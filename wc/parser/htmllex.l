@@ -245,16 +245,32 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_TAGSTART>"/>" {
     UPDATE_BUFPOS;
+    BEGIN(INITIAL);
+    if (!strlen(yyextra->tmp_buf)) {
+	yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, 4);
+	if (!yyextra->tmp_buf) {return T_ERROR; }
+        strcpy(yyextra->tmp_buf, "</>");
+        yyextra->tmp_attrs = NULL;
+        SETLVAL;
+        RETURN(T_TEXT);
+    }
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_tag);
     CLEAR_BUF(yyextra->tmp_buf);
-    BEGIN(INITIAL);
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START_END);
 }
 
 <S_TAGSTART>">" {
     UPDATE_BUFPOS;
+    if (!strlen(yyextra->tmp_buf)) {
+	yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, 3);
+	if (!yyextra->tmp_buf) {return T_ERROR; }
+        strcpy(yyextra->tmp_buf, "<>");
+        yyextra->tmp_attrs = NULL;
+	SETLVAL;
+        RETURN(T_TEXT);
+    }
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_tag);
     if (strcmp("script", yyextra->tmp_buf)==0)
@@ -356,6 +372,28 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
     BEGIN(S_ATTR5);
+}
+
+<S_ATTR4>">" {
+    UPDATE_BUFPOS;
+    PYSTRING_TMP(yyextra->tmp_attrval);
+    CLEAR_BUF(yyextra->tmp_buf);
+    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
+    BEGIN(INITIAL);
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START);
+}
+
+<S_ATTR4>"/>" {
+    UPDATE_BUFPOS;
+    PYSTRING_TMP(yyextra->tmp_attrval);
+    CLEAR_BUF(yyextra->tmp_buf);
+    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
+    BEGIN(INITIAL);
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START_END);
 }
 
 <S_ATTR5>[^\012 \t\b\r\n>]+ {

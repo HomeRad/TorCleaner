@@ -106,13 +106,9 @@ class HtmlFilter (HtmlParser):
         else:
             self.buffer.append(data)
 
-    def cdataBlock (self, d):
+    def cdata (self, d):
         """handler for data"""
         self.buffer_append_data([DATA, d])
-
-    def ignorableWhitespace (self, d):
-        """handler for ignorable whitespace"""
-        #self.buffer_append_data([DATA, d])
 
     def flushbuf (self):
         """flush internal data buffer"""
@@ -147,9 +143,8 @@ class HtmlFilter (HtmlParser):
         self.buffer = []
 
     def comment (self, data):
-        """a comment. If we accept comments, filter them because JavaScript
-	is often wrapped in comments"""
-        if self.comments:
+        """a comment: accept only non-empty comments"""
+        if self.comments and data:
             self.buffer.append([COMMENT, data])
 
     def characters (self, s):
@@ -196,14 +191,11 @@ class HtmlFilter (HtmlParser):
         if not self.rulestack:
             self.buffer2data()
 
-    def internalSubset (self, name, externId, systemId):
-        s = "<!DOCTYPE HTML "
-        if externId:
-            s += "PUBLIC "
-        elif systemId:
-            s += "SYSTEM "
-        s += '"%s">'%name
-        self.buffer_append_data([DATA, s])
+    def doctype (self, data):
+        self.buffer_append_data([DATA, "<!DOCTYPE %s>"%data])
+
+    def pi (self, data):
+        self.buffer_append_data([DATA; "<?%s?>"%data])
 
     def errorfun (self, line, col, msg, name):
         print >> sys.stderr, name, _("parsing %s:%d:%d: %s") % \
