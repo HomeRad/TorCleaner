@@ -3,7 +3,7 @@ __date__    = "$Date$"[7:-2]
 
 import dns_lookups, mimetypes, base64
 import wc.proxy
-from wc.proxy import spliturl, fix_http_version
+from wc.proxy import spliturl, splitnport, fix_http_version
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
@@ -65,6 +65,8 @@ class ClientServerMatchmaker:
         if scheme!='file' and not hostname:
             # the 'Host' header has to be there
             hostname = self.headers.get('Host')
+            if hostname:
+                hostname, port = splitnport(hostname, 80)
             if not hostname:
                 # we cannot handle the request
                 self.client.error(400, i18n._("Incomplete Proxy Request"))
