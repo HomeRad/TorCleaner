@@ -174,7 +174,7 @@ else:
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
-       version = "1.11",
+       version = "1.12",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
