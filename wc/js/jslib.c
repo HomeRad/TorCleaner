@@ -390,7 +390,7 @@ static PyObject* JSEnv_detachListener (JSEnvObject* self, PyObject* args) {
         return NULL;
     }
     // XXX error code? decref?
-    PyDict_DelItem(self->listeners, item);
+    if (PyDict_DelItem(self->listeners, item)!=0) return NULL;
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -421,12 +421,24 @@ static void executeScheduledActions (JSEnvObject* self) {
     // XXX error checking!
     jsval rval;
     for (int i=0; i<PyList_Size(self->scheduled_actions); i++) {
-        PyObject* item = PyList_GetItem(self->scheduled_actions, i);
-        Py_INCREF(item);
+        PyObject* func;
+        PyObject* tup = PyList_GetItem(self->scheduled_actions, i);
+        if (!tup) {
+            // XXX error
+            continue;
+        }
+        Py_INCREF(tup);
+        if (!(func = PyTuple_GetItem(tup, 1))) {
+            // XXX error
+            Py_DECREF(tup);
+            continue;
+        }
+        Py_INCREF(func);
         JS_EvaluateScript(self->ctx, self->global_obj,
-                          PyString_AsString(item),
-                          PyString_Size(item), "[unknown]", 1, &rval);
-        Py_DECREF(item);
+                          PyString_AsString(func),
+                          PyString_Size(func), "[unknown]", 1, &rval);
+        Py_DECREF(func);
+        Py_DECREF(tup);
     }
     Py_DECREF(self->scheduled_actions);
     self->scheduled_actions = PyList_New(0);
