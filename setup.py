@@ -206,7 +206,7 @@ class MyBdistWininst (bdist_wininst, object):
     """bdist_wininst command supporting cross compilation"""
 
     def run (self):
-        if (sys.platform != "win32" and not win_compiling and
+        if (not win_compiling and
             (self.distribution.has_ext_modules() or
              self.distribution.has_c_libraries())):
             raise DistutilsPlatformError \
