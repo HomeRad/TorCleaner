@@ -33,6 +33,10 @@ class Category (object):
         """True if value is valid according to this category."""
         raise NotImplementedError, "unimplemented"
 
+    def allowance (self, value, limit):
+        """check if value exceeds limit"""
+        raise NotImplementedError, "unimplemented"
+
     def __cmp__ (self, other):
         """Compare with another category by name."""
         return cmp(self.name, other.name)
@@ -53,6 +57,13 @@ class ValueCategory (Category):
         """True if value is in values list."""
         return value in self.values
 
+    def allowance (self, value, limit):
+        """check if value exceeds limit"""
+        if self.values.index(value) > self.values.index(limit):
+            return _("Rating %r for category %r exceeds limit %r") % \
+                     (value, self.name, limit)
+        return None
+
 
 class RangeCategory (Category):
     """Rating category that can hold values in a range between a given
@@ -66,12 +77,23 @@ class RangeCategory (Category):
 
     def valid_value (self, value):
         """Check range value."""
-        if not isinstance(value, tuple):
-            return value_in_range(value, self.values)
-        else:
+        if isinstance(value, tuple):
             assert len(value) == 2, "Invalid value %r" % repr(value)
             return range_in_range(value, self.values)
+        else:
+            return value_in_range(value, self.values)
 
+    def allowance (self, value, limit):
+        """check if value exceeds limit"""
+        if isinstance(value, tuple):
+            assert len(value) == 2, "Invalid value %r" % repr(value)
+            allow = range_in_range(value, limit)
+        else:
+            allow = value_in_range(value, limit)
+        if not allow:
+            return _("Rating %r for category %r is not in range %s") % \
+                     (value, self.name, limit)
+        return None
 
 def value_in_range (num, prange):
     """return True iff number is in range.
