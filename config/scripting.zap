@@ -4,7 +4,8 @@
  desc="Scripting related.">
 
 <javascript sid="wc.304" oid="0" title="Enable JavaScript engine"
- desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"/>
+ desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"
+ dontmatchurl="(msdn\.microsoft\.com|www\.mvhs\.de)"/>
 
 <rewrite sid="wc.290" oid="1" title="&lt;a&gt; onfocus">
 <attr name="onfocus"/>
