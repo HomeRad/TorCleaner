@@ -35,7 +35,7 @@ else:
 
 def get_localhosts ():
     """get list of localhost names and ips"""
-    # XXX is this list of localhost stuff complete?
+    # XXX is this default list of localhost stuff complete?
     localhosts = sets.Set([
       'localhost',
       'loopback',
@@ -74,6 +74,11 @@ class DnsConfig (object):
         self.search_domains = wc.containers.SetList()
         self.search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
 
+    def __str__ (self):
+        return "nameservers: "+str(self.nameservers)+\
+               "\nsearch domains: "+str(self.search_domains)+\
+               "\nsearch_patterns: "+str(self.search_patterns)
+
 
 def resolver_config ():
     """dns resolver configuration"""
@@ -92,4 +97,5 @@ def resolver_config ():
 
 
 if __name__=='__main__':
-    print get_localhosts()
+    print "localhosts:", get_localhosts()
+    print resolver_config()
