@@ -142,3 +142,20 @@ var words = navigator.plugins["Shockwave Flash"].description.split(" ");
 //-->
 </script>
 
+filter test/html/script9.html
+
+<script language=JavaScript1.1>
+<!--
+var v1 = document.location.hostname;
+var v2 = location.hostname;
+//-->
+</script>
+
+filter test/html/script10.html
+
+<script language=VBScript>
+<!--
+tooooooot.
+//-->
+</script>
+
