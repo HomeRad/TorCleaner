@@ -39,6 +39,7 @@ from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy.Headers import WcMessage
 from wc.proxy import make_timer
 from HtmlTags import check_spelling
+from HtmlSecurity import HtmlSecurity
 
 # whitespace matcher
 _has_ws = re.compile("\s").search
@@ -191,11 +192,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.waitbuf = []
         self.url = url or "unknown"
         self.base_url = None
+        # for security flaw scanning
+        self.security = HtmlSecurity()
 
 
     def __repr__ (self):
         """representation with recursion level and state"""
-        return "<HtmlParser[%d] %s>" % (self.level, str(self.state))
+        return "<HtmlParser[%d] %s %s>" % (self.level, str(self.state), self.url)
 
 
     def _debug (self, msg, *args):
@@ -344,29 +347,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         elif tag=="base" and attrs.has_key('href'):
             self.base_url = strip_quotes(attrs['href'])
             self._debug("using base url %s", `self.base_url`)
-        elif tag=="input" and attrs.has_key('type'):
-            # fix IE crash bug on empty type attribute
-            if not attrs['type']:
-                warn(PROXY, "Detected and prevented IE <input type> crash bug at %s", `self.url`)
-                del attrs['type']
-        elif tag=="fieldset" and attrs.has_key('style'):
-            # fix Mozilla crash bug on fieldsets
-            if "position" in attrs['style']:
-                warn(PROXY, "Detected and prevented Mozilla <fieldset style> crash bug at %s", `self.url`)
-                del attrs['style']
-        elif tag=="hr" and attrs.has_key('align'):
-            # fix CAN-2003-0469, length 50 should be safe
-            if len(attrs['align']) > 50:
-                warn(PROXY, "Detected and prevented IE <hr align> crash bug at %s", `self.url`)
-                del attrs['align']
-        elif tag=="object" and attrs.has_key('type'):
-            # fix CAN-2003-0344, only one / (slash) allowed
-            t = attrs['type']
-            c = t.count("/")
-            if c > 1:
-                warn(PROXY, "Detected and prevented IE <object type> bug at %s", `self.url`)
-                t = t.replace("/", "", c-1)
-                attrs['type'] = t
+        # search for and prevent known security flaws in HTML
+        self.security.scan(tag, attrs, self)
 
         # look for filter rules which apply
         for rule in self.rules:
@@ -408,6 +390,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 	the buffer (by calling buf2data)"""
         self._debug("endElement %s", `tag`)
         tag = check_spelling(tag, self.url)
+        # search for and prevent known security flaws in HTML
+        self.security.scan_end_tag(tag)
         item = [ENDTAG, tag]
         if self.state[0]=='wait':
             self.waitbuf.append(item)
