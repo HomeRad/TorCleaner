@@ -4,6 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+from wc import i18n
 from wc.log import *
 from rfc822 import Message
 from UnchunkStream import UnchunkStream
