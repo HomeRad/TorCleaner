@@ -1,4 +1,4 @@
-include MANIFEST.in
+include MANIFEST.in guruguru.bmp
 include INSTALL LICENSE README TODO
 include draft-luotonen-web-proxy-tunneling-01.txt
 include Makefile webcleaner webcleanerconf webcleaner.bat
@@ -12,5 +12,7 @@ include debian/rules debian/templates debian/copyright
 include filtertest filtertest.html
 include webcleaner.1 webcleanerconf.1
 include rpm_build_script
-recursive-include config *
+include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
+include config/*.png config/*.html
+include test/*.py test/output/test_*
 exclude _webcleaner2_configdata.py

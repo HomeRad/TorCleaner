@@ -24,7 +24,7 @@ db_version 2.0
 #     installation fails and the `postinst' is called with `abort-upgrade',
 #     `abort-remove' or `abort-deconfigure'.
 
-package=webcleaner
+package=webcleanerconf
 PYTHON=/usr/bin/python2
 SITEPACKAGES="/usr/lib/python2.0/site-packages"
 DIRLIST="wc/gui"

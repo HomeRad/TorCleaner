@@ -41,7 +41,7 @@ deb:	locale
 
 .PHONY: dist
 dist:	locale
-	./setup.py sdist --formats=gztar
+	./setup.py sdist --formats=gztar,zip
 
 .PHONY: test
 test:
@@ -80,7 +80,7 @@ filterfiles:	md5sums
 upload: distclean dist VERSION
 	scp -1 debian/changelog $(HTMLDIR)/changes.txt
 	scp -1 VERSION $(HTMLDIR)/raw/
-	scp -1 dist/*.tar.gz $(HTMLDIR)
+	scp -1 dist/* $(HTMLDIR)
 	scp -1 dist/* $(FTPDIR)
 	ssh -1 -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
 

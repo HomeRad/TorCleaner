@@ -16,7 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os, string, re, sys
+import os, re, sys
 from types import StringType, TupleType
 from distutils.core import setup, Extension, DEBUG
 from distutils.dist import Distribution
@@ -144,8 +144,36 @@ class MyDistribution(Distribution):
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
+data_files = [('share/webcleaner/config',
+      ['config/blocked.html',
+       'config/blocked.gif',
+       'config/webcleaner.conf',
+       'config/webcleaner.dtd',
+       'config/filter.dtd',
+       'config/adverts.zap',
+       'config/css.zap',
+       'config/erotic.zap',
+       'config/misc.zap',
+       'config/plugins.zap',
+       'config/redirects.zap',
+       'config/scripting.zap',
+       'config/iconbig.png',
+       'config/minidoc.png',
+       'config/minifolder.png',
+       'config/disabledrule.png',
+       'config/minifolderopen.png']),
+     ('man/man1',
+      ['webcleaner.1', 'webcleanerconf.1']),
+    ]
+scripts = ['webcleaner', 'webcleanerconf']
+
+if os.name=="nt":
+    scripts.append("webcleaner.bat")
+else:
+    data_files.append(('share/webcleaner/examples', ['webcleaner.bat']))
+
 setup (name = "webcleaner",
-       version = "0.17",
+       version = "0.18",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -156,7 +184,7 @@ setup (name = "webcleaner",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
        ext_modules = [Extension('wc.parser.htmlop',['wc/parser/htmlop.c'])],
-       scripts = ['webcleaner', 'webcleanerconf'],
+       scripts = scripts,
        long_description =
 """WebCleaner features:
 o disable animated GIFs
@@ -171,27 +199,5 @@ o HTTP/1.1 support
        cmdclass = {'install': MyInstall,
 		   'build_scripts': my_build_scripts,
                   },
-       data_files = [('share/webcleaner/config',
-                      ['config/blocked.html',
-                       'config/blocked.gif',
-                       'config/webcleaner.conf',
-                       'config/webcleaner.dtd',
- 	               'config/filter.dtd',
-		       'config/adverts.zap',
-		       'config/css.zap',
-		       'config/erotic.zap',
-		       'config/misc.zap',
-		       'config/plugins.zap',
-		       'config/redirects.zap',
-		       'config/scripting.zap',
-		       'config/iconbig.png',
-		       'config/minidoc.png',
-		       'config/minifolder.png',
-                       'config/disabledrule.png',
-		       'config/minifolderopen.png']),
-                     ('share/webcleaner/examples',
-                      ['webcleaner.bat']),
-                     ('man/man1',
-		      ['webcleaner.1', 'webcleanerconf.1']),
-		    ],
+       data_files = data_files,
 )

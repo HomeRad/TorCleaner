@@ -1,9 +1,15 @@
 TODO
 
-- better Connection/Server/HttpServer - ClientServerMatchmaker - Client
-  distinction
-  
-- better DNS lib (hangs sometimes ?)
+- Windows: the block files are not found because of mixing slashes
+  and backslashes in the path name (use os.path.norm)
+
+- htmlop.l:
+  better support for <! > tags
+  support for <? ?> tags
+
+- test Cookies
+
+- test .zap update with webcleanerconf
 
 - new filtering:
   Stop/limit Javascript Pop-ups/alert/confirms

@@ -1,3 +1,9 @@
+webcleaner (0.18) unstable; urgency=low
+
+  * fixes for debian install scripts
+
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  5 Oct 2001 16:48:31 +0200
+
 webcleaner (0.17) unstable; urgency=low
 
   * webcleaner: import os only when really needed (thanks to
@@ -8,8 +14,13 @@ webcleaner (0.17) unstable; urgency=low
   * wc/parser/htmlop.c: new HTML parser, adapted from libhtmlparser
     package
   * added regression tests
+  * fixed typo in dns_lookups.py for Windows Registry handling
+  * fixed Windows version recognition in daemon/_nt.py
+  * add missing argument in daemon/_other.py and daemon/_nt.py
+    start() functions
+  * setup.py: install webcleaner.bat on Windows platforms
 
- -- Bastian Kleineidam <calvin@debian.org>  Thu,  4 Oct 2001 11:43:33 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  5 Oct 2001 15:41:15 +0200
 
 webcleaner (0.16) unstable; urgency=low
 

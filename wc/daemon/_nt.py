@@ -19,6 +19,8 @@
 
 import os,sys
 from wc.daemon import startfunc,pidfile
+from wc.debug_levels import *
+from wc import debug
 
 def start():
     # already running?
@@ -31,12 +33,14 @@ Do 'webcleaner stop' first."""
     try:
         # under Windows NT/2000 we can use NOWAIT
         key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
-                 r"Software\Microsoft\Windows NT")
-        # XXX
-        val = key["ProgramVersion"]
+                 r"Software\Microsoft\Windows NT\CurrentVersion")
+        val = key["CurrentVersion"]
         mode = os.P_NOWAIT
-    except WindowsError: pass
-    except IndexError: pass
+    except EnvironmentError:
+        pass
+    except IndexError:
+        # key not found
+        pass
     try:
         ret = os.spawnv(mode, command[0], command)
     except OSError, exc:
@@ -49,7 +53,7 @@ Do 'webcleaner stop' first."""
               "command '%s' killed by signal %d" % (command, -ret)
 
 
-def start_nt():
+def start_nt(parent_exit=1):
     # no need to spawn in this thing
     # write pid in pidfile
     f = open(pidfile, 'w')
