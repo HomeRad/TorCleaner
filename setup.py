@@ -18,7 +18,7 @@
 
 import os, re, sys, string
 from types import StringType, TupleType
-from distutils.core import setup, Extension
+from distutils.core import setup, Extension, DEBUG
 from distutils.dist import Distribution
 from distutils.command.install import install
 from distutils.file_util import write_file
