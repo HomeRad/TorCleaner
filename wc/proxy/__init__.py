@@ -7,7 +7,7 @@ used by Bastian Kleineidam for WebCleaner
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, socket, select, asyncore, re, urlparse, os
+import time, socket, select, asyncore, re, urlparse, urllib, os
 # remove asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 # add the fileno function
@@ -43,16 +43,18 @@ def stripsite (url):
 
 def norm_url (url):
     """replace empty paths with / and normalize them"""
+    url = urllib.unquote(url)
     urlparts = list(urlparse.urlparse(url))
-    path = urlparts[2]
+    path = urlparts[2].replace('\\', '/')
     if not path or path=='/':
         urlparts[2] = '/'
     else:
-        # XXX only windows and posix??
+        # XXX this works only under windows and posix??
         # collapse redundant path segments
         urlparts[2] = os.path.normpath(path).replace('\\', '/')
         if path.endswith('/'):
             urlparts[2] += '/'
+    urlparts = [ urllib.quote(p) for p in urlparts ]
     return urlparse.urlunparse(urlparts)
 
 
