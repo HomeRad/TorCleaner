@@ -223,9 +223,9 @@ class RewriteRule (UrlRule):
 
     def filter_tag (self, tag, attrs):
         """return filtered tag data for given tag and attributes"""
-        #debug(FILTER, "rule %s filter_tag", self.title)
-        #debug(FILTER, "original tag %r attrs %s", tag, attrs)
-        #debug(FILTER, "replace %s with %r", num_part(self.part), self.replacement)
+        debug(FILTER, "rule %s filter_tag", self.title)
+        debug(FILTER, "original tag %r attrs %s", tag, attrs)
+        debug(FILTER, "replace %s with %r", num_part(self.part), self.replacement)
         if self.part==COMPLETE:
             return [DATA, ""]
         if self.part==TAGNAME:
@@ -261,15 +261,15 @@ class RewriteRule (UrlRule):
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        #debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
+        debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
         return [STARTTAG, tag, newattrs]
 
 
     def filter_complete (self, i, buf):
         """replace complete tag data in buf with replacement"""
-        #debug(FILTER, "rule %s filter_complete", self.title)
-        #debug(FILTER, "original buffer %r", buf)
-        #debug(FILTER, "part %s", num_part(self.part))
+        debug(FILTER, "rule %s filter_complete", self.title)
+        debug(FILTER, "original buffer %r", buf)
+        debug(FILTER, "part %s", num_part(self.part))
         if self.part==COMPLETE:
             buf[i:] = [[DATA, self.replacement]]
         elif self.part==TAG:
@@ -288,9 +288,6 @@ class RewriteRule (UrlRule):
         s = super(RewriteRule, self).toxml()
         if self.tag!='a':
             s += '\n tag="%s"' % self.tag
-        if not (self.attrs or self.part!=COMPLETE or self.replacement or \
-                self.enclosed):
-            return s+"/>\n"
         s += ">\n"
         for key, val in self.attrs.items():
             s += "<attr"
@@ -302,12 +299,13 @@ class RewriteRule (UrlRule):
                 s += "/>\n"
         if self.enclosed:
             s += "<enclosed>"+xmlify(self.enclosed)+"</enclosed>\n"
-        s += "<replacement"
-        s += ' part="%s"' % num_part(self.part)
-        if self.replacement:
-            s += '>'+xmlify(self.replacement)+"</replacement>\n"
-        else:
-            s += "/>\n"
+        if self.part!=COMPLETE or self.replacement:
+            s += "<replacement"
+            s += ' part="%s"' % num_part(self.part)
+            if self.replacement:
+                s += '>'+xmlify(self.replacement)+"</replacement>\n"
+            else:
+                s += "/>\n"
         s += self.matchestoxml()
         s += "</%s>" % self.get_name()
         return s
