@@ -142,6 +142,14 @@ static PyObject* resolve_entities;
     if (buf==NULL) return NULL; \
     buf[0] = '\0'
 
+#define CHECK_ERROR(ud, label) \
+if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) { \
+	callback = PyObject_GetAttrString(ud->handler, "error"); \
+	if (!callback) { error=1; goto label; } \
+	result = PyObject_CallFunction(callback, "O", ud->error); \
+	if (!result) { error=1; goto label; } \
+    }
+
 /* parser type definition */
 typedef struct {
     PyObject_HEAD
@@ -184,7 +192,7 @@ typedef int YYSTYPE;
 
 
 /* Line 214 of yacc.c.  */
-#line 188 "htmlparse.c"
+#line 196 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -354,8 +362,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,    98,    98,    99,   102,   103,   110,   147,   196,   229,
-     260,   291,   322,   353,   393,   433
+       0,   106,   106,   107,   110,   111,   118,   150,   194,   222,
+     248,   274,   300,   326,   361,   396
 };
 #endif
 
@@ -1060,22 +1068,22 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 98 "htmlparse.y"
+#line 106 "htmlparse.y"
     {;}
     break;
 
   case 3:
-#line 99 "htmlparse.y"
+#line 107 "htmlparse.y"
     {;}
     break;
 
   case 4:
-#line 102 "htmlparse.y"
+#line 110 "htmlparse.y"
     { YYACCEPT; /* wait for more lexer input */ ;}
     break;
 
   case 5:
-#line 104 "htmlparse.y"
+#line 112 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1085,7 +1093,7 @@ yyreduce:
     break;
 
   case 6:
-#line 111 "htmlparse.y"
+#line 119 "htmlparse.y"
     {
     /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
@@ -1104,14 +1112,9 @@ yyreduce:
         Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_start; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_start; }
-    }
+    CHECK_ERROR(ud, finish_start);
 finish_start:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_XDECREF(tag);
@@ -1125,7 +1128,7 @@ finish_start:
     break;
 
   case 7:
-#line 148 "htmlparse.y"
+#line 151 "htmlparse.y"
     {
     /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
@@ -1156,14 +1159,9 @@ finish_start:
         Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_start_end; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_start_end; }
-    }
+    CHECK_ERROR(ud, finish_start_end);
 finish_start_end:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_XDECREF(tag);
@@ -1177,7 +1175,7 @@ finish_start_end:
     break;
 
   case 8:
-#line 197 "htmlparse.y"
+#line 195 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1194,14 +1192,9 @@ finish_start_end:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_end; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_end; }
-    }
+    CHECK_ERROR(ud, finish_end);
 finish_end:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1213,7 +1206,7 @@ finish_end:
     break;
 
   case 9:
-#line 230 "htmlparse.y"
+#line 223 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1228,14 +1221,9 @@ finish_end:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_comment; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_comment; }
-    }
+    CHECK_ERROR(ud, finish_comment);
 finish_comment:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1247,7 +1235,7 @@ finish_comment:
     break;
 
   case 10:
-#line 261 "htmlparse.y"
+#line 249 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1262,14 +1250,9 @@ finish_comment:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_pi; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_pi; }
-    }
+    CHECK_ERROR(ud, finish_pi);
 finish_pi:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1281,7 +1264,7 @@ finish_pi:
     break;
 
   case 11:
-#line 292 "htmlparse.y"
+#line 275 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1296,14 +1279,9 @@ finish_pi:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_cdata; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_cdata; }
-    }
+    CHECK_ERROR(ud, finish_cdata);
 finish_cdata:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1315,7 +1293,7 @@ finish_cdata:
     break;
 
   case 12:
-#line 323 "htmlparse.y"
+#line 301 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1330,14 +1308,9 @@ finish_cdata:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_doctype; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_doctype; }
-    }
+    CHECK_ERROR(ud, finish_doctype);
 finish_doctype:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1349,7 +1322,7 @@ finish_doctype:
     break;
 
   case 13:
-#line 354 "htmlparse.y"
+#line 327 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1373,14 +1346,9 @@ finish_doctype:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_script; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_script; }
-    }
+    CHECK_ERROR(ud, finish_script);
 finish_script:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1392,7 +1360,7 @@ finish_script:
     break;
 
   case 14:
-#line 394 "htmlparse.y"
+#line 362 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1416,14 +1384,9 @@ finish_script:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_style; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_style; }
-    }
+    CHECK_ERROR(ud, finish_style);
 finish_style:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1435,7 +1398,7 @@ finish_style:
     break;
 
   case 15:
-#line 434 "htmlparse.y"
+#line 397 "htmlparse.y"
     {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1451,14 +1414,9 @@ finish_style:
 	Py_DECREF(result);
         callback=result=NULL;
     }
-    if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) {
-        ud->error = NULL;
-	callback = PyObject_GetAttrString(ud->handler, "error");
-	if (!callback) { error=1; goto finish_characters; }
-	result = PyObject_CallFunction(callback, "s", ud->error);
-	if (!result) { error=1; goto finish_characters; }
-    }
+    CHECK_ERROR(ud, finish_characters);
 finish_characters:
+    Py_XDECREF(ud->error);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
@@ -1473,7 +1431,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1477 "htmlparse.c"
+#line 1435 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1667,7 +1625,7 @@ yyreturn:
 }
 
 
-#line 467 "htmlparse.y"
+#line 425 "htmlparse.y"
 
 
 /* disable python memory interface */

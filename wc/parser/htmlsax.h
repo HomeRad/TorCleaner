@@ -39,7 +39,7 @@ typedef struct {
     PyObject* exc_val;
     PyObject* exc_tb;
     /* error string */
-    char* error;
+    PyObject* error;
 } UserData;
 
 #endif

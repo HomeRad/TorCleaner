@@ -45,28 +45,53 @@ class HtmlParser:
         self.parser = htmlsax.new_parser(self)
         self.debug = self.parser.debug
 
+
     def feed (self, data):
         """feed some data to the parser"""
         self.parser.feed(data)
 
+
     def flush (self):
         """flush all data"""
         self.parser.flush()
+
 
     def reset (self):
         """reset the parser (without flushing)"""
         self.parser.reset()
 
 
-class HtmlPrinter(HtmlParser):
+
+class HtmlPrinter (HtmlParser):
     """handles all functions by printing the function name and
        attributes"""
+    def _print (self, *attrs):
+        print self.mem, attrs
+
+
+    def _errorfun (self, msg, name):
+        """print msg to stderr with name prefix"""
+        print >> sys.stderr, name, msg
+
+
+    def error (self, msg):
+        """signal a filter/parser error"""
+        self._errorfun(msg, "error:")
+
+
+    def warning (self, msg):
+        """signal a filter/parser warning"""
+        self._errorfun(msg, "warning:")
+
+
+    def fatalError (self, msg):
+        """signal a fatal filter/parser error"""
+        self._errorfun(msg, "fatal error:")
+
+
     def __getattr__ (self, name):
         self.mem = name
         return self._print
-
-    def _print (self, *attrs):
-        print self.mem, attrs
 
 
 def _test():

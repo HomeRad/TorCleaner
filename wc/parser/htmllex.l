@@ -78,9 +78,6 @@
 /* return a token, adjusting the nextpos value */
 #define RETURN(tok) yyextra->nextpos = yyextra->bufpos; return tok
 
-/* XXX todo */
-#define SET_ERROR(s)
-
 /* use Pythons memory management */
 void* yyalloc (yy_size_t bytes, void* yyscanner) {
     return PyMem_Malloc(bytes);
@@ -754,8 +751,8 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_TAGEND><{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
     LOWER_TMP;
+    yyextra->error = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf);
     SETLVAL;
-    SET_ERROR("Missing > in end tag.");
     yyextra->tmp_attrs = PyDict_New();
     if (!yyextra->tmp_attrs) return T_ERROR;
     BEGIN(S_TAGSTART);
@@ -779,8 +776,8 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_TAGEND2><{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
     LOWER_TMP;
+    yyextra->error = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf);
     SETLVAL;
-    SET_ERROR("Missing > in end tag.");
     yyextra->tmp_attrs = PyDict_New();
     if (!yyextra->tmp_attrs) return T_ERROR;
     BEGIN(S_TAGSTART);
