@@ -33,7 +33,7 @@ class JSFilter (wc.js.JSListener.JSListener):
     def __init__ (self, script, ver):
         self.js_env = wc.js.jslib.JSEnv()
         self.js_env.listeners.append(self)
-        self.js_env.executeScript(wc.js.unescape_js(script), ver)
+        self.js_env.executeScript(script, ver)
         self.js_env.listeners.remove(self)
 
     def _str__ (self):
