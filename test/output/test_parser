@@ -65,6 +65,16 @@ HTML '<!DOCTYPE adrbook SYSTEM "adrbook.dtd">'
 p decl 'DOCTYPE' [('adrbook', None), ('SYSTEM', None), ('"adrbook.dtd"', None)]
 HTML '<?xml version="1.0" encoding="latin1"?>'
 p xmldecl 'xml' [('version', '1.0'), ('encoding', 'latin1')]
+HTML '<script >\012</script>'
+p starttag 'script' []
+p data '\012'
+p endtag 'script'
+HTML '<script lang="a">bla < fasel</script>'
+p starttag 'script' [('lang', 'a')]
+p data 'bla '
+p data '<'
+p data ' fasel'
+p endtag 'script'
 subsequent interwoven parsing
 p starttag 'html' []
 p1 starttag 'html' []

@@ -4,9 +4,12 @@ webcleaner (0.18) unstable; urgency=low
   * flush logfile when logging
   * fix log format
   * norm config_dir path in configdata for platform independency
-  * HTML parser fixes
+  * HTML parser:
+    add support for XML declaration tags <?...?>
+    better parsing of <script> tags without inside comments
+    better <!...> parsing
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat,  6 Oct 2001 12:53:46 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 10 Oct 2001 12:48:30 +0200
 
 webcleaner (0.17) unstable; urgency=low
 

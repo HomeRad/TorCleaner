@@ -42,7 +42,7 @@ def iswriteable(file):
 
 fname = "webcleaner-%s.pid"%Version
 if os.name=="nt":
-    pidfile=os.path.join(os.environ("TEMP"), fname)
+    pidfile=os.path.join(os.environ.get("TEMP"), fname)
 else:
     pidfile=os.path.join('/var/run', fname)
     if not iswriteable(pidfile):

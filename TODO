@@ -1,8 +1,5 @@
 TODO
 
-- htmlop.l:
-  better support for <! > tags
-
 - Debian: purge does not remove all .pyc files (why??)
 
 - test Cookies

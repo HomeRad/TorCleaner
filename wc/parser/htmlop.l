@@ -19,7 +19,7 @@
 #define XCFREE(a) if (a) { PyMem_Del(a); a=NULL; }
 #define XPFREE(a) if (a) { Py_DECREF(a); a=NULL; }
 #define yyterminate() return YY_NULL
-/* uncomment to debug
+/*
 #define DEBUG
 */
 #ifdef DEBUG
@@ -64,12 +64,12 @@ staticforward PyTypeObject parser_type;
 %}
 
 %x COMMENT
+%x SCRIPT
 %x STARTTAG
 %x PARAM
 %x PARAM2
 %x DECLTAG
 %x DPARAM
-%x DPARAM2
 %x XMLTAG
 %x XPARAM
 %x XPARAM2
@@ -147,6 +147,17 @@ staticforward PyTypeObject parser_type;
     PyObject_CallFunction(self->handle_data, "s", yytext);
 }
 
+<SCRIPT><\/[sS][cC][rR][iI][pP][tT][ \r\n\t]*> {
+    _debug;
+    PyObject_CallFunction(self->handle_endtag, "s", "script");
+    BEGIN(INITIAL);
+}
+
+<SCRIPT>[^<]+|< {
+    _debug;
+    PyObject_CallFunction(self->handle_data, "s", yytext);
+}
+
 <COMMENT>--[ \r\n\t]*>    {
     _debug;
     PyObject_CallFunction(self->handle_comment, "s", self->tag);
@@ -173,6 +184,7 @@ staticforward PyTypeObject parser_type;
 }
 
 <STARTTAG>">"   {
+    int n;
     _debug;
     if (!self->tag) {
         self->tag = PyMem_New(char, 1);
@@ -186,9 +198,15 @@ staticforward PyTypeObject parser_type;
     else {
         PyObject_CallFunction(self->handle_starttag, "sO", self->tag, self->params);
     }
+    n = strlen(self->tag);
+    if (n>=6 && strncasecmp(self->tag, "script", n)==0) {
+        BEGIN(SCRIPT);
+    }
+    else {
+        BEGIN(INITIAL);
+    }
     CFREE(self->tag);
     PFREE(self->params);
-    BEGIN(INITIAL);
 }
 
 <STARTTAG>[ \r\n\t]+    {
@@ -204,6 +222,7 @@ staticforward PyTypeObject parser_type;
 }
 
 <PARAM>">"      {
+    int n;
     _debug;
     if (self->paramname) {
         PyList_Append(self->params, Py_BuildValue("sO", self->paramname, Py_None));
@@ -217,9 +236,15 @@ staticforward PyTypeObject parser_type;
     else {
         PyObject_CallFunction(self->handle_starttag, "sO", self->tag, self->params);
     }
+    n = strlen(self->tag);
+    if (n>=6 && strncasecmp(self->tag, "script", n)==0) {
+        BEGIN(SCRIPT);
+    }
+    else {
+        BEGIN(INITIAL);
+    }
     CFREE(self->tag);
     PFREE(self->params);
-    BEGIN(INITIAL);
 }
 
 <PARAM>[ \r\n\t]*=      {
@@ -272,6 +297,7 @@ staticforward PyTypeObject parser_type;
 }
 
 <PARAM2>">" {
+    int n;
     _debug;
     /* this occurs with <a b=> */
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
@@ -284,14 +310,21 @@ staticforward PyTypeObject parser_type;
     else {
         PyObject_CallFunction(self->handle_starttag, "sO", self->tag, self->params);
     }
+    n = strlen(self->tag);
+    if (n>=6 && strncasecmp(self->tag, "script", n)==0) {
+        BEGIN(SCRIPT);
+    }
+    else {
+        BEGIN(INITIAL);
+    }
     CFREE(self->tag);
     PFREE(self->params);
-    BEGIN(INITIAL);
 }
 
 <DECLTAG>[^ >\r\n\t]+  {
     char* tmp;
     int len = self->tag ? strlen(self->tag) : 0;
+    _debug;
     self->tag = PyMem_Resize(self->tag, char, len + strlen(yytext) + 1);
     strncpy(self->tag + len, yytext, strlen(yytext));
     self->tag[len + strlen(yytext)] = '\0';
@@ -315,7 +348,7 @@ staticforward PyTypeObject parser_type;
     BEGIN(DPARAM);
 }
 
-<DPARAM>[^ \r\n\t=>]+    {
+<DPARAM>[^ \r\n\t>]+    {
     _debug;
     self->paramname = PyMem_Resize(self->paramname, char, strlen(yytext)+1);
     strncpy(self->paramname, yytext, strlen(yytext));
@@ -334,16 +367,6 @@ staticforward PyTypeObject parser_type;
     BEGIN(INITIAL);
 }
 
-<DPARAM>[ \r\n\t]*=      {
-    _debug;
-    if (!self->paramname) {
-        /* the empty param name as default, for things like <a =1 =2> */
-        self->paramname = PyMem_New(char, 1);
-        self->paramname[0] = '\0';
-    }
-    BEGIN(DPARAM2);
-}
-
 <DPARAM>[ \r\n\t]+       {
     _debug;
     if (self->paramname) {
@@ -351,36 +374,10 @@ staticforward PyTypeObject parser_type;
     }
 }
 
-<DPARAM2>\"([^"]|\\\")+\"       {
-    _debug;
-    PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
-    CFREE(self->paramname);
-    BEGIN(DPARAM);
-}
-
-<DPARAM2>\'([^']|\\')+\'       {
-    _debug;
-    PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
-    CFREE(self->paramname);
-    BEGIN(DPARAM);
-}
-
-<DPARAM2>[ \r\n\t]+      {
-    _debug;
-    CFREE(self->paramname);
-    BEGIN(DPARAM);
-}
-
-<DPARAM2>[^ \r\n\t>]+    {
-    _debug;
-    PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext, strlen(yytext)-1));
-    CFREE(self->paramname);
-    BEGIN(DPARAM);
-}
-
 <XMLTAG>[^ >\r\n\t]+  {
     char* tmp;
     int len = self->tag ? strlen(self->tag) : 0;
+    _debug;
     self->tag = PyMem_Resize(self->tag, char, len + strlen(yytext) + 1);
     strncpy(self->tag + len, yytext, strlen(yytext));
     self->tag[len + strlen(yytext)] = '\0';
@@ -550,7 +547,6 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	break;
     case DECLTAG:
     case DPARAM:
-    case DPARAM2:
         if (!self->tag) {
             self->tag = PyMem_New(char, 1);
 	    self->tag[0] = '\0';
