@@ -95,7 +95,7 @@ def parse_adzapper_file (filename):
     res = []
     is_comment = re.compile('^\s*(#.*)?$').match
     content = False # skip content until __DATA__ marker
-    for line in open(filename):
+    for line in file(filename):
         if not content:
             content = line.startswith('__DATA__')
         elif not is_comment(line):
@@ -107,13 +107,12 @@ def parse_adzapper_line (line, res):
     res.append(line.split(None, 1))
 
 
-def write_filters (res):
-    filename = os.path.join("config", "adzapper.zap")
+def write_filters (res, filename):
     if os.path.exists(filename):
         remove(filename)
     zapfile = file(filename, 'w')
     d = {"title": xmlify("AdZapper filters"),
-         "desc": xmlify("Automatically generated on %s" % date),
+         "desc": xmlify("Automatically generated from adzap2wc.py on %s"%date),
     }
     zapfile.write("""<?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
@@ -144,9 +143,10 @@ def convert_adzapper_pattern (pattern):
     pattern = pattern.replace(".", "\\.")
     pattern = pattern.replace("?", "\\?")
     pattern = pattern.replace("+", "\\+")
-    pattern = re.sub(r"/(?!/)", r"/+", pattern)
-    pattern = pattern.replace("**", ".*?")
-    pattern = re.sub(r"([^.])\*([^?]|$)", r"\1[^/]*\2", pattern)
+    # this is overkill
+    #pattern = re.sub(r"/(?!/)", r"/+", pattern)
+    pattern = pattern.replace("**", ".*")
+    pattern = re.sub(r"([^.])\*", r"\1[^/]*", pattern)
     return pattern
 
 
@@ -183,26 +183,28 @@ def write_block (zapfile, adclass, pattern, replacement=None):
 def get_rule_dict (adclass, pattern):
     return {
         'title': xmlify("AdZapper %s filter" % adclass),
-        'desc': xmlify("Automatically generated, you should not edit this filter."),
+        'desc': xmlify("Automatically generated."),
         'url': xmlify(pattern),
     }
 
 
-def download_and_parse ():
-    tmpfile = download_adzapper_file()
-    if diff(tmpfile, ADZAPPER_FILE):
-        move(tmpfile, ADZAPPER_FILE)
-        parse()
-    else:
-        print "No changes in AdZapper config"
-        remove(tmpfile)
-
-
-def parse ():
+def _test ():
     ads = parse_adzapper_file(ADZAPPER_FILE)
-    write_filters(ads)
+    filename = os.path.join("config", "adzapper.zap")
+    write_filters(ads, filename)
 
 
 if __name__=='__main__':
-    #download_and_parse()
-    parse()
+    _test()
+    #tmpfile = download_adzapper_file()
+    #if diff(tmpfile, ADZAPPER_FILE):
+    #    move(tmpfile, ADZAPPER_FILE)
+    #    ads = parse_adzapper_file(tmpfile)
+    #    filename = os.path.join("config", "adzapper.zap")
+    #    if os.path.exists(filename):
+    #        merge_filters(ads, filename)
+    #    else:
+    #        write_filters(ads, filename)
+    #else:
+    #    print "No changes in AdZapper config"
+    #    remove(tmpfile)
