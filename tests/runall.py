@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 import unittest, os, getopt, sys
 
@@ -40,8 +41,11 @@ def runall (verbosity):
     mysuite = unittest.TestSuite()
     for fname in get_test_files():
         klass = os.path.splitext(fname)[0]
-        exec 'from tests.%s import suite' % klass
-        mysuite.addTest(suite)
+        try:
+            exec 'from tests.%s import suite' % klass
+            mysuite.addTest(suite)
+        except ImportError:
+            pass
     runner = unittest.TextTestRunner(verbosity=verbosity)
     runner.run(mysuite)
 
