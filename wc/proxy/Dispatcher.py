@@ -65,11 +65,12 @@ if socket.has_ipv6:
         if msg[0] not in (97, 10047):
             raise
 
-def create_socket (family, socktype, sslctx=None):
+def create_socket (family, socktype):
     """Create a socket with given family and type. If SSL context
        is given an SSL socket is created"""
     sock = socket.socket(family, socktype)
-    sock.settimeout(wc.configuration.config['timeout'])
+    # XXX disable custom timeouts for now
+    #sock.settimeout(wc.configuration.config['timeout'])
     socktypes_inet = [socket.AF_INET]
     if has_ipv6:
         socktypes_inet.append(socket.AF_INET6)
@@ -78,11 +79,6 @@ def create_socket (family, socktype, sslctx=None):
         # immediately, possibly wasting bandwidth but improving
         # responsiveness for fast networks
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    if sslctx is not None:
-        # make SSL socket
-        import OpenSSL
-        # XXX has SSL its own timeout?
-        sock = OpenSSL.SSL.Connection(sslctx, sock)
     return sock
 
 
@@ -137,15 +133,10 @@ class Dispatcher (object):
             return socket.AF_INET6
         return socket.AF_INET
 
-    def create_socket (self, family, socktype, sslctx=None):
-        self.family_and_type = family, socktype
-        self.socket = create_socket(family, socktype, sslctx=sslctx)
+    def create_socket (self, family, socktype):
+        self.family_and_type = (family, socktype)
+        self.socket = create_socket(family, socktype)
         self.socket.setblocking(0)
-        if socktype == socket.SOCK_STREAM:
-            # disable NAGLE algorithm, which means sending pending data
-            # immediately, possibly wasting bandwidth but improving
-            # responsiveness for fast networks
-            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.add_channel()
 
     def set_socket (self, sock):
