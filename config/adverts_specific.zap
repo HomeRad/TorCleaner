@@ -219,11 +219,16 @@
 
 <rewrite sid="wc.423"
  tag="img">
-  <title lang="de">Freshmeat Werbung</title>
+  <title lang="de">OSDN Werbung</title>
   <title lang="en">Freshmeat ads</title>
+  <description lang="de">OSDN Werbung bei freshmeat.net und anderen.</description>
   <description lang="en">Freshmeat ad server</description>
-  <matchurl>freshmeat\.net</matchurl>
   <attr name="src">fmads\.osdn\.com</attr>
+</rewrite>
+
+<rewrite sid="wc.26">
+  <title lang="de">OSDN Werbung 2</title>
+  <attr>ads\d\.osdn\.com</attr>
 </rewrite>
 
 <rewrite sid="wc.425">
