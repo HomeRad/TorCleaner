@@ -34,10 +34,18 @@ from distutils.core import setup, Extension, DEBUG
 import distutils.dist
 distklass = distutils.dist.Distribution
 from distutils.command.install import install
-from distutils.command.build_ext import build_ext
+from distutils.command.bdist_wininst import bdist_wininst
 from distutils.command.install_data import install_data
 from distutils.file_util import write_file
-from distutils import util
+from distutils.dir_util import create_tree, remove_tree
+from distutils import util, log
+
+
+# cross compile config
+cc = os.environ.get("CC")
+win_cross_compiling = cc is not None and "mingw32" in cc
+# directory with cross compiled (for win32) python
+win_python_dir = "/home/calvin/src/python-cvs/dist/src/"
 
 
 def p (path):
@@ -157,6 +165,86 @@ class MyDistribution (distklass, object):
         util.execute(write_file, (filename, data),
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
+
+class MyBdistWininst (bdist_wininst, object):
+    """bdist_wininst command supporting cross compilation"""
+
+    def run (self):
+        if (sys.platform != "win32" and not win_cross_compiling and
+            (self.distribution.has_ext_modules() or
+             self.distribution.has_c_libraries())):
+            raise DistutilsPlatformError \
+                  ("distribution contains extensions and/or C libraries; "
+                   "must be compiled on a Windows 32 platform")
+
+        if not self.skip_build:
+            self.run_command('build')
+
+        install = self.reinitialize_command('install', reinit_subcommands=1)
+        install.root = self.bdist_dir
+        install.skip_build = self.skip_build
+        install.warn_dir = 0
+
+        install_lib = self.reinitialize_command('install_lib')
+        # we do not want to include pyc or pyo files
+        install_lib.compile = 0
+        install_lib.optimize = 0
+
+        # If we are building an installer for a Python version other
+        # than the one we are currently running, then we need to ensure
+        # our build_lib reflects the other Python version rather than ours.
+        # Note that for target_version!=sys.version, we must have skipped the
+        # build step, so there is no issue with enforcing the build of this
+        # version.
+        target_version = self.target_version
+        if not target_version:
+            assert self.skip_build, "Should have already checked this"
+            target_version = sys.version[0:3]
+        plat_specifier = ".%s-%s" % (util.get_platform(), target_version)
+        build = self.get_finalized_command('build')
+        build.build_lib = os.path.join(build.build_base,
+                                       'lib' + plat_specifier)
+
+        # Use a custom scheme for the zip-file, because we have to decide
+        # at installation time which scheme to use.
+        for key in ('purelib', 'platlib', 'headers', 'scripts', 'data'):
+            value = string.upper(key)
+            if key == 'headers':
+                value = value + '/Include/$dist_name'
+            setattr(install,
+                    'install_' + key,
+                    value)
+
+        log.info("installing to %s", self.bdist_dir)
+        install.ensure_finalized()
+
+        # avoid warning of 'install_lib' about installing
+        # into a directory not in sys.path
+        sys.path.insert(0, os.path.join(self.bdist_dir, 'PURELIB'))
+
+        install.run()
+
+        del sys.path[0]
+
+        # And make an archive relative to the root of the
+        # pseudo-installation tree.
+        from tempfile import mktemp
+        archive_basename = mktemp()
+        fullname = self.distribution.get_fullname()
+        arcname = self.make_archive(archive_basename, "zip",
+                                    root_dir=self.bdist_dir)
+        # create an exe containing the zip-file
+        self.create_exe(arcname, fullname, self.bitmap)
+        # remove the zip-file again
+        log.debug("removing temporary file '%s'", arcname)
+        os.remove(arcname)
+
+        if not self.keep_temp:
+            remove_tree(self.bdist_dir, dry_run=self.dry_run)
+
+    # run()
+
+
 # global include dirs
 include_dirs = []
 # global macros
@@ -167,13 +255,6 @@ extra_compile_args = []
 library_dirs = []
 # libraries
 libraries = []
-
-# cross compile config
-cc = os.environ.get("CC")
-win_cross_compiling = cc is not None and "mingw32" in cc
-# directory with cross compiled (for win32) python
-win_python_dir = "/home/calvin/src/python-cvs/dist/src/"
-
 
 # distinguish the different platforms
 if os.name=='nt':
@@ -258,7 +339,7 @@ scripts = [
     'webcleaner-certificates',
 ]
 if os.name=='nt' or win_cross_compiling:
-scripts.append('install-webcleaner.py')
+    scripts.append('install-webcleaner.py')
 
 # now to the main stuff
 myname = "Bastian Kleineidam"
@@ -305,6 +386,7 @@ setup (name = "webcleaner",
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
                    'install_data': MyInstallData,
+                   'bdist_wininst': MyBdistWininst,
                   },
        data_files = [('share/webcleaner/config',
       ['config/webcleaner.conf',
