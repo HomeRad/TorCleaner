@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import AppName, Version, config
-from wc.update import update as _update
+from wc.update import update_filter as _update_filter
 from wc.update import update_ratings as _update_ratings
 from cStringIO import StringIO as _StringIO
 
