@@ -55,7 +55,7 @@ crossbuild: all
 	CC=/usr/bin/i586-mingw32msvc-gcc \
 	CCSHARED=/usr/bin/i586-mingw32msvc-gcc \
 	  CXX=/usr/bin/i586-mingw32msvc-g++ \
-	  LDSHARED="/usr/bin/i586-mingw32msvc-gcc" \
+	  LDSHARED="/usr/bin/i586-mingw32msvc-gcc --entry _DllMain@12" \
 	  PY_HOST_PLATFORM=nt \
 	  $(PYTHON) setup.py build -c mingw32 bdist_wininst \
 	  2>&1 | tee --append crossbuild.log
