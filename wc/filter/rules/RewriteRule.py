@@ -153,8 +153,8 @@ class RewriteRule (UrlRule):
     def filter_tag (self, tag, attrs):
         #debug(NIGHTMARE, "rule %s filter_tag" % self.title)
         part = self.replace[0]
-        #debug(NIGHTMARE, "original tag", tag, "attrs", attrs)
-        #debug(NIGHTMARE, "replace", num_part(part), "with", self.replace[1])
+        #debug(NIGHTMARE, "original tag", `tag`, "attrs", attrs)
+        #debug(NIGHTMARE, "replace", num_part(part), "with", `self.replace[1]`)
         if part==TAGNAME:
             return (STARTTAG, self.replace[1], attrs)
         if part==TAG:
