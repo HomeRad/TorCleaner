@@ -93,4 +93,5 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
   Big problem: how do we decide when to send out IPv6 DNS queries?
 
 - integrate with http://mute-net.sourceforge.net/ somehow?
+  integrate with Coral somehow (appending .nyud.net:8090)?
 
