@@ -29,7 +29,7 @@ class ImageReducer (wc.filter.Filter.Filter):
     orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
-    rulenames = []
+    rulenames = ["imagereduce"]
     # which mime types this filter applies to
     mimelist = [wc.filter.compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
@@ -38,18 +38,29 @@ class ImageReducer (wc.filter.Filter.Filter):
         super(ImageReducer, self).__init__()
         # minimal number of bytes before we start reducing
         self.minimal_size_bytes = 5120
+        # reduced JPEG quality
+        self.quality = 20
+
+
+    def addrule (self, rule):
+        """add given rule to filter, filling config values"""
+        super(ImageReducer, self).addrule(rule)
+        self.minimal_size_bytes = rule.minimal_size_bytes
+        self.quality = rule.quality
 
 
     def filter (self, data, **attrs):
         """feed image data to buffer"""
-        if not attrs.has_key('imgreducer_buf'): return data
+        if not attrs.has_key('imgreducer_buf'):
+            return data
         attrs['imgreducer_buf'].write(data)
         return ''
 
 
     def finish (self, data, **attrs):
         """feed image data to buffer, then convert it and return result"""
-        if not attrs.has_key('imgreducer_buf'): return data
+        if not attrs.has_key('imgreducer_buf'):
+            return data
         p = attrs['imgreducer_buf']
         if data: p.write(data)
         p.seek(0)
@@ -58,7 +69,7 @@ class ImageReducer (wc.filter.Filter.Filter):
             data = StringIO.StringIO()
             if attrs.get('imgreducer_convert'):
                 img = img.convert()
-            img.save(data, "JPEG", quality=10, optimize=1)
+            img.save(data, "JPEG", quality=self.quality, optimize=1)
         except IOError:
             # return original image data on error
             # XXX the content type is pretty sure wrong
