@@ -11,10 +11,8 @@ SPLINTOPTS := +posixlib \
 	      -nestcomment -ifempty
 PYCHECKEROPTS := -F test/pycheckrc
 PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
-	bk/*.py bk/HtmlParser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
-	wc/net/dns/*.py wc/net/*.py \
-	wc/webgui/*.py wc/webgui/context/*.py \
-	wc/webgui/simpletal/*.py wc/magic/*.py
+	wc/proxy/*.py wc/proxy/auth/*.py wc/webgui/*.py \
+	wc/webgui/context/*.py wc/webgui/simpletal/*.py wc/magic/*.py
 
 SERVICEDIR := /etc/webcleaner/service
 
