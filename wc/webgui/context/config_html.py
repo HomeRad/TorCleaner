@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 # be sure not to import something in the context namespace we do not want
 import base64
-from wc import i18n, AppName, filtermodules, ip
+from wc import i18n, AppName, filtermodules, ip, sort_seq
 from wc import Configuration as _Configuration
 
 # translations
@@ -33,7 +33,7 @@ for _i in filtermodules:
     config['filterdict'][_i] = False
 for _i in config['filters']:
     config['filterdict'][_i] = True
-config['allowedhostset'] = ip.map2hosts(config['allowedhosts'])
+config['allowedhostlist'] = sort_seq(ip.map2hosts(config['allowedhosts']))
 
 # form execution
 def exec_form (form):
@@ -72,7 +72,6 @@ def exec_form (form):
         _form_addallowed(form['newallowed'].value.strip())
     elif form.has_key('delallowed') and form.has_key('allowedhosts'):
         _form_delallowed(form['allowedhosts'])
-    # XXX
     # no filter hosts
     # XXX
     if info:
@@ -156,10 +155,12 @@ def _form_filtermodules (form):
 
 
 def _form_addallowed (host):
-    config['allowedhostset'].add(host)
-    config['allowedhosts'] = ip.hosts2map(config['allowedhostset'])
-    config['allowedhostset'] = ip.map2hosts(config['allowedhosts'])
-    info.append(i18n._("Allowed host successfully added"))
+    hosts = ip.map2hosts(config['allowedhosts'])
+    if host not in hosts:
+        hosts.add(host)
+        config['allowedhosts'] = ip.hosts2map(hosts)
+        config['allowedhostlist'] = sort_seq(hosts)
+        info.append(i18n._("Allowed host successfully added"))
 
 
 def _form_delallowed (hosts):
