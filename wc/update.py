@@ -1,6 +1,4 @@
-import os, md5
-from wc import ConfigDir, ZapperParser, Configuration, filterconf_files
-from wc import Name, Version
+import os, md5, wc
 from wc.log import *
 
 #
@@ -30,7 +28,7 @@ from wc.log import *
 # modified by Bastian Kleineidam <calvin@users.sf.net> for WebCleaner
 
 import httplib, urllib, urllib2, re, socket
-UA_STR = '%s/%s' % (Name, Version)
+UA_STR = '%s/%s' % (wc.Name, wc.Version)
 
 def decode (page):
     "gunzip or deflate a compressed page"
@@ -117,26 +115,27 @@ def update (config, baseurl, dryrun=False, log=None):
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
     """
+    chg = False
     url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
     except IOError, msg:
         print >>log, "error fetching %s:"%url, msg
-        return False
-    chg = False
+        return chg
+    # remember all local config files
     filemap = {}
-    for filename in filterconf_files():
+    for filename in wc.filterconf_files():
         filemap[os.path.basename(filename)] = filename
-    lines = page.read().splitlines()
-    for line in lines:
+    # read md5sums
+    for line in page.read().splitlines():
         if "<" in line:
             print >>log, "error fetching", url
-            return False
+            return chg
         if not line:
             continue
         md5sum, filename = line.split()
         assert filename.endswith('.zap')
-        fullname = os.path.join(ConfigDir, filename)
+        fullname = os.path.join(wc.ConfigDir, filename)
         # compare checksums
         if filemap.has_key(filename):
             f = file(fullname)
@@ -150,9 +149,10 @@ def update (config, baseurl, dryrun=False, log=None):
             print >>log, "updating filter", filename
         else:
             print >>log, "adding new filter", filename
+        # parse new filter
         url = baseurl+filename+".gz"
         page = open_url(url)
-        p = ZapperParser(fullname)
+        p = wc.ZapperParser(fullname, compile_data=False)
         p.parse(page, config)
         chg = config.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
 
@@ -161,17 +161,16 @@ def update (config, baseurl, dryrun=False, log=None):
         page = open_url(url)
     except IOError, msg:
         print >>log, "error fetching %s:"%url, msg
-        return False
-    lines = page.read().splitlines()
-    for line in lines:
+        return chg
+    for line in page.read().splitlines():
         if "<" in line:
             print >>log, "error fetching", url
-            return False
+            return chg
         if not line:
             continue
         md5sum, filename = line.split()
         # XXX UNIX-generated md5sum filenames with subdirs are not portable
-        fullname = os.path.join(ConfigDir, filename)
+        fullname = os.path.join(wc.ConfigDir, filename)
         # compare checksums
         if os.path.exists(fullname):
             f = file(fullname)
@@ -200,11 +199,10 @@ def update (config, baseurl, dryrun=False, log=None):
 
 
 def _test ():
-    # read local configuration
-    config = Configuration()
     # test base url for all files
+    initlog("test/logging.conf")
     baseurl = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
-    update(config, baseurl, dryrun=True)
+    update(wc.Configuration(), baseurl, dryrun=True)
 
 
 if __name__=='__main__':
