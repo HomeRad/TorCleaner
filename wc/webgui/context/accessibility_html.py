@@ -1,8 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 from wc import i18n, AppName
 
-title = i18n._("%s accessibility statement") % AppName
-t_feedback = i18n._("Feedback")
 tt_feedback = i18n._("%s feedback information") % AppName
 t_skip_to_main = i18n._("Skip to main content")
 t_webcleaner = AppName

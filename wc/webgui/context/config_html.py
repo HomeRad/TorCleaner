@@ -8,44 +8,25 @@ from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 
 # translations
-t_accessibility = i18n._("Accessibility statement")
 tt_accessibility = i18n._("accessibility features of these pages")
-t_feedback = i18n._("Feedback")
 tt_feedback = i18n._("%s feedback information") % AppName
-t_skip_to_main = i18n._("Skip to main content")
 t_webcleaner = AppName
-t_proxyconf = i18n._("Proxy configuration")
-t_filterconf = i18n._("Filter configuration")
-t_proxy_settings = i18n._("Proxy settings")
-t_parentproxy_settings = i18n._("Parent proxy settings")
-t_port = i18n._("Port number")
 tt_port = i18n._("Port number the proxy is listening on for requests")
-t_proxyuser = i18n._("Username")
 tt_proxyuser = i18n._("Username used for proxy authentication")
-t_proxypass = i18n._("Password")
 tt_proxypass = i18n._("Password used for proxy authentitaction")
 t_parentproxy = i18n._("Hostname")
 tt_parentproxy = i18n._("Hostname of the parent proxy")
-t_parentproxyport = i18n._("Port number")
 tt_parentproxyport = i18n._("Port number of the parent proxy")
-t_parentproxyuser = i18n._("Username")
 tt_parentproxyuser = i18n._("Username used for parent proxy authentication")
-t_parentproxypass = i18n._("Password")
 tt_parentproxypass = i18n._("Password used for parent proxy authentication")
-t_timeout = i18n._("Timeout")
 tt_timeout = i18n._("Connection timeout in seconds")
-t_proxyfiltermodules = i18n._("Proxy filter modules")
-t_allowedhosts = i18n._("Allowed hosts")
 tt_allowedhosts = i18n._("List of hosts allowed to use this proxy.")
 tt_addallowed = i18n._("Only numeric IPs/networks are useful as DNS resolution is not performed.")
 t_remove = i18n._("Remove selected")
 t_add = i18n._("Add new")
-t_nofilterhosts = i18n._("Don't filter hosts")
 tt_nofilterhosts = i18n._("List of hostnames the proxy must not filter.")
 tt_addnofilter = i18n._("Be sure to supply all host aliases and IPs as DNS resolution is not performed.")
 t_configapply = i18n._("Apply")
-t_info = i18n._("Info")
-t_error = i18n._("Error")
 
 # config vars
 info = []
