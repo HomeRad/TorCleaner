@@ -6,7 +6,7 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "get_ntlm_credentials", "parse_ntlm_credentials",
            "check_ntlm_credentials"]
 
-import des, md4, utils, base64
+import des, md4, utils, base64, random
 
 # nonce dictionary
 # XXX regularly delete nonces
@@ -37,8 +37,8 @@ def parse_ntlm_challenge (challenge):
         # empty challenge (type0) encountered
         res['type'] = 0
         return res, challenge
-    res['nonce'] = chal[24:32]
     res['type'] = 2
+    res['nonce'] = chal[24:32]
     return res, remainder.strip()
 
 
@@ -47,7 +47,7 @@ def get_ntlm_credentials (challenge, **attrs):
     if ctype==1:
         msg = create_message1()
     elif ctype==3:
-        nonce = attrs['nonce']
+        nonce = challenge['nonce']
         domain = attrs['domain']
         username = attrs['username']
         host = attrs['host']
@@ -68,7 +68,7 @@ def parse_ntlm_credentials (credentials):
     if not creds.startswith('NTLMSSP\x00'):
         # invalid credentials, skip
         return res, remainder.strip()
-    type = creds[8]
+    type = ord(creds[8])
     if type==1:
         res['type'] = 1
         domain_len = int(creds[16:18])
@@ -215,9 +215,9 @@ def create_message2 ():
     protocol = 'NTLMSSP\x00'    #name
     type = '\x02'
     zero7 = '\x00'*7
-    msglen = '\x28'
+    msglen = '\x00\x28'
     zero2 = '\x00'*2
-    flags="\x82\x01"
+    flags="\x01\x82"
     # zero2 again
     nonce = "%08d" % (random.random()*100000000) # eight random bytes
     assert nonce not in nonces
@@ -226,12 +226,12 @@ def create_message2 ():
     return "%(protocol)s%(type)s%(zero7)s%(msglen)s%(zero2)s%(flags)s%(zero2)s%(nonce)s%(zero8)s" % locals()
 
 
-def create_message3 (nonce, domain, username, host, flags="\x82\x01",
-                     lm_hashed_pw=None, nt_hashed_pw=None,
-                     ntlm_mode=0):
+def create_message3 (nonce, domain, username, host,
+                     lm_hashed_pw=None, nt_hashed_pw=None, ntlm_mode=0):
     protocol = 'NTLMSSP\x00'        # name
     type = '\x03'                   # type 3
     head = protocol + type + '\x00'*3
+    flags="\x01\x82"
     domain_rec = record(domain)
     user_rec = record(username)
     host_rec = record(host)
@@ -247,8 +247,8 @@ def create_message3 (nonce, domain, username, host, flags="\x82\x01",
     # length of the head and five infos for LM, NT, Domain, User, Host
     domain_offset = len(head) + 5 * 8
     # and unknown record info and flags' lenght
-    if nltm_mode == 0:
-        domain_offset = domain_offset + 8 + len(flags)
+    if ntlm_mode == 0:
+        domain_offset += 8 + len(flags)
     # create info fields
     domain_rec.create_record_info(domain_offset)
     user_rec.create_record_info(domain_rec.next_offset)

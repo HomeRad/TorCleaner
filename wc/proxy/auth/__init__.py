@@ -112,15 +112,29 @@ def check_credentials (creds, **attrs):
 
 def _test ():
     #print parse_credentials("Basic dGVzdDp0ZXN0")
-    attrs = {"username":"wummel", "password_b64":"", "uri":"/", "method":"GET"}
-    challenges = get_challenges()
-    print "challenges", challenges
+    #attrs = {, "password_b64":"", "uri":"/", "method":"GET"}
+    attrs = {"username":"wummel", "type":1,}
+    challenges = get_challenges(type=0)
+    print "challenges 0", challenges
     challenges = parse_challenges(", ".join(challenges))
-    print "parsed challenges", challenges
+    print "parsed challenges 0", challenges
     creds = get_credentials(challenges, **attrs)
-    print "credentials", creds
+    print "credentials 1", creds
     creds = parse_credentials(creds)
-    print "parsed credentials", creds
+    print "parsed credentials 1", creds
+    attrs['host'] = creds['NTLM'][0]['host']
+    attrs['domain'] = creds['NTLM'][0]['domain']
+    print check_credentials(creds, **attrs)
+    creds['type'] = 2
+    challenges = get_challenges(**creds)
+    print "challenges 2", challenges
+    challenges = parse_challenges(", ".join(challenges))
+    print "parsed challenges 2", challenges
+    attrs['type'] = 3
+    creds = get_credentials(challenges, **attrs)
+    print "credentials 3", creds
+    creds = parse_credentials(creds)
+    print "parsed credentials 3", creds
     print check_credentials(creds, **attrs)
 
 
