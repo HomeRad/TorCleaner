@@ -42,10 +42,8 @@ orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['rewrite','nocomments','javascript']
 mimelist = map(compileMime, ['text/html'])
 
-# regular expression which matches tag attributes that dont
-# need to be quoted
-# modern browsers can cope with a lot of non-quoted content
-_noquoteval = re.compile("^[-+~a-zA-Z0-9_/.#%:?,$]+$")
+# whitespace matcher
+_has_ws = re.compile("\s").search
 
 class Rewriter (Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
@@ -98,7 +96,8 @@ class Rewriter (Filter):
 
 
 class HtmlFilter (HtmlParser,JSListener):
-    """The parser has the rules, a data buffer and a rule stack.
+    """The parser has filter rules, data buffers and a rule stack.
+       XXX fixme: should make internal functions start with _
        States:
        parse => default parsing state, no background fetching
        wait  => this filter (or a recursive HtmlFilter used by javascript)
@@ -112,12 +111,14 @@ class HtmlFilter (HtmlParser,JSListener):
                 inbuf:                      [-------------- ...
 
                 When finished with script data, the buffers look like
-                XXX
+                XXX (to be done)
 
        After a wait state, replays the waitbuf and re-feed the inbuf
        data.
     """
+
     def __init__ (self, rules, url, **opts):
+        "init rules and buffers"
         if wc.config['showerrors']:
             self.error = self._error
             self.warning = self._warning
@@ -145,15 +146,17 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def __repr__ (self):
+        """representation with recursion level and state"""
         return "<HtmlFilter[%d] %s>" % (self.level, self.state)
 
 
     def _debug (self, level, *args):
+        """debug with recursion level and state"""
         debug(level, "HtmlFilter[%d,%s]:"%(self.level,self.state), *args)
 
 
     def _debugbuf (self):
-        """print debugging information about buffer status"""
+        """print debugging information about data buffer status"""
         #self._debug(NIGHTMARE, "self.buf", `self.buf`)
         #self._debug(NIGHTMARE, "self.waitbuf", `self.waitbuf`)
         #self._debug(NIGHTMARE, "self.inbuf", `self.inbuf.getvalue()`)
@@ -161,7 +164,9 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def feed (self, data):
+        """feed some data to the parser"""
         if self.state=='parse':
+            # look if we must replay something
             if self.waited:
                 self.waited = 0
                 waitbuf, self.waitbuf = self.waitbuf, []
@@ -171,18 +176,21 @@ class HtmlFilter (HtmlParser,JSListener):
                 self.inbuf.close()
                 self.inbuf = StringIO()
             if data:
+                # only feed non-empty data
                 #self._debug(NIGHTMARE, "feed", `data`)
                 HtmlParser.feed(self, data)
             else:
                 #self._debug(NIGHTMARE, "feed")
                 pass
         else:
+            # wait state --> put in input buffer
             #self._debug(NIGHTMARE, "wait")
             self.inbuf.write(data)
 
 
     def flush (self):
         #self._debug(HURT_ME_PLENTY, "flush")
+        # flushing in wait state raises a filter exception
         if self.state=='wait':
             raise FilterException("HtmlFilter[%d]: still waiting for data"%self.level)
         HtmlParser.flush(self)
@@ -438,7 +446,11 @@ class HtmlFilter (HtmlParser,JSListener):
             if mo:
                 ver = float(mo.group('num'))
         url = urlparse.urljoin(self.url, url)
-        #self._debug(HURT_ME_PLENTY, "JS jsScriptSrc", url, ver)
+        #self._debug(HURT_ME_PLENTY, "JS jsScriptSrc", `url`, `ver`)
+        if _has_ws(url):
+            print >> sys.stderr, "HtmlFilter[%d]: broken JS url"%self.level,\
+                     `url`, "at", `self.url`
+            return
         self.state = 'wait'
         self.js_src = 'True'
         client = HttpProxyClient(self.jsScriptData, (url, ver))
@@ -512,6 +524,12 @@ class HtmlFilter (HtmlParser,JSListener):
         self.js_popup += 1
 
 
+    def jsProcessError (self, msg):
+        """process javascript syntax error"""
+        print >>sys.stderr, "JS error at", self.url
+        print >>sys.stderr, msg
+
+
     def jsEndElement (self, item):
         """parse generated html for scripts"""
         #self._debug(NIGHTMARE, "jsEndElement buf", self.buf)
@@ -524,7 +542,8 @@ class HtmlFilter (HtmlParser,JSListener):
                 # syntax error, ignore
                 print >>sys.stderr, "JS end self.buf", self.buf
                 return
-            if self.buf[-3][0]==STARTTAG and self.buf[-3][1]=='script':
+            if len(self.buf) > 2 and \
+               self.buf[-3][0]==STARTTAG and self.buf[-3][1]=='script':
                 del self.buf[-1]
         if len(self.buf)<2 or self.buf[-1][0]!=DATA or \
             self.buf[-2][0]!=STARTTAG or self.buf[-2][1]!='script':
@@ -550,16 +569,20 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def errorfun (self, msg, name):
+        """print msg to stderr with name prefix"""
         print >> sys.stderr, name, "parsing %s: %s" % (self.url, msg)
 
 
     def _error (self, msg):
+        """signal a filter/parser error"""
         self.errorfun(msg, "error")
 
 
     def _warning (self, msg):
+        """signal a filter/parser warning"""
         self.errorfun(msg, "warning")
 
 
     def _fatalError (self, msg):
+        """signal a fatal filter/parser error"""
         self.errorfun(msg, "fatalError")
