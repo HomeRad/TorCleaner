@@ -13,7 +13,7 @@ def _main ():
     initlog("test/logging.conf")
     import wc
     from wc.proxy.Headers import WcMessage
-    wc.config = wc.Configuration()
+    wc.config = wc.init()
     wc.config['filters'] = ['Blocker',]
     wc.config.init_filter_modules()
     from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST

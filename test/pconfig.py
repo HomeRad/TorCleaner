@@ -10,7 +10,7 @@ def _main ():
     initlog("test/logging.conf")
     import hotshot
     profile = hotshot.Profile("config.prof")
-    profile.run("config = wc.configuration.Configuration()")
+    profile.run("config = wc.configuration.init()")
     profile.close()
 
 

@@ -18,7 +18,7 @@ def _main ():
     from test import initlog
     initlog("test/logging.conf")
     import wc
-    wc.configuration.config = wc.configuration.Configuration()
+    wc.configuration.config = wc.configuration.init()
     wc.config['filters'] = ['ImageReducer']
     wc.config.init_filter_modules()
     from wc.proxy.Headers import WcMessage

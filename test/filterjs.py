@@ -64,7 +64,7 @@ def _main ():
         f = file(fname)
     from test import initlog, disable_rating_rules
     initlog("test/logging.conf")
-    wc.configuration.config = wc.configuration.Configuration()
+    wc.configuration.config = wc.configuration.init()
     disable_rating_rules(wc.config)
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()

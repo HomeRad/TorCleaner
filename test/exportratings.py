@@ -6,7 +6,7 @@ def _main ():
     from test import initlog
     initlog("test/logging.conf")
     import wc
-    wc.config = wc.Configuration()
+    wc.config = wc.init()
     from wc.filter.Rating import rating_exportall
     rating_exportall()
 
