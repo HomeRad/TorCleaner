@@ -21,7 +21,8 @@
 <table>
 <tr>
 <td>
-<label for="port" tal:attributes="title tt_port" i18n:translate=""
+<label for="port" i18n:translate=""
+ i18n:attributes="title Port number the proxy is listening on for requests"
  >Port number</label><sup>*</sup>
 </td>
 <td>
@@ -32,7 +33,7 @@
 <tr>
 <td>
 <label for="timeout" i18n:translate=""
- tal:attributes="title tt_timeout">Timeout</label>
+ i18n:attributes="title Connection timeout in seconds">Timeout</label>
 </td>
 <td>
 <input class="number" type="text" name="timeout" id="timeout" value=""
@@ -41,8 +42,8 @@
 </tr>
 <tr>
 <td>
-<label for="proxyuser" i18n:translate=""
- tal:attributes="title tt_proxyuser">Username</label>
+<label i18n:attributes="title Username used for proxy authentication"
+ for="proxyuser" i18n:translate="">Username</label>
 </td>
 <td>
 <input class="text" type="text" name="proxyuser" id="proxyuser"
@@ -51,8 +52,8 @@
 </tr>
 <tr>
 <td>
-<label for="proxypass" i18n:translate=""
- tal:attributes="title tt_proxypass">Password</label>
+<label i18n:attributes="title Password used for proxy authentitaction"
+ for="proxypass" i18n:translate="">Password</label>
 </td>
 <td>
 <input class="text" type="password" name="proxypass" id="proxypass" value="">
@@ -71,7 +72,7 @@
 <tr>
 <td>
 <label for="parentproxy" i18n:translate=""
- tal:attributes="title tt_parentproxy">Hostname</label>
+ i18n:attributes="title Hostname of the parent proxy">Hostname</label>
 </td>
 <td>
 <input class="text" type="text" name="parentproxy" id="parentproxy"
@@ -81,7 +82,7 @@
 <tr>
 <td>
 <label for="parentproxyport" i18n:translate=""
- tal:attributes="title tt_parentproxyport">Port number</label>
+ i18n:attributes="title Port number of the parent proxy">Port number</label>
 </td>
 <td>
 <input class="number" type="text" name="parentproxyport" id="parentproxyport"
@@ -90,8 +91,8 @@
 </tr>
 <tr>
 <td>
-<label for="parentproxyuser" i18n:translate=""
- tal:attributes="title tt_parentproxyuser">Username</label>
+<label i18n:attributes="title Username used for parent proxy authentication"
+ for="parentproxyuser" i18n:translate="">Username</label>
 </td>
 <td>
 <input class="text" type="text" name="parentproxyuser" id="parentproxyuser"
@@ -100,8 +101,8 @@
 </tr>
 <tr>
 <td>
-<label for="parentproxypass" i18n:translate=""
- tal:attributes="title tt_parentproxypass">Password</label>
+<label i18n:attributes="title Password used for parent proxy authentication"
+ for="parentproxypass" i18n:translate="">Password</label>
 </td>
 <td>
 <input class="text" type="password" name="parentproxypass"
@@ -130,7 +131,7 @@
 <tr>
 <td>
 <select name="allowedhosts" id="allowedhosts" multiple size="5"
- tal:attributes="title tt_allowedhosts">
+ i18n:attributes="title List of hosts allowed to use this proxy.">
 <option tal:repeat="host config/allowedhostlist" tal:attributes="value host">
 <span tal:replace="host">127.0.0.1</span>
 </option>
@@ -138,17 +139,17 @@
 </td>
 <td>
 <input type="submit" name="delallowed" value="Remove selected" class="submit"
- tal:attributes="value t_remove">
+ i18n:attributes="value Remove selected">
 </td>
 </tr>
 <tr>
 <td>
 <input class="text" type="text" name="newallowed" value=""
- tal:attributes="title tt_addallowed">
+ i18n:attributes="title Only numeric IPs/networks are useful as DNS resolution is not performed.">
 </td>
 <td>
 <input type="submit" name="addallowed" value="Add new" class="submit"
- tal:attributes="value t_add">
+ i18n:attributes="value Add new">
 </td>
 </tr>
 </table>
@@ -161,24 +162,24 @@
 <tr>
 <td>
 <select name="nofilterhosts" id="nofilterhosts" multiple size="5"
- tal:attributes="title tt_nofilterhosts">
+ i18n:attributes="title List of hostnames the proxy must not filter.">
 <option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
  tal:content="host">127.0.0.1</option>
 </select>
 </td>
 <td>
 <input type="submit" name="delnofilter" value="Remove selected" class="submit"
- tal:attributes="value t_remove">
+ i18n:attributes="value Remove selected">
 </td>
 </tr>
 <tr>
 <td>
 <input class="text" type="text" name="newnofilter" value=""
- tal:attributes="title tt_addnofilter">
+ i18n:attributes="title Be sure to supply all host aliases and IPs as DNS resolution is not performed.">
 </td>
 <td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"
- tal:attributes="value t_add">
+ i18n:attributes="value Add new">
 </td>
 </tr>
 </table>
@@ -188,7 +189,7 @@
 <tr>
 <td colspan="2">
 <input type="submit" value="Apply" class="submit"
- tal:attributes="value t_configapply">
+ i18n:attributes="value Apply">
 </td>
 </tr>
 </table>

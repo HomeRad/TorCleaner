@@ -8,7 +8,7 @@
 </head>
 <body>
 <p class="skip"><a accesskey="2" href="#main"
- tal:content="t_skip_to_main">Skip to main content</a></p>
+ i18n:translate="">Skip to main content</a></p>
 <div metal:use-macro="macros/macros/nav">Navigation</div>
 
 <div class="content" id="main">
@@ -16,11 +16,10 @@
 <p i18n:translate="">I wrote this software to get rid of advertisings. Adverts are nowadays so
 blatantly user-unfriendly I was fed up with them and now I can browse
 almost every site again without this annoying stuff.</p>
-<p i18n:translate="">If you have any suggestions or comments about WebCleaner, feel free to
+<p i18n:translate="">If you have any suggestions or comments about %(AppName)s, feel free to
 email me at
 <a href="mailto:calvin@users.sf.net">calvin@users.sf.net</a>.
 </p>
-
 </div>
 
 <div metal:use-macro="macros/macros/footer">Footer...</div>

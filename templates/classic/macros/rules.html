@@ -17,13 +17,13 @@
 <table>
 <div metal:define-macro="titledesc">
 <tr><td>
-<label for="rule_title" tal:content="t_ruletitle">Title</label>:
+<label for="rule_title" i18n:translate="">Title</label>:
 </td><td>
 <input type="text" class="text" name="rule_title" id="rule_title"
  value="Rule title" tal:attributes="value currule/title">
 </td></tr>
 <tr><td>
-<label for="rule_description" tal:content="t_ruledescription">Description</label>:
+<label for="rule_description" i18n:translate="">Description</label>:
 </td><td>
 <textarea name="rule_description" id="rule_description" cols="50" rows="5"
  tal:content="currule/desc">Rule description</textarea>
@@ -37,13 +37,13 @@
 <table>
 <div metal:define-macro="matchurl">
 <tr><td>
-<label for="rule_matchurl" tal:content="t_rulematchurl">Match URL</label>:
+<label for="rule_matchurl" i18n:translate="">Match URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_matchurl" id="rule_matchurl"
  value="Match url" tal:attributes="value currule/matchurl">
 </td></tr>
 <tr><td>
-<label for="rule_dontmatchurl" tal:content="t_ruledontmatchurl">Don't match URL</label>:
+<label for="rule_dontmatchurl" i18n:translate="">Don't match URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_dontmatchurl" id="rule_dontmatchurl"
  value="Don't match url" tal:attributes="value currule/dontmatchurl">
@@ -57,43 +57,43 @@
 <table>
 <div metal:define-macro="urlparts">
 <tr><td>
-<label for="rule_urlscheme" tal:content="t_ruleurlscheme">URL scheme</label>:
+<label for="rule_urlscheme" i18n:translate="">URL scheme</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlscheme" value="http"
  tal:attributes="value currule/scheme">
 </td></tr>
 <tr><td>
-<label for="rule_urlhost" tal:content="t_ruleurlhost">URL host</label>:
+<label for="rule_urlhost" i18n:translate="">URL host</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlhost" value="www.imadoofus.com"
  tal:attributes="value currule/host">
 </td></tr>
 <tr><td>
-<label for="rule_urlport" tal:content="t_ruleurlport">URL port</label>:
+<label for="rule_urlport" i18n:translate="">URL port</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlport" value="80"
  tal:attributes="value currule/port">
 </td></tr>
 <tr><td>
-<label for="rule_urlpath" tal:content="t_ruleurlpath">URL path</label>:
+<label for="rule_urlpath" i18n:translate="">URL path</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlpath" value="/hulla/bulla"
  tal:attributes="value currule/path">
 </td></tr>
 <tr><td>
-<label for="rule_urlparameters" tal:content="t_ruleurlparameters">URL parameters</label>:
+<label for="rule_urlparameters" i18n:translate="">URL parameters</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlparameters" value=""
  tal:attributes="value currule/parameters">
 </td></tr>
 <tr><td>
-<label for="rule_urlquery" tal:content="t_ruleurlquery">URL query</label>:
+<label for="rule_urlquery" i18n:translate="">URL query</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlquery" value=""
  tal:attributes="value currule/query">
 </td></tr>
 <tr><td>
-<label for="rule_urlfragment" tal:content="t_ruleurlfragment">URL fragment</label>:
+<label for="rule_urlfragment" i18n:translate="">URL fragment</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlfragment" value=""
  tal:attributes="value currule/fragment">
@@ -107,17 +107,17 @@
 <table>
 <div metal:define-macro="externfile">
 <tr><td>
-<span tal:replace="t_ruletitle">Title</span>:
+<span i18n:translate="">Title</span>:
 </td><td>
 <span tal:replace="currule/title">rule title</span>
 </td></tr>
 <tr><td>
-<span tal:replace="t_ruledescription">Description</span>:
+<span i18n:translate="">Description</span>:
 </td><td>
 <span tal:replace="currule/desc">rule description</span>
 </td></tr>
 <tr><td>
-<span tal:replace="t_rulefile">File</span>:
+<span i18n:translate="">Filename</span>:
 </td><td>
 <span tal:replace="currule/file">/path/to/file</span>
 </td></tr>
@@ -139,7 +139,7 @@ Rule url parts
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -190,14 +190,14 @@ Rule title and description
 Rule url parts
 </tr>
 <tr><td>
-<label for="rule_blockedurl" tal:content="t_ruleblockedurl">Blocked URL</label>:
+<label for="rule_blockedurl" i18n:translate="">Blocked URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_blockedurl" id="rule_blockedurl"
  value="http://www.calvinandhobbes.com/" tal:attributes="value currule/url">
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -212,20 +212,20 @@ Rule title and description
 Rule (don't) match url
 </tr>
 <tr><td>
-<label for="rule_headername" tal:content="t_ruleheadername">Header name</label>:
+<label for="rule_headername" i18n:translate="">Header name</label>:
 </td><td>
 <input type="text" class="text" name="rule_headername" id="rule_headername"
  value="x-meta" tal:attributes="value currule/name">
 </td></tr>
 <tr><td>
-<label for="rule_headervalue" tal:content="t_ruleheadervalue">Header value</label>:
+<label for="rule_headervalue" i18n:translate="">Header value</label>:
 </td><td>
 <input type="text" class="text" name="rule_headervalue" id="rule_headervalue"
  value="" tal:attributes="value currule/value">
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -240,27 +240,27 @@ Rule title and description
 Rule (don't) match url
 </tr>
 <tr><td>
-<label for="rule_imgwidth" tal:content="t_ruleimgwidth">Image width</label>:
+<label for="rule_imgwidth" i18n:translate="">Image width</label>:
 </td><td>
 <input type="text" class="number" name="rule_imgwidth" id="rule_imgwidth"
  value="1" tal:attributes="value string:${currule/width}">
 </td></tr>
 <tr><td>
-<label for="rule_imgheight"  tal:content="t_ruleimgheight">Image height</label>:
+<label for="rule_imgheight" i18n:translate="">Image height</label>:
 </td><td>
 <input type="text" class="number" name="rule_imgheight" id="rule_imgheight"
  value="1" tal:attributes="value string:${currule/height}">
 </td></tr>
 <!-- XXX todo: image type select -->
 <tr><td>
-<label for="rule_imgurl" tal:content="t_ruleimgurl">Blocked image URL</label>:
+<label for="rule_imgurl" i18n:translate="">Blocked image URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_imgurl" id="rule_imgurl"
  value="myblocked.gif" tal:attributes="value currule/url">
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -276,7 +276,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -292,7 +292,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -307,20 +307,20 @@ Rule title and description
 Rule (don't) match url
 </tr>
 <tr><td>
-<label for="rule_fallback" tal:content="t_rulefallback">Fallback URL</label>:
+<label for="rule_fallback" i18n:translate="">Fallback URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_fallback" id="rule_fallback"
  value="http://www..." tal:attributes="value currule/url">
 </td></tr>
 <tr><td>
-<span tal:replace="t_picsratings">Pics ratings</span>:
+<span i18n:translate="">PICS ratings</span>:
 </td><td>
 <div tal:repeat="service pics_services">
 <input tal:condition="currule/ratings/?service"
  type="checkbox" tal:attributes="name string:service_${service}" checked >
 <input tal:condition="not:currule/ratings/?service"
  type="checkbox" tal:attributes="name string:service_${service}">
-<span tal:content="t_service">Service</span>
+<span i18n:translate="">Service</span>
 <span tal:content="pics_data/?service/name">Netnanny</span>
 <br>
 <div tal:condition="currule/ratings/?service"
@@ -332,7 +332,7 @@ Rule (don't) match url
 <input tal:condition="not:currule/ratings/?service/?category"
  type="checkbox"
  tal:attributes="name string:category_${service}_${category}">
-<span tal:content="t_category">Category</span>
+<span i18n:translate="">Category</span>
 <span tal:content="category">adult</span>
 </div>
 </div>
@@ -341,7 +341,7 @@ Rule (don't) match url
 <tr>
 <td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td>
 </tr>
 </table>
@@ -357,13 +357,13 @@ Rule title and description
 Rule (don't) match url
 </tr>
 <tr><td>
-<label for="rule_search" tal:content="t_rulesearch">Replace search regex</label>:
+<label for="rule_search" i18n:translate="">Replace regex</label>:
 </td><td>
 <input type="text" class="text" name="rule_search" id="rule_search"
  value="A nasty word" tal:attributes="value currule/search">
 </td></tr>
 <tr><td>
-<label for="rule_replace" tal:content="t_rulereplace">Replacement</label>:
+<label for="rule_replace" i18n:translate="">Replacement</label>:
 </td><td>
 <input type="text" class="text" name="rule_replace" id="rule_replace"
  value="Something good" tal:attributes="value currule/replace">
@@ -371,7 +371,7 @@ Rule (don't) match url
 <tr>
 <td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -386,20 +386,20 @@ Rule (don't) match url
 <td>Rule (don't) match url</td>
 </tr>
 <tr><td>
-<label for="rule_tag" tal:content="t_ruletag">Tag name</label>:
+<label for="rule_tag" i18n:translate="">Tag name</label>:
 </td><td>
 <input type="text" class="text" name="rule_tag" id="rule_tag" value="img"
  tal:attributes="value currule/tag">
 </td></tr>
 <tr><td>
-<span tal:content="t_ruleattrs">Attributes</span>:
+<span i18n:translate="">Attributes</span>:
 </td><td>
 <table rules="cols" cellpadding="2">
 <thead>
 <tr style="border-bottom:1px solid black;">
 <td>&nbsp;</td>
-<th tal:content="t_attrname">Name</th>
-<th tal:content="t_attrval">Value</th>
+<th i18n:translate="">Name</th>
+<th i18n:translate="">Value</th>
 </tr>
 </thead>
 <tbody>
@@ -419,31 +419,31 @@ Rule (don't) match url
 </table>
 <span tal:condition="currule/attrs">
 <input type="submit" class="submit" name="removeattrs" value="Remove selected"
- tal:attributes="value t_removeattrs">
+ i18n:attributes="value Remove selected attributes">
 </span>
 </td></tr>
 <tr><td>
-<label for="attrname" tal:content="t_attrname">Name</label>:
+<label for="attrname" i18n:translate="">Name</label>:
 </td><td>
 <input type="text" class="text" name="attrname" id="attrname" value="href">
 </td></tr>
 <tr><td>
-<label for="attrval" tal:content="t_attrval">Value</label>:
+<label for="attrval" i18n:translate="">Value</label>:
 </td><td>
 <input type="text" class="text" name="attrval" id="attrval" value="">
 </td></tr>
 <tr><td>&nbsp;</td>
 <td><input type="submit" class="submit" name="addattr" value="Add attribute"
- tal:attributes="value t_addattr">
+ i18n:attributes="value Add attribute">
 </td></tr>
 <tr><td>
-<label for="rule_enclosedblock" tal:replace="t_enclosedblock">Enclosed block</label>:
+<label for="rule_enclosedblock" i18n:translate="">Enclosed block</label>:
 </td><td>
 <input type="text" class="text" name="rule_enclosedblock"
  id="rule_enclosedblock" value="" tal:attributes="value currule/enclosed">
 </td></tr>
 <tr><td>
-<label for="rule_rewritepart" tal:replace="t_replacepart">Replace part</label>:
+<label for="rule_rewritepart" i18n:translate="">Replace part</label>:
 </td><td>
 <select name="rule_rewritepart">
 <span tal:repeat="part partvalnames" tal:omit-tag="">
@@ -455,15 +455,14 @@ Rule (don't) match url
 </select>
 </td></tr>
 <tr><td>
-<label for="rule_rewritereplacement" 
- tal:replace="t_replacevalue">Replace value</label>:
+<label for="rule_rewritereplacement" i18n:translate="">Replace value</label>:
 </td><td>
 <input type="text" class="text" name="rule_rewritereplacement" value=""
  id="rule_rewritereplacement" tal:attributes="value currule/replacement">
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- tal:attributes="value t_apply">
+ i18n:attributes="value Apply">
 </td></tr>
 </table>
 <hr noshade size="1">

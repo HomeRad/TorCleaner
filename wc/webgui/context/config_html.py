@@ -7,27 +7,6 @@ from wc import Configuration as _Configuration
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 
-# translations
-tt_accessibility = i18n._("accessibility features of these pages")
-tt_feedback = i18n._("%s feedback information") % AppName
-t_webcleaner = AppName
-tt_port = i18n._("Port number the proxy is listening on for requests")
-tt_proxyuser = i18n._("Username used for proxy authentication")
-tt_proxypass = i18n._("Password used for proxy authentitaction")
-t_parentproxy = i18n._("Hostname")
-tt_parentproxy = i18n._("Hostname of the parent proxy")
-tt_parentproxyport = i18n._("Port number of the parent proxy")
-tt_parentproxyuser = i18n._("Username used for parent proxy authentication")
-tt_parentproxypass = i18n._("Password used for parent proxy authentication")
-tt_timeout = i18n._("Connection timeout in seconds")
-tt_allowedhosts = i18n._("List of hosts allowed to use this proxy.")
-tt_addallowed = i18n._("Only numeric IPs/networks are useful as DNS resolution is not performed.")
-t_remove = i18n._("Remove selected")
-t_add = i18n._("Add new")
-tt_nofilterhosts = i18n._("List of hostnames the proxy must not filter.")
-tt_addnofilter = i18n._("Be sure to supply all host aliases and IPs as DNS resolution is not performed.")
-t_configapply = i18n._("Apply")
-
 # config vars
 info = []
 error = []

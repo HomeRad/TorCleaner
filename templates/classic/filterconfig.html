@@ -8,18 +8,17 @@
 </head>
 <body>
 <p class="skip"><a accesskey="2" href="#main"
- tal:content="t_skip_to_main">Skip to main content</a></p>
+ i18n:translate="">Skip to main content</a></p>
 <div metal:use-macro="macros/macros/nav">Navigation</div>
 
 <div class="content" id="main">
-<form action="filterconfig.html" method="POST" 
- name="filterform">
+<form action="filterconfig.html" method="POST" name="filterform">
 <table rules="cols" cellpadding="5">
 <thead>
 <tr style="border-bottom:1px solid black;">
-<th style="width:25%;" tal:content="t_folders">Folders</th>
-<th style="width:30%;" tal:content="t_rules">Folder rules</th>
-<th style="width:45%;" tal:content="t_rule">Rule</th>
+<th style="width:25%;" i18n:translate="">Folders</th>
+<th style="width:30%;" i18n:translate="">Folder rules</th>
+<th style="width:45%;" i18n:translate="">Rule</th>
 </tr>
 </thead>
 <tbody>
@@ -29,17 +28,19 @@
 <div tal:repeat="folder config/folderrules"><img
  tal:condition="not:folder/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="folder/up"
- tal:attributes="name string:folder_up_${folder/oid}; title t_foldermoveup; alt t_up"
+ tal:attributes="name string:folder_up_${folder/oid}"
+ i18n:attributes="title Move folder up; alt Up"
 ><img tal:condition="not:folder/down" src="blocked.png" width="10" alt=""><input
  type="image" src="down.png" border="0" tal:condition="folder/down"
- tal:attributes="name string:folder_down_${folder/oid}; title t_foldermovedown; alt t_down"
+ tal:attributes="name string:folder_down_${folder/oid}"
+ i18n:attributes="title Move folder down; alt Down"
 ><img tal:condition="folder/disable" src="disabled.png"
- tal:attributes="alt t_disabledfoldericon"><span
+ i18n:attributes="alt Disabled folder icon"><span
  tal:condition="not:folder/disable"
 ><img tal:condition="not:folder/selected" src="minifolder.png"
- tal:attributes="alt t_foldericon"
+ i18n:attributes="alt Folder icon"
 ><img tal:condition="folder/selected" src="minifolderopen.png"
- tal:attributes="alt t_foldericon"></span>
+ i18n:attributes="alt Folder icon"></span>
 <b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}; title folder/tiptext"
@@ -51,11 +52,11 @@
 <tr>
 <td>
 <input type="text" class="text" name="newfoldername"
- tal:attributes="value t_foldername">
+ i18n:attributes="value Folder name">
 </td>
 <td>
 <input type="submit" class="submit" name="newfolder" value="New folder"
- tal:attributes="value t_newfolder">
+ i18n:attributes="value New folder">
 </td>
 </tr>
 </table>
@@ -67,15 +68,17 @@
 <div tal:repeat="rule curfolder/rules"><img
  tal:condition="not:rule/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="rule/up"
- tal:attributes="name string:rule_up_${rule/oid}; title t_rulemoveup; alt t_up"
-><img tal:condition="not:rule/down" src="blocked.png" width="10" alt=""><input 
+ tal:attributes="name string:rule_up_${rule/oid}"
+ i18n:attributes="title Move rule up; alt Up"
+><img tal:condition="not:rule/down" src="blocked.png" width="10" alt=""><input
  type="image" src="down.png" border="0"
  tal:condition="rule/down"
- tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down"
-><img tal:condition="rule/disable" src="disabled.png"
- tal:attributes="alt t_disabledruleicon"><img 
- tal:condition="not:rule/disable" src="minidoc.png"
- tal:attributes="alt t_ruleicon">
+ tal:attributes="name string:rule_down_${rule/oid}"
+ i18n:attributes="title Move rule down; alt Down"
+><img tal:condition="rule/disable" src="disabled.png" alt="Disabled rule icon"
+ i18n:attributes="alt Disabled rule icon"><img 
+ tal:condition="not:rule/disable" src="minidoc.png" alt="Rule icon"
+ i18n:attributes="alt Rule icon">
 <b tal:omit-tag="not:rule/selected">
 <a href="#" tal:condition="not:curfolder/disable" tal:content="rule/title"
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}; title rule/tiptext"
@@ -93,7 +96,7 @@
 </td>
 <td>
 <input type="submit" class="submit" name="renamefolder" value="Rename folder"
- tal:attributes="value t_renamefolder">
+ i18n:attributes="value Rename folder">
 </td>
 </tr>
 <tr>
@@ -105,19 +108,22 @@
 </td>
 <td>
 <input type="submit" class="submit" name="newrule" value="New rule"
- tal:attributes="value t_newrule; title tt_newrule">
+ i18n:attributes="value New rule; title Add new rule to current folder.">
 </td>
 </tr>
 <tr>
 <td colspan="2">
 <input type="submit" class="submit" value="Remove folder"
- tal:attributes="name string:removefolder${curfolder/oid}; value t_removefolder; onclick string:return window.confirm('${t_really_remove_folder}')">
+ tal:attributes="name string:removefolder${curfolder/oid}"
+ i18n:attributes="value Remove folder; onclick return window.confirm('Really remove this folder?')">
 <input tal:condition="curfolder/disable"
  type="submit" class="submit" value="Enable folder"
- tal:attributes="name string:enablefolder${curfolder/oid}; value t_enablefolder"
+ tal:attributes="name string:enablefolder${curfolder/oid}"
+ i18n:attributes="value Enable folder"
 ><input tal:condition="not:curfolder/disable"
  type="submit" class="submit" value="Disable folder"
- tal:attributes="name string:disablefolder${curfolder/oid}; value t_disablefolder">
+ tal:attributes="name string:disablefolder${curfolder/oid}"
+ i18n:attributes="value Disable folder">
 </td>
 </tr>
 </table>
@@ -132,7 +138,7 @@
 <span tal:condition="ruletype/?rule" tal:omit-tag="">
 <div>
 <span tal:content="rule/capitalize">Javascript</span>
-<span tal:content="t_rule">Rule</span>
+<span i18n:translate="">Rule</span>
 </div>
 <div metal:use-macro="rulemacros/macros/?rule">
 Here is the rule configuration...
@@ -140,13 +146,16 @@ Here is the rule configuration...
 </span>
 <hr noshade size="1">
 <input type="submit" class="submit" value="Remove rule"
- tal:attributes="name string:removerule${currule/oid}; value t_removerule; onclick string:return window.confirm('${t_really_remove_rule}')">
+ tal:attributes="name string:removerule${currule/oid}"
+ i18n:attributes="value Remove rule; onclick return window.confirm('Really remove this rule?')">
 <input tal:condition="currule/disable"
  type="submit" class="submit" value="Enable rule"
- tal:attributes="name string:enablerule${currule/oid}; value t_enablerule"
+ tal:attributes="name string:enablerule${currule/oid}"
+ i18n:attributes="value Enable rule"
 ><input tal:condition="not:currule/disable"
  type="submit" class="submit" value="Disable rule"
- tal:attributes="name string:disablerule${currule/oid}; value t_disablerule">
+ tal:attributes="name string:disablerule${currule/oid}"
+ i18n:attributes="value Disable rule">
 </div>
 </td>
 </tr>
@@ -154,14 +163,19 @@ Here is the rule configuration...
 </table>
 </form>
 
-<div tal:repeat="item info">
-<span tal:replace="item">Info</span>
+<div tal:condition="info"  class="info">
+<span i18n:translate="">Info</span>:
+<span tal:repeat="item info">
+<span tal:replace="item">something happened</span>
+</span>
 </div>
 
-<div tal:repeat="item error">
-<span tal:replace="item">Error</span>
+<div tal:condition="error" class="error">
+<span i18n:translate="">Error</span>:
+<span tal:repeat="item error">
+<span tal:replace="item">Error message</span>
+</span>
 </div>
-
 
 </div>
 
