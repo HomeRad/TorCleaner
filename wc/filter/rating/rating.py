@@ -35,13 +35,13 @@ class Rating (object):
 
     def add_category_value (self, category, value):
         """Add value for given category. Updates modified time."""
-        self.category_values[category] = value
+        self.category_values[category.name] = value
         self.modified = time.time()
 
     def remove_category (self, category):
         """Remove given category. Updates modified time."""
-        if category in self.category_values:
-            del self.category_values[category]
+        if category.name in self.category_values:
+            del self.category_values[category.name]
             self.modified = time.time()
 
     def remove_categories (self):
