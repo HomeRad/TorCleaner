@@ -100,7 +100,6 @@ def proxy_poll (timeout=0.0):
         debug(PROXY, "select with %f timeout:", timeout)
         for x in e:
             debug(PROXY, "  %s", x)
-        t = time.time()
         try:
             (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
@@ -109,24 +108,23 @@ def proxy_poll (timeout=0.0):
                 return
             else:
                 raise
-        _slow_check("select", t, 'pslow')
         debug(PROXY, "poll result %s", (r,w,e))
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
         for x in e:
-            debug(PROXY, "%s handle exception event", x)
+            debug(PROXY, "%s poll handle exception", x)
             x.handle_expt_event()
             handlerCount += 1
         for x in [ x for x in w if x not in e and x.writable() ]:
             t = time.time()
-            debug(PROXY, "%s handle write", x)
+            debug(PROXY, "%s poll handle write", x)
             x.handle_write_event()
             handlerCount += 1
             _slow_check(x, t, 'wslow')
         for x in [ x for x in r if (x not in e and x not in w) and x.readable ]:
             t = time.time()
-            debug(PROXY, "%s handle read", x)
+            debug(PROXY, "%s poll handle read", x)
             x.handle_read_event()
             handlerCount += 1
             _slow_check(x, t, 'rslow')

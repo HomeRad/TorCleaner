@@ -122,14 +122,6 @@ def set_format (handler):
 #gc.set_debug(gc.DEBUG_LEAK)
 def debug (log, msg, *args):
     logging.getLogger(log).debug(msg, *args)
-    #logging.getLogger(log).debug("collected %d"%gc.collect())
-    #logging.getLogger(log).debug("collected %d"%gc.collect())
-    #logging.getLogger(log).debug("collected %d"%gc.collect())
-    #logging.getLogger(log).debug("objects %d"%len(gc.get_objects()))
-    #logging.getLogger(log).debug("garbage %d"%len(gc.garbage))
-    #if gc.garbage:
-    #    for o in gc.garbage:
-    #        logging.getLogger(log).debug("O %s"%repr(o))
     #logging.getLogger(log).debug("Mem: %d kB"%usedmemory())
 
 
