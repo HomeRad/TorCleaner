@@ -81,7 +81,7 @@ class HtmlSecurity (object):
                 if url.startswith('url='):
                     url = url[4:]
                 if url.startswith('file:/'):
-                    warn(FILTER, "%s\n Detected and prevented local file redirection", str(htmlfilter))
+                    warn(FILTER, "%s %s\n Detected and prevented local file redirection", str(htmlfilter), `attrs['content']`)
                     del attrs['content']
         elif tag=='embed' and attrs.has_key('src'):
             src = attrs['src']
@@ -89,12 +89,12 @@ class HtmlSecurity (object):
                 # prevent CVE-2002-0022
                 i = src.find('.')
                 if len(src[i:]) > 10:
-                    warn(FILTER, "%s\n Detected and prevented IE filename overflow crash", str(htmlfilter))
+                    warn(FILTER, "%s %s\n Detected and prevented IE filename overflow crash", str(htmlfilter), `src`)
                     del attrs['src']
         elif tag=='font' and attrs.has_key('size'):
             if len(attrs['size']) > 10:
                 # prevent CVE-2001-0130
-                warn(FILTER, "%s\n Detected and prevented Lotus Domino font size overflow crash", str(htmlfilter))
+                warn(FILTER, "%s %s\n Detected and prevented Lotus Domino font size overflow crash", str(htmlfilter), `attrs['size']`)
                 del attrs['size']
 
 
