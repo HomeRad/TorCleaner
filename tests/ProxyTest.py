@@ -21,7 +21,7 @@ class ProxyTest (StandardTest):
         self.proxytests.append((request, client_class,
                                 server_class, handler_class))
 
-    def setUp (self):
+    def init (self):
         """Starts proxy server."""
         self.log = file("servertests.txt", 'a')
         #self.log = sys.stdout
@@ -29,7 +29,7 @@ class ProxyTest (StandardTest):
         self.proxyconfig = wc.Configuration()
         self.startProxy()
 
-    def tearDown (self):
+    def shutdown (self):
         """Stop proxy, close log"""
         self.stopProxy()
         self.log.close()

@@ -56,7 +56,8 @@ def addtest (dirname, fname, mysuite):
     try:
         exec 'from %s.%s import suite' % (pkg, klass)
         mysuite.addTest(suite)
-    except ImportError:
+    except ImportError, msg:
+        print "oops", msg
         pass
 
 

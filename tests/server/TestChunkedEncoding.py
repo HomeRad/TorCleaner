@@ -44,8 +44,8 @@ class ChunkRequest (HttpRequest):
 
 
 class TestChunkedEncoding (ProxyTest):
-    def __init__ (self, methodName='runTest'):
-        ProxyTest.__init__(self, methodName=methodName)
+    def init (self):
+        super(TestChunkedEncoding, self).init()
         request = ChunkRequest()
         self.addTest(request, handler_class=ChunkRequestHandler)
 
