@@ -118,10 +118,10 @@ def _main ():
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)
-    import wc
+    import wc.configuration
     wc.configuration.config = wc.configuration.init()
-    port = config['port']
-    sslport = config['sslport']
+    port = wc.configuration.config['port']
+    sslport = wc.configuration.config['sslport']
     request(sys.argv[1], sslport)
     #rawrequest(sys.argv[1], sslport)
     #rawrequest2(sys.argv[1], sslport)
