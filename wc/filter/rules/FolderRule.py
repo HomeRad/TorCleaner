@@ -112,8 +112,9 @@ class FolderRule (wc.filter.rules.Rule.Rule):
 
     def write (self):
         """write xml data into filename"""
+        s = self.toxml().encode("iso-8859-1", "replace")
         f = file(self.filename, 'w')
-        f.write(self.toxml().encode("iso-8859-1", "replace"))
+        f.write(s)
         f.close()
 
 
