@@ -31,6 +31,7 @@ class Header (wc.filter.Filter.Filter):
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['header']
+    # which mime types this filter applies to
     mimelist = []
 
     def __init__ (self):
