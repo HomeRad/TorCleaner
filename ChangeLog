@@ -21,6 +21,23 @@
     Type: feature
     Changed: libjs/*
 
+  * change default socket timeout to 10 seconds, and apply it only
+    to server sockets, added correct timeout error code
+    Type: bugfix
+    Changed: config/webcleaner.conf, wc/__init__.py, wc/proxy/SslServer.py,
+      wc/proxy/HttpsServer.py, wc/
+
+  * filter background JavaScript download urls
+    Type: feature
+    Changed: wc/proxy/HttpProxyClient.py, wc/filter/Blocker.py
+    Added: templates/classic/blocked.js
+
+  * remove 404 "Not found" from the list of errors to display the google
+    search possibilities on
+    Type: feature
+    Changed: wc/google.py
+
+  
 
 2.10 (released 27.3.2004)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20040323

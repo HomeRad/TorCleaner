@@ -2,8 +2,7 @@ TODO
 
 version 2.11 and above
 
-- display a stripped version of server error messages inline in
-  the standard webcleaner error page
+- propagate possible changed mime (from request block filter)
 
 - virus scanning with clamav http://localhost/doc/clamav/html/node45.html
 
@@ -18,6 +17,8 @@ version 2.11 and above
 
 - bfilter has Flash parse and generation library, I want that too .)
 
+- the error "Empty image data found" - what causes it??
+
 - test NTLM authentication
   Mozilla >= 1.6b can test NTLM server auth, squid can test client auth
 
@@ -29,9 +30,6 @@ version 2.11 and above
 - unicode parsing for flex
   the HTML parser (written with flex) does not support unicode, so
   sometimes you'll see '?' chars in the HTML output.
-
-- blocked HTTPS urls issue a warning because we switch to http://
-  instead the proxy should use https requests?
 
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
