@@ -2,6 +2,19 @@ TODO
 
 version 2.24 and above
 
+- UTF-8 encoded "" (gro geschriebene &Auml;) werden einfach                                 
+  rausgefiltert. (Siehe http://de.wikipedia.org/wiki/Wasserzeichen                            
+  (http://tinyurl.com/3oc5a) Abschnitt "Merkmale" unter "Robustheit" als                      
+  Beispiel)                                                                                   
+
+- da krachts im Gebälk:
+  http://www.golem.de/0411/34728.html
+
+- Geht net:
+  http://msdn.microsoft.com/library/shared/deeptree/bot/bot.asp?dtcnfg=/library/deeptreeconfig.xml
+
+version 2.25 and above
+
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
 
