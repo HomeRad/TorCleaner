@@ -1,5 +1,6 @@
 Changes since 0.54:
   * Also support Content-Encoding: deflate and identity
+  * Updated german translations
 
 Changes since 0.53:
   * add <area> to tags-with-no-end-tag in Rewriter rule
