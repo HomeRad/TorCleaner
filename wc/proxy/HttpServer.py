@@ -285,7 +285,7 @@ class HttpServer (wc.proxy.Server.Server):
             location = self.headers.get('Location')
             if location:
                 host = wc.url.spliturl(location)[1]
-                if host in wc.config['localhosts']:
+                if host in wc.proxy.dns_lookups.resolver.localhosts:
                     self.handle_error(wc.i18n._('redirection to localhost'))
                     return
         self.mangle_response_headers()
