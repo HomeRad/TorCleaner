@@ -2,9 +2,11 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+from cStringIO import StringIO
 import dns_lookups
 import wc.proxy
 from wc.proxy import spliturl, splitnport, fix_http_version
+from wc.proxy.Headers import WcMessage
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
@@ -122,8 +124,8 @@ class ClientServerMatchmaker (object):
             ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol,
-              'Content-type: text/plain\r\n'
-              'Location: %s\r\n\r\n' % new_url,
+              WcMessage(StringIO('Content-type: text/plain\r\n'
+              'Location: %s\r\n\r\n' % new_url)),
               i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host, so close this connection

@@ -29,7 +29,7 @@ class HttpProxyClient (object):
             handler = self.handler.func_name
             if hasattr(self.handler, 'im_class'):
                 handler = self.handler.im_class.__name__+"."+handler
-        return '<%s: %s>' % ('proxyclient', handler)
+        return '<%s: %s %s>' % ('proxyclient', str(self.args), handler)
 
 
     def finish (self):
@@ -71,8 +71,8 @@ class HttpProxyClient (object):
                            )
             return
         elif status!=200:
-            error(PROXY, "ProxyClient: got %s status %d %s from %s",
-                          protocol, status, `msg`, self.args[0])
+            error(PROXY, "%s got %s status %d %s",
+                          str(self), protocol, status, `msg`)
             self.finish()
 
 

@@ -36,6 +36,7 @@ except ImportError:
     jslib = None
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
+from wc.proxy.Headers import WcMessage
 from wc.proxy import make_timer
 from HtmlTags import check_spelling
 
@@ -520,7 +521,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         client = HttpProxyClient(self.jsScriptData, (url, ver))
         ClientServerMatchmaker(client,
                                "GET %s HTTP/1.1" % url, #request
-                               {}, #headers
+                               WcMessage(StringIO('')), #headers
                                '', #content
                                {'nofilter': None}, # nofilter
                                'identity', # compress
@@ -553,6 +554,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.js_html.feed('')
                 self.js_html.flush()
             except FilterWait:
+                self._debug("JS: subprocessor is waiting")
                 self.state = ('wait', 'recursive script')
                 self.waited = 1
                 make_timer(0.2, lambda : self.jsEndScript(item))
