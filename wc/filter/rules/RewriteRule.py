@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2002  Bastian Kleineidam
+# Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -171,15 +171,19 @@ class RewriteRule (UrlRule):
                 mo = ro.search(val)
                 if mo:
                     if part==ATTR:
+                        # replace complete attr
                         if self.replace[1]:
                             newattrs[self.replace[1][0]] = self.replace[1][1]
                     else:
                         # part has to be ATTRVAL
-                        # Python has named submatches
-                        if mo.groupdict().has_key('replace'):
-                            newattrs[attr] = mo.groupdict()['replace']
+                        # Python has named submatches, and we can use them
+                        # the name 'replace' replaces the value,
+                        # all other names are given as format strings
+                        dict = mo.groupdict()
+                        if dict.has_key('replace'):
+                            newattrs[attr] = dict['replace']
                         else:
-                            newattrs[attr] = self.replace[1]
+                            newattrs[attr] = self.replace[1] % dict
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
