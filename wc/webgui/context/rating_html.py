@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003-2004  Bastian Kleineidam
+# Copyright (C) 2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,7 +38,8 @@ def _reset_ratings ():
             ratings[category] = ""
     values.clear()
     for category, value in ratings.items():
-        values[category] = {value: True}
+        if category not in ["generic", "modified"]:
+            values[category] = {value: True}
     rating_modified.clear()
 
 
@@ -138,7 +139,8 @@ def _form_ratings (form):
                 return False
             else:
                 ratings[category] = value
-                values[category] = {value: True}
+                if category not in ["generic", "modified"]:
+                    values[category] = {value: True}
     return True
 
 
@@ -183,5 +185,6 @@ def _form_load ():
                 generic = (value=='true')
             else:
                 ratings[category] = value
-                values[category] = {value: True}
+                if category not in ["modified"]:
+                    values[category] = {value: True}
 
