@@ -55,7 +55,6 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """make a new instance of this filter, for recursive filtering"""
         return HtmlFilter(self.rules, self.ratings, self.url, **opts)
 
-
     def error (self, msg):
         """signal a filter/parser error"""
         wc.log.error(wc.LOG_FILTER, msg)
@@ -97,9 +96,9 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                         wc.log.warn(wc.LOG_FILTER,
                                     "unknown encoding %r", encoding)
 
-    def _data (self, d):
+    def _data (self, data):
         """general handler for data"""
-        item = [wc.filter.rules.RewriteRule.DATA, d]
+        item = [wc.filter.rules.RewriteRule.DATA, data]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
