@@ -20,3 +20,18 @@ class StatefulConnection (Connection):
     def readable (self):
         """a connection is readable if we're connected and not in a close state"""
         return self.connected and self.state!='closed'
+
+
+    def delegate_read (self):
+        """delegate a read process to process_* funcs according to the
+           current state
+        """
+        bytes_before = len(self.recv_buffer)
+        state_before = self.state
+        getattr(self, 'process_'+self.state)()
+        bytes_after = len(self.recv_buffer)
+        state_after = self.state
+        return self.state=='closed' or \
+           (bytes_before==bytes_after and state_before==state_after)
+
+
