@@ -27,6 +27,17 @@ categories = {}
 
 # only accept these categories
 mycats = ['ads', 'violence', 'aggressive']
+transcats = {
+    'ads': {'de': 'Werbung'},
+    'violence': {'de': 'Gewalt'},
+    'aggressive': {'de': 'Aggression'},
+}
+
+transtypes = {
+    'blacklist': {'de': 'Filter für'},
+    'whitelist': {'de': 'Erlaubnis für'},
+}
+
 # only extract these files
 myfiles = ['domains', 'expressions', 'urls']
 ###################### read blacklist data #########################
@@ -54,7 +65,8 @@ def read_blacklists (fname):
 
 def read_data (fname, name, data):
     cat = os.path.basename(os.path.dirname(fname))
-    if cat not in mycats: return
+    if cat not in mycats:
+        return
     f = file(fname)
     line = f.readline()
     while line:
@@ -91,7 +103,8 @@ def write_folder (cat, ftype, data, f):
     d = {
         "charset": ConfigCharset,
         "title_en": xmlify("%s %s" % (ftype.capitalize(), cat)),
-        "title_de": xmlify("%s %s" % (ftype.capitalize(), cat)),
+        "title_de": xmlify("%s %s" % (transtypes[ftype]['de'].capitalize(),
+                                      transcats[cat]['de'].capitalize())),
         "desc_en": xmlify("Automatically generated on %s" % date),
         "desc_de": xmlify("Automatisch generiert am %s" % date),
     }
@@ -117,8 +130,8 @@ def write_folder (cat, ftype, data, f):
 def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
     d = {
-        'title_en': cat+" domain filter",
-        'title_de': cat+" Rechnername Filter",
+        'title_en': "%s domain filter"%cat.capitalize(),
+        'title_de': "%s Rechnername Filter"%transcats[cat]['de'].capitalize(),
         'desc_en': """You should not edit this filter, only disable or delete it.
 To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
         'desc_de': """Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
@@ -138,8 +151,8 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
 def write_urls (cat, b, ftype, f):
     print "write", cat, "urls"
     d = {
-        'title_en': cat+" url filter",
-        'title_de': cat+" URL Filter",
+        'title_en': "%s url filter"%cat.capitalize(),
+        'title_de': "%s URL Filter"%transcats[cat]['de'].capitalize(),
         'desc_en': """You should not edit this filter, only disable or delete it.
 To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
         'desc_de': """Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
@@ -159,8 +172,8 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
 
 def write_expressions (cat, b, ftype, f):
     d = {
-        'title_en': cat+" expression filter",
-        'title_de': cat+" Ausdruckfilter",
+        'title_en': "%s expression filter"%cat.capitalize(),
+        'title_de': "%s Ausdruckfilter"%transcats[cat]['de'].capitalize(),
         'desc_en': """Automatically generated, you should not edit this filter.
 To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
         'desc_de': """Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
@@ -347,6 +360,7 @@ def remove_old_data ():
     for d in ("extracted", "config/blacklists_new"):
         if os.path.isdir(d):
             rm_rf(d)
+
 
 def remove_gunziped_files (fname):
     if os.path.isdir(fname):
