@@ -220,4 +220,12 @@
   <nomatchurl>imdb\.com</nomatchurl>
   <replacement part="tag"/>
 </rewrite>
+
+<rewrite sid="wc.27"
+ tag="script">
+  <title lang="de">Skript Werbung</title>
+  <title lang="en">Script adverts</title>
+  <description lang="en">JavaScript adverts</description>
+  <attr name="src">doubleclick\.net</attr>
+</rewrite>
 </folder>
