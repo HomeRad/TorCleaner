@@ -2,10 +2,11 @@
   * Updated advert filters
     Changed files: config/adverts.zap
   * Local HTML configuration
-    Changed files: ...
+    Changed files: wc/proxy/ClientServerMatchMaker.py
+    Added files: wc/webgui/{__init__.py, WebConfig.py}
   * Added README.parser and README.sshtunnel to documents
   * import DeflateStream, fixes pages with content-encoding: deflate
-    Changed files: wc/proxy/HttpServer.py<
+    Changed files: wc/proxy/HttpServer.py
   * Add netmask support for allowed/denied host configuration
     Changed files: wc/__init__.py
     Added files: wc/ip.py
