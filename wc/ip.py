@@ -193,10 +193,7 @@ def hosts2map (hosts):
         elif is_valid_ip(host):
             hostset.add(expand_ip(host)[0])
         else:
-            try:
-                hostset |= resolve_host(host)
-            except socket.gaierror:
-                wc.log.error(wc.LOG_NET, "invalid host %r", host)
+            hostset |= resolve_host(host)
     return (hostset, nets)
 
 
