@@ -2,6 +2,8 @@ webcleaner (2.0-0.1) unstable; urgency=low
 
   * New upstream release.
   * adjust depends for Python 2.3
+  * downgrade webcleanertools dependency to "Suggests" since there is
+    now a web configuration.
 
  -- Bastian Kleineidam <calvin@debian.org>  Fri, 20 Jun 2003 17:26:16 +0200
 

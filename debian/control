@@ -8,7 +8,7 @@ Build-Depends: python2.3-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), dpatch
 Package: webcleaner
 Architecture: any
 Depends: python2.3, debconf (>= 1.2.9), python2.3-imaging
-Recommends: webcleanertools
+Suggests: webcleanertools
 Description: a filtering HTTP proxy
  Features:
   o disable animated GIFs
