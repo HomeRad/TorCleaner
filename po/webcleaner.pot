@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Jan  9 21:56:59 2004\n"
+"POT-Creation-Date: Tue Jan 13 04:05:01 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,6 +46,12 @@ msgid "Heavy"
 msgstr ""
 
 msgid "malformed rating line %r"
+msgstr ""
+
+msgid "malfored modified time %r"
+msgstr ""
+
+msgid "generic url %r doesn't match %r"
 msgstr ""
 
 msgid "inserting new rule %s"
@@ -180,6 +186,15 @@ msgstr ""
 msgid "invalid HTTP version %r"
 msgstr ""
 
+msgid "seconds"
+msgstr ""
+
+msgid "minutes"
+msgstr ""
+
+msgid "hours"
+msgstr ""
+
 msgid "filter %s not changed, ignoring"
 msgstr ""
 
@@ -300,6 +315,12 @@ msgstr ""
 msgid "Unknown command %s"
 msgstr ""
 
+msgid ""
+"When you klick on the accept button below,\n"
+"the following information will be mailed to the author of %(AppName)s\n"
+"at %(Email)s:"
+msgstr ""
+
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -355,6 +376,9 @@ msgstr ""
 msgid ""
 "Compression of documents with good compression ratio\n"
 "like HTML, WAV, etc."
+msgstr ""
+
+msgid "Invalid rating."
 msgstr ""
 
 msgid "%(AppName)s configuration"
@@ -476,6 +500,12 @@ msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
 msgid ""
+"You can send me changed or new page ratings per\n"
+"email so I can review them and include the chages into the shipped\n"
+"rating database.\n"
+msgstr ""
+
+msgid ""
 "Block images with a certain size which is replacing\n"
 "them with a transparent 1x1 image."
 msgstr ""
@@ -505,6 +535,12 @@ msgid "Don't match URL"
 msgstr ""
 
 msgid "Parent proxy settings"
+msgstr ""
+
+msgid ""
+"The administrator password was not yet initialized.\n"
+"This password protects the web configuration pages. Without an\n"
+"administrator password, every user can change the proxy configuration.\n"
 msgstr ""
 
 msgid "Allowed limit"
@@ -537,6 +573,14 @@ msgid "Update filter configuration"
 msgstr ""
 
 msgid "Applies to"
+msgstr ""
+
+msgid ""
+"After that, restart %(AppName)s and click on\n"
+"the configuration link below.\n"
+"Your new credentials for the configuration are:<br>\n"
+"username <b>%(adminuser)s</b><br>\n"
+"password <b>%(adminpass)s</b><br>\n"
 msgstr ""
 
 msgid ""
@@ -577,6 +621,9 @@ msgstr ""
 msgid "Folder successfully enabled."
 msgstr ""
 
+msgid "Send"
+msgstr ""
+
 msgid "New rule successfully created."
 msgstr ""
 
@@ -596,6 +643,9 @@ msgid "Proxy password successfully changed."
 msgstr ""
 
 msgid "Hostname of the parent proxy"
+msgstr ""
+
+msgid "Applies to all pages starting with url?"
 msgstr ""
 
 msgid "Search in %(site)s"
@@ -634,12 +684,6 @@ msgstr ""
 msgid "Rule rewrite part successfully changed."
 msgstr ""
 
-msgid ""
-"The administrator password was not yet initialized.\n"
-"This password protects the web configuration interface. Without an\n"
-"administrator password, every user can change the proxy configuration.\n"
-msgstr ""
-
 msgid "Move folder down"
 msgstr ""
 
@@ -650,10 +694,6 @@ msgid "Replace regular expressions in data streams."
 msgstr ""
 
 msgid "%(AppName)s error"
-msgstr ""
-
-msgid ""
-"Generic\n"
 msgstr ""
 
 msgid "Rule rewrite replacement successfully changed."
@@ -682,6 +722,9 @@ msgid ""
 msgstr ""
 
 msgid "Up"
+msgstr ""
+
+msgid "Modified"
 msgstr ""
 
 msgid "Filter update log"
@@ -713,6 +756,9 @@ msgid ""
 "extensions (for example GIF comments)."
 msgstr ""
 
+msgid "Error sending mail."
+msgstr ""
+
 msgid "Request and response headers of all mime types."
 msgstr ""
 
@@ -727,6 +773,9 @@ msgid ""
 "part will be removed, else it will be replaced.<br>\n"
 "Back references to matched subgroups can be specified in the replacement\n"
 "string with a backslash and the subgroup number (ie. \\1, \\2, ...)."
+msgstr ""
+
+msgid "Email URL rating to %(Email)s"
 msgstr ""
 
 msgid "Rule successfully enabled."
@@ -781,9 +830,6 @@ msgid "Remove selected"
 msgstr ""
 
 msgid "Access keys"
-msgstr ""
-
-msgid "Applies to all pages starting with url"
 msgstr ""
 
 msgid "Invalid folder move up id."
@@ -922,9 +968,6 @@ msgstr ""
 msgid "Feedback for %(AppName)s"
 msgstr ""
 
-msgid "Invalid url."
-msgstr ""
-
 msgid ""
 "resulted in the following error:<br>\n"
 "Server response <b>%(response)s</b>"
@@ -983,6 +1026,9 @@ msgstr ""
 msgid "Administrator username"
 msgstr ""
 
+msgid "Rating data mailed successfully."
+msgstr ""
+
 msgid "Feedback"
 msgstr ""
 
@@ -1035,6 +1081,9 @@ msgid ""
 "and merges their changes into the current configuration.<br>\n"
 "If something has changed, the new filter configuration files\n"
 "are saved and reloaded into the proxy."
+msgstr ""
+
+msgid "Email this rating to the author"
 msgstr ""
 
 msgid "Remove rule"
@@ -1091,7 +1140,7 @@ msgstr ""
 msgid "Rule header value successfully changed."
 msgstr ""
 
-msgid "Go to rating:"
+msgid "Invalid url."
 msgstr ""
 
 msgid "Invalid folder move down id."
@@ -1120,14 +1169,6 @@ msgstr ""
 msgid "Rule moved down."
 msgstr ""
 
-msgid ""
-"After that, restart %(AppName)s and click on\n"
-"the configuration link below.\n"
-"Your new credentials for the configuration interface are:<br>\n"
-"username <b>%(adminuser)s</b><br>\n"
-"password <b>%(adminpass)s</b><br>\n"
-msgstr ""
-
 msgid "Admin user"
 msgstr ""
 
@@ -1144,6 +1185,9 @@ msgid "Remove selected attributes"
 msgstr ""
 
 msgid "Invalid rule move down id."
+msgstr ""
+
+msgid "Go to rating:"
 msgstr ""
 
 msgid "Invalid parent proxy port."
@@ -1290,6 +1334,11 @@ msgid ""
 msgstr ""
 
 msgid "Replacement URL"
+msgstr ""
+
+msgid ""
+"The configuration also allows you to change the\n"
+"above initial password.\n"
 msgstr ""
 
 msgid "Invalid attribute name."

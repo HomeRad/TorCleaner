@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Fri Jan  9 21:56:59 2004\n"
-"PO-Revision-Date: 2004-01-09 22:01+0100\n"
+"POT-Creation-Date: Tue Jan 13 04:05:01 2004\n"
+"PO-Revision-Date: 2004-01-13 04:08+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,12 @@ msgstr "Viel"
 
 msgid "malformed rating line %r"
 msgstr "ungültige Bewertungszeile %r"
+
+msgid "malfored modified time %r"
+msgstr "ungültige Änderungszeit %r"
+
+msgid "generic url %r doesn't match %r"
+msgstr "Allgemeine URL %r passt nicht zu %r"
 
 msgid "inserting new rule %s"
 msgstr "füge neue Regel %s ein"
@@ -176,6 +182,15 @@ msgstr "nicht unterstützte HTTP Version %s"
 
 msgid "invalid HTTP version %r"
 msgstr "ungültige HTTP Version %r"
+
+msgid "seconds"
+msgstr "Sekunden"
+
+msgid "minutes"
+msgstr "Minuten"
+
+msgid "hours"
+msgstr "Stunden"
 
 msgid "filter %s not changed, ignoring"
 msgstr "Filter %s nicht geändert, ignoriere ihn"
@@ -325,6 +340,12 @@ msgstr "Kein Befehl angegeben."
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
 
+msgid ""
+"When you klick on the accept button below,\n"
+"the following information will be mailed to the author of %(AppName)s\n"
+"at %(Email)s:"
+msgstr ""
+
 msgid "Proxy user successfully changed."
 msgstr "Proxybenutzer erfolgreich geändert."
 
@@ -387,6 +408,9 @@ msgid ""
 msgstr ""
 "Komprimierung von Dokumenten mit guter Komprimierungsrate\n"
 "wie z.B. HTML, WAV, etc."
+
+msgid "Invalid rating."
+msgstr "Ungültige Bewertung."
 
 msgid "%(AppName)s configuration"
 msgstr "%(AppName)s Konfiguration"
@@ -524,6 +548,12 @@ msgid "Parse and evaluate content rating system header values."
 msgstr "Parse und evaluiere Header Werte der Inhaltsbewertung."
 
 msgid ""
+"You can send me changed or new page ratings per\n"
+"email so I can review them and include the chages into the shipped\n"
+"rating database.\n"
+msgstr ""
+
+msgid ""
 "Block images with a certain size which is replacing\n"
 "them with a transparent 1x1 image."
 msgstr ""
@@ -560,6 +590,15 @@ msgstr "Nicht betroffene URL"
 msgid "Parent proxy settings"
 msgstr "Übergeordnete Proxy-Einstellungen"
 
+msgid ""
+"The administrator password was not yet initialized.\n"
+"This password protects the web configuration pages. Without an\n"
+"administrator password, every user can change the proxy configuration.\n"
+msgstr ""
+"Das Administratorpasswort wurde noch nicht initialisiert.\n"
+"Dieses Passwort schützt die Seiten der Webkonfiguration.\n"
+"Ohne ein Administratorpasswort kann jeder Benutzer die Proxy-Konfiguration ändern.\n"
+
 msgid "Allowed limit"
 msgstr "Erlaubnisgrenze"
 
@@ -593,6 +632,19 @@ msgstr "Aktualisierung der Filterkonfiguration"
 
 msgid "Applies to"
 msgstr "Trifft zu auf"
+
+msgid ""
+"After that, restart %(AppName)s and click on\n"
+"the configuration link below.\n"
+"Your new credentials for the configuration are:<br>\n"
+"username <b>%(adminuser)s</b><br>\n"
+"password <b>%(adminpass)s</b><br>\n"
+msgstr ""
+"Starten Sie danach %(AppName)s neu und klicken auf die unten stehende\n"
+"Verknüpfung zur Konfiguration.\n"
+"Ihre neuen Authentifizierungsdaten für das Konfigurationsmenü lauten:<br>\n"
+"Benutzername <b>%(adminuser)s</b><br>\n"
+"Passwort <b>%(adminpass)s</b><br>\n"
 
 msgid ""
 "Remove comments from HTML source. Comments inside\n"
@@ -634,6 +686,9 @@ msgstr "Ungültige Regel-nach-oben-Verschieben Nummer."
 msgid "Folder successfully enabled."
 msgstr "Ordner erfolgreich aktiviert."
 
+msgid "Send"
+msgstr "Senden"
+
 msgid "New rule successfully created."
 msgstr "Neue Regel wurde erfolgreich erstellt."
 
@@ -657,6 +712,9 @@ msgstr "Proxypasswort erfolgreich geändert."
 
 msgid "Hostname of the parent proxy"
 msgstr "Rechnername des übergeordneten Proxy"
+
+msgid "Applies to all pages starting with url?"
+msgstr "Gilt für alle Seiten die mit dieser URL beginnen?"
 
 msgid "Search in %(site)s"
 msgstr "Suche in %(site)s"
@@ -698,15 +756,6 @@ msgstr "Zum Hauptinhalt springen"
 msgid "Rule rewrite part successfully changed."
 msgstr "Rewrite-Regel Teilwert wurde erfolgreich geändert."
 
-msgid ""
-"The administrator password was not yet initialized.\n"
-"This password protects the web configuration interface. Without an\n"
-"administrator password, every user can change the proxy configuration.\n"
-msgstr ""
-"Das Administratorpasswort wurde noch nicht initialisiert.\n"
-"Dieses Passwort schützt die Konfiguration über die Webschnittstelle.\n"
-"Ohne ein Administratorpasswort kann jeder Benutzer die Proxy-Konfiguration ändern.\n"
-
 msgid "Move folder down"
 msgstr "Ordner nach unten schieben"
 
@@ -718,9 +767,6 @@ msgstr "Ersetze reguläre Ausdrücke in Daten."
 
 msgid "%(AppName)s error"
 msgstr "%(AppName)s error"
-
-msgid "Generic\n"
-msgstr "Generisch\n"
 
 msgid "Rule rewrite replacement successfully changed."
 msgstr "Rewrite-Regel Ersatztext wurde erfolgreich geändert."
@@ -751,6 +797,9 @@ msgstr ""
 
 msgid "Up"
 msgstr "Hoch"
+
+msgid "Modified"
+msgstr "Geändert"
 
 msgid "Filter update log"
 msgstr "Filteraktualisierung Protokoll"
@@ -783,6 +832,9 @@ msgstr ""
 "Deanimiere GIF Bilder und lösche alle unerwünschten GIF\n"
 "Bilddaten (wie z.B. GIF Kommentare)."
 
+msgid "Error sending mail."
+msgstr "Fehler beim Mailversand."
+
 msgid "Request and response headers of all mime types."
 msgstr "Anfrage und Antwort Header aller Mime-Typen."
 
@@ -804,6 +856,9 @@ msgstr ""
 "Referenzen auf zugeordnete Untergruppen können im Ersatzwert durch\n"
 "einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden\n"
 "(z.B. \\1, \\2, ...)."
+
+msgid "Email URL rating to %(Email)s"
+msgstr ""
 
 msgid "Rule successfully enabled."
 msgstr "Regel wurde erfolgreich aktiviert."
@@ -860,9 +915,6 @@ msgstr "Lösche Auswahl"
 
 msgid "Access keys"
 msgstr "Tastaturkommandos"
-
-msgid "Applies to all pages starting with url"
-msgstr "Gilt für alle Seiten die mit dieser URL beginnen"
 
 msgid "Invalid folder move up id."
 msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
@@ -1019,9 +1071,6 @@ msgstr "Ordner umbenennen"
 msgid "Feedback for %(AppName)s"
 msgstr "Feedback für %(AppName)s"
 
-msgid "Invalid url."
-msgstr "Ungültige URL."
-
 msgid ""
 "resulted in the following error:<br>\n"
 "Server response <b>%(response)s</b>"
@@ -1085,6 +1134,9 @@ msgstr "Ungültiger Ordnerindex."
 msgid "Administrator username"
 msgstr "Administrator"
 
+msgid "Rating data mailed successfully."
+msgstr "Mail zur Inhaltsbewertung wurde erfolgreich versendet."
+
 msgid "Feedback"
 msgstr "Feedback"
 
@@ -1147,6 +1199,9 @@ msgstr ""
 "Falls etwas geändert wurde, wird die neue Filterkonfiguration gespeichert und\n"
 "in den Proxy neu geladen."
 
+msgid "Email this rating to the author"
+msgstr ""
+
 msgid "Remove rule"
 msgstr "Regel löschen"
 
@@ -1205,8 +1260,8 @@ msgstr "Bild von inaktiver Regel"
 msgid "Rule header value successfully changed."
 msgstr "Regel Header-Wert wurde erfolgreich geändert."
 
-msgid "Go to rating:"
-msgstr "Gehe zur Bewertung:"
+msgid "Invalid url."
+msgstr "Ungültige URL."
 
 msgid "Invalid folder move down id."
 msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
@@ -1236,19 +1291,6 @@ msgstr "Zugänglichkeitserklärung"
 msgid "Rule moved down."
 msgstr "Regel wurde nach unten geschoben."
 
-msgid ""
-"After that, restart %(AppName)s and click on\n"
-"the configuration link below.\n"
-"Your new credentials for the configuration interface are:<br>\n"
-"username <b>%(adminuser)s</b><br>\n"
-"password <b>%(adminpass)s</b><br>\n"
-msgstr ""
-"Danach starten Sie %(AppName)s neu und klicken auf die unten stehende\n"
-"Verknüpfung zur Konfiguration.\n"
-"Ihre neuen Authentifizierungsdaten für das Konfigurationsmenü lauten:<br>\n"
-"Benutzername <b>%(adminuser)s</b><br>\n"
-"Passwort <b>%(adminpass)s</b><br>\n"
-
 msgid "Admin user"
 msgstr "Administrator"
 
@@ -1270,6 +1312,9 @@ msgstr "Lösche ausgewählte Attribute"
 
 msgid "Invalid rule move down id."
 msgstr "Ungültige Regel-nach-unten-Verschieben Nummer."
+
+msgid "Go to rating:"
+msgstr "Gehe zur Bewertung:"
 
 msgid "Invalid parent proxy port."
 msgstr "Ungültige übergeordnete Proxy Portnummer."
@@ -1443,6 +1488,11 @@ msgstr ""
 
 msgid "Replacement URL"
 msgstr "Ersetzte URL"
+
+msgid ""
+"The configuration also allows you to change the\n"
+"above initial password.\n"
+msgstr ""
 
 msgid "Invalid attribute name."
 msgstr "Ungültiger Attributname."
