@@ -35,12 +35,12 @@ class LangDict (dict):
        translated entry or a random one"""
     def __getitem__ (self, key):
         if not self.has_key(key):
-            assert self
             # default is english
             if 'en' in self:
                 return self['en']
             for val in self.itervalues():
                 return val
+            self[key] = ""
         return super(LangDict, self).__getitem__(key)
 
 
@@ -202,10 +202,10 @@ class Rule (object):
     def title_desc_toxml (self, prefix=""):
         t = ['%s<title lang="%s">%s</title>' % \
              (prefix, xmlify(key), xmlify(value)) \
-             for key,value in self.titles.iteritems()]
+             for key,value in self.titles.iteritems() if value]
         d = ['%s<description lang="%s">%s</description>'% \
              (prefix, xmlify(key), xmlify(value)) \
-             for key,value in self.descriptions.iteritems()]
+             for key,value in self.descriptions.iteritems() if value]
         return "\n".join(t+d)
 
 
