@@ -19,7 +19,10 @@ DEB_MAKE_INSTALL_TARGET =
 # webcleaner gets the python files
 DEB_DESTDIR = $(BASE)
 
-# available custom targets are for example
+makebuilddir/webcleaner::
+# for CVS build regenerate ./configure
+	@if ! test -f ./configure; then ./autogen.sh; fi
+
 binary-post-install/webcleaner::
 	chown root:adm $(BASE)/var/log/webcleaner
 	chmod 0750 $(BASE)/var/log/webcleaner
@@ -41,4 +44,3 @@ binary-post-install/webcleaner::
 # overrides
 	install -m 0644 debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
 	install -m 0644 debian/webcleaner.linda debian/webcleaner/usr/share/linda/overrides/webcleaner
-
