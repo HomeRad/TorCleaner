@@ -53,21 +53,23 @@ def startfunc ():
     if os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, reload_config)
-    # drop root privileges
-    if os.geteuid()==0:
-        import pwd, grp
-        try:
-            pentry = pwd.getpwnam("nobody")
-            pw_uid = 2
-            nobody = pentry[pw_uid]
-            gentry = grp.getgrnam("nogroup")
-            gr_gid = 2
-            nogroup = gentry[gr_gid]
-            os.setgid(nogroup)
-            os.setuid(nobody)
-        except KeyError:
-            print >>sys.stderr, "warning: could not drop root privileges, user nobody and/or group nogroup not found"
-            pass
+        # drop root privileges
+        if os.geteuid()==0:
+            import pwd, grp
+            try:
+                pentry = pwd.getpwnam("nobody")
+                pw_uid = 2
+                nobody = pentry[pw_uid]
+                gentry = grp.getgrnam("nogroup")
+                gr_gid = 2
+                nogroup = gentry[gr_gid]
+                os.setgid(nogroup)
+                os.setuid(nobody)
+            except KeyError:
+                print >>sys.stderr, \
+                    "warning: could not drop root privileges, user nobody "+\
+                    "and/or group nogroup not found"
+                pass
     # read configuration
     global config
     config = Configuration()
@@ -75,6 +77,7 @@ def startfunc ():
     # start the proxy
     import wc.proxy
     wc.proxy.mainloop()
+
 
 # reload configuration
 def reload_config (signum, frame):
@@ -84,14 +87,15 @@ def reload_config (signum, frame):
     config.read_filterconf()
     config.init_filter_modules()
 
+
 import wc.filter
 
-class Configuration (UserDict.UserDict):
+class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
 
     def __init__ (self):
         """Initialize the options"""
-        UserDict.UserDict.__init__(self)
+        dict.__init__(self)
         # reset to default
         self.reset()
         # read configuration
