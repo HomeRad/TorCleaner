@@ -18,7 +18,12 @@
     Type: bugfix
     Changed: wc/url.py
 
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20040330
+  * allow JavaScript urls to connect to port 80 (default), 8000 (used
+    in test scripts) and 8080 (for proxies).
+    Type: feature
+    Changed: wc/url.py
+
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040419
     Type: feature
     Changed: libjs/*
 
