@@ -77,10 +77,19 @@ class HttpServer (Server):
         # default values
         self.addr = (ipaddr, port)
         self.reset()
-        # attempt connect
         create_inet_socket(self, socket.SOCK_STREAM)
+        self.try_connect()
+
+
+    def try_connect (self):
+        """attempt connect, close on error and raise exception"""
         self.socket.settimeout(config['timeout'])
-        self.connect(self.addr)
+        try:
+            self.connect(self.addr)
+        except (socket.timeout, socket.error):
+            # we never connected, but still the socket is in the socket map so remove it
+            self.del_channel()
+            raise
 
 
     def reset (self):
