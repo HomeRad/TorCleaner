@@ -277,4 +277,10 @@
  tag="script">
 <attr name="src">pagead\.googlesyndication\.com</attr>
 </rewrite>
+
+<rewrite title="LWN ad" oid="121"
+ desc="Pagead at linux weekly news"
+ matchurl="lwn\.net">
+<attr>oasis\.lwn\.net/oasisc\.php</attr>
+</rewrite>
 </folder>
