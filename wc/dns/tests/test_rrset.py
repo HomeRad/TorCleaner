@@ -16,39 +16,39 @@
 
 import unittest
 
-import linkcheck.dns.rrset
+import wc.dns.rrset
 
 class TestRRset (unittest.TestCase):
 
     def testEqual1(self):
-        r1 = linkcheck.dns.rrset.from_text('foo', 300, 'in', 'a', '10.0.0.1', '10.0.0.2')
-        r2 = linkcheck.dns.rrset.from_text('FOO', 300, 'in', 'a', '10.0.0.2', '10.0.0.1')
+        r1 = wc.dns.rrset.from_text('foo', 300, 'in', 'a', '10.0.0.1', '10.0.0.2')
+        r2 = wc.dns.rrset.from_text('FOO', 300, 'in', 'a', '10.0.0.2', '10.0.0.1')
         self.assertEqual(r1, r2)
 
     def testEqual2(self):
-        r1 = linkcheck.dns.rrset.from_text('foo', 300, 'in', 'a', '10.0.0.1', '10.0.0.2')
-        r2 = linkcheck.dns.rrset.from_text('FOO', 600, 'in', 'a', '10.0.0.2', '10.0.0.1')
+        r1 = wc.dns.rrset.from_text('foo', 300, 'in', 'a', '10.0.0.1', '10.0.0.2')
+        r2 = wc.dns.rrset.from_text('FOO', 600, 'in', 'a', '10.0.0.2', '10.0.0.1')
         self.assertEqual(r1, r2)
 
     def testNotEqual1(self):
-        r1 = linkcheck.dns.rrset.from_text('fooa', 30, 'in', 'a', '10.0.0.1', '10.0.0.2')
-        r2 = linkcheck.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
+        r1 = wc.dns.rrset.from_text('fooa', 30, 'in', 'a', '10.0.0.1', '10.0.0.2')
+        r2 = wc.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
         self.assertNotEqual(r1, r2)
 
     def testNotEqual2(self):
-        r1 = linkcheck.dns.rrset.from_text('foo', 30, 'in', 'a', '10.0.0.1', '10.0.0.3')
-        r2 = linkcheck.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
+        r1 = wc.dns.rrset.from_text('foo', 30, 'in', 'a', '10.0.0.1', '10.0.0.3')
+        r2 = wc.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
         self.assertNotEqual(r1, r2)
 
     def testNotEqual3(self):
-        r1 = linkcheck.dns.rrset.from_text('foo', 30, 'in', 'a', '10.0.0.1', '10.0.0.2',
+        r1 = wc.dns.rrset.from_text('foo', 30, 'in', 'a', '10.0.0.1', '10.0.0.2',
                                  '10.0.0.3')
-        r2 = linkcheck.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
+        r2 = wc.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
         self.assertNotEqual(r1, r2)
 
     def testNotEqual4(self):
-        r1 = linkcheck.dns.rrset.from_text('foo', 30, 'in', 'a', '10.0.0.1')
-        r2 = linkcheck.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
+        r1 = wc.dns.rrset.from_text('foo', 30, 'in', 'a', '10.0.0.1')
+        r2 = wc.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
         self.assertNotEqual(r1, r2)
 
 

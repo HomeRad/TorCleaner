@@ -15,8 +15,8 @@
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-import linkcheck.dns.rdtypes.nsbase
+import wc.dns.rdtypes.nsbase
 
-class DNAME(linkcheck.dns.rdtypes.nsbase.UncompressedNS):
+class DNAME(wc.dns.rdtypes.nsbase.UncompressedNS):
     """DNAME record"""
     pass

@@ -14,8 +14,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.rdtypes.nsbase
+import wc.dns.rdtypes.nsbase
 
-class NS(linkcheck.dns.rdtypes.nsbase.NSBase):
+class NS(wc.dns.rdtypes.nsbase.NSBase):
     """NS record"""
     pass

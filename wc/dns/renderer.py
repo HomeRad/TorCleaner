@@ -21,8 +21,8 @@ import random
 import struct
 import time
 
-import linkcheck.dns.exception
-import linkcheck.dns.tsig
+import wc.dns.exception
+import wc.dns.tsig
 
 QUESTION = 0
 ANSWER = 1
@@ -32,21 +32,21 @@ ADDITIONAL = 3
 class Renderer(object):
     """Helper class for building DNS wire-format messages.
 
-    Most applications can use the higher-level L{linkcheck.dns.message.Message}
+    Most applications can use the higher-level L{wc.dns.message.Message}
     class and its to_wire() method to generate wire-format messages.
     This class is for those applications which need finer control
     over the generation of messages.
 
     Typical use::
 
-        r = linkcheck.dns.renderer.Renderer(id=1, flags=0x80, max_size=512)
+        r = wc.dns.renderer.Renderer(id=1, flags=0x80, max_size=512)
         r.add_question(qname, qtype, qclass)
-        r.add_rrset(linkcheck.dns.renderer.ANSWER, rrset_1)
-        r.add_rrset(linkcheck.dns.renderer.ANSWER, rrset_2)
-        r.add_rrset(linkcheck.dns.renderer.AUTHORITY, ns_rrset)
+        r.add_rrset(wc.dns.renderer.ANSWER, rrset_1)
+        r.add_rrset(wc.dns.renderer.ANSWER, rrset_2)
+        r.add_rrset(wc.dns.renderer.AUTHORITY, ns_rrset)
         r.add_edns(0, 0, 4096)
-        r.add_rrset(linkcheck.dns.renderer.ADDTIONAL, ad_rrset_1)
-        r.add_rrset(linkcheck.dns.renderer.ADDTIONAL, ad_rrset_2)
+        r.add_rrset(wc.dns.renderer.ADDTIONAL, ad_rrset_1)
+        r.add_rrset(wc.dns.renderer.ADDTIONAL, ad_rrset_2)
         r.write_header()
         r.add_tsig(keyname, secret, 300, 1, 0, '', request_mac)
         wire = r.get_wire()
@@ -60,12 +60,12 @@ class Renderer(object):
     @ivar max_size: the maximum size of the message
     @type max_size: int
     @ivar origin: the origin to use when rendering relative names
-    @type origin: linkcheck.dns.name.Name object
+    @type origin: wc.dns.name.Name object
     @ivar compress: the compression table
     @type compress: dict
     @ivar section: the section currently being rendered
-    @type section: int (linkcheck.dns.renderer.QUESTION, linkcheck.dns.renderer.ANSWER,
-    linkcheck.dns.renderer.AUTHORITY, or linkcheck.dns.renderer.ADDITIONAL)
+    @type section: int (wc.dns.renderer.QUESTION, wc.dns.renderer.ANSWER,
+    wc.dns.renderer.AUTHORITY, or wc.dns.renderer.ADDITIONAL)
     @ivar counts: list of the number of RRs in each section
     @type counts: int list of length 4
     @ivar mac: the MAC of the rendered message (if TSIG was used)
@@ -81,10 +81,10 @@ class Renderer(object):
         @type flags: int
         @param max_size: the maximum message size; the default is 65535.
         If rendering results in a message greater than I{max_size},
-        then L{linkcheck.dns.exception.TooBig} will be raised.
+        then L{wc.dns.exception.TooBig} will be raised.
         @type max_size: int
         @param origin: the origin to use when rendering relative names
-        @type origin: linkcheck.dns.name.Namem or None.
+        @type origin: wc.dns.name.Namem or None.
         """
 
         self.output = StringIO.StringIO()
@@ -127,20 +127,20 @@ class Renderer(object):
 
         @param section: the section
         @type section: int
-        @raises linkcheck.dns.exception.FormError: an attempt was made to set
+        @raises wc.dns.exception.FormError: an attempt was made to set
         a section value less than the current section.
         """
 
         if self.section != section:
             if self.section > section:
-                raise linkcheck.dns.exception.FormError
+                raise wc.dns.exception.FormError
             self.section = section
 
-    def add_question(self, qname, rdtype, rdclass=linkcheck.dns.rdataclass.IN):
+    def add_question(self, qname, rdtype, rdclass=wc.dns.rdataclass.IN):
         """Add a question to the message.
 
         @param qname: the question name
-        @type qname: linkcheck.dns.name.Name
+        @type qname: wc.dns.name.Name
         @param rdtype: the question rdata type
         @type rdtype: int
         @param rdclass: the question rdata class
@@ -154,7 +154,7 @@ class Renderer(object):
         after = self.output.tell()
         if after >= self.max_size:
             self._rollback(before)
-            raise linkcheck.dns.exception.TooBig
+            raise wc.dns.exception.TooBig
         self.counts[QUESTION] += 1
 
     def add_rrset(self, section, rrset, **kw):
@@ -166,7 +166,7 @@ class Renderer(object):
         @param section: the section
         @type section: int
         @param rrset: the rrset
-        @type rrset: linkcheck.dns.rrset.RRset object
+        @type rrset: wc.dns.rrset.RRset object
         """
 
         self._set_section(section)
@@ -175,7 +175,7 @@ class Renderer(object):
         after = self.output.tell()
         if after >= self.max_size:
             self._rollback(before)
-            raise linkcheck.dns.exception.TooBig
+            raise wc.dns.exception.TooBig
         self.counts[section] += n
 
     def add_rdataset(self, section, name, rdataset, **kw):
@@ -188,9 +188,9 @@ class Renderer(object):
         @param section: the section
         @type section: int
         @param name: the owner name
-        @type name: linkcheck.dns.name.Name object
+        @type name: wc.dns.name.Name object
         @param rdataset: the rdataset
-        @type rdataset: linkcheck.dns.rdataset.Rdataset object
+        @type rdataset: wc.dns.rdataset.Rdataset object
         """
 
         self._set_section(section)
@@ -200,7 +200,7 @@ class Renderer(object):
         after = self.output.tell()
         if after >= self.max_size:
             self._rollback(before)
-            raise linkcheck.dns.exception.TooBig
+            raise wc.dns.exception.TooBig
         self.counts[section] += n
 
     def add_edns(self, edns, ednsflags, payload):
@@ -218,12 +218,12 @@ class Renderer(object):
 
         self._set_section(ADDITIONAL)
         before = self.output.tell()
-        self.output.write(struct.pack('!BHHIH', 0, linkcheck.dns.rdatatype.OPT, payload,
+        self.output.write(struct.pack('!BHHIH', 0, wc.dns.rdatatype.OPT, payload,
                                       ednsflags, 0))
         after = self.output.tell()
         if after >= self.max_size:
             self._rollback(before)
-            raise linkcheck.dns.exception.TooBig
+            raise wc.dns.exception.TooBig
         self.counts[ADDITIONAL] += 1
 
     def add_tsig(self, keyname, secret, fudge, id, tsig_error, other_data,
@@ -231,7 +231,7 @@ class Renderer(object):
         """Add a TSIG signature to the message.
 
         @param keyname: the TSIG key name
-        @type keyname: linkcheck.dns.name.Name object
+        @type keyname: wc.dns.name.Name object
         @param secret: the secret to use
         @type secret: string
         @param fudge: TSIG time fudge; default is 300 seconds.
@@ -250,7 +250,7 @@ class Renderer(object):
         self._set_section(ADDITIONAL)
         before = self.output.tell()
         s = self.output.getvalue()
-        (tsig_rdata, self.mac, ctx) = linkcheck.dns.tsig.hmac_md5(s,
+        (tsig_rdata, self.mac, ctx) = wc.dns.tsig.hmac_md5(s,
                                                         keyname,
                                                         secret,
                                                         int(time.time()),
@@ -260,15 +260,15 @@ class Renderer(object):
                                                         other_data,
                                                         request_mac)
         keyname.to_wire(self.output, self.compress, self.origin)
-        self.output.write(struct.pack('!HHIH', linkcheck.dns.rdatatype.TSIG,
-                                      linkcheck.dns.rdataclass.ANY, 0, 0))
+        self.output.write(struct.pack('!HHIH', wc.dns.rdatatype.TSIG,
+                                      wc.dns.rdataclass.ANY, 0, 0))
         rdata_start = self.output.tell()
         self.output.write(tsig_rdata)
         after = self.output.tell()
         assert after - rdata_start < 65536
         if after >= self.max_size:
             self._rollback(before)
-            raise linkcheck.dns.exception.TooBig
+            raise wc.dns.exception.TooBig
         self.output.seek(rdata_start - 2)
         self.output.write(struct.pack('!H', after - rdata_start))
         self.counts[ADDITIONAL] += 1

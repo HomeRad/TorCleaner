@@ -16,7 +16,7 @@
 
 """DNS Result Codes."""
 
-import linkcheck.dns.exception
+import wc.dns.exception
 
 NOERROR = 0
 FORMERR = 1
@@ -53,7 +53,7 @@ _by_text = {
 _by_value = dict([(y, x) for x, y in _by_text.iteritems()])
 
 
-class UnknownRcode(linkcheck.dns.exception.DNSException):
+class UnknownRcode(wc.dns.exception.DNSException):
     """Raised if an rcode is unknown."""
     pass
 

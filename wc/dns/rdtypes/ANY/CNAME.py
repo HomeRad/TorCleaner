@@ -14,9 +14,9 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.rdtypes.nsbase
+import wc.dns.rdtypes.nsbase
 
-class CNAME(linkcheck.dns.rdtypes.nsbase.NSBase):
+class CNAME(wc.dns.rdtypes.nsbase.NSBase):
     """CNAME record
 
     Note: although CNAME is officially a singleton type, dnspython allows

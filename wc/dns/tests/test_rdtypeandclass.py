@@ -16,110 +16,110 @@
 
 import unittest
 
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdatatype
+import wc.dns.rdataclass
+import wc.dns.rdatatype
 
 class TestRdTypeAndClass (unittest.TestCase):
 
     # Classes
 
     def test_class_meta1(self):
-        self.assert_(linkcheck.dns.rdataclass.is_metaclass(linkcheck.dns.rdataclass.ANY))
+        self.assert_(wc.dns.rdataclass.is_metaclass(wc.dns.rdataclass.ANY))
 
     def test_class_meta2(self):
-        self.assert_(not linkcheck.dns.rdataclass.is_metaclass(linkcheck.dns.rdataclass.IN))
+        self.assert_(not wc.dns.rdataclass.is_metaclass(wc.dns.rdataclass.IN))
 
     def test_class_bytext1(self):
-        self.assertEqual(linkcheck.dns.rdataclass.from_text('IN'),
-                         linkcheck.dns.rdataclass.IN)
+        self.assertEqual(wc.dns.rdataclass.from_text('IN'),
+                         wc.dns.rdataclass.IN)
 
     def test_class_bytext2(self):
-        self.assertEqual(linkcheck.dns.rdataclass.from_text('CLASS1'),
-                         linkcheck.dns.rdataclass.IN)
+        self.assertEqual(wc.dns.rdataclass.from_text('CLASS1'),
+                         wc.dns.rdataclass.IN)
 
     def test_class_bytext_bounds1(self):
-        self.assertEqual(linkcheck.dns.rdataclass.from_text('CLASS0'), 0)
-        self.assertEqual(linkcheck.dns.rdataclass.from_text('CLASS65535'), 65535)
+        self.assertEqual(wc.dns.rdataclass.from_text('CLASS0'), 0)
+        self.assertEqual(wc.dns.rdataclass.from_text('CLASS65535'), 65535)
 
     def test_class_bytext_bounds2(self):
         def bad():
-            junk = linkcheck.dns.rdataclass.from_text('CLASS65536')
+            junk = wc.dns.rdataclass.from_text('CLASS65536')
         self.assertRaises(ValueError, bad)
 
     def test_class_bytext_unknown(self):
         def bad():
-            junk = linkcheck.dns.rdataclass.from_text('XXX')
-        self.assertRaises(linkcheck.dns.rdataclass.UnknownRdataclass, bad)
+            junk = wc.dns.rdataclass.from_text('XXX')
+        self.assertRaises(wc.dns.rdataclass.UnknownRdataclass, bad)
 
     def test_class_totext1(self):
-        self.assertEqual(linkcheck.dns.rdataclass.to_text(linkcheck.dns.rdataclass.IN),
+        self.assertEqual(wc.dns.rdataclass.to_text(wc.dns.rdataclass.IN),
                          'IN')
 
     def test_class_totext1(self):
-        self.assertEqual(linkcheck.dns.rdataclass.to_text(999), 'CLASS999')
+        self.assertEqual(wc.dns.rdataclass.to_text(999), 'CLASS999')
 
     def test_class_totext_bounds1(self):
         def bad():
-            junk = linkcheck.dns.rdataclass.to_text(-1)
+            junk = wc.dns.rdataclass.to_text(-1)
         self.assertRaises(ValueError, bad)
 
     def test_class_totext_bounds2(self):
         def bad():
-            junk = linkcheck.dns.rdataclass.to_text(65536)
+            junk = wc.dns.rdataclass.to_text(65536)
         self.assertRaises(ValueError, bad)
 
     # Types
 
     def test_type_meta1(self):
-        self.assert_(linkcheck.dns.rdatatype.is_metatype(linkcheck.dns.rdatatype.ANY))
+        self.assert_(wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.ANY))
 
     def test_type_meta2(self):
-        self.assert_(linkcheck.dns.rdatatype.is_metatype(linkcheck.dns.rdatatype.OPT))
+        self.assert_(wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.OPT))
 
     def test_type_meta3(self):
-        self.assert_(not linkcheck.dns.rdatatype.is_metatype(linkcheck.dns.rdatatype.A))
+        self.assert_(not wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.A))
 
     def test_type_singleton1(self):
-        self.assert_(linkcheck.dns.rdatatype.is_singleton(linkcheck.dns.rdatatype.SOA))
+        self.assert_(wc.dns.rdatatype.is_singleton(wc.dns.rdatatype.SOA))
 
     def test_type_singleton2(self):
-        self.assert_(not linkcheck.dns.rdatatype.is_singleton(linkcheck.dns.rdatatype.A))
+        self.assert_(not wc.dns.rdatatype.is_singleton(wc.dns.rdatatype.A))
 
     def test_type_bytext1(self):
-        self.assertEqual(linkcheck.dns.rdatatype.from_text('A'), linkcheck.dns.rdatatype.A)
+        self.assertEqual(wc.dns.rdatatype.from_text('A'), wc.dns.rdatatype.A)
 
     def test_type_bytext2(self):
-        self.assertEqual(linkcheck.dns.rdatatype.from_text('TYPE1'),
-                         linkcheck.dns.rdatatype.A)
+        self.assertEqual(wc.dns.rdatatype.from_text('TYPE1'),
+                         wc.dns.rdatatype.A)
 
     def test_type_bytext_bounds1(self):
-        self.assertEqual(linkcheck.dns.rdatatype.from_text('TYPE0'), 0)
-        self.assertEqual(linkcheck.dns.rdatatype.from_text('TYPE65535'), 65535)
+        self.assertEqual(wc.dns.rdatatype.from_text('TYPE0'), 0)
+        self.assertEqual(wc.dns.rdatatype.from_text('TYPE65535'), 65535)
 
     def test_type_bytext_bounds2(self):
         def bad():
-            junk = linkcheck.dns.rdatatype.from_text('TYPE65536')
+            junk = wc.dns.rdatatype.from_text('TYPE65536')
         self.assertRaises(ValueError, bad)
 
     def test_type_bytext_unknown(self):
         def bad():
-            junk = linkcheck.dns.rdatatype.from_text('XXX')
-        self.assertRaises(linkcheck.dns.rdatatype.UnknownRdatatype, bad)
+            junk = wc.dns.rdatatype.from_text('XXX')
+        self.assertRaises(wc.dns.rdatatype.UnknownRdatatype, bad)
 
     def test_type_totext1(self):
-        self.assertEqual(linkcheck.dns.rdatatype.to_text(linkcheck.dns.rdatatype.A), 'A')
+        self.assertEqual(wc.dns.rdatatype.to_text(wc.dns.rdatatype.A), 'A')
 
     def test_type_totext1(self):
-        self.assertEqual(linkcheck.dns.rdatatype.to_text(999), 'TYPE999')
+        self.assertEqual(wc.dns.rdatatype.to_text(999), 'TYPE999')
 
     def test_type_totext_bounds1(self):
         def bad():
-            junk = linkcheck.dns.rdatatype.to_text(-1)
+            junk = wc.dns.rdatatype.to_text(-1)
         self.assertRaises(ValueError, bad)
 
     def test_type_totext_bounds2(self):
         def bad():
-            junk = linkcheck.dns.rdatatype.to_text(65536)
+            junk = wc.dns.rdatatype.to_text(65536)
         self.assertRaises(ValueError, bad)
 
 

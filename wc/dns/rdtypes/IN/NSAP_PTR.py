@@ -14,8 +14,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.rdtypes.nsbase
+import wc.dns.rdtypes.nsbase
 
-class NSAP_PTR(linkcheck.dns.rdtypes.nsbase.UncompressedNS):
+class NSAP_PTR(wc.dns.rdtypes.nsbase.UncompressedNS):
     """NSAP-PTR record"""
     pass

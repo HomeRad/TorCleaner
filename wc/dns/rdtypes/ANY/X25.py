@@ -14,11 +14,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.tokenizer
 
-class X25(linkcheck.dns.rdata.Rdata):
+class X25(wc.dns.rdata.Rdata):
     """X25 record
 
     @ivar address: the PSDN address
@@ -32,7 +32,7 @@ class X25(linkcheck.dns.rdata.Rdata):
         self.address = address
 
     def to_text(self, origin=None, relativize=True, **kw):
-        return '"%s"' % linkcheck.dns.rdata._escapify(self.address)
+        return '"%s"' % wc.dns.rdata._escapify(self.address)
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         address = tok.get_string()
@@ -53,7 +53,7 @@ class X25(linkcheck.dns.rdata.Rdata):
         current += 1
         rdlen -= 1
         if l != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         address = wire[current : current + l]
         return cls(rdclass, rdtype, address)
 

@@ -17,16 +17,16 @@
 """DNS Names.
 
 @var root: The DNS root name.
-@type root: linkcheck.dns.name.Name object
+@type root: wc.dns.name.Name object
 @var empty: The empty DNS name.
-@type empty: linkcheck.dns.name.Name object
+@type empty: wc.dns.name.Name object
 """
 
 import string
 import struct
 import sys
 
-import linkcheck.dns.exception
+import wc.dns.exception
 
 NAMERELN_NONE = 0
 NAMERELN_SUPERDOMAIN = 1
@@ -34,36 +34,36 @@ NAMERELN_SUBDOMAIN = 2
 NAMERELN_EQUAL = 3
 NAMERELN_COMMONANCESTOR = 4
 
-class EmptyLabel(linkcheck.dns.exception.SyntaxError):
+class EmptyLabel(wc.dns.exception.SyntaxError):
     """Raised if a label is empty."""
     pass
 
-class BadEscape(linkcheck.dns.exception.SyntaxError):
+class BadEscape(wc.dns.exception.SyntaxError):
     """Raised if an escaped code in a text format name is invalid."""
     pass
 
-class BadPointer(linkcheck.dns.exception.FormError):
+class BadPointer(wc.dns.exception.FormError):
     """Raised if a compression pointer points forward instead of backward."""
     pass
 
-class BadLabelType(linkcheck.dns.exception.FormError):
+class BadLabelType(wc.dns.exception.FormError):
     """Raised if the label type of a wire format name is unknown."""
     pass
 
-class NeedAbsoluteNameOrOrigin(linkcheck.dns.exception.DNSException):
+class NeedAbsoluteNameOrOrigin(wc.dns.exception.DNSException):
     """Raised if an attempt is made to convert a non-absolute name to
     wire when there is also a non-absolute (or missing) origin."""
     pass
 
-class NameTooLong(linkcheck.dns.exception.FormError):
+class NameTooLong(wc.dns.exception.FormError):
     """Raised if a name is > 255 octets long."""
     pass
 
-class LabelTooLong(linkcheck.dns.exception.SyntaxError):
+class LabelTooLong(wc.dns.exception.SyntaxError):
     """Raised if a label is > 63 octets long."""
     pass
 
-class AbsoluteConcatenation(linkcheck.dns.exception.DNSException):
+class AbsoluteConcatenation(wc.dns.exception.DNSException):
     """Raised if an attempt is made to append anything other than the
     empty name to an absolute name."""
     pass
@@ -121,7 +121,7 @@ def _validate_labels(labels):
 class Name(object):
     """A DNS name.
 
-    The linkcheck.dns.name.Name class represents a DNS name as a tuple of labels.
+    The wc.dns.name.Name class represents a DNS name as a tuple of labels.
     Instances of the class are immutable.
 
     @ivar labels: The tuple of labels in the name. Each label is a string of
@@ -170,9 +170,9 @@ class Name(object):
         """Compare two names, returning a 3-tuple (relation, order, nlabels).
 
         I{relation} describes the relation ship beween the names,
-        and is one of: linkcheck.dns.name.NAMERELN_NONE,
-        linkcheck.dns.name.NAMERELN_SUPERDOMAIN, linkcheck.dns.name.NAMERELN_SUBDOMAIN,
-        linkcheck.dns.name.NAMERELN_EQUAL, or linkcheck.dns.name.NAMERELN_COMMONANCESTOR
+        and is one of: wc.dns.name.NAMERELN_NONE,
+        wc.dns.name.NAMERELN_SUPERDOMAIN, wc.dns.name.NAMERELN_SUBDOMAIN,
+        wc.dns.name.NAMERELN_EQUAL, or wc.dns.name.NAMERELN_COMMONANCESTOR
 
         I{order} is < 0 if self < other, > 0 if self > other, and ==
         0 if self == other.  A relative name is always less than an
@@ -254,7 +254,7 @@ class Name(object):
     def canonicalize(self):
         """Return a name which is equal to the current name, but is in
         DNSSEC canonical form.
-        @rtype: linkcheck.dns.name.Name object
+        @rtype: wc.dns.name.Name object
         """
 
         return Name([x.lower() for x in self.labels])
@@ -326,7 +326,7 @@ class Name(object):
 
         @param origin: If the name is relative and origin is not None, then
         origin will be appended to it.
-        @type origin: linkcheck.dns.name.Name object
+        @type origin: wc.dns.name.Name object
         @raises NeedAbsoluteNameOrOrigin: All names in wire format are
         absolute.  If self is a relative name, then an origin must be supplied;
         if it is missing, then this exception is raised
@@ -354,7 +354,7 @@ class Name(object):
         @type compress: dict
         @param origin: If the name is relative and origin is not None, then
         origin will be appended to it.
-        @type origin: linkcheck.dns.name.Name object
+        @type origin: wc.dns.name.Name object
         @raises NeedAbsoluteNameOrOrigin: All names in wire format are
         absolute.  If self is a relative name, then an origin must be supplied;
         if it is missing, then this exception is raised
@@ -422,9 +422,9 @@ class Name(object):
 
         l = len(self.labels)
         if depth == 0:
-            return (self, linkcheck.dns.name.empty)
+            return (self, wc.dns.name.empty)
         elif depth == l:
-            return (linkcheck.dns.name.empty, self)
+            return (wc.dns.name.empty, self)
         elif depth < 0 or depth > l:
             raise ValueError, \
                   'depth must be >= 0 and <= the length of the name'
@@ -432,7 +432,7 @@ class Name(object):
 
     def concatenate(self, other):
         """Return a new name which is the concatenation of self and other.
-        @rtype: linkcheck.dns.name.Name object
+        @rtype: wc.dns.name.Name object
         @raises AbsoluteConcatenation: self is absolute and other is
         not the empty name
         """
@@ -446,7 +446,7 @@ class Name(object):
     def relativize(self, origin):
         """If self is a subdomain of origin, return a new name which is self
         relative to origin.  Otherwise return self.
-        @rtype: linkcheck.dns.name.Name object
+        @rtype: wc.dns.name.Name object
         """
 
         if not origin is None and self.is_subdomain(origin):
@@ -457,7 +457,7 @@ class Name(object):
     def derelativize(self, origin):
         """If self is a relative name, return a new name which is the
         concatenation of self and origin.  Otherwise return self.
-        @rtype: linkcheck.dns.name.Name object
+        @rtype: wc.dns.name.Name object
         """
 
         if not self.is_absolute():
@@ -470,7 +470,7 @@ class Name(object):
         origin is None, then self is returned.  Otherwise, if
         relativize is true the name is relativized, and if relativize is
         false the name is derelativized.
-        @rtype: linkcheck.dns.name.Name object
+        @rtype: wc.dns.name.Name object
         """
         if origin:
             if relativize:
@@ -485,7 +485,7 @@ empty = Name([])
 
 def from_text(text, origin = root):
     """Convert text into a Name object.
-    @rtype: linkcheck.dns.name.Name object
+    @rtype: wc.dns.name.Name object
     """
 
     if not isinstance(text, str):
@@ -546,12 +546,12 @@ def from_wire(message, current):
     @param current: the offset of the beginning of the name from the start
     of the message
     @type current: int
-    @raises linkcheck.dns.name.BadPointer: a compression pointer did not point backwards
+    @raises wc.dns.name.BadPointer: a compression pointer did not point backwards
     in the message
-    @raises linkcheck.dns.name.BadLabelType: an invalid label type was encountered.
+    @raises wc.dns.name.BadLabelType: an invalid label type was encountered.
     @returns: a tuple consisting of the name that was read and the number
     of bytes of the wire format message which were consumed reading it
-    @rtype: (linkcheck.dns.name.Name object, int) tuple
+    @rtype: (wc.dns.name.Name object, int) tuple
     """
 
     if not isinstance(message, str):

@@ -14,15 +14,15 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.rdtypes.mxbase
+import wc.dns.rdtypes.mxbase
 
-class AFSDB(linkcheck.dns.rdtypes.mxbase.UncompressedMX):
+class AFSDB(wc.dns.rdtypes.mxbase.UncompressedMX):
     """AFSDB record
 
     @ivar subtype: the subtype value
     @type subtype: int
     @ivar hostname: the hostname name
-    @type hostname: linkcheck.dns.name.Name object"""
+    @type hostname: wc.dns.name.Name object"""
 
     # Use the property mechanism to make "subtype" an alias for the
     # "preference" attribute, and "hostname" an alias for the "exchange"

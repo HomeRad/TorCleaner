@@ -14,16 +14,16 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.rdatatype
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.rdatatype
+import wc.dns.name
 
-class NXT(linkcheck.dns.rdata.Rdata):
+class NXT(wc.dns.rdata.Rdata):
     """NXT record
 
     @ivar next: the next name
-    @type next: linkcheck.dns.name.Name object
+    @type next: wc.dns.name.Name object
     @ivar bitmap: the type bitmap
     @type bitmap: string
     @see: RFC 2535"""
@@ -42,7 +42,7 @@ class NXT(linkcheck.dns.rdata.Rdata):
             byte = ord(self.bitmap[i])
             for j in xrange(0, 8):
                 if byte & (0x80 >> j):
-                    bits.append(linkcheck.dns.rdatatype.to_text(i * 8 + j))
+                    bits.append(wc.dns.rdatatype.to_text(i * 8 + j))
         text = ' '.join(bits)
         return '%s %s' % (next, text)
 
@@ -55,19 +55,19 @@ class NXT(linkcheck.dns.rdata.Rdata):
                   '\x00', '\x00', '\x00', '\x00' ]
         while 1:
             (ttype, value) = tok.get()
-            if ttype == linkcheck.dns.tokenizer.EOL or ttype == linkcheck.dns.tokenizer.EOF:
+            if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
                 break
             if value.isdigit():
                 nrdtype = int(value)
             else:
-                nrdtype = linkcheck.dns.rdatatype.from_text(value)
+                nrdtype = wc.dns.rdatatype.from_text(value)
             if nrdtype == 0:
-                raise linkcheck.dns.exception.SyntaxError, "NXT with bit 0"
+                raise wc.dns.exception.SyntaxError, "NXT with bit 0"
             if nrdtype > 127:
-                raise linkcheck.dns.exception.SyntaxError, "NXT with bit > 127"
+                raise wc.dns.exception.SyntaxError, "NXT with bit > 127"
             i = nrdtype // 8
             bitmap[i] = chr(ord(bitmap[i]) | (0x80 >> (nrdtype % 8)))
-        bitmap = linkcheck.dns.rdata._truncate_bitmap(bitmap)
+        bitmap = wc.dns.rdata._truncate_bitmap(bitmap)
         return cls(rdclass, rdtype, next, bitmap)
 
     from_text = classmethod(from_text)
@@ -77,7 +77,7 @@ class NXT(linkcheck.dns.rdata.Rdata):
         file.write(self.bitmap)
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        (next, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen], current)
+        (next, cused) = wc.dns.name.from_wire(wire[: current + rdlen], current)
         current += cused
         rdlen -= cused
         bitmap = wire[current : current + rdlen]

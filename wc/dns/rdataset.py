@@ -21,22 +21,22 @@ import StringIO
 import struct
 import sets
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdatatype
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdata
-import linkcheck.dns.set
+import wc.dns.exception
+import wc.dns.rdatatype
+import wc.dns.rdataclass
+import wc.dns.rdata
+import wc.dns.set
 
-class DifferingCovers(linkcheck.dns.exception.DNSException):
+class DifferingCovers(wc.dns.exception.DNSException):
     """Raised if an attempt is made to add a SIG/RRSIG whose covered type
     is not the same as that of the other rdatas in the rdataset."""
     pass
 
-class IncompatibleTypes(linkcheck.dns.exception.DNSException):
+class IncompatibleTypes(wc.dns.exception.DNSException):
     """Raised if an attempt is made to add rdata of an incompatible type."""
     pass
 
-class Rdataset(linkcheck.dns.set.Set):
+class Rdataset(wc.dns.set.Set):
     """A DNS rdataset.
 
     @ivar rdclass: The class of the rdataset
@@ -44,8 +44,8 @@ class Rdataset(linkcheck.dns.set.Set):
     @ivar rdtype: The type of the rdataset
     @type rdtype: int
     @ivar covers: The covered type.  Usually this value is
-    linkcheck.dns.rdatatype.NONE, but if the rdtype is linkcheck.dns.rdatatype.SIG or
-    linkcheck.dns.rdatatype.RRSIG, then the covers value will be the rdata
+    wc.dns.rdatatype.NONE, but if the rdtype is wc.dns.rdatatype.SIG or
+    wc.dns.rdatatype.RRSIG, then the covers value will be the rdata
     type the SIG/RRSIG covers.  The library treats the SIG and RRSIG
     types as if they were a family of
     types, e.g. RRSIG(A), RRSIG(NS), RRSIG(SOA).  This makes RRSIGs much
@@ -58,7 +58,7 @@ class Rdataset(linkcheck.dns.set.Set):
 
     __slots__ = ['rdclass', 'rdtype', 'covers', 'ttl']
 
-    def __init__(self, rdclass, rdtype, covers=linkcheck.dns.rdatatype.NONE):
+    def __init__(self, rdclass, rdtype, covers=wc.dns.rdatatype.NONE):
         """Create a new rdataset of the specified class and type.
 
         @see: the description of the class instance variables for the
@@ -97,7 +97,7 @@ class Rdataset(linkcheck.dns.set.Set):
         self.update_ttl(ttl) will be called prior to adding the rdata.
 
         @param rd: The rdata
-        @type rd: linkcheck.dns.rdata.Rdata object
+        @type rd: wc.dns.rdata.Rdata object
         @param ttl: The TTL
         @type ttl: int"""
 
@@ -111,14 +111,14 @@ class Rdataset(linkcheck.dns.set.Set):
             raise IncompatibleTypes
         if not ttl is None:
             self.update_ttl(ttl)
-        if self.rdtype == linkcheck.dns.rdatatype.RRSIG or \
-           self.rdtype == linkcheck.dns.rdatatype.SIG:
+        if self.rdtype == wc.dns.rdatatype.RRSIG or \
+           self.rdtype == wc.dns.rdatatype.SIG:
             covers = rd.covers()
-            if len(self) == 0 and self.covers == linkcheck.dns.rdatatype.NONE:
+            if len(self) == 0 and self.covers == wc.dns.rdatatype.NONE:
                 self.covers = covers
             elif self.covers != covers:
                 raise DifferingCovers
-        if linkcheck.dns.rdatatype.is_singleton(rd.rdtype) and len(self) > 0:
+        if wc.dns.rdatatype.is_singleton(rd.rdtype) and len(self) > 0:
             self.clear()
         super(Rdataset, self).add(rd)
 
@@ -134,7 +134,7 @@ class Rdataset(linkcheck.dns.set.Set):
         """Add all rdatas in other to self.
 
         @param other: The rdataset from which to update
-        @type other: linkcheck.dns.rdataset.Rdataset object"""
+        @type other: wc.dns.rdataset.Rdataset object"""
         self.update_ttl(other.ttl)
         super(Rdataset, self).update(other)
 
@@ -142,9 +142,9 @@ class Rdataset(linkcheck.dns.set.Set):
         if self.covers == 0:
             ctext = ''
         else:
-            ctext = '(' + linkcheck.dns.rdatatype.to_text(self.covers) + ')'
-        return '<DNS ' + linkcheck.dns.rdataclass.to_text(self.rdclass) + ' ' + \
-               linkcheck.dns.rdatatype.to_text(self.rdtype) + ctext + ' rdataset>'
+            ctext = '(' + wc.dns.rdatatype.to_text(self.covers) + ')'
+        return '<DNS ' + wc.dns.rdataclass.to_text(self.rdclass) + ' ' + \
+               wc.dns.rdatatype.to_text(self.rdtype) + ctext + ' rdataset>'
 
     def __str__(self):
         return self.to_text()
@@ -168,7 +168,7 @@ class Rdataset(linkcheck.dns.set.Set):
                 override_rdclass=None, **kw):
         """Convert the rdataset into DNS master file format.
 
-        @see: L{linkcheck.dns.name.Name.choose_relativity} for more information
+        @see: L{wc.dns.name.Name.choose_relativity} for more information
         on how I{origin} and I{relativize} determine the way names
         are emitted.
 
@@ -177,9 +177,9 @@ class Rdataset(linkcheck.dns.set.Set):
 
         @param name: If name is not None, emit a RRs with I{name} as
         the owner name.
-        @type name: linkcheck.dns.name.Name object
+        @type name: wc.dns.name.Name object
         @param origin: The origin for relative names, or None.
-        @type origin: linkcheck.dns.name.Name object
+        @type origin: wc.dns.name.Name object
         @param relativize: True if names should names be relativized
         @type relativize: bool"""
         if not name is None:
@@ -201,13 +201,13 @@ class Rdataset(linkcheck.dns.set.Set):
             # (which is meaningless anyway).
             #
             print >> s, '%s%s%s %s' % (ntext, pad,
-                                       linkcheck.dns.rdataclass.to_text(rdclass),
-                                       linkcheck.dns.rdatatype.to_text(self.rdtype))
+                                       wc.dns.rdataclass.to_text(rdclass),
+                                       wc.dns.rdatatype.to_text(self.rdtype))
         else:
             for rd in self:
                 print >> s, '%s%s%d %s %s %s' % \
-                      (ntext, pad, self.ttl, linkcheck.dns.rdataclass.to_text(rdclass),
-                       linkcheck.dns.rdatatype.to_text(self.rdtype),
+                      (ntext, pad, self.ttl, wc.dns.rdataclass.to_text(rdclass),
+                       wc.dns.rdatatype.to_text(self.rdtype),
                        rd.to_text(origin=origin, relativize=relativize, **kw))
         #
         # We strip off the final \n for the caller's convenience in printing
@@ -219,7 +219,7 @@ class Rdataset(linkcheck.dns.set.Set):
         """Convert the rdataset to wire format.
 
         @param name: The owner name of the RRset that will be emitted
-        @type name: linkcheck.dns.name.Name object
+        @type name: wc.dns.name.Name object
         @param file: The file to which the wire format data will be appended
         @type file: file
         @param compress: The compression table to use; the default is None.
@@ -274,17 +274,17 @@ def from_text_list(rdclass, rdtype, ttl, text_rdatas):
     """Create an rdataset with the specified class, type, and TTL, and with
     the specified list of rdatas in text format.
 
-    @rtype: linkcheck.dns.rdataset.Rdataset object
+    @rtype: wc.dns.rdataset.Rdataset object
     """
 
     if isinstance(rdclass, str):
-        rdclass = linkcheck.dns.rdataclass.from_text(rdclass)
+        rdclass = wc.dns.rdataclass.from_text(rdclass)
     if isinstance(rdtype, str):
-        rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+        rdtype = wc.dns.rdatatype.from_text(rdtype)
     r = Rdataset(rdclass, rdtype)
     r.update_ttl(ttl)
     for t in text_rdatas:
-        rd = linkcheck.dns.rdata.from_text(r.rdclass, r.rdtype, t)
+        rd = wc.dns.rdata.from_text(r.rdclass, r.rdtype, t)
         r.add(rd)
     return r
 
@@ -292,7 +292,7 @@ def from_text(rdclass, rdtype, ttl, *text_rdatas):
     """Create an rdataset with the specified class, type, and TTL, and with
     the specified rdatas in text format.
 
-    @rtype: linkcheck.dns.rdataset.Rdataset object
+    @rtype: wc.dns.rdataset.Rdataset object
     """
 
     return from_text_list(rdclass, rdtype, ttl, text_rdatas)
@@ -301,7 +301,7 @@ def from_rdata_list(ttl, rdatas):
     """Create an rdataset with the specified TTL, and with
     the specified list of rdata objects.
 
-    @rtype: linkcheck.dns.rdataset.Rdataset object
+    @rtype: wc.dns.rdataset.Rdataset object
     """
 
     if len(rdatas) == 0:
@@ -319,7 +319,7 @@ def from_rdata(ttl, *rdatas):
     """Create an rdataset with the specified TTL, and with
     the specified rdata objects.
 
-    @rtype: linkcheck.dns.rdataset.Rdataset object
+    @rtype: wc.dns.rdataset.Rdataset object
     """
 
     return from_rdata_list(ttl, rdatas)

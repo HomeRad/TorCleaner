@@ -16,10 +16,10 @@
 
 import struct
 
-import linkcheck.dns.rdata
-import linkcheck.dns.rdatatype
+import wc.dns.rdata
+import wc.dns.rdatatype
 
-class SSHFP(linkcheck.dns.rdata.Rdata):
+class SSHFP(wc.dns.rdata.Rdata):
     """SSHFP record
 
     @ivar algorithm: the algorithm
@@ -42,7 +42,7 @@ class SSHFP(linkcheck.dns.rdata.Rdata):
     def to_text(self, origin=None, relativize=True, **kw):
         return '%d %d %s' % (self.algorithm,
                              self.fp_type,
-                             linkcheck.dns.rdata._hexify(self.fingerprint,
+                             wc.dns.rdata._hexify(self.fingerprint,
                                                chunksize=128))
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):

@@ -16,11 +16,11 @@
 
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.name
 
-class SRV(linkcheck.dns.rdata.Rdata):
+class SRV(wc.dns.rdata.Rdata):
     """SRV record
 
     @ivar priority: the priority
@@ -30,7 +30,7 @@ class SRV(linkcheck.dns.rdata.Rdata):
     @ivar port: the port of the service
     @type port: int
     @ivar target: the target host
-    @type target: linkcheck.dns.name.Name object
+    @type target: wc.dns.name.Name object
     @see: RFC 2782"""
 
     __slots__ = ['priority', 'weight', 'port', 'target']
@@ -68,10 +68,10 @@ class SRV(linkcheck.dns.rdata.Rdata):
                                                  wire[current : current + 6])
         current += 6
         rdlen -= 6
-        (target, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+        (target, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                              current)
         if cused != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         if not origin is None:
             target = target.relativize(origin)
         return cls(rdclass, rdtype, priority, weight, port, target)

@@ -16,15 +16,15 @@
 
 """NS-like base classes."""
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.name
 
-class NSBase(linkcheck.dns.rdata.Rdata):
+class NSBase(wc.dns.rdata.Rdata):
     """Base class for rdata that is like an NS record.
 
     @ivar target: the target name of the rdata
-    @type target: linkcheck.dns.name.Name object"""
+    @type target: wc.dns.name.Name object"""
 
     __slots__ = ['target']
 
@@ -48,10 +48,10 @@ class NSBase(linkcheck.dns.rdata.Rdata):
         self.target.to_wire(file, compress, origin)
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        (target, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+        (target, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                              current)
         if cused != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         if not origin is None:
             target = target.relativize(origin)
         return cls(rdclass, rdtype, target)

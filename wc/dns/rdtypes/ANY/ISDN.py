@@ -14,11 +14,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.tokenizer
 
-class ISDN(linkcheck.dns.rdata.Rdata):
+class ISDN(wc.dns.rdata.Rdata):
     """ISDN record
 
     @ivar address: the ISDN address
@@ -36,15 +36,15 @@ class ISDN(linkcheck.dns.rdata.Rdata):
 
     def to_text(self, origin=None, relativize=True, **kw):
         if self.subaddress:
-            return '"%s" "%s"' % (linkcheck.dns.rdata._escapify(self.address),
-                                  linkcheck.dns.rdata._escapify(self.subaddress))
+            return '"%s" "%s"' % (wc.dns.rdata._escapify(self.address),
+                                  wc.dns.rdata._escapify(self.subaddress))
         else:
-            return '"%s"' % linkcheck.dns.rdata._escapify(self.address)
+            return '"%s"' % wc.dns.rdata._escapify(self.address)
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         address = tok.get_string()
         t = tok.get()
-        if t[0] != linkcheck.dns.tokenizer.EOL and t[0] != linkcheck.dns.tokenizer.EOF:
+        if t[0] != wc.dns.tokenizer.EOL and t[0] != wc.dns.tokenizer.EOF:
             tok.unget(t)
             subaddress = tok.get_string()
         else:
@@ -73,7 +73,7 @@ class ISDN(linkcheck.dns.rdata.Rdata):
         current += 1
         rdlen -= 1
         if l > rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         address = wire[current : current + l]
         current += l
         rdlen -= l
@@ -82,7 +82,7 @@ class ISDN(linkcheck.dns.rdata.Rdata):
             current += 1
             rdlen -= 1
             if l != rdlen:
-                raise linkcheck.dns.exception.FormError
+                raise wc.dns.exception.FormError
             subaddress = wire[current : current + l]
         else:
             subaddress = ''

@@ -16,9 +16,9 @@
 
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.name
-import linkcheck.dns.rdata
+import wc.dns.exception
+import wc.dns.name
+import wc.dns.rdata
 
 def _write_string(file, s):
     l = len(s)
@@ -27,7 +27,7 @@ def _write_string(file, s):
     file.write(byte)
     file.write(s)
 
-class NAPTR(linkcheck.dns.rdata.Rdata):
+class NAPTR(wc.dns.rdata.Rdata):
     """NAPTR record
 
     @ivar order: order
@@ -41,7 +41,7 @@ class NAPTR(linkcheck.dns.rdata.Rdata):
     @ivar regexp: regular expression
     @type regexp: string
     @ivar replacement: replacement name
-    @type replacement: linkcheck.dns.name.Name object
+    @type replacement: wc.dns.name.Name object
     @see: RFC 3403"""
 
     __slots__ = ['order', 'preference', 'flags', 'service', 'regexp',
@@ -61,9 +61,9 @@ class NAPTR(linkcheck.dns.rdata.Rdata):
         replacement = self.replacement.choose_relativity(origin, relativize)
         return '%d %d "%s" "%s" "%s" %s' % \
                (self.order, self.preference,
-                linkcheck.dns.rdata._escapify(self.flags),
-                linkcheck.dns.rdata._escapify(self.service),
-                linkcheck.dns.rdata._escapify(self.regexp),
+                wc.dns.rdata._escapify(self.flags),
+                wc.dns.rdata._escapify(self.service),
+                wc.dns.rdata._escapify(self.regexp),
                 self.replacement)
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
@@ -98,15 +98,15 @@ class NAPTR(linkcheck.dns.rdata.Rdata):
             current += 1
             rdlen -= 1
             if l > rdlen or rdlen < 0:
-                raise linkcheck.dns.exception.FormError
+                raise wc.dns.exception.FormError
             s = wire[current : current + l]
             current += l
             rdlen -= l
             strings.append(s)
-        (replacement, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+        (replacement, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                                   current)
         if cused != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         if not origin is None:
             replacement = replacement.relativize(origin)
         return cls(rdclass, rdtype, order, preference, strings[0], strings[1],

@@ -16,16 +16,16 @@
 
 import cStringIO
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.rdatatype
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.rdatatype
+import wc.dns.name
 
-class NSEC(linkcheck.dns.rdata.Rdata):
+class NSEC(wc.dns.rdata.Rdata):
     """NSEC record
 
     @ivar next: the next name
-    @type next: linkcheck.dns.name.Name object
+    @type next: wc.dns.name.Name object
     @ivar windows: the windowed bitmap list
     @type windows: list of (window number, string) tuples"""
 
@@ -44,7 +44,7 @@ class NSEC(linkcheck.dns.rdata.Rdata):
                 byte = ord(bitmap[i])
                 for j in xrange(0, 8):
                     if byte & (0x80 >> j):
-                        bits.append(linkcheck.dns.rdatatype.to_text(window * 256 + \
+                        bits.append(wc.dns.rdatatype.to_text(window * 256 + \
                                                           i * 8 + j))
             text = ' '.join(bits)
         return '%s %s' % (next, text)
@@ -55,13 +55,13 @@ class NSEC(linkcheck.dns.rdata.Rdata):
         rdtypes = []
         while 1:
             (ttype, value) = tok.get()
-            if ttype == linkcheck.dns.tokenizer.EOL or ttype == linkcheck.dns.tokenizer.EOF:
+            if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
                 break
-            nrdtype = linkcheck.dns.rdatatype.from_text(value)
+            nrdtype = wc.dns.rdatatype.from_text(value)
             if nrdtype == 0:
-                raise linkcheck.dns.exception.SyntaxError, "NSEC with bit 0"
+                raise wc.dns.exception.SyntaxError, "NSEC with bit 0"
             if nrdtype > 65535:
-                raise linkcheck.dns.exception.SyntaxError, "NSEC with bit > 65535"
+                raise wc.dns.exception.SyntaxError, "NSEC with bit > 65535"
             rdtypes.append(nrdtype)
         rdtypes.sort()
         window = 0
@@ -96,21 +96,21 @@ class NSEC(linkcheck.dns.rdata.Rdata):
             file.write(bitmap)
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        (next, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen], current)
+        (next, cused) = wc.dns.name.from_wire(wire[: current + rdlen], current)
         current += cused
         rdlen -= cused
         windows = []
         while rdlen > 0:
             if rdlen < 3:
-                raise linkcheck.dns.exception.FormError, "NSEC too short"
+                raise wc.dns.exception.FormError, "NSEC too short"
             window = ord(wire[current])
             octets = ord(wire[current + 1])
             if octets == 0 or octets > 32:
-                raise linkcheck.dns.exception.FormError, "bad NSEC octets"
+                raise wc.dns.exception.FormError, "bad NSEC octets"
             current += 2
             rdlen -= 2
             if rdlen < octets:
-                raise linkcheck.dns.exception.FormError, "bad NSEC bitmap length"
+                raise wc.dns.exception.FormError, "bad NSEC bitmap length"
             bitmap = wire[current : current + octets]
             current += octets
             rdlen -= octets

@@ -19,19 +19,19 @@
 import hmac
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdataclass
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdataclass
+import wc.dns.name
 
-class BadTime(linkcheck.dns.exception.DNSException):
+class BadTime(wc.dns.exception.DNSException):
     """Raised if the current time is not within the TSIG's validity time."""
     pass
 
-class BadSignature(linkcheck.dns.exception.DNSException):
+class BadSignature(wc.dns.exception.DNSException):
     """Raised if the TSIG signature fails to verify."""
     pass
 
-_alg_name = linkcheck.dns.name.from_text('HMAC-MD5.SIG-ALG.REG.INT.').to_digestable()
+_alg_name = wc.dns.name.from_text('HMAC-MD5.SIG-ALG.REG.INT.').to_digestable()
 
 def hmac_md5(wire, keyname, secret, time, fudge, original_id, error,
              other_data, request_mac, ctx=None, multi=False, first=True):
@@ -53,7 +53,7 @@ def hmac_md5(wire, keyname, secret, time, fudge, original_id, error,
     ctx.update(wire[2:])
     if first:
         ctx.update(keyname.to_digestable())
-        ctx.update(struct.pack('!H', linkcheck.dns.rdataclass.ANY))
+        ctx.update(struct.pack('!H', wc.dns.rdataclass.ANY))
         ctx.update(struct.pack('!I', 0))
     long_time = time + 0L
     upper_time = (long_time >> 32) & 0xffffL
@@ -93,11 +93,11 @@ def validate(wire, keyname, secret, now, request_mac, tsig_start, tsig_rdata,
 
     (adcount,) = struct.unpack("!H", wire[10:12])
     if adcount == 0:
-        raise linkcheck.dns.exception.FormError
+        raise wc.dns.exception.FormError
     adcount -= 1
     new_wire = wire[0:10] + struct.pack("!H", adcount) + wire[12:tsig_start]
     current = tsig_rdata
-    (aname, used) = linkcheck.dns.name.from_wire(wire, current)
+    (aname, used) = wc.dns.name.from_wire(wire, current)
     current = current + used
     (upper_time, lower_time, fudge, mac_size) = \
                  struct.unpack("!HIHH", wire[current:current + 10])
@@ -111,7 +111,7 @@ def validate(wire, keyname, secret, now, request_mac, tsig_start, tsig_rdata,
     other_data = wire[current:current + other_size]
     current += other_size
     if current != tsig_rdata + tsig_rdlen:
-        raise linkcheck.dns.exception.FormError
+        raise wc.dns.exception.FormError
     time_low = time - fudge
     time_high = time + fudge
     if now < time_low or now > time_high:

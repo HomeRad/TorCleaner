@@ -14,8 +14,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.rdtypes.keybase
+import wc.dns.rdtypes.keybase
 
-class DNSKEY(linkcheck.dns.rdtypes.keybase.KEYBase):
+class DNSKEY(wc.dns.rdtypes.keybase.KEYBase):
     """DNSKEY record"""
     pass

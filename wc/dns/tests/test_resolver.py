@@ -19,12 +19,12 @@ import sys
 import time
 import unittest
 
-import linkcheck.dns.name
-import linkcheck.dns.message
-import linkcheck.dns.name
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdatatype
-import linkcheck.dns.resolver
+import wc.dns.name
+import wc.dns.message
+import wc.dns.name
+import wc.dns.rdataclass
+import wc.dns.rdatatype
+import wc.dns.resolver
 
 resolv_conf = """
     /t/t
@@ -52,31 +52,31 @@ class TestResolver (unittest.TestCase):
     if sys.platform != 'win32':
         def testRead(self):
             f = StringIO.StringIO(resolv_conf)
-            r = linkcheck.dns.resolver.Resolver(f)
+            r = wc.dns.resolver.Resolver(f)
             self.assertEqual(r.nameservers, ['10.0.0.1', '10.0.0.2'])
-            self.assertEqual(r.domain, linkcheck.dns.name.from_text('foo'))
+            self.assertEqual(r.domain, wc.dns.name.from_text('foo'))
 
     def testCacheExpiration(self):
-        message = linkcheck.dns.message.from_text(message_text)
-        name = linkcheck.dns.name.from_text('example.')
-        answer = linkcheck.dns.resolver.Answer(name, linkcheck.dns.rdatatype.A, linkcheck.dns.rdataclass.IN,
+        message = wc.dns.message.from_text(message_text)
+        name = wc.dns.name.from_text('example.')
+        answer = wc.dns.resolver.Answer(name, wc.dns.rdatatype.A, wc.dns.rdataclass.IN,
                                      message)
-        cache = linkcheck.dns.resolver.Cache()
-        cache.put((name, linkcheck.dns.rdatatype.A, linkcheck.dns.rdataclass.IN), answer)
+        cache = wc.dns.resolver.Cache()
+        cache.put((name, wc.dns.rdatatype.A, wc.dns.rdataclass.IN), answer)
         time.sleep(2)
-        self.assert_(cache.get((name, linkcheck.dns.rdatatype.A,
-                                linkcheck.dns.rdataclass.IN)) is None)
+        self.assert_(cache.get((name, wc.dns.rdatatype.A,
+                                wc.dns.rdataclass.IN)) is None)
 
     def testCacheCleaning(self):
-        message = linkcheck.dns.message.from_text(message_text)
-        name = linkcheck.dns.name.from_text('example.')
-        answer = linkcheck.dns.resolver.Answer(name, linkcheck.dns.rdatatype.A, linkcheck.dns.rdataclass.IN,
+        message = wc.dns.message.from_text(message_text)
+        name = wc.dns.name.from_text('example.')
+        answer = wc.dns.resolver.Answer(name, wc.dns.rdatatype.A, wc.dns.rdataclass.IN,
                                      message)
-        cache = linkcheck.dns.resolver.Cache(cleaning_interval=1.0)
-        cache.put((name, linkcheck.dns.rdatatype.A, linkcheck.dns.rdataclass.IN), answer)
+        cache = wc.dns.resolver.Cache(cleaning_interval=1.0)
+        cache.put((name, wc.dns.rdatatype.A, wc.dns.rdataclass.IN), answer)
         time.sleep(2)
-        self.assert_(cache.get((name, linkcheck.dns.rdatatype.A,
-                                linkcheck.dns.rdataclass.IN)) is None)
+        self.assert_(cache.get((name, wc.dns.rdatatype.A,
+                                wc.dns.rdataclass.IN)) is None)
 
 
 def test_suite ():

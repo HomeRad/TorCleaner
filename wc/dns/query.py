@@ -25,18 +25,18 @@ import struct
 import sys
 import time
 
-import linkcheck.dns.exception
-import linkcheck.dns.inet
-import linkcheck.dns.name
-import linkcheck.dns.message
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdatatype
+import wc.dns.exception
+import wc.dns.inet
+import wc.dns.name
+import wc.dns.message
+import wc.dns.rdataclass
+import wc.dns.rdatatype
 
-class UnexpectedSource(linkcheck.dns.exception.DNSException):
+class UnexpectedSource(wc.dns.exception.DNSException):
     """Raised if a query response comes from an unexpected address or port."""
     pass
 
-class BadResponse(linkcheck.dns.exception.FormError):
+class BadResponse(wc.dns.exception.FormError):
     """Raised if a query response does not respond to the question asked."""
     pass
 
@@ -54,13 +54,13 @@ def _wait_for(ir, iw, ix, expiration):
     else:
         timeout = expiration - time.time()
         if timeout <= 0.0:
-            raise linkcheck.dns.exception.Timeout
+            raise wc.dns.exception.Timeout
     if timeout is None:
         (r, w, x) = select.select(ir, iw, ix)
     else:
         (r, w, x) = select.select(ir, iw, ix, timeout)
     if len(r) == 0 and len(w) == 0 and len(x) == 0:
-        raise linkcheck.dns.exception.Timeout
+        raise wc.dns.exception.Timeout
 
 def _wait_for_readable(s, expiration):
     _wait_for([s], [], [s], expiration)
@@ -74,7 +74,7 @@ def udp(q, where, timeout=None, port=53, af=None):
     """Return the response obtained after sending a query via UDP.
 
     @param q: the query
-    @type q: linkcheck.dns.message.Message
+    @type q: wc.dns.message.Message
     @param where: where to send the message
     @type where: string
     @param timeout: The number of seconds to wait before the query times out.
@@ -86,17 +86,17 @@ def udp(q, where, timeout=None, port=53, af=None):
     causes the address family to use to be inferred from the form of of where.
     If the inference attempt fails, AF_INET is used.
     @type af: int
-    @rtype: linkcheck.dns.message.Message object
+    @rtype: wc.dns.message.Message object
     """
     wire = q.to_wire()
     if af is None:
         try:
-            af = linkcheck.dns.inet.af_for_address(where)
+            af = wc.dns.inet.af_for_address(where)
         except:
-            af = linkcheck.dns.inet.AF_INET
-    if af == linkcheck.dns.inet.AF_INET:
+            af = wc.dns.inet.AF_INET
+    if af == wc.dns.inet.AF_INET:
         destination = (where, port)
-    elif af == linkcheck.dns.inet.AF_INET6:
+    elif af == wc.dns.inet.AF_INET6:
         destination = (where, port, 0, 0)
     s = socket.socket(af, socket.SOCK_DGRAM, 0)
     try:
@@ -110,7 +110,7 @@ def udp(q, where, timeout=None, port=53, af=None):
         s.close()
     if from_address != destination:
         raise UnexpectedSource
-    r = linkcheck.dns.message.from_wire(wire, keyring=q.keyring, request_mac=q.mac)
+    r = wc.dns.message.from_wire(wire, keyring=q.keyring, request_mac=q.mac)
     if not q.is_response(r):
         raise BadResponse
     return r
@@ -154,7 +154,7 @@ def tcp(q, where, timeout=None, port=53, af=None):
     """Return the response obtained after sending a query via TCP.
 
     @param q: the query
-    @type q: linkcheck.dns.message.Message object
+    @type q: wc.dns.message.Message object
     @param where: where to send the message
     @type where: string
     @param timeout: The number of seconds to wait before the query times out.
@@ -166,17 +166,17 @@ def tcp(q, where, timeout=None, port=53, af=None):
     causes the address family to use to be inferred from the form of of where.
     If the inference attempt fails, AF_INET is used.
     @type af: int
-    @rtype: linkcheck.dns.message.Message object"""
+    @rtype: wc.dns.message.Message object"""
 
     wire = q.to_wire()
     if af is None:
         try:
-            af = linkcheck.dns.inet.af_for_address(where)
+            af = wc.dns.inet.af_for_address(where)
         except:
-            af = linkcheck.dns.inet.AF_INET
-    if af == linkcheck.dns.inet.AF_INET:
+            af = wc.dns.inet.AF_INET
+    if af == wc.dns.inet.AF_INET:
         destination = (where, port)
-    elif af == linkcheck.dns.inet.AF_INET6:
+    elif af == wc.dns.inet.AF_INET6:
         destination = (where, port, 0, 0)
     s = socket.socket(af, socket.SOCK_STREAM, 0)
     try:
@@ -196,12 +196,12 @@ def tcp(q, where, timeout=None, port=53, af=None):
         wire = _net_read(s, l, expiration)
     finally:
         s.close()
-    r = linkcheck.dns.message.from_wire(wire, keyring=q.keyring, request_mac=q.mac)
+    r = wc.dns.message.from_wire(wire, keyring=q.keyring, request_mac=q.mac)
     if not q.is_response(r):
         raise BadResponse
     return r
 
-def xfr(where, zone, rdtype=linkcheck.dns.rdatatype.AXFR, rdclass=linkcheck.dns.rdataclass.IN,
+def xfr(where, zone, rdtype=wc.dns.rdatatype.AXFR, rdclass=wc.dns.rdataclass.IN,
         timeout=None, port=53, keyring=None, keyname=None, relativize=True,
         af=None, lifetime=None):
     """Return a generator for the responses to a zone transfer.
@@ -209,12 +209,12 @@ def xfr(where, zone, rdtype=linkcheck.dns.rdatatype.AXFR, rdclass=linkcheck.dns.
     @param where: where to send the message
     @type where: string
     @param zone: The name of the zone to transfer
-    @type zone: linkcheck.dns.name.Name object or string
+    @type zone: wc.dns.name.Name object or string
     @param rdtype: The type of zone transfer.  The default is
-    linkcheck.dns.rdatatype.AXFR.
+    wc.dns.rdatatype.AXFR.
     @type rdtype: int or string
     @param rdclass: The class of the zone transfer.  The default is
-    linkcheck.dns.rdatatype.IN.
+    wc.dns.rdatatype.IN.
     @type rdclass: int or string
     @param timeout: The number of seconds to wait for each response message.
     If None, the default, wait forever.
@@ -224,7 +224,7 @@ def xfr(where, zone, rdtype=linkcheck.dns.rdatatype.AXFR, rdclass=linkcheck.dns.
     @param keyring: The TSIG keyring to use
     @type keyring: dict
     @param keyname: The name of the TSIG key to use
-    @type keyname: linkcheck.dns.name.Name object or string
+    @type keyname: wc.dns.name.Name object or string
     @param relativize: If True, all names in the zone will be relativized to
     the zone origin.
     @type relativize: bool
@@ -236,22 +236,22 @@ def xfr(where, zone, rdtype=linkcheck.dns.rdatatype.AXFR, rdclass=linkcheck.dns.
     If None, the default, then there is no limit on the time the transfer may
     take.
     @type lifetime: float
-    @rtype: generator of linkcheck.dns.message.Message objects."""
+    @rtype: generator of wc.dns.message.Message objects."""
 
     if isinstance(zone, str):
-        zone = linkcheck.dns.name.from_text(zone)
-    q = linkcheck.dns.message.make_query(zone, rdtype, rdclass)
+        zone = wc.dns.name.from_text(zone)
+    q = wc.dns.message.make_query(zone, rdtype, rdclass)
     if not keyring is None:
         q.use_tsig(keyring, keyname)
     wire = q.to_wire()
     if af is None:
         try:
-            af = linkcheck.dns.inet.af_for_address(where)
+            af = wc.dns.inet.af_for_address(where)
         except:
-            af = linkcheck.dns.inet.AF_INET
-    if af == linkcheck.dns.inet.AF_INET:
+            af = wc.dns.inet.AF_INET
+    if af == wc.dns.inet.AF_INET:
         destination = (where, port)
-    elif af == linkcheck.dns.inet.AF_INET6:
+    elif af == wc.dns.inet.AF_INET6:
         destination = (where, port, 0, 0)
     s = socket.socket(af, socket.SOCK_STREAM, 0)
     expiration = _compute_expiration(lifetime)
@@ -263,7 +263,7 @@ def xfr(where, zone, rdtype=linkcheck.dns.rdatatype.AXFR, rdclass=linkcheck.dns.
     seen_soa = False
     if relativize:
         origin = zone
-        oname = linkcheck.dns.name.empty
+        oname = wc.dns.name.empty
     else:
         origin = None
         oname = zone
@@ -276,29 +276,29 @@ def xfr(where, zone, rdtype=linkcheck.dns.rdatatype.AXFR, rdclass=linkcheck.dns.
         ldata = _net_read(s, 2, mexpiration)
         (l,) = struct.unpack("!H", ldata)
         wire = _net_read(s, l, mexpiration)
-        r = linkcheck.dns.message.from_wire(wire, keyring=q.keyring, request_mac=q.mac,
+        r = wc.dns.message.from_wire(wire, keyring=q.keyring, request_mac=q.mac,
                                   xfr=True, origin=origin, tsig_ctx=tsig_ctx,
                                   multi=True, first=first)
         tsig_ctx = r.tsig_ctx
         first = False
         if not seen_soa:
             if not r.answer or r.answer[0].name != oname:
-                raise linkcheck.dns.exception.FormError
+                raise wc.dns.exception.FormError
             rrset = r.answer[0]
-            if rrset.rdtype != linkcheck.dns.rdatatype.SOA:
-                raise linkcheck.dns.exception.FormError
+            if rrset.rdtype != wc.dns.rdatatype.SOA:
+                raise wc.dns.exception.FormError
             seen_soa = True
             if len(r.answer) > 1 and r.answer[-1].name == oname:
                 rrset = r.answer[-1]
-                if rrset.rdtype == linkcheck.dns.rdatatype.SOA:
+                if rrset.rdtype == wc.dns.rdatatype.SOA:
                     if q.keyring and not r.had_tsig:
-                        raise linkcheck.dns.exception.FormError, "missing TSIG"
+                        raise wc.dns.exception.FormError, "missing TSIG"
                     done = True
         elif r.answer and r.answer[-1].name == oname:
             rrset = r.answer[-1]
-            if rrset.rdtype == linkcheck.dns.rdatatype.SOA:
+            if rrset.rdtype == wc.dns.rdatatype.SOA:
                 if q.keyring and not r.had_tsig:
-                    raise linkcheck.dns.exception.FormError, "missing TSIG"
+                    raise wc.dns.exception.FormError, "missing TSIG"
                 done = True
         yield r
     s.close()

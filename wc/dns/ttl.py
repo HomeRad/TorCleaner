@@ -16,9 +16,9 @@
 
 """DNS TTL conversion."""
 
-import linkcheck.dns.exception
+import wc.dns.exception
 
-class BadTTL(linkcheck.dns.exception.SyntaxError):
+class BadTTL(wc.dns.exception.SyntaxError):
     pass
 
 def from_text(text):
@@ -28,7 +28,7 @@ def from_text(text):
 
     @param text: the textual TTL
     @type text: string
-    @raises linkcheck.dns.ttl.BadTTL: the TTL is not well-formed
+    @raises wc.dns.ttl.BadTTL: the TTL is not well-formed
     @rtype: int
     """
 

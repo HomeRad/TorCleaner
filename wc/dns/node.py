@@ -18,9 +18,9 @@
 
 import StringIO
 
-import linkcheck.dns.rdataset
-import linkcheck.dns.rdatatype
-import linkcheck.dns.renderer
+import wc.dns.rdataset
+import wc.dns.rdatatype
+import wc.dns.renderer
 
 class Node(object):
     """A DNS node.
@@ -28,7 +28,7 @@ class Node(object):
     A node is a set of rdatasets
 
     @ivar rdatasets: the node's rdatasets
-    @type rdatasets: list of linkcheck.dns.rdataset.Rdataset objects"""
+    @type rdatasets: list of wc.dns.rdataset.Rdataset objects"""
 
     __slots__ = ['rdatasets']
 
@@ -44,7 +44,7 @@ class Node(object):
         Each rdataset at the node is printed.  Any keyword arguments
         to this method are passed on to the rdataset's to_text() method.
         @param name: the owner name of the rdatasets
-        @type name: linkcheck.dns.name.Name object
+        @type name: wc.dns.name.Name object
         @rtype: string
         """
 
@@ -81,7 +81,7 @@ class Node(object):
     def __iter__(self):
         return iter(self.rdatasets)
 
-    def find_rdataset(self, rdclass, rdtype, covers=linkcheck.dns.rdatatype.NONE,
+    def find_rdataset(self, rdclass, rdtype, covers=wc.dns.rdatatype.NONE,
                       create=False):
         """Find an rdataset matching the specified properties in the
         current node.
@@ -91,8 +91,8 @@ class Node(object):
         @param rdtype: The type of the rdataset
         @type rdtype: int
         @param covers: The covered type.  Usually this value is
-        linkcheck.dns.rdatatype.NONE, but if the rdtype is linkcheck.dns.rdatatype.SIG or
-        linkcheck.dns.rdatatype.RRSIG, then the covers value will be the rdata
+        wc.dns.rdatatype.NONE, but if the rdtype is wc.dns.rdatatype.SIG or
+        wc.dns.rdatatype.RRSIG, then the covers value will be the rdata
         type the SIG/RRSIG covers.  The library treats the SIG and RRSIG
         types as if they were a family of
         types, e.g. RRSIG(A), RRSIG(NS), RRSIG(SOA).  This makes RRSIGs much
@@ -103,7 +103,7 @@ class Node(object):
         @type create: bool
         @raises KeyError: An rdataset of the desired type and class does
         not exist and I{create} is not True.
-        @rtype: linkcheck.dns.rdataset.Rdataset object
+        @rtype: wc.dns.rdataset.Rdataset object
         """
 
         for rds in self.rdatasets:
@@ -111,11 +111,11 @@ class Node(object):
                 return rds
         if not create:
             raise KeyError
-        rds = linkcheck.dns.rdataset.Rdataset(rdclass, rdtype)
+        rds = wc.dns.rdataset.Rdataset(rdclass, rdtype)
         self.rdatasets.append(rds)
         return rds
 
-    def get_rdataset(self, rdclass, rdtype, covers=linkcheck.dns.rdatatype.NONE,
+    def get_rdataset(self, rdclass, rdtype, covers=wc.dns.rdatatype.NONE,
                      create=False):
         """Get an rdataset matching the specified properties in the
         current node.
@@ -131,7 +131,7 @@ class Node(object):
         @type covers: int
         @param create: If True, create the rdataset if it is not found.
         @type create: bool
-        @rtype: linkcheck.dns.rdataset.Rdataset object or None
+        @rtype: wc.dns.rdataset.Rdataset object or None
         """
 
         try:
@@ -140,7 +140,7 @@ class Node(object):
             rds = None
         return rds
 
-    def delete_rdataset(self, rdclass, rdtype, covers=linkcheck.dns.rdatatype.NONE):
+    def delete_rdataset(self, rdclass, rdtype, covers=wc.dns.rdatatype.NONE):
         """Delete the rdataset matching the specified properties in the
         current node.
 

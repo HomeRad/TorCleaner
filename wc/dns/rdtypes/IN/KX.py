@@ -14,8 +14,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.rdtypes.mxbase
+import wc.dns.rdtypes.mxbase
 
-class KX(linkcheck.dns.rdtypes.mxbase.UncompressedMX):
+class KX(wc.dns.rdtypes.mxbase.UncompressedMX):
     """KX record"""
     pass

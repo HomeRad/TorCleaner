@@ -16,19 +16,19 @@
 
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.name
 
-class PX(linkcheck.dns.rdata.Rdata):
+class PX(wc.dns.rdata.Rdata):
     """PX record.
 
     @ivar preference: the preference value
     @type preference: int
     @ivar map822: the map822 name
-    @type map822: linkcheck.dns.name.Name object
+    @type map822: wc.dns.name.Name object
     @ivar mapx400: the mapx400 name
-    @type mapx400: linkcheck.dns.name.Name object
+    @type mapx400: wc.dns.name.Name object
     @see: RFC 2163"""
 
     __slots__ = ['preference', 'map822', 'mapx400']
@@ -65,18 +65,18 @@ class PX(linkcheck.dns.rdata.Rdata):
         (preference, ) = struct.unpack('!H', wire[current : current + 2])
         current += 2
         rdlen -= 2
-        (map822, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+        (map822, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                                current)
         if cused > rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         current += cused
         rdlen -= cused
         if not origin is None:
             map822 = map822.relativize(origin)
-        (mapx400, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+        (mapx400, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                               current)
         if cused != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         if not origin is None:
             mapx400 = mapx400.relativize(origin)
         return cls(rdclass, rdtype, preference, map822, mapx400)

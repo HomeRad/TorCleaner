@@ -16,8 +16,8 @@
 
 import unittest
 
-import linkcheck.dns.exception
-import linkcheck.dns.message
+import wc.dns.exception
+import wc.dns.message
 
 query_text = """id 1234
 opcode QUERY
@@ -88,66 +88,66 @@ goodwire3 = goodhex3.decode('hex_codec')
 class TestMessage (unittest.TestCase):
 
     def test_comparison_eq1(self):
-        q1 = linkcheck.dns.message.from_text(query_text)
-        q2 = linkcheck.dns.message.from_text(query_text)
+        q1 = wc.dns.message.from_text(query_text)
+        q2 = wc.dns.message.from_text(query_text)
         self.assertEqual(q1, q2)
 
     def test_comparison_ne1(self):
-        q1 = linkcheck.dns.message.from_text(query_text)
-        q2 = linkcheck.dns.message.from_text(query_text)
+        q1 = wc.dns.message.from_text(query_text)
+        q2 = wc.dns.message.from_text(query_text)
         q2.id = 10
         self.assertNotEqual(q1, q2)
 
     def test_comparison_ne2(self):
-        q1 = linkcheck.dns.message.from_text(query_text)
-        q2 = linkcheck.dns.message.from_text(query_text)
+        q1 = wc.dns.message.from_text(query_text)
+        q2 = wc.dns.message.from_text(query_text)
         q2.question = []
         self.assertNotEqual(q1, q2)
 
     def test_comparison_ne3(self):
-        q1 = linkcheck.dns.message.from_text(query_text)
+        q1 = wc.dns.message.from_text(query_text)
         self.assertNotEqual(q1, 1)
 
     def test_EDNS_to_wire1(self):
-        q = linkcheck.dns.message.from_text(query_text)
+        q = wc.dns.message.from_text(query_text)
         w = q.to_wire()
         self.assertEqual(w, goodwire)
 
     def test_EDNS_from_wire1(self):
-        m = linkcheck.dns.message.from_wire(goodwire)
+        m = wc.dns.message.from_wire(goodwire)
         self.assertEqual(str(m), query_text)
 
     def test_EDNS_to_wire2(self):
-        q = linkcheck.dns.message.from_text(query_text_2)
+        q = wc.dns.message.from_text(query_text_2)
         w = q.to_wire()
         self.assertEqual(w, goodwire3)
 
     def test_EDNS_from_wire2(self):
-        m = linkcheck.dns.message.from_wire(goodwire3)
+        m = wc.dns.message.from_wire(goodwire3)
         self.assertEqual(str(m), query_text_2)
 
     def test_TooBig(self):
         def bad():
-            q = linkcheck.dns.message.from_text(query_text)
+            q = wc.dns.message.from_text(query_text)
             w = q.to_wire(max_size=15)
-        self.assertRaises(linkcheck.dns.exception.TooBig, bad)
+        self.assertRaises(wc.dns.exception.TooBig, bad)
 
     def test_answer1(self):
-        a = linkcheck.dns.message.from_text(answer_text)
+        a = wc.dns.message.from_text(answer_text)
         wire = a.to_wire(want_shuffle=False)
         self.assertEqual(wire, goodwire2)
 
     def test_TrailingJunk(self):
         def bad():
             badwire = goodwire + '\x00'
-            m = linkcheck.dns.message.from_wire(badwire)
-        self.assertRaises(linkcheck.dns.message.TrailingJunk, bad)
+            m = wc.dns.message.from_wire(badwire)
+        self.assertRaises(wc.dns.message.TrailingJunk, bad)
 
     def test_ShortHeader(self):
         def bad():
             badwire = '\x00' * 11
-            m = linkcheck.dns.message.from_wire(badwire)
-        self.assertRaises(linkcheck.dns.message.ShortHeader, bad)
+            m = wc.dns.message.from_wire(badwire)
+        self.assertRaises(wc.dns.message.ShortHeader, bad)
 
 
 def test_suite ():

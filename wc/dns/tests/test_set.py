@@ -16,7 +16,7 @@
 import unittest
 
 # for convenience
-from linkcheck.dns.set import Set as S
+from wc.dns.set import Set as S
 
 class TestSet(unittest.TestCase):
 

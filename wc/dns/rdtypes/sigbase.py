@@ -18,12 +18,12 @@ import calendar
 import struct
 import time
 
-import linkcheck.dns.dnssec
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.rdatatype
+import wc.dns.dnssec
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.rdatatype
 
-class BadSigTime(linkcheck.dns.exception.DNSException):
+class BadSigTime(wc.dns.exception.DNSException):
     """Raised when a SIG or RRSIG RR's time cannot be parsed."""
     pass
 
@@ -42,7 +42,7 @@ def sigtime_to_posixtime(what):
 def posixtime_to_sigtime(what):
     return time.strftime('%Y%m%d%H%M%S', time.gmtime(what))
 
-class SIGBase(linkcheck.dns.rdata.Rdata):
+class SIGBase(wc.dns.rdata.Rdata):
     """SIG-like record base
 
     @ivar type_covered: the rdata type this signature covers
@@ -60,7 +60,7 @@ class SIGBase(linkcheck.dns.rdata.Rdata):
     @ivar key_tag: the key tag
     @type key_tag: int
     @ivar signer: the signer
-    @type signer: linkcheck.dns.name.Name object
+    @type signer: wc.dns.name.Name object
     @ivar signature: the signature
     @type signature: string"""
 
@@ -87,7 +87,7 @@ class SIGBase(linkcheck.dns.rdata.Rdata):
 
     def to_text(self, origin=None, relativize=True, **kw):
         return '%s %d %d %d %s %s %d %s %s' % (
-            linkcheck.dns.rdatatype.to_text(self.type_covered),
+            wc.dns.rdatatype.to_text(self.type_covered),
             self.algorithm,
             self.labels,
             self.original_ttl,
@@ -95,12 +95,12 @@ class SIGBase(linkcheck.dns.rdata.Rdata):
             posixtime_to_sigtime(self.inception),
             self.key_tag,
             self.signer,
-            linkcheck.dns.rdata._base64ify(self.signature)
+            wc.dns.rdata._base64ify(self.signature)
             )
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
-        type_covered = linkcheck.dns.rdatatype.from_text(tok.get_string())
-        algorithm = linkcheck.dns.dnssec.algorithm_from_text(tok.get_string())
+        type_covered = wc.dns.rdatatype.from_text(tok.get_string())
+        algorithm = wc.dns.dnssec.algorithm_from_text(tok.get_string())
         labels = tok.get_int()
         original_ttl = tok.get_uint32()
         expiration = sigtime_to_posixtime(tok.get_string())
@@ -111,10 +111,10 @@ class SIGBase(linkcheck.dns.rdata.Rdata):
         chunks = []
         while 1:
             t = tok.get()
-            if t[0] == linkcheck.dns.tokenizer.EOL or t[0] == linkcheck.dns.tokenizer.EOF:
+            if t[0] == wc.dns.tokenizer.EOL or t[0] == wc.dns.tokenizer.EOF:
                 break
-            if t[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-                raise linkcheck.dns.exception.SyntaxError
+            if t[0] != wc.dns.tokenizer.IDENTIFIER:
+                raise wc.dns.exception.SyntaxError
             chunks.append(t[1])
         b64 = ''.join(chunks)
         signature = b64.decode('base64_codec')
@@ -137,7 +137,7 @@ class SIGBase(linkcheck.dns.rdata.Rdata):
         header = struct.unpack('!HBBIIIH', wire[current : current + 18])
         current += 18
         rdlen -= 18
-        (signer, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen], current)
+        (signer, cused) = wc.dns.name.from_wire(wire[: current + rdlen], current)
         current += cused
         rdlen -= cused
         if not origin is None:

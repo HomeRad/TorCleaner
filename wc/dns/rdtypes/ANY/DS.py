@@ -16,10 +16,10 @@
 
 import struct
 
-import linkcheck.dns.rdata
-import linkcheck.dns.rdatatype
+import wc.dns.rdata
+import wc.dns.rdatatype
 
-class DS(linkcheck.dns.rdata.Rdata):
+class DS(wc.dns.rdata.Rdata):
     """DS record
 
     @ivar key_tag: the key tag
@@ -45,7 +45,7 @@ class DS(linkcheck.dns.rdata.Rdata):
     def to_text(self, origin=None, relativize=True, **kw):
         return '%d %d %d %s' % (self.key_tag, self.algorithm,
                                 self.digest_type,
-                                linkcheck.dns.rdata._hexify(self.digest,
+                                wc.dns.rdata._hexify(self.digest,
                                                   chunksize=128))
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):

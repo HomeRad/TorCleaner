@@ -14,12 +14,12 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.ipv4
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.ipv4
+import wc.dns.rdata
+import wc.dns.tokenizer
 
-class A(linkcheck.dns.rdata.Rdata):
+class A(wc.dns.rdata.Rdata):
     """A record.
 
     @ivar address: an IPv4 address
@@ -30,7 +30,7 @@ class A(linkcheck.dns.rdata.Rdata):
     def __init__(self, rdclass, rdtype, address):
         super(A, self).__init__(rdclass, rdtype)
         # check that it's OK
-        junk = linkcheck.dns.ipv4.inet_aton(address)
+        junk = wc.dns.ipv4.inet_aton(address)
         self.address = address
 
     def to_text(self, origin=None, relativize=True, **kw):
@@ -38,23 +38,23 @@ class A(linkcheck.dns.rdata.Rdata):
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         (ttype, address) = tok.get()
-        if ttype != linkcheck.dns.tokenizer.IDENTIFIER:
-            raise linkcheck.dns.exception.SyntaxError
+        if ttype != wc.dns.tokenizer.IDENTIFIER:
+            raise wc.dns.exception.SyntaxError
         t = tok.get_eol()
         return cls(rdclass, rdtype, address)
 
     from_text = classmethod(from_text)
 
     def to_wire(self, file, compress = None, origin = None):
-        file.write(linkcheck.dns.ipv4.inet_aton(self.address))
+        file.write(wc.dns.ipv4.inet_aton(self.address))
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        address = linkcheck.dns.ipv4.inet_ntoa(wire[current : current + rdlen])
+        address = wc.dns.ipv4.inet_ntoa(wire[current : current + rdlen])
         return cls(rdclass, rdtype, address)
 
     from_wire = classmethod(from_wire)
 
     def _cmp(self, other):
-        sa = linkcheck.dns.ipv4.inet_aton(self.address)
-        oa = linkcheck.dns.ipv4.inet_aton(other.address)
+        sa = wc.dns.ipv4.inet_aton(self.address)
+        oa = wc.dns.ipv4.inet_aton(other.address)
         return cmp(sa, oa)

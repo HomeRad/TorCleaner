@@ -16,9 +16,9 @@
 
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.dnssec
-import linkcheck.dns.rdata
+import wc.dns.exception
+import wc.dns.dnssec
+import wc.dns.rdata
 
 _flags_from_text = {
     'NOCONF': (0x4000, 0xC000),
@@ -63,7 +63,7 @@ _protocol_from_text = {
     'ALL' : 255,
     }
 
-class KEYBase(linkcheck.dns.rdata.Rdata):
+class KEYBase(wc.dns.rdata.Rdata):
     """KEY-like record base
 
     @ivar flags: the key flags
@@ -86,7 +86,7 @@ class KEYBase(linkcheck.dns.rdata.Rdata):
 
     def to_text(self, origin=None, relativize=True, **kw):
         return '%d %d %d %s' % (self.flags, self.protocol, self.algorithm,
-                                linkcheck.dns.rdata._base64ify(self.key))
+                                wc.dns.rdata._base64ify(self.key))
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         flags = tok.get_string()
@@ -98,7 +98,7 @@ class KEYBase(linkcheck.dns.rdata.Rdata):
             for flag in flag_names:
                 v = _flags_from_text.get(flag)
                 if v is None:
-                    raise linkcheck.dns.exception.SyntaxError, 'unknown flag %s' % flag
+                    raise wc.dns.exception.SyntaxError, 'unknown flag %s' % flag
                 flags &= ~v[1]
                 flags |= v[0]
         protocol = tok.get_string()
@@ -107,17 +107,17 @@ class KEYBase(linkcheck.dns.rdata.Rdata):
         else:
             protocol = _protocol_from_text.get(protocol)
             if protocol is None:
-                raise linkcheck.dns.exception.SyntaxError, \
+                raise wc.dns.exception.SyntaxError, \
                       'unknown protocol %s' % protocol
 
-        algorithm = linkcheck.dns.dnssec.algorithm_from_text(tok.get_string())
+        algorithm = wc.dns.dnssec.algorithm_from_text(tok.get_string())
         chunks = []
         while 1:
             t = tok.get()
-            if t[0] == linkcheck.dns.tokenizer.EOL or t[0] == linkcheck.dns.tokenizer.EOF:
+            if t[0] == wc.dns.tokenizer.EOL or t[0] == wc.dns.tokenizer.EOF:
                 break
-            if t[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-                raise linkcheck.dns.exception.SyntaxError
+            if t[0] != wc.dns.tokenizer.IDENTIFIER:
+                raise wc.dns.exception.SyntaxError
             chunks.append(t[1])
         b64 = ''.join(chunks)
         key = b64.decode('base64_codec')
@@ -132,7 +132,7 @@ class KEYBase(linkcheck.dns.rdata.Rdata):
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
         if rdlen < 4:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         header = struct.unpack('!HBB', wire[current : current + 4])
         current += 4
         rdlen -= 4

@@ -16,8 +16,8 @@
 
 import re
 
-import linkcheck.dns.exception
-import linkcheck.dns.ipv4
+import wc.dns.exception
+import wc.dns.ipv4
 
 _leading_zero = re.compile(r'0+([0-9a-f]+)')
 
@@ -79,7 +79,7 @@ def inet_ntoa(address):
                 prefix = '::'
             else:
                 prefix = '::ffff:'
-            hex = prefix + linkcheck.dns.ipv4.inet_ntoa(address[12:])
+            hex = prefix + wc.dns.ipv4.inet_ntoa(address[12:])
         else:
             hex = ':'.join(chunks[:best_start]) + '::' + \
                   ':'.join(chunks[best_start + best_len:])
@@ -97,7 +97,7 @@ def inet_aton(text):
     @param text: the textual address
     @type text: string
     @rtype: string
-    @raises linkcheck.dns.exception.SyntaxError: the text was not properly formatted
+    @raises wc.dns.exception.SyntaxError: the text was not properly formatted
     """
 
     #
@@ -131,25 +131,25 @@ def inet_aton(text):
     chunks = text.split(':')
     l = len(chunks)
     if l > 8:
-        raise linkcheck.dns.exception.SyntaxError
+        raise wc.dns.exception.SyntaxError
     seen_empty = False
     canonical = []
     for c in chunks:
         if c == '':
             if seen_empty:
-                raise linkcheck.dns.exception.SyntaxError
+                raise wc.dns.exception.SyntaxError
             seen_empty = True
             for i in xrange(0, 8 - l + 1):
                 canonical.append('0000')
         else:
             lc = len(c)
             if lc > 4:
-                raise linkcheck.dns.exception.SyntaxError
+                raise wc.dns.exception.SyntaxError
             if lc != 4:
                 c = ('0' * (4 - lc)) + c
             canonical.append(c)
     if l < 8 and not seen_empty:
-        raise linkcheck.dns.exception.SyntaxError
+        raise wc.dns.exception.SyntaxError
     text = ''.join(canonical)
 
     #

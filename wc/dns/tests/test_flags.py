@@ -16,46 +16,46 @@
 
 import unittest
 
-import linkcheck.dns.flags
-import linkcheck.dns.rcode
-import linkcheck.dns.opcode
+import wc.dns.flags
+import wc.dns.rcode
+import wc.dns.opcode
 
 class TestFlags (unittest.TestCase):
 
     def test_rcode1(self):
-        self.assertEqual(linkcheck.dns.rcode.from_text('FORMERR'),
-                         linkcheck.dns.rcode.FORMERR)
+        self.assertEqual(wc.dns.rcode.from_text('FORMERR'),
+                         wc.dns.rcode.FORMERR)
 
     def test_rcode2(self):
-        self.assertEqual(linkcheck.dns.rcode.to_text(linkcheck.dns.rcode.FORMERR),
+        self.assertEqual(wc.dns.rcode.to_text(wc.dns.rcode.FORMERR),
                          "FORMERR")
 
     def test_rcode3(self):
-        self.assertEqual(linkcheck.dns.rcode.to_flags(linkcheck.dns.rcode.FORMERR), (1, 0))
+        self.assertEqual(wc.dns.rcode.to_flags(wc.dns.rcode.FORMERR), (1, 0))
 
     def test_rcode4(self):
-        self.assertEqual(linkcheck.dns.rcode.to_flags(linkcheck.dns.rcode.BADVERS),
+        self.assertEqual(wc.dns.rcode.to_flags(wc.dns.rcode.BADVERS),
                          (0, 0x01000000))
 
     def test_rcode6(self):
-        self.assertEqual(linkcheck.dns.rcode.from_flags(0, 0x01000000),
-                         linkcheck.dns.rcode.BADVERS)
+        self.assertEqual(wc.dns.rcode.from_flags(0, 0x01000000),
+                         wc.dns.rcode.BADVERS)
 
     def test_rcode6(self):
-        self.assertEqual(linkcheck.dns.rcode.from_flags(5, 0), linkcheck.dns.rcode.REFUSED)
+        self.assertEqual(wc.dns.rcode.from_flags(5, 0), wc.dns.rcode.REFUSED)
 
     def test_rcode7(self):
         def bad():
-            linkcheck.dns.rcode.to_flags(4096)
+            wc.dns.rcode.to_flags(4096)
         self.assertRaises(ValueError, bad)
 
     def test_flags1(self):
-        self.assertEqual(linkcheck.dns.flags.from_text("RA RD AA QR"),
-              linkcheck.dns.flags.QR|linkcheck.dns.flags.AA|linkcheck.dns.flags.RD|linkcheck.dns.flags.RA)
+        self.assertEqual(wc.dns.flags.from_text("RA RD AA QR"),
+              wc.dns.flags.QR|wc.dns.flags.AA|wc.dns.flags.RD|wc.dns.flags.RA)
 
     def test_flags2(self):
-        flgs = linkcheck.dns.flags.QR|linkcheck.dns.flags.AA|linkcheck.dns.flags.RD|linkcheck.dns.flags.RA
-        self.assertEqual(linkcheck.dns.flags.to_text(flgs), "QR AA RD RA")
+        flgs = wc.dns.flags.QR|wc.dns.flags.AA|wc.dns.flags.RD|wc.dns.flags.RA
+        self.assertEqual(wc.dns.flags.to_text(flgs), "QR AA RD RA")
 
 
 def test_suite ():

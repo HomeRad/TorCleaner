@@ -16,21 +16,21 @@
 
 """DNS Dynamic Update Support"""
 
-import linkcheck.dns.message
-import linkcheck.dns.name
-import linkcheck.dns.opcode
-import linkcheck.dns.rdata
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdataset
+import wc.dns.message
+import wc.dns.name
+import wc.dns.opcode
+import wc.dns.rdata
+import wc.dns.rdataclass
+import wc.dns.rdataset
 
-class Update(linkcheck.dns.message.Message):
-    def __init__(self, zone, rdclass=linkcheck.dns.rdataclass.IN, keyring=None,
+class Update(wc.dns.message.Message):
+    def __init__(self, zone, rdclass=wc.dns.rdataclass.IN, keyring=None,
                  keyname=None):
         """Initialize a new DNS Update object.
 
         @param zone: The zone which is being updated.
-        @type zone: A linkcheck.dns.name.Name or string
-        @param rdclass: The class of the zone; defaults to linkcheck.dns.rdataclass.IN.
+        @type zone: A wc.dns.name.Name or string
+        @param rdclass: The class of the zone; defaults to wc.dns.rdataclass.IN.
         @type rdclass: An int designating the class, or a string whose value
         is the name of a class.
         @param keyring: The TSIG keyring to use; defaults to None.
@@ -41,19 +41,19 @@ class Update(linkcheck.dns.message.Message):
         keyring.  Note that the order of keys in a dictionary is not defined,
         so applications should supply a keyname when a keyring is used, unless
         they know the keyring contains only one key.
-        @type keyname: linkcheck.dns.name.Name or string
+        @type keyname: wc.dns.name.Name or string
         """
         super(Update, self).__init__()
-        self.flags |= linkcheck.dns.opcode.to_flags(linkcheck.dns.opcode.UPDATE)
+        self.flags |= wc.dns.opcode.to_flags(wc.dns.opcode.UPDATE)
         if isinstance(zone, str):
-            zone = linkcheck.dns.name.from_text(zone)
+            zone = wc.dns.name.from_text(zone)
         else:
             zone = zone.copy()
         self.origin = zone
         if isinstance(rdclass, str):
-            rdclass = linkcheck.dns.rdataclass.from_text(rdclass)
+            rdclass = wc.dns.rdataclass.from_text(rdclass)
         self.zone_rdclass = rdclass
-        self.find_rrset(self.question, self.origin, rdclass, linkcheck.dns.rdatatype.SOA,
+        self.find_rrset(self.question, self.origin, rdclass, wc.dns.rdatatype.SOA,
                         create=True, force_unique=True)
         if not keyring is None:
             self.use_tsig(keyring, keyname)
@@ -82,8 +82,8 @@ class Update(linkcheck.dns.message.Message):
                 - ttl, rdtype, string..."""
 
         if isinstance(name, str):
-            name = linkcheck.dns.name.from_text(name, None)
-        if isinstance(args[0], linkcheck.dns.rdataset.Rdataset):
+            name = wc.dns.name.from_text(name, None)
+        if isinstance(args[0], wc.dns.rdataset.Rdataset):
             for rds in args:
                 if replace:
                     self.delete(name, rds.rdtype)
@@ -92,7 +92,7 @@ class Update(linkcheck.dns.message.Message):
         else:
             args = list(args)
             ttl = int(args.pop(0))
-            if isinstance(args[0], linkcheck.dns.rdata.Rdata):
+            if isinstance(args[0], wc.dns.rdata.Rdata):
                 if replace:
                     self.delete(name, args[0].rdtype)
                 for rd in args:
@@ -100,11 +100,11 @@ class Update(linkcheck.dns.message.Message):
             else:
                 rdtype = args.pop(0)
                 if isinstance(rdtype, str):
-                    rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+                    rdtype = wc.dns.rdatatype.from_text(rdtype)
                 if replace:
                     self.delete(name, rdtype)
                 for s in args:
-                    rd = linkcheck.dns.rdata.from_text(self.zone_rdclass, rdtype, s,
+                    rd = wc.dns.rdata.from_text(self.zone_rdclass, rdtype, s,
                                              self.origin)
                     self._add_rr(name, ttl, rd, section=section)
 
@@ -132,35 +132,35 @@ class Update(linkcheck.dns.message.Message):
                 - rdtype, [string...]"""
 
         if isinstance(name, str):
-            name = linkcheck.dns.name.from_text(name, None)
+            name = wc.dns.name.from_text(name, None)
         if len(args) == 0:
-            rrset = self.find_rrset(self.authority, name, linkcheck.dns.rdataclass.ANY,
-                                    linkcheck.dns.rdatatype.ANY, linkcheck.dns.rdatatype.NONE,
-                                    linkcheck.dns.rdatatype.ANY, True, True)
-        elif isinstance(args[0], linkcheck.dns.rdataset.Rdataset):
+            rrset = self.find_rrset(self.authority, name, wc.dns.rdataclass.ANY,
+                                    wc.dns.rdatatype.ANY, wc.dns.rdatatype.NONE,
+                                    wc.dns.rdatatype.ANY, True, True)
+        elif isinstance(args[0], wc.dns.rdataset.Rdataset):
             for rds in args:
                 for rd in rds:
-                    self._add_rr(name, 0, rd, linkcheck.dns.rdataclass.NONE)
+                    self._add_rr(name, 0, rd, wc.dns.rdataclass.NONE)
         else:
             args = list(args)
-            if isinstance(args[0], linkcheck.dns.rdata.Rdata):
+            if isinstance(args[0], wc.dns.rdata.Rdata):
                 for rd in args:
-                    self._add_rr(name, 0, rd, linkcheck.dns.rdataclass.NONE)
+                    self._add_rr(name, 0, rd, wc.dns.rdataclass.NONE)
             else:
                 rdtype = args.pop(0)
                 if isinstance(rdtype, str):
-                    rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+                    rdtype = wc.dns.rdatatype.from_text(rdtype)
                 if len(args) == 0:
                     rrset = self.find_rrset(self.authority, name,
                                             self.zone_rdclass, rdtype,
-                                            linkcheck.dns.rdatatype.NONE,
-                                            linkcheck.dns.rdataclass.ANY,
+                                            wc.dns.rdatatype.NONE,
+                                            wc.dns.rdataclass.ANY,
                                             True, True)
                 else:
                     for s in args:
-                        rd = linkcheck.dns.rdata.from_text(self.zone_rdclass, rdtype, s,
+                        rd = wc.dns.rdata.from_text(self.zone_rdclass, rdtype, s,
                                                  self.origin)
-                        self._add_rr(name, 0, rd, linkcheck.dns.rdataclass.NONE)
+                        self._add_rr(name, 0, rd, wc.dns.rdataclass.NONE)
 
     def replace(self, name, *args):
         """Replace records.  The first argument is always a name.  The other
@@ -190,14 +190,14 @@ class Update(linkcheck.dns.message.Message):
                 - rdtype, string..."""
 
         if isinstance(name, str):
-            name = linkcheck.dns.name.from_text(name, None)
+            name = wc.dns.name.from_text(name, None)
         if len(args) == 0:
             rrset = self.find_rrset(self.answer, name,
-                                    linkcheck.dns.rdataclass.ANY, linkcheck.dns.rdatatype.ANY,
-                                    linkcheck.dns.rdatatype.NONE, None,
+                                    wc.dns.rdataclass.ANY, wc.dns.rdatatype.ANY,
+                                    wc.dns.rdatatype.NONE, None,
                                     True, True)
-        elif isinstance(args[0], linkcheck.dns.rdataset.Rdataset) or \
-             isinstance(args[0], linkcheck.dns.rdata.Rdata) or \
+        elif isinstance(args[0], wc.dns.rdataset.Rdataset) or \
+             isinstance(args[0], wc.dns.rdata.Rdata) or \
              len(args) > 1:
             if len(args) > 1:
                 # Add a 0 TTL
@@ -207,10 +207,10 @@ class Update(linkcheck.dns.message.Message):
         else:
             rdtype = args[0]
             if isinstance(rdtype, str):
-                rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+                rdtype = wc.dns.rdatatype.from_text(rdtype)
             rrset = self.find_rrset(self.answer, name,
-                                    linkcheck.dns.rdataclass.ANY, rdtype,
-                                    linkcheck.dns.rdatatype.NONE, None,
+                                    wc.dns.rdataclass.ANY, rdtype,
+                                    wc.dns.rdatatype.NONE, None,
                                     True, True)
 
     def absent(self, name, rdtype=None):
@@ -218,18 +218,18 @@ class Update(linkcheck.dns.message.Message):
         not exist as a prerequisite to the execution of the update."""
 
         if isinstance(name, str):
-            name = linkcheck.dns.name.from_text(name, None)
+            name = wc.dns.name.from_text(name, None)
         if rdtype is None:
             rrset = self.find_rrset(self.answer, name,
-                                    linkcheck.dns.rdataclass.NONE, linkcheck.dns.rdatatype.ANY,
-                                    linkcheck.dns.rdatatype.NONE, None,
+                                    wc.dns.rdataclass.NONE, wc.dns.rdatatype.ANY,
+                                    wc.dns.rdatatype.NONE, None,
                                     True, True)
         else:
             if isinstance(rdtype, str):
-                rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+                rdtype = wc.dns.rdatatype.from_text(rdtype)
             rrset = self.find_rrset(self.answer, name,
-                                    linkcheck.dns.rdataclass.NONE, rdtype,
-                                    linkcheck.dns.rdatatype.NONE, None,
+                                    wc.dns.rdataclass.NONE, rdtype,
+                                    wc.dns.rdatatype.NONE, None,
                                     True, True)
 
     def to_wire(self, origin=None, max_size=65535, **kw):

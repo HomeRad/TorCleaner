@@ -16,11 +16,11 @@
 
 """DNS name dictionary"""
 
-import linkcheck.dns.name
+import wc.dns.name
 
 class NameDict(dict):
 
-    """A dictionary whose keys are linkcheck.dns.name.Name objects.
+    """A dictionary whose keys are wc.dns.name.Name objects.
     @ivar max_depth: the maximum depth of the keys that have ever been
     added to the dictionary.
     @type max_depth: int
@@ -31,7 +31,7 @@ class NameDict(dict):
         self.max_depth = 0
 
     def __setitem__(self, key, value):
-        if not isinstance(key, linkcheck.dns.name.Name):
+        if not isinstance(key, wc.dns.name.Name):
             raise ValueError, 'NameDict key must be a name'
         depth = len(key)
         if depth > self.max_depth:
@@ -45,7 +45,7 @@ class NameDict(dict):
         a superdomain of I{name}.
 
         @param name: the name
-        @type name: linkcheck.dns.name.Name object
+        @type name: wc.dns.name.Name object
         @rtype: (key, value) tuple
         """
 
@@ -53,8 +53,8 @@ class NameDict(dict):
         if depth > self.max_depth:
             depth = self.max_depth
         for i in xrange(-depth, 0):
-            n = linkcheck.dns.name.Name(name[i:])
+            n = wc.dns.name.Name(name[i:])
             if self.has_key(n):
                 return (n, self[n])
-        v = self[linkcheck.dns.name.empty]
-        return (linkcheck.dns.name.empty, v)
+        v = self[wc.dns.name.empty]
+        return (wc.dns.name.empty, v)

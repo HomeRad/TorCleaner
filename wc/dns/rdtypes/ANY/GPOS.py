@@ -14,9 +14,9 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.tokenizer
 
 def _validate_float_string(what):
     if what[0] == '-' or what[0] == '+':
@@ -25,13 +25,13 @@ def _validate_float_string(what):
         return
     (left, right) = what.split('.')
     if left == '' and right == '':
-        raise linkcheck.dns.exception.FormError
+        raise wc.dns.exception.FormError
     if not left == '' and not left.isdigit():
-        raise linkcheck.dns.exception.FormError
+        raise wc.dns.exception.FormError
     if not right == '' and not right.isdigit():
-        raise linkcheck.dns.exception.FormError
+        raise wc.dns.exception.FormError
 
-class GPOS(linkcheck.dns.rdata.Rdata):
+class GPOS(wc.dns.rdata.Rdata):
     """GPOS record
 
     @ivar latitude: latitude
@@ -99,7 +99,7 @@ class GPOS(linkcheck.dns.rdata.Rdata):
         current += 1
         rdlen -= 1
         if l > rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         latitude = wire[current : current + l]
         current += l
         rdlen -= l
@@ -107,7 +107,7 @@ class GPOS(linkcheck.dns.rdata.Rdata):
         current += 1
         rdlen -= 1
         if l > rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         longitude = wire[current : current + l]
         current += l
         rdlen -= l
@@ -115,7 +115,7 @@ class GPOS(linkcheck.dns.rdata.Rdata):
         current += 1
         rdlen -= 1
         if l != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         altitude = wire[current : current + l]
         return cls(rdclass, rdtype, latitude, longitude, altitude)
 

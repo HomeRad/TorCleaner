@@ -17,13 +17,13 @@
 import socket
 import struct
 
-import linkcheck.dns.ipv4
-import linkcheck.dns.rdata
+import wc.dns.ipv4
+import wc.dns.rdata
 
 _proto_tcp = socket.getprotobyname('tcp')
 _proto_udp = socket.getprotobyname('udp')
 
-class WKS(linkcheck.dns.rdata.Rdata):
+class WKS(wc.dns.rdata.Rdata):
     """WKS record
 
     @ivar address: the address
@@ -62,7 +62,7 @@ class WKS(linkcheck.dns.rdata.Rdata):
         bitmap = []
         while 1:
             (ttype, value) = tok.get()
-            if ttype == linkcheck.dns.tokenizer.EOL or ttype == linkcheck.dns.tokenizer.EOF:
+            if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
                 break
             if value.isdigit():
                 serv = int(value)
@@ -80,19 +80,19 @@ class WKS(linkcheck.dns.rdata.Rdata):
                 for j in xrange(l, i + 1):
                     bitmap.append('\x00')
             bitmap[i] = chr(ord(bitmap[i]) | (0x80 >> (serv % 8)))
-        bitmap = linkcheck.dns.rdata._truncate_bitmap(bitmap)
+        bitmap = wc.dns.rdata._truncate_bitmap(bitmap)
         return cls(rdclass, rdtype, address, protocol, bitmap)
 
     from_text = classmethod(from_text)
 
     def to_wire(self, file, compress = None, origin = None):
-        file.write(linkcheck.dns.ipv4.inet_aton(self.address))
+        file.write(wc.dns.ipv4.inet_aton(self.address))
         protocol = struct.pack('!B', self.protocol)
         file.write(protocol)
         file.write(self.bitmap)
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        address = linkcheck.dns.ipv4.inet_ntoa(wire[current : current + 4])
+        address = wc.dns.ipv4.inet_ntoa(wire[current : current + 4])
         protocol, = struct.unpack('!B', wire[current + 4 : current + 5])
         current += 5
         rdlen -= 5
@@ -102,8 +102,8 @@ class WKS(linkcheck.dns.rdata.Rdata):
     from_wire = classmethod(from_wire)
 
     def _cmp(self, other):
-        sa = linkcheck.dns.ipv4.inet_aton(self.address)
-        oa = linkcheck.dns.ipv4.inet_aton(other.address)
+        sa = wc.dns.ipv4.inet_aton(self.address)
+        oa = wc.dns.ipv4.inet_aton(other.address)
         v = cmp(sa, oa)
         if v == 0:
             sp = struct.pack('!B', self.protocol)

@@ -16,7 +16,7 @@
 
 """DNS Opcodes."""
 
-import linkcheck.dns.exception
+import wc.dns.exception
 
 QUERY = 0
 IQUERY = 1
@@ -39,7 +39,7 @@ _by_text = {
 _by_value = dict([(y, x) for x, y in _by_text.iteritems()])
 
 
-class UnknownOpcode(linkcheck.dns.exception.DNSException):
+class UnknownOpcode(wc.dns.exception.DNSException):
     """Raised if an opcode is unknown."""
     pass
 

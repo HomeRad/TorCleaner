@@ -16,12 +16,12 @@
 
 """DNS RRsets (an RRset is a named rdataset)"""
 
-import linkcheck.dns.name
-import linkcheck.dns.rdataset
-import linkcheck.dns.rdataclass
-import linkcheck.dns.renderer
+import wc.dns.name
+import wc.dns.rdataset
+import wc.dns.rdataclass
+import wc.dns.renderer
 
-class RRset(linkcheck.dns.rdataset.Rdataset):
+class RRset(wc.dns.rdataset.Rdataset):
     """A DNS RRset (named rdataset).
 
     RRset inherits from Rdataset, and RRsets can be treated as
@@ -33,7 +33,7 @@ class RRset(linkcheck.dns.rdataset.Rdataset):
 
     __slots__ = ['name', 'deleting']
 
-    def __init__(self, name, rdclass, rdtype, covers=linkcheck.dns.rdatatype.NONE,
+    def __init__(self, name, rdclass, rdtype, covers=wc.dns.rdatatype.NONE,
                  deleting=None):
         """Create a new RRset."""
 
@@ -51,14 +51,14 @@ class RRset(linkcheck.dns.rdataset.Rdataset):
         if self.covers == 0:
             ctext = ''
         else:
-            ctext = '(' + linkcheck.dns.rdatatype.to_text(self.covers) + ')'
+            ctext = '(' + wc.dns.rdatatype.to_text(self.covers) + ')'
         if not self.deleting is None:
-            dtext = ' delete=' + linkcheck.dns.rdataclass.to_text(self.deleting)
+            dtext = ' delete=' + wc.dns.rdataclass.to_text(self.deleting)
         else:
             dtext = ''
         return '<DNS ' + str(self.name) + ' ' + \
-               linkcheck.dns.rdataclass.to_text(self.rdclass) + ' ' + \
-               linkcheck.dns.rdatatype.to_text(self.rdtype) + ctext + dtext + ' RRset>'
+               wc.dns.rdataclass.to_text(self.rdclass) + ' ' + \
+               wc.dns.rdatatype.to_text(self.rdtype) + ctext + dtext + ' RRset>'
 
     def __str__(self):
         return self.to_text()
@@ -87,7 +87,7 @@ class RRset(linkcheck.dns.rdataset.Rdataset):
     def to_text(self, origin=None, relativize=True, **kw):
         """Convert the RRset into DNS master file format.
 
-        @see: L{linkcheck.dns.name.Name.choose_relativity} for more information
+        @see: L{wc.dns.name.Name.choose_relativity} for more information
         on how I{origin} and I{relativize} determine the way names
         are emitted.
 
@@ -95,7 +95,7 @@ class RRset(linkcheck.dns.rdataset.Rdataset):
         to_text() method.
 
         @param origin: The origin for relative names, or None.
-        @type origin: linkcheck.dns.name.Name object
+        @type origin: wc.dns.name.Name object
         @param relativize: True if names should names be relativized
         @type relativize: bool"""
 
@@ -113,19 +113,19 @@ def from_text_list(name, ttl, rdclass, rdtype, text_rdatas):
     """Create an RRset with the specified name, TTL, class, and type, and with
     the specified list of rdatas in text format.
 
-    @rtype: linkcheck.dns.rrset.RRset object
+    @rtype: wc.dns.rrset.RRset object
     """
 
     if isinstance(name, str):
-        name = linkcheck.dns.name.from_text(name, None)
+        name = wc.dns.name.from_text(name, None)
     if isinstance(rdclass, str):
-        rdclass = linkcheck.dns.rdataclass.from_text(rdclass)
+        rdclass = wc.dns.rdataclass.from_text(rdclass)
     if isinstance(rdtype, str):
-        rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+        rdtype = wc.dns.rdatatype.from_text(rdtype)
     r = RRset(name, rdclass, rdtype)
     r.update_ttl(ttl)
     for t in text_rdatas:
-        rd = linkcheck.dns.rdata.from_text(r.rdclass, r.rdtype, t)
+        rd = wc.dns.rdata.from_text(r.rdclass, r.rdtype, t)
         r.add(rd)
     return r
 
@@ -133,7 +133,7 @@ def from_text(name, ttl, rdclass, rdtype, *text_rdatas):
     """Create an RRset with the specified name, TTL, class, and type and with
     the specified rdatas in text format.
 
-    @rtype: linkcheck.dns.rrset.RRset object
+    @rtype: wc.dns.rrset.RRset object
     """
 
     return from_text_list(name, ttl, rdclass, rdtype, text_rdatas)
@@ -142,11 +142,11 @@ def from_rdata_list(name, ttl, rdatas):
     """Create an RRset with the specified name and TTL, and with
     the specified list of rdata objects.
 
-    @rtype: linkcheck.dns.rrset.RRset object
+    @rtype: wc.dns.rrset.RRset object
     """
 
     if isinstance(name, str):
-        name = linkcheck.dns.name.from_text(name, None)
+        name = wc.dns.name.from_text(name, None)
 
     if len(rdatas) == 0:
         raise ValueError, "rdata list must not be empty"
@@ -163,7 +163,7 @@ def from_rdata(name, ttl, *rdatas):
     """Create an RRset with the specified name and TTL, and with
     the specified rdata objects.
 
-    @rtype: linkcheck.dns.rrset.RRset object
+    @rtype: wc.dns.rrset.RRset object
     """
 
     return from_rdata_list(name, ttl, rdatas)

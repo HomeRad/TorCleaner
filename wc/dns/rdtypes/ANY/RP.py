@@ -14,18 +14,18 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.name
 
-class RP(linkcheck.dns.rdata.Rdata):
+class RP(wc.dns.rdata.Rdata):
     """RP record
 
     @ivar mbox: The responsible person's mailbox
-    @type mbox: linkcheck.dns.name.Name object
+    @type mbox: wc.dns.name.Name object
     @ivar txt: The owner name of a node with TXT records, or the root name
     if no TXT records are associated with this RP.
-    @type txt: linkcheck.dns.name.Name object
+    @type txt: wc.dns.name.Name object
     @see: RFC 1183"""
 
     __slots__ = ['mbox', 'txt']
@@ -55,16 +55,16 @@ class RP(linkcheck.dns.rdata.Rdata):
         self.txt.to_wire(file, None, origin)
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        (mbox, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+        (mbox, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                            current)
         current += cused
         rdlen -= cused
         if rdlen <= 0:
-            raise linkcheck.dns.exception.FormError
-        (txt, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+            raise wc.dns.exception.FormError
+        (txt, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                           current)
         if cused != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         if not origin is None:
             mbox = mbox.relativize(origin)
             txt = txt.relativize(origin)

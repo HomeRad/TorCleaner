@@ -17,10 +17,10 @@
 import cStringIO
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.inet
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.inet
+import wc.dns.rdata
+import wc.dns.tokenizer
 
 class APLItem(object):
     """An APL list item.
@@ -51,9 +51,9 @@ class APLItem(object):
 
     def to_wire(self, file):
         if self.family == 1:
-            address = linkcheck.dns.inet.inet_pton(linkcheck.dns.inet.AF_INET, self.address)
+            address = wc.dns.inet.inet_pton(wc.dns.inet.AF_INET, self.address)
         elif self.family == 2:
-            address = linkcheck.dns.inet.inet_pton(linkcheck.dns.inet.AF_INET6, self.address)
+            address = wc.dns.inet.inet_pton(wc.dns.inet.AF_INET6, self.address)
         else:
             address = self.address.decode('hex_codec')
         #
@@ -73,7 +73,7 @@ class APLItem(object):
         file.write(header)
         file.write(address)
 
-class APL(linkcheck.dns.rdata.Rdata):
+class APL(wc.dns.rdata.Rdata):
     """APL record.
 
     @ivar items: a list of APL items
@@ -93,7 +93,7 @@ class APL(linkcheck.dns.rdata.Rdata):
         items = []
         while 1:
             (ttype, item) = tok.get()
-            if ttype == linkcheck.dns.tokenizer.EOL or ttype == linkcheck.dns.tokenizer.EOF:
+            if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
                 break
             if item[0] == '!':
                 negation = True
@@ -119,7 +119,7 @@ class APL(linkcheck.dns.rdata.Rdata):
         items = []
         while 1:
             if rdlen < 4:
-                raise linkcheck.dns.exception.FormError
+                raise wc.dns.exception.FormError
             header = struct.unpack('!HBB', wire[current : current + 4])
             afdlen = header[2]
             if afdlen > 127:
@@ -130,17 +130,17 @@ class APL(linkcheck.dns.rdata.Rdata):
             current += 4
             rdlen -= 4
             if rdlen < afdlen:
-                raise linkcheck.dns.exception.FormError
+                raise wc.dns.exception.FormError
             address = wire[current : current + afdlen]
             l = len(address)
             if header[0] == 1:
                 if l < 4:
                     address += '\x00' * (4 - l)
-                address = linkcheck.dns.inet.inet_ntop(linkcheck.dns.inet.AF_INET, address)
+                address = wc.dns.inet.inet_ntop(wc.dns.inet.AF_INET, address)
             elif header[0] == 2:
                 if l < 16:
                     address += '\x00' * (16 - l)
-                address = linkcheck.dns.inet.inet_ntop(linkcheck.dns.inet.AF_INET6, address)
+                address = wc.dns.inet.inet_ntop(wc.dns.inet.AF_INET6, address)
             else:
                 #
                 # This isn't really right according to the RFC, but it

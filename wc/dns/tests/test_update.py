@@ -16,9 +16,9 @@
 
 import unittest
 
-import linkcheck.dns.update
-import linkcheck.dns.rdata
-import linkcheck.dns.rdataset
+import wc.dns.update
+import wc.dns.rdata
+import wc.dns.rdataset
 
 goodhex = '0001 2800 0001 0005 0007 0000' \
           '076578616d706c6500 0006 0001' \
@@ -61,7 +61,7 @@ blaz2 ANY ANY
 class TestUpdate (unittest.TestCase):
 
     def test_to_wire1(self):
-        update = linkcheck.dns.update.Update('example')
+        update = wc.dns.update.Update('example')
         update.id = 1
         update.present('foo')
         update.present('foo', 'a')
@@ -76,7 +76,7 @@ class TestUpdate (unittest.TestCase):
         self.assertEqual(update.to_wire(), goodwire)
 
     def test_to_wire2(self):
-        update = linkcheck.dns.update.Update('example')
+        update = wc.dns.update.Update('example')
         update.id = 1
         update.present('foo')
         update.present('foo', 'a')
@@ -84,14 +84,14 @@ class TestUpdate (unittest.TestCase):
         update.absent('blaz2')
         update.absent('blaz2', 'a')
         update.replace('foo', 300, 'a', '10.0.0.1', '10.0.0.2')
-        update.add('bar', 300, linkcheck.dns.rdata.from_text(1, 1, '10.0.0.3'))
+        update.add('bar', 300, wc.dns.rdata.from_text(1, 1, '10.0.0.3'))
         update.delete('bar', 'a', '10.0.0.4')
         update.delete('blaz','a')
         update.delete('blaz2')
         self.assertEqual(update.to_wire(), goodwire)
 
     def test_to_wire3(self):
-        update = linkcheck.dns.update.Update('example')
+        update = wc.dns.update.Update('example')
         update.id = 1
         update.present('foo')
         update.present('foo', 'a')
@@ -99,15 +99,15 @@ class TestUpdate (unittest.TestCase):
         update.absent('blaz2')
         update.absent('blaz2', 'a')
         update.replace('foo', 300, 'a', '10.0.0.1', '10.0.0.2')
-        update.add('bar', linkcheck.dns.rdataset.from_text(1, 1, 300, '10.0.0.3'))
+        update.add('bar', wc.dns.rdataset.from_text(1, 1, 300, '10.0.0.3'))
         update.delete('bar', 'a', '10.0.0.4')
         update.delete('blaz','a')
         update.delete('blaz2')
         self.assertEqual(update.to_wire(), goodwire)
 
     def test_from_text1(self):
-        update = linkcheck.dns.message.from_text(update_text)
-        w = update.to_wire(origin=linkcheck.dns.name.from_text('example'),
+        update = wc.dns.message.from_text(update_text)
+        w = update.to_wire(origin=wc.dns.name.from_text('example'),
                            want_shuffle=False)
         self.assertEqual(w, goodwire)
 

@@ -17,40 +17,40 @@
 """DNS stub resolver.
 
 @var default_resolver: The default resolver object
-@type default_resolver: linkcheck.dns.resolver.Resolver object"""
+@type default_resolver: wc.dns.resolver.Resolver object"""
 
 import socket
 import sets
 import sys
 import time
 
-import linkcheck.dns.exception
-import linkcheck.dns.ifconfig
-import linkcheck.dns.message
-import linkcheck.dns.name
-import linkcheck.dns.query
-import linkcheck.dns.rcode
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdatatype
+import wc.dns.exception
+import wc.dns.ifconfig
+import wc.dns.message
+import wc.dns.name
+import wc.dns.query
+import wc.dns.rcode
+import wc.dns.rdataclass
+import wc.dns.rdatatype
 
 if sys.platform == 'win32':
     import _winreg
 
-class NXDOMAIN(linkcheck.dns.exception.DNSException):
+class NXDOMAIN(wc.dns.exception.DNSException):
     """The query name does not exist."""
     pass
 
 # The definition of the Timeout exception has moved from here to the
-# linkcheck.dns.exception module.  We keep linkcheck.dns.resolver.Timeout defined for
+# wc.dns.exception module.  We keep wc.dns.resolver.Timeout defined for
 # backwards compatibility.
 
-Timeout = linkcheck.dns.exception.Timeout
+Timeout = wc.dns.exception.Timeout
 
-class NoAnswer(linkcheck.dns.exception.DNSException):
+class NoAnswer(wc.dns.exception.DNSException):
     """The response did not contain an answer to the question."""
     pass
 
-class NoNameservers(linkcheck.dns.exception.DNSException):
+class NoNameservers(wc.dns.exception.DNSException):
     """No non-broken nameservers are available to answer the query."""
     pass
 
@@ -67,15 +67,15 @@ class Answer(object):
     node's name might not be the query name.
 
     @ivar qname: The query name
-    @type qname: linkcheck.dns.name.Name object
+    @type qname: wc.dns.name.Name object
     @ivar rdtype: The query type
     @type rdtype: int
     @ivar rdclass: The query class
     @type rdclass: int
     @ivar response: The response message
-    @type response: linkcheck.dns.message.Message object
+    @type response: wc.dns.message.Message object
     @ivar rrset: The answer
-    @type rrset: linkcheck.dns.rrset.RRset object
+    @type rrset: wc.dns.rrset.RRset object
     @ivar expiration: The time when the answer expires
     @type expiration: float (seconds since the epoch)
     """
@@ -94,12 +94,12 @@ class Answer(object):
                     min_ttl = rrset.ttl
                 break
             except KeyError:
-                if rdtype != linkcheck.dns.rdatatype.CNAME:
+                if rdtype != wc.dns.rdatatype.CNAME:
                     try:
                         crrset = response.find_rrset(response.answer,
                                                      qname,
                                                      rdclass,
-                                                     linkcheck.dns.rdatatype.CNAME)
+                                                     wc.dns.rdatatype.CNAME)
                         if min_ttl == -1 or crrset.ttl < min_ttl:
                             min_ttl = crrset.ttl
                         for rd in crrset:
@@ -177,9 +177,9 @@ class Cache(object):
         """Get the answer associated with I{key}.  Returns None if
         no answer is cached for the key.
         @param key: the key
-        @type key: (linkcheck.dns.name.Name, int, int) tuple whose values are the
+        @type key: (wc.dns.name.Name, int, int) tuple whose values are the
         query name, rdtype, and rdclass.
-        @rtype: linkcheck.dns.resolver.Answer object or None
+        @rtype: wc.dns.resolver.Answer object or None
         """
 
         self.maybe_clean()
@@ -191,10 +191,10 @@ class Cache(object):
     def put(self, key, value):
         """Associate key and value in the cache.
         @param key: the key
-        @type key: (linkcheck.dns.name.Name, int, int) tuple whose values are the
+        @type key: (wc.dns.name.Name, int, int) tuple whose values are the
         query name, rdtype, and rdclass.
         @param value: The answer being cached
-        @type value: linkcheck.dns.resolver.Answer object
+        @type value: wc.dns.resolver.Answer object
         """
         self.maybe_clean()
         self.data[key] = value
@@ -206,7 +206,7 @@ class Cache(object):
         the entire cache is flushed.
 
         @param key: the key to flush
-        @type key: (linkcheck.dns.name.Name, int, int) tuple or None
+        @type key: (wc.dns.name.Name, int, int) tuple or None
         """
         if not key is None:
             if self.data.has_key(key):
@@ -220,14 +220,14 @@ class Resolver(object):
     """DNS stub resolver
 
     @ivar domain: The domain of this host
-    @type domain: linkcheck.dns.name.Name object
+    @type domain: wc.dns.name.Name object
     @ivar nameservers: A list of nameservers to query.  Each nameserver is
     a string which contains the IP address of a nameserver.
     @type nameservers: list of strings
     @ivar search: The search list.  If the query name is a relative name,
     the resolver will construct an absolute query name by appending the search
     names one by one to the query name.
-    @type search: list of linkcheck.dns.name.Name objects
+    @type search: list of wc.dns.name.Name objects
     @ivar port: The port to which to send queries.  The default is 53.
     @type port: int
     @ivar timeout: The number of seconds to wait for a response from a
@@ -240,15 +240,15 @@ class Resolver(object):
     @ivar keyring: The TSIG keyring to use.  The default is None.
     @type keyring: dict
     @ivar keyname: The TSIG keyname to use.  The default is None.
-    @type keyname: linkcheck.dns.name.Name object
-    @ivar edns: The EDNS level to use.  The default is -1, no Elinkcheck.dns.
+    @type keyname: wc.dns.name.Name object
+    @ivar edns: The EDNS level to use.  The default is -1, no Ewc.dns.
     @type edns: int
     @ivar ednsflags: The EDNS flags
     @type ednsflags: int
     @ivar payload: The EDNS payload size.  The default is 0.
     @type payload: int
     @ivar cache: The cache to use.  The default is None.
-    @type cache: linkcheck.dns.resolver.Cache object
+    @type cache: wc.dns.resolver.Cache object
     """
     def __init__(self, filename='/etc/resolv.conf', configure=True):
         """Initialize a resolver instance.
@@ -274,9 +274,9 @@ class Resolver(object):
     def reset(self):
         """Reset all resolver configuration to the defaults."""
         self.domain = \
-            linkcheck.dns.name.Name(linkcheck.dns.name.from_text(socket.gethostname())[1:])
+            wc.dns.name.Name(wc.dns.name.from_text(socket.gethostname())[1:])
         if len(self.domain) == 0:
-            self.domain = linkcheck.dns.name.root
+            self.domain = wc.dns.name.root
         self.nameservers = []
         self.localhosts = sets.Set([
           'localhost',
@@ -318,10 +318,10 @@ class Resolver(object):
                 if tokens[0] == 'nameserver':
                     self.nameservers.append(tokens[1])
                 elif tokens[0] == 'domain':
-                    self.domain = linkcheck.dns.name.from_text(tokens[1])
+                    self.domain = wc.dns.name.from_text(tokens[1])
                 elif tokens[0] == 'search':
                     for suffix in tokens[1:]:
-                        self.search.append(linkcheck.dns.name.from_text(suffix))
+                        self.search.append(wc.dns.name.from_text(suffix))
         finally:
             if want_close:
                 f.close()
@@ -337,7 +337,7 @@ class Resolver(object):
 
     def read_local_ifaddrs (self):
         """all active interfaces' ip addresses"""
-        ifc = linkcheck.dns.ifconfig.IfConfig()
+        ifc = wc.dns.ifconfig.IfConfig()
         return [ ifc.getAddr(iface) for iface in ifc.getInterfaceList()
                  if ifc.isUp(iface) ]
 
@@ -364,7 +364,7 @@ class Resolver(object):
     def _config_win32_domain(self, domain):
         """Configure a Domain registry entry."""
         # we call str() on domain to convert it from unicode to ascii
-        self.domain = linkcheck.dns.name.from_text(str(domain))
+        self.domain = wc.dns.name.from_text(str(domain))
 
     def _config_win32_search(self, search):
         """Configure a Search registry entry."""
@@ -372,7 +372,7 @@ class Resolver(object):
         search_list = str(search).split(',')
         for s in search_list:
             if not s in self.search:
-                self.search.append(linkcheck.dns.name.from_text(s))
+                self.search.append(wc.dns.name.from_text(s))
 
     def _config_win32_add_ifaddr (self, key, name):
         """Add interface ip address to self.localhosts."""
@@ -477,8 +477,8 @@ class Resolver(object):
         finally:
             lm.Close()
 
-    def query(self, qname, rdtype=linkcheck.dns.rdatatype.A,
-              rdclass=linkcheck.dns.rdataclass.IN, tcp=False):
+    def query(self, qname, rdtype=wc.dns.rdatatype.A,
+              rdclass=wc.dns.rdataclass.IN, tcp=False):
         """Query nameservers to find the answer to the question.
 
         The I{qname}, I{rdtype}, and I{rdclass} parameters may be objects
@@ -487,14 +487,14 @@ class Resolver(object):
         the string 'NS' both mean to query for records with DNS rdata type NS.
 
         @param qname: the query name
-        @type qname: linkcheck.dns.name.Name object or string
+        @type qname: wc.dns.name.Name object or string
         @param rdtype: the query type
         @type rdtype: int or string
         @param rdclass: the query class
         @type rdclass: int or string
         @param tcp: use TCP to make the query (default is False).
         @type tcp: bool
-        @rtype: linkcheck.dns.resolver.Answer instance
+        @rtype: wc.dns.resolver.Answer instance
         @raises Timeout: no answers could be found in the specified lifetime
         @raises NXDOMAIN: the query name does not exist
         @raises NoAnswer: the response did not contain an answer
@@ -502,17 +502,17 @@ class Resolver(object):
         answer the question."""
 
         if isinstance(qname, str):
-            qname = linkcheck.dns.name.from_text(qname, None)
+            qname = wc.dns.name.from_text(qname, None)
         if isinstance(rdtype, str):
-            rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+            rdtype = wc.dns.rdatatype.from_text(rdtype)
         if isinstance(rdclass, str):
-            rdclass = linkcheck.dns.rdataclass.from_text(rdclass)
+            rdclass = wc.dns.rdataclass.from_text(rdclass)
         qnames_to_try = []
         if qname.is_absolute():
             qnames_to_try.append(qname)
         else:
             if len(qname) > 1:
-                qnames_to_try.append(qname.concatenate(linkcheck.dns.name.root))
+                qnames_to_try.append(qname.concatenate(wc.dns.name.root))
             if self.search:
                 for suffix in self.search:
                     qnames_to_try.append(qname.concatenate(suffix))
@@ -525,7 +525,7 @@ class Resolver(object):
                 answer = self.cache.get((qname, rdtype, rdclass))
                 if answer:
                     return answer
-            request = linkcheck.dns.message.make_query(qname, rdtype, rdclass)
+            request = wc.dns.message.make_query(qname, rdtype, rdclass)
             if not self.keyname is None:
                 request.use_tsig(self.keyring, self.keyname)
             request.use_edns(self.edns, self.ednsflags, self.payload)
@@ -548,25 +548,25 @@ class Resolver(object):
                     timeout = min(self.lifetime - duration, self.timeout)
                     try:
                         if tcp:
-                            response = linkcheck.dns.query.tcp(request, nameserver,
+                            response = wc.dns.query.tcp(request, nameserver,
                                                      timeout, self.port)
                         else:
-                            response = linkcheck.dns.query.udp(request, nameserver,
+                            response = wc.dns.query.udp(request, nameserver,
                                                      timeout, self.port)
-                    except (socket.error, linkcheck.dns.exception.Timeout):
+                    except (socket.error, wc.dns.exception.Timeout):
                         #
                         # Communication failure or timeout.  Go to the
                         # next server
                         #
                         response = None
                         continue
-                    except linkcheck.dns.query.UnexpectedSource:
+                    except wc.dns.query.UnexpectedSource:
                         #
                         # Who knows?  Keep going.
                         #
                         response = None
                         continue
-                    except linkcheck.dns.exception.FormError:
+                    except wc.dns.exception.FormError:
                         #
                         # We don't understand what this server is
                         # saying.  Take it out of the mix and
@@ -576,11 +576,11 @@ class Resolver(object):
                         response = None
                         continue
                     rcode = response.rcode()
-                    if rcode == linkcheck.dns.rcode.NOERROR or \
-                           rcode == linkcheck.dns.rcode.NXDOMAIN:
+                    if rcode == wc.dns.rcode.NOERROR or \
+                           rcode == wc.dns.rcode.NXDOMAIN:
                         break
                     response = None
-            if response.rcode() == linkcheck.dns.rcode.NXDOMAIN:
+            if response.rcode() == wc.dns.rcode.NXDOMAIN:
                 continue
             all_nxdomain = False
             break
@@ -609,9 +609,9 @@ class Resolver(object):
             self.keyname = keyname
 
     def use_edns(self, edns, ednsflags, payload):
-        """Configure Elinkcheck.dns.
+        """Configure Ewc.dns.
 
-        @param edns: The EDNS level to use.  The default is -1, no Elinkcheck.dns.
+        @param edns: The EDNS level to use.  The default is -1, no Ewc.dns.
         @type edns: int
         @param ednsflags: The EDNS flags
         @type ednsflags: int
@@ -626,13 +626,13 @@ class Resolver(object):
 
 default_resolver = None
 
-def query(qname, rdtype=linkcheck.dns.rdatatype.A, rdclass=linkcheck.dns.rdataclass.IN,
+def query(qname, rdtype=wc.dns.rdatatype.A, rdclass=wc.dns.rdataclass.IN,
           tcp=False):
     """Query nameservers to find the answer to the question.
 
     This is a convenience function that uses the default resolver
     object to make the query.
-    @see: L{linkcheck.dns.resolver.Resolver.query} for more information on the
+    @see: L{wc.dns.resolver.Resolver.query} for more information on the
     parameters."""
     global default_resolver
     if default_resolver is None:

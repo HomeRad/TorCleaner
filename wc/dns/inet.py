@@ -18,8 +18,8 @@
 
 import socket
 
-import linkcheck.dns.ipv4
-import linkcheck.dns.ipv6
+import wc.dns.ipv4
+import wc.dns.ipv6
 
 
 # We assume that AF_INET is always defined.
@@ -48,9 +48,9 @@ def inet_pton(family, text):
     """
 
     if family == AF_INET:
-        return linkcheck.dns.ipv4.inet_aton(text)
+        return wc.dns.ipv4.inet_aton(text)
     elif family == AF_INET6:
-        return linkcheck.dns.ipv6.inet_aton(text)
+        return wc.dns.ipv6.inet_aton(text)
     else:
         raise NotImplementedError
 
@@ -63,11 +63,11 @@ def af_for_address(text):
     @rtype int
     """
     try:
-        junk = linkcheck.dns.ipv4.inet_aton(text)
+        junk = wc.dns.ipv4.inet_aton(text)
         return AF_INET
     except:
         try:
-            junk = linkcheck.dns.ipv6.inet_aton(text)
+            junk = wc.dns.ipv6.inet_aton(text)
             return AF_INET6
         except:
             raise ValueError
@@ -84,8 +84,8 @@ def inet_ntop(family, address):
     @rtype: string
     """
     if family == AF_INET:
-        return linkcheck.dns.ipv4.inet_ntoa(address)
+        return wc.dns.ipv4.inet_ntoa(address)
     elif family == AF_INET6:
-        return linkcheck.dns.ipv6.inet_ntoa(address)
+        return wc.dns.ipv6.inet_ntoa(address)
     else:
         raise NotImplementedError

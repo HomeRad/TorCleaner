@@ -16,17 +16,17 @@
 
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.name
 
-class SOA(linkcheck.dns.rdata.Rdata):
+class SOA(wc.dns.rdata.Rdata):
     """SOA record
 
     @ivar mname: the SOA MNAME (master name) field
-    @type mname: linkcheck.dns.name.Name object
+    @type mname: wc.dns.name.Name object
     @ivar rname: the SOA RNAME (responsible name) field
-    @type rname: linkcheck.dns.name.Name object
+    @type rname: wc.dns.name.Name object
     @ivar serial: The zone's serial number
     @type serial: int
     @ivar refresh: The zone's refresh value (in seconds)
@@ -85,14 +85,14 @@ class SOA(linkcheck.dns.rdata.Rdata):
         file.write(five_ints)
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        (mname, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen], current)
+        (mname, cused) = wc.dns.name.from_wire(wire[: current + rdlen], current)
         current += cused
         rdlen -= cused
-        (rname, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen], current)
+        (rname, cused) = wc.dns.name.from_wire(wire[: current + rdlen], current)
         current += cused
         rdlen -= cused
         if rdlen != 20:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         five_ints = struct.unpack('!IIIII',
                                   wire[current : current + rdlen])
         if not origin is None:

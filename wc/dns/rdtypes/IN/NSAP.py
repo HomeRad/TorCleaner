@@ -14,11 +14,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.tokenizer
 
-class NSAP(linkcheck.dns.rdata.Rdata):
+class NSAP(wc.dns.rdata.Rdata):
     """NSAP record.
 
     @ivar address: a NASP
@@ -38,10 +38,10 @@ class NSAP(linkcheck.dns.rdata.Rdata):
         address = tok.get_string()
         t = tok.get_eol()
         if address[0:2] != '0x':
-            raise linkcheck.dns.exception.SyntaxError, 'string does not start with 0x'
+            raise wc.dns.exception.SyntaxError, 'string does not start with 0x'
         address = address[2:].replace('.', '')
         if len(address) % 2 != 0:
-            raise linkcheck.dns.exception.SyntaxError, 'hexstring has odd length'
+            raise wc.dns.exception.SyntaxError, 'hexstring has odd length'
         address = address.decode('hex_codec')
         return cls(rdclass, rdtype, address)
 

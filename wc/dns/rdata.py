@@ -20,16 +20,16 @@
 the module which implements that type.
 @type _rdata_modules: dict
 @var _module_prefix: The prefix to use when forming modules names.  The
-default is 'linkcheck.dns.rdtypes'.  Changing this value will break the library.
+default is 'wc.dns.rdtypes'.  Changing this value will break the library.
 @type _module_prefix: string
 @var _hex_chunk: At most this many octets that will be represented in each
 chunk of hexstring that _hexify() produces before whitespace occurs.
 @type _hex_chunk: int"""
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdatatype
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.rdataclass
+import wc.dns.rdatatype
+import wc.dns.tokenizer
 
 _hex_chunksize = 32
 
@@ -39,7 +39,7 @@ def _hexify(data, chunksize=None):
 
     @param data: the binary string
     @type data: string
-    @param chunksize: the chunk size.  Default is L{linkcheck.dns.rdata._hex_chunksize}
+    @param chunksize: the chunk size.  Default is L{wc.dns.rdata._hex_chunksize}
     @rtype: string
     """
 
@@ -65,7 +65,7 @@ def _base64ify(data, chunksize=None):
     @param data: the binary string
     @type data: string
     @param chunksize: the chunk size.  Default is
-    L{linkcheck.dns.rdata._base64_chunksize}
+    L{wc.dns.rdata._base64_chunksize}
     @rtype: string
     """
 
@@ -141,13 +141,13 @@ class Rdata(object):
     def covers(self):
         """DNS SIG/RRSIG rdatas apply to a specific type; this type is
         returned by the covers() function.  If the rdata type is not
-        SIG or RRSIG, linkcheck.dns.rdatatype.NONE is returned.  This is useful when
+        SIG or RRSIG, wc.dns.rdatatype.NONE is returned.  This is useful when
         creating rdatasets, allowing the rdataset to contain only RRSIGs
         of a particular type, e.g. RRSIG(NS).
         @rtype: int
         """
 
-        return linkcheck.dns.rdatatype.NONE
+        return wc.dns.rdatatype.NONE
 
     def extended_rdatatype(self):
         """Return a 32-bit type value, the least significant 16 bits of
@@ -173,12 +173,12 @@ class Rdata(object):
 
     def __repr__(self):
         covers = self.covers()
-        if covers == linkcheck.dns.rdatatype.NONE:
+        if covers == wc.dns.rdatatype.NONE:
             ctext = ''
         else:
-            ctext = '(' + linkcheck.dns.rdatatype.to_text(covers) + ')'
-        return '<DNS ' + linkcheck.dns.rdataclass.to_text(self.rdclass) + ' ' + \
-               linkcheck.dns.rdatatype.to_text(self.rdtype) + ctext + ' rdata: ' + \
+            ctext = '(' + wc.dns.rdatatype.to_text(covers) + ')'
+        return '<DNS ' + wc.dns.rdataclass.to_text(self.rdclass) + ' ' + \
+               wc.dns.rdatatype.to_text(self.rdtype) + ctext + ' rdata: ' + \
                str(self) + '>'
 
     def __str__(self):
@@ -244,12 +244,12 @@ class Rdata(object):
         @param rdtype: The rdata type
         @type rdtype: int
         @param tok: The tokenizer
-        @type tok: linkcheck.dns.tokenizer.Tokenizer
+        @type tok: wc.dns.tokenizer.Tokenizer
         @param origin: The origin to use for relative names
-        @type origin: linkcheck.dns.name.Name
+        @type origin: wc.dns.name.Name
         @param relativize: should names be relativized?
         @type origin: bool
-        @rtype: linkcheck.dns.rdata.Rdata instance
+        @rtype: wc.dns.rdata.Rdata instance
         """
 
         raise NotImplementedError
@@ -270,8 +270,8 @@ class Rdata(object):
         @param rdlen: The length of the wire-format rdata
         @type rdlen: int
         @param origin: The origin to use for relative names
-        @type origin: linkcheck.dns.name.Name
-        @rtype: linkcheck.dns.rdata.Rdata instance
+        @type origin: wc.dns.name.Name
+        @rtype: wc.dns.rdata.Rdata instance
         """
 
         raise NotImplementedError
@@ -304,19 +304,19 @@ class GenericRdata(Rdata):
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         if tok.get_string() != r'\#':
-            raise linkcheck.dns.exception.SyntaxError, \
+            raise wc.dns.exception.SyntaxError, \
                   r'generic rdata does not start with \#'
         length = tok.get_int()
         chunks = []
         while 1:
             (ttype, value) = tok.get()
-            if ttype == linkcheck.dns.tokenizer.EOL or ttype == linkcheck.dns.tokenizer.EOF:
+            if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
                 break
             chunks.append(value)
         hex = ''.join(chunks)
         data = hex.decode('hex_codec')
         if len(data) != length:
-            raise linkcheck.dns.exception.SyntaxError, \
+            raise wc.dns.exception.SyntaxError, \
                   'generic rdata hex data has wrong length'
         return cls(rdclass, rdtype, data)
 
@@ -334,7 +334,7 @@ class GenericRdata(Rdata):
         return cmp(self.data, other.data)
 
 _rdata_modules = {}
-_module_prefix = 'linkcheck.dns.rdtypes'
+_module_prefix = 'wc.dns.rdtypes'
 
 def get_rdata_class(rdclass, rdtype):
 
@@ -346,11 +346,11 @@ def get_rdata_class(rdclass, rdtype):
         return mod
 
     mod = _rdata_modules.get((rdclass, rdtype))
-    rdclass_text = linkcheck.dns.rdataclass.to_text(rdclass)
-    rdtype_text = linkcheck.dns.rdatatype.to_text(rdtype)
+    rdclass_text = wc.dns.rdataclass.to_text(rdclass)
+    rdtype_text = wc.dns.rdatatype.to_text(rdtype)
     rdtype_text = rdtype_text.replace('-', '_')
     if not mod:
-        mod = _rdata_modules.get((linkcheck.dns.rdatatype.ANY, rdtype))
+        mod = _rdata_modules.get((wc.dns.rdatatype.ANY, rdtype))
         if not mod:
             try:
                 mod = import_module('.'.join([_module_prefix,
@@ -360,7 +360,7 @@ def get_rdata_class(rdclass, rdtype):
                 try:
                     mod = import_module('.'.join([_module_prefix,
                                                   'ANY', rdtype_text]))
-                    _rdata_modules[(linkcheck.dns.rdataclass.ANY, rdtype)] = mod
+                    _rdata_modules[(wc.dns.rdataclass.ANY, rdtype)] = mod
                 except ImportError:
                     mod = None
     if mod:
@@ -385,21 +385,21 @@ def from_text(rdclass, rdtype, tok, origin = None, relativize = True):
     @param rdtype: The rdata type
     @type rdtype: int
     @param tok: The tokenizer
-    @type tok: linkcheck.dns.tokenizer.Tokenizer
+    @type tok: wc.dns.tokenizer.Tokenizer
     @param origin: The origin to use for relative names
-    @type origin: linkcheck.dns.name.Name
+    @type origin: wc.dns.name.Name
     @param relativize: Should names be relativized?
     @type relativize: bool
-    @rtype: linkcheck.dns.rdata.Rdata instance"""
+    @rtype: wc.dns.rdata.Rdata instance"""
 
     if isinstance(tok, str):
-        tok = linkcheck.dns.tokenizer.Tokenizer(tok)
+        tok = wc.dns.tokenizer.Tokenizer(tok)
     cls = get_rdata_class(rdclass, rdtype)
     if cls != GenericRdata:
         # peek at first token
         token = tok.get()
         tok.unget(token)
-        if token[0] == linkcheck.dns.tokenizer.IDENTIFIER and \
+        if token[0] == wc.dns.tokenizer.IDENTIFIER and \
            token[1] == r'\#':
             #
             # Known type using the generic syntax.  Extract the
@@ -434,8 +434,8 @@ def from_wire(rdclass, rdtype, wire, current, rdlen, origin = None):
     @param rdlen: The length of the wire-format rdata
     @type rdlen: int
     @param origin: The origin to use for relative names
-    @type origin: linkcheck.dns.name.Name
-    @rtype: linkcheck.dns.rdata.Rdata instance"""
+    @type origin: wc.dns.name.Name
+    @rtype: wc.dns.rdata.Rdata instance"""
 
     cls = get_rdata_class(rdclass, rdtype)
     return cls.from_wire(rdclass, rdtype, wire, current, rdlen, origin)

@@ -14,11 +14,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.tokenizer
 
-class TXT(linkcheck.dns.rdata.Rdata):
+class TXT(wc.dns.rdata.Rdata):
     """TXT record
 
     @ivar strings: the text strings
@@ -37,7 +37,7 @@ class TXT(linkcheck.dns.rdata.Rdata):
         txt = ''
         prefix = ''
         for s in self.strings:
-            txt += '%s"%s"' % (prefix, linkcheck.dns.rdata._escapify(s))
+            txt += '%s"%s"' % (prefix, wc.dns.rdata._escapify(s))
             prefix = ' '
         return txt
 
@@ -45,15 +45,15 @@ class TXT(linkcheck.dns.rdata.Rdata):
         strings = []
         while 1:
             (ttype, s) = tok.get()
-            if ttype == linkcheck.dns.tokenizer.EOL or ttype == linkcheck.dns.tokenizer.EOF:
+            if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
                 break
-            if ttype != linkcheck.dns.tokenizer.QUOTED_STRING:
-                raise linkcheck.dns.exception.SyntaxError, "expected a quoted string"
+            if ttype != wc.dns.tokenizer.QUOTED_STRING:
+                raise wc.dns.exception.SyntaxError, "expected a quoted string"
             if len(s) > 255:
-                raise linkcheck.dns.exception.SyntaxError, "string too long"
+                raise wc.dns.exception.SyntaxError, "string too long"
             strings.append(s)
         if len(strings) == 0:
-            raise linkcheck.dns.exception.UnexpectedEnd
+            raise wc.dns.exception.UnexpectedEnd
         return cls(rdclass, rdtype, strings)
 
     from_text = classmethod(from_text)
@@ -73,7 +73,7 @@ class TXT(linkcheck.dns.rdata.Rdata):
             current += 1
             rdlen -= 1
             if l > rdlen:
-                raise linkcheck.dns.exception.FormError
+                raise wc.dns.exception.FormError
             s = wire[current : current + l]
             current += l
             rdlen -= l

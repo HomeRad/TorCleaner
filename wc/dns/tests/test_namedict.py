@@ -16,20 +16,20 @@
 
 import unittest
 
-import linkcheck.dns.name
-import linkcheck.dns.namedict
+import wc.dns.name
+import wc.dns.namedict
 
 class TestNameDict (unittest.TestCase):
 
     def setUp(self):
-        self.ndict = linkcheck.dns.namedict.NameDict()
-        n1 = linkcheck.dns.name.from_text('foo.bar.')
-        n2 = linkcheck.dns.name.from_text('bar.')
+        self.ndict = wc.dns.namedict.NameDict()
+        n1 = wc.dns.name.from_text('foo.bar.')
+        n2 = wc.dns.name.from_text('bar.')
         self.ndict[n1] = 1
         self.ndict[n2] = 2
-        self.rndict = linkcheck.dns.namedict.NameDict()
-        n1 = linkcheck.dns.name.from_text('foo.bar', None)
-        n2 = linkcheck.dns.name.from_text('bar', None)
+        self.rndict = wc.dns.namedict.NameDict()
+        n1 = wc.dns.name.from_text('foo.bar', None)
+        n2 = wc.dns.name.from_text('bar', None)
         self.rndict[n1] = 1
         self.rndict[n2] = 2
 
@@ -37,35 +37,35 @@ class TestNameDict (unittest.TestCase):
         self.assertEqual(self.ndict.max_depth, 3)
 
     def testLookup1(self):
-        k = linkcheck.dns.name.from_text('foo.bar.')
+        k = wc.dns.name.from_text('foo.bar.')
         self.assertEqual(self.ndict[k], 1)
 
     def testLookup2(self):
-        k = linkcheck.dns.name.from_text('foo.bar.')
+        k = wc.dns.name.from_text('foo.bar.')
         self.assertEqual(self.ndict.get_deepest_match(k)[1], 1)
 
     def testLookup3(self):
-        k = linkcheck.dns.name.from_text('a.b.c.foo.bar.')
+        k = wc.dns.name.from_text('a.b.c.foo.bar.')
         self.assertEqual(self.ndict.get_deepest_match(k)[1], 1)
 
     def testLookup4(self):
-        k = linkcheck.dns.name.from_text('a.b.c.bar.')
+        k = wc.dns.name.from_text('a.b.c.bar.')
         self.assertEqual(self.ndict.get_deepest_match(k)[1], 2)
 
     def testLookup5(self):
         def bad():
-            n = linkcheck.dns.name.from_text('a.b.c.')
+            n = wc.dns.name.from_text('a.b.c.')
             (k, v) = self.ndict.get_deepest_match(n)
         self.assertRaises(KeyError, bad)
 
     def testLookup6(self):
         def bad():
-            (k, v) = self.ndict.get_deepest_match(linkcheck.dns.name.empty)
+            (k, v) = self.ndict.get_deepest_match(wc.dns.name.empty)
         self.assertRaises(KeyError, bad)
 
     def testLookup7(self):
-        self.ndict[linkcheck.dns.name.empty] = 100
-        n = linkcheck.dns.name.from_text('a.b.c.')
+        self.ndict[wc.dns.name.empty] = 100
+        n = wc.dns.name.from_text('a.b.c.')
         (k, v) = self.ndict.get_deepest_match(n)
         self.assertEqual(v, 100)
 
@@ -78,24 +78,24 @@ class TestNameDict (unittest.TestCase):
         self.assertEqual(self.rndict.max_depth, 2)
 
     def testRelLookup1(self):
-        k = linkcheck.dns.name.from_text('foo.bar', None)
+        k = wc.dns.name.from_text('foo.bar', None)
         self.assertEqual(self.rndict[k], 1)
 
     def testRelLookup2(self):
-        k = linkcheck.dns.name.from_text('foo.bar', None)
+        k = wc.dns.name.from_text('foo.bar', None)
         self.assertEqual(self.rndict.get_deepest_match(k)[1], 1)
 
     def testRelLookup3(self):
-        k = linkcheck.dns.name.from_text('a.b.c.foo.bar', None)
+        k = wc.dns.name.from_text('a.b.c.foo.bar', None)
         self.assertEqual(self.rndict.get_deepest_match(k)[1], 1)
 
     def testRelLookup4(self):
-        k = linkcheck.dns.name.from_text('a.b.c.bar', None)
+        k = wc.dns.name.from_text('a.b.c.bar', None)
         self.assertEqual(self.rndict.get_deepest_match(k)[1], 2)
 
     def testRelLookup7(self):
-        self.rndict[linkcheck.dns.name.empty] = 100
-        n = linkcheck.dns.name.from_text('a.b.c', None)
+        self.rndict[wc.dns.name.empty] = 100
+        n = wc.dns.name.from_text('a.b.c', None)
         (k, v) = self.rndict.get_deepest_match(n)
         self.assertEqual(v, 100)
 

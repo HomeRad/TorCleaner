@@ -20,43 +20,43 @@ import struct
 import sys
 import time
 
-import linkcheck.dns.exception
-import linkcheck.dns.flags
-import linkcheck.dns.name
-import linkcheck.dns.opcode
-import linkcheck.dns.rcode
-import linkcheck.dns.rdata
-import linkcheck.dns.rdataclass
-import linkcheck.dns.rdatatype
-import linkcheck.dns.rrset
-import linkcheck.dns.renderer
-import linkcheck.dns.tsig
+import wc.dns.exception
+import wc.dns.flags
+import wc.dns.name
+import wc.dns.opcode
+import wc.dns.rcode
+import wc.dns.rdata
+import wc.dns.rdataclass
+import wc.dns.rdatatype
+import wc.dns.rrset
+import wc.dns.renderer
+import wc.dns.tsig
 
-class ShortHeader(linkcheck.dns.exception.FormError):
+class ShortHeader(wc.dns.exception.FormError):
     """Raised if the DNS packet passed to from_wire() is too short."""
     pass
 
-class TrailingJunk(linkcheck.dns.exception.FormError):
+class TrailingJunk(wc.dns.exception.FormError):
     """Raised if the DNS packet passed to from_wire() has extra junk
     at the end of it."""
     pass
 
-class UnknownHeaderField(linkcheck.dns.exception.DNSException):
+class UnknownHeaderField(wc.dns.exception.DNSException):
     """Raised if a header field name is not recognized when converting from
     text into a message."""
     pass
 
-class BadEDNS(linkcheck.dns.exception.FormError):
+class BadEDNS(wc.dns.exception.FormError):
     """Raised if an OPT record occurs somewhere other than the start of
     the additional data section."""
     pass
 
-class BadTSIG(linkcheck.dns.exception.FormError):
+class BadTSIG(wc.dns.exception.FormError):
     """Raised if a TSIG record occurs somewhere other than the end of
     the additional data section."""
     pass
 
-class UnknownTSIGKey(linkcheck.dns.exception.DNSException):
+class UnknownTSIGKey(wc.dns.exception.DNSException):
     """Raised if we got a TSIG but don't know the key."""
     pass
 
@@ -69,14 +69,14 @@ class Message(object):
     explanation of these flags.
     @type flags: int
     @ivar question: The question section.
-    @type question: list of linkcheck.dns.rrset.RRset objects
+    @type question: list of wc.dns.rrset.RRset objects
     @ivar answer: The answer section.
-    @type answer: list of linkcheck.dns.rrset.RRset objects
+    @type answer: list of wc.dns.rrset.RRset objects
     @ivar authority: The authority section.
-    @type authority: list of linkcheck.dns.rrset.RRset objects
+    @type authority: list of wc.dns.rrset.RRset objects
     @ivar additional: The additional data section.
-    @type additional: list of linkcheck.dns.rrset.RRset objects
-    @ivar edns: The EDNS level to use.  The default is -1, no Elinkcheck.dns.
+    @type additional: list of wc.dns.rrset.RRset objects
+    @ivar edns: The EDNS level to use.  The default is -1, no Ewc.dns.
     @type edns: int
     @ivar ednsflags: The EDNS flags
     @type ednsflags: long
@@ -85,7 +85,7 @@ class Message(object):
     @ivar keyring: The TSIG keyring to use.  The default is None.
     @type keyring: dict
     @ivar keyname: The TSIG keyname to use.  The default is None.
-    @type keyname: linkcheck.dns.name.Name object
+    @type keyname: wc.dns.name.Name object
     @ivar request_mac: The TSIG MAC of the request message associated with
     this message; used when validating TSIG signatures.   @see: RFC 2845 for
     more information on TSIG fields.
@@ -105,7 +105,7 @@ class Message(object):
     @type xfr: bool
     @ivar origin: The origin of the zone in messages which are used for
     zone transfers or for DNS dynamic updates.  The default is None.
-    @type origin: linkcheck.dns.name.Name object
+    @type origin: wc.dns.name.Name object
     @ivar tsig_ctx: The TSIG signature context associated with this
     message.  The default is None.
     @type tsig_ctx: hmac.HMAC object
@@ -168,17 +168,17 @@ class Message(object):
         s = StringIO.StringIO()
         print >> s, 'id %d' % self.id
         print >> s, 'opcode %s' % \
-              linkcheck.dns.opcode.to_text(linkcheck.dns.opcode.from_flags(self.flags))
-        rc = linkcheck.dns.rcode.from_flags(self.flags, self.ednsflags)
-        print >> s, 'rcode %s' % linkcheck.dns.rcode.to_text(rc)
-        print >> s, 'flags %s' % linkcheck.dns.flags.to_text(self.flags)
+              wc.dns.opcode.to_text(wc.dns.opcode.from_flags(self.flags))
+        rc = wc.dns.rcode.from_flags(self.flags, self.ednsflags)
+        print >> s, 'rcode %s' % wc.dns.rcode.to_text(rc)
+        print >> s, 'flags %s' % wc.dns.flags.to_text(self.flags)
         if self.edns >= 0:
             print >> s, 'edns %s' % self.edns
             if self.ednsflags != 0:
                 print >> s, 'eflags %s' % \
-                      linkcheck.dns.flags.edns_to_text(self.ednsflags)
+                      wc.dns.flags.edns_to_text(self.ednsflags)
             print >> s, 'payload', self.payload
-        is_update = linkcheck.dns.opcode.is_update(self.flags)
+        is_update = wc.dns.opcode.is_update(self.flags)
         if is_update:
             print >> s, ';ZONE'
         else:
@@ -245,15 +245,15 @@ class Message(object):
     def is_response(self, other):
         """Is other a response to self?
         @rtype: bool"""
-        if other.flags & linkcheck.dns.flags.QR == 0 or \
+        if other.flags & wc.dns.flags.QR == 0 or \
            self.id != other.id or \
-           linkcheck.dns.opcode.from_flags(self.flags) != \
-           linkcheck.dns.opcode.from_flags(other.flags):
+           wc.dns.opcode.from_flags(self.flags) != \
+           wc.dns.opcode.from_flags(other.flags):
             return False
-        if linkcheck.dns.rcode.from_flags(other.flags, other.ednsflags) != \
-               linkcheck.dns.rcode.NOERROR:
+        if wc.dns.rcode.from_flags(other.flags, other.ednsflags) != \
+               wc.dns.rcode.NOERROR:
             return True
-        if linkcheck.dns.opcode.is_update(self.flags):
+        if wc.dns.opcode.is_update(self.flags):
             return True
         for n in self.question:
             if n not in other.question:
@@ -264,15 +264,15 @@ class Message(object):
         return True
 
     def find_rrset(self, section, name, rdclass, rdtype,
-                   covers=linkcheck.dns.rdatatype.NONE, deleting=None, create=False,
+                   covers=wc.dns.rdatatype.NONE, deleting=None, create=False,
                    force_unique=False):
         """Find the RRset with the given attributes in the specified section.
 
         @param section: the section of the message to look in, e.g.
         self.answer.
-        @type section: list of linkcheck.dns.rrset.RRset objects
+        @type section: list of wc.dns.rrset.RRset objects
         @param name: the name of the RRset
-        @type name: linkcheck.dns.name.Name object
+        @type name: wc.dns.name.Name object
         @param rdclass: the class of the RRset
         @type rdclass: int
         @param rdtype: the type of the RRset
@@ -288,7 +288,7 @@ class Message(object):
         new RRset regardless of whether a matching RRset exists already.
         @type force_unique: bool
         @raises KeyError: the RRset was not found and create was False
-        @rtype: linkcheck.dns.rrset.RRset object"""
+        @rtype: wc.dns.rrset.RRset object"""
 
         if not force_unique:
             for rrset in section:
@@ -296,12 +296,12 @@ class Message(object):
                     return rrset
         if not create:
             raise KeyError
-        rrset = linkcheck.dns.rrset.RRset(name, rdclass, rdtype, covers, deleting)
+        rrset = wc.dns.rrset.RRset(name, rdclass, rdtype, covers, deleting)
         section.append(rrset)
         return rrset
 
     def get_rrset(self, section, name, rdclass, rdtype,
-                  covers=linkcheck.dns.rdatatype.NONE, deleting=None, create=False,
+                  covers=wc.dns.rdatatype.NONE, deleting=None, create=False,
                   force_unique=False):
         """Get the RRset with the given attributes in the specified section.
 
@@ -309,9 +309,9 @@ class Message(object):
 
         @param section: the section of the message to look in, e.g.
         self.answer.
-        @type section: list of linkcheck.dns.rrset.RRset objects
+        @type section: list of wc.dns.rrset.RRset objects
         @param name: the name of the RRset
-        @type name: linkcheck.dns.name.Name object
+        @type name: wc.dns.name.Name object
         @param rdclass: the class of the RRset
         @type rdclass: int
         @param rdtype: the type of the RRset
@@ -326,7 +326,7 @@ class Message(object):
         @param force_unique: If True and create is also True, create a
         new RRset regardless of whether a matching RRset exists already.
         @type force_unique: bool
-        @rtype: linkcheck.dns.rrset.RRset object or None"""
+        @rtype: wc.dns.rrset.RRset object or None"""
 
         try:
             rrset = self.find_rrset(section, name, rdclass, rdtype, covers,
@@ -343,24 +343,24 @@ class Message(object):
         method.
 
         @param origin: The origin to be appended to any relative names.
-        @type origin: linkcheck.dns.name.Name object
+        @type origin: wc.dns.name.Name object
         @param max_size: The maximum size of the wire format output.
         @type max_size: int
-        @raises linkcheck.dns.exception.TooBig: max_size was exceeded
+        @raises wc.dns.exception.TooBig: max_size was exceeded
         @rtype: string
         """
 
-        r = linkcheck.dns.renderer.Renderer(self.id, self.flags, max_size, origin)
+        r = wc.dns.renderer.Renderer(self.id, self.flags, max_size, origin)
         for rrset in self.question:
             r.add_question(rrset.name, rrset.rdtype, rrset.rdclass)
         for rrset in self.answer:
-            r.add_rrset(linkcheck.dns.renderer.ANSWER, rrset, **kw)
+            r.add_rrset(wc.dns.renderer.ANSWER, rrset, **kw)
         for rrset in self.authority:
-            r.add_rrset(linkcheck.dns.renderer.AUTHORITY, rrset, **kw)
+            r.add_rrset(wc.dns.renderer.AUTHORITY, rrset, **kw)
         if self.edns >= 0:
             r.add_edns(self.edns, self.ednsflags, self.payload)
         for rrset in self.additional:
-            r.add_rrset(linkcheck.dns.renderer.ADDITIONAL, rrset, **kw)
+            r.add_rrset(wc.dns.renderer.ADDITIONAL, rrset, **kw)
         r.write_header()
         if not self.keyname is None:
             r.add_tsig(self.keyname, self.keyring[self.keyname],
@@ -382,7 +382,7 @@ class Message(object):
         keyring.  Note that the order of keys in a dictionary is not defined,
         so applications should supply a keyname when a keyring is used, unless
         they know the keyring contains only one key.
-        @type keyname: linkcheck.dns.name.Name or string
+        @type keyname: wc.dns.name.Name or string
         @param fudge: TSIG time fudge; default is 300 seconds.
         @type fudge: int
         @param original_id: TSIG original id; defaults to the message's id
@@ -398,7 +398,7 @@ class Message(object):
             self.keyname = self.keyring.keys()[0]
         else:
             if isinstance(keyname, str):
-                keyname = linkcheck.dns.name.from_text(keyname)
+                keyname = wc.dns.name.from_text(keyname)
             self.keyname = keyname
         self.fudge = fudge
         if original_id is None:
@@ -430,14 +430,14 @@ class Message(object):
         """Return the rcode.
         @rtype: int
         """
-        return linkcheck.dns.rcode.from_flags(self.flags, self.ednsflags)
+        return wc.dns.rcode.from_flags(self.flags, self.ednsflags)
 
     def set_rcode(self, rcode):
         """Set the rcode.
         @param rcode: the rcode
         @type rcode: int
         """
-        (value, evalue) = linkcheck.dns.rcode.to_flags(rcode)
+        (value, evalue) = wc.dns.rcode.to_flags(rcode)
         self.flags &= 0xFFF0
         self.flags |= value
         self.ednsflags &= 0xFF000000L
@@ -451,7 +451,7 @@ class _WireReader(object):
     @ivar wire: the wire-format message.
     @type wire: string
     @ivar message: The message object being built
-    @type message: linkcheck.dns.message.Message object
+    @type message: wc.dns.message.Message object
     @ivar current: When building a message object from wire format, this
     variable contains the offset from the beginning of wire of the next octet
     to be read.
@@ -468,7 +468,7 @@ class _WireReader(object):
         self.message = message
         self.current = 0
         self.updating = False
-        self.zone_rdclass = linkcheck.dns.rdataclass.IN
+        self.zone_rdclass = wc.dns.rdataclass.IN
         self.question_only = question_only
 
     def _get_question(self, qcount):
@@ -478,10 +478,10 @@ class _WireReader(object):
         @type qcount: int"""
 
         if self.updating and qcount > 1:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
 
         for i in xrange(0, qcount):
-            (qname, used) = linkcheck.dns.name.from_wire(self.wire, self.current)
+            (qname, used) = wc.dns.name.from_wire(self.wire, self.current)
             if not self.message.origin is None:
                 qname = qname.relativize(self.message.origin)
             self.current = self.current + used
@@ -499,7 +499,7 @@ class _WireReader(object):
         """Read the next I{count} records from the wire data and add them to
         the specified section.
         @param section: the section of the message to which to add records
-        @type section: list of linkcheck.dns.rrset.RRset objects
+        @type section: list of wc.dns.rrset.RRset objects
         @param count: the number of records to read
         @type count: int"""
 
@@ -510,7 +510,7 @@ class _WireReader(object):
         seen_opt = False
         for i in xrange(0, count):
             rr_start = self.current
-            (name, used) = linkcheck.dns.name.from_wire(self.wire, self.current)
+            (name, used) = wc.dns.name.from_wire(self.wire, self.current)
             if not self.message.origin is None:
                 name = name.relativize(self.message.origin)
             self.current = self.current + used
@@ -518,14 +518,14 @@ class _WireReader(object):
                      struct.unpack('!HHIH',
                                    self.wire[self.current:self.current + 10])
             self.current = self.current + 10
-            if rdtype == linkcheck.dns.rdatatype.OPT:
+            if rdtype == wc.dns.rdatatype.OPT:
                 if not section is self.message.additional or seen_opt:
                     raise BadEDNS
                 self.message.payload = rdclass
                 self.message.ednsflags = ttl
                 self.message.edns = (ttl & 0xff0000) >> 16
                 seen_opt = True
-            elif rdtype == linkcheck.dns.rdatatype.TSIG:
+            elif rdtype == wc.dns.rdatatype.TSIG:
                 if not (section is self.message.additional and
                         i == (count - 1)):
                     raise BadTSIG
@@ -535,7 +535,7 @@ class _WireReader(object):
                 if secret is None:
                     raise UnknownTSIGKey, "key '%s' unknown" % name
                 self.message.tsig_ctx = \
-                        linkcheck.dns.tsig.validate(self.wire,
+                        wc.dns.tsig.validate(self.wire,
                                           name,
                                           secret,
                                           int(time.time()),
@@ -551,21 +551,21 @@ class _WireReader(object):
                 if ttl < 0:
                     ttl = 0
                 if self.updating and \
-                   (rdclass == linkcheck.dns.rdataclass.ANY or
-                    rdclass == linkcheck.dns.rdataclass.NONE):
+                   (rdclass == wc.dns.rdataclass.ANY or
+                    rdclass == wc.dns.rdataclass.NONE):
                     deleting = rdclass
                     rdclass = self.zone_rdclass
                 else:
                     deleting = None
-                if deleting == linkcheck.dns.rdataclass.ANY:
-                    covers = linkcheck.dns.rdatatype.NONE
+                if deleting == wc.dns.rdataclass.ANY:
+                    covers = wc.dns.rdatatype.NONE
                     rd = None
                 else:
-                    rd = linkcheck.dns.rdata.from_wire(rdclass, rdtype, self.wire,
+                    rd = wc.dns.rdata.from_wire(rdclass, rdtype, self.wire,
                                              self.current, rdlen,
                                              self.message.origin)
                     covers = rd.covers()
-                if self.message.xfr and rdtype == linkcheck.dns.rdatatype.SOA:
+                if self.message.xfr and rdtype == wc.dns.rdatatype.SOA:
                     force_unique = True
                 rrset = self.message.find_rrset(section, name,
                                                 rdclass, rdtype, covers,
@@ -575,7 +575,7 @@ class _WireReader(object):
             self.current = self.current + rdlen
 
     def read(self):
-        """Read a wire format DNS message and build a linkcheck.dns.message.Message
+        """Read a wire format DNS message and build a wc.dns.message.Message
         object."""
 
         l = len(self.wire)
@@ -584,7 +584,7 @@ class _WireReader(object):
         (self.message.id, self.message.flags, qcount, ancount,
          aucount, adcount) = struct.unpack('!HHHHHH', self.wire[:12])
         self.current = 12
-        if linkcheck.dns.opcode.is_update(self.message.flags):
+        if wc.dns.opcode.is_update(self.message.flags):
             self.updating = True
         self._get_question(qcount)
         if self.question_only:
@@ -614,7 +614,7 @@ def from_wire(wire, keyring=None, request_mac='', xfr=False, origin=None,
     @type xfr: bool
     @param origin: If the message is part of a zone transfer, I{origin}
     should be the origin name of the zone.
-    @type origin: linkcheck.dns.name.Name object
+    @type origin: wc.dns.name.Name object
     @param tsig_ctx: The ongoing TSIG context, used when validating zone
     transfers.
     @type tsig_ctx: hmac.HMAC object
@@ -632,7 +632,7 @@ def from_wire(wire, keyring=None, request_mac='', xfr=False, origin=None,
     than once.
     @raises BadTSIG: A TSIG record was not the last record of the additional
     data section.
-    @rtype: linkcheck.dns.message.Message object"""
+    @rtype: wc.dns.message.Message object"""
 
     m = Message(id=0)
     m.keyring = keyring
@@ -653,9 +653,9 @@ class _TextReader(object):
     """Text format reader.
 
     @ivar tok: the tokenizer
-    @type tok: linkcheck.dns.tokenizer.Tokenizer object
+    @type tok: wc.dns.tokenizer.Tokenizer object
     @ivar message: The message object being built
-    @type message: linkcheck.dns.message.Message object
+    @type message: wc.dns.message.Message object
     @ivar updating: Is the message a dynamic update?
     @type updating: bool
     @ivar zone_rdclass: The class of the zone in messages which are
@@ -663,14 +663,14 @@ class _TextReader(object):
     @type zone_rdclass: int
     @ivar last_name: The most recently read name when building a message object
     from text format.
-    @type last_name: linkcheck.dns.name.Name object
+    @type last_name: wc.dns.name.Name object
     """
 
     def __init__(self, text, message):
         self.message = message
-        self.tok = linkcheck.dns.tokenizer.Tokenizer(text)
+        self.tok = wc.dns.tokenizer.Tokenizer(text)
         self.last_name = None
-        self.zone_rdclass = linkcheck.dns.rdataclass.IN
+        self.zone_rdclass = wc.dns.rdataclass.IN
         self.updating = False
 
     def _header_line(self, section):
@@ -682,12 +682,12 @@ class _TextReader(object):
         elif what == 'flags':
             while True:
                 token = self.tok.get()
-                if token[0] != linkcheck.dns.tokenizer.IDENTIFIER:
+                if token[0] != wc.dns.tokenizer.IDENTIFIER:
                     self.tok.unget(token)
                     break
                 self.message.flags = self.message.flags | \
-                                     linkcheck.dns.flags.from_text(token[1])
-            if linkcheck.dns.opcode.is_update(self.message.flags):
+                                     wc.dns.flags.from_text(token[1])
+            if wc.dns.opcode.is_update(self.message.flags):
                 self.updating = True
         elif what == 'edns':
             self.message.edns = self.tok.get_int()
@@ -698,11 +698,11 @@ class _TextReader(object):
                 self.message.edns = 0
             while True:
                 token = self.tok.get()
-                if token[0] != linkcheck.dns.tokenizer.IDENTIFIER:
+                if token[0] != wc.dns.tokenizer.IDENTIFIER:
                     self.tok.unget(token)
                     break
                 self.message.ednsflags = self.message.ednsflags | \
-                              linkcheck.dns.flags.edns_from_text(token[1])
+                              wc.dns.flags.edns_from_text(token[1])
         elif what == 'payload':
             self.message.payload = self.tok.get_int()
             if self.message.edns < 0:
@@ -710,10 +710,10 @@ class _TextReader(object):
         elif what == 'opcode':
             text = self.tok.get_string()
             self.message.flags = self.message.flags | \
-                      linkcheck.dns.opcode.to_flags(linkcheck.dns.opcode.from_text(text))
+                      wc.dns.opcode.to_flags(wc.dns.opcode.from_text(text))
         elif what == 'rcode':
             text = self.tok.get_string()
-            self.message.set_rcode(linkcheck.dns.rcode.from_text(text))
+            self.message.set_rcode(wc.dns.rcode.from_text(text))
         else:
             raise UnknownHeaderField
         self.tok.get_eol()
@@ -721,24 +721,24 @@ class _TextReader(object):
     def _question_line(self, section):
         """Process one line from the text format question section."""
         token = self.tok.get(want_leading = True)
-        if token[0] != linkcheck.dns.tokenizer.WHITESPACE:
-            self.last_name = linkcheck.dns.name.from_text(token[1], None)
+        if token[0] != wc.dns.tokenizer.WHITESPACE:
+            self.last_name = wc.dns.name.from_text(token[1], None)
         name = self.last_name
         token = self.tok.get()
-        if token[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-            raise linkcheck.dns.exception.SyntaxError
+        if token[0] != wc.dns.tokenizer.IDENTIFIER:
+            raise wc.dns.exception.SyntaxError
         # Class
         try:
-            rdclass = linkcheck.dns.rdataclass.from_text(token[1])
+            rdclass = wc.dns.rdataclass.from_text(token[1])
             token = self.tok.get()
-            if token[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-                raise linkcheck.dns.exception.SyntaxError
-        except linkcheck.dns.exception.SyntaxError:
-            raise linkcheck.dns.exception.SyntaxError
+            if token[0] != wc.dns.tokenizer.IDENTIFIER:
+                raise wc.dns.exception.SyntaxError
+        except wc.dns.exception.SyntaxError:
+            raise wc.dns.exception.SyntaxError
         except:
-            rdclass = linkcheck.dns.rdataclass.IN
+            rdclass = wc.dns.rdataclass.IN
         # Type
-        rdtype = linkcheck.dns.rdatatype.from_text(token[1])
+        rdtype = wc.dns.rdatatype.from_text(token[1])
         self.message.find_rrset(self.message.question, name,
                                 rdclass, rdtype, create=True,
                                 force_unique=True)
@@ -753,45 +753,45 @@ class _TextReader(object):
         deleting = None
         # Name
         token = self.tok.get(want_leading = True)
-        if token[0] != linkcheck.dns.tokenizer.WHITESPACE:
-            self.last_name = linkcheck.dns.name.from_text(token[1], None)
+        if token[0] != wc.dns.tokenizer.WHITESPACE:
+            self.last_name = wc.dns.name.from_text(token[1], None)
         name = self.last_name
         token = self.tok.get()
-        if token[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-            raise linkcheck.dns.exception.SyntaxError
+        if token[0] != wc.dns.tokenizer.IDENTIFIER:
+            raise wc.dns.exception.SyntaxError
         # TTL
         try:
             ttl = int(token[1], 0)
             token = self.tok.get()
-            if token[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-                raise linkcheck.dns.exception.SyntaxError
-        except linkcheck.dns.exception.SyntaxError:
-            raise linkcheck.dns.exception.SyntaxError
+            if token[0] != wc.dns.tokenizer.IDENTIFIER:
+                raise wc.dns.exception.SyntaxError
+        except wc.dns.exception.SyntaxError:
+            raise wc.dns.exception.SyntaxError
         except:
             ttl = 0
         # Class
         try:
-            rdclass = linkcheck.dns.rdataclass.from_text(token[1])
+            rdclass = wc.dns.rdataclass.from_text(token[1])
             token = self.tok.get()
-            if token[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-                raise linkcheck.dns.exception.SyntaxError
-            if rdclass == linkcheck.dns.rdataclass.ANY or rdclass == linkcheck.dns.rdataclass.NONE:
+            if token[0] != wc.dns.tokenizer.IDENTIFIER:
+                raise wc.dns.exception.SyntaxError
+            if rdclass == wc.dns.rdataclass.ANY or rdclass == wc.dns.rdataclass.NONE:
                 deleting = rdclass
                 rdclass = self.zone_rdclass
-        except linkcheck.dns.exception.SyntaxError:
-            raise linkcheck.dns.exception.SyntaxError
+        except wc.dns.exception.SyntaxError:
+            raise wc.dns.exception.SyntaxError
         except:
-            rdclass = linkcheck.dns.rdataclass.IN
+            rdclass = wc.dns.rdataclass.IN
         # Type
-        rdtype = linkcheck.dns.rdatatype.from_text(token[1])
+        rdtype = wc.dns.rdatatype.from_text(token[1])
         token = self.tok.get()
-        if token[0] != linkcheck.dns.tokenizer.EOL and token[0] != linkcheck.dns.tokenizer.EOF:
+        if token[0] != wc.dns.tokenizer.EOL and token[0] != wc.dns.tokenizer.EOF:
             self.tok.unget(token)
-            rd = linkcheck.dns.rdata.from_text(rdclass, rdtype, self.tok, None)
+            rd = wc.dns.rdata.from_text(rdclass, rdtype, self.tok, None)
             covers = rd.covers()
         else:
             rd = None
-            covers = linkcheck.dns.rdatatype.NONE
+            covers = wc.dns.rdatatype.NONE
         rrset = self.message.find_rrset(section, name,
                                         rdclass, rdtype, covers,
                                         deleting, True, self.updating)
@@ -799,15 +799,15 @@ class _TextReader(object):
             rrset.add(rd, ttl)
 
     def read(self):
-        """Read a text format DNS message and build a linkcheck.dns.message.Message
+        """Read a text format DNS message and build a wc.dns.message.Message
         object."""
         line_method = self._header_line
         section = None
         while 1:
             token = self.tok.get(True, True)
-            if token[0] == linkcheck.dns.tokenizer.EOL or token[0] == linkcheck.dns.tokenizer.EOF:
+            if token[0] == wc.dns.tokenizer.EOL or token[0] == wc.dns.tokenizer.EOF:
                 break
-            if token[0] == linkcheck.dns.tokenizer.COMMENT:
+            if token[0] == wc.dns.tokenizer.COMMENT:
                 u = token[1].upper()
                 if u == 'HEADER':
                     line_method = self._header_line
@@ -835,8 +835,8 @@ def from_text(text):
     @param text: The text format message.
     @type text: string
     @raises UnknownHeaderField:
-    @raises linkcheck.dns.exception.SyntaxError:
-    @rtype: linkcheck.dns.message.Message object"""
+    @raises wc.dns.exception.SyntaxError:
+    @rtype: wc.dns.message.Message object"""
 
     # 'text' can also be a file, but we don't publish that fact
     # since it's an implementation detail.  The official file
@@ -853,8 +853,8 @@ def from_file(f):
     @param f: file or string.  If I{f} is a string, it is treated
     as the name of a file to open.
     @raises UnknownHeaderField:
-    @raises linkcheck.dns.exception.SyntaxError:
-    @rtype: linkcheck.dns.message.Message object"""
+    @raises wc.dns.exception.SyntaxError:
+    @rtype: wc.dns.message.Message object"""
     if sys.hexversion >= 0x02030000:
         # allow Unicode filenames; turn on universal newline support
         str_type = basestring
@@ -876,30 +876,30 @@ def from_file(f):
     return m
 
 
-def make_query(qname, rdtype, rdclass = linkcheck.dns.rdataclass.IN):
+def make_query(qname, rdtype, rdclass = wc.dns.rdataclass.IN):
     """Make a query message.
 
     The query name, type, and class may all be specified either
     as objects of the appropriate type, or as strings.
 
     The query will have a randomly choosen query id, and its DNS flags
-    will be set to linkcheck.dns.flags.RD.
+    will be set to wc.dns.flags.RD.
 
     @param qname: The query name.
-    @type qname: linkcheck.dns.name.Name object or string
+    @type qname: wc.dns.name.Name object or string
     @param rdtype: The desired rdata type.
     @type rdtype: int
     @param rdclass: The desired rdata class; the default is class IN.
     @type rdclass: int
-    @rtype: linkcheck.dns.message.Message object"""
+    @rtype: wc.dns.message.Message object"""
     if isinstance(qname, str):
-        qname = linkcheck.dns.name.from_text(qname)
+        qname = wc.dns.name.from_text(qname)
     if isinstance(rdtype, str):
-        rdtype = linkcheck.dns.rdatatype.from_text(rdtype)
+        rdtype = wc.dns.rdatatype.from_text(rdtype)
     if isinstance(rdclass, str):
-        rdclass = linkcheck.dns.rdataclass.from_text(rdclass)
+        rdclass = wc.dns.rdataclass.from_text(rdclass)
     m = Message()
-    m.flags |= linkcheck.dns.flags.RD
+    m.flags |= wc.dns.flags.RD
     m.find_rrset(m.question, qname, rdclass, rdtype, create=True,
                  force_unique=True)
     return m

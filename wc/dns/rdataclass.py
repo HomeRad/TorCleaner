@@ -26,7 +26,7 @@ whose key is the rdatatype value and whose value is True in this dictionary.
 
 import re
 
-import linkcheck.dns.exception
+import wc.dns.exception
 
 RESERVED0 = 0
 IN = 1
@@ -66,7 +66,7 @@ _metaclasses = {
 
 _unknown_class_pattern = re.compile('CLASS([0-9]+)$', re.I);
 
-class UnknownRdataclass(linkcheck.dns.exception.DNSException):
+class UnknownRdataclass(wc.dns.exception.DNSException):
     """Raised when a class is unknown."""
     pass
 
@@ -75,7 +75,7 @@ def from_text(text):
     @param text: the text
     @type text: string
     @rtype: int
-    @raises linkcheck.dns.rdataclass.UnknownRdataClass: the class is unknown
+    @raises wc.dns.rdataclass.UnknownRdataClass: the class is unknown
     @raises ValueError: the rdata class value is not >= 0 and <= 65535
     """
 

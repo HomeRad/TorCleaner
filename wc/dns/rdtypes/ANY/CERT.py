@@ -17,10 +17,10 @@
 import cStringIO
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.dnssec
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.dnssec
+import wc.dns.rdata
+import wc.dns.tokenizer
 
 _ctype_by_value = {
     1 : 'PKIX',
@@ -50,7 +50,7 @@ def _ctype_to_text(what):
         return v
     return str(what)
 
-class CERT(linkcheck.dns.rdata.Rdata):
+class CERT(wc.dns.rdata.Rdata):
     """CERT record
 
     @ivar certificate_type: certificate type
@@ -76,22 +76,22 @@ class CERT(linkcheck.dns.rdata.Rdata):
     def to_text(self, origin=None, relativize=True, **kw):
         certificate_type = _ctype_to_text(self.certificate_type)
         return "%s %d %s %s" % (certificate_type, self.key_tag,
-                                linkcheck.dns.dnssec.algorithm_to_text(self.algorithm),
-                                linkcheck.dns.rdata._base64ify(self.certificate))
+                                wc.dns.dnssec.algorithm_to_text(self.algorithm),
+                                wc.dns.rdata._base64ify(self.certificate))
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         certificate_type = _ctype_from_text(tok.get_string())
         key_tag = tok.get_uint16()
-        algorithm = linkcheck.dns.dnssec.algorithm_from_text(tok.get_string())
+        algorithm = wc.dns.dnssec.algorithm_from_text(tok.get_string())
         if algorithm < 0 or algorithm > 255:
-            raise linkcheck.dns.exception.SyntaxError, "bad algorithm type"
+            raise wc.dns.exception.SyntaxError, "bad algorithm type"
         chunks = []
         while 1:
             t = tok.get()
-            if t[0] == linkcheck.dns.tokenizer.EOL or t[0] == linkcheck.dns.tokenizer.EOF:
+            if t[0] == wc.dns.tokenizer.EOL or t[0] == wc.dns.tokenizer.EOF:
                 break
-            if t[0] != linkcheck.dns.tokenizer.IDENTIFIER:
-                raise linkcheck.dns.exception.SyntaxError
+            if t[0] != wc.dns.tokenizer.IDENTIFIER:
+                raise wc.dns.exception.SyntaxError
             chunks.append(t[1])
         b64 = ''.join(chunks)
         certificate = b64.decode('base64_codec')
@@ -111,7 +111,7 @@ class CERT(linkcheck.dns.rdata.Rdata):
         current += 5
         rdlen -= 5
         if rdlen < 0:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         (certificate_type, key_tag, algorithm) = struct.unpack("!HHB", prefix)
         certificate = wire[current : current + rdlen]
         return cls(rdclass, rdtype, certificate_type, key_tag, algorithm,

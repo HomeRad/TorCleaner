@@ -8,7 +8,7 @@ import fcntl
 import os
 import struct
 import re
-import linkcheck.log
+import wc.log
 
 
 class IfConfig (object):
@@ -50,7 +50,7 @@ class IfConfig (object):
         try:
             result = self._fcntl(func, ifreq)
         except IOError, msg:
-            linkcheck.log.warn(linkcheck.LOG,
+            wc.log.warn(wc.LOG,
                   "error getting addr for interface %r: %s", ifname, msg)
             return None
         return socket.inet_ntoa(result[20:24])
@@ -79,7 +79,7 @@ class IfConfig (object):
         try:
             result = self._fcntl(self.SIOCGIFFLAGS, ifreq)
         except IOError, msg:
-            linkcheck.log.warn(linkcheck.LOG_NET,
+            wc.log.warn(wc.LOG_NET,
                  "error getting flags for interface %r: %s", ifname, msg)
             return 0
         # extract the interface's flags from the return value

@@ -14,12 +14,12 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.exception
-import linkcheck.dns.inet
-import linkcheck.dns.rdata
-import linkcheck.dns.tokenizer
+import wc.dns.exception
+import wc.dns.inet
+import wc.dns.rdata
+import wc.dns.tokenizer
 
-class AAAA(linkcheck.dns.rdata.Rdata):
+class AAAA(wc.dns.rdata.Rdata):
     """AAAA record.
 
     @ivar address: an IPv6 address
@@ -30,7 +30,7 @@ class AAAA(linkcheck.dns.rdata.Rdata):
     def __init__(self, rdclass, rdtype, address):
         super(AAAA, self).__init__(rdclass, rdtype)
         # check that it's OK
-        junk = linkcheck.dns.inet.inet_pton(linkcheck.dns.inet.AF_INET6, address)
+        junk = wc.dns.inet.inet_pton(wc.dns.inet.AF_INET6, address)
         self.address = address
 
     def to_text(self, origin=None, relativize=True, **kw):
@@ -38,24 +38,24 @@ class AAAA(linkcheck.dns.rdata.Rdata):
 
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         (ttype, address) = tok.get()
-        if ttype != linkcheck.dns.tokenizer.IDENTIFIER:
-            raise linkcheck.dns.exception.SyntaxError
+        if ttype != wc.dns.tokenizer.IDENTIFIER:
+            raise wc.dns.exception.SyntaxError
         t = tok.get_eol()
         return cls(rdclass, rdtype, address)
 
     from_text = classmethod(from_text)
 
     def to_wire(self, file, compress = None, origin = None):
-        file.write(linkcheck.dns.inet.inet_pton(linkcheck.dns.inet.AF_INET6, self.address))
+        file.write(wc.dns.inet.inet_pton(wc.dns.inet.AF_INET6, self.address))
 
     def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        address = linkcheck.dns.inet.inet_ntop(linkcheck.dns.inet.AF_INET6,
+        address = wc.dns.inet.inet_ntop(wc.dns.inet.AF_INET6,
                                      wire[current : current + rdlen])
         return cls(rdclass, rdtype, address)
 
     from_wire = classmethod(from_wire)
 
     def _cmp(self, other):
-        sa = linkcheck.dns.inet.inet_pton(linkcheck.dns.inet.AF_INET6, self.address)
-        oa = linkcheck.dns.inet.inet_pton(linkcheck.dns.inet.AF_INET6, other.address)
+        sa = wc.dns.inet.inet_pton(wc.dns.inet.AF_INET6, self.address)
+        oa = wc.dns.inet.inet_pton(wc.dns.inet.AF_INET6, other.address)
         return cmp(sa, oa)

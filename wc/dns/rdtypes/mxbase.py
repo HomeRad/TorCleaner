@@ -18,17 +18,17 @@
 
 import struct
 
-import linkcheck.dns.exception
-import linkcheck.dns.rdata
-import linkcheck.dns.name
+import wc.dns.exception
+import wc.dns.rdata
+import wc.dns.name
 
-class MXBase(linkcheck.dns.rdata.Rdata):
+class MXBase(wc.dns.rdata.Rdata):
     """Base class for rdata that is like an MX record.
 
     @ivar preference: the preference value
     @type preference: int
     @ivar exchange: the exchange name
-    @type exchange: linkcheck.dns.name.Name object"""
+    @type exchange: wc.dns.name.Name object"""
 
     __slots__ = ['preference', 'exchange']
 
@@ -59,10 +59,10 @@ class MXBase(linkcheck.dns.rdata.Rdata):
         (preference, ) = struct.unpack('!H', wire[current : current + 2])
         current += 2
         rdlen -= 2
-        (exchange, cused) = linkcheck.dns.name.from_wire(wire[: current + rdlen],
+        (exchange, cused) = wc.dns.name.from_wire(wire[: current + rdlen],
                                                current)
         if cused != rdlen:
-            raise linkcheck.dns.exception.FormError
+            raise wc.dns.exception.FormError
         if not origin is None:
             exchange = exchange.relativize(origin)
         return cls(rdclass, rdtype, preference, exchange)

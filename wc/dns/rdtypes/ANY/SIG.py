@@ -14,8 +14,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import linkcheck.dns.rdtypes.sigbase
+import wc.dns.rdtypes.sigbase
 
-class SIG(linkcheck.dns.rdtypes.sigbase.SIGBase):
+class SIG(wc.dns.rdtypes.sigbase.SIGBase):
     """SIG record"""
     pass

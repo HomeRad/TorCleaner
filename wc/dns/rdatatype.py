@@ -29,7 +29,7 @@ whose key is the rdatatype value and whose value is True in this dictionary.
 
 import re
 
-import linkcheck.dns.exception
+import wc.dns.exception
 
 NONE = 0
 A = 1
@@ -159,7 +159,7 @@ _singletons = {
 
 _unknown_type_pattern = re.compile('TYPE([0-9]+)$', re.I);
 
-class UnknownRdatatype(linkcheck.dns.exception.DNSException):
+class UnknownRdatatype(wc.dns.exception.DNSException):
     """Raised if a type is unknown."""
     pass
 
@@ -167,7 +167,7 @@ def from_text(text):
     """Convert text into a DNS rdata type value.
     @param text: the text
     @type text: string
-    @raises linkcheck.dns.rdatatype.UnknownRdatatype: the type is unknown
+    @raises wc.dns.rdatatype.UnknownRdatatype: the type is unknown
     @raises ValueError: the rdata type value is not >= 0 and <= 65535
     @rtype: int"""
 
