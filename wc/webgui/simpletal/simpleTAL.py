@@ -273,10 +273,10 @@ class TemplateInterpreter:
 			# Default, let's just run through as normal
 			self.programCounter += 1
 			return
-		
+
 	def cmdAttributes (self, command, args):
 		""" args: [(attributeName, expression)]
-				Add, leave, or remove attributes from the start tag
+		Add, leave, or remove attributes from the start tag
 		"""
 		attsToRemove = {}
 		newAtts = []
@@ -297,7 +297,7 @@ class TemplateInterpreter:
 		self.currentAttributes = newAtts
 		# Evaluate all other commands
 		self.programCounter += 1
-		
+
 	def cmdOmitTag (self, command, args):
 		""" args: expression
 				Conditionally turn off tag output
@@ -473,7 +473,27 @@ class TemplateInterpreter:
                 self.programCounter += 1
 
         def cmdI18nAttributes (self, command, args):
-                pass # XXX
+		""" args: [(attributeName, expression)]
+		Add, leave, or remove translated attributes from the start tag
+		"""
+                if self.translator is None:
+                        return
+		attsToRemove = {}
+		newAtts = []
+		for attName, attExpr in args:
+			result = self.translator.gettext(attExpr) % \
+                                      self.context.getVariableMap()
+			# We have a value - let's use it!
+			attsToRemove[attName] = 1
+			escapedAttVal = cgi.escape(result).replace('"', '&quot;')
+			newAtts.append((attName, escapedAttVal))
+		# Copy over the old attributes 
+		for oldAtt in self.currentAttributes:
+			if oldAtt[0] not in attsToRemove:
+				newAtts.append(oldAtt)
+		self.currentAttributes = newAtts
+		# Evaluate all other commands
+		self.programCounter += 1
 
 class Template:
 	def __init__ (self, commands, macros, symbols):
@@ -1038,26 +1058,8 @@ class TemplateCompiler:
 	def compileCmdAttributes (self, argument):
 		# Compile tal:attributes into attribute command
 		# Argument: [(attributeName, expression)]
-		
-		# Break up the list of attribute settings first
-		commandArgs = []
-		# We only want to match semi-colons that are not escaped
-		argumentSplitter =  re.compile ('(?<!;);(?!;)')
-		for attributeStmt in argumentSplitter.split (argument):
-			#  remove any leading space and un-escape any semi-colons
-			attributeStmt = attributeStmt.lstrip().replace (';;', ';')
-			# Break each attributeStmt into name and expression
-			stmtBits = attributeStmt.split (' ')
-			if (len (stmtBits) < 2):
-				# Error, badly formed attributes command
-				msg = "Badly formed attributes command '%s'.  Attributes commands must be of the form: 'name expression[;name expression]'" % argument
-				self.log.error (msg)
-				raise TemplateParseException (tagAsText (self.currentStartTag), msg)
-			attName = stmtBits[0]
-			attExpr = " ".join (stmtBits[1:])
-			commandArgs.append ((attName, attExpr))
-		return (TAL_ATTRIBUTES, commandArgs)
-		
+		return (TAL_ATTRIBUTES, self.get_command_args(argument))
+
 	def compileCmdOmitTag (self, argument):
 		# Compile a condition command, resulting argument is:
 		# path
@@ -1171,22 +1173,46 @@ class TemplateCompiler:
 		return (I18N_TRANSLATE, (argument, self.endTagSymbol))
 
         def compileI18nAttributes (self, argument):
-                pass # XXX
+		# Compile i18n:attributes into attribute command
+		# Argument: [(attributeName, expression)]
+		return (I18N_ATTRIBUTES, self.get_command_args(argument))
+
+        def get_command_args (self, argument):
+		# Break up the list of attribute settings
+                commandArgs = []
+		# We only want to match semi-colons that are not escaped
+		argumentSplitter =  re.compile('(?<!;);(?!;)')
+		for attributeStmt in argumentSplitter.split(argument):
+			#  remove any leading space and un-escape any semi-colons
+			attributeStmt = attributeStmt.lstrip().replace(';;', ';')
+			# Break each attributeStmt into name and expression
+			stmtBits = attributeStmt.split(' ')
+			if len(stmtBits) < 2:
+				# Error, badly formed attributes command
+				msg = "Badly formed attributes command '%s'.  Attributes commands must be of the form: 'name expression[;name expression]'" % argument
+				self.log.error(msg)
+				raise TemplateParseException(tagAsText(self.currentStartTag), msg)
+			attName = stmtBits[0]
+			attExpr = " ".join(stmtBits[1:])
+			commandArgs.append((attName, attExpr))
+		return commandArgs
 
 
 class TemplateParseException (Exception):
 	def __init__ (self, location, errorDescription):
 		self.location = location
 		self.errorDescription = errorDescription
-		
+
 	def __str__ (self):
 		return "[" + self.location + "] " + self.errorDescription
 
-# The list of elements in HTML that can not have end tags - done as a dictionary for fast
-# lookup.	
-HTML_FORBIDDEN_ENDTAG = {'AREA': 1, 'BASE': 1, 'BASEFONT': 1, 'BR': 1, 'COL': 1
-												,'FRAME': 1, 'HR': 1, 'IMG': 1, 'INPUT': 1, 'ISINDEX': 1
-												,'LINK': 1, 'META': 1, 'PARAM': 1}
+# The list of elements in HTML that can not have end tags - done as a
+# dictionary for fast lookup.
+HTML_FORBIDDEN_ENDTAG = {
+    'AREA': 1, 'BASE': 1, 'BASEFONT': 1, 'BR': 1, 'COL': 1,
+    'FRAME': 1, 'HR': 1, 'IMG': 1, 'INPUT': 1, 'ISINDEX': 1,
+    'LINK': 1, 'META': 1, 'PARAM': 1,
+}
 
 class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 	def __init__ (self):
@@ -1203,7 +1229,7 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 		self.close()
 		
 	def unknown_starttag (self, tag, attributes):
-		self.log.debug ("Recieved Start Tag: " + tag + " Attributes: " + str (attributes))
+		self.log.debug ("Received Start Tag: " + tag + " Attributes: " + str (attributes))
 		atts = []
 		for att in attributes:
 			if (att[0] == att[1]):
@@ -1221,7 +1247,7 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 			self.parseStartTag (tag, atts)
 		
 	def unknown_endtag (self, tag):
-		self.log.debug ("Recieved End Tag: " + `tag`)
+		self.log.debug ("Received End Tag: " + `tag`)
 		if (HTML_FORBIDDEN_ENDTAG.has_key (tag.upper())):
 			self.log.warn ("HTML 4.01 forbids end tags for the %s element" % tag)
 		else:
@@ -1229,9 +1255,9 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 			self.popTag ((tag, None))
 			
 	def handle_data (self, data):
-		self.log.debug ("Recieved Real Data: " + `data`)
+		self.log.debug ("Received Real Data: " + `data`)
 		self.parseData (cgi.escape (data))
-		
+
 	# These two methods are required so that we pass through entity references that we don't
 	# know about.  NOTE:  They are not escaped on purpose.
 	def handle_charref (self, ref):
