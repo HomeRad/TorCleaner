@@ -1,4 +1,4 @@
-2.23 "The fog of war" (released xx.xx.xxxx)
+2.23 "The fog of war" (released 27.10.2004)
 
   * Fixed MIME type changing.
     Type: bugfix
@@ -24,8 +24,8 @@
     Type: bugfix
     Changed: wc/filter/HtmlParser.py
 
-  * Proper reset of Connection objects, including empty all send and
-    receive buffers.
+  * Proper reset of Connection objects, including emptying of all send
+    and receive buffers.
     Type: bugfix
     Changed: wc/proxy/*Connection.py
 
