@@ -76,16 +76,15 @@ class HttpProxyClient (object):
                 self.document = '/'
             host = stripsite(self.url)[0]
             self.args = (self.url, self.args[1])
+            mime = self.server.mime
+            content = ''
+            request = "GET %s HTTP/1.0"%url_quote(self.url)
             # close the server and try again
             self.server.client_abort()
+            self.server = None
             headers = get_wc_client_headers(host)
             headers['Accept-Encoding'] = 'identity\r'
-            ClientServerMatchmaker(self,
-                           "GET %s HTTP/1.0" % url_quote(self.url), #request
-                           headers,
-                           '', #content
-                           mime=self.server.mime,
-                           )
+            ClientServerMatchmaker(self, request, headers, content, mime=mime)
             return
         elif not (200 <= status < 300):
             error(PROXY, "%s got %s status %d %r", self, protocol, status, msg)

@@ -12,8 +12,10 @@ class Interpreter (Connection):
         super(Interpreter, self).__init__(sock=sock)
         self.write('>> ')
 
+
     def __repr__ (self):
         return '<interpreter>'
+
 
     def process_read (self):
         while 1:
@@ -34,5 +36,4 @@ class Interpreter (Connection):
             self.write('>> ')
 
 # TODO: make other modules accessible somehow
-#import proxy4_dns, proxy4_web
 
