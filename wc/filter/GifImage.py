@@ -45,7 +45,8 @@ class GifImage (wc.filter.Filter.Filter):
 
     def filter (self, data, **attrs):
         """feed data to GIF image parser, return processed data"""
-        if not attrs.has_key('gifparser'): return data
+        if not attrs.has_key('gifparser'):
+            return data
         gifparser = attrs['gifparser']
         gifparser.addData(data)
         try:
@@ -58,7 +59,8 @@ class GifImage (wc.filter.Filter.Filter):
     def finish (self, data, **attrs):
         """feed data to GIF image parser, flush it and return processed
            data"""
-        if not attrs.has_key('gifparser'): return data
+        if not attrs.has_key('gifparser'):
+            return data
         if data:
             data = self.filter(data, **attrs)
         gifparser = attrs['gifparser']
