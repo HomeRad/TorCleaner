@@ -5,8 +5,9 @@ webcleaner (2.0-0.1) unstable; urgency=low
   * downgrade webcleanertools dependency to "Suggests" since there is
     now a web configuration.
   * install dmozfilter.py example
+  * add gettext to build depends
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri,  8 Aug 2003 12:12:59 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  8 Aug 2003 14:33:05 +0200
 
 webcleaner (1.13-0.1) unstable; urgency=low
 
