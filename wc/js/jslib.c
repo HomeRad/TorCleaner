@@ -430,10 +430,10 @@ static PyObject* JSEnv_hasListener (JSEnvObject* self, PyObject* args) {
         return NULL;
     }
     if (PyMapping_HasKey(self->listeners, item)==1) {
-        PyINCREF(Py_True);
+        Py_INCREF(Py_True);
         return Py_True;
     }
-    PyINCREF(Py_False);
+    Py_INCREF(Py_False);
     return Py_False;
 }
 
