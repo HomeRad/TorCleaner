@@ -129,7 +129,7 @@ def update (config, baseurl, dryrun=False, log=None):
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, "error fetching", url
+        print >>log, "error fetching %s:"%url, msg
         return False
     chg = False
     filemap = {}
@@ -168,7 +168,7 @@ def update (config, baseurl, dryrun=False, log=None):
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, "error fetching", url
+        print >>log, "error fetching %s:"%url, msg
         return False
     lines = page.read().splitlines()
     for line in lines:
