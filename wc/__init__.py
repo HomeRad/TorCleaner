@@ -325,6 +325,7 @@ class Configuration (dict):
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['mime_content_rewriting'] = Set()
         for filtername in self['filters']:
+            # import filter module
             exec "from filter import %s" % filtername
             # filter class has same name as module
             clazz = getattr(getattr(wc.filter, filtername), filtername)

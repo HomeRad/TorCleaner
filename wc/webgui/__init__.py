@@ -179,8 +179,8 @@ def get_context (dirs, form, localcontext, lang):
     """Get template context, raise ImportError if not found.
        The context includes the given local context, plus all variables
        defined by the imported context module
-       Evaluation of the context can set a different HTTP status which is
-       returned."""
+       Evaluation of the context can set a different HTTP status.
+       Returns tuple `(context, status)`"""
     # get template-specific context dict
     status = None
     modulepath = ".".join(['context'] + dirs[:-1])

@@ -20,6 +20,7 @@ class SslConnection (Connection):
         try:
             data = self.socket.read(RECV_BUFSIZE)
         except SSL.WantReadError:
+            # you _are_ already reading, stupid
             return
         except SSL.WantWriteError:
             # you want to write? here you go
@@ -60,6 +61,7 @@ class SslConnection (Connection):
             self.handle_read()
             return
         except SSL.WantWriteError:
+            # you _are_ already writing, stupid
             return
         except SSL.WantX509LookupError, err:
             exception(PROXY, "%s ssl write message", self)
