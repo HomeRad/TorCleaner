@@ -1,5 +1,6 @@
 2.11 (released xx.xx.xxxx)
-  * preserve the order in which HTML attributes have been parsed
+  * - preserve the order in which HTML attributes have been parsed
+    - cope with trailing space in HTML comments
     Type: feature
     Changed: wc/parser/{__init__.py,htmllex.l}
 
