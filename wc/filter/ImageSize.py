@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import Image
-from cStringIO import StringIO
+from StringIO import StringIO
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
 from wc.filter.Filter import Filter
 from wc.log import *
@@ -51,7 +51,7 @@ class ImageSize (Filter):
 
 
     def filter (self, data, **attrs):
-        if not attrs.has_key('buffer'):
+        if attrs['buffer'].closed:
             # we do not block this image
             # or we do not have enough buffer data
             return data
@@ -62,8 +62,7 @@ class ImageSize (Filter):
                 # size is ok
                 data = buf.getvalue()
                 buf.close()
-                del attrs['buffer']
-                return
+                return data
         return ''
 
 
@@ -74,7 +73,7 @@ class ImageSize (Filter):
 
     def check_sizes (self, buf):
         try:
-            img = Image.open(buf)
+            img = Image.open(buf, 'r')
             for size, formats in sizes:
                 if size==img.size:
                     # size matches, look for format restriction
