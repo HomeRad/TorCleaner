@@ -17,10 +17,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """WebCleaner - a filtering HTTP proxy"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-# $Source$
-
 import sys
 if not hasattr(sys, "version_info"):
     raise SystemExit, "This program requires Python 2.3.1 or later."
@@ -137,7 +133,7 @@ def parse_options (sysargs):
                                       ["help", "configdir=", "no-file-logs"])
     except getopt.error:
         print_usage(sys.exc_info()[1])
-    for opt,arg in options:
+    for opt, arg in options:
         if opt=="-h" or opt=="--help":
             print_help()
         elif opt=="--configdir" or opt=="-d":
@@ -145,7 +141,7 @@ def parse_options (sysargs):
         elif opt=="--no-file-logs":
             filelogs = False
         else:
-            print_usage(_("Unknown option %(option)r")%{'option': opt})
+            print_usage(_("Unknown option %(option)r") % {'option': opt})
     return (configdir, filelogs, args)
 
 
