@@ -312,4 +312,9 @@
  tag="iframe">
 <attr name="src">maxihitz\.de</attr>
 </rewrite>
+
+<rewrite title="Ad servers 12" oid="52"
+ desc="adclick stuff">
+<attr>/adclick\.exe/</attr>
+</rewrite>
 </folder>
