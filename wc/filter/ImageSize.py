@@ -93,10 +93,10 @@ class ImageSize (wc.filter.Filter.Filter):
         url = attrs['url']
         pos = buf.tell()
         if pos <= 0:
-            bk.log.error(wc.LOG_FILTER, "Empty image data found at %r (%r)",
-                         url, buf.getvalue())
-        else:
-            attrs['imgsize_blocked'] = \
+            # there was no data, probably a 304 Not Modified answer
+            # just return
+            return ''
+        attrs['imgsize_blocked'] = \
           not self.check_sizes(buf, attrs['imgsize_sizes'], url, finish=True)
         data = buf.getvalue()
         buf.close()
