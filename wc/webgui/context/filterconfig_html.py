@@ -30,7 +30,8 @@ from wc.filter.rules import register_rule as _register_rule
 from wc.filter.rules import recalc_up_down as _recalc_up_down
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
-from wc.filter.Rating import service as webcleaner_rating
+from wc.filter.Rating import service, rangenames
+
 
 # config vars
 info = {}

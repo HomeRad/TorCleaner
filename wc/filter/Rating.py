@@ -42,32 +42,31 @@ service = dict(
    # request ratings from service
    request = '%s/rating/request'%_base,
    # rating categories
-   # rating values are 0: None, 1: mild, 2: heavy
-   # age range is 0-.., for example "5-10" or "14-"
    categories = dict(
        violence = dict(
              name = i18n._('violence'),
-             type = 'int',
-             range = [0,2],
+             rvalues = ["0", "1", "2"],
            ),
        sex = dict(
              name = i18n._('sex'),
-             type = 'int',
-             range = [0,2],
+             rvalues = ["0", "1", "2"],
            ),
        language = dict(
              name = i18n._('language'),
-             type = 'int',
-             range = [0,2],
+             rvalues = ["0", "1", "2"],
            ),
        agerange = dict(
              name = i18n._('age range'),
-             type = 'range',
-             range = [0,None],
+             rrange = [0, None],
            ),
    ),
 )
 
+rangenames = {
+    "0": i18n._("None"),
+    "1": i18n._("Mild"),
+    "2": i18n._("Heavy"),
+}
 
 def parse (data, debug=0):
     """parse given rating data, throws ParseError on error"""

@@ -284,16 +284,35 @@ Rule (don't) match url
 <input type="text" class="text" name="rule_fallback" id="rule_fallback"
  value="http://www..." tal:attributes="value currule/url">
 </td></tr>
-<tr valign="top"><td>
-<span i18n:translate="">Ratings</span>:
-</td><td>
-<div tal:repeat="category webcleaner_rating/categories/keys"
- style="margin-left:30px;">
+<tr valign="top"><td colspan="2">
+<span i18n:translate="">Rating limits for</span>
+<a href="http://imadoofus.com/" tal:attributes="href service/home"
+ tal:content="service/name">WebCleaner service</a>:
+</td>
+</tr>
+<tr valign="top"><td colspan="2">
+<table rules="cols" cellpadding="2" cellspacing="0" border="0" summary="">
+<thead>
+<tr style="border-bottom:1px solid black;">
+<th i18n:translate="">Category</th>
+<th colspan="3">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr tal:repeat="category service/categories/keys">
+<td
+ tal:content="service/categories/?category/name">adult</td>
+<td tal:condition="service/categories/?category/rrange" colspan="3">
 <input type="text" size="4"
  tal:attributes="name string:category_${category};value currule/ratings/?category"
->&nbsp;<span
- i18n:translate="">Category</span>&nbsp;<span tal:content="webcleaner_rating/categories/?category/name">adult</span>
-</div>
+></td>
+<td tal:repeat="value service/categories/?category/rvalues"><input
+ tal:attributes="name string:category_${category};value value"
+ type="radio">&nbsp;<span tal:replace="rangenames/?value">Mild</span>
+</td>
+</tr>
+</tbody>
+</table>
 </td>
 </tr>
 <tr><td colspan="2">
