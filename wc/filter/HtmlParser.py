@@ -47,6 +47,22 @@ _has_ws = re.compile("\s").search
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
 _end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
 
+NO_HTML_END_TAG = ["area",
+ "base",
+ "basefont",
+ "br",
+ "col",
+ "frame",
+ "hr",
+ "img",
+ "input",
+ "isindex",
+ "link",
+ "meta",
+ "param",
+]
+
+
 class JSHtmlListener (JSListener):
     """defines callback handlers for Javascript code"""
     def __init__ (self, opts):
@@ -171,6 +187,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.state = ('parse',)
         self.waited = 0
         self.rulestack = []
+        self.stackcount = []
         self.inbuf = StringIO()
         self.waitbuf = []
         self.url = url or "unknown"
@@ -313,6 +330,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # default data
         self._debug("startElement %r", tag)
         tag = check_spelling(tag, self.url)
+        if self.stackcount:
+            if self.stackcount[-1][0]==tag:
+                self.stackcount[-1][1] += 1
         if self.state[0]=='wait':
             self.waitbuf.append([STARTTAG, tag, attrs])
             return
@@ -366,6 +386,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             # remember buffer position for end tag matching
             pos = len(self.buf)
             self.rulestack.append((pos, rulelist))
+            self.stackcount.append([tag, 1])
         if filtered:
             self.buf_append_data(item)
         elif self.javascript:
@@ -383,6 +404,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 	the buffer (by calling buf2data)"""
         self._debug("endElement %r", tag)
         tag = check_spelling(tag, self.url)
+        if self.stackcount and self.stackcount[-1][0]==tag:
+            self.stackcount[-1][1] -= 1
+
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
         item = [ENDTAG, tag]
@@ -403,7 +427,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
         # matches, all other match too
-        if self.rulestack and self.rulestack[-1][1][0].match_tag(tag):
+        if self.rulestack and self.rulestack[-1][1][0].match_tag(tag) and \
+           self.stackcount[-1][0]==tag and self.stackcount[-1][1]<=0:
+            del self.stackcount[-1]
             pos, rulelist = self.rulestack.pop()
             for rule in rulelist:
                 if rule.match_complete(pos, self.buf):
