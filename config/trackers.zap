@@ -4,7 +4,12 @@
  desc="Statistic links and tracker images deserve now a separate category as they became a lot more in the last couple of months." oid="5">
 <block sid="wc.363" title="Statistic sites"
  desc="Some tracker sites"
- url="https?://(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"/>
+ url="^https?://[0-9a-z.]*(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"/>
+
+<rewrite sid="wc.6" title="Statistic sites 2">
+<attr>^https?://[0-9a-z.]*(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)</attr>
+<replacement part="complete"/>
+</rewrite>
 
 <rewrite sid="wc.364" title="tracker images"
  desc="Several sites use images to track users."
