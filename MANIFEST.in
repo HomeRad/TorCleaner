@@ -1,7 +1,7 @@
 include MANIFEST.in TODO proxy.pac cross-build.sh
 include README README.squid README.sshtunnel README.parser
 include README.patches README.sslgateway
-include webcleaner webcleaner-service
+include webcleaner webcleaner-service webcleaner-certificates
 include debian/changelog debian/config debian/control debian/compat
 include debian/patches/*.dpatch debian/patches/00list*
 include debian/webcleaner.dirs debian/webcleaner.docs
@@ -12,6 +12,7 @@ include debian/webcleanertools.postinst debian/webcleanertools.prerm
 include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
 include webcleaner.1 webcleaner-service.1 webcleaner.conf.5
+include webcleaner-certificates.1
 include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
 include config/*.py config/magic.mime
 recursive-include config/blacklists *.gz README
