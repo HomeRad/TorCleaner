@@ -358,8 +358,7 @@ class HttpServer (Server):
         # flush pending client data and try to reuse this connection
         self.flushing = True
         self.flush()
-        if self.statuscode==407:
-            assert config['parentproxy']
+        if self.statuscode==407 and config['parentproxy']:
             if self.authtries:
                 # we failed twice, abort
                 self.handle_error('authentication error')
@@ -373,6 +372,10 @@ class HttpServer (Server):
                      'username': config['parentproxyuser']}
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
+                # must use GET for ntlm handshake
+                if self.method!='GET':
+                    self.oldmethod = self.method
+                    self.method = 'GET'
             if 'Digest' in challenges:
                 # note: assume self.document is already url-encoded
                 attrs['uri'] = get_auth_uri(self.document)
