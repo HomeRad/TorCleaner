@@ -60,6 +60,7 @@ class RatingHeader (wc.filter.Filter.Filter):
         for rule in rules:
             msg = rule.rating_allow(url)
             if msg:
+                wc.log.debug(wc.LOG_FILTER, "rated page: %s", msg)
                 raise wc.filter.FilterRating, msg
         return data
 
