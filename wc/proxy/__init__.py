@@ -11,7 +11,7 @@ del asyncore.dispatcher.__getattr__
 def fileno(self):
     return self.socket.fileno()
 asyncore.dispatcher.fileno = fileno
-from wc import debug,_,config
+from wc import debug,_,config,xmlify
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
 from LimitQueue import LimitQueue
@@ -91,8 +91,9 @@ def text_status ():
     'error': config['requests']['error'],
     'blocked': config['requests']['blocked'],
     }
+    connections = map(str, asyncore.socket_map.values())
     s = STATUS_TEMPLATE % data
-    s += '\n              '.join(map(str, asyncore.socket_map.values()))
+    s += xmlify('\n     '.join(connections))
     s += ']\n\ndnscache: %s'%dns_lookups.dnscache
     return s
 

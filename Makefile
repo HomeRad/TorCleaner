@@ -56,7 +56,7 @@ dist:	locale
 	md5sum dist/* > $(MD5SUMS)
 
 test:
-	$(PYTHON) test/regrtest.py
+	env http_proxy="" ftp_proxy="" LANG=C $(PYTHON) test/regrtest.py
 
 gentest:
 	$(PYTHON) test/regrtest.py -g

@@ -44,7 +44,7 @@ test_rewriter
 
 
 
-     <a href=http://playboy.com/issue/>blubba</a>
+     <a href="http://playboy.com/issue/">blubba</a>
 
 
 
@@ -71,8 +71,8 @@ test_rewriter
 <a href=http://www/>link</a>
 
 
-These ‘Microsoft chars‘ are history.
-„Retter„ Majak trifft in der Schlussminute.
+These `Microsoft chars` are history.
+"Retter" Majak trifft in der Schlussminute.
 
 
 <a href=bla>seen at slashdot</a>
@@ -86,39 +86,10 @@ These ‘Microsoft chars‘ are history.
 
 
 
-<a href=bla">link</a>
+<a defer href="bla>link</a>
 
-<script defer type=text/javascript>
-<!-- Hide code for older browsers...
-// window instance
-w = self;
+<script type=" textjavascript>
 
-function finish() {
-    w.defaultStatus = "";
-}
-
-function get_date() {
-    var d = new Date();
-    today = "" + d.getDate() +"."+ (d.getMonth()+ 1) + "." + d.getYear();
-    return today;
-}
-
-function get_time() {
-    var now = new Date();
-    var hours = now.getHours();
-    var minutes = now.getMinutes();
-    var seconds = now.getSeconds();
-    var timeValue = "" + hours;
-    timeValue += ((minutes < 10) ? ":0" : ":") + minutes;
-    timeValue += ((seconds < 10) ? ":0" : ":") + seconds;
-    return timeValue;
-}
-
-function display() {
-    message = "Calvin wünscht angenehmes Surfen am " + get_date() + " um " + get_time () + ".";
-    w.defaultStatus = message;
-}
-// end of script. -->
 </script>
 
 </body></html>

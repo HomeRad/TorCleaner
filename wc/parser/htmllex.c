@@ -9,7 +9,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 23
+#define YY_FLEX_SUBMINOR_VERSION 24
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -407,7 +407,6 @@ void yy_flush_buffer YY_PARAMS(( YY_BUFFER_STATE b YY_PROTO_LAST_ARG ));
 YY_BUFFER_STATE yy_scan_buffer YY_PARAMS(( char *base, yy_size_t size YY_PROTO_LAST_ARG ));
 YY_BUFFER_STATE yy_scan_string YY_PARAMS(( yyconst char *yy_str YY_PROTO_LAST_ARG ));
 YY_BUFFER_STATE yy_scan_bytes YY_PARAMS(( yyconst char *bytes, int len YY_PROTO_LAST_ARG ));
-
 
 
 void *yyalloc YY_PARAMS(( yy_size_t YY_PROTO_LAST_ARG ));
@@ -6691,7 +6690,7 @@ static PyObject* quote_string (PyObject* val) {
 
 #define S_STRING 15
 
-#line 6695 "htmllex.c"
+#line 6694 "htmllex.c"
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
@@ -7009,7 +7008,7 @@ YY_DECL
 
 
   /*********************** EOF ************************/
-#line 7013 "htmllex.c"
+#line 7012 "htmllex.c"
 
     yylval = yylvalp;
 #ifdef YYLTYPE
@@ -7982,7 +7981,7 @@ YY_RULE_SETUP
 #line 724 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 7986 "htmllex.c"
+#line 7985 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{

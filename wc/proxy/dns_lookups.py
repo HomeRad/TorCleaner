@@ -1,9 +1,9 @@
 # For a high level overview of DNS, see
 # http://www.rad.com/networks/1998/dns/main.html
 
-import sys, os, time, socket, re,DNS
+import sys, os, time, socket, re
 from Connection import Connection
-from wc.proxy import make_timer
+from wc.proxy import make_timer, DNS
 from wc import debug, warning
 from wc.debug_levels import *
 from pprint import pformat
