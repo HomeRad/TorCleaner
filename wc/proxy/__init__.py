@@ -7,6 +7,7 @@ used by Bastian Kleineidam for WebCleaner
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
 import sys, os, urlparse, time, select, asyncore, wc
+from wc import message
 
 TIMERS = [] # list of (time, function)
 

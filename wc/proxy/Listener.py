@@ -23,7 +23,7 @@ class Listener(asyncore.dispatcher):
         return 0
     
     def handle_accept(self):
-        message(None, 'accept', None, None, self)
+        #message(None, 'accept', None, None, self)
         apply(self.handler, self.accept())
 
     def handle_error(self, type, value, tb=None):

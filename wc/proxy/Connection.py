@@ -37,7 +37,7 @@ class Connection(asyncore.dispatcher):
 
     def close(self):
         if self.connected:
-            message(None, 'close', None, None, self)
+            #message(None, 'close', None, None, self)
             self.connected = 0
             asyncore.dispatcher.close(self)
 
@@ -63,7 +63,7 @@ class Connection(asyncore.dispatcher):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            message(None, 'close ready', None, None, self)
+            #message(None, 'close ready', None, None, self)
             self.close_pending = 1
         else:
             self.close()
@@ -76,7 +76,7 @@ class Connection(asyncore.dispatcher):
         try:
             num_sent = self.send(self.send_buffer[:SEND_BUFSIZE])
         except socket.error, err:
-            message(1, 'write error', None, None, self, err)
+            #message(1, 'write error', None, None, self, err)
             self.handle_error(socket.error, err)
             return
         self.send_buffer = self.send_buffer[num_sent:]
@@ -86,20 +86,21 @@ class Connection(asyncore.dispatcher):
         return num_sent
 
     def handle_connect(self):
-        message(None, 'connect', None, None, self)
+        #message(None, 'connect', None, None, self)
+        pass
 
     def handle_read(self):
         if not self.connected:
             # It's been closed (presumably recently)
-            message(0, 'read from connected')
+            #message(0, 'read from connected')
             return
         try:
             data = self.recv(RECV_BUFSIZE)
             if not data: # It's been closed, and handle_close has been called
                 return
-            message(None, 'read', len(data), '<=', self)
+            #message(None, 'read', len(data), '<=', self)
         except socket.error, err:
-            message(1, 'read error', None, None, self, err)
+            #message(1, 'read error', None, None, self, err)
             self.handle_error(socket.error, err)
             return
 	self.recv_buffer += data

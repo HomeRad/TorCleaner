@@ -116,7 +116,7 @@ class ClientServerMatchmaker:
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            message(6, 'resurrecting', None, None, server)
+            #message(6, 'resurrecting', None, None, server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -154,8 +154,8 @@ class ClientServerMatchmaker:
             self.client.server_no_response()
         
     def server_close(self):
-        message(6, 'resurrection failed', None,
-                self.server.sequence_number, self.server)
+        #message(6, 'resurrection failed', None,
+        #        self.server.sequence_number, self.server)
 
         # Look for a server again
         if self.server.sequence_number > 0:

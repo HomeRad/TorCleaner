@@ -37,7 +37,7 @@ class UnchunkStream:
                     if line:
                         # NOTE: chunklen can be followed by r";.*"
                         self.bytes_remaining = atoi(line, 16) # chunklen is hex
-                        print 'chunk len:', color(2, self.bytes_remaining)
+                        #print 'chunk len:', color(2, self.bytes_remaining)
                         if self.bytes_remaining == 0:
                             # End of stream
                             self.closed = 1

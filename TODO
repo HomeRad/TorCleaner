@@ -1,4 +1,6 @@
 TODO
+- a single debug() function, no more message()
+- filter debugging
 - additionally give _all_ modules the URL info
 - more status info (look at surfboard: the WM applet is cool)
   o uptime
@@ -13,8 +15,6 @@ TODO
   Remove dynamic HTML
   Control sounds
   Highlight keywords
-- HTTP Proxy redesign: use asyncore.dispatcher
-  HTTP/1.1, persistent connections, connection pools
 - NT specific functions in daemon module (works now with generic functions)
 - HTTPS support
   It's sort of an extension to HTTP - you just send the proxy the request

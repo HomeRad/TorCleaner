@@ -4,11 +4,12 @@ from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from string import split,find,join
 from wc import message,color
-from wc.filter import FILTER_REQUEST,
-                      FILTER_REQUEST_HEADER,
-                      FILTER_REQUEST_DECODE,
-                      FILTER_REQUEST_MODIFY,
-                      FILTER_REQUEST_ENCODE
+from wc.filter import FILTER_REQUEST
+from wc.filter import FILTER_REQUEST_HEADER
+from wc.filter import FILTER_REQUEST_DECODE
+from wc.filter import FILTER_REQUEST_MODIFY
+from wc.filter import FILTER_REQUEST_ENCODE
+from wc.filter import applyfilter
 
 class HttpClient(Connection):
     # States:
@@ -17,7 +18,6 @@ class HttpClient(Connection):
     # data (read any additional data and forward it to the server)
     
     def __init__(self, socket, addr):
-        print "init HttpClient"
         Connection.__init__(self, socket)
         self.addr = addr
         self.state = 'request'
@@ -113,7 +113,7 @@ class HttpClient(Connection):
         
     def handle_error(self, type, value, traceback=None):
         # We should also close the server connection
-        message(1, 'client error', None, None, self, type, value)
+        #message(1, 'client error', None, None, self, type, value)
         Connection.handle_error(self, type, value, traceback)
         if self.server:
             server, self.server = self.server, None
@@ -122,7 +122,7 @@ class HttpClient(Connection):
     def handle_close(self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
-        message(1, 'client close', None, None, self)
+        #message(1, 'client close', None, None, self)
         Connection.handle_close(self)
         if self.server:
             server, self.server = self.server, None

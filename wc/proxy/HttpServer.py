@@ -7,17 +7,23 @@ from ClientServerMatchmaker import serverpool
 from string import find,strip,split,join,lower
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
-from wc.filter import applyfilter, initStateObjects,
-     FILTER_RESPONSE,
-     FILTER_RESPONSE_HEADER,
-     FILTER_RESPONSE_DECODE,
-     FILTER_RESPONSE_MODIFY,
-     FILTER_RESPONSE_ENCODE
+from wc.filter import applyfilter, initStateObjects
+from wc.filter import FILTER_RESPONSE
+from wc.filter import FILTER_RESPONSE_HEADER
+from wc.filter import FILTER_RESPONSE_DECODE
+from wc.filter import FILTER_RESPONSE_MODIFY
+from wc.filter import FILTER_RESPONSE_ENCODE
 
 # DEBUGGING
 PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
+
+_RESPONSE_FILTERS = (
+   FILTER_RESPONSE_DECODE,
+   FILTER_RESPONSE_MODIFY,
+   FILTER_RESPONSE_ENCODE)
+
 
 class HttpServer(Server):
     def __init__(self, ipaddr, port, client):
@@ -52,7 +58,7 @@ class HttpServer(Server):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         try: self.connect(self.addr)
         except socket.error, err:
-            message(6, 'connect error', None, None, err)
+            #message(6, 'connect error', None, None, err)
             self.handle_error(socket.error, err)
             return
 
@@ -119,8 +125,9 @@ class HttpServer(Server):
             self.client.server_response(self.response, self.headers)
         else:
             # We have no idea what it is!?
-            message(6, 'Warning', None, None, 'puzzling header received ',
-	            `self.response`)
+            #message(6, 'Warning', None, None, 'puzzling header received ',
+	    #        `self.response`)
+            pass
 
     def process_headers(self):
         # Headers are terminated by a blank line .. now in the regexp,
@@ -279,7 +286,7 @@ class HttpServer(Server):
             # We can't reuse this connection
             self.close()
         else:
-            message(6, 'recycling', None, self.sequence_number, self)
+            #message(6, 'recycling', None, self.sequence_number, self)
             self.sequence_number = self.sequence_number + 1
             self.state = 'client'
             self.document = ''
@@ -300,7 +307,7 @@ class HttpServer(Server):
             client.server_abort()
         
     def handle_close(self):
-        message(1, 'server close; '+self.state, None, None, self)
+        #message(1, 'server close; '+self.state, None, None, self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None
