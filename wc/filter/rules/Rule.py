@@ -193,7 +193,10 @@ class Rule (object):
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        return '<%s sid="%s"' % (self.get_name(), xmlify(self.sid))
+        s = '<%s sid="%s"' % (self.get_name(), xmlify(self.sid))
+        if self.disable:
+            s+= ' disable="%d"' % self.disable
+        return s
 
 
     def title_desc_toxml (self, prefix=""):
