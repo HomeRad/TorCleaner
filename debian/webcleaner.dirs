@@ -2,3 +2,4 @@ usr/sbin
 var/log/webcleaner/main
 var/run/webcleaner
 var/run/webcleaner.log
+etc/webcleaner
