@@ -140,7 +140,7 @@ __date__    = "$Date$"[7:-2]
 import sys, os
 if sys.version[:5] < "2.3":
     raise SystemExit, "This program requires Python 2.3 or later."
-# psyco is disabled, it's unstable
+# psyco library for speedup
 try:
     import psyco
     psyco.profile()
