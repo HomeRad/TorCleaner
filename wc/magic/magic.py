@@ -36,7 +36,8 @@ class Failed (Exception):
 
 class Magic (object):
 
-    data_size = {'byte':1, 'short':2, 'long':4, 'string':1, 'pstring':1, 'date': 4, 'ldate': 4}
+    data_size = {'byte':1, 'short':2, 'long':4, 'string':1, 'stringnocase':1,
+                 'pstring':1, 'date': 4, 'ldate': 4}
     type_size = {'b':1, 'B':1, 's':2, 'S':2, 'l':4, 'L':5}
 
 
@@ -176,15 +177,16 @@ class Magic (object):
         else:
             kind = full_type[2:]
 
-        # XXX: string case and white space compaction option not implemented
+        # XXX: white space compaction option not implemented
         # XXX: Not very used ...
         if kind.startswith("string/"):
             # XXX todo
-            #NOT_DONE_YET = kind[7:]
-            kind = "string"
-
+            if "c" in kind[7:]:
+                kind = "stringnocase"
+            else:
+                kind = "string"
         # XXX: No idea what are those extension
-        if kind.startswith("ldate-"):
+        elif kind.startswith("ldate-"):
             # XXX todo
             #NOT_DONE_YET = kind[6:]
             kind = "ldate"
@@ -223,6 +225,10 @@ class Magic (object):
 
 
     def _data (self,kind,result):
+        if kind=="string":
+            return result.replace("\\", "")
+        elif kind=="stringnocase":
+            return result.replace("\\", "").lower()
         pos = 0
         data = list('')
         while pos < len(result):
@@ -235,12 +241,8 @@ class Magic (object):
                 else:
                     data.append(result[pos:pos+2])
                 pos +=2
-            elif kind == "string" and (result[pos] in string.ascii_letters or result[pos] in string.digits):
-                data.append(ord(result[pos])*1L)
-                pos +=1
             else:
                 base = convert.which_base(result[pos:])
-
                 if base == 0:
                     data.append(ord(result[pos])*1L)
                     pos += 1
@@ -257,7 +259,7 @@ class Magic (object):
 
     def _length (self, kind, data):
         # Calculate the size of the data to read in the file
-        if kind == "string":
+        if kind.startswith("string"):
             replace = ""
             for i in data:
                 # except: Too lazy to handle the '\r' and co otherwise
@@ -354,8 +356,8 @@ class Magic (object):
                 self._lengthdict[index] = length
                 self._mimedict[index] = mime
 
-                self.entries = index
                 index += 1
+                self.entries = index
 
         f.close()
 
@@ -467,6 +469,8 @@ class Magic (object):
         elif kind == 'string':
             # Nothing to do
             pass
+        elif kind == 'stringnocase':
+            value = data.lower()
         elif kind == 'pstring':
             # Not done here anymore
             pass
@@ -597,17 +601,8 @@ class Magic (object):
                 # Perform the test
                 if test == '=':
                     # If we are comparing string the string is already read
-                    if kind == 'string':
-                        # The string \0 seems special and it seems to be what to do
-                        if self._is_null_string(data):
-                            success = True
-                        # Other string perform a byte to byte comparaison
-                        elif len(data) == len(extract):
-                            success = True
-                            for index in range(len(data)):
-                                # XXX: Does this fail for '\r' test
-                                if ord(extract[index]) != data[index]:
-                                    success = False
+                    if kind.startswith('string'):
+                        success = (data==value)
                     elif kind == 'pstring':
                         raise Failed("pstring not implemented")
                     else:
@@ -698,7 +693,7 @@ class Magic (object):
                         result += ' '
                 else:
                     raise Failed("No success")
-            except (Failed, IOError):
+            except (Failed, IOError), msg:
                 allow_next = level
         f.close()
 
