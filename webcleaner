@@ -48,22 +48,12 @@ enabled.
 """
 
 __author__ = "Bastian Kleineidam"
-__credits__ = \
-"""Credits go to munchy.py from Neil Schemenauer <nascheme@enme.ucalgary.ca>.
-The proxy class is based on his code.
-The filter code design is inspired from FilterProxy, a Perl program from
-Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
-Me, Bob and the author of AIFilter (Tels) had a nice discussion about
-filter formats with good ideas. Tels convinced me to try stateful
-filtering and I realize that it is very nice indeed.
-Disabling animated GIFs is a question of honor, but the idea goes back to
-the Webwasher.
-Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
-HTTP/1.1 Proxy written in Java."""
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
 
 import sys, os
-if sys.version[:5] < "2.2":
-    raise SystemExit, "This program requires Python 2.2 or later."
+if sys.version[:5] < "2.3":
+    raise SystemExit, "This program requires Python 2.3 or later."
 # for pydoc testing, and local running. XXX should be a config entry
 try:
     from wc import i18n, daemon
