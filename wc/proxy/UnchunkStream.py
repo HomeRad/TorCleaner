@@ -17,18 +17,17 @@ class UnchunkStream (object):
      - bytes_remaining is not None:
        we're reading up to bytes_remaining elements of data
     """
+
     def __init__ (self):
         """initialize internal buffers and flags"""
         self.buf = ''
         self.bytes_remaining = None
         self.closed = False
 
-
     def __repr__ (self):
         """representation of stream filter state"""
         return '<%s closed=%s buflen=%d bytes_remaining=%s>' % \
       ('unchunk', self.closed, len(self.buf), self.bytes_remaining)
-
 
     def decode (self, s):
         """unchunk given data s"""
@@ -75,7 +74,6 @@ class UnchunkStream (object):
                     self.bytes_remaining = None
         wc.log.debug(wc.LOG_PROXY, "decoded chunk %r", s)
         return s
-
 
     def flush (self):
         """flush internal buffers and return flushed data"""

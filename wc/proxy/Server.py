@@ -14,13 +14,11 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
         super(Server, self).__init__(state)
         self.client = client
 
-
     def client_abort (self):
         """the client has aborted the connection"""
         wc.log.debug(wc.LOG_PROXY, "%s Server.client_abort", self)
         self.client = None
         self.close()
-
 
     def handle_connect (self):
         """make connection to remote server"""
@@ -32,7 +30,7 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
             return
         self.process_connect()
 
-
     def process_connect (self):
         """connect to remote server, must be implemented in subclass"""
         raise NotImplementedError("must be implemented in a subclass")
+

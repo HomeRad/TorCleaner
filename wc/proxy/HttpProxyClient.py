@@ -39,7 +39,6 @@ class HttpProxyClient (object):
         self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, request, "filter", attrs)
         wc.log.debug(wc.LOG_PROXY, '%s init', self)
 
-
     def __repr__ (self):
         """object representation"""
         if self.handler is None:
@@ -50,7 +49,6 @@ class HttpProxyClient (object):
                 handler = self.handler.im_class.__name__+"."+handler
         return '<%s: %s %s>' % ('proxyclient', self.args[0], handler)
 
-
     def finish (self):
         """tell handler all data is written and remove handler"""
         wc.log.debug(wc.LOG_PROXY, '%s finish', self)
@@ -58,18 +56,15 @@ class HttpProxyClient (object):
             self.handler(None, *self.args)
             self.handler = None
 
-
     def error (self, status, msg, txt=''):
         """on error the client finishes"""
         wc.log.error(wc.LOG_PROXY, '%s error %s %s %s', self, status, msg, txt)
         self.finish()
 
-
     def write (self, data):
         """give data to handler"""
         if self.handler:
             self.handler(data, *self.args)
-
 
     def server_response (self, server, response, status, headers):
         """Follow redirects, and finish on errors. For HTTP status 2xx
@@ -85,7 +80,6 @@ class HttpProxyClient (object):
             wc.log.error(wc.LOG_PROXY, "%s got %s status %d %r", self, protocol, status, msg)
             self.finish()
 
-
     def server_content (self, data):
         """delegate server content to handler if it is not from a redirect
            response"""
@@ -93,7 +87,6 @@ class HttpProxyClient (object):
         wc.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes', self, len(data))
         if data and not self.isredirect:
             self.write(data)
-
 
     def server_close (self, server):
         """The server has closed. Either redirect to new url, or finish"""
@@ -104,18 +97,15 @@ class HttpProxyClient (object):
         else:
             self.finish()
 
-
     def server_abort (self):
         """The server aborted, so finish"""
         wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.finish()
 
-
     def handle_local (self):
         """Local data is not allowed here, finish."""
         wc.log.error(wc.LOG_PROXY, "%s handle_local %s", self, self.args)
         self.finish()
-
 
     def redirect (self):
         """handle redirection to new url"""

@@ -75,7 +75,6 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
             # Read & discard the 16-bit header CRC
             if len(s) < 2: return # Incomplete
             s = s[2:]
-
         # We actually got through the header
         self.buf = s
         self.header_seen = True
@@ -97,7 +96,6 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
             else:
                 # We haven't finished parsing the header
                 return ''
-
         # We have seen the header, so we can move on to zlib
         return super(GunzipStream, self).decode(s)
 

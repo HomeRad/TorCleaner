@@ -24,7 +24,6 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         super(SslClient, self).__init__(sock, addr)
         self.allow = wc.proxy.Allowed.AllowedSslClient()
 
-
     def __repr__ (self):
         extra = self.persistent and "persistent " or ""
         if self.request:
@@ -39,7 +38,6 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         if not self.connected:
             extra += " (unconnected)"
         return '<%s:%-8s %s>' % ('sslclient', self.state, extra)
-
 
     def fix_request (self):
         # refresh with filtered request data
@@ -69,13 +67,11 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         # request is ok
         return True
 
-
     def server_request (self):
         assert self.state == 'receive', "%s server_request in non-receive state" % self
         wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self, self.request, self.headers, self.content)
-
 
     def handle_local (self, is_public_doc=False):
         assert self.state == 'receive'
@@ -84,7 +80,6 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         self.url = "/blocked.html"
         self.headers['Host'] = 'localhost\r'
         wc.webgui.WebConfig(self, self.url, form, self.protocol, self.headers)
-
 
     def mangle_request_headers (self, headers):
         # nothing to do

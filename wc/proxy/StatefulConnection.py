@@ -7,21 +7,19 @@ import wc.proxy.Connection
 class StatefulConnection (wc.proxy.Connection.Connection):
     """connection class allowing the connection to be in a specified state
     """
+
     def __init__ (self, state, sock=None):
         """initialize connection with given start state"""
         super(StatefulConnection, self).__init__(sock=sock)
         self.state = state
 
-
     def readable (self):
         """a connection is readable if we're connected and not in a close state"""
         return self.connected and self.state not in ('closed', 'unreadable')
 
-
     def writable (self):
         """a connection is writable if we're connecting or if data is available"""
         return self.send_buffer or self.state == 'connect'
-
 
     def delegate_read (self):
         """delegate a read process to process_* funcs according to the

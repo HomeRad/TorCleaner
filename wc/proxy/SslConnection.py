@@ -1,14 +1,16 @@
 # -*- coding: iso-8859-1 -*-
 """ssl connection, usable for both client and server connections"""
 
-import wc
-import wc.proxy.Connection
 from OpenSSL import SSL
+
+import wc
 import wc.log
+import wc.proxy.Connection
 
 
 class SslConnection (wc.proxy.Connection.Connection):
     """mix-in class for SSL connections"""
+
     def handle_read (self):
         """read data from SSL connection, put it into recv_buffer and call
            process_read"""
@@ -44,7 +46,6 @@ class SslConnection (wc.proxy.Connection.Connection):
         wc.log.debug(wc.LOG_NET, 'data %r', data)
         self.recv_buffer += data
         self.process_read()
-
 
     def handle_write (self):
         """Write data from send_buffer to connection socket.

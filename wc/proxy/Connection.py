@@ -38,11 +38,9 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         # reuse counter for persistent connections
         self.sequence_number = 0
 
-
     def readable (self):
         """return True if connection is readable"""
         return self.connected
-
 
     def read (self, bytes=RECV_BUFSIZE):
         """read up to LEN bytes from the internal buffer"""
@@ -51,7 +49,6 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         data = self.recv_buffer[:bytes]
         self.recv_buffer = self.recv_buffer[bytes:]
         return data
-
 
     def handle_read (self):
         """read data from connection, put it into recv_buffer and call
@@ -78,21 +75,17 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         self.recv_buffer += data
         self.process_read()
 
-
     def process_read (self):
         """handle read event"""
         raise NotImplementedError("must be implemented in a subclass")
-
 
     def writable (self):
         """return True if connection is writable"""
         return (not self.connected) or self.send_buffer
 
-
     def write (self, data):
         """write data to the internal buffer"""
         self.send_buffer += data
-
 
     def handle_write (self):
         """Write data from send_buffer to connection socket.
@@ -116,11 +109,9 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         if self.close_pending and self.close_ready():
             self.close()
 
-
     def handle_connect (self):
         """empty function; per default we don't connect to anywhere"""
         pass
-
 
     def close (self):
         """close connection"""
@@ -131,14 +122,12 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         else:
             self.close_close()
 
-
     def close_close (self):
         """close the connection socket"""
         wc.log.debug(wc.LOG_PROXY, '%s Connection.close_close', self)
         if self.connected:
             self.connected = False
             super(Connection, self).close()
-
 
     def handle_close (self):
         """if we are still connected, wait until all data is sent, then close
@@ -149,12 +138,10 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         else:
             self.close()
 
-
     def close_ready (self):
         """return True if all data is sent and this connection can be closed
         """
         return not self.send_buffer
-
 
     def delayed_close (self):
         """Close whenever the data has been sent"""
@@ -167,22 +154,20 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         else:
             self.close()
 
-
     def close_reuse (self):
         """don't close the socket, just reset the connection state.
            Must only be called for persistent connections"""
         assert self.persistent
         assert self.connected
-        wc.log.debug(wc.LOG_PROXY, '%s Connection.close_reuse %d', self, self.sequence_number)
+        wc.log.debug(wc.LOG_PROXY, '%s Connection.close_reuse %d',
+                     self, self.sequence_number)
         self.sequence_number += 1
-
 
     def handle_error (self, what):
         """print error and close the connection"""
         wc.log.debug(wc.LOG_PROXY, "%s error %s", self, what)
         super(Connection, self).handle_error(what)
         self.close()
-
 
     def handle_expt (self):
         """print exception"""

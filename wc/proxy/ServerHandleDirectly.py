@@ -18,11 +18,9 @@ class ServerHandleDirectly (wc.proxy.Server.Server):
         client.server_close(self)
         self.connected = False
 
-
     def process_connect (self):
         """empty function; no server connection has to be made"""
         pass
-
 
     def process_read (self):
         """empty function; no server has to be read"""

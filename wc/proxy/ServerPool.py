@@ -26,12 +26,10 @@ class ServerPool (object):
         self.callbacks = {} # {(ipaddr, port) -> [functions to call]}
         wc.proxy.make_timer(60, self.expire_servers)
 
-
     def count_servers (self, addr):
         """How many busy server objects connect to this address?"""
         states = self.smap.get(addr, {}).values()
         return len([x for x in states if x[0] == 'busy'])
-
 
     def reserve_server (self, addr):
         """Try to return an existing server connection for given addr,
@@ -45,7 +43,6 @@ class ServerPool (object):
                 return server
         return None
 
-
     def unreserve_server (self, addr, server):
         """make given server connection available"""
         wc.log.debug(wc.LOG_PROXY, "pool unreserve %s %s", addr, server)
@@ -57,12 +54,10 @@ class ServerPool (object):
         self.smap[addr][server] = ('available', time.time())
         self.invoke_callbacks(addr)
 
-
     def register_server (self, addr, server):
         """Register the server as being used"""
         wc.log.debug(wc.LOG_PROXY, "pool register %s %s", addr, server)
         self.smap.setdefault(addr, {})[server] = ('busy',)
-
 
     def unregister_server (self, addr, server):
         """Unregister the server and remove it from the pool"""
@@ -75,13 +70,11 @@ class ServerPool (object):
             del self.smap[addr]
         self.invoke_callbacks(addr)
 
-
     def register_callback (self, addr, callback):
         """Callbacks are called whenever a server may be available
            for (addr). It's the callback's responsibility to re-register
            if someone else has stolen the server already."""
         self.callbacks.setdefault(addr, []).append(callback)
-
 
     def connection_limit (self, addr):
         """keep these limits reasonably high (at least twenty or more)
@@ -93,12 +86,10 @@ class ServerPool (object):
         else:
             return 40
 
-
     def set_http_version (self, addr, http_version):
         """store http version for a given server"""
         self.http_versions[addr] = http_version
         self.invoke_callbacks(addr)
-
 
     def expire_servers (self):
         """expire server connection that have been unused for too long"""
@@ -116,7 +107,6 @@ class ServerPool (object):
             if addr in self.smap:
                 assert not self.smap[addr].has_key(server), "Not expired: %s" % str(self.smap[addr])
         wc.proxy.make_timer(60, self.expire_servers)
-
 
     def invoke_callbacks (self, addr):
         """Notify whoever wants to know about a server becoming available"""

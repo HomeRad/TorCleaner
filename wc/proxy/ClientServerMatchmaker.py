@@ -3,14 +3,15 @@
 
 import socket
 import cStringIO as StringIO
-import wc.url
+
 import wc
+import wc.url
 import wc.proxy.dns_lookups
 import wc.proxy.Headers
-from wc.proxy.ServerPool import serverpool
 import wc.proxy.ServerHandleDirectly
 import wc.proxy.HttpServer
 import wc.proxy.SslServer
+from wc.proxy.ServerPool import serverpool
 
 
 BUSY_LIMIT = 10
@@ -84,7 +85,6 @@ class ClientServerMatchmaker (object):
         wc.log.debug(wc.LOG_PROXY, "background dns lookup %r", self.hostname)
         wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
-
     def handle_dns (self, hostname, answer):
         """got dns answer, look for server"""
         assert self.state == 'dns'
@@ -109,16 +109,16 @@ class ClientServerMatchmaker (object):
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol, 301,
-              wc.proxy.Headers.WcMessage(StringIO.StringIO('Content-type: text/plain\r\n'
-              'Location: %s\r\n\r\n' % new_url)),
-              _('Host %s is an abbreviation for %s')%(hostname, answer.data))
+              wc.proxy.Headers.WcMessage(
+                    StringIO.StringIO('Content-type: text/plain\r\n'
+                                      'Location: %s\r\n\r\n' % new_url)),
+               _('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host,
             # close this connection
             self.state = 'done'
             self.client.error(504, _("Host not found"),
                 _('Host %s not found .. %s')%(hostname, answer.data))
-
 
     def find_server (self):
         """search for a connected server or make a new one"""
@@ -141,9 +141,10 @@ class ClientServerMatchmaker (object):
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
             if self.server_busy > BUSY_LIMIT:
-                wc.log.warn(wc.LOG_PROXY, "Waited too long for available connection at %s"+\
-                    ", consider increasing the server pool connection limit"+\
-                     " (currently at %d)", addr, BUSY_LIMIT)
+                wc.log.warn(wc.LOG_PROXY,
+                    "Waited too long for available connection at %s" \
+                    ", consider increasing the server pool connection limit" \
+                    " (currently at %d)", addr, BUSY_LIMIT)
                 self.client.error(503, _("Service unavailable"))
                 return
             # There are too many connections right now, so register us
@@ -155,7 +156,8 @@ class ClientServerMatchmaker (object):
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
             try:
-                if self.url.startswith("https://") and wc.config['sslgateway']:
+                if self.url.startswith("https://") and \
+                   wc.config['sslgateway']:
                     klass = wc.proxy.SslServer.SslServer
                 else:
                     klass = wc.proxy.HttpServer.HttpServer
@@ -165,7 +167,6 @@ class ClientServerMatchmaker (object):
                 self.client.error(504, _('Connection timeout'))
             except socket.error:
                 self.client.error(503, _('Connect error'))
-
 
     def server_connected (self, server):
         """the server has connected"""
@@ -213,17 +214,16 @@ class ClientServerMatchmaker (object):
                                    self.content, self,
                                    self.url, self.mime)
 
-
     def server_abort (self, reason=_("No response from server")):
         """The server had an error, so we need to tell the client
            that we couldn't connect"""
         if self.client.connected:
             self.client.error(503, reason)
 
-
     def server_close (self, server):
         """the server has closed"""
-        wc.log.debug(wc.LOG_PROXY, '%s resurrection failed %d %s', self, server.sequence_number, server)
+        wc.log.debug(wc.LOG_PROXY, '%s resurrection failed %d %s',
+                     self, server.sequence_number, server)
         # Look for a server again
         if server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
@@ -235,17 +235,16 @@ class ClientServerMatchmaker (object):
             # tell the client, sorry.
             self.client.error(503, _("Server closed connection"))
 
-
     def server_response (self, server, response, status, headers):
         """the server got a response"""
-        wc.log.debug(wc.LOG_PROXY, "%s server_response, match client/server", self)
+        wc.log.debug(wc.LOG_PROXY, "%s server_response, match client/server",
+                     self)
         # Okay, transfer control over to the real client
         if self.client.connected:
             server.client = self.client
             self.client.server_response(server, response, status, headers)
         else:
             server.client_abort()
-
 
     def __repr__ (self):
         """object representation"""
