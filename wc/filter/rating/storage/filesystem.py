@@ -16,6 +16,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import re
+import os
+
+is_time = re.compile(r"^\d+$").search
+
+
 class DirectoryStorage (Storage):
     """Store ratings in as plain file data in dictionaries."""
 
@@ -94,3 +100,20 @@ def rating_cache_parse (fp):
             ratingdata.append(line)
     return newrating_cache
 
+
+_range_re = re.compile(r'^(\d*)-(\d*)$')
+def range_from_string (value):
+    """parse value as range; return tuple (rmin, rmax) or None on error"""
+    mo = _range_re.match(value)
+    if not mo:
+        return None
+    vmin, vmax = mo.group(1), mo.group(2)
+    if vmin == "":
+        vmin = None
+    else:
+        vmin = int(vmin)
+    if vmax == "":
+        vmax = None
+    else:
+        vmax = int(vmax)
+    return (vmin, vmax)

@@ -26,6 +26,10 @@ class Category (object):
         self.name = name
         self.values = values
 
+    def valid_value (self, value):
+        """True if value is valid according to this category."""
+        raise NotImplementedError, "unimplemented"
+
 
 class ValueCategory (Category):
     """Rating category that can hold the discrete values none, mild,
@@ -38,6 +42,10 @@ class ValueCategory (Category):
         del _
         super(ValueCategory, self).__init__(name, values)
 
+    def valid_value (self, value):
+        """True if value is in values list."""
+        return value in self.values
+
 
 class RangeCategory (Category):
     """Rating category that can hold values in a range between a given
@@ -47,4 +55,32 @@ class RangeCategory (Category):
     def __init__ (self, name, minval=None, maxval=None):
         """Initialize name and values."""
         super(RangeCategory, self).__init__(name, [minval, maxval])
+
+    def valid_value (self, value):
+        """Check range value."""
+        if not isinstance(value, tuple):
+            return value_in_range(value, self.values)
+        assert len(value) == 2, "Invalid value %r" % repr(value)
+        return range_in_range(value, self.values)
+
+
+def value_in_range (num, prange):
+    """return True iff number is in range.
+       prange - tuple (min, max)
+       value - a number
+    """
+    if prange[0] is not None and num is not None and num < prange[0]:
+        return False
+    if prange[1] is not None and num is not None and num > prange[1]:
+        return False
+    return True
+
+
+def range_in_range (vrange, prange):
+    """return True iff num vrange is in prange.
+       prange - tuple (min, max)
+       vrange - tuple (min, max)
+    """
+    return value_in_range(vrange[0], prange) and \
+           value_in_range(vrange[1], prange)
 
