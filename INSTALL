@@ -5,6 +5,9 @@ Requirements
 ------------
 Python >= 2.2 from http://www.python.org/
 
+For JavaScript filtering you'll need the SpiderMonkey JS engine
+from ftp://ftp.mozilla.org/pub/js/js-1.5-rc5.tar.gz
+
 For the GUI config tool webcleanerconf you need
 FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
 FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
@@ -14,6 +17,7 @@ Setup
 To install, execute "python setup.py install".
 Run "python setup.py install --help" for help on install options.
 
+To enable JavaScript filtering, edit setup.py and set USE_JS=1.
 
 The HTML parser
 ---------------
