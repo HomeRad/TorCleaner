@@ -501,9 +501,9 @@ class WConfigParser (BaseParser):
                 self.config[key] = int(self.config[key])
             if self.config['nofilterhosts'] is not None:
                 strhosts = self.config['nofilterhosts']
-                self.config['nofilterhosts'] = ip.strhosts2map(strhosts)
+                self.config['nofilterhosts'] = strhosts.split(",")
             else:
-                self.config['nofilterhosts'] = [Set(), []]
+                self.config['nofilterhosts'] = []
             if self.config['allowedhosts'] is not None:
                 strhosts = self.config['allowedhosts']
                 self.config['allowedhosts'] = ip.strhosts2map(strhosts)
