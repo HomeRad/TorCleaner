@@ -36,18 +36,42 @@ import wc.configuration
 import wc.filter.rules
 import wc.proxy.Headers
 
-# filter order
-FILTER_REQUEST         = 0 # Filter complete request (blocking)
-FILTER_REQUEST_HEADER  = 1 # Outgoing header manglers
-FILTER_REQUEST_DECODE  = 2 # May decode outgoing content.
-FILTER_REQUEST_MODIFY  = 3 # May modify outgoing content.
-FILTER_REQUEST_ENCODE  = 4 # May encode outgoing content.
-FILTER_RESPONSE        = 5 # Filter complete response
-FILTER_RESPONSE_HEADER = 6 # Incoming header manglers
-FILTER_RESPONSE_DECODE = 7 # May decode incoming content
-FILTER_RESPONSE_MODIFY = 8 # May modify incoming content
-FILTER_RESPONSE_ENCODE = 9 # May encode incoming content
+# filter orders
 
+
+# Filter complete request (blocking)
+FILTER_REQUEST = 0
+# Outgoing header manglers
+FILTER_REQUEST_HEADER = 1
+# May decode outgoing content.
+FILTER_REQUEST_DECODE = 2
+# May modify outgoing content.
+FILTER_REQUEST_MODIFY = 3
+# May modify outgoing content.
+FILTER_REQUEST_ENCODE = 4
+# Filter complete response
+FILTER_RESPONSE = 5
+# Filter complete response
+FILTER_RESPONSE_HEADER = 6
+# May decode incoming content
+FILTER_RESPONSE_DECODE = 7
+# May modify incoming content
+FILTER_RESPONSE_MODIFY = 8
+# May encode incoming content
+FILTER_RESPONSE_ENCODE = 9
+
+FilterOrder = {
+    FILTER_REQUEST: "Request",
+    FILTER_REQUEST_HEADER: "Request Header",
+    FILTER_REQUEST_DECODE: "Request Decode",
+    FILTER_REQUEST_MODIFY: "Request Modify",
+    FILTER_REQUEST_ENCODE: "Request Encode",
+    FILTER_RESPONSE: "Response",
+    FILTER_RESPONSE_HEADER: "Response Header",
+    FILTER_RESPONSE_DECODE: "Response Decode",
+    FILTER_RESPONSE_MODIFY: "Response Modify",
+    FILTER_RESPONSE_ENCODE: "Response Encode",
+}
 
 class FilterException (Exception):
     """Generic filter exception"""
@@ -55,21 +79,23 @@ class FilterException (Exception):
 
 
 class FilterWait (FilterException):
-    """Raised when filter wait for more data to filter. The filter
-       has to buffer already passed data until the next call.
+    """Raised when a filter waits for more data. The filter should
+       buffer the already passed data until the next call (and until
+       it has enough data to proceed).
     """
     pass
 
 
 class FilterRating (FilterException):
-    """Raised when filter detected rated content.
-       Proxy must not have sent any content.
+    """Raised when a filter detected rated content.
+       The proxy must not have sent any content.
     """
     pass
 
 
 class FilterProxyError (FilterException):
-    """Raised to signal a proxy error"""
+    """Raised to signal a proxy error which should be delegated to
+       the HTTP client."""
     def __init__ (self, status, msg, text):
         self.status = status
         self.msg = msg
@@ -78,29 +104,7 @@ class FilterProxyError (FilterException):
 
 def printFilterOrder (i):
     """return string representation of filter order i"""
-    if i == FILTER_REQUEST:
-        s = "Request"
-    elif i == FILTER_REQUEST_HEADER:
-        s = "Request Header"
-    elif i == FILTER_REQUEST_DECODE:
-        s = "Request Decode"
-    elif i == FILTER_REQUEST_MODIFY:
-        s = "Request Modify"
-    elif i == FILTER_REQUEST_ENCODE:
-        s = "Request Encode"
-    elif i == FILTER_RESPONSE:
-        s = "Response"
-    elif i == FILTER_RESPONSE_HEADER:
-        s = "Response Header"
-    elif i == FILTER_RESPONSE_DECODE:
-        s = "Response Decode"
-    elif i == FILTER_RESPONSE_MODIFY:
-        s = "Response Modify"
-    elif i == FILTER_RESPONSE_ENCODE:
-        s = "Response Encode"
-    else:
-        s = "Invalid"
-    return s
+    return FilterOrder.get(i, "Invalid")
 
 
 def compile_mime (mime):
@@ -146,8 +150,8 @@ def applyfilters (levels, data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, filters, clientheaders=None, serverheaders=None,
-                     headers=None, browser='Calzilla/6.0'):
+def get_filterattrs (url, filterstages, browser='Calzilla/6.0',
+                     clientheaders=None, serverheaders=None, headers=None):
     """init external state objects"""
     if clientheaders is None:
         clientheaders = wc.proxy.Headers.WcMessage()
@@ -171,7 +175,7 @@ def get_filterattrs (url, filters, clientheaders=None, serverheaders=None,
         charset = get_mime_charset(attrs['mime'])
         if charset:
             attrs['charset'] = charset
-    for i in filters:
+    for i in filterstages:
         for f in wc.configuration.config['filterlist'][i]:
             if f.applies_to_mime(attrs['mime']):
                 attrs.update(f.get_attrs(url, attrheaders))
