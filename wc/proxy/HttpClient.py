@@ -25,11 +25,14 @@ from wc.filter import FILTER_REQUEST_MODIFY
 from wc.filter import FILTER_REQUEST_ENCODE
 from wc.filter import applyfilter
 
+allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
+
 class HttpClient (Connection):
     """States:
         request (read first line)
         headers (read HTTP headers)
-        data    (read any additional data and forward it to the server)
+        content (read HTTP POST content data)
+        receive (read any additional data and forward it to the server)
         done    (done reading data, response already sent)
     """
 
@@ -70,25 +73,27 @@ class HttpClient (Connection):
     def __repr__ (self):
         if self.state != 'request':
             try:
-                extra = self.request.split()[1][7:] # Remove http://
+                extra = self.request.split()[1]
             except IndexError:
                 extra = '???' + self.request
             #if len(extra) > 46: extra = extra[:43] + '...'
         else:
             extra = 'being read'
-        return '<%s:%-8s %s>' % ('client', self.state, extra)
+        return '<%s:%-8s persistent=%s %s>'%('client', self.state, self.persistent, extra)
 
 
     def process_read (self):
         # hmm, this occurs with WebCleaner as a parent of Oops Http Proxy
-        assert not (self.state in ('receive','closed') and self.recv_buffer),\
+        assert not (self.state in ('receive','closed') and self.recv_buffer and self.method!='CONNECT'),\
          'client in state %s sent data %s'%(self.state, `self.recv_buffer`)
 
         while True:
             bytes_before = len(self.recv_buffer)
             state_before = self.state
-            try: handler = getattr(self, 'process_'+self.state)
-            except AttributeError: handler = lambda:None # NO-OP
+            try:
+                handler = getattr(self, 'process_'+self.state)
+            except AttributeError:
+                handler = lambda: None # NO-OP
             handler()
             bytes_after = len(self.recv_buffer)
             if (self.state=='done' or
@@ -109,6 +114,10 @@ class HttpClient (Connection):
         except ValueError:
             config['requests']['error'] += 1
             self.error(400, i18n._("Can't parse request"))
+            return
+        if self.method not in allowed_methods:
+            config['requests']['error'] += 1
+            self.error(405, i18n._("Method Not Allowed"))
             return
         # fix broken url paths
         self.url = norm_url(self.url)
@@ -232,8 +241,18 @@ class HttpClient (Connection):
             self.server_request()
 
 
+    def process_receive (self):
+        """called for tunneled ssl connections
+        XXX will also be called on pipelining?
+        """
+        if not self.server:
+            # server is not yet there, delay
+            return
+        self.server.write(self.read())
+
+
     def server_request (self):
-        assert self.state == 'receive'
+        assert self.state=='receive', "%s server_request in state receive" % str(self)
         # This object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
                                self.content, self.nofilter,
@@ -242,7 +261,7 @@ class HttpClient (Connection):
 
     def server_response (self, server, response, status, headers):
         # try google options
-        assert server.connected
+        assert server.connected, "%s server was not connected" % str(self)
         debug(PROXY, '%s server_response %s (%d)', str(self), `response`, status)
         if status in google_try_status and config['try_google']:
             server.client_abort()
@@ -268,12 +287,12 @@ class HttpClient (Connection):
 
 
     def server_content (self, data):
-        assert self.server
+        assert self.server, "%s server_content had no server" % str(self)
         self.write(data)
 
 
     def server_close (self):
-        assert self.server
+        assert self.server, "%s server_close had no server" % str(self)
         debug(PROXY, '%s server_close', str(self))
         if self.connected and not self.close_pending:
             self.delayed_close()
@@ -307,7 +326,7 @@ class HttpClient (Connection):
 
 
     def handle_local (self):
-        assert self.state == 'receive'
+        assert self.state=='receive'
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
             self.error(403, i18n._("Invalid Method"))

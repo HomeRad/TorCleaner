@@ -122,13 +122,14 @@ class HttpServer (Server):
             self.reuse()
 
 
-    def client_send_request (self, method, hostname, document, headers,
+    def client_send_request (self, method, hostname, port, document, headers,
                             content, client, nofilter, url, mime):
         """the client (matchmaker) sends the request to the server"""
         assert self.state == 'client'
-        self.client = client
         self.method = method
+        self.client = client
         self.hostname = hostname
+        self.port = port
         self.document = document
         self.content = content
         self.nofilter = nofilter
@@ -146,7 +147,11 @@ class HttpServer (Server):
     def send_request (self):
         """actually send the request to the server, is also used to
         send a request twice for NTLM authentication"""
-        request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
+        if self.method=='CONNECT':
+            return
+            #request = 'CONNECT %s:%d HTTP/1.1\r\n'%(self.hostname, self.port)
+        else:
+            request = '%s %s HTTP/1.1\r\n'%(self.method, self.document)
         debug(PROXY, '%s write request\n%s', str(self), `request`)
         self.write(request)
         debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
@@ -157,7 +162,7 @@ class HttpServer (Server):
 
 
     def process_read (self):
-        assert self.state not in ('connect', 'client'), \
+        assert self.state not in ('connect', 'client') or self.client.method=='CONNECT', \
             'server should not receive data in %s state'%self.state
 
         while True:
@@ -173,7 +178,7 @@ class HttpServer (Server):
             try:
                 handler = getattr(self, 'process_'+self.state)
             except AttributeError:
-                pass # NO-OP
+                handler = lambda: None # NO-OP
             handler()
             bytes_after = len(self.recv_buffer)
             state_after = self.state
@@ -341,6 +346,14 @@ class HttpServer (Server):
         if is_closed or self.bytes_remaining==0:
             # Either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
+
+
+    def process_client (self):
+        """gets called on SSL tunneled connections"""
+        if not self.client:
+            # delay
+            return
+        self.client.write(self.read())
 
 
     def process_recycle (self):

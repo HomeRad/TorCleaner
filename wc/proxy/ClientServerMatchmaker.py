@@ -12,6 +12,9 @@ from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
 from wc.log import *
 
+allowed_schemes = ['http', 'https']
+allowed_connect_ports = [443]
+
 serverpool = ServerPool()
 
 from HttpServer import HttpServer
@@ -61,17 +64,37 @@ class ClientServerMatchmaker (object):
         self.method, self.url, protocol = self.request.split()
         # strip leading zeros and other stuff
         self.protocol = fix_http_version(protocol)
-        self.scheme, hostname, port, document = spliturl(self.url)
+        # fix CONNECT urls
+        if self.method=='CONNECT':
+            self.scheme = 'https'
+            hostname, port = splitnport(self.url, 443)
+            document = ''
+        else:
+            self.scheme, hostname, port, document = spliturl(self.url)
         # some clients send partial URI's without scheme, hostname
         # and port to clients, so we have to handle this
         if not self.scheme:
             # default scheme is http
-            self.scheme = "http"
-        elif self.scheme != 'http':
-            warn(PROXY, "Forbidden scheme encountered at %s", str(self))
+            self.scheme = 'http'
+        elif self.scheme not in allowed_schemes:
+            warn(PROXY, "Forbidden scheme %s encountered at %s", `self.scheme`, str(self))
             client.error(403, i18n._("Forbidden"))
             return
-        if not hostname and self.headers.has_key('Host'):
+        # check CONNECT values sanity
+        if self.method == 'CONNECT':
+            if self.scheme != 'https':
+                warn(PROXY, "CONNECT method with forbidden scheme %s encountered at %s", `self.scheme`, str(self))
+                client.error(403, i18n._("Forbidden"))
+                return
+            if not self.headers.has_key('Host'):
+                warn(PROXY, "CONNECT method without Host header encountered at %s", str(self))
+                client.error(403, i18n._("Forbidden"))
+                return
+            if port != 443:
+                warn(PROXY, "CONNECT method with invalid port %d encountered at %s", port, str(self))
+                client.error(403, i18n._("Forbidden"))
+                return
+        elif not hostname and self.headers.has_key('Host'):
             host = self.headers['Host']
             hostname, port = splitnport(host, 80)
         if not hostname or \
@@ -165,6 +188,7 @@ class ClientServerMatchmaker (object):
             debug(PROXY, "%s new connect to server", str(self))
             # Let's make a new one
             self.state = 'connect'
+            # HttpServer eventually call server_connected
             server = HttpServer(self.ipaddr, self.port, self)
             serverpool.register_server(addr, server)
 
@@ -172,15 +196,20 @@ class ClientServerMatchmaker (object):
     def server_connected (self, server):
         """the server has connected"""
         debug(PROXY, "%s server_connected", str(self))
-        assert self.state == 'connect'
+        assert self.state=='connect'
         if not self.client.connected:
             # The client has aborted, so let's return this server
             # connection to the pool
             server.reuse()
             return
         self.server = server
-        addr = (self.ipaddr, self.port)
+        if self.method=='CONNECT':
+            self.state = 'response'
+            headers = WcMessage(StringIO(''))
+            self.server_response('HTTP/1.1 200 OK', 200, headers)
+            return
         # check expectations
+        addr = (self.ipaddr, self.port)
         expect = self.headers.get('Expect', '').lower().strip()
         docontinue = expect.startswith('100-continue') or \
                      expect.startswith('0100-continue')
@@ -193,12 +222,13 @@ class ClientServerMatchmaker (object):
             self.client.error(417, i18n._("Expectation failed"),
                        i18n._("Unsupported expectation `%s'")%expect)
             return
-        # ok, assign server object
+        # switch to response status
         self.state = 'response'
         # At this point, we tell the server that we are the client.
         # Once we get a response, we transfer to the real client.
         self.server.client_send_request(self.method,
-                                        self.hostname, 
+                                        self.hostname,
+                                        self.port,
                                         self.document,
                                         self.headers,
                                         self.content,
@@ -232,6 +262,7 @@ class ClientServerMatchmaker (object):
 
     def server_response (self, response, status, headers):
         """the server got a response"""
+        debug(PROXY, "%s server_response, match client/server", str(self))
         # Okay, transfer control over to the real client
         if self.client.connected:
             config['requests']['valid'] += 1
