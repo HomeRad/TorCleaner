@@ -11,4 +11,8 @@
  desc="What the hell are x-meta tag? Definitely not something I need."
  disable="1"
  name="x-meta"/>
+
+<header title="No referer"
+ desc="Remove the Referer header"
+ name="Referer"/>
 </folder>

@@ -37,6 +37,12 @@ class Header(Filter):
             self.add[rule.name] = rule.value
 
     def filter(self, data, **attrs):
+        return self.doit(data)
+
+    def finish(self, data, **attrs):
+        return self.doit(data)
+
+    def doit(self, data):
         headers = data.keys()[:]
         for header in headers:
             for name in self.delete:
@@ -46,15 +52,3 @@ class Header(Filter):
             data[key] = val
         debug(HURT_ME_PLENTY, "Headers\n", data)
         return data
-
-    def finish(self, data, **attrs):
-        names = data.keys()
-        for name in names:
-            for expr in self.delete:
-                if expr.search(name):
-                    del data[name]
-        for key,val in self.add.items():
-            data[key] = val
-        debug(HURT_ME_PLENTY, "Headers\n", data)
-        return data
-
