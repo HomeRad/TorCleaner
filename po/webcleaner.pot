@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-10-16 13:00+0200\n"
+"POT-Creation-Date: 2004-10-27 19:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,32 +29,32 @@ msgstr ""
 msgid "Missing content type in %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:210
+#: ../wc/proxy/Headers.py:215
 #, python-format
 msgid "Change content type of %r from %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:213
+#: ../wc/proxy/Headers.py:218
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:263
+#: ../wc/proxy/Headers.py:268
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:48 ../wc/proxy/HttpClient.py:174
+#: ../wc/proxy/SslClient.py:53 ../wc/proxy/HttpClient.py:175
 msgid "URL too long"
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:49 ../wc/proxy/HttpClient.py:175
+#: ../wc/proxy/SslClient.py:54 ../wc/proxy/HttpClient.py:176
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:65 ../wc/proxy/HttpClient.py:204
-#: ../wc/proxy/HttpClient.py:212 ../wc/proxy/HttpClient.py:218
+#: ../wc/proxy/SslClient.py:74 ../wc/proxy/HttpClient.py:205
+#: ../wc/proxy/HttpClient.py:213 ../wc/proxy/HttpClient.py:219
 msgid "Forbidden"
 msgstr ""
 
@@ -68,33 +68,33 @@ msgstr ""
 msgid "invalid HTTP version %r"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:92
+#: ../wc/proxy/HttpClient.py:93
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:138
+#: ../wc/proxy/HttpClient.py:139
 msgid "Can't parse request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:141
+#: ../wc/proxy/HttpClient.py:142
 msgid "Method Not Allowed"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:146
+#: ../wc/proxy/HttpClient.py:147
 msgid "Empty URL"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:274
+#: ../wc/proxy/HttpClient.py:275
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:294 ../wc/proxy/HttpClient.py:307
-#: ../wc/proxy/HttpClient.py:319
+#: ../wc/proxy/HttpClient.py:295 ../wc/proxy/HttpClient.py:308
+#: ../wc/proxy/HttpClient.py:320
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:411 ../wc/proxy/HttpServer.py:375
+#: ../wc/proxy/HttpClient.py:412 ../wc/proxy/HttpServer.py:378
 msgid "Moved Temporarily"
 msgstr ""
 
@@ -103,125 +103,125 @@ msgid "Invalid Method"
 msgstr ""
 
 #: ../wc/proxy/HttpClient.py:530 ../wc/proxy/HttpClient.py:536
-#: ../wc/proxy/HttpClient.py:547 ../wc/webgui/webconfig.py:77
+#: ../wc/proxy/HttpClient.py:547 ../wc/webgui/webconfig.py:74
 msgid "Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:240
+#: ../wc/proxy/HttpServer.py:241
 #, python-format
 msgid "invalid or missing response from %r: %r"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:250
+#: ../wc/proxy/HttpServer.py:251
 #, python-format
 msgid "missing headers in response from %r"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:314
+#: ../wc/proxy/HttpServer.py:315
 msgid "redirection to localhost"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:429
+#: ../wc/proxy/HttpServer.py:432
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:117
+#: ../wc/proxy/ClientServerMatchmaker.py:121
 #, python-format
 msgid "Host %s is an abbreviation for %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:122
+#: ../wc/proxy/ClientServerMatchmaker.py:126
 msgid "Host not found"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:123
+#: ../wc/proxy/ClientServerMatchmaker.py:127
 #, python-format
 msgid "Host %s not found .. %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:152
+#: ../wc/proxy/ClientServerMatchmaker.py:156
 msgid "Service unavailable"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:172
+#: ../wc/proxy/ClientServerMatchmaker.py:176
 msgid "Connection timeout"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:174
+#: ../wc/proxy/ClientServerMatchmaker.py:178
 msgid "Connect error"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:205
 #: ../wc/proxy/ClientServerMatchmaker.py:209
+#: ../wc/proxy/ClientServerMatchmaker.py:213
 msgid "Expectation failed"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:206
+#: ../wc/proxy/ClientServerMatchmaker.py:210
 msgid "Server does not understand HTTP/1.1"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:210
+#: ../wc/proxy/ClientServerMatchmaker.py:214
 #, python-format
 msgid "Unsupported expectation %r"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:222
+#: ../wc/proxy/ClientServerMatchmaker.py:226
 msgid "No response from server"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:241
+#: ../wc/proxy/ClientServerMatchmaker.py:245
 msgid "Server closed connection"
 msgstr ""
 
-#: ../wc/filter/Rating.py:29
+#: ../wc/filter/Rating.py:30
 msgid "Unknown page"
 msgstr ""
 
-#: ../wc/filter/Rating.py:49
+#: ../wc/filter/Rating.py:47
 msgid "violence"
 msgstr ""
 
-#: ../wc/filter/Rating.py:54
+#: ../wc/filter/Rating.py:52
 msgid "sex"
 msgstr ""
 
-#: ../wc/filter/Rating.py:59
+#: ../wc/filter/Rating.py:57
 msgid "language"
 msgstr ""
 
-#: ../wc/filter/Rating.py:64
+#: ../wc/filter/Rating.py:62
 msgid "age range"
 msgstr ""
 
-#: ../wc/filter/Rating.py:72
+#: ../wc/filter/Rating.py:70
 msgid "None"
 msgstr ""
 
-#: ../wc/filter/Rating.py:73
+#: ../wc/filter/Rating.py:71
 msgid "Mild"
 msgstr ""
 
-#: ../wc/filter/Rating.py:74
+#: ../wc/filter/Rating.py:72
 msgid "Heavy"
 msgstr ""
 
-#: ../wc/filter/Rating.py:97
+#: ../wc/filter/Rating.py:102
 #, python-format
 msgid "malformed rating line %r"
 msgstr ""
 
-#: ../wc/filter/Rating.py:100
+#: ../wc/filter/Rating.py:105
 #, python-format
 msgid "malfored modified time %r"
 msgstr ""
 
-#: ../wc/filter/Rating.py:104
+#: ../wc/filter/Rating.py:109
 #, python-format
 msgid "generic url %r doesn't match %r"
 msgstr ""
 
-#: ../wc/filter/Rating.py:301
+#: ../wc/filter/Rating.py:307
 #, python-format
 msgid "adding new rating for %r"
 msgstr ""
@@ -231,11 +231,11 @@ msgstr ""
 msgid "inserting new rule %s"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:125
+#: ../wc/filter/rules/FolderRule.py:126
 msgid "with 1 rule"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:127
+#: ../wc/filter/rules/FolderRule.py:128
 #, python-format
 msgid "with %d rules"
 msgstr ""
@@ -289,7 +289,7 @@ msgstr ""
 msgid "Rating %r for category %r exceeds limit %r"
 msgstr ""
 
-#: ../wc/filter/JSFilter.py:315
+#: ../wc/filter/JSFilter.py:314
 #, python-format
 msgid "error fetching script from %r"
 msgstr ""
@@ -336,7 +336,7 @@ msgstr ""
 msgid "Error: %s"
 msgstr ""
 
-#: ../wc/webgui/context/filterconfig_html.py:364
+#: ../wc/webgui/context/filterconfig_html.py:369
 msgid "No title"
 msgstr ""
 
@@ -344,78 +344,78 @@ msgstr ""
 msgid "Unknown reason"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:41
+#: ../wc/webgui/webconfig.py:37
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:92
+#: ../wc/webgui/webconfig.py:89
 msgid "Not Found"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:97
+#: ../wc/webgui/webconfig.py:94
 msgid "Internal Error"
 msgstr ""
 
-#: ../wc/update.py:172
+#: ../wc/update.py:174
 msgid "updating filters"
 msgstr ""
 
-#: ../wc/update.py:179 ../wc/update.py:189
+#: ../wc/update.py:181 ../wc/update.py:191
 #, python-format
 msgid "error fetching %s"
 msgstr ""
 
-#: ../wc/update.py:180 ../wc/update.py:190 ../wc/update.py:225
-#: ../wc/update.py:233 ../wc/update.py:270 ../wc/update.py:284
-#: ../wc/update.py:288
+#: ../wc/update.py:182 ../wc/update.py:192 ../wc/update.py:228
+#: ../wc/update.py:236 ../wc/update.py:273 ../wc/update.py:287
+#: ../wc/update.py:291
 msgid "done"
-msgstr ""
-
-#: ../wc/update.py:206
-#, python-format
-msgid "filter %s not changed, ignoring"
 msgstr ""
 
 #: ../wc/update.py:208
 #, python-format
-msgid "updating filter %s"
+msgid "filter %s not changed, ignoring"
 msgstr ""
 
 #: ../wc/update.py:210
 #, python-format
+msgid "updating filter %s"
+msgstr ""
+
+#: ../wc/update.py:212
+#, python-format
 msgid "adding new filter %s"
 msgstr ""
 
-#: ../wc/update.py:224 ../wc/update.py:231 ../wc/update.py:260
-#: ../wc/update.py:264 ../wc/update.py:283
+#: ../wc/update.py:227 ../wc/update.py:234 ../wc/update.py:263
+#: ../wc/update.py:267 ../wc/update.py:286
 #, python-format
 msgid "error fetching %s:"
 msgstr ""
 
-#: ../wc/update.py:232
+#: ../wc/update.py:235
 msgid "invalid content"
 msgstr ""
 
-#: ../wc/update.py:249
+#: ../wc/update.py:252
 #, python-format
 msgid "extern filter %s not changed, ignoring"
 msgstr ""
 
-#: ../wc/update.py:251
+#: ../wc/update.py:254
 #, python-format
 msgid "updating extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:253
+#: ../wc/update.py:256
 #, python-format
 msgid "adding new extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:265
+#: ../wc/update.py:268
 msgid "got no data"
 msgstr ""
 
-#: ../wc/update.py:276
+#: ../wc/update.py:279
 msgid "updating ratings..."
 msgstr ""
 
@@ -481,12 +481,12 @@ msgstr ""
 msgid "The %s service can be paused."
 msgstr ""
 
-#: ../wc/configuration.py:212
+#: ../wc/configuration.py:220
 #, python-format
 msgid "inserting %s"
 msgstr ""
 
-#: ../wc/configuration.py:393
+#: ../wc/configuration.py:401
 #, python-format
 msgid "unknown tag name %r"
 msgstr ""

@@ -29,6 +29,11 @@
     Type: bugfix
     Changed: wc/proxy/*Connection.py
 
+  * Updated spidermonkey JavaScript library from upstream CVS as of
+    20041026
+    Type: feature
+    Changed: libjs/*
+
 2.22 "Monster" (released 20.10.2004)
 
   * added favicon.ico to distributed files
