@@ -34,20 +34,18 @@
 class DummyLogger:
 	def debug (self, *args):
 		pass
-		
+
 	def info (self, *args):
 		pass
 
 	def warn (self, *args):
 		pass
-		
+
 	def error (self, *args):
 		pass
 
 	def critical (self, *args):
 		pass
-			
+
 def getLogger (*params):
 	return DummyLogger()
-	
-	

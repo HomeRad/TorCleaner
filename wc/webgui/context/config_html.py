@@ -63,13 +63,13 @@ def _exec_form (form):
         config['auth_ntlm'] = 0
         info['auth_ntlm'] = True
     # use google cache
-    if form.has_key('use_google_cache'):
-        if not config['use_google_cache']:
-            config['use_google_cache'] = 1
-            info['use_google_cache'] = True
-    elif config['use_google_cache']:
-        config['use_google_cache'] = 0
-        info['use_google_cache'] = True
+    if form.has_key('try_google'):
+        if not config['try_google']:
+            config['try_google'] = 1
+            info['try_google'] = True
+    elif config['try_google']:
+        config['try_google'] = 0
+        info['try_google'] = True
     # parent proxy host
     if form.has_key('parentproxy'):
         _form_parentproxy(_getval(form, 'parentproxy').strip())

@@ -33,8 +33,6 @@
 		Module Dependencies: logging
 """
 
-__version__ = "3.3"
-
 import copy
 
 try:
@@ -42,17 +40,21 @@ try:
 except:
 	import DummyLogger as logging
 
+from wc.webgui import simpletal
+
+__version__ = simpletal.__version__
+
 
 class ContextVariable:
 	def __init__ (self, value = None):
 		self.ourValue = value
-		
+
 	def isDefault (self):
 		return False
-		
+
 	def isNothing (self):
 		return self.value() is None
-		
+
 	def isSequence (self):
 		# Return the length of the sequence - if it's zero length then it's handled
 		# as though it wasn't a sequence at all.
@@ -62,10 +64,10 @@ class ContextVariable:
 			return seqLength>0
 		except:
 			return False
-		
+
 	def isCallable (self):
 		return callable(self.ourValue)
-		
+
 	def isTrue (self):
 		if (self.isNothing()):
 			return False
@@ -74,46 +76,42 @@ class ContextVariable:
 		if (self.isSequence()):
 			return len(self.value())>0
 		return self.value()
-		
+
 	def value (self, currentPath=None):
 		if (callable (self.ourValue)):
 			return apply (self.ourValue, ())
 		return self.ourValue
-		
+
 	def rawValue (self):
 		return self.ourValue
-		
+
 	def __str__ (self):
-		try:
-			return str (self.ourValue)
-		except UnicodeError:
-			# Ignore - just return the value decoded
-			return self.ourValue.encode ('ASCII', 'replace')
-		
+		return str (self.ourValue)
+
 class DefaultVariable (ContextVariable):
 	def __init__ (self):
 		ContextVariable.__init__ (self, 1)
 		
 	def isNothing (self):
 		return False
-		
+
 	def isDefault (self):
 		return True
-		
+
 	def value (self, currentPath=None):
 		# We return our self so that define works properly.
 		return self
-		
+
 	def __str__ (self):
 		return "Default"
-		
+
 class NothingVariable (ContextVariable):
 	def __init__ (self):
 		ContextVariable.__init__ (self, None)
-				
+
 	def isNothing (self):
 		return True
-		
+
 class NoCallVariable (ContextVariable):
 	def __init__ (self, variable):
 		ContextVariable.__init__ (self, variable.ourValue)
@@ -129,7 +127,7 @@ class RepeatVariable (ContextVariable):
 		self.sequence = sequence	
 		self.position = 0	
 		self.map = None
-		
+
 	def value (self, currentPath=None):
 		if (self.map is None):
 			self.createMap()
@@ -198,19 +196,19 @@ class RepeatVariable (ContextVariable):
 		
 	def getLowerRoman (self):
 		romanNumeralList = (('m', 1000)
-						   ,('cm', 900)
-						   ,('d', 500)
-						   ,('cd', 400)
-						   ,('c', 100)
-						   ,('xc', 90)
-						   ,('l', 50)
-						   ,('xl', 40)
-						   ,('x', 10)
-						   ,('ix', 9)
-						   ,('v', 5)
-						   ,('iv', 4)
-						   ,('i', 1)
-						   )
+				   ,('cm', 900)
+				   ,('d', 500)
+				   ,('cd', 400)
+				   ,('c', 100)
+				   ,('xc', 90)
+				   ,('l', 50)
+				   ,('xl', 40)
+				   ,('x', 10)
+				   ,('ix', 9)
+				   ,('v', 5)
+				   ,('iv', 4)
+				   ,('i', 1)
+				   )
 		if (self.position > 3999):
 			# Roman numbers only supported up to 4000
 			return ' '
@@ -268,6 +266,28 @@ class PythonPathFunctions:
 			return result.value()
 		else:
 			return result
+			
+	def test (self, *arguments):
+		if (len (arguments) % 2):
+			# We have an odd number of arguments - which means the last one is a default
+			pairs = arguments[:-1]
+			defaultValue = arguments[-1]
+		else:
+			# No default - so use None
+			pairs = arguments
+			defaultValue = None
+			
+		index = 0
+		while (index < len (pairs)):
+			test = pairs[index]
+			index += 1
+			value = pairs[index]
+			index += 1
+			if (test):
+				return value
+				
+		return defaultValue
+		
 
 class Context:
 	def __init__ (self, options=None, allowPythonPath=0):
@@ -373,6 +393,7 @@ class Context:
 		globals ['string'] = self.pythonPathFuncs.string
 		globals ['exists'] = self.pythonPathFuncs.exists
 		globals ['nocall'] = self.pythonPathFuncs.nocall
+		globals ['test'] = self.pythonPathFuncs.test
 
 		locals={}
 		for name, value in self.locals.items():
@@ -381,8 +402,8 @@ class Context:
 		try:
 			result = eval(expr, globals, locals)
 		except Exception, e:
-			# An exception occured evaluating the template, return the exception as text
-			self.log.warn ("Exception occured evaluting python path, exception: " + str (e))
+			# An exception occurred evaluating the template, return the exception as text
+			self.log.warn ("Exception occurred evaluting python path, exception: " + str (e))
 			return ContextVariable ("Exception: %s" % str (e))
 		return ContextVariable(result)
 
@@ -477,9 +498,7 @@ class Context:
 								pathResult = self.evaluate (path)
 								if (pathResult is not None and not pathResult.isNothing()):
 									resultVal = pathResult.value()
-									if (type (resultVal) == type (u"")):
-										result += resultVal
-									elif (type (resultVal) == type ("")):
+									if isinstance(resultVal, basestring):
 										result += resultVal
 									else:
 										result += str(resultVal)
@@ -494,9 +513,7 @@ class Context:
 							pathResult = self.traversePath (path)
 							if (pathResult is not None and not pathResult.isNothing()):
 								resultVal = pathResult.value()
-								if (type (resultVal) == type (u"")):
-									result += resultVal
-								elif (type (resultVal) == type ("")):
+								if isinstance(resultVal, basestring):
 									result += resultVal
 								else:
 									result += str(resultVal)

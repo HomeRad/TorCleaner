@@ -34,12 +34,10 @@
 		Module Dependencies: None
 """
 
-__version__ = "3.3"
-
-
 import StringIO, os, stat, threading, codecs, sgmllib, cgi, re
+from wc.webgui import simpletal, simpleTAL
 
-import simpleTAL
+__version__ = simpletal.__version__
 
 # This is used to check for already escaped attributes.
 ESCAPED_TEXT_REGEX=re.compile (r"\&\S+?;")
@@ -103,7 +101,7 @@ class TemplateCache:
 		self.hits = 0
 		self.misses = 0
 		
-	def getTemplate (self, name, inputEncoding='ISO8859-1'):
+	def getTemplate (self, name, inputEncoding='ISO-8859-1'):
 		""" Name should be the path of a template file.  If the path ends in 'xml' it is treated
 			as an XML Template, otherwise it's treated as an HTML Template.  If the template file
 			has changed since the last cache it will be re-compiled.
@@ -127,7 +125,7 @@ class TemplateCache:
 			tempFile = open (name, 'r')
 			firstline = tempFile.readline()
 			tempFile.seek(0)
-			if (name [-3:] == "xml") or (firstline.strip ()[:5] == '<?xml'):
+			if (name [-3:] == "xml") or (firstline.strip ()[:5] == '<?xml') or (firstline [:9] == '<!DOCTYPE' and firstline.find('XHTML') != -1):
 				template = simpleTAL.compileXMLTemplate (tempFile)
 			else:
 				template = simpleTAL.compileHTMLTemplate (tempFile, inputEncoding)
@@ -221,34 +219,30 @@ class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
 					# End of the macro
 					self.inMacro = 0
 				else:
-					if (type (resultVal) == type (u"")):
+					if isinstance(resultVal, basestring):
 						self.file.write (resultVal)
-					elif (type (resultVal) == type ("")):
-						self.file.write (unicode (resultVal, 'ascii'))
 					else:
-						self.file.write (unicode (str (resultVal), 'ascii'))
+						self.file.write (str (resultVal))
 			else:
-				if (type (resultVal) == type (u"")):
+				if isinstance(resultVal, basestring):
 					self.file.write (cgi.escape (resultVal))
-				elif (type (resultVal) == type ("")):
-					self.file.write (cgi.escape (unicode (resultVal, 'ascii')))
 				else:
-					self.file.write (cgi.escape (unicode (str (resultVal), 'ascii')))
-					
+					self.file.write (cgi.escape (str (resultVal)))
+
 		if (self.outputTag and not args[1]):
 			self.file.write ('</' + args[0] + '>')
-		
+
 		if (self.movePCBack is not None):
 			self.programCounter = self.movePCBack
 			return
-			
+
 		if (self.localVarsDefined):
 			self.context.popLocals()
-			
+
 		self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined = self.scopeStack.pop()			
 		self.programCounter += 1
 			
-def ExpandMacros (context, template, outputEncoding="ISO8859-1"):
+def ExpandMacros (context, template, outputEncoding="ISO-8859-1"):
 	out = StringIO.StringIO()
 	interp = MacroExpansionInterpreter()
 	interp.initialise (context, out)
