@@ -30,6 +30,9 @@ except ImportError, msg:
 
 
 class SortedDict (dict):
+    """a dictionary whose listing functions for keys and values preserve
+       the order in which elements were added
+    """
     def __init__ (self):
         # sorted list of keys
         self._keys = []
