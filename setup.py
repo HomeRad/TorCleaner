@@ -202,6 +202,11 @@ o user/password protection with proxy authentication
 o per-host access control
 o completely customizable over web interface
 """,
+       classifiers = ['Development Status :: 4 - Beta',
+           'Environment :: No Input/Output (Daemon)'.
+           'Programming Language :: Python',
+           'Topic :: Internet :: Proxy Servers',
+       ],
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
                   },
