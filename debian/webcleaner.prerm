@@ -15,5 +15,7 @@ if [ "$1" = "remove" ]; then
     if [ -h /var/service/webcleaner ]; then
         rm -f /var/service/webcleaner
     fi
+    # remove SSL certificates
+    webcleaner-certificates remove
 fi
 exit 0
