@@ -22,8 +22,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.filter.Filter import Filter
-from wc.filter.PICS import pics_add, pics_is_cached
-from wc.filter import FILTER_RESPONSE_HEADER
+from wc.filter.PICS import pics_add, pics_is_cached, pics_allow
+from wc.filter import FILTER_RESPONSE_HEADER, FilterPics
 
 class PicsHeader (Filter):
     """Adds PICS data supplied in header values of 'PICS-Label'"""
@@ -36,16 +36,18 @@ class PicsHeader (Filter):
 
     def doit (self, data, **attrs):
         url = attrs['url']
-        if pics_is_cached(url):
-            # we already have PICS data for this url, ignore any new ones
-            # note: do not yet check at this point, but give the HTML
-            # page a chance to override this with its own PICS label.
-            # XXX for non-HTML content, do indeed check at this point
-            return data
+        if not pics_is_cached(url):
+            headers = attrs['headers']
+            if headers.has_key('PICS-Label'):
+                pics_add(url, headers['PICS-Label'])
         rules = attrs['pics_rules']
-        headers = attrs['headers']
-        if headers.has_key('PICS-Label'):
-            pics_add(url, headers['PICS-Label'])
+        if rules and not attrs['mime'].lower().startswith('text/html'):
+            # note: do not check HTML pages at this point, but give them
+            # a chance to override this with their own PICS label.
+            for rule in rules:
+                msg = pics_allow(url, rule)
+                if msg:
+                    raise FilterPics(msg)
         return data
 
 
