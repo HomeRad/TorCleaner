@@ -2,6 +2,8 @@ TODO
 
 version 2.9 and above
 
+- rating rule enabled gives assertion "close with open client"
+
 - memory leaks while operating the proxy
 
 - content rating:
