@@ -189,6 +189,3 @@ def get_last_word_boundary (s, width):
         return match.end()
     return width-1
 
-
-if __name__=='__main__':
-    _test()
