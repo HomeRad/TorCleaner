@@ -350,16 +350,18 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.state = 'receive'
             is_local = self.hostname in wc.config['localhosts'] and \
                self.port in (wc.config['port'], wc.config['sslport'])
+            if is_local:
+                is_public_doc = self.allow.public_document(self.document)
             if wc.config['adminuser'] and not wc.config['adminpass']:
-                if is_local and self.allow.public_document(self.document):
-                    self.handle_local(is_public_doc=True)
+                if is_local:
+                    self.handle_local(is_public_doc=is_public_doc)
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = "http://localhost:%d/adminpass.html\r"%wc.config['port']
                     self.error(302, wc.i18n._("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call
-                self.handle_local()
+                self.handle_local(is_public_doc=is_public_doc)
             else:
                 self.server_request()
 
