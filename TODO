@@ -1,15 +1,14 @@
 TODO
 
-- fetching JS in background invalidates some buffer/encoder states (!?)
-  verrry baaaad, must have invariants for buffering data when the call
-  gets interrupted and the same data is parsed/fed again...
+- webgui configuration
 
-- different authentication schemes
+- PICS features:
+  for non-PICS-enabled sites, try to fetch info from rating services
+  when no PICS info is available, display dialog to build own PICS
+  database (after password authentication)
 
-- PICS rule parsing (implements whitelist operation)
-
-- if we know the mime type (eg <script src="">) then add it if its missing
-  (feature: mime hints)
+- Digest and NTLM authentication schemes
+  (Mozilla Windows >= 1.4b can test NTLM auth)
 
 - Python 2.3: (note: wait for Python 2.3.1 :)
   o use Bool type

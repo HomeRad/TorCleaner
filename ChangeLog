@@ -18,6 +18,9 @@
     Changed files: wc/proxy/HttpClient.py
   * add mime hints
     Changed files: wc/proxy/{HttpServer.py, ClientServerMatchmaker.py}
+  * cope with b0rked servers not sending any response or header lines,
+    just the plain content
+    Changed files: wc/proxy/HttpServer.py
 
 1.9
   * use the original headers list in rfc822 Message objects to preserve
