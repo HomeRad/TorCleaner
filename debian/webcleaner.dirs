@@ -1,3 +1,4 @@
 usr/sbin
-etc/webcleaner/service/log/main
-var/log/webcleaner
+var/log/webcleaner/main
+var/run/webcleaner
+var/run/webcleaner.log

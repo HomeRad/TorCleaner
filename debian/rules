@@ -53,6 +53,8 @@ install: build
 	dh_testdir
 	dh_clean -k
 	dh_installdirs
+	chown root:adm $(BASE)/var/log/webcleaner
+	chmod -m 0750 $(BASE)/var/log/webcleaner
 	$(PYTHON) setup.py install --root=$(CURDIR)/$(BASE) --no-compile
 	# delete man pages, we install them with dh_installmanpages
 	rm -rf $(BASE)/usr/man
@@ -97,7 +99,7 @@ binary-arch: build install
 	dh_link
 	dh_strip
 	dh_compress
-	dh_fixperms -X /etc/webcleaner/webcleaner.conf
+	dh_fixperms -X /etc/webcleaner/webcleaner.conf -X /var/log/webcleaner
 	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps

@@ -36,6 +36,13 @@ Direct download links are in brackets.
    http://www.amk.ca/python/code/crypto.html
    [ http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz ]
    For Installation of PyCrypto see below.
+6. Install OpenSSL for Windows from
+   http://www.slproweb.com/products/Win32OpenSSL.html
+   [ http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe ]
+7. Download PyOpenSSL from
+   http://pyopenssl.sourceforge.net/
+   [ http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz ]
+   For Installation of PyOpenSSL see below.
 
 Setup for Unix/Linux:
 ---------------------
@@ -82,10 +89,22 @@ Setup for Windows:
    % cd webcleaner-X.X
    Configure and compile the JavaScript library:
    % ./configure; make
-4. Compile and install PyCrypto
+4a.Compile and install PyCrypto
    Close the MSYS application and open a DOS command prompt.
    Change to the pycrypto-1.9a6 directory and do:
    c:> python setup.py build -c mingw32 install
+4b.Install OpenSSL and compile PyOpenSSL
+   Change to the directory where you installed OpenSSL (for example
+   c:\OpenSSL).
+   Fix the library names for the mingw compiler:
+   c:> move lib\MinGW\ssleay.a lib\MinGW\libssleay.a
+   c:> move lib\MinGW\ssleay.def lib\MinGW\libssleay.def
+   Change to the directory where you extracted PyOpenSSL (for
+   example c:\pyOpenSSL-0.5.1)
+   Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
+   Then run:
+   c:> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
+       -L c:\OpenSSL\lib\MinGW build install
 5. Compile and install the Python modules
    Change to the webcleaner-X.X directory and do:
    c:> python setup.py build -c mingw32 install
@@ -99,3 +118,7 @@ Setup for Windows:
 7. Enjoy
    WebCleaner is now installed and started as a regular Windows service.
    See the README on how to configure the proxy filters.
+
+Troubleshooting for Windows
+---------------------------
+Proxy startup errors are logged in the 

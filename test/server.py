@@ -33,20 +33,6 @@ def start (test):
     msg, status = wc.daemon.start(startfunc, pidfile, parent_exit=False)
 
 
-def _main ():
-    command = sys.argv[1]
-    if command=='start':
-        start(sys.argv[2])
-    elif command=='stop':
-        from wc.daemon import stop
-        msg, status = stop(pidfile)
-    else:
-        print "unknown command", `command`
-    if msg:
-        print >>sys.stderr, msg
-    sys.exit(status)
-
-
 if __name__=='__main__':
     #_main() # start the server process
     startfunc() # use this for testing

@@ -1,7 +1,14 @@
+<!-- Changes
+20040317 Bastian Kleineidam
+  - removed unused elements
+  - added sslport, sslgateway attributes
+-->
 <!ELEMENT webcleaner (filter+,Blocker?,GifImage?,Rewriter?)>
 <!ATTLIST webcleaner
  version     CDATA #REQUIRED
  port        CDATA "8080"
+ sslport     CDATA "8443"
+ sslgateway  CDATA #IMPLIED
  proxyuser   CDATA #IMPLIED
  proxypass   CDATA #IMPLIED
  parentproxyuser CDATA #IMPLIED
@@ -20,29 +27,4 @@
 <!ELEMENT filter EMPTY>
 <!ATTLIST filter
  name (Header|Blocker|GifImage|BinaryCharFilter|Rewriter|Replacer|Compress) #REQUIRED
->
-
-<!--
-Unused.
--->
-<!ELEMENT Blocker EMPTY>
-<!ATTLIST Blocker
- url CDATA "blocked.html"
- image CDATA "blocked.gif"
->
-
-<!--
-Unused.
--->
-<!ELEMENT GifImage EMPTY>
-<!ATTLIST GifImage
- image CDATA "1x1.gif"
->
-
-<!--
-Unused.
--->
-<!ELEMENT Rewriter EMPTY>
-<!ATTLIST Rewriter
- buffersize CDATA "1024"
 >

@@ -171,6 +171,7 @@ class Configuration (dict):
             # is installed
             self['port'] += 1
             self['sslport'] += 1
+            self['sslgateway'] = 1
             # test data directory url
             self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
 

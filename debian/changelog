@@ -1,8 +1,11 @@
 webcleaner (2.10-0.1) unstable; urgency=low
 
   * New upstream release.
+  * set permissions on log dir to 0750 and owner to root:adm
+  * put supervise directories under /var/run, set symlinks
+  * put log directory under /var/log/webcleaner/main, set symlinks
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon,  1 Mar 2004 20:58:45 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 10 Mar 2004 01:02:52 +0100
 
 webcleaner (2.9-0.1) unstable; urgency=low
 

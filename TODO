@@ -2,6 +2,8 @@ TODO
 
 version 2.10 and above
 
+- make and install ssl certs
+
 - memory leaks while operating the proxy
 
 - convert remaining tests to unit testing where appropriate
@@ -28,3 +30,4 @@ version 2.10 and above
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
 
+- http://whiskyworld.de/whiskysinglemalts_l.htm

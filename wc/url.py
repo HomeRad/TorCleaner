@@ -51,19 +51,14 @@ def is_valid_js_url (urlstr):
     """test javascript urls"""
     url = urlparse.urlsplit(urlstr)
     if url[0].lower()!='http':
-        print 1
         return False
     if not is_valid_host(url[1]):
-        print 2
         return False
     if not is_valid_path(url[2]):
-        print 3
         return False
     if not is_valid_query(url[3]):
-        print 4
         return False
     if not is_valid_fragment(url[4]):
-        print 5
         return False
     return True
 
