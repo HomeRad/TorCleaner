@@ -543,9 +543,10 @@ class HtmlGettext (sgmllib.SGMLParser, object):
             self.tag = tag
             # search for tal:content and tal:replace string: vars
             for key,val in attributes:
-                if key in ("tal:content", "tal:replace") and \
-                   val.startswith("string:"):
-                    self.translations.add(val[7:].replace(';;', ';'))
+                if key in ("tal:content", "tal:replace"):
+                    self.tag = None # tag content will be replaced
+                    if val.startswith("string:"):
+                        self.translations.add(val[7:].replace(';;', ';'))
             self.data = ""
         elif i18nval is not None:
             if self.tag:
