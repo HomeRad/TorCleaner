@@ -211,7 +211,7 @@ def server_set_content_headers (headers, content, document, mime, url):
             mime = wc.magic.classify(StringIO.StringIO(content))
         except StandardError, msg:
             wc.log.warn(wc.LOG_PROXY, "Could not classify data %r at %r: %s",
-                        data, url, msg)
+                        content, url, msg)
     ct = headers.get('Content-Type', None)
     if mime:
         if ct is None:
