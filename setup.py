@@ -189,21 +189,20 @@ setup (name = "webcleaner",
            'wc/webgui/context',],
        ext_modules = extensions,
        scripts = scripts,
-       long_description =
-"""WebCleaner features:
-o HTTP/1.1 support
-o integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
-o integrated JavaScript engine, allows popup filtering
-o compress documents on-the-fly (with gzip)
-o disable animated GIFs
-o filter images by size, removes certain banner adverts
-o reduce images to low-bandwidth JPEGs
-o remove/add/modify arbitrary HTTP headers
-o usage of SquidGuard domain and url blacklists
-o user/password protection with proxy authentication
+       long_description = """WebCleaner features:
+* HTTP/1.1 support
+* integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
+* integrated JavaScript engine, allows popup filtering
+* compress documents on-the-fly (with gzip)
+* disable animated GIFs
+* filter images by size, removes certain banner adverts
+* reduce images to low-bandwidth JPEGs
+* remove/add/modify arbitrary HTTP headers
+* usage of SquidGuard domain and url blacklists
+* user/password protection with proxy authentication
   (requires HTTP/1.1 capable browser)
-o per-host access control
-o completely customizable over web interface
+* per-host access control
+* completely customizable over web interface
 """,
        classifiers = ['Development Status :: 4 - Beta',
            'Environment :: No Input/Output (Daemon)',
