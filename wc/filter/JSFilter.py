@@ -330,7 +330,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.htmlparser.debugbuf(wc.LOG_JS)
         else:
             wc.log.debug(wc.LOG_JS, "JS read %d <= %s", len(data), url)
-            self.js_script += data
+            self.js_script += data.decode(self.htmlparser.encoding, "ignore")
 
     def finish (self):
         """stop all background downloads immediately"""
