@@ -20,7 +20,6 @@
 %}
 
 %option 8bit outfile="htmllex.c"
-%option debug
 %option align
 %option fast
 %option nounput nomain noyywrap noyymore noreject
@@ -131,12 +130,16 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_ATTRVAL>\" {
+    SETLVAL;
     BEGIN(S_STRING);
+    return T_QUOTE;
 }
 
 
 <S_ATTRVAL>\' {
+    SETLVAL;
     BEGIN(S_APOSSTRING);
+    return T_APOS;
 }
 
 
@@ -152,7 +155,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_ATTRVAL>[ \t\r\n]* {
-    SETLVAL;
 }
 
 
@@ -217,8 +219,9 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_APOSSTRING>\' {
+    SETLVAL;
     BEGIN(S_INNER);
-    return T_STRING;
+    return T_APOS;
 }
 
 <S_APOSSTRING>[^']* { 
@@ -228,8 +231,9 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_STRING>\" {
+    SETLVAL;
     BEGIN(S_INNER);
-    return T_STRING;
+    return T_QUOTE;
 }
 
 <S_STRING>[^"]* { 

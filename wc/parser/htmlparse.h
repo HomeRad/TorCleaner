@@ -16,12 +16,13 @@
 # define	T_NAME	265
 # define	T_EQUAL	266
 # define	T_VALUE	267
-# define	T_STRING	268
-# define	T_PI_OPEN	269
-# define	T_PI_CLOSE	270
-# define	T_CDATA_START	271
-# define	T_CDATA_END	272
-# define	T_DOCTYPE_START	273
+# define	T_QUOTE	268
+# define	T_APOS	269
+# define	T_PI_OPEN	270
+# define	T_PI_CLOSE	271
+# define	T_CDATA_START	272
+# define	T_CDATA_END	273
+# define	T_DOCTYPE_START	274
 
 
 #endif /* not BISON_HTMLPARSE_H */

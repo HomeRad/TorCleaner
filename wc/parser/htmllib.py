@@ -75,8 +75,31 @@ class HtmlPrinter(HtmlParser):
 
 def _test():
     p = HtmlPrinter()
-    p.feed("html")
+    p.feed("<hTml>")
+    p.feed("<a href>")
+    p.feed("<a href=''>")
+    p.feed('<a href="">')
+    p.feed("<a href='a'>")
+    p.feed('<a href="a">')
+    p.feed("<a href=a>")
+    p.feed("<a href='\"'>")
+    p.feed("<a href=\"'\">")
+    p.feed("<a href=' '>")
+    p.feed("<a href=a href=b>")
+    p.feed("<a/>")
+    p.feed("<a href/>")
+    p.feed("<a href=a />")
+    p.feed("<?bla foo?>")
+    p.feed("<?bla?>")
+    p.feed("<!-- - comment -->")
+    p.feed("<!-- -->")
+    p.feed("<!DOCTYPE \"vla foo>")
+    p.flush()
+
+def _broken ():
+    p = HtmlPrinter()
+    p.feed("<<>")
     p.flush()
 
 if __name__ == '__main__':
-    _test()
+    _broken()
