@@ -28,24 +28,19 @@ cleandeb:
 
 .PHONY: deb
 deb:	locale
-	# clean deb files because distutils chokes on broken symlinks
-	# (webcleaner.1 -> undocumented.1)
-	$(MAKE) cleandeb
-	fakeroot debian/rules binary
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k959C340F -rfakeroot
 
 
 .PHONY: dist
 dist:	locale
 	./setup.py sdist --formats=gztar
-	#$(MAKE) cleandeb
-	#fakeroot debian/rules binary
-	#@for i in $(DEBS); do cp -f ../$$i dist; done
+	# no more .deb creation as its in unstable/testing now
 
 # only visual test
 .PHONY: test
 test:
 	./filtertest filter filtertest.html
+	# try localhost
 	#env http_proxy="http://localhost:9090" wget -t1 http://localhost/
 
 .PHONY: test_remote
