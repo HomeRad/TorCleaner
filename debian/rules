@@ -38,7 +38,6 @@ build: build-stamp
 build-stamp: configure-stamp
 	dh_testdir
 	$(MAKE)
-	$(MAKE) -C po mofiles
 	touch build-stamp
 
 clean:
