@@ -45,10 +45,11 @@ from distutils.sysconfig import get_python_version
 
 # cross compile config
 cc = os.environ.get("CC")
-win_cross_compiling = cc is not None and "mingw32" in cc
 # directory with cross compiled (for win32) python
 # see also http://kampfwurst.net/python-mingw32/
 win_python_dir = "/home/calvin/src/python23-maint-cvs/dist/src/"
+# if we are compiling for or under windows
+win_compiling = (os.name == 'nt') or (cc is not None and "mingw32" in cc)
 
 
 def normpath (path):
@@ -58,9 +59,9 @@ def normpath (path):
 
 def cnormpath (path):
     """norm a path name to platform specific notation, but honoring
-       the win_cross_compiling flag"""
+       the win_compiling flag"""
     path = normpath(path)
-    if win_cross_compiling:
+    if win_compiling:
         # replace slashes with backslashes
         path = path.replace("/", "\\")
     return path
@@ -98,10 +99,10 @@ class MyInstall (install, object):
                 val = getattr(self, attr)[cutoff:]
             else:
                 val = getattr(self, attr)
-            if win_cross_compiling and d in win_path_scheme:
+            if win_compiling and d in win_path_scheme:
                 # look for placeholders to replace
                 oldpath, newpath = win_path_scheme[d]
-                oldpath = "/%s" % oldpath
+                oldpath = "%s%s" % (os.sep, oldpath)
                 if oldpath in val:
                     val = val.replace(oldpath, newpath)
             if attr=="install_data":
@@ -205,7 +206,7 @@ class MyBdistWininst (bdist_wininst, object):
     """bdist_wininst command supporting cross compilation"""
 
     def run (self):
-        if (sys.platform != "win32" and not win_cross_compiling and
+        if (sys.platform != "win32" and not win_compiling and
             (self.distribution.has_ext_modules() or
              self.distribution.has_c_libraries())):
             raise DistutilsPlatformError \
@@ -278,7 +279,7 @@ class MyBdistWininst (bdist_wininst, object):
             remove_tree(self.bdist_dir, dry_run=self.dry_run)
 
     def get_exe_bytes (self):
-        if win_cross_compiling:
+        if win_compiling:
             # wininst.exe is in the same directory as bdist_wininst
             # XXX for python2.4, use wininst-X.Y.exe
             directory = os.path.dirname(distutils.command.__file__)
@@ -306,7 +307,7 @@ else:
     # for gcc 3.x we could add -std=gnu99 to get rid of warnings, but
     # that breaks other compilers
     extra_compile_args.append("-pedantic")
-    if win_cross_compiling:
+    if win_compiling:
         # we are cross compiling with mingw
         # add directory for pyconfig.h
         include_dirs.append(win_python_dir)
@@ -345,42 +346,29 @@ extensions.append(Extension('wc.levenshtein',
              ))
 
 # javascript extension
-if os.name=='nt':
-    extensions.append(Extension('wc.js.jslib',
-                    sources=['wc/js/jslib.c'],
-                    # since we are not compiling with configure/make, put
-                    # all needed defines here
-                    define_macros = [('WIN32', None), ('XP_WIN', None), ('EXPORT_JS_API', None)],
-                    include_dirs = include_dirs + ['libjs'],
-                    extra_compile_args = extra_compile_args,
-                    extra_objects = ['libjs/.libs/libjs.a'],
-                    library_dirs = library_dirs,
-                    libraries = libraries,
-                  ))
+if win_compiling:
+    define_macros = [('WIN32', None),
+                     ('XP_WIN', None),
+                     ('EXPORT_JS_API', None),
+                    ]
 else:
-    if win_cross_compiling:
-        define_macros = [('WIN32', None),
-                         ('XP_WIN', None),
-                         ('EXPORT_JS_API', None),
-                        ]
-    else:
-        define_macros = []
-    extensions.append(Extension('wc.js.jslib',
-                    sources=['wc/js/jslib.c'],
-                    include_dirs = include_dirs + ['libjs'],
-                    define_macros = define_macros,
-                    extra_compile_args = extra_compile_args,
-                    extra_objects = ['libjs/.libs/libjs.a'],
-                    library_dirs = library_dirs,
-                    libraries = libraries,
-                  ))
+    define_macros = []
+extensions.append(Extension('wc.js.jslib',
+                  sources=['wc/js/jslib.c'],
+                  include_dirs = include_dirs + ['libjs'],
+                  define_macros = define_macros,
+                  extra_compile_args = extra_compile_args,
+                  extra_objects = ['libjs/.libs/libjs.a'],
+                  library_dirs = library_dirs,
+                  libraries = libraries,
+                 ))
 
 # scripts
 scripts = [
     'webcleaner',
     'webcleaner-certificates',
 ]
-if os.name=='nt' or win_cross_compiling:
+if win_compiling:
     scripts.append('install-webcleaner.py')
 
 # now to the main stuff
