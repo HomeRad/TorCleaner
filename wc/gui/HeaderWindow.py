@@ -1,7 +1,7 @@
 import sys, os, httplib
 from ToolWindow import ToolWindow
 
-from wc import i18n, BaseParser, ConfigDir
+from wc import i18n, BaseParser, ConfigDir, Configuration
 from wc.debug import *
 from FXPy.fox import *
 
@@ -46,16 +46,17 @@ def parse_headers ():
 
 
 def get_data (selector):
+    config = Configuration()
     h = httplib.HTTP()
-    host = "localhost:%d"%wc.config['port']
+    host = "localhost:%d"%config['port']
     #debug(BRING_IT_ON, "connect to", host)
     h.connect(host)
     #debug(BRING_IT_ON, "GET", selector)
     h.putrequest("GET", selector)
-    if wc.config["proxyuser"]:
+    if config["proxyuser"]:
         import base64
-        p = base64.decodestring(wc.config['proxypass'])
-        auth = "%s:%s" % (wc.config['proxyuser'], p)
+        p = base64.decodestring(config['proxypass'])
+        auth = "%s:%s" % (config['proxyuser'], p)
         auth = "Basic "+base64.encodestring(auth).strip()
         h.putheader("Proxy-Authorization", auth)
     #debug(BRING_IT_ON, "endheaders")
@@ -463,14 +464,14 @@ class OptionsWindow (FXDialogBox):
         self.update_headers(owner)
         # header buttons
         w = FXHorizontalFrame(frame, LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
-        FXButton(w, i18n.("&Add"),None,owner,HeaderWindow.ID_ADDHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
-        FXButton(w, i18n.("&Edit"),None,owner,HeaderWindow.ID_EDITHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
-        FXButton(w, i18n.("&Remove"),None,owner,HeaderWindow.ID_REMOVEHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, i18n._("&Add"),None,owner,HeaderWindow.ID_ADDHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, i18n._("&Edit"),None,owner,HeaderWindow.ID_EDITHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, i18n._("&Remove"),None,owner,HeaderWindow.ID_REMOVEHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
 
         # close button
         w = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
-        FXButton(w,i18n.("&Save"),None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
-        FXButton(w,i18n.("&Close"),None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
+        FXButton(w,i18n._("&Save"),None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
+        FXButton(w,i18n._("&Close"),None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
 
 
     def update_headers (self, owner):

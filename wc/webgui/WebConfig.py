@@ -14,6 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
+from wc import config
+
 HTML_TEMPLATE = """<html><head>
 <title>%(title)s</title>
 </head>
@@ -42,11 +45,49 @@ def handle_document (document, client):
         ServerHandleDirectly(client,
         'HTTP/1.0 200 OK\r\n',
         'Content-Type: text/plain\r\n\r\n',
-        wc.proxy.text_headers())
+        text_headers())
     elif document=="/connections/":
         ServerHandleDirectly(client,
         'HTTP/1.0 200 OK\r\n',
         'Content-Type: text/plain\r\n\r\n',
-        wc.proxy.text_connections())
+        text_connections())
     else:
         return 0
+
+
+def text_status ():
+    data = {
+    'uptime': format_seconds(time.time() - config['starttime']),
+    'valid':  config['requests']['valid'],
+    'error': config['requests']['error'],
+    'blocked': config['requests']['blocked'],
+    }
+    connections = map(str, asyncore.socket_map.values())
+    s = STATUS_TEMPLATE % data
+    s += xmlify('\n     '.join(connections))
+    s += ']\n\ndnscache: %s'%dns_lookups.dnscache
+    return s
+
+
+def text_headers ():
+    return "\n".join(HEADERS.getall()) or "-"
+
+
+def text_connections ():
+    return "valid:%(valid)d\nerror:%(error)d\nblocked:%(blocked)d"%\
+           config['requests']
+
+
+def access_denied (addr):
+    data = {
+      'title': "WebCleaner Proxy",
+      'header': "WebCleaner Proxy",
+      'content': "access denied for %s"%str(addr),
+    }
+    return HTML_TEMPLATE % data
+
+
+def text_config ():
+    return str(config)
+
+
