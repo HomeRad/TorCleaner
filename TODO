@@ -2,9 +2,6 @@ TODO
 
 version 2.2
 
-- TypeError: location.hostname has no properties
-  TypeError: document.location.hostname has no properties
-
 - support NTLM authentication, add README.squid example config
   (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
    client auth)

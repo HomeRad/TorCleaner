@@ -10,6 +10,9 @@
     Changed: wc/filter/GifImage.py
   * fix setting of missing host header
     Changed: wc/proxy/ClientServerMatchmaker.py
+  * Javascript engine initialization improvements:
+    - set navigator.plugins['Shockwave Flash'] object
+    - set location.hostname and document.location.hostname properties
 
 2.1
   * lots of minor bugs fixed running pychecker

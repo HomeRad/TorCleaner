@@ -811,6 +811,12 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         ==JS_FALSE) {
         return shutdown(env, "Could not set location.host property");
     }
+    if (JS_DefineProperty(env->ctx, location_obj, "hostname",
+                          JS_GetEmptyStringValue(env->ctx), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
+        ==JS_FALSE) {
+        return shutdown(env, "Could not set location.hostname property");
+    }
     if (JS_DefineProperty(env->ctx, location_obj, "port",
                           INT_TO_JSVAL(80), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)

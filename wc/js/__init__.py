@@ -38,6 +38,7 @@ def get_js_data (attrs):
     js_lang = attrs.get('language', '').lower()
     js_type = attrs.get('type', '').lower()
     js_ok = js_type=='text/javascript' or \
+            js_type.startswith('javascript') or \
             js_lang.startswith('javascript') or \
             not (js_lang or js_type)
     return js_ok, js_lang
