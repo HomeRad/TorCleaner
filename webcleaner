@@ -168,19 +168,36 @@ startwatch
 stopwatch
         Stop the monitor program and the proxy.""")
 
-_nt_usage = i18n._("""USAGE\twebcleaner command
+_nt_usage = i18n._("""USAGE\twebcleaner command [options]
 
 COMMANDS
 start
         Start the proxy. If it is already started, do nothing.
 stop
         Stop the proxy. If it is already stopped, do nothing.
+restart
+        Restart the proxy.
 status
         Print info if the proxy is running or not.
-install
+debug
+        XXX
+install [options]
         Install WebCleaner Windows service.
+update [options]
+        XXX
 remove
-        Remove WebCleaner Windows service.""")
+        Remove WebCleaner Windows service.
+
+OPTIONS (for 'install' and 'update' commands only)
+--username <domain\username>
+        The Username the service is to run under
+--password password
+        The password for the username
+--startup [manual|auto|disabled]
+        How the service starts, default = manual
+--interactive
+        Allow the service to interact with the desktop.
+""")
 
 
 def _print_usage (msg):
@@ -274,42 +291,7 @@ def main_nt ():
         else:
             _print_usage(i18n._("Unknown option %(option)s") % {'option':`opt`})
     import win32serviceutil
-    import win32service
-    import win32event
-    from wc import wstartfunc
-
-    class PythonService (win32serviceutil.ServiceFramework):
-        _svc_name_ = configdata.name
-        _svc_display_name_ = configdata.description
-        def __init__(self, args):
-            win32serviceutil.ServiceFramework.__init__(self, args)
-            # Create an event which we will use to wait on.
-            # The "service stop" request will set this event.
-            self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
-
-        def SvcStop(self):
-            # Before we do anything, tell the SCM we are starting the stop process.
-            self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-            # And set my event.
-            win32event.SetEvent(self.hWaitStop)
-
-        def SvcDoRun(self):
-            import servicemanager
-            # Log a "started" message to the event log.
-            servicemanager.LogMsg(
-               servicemanager.EVENTLOG_INFORMATION_TYPE,
-               servicemanager.PYS_SERVICE_STARTED,
-               (self._svc_name_,''))
-            wstartfunc(self.hWaitStop)
-            # Now log a "service stopped" message
-            servicemanager.LogMsg(
-               servicemanager.EVENTLOG_INFORMATION_TYPE,
-               servicemanager.PYS_SERVICE_STOPPED,
-               (self._svc_name_,''))
-
-    # end class PythonService
-
-    win32serviceutil.HandleCommandLine(PythonService)
+    win32serviceutil.HandleCommandLine(daemon.ProxyService)
 
 
 if __name__ == '__main__':

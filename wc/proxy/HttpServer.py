@@ -374,6 +374,8 @@ class HttpServer (Server):
                         self.client.server_response(self, self.response,
                                               self.statuscode, self.headers)
                         self.data_written = True
+                    if not self.client:
+                        return
                     self.client.server_content(data)
         except FilterWait, msg:
             debug(PROXY, "%s FilterWait %s", self, msg)

@@ -28,6 +28,7 @@ from stat import ST_SIZE
 Version = configdata.version
 AppName = configdata.appname
 Name = configdata.name
+Description = configdata.description
 App = AppName+" "+Version
 UserAgent = AppName+"/"+Version
 Author =  configdata.author

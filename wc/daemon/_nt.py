@@ -26,8 +26,45 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os, sys
+import win32service
+import win32serviceutil
+import win32event
 from wc.log import *
-from wc import i18n, configdata
+from wc import i18n, wstartfunc, AppName
+
+
+class ProxyService (win32serviceutil.ServiceFramework):
+    _svc_name_ = AppName
+    _svc_display_name_ = i18n._("%s Proxy") % AppName
+    def __init__(self, args):
+        win32serviceutil.ServiceFramework.__init__(self, args)
+        # Create an event which we will use to wait on.
+        # The "service stop" request will set this event.
+        self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
+
+    def SvcStop(self):
+        # Before we do anything, tell the SCM we are starting the
+        # stop process.
+        self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+        # And set my event.
+        win32event.SetEvent(self.hWaitStop)
+
+    def SvcDoRun(self):
+        import servicemanager
+        # Log a "started" message to the event log.
+        servicemanager.LogMsg(
+           servicemanager.EVENTLOG_INFORMATION_TYPE,
+           servicemanager.PYS_SERVICE_STARTED,
+           (self._svc_name_,''))
+        wstartfunc(self.hWaitStop)
+        # Now log a "service stopped" message
+        servicemanager.LogMsg(
+           servicemanager.EVENTLOG_INFORMATION_TYPE,
+           servicemanager.PYS_SERVICE_STOPPED,
+           (self._svc_name_,''))
+
+
+# XXX the code below is currently unused
 
 def start (startfunc, pidfile, parent_exit=True):
     # already running?
