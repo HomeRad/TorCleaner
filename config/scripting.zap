@@ -74,6 +74,7 @@
  desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1">
 <attr>javascript:.*</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="use contents of noscript tag" oid="12"
@@ -108,6 +109,7 @@
  desc="Good! Adaptation, improvisation, but your weakness is not your technique."
  tag="script">
 <enclosed>(?i)document\.onmousedown</enclosed>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="&lt;body&gt; ondragstart" oid="18"

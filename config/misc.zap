@@ -40,11 +40,11 @@
 <replace title="The Dude" oid="6"
  desc="Just a silly example."
  disable="1"
- search="Bastian">The Dude</replace>
+ search="Bastian"/>
 
 <replace title="Replace blink CSS" oid="7"
  desc="Unfuckingbelievable they made a blink CSS entry."
- search="text-decoration:\s*blink">text-decoration: none</replace>
+ search="text-decoration:\s*blink"/>
 
 <rewrite title="Replace MARQUEE with SPAN" oid="8"
  desc="Jeeesus, as if blinking isn&apos;t enough."
@@ -54,12 +54,12 @@
 
 <replace title="Love and Peace" oid="9"
  desc="Love &amp; Peace!"
- search="(US-Präsident|George( W.)?) Bush">Love and Peace</replace>
+ search="(US-Präsident|George( W.)?) Bush"/>
 
 <replace title="bllnk" oid="10"
  desc="&lt;blink&gt;&lt;/bllnk&gt; still does blink, so replace it. We might want to think later about correcting such typos automatically. For now it happens only at the india page. "
  matchurl="allindiaradio.org"
- search="&lt;/bllnk&gt;">&lt;/blink&gt;</replace>
+ search="&lt;/bllnk&gt;"/>
 
 <rewrite title="Remove LOWSRC" oid="11"
  desc="The lowsrc is waste of bandwidth if you have enough of it ;)"
@@ -78,6 +78,7 @@
  matchurl="eselfilme.de"
  tag="div">
 <attr name="id">Layer1</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Remove _blank and _new area targets" oid="14"

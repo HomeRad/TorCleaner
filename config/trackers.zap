@@ -18,5 +18,6 @@
  tag="img">
 <attr name="width">^1$</attr>
 <attr name="height">^1$</attr>
+<replacement part="complete"/>
 </rewrite>
 </folder>

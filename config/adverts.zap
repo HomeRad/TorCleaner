@@ -6,41 +6,49 @@
 <rewrite title="/werbung" oid="0"
  desc="Kill links with the german ad word in the path.">
 <attr>/(publicite|werbung|rekla(ma|me|am)|annonse|maino(kset|nta|s)?)/</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 01" oid="1"
  desc="Kill links with &apos;ad&apos; in the host name.">
 <attr>http://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 10" oid="2"
  desc="Kill links with &apos;click&apos; words in the host name.">
 <attr>http://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 02" oid="3"
  desc="Kill links with ad words in the host name.">
 <attr>http://[^/]*(tradedoubler|emerchandise|ecommercetimes)\.</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="counter and tracker" oid="4"
  desc="Kill tracker and counter cgi scripts.">
 <attr>/.*(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 05" oid="5"
  desc="Kill links with ad words in the host name.">
 <attr>http://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 06" oid="6"
  desc="Kill ad servers.">
 <attr>http://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 07" oid="7"
  desc="Kill links with &apos;banner&apos; in the host name.">
 <attr>banner.*\.</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <block title="Ad servers 08" oid="8"
@@ -56,21 +64,25 @@
 <rewrite title="Adverts in the path name 01" oid="9"
  desc="Kill links with ad words in the path name.">
 <attr>/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Adverts in the path name 02" oid="10"
  desc="Kill links with ad words in the path name.">
 <attr>/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew)/</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Adverts in the path name 03" oid="11"
  desc="Kill links with ad words in the path name.">
 <attr>/event\.ng(\?|/)Type=click</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Adverts in the path name 04" oid="12"
  desc="Kill links with ad words in the path name.">
 <attr>\.eu-adcenter\.net</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <block title="CGI adverts 1" oid="13"
@@ -86,6 +98,7 @@
 <rewrite title="CGI adverts 2" oid="14"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
 <attr>/cgi-bin/ads?(log(\.pl)?|click)?\?</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <block title="CGI adverts 3" oid="15"
@@ -101,16 +114,19 @@
 <rewrite title="CGI adverts 4" oid="16"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
 <attr>clickthru.(acc|aspx)\?</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Deja.com adverts" oid="17"
  desc="Kill links with ad words in the host name.">
 <attr>www\.deja\.com/jump/</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="German ad servers" oid="18"
  desc="Kill links with ad words in the host name.">
 <attr>(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Heise advert tag" oid="19"
@@ -154,34 +170,40 @@
 <rewrite title="Userfriendly outbound links" oid="25"
  desc="Links on userfriendly.org which point outbound. This is a redirector host.">
 <attr>http://links\.userfriendly\.org</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="adbouncer" oid="26"
  desc="Kill links with ad words in the path name.">
 <attr>/adbouncer\.phtml</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="easy-cash" oid="27"
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Salon.com" oid="28"
  desc="Jump ads at Salon"
  matchurl="salon.com">
 <attr>jump.salon.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="OSDN navbar" oid="29"
  desc="Navigation bar form"
  tag="form">
 <attr name="action">http://www\.osdn\.com/osdnsearch\.pl</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="SF tracker image" oid="30"
  desc="akamai tracker image at sourceforge"
  tag="img">
 <attr name="src">e\.akamai\.net</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="IMDB Advert 2" oid="31"
@@ -189,12 +211,14 @@
  matchurl="imdb"
  tag="area">
 <attr>/tiger_redirect\?</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="IMDB Advert" oid="32"
  desc="adverts are redirections"
  matchurl="imdb">
 <attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS|TSEARCH|TSEARCH_RHS|[A-Z_]*AD_LOWRES|[A-Z_]*LOWRES_BUY)</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="IMDB Advert 3" oid="33"
@@ -202,10 +226,12 @@
  matchurl="imdb"
  tag="img">
 <attr name="usemap">^#m_pro-</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Adverts in the path name 7" oid="34">
 <attr>/l.click\?clickId=</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Onmouseover ads" oid="35"
@@ -218,6 +244,7 @@
  desc="/r/ stuff and imdb pro"
  matchurl="imdb">
 <attr>(/r/|/register/subscribe)</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="IMDB Advert 5" oid="37"
@@ -225,6 +252,7 @@
  matchurl="imdb"
  tag="img">
 <attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="IMDB Advert 6" oid="38"
@@ -232,16 +260,19 @@
  matchurl="imdb"
  tag="image">
 <attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="EOnline ads" oid="39">
 <attr>/cgi-bin/acc_clickthru\?</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="slashdot ad" oid="40"
  desc="JS ad at slashdot"
  tag="script">
 <attr name="src">s0b\.bluestreak\.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <block title="Slashdot JS ad 1" oid="41"
@@ -266,24 +297,28 @@
  desc="found at fortune.com"
  tag="script">
 <attr name="src">ar\.atwola\.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="JS .au ad" oid="44"
  desc="Fairfax advert"
  tag="script">
 <attr name="src">http://campaigns\.f2\.com\.au</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Google Pageads" oid="45"
  desc="Google Javascript (textual) pageads."
  tag="script">
 <attr name="src">pagead\.googlesyndication\.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="LWN ad" oid="46"
  desc="Pagead at linux weekly news"
  matchurl="lwn\.net">
 <attr>oasis\.lwn\.net/oasisc\.php</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Freshmeat ads" oid="47"
@@ -291,46 +326,55 @@
  matchurl="freshmeat.net"
  tag="img">
 <attr name="src">fmads.osdn.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="MSN ads" oid="48"
  desc="Found at MSN">
 <attr>g\.msn(bc)?\.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="IMDB Advert 7" oid="49"
  tag="embed">
 <attr name="src">i.imdb.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 11" oid="50"
  desc="Tribal fusion">
 <attr>a\.tribalfusion\.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="maxihitz" oid="51"
  tag="iframe">
 <attr name="src">maxihitz\.de</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Ad servers 12" oid="52"
  desc="adclick stuff">
 <attr>/adclick\.(exe|php)</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Schmidtie" oid="53"
  desc="Harald-Schmidt-Show homepage sux"
  matchurl="www.sat1.de">
 <attr>/jump\.hbs</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="MSN ads 2" oid="54"
  desc="Same as MSN ads, only in area"
  tag="area">
 <attr>g\.msn(bc)?\.com</attr>
+<replacement part="complete"/>
 </rewrite>
 
 <rewrite title="Falk ag link" oid="55">
 <attr>as1\.falkag\.de/server/link\.asp</attr>
+<replacement part="complete"/>
 </rewrite>
 </folder>
