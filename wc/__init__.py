@@ -114,6 +114,7 @@ def sort_seq (seq):
 import wc.ip
 import wc.i18n
 import wc.url
+import wc.network
 import wc.proxy
 import wc.proxy.dns_lookups
 import wc.filter
@@ -165,26 +166,6 @@ def reload_config ():
     config.init_filter_modules()
     wc.proxy.dns_lookups.init_dns_resolver()
     wc.filter.VirusFilter.init_clamav_conf()
-
-
-def get_localhosts ():
-    """get list of localhost names and ips"""
-    # XXX is this list of localhost stuff complete?
-    addrinfo = socket.gethostbyaddr(socket.gethostname())
-    localhosts = {
-      'localhost' : None,
-      'loopback' : None,
-      '127.0.0.1' : None,
-      '::1' : None,
-      'ip6-localhost' : None,
-      'ip6-loopback' : None,
-    }
-    localhosts[addrinfo[0]] = None
-    for h in addrinfo[1]:
-        localhosts[h] = None
-    for h in addrinfo[2]:
-        localhosts[h] = None
-    return localhosts.keys()
 
 
 def proxyconf_file (confdir):
@@ -254,7 +235,7 @@ class Configuration (dict):
 	# if set to one the bound socket does not accept connections from
 	# hosts except localhost; normally not needed
         self['local_sockets_only'] = 0
-        self['localhosts'] = get_localhosts()
+        self['localhosts'] = wc.network.get_localhosts()
         self['mime_content_rewriting'] = sets.Set()
         self['gui_theme'] = "classic"
         self['timeout'] = 10
