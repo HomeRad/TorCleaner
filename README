@@ -27,14 +27,14 @@ Read the file INSTALL
 Why should I use WebCleaner?
 ----------------------------
 The first feature that set WebCleaner apart from other proxies is
-real HTML filtering, and this removes a lot of advertisings.
+exact HTML filtering, and this removes a lot of advertisings.
 The filter does not just replace some strings, the proxy parses all HTML
 data into tags. The parser is fast (written in C) and can cope with every
 broken HTML page out there; if the parser does not recognize HTML
 structures, it just passes the data over to the browser until it recognizes
 a tag again. No data is ever discarded or dropped by the parser.
 
-The second thing is the real Javascript filtering: Javascript data is
+The second thing is the Javascript filtering: Javascript data is
 executed in the integrated Spidermonkey JS engine which is also used by
 the Mozilla browser suite.
 This eliminates all JavaScript obfuscation, popups, and document.write()
