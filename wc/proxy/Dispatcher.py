@@ -294,9 +294,11 @@ class Dispatcher (object):
             (r, w, e) = select.select([], [self.fileno()], [], 0.2)
         except select.error, why:
             # not yet ready
+            wc.log.debug(wc.LOG_PROXY, '%s connect error %s', self, str(why))
             return
         if self.fileno() not in w:
             # not yet ready
+            wc.log.debug(wc.LOG_PROXY, '%s not writable', self)
             return
         err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
         if err == 0:
@@ -305,11 +307,11 @@ class Dispatcher (object):
             wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
         elif err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
+            wc.log.debug(wc.LOG_PROXY, '%s connect status in progress/would block', self)
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
         else:
             strerr = errno.errorcode[err]
-            wc.log.info(wc.LOG_PROXY, '%s connect(%s) error %s',
-                        self, addr, strerr)
+            wc.log.info(wc.LOG_PROXY, '%s connect error %s', self, strerr)
             self.handle_close()
 
     def accept (self):
