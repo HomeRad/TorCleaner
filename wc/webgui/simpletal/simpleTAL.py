@@ -125,7 +125,16 @@ class TemplateInterpreter:
 	def initialise (self, context, outputFile):
 		self.context = context
 		self.file = outputFile
-		
+
+        def translate (self, msg):
+                if self.translator is None or not self.translateContent:
+                        return msg
+                val = self.translator.gettext(msg) % \
+                      self.context.getVariableMap()
+                self.log.debug("Translated %s to %s with %s", `msg`, `val`,
+                               self.translator.info())
+                return val
+
 	def cleanState (self):
 		self.scopeStack = []
 		self.programCounter = 0
@@ -368,12 +377,7 @@ class TemplateInterpreter:
 		self.programCounter += 1
 
 	def cmdOutput (self, command, args):
-                if self.translator is not None and self.translateContent:
-                        self.log.debug("Translating %s with %s", `args`, str(self.translator))
-                        self.file.write(self.translator.gettext(args) % \
-                                        self.context.getVariableMap())
-                else:
-                        self.file.write (args)
+                self.file.write(self.translate(args))
 		self.programCounter += 1
 
 	def cmdStartScope (self, command, args):
@@ -466,12 +470,7 @@ class TemplateInterpreter:
                 else:
                         result = self.context.evaluate (args[0], self.originalAttributes)
                         if not (result is None or result.isNothing() or result.isDefault()):
-                                if self.translator is not None:
-                                        self.log.debug("Translating %s with %s", `result.value()`, str(self.translator))
-                                        self.tagContent = (0, self.translator.gettext(result.value()) % \
-                                                              self.context.getVariableMap())
-                                else:
-                                        self.tagContent = (0, result.value())
+                                self.tagContent = (0, self.translate(result.value()))
         			self.movePCForward = self.symbolTable[args[1]]
                 self.programCounter += 1
 
@@ -485,9 +484,7 @@ class TemplateInterpreter:
 		attsToRemove = {}
 		newAtts = []
 		for attName, attExpr in args:
-                        self.log.debug("Translating %s with %s", `attExpr`, str(self.translator))
-			result = self.translator.gettext(attExpr) % \
-                                      self.context.getVariableMap()
+			result = self.translate(attExpr)
 			# We have a value - let's use it!
 			attsToRemove[attName] = 1
 			escapedAttVal = cgi.escape(result).replace('"', '&quot;')
