@@ -14,6 +14,7 @@ TODO
 
 - Digest and NTLM authentication schemes
   (Mozilla Windows >= 1.4b can test NTLM auth)
+  in README.squid, add example ntlm and digest auth module config
 
 - testing of persistent connections
 
