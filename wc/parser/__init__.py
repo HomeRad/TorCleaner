@@ -65,6 +65,11 @@ class SortedDict (dict):
         return iter(self.keys())
 
 
+    def clear (self):
+        self._keys = []
+        super(SortedDict, self).clear()
+
+
 def _resolve_entity (mo):
     """resolve one &#XXX; entity"""
     # convert to number
