@@ -170,18 +170,18 @@ Setup for Windows:
    Change to the directory where you installed Python into
    (for example ``c:> cd c:\\Python23\\``).
    Run the webcleaner-certificates script to install the certificates:
-   ``c:> python scripts\webcleaner-certificates install``
+   ``c:> python scripts\webcleaner-certificates install``.
    To remove the certificates later, you can run
-   ``c:> python scripts\webcleaner-certificates remove``
+   ``c:> python scripts\webcleaner-certificates remove``.
 
 8. Install and start the WebCleaner NT service
    
    Change to the directory where you installed Python into
    (for example ``c:> cd c:\\Python23\\``).
    Run the webcleaner-service script to install the service:
-   ``c:> python scripts\webcleaner-service install``
+   ``c:> python scripts\webcleaner-service install``.
    To remove the service later, you can run
-   ``c:> python scripts\webcleaner-service remove``
+   ``c:> python scripts\webcleaner-service remove``.
 
 9. Enjoy
    
