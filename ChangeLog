@@ -2,7 +2,7 @@
   * added "What you can do" entry
     Changed files: README
   * Filter rule updates:
-    - remove <body ondragstart, oncontextmenu, onselectstart>
+    - remove <body ondragstart, oncontextmenu, onselectstart, onkeydown>
     - prevent document.onmousedown rebinding
     - some ad filter updates
     - remove more headers with client infos
@@ -18,14 +18,17 @@
     Changed files: wc/daemon/_posix.py
   * use builtin dict type for configuration
     Changed files: wc/__init__.py
-  * convert paths to platform specific representation
+  * convert install paths to platform specific representation
     Changed files: setup.py
   * 100 continue: switch back to response state only after reading headers
     Changed files: wc/proxy/HttpServer.py
-  * be more HTTP conform by adding required and removing hop-by-hop headers
-    also, some header values are parsed with better error recovery
+  * be more HTTP/1.1 conform:
+    - remove hop-by-hop headers
+    - add Connection: Keep-Alive header for persistent connections
+    - some header values are parsed with better error recovery
     Changed files: wc/proxy/{__init__, HttpClient, HttpServer}.py,
        wc/__init__.py
+    Added files: wc/proxy/Headers.py
   * handle partial proxy request uris
     Changed files: wc/proxy/{__init__,ClientServerMatchmaker}.py
   * embedded the spidermonkey javascript engine to reduce dependencies

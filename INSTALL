@@ -3,17 +3,18 @@
 
 Requirements
 ------------
-Python >= 2.2 from http://www.python.org/
+You need a C compiler (most notably the GNU C Compiler gcc).
 
+Python >= 2.2 from http://www.python.org/
+Your Python installation has to be compiled with the
+expat XML parser module. The expat library needed for this can be
+found at http://expat.sourceforge.net/.
 For Python << 2.3 you'll need the python-logging module from
 http://www.red-dove.com/python_logging.html
 
 For the GUI config tool webcleanerconf you need
 FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
 FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
-Additionally, your Python installation has to be compiled with the
-expat XML parser module. The expat library needed for this can be
-found at http://expat.sourceforge.net/.
 
 Setup
 -----
