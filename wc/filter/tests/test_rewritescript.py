@@ -14,7 +14,7 @@ class TestRewriteScript (unittest.TestCase):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def setUp (self):
-        wc.configuration.config = wc.Configuration()
+        wc.configuration.config = wc.configuration.Configuration()
         wc.configuration.config['filters'] = ['Rewriter',]
         wc.configuration.config.init_filter_modules()
         wc.proxy.dns_lookups.init_resolver()

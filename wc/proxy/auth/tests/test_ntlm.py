@@ -10,7 +10,7 @@ class TestNtlm (unittest.TestCase):
 
     def test_ntlm (self):
         """construct and parse NTLM authentication messages"""
-        wc.config['auth_ntlm'] = 1
+        wc.configuration.config['auth_ntlm'] = 1
         # challenge type 0
         challenges = wc.proxy.auth.get_challenges(type=wc.proxy.auth.ntlm.NTLMSSP_INIT)
         challenges = wc.proxy.auth.parse_challenges(", ".join(challenges))
@@ -36,7 +36,7 @@ class TestNtlm (unittest.TestCase):
         self.assertEqual(creds['NTLM'][0]['type'], 3)
         self.assertEqual(creds['NTLM'][0]['username'], 'calvin')
         self.assert_(wc.proxy.auth.check_credentials(creds, **attrs))
-        wc.config['auth_ntlm'] = 0
+        wc.configuration.config['auth_ntlm'] = 0
 
     def test_ntlmpass (self):
         """construct NTLM hashed password responses"""
