@@ -264,7 +264,7 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_TAGSTART);
 }
 
-<S_TAGSTART>{RX_NAME} {
+<S_TAGSTART>[A-Za-z0-9]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
@@ -598,12 +598,12 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** TAGEND ************************/
-<INITIAL><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}* {
+<INITIAL><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}*/[A-Za-z] {
     UPDATE_BUFPOS;
     BEGIN(S_TAGEND);
 }
 
-<S_TAGEND>{RX_NAME} {
+<S_TAGEND>[A-Za-z0-9]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
