@@ -16,6 +16,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import wc
+import wc.filter.rating.category
+
+
 class Service (object):
     """A named service with url and list of supported categories."""
 
@@ -24,6 +28,9 @@ class Service (object):
         self.name = name
         self.url = url
         self.categories = categories
+
+    def __cmp__ (self, other):
+        return cmp(self.name, other.name)
 
 
 class WebCleanerService (Service):
@@ -38,13 +45,14 @@ class WebCleanerService (Service):
         url = '%s/rating/' % wc.Url,
         # rating categories
         categories = [
-            ValueCategory("violence"),
-            ValueCategory("sex"),
-            ValueCategory("language"),
-            RangeCategory("age", minval=0),
+            wc.filter.rating.category.ValueCategory("violence"),
+            wc.filter.rating.category.ValueCategory("sex"),
+            wc.filter.rating.category.ValueCategory("language"),
+            wc.filter.rating.category.RangeCategory("age", minval=0),
         ]
         super(WebCleanerService, self).__init__(name, url, categories)
         # submit ratings to service
         self.submit = '%s/submit' % self.url,
         # request ratings from service
         self.request = '%s/request' % self.url,
+
