@@ -16,6 +16,7 @@ import urllib2
 import gzip
 import tarfile
 import wc
+import wc.configuration
 import wc.XmlUtils
 
 # global vars
@@ -106,11 +107,14 @@ def write_filters ():
 def write_folder (cat, ftype, data, f):
     print "write", cat, "folder"
     d = {
-        "charset": wc.ConfigCharset,
-        "title_en": wc.XmlUtils.xmlquote("%s %s" % (ftype.capitalize(), cat)),
-        "title_de": wc.XmlUtils.xmlquote("%s %s" % (transtypes[ftype]['de'].capitalize(),
-                                      transcats[cat]['de'].capitalize())),
-        "desc_en": wc.XmlUtils.xmlquote("Automatically generated on %s" % date),
+        "charset": wc.configuration.ConfigCharset,
+        "title_en": wc.XmlUtils.xmlquote("%s %s" %
+                                     (ftype.capitalize(), cat)),
+        "title_de": wc.XmlUtils.xmlquote("%s %s" %
+                            (transtypes[ftype]['de'].capitalize(),
+                             transcats[cat]['de'].capitalize())),
+        "desc_en": wc.XmlUtils.xmlquote(
+                                     "Automatically generated on %s" % date),
         "desc_de": wc.XmlUtils.xmlquote("Automatisch generiert am %s" % date),
     }
     f.write("""<?xml version="1.0" encoding="%(charset)s"?>
