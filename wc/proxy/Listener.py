@@ -6,13 +6,14 @@ import asyncore, socket
 from wc import config
 from wc.log import *
 
-class Listener (asyncore.dispatcher):
+# XXX drop the ", object" when dispatcher is a new-style class
+class Listener (asyncore.dispatcher, object):
     """A listener accepts connections on a specified port. Each
        accepted incoming connection gets delegated to an instance of the
        handler class"""
     def __init__ (self, port, handler):
         """create a socket on specified port and start listening to it"""
-        asyncore.dispatcher.__init__(self)
+        super(Listener, self).__init__()
         self.addr = (('', 'localhost')[config['local_sockets_only']], port)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         # disable NAGLE algorithm, which means sending pending data

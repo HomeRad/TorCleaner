@@ -70,8 +70,8 @@ class UnchunkStream (object):
         debug(PROXY, "Proxy: decoded chunk %s", `s`)
         return s
 
+
     def flush (self):
         s = self.buffer.strip()
         self.buffer = ''
         return s
-

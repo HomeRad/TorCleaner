@@ -9,7 +9,7 @@ from wc.log import *
 # elsewhere
 class Server (Connection):
     def __init__ (self, client):
-        Connection.__init__(self)
+        super(Server, self).__init__()
         self.client = client
 
 

@@ -24,10 +24,11 @@ SEND_BUFSIZE = 1024
 # to prevent DoS attacks, specify a maximum buffer size
 MAX_BUFSIZE = 1024*1024
 
-class Connection (asyncore.dispatcher):
+# XXX drop the ", object" when dispatcher is a new-style class
+class Connection (asyncore.dispatcher, object):
     """add buffered input and output capabilities"""
     def __init__(self, sock=None):
-        asyncore.dispatcher.__init__(self, sock)
+        super(Connection, self).__init__(sock)
         self.recv_buffer = ''
         self.send_buffer = ''
         self.close_pending = False
@@ -96,7 +97,7 @@ class Connection (asyncore.dispatcher):
     def close (self):
         if self.connected:
             self.connected = False
-            asyncore.dispatcher.close(self)
+            super(Connection, self).close()
 
 
     def handle_close (self):

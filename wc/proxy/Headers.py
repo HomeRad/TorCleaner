@@ -31,6 +31,7 @@ class WcMessage (Message):
                 hit = False
         return vals
 
+
     def __contains__(self, name):
         """Determine whether a message contains the named header."""
         return name.lower() in self.dict

@@ -6,9 +6,9 @@ __date__    = "$Date$"[7:-2]
 from Connection import Connection
 
 class Interpreter (Connection):
-    def __init__ (self, socket, addr):
+    def __init__ (self, sock, addr):
         self.addr = addr
-        Connection.__init__(self, socket)
+        super(Interpreter, self).__init__(sock=sock)
         self.write('>> ')
 
     def __repr__ (self):
@@ -34,5 +34,4 @@ class Interpreter (Connection):
 
 # TODO: make other modules accessible somehow
 #import proxy4_dns, proxy4_web
-
 

@@ -48,7 +48,7 @@ class HttpServer (Server):
      but could also be a HttpProxyClient (for Javascript sources)
     """
     def __init__ (self, ipaddr, port, client):
-        Server.__init__(self, client)
+        super(HttpServer, self).__init__(client)
         self.addr = (ipaddr, port)
         self.hostname = ''
         self.document = ''
@@ -490,11 +490,11 @@ class HttpServer (Server):
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
-        Server.close(self)
+        super(HttpServer, self).close()
 
 
     def handle_error (self, what):
-        Server.handle_error(self, what)
+        super(HttpServer, self).handle_error(what)
         if self.client:
             client, self.client = self.client, None
             client.server_abort()
@@ -503,7 +503,7 @@ class HttpServer (Server):
     def handle_close (self):
         debug(PROXY, "Server: handle_close %s", str(self))
         self.can_reuse = False
-        Server.handle_close(self)
+        super(HttpServer, self).handle_close()
         # flush unhandled data
         if not self.flushing:
             self.flush()

@@ -31,7 +31,7 @@ class HttpClient (Connection):
     """
 
     def __init__ (self, sock, addr):
-        Connection.__init__(self, sock=sock)
+        super(HttpClient, self).__init__(sock=sock)
         self.addr = addr
         self.state = 'request'
         self.server = None
@@ -251,7 +251,7 @@ class HttpClient (Connection):
 
 
     def handle_error (self, what):
-        Connection.handle_error(self, what)
+        super(HttpClient, self).handle_error(what)
         # We should close the server connection
         if self.server:
             server, self.server = self.server, None
@@ -262,7 +262,7 @@ class HttpClient (Connection):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
         debug(PROXY, 'Client: handle_close %s', str(self))
-        Connection.handle_close(self)
+        super(HttpClient, self).handle_close()
         if self.server:
             server, self.server = self.server, None
             server.client_abort()
@@ -302,7 +302,7 @@ class HttpClient (Connection):
     def close (self):
         debug(PROXY, 'Client: close %s', str(self))
         self.state = 'closed'
-        Connection.close(self)
+        super(HttpClient, self).close()
 
 
 def get_content_length (headers):

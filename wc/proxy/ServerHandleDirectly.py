@@ -8,7 +8,7 @@ from Headers import WcMessage
 
 class ServerHandleDirectly (Server):
     def __init__ (self, client, response, headers, content):
-        Server.__init__(self, client)
+        super(ServerHandleDirectly, self).__init__(client)
         headers = "Content-Length: %d\r\n%s" % (len(content), headers)
         headers = WcMessage(StringIO(headers))
         self.connected = True

@@ -23,12 +23,13 @@ from wc.log import *
 class GunzipStream (DeflateStream):
     # Flags in the gzip header
     FTEXT, FHCRC, FEXTRA, FNAME, FCOMMENT = 1, 2, 4, 8, 16
-    
+
     def __init__ (self):
-        DeflateStream.__init__(self)
+        super(GunzipStream, self).__init__()
         self.buf = ''
         self.header_seen = False
         self.error = False
+
 
     def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
@@ -64,13 +65,13 @@ class GunzipStream (DeflateStream):
             i = s.find('\000')
             if i < 0: return '' # Incomplete
             s = s[i+1:]
-            
+
         if flag & self.FCOMMENT:
             # Read and discard a null-terminated string containing a comment
             i = s.find('\000')
             if i < 0: return '' # Incomplete
             s = s[i+1:]
-            
+
         if flag & self.FHCRC:
             # Read & discard the 16-bit header CRC
             if len(s) < 2: return '' # Incomplete
@@ -79,6 +80,7 @@ class GunzipStream (DeflateStream):
         # We actually got through the header
         self.buf = s
         self.header_seen = True
+
 
     def decode (self, s):
         if self.error: return s
@@ -97,7 +99,8 @@ class GunzipStream (DeflateStream):
                 return ''
 
         # We have seen the header, so we can move on to zlib
-        return DeflateStream.decode(self, s)
+        return super(GunzipStream, self).decode(s)
+
 
     def flush (self):
         if self.error: return self.buf
@@ -105,5 +108,4 @@ class GunzipStream (DeflateStream):
             # We still haven't finished parsing the header .. oh well
             return self.buf
         else:
-            return DeflateStream.flush(self)
-
+            return super(GunzipStream, self).flush()

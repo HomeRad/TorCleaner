@@ -387,20 +387,22 @@ class DnsLookupConnection (Connection):
     PORT = 53
     TIMEOUT = 2 # Resend the request every second
     accepts_tcp = {} # Map nameserver to 0/1, whether it accepts TCP requests
-    
+
+
     def __init__ (self, nameserver, hostname, callback):
         self.hostname = hostname
         self.callback = callback
         self.nameserver = nameserver
         self.retries = 0
         self.conntype = 'udp'
-        Connection.__init__(self)
+        super(DnsLookupConnection, self).__init__()
         try:
             self.establish_connection()
         except socket.error:
             # We couldn't even connect .. bah!
             callback(hostname, DnsResponse('error', 'could not connect to DNS server'))
             self.callback = None
+
 
     def establish_connection (self):
         if self.conntype == 'tcp':
@@ -417,6 +419,7 @@ class DnsLookupConnection (Connection):
             self.connect((self.nameserver, self.PORT))
             self.send_dns_request()
 
+
     def __repr__ (self):
         where = ''
         if self.nameserver != DnsConfig.nameservers[0]:
@@ -429,14 +432,17 @@ class DnsLookupConnection (Connection):
             conntype = 'TCP'
         return '<%s %3s  %s%s%s>' % ('dns-lookup', conntype, self.hostname, retry, where)
 
+
     def cancel (self):
         if self.callback:
             if self.connected: self.close()
             self.callback = None
 
+
     def handle_connect (self):
         # For TCP requests only
         DnsLookupConnection.accepts_tcp[self.nameserver] = 1
+
 
     def handle_connect_timeout (self):
         # We're trying to perform a TCP connect
@@ -446,6 +452,7 @@ class DnsLookupConnection (Connection):
                   DnsResponse('error', 'timed out connecting .. %s' % self))
             self.callback = None
             return
+
 
     def send_dns_request (self):
         # Issue the request and set a timeout
@@ -459,6 +466,7 @@ class DnsLookupConnection (Connection):
         else:
             self.send_buffer = msg
         make_timer(self.TIMEOUT + 0.2*self.retries, self.handle_timeout)
+
 
     def handle_timeout (self):
         # The DNS server hasn't responded to us, or we've lost the
@@ -489,6 +497,7 @@ class DnsLookupConnection (Connection):
                 self.callback(self.hostname, DnsResponse('error', 'timed out'))
                 self.callback = None
             if self.connected: self.close()
+
 
     def process_read (self):
         # Assume that the entire answer comes in one packet
@@ -568,17 +577,19 @@ class DnsLookupConnection (Connection):
                 callback(self.hostname, DnsResponse('error', 'not found'))
         self.close()
 
+
     def handle_error (self, what):
-        Connection.handle_error(self, what)
+        super(DnsLookupConnection, self).handle_error(what)
         if self.callback:
             callback, self.callback = self.callback, None
             callback(self.hostname,
                      DnsResponse('error', 'failed lookup .. %s' % self))
 
+
     def handle_close (self):
         # If we ever get here, we want to make sure we notify the
         # callbacks so that they don't get stuck
-        Connection.handle_close(self)
+        super(DnsLookupConnection, self).handle_close()
         if self.callback:
             callback, self.callback = self.callback, None
             callback(self.hostname, DnsResponse('error', 'closed with no answer .. %s' % self))
