@@ -1,4 +1,6 @@
-"""Win32 specific daemon helper functions"""
+"""Windows specific daemon helper functions.
+   Needs Active Python (with win32api module) installed.
+"""
 # Copyright (C) 2001  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,18 +25,22 @@ def start():
     if os.path.exists(pidfile):
         raise Exception("webcleaner already started (lock file found). "
 	                "Do 'webcleaner stop' first.")
+    command = (sys.executable, 'webcleaner', 'start_nt')
+    if sys.platform=="win98se":
+        mode = os.P_DETACH
+    else:
+        mode = os.P_NOWAIT
     try:
-        command = (sys.executable, 'webcleaner', 'start_nt')
-        ret = os.spawnv(os.P_NOWAIT, command[0], command)
+        ret = os.spawnv(mode, command[0], command)
     except OSError, exc:
         # this seems to happen when the command isn't found
         print exc
         raise Exception, \
               "command '%s' failed: %s" % (command, exc[-1])
-    if ret != 0:
+    if ret < 0:
         # and this reflects the command running but failing
         raise Exception, \
-              "command '%s' failed with exit status %d" % (command, ret)
+              "command '%s' killed by signal %d" % (command, -ret)
 
 
 def start_nt():
