@@ -6,8 +6,7 @@
  desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"
  disable="1">
 <nomatchurl>msdn\.microsoft\.com</nomatchurl>
-<nomatchurl>www\.mvhs\.de</nomatchurl>
-<nomatchurl>suprnova\.org</nomatchurl></javascript>
+<nomatchurl>www\.mvhs\.de</nomatchurl></javascript>
 
 <rewrite sid="wc.290" title="&lt;a&gt; onfocus">
 <attr name="onfocus"/>
