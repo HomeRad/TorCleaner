@@ -8,14 +8,12 @@
  name="User-Agent">Calzilla</header>
 
 <header title="No Cookies" oid="1"
- desc="Remove all set-cookie headers. Some sites may not work with this option because they require Cookies.
-This rule is disabled per default because I use the browser&apos;s Cookie management interface: everytime someone wants to set a cookie the browser displays a question if I want to set it."
+ desc="Remove all set-cookie headers. Some sites may not work with this option because they require Cookies. This rule is disabled per default because I use the browser&apos;s Cookie management interface: everytime someone wants to set a cookie the browser displays a question if I want to set it."
  disable="1"
  name="Set-Cookie"/>
 
 <header title="No accepts" oid="2"
- desc="This is really paranoid. Most browsers send Accept, Accept-Language, Accept-Encoding and Accept-Charset headers. These headers can reveal private information (eg. if you accept certain languages your ethnic group can be guessed).
-This rule is disabled per default because I use the Accept-Language headers. "
+ desc="This is really paranoid. Most browsers send Accept, Accept-Language, Accept-Encoding and Accept-Charset headers. These headers can reveal private information (eg. if you accept certain languages your ethnic group can be guessed). This rule is disabled per default because I use the Accept-Language headers. "
  disable="1"
  name="Accept.*"/>
 
