@@ -266,9 +266,15 @@
 <attr name="src">ar\.atwola\.com</attr>
 </rewrite>
 
-<rewrite title="JS .au ad" oid="117"
+<rewrite title="JS .au ad" oid="44"
  desc="Fairfax advert"
  tag="script">
 <attr name="src">http://campaigns\.f2\.com\.au</attr>
+</rewrite>
+
+<rewrite title="Google Pageads" oid="117"
+ desc="Google Javascript (textual) pageads."
+ tag="script">
+<attr name="src">pagead\.googlesyndication\.com</attr>
 </rewrite>
 </folder>
