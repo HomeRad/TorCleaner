@@ -1,10 +1,11 @@
 webcleaner (0.48) unstable; urgency=low
 
-  * wc/proxy/dns_lookups.py: 
+  * wc/proxy/dns_lookups.py:
     - reread DNS config every 10 minutes
     - fall back to TCP for truncated UDP packets
+  * debian/templates: add monitor question
 
- -- Bastian Kleineidam <calvin@debian.org>  Sun, 23 Jun 2002 09:35:16 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sun, 23 Jun 2002 23:43:51 +0200
 
 webcleaner (0.47) unstable; urgency=low
 

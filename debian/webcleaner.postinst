@@ -15,7 +15,7 @@ FILELIST="_webcleaner2_configdata.py"
 COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
 
 case "$1" in
-    configure|abort-upgrade|abort-remove|abort-deconfigure)
+    configure|reconfigure|abort-upgrade|abort-remove|abort-deconfigure)
         for i in $DIRLIST; do
             $PYTHON -O /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
             $PYTHON /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
@@ -32,10 +32,19 @@ case "$1" in
     ;;
 esac
 
-if [ "$1" = "configure" ]; then
+if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     db_get $package/port
     test -n "$RET" || RET="8080"
     sed -e "s/ port=.*/ port=\"$RET\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
+    mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
+    
+    db_get $package/monitor
+    if [ "$RET" = "true" ]; then
+        S="s/#MONITOR/MONITOR/"
+    else
+        S="s/MONITOR/#MONITOR/"
+    fi
+    sed -e "$S" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
 fi
 db_stop
