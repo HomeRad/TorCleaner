@@ -110,7 +110,7 @@ def open_url (url, proxies=None):
 
 # ====================== end of urlutils.py =================================
 
-def update (config, baseurl, dryrun=False, log=None):
+def update (wconfig, baseurl, dryrun=False, log=None):
     """Update the given configuration object with .zap files found at baseurl.
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
@@ -153,8 +153,8 @@ def update (config, baseurl, dryrun=False, log=None):
         url = baseurl+filename+".gz"
         page = open_url(url)
         p = wc.ZapperParser(fullname, compile_data=False)
-        p.parse(page, config)
-        chg = config.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
+        p.parse(page, wconfig)
+        chg = wconfig.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
 
     url = baseurl+"extern-md5sums.txt"
     try:
