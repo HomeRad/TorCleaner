@@ -25,6 +25,7 @@ from wc.filter.Rating import rating_export as _rating_export
 from wc.url import is_valid_url as _is_valid_url
 from wc.mail import valid_mail as _valid_mail
 from wc.mail import send_mail as _send_mail
+from wc.mail import mail_date as _mail_date
 
 info = {}
 error = {}
@@ -85,9 +86,10 @@ def _form_send (form):
     global smtphost
     smtphost = _getval(form, 'smtphost')
     if form.has_key('fromaddr'):
-        fromaddr = _valid_mail(_getval(form, 'fromaddr'))
+        fromaddr = _getval(form, 'fromaddr')
     else:
-        fromaddr = Email
+        fromaddr = "Wummel <%s>"%Email
+    fromaddr = _valid_mail(fromaddr)
     if not fromaddr:
         error['fromaddr'] = True
         return
@@ -95,6 +97,7 @@ def _form_send (form):
     headers = []
     headers.append("From: %s"%fromaddr)
     headers.append("To: %s"%", ".join(toaddrs))
+    headers.append("Date: %s" % _mail_date())
     headers.append("Subject: Webcleaner rating for %s"%url)
     headers.append("X-WebCleaner: rating")
     message = "%s\r\n%s" % ("\r\n".join(headers), rating)
