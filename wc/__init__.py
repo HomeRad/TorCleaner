@@ -291,6 +291,20 @@ class Configuration (dict):
                 self['filterlist'][order].append(instance)
 
 
+    def nofilter (self, url):
+        """Decide whether to filter this url or not.
+           returns True if the request must not be filtered, else False
+        """
+        from wc.proxy import match_url
+        return match_url(url, self['nofilterhosts'])
+
+
+    def allowed (self, host):
+        """return True if the host is allowed for proxying, else False"""
+        from wc.proxy import match_host
+        return match_host(host, self['allowedhosts'])
+
+
 ##### xml parsers #########
 import xml.parsers.expat
 from XmlUtils import unxmlify

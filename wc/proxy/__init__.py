@@ -133,27 +133,17 @@ def proxy_poll (timeout=0.0):
         return handlerCount
 
 
-def match_host (request):
-    """Decide whether to filter this request or not.
-       Return a boolean false value if the request must be filtered,
-       a boolean true value if the request must not be filtered.
-       The String "noproxy" indicates a turned off filtering by the
-       noproxy suffix before the hostname."""
-    if not request:
+def match_url (url, hostset):
+    if not url:
         return False
-    try:
-        foo, url, bar = request.split()
-    except ValueError, why:
-        error(PROXY, i18n._("bad request: %s"), why)
+    hostname = 
+    return match_host(spliturl(url)[1], hostset)
+
+
+def match_host (host, hostset):
+    if not host:
         return False
-    hostname = spliturl(url)[1]
-    if not hostname:
-        return False
-    # XXX test this...
-    if hostname.startswith('noproxy.'):
-        return "noproxy"
-    hosts, nets = config['nofilterhosts']
-    return ip.host_in_set(hostname, hosts, nets)
+    return ip.host_in_set(host, hostset[0], hostset[1])
 
 
 def spliturl (url):

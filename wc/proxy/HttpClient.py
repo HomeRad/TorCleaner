@@ -10,7 +10,7 @@ from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip
-from wc.proxy import match_host, fix_http_version
+from wc.proxy import fix_http_version
 from Headers import client_set_headers, WcMessage
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.log import *
@@ -43,8 +43,7 @@ class HttpClient (Connection):
         self.protocol = 'HTTP/1.0'
         self.url = ''
         host = self.addr[0]
-        hosts, nets = config['allowedhosts']
-        if not ip.host_in_set(host, hosts, nets):
+        if not config.allowed(host):
             warn(PROXY, "host %s access denied", host)
             self.close()
 
@@ -110,7 +109,7 @@ class HttpClient (Connection):
             except ValueError:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Can't parse request"))
-            self.nofilter = {'nofilter': match_host(self.request)}
+            self.nofilter = {'nofilter': config.nofilter(self.url)}
             debug(PROXY, "Client: request %s", self.request)
             self.url = applyfilter(FILTER_REQUEST, self.url,
                                    fun="finish", attrs=self.nofilter)
