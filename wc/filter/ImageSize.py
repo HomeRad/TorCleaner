@@ -33,7 +33,8 @@ class ImageSize (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = ['image']
     # which mime types this filter applies to
-    mimelist = [wc.filter.compile_mime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
+    mimelist = [wc.filter.compile_mime(x) for x in \
+           ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
 
     def __init__ (self):
@@ -112,7 +113,7 @@ class ImageSize (wc.filter.Filter.Filter):
             img = Image.open(buf, 'r')
             buf.seek(pos)
             for size, formats in sizes:
-                if size==img.size:
+                if size == img.size:
                     # size matches, look for format restriction
                     if not formats:
                         wc.log.debug(wc.LOG_FILTER, "Blocking image size %s",
@@ -124,7 +125,8 @@ class ImageSize (wc.filter.Filter.Filter):
                         return False
         except IOError:
             if finish:
-                wc.log.exception(wc.LOG_FILTER, "Could not get image size from %r", url)
+                wc.log.exception(wc.LOG_FILTER,
+                                 "Could not get image size from %r", url)
             else:
                 assert pos > self.min_bufsize
                 # wait for more data

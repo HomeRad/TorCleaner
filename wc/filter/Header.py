@@ -53,15 +53,17 @@ class Header (wc.filter.Filter.Filter):
         if not rule.name:
             return
         if not rule.value:
+            name = rule.name.lower()
             if rule.filterstage in ('both', 'request'):
-                self.delete[wc.filter.FILTER_REQUEST_HEADER].append(rule.name.lower())
+                self.delete[wc.filter.FILTER_REQUEST_HEADER].append(name)
             if rule.filterstage in ('both', 'response'):
-                self.delete[wc.filter.FILTER_RESPONSE_HEADER].append(rule.name.lower())
+                self.delete[wc.filter.FILTER_RESPONSE_HEADER].append(name)
         else:
+            val = rule.value
             if rule.filterstage in ('both', 'request'):
-                self.add[wc.filter.FILTER_REQUEST_HEADER][rule.name] = rule.value
+                self.add[wc.filter.FILTER_REQUEST_HEADER][rule.name] = val
             if rule.filterstage in ('both', 'response'):
-                self.add[wc.filter.FILTER_RESPONSE_HEADER][rule.name] = rule.value
+                self.add[wc.filter.FILTER_RESPONSE_HEADER][rule.name] = val
 
     def doit (self, data, **attrs):
         """apply stored header rules to data, which is a WcMessage object"""
@@ -73,6 +75,6 @@ class Header (wc.filter.Filter.Filter):
                 if re.match(name, h):
                     delete[h.lower()] = h
         wc.proxy.Headers.remove_headers(data, delete.values())
-        for key,val in self.add[stage].items():
+        for key, val in self.add[stage].items():
             data[key] = val+"\r"
         return data

@@ -77,25 +77,25 @@ class FilterProxyError (FilterException):
 
 def printFilterOrder (i):
     """return string representation of filter order i"""
-    if i==FILTER_REQUEST:
+    if i == FILTER_REQUEST:
         s = "Request"
-    elif i==FILTER_REQUEST_HEADER:
+    elif i == FILTER_REQUEST_HEADER:
         s = "Request Header"
-    elif i==FILTER_REQUEST_DECODE:
+    elif i == FILTER_REQUEST_DECODE:
         s = "Request Decode"
-    elif i==FILTER_REQUEST_MODIFY:
+    elif i == FILTER_REQUEST_MODIFY:
         s = "Request Modify"
-    elif i==FILTER_REQUEST_ENCODE:
+    elif i == FILTER_REQUEST_ENCODE:
         s = "Request Encode"
-    elif i==FILTER_RESPONSE:
+    elif i == FILTER_RESPONSE:
         s = "Response"
-    elif i==FILTER_RESPONSE_HEADER:
+    elif i == FILTER_RESPONSE_HEADER:
         s = "Response Header"
-    elif i==FILTER_RESPONSE_DECODE:
+    elif i == FILTER_RESPONSE_DECODE:
         s = "Response Decode"
-    elif i==FILTER_RESPONSE_MODIFY:
+    elif i == FILTER_RESPONSE_MODIFY:
         s = "Response Modify"
-    elif i==FILTER_RESPONSE_ENCODE:
+    elif i == FILTER_RESPONSE_ENCODE:
         s = "Response Encode"
     else:
         s = "Invalid"

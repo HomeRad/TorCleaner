@@ -74,7 +74,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
     def _is_waiting (self, item):
         """if parser is in wait state put item on waitbuffer and return
            True"""
-        if self.htmlparser.state[0]=='wait':
+        if self.htmlparser.state[0] == 'wait':
             self.htmlparser.waitbuf.append(item)
             return True
         return False
@@ -126,21 +126,23 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         pending rules. No rules can be removed from the list."""
         # default data
         wc.log.debug(wc.LOG_FILTER, "%s start_element %r", self, tag)
-        if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]):
+        if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG,
+                             tag, attrs]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
         if self.stackcount:
-            if self.stackcount[-1][0]==tag:
+            if self.stackcount[-1][0] == tag:
                 self.stackcount[-1][1] += 1
-        if tag=="meta":
+        if tag == "meta":
             if attrs.get('http-equiv', '').lower() == 'content-rating':
-                rating = wc.HtmlParser.resolve_html_entities(attrs.get('content', ''))
+                rating = wc.HtmlParser.resolve_html_entities(
+                                                  attrs.get('content', ''))
                 url, rating = wc.filter.Rating.rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
                 # often
                 wc.filter.Rating.rating_add(url, rating)
-        elif tag=="body":
+        elif tag == "body":
             if self.ratings:
                 # headers finished, check rating data
                 for rule in self.ratings:
@@ -148,14 +150,15 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                     if msg:
                         raise wc.filter.FilterRating(msg)
                 self.ratings = []
-        elif tag=="base" and attrs.has_key('href'):
+        elif tag == "base" and attrs.has_key('href'):
             self.base_url = attrs['href']
             # some base urls are just the host name, eg. www.imadoofus.com
             if not urllib.splittype(self.base_url)[0]:
                 self.base_url = "%s://%s" % \
                                 (urllib.splittype(self.url)[0], self.base_url)
             self.base_url = wc.url.url_norm(self.base_url)
-            wc.log.debug(wc.LOG_FILTER, "%s using base url %r", self, self.base_url)
+            wc.log.debug(wc.LOG_FILTER, "%s using base url %r",
+                         self, self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply
@@ -172,18 +175,21 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         item = [wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                wc.log.debug(wc.LOG_FILTER, "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
+                wc.log.debug(wc.LOG_FILTER, "%s matched rule %r on tag %r",
+                             self, rule.titles['en'], tag)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = True
-                    if item[0]==wc.filter.rules.RewriteRule.STARTTAG and item[1]==tag:
+                    if item[0] == wc.filter.rules.RewriteRule.STARTTAG and \
+                       item[1] == tag:
                         foo,tag,attrs = item
                         # give'em a chance to replace more than one attribute
                         continue
                     else:
                         break
                 else:
-                    wc.log.debug(wc.LOG_FILTER, "%s put rule %r on buffer", self, rule.titles['en'])
+                    wc.log.debug(wc.LOG_FILTER, "%s put rule %r on buffer",
+                                 self, rule.titles['en'])
                     rulelist.append(rule)
         if rulelist:
             # remember buffer position for end tag matching
@@ -211,13 +217,13 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         if self._is_waiting([wc.filter.rules.RewriteRule.ENDTAG, tag]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
-        if self.stackcount and self.stackcount[-1][0]==tag:
+        if self.stackcount and self.stackcount[-1][0] == tag:
             self.stackcount[-1][1] -= 1
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
         item = [wc.filter.rules.RewriteRule.ENDTAG, tag]
         if not self.filter_end_element(tag):
-            if self.javascript and tag=='script':
+            if self.javascript and tag == 'script':
                 self.js_end_element(item)
                 self.js_src = False
                 return
@@ -235,7 +241,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         # matched for a start tag. and if the first one ([0])
         # matches, all other match too
         if self.rulestack and self.rulestack[-1][1][0].match_tag(tag) and \
-           self.stackcount[-1][0]==tag and self.stackcount[-1][1]<=0:
+           self.stackcount[-1][0] == tag and self.stackcount[-1][1] <= 0:
             del self.stackcount[-1]
             pos, rulelist = self.rulestack.pop()
             for rule in rulelist:

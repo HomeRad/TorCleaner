@@ -32,7 +32,8 @@ class ImageReducer (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = ["imagereduce"]
     # which mime types this filter applies to
-    mimelist = [wc.filter.compile_mime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
+    mimelist = [wc.filter.compile_mime(x) for x in \
+           ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
     def __init__ (self):
         """initialize image reducer flags"""
@@ -79,7 +80,8 @@ class ImageReducer (wc.filter.Filter.Filter):
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if rules:
             if len(rules) > 1:
-                wc.log.warn(wc.LOG_FILTER, "more than one rule matched %r: %s", url, str(rules))
+                wc.log.warn(wc.LOG_FILTER,
+                        "more than one rule matched %r: %s", url, str(rules))
             # first rule wins
             quality = rules[0].quality
             minimal_size_bytes = rules[0].minimal_size_bytes
@@ -94,7 +96,7 @@ class ImageReducer (wc.filter.Filter.Filter):
         if length < 0:
             wc.log.warn(wc.LOG_FILTER, "negative content length at %r", url)
             return d
-        if length==0:
+        if length == 0:
             wc.log.warn(wc.LOG_FILTER, "missing content length at %r", url)
         elif 0 < length < minimal_size_bytes:
             return d

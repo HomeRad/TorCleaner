@@ -33,8 +33,8 @@ class Replacer (wc.filter.Filter.Filter):
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['replace']
-    mimelist = [ wc.filter.compile_mime(x)
-       for x in ['text/html', 'text/javascript', 'application/x-javascript'] ]
+    mimelist = [wc.filter.compile_mime(x)
+       for x in ['text/html', 'text/javascript', 'application/x-javascript']]
 
 
     def filter (self, data, **attrs):

@@ -89,13 +89,15 @@ def rating_import (url, ratingdata, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError:
-            raise RatingParseError(wc.i18n._("malformed rating line %r")%line)
-        if category=="modified" and not is_time(value):
-            raise RatingParseError(wc.i18n._("malfored modified time %r")%value)
-        if category=="generic" and value not in ["true", "false"] and \
+            raise RatingParseError(wc.i18n._(
+                                        "malformed rating line %r") % line)
+        if category == "modified" and not is_time(value):
+            raise RatingParseError(wc.i18n._(
+                                         "malfored modified time %r") % value)
+        if category == "generic" and value not in ["true", "false"] and \
            not url.startswith(value):
-            raise RatingParseError(wc.i18n._("generic url %r doesn't match %r")%\
-                                   (value, url))
+            raise RatingParseError(wc.i18n._(
+                            "generic url %r doesn't match %r") % (value, url))
         categories[category] = value
     return categories
 
@@ -273,11 +275,11 @@ def rating_range (value):
     if not mo:
         return None
     vmin, vmax = mo.group(1), mo.group(2)
-    if vmin=="":
+    if vmin == "":
         vmin = None
     else:
         vmin = int(vmin)
-    if vmax=="":
+    if vmax == "":
         vmax = None
     else:
         vmax = int(vmax)

@@ -100,7 +100,8 @@ class VirusFilter (wc.filter.Filter.Filter):
         else:
             data = ""
             for msg in scanner.infected:
-                wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r", msg, attrs['url'])
+                wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r",
+                            msg, attrs['url'])
         buf.close()
         return data
 
@@ -178,9 +179,11 @@ class ClamavConfig (dict):
         super(ClamavConfig, self).__init__()
         self.parseconf(filename)
         if self.get('ScannerDaemonOutputFormat'):
-            raise Exception(wc.i18n._("You have to disable ScannerDaemonOutputFormat"))
+            raise Exception(wc.i18n._(
+                             "You have to disable ScannerDaemonOutputFormat"))
         if self.get('TCPSocket') and self.get('LocalSocket'):
-            raise Exception(wc.i18n._("Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."))
+            raise Exception(wc.i18n._("Clamd is not configured properly: " \
+                               "both TCPSocket and LocalSocket are enabled."))
 
 
     def parseconf (self, filename):
@@ -193,7 +196,7 @@ class ClamavConfig (dict):
                 # ignore empty lines and comments
                 continue
             split = line.split(None, 1)
-            if len(split)==1:
+            if len(split) == 1:
                 self[split[0]] = True
             else:
                 self[split[0]] = split[1]
@@ -209,7 +212,8 @@ class ClamavConfig (dict):
             sock = self.create_tcp_socket()
             host = self.get('TCPAddr', 'localhost')
         else:
-            raise Exception(wc.i18n._("You have to enable either TCPSocket or LocalSocket in your Clamd configuration"))
+            raise Exception(wc.i18n._("You have to enable either TCPSocket " \
+                                "or LocalSocket in your Clamd configuration"))
         return sock, host
 
 
@@ -255,7 +259,8 @@ class ClamavConfig (dict):
             sock.close()
             raise
         if port is None:
-            raise Exception(wc.i18n._("Clamd is not ready for stream scanning"))
+            raise Exception(
+                        wc.i18n._("Clamd is not ready for stream scanning"))
         sockinfo = get_sockinfo(host, port=port)
         wsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:

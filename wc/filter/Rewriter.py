@@ -71,16 +71,17 @@ class Rewriter (wc.filter.Filter.Filter):
         for rule in self.rules:
             if not rule.appliesTo(url):
                 continue
-            if rule.get_name()=='rewrite':
+            if rule.get_name() == 'rewrite':
                 rewrites.append(rule)
-            elif rule.get_name()=='nocomments':
+            elif rule.get_name() == 'nocomments':
                 opts['comments'] = False
-            elif rule.get_name()=='javascript':
+            elif rule.get_name() == 'javascript':
                 opts['javascript'] = True
-            elif rule.get_name()=='rating':
+            elif rule.get_name() == 'rating':
                 ratings.append(rule)
         # generate the HTML filter
-        handler = wc.filter.HtmlFilter.HtmlFilter(rewrites, ratings, url, **opts)
+        handler = wc.filter.HtmlFilter.HtmlFilter(rewrites, ratings,
+                                                  url, **opts)
         p = wc.filter.HtmlParser.HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state

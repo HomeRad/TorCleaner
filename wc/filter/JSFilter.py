@@ -114,8 +114,11 @@ class JSFilter (wc.js.JSListener.JSListener):
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
         wc.log.debug(wc.LOG_JS, "%s jsScript %s %r", self, ver, script)
-        assert self.htmlparser.state[0]=='parse', "parser %s not in parse state" % self.htmlparser
-        assert len(self.htmlparser.tagbuf) >= 2, "parser %s must have script start and content tags in tag buffer" % self.htmlparser
+        assert self.htmlparser.state[0] == 'parse', \
+               "parser %s not in parse state" % self.htmlparser
+        assert len(self.htmlparser.tagbuf) >= 2, \
+               "parser %s must have script start and " \
+               "content tags in tag buffer" % self.htmlparser
         self.js_output = 0
         self.js_env.listeners.append(self)
         # start recursive html filter (used by jsProcessData)
@@ -135,7 +138,8 @@ class JSFilter (wc.js.JSListener.JSListener):
         wc.log.debug(wc.LOG_JS, "%s js_end_script %s", self, item)
         self.htmlparser.debugbuf(wc.LOG_JS)
         if len(self.htmlparser.tagbuf) < 2:
-            assert False, "parser %s must have script start and content tags in tag buffer" % self.htmlparser
+            assert False, "parser %s must have script start and content " \
+                          "tags in tag buffer" % self.htmlparser
         if self.js_output:
             try:
                 self.js_htmlparser.feed('')
@@ -149,9 +153,11 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.js_htmlparser.debugbuf(wc.LOG_JS)
             assert not self.js_htmlparser.inbuf.getvalue()
             assert not self.js_htmlparser.waitbuf
-            assert len(self.htmlparser.tagbuf) >= 2, "too small buffer %s" % self.htmlparser.tagbuf
+            assert len(self.htmlparser.tagbuf) >= 2, \
+                   "too small buffer %s" % self.htmlparser.tagbuf
             data = self.js_htmlparser.getoutput()
-            self.htmlparser.tagbuf[-2:-2] = [[wc.filter.rules.RewriteRule.DATA, data]]+self.js_htmlparser.tagbuf
+            self.htmlparser.tagbuf[-2:-2] = \
+        [[wc.filter.rules.RewriteRule.DATA, data]]+self.js_htmlparser.tagbuf
             self.htmlparser.debugbuf(wc.LOG_JS)
         self.js_htmlparser = None
         if self.js_popup or self.js_output:
@@ -178,26 +184,33 @@ class JSFilter (wc.js.JSListener.JSListener):
 
     def js_end_element (self, item):
         """parse generated html for scripts"""
-        wc.log.debug(wc.LOG_JS, "%s js_end_element buf %r", self, self.htmlparser.tagbuf)
+        wc.log.debug(wc.LOG_JS,
+                     "%s js_end_element buf %r", self, self.htmlparser.tagbuf)
         if len(self.htmlparser.tagbuf)<2:
             # syntax error, ignore
-            wc.log.warn(wc.LOG_JS, "JS syntax error, self.tagbuf %r", self.htmlparser.tagbuf)
+            wc.log.warn(wc.LOG_JS,
+                    "JS syntax error, self.tagbuf %r", self.htmlparser.tagbuf)
             return
         if self.js_src:
-            wc.log.debug(wc.LOG_JS, "JS src, self.tagbuf %r", self.htmlparser.tagbuf)
+            wc.log.debug(wc.LOG_JS,
+                         "JS src, self.tagbuf %r", self.htmlparser.tagbuf)
             del self.htmlparser.tagbuf[-1]
             if len(self.htmlparser.tagbuf)<2:
                 # syntax error, ignore
-                wc.log.warn(wc.LOG_JS, "JS end, self.tagbuf %s", self.htmlparser.tagbuf)
+                wc.log.warn(wc.LOG_JS,
+                            "JS end, self.tagbuf %s", self.htmlparser.tagbuf)
                 return
             if len(self.htmlparser.tagbuf) > 2 and \
-               self.htmlparser.tagbuf[-3][0]==wc.filter.rules.RewriteRule.STARTTAG and \
-               self.htmlparser.tagbuf[-3][1]=='script':
+               self.htmlparser.tagbuf[-3][0] == \
+               wc.filter.rules.RewriteRule.STARTTAG and \
+               self.htmlparser.tagbuf[-3][1] == 'script':
                 del self.htmlparser.tagbuf[-1]
         if len(self.htmlparser.tagbuf)<2 or \
-           self.htmlparser.tagbuf[-1][0]!=wc.filter.rules.RewriteRule.DATA or \
-           self.htmlparser.tagbuf[-2][0]!=wc.filter.rules.RewriteRule.STARTTAG or \
-           self.htmlparser.tagbuf[-2][1]!='script':
+           self.htmlparser.tagbuf[-1][0] != \
+           wc.filter.rules.RewriteRule.DATA or \
+           self.htmlparser.tagbuf[-2][0] != \
+           wc.filter.rules.RewriteRule.STARTTAG or \
+           self.htmlparser.tagbuf[-2][1] != 'script':
             # syntax error, ignore
             return
         js_ok, js_lang = wc.js.get_js_data(self.htmlparser.tagbuf[-2][2])
@@ -233,10 +246,11 @@ class JSFilter (wc.js.JSListener.JSListener):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
                 wc.log.debug(wc.LOG_JS, "JS: del %r from %r", name, tag)
                 del attrs[name]
-        if tag=='form':
+        if tag == 'form':
             name = attrs.get('name', attrs.get('id'))
-            self.jsForm(name, attrs.get('action', ''), attrs.get('target', ''))
-        elif tag=='script':
+            self.jsForm(name, attrs.get('action', ''),
+                        attrs.get('target', ''))
+        elif tag == 'script':
             js_ok, js_lang = wc.js.get_js_data(attrs)
             url = attrs.get('src', '')
             # sanitize script src url
@@ -245,14 +259,16 @@ class JSFilter (wc.js.JSListener.JSListener):
             if js_ok and url:
                 self.jsScriptSrc(url, js_lang)
                 return
-        self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.STARTTAG, tag, attrs])
+        self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.STARTTAG,
+                                       tag, attrs])
 
 
     def jsForm (self, name, action, target):
         """when hitting a named form, add it to the JS environment"""
         if not name:
             return
-        wc.log.debug(wc.LOG_JS, "%s jsForm %r action %r %r", self, name, action, target)
+        wc.log.debug(wc.LOG_JS, "%s jsForm %r action %r %r",
+                     self, name, action, target)
         self.js_env.addForm(name, action, target)
 
 
@@ -260,7 +276,8 @@ class JSFilter (wc.js.JSListener.JSListener):
         """Start a background download for <script src=""> tags
            After that, self.js_client points to the proxy client object"""
         wc.log.debug(wc.LOG_JS, "%s jsScriptSrc %r", self, url)
-        assert self.htmlparser.state[0]=='parse', "non-parse state %s" % self.htmlparser.state
+        assert self.htmlparser.state[0] == 'parse', \
+               "non-parse state %s" % self.htmlparser.state
         ver = wc.js.get_js_ver(language)
         # some urls are relative, need to make absolut
         if self.base_url:
@@ -268,14 +285,17 @@ class JSFilter (wc.js.JSListener.JSListener):
         else:
             url = urlparse.urljoin(self.url, url)
         if not wc.url.is_safe_js_url(url):
-            wc.log.error(wc.LOG_JS, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
+            wc.log.error(wc.LOG_JS,
+                         "invalid script src url %r at %s (base %r)",
+                         url, self.url, self.base_url)
             return
         self.htmlparser.state = ('wait', url)
         self.htmlparser.waited = 1
         self.js_src = True
         self.js_client = wc.proxy.HttpProxyClient.HttpProxyClient(
                                              self.jsScriptData, (url, ver))
-        headers = wc.proxy.Headers.get_wc_client_headers(self.js_client.hostname)
+        headers = wc.proxy.Headers.get_wc_client_headers(
+                                             self.js_client.hostname)
         # note: some javascript servers do not specify content encoding
         # so only accept non-encoded content here
         headers['Accept-Encoding'] = 'identity\r'
@@ -290,21 +310,25 @@ class JSFilter (wc.js.JSListener.JSListener):
     def jsScriptData (self, data, url, ver):
         """Callback for loading <script src=""> data in the background
            If downloading is finished, data is None"""
-        assert self.htmlparser.state[0]=='wait', "non-wait state"
+        assert self.htmlparser.state[0] == 'wait', "non-wait state"
         wc.log.debug(wc.LOG_JS, "%s jsScriptData %r", self, data)
         if data is None:
             if not self.js_script:
                 wc.log.warn(wc.LOG_JS, "empty JavaScript src %s", url)
                 self.js_script = "// "+\
                       wc.i18n._("error fetching script from %r")%url
-            self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.STARTTAG, "script", {'type': 'text/javascript'}])
+            self.htmlparser.tagbuf.append(
+                 [wc.filter.rules.RewriteRule.STARTTAG, "script",
+                  {'type': 'text/javascript'}])
             # norm html comments
             script = wc.js.remove_html_comments(self.js_script)
             script = "\n<!--\n%s\n//-->\n"%wc.js.escape_js(script)
-            self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.DATA, script])
+            self.htmlparser.tagbuf.append(
+                                   [wc.filter.rules.RewriteRule.DATA, script])
             # Note: <script src=""> could be missing an end tag,
             # but now we need one. Look later for a duplicate </script>.
-            self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.ENDTAG, "script"])
+            self.htmlparser.tagbuf.append(
+                               [wc.filter.rules.RewriteRule.ENDTAG, "script"])
             self.js_script = ''
             self.htmlparser.state = ('parse',)
             wc.log.debug(wc.LOG_JS, "%s switching back to parse with", self)
