@@ -9,11 +9,17 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
+PYCHECKER := env PYTHONVER=2.3 pychecker
 PYCHECKEROPTS := -F test/pycheckrc
-PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
+PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint
+PYLINTOPTS :=
+PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
 	wc/proxy/*.py wc/proxy/auth/*.py wc/webgui/*.py \
-	wc/webgui/context/*.py wc/webgui/simpletal/*.py wc/magic/*.py
-
+	wc/webgui/context/*.py wc/magic/*.py)
+PYLINTBROKEN = wc/win32start.py wc/proxy/__init__.py
+PYLINTFILES = $(filter-out $(PYLINTBROKEN),$(PYFILES))
+# XXX add test files
+TESTFILES :=
 SERVICEDIR := /etc/webcleaner/service
 
 clean-local: clean-log
@@ -105,7 +111,10 @@ homepage-zapper: md5sums
 	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
 
 pycheck:
-	-env PYTHONVER=2.3 pychecker $(PYCHECKEROPTS) $(PYCHECKERFILES)
+	$(PYCHECKER) $(PYCHECKEROPTS) $(PYFILES) $(TESTFILES)
+
+pylint:
+	$(PYLINT) $(PYLINTOPTS) $(PYLINTFILES) $(TESTFILES)
 
 ccheck:
 	-splint $(SPLINTOPTS) wc/js/jslib.c
@@ -118,10 +127,16 @@ installservice:
           ln -s /etc/webcleaner/service /var/service/webcleaner; \
 	fi
 
+unittest:
+	test/run.sh test.py --resource=network --search-in=wc -fupv
+
 # (re)generate webcleaner rules
 update-blacklists:
 	test/run.sh config/bl2wc.py
 
+reindent:
+	$(PYTHON) config/reindent.py -r -v wc
+
 
 .PHONY: localbuild distclean deb_signed update-blacklists
-.PHONY: md5sums pycheck ccheck installservice homepage upload doc
+.PHONY: md5sums pycheck pylint ccheck installservice homepage upload doc
