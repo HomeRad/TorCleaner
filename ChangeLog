@@ -9,6 +9,10 @@
     Type: feature
     Changed: wc/proxy/HttpServer.py
 
+  * fixed HTML comment parsing
+    Type: bugfix
+    Changed: wc/parser/htmllex.l
+
 2.11 (released 25.4.2004)
   * - preserve the order in which HTML attributes have been parsed
     - cope with trailing space in HTML comments
