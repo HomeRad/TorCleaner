@@ -26,7 +26,7 @@ from wc.filter import FilterException, compileMime, compileRegex
 from wc.filter.Filter import Filter
 # JS imports
 from wc.js.JSListener import JSListener
-from wc.js import escape_js
+from wc.js import escape_js, unescape_js
 try:
    from wc.js import jslib
 except ImportError:
@@ -463,7 +463,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.js_html = HtmlFilter(self.rules, self.url,
        comments=self.comments, javascript=self.js_filter, level=self.level+1)
         # execute
-        self.js_env.executeScript(script, ver)
+        self.js_env.executeScript(unescape_js(script), ver)
         self.js_env.detachListener(self)
         # wait for recursive filter to finish
         self.jsEndScript(item)
@@ -520,6 +520,10 @@ class HtmlFilter (HtmlParser,JSListener):
             return
         if self.js_src:
             del self.buf[-1]
+            if len(self.buf)<2:
+                # syntax error, ignore
+                print >>sys.stderr, "JS end self.buf", self.buf
+                return
             if self.buf[-3][0]==STARTTAG and self.buf[-3][1]=='script':
                 del self.buf[-1]
         if len(self.buf)<2 or self.buf[-1][0]!=DATA or \
