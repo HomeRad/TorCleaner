@@ -62,11 +62,18 @@ div.tabs {
     /* Navigational Plone Tabs(tm), implemented by customizing the a tag - they are surprisingly elegant. The power of CSS runs strong in these :) */
     background: transparent;
     border-collapse: collapse;
-    border-bottom-width: 2px;
+    border-bottom-width: 1px;
     border-bottom-style: dotted;
     border-bottom-color: #f86821;
-    padding: 0em 0em 0em 2em;
-    white-space: nowrap;
+    border-top-width: 1px;
+    border-top-style: dotted;
+    border-top-color: #f86821;
+    padding-top: 0em;
+    padding-bottom: 0em;
+    padding-left: 2em;
+    padding-right: 0em;
+    /*white-space: nowrap; */
+    white-space: normal;
 }
 
 div.tabs a {
@@ -78,8 +85,11 @@ div.tabs a {
     border-left-color: #f86821;
     font-weight: normal;
     /*height: 1.2em;*/
+    padding-top: 0em;
+    padding-bottom: 0em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
     margin-right: 1em;
-    padding: 0em 0.5em;
     text-decoration: none;
 }
 
