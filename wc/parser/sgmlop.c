@@ -2,6 +2,8 @@
  * SGMLOP
  * $Id$
  *
+ * snatched from PyXML
+ *
  * The sgmlop accelerator module
  *
  * This module provides a FastSGMLParser type, which is designed to
@@ -9,33 +11,6 @@
  * be configured to support either basic SGML (enough of it to process
  * HTML documents, at least) or XML.  This module also provides an
  * Element type, useful for fast but simple DOM implementations.
- *
- * History:
- * 1998-04-04 fl  Created (for coreXML)
- * 1998-04-05 fl  Added close method
- * 1998-04-06 fl  Added parse method, revised callback interface
- * 1998-04-14 fl  Fixed parsing of PI tags
- * 1998-05-14 fl  Cleaned up for first public release
- * 1998-05-19 fl  Fixed xmllib compatibility: handle_proc, handle_special
- * 1998-05-22 fl  Added attribute parser
- * 1999-06-20 fl  Added Element data type, various bug fixes.
- * 2000-05-28 fl  Fixed data truncation error (@SGMLOP1)
- * 2000-05-28 fl  Added temporary workaround for unicode problem (@SGMLOP2)
- * 2000-05-28 fl  Removed optional close argument (@SGMLOP3)
- * 2000-05-28 fl  Raise exception on recursive feed (@SGMLOP4)
- * 2000-07-05 fl  Fixed attribute handling in empty tags (@SGMLOP6)
- Changes from Bastian Kleineidam <calvin@users.sourceforge.net>
- * new reset function
- * use METH_VARARGS in method tables
- * flush unprocessed data on close
- * removed element and treebuilder, dont need it and its not working anyway
- * merged register() function into constructor
- * give error on missing callbacks
- * better start tag parsing
- * direct call of unknown_starttag, unknown_endtag
- * fixed bug with unquoted attrs ending with a slash:
-   <a href=http://foo/>bar</a>
- * deleted xml parser, I only need sgml/html
  *
  * Copyright (c) 1998-2000 by Secret Labs AB
  * Copyright (c) 1998-2000 by Fredrik Lundh
@@ -403,6 +378,8 @@ initsgmlop(void)
 #define CHARREF 0x401
 #define COMMENT 0x800
 
+#define INC_P if (++p>=end) goto eol
+
 static int fastfeed(FastSGMLParserObject* self) {
     CHAR_T *end; /* tail */
     CHAR_T *p, *q, *s; /* scanning pointers */
@@ -417,17 +394,15 @@ static int fastfeed(FastSGMLParserObject* self) {
 	q = p; /* start of token */
 
 	if (*p == '<') {
-	    int has_attr;
+	    int has_attr=0;
 
 	    /* <tags> */
 	    token = TAG_START;
-	    if (++p >= end)
-		goto eol;
+            INC_P;
 
 	    if (*p == '!') {
 		/* <! directive */
-		if (++p >= end)
-		    goto eol;
+                INC_P;
 		token = DIRECTIVE;
 		b = t = p;
 		if (*p == '-') {
@@ -461,13 +436,11 @@ static int fastfeed(FastSGMLParserObject* self) {
 		}
 	    } else if (*p == '?') {
 		token = PI;
-		if (++p >= end)
-		    goto eol;
+                INC_P;
 	    } else if (*p == '/') {
 		/* </endtag> */
 		token = TAG_END;
-		if (++p >= end)
-		    goto eol;
+                INC_P;
 	    }
 
 	    /* process tag name */
@@ -475,25 +448,20 @@ static int fastfeed(FastSGMLParserObject* self) {
 	    while (ISALNUM(*p) || *p == '-' || *p == '.' ||
 		   *p == ':' || *p == '?') {
 		*p = (CHAR_T) TOLOWER(*p);
-		if (++p >= end)
-		    goto eol;
+                INC_P;
 	    }
 
 	    t = p;
-
-	    has_attr = 0;
 
 	    if (*p == '/') {
 		/* <tag/data/ or <tag/> */
 		token = TAG_START;
 		e = p;
-		if (++p >= end)
-		    goto eol;
+                INC_P;
 		if (*p == '>') {
 		    /* <tag/> */
 		    token = TAG_EMPTY;
-		    if (++p >= end)
-			goto eol;
+                    INC_P;
 		} else
 		    /* <tag/data/ */
 		    self->shorttag = SURE;
@@ -507,7 +475,9 @@ static int fastfeed(FastSGMLParserObject* self) {
 		int state = 0;
 		while (*p != '>' || (quote && !error)) {
 		    if (!ISSPACE(*p)) {
-			if (state==3) error=1;
+			if (state==3) {
+			    error=1;
+			}
 			has_attr = 1;
 			/* FIXME: note: end tags cannot have attributes! */
 		    }
@@ -517,7 +487,8 @@ static int fastfeed(FastSGMLParserObject* self) {
 			    quote = 0;
 			    state = 3;
 			}
-		    } else {
+		    }
+		    else {
 			if (*p=='=') {
 			    if (state==1) error=1;
 			    else state=1;
@@ -535,14 +506,13 @@ static int fastfeed(FastSGMLParserObject* self) {
 			goto eot;
 		    }
 		    last = *p;
-		    if (++p >= end)
-			goto eol;
+                    INC_P;
 		}
 
 		e = p++;
 
-                // XXX remove this ??
-		if (last == '/') {
+		// attention: it could be <a href=/foo/>bar</a>
+		if (last=='/' && state!=1) {
 		    /* <tag/> */
 		    e--;
 		    token = TAG_EMPTY;
@@ -557,68 +527,69 @@ static int fastfeed(FastSGMLParserObject* self) {
 		    ; /* FIXME: process attributes */
 
 	    }
+	} // if p=='<'
 
-	} else if (*p == '/' && self->shorttag) {
+	else if (*p == '/' && self->shorttag) {
 
 	    /* end of shorttag. this generates an empty end tag */
 	    token = TAG_END;
 	    self->shorttag = 0;
 	    b = t = e = p;
-	    if (++p >= end)
-		goto eol;
+            INC_P;
+	}
 
-	} else if (*p == ']' && self->doctype) {
-
+	else if (*p == ']' && self->doctype) {
 	    /* end of dtd. this generates an empty end tag */
 	    token = DTD_END;
 	    /* FIXME: who handles the ending > !? */
 	    b = t = e = p;
-	    if (++p >= end)
-		goto eol;
+            INC_P;
 	    self->doctype = 0;
+	}
 
-	} else if (*p == '%' && self->doctype) {
-
+	else if (*p == '%' && self->doctype) {
 	    /* doctype entities */
 	    token = DTD_ENTITY;
-	    if (++p >= end)
-		goto eol;
+            INC_P;
 	    b = t = p;
-	    while (ISALNUM(*p) || *p == '.')
-		if (++p >= end)
-		    goto eol;
+	    while (ISALNUM(*p) || *p == '.') {
+                INC_P;
+	    }
 	    e = p;
-	    if (*p == ';')
+	    if (*p == ';') {
 		p++;
+	    }
+	    else {
+		continue;
+	    }
 
-	} else if (*p == '&') {
+	}
 
+	else if (*p == '&') {
 	    /* entities */
 	    token = ENTITYREF;
-	    if (++p >= end)
-		goto eol;
+            INC_P;
 	    if (*p == '#') {
 		token = CHARREF;
-		if (++p >= end)
-		    goto eol;
+                INC_P;
 	    }
 	    b = t = p;
-	    while (ISALNUM(*p) || *p == '.')
-		if (++p >= end)
-		    goto eol;
+	    while (ISALNUM(*p) || *p == '.') {
+		INC_P;
+	    }
 	    e = p;
-	    if (*p == ';')
+	    if (*p == ';') {
 		p++;
+	    }
+	}
 
-	} else {
-
+	else {
 	    /* raw data */
 	    if (++p >= end) {
 		q = p;
 		goto eol;
 	    }
 	    continue;
-
 	}
 
     eot: /* end of token */
@@ -663,8 +634,10 @@ static int fastfeed(FastSGMLParserObject* self) {
 		PyObject* res;
 		PyObject* attr;
 		int len = t-b;
-		while (ISSPACE(*t))
+		while (ISSPACE(*t)) {
 		    t++;
+		}
+                // XXX ending slash??
 		attr = attrparse(t, e-t);
 		if (!attr)
 		    return -1;
@@ -772,22 +745,26 @@ attrparse(const CHAR_T* p, int len)
 	    /* attribute value found */
 	    Py_DECREF(value);
 
-	    if (p < end)
+	    if (p < end) {
 		p++;
-	    while (p < end && ISSPACE(*p))
+	    }
+	    while (p < end && ISSPACE(*p)) {
 		p++;
+	    }
 
 	    q = p;
 	    if (p < end && (*p == '"' || *p == '\'')) {
 		p++;
-		while (p < end && *p != *q)
+		while (p < end && *p != *q) {
 		    p++;
+		}
 		value = PyString_FromStringAndSize(q+1, p-q-1);
 		if (p < end && *p == *q)
 		    p++;
 	    } else {
-		while (p < end && !ISSPACE(*p))
+		while (p < end && !ISSPACE(*p)) {
 		    p++;
+		}
 		value = PyString_FromStringAndSize(q, p-q);
 	    }
 

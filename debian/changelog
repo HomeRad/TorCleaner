@@ -1,3 +1,10 @@
+webcleaner (0.15) unstable; urgency=low
+
+  * fix parser with unquoted tag attributes ending in a slash
+    (often found on google.com)
+
+ -- Bastian Kleineidam <calvin@debian.org>  Thu,  9 Aug 2001 20:24:20 +0200
+
 webcleaner (0.14) unstable; urgency=low
 
   * sanitize default config
