@@ -58,20 +58,13 @@ include test/*.po
 include test/Makefile
 include test/pycheckrc
 include test/rating/rating.txt
-include bk/HtmlParser/htmllex.l
-include bk/HtmlParser/htmlparse.y
-include bk/HtmlParser/*.h
-include bk/HtmlParser/s_util.c
-include bk/HtmlParser/Makefile
-include bk/tests/*.py
-include bk/net/tests/*.py
 include wc/magic/tests/*.py
 include wc/magic/tests/*.html
 include wc/filter/tests/*.py
 include wc/proxy/tests/*.py
 include wc/proxy/auth/tests/*.py
-recursive-include wc/webgui/simpletal/tests *.py
 include test*.py
 include po/*.po
 include po/*.pot
 include po/*.py
+include wc/dns/tests/example*
