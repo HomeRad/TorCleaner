@@ -65,7 +65,8 @@ class ServerPool (object):
         assert server in self.smap[addr], \
                '%s missing %s' % (self.smap[addr], server)
         del self.smap[addr][server]
-        if not self.smap[addr]: del self.smap[addr]
+        if not self.smap[addr]:
+            del self.smap[addr]
         self.invoke_callbacks(addr)
 
 
@@ -97,10 +98,11 @@ class ServerPool (object):
             for server,status in set.items():
                 if status[0] == 'available' and status[1] < expire_time:
                     # It's old .. let's get rid of it
-                    to_expire.append(server)
-        for server in to_expire:
-            debug(PROXY, "expire server %s", server)
+                    to_expire.append((addr,server))
+        for addr,server in to_expire:
+            debug(PROXY, "expire %s server %s", addr, server)
             server.close()
+            assert not self.smap[addr].has_key(server)
         make_timer(60, self.expire_servers)
 
 
