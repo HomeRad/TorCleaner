@@ -154,7 +154,8 @@ def _form_selindex (index):
 
 def _calc_selindex (index):
     global selindex
-    res = [index-1000, index-250, index-50, index, index+50, index+250, index+1000]
+    res = [index-1000, index-250, index-50, index, index+50,
+           index+250, index+1000]
     selindex = [ x for x in res if 0 <= x < len(rating_cache) and x!=index ]
 
 

@@ -294,7 +294,8 @@ class HttpServer (wc.proxy.Server.Server):
                 self._show_rating_deny(str(msg))
                 return
         #except wc.filter.FilterMime, msg:
-        #    wc.log.debug(wc.LOG_PROXY, "%s FilterMime from header: %s", self, msg)
+        #    wc.log.debug(wc.LOG_PROXY, "%s FilterMime from header: %s",
+        #                 self, msg)
         #    self._show_mime_replacement(str(msg))
         #    return
         if self.statuscode in (301, 302):

@@ -52,7 +52,8 @@ class UnchunkStream (object):
                             # chunklen is hex
                             self.bytes_remaining = int(mo.group('bytes'), 16)
                         else:
-                            wc.log.warn(wc.LOG_PROXY, "invalid chunk size %r", line)
+                            wc.log.warn(wc.LOG_PROXY,
+                                        "invalid chunk size %r", line)
                             self.bytes_remaining = 0
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:

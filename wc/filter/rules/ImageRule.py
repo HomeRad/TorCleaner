@@ -34,7 +34,7 @@ class ImageRule (wc.filter.rules.UrlRule.UrlRule):
         self.height = height
         self.intattrs.extend(('width', 'height'))
         self.listattrs.append('formats')
-        if formarts is None:
+        if formats is None:
             self.formats = []
         else:
             self.formats = formats

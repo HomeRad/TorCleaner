@@ -39,7 +39,8 @@ def get_serverctx (configdir):
         serverctx = SSL.Context(SSL.SSLv23_METHOD)
         #serverctx.set_options(SSL.OP_NO_SSLv2)
         # Demand a certificate
-        #serverctx.set_verify(SSL.VERIFY_PEER|SSL.VERIFY_FAIL_IF_NO_PEER_CERT, verify_server_cb)
+        #serverctx.set_verify(SSL.VERIFY_PEER|SSL.VERIFY_FAIL_IF_NO_PEER_CERT,
+        #                     verify_server_cb)
         serverctx.set_verify(SSL.VERIFY_NONE, verify_server_cb)
         serverctx.use_privatekey_file(os.path.join(configdir, 'server.pkey'))
         serverctx.use_certificate_file(os.path.join(configdir, 'server.cert'))

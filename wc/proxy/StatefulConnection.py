@@ -14,11 +14,15 @@ class StatefulConnection (wc.proxy.Connection.Connection):
         self.state = state
 
     def readable (self):
-        """a connection is readable if we're connected and not in a close state"""
+        """a connection is readable if we're connected and not in a
+           close state
+        """
         return self.connected and self.state not in ('closed', 'unreadable')
 
     def writable (self):
-        """a connection is writable if we're connecting or if data is available"""
+        """a connection is writable if we're connecting or if data is
+           available
+        """
         return self.send_buffer or self.state == 'connect'
 
     def delegate_read (self):

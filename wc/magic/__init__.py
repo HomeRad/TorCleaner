@@ -2,21 +2,21 @@
    'magic' file
    See: 'man 4 magic' and 'man file'
 """
-#    Copyright (C) 2002 Thomas Mangin
+# Copyright (C) 2002 Thomas Mangin
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
 
@@ -43,9 +43,11 @@ def classify (fp):
     return _magic.classify(fp)
 
 
-# Need to have a checksum on the cache and source file to update at object creation
+# Need to have a checksum on the cache and source file to update at object
+# creation
 # Could use circle safe_pickle (see speed performance impact)
-# This program take some input file, we should check the permission on those files ..
+# This program take some input file, we should check the permission on
+# those files ..
 # Some code cleanup and better error catching are needed
 # Implement the missing part of the magic file definition
 
@@ -68,8 +70,10 @@ class Magic (object):
     type_size = {'b':1, 'B':1, 's':2, 'S':2, 'l':4, 'L':5}
 
 
-    se_offset_abs="^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)(\.[bslBSL])*\)"
-    se_offset_add="^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)(\.[bslBSL])*([-+])([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)\)"
+    se_offset_abs = "^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)" \
+                    "(\.[bslBSL])*\)"
+    se_offset_add = "^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)" \
+              "(\.[bslBSL])*([-+])([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)\)"
 
     def __init__ (self, filename, cachename):
         self.entries = 0
@@ -160,9 +164,11 @@ class Magic (object):
                     offset_type = match_add.group(2)[1]
 
                 if match_add.group(3) == '-':
-                    offset_delta = 0L - wc.magic.convert.convert(match_add.group(4))
+                    offset_delta = 0L - \
+                                wc.magic.convert.convert(match_add.group(4))
                 else:
-                    offset_delta = wc.magic.convert.convert(match_add.group(4))
+                    offset_delta = \
+                                 wc.magic.convert.convert(match_add.group(4))
 
         return (direct, offset_type, offset_delta, offset_relatif)
 
@@ -315,11 +321,14 @@ class Magic (object):
                 # Get the level of the test
                 level = self._level(part[0])
 
-                # XXX: What does the & is used for in ">>&2" as we do not know skip it
+                # XXX: What does the & is used for in ">>&2" as we do
+                # not know skip it
                 offset_string = self._strip_start('&', part[0][level:])
 
-                # offset such as (<number>[.[bslBSL]][+-][<number>]) are indirect offset
-                (direct, offset_type, offset_delta, offset_relatif) = self._offset(offset_string)
+                # offset such as (<number>[.[bslBSL]][+-][<number>]) are
+                # indirect offset
+                (direct, offset_type, offset_delta, offset_relatif) = \
+                                                self._offset(offset_string)
 
                 # The type can be associated to a netmask
                 (oper, mask, rest) = self._oper_mask(part[1])
@@ -513,7 +522,8 @@ class Magic (object):
             raise StandardError("Not initialised properly")
         # Are we still looking for the ruleset to apply or are we in a rule
         found_rule = False
-        # If we failed part of the rule there is no point looking for higher level subrule
+        # If we failed part of the rule there is no point looking for
+        # higher level subrule
         allow_next = 0
         # String provided by the successfull rule
         result = ""
@@ -524,14 +534,16 @@ class Magic (object):
         for i in range(self.entries):
             level = self._leveldict[i]
 
-            # Optimisation: Skipping all the rule we do not match the first prerequesite
+            # Optimisation: Skipping all the rule we do not match the
+            # first prerequesite
             if not found_rule and level > 0:
                 # Nothing to do with this rule
                 continue
 
             # We are currently working a rule
             if found_rule:
-                # Finished: we performed a series of test and it is now completed
+                # Finished: we performed a series of test and it is now
+                # completed
                 if level == 0:
                     break
 
@@ -560,7 +572,8 @@ class Magic (object):
             # Does the magic line checked match the content of the file ?
             success = False
 
-            # The content of the file that may be used for substitution with %s
+            # The content of the file that may be used for substitution
+            # with %s
             replace = None
 
             try:
@@ -568,17 +581,20 @@ class Magic (object):
                 if direct == 1:
                     offset = offset_delta
                 else:
-                    offset = self._indirect_offset(f, offset_type, offset_delta)
+                    offset = self._indirect_offset(f, offset_type,
+                                                   offset_delta)
 
                 # If it is out of the file then the test fails.
                 if file_length < offset:
-                    raise Failed("Data length %d too small, needed %d" % (file_length, offset))
+                    raise Failed("Data length %d too small, needed %d" %
+                                 (file_length, offset))
 
                 # Make sure we can read the data at the offset position
                 f.seek(offset)
                 extract = self._read(f, leng)
                 if not extract:
-                    raise Failed("Could not extract %d bytes from offset %d" % (leng, offset))
+                    raise Failed("Could not extract %d bytes from offset %d" \
+                                 % (leng, offset))
 
                 # Convert the little/big endian value from the file
                 value = self._convert(kind, endian, extract)
@@ -646,7 +662,8 @@ class Magic (object):
                     replace = value
 
                 elif test == 'x':
-                    # XXX: copy from the code in test == '>', should create a function
+                    # XXX: copy from the code in test == '>',
+                    # should create a function
                     if kind == 'string':
                         limit = 0
                         while True:
@@ -688,5 +705,7 @@ class Magic (object):
             # XXX: API Change this was previously returning "unknown"
             return None
 
-        # The magic file use "backspace" to concatenate what is normally separated with a space"
+        # The magic file use "backspace" to concatenate what is normally
+        # separated with a space"
         return result.rstrip().lstrip('\x08').replace(' \x08', '')
+

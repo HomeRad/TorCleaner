@@ -164,7 +164,8 @@ def _form_set_tags ():
             rule.selected = False
     if curfolder:
         curfolder.selected = True
-        curfolder.rules_display = curfolder.rules[curindex:curindex+_rules_per_page]
+        curfolder.rules_display = \
+                        curfolder.rules[curindex:curindex+_rules_per_page]
     if currule:
         currule.selected = True
 
@@ -214,8 +215,10 @@ def _form_selindex (index):
 
 
 def _calc_selindex (folder, index):
-    res = [index-1000, index-250, index-50, index, index+50, index+250, index+1000]
-    folder.selindex = [x for x in res if 0 <= x < len(folder.rules) and x != index]
+    res = [index-1000, index-250, index-50, index, index+50,
+           index+250, index+1000]
+    folder.selindex = [x for x in res
+                       if 0 <= x < len(folder.rules) and x != index]
 
 
 def _reinit_filters ():
@@ -475,7 +478,8 @@ def _form_rule_addmatchurl (form):
 
 
 def _form_rule_delmatchurls (form):
-    toremove = [u for u in _getlist(form, 'rule_matchurls') if u in currule.matchurls]
+    toremove = [u for u in _getlist(form, 'rule_matchurls')
+                if u in currule.matchurls]
     if toremove:
         for matchurl in toremove:
             currule.matchurls.remove(matchurl)
@@ -496,7 +500,8 @@ def _form_rule_addnomatchurl (form):
 
 
 def _form_rule_delnomatchurls (form):
-    toremove = [u for u in _getlist(form, 'rule_nomatchurls') if u in currule.nomatchurls]
+    toremove = [u for u in _getlist(form, 'rule_nomatchurls')
+                if u in currule.nomatchurls]
     if toremove:
         for nomatchurl in toremove:
             currule.nomatchurls.remove(nomatchurl)

@@ -67,8 +67,10 @@ def proxy_poll (timeout=0.0):
        connection handlers"""
     handlerCount = 0
     if wc.proxy.Dispatcher.socket_map:
-        r = [x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.readable()]
-        w = [x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.writable()]
+        r = [x for x in wc.proxy.Dispatcher.socket_map.itervalues()
+             if x.readable()]
+        w = [x for x in wc.proxy.Dispatcher.socket_map.itervalues()
+             if x.writable()]
         e = wc.proxy.Dispatcher.socket_map.values()
         wc.log.debug(wc.LOG_PROXY, "select with %f timeout:", timeout)
         for x in e:

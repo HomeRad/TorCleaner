@@ -48,7 +48,8 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
 
     def mangle_response_headers (self):
         """modify HTTP response headers"""
-        self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
+        self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(
+         self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
             self.persistent = False
         # 304 Not Modified does not send any type info, because it was cached

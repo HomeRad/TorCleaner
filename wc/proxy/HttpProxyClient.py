@@ -24,19 +24,24 @@ class HttpProxyClient (object):
         self.args = args
         self.method = "GET"
         self.url = wc.url.url_norm(self.args[0])
-        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
+        self.scheme, self.hostname, self.port, self.document = \
+                                                  wc.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
         self.connected = True
         self.addr = ('localhost', 80)
         self.isredirect = False
-        attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_REQUEST])
+        attrs = wc.filter.get_filterattrs(self.url,
+                                          [wc.filter.FILTER_REQUEST])
         attrs['mime'] = 'application/x-javascript'
         request = "GET %s HTTP/1.0" % self.url
-        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, request, "filter", attrs)
-        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, request, "filter", attrs)
-        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, request, "filter", attrs)
+        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE,
+                                        request, "filter", attrs)
+        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY,
+                                        request, "filter", attrs)
+        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE,
+                                             request, "filter", attrs)
         wc.log.debug(wc.LOG_PROXY, '%s init', self)
 
     def __repr__ (self):
@@ -58,7 +63,8 @@ class HttpProxyClient (object):
 
     def error (self, status, msg, txt=''):
         """on error the client finishes"""
-        wc.log.error(wc.LOG_PROXY, '%s error %s %s %s', self, status, msg, txt)
+        wc.log.error(wc.LOG_PROXY, '%s error %s %s %s',
+                     self, status, msg, txt)
         self.finish()
 
     def write (self, data):
@@ -72,19 +78,23 @@ class HttpProxyClient (object):
         self.server = server
         assert self.server.connected
         wc.log.debug(wc.LOG_PROXY, '%s server_response %r', self, response)
-        protocol, status, msg = wc.proxy.HttpServer.get_response_data(response, self.args[0])
-        wc.log.debug(wc.LOG_PROXY, '%s response %s %d %s', self, protocol, status, msg)
+        protocol, status, msg = \
+               wc.proxy.HttpServer.get_response_data(response, self.args[0])
+        wc.log.debug(wc.LOG_PROXY, '%s response %s %d %s',
+                     self, protocol, status, msg)
         if status in (302, 301):
             self.isredirect = True
         elif not (200 <= status < 300):
-            wc.log.error(wc.LOG_PROXY, "%s got %s status %d %r", self, protocol, status, msg)
+            wc.log.error(wc.LOG_PROXY, "%s got %s status %d %r",
+                         self, protocol, status, msg)
             self.finish()
 
     def server_content (self, data):
         """delegate server content to handler if it is not from a redirect
            response"""
         assert self.server
-        wc.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes', self, len(data))
+        wc.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes',
+                     self, len(data))
         if data and not self.isredirect:
             self.write(data)
 
@@ -119,7 +129,8 @@ class HttpProxyClient (object):
         self.args = (self.url, self.args[1])
         self.isredirect = False
         wc.log.debug(wc.LOG_PROXY, "%s redirected", self)
-        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
+        self.scheme, self.hostname, self.port, self.document = \
+                                                  wc.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
@@ -132,4 +143,6 @@ class HttpProxyClient (object):
         self.server = None
         headers = wc.proxy.Headers.get_wc_client_headers(host)
         headers['Accept-Encoding'] = 'identity\r'
-        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self, request, headers, content, mime=mime)
+        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(
+                                  self, request, headers, content, mime=mime)
+

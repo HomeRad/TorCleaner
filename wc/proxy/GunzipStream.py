@@ -37,13 +37,15 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            wc.log.warn(wc.LOG_PROXY, _("zlib error: not gzip format, disabling gunzip"))
+            wc.log.warn(wc.LOG_PROXY,
+                        _("zlib error: not gzip format, disabling gunzip"))
             self.error = True
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            wc.log.warn(wc.LOG_PROXY, _("zlib error: unknown compression method, disabling gunzip"))
+            wc.log.warn(wc.LOG_PROXY,
+                _("zlib error: unknown compression method, disabling gunzip"))
             self.error = True
             return
 
@@ -60,7 +62,8 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
             s = s[2+xlen:]
 
         if flag & self.FNAME:
-            # Read and discard a null-terminated string containing the filename
+            # Read and discard a null-terminated string containing the
+            # filename
             i = s.find('\000')
             if i < 0: return # Incomplete
             s = s[i+1:]

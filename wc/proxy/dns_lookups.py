@@ -394,7 +394,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                                     self.hostname, self.rdtype, self.rdclass)
         if resolver.keyname is not None:
             self.query.use_tsig(resolver.keyring, resolver.keyname)
-        self.query.use_edns(resolver.edns, resolver.ednsflags, resolver.payload)
+        self.query.use_edns(resolver.edns, resolver.ednsflags,
+                            resolver.payload)
         wc.log.debug(wc.LOG_DNS, "sending DNS query %s", self.query)
         wire = self.query.to_wire()
         if self.tcp:
@@ -461,7 +462,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                  wire, keyring=self.query.keyring, request_mac=self.query.mac)
         wc.log.debug(wc.LOG_DNS, "got DNS response %s", response)
         if not self.query.is_response(response):
-            wc.log.warn(wc.LOG_DNS, '%s was no response to %s', response, self.query)
+            wc.log.warn(wc.LOG_DNS, '%s was no response to %s',
+                        response, self.query)
             # Oops, this doesn't answer the right question.  This can
             # happen because we're using UDP, and UDP replies might end
             # up in the wrong place: open conn A, send question to A,
