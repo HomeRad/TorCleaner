@@ -195,13 +195,13 @@ setup (name = "webcleaner",
 * integrated JavaScript engine, allows popup filtering
 * compress documents on-the-fly (with gzip)
 * disable animated GIFs
-* filter images by size, removes certain banner adverts
+* filter images by size, removes banner adverts
 * reduce images to low-bandwidth JPEGs
 * remove/add/modify arbitrary HTTP headers
 * usage of SquidGuard domain and url blacklists
-* Basic, Digest and NTLM proxy authentication for both clients and servers
+* Basic, Digest and (untested) NTLM proxy authentication support
 * per-host access control
-* customizable with a themable web interface
+* configurable over a themable web interface
 """,
        classifiers = ['Development Status :: 5 - Production/Stable',
            'Environment :: No Input/Output (Daemon)',
