@@ -165,7 +165,7 @@ class Configuration(UserDict.UserDict):
                 self['filterlist'][order].append(instance)
 
     def __repr__(self):
-        return """
+        return _("""
 WebCleaner Configuration
 ========================
 
@@ -177,7 +177,7 @@ TCP timeout:   %(timeout)d
 Obfuscate IP:  %(obfuscateip)d
 Debug level:   %(debuglevel)d
 
-""" % self
+""") % self
 
 ##### xml parsers #########
 import xml.parsers.expat
@@ -234,7 +234,7 @@ class ZapperParser(BaseParser):
         elif name in _nestedtags:
             self.rule.fill_attrs(attrs, name)
         else:
-            raise ParseException, "unknown tag name %s"%name
+            raise ParseException, _("unknown tag name %s")%name
 
     def end_element(self, name):
         self.cmode = None

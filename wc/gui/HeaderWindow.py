@@ -6,9 +6,10 @@ from FXPy.fox import *
 
 class HeaderWindow(FXMainWindow):
     """The main window holds all data and windows to display"""
-    (ID_ACCEPT,
-     ID_CANCEL,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+2)
+    (ID_ABOUT,
+     ID_QUIT,
+     ID_REFRESH,
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+3)
 
 
     def __init__(self, app):
@@ -17,6 +18,25 @@ class HeaderWindow(FXMainWindow):
         self.eventMap()
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
         FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
+        # dialogs
+        self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
+        # main frames
+        frame = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        self.connectionFrame(frame)
+        self.headerFrame(frame)
+        # Buttons
+        frame = FXHorizontalFrame(frame, LAYOUT_FILL_X)
+        FXButton(frame, _(" &Quit "), None, self, self.ID_QUIT)
+        FXButton(frame, _(" &Refresh "), None, self, self.ID_REFRESH)
+        FXButton(frame, _("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
+
+
+    def connectionFrame(self, frame):
+	basics = FXGroupBox(frame, _("Connections"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+
+
+    def headerFrame(self, frame):
+        headers = FXGroupBox(frame, _("Headers"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
 
 
     def create(self):
@@ -27,18 +47,28 @@ class HeaderWindow(FXMainWindow):
 
     def eventMap(self):
         """attach all events to (member) functions"""
-        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_ACCEPT,HeaderWindow.onCmdAccept)
-        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_CANCEL,HeaderWindow.onCmdCancel)
+        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_ABOUT,HeaderWindow.onCmdAbout)
+        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_QUIT,HeaderWindow.onCmdQuit)
+        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_REFRESH,HeaderWindow.onCmdRefresh)
 
 
-    def onCmdAccept(self, sender, sel, ptr):
+    def onCmdAbout(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "About")
+        self.doShow(self.about)
+        return 1
+
+
+    def onCmdQuit(self, sender, sel, ptr):
         debug(BRING_IT_ON, "Accept")
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
 
 
-    def onCmdCancel(self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Cancel")
-        self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
+    def onCmdRefresh(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "Refresh")
         return 1
+
+
+    def doShow(self, win):
+        return win.execute(PLACEMENT_OWNER)
 

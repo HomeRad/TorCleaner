@@ -14,14 +14,14 @@ asyncore.dispatcher.fileno = fileno
 from wc import debug,_,config
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
-from LimitList import LimitList
+from LimitQueue import LimitQueue
 
 TIMERS = [] # list of (time, function)
 
 # list of gathered headers
 # entries have the form
 # (url, 0(incoming)/1(outgoing), headers)
-HEADERS = LimitList(config['headersave'])
+HEADERS = LimitQueue(config['headersave'])
 
 HTML_TEMPLATE = """<html><head>
 <title>%(title)s</title>
@@ -113,11 +113,7 @@ def html_portal():
 
 
 def new_headers(i):
-    l = []
-    while HEADERS.hasnext(i):
-        l.append(str(HEADERS[i]))
-        i = HEADERS.next(i)
-    return "\n".join(l)
+    return "\n".join(HEADERS.getall()) or "-"
 
 
 def access_denied(addr):

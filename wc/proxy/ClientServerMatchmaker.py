@@ -86,7 +86,7 @@ class ClientServerMatchmaker:
         if hostname.lower()=='localhost' and port==config['port']:
             return self.handle_local(document)
 
-        wc.proxy.HEADERS.add((self.url, 0, self.headers.headers))
+        wc.proxy.HEADERS.append((self.url, 0, self.headers.headers))
         if config['parentproxy']:
             self.hostname = config['parentproxy']
             self.port = config['parentproxyport']
@@ -105,11 +105,7 @@ class ClientServerMatchmaker:
             content = wc.proxy.access_denied(self.client.addr)
         elif document.startswith("/headers/"):
             contenttype = "text/plain"
-            i = document[9:]
-            if _intre.match(i):
-                content = wc.proxy.new_headers(int(i)) or "-"
-            else:
-                content = "-"
+            content = wc.proxy.new_headers()
         else:
             contenttype = "text/html"
             content = wc.proxy.html_portal()
