@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat Dec 13 10:38:56 2003\n"
+"POT-Creation-Date: Sat Dec 13 10:45:50 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -477,9 +477,6 @@ msgstr ""
 msgid "PICS service successfully enabled."
 msgstr ""
 
-msgid "Proxy Password"
-msgstr ""
-
 msgid "Up"
 msgstr ""
 
@@ -700,6 +697,9 @@ msgid "Access key 0"
 msgstr ""
 
 msgid "%(AppName)s Google Selection"
+msgstr ""
+
+msgid "Proxy password"
 msgstr ""
 
 msgid "Down"

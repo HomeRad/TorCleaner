@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sat Dec 13 10:38:56 2003\n"
-"PO-Revision-Date: 2003-12-13 10:44+0100\n"
+"POT-Creation-Date: Sat Dec 13 10:45:50 2003\n"
+"PO-Revision-Date: 2003-12-13 10:46+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -500,9 +500,6 @@ msgstr "Regel"
 msgid "PICS service successfully enabled."
 msgstr "PICS Dienstleister wurde erfolgreich aktiviert."
 
-msgid "Proxy Password"
-msgstr "Proxy Passwort"
-
 msgid "Up"
 msgstr "Hoch"
 
@@ -726,6 +723,9 @@ msgstr "Tastaturkommando 0"
 
 msgid "%(AppName)s Google Selection"
 msgstr "%(AppName)s Google Auswahl"
+
+msgid "Proxy password"
+msgstr "Proxy Passwort"
 
 msgid "Down"
 msgstr "Nach unten"
