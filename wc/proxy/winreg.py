@@ -13,7 +13,7 @@ class key_handle:
             raise TypeError, "key type must be string"
         try:
 	    val = QueryValueEx(self._key, key)
-        except XXXError:
+        except WindowsError:
             raise IndexError, "subkey %s not found"%key
         return val[0]
 
@@ -32,3 +32,9 @@ class key_handle:
     def __delitem__(self, key):
         pass
 
+
+def test():
+    pass
+
+if __name__=="__main__":
+    test()

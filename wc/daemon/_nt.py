@@ -16,7 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os,sys
-from wc import startfunc,pidfile
+from wc.daemon import startfunc,pidfile
 
 def start():
     # already running?

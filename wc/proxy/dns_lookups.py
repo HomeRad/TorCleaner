@@ -494,19 +494,19 @@ def init_dns_resolver_posix():
         DnsConfig.nameservers.append('127.0.0.1')
 
 def init_dns_resolver_nt():
-    import _winreg
+    import winreg
     try:
-        key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,
+        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
                  "SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
     except WindowsError:
         debug(BRING_IT_ON, "no windows tcpip config found")
         return
-    dhcp = _winreg.QueryValue(key, "EnableDhcp")
+    dhcp = key.get("EnableDhcp", None)
     if dhcp:
-        debug(BRING_IT_ON, _winreg.QueryValue(key, "DhcpNameServer"))
+        debug(BRING_IT_ON, key.get("DhcpNameServer", "no dhcp server"))
     else:
-        debug(BRING_IT_ON, _winreg.QueryValue(key, "NameServer"))
-    debug(BRING_IT_ON, _winreg.QueryValue(key, "SearchList"))
+        debug(BRING_IT_ON, key.get("NameServer", "no name server"))
+    debug(BRING_IT_ON, key.get("SearchList", "no search list"))
 
 
 init_dns_resolver()
