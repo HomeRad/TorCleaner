@@ -209,6 +209,7 @@ class ConfWindow (ToolWindow):
         FXLabel(matrix, i18n._("Web GUI theme"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         cols=0
         d = FXComboBox(matrix,0,len(self.themes),self, self.ID_THEME,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
+        # XXX use enumerate() in Python 2.3
         i = 0
         for theme in self.themes:
              cols = max(len(theme), cols)
