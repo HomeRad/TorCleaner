@@ -85,7 +85,7 @@ class ImageReducer (wc.filter.Filter.Filter):
         if length is not None and length < self.minimal_size_bytes:
             return d
         ctype = serverheaders['Content-Type']
-        headers['Content-Type'] = 'image/jpeg'
+        serverheaders['Content-Type'] = 'image/jpeg'
         wc.proxy.Headers.remove_headers(serverheaders, ['Content-Length'])
         d['imgreducer_buf'] = StringIO.StringIO()
         # some images have to be convert()ed before saving
