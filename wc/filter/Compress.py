@@ -40,7 +40,8 @@ mimelist = map(compileMime,  ['text/.+',
             'x-world/x-vrml',
             ])
 
-GZIP_HEADER = '%s%s%s%s' % (
+def gzip_header ():
+    return '%s%s%s%s' % (
               '\037\213\010', # header
 	      chr(0),         # flags
 	      struct.pack('<L', long(time.time())), # time
@@ -50,11 +51,11 @@ BASIC_CRC = zlib.crc32('')
 COMPRESS_RE = re.compile(r'(compress|gzip|bzip2)', re.I)
 
 
-def getCompressObject():
+def getCompressObject ():
     return {'compressor': zlib.compressobj(9, zlib.DEFLATED,
                                              -zlib.MAX_WBITS,
                                               zlib.DEF_MEM_LEVEL, 0),
-            'header': GZIP_HEADER,
+            'header': gzip_header(),
             'crc': BASIC_CRC,
             'size': 0,
            }
