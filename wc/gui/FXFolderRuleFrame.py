@@ -2,6 +2,7 @@ import string
 from FXRuleFrame import FXRuleFrame
 from FXPy import *
 from wc import _,debug
+from wc.debug_levels import *
 
 def _lang_num(lang):
     """a little helper function for an FXComboBox"""
@@ -44,7 +45,7 @@ class FXFolderRuleFrame(FXRuleFrame):
         if filename:
             self.rule.filename = filename
             self.getApp().dirty = 1
-            debug("Changed rule filename")
+            debug(BRING_IT_ON, "Changed rule filename")
         else:
             error(_("empty filename"))
         return 1
@@ -52,6 +53,6 @@ class FXFolderRuleFrame(FXRuleFrame):
     def onCmdLang(self, sender, sel, ptr):
         self.rule.lang = _num_lang(sender.getCurrentItem())
         self.getApp().dirty = 1
-        debug("Changed rule language")
+        debug(BRING_IT_ON, "Changed rule language")
         return 1
 

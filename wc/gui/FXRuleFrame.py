@@ -1,6 +1,7 @@
 import string
 from FXPy import *
 from wc import _,debug
+from wc.debug_levels import *
 
 class FXRuleFrame(FXVerticalFrame):
     """display all variables found in a basic Rule.
@@ -51,7 +52,7 @@ class FXRuleFrame(FXVerticalFrame):
         sender.setText(title)
         self.rule.title = title
         self.getApp().dirty = 1
-        debug("Rule title changed")
+        debug(BRING_IT_ON, "Rule title changed")
         # send message to main window for treelist updating
         win = self.getApp().getMainWindow()
         win.handle(sender, MKUINT(win.ID_TITLE,SEL_COMMAND), ptr)
@@ -61,11 +62,11 @@ class FXRuleFrame(FXVerticalFrame):
         if self.rule.desc != sender.getText():
             self.rule.desc = sender.getText()
             self.getApp().dirty = 1
-            debug("Rule description changed")
+            debug(BRING_IT_ON, "Rule description changed")
         return 1
 
     def onCmdDisableRule(self, sender, sel, ptr):
-        debug("Rule %d %s"%(self.rule.index,
+        debug(BRING_IT_ON, "Rule %d %s"%(self.rule.index,
 	      (self.rule.disable and "disabled" or "enabled")))
         self.rule.disable = sender.getCheck()
         self.getApp().dirty = 1

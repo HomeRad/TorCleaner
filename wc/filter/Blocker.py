@@ -19,6 +19,7 @@ from Rules import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
 from wc import debug
+from wc.debug_levels import *
 
 orders = [FILTER_REQUEST]
 # regular expression for image filenames
@@ -43,7 +44,7 @@ class Blocker(Filter):
 
 
     def addrule(self, rule):
-        debug("enable %s '%s'" % (rule.get_name(),rule.title), 2)
+        debug(BRING_IT_ON, "enable %s '%s'" % (rule.get_name(),rule.title))
         _rule = []
         for part in Netlocparts:
             _rule.append(getattr(rule, part))
@@ -66,7 +67,7 @@ class Blocker(Filter):
                 urlTuple[1:2] = [netloc,80]
             blocked = self.blocked(urlTuple)
             if blocked is not None:
-                debug("blocked url %s" % url, 2)
+                debug(BRING_IT_ON, "blocked url %s" % url)
                 # index 3, not 2!
                 if image_re.match(urlTuple[3][-4:]):
                     return '%s %s %s' % (method,
@@ -80,29 +81,32 @@ class Blocker(Filter):
 
 
     def blocked(self, urlTuple):
-        debug("checking block", 3)
+        debug(NIGHTMARE, "checking block")
         for _block in self.block:
             match = 1
             for i in range(len(urlTuple)):
                 if _block[i]:
-                    debug("block pattern "+_block[i].pattern, 3)
+                    debug(NIGHTMARE, "block pattern "+_block[i].pattern)
                     if not _block[i].search(urlTuple[i]):
-                        debug("no match", 3)
+                        debug(NIGHTMARE, "no match")
                         match = 0
             if match and not self.allowed(urlTuple):
+                debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
                 return _block[-1]
         return None
 
 
     def allowed(self, urlTuple):
-        debug("checking allow", 3)
+        debug(NIGHTMARE, "checking allow")
         for _allow in self.allow:
             match = 1
             for i in range(len(urlTuple)):
                 if _allow[i]:
-                    debug("allow pattern "+_allow[i].pattern, 3)
+                    debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
 		    if not _allow[i].search(urlTuple[i]):
-                        debug("no match", 3)
+                        debug(NIGHTMARE, "no match")
                         match = 0
-            if match: return 1
+            if match:
+                debug(NIGHTMARE, "allowed")
+	        return 1
         return 0

@@ -8,6 +8,7 @@ from FXPy import *
 from types import IntType
 from wc.filter.Rules import FolderRule
 from wc.filter import GetRuleFromName
+from wc.debug_levels import *
 
 UpdateHelp = \
 _("Updating procedure:\n\n"
@@ -207,7 +208,7 @@ class ConfWindow(FXMainWindow):
 
 
     def onCmdNewFolder(self, sender, sel, ptr):
-        debug("new folder")
+        debug(BRING_IT_ON, "new folder")
         f = FolderRule("No title","",0,0,tempfile.mktemp()+".zap")
         self.tree.addFolder(f, create=1)
         self.getApp().dirty = 1
@@ -215,7 +216,7 @@ class ConfWindow(FXMainWindow):
 
 
     def onCmdNewRule(self, sender, sel, ptr):
-        debug("new filter rule")
+        debug(BRING_IT_ON, "new filter rule")
         self.tree.newRule(GetRuleFromName(sender.getText()))
         self.getApp().dirty = 1
         return 1
@@ -225,13 +226,13 @@ class ConfWindow(FXMainWindow):
         item = self.tree.getCurrentItem()
         if item.isSelected():
             self.tree.setItemText(item, sender.getText())
-            debug("updated tree item")
+            debug(BRING_IT_ON, "updated tree item")
         return 1
 
 
     def onCmdDisableRule(self, sender, sel, ptr):
         item = self.tree.getCurrentItem()
-        debug("%d" % item.getData())
+        debug(BRING_IT_ON, "%d" % item.getData())
         if item.isSelected():
             rule = self.tree.searchRule(item.getData())
             self.tree.setItemIcons(item, rule)
@@ -244,7 +245,7 @@ class ConfWindow(FXMainWindow):
                 self.tree.removeItem(item)
                 self.filterswitcher.setCurrent(0)
                 self.getApp().dirty = 1
-                debug("removed filter")
+                debug(BRING_IT_ON, "removed filter")
             else:
                 self.removeDialog.execute()
         else:
@@ -252,14 +253,14 @@ class ConfWindow(FXMainWindow):
         return 1
 
     def onCmdAccept(self, sender, sel, ptr):
-        debug("Accept")
+        debug(BRING_IT_ON, "Accept")
         if self.getApp().dirty:
             self.writeconfig()
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
 
     def onCmdCancel(self, sender, sel, ptr):
-        debug("Cancel")
+        debug(BRING_IT_ON, "Cancel")
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
 
@@ -271,12 +272,12 @@ class ConfWindow(FXMainWindow):
         return 1
 
     def onCmdApply(self, sender, sel, ptr):
-        debug("Apply")
+        debug(BRING_IT_ON, "Apply")
         self.writeconfig()
         return 1
 
     def onCmdAbout(self, sender, sel, ptr):
-        debug("About")
+        debug(BRING_IT_ON, "About")
         self.doShow(self.about)
         return 1
 
@@ -284,50 +285,50 @@ class ConfWindow(FXMainWindow):
         return win.execute(PLACEMENT_OWNER)
 
     def onCmdHelp(self, sender, sel, ptr):
-        debug("Help")
+        debug(BRING_IT_ON, "Help")
         self.doShow(self.help)
         return 1
 
     def onCmdPort(self, sender, sel, ptr):
         self.port = sender.getValue()
         self.getApp().dirty = 1
-        debug("Port=%d"%self.port)
+        debug(BRING_IT_ON, "Port=%d"%self.port)
         return 1
 
     def onCmdDebuglevel(self, sender, sel, ptr):
         self.debuglevel = sender.getCurrentItem()
         self.getApp().dirty = 1
-        debug("Debuglevel=%d"%self.debuglevel)
+        debug(BRING_IT_ON, "Debuglevel=%d"%self.debuglevel)
         return 1
 
     def onCmdTimeout(self, sender, sel, ptr):
         self.timeout = sender.getValue()
         self.getApp().dirty = 1
-        debug("Timeout=%d" % self.timeout)
+        debug(BRING_IT_ON, "Timeout=%d" % self.timeout)
         return 1
 
     def onCmdObfuscateIp(self, sender, sel, ptr):
         self.obfuscateip = sender.getCheck()
         self.getApp().dirty = 1
-        debug("Obfuscateip=%d" % self.obfuscateip)
+        debug(BRING_IT_ON, "Obfuscateip=%d" % self.obfuscateip)
         return 1
 
     def onCmdParentProxy(self, sender, sel, ptr):
         self.parentproxy = sender.getText()
         self.getApp().dirty = 1
-        debug("Parentproxy=%s"%self.parentproxy)
+        debug(BRING_IT_ON, "Parentproxy=%s"%self.parentproxy)
         return 1
 
     def onCmdParentProxyPort(self, sender, sel, ptr):
         self.parentproxyport = sender.getValue()
         self.getApp().dirty = 1
-        debug("Parentproxyport=%d"%self.parentproxyport)
+        debug(BRING_IT_ON, "Parentproxyport=%d"%self.parentproxyport)
         return 1
 
     def onCmdLogfile(self, sender, sel, ptr):
         self.logfile = sender.getText()
         self.getApp().dirty = 1
-        debug("Logfile=%s"%self.logfile)
+        debug(BRING_IT_ON, "Logfile=%s"%self.logfile)
         return 1
 
     def onCmdFilterModule(self, sender, sel, ptr):
@@ -335,14 +336,14 @@ class ConfWindow(FXMainWindow):
         module = sender.getText()
         self.modules[module] = state
         self.getApp().dirty = 1
-        debug("Filtermodule %s = %d" % (module, state))
+        debug(BRING_IT_ON, "Filtermodule %s = %d" % (module, state))
         return 1
 
     def onCmdFilter(self, sender, sel, ptr):
         if hasattr(ptr, "isSelected"):
             if not ptr.isSelected(): return 1
         index = ptr.getData()
-        debug("tree item index %d" % index)
+        debug(BRING_IT_ON, "tree item index %d" % index)
         if type(index) is IntType:
             self.filterswitcher.setCurrent(index)
         return 1
@@ -355,14 +356,14 @@ class ConfWindow(FXMainWindow):
         except SystemExit:
             # parent does not exit
             pass
-        debug("webcleaner start")
+        debug(BRING_IT_ON, "webcleaner start")
         return 1
 
 
     def onCmdProxyStop(self, sender, sel, ptr):
         from wc import daemon
         daemon.stop()
-        debug("webcleaner stop")
+        debug(BRING_IT_ON, "webcleaner stop")
         return 1
 
 
@@ -373,14 +374,14 @@ class ConfWindow(FXMainWindow):
         except SystemExit:
             # parent does not exit
             pass
-        debug("webcleaner restart")
+        debug(BRING_IT_ON, "webcleaner restart")
         return 1
 
 
     def onCmdProxyReload(self, sender, sel, ptr):
         from wc import daemon
         daemon.reload()
-        debug("webcleaner reload")
+        debug(BRING_IT_ON, "webcleaner reload")
         return 1
 
 
@@ -388,7 +389,7 @@ class ConfWindow(FXMainWindow):
         from wc import daemon
         dialog = FXMessageBox(self,_("Proxy Status"),daemon.status(),None,MBOX_OK)
         self.doShow(dialog)
-        debug("webcleaner status")
+        debug(BRING_IT_ON, "webcleaner status")
         return 1
 
 
@@ -421,7 +422,7 @@ class ConfWindow(FXMainWindow):
                     digest = map(lambda c: "%0.2x" % ord(c), digest)
                     digest = string.join(digest, "")
                     if digest==md5sum:
-                        debug(filename+" is uptodate")
+                        debug(BRING_IT_ON, "%s is uptodate" % filename)
 		        continue
                     # move away old file
                     os.rename(file, file+".old")
@@ -455,7 +456,7 @@ class ConfWindow(FXMainWindow):
 
     def readconfig(self):
         """read the configuration from disc"""
-        debug("reading config")
+        debug(BRING_IT_ON, "reading config")
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
          'timeout','obfuscateip','debuglevel','logfile',

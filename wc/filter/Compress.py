@@ -72,11 +72,11 @@ class Compress(Filter):
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                debug('writing gzip header\n', 3)
+                debug(NIGHTMARE, 'writing gzip header\n')
             if data:
                 compobj['size'] = compobj['size'] + len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                debug('compressing %s\n' % `data`, 3)
+                debug(NIGHTMARE, 'compressing %s\n' % `data`)
                 data = header + compobj['compressor'].compress(data)
             else:
                 data = header
@@ -88,9 +88,9 @@ class Compress(Filter):
             if data:
                 compobj['size'] = compobj['size'] + len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                debug('final compressing %s\n' % `data`, 3)
+                debug(NIGHTMARE, 'final compressing %s\n' % `data`)
                 data = compobj['compressor'].compress(data)
-            debug('finishing compressor\n', 3)
+            debug(NIGHTMARE, 'finishing compressor\n')
             data = data + \
 	           compobj['compressor'].flush() + \
 	           struct.pack('<l', compobj['crc']) + \

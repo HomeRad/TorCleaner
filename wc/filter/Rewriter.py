@@ -36,8 +36,7 @@ class Rewriter(Filter):
 
 
     def addrule(self, rule):
-        debug("enable %s rule '%s'" % (rule.get_name(),rule.title))
-        debug(str(rule))
+        debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
         if rule.get_name()=='rewrite':
             if rule.enclosed:
                 rule.enclosed = re.compile(rule.enclosed)
@@ -91,7 +90,7 @@ class HtmlFilter(SGMLParser):
 
     def handle_data(self, d):
         """handler for data"""
-        debug("data: "+d, 3)
+        debug(NIGHTMARE, "data: "+d)
         self.buffer_append_data([DATA, d])
 
 
@@ -124,14 +123,14 @@ class HtmlFilter(SGMLParser):
     def handle_comment(self, data):
         """a comment. either delete it or print it, nothing more
 	   because we dont filter inside comments"""
-        debug("comment: "+data, 3)
+        debug(NIGHTMARE, "comment: "+data)
         if self.comments:
             self.buffer.append((COMMENT,data))
 
 
     def handle_entityref(self, name):
         """dont translate, we leave that for the browser"""
-        debug("entityref: "+`name`, 3)
+        debug(NIGHTMARE, "entityref: "+`name`)
         if name:
             name = "&"+name+";"
         else:
@@ -143,19 +142,19 @@ class HtmlFilter(SGMLParser):
 
     def handle_charref(self, name):
         """dont translate, we leave that for the browser"""
-        debug("charref: "+`name`, 3)
+        debug(NIGHTMARE, "charref: "+`name`)
         self.buffer_append_data([DATA, "&#"+name+";"])
 
 
     def unknown_starttag(self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
-        debug("start tag: %s %s" % (tag, attrs), 3)
+        debug(NIGHTMARE, "start tag: %s %s" % (tag, attrs))
         rulelist = []
         tobuffer = (STARTTAG, tag, attrs)
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                debug("matched rule %s" % rule.title, 3)
+                debug(NIGHTMARE, "matched rule %s" % rule.title)
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute
@@ -166,7 +165,7 @@ class HtmlFilter(SGMLParser):
                     else:
                         break
                 else:
-                    debug("put on buffer", 3)
+                    debug(NIGHTMARE, "put on buffer")
                     rulelist.append(rule)
         if rulelist:
             self.rulestack.append((len(self.buffer), rulelist))
@@ -181,7 +180,7 @@ class HtmlFilter(SGMLParser):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buffer2data)"""
-        debug('end tag: </' + tag + '>', 3)
+        debug(NIGHTMARE, 'end tag: </%s>' % tag)
         self.buffer.append((ENDTAG, tag))
         if self.rulestack and self.rulestack[-1][1][0].match_tag(tag):
             i, rulelist = self.rulestack.pop()

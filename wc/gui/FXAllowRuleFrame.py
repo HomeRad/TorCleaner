@@ -2,6 +2,7 @@ import string
 from FXRuleFrame import FXRuleFrame
 from FXPy import *
 from wc import _,debug
+from wc.debug_levels import *
 
 class FXAllowRuleFrame(FXRuleFrame):
     """display all variables found in an AllowRule"""
@@ -51,43 +52,43 @@ class FXAllowRuleFrame(FXRuleFrame):
     def onCmdScheme(self, sender, sel, ptr):
         self.rule.scheme = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule scheme")
+        debug(BRING_IT_ON, "Changed rule scheme")
         return 1
 
     def onCmdHost(self, sender, sel, ptr):
         self.rule.host = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule host")
+        debug(BRING_IT_ON, "Changed rule host")
         return 1
 
     def onCmdPort(self, sender, sel, ptr):
         self.rule.host = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule port")
+        debug(BRING_IT_ON, "Changed rule port")
         return 1
 
     def onCmdPath(self, sender, sel, ptr):
         self.rule.path = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule path")
+        debug(BRING_IT_ON, "Changed rule path")
         return 1
 
     def onCmdParameters(self, sender, sel, ptr):
         self.rule.parameters = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule parameters")
+        debug(BRING_IT_ON, "Changed rule parameters")
         return 1
 
     def onCmdQuery(self, sender, sel, ptr):
         self.rule.query = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule query")
+        debug(BRING_IT_ON, "Changed rule query")
         return 1
 
     def onCmdFragment(self, sender, sel, ptr):
         self.rule.fragment = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule fragment")
+        debug(BRING_IT_ON, "Changed rule fragment")
         return 1
 
 

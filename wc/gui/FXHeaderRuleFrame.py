@@ -2,6 +2,7 @@ import string
 from FXRuleFrame import FXRuleFrame
 from FXPy import *
 from wc import _,debug
+from wc.debug_levels import *
 
 class FXHeaderRuleFrame(FXRuleFrame):
     """display all variables found in a HeaderRule"""
@@ -24,13 +25,13 @@ class FXHeaderRuleFrame(FXRuleFrame):
     def onCmdName(self, sender, sel, ptr):
         self.rule.name = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule header name")
+        debug(BRING_IT_ON, "Changed rule header name")
         return 1
 
     def onCmdValue(self, sender, sel, ptr):
         self.rule.value = string.strip(sender.getText())
         self.getApp().dirty = 1
-        debug("Changed rule header value")
+        debug(BRING_IT_ON, "Changed rule header value")
         return 1
 
 

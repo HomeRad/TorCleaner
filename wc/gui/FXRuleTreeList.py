@@ -2,6 +2,7 @@ from FXPy import *
 from wc import _,debug
 from wc.gui import loadIcon
 from FXRuleFrameFactory import FXRuleFrameFactory
+from wc.debug_levels import *
 
 
 class FXRuleTreeList(FXTreeList):
@@ -49,18 +50,18 @@ class FXRuleTreeList(FXTreeList):
     def newRule(self, rule):
         item = self.getCurrentItem()
         # we must have selected a rule folder:
-        debug("item index %d"%item.getData())
+        debug(BRING_IT_ON, "item index %d"%item.getData())
         if item.getData()==0:
             item = item.getBelow()
         elif not self.searchFolder(item.getData()):
             item = item.getParent()
-        debug("item index %d"%item.getData())
+        debug(BRING_IT_ON, "item index %d"%item.getData())
         self.expandTree(item)
         folder = self.searchFolder(item.getData())
         rule.parent = folder
         folder.append_rule(rule)
         item = self.addRule(item, rule, 1)
-        debug("item index %d"%item.getData())
+        debug(BRING_IT_ON, "item index %d"%item.getData())
 
 
     def searchFolder(self, index):

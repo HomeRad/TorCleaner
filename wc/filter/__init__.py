@@ -68,7 +68,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     """
     if attrs.get('nofilter'): return arg
     try:
-        debug('filter stage %s' % printFilterOrder(i), 2)
+        debug(BRING_IT_ON, 'filter stage %s' % printFilterOrder(i))
         for f in _FILTER_LIST[i]:
             ffun = getattr(f, fun)
             if hasattr(f, 'mimelist'):

@@ -238,9 +238,10 @@ class RewriteRule(Rule):
 
 
     def filter_tag(self, tag, attrs):
-        debug("rule %s filter_tag" % self.title, 3)
+        debug(NIGHTMARE, "rule %s filter_tag" % self.title)
         part = self.replace[0]
-        debug("replace %s with %s" % (num_part(part), `self.replace[1]`), 3)
+        debug(NIGHTMARE, "replace %s with %s" % \
+	      (num_part(part), `self.replace[1]`))
         if part==TAGNAME:
             return (STARTTAG, self.replace[1], attrs)
         if part==TAG:
@@ -273,7 +274,7 @@ class RewriteRule(Rule):
 
 
     def filter_complete(self, i, buf):
-        debug("rule %s filter_complete" % self.title, 3)
+        debug(NIGHTMARE, "rule %s filter_complete" % self.title)
         part = self.replace[0]
         if part==COMPLETE:
             buf[i:] = [[DATA, self.replace[1]]]

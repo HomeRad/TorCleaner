@@ -2,6 +2,7 @@ import string,sys
 from FXRuleFrame import FXRuleFrame
 from FXPy import *
 from wc import _,debug
+from wc.debug_levels import *
 
 class FXRewriteRuleFrame(FXRuleFrame):
     """display all variables found in a RewriteRule"""
@@ -66,7 +67,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
             return 1
         self.rule.tag = tag
         self.getApp().dirty = 1
-        debug("Changed rule tag name")
+        debug(BRING_IT_ON, "Changed rule tag name")
         return 1
 
 
@@ -77,14 +78,14 @@ class FXRewriteRuleFrame(FXRuleFrame):
         else:
             self.rule.enclosed = None
         self.getApp().dirty = 1
-        debug("Changed rule enclosed block")
+        debug(BRING_IT_ON, "Changed rule enclosed block")
         return 1
 
 
     def onCmdReplacePart(self, sender, sel, ptr):
         self.rule.replace[0] = sender.getCurrentItem()
         self.getApp().dirty = 1
-        debug("Changed rule replace part")
+        debug(BRING_IT_ON, "Changed rule replace part")
         return 1
 
     def onCmdAttributeAdd(self, sender, sel, ptr):
@@ -114,7 +115,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
             self.rule.attrs[name] = value
             self.getApp().dirty = 1
             self.iconlist.appendItem(name+"\t"+value)
-            debug("Added rule attribute")
+            debug(BRING_IT_ON, "Added rule attribute")
         return 1
 
     def onCmdAttributeEdit(self, sender, sel, ptr):
@@ -146,7 +147,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
             self.rule.attrs[newname] = value
             self.getApp().dirty = 1
             self.iconlist.replaceItem(index, newname+"\t"+value)
-            debug("Changed rule attribute")
+            debug(BRING_IT_ON, "Changed rule attribute")
         return 1
 
     def onCmdAttributeRemove(self, sender, sel, ptr):
@@ -158,13 +159,13 @@ class FXRewriteRuleFrame(FXRuleFrame):
         del self.rule.attrs[name]
         self.getApp().dirty = 1
         self.iconlist.removeItem(index)
-        debug("Removed rule attribute")
+        debug(BRING_IT_ON, "Removed rule attribute")
         return 1
 
     def onCmdReplaceValue(self, sender, sel, ptr):
         self.rule.replace[1] = sender.getText()
         self.getApp().dirty = 1
-        debug("Changed rule replace value")
+        debug(BRING_IT_ON, "Changed rule replace value")
         return 1
 
 

@@ -142,11 +142,6 @@ def get_time(secs):
 # names of the filter types
 Filternames = ['block', 'rewrite', 'allow', 'header', 'image', 'nocomments']
 
-DEBUG_LEVEL=1
-def debug(msg):
-    if DEBUG_LEVEL:
-       sys.stderr.write("DEBUG: "+msg+"\n")
-
 def error(msg):
     sys.stderr.write("error: "+msg+"\n")
 
@@ -156,6 +151,5 @@ def loadIcon(app, filename):
     if string.lower(filename[-3:])=='png':
         return FXPNGIcon(app, open(filename, 'rb').read())
     raise Exception, "only PNG graphics supported"
-
 
 from ConfWindow import ConfWindow
