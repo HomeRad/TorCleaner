@@ -29,7 +29,7 @@ from wc.filter.PICS import check_pics
 from wc.log import *
 # JS imports
 from wc.js.JSListener import JSListener
-from wc.js import escape_js, unescape_js, get_js_ver
+from wc.js import escape_js, unescape_js, get_js_ver, get_js_data
 try:
    from wc.js import jslib
 except ImportError:
@@ -448,14 +448,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             name = attrs.get('name', attrs.get('id'))
             self.jsForm(name, attrs.get('action', ''), attrs.get('target', ''))
         elif tag=='script':
-            lang = attrs.get('language', '').lower()
+            js_ok, js_lang = get_js_data(attrs)
             url = attrs.get('src', '')
-            scrtype = attrs.get('type', '').lower()
-            is_js = scrtype=='text/javascript' or \
-                    lang.startswith('javascript') or \
-                    not (lang or scrtype)
-            if is_js and url:
-                self.jsScriptSrc(url, lang)
+            if js_ok and url:
+                self.jsScriptSrc(url, js_lang)
                 return
         self.buf.append([STARTTAG, tag, attrs])
 
@@ -599,16 +595,11 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.buf[-2][0]!=STARTTAG or self.buf[-2][1]!='script':
             # syntax error, ignore
             return
-        attrs = self.buf[-2][2]
-        lang = attrs.get('language', '').lower()
-        scrtype = attrs.get('type', '').lower()
-        is_js = scrtype=='text/javascript' or \
-                lang.startswith('javascript') or \
-                not (lang or scrtype)
-        if not is_js:
+        js_ok, js_lang = get_js_data(self.buf[-2][2])
+        if not js_ok:
             # no JavaScript, ignore
             return
-        ver = get_js_ver(lang)
+        ver = get_js_ver(js_lang)
         # get script data
         script = self.buf[-1][1].strip()
         # remove html comments
