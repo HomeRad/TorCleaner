@@ -447,10 +447,10 @@ class ZapperParser (BaseParser):
             self.folder.append_rule(self.rule)
         # tag has character data
         elif name in _nestedtags:
-            if self.rule is not None:
-                self.rule.fill_attrs(attrs, name)
-            else:
+            if self.rule is None:
                 self.folder.fill_attrs(attrs, name)
+            else:
+                self.rule.fill_attrs(attrs, name)
         elif name=='folder':
             self.folder.fill_attrs(attrs, name)
         else:
@@ -470,8 +470,11 @@ class ZapperParser (BaseParser):
 
 
     def character_data (self, data):
-        if self.cmode and self.rule:
-            self.rule.fill_data(data, self.cmode)
+        if self.cmode:
+            if self.rule is None:
+                self.folder.fill_data(data, self.cmode)
+            else:
+                self.rule.fill_data(data, self.cmode)
 
 
 class WConfigParser (BaseParser):

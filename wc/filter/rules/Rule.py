@@ -71,7 +71,6 @@ class Rule (object):
         self.attrnames = ['disable', 'sid']
         self.intattrs = ['disable']
         self.listattrs = []
-        self._reset_parsed_data()
 
 
     def _reset_parsed_data (self):
@@ -139,6 +138,7 @@ class Rule (object):
 
     def fill_attrs (self, attrs, name):
         """initialize rule attributes with given attrs"""
+        self._reset_parsed_data()
         if name in ('title', 'description'):
             self._lang = attrs['lang']
             return
@@ -169,10 +169,8 @@ class Rule (object):
         """called when XML end element was reached"""
         if name=='title':
             self.titles[self._lang] = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
         elif name=='description':
             self.descriptions[self._lang] = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
 
 
     def compile_data (self):

@@ -36,10 +36,10 @@ class BlockRule (AllowRule):
 
 
     def end_data (self, name):
-        super(BlockRule, self).end_data(name)
         if name=='replacement':
             self.replacement = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
+        else:
+            super(BlockRule, self).end_data(name)
 
 
     def fromFactory (self, factory):

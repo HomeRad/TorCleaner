@@ -128,9 +128,8 @@ class RewriteRule (UrlRule):
 
     def fill_attrs (self, attrs, name):
         """set attribute values"""
-        if name=='rewrite':
-            super(RewriteRule, self).fill_attrs(attrs, name)
-        elif name=='attr':
+        super(RewriteRule, self).fill_attrs(attrs, name)
+        if name=='attr':
             val = unxmlify(attrs.get('name', 'href')).encode('iso8859-1')
             self.current_attr = val
             self.attrs[self.current_attr] = ""
@@ -139,16 +138,14 @@ class RewriteRule (UrlRule):
 
 
     def end_data (self, name):
-        super(UrlRule, self).end_data(name)
         if name=='attr':
             self.attrs[self.current_attr] = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
         elif name=='enclosed':
             self.enclosed = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
         elif name=='replacement':
             self.replacement = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
+        else:
+            super(UrlRule, self).end_data(name)
 
 
     def compile_data (self):

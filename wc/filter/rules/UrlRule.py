@@ -52,13 +52,12 @@ class UrlRule (Rule):
 
 
     def end_data (self, name):
-        super(UrlRule, self).end_data(name)
         if name=='matchurl':
             self.matchurls.append(unxmlify(self._data).encode('iso8859-1'))
-            self._reset_parsed_data()
         elif name=='nomatchurl':
             self.nomatchurls.append(unxmlify(self._data).encode('iso8859-1'))
-            self._reset_parsed_data()
+        else:
+            super(UrlRule, self).end_data(name)
 
 
     def compile_data (self):

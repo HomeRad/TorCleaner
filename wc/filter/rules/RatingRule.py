@@ -43,19 +43,16 @@ class RatingRule (UrlRule):
             self._category = unxmlify(attrs.get('name')).encode('iso8859-1')
         elif name=='url':
             pass
-        elif name=='rating':
-            UrlRule.fill_attrs(self, attrs, name)
 
 
     def end_data (self, name):
-        super(RatingRule, self).end_data(name)
         if name=='category':
             assert self._category
             self.ratings[self._category] = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
         elif name=='url':
             self.url = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
+        else:
+            super(RatingRule, self).end_data(name)
 
 
     def compile_data (self):

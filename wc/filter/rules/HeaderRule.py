@@ -36,10 +36,10 @@ class HeaderRule (UrlRule):
 
 
     def end_data (self, name):
-        super(HeaderRule, self).end_data(name)
         if name=='replacement':
             self.value = unxmlify(self._data).encode('iso8859-1')
-            self._reset_parsed_data()
+        else:
+            super(HeaderRule, self).end_data(name)
 
 
     def fromFactory (self, factory):
