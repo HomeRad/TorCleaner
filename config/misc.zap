@@ -49,7 +49,7 @@
 
 <replace sid="wc.375" oid="8" title="Love and Peace"
  desc="Love &amp; Peace!"
- search="(US-PrÃ¤sident|George( W.)?) Bush"/>
+ search="(US-Präsident|George( W.)?) Bush"/>
 
 <rewrite sid="wc.376" oid="9" title="Remove LOWSRC"
  desc="The lowsrc is waste of bandwidth if you have enough of it ;)"
