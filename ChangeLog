@@ -62,6 +62,12 @@
     Type: bugfix
     Changed: wc/proxy/{Http,Ssl}Server.py
 
+  * The ``webcleaner`` script accepts new commandline options
+    --config and --filterdir to be able to specify custom configuration
+    and filter definitions.
+    Type: feature
+    Changed: webcleaner, wc/__init__.py
+
 
 2.10 (released 27.3.2004)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20040323

@@ -2,13 +2,23 @@
 .SH NAME
 webcleaner \- a filtering HTTP proxy
 .SH SYNOPSIS
-\fBwebcleaner\fP
+\fBwebcleaner\fP [\fIoptions\fP]
 .SH DESCRIPTION
 WebCleaner is a filtering HTTP proxy. You can encode, decode and modify
 each part of an HTTP request. WebCleaner enhances your privacy and
 efficiency on the web and comes with several ready-to-use
 filters to remove advertisement and unwanted HTML content,
 compress documents on-the-fly, disable animated GIFs and more.
+.SH OPTIONS
+.TP
+\fB-h\fP, \fB--help\fP
+Print help text.
+.TP
+\fB--config=\fP\fIfile\fP
+Use given configuration file.
+.TP
+\fB--filterdir=\fP\fIdirectory\fP
+Use given directory to search for *.zap filter definitions.
 .SH CONFIGURATION
 To configure WebCleaner, point your favourite webbrowser to
 \fBhttp://localhost:\fP\fIport\fP\fB/\fP
