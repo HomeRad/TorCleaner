@@ -488,6 +488,38 @@ static void parser_dealloc (parser_object* self) {
 }
 
 
+/* feed a chunk of data to the parser */
+static PyObject* parser_feed (parser_object* self, PyObject* args) {
+    /* set up the parse string */
+    int slen = 0;
+    char* s = NULL;
+    if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
+	PyErr_SetString(PyExc_TypeError, "string arg required");
+	return NULL;
+    }
+    /* parse */
+    if (htmllexStart(self->scanner, self->userData, s, slen)!=0) {
+	PyErr_SetString(PyExc_MemoryError, "could not start scanner");
+ 	return NULL;
+    }
+    if (yyparse(self->scanner)!=0) {
+        if (self->userData->exc_type!=NULL) {
+            /* note: we give away these objects, so don't decref */
+            PyErr_Restore(self->userData->exc_type,
+        		  self->userData->exc_val,
+        		  self->userData->exc_tb);
+        }
+        htmllexStop(self->scanner, self->userData);
+        return NULL;
+    }
+    if (htmllexStop(self->scanner, self->userData)!=0) {
+	PyErr_SetString(PyExc_MemoryError, "could not stop scanner");
+	return NULL;
+    }
+    Py_RETURN_NONE;
+}
+
+
 /* flush all parser buffers */
 static PyObject* parser_flush (parser_object* self, PyObject* args) {
     int res = 0;
@@ -526,39 +558,16 @@ static PyObject* parser_flush (parser_object* self, PyObject* args) {
 	    return NULL;
 	}
     }
-    return Py_BuildValue("i", res);
-}
-
-
-/* feed a chunk of data to the parser */
-static PyObject* parser_feed (parser_object* self, PyObject* args) {
-    /* set up the parse string */
-    int slen = 0;
-    char* s = NULL;
-    if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
-	PyErr_SetString(PyExc_TypeError, "string arg required");
-	return NULL;
-    }
-    /* parse */
-    if (htmllexStart(self->scanner, self->userData, s, slen)!=0) {
-	PyErr_SetString(PyExc_MemoryError, "could not start scanner");
- 	return NULL;
-    }
-    if (yyparse(self->scanner)!=0) {
-        if (self->userData->exc_type!=NULL) {
-            /* note: we give away these objects, so don't decref */
-            PyErr_Restore(self->userData->exc_type,
-        		  self->userData->exc_val,
-        		  self->userData->exc_tb);
-        }
-        htmllexStop(self->scanner, self->userData);
+    if (htmllexDestroy(self->scanner)!=0) {
+        PyErr_SetString(PyExc_MemoryError, "could not destroy scanner data");
         return NULL;
     }
-    if (htmllexStop(self->scanner, self->userData)!=0) {
-	PyErr_SetString(PyExc_MemoryError, "could not stop scanner");
-	return NULL;
+    self->scanner = NULL;
+    if (htmllexInit(&(self->scanner), self->userData)!=0) {
+        PyErr_SetString(PyExc_MemoryError, "could not initialize scanner data");
+        return NULL;
     }
-    Py_RETURN_NONE;
+    return Py_BuildValue("i", res);
 }
 
 
