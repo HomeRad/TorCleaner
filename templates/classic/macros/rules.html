@@ -38,7 +38,9 @@
 <table summary="">
 <div metal:define-macro="matchurl">
 <tr valign="top"><td>
-<label for="rule_matchurls" i18n:translate="">Match urls</label>:
+<label for="rule_matchurls" i18n:translate="">Match urls</label><sup><a
+ href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title string:see footnote 1">1)</a></sup>:
 </td><td>
 <select name="rule_matchurls" id="rule_matchurls" multiple size="3"
  i18n:attributes="title string:List of urls this rule should apply to">
@@ -52,7 +54,9 @@
  i18n:attributes="value string:Add new">
 </td></tr>
 <tr valign="top"><td>
-<label for="rule_nomatchurls" i18n:translate="">Don't match urls</label>:
+<label for="rule_nomatchurls" i18n:translate="">Don't match urls</label><sup><a
+ href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title string:see footnote 1">1)</a></sup>:
 </td><td>
 <select name="rule_nomatchurls" id="rule_nomatchurls" multiple size="3"
  i18n:attributes="title string:List of urls this rule must not apply to">
@@ -125,6 +129,10 @@ Rule url parts
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -187,6 +195,10 @@ Rule url parts
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -215,6 +227,10 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -250,6 +266,10 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -266,6 +286,10 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -282,6 +306,10 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -340,6 +368,10 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -354,7 +386,9 @@ Rule title and description
 Rule (don't) match url
 </tr>
 <tr valign="top"><td>
-<label for="rule_search" i18n:translate="">Replace regex</label>:
+<label for="rule_search" i18n:translate="">Search for</label><sup><a
+ href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title string:see footnote 1">1)</a></sup>:
 </td><td>
 <input type="text" class="text" name="rule_search" id="rule_search"
  value="A nasty word" tal:attributes="value currule/search">
@@ -369,6 +403,10 @@ Rule (don't) match url
 <td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -428,7 +466,9 @@ Rule (don't) match url
  tal:condition="currule/attrs">
 </td></tr>
 <tr valign="top"><td>
-<label for="attrval" i18n:translate="">Value</label>:
+<label for="attrval" i18n:translate="">Value</label><sup><a
+ href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title string:see footnote 1">1)</a></sup>:
 </td><td>
 <input type="text" class="text" name="attrval" id="attrval" value="">
 </td></tr>
@@ -464,6 +504,10 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
