@@ -89,11 +89,11 @@ def stop (pidfile):
 
 
 def startwatch (startfunc, pidfile, parent_exit=True, sleepsecs=5):
-    start(startfunc, pidfile)
+    return start(startfunc, pidfile)
 
 
-def stopwatch (pidfile):
-    stop(pidfile)
+def stopwatch (pidfile, watchfile):
+    return stop(pidfile)
 
 
 def reload ():

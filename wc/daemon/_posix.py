@@ -104,14 +104,13 @@ def startwatch (startfunc, pidfile, watchfile, parent_exit=True, sleepsecs=5):
     return "", 0
 
 
-def stopwatch (watchfile):
+def stopwatch (pidfile, watchfile):
     """stop webcleaner and the monitor"""
-    msg, status = stop() or ""
     if not os.path.exists(watchfile):
-        if msg:
-            msg += "\n"
-        return msg+i18n._("Watcher was not running (no lock file found)"), 1
-    return _stop(watchfile)
+        return i18n._("Watcher was not running (no lock file found)"), 1
+    msg, status = _stop(watchfile)
+    msg2, status2 = stop(pidfile)
+    return "%s\n%s"%(msg,msg2), status2
 
 
 def reload (pidfile):

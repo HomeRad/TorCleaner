@@ -32,7 +32,7 @@ def reload (pidfile):
     return i18n._("reload not supported for this platform"), 1
 
 def startwatch (startfunc, pidfile, watchfile, parent_exit=True, sleepsecs=5):
-    start(startfunc, pidfile)
+    return start(startfunc, pidfile)
 
 def stopwatch (pidfile, watchfile):
-    pass
+    return stop(pidfile)
