@@ -2579,8 +2579,11 @@ js_DecompileValueGenerator(JSContext *cx, intN spindex, jsval v,
             goto do_fallback;
 
         if (spindex != JSDVG_IGNORE_STACK) {
+            JS_ASSERT(spindex < 0);
             depth = (intN)script->depth;
-            JS_ASSERT(-depth <= spindex && spindex < 0);
+#if !JS_HAS_NO_SUCH_METHOD
+            JS_ASSERT(-depth <= spindex);
+#endif
             spindex -= depth;
 
             base = (jsval *) cx->stackPool.current->base;
@@ -2603,6 +2606,11 @@ js_DecompileValueGenerator(JSContext *cx, intN spindex, jsval v,
     op = (JSOp) *pc;
     if (op == JSOP_TRAP)
         op = JS_GetTrapOpcode(cx, script, pc);
+
+    /* XXX handle null as a special case, to avoid calling null "object" */
+    if (op == JSOP_NULL)
+        return ATOM_TO_STRING(cx->runtime->atomState.nullAtom);
+
     cs = &js_CodeSpec[op];
     format = cs->format;
     mode = (format & JOF_MODEMASK);
