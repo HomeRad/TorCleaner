@@ -55,12 +55,43 @@ class MyInstall (install):
         self.distribution.create_conf_file(self.install_lib, data)
         # install proxy service
         if os.name=="nt":
-            from wc import daemon
-            import win32serviceutil
-            oldargs = sys.argv
-            sys.argv = ['webcleaner', 'install']
+            self.install_nt_service()
+
+
+    def state_nt_service (self, name):
+        import win32serviceutil
+        return win32serviceutil.QueryServiceStatus(name)[1]
+
+
+    def install_nt_service (self):
+        from wc import daemon, AppName, Configuration
+        import win32serviceutil
+        oldargs = sys.argv
+        # install service
+        sys.argv = ['webcleaner', 'install']
+        win32serviceutil.HandleCommandLine(daemon.ProxyService)
+        # stop proxy (if it is running)
+        state = self.state_nt_service(AppName)
+        while state==win32service.SERVICE_START_PENDING:
+            time.sleep(1)
+            state = self.state_nt_service(AppName)
+        if state==win32service.SERVICE_RUNNING:
+            sys.argv = ['webcleaner', 'stop']
             win32serviceutil.HandleCommandLine(daemon.ProxyService)
-            sys.argv = oldargs
+        state = self.state_nt_service(AppName)
+        while state==win32service.SERVICE_STOP_PENDING:
+            time.sleep(1)
+            state = self.state_nt_service(AppName)
+        # start proxy
+        sys.argv = ['webcleaner', 'start']
+        win32serviceutil.HandleCommandLine(daemon.ProxyService)
+        sys.argv = oldargs
+        config = Configuration()
+        config_url = "http://localhost:%d/" % config['port']
+        # sleep a while to let the proxy start...
+        import time, webbrowser
+        time.sleep(5)
+        webbrowser.open(config_url)
 
 
     # sent a patch for this, but here it is for compatibility
