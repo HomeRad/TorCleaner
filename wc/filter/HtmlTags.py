@@ -21,6 +21,7 @@ if __name__=='__main__':
     sys.path.insert(0, os.getcwd())
 from wc.levenshtein import distance
 
+# no comment means HTML 4.01 tag
 HtmlTags = {
     "a" : None,
     "abbr" : None,
@@ -77,9 +78,11 @@ HtmlTags = {
     "legend" : None,
     "li" : None,
     "link" : None,
+    "listing" : None, # HTML 3.2
     "map" : None,
     "menu" : None,
     "meta" : None,
+    "nobr" : None, # Netscape Navigator 1.1 (!)
     "noframes" : None,
     "noscript" : None,
     "object" : None,
@@ -88,6 +91,7 @@ HtmlTags = {
     "option" : None,
     "p" : None,
     "param" : None,
+    "plaintext" : None, # HTML 3.2
     "pre" : None,
     "q" : None,
     "s" : None,
@@ -114,6 +118,8 @@ HtmlTags = {
     "u" : None,
     "ul" : None,
     "var" : None,
+    "wbr" : None, # Netscape Navigator 1.1 (!)
+    "xmp" : None, # HTML 3.2
 }
 
 def check_spelling (tag):

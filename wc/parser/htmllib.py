@@ -1,5 +1,5 @@
 """A parser for HTML"""
-# Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -80,6 +80,7 @@ class HtmlPrinter (HtmlParser):
 
 
     def __getattr__ (self, name):
+        """delegate attrs to the parser and remember the func name"""
         if hasattr(self.parser, name):
             return getattr(self.parser, name)
         self.mem = name

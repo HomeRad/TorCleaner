@@ -20,6 +20,9 @@
   59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
 */
 
+/* modified by Bastian Kleineidam <calvin@users.sf.net>
+ * deleted everything except the distance() function
+ */
 #include <Python.h>
 
 /*

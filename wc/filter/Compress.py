@@ -1,5 +1,5 @@
 """compress documents on-the-fly with zlib"""
-# Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

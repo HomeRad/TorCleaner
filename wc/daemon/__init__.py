@@ -4,7 +4,7 @@ Of course this is OS dependent and currently we support only Posix
 and Windows systems natively, the other OSes use a generic interface
 with no fork().
 """
-# Copyright (C) 2001  Bastian Kleineidam
+# Copyright (C) 2001-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

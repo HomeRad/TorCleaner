@@ -48,7 +48,23 @@ class HttpProxyClient:
         debug(NIGHTMARE, 'Proxy: CP/Server response', self, `response`)
         try:
             http_ver, status, msg = response.split()
-            if status!="200":
+            if status in ["302", "301"]:
+                # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
+                # make a new ClientServerMatchmaker
+                url = self.server.headers.getheader("Location",
+                             self.server.headers.getheader("Uri", ""))
+                url = urlparse.urljoin(self.server.url, url)
+                url = unquote(url)
+                self.args = (url, args[1])
+                # try again
+                ClientServerMatchmaker(self,
+                               "GET %s HTTP/1.1" % url, #request
+                               {}, #headers
+                               '', #content
+                               {'nofilter': None}, # nofilter
+                               'identity', # compress
+                               )
+            elif status!="200":
                 print >> sys.stderr, "error fetching data", status, msg
                 self.finish()
         except:
