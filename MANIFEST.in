@@ -59,6 +59,7 @@ recursive-include tests *.py test*
 include wc/parser/htmllex.l
 include wc/parser/htmlparse.y
 include wc/parser/*.h
+include wc/parser/s_util.c
 include wc/parser/Makefile
 include po/*.po
 include po/*.pot
