@@ -69,8 +69,8 @@ HTML '<script >\012</script>'
 p starttag 'script' []
 p data '\012'
 p endtag 'script'
-HTML '<script lang="a">bla < fasel</script>'
-p starttag 'script' [('lang', 'a')]
+HTML '<sCrIpt lang="a">bla < fasel</scripT>'
+p starttag 'sCrIpt' [('lang', 'a')]
 p data 'bla '
 p data '<'
 p data ' fasel'
@@ -88,4 +88,5 @@ p starttag 'a' []
 FLUSH test <!a
 p decl 'a' []
 FLUSH test <?a
+p xmldecl 'a' []
 finished

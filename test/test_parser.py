@@ -71,7 +71,7 @@ tests = (
     """<?xml version="1.0" encoding="latin1"?>""",
     # javascript
     """<script >\n</script>""",
-    """<script lang="a">bla < fasel</script>""",
+    """<sCrIpt lang="a">bla < fasel</scripT>""",
 )
 
 flushtests = (

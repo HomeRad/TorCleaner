@@ -2,8 +2,6 @@ TODO
 
 - test .zap update with webcleanerconf
 
-- xmldecl flushing does not work
-
 - HTTPS support (only proxy, no filtering)
   It's sort of an extension to HTTP - you just send the proxy the request
   CONNECT home.netscape.com:443 HTTP/1.0\r\n\r\n

@@ -36,6 +36,30 @@
 #define _debug
 #endif
 
+/* on Linux: strncasecmp
+   on Windows: StrCmpIN ?
+   on other: ??
+   
+   so, here the glibc 2.2.4 code
+*/
+int my_strncasecmp(const char* s1, const char* s2, int n) {
+    const unsigned char* p1 = (const unsigned char*) s1;
+    const unsigned char* p2 = (const unsigned char*) s2;
+    unsigned char c1, c2;
+
+    if (p1 == p2 || n == 0)
+        return 0;
+
+    do {
+        c1 = tolower(*p1++);
+        c2 = tolower(*p2++);
+        if (c1 == '\0' || c1 != c2)
+	    return c1 - c2;
+    } while (--n > 0);
+
+    return c1 - c2;
+}
+
 int htmlopwrap (void) {
     return 1;
 }
@@ -207,7 +231,7 @@ staticforward PyTypeObject parser_type;
         PyObject_CallFunction(self->handle_starttag, "sO", self->tag, self->params);
     }
     n = strlen(self->tag);
-    if (n>=6 && strncasecmp(self->tag, "script", n)==0) {
+    if (n==6 && my_strncasecmp(self->tag, "script", n)==0) {
         BEGIN(SCRIPT);
     }
     else {
@@ -245,7 +269,7 @@ staticforward PyTypeObject parser_type;
         PyObject_CallFunction(self->handle_starttag, "sO", self->tag, self->params);
     }
     n = strlen(self->tag);
-    if (n>=6 && strncasecmp(self->tag, "script", n)==0) {
+    if (n>=6 && my_strncasecmp(self->tag, "script", n)==0) {
         BEGIN(SCRIPT);
     }
     else {
@@ -319,7 +343,7 @@ staticforward PyTypeObject parser_type;
         PyObject_CallFunction(self->handle_starttag, "sO", self->tag, self->params);
     }
     n = strlen(self->tag);
-    if (n>=6 && strncasecmp(self->tag, "script", n)==0) {
+    if (n>=6 && my_strncasecmp(self->tag, "script", n)==0) {
         BEGIN(SCRIPT);
     }
     else {
