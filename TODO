@@ -2,6 +2,10 @@ TODO
 
 version 2.20
 
+- convert templates to the official TAL i18n syntax
+
+- proper MIME magic scanning on the body content, not on response content
+
 - use ZPT tal implementation, having i18n support
 
 - weisses Bild: http://web.vobis.de/is-bin/INTERSHOP.enfinity/eCS/Store/de/-/EUR/Katalog-Seite;sid=nyF9AlBsxMh9xBFkZ_ukWzYIWd8I_wlIaUI=;sid=BpfPg75hPsXOPP9p_ksW2tgFJK27A-dF8PQ=?PageableID=M13ZWWZlEpYAAAD%2eJTz6pgoK&MasterPageableID=uOLZWWZlRGcAAAD%2eNCn6pgsM&MasterPageableName=Monitore&PageableName=Products&PageNumber=1&modus=&xyz=n&search_query_keyword=
@@ -18,20 +22,14 @@ version 2.20
 
 - IP network mask/range is not working
 
+- document how to install a proxy that can be used from outside
+  (intranet or internet)
+
 - kein Text: http://www.osnews.com/story.php?news_id=7314
 
 - HTML scan: 
   ERROR 2004-09-01 09:46:23,992 wc.filter unknown HTML tag "scr'+'ipt" at 
   'http://servedby.netshelter.net/serve.cgi?pid=OSNEWS&g=1&m=4&j=1&k=1&id=537309467594&d=js'
-
-version 2.21 and above
-
-- use ssl-cert-check bash script
-
-- Python 2.4 made socket.sslerror a subclass of socket.error; can we
-  use that?
-
-- add functional tests
 
 - Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/webcleaner", line 170, in ?
@@ -59,6 +57,15 @@ version 2.21 and above
   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 443, in server_content
     assert self.server, "%s server_content had no server"%self
 AssertionError: <client:request  being read> server_content had no server
+
+version 2.21 and above
+
+- use ssl-cert-check bash script
+
+- Python 2.4 made socket.sslerror a subclass of socket.error; can we
+  use that?
+
+- add functional tests
 
 invalid js url:
 http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
