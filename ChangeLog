@@ -1,5 +1,8 @@
 2.7 (released xx.xx.xxxx)
   * updated squidguard blacklist filters as of 20031126
+    Changed: config/blacklists/*
+  * prevent Opera vulnerability CAN-2003-0870
+    Changed: wc/filter/HtmlSecurity.py
 
 2.6 (released 25.11.2003)
   * fixed background downloading with 30x redirects

@@ -2,6 +2,10 @@ TODO
 
 version 2.5 and above
 
+- check stuff like http://server/..%5c..%5c..%5c..%5c..%5c..%5c..%5..%5c..%5ccskin.zip
+
+- http://xhaus.com/alan/python/proxies.html
+
 - wrong content type at http://flug.de/img/lastminute/
   Solution: try to peek at content
 
