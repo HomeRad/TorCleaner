@@ -14,7 +14,7 @@
 </rewrite>
 
 <rewrite title="Ad servers 10" oid="2">
-<attr>(ad\.krutilka\.ru|fastclick\.net|click\.atdmt\.com|ar\.atwola\.com)</attr>
+<attr>(ad\.krutilka\.ru|(fast|double)click\.net|click\.atdmt\.com|ar\.atwola\.com)</attr>
 </rewrite>
 
 <rewrite title="Ad servers 2" oid="3"
@@ -49,7 +49,7 @@
 
 <block title="Ad servers 8" oid="9"
  scheme=""
- host="^ads\."
+ host="^ads?\."
  port=""
  path=""
  parameters=""
@@ -212,7 +212,7 @@
 <rewrite title="IMDB Advert" oid="35"
  desc="redirect CGI at the Internet Movie database"
  matchurl="\.imdb\.">
-<attr>/tiger_redirect\?((TITLE|FIND)_TOP|(COVER|CREDITS)_RHS|QUOTES|(P|E)GALLERY|(PLOT|BIO|TURLS)_TOP)</attr>
+<attr>/tiger_redirect\?((TITLE|FIND)_TOP|(COVER|CREDITS)_RHS|QUOTES|(P|E)GALLERY|(PLOT|NAME|BIO|TURLS)_TOP|SOUNDTRACKS)</attr>
 <replace>&amp;nbsp;</replace>
 </rewrite>
 
