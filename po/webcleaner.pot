@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat Feb 28 22:04:15 2004\n"
+"POT-Creation-Date: Sun Feb 29 12:34:06 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -995,9 +995,6 @@ msgstr ""
 msgid "What it does when replacement is <i>foo</i>"
 msgstr ""
 
-msgid "Use NTLM authentication (Windows domain controller)"
-msgstr ""
-
 msgid "Folder icon"
 msgstr ""
 
@@ -1298,9 +1295,6 @@ msgstr ""
 msgid ""
 "Please open the file <code>%(ConfigFile)s</code> and\n"
 "replace the line <code>adminpass=\"\"</code> with:\n"
-msgstr ""
-
-msgid "NTLM authentication"
 msgstr ""
 
 msgid "after"

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sat Feb 28 22:04:15 2004\n"
+"POT-Creation-Date: Sun Feb 29 12:34:06 2004\n"
 "PO-Revision-Date: 2004-02-28 17:35+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -1149,9 +1149,6 @@ msgstr "Filteraktualisierung"
 msgid "What it does when replacement is <i>foo</i>"
 msgstr "Ausgeführte Aktion falls der Ersatzwert <i>foo</i> ist"
 
-msgid "Use NTLM authentication (Windows domain controller)"
-msgstr "NTLM Authentifizierung (Windows Domänen Controller) benutzen"
-
 msgid "Folder icon"
 msgstr "Ordnericon"
 
@@ -1496,9 +1493,6 @@ msgstr ""
 "Bitte bearbeiten Sie die Datei <code>%(ConfigFile)s</code> und\n"
 "ersetzen Sie die Zeile <code>adminpass=\"\"</code> mit:\n"
 
-msgid "NTLM authentication"
-msgstr "NTLM Authentifizierung"
-
 msgid "after"
 msgstr "danach"
 
@@ -1640,3 +1634,9 @@ msgstr ""
 
 msgid "Invalid image height value."
 msgstr "Ungültige Bildhöhe."
+
+#~ msgid "Use NTLM authentication (Windows domain controller)"
+#~ msgstr "NTLM Authentifizierung (Windows Domänen Controller) benutzen"
+
+#~ msgid "NTLM authentication"
+#~ msgstr "NTLM Authentifizierung"
