@@ -63,8 +63,10 @@ class HttpClient (Connection):
 
     def __repr__ (self):
         if self.state != 'request':
-            try: extra = self.request.split()[1][7:] # Remove http://
-            except: extra = '???' + self.request
+            try:
+                extra = self.request.split()[1][7:] # Remove http://
+            except IndexError:
+                extra = '???' + self.request
             #if len(extra) > 46: extra = extra[:43] + '...'
         else:
             extra = 'being read'
