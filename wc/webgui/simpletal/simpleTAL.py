@@ -48,6 +48,7 @@ import simpleTALES
 # Name-space URIs
 METAL_NAME_URI="http://xml.zope.org/namespaces/metal"
 TAL_NAME_URI="http://xml.zope.org/namespaces/tal"
+I18N_NAME_URI="http://xml.zope.org/namespaces/i18n"
 	
 # All commands are of the form (opcode, args, commandList)
 # The numbers are the opcodes, and also the order of priority
@@ -85,7 +86,11 @@ METAL_DEFINE_SLOT=15
 # Only used for parsing
 METAL_FILL_SLOT=16
 METAL_DEFINE_MACRO=17
-											
+
+# I18N Starts here
+# Argument: ???
+I18N_TRANSLATE = 18
+
 METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
 #SINGLETON_XML_REGEX = re.compile ('^<[^\s>]+?([\s]*?[^\s]+?=".+?")*?[\s]*?/>')
 SINGLETON_XML_REGEX = re.compile ('^<[^\s>]+?([\s]+?[^=]+?="[^"]+?")*?[\s]*?/>')
@@ -327,19 +332,19 @@ class TemplateInterpreter:
 					self.slotParameters = {}
 				else:
 					if (type (resultVal) == type (u"")):
-						self.file.write (resultVal)
+						self.file.write(resultVal)
 					elif (type (resultVal) == type ("")):
-						self.file.write (unicode (resultVal, 'ascii'))
+						self.file.write(resultVal)
 					else:
-						self.file.write (unicode (str (resultVal), 'ascii'))
+						self.file.write(str(resultVal))
 			else:
 				if (type (resultVal) == type (u"")):
-					self.file.write (cgi.escape (resultVal))
+					self.file.write(cgi.escape(resultVal))
 				elif (type (resultVal) == type ("")):
-					self.file.write (cgi.escape (unicode (resultVal, 'ascii')))
+					self.file.write(cgi.escape(resultVal))
 				else:
-					self.file.write (cgi.escape (unicode (str (resultVal), 'ascii')))
-					
+					self.file.write(cgi.escape(str(resultVal)))
+
 		if (self.outputTag and not args[1]):
 			# Do NOT output end tag if a singleton with no content
 			if not (args[2] and self.tagContent is None):
@@ -433,7 +438,7 @@ class TemplateInterpreter:
 		# Slot isn't filled, so just use our own content
 		self.programCounter += 1
 		return
-	
+
 class Template:
 	def __init__ (self, commands, macros, symbols):
 		self.commandList = commands
@@ -528,7 +533,8 @@ class HTMLTemplate (Template):
 	"""A specialised form of a template that knows how to output HTML
 	"""
 	
-	def expand (self, context, outputFile, outputEncoding="ISO-8859-1",interpreter=None):
+	def expand (self, context, outputFile, outputEncoding="ISO-8859-1",
+                    interpreter=None):
 		""" This method will write to the outputFile, using the encoding specified,
 				the expanded version of this template.  The context passed in is used to resolve
 				all expressions with the template.
@@ -536,8 +542,8 @@ class HTMLTemplate (Template):
 		# This method must wrap outputFile if required by the encoding, and write out
 		# any template pre-amble (DTD, Encoding, etc)
 		
-		encodingFile = codecs.lookup (outputEncoding)[3](outputFile)
-		self.expandInline (context, encodingFile, interpreter)
+		#encodingFile = codecs.lookup (outputEncoding)[3](outputFile)
+		self.expandInline (context, outputFile, interpreter)
 		
 class XMLTemplate (Template):
 	"""A specialised form of a template that knows how to output XML
@@ -599,17 +605,23 @@ class TemplateCompiler:
 		self.commandHandler [METAL_DEFINE_SLOT] = self.compileMetalDefineSlot
 		self.commandHandler [METAL_FILL_SLOT] = self.compileMetalFillSlot
 		self.commandHandler [METAL_DEFINE_MACRO] = self.compileMetalDefineMacro
-		
+
+                # i18n commands
+                self.commandHandler [I18N_TRANSLATE] = self.compileI18nTranslate
+
 		# Default namespaces
-		self.setTALPrefix ('tal')
 		self.tal_namespace_prefix_stack = []
 		self.metal_namespace_prefix_stack = []
+                self.i18n_namespace_prefix_stack = []
+		self.setTALPrefix ('tal')
 		self.tal_namespace_prefix_stack.append ('tal')
 		self.setMETALPrefix ('metal')
 		self.metal_namespace_prefix_stack.append ('metal')
-		
+                self.setI18NPrefix('i18n')
+		self.i18n_namespace_prefix_stack.append ('i18n')
+
 		self.log = logging.getLogger ("simpleTAL.TemplateCompiler")
-		
+
 	def setTALPrefix (self, prefix):
 		self.tal_namespace_prefix = prefix
 		self.tal_attribute_map = {}
@@ -620,7 +632,7 @@ class TemplateCompiler:
 		self.tal_attribute_map ['%s:omit-tag'%prefix] = TAL_OMITTAG
 		self.tal_attribute_map ['%s:condition'%prefix] = TAL_CONDITION
 		self.tal_attribute_map ['%s:repeat'%prefix] = TAL_REPEAT
-		
+
 	def setMETALPrefix (self, prefix):
 		self.metal_namespace_prefix = prefix
 		self.metal_attribute_map = {}
@@ -628,19 +640,29 @@ class TemplateCompiler:
 		self.metal_attribute_map ['%s:use-macro'%prefix] = METAL_USE_MACRO
 		self.metal_attribute_map ['%s:define-slot'%prefix] = METAL_DEFINE_SLOT
 		self.metal_attribute_map ['%s:fill-slot'%prefix] = METAL_FILL_SLOT
-		
+
+        def setI18NPrefix (self, prefix):
+                self.i18n_namespace_prefix = prefix
+                self.i18n_attribute_map = {}
+                self.i18n_attribute_map['%s:translate'%prefix] = I18N_TRANSLATE
+                # XXX for now, only support i18n:translate
+
 	def popTALNamespace (self):
 		newPrefix = self.tal_namespace_prefix_stack.pop()
 		self.setTALPrefix (newPrefix)
-		
+
 	def popMETALNamespace (self):
 		newPrefix = self.metal_namespace_prefix_stack.pop()
 		self.setMETALPrefix (newPrefix)
-		
+
+	def popI18NNamespace (self):
+		newPrefix = self.i18n_namespace_prefix_stack.pop()
+		self.setI18NPrefix (newPrefix)
+
 	def getTemplate (self):
 		template = Template (self.commandList, self.macroMap, self.symbolLocationTable)
 		return template
-		
+
 	def addCommand (self, command):
 		if (command[0] == TAL_OUTPUT and (len (self.commandList) > 0) and self.commandList[-1][0] == TAL_OUTPUT):
 			# We can combine output commands
@@ -652,14 +674,14 @@ class TemplateCompiler:
 		""" Used to add a tag to the stack.  Various properties can be passed in the dictionary
 		    as being information required by the tag.
 		    Currently supported properties are:
-		    		'command'         - The (command,args) tuple associated with this command
-		    		'originalAtts'    - The original attributes that include any metal/tal attributes
-		    		'endTagSymbol'    - The symbol associated with the end tag for this element
-		    		'popFunctionList' - A list of functions to execute when this tag is popped
-					'singletonTag'    - A boolean to indicate that this is a singleton flag
+	  		'command'         - The (command,args) tuple associated with this command
+	    		'originalAtts'    - The original attributes that include any metal/tal attributes
+	    		'endTagSymbol'    - The symbol associated with the end tag for this element
+	    		'popFunctionList' - A list of functions to execute when this tag is popped
+			'singletonTag'    - A boolean to indicate that this is a singleton flag
 		"""
 		# Add the tag to the tagStack (list of tuples (tag, properties, useMacroLocation))
-		self.log.debug ("Adding tag %s to stack" % tag[0])
+		self.log.debug ("Adding tag %s to stack" % `tag[0]`)
 		command = tagProperties.get ('command',None)
 		originalAtts = tagProperties.get ('originalAtts', None)
 		singletonTag = tagProperties.get ('singletonTag', 0)
@@ -692,7 +714,7 @@ class TemplateCompiler:
 			singletonTag = tagProperties.get ('singletonTag', 0)
 			for func in popCommandList:
 				apply (func, ())
-			self.log.debug ("Popped tag %s off stack" % oldTag[0])
+			self.log.debug ("Popped tag %s off stack" % `oldTag[0]`)
 			if (oldTag[0] == tag[0]):
 				# We've found the right tag, now check to see if we have any TAL commands on it
 				if (endTagSymbol is not None):					
@@ -720,7 +742,7 @@ class TemplateCompiler:
 					msg = "TAL/METAL Elements must be balanced - found close tag %s expecting %s" % (tag[0], oldTag[0])
 					self.log.error (msg)
 					raise TemplateParseException (tagAsText(oldTag), msg)
-		self.log.error ("Close tag %s found with no corresponding open tag." % tag[0])
+		self.log.error ("Close tag %s found with no corresponding open tag." % `tag[0]`)
 		raise TemplateParseException ("</%s>" % tag[0], "Close tag encountered with no corresponding open tag.")
 					
 	def parseStartTag (self, tag, attributes, singletonElement=0):
@@ -731,6 +753,7 @@ class TemplateCompiler:
 		# Look for tal/metal attributes
 		foundTALAtts = []
 		foundMETALAtts = []
+                foundI18NAtts = []
 		foundCommandsArgs = {}
 		cleanAttributes = []
 		tagProperties = {}
@@ -738,7 +761,7 @@ class TemplateCompiler:
 		TALElementNameSpace = 0
 		prefixToAdd = ""
 		tagProperties ['singletonTag'] = singletonElement
-		
+
 		# Determine whether this element is in either the METAL or TAL namespace
 		if (tag.find (':') > 0):
 			# We have a namespace involved, so let's look to see if its one of ours
@@ -749,13 +772,13 @@ class TemplateCompiler:
 			elif (namespace == self.tal_namespace_prefix):
 				TALElementNameSpace = 1
 				prefixToAdd = self.tal_namespace_prefix +":"
-			
+
 			if (TALElementNameSpace):
 				# We should treat this an implicit omit-tag
 				foundTALAtts.append (TAL_OMITTAG)
 				# Will go to default, i.e. yes
 				foundCommandsArgs [TAL_OMITTAG] = ""
-				
+
 		for att, value in attributes:
 			if (TALElementNameSpace and att[0:len (prefixToAdd)] != prefixToAdd):
 				commandAttName = prefixToAdd + att
@@ -773,7 +796,7 @@ class TemplateCompiler:
 						# We want this function called when the scope ends
 						popTagFuncList.append (self.popMETALNamespace)
 					else:
-						# We don't allow METAL/TAL to be declared as a default
+						# We don't allow METAL/TAL/I18N to be declared as a default
 						msg = "Can not use METAL name space by default, a prefix must be provided."
 						raise TemplateParseException (tagAsText (self.currentStartTag), msg)
 				elif (value == TAL_NAME_URI):
@@ -784,8 +807,18 @@ class TemplateCompiler:
 						# We want this function called when the scope ends
 						popTagFuncList.append (self.popTALNamespace)
 					else:
-						# We don't allow METAL/TAL to be declared as a default
+						# We don't allow METAL/TAL/I18N to be declared as a default
 						msg = "Can not use TAL name space by default, a prefix must be provided."
+						raise TemplateParseException (tagAsText (self.currentStartTag), msg)
+                                elif value == I18N_NAME_URI:
+                                        if len(prefix) > 0:
+                                                self.i18n_namespace_prefix_stack.append(self.i18n_namespace_prefix)
+                                                self.setI18NPrefix (prefix)
+						# We want this function called when the scope ends
+						popTagFuncList.append (self.popI18NNamespace)
+					else:
+						# We don't allow METAL/TAL/I18N to be declared as a default
+						msg = "Can not use I18N name space by default, a prefix must be provided."
 						raise TemplateParseException (tagAsText (self.currentStartTag), msg)
 				else:
 					# It's nothing special, just an ordinary namespace declaration
@@ -803,6 +836,11 @@ class TemplateCompiler:
 				cmnd = self.metal_attribute_map [commandAttName]
 				foundCommandsArgs [cmnd] = value
 				foundMETALAtts.append (cmnd)
+                        elif self.i18n_attribute_map.has_key(commandAttName):
+                                # It's an I18N attribute
+                                cmnd = self.i18n_attribute_map[commandAttName]
+                                foundCommandArgs[cmnd] = value
+                                foundI18NAtts.append(cmnd)
 			else:
 				cleanAttributes.append ((att,value))
 		tagProperties ['popFunctionList'] = popTagFuncList
@@ -812,16 +850,16 @@ class TemplateCompiler:
 			# Just content, add it to the various stacks
 			self.addTag ((tag, cleanAttributes), tagProperties)
 			return
-		
+
 		# Create a symbol for the end of the tag - we don't know what the offset is yet
 		self.endTagSymbol += 1
 		tagProperties ['endTagSymbol'] = self.endTagSymbol
-		
+
 		# Sort the METAL commands
 		foundMETALAtts.sort()
 		# Sort the tags by priority
 		foundTALAtts.sort()
-		
+
 		# We handle the METAL before the TAL
 		allCommands = foundMETALAtts + foundTALAtts
 		firstTag = 1
@@ -1059,15 +1097,15 @@ class TemplateCompiler:
 			msg = "Slot %s has already been filled!" % argument
 			self.log.error (msg)
 			raise TemplateParseException (tagAsText (self.currentStartTag), msg)
-		
+
 		# The slot starts at the next command.
 		slot = SubTemplate (len (self.commandList), self.endTagSymbol)
 		slotMap [argument] = slot
-		
+
 		# Update the command
 		self.commandList [ourMacroLocation] = (cmnd, (macroName, slotMap, endSymbol))
 		return None
-		
+
 	def compileMetalDefineSlot (self, argument):
 		if (len (argument) == 0):
 			# No argument passed
@@ -1079,8 +1117,12 @@ class TemplateCompiler:
 			msg = "Slot name %s is invalid." % argument
 			self.log.error (msg)
 			raise TemplateParseException (tagAsText (self.currentStartTag), msg)
-			
+
 		return (METAL_DEFINE_SLOT, (argument, self.endTagSymbol))
+
+        def compileI18nTranslate (self, content):
+                # XXX
+                pass
 
 class TemplateParseException (Exception):
 	def __init__ (self, location, errorDescription):
@@ -1102,10 +1144,12 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 		sgmllib.SGMLParser.__init__ (self)
 		self.log = logging.getLogger ("simpleTAL.HTMLTemplateCompiler")
 		
-	def parseTemplate (self, file, encoding="iso8859-1"):
-		encodedFile = codecs.lookup (encoding)[2](file)
-		self.encoding = encoding
-		self.feed (encodedFile.read())
+	def parseTemplate (self, fd, encoding="iso8859-1"):
+		#encodedFile = codecs.lookup (encoding)[2](fd)
+		#self.encoding = encoding
+                #data = encodedFile.read()
+                #print `data`
+		self.feed (fd.read())
 		self.close()
 		
 	def unknown_starttag (self, tag, attributes):
@@ -1127,7 +1171,7 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 			self.parseStartTag (tag, atts)
 		
 	def unknown_endtag (self, tag):
-		self.log.debug ("Recieved End Tag: " + tag)
+		self.log.debug ("Recieved End Tag: " + `tag`)
 		if (HTML_FORBIDDEN_ENDTAG.has_key (tag.upper())):
 			self.log.warn ("HTML 4.01 forbids end tags for the %s element" % tag)
 		else:
@@ -1135,24 +1179,24 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 			self.popTag ((tag, None))
 			
 	def handle_data (self, data):
-		self.log.debug ("Recieved Real Data: " + data)
+		self.log.debug ("Recieved Real Data: " + `data`)
 		self.parseData (cgi.escape (data))
 		
 	# These two methods are required so that we pass through entity references that we don't
 	# know about.  NOTE:  They are not escaped on purpose.
 	def handle_charref (self, ref):
-		self.parseData (u'&#%s;' % ref)
+		self.parseData ('&#%s;' % ref)
 		
 	def handle_entityref (self, ref):
-		self.parseData (u'&%s;' % ref)
+		self.parseData ('&%s;' % ref)
 		
 	# Handle document type declarations
 	def handle_decl (self, data):
-		self.parseData (u'<!%s>' % data)
+		self.parseData ('<!%s>' % data)
 		
 	# Pass comments through un-affected.
 	def handle_comment (self, data):
-		self.parseData (u'<!--%s-->' % data)
+		self.parseData ('<!--%s-->' % data)
 		
 	def report_unbalanced (self, tag):
 		self.log.warn ("End tag %s present with no corresponding open tag.")
@@ -1202,7 +1246,7 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler):
 		
 	def processingInstruction (self, target, data):
 		self.log.debug ("Recieved processing instruction.")
-		self.parseData (u'<?%s %s?>' % (target, data))
+		self.parseData ('<?%s %s?>' % (target, data))
 		
 	def getTemplate (self):
 		template = XMLTemplate (self.commandList, self.macroMap, self.symbolLocationTable)
