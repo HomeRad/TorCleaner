@@ -1,21 +1,24 @@
 # -*- coding: iso-8859-1 -*-
-import tempfile
-from wc import i18n, AppName, ConfigDir
+import tempfile, os
+from wc import i18n, AppName, ConfigDir, rulenames
 from wc import Configuration as _Configuration
 from wc.webgui.context import getval
 from wc.filter.rules.RewriteRule import partvalnames, partnames
+from wc.filter.rules.FolderRule import FolderRule
+from wc.filter import GetRuleFromName
 
 t_title = i18n._("%s filter configuration") % AppName
 t_back = i18n._("Back")
 t_apply = i18n._("Apply")
-t_removefolder = i18n._("Remove this folder")
-t_enablefolder = i18n._("Enable this folder")
-t_disablefolder = i18n._("Disable this folder")
+t_removefolder = i18n._("Remove folder")
+t_renamefolder = i18n._("Rename folder")
+t_enablefolder = i18n._("Enable folder")
+t_disablefolder = i18n._("Disable folder")
 t_disabledfoldericon = i18n._("Disabled folder icon")
 t_foldericon = i18n._("Folder icon")
-t_removerule = i18n._("Remove this rule")
-t_enablerule = i18n._("Enable this rule")
-t_disablerule = i18n._("Disable this rule")
+t_removerule = i18n._("Remove rule")
+t_enablerule = i18n._("Enable rule")
+t_disablerule = i18n._("Disable rule")
 t_disabledruleicon = i18n._("Disabled rule icon")
 t_ruleicon = i18n._("Rule icon")
 t_newfolder = i18n._("New folder")
@@ -63,21 +66,6 @@ folders = [ r for r in config['rules'] if r.get_name()=='folder' ]
 curfolder = None
 # current selected rule
 currule = None
-ruletypes = [
-    "Allow",
-    "Allowdomains",
-    "Allowurls",
-    "Blockdomains",
-    "Blockurls",
-    "Block",
-    "Header",
-    "Image",
-    "Javascript",
-    "Nocomments",
-    "Pics",
-    "Rewrite",
-    "Replacer",
-]
 # ruletype flag for tal condition
 ruletype = {}
 
@@ -94,8 +82,11 @@ def exec_form (form):
     if form.has_key('selrule') and curfolder:
         _form_selrule(getval(form['selrule']))
     # make a new folder
-    if form.has_key('newfolder') and form.has_key('foldername'):
-        _form_newfolder(getval(form['foldername']))
+    if form.has_key('newfolder') and form.has_key('newfoldername'):
+        _form_newfolder(getval(form['newfoldername']))
+    # rename current folder
+    elif curfolder and form.has_key('renamefolder') and form.has_key('foldername'):
+        _form_renamefolder(getval(form['foldername']))
     # disable current folder
     elif curfolder and form.has_key('disablefolder%d'%curfolder.oid):
         _form_disablefolder(curfolder)
@@ -114,10 +105,11 @@ def exec_form (form):
     elif currule and form.has_key('enablerule%d'%currule.oid):
         _form_enablerule(currule)
     # remove current rule
-    # XXX more
+    # XXX
+    elif currule and form.has_key('apply'):
+        _form_apply()
     if info:
-        # XXX write changed config
-        pass
+        config.write_filterconf()
 
 
 def _form_reset ():
@@ -143,8 +135,8 @@ def _form_selrule (index):
         index = int(index)
         global currule
         currule = [ r for r in curfolder.rules if r.oid==index ][0]
-        for rt in ruletypes:
-            ruletype[rt] = (currule.get_name()==rt.lower())
+        for rt in rulenames:
+            ruletype[rt] = (currule.get_name()==rt)
         if currule.get_name()=="rewrite":
             global curparts
             curparts = {}
@@ -158,12 +150,21 @@ def _form_newfolder (foldername):
     if not foldername:
         error.append(i18n._("Empty folder name"))
         return
-    f, filename = tempfile.mkstemp("", ".zap", ConfigDir, text=True)
-    f.write("Wummel")
-    f.close()
-    f = FolderRule(title=foldername, desc="", disable=0, filename=filename)
-    config['rule'].append(f)
-    info.append(i18n._("New folder created"))
+    fd, filename = tempfile.mkstemp(".zap", "local_", ConfigDir, text=True)
+    # select the new folder
+    global curfolder
+    curfolder = FolderRule(title=foldername, desc="", disable=0, filename=filename)
+    config['rules'].append(curfolder)
+    folders.append(curfolder)
+    info.append(i18n._("New folder %s created")%`os.path.basename(filename)`)
+
+
+def _form_renamefolder (foldername):
+    if not foldername:
+        error.append(i18n._("Empty folder name"))
+        return
+    curfolder.title = foldername
+    info.append(i18n._("Folder successfully renamed"))
 
 
 def _form_disablefolder (folder):
@@ -183,8 +184,18 @@ def _form_enablefolder (folder):
 
 
 def _form_newrule (ruletype):
-    pass
-    # XXX
+    if ruletype not in rulenames:
+        error.append(i18n._("Invalid rule type"))
+        return
+    # add new rule
+    rule = GetRuleFromName(ruletype)
+    rule.parent = curfolder
+    curfolder.append_rule(rule)
+    config['rules'].append(rule)
+    # select new rule
+    global currule
+    currule = rule
+    info.append(i18n._("New rule created"))
 
 
 def _form_disablerule (rule):
@@ -201,3 +212,45 @@ def _form_enablerule (rule):
         return
     rule.disable = 0
     info.append(i18n._("Rule enabled"))
+
+
+def _form_apply ():
+    """delegate rule apply to different apply_* functions"""
+    attr = "_form_apply_%s" % currule.get_name()
+    globals()[attr]()
+
+
+def _form_apply_allow ():
+    print "XXX apply allow"
+
+
+def _form_apply_block ():
+    print "XXX apply block"
+
+
+def _form_apply_header ():
+    print "XXX apply header"
+
+
+def _form_apply_image ():
+    print "XXX apply image"
+
+
+def _form_apply_javascript ():
+    print "XXX apply javascript"
+
+
+def _form_apply_nocomments ():
+    print "XXX apply nocomments"
+
+
+def _form_apply_pics ():
+    print "XXX apply pics"
+
+
+def _form_apply_rewrite ():
+    print "XXX apply rewrite"
+
+
+def _form_apply_replace ():
+    print "XXX apply replace"

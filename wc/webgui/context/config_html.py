@@ -82,6 +82,7 @@ def exec_form (form):
         # write changed config
         config.write_proxyconf()
 
+
 def _form_proxyport (port):
     try:
         port = int(port)

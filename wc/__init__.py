@@ -173,6 +173,7 @@ class Configuration (dict):
         else:
             socket.setdefaulttimeout(None)
 
+
     def reset (self):
         """Reset to default values"""
         self['port'] = 8080
@@ -248,6 +249,15 @@ class Configuration (dict):
         filter.rules.FolderRule.recalc_oids(self['rules'])
 
 
+    def write_filterconf (self):
+        """write filter rules"""
+        folders = [r for r in self['rules'] if r.get_name()=="folder"]
+        for folder in folders:
+            f = file(folder.filename, 'w')
+            f.write(folder.toxml())
+            f.close()
+
+
     def init_filter_modules (self):
         """go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
@@ -277,7 +287,7 @@ class Configuration (dict):
 import xml.parsers.expat
 from XmlUtils import unxmlify
 
-_rulenames = (
+rulenames = (
   'rewrite',
   'block',
   'blockurls',
@@ -289,12 +299,12 @@ _rulenames = (
   'image',
   'nocomments',
   'javascript',
-  'replacer',
+  'replace',
   'pics'
 )
 _nestedtags = (
   # rewriter rule nested tag names
-  'attr','enclosed','replace',
+  'attr','enclosed','replacement',
   # PICS rule nested tag names
   'url', 'service','category',
 )
@@ -311,6 +321,7 @@ class BaseParser (object):
         self.reset(filename)
         self.config = config
         self.p.ParseFile(open(filename))
+
 
     def start_element (self, name, attrs):
         pass
@@ -333,11 +344,12 @@ class ZapperParser (BaseParser):
         super(ZapperParser, self).parse(filename, config)
         config['rules'].append(self.rules)
 
+
     def start_element (self, name, attrs):
         self.cmode = name
         if name=='folder':
             self.rules.fill_attrs(attrs, name)
-        elif name in _rulenames:
+        elif name in rulenames:
             self.rule = wc.filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.rules.append_rule(self.rule)
@@ -347,15 +359,18 @@ class ZapperParser (BaseParser):
         else:
             raise ParseException, i18n._("unknown tag name %s")%name
 
+
     def end_element (self, name):
         self.cmode = None
-        if name in _rulenames:
+        if name in rulenames:
             if name=='rewrite':
                 self.rule.set_start_sufficient()
+
 
     def character_data (self, data):
         if self.cmode and self.rule:
             self.rule.fill_data(data, self.cmode)
+
 
     def reset (self, filename):
         from wc.filter.rules import FolderRule
@@ -368,6 +383,7 @@ class WConfigParser (BaseParser):
     def parse (self, filename, config):
         super(WConfigParser, self).parse(filename, config)
         self.config['configfile'] = filename
+
 
     def start_element (self, name, attrs):
         if name=='webcleaner':
@@ -395,4 +411,3 @@ class WConfigParser (BaseParser):
         elif name=='filter':
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
-

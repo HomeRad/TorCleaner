@@ -77,8 +77,6 @@ class RewriteRule (UrlRule):
     """A rewrite rule applies to a specific tag, optional with attribute
        constraints (stored in self.attrs) or a regular expression to
        match the enclosed block (self.enclosed).
-       The replacement part and value is stored in a list with length
-       two (self.replace == [repl. part, repl. string]).
     """
     def __init__ (self, title="No title", desc="", disable=0, tag="a",
                attrs=None, enclosed="", part=COMPLETE, replacement="", oid=0):
@@ -103,7 +101,7 @@ class RewriteRule (UrlRule):
             val = unxmlify(attrs.get('name', 'href')).encode('iso8859-1')
             self.current_attr = val
             self.attrs[self.current_attr] = ""
-        elif name=='replace' and attrs.has_key('part'):
+        elif name=='replacement' and attrs.has_key('part'):
             self.part = part_num(unxmlify(attrs['part']).encode('iso8859-1'))
 
 
@@ -113,7 +111,7 @@ class RewriteRule (UrlRule):
             self.attrs[self.current_attr] += data
         elif name=='enclosed':
             self.enclosed += data
-        elif name=='replace':
+        elif name=='replacement':
             self.replacement += data
 
 
@@ -246,14 +244,12 @@ class RewriteRule (UrlRule):
                 s += "/>\n"
         if self.enclosed:
             s += "<enclosed>"+xmlify(self.enclosed)+"</enclosed>\n"
-        if not self.part==COMPLETE or self.replacement:
-            s += "<replace"
-            if self.part!=COMPLETE:
-                s += ' part="%s"' % num_part(self.part)
-            if self.replacement:
-                s += '>'+xmlify(self.replacement)+"</replace>\n"
-            else:
-                s += "/>\n"
+        s += "<replacement"
+        s += ' part="%s"' % num_part(self.part)
+        if self.replacement:
+            s += '>'+xmlify(self.replacement)+"</replacement>\n"
+        else:
+            s += "/>\n"
         return s + "</rewrite>"
 
 

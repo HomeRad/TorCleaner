@@ -76,8 +76,6 @@ bandwidth"""),
 _proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
 
 import tempfile
-# set the directory for new files
-tempfile.tempdir = ConfigDir
 
 
 def get_available_themes ():
@@ -295,7 +293,7 @@ class ConfWindow (ToolWindow):
         FXMenuCommand(filtermenu, "Nocomments", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Pics", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Rewrite", None, self, self.ID_NEWRULE)
-        FXMenuCommand(filtermenu, "Replacer", None, self, self.ID_NEWRULE)
+        FXMenuCommand(filtermenu, "Replace", None, self, self.ID_NEWRULE)
         FXMenuCascade(addmenu, i18n._("Filter"), None, filtermenu)
         FXMenuButton(f, i18n._("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(f, i18n._("Remove"), None, self, self.ID_REMOVE)
@@ -329,9 +327,7 @@ class ConfWindow (ToolWindow):
     def onCmdNewFolder (self, sender, sel, ptr):
         debug(GUI, "new folder")
         # use the special case of filename with the mkstemp tuple
-        f, filename = tempfile.mkstemp("", ".zap", ConfigDir, text=True)
-        f.write("Wummel")
-        f.close()
+        fd, filename = tempfile.mkstemp(".zap","local_", ConfigDir, text=True)
         f = FolderRule(title="No title", desc="", disable=0,filename=filename)
         self.tree.addFolder(f, create=1)
         self.getApp().dirty = 1

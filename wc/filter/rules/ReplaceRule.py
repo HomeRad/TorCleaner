@@ -21,10 +21,10 @@ __date__    = "$Date$"[7:-2]
 from UrlRule import UrlRule
 from wc.XmlUtils import xmlify, unxmlify
 
-class ReplacerRule (UrlRule):
+class ReplaceRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0,
                   search="", replace="", oid=0):
-        super(ReplacerRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+        super(ReplaceRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
         self.search = search
         self.replace = replace
         self.attrnames.append('search')
@@ -36,11 +36,11 @@ class ReplacerRule (UrlRule):
 
 
     def fromFactory (self, factory):
-        return factory.fromReplacerRule(self)
+        return factory.fromReplaceRule(self)
 
 
     def toxml (self):
-	s = super(ReplacerRule, self).toxml()
+	s = super(ReplaceRule, self).toxml()
         if self.search:
             s += '\n search="%s"'%xmlify(self.search)
         if self.replace:

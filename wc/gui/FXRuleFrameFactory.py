@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 from FXRuleFrame import FXRuleFrame
 from FXRewriteRuleFrame import FXRewriteRuleFrame
-from FXReplacerRuleFrame import FXReplacerRuleFrame
+from FXReplaceRuleFrame import FXReplaceRuleFrame
 from FXAllowRuleFrame import FXAllowRuleFrame
 from FXBlockRuleFrame import FXBlockRuleFrame
 from FXHeaderRuleFrame import FXHeaderRuleFrame
@@ -61,9 +61,9 @@ class FXRuleFrameFactory (object):
         self.inc_index()
         return FXRewriteRuleFrame(self.treeframe, rule, self.index)
 
-    def fromReplacerRule (self, rule):
+    def fromReplaceRule (self, rule):
         self.inc_index()
-        return FXReplacerRuleFrame(self.treeframe, rule, self.index)
+        return FXReplaceRuleFrame(self.treeframe, rule, self.index)
 
     def fromAllowRule (self, rule):
         self.inc_index()
