@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-10-01 02:49+0200\n"
-"PO-Revision-Date: 2004-10-01 02:53+0100\n"
+"POT-Creation-Date: 2004-10-01 12:07+0200\n"
+"PO-Revision-Date: 2004-10-01 12:11+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -757,19 +757,19 @@ msgstr ""
 "Falls Attribute angegeben sind müssen diese auch zum Inhalt passen ehe diese Regel\n"
 "zutrifft."
 
-#: ../templates/classic/accessibility.html:47
+#: ../templates/classic/accessibility.html:49
 msgid "Access key 0"
 msgstr "Tastaturkommando 0"
 
-#: ../templates/classic/accessibility.html:41
+#: ../templates/classic/accessibility.html:43
 msgid "Access key 1"
 msgstr "Tastaturkommando 1"
 
-#: ../templates/classic/accessibility.html:43
+#: ../templates/classic/accessibility.html:45
 msgid "Access key 2"
 msgstr "Tastaturkommando 2"
 
-#: ../templates/classic/accessibility.html:45
+#: ../templates/classic/accessibility.html:47
 msgid "Access key 9"
 msgstr "Tastaturkommando 9"
 
@@ -777,9 +777,14 @@ msgstr "Tastaturkommando 9"
 msgid "Access keys"
 msgstr "Tastaturkommandos"
 
+#: ../templates/classic/accessibility.html:22
+#, fuzzy
+msgid "Accessibility pages"
+msgstr "Zugänglichkeitserklärung"
+
 #: ../templates/classic/macros/standard.html:83
 #: ../templates/classic/accessibility.html:12
-#: ../templates/classic/accessibility.html:48
+#: ../templates/classic/accessibility.html:50
 msgid "Accessibility statement"
 msgstr "Zugänglichkeitserklärung"
 
@@ -853,7 +858,7 @@ msgstr ""
 msgid "All hosts"
 msgstr "Alle Rechner"
 
-#: ../templates/classic/accessibility.html:38
+#: ../templates/classic/accessibility.html:40
 msgid "All pages define the following access keys:"
 msgstr "Alle Seiten definieren folgende Tastaturkommandos:"
 
@@ -923,7 +928,7 @@ msgstr "Übernehmen"
 msgid "Attributes"
 msgstr "Attribute"
 
-#: ../templates/classic/update_doit.html:21
+#: ../templates/classic/update_doit.html:22
 msgid "Back to update overview"
 msgstr "Zurück zur Aktualisierungsübersicht"
 
@@ -1128,7 +1133,7 @@ msgid "Fallback URL"
 msgstr "Ersatz-URL"
 
 #: ../templates/classic/macros/standard.html:89
-#: ../templates/classic/accessibility.html:46
+#: ../templates/classic/accessibility.html:48
 msgid "Feedback"
 msgstr "Feedback"
 
@@ -1257,7 +1262,7 @@ msgstr "Header Wert"
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../templates/classic/accessibility.html:42
+#: ../templates/classic/accessibility.html:44
 msgid "Home page"
 msgstr "Startseite"
 
@@ -1270,13 +1275,12 @@ msgid "Hostname of the parent proxy"
 msgstr "Rechnername des übergeordneten Proxy"
 
 #: ../templates/classic/feedback.html:20
-#, fuzzy
 msgid "I wrote this software to get rid of advertisings. If you still see advert images on pages you surf on, you are free to send me the url of those pages and I will include filters to remove the adverts."
 msgstr ""
 "Ich habe dieses Progamm geschrieben, um Werbung zu entfernen.\n"
 "Falls sie immer noch Werbebanner auf Seiten sehen, können sie mir eine\n"
 "Url dieser Seiten schicken und ich werde Filter einfügen, um diese Werbung\n"
-"zu entfernen.\n"
+"zu entfernen."
 
 #: ../templates/classic/help.html:180
 #, fuzzy
@@ -1289,10 +1293,10 @@ msgstr ""
 "einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden\n"
 "(z.B. \\1, \\2, ...)."
 
-#: ../templates/classic/accessibility.html:26
+#: ../templates/classic/accessibility.html:25
 #, fuzzy
-msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at x."
-msgstr "Falls sie Fragen oder Vorschläge zu den Zugänglichkeitseigenschaften dieser Seiten haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen.\n"
+msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>."
+msgstr "Falls sie Vorschläge oder Kommentare zu ${appname} haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
 
 #: ../templates/classic/feedback.html:27
 msgid "If you have any suggestions or comments about ${appname}, feel free to email me at <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>."
@@ -1466,9 +1470,9 @@ msgstr ""
 "der Header gelöscht. Ansonsten wird er ersetzt oder hinzugefügt\n"
 "falls er vorher noch nicht existierte."
 
-#: ../templates/classic/accessibility.html:35
+#: ../templates/classic/accessibility.html:36
 #, fuzzy
-msgid "Most browsers support jumping to specific links by typing keys defined on the web site. On Windows, you can press x + an access key; on Macintosh, you can press x + an access key."
+msgid "Most browsers support jumping to specific links by typing keys defined on the web site. On Windows, you can press ${alt-key} + an access key; on Macintosh, you can press ${control-key} + an access key."
 msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können sie <acronym>ALT</acronym> + Tastaturkommando tippen, unter Macintoshkönnen sie <acronym>Control</acronym> + Tastaturkommando tippen."
 
 #: ../templates/classic/filterconfig.html:44
@@ -1589,22 +1593,16 @@ msgid "Password used for proxy authentitaction"
 msgstr "Passwort zur Proxy Authentifizierung"
 
 #: ../templates/classic/adminpass.html:22
-#, fuzzy
 msgid "Please open the file ${configfile} and replace the line ${lineold} with:"
-msgstr ""
-"Bitte bearbeiten Sie die Datei <code>%(ConfigFile)s</code> und\n"
-"ersetzen Sie die Zeile <code>adminpass=\"\"</code> mit:\n"
+msgstr "Bitte bearbeiten Sie die Datei ${configfile} und ersetzen Sie die Zeile ${lineold} mit:"
 
 #: ../templates/classic/rated.html:20
 msgid "Please point your browser somewhere else or"
 msgstr "Bitte besuchen Sie eine andere Internetseite oder"
 
 #: ../templates/classic/rating_mail.html:35
-#, fuzzy
 msgid "Please specify an SMTP host to send the mail to. If unsure, leave it at <code>localhost</code>."
-msgstr ""
-"Geben Sie bitte einen SMTP Rechnernamen ein, an den die Email\n"
-"versandt wird. Falls Sie unsicher sind, lassen Sie <code>localhost</code> stehen.\n"
+msgstr "Geben Sie bitte einen SMTP Rechnernamen ein, an den die Email versandt wird. Falls Sie unsicher sind, lassen Sie <code>localhost</code> stehen."
 
 #: ../templates/classic/config.html:54
 #: ../templates/classic/config.html:242
@@ -1774,11 +1772,8 @@ msgstr "Anfrage URL aller Mime-Typen."
 
 #: ../templates/classic/help.html:127
 #: ../templates/classic/help.html:137
-#, fuzzy
 msgid "Response content data of all image types supported by the Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm."
-msgstr ""
-"Antwortdaten von allen Bildformaten die von der Python Imaging Library\n"
-"unterstützt werden: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
+msgstr "Antwortdaten von allen Bildformaten die von der Python Imaging Library unterstützt werden: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm."
 
 #: ../templates/classic/help.html:110
 msgid "Response content data of mime types image/gif"
@@ -2004,11 +1999,11 @@ msgid "Send"
 msgstr "Senden"
 
 #: ../templates/classic/macros/standard.html:17
-#: ../templates/classic/accessibility.html:44
+#: ../templates/classic/accessibility.html:46
 msgid "Skip to main content"
 msgstr "Zum Hauptinhalt springen"
 
-#: ../templates/classic/update.html:36
+#: ../templates/classic/update.html:37
 #, fuzzy
 msgid "The <b>Update content ratings</b> button downloads new content ratings from ${url} and adds new ratings into the current configuration.<br> Existing content ratings are not changed."
 msgstr ""
@@ -2017,7 +2012,7 @@ msgstr ""
 "und fügt neue Bewertungen in die aktuelle Konfiguration ein.<br>\n"
 "Existierende Bewertungen werden nicht verändert."
 
-#: ../templates/classic/update.html:19
+#: ../templates/classic/update.html:20
 #, fuzzy
 msgid "The <b>Update filter configuration</b> button downloads new filter files from ${url} and merges their changes into the current configuration.<br> If something has changed, the new filter configuration files are saved and reloaded into the proxy."
 msgstr ""
@@ -2027,19 +2022,12 @@ msgstr ""
 "in den Proxy neu geladen."
 
 #: ../templates/classic/adminpass.html:16
-#, fuzzy
 msgid "The administrator password was not yet initialized. This password protects the web configuration pages. Without an administrator password, every user can change the proxy configuration."
-msgstr ""
-"Das Administratorpasswort wurde noch nicht initialisiert.\n"
-"Dieses Passwort schützt die Seiten der Webkonfiguration.\n"
-"Ohne ein Administratorpasswort kann jeder Benutzer die Proxy-Konfiguration ändern.\n"
+msgstr "Das Administratorpasswort wurde noch nicht initialisiert. Dieses Passwort schützt die Seiten der Webkonfiguration. Ohne ein Administratorpasswort kann jeder Benutzer die Proxy-Konfiguration ändern."
 
 #: ../templates/classic/adminpass.html:32
-#, fuzzy
 msgid "The configuration also allows you to change the password."
-msgstr ""
-"Die Konfiguration erlaubt Ihnen auch, das Passwort zu\n"
-"ändern.\n"
+msgstr "Die Konfiguration erlaubt Ihnen auch, das Passwort zu ändern."
 
 #: ../templates/classic/rated.html:16
 msgid "The content of the requested page ${url} was rated for the following reason:"
@@ -2060,9 +2048,8 @@ msgid "This page is also available in"
 msgstr "Diese Seite ist auch verfügbar auf"
 
 #: ../templates/classic/accessibility.html:21
-#, fuzzy
-msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims x."
-msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Webseiten stammen von Mark Pilgrims <a href=\"http://diveintoaccessibility.org/\">Accessibility Seiten</a>.\n"
+msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims ${accessibility-link}."
+msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Webseiten stammen von Mark Pilgrims ${accessibility-link}."
 
 #: ../templates/classic/config.html:104
 msgid "Timeout"
@@ -2096,15 +2083,15 @@ msgstr "Zu bewertende URL"
 msgid "Up"
 msgstr "Hoch"
 
-#: ../templates/classic/update.html:44
+#: ../templates/classic/update.html:45
 msgid "Update content ratings"
 msgstr "Aktualisierung der Inhaltsbewertung"
 
-#: ../templates/classic/update.html:28
+#: ../templates/classic/update.html:29
 msgid "Update filter configuration"
 msgstr "Aktualisierung der Filterkonfiguration"
 
-#: ../templates/classic/update_doit.html:18
+#: ../templates/classic/update_doit.html:19
 msgid "Update log"
 msgstr "Aktualisierungsprotokoll"
 
@@ -2161,12 +2148,8 @@ msgstr ""
 "Kategorien bewerten."
 
 #: ../templates/classic/rating_mail.html:20
-#, fuzzy
 msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
-msgstr ""
-"Sie können mir geänderte oder neue Seitenbewertungen per\n"
-"Mail schicken so daß ich diese anschauen und in eine aktualisierte\n"
-"Bewertungsdatenbank einfügen kann.\n"
+msgstr "Sie können mir geänderte oder neue Seitenbewertungen per Mail schicken so daß ich diese anschauen und in eine aktualisierte Bewertungsdatenbank einfügen kann."
 
 #: ../templates/classic/config.html:332
 msgid "You can specify network masks for whole subnets. For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host)."
@@ -2186,16 +2169,11 @@ msgstr "Ihre Anfrage"
 msgid "accessibility features of these pages"
 msgstr "Zugänglichkeitseigenschaften dieser Seiten"
 
-#: ../templates/classic/accessibility.html:21
-#, fuzzy
-msgid "accessibility-link"
-msgstr "Zugänglichkeitserklärung"
-
 #: ../templates/classic/help.html:194
 msgid "after"
 msgstr "danach"
 
-#: ../templates/classic/accessibility.html:33
+#: ../templates/classic/accessibility.html:34
 msgid "alt-key"
 msgstr "Alt-Taste"
 
@@ -2203,13 +2181,9 @@ msgstr "Alt-Taste"
 msgid "before"
 msgstr "vorher"
 
-#: ../templates/classic/accessibility.html:35
+#: ../templates/classic/accessibility.html:37
 msgid "control-key"
 msgstr "Strg-Taste"
-
-#: ../templates/classic/accessibility.html:26
-msgid "email-link"
-msgstr ""
 
 #: ../templates/classic/config.html:218
 #: ../templates/classic/macros/rules.html:19

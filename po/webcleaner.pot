@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-10-01 02:49+0200\n"
+"POT-Creation-Date: 2004-10-01 12:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -659,19 +659,19 @@ msgstr ""
 msgid "A rewrite rule applies to one specified HTML tag and can replace (or delete if the replacement data is empty) parts of or the complete tag. The tag name is a case insensitive string.<br> If attributes are given, they must match too before the rule applies."
 msgstr ""
 
-#: ../templates/classic/accessibility.html:47
+#: ../templates/classic/accessibility.html:49
 msgid "Access key 0"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:41
+#: ../templates/classic/accessibility.html:43
 msgid "Access key 1"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:43
+#: ../templates/classic/accessibility.html:45
 msgid "Access key 2"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:45
+#: ../templates/classic/accessibility.html:47
 msgid "Access key 9"
 msgstr ""
 
@@ -679,9 +679,13 @@ msgstr ""
 msgid "Access keys"
 msgstr ""
 
+#: ../templates/classic/accessibility.html:22
+msgid "Accessibility pages"
+msgstr ""
+
 #: ../templates/classic/macros/standard.html:83
 #: ../templates/classic/accessibility.html:12
-#: ../templates/classic/accessibility.html:48
+#: ../templates/classic/accessibility.html:50
 msgid "Accessibility statement"
 msgstr ""
 
@@ -750,7 +754,7 @@ msgstr ""
 msgid "All hosts"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:38
+#: ../templates/classic/accessibility.html:40
 msgid "All pages define the following access keys:"
 msgstr ""
 
@@ -816,7 +820,7 @@ msgstr ""
 msgid "Attributes"
 msgstr ""
 
-#: ../templates/classic/update_doit.html:21
+#: ../templates/classic/update_doit.html:22
 msgid "Back to update overview"
 msgstr ""
 
@@ -1002,7 +1006,7 @@ msgid "Fallback URL"
 msgstr ""
 
 #: ../templates/classic/macros/standard.html:89
-#: ../templates/classic/accessibility.html:46
+#: ../templates/classic/accessibility.html:48
 msgid "Feedback"
 msgstr ""
 
@@ -1131,7 +1135,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:42
+#: ../templates/classic/accessibility.html:44
 msgid "Home page"
 msgstr ""
 
@@ -1151,8 +1155,8 @@ msgstr ""
 msgid "If there is no replacement given the specified tag part will be removed, else it will be replaced.<br> Back references to matched subgroups can be specified in the replacement string with a backslash and the subgroup number (ie. \1, \2, ...)."
 msgstr ""
 
-#: ../templates/classic/accessibility.html:26
-msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at x."
+#: ../templates/classic/accessibility.html:25
+msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>."
 msgstr ""
 
 #: ../templates/classic/feedback.html:27
@@ -1318,8 +1322,8 @@ msgstr ""
 msgid "Modify HTTP headers. If the replacement value is empty, the header is deleted, else it gets replaced or added if it did not exist before."
 msgstr ""
 
-#: ../templates/classic/accessibility.html:35
-msgid "Most browsers support jumping to specific links by typing keys defined on the web site. On Windows, you can press x + an access key; on Macintosh, you can press x + an access key."
+#: ../templates/classic/accessibility.html:36
+msgid "Most browsers support jumping to specific links by typing keys defined on the web site. On Windows, you can press ${alt-key} + an access key; on Macintosh, you can press ${control-key} + an access key."
 msgstr ""
 
 #: ../templates/classic/filterconfig.html:44
@@ -1788,15 +1792,15 @@ msgid "Send"
 msgstr ""
 
 #: ../templates/classic/macros/standard.html:17
-#: ../templates/classic/accessibility.html:44
+#: ../templates/classic/accessibility.html:46
 msgid "Skip to main content"
 msgstr ""
 
-#: ../templates/classic/update.html:36
+#: ../templates/classic/update.html:37
 msgid "The <b>Update content ratings</b> button downloads new content ratings from ${url} and adds new ratings into the current configuration.<br> Existing content ratings are not changed."
 msgstr ""
 
-#: ../templates/classic/update.html:19
+#: ../templates/classic/update.html:20
 msgid "The <b>Update filter configuration</b> button downloads new filter files from ${url} and merges their changes into the current configuration.<br> If something has changed, the new filter configuration files are saved and reloaded into the proxy."
 msgstr ""
 
@@ -1826,7 +1830,7 @@ msgid "This page is also available in"
 msgstr ""
 
 #: ../templates/classic/accessibility.html:21
-msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims x."
+msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims ${accessibility-link}."
 msgstr ""
 
 #: ../templates/classic/config.html:104
@@ -1861,15 +1865,15 @@ msgstr ""
 msgid "Up"
 msgstr ""
 
-#: ../templates/classic/update.html:44
+#: ../templates/classic/update.html:45
 msgid "Update content ratings"
 msgstr ""
 
-#: ../templates/classic/update.html:28
+#: ../templates/classic/update.html:29
 msgid "Update filter configuration"
 msgstr ""
 
-#: ../templates/classic/update_doit.html:18
+#: ../templates/classic/update_doit.html:19
 msgid "Update log"
 msgstr ""
 
@@ -1934,15 +1938,11 @@ msgstr ""
 msgid "accessibility features of these pages"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:21
-msgid "accessibility-link"
-msgstr ""
-
 #: ../templates/classic/help.html:194
 msgid "after"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:33
+#: ../templates/classic/accessibility.html:34
 msgid "alt-key"
 msgstr ""
 
@@ -1950,12 +1950,8 @@ msgstr ""
 msgid "before"
 msgstr ""
 
-#: ../templates/classic/accessibility.html:35
+#: ../templates/classic/accessibility.html:37
 msgid "control-key"
-msgstr ""
-
-#: ../templates/classic/accessibility.html:26
-msgid "email-link"
 msgstr ""
 
 #: ../templates/classic/config.html:218

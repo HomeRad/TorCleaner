@@ -25,7 +25,7 @@ mofiles:
 	$(MSGMERGE) -U --suffix=.bak $@ $<
 
 template: $(TEMPLATE)
-$(TEMPLATE): $(POSOURCES)
+$(TEMPLATE): $(POSOURCES) $(TEMPLATES)
 	$(XGETTEXT) -w 80 --default-domain=$(PACKAGE) --language=Python \
 	  --copyright-holder="Bastian Kleineidam <calvin@users.sf.net>" \
 	  --msgid-bugs-address=calvin@users.sf.net -o $(TEMPLATE) \
