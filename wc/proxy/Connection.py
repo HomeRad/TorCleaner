@@ -18,7 +18,9 @@ import asyncore,socket,sys
 RECV_BUFSIZE = 8192
 SEND_BUFSIZE = 8192
 
-# XXX implement maximum sizes for buffers to prevent DoS attacks
+# to prevent DoS attacks, specify a maximum buffer size
+MAX_BUFSIZE = 1024*1024
+
 class Connection (asyncore.dispatcher):
     """add buffered input and output capabilities"""
     def __init__(self, sock=None):
@@ -41,6 +43,8 @@ class Connection (asyncore.dispatcher):
         if not self.connected:
             # It's been closed (presumably recently)
             return
+	if len(self.recv_buffer) > MAX_BUFSIZE:
+	    return
         try:
             data = self.recv(RECV_BUFSIZE)
             if not data: # It's been closed, and handle_close has been called

@@ -18,7 +18,7 @@ import re, urlparse, os, gzip, wc
 from wc.filter.rules.AllowRule import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
-from wc import debug, ConfigDir
+from wc import debug, ConfigDir, config
 from wc.debug_levels import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
@@ -45,7 +45,7 @@ def _file_url (fname):
 class Blocker (Filter):
 
     def __init__ (self, mimelist):
-        """With no blocker and no allower we never block."""
+        """load blocked/allowed urls/regex."""
         Filter.__init__(self, mimelist)
         from os.path import join
         # block and allow regular expressions
@@ -62,6 +62,8 @@ class Blocker (Filter):
         # urls for blocked types
         self.block_url = _file_url("blocked.html")
         self.block_image = _file_url("blocked.gif")
+	# strict whitelist mode (for parents)
+	self.strict_whitelist = config['strict_whitelist']
 
     def addrule (self, rule):
         Filter.addrule(self, rule)
@@ -133,7 +135,7 @@ class Blocker (Filter):
                 urlTuple[1:2] = [netloc,80]
             if self.allowed(urlTuple):
                 return data
-            blocked = self.blocked(urlTuple)
+            blocked = self.strict_whitelist or self.blocked(urlTuple)
             if blocked is not None:
                 #debug(BRING_IT_ON, "blocked url %s" % url)
                 # index 3, not 2!

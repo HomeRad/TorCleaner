@@ -50,6 +50,7 @@ class ConfWindow (ToolWindow):
      ID_APPLY,
      ID_TIMEOUT,
      ID_OBFUSCATEIP,
+     ID_STRICT_WHITELIST,
      ID_SHOWERRORS,
      ID_LOGFILE,
      ID_ABOUT,
@@ -71,7 +72,7 @@ class ConfWindow (ToolWindow):
      ID_NOPROXYFOR_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+35)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+36)
 
 
     def __init__ (self, app):
@@ -119,6 +120,8 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_TIMEOUT,ConfWindow.onCmdTimeout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_OBFUSCATEIP,ConfWindow.onCmdObfuscateIp)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_STRICT_WHITELIST,ConfWindow.onCmdStrictWhitelist)
+        FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_STRICT_WHITELIST,ConfWindow.onUpdStrictWhitelist)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_SHOWERRORS,ConfWindow.onCmdShowErrors)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PORT,ConfWindow.onCmdPort)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DEBUGLEVEL,ConfWindow.onCmdDebuglevel)
@@ -182,6 +185,8 @@ class ConfWindow (ToolWindow):
         widget.setValue(self.timeout)
         FXLabel(matrix, _("Obfuscate IP"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXCheckButton(matrix, None, self, self.ID_OBFUSCATEIP, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.obfuscateip)
+        FXLabel(matrix, _("Strict whitelist"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXCheckButton(matrix, None, self, self.ID_STRICT_WHITELIST, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.strict_whitelist)
         FXLabel(matrix, _("Debug level"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         cols=0
         d = FXComboBox(matrix,0,4,self, self.ID_DEBUGLEVEL,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
@@ -402,6 +407,18 @@ class ConfWindow (ToolWindow):
         self.obfuscateip = sender.getCheck()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Obfuscateip=%d" % self.obfuscateip)
+        return 1
+
+
+    def onCmdStrictWhitelist (self, sender, sel, ptr):
+        self.strict_whitelist = sender.getCheck()
+        self.getApp().dirty = 1
+        #debug(BRING_IT_ON, "Strict Whitelist=%d" % self.strict_whitelist)
+        return 1
+
+
+    def onUpdStrictWhitelist (self, sender, sel, ptr):
+        # XXX look for blocker module
         return 1
 
 
@@ -655,7 +672,7 @@ class ConfWindow (ToolWindow):
         #debug(BRING_IT_ON, "reading config")
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
-         'timeout','obfuscateip','debuglevel','logfile',
+         'timeout','obfuscateip','debuglevel','logfile','strict_whitelist',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass'):
             setattr(self, key, self.config[key])

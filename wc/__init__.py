@@ -122,6 +122,7 @@ class Configuration (UserDict.UserDict):
         self['parentproxypass'] = ""
         self['logfile'] = ""
         self['timeout'] = 30
+        self['strict_whitelist'] = 0
         self['obfuscateip'] = 0
         self['debuglevel'] = 0
         self['rules'] = []
@@ -314,7 +315,8 @@ class WConfigParser (BaseParser):
             for key,val in attrs.items():
                 self.config[str(key)] = unxmlify(val)
             for key in ('port','parentproxyport','timeout',
-	                'obfuscateip','debuglevel','colorize','showerrors'):
+	                'obfuscateip','debuglevel','colorize','showerrors',
+                        'strict_whitelist'):
                 self.config[key] = int(self.config[key])
             for key in ('version', 'parentproxy', 'logfile', 'proxyuser',
                         'proxypass', 'parentproxyuser', 'parentproxypass',
