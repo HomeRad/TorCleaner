@@ -56,7 +56,9 @@ libjs_la_SOURCES	= jsapi.c jsapi.h \
 			jsprvtd.h \
 			jspubtd.h \
 			jsstddef.h \
-			jstypes.h
+			jstypes.h \
+			$(CONFIG_HEADER)
+
 libjs_la_LIBADD		= ./fdlibm/libfdm.la
 
 noinst_PROGRAMS		= jscpucfg

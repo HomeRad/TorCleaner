@@ -50,13 +50,17 @@
 ** Note: on some platforms va_list is defined as an array,
 ** and requires array notation.
 */
-#ifdef HAVE_VA_COPY
-#define VARARGS_ASSIGN(foo, bar)        VA_COPY(foo,bar)
-#elif defined(HAVE_VA_LIST_AS_ARRAY)
+#if HAVE_VA_COPY
+#define	VARARGS_ASSIGN(foo, bar) va_copy (foo, bar)
+#elif HAVE___VA_COPY
+#define	VARARGS_ASSIGN(foo, bar) __va_copy (foo, bar)
+#elif defined (__GNUC__) && defined (__PPC__) && (defined (_CALL_SYSV) || defined (_WIN32))
+#define VARARGS_ASSIGN(foo, bar) (*(foo) = *(bar))
+#elif HAVE_VA_COPY_AS_ARRAY
 #define VARARGS_ASSIGN(foo, bar)        foo[0] = bar[0]
-#else
-#define VARARGS_ASSIGN(foo, bar)        (foo) = (bar)
-#endif
+#else	/* va_list is a pointer */
+#define	VARARGS_ASSIGN(foo, bar)	((foo) = (bar))
+#endif	/* va_list is a pointer */
 
 /*
 ** WARNING: This code may *NOT* call JS_LOG (because JS_LOG calls it)

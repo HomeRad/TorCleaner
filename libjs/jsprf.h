@@ -54,6 +54,7 @@
 #include "jstypes.h"
 #include <stdio.h>
 #include <stdarg.h>
+#include "../config.h"
 
 JS_BEGIN_EXTERN_C
 
