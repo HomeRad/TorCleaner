@@ -157,3 +157,28 @@ tooooooot.
 //-->
 </script>
 
+filter test/html/script11.html
+
+<script>
+<!--
+a = 0
+//-->
+</script>
+
+filter test/html/script12.html
+
+<script language="JavaScript1.1">
+<!--
+a=0;
+//-->
+</script>
+      </td>
+   </tr>
+</table>
+
+filter test/html/script13.html
+
+
+
+</html>
+
