@@ -3,41 +3,44 @@
 <folder sid="wc.312" oid="4" title="Scripting"
  desc="Scripting related.">
 
-<rewrite sid="wc.290" oid="0" title="&lt;a&gt; onfocus">
+<javascript sid="wc.304" oid="0" title="Enable JavaScript engine"
+ desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"/>
+
+<rewrite sid="wc.290" oid="1" title="&lt;a&gt; onfocus">
 <attr name="onfocus"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.291" oid="1" title="&lt;a&gt; onmouseout">
+<rewrite sid="wc.291" oid="2" title="&lt;a&gt; onmouseout">
 <attr name="onmouseout"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.292" oid="2" title="&lt;a&gt; onmouseover">
+<rewrite sid="wc.292" oid="3" title="&lt;a&gt; onmouseover">
 <attr name="onmouseover"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.293" oid="3" title="&lt;area&gt; onfocus"
+<rewrite sid="wc.293" oid="4" title="&lt;area&gt; onfocus"
  tag="area">
 <attr name="onfocus"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.294" oid="4" title="&lt;area&gt; onmouseout"
+<rewrite sid="wc.294" oid="5" title="&lt;area&gt; onmouseout"
  tag="area">
 <attr name="onmouseover"/>
 <attr name="onmouseout"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.295" oid="5" title="&lt;area&gt; onmouseover"
+<rewrite sid="wc.295" oid="6" title="&lt;area&gt; onmouseover"
  tag="area">
 <attr name="onmouseover"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.296" oid="6" title="&lt;body&gt; onload"
+<rewrite sid="wc.296" oid="7" title="&lt;body&gt; onload"
  desc="Remove onload javascript attribute"
  disable="1"
  tag="body">
@@ -45,51 +48,48 @@
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.297" oid="7" title="&lt;body&gt; onresize"
+<rewrite sid="wc.297" oid="8" title="&lt;body&gt; onresize"
  desc="filter the onresize tag"
  tag="body">
 <attr name="onresize"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.298" oid="8" title="&lt;body&gt; onunload"
+<rewrite sid="wc.298" oid="9" title="&lt;body&gt; onunload"
  desc="onunload is used for advert popups "
  tag="body">
 <attr name="onunload"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.299" oid="9" title="&lt;noscript&gt;"
+<rewrite sid="wc.299" oid="10" title="&lt;noscript&gt;"
  desc="Remove &lt;noscript&gt; tag (use if you allowed scripting)"
  tag="noscript"/>
 
 
-<rewrite sid="wc.300" oid="10" title="&lt;script&gt;"
+<rewrite sid="wc.300" oid="11" title="Remove Javascript content"
  desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1"
  tag="script"/>
 
 
-<rewrite sid="wc.301" oid="11" title="Javascript links"
+<rewrite sid="wc.301" oid="12" title="Remove Javascript links"
  desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1">
 <attr>javascript:.*</attr>
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite sid="wc.302" oid="12" title="use contents of noscript tag"
+<rewrite sid="wc.302" oid="13" title="Use noscript tag"
  desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1"
  tag="noscript">
 <replacement part="tag"/>
 </rewrite>
 
-<replace sid="wc.303" oid="13" title="top frame bashing"
+<replace sid="wc.303" oid="14" title="Disable top frame bashing"
  desc="Some sites disable surrounding frames and install themselves as the top frame."
  search="top\.location\.href\s*=\s*self\.location\.href"/>
-
-<javascript sid="wc.304" oid="14" title="Enable JavaScript engine"
- desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"/>
 
 <rewrite sid="wc.305" oid="15" title="&lt;frameset&gt; onunload"
  desc="onunload is used for advert popups"
