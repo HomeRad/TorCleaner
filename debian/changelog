@@ -5,8 +5,9 @@ webcleaner (2.14-0.1) unstable; urgency=low
     installation
   * move binaries to /usr/bin, since they could also be run by normal
     users with custom configurations
+  * add linda and lintian overrides
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat, 22 May 2004 10:09:44 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sat, 22 May 2004 14:53:51 +0200
 
 webcleaner (2.13-0.2) unstable; urgency=low
 

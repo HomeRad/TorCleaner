@@ -72,6 +72,9 @@ install: build
 	install -m 0755 service/webcleaner/log/run $(SERVICEDIR)/log/
 	# move files to packages
 	dh_movefiles --sourcedir=$(BASE)
+	# overrides
+	cp -a debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
+	cp -a debian/webcleaner.linda debian/webcleaner/usr/share/linda/overrides/webcleaner
 
 
 # Build architecture-independent files here.

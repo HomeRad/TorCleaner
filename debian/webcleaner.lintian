@@ -1,0 +1,2 @@
+webcleaner: non-standard-dir-perm var/log/webcleaner/ 0750 != 0755
+webcleaner: non-standard-file-perm etc/webcleaner/webcleaner.conf 0600 != 0644
