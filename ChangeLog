@@ -20,6 +20,7 @@
     o use yy_size_t for parser alloc definitions, fixes build errors on 64bit
       architectures
     o recognise "<! --" HTML comments (seen at Eonline)
+    o recognise "<! !>" HTML comments (seen at www.nba.com)
     o rebuild with flex 2.5.26
     Changed files: wc/parser/htmllex.[lc]
   * Improve error message for failing htmlsax module import
