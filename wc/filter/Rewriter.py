@@ -136,6 +136,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.inbuf = StringIO()
         self.waitbuf = StringIO()
         self.state = 'parse'
+        self.script = ''
         self.waited = 0
         self.rulestack = []
         self.buf = []
@@ -161,9 +162,9 @@ class HtmlFilter (HtmlParser,JSListener):
                 self.inbuf = StringIO()
                 self.waitbuf = StringIO()
                 self.waited = 0
-            debug(NIGHTMARE, "HtmlFilter: feed", `data`)
+            #debug(NIGHTMARE, "HtmlFilter: feed", `data`)
             HtmlParser.feed(self, data)
-            debug(NIGHTMARE, "HtmlFilter: feed finished")
+            #debug(NIGHTMARE, "HtmlFilter: feed finished")
         else:
             self.inbuf.write(data)
 
@@ -366,15 +367,15 @@ class HtmlFilter (HtmlParser,JSListener):
                 self.buf.append([STARTTAG, "script", {'type':
                                                       'text/javascript'}])
                 self.buf.append([DATA, "<!--\n%s\n//-->"%self.script])
-                self.buf.append([ENDTAG, "script"])
             self.state = 'parse'
-            #debug(NIGHTMARE, "XXX switching back to parse with")
-            #debug(NIGHTMARE, "self.buf", `self.buf`)
+            self.script = ''
+            debug(NIGHTMARE, "XXX switching back to parse with")
+            debug(NIGHTMARE, "self.buf", `self.buf`)
             #debug(NIGHTMARE, "self.outbuf", `self.outbuf.getvalue()`)
-            #debug(NIGHTMARE, "self.inbuf", `self.inbuf.getvalue()`)
-            #debug(NIGHTMARE, "self.waitbuf", `self.waitbuf.getvalue()`)
+            debug(NIGHTMARE, "self.inbuf", `self.inbuf.getvalue()`)
+            debug(NIGHTMARE, "self.waitbuf", `self.waitbuf.getvalue()`)
         else:
-            debug(HURT_ME_PLENTY, "JS: data", data)
+            debug(HURT_ME_PLENTY, "JS: read", len(data))
             self.script += data
 
 
@@ -385,9 +386,10 @@ class HtmlFilter (HtmlParser,JSListener):
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
             if mo:
                 ver = float(mo.group('num'))
+        debug(HURT_ME_PLENTY, "JS: self.url", self.url)
+        debug(HURT_ME_PLENTY, "JS: url", url)
         url = urlparse.urljoin(self.url, url)
         debug(HURT_ME_PLENTY, "JS: jsScriptSrc", url, ver)
-        self.script = ''
         self.state = 'wait'
         client = HttpProxyClient(self.jsScriptData, (url, ver))
         ClientServerMatchmaker(client,
@@ -403,7 +405,7 @@ class HtmlFilter (HtmlParser,JSListener):
     def jsScript (self, script, ver):
         """execute given script with javascript version ver
            return True if the script generates any output, else False"""
-        debug(HURT_ME_PLENTY, "JS: jsScript", ver, `script`)
+        #debug(HURT_ME_PLENTY, "JS: jsScript", ver, `script`)
         self.output_counter = 0
         self.jsEnv.attachListener(self)
         self.jsfilter = HtmlFilter(self.rules, self.url,
