@@ -137,7 +137,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.url:
             self.error(400, wc.i18n._("Empty URL"))
             return
-        self.attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_REQUEST])
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                                               [wc.filter.FILTER_REQUEST])
         self.protocol = wc.proxy.fix_http_version(protocol)
         self.http_ver = wc.proxy.get_http_version(self.protocol)
         self.request = "%s %s %s" % (self.method, wc.url.url_quote(self.url), self.protocol)
@@ -216,7 +217,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
         debug(PROXY, "%s client headers \n%s", self, msg)
-        self.attrs['headers'] = msg
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                               [wc.filter.FILTER_REQUEST_HEADER], headers=msg)
         self.set_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
         self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
@@ -226,7 +228,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # add decoders
         self.decoders = []
         # if content-length header is missing, assume zero length
-        self.bytes_remaining = wc.proxy.Headers.get_content_length(self.headers, 0)
+        self.bytes_remaining = \
+               wc.proxy.Headers.get_content_length(self.headers, 0)
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
