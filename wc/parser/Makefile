@@ -3,22 +3,19 @@ FLEX=/home/pool/src/flex/flex
 
 all: htmllex.c htmlparse.c
 
-testsax: htmllex.o htmlparse.o
-	gcc -lpython2.1 $^ -o testsax
-
 %.o:	%.c
 	gcc -g -Wall -pedantic -Wstrict-prototypes -fPIC -I. -I/usr/include/python2.1 -c $< -o $@
 
-htmlparse.h htmlparse.c:	htmlparse.y
+htmlparse.h htmlparse.c:	htmlparse.y htmlsax.h
 	bison htmlparse.y
 
 htmllex.l:	htmlparse.h
 
-htmllex.c:	htmllex.l
+htmllex.c:	htmllex.l htmlsax.h
 	$(FLEX) htmllex.l
 
 test:	testsax
 	cat test.html | ./testsax
 
 clean:
-	rm -f htmlparse.c htmlparse.h htmllex.c *.o *.output testsax
+	rm -f htmlparse.c htmlparse.h htmllex.c *.o *.output

@@ -2,18 +2,19 @@ include MANIFEST.in guruguru.bmp
 include INSTALL LICENSE README TODO
 include Makefile webcleaner webcleanerconf wcheaders
 include wcheaders.bat webcleanerconf.bat
-include debian/changelog debian/conffiles debian/config debian/control
+include debian/changelog debian/config debian/control debian/ConfWindow.patch
 include debian/webcleaner.dirs debian/webcleaner.docs
 include debian/webcleaner.init debian/webcleaner.postinst
 include debian/webcleaner.links debian/webcleaner.logrotate
-include debian/webcleanerconf.postinst debian/webcleanerconf.prerm
+include debian/webcleanertools.postinst debian/webcleanertools.prerm
 include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
-include filtertest filtertest.html
 include webcleaner.1 webcleanerconf.1 webcleaner.conf.5 wcheaders.1
 include rpm_build_script
 include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
 include config/*.png config/*.html
 include test/*.py test/output/test_* test/html/*.html
-include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparser.y
+include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparse.y
+include wc/parser/*.h
+include po/*.po po/*.pot po/*.py po/Makefile
 exclude _webcleaner2_configdata.py

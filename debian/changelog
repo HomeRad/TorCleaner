@@ -1,8 +1,10 @@
 webcleaner (0.38) unstable; urgency=low
 
-  * rewrite of the HTML parser module
+  * rewrite of the HTML parser module; libxml is not needed anymore.
+  * quote attr values in XML (SF bug#555045)
+  * include forgotten source files in MANIFEST.in
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 28 May 2002 16:37:56 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 29 May 2002 00:03:35 +0200
 
 webcleaner (0.37) unstable; urgency=low
 

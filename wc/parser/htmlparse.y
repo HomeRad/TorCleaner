@@ -53,7 +53,7 @@ staticforward PyTypeObject parser_type;
 %}
 
 /* parser options */
-%verbose
+/*%verbose*/
 /*%debug*/
 %defines
 %output="htmlparse.c"

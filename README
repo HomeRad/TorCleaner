@@ -39,6 +39,9 @@ Squid parent proxy.
 Yes, surf performance will decrease, especially with the Rewriter and
 the Replacer module enabled.
 
+Note that the Rewriter module parses the HTML. It optimizes HTML by making
+tags and attribute names lowercase, quoting attribute values only
+when necessary and removing some ignorable whitespace.
 
 Credits
 -------
@@ -57,3 +60,5 @@ the Webwasher.
 
 Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
 HTTP/1.1 proxy written in Java.
+
+The HTML parser is inspired from HotSAX.
