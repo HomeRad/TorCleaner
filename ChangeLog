@@ -44,6 +44,8 @@
   * 1k recv and send buffer (instead of 8k) to improve responsiveness
     for slow connections.
     Changed files: wc/proxy/Connection.py
+  * updated german translation
+    Changed files: po/de.po
 
 1.5
   * - increase TCP dns query timeout from 10 to 20 seconds
