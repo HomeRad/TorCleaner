@@ -219,13 +219,10 @@ def context_add (context, key, val):
 
 class Translator (gettext.GNUTranslations):
 
-    OUTPUT_ENCODING = "utf-8"
-
     def translate (self, domain, msgid, mapping=None,
                    context=None, target_language=None, default=None):
         _msg = self.gettext(msgid)
-        wc.log.debug(wc.LOG_TAL, "TRANSLATE %s %s %s %s",
-                     msgid, _msg, mapping, context)
+        wc.log.debug(wc.LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
         return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
 
     def gettext (self, msgid):
