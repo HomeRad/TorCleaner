@@ -194,8 +194,15 @@ _rulenames = (
   'image',
   'nocomments',
   'javascript',
-  'replacer')
-_nestedtags = ('attr','enclosed','replace')
+  'replacer',
+  'pics'
+)
+_nestedtags = (
+  # rewriter rule nested tag names
+  'attr','enclosed','replace',
+  # PICS rule nested tag names
+  'service','category',
+)
 
 class ParseException (Exception): pass
 
