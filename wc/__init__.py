@@ -207,7 +207,6 @@ class Configuration (dict):
         # DNS resolved nofilterhosts
         self['allowedhosts'] = None
         self['starttime'] = time.time()
-        self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
         self['localhosts'] = get_localhosts()
         self['mime_content_rewriting'] = Set()

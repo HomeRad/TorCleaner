@@ -134,8 +134,6 @@ class ClientServerMatchmaker (object):
             self.hostname = hostname
             self.port = port
             self.document = document
-        # append information for wcheaders tool
-        wc.proxy.HEADERS.append((self.url, 'client', self.headers.items()))
         # start DNS lookup
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
@@ -159,7 +157,6 @@ class ClientServerMatchmaker (object):
             new_url += self.document
             info(PROXY, "%s redirecting %s", str(self), `new_url`)
             self.state = 'done'
-            config['requests']['valid'] += 1
             # XXX find http version!
             ServerHandleDirectly(
               self.client,
@@ -171,7 +168,6 @@ class ClientServerMatchmaker (object):
             # Couldn't look up the host,
             # close this connection
             self.state = 'done'
-            config['requests']['error'] += 1
             self.client.error(504, i18n._("Host not found"),
                 i18n._('Host %s not found .. %s')%(hostname, answer.data))
 
@@ -276,7 +272,6 @@ class ClientServerMatchmaker (object):
         debug(PROXY, "%s server_response, match client/server", str(self))
         # Okay, transfer control over to the real client
         if self.client.connected:
-            config['requests']['valid'] += 1
             self.server.client = self.client
             self.client.server_response(self.server, response, status, headers)
         else:

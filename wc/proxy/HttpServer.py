@@ -213,7 +213,6 @@ class HttpServer (Server):
                 self.attrs = self.nofilter
             else:
                 self.attrs = initStateObjects(self.headers, self.url)
-            wc.proxy.HEADERS.append((self.url, "server", self.headers))
             self.state = 'content'
             self.client.server_response(self.response, self.statuscode, self.headers)
         else:
@@ -293,7 +292,6 @@ class HttpServer (Server):
         #    self.headers['Connection'] = 'close\r'
         #remove_headers(self.headers, ['Keep-Alive'])
         # XXX </doh>
-        wc.proxy.HEADERS.append((self.url, "server", self.headers))
         if self.statuscode!=407:
             self.client.server_response(self.response, self.statuscode, self.headers)
         if self.statuscode in (204, 304) or self.method == 'HEAD':

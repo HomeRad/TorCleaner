@@ -34,12 +34,6 @@ if socket.has_ipv6:
 
 TIMERS = [] # list of (time, function)
 
-# list of gathered headers
-# entries have the form
-# (url, 0(incoming)/1(outgoing), headers)
-HEADERS = LimitQueue(100)
-
-
 # XXX better name/implementation for this function
 def stripsite (url):
     """remove scheme and host from url. return host, newurl"""
