@@ -1,6 +1,8 @@
 2.26 "Tokyo Raiders" (released xx.12.2004)
 
-  * Do not include test packages in installed binaries.
+  * Do not include test packages in installed binaries. This prevents
+    finding the Virus test pattern in them.
+    Type: feature
     Changed: setup.py
 
   * Fix rule XML export.
