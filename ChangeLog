@@ -1,5 +1,8 @@
 2.2
-  *
+  * removed unused imports
+    Changed: wc/*.py
+  * updated filters
+    Changed: config/*.zap
 
 2.1
   * lots of minor bugs fixed running pychecker
