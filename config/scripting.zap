@@ -65,18 +65,19 @@
 </rewrite>
 
 <rewrite title="&lt;script&gt;" oid="10"
- desc="remove script tag (use if you dont want javascript)"
+ desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1"
  tag="script">
 </rewrite>
 
 <rewrite title="Javascript links" oid="11"
+ desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1">
 <attr>javascript:.*</attr>
 </rewrite>
 
 <rewrite title="use contents of noscript tag" oid="12"
- desc="use if you are filtering script tags. This rule just removes the &lt;noscript&gt; tags, not the tag content."
+ desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1"
  tag="noscript">
 <replace part="tag"/>

@@ -330,7 +330,7 @@
 <attr>g\.msn(bc)?\.com</attr>
 </rewrite>
 
-<rewrite title="Falk ag link" oid="142">
+<rewrite title="Falk ag link" oid="55">
 <attr>as1\.falkag\.de/server/link\.asp</attr>
 </rewrite>
 </folder>
