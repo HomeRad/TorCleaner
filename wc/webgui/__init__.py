@@ -201,6 +201,7 @@ def get_context (dirs, form, localcontext, lang):
         # handle form action
         bk.log.debug(wc.LOG_GUI, "got form %s", form)
         status = template_context._exec_form(form, lang)
+        # add form vars to context
         context_add(context, "form", form)
     # add default context values
     add_default_context(context, dirs[-1], lang)

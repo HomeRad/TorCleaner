@@ -157,9 +157,9 @@ class TemplateInterpreter (object):
         def translate (self, msg):
                 if self.translator is None:
                         return msg
+                formatvars = self.context.getVariableMap()
                 self.log.debug("Translating %r...", msg)
-                val = self.translator.ugettext(msg) % \
-                        self.context.getVariableMap()
+                val = self.translator.ugettext(msg) % formatvars
                 self.log.debug("...to %r", val)
                 return val
 

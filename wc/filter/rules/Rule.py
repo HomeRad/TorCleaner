@@ -28,6 +28,7 @@ def compileRegex (obj, attr):
     if hasattr(obj, attr) and getattr(obj, attr):
         setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
 
+
 class LangDict (dict):
     """Dictionary with a fallback algorithm, getting a default key entry if
        the requested key is not already mapped. Keys are usually languages
@@ -224,7 +225,6 @@ class Rule (object):
              for key,value in self.descriptions.iteritems() if value]
         return u"\n".join(t+d)
 
-
     def __str__ (self):
         """return basic rule data as string"""
         s = self.get_name()+"\n"
@@ -233,7 +233,6 @@ class Rule (object):
         s += "disable %d\n" % self.disable
         s += "title %s\n" % self.titles['en'].encode("iso-8859-1")
         return s
-
 
     def tiptext (self):
         """return short info for gui display"""

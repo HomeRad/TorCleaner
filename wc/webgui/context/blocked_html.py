@@ -19,15 +19,15 @@
 from wc import AppName, Version
 from wc.webgui.context import getval as _getval
 
-rule = None
+ruletitle = None
 selfolder = 0
 selrule = 0
 
 # form execution
 def _exec_form (form, lang):
-    global rule, selfolder, selrule
-    if form.has_key('rule'):
-        rule = _getval(form, 'rule')
+    global ruletitle, selfolder, selrule
+    if form.has_key('ruletitle'):
+        ruletitle = _getval(form, 'ruletitle')
     if form.has_key('selfolder'):
         selfolder = int(_getval(form, 'selfolder'))
     if form.has_key('selrule'):

@@ -202,7 +202,7 @@ class Blocker (wc.filter.Filter.Filter):
                 doc = self.block_url
                 attrs['mime'] = 'text/html'
                 rule = [r for r in self.rules if r.sid==sid][0]
-                query = urllib.urlencode({"rule": rule.tiptext(),
+                query = urllib.urlencode({"ruletitle": rule.titles['en'],
                                           "selfolder": "%d"%rule.parent.oid,
                                           "selrule": "%d"%rule.oid})
                 doc += "?%s" % query
