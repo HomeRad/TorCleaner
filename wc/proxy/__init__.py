@@ -168,9 +168,11 @@ def spliturl (url):
 
 def mainloop (handle=None):
     from HttpClient import HttpClient
+    from LocalClient import LocalClient
     #from Interpreter import Interpreter
     from Listener import Listener
     Listener(config['port'], HttpClient)
+    Listener(config['port']+1, LocalClient)
     #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))
     # make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)

@@ -9,22 +9,6 @@ from wc.webgui import WebConfig
 
 serverpool = ServerPool()
 
-# XXX is this list of localhost stuff complete?
-addrinfo = socket.gethostbyaddr(socket.gethostname())
-_localhosts = {
-    'localhost' : None,
-    'loopback' : None,
-    '127.0.0.1' : None,
-    '::1' : None,
-    'ip6-localhost' : None,
-    'ip6-loopback' : None,
-}
-_localhosts[addrinfo[0]] = None
-for h in addrinfo[1]:
-    _localhosts[h] = None
-for h in addrinfo[2]:
-    _localhosts[h] = None
-
 from HttpServer import HttpServer
 
 class ClientServerMatchmaker:
@@ -104,7 +88,7 @@ class ClientServerMatchmaker:
              'Content-Type: %s\r\n\r\n'%(mtype or 'application/octet-stream'),
               open(document, 'rb').read())
             return
-        if hostname in _localhosts and port==config['port']:
+        if hostname in config['localhosts'] and port==config['port']:
             self.client.error(400, i18n._("Invalid Proxy Request"))
             return
         # prepare DNS lookup
@@ -126,16 +110,6 @@ class ClientServerMatchmaker:
         # start DNS lookup
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
-
-
-    def handle_local (self, document):
-        debug(PROXY, "ClientServer: handle local request for %s", document)
-        if self.client and self.client.addr[0] not in _localhosts:
-            self.client.error(403, i18n._("Forbidden"),
-                              wc.proxy.access_denied(self.client.addr))
-        elif not WebConfig.handle_document(document, self.client):
-            self.client.error(404, i18n._("Not found"),
-              i18n._("Invalid path %s") % `document`)
 
 
     def handle_dns (self, hostname, answer):

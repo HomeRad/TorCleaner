@@ -192,10 +192,15 @@ class HttpClient (Connection):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
-            # This object will call server_connected at some point
-            ClientServerMatchmaker(self, self.request, self.headers,
-                                   self.content, self.nofilter,
-                                   self.compress)
+            self.server_request()
+
+
+    def server_request (self):
+        assert self.state == 'receive'
+        # This object will call server_connected at some point
+        ClientServerMatchmaker(self, self.request, self.headers,
+                               self.content, self.nofilter,
+                               self.compress)
 
 
     def server_response (self, server, response, headers):

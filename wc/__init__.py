@@ -101,6 +101,26 @@ def reload_config (signum, frame):
     config.init_filter_modules()
 
 
+def get_localhosts ():
+    """get list of localhost names and ips"""
+    # XXX is this list of localhost stuff complete?
+    addrinfo = socket.gethostbyaddr(socket.gethostname())
+    localhosts = {
+      'localhost' : None,
+      'loopback' : None,
+      '127.0.0.1' : None,
+      '::1' : None,
+      'ip6-localhost' : None,
+      'ip6-loopback' : None,
+    }
+    localhosts[addrinfo[0]] = None
+    for h in addrinfo[1]:
+        localhosts[h] = None
+    for h in addrinfo[2]:
+        localhosts[h] = None
+    return localhosts.keys()
+
+
 import wc.filter
 
 class Configuration (dict):
@@ -134,7 +154,7 @@ class Configuration (dict):
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
-        self['localip'] = socket.gethostbyname(socket.gethostname())
+        self['localhosts'] = get_localhosts()
         self['mime_content_rewriting'] = []
         self['headersave'] = 100
         self['showerrors'] = None
