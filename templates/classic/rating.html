@@ -43,8 +43,8 @@ several given categories.</p>
 <tbody>
 <!-- loop over categories (violence, sex, language, agerange) -->
 <tr tal:repeat="category service/categories/keys">
+<!-- XXX translation -->
 <td><label tal:attributes="title category;for string:category_${category}"
- i18n:translate=""
  tal:content="service/categories/?category/name">violence</label>
 </td>
 <td tal:condition="service/categories/?category/rrange" colspan="3">
@@ -58,7 +58,7 @@ several given categories.</p>
  type="radio"><input
  tal:attributes="name string:category_${category};value value"
  tal:condition="not:values/?category/?value"
- type="radio">&nbsp;<span i18n:translate="" 
+ type="radio">&nbsp;<!-- XXX translation --><span 
  tal:content="rangenames/?value">Mild</span>
 </td>
 </tr>
@@ -110,7 +110,8 @@ several given categories.</p>
  tal:content="url">http://imadoofus.com</a></td>
 <td><span tal:repeat="category rating_cache/?url/keys">
 <span tal:condition="values/?category">
-<span i18n:translate="" tal:content="category">violence</span>=<span 
+<!-- XXX translation -->
+<span tal:content="category">violence</span>=<span
  tal:replace="rating_cache/?url/?category">0</span>
 </span></span></td>
 <td><span tal:replace="structure rating_modified/?url">1. Jan 2004</span></td>

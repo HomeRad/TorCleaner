@@ -423,7 +423,8 @@ Rule (don't) match url
 </thead>
 <tbody>
 <tr tal:repeat="category service/categories/keys">
-<td i18n:translate=""
+<!-- XXX translation -->
+<td
  tal:content="service/categories/?category/name">violence</td>
 <td tal:condition="service/categories/?category/rrange" colspan="3">
 <input type="text" size="4"
@@ -435,7 +436,7 @@ Rule (don't) match url
  type="radio"><input
  tal:attributes="name string:category_${category};value value"
  tal:condition="not:currule/values/?category/?value"
- type="radio">&nbsp;<span i18n:translate=""
+ type="radio">&nbsp;<!-- XXX translation --><span 
  tal:content="rangenames/?value">Mild</span>
  </td>
 </tr>
