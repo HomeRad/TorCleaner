@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Aug  5 17:53:51 2003\n"
+"POT-Creation-Date: Thu Aug  7 08:32:15 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,18 +87,18 @@ msgid ""
 "Updating procedure:\n"
 "\n"
 "We download the new configuration files from\n"
-"'%s'.\n"
-"Changed config files are renamed to .old files, new\n"
-"files are copied into the config directory.\n"
+"'%s'\n"
+"and merge their changes into the current configuration.\n"
 "\n"
-"If something has changed, we restart the proxy."
+"If something has changed, we save the new filter\n"
+"configuration files and reload them into the proxy."
 msgstr ""
 
 msgid ""
 "You cannot remove folders. If you really want to get rid\n"
 "of this folder, delete the appropriate configuration file.\n"
 "It is always safer to disable a folder or filter instead of\n"
-"deleting it!"
+"deleting it."
 msgstr ""
 
 msgid ""
@@ -583,6 +583,9 @@ msgstr ""
 msgid "invalid or missing response from %s: %s"
 msgstr ""
 
+msgid "add Content-Type %s in %s"
+msgstr ""
+
 msgid "set Content-Type from %s to %s in %s"
 msgstr ""
 
@@ -986,7 +989,7 @@ msgid "Filter configuration"
 msgstr ""
 
 #: html translation
-msgid "Remove selected attributes"
+msgid "Skip to main content"
 msgstr ""
 
 #: html translation
@@ -999,6 +1002,10 @@ msgstr ""
 
 #: html translation
 msgid "Service"
+msgstr ""
+
+#: html translation
+msgid "%(AppName)s filter update script"
 msgstr ""
 
 #: html translation
@@ -1091,6 +1098,10 @@ msgid "Rule"
 msgstr ""
 
 #: html translation
+msgid "%(AppName)s filter update"
+msgstr ""
+
+#: html translation
 msgid "Timeout"
 msgstr ""
 
@@ -1123,7 +1134,7 @@ msgid "Feedback"
 msgstr ""
 
 #: html translation
-msgid "Username used for proxy authentication"
+msgid "Password used for proxy authentitaction"
 msgstr ""
 
 #: html translation
@@ -1139,7 +1150,7 @@ msgid "Access key 0"
 msgstr ""
 
 #: html translation
-msgid "Password used for proxy authentitaction"
+msgid "Username used for proxy authentication"
 msgstr ""
 
 #: html translation
@@ -1148,6 +1159,10 @@ msgstr ""
 
 #: html translation
 msgid "URL path"
+msgstr ""
+
+#: html translation
+msgid "Update filter configuration"
 msgstr ""
 
 #: html translation
@@ -1183,6 +1198,10 @@ msgid "Feedback for %(AppName)s"
 msgstr ""
 
 #: html translation
+msgid "Filter update"
+msgstr ""
+
+#: html translation
 msgid "Add attribute"
 msgstr ""
 
@@ -1192,6 +1211,10 @@ msgstr ""
 
 #: html translation
 msgid "Proxy settings"
+msgstr ""
+
+#: html translation
+msgid "Back to update overview"
 msgstr ""
 
 #: html translation
@@ -1243,7 +1266,7 @@ msgid "Header name"
 msgstr ""
 
 #: html translation
-msgid "Skip to main content"
+msgid "Remove selected attributes"
 msgstr ""
 
 #: html translation
@@ -1284,6 +1307,10 @@ msgid "%(AppName)s"
 msgstr ""
 
 #: html translation
+msgid "Filter update log"
+msgstr ""
+
+#: html translation
 msgid "Disabled folder icon"
 msgstr ""
 
@@ -1307,6 +1334,15 @@ msgstr ""
 msgid ""
 "If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
 "<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
+msgstr ""
+
+#: html translation
+msgid ""
+"The following button downloads new\n"
+"filter files from <code>%(BaseUrl)s</code> and merges their changes\n"
+"into the current configuration.<br>\n"
+"If something has changed, the new filter configuration files\n"
+"are saved and reloaded into the proxy."
 msgstr ""
 
 #: html translation

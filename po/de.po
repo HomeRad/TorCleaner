@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Tue Aug  5 17:53:51 2003\n"
-"PO-Revision-Date: 2003-08-05 17:54+0100\n"
+"POT-Creation-Date: Thu Aug  7 08:32:15 2003\n"
+"PO-Revision-Date: 2003-08-07 08:39+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -86,31 +86,31 @@ msgid ""
 "Updating procedure:\n"
 "\n"
 "We download the new configuration files from\n"
-"'%s'.\n"
-"Changed config files are renamed to .old files, new\n"
-"files are copied into the config directory.\n"
+"'%s'\n"
+"and merge their changes into the current configuration.\n"
 "\n"
-"If something has changed, we restart the proxy."
+"If something has changed, we save the new filter\n"
+"configuration files and reload them into the proxy."
 msgstr ""
-"Update Prozedere:\n"
+"Aktualisierungsprozedere:\n"
 "\n"
 "Die neuen Konfigurationsdateien werden von.\n"
-"'%s' heruntergeladen.\n"
-"Geänderte Konfigurationsdateien werden nach .old umbenannt,\n"
-"neue Dateien werden in das Konfigurationsverzeichnis kopiert.\n"
+"'%s' heruntergeladen und\n"
+"hre Änderungen in die aktuelle Konfiguration eingefügt.\n"
 "\n"
-"Falls sich Dateien geändert haben, wird der Proxy neu gestartet."
+"Falls etwas geändert wurde, wird die neue Filterkonfiguration\n"
+"gespeichert und in den Proxy neu geladen."
 
 msgid ""
 "You cannot remove folders. If you really want to get rid\n"
 "of this folder, delete the appropriate configuration file.\n"
 "It is always safer to disable a folder or filter instead of\n"
-"deleting it!"
+"deleting it."
 msgstr ""
 "Sie können Ordner nicht löschen. Wenn Sie diesen Ordner\n"
 "wirklich loswerden wollen, löschen Sie die entsprechende\n"
 "Konfigurationsdatei.\n"
-"Es ist immer sicherer, einen Ordner oder Filter zu deaktivieren\n"
+"Es ist immer sicherer, einen Ordner oder Filter zu deaktivieren,\n"
 "anstatt ihn zu löschen!"
 
 msgid ""
@@ -613,6 +613,9 @@ msgstr "Ungültige Anfrage"
 msgid "invalid or missing response from %s: %s"
 msgstr "ungültige oder fehlende Antwort von %s: %s"
 
+msgid "add Content-Type %s in %s"
+msgstr "füge Content-Type %s zu %s hinzu"
+
 msgid "set Content-Type from %s to %s in %s"
 msgstr "setze Content-Type von %s nach %s in %s"
 
@@ -1053,8 +1056,8 @@ msgstr "Filterkonfiguration"
 
 #: html
 #: translation
-msgid "Remove selected attributes"
-msgstr "Lösche ausgewählte Attribute"
+msgid "Skip to main content"
+msgstr "Zum Hauptinhalt springen"
 
 #: html
 #: translation
@@ -1069,6 +1072,11 @@ msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tip
 #: translation
 msgid "Service"
 msgstr "Dienstleister"
+
+#: html
+#: translation
+msgid "%(AppName)s filter update script"
+msgstr "%(AppName)s Filteraktualisierung Skript"
 
 #: html
 #: translation
@@ -1182,6 +1190,11 @@ msgstr "Regel"
 
 #: html
 #: translation
+msgid "%(AppName)s filter update"
+msgstr "%(AppName)s Filteraktualisierung"
+
+#: html
+#: translation
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
 
@@ -1222,8 +1235,8 @@ msgstr "Feedback"
 
 #: html
 #: translation
-msgid "Username used for proxy authentication"
-msgstr "Benutzername zur Proxy Authentifizierung"
+msgid "Password used for proxy authentitaction"
+msgstr "Passwort zur Proxy Authentifizierung"
 
 #: html
 #: translation
@@ -1242,8 +1255,8 @@ msgstr "Tastaturkommando 0"
 
 #: html
 #: translation
-msgid "Password used for proxy authentitaction"
-msgstr "Passwort zur Proxy Authentifizierung"
+msgid "Username used for proxy authentication"
+msgstr "Benutzername zur Proxy Authentifizierung"
 
 #: html
 #: translation
@@ -1254,6 +1267,11 @@ msgstr "Ordner nach unten schieben"
 #: translation
 msgid "URL path"
 msgstr "URL Pfad"
+
+#: html
+#: translation
+msgid "Update filter configuration"
+msgstr "Aktualisierung der Filterkonfiguration"
 
 #: html
 #: translation
@@ -1297,6 +1315,11 @@ msgstr "Feedback für %(AppName)s"
 
 #: html
 #: translation
+msgid "Filter update"
+msgstr "Filteraktualisierung"
+
+#: html
+#: translation
 msgid "Add attribute"
 msgstr "Attribut hinzufügen"
 
@@ -1309,6 +1332,11 @@ msgstr "URL Fragment"
 #: translation
 msgid "Proxy settings"
 msgstr "Proxy-Einstellungen"
+
+#: html
+#: translation
+msgid "Back to update overview"
+msgstr "Zurück zur Aktualisierungsübersicht"
 
 #: html
 #: translation
@@ -1372,8 +1400,8 @@ msgstr "Header Name"
 
 #: html
 #: translation
-msgid "Skip to main content"
-msgstr "Zum Hauptinhalt springen"
+msgid "Remove selected attributes"
+msgstr "Lösche ausgewählte Attribute"
 
 #: html
 #: translation
@@ -1428,6 +1456,11 @@ msgstr "%(AppName)s"
 
 #: html
 #: translation
+msgid "Filter update log"
+msgstr "Filteraktualisierung Protokoll"
+
+#: html
+#: translation
 msgid "Disabled folder icon"
 msgstr "Bild für inaktiven Ordner"
 
@@ -1457,6 +1490,20 @@ msgid ""
 "If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
 "<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr "Falls sie Fragen oder Vorschläge zu den Zugänglichkeitseigenschaften dieser Seiten haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
+
+#: html
+#: translation
+msgid ""
+"The following button downloads new\n"
+"filter files from <code>%(BaseUrl)s</code> and merges their changes\n"
+"into the current configuration.<br>\n"
+"If something has changed, the new filter configuration files\n"
+"are saved and reloaded into the proxy."
+msgstr ""
+"Die folgende Taste lädt neue Filterdateien von <code>%(BaseUrl)s</code>\n"
+"und fügt ihre Änderungen in die aktuelle Konfiguration ein.<br>\n"
+"Falls etwas geändert wurde, wird die neue Filterkonfiguration gespeichert und\n"
+"in den Proxy neu geladen."
 
 #: html
 #: translation
