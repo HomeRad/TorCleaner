@@ -20,7 +20,7 @@ several given categories.</p>
 <form action="#" method="POST" name="ratingform"
  tal:attributes="action string:${filename}.${lang}">
 <label for="url" i18n:translate=""
- i18n:attributes="title URL to rate"
+ i18n:attributes="title string:URL to rate"
  >URL</label>
 <input class="text" style="width: 280px;" type="text" name="url" id="url"
  value="http://imadoofus.com/" tal:attributes="value url">
@@ -60,7 +60,7 @@ several given categories.</p>
 </table>
 <br>
 <input type="submit" name="apply" value="Apply" class="submit"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </form>
 
 <h2 i18n:translate="">Saved ratings</h2>
@@ -84,15 +84,15 @@ several given categories.</p>
 <tr tal:repeat="url ratings_display">
 <td>
 <table border="0" cellpadding="0" cellspacing="0" summary="">
-<tr><td><a href="#" i18n:attributes="title Edit this rating"
+<tr><td><a href="#" i18n:attributes="title string:Edit this rating"
  tal:attributes="href string:${filename}.${lang}?url=${url}"><img
  src="edit.png"></a></td>
 <td><a href="#"
- i18n:attributes="title Delete this rating; onclick return window.confirm('Really delete this rating?')"
+ i18n:attributes="title string:Delete this rating; onclick string:return window.confirm('Really delete this rating?')"
  tal:attributes="href string:${filename}.${lang}?url=${url}&delete=1"><img
  src="delete.png"></a></td>
 <td><a href="#"
- i18n:attributes="title Email this rating to the author"
+ i18n:attributes="title string:Email this rating to the author"
  tal:attributes="href string:rating_mail.html.${lang}?url=${url}"><img
  src="mail.png"></a></td>
 </tr></table></td>

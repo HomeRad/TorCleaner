@@ -24,10 +24,10 @@
 <tr>
 <td>
 <label for="port" i18n:translate=""
- i18n:attributes="title Port number the proxy is listening on for requests"
+ i18n:attributes="title string:Port number the proxy is listening on for requests"
  >Port number</label>
 <sup><a href="#footnote1" class="footnote" title="see footnote 1"
- i18n:attributes="title see footnote 1">1)</a></sup>
+ i18n:attributes="title string:see footnote 1">1)</a></sup>
 </td>
 <td>
 <input class="number" type="text" name="port" id="port" maxlength="5"
@@ -37,7 +37,7 @@
 <tr>
 <td>
 <label for="timeout" i18n:translate=""
- i18n:attributes="title Connection timeout in seconds">Timeout</label>
+ i18n:attributes="title string:Connection timeout in seconds">Timeout</label>
 </td>
 <td>
 <input class="number" type="text" name="timeout" id="timeout" value=""
@@ -46,7 +46,7 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Administrator username"
+<label i18n:attributes="title string:Administrator username"
  for="adminuser" i18n:translate="">Admin user</label>
 </td>
 <td>
@@ -56,10 +56,10 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Administrator password"
+<label i18n:attributes="title string:Administrator password"
  for="adminpass" i18n:translate="">Admin password</label>
  <sup><a href="#footnote2" class="footnote" title="see footnote 2"
- i18n:attributes="title see footnote 2">2)</a></sup>
+ i18n:attributes="title string:see footnote 2">2)</a></sup>
 </td>
 <td>
 <input class="text" type="password" name="adminpass" id="adminpass"
@@ -70,7 +70,7 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Username used for proxy authentication"
+<label i18n:attributes="title string:Username used for proxy authentication"
  for="proxyuser" i18n:translate="">Proxy user</label>
 </td>
 <td>
@@ -80,10 +80,10 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Password used for proxy authentitaction"
+<label i18n:attributes="title string:Password used for proxy authentitaction"
  for="proxypass" i18n:translate="">Proxy password</label>
  <sup><a href="#footnote2" class="footnote" title="see footnote 2"
- i18n:attributes="title see footnote 2">2)</a></sup>
+ i18n:attributes="title string:see footnote 2">2)</a></sup>
 </td>
 <td>
 <input class="text" type="password" name="proxypass" id="proxypass"
@@ -94,7 +94,7 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Use NTLM authentication (Windows domain controller)"
+<label i18n:attributes="title string:Use NTLM authentication (Windows domain controller)"
  for="auth_ntlm" i18n:translate="">NTLM authentication</label>
 </td>
 <td>
@@ -106,7 +106,7 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Display Google search options for invalid pages"
+<label i18n:attributes="title string:Display Google search options for invalid pages"
  for="try_google" i18n:translate="">Try Google</label>
 </td>
 <td>
@@ -118,9 +118,9 @@
 </tr>
 </table>
 <div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title footnote 1">1)</sup>
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
 <span i18n:translate="">Changes to this option require a proxy restart to take effect.</span><br>
-<sup id="footnote2" title="footnote 2" i18n:attributes="title footnote 2">2)</sup>
+<sup id="footnote2" title="footnote 2" i18n:attributes="title string:footnote 2">2)</sup>
 <span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
 </div>
 </fieldset>
@@ -131,7 +131,7 @@
 <tr>
 <td>
 <label for="parentproxy" i18n:translate=""
- i18n:attributes="title Hostname of the parent proxy">Hostname</label>
+ i18n:attributes="title string:Hostname of the parent proxy">Hostname</label>
 </td>
 <td>
 <input class="text" type="text" name="parentproxy" id="parentproxy"
@@ -141,7 +141,7 @@
 <tr>
 <td>
 <label for="parentproxyport" i18n:translate=""
- i18n:attributes="title Port number of the parent proxy">Port number</label>
+ i18n:attributes="title string:Port number of the parent proxy">Port number</label>
 </td>
 <td>
 <input class="number" type="text" name="parentproxyport" id="parentproxyport"
@@ -150,7 +150,7 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Username used for parent proxy authentication"
+<label i18n:attributes="title string:Username used for parent proxy authentication"
  for="parentproxyuser" i18n:translate="">Username</label>
 </td>
 <td>
@@ -160,10 +160,10 @@
 </tr>
 <tr>
 <td>
-<label i18n:attributes="title Password used for parent proxy authentication"
+<label i18n:attributes="title string:Password used for parent proxy authentication"
  for="parentproxypass" i18n:translate="">Password</label>
  <sup><a href="#footnote3" class="footnote" title="see footnote 3"
- i18n:attributes="title see footnote 3">3)</a></sup>
+ i18n:attributes="title string:see footnote 3">3)</a></sup>
 </td>
 <td>
 <input class="text" type="password" name="parentproxypass" value="__dummy__"
@@ -174,7 +174,7 @@
 </tr>
 </table>
 <div class="footnote">
-<sup id="footnote3" title="footnote 3" i18n:attributes="title footnote 3">3)</sup>
+<sup id="footnote3" title="footnote 3" i18n:attributes="title string:footnote 3">3)</sup>
 <span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
 </div>
 </fieldset>
@@ -198,30 +198,30 @@
 <tr>
 <td>
 <select name="allowedhosts" id="allowedhosts" multiple size="5"
- i18n:attributes="title List of hosts allowed to use this proxy.">
+ i18n:attributes="title string:List of hosts allowed to use this proxy.">
 <option tal:repeat="host config/allowedhostlist" tal:attributes="value host"
  tal:content="host">127.0.0.1</option>
 </select>
 </td>
 <td>
 <input type="submit" name="delallowed" value="Remove selected" class="submit"
- i18n:attributes="value Remove selected">
+ i18n:attributes="value string:Remove selected">
 </td>
 </tr>
 <tr>
 <td>
 <input class="text" type="text" name="newallowed" value=""><sup><a
  href="#footnote4" class="footnote" title="see footnote 4"
- i18n:attributes="title see footnote 4">4)</a></sup>
+ i18n:attributes="title string:see footnote 4">4)</a></sup>
 </td>
 <td>
 <input type="submit" name="addallowed" value="Add new" class="submit"
- i18n:attributes="value Add new">
+ i18n:attributes="value string:Add new">
 </td>
 </tr>
 </table>
 <div class="footnote">
-<sup id="footnote4" title="footnote 4" i18n:attributes="title footnote 4">4)</sup>
+<sup id="footnote4" title="footnote 4" i18n:attributes="title string:footnote 4">4)</sup>
 <span i18n:translate="">Only numeric IPs/networks are useful as DNS resolution is not performed.</span>
 </div>
 </fieldset>
@@ -233,30 +233,30 @@
 <tr>
 <td>
 <select name="nofilterhosts" id="nofilterhosts" multiple size="5"
- i18n:attributes="title List of hostnames the proxy must not filter.">
+ i18n:attributes="title string:List of hostnames the proxy must not filter.">
 <option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
  tal:content="host">127.0.0.1</option>
 </select>
 </td>
 <td>
 <input type="submit" name="delnofilter" value="Remove selected" class="submit"
- i18n:attributes="value Remove selected">
+ i18n:attributes="value string:Remove selected">
 </td>
 </tr>
 <tr>
 <td>
 <input class="text" type="text" name="newnofilter" value=""><sup><a
  href="#footnote5" class="footnote" title="see footnote 5"
- i18n:attributes="title see footnote 5">5)</a></sup>
+ i18n:attributes="title string:see footnote 5">5)</a></sup>
 </td>
 <td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"
- i18n:attributes="value Add new">
+ i18n:attributes="value string:Add new">
 </td>
 </tr>
 </table>
 <div class="footnote">
-<sup id="footnote5" title="footnote 5" i18n:attributes="title footnote 5">5)</sup>
+<sup id="footnote5" title="footnote 5" i18n:attributes="title string:footnote 5">5)</sup>
 <span i18n:translate="">Be sure to supply all host aliases and IPs as DNS resolution is not performed.</span>
 </div>
 </fieldset>
@@ -265,7 +265,7 @@
 <tr>
 <td colspan="2">
 <input type="submit" value="Apply" class="submit"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td>
 </tr>
 </table>

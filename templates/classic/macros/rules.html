@@ -41,29 +41,29 @@
 <label for="rule_matchurls" i18n:translate="">Match urls</label>:
 </td><td>
 <select name="rule_matchurls" id="rule_matchurls" multiple size="3"
- i18n:attributes="title List of urls this rule should apply to">
+ i18n:attributes="title string:List of urls this rule should apply to">
 <option tal:repeat="url currule/matchurls" tal:attributes="value url"
  tal:content="url">www\.imadoofus\.org</option>
 </select><br>
 <input type="submit" name="delmatchurls" value="Remove selected" class="submit"
- i18n:attributes="value Remove selected"><br>
+ i18n:attributes="value string:Remove selected"><br>
 <input class="text" type="text" name="newmatchurl" value=""><br>
 <input type="submit" name="addmatchurl" value="Add new" class="submit"
- i18n:attributes="value Add new">
+ i18n:attributes="value string:Add new">
 </td></tr>
 <tr valign="top"><td>
 <label for="rule_nomatchurls" i18n:translate="">Don't match urls</label>:
 </td><td>
 <select name="rule_nomatchurls" id="rule_nomatchurls" multiple size="3"
- i18n:attributes="title List of urls this rule must not apply to">
+ i18n:attributes="title string:List of urls this rule must not apply to">
 <option tal:repeat="url currule/nomatchurls" tal:attributes="value url"
  tal:content="url">www\.imadoofus\.org</option>
 </select><br>
 <input type="submit" name="delnomatchurls" value="Remove selected" class="submit"
- i18n:attributes="value Remove selected"><br>
+ i18n:attributes="value string:Remove selected"><br>
 <input class="text" type="text" name="newnomatchurl" value=""><br>
 <input type="submit" name="addnomatchurl" value="Add new" class="submit"
- i18n:attributes="value Add new">
+ i18n:attributes="value string:Add new">
 </td></tr>
 </div>
 </table>
@@ -124,7 +124,7 @@ Rule url parts
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -186,7 +186,7 @@ Rule url parts
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -214,7 +214,7 @@ Rule (don't) match url
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -249,7 +249,7 @@ Rule (don't) match url
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -265,7 +265,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -281,7 +281,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -339,7 +339,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -368,7 +368,7 @@ Rule (don't) match url
 <tr>
 <td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -416,7 +416,7 @@ Rule (don't) match url
 </table>
 <span tal:condition="currule/attrs">
 <input type="submit" class="submit" name="removeattrs" value="Remove selected"
- i18n:attributes="value Remove selected attributes">
+ i18n:attributes="value string:Remove selected attributes">
 </span>
 </td></tr>
 <tr valign="top"><td>
@@ -435,7 +435,7 @@ Rule (don't) match url
 <tr valign="top"><td>&nbsp;</td>
 <td><input type="submit" class="submit" name="addattr"
  value="Add/replace attribute"
- i18n:attributes="value Add/replace attribute">
+ i18n:attributes="value string:Add/replace attribute">
 </td></tr>
 <tr valign="top"><td>
 <label for="rule_enclosedblock" i18n:translate="">Enclosed block</label>:
@@ -463,7 +463,7 @@ Rule (don't) match url
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value Apply">
+ i18n:attributes="value string:Apply">
 </td></tr>
 </table>
 <hr noshade size="1">
