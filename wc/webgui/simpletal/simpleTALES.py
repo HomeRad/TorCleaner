@@ -311,7 +311,7 @@ class Context:
 				self.locals [name] = value
 			else:
 				self.locals [name] = ContextVariable (value)
-				
+
 	def setLocal (self, name, value):
 		# Override the current local if present with the new one
 		if (isinstance (value, ContextVariable)):
@@ -330,39 +330,42 @@ class Context:
 
 	def popLocals (self):
 		self.locals = self.localStack.pop()
-		
+
 	def evaluate (self, expr, originalAtts = None):
 		# Returns a ContextVariable
-		self.log.debug ("Evaluating %s" % expr)
+		self.log.debug ("Evaluating %s ...", expr)
 		if (originalAtts is not None):
 			# Call from outside
 			self.globals['attrs'] = ContextVariable(originalAtts)
-			
+
 		# Supports path, exists, nocall, not, and string
 		expr = expr.strip ()
 		if expr.startswith ('path:'):
-			return self.evaluatePath (expr[5:].lstrip ())
+			res = self.evaluatePath (expr[5:].lstrip ())
 		elif expr.startswith ('exists:'):
-			return self.evaluateExists (expr[7:].lstrip())
+			res = self.evaluateExists (expr[7:].lstrip())
 		elif expr.startswith ('nocall:'):
-			return self.evaluateNoCall (expr[7:].lstrip())
+			res = self.evaluateNoCall (expr[7:].lstrip())
 		elif expr.startswith ('not:'):
-			return self.evaluateNot (expr[4:].lstrip())
+			res = self.evaluateNot (expr[4:].lstrip())
 		elif expr.startswith ('string:'):
-			return self.evaluateString (expr[7:].lstrip())
+			res = self.evaluateString (expr[7:].lstrip())
 		elif expr.startswith ('python:'):
-			return self.evaluatePython (expr[7:].lstrip())
+			res = self.evaluatePython (expr[7:].lstrip())
 		else:
 			# Not specified - so it's a path
-			return self.evaluatePath (expr)
-		
+			res = self.evaluatePath (expr)
+                self.log.debug("... result %s", str(res))
+                return res
+
+
 	def evaluatePython (self, expr):
 		if (not self.allowPythonPath):
 			self.log.warn ("Parameter allowPythonPath is false.  NOT Evaluating python expression %s" % expr)
 			return self.false
-		
+
 		self.log.debug ("Evaluating python expression %s" % expr)
-		
+
 		globals={}
 		for name, value in self.globals.items():
 			globals [name] = value.rawValue()
@@ -370,11 +373,11 @@ class Context:
 		globals ['string'] = self.pythonPathFuncs.string
 		globals ['exists'] = self.pythonPathFuncs.exists
 		globals ['nocall'] = self.pythonPathFuncs.nocall
-			
+
 		locals={}
 		for name, value in self.locals.items():
 			locals [name] = value.rawValue()
-			
+
 		try:
 			result = eval(expr, globals, locals)
 		except Exception, e:
@@ -396,7 +399,7 @@ class Context:
 		else:
 			# A single path - so let's evaluate it
 			return self.traversePath (allPaths[0])
-			
+
 	def evaluateExists (self, expr):
 		self.log.debug ("Evaluating %s to see if it exists" % expr)
 		allPaths = expr.split ('|')
@@ -419,7 +422,7 @@ class Context:
 			if (result is None):
 				return None
 			return self.true
-			
+
 	def evaluateNoCall (self, expr):
 		self.log.debug ("Evaluating %s using nocall" % expr)
 		allPaths = expr.split ('|')
@@ -441,7 +444,7 @@ class Context:
 			
 	def evaluateNot (self, expr):
 		self.log.debug ("Evaluating NOT value of %s" % expr)
-		
+
 		# Evaluate what I was passed
 		pathResult = self.evaluate (expr)
 		if (pathResult is None):
@@ -450,7 +453,7 @@ class Context:
 		if (pathResult.isTrue()):
 			return self.false
 		return self.true
-		
+
 	def evaluateString (self, expr):
 		self.log.debug ("Evaluating String %s" % expr)
 		result = ""
@@ -505,7 +508,8 @@ class Context:
 				else:
 					result += expr[position]
 		return ContextVariable(result)
-					
+
+
 	def traversePath (self, expr, canCall=1):
 		self.log.debug ("Traversing path %s" % expr)
 		# Check for and correct for trailing/leading quotes
@@ -514,7 +518,7 @@ class Context:
 		if (expr[-1] == '"' or expr[-1] == "'"):
 			expr = expr [0:-1]
 		pathList = expr.split ('/')
-		
+
 		path = pathList[0]
 		if path.startswith ('?'):
 			path = path[1:]
@@ -526,7 +530,7 @@ class Context:
 		if self.locals.has_key(path):
 			val = self.locals[path]
 		elif self.globals.has_key(path):
-			val = self.globals[path]  
+			val = self.globals[path]
 		else:
 			# If we can't find it then return None
 			return None
@@ -547,7 +551,7 @@ class Context:
 					return e
 			else:
 				temp = NoCallVariable (val).value()
-				
+
 			if (hasattr (temp, path)):
 				val = getattr (temp, path)
 				if (not isinstance (val, ContextVariable)):
@@ -559,16 +563,18 @@ class Context:
 						val = ContextVariable (val)
 				except:
 					#self.log.debug ("Not found.")
-					return None		
+					return None
 			index = index + 1
 		#self.log.debug ("Found value %s" % str (val))
 		if (not canCall):
 			return NoCallVariable (val)
 		return val
-		
+
+
 	def __str__ (self):
 		return "Globals: " + str (self.globals) + "Locals: " + str (self.locals)
-		
+
+
 	def populateDefaultVariables (self, options):
 		vars = {}
 		self.repeatMap = {}
@@ -579,11 +585,11 @@ class Context:
 		# To start with there are no repeats
 		vars['repeat'] = self.repeatMap	
 		vars['attrs'] = self.nothing
-		
+
 		# Add all of these to the global context
 		for name in vars.keys():
 			self.addGlobal (name,vars[name])
-			
+
 		# Add also under CONTEXTS
 		self.addGlobal ('CONTEXTS', vars)
 
