@@ -22,8 +22,14 @@ from Rule import Rule
 from wc import i18n
 
 def recalc_oids (rules):
-    for i, r in enumerate(rules):
-        r.oid = i
+    for i, rule in enumerate(rules):
+        rule.oid = i
+
+def recalc_up_down (rules):
+    upper = len(rules)-1
+    for i, rule in enumerate(rules):
+        rule.up = (i>0)
+        rule.down = (i<upper)
 
 
 class FolderRule (Rule):
@@ -66,6 +72,7 @@ class FolderRule (Rule):
     def sort (self):
         recalc_oids(self.rules)
         self.rules.sort()
+        recalc_up_down(self.rules)
 
 
     def toxml (self):

@@ -24,6 +24,7 @@ import _webcleaner2_configdata as configdata
 from glob import glob
 from sets import Set
 from wc.XmlUtils import xmlify
+from filter.rules.FolderRule import recalc_oids, recalc_up_down
 
 Version = configdata.version
 AppName = configdata.name
@@ -244,10 +245,16 @@ class Configuration (dict):
         # filter configuration
         for f in filterconf_files():
             ZapperParser().parse(f, self)
+        self.sort()
+
+
+    def sort (self):
+        """sort rules"""
         for f in self['folderrules']:
             f.sort()
+        recalc_oids(self['folderrules'])
         self['folderrules'].sort()
-        filter.rules.FolderRule.recalc_oids(self['folderrules'])
+        recalc_up_down(self['folderrules'])
 
 
     def write_filterconf (self):

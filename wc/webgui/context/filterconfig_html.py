@@ -141,7 +141,7 @@ def exec_form (form):
     # generic apply rule values
     elif currule and form.has_key('apply'):
         _form_apply(form)
-    # last catch-all (somewhat): look for up/down moves
+    # look for rule up/down moves
     elif curfolder:
         for rule in curfolder.rules:
             # note: image submits can append ".x" and ".y" to key
@@ -151,6 +151,16 @@ def exec_form (form):
             elif form.has_key('rule_down_%d' % rule.oid) or \
                  form.has_key('rule_down_%d.x' % rule.oid):
                 _form_rule_down(rule.oid)
+    # look for folder up/down moves
+    else:
+        for folder in config['folderrules']:
+            if form.has_key('folder_up_%d' % folder.oid) or \
+               form.has_key('folder_up_%d.x' % folder.oid):
+                _form_folder_up(folder.oid)
+            elif form.has_key('folder_down_%d' % folder.oid) or \
+                 form.has_key('folder_down_%d.x' % folder.oid):
+                _form_folder_down(folder.oid)
+
     if info:
         config.write_filterconf()
     _form_set_tags()
@@ -170,8 +180,6 @@ def _form_set_tags ():
         folder.selected = False
         for i, rule in enumerate(folder.rules):
             rule.selected = False
-            rule.up = (i>0)
-            rule.down = (i<(len(folder.rules)-1))
     if curfolder:
         curfolder.selected = True
     if currule:
@@ -305,15 +313,52 @@ def _form_rewrite_removeattrs (form):
         info.append(i18n._("Rewrite attributes removed"))
 
 
+def _form_folder_up (oid):
+    """move folder with given oid one up"""
+    folders = config['folderrules']
+    for i, folder in enumerate(folders):
+        if folder.oid==oid and i>0:
+            # swap folders
+            folders[(i-1):(i+1)] = [folders[i], folders[i-1]]
+            # sort folders
+            config.sort()
+            # deselet rule and folder
+            global currule, curfolder
+            currule = None
+            curfolder = None
+            info.append(i18n._("Folder moved up"))
+            return
+    error.append(i18n._("Invalid folder move up id"))
+
+
+def _form_folder_down (oid):
+    """move folder with given oid one down"""
+    folders = config['folderrules']
+    for i, folder in enumerate(folders):
+        if folder.oid==oid and i<(len(folders)-1):
+            # swap folders
+            folders[i:(i+2)] = [folders[i+1], folders[i]]
+            # sort folders
+            config.sort()
+            # deselet rule and folder
+            global currule, curfolder
+            currule = None
+            curfolder = None
+            info.append(i18n._("Folder moved down"))
+            return
+    error.append(i18n._("Invalid folder move down id"))
+
+
 def _form_rule_up (oid):
     """move rule with given oid one up"""
-    for i, rule in enumerate(curfolder.rules):
+    rules = curfolder.rules
+    for i, rule in enumerate(rules):
         if rule.oid==oid and i>0:
             # swap rules
-            curfolder.rules[(i-1):(i+1)] = [curfolder.rules[i],
-                                            curfolder.rules[i-1]]
+            rules[(i-1):(i+1)] = [rules[i], rules[i-1]]
             # sort folder
             curfolder.sort()
+            # deselect rule
             global currule
             currule = None
             info.append(i18n._("Rule moved up"))
@@ -323,13 +368,14 @@ def _form_rule_up (oid):
 
 def _form_rule_down (oid):
     """move rule with given oid one down"""
-    for i, rule in enumerate(curfolder.rules):
-        if rule.oid==oid and i<(len(curfolder.rules)-1):
+    rules = curfolder.rules
+    for i, rule in enumerate(rules):
+        if rule.oid==oid and i<(len(rules)-1):
             # swap rules
-            curfolder.rules[i:(i+2)] = [curfolder.rules[i+1],
-                                        curfolder.rules[i]]
+            rules[i:(i+2)] = [rules[i+1], rules[i]]
             # sort folder
             curfolder.sort()
+            # deselect rule
             global currule
             currule = None
             info.append(i18n._("Rule moved down"))
