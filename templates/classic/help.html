@@ -21,9 +21,43 @@ Under <b>HTTPS Proxy</b> enter <i>localhost</i>, the <b>Port</b> is
 <i tal:content="string:${config/port}">8080</i>.<br>
 Under <b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br>
 Click <b>Ok</b> to use your new settings.</p>
+
 <h3 i18n:translate="">Internet Explorer</h3>
-<p i18n:translate="">XXX</p>
+<p i18n:translate="">Select <b>Tools -&gt; Internet Options -&gt;
+Connections</b>.<br>
+Click on <b>LAN Settings</b>. If you have a dialup connection to the
+internet, select your dialup connection and click on <b>Settings</b>.<br>
+Activate <b>Use a proxy server</b>.<br>
+If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br>
+Click on <b>Advanced</b>.<br>
+Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="string:${config/port}">8080</i>.<br>
+Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="string:${config/port}">8080</i>.<br>
+Click <b>Ok</b> to use your new settings.</p>
+</p>
+
+<h3 i18n:translate="">Internet Explorer (Macintosh OS)</h3>
+<p i18n:translate="">Select <b>Edit -&gt; Options -&gt; Proxy</b>.<br>
+Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="string:${config/port}">8080</i>.<br>
+Under <b>HTTPS</b> enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="string:${config/port}">8080</i>.<br>
+Click <b>Ok</b> to use your new settings.</p>
+</p>
 </div>
+
+<h3 i18n:translate="">Opera</h3>
+<p i18n:translate="">Select <b>File -&gt; Preferences -&gt; Network
+-&gt; Proxy servers</b>.<br>
+Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="string:${config/port}">8080</i>.<br>
+Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="string:${config/port}">8080</i>.<br>
+Activate <b>Do not use Proxy on the adresses below</b> and enter
+<i>localhost, 127.0.0.1</i>.<br>
+Click <b>Ok</b> to use your new settings.</p>
+</p>
 
 <div metal:use-macro="macros/macros/footer">Footer...</div>
 </body>
