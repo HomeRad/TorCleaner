@@ -127,7 +127,7 @@ def parse_navtree (dirname):
                 nodes.append(node)
     nodes.sort()
     for i,n in enumerate(nodes):
-        if (i+1)<len(nodes):
+        if (i+1) < len(nodes):
             n.sibling_right = nodes[i+1]
     #print_nodes(nodes)
     return nodes
