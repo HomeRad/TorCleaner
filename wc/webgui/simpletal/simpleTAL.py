@@ -121,7 +121,7 @@ class TemplateInterpreter (object):
         self.log = logging.getLogger("simpleTAL.TemplateInterpreter")
 
 
-    def tagAsText (self, (tag,atts), singletonFlag=0):
+    def tagAsText (self, (tag,atts), singletonFlag=False):
         """ This returns a tag as text.
         If self.escapeAttributes is true then the value of the attributes will be
          escaped.
@@ -132,10 +132,12 @@ class TemplateInterpreter (object):
             result.append(' ')
             result.append(att[0])
             result.append('="')
+            val = att[1]
+            if self.translateContent:
+                val = self.translate(val)
             if self.escapeAttributes:
-                result.append(cgi.escape(att[1], quote=1))
-            else:
-                result.append(att[1])
+                val = cgi.escape(val, quote=1)
+            result.append(val)
             result.append('"')
         if singletonFlag:
             result.append(" />")
@@ -382,10 +384,8 @@ def cmdOutputStartTag (self, command, args):
     """
     tagName, singletonTag = args
     if self.outputTag:
-        if self.tagContent is None and singletonTag:
-            val = self.tagAsText((tagName, self.currentAttributes), 1)
-        else:
-            val = self.tagAsText((tagName, self.currentAttributes))
+        singleton = self.tagContent is None and singletonTag
+        val = self.tagAsText((tagName, self.currentAttributes), singleton)
         self.file.write(val)
     if self.movePCForward is not None:
         self.programCounter = self.movePCForward
