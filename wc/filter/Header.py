@@ -48,7 +48,6 @@ class Header (wc.filter.Filter.Filter):
             if not rule.applies_to(url) or not rule.name:
                 continue
             # name is a regular expression match object
-            wc.log.debug(wc.LOG_FILTER, "XXX %r %r", rule.name, rule.value)
             if not rule.value:
                 # no value --> header name should be deleted
                 # deletion can apply to many headers
