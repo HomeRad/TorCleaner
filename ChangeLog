@@ -7,6 +7,11 @@
     Changed files: wc/filter/HtmlParser.py
   * fix return types in the daemon package
     Changed files: wc/daemon/_posix.py
+  * use builtin dict for configuration
+    Changed files: wc/__init__.py
+  * convert paths to platform specific representation to prevent
+    compile errors
+    Changed files: setup.py
 
 1.10
   * fix rule title updating (again)

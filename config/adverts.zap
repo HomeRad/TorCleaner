@@ -135,12 +135,13 @@
 
 <rewrite title="Remove &lt;ilayer&gt; tag" oid="22"
  desc="Lots of ads come nowadays in ilayer tags."
+ dontmatchurl="www\.mplayerhq\.hu"
  tag="ilayer">
 </rewrite>
 
 <rewrite title="Remove &lt;layer&gt; tag" oid="23"
  desc="Dont know some example sites, but I dont want layers."
- dontmatchurl="www\.on2\.com"
+ dontmatchurl="www\.on2\.com|www\.mplayerhq\.hu"
  tag="layer">
 </rewrite>
 
