@@ -31,6 +31,7 @@ class ImagereduceRule (wc.filter.rules.UrlRule.UrlRule):
                                 matchurls=matchurls, nomatchurls=nomatchurls)
         self.quality = quality
         self.minimal_size_bytes = minimal_size_bytes
+        self.intattrs.extend(('quality', 'minimal_size_bytes'))
         self.attrnames.extend(('quality', 'minimal_size_bytes'))
 
 
