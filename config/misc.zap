@@ -19,7 +19,7 @@
 
 <rewrite sid="wc.369" oid="2" title="Remove IFRAMEs"
  desc="&lt;iframe&gt; content is almost always advertising. So remove it."
- dontmatchurl="www\.eselfilme\.de"
+ dontmatchurl="(www\.eselfilme\.de|coverviewer\.sourceforge\.net)"
  tag="iframe"/>
 
 

@@ -106,7 +106,7 @@
 
 <rewrite sid="wc.413" oid="15" title="IMDB Advert 7"
  tag="embed">
-<attr name="src">i.imdb.com</attr>
+<attr name="src">ia?\.imdb\.com</attr>
 <replacement part="complete"/>
 </rewrite>
 

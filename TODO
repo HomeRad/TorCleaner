@@ -1,13 +1,61 @@
 TODO
 
-version 2.2 and above
+version 2.2
+
+- TypeError: location.hostname has no properties
+  TypeError: document.location.hostname has no properties
 
 - support NTLM authentication, add README.squid example config
-  (Mozilla Windows >= 1.4b can test NTLM auth)
+  (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
+   client auth)
+
+version 2.3 and above
 
 - HTTPS tunneling (RFC 2818)
 
 - HTTPS gateway functionality
+
+make sure that the certificate file includes:
+
+    * (optional) a chain of certificates from a known certificate authority to your server certificate
+    * the server certificate
+    * the private key; the key may not be password-protected
+
+The file should be in PEM format. The OpenSSL command to generate a self-signed certificate in the correct format would be something like:
+
+
+    openssl req -x509 -newkey rs:1024 -keyout test.pem -out test.pem -days 365 -nodes
+
+Note the '-nodes' flag - it's important!
+
+
+HTTPS CERTIFICATES
+
+If a client browser connects via HTTPS and if it presents a
+certificate and if HTTPSHeaders is set, Pound will obtain the
+certificate data and add the following HTTP headers to the
+request it makes to the server:
+
+- X-SSL-Subject: information about the certificate owner
+- X-SSL-Issuer: information about the certificate issuer (CA)
+- X-SSL-notBefore: begin validity date for the certificate
+- X-SSL-notAfter: end validity date for the certificate
+- X-SSL-serial: certificate serial number (in decimal)
+
+It is the application's responsibility to actually use these
+headers - Pound just passes this information without checking
+it in any way (except for signature and encryption correctness).
+
+Please note that this mechanism allows forgeries: a client may
+(maliciously) send these headers to Pound in order to masquerade
+as an SSL client with a specific certificate. If this is a problem
+for your application make sure to deny these requests: add
+
+    HeadDeny X-SSL-Subject ".*"
+    HeadDeny X-SSL-Issuer ".*"
+    HeadDeny X-SSL-notBefore ".*"
+    HeadDeny X-SSL-notAfter ".*"
+    HeadDeny X-SSL-serial ".*"
 
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
