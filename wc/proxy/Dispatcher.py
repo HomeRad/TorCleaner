@@ -91,6 +91,7 @@ class Dispatcher (object):
         fd = self._fileno
         if socket_map.has_key(fd):
             del socket_map[fd]
+            self._fileno = None
 
 
     def create_socket (self, family, type):
