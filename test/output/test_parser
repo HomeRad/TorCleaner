@@ -7,12 +7,22 @@ HTML '<a b=c">'
 p starttag 'a' [('b', 'c')]
 HTML '<a b="c>'
 p starttag 'a' [('b', 'c')]
+HTML '<a b="">'
+p starttag 'a' [('b', '')]
+HTML "<a b=''>"
+p starttag 'a' [('b', '')]
 HTML '<a b=>'
 p starttag 'a' [('b', '')]
 HTML '<a =c>'
 p starttag 'a' [('', 'c')]
 HTML '<a =>'
 p starttag 'a' [('', '')]
+HTML '<a b= "c">'
+p starttag 'a' [('b', 'c')]
+HTML '<a b ="c">'
+p starttag 'a' [('b', 'c')]
+HTML '<a b = "c">'
+p starttag 'a' [('b', 'c')]
 HTML '<a >'
 p starttag 'a' []
 HTML '< a>'
@@ -65,9 +75,9 @@ HTML '<!DOCTYPE adrbook SYSTEM "adrbook.dtd">'
 p decl 'DOCTYPE' [('adrbook', None), ('SYSTEM', None), ('"adrbook.dtd"', None)]
 HTML '<?xml version="1.0" encoding="latin1"?>'
 p xmldecl 'xml' [('version', '1.0'), ('encoding', 'latin1')]
-HTML '<script >\012</script>'
+HTML '<script >\n</script>'
 p starttag 'script' []
-p data '\012'
+p data '\n'
 p endtag 'script'
 HTML '<sCrIpt lang="a">bla < fasel</scripT>'
 p starttag 'sCrIpt' [('lang', 'a')]
@@ -75,6 +85,8 @@ p data 'bla '
 p data '<'
 p data ' fasel'
 p endtag 'script'
+HTML '<img bo\\\nrder=0 >'
+p starttag 'img' [('bo\\\nrder', '0')]
 subsequent interwoven parsing
 p starttag 'html' []
 p1 starttag 'html' []
