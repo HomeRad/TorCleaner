@@ -1,0 +1,9 @@
+<!ELEMENT wcheaders (nodisplay*)>
+<!ATTLIST wcheaders
+ version   CDATA #REQUIRED
+ refresh   CDATA "5"
+ scrolling (auto|always|never)
+ onlyfirst (1|0)
+>
+
+<!ELEMENT nodisplay (#PCDATA)>

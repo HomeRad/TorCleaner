@@ -43,6 +43,7 @@ class ConfWindow(FXMainWindow):
      ID_APPLY,
      ID_TIMEOUT,
      ID_OBFUSCATEIP,
+     ID_SHOWERRORS,
      ID_LOGFILE,
      ID_ABOUT,
      ID_HELP,
@@ -61,11 +62,11 @@ class ConfWindow(FXMainWindow):
      ID_NOPROXYFOR_ADD,
      ID_NOPROXYFOR_EDIT,
      ID_NOPROXYFOR_REMOVE,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+28)
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+29)
 
 
     def __init__(self, app):
-	FXMainWindow.__init__(self, app, "webcleanerconf",w=640,h=500)
+	FXMainWindow.__init__(self, app, "webcleanerconf",w=640,h=550)
         self.setIcon(loadIcon(app, 'iconbig.png'))
         self.readconfig()
         self.eventMap()
@@ -112,6 +113,7 @@ class ConfWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_TIMEOUT,ConfWindow.onCmdTimeout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_OBFUSCATEIP,ConfWindow.onCmdObfuscateIp)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_SHOWERRORS,ConfWindow.onCmdShowErrors)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PORT,ConfWindow.onCmdPort)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DEBUGLEVEL,ConfWindow.onCmdDebuglevel)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXY,ConfWindow.onCmdParentProxy)
@@ -153,6 +155,9 @@ class ConfWindow(FXMainWindow):
         FXLabel(matrix, _("Logfile"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         widget = FXTextField(matrix, 10, self, self.ID_LOGFILE)
         widget.setText(self.logfile)
+        FXLabel(matrix, _("Log HTML errors"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        widget = FXCheckButton(matrix, None, self, self.ID_SHOWERRORS, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
+        widget.setCheck(self.showerrors)
         FXLabel(matrix, _("Timeout (sec.)"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         widget = FXSpinner(matrix, 3, self, self.ID_TIMEOUT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(1,600)
@@ -333,6 +338,12 @@ class ConfWindow(FXMainWindow):
         debug(BRING_IT_ON, "Obfuscateip=%d" % self.obfuscateip)
         return 1
 
+    def onCmdShowErrors(self, sender, sel, ptr):
+        self.showerrors = sender.getCheck()
+        self.getApp().dirty = 1
+        debug(BRING_IT_ON, "Showerrors=%d" % self.showerrors)
+        return 1
+
     def onCmdParentProxy(self, sender, sel, ptr):
         self.parentproxy = sender.getText()
         self.getApp().dirty = 1
@@ -367,7 +378,6 @@ class ConfWindow(FXMainWindow):
         if type(index) is IntType:
             self.filterswitcher.setCurrent(index)
         return 1
-
 
     def onCmdNoProxyForAdd(self, sender, sel, ptr):
         dialog = FXDialogBox(self,_("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
@@ -531,7 +541,7 @@ class ConfWindow(FXMainWindow):
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
          'timeout','obfuscateip','debuglevel','logfile',
-	 'configfile', 'noproxyfor'):
+	 'configfile', 'noproxyfor', 'showerrors'):
             setattr(self, key, self.config[key])
         self.modules = {
 	    "Header":0,
@@ -559,7 +569,7 @@ class ConfWindow(FXMainWindow):
             file.write(self.toxml())
             file.close()
         except IOError:
-            error(_("can not write to file %s") % configfile)
+            error(_("cannot write to file %s") % configfile)
             dirty = 1
         for f in self.folders:
             try:
@@ -567,7 +577,7 @@ class ConfWindow(FXMainWindow):
                 file.write(f.toxml())
                 file.close()
             except IOError:
-                error(_("can not write to file %s") % f.filename)
+                error(_("cannot write to file %s") % f.filename)
                 dirty = 1
 	self.getApp().dirty = dirty
         self.getApp().endWaitCursor()
@@ -585,7 +595,8 @@ class ConfWindow(FXMainWindow):
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
              ' timeout="%d"\n' % self.timeout +\
              ' obfuscateip="%d"\n' % self.obfuscateip +\
-             ' debuglevel="%d"\n' % self.debuglevel
+             ' debuglevel="%d"\n' % self.debuglevel +\
+             ' showerrors="%d"\n' % self.showerrors
         if self.logfile:
             s += ' logfile="%s"\n' % self.logfile
         if self.noproxyfor:

@@ -112,8 +112,13 @@ def html_portal():
     return HTML_TEMPLATE % data
 
 
-def new_headers():
+def text_headers():
     return "\n".join(HEADERS.getall()) or "-"
+
+
+def text_connections():
+    return "valid:%(valid)d\nerror:%(error)d\nblocked:%(blocked)d"%\
+           config['requests']
 
 
 def access_denied(addr):

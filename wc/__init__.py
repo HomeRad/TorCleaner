@@ -131,6 +131,7 @@ class Configuration(UserDict.UserDict):
         self['mime_no_length'] = []
         self['mime_gunzip_ok'] = []
         self['headersave'] = 100
+        self['showerrors'] = 0
 
     def read_proxyconf(self):
         p = WConfigParser()
@@ -263,7 +264,7 @@ class WConfigParser(BaseParser):
             for key,val in attrs.items():
                 self.config[str(key)] = val
             for key in ('port','parentproxyport','buffersize','timeout',
-	                'obfuscateip','debuglevel','colorize'):
+	                'obfuscateip','debuglevel','colorize','showerrors'):
                 self.config[key] = int(self.config[key])
             for key in ('version','parentproxy','logfile'):
                 if self.config[key] is not None:
@@ -280,6 +281,7 @@ class WConfigParser(BaseParser):
         elif name=='filter':
             debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
+
 
 config = Configuration()
 

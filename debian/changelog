@@ -2,8 +2,9 @@ webcleaner (0.24) unstable; urgency=low
 
   * htmlsax.c: set default encoding to latin-1, because some pages dont
     set the correct charset
+  * new config option: log HTML errors
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed,  7 Nov 2001 22:23:11 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  9 Nov 2001 22:24:52 +0100
 
 webcleaner (0.23) unstable; urgency=low
 

@@ -41,7 +41,7 @@ class ClientServerMatchmaker:
      done:     We are done matching up the client and server
     """
     def error(self, code, msg, txt=""):
-        content = wc.HTML_TEMPLATE % \
+        content = wc.proxy.HTML_TEMPLATE % \
             {'title': "WebCleaner Proxy Error %d %s" % (code, msg),
              'header': "Bummer!",
              'content': "WebCleaner Proxy Error %d %s<br>%s<br>" % \
@@ -105,7 +105,10 @@ class ClientServerMatchmaker:
             content = wc.proxy.access_denied(self.client.addr)
         elif document.startswith("/headers/"):
             contenttype = "text/plain"
-            content = wc.proxy.new_headers()
+            content = wc.proxy.text_headers()
+        elif document.startswith("/connections/"):
+            contenttype = "text/plain"
+            content = wc.proxy.text_connections()
         else:
             contenttype = "text/html"
             content = wc.proxy.html_portal()
