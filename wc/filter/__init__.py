@@ -174,7 +174,7 @@ def get_filterattrs (url, filters, clientheaders=None, serverheaders=None,
     for i in filters:
         for f in wc.configuration.config['filterlist'][i]:
             if f.applies_to_mime(attrs['mime']):
-                attrs.update(f.get_attrs(url, headers))
+                attrs.update(f.get_attrs(url, attrheaders))
     return attrs
 
 

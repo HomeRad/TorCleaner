@@ -60,6 +60,6 @@ class MimeRecognizer (wc.filter.Filter.Filter):
 
     def get_attrs (self, url, headers):
         """initialize buffer"""
-        d = super(ImageReducer, self).get_attrs(url, headers)
+        d = super(MimeRecognizer, self).get_attrs(url, headers)
         d['mimerecognizer_buf'] = StringIO.StringIO()
         return d
