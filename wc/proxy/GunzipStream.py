@@ -9,6 +9,7 @@
 
 # TEST CASE:
 #    http://tv.excite.com/grid
+from DeflateStream import DeflateStream
 
 import zlib
 
