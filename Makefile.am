@@ -11,7 +11,7 @@ SPLINTOPTS := +posixlib \
 PYCHECKEROPTS := -F pycheckrc
 PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
                   wc/parser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
-		  wc/proxy/dns/*.py \
+		  wc/proxy/dns/*.py wc/network/*.py \
 		  wc/webgui/*.py wc/webgui/context/*.py \
 		  wc/webgui/simpletal/*.py wc/magic/*.py
 #		  test/*.py tests/*.py tests/server/*.py
