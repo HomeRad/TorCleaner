@@ -34,11 +34,15 @@ import wc
 nt_usage = wc.i18n._("""USAGE\twebcleaner [options] <command> [command options]
 
 OPTIONS
--h      Print this help.
+-h, --help
+        Print this help.
 
 -d <directory>, --configdir=<directory>
-        Use given directory for configuration. It should include a
-        webcleaner.conf file and several .zap files.
+        Use given directory for configuration. It should include the
+        webcleaner.conf, logging.conf and several .zap files.
+
+--no-file-logs
+        Do not add automatic .log files to the logging configuration.
 
 COMMANDS
 start [-f <config>]
@@ -76,11 +80,15 @@ usage = wc.i18n._("""USAGE\twebcleaner [options]
 The %(AppName)s proxy is started as a foreground process.
 
 OPTIONS
--h      Print this help.
---config=<file>
-        Use given configuration file.
---filterdir=<directory>
-        Use given directory to search for *.zap filter definitions.
+-h, --help
+        Print this help.
+
+-d <directory>, --configdir=<directory>
+        Use given directory for configuration. It should include the
+        webcleaner.conf, logging.conf and several .zap files.
+
+--no-file-logs
+        Do not add automatic .log files to the logging configuration.
 """)
 
 
