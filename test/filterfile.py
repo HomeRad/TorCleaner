@@ -26,12 +26,15 @@ def _main ():
     filtered = ""
     data = f.read(2048)
     while data:
+        print >>sys.stderr, "Test: data", len(data)
         try:
             filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter',
                                     attrs)
         except FilterException, msg:
+            print >>sys.stderr, "Test: exception:", msg
             pass
         data = f.read(2048)
+    print >>sys.stderr, "Test: finishing"
     i = 1
     while True:
         print >>sys.stderr, "Test: finish", i
@@ -45,7 +48,7 @@ def _main ():
         i += 1
         if i==200:
             # background downloading if javascript is too slow
-            print "Test: oooooops"
+            print >>sys.stderr, "Test: oooooops"
             break
     print "Filtered:", filtered
 
