@@ -7,10 +7,14 @@ used by Bastian Kleineidam for WebCleaner
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import socket, select, re, time
+import socket
+import select
+import re
+import time
 from wc import i18n, ip
 from wc.log import *
 from wc.proxy.LimitQueue import LimitQueue
+
 
 # test for IPv6, both in Python build and in kernel build
 has_ipv6 = False

@@ -33,7 +33,9 @@ to work properly.
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, wc, wc.filter.rules
+import re
+import wc
+import wc.filter.rules
 from wc.proxy.Headers import WcMessage
 from cStringIO import StringIO
 

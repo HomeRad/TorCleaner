@@ -4,7 +4,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, cgi, urlparse, os
+import time
+import cgi
+import urlparse
+import os
 from cStringIO import StringIO
 from wc import i18n, config
 from wc.proxy.StatefulConnection import StatefulConnection

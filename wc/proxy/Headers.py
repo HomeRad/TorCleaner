@@ -12,6 +12,7 @@ from wc.proxy.UnchunkStream import UnchunkStream
 from wc.proxy.GunzipStream import GunzipStream
 from wc.proxy.DeflateStream import DeflateStream
 from cStringIO import StringIO
+
 import mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'

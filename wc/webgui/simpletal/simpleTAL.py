@@ -35,7 +35,13 @@ both XML and HTML templates.
 Module Dependencies: logging, simpleTALES, simpleTALTemplates
 """
 
-import logging, sgmllib, xml.sax, cgi, codecs, re, htmlentitydefs
+import logging
+import sgmllib
+import xml.sax
+import cgi
+import codecs
+import re
+import htmlentitydefs
 from wc.webgui import simpletal
 from StringIO import StringIO
 

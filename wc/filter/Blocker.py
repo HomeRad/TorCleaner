@@ -19,12 +19,16 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, os, gzip, urllib
-from wc.filter import FILTER_REQUEST
-from wc.filter.Filter import Filter
-from wc import ConfigDir, config
+import re
+import os
+import gzip
+import urllib
+import wc
+import wc.url
+import wc.filter
+import wc.filter.Filter
 from wc.log import *
-from wc.url import DOMAIN, spliturl
+
 
 def is_flash_mime (mime):
     """return True if mime is Shockwave Flash"""
@@ -59,10 +63,10 @@ def strblock (block):
     return "[%s]" % ", ".join(patterns)
 
 
-class Blocker (Filter):
+class Blocker (wc.filter.Filter.Filter):
     """block urls and show replacement data instead"""
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_REQUEST]
+    orders = [wc.filter.FILTER_REQUEST]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = [
@@ -151,7 +155,7 @@ class Blocker (Filter):
     def get_file_data (self, filename):
         """return plain file object, possible gunzipping the file"""
         debug(FILTER, "reading %s", filename)
-        filename = os.path.join(ConfigDir, filename)
+        filename = os.path.join(wc.ConfigDir, filename)
         if filename.endswith(".gz"):
             f = gzip.GzipFile(filename, 'rb')
         else:
@@ -168,7 +172,7 @@ class Blocker (Filter):
         mime = attrs['mime']
         if mime is None:
             mime = "text/html"
-        parts = spliturl(url)
+        parts = wc.url.spliturl(url)
         debug(FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
         if allowed:
@@ -199,7 +203,7 @@ class Blocker (Filter):
                                           "selfolder": "%d"%rule.parent.oid,
                                           "selrule": "%d"%rule.oid})
                 doc += "?%s" % query
-            port = config['port']
+            port = wc.config['port']
             # XXX activate when https can be served locally
             #if url.startswith("https://"):
             #    scheme = "https"
@@ -214,7 +218,7 @@ class Blocker (Filter):
         """return True if url is blocked. Parts are the splitted url parts."""
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
-            if blockdomain == parts[DOMAIN]:
+            if blockdomain == parts[wc.url.DOMAIN]:
                 debug(FILTER, "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
@@ -236,7 +240,7 @@ class Blocker (Filter):
     def allowed (self, url, parts):
         """return True if url is allowed. Parts are the splitted url parts."""
         for allowdomain, sid in self.allowed_domains:
-            if allowdomain == parts[DOMAIN]:
+            if allowdomain == parts[wc.url.DOMAIN]:
                 return True, sid
         for allowurl, sid in self.allowed_urls:
             if allowurl in url:

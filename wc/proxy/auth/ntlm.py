@@ -41,7 +41,10 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "NTLMSSP_CHALLENGE", "NTLMSSP_AUTH",
  ]
 
-import base64, random, struct, time
+import base64
+import random
+import struct
+import time
 from Crypto.Hash import MD4
 from Crypto.Cipher import DES
 from wc.log import *

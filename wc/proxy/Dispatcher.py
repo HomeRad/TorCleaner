@@ -38,11 +38,12 @@ The following changes were made:
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 # ======================================================================
 
+import sys
+import os
+import socket
+import errno
+import OpenSSL
 from wc.log import *
-from OpenSSL import SSL
-import sys, os, socket
-from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
-     ENOTCONN, ESHUTDOWN, EINTR, EISCONN, errorcode
 
 # map of sockets
 socket_map = {}
@@ -51,7 +52,7 @@ def create_socket (family, socktype, sslctx=None):
     """Create a socket with given family and type. If SSL context
        is given an SSL socket is created"""
     if sslctx is not None:
-        sock = SSL.Connection(sslctx, socket.socket(family, socktype))
+        sock = OpenSSL.SSL.Connection(sslctx, socket.socket(family, socktype))
     else:
         sock = socket.socket(family, socktype)
         if family==socket.AF_INET and socktype==socket.SOCK_STREAM:
@@ -182,14 +183,14 @@ class Dispatcher (object):
         self.connected = False
         err = self.socket.connect_ex(address)
         # XXX Should interpret Winsock return values
-        if err in (EINPROGRESS, EALREADY, EWOULDBLOCK):
+        if err in (errno.EINPROGRESS, errno.EALREADY, errno.EWOULDBLOCK):
             return
-        if err in (0, EISCONN):
+        if err in (0, errno.EISCONN):
             self.addr = address
             self.connected = True
             self.handle_connect()
         else:
-            raise socket.error, (err, errorcode[err])
+            raise socket.error, (err, errno.errorcode[err])
 
 
     def accept (self):
@@ -198,7 +199,7 @@ class Dispatcher (object):
             conn, addr = self.socket.accept()
             return conn, addr
         except socket.error, why:
-            if why[0] == EWOULDBLOCK:
+            if why[0] == errno.EWOULDBLOCK:
                 pass
             else:
                 raise socket.error, why
@@ -209,9 +210,9 @@ class Dispatcher (object):
             result = self.socket.send(data)
             return result
         except socket.error, why:
-            if why[0] == EWOULDBLOCK:
+            if why[0] == errno.EWOULDBLOCK:
                 return 0
-            if why[0] in (ECONNRESET, ENOTCONN, ESHUTDOWN):
+            if why[0] in (errno.ECONNRESET, errno.ENOTCONN, errno.ESHUTDOWN):
                 self.handle_close()
                 return 0
             raise
@@ -228,8 +229,8 @@ class Dispatcher (object):
             else:
                 return data
         except socket.error, why:
-            # winsock sometimes throws ENOTCONN
-            if why[0] in (ECONNRESET, ENOTCONN, ESHUTDOWN):
+            # winsock sometimes throws errno.ENOTCONN
+            if why[0] in (errno.ECONNRESET, errno.ENOTCONN, errno.ESHUTDOWN):
                 self.handle_close()
                 return ''
             else:

@@ -19,21 +19,21 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
-from wc.filter.Filter import Filter
 import string
+import wc.filter
+import wc.filter.Filter
 
-class BinaryCharFilter (Filter):
+class BinaryCharFilter (wc.filter.Filter.Filter):
     """replace binary characters, often found in Microsoft HTML documents,
         with their correct HTML equivalent
     """
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_MODIFY]
+    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [compileMime(x) for x in ['text/html']]
+    mimelist = [wc.filter.compileMime(x) for x in ['text/html']]
 
     def doit (self, data, **attrs):
         """filter given data"""

@@ -21,7 +21,11 @@
 
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
 
-import os, re, cPickle, pickle, convert
+import os
+import re
+import cPickle
+import pickle
+import wc.magic.convert
 
 # Need to have a checksum on the cache and source file to update at object creation
 # Could use circle safe_pickle (see speed performance impact)
@@ -86,7 +90,7 @@ class Magic (object):
             part = []
             top = len(split)
             while pos < top:
-                if convert.is_final_dash(split[pos]):
+                if wc.magic.convert.is_final_dash(split[pos]):
                     result = split[pos] + ' '
                     index = line.find(result)
                     if index != -1:
@@ -127,28 +131,28 @@ class Magic (object):
 
         # Get the offset information
         if direct:
-            offset_delta = convert.convert(text)
+            offset_delta = wc.magic.convert.convert(text)
         else:
             match_abs = re.compile(self.se_offset_abs).match(text)
             match_add = re.compile(self.se_offset_add).match(text)
 
             if match_abs:
-                offset_relatif = convert.convert(match_abs.group(1))
+                offset_relatif = wc.magic.convert.convert(match_abs.group(1))
 
                 if match_abs.group(2) != None:
                     offset_type = match_abs.group(2)[1]
 
 
             elif match_add:
-                offset_relatif = convert.convert(match_add.group(1))
+                offset_relatif = wc.magic.convert.convert(match_add.group(1))
 
                 if match_add.group(2) != None:
                     offset_type = match_add.group(2)[1]
 
                 if match_add.group(3) == '-':
-                    offset_delta = 0L - convert.convert(match_add.group(4))
+                    offset_delta = 0L - wc.magic.convert.convert(match_add.group(4))
                 else:
-                    offset_delta = convert.convert(match_add.group(4))
+                    offset_delta = wc.magic.convert.convert(match_add.group(4))
 
         return (direct,offset_type,offset_delta,offset_relatif)
 
@@ -159,12 +163,12 @@ class Magic (object):
 
         if len(type_mask_and) > 1:
             oper = '&'
-            mask = convert.convert(type_mask_and[1])
+            mask = wc.magic.convert.convert(type_mask_and[1])
             rest = type_mask_and[0]
             return (oper,mask,rest)
         if len(type_mask_or) > 1:
             oper = '^'
-            mask = convert.convert(type_mask_or[1])
+            mask = wc.magic.convert.convert(type_mask_or[1])
             rest = type_mask_or[0]
             return (oper,mask,rest)
         return ('',0L,text)
@@ -224,7 +228,7 @@ class Magic (object):
         pos = 0
         data = list('')
         while pos < len(result):
-            if convert.is_c_escape(result[pos:]):
+            if wc.magic.convert.is_c_escape(result[pos:]):
                 # \0 is not a number it is the null string
                 if result[pos+1] == '0':
                     data.append(result[pos])
@@ -234,13 +238,13 @@ class Magic (object):
                     data.append(result[pos:pos+2])
                 pos +=2
             else:
-                base = convert.which_base(result[pos:])
+                base = wc.magic.convert.which_base(result[pos:])
                 if base == 0:
                     data.append(ord(result[pos])*1L)
                     pos += 1
                 else:
-                    size_base = convert.size_base(base)
-                    size_number = convert.size_number(result[pos:])
+                    size_base = wc.magic.convert.size_base(base)
+                    size_number = wc.magic.convert.size_number(result[pos:])
                     start = pos + size_base
                     end = pos + size_base + size_number
                     assert start < end
@@ -398,13 +402,13 @@ class Magic (object):
         # Raise file error if file too short    
         f.seek(offset)
         if type == 'l':
-            delta = convert.little4(self._read(f,4))
+            delta = wc.magic.convert.little4(self._read(f,4))
         elif type == 'L':
-            delta = convert.big4(self._read(f,4))
+            delta = wc.magic.convert.big4(self._read(f,4))
         elif type == 's':
-            delta = convert.little2(self._read(f,2))
+            delta = wc.magic.convert.little2(self._read(f,2))
         elif type == 'S':
-            delta = convert.big2(self._read(f,2))
+            delta = wc.magic.convert.big2(self._read(f,2))
         elif type == 'b':
             delta = ord(self._read(f,1))
         elif type == 'B':
@@ -433,22 +437,22 @@ class Magic (object):
             if len(data) < 2:
                 raise StandardError("Should never happen, not enough data")
             if endian == 'local':
-                value= convert.local2(data)
+                value= wc.magic.convert.local2(data)
             elif endian == 'little':
-                value= convert.little2(data)
+                value= wc.magic.convert.little2(data)
             elif endian == 'big':
-                value= convert.big2(data)
+                value= wc.magic.convert.big2(data)
             else:
                 raise StandardError("Endian type unknown")
         elif kind == 'long':
             if len(data) < 4:
                 raise StandardError("Should never happen, not enough data")
             if endian == 'local':
-                value= convert.local4(data)
+                value= wc.magic.convert.local4(data)
             elif endian == 'little':
-                value= convert.little4(data)
+                value= wc.magic.convert.little4(data)
             elif endian == 'big':
-                value= convert.big4(data)
+                value= wc.magic.convert.big4(data)
             else:
                 raise StandardError("Endian type unknown")
         elif kind == 'date':

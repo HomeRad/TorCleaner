@@ -25,7 +25,8 @@ try:
 except ImportError:
     # assume a non-windows platform
     pass
-from types import StringType
+import types
+
 
 class key_handle (object):
     """represent an opened key with dictionary-like access"""
@@ -35,7 +36,7 @@ class key_handle (object):
 
 
     def __getitem__ (self, key):
-        if type(key) != StringType:
+        if type(key) != types.StringType:
             raise TypeError, "key type must be string"
         try:
 	    val = QueryValueEx(self._key, key)

@@ -19,7 +19,8 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import Image, os
+import Image
+import os
 from cStringIO import StringIO
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter

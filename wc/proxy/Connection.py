@@ -9,7 +9,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 
-import socket, errno
+import socket
+import errno
 from wc.log import *
 from wc.proxy.Dispatcher import Dispatcher
 

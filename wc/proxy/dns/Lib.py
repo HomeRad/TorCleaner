@@ -22,12 +22,12 @@
 # ------------------------------------------------------------------------
 
 
-import string, types
-
+import types
 import Type
 import Class
 import Opcode
 import Status
+
 
 class DNSError (Exception):
     """basic DNS error class"""
@@ -146,14 +146,14 @@ class Packer (object):
            Redundant dots are ignored.
         """
         list = []
-        for label in string.splitfields(name, '.'):
+        for label in name.split('.'):
             if label:
                 if len(label) > 63:
                     raise PackError, 'label too long'
                 list.append(label)
         keys = []
         for i in range(len(list)):
-            key = string.upper(string.joinfields(list[i:], '.'))
+            key = '.'.join(list[i:]).upper()
             keys.append(key)
             if self.index.has_key(key):
                 pointer = self.index[key]

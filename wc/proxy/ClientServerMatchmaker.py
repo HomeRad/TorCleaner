@@ -4,7 +4,8 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import dns_lookups, socket
+import dns_lookups
+import socket
 from cStringIO import StringIO
 from wc import i18n, config
 from wc.log import *

@@ -7,8 +7,12 @@ http://www.rad.com/networks/1998/dns/main.html
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import sys, os, time, socket, re
-from pprint import pformat
+import sys
+import os
+import time
+import socket
+import re
+import pprint
 from wc.proxy.Connection import Connection
 from wc import ip
 from wc.log import *
@@ -264,7 +268,7 @@ class DnsCache (object):
 
 
     def __repr__ (self):
-        return pformat(self.cache)
+        return pprint.pformat(self.cache)
 
 
     def read_localhosts (self):

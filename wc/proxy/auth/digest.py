@@ -8,12 +8,19 @@ __all__ = ["get_digest_challenge", "parse_digest_challenge",
            "get_digest_credentials", "parse_digest_credentials",
            "check_digest_credentials"]
 
-import md5, sha, random, base64, time
+import md5
+import sha
+import random
+import base64
+import time
 from parse import *
-random.seed()
+
 # the default realm
 from wc.proxy.auth import wc_realm
 from wc.log import *
+
+
+random.seed()
 # the default opaque value
 wc_opaque = base64.encodestring("unknown").strip()
 # XXX regularly delete all old nonces

@@ -19,7 +19,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os, sys, re
+import os
+import sys
+import re
 from wc.log import *
 from wc.url import url_norm
 

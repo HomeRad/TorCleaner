@@ -19,11 +19,16 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import os
+import re
+import urllib
+import urlparse
+import gettext
+import mimetypes
 from wc.webgui.simpletal import simpleTAL, simpleTALES
 from cStringIO import StringIO
 from wc import i18n, config, TemplateDir, Name, LocaleDir
 from wc.log import *
-import os, re, urllib, urlparse, gettext, mimetypes
 from wc.proxy.auth import get_challenges
 from wc.proxy.Headers import WcMessage
 

@@ -19,10 +19,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from sets import Set
+import sets
 
 _rules_without_sid = []
-_sids = Set()
+_sids = sets.Set()
 _sidcounter = 0
 
 def register_rule (rule):

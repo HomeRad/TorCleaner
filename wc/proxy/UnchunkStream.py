@@ -5,11 +5,10 @@ Deal with Transfer-encoding: chunked [HTTP/1.1]"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-# TEST CASE:
-#    http://www.apache.org/
+import re
 from wc.log import *
 
-import re
+
 match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
 
 class UnchunkStream (object):

@@ -20,7 +20,8 @@
 
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
 
-import sys, re
+import sys
+import re
 
 _oct='01234567'
 _dec='0123456789'

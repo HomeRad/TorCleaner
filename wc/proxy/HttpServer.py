@@ -5,8 +5,11 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, socket, re, urlparse, urllib
-
+import time
+import socket
+import re
+import urlparse
+import urllib
 from cStringIO import StringIO
 from wc.proxy.Server import Server
 from wc.proxy import make_timer, get_http_version, create_inet_socket

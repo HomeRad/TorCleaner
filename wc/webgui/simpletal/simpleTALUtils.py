@@ -35,7 +35,13 @@ up HTML that can then be used as 'structure' content.
 Module Dependencies: None
 """
 
-import os, stat, threading, codecs, sgmllib, cgi, re
+import os
+import stat
+import threading
+import codecs
+import sgmllib
+import cgi
+import re
 from wc.webgui import simpletal, simpleTAL
 from StringIO import StringIO
 

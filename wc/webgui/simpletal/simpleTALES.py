@@ -34,7 +34,8 @@ by the simpleTAL module.
 Module Dependencies: logging
 """
 
-import copy, logging
+import copy
+import logging
 from wc.webgui import simpletal
 
 __version__ = simpletal.__version__
