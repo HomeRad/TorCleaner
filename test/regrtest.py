@@ -247,5 +247,6 @@ class Compare:
         return 0
 
 if __name__ == '__main__':
-    sys.path.append(".")
+    import os
+    sys.path.insert(0, os.getcwd())
     sys.exit(main())
