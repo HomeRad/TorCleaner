@@ -66,7 +66,6 @@ class Header (wc.filter.Filter.Filter):
 
     def doit (self, data, attrs):
         """apply stored header rules to data, which is a WcMessage object"""
-        wc.log.debug(wc.LOG_FILTER, "%s filter %s", self, data)
         delete = sets.Set()
         # stage is STAGE_REQUEST_HEADER or STAGE_RESPONSE_HEADER
         for h in data.keys():
