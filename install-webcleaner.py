@@ -134,7 +134,7 @@ def open_browser (url):
     # the windows webbrowser.open func raises an exception for http://
     # urls, but works nevertheless. Just ignore the error.
     try:
-        webbrowser.open(config_url)
+        webbrowser.open(url)
     except WindowsError, msg:
         print _("Could not open webbrowser: %r") % str(msg)
 
