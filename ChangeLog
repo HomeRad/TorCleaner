@@ -11,8 +11,13 @@
     Changed files: wc/proxy/Connection.py
   * use tuple of allowed Content-Encodings instead of regex
     Changed files: wc/filter/Compress.py
-  * updated squid example config with no-digest option
+  * updated squid example config with no-digest peer option
     Changed files: README.squid
+  * recompile HTML parser with bison 1.50 and flex 2.5.22
+    Changed files: wc/parser/Makefile, wc/parser/htmllex.c,
+      wc/parser/htmlparse.c wc/parser/htmlparse.h
+  * enable the referrer HTTP header filter per default
+    Changed files: config/header.zap
 
 0.58:
   * Set the 'Via' HTTP header when forwarding requests/responses
