@@ -25,7 +25,7 @@ from distutils.file_util import write_file
 from distutils import util
 
 # set to 1 to use JavaScript
-USE_JS = 0
+USE_JS = 1
 
 class MyInstall(install):
     def run(self):
