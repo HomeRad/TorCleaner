@@ -24,6 +24,7 @@ import xml.parsers.expat
 import _webcleaner2_configdata as configdata
 from glob import glob
 from sets import Set
+from stat import ST_SIZE
 Version = configdata.version
 AppName = configdata.appname
 Name = configdata.name
@@ -190,6 +191,7 @@ class Configuration (dict):
     def reset (self):
         """Reset to default values"""
         self['port'] = 8080
+        self['adminpass'] = ""
         self['proxyuser'] = ""
         self['proxypass'] = ""
         self['parentproxy'] = ""
@@ -237,6 +239,7 @@ class Configuration (dict):
 """ % ConfigCharset)
         f.write(' version="%s"\n' % xmlify(self['version']))
         f.write(' port="%d"\n' % self['port'])
+        f.write(' adminpass="%s"\n' % xmlify(self['adminpass']))
         f.write(' proxyuser="%s"\n' % xmlify(self['proxyuser']))
         f.write(' proxypass="%s"\n' % xmlify(self['proxypass']))
         if self['parentproxy']:
@@ -265,6 +268,9 @@ class Configuration (dict):
         """read filter rules"""
         from wc.filter.rules import generate_sids, recalc_up_down
         for filename in filterconf_files():
+            if os.stat(filename)[ST_SIZE]==0:
+                warn(PROXY, "Skipping empty file %r", filename)
+                continue
             p = ZapperParser(filename)
             p.parse(file(filename), self)
             self['folderrules'].append(p.folder)
