@@ -234,8 +234,8 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def processData (self, data):
-        print >>sys.stderr, "JS:", data
-        # XXX parse recursively
+        # parse recursively
+        self.jsfilter.feed(data)
 
 
     def processPopup (self):
@@ -249,7 +249,6 @@ class HtmlFilter (HtmlParser,JSListener):
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buffer2data)"""
         filtered = 0
-        self.buffer.append((ENDTAG, tag))
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
         # matches, all other match too
@@ -260,28 +259,35 @@ class HtmlFilter (HtmlParser,JSListener):
                     rule.filter_complete(pos, self.buffer)
                     filtered = 1
                     break
-        if not filtered and self.javascript:
+        if not filtered and self.javascript and tag=='script':
             self.jsEndElement(tag)
+        else:
+            self.buffer.append((ENDTAG, tag))
         if not self.rulestack:
             self.buffer2data()
 
 
     def jsEndElement (self, tag):
         """parse generated html for scripts"""
-        if tag!='script': return
-        if not self.buffer:
-            print >>sys.stderr, "empty buffer on </script>"
+        if len(self.buffer)<2:
+            print >>sys.stderr, "short buffer on </script>", self.buffer
             return
-        last = self.buffer[-1]
-        if last[0]!=DATA:
-            print >>sys.stderr, "missing body for </script>", last
+        if self.buffer[-1][0]!=DATA or self.buffer[-2][0]!=STARTTAG:
+            print >>sys.stderr, "missing tags for </script>", self.buffer[-2:]
             return
-        script = last[1].strip()
+        script = self.buffer[-1][1].strip()
+        self.buffer[-2:] = []
         if script.startswith("<!--"):
             script = script[4:].strip()
         self.jsEnv.attachListener(self)
-        self.jsEnv.executeScriptAsFunction(val, 0.0)
+        self.jsfilter = HtmlFilter(self.rules, self.document,
+                 comments=self.comments, javascript=self.javascript)
+        self.jsEnv.executeScriptAsFunction(script, 0.0)
         self.jsEnv.detachListener(self)
+        self.jsfilter.flush()
+        self.buffer.append([DATA, self.jsfilter.flushbuf()])
+        self.buffer += self.jsfilter.buffer
+        self.jsfilter = None
 
 
     def doctype (self, data):
