@@ -260,4 +260,12 @@
   <title lang="en">Falk ag link</title>
   <attr>as1\.falkag\.de/server/link\.asp</attr>
 </rewrite>
+
+<rewrite sid="wc.28"
+ tag="table">
+  <title lang="de">Google search ads</title>
+  <matchurl>www\.google\.</matchurl>
+  <attr name="width">^(25|100)%$</attr>
+  <enclosed>&amp;ai=A</enclosed>
+</rewrite>
 </folder>
