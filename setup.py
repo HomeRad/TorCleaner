@@ -142,7 +142,7 @@ extensions = [
              ),
 ]
 
-scripts = ['webcleaner']
+scripts = ['webcleaner', 'webcleaner-certificates']
 
 # javascript extension
 if os.name=='nt':
