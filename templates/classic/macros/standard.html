@@ -1,0 +1,37 @@
+<html>
+<body>
+
+<!-- standard macro definitions
+  Note: the TAL contexts from the calling templates are used here
+ -->
+
+<!-- navigation -->
+<div class="tabs" metal:define-macro="nav">
+<a href="index.html" class="plain"
+ tal:condition="not:nav/index_html"
+ tal:content="t_webcleaner">WebCleaner</a>
+<a href="index.html" class="selected"
+ tal:condition="nav/index_html"
+ tal:content="t_webcleaner">WebCleaner (selected)</a>
+<a href="config.html" class="plain"
+ tal:condition="not:nav/config_html"
+ tal:content="t_proxyconf">Proxy configuration</a>
+<a href="config.html" class="selected"
+ tal:condition="nav/config_html"
+ tal:content="t_proxyconf">Proxy configuration (selected)</a>
+<a href="filterconfig.html" class="plain"
+ tal:condition="not:nav/filterconf_html"
+ tal:content="t_filterconf">Filter configuration</a>
+<a href="filterconfig.html" class="selected"
+ tal:condition="nav/filterconf_html"
+ tal:content="t_filterconf">Filter configuration (selected)</a>
+</div>
+
+<!-- footer -->
+<div class="footer" metal:define-macro="footer">
+<span tal:replace="structure footer">WebCleaner v2.x
+Copyright &copy; 2003 Bastian Kleineidam</span>
+</div>
+
+</body>
+</html>
