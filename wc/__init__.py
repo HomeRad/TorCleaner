@@ -39,10 +39,21 @@ TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'locale')
 
 def remove_headers (headers, to_remove):
-    """utility function to remove entries from RFC822 headers"""
+    """remove entries from RFC822 headers"""
     for h in to_remove:
         if headers.has_key(h):
+            # note: this removes all headers with that name
             del headers[h]
+
+def has_header_value (headers, key, value):
+    if has_attr(headers, "getallmatchingheaders"):
+        # rfc822.Message() object
+        for h in headers.getallmatchingheaders(key):
+            if h.strip().lower() == value.lower():
+                return "True"
+        return None
+    return headers.get(key, '').lower() == value.lower()
+
 
 config = None
 
