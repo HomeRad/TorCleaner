@@ -402,7 +402,7 @@ static const yysigned_char yyrhs[] =
 static const unsigned short yyrline[] =
 {
        0,   145,   145,   146,   149,   150,   157,   192,   242,   276,
-     297,   318,   339,   360,   382,   404
+     297,   318,   339,   360,   384,   408
 };
 #endif
 
@@ -1363,8 +1363,10 @@ finish_doctype:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
+    PyObject* script = PyUnicode_DecodeASCII("script", 6, "ignore");
+    if (script==NULL) { error=1; goto finish_script; }
     CALLBACK(ud, "characters", "O", yyvsp[0], finish_script);
-    CALLBACK(ud, "end_element", "s", "script", finish_script);
+    CALLBACK(ud, "end_element", "O", script, finish_script);
     CHECK_ERROR(ud, finish_script);
 finish_script:
     Py_XDECREF(ud->error);
@@ -1381,15 +1383,17 @@ finish_script:
     break;
 
   case 14:
-#line 383 "htmlparse.y"
+#line 385 "htmlparse.y"
     {
     /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
+    PyObject* style = PyUnicode_DecodeASCII("style", 5, "ignore");
+    if (style==NULL) { error=1; goto finish_style; }
     CALLBACK(ud, "characters", "O", yyvsp[0], finish_style);
-    CALLBACK(ud, "end_element", "s", "style", finish_style);
+    CALLBACK(ud, "end_element", "O", style, finish_style);
     CHECK_ERROR(ud, finish_style);
 finish_style:
     Py_XDECREF(ud->error);
@@ -1406,7 +1410,7 @@ finish_style:
     break;
 
   case 15:
-#line 405 "htmlparse.y"
+#line 409 "htmlparse.y"
     {
     /* $1 is a PyUnicode */
     /* Remember this is also called as a lexer error fallback */
@@ -1434,7 +1438,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1438 "htmlparse.c"
+#line 1442 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1628,7 +1632,7 @@ yyreturn:
 }
 
 
-#line 428 "htmlparse.y"
+#line 432 "htmlparse.y"
 
 
 /* disable python memory interface */

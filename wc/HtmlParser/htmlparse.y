@@ -364,8 +364,10 @@ finish_doctype:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
+    PyObject* script = PyUnicode_DecodeASCII("script", 6, "ignore");
+    if (script==NULL) { error=1; goto finish_script; }
     CALLBACK(ud, "characters", "O", $1, finish_script);
-    CALLBACK(ud, "end_element", "s", "script", finish_script);
+    CALLBACK(ud, "end_element", "O", script, finish_script);
     CHECK_ERROR(ud, finish_script);
 finish_script:
     Py_XDECREF(ud->error);
@@ -386,8 +388,10 @@ finish_script:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
+    PyObject* style = PyUnicode_DecodeASCII("style", 5, "ignore");
+    if (style==NULL) { error=1; goto finish_style; }
     CALLBACK(ud, "characters", "O", $1, finish_style);
-    CALLBACK(ud, "end_element", "s", "style", finish_style);
+    CALLBACK(ud, "end_element", "O", style, finish_style);
     CHECK_ERROR(ud, finish_style);
 finish_style:
     Py_XDECREF(ud->error);
