@@ -16,7 +16,10 @@
 <thead>
 <tr style="border-bottom:1px solid black;">
 <th style="width:25%;" i18n:translate="">Folders</th>
-<th style="width:30%;" i18n:translate="">Folder rules</th>
+<th style="width:30%;">
+<span i18n:translate="">Folder rules</span>
+<span tal:condition="curfolder" tal:content="curfolder/indexstr">(0-15)</span>
+</th>
 <th style="width:45%;" i18n:translate="">Rule</th>
 </tr>
 </thead>
@@ -24,7 +27,9 @@
 <tr valign="top">
 <!-- folders -->
 <td>
-<div tal:repeat="folder config/folderrules"><img
+<table tal:repeat="folder config/folderrules">
+<tr>
+<td><img
  tal:condition="not:folder/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="folder/up"
  tal:attributes="name string:folder_up_${folder/oid}"
@@ -39,13 +44,14 @@
 ><img tal:condition="not:folder/selected" src="minifolder.png"
  i18n:attributes="alt Folder icon"
 ><img tal:condition="folder/selected" src="minifolderopen.png"
- i18n:attributes="alt Folder icon"></span>
-<b tal:omit-tag="not:folder/selected">
+ i18n:attributes="alt Folder icon"></span></td>
+<td><b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:${filename}.${lang}?selfolder=${folder/oid}; title folder/tiptext"
  >Scripting</a>
-</b>
-</div>
+</b></td>
+</tr>
+</table>
 <hr noshade size="1">
 <table>
 <tr>
@@ -64,7 +70,9 @@
 <td>
 <div tal:condition="curfolder">
 <input type="hidden" name="selfolder" tal:attributes="value string:${curfolder/oid}">
-<div tal:repeat="rule curfolder/rules"><img
+<table tal:repeat="rule curfolder/rules_display">
+<tr>
+<td><img
  tal:condition="not:rule/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="rule/up"
  tal:attributes="name string:rule_up_${rule/oid}"
@@ -77,14 +85,21 @@
 ><img tal:condition="rule/disable" src="disabled.png" alt="Disabled rule icon"
  i18n:attributes="alt Disabled rule icon"><img 
  tal:condition="not:rule/disable" src="minidoc.png" alt="Rule icon"
- i18n:attributes="alt Rule icon">
-<b tal:omit-tag="not:rule/selected">
+ i18n:attributes="alt Rule icon"></td>
+<td><b tal:omit-tag="not:rule/selected">
 <a href="#" tal:condition="not:curfolder/disable" tal:content="rule/title"
  tal:attributes="href string:${filename}.${lang}?selfolder=${curfolder/oid}&amp;selrule=${rule/oid}; title rule/tiptext"
  >On focus</a>
 <span tal:condition="curfolder/disable" tal:content="rule/title"
  tal:attributes="title rule/tiptext">On focus</span>
-</b>
+</b></td>
+</tr>
+</table>
+<div tal:condition="curfolder/selindex">
+<span i18n:translate="">Go to rule:</span>
+<span tal:repeat="number curfolder/selindex"><a href="#"
+ tal:attributes="href string:${filename}.${lang}?selfolder=${curfolder/oid}&amp;selindex=${number}"
+ tal:content="number">50</a> </span>
 </div>
 <hr noshade size="1">
 <table>

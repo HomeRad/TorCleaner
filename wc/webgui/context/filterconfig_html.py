@@ -18,7 +18,7 @@ from wc.log import GUI as _GUI
 # config vars
 info = {}
 error = {}
-_rules_per_page = 25
+_rules_per_page = 50
 # current selected folder
 curfolder = None
 # current selected rule
@@ -52,11 +52,19 @@ def _exec_form (form):
     # select a folder
     if form.has_key('selfolder'):
         _form_selfolder(_getval(form, 'selfolder'))
+    if form.has_key('selindex') and curfolder:
+        _form_selindex(_getval(form, 'selindex'))
+    if curfolder:
+        l = len(curfolder.rules)
+        if l > _rules_per_page:
+            _calc_selindex(curfolder, curindex)
+        else:
+            curfolder.selindex = []
+        curfolder.indexstr = "(%d-%d/%d)"%(curindex+1,
+                                       min(curindex+_rules_per_page, l), l)
     # select a rule
     if form.has_key('selrule') and curfolder:
         _form_selrule(_getval(form, 'selrule'))
-    if form.has_key('selindex') and curfolder:
-        _form_selindex(_getval(form, 'selindex'))
     # make a new folder
     if form.has_key('newfolder'):
         _form_newfolder(_getval(form, 'newfoldername'))
@@ -119,10 +127,11 @@ def _exec_form (form):
 def _form_reset ():
     info.clear()
     error.clear()
-    global curfolder, currule, curparts
+    global curfolder, currule, curparts, curindex
     curfolder = None
     currule = None
     curparts = None
+    curindex = 0
 
 
 def _form_set_tags ():
@@ -172,6 +181,11 @@ def _form_selindex (index):
         curindex = int(index)
     except ValueError:
         error['selindex'] = True
+
+
+def _calc_selindex (folder, index):
+    res = [index-1000, index-250, index-50, index, index+50, index+250, index+1000]
+    folder.selindex = [ x for x in res if 0 <= x < len(folder.rules) and x!=index ]
 
 
 def _form_newfolder (foldername):
