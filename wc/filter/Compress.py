@@ -94,7 +94,7 @@ class Compress (Filter):
                 #debug(NIGHTMARE, 'final compressing %s\n' % `data`)
                 data = compobj['compressor'].compress(data)
             #debug(NIGHTMARE, 'finishing compressor\n')
-            data += compobj['compressor'].flush() + \
+            data += compobj['compressor'].flush(zlib.Z_FINISH) + \
 	            struct.pack('<l', compobj['crc']) + \
 		    struct.pack('<l', compobj['size'])
         return data
