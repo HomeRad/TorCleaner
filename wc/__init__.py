@@ -130,6 +130,17 @@ def get_localhosts ():
 
 import wc.filter
 
+
+def proxyconf_file ():
+    """return proxy configuration filename"""
+    return os.path.join(ConfigDir, "webcleaner.conf")
+
+
+def filterconf_files ():
+    """return list of filter configuration filenames"""
+    return glob(os.path.join(ConfigDir, "*.zap"))
+
+
 class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
 
@@ -164,19 +175,55 @@ class Configuration (dict):
         self['localhosts'] = get_localhosts()
         self['mime_content_rewriting'] = []
         self['headersave'] = 100
-        self['showerrors'] = None
+        self['showerrors'] = 0
         self['webgui_theme'] = "classic"
+
 
     def read_proxyconf (self):
         """read proxy configuration"""
         p = WConfigParser()
-        p.parse(os.path.join(ConfigDir, "webcleaner.conf"), self)
+        p.parse(proxyconf_file(), self)
+
+
+    def write_proxyconf (self):
+        """write proxy configuration"""
+        f = file(proxyconf_file())
+        f.write("""<?xml version="1.0"?>
+<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
+<webcleaner
+"""
+        f.write(' version="%s"\n' % xmlify(self['version']))
+        f.write(' port="%d"\n' % self['port'])
+        f.write(' proxyuser="%s"\n' % xmlify(self['proxyuser']))
+        f.write(' proxypass="%s"\n' % xmlify(self['proxypass']))
+        if self['parentproxy']:
+            f.write(' parentproxy="%s"\n' % xmlify(self['parentproxy']))
+        f.write(' parentproxyuser="%s"\n' % xmlify(self['parentproxyuser']))
+        f.write(' parentproxypass="%s"\n' % xmlify(self['parentproxypass']))
+        f.write(' parentproxyport="%d"\n' % self['parentproxyport'])
+        if self['showerrors']:
+            f.write(' showerrors="1"\n')
+        f.write(' webgui_theme="%s"\n' % xmlify(self['webgui_theme']))
+        if self['noproxyfor']:
+            keys = self['noproxyfor'][2].keys()
+            keys.sort()
+            f.write(' noproxyfor="%s"\n'%xmlify(",".join(keys)))
+        if self.allowedhosts:
+            keys = self['allowedhosts'][2].keys()
+            keys.sort()
+            f.write(' allowedhosts="%s"\n'%xmlify(",".join(keys)))
+        f.write('>\n')
+        for key in self['filters']:
+            f.write('<filter name="%s"/>\n' % key)
+        f.write('</webcleaner>\n')
+        f.close()
+
 
     def read_filterconf (self):
         """read filter rules"""
         from glob import glob
         # filter configuration
-        for f in glob(os.path.join(ConfigDir, "*.zap")):
+        for f in filterconf_files():
             ZapperParser().parse(f, self)
         for f in self['rules']:
             f.sort()
