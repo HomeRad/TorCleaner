@@ -41,9 +41,10 @@ class ImageSize (Filter):
 
     def __init__ (self):
         super(ImageSize, self).__init__()
-        # minimal amount of image data for PIL to read header info
-        # 6000 bytes should be enough, even for JPEG images
-        self.min_bufsize = 6000
+        # minimal amount of image data for PIL to read header info:
+        # 4000 bytes is enough for most images; the value is increased
+        # when it is not big enough
+        self.min_bufsize = 4096
         fname = os.path.join(TemplateDir, config['gui_theme'])
         fname = os.path.join(fname, "blocked.png")
         f = file(fname)
@@ -65,11 +66,20 @@ class ImageSize (Filter):
             # block this image
             return ''
         if attrs['buffer'].closed:
+            # do not block this image
             return data
+        if not data:
+           return ''
         buf = attrs['buffer']
         buf.write(data)
         if buf.tell() > self.min_bufsize:
-            attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'], attrs['url'])
+            # test if image is blocked
+            url = attrs['url']
+            sizes = attrs['sizes']
+            attrs['blocked'] = not self.check_sizes(buf, sizes, url)
+            if buf.tell() < self.min_bufsize:
+                # wait for more data
+                return ''
             data = buf.getvalue()
             buf.close()
             if attrs['blocked']:
@@ -79,6 +89,8 @@ class ImageSize (Filter):
 
 
     def finish (self, data, **attrs):
+        # note: if attrs['blocked'] is True, then the blockdata is
+        # already sent out
         if not attrs.has_key('buffer'):
             # do not block this image
             return data
@@ -89,7 +101,9 @@ class ImageSize (Filter):
             return data
         buf = attrs['buffer']
         buf.write(data)
-        attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'], attrs['url'])
+        url = attrs['url']
+        sizes = attrs['sizes']
+        attrs['blocked'] = not self.check_sizes(buf, sizes, url, finish=True)
         data = buf.getvalue()
         buf.close()
         if attrs['blocked']:
@@ -97,13 +111,15 @@ class ImageSize (Filter):
         return data
 
 
-    def check_sizes (self, buf, sizes, url):
-        if buf.tell()==0:
+    def check_sizes (self, buf, sizes, url, finish=False):
+        pos = buf.tell()
+        if pos==0:
             error(FILTER, "Empty image data found at %s", `url`)
             return True
         try:
             buf.seek(0)
             img = Image.open(buf, 'r')
+            buf.seek(pos)
             for size, formats in sizes:
                 if size==img.size:
                     # size matches, look for format restriction
@@ -114,7 +130,14 @@ class ImageSize (Filter):
                         debug(FILTER, "Blocking image size %s", str(size))
                         return False
         except IOError:
-            exception(FILTER, "Could not get image size from %s", `url`)
+            if finish:
+                exception(FILTER, "Could not get image size from %s", `url`)
+            else:
+                assert pos > self.min_bufsize
+                # wait for more data
+                buf.seek(pos)
+                self.min_bufsize = pos+4096
+                assert buf.tell() < self.min_bufsize
         return True
 
 
