@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""special container classes"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Special container classes.
+"""
 
 
 class SetList (list):
@@ -131,6 +133,23 @@ class ListDict (dict):
         super(ListDict, self).clear()
 
 
+class Node (object):
+    """
+    Internal node with pointers to sisters.
+    Built for and used by PyPE:
+    http://pype.sourceforge.net
+    Copyright 2003 Josiah Carlson. (Licensed under the GPL)
+    """
+
+    def __init__ (self, prev, me):
+        """
+        Initialize pointers and data.
+        """
+        self.prev = prev
+        self.me = me
+        self.next = None
+
+
 class LRU (object):
     """
     Implementation of a length-limited O(1) LRU queue.
@@ -138,19 +157,6 @@ class LRU (object):
     http://pype.sourceforge.net
     Copyright 2003 Josiah Carlson. (Licensed under the GPL)
     """
-
-    class Node (object):
-        """
-        Internal node with pointers to sisters.
-        """
-
-        def __init__ (self, prev, me):
-            """
-            Initialize pointers and data.
-            """
-            self.prev = prev
-            self.me = me
-            self.next = None
 
     def __len__ (self):
         """
@@ -196,7 +202,7 @@ class LRU (object):
         """
         if obj in self.d:
             del self[obj]
-        nobj = self.Node(self.last, (obj, val))
+        nobj = Node(self.last, (obj, val))
         if self.first is None:
             self.first = nobj
         if self.last:

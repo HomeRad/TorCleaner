@@ -1,5 +1,21 @@
 # -*- coding: iso-8859-1 -*-
-"""ANSI Color definitions and functions.
+# Copyright (C) 2000-2005  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+ANSI Color definitions and functions.
 
 From Term::ANSIColor, applies also to this module:
 
@@ -18,7 +34,7 @@ garbage.
 
 Jean Delvare provided the following table of different common terminal
 emulators and their support for the various attributes and others have
-helped me flesh it out:
+helped me flesh it out::
 
               clear    bold     dark    under    blink   reverse  conceal
  ------------------------------------------------------------------------
@@ -61,21 +77,6 @@ The current version of this module is always available from its web site at
 http://www.eyrie.org/~eagle/software/ansicolor/. It is also part of the Perl
 core distribution as of 5.6.0.
 """
-# Copyright (C) 2000-2005  Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os
 import logging
@@ -180,7 +181,7 @@ def has_colors_nt ():
 
 def colorize (text, color=None):
     """
-    Colorize text with given color. If color is c{None}, leave the
+    Colorize text with given color. If color is None, leave the
     text as-is.
     """
     if color is not None:

@@ -248,7 +248,7 @@ class Rdata(object):
         @param origin: The origin to use for relative names
         @type origin: wc.dns.name.Name
         @param relativize: should names be relativized?
-        @type origin: bool
+        @type relativize: bool
         @rtype: wc.dns.rdata.Rdata instance
         """
 

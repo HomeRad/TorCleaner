@@ -1,7 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""
-Logging and debug functions.
-"""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,6 +14,9 @@ Logging and debug functions.
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Logging and debug functions.
+"""
 
 # public api
 __all__ = ["debug", "info", "warn", "error", "critical", "exception", ]
@@ -31,7 +31,7 @@ def debug (log, msg, *args):
     """
     Log a debug message.
 
-    return: c{None}
+    return: None
     """
     logging.getLogger(log).debug(msg, *args)
 
@@ -40,7 +40,7 @@ def info (log, msg, *args):
     """
     Log an informational message.
 
-    return: c{None}
+    return: None
     """
     logging.getLogger(log).info(msg, *args)
 
@@ -49,7 +49,7 @@ def warn (log, msg, *args):
     """
     Log a warning.
 
-    return: c{None}
+    return: None
     """
     logging.getLogger(log).warn(msg, *args)
 
@@ -58,7 +58,7 @@ def error (log, msg, *args):
     """
     Log an error.
 
-    return: c{None}
+    return: None
     """
     logging.getLogger(log).error(msg, *args)
 
@@ -67,7 +67,7 @@ def critical (log, msg, *args):
     """
     Log a critical error.
 
-    return: c{None}
+    return: None
     """
     logging.getLogger(log).critical(msg, *args)
 
@@ -76,6 +76,6 @@ def exception (log, msg, *args):
     """
     Log an exception.
 
-    return: c{None}
+    return: None
     """
     logging.getLogger(log).exception(msg, *args)

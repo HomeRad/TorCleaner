@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""test string formatting operations"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Test string formatting operations.
+"""
 
 import unittest
 import os
@@ -23,10 +25,14 @@ import wc.strformat
 
 
 class TestStrFormat (unittest.TestCase):
-    """test string formatting routines"""
+    """
+    Test string formatting routines.
+    """
 
     def test_unquote (self):
-        """test quote stripping"""
+        """
+        Test quote stripping.
+        """
         self.assertEquals(wc.strformat.unquote(""), "")
         self.assertEquals(wc.strformat.unquote(None), None)
         self.assertEquals(wc.strformat.unquote("'"), "'")
@@ -43,7 +49,9 @@ class TestStrFormat (unittest.TestCase):
         self.assertEquals(wc.strformat.unquote("\"a'"), "a")
 
     def test_wrap (self):
-        """test line wrapping"""
+        """
+        Test line wrapping.
+        """
         s = "11%(sep)s22%(sep)s33%(sep)s44%(sep)s55" % {'sep': os.linesep}
         # testing width <= 0
         self.assertEquals(wc.strformat.wrap(s, -1), s)
@@ -58,14 +66,18 @@ class TestStrFormat (unittest.TestCase):
         self.assertEquals(wc.strformat.wrap(s, 4+l), s2)
 
     def test_remove_markup (self):
-        """test markup removing"""
+        """
+        Test markup removing.
+        """
         self.assertEquals(wc.strformat.remove_markup("<a>"), "")
         self.assertEquals(wc.strformat.remove_markup("<>"), "")
         self.assertEquals(wc.strformat.remove_markup("<<>"), "")
         self.assertEquals(wc.strformat.remove_markup("a < b"), "a < b")
 
     def test_strsize (self):
-        """test byte size strings"""
+        """
+        Test byte size strings.
+        """
         self.assertRaises(ValueError, wc.strformat.strsize, -1)
         self.assertEquals(wc.strformat.strsize(0), "0 Bytes")
         self.assertEquals(wc.strformat.strsize(1), "1 Byte")
@@ -75,7 +87,9 @@ class TestStrFormat (unittest.TestCase):
 
 
 def test_suite ():
-    """build and return a TestSuite"""
+    """
+    Build and return a TestSuite.
+    """
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestStrFormat))
     return suite
