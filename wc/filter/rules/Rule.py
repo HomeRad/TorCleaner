@@ -233,22 +233,21 @@ class Rule (object):
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        s = '<%s sid="%s"' % (self.get_name(), wc.XmlUtils.xmlquoteattr(self.sid))
+        s = u'<%s sid="%s"' % (self.get_name(), wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
-            s+= ' disable="%d"' % self.disable
+            s+= u' disable="%d"' % self.disable
         return s
 
 
     def title_desc_toxml (self, prefix=""):
         """return XML for rule title and description"""
-        t = ['%s<title lang="%s">%s</title>' % \
+        t = [u'%s<title lang="%s">%s</title>' % \
              (prefix, wc.XmlUtils.xmlquoteattr(key), wc.XmlUtils.xmlquote(value)) \
              for key,value in self.titles.iteritems() if value]
-        d = ['%s<description lang="%s">%s</description>'% \
+        d = [u'%s<description lang="%s">%s</description>'% \
              (prefix, wc.XmlUtils.xmlquoteattr(key), wc.XmlUtils.xmlquote(value)) \
              for key,value in self.descriptions.iteritems() if value]
-        s = "\n".join(t+d)
-        return s
+        return u"\n".join(t+d)
 
 
     def __str__ (self):
@@ -262,5 +261,5 @@ class Rule (object):
 
     def tiptext (self):
         """return short info for gui display"""
-        return "%s #%s" % (self.get_name().capitalize(), self.sid)
+        return u"%s #%s" % (self.get_name().capitalize(), self.sid)
 

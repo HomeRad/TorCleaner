@@ -64,13 +64,12 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
         """Rule data as XML for storing"""
 	s = super(ReplaceRule, self).toxml()
         if self.search:
-            s += '\n search="%s"'%wc.XmlUtils.xmlquoteattr(self.search)
-        s += ">"
-        s += "\n"+self.title_desc_toxml(prefix="  ")
+            s += u'\n search="%s"'%wc.XmlUtils.xmlquoteattr(self.search)
+        s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
-            s += "\n"+self.matchestoxml(prefix="  ")
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.replacement:
-            s += '\n  <replacement>%s</replacement>'%\
+            s += u'\n  <replacement>%s</replacement>'%\
               wc.XmlUtils.xmlquote(self.replacement)
-        s += "\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.get_name()
         return s

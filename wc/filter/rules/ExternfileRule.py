@@ -45,7 +45,7 @@ class ExternfileRule (wc.filter.rules.Rule.Rule):
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(ExternfileRule, self).toxml()
-        s += ' filename="%s">' % wc.XmlUtils.xmlquoteattr(self.filename)
-        s += "\n"+self.title_desc_toxml(prefix="  ")
-        s += "\n</%s>"%self.get_name()
+        s += u' filename="%s">' % wc.XmlUtils.xmlquoteattr(self.filename)
+        s += u"\n"+self.title_desc_toxml(prefix=u"  ")
+        s += u"\n</%s>"%self.get_name()
         return s

@@ -285,29 +285,28 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(RewriteRule, self).toxml()
-        if self.tag!='a':
-            s += '\n tag="%s"' % wc.XmlUtils.xmlquoteattr(self.tag)
-        s += ">"
-        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.tag!=u'a':
+            s += u'\n tag="%s"' % wc.XmlUtils.xmlquoteattr(self.tag)
+        s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
-            s += "\n"+self.matchestoxml(prefix="  ")
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
         for key, val in self.attrs.items():
-            s += "\n  <attr"
-            if key!='href':
-                s += ' name="%s"' % key
+            s += u"\n  <attr"
+            if key!=u'href':
+                s += u' name="%s"' % key
             if val:
-                s += ">%s</attr>" % wc.XmlUtils.xmlquote(val)
+                s += u">%s</attr>" % wc.XmlUtils.xmlquote(val)
             else:
-                s += "/>"
+                s += u"/>"
         if self.enclosed:
-            s += "\n  <enclosed>%s</enclosed>" % wc.XmlUtils.xmlquote(self.enclosed)
+            s += u"\n  <enclosed>%s</enclosed>" % wc.XmlUtils.xmlquote(self.enclosed)
         if self.part!=COMPLETE or self.replacement:
-            s += '\n  <replacement part="%s"' % num_part(self.part)
+            s += u'\n  <replacement part="%s"' % num_part(self.part)
             if self.replacement:
-                s += ">%s</replacement>" % wc.XmlUtils.xmlquote(self.replacement)
+                s += u">%s</replacement>" % wc.XmlUtils.xmlquote(self.replacement)
             else:
-                s += "/>"
-        s += "\n</%s>" % self.get_name()
+                s += u"/>"
+        s += u"\n</%s>" % self.get_name()
         return s
 
 

@@ -76,11 +76,11 @@ class UrlRule (wc.filter.rules.Rule.Rule):
 
     def matchestoxml (self, prefix=""):
         """match url rule data as XML for storing"""
-        m = ["%s<matchurl>%s</matchurl>" % \
+        m = [u"%s<matchurl>%s</matchurl>" % \
              (prefix, wc.XmlUtils.xmlquote(r)) for r in self.matchurls]
-        n = ["%s<nomatchurl>%s</nomatchurl>" % \
+        n = [u"%s<nomatchurl>%s</nomatchurl>" % \
              (prefix, wc.XmlUtils.xmlquote(r)) for r in self.nomatchurls]
-        return "\n".join(m+n)
+        return u"\n".join(m+n)
 
 
     def __str__ (self):

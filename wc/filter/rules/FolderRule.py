@@ -111,19 +111,19 @@ class FolderRule (wc.filter.rules.Rule.Rule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        s = """<?xml version="1.0" encoding="%s"?>
+        s = u"""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
 %s oid="%d">"""%(wc.ConfigCharset, super(FolderRule, self).toxml(), self.oid)
-        s += "\n"+self.title_desc_toxml()+"\n"
+        s += u"\n"+self.title_desc_toxml()+u"\n"
         for r in self.rules:
-            s += "\n%s\n"%r.toxml()
-        return s+"</folder>\n"
+            s += u"\n%s\n"%r.toxml()
+        return s+u"</folder>\n"
 
 
     def write (self):
         """write xml data into filename"""
         f = file(self.filename, 'w')
-        f.write(self.toxml())
+        f.write(self.toxml().encode("iso-8859-1", "replace"))
         f.close()
 
 

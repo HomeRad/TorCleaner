@@ -27,7 +27,7 @@ reason = None
 
 def _form_reset ():
     global url, reason
-    url = ""
+    url = u""
     reason = i18n._("Unknown reason")
 
 

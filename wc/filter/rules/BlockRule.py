@@ -51,12 +51,12 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(wc.filter.rules.AllowRule.AllowRule, self).toxml() + \
-             '\n url="%s">' % wc.XmlUtils.xmlquoteattr(self.url)
-        s += "\n"+self.title_desc_toxml(prefix="  ")
+             u'\n url="%s">' % wc.XmlUtils.xmlquoteattr(self.url)
+        s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
-            s += "\n"+self.matchestoxml(prefix="  ")
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.replacement:
-            s += "\n  <replacement>%s</replacement>"%\
+            s += u"\n  <replacement>%s</replacement>"%\
               wc.XmlUtils.xmlquote(self.replacement)
-        s += "\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.get_name()
         return s

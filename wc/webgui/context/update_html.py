@@ -20,5 +20,5 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import AppName, Version, config
-updatezapperurl = config.get('baseurl', '')+"zapper/"
-updateratingurl = config.get('baseurl', '')+"rating/"
+updatezapperurl = config.get('baseurl', '')+u"zapper/"
+updateratingurl = config.get('baseurl', '')+u"rating/"

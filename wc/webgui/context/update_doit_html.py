@@ -24,7 +24,7 @@ from wc.update import update_filter as _update_filter
 from wc.update import update_ratings as _update_ratings
 from cStringIO import StringIO as _StringIO
 
-updatelog = ""
+updatelog = u""
 
 def _exec_form (form, lang):
     if form.has_key('updatezapper'):
@@ -45,7 +45,7 @@ def _updatezapper ():
         updatelog = log.getvalue()
         config.write_filterconf()
     except IOError, msg:
-        updatelog = "Error: %s" % msg
+        updatelog = i18n._("Error: %s") % msg
     else:
         if doreload:
             # pass
@@ -59,4 +59,4 @@ def _updaterating ():
         # XXX
         _update_ratings(config, log=log, dryrun=False)
     except IOError, msg:
-        updatelog = "Error: %s" % msg
+        updatelog = i18n._("Error: %s") % msg

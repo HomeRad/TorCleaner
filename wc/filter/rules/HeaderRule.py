@@ -57,15 +57,15 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        s = '%s\n name="%s"' % (super(HeaderRule, self).toxml(),
+        s = u'%s\n name="%s"' % (super(HeaderRule, self).toxml(),
                                 wc.XmlUtils.xmlquoteattr(self.name))
         if self.filterstage!='request':
-            s += '\n filterstage="%s"' % self.filterstage
-        s += ">\n"+self.title_desc_toxml(prefix="  ")
+            s += u'\n filterstage="%s"' % self.filterstage
+        s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
-            s += "\n"+self.matchestoxml(prefix="  ")
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.value:
-            s += '\n  <replacement>%s</replacement>' % \
+            s += u'\n  <replacement>%s</replacement>' % \
                wc.XmlUtils.xmlquote(self.value)
-        s += "\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.get_name()
         return s

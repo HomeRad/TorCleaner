@@ -45,9 +45,9 @@ class AllowRule (wc.filter.rules.UrlRule.UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(AllowRule, self).toxml() + \
-             '\n url="%s">' % wc.XmlUtils.xmlquoteattr(self.url)
-        s += "\n"+self.title_desc_toxml(prefix="  ")
+             u'\n url="%s">' % wc.XmlUtils.xmlquoteattr(self.url)
+        s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
-            s += "\n"+self.matchestoxml(prefix="  ")
-        s += "\n</%s>" % self.get_name()
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
+        s += u"\n</%s>" % self.get_name()
         return s

@@ -51,7 +51,7 @@ def _calc_ratings_display ():
     ratings_display = urls[curindex:curindex+_entries_per_page]
     for url in ratings_display:
         t = _strtime(float(rating_cache[url]['modified']))
-        rating_modified[url] = t.replace(" ", "&nbsp;")
+        rating_modified[url] = t.replace(u" ", u"&nbsp;")
 
 
 # config vars
@@ -61,7 +61,7 @@ ratings = {}
 values = {}
 rating_modified = {}
 _reset_ratings()
-url = ""
+url = u""
 generic = False
 # current index of entry to display
 curindex = 0
@@ -107,7 +107,7 @@ def _form_reset ():
     error.clear()
     _reset_ratings()
     global url, generic, curindex
-    url = ""
+    url = u""
     generic = False
     curindex = 0
 
@@ -164,8 +164,8 @@ def _form_apply ():
     rating = {}
     rating.update(ratings)
     if generic:
-        rating['generic'] = "true"
-    rating['modified'] = "%d"%int(_time.time())
+        rating['generic'] = u"true"
+    rating['modified'] = u"%d"%int(_time.time())
     rating_cache[url] = rating
     _rating_cache_write()
     info['ratingupdated'] = True
@@ -182,10 +182,10 @@ def _form_load ():
     if url in rating_cache:
         rating = rating_cache[url]
         for category, value in rating.items():
-            if category=='generic':
-                generic = (value=='true')
+            if category==u'generic':
+                generic = (value==u'true')
             else:
                 ratings[category] = value
-                if category not in ["modified"]:
+                if category not in [u"modified"]:
                     values[category] = {value: True}
 

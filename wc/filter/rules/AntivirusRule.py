@@ -32,9 +32,9 @@ class AntivirusRule (wc.filter.rules.UrlRule.UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        s = super(AntivirusRule, self).toxml()+">"
-        s += "\n"+self.title_desc_toxml(prefix="  ")
+        s = super(AntivirusRule, self).toxml()+u">"
+        s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
-            s += "\n"+self.matchestoxml(prefix="  ")
-        s += "\n</%s>" % self.get_name()
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
+        s += u"\n</%s>" % self.get_name()
 	return s

@@ -189,17 +189,17 @@ def _form_selrule (index):
             ruletype[rt] = (currule.get_name()==rt)
         # XXX this side effect is bad :(
         # fill part flags
-        if currule.get_name()=="rewrite":
+        if currule.get_name()==u"rewrite":
             global curparts
             curparts = {}
             for i, part in enumerate(partvalnames):
                 curparts[part] = (currule.part==i)
-        elif currule.get_name()=="header":
+        elif currule.get_name()==u"header":
             global curfilterstage
             curfilterstage = {
-                'both': currule.filterstage=='both',
-                'request': currule.filterstage=='request',
-                'response': currule.filterstage=='response',
+                u'both': currule.filterstage==u'both',
+                u'request': currule.filterstage==u'request',
+                u'response': currule.filterstage==u'response',
             }
     except (ValueError, IndexError):
         error['ruleindex'] = True
@@ -227,12 +227,12 @@ def _form_newfolder (foldername, lang):
     if not foldername:
         error['newfolder'] = True
         return
-    fd, filename = tempfile.mkstemp(".zap", "local_", ConfigDir, text=True)
+    fd, filename = tempfile.mkstemp(u".zap", u"local_", ConfigDir, text=True)
     # create and select the new folder
     global curfolder
     curfolder = _FolderRule(titles={lang:foldername}, filename=filename)
     _register_rule(curfolder)
-    prefix = config['development'] and "wc" or "lc"
+    prefix = config['development'] and u"wc" or u"lc"
     _generate_sids(prefix)
     if not config['folderrules']:
         curfolder.oid = 0
@@ -294,7 +294,7 @@ def _form_newrule (rtype, lang):
     rule.titles[lang] = i18n._("No title")
     # compile data and register
     rule.compile_data()
-    prefix = config['development'] and "wc" or "lc"
+    prefix = config['development'] and u"wc" or u"lc"
     _generate_sids(prefix)
     curfolder.append_rule(rule)
     _recalc_up_down(curfolder.rules)

@@ -39,15 +39,15 @@ for _i in config.get('filters', []):
 config['newport'] = config.get('port', 8080)
 config['newsslport'] = config.get('sslport', 8443)
 config['newsslgateway'] = config.get('sslgateway', 0)
-filterenabled = ""
-filterdisabled = ""
+filterenabled = u""
+filterdisabled = u""
 
 # form execution
 def _exec_form (form, lang):
     # reset info/error
     global filterenabled, filterdisabled
-    filterenabled = ""
-    filterdisabled = ""
+    filterenabled = u""
+    filterdisabled = u""
     info.clear()
     error.clear()
     res = [None]
@@ -70,17 +70,17 @@ def _exec_form (form, lang):
     if form.has_key('adminuser'):
         _form_adminuser(_getval(form, 'adminuser').strip(), res)
     elif config['adminuser']:
-        config['adminuser'] = ''
+        config['adminuser'] = u''
         config.write_proxyconf()
         info['adminuser'] = True
     # admin pass
     if form.has_key('adminpass'):
         val = _getval(form, 'adminpass')
         # ignore dummy values
-        if val!='__dummy__':
+        if val!=u'__dummy__':
             _form_adminpass(base64.encodestring(val).strip(), res)
     elif config['adminpass']:
-        config['adminpass'] = ''
+        config['adminpass'] =u ''
         config.write_proxyconf()
         info['adminpass'] = True
         if config['adminuser']:
@@ -96,7 +96,7 @@ def _exec_form (form, lang):
     if form.has_key('proxypass'):
         val = _getval(form, 'proxypass')
         # ignore dummy values
-        if val!='__dummy__':
+        if val!=u'__dummy__':
             _form_proxypass(base64.encodestring(val).strip(), res)
     elif config['proxypass']:
         config['proxypass'] = ''
@@ -147,7 +147,7 @@ def _exec_form (form, lang):
     if form.has_key('parentproxypass'):
         val = _getval(form, 'parentproxypass')
         # ignore dummy values
-        if val!='__dummy__':
+        if val!=u'__dummy__':
             _form_parentproxypass(base64.encodestring(val).strip())
     elif config['parentproxypass']:
         config['parentproxypass'] = ''
@@ -310,8 +310,8 @@ def _form_filtermodules (form):
     if enabled or disabled:
         config.write_proxyconf()
     global filterenabled, filterdisabled
-    filterenabled = ", ".join(enabled)
-    filterdisabled = ", ".join(disabled)
+    filterenabled = u", ".join(enabled)
+    filterdisabled = u", ".join(disabled)
 
 
 def _form_addallowed (host):

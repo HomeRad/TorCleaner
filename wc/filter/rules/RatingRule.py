@@ -108,17 +108,17 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-	s = "%s>" % super(RatingRule, self).toxml()
-        s += "\n"+self.title_desc_toxml(prefix="  ")
+	s = u"%s>" % super(RatingRule, self).toxml()
+        s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
-            s += "\n"+self.matchestoxml(prefix="  ")
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.url:
-            s += "\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
+            s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
         for category, value in self.ratings.items():
             if value:
-                s += "\n  <category name=\"%s\">%s</category>"% \
+                s += u"\n  <category name=\"%s\">%s</category>"% \
                       (wc.XmlUtils.xmlquoteattr(category),
                        wc.XmlUtils.xmlquote(value))
-        s += "\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.get_name()
         return s
 

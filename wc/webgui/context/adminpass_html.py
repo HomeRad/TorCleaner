@@ -26,7 +26,7 @@ import string as _string
 
 ConfigFile = _join(ConfigDir, "webcleaner.conf")
 _chars = _string.letters + _string.digits
-adminpass = ''.join([_choice(_chars) for i in range(8)])
-adminuser = config.get('adminuser', 'admin')
+adminpass = u''.join([_choice(_chars) for i in range(8)])
+adminuser = config.get('adminuser', u'admin')
 adminpass_b64 = adminpass.encode("base64").strip()
 
