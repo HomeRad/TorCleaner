@@ -61,6 +61,10 @@ class WebConfig:
         self.client.server_close()
 
 
+    def client_abort (self):
+        self.client = None
+
+
 def norm (path):
     return os.path.realpath(os.path.normpath(os.path.normcase(path)))
 

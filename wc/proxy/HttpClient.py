@@ -285,7 +285,11 @@ class HttpClient (Connection):
             form = {}
         # this object will call server_connected at some point
         gm = mimetypes.guess_type(self.url, None)
-        headers = {'Content-Type': gm[0]}
+        if gm[0] is not None:
+            headers = {'Content-Type': gm[0]}
+        else:
+            # note: index.html is appended to directories
+            headers = {'Content-Type': 'text/html'}
         WebConfig(self, self.url, form, self.protocol, headers=headers)
 
 
