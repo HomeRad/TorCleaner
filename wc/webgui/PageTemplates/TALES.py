@@ -18,6 +18,9 @@ An implementation of a generic TALES engine
 import re
 import sys
 import weakref
+
+import wc
+import wc.log
 from wc.webgui import ZTUtils
 from MultiMapping import MultiMapping
 
@@ -217,6 +220,7 @@ class Context (object):
 
     def evaluate (self, expression,
                   isinstance=isinstance, StringType=StringType):
+        wc.log.debug(wc.LOG_TALES, "Evaluate %r", expression)
         if isinstance(expression, StringType):
             expression = self._compiler.compile(expression)
         __traceback_supplement__ = (
