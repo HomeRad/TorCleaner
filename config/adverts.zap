@@ -56,7 +56,7 @@
 
 <rewrite sid="wc.342" oid="8" title="Ad servers 11"
  desc="Tribal fusion">
-<attr>(a\.tribalfusion\.com|ads\.adcode\.de)</attr>
+<attr>(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
 <replacement part="complete"/>
 </rewrite>
 
