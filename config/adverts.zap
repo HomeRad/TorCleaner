@@ -307,4 +307,9 @@
  desc="Tribal fusion">
 <attr>a\.tribalfusion\.com</attr>
 </rewrite>
+
+<rewrite title="maxihitz" oid="134"
+ tag="iframe">
+<attr name="src">maxihitz\.de</attr>
+</rewrite>
 </folder>

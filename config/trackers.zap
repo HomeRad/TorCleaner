@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Trackers and Counters" oid="12"
+<folder title="Trackers and Counters" oid="9"
  desc="Statistic links and tracker images deserve now a separate category as they became a lot more in the last couple of months.">
 
 <block title="Statistic sites" oid="0"

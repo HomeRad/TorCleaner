@@ -2,6 +2,8 @@ TODO
 
 - webgui configuration
 
+- HTTPS tunneling
+
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS
