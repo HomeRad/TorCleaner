@@ -170,6 +170,8 @@ class Configuration (dict):
         self.read_filterconf()
         if self['timeout']:
             socket.setdefaulttimeout(self['timeout'])
+        else:
+            socket.setdefaulttimeout(None)
 
     def reset (self):
         """Reset to default values"""
