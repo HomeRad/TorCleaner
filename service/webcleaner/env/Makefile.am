@@ -1,10 +1,10 @@
-EXTRA_DIST = PATH LANG LC_ALL LC_CTYPE WC_DEVELOPMENT
-
-data_SOURCES: PYTHONPATH PATH
+data_DATA = PYTHONPATH PATH LANG LC_ALL LC_CTYPE WC_DEVELOPMENT
 
 # both PATH and PYTHONPATH should contain the top builddir for local
 # testing
 PYTHONPATH PATH:
-	echo "$(top_builddir)" > $<
+	echo `readlink -f "$(top_builddir)"` > $@
 
 
+clean-local:
+	rm -f PYTHONPATH PATH
