@@ -620,7 +620,11 @@ class HttpServer (wc.proxy.Server.Server):
         the connection pool.
         """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.close_close", self)
-        assert not self.client, "close with open client"
+        # If a connect() failed, the handle_close has been called
+        # directly. The client might still be open in this case.
+        if self.client:
+            self.client.server_close(self)
+            self.client = None
         unregister = (self.connected and self.state != 'closed')
         if unregister:
             self.state = 'closed'
