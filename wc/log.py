@@ -28,7 +28,7 @@ __date__    = "$Date$"[7:-2]
 
 import os, re, logging, logging.config, textwrap
 from logging.handlers import RotatingFileHandler
-from wc import Name, iswriteable
+from wc import Name, ConfigDir, iswriteable
 
 
 # logger areas
@@ -47,9 +47,11 @@ def initlog (filename):
     """initialize logfiles and configuration"""
     logging.config.fileConfig(filename)
     if os.name=='nt':
-        # on windows, services should log to event log
-        from logging.handlers import NTEventLogHandler
-        handler = set_format(NTEventLogHandler(Name))
+        # log to event log
+        #from logging.handlers import NTEventLogHandler
+        #handler = set_format(NTEventLogHandler(Name))
+        logfile = get_log_file("%s.log"%Name)
+        handler = get_wc_handler(logfile)
     else:
         # on posix/mac systems log to file
         logfile = get_log_file("%s.log"%Name)
@@ -86,7 +88,11 @@ def get_access_handler (logfile):
 def get_log_file (fname, trydir=os.getcwd()):
     """get full path name to writeable logfile"""
     if os.name =='nt':
-        return os.path.join(os.environ.get("TEMP"), fname)
+        return _get_log_file_nt(fname, trydir)
+    return _get_log_file_posix(fname, trydir)
+
+
+def _get_log_file_posix (fname, trydir):
     logfile = os.path.join('/', 'var', 'log', 'webcleaner', fname)
     if not iswriteable(logfile):
         logfile = os.path.join(trydir, fname)
@@ -94,6 +100,13 @@ def get_log_file (fname, trydir=os.getcwd()):
         logfile = os.path.join('/', 'var', 'tmp', fname)
     if not iswriteable(logfile):
         logfile = os.path.join('/','tmp', fname)
+    return logfile
+
+
+def _get_log_file_nt (fname, trydir):
+    logfile = os.path.join(ConfigDir, fname)
+    if not iswriteable(logfile):
+        logfile = os.path.join(os.environ.get("TEMP"), fname)
     return logfile
 
 
