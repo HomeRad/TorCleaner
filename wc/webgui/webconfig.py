@@ -229,11 +229,10 @@ class Translator (gettext.GNUTranslations):
         return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
 
     def gettext (self, msgid):
-        return self.ugettext(msgid).encode(self.OUTPUT_ENCODING)
+        return self.ugettext(msgid)
 
     def ngettext (self, singular, plural, number):
-        return self.ungettext(singular, plural, number).encode(
-            self.OUTPUT_ENCODING)
+        return self.ungettext(singular, plural, number)
 
 
 class NullTranslator (gettext.NullTranslations):

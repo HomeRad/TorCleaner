@@ -19,7 +19,7 @@ import re
 import sys
 
 from TALDefs import NAME_RE, TALESError, ErrorInfo
-ustr = str
+ustr = unicode
 
 
 IDomain = None

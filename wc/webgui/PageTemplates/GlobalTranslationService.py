@@ -18,7 +18,7 @@ import re
 
 from wc.webgui.TAL.TALDefs import NAME_RE
 
-ustr = str
+ustr = unicode
 
 class DummyTranslationService (object):
     """Translation service that doesn't know anything about translation."""

@@ -24,7 +24,7 @@ import wc.log
 from wc.webgui import ZTUtils
 from MultiMapping import MultiMapping
 
-ustr = str
+ustr = unicode
 
 StringType = type('')
 

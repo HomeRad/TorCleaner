@@ -43,12 +43,12 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
 
     def render (self, context):
         """Render this Page Template"""
+        out = wc.webgui.TAL.TALInterpreter.FasterStringIO()
         __traceback_supplement__ = \
   (wc.webgui.PageTemplates.PageTemplate.PageTemplateTracebackSupplement, self)
-        output = StringIO.StringIO()
         engine = wc.webgui.PageTemplates.Expressions.getEngine()
         wc.webgui.TAL.TALInterpreter.TALInterpreter(
             self._v_program, self.macros,
-            engine.getContext(context), output, tal=1, strictinsert=0)()
-        return output.getvalue()
+            engine.getContext(context), out, tal=1, strictinsert=0)()
+        return out.getvalue().encode("iso8859-1")
 
