@@ -149,6 +149,9 @@ class HtmlSecurity (object):
     def embed_start (self, attrs, htmlfilter):
         if attrs.has_key('src'):
             src = attrs['src']
+            if '?' in src:
+                i = src.rfind('?')
+                src = src[:i]
             if "." in src:
                 # prevent CVE-2002-0022
                 i = src.rfind('.')
