@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Mar  7 23:44:23 2003\n"
+"POT-Creation-Date: Tue Apr  1 17:57:44 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -525,15 +525,6 @@ msgstr ""
 msgid "About WebCleaner"
 msgstr ""
 
-msgid "Proxy Authentication Required"
-msgstr ""
-
-msgid "Can't parse request"
-msgstr ""
-
-msgid "Empty URL"
-msgstr ""
-
 msgid "Forbidden"
 msgstr ""
 
@@ -562,6 +553,15 @@ msgid "No response from server"
 msgstr ""
 
 msgid "Server closed connection"
+msgstr ""
+
+msgid "Can't parse request"
+msgstr ""
+
+msgid "Empty URL"
+msgstr ""
+
+msgid "Proxy Authentication Required"
 msgstr ""
 
 msgid "%d days, %02d:%02d:%02d"

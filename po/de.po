@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Fri Mar  7 23:44:23 2003\n"
+"POT-Creation-Date: Tue Apr  1 17:57:44 2003\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -597,15 +597,6 @@ msgstr "Schliessen"
 msgid "About WebCleaner"
 msgstr "Über WebCleaner"
 
-msgid "Proxy Authentication Required"
-msgstr "Proxy Authorisierung benötigt"
-
-msgid "Can't parse request"
-msgstr "Kann Anfrage nicht parsen"
-
-msgid "Empty URL"
-msgstr "Leere URL"
-
 msgid "Forbidden"
 msgstr "Verboten"
 
@@ -635,6 +626,15 @@ msgstr "Keine Antwort vom Server"
 
 msgid "Server closed connection"
 msgstr "Server hat Verbindung geschlossen"
+
+msgid "Can't parse request"
+msgstr "Kann Anfrage nicht parsen"
+
+msgid "Empty URL"
+msgstr "Leere URL"
+
+msgid "Proxy Authentication Required"
+msgstr "Proxy Authorisierung benötigt"
 
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d Tage, %02d:%02d:%02d"
