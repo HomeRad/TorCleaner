@@ -19,20 +19,13 @@ import sys
 try:
     import htmlsax
 except ImportError:
-    sys.stderr.write("""
-Could not import the "htmlsax" module.
-Please run 'python setup.py install' to install WebCleaner
-completely on your system.
-For local installation you can copy the file
-build/lib.../htmlsax.so into the wc/parser/ directory.
-Then you can run 'python webcleaner' from the source directory.
-""")
+    sys.stderr.write("""Could not import the `htmlsax' parser module.""")
     sys.exit(1)
 
 class HtmlParser:
     """Use an internal C SAX parser. We do not define any callbacks
     here for compatibility. Currently recognized callbacks are:
-    comment(data): <!-- data -->
+    comment(data): <!--data-->
     startElement(tag, attrs): <tag {attr1:value1,attr2:value2,..}>
     endElement(tag): </tag>
     doctype(data): <!DOCTYPE data?>
@@ -45,7 +38,7 @@ class HtmlParser:
     warning(msg)
     fatalError(msg)
     """
-    def __init__(self):
+    def __init__ (self):
         """initialize the internal parser"""
         self.parser = htmlsax.parser(self)
 
@@ -65,7 +58,7 @@ class HtmlParser:
 class HtmlPrinter(HtmlParser):
     """handles all functions by printing the function name and
        attributes"""
-    def __getattr__(self, name):
+    def __getattr__ (self, name):
         self.mem = name
         return self._print
 

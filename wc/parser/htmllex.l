@@ -89,7 +89,7 @@
 #include "htmlparse.h"
 
 /* Find out if and how we must quote the value as an HTML attribute.
- - quote if it contains white space or <>
+ - quote if it contains white space or <> or ends with /
  - quote with " if it contains '
  - quote with ' if it contains "
 
@@ -101,6 +101,10 @@ static PyObject* quote_string (PyObject* val) {
     char* internal = PyString_AS_STRING(val);
     int i;
     PyObject* prefix;
+    if (len==0) {
+        /* its an empty string */
+	return val;
+    }
     for (i=0; i<len; i++) {
 	if (!quote && (isspace(internal[i]) ||
 		       internal[i]=='<' ||
@@ -115,6 +119,9 @@ static PyObject* quote_string (PyObject* val) {
 	    quote = "'";
             break;
 	}
+    }
+    if (!quote && internal[len-1]=='/') {
+	quote = "\"";
     }
     if (quote==NULL) {
         return val;
