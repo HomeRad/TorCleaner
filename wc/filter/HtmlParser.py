@@ -488,9 +488,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                                "GET %s HTTP/1.1" % url, # request
                                get_wc_client_headers(host), # headers
                                '', # content
-                               {'nofilter': None}, # nofilter
                                'identity', # compress
-                               mime = "application/x-javascript",
+                               mime="application/x-javascript",
                                )
 
 

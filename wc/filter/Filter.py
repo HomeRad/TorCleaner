@@ -47,7 +47,7 @@ class Filter (object):
 
 
     def getAttrs (self, url, headers):
-        return {'headers': headers}
+        return {}
 
 
     def applies_to_mime (self, mime):

@@ -2,6 +2,14 @@ TODO
 
 version 2.5 and above
 
+- PICS features:
+  for non-PICS-enabled sites, try to fetch info from rating services
+  when no PICS info is available, display dialog to build own PICS
+  database (after password authentication)
+  this should integrate with the webgui configuration somehow
+
+- re-enabling a rule does not reinit filters, but should
+
 - use test/client.py, test/server.py for testing
 
 - test NTLM authentication
@@ -60,12 +68,6 @@ for your application make sure to deny these requests: add
     HeadDeny X-SSL-notBefore ".*"
     HeadDeny X-SSL-notAfter ".*"
     HeadDeny X-SSL-serial ".*"
-
-- PICS features:
-  for non-PICS-enabled sites, try to fetch info from rating services
-  when no PICS info is available, display dialog to build own PICS
-  database (after password authentication)
-  this should integrate with the webgui configuration somehow
 
 - dockapp to visualize config and status
   I made machine-parseable config and status output, so write a tool

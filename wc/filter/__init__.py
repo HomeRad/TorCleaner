@@ -34,6 +34,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re, wc, wc.filter.rules
+from wc.proxy.Headers import WcMessage
+from cStringIO import StringIO
 
 # filter order
 FILTER_REQUEST         = 0 # Filter complete request (blocking)
@@ -125,12 +127,14 @@ def applyfilter (i, data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, filters, headers={'Content-Type': 'text/html'}):
+default_headers = WcMessage(StringIO('Content-Type: text/html\r\n\r\n'))
+def get_filterattrs (url, filters, headers=default_headers):
     """init external state objects"""
     attrs = {
         'url': url,
         'nofilter': wc.config.nofilter(url),
         'mime' : headers.get('Content-Type', 'application/octet-stream'),
+        'headers': headers,
     }
     for i in filters:
         for f in wc.config['filterlist'][i]:

@@ -37,7 +37,6 @@ class UrlRule (Rule):
         if self.matchurl:
             return self.matchurl_ro.search(url)
         if self.dontmatchurl:
-            info(FILTER, "XXX url=%s", str(url))
             return not self.dontmatchurl_ro.search(url)
         return True
 

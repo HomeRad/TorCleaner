@@ -71,7 +71,6 @@ class HttpProxyClient (object):
                            "GET %s HTTP/1.1" % url, #request
                            get_wc_client_headers(host), #headers
                            '', #content
-                           {'nofilter': None}, # nofilter
                            'identity', # compress
                            )
             return

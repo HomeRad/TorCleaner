@@ -67,9 +67,9 @@
  tag="noscript"/>
 
 
-<rewrite sid="wc.300" title="Remove Javascript content"
- desc="Only activate this rule if Javascript is disabled in your browser."
- disable="1"
+<rewrite sid="wc.300" title="Disable Javascript"
+ desc="Remove Javascript for certain pages."
+ matchurl="apnews\.excite\.com"
  tag="script"/>
 
 
