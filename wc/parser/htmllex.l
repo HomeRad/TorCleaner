@@ -146,10 +146,6 @@ RX_DATA [-a-zA-Z0-9_]+
     return T_WAIT;
 }
 
-<INITIAL>. {
-    return T_WAIT;
-}
-
   /*********************** COMMENT ************************/
 <INITIAL>"<!--" {
     UPDATE_BUFPOS;
@@ -501,6 +497,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_TAGEND>">" {
     UPDATE_BUFPOS;
     SETLVAL;
+    BEGIN(INITIAL);
     RETURN(T_ELEMENT_END);
 }
 
@@ -509,7 +506,7 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_TAGSTART);
 }
 
-<S_TAGEND>. {
+<S_TAGEND>.|{RX_WHITE_SPACE}+ {
     UPDATE_BUFPOS;
 }
 
@@ -519,6 +516,10 @@ RX_DATA [-a-zA-Z0-9_]+
     APPEND_TO_TMP;
     SETLVAL;
     RETURN(T_TEXT);
+}
+
+<INITIAL>. {
+    return T_WAIT;
 }
 
 %%
