@@ -112,7 +112,7 @@ class HtmlFilter (HtmlParser):
 
     def ignorableWhitespace (self, d):
         """handler for ignorable whitespace"""
-        self.buffer_append_data([DATA, d])
+        #self.buffer_append_data([DATA, d])
 
     def flushbuf (self):
         """flush internal data buffer"""

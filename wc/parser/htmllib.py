@@ -29,16 +29,36 @@ Then you can run 'python webcleaner' from the source directory.
 """)
     sys.exit(1)
 
-# --------------------------------------------------------------------
-# accelerated HTML parser
-
 class HtmlParser:
-    # Interface -- initialize and reset this instance
+    """Use an internal C SAX parser. We do not define any callbacks
+    here for compatibility. Currently recognized callbacks are:
+    comment(data): <!-- data -->
+    startElement(tag, attrs): <tag {attr1:value1,attr2:value2,..}>
+    endElement(tag): </tag>
+    doctype(data): <?DOCTYPE data?>
+    pi(data): <?data?>
+    characters(data): data
+
+    additionally, there are error and warning callbacks:
+    error(msg)
+    warning(msg)
+    fatalError(msg)
+    """
     def __init__(self):
+        """initialize the internal parser"""
         self.parser = htmlsax.parser(self)
-        self.feed = self.parser.feed
-        self.flush = self.parser.flush
-        self.reset = self.parser.reset
+
+    def feed (self, data):
+        """feed some data to the parser"""
+        self.parser.feed(data)
+
+    def flush (self):
+        """flush all data"""
+        self.parser.flush()
+
+    def reset (self):
+        """reset the parser (without flushing)"""
+        self.parser.reset()
 
 
 class HtmlPrinter(HtmlParser):
@@ -54,6 +74,7 @@ class HtmlPrinter(HtmlParser):
 
 def _test():
     p = HtmlPrinter()
+    p.feed("<html>")
     p.flush()
 
 if __name__ == '__main__':

@@ -123,18 +123,6 @@ class MyDistribution(Distribution):
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
-if os.name=="nt":
-    ext_modules = [Extension('wc.parser.htmlsax',
-                      ['wc/parser/htmlsax.c'],
-                      libraries = ["libxml2"],
-                      )]
-else:
-    ext_modules = [Extension('wc.parser.htmlsax',
-                      ['wc/parser/htmlsax.c'],
-                      libraries = ["xml2"],
-                      include_dirs = ["/usr/include/libxml2"],
-                      )]
-
 setup (name = "webcleaner",
        version = "0.37",
        description = "a filtering HTTP proxy",
@@ -146,7 +134,10 @@ setup (name = "webcleaner",
        licence = "GPLv2",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
-       ext_modules = ext_modules,
+       ext_modules = [Extension('wc.parser.htmlsax',
+                  ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
+                  include_dirs = ["wc/parser"],
+                  )],
        scripts = ['webcleaner', 'webcleanerconf', 'wcheaders'],
        long_description =
 """WebCleaner features:

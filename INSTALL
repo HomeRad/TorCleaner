@@ -4,12 +4,10 @@
 Requirements
 ------------
 Python >= 2.1 from http://www.python.org/
-libxml2 from http://xmlsoft.org/
 
 For the GUI config tool webcleanerconf you need
-FOX Toolkit >= 0.99.172 from http://www.cfdrc.com/FOX/fox.html and
-FXPy >= 0.99.172 from http://fxpy.sourceforge.net/
-(FXPy version must be the same as FOX version)
+FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
+FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
 
 Setup
 -----
@@ -17,3 +15,9 @@ To install, execute "python setup.py install".
 Run "python setup.py install --help" for help on install options.
 
 Now you can start the proxy by executing "webcleaner start".
+
+
+The HTML parser, flex, bison
+----------------------------
+The parser is built with a patched flex snapshot release available
+from the WebCleaner homepage.

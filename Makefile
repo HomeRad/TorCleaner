@@ -17,7 +17,7 @@ clean:
 
 # to build in the current directory (assumes python 2.1)
 localbuild:
-	$(PYTHON) setup.py build_ext --include-dirs=/usr/include/libxml2 build
+	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-2.1/wc/parser/htmlsax.so wc/parser
 
 distclean:	clean cleandeb
