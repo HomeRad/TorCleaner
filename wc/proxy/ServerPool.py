@@ -72,7 +72,7 @@ class ServerPool (object):
 
     def register_callback (self, addr, callback):
         # Callbacks are called whenever a server may be available
-        # for (addr).  It's the callback's responsibility to re-register
+        # for (addr). It's the callback's responsibility to re-register
         # if someone else has stolen the server already.
         self.callbacks.setdefault(addr, []).append(callback)
 
@@ -114,3 +114,6 @@ class ServerPool (object):
             for callback in callbacks:
                 callback()
 
+
+# connection pool for persistent server connections
+serverpool = ServerPool()
