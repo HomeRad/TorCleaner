@@ -59,6 +59,7 @@ class HttpClient (Connection):
                 # the first 2 chars are the newline of request
                 data = self.read(i)[2:]
                 self.headers = rfc822.Message(StringIO(data))
+                #debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
                 # set via header
                 via = self.headers.get('Via', "").strip()
                 if via: via += " "
@@ -66,11 +67,21 @@ class HttpClient (Connection):
                 self.headers['Via'] = via
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
                      self.headers, fun="finish", attrs=self.nofilter)
-                # add supported encodings
-                if not self.headers.has_key('Accept-Encoding'):
-                    self.headers['Accept-Encoding'] = \
-                                 "gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r"
-                #debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
+                if self.headers.has_key('Accept-Encoding'):
+                    # remove unsupported encodings
+                    encodings = self.headers['Accept-Encoding']
+                    if encodings.find('compress') != -1:
+                        encs = encodings.split(",")
+                        encs = [enc.strip() for enc in encs if not \
+                              (enc.strip().lower().startswith('compress') or \
+                               enc.strip().lower().startswith('x-compress'))]
+                        encodings = ", ".join(encs)+"\r"
+                else:
+                    # add supported encodings
+                    encodings = "gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r"
+                self.headers['Accept-Encoding'] = encodings
+                #debug(HURT_ME_PLENTY, "C/Headers filtered",
+                      `self.headers.headers`)
                 self.bytes_remaining = int(self.headers.get('Content-Length', 0))
                 self.state = 'content'
 
