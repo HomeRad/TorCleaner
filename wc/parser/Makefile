@@ -1,5 +1,5 @@
 # use CVS snapshot flex for reentrant bison parser support
-FLEX=/home/pool/src/flex-2.5.14/flex
+FLEX=/home/calvin/src/flex-2.5.15/flex
 
 all: htmllex.c htmlparse.c
 
