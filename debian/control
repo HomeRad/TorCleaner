@@ -11,14 +11,19 @@ Depends: python2.3, debconf (>= 1.2.9), python2.3-imaging
 Suggests: webcleanertools
 Description: a filtering HTTP proxy
  Features:
-  o disable animated GIFs
-  o compress documents on-the-fly (with gzip)
-  o remove/add HTTP headers
-  o remove unwanted HTML (adverts, javascript, ...)
-  o customizable to suit your (filtering) needs
-  o HTTP/1.1 support
-  o Per-host access control
-  o JavaScript filtering
+ o HTTP/1.1 support
+ o integrated HTML parser, removes unwanted HTML (adverts, javascript, ...)
+ o integrated JavaScript engine, allows popup filtering
+ o compress documents on-the-fly (with gzip)
+ o disable animated GIFs
+ o filter images by size, removes certain banner adverts
+ o reduce images to low-bandwidth JPEGs
+ o remove/add/modify arbitrary HTTP headers
+ o usage of SquidGuard domain and url blacklists
+ o user/password protection with proxy authentication
+   (requires HTTP/1.1 capable browser)
+ o per-host access control
+ o completely customizable over web interface
 
 Package: webcleanertools
 Section: x11

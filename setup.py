@@ -188,16 +188,19 @@ setup (name = "webcleaner",
        scripts = scripts,
        long_description =
 """WebCleaner features:
-o disable animated GIFs
-o compress documents on-the-fly (with gzip)
-o enhance your privacy (remove user-agent: header and obfuscate IP address)
-o remove unwanted HTML (adverts, javascript, ...)
-o completely customizable to suit your (filtering) needs
-o single process proxy with select() I/O
 o HTTP/1.1 support
-o Proxy Authentication (requires HTTP/1.1 capable browser)
-o Per-host access control
-o embedded JavaScript engine and filtering
+o integrated HTML parser, removes unwanted HTML (adverts, javascript, ...)
+o integrated JavaScript engine, allows popup filtering
+o compress documents on-the-fly (with gzip)
+o disable animated GIFs
+o filter images by size, removes certain banner adverts
+o reduce images to low-bandwidth JPEGs
+o remove/add/modify arbitrary HTTP headers
+o usage of SquidGuard domain and url blacklists
+o user/password protection with proxy authentication
+  (requires HTTP/1.1 capable browser)
+o per-host access control
+o completely customizable over web interface
 """,
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,

@@ -4,29 +4,55 @@
 
 Features
 --------
-o disable animated GIFs
-o compress documents on-the-fly (with gzip)
-o remove/add HTTP headers
-o remove unwanted HTML (adverts, javascript, ...)
-o customizable to suit your (filtering) needs
 o HTTP/1.1 support
-o Proxy Authentication (requires HTTP/1.1 capable browser)
-o Per-host access control
-o JavaScript filtering
+o integrated HTML parser, removes unwanted HTML (adverts, javascript, ...)
+o integrated JavaScript engine, allows popup filtering
+o compress documents on-the-fly (with gzip)
+o disable animated GIFs
+o filter images by size, removes certain banner adverts
+o reduce images to low-bandwidth JPEGs
+o remove/add/modify arbitrary HTTP headers
+o usage of SquidGuard domain and url blacklists
+o user/password protection with proxy authentication
+  (requires HTTP/1.1 capable browser)
+o per-host access control
+o completely customizable over web interface
+
 
 Installing
 ----------
 Read the file INSTALL
 
 
+Why should I use WebCleaner?
+----------------------------
+The first feature that set WebCleaner apart from other proxies is
+real HTML filtering. It does not just replace some strings, the proxy
+parses all HTML data into tags. The parser is a "real world" parser.
+It is fast (written in C) and can cope with every broken HTML page out
+there; if the parser does not recognize HTML structures, it just passes the
+data over to the browser until it recognizes a tag again. No data is ever
+discarded or dropped by the parser.
+
+The second thing is the real Javascript filtering: Javascript data is
+executed in the integrated Spidermonkey JS engine which is also used by
+the Mozilla browser suite.
+This eliminates all JavaScript obfuscation, popups, and document.write()
+stuff, but the other JS functions still work as usual.
+
+
 Configuration
 -------------
-Run the nice GUI config tool "webcleanerconf".
+Assuming your proxy runs on port 8080, point your browser to
+http://localhost:8080/ to configure the proxy.
 The underlying configuration format is a custom XML format which is
 explained in config/filter.dtd and config/webcleaner.dtd.
-Of course the current configuration is tuned to websites I visit
+Of course the default configuration is tuned to websites I visit
 regularly. You can help me extend the current config data by sending
 me patches!
+If you installed from source or have the "webcleanertools" Debian
+package installed, you can additionally run the GUI config tool
+"webcleanerconf".
 
 
 Running
