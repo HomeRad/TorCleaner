@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# this files has to be executed in the config parent dir
+# which is normally /usr/share/webcleaner on installed systems
 """convert a squidguard blacklist file into a webcleaner filter
 It generates squidguard_XXX folders with blocking and rewriting
 filters for the given blacklist files.

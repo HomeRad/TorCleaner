@@ -23,7 +23,7 @@ configure-stamp:
 build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
-	$(PYTHON) setup.py build_ext --include-dirs=/usr/include/libxml2 build
+	$(PYTHON) setup.py build
 	touch build-stamp
 
 clean:
@@ -49,10 +49,10 @@ install: build
 	mv -f debian/$(PACKAGE)/usr/bin/webcleanerconf debian/$(PACKAGE)/usr/sbin
 	mv -f debian/$(PACKAGE)/usr/bin/wcheaders debian/$(PACKAGE)/usr/sbin
 	rmdir debian/$(PACKAGE)/usr/bin
-	# remove example and config files, we install them ourselves
+	# move config files
+	mv debian/$(PACKAGE)/usr/share/webcleaner/config debian/$(PACKAGE)/etc/webcleaner
+	# remove example files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
-	# install configuration
-	install -c -m 644 config/*.{html,zap,dtd,gif,png,conf} debian/$(PACKAGE)/etc/webcleaner
 	# patch ConfWindow
 	patch $(PATCHED) debian/ConfWindow.patch && rm -f $(PATCHED)~
 
@@ -69,7 +69,7 @@ binary-arch: build install
             usr/sbin/webcleanerconf usr/sbin/wcheaders usr/lib/$(PYTHON)/site-packages/wc/gui/
 	dh_installdebconf
 	dh_installdocs
-#	dh_installexamples filtertest filtertest.html
+	dh_installexamples config/bl2wc.py
 	dh_installmenu
 	dh_installlogrotate
 	dh_installinit
