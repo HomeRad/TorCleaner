@@ -222,7 +222,8 @@ RX_DATA [-a-zA-Z0-9_]+
 
   /*********************** COMMENT ************************/
   /* Note: eonline had some "<! --" comments */
-<INITIAL><![ ]*-- {
+  /* Note: a bug report about "<!- " comments was filed */
+<INITIAL><![ ]*-[- ] {
     UPDATE_BUFPOS;
     BEGIN(S_COMMENT);
 }
