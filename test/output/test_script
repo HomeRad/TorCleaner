@@ -19,7 +19,8 @@ filter test/html/script2.html
 
 filter test/html/script3.html
 
-<script type=text/javascript><!--
+<script type=text/javascript>
+<!--
 // check url validity
 function isValid (thisForm) {
     if (thisForm.url.value=="" || thisForm.url.value=="http://") {
@@ -43,13 +44,15 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
-//--></script>
+//-->
+</script>
 
 </html>
 
 filter test/html/script4.html
 
-<script type=text/javascript><!--
+<script type=text/javascript>
+<!--
 // check url validity
 function isValid (thisForm) {
     if (thisForm.url.value=="" || thisForm.url.value=="http://") {
@@ -73,14 +76,16 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
-//--></script>
+//-->
+</script>
 
 </html>
 
 filter test/html/script5.html
 
 
-<script type=text/javascript><!--
+<script type=text/javascript>
+<!--
 // check url validity
 function isValid (thisForm) {
     if (thisForm.url.value=="" || thisForm.url.value=="http://") {
@@ -104,7 +109,8 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
-//--></script>
+//-->
+</script>
 <script type=JavaScript>
 <!--
 a = 1

@@ -1,4 +1,6 @@
 from wc.parser.htmllib import HtmlPrinter
+import sys
+sys.stderr = sys.stdout
 
 tests = (
     # start tags
@@ -46,7 +48,7 @@ tests = (
     """</a >""",
     """< / a>""", # invalid (is start tag)
     """< /a>""", # invalid (is start tag)
-    """</td <td a="b" >""",
+    """</td <td a="b" >""", # missing > in end tag
     # start and end tag
     """<a/>""",
     # declaration tags

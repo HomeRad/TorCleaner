@@ -30,6 +30,8 @@ def filterfile (fname):
 
 import wc, time
 reload(wc)
+from wc.log import *
+initlog('test/logging.conf')
 wc.DebugLevel = 0
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
