@@ -271,21 +271,25 @@ class DnsCache (object):
         # see if hostname is already a resolved IP address
         hostname, numeric = ip.expand_ip(hostname)
         if numeric:
-            return callback(hostname, DnsResponse('found', [hostname]))
+            callback(hostname, DnsResponse('found', [hostname]))
+            return
 
         if hostname[-1:] == '.':
             # We should just remove the trailing '.'
-            return DnsResponse('redirect', hostname[:-1])
+            DnsResponse('redirect', hostname[:-1])
+            return
 
         if len(hostname) > 100:
             # It's too long .. assume it's an error
-            return callback(hostname, DnsResponse('error', 'hostname %s too long' % hostname))
+            callback(hostname, DnsResponse('error', 'hostname %s too long' % hostname))
+            return
         
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
                 debug(DNS, 'cached! %s', hostname)
-                return callback(hostname, self.cache[hostname])
+                callback(hostname, self.cache[hostname])
+                return
             elif not self.cache[hostname].isError():
                 # It has expired, but we can use the old value for now
                 callback(hostname, self.cache[hostname])
@@ -521,8 +525,8 @@ class DnsLookupConnection (Connection):
                       tc, self.nameserver, self.hostname)
                 self.handle_error("dns error")
             else:
-                warning('truncated UDP DNS packet: %s from %s for %s' %
-                        (tc, self.nameserver, self.hostname))
+                warning(PROXY, 'truncated UDP DNS packet: %s from %s for %s',
+                        tc, self.nameserver, self.hostname)
             # we ignore this read, and let the timeout take its course
             return
 
@@ -534,7 +538,7 @@ class DnsLookupConnection (Connection):
             self.close()
             return
 
-        for i in range(qdcount):
+        for dummy in range(qdcount):
             hostname, _, _ = msg.getQuestion()
             if hostname == self.hostname:
                 # This DOES answer the question we asked

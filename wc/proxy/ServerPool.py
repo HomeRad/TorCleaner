@@ -44,7 +44,7 @@ class ServerPool (object):
         debug(PROXY, "pool unreserve %s %s", str(addr), str(server))
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
-               '%s missing %s' % (self.map[addr], server)
+               '%s missing %s' % (self.smap[addr], server)
         assert self.smap[addr][server][0] == 'busy', \
                '%s is not busy but %s' % (server, self.smap[addr][server][0])
         self.smap[addr][server] = ('available', time.time())

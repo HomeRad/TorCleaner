@@ -11,7 +11,8 @@ from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip
 from wc.proxy import fix_http_version
-from Headers import client_set_headers, WcMessage
+from Headers import client_set_headers, client_get_max_forwards, WcMessage
+from Headers import client_remove_encoding_headers
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.log import *
 from wc.webgui import WebConfig
@@ -98,7 +99,8 @@ class HttpClient (Connection):
                 self.method, self.url, protocol = self.request.split()
             except ValueError:
                 config['requests']['error'] += 1
-                return self.error(400, i18n._("Can't parse request"))
+                self.error(400, i18n._("Can't parse request"))
+                return
             self.nofilter = {'nofilter': config.nofilter(self.url)}
             debug(PROXY, "Client: request %s", self.request)
             self.url = applyfilter(FILTER_REQUEST, self.url,
@@ -107,7 +109,8 @@ class HttpClient (Connection):
             self.request = "%s %s %s" % (self.method, self.url, self.protocol)
             if not self.url:
                 config['requests']['error'] += 1
-                return self.error(400, i18n._("Empty URL"))
+                self.error(400, i18n._("Empty URL"))
+                return
             # note: we do not enforce a maximum url length
             self.state = 'headers'
 
@@ -148,12 +151,12 @@ class HttpClient (Connection):
                     return self.error(407,
                           i18n._("Proxy Authentication Required"), auth=auth)
             if self.method in ['OPTIONS', 'TRACE'] and \
-               get_max_forwards(self.headers)==0:
+               client_get_max_forwards(self.headers)==0:
                 # XXX display options ?
                 self.state = 'done'
-                return ServerHandleDirectly(self,
-                                   '%s 200 OK\r\n'%self.protocol,
-                                   'Content-Type: text/plain\r\n\r\n', '')
+                ServerHandleDirectly(self, '%s 200 OK\r\n'%self.protocol,
+                                     'Content-Type: text/plain\r\n\r\n', '')
+                return
             self.state = 'content'
 
 
@@ -267,7 +270,8 @@ class HttpClient (Connection):
         assert self.state == 'receive'
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
-            return self.error(403, i18n._("Invalid Method"))
+            self.error(403, i18n._("Invalid Method"))
+            return
         # get cgi form data
         form = None
         if self.method=='GET':

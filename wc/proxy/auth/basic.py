@@ -5,6 +5,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import base64
+from wc.log import *
 
 def get_basic_challenge ():
     """return initial challenge token for basic authentication"""

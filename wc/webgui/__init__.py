@@ -58,15 +58,17 @@ class WebConfig (object):
             else:
                 f = file(path, 'rb')
                 data = f.read()
-        except IOError, e:
+        except IOError:
             exception(GUI, "Wrong path `%s'", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
-            return client.error(404, i18n._("Not Found"))
+            client.error(404, i18n._("Not Found"))
+            return
         except:
             # catch all other exceptions and report internal error
             exception(GUI, "Template error")
-            return client.error(500, i18n._("Internal Error"))
+            client.error(500, i18n._("Internal Error"))
+            return
         f.close()
         # write response
         self.put_response(data, protocol, status, msg, headers)

@@ -34,7 +34,7 @@ class GunzipStream (DeflateStream):
     def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
         if len(self.buf) < 10: # Incomplete fixed part of header
-            return ''
+            return
 
         magic = self.buf[:2]
         if magic != '\037\213':
@@ -63,18 +63,18 @@ class GunzipStream (DeflateStream):
         if flag & self.FNAME:
             # Read and discard a null-terminated string containing the filename
             i = s.find('\000')
-            if i < 0: return '' # Incomplete
+            if i < 0: return # Incomplete
             s = s[i+1:]
 
         if flag & self.FCOMMENT:
             # Read and discard a null-terminated string containing a comment
             i = s.find('\000')
-            if i < 0: return '' # Incomplete
+            if i < 0: return # Incomplete
             s = s[i+1:]
 
         if flag & self.FHCRC:
             # Read & discard the 16-bit header CRC
-            if len(s) < 2: return '' # Incomplete
+            if len(s) < 2: return # Incomplete
             s = s[2:]
 
         # We actually got through the header
