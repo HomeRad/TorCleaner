@@ -304,9 +304,11 @@ class JSFilter (JSListener):
 
 
     def finish (self):
-        """stop background download"""
+        """stop all background downloads immediately"""
         debug(FILTER, "%s finish", self)
         self.js_client.finish()
         self.js_client = None
-        self.js_htmlparser = None
+        if self.js_htmlparser is not None:
+            self.js_htmlparser.handler.finish()
+            self.js_htmlparser = None
 
