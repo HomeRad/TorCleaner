@@ -52,6 +52,15 @@
  query=""
  fragment=""/>
 
+<block title="Ad servers 9"
+ scheme=""
+ host="216.200.201.212"
+ port=""
+ path=""
+ parameters=""
+ query=""
+ fragment=""/>
+
 <rewrite title="Adverts in the path name 1"
  desc="Kill links with ad words in the path name.">
 <attr>/(web)?ad(vert(s)?|click|s)/</attr>
@@ -189,12 +198,7 @@
 <attr>easy-cash</attr>
 </rewrite>
 
-<block title="Adserver 9"
- scheme=""
- host="216.200.201.212"
- port=""
- path=""
- parameters=""
- query=""
- fragment=""/>
+<rewrite title="Ad servers 10">
+<attr>ad\.krutilka\.ru</attr>
+</rewrite>
 </folder>
