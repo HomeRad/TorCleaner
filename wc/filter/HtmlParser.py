@@ -346,24 +346,24 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         elif tag=="input" and attrs.has_key('type'):
             # fix IE crash bug on empty type attribute
             if not attrs['type']:
-                warn(PROXY, "Detected and prevented IE <input type> crash bug")
+                warn(PROXY, "Detected and prevented IE <input type> crash bug at %s", `self.url`)
                 del attrs['type']
         elif tag=="fieldset" and attrs.has_key('style'):
             # fix Mozilla crash bug on fieldsets
             if "position" in attrs['style']:
-                warn(PROXY, "Detected and prevented Mozilla <fieldset style> crash bug")
+                warn(PROXY, "Detected and prevented Mozilla <fieldset style> crash bug at %s", `self.url`)
                 del attrs['style']
         elif tag=="hr" and attrs.has_key('align'):
             # fix CAN-2003-0469, length 50 should be safe
             if len(attrs['align']) > 50:
-                warn(PROXY, "Detected and prevented IE <hr align> crash bug")
+                warn(PROXY, "Detected and prevented IE <hr align> crash bug at %s", `self.url`)
                 del attrs['align']
         elif tag=="object" and attrs.has_key('type'):
             # fix CAN-2003-0344, only one / (slash) allowed
             t = attrs['type']
             c = t.count("/")
             if c > 1:
-                warn(PROXY, "Detected and prevented IE <object type> bug")
+                warn(PROXY, "Detected and prevented IE <object type> bug at %s", `self.url`)
                 t = t.replace("/", "", c-1)
                 attrs['type'] = t
 
