@@ -1,17 +1,12 @@
 Template: webcleaner/port
 Type: string
-Default: 8080
-Description: Default proxy port
+_Default: 8080
+_Description: Default proxy port
  This is the port number the proxy will listen on for requests.
-Description-de: Standard Proxy port
- Dies ist die Port Nummer, unter der der Proxy Anfragen akzeptiert.
 
 Template: webcleaner/monitor
 Type: boolean
 Default: false
-Description: Start WebCleaner with monitor daemon?
- You can start WebCleaner with an additional monitor daemon that
- restarts the proxy automatically if it crashes.
-Description-de: WebCleaner mit Monitor-Dämon starten?
- Sie können WebCleaner mit einem zusätzlichen Monitor-Dämon starten,
- der den Proxy bei Ausfall automatisch neu startet.
+_Description: Start WebCleaner with monitor daemon?
+ You can start WebCleaner with an additional monitor daemon that restarts
+ the proxy automatically if it crashes.
