@@ -369,7 +369,7 @@ class TemplateInterpreter:
 
 	def cmdOutput (self, command, args):
                 if self.translator is not None and self.translateContent:
-                        self.log.debug("Translating %s" % `args`)
+                        self.log.debug("Translating %s with %s", `args`, str(self.translator))
                         self.file.write(self.translator.gettext(args) % \
                                         self.context.getVariableMap())
                 else:
@@ -467,7 +467,7 @@ class TemplateInterpreter:
                         result = self.context.evaluate (args[0], self.originalAttributes)
                         if not (result is None or result.isNothing() or result.isDefault()):
                                 if self.translator is not None:
-                                        self.log.debug("Translating %s" % `result.value()`)
+                                        self.log.debug("Translating %s with %s", `result.value()`, str(self.translator))
                                         self.tagContent = (0, self.translator.gettext(result.value()) % \
                                                               self.context.getVariableMap())
                                 else:
@@ -485,7 +485,7 @@ class TemplateInterpreter:
 		attsToRemove = {}
 		newAtts = []
 		for attName, attExpr in args:
-                        self.log.debug("Translating %s" % `attExpr`)
+                        self.log.debug("Translating %s with %s", `attExpr`, str(self.translator))
 			result = self.translator.gettext(attExpr) % \
                                       self.context.getVariableMap()
 			# We have a value - let's use it!
