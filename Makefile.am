@@ -1,6 +1,5 @@
 SUBDIRS = po libjs service
 DIST_SUBDIRS = $(SUBDIRS) docs
-TESTS = test.py testsimpletal.py
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
