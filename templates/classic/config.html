@@ -15,18 +15,22 @@
 
 <form action="config.html" method="POST">
 <table>
+<tr>
+<td><table>
 <caption><big><span tal:replace="title">WebCleaner Configuration</span>
 </big><caption>
 <tr valign="top">
 <td><span tal:replace="port">Port number</span></td>
 <td>
-  <input type="text" name="port" tal:attributes="value config/strport">
+  <input type="text" name="port" size="5" maxlength="5"
+   tal:attributes="value config/strport">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="proxyuser">Proxy user</span></td>
 <td>
-  <input type="text" name="proxyuser" tal:attributes="value config/proxyuser">
+  <input type="text" name="proxyuser" size="15"
+   tal:attributes="value config/proxyuser">
 </td>
 </tr>
 <tr valign="top">
@@ -38,19 +42,22 @@
 <tr valign="top">
 <td><span tal:replace="parentproxy">Parent proxy</span></td>
 <td>
-  <input type="text" name="parentproxy" tal:attributes="value config/parentproxy">
+  <input type="text" name="parentproxy" size="20"
+   tal:attributes="value config/parentproxy">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxyport">Parent proxy port number</span></td>
 <td>
-  <input type="text" name="parentproxyport" tal:attributes="value config/strparentproxyport">
+  <input type="text" name="parentproxyport" size="5" maxlength="5"
+   tal:attributes="value config/strparentproxyport">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxyuser">Parent proxy user</span></td>
 <td>
-  <input type="text" name="parentproxyuser" tal:attributes="value config/parentproxyuser">
+  <input type="text" name="parentproxyuser" size="15"
+   tal:attributes="value config/parentproxyuser">
 </td>
 </tr>
 <tr valign="top">
@@ -71,6 +78,12 @@
 <tr valign="top">
 <td colspan="2">
   <input type="submit" value="Apply" tal:attributes="value configapply">
+  <a href="/" tal:content="cancel">Cancel</a>
+</td>
+</tr>
+</table></td>
+<td>
+... bla, hosts and stuff
 </td>
 </tr>
 </table>

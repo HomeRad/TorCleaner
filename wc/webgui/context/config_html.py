@@ -13,6 +13,7 @@ parentproxyuser = i18n._("Parent proxy user")
 parentproxypass = i18n._("Parent proxy pass")
 proxyfiltermodules = i18n._("Proxy filter modules")
 configapply = i18n._("Apply")
+cancel = i18n._("Cancel")
 info = []
 error = []
 config = _Configuration()
