@@ -28,10 +28,13 @@
   * a block/allow domain rule is only matched against the url domain, not
     against the complete url anymore
     Changed: wc/filter/Blocker.py
-  * The Standard block page displays a link to edit the rule responsible
+  * The standard block page displays a link to edit the rule responsible
     for the blocked page.
     Changed: templates/classic/blocked.html, wc/filter/Blocker.py,
       wc/webgui/context/blocked_html.py
+  * translate tal:replace and tal:content content if i18n:translate="" is
+    given in the template attributes
+    Changed: wc/webgui/simpletal/simpleTAL.py
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way

@@ -2,7 +2,7 @@ TODO
 
 version 2.9 and above
 
-- double close (EBADF bad file descriptor in fileno())
+- memory leaks while operating the proxy
 
 - content rating:
   o feature: content rating cache update rating_cache_merge_with(ratings)
@@ -10,13 +10,13 @@ version 2.9 and above
   o command line script to put squidguard blacklists into content rating
     cache
 
-- bfilter has Flash parse and generation library, I want that too .)
-
-- memory leaks while operating the proxy
-
 - convert remaining tests to unit testing where appropriate
 
 - use test/client.py, test/server.py for testing
+
+- translatable rule title and description
+
+- bfilter has Flash parse and generation library, I want that too .)
 
 - test NTLM authentication
   Mozilla >= 1.6b can test NTLM server auth, squid can test client auth
