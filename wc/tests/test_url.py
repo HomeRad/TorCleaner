@@ -78,6 +78,9 @@ class TestUrl (unittest.TestCase):
         url = "http://example.com/a*+-();b"
         nurl = url
         self.assertEqual(url_norm(url), nurl)
+        url = "http://www.company.com/path/doc.html?url=/path2/doc2.html?foo=bar"
+        nurl = url
+        self.assertEqual(url_norm(url), nurl)
 
     def test_norm_case_sensitivity (self):
         """test url norm case sensitivity"""
