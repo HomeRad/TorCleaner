@@ -28,6 +28,11 @@
     Removed: wc/webgui/simpletal
     Changed: wc/webgui/*.py
 
+  * Recognize MIME type not in request form content but in request data.
+    Type: bugfix
+    Added: wc/filter/MimeRecognizer.py
+    Changed: wc/filter/__init__.py, wc/proxy/HttpServer.py
+
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.
