@@ -1,22 +1,22 @@
 SUBDIRS 		= libjs
 
-PYVER=2.2
-PYTHON=python$(PYVER)
-VERSION=$(shell $(PYTHON) setup.py --version)
-PACKAGE=webcleaner
-#GROUPDIR=shell1.sourceforge.net:/home/groups
-#HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
-HTMLDIR=/home/calvin/public_html/webcleaner.sf.net/htdocs
-MD5SUMS=$(PACKAGE)-md5sums.txt
+PYVER := 2.2
+PYTHON := python$(PYVER)
+WCVERSION := $(shell $(PYTHON) setup.py --version)
+WCPACKAGE := webcleaner
+#GROUPDIR := shell1.sourceforge.net:/home/groups
+#HTMLDIR := $(GROUPDIR)/w/we/$(WCPACKAGE)/htdocs
+HTMLDIR := /home/calvin/public_html/webcleaner.sf.net/htdocs
+MD5SUMS := $(WCPACKAGE)-md5sums.txt
 SPLINTOPTS := +posixlib \
-              -Iwc/parser -I/usr/include/python2.2 \
+              -Iwc/parser -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 
 
 clean-local:
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
 	$(MAKE) -C po clean
-	rm -f wc/parser/htmlsax.so wc/js/jslib.so
+	rm -f wc/parser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 
@@ -36,7 +36,7 @@ distclean-local:
 	rm -f VERSION MANIFEST _*_configdata.*
 
 cleandeb:
-	rm -rf debian/$(PACKAGE) debian/$(PACKAGE)conf debian/tmp
+	rm -rf debian/$(WCPACKAGE) debian/$(WCPACKAGE)conf debian/tmp
 	rm -f debian/*.debhelper debian/{files,substvars}
 	rm -f configure-stamp build-stamp
 
@@ -104,7 +104,7 @@ package:
 	cd dist && dpkg-scanpackages . ../override.txt | gzip --best > Packages.gz
 
 VERSION:
-	echo $(VERSION) > VERSION
+	echo $(WCVERSION) > VERSION
 
 filterfiles:	md5sums
 	cp config/*.zap config/*.dtd config/*.conf config/md5sums $(HTMLDIR)/zapper
