@@ -2,9 +2,6 @@ TODO
 
 version 2.19 and above
 
-- http://www.sane.com/demo/NetTracker/intranet/index.html
-  JS navi not there
-
 - Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/webcleaner", line 170, in ?
     main(sys.argv[1:])
@@ -31,6 +28,45 @@ version 2.19 and above
   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 443, in server_content
     assert self.server, "%s server_content had no server"%self
 AssertionError: <client:request  being read> server_content had no server
+
+Adblock regexes:
+[Adblock]
+/\D\d{2,3}x\d{2,3}\D/
+googlesyndication
+us.yimg.com/a/
+/\/buy_assets\//
+/[\W\d_](top|bottom|left|right|)?banner(s|id=|\d|_)[\W\d]/
+/[\W\d](double|fast)click[\W\d]/
+/[\W\d]click(stream|thrutraffic|thru|xchange)[\W\d]/
+/[\W\d]value(stream|xchange|click)[\W\d]/
+/[\W\d]dime(xchange|click)[\W\d]/
+/[\W\d](onlineads?|ad(banner|click|-?flow|frame|ima?g(es?)?|_id|js|log|serv(er|e)?|stream|_string|s|trix|type|vertisements?|v|vert|xchange)?)[\W\d]/
+
+Adblock]
+/(hot|spy)log/
+/[\W_](b(an|nr)s?|jump|redir(ect|s)?|stat)[\W_]/
+/\W(cy|r)?c(ou)?nt(er|ed)?\W/
+/p(artner|ing\.cgi|romotion)/
+reklama
+/sp(onsor|ymagic)/
+/top(100|cto)/
+
+geht net:
+http://redirect.alexa.com/redirect?http%3A%2F%2Fwww.offeroptimizer.com
+
+Thinks is html:
+http://creativecommons.org/images/public/somerights
+
+invalid js url:
+http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
+http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
+
+- advert <a href="http://adlog.com.com/">
+
+- <embed loop="TRUE">
+
+- http://www.sane.com/demo/NetTracker/intranet/index.html
+  JS navi not there
 
 - ssl certificate verification
 
