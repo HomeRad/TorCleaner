@@ -37,6 +37,7 @@ def initlog (filename):
     wc_handler = get_wc_handler()
     logging.getLogger("wc").addHandler(wc_handler)
     logging.getLogger("simpleTAL").addHandler(wc_handler)
+    logging.getLogger("simpleTALES").addHandler(wc_handler)
     logging.getLogger("wc.access").addHandler(get_access_handler())
 
 
