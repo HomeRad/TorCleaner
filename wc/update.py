@@ -4,10 +4,11 @@ try:
     import wc
 except ImportError:
     import sys
-    sys.path.insert(0, os.getwcd())
+    sys.path.insert(0, os.getcwd())
     import wc
     print "using local development version"
 from wc import ConfigDir, ZapperParser
+from wc.log import *
 
 #
 # urlutils.py - Simplified urllib handling
@@ -98,43 +99,41 @@ def urlopen (url, proxies=None, data=None):
     return _opener.open(request)
 
 
-# Global useful URL opener; returns None if the page is absent, otherwise
-# like urlopen
-def open_url(url, proxies=None):
+# Global useful URL opener; throws IOError on error
+def open_url (url, proxies=None):
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
-        if x.code in (404, 500, 503):
-            return None
-        else:
-            raise
+        error(WC, "could not open url %s", `url`)
+        raise IOError, x
     except (socket.gaierror, socket.error, urllib2.URLError), x:
-        raise NoNetwork
+        error(WC, "could not open url %s", `url`)
+        raise IOError, "no network access available"
     except IOError, data:
+        error(WC, "could not open url %s", `url`)
         if data and data[0] == 'http error' and data[1] == 404:
-            return None
+            raise IOError, data
         else:
-            raise NoNetwork
+            raise IOError, "no network access available"
     return page
 
 
 # ====================== end of urlutils.py =================================
 
-def update (config, baseurl, dryrun=False):
-    """Update the given configuration object with .zap file found at baseurl.
+def update (config, baseurl, dryrun=False, log=sys.stdout):
+    """Update the given configuration object with .zap files found at baseurl.
     If dryrun is True, only print out the changes but do nothing
+    throws IOError on error
     """
     url = baseurl+"md5sums.gz"
     page = open_url(url)
-    if page is None:
-        raise SystemExit, "error fetching url "+url
     filemap = {}
     for filename in wc.filterconf_files():
         filemap[os.path.basename(filename)] = filename
     lines = page.read().splitlines()
     for line in lines:
         if "<" in line:
-            raise IOError, "error fetching url"+url
+            raise IOError, "error fetching url "+url
         if not line:
             continue
         md5sum, filename = line.split()
@@ -146,20 +145,17 @@ def update (config, baseurl, dryrun=False):
             digest = list(md5.new(data).digest())
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
-                print "file", filename, "no change"
+                print >>log, "filter", filename, "not changed, ignoring"
                 continue
-            print "updating", filename
+            print >>log, "updating filter", filename
         else:
             fullname = os.path.join(ConfigDir, filename)
-            print "inserting", filename
+            print >>log, "inserting new filter", filename
         url = baseurl+filename+".gz"
         page = open_url(url)
-        if page is None:
-            print >>sys.stderr, "error fetching URL", url
-            continue
         p = ZapperParser(filename)
-        p.parse(newfile)
-        config.merge_folder(p.folder, dryrun=dryrun)
+        p.parse(page)
+        config.merge_folder(p.folder, dryrun=dryrun, log=log)
 
 
 def _test ():
