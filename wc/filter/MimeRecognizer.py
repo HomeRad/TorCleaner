@@ -70,11 +70,11 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         buf.close()
         return data
 
-    def get_attrs (self, url, stages, headers):
+    def get_attrs (self, url, localhost, stages, headers):
         """initialize buffer"""
         if not self.applies_to_stages(stages):
             return {}
-        d = super(MimeRecognizer, self).get_attrs(url, stages, headers)
+        d = super(MimeRecognizer, self).get_attrs(url, localhost, stages, headers)
         d['mimerecognizer_buf'] = StringIO.StringIO()
         d['mimerecognizer_ignore'] = False
         return d

@@ -70,12 +70,12 @@ class ImageReducer (wc.filter.Filter.Filter):
             return p.getvalue()
         return data.getvalue()
 
-    def get_attrs (self, url, stages, headers):
+    def get_attrs (self, url, localhost, stages, headers):
         """initialize image reducer buffer and flags"""
         if not self.applies_to_stages(stages):
             return {}
         # don't filter tiny images
-        d = super(ImageReducer, self).get_attrs(url, stages, headers)
+        d = super(ImageReducer, self).get_attrs(url, localhost, stages, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.applies_to(url) ]
         if rules:

@@ -47,12 +47,13 @@ js_event_attrs = (
 class JSFilter (wc.js.JSListener.JSListener):
     """defines callback handlers for filtering Javascript code"""
 
-    def __init__ (self, url, opts):
+    def __init__ (self, url, localhost, opts):
         # True if javascript has to be filtered
         self.javascript = opts['javascript']
         self.level = opts.get('level', 0)
         self.comments = opts['comments']
         self.url = url or "unknown"
+        self.localhost = localhost
         self.js_src = False
         self.js_script = u''
         # HttpProxyClient object used in background downloads,
@@ -290,7 +291,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.htmlparser.waited = 1
         self.js_src = True
         self.js_client = wc.proxy.HttpProxyClient.HttpProxyClient(
-                                             self.jsScriptData, (url, ver))
+                               self.jsScriptData, (url, ver), self.localhost)
         headers = wc.proxy.Headers.get_wc_client_headers(
                                              self.js_client.hostname)
         # note: some javascript servers do not specify content encoding

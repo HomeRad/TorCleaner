@@ -138,7 +138,7 @@ def applyfilter (filterstage, data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, filterstages, browser='Calzilla/6.0',
+def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
                      clientheaders=None, serverheaders=None, headers=None):
     """init external state objects"""
     if clientheaders is None:
@@ -167,7 +167,7 @@ def get_filterattrs (url, filterstages, browser='Calzilla/6.0',
     for f in wc.configuration.config['filtermodules']:
         # note: get attributes of _all_ filters since the
         # mime type can change dynamically
-        attrs.update(f.get_attrs(url, filterstages, attrheaders))
+        attrs.update(f.get_attrs(url, localhost, filterstages, attrheaders))
     return attrs
 
 

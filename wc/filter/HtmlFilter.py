@@ -36,9 +36,9 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
        XXX fixme: should make internal functions start with _
     """
 
-    def __init__ (self, rules, ratings, url, **opts):
+    def __init__ (self, rules, ratings, url, localhost, **opts):
         "init rules and buffers"
-        super(HtmlFilter, self).__init__(url, opts)
+        super(HtmlFilter, self).__init__(url, localhost, opts)
         self.rules = rules
         self.ratings = ratings
         self.rulestack = []
@@ -49,7 +49,8 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
 
     def new_instance (self, **opts):
         """make a new instance of this filter, for recursive filtering"""
-        return HtmlFilter(self.rules, self.ratings, self.url, **opts)
+        return HtmlFilter(self.rules, self.ratings, self.url,
+                          self.localhost, **opts)
 
     def error (self, msg):
         """signal a filter/parser error"""

@@ -58,7 +58,7 @@ class Filter (object):
         """
         return data
 
-    def get_attrs (self, url, stages, headers):
+    def get_attrs (self, url, localhost, stages, headers):
         """Get filter-specific state data for all given filter stages.
 
            @param url the complete request url

@@ -38,11 +38,11 @@ class Header (wc.filter.Filter.Filter):
     # which mime types this filter applies to
     mimelist = []
 
-    def get_attrs (self, url, stages, headers):
+    def get_attrs (self, url, localhost, stages, headers):
         """configure header rules to add/delete"""
         if not self.applies_to_stages(stages):
             return {}
-        d = super(Header, self).get_attrs(url, stages, headers)
+        d = super(Header, self).get_attrs(url, localhost, stages, headers)
         delete = {
             wc.filter.STAGE_REQUEST_HEADER: [],
             wc.filter.STAGE_RESPONSE_HEADER: [],
