@@ -296,8 +296,13 @@ def check_spelling (tag, url):
                                  "corrected to", `htmltag`, "at", `url`
              return htmltag
     print >>sys.stderr, "Error: unknown HTML tag", `tag`, "at", `url`
+    # filter possibly trailing garbage the parser accepted
+    mo = filter_tag_garbage(tag)
+    if mo:
+        return mo.group("tag")
     return tag
 
+filter_tag_garbage = re.compile(r"(?P<tag>^[a-z][a-z0-9]*)").search
 
 if __name__=='__main__':
     for tag in ["blink", "bllnk", "htmm", "hu", ]:
