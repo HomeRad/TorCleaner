@@ -54,7 +54,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     def end_data (self, name):
         super(RatingRule, self).end_data(name)
         if name == 'category':
-            assert self.ratings.has_key(self._category)
+            assert self.ratings.has_key(self._category), repr(self._category)
             self.ratings[self._category] = self._data
         elif name == 'url':
             self.url = self._data
