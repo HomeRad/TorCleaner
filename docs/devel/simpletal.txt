@@ -76,12 +76,11 @@ Example program::
   print expand_template(f, get_context())
 
 
-CVS files
----------
-See the viewcvs links for `simpleTAL with i18n support`_ and
+Diff agains SimpleTAL 3.9
+-------------------------
+See the diffs for `simpleTAL with i18n support`_ and
 `pygettext.py with i18n support`_.
 
-.. _simpleTAL with i18n support: http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/webcleaner/webcleaner2/wc/webgui/simpletal/
-.. _pygettext.py with i18n support:
-   http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/webcleaner/webcleaner2/po/pygettext.py?view=markup
+.. _simpleTAL with i18n support: simpletal_i18n.diff
+.. _pygettext.py with i18n support: pygettext_i18n.diff
 
