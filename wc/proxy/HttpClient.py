@@ -151,7 +151,7 @@ class HttpClient (Connection):
                     self.bytes_remaining = None
                 remove_headers(self.headers, to_remove)
                 # add warning
-                self.headers['Warning'] = "214 WebCleaner Transformation applied"
+                self.headers['Warning'] = "214 WebCleaner Transformation applied\r"
             debug(HURT_ME_PLENTY, "Proxy: C/Headers", `str(self.headers)`)
             self.bytes_remaining = int(self.headers.get('Content-Length', 0))
             if config["proxyuser"] and not self.check_proxy_auth():
