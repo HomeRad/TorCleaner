@@ -158,6 +158,22 @@
  type="checkbox" name="try_google" id="try_google" value="1">
 </td>
 </tr>
+
+<tr>
+<td>
+<label i18n:attributes="title string:Location of the Clamav Antivirus software configuration file"
+ for="clamav_conf" i18n:translate="">Clamav Config</label>
+</td>
+<td>
+<input tal:condition="config/filterdict/VirusFilter"
+ class="text" type="text" name="clamav_conf" id="clamav_conf" value=""
+ tal:attributes="value config/clamavconf">
+<input tal:condition="not:config/filterdict/VirusFilter" disabled
+ class="text" type="text" name="clamav_conf" id="clamav_conf" value=""
+ tal:attributes="value config/clamavconf">
+</td>
+</tr>
+
 </table>
 <div class="footnote">
 <sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
