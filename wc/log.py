@@ -33,7 +33,9 @@ def initlog (filename):
     """initialize logfiles and configuration"""
     logging.config.fileConfig(filename)
     logging.getLogger("root").addHandler(get_root_handler())
-    logging.getLogger("wc").addHandler(get_wc_handler())
+    wc_handler = get_wc_handler()
+    logging.getLogger("wc").addHandler(wc_handler)
+    logging.getLogger("simpleTAL").addHandler(wc_handler)
     logging.getLogger("wc.access").addHandler(get_access_handler())
 
 
@@ -43,9 +45,7 @@ def get_root_handler ():
         return set_format(NTEventLogHandler(AppName))
     logfile = get_log_file("%s.err"%AppName)
     mode = 'a'
-    maxBytes = 1024*1024*2 # 2 MB
-    backupCount = 5 # number of files to generate
-    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = FileHandler(logfile, mode, maxBytes, backupCount)
     return set_format(handler)
 
 
@@ -55,9 +55,7 @@ def get_wc_handler ():
         return set_format(NTEventLogHandler(AppName))
     logfile = get_log_file("%s.log"%AppName)
     mode = 'a'
-    maxBytes = 1024*1024*2 # 2 MB
-    backupCount = 5 # number of files to generate
-    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = FileHandler(logfile, mode, maxBytes, backupCount)
     return set_format(handler)
 
 
@@ -65,9 +63,7 @@ def get_access_handler ():
     """return a handler for access logging"""
     logfile = get_log_file("%s-access.log"%AppName)
     mode = 'a'
-    maxBytes = 1024*1024 # 1 MB
-    backupCount = 5 # number of files to generate
-    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = FileHandler(logfile, mode, maxBytes, backupCount)
     # log only the message
     handler.setFormatter(logging.Formatter("%(message)s"))
     return handler
