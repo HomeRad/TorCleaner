@@ -24,7 +24,7 @@ class HttpProxyClient (object):
         self.method = "GET"
         self.url = wc.url.url_norm(self.args[0])[0]
         self.scheme, self.hostname, self.port, self.document = \
-                                                  wc.url.spliturl(self.url)
+                                                  wc.url.url_split(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
@@ -129,7 +129,7 @@ class HttpProxyClient (object):
         self.isredirect = False
         wc.log.debug(wc.LOG_PROXY, "%s redirected", self)
         self.scheme, self.hostname, self.port, self.document = \
-                                                  wc.url.spliturl(self.url)
+                                                  wc.url.url_split(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'

@@ -190,7 +190,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.document = '/'
         else:
             self.scheme, self.hostname, self.port, self.document = \
-                                                     wc.url.spliturl(self.url)
+                                                wc.url.url_split(self.url)
             # fix missing trailing /
             if not self.document:
                 self.document = '/'

@@ -60,7 +60,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
         # and unquote again
         self.url = wc.url.url_norm(self.url)[0]
         self.scheme, self.hostname, self.port, self.document = \
-                                                wc.url.spliturl(self.url)
+                                                wc.url.url_split(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
