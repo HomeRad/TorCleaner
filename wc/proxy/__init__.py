@@ -72,8 +72,9 @@ def create_inet_socket (dispatch, socktype):
 
 def make_timer (delay, callback):
     "After DELAY seconds, run the CALLBACK function"
-    TIMERS.append( [time() + delay, callback] )
+    TIMERS.append( (time()+delay, callback) )
     TIMERS.sort()
+    debug(PROXY, "%d timers", len(TIMERS))
 
 
 def run_timers ():
@@ -87,7 +88,6 @@ def run_timers ():
         callback = TIMERS[0][1]
         del TIMERS[0]
         callback()
-
     if TIMERS: return TIMERS[0][0] - time()
     else:      return 60
 
@@ -100,9 +100,10 @@ def periodic_print_status ():
 def proxy_poll (timeout=0.0):
     smap = asyncore.socket_map
     if smap:
-        r = filter(lambda x: x.readable(), smap.values())
-        w = filter(lambda x: x.writable(), smap.values())
+        r = [ x for x in smap.values() if x.readable() ]
+        w = [ x for x in smap.values() if x.writable() ]
         e = smap.values()
+        debug(PROXY, "poll smap %s", (r,w,e))
         try:
             (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
@@ -111,34 +112,22 @@ def proxy_poll (timeout=0.0):
                 return
             else:
                 raise
-
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
-        handlerCount = 0
         for x in e:
             debug(PROXY, "%s handle exception event", x)
             x.handle_expt_event()
-            handlerCount += 1
         for x in w:
             t = time()
             if x not in e and x.writable():
                 debug(PROXY, "%s handle write", x)
                 x.handle_write_event()
-                handlerCount += 1
-                #if time() - t > 0.1:
-                #    debug(PROXY, 'wslow %4.1f %r %s', (time()-t), s, x)
-                #    pass
         for x in r:
             t = time()
             if x not in e and x not in w and x.readable():
                 debug(PROXY, "%s handle read", x)
                 x.handle_read_event()
-                handlerCount += 1
-                #if time() - t > 0.1:
-                #    debug(PROXY, 'rslow %4.1f %r %s', (time()-t), s, x)
-                #    pass
-        return handlerCount
 
 
 def mainloop (handle=None):

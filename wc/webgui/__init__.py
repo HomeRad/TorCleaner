@@ -56,7 +56,7 @@ class WebConfig (object):
             # get the template filename
             path, dirs, lang = get_template_url(url, lang)
             if path.endswith('.html'):
-                f = file(path)
+                fp = file(path)
                 # get TAL context
                 context, newstatus = get_context(dirs, form, context, lang)
                 if newstatus==401 and status!=newstatus:
@@ -67,10 +67,11 @@ class WebConfig (object):
                 translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
                 #debug(GUI, "Using translator %s", translator.info())
                 # expand template
-                data = expand_template(f, context, translator=translator)
+                data = expand_template(fp, context, translator=translator)
             else:
-                f = file(path, 'rb')
-                data = f.read()
+                fp = file(path, 'rb')
+                data = fp.read()
+            fp.close()
         except IOError:
             exception(GUI, "Wrong path %r", url)
             # XXX this can actually lead to a maximum recursion
@@ -82,7 +83,6 @@ class WebConfig (object):
             exception(GUI, "Template error")
             client.error(500, i18n._("Internal Error"))
             return
-        f.close()
         # write response
         self.put_response(data, protocol, status, msg, headers)
 
@@ -110,9 +110,7 @@ def expand_template (f, context, translator=None):
     template = simpleTAL.compileHTMLTemplate(f)
     out = StringIO()
     template.expand(context, out, translator=translator)
-    data = out.getvalue()
-    out.close()
-    return data
+    return out.getvalue()
 
 
 safe_path = re.compile(r"[-a-zA-Z0-9_.]+").match
@@ -125,8 +123,7 @@ def get_relative_path (path):
     # get non-empty url path components, remove path fragments
     dirs = [ urlparse.urldefrag(d)[0] for d in path.split("/") if d ]
     # remove ".." and other invalid paths (security!)
-    dirs = [ d for d in dirs if is_safe_path(d) ]
-    return dirs
+    return [ d for d in dirs if is_safe_path(d) ]
 
 
 def get_template_url (url, lang):
@@ -196,15 +193,11 @@ def add_default_context (context, form, filename, lang):
     context.addGlobal("form", form)
     # rule macros
     path, dirs, lang = get_template_path("macros/rules.html", lang)
-    f = file(path, 'r')
-    rulemacros = simpleTAL.compileHTMLTemplate(f)
-    f.close()
+    rulemacros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
     context.addGlobal("rulemacros", rulemacros)
     # standard macros
     path, dirs, lang = get_template_path("macros/standard.html", lang)
-    f = file(path, 'r')
-    macros = simpleTAL.compileHTMLTemplate(f)
-    f.close()
+    macros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
     context.addGlobal("macros", macros)
     # used by navigation macro
     context.addGlobal("nav", {filename.replace('.', '_'): True})
