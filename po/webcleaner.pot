@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Feb 27 17:10:29 2004\n"
+"POT-Creation-Date: Fri Feb 27 17:16:36 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -699,6 +699,12 @@ msgstr ""
 msgid "%(AppName)s error"
 msgstr ""
 
+msgid ""
+"When you klick on the send button below,\n"
+"the following information will be mailed to the author of %(AppName)s\n"
+"at %(Email)s:"
+msgstr ""
+
 msgid "Rule rewrite replacement successfully changed."
 msgstr ""
 
@@ -1020,12 +1026,6 @@ msgid "New folder"
 msgstr ""
 
 msgid "accessibility features of these pages"
-msgstr ""
-
-msgid ""
-"When you klick on the accept button below,\n"
-"the following information will be mailed to the author of %(AppName)s\n"
-"at %(Email)s:"
 msgstr ""
 
 msgid "Replacement"
