@@ -9,6 +9,8 @@ from FXNocommentsRuleFrame import FXNocommentsRuleFrame
 from FXFolderRuleFrame import FXFolderRuleFrame
 from FXBlockurlsRuleFrame import FXBlockurlsRuleFrame
 from FXBlockdomainsRuleFrame import FXBlockdomainsRuleFrame
+from FXAllowurlsRuleFrame import FXAllowurlsRuleFrame
+from FXAllowdomainsRuleFrame import FXAllowdomainsRuleFrame
 
 
 class FXRuleFrameFactory:
@@ -71,3 +73,11 @@ class FXRuleFrameFactory:
     def fromBlockurlsRule (self, rule):
         self.inc_index()
         return FXBlockurlsRuleFrame(self.treeframe, rule, self.index)
+
+    def fromAllowdomainsRule (self, rule):
+        self.inc_index()
+        return FXAllowdomainsRuleFrame(self.treeframe, rule, self.index)
+
+    def fromAllowurlsRule (self, rule):
+        self.inc_index()
+        return FXAllowurlsRuleFrame(self.treeframe, rule, self.index)
