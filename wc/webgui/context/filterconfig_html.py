@@ -24,6 +24,7 @@ from wc.configuration import config, rulenames
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
+from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.filter.rules.Rule import compileRegex as _compileRegex
 from wc.filter.rules.RewriteRule import partvalnames, partnames
 from wc.filter.rules.RewriteRule import part_num as _part_num
@@ -33,6 +34,8 @@ from wc.filter.rules import register_rule as _register_rule
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.rating import categories
+from wc.filter.rating import get_category as _get_category
+from wc.filter.rating.category import intrange_from_string as _intrange_from_string
 
 # config vars
 info = {
@@ -672,26 +675,30 @@ def _form_apply_nocomments (form):
     pass
 
 
-def _form_XXX_apply_rating (form):
+def _form_apply_rating (form):
     # rating categories
-    for category in registered_categories:
-        key = "category_%s" % category
-        if form.has_key(key):
-            value = _getval(form, key)
-            if not _rating_is_valid_value(catdata, value):
-                error['categoryvalue'] = True
-                return
-            if category not in currule.ratings:
-                currule.ratings[category] = value
+    for catname, value in _get_prefix_vals(form, 'category_'):
+        category = _get_category(catname)
+        if category is None:
+            # unknown category
+            error['categoryvalue'] = True
+            return False
+        if category.iterable:
+            realvalue = value
+        else:
+            realvalue = _intrange_from_string(value)
+        if not category.valid_value(realvalue):
+            error['categoryvalue'] = True
+            return False
+            if catname not in currule.ratings:
+                currule.ratings[catname] = value
                 info['rulecategory'] = True
-            elif currule.ratings[category] != value:
-                currule.ratings[category] = value
+            elif currule.ratings[catname] != value:
+                currule.ratings[catname] = value
                 info['rulecategory'] = True
-        elif category in currule.ratings:
+        elif catname in currule.ratings:
             info['rulecategory'] = True
-            del currule.ratings[category]
-    if info:
-        currule.compile_values()
+            del currule.ratings[catname]
 
 
 def _form_apply_replace (form):
