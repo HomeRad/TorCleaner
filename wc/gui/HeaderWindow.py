@@ -1,5 +1,6 @@
+import sys
+
 if __name__=='__main__':
-    import sys
     sys.path.insert(0, ".")
 
 import wc,os
@@ -71,7 +72,8 @@ class HeaderWindow(FXMainWindow):
      ID_SETREFRESH,
      ID_SETONLYFIRST,
      ID_SETSCROLLING,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+7)
+     ID_STATUS
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+8)
 
 
     def __init__(self, app):
@@ -79,22 +81,26 @@ class HeaderWindow(FXMainWindow):
         self.setIcon(loadIcon(app, 'iconbig.png'))
         self.eventMap()
         self.timer = None
+        self.status = "Ready."
         self.read_config()
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
-        FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
+        self.statusbar = FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
         # dialogs
         self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
         self.options = OptionsWindow(self)
         # main frames
         frame = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
-        self.connectionFrame(frame)
         self.headerFrame(frame)
+        self.connectionFrame(frame)
         # Buttons
         frame = FXHorizontalFrame(frame, LAYOUT_FILL_X)
         FXButton(frame, _(" &Quit "), None, self, self.ID_QUIT)
         FXButton(frame, _(" &Refresh "), None, self, self.ID_REFRESH)
         FXButton(frame, _(" &Options "), None, self, self.ID_OPTIONS)
         FXButton(frame, _("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
+
+        self.statusbar.getStatusline().setTarget(self)
+        self.statusbar.getStatusline().setSelector(self.ID_STATUS)
         # start refresh timer
         if self.config['refresh']:
             self.timer = app.addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
@@ -106,6 +112,10 @@ class HeaderWindow(FXMainWindow):
 
     def headerFrame(self, frame):
         headers = FXGroupBox(frame, _("Headers"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        self.headers = FXIconList(headers, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|ICONLIST_SINGLESELECT|ICONLIST_AUTOSIZE)
+        self.headers.appendHeader(_("URL"),NULL,150)
+        self.headers.appendHeader(_("Name"),NULL,100)
+        self.headers.appendHeader(_("Value"),NULL,200)
 
 
     def create(self):
@@ -124,6 +134,7 @@ class HeaderWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETREFRESH, HeaderWindow.onSetRefresh)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETONLYFIRST, HeaderWindow.onSetOnlyfirst)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETSCROLLING, HeaderWindow.onSetScrolling)
+        FXMAPFUNC(self,SEL_UPDATE, HeaderWindow.ID_STATUS, HeaderWindow.onUpdStatus)
 
 
     def onCmdAbout(self, sender, sel, ptr):
@@ -182,16 +193,25 @@ class HeaderWindow(FXMainWindow):
         return 1
 
 
+    def onUpdStatus(self, sender, sel, ptr):
+        sender.setText(self.status)
+
+
     def onTimerRefresh(self, sender, sel, ptr):
         debug(BRING_IT_ON, "TimerRefresh")
         return self.refresh()
 
 
     def refresh(self):
-        headers = parse_headers()
-        connections = parse_connections()
-        # XXX
-        #sender->handle(this,MKUINT(ID_SETSTRINGVALUE,SEL_COMMAND),(void*)&info);
+        try:
+            self.status = "Getting headers..."
+            headers = parse_headers()
+            self.status = "Getting connections..."
+            connections = parse_connections()
+            self.status = "Ready."
+            # XXX
+        except Exception, msg:
+            self.status = "Error %s"%msg
         if self.config['refresh']:
             self.getApp().addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
         return 1
