@@ -11,6 +11,14 @@
     Type: bugfix
     Changed: wc/proxy/HttpClient.py
 
+  * fix urls with (leading) backslashes in the path
+    Type: bugfix
+    Changed: wc/url.py
+
+  * when url had backslashes, give a 302 redirect to correct url
+    Type: feature
+    Changed: wc/proxy/HttpClient.py
+
 2.15 (released 22.5.2004)
   * set default config dir in webcleaner script
     Type: bugfix
