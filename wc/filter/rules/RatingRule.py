@@ -28,9 +28,9 @@ from wc.log import *
 
 class RatingRule (UrlRule):
     """holds configured rating data"""
-    def __init__ (self, sid=None, title="No title", desc="", disable=0):
-        super(RatingRule, self).__init__(sid=sid, title=title,
-                                        desc=desc, disable=disable)
+    def __init__ (self, sid=None, titles=None, descriptions=None, disable=0):
+        super(RatingRule, self).__init__(sid=sid, titles=titles,
+                                   descriptions=descriptions, disable=disable)
         # category -> rating value
         self.ratings = {}
         self.url = ""
@@ -38,39 +38,29 @@ class RatingRule (UrlRule):
 
     def fill_attrs (self, attrs, name):
         """init rating and url attrs"""
+        super(RatingRule, self).fill_attrs(attrs, name)
         if name=='category':
             self._category = unxmlify(attrs.get('name')).encode('iso8859-1')
         elif name=='url':
             pass
         elif name=='rating':
             UrlRule.fill_attrs(self, attrs, name)
-        else:
-            raise ValueError(
-    i18n._("Invalid rating rule tag name %r, check your configuration")%name)
 
 
-    def fill_data (self, data, name):
-        """add rating and url data"""
-        super(RatingRule, self).fill_data(data, name)
+    def end_data (self, name):
+        super(RatingRule, self).end_data(name)
         if name=='category':
             assert self._category
-            if self._category not in self.ratings:
-                self.ratings[self._category] = ""
-            self.ratings[self._category] += data
+            self.ratings[self._category] = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
         elif name=='url':
-            self.url += data
-        else:
-            # ignore other content
-            pass
+            self.url = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
 
 
     def compile_data (self):
         """fill rating structure"""
         super(RatingRule, self).compile_data()
-        self.url = unxmlify(self.url).encode('iso8859-1')
-        for category, val in self.ratings.items():
-            val = unxmlify(val).encode('iso8859-1')
-            self.ratings[category] = val
         for category, catdata in service['categories'].items():
             if category not in self.ratings:
                 if catdata.has_key('rvalues'):
@@ -123,12 +113,13 @@ class RatingRule (UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
 	s = "%s>\n" % super(RatingRule, self).toxml()
-        s += self.matchestoxml()
+        s += "\n  "+self.title_desc_toxml()
+        s += "\n  "+self.matchestoxml()
         if self.url:
-            s += "<url>%s</url>\n" % xmlify(self.url)
+            s += "  <url>%s</url>\n" % xmlify(self.url)
         for category, value in self.ratings.items():
             if value:
-                s += "<category name=\"%s\">%s</category>\n"% \
+                s += "  <category name=\"%s\">%s</category>\n"% \
                       (xmlify(category), xmlify(value))
         s += "</%s>" % self.get_name()
         return s

@@ -105,12 +105,12 @@ class RewriteRule (UrlRule):
        constraints (stored in self.attrs) or a regular expression to
        match the enclosed block (self.enclosed).
     """
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, tag="a", attrs=None, enclosed="", part=COMPLETE,
                   replacement=""):
         """initialize rule data"""
-        super(RewriteRule, self).__init__(sid=sid, title=title,
-                                          desc=desc, disable=disable)
+        super(RewriteRule, self).__init__(sid=sid, titles=titles,
+                                  descriptions=descriptions, disable=disable)
         self.tag = tag
         if attrs is None:
             self.attrs = {}
@@ -138,27 +138,25 @@ class RewriteRule (UrlRule):
             self.part = part_num(unxmlify(attrs['part']).encode('iso8859-1'))
 
 
-    def fill_data (self, data, name):
-        """set attribute data"""
-        super(RewriteRule, self).fill_data(data, name)
+    def end_data (self, name):
+        super(UrlRule, self).end_data(name)
         if name=='attr':
-            self.attrs[self.current_attr] += data
+            self.attrs[self.current_attr] = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
         elif name=='enclosed':
-            self.enclosed += data
+            self.enclosed = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
         elif name=='replacement':
-            self.replacement += data
+            self.replacement = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
 
 
     def compile_data (self):
         """compile url regular expressions"""
         super(RewriteRule, self).compile_data()
-        self.enclosed = unxmlify(self.enclosed).encode('iso8859-1')
         compileRegex(self, "enclosed")
-        self.replacement = unxmlify(self.replacement).encode('iso8859-1')
         self.attrs_ro = {}
         for attr, val in self.attrs.items():
-            val = unxmlify(val).encode('iso8859-1')
-            self.attrs[attr] = val
             self.attrs_ro[attr] = re.compile(val)
         self.set_start_sufficient()
 
@@ -198,8 +196,10 @@ class RewriteRule (UrlRule):
         occurred = []
         for attr,val in attrs.items():
             # attr or val could be None
-            if attr is None: attr = ''
-            if val is None: val = ''
+            if attr is None:
+                attr = ''
+            if val is None:
+                val = ''
             occurred.append(attr)
             ro = self.attrs_ro.get(attr)
             if ro and not ro.search(val):
@@ -287,27 +287,27 @@ class RewriteRule (UrlRule):
         """Rule data as XML for storing"""
         s = super(RewriteRule, self).toxml()
         if self.tag!='a':
-            s += '\n tag="%s"' % self.tag
+            s += '\n tag="%s"' % xmlify(self.tag)
         s += ">\n"
+        s += "\n  "+self.title_desc_toxml()
+        s += "\n  "+self.matchestoxml()
         for key, val in self.attrs.items():
-            s += "<attr"
+            s += "  <attr"
             if key!='href':
                 s += ' name="%s"' % key
             if val:
-                s += ">"+xmlify(val)+"</attr>\n"
+                s += ">"+xmlify(val)+"</attr>"
             else:
-                s += "/>\n"
+                s += "/>"
         if self.enclosed:
-            s += "<enclosed>"+xmlify(self.enclosed)+"</enclosed>\n"
+            s += "\n  <enclosed>"+xmlify(self.enclosed)+"</enclosed>"
         if self.part!=COMPLETE or self.replacement:
-            s += "<replacement"
-            s += ' part="%s"' % num_part(self.part)
+            s += '\n  <replacement part="%s"' % num_part(self.part)
             if self.replacement:
-                s += '>'+xmlify(self.replacement)+"</replacement>\n"
+                s += '>'+xmlify(self.replacement)+"</replacement>"
             else:
-                s += "/>\n"
-        s += self.matchestoxml()
-        s += "</%s>" % self.get_name()
+                s += "/>"
+        s += "\n</%s>" % self.get_name()
         return s
 
 

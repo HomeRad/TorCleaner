@@ -358,6 +358,7 @@ rulenames = (
   'rating'
 )
 _nestedtags = (
+  'title', 'description',
   # urlrule nested tag names
   'matchurl', 'nomatchurl',
   # rewriter rule nested tag names
@@ -409,7 +410,8 @@ class BaseParser (object):
             try:
                 self.xmlparser.ParseFile(file(self.filename))
             except (xml.parsers.expat.ExpatError, ParseException):
-                error(PROXY, "Error parsing %s", self.filename)
+                exception(PROXY, "Error parsing %s", self.filename)
+                raise SystemExit("parse error in %s"%self.filename)
         finally:
             self._postparse()
 
@@ -445,7 +447,10 @@ class ZapperParser (BaseParser):
             self.folder.append_rule(self.rule)
         # tag has character data
         elif name in _nestedtags:
-            self.rule.fill_attrs(attrs, name)
+            if self.rule is not None:
+                self.rule.fill_attrs(attrs, name)
+            else:
+                self.folder.fill_attrs(attrs, name)
         elif name=='folder':
             self.folder.fill_attrs(attrs, name)
         else:

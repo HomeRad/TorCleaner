@@ -26,7 +26,7 @@ selfolder = 0
 selrule = 0
 
 # form execution
-def _exec_form (form):
+def _exec_form (form, lang):
     global rule, selfolder, selrule
     if form.has_key('rule'):
         rule = _getval(form, 'rule')

@@ -25,14 +25,21 @@ from wc.XmlUtils import xmlify, unxmlify
 class HeaderRule (UrlRule):
     """rule for filtering HTTP headers"""
 
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, name="noname", value=""):
         """init rule name and value"""
-        super(HeaderRule, self).__init__(sid=sid, title=title,
-                                         desc=desc, disable=disable)
+        super(HeaderRule, self).__init__(sid=sid, titles=titles,
+                                   descriptions=descriptions, disable=disable)
         self.name = name
         self.value = value
-        self.attrnames.extend(('name', 'value'))
+        self.attrnames.append('name')
+
+
+    def end_data (self, name):
+        super(HeaderRule, self).end_data(name)
+        if name=='replacement':
+            self.value = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
 
 
     def fromFactory (self, factory):
@@ -48,10 +55,11 @@ class HeaderRule (UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        s = '%s\n name="%s"' % \
+        s = '%s\n name="%s">' % \
             (super(HeaderRule, self).toxml(), xmlify(self.name))
+        s += "\n"+self.title_desc_toxml()
+        s += "\n"+self.matchestoxml()
         if self.value:
-            s+= ' value="%s"' % xmlify(self.value)
-        s += ">\n"+self.matchestoxml()
+            s += ' <replacement>%s</replacement>' % xmlify(self.value)
         s += "</%s>" % self.get_name()
         return s

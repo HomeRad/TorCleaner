@@ -31,7 +31,7 @@ class Filter (object):
 
 
     def addrule (self, rule):
-        debug(FILTER, "enable %s rule %r", rule.get_name(), rule.title)
+        debug(FILTER, "enable %s ", rule)
         self.rules.append(rule)
 
 

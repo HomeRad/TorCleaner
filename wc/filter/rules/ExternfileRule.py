@@ -27,11 +27,11 @@ class ExternfileRule (Rule):
     """rule with data stored in a (compressed) external file, used for
        huge url and domain block lists
     """
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, filename=None):
         """initialize rule attributes"""
-        super(ExternfileRule, self).__init__(sid=sid, title=title,
-                                             desc=desc, disable=disable)
+        super(ExternfileRule, self).__init__(sid=sid, titles=titles,
+                                  descriptions=descriptions, disable=disable)
         self.filename = filename
         self.attrnames.append('filename')
 
@@ -44,5 +44,8 @@ class ExternfileRule (Rule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        return '%s filename="%s"/>' % \
-            (super(ExternfileRule, self).toxml(), xmlify(self.filename))
+        s = super(ExternfileRule, self).toxml()
+        s += ' filename="%s">' % xmlify(self.filename)
+        s += "\n"+self.title_desc_toxml()
+        s += "</%s>"%self.get_name()
+        return s

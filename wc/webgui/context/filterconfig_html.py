@@ -57,7 +57,7 @@ newrulenames.sort()
 ruletype = {}
 
 
-def _exec_form (form):
+def _exec_form (form, lang):
     """form execution"""
     # reset info/error and form vals
     _form_reset()
@@ -82,7 +82,7 @@ def _exec_form (form):
         _form_newfolder(_getval(form, 'newfoldername'))
     # rename current folder
     elif curfolder and form.has_key('renamefolder'):
-        _form_renamefolder(_getval(form, 'foldername'))
+        _form_renamefolder(_getval(form, 'foldername'), lang)
     # disable current folder
     elif curfolder and form.has_key('disablefolder%d'%curfolder.oid):
         _form_disablefolder(curfolder)
@@ -121,7 +121,7 @@ def _exec_form (form):
 
     # generic apply rule values
     elif currule and form.has_key('apply'):
-        _form_apply(form)
+        _form_apply(form, lang)
     # look for rule up/down moves
     elif curfolder:
         for rule in curfolder.rules:
@@ -219,7 +219,7 @@ def _form_newfolder (foldername):
     fd, filename = tempfile.mkstemp(".zap", "local_", ConfigDir, text=True)
     # select the new folder
     global curfolder
-    curfolder = _FolderRule(title=foldername, desc="", disable=0, filename=filename)
+    curfolder = _FolderRule(titles={'en':foldername}, filename=filename)
     _register_rule(curfolder)
     prefix = config['development'] and "wc" or "lc"
     _generate_sids(prefix)
@@ -233,11 +233,11 @@ def _form_newfolder (foldername):
     info['newfolder'] = True
 
 
-def _form_renamefolder (foldername):
+def _form_renamefolder (foldername, lang):
     if not foldername:
         error['renamefolder'] = True
         return
-    curfolder.title = foldername
+    curfolder.titles[lang] = foldername
     curfolder.write()
     info['renamefolder'] = True
 
@@ -427,10 +427,10 @@ def _form_rule_up (oid):
     info['ruleup'] = True
 
 
-def _form_apply (form):
+def _form_apply (form, lang):
     """delegate rule apply to different apply_* functions"""
     # title and description apply for all rules:
-    _form_rule_titledesc(form)
+    _form_rule_titledesc(form, lang)
     # delegate
     attr = "_form_apply_%s" % currule.get_name()
     globals()[attr](form)
@@ -438,17 +438,17 @@ def _form_apply (form):
         curfolder.write()
 
 
-def _form_rule_titledesc (form):
+def _form_rule_titledesc (form, lang):
     title = _getval(form, 'rule_title')
     if not title:
         error['ruletitle'] = True
         return
-    if title!=currule.title:
-        currule.title = title
+    if title!=currule.titles[lang]:
+        currule.titles[lang] = title
         info['ruletitle'] = True
     desc = _getval(form, 'rule_description')
-    if desc!=currule.desc:
-        currule.desc = desc
+    if desc!=currule.descriptions[lang]:
+        currule.descriptions[lang] = desc
         info['ruledesc'] = True
 
 

@@ -27,16 +27,15 @@ from wc.log import *
 
 class UrlRule (Rule):
     """rule which applies only to urls which match a regular expression"""
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, matchurls=[], nomatchurls=[]):
         """initialize rule attributes"""
-        super(UrlRule, self).__init__(sid=sid, title=title,
-                                      desc=desc, disable=disable)
+        super(UrlRule, self).__init__(sid=sid, titles=titles,
+                                   descriptions=descriptions, disable=disable)
         self.matchurls = []
         self.nomatchurls = []
         self.matchurls.extend(matchurls)
         self.nomatchurls.extend(nomatchurls)
-        self._curdata = ""
 
 
     def appliesTo (self, url):
@@ -52,19 +51,14 @@ class UrlRule (Rule):
         return True
 
 
-    def fill_data (self, data, name):
-        """add replacement text"""
-        if name in ('matchurl', 'nomatchurl'):
-            self._curdata += data
-
-
     def end_data (self, name):
+        super(UrlRule, self).end_data(name)
         if name=='matchurl':
-            self.matchurls.append(unxmlify(self._curdata).encode('iso8859-1'))
-            self._curdata = ""
+            self.matchurls.append(unxmlify(self._data).encode('iso8859-1'))
+            self._reset_parsed_data()
         elif name=='nomatchurl':
-            self.nomatchurls.append(unxmlify(self._curdata).encode('iso8859-1'))
-            self._curdata = ""
+            self.nomatchurls.append(unxmlify(self._data).encode('iso8859-1'))
+            self._reset_parsed_data()
 
 
     def compile_data (self):
@@ -84,10 +78,9 @@ class UrlRule (Rule):
 
     def matchestoxml (self):
         """match url rule data as XML for storing"""
-        l = []
-        l.extend(["<matchurl>%s</matchurl>"%xmlify(r) for r in self.matchurls])
-        l.extend(["<nomatchurl>%s</nomatchurl>"%xmlify(r) for r in self.nomatchurls])
-        return "\n".join(l)
+        m = ["<matchurl>%s</matchurl>"%xmlify(r) for r in self.matchurls]
+        n = ["<nomatchurl>%s</nomatchurl>"%xmlify(r) for r in self.nomatchurls]
+        return "\n".join(m+n)
 
 
     def __str__ (self):

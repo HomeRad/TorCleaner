@@ -30,30 +30,53 @@ def compileRegex (obj, attr):
     if hasattr(obj, attr) and getattr(obj, attr):
         setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
 
+class LangDict (dict):
+    """accessing an entry with unknown translation returns the default
+       translated entry or a random one"""
+    def __getitem__ (self, key):
+        if not self.has_key(key):
+            assert self
+            # default is english
+            if 'en' in self:
+                return self['en']
+            for val in self.itervalues():
+                return val
+        return super(LangDict, self).__getitem__(key)
+
 
 class Rule (object):
     """Basic rule class for filtering.
        After loading from XML (and having called compile_data), a rule has:
-        title - the title
+        titles - mapping of {lang -> translated titles}
+        descriptions - mapping of {lang -> translated description}
         sid - identification string (unique among all rules)
         oid - dynamic sorting number (unique only for sorting in one level)
-        desc - the description
         disable - flag to disable this rule
         urlre - regular expression that matches urls applicable for this rule.
                 leave empty to apply to all urls.
         parent - the parent folder (if any); look at FolderRule class
     """
-    def __init__ (self, sid=None, title="<title>", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, parent=None):
         """initialize basic rule data"""
         self.sid = sid
-        self.title = title
-        self.desc = desc
+        self.titles = LangDict()
+        if titles is not None:
+            self.titles.update(titles)
+        self.descriptions = LangDict()
+        if descriptions is not None:
+            self.descriptions.update(descriptions)
         self.disable = disable
         self.parent = parent
-        self.attrnames = ['title', 'desc', 'disable', 'sid']
+        self.attrnames = ['disable', 'sid']
         self.intattrs = ['disable']
         self.listattrs = []
+        self._reset_parsed_data()
+
+
+    def _reset_parsed_data (self):
+        self._data = ""
+        self._lang = "en"
 
 
     def update (self, rule, dryrun=False, log=None):
@@ -116,6 +139,9 @@ class Rule (object):
 
     def fill_attrs (self, attrs, name):
         """initialize rule attributes with given attrs"""
+        if name in ('title', 'description'):
+            self._lang = attrs['lang']
+            return
         for attr in self.attrnames:
             if attrs.has_key(attr):
                 val = unxmlify(attrs[attr])
@@ -136,12 +162,17 @@ class Rule (object):
 
     def fill_data (self, data, name):
         """called when XML character data was parsed to fill rule values"""
-        pass
+        self._data += data
 
 
     def end_data (self, name):
         """called when XML end element was reached"""
-        pass
+        if name=='title':
+            self.titles[self._lang] = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
+        elif name=='description':
+            self.descriptions[self._lang] = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
 
 
     def compile_data (self):
@@ -161,23 +192,24 @@ class Rule (object):
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        s = "<"+self.get_name()
-        s += ' sid="%s"' % xmlify(self.sid)
-        s += ' title="%s"' % xmlify(self.title)
-        if self.desc:
-            s += '\n desc="%s"' % xmlify(self.desc)
-        if self.disable:
-            s += '\n disable="1"'
-        return s
+        return '<%s sid="%s"' % (self.get_name(), xmlify(self.sid))
+
+
+    def title_desc_toxml (self):
+        t = ['<title lang="%s">%s</title>'%(xmlify(key), xmlify(value)) \
+             for key,value in self.titles.iteritems()]
+        d = ['<description lang="%s">%s</description>'% \
+             (xmlify(key), xmlify(value)) \
+             for key,value in self.descriptions.iteritems()]
+        return "\n".join(t+d)
 
 
     def __str__ (self):
         """return basic rule data as string"""
         s = self.get_name()+"\n"
         s += "sid     %s\n" % self.sid
-        s += "title   %r\n" % self.title
-        s += "desc    %r\n" % self.desc
         s += "disable %d\n" % self.disable
+        s += "title %s\n" % self.titles['en']
         return s
 
 

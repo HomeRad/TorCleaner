@@ -28,11 +28,11 @@ class AllowRule (UrlRule):
        would be blocked by a block rule otherwise.
        See also the Blocker filter module.
     """
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, scheme="", url=""):
         """initialize rule data"""
-        super(AllowRule, self).__init__(sid=sid, title=title,
-                                        desc=desc, disable=disable)
+        super(AllowRule, self).__init__(sid=sid, titles=titles,
+                                  descriptions=descriptions, disable=disable)
         self.url = url
         self.attrnames.append('url')
 
@@ -45,7 +45,8 @@ class AllowRule (UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(AllowRule, self).toxml() + \
-             '\n url="%s">\n' % xmlify(self.url)
-        s += self.matchestoxml()
-        s += "</%s>" % self.get_name()
+             '\n url="%s">' % xmlify(self.url)
+        s += "\n"+self.title_desc_toxml()
+        s += "\n"+self.matchestoxml()
+        s += "\n</%s>" % self.get_name()
         return s

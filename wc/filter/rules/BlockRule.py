@@ -27,25 +27,19 @@ class BlockRule (AllowRule):
        replacement url with back references for matched subgroups.
        See also the Blocker filter module.
     """
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, url="", replacement=""):
         """initialize rule data"""
-        super(BlockRule, self).__init__(sid=sid, title=title,
-                                        desc=desc, disable=disable, url=url)
+        super(BlockRule, self).__init__(sid=sid, titles=titles,
+                          descriptions=descriptions, disable=disable, url=url)
         self.replacement = replacement
 
 
-    def fill_data (self, data, name):
-        """add replacement text"""
-        super(BlockRule, self).fill_data(data, name)
-        if name=='block':
-            self.replacement += data
-
-
-    def compile_data (self):
-        """unquote replacement text"""
-        super(BlockRule, self).compile_data()
-        self.replacement = unxmlify(self.replacement).encode('iso8859-1')
+    def end_data (self, name):
+        super(BlockRule, self).end_data(name)
+        if name=='replacement':
+            self.replacement = unxmlify(self._data).encode('iso8859-1')
+            self._reset_parsed_data()
 
 
     def fromFactory (self, factory):
@@ -55,10 +49,11 @@ class BlockRule (AllowRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        # chop off the last two chars '/>'
         s =  super(AllowRule, self).toxml() + \
-             '\n url="%s" replacement="%s">\n' % \
-             (xmlify(self.url), xmlify(self.replacement))
-        s += self.matchestoxml()
-        s += "</%s>" % self.get_name()
+             '\n url="%s">' % xmlify(self.url)
+        s += "\n"+self.title_desc_toxml()
+        s += "\n"+self.matchestoxml()
+        if self.replacement:
+            s += "\n<replacement>%s</replacement>"%xmlify(self.replacement)
+        s += "\n</%s>" % self.get_name()
         return s

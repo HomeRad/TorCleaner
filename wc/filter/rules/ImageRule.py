@@ -23,11 +23,11 @@ from UrlRule import UrlRule
 from wc.XmlUtils import xmlify
 
 class ImageRule (UrlRule):
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, width=0, height=0, formats=[], url=""):
         """initalize rule data"""
-        super(ImageRule, self).__init__(sid=sid, title=title,
-                                        desc=desc, disable=disable)
+        super(ImageRule, self).__init__(sid=sid, titles=titles,
+                                  descriptions=descriptions, disable=disable)
         self.width = width
         self.height = height
         self.intattrs.extend(('width','height'))
@@ -53,6 +53,8 @@ class ImageRule (UrlRule):
             s += '\n formats="%s"\n' % xmlify(",".join(self.formats))
         if self.url:
             s += '\n url="%s"\n' % xmlify(self.url)
-        s += ">\n"+self.matchestoxml()
+        s += ">"
+        s += "\n"+self.title_desc_toxml()
+        s += "\n"+self.matchestoxml()
         s += "</%s>" % self.get_name()
         return s

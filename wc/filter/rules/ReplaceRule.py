@@ -26,11 +26,11 @@ from wc.XmlUtils import xmlify, unxmlify
 class ReplaceRule (UrlRule):
     """This rule can Replace parts of text data according to regular
     expressions"""
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, search="", replace=""):
         """initialize rule attributes"""
-        super(ReplaceRule, self).__init__(sid=sid, title=title,
-                                          desc=desc, disable=disable)
+        super(ReplaceRule, self).__init__(sid=sid, titles=titles,
+                                   descriptions=descriptions, disable=disable)
         self.search = search
         self.replace = replace
         self.attrnames.extend(('search', 'replacement'))
@@ -61,6 +61,7 @@ class ReplaceRule (UrlRule):
         if self.replace:
             s += '\n replacement="%s"'%xmlify(self.replace)
         s += ">\n"
-        s += self.matchestoxml()
+        s += "\n  "+self.title_desc_toxml()
+        s += "\n  "+self.matchestoxml()
         s += "</%s>" % self.get_name()
         return s

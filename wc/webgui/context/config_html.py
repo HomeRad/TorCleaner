@@ -40,7 +40,7 @@ filterenabled = ""
 filterdisabled = ""
 
 # form execution
-def _exec_form (form):
+def _exec_form (form, lang):
     # reset info/error
     global filterenabled, filterdisabled
     filterenabled = ""

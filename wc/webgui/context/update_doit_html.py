@@ -24,7 +24,7 @@ from cStringIO import StringIO as _StringIO
 
 updatelog = ""
 
-def _exec_form (form):
+def _exec_form (form, lang):
     global updatelog
     log = _StringIO()
     doreload = False

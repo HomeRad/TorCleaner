@@ -33,11 +33,11 @@ def recalc_up_down (rules):
 
 
 class FolderRule (Rule):
-    def __init__ (self, sid=None, title="No title", desc="",
+    def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, filename=""):
         """initialize rule data"""
-        super(FolderRule, self).__init__(sid=sid, title=title,
-                                         desc=desc, disable=disable)
+        super(FolderRule, self).__init__(sid=sid, titles=titles,
+                                   descriptions=descriptions, disable=disable)
         # make filename read-only
         self._filename = filename
         self.rules = []
@@ -108,8 +108,8 @@ class FolderRule (Rule):
     def toxml (self):
         """Rule data as XML for storing"""
         s = """<?xml version="1.0" encoding="%s"?>
-<!DOCTYPE filter SYSTEM "filter.dtd">
-%s oid="%d">""" % (ConfigCharset, super(FolderRule, self).toxml(), self.oid)
+<!DOCTYPE folder SYSTEM "filter.dtd">
+%s oid="%d">\n""" % (ConfigCharset, super(FolderRule, self).toxml(), self.oid)
         for r in self.rules:
             s += "\n%s\n"%r.toxml()
         return s+"</folder>\n"
