@@ -135,6 +135,8 @@ def get_context (dirs, form, localcontext, lang):
     exec "from %s import %s as template_context" % (modulepath, template)
     # make TAL context
     context = {}
+    if hasattr(template_context, "_form_reset"):
+        template_context._form_reset()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
         wc.log.debug(wc.LOG_GUI, "got form %s", form)
