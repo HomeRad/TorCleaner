@@ -11,7 +11,6 @@ PYCHECKEROPTS := --varlist=__all__,__date__,__version__,__copyright__
 
 clean-local:
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
-	$(MAKE) -C po clean
 	rm -f wc/parser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
