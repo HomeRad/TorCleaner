@@ -391,6 +391,7 @@ rulenames = (
   u'allow',
   u'header',
   u'image',
+  u'imagereduce',
   u'nocomments',
   u'javascript',
   u'replace',
