@@ -83,6 +83,7 @@ def get_digest_credentials (challenge, **attrs):
         # mod_digest doesn't send an opaque, even though it isn't
         # supposed to be optional
         opaque = challenge.get('opaque', None)
+        qop = challenge.get('qop', None)
     except KeyError:
         return None
 
@@ -104,12 +105,19 @@ def get_digest_credentials (challenge, **attrs):
 
     base = 'username="%s", realm="%s", nonce="%s", uri="%s", ' \
            'response="%s"' % (username, realm, nonce, uri, respdig)
-    if opaque:
+    if opaque is not None:
         base += ', opaque="%s"' % opaque
-    if entdig:
+    if entdig is not None:
         base += ', digest="%s"' % entdig
     if algorithm != 'MD5':
         base += ', algorithm="%s"' % algorithm
+    if qop is None:
+        base += ", qop=\"auth\""
+    else:
+        cnonce = encode_digest("%f" % random.random())
+        base += ", qop=\"%s\"" % qop
+        base += ", cnonce=\"%s\"" % cnonce
+        base += ", nc=00000001"
     return "Digest %s" % base
 
 
@@ -119,11 +127,14 @@ def get_algorithm_impls (algorithm):
         H = lambda x, e=encode_digest:e(md5.new(x).digest())
     elif algorithm == 'SHA':
         H = lambda x, e=encode_digest:e(sha.new(x).digest())
+    else:
+        error(AUTH, "Invalid digest algorithm %s", `algorithm`)
+        H = None
     KD = lambda s, d, H=H: H("%s:%s" % (s, d))
     return H, KD
 
 
-def get_entity_digest(data, chal):
+def get_entity_digest (data, chal):
     # XXX not implemented yet
     return None
 

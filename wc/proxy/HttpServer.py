@@ -488,17 +488,14 @@ class HttpServer (Server):
             self.authtries += 1
             challenges = get_header_challenges(self.headers, 'Proxy-Authenticate')
             remove_headers(self.headers, ['Proxy-Authentication'])
-            debug(PROXY, "Server: 407 challenges %s", str(challenges))
             attrs = {'password_b64': config['parentproxypass'],
                      'username': config['parentproxyuser']}
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
-            if 'Basic' in challenges:
-                attrs['realm'] = challenges['Basic'][0]['realm']
             if 'Digest' in challenges:
-                pass # XXX
+                attrs['uri'] = self.document
+                attrs['method'] = self.method
             creds = get_credentials(challenges, **attrs)
-            debug(PROXY, "Server: credentials %s", str(creds))
             # resubmit the request with proxy credentials
             self.state = 'client'
             config['parentproxycreds'] = creds

@@ -52,17 +52,22 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    return [get_basic_challenge(),
-            #get_digest_challenge(),
-            #get_ntlm_challenge(**args),
-           ]
+    chals = [get_basic_challenge(),
+             #get_digest_challenge(),
+             #get_ntlm_challenge(**args),
+            ]
+    debug(AUTH, "challenges %s", str(chals))
+    return chals
+
 
 
 def get_header_credentials (headers, key):
     creds = {}
     for cred in get_header_values(headers, key):
+        debug(AUTH, "%s header credential:\n  %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)
+    debug(AUTH, "parsed credentials: %s", str(creds))
     return creds
 
 
@@ -89,25 +94,30 @@ def get_credentials (challenges, **attrs):
     or None if challenge could not be fulfilled (eg on error or if
     scheme is unsupported)"""
     if 'NTLM' in challenges:
-        return get_ntlm_credentials(challenges['NTLM'][0], **attrs)
-    if 'Digest' in challenges:
-        return get_digest_credentials(challenges['Digest'][0], **attrs)
-    if 'Basic' in challenges:
-        return get_basic_credentials(challenges['Basic'][0], **attrs)
-    return None
+        creds = get_ntlm_credentials(challenges['NTLM'][0], **attrs)
+    elif 'Digest' in challenges:
+        creds = get_digest_credentials(challenges['Digest'][0], **attrs)
+    elif 'Basic' in challenges:
+        creds = get_basic_credentials(challenges['Basic'][0], **attrs)
+    else:
+        creds = None
+    debug(AUTH, "credentials: %s", str(creds))
+    return creds
 
 
 def check_credentials (creds, **attrs):
     if not creds:
-        return False
-    if 'NTLM' in creds:
-        return check_ntlm_credentials(creds['NTLM'][0], **attrs)
-    if 'Digest' in creds:
-        return check_digest_credentials(creds['Digest'][0], **attrs)
-    if 'Basic' in creds:
-        return check_basic_credentials(creds['Basic'][0], **attrs)
-    warn(PROXY, "Unknown authentication credentials %s", str(creds))
-    return False
+        res = False
+    elif 'NTLM' in creds:
+        res = check_ntlm_credentials(creds['NTLM'][0], **attrs)
+    elif 'Digest' in creds:
+        res = check_digest_credentials(creds['Digest'][0], **attrs)
+    elif 'Basic' in creds:
+        res = check_basic_credentials(creds['Basic'][0], **attrs)
+    else:
+        error(AUTH, "Unknown authentication credentials %s", str(creds))
+        res = False
+    return res
 
 
 def _test ():

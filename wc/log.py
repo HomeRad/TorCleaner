@@ -20,7 +20,7 @@ logging. Look in logging.conf if you want to customize their behaviour
 
 # public api
 __all__ = ["WC", "FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS", "PICS",
-           "debug", "info", "warn", "error", "critical", "exception",
+           "AUTH", "debug", "info", "warn", "error", "critical", "exception",
            "initlog", "blocktext"]
 __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
@@ -109,6 +109,7 @@ WC = "wc"
 FILTER = "wc.filter"
 PARSER = "wc.parser"
 PROXY = "wc.proxy"
+AUTH = "wc.proxy.auth"
 GUI = "wc.gui"
 DNS = "wc.dns"
 ACCESS = "wc.access"

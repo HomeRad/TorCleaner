@@ -34,7 +34,7 @@ def parse_basic_credentials (credentials):
     auth, credentials = parse_token(credentials, more_chars="=")
     auth = base64.decodestring(auth)
     if ':' not in auth:
-        warn(PROXY, "invalid Basic credentials %s", auth)
+        warn(AUTH, "invalid Basic credentials %s", auth)
         _user, _pw = auth, ''
     else:
         _user, _pw = auth.split(':', 1)
