@@ -558,7 +558,7 @@ RX_DATA [-a-zA-Z0-9_:]+
     APPEND_TO_TMP(yyleng);
     BEGIN(S_SCRIPT);
 }
-
+                         
 <S_SCRIPT_COMMENT>-([^-\n]+|-[^>\n]+) {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -699,6 +699,12 @@ RX_DATA [-a-zA-Z0-9_:]+
 <S_ATTR1,S_ATTR2,S_ATTR3>.|\n {
     /* this also skips whitespace! */
     UPDATE_BUFPOS;
+}
+
+<S_ATTR4>\\\" {
+    /* backslash escapes seen at freshmeat.net */
+    UPDATE_BUFPOS;
+    BEGIN(S_STRING);
 }
 
 <S_ATTR4>\" {
