@@ -1,16 +1,17 @@
 TODO
 
+- PICS rule parsing (implements whitelist operation)
+
 - if we know the mime type (eg <script src="">) then add it if its missing
 
-- http://searchenterpriselinux.techtarget.com/qna/0,289202,sid39_gci892814,00.html
-   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 244, in server_content
-     assert self.server
-     AssertionError
-
 - Python 2.3: (note: wait for Pthon 2.3.1 :)
-  use Bool type
-  use builtin timeout in socket module
-  use logging package (get rid of debug, warn, info, error functions)
+  o use Bool type
+  o use builtin timeout in socket module
+  o use logging package (get rid of debug, warn, info, error functions)
+  o The socket module now provides the functions inet_pton and inet_ntop for
+    converting between string and packed representation of IP addresses.
+    There is also a new module variable, has_ipv6, which is True iff the
+    current Python has IPv6 support. See SF patch #658327.
 
 - unicode parsing for flex
   the HTML parser (written with flex) does not support unicode, so
@@ -37,5 +38,3 @@ TODO
     Annoying!
   o HTML bugs should issue a warning on stderr.
 
-- strict whitelist operation (for parents)
-  To use this as a real kids-enabled tool.
