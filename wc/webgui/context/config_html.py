@@ -6,6 +6,7 @@ from wc import Configuration as _Configuration
 from wc.webgui.context import getval, getlist
 
 # translations
+title = i18n._("%s proxy configuration") % AppName
 t_webcleaner = AppName
 t_proxyconf = i18n._("Proxy configuration")
 t_filterconf = i18n._("Filter configuration")
