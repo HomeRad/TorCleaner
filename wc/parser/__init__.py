@@ -15,14 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import re
+import re, htmlentitydefs
 
 def _resolve_entity (mo):
     """resolve one &#XXX; entity"""
     # convert to number
     ent = mo.group()
     num = mo.group("num")
-    if ent.startswith('#x'):
+    if ent.startswith('&#x'):
         radix = 16
     else:
         radix = 10
@@ -35,8 +35,24 @@ def _resolve_entity (mo):
 
 
 def resolve_entities (s):
-    """resolve &#XXX; entities"""
+    """resolve &#XXX; entities in ASCII range to eliminate obfuscation"""
     return re.sub(r'(?i)&#x?(?P<num>\d+);', _resolve_entity, s)
+
+UnHtmlTable = map(lambda x: ("&"+x[0]+";", x[1]),
+                  htmlentitydefs.entitydefs.items())
+# order matters!
+UnHtmlTable.sort()
+UnHtmlTable.reverse()
+
+def applyTable (table, s):
+    "apply a table of replacement pairs to str"
+    for mapping in table:
+        s = s.replace(mapping[0], mapping[1])
+    return s
+
+
+def resolve_html_entities (s):
+    return applyTable(UnHtmlTable, s)
 
 
 def _test ():
