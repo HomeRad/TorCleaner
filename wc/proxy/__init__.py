@@ -136,7 +136,6 @@ def proxy_poll (timeout=0.0):
 def match_url (url, hostset):
     if not url:
         return False
-    hostname = 
     return match_host(spliturl(url)[1], hostset)
 
 
