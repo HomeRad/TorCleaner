@@ -35,23 +35,28 @@ class FXPicsRuleFrame (FXRuleFrame):
         FXMAPFUNC(self,SEL_COMMAND,FXPicsRuleFrame.ID_SERVICE,FXPicsRuleFrame.onCmdService)
         FXMAPFUNC(self,SEL_COMMAND,FXPicsRuleFrame.ID_CATEGORY,FXPicsRuleFrame.onCmdCategory)
 	g = FXGroupBox(self, i18n._("PICS services"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
-        fv = FXVerticalFrame(g, LAYOUT_FILL_X|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
+        fv = FXVerticalFrame(g, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
         fh = FXHorizontalFrame(fv, LAYOUT_FILL_X|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
         FXLabel(fh, i18n._("Fallback URL:\tA URL to display if the page is censored\nThe default is to return a 403 Forbidden HTTP error."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        FXTextField(fh, 25, self, FXPicsRuleFrame.ID_URL).setText(self.rule.url)
-        scroll = FXScrollWindow(self, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_LEFT|LAYOUT_TOP|SCROLLERS_TRACK, 0,0,0,0)
-        fv = FXVerticalFrame(scroll, LAYOUT_FILL_X|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
+        FXTextField(fh, 27, self, FXPicsRuleFrame.ID_URL).setText(self.rule.url)
+        scroll = FXScrollWindow(fv, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_LEFT|LAYOUT_TOP|SCROLLERS_TRACK, 0,0,0,0)
+        fv = FXVerticalFrame(scroll, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
         # store checkbox groups in local config
         self.widgets = {}
         # store rating values in local config
         # draw lots of checkboxes
-        for service, sdata in services.items():
+        _services = services.keys()
+        _services.sort()
+        for service in _services:
+            sdata = services[service]
             self.widgets[service] = {}
             c = FXCheckButton(fv, i18n._("%s\tEnable/disable this rating service.")%sdata['name'], self, FXPicsRuleFrame.ID_SERVICE,ICON_BEFORE_TEXT|LAYOUT_LEFT|LAYOUT_TOP)
             c.setCheck(self.rule.ratings.has_key(service))
             c.setHelpText(service)
             # categories
-            for category in sdata['categories'].keys():
+            _categories = sdata['categories'].keys()
+            _categories.sort()
+            for category in _categories:
                 fh = FXHorizontalFrame(fv, LAYOUT_FILL_X|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
                 c = FXCheckButton(fh, i18n._("%s\tEnable/disable this category.")%category, self, FXPicsRuleFrame.ID_CATEGORY,ICON_BEFORE_TEXT|LAYOUT_LEFT|LAYOUT_TOP)
                 c.setHelpText("%s %s" % (service, category))
