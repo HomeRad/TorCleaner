@@ -1,5 +1,5 @@
 #!/bin/sh
-# prerm script for webcleaner
+# prerm script for webcleanerconf
 #
 # see: dh_installdeb(1)
 set -e
@@ -15,7 +15,7 @@ set -e
 # for details, see /usr/doc/packaging-manual/
 
 PACKAGE=webcleaner
-DIRS=wc/parser wc/daemon wc/filter wc/proxy/dns wc/proxy wc
+DIRS="wc/gui"
 
 # delete all generated .pyc and .pyo files
 dpkg --listfiles $PACKAGE |
@@ -25,7 +25,7 @@ dpkg --listfiles $PACKAGE |
 # delete all dirs, ignore if they are not empty (for example
 # the user generated some files in these directories)
 for d in $DIRS; do
-    rm -f /usr/lib/python2.0/site-packages/$d 2>/dev/null;
+    rmdir /usr/lib/python2.0/site-packages/$d || true;
 done
 
 

@@ -29,12 +29,14 @@
 <replace part="attrval"/>
 </rewrite>
 
-<rewrite title="No redirection 4">
+<rewrite title="No redirection 4"
+ desc="redirection at fileleech.com">
 <attr>www\.fileleech\.com/dl/\?.*?filepath=(?P&lt;replace&gt;[^=&quot;&amp;]+)</attr>
 <replace part="attrval"/>
 </rewrite>
 
-<rewrite title="www.coolpix.de">
+<rewrite title="www.coolpix.de"
+ desc="redirection at coolpix.de">
 <attr>www\.cool-pix\.de/cgi-bin/count/count\.pl\?zaehle,(?P&lt;replace&gt;.+)</attr>
 <replace part="attrval"/>
 </rewrite>

@@ -146,13 +146,11 @@
 
 <rewrite title="Remove &lt;layer&gt; tag"
  desc="Dont know some example sites, but I dont want layers."
- disable="1"
  tag="layer">
 </rewrite>
 
 <rewrite title="Use the &lt;nolayer&gt; tag"
  desc="If we remove the &lt;ilayer&gt; and &lt;layer&gt;, use the &lt;nolayer&gt; content."
- disable="1"
  tag="nolayer">
 <replace part="tag"/>
 </rewrite>
@@ -170,13 +168,5 @@
 <rewrite title="easy-cash"
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
-</rewrite>
-
-<rewrite title="wohin.heute.de"
- desc="Scheissendreck Werbeframe auf wohin.heute.de, wech damit."
- disable="1"
- tag="head">
-<enclosed>Werbeframe</enclosed>
-<replace part="enclosed"/>
 </rewrite>
 </folder>

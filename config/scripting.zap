@@ -58,14 +58,10 @@
 </rewrite>
 
 <rewrite title="&lt;body&gt; onunload"
+ desc="unonload is almost always used for advert popups "
  tag="body">
 <attr name="onunload"/>
 <replace part="attr"/>
-</rewrite>
-
-<rewrite title="&lt;script&gt; OFF"
- disable="1"
- tag="script">
 </rewrite>
 
 <rewrite title="Javascript links"
@@ -73,12 +69,21 @@
 <attr>javascript:.*</attr>
 </rewrite>
 
-<rewrite title="remove noscript tag"
+<rewrite title="&lt;noscript&gt;"
  desc="Remove &lt;noscript&gt; tag (use if you allowed scripting)"
  tag="noscript">
 </rewrite>
 
+<rewrite title="&lt;script&gt;"
+ desc="remove script tag (use if you dont want javascript)"
+ disable="1"
+ tag="script">
+</rewrite>
+
 <rewrite title="use contents of noscript tag"
+ desc="use if you are filtering script tags. This rule
+just removes the &lt;noscript&gt; tags, not the
+tag content."
  disable="1"
  tag="noscript">
 <replace part="tag"/>
