@@ -9,7 +9,6 @@ from wc.debug_levels import *
 from wc.gui import loadIcon
 from FXPy.fox import *
 os.environ['http_proxy'] = ""
-wc.DebugLevel = 1
 
 SCROLLING_NONE = 0
 SCROLLING_AUTO = 1

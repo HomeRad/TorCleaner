@@ -111,7 +111,7 @@ function get_time() {
 }
 
 function display() {
-    message = "Calvin wscht angenehmes Surfen am " + get_date() + " um " + get_time () + ".";
+    message = "Calvin w&uuml;nscht angenehmes Surfen am " + get_date() + " um " + get_time () + ".";
     w.defaultStatus = message;
 }
 // end of script. -->

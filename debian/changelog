@@ -4,8 +4,10 @@ webcleaner (0.24) unstable; urgency=low
     set the correct charset
   * new config option: log HTML errors
   * filter rule shortcut icon: match case insensitive
+  * new header filter to remove cookies
+  * a new gui tool wcheaders watches HTTP headers while surfing
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat, 10 Nov 2001 00:02:03 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 13 Nov 2001 00:52:02 +0100
 
 webcleaner (0.23) unstable; urgency=low
 
