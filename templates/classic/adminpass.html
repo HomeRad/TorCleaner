@@ -1,34 +1,39 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en" tal:attributes="lang lang">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="copyright" content="(C) 2004 Bastian Kleineidam">
 <link href="wc.css" type="text/css" rel="Stylesheet">
 <link rel="SHORTCUT ICON" href="/favicon.png">
-<title i18n:translate="">Administrator password for %(AppName)s Proxy</title>
+<title i18n:translate="">Administrator password for
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span> Proxy</title>
 </head>
 <body>
 <div class="content" id="main">
-<h2 i18n:translate="">Administrator password for %(AppName)s Proxy</h2>
+<h2 i18n:translate="">Administrator password for
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span> Proxy</h2>
 <p i18n:translate="">The administrator password was not yet initialized.
 This password protects the web configuration pages. Without an
 administrator password, every user can change the proxy configuration.
 </p>
-<p i18n:translate="">Please open the file <code>%(ConfigFile)s</code> and
-replace the line <code>adminpass=""</code> with:
+<p i18n:translate="">Please open the file <code tal:content="ConfigFile"
+ i18n:name="configfile">/etc/webcleaner/webcleaner.conf</code> and
+replace the line <code i18n:name="lineold">adminpass=""</code> with:
 </p>
 <pre>adminpass="<span tal:replace="adminpass_b64">dummy</span>"</pre>
-<p i18n:translate="">After that, restart %(AppName)s and click on
-the configuration link below.
+<p i18n:translate="">After that, restart 
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+and click on the configuration link below.
 Your new credentials for the configuration are:<br>
-username <b>%(adminuser)s</b><br>
-password <b>%(adminpass)s</b><br>
+username <b tal:content="adminuser" i18n:name="adminuser">user</b><br>
+password <b tal:content="adminpass" i18n:name="adminpass">pass</b><br>
 </p>
 <p i18n:translate="">The configuration also allows you to change the
 password.
 </p>
 <a href="#" tal:attributes="href string:index.html.${lang}"
- i18n:translate="">%(AppName)s configuration</a>
+ i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span> configuration</a>
 </div>
 
 <div metal:use-macro="macros/footerplain">Footer...</div>

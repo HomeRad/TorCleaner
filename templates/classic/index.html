@@ -7,15 +7,18 @@
 <link rel="SHORTCUT ICON" href="/favicon.png">
 <link rel="help" href="help.html" title="Help"
  tal:attributes="href string:help.html.${lang}">
-<title i18n:translate="">%(AppName)s web interface main page</title>
+<title i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+web interface main page</title>
 </head>
 <body>
 <div metal:use-macro="macros/nav">Navigation</div>
 <div class="content" id="main">
 <p i18n:translate="">Welcome to the wonderful
-world of %(AppName)s.</p>
+world of
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span>.</p>
 <p i18n:translate="">Read the help for information on how to set up your
-browser to work with %(AppName)s.</p>
+browser to work with
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span>.</p>
 </div>
 
 <div metal:use-macro="macros/footer">Footer...</div>

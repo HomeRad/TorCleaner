@@ -9,19 +9,23 @@
  tal:attributes="href string:index.html.${lang}">
 <link rel="help" href="help.html" title="Help"
  tal:attributes="href string:help.html.${lang}">
-<title i18n:translate="">Content rating for %(AppName)s</title>
+<title i18n:translate="">Content rating for
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span></title>
 </head>
 <body>
 <div metal:use-macro="macros/nav">Navigation...</div>
 <div class="content" id="main">
-<h2 i18n:translate="">Email URL rating to %(Email)s</h2>
+<h2 i18n:translate="">Email URL rating to
+<span tal.replace="Email" i18n:name="email">calvin@imadoofus.org</span></h2>
 <p i18n:translate="">You can send me changed or new page ratings per
 email so I can review them and include the changes into an updated
 rating database.
 </p>
 <p i18n:translate="">When you klick on the send button below,
-the following information will be mailed to the author of %(AppName)s
-at %(Email)s:</p>
+the following information will be mailed to the author of
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+at
+<span tal.replace="Email" i18n:name="email">calvin@imadoofus.org</span>:</p>
 <pre tal:content="rating">rating info...</pre>
 
 <form action="#" method="POST" name="ratingform"

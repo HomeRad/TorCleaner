@@ -9,22 +9,23 @@
 <link rel="SHORTCUT ICON" href="/favicon.png">
 <link rel="home" href="index.html" title="Home"
  tal:attributes="href string:index.html.${lang}">
-<title i18n:translate="">%(AppName)s help</title>
+<title i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+help</title>
 </head>
 <body>
 <div metal:use-macro="macros/nav">Navigation</div>
 <div class="content" id="main">
 <h2 i18n:translate="">Browser configuration</h2>
 <p i18n:translate="">You have to configure your web browser to use
-%(AppName)s as a proxy.</p>
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span> as a proxy.</p>
 <h3 i18n:translate="">Netscape/Mozilla</h3>
 <p i18n:translate="">Select <b>Edit -&gt; Preferences -&gt; Advanced
 -&gt; Proxies</b>.<br>
 Activate <b>Manual proxy configuration</b>.<br>
 Under <b>HTTP Proxy</b> enter <i>localhost</i>, the <b>Port</b> is
-<i>%(port)d</i>.<br>
+<i tal:content="port" i18n:name="port">8080</i>.<br>
 Under <b>HTTPS Proxy</b> enter <i>localhost</i>, the <b>Port</b> is
-<i>%(port)d</i>.<br>
+<i tal:content="port" i18n:name="port">8080</i>.<br>
 Under <b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br>
 Click <b>Ok</b> to use your new settings.</p>
 
@@ -37,18 +38,18 @@ Activate <b>Use a proxy server</b>.<br>
 If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br>
 Click on <b>Advanced</b>.<br>
 Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is
-<i>%(port)d</i>.<br>
+<i tal:content="port" i18n:name="port">8080</i>.<br>
 Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is
-<i>%(port)d</i>.<br>
+<i tal:content="port" i18n:name="port">8080</i>.<br>
 Click <b>Ok</b> to use your new settings.</p>
 
 <h3 i18n:translate="">Opera 6</h3>
 <p i18n:translate="">Select <b>File -&gt; Preferences -&gt; Network
 -&gt; Proxy servers</b>.<br>
 Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is
-<i>%(port)d</i>.<br>
+<i tal:content="port" i18n:name="port">8080</i>.<br>
 Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is
-<i>%(port)d</i>.<br>
+<i tal:content="port" i18n:name="port">8080</i>.<br>
 Activate <b>Do not use Proxy on the adresses below</b> and enter
 <i>localhost, 127.0.0.1</i>.<br>
 Click <b>Ok</b> to use your new settings.</p>
@@ -63,7 +64,7 @@ XXX to be written.
 
 <h2 i18n:translate="">Proxy filter modules</h2>
 
-<p i18n:translate="">%(AppName)s uses a modular filter design allowing
+<p i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span> uses a modular filter design allowing
 a lot of flexibility for different uses.<br>
 Each module has a list if mime types and a list of which
 parts of request/response challenge it applies to. And each module can
@@ -272,8 +273,8 @@ dynamic content emitted with document.write() into the HTML file.</p>
 
 <h3>Rating</h3>
 <p i18n:translate="">One activated Rating rule enables the content rating
-system in %(AppName)s. Several distinct content rating services including
-the one defined by %(AppName)s itself can be configured.</p>
+system in <span tal:replace="AppName" i18n:name="appname">WebCleaner</span>. Several distinct content rating services including
+the one defined by <span tal:replace="AppName" i18n:name="appname">WebCleaner</span> itself can be configured.</p>
 
 </div>
 

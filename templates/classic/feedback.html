@@ -9,19 +9,22 @@
  tal:attributes="href string:index.html.${lang}">
 <link rel="help" href="help.html" title="Help"
  tal:attributes="href string:help.html.${lang}">
-<title i18n:translate="">Feedback for %(AppName)s</title>
+<title i18n:translate="">Feedback for
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span></title>
 </head>
 <body>
 <div metal:use-macro="macros/nav">Navigation</div>
 <div class="content" id="main">
-<h2 i18n:translate="">Feedback for %(AppName)s</h2>
+<h2 i18n:translate="">Feedback for
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span></h2>
 <p i18n:translate="">I wrote this software to get rid of advertisings. If you still see advert images
 on pages you surf on, you are free to send me the url of those pages and I
 will include filters to remove the adverts.
 </p>
 <p i18n:translate="">You can of course always add your own filter rules, they will not be
 touched on a filter update.</p>
-<p i18n:translate="">If you have any suggestions or comments about %(AppName)s, feel free to
+<p i18n:translate="">If you have any suggestions or comments about
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span>, feel free to
 email me at
 <a href="mailto:calvin@users.sf.net">calvin@users.sf.net</a>.
 </p>

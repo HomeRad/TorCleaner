@@ -3,7 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="copyright" content="(C) 2004 Bastian Kleineidam">
-<title i18n:translate="">Page blocked by %(AppName)s</title></head>
+<title i18n:translate="">Page blocked by
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span></title></head>
 <style type="text/css">
 <!--
 a {
@@ -18,7 +19,8 @@ a:hover {
 <p>
 <a i18n:translate="" href="#" target="_top"
  tal:attributes="href string:${baseurl}filterconfig.html.${lang}?selfolder=${selfolder}&selrule=${selrule}"
->Blocked by %(ruletitle)s.</a>
+>Blocked by <span tal:replace="ruletitle" i18n:name="ruletitle">Advert
+rule</span>.</a>
 </p>
 </body>
 </html>

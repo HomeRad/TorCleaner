@@ -9,7 +9,8 @@
  tal:attributes="href string:index.html.${lang}">
 <link rel="help" href="help.html" title="Help"
  tal:attributes="href string:help.html.${lang}">
-<title i18n:translate="">%(AppName)s proxy configuration</title>
+<title i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+proxy configuration</title>
 </head>
 <body>
 <div metal:use-macro="macros/nav">Navigation...</div>
@@ -335,8 +336,10 @@
 <div tal:condition="info/parentproxyuser" i18n:translate="">Parent proxy user successfully changed.</div>
 <div tal:condition="info/parentproxypass" i18n:translate="">Parent proxy password successfully changed.</div>
 <div tal:condition="info/timeout" i18n:translate="">Timeout sucessfully changed.</div>
-<div tal:condition="filterenabled" i18n:translate="">Enabled filter module(s) %(filterenabled)s.</div>
-<div tal:condition="filterdisabled" i18n:translate="">Disabled filter module(s) %(filterdisabled)s.</div>
+<div tal:condition="filterenabled" i18n:translate="">Enabled filter module(s)
+<span i18n:name="enabled-filter" tal:replace="filterenabled">Rewriter</span>.</div>
+<div tal:condition="filterdisabled" i18n:translate="">Disabled filter module(s)
+<span i18n:name="disabled-filter" tal:replace="filterdisabled">Rewriter</span>.</div>
 <div tal:condition="info/addallowed" i18n:translate="">Allowed host successfully added.</div>
 <div tal:condition="info/delallowed" i18n:translate="">Allowed host(s) successfully removed.</div>
 <div tal:condition="info/addnofilter" i18n:translate="">Nofilter host successfully added.</div>

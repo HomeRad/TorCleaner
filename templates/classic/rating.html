@@ -9,7 +9,8 @@
  tal:attributes="href string:index.html.${lang}">
 <link rel="help" href="help.html" title="Help"
  tal:attributes="href string:help.html.${lang}">
-<title i18n:translate="">Content rating for %(AppName)s</title>
+<title i18n:translate="">Content rating for
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span></title>
 </head>
 <body>
 <div metal:use-macro="macros/nav">Navigation...</div>

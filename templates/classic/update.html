@@ -9,13 +9,16 @@
  tal:attributes="href string:index.html.${lang}">
 <link rel="help" href="help.html" title="Help"
  tal:attributes="href string:help.html.${lang}">
-<title i18n:translate="">%(AppName)s filter update</title>
+<title i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+filter update</title>
 </head>
 <body>
 <div metal:use-macro="macros/nav">Navigation</div>
 <div class="content" id="main">
 <span i18n:translate="">The <b>Update filter configuration</b> button
-downloads new filter files from <a href="%(updatezapperurl)s">%(updatezapperurl)s</a>
+downloads new filter files from <a href="http://www.imadoofus.org/"
+i18n:name="url" tal:attributes="href updatezapperurl"
+tal:content="updatezapperurl">http://www.imadoofus.org/</a>
 and merges their changes into the current configuration.<br>
 If something has changed, the new filter configuration files
 are saved and reloaded into the proxy.</span>
@@ -29,7 +32,10 @@ are saved and reloaded into the proxy.</span>
 <br><br>
 
 <span i18n:translate="">The <b>Update content ratings</b> button
-downloads new content ratings from <a href="%(updateratingurl)s">%(updateratingurl)s</a>
+downloads new content ratings from
+<a href="http://www.imadoofus.org/"
+i18n:name="url" tal:attributes="href updateratingurl"
+tal:content="updateratingurl">http://www.imadoofus.org/</a>
 and adds new ratings into the current configuration.<br>
 Existing content ratings are not changed.</span>
 <br>

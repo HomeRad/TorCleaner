@@ -5,12 +5,15 @@
 <meta name="copyright" content="(C) 2004 Bastian Kleineidam">
 <link href="wc.css" type="text/css" rel="Stylesheet">
 <link rel="SHORTCUT ICON" href="/favicon.png">
-<title i18n:translate="">Content rated by %(AppName)s</title>
+<title i18n:translate="">Content rated by
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span></title>
 </head>
 <body>
 <div class="content" id="main">
-<h2 i18n:translate="">Content rated by %(AppName)s</h2>
-<span i18n:translate="">The content of the requested page <b>%(url)s</b>
+<h2 i18n:translate="">Content rated by
+<span tal:replace="AppName" i18n:name="appname">WebCleaner</span></h2>
+<span i18n:translate="">The content of the requested page
+<b tal:content="url" i18n:name="url">http://www.imadoofus.org</b>
 was rated for the following reason:</span>
 <b tal:content="reason">Unknown</b>.
 <br><br>

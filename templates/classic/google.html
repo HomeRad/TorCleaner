@@ -2,7 +2,8 @@
 <html lang="en" tal:attributes="lang lang">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title i18n:translate="">%(AppName)s Google Selection</title>
+<title i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+Google Selection</title>
 <style>
 <!--
 body {
@@ -87,13 +88,14 @@ input.submit:focus {
 </head>
 <body>
 <div class="content">
-<h2 i18n:translate="">%(AppName)s Google Selection</h2>
+<h2 i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+Google Selection</h2>
 <span i18n:translate="">Your request</span>
 <a href="http://www.imadoofus.org/index.pl"
  tal:attributes="href url"
  tal:content="url">http://www.imadoofus.org/index.pl</a>
 <span i18n:translate="">resulted in the following error:<br>
-Server response <b>%(response)s</b></span>
+Server response <b tal:content="response" i18n:name="response"></b></span>
 
 <p>
 <span i18n:translate="">Google Cache for</span>
@@ -114,7 +116,8 @@ Server response <b>%(response)s</b></span>
 <p>
 <span style="" tal:replace="nothing">XXX use safeSearch parameter,
 see http://www.google.com/apis/reference.html</span>
-<span i18n:translate="">Search in %(site)s</span>
+<span i18n:translate="">Search in
+<span tal:replace="site" i18n:name="site">www.imadoofus.org</span></span>
 <form method="POST" action="http://www.google.com/custom"
  tal:attributes="action custom_path">
 <span style="" tal:replace="nothing">Query parameters</span>
