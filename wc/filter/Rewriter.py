@@ -44,6 +44,9 @@ class Rewriter (Filter):
         if not attrs.has_key('rewriter_filter'): return data
         p = attrs['rewriter_filter']
         p.feed(data)
+        if p.handler.ratings:
+            # XXX correct raise
+            raise FilterWait("wait for rating decision")
         return p.getoutput()
 
 
@@ -54,6 +57,9 @@ class Rewriter (Filter):
         p.feed(data)
         # flushing can raise FilterWait exception
         p.flush()
+        if p.handler.ratings:
+            # XXX correct raise
+            raise FilterRating("missing rating")
         # break cyclic references
         p.handler = None
         p.tagbuf2data()
