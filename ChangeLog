@@ -20,6 +20,10 @@
     Closes: SF bug #1053899
     Changed: setup.py, wc/proxy/Dispatcher.py
 
+  * Ignore encoding errors of HTML content.
+    Type: bugfix
+    Changed: wc/filter/HtmlParser.py
+
 2.22 "Monster" (released 20.10.2004)
 
   * added favicon.ico to distributed files
