@@ -144,14 +144,15 @@ class Blocker (Filter):
         if blocked is not None:
             debug(FILTER, "blocked url %s", url)
             # index 3, not 2!
-            if image_re.match(urlTuple[3][-4:]):
-                return '%s %s %s' % (method,
-                      blocked or self.block_image, 'image/gif')
+            if blocked:
+                doc = blocked
+            elif image_re.match(urlTuple[3][-4:]):
+                doc = self.block_image
             else:
                 # XXX hmmm, what about CGI images?
                 # make HTTP HEAD request?
-                return '%s %s %s' % (method,
-                      blocked or self.block_url, 'text/html')
+                doc = self.block_url
+            return '%s %s HTTP/1.1' % (method, doc)
         return data
 
     def blocked (self, urlTuple):
