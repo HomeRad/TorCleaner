@@ -46,10 +46,12 @@ class ClientServerMatchmaker:
 
      done:     We are done matching up the client and server
     """
-    def __init__ (self, client, request, headers, content, nofilter):
+    def __init__ (self, client, request, headers, content, nofilter,
+                  compress):
         self.client = client
         self.request = request
         self.headers = headers
+        self.compress = compress
         if config["proxyuser"]:
             if not self.check_proxy_auth():
                 self.error(407, _("Proxy Authentication Required"))

@@ -189,6 +189,7 @@ class HttpServer (Server):
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
+        #debug(HURT_ME_PLENTY, "S/Headers", `self.headers.headers`)
         # check for unusual compressed files
         if not self.headers.has_key('Content-Type') and \
            (self.document.endswith(".bz2") or \
@@ -204,7 +205,8 @@ class HttpServer (Server):
             if ro.match(self.headers.get('Content-Type', '')):
                 rewrite = True
                 break
-        #debug(HURT_ME_PLENTY, "S/Headers", `self.headers.headers`)
+        # add client accept-encoding value
+        self.headers['Accept-Encoding'] = self.client.compress
         if self.headers.has_key('Content-Length'):
             self.bytes_remaining = int(self.headers['Content-Length'])
             #debug(HURT_ME_PLENTY, "%d bytes remaining"%self.bytes_remaining)
@@ -227,8 +229,10 @@ class HttpServer (Server):
                 to_remove.append("Content-Length")
                 self.bytes_remaining = None
             remove_headers(self.headers, to_remove)
+            # add warning
+            self.headers['Warning'] = "214 WebCleaner Transformation applied"
         # Compressed content (uncompress only for rewriting modules)
-        encoding = self.headers.get('Content-Encoding')
+        encoding = self.headers.get('Content-Encoding', '').lower()
         if encoding in ('gzip', 'x-gzip', 'deflate') and rewrite:
             if encoding=='deflate':
                 self.decoders.append(DeflateStream())

@@ -69,19 +69,18 @@ class HttpClient (Connection):
                 self.headers['Via'] = via
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
                      self.headers, fun="finish", attrs=self.nofilter)
-                if self.headers.has_key('Accept-Encoding'):
-                    # remove unsupported encodings
-                    encodings = self.headers['Accept-Encoding']
-                    if encodings.find('compress') != -1:
-                        encs = encodings.split(",")
-                        encs = [enc.strip() for enc in encs if not \
-                              (enc.strip().lower().startswith('compress') or \
-                               enc.strip().lower().startswith('x-compress'))]
-                        encodings = ", ".join(encs)+"\r"
-                else:
-                    # add supported encodings
-                    encodings = "gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r"
-                self.headers['Accept-Encoding'] = encodings
+                # remember if client understands gzip
+                self.compress = 'identity'
+                encodings = self.headers.get('Accept-Encoding', '')
+                for accept in encodings.split(','):
+                    if ';' in accept:
+                        accept, q = accept.split(';', 1)
+                    if accept.strip().lower() in ('gzip', 'x-gzip'):
+                        self.compress = 'gzip'
+                        break
+                # we understand gzip, deflate and identity
+                self.headers['Accept-Encoding'] = \
+                        'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
                 #debug(HURT_ME_PLENTY, "C/Headers filtered", `self.headers.headers`)
                 self.bytes_remaining = int(self.headers.get('Content-Length', 0))
                 self.state = 'content'
@@ -115,7 +114,8 @@ class HttpClient (Connection):
                 self.state = 'receive'
                 # This object will call server_connected at some point
                 ClientServerMatchmaker(self, self.request, self.headers,
-		                       self.content, self.nofilter)
+		                       self.content, self.nofilter,
+                                       self.compress)
         # this occurs with WebCleaner as a parent of Oops Http Proxy
         assert not (self.state in ('receive', 'closed') and self.recv_buffer),\
          'client in state %s sent data %s' % (self.state, `self.recv_buffer`)
