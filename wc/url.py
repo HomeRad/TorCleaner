@@ -84,6 +84,18 @@ def url_norm (url):
     urlparts = list(urlparse.urlsplit(url))
     urlparts[0] = urllib.unquote(urlparts[0]) # scheme
     urlparts[1] = urllib.unquote(urlparts[1]) # host
+    # a leading backslash in path causes urlsplit() to add the
+    # path components up to the first slash to host
+    # try to find this case...
+    i = urlparts[1].find("\\")
+    if i != -1:
+        # ...and fix it by prepending the misplaced components to the path
+        comps = urlparts[1][i:] # note: still has leading backslash
+        if not urlparts[2] or urlparts[2]=='/':
+            urlparts[2] = comps
+        else:
+            urlparts[2] = "%s%s" % (comps, urlparts[2])
+        urlparts[1] = urlparts[1][:i]
     urlparts[2] = urllib.unquote(urlparts[2]) # path
     urlparts[4] = urllib.unquote(urlparts[4]) # anchor
     path = urlparts[2].replace('\\', '/')
