@@ -103,7 +103,7 @@ class HttpClient (Connection):
                 self.content += data
             if self.bytes_remaining <= 0:
                 if self.bytes_remaining < 0:
-                    print >>sys.stderr, _("warning: client received %d bytes more than content-length") % (-self.bytes_remaining)
+                    print >>sys.stderr, _("Warning: client received %d bytes more than content-length") % (-self.bytes_remaining)
                 data = applyfilter(FILTER_REQUEST_DECODE, "",
 		                   fun="finish", attrs=self.nofilter)
                 data = applyfilter(FILTER_REQUEST_DECODE, data,
