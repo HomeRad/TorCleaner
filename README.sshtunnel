@@ -24,7 +24,7 @@ test -f $O || exit 0
 rm -f $N
 sed  -e "$R" $O > $N
 mv -f $N $O
-/etc/init.d/webcleaner reload
+/etc/init.d/webcleaner restart
 -- end /etc/ppp/ip-up.d/30webcleaner --
 
 2) copy this script on your work box my.atworkbox.com
