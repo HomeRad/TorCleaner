@@ -24,3 +24,6 @@ Copyright (C) 1999-2002  Bastian Kleineidam
 the web proxy is based on amits web proxy, downloaded from
 http://theory.stanford.edu/~amitp/proxy.html
 and is licensed under a BSD license
+
+the included dns package is part of the pydns project and covered by
+the Standard Python license.
