@@ -526,10 +526,13 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return NULL;
     }
     env->listeners = NULL;
+    env->document_cookie = NULL;
+    env->scheduled_actions = NULL;
     env->runtime = NULL;
     env->ctx = NULL;
     env->global_class = generic_class;
     env->global_class.name = "Window";
+    env->global_class.flags = JSCLASS_HAS_PRIVATE;
     env->document_class = generic_class;
     env->document_class.name = "HTMLDocument";
     env->navigator_class = generic_class;
@@ -567,7 +570,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     JS_SetBranchCallback(env->ctx, &branchCallback);
 
     // init global object
-    if (!(env->global_obj=JS_NewObject(env->ctx, &env->global_class, 0, 0))) {
+    if (!(env->global_obj=JS_NewObject(env->ctx, &env->global_class, NULL, NULL))) {
         return shutdown(env, "Could not initialize global object");
     }
     if (JS_InitStandardClasses(env->ctx, env->global_obj)==JS_FALSE) {
@@ -666,7 +669,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
                            &wcDebugLog, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global wcDebugLog function");
     }
-
+    // init location object
     if (!(location_obj=JS_DefineObject(env->ctx, env->global_obj, "location",
                                        &env->location_class, 0,
                                        JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {

@@ -105,6 +105,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.document = url or "unknown"
         if self.javascript:
             self.jsEnv = jslib.new_jsenv()
+            self.popup_counter = 0
 
     def __repr__ (self):
         return "<HtmlFilter with rulestack %s >" % self.rulestack
@@ -193,7 +194,8 @@ class HtmlFilter (HtmlParser,JSListener):
         else:
             self.buffer.append(tobuffer)
         # if rule stack is empty, write out the buffered data
-        if not self.rulestack:
+        if not self.rulestack and \
+           (not self.javascript or tag!='script'):
             self.buffer2data()
 
 
@@ -209,6 +211,9 @@ class HtmlFilter (HtmlParser,JSListener):
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
             self.jsForm(name, attrs.get('action'), attrs.get('target'))
+        elif tag=='script':
+            # XXX
+            pass
         self.buffer.append((STARTTAG, tag, attrs))
 
 
@@ -217,18 +222,20 @@ class HtmlFilter (HtmlParser,JSListener):
         val = attrs[name]
         if not val: return
         self.jsEnv.attachListener(self)
-        self.jsEnv.executeScriptAsFunction(val)
+        self.jsEnv.executeScriptAsFunction(val, 0.0)
         self.jsEnv.detachListener(self)
         return self.popup_counter
 
 
     def jsForm (self, name, action, target):
+        if not name: return
+        #debug(HURT_ME_PLENTY, "jsForm", `name`, `action`, `target`)
         self.jsEnv.addForm(name, action, target)
 
 
     def processData (self, data):
-        # XXX
-        pass
+        print >>sys.stderr, "JS:", data
+        # XXX parse recursively
 
 
     def processPopup (self):
@@ -262,7 +269,19 @@ class HtmlFilter (HtmlParser,JSListener):
     def jsEndElement (self, tag):
         """parse generated html for scripts"""
         if tag!='script': return
-        # XXX
+        if not self.buffer:
+            print >>sys.stderr, "empty buffer on </script>"
+            return
+        last = self.buffer[-1]
+        if last[0]!=DATA:
+            print >>sys.stderr, "missing body for </script>", last
+            return
+        script = last[1].strip()
+        if script.startswith("<!--"):
+            script = script[4:].strip()
+        self.jsEnv.attachListener(self)
+        self.jsEnv.executeScriptAsFunction(val, 0.0)
+        self.jsEnv.detachListener(self)
 
 
     def doctype (self, data):
