@@ -134,13 +134,15 @@ def update_filter (wconfig, dryrun=False, log=None):
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
     """
+    print >>log, wc.i18n._("updating filters"), "..."
     chg = False
     baseurl = wconfig['baseurl']+"filter/"
     url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, "error fetching %s:"%url, msg
+        print >>log, wc.i18n._("error fetching %s")%url, msg
+        print >>log, "...", wc.i18n._("done")
         return chg
     # remember all local config files
     filemap = {}
@@ -149,7 +151,8 @@ def update_filter (wconfig, dryrun=False, log=None):
     # read md5sums
     for line in page.read().splitlines():
         if "<" in line:
-            print >>log, "error fetching", url
+            print >>log, wc.i18n._("error fetching %s")%url
+            print >>log, "...", wc.i18n._("done")
             return chg
         if not line:
             continue
@@ -183,12 +186,14 @@ def update_filter (wconfig, dryrun=False, log=None):
         page = open_url(url)
     except IOError, msg:
         print >>log, wc.i18n._("error fetching %s:")%url, msg
+        print >>log, "...", wc.i18n._("done")
         return chg
     lines = page.read().splitlines()
     page.close()
     for line in lines:
         if "<" in line:
             print >>log, wc.i18n._("error fetching %s:")%url, wc.i18n._("invalid content")
+            print >>log, "...", wc.i18n._("done")
             return chg
         if not line:
             continue
@@ -224,19 +229,23 @@ def update_filter (wconfig, dryrun=False, log=None):
             f = file(fullname, 'wb')
             f.write(data)
             f.close()
+    print >>log, "...", wc.i18n._("done")
     return chg
 
 
 def update_ratings (wconfig, dryrun=False, log=None):
     """update rating database from configured online rating service"""
+    print >>log, wc.i18n._("updating ratings...")
     chg = False
     baseurl = wconfig['baseurl']+"rating/"
     url = baseurl+"rating.txt"
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, "error fetching %s:"%url, msg
+        print >>log, wc.i18n._("error fetching %s:")%url, msg
+        print >>log, "...", wc.i18n._("done")
         return chg
     # build local rating cache, and merge
     chg = rating_cache_merge(rating_cache_parse(page), dryrun=dryrun, log=log)
+    print >>log, "...", wc.i18n._("done")
     return chg
