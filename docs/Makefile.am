@@ -28,7 +28,7 @@ apidocs:
 
 homepage: nav apidocs
 	cp *.html *.css *.jpg *.png $(HTMLDIR)/htdocs
-	cp devel/*.html devel/*.diff $(HTMLDIR)/htdocs/devel
+	cp devel/*.html $(HTMLDIR)/htdocs/devel
 	cp misc/*.html $(HTMLDIR)/htdocs/misc
 	cp -r devel/api $(HTMLDIR)/htdocs/devel
 
