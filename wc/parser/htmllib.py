@@ -42,7 +42,7 @@ class HtmlParser:
     """
     def __init__ (self, debug=0):
         """initialize the internal parser"""
-        self.parser = htmlsax.parser(self)
+        self.parser = htmlsax.new_parser(self)
         self.debug = self.parser.debug
 
     def feed (self, data):

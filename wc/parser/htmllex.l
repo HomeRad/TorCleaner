@@ -150,13 +150,21 @@ static PyObject* quote_string (PyObject* val) {
 }
 %}
 
+/* use our own memory management functions (see above) */
 %option noyyalloc noyyrealloc noyyfree
-%option 8bit outfile="htmllex.c"
+/* handle 8bit characters */
+%option 8bit
+/* define output file */
+%option outfile="htmllex.c"
+/* optimize for speed */
 %option align full
 /* uncomment the next line for debugging */
 %option debug
+/* dont use unneeded functions */
 %option nounput nomain noyywrap noyymore noreject
+/* make it reentrant and bison compatible */
 %option bison-bridge reentrant never-interactive
+/* print warnings on compiling */
 %option warn
 
 %x S_PI

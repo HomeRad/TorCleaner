@@ -469,13 +469,14 @@ finish_characters:
 #undef free
 
 /* create parser */
-static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
+static PyObject* htmlsax_parser_new(PyObject* self, PyObject* args) {
     PyObject* handler;
     parser_object* p;
     if (!PyArg_ParseTuple(args, "O", &handler)) {
 	return NULL;
     }
-    if (!(p=PyObject_NEW(parser_object, &parser_type))) {
+    p = PyObject_New(parser_object, &parser_type);
+    if (!p) {
 	PyErr_SetString(PyExc_TypeError, "Allocating parser object failed");
 	return NULL;
     }
@@ -500,42 +501,44 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 }
 
 
-static void parser_dealloc(parser_object* self) {
-    htmllexDestroy(self->scanner);
-    Py_DECREF(self->userData->handler);
-    PyMem_Del(self->userData->buf);
-    PyMem_Del(self->userData->tmp_buf);
-    PyMem_Del(self->userData);
-    PyMem_DEL(self);
+static void parser_dealloc(PyObject* self) {
+    parser_object* p = (parser_object*)self;
+    htmllexDestroy(p->scanner);
+    Py_DECREF(p->userData->handler);
+    PyMem_Del(p->userData->buf);
+    PyMem_Del(p->userData->tmp_buf);
+    PyMem_Del(p->userData);
+    PyObject_Del(p);
 }
 
 
-static PyObject* parser_flush(parser_object* self, PyObject* args) {
+static PyObject* parser_flush(PyObject* self, PyObject* args) {
     /* flush parser buffers */
     int res=0;
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
     }
+    parser_object* p = (parser_object*)self;
     /* reset parser variables */
-    RESIZE_BUF(self->userData->tmp_buf);
-    Py_XDECREF(self->userData->tmp_tag);
-    Py_XDECREF(self->userData->tmp_attrs);
-    Py_XDECREF(self->userData->tmp_attrval);
-    Py_XDECREF(self->userData->tmp_attrname);
-    self->userData->tmp_tag = self->userData->tmp_attrs =
-	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
-    self->userData->bufpos = 0;
-    if (strlen(self->userData->buf)) {
+    RESIZE_BUF(p->userData->tmp_buf);
+    Py_XDECREF(p->userData->tmp_tag);
+    Py_XDECREF(p->userData->tmp_attrs);
+    Py_XDECREF(p->userData->tmp_attrval);
+    Py_XDECREF(p->userData->tmp_attrname);
+    p->userData->tmp_tag = p->userData->tmp_attrs =
+	p->userData->tmp_attrval = p->userData->tmp_attrname = NULL;
+    p->userData->bufpos = 0;
+    if (strlen(p->userData->buf)) {
         int error = 0;
-	PyObject* s = PyString_FromString(self->userData->buf);
+	PyObject* s = PyString_FromString(p->userData->buf);
 	PyObject* callback = NULL;
 	PyObject* result = NULL;
 	/* reset buffer */
-	RESIZE_BUF(self->userData->buf);
+	RESIZE_BUF(p->userData->buf);
 	if (s==NULL) { error=1; goto finish_flush; }
-	if (PyObject_HasAttrString(self->userData->handler, "characters")==1) {
-	    callback = PyObject_GetAttrString(self->userData->handler, "characters");
+	if (PyObject_HasAttrString(p->userData->handler, "characters")==1) {
+	    callback = PyObject_GetAttrString(p->userData->handler, "characters");
 	    if (callback==NULL) { error=1; goto finish_flush; }
 	    result = PyObject_CallFunction(callback, "O", s);
 	    if (result==NULL) { error=1; goto finish_flush; }
@@ -553,7 +556,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 
 
 /* feed a chunk of data to the parser */
-static PyObject* parser_feed(parser_object* self, PyObject* args) {
+static PyObject* parser_feed(PyObject* self, PyObject* args) {
     /* set up the parse string */
     int slen = 0;
     char* s = NULL;
@@ -562,20 +565,21 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
 	return NULL;
     }
     /* parse */
-    if (htmllexStart(self->scanner, self->userData, s, slen)!=0) {
+    parser_object* p = (parser_object*)self;
+    if (htmllexStart(p->scanner, p->userData, s, slen)!=0) {
 	PyErr_SetString(PyExc_MemoryError, "could not start scanner");
  	return NULL;
     }
-    if (yyparse(self->scanner)!=0) {
-        if (self->userData->exc_type!=NULL) {
+    if (yyparse(p->scanner)!=0) {
+        if (p->userData->exc_type!=NULL) {
             /* note: we give away these objects, so don't decref */
-            PyErr_Restore(self->userData->exc_type,
-        		  self->userData->exc_val,
-        		  self->userData->exc_tb);
+            PyErr_Restore(p->userData->exc_type,
+        		  p->userData->exc_val,
+        		  p->userData->exc_tb);
         }
         return NULL;
     }
-    if (htmllexStop(self->scanner, self->userData)!=0) {
+    if (htmllexStop(p->scanner, p->userData)!=0) {
 	PyErr_SetString(PyExc_MemoryError, "could not stop scanner");
 	return NULL;
     }
@@ -585,23 +589,24 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
 
 
 /* reset the parser. This will erase all buffered data! */
-static PyObject* parser_reset(parser_object* self, PyObject* args) {
+static PyObject* parser_reset(PyObject* self, PyObject* args) {
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
 	return NULL;
     }
-    if (htmllexDestroy(self->scanner)!=0) {
+    parser_object* p = (parser_object*)self;
+    if (htmllexDestroy(p->scanner)!=0) {
         PyErr_SetString(PyExc_MemoryError, "could not destroy scanner data");
         return NULL;
     }
     /* reset buffer */
-    RESIZE_BUF(self->userData->buf);
-    RESIZE_BUF(self->userData->tmp_buf);
-    self->userData->bufpos = 0;
-    self->userData->tmp_tag = self->userData->tmp_attrs =
-        self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
-    self->scanner = NULL;
-    if (htmllexInit(&(self->scanner), self->userData)!=0) {
+    RESIZE_BUF(p->userData->buf);
+    RESIZE_BUF(p->userData->tmp_buf);
+    p->userData->bufpos = 0;
+    p->userData->tmp_tag = p->userData->tmp_attrs =
+        p->userData->tmp_attrval = p->userData->tmp_attrname = NULL;
+    p->scanner = NULL;
+    if (htmllexInit(&(p->scanner), p->userData)!=0) {
         PyErr_SetString(PyExc_MemoryError, "could not initialize scanner data");
         return NULL;
     }
@@ -611,58 +616,62 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 
 
 /* set the debug level, if its >0, debugging is on, =0 means off */
-static PyObject* parser_debug(parser_object* self, PyObject* args) {
+static PyObject* parser_debug(PyObject* self, PyObject* args) {
     int debug;
     if (!PyArg_ParseTuple(args, "i", &debug)) {
         return NULL;
     }
-    debug = htmllexDebug(&(self->scanner), debug);
+    parser_object* p = (parser_object*)self;
+    debug = htmllexDebug(&(p->scanner), debug);
     return PyInt_FromLong((long)debug);
 }
 
 
 /* type interface */
 static PyMethodDef parser_methods[] = {
-    /* incremental parsing */
-    {"feed",  (PyCFunction)parser_feed, METH_VARARGS},
-    /* reset the parser (no flushing) */
-    {"reset", (PyCFunction)parser_reset, METH_VARARGS},
-    /* flush the parser buffers */
-    {"flush", (PyCFunction)parser_flush, METH_VARARGS},
-    /* set debug level */
-    {"debug", (PyCFunction)parser_debug, METH_VARARGS},
-    {NULL, NULL}
+    {"feed",  parser_feed, METH_VARARGS, "feed data to parse incremental"},
+    {"reset", parser_reset, METH_VARARGS, "reset the parser (no flushing)"},
+    {"flush", parser_flush, METH_VARARGS, "flush parser buffers"},
+    {"debug", parser_debug, METH_VARARGS, "set debug level"},
+    {NULL, NULL, 0, NULL}
 };
 
 
-static PyObject* parser_getattr(parser_object* self, char* name) {
-    return Py_FindMethod(parser_methods, (PyObject*) self, name);
+static PyObject* parser_getattr(PyObject* self, char* name) {
+    return Py_FindMethod(parser_methods, self, name);
 }
 
 
-statichere PyTypeObject parser_type = {
+static PyTypeObject parser_type = {
     PyObject_HEAD_INIT(NULL)
     0, /* ob_size */
     "parser", /* tp_name */
     sizeof(parser_object), /* tp_size */
     0, /* tp_itemsize */
     /* methods */
-    (destructor)parser_dealloc, /* tp_dealloc */
+    parser_dealloc, /* tp_dealloc */
     0, /* tp_print */
-    (getattrfunc)parser_getattr, /* tp_getattr */
-    0 /* tp_setattr */
+    parser_getattr, /* tp_getattr */
+    0,          /* tp_setattr */
+    0,          /*tp_compare*/
+    0,          /*tp_repr*/
+    0,          /*tp_as_number*/
+    0,          /*tp_as_sequence*/
+    0,          /*tp_as_mapping*/
+    0,          /*tp_hash */
 };
 
 
 /* python module interface */
 static PyMethodDef htmlsax_methods[] = {
-    {"parser", (PyCFunction)htmlsax_parser, METH_VARARGS},
-    {NULL, NULL}
+    {"new_parser", (PyCFunction)htmlsax_parser_new, METH_VARARGS,
+     "Create a new HTML parser object."},
+    {NULL, NULL, 0, NULL}
 };
 
 
 /* initialization of the htmlsaxhtmlop module */
-void inithtmlsax(void) {
+DL_EXPORT(void) inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
     /*yydebug = 1;*/
 }
