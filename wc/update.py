@@ -63,7 +63,14 @@ def decode (page):
         for h in page.info().keys():
             if not ceheader.match(h):
                 headers[h] = page.info()[h]
-        page = urllib.addinfourl(fp, headers, page.geturl())
+        newpage = urllib.addinfourl(fp, headers, page.geturl())
+        if hasattr(page, "code"):
+            # python 2.4 compatibility
+            newpage.code = page.code
+        if hasattr(page, "msg"):
+            # python 2.4 compatibility
+            newpage.msg = page.msg
+        page = newpage
     return page
 
 
@@ -98,12 +105,14 @@ def urlopen (url, proxies=None, data=None):
     request = urllib2.Request(url, data, headers)
     proxy_support = urllib2.ProxyHandler(proxies)
     if _opener is None:
+        pwd_manager = PasswordManager(self.user, self.password)
         handlers = [proxy_support,
-            urllib2.UnknownHandler, HttpWithGzipHandler,
-            urllib2.HTTPBasicAuthHandler,
-            urllib2.ProxyBasicAuthHandler,
-            urllib2.HTTPDigestAuthHandler,
-            urllib2.ProxyDigestAuthHandler,
+            urllib2.UnknownHandler,
+            HttpWithGzipHandler,
+            urllib2.HTTPBasicAuthHandler(pwd_manager),
+            urllib2.ProxyBasicAuthHandler(pwd_manager),
+            urllib2.HTTPDigestAuthHandler(pwd_manager),
+            urllib2.ProxyDigestAuthHandler(pwd_manager),
             urllib2.HTTPDefaultErrorHandler,
             urllib2.HTTPRedirectHandler,
         ]
