@@ -14,7 +14,12 @@ class HttpRequest (object):
         return self.__class__.__name__
 
     def get_request (self):
-        """return string of complete request data (with headers and body)"""
+        """complete request data, could also be multiple pipelined requests
+        """
+        return self.get_single_request()
+
+    def get_single_request (self):
+        """single request with headers and body"""
         line = self.get_request_line()
         headers = self.get_request_headers()
         body = self.get_request_body()
