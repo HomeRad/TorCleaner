@@ -3,8 +3,10 @@ webcleaner (0.47) unstable; urgency=low
   * wc/parser: fix memory leaks
   * wc/proxy: reset self.attrs in recycled servers; this finally fixes
     the zlib.flush error
+  * wc/proxy/HttpServer.py: fix error in reusing HTTP/1.0 connections
+    without keep-alive
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat, 22 Jun 2002 20:50:16 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sat, 22 Jun 2002 23:40:37 +0200
 
 webcleaner (0.46) unstable; urgency=low
 
