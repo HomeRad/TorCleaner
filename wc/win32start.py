@@ -36,7 +36,7 @@ class ProxyService (service_klass):
     _svc_name_ = wc.AppName
     _svc_display_name_ = bk.i18n._("%s Proxy") % wc.AppName
     configdir = wc.ConfigDir
-    file_logs = True
+    filelogs = True
 
     def __init__ (self, args):
         """initialize service framework and set stop handler"""
@@ -62,7 +62,7 @@ class ProxyService (service_klass):
            servicemanager.PYS_SERVICE_STARTED,
            (self._svc_name_, ''))
         wc.wstartfunc(handle=self.hWaitStop, confdir=self.configdir,
-                      file_logs=self.file_logs)
+                      filelogs=self.filelogs)
         # Now log a "service stopped" message
         servicemanager.LogMsg(
            servicemanager.EVENTLOG_INFORMATION_TYPE,
