@@ -1,50 +1,67 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title tal:content="title">WebCleaner Filter Configuration</title>
+<title tal:content="t_title">WebCleaner Filter Configuration</title>
 </head>
 <body bgcolor="#ffffff">
+
+<div tal:repeat="item info">
+<span tal:replace="item">Info</span>
+</div>
+
+<div tal:repeat="item error">
+<span tal:replace="item">Error</span>
+</div>
+
 <form action="filterconfig.html" method="POST">
 <table>
 <tr>
-<td><big tal:content="folder">Folder</big></td>
-<td><big tal:content="filter">Filter</big></td>
-<td><big tal:content="rule">Rule</big></td>
+<td><big tal:content="t_folders">Folders</big></td>
+<td><big tal:content="t_filters">Filters</big></td>
+<td><big tal:content="t_rule">Rule</big></td>
 </tr>
 <tr valign="top">
 <!-- folders -->
 <td>
-<div tal:repeat="folder folders" tal:content="folder">Scripting</div>
+<div tal:repeat="folder folders">
+<a href="#" tal:content="folder/title"
+ tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
+</div>
 <br>
-<input type="submit" value="Remove selected" tal:attributes="value remove">
+<input type="submit" value="Remove selected" tal:attributes="value t_remove">
 <br>
-<input type="text" value="Folder name" tal:attributes="value foldername"
+<input type="text" value="Folder name" tal:attributes="value t_foldername"
  size="10">
-<input type="submit" value="New folder" tal:attributes="value newfolder">
+<input type="submit" value="New folder" tal:attributes="value t_newfolder">
 </td>
 <!-- filter -->
 <td>
-<div tal:repeat="filt filters" tal:content="filt">On focus</div>
+<div tal:repeat="filt filters">
+<a href="#" tal:content="filt/title"
+ tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selfilter=${filt/oid}">On focus</a>
+</div>
 <br>
 <input type="submit" value="Remove selected"
- tal:attributes="value remove">
+ tal:attributes="value t_remove">
 <br>
 <select>
 <option tal:repeat="rule ruletypes" tal:attributes="value rule"
  tal:content="rule">Rewrite rule</option>
 </select>
 <input type="submit" value="New rule"
- tal:attributes="value newrule; title ttnewrule">
+ tal:attributes="value t_newrule; title tt_newrule">
 </td>
 <!-- rule -->
 <td>
-XXX
+<div tal:condition="curfilter">
+<div tal:content="curfilter/desc">Rule description</div>
+</div>
 </td>
 </tr>
 </table>
 <br>
-<input type="submit" value="Apply" tal:attributes="value apply">
-<a href="/" tal:content="back">Back</a>
+<input type="submit" value="Apply" tal:attributes="value t_apply">
+<a href="/" tal:content="t_back">Back</a>
 </form>
 </body>
 </html>

@@ -50,8 +50,9 @@ class WebConfig:
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
             return client.error(404, i18n._("Not Found"))
-        except ImportError, e:
-            exception(GUI, "No context found")
+        except:
+            # catch all other exceptions and report internal error
+            exception(GUI, "Template error")
             return client.error(500, i18n._("Internal Error"))
         f.close()
         # write response

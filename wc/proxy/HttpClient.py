@@ -3,7 +3,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, cgi, mimetypes
+import time, cgi, mimetypes, urlparse
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
@@ -276,8 +276,12 @@ class HttpClient (Connection):
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
             return self.error(403, i18n._("Invalid Method"))
-        if self.content:
-            # get cgi form data
+        # get cgi form data
+        if self.method=='GET':
+            # split off query string and parse it
+            qs = urlparse.urlsplit(self.url)[3]
+            form = cgi.parse_qs(qs)
+        elif self.method=='POST':
             # XXX this uses FieldStorage internals?
             form = cgi.FieldStorage(fp=StringIO(self.content),
                                     headers=self.headers,
