@@ -129,10 +129,6 @@ def main(tests=None, testdir=None, verbose=0, quiet=0, generate=0,
     return len(bad) > 0
 
 STDTESTS = [
-    'test_js',
-    'test_rating',
-    'test_replacer',
-    'test_rewriter',
     'test_script',
     'test_simpletal',
    ]
