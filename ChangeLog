@@ -22,7 +22,8 @@
            templates/classic/macros/rules.html,
            wc/webgui/context/filterconfig_html.py
     Changed: wc/webgui/__init__.py
-
+  * new filter module ImageSize that filters images by size
+    Added: wc/filter/ImageSize
 
 1.13
   * - when the HTTP server closes, flush any existing data
