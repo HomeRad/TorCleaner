@@ -119,7 +119,7 @@
 
 <rewrite title="CGI adverts 2" oid="19"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
-<attr>/cgi-bin/ads?(log)?.*([=&amp;?]|\.gif)</attr>
+<attr>/cgi-bin/ads?(log)?\?</attr>
 </rewrite>
 
 <block title="CGI adverts 3" oid="20"
