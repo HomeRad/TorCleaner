@@ -91,6 +91,20 @@ if hasattr(httplib, 'HTTPS'):
             return decode(urllib2.HTTPSHandler.http_open(self, req))
 
 
+class PasswordManager (object):
+
+    def __init__ (self, user, password):
+        self.user = user
+        self.password = password
+
+    def add_password (self, realm, uri, user, passwd):
+        # we have already our password
+        pass
+
+    def find_user_password (self, realm, authuri):
+        return self.user, self.password
+
+
 _opener = None
 def urlopen (url, proxies=None, data=None):
     """Return connected request object for given url.
