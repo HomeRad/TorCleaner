@@ -135,10 +135,8 @@ if os.name=='nt':
     scripts = ['webcleanerconf', 'wcheaders']
 else:
     macros = []
-    # use -std=gnu99 because
-    # - Python 2.2 defines long long int, which is C99
-    # - and flex uses fileno(3), which is a gnu extension
-    cargs = ['-pedantic', '-std=gnu99']
+    # XXX for gcc 3.x we could add -std=gnu99
+    cargs = ["-pedantic"]
     scripts = ['webcleaner', 'webcleanerconf', 'wcheaders']
 
 # extensions
