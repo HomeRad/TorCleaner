@@ -517,9 +517,9 @@ if os.name == 'posix':
         'docs/en/webcleaner.conf.5',
         ]))
     data_files.append(('share/man/de/man1', [
-        'docs/de/webcleaner.de.1',
-        'docs/de/webcleaner-certificates.de.1',
-        'docs/de/webcleaner.conf.de.5',
+        'docs/de/webcleaner.1',
+        'docs/de/webcleaner-certificates.1',
+        'docs/de/webcleaner.conf.5',
         ]))
 
 # now to the main stuff

@@ -36,9 +36,9 @@ include debian/webcleaner.templates
 include docs/en/webcleaner.1
 include docs/en/webcleaner.conf.5
 include docs/en/webcleaner-certificates.1
-include docs/de/webcleaner.de.1
-include docs/de/webcleaner.conf.de.5
-include docs/de/webcleaner-certificates.de.1
+include docs/de/webcleaner.1
+include docs/de/webcleaner.conf.5
+include docs/de/webcleaner-certificates.1
 include config/proxy.pac
 include config/*.txt
 include config/*.zap
