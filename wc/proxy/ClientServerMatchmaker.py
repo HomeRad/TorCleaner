@@ -147,9 +147,9 @@ class ClientServerMatchmaker (object):
             # Let's make a new one
             self.state = 'connect'
             # All Server objects eventually call server_connected
-            if self.client.method=='CONNECT':
+            if self.client.method=='CONNECT' and config['sslgateway']:
                 server = HttpsServer(self.ipaddr, self.port, self)
-            elif self.url.startswith("https"):
+            elif self.url.startswith("https") and config['sslgateway']:
                 server = SslServer(self.ipaddr, self.port, self)
             else:
                 server = HttpServer(self.ipaddr, self.port, self)

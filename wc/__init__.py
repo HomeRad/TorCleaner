@@ -172,7 +172,6 @@ class Configuration (dict):
             self['port'] += 1
             # test data directory url
             self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
-            self['sslgateway'] = 1
 
 
     def reset (self):
