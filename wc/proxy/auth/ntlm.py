@@ -318,6 +318,9 @@ def parse_message1 (msg):
         if res['flags'] & NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED:
             host_offset = getint32(msg[28:32])
             res['host'] = msg[host_offset:domain_offset]
+    elif res['flags'] & NTLMSSP_REQUEST_TARGET:
+        res['host'] = 'imadoofus'
+        res['domain'] = 'WORKGROUP'
     return res
 
 
