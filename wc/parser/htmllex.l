@@ -107,7 +107,7 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align fast
-%option debug
+/*%option debug */
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
@@ -512,16 +512,7 @@ int htmllexStop (void* scanner, UserData* data) {
 	data->buf = PyMem_Resize(data->buf, char, len-data->nextpos+1);
 	if (!data->buf) return -1;
     }
-    if (data->lexbuf) {
-	yy_delete_buffer(data->lexbuf, scanner);
-	data->lexbuf = NULL;
-    }
-    return 0;
-}
-
-
-int htmllexRestart (void* scanner) {
-    //((struct yy_globals_t*)scanner)->yy_start = 0;
+    yy_delete_buffer(data->lexbuf, scanner);
     return 0;
 }
 

@@ -12,7 +12,6 @@
 extern int htmllexInit(void** scanner, void* data);
 extern int htmllexStart(void* scanner, UserData* data, const char* s, int slen);
 extern int htmllexStop(void* scanner, UserData* data);
-extern int htmllexRestart (void* scanner);
 extern int htmllexDestroy(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
@@ -56,7 +55,6 @@ staticforward PyTypeObject parser_type;
 /* parser options */
 %verbose
 %defines
-%debug
 %output="htmlparse.c"
 %pure_parser
 
@@ -378,9 +376,10 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	RESIZE_BUF(self->userData->buf);
         self->userData->bufpos = self->userData->nextpos = 0;
     }
+    RESIZE_BUF(self->userData->tmp_buf);
     self->userData->tmp_tag = self->userData->tmp_attrs =
 	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
-    htmllexRestart(self->scanner);
+    htmllexInit(&(self->scanner), self->userData);
     return Py_BuildValue("i", res);
 }
 
@@ -472,7 +471,7 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
-    yydebug = 1;
+    //yydebug = 1;
 }
 
 /* standard error reporting, indicating an internal error */

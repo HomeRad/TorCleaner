@@ -29,7 +29,6 @@
 extern int htmllexInit(void** scanner, void* data);
 extern int htmllexStart(void* scanner, UserData* data, const char* s, int slen);
 extern int htmllexStop(void* scanner, UserData* data);
-extern int htmllexRestart (void* scanner);
 extern int htmllexDestroy(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
@@ -73,7 +72,7 @@ staticforward PyTypeObject parser_type;
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 
 
@@ -136,8 +135,8 @@ static const short yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined. */
 static const short yyrline[] =
 {
-       0,    77,    78,    81,    82,    89,   116,   155,   178,   199,
-     220,   241,   262,   292
+       0,    75,    76,    79,    80,    87,   114,   153,   176,   197,
+     218,   239,   260,   290
 };
 #endif
 
@@ -919,19 +918,19 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 77 "htmlparse.y"
+#line 75 "htmlparse.y"
 {;
     break;}
 case 2:
-#line 78 "htmlparse.y"
+#line 76 "htmlparse.y"
 {;
     break;}
 case 3:
-#line 81 "htmlparse.y"
+#line 79 "htmlparse.y"
 { YYACCEPT; /* wait for more lexer input */ ;
     break;}
 case 4:
-#line 83 "htmlparse.y"
+#line 81 "htmlparse.y"
 {
     /* a python error occured in the scanner */
     UserData* ud = yyget_extra(scanner);
@@ -940,7 +939,7 @@ case 4:
 ;
     break;}
 case 5:
-#line 90 "htmlparse.y"
+#line 88 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
@@ -969,7 +968,7 @@ finish_start:
 ;
     break;}
 case 6:
-#line 117 "htmlparse.y"
+#line 115 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
@@ -1010,7 +1009,7 @@ finish_start_end:
 ;
     break;}
 case 7:
-#line 156 "htmlparse.y"
+#line 154 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1035,7 +1034,7 @@ finish_end:
 ;
     break;}
 case 8:
-#line 179 "htmlparse.y"
+#line 177 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1058,7 +1057,7 @@ finish_comment:
 ;
     break;}
 case 9:
-#line 200 "htmlparse.y"
+#line 198 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1081,7 +1080,7 @@ finish_pi:
 ;
     break;}
 case 10:
-#line 221 "htmlparse.y"
+#line 219 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1104,7 +1103,7 @@ finish_cdata:
 ;
     break;}
 case 11:
-#line 242 "htmlparse.y"
+#line 240 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1127,7 +1126,7 @@ finish_doctype:
 ;
     break;}
 case 12:
-#line 263 "htmlparse.y"
+#line 261 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1159,7 +1158,7 @@ finish_script:
 ;
     break;}
 case 13:
-#line 293 "htmlparse.y"
+#line 291 "htmlparse.y"
 {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1415,7 +1414,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 316 "htmlparse.y"
+#line 314 "htmlparse.y"
 
 
 /* create parser */
@@ -1481,9 +1480,10 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	RESIZE_BUF(self->userData->buf);
         self->userData->bufpos = self->userData->nextpos = 0;
     }
+    RESIZE_BUF(self->userData->tmp_buf);
     self->userData->tmp_tag = self->userData->tmp_attrs =
 	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
-    htmllexRestart(self->scanner);
+    htmllexInit(&(self->scanner), self->userData);
     return Py_BuildValue("i", res);
 }
 
@@ -1575,7 +1575,7 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
-    yydebug = 1;
+    //yydebug = 1;
 }
 
 /* standard error reporting, indicating an internal error */

@@ -350,8 +350,6 @@ static void yy_flex_free YY_PROTO(( void * YY_LAST_ARG ));
 
 #define yywrap(n) 1
 #define YY_SKIP_YYWRAP
-
-#define FLEX_DEBUG
 #ifndef yyIN_HEADER
 typedef unsigned char YY_CHAR;
 #endif /* !yyIN_HEADER */
@@ -363,8 +361,6 @@ FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 #ifndef yyIN_HEADER
 typedef yyconst struct yy_trans_info *yy_state_type;
 #endif /* !yyIN_HEADER */
-
-#define FLEX_DEBUG
 #define yytext_ptr yytext_r
 
 /* %- Standard (non-C++) definition */
@@ -3950,18 +3946,6 @@ static yyconst struct yy_trans_info *yy_start_state_list[33] =
 
     } ;
 
-extern int yy_flex_debug;
-int yy_flex_debug = 1;
-
-static yyconst long int yy_rule_linenum[50] =
-    {   0,
-      144,  149,  156,  161,  167,  172,  179,  185,  190,  197,
-      202,  208,  213,  220,  226,  233,  238,  246,  256,  269,
-      276,  283,  289,  295,  303,  311,  316,  323,  330,  335,
-      343,  349,  355,  361,  366,  377,  388,  397,  407,  413,
-      424,  430,  435,  440,  446,  451,  456,  461,  469
-    } ;
-
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
  */
@@ -4078,6 +4062,7 @@ static PyObject* quote_string (PyObject* val) {
     }
     return prefix;
 }
+/*%option debug */
 #define YY_NO_UNPUT 1
 #define YY_MAIN 0
 #define YY_NEVER_INTERACTIVE 1
@@ -4111,7 +4096,7 @@ static PyObject* quote_string (PyObject* val) {
 
 #define S_STRING 15
 
-#line 4115 "htmllex.c"
+#line 4100 "htmllex.c"
 /* %e */
 #endif /* !yyIN_HEADER */
 
@@ -4455,7 +4440,7 @@ YY_DECL
 
 
   /*********************** EOF ************************/
-#line 4459 "htmllex.c"
+#line 4444 "htmllex.c"
 
 #ifdef YY_REENTRANT_BISON_PURE
     yylval = yylvalp;
@@ -4541,21 +4526,6 @@ yy_find_action:
 do_action:	/* This label is used only to access EOF actions. */
 
 /* %% [12.0] debug code goes here */
-		if ( yy_flex_debug )
-			{
-			if ( yy_act == 0 )
-				fprintf( stderr, "--scanner backing up\n" );
-			else if ( yy_act < 50 )
-				fprintf( stderr, "--accepting rule at line %ld (\"%s\")\n",
-				         yy_rule_linenum[yy_act], yytext );
-			else if ( yy_act == 50 )
-				fprintf( stderr, "--accepting default rule (\"%s\")\n",
-				         yytext );
-			else if ( yy_act == 51 )
-				fprintf( stderr, "--(end of buffer or a NUL)\n" );
-			else
-				fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
-			}
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
@@ -5071,7 +5041,7 @@ YY_RULE_SETUP
 #line 477 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 5075 "htmllex.c"
+#line 5045 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -6390,16 +6360,7 @@ int htmllexStop (void* scanner, UserData* data) {
 	data->buf = PyMem_Resize(data->buf, char, len-data->nextpos+1);
 	if (!data->buf) return -1;
     }
-    if (data->lexbuf) {
-	yy_delete_buffer(data->lexbuf, scanner);
-	data->lexbuf = NULL;
-    }
-    return 0;
-}
-
-
-int htmllexRestart (void* scanner) {
-    //((struct yy_globals_t*)scanner)->yy_start = 0;
+    yy_delete_buffer(data->lexbuf, scanner);
     return 0;
 }
 
