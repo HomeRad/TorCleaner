@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, sys, urlparse, time, wc
+import re, sys, urlparse, time, rfc822, wc
+from cStringIO import StringIO
 from wc import urlutils
 from wc.parser.htmllib import HtmlParser
 from wc.parser import resolve_html_entities
@@ -25,6 +26,8 @@ from wc.filter.Filter import Filter
 # JS imports
 from wc.js.JSListener import JSListener
 from wc.js import jslib
+from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
+from wc.proxy.HttpProxyClient import HttpProxyClient
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
@@ -69,7 +72,7 @@ class Rewriter (Filter):
         p = attrs['filter']
         if data: p.feed(data)
         p.flush()
-        p.buffer2data()
+        p.buf2data()
         return p.flushbuf()
 
     def getAttrs (self, headers, url):
@@ -99,72 +102,85 @@ class HtmlFilter (HtmlParser,JSListener):
         self.rules = rules
         self.comments = opts['comments']
         self.javascript = opts['javascript']
-        self.data = []
+        self.outbuf = StringIO()
+        self.inbuf = ''
+        self.state = 'parse'
         self.rulestack = []
-        self.buffer = []
+        self.buf = []
         self.url = url or "unknown"
         if self.javascript:
             self.jsEnv = jslib.new_jsenv()
             self.output_counter = 0
             self.popup_counter = 0
 
+
     def __repr__ (self):
         return "<HtmlFilter with rulestack %s >" % self.rulestack
 
 
-    def buffer_append_data (self, data):
+    def feed (self, data):
+        if self.state=='parse':
+            if self.inbuf:
+                data = self.inbuf + data
+                self.inbuf = ''
+            HtmlParser.feed(self, data)
+        else:
+            self.inbuf += data
+
+
+    def buf_append_data (self, data):
         """we have to make sure that we have no two following
         DATA things in the buffer. Why? To be 100% sure that
         an ENCLOSED match really matches enclosed data.
         """
-        if self.buffer and data[0]==DATA and self.buffer[-1][0]==DATA:
-            self.buffer[-1][1] += data[1]
+        if self.buf and data[0]==DATA and self.buf[-1][0]==DATA:
+            self.buf[-1][1] += data[1]
         else:
-            self.buffer.append(data)
+            self.buf.append(data)
 
 
     def cdata (self, d):
         """handler for data"""
-        self.buffer_append_data([DATA, d])
+        self.buf_append_data([DATA, d])
 
 
     def flushbuf (self):
         """flush internal data buffer"""
-        data = "".join(self.data)
-        if data:
-            self.data = []
+        data = self.outbuf.getvalue()
+        self.outbuf.close()
+        self.outbuf = StringIO()
         return data
 
 
-    def buffer2data (self):
+    def buf2data (self):
         """Append all tags of the buffer to the data"""
-        for n in self.buffer:
+        for n in self.buf:
             if n[0]==DATA:
-                self.data.append(n[1])
+                self.outbuf.write(n[1])
             elif n[0]==STARTTAG:
                 s = "<"+n[1]
                 for name,val in n[2].items():
                     s += ' %s'%name
                     if val:
                         s += "=%s"%val
-                self.data.append(s+">")
+                self.outbuf.write(s+">")
             elif n[0]==ENDTAG:
-                self.data.append("</%s>"%n[1])
+                self.outbuf.write("</%s>"%n[1])
             elif n[0]==COMMENT:
-                self.data.append("<!--%s-->"%n[1])
+                self.outbuf.write("<!--%s-->"%n[1])
             else:
                 error("unknown buffer element %s" % n[0])
-        self.buffer = []
+        self.buf = []
 
 
     def comment (self, data):
         """a comment: accept only non-empty comments"""
         if self.comments and data:
-            self.buffer.append([COMMENT, data])
+            self.buf.append([COMMENT, data])
 
 
     def characters (self, s):
-        self.buffer_append_data([DATA, s])
+        self.buf_append_data([DATA, s])
 
 
     def startElement (self, tag, attrs):
@@ -192,19 +208,19 @@ class HtmlFilter (HtmlParser,JSListener):
                     rulelist.append(rule)
         if rulelist:
             # remember buffer position for end tag matching
-            pos = len(self.buffer)
+            pos = len(self.buf)
             self.rulestack.append((pos, rulelist))
         # if its not yet filtered, try filter javascript
         if filtered:
-            self.buffer_append_data(tobuffer)
+            self.buf_append_data(tobuffer)
         elif self.javascript:
             self.jsStartElement(tag, attrs)
         else:
-            self.buffer.append(tobuffer)
+            self.buf.append(tobuffer)
         # if rule stack is empty, write out the buffered data
         if not self.rulestack and \
            (not self.javascript or tag!='script'):
-            self.buffer2data()
+            self.buf2data()
 
 
     def jsStartElement (self, tag, attrs):
@@ -216,19 +232,20 @@ class HtmlFilter (HtmlParser,JSListener):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
                 del attrs[name]
                 changed = 1
+        self.tobuffer = (STARTTAG, tag, attrs)
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
             self.jsForm(name, attrs.get('action', ''), attrs.get('target', ''))
-        # fetching JS script src is too much delay
-        #elif tag=='script':
-        #    lang = attrs.get('language', '').lower()
-        #    scrtype = attrs.get('type', '').lower()
-        #    if scrtype=='text/javascript' or \
-        #       lang.startswith('javascript') or \
-        #       not (lang or scrtype):
-        #        if self.jsScriptSrc(attrs.get('src', ''), lang):
-        #            return
-        self.buffer.append((STARTTAG, tag, attrs))
+        elif tag=='script':
+            lang = attrs.get('language', '').lower()
+            url = attrs.get('src', '')
+            scrtype = attrs.get('type', '').lower()
+            is_js = scrtype=='text/javascript' or \
+                    lang.startswith('javascript') or \
+                    not (lang or scrtype)
+            if is_js and url:
+                self.jsScriptSrc(url, lang)
+        self.buf.append(self.tobuffer)
 
 
     def jsPopup (self, attrs, name):
@@ -252,28 +269,39 @@ class HtmlFilter (HtmlParser,JSListener):
         self.jsEnv.addForm(name, action, target)
 
 
+    def jsScriptData (self, data, url, ver):
+        if data is None:
+            debug(BRING_IT_ON, "Filter: jsScriptData", time.ctime(time.time()))
+            if not self.script:
+                self.state = 'parse'
+                return
+            if self.jsScript(self.script, ver):
+                print >> sys.stderr, "JS popup src", url
+            else:
+                self.buf.append(self.tobuffer)
+            self.state = 'parse'
+        else:
+            self.script += data
+
+
     def jsScriptSrc (self, url, language):
-        if not url: return
-        url = urlparse.urljoin(self.url, url)
-        debug(HURT_ME_PLENTY, "Filter: jsScriptSrc", url, language)
-        try:
-            debug(BRING_IT_ON, "fetching", url, time.ctime(time.time()))
-            script = urlutils.open_url(url).read()
-            debug(BRING_IT_ON, "...fetched", time.ctime(time.time()))
-        except:
-            print >>sys.stderr, "exception fetching script url", `url`
-            import traceback
-            traceback.print_exc()
-            return
-        if not script: return
         ver = 0.0
         if language:
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
             if mo:
                 ver = float(mo.group('num'))
-        if self.jsScript(script, ver):
-            print >> sys.stderr, "JS popup src", url, "url", url
-            return "True"
+        url = urlparse.urljoin(self.url, url)
+        debug(HURT_ME_PLENTY, "Filter: jsScriptSrc", url, ver)
+        self.script = ''
+        self.state = 'script'
+        client = HttpProxyClient(self.jsScriptData, (url, ver))
+        ClientServerMatchmaker(client,
+                               "GET %s HTTP/1.1" % url, #request
+                               rfc822.Message(StringIO('')), #headers
+                               '', #content
+                               {'nofilter': None},
+                               '', # compress
+                               )
 
 
     def jsScript (self, script, ver):
@@ -288,8 +316,8 @@ class HtmlFilter (HtmlParser,JSListener):
         self.jsEnv.detachListener(self)
         if self.output_counter:
             self.jsfilter.flush()
-            self.data.append(self.jsfilter.flushbuf())
-            self.buffer += self.jsfilter.buffer
+            self.outbuf.write(self.jsfilter.flushbuf())
+            self.buf += self.jsfilter.buf
             self.rulestack += self.jsfilter.rulestack
         self.jsfilter = None
         return self.output_counter
@@ -310,7 +338,7 @@ class HtmlFilter (HtmlParser,JSListener):
         the one on the top of the stack. So we look only at the top
         rule.
 	If it matches and the rule stack is now empty we can flush
-	the buffer (by calling buffer2data)"""
+	the buffer (by calling buf2data)"""
         filtered = 0
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
@@ -318,31 +346,31 @@ class HtmlFilter (HtmlParser,JSListener):
         if self.rulestack and self.rulestack[-1][1][0].match_tag(tag):
             pos, rulelist = self.rulestack.pop()
             for rule in rulelist:
-                if rule.match_complete(pos, self.buffer):
-                    rule.filter_complete(pos, self.buffer)
+                if rule.match_complete(pos, self.buf):
+                    rule.filter_complete(pos, self.buf)
                     filtered = 1
                     break
         if not filtered and self.javascript and tag=='script' and \
             self.jsEndElement(tag):
-            del self.buffer[-1]
-            del self.buffer[-1]
+            del self.buf[-1]
+            del self.buf[-1]
         else:
-            self.buffer.append((ENDTAG, tag))
+            self.buf.append((ENDTAG, tag))
         if not self.rulestack:
-            self.buffer2data()
+            self.buf2data()
 
 
     def jsEndElement (self, tag):
         """parse generated html for scripts
            return True if the script generates any output, else False"""
-        if len(self.buffer)<2:
+        if len(self.buf)<2:
             return
-        if self.buffer[-1][0]!=DATA:
-            print >>sys.stderr, "missing data for </script>", self.buffer[-1:]
+        if self.buf[-1][0]!=DATA:
+            print >>sys.stderr, "missing data for </script>", self.buf[-1:]
             return
-        script = self.buffer[-1][1].strip()
-        if not (self.buffer[-2][0]==STARTTAG and \
-                self.buffer[-2][1]=='script'):
+        script = self.buf[-1][1].strip()
+        if not (self.buf[-2][0]==STARTTAG and \
+                self.buf[-2][1]=='script'):
             # there was a <script src="..."> already
             return
         # remove html comments
@@ -359,11 +387,11 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def doctype (self, data):
-        self.buffer_append_data([DATA, "<!DOCTYPE%s>"%data])
+        self.buf_append_data([DATA, "<!DOCTYPE%s>"%data])
 
 
     def pi (self, data):
-        self.buffer_append_data([DATA, "<?%s?>"%data])
+        self.buf_append_data([DATA, "<?%s?>"%data])
 
     def errorfun (self, msg, name):
         print >> sys.stderr, name, "parsing %s: %s" % (self.url, msg)

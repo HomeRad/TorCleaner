@@ -236,6 +236,7 @@ class DnsCache:
             # Win98SE: c:\windows\hosts.sam
             # Win2000: c:\winnt\system32\drivers\etc\hosts
             # WinNT: ???
+            # WinXP: ???
             filename = 'c:\\windows\\hosts.sam'
         else:
             return
@@ -258,6 +259,7 @@ class DnsCache:
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
+        debug(HURT_ME_PLENTY, 'DNS lookup', hostname)
         # see if hostname is already a resolved IP address
         hostname, numeric = ip.expand_ip(hostname)
         if numeric:
