@@ -173,9 +173,12 @@ def mainloop (handle=None):
     #from Interpreter import Interpreter
     from Listener import Listener
     Listener(config['port'], HttpClient)
-    Listener(config['port']+1, LocalClient)
+    # try to handle local requests on the same port
+    #Listener(config['port']+1, LocalClient)
+    # experimental interactive command line
     #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))
-    # make_timer(5, transport.http_server.speedcheck_print_status)
+    # periodic statistics (only useful for speed profiling)
+    #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
     while 1:
         # Installing a timeout means we're in a handler, and after

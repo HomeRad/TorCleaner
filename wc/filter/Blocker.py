@@ -40,11 +40,6 @@ def strblock (block):
         s += ","+(b and b.pattern or "")
     return s+")"
 
-def _file_url (fname):
-    u = os.path.join(ConfigDir, fname)
-    u = os.path.normcase(u).replace("\\", "/")
-    return "file://"+u
-
 
 class Blocker (Filter):
 
@@ -63,8 +58,8 @@ class Blocker (Filter):
         # allowed urls (exact host match, prefix url match)
         self.allowed_urls = []
         # urls for blocked types
-        self.block_url = _file_url("blocked.html")
-        self.block_image = _file_url("blocked.gif")
+        self.block_url = "/blocked.html"
+        self.block_image = "/blocked.gif"
 	# strict whitelist mode (for parents)
 	self.strict_whitelist = config['strict_whitelist']
 

@@ -59,43 +59,23 @@ class ClientServerMatchmaker:
         # some clients send partial URI's without scheme, hostname
         # and port to clients, so we have to handle this
         if not scheme:
-            warn(PROXY, "partial request uri: %s", self.request)
             # default scheme is http
             scheme = "http"
-        if scheme!='file' and not hostname:
-            # the 'Host' header has to be there
-            hostname = self.headers.get('Host')
-            if hostname:
-                hostname, port = splitnport(hostname, 80)
-            if not hostname:
-                # we cannot handle the request
-                self.client.error(400, i18n._("Incomplete Proxy Request"))
-                return
-        if scheme!='file' and not port:
-            port = 80
+        if not hostname and self.headers.has_key('Host'):
+            host = self.headers['Host']
+            hostname, port = splitnport(host, 80)
+        if not hostname or \
+           (hostname in config['localhosts'] and port==config['port']):
+            # this is a direct proxy call, delegate it to local handler
+            return client.handle_local()
         # fix missing trailing /
         if not document: document = '/'
-        # fix missing host headers for HTTP/1.1
+        # add missing host headers for HTTP/1.1
         if protocol=='HTTP/1.1' and not self.headers.has_key('Host'):
             self.headers['Host'] = hostname
             if port!=80:
                 self.headers['Host'] += ":%d"%port
         debug(PROXY, "ClientServer: splitted url %s %s %d %s", scheme, hostname, port, document)
-        if scheme=='file':
-            # a blocked url is a local file:// link
-            # this means we should _not_ use this proxy for local
-            # file links :)
-            mtype = mimetypes.guess_type(self.url)[0]
-            config['requests']['valid'] += 1
-            config['requests']['blocked'] += 1
-            ServerHandleDirectly(self.client,
-             'HTTP/1.1 200 OK\r\n',
-             'Content-Type: %s\r\n\r\n'%(mtype or 'application/octet-stream'),
-              open(document, 'rb').read())
-            return
-        if hostname in config['localhosts'] and port==config['port']:
-            self.client.error(400, i18n._("Invalid Proxy Request"))
-            return
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']

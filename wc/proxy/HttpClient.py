@@ -1,7 +1,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time
+import time, cgi
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
@@ -267,6 +267,23 @@ class HttpClient (Connection):
             # If there isn't a server, then it's in the process of
             # doing DNS lookup or connecting.  The matchmaker will
             # check to see if the client is still connected.
+
+
+    def handle_local (self):
+        assert self.state == 'receive'
+        # reject invalid methods
+        if self.method not in ['GET', 'POST', 'HEAD']:
+            return self.error(403, i18n._("Invalid Method"))
+        if self.content:
+            # get cgi form data
+            # XXX this uses FieldStorage internals?
+            form = cgi.FieldStorage(fp=StringIO(self.content),
+                                    headers=self.headers,
+                                    environ={'REQUEST_METHOD': self.method})
+        else:
+            form = {}
+        # this object will call server_connected at some point
+        WebConfig(self, self.url, form, self.protocol)
 
 
     def close (self):

@@ -26,7 +26,9 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import ConfigDir, AppName, iswriteable
-import os, re, logging, logging.config
+import sys, os, re, logging, logging.config
+from logging.handlers import RotatingFileHandler
+
 
 def initlog (filename):
     """initialize logfiles and configuration"""
@@ -45,7 +47,9 @@ def get_root_handler ():
         return set_format(NTEventLogHandler(AppName))
     logfile = get_log_file("%s.err"%AppName)
     mode = 'a'
-    handler = logging.FileHandler(logfile, mode)
+    maxBytes = 1024*1024*2 # 2 MB
+    backupCount = 5 # number of files to generate
+    handler = WcRotatingFileHandler(logfile, mode, maxBytes, backupCount)
     return set_format(handler)
 
 
@@ -56,7 +60,9 @@ def get_wc_handler ():
         return set_format(NTEventLogHandler(AppName))
     logfile = get_log_file("%s.log"%AppName)
     mode = 'a'
-    handler = logging.FileHandler(logfile, mode)
+    maxBytes = 1024*1024*2 # 2 MB
+    backupCount = 5 # number of files to generate
+    handler = WcRotatingFileHandler(logfile, mode, maxBytes, backupCount)
     return set_format(handler)
 
 
@@ -64,7 +70,9 @@ def get_access_handler ():
     """return a handler for access logging"""
     logfile = get_log_file("%s-access.log"%AppName)
     mode = 'a'
-    handler = logging.FileHandler(logfile, mode)
+    maxBytes = 1024*1024*2 # 2 MB
+    backupCount = 5 # number of files to generate
+    handler = WcRotatingFileHandler(logfile, mode, maxBytes, backupCount)
     # log only the message
     handler.setFormatter(logging.Formatter("%(message)s"))
     return handler
@@ -169,6 +177,20 @@ def get_last_word_boundary (s, width):
     if match:
         return match.end()
     return width-1
+
+
+class WcRotatingFileHandler (RotatingFileHandler):
+    def emit (self, record):
+        """
+        A little more verbose emit function.
+        """
+        try:
+            msg = self.format(record)
+            self.stream.write("%s\n" % msg)
+            self.flush()
+        except:
+            print >>sys.stderr, "Could not format record", record
+            self.handleError()
 
 
 if __name__=='__main__':
