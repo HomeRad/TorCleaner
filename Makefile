@@ -72,6 +72,17 @@ restart:
 authtest: restart
 	env http_proxy="http://localhost:8080" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://www.heise.de/
 
+
+# filter and parse random data
+randomtest:
+	@echo "parse random data..."
+	head -c 20000 /dev/random | $(PYTHON) test/parsefile.py - > /dev/null
+	@echo "done."
+	@echo "filter random data..."
+	head -c 20000 /dev/random | $(PYTHON) test/filterfile.py - > /dev/null
+	@echo "done."
+
+
 #env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/
 #env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/test.gif
 onlinetest: restart
