@@ -406,7 +406,12 @@ class BaseParser (object):
 
 
     def start_element (self, name, attrs):
-        pass
+        # all strings are unicode, but internal representation of
+        # rule data has to be in ConfigCharset
+        newattrs = attrs.copy()
+        attrs.clear()
+        for key,value in newattrs.items():
+            attrs[key.encode(ConfigCharset)] = value.encode(ConfigCharset)
 
 
     def end_element (self, name):
@@ -428,6 +433,7 @@ class ZapperParser (BaseParser):
 
 
     def start_element (self, name, attrs):
+        super(ZapperParser, self).start_element(name, attrs)
         self.cmode = name
         if name in rulenames:
             self.rule = wc.filter.GetRuleFromName(name)

@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from wc import i18n
+from wc import i18n, ConfigCharset
 from wc.XmlUtils import xmlify
 from wc.filter.rules import register_rule
 
@@ -168,6 +168,8 @@ class Rule (object):
         """called when XML end element was reached"""
         if name == self.get_name():
             self._data = ""
+        else:
+            self._data = self._data.encode(ConfigCharset)
         if name=='title':
             self.titles[self._lang] = self._data
         elif name=='description':
