@@ -156,7 +156,6 @@ class HttpServer (Server):
             serverpool.set_http_version(self.addr, self.http_version())
         elif not self.response.strip():
             # It's a blank line, so assume HTTP/0.9
-            print >> sys.stderr, 'Warning: HTTP/0.9 response:', `self.response`
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
@@ -166,9 +165,9 @@ class HttpServer (Server):
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
         else:
-            # We have no idea what it is? Assume headers started
-            print >> sys.stderr, 'Warning: puzzling response received:', `self.response`
-            self.state = 'headers'
+            # We have no idea what it is!?
+            print >> sys.stderr, _('Warning: puzzling header received:'), \
+                  `self.response`
 
 
 
@@ -245,7 +244,7 @@ class HttpServer (Server):
             # add warning
             self.headers['Warning'] = "214 WebCleaner Transformation applied"
         elif encoding and encoding!='identity' and not rewrite:
-            print >>sys.stderr, "Warning: unsupported encoding", `encoding`
+            print >>sys.stderr, _("Warning: unsupported encoding:"),`encoding`
             # do not disable filtering for unknown content-encodings
             # this could result in a DoS attack (server sending garbage
             # as content-encoding)
@@ -272,7 +271,7 @@ class HttpServer (Server):
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
             if self.bytes_remaining < 0:
-                print >>sys.stderr, _("warning: server received %d bytes more than content-length") % (-self.bytes_remaining)
+                print >>sys.stderr, _("Warning: server received %d bytes more than content-length") % (-self.bytes_remaining)
 
         filtered_data = data
         is_closed = 0

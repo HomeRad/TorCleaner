@@ -1,9 +1,12 @@
 0.58:
   * Set the 'Via' HTTP header when forwarding requests/responses
+  * Remove the Via header in the default filter configuration,
+    so the above is not even noticed :)
   * Add a 'Warning' HTTP header when content-encoding is changed
   * Honor the 'Max-Forwards' HTTP header for OPTIONS requests
   * Adjust empty paths in requests to be '/'. This was causing
     "puzzling header received" errors.
+  * Updated german translation
 
 0.57:
   * Oopsie, fix umask to 0177
