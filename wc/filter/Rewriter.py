@@ -20,6 +20,9 @@ from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.debug import *
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
 from wc.filter.Filter import Filter
+# JS imports
+from wc.js.JSListener import JSListener
+from wc.js import jslib
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
@@ -85,7 +88,7 @@ class Rewriter (Filter):
         return {'filter': HtmlFilter(rewrites, url, **opts)}
 
 
-class HtmlFilter (HtmlParser):
+class HtmlFilter (HtmlParser,JSListener):
     """The parser has the rules, a data buffer and a rule stack."""
     def __init__ (self, rules, url, **opts):
         if wc.config['showerrors']:
@@ -100,6 +103,8 @@ class HtmlFilter (HtmlParser):
         self.rulestack = []
         self.buffer = []
         self.document = url or "unknown"
+        if self.javascript:
+            self.jsEnv = jslib.new_jsenv()
 
     def __repr__ (self):
         return "<HtmlFilter with rulestack %s >" % self.rulestack
@@ -191,12 +196,44 @@ class HtmlFilter (HtmlParser):
         if not self.rulestack:
             self.buffer2data()
 
+
     def jsStartElement (self, tag, attrs):
         """Check popups for onmouseout and onmouseover.
            Inline extern javascript sources (only in the
            same domain)"""
-        # XXX
+        changed = 0
+        for name in ('onmouseover', 'onmouseout'):
+            if attrs.has_key(name) and self.jsPopup(attrs, name):
+                del attrs[name]
+                changed = 1
+        if tag=='form':
+            name = attrs.get('name', attrs.get('id'))
+            self.jsForm(name, attrs.get('action'), attrs.get('target'))
         self.buffer.append((STARTTAG, tag, attrs))
+
+
+    def jsPopup (self, attrs, name):
+        """check if attrs[name] javascript opens a popup window"""
+        val = attrs[name]
+        if not val: return
+        self.jsEnv.attachListener(self)
+        self.jsEnv.executeScriptAsFunction(val)
+        self.jsEnv.detachListener(self)
+        return self.popup_counter
+
+
+    def jsForm (self, name, action, target):
+        self.jsEnv.addForm(name, action, target)
+
+
+    def processData (self, data):
+        # XXX
+        pass
+
+
+    def processPopup (self):
+        self.popup_counter += 1
+
 
     def endElement (self, tag):
         """We know the following: if a rule matches, it must be
@@ -221,10 +258,12 @@ class HtmlFilter (HtmlParser):
         if not self.rulestack:
             self.buffer2data()
 
+
     def jsEndElement (self, tag):
         """parse generated html for scripts"""
         if tag!='script': return
         # XXX
+
 
     def doctype (self, data):
         self.buffer_append_data([DATA, "<!DOCTYPE%s>"%data])
