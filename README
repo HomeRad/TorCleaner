@@ -105,6 +105,7 @@ The HTML parser is inspired from HotSAX.
 CoAdvisor, for extracting all the important RFC stuff for non-caching
 proxies in their test case documentation.
 
+Colin Stewart for making simpleTAL.
 
 What you can do
 ---------------
