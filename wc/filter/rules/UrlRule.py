@@ -23,9 +23,10 @@ from wc.XmlUtils import xmlify
 
 class UrlRule (Rule):
     """rule which applies only to urls which match a regular expression"""
-    def __init__ (self, title="No title", desc="", disable=0, matchurl="",
-                  dontmatchurl="", oid=0):
-        super(UrlRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, matchurl="", dontmatchurl=""):
+        super(UrlRule, self).__init__(sid=sid, oid=oid, title=title,
+                                      desc=desc, disable=disable)
         self.matchurl = matchurl
         self.dontmatchurl = dontmatchurl
         self.attrnames.extend(('matchurl', 'dontmatchurl'))

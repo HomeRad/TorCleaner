@@ -33,9 +33,10 @@ def recalc_up_down (rules):
 
 
 class FolderRule (Rule):
-    def __init__ (self, title="No title", desc="", disable=0, lang="",
-                  filename="", oid=0):
-        super(FolderRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, lang="", filename=""):
+        super(FolderRule, self).__init__(sid=sid, oid=oid, title=title,
+                                         desc=desc, disable=disable)
         # make filename read-only
         self.__filename = filename
         self.lang = lang
@@ -43,8 +44,8 @@ class FolderRule (Rule):
 
 
     def __str__ (self):
-        return super(FolderRule, self).__str__()+\
-            ("\nrules:   %d"%len(self.rules))+\
+        return super(FolderRule, self).__str__()+ \
+            ("\nrules:   %d"%len(self.rules))+ \
             ("\nlang:    %s"%self.lang)
 
 

@@ -98,7 +98,7 @@ class Blocker (Filter):
 
 
     def add_blockdomains (self, rule):
-        lines = self.get_file_data(rule.file)
+        lines = self.get_file_data(rule.filename)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
@@ -106,7 +106,7 @@ class Blocker (Filter):
 
 
     def add_allowdomains (self, rule):
-        lines = self.get_file_data(rule.file)
+        lines = self.get_file_data(rule.filename)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
@@ -114,7 +114,7 @@ class Blocker (Filter):
 
 
     def add_blockurls (self, rule):
-        lines = self.get_file_data(rule.file)
+        lines = self.get_file_data(rule.filename)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
@@ -122,7 +122,7 @@ class Blocker (Filter):
 
 
     def add_allowurls (self, rule):
-        lines = self.get_file_data(rule.file)
+        lines = self.get_file_data(rule.filename)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue

@@ -33,10 +33,11 @@ Netlocparts = [
     ]
 
 class AllowRule (Rule):
-    def __init__ (self, title="No title", desc="", disable=0, scheme="",
-                  host="", port="", path="", parameters="", query="",
-		  fragment="", oid=0):
-        super(AllowRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, scheme="", host="", port="", path="",
+                  parameters="", query="", fragment=""):
+        super(AllowRule, self).__init__(sid=sid, oid=oid, title=title,
+                                        desc=desc, disable=disable)
         self.scheme = scheme
         self.host = host
         self.port = port

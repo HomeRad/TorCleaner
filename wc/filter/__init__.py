@@ -94,7 +94,7 @@ def GetRuleFromName (name):
     name = '%sRule' % name.capitalize()
     exec "from wc.filter.rules.%s import %s"%(name,name)
     klass = locals()[name]
-    return klass()
+    return klass(None)
 
 
 def applyfilter (i, data, fun='filter', attrs={}):

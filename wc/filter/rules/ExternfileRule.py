@@ -23,18 +23,19 @@ from wc.XmlUtils import xmlify
 
 class ExternfileRule (Rule):
     """rule with data stored in an external file"""
-    def __init__ (self, title="No title", desc="", disable=0, oid=0,
-                  file=None):
-        super(ExternfileRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
-        self.file = file
-        self.attrnames.append('file')
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, filename=None):
+        super(ExternfileRule, self).__init__(sid=sid, oid=oid, title=title,
+                                             desc=desc, disable=disable)
+        self.filename = filename
+        self.attrnames.append('filename')
 
 
     def __str__ (self):
         return "%sfile %s\n" % \
-            (super(ExternfileRule, self).__str__(), `self.file`)
+            (super(ExternfileRule, self).__str__(), `self.filename`)
 
 
     def toxml (self):
-        return '%s file="%s"/>' % \
-            (super(ExternfileRule, self).toxml(), xmlify(self.file))
+        return '%s filename="%s"/>' % \
+            (super(ExternfileRule, self).toxml(), xmlify(self.filename))

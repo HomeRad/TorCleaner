@@ -24,10 +24,11 @@ from wc.XmlUtils import xmlify, unxmlify
 class HeaderRule (UrlRule):
     """rule for filtering HTTP headers"""
 
-    def __init__ (self, title="No title", desc="", disable=0, name="noname",
-                  value="", oid=0):
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, name="noname", value=""):
         """init rule name and value"""
-        super(HeaderRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+        super(HeaderRule, self).__init__(sid=sid, oid=oid, title=title,
+                                         desc=desc, disable=disable)
         self.name = name
         self.value = value
         self.attrnames.append('name')

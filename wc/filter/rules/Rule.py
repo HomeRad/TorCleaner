@@ -27,33 +27,53 @@ class Rule (object):
     """Basic rule class for filtering.
     A basic rule has:
        title - the title
-       oid - identification number, also used for sorting
+       sid - identification string (unique among all sid)
+       oid - sorting number (unique only for sorting in one level)
        desc - the description
        disable - flag to disable this rule
        urlre - regular expression that matches urls applicable for this rule.
                leave empty to apply to all urls.
        parent - the parent folder (if any); look at FolderRule class
     """
-    def __init__ (self, title="No title", desc="", disable=0, parent=None,
-                  oid=0):
+    def __init__ (self, sid=None, oid=None, title="<title>", desc="",
+                  disable=0, parent=None):
+        self.sid = sid
         self.title = title
-        if not oid:
-            self.oid = wc.filter.rules.rulecounter
-            wc.filter.rules.rulecounter += 1
+        if oid is None:
+            self.oid = wc.filter.rules.oidcounter
+            wc.filter.rules.oidcounter += 1
         else:
             self.oid = oid
-	    if oid >= wc.filter.rules.rulecounter:
-	        wc.filter.rules.rulecounter = oid+1
+	    if oid >= wc.filter.rules.oidcounter:
+	        wc.filter.rules.oidcounter = oid+1
         self.desc = desc
         self.disable = disable
         self.parent = parent
-        self.attrnames = ['title', 'desc', 'disable', 'oid']
+        self.attrnames = ['title', 'desc', 'disable', 'sid', 'oid']
         self.intattrs = ['disable', 'oid']
         self.listattrs = []
 
 
-    def __cmp__ (self, other):
-        return cmp(self.oid, other.oid)
+    def __lt__ (self, other):
+        return self.oid < other.oid
+
+    def __le__ (self, other):
+        return self.oid <= other.oid
+
+    def __eq__ (self, other):
+        return self.oid == other.oid
+
+    def __ne__ (self, other):
+        return self.oid != other.oid
+
+    def __gt__ (self, other):
+        return self.oid > other.oid
+
+    def __ge__ (self, other):
+        return self.oid >= other.oid
+
+    def __hash__ (self):
+        return self.oid
 
 
     def fill_attrs (self, attrs, name):
@@ -90,8 +110,9 @@ class Rule (object):
 
     def toxml (self):
         s = "<"+self.get_name()
-        s += ' title="%s"' % xmlify(self.title)
+        s += ' sid="%s"' % xmlify(self.sid)
 	s += ' oid="%d"' % self.oid
+        s += ' title="%s"' % xmlify(self.title)
         if self.desc:
             s += '\n desc="%s"' % xmlify(self.desc)
         if self.disable:
@@ -101,6 +122,7 @@ class Rule (object):
 
     def __str__ (self):
         s = self.get_name()+"\n"
+        s += "sid     %s\n" % self.sid
         s += "title   %s\n" % `self.title`
 	s += "oid     %d\n" % self.oid
         s += "desc    %s\n" % `self.desc`
@@ -110,4 +132,5 @@ class Rule (object):
 
     def tiptext (self):
         """return short info for gui display"""
-        return "%s #%d" % (self.get_name().capitalize(), self.oid)
+        return "%s #%d" % (self.get_name().capitalize(), self.sid)
+

@@ -23,13 +23,14 @@ from Rule import Rule
 from wc.XmlUtils import xmlify, unxmlify
 
 class BlockRule (AllowRule):
-    def __init__ (self, title="No title", desc="", disable=0, scheme="",
-                  host="", port="", path="", parameters="", query="",
-		  fragment="", url="", oid=0):
-        super(BlockRule, self).__init__(title=title, desc=desc, disable=disable,
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, scheme="", host="", port="", path="",
+                  parameters="", query="", fragment="", url=""):
+        super(BlockRule, self).__init__(sid=sid, oid=oid, title=title,
+                           desc=desc, disable=disable,
                            scheme=scheme, host=host, port=port, path=path,
                            parameters=parameters, query=query,
-                           fragment=fragment, oid=oid)
+                           fragment=fragment)
         self.url = url
 
 

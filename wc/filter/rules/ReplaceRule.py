@@ -22,9 +22,10 @@ from UrlRule import UrlRule
 from wc.XmlUtils import xmlify, unxmlify
 
 class ReplaceRule (UrlRule):
-    def __init__ (self, title="No title", desc="", disable=0,
-                  search="", replace="", oid=0):
-        super(ReplaceRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, search="", replace=""):
+        super(ReplaceRule, self).__init__(sid=sid, oid=oid, title=title,
+                                          desc=desc, disable=disable)
         self.search = search
         self.replace = replace
         self.attrnames.append('search')

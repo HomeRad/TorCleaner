@@ -78,9 +78,11 @@ class RewriteRule (UrlRule):
        constraints (stored in self.attrs) or a regular expression to
        match the enclosed block (self.enclosed).
     """
-    def __init__ (self, title="No title", desc="", disable=0, tag="a",
-               attrs=None, enclosed="", part=COMPLETE, replacement="", oid=0):
-        super(RewriteRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, tag="a", attrs=None, enclosed="", part=COMPLETE,
+                  replacement=""):
+        super(RewriteRule, self).__init__(sid=sid, oid=oid, title=title,
+                                          desc=desc, disable=disable)
         self.tag = tag
         if attrs is None:
             self.attrs = {}

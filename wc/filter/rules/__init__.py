@@ -19,6 +19,42 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-# global counter in case the .zap rules dont yet have the oid entry
-rulecounter = 1
+from sets import Set
 
+# global counter in case the .zap rules dont yet have the oid entry
+oidcounter = 1
+
+_rules_without_sid = []
+_sids = Set()
+_sidcounter = 0
+
+def register_rule (rule):
+    _rules_without_sid.append(rule)
+
+
+def register_sid (sid):
+    _sids.add(sid)
+
+
+def has_sid (sid):
+    return sid in _sids
+
+
+def generate_sids ():
+    for rule in _rules_without_sid:
+        rule.sid = generate_unique_sid("wc")
+    del _rules_without_sid[:]
+
+
+def generate_unique_sid (prefix):
+    sid = generate_sid(prefix)
+    while has_sid(sid):
+        sid = generate_sid(prefix)
+    register_sid(sid)
+    return sid
+
+
+def generate_sid (prefix):
+    global _sidcounter
+    _sidcounter += 1
+    return "%s.%d" % (prefix, _sidcounter)

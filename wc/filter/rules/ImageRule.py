@@ -22,9 +22,10 @@ from UrlRule import UrlRule
 from wc.XmlUtils import xmlify
 
 class ImageRule (UrlRule):
-    def __init__ (self, title="No title", desc="", disable=0, width=0,
-                  height=0, formats=[], url="", oid=0):
-        super(ImageRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+                  disable=0, width=0, height=0, formats=[], url=""):
+        super(ImageRule, self).__init__(sid=sid, oid=oid, title=title,
+                                        desc=desc, disable=disable)
         self.width = width
         self.height = height
         self.intattrs.extend(('width','height'))
