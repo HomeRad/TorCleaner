@@ -214,7 +214,12 @@ def _exec_form (form, lang):
     if form.has_key('addnofilter') and form.has_key('newnofilter'):
         _form_addnofilter(_getval(form, 'newnofilter').strip())
     elif form.has_key('delnofilter') and form.has_key('nofilterhosts'):
-        _form_delnofilter(form)
+        _form_delnofilter(_getlist(form, 'nofilterhosts'))
+    # nofilter shortcut: disable all filtering
+    if form.has_key('disablefilter'):
+        _form_addnofilter('1.1.1.1/0')
+    elif form.has_key('enablefilter'):
+        _form_delnofilter(['1.1.1.1/0'])
     return res[0]
 
 
@@ -401,9 +406,9 @@ def _form_addnofilter (host):
         info['addnofilter'] = True
 
 
-def _form_delnofilter (form):
+def _form_delnofilter (hosts):
     removed = 0
-    for host in _getlist(form, 'nofilterhosts'):
+    for host in hosts:
         if host in config['nofilterhosts']:
             config['nofilterhosts'].remove(host)
             removed += 1

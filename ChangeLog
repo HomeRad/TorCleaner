@@ -44,6 +44,13 @@
     Changed: wc/configuration.py, wc/proxy/Listener.py,
       wc/webgui/context/config_html.py, template/classic/config.html
 
+  * Configuration shortcut: config.html?disablefilter=1 disables
+    all filters. This is a shortcut for adding 1.1.1.1/0 to the nofilter
+    host list.
+    Specifying enablefilter=1 enables the filters back again.
+    Type: feature
+    Changed: wc/webgui/context/config_html.py
+
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.
