@@ -50,3 +50,14 @@ class Rating (object):
         if self.category_values:
             self.category_values = {}
             self.modified = time.time()
+
+    def serialize (self):
+        """Return serialized string of this rating"""
+        lines = []
+        lines.append("url %s" % self.url)
+        lines.append("generic %s" % str(self.generic))
+        lines.append("modified %d" % self.modified)
+        for item in self.category_values.items():
+            lines.append("category %s=%s" % item)
+        return "\n".join(lines)
+
