@@ -366,7 +366,7 @@ class TemplateInterpreter:
 	def cmdOutput (self, command, args):
                 if self.translator is not None and self.translateContent:
                         self.file.write(self.translator.gettext(args) % \
-                                        self.context.getContextVarsMap())
+                                        self.context.getVariableMap())
                 else:
                         self.file.write (args)
 		self.programCounter += 1
@@ -463,7 +463,7 @@ class TemplateInterpreter:
                         if not (result is None or result.isNothing() or result.isDefault()):
                                 if self.translator is not None:
                                         self.tagContent = (0, self.translator.gettext(result.value()) % \
-                                                              self.context.getContextVarsMap())
+                                                              self.context.getVariableMap())
                                 else:
                                         self.tagContent = (0, result.value())
         			self.movePCForward = self.symbolTable[args[1]]

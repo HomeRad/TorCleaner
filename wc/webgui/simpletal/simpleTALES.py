@@ -319,7 +319,7 @@ class Context:
 		else:
 			self.locals [name] = ContextVariable (value)
 
-        def getContextVarsMap (self):
+        def getVariableMap (self):
                 """return a mapping of all context variables"""
                 d = {}
                 for key, var in self.globals.items():
