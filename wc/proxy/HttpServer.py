@@ -176,33 +176,16 @@ class HttpServer (Server):
 
     def process_read (self):
         """process read event by delegating it to process_* functions"""
-        if self.state in ('connect', 'client') and \
-           (self.client and self.client.method!='CONNECT'):
-            # with http pipelining the client could send more data after
-            # the initial request
-            error(PROXY, 'server received data in %s state', self.state)
-            error(PROXY, '%r', self.read())
-            return
-
+        assert self.state!='closed'
         while True:
-            if not self.client:
+            if not self.client or self.state=='unreadable':
                 # By the time this server object was ready to receive
                 # data, the client has already closed the connection!
                 # We never received the client_abort because the server
                 # didn't exist back when the client aborted.
                 self.client_abort()
                 return
-            bytes_before = len(self.recv_buffer)
-            state_before = self.state
-            try:
-                handler = getattr(self, 'process_'+self.state)
-            except AttributeError:
-                handler = lambda: None # NO-OP
-            handler()
-            bytes_after = len(self.recv_buffer)
-            state_after = self.state
-            if self.client is None or \
-               (bytes_before==bytes_after and state_before==state_after):
+            if self.delegate_read():
                 break
 
 
