@@ -37,8 +37,9 @@ pending_reload = False
 def init (confdir=wc.ConfigDir):
     global config
     config = Configuration(confdir)
-    import wc.filter.rating
-    wc.filter.rating.rating_cache_load()
+    # XXX ratings disabled
+    #import wc.filter.rating
+    #wc.filter.rating.rating_cache_load()
     return config
 
 
@@ -398,12 +399,15 @@ class ZapperParser (BaseParser):
         from wc.filter.rules.FolderRule import FolderRule
         self.folder = FolderRule(filename=filename)
         self.cmode = None
+        self.error = None
         self.rule = None
         self.compile_data = compile_data
 
     def start_element (self, name, attrs):
         """handle start tag of folder, rule or nested element"""
         super(ZapperParser, self).start_element(name, attrs)
+        if self.error:
+            return
         self.cmode = name
         if name in rulenames:
             self.rule = wc.filter.GetRuleFromName(name)
@@ -418,25 +422,33 @@ class ZapperParser (BaseParser):
         elif name == 'folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            raise ParseException, _("unknown tag name %r") % name
+            wc.log.warn(wc.LOG_PROXY, _("unknown tag name %r"), name)
+            self.error = name
+            self.cmode = None
 
     def end_element (self, name):
         """handle end tag of folder, rule or nested element"""
-        self.cmode = None
-        if self.rule is None:
-            self.folder.end_data(name)
+        if self.error:
+            if name == self.error:
+                self.error = None
         else:
-            self.rule.end_data(name)
-        if name in rulenames:
-            if self.compile_data:
-                self.rule.compile_data()
-        elif name == 'folder':
-            if self.compile_data:
-                self.folder.compile_data()
+            self.cmode = None
+            if self.rule is None:
+                self.folder.end_data(name)
+            else:
+                self.rule.end_data(name)
+            if name in rulenames:
+                if self.compile_data:
+                    self.rule.compile_data()
+            elif name == 'folder':
+                if self.compile_data:
+                    self.folder.compile_data()
 
     def character_data (self, data):
         """handle rule of folder character data"""
-        if self.cmode:
+        if self.error:
+            pass
+        elif self.cmode:
             if self.rule is None:
                 self.folder.fill_data(data, self.cmode)
             else:
