@@ -2,6 +2,8 @@
 """magic(5) module"""
 
 import os
+import wc
+import wc.magic
 
 
 _magic = None
@@ -11,10 +13,8 @@ def classify (fp):
     global _magic
     if not _magic:
         # initialize mime data
-        from magic import Magic
-        from wc import ConfigDir
-        magicfile = os.path.join(ConfigDir, "magic.mime")
+        magicfile = os.path.join(wc.ConfigDir, "magic.mime")
         assert os.path.exists(magicfile)
         magiccache = magicfile+".mgc"
-        _magic = Magic(magicfile, magiccache)
+        _magic = wc.magic.Magic(magicfile, magiccache)
     return _magic.classify(fp)
