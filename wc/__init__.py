@@ -69,10 +69,10 @@ except IOError:
 
 def remove_headers (headers, to_remove):
     """utility function to remove entries from RFC822 headers"""
-    for h in headers.headers[:]:
-        for pat in ["(?i)%s:"%s for s in to_remove]:
-            if re.match(pat, h):
-                headers.headers.remove(h)
+    for h in to_remove:
+        if headers.has_key(h):
+            #debug(BRING_IT_ON, "remove header", `h`)
+            del headers[h]
 
 def error (s):
     print >>sys.stderr, "error:", s

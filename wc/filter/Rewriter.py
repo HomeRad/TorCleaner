@@ -150,7 +150,9 @@ class HtmlFilter (HtmlParser):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         rulelist = []
+        # default data
         tobuffer = (STARTTAG, tag, attrs)
+        # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
                 #debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
@@ -168,6 +170,7 @@ class HtmlFilter (HtmlParser):
         if rulelist:
             self.rulestack.append((len(self.buffer), rulelist))
         self.buffer_append_data(tobuffer)
+        # if rule stack is empty, write out the buffered data
         if not self.rulestack:
             self.buffer2data()
 

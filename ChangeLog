@@ -5,6 +5,17 @@
     Changed files: config/misc.zap
   * Use lists and "".join(list) in HtmlFilter.buffer2data, which gives
     a pretty good speedup when filtering big HTML files.
+    Changed files: wc/filter/Rewriter.py
+  * Always send our Accept-Encoding header, but remember what the
+    client could understand.
+    Changed files: wc/proxy/HttpClient.py, wc/proxy/HttpServer.py,
+      wc/proxy/ClientServerMatchmaker.py
+  * Only compress files when the client accepts the gzip encoding.
+    Changed files: wc/filter/Compress.py
+  * Some b0rked servers send a gzip encoding when the file is not
+    compressed. So the decoding disables the decompression when such
+    an error is encountered.
+    Changed files: wc/proxy/GunzipStream.py
 
 0.59
   * - add missing import of _
