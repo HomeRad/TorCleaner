@@ -1,4 +1,4 @@
-import wc, os, sha, re
+import wc, os, sha, re, base64
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
@@ -435,7 +435,7 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdParentProxyPass (self, sender, sel, ptr):
-        self.parentproxypass = sender.getText()
+        self.parentproxypass = base64.encodestring(sender.getText())
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Parentproxypass was changed")
         return 1
