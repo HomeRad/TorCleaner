@@ -70,7 +70,8 @@ class ImageReducer (wc.filter.Filter.Filter):
         """initialize image reducer buffer and flags"""
         # don't filter tiny images
         d = super(ImageReducer, self).getAttrs(url, headers)
-        if headers.get('Content-Length', 0) < self.minimal_size_bytes:
+        length = headers.get('Content-Length')
+        if length is not None and length < self.minimal_size_bytes:
             return d
         ctype = headers['Content-Type']
         headers['Content-Type'] = 'image/jpeg'
