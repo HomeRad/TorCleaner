@@ -207,10 +207,9 @@ class Configuration (dict):
         self.read_filterconf()
         if self['development']:
             # avoid conflicting servers if an official WebCleaner release
-            # is installed
+            # is installed by incrementing port numbers
             self['port'] += 1
             self['sslport'] += 1
-            self['sslgateway'] = 1
             # test data directory url
             self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
 
