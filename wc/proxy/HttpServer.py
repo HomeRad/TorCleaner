@@ -16,7 +16,8 @@ from Headers import has_header_value, WcMessage, get_content_length
 from wc import i18n, config
 from wc.log import *
 from ServerPool import serverpool
-from wc.filter import applyfilter, get_filterattrs, FilterWait, FilterRating
+from wc.filter import applyfilter, get_filterattrs
+from wc.filter import FilterWait, FilterRating, FilterProxyError
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
