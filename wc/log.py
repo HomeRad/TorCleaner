@@ -27,7 +27,6 @@ __date__    = "$Date$"[7:-2]
 
 from wc import ConfigDir, AppName, iswriteable
 import os, re, logging, logging.config
-from logging.handlers import RotatingFileHandler, NTEventLogHandler
 
 def initlog (filename):
     """initialize logfiles and configuration"""
@@ -42,20 +41,22 @@ def initlog (filename):
 def get_root_handler ():
     """return a handler for basic logging"""
     if os.name=="nt":
+        from logging.handlers import NTEventLogHandler
         return set_format(NTEventLogHandler(AppName))
     logfile = get_log_file("%s.err"%AppName)
     mode = 'a'
-    handler = FileHandler(logfile, mode, maxBytes, backupCount)
+    handler = logging.FileHandler(logfile, mode)
     return set_format(handler)
 
 
 def get_wc_handler ():
     """return a handler for webcleaner logging"""
     if os.name=="nt":
+        from logging.handlers import NTEventLogHandler
         return set_format(NTEventLogHandler(AppName))
     logfile = get_log_file("%s.log"%AppName)
     mode = 'a'
-    handler = FileHandler(logfile, mode, maxBytes, backupCount)
+    handler = logging.FileHandler(logfile, mode)
     return set_format(handler)
 
 
@@ -63,7 +64,7 @@ def get_access_handler ():
     """return a handler for access logging"""
     logfile = get_log_file("%s-access.log"%AppName)
     mode = 'a'
-    handler = FileHandler(logfile, mode, maxBytes, backupCount)
+    handler = logging.FileHandler(logfile, mode)
     # log only the message
     handler.setFormatter(logging.Formatter("%(message)s"))
     return handler
