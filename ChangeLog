@@ -3,6 +3,14 @@
     Type: bugfix
     Changed: wc/url.py
 
+  * added all allowed blocked pages to public documents
+    Type: bugfix
+    Changed: wc/proxy/Allowed.py
+
+  * always check for public documents in local pages
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
 2.15 (released 22.5.2004)
   * set default config dir in webcleaner script
     Type: bugfix
