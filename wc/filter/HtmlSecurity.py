@@ -48,7 +48,7 @@ class HtmlSecurity (object):
     def scan_end_tag (self, tag):
         fun = "%s_end"%tag
         if hasattr(self, fun):
-            getattr(self, fun)(htmlfilter)
+            getattr(self, fun)()
 
 
     def input_start (self, attrs, htmlfilter):
@@ -99,7 +99,7 @@ class HtmlSecurity (object):
             self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
 
 
-    def object_end (self, htmlfilter):
+    def object_end (self):
         if self.in_winhelp:
             self.in_winhelp = False
 
