@@ -10,11 +10,8 @@ Required are the "tarfile" module and Python 2.2
 
 import sys, time, os, re, urllib2, gzip
 from tarfile import TarFile
-try:
-    from wc.XmlUtils import xmlify
-except ImportError:
-    sys.path.insert(0, os.getcwd())
-    from wc.XmlUtils import xmlify
+from wc import ConfigCharset
+from wc.XmlUtils import xmlify
 
 # global vars
 date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -88,15 +85,17 @@ def write_filters ():
 	write_folder(cat, d, data, f)
         f.close()
 
+
 def write_folder (cat, ftype, data, f):
     print "write", cat, "folder"
     d = {
+        "charset": ConfigCharset,
         "title_en": xmlify("%s %s" % (ftype.capitalize(), cat)),
         "title_de": xmlify("%s %s" % (ftype.capitalize(), cat)),
         "desc_en": xmlify("Automatically generated on %s" % date),
         "desc_de": xmlify("Automatisch generiert am %s" % date),
     }
-    f.write("""<?xml version="1.0" encoding="iso-8859-1"?>
+    f.write("""<?xml version="1.0" encoding="%(charset)s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
 <folder disable="0">
 <title lang="en">%(title_en)s</title>
@@ -113,6 +112,7 @@ def write_folder (cat, ftype, data, f):
             _type = "block"
         globals()["write_%s"%t](cat, b, _type, f)
     f.write("</folder>\n")
+
 
 def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
@@ -155,6 +155,7 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
   <description lang="de">%(desc_de)s</description>
 """ % d)
     f.write("</%(type)surls>" % d)
+
 
 def write_expressions (cat, b, ftype, f):
     d = {
@@ -211,6 +212,7 @@ def blacklist (fname):
         f.close()
         read_data(fname, "domains", domains)
 
+
 # for now, only kids_and_teens
 def dmozlists (fname):
     print "filtering %s..." % fname
@@ -243,6 +245,7 @@ def dmozlists (fname):
         line = f.readline()
     f.close()
 
+
 def geturl (basedir, fname, fun, saveas=None):
     if saveas is not None:
         target = saveas
@@ -264,6 +267,7 @@ def geturl (basedir, fname, fun, saveas=None):
             print msg
             return
     fun(target)
+
 
 def rm_rf (directory):
     for f in os.listdir(directory):
@@ -350,6 +354,7 @@ def remove_gunziped_files (fname):
             remove_gunziped_file(fname+"/"+f)
     elif os.path.basename(fname) in ("domains", "urls", "expressions"):
         os.remove(fname)
+
 
 if __name__=='__main__':
     remove_old_data()
