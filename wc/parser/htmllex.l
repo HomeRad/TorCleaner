@@ -157,6 +157,7 @@ static PyObject* quote_string (PyObject* val) {
 %x S_CDATA
 %x S_TAGSTART
 %x S_TAGEND
+%x S_TAGEND2
 %x S_SCRIPT
 %x S_STYLE
 %x S_ATTR1
@@ -671,7 +672,7 @@ RX_DATA [-a-zA-Z0-9_]+
     APPEND_TO_TMP(yyleng);
 }
 
-<S_TAGEND>> {
+<S_TAGEND>{RX_WHITE_SPACE}*> {
     UPDATE_BUFPOS;
     LOWER_TMP;
     SETLVAL;
@@ -691,10 +692,22 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
 <S_TAGEND>{RX_WHITE_SPACE}+ {
-    /* delete whitespace in or around tag names */
     UPDATE_BUFPOS;
+    /* ignore any trailing garbage of this end tag */
+    BEGIN(S_TAGEND2);
 }
 
+<S_TAGEND2>> {
+    UPDATE_BUFPOS;
+    LOWER_TMP;
+    SETLVAL;
+    BEGIN(INITIAL);
+    RETURN(T_ELEMENT_END);
+}
+
+<S_TAGEND2>. {
+    UPDATE_BUFPOS;
+}
   /*********************** TEXT ************************/
 <INITIAL>[^<]+ {
     UPDATE_BUFPOS;
