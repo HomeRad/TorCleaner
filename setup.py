@@ -47,7 +47,8 @@ from distutils.sysconfig import get_python_version
 cc = os.environ.get("CC")
 win_cross_compiling = cc is not None and "mingw32" in cc
 # directory with cross compiled (for win32) python
-win_python_dir = "/home/calvin/src/python-cvs/dist/src/"
+# see also http://kampfwurst.net/python-mingw32/
+win_python_dir = "/home/calvin/src/python23-maint-cvs/dist/src/"
 
 
 def p (path):
