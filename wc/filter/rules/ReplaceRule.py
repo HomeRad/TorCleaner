@@ -33,19 +33,12 @@ class ReplaceRule (UrlRule):
                                           desc=desc, disable=disable)
         self.search = search
         self.replace = replace
-        self.attrnames.append('search')
-
-
-    def fill_data (self, data, name):
-        """add replace data"""
-        if name=='replace':
-            self.replace += data
+        self.attrnames.extend(('search', 'replacement'))
 
 
     def compile_data (self):
         """compile url regular expressions"""
         super(ReplaceRule, self).compile_data()
-        self.replace = unxmlify(self.replace).encode('iso8859-1')
         compileRegex(self, "search")
 
 
@@ -66,5 +59,8 @@ class ReplaceRule (UrlRule):
         if self.search:
             s += '\n search="%s"'%xmlify(self.search)
         if self.replace:
-            return s+">"+xmlify(self.replace)+"</replace>"
-        return s+"/>"
+            s += '\n replacement="%s"'%xmlify(self.replace)
+        s += ">\n"
+        s += self.matchestoxml()
+        s += "</%s>" % self.get_name()
+        return s

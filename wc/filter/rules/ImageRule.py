@@ -46,11 +46,13 @@ class ImageRule (UrlRule):
         """Rule data as XML for storing"""
         s = super(ImageRule, self).toxml()
         if self.width:
-            s += '\n width="%d"'%self.width
+            s += '\n width="%d"' % self.width
         if self.height:
-            s += '\n height="%d"'%self.height
+            s += '\n height="%d"' % self.height
         if self.formats:
-            s += '\n formats="%s"\n'%",".join(self.formats)
+            s += '\n formats="%s"\n' % xmlify(",".join(self.formats))
         if self.url:
-            return s+">"+xmlify(self.url)+"</image>\n"
-        return s+"/>"
+            s += '\n url="%s"\n' % xmlify(self.url)
+        s += ">\n"+self.matchestoxml()
+        s += "</%s>" % self.get_name()
+        return s

@@ -140,6 +140,7 @@ class RewriteRule (UrlRule):
 
     def fill_data (self, data, name):
         """set attribute data"""
+        super(RewriteRule, self).fill_data(data, name)
         if name=='attr':
             self.attrs[self.current_attr] += data
         elif name=='enclosed':
@@ -307,7 +308,9 @@ class RewriteRule (UrlRule):
             s += '>'+xmlify(self.replacement)+"</replacement>\n"
         else:
             s += "/>\n"
-        return s + "</rewrite>"
+        s += self.matchestoxml()
+        s += "</%s>" % self.get_name()
+        return s
 
 
     def __str__ (self):

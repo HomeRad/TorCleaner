@@ -51,6 +51,7 @@ class RatingRule (UrlRule):
 
     def fill_data (self, data, name):
         """add rating and url data"""
+        super(RatingRule, self).fill_data(data, name)
         if name=='category':
             assert self._category
             if self._category not in self.ratings:
@@ -122,11 +123,13 @@ class RatingRule (UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
 	s = "%s>\n" % super(RatingRule, self).toxml()
+        s += self.matchestoxml()
         if self.url:
             s += "<url>%s</url>\n" % xmlify(self.url)
         for category, value in self.ratings.items():
             if value:
                 s += "<category name=\"%s\">%s</category>\n"% \
                       (xmlify(category), xmlify(value))
-        return s+"</rating>"
+        s += "</%s>" % self.get_name()
+        return s
 

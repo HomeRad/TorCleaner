@@ -19,51 +19,75 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import re
 from Rule import Rule, compileRegex
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlify, unxmlify
 from wc.log import *
 
 
 class UrlRule (Rule):
     """rule which applies only to urls which match a regular expression"""
     def __init__ (self, sid=None, title="No title", desc="",
-                  disable=0, matchurl="", dontmatchurl=""):
+                  disable=0, matchurls=[], nomatchurls=[]):
         """initialize rule attributes"""
         super(UrlRule, self).__init__(sid=sid, title=title,
                                       desc=desc, disable=disable)
-        self.matchurl = matchurl
-        self.dontmatchurl = dontmatchurl
-        self.attrnames.extend(('matchurl', 'dontmatchurl'))
+        self.matchurls = []
+        self.nomatchurls = []
+        self.matchurls.extend(matchurls)
+        self.nomatchurls.extend(nomatchurls)
+        self._curdata = ""
 
 
     def appliesTo (self, url):
         """return True iff this rule can be applied to given url"""
-        if self.matchurl:
-            return self.matchurl_ro.search(url)
-        if self.dontmatchurl:
-            return not self.dontmatchurl_ro.search(url)
+        for mo in self.matchurls_ro:
+            if mo.search(url):
+                return True
+        for mo in self.nomatchurls_ro:
+            if mo.search(url):
+                return False
         return True
+
+
+    def fill_data (self, data, name):
+        """add replacement text"""
+        if name in ('matchurl', 'nomatchurl'):
+            self._curdata += data
+
+
+    def end_data (self, name):
+        if name=='matchurl':
+            self.matchurls.append(unxmlify(self._curdata).encode('iso8859-1'))
+        elif name=='nomatchurl':
+            self.nomatchurls.append(unxmlify(self._curdata).encode('iso8859-1'))
 
 
     def compile_data (self):
         """compile url regular expressions"""
         super(UrlRule, self).compile_data()
-        compileRegex(self, "matchurl")
-        compileRegex(self, "dontmatchurl")
+        self.compile_matchurls()
+        self.compile_nomatchurls()
 
 
-    def toxml (self):
-        """Rule data as XML for storing"""
-        s = super(UrlRule, self).toxml()
-        if self.matchurl:
-            s += '\n matchurl="%s"' % xmlify(self.matchurl)
-        if self.dontmatchurl:
-            s += '\n dontmatchurl="%s"' % xmlify(self.dontmatchurl)
-        return s
+    def compile_matchurls (self):
+        self.matchurls_ro = [re.compile(s) for s in self.matchurls]
+
+
+    def compile_nomatchurls (self):
+        self.nomatchurls_ro = [re.compile(s) for s in self.nomatchurls]
+
+
+    def matchestoxml (self):
+        """match url rule data as XML for storing"""
+        l = []
+        l.extend(["<matchurl>%s</matchurl>"%xmlify(r) for r in self.matchurls])
+        l.extend(["<nomatchurl>%s</nomatchurl>"%xmlify(r) for r in self.nomatchurls])
+        return "\n".join(l)
 
 
     def __str__ (self):
         """return rule data as string"""
         return super(UrlRule, self).__str__() + \
-            "matchurl %r\n" % self.matchurl + \
-            "dontmatchurl %r\n" % self.dontmatchurl
+            "matchurls %s\n" % str(self.matchurls) + \
+            "nomatchurls %s\n" % str(self.nomatchurls)

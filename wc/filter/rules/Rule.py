@@ -139,6 +139,11 @@ class Rule (object):
         pass
 
 
+    def end_data (self, name):
+        """called when XML end element was reached"""
+        pass
+
+
     def compile_data (self):
         """register this rule; called when all XML parsing of rule finished"""
         register_rule(self)

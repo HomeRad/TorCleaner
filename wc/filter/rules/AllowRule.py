@@ -44,5 +44,8 @@ class AllowRule (UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        return super(AllowRule, self).toxml() + \
-           '\n url="%s"/>' % xmlify(self.url)
+        s =  super(AllowRule, self).toxml() + \
+             '\n url="%s">\n' % xmlify(self.url)
+        s += self.matchestoxml()
+        s += "</%s>" % self.get_name()
+        return s

@@ -37,6 +37,7 @@ class BlockRule (AllowRule):
 
     def fill_data (self, data, name):
         """add replacement text"""
+        super(BlockRule, self).fill_data(data, name)
         if name=='block':
             self.replacement += data
 
@@ -55,7 +56,9 @@ class BlockRule (AllowRule):
     def toxml (self):
         """Rule data as XML for storing"""
         # chop off the last two chars '/>'
-        s = super(BlockRule, self).toxml()[:-2]
-        if self.replacement:
-            return s+">"+xmlify(self.replacement)+"</block>"
-        return s+"/>"
+        s =  super(AllowRule, self).toxml() + \
+             '\n url="%s" replacement="%s">\n' % \
+             (xmlify(self.url), xmlify(self.replacement))
+        s += self.matchestoxml()
+        s += "</%s>" % self.get_name()
+        return s

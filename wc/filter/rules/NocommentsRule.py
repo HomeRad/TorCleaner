@@ -29,4 +29,7 @@ class NocommentsRule (UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-	return "%s/>" % super(NocommentsRule, self).toxml()
+        s = super(NocommentsRule, self).toxml()
+        s += ">\n" + self.matchestoxml()
+        s += "</%s>" % self.get_name()
+	return s

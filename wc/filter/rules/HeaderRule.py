@@ -32,19 +32,7 @@ class HeaderRule (UrlRule):
                                          desc=desc, disable=disable)
         self.name = name
         self.value = value
-        self.attrnames.append('name')
-
-
-    def fill_data (self, data, name):
-        """add header data"""
-        if name=='header':
-            self.value += data
-
-
-    def compile_data (self):
-        """compile header data"""
-        super(HeaderRule, self).compile_data()
-        self.value = unxmlify(self.value).encode('iso8859-1')
+        self.attrnames.extend(('name', 'value'))
 
 
     def fromFactory (self, factory):
@@ -63,5 +51,7 @@ class HeaderRule (UrlRule):
         s = '%s\n name="%s"' % \
             (super(HeaderRule, self).toxml(), xmlify(self.name))
         if self.value:
-            return s+">"+xmlify(self.value)+"</header>"
-        return s+"/>"
+            s+= ' value="%s"' % xmlify(self.value)
+        s += ">\n"+self.matchestoxml()
+        s += "</%s>" % self.get_name()
+        return s
