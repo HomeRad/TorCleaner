@@ -38,6 +38,7 @@ class Header (Filter):
         self.delete = []
         self.add = {}
 
+
     def addrule (self, rule):
         Filter.addrule(self, rule)
         compileRegex(rule, "matchurl")
@@ -46,6 +47,7 @@ class Header (Filter):
             self.delete.append(rule.name.lower())
         else:
             self.add[rule.name] = rule.value
+
 
     def doit (self, data, **args):
         delete = {}

@@ -55,8 +55,8 @@ class Replacer (Filter):
         return data+buf.flush()
 
     def getAttrs (self, headers, url):
-        # weed out the rules that dont apply to this url
-        rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
+        # weed out the rules that don't apply to this url
+        rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
             return {}
         return {'buf': Buf(rules)}

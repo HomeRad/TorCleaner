@@ -23,17 +23,20 @@ from wc.XmlUtils import xmlify
 
 class ImageRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, width=0,
-                  height=0, type="gif", url="", oid=0):
+                  height=0, formats=[], url="", oid=0):
         UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.width = width
         self.height = height
         self.intattrs.extend(('width','height'))
-        self.type = type
+        self.listattrs.append('formats')
+        self.formats = formats
         self.url = url
-        self.attrnames.extend(('type','url','width','height'))
+        self.attrnames.extend(('formats','url','width','height'))
+
 
     def fromFactory (self, factory):
         return factory.fromImageRule(self)
+
 
     def toxml (self):
         s = UrlRule.toxml(self)
@@ -41,8 +44,8 @@ class ImageRule (UrlRule):
             s += '\n width="%d"' % self.width
         if self.height:
             s += '\n height="%d"' % self.height
-        if self.type!='gif':
-            s += '\n type="%s"\n' % self.type
+        if self.formats:
+            s += '\n formats="%s"\n' % ",".join(formats)
         if self.url:
             return s+">"+xmlify(self.url)+"</image>\n"
         return s+"/>"

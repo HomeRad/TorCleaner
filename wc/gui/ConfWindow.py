@@ -24,7 +24,7 @@ from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from wc import i18n, ConfigDir, TemplateDir, Configuration, Version, \
-     filterconf_files, ip, sort_seq
+     filterconf_files, ip, sort_seq, filtermodules
 from wc.XmlUtils import xmlify
 from FXPy.fox import *
 from wc.filter.rules.FolderRule import FolderRule
@@ -69,6 +69,8 @@ like HTML, WAV, etc."""),
 
 "ImageReducer": i18n._("""Convert images to low quality JPEG files to reduce
 bandwidth"""),
+
+"ImageSize": i18n._("""Remove images with certain sizes"""),
 }
 
 _proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
@@ -223,7 +225,7 @@ class ConfWindow (ToolWindow):
         for i, theme in enumerate(self.themes):
              cols = max(len(theme), cols)
              d.appendItem(theme)
-             if theme == self.webgui_theme:
+             if theme == self.gui_theme:
                  d.setCurrentItem(i)
         d.setEditable(0)
         d.setNumColumns(cols)
@@ -287,7 +289,9 @@ class ConfWindow (ToolWindow):
         FXMenuCommand(filtermenu, "Block", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Header", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Image", None, self, self.ID_NEWRULE)
+        FXMenuCommand(filtermenu, "Javascript", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Nocomments", None, self, self.ID_NEWRULE)
+        FXMenuCommand(filtermenu, "Pics", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Rewrite", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Replacer", None, self, self.ID_NEWRULE)
         FXMenuCascade(addmenu, i18n._("Filter"), None, filtermenu)
@@ -338,10 +342,10 @@ class ConfWindow (ToolWindow):
     def onCmdTheme (self, sender, sel, ptr):
         theme = sender.retrieveItem(sender.getCurrentItem())
         debug(GUI, "theme=%s", theme)
-        if self.webgui_theme != theme:
-            self.webgui_theme = theme
+        if self.gui_theme != theme:
+            self.gui_theme = theme
             self.getApp().dirty = 1
-            debug(GUI, "Webgui theme=%s", self.webgui_theme)
+            debug(GUI, "Gui theme=%s", self.gui_theme)
         return 1
 
 
@@ -742,20 +746,13 @@ class ConfWindow (ToolWindow):
         for key in ['version','port','parentproxy','parentproxyport',
 	 'configfile', 'nofilterhosts', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass', 'allowedhosts',
-         'webgui_theme', 'timeout',]:
+         'gui_theme', 'timeout',]:
             setattr(self, key, self.config[key])
         self.nofilterhosts = ip.map2hosts(self.nofilterhosts)
         self.allowedhosts = ip.map2hosts(self.allowedhosts)
-        self.modules = {
-	    "Header": 0,
-	    "Blocker": 0,
-	    "GifImage": 0,
-            "ImageReducer": 0,
-	    "BinaryCharFilter": 0,
-	    "Rewriter": 0,
-            "Replacer": 0,
-	    "Compress": 0,
-	}
+        self.modules = {}
+        for f in filtermodules:
+            self.modules[f] = 0
         for f in self.config['filters']:
             self.modules[f] = 1
         self.folders = self.config['rules']
@@ -804,7 +801,7 @@ class ConfWindow (ToolWindow):
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
              ' showerrors="%d"\n' % self.showerrors +\
              ' timeout="%d"\n' % self.timeout
-        s += ' webgui_theme="%s"\n' % xmlify(self.webgui_theme)
+        s += ' gui_theme="%s"\n' % xmlify(self.gui_theme)
         hosts = sort_seq(self.nofilterhosts)
         s += ' nofilterhosts="%s"\n'%xmlify(",".join(hosts))
         hosts = sort_seq(self.allowedhosts)

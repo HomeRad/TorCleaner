@@ -48,6 +48,7 @@ class Rule:
         self.parent = parent
         self.attrnames = ['title', 'desc', 'disable', 'oid']
         self.intattrs = ['disable', 'oid']
+        self.listattrs = []
 
 
     def __cmp__ (self, other):
@@ -61,8 +62,16 @@ class Rule:
                 setattr(self, attr, val)
         for attr in self.intattrs:
             val = getattr(self, attr)
-            if val and type(val) != IntType:
-                setattr(self, attr, int(getattr(self, attr)))
+            if val:
+                setattr(self, attr, int(val))
+            else:
+                setattr(self, attr, 0)
+        for attr in self.listattrs:
+            val = getattr(self, attr)
+            if val:
+                setattr(self, attr, val.split(","))
+            else:
+                setattr(self, attr, [])
 
 
     def fill_data (self, data, name):

@@ -154,7 +154,7 @@ def filterconf_files ():
 
 
 # available filter modules
-filtermodules = ["Header", "Blocker", "GifImage", "ImageReducer",
+filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                  "BinaryCharFilter", "Rewriter", "Replacer", "Compress", ]
 
 class Configuration (dict):
@@ -196,7 +196,7 @@ class Configuration (dict):
         self['mime_content_rewriting'] = []
         self['headersave'] = 100
         self['showerrors'] = 0
-        self['webgui_theme'] = "classic"
+        self['gui_theme'] = "classic"
         self['timeout'] = 30
 
 
@@ -225,7 +225,7 @@ class Configuration (dict):
         if self['showerrors']:
             f.write(' showerrors="1"\n')
         f.write(' timeout="%d"\n' % self['timeout'])
-        f.write(' webgui_theme="%s"\n' % xmlify(self['webgui_theme']))
+        f.write(' gui_theme="%s"\n' % xmlify(self['gui_theme']))
         hosts = sort_seq(ip.map2hosts(self['nofilterhosts']))
         f.write(' nofilterhosts="%s"\n'%xmlify(",".join(hosts)))
         hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
@@ -256,6 +256,7 @@ class Configuration (dict):
             exec "from filter import %s" % f
             _module = getattr(wc.filter, f)
             # add content-rewriting mime types to special list
+            # XXX ImageReducer and ImageSize???
             if f in ('Rewriter', 'Replacer', 'GifImage', 'Compress'):
                 for mime in getattr(_module, "mimelist"):
                     if mime not in self['mime_content_rewriting']:
@@ -372,7 +373,7 @@ class WConfigParser (BaseParser):
                 self.config[key] = int(self.config[key])
             for key in ('version', 'parentproxy', 'proxyuser',
                         'proxypass', 'parentproxyuser', 'parentproxypass',
-                        'webgui_theme',
+                        'gui_theme',
                         ):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])

@@ -31,13 +31,16 @@ def get_time (secs):
 # names of the filter types
 Filternames = ['block', 'rewrite', 'allow', 'header', 'image', 'nocomments']
 
+config = wc.Configuration()
+
 def error (msg):
     sys.stderr.write("error: "+msg+"\n")
 
 def loadIcon (app, filename):
     """load PNG icons"""
-    filename = os.path.join(wc.TemplateDir, filename)
-    if filename[-3:].lower()=='png':
+    themedir = os.path.join(wc.TemplateDir, config['gui_theme'])
+    filename = os.path.join(themedir, filename)
+    if filename[-4:].lower()=='.png':
         return FXPNGIcon(app, open(filename, 'rb').read())
     raise Exception("only PNG graphics supported")
 

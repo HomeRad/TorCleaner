@@ -28,7 +28,7 @@ from wc.log import *
 orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
-rulenames = ['image']
+rulenames = []
 # which mime types this filter applies to
 mimelist = map(compileMime, ['image/gif'])
 # XXX also filter other image types than gif: at least jpg and png
@@ -50,12 +50,6 @@ class GifImage (Filter):
         Filter.__init__(self, mimelist)
         self.tiny_gif = None
 
-    def addrule (self, rule):
-        Filter.addrule(self, rule)
-        compileRegex(rule, "matchurl")
-        compileRegex(rule, "dontmatchurl")
-
-
     def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
         gifparser = attrs['gifparser']
@@ -75,12 +69,7 @@ class GifImage (Filter):
 
 
     def getAttrs (self, headers, url):
-        # first: weed out the rules that dont apply to this url
-        rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
-        if not rules:
-            return {}
-        sizes = [ (r.width, r.height) for r in rules if r.type=='gif' ]
-        return {'gifparser': GifParser(sizes)}
+        return {'gifparser': GifParser()}
 
 
 

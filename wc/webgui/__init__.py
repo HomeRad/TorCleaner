@@ -102,7 +102,7 @@ def get_template_url (url):
 
 def get_template_path (path):
     """return tuple (path, dirs)"""
-    base = os.path.join(TemplateDir, config['webgui_theme'])
+    base = os.path.join(TemplateDir, config['gui_theme'])
     base = norm(base)
     dirs = get_relative_path(path)
     if not dirs:
