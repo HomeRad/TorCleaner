@@ -18,23 +18,18 @@ def _main():
     from wc.filter import FilterException
     attrs = wc.filter.initStateObjects(url=f)
     filtered = ""
-    for c in data:
-        try:
-            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                              c, 'filter', attrs)
-        except FilterException, msg:
-            print "Test: filter:", msg
     i = 1
     while 1:
         try:
             filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                             "", 'finish', attrs)
+                                             data, 'finish', attrs)
             break
         except FilterException, msg:
-            print "Test: finish:", msg
+            print "Test: finish: exception:", msg
+            data = ""
             proxy_poll(timeout=max(0, run_timers()))
         i+=1
-        if i==6:
+        if i==99:
             print "Test: oooooops"
             break
     print filtered
