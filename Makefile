@@ -15,6 +15,7 @@ clean:
 	-./setup.py clean --all #  ignore errors for this command
 	$(MAKE) -C po clean
 	find . -name '*.py[co]' | xargs rm -f
+	rm -f index.html* test.gif
 
 .PHONY: distclean
 distclean:	clean cleandeb
@@ -45,7 +46,7 @@ test:
 
 .PHONY: onlinetest
 onlinetest:
-	rm -f index.html* top-12-09.gif
+	rm -f index.html* test.gif
 	# get a standard page with included adverts
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/
 	# get own config
