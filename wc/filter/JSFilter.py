@@ -267,7 +267,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             url = urlparse.urljoin(self.base_url, url)
         else:
             url = urlparse.urljoin(self.url, url)
-        if not wc.url.is_valid_js_url(url):
+        if not wc.url.is_safe_js_url(url):
             wc.log.error(wc.LOG_JS, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
             return
         self.htmlparser.state = ('wait', url)
