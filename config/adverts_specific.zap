@@ -280,6 +280,5 @@
   <title lang="de">Blog Werbungen</title>
   <attr>blogads\.com</attr>
 </rewrite>
-</folder>
 
 </folder>
