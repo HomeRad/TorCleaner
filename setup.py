@@ -174,6 +174,7 @@ o Per-host access control
        'config/misc.zap',
        'config/plugins.zap',
        'config/redirects.zap',
+       'config/trackers.zap',
        'config/scripting.zap',
        'config/iconbig.png',
        'config/minidoc.png',
