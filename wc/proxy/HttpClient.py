@@ -116,7 +116,7 @@ class HttpClient (Connection):
             # the first 2 chars are the newline of request
             data = self.read(i)[2:]
             self.headers = rfc822.Message(StringIO(data))
-            debug(HURT_ME_PLENTY, "Proxy: C/Headers", `self.headers.headers`)
+            #debug(HURT_ME_PLENTY, "Proxy: C/Headers", `self.headers.headers`)
             # set via header
             via = self.headers.get('Via', "").strip()
             if via: via += " "
@@ -151,7 +151,7 @@ class HttpClient (Connection):
                 remove_headers(self.headers, to_remove)
                 # add warning
                 self.headers['Warning'] = "214 WebCleaner Transformation applied"
-            debug(HURT_ME_PLENTY, "Proxy: C/Headers filtered", `self.headers.headers`)
+            debug(HURT_ME_PLENTY, "Proxy: C/Headers", `str(self.headers)`)
             self.bytes_remaining = int(self.headers.get('Content-Length', 0))
             if config["proxyuser"] and not self.check_proxy_auth():
                 return self.error(407, i18n._("Proxy Authentication Required"))

@@ -8,6 +8,7 @@ class HttpProxyClient:
        Buffered data is None on error, else the content string.
     """
     def __init__ (self, handler, args):
+        assert callable(handler)
         self.handler = handler
         self.args = args
         self.connected = "True"
@@ -16,7 +17,10 @@ class HttpProxyClient:
 
 
     def __repr__ (self):
-        return '<%s: %s>' % ('proxyclient', self.handler)
+        handler = self.handler.func_name
+        if hasattr(self.handler, 'im_class'):
+            handler = self.handler.im_class.__name__+"."+handler
+        return '<%s: %s>' % ('proxyclient', handler)
 
 
     def finish (self):
@@ -25,8 +29,10 @@ class HttpProxyClient:
             self.handler(None, *self.args)
             self.handler = None
 
+
     def error (self, status, msg, txt=''):
         pass
+
 
     def write (self, data):
         if self.handler:
