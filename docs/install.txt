@@ -125,15 +125,15 @@ Setup for Unix/Linux:
       For more information look at the `Modifying Python's search path`_
       documentation.
       
+      .. _Modifying Python's search path:
+         http://docs.python.org/inst/search-path.html#SECTION000410000000000000000
+      
       Now run ``webcleaner-certificates install`` to install the SSL
       certificates.
       After that read the `runsvdir(8)`_ documentation on how to setup a
       local runit service.
       
-      .. _Modifying Python's search path:
-         http://docs.python.org/inst/search-path.html#SECTION000410000000000000000
-         
-         _runsvdir(8):
+      .. _runsvdir(8):
          http://smarden.org/runit/runsvdir.8.html
 
 4. Enjoy

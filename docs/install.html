@@ -139,10 +139,17 @@ certificates.
 Run <tt class="literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'make</span> <span class="pre">installservice'</span></tt> to install the runit service.</p>
 </li>
 <li><p class="first">Installation as a normal user</p>
-<p>Run <tt class="literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--home</span> <span class="pre">$HOME</span></tt>.
-Run <tt class="literal"><span class="pre">webcleaner-certificates</span> <span class="pre">install</span></tt> to install the certificates.
-Now read the runsvdir(8) documentation on how to setup a local
-runit service.</p>
+<p>Run <tt class="literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--home</span> <span class="pre">$HOME</span></tt>. Note that you have
+to adjust your PATH and PYTHONPATH environment variables, eg. by
+adding the commands <tt class="literal"><span class="pre">export</span> <span class="pre">PYTHONPATH=$HOME/lib/python</span></tt> and
+<tt class="literal"><span class="pre">export</span> <span class="pre">PATH=$PATH:$HOME/bin</span></tt> to your shell configuration
+file.</p>
+<p>For more information look at the <a class="reference" href="http://docs.python.org/inst/search-path.html#SECTION000410000000000000000">Modifying Python's search path</a>
+documentation.</p>
+<p>Now run <tt class="literal"><span class="pre">webcleaner-certificates</span> <span class="pre">install</span></tt> to install the SSL
+certificates.
+After that read the <a class="reference" href="http://smarden.org/runit/runsvdir.8.html">runsvdir(8)</a> documentation on how to setup a
+local runit service.</p>
 </li>
 </ol>
 </blockquote>
@@ -244,7 +251,7 @@ and look at the &quot;Application Log&quot; events.</p>
 </div>
 <hr class="footer" />
 <div class="footer">
-Generated on: 2004-11-16 01:23 UTC.
+Generated on: 2004-11-17 19:09 UTC.
 </div>
 </body>
 </html>
