@@ -235,7 +235,10 @@ class Dispatcher (object):
             # shutdown ssl socket
             self.socket.shutdown()
         else:
-            self.socket.shutdown(2)
+            try:
+                self.socket.shutdown(2)
+            except socket.error:
+                pass
         self.socket.close()
 
 
