@@ -56,8 +56,11 @@ def _exec_form (form):
         config['parentproxyuser'] = ''
     # parent proxy pass
     if form.has_key('parentproxypass'):
-        _form_parentproxypass(
-                       base64.encodestring(_getval(form, 'parentproxypass')))
+        val = _getval(form, 'parentproxypass')
+        if val=='__dummy__':
+            # ignore the dummy value
+            val = ""
+        _form_parentproxypass(base64.encodestring(val))
     else:
         config['parentproxypass'] = ''
     # timeout
