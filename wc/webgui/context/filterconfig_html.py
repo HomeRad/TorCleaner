@@ -19,8 +19,8 @@
 import tempfile
 import os
 import re
-from wc import AppName, ConfigDir, rulenames, Version
-from wc.configuration import config
+from wc import AppName, ConfigDir, Version
+from wc.configuration import config, rulenames
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
