@@ -18,6 +18,8 @@ Setup
 -----
 Run "./configure; make" to compile the included C libraries.
 Run "python setup.py build" to byte-compile the Python files.
+The CC environment variable is checked before compilation, so you can
+change the default C compiler with "export CC=myccompiler".
 Run "python setup.py install" to install everything.
 Note: if you work from CVS, you must run "./autogen.sh" first to
 generate the configure and Makefile files.
