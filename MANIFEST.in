@@ -3,7 +3,11 @@ include INSTALL LICENSE README TODO
 include draft-luotonen-web-proxy-tunneling-01.txt
 include Makefile webcleaner webcleanerconf webcleaner.bat
 include debian/changelog debian/conffiles debian/config debian/control
-include debian/dirs debian/docs debian/init debian/postinst debian/prerm
+include debian/webcleaner.dirs debian/webcleaner.docs
+include debian/webcleaner.init debian/webcleaner.postinst
+include debian/webcleaner.links debian/webcleaner.logrotate
+include debian/webcleanerconf.postinst debian/webcleanerconf.prerm
+include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
 include filtertest filtertest.html
 include webcleaner.1 webcleanerconf.1
