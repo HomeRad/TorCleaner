@@ -2,6 +2,9 @@ TODO
 
 version 2.1
 
+- when setting a proxy password, the authorization must be enforced
+  immediately.
+
 - for webgui, set i18n._ domain to the get_lang domain to match it with
   the TAL translator
 

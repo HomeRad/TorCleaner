@@ -31,6 +31,8 @@
     Changed: wc/parser/htmlex.l
   * - handle empty status messages like 'HTTP/1.1 302 \r\n'
     - fix Message.get() usage by always providing default value
+    - set statuscode for all http versions, even with missing response
+      line
     Changed: wc/proxy/HttpServer.py
     Closes: SF bug #760434
   * added a new filter update mechanism that actually works
