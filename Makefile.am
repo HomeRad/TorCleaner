@@ -8,6 +8,10 @@ SPLINTOPTS := +posixlib \
               -Iwc/parser -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 PYCHECKEROPTS := --varlist=__all__,__date__,__version__,__copyright__
+PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
+                  wc/parser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
+		  wc/webgui/*.py wc/webgui/context/*.py \
+		  wc/webgui/simpletal/*.py
 
 clean-local:
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
@@ -90,9 +94,6 @@ md5sums:
 	done
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz whitelists/kids_and_teens/*.gz > extern-md5sums.txt)
 
-package:
-	cd dist && dpkg-scanpackages . ../override.txt | gzip --best > Packages.gz
-
 VERSION:
 	echo $(WCVERSION) > VERSION
 
@@ -134,7 +135,7 @@ ndebug:
 	done
 
 syntaxcheck:
-	-env PYTHONVER=2.3 pychecker $(PYCHECKEROPTS) wc/__init__.py
+	-env PYTHONVER=2.3 pychecker $(PYCHECKEROPTS) $(PYCHECKERFILES)
 #	-splint $(SPLINTOPTS) wc/parser/htmllex.c
 
 # (re)generate webcleaner rules
@@ -143,5 +144,5 @@ update-blacklists:
 
 
 .PHONY: localbuild distclean deb_signed update-blacklists
-.PHONY: gentest onlinetest offlinetest md5sums package splint
+.PHONY: gentest onlinetest offlinetest md5sums syntaxcheck
 .PHONY: homepage upload doc tar debug ndebug
