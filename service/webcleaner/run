@@ -1,0 +1,3 @@
+#!/bin/sh
+# this script is just for development, install should use run2 instead
+exec chpst -e ./env ./run2
