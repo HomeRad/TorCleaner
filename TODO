@@ -1,6 +1,13 @@
 TODO
 
-version 2.8 and above
+version 2.9 and above
+
+- memory leaks while operating the proxy
+  (StringIO needs close() calls?)
+
+- .deb update does not work
+
+- .deb empty password should not be accepted
 
 - content rating:
   o feature: content rating cache update rating_cache_merge_with(ratings)
