@@ -235,4 +235,28 @@
 <rewrite title="EOnline ads" oid="39">
 <attr>/cgi-bin/acc_clickthru\?</attr>
 </rewrite>
+
+<rewrite title="slashdot ad" oid="40"
+ desc="JS ad at slashdot"
+ tag="script">
+<attr name="src">s0b\.bluestreak\.com</attr>
+</rewrite>
+
+<block title="Slashdot JS ad 1" oid="107"
+ scheme="http"
+ host="images2.slashdot.org"
+ port=""
+ path="/Slashdot/pc.gif"
+ parameters=""
+ query=""
+ fragment=""/>
+
+<block title="Slashdot JS ad 2" oid="108"
+ scheme="http"
+ host="images.slashdot.org"
+ port=""
+ path="/banner/"
+ parameters=""
+ query=""
+ fragment=""/>
 </folder>
