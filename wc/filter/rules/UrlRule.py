@@ -50,9 +50,9 @@ class UrlRule (wc.filter.rules.Rule.Rule):
 
     def end_data (self, name):
         super(UrlRule, self).end_data(name)
-        if name=='matchurl':
+        if name == 'matchurl':
             self.matchurls.append(self._data)
-        elif name=='nomatchurl':
+        elif name == 'nomatchurl':
             self.nomatchurls.append(self._data)
 
 

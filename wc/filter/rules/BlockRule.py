@@ -26,7 +26,8 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
        See also the Blocker filter module.
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, url="", replacement="", matchurls=[], nomatchurls=[]):
+                  disable=0, url="", replacement="", matchurls=[],
+                  nomatchurls=[]):
         """initialize rule data"""
         super(BlockRule, self).__init__(sid=sid, titles=titles,
                           descriptions=descriptions, disable=disable, url=url,
@@ -36,7 +37,7 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
 
     def end_data (self, name):
         super(BlockRule, self).end_data(name)
-        if name=='replacement':
+        if name == 'replacement':
             self.replacement = self._data
 
 

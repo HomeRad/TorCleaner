@@ -35,7 +35,7 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
 
     def end_data (self, name):
         super(ReplaceRule, self).end_data(name)
-        if name=='replacement':
+        if name == 'replacement':
             self.replacement = self._data
 
     def compile_data (self):

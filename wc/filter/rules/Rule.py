@@ -56,8 +56,8 @@ class Rule (object):
         - sid - identification string (unique among all rules)
         - oid - dynamic sorting number (unique only for sorting in one level)
         - disable - flag to disable this rule
-        - urlre - regular expression that matches urls applicable for this rule.
-          leave empty to apply to all urls.
+        - urlre - regular expression that matches urls applicable for this
+          rule. leave empty to apply to all urls.
         - parent - the parent folder (if any); look at FolderRule class
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
@@ -83,7 +83,8 @@ class Rule (object):
 
     def update (self, rule, dryrun=False, log=None):
         """update title and description with given rule data"""
-        assert self.sid==rule.sid, "updating %s with invalid rule %s"%(self, rule)
+        assert self.sid == rule.sid, "updating %s with invalid rule %s" % \
+                                     (self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
         l = [a for a in self.attrnames if a not in ['sid', 'disable'] ]
         chg = self.update_attrs(l, rule, dryrun, log)
@@ -102,7 +103,8 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", wc.i18n._("updating rule title for language %s:")%key
+                print >>log, " ", wc.i18n._("updating rule title for " \
+                                            "language %s:")%key
                 print >>log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.titles[key] = value
@@ -115,8 +117,9 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", wc.i18n._("updating rule description for language %s:")%key
-                print >>log, " ", repr(oldvalue), "==>", repr(value)
+                print >> log, " ", wc.i18n._("updating rule description for" \
+                                             " language %s:") % key
+                print >> log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.descriptions[key] = value
         return chg
@@ -128,8 +131,9 @@ class Rule (object):
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
-                print >>log, " ", wc.i18n._("updating rule %s:")%self.tiptext()
-                print >>log, " ", attr, repr(oldval), "==>", repr(newval)
+                print >> log, " ", \
+                         wc.i18n._("updating rule %s:") % self.tiptext()
+                print >> log, " ", attr, repr(oldval), "==>", repr(newval)
                 chg = True
                 if not dryrun:
                     setattr(self, attr, newval)
@@ -195,9 +199,9 @@ class Rule (object):
             self._data = ""
         else:
             self._data = wc.XmlUtils.xmlunquote(self._data)
-        if name=='title':
+        if name == 'title':
             self.titles[self._lang] = self._data
-        elif name=='description':
+        elif name == 'description':
             self.descriptions[self._lang] = self._data
 
     def compile_data (self):
@@ -210,7 +214,8 @@ class Rule (object):
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        s = u'<%s sid="%s"' % (self.get_name(), wc.XmlUtils.xmlquoteattr(self.sid))
+        s = u'<%s sid="%s"' % (self.get_name(),
+                               wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
             s+= u' disable="%d"' % self.disable
         return s
@@ -218,10 +223,12 @@ class Rule (object):
     def title_desc_toxml (self, prefix=""):
         """return XML for rule title and description"""
         t = [u'%s<title lang="%s">%s</title>' % \
-             (prefix, wc.XmlUtils.xmlquoteattr(key), wc.XmlUtils.xmlquote(value)) \
+             (prefix, wc.XmlUtils.xmlquoteattr(key),
+              wc.XmlUtils.xmlquote(value)) \
              for key,value in self.titles.iteritems() if value]
         d = [u'%s<description lang="%s">%s</description>'% \
-             (prefix, wc.XmlUtils.xmlquoteattr(key), wc.XmlUtils.xmlquote(value)) \
+             (prefix, wc.XmlUtils.xmlquoteattr(key),
+              wc.XmlUtils.xmlquote(value)) \
              for key,value in self.descriptions.iteritems() if value]
         return u"\n".join(t+d)
 

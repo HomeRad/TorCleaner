@@ -94,7 +94,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
     def get_rule (self, sid):
         """return rule with given sid or None if not found"""
         for rule in self.rules:
-            if rule.sid==sid:
+            if rule.sid == sid:
                 return rule
         return None
 
@@ -121,7 +121,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
     def tiptext (self):
         """return short info for gui display"""
         l = len(self.rules)
-        if l==1:
+        if l == 1:
             text = wc.i18n._("with 1 rule")
         else:
             text = wc.i18n._("with %d rules")%l

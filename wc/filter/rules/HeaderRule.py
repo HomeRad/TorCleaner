@@ -37,7 +37,7 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
 
     def end_data (self, name):
         super(HeaderRule, self).end_data(name)
-        if name=='replacement':
+        if name == 'replacement':
             self.value = self._data
 
     def update (self, rule, dryrun=False, log=None):

@@ -39,23 +39,24 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     def fill_attrs (self, attrs, name):
         """init rating and url attrs"""
         super(RatingRule, self).fill_attrs(attrs, name)
-        if name=='category':
+        if name == 'category':
             self._category = attrs.get('name')
 
 
     def end_data (self, name):
         super(RatingRule, self).end_data(name)
-        if name=='category':
+        if name == 'category':
             assert self._category
             self.ratings[self._category] = self._data
-        elif name=='url':
+        elif name == 'url':
             self.url = self._data
 
 
     def compile_data (self):
         """fill rating structure"""
         super(RatingRule, self).compile_data()
-        for category, catdata in wc.filter.Rating.service['categories'].items():
+        for category, catdata in \
+            wc.filter.Rating.service['categories'].items():
             if category not in self.ratings:
                 if catdata.has_key('rvalues'):
                     self.ratings[category] = catdata['rvalues'][0]

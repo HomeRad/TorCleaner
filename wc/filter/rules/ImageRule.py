@@ -46,7 +46,8 @@ class ImageRule (wc.filter.rules.UrlRule.UrlRule):
         if self.height:
             s += u'\n height="%d"' % self.height
         if self.formats:
-            s += u'\n formats="%s"' % wc.XmlUtils.xmlquoteattr(",".join(self.formats))
+            s += u'\n formats="%s"' % \
+                 wc.XmlUtils.xmlquoteattr(",".join(self.formats))
         if self.url:
             s += u'\n url="%s"' % wc.XmlUtils.xmlquoteattr(self.url)
         s += u">"
