@@ -171,6 +171,7 @@ class HtmlFilter (HtmlParser,JSListener):
                 HtmlParser.feed(self, data)
             else:
                 #self._debug(NIGHTMARE, "feed")
+                pass
         else:
             #self._debug(NIGHTMARE, "wait")
             self.inbuf.write(data)
