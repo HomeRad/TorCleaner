@@ -5,6 +5,7 @@ __date__    = "$Date$"[7:-2]
 import asyncore, socket
 from wc import config
 from wc.log import *
+from wc.proxy import create_inet_socket
 
 # XXX drop the ", object" when dispatcher is a new-style class
 class Listener (asyncore.dispatcher, object):
@@ -15,10 +16,7 @@ class Listener (asyncore.dispatcher, object):
         """create a socket on specified port and start listening to it"""
         super(Listener, self).__init__()
         self.addr = (('', 'localhost')[config['local_sockets_only']], port)
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        # disable NAGLE algorithm, which means sending pending data
-        # immediately, possibly wasting bandwidth
-        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        create_inet_socket(self, socket.SOCK_STREAM)
         self.set_reuse_addr()
         self.bind(self.addr)
         # 5 is the maximum number of queued connections

@@ -7,7 +7,7 @@ import time, socket, re, urlparse
 
 from cStringIO import StringIO
 from Server import Server
-from wc.proxy import make_timer, get_http_version
+from wc.proxy import make_timer, get_http_version, create_inet_socket
 from wc.proxy.auth import *
 from Headers import server_set_headers, server_set_content_headers, server_set_encoding_headers, remove_headers
 from Headers import has_header_value, WcMessage
@@ -73,8 +73,7 @@ class HttpServer (Server):
         self.statuscode = None
         self.bytes_remaining = None
         # attempt connect
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        create_inet_socket(self, socket.SOCK_STREAM)
         try:
 	    self.connect(self.addr)
         except socket.error:

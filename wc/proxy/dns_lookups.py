@@ -407,8 +407,7 @@ class DnsLookupConnection (Connection):
 
     def establish_connection (self):
         if self.conntype == 'tcp':
-            self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            create_inet_socket(self, socket.SOCK_STREAM)
             self.connect((self.nameserver, self.PORT))
             make_timer(30, self.handle_connect_timeout)
             # XXX: we have to fill the buffer because otherwise we
@@ -416,7 +415,7 @@ class DnsLookupConnection (Connection):
             # call handle_connect.  This needs to be fixed somehow.
             self.send_dns_request()
         else:
-            self.create_socket(socket.AF_INET, socket.SOCK_DGRAM)
+            create_inet_socket(self, socket.SOCK_DGRAM)
             self.connect((self.nameserver, self.PORT))
             self.send_dns_request()
 

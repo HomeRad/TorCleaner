@@ -9,7 +9,7 @@ __date__    = "$Date$"[7:-2]
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import time, select, asyncore, re, urlparse, os
+import time, socket, select, asyncore, re, urlparse, os
 # fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 def fileno(self):
@@ -68,6 +68,22 @@ def get_http_version (protocol):
         return f
     error(PROXY, i18n._("invalid HTTP version %s"), `protocol`)
     return (1,0)
+
+
+def create_inet_socket (dispatch, socktype):
+    """create an AF_INET(6) socket object for given dispatcher, testing
+    for IPv6 capability and disabling the NAGLE algorithm for TCP sockets
+    """
+    if socket.has_ipv6:
+        family = socket.AF_INET6
+    else:
+        family = socket.AF_INET
+    dispatch.create_socket(family, socktype)
+    if socktype==socket.SOCK_STREAM:
+        # disable NAGLE algorithm, which means sending pending data
+        # immediately, possibly wasting bandwidth but improving
+        # responsiveness for fast networks
+        dispatch.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
 
 def make_timer (delay, callback):
