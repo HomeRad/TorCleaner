@@ -12,11 +12,11 @@ def _main ():
         f = sys.stdin
     else:
         f = file(fname)
-    from test import initlog, disable_pics_rules
+    from test import initlog, disable_rating_rules
     initlog("test/logging.conf")
     import wc
     wc.config = wc.Configuration()
-    disable_pics_rules(wc.config)
+    disable_rating_rules(wc.config)
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
     from wc.proxy import proxy_poll, run_timers

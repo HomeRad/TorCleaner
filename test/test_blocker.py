@@ -4,10 +4,9 @@
 from test_support import TestFailed
 url = "http://ads.realmedia.com/"
 data = "GET %s HTTP/1.0" % url
-from test import initlog
-initlog("test/logging.conf")
 import wc
 wc.config = wc.Configuration()
+wc.config['filters'] = ['Blocker',]
 wc.config.init_filter_modules()
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
 attrs = get_filterattrs(url, [FILTER_REQUEST])

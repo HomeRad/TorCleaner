@@ -15,8 +15,8 @@ config ['192.168.1.1/8']
 ip 1.2.3.4 False
 ip 2.3.4 False
 ip 192.168.1.18 True
-ip 192.168.2.18 False
-ip 192.169.2.18 False
+ip 192.168.2.18 True
+ip 192.169.2.18 True
 config ['192.168.1.1/16']
 ip 1.2.3.4 False
 ip 2.3.4 False
@@ -27,8 +27,8 @@ config ['192.168.1.1/24']
 ip 1.2.3.4 False
 ip 2.3.4 False
 ip 192.168.1.18 True
-ip 192.168.2.18 True
-ip 192.169.2.18 True
+ip 192.168.2.18 False
+ip 192.169.2.18 False
 config ['192.168.1.1/255.255.255.0']
 ip 1.2.3.4 False
 ip 2.3.4 False

@@ -81,6 +81,8 @@ def main(tests=None, testdir=None, verbose=0, quiet=0, generate=0,
     bad = []
     skipped = []
 
+    from test import initlog
+    initlog("test/logging.conf")
     for i in range(len(args)):
         # Strip trailing ".py" from arguments
         if args[i][-3:] == '.py':
@@ -251,5 +253,4 @@ class Compare:
         return 0
 
 if __name__ == '__main__':
-    sys.path.insert(0, os.getcwd())
     sys.exit(main())

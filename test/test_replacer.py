@@ -21,8 +21,6 @@ document.write("</OBJECT>");
 </script>
 """
 
-from test import initlog
-initlog("test/logging.conf")
 import wc
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer']
@@ -31,3 +29,4 @@ import time
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])
 print applyfilter(FILTER_RESPONSE_MODIFY, htmldata, 'finish', attrs)
+

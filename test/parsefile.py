@@ -12,7 +12,8 @@ def _main ():
     else:
         f = file(sys.argv[1])
     from wc.parser.htmllib import HtmlPrinter
-    p = HtmlPrinter()
+    from wc.parser import htmlsax
+    p = htmlsax.new_parser(HtmlPrinter())
     #p.debug(1)
     data = f.read(1024)
     while data:

@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 from wc.parser.htmllib import HtmlPrinter
+from wc.parser import htmlsax
 import sys
 sys.stderr = sys.stdout
 
@@ -80,7 +81,7 @@ flushtests = (
 
 def _test():
     print "============ syntax tests ============="
-    p = HtmlPrinter()
+    p = htmlsax.parser(HtmlPrinter())
     for t in tests:
         print "HTML", `t`
         p.feed(t)
@@ -94,7 +95,7 @@ def _test():
         p.flush()
         p.reset()
     print "===== subsequent interwoven parsing ===="
-    p1 = HtmlPrinter()
+    p1 = htmlsax.parser(HtmlPrinter())
     p.feed("<")
     p1.feed("<")
     p.feed("ht")

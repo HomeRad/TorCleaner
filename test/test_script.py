@@ -27,8 +27,7 @@ def filterfile (fname):
             break
     print s
 
-from test import initlog, disable_pics_rules
-initlog("test/logging.conf")
+from test import disable_pics_rules
 import wc
 wc.config = wc.Configuration()
 disable_pics_rules(wc.config)
