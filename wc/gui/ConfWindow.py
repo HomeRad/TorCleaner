@@ -298,7 +298,7 @@ class ConfWindow (ToolWindow):
         FXMenuButton(f, i18n._("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(f, i18n._("Remove"), None, self, self.ID_REMOVE)
         FXButton(f, i18n._("Up"), None, self, self.ID_UP)
-        FXButton(f, i18n._("Dwn"), None, self, self.ID_DOWN)
+        FXButton(f, i18n._("Down"), None, self, self.ID_DOWN)
         # filterSettings
 
 

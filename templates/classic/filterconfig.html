@@ -15,12 +15,15 @@
 
 <form action="filterconfig.html" method="POST" 
  name="filterform">
-<table>
-<tr>
-<td><big tal:content="t_folders">Folders</big></td>
-<td><big tal:content="t_rules">Rules</big></td>
-<td><big tal:content="t_rule">Rule</big></td>
+<table rules="cols" cellpadding="5">
+<thead>
+<tr style="border-bottom:1px solid black;" >
+<td style="width:25%;"><big tal:content="t_folders">Folders</big></td>
+<td style="width:30%;"><big tal:content="t_rules">Folder rules</big></td>
+<td style="width:45%;"><big tal:content="t_rule">Rule</big></td>
 </tr>
+</thead>
+<tbody>
 <tr valign="top">
 <!-- folders -->
 <td>
@@ -50,6 +53,12 @@
  tal:attributes="alt t_disabledruleicon">
 <img tal:condition="not:rule/disable" src="minidoc.png"
  tal:attributes="alt t_ruleicon">
+<input type="image" src="up.png" border="0"
+ tal:condition="rule/up"
+ tal:attributes="name string:rule_up_${rule/oid}; title t_rulemoveup; alt t_up">
+<input type="image" src="down.png" border="0"
+ tal:condition="rule/down"
+ tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down">
 <b tal:omit-tag="not:rule/selected">
 <a href="#" tal:content="string:[${rule/get_name}] ${rule/title}"
  tal:condition="not:curfolder/disable"
@@ -103,6 +112,7 @@ Here is the rule configuration...
 </div>
 </td>
 </tr>
+</tbody>
 </table>
 </form>
 <br>

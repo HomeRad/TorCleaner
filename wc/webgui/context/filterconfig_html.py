@@ -63,6 +63,10 @@ t_category = i18n._("Category")
 t_picsratings = i18n._("PICS ratings")
 t_really_remove_folder = i18n._("Really remove this folder?")
 t_really_remove_rule = i18n._("Really remove this rule?")
+t_up = i18n._("Up")
+t_down = i18n._("Down")
+t_rulemoveup = i18n._("Move rule up")
+t_rulemovedown = i18n._("Move rule down")
 
 # config vars
 info = []
@@ -139,7 +143,7 @@ def exec_form (form):
         _form_apply(form)
     if info:
         config.write_filterconf()
-    _form_set_selected()
+    _form_set_tags()
 
 
 def _form_reset ():
@@ -151,11 +155,13 @@ def _form_reset ():
     curparts = None
 
 
-def _form_set_selected ():
+def _form_set_tags ():
     for f in config['folderrules']:
         f.selected = False
-        for r in f.rules:
+        for i, r in enumerate(f.rules):
             r.selected = False
+            r.up = (i>0)
+            r.down = (i<(len(f.rules)-1))
     if curfolder:
         curfolder.selected = True
     if currule:
