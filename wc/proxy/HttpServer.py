@@ -309,10 +309,19 @@ class HttpServer (Server):
         gm = mimetypes.guess_type(document, None)
         ct = self.headers.get('Content-Type', None)
         if self.mime:
-            if ct != self.mime:
+            if ct is None:
                 warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
                      `str(ct)`, `self.mime`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%self.mime
+            elif not ct.startswith(self.mime):
+                i = ct.find(';')
+                if i== -1:
+                    val = self.mime
+                else:
+                    val = self.mime + ct[i]
+                warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
+                     `str(ct)`, `val`, `self.url`)
+                self.headers['Content-Type'] = "%s\r"%val
         elif gm[0]:
             # guessed an own content type
             if ct is None:
