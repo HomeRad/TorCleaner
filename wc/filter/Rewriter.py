@@ -69,8 +69,8 @@ class Rewriter (Filter):
     def finish (self, data, **attrs):
         if not attrs.has_key('filter'): return data
         p = attrs['filter']
-        if data:
-            p.feed(data)
+        # feed even if data is empty
+        p.feed(data)
         p.flush()
         p.buf2data()
         return p.flushbuf()
@@ -91,25 +91,6 @@ class Rewriter (Filter):
         return {'filter': HtmlFilter(rewrites, url, **opts)}
 
 
-def _buf2data (buf, outbuf):
-    """Append all tags of the buffer to the data"""
-    for item in buf:
-        if item[0]==DATA:
-            outbuf.write(item[1])
-        elif item[0]==STARTTAG:
-            s = "<"+item[1]
-            for name,val in item[2].items():
-                s += ' %s'%name
-                if val:
-                    s += "=%s"%val
-            outbuf.write(s+">")
-        elif item[0]==ENDTAG:
-            outbuf.write("</%s>"%item[1])
-        elif item[0]==COMMENT:
-            outbuf.write("<!--%s-->"%item[1])
-        else:
-            error("unknown buffer element %s" % item[0])
-
 
 class HtmlFilter (HtmlParser,JSListener):
     """The parser has the rules, a data buffer and a rule stack.
@@ -122,6 +103,9 @@ class HtmlFilter (HtmlParser,JSListener):
                                   ^-script src tag
                 waitbuf           [--------]
                 inbuf                       [-------------- ...
+
+       After a wait state, replays the waitbuf and re-feed the inbuf
+       data.
     """
     def __init__ (self, rules, url, **opts):
         if wc.config['showerrors']:
@@ -134,7 +118,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.javascript = opts['javascript']
         self.outbuf = StringIO()
         self.inbuf = StringIO()
-        self.waitbuf = StringIO()
+        self.waitbuf = []
         self.state = 'parse'
         self.script = ''
         self.waited = 0
@@ -148,23 +132,23 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def __repr__ (self):
-        return "<HtmlFilter with rulestack %s >" % self.rulestack
+        return "<HtmlFilter with rulestack %s>" % self.rulestack
 
 
     def feed (self, data):
         if self.state=='parse':
             if self.waited:
-                data = "%s%s" % (self.waitbuf.getvalue(),
-                                 self.inbuf.getvalue(),
-                                )
-                self.inbuf.close()
-                self.waitbuf.close()
-                self.inbuf = StringIO()
-                self.waitbuf = StringIO()
                 self.waited = 0
-            #debug(NIGHTMARE, "HtmlFilter: feed", `data`)
-            HtmlParser.feed(self, data)
-            #debug(NIGHTMARE, "HtmlFilter: feed finished")
+                waitbuf, self.waitbuf = self.waitbuf, []
+                self.replay(waitbuf)
+                if self.state!='parse': return
+                data = self.inbuf.getvalue()
+                self.inbuf.close()
+                self.inbuf = StringIO()
+            if data:
+                debug(NIGHTMARE, "HtmlFilter: feed", `data`)
+                HtmlParser.feed(self, data)
+                debug(NIGHTMARE, "HtmlFilter: feed finished")
         else:
             self.inbuf.write(data)
 
@@ -173,6 +157,19 @@ class HtmlFilter (HtmlParser,JSListener):
         if self.state=='wait':
             raise FilterException("HtmlFilter: still waiting for data")
         HtmlParser.flush(self)
+
+
+    def replay (self, waitbuf):
+        """call the handler functions again with buffer data"""
+        for item in waitbuf:
+            if item[0]==DATA:
+                self.characters(item[1])
+            elif item[0]==STARTTAG:
+                self.startElement(item[1], item[2])
+            elif item[0]==ENDTAG:
+                self.endElement(item[1])
+            elif item[0]==COMMENT:
+                self.comment(item[1])
 
 
     def buf_append_data (self, data):
@@ -195,7 +192,23 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def buf2data (self):
-        _buf2data(self.buf, self.outbuf)
+        """Append all tags of the buffer to the data"""
+        for item in self.buf:
+            if item[0]==DATA:
+                self.outbuf.write(item[1])
+            elif item[0]==STARTTAG:
+                s = "<"+item[1]
+                for name,val in item[2].items():
+                    s += ' %s'%name
+                    if val:
+                        s += "=%s"%val
+                self.outbuf.write(s+">")
+            elif item[0]==ENDTAG:
+                self.outbuf.write("</%s>"%item[1])
+            elif item[0]==COMMENT:
+                self.outbuf.write("<!--%s-->"%item[1])
+            else:
+                error("unknown buffer element %s" % item[0])
         self.buf = []
 
 
@@ -203,7 +216,7 @@ class HtmlFilter (HtmlParser,JSListener):
         """handler for data"""
         item = [DATA, d]
         if self.state=='wait':
-            return _buf2data([item], self.waitbuf)
+            return self.waitbuf.append(item)
         self.buf_append_data(item)
 
 
@@ -211,7 +224,7 @@ class HtmlFilter (HtmlParser,JSListener):
         """a comment; accept only non-empty comments"""
         item = [COMMENT, data]
         if self.state=='wait':
-            return _buf2data([item], self.waitbuf)
+            return self.waitbuf.append(item)
         if self.comments and data:
             self.buf.append(item)
 
@@ -220,21 +233,21 @@ class HtmlFilter (HtmlParser,JSListener):
         """handler for characters"""
         item = [DATA, s]
         if self.state=='wait':
-            return _buf2data([item], self.waitbuf)
+            return self.waitbuf.append(item)
         self.buf_append_data(item)
 
 
     def doctype (self, data):
         item = [DATA, "<!DOCTYPE%s>"%data]
         if self.state=='wait':
-            return _buf2data([item], self.waitbuf)
+            return self.waitbuf.append(item)
         self.buf_append_data(item)
 
 
     def pi (self, data):
         item = [DATA, "<?%s?>"%data]
         if self.state=='wait':
-            return _buf2data([item], self.waitbuf)
+            return self.waitbuf.append(item)
         self.buf_append_data(item)
 
 
@@ -244,7 +257,7 @@ class HtmlFilter (HtmlParser,JSListener):
         # default data
         item = [STARTTAG, tag, attrs]
         if self.state=='wait':
-            return _buf2data([item], self.waitbuf)
+            return self.waitbuf.append(item)
         rulelist = []
         filtered = 0
         # look for filter rules which apply
@@ -287,7 +300,7 @@ class HtmlFilter (HtmlParser,JSListener):
 	the buffer (by calling buf2data)"""
         item = [ENDTAG, tag]
         if self.state=='wait':
-            return _buf2data([item], self.waitbuf)
+            return self.waitbuf.append(item)
         filtered = 0
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
@@ -299,12 +312,13 @@ class HtmlFilter (HtmlParser,JSListener):
                     rule.filter_complete(pos, self.buf)
                     filtered = "True"
                     break
-        if not filtered and self.javascript and tag=='script' and \
-            self.jsEndElement(tag):
-            del self.buf[-1]
-            del self.buf[-1]
-        else:
-            self.buf.append(item)
+        if not filtered:
+            if self.javascript and tag=='script' and \
+               self.jsEndElement(tag):
+                del self.buf[-1]
+                del self.buf[-1]
+            else:
+                self.buf.append(item)
         if not self.rulestack:
             self.buf2data()
 
@@ -359,21 +373,18 @@ class HtmlFilter (HtmlParser,JSListener):
         if data is None:
             if not self.script:
                 print >> sys.stderr, "empty JS src", url
-            elif self.jsScript(self.script, ver):
-                print >> sys.stderr, "JS popup src", url
             else:
                 self.buf.append([STARTTAG, "script", {'type':
                                                       'text/javascript'}])
                 self.buf.append([DATA, "<!--\n%s\n//-->"%self.script])
             self.state = 'parse'
             self.script = ''
-            debug(NIGHTMARE, "XXX switching back to parse with")
-            debug(NIGHTMARE, "self.buf", `self.buf`)
-            #debug(NIGHTMARE, "self.outbuf", `self.outbuf.getvalue()`)
-            debug(NIGHTMARE, "self.inbuf", `self.inbuf.getvalue()`)
-            debug(NIGHTMARE, "self.waitbuf", `self.waitbuf.getvalue()`)
+            debug(NIGHTMARE, "Filter: switching back to parse with")
+            debug(NIGHTMARE, "Filter: self.buf", `self.buf`)
+            debug(NIGHTMARE, "Filter: self.waitbuf", `self.waitbuf`)
+            debug(NIGHTMARE, "Filter: self.inbuf", `self.inbuf.getvalue()`)
         else:
-            debug(HURT_ME_PLENTY, "JS: read", len(data))
+            debug(HURT_ME_PLENTY, "JS: read", len(data), "<=", url)
             self.script += data
 
 
@@ -384,8 +395,6 @@ class HtmlFilter (HtmlParser,JSListener):
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
             if mo:
                 ver = float(mo.group('num'))
-        debug(HURT_ME_PLENTY, "JS: self.url", self.url)
-        debug(HURT_ME_PLENTY, "JS: url", url)
         url = urlparse.urljoin(self.url, url)
         debug(HURT_ME_PLENTY, "JS: jsScriptSrc", url, ver)
         self.state = 'wait'
@@ -397,13 +406,13 @@ class HtmlFilter (HtmlParser,JSListener):
                                {'nofilter': None},
                                'identity', # compress
                                )
-        self.waited = 1
+        self.waited = "True"
 
 
     def jsScript (self, script, ver):
         """execute given script with javascript version ver
            return True if the script generates any output, else False"""
-        #debug(HURT_ME_PLENTY, "JS: jsScript", ver, `script`)
+        #debug(NIGHTMARE, "JS: jsScript", ver, `script`)
         self.output_counter = 0
         self.jsEnv.attachListener(self)
         self.jsfilter = HtmlFilter(self.rules, self.url,
@@ -413,10 +422,10 @@ class HtmlFilter (HtmlParser,JSListener):
         if self.output_counter:
             self.jsfilter.flush()
             self.outbuf.write(self.jsfilter.flushbuf())
-            self.buf += self.jsfilter.buf
+            self.buf[-2:-2] = self.jsfilter.buf
             self.rulestack += self.jsfilter.rulestack
         self.jsfilter = None
-        return self.output_counter
+        return self.popup_counter + self.output_counter
 
 
     def processData (self, data):
