@@ -41,7 +41,7 @@ bison parser.
 the parser. Invalid syntax elements are passed as TEXT. This way we do
 not need the bison error recovery.
 Incomplete data is rescanned the next time the parser calls yylex() or
-flush()ed.
+when it is being flush()ed.
 
 The following syntax errors will be recognized correctly:
 a) missing quotes around attribute values

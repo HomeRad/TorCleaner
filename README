@@ -33,9 +33,10 @@ broken HTML page out there; if the parser does not recognize HTML
 structures, it just passes the data over to the browser until it recognizes
 a tag again. No data is ever discarded or dropped by the parser.
 The parser can also correct invalid HTML and even prevents some common
-security risks like HTML buffer overflows (see ChangeLog for details).
+security risks like HTML buffer overflows (see wc/filter/HtmlSecurity.py
+for details).
 
-The second thing is the Javascript filtering: Javascript data is
+Another feature is the JavaScript (JS) filtering: JavaScript data is
 executed in the integrated Spidermonkey JS engine which is also used by
 the Mozilla browser suite.
 This eliminates all JavaScript obfuscation, popups, and document.write()
@@ -51,9 +52,6 @@ explained in config/filter.dtd and config/webcleaner.dtd.
 Of course the default configuration is tuned to websites I visit
 regularly. You can help me extend the current config data by sending
 me patches!
-If you installed from source or have the "webcleanertools" Debian
-package installed, you can additionally run the GUI config tool
-"webcleanerconf".
 
 
 Running
@@ -107,6 +105,7 @@ CoAdvisor, for extracting all the important RFC stuff for non-caching
 proxies in their test case documentation.
 
 Colin Stewart for making simpleTAL.
+
 
 What you can do
 ---------------
