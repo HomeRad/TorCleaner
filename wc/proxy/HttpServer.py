@@ -5,7 +5,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import i18n, config, remove_headers
+from wc import i18n, config, remove_headers, has_header_value
 from wc.debug import *
 from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
@@ -45,7 +45,7 @@ class HttpServer (Server):
         self.hostname = ''
         self.document = ''
         self.response = ''
-        self.headers = None
+        self.headers = {}
         self.data_written = None
         self.decoders = [] # Handle each of these, left to right
         self.sequence_number = 0 # For persistent connections
@@ -151,12 +151,14 @@ class HttpServer (Server):
                 return
             bytes_before = len(self.recv_buffer)
             state_before = self.state
-            try: handler = getattr(self, 'process_'+self.state)
-            except AttributeError: handler = lambda:None # NO-OP
-            handler()
+            try:
+                getattr(self, 'process_'+self.state)()
+            except AttributeError:
+                pass # NO-OP
             bytes_after = len(self.recv_buffer)
-            if (self.client is None or
-                (bytes_before==bytes_after and state_before==self.state)):
+            state_after = self.state
+            if self.client is None or \
+               (bytes_before==bytes_after and state_before==state_after):
                 break
 
 
@@ -412,14 +414,12 @@ class HttpServer (Server):
 
 
     def process_recycle (self):
-        # We're done sending things to the client, and we can reuse
-        # this connection
         debug(NIGHTMARE, "Server: recycling", self)
-        client, self.client = self.client, None
-        self.flush(client, reuse="True")
+        # flush pending client data and try to reuse this connection
+        self.flush()
 
 
-    def flush (self, client, reuse=None):
+    def flush (self):
         """flush data of decoders (if any) and filters"""
         debug(NIGHTMARE, "Server: flushing", self)
         data = ""
@@ -435,17 +435,15 @@ class HttpServer (Server):
             debug(NIGHTMARE, "Server: FilterWait", msg)
             # the filter still needs some data so try flushing again
             # after a while
-            make_timer(0.2, lambda : HttpServer.flush(self, client, reuse))
+            make_timer(0.2, lambda : self.flush())
             return
-        # now, the client might already have closed this server
-        # so test if client is still interested
-        if client.server:
+        # the client might already have closed
+        if self.client:
             if data:
-                client.server_content(data)
-            client.server_close()
+                self.client.server_content(data)
+            self.client.server_close()
         self.attrs = {}
-        if reuse:
-            self.reuse()
+        self.reuse()
 
 
     def http_version (self):
@@ -458,23 +456,24 @@ class HttpServer (Server):
 
 
     def reuse (self):
+        self.client = None
+        key = 'Connection'
         if self.http_version() >= 1.1:
-            can_reuse = not (self.headers and
-                self.headers.get('Connection', '').lower()=='close')
+            can_reuse = not has_header_value(self.headers, key, 'Close')
+        elif self.http_version() >= 1.0:
+            can_reuse = has_header_value(self.headers, key, 'Keep-Alive')
         else:
-            can_reuse = self.headers and \
-               self.headers.get('Connection', '').lower()=='keep-alive'
-        if not can_reuse:
-            # We can't reuse this connection
-            self.close()
-        else:
+            can_reuse = None
+        if can_reuse:
             debug(HURT_ME_PLENTY, 'Server: reusing', self.sequence_number, self)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
-            self.client = None
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
+        else:
+            # We can't reuse this connection
+            self.close()
 
 
     def close (self):
@@ -496,8 +495,7 @@ class HttpServer (Server):
         debug(HURT_ME_PLENTY, "Server: handle_close", self)
         Server.handle_close(self)
         if self.client:
-            client, self.client = self.client, None
-            self.flush(client)
+            self.flush()
 
 
 def speedcheck_print_status ():
