@@ -9825,7 +9825,7 @@ YY_RULE_SETUP
 #line 338 "htmllex.l"
 {
     UPDATE_LINE;
-    yyextra->tmp_attrs = PyObject_CallObject(yyextra->sorted_dict, NULL);
+    yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
     if (yyextra->tmp_attrs==NULL) {
         return T_ERROR;
     }
@@ -10690,7 +10690,7 @@ YY_RULE_SETUP
     LOWER_TMP;
     yyextra->error = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf);
     SETLVAL;
-    yyextra->tmp_attrs = PyObject_CallObject(yyextra->sorted_dict, NULL);
+    yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
     if (yyextra->tmp_attrs==NULL) {
         return T_ERROR;
     }
@@ -10755,7 +10755,7 @@ YY_RULE_SETUP
     LOWER_TMP;
     yyextra->error = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf);
     SETLVAL;
-    yyextra->tmp_attrs = PyObject_CallObject(yyextra->sorted_dict, NULL);
+    yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
     if (yyextra->tmp_attrs==NULL) {
         return T_ERROR;
     }
