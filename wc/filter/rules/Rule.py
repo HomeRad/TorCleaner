@@ -217,7 +217,7 @@ class Rule (object):
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        s = u'<Rule %s sid="%s"' % (self.get_name(),
+        s = u'<%s sid="%s"' % (self.get_name(),
                                wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
             s += u' disable="%d"' % self.disable
