@@ -21,11 +21,11 @@ __date__    = "$Date$"[7:-2]
 
 import socket
 import os
-from cStringIO import StringIO
-from wc import i18n
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, FilterProxyError
-from wc.filter.Filter import Filter
-from wc.proxy.Connection import RECV_BUFSIZE
+import cStringIO as StringIO
+import wc
+import wc.filter
+import wc.filter.Filter
+import wc.proxy.Connection
 from wc.log import *
 
 
@@ -43,11 +43,11 @@ def strsize (b):
     return "%.2f GB"
 
 
-class VirusFilter (Filter):
+class VirusFilter (wc.filter.Filter.Filter):
     """scan for virus signatures in a data stream"""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_MODIFY]
+    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['antivirus']
@@ -75,8 +75,8 @@ class VirusFilter (Filter):
 
 
     def size_error (self):
-        raise FilterProxyError(406, i18n._("Not acceptable"),
-                i18n._("Maximum data size (%s) exceeded") % \
+        raise wc.filter.FilterProxyError(406, wc.i18n._("Not acceptable"),
+                wc.i18n._("Maximum data size (%s) exceeded") % \
                 strsize(VirusFilter.MAX_FILE_BYTES))
 
 
@@ -117,7 +117,7 @@ class VirusFilter (Filter):
         conf = get_clamav_conf()
         if conf is not None:
             d['scanner'] = ClamdScanner(conf)
-            d['virus_buf'] = StringIO()
+            d['virus_buf'] = StringIO.StringIO()
             d['virus_buf_size'] = [0]
         return d
 
@@ -142,13 +142,13 @@ class ClamdScanner (object):
     def close (self):
         """get results and close clamd daemon sockets"""
         self.wsock.close()
-        data = self.sock.recv(RECV_BUFSIZE)
+        data = self.sock.recv(wc.proxy.Connection.RECV_BUFSIZE)
         while data:
             if "FOUND\n" in data:
                 self.infected.append(data)
             if "ERROR\n" in data:
                 self.errors.append(data)
-            data = self.sock.recv(RECV_BUFSIZE)
+            data = self.sock.recv(wc.proxy.Connection.RECV_BUFSIZE)
         self.sock.close()
 
 
@@ -181,9 +181,9 @@ class ClamavConfig (dict):
         super(ClamavConfig, self).__init__()
         self.parseconf(filename)
         if self.get('ScannerDaemonOutputFormat'):
-            raise Exception(i18n._("You have to disable ScannerDaemonOutputFormat"))
+            raise Exception(wc.i18n._("You have to disable ScannerDaemonOutputFormat"))
         if self.get('TCPSocket') and self.get('LocalSocket'):
-            raise Exception(i18n._("Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."))
+            raise Exception(wc.i18n._("Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."))
 
 
     def parseconf (self, filename):
@@ -212,7 +212,7 @@ class ClamavConfig (dict):
             sock = self.create_tcp_socket()
             host = self.get('TCPAddr', 'localhost')
         else:
-            raise Exception(i18n._("You have to enable either TCPSocket or LocalSocket in your Clamd configuration"))
+            raise Exception(wc.i18n._("You have to enable either TCPSocket or LocalSocket in your Clamd configuration"))
         return sock, host
 
 
@@ -249,7 +249,7 @@ class ClamavConfig (dict):
             sock.sendall("STREAM")
             port = None
             for i in range(60):
-                data = sock.recv(RECV_BUFSIZE)
+                data = sock.recv(wc.proxy.Connection.RECV_BUFSIZE)
                 i = data.find("PORT")
                 if i != -1:
                     port = int(data[i+5:])
@@ -258,7 +258,7 @@ class ClamavConfig (dict):
             sock.close()
             raise
         if port is None:
-            raise Exception(i18n._("Clamd is not ready for stream scanning"))
+            raise Exception(wc.i18n._("Clamd is not ready for stream scanning"))
         sockinfo = get_sockinfo(host, port=port)
         wsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:

@@ -21,23 +21,21 @@ __date__    = "$Date$"[7:-2]
 
 import re
 from wc.log import *
-
-from wc.filter import FILTER_RESPONSE_MODIFY, FilterWait, FilterRating
-from wc.filter import compileMime
-from wc.filter.Filter import Filter
-from wc.filter.HtmlParser import HtmlParser
-from wc.filter.HtmlFilter import HtmlFilter
+import wc.filter
+import wc.filter.Filter
+import wc.filter.HtmlParser
+import wc.filter.HtmlFilter
 
 
-class Rewriter (Filter):
+class Rewriter (wc.filter.Filter.Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_MODIFY]
+    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['rewrite', 'nocomments', 'javascript', 'rating']
-    mimelist = [compileMime(x) for x in ['text/html']]
+    mimelist = [wc.filter.compileMime(x) for x in ['text/html']]
 
 
     def filter (self, data, **attrs):
@@ -46,7 +44,7 @@ class Rewriter (Filter):
         p.feed(data)
         if p.handler.ratings:
             # XXX correct raise
-            raise FilterWait("wait for rating decision")
+            raise wc.filter.FilterWait("wait for rating decision")
         return p.getoutput()
 
 
@@ -59,7 +57,7 @@ class Rewriter (Filter):
         p.flush()
         if p.handler.ratings:
             # XXX correct raise
-            raise FilterRating("missing rating")
+            raise wc.filter.FilterRating("missing rating")
         # break cyclic references
         p.handler = None
         p.tagbuf2data()
@@ -85,8 +83,8 @@ class Rewriter (Filter):
             elif rule.get_name()=='rating':
                 ratings.append(rule)
         # generate the HTML filter
-        handler = HtmlFilter(rewrites, ratings, url, **opts)
-        p = HtmlParser(handler)
+        handler = wc.filter.HtmlFilter.HtmlFilter(rewrites, ratings, url, **opts)
+        p = wc.filter.HtmlParser.HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = p

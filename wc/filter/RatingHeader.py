@@ -20,15 +20,16 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import wc.filter
+import wc.filter.Filter
+import wc.filter.Rating
 from wc.log import *
-from wc.filter.Filter import Filter
-from wc.filter import FILTER_RESPONSE_HEADER, FilterRating
-from wc.filter.Rating import rating_cache_get, rating_add, rating_allow, rating_import, RatingParseError
 
-class RatingHeader (Filter):
+
+class RatingHeader (wc.filter.Filter.Filter):
     """Adds rating data supplied in 'Content-Rating' headers"""
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_HEADER,]
+    orders = [wc.filter.FILTER_RESPONSE_HEADER,]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['rating']
@@ -39,19 +40,19 @@ class RatingHeader (Filter):
         url = attrs['url']
         headers = attrs['headers']
         if headers.has_key('Content-Rating'):
-            cached_rating = rating_cache_get(url)
+            cached_rating = wc.filter.Rating.rating_cache_get(url)
             if cached_rating is None:
                 rating = headers['Content-Rating']
                 try:
-                    url, rating = rating_import(url, rating)
-                    rating_add(url, rating)
-                except RatingParseError, msg:
+                    url, rating = wc.filter.Rating.rating_import(url, rating)
+                    wc.filter.Rating.rating_add(url, rating)
+                except wc.filter.Rating.RatingParseError, msg:
                     warn(FILTER, "rating parse error: %s", msg)
         rules = attrs['rating_rules']
         for rule in rules:
-            msg = rating_allow(url, rule)
+            msg = wc.filter.Rating.rating_allow(url, rule)
             if msg:
-                raise FilterRating(msg)
+                raise wc.filter.FilterRating(msg)
         return data
 
 

@@ -21,20 +21,20 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
-from wc.filter.Filter import Filter
+import wc.filter
+import wc.filter.Filter
 
 
 # XXX group matches?
-class Replacer (Filter):
+class Replacer (wc.filter.Filter.Filter):
     """replace regular expressions in a data stream"""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_MODIFY]
+    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['replace']
-    mimelist = [compileMime(x) for x in ['text/html', 'text/javascript',
+    mimelist = [wc.filter.compileMime(x) for x in ['text/html', 'text/javascript',
                                          'application/x-javascript']]
 
 

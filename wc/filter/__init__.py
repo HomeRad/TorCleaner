@@ -36,8 +36,7 @@ __date__    = "$Date$"[7:-2]
 import re
 import wc
 import wc.filter.rules
-from wc.proxy.Headers import WcMessage
-from cStringIO import StringIO
+import wc.proxy.Headers
 
 # filter order
 FILTER_REQUEST         = 0 # Filter complete request (blocking)
@@ -133,7 +132,7 @@ def applyfilter (i, data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, filters, headers=WcMessage()):
+def get_filterattrs (url, filters, headers=wc.proxy.Headers.WcMessage()):
     """init external state objects"""
     attrs = {
         'url': url,
