@@ -17,17 +17,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os,sys
+import os, sys
 from wc.daemon import startfunc,pidfile
 from wc.debug_levels import *
-from wc import debug
+from wc import debug, configdata
 
 def start(parent_exit=1):
     # already running?
     if os.path.exists(pidfile):
         return """webcleaner already started (lock file found).
 Do 'webcleaner stop' first."""
-    command = (sys.executable, 'webcleaner', 'start_nt')
+    script = os.path.join(configdata.install_scripts, 'webcleaner')
+    command = (sys.executable, script, 'start_nt')
     from wc.proxy import winreg
     mode = os.P_DETACH
     try:
@@ -35,6 +36,7 @@ Do 'webcleaner stop' first."""
         key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
                  r"Software\Microsoft\Windows NT\CurrentVersion")
         val = key["CurrentVersion"]
+        # XXX
         mode = os.P_NOWAIT
     except EnvironmentError:
         pass
