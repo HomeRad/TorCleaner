@@ -395,6 +395,7 @@ class HttpServer (Server):
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
+        debug(PROXY, 'Proxy: server data %s', blocktext(`data`, 72))
         try:
             for i in _RESPONSE_FILTERS:
                 data = applyfilter(i, data, attrs=self.attrs)
@@ -491,9 +492,9 @@ class HttpServer (Server):
         debug(PROXY, "Server: handle_close %s", str(self))
         self.can_reuse = None
         Server.handle_close(self)
-        if self.client and not self.flushing:
-            client, self.client = self.client, None
-            client.server_close()
+        # flush unhandled data
+        if not self.flushing:
+            self.flush()
 
 
 def speedcheck_print_status ():
