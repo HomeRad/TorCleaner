@@ -104,7 +104,6 @@ class ClientServerMatchmaker (object):
                 return
         elif not hostname and self.headers.has_key('Host'):
             host = self.headers['Host']
-            warn(PROXY, "%s empty hostname, using %s", str(self), host)
             hostname, port = splitnport(host, 80)
         if not hostname:
             error(PROXY, "%s missing hostname in request", str(self))
