@@ -109,6 +109,7 @@ def wstartfunc (handle=None):
     config = Configuration()
     config.init_filter_modules()
     # start the proxy
+    info(PROXY, "Starting proxy on port %d", config['port'])
     from wc.proxy import mainloop
     mainloop(handle=handle)
 
