@@ -2,14 +2,9 @@
 # -*- coding: iso-8859-1 -*-
 """print headers of an url"""
 
+import httplib, urlparse, sys, os
 
-def _main ():
-    """USAGE: test/getssl.py <https url>"""
-    import httplib, urlparse, sys
-    if len(sys.argv)!=2:
-        print _main.__doc__
-        sys.exit(1)
-    url = sys.argv[1]
+def request (url):
     parts = urlparse.urlsplit(url)
     host = parts[1]
     port = 8443
@@ -22,6 +17,21 @@ def _main ():
     h.putheader("Host", host)
     h.endheaders()
     req = h.getresponse()
+    if req.status==302:
+        url = req.msg.get('Location')
+        print "redirected to", url
+        return request(url)
+    return req
+
+
+def _main ():
+    """USAGE: test/getssl.py <https url>"""
+    if len(sys.argv)!=2:
+        print _main.__doc__
+        sys.exit(1)
+    req = request(sys.argv[1])
+    print "HTTP version", req.version, req.status, req.reason
+    print req.msg
     print req.read()
 
 
