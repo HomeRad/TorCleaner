@@ -18,6 +18,7 @@ include config/*.png config/*.html
 include templates/classic/*.html
 include templates/classic/*.txt
 include templates/classic/*.png
+include templates/classic/*.js
 include templates/classic/*.css
 include templates/classic/macros/*.html
 include test/*.py test/output/test_* test/html/*.html test/*.sh
