@@ -29,6 +29,7 @@ from wc.filter import FILTER_REQUEST_ENCODE
 from wc.filter import applyfilter, get_filterattrs, FilterRating
 
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
+all_methods = allowed_methods + ['PUT']
 allowed_schemes = ['http', 'https'] # 'nntps' is untested
 allowed_connect_ports = [443] # 563 (NNTP over SSL) is untested
 allowed_local_docs = ['/blocked.html', '/blocked.png', '/error.html',
@@ -39,6 +40,17 @@ def is_allowed_document (doc):
         if doc.startswith(f):
             return True
     return False
+
+
+def is_http_method (s):
+    if len(s)<7:
+        # not enough data, say yes for now
+        return True
+    for m in all_methods:
+        if s.startswith(m):
+            return True
+    return False
+
 
 class HttpClient (StatefulConnection):
     """States:
