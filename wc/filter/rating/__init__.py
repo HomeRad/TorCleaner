@@ -31,6 +31,21 @@ class RatingParseError (Exception):
     pass
 
 
+def make_safe_url (url):
+    """remove unsafe parts of url for rating cache check"""
+    parts = wc.filter.rating.split_url(url)
+    pathparts = [make_safe_part(x) for x in parts[2:]]
+    pathparts[0:2] = parts[0:2]
+    return "".join(pathparts)
+
+
+def make_safe_part (part):
+    """remove unsafe chars of url"""
+    if part == '/':
+        return part
+    return filter(wc.url.is_safe_char, part)
+
+
 def split_url (url):
     """split an url into parts suitable for longest prefix match
        return parts so that "".join(parts) == url
