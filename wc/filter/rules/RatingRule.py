@@ -64,6 +64,21 @@ class RatingRule (UrlRule):
         for category, val in self.ratings.items():
             val = unxmlify(val).encode('iso8859-1')
             self.ratings[category] = val
+        from wc.filter.Rating import service
+        for category, catdata in service['categories'].items():
+            if category not in self.ratings:
+                if catdata.get('rvalues'):
+                    self.ratings[category] = catdata['rvalues'][0]
+                else:
+                    self.ratings[category] = ""
+        self.compile_values()
+
+
+    def compile_values (self):
+        self.values = {}
+        for category, val in self.ratings.items():
+            if val:
+                self.values[category] = {val:True}
 
 
     def fromFactory (self, factory):

@@ -515,12 +515,11 @@ def _form_apply_rating (form):
             elif currule.ratings[category]!=value:
                 currule.ratings[category] = value
                 info['rulecategory'] = True
-        else:
-            # note: if fresh enabled, the categories are not yet
-            # initialized with empty strings
-            if currule.ratings.get(category):
-                info['rulecategory'] = True
-            currule.ratings[category] = ""
+        elif category in currule.ratings:
+            info['rulecategory'] = True
+            del currule.ratings[category]
+    if info:
+        currule.compile_values()
 
 
 def _form_apply_replace (form):
