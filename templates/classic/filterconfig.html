@@ -24,7 +24,10 @@
 <!-- folders -->
 <td>
 <div tal:repeat="folder folders">
-<!-- XXX disable icon -->
+<img tal:condition="folder/disable" src="disabled.png"
+ tal:attributes="alt t_disabledfoldericon">
+<img tal:condition="not:folder/disable" src="minifolder.png"
+ tal:attributes="alt t_foldericon">
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
 </div>
@@ -39,7 +42,10 @@
 <td>
 <div tal:condition="curfolder">
 <div tal:repeat="rule curfolder/rules">
-<!-- XXX disable icon -->
+<img tal:condition="rule/disable" src="disabled.png"
+ tal:attributes="alt t_disabledruleicon">
+<img tal:condition="not:rule/disable" src="minidoc.png"
+ tal:attributes="alt t_ruleicon">
 <a href="#" tal:content="rule/title"
  tal:condition="not:curfolder/disable"
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}">On focus</a>

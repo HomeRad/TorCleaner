@@ -30,7 +30,7 @@ class FXRuleTreeList (FXTreeList):
         self.setListStyle(TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|TREELIST_SINGLESELECT)
         self.icon_open = loadIcon(self.getApp(), 'minifolderopen.png')
         self.icon_closed = loadIcon(self.getApp(), 'minifolder.png')
-        self.icon_disabled = loadIcon(self.getApp(), 'disabledrule.png')
+        self.icon_disabled = loadIcon(self.getApp(), 'disabled.png')
         self.icon_doc = loadIcon(self.getApp(), 'minidoc.png')
         topItem = FXTreeItem('Filter', self.icon_open, self.icon_closed)
         topItem.setData(0)
