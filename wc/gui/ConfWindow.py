@@ -233,9 +233,9 @@ class ConfWindow (ToolWindow):
         for host in sort_seq(self.nofilterhosts):
             self.nofilterlist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
-        FXButton(f, i18n._("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
-        FXButton(f, i18n._("Edit"), None, self, ConfWindow.ID_NOPROXYFOR_EDIT)
-        FXButton(f, i18n._("Remove"), None, self, ConfWindow.ID_NOPROXYFOR_REMOVE)
+        FXButton(f, i18n._("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOFILTERHOSTS_ADD)
+        FXButton(f, i18n._("Edit"), None, self, ConfWindow.ID_NOFILTERHOSTS_EDIT)
+        FXButton(f, i18n._("Remove"), None, self, ConfWindow.ID_NOFILTERHOSTS_REMOVE)
 
         f = FXGroupBox(proxy_top, i18n._("Allowed hosts"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -298,7 +298,7 @@ class ConfWindow (ToolWindow):
         # filterSettings
 
 
-    def onUpdFilterHosts (self, sender, sel, ptr):
+    def onUpdNoFilterHosts (self, sender, sel, ptr):
         i = self.nofilterlist.getCurrentItem()
         if i<0:
             sender.disable()
@@ -740,8 +740,8 @@ class ConfWindow (ToolWindow):
          'parentproxyuser', 'parentproxypass', 'allowedhosts',
          'webgui_theme', 'timeout',]:
             setattr(self, key, self.config[key])
-        self.nofilterhosts = ip.strhosts2map(self.nofilterhosts)
-        self.allowedhosts = ip.strhosts2map(self.allowedhosts)
+        self.nofilterhosts = ip.map2hosts(self.nofilterhosts)
+        self.allowedhosts = ip.map2hosts(self.allowedhosts)
         self.modules = {
 	    "Header": 0,
 	    "Blocker": 0,
@@ -801,9 +801,9 @@ class ConfWindow (ToolWindow):
              ' showerrors="%d"\n' % self.showerrors +\
              ' timeout="%d"\n' % self.timeout
         s += ' webgui_theme="%s"\n' % xmlify(self.webgui_theme)
-        hosts = sort_seq(ip.map2hosts(self.nofilterhosts))
+        hosts = sort_seq(self.nofilterhosts)
         s += ' nofilterhosts="%s"\n'%xmlify(",".join(hosts))
-        hosts = sort_seq(ip.map2hosts(self.allowedhosts))
+        hosts = sort_seq(self.allowedhosts)
         s += ' allowedhosts="%s"\n'%xmlify(",".join(hosts))
         s += '>\n'
         for key,val in self.modules.items():
