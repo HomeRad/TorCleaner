@@ -20,39 +20,11 @@ UPDATE = 5
 
 # Construct reverse mapping dictionary
 
-_names = dir()
-opcodemap = {}
-for _name in _names:
-    if _name[0] != '_': opcodemap[eval(_name)] = _name
+_opcodemap = {}
+for _name in dir():
+    if not _name.startswith('_'):
+        _opcodemap[eval(_name)] = _name
 
-def opcodestr(opcode):
-    return opcodemap.get(opcode, `opcode`)
+def opcodestr (opcode):
+    return _opcodemap.get(opcode, `opcode`)
 
-#
-# $Log$
-# Revision 1.2  2003/07/01 15:46:17  calvin
-# use bool type, add encoding comment, add timeout config value
-#
-# Revision 1.1  2002/11/27 23:27:05  calvin
-# update tests
-#
-# Revision 1.3  2002/11/26 23:27:43  calvin
-# update to Python >= 2.2.1
-#
-# Revision 1.6  2002/04/23 10:51:43  anthonybaxter
-# Added UPDATE, NOTIFY.
-#
-# Revision 1.5  2002/03/19 12:41:33  anthonybaxter
-# tabnannied and reindented everything. 4 space indent, no tabs.
-# yay.
-#
-# Revision 1.4  2002/03/19 12:26:13  anthonybaxter
-# death to leading tabs.
-#
-# Revision 1.3  2001/08/09 09:08:55  anthonybaxter
-# added identifying header to top of each file
-#
-# Revision 1.2  2001/07/19 06:57:07  anthony
-# cvs keywords added
-#
-#

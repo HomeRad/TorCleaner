@@ -33,34 +33,3 @@ for _name in dir():
 def classstr (klass):
     return _classmap.get(klass, `klass`)
 
-#
-# $Log$
-# Revision 1.3  2003/11/04 21:38:55  calvin
-# removed unnecessary stuff
-#
-# Revision 1.2  2003/07/01 15:46:17  calvin
-# use bool type, add encoding comment, add timeout config value
-#
-# Revision 1.1  2002/11/27 23:27:05  calvin
-# update tests
-#
-# Revision 1.3  2002/11/26 23:27:43  calvin
-# update to Python >= 2.2.1
-#
-# Revision 1.6  2002/04/23 12:52:19  anthonybaxter
-# cleanup whitespace.
-#
-# Revision 1.5  2002/03/19 12:41:33  anthonybaxter
-# tabnannied and reindented everything. 4 space indent, no tabs.
-# yay.
-#
-# Revision 1.4  2002/03/19 12:26:13  anthonybaxter
-# death to leading tabs.
-#
-# Revision 1.3  2001/08/09 09:08:55  anthonybaxter
-# added identifying header to top of each file
-#
-# Revision 1.2  2001/07/19 06:57:07  anthony
-# cvs keywords added
-#
-#
