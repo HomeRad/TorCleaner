@@ -72,7 +72,13 @@ class HttpServer (Server):
         self.authtries = 0
         self.statuscode = None
         self.bytes_remaining = None
-        self.attempt_connect()
+        # attempt connect
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        try:
+	    self.connect(self.addr)
+        except socket.error:
+            self.handle_error('connect error')
 
 
     def __repr__ (self):
@@ -98,16 +104,6 @@ class HttpServer (Server):
                            portstr, self.document)
 
 
-    def attempt_connect (self):
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        try:
-	    self.connect(self.addr)
-        except socket.error:
-            self.handle_error('connect error')
-            return
-
-
     def process_connect (self):
         assert self.state == 'connect'
         self.state = 'client'
@@ -128,20 +124,9 @@ class HttpServer (Server):
             self.reuse()
 
 
-    def send_request (self):
-        request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
-        self.write(request)
-        # write original Message object headers to preserve
-        # case sensitivity (!)
-        debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
-        self.write("".join(self.clientheaders.headers))
-        self.write('\r\n')
-        self.write(self.content)
-        self.state = 'response'
-
-
     def client_send_request (self, method, hostname, document, headers,
                             content, client, nofilter, url, mime):
+        """the client (matchmaker) sends the request to the server"""
         assert self.state == 'client'
         self.client = client
         self.method = method
@@ -158,6 +143,18 @@ class HttpServer (Server):
             # stored previous proxy authentication (for Basic and Digest auth)
             headers['Proxy-Authorization'] = "%s\r"%config['parentproxycreds']
         self.send_request()
+
+
+    def send_request (self):
+        """actually send the request to the server, is also used to
+        send a request twice for NTLM authentication"""
+        request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
+        self.write(request)
+        debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
+        self.write("".join(self.clientheaders.headers))
+        self.write('\r\n')
+        self.write(self.content)
+        self.state = 'response'
 
 
     def process_read (self):
@@ -213,7 +210,7 @@ class HttpServer (Server):
                 self.attrs = initStateObjects(self.headers, self.url)
             wc.proxy.HEADERS.append((self.url, "server", self.headers))
             self.state = 'content'
-            self.client.server_response(self.response, self.headers)
+            self.client.server_response(self.response, self.statuscode, self.headers)
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
@@ -263,14 +260,15 @@ class HttpServer (Server):
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
                                        msg, attrs=self.nofilter)
         except FilterPics, msg:
+            self.statuscode = 403
             debug(PROXY, "%s FilterPics %s", str(self), `msg`)
             # XXX get version
-            response = "HTTP/1.1 200 OK"
+            response = "HTTP/1.1 403 Forbidden"
             headers = {
                 "Content-Type": "text/plain",
                 "Content-Length": len(msg),
             }
-            self.client.server_response(response, headers)
+            self.client.server_response(response, self.statuscode, headers)
             self.client.server_content(msg)
             self.client.server_close()
             self.state = 'recycle'
@@ -295,7 +293,7 @@ class HttpServer (Server):
         debug(PROXY, "%s filtered headers\n%s", str(self), str(self.headers))
         wc.proxy.HEADERS.append((self.url, "server", self.headers))
         if self.statuscode!=407:
-            self.client.server_response(self.response, self.headers)
+            self.client.server_response(self.response, self.statuscode, self.headers)
         if self.statuscode in (204, 304) or self.method == 'HEAD':
             # These response codes indicate no content
             self.state = 'recycle'
