@@ -4,9 +4,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Wed Jul 16 09:06:45 2003\n"
-"PO-Revision-Date: 2003-07-16 09:31+0100\n"
-"Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
+"POT-Creation-Date: Mon Jul 21 13:03:58 2003\n"
+"PO-Revision-Date: 2003-07-21 13:59+0100\n"
+"Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
@@ -212,7 +212,7 @@ msgid "Port\tThe port adress the WebCleaner proxy is listening on."
 msgstr "Portnummer\tPortnummer an der der WebCleaner Proxy horchen soll."
 
 msgid "Timeout\tConnection timeout in seconds, a zero value uses the default platform timeout."
-msgstr ""
+msgstr "Zeitüberschreitung\tZeitüberschreitung von Verbindungen in Sekunden, eine Null nimmt den Standardwert des Systems"
 
 msgid "Web GUI theme"
 msgstr "Weboberfläche"
@@ -393,12 +393,14 @@ msgid ""
 "Fallback URL:\tA URL to display if the page is censored\n"
 "The default is to return a 403 Forbidden HTTP error."
 msgstr ""
+"Ersatz-URL:\tEine URL, die anstatt der zensierten Seite genommen wird\n"
+"Standardmäßig wird ein 403 Forbidden HTTP Fehler zurückgegeben."
 
 msgid "%s\tEnable/disable this rating service."
-msgstr ""
+msgstr "%s\tAktivieren/Deaktivieren dieses Dienstleisters"
 
 msgid "%s\tEnable/disable this category."
-msgstr ""
+msgstr "%s\tAktivieren/Deaktivieren dieser Kategorie"
 
 msgid "Replace regex:\tRegular expression to match the data stream"
 msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
@@ -659,6 +661,12 @@ msgstr "Erstellt von"
 msgid "%s accessibility statement"
 msgstr "%s Zugänglichkeitserklärung"
 
+msgid "Feedback"
+msgstr "Feedback"
+
+msgid "%s feedback information"
+msgstr "%s feedback information"
+
 msgid "Skip to main content"
 msgstr "Zum Hauptinhalt springen"
 
@@ -690,7 +698,7 @@ msgid "Port number"
 msgstr "Portnummer"
 
 msgid "Port number the proxy is listening on for requests"
-msgstr ""
+msgstr "Portnummer auf der dieser Proxy auf Anfragen wartet"
 
 msgid "Username"
 msgstr "Benutzername"
@@ -702,7 +710,7 @@ msgid "Password"
 msgstr "Passwort"
 
 msgid "Password used for proxy authentitaction"
-msgstr ""
+msgstr "Passwort zur Proxy Authentifizierung"
 
 msgid "Hostname of the parent proxy"
 msgstr "Rechnername des übergeordneten Proxy"
@@ -711,10 +719,10 @@ msgid "Port number of the parent proxy"
 msgstr "Die Portnummer des übergeordneten Proxy"
 
 msgid "Username used for parent proxy authentication"
-msgstr ""
+msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
 
 msgid "Password used for parent proxy authentication"
-msgstr ""
+msgstr "Passwort zur Authentifizierung des übergeordneten Proxy"
 
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
@@ -726,10 +734,10 @@ msgid "Proxy filter modules"
 msgstr "Proxy Filter Module"
 
 msgid "List of hosts allowed to use this proxy."
-msgstr ""
+msgstr "Liste der Rechner die diesen Proxy benutzen dürfen"
 
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
-msgstr ""
+msgstr "Nur numerische IPs/Netzwerke sind hier nützlich weil DNS Auflösung nicht stattfindet."
 
 msgid "Remove selected"
 msgstr "Lösche Auswahl"
@@ -738,13 +746,13 @@ msgid "Add new"
 msgstr "Neu hinzufügen"
 
 msgid "Don't filter hosts"
-msgstr ""
+msgstr "Nicht zu filternde Rechner"
 
 msgid "List of hostnames the proxy must not filter."
-msgstr ""
+msgstr "Liste von Rechnernamen die dieser Proxy nicht filtern darf"
 
 msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
-msgstr ""
+msgstr "Stellen sie sicher, alle Rechner Aliase und IPs angegeben zu haben weil DNS Auflösung nicht stattfindet."
 
 msgid "Apply"
 msgstr "Übernehmen"
@@ -777,10 +785,10 @@ msgid "Parent proxy user successfully changed."
 msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
 
 msgid "Parent proxy password successfully changed."
-msgstr ""
+msgstr "Passwort des übergeordneten Proxy wurde erfolgreich geändert."
 
 msgid "Timeout sucessfully changed."
-msgstr ""
+msgstr "Zeitüberschreitung wurde erfolgreich geändert."
 
 msgid "Invalid timeout value."
 msgstr "Ungültiger Timeoutwert."
@@ -792,22 +800,22 @@ msgid "Disabled filter modules %s."
 msgstr "Filter Module %s wurden deaktiviert."
 
 msgid "Allowed host successfully added."
-msgstr ""
+msgstr "Erlaubter Rechner wurde erfolgreich hinzugefügt."
 
 msgid "Allowed host successfully removed."
-msgstr ""
+msgstr "Erlaubter Rechner wurde erfolgreich entfernt."
 
 msgid "%d allowed hosts successfully removed."
-msgstr ""
+msgstr "%d erlaubte Rechner wurden erfolgreich entfernt."
 
 msgid "Nofilter host successfully added."
-msgstr ""
+msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
 
 msgid "Nofilter host successfully removed."
-msgstr ""
+msgstr "Nicht zu filternder Rechner wurde erfolgreich entfernt."
 
 msgid "%d nofilter hosts successfully removed."
-msgstr ""
+msgstr "%d nicht zu filternde Rechner wurde erfolgreich entfernt."
 
 msgid "%s error page"
 msgstr "%s Fehlerseite"
@@ -999,7 +1007,7 @@ msgid "Rule already disabled."
 msgstr "Regel ist bereits deaktiviert."
 
 msgid "Rule disabled."
-msgstr ""
+msgstr "Regel wurde deaktiviert."
 
 msgid "Rule already enabled."
 msgstr "Regel ist bereits aktiviert."
@@ -1026,7 +1034,7 @@ msgid "Invalid folder move up id."
 msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
 
 msgid "Folder moved down."
-msgstr ""
+msgstr "Ordner wurde nach unten geschoben."
 
 msgid "Invalid folder move down id."
 msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
@@ -1047,61 +1055,61 @@ msgid "Empty rule title"
 msgstr "Leerer Regel Titel"
 
 msgid "Rule title changed."
-msgstr ""
+msgstr "Regelname wurde geändert."
 
 msgid "Rule description changed."
-msgstr ""
+msgstr "Regelbeschreibung wurde geändert."
 
 msgid "Rule match url changed."
-msgstr ""
+msgstr "Regel Treffer-URL wurde geändert."
 
 msgid "Rule dontmatch url changed."
-msgstr ""
+msgstr "Regel Nichttreffer-URL wurde geändert."
 
 msgid "Rule url scheme changed."
-msgstr ""
+msgstr "Regel URL Schema wurde geändert."
 
 msgid "Rule url host changed."
-msgstr ""
+msgstr "Regel URL Rechner wurde geändert."
 
 msgid "Rule url port changed."
-msgstr ""
+msgstr "Regel URL Portnummer wurde geändert."
 
 msgid "Rule url path changed."
-msgstr ""
+msgstr "Regel URL Pfad wurde geändert."
 
 msgid "Rule url parameters changed."
-msgstr ""
+msgstr "Regel URL Parameter wurde geändert."
 
 msgid "Rule url query changed."
-msgstr ""
+msgstr "Regel URL Anfrage wurde geändert."
 
 msgid "Rule url fragment changed."
-msgstr ""
+msgstr "Regel URL Fragment wurde geändert."
 
 msgid "Rule blocked url changed."
-msgstr ""
+msgstr "Regel Block-URL wurde geändert."
 
 msgid "Empty header rule name."
 msgstr "Leerer Header-Regel Name."
 
 msgid "Rule header name changed."
-msgstr ""
+msgstr "Regel Header-Name wurde geändert."
 
 msgid "Rule header value changed."
-msgstr ""
+msgstr "Regel Header-Wert wurde geändert."
 
 msgid "Invalid image width value."
 msgstr "Ungültige Bildbreite."
 
 msgid "Rule image width changed."
-msgstr ""
+msgstr "Regel Bildbreite wurde geändert."
 
 msgid "Invalid image height value."
 msgstr "Ungültige Bildhöhe."
 
 msgid "Rule image height changed."
-msgstr ""
+msgstr "Regel Bildhöhe wurde geändert."
 
 msgid "PICS service %s enabled."
 msgstr "PICS Dienstleister %s aktiviert."
@@ -1131,7 +1139,7 @@ msgid "Rule rewrite tag changed."
 msgstr "Rewrite-Regel Tagname geändert."
 
 msgid "Rule rewrite enclosed block changed."
-msgstr ""
+msgstr "Rewrite-Regel eingeschlossener Block wurde geändert."
 
 msgid "Invalid part value %s."
 msgstr "Ungültiger Teilwert %s."
@@ -1140,10 +1148,10 @@ msgid "Rule rewrite part changed."
 msgstr "Rewrite-Regel Teilwert geändert."
 
 msgid "Rule rewrite replacement changed."
-msgstr ""
+msgstr "Rewrite-Regel Ersatztext wurde geändert."
 
 msgid "%s web interface main page"
-msgstr ""
+msgstr "%s Weboberfläche Hauptseite"
 
 msgid ""
 "USAGE\twebcleaner command\n"
