@@ -19,5 +19,10 @@ Now you can start the proxy by executing "webcleaner start".
 
 The HTML parser, flex, bison
 ----------------------------
+If you want, you can rebuilt the parser .c files from the .l and .y
+source files.
 The parser is built with a patched flex snapshot release available
 from the WebCleaner homepage.
+You have to adjust the FLEX variable in wc/parser/Makefile to point
+to your flex binary.
+
