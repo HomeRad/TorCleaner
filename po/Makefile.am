@@ -1,7 +1,7 @@
 PYTHON = env PYTHONPATH=$(top_srcdir) python
-XGETTEXT = @XGETTEXT@
-MSGFMT = @MSGFMT@
-MSGMERGE = @MSGMERGE@
+XGETTEXT := xgettext
+MSGFMT := msgfmt
+MSGMERGE := msgmerge
 TALGETTEXT = $(PYTHON) ../wc/webgui/TAL/talgettext.py
 POSOURCES = $(shell find ../wc -name \*.py) \
 	../webcleaner ../webcleaner-certificates
