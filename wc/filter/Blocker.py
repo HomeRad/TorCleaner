@@ -63,7 +63,7 @@ class Blocker (Filter):
         getattr(self, rule.get_name()).append(_rule)
 
     def doit (self, data, **args):
-        debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
+        #debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
         splitted = data.split()
         if len(splitted)==3:
             method,url,protocol = splitted
@@ -76,7 +76,7 @@ class Blocker (Filter):
                 urlTuple[1:2] = [netloc,80]
             blocked = self.blocked(urlTuple)
             if blocked is not None:
-                debug(BRING_IT_ON, "blocked url %s" % url)
+                #debug(BRING_IT_ON, "blocked url %s" % url)
                 # index 3, not 2!
                 if image_re.match(urlTuple[3][-4:]):
                     return '%s %s %s' % (method,
@@ -93,12 +93,12 @@ class Blocker (Filter):
             match = 1
             for i in range(len(urlTuple)):
                 if _block[i]:
-                    debug(NIGHTMARE, "block pattern "+_block[i].pattern)
+                    #debug(NIGHTMARE, "block pattern "+_block[i].pattern)
                     if not _block[i].search(urlTuple[i]):
-                        debug(NIGHTMARE, "no match")
+                        #debug(NIGHTMARE, "no match")
                         match = 0
             if match and not self.allowed(urlTuple):
-                debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
+                #debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
                 return _block[-1]
         return None
 
@@ -107,11 +107,11 @@ class Blocker (Filter):
             match = 1
             for i in range(len(urlTuple)):
                 if _allow[i]:
-                    debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
+                    #debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
 		    if not _allow[i].search(urlTuple[i]):
-                        debug(NIGHTMARE, "no match")
+                        #debug(NIGHTMARE, "no match")
                         match = 0
             if match:
-                debug(NIGHTMARE, "allowed")
+                #debug(NIGHTMARE, "allowed")
 	        return 1
         return 0

@@ -47,18 +47,18 @@ class FXRuleTreeList(FXTreeList):
     def newRule(self, rule):
         item = self.getCurrentItem()
         # we must have selected a rule folder:
-        debug(BRING_IT_ON, "item index %d"%item.getData())
+        #debug(BRING_IT_ON, "item index %d"%item.getData())
         if item.getData()==0:
             item = item.getBelow()
         elif not self.searchFolder(item.getData()):
             item = item.getParent()
-        debug(BRING_IT_ON, "item index %d"%item.getData())
+        #debug(BRING_IT_ON, "item index %d"%item.getData())
         self.expandTree(item)
         folder = self.searchFolder(item.getData())
         rule.parent = folder
         folder.append_rule(rule)
         item = self.addRule(item, rule, 1)
-        debug(BRING_IT_ON, "item index %d"%item.getData())
+        #debug(BRING_IT_ON, "item index %d"%item.getData())
 
     def searchFolder(self, index):
         for f in self.folders:

@@ -60,7 +60,7 @@ class FXRuleFrame(FXVerticalFrame):
         sender.setText(title)
         self.rule.title = title
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Rule title changed")
+        #debug(BRING_IT_ON, "Rule title changed")
         # send message to main window for treelist updating
         win = self.getApp().getMainWindow()
         win.handle(sender, MKUINT(win.ID_TITLE, SEL_COMMAND), ptr)
@@ -70,11 +70,11 @@ class FXRuleFrame(FXVerticalFrame):
         if self.rule.desc != sender.getText():
             self.rule.desc = sender.getText()
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Rule description changed")
+            #debug(BRING_IT_ON, "Rule description changed")
         return 1
 
     def onCmdDisableRule(self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Rule %d %s"%(self.rule.index, (self.rule.disable and "disabled" or "enabled")))
+        #debug(BRING_IT_ON, "Rule %d %s"%(self.rule.index, (self.rule.disable and "disabled" or "enabled")))
         self.rule.disable = sender.getCheck()
         self.getApp().dirty = 1
         # send message to main window for icon updating
@@ -86,12 +86,12 @@ class FXRuleFrame(FXVerticalFrame):
         if self.rule.matchurl != sender.getText():
             self.rule.matchurl = sender.getText()
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Rule matchurl changed")
+            #debug(BRING_IT_ON, "Rule matchurl changed")
         return 1
 
     def onCmdDontMatchUrl (self, sender, sel, ptr):
         if self.rule.dontmatchurl != sender.getText():
             self.rule.dontmatchurl = sender.getText()
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Rule dontmatchurl changed")
+            #debug(BRING_IT_ON, "Rule dontmatchurl changed")
         return 1
