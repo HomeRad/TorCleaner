@@ -68,6 +68,7 @@ def init_i18n ():
     """
     wc.i18n.init(configdata.name, get_locdir())
 
+
 def get_locdir ():
     """return locale directory"""
     locdir = os.environ.get('LOCPATH')
