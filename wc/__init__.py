@@ -84,8 +84,8 @@ def initlog (filename, appname, filelogs=True):
         logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_wc_handler(logfile)
         logging.getLogger("wc").addHandler(handler)
-        logging.getLogger("simpleTAL").addHandler(handler)
-        logging.getLogger("simpleTALES").addHandler(handler)
+        logging.getLogger("TAL").addHandler(handler)
+        logging.getLogger("TALES").addHandler(handler)
         # access log is always a file
         logname = "%s-access.log" % appname
         logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
