@@ -34,9 +34,9 @@ class UrlRule (Rule):
 
     def appliesTo (self, url):
         if self.matchurl:
-            return self.matchurl.search(url)
+            return self.matchurl_ro.search(url)
         if self.dontmatchurl:
-            return not self.dontmatchurl.search(url)
+            return not self.dontmatchurl_ro.search(url)
         return True
 
 

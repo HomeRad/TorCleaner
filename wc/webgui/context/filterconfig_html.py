@@ -1,7 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 import tempfile, os
 from wc import AppName, ConfigDir, rulenames, Version, config
-from wc import Configuration as _Configuration
 from wc import daemon as _daemon
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
@@ -17,7 +16,6 @@ from wc.filter.PICS import services as pics_data
 # config vars
 info = {}
 error = {}
-#config = _Configuration()
 # current selected folder
 curfolder = None
 # current selected rule

@@ -33,7 +33,7 @@ to work properly.
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, wc
+import re, wc, wc.filter.rules
 
 # filter order
 FILTER_REQUEST         = 0 # Filter complete request (blocking)
@@ -95,7 +95,8 @@ def printFilterOrder (i):
 # compile object attribute
 def compileRegex (obj, attr):
     if hasattr(obj, attr) and getattr(obj, attr):
-        setattr(obj, attr, re.compile(getattr(obj, attr)))
+        setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
+
 
 # compile mimelist entry
 def compileMime (mime):
@@ -104,9 +105,7 @@ def compileMime (mime):
 
 def GetRuleFromName (name):
     name = '%sRule' % name.capitalize()
-    exec "from wc.filter.rules.%s import %s"%(name,name)
-    klass = locals()[name]
-    return klass(None)
+    return getattr(wc.filter.rules, name)()
 
 
 def applyfilter (i, data, fun='filter', attrs={}):

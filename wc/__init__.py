@@ -259,8 +259,7 @@ class Configuration (dict):
 
     def read_filterconf (self):
         """read filter rules"""
-        from wc.filter.rules.FolderRule import recalc_up_down
-        from wc.filter.rules import generate_sids
+        from wc.filter.rules import generate_sids, recalc_up_down
         for filename in filterconf_files():
             p = ZapperParser(filename)
             p.parse(file(filename), self)
@@ -402,7 +401,7 @@ class ZapperParser (BaseParser):
     def __init__ (self, filename):
         super(ZapperParser, self).__init__(filename)
         from wc.filter.rules import FolderRule
-        self.folder = FolderRule.FolderRule(filename=filename)
+        self.folder = FolderRule(filename=filename)
         self.cmode = None
         self.rule = None
 

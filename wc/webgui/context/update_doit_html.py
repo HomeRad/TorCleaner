@@ -1,7 +1,6 @@
 # -*- coding: iso-8859-1 -*-
-from wc import AppName, Version, BaseUrl
+from wc import AppName, Version, BaseUrl, config
 from wc.update import update as _update
-from wc import Configuration as _Configuration
 from cStringIO import StringIO as _StringIO
 
 updatelog = ""
@@ -9,7 +8,6 @@ updatelog = ""
 def _exec_form (form):
     global updatelog
     log = _StringIO()
-    config = _Configuration()
     doreload = False
     try:
         doreload = _update(config, BaseUrl, log=log, dryrun=False)

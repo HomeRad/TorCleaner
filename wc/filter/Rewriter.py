@@ -48,8 +48,9 @@ class Rewriter (Filter):
         compileRegex(rule, "dontmatchurl")
         if rule.get_name()=='rewrite':
             compileRegex(rule, "enclosed")
-            for key,val in rule.attrs.items():
-                rule.attrs[key] = re.compile(rule.attrs[key])
+            rule.attrs_ro = {}
+            for key, val in rule.attrs.items():
+                rule.attrs_ro[key] = re.compile(rule.attrs[key])
         elif rule.get_name()=='nocomments':
             self.comments = 0
 

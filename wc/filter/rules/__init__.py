@@ -43,8 +43,12 @@ def has_sid (sid):
 
 
 def generate_sids (prefix="wc"):
+    sid = generate_sid(prefix)
+    while has_sid(sid):
+        sid = generate_sid(prefix)
     for rule in _rules_without_sid:
-        rule.sid = generate_unique_sid(prefix)
+        rule.sid = sid
+        sid = generate_sid(prefix)
     del _rules_without_sid[:]
 
 
@@ -60,3 +64,21 @@ def generate_sid (prefix):
     global _sidcounter
     _sidcounter += 1
     return "%s.%d" % (prefix, _sidcounter)
+
+
+from AllowRule import *
+from AllowdomainsRule import *
+from AllowurlsRule import *
+from BlockRule import *
+from BlockdomainsRule import *
+from BlockurlsRule import *
+from ExternfileRule import *
+from FolderRule import *
+from HeaderRule import *
+from ImageRule import *
+from JavascriptRule import *
+from NocommentsRule import *
+from PicsRule import *
+from ReplaceRule import *
+from RewriteRule import *
+from UrlRule import *

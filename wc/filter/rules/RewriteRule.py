@@ -156,7 +156,7 @@ class RewriteRule (UrlRule):
             if attr is None: attr = ''
             if val is None: val = ''
             occurred.append(attr)
-            ro = self.attrs.get(attr)
+            ro = self.attrs_ro.get(attr)
             if ro and not ro.search(val):
                 return False
         for attr in self.attrs.keys():
@@ -174,7 +174,7 @@ class RewriteRule (UrlRule):
         # check every data for a match
         # remember that data is _not_ splitted across multiple items
         for n in buf[pos:]:
-            if n[0]==DATA and self.enclosed.search(n[1]):
+            if n[0]==DATA and self.enclosed_ro.search(n[1]):
                 return True
         return False
 
@@ -194,7 +194,7 @@ class RewriteRule (UrlRule):
         newattrs = {}
         # look for matching tag attributes
         for attr,val in attrs.items():
-            ro = self.attrs.get(attr)
+            ro = self.attrs_ro.get(attr)
             if ro:
                 mo = ro.search(val)
                 if mo:
@@ -246,7 +246,7 @@ class RewriteRule (UrlRule):
                 self.enclosed):
             return s+"/>\n"
         s += ">\n"
-        for key,val in self.attrs.items():
+        for key, val in self.attrs.items():
             s += "<attr"
             if key!='href':
                 s += ' name="%s"' % key
