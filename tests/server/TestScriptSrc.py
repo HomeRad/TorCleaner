@@ -9,7 +9,6 @@ from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from wc.log import initlog
 
 
 jsfiles = {
@@ -73,22 +72,25 @@ class TestScriptSrc (StandardTest):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def init (self):
+        super(TestScriptSrc, self).init()
         wc.config = wc.Configuration()
         disable_rating_rules(wc.config)
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
-        initlog(os.path.join("test", "logging.conf"))
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
-        #self.log = file("servertests.txt", 'a')
-        self.log = sys.stdout
+        if self.showAll:
+            self.log = sys.stdout
+        else:
+            self.log = file("servertests.txt", 'a')
         self.serverthread = HttpServer.startServer(self.log,
                                        handler_class=JSRequestHandler)
 
     def shutdown (self):
         """Stop server, close log"""
         HttpServer.stopServer(self.log)
-        #self.log.close()
+        if not self.showAll:
+            self.log.close()
 
     def filt (self, data, result, name=""):
         attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY], headers=self.headers)
