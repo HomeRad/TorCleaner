@@ -2,7 +2,13 @@
 .SH NAME
 webcleaner-certificates \- generate or remove WebCleaner SSL certificates
 .SH SYNOPSIS
-\fBwebcleaner-certificates\fP \fIcommand\fP
+\fBwebcleaner-certificates\fP [\fIoptions\fP] \fIcommand\fP
+.SH OPTIONS
+.TP
+\fB-d\fP \fIdirectory\fP, \fB--configdir=\fP\fIdirectory\fP
+Generate certificates in given directory instead of the
+default one for WebCleaner.
+This should be the same directory as given in \fBwebcleaner -d\fP.
 .SH COMMANDS
 .TP
 \fBinstall\fP
