@@ -36,7 +36,7 @@ Obfuscate IP address does not spoof your address, it just encodes the
 IP numbers in one big integer. This is known to *not* work with
 a Squid parent proxy.
 
-Yes, surf performance will decrease, espacially with the Rewriter module
+Yes, surf performance will decrease, especially with the Rewriter module
 enabled.
 
 
@@ -57,6 +57,3 @@ the Webwasher.
 
 Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
 HTTP/1.1 proxy written in Java.
-
-Mooneer Salem <mooneer@translator.cx> made the groundwork for the
-HTML parser with his libhtmlparser package.
