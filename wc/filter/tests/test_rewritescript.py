@@ -160,7 +160,7 @@ a=0;
 </script>""",
 """<script type="text/javascript">
 <!--
-// error fetching script from 'http://imadoofus.org/notfound.js'
+// error fetching script from u'http://imadoofus.org/notfound.js'
 //-->
 </script>""")
 
