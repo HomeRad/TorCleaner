@@ -44,6 +44,7 @@ import struct
 import time
 from Crypto.Hash import MD4
 from Crypto.Cipher import DES
+import bk.log
 import wc
 
 random.seed()

@@ -6,6 +6,7 @@ import wc.net.url
 # default realm for authentication
 wc_realm = "unknown"
 
+import bk.log
 import wc
 from basic import parse_basic_challenge, get_basic_challenge
 from basic import parse_basic_credentials, get_basic_credentials

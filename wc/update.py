@@ -4,6 +4,8 @@
 import os
 import md5
 import wc
+import bk.i18n
+import bk.log
 from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
 #

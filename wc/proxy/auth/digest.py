@@ -14,6 +14,7 @@ from parse import *
 
 # the default realm
 from wc.proxy.auth import wc_realm
+import bk.log
 import wc
 
 
