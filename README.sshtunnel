@@ -18,7 +18,6 @@ mv -f $N $O
 2) place this on your remote server (eg at work) and start it
 -- start ~/bin/f.sh --
 #!/bin/sh
-# I use this from work to my home dsl box
 ssh -X -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
 -- end ~/bin/f.sh --
 

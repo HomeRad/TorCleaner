@@ -2,8 +2,9 @@ import rfc822, time, sys
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
+from ServerHandleDirectly import ServerHandleDirectly
 from wc import debug, config, _
-from wc.proxy import log, match_host
+from wc.proxy import log, match_host, HTML_TEMPLATE
 from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
@@ -31,6 +32,27 @@ class HttpClient (Connection):
         if not config['allowedhosts'].has_key(host):
             print >>sys.stderr, _("%s access denied")%host
             self.close()
+
+
+    def error (self, code, msg, txt=''):
+        content = HTML_TEMPLATE % \
+            {'title': 'WebCleaner Proxy Error %d %s' % (code, msg),
+             'header': 'Bummer!',
+             'content': 'WebCleaner Proxy Error %d %s<br>%s<br>' % \
+                        (code, msg, txt),
+            }
+        if config['proxyuser']:
+            auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
+            http_ver = '1.1'
+        else:
+            auth = ''
+            http_ver = '1.0'
+        ServerHandleDirectly(self,
+            'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
+            'Server: WebCleaner Proxy\r\n' +\
+            'Content-type: text/html\r\n' +\
+            '%s'%auth +\
+            '\r\n', content)
 
 
     def __repr__ (self):

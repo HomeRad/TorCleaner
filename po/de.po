@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Wed Oct 16 01:04:04 2002\n"
+"POT-Creation-Date: Wed Oct 16 23:26:57 2002\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -693,6 +693,31 @@ msgstr "Kann Anfrage nicht parsen"
 
 msgid "Empty URL"
 msgstr "Leere URL"
+
+msgid "Forbidden"
+msgstr "Verboten"
+
+msgid "Not found"
+msgstr "Nicht gefunden"
+
+#, fuzzy
+msgid "Invalid path %s"
+msgstr "Ungültiger regulärer Ausdruck %s: %s"
+
+msgid "Host %s is an abbreviation for %s"
+msgstr "Rechner %s ist eine Abkürzung für %s"
+
+msgid "Host not found"
+msgstr "Rechner nicht gefunden"
+
+msgid "Host %s not found .. %s"
+msgstr "Rechner %s nicht gefunden .. %s"
+
+msgid "Expectation failed"
+msgstr "Erwartung fehlgeschlagen"
+
+msgid "Server does not understand HTTP/1.1"
+msgstr "Server versteht nicht HTTP/1.1"
 
 msgid "No response from server"
 msgstr "Keine Antwort vom Server"

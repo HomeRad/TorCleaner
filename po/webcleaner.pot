@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Oct 16 01:04:04 2002\n"
+"POT-Creation-Date: Wed Oct 16 23:26:57 2002\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -656,6 +656,30 @@ msgid "Can't parse request"
 msgstr ""
 
 msgid "Empty URL"
+msgstr ""
+
+msgid "Forbidden"
+msgstr ""
+
+msgid "Not found"
+msgstr ""
+
+msgid "Invalid path %s"
+msgstr ""
+
+msgid "Host %s is an abbreviation for %s"
+msgstr ""
+
+msgid "Host not found"
+msgstr ""
+
+msgid "Host %s not found .. %s"
+msgstr ""
+
+msgid "Expectation failed"
+msgstr ""
+
+msgid "Server does not understand HTTP/1.1"
 msgstr ""
 
 msgid "No response from server"

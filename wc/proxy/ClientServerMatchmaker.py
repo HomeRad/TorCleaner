@@ -54,7 +54,7 @@ class ClientServerMatchmaker:
         self.compress = compress
         if config["proxyuser"]:
             if not self.check_proxy_auth():
-                self.error(407, _("Proxy Authentication Required"))
+                self.client.error(407, _("Proxy Authentication Required"))
                 return
         self.content = content
         self.nofilter = nofilter
@@ -62,20 +62,20 @@ class ClientServerMatchmaker:
         try: self.method, self.url, protocol = request.split()
         except:
             config['requests']['error'] += 1
-            self.error(400, _("Can't parse request"))
+            self.client.error(400, _("Can't parse request"))
             return
         if not self.url:
             config['requests']['error'] += 1
-            self.error(400, _("Empty URL"))
+            self.client.error(400, _("Empty URL"))
             return
         if self.method=='OPTIONS':
             mf = int(self.headers.get('Max-Forwards', -1))
             if mf==0:
                 # XXX display options
                 ServerHandleDirectly(self.client,
-                    'HTTP/1.0 200 OK\r\n',
-                    'Content-Type: text/plain\r\n\r\n',
-                    'WebCleaner')
+                   'HTTP/1.0 200 OK\r\n',
+                   'Content-Type: text/plain\r\n\r\n',
+                   'WebCleaner')
                 return
             if mf>0:
                 self.headers['Max-Forwards'] = mf-1
@@ -91,13 +91,12 @@ class ClientServerMatchmaker:
             config['requests']['valid'] += 1
             config['requests']['blocked'] += 1
             ServerHandleDirectly(self.client,
-	        'HTTP/1.0 200 OK\r\n',
-                'Content-Type: %s\r\n\r\n' % (mtype or 'application/octet-stream'),
-                open(document, 'rb').read())
+             'HTTP/1.0 200 OK\r\n',
+             'Content-Type: %s\r\n\r\n'%(mtype or 'application/octet-stream'),
+              open(document, 'rb').read())
             return
 
-        if hostname.lower() in ('localhost', '127.0.0.1', '::1') and \
-           port==config['port']:
+        if hostname.lower() in _localhosts and port==config['port']:
             return self.handle_local(document)
         # prepare DNS lookup
         if config['parentproxy']:
@@ -118,27 +117,6 @@ class ClientServerMatchmaker:
         # start DNS lookup
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
-
-
-    def error (self, code, msg, txt=''):
-        content = wc.proxy.HTML_TEMPLATE % \
-            {'title': 'WebCleaner Proxy Error %d %s' % (code, msg),
-             'header': 'Bummer!',
-             'content': 'WebCleaner Proxy Error %d %s<br>%s<br>' % \
-                        (code, msg, txt),
-            }
-        if config['proxyuser']:
-            auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
-            http_ver = '1.1'
-        else:
-            auth = ''
-            http_ver = '1.0'
-        ServerHandleDirectly(self.client,
-            'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
-            'Server: WebCleaner Proxy\r\n' +\
-            'Content-type: text/html\r\n' +\
-            '%s'%auth +\
-            '\r\n', content)
 
 
     def check_proxy_auth (self):
@@ -162,21 +140,26 @@ class ClientServerMatchmaker:
     def handle_local (self, document):
         #debug(HURT_ME_PLENTY, "handle local request for", document)
         if self.client and self.client.addr[0] not in _localhosts:
-            contenttype = "text/html"
-            content = wc.proxy.access_denied(self.client.addr)
-        elif document.startswith("/headers/"):
-            contenttype = "text/plain"
-            content = wc.proxy.text_headers()
-        elif document.startswith("/connections/"):
-            contenttype = "text/plain"
-            content = wc.proxy.text_connections()
-        else:
-            contenttype = "text/html"
-            content = wc.proxy.html_portal()
-        ServerHandleDirectly(self.client,
+            self.client.error(403, _("Forbidden"),
+                              wc.proxy.access_denied(self.client.addr))
+        elif document=="/":
+            ServerHandleDirectly(self.client,
             'HTTP/1.0 200 OK\r\n',
-            'Content-Type: %s\r\n\r\n'%contenttype,
-            content)
+            'Content-Type: text/html\r\n\r\n',
+            wc.proxy.html_portal())
+        elif document=="/headers/":
+            ServerHandleDirectly(self.client,
+            'HTTP/1.0 200 OK\r\n',
+            'Content-Type: text/plain\r\n\r\n',
+            wc.proxy.text_headers())
+        elif document=="/connections/":
+            ServerHandleDirectly(self.client,
+            'HTTP/1.0 200 OK\r\n',
+            'Content-Type: text/plain\r\n\r\n',
+            wc.proxy.text_connections())
+        else:
+            self.client.error(404, _("Not found"),
+              _("Invalid path %s") % `document`)
 
 
     def handle_dns (self, hostname, answer):
@@ -198,19 +181,18 @@ class ClientServerMatchmaker:
             self.state = 'done'
             config['requests']['valid'] += 1
             ServerHandleDirectly(
-                self.client,
-                'HTTP/1.0 301 Use different host\r\n',
-                'Content-type: text/html\r\n'
-                'Location: http://%s\r\n'
-                '\r\n' % new_url,
-                'Host %s is an abbreviation for %s\r\n'
-                % (hostname, answer.data))
+              self.client,
+              'HTTP/1.0 301 Use different host\r\n',
+              'Content-type: text/html\r\n'
+              'Location: http://%s\r\n'
+              '\r\n' % new_url,
+              _('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host, so close this connection
             self.state = 'done'
             config['requests']['error'] += 1
-            self.error(504, "Host not found",
-                'Host %s not found .. %s\r\n' % (hostname, answer.data))
+            self.client.error(504, _("Host not found"),
+                _('Host %s not found .. %s')%(hostname, answer.data))
             return
 
     def find_server (self):
@@ -224,8 +206,8 @@ class ClientServerMatchmaker:
             # if http version is <1.1 and expect header found: 417
             if self.headers.get('Expect')=='100-continue' and \
                serverpool.http_versions.get(addr, 1.1) < 1.1:
-                self.error(417, "Expectation failed",
-                           "Server does not understand HTTP/1.1")
+                self.client.error(417, _("Expectation failed"),
+                           _("Server does not understand HTTP/1.1"))
                 return
             # Let's reuse it
             #debug(BRING_IT_ON, 'resurrecting', server)
@@ -268,7 +250,7 @@ class ClientServerMatchmaker:
         # The server had an error, so we need to tell the client
         # that we couldn't connect
         if self.client.connected:
-            self.error(503, _("No response from server"))
+            self.client.error(503, _("No response from server"))
 
 
     def server_close (self):
@@ -284,7 +266,7 @@ class ClientServerMatchmaker:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
             if self.client.connected:
-                self.error(503, _("Server closed connection"))
+                self.client.error(503, _("Server closed connection"))
 
 
     def server_response (self, response, headers):
