@@ -227,13 +227,13 @@ class ClientServerMatchmaker (object):
             self.client.error(503, i18n._("Server closed connection"))
 
 
-    def server_response (self, response, statuscode, headers):
+    def server_response (self, response, statuscode, status, headers):
         """the server got a response"""
         # Okay, transfer control over to the real client
         if self.client.connected:
             config['requests']['valid'] += 1
             self.server.client = self.client
-            self.client.server_response(self.server, response, statuscode, headers)
+            self.client.server_response(self.server, response, status, headers)
         else:
             self.server.client_abort()
 
