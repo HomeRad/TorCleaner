@@ -14,8 +14,8 @@
 import asyncore, socket, sys, errno
 from wc.debug import *
 
-RECV_BUFSIZE = 8192
-SEND_BUFSIZE = 8192
+RECV_BUFSIZE = 1024
+SEND_BUFSIZE = 1024
 
 # to prevent DoS attacks, specify a maximum buffer size
 MAX_BUFSIZE = 1024*1024
