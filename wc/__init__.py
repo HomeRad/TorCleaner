@@ -99,7 +99,7 @@ def wstartfunc (handle=None):
 
 def sighup_reload_config (signum, frame):
     """store timer for reloading configuration data"""
-    make_timer(1, lambda: reload_config())
+    make_timer(1, reload_config)
 
 
 def reload_config ():
