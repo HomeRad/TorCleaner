@@ -117,33 +117,27 @@ def proxy_poll (timeout=0.0):
         # don't want to call another handle_* on it
         handlerCount = 0
         for x in e:
-            try:
-                x.handle_expt_event()
-                handlerCount += 1
-            except:
-                x.handle_error("poll error")
+            debug(PROXY, "%s handle exception event", str(x))
+            x.handle_expt_event()
+            handlerCount += 1
         for x in w:
-            try:
-                t = time.time()
-                if x not in e:
-                    x.handle_write_event()
-                    handlerCount += 1
-                    #if time.time() - t > 0.1:
-                    #    debug(PROXY, 'wslow %4.1f %s %s', (time.time()-t), 's', str(x))
-                    #    pass
-            except:
-                x.handle_error("poll error")
+            t = time.time()
+            if x not in e:
+                debug(PROXY, "%s handle write", str(x))
+                x.handle_write_event()
+                handlerCount += 1
+                #if time.time() - t > 0.1:
+                #    debug(PROXY, 'wslow %4.1f %s %s', (time.time()-t), 's', str(x))
+                #    pass
         for x in r:
-            try:
-                t = time.time()
-                if x not in e and x not in w:
-                    x.handle_read_event()
-                    handlerCount += 1
-                    #if time.time() - t > 0.1:
-                    #    debug(PROXY, 'rslow %4.1f %s %s', (time.time()-t), 's', str(x))
-                    #    pass
-            except:
-                x.handle_error("poll error")
+            t = time.time()
+            if x not in e and x not in w:
+                debug(PROXY, "%s handle read", str(x))
+                x.handle_read_event()
+                handlerCount += 1
+                #if time.time() - t > 0.1:
+                #    debug(PROXY, 'rslow %4.1f %s %s', (time.time()-t), 's', str(x))
+                #    pass
         return handlerCount
 
 
