@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Sat Apr 12 14:55:00 2003\n"
+"POT-Creation-Date: Sat Apr 26 18:41:58 2003\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
