@@ -96,13 +96,21 @@ class HttpServer (wc.proxy.Server.Server):
         self.document = ''
         self.response = ''
         self.headers = wc.proxy.Headers.WcMessage()
-        self.decoders = [] # Handle each of these, left to right
-        self.persistent = False # for persistent connections
-        self.attrs = {'mime': None} # initial filter attributes
-        self.authtries = 0 # restrict number of authentication tries
-        self.statuscode = None # numeric HTTP status code
-        self.bytes_remaining = None # number of content bytes remaining
-        self.defer_data = False # for content rating
+        # Handle each of these, left to right
+        self.decoders = []
+        # for persistent connections
+        self.persistent = False
+        # initial filter attributes
+        self.attrs = {'mime': None}
+        # restrict number of authentication tries
+        self.authtries = 0
+        # numeric HTTP status code
+        self.statuscode = None
+        # number of content bytes remaining
+        self.bytes_remaining = None
+        # flag indicating to hold sending of data
+        self.defer_data = \
+                     'MimeRecognizer' in wc.configuration.config['filters']
         wc.log.debug(wc.LOG_PROXY, "%s resetted", self)
 
     def __repr__ (self):
