@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Tue Jan  6 21:31:39 2004\n"
-"PO-Revision-Date: 2004-01-06 21:42+0100\n"
+"POT-Creation-Date: Thu Jan  8 21:00:34 2004\n"
+"PO-Revision-Date: 2004-01-08 21:06+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgid "Heavy"
 msgstr "Viel"
 
 msgid "Malformed rating line %r"
-msgstr ""
+msgstr "Ungültige Bewertungszeile %r"
 
 msgid "inserting new rule %s"
 msgstr "füge neue Regel %s ein"
@@ -369,8 +369,8 @@ msgstr ""
 "Lesen Sie die Hilfe um\n"
 "zu erfahren welche Einstellungen Ihr Browser benötigt, um mit %(AppName)s zusammenzuarbeiten."
 
-msgid "Generic\n"
-msgstr "Generisch\n"
+msgid "Rated"
+msgstr "Bewerted"
 
 msgid ""
 "Compression of documents with good compression ratio\n"
@@ -378,6 +378,9 @@ msgid ""
 msgstr ""
 "Komprimierung von Dokumenten mit guter Komprimierungsrate\n"
 "wie z.B. HTML, WAV, etc."
+
+msgid "%(AppName)s configuration"
+msgstr "%(AppName)s Konfiguration"
 
 msgid "Attributes"
 msgstr "Attribute"
@@ -477,6 +480,9 @@ msgstr "Tastaturkommando 9"
 
 msgid "Value"
 msgstr "Wert"
+
+msgid "Edit this rating"
+msgstr "Ändere diese Bewertung"
 
 msgid "Folder successfully disabled."
 msgstr "Ordner erfolgreich deaktiviert."
@@ -616,15 +622,6 @@ msgstr "Ordner erfolgreich aktiviert."
 msgid "New rule successfully created."
 msgstr "Neue Regel wurde erfolgreich erstellt."
 
-msgid ""
-"The administrator password was not yet initialized.\n"
-"This password protects the web configuration interface. Without an\n"
-"administrator password, every proxy user can change the proxy configuration.\n"
-msgstr ""
-"Das Administratorpasswort wurde noch nicht initialisiert.\n"
-"Dieses Passwort schützt die Konfiguration über die Webschnittstelle.\n"
-"Ohne ein Administratorpasswort kann jeder Proxybenutzer die Konfiguration ändern.\n"
-
 msgid "Replace value"
 msgstr "Zu ersetzender Text"
 
@@ -686,6 +683,15 @@ msgstr "Zum Hauptinhalt springen"
 msgid "Rule rewrite part successfully changed."
 msgstr "Rewrite-Regel Teilwert wurde erfolgreich geändert."
 
+msgid ""
+"The administrator password was not yet initialized.\n"
+"This password protects the web configuration interface. Without an\n"
+"administrator password, every user can change the proxy configuration.\n"
+msgstr ""
+"Das Administratorpasswort wurde noch nicht initialisiert.\n"
+"Dieses Passwort schützt die Konfiguration über die Webschnittstelle.\n"
+"Ohne ein Administratorpasswort kann jeder Benutzer die Proxy-Konfiguration ändern.\n"
+
 msgid "Move folder down"
 msgstr "Ordner nach unten schieben"
 
@@ -697,6 +703,9 @@ msgstr "Ersetze reguläre Ausdrücke in Daten."
 
 msgid "%(AppName)s error"
 msgstr "%(AppName)s error"
+
+msgid "Generic\n"
+msgstr "Generisch\n"
 
 msgid "Rule rewrite replacement successfully changed."
 msgstr "Rewrite-Regel Ersatztext wurde erfolgreich geändert."
@@ -711,6 +720,9 @@ msgstr "Falls sie Fragen oder Vorschläge zu den Zugänglichkeitseigenschaften die
 
 msgid "Response headers of all mime types."
 msgstr "Antwort Header von allem Mime-Typen."
+
+msgid "return window.confirm('Really delete this rating?')"
+msgstr "return window.confirm('Diese Bewertung wirklich löschen?')"
 
 msgid "Rule"
 msgstr "Regel"
@@ -760,7 +772,10 @@ msgid "Request and response headers of all mime types."
 msgstr "Anfrage und Antwort Header aller Mime-Typen."
 
 msgid "Content rating"
-msgstr "Inhalt Bewertungen"
+msgstr "Inhaltsbewertung"
+
+msgid "Rating successfully updated."
+msgstr "Bewerung erfolgreich geändert."
 
 msgid ""
 "If there is no replacement given the specified tag\n"
@@ -843,21 +858,20 @@ msgstr "Rechnername"
 msgid "Netscape/Mozilla"
 msgstr "Netscape/Mozilla"
 
-#, fuzzy
 msgid ""
 "Parse HTML code and rewrite single tags, attributes\n"
 "and values. Execute and filter JavaScript. Parse and filter content rated\n"
 "pages. Filter HTML comments."
 msgstr ""
 "Parst HTML Daten und schreibe einzelne Tags, Attribute und\n"
-"Werte um. Führt JavaScript aus und filtert es. Parst in Seiten angegebene PICS Daten und filtert diese Seiten. Filtert HTML\n"
-"Kommentare."
+"Werte um. Führt JavaScript aus und filtert es. Parst in Seiten angegebene\n"
+"Inhaltsbewertungen und filtert diese Seiten. Filtert HTML Kommentare."
 
 msgid "Folder moved up."
 msgstr "Ordner wurde nach oben geschoben."
 
 msgid "Rating limits for"
-msgstr ""
+msgstr "Bewertungsgrenzen für"
 
 msgid "Accessibility statement for %(AppName)s"
 msgstr "Zugänglichkeitserklärung für %(AppName)s"
@@ -867,6 +881,9 @@ msgstr "siehe Fußnote 2"
 
 msgid "Your request"
 msgstr "Ihre Anfrage"
+
+msgid "Rating successfully deleted."
+msgstr "Bewertung wurde erfolgreich gelöscht."
 
 msgid "Image height"
 msgstr "Bildhöhe"
@@ -986,6 +1003,9 @@ msgstr "Ordner umbenennen"
 
 msgid "Feedback for %(AppName)s"
 msgstr "Feedback für %(AppName)s"
+
+msgid "Invalid url."
+msgstr "Ungültige URL."
 
 msgid ""
 "resulted in the following error:<br>\n"
@@ -1139,12 +1159,8 @@ msgstr "siehe Fußnote 4"
 msgid "Admin password"
 msgstr "Administrator Passwort"
 
-msgid ""
-"Response content data of all image types supported by the\n"
-"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
-msgstr ""
-"Antwortdaten von allen Bildformaten die von der Python Imaging Library\n"
-"unterstützt werden: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
+msgid "Invalid selection index."
+msgstr "Ungültiger Auswahlindex."
 
 msgid "Add, modify and delete HTTP headers of request and response."
 msgstr "Hinzufügen, Ändern und Löschen von HTTP Headern bei Anfrage und Antwort."
@@ -1170,6 +1186,9 @@ msgstr "Bild von inaktiver Regel"
 
 msgid "Rule header value successfully changed."
 msgstr "Regel Header-Wert wurde erfolgreich geändert."
+
+msgid "Go to rating:"
+msgstr "Gehe zur Bewertung:"
 
 msgid "Invalid folder move down id."
 msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
@@ -1199,16 +1218,28 @@ msgstr "Zugänglichkeitserklärung"
 msgid "Rule moved down."
 msgstr "Regel wurde nach unten geschoben."
 
+msgid ""
+"After that, restart %(AppName)s and click on\n"
+"the configuration link below.\n"
+"Your new credentials for the configuration interface are:<br>\n"
+"username <b>%(adminuser)s</b><br>\n"
+"password <b>%(adminpass)s</b><br>\n"
+msgstr ""
+"Danach starten Sie %(AppName)s neu und klicken auf die unten stehende\n"
+"Verknüpfung zur Konfiguration.\n"
+"Ihre neuen Authentifizierungsdaten für das Konfigurationsmenü lauten:<br>\n"
+"Benutzername <b>%(adminuser)s</b><br>\n"
+"Passwort <b>%(adminpass)s</b><br>\n"
+
 msgid "Admin user"
 msgstr "Administrator"
 
-#, fuzzy
 msgid ""
 "One activated Rating rule enables the content rating\n"
 "system in %(AppName)s. Several distinct content rating services including\n"
 "the one defined by %(AppName)s itself can be configured."
 msgstr ""
-"Eine aktivierte PICS Regel schaltet das PICS Bewertungssytem in\n"
+"Eine aktivierte Bewertungsregel schaltet das Bewertungssytem in\n"
 "%(AppName)s ein. Mehrere unterschiedliche Bewertungsdienstleister\n"
 "einschließliche des von %(AppName)s selbst definierten können konfiguriert\n"
 "werden."
@@ -1234,6 +1265,9 @@ msgid ""
 msgstr ""
 "Willkommen in der wundervollen Welt\n"
 "von %(AppName)s, im Land der Kampfsurfer."
+
+msgid "There are no url ratings saved."
+msgstr "Es sind keine URL Bewertungen gespeichert."
 
 msgid "Password"
 msgstr "Passwort"
@@ -1274,15 +1308,6 @@ msgstr "Neue Regel zu aktuellem Ordner hinzufügen"
 msgid "Username"
 msgstr "Benutzername"
 
-msgid ""
-"After that, restart %(AppName)s and specify\n"
-"<b>%(adminuser)s</b> as username and <b>%(adminpass)s</b> as password at\n"
-"the configuration interface.\n"
-msgstr ""
-"Danach starten Sie %(AppName)s neu und geben\n"
-"<b>%(adminuser)s</b> als Benutzername und <b>%(adminpass)s</b> als Passwort\n"
-"bei Aufruf der Webkonfiguration an.\n"
-
 msgid "Name"
 msgstr "Name"
 
@@ -1294,7 +1319,7 @@ msgid ""
 "replace the line <code>adminpass=\"\"</code> with:\n"
 msgstr ""
 "Bitte bearbeiten Sie die Datei <code>%(ConfigFile)s</code> und\n"
-"ersetzen die Zeile <code>adminpass=\"\"</code> mit:\n"
+"ersetzen Sie die Zeile <code>adminpass=\"\"</code> mit:\n"
 
 msgid "NTLM authentication"
 msgstr "NTLM Authentifizierung"
@@ -1312,6 +1337,9 @@ msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behinderte
 
 msgid "Empty rule title."
 msgstr "Leerer Regel Titel."
+
+msgid "Delete this rating"
+msgstr "Lösche diese Bewertung"
 
 msgid "Disabled folder icon"
 msgstr "Bild für inaktiven Ordner"
@@ -1350,7 +1378,7 @@ msgid "Enable rule"
 msgstr "Aktiviere Regel"
 
 msgid "URL rating"
-msgstr "URLBewertungen"
+msgstr "URL Bewertung"
 
 msgid "Google Cache for"
 msgstr "Google Cache für"
@@ -1405,6 +1433,13 @@ msgstr "Verbindungszeitüberschreitung in Sekunden"
 
 msgid "Port number of the parent proxy"
 msgstr "Die Portnummer des übergeordneten Proxy"
+
+msgid ""
+"Response content data of all image types supported by the\n"
+"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
+msgstr ""
+"Antwortdaten von allen Bildformaten die von der Python Imaging Library\n"
+"unterstützt werden: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
 
 msgid "Invalid image height value."
 msgstr "Ungültige Bildhöhe."

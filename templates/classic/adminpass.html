@@ -15,16 +15,19 @@
 <h2 i18n:translate="">Administrator password for %(AppName)s</h2>
 <p i18n:translate="">The administrator password was not yet initialized.
 This password protects the web configuration interface. Without an
-administrator password, every proxy user can change the proxy configuration.
+administrator password, every user can change the proxy configuration.
 </p>
 <p i18n:translate="">Please open the file <code>%(ConfigFile)s</code> and
 replace the line <code>adminpass=""</code> with:
 </p>
 <pre>adminpass="<span tal:replace="adminpass_b64">dummy</span>"</pre>
-<p i18n:translate="">After that, restart %(AppName)s and specify
-<b>%(adminuser)s</b> as username and <b>%(adminpass)s</b> as password at
-the configuration interface.
+<p i18n:translate="">After that, restart %(AppName)s and click on
+the configuration link below.
+Your new credentials for the configuration interface are:<br>
+username <b>%(adminuser)s</b><br>
+password <b>%(adminpass)s</b><br>
 </p>
+<a href="/" i18n:translate="">%(AppName)s configuration</a>
 </div>
 
 <div metal:use-macro="macros/macros/footerplain">Footer...</div>

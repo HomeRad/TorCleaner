@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Jan  6 21:31:39 2004\n"
+"POT-Creation-Date: Thu Jan  8 21:00:34 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -340,13 +340,15 @@ msgid ""
 "browser to work with %(AppName)s"
 msgstr ""
 
-msgid ""
-"Generic\n"
+msgid "Rated"
 msgstr ""
 
 msgid ""
 "Compression of documents with good compression ratio\n"
 "like HTML, WAV, etc."
+msgstr ""
+
+msgid "%(AppName)s configuration"
 msgstr ""
 
 msgid "Attributes"
@@ -432,6 +434,9 @@ msgid "Access key 9"
 msgstr ""
 
 msgid "Value"
+msgstr ""
+
+msgid "Edit this rating"
 msgstr ""
 
 msgid "Folder successfully disabled."
@@ -560,12 +565,6 @@ msgstr ""
 msgid "New rule successfully created."
 msgstr ""
 
-msgid ""
-"The administrator password was not yet initialized.\n"
-"This password protects the web configuration interface. Without an\n"
-"administrator password, every proxy user can change the proxy configuration.\n"
-msgstr ""
-
 msgid "Replace value"
 msgstr ""
 
@@ -620,6 +619,12 @@ msgstr ""
 msgid "Rule rewrite part successfully changed."
 msgstr ""
 
+msgid ""
+"The administrator password was not yet initialized.\n"
+"This password protects the web configuration interface. Without an\n"
+"administrator password, every user can change the proxy configuration.\n"
+msgstr ""
+
 msgid "Move folder down"
 msgstr ""
 
@@ -630,6 +635,10 @@ msgid "Replace regular expressions in data streams."
 msgstr ""
 
 msgid "%(AppName)s error"
+msgstr ""
+
+msgid ""
+"Generic\n"
 msgstr ""
 
 msgid "Rule rewrite replacement successfully changed."
@@ -644,6 +653,9 @@ msgid ""
 msgstr ""
 
 msgid "Response headers of all mime types."
+msgstr ""
+
+msgid "return window.confirm('Really delete this rating?')"
 msgstr ""
 
 msgid "Rule"
@@ -690,6 +702,9 @@ msgid "Request and response headers of all mime types."
 msgstr ""
 
 msgid "Content rating"
+msgstr ""
+
+msgid "Rating successfully updated."
 msgstr ""
 
 msgid ""
@@ -784,6 +799,9 @@ msgid "see footnote 2"
 msgstr ""
 
 msgid "Your request"
+msgstr ""
+
+msgid "Rating successfully deleted."
 msgstr ""
 
 msgid "Image height"
@@ -887,6 +905,9 @@ msgid "Rename folder"
 msgstr ""
 
 msgid "Feedback for %(AppName)s"
+msgstr ""
+
+msgid "Invalid url."
 msgstr ""
 
 msgid ""
@@ -1028,9 +1049,7 @@ msgstr ""
 msgid "Admin password"
 msgstr ""
 
-msgid ""
-"Response content data of all image types supported by the\n"
-"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
+msgid "Invalid selection index."
 msgstr ""
 
 msgid "Add, modify and delete HTTP headers of request and response."
@@ -1052,6 +1071,9 @@ msgid "Disabled rule icon"
 msgstr ""
 
 msgid "Rule header value successfully changed."
+msgstr ""
+
+msgid "Go to rating:"
 msgstr ""
 
 msgid "Invalid folder move down id."
@@ -1078,6 +1100,14 @@ msgid "Accessibility statement"
 msgstr ""
 
 msgid "Rule moved down."
+msgstr ""
+
+msgid ""
+"After that, restart %(AppName)s and click on\n"
+"the configuration link below.\n"
+"Your new credentials for the configuration interface are:<br>\n"
+"username <b>%(adminuser)s</b><br>\n"
+"password <b>%(adminpass)s</b><br>\n"
 msgstr ""
 
 msgid "Admin user"
@@ -1109,6 +1139,9 @@ msgid ""
 "world of %(AppName)s, the land of lounge lizards."
 msgstr ""
 
+msgid "There are no url ratings saved."
+msgstr ""
+
 msgid "Password"
 msgstr ""
 
@@ -1134,12 +1167,6 @@ msgid "Add new rule to current folder."
 msgstr ""
 
 msgid "Username"
-msgstr ""
-
-msgid ""
-"After that, restart %(AppName)s and specify\n"
-"<b>%(adminuser)s</b> as username and <b>%(adminpass)s</b> as password at\n"
-"the configuration interface.\n"
 msgstr ""
 
 msgid "Name"
@@ -1168,6 +1195,9 @@ msgid ""
 msgstr ""
 
 msgid "Empty rule title."
+msgstr ""
+
+msgid "Delete this rating"
 msgstr ""
 
 msgid "Disabled folder icon"
@@ -1252,6 +1282,11 @@ msgid "Connection timeout in seconds"
 msgstr ""
 
 msgid "Port number of the parent proxy"
+msgstr ""
+
+msgid ""
+"Response content data of all image types supported by the\n"
+"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
 msgstr ""
 
 msgid "Invalid image height value."
