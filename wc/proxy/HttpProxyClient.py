@@ -50,7 +50,7 @@ class HttpProxyClient (object):
             self.handler(data, *self.args)
 
 
-    def server_response (self, server, response, headers):
+    def server_response (self, server, response, status, headers):
         self.server = server
         assert self.server.connected
         debug(PROXY, '%s server_response %s', str(self), `response`)
