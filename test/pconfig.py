@@ -8,8 +8,10 @@ def _main ():
     """USAGE: test/run.sh test/pconfig.py"""
     from test import initlog
     initlog("test/logging.conf")
-    import profile
-    profile.run("config = wc.Configuration()", "filter.prof")
+    import hotshot
+    profile = hotshot.Profile("config.prof")
+    profile.run("config = wc.Configuration()")
+    profile.close()
 
 
 if __name__=='__main__':
