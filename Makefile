@@ -70,7 +70,7 @@ offlinetest:
 	rm -f index.html
 	sleep 4
 	# get own config
-	env http_proxy="http://localhost:9090" wget -S -t1 http://localhost:9090/
+	env http_proxy="http://localhost:9090" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://localhost:9090/
 	cat index.html
 	rm -f index.html
 
