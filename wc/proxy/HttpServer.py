@@ -310,15 +310,15 @@ class HttpServer (Server):
         ct = self.headers.get('Content-Type', None)
         if self.mime:
             if ct is None:
-                warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
-                     `str(ct)`, `self.mime`, `self.url`)
+                warn(PROXY, i18n._("add Content-Type %s in %s"),
+                     `self.mime`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%self.mime
             elif not ct.startswith(self.mime):
                 i = ct.find(';')
                 if i== -1:
                     val = self.mime
                 else:
-                    val = self.mime + ct[i]
+                    val = self.mime + ct[i:]
                 warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
                      `str(ct)`, `val`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%val
