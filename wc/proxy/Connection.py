@@ -43,7 +43,7 @@ class Connection (asyncore.dispatcher):
             # It's been closed (presumably recently)
             return
 	if len(self.recv_buffer) > MAX_BUFSIZE:
-            print >>sys.stderr, 'warning: read buffer full'
+            print >>sys.stderr, 'Warning: read buffer full'
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
