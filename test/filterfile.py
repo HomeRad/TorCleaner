@@ -12,8 +12,6 @@ def _main ():
         f = sys.stdin
     else:
         f = file(fname)
-    import os
-    sys.path.insert(0, os.getcwd())
     from test import initlog, disable_rating_rules
     initlog("test/logging.conf")
     import wc

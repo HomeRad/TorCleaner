@@ -76,7 +76,7 @@ class Rewriter (Filter):
         # generate the HTML filter
         handler = HtmlFilter(rewrites, ratings, url, **opts)
         htmlparser = HtmlParser(handler)
-        htmlparser.debug(1)
+        #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = htmlparser
         d['rewriter_filter'] = htmlparser
