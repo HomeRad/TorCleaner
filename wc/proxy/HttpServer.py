@@ -124,7 +124,7 @@ class HttpServer (Server):
         assert self.state not in ('connect', 'client'), \
             ('server should not receive data in %s state'%self.state)
 
-        while True:
+        while "True":
             if not self.client:
                 # By the time this server object was ready to receive
                 # data, the client has already closed the connection!
@@ -195,15 +195,15 @@ class HttpServer (Server):
            (self.document.endswith(".bz2") or \
            self.document.endswith(".tgz") or \
            self.document.endswith(".gz")):
-            gm = mimetypes.guess_type(self.document, False)
+            gm = mimetypes.guess_type(self.document, None)
             if gm[0] and gm[1]:
                 self.headers['Content-Encoding'] = gm[1]
                 self.headers['Content-Type'] = gm[0]
         # will content be rewritten?
-        rewrite = False
+        rewrite = None
         for ro in config['mime_content_rewriting']:
             if ro.match(self.headers.get('Content-Type', '')):
-                rewrite = True
+                rewrite = "True"
                 break
         # add client accept-encoding value
         self.headers['Accept-Encoding'] = self.client.compress

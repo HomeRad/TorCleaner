@@ -1,12 +1,30 @@
 TODO
 
+- unicode parsing for flex
+  the HTML parser (written with flex) does not support unicode, so
+  sometimes you'll see '?' chars in the HTML output.
+
 - webcleanerconf: sortable filters (with up/down)
+  The order in which filters are applied should be customizable through
+  the GUI.
+
+- Use FOX 1.2 Python bindings (fxpy 1.2)
+  When FOX 1.2 is released, help to updated fxpy to this release using
+  the much faster new SWIG 1.3 code. Then the gui tools will be 
+  considerably faster.
+
 - dockapp to visualize config and status
+  I made machine-parseable config and status output, so write a tool
+  that uses it :)
+
 - test parent proxy authentication
+  I never tested this.
+
 - more error/warning recognition in parser
-- error recovery in parser (damn it!)
+  HTML bugs should issue a warning on stderr.
+
 - strict whitelist operation (for parents)
-- unicode parsing for flex (not yet supported)
+  To use this as a real kids-enabled tool, make 
 
 WONTDO
 

@@ -146,23 +146,23 @@ class Configuration (UserDict.UserDict):
         self['parentproxyuser'] = ""
         self['parentproxypass'] = ""
         self['logfile'] = ""
-        self['strict_whitelist'] = False
+        self['strict_whitelist'] = None
         self['debuglevel'] = 0
         self['rules'] = []
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['errorlen'] = ErrorLen
         self['errortext'] = ErrorText
-        self['colorize'] = False
+        self['colorize'] = None
         self['noproxyfor'] = {}
         self['allowedhosts'] = {}
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
-        self['local_sockets_only'] = False
+        self['local_sockets_only'] = None
         self['localip'] = socket.gethostbyname(socket.gethostname())
         self['mime_content_rewriting'] = []
         self['headersave'] = 100
-        self['showerrors'] = False
+        self['showerrors'] = None
 
     def read_proxyconf (self):
         """read proxy configuration"""

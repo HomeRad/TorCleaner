@@ -1,4 +1,4 @@
-0.61
+1.0
   * Print access denied messages on stderr
     Changed files: wc/proxy/HttpClient.py
   * Remove unsupported timeout and obfuscateip config options
@@ -9,6 +9,14 @@
   * fixed reloading on SIGHUP
     Changed files: wc/__init__.py
   * Updated README and FAQ
+  * Updated filter block lists with config/bl2wc.py script.
+    Changed files: config/*.zap, config/bl2wc.py
+    New files: config/dmozfilter.py
+  * Dont yet use True and False constants - they are only in most
+    recent Python versions (2.2.2, 2.3pre)
+    Changed files: wc/__init__.py, wc/proxy/GunzipStream.py,
+    wc/proxy/HttpServer.py, wc/proxy/ClientServerMatchmaker.py,
+    wc/proxy/__init__.py
 
 0.60
   * Dont filter comments in *.oreillynet.com - they have some funky

@@ -1,6 +1,17 @@
-Here are some scripts to let you use WebCleaner over ssh and dialup.
+Here are some scripts to let you use WebCleaner over ssh and dialup from
+your box at work (my.atworkbox.com) to your box at home (my.homedslbox.org).
 
-1) place this on your local box (eg. my.homedslbox.org)
+|=========================================================================|
+| Remember: do NOT open port 8080 in your firewall for this to work!      |
+| If you do not have a firewall or you dont know what I am talking about, |
+| leave these scripts alone!                                              |
+|=========================================================================|
+
+0) Put this iptables line in your firewall at my.homedslbox.org:
+$IPTABLES -A INPUT -i ppp0 -p tcp -s my.atworkbox.com --dport ssh -m state --state NEW -j ACCEPT
+This presumes your ppp interface is ppp0.
+
+1) copy this script on home box my.homedslbox.org
 -- start /etc/ppp/ip-up.d/30webcleaner --
 # add external IP to the allowed host list
 # tested under Debian Linux
@@ -15,8 +26,14 @@ sed  -e "$R" $O > $N
 mv -f $N $O
 -- end /etc/ppp/ip-up.d/30webcleaner --
 
-2) place this on your remote server (eg at work) and start it
+2) copy this script on your work box my.atworkbox.com
 -- start ~/bin/f.sh --
 #!/bin/sh
 ssh -X -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
 -- end ~/bin/f.sh --
+
+3) Start your home box, start webcleaner, then start your network with "pon".
+   The script under 1) gets executed.
+
+4) Go at work, start script 2) and you can surf over
+   http_proxy="localhost:8080" :)

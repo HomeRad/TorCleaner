@@ -199,20 +199,20 @@ def proxy_poll (timeout=0.0):
 
 def match_host (request):
     if not request:
-        return False
+        return None
     try:
         foo, url, bar = request.split()
     except Exception, why:
         print >> sys.stderr, "bad request", why
-        return False
+        return None
     hostname = spliturl(url)[1]
     if not hostname:
-        return False
+        return None
     hostname = hostname.lower()
     for domain in config['noproxyfor'].keys():
         if hostname.find(domain) != -1:
-            return True
-    return False
+            return "True"
+    return None
 
 
 def spliturl (url):

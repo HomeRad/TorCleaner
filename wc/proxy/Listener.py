@@ -19,7 +19,7 @@ class Listener (asyncore.dispatcher):
         pass
 
     def writable (self):
-        return False
+        return None
 
     def handle_accept (self):
         #debug(HURT_ME_PLENTY, 'accept', self)
