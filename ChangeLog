@@ -1,4 +1,4 @@
-2.16 (released xx.xx.xxxx)
+2.16 (released 26.5.2004)
   * parse and quote query parts of urls
     Type: bugfix
     Changed: wc/url.py
@@ -62,6 +62,10 @@
   * only apply non-empty config dir to win32start handler
     Type: bugfix
     Changed: webcleaner
+
+  * fixed and better logging of rating and filter updaters
+    Type: bugfix
+    Changed: wc/update.py, wc/webgui/context/update_doit_html.py
 
 2.15 (released 22.5.2004)
   * set default config dir in webcleaner script
