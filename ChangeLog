@@ -1,8 +1,13 @@
 2.23 "The fog of war" (released xx.xx.xxxx)
 
-  * fixed Mime type changing
+  * Fixed MIME type changing.
     Type: bugfix
     Changed: wc/proxy/Headers.py
+
+  * Handle case in MIME recognizing where Content-type header was
+    missing.
+    Type: bugfix
+    Changed: wc/filter/MimeRecognizer.py
 
 2.22 "Monster" (released 20.10.2004)
 
