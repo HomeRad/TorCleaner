@@ -20,6 +20,11 @@
     Type: code cleanup
     Changed: *.py
 
+  * do not bail out on I/O errors (eg gzip error) when reading
+    configuration files
+    Type: bugfix
+    Changed: wc/filter/Blocker.py
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix
