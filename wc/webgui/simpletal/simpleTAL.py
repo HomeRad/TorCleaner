@@ -839,14 +839,14 @@ class TemplateCompiler:
                         elif self.i18n_attribute_map.has_key(commandAttName):
                                 # It's an I18N attribute
                                 cmnd = self.i18n_attribute_map[commandAttName]
-                                foundCommandArgs[cmnd] = value
+                                foundCommandsArgs[cmnd] = value
                                 foundI18NAtts.append(cmnd)
 			else:
 				cleanAttributes.append ((att,value))
 		tagProperties ['popFunctionList'] = popTagFuncList
 
 		# This might be just content
-		if ((len (foundTALAtts) + len (foundMETALAtts)) == 0):
+		if not (foundTALAtts or foundMETALAtts or foundI18NAtts):
 			# Just content, add it to the various stacks
 			self.addTag ((tag, cleanAttributes), tagProperties)
 			return
@@ -857,11 +857,13 @@ class TemplateCompiler:
 
 		# Sort the METAL commands
 		foundMETALAtts.sort()
+                # Sort the I18N commands
+                foundI18NAtts.sort()
 		# Sort the tags by priority
 		foundTALAtts.sort()
 
 		# We handle the METAL before the TAL
-		allCommands = foundMETALAtts + foundTALAtts
+		allCommands = foundMETALAtts + foundI18NAtts + foundTALAtts
 		firstTag = 1
 		for talAtt in allCommands:
 			# Parse and create a command for each 
@@ -876,23 +878,23 @@ class TemplateCompiler:
 				else:
 					# All others just append
 					self.addCommand(cmnd)
-		
+
 		if (firstTag):
 			tagProperties ['originalAtts'] = attributes
 			tagProperties ['command'] = (TAL_STARTTAG, (tag, singletonElement))
 			self.addTag ((tag, cleanAttributes), tagProperties)
-		else:		
+		else:
 			# Add the start tag command in as a child of the last TAL command
 			self.addCommand((TAL_STARTTAG, (tag,singletonElement)))
-		
+
 	def parseEndTag (self, tag):
 		""" Just pop the tag and related commands off the stack. """
 		self.popTag ((tag,None))
-		
+
 	def parseData (self, data):
 		# Just add it as an output
 		self.addCommand((TAL_OUTPUT, data))
-						
+
 	def compileCmdDefine (self, argument):
 		# Compile a define command, resulting argument is:
 		# [(isLocalFlag (Y/n), variableName, variablePath),...]
