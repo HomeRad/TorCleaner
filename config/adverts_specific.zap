@@ -3,7 +3,7 @@
 <folder sid="wc.429" oid="4">
 <title lang="de">Spezielle Werbung</title>
 <title lang="en">Specific adverts</title>
-<description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&amp;quot;http://company.com&amp;quot;&gt;&lt;img  src=&amp;quot;http://adserver.de/banner.gif&amp;quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
+<description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&quot;http://company.com&quot;&gt;&lt;img  src=&quot;http://adserver.de/banner.gif&quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
 
 <rewrite sid="wc.398">
   <title lang="de">www.deja.com</title>

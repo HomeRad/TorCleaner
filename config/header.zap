@@ -10,7 +10,7 @@
   <title lang="de">Eigener &apos;User-Agent&apos;</title>
   <title lang="en">Change &apos;User-Agent&apos;</title>
   <description lang="de">Der user-agent ist das am meisten benutzte HTTP Kopfdatum zur Browserunterscheidung. Einige Seiten werden nicht richtig dargestellt wenn der falsche Browser erkannt wird.</description>
-  <description lang="en">The user-agent is the most widely used HTTP header to detect your browser. Some people might like it, some dont. I dont. Some sites may not be displayed correctly with this option (mail them to me and I add them to the dont match url). A common User-Agent value could be &amp;quot;Mozilla (compatible; MSIE 6.0b; Window NT 5.0)&amp;quot;</description>
+  <description lang="en">The user-agent is the most widely used HTTP header to detect your browser. Some people might like it, some dont. I dont. Some sites may not be displayed correctly with this option (mail them to me and I add them to the dont match url). A common User-Agent value could be &quot;Mozilla (compatible; MSIE 6.0b; Window NT 5.0)&quot;</description>
   <nomatchurl>www\.k3b\.org</nomatchurl>
   <replacement>Calzilla/6.0</replacement>
 </header>

@@ -7,35 +7,35 @@
 
 <rewrite sid="wc.383">
   <title lang="de">redirect.cgi</title>
-  <title lang="en">No redirection 1</title>
+  <title lang="en">redirect.cgi</title>
   <description lang="en">location, location, location</description>
-  <attr>redirect\.cgi\?.*?location=([^=&amp;quot;&amp;]+)</attr>
+  <attr>redirect\.cgi\?.*?location=([^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </rewrite>
 
 <rewrite sid="wc.384">
   <title lang="de">www.nist.gov</title>
-  <title lang="en">No redirection 2</title>
+  <title lang="en">www.nist.gov</title>
   <description lang="de">Weiterleitung bei www.nist.gov</description>
   <description lang="en">redirection at www.nist.gov</description>
-  <attr>www\.nist\.gov/cgi-bin/exit_nist\.cgi\?url=([^=&amp;quot;]+)</attr>
+  <attr>www\.nist\.gov/cgi-bin/exit_nist\.cgi\?url=([^="]+)</attr>
   <replacement part="attrval">\1</replacement>
 </rewrite>
 
 <rewrite sid="wc.385">
   <title lang="de">linuxapps.com</title>
-  <title lang="en">No redirection 3</title>
+  <title lang="en">linuxapps.com</title>
   <description lang="de">Weiterleitung bei linuxapps.com</description>
   <description lang="en">redirection at linuxapps.com</description>
-  <attr>(linuxapps\.com.*|redir\.asp)\?.*?url=([^=&amp;quot;&amp;]+)</attr>
+  <attr>(linuxapps\.com.*|redir\.asp)\?.*?url=([^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </rewrite>
 
 <rewrite sid="wc.386">
   <title lang="de">www.fileleech.com</title>
-  <title lang="en">No redirection 4</title>
+  <title lang="en">fileleech.com</title>
   <description lang="en">redirection at fileleech.com</description>
-  <attr>www\.fileleech\.com/dl/\?.*?filepath=([^=&amp;quot;&amp;]+)</attr>
+  <attr>www\.fileleech\.com/dl/\?.*?filepath=([^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </rewrite>
 
@@ -57,7 +57,7 @@
   <title lang="de">Knoppix Weiterleitung</title>
   <title lang="en">Knoppix redirection</title>
   <matchurl>knopper\.net</matchurl>
-  <attr>download\.php3\?link=([^=&amp;quot;&amp;]+)</attr>
+  <attr>download\.php3\?link=([^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </rewrite>
 
