@@ -159,7 +159,7 @@ Rule (don't) match url
 <span tal:replace="t_ruleimgheight">Image height</span>:
 <input type="text" name="rule_imgheight" value="1"
  tal:attributes="value currule/height">
- <!-- only gif is supported anyway :)
+ <!-- XXX todo
 <span tal:replace="t_ruleimgtype">Image type</span>:
 <input type="text" name="rule_imgtype" value=""
  tal:attributes="value currule/type">
@@ -197,6 +197,10 @@ Rule title and description
 <div metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </div>
+<span tal:replace="t_rulefallback">Fallback URL</span>:
+<input type="text" name="rule_fallback" value="http://www..."
+ tal:attributes="value currule/url">
+<br>
 <!-- XXX more config -->
 </p>
 
@@ -261,14 +265,14 @@ Rule (don't) match url
  tal:attributes="value currule/enclosed">
 <br>
 <span tal:replace="t_replacepart">Replace part</span>:
+<span tal:condition="curparts/tag">Teest</span>
 <select name="replacepart">
-<span tal:repeat="part replaceparts" tal:omit-tag="">
-<span tal:define="valname part/valname" tal:replace="nothing"></span>
-<option tal:condition="curparts/?valname" selected
- tal:attributes="value valname" tal:content="part/name">a part</option>
-<option tal:condition="not:curparts/?valname"
- tal:attributes="value valname" tal:content="part/name">a part</option>
- </span>
+<span tal:repeat="part partvalnames" tal:omit-tag="">
+<option tal:condition="not:curparts/?part"
+ tal:attributes="value part" tal:content="partnames/?part">a part</option>
+<option tal:condition="curparts/?part" selected
+ tal:attributes="value part" tal:content="partnames/?part">a part</option>
+</span>
 </select>
 <br>
 <span tal:replace="t_replacevalue">Replace value</span>:

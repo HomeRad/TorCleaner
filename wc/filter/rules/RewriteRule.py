@@ -36,20 +36,23 @@ ATTRVAL = 3
 COMPLETE = 4
 ENCLOSED = 5
 # a list
-replaceparts = [
-    {'valname': 'tag',
-     'name': i18n._("Tag")},
-    {'valname': 'tagname',
-     'name':  i18n._("Tag name")},
-    {'valname': 'attr',
-     'name':  i18n._("Attribute")},
-    {'valname': 'attrval',
-     'name':  i18n._("Attribute value")},
-    {'valname': 'complete',
-     'name':  i18n._("Complete tag")},
-    {'valname': 'enclosed',
-     'name':  i18n._("Enclosed block")},
+partvalnames = [
+    'tag',
+    'tagname',
+    'attr',
+    'attrval',
+    'complete',
+    'enclosed',
 ]
+partnames = {
+    'tag': i18n._("Tag"),
+    'tagname': i18n._("Tag name"),
+    'attr': i18n._("Attribute"),
+    'attrval': i18n._("Attribute value"),
+    'complete': i18n._("Complete tag"),
+    'enclosed': i18n._("Enclosed block"),
+}
+
 
 # tags where close tag is missing
 # note that this means that if the ending tag is there, it will not
@@ -59,15 +62,15 @@ NO_CLOSE_TAGS = ('img', 'image', 'meta', 'br', 'link', 'area')
 
 def part_num (s):
     """translation: tag name ==> tag number"""
-    for i, part in enumerate(replaceparts):
-        if part['valname']==s:
+    for i, part in enumerate(partvalnames):
+        if part==s:
             return i
     return None
 
 
 def num_part (i):
     """translation: tag number ==> tag name"""
-    return replaceparts[i]['valname']
+    return partvalnames[i]
 
 
 class RewriteRule (UrlRule):

@@ -2,7 +2,7 @@
 from wc import i18n, AppName
 from wc import Configuration as _Configuration
 from wc.webgui.context import getval
-from wc.filter.rules.RewriteRule import replaceparts
+from wc.filter.rules.RewriteRule import partvalnames, partnames
 
 t_title = i18n._("%s filter configuration") % AppName
 t_back = i18n._("Back")
@@ -51,6 +51,7 @@ t_addattr = i18n._("Add attribute")
 t_enclosedblock = i18n._("Enclosed block")
 t_replacepart = i18n._("Replace part")
 t_replacevalue = i18n._("Replace value")
+t_rulefallback = i18n._("Fallback URL")
 
 # config vars
 info = []
@@ -135,7 +136,7 @@ def _form_selrule (index):
         if currule.get_name()=="rewrite":
             global curparts
             curparts = {}
-            for i, part in enumerate(replaceparts):
-                curparts[part['valname']] = (currule.part==i)
+            for i, part in enumerate(partvalnames):
+                curparts[part] = (currule.part==i)
     except (ValueError, IndexError):
         error.append(i18n._("Invalid filter index"))

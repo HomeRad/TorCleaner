@@ -24,7 +24,7 @@ from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
 from wc.log import *
-from wc.filter.rules.RewriteRule import replaceparts
+from wc.filter.rules.RewriteRule import partvalnames, partnames
 
 
 class FXRewriteRuleFrame (FXRuleFrame):
@@ -72,8 +72,8 @@ class FXRewriteRuleFrame (FXRuleFrame):
             t.setText(self.rule.enclosed)
         FXLabel(matrix, i18n._("Replace part")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXComboBox(matrix,23,6,self, self.ID_REPLACE_PART,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        for part in replaceparts:
-            t.appendItem(part['name'])
+        for part in partvalnames:
+            t.appendItem(partnames[part])
         t.setEditable(0)
         t.setCurrentItem(self.rule.part)
         FXLabel(matrix, i18n._("Replace value")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)

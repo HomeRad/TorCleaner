@@ -180,7 +180,11 @@ class HttpServer (Server):
 	                attrs=self.nofilter)
         if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
-            protocol, self.statuscode, tail = self.response.split(None, 2)
+            try:
+                protocol, self.statuscode, tail = self.response.split(None, 2)
+            except ValueError, e:
+                error(PROXY, "Invalid response %s", `self.response`)
+                raise
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, get_http_version(protocol))
