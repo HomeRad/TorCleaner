@@ -9,7 +9,6 @@ EXTRA_DIST = wc/tests \
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
-VERSION := $(shell python setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
