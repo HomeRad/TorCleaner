@@ -108,9 +108,8 @@
 <div tal:replace="nofilterhosts">Don't filter hosts</div>
 <br>
 <select name="nofilterhosts" size="5" multiple style="width:200px;">
-<option tal:repeat="host config/nofilterhostlist" tal:attributes="value host">
-<span tal:replace="host">127.0.0.1</span>
-</option>
+<option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
+ tal:content="host">127.0.0.1</option>
 </select>
 <br>
 <input type="submit" name="delnofilter" value="Remove selected"

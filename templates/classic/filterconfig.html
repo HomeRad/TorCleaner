@@ -4,7 +4,47 @@
 <title tal:content="title">WebCleaner Filter Configuration</title>
 </head>
 <body bgcolor="#ffffff">
-<div>XXX todo</div>
+<form action="filterconfig.html" method="POST">
+<table>
+<tr>
+<td><big tal:content="folder">Folder</big></td>
+<td><big tal:content="filter">Filter</big></td>
+<td><big tal:content="rule">Rule</big></td>
+</tr>
+<tr valign="top">
+<!-- folders -->
+<td>
+<div tal:repeat="folder folders" tal:content="folder">Scripting</div>
+<br>
+<input type="submit" value="Remove selected" tal:attributes="value remove">
+<br>
+<input type="text" value="Folder name" tal:attributes="value foldername"
+ size="10">
+<input type="submit" value="New folder" tal:attributes="value newfolder">
+</td>
+<!-- filter -->
+<td>
+<div tal:repeat="filt filters" tal:content="filt">On focus</div>
+<br>
+<input type="submit" value="Remove selected"
+ tal:attributes="value remove">
+<br>
+<select>
+<option tal:repeat="rule ruletypes" tal:attributes="value rule"
+ tal:content="rule">Rewrite rule</option>
+</select>
+<input type="submit" value="New rule"
+ tal:attributes="value newrule; title ttnewrule">
+</td>
+<!-- rule -->
+<td>
+XXX
+</td>
+</tr>
+</table>
+<br>
+<input type="submit" value="Apply" tal:attributes="value apply">
 <a href="/" tal:content="back">Back</a>
+</form>
 </body>
 </html>
