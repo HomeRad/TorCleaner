@@ -19,7 +19,12 @@
 import os, re, sys, string
 from types import StringType, TupleType
 from distutils.core import setup, Extension, DEBUG
-from distutils.dist import Distribution
+try:
+    import py2exe
+    distklass = py2exe.Distribution
+except ImportError:
+    import distutils.dist
+    distklass = distutils.dist.Distribution
 from distutils.command.install import install
 from distutils.file_util import write_file
 from distutils import util
@@ -73,9 +78,9 @@ class MyInstall (install, object):
                 print "  %s: %s" % (opt_name, val)
 
 
-class MyDistribution (Distribution):
+class MyDistribution (distklass, object):
     def __init__ (self, attrs=None):
-        Distribution.__init__(self, attrs=attrs)
+        super(MyDistribution, self).__init__(attrs=attrs)
         self.config_file = "_%s2_configdata.py"%self.get_name()
 
 
@@ -86,7 +91,7 @@ class MyDistribution (Distribution):
         data.append('template_dir = %r' % os.path.join(cwd, "templates"))
         data.append("install_data = %r" % cwd)
         self.create_conf_file("", data)
-        Distribution.run_commands(self)
+        super(MyDistribution, self).run_commands()
 
 
     def create_conf_file (self, directory, data=[]):
