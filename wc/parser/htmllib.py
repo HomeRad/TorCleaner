@@ -20,13 +20,6 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import sys
-try:
-    import htmlsax
-except ImportError, msg:
-    exctype, value = sys.exc_info()[:2]
-    print >>sys.stderr, "Could not import the parser module `htmlsax':", value
-    print >>sys.stderr, "Please check your installation of WebCleaner."
-    sys.exit(1)
 
 
 class HtmlPrinter (object):
