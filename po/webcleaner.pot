@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Aug 25 23:23:15 2003\n"
+"POT-Creation-Date: Tue Aug 26 21:59:29 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -590,15 +590,6 @@ msgid "set Content-Type from %s to %s in %s"
 msgstr ""
 
 msgid "add Content-Type %s to %s"
-msgstr ""
-
-msgid "change Content-Type from %s to %s in %s"
-msgstr ""
-
-msgid "add Content-Encoding %s to %s"
-msgstr ""
-
-msgid "change Content-Encoding from %s to %s in %s"
 msgstr ""
 
 msgid "fix x-httpd-php Content-Type"
