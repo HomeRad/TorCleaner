@@ -459,7 +459,9 @@ class ZapperParser (BaseParser):
 
     def end_element (self, name):
         self.cmode = None
-        if self.rule:
+        if self.rule is None:
+            self.folder.end_data(name)
+        else:
             self.rule.end_data(name)
         if name in rulenames:
             if self.compile_data:
