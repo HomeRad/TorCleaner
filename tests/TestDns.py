@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
+import wc.network
 from wc.proxy.dns.Lib import Packer, Unpacker
 import StandardTest
 
@@ -29,6 +30,17 @@ class TestDns (StandardTest.StandardTest):
         self.assertEqual(u.getname(), 'ARPA')
         self.assertEqual(u.getbytes(26), '*' * 26)
         self.assertEqual(u.getname(), '')
+
+    def testHostLowercase (self):
+        for host in wc.network.get_localhosts():
+            self.assertEqual(host, host.lower())
+        config = wc.network.resolver_config()
+        for host in config.nameservers:
+            self.assertEqual(host, host.lower())
+        for host in config.search_domains:
+            self.assertEqual(host, host.lower())
+        for host in config.search_patterns:
+            self.assertEqual(host, host.lower())
 
 
 if __name__ == '__main__':
