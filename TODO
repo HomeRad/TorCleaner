@@ -1,10 +1,5 @@
 TODO
 
-- wcheaders:
-  * widget buttons for nodisplay
-
-- Windows installation routine
-
 - Rule matching in C for speed
 
 - HTTPS support (only proxy, no filtering)

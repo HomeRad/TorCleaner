@@ -76,21 +76,9 @@ class Buf:
     def replace(self, data):
         data = self.buf + data
         for ro,repl in self.rules:
-            data = self.replace_one(ro, repl, data)
+            data = ro.sub(repl, data)
         self.buf = data[-BUF_SIZE:]
         return data[:-BUF_SIZE]
-
-
-    def replace_one(self, ro, repl, data):
-        debug(NIGHTMARE, "checking replacer rule", ro.pattern, "...")
-        offset = 0
-        mo = ro.search(data, offset)
-        while mo:
-            debug(NIGHTMARE, "matched, replacing", `repl`)
-            data = data[:mo.start()] + repl + data[mo.end():]
-            offset = mo.start()+len(repl)+1
-            mo = ro.search(data, offset)
-        return data
 
 
     def flush(self):

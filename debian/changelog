@@ -1,8 +1,9 @@
 webcleaner (0.28) unstable; urgency=low
 
   * fix another flush error when self.attrs is not set
+  * use re.sub() in Replacer.py, this is much faster
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 21 Nov 2001 17:12:05 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 21 Nov 2001 19:45:18 +0100
 
 webcleaner (0.27) unstable; urgency=low
 
