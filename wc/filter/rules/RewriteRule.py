@@ -94,6 +94,8 @@ class RewriteRule (UrlRule):
         if self.enclosed and self.tag in NO_CLOSE_TAGS:
             raise ValueError("reading rule %s: tag %s has no end tag, so specifying an enclose value is invalid." % (`self.title`, `tag`))
         self.attrnames.append('tag')
+        # we'll do this again in after parsing, in compile_data()
+        self.set_start_sufficient()
 
 
     def fill_attrs (self, attrs, name):
