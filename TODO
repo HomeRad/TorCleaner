@@ -32,9 +32,6 @@ version 2.19 and above
     assert self.server, "%s server_content had no server"%self
 AssertionError: <client:request  being read> server_content had no server
 
-geht net:
-http://redirect.alexa.com/redirect?http%3A%2F%2Fwww.offeroptimizer.com
-
 invalid js url:
 http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
 http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
