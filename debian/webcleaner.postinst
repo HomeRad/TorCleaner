@@ -76,6 +76,11 @@ if [ -f /var/log/webcleaner/main/current ]; then
     mv -f /var/log/webcleaner/main/* /var/log/webcleaner
     rmdir /var/log/webcleaner/main || true
 fi
+# remove old init.d files and links
+if [ -f /etc/init.d/webcleaner ]; then
+    rm -f /etc/init.d/webcleaner
+    update-rc.d webcleaner remove
+fi
 # start webcleaner
 webcleaner-ctl start || true
 
