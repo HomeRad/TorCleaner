@@ -1,3 +1,5 @@
 *.pyc
 *.so
 *.pyo
+*.output
+*.o
