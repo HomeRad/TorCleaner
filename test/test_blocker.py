@@ -11,5 +11,6 @@ attrs = wc.filter.initStateObjects()
 filtered = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, htmldata,
            'finish', attrs)
 stop = time.clock()
-print filtered
+if filtered.find("blocked.html")==-1:
+    raise TestFailed, "unblocked query %s"%htmldata
 #print "time: %.3f seconds" % (stop-start)

@@ -1,10 +1,15 @@
 webcleaner (0.17) unstable; urgency=low
 
-  * webcleaner: import os only when really needed
+  * webcleaner: import os only when really needed (thanks to
+    Jim Rutledge <jimrutledge@earthlink.net>)
+  * wc/proxy/__init__.py,wc/proxy/Listener.py:
+    add missing commas in print statements
+    (thanks to Jim Rutledge <jimrutledge@earthlink.net>)
   * wc/parser/htmlop.c: new HTML parser, adapted from libhtmlparser
     package
+  * added regression tests
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue,  2 Oct 2001 18:21:05 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Thu,  4 Oct 2001 11:43:33 +0200
 
 webcleaner (0.16) unstable; urgency=low
 
