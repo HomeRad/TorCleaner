@@ -7,9 +7,6 @@ version 2.24 and above
   (http://tinyurl.com/3oc5a) Abschnitt "Merkmale" unter "Robustheit" als                      
   Beispiel)                                                                                   
 
-- da krachts im Gebälk:
-  http://www.golem.de/0411/34728.html
-
 - Geht net:
   http://msdn.microsoft.com/library/shared/deeptree/bot/bot.asp?dtcnfg=/library/deeptreeconfig.xml
 
@@ -21,8 +18,6 @@ version 2.25 and above
 - SSL gateway is broken.
   Use case:
   https://bugzilla.mozilla.org/show_bug.cgi?id=217527
-
-- use ssl-cert-check bash script
 
 - Test "www.%s" DNS search pattern for automationpartnership.com
 
