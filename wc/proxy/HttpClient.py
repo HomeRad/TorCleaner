@@ -329,7 +329,7 @@ class HttpClient (Connection):
 
     def close (self):
         debug(PROXY, '%s close', str(self))
-        if self.persistent:
+        if False: # self.persistent:
             self.state = 'receive'
         else:
             self.state = 'closed'
