@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter according to rating rules"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter according to rating rules.
+"""
 
 import wc
 import wc.log
@@ -29,7 +31,9 @@ MISSING = _("Unknown page")
 
 
 class RatingRule (wc.filter.rules.UrlRule.UrlRule):
-    """holds configured rating data"""
+    """
+    Holds configured rating data.
+    """
 
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
                   matchurls=None, nomatchurls=None):
@@ -46,7 +50,9 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         self.url = ""
 
     def fill_attrs (self, attrs, name):
-        """init rating and url attrs"""
+        """
+        Init rating and url attrs.
+        """
         super(RatingRule, self).fill_attrs(attrs, name)
         if name == 'category':
             self._category = attrs.get('name')
@@ -75,7 +81,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                 self.values[name] = value
 
     def rating_allow (self, url):
-        """asks cache if the rule allows the rating data for given url
+        """
+        Asks cache if the rule allows the rating data for given url
         Looks up cache to find rating data, if not returns a MISSING message.
         """
         klass = wc.filter.rating.storage.pickle.PickleStorage
@@ -87,7 +94,9 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         return MISSING
 
     def check_against (self, rating):
-        """return None if allowed, else a reason of why not"""
+        """
+        Return None if allowed, else a reason of why not.
+        """
         for catname, value in rating.category_values.items():
             if catname not in self.ratings:
                 wc.log.warn(wc.LOG_FILTER,
@@ -108,7 +117,9 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         return None
 
     def toxml (self):
-        """Rule data as XML for storing"""
+        """
+        Rule data as XML for storing.
+        """
         s = u"%s>" % super(RatingRule, self).toxml()
         s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:

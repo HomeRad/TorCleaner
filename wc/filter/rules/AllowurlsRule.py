@@ -1,6 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""hold a list of urls to allow in external file, like those
-found in SquidGuard"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -16,14 +14,18 @@ found in SquidGuard"""
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Hold a list of urls to allow in external file, like those
+found in SquidGuard.
+"""
 
 import wc.filter.rules.ExternfileRule
 
 
 class AllowurlsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
-    """Specifies a list of url paths to allow, even if they would be blocked
-       otherwise.
-       See also the Blocker filter module.
     """
-
+    Specifies a list of url paths to allow, even if they would be blocked
+    otherwise.
+    See also the Blocker filter module.
+    """
     pass

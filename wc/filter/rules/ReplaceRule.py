@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""rule replacing parts of text"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Rule replacing parts of text.
+"""
 
 import wc.filter.rules.UrlRule
 import wc.filter.rules.Rule
@@ -22,12 +24,15 @@ import wc.XmlUtils
 
 
 class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
-    """This rule can Replace parts of text data according to regular
-    expressions"""
+    """
+    This rule can Replace parts of text data according to regular expressions.
+    """
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, search="", replacement=""):
-        """initialize rule attributes"""
+        """
+        Initialize rule attributes.
+        """
         super(ReplaceRule, self).__init__(sid=sid, titles=titles,
                                    descriptions=descriptions, disable=disable)
         self.search = search
@@ -40,17 +45,23 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
             self.replacement = self._data
 
     def compile_data (self):
-        """compile url regular expressions"""
+        """
+        Compile url regular expressions.
+        """
         super(ReplaceRule, self).compile_data()
         wc.filter.rules.Rule.compileRegex(self, "search")
 
     def update (self, rule, dryrun=False, log=None):
-        """update rule attributes with given rule data"""
+        """
+        Update rule attributes with given rule data.
+        """
         chg = super(ReplaceRule, self).update(rule, dryrun=dryrun, log=log)
         return self.update_attrs(['replacement'], rule, dryrun, log) or chg
 
     def toxml (self):
-        """Rule data as XML for storing"""
+        """
+        Rule data as XML for storing.
+        """
         s = super(ReplaceRule, self).toxml()
         if self.search:
             s += u'\n search="%s"' % wc.XmlUtils.xmlquoteattr(self.search)

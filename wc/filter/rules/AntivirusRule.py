@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter viruses"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,15 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter viruses.
+"""
 
 import wc.filter.rules.UrlRule
 
 
 class AntivirusRule (wc.filter.rules.UrlRule.UrlRule):
-    """if enabled, tells the VirusFilter to scan web content for viruses"""
+    """
+    If enabled, tells the VirusFilter to scan web content for viruses.
+    """
 
     def toxml (self):
-        """Rule data as XML for storing"""
-        s = super(AntivirusRule, self).toxml()
-        s += self.endxml()
-        return s
+        """
+        Rule data as XML for storing.
+        """
+        return super(AntivirusRule, self).toxml() + self.endxml()

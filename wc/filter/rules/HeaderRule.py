@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Filter HTTP headers"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,18 +14,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter HTTP headers.
+"""
 
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 
 
 class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
-    """rule for filtering HTTP headers"""
+    """
+    Rule for filtering HTTP headers.
+    """
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, name="noname", value="", filterstage="request",
                   matchurls=None, nomatchurls=None):
-        """init rule name and value"""
+        """
+        Init rule name and value.
+        """
         super(HeaderRule, self).__init__(sid=sid, titles=titles,
                                  descriptions=descriptions, disable=disable,
                                  matchurls=matchurls, nomatchurls=nomatchurls)
@@ -41,18 +47,24 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
             self.value = self._data
 
     def update (self, rule, dryrun=False, log=None):
-        """update header data"""
+        """
+        Update header data.
+        """
         chg = super(HeaderRule, self).update(rule, dryrun=dryrun, log=log)
         return self.update_attrs(['value'], rule, dryrun, log) or chg
 
     def __str__ (self):
-        """return rule data as string"""
+        """
+        Return rule data as string.
+        """
         return super(HeaderRule, self).__str__() + \
             ("name %r\nvalue %r\nstage %s" %
              (self.name, self.value, self.filterstage))
 
     def toxml (self):
-        """Rule data as XML for storing"""
+        """
+        Rule data as XML for storing.
+        """
         s = u'%s\n name="%s"' % (super(HeaderRule, self).toxml(),
                                 wc.XmlUtils.xmlquoteattr(self.name))
         if self.filterstage != 'request':

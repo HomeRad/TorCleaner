@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""rule rewriting html tags"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Rule rewriting html tags.
+"""
 
 import re
 
@@ -42,7 +44,9 @@ COMPLETE = 4
 ENCLOSED = 5
 
 def _startout (out, item, end):
-    """Write given item data on output stream as HTML start tag."""
+    """
+    Write given item data on output stream as HTML start tag.
+    """
     out.write(u"<")
     out.write(item[1])
     for name, val in item[2].items():
@@ -53,7 +57,9 @@ def _startout (out, item, end):
 
 
 def tagbuf2data (tagbuf, out):
-    """write tag buffer items to output stream out and returns out"""
+    """
+    Write tag buffer items to output stream out and returns out.
+    """
     for item in tagbuf:
         if item[0] == DATA:
             out.write(item[1])
@@ -96,7 +102,9 @@ NO_CLOSE_TAGS = ('img', 'image', 'meta', 'br', 'link', 'area')
 
 
 def part_num (s):
-    """translation: tag name ==> tag number"""
+    """
+    Translation: tag name ==> tag number.
+    """
     for i, part in enumerate(partvalnames):
         if part == s:
             return i
@@ -104,19 +112,24 @@ def part_num (s):
 
 
 def num_part (i):
-    """translation: tag number ==> tag name"""
+    """
+    Translation: tag number ==> tag name.
+    """
     return partvalnames[i]
 
 
 class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
-    """A rewrite rule applies to a specific tag, optional with attribute
-       constraints (stored in self.attrs) or a regular expression to
-       match the enclosed block (self.enclosed).
+    """
+    A rewrite rule applies to a specific tag, optional with attribute
+    constraints (stored in self.attrs) or a regular expression to
+    match the enclosed block (self.enclosed).
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, tag=u"a", attrs=None, enclosed=u"",
                   part=COMPLETE, replacement=u""):
-        """initialize rule data"""
+        """
+        Initialize rule data.
+        """
         super(RewriteRule, self).__init__(sid=sid, titles=titles,
                                   descriptions=descriptions, disable=disable)
         self.tag = tag
@@ -137,7 +150,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
 
 
     def fill_attrs (self, attrs, name):
-        """set attribute values"""
+        """
+        Set attribute values.
+        """
         super(RewriteRule, self).fill_attrs(attrs, name)
         if name == 'attr':
             val = attrs.get('name', u'href')
@@ -156,7 +171,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             self.replacement = self._data
 
     def compile_data (self):
-        """compile url regular expressions"""
+        """
+        Compile url regular expressions.
+        """
         super(RewriteRule, self).compile_data()
         wc.filter.rules.Rule.compileRegex(self, "enclosed")
         self.attrs_ro = {}
@@ -165,28 +182,38 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         self.set_start_sufficient()
 
     def update (self, rule, dryrun=False, log=None):
-        """update rewrite attributes with given rule data"""
+        """
+        Update rewrite attributes with given rule data.
+        """
         chg = super(RewriteRule, self).update(rule, dryrun=dryrun, log=log)
         attrs = ['attrs', 'part', 'replacement', 'enclosed']
         return self.update_attrs(attrs, rule, dryrun, log) or chg
 
     def _compute_start_sufficient (self):
-        """return True if start tag is sufficient for rule application"""
+        """
+        Return True if start tag is sufficient for rule application.
+        """
         if self.tag in NO_CLOSE_TAGS:
             return True
         return self.part not in [ENCLOSED, COMPLETE, TAG, TAGNAME]
 
     def set_start_sufficient (self):
-        """set flag to test if start tag is sufficient for rule application"""
+        """
+        Set flag to test if start tag is sufficient for rule application.
+        """
         self.start_sufficient = self._compute_start_sufficient()
 
     def match_tag (self, tag):
-        """return True iff tag name matches this rule"""
+        """
+        Return True iff tag name matches this rule.
+        """
         # XXX support regular expressions for self.tag
         return self.tag == tag
 
     def match_attrs (self, attrs):
-        """return True iff this rule matches given attributes"""
+        """
+        Return True iff this rule matches given attributes.
+        """
         occurred = []
         for attr, val in attrs.items():
             # attr or val could be None
@@ -204,8 +231,10 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         return True
 
     def match_complete (self, pos, tagbuf):
-        """We know that the tag (and tag attributes) match. Now match
-           the enclosing block. Return True on a match."""
+        """
+        We know that the tag (and tag attributes) match. Now match
+        the enclosing block. Return True on a match.
+        """
         if not self.enclosed:
             # no enclosed expression => match
             return True
@@ -214,7 +243,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         return self.enclosed_ro.search(data)
 
     def filter_tag (self, tag, attrs, starttype):
-        """return filtered tag data for given tag and attributes"""
+        """
+        Return filtered tag data for given tag and attributes.
+        """
         wc.log.debug(wc.LOG_FILTER, "rule %s filter_tag", self.titles['en'])
         wc.log.debug(wc.LOG_FILTER, "original tag %r attrs %s", tag, attrs)
         wc.log.debug(wc.LOG_FILTER,
@@ -260,7 +291,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         return [starttype, tag, newattrs]
 
     def filter_complete (self, i, buf, tag):
-        """replace complete tag data in buf with replacement"""
+        """
+        Replace complete tag data in buf with replacement.
+        """
         wc.log.debug(wc.LOG_FILTER, "rule %s filter_complete",
                      self.titles['en'])
         wc.log.debug(wc.LOG_FILTER, "original buffer %s", buf)
@@ -279,7 +312,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         wc.log.debug(wc.LOG_FILTER, "filtered buffer %s", buf)
 
     def toxml (self):
-        """Rule data as XML for storing"""
+        """
+        Rule data as XML for storing.
+        """
         s = super(RewriteRule, self).toxml()
         if self.tag != u'a':
             s += u'\n tag="%s"' % wc.XmlUtils.xmlquoteattr(self.tag)
@@ -308,7 +343,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         return s
 
     def __str__ (self):
-        """return rule data as string"""
+        """
+        Return rule data as string.
+        """
         s = super(RewriteRule, self).__str__()
         s += "tag %s\n" % self.tag.encode("iso-8859-1")
         for key, val in self.attrs.items():

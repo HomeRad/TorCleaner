@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""basic rule class and routines"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Basic rule class and routines.
+"""
 
 import re
 import wc
@@ -23,20 +25,26 @@ import wc.filter.rules
 
 
 def compileRegex (obj, attr):
-    """regex-compile object attribute into <attr>_ro"""
+    """
+    Regex-compile object attribute into <attr>_ro.
+    """
     if hasattr(obj, attr) and getattr(obj, attr):
         setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
 
 
 class LangDict (dict):
-    """Dictionary with a fallback algorithm, getting a default key entry if
-       the requested key is not already mapped. Keys are usually languages
-       like 'en' or 'de'."""
+    """
+    Dictionary with a fallback algorithm, getting a default key entry if
+    the requested key is not already mapped. Keys are usually languages
+    like 'en' or 'de'.
+    """
 
     def __getitem__ (self, key):
-        """accessing an entry with unknown translation returns the default
-           translated entry or if not found a random one or if the dict
-           is empty an empty string"""
+        """
+        Accessing an entry with unknown translation returns the default
+        translated entry or if not found a random one or if the dict
+        is empty an empty string.
+        """
         if not self.has_key(key):
             # default is english
             if 'en' in self:
@@ -48,22 +56,25 @@ class LangDict (dict):
 
 
 class Rule (object):
-    """Basic rule class for filtering.
+    """
+    Basic rule class for filtering.
 
-       After loading from XML (and having called compile_data), a rule has:
-       titles - mapping of {lang -> translated titles}
-       descriptions - mapping of {lang -> translated description}
-        - sid - identification string (unique among all rules)
-        - oid - dynamic sorting number (unique only for sorting in one level)
-        - disable - flag to disable this rule
-        - urlre - regular expression that matches urls applicable for this
-          rule. leave empty to apply to all urls.
-        - parent - the parent folder (if any); look at FolderRule class
+    After loading from XML (and having called compile_data), a rule has:
+    titles - mapping of {lang -> translated titles}
+    descriptions - mapping of {lang -> translated description}
+     - sid - identification string (unique among all rules)
+     - oid - dynamic sorting number (unique only for sorting in one level)
+     - disable - flag to disable this rule
+     - urlre - regular expression that matches urls applicable for this
+       rule. leave empty to apply to all urls.
+     - parent - the parent folder (if any); look at FolderRule class
     """
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, parent=None):
-        """initialize basic rule data"""
+        """
+        Initialize basic rule data.
+        """
         self.sid = sid
         self.titles = LangDict()
         if titles is not None:
@@ -78,12 +89,16 @@ class Rule (object):
         self.listattrs = []
 
     def _reset_parsed_data (self):
-        """reset parsed rule data"""
+        """
+        Reset parsed rule data.
+        """
         self._data = u""
         self._lang = u"en"
 
     def update (self, rule, dryrun=False, log=None):
-        """update title and description with given rule data"""
+        """
+        Update title and description with given rule data.
+        """
         assert self.sid == rule.sid, "updating %s with invalid rule %s" % \
                                      (self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
@@ -93,7 +108,9 @@ class Rule (object):
         return chg
 
     def update_titledesc (self, rule, dryrun, log):
-        """update rule title and description with given rule data"""
+        """
+        Update rule title and description with given rule data.
+        """
         chg = False
         for key, value in rule.titles.items():
             if not self.titles.has_key(key):
@@ -126,8 +143,9 @@ class Rule (object):
         return chg
 
     def update_attrs (self, attrs, rule, dryrun, log):
-        """Update rule attributes (specified by attrs) with given rule
-           data."""
+        """
+        Update rule attributes (specified by attrs) with given rule data.
+        """
         chg = False
         for attr in attrs:
             oldval = getattr(self, attr)
@@ -142,35 +160,51 @@ class Rule (object):
         return chg
 
     def __lt__ (self, other):
-        """True iff self < other according to oid"""
+        """
+        True iff self < other according to oid.
+        """
         return self.oid < other.oid
 
     def __le__ (self, other):
-        """True iff self <= other according to oid"""
+        """
+        True iff self <= other according to oid.
+        """
         return self.oid <= other.oid
 
     def __eq__ (self, other):
-        """True iff self == other according to oid"""
+        """
+        True iff self == other according to oid.
+        """
         return self.oid == other.oid
 
     def __ne__ (self, other):
-        """True iff self != other according to oid"""
+        """
+        True iff self != other according to oid.
+        """
         return self.oid != other.oid
 
     def __gt__ (self, other):
-        """True iff self > other according to oid"""
+        """
+        True iff self > other according to oid.
+        """
         return self.oid > other.oid
 
     def __ge__ (self, other):
-        """True iff self >= other according to oid"""
+        """
+        True iff self >= other according to oid.
+        """
         return self.oid >= other.oid
 
     def __hash__ (self):
-        """Hash value."""
+        """
+        Hash value.
+        """
         return self.sid
 
     def fill_attrs (self, attrs, name):
-        """initialize rule attributes with given attrs"""
+        """
+        Initialize rule attributes with given attrs.
+        """
         self._reset_parsed_data()
         if name in ('title', 'description'):
             self._lang = attrs['lang']
@@ -192,11 +226,15 @@ class Rule (object):
                 setattr(self, attr, [])
 
     def fill_data (self, data, name):
-        """called when XML character data was parsed to fill rule values."""
+        """
+        Called when XML character data was parsed to fill rule values.
+        """
         self._data += data
 
     def end_data (self, name):
-        """Called when XML end element was reached."""
+        """
+        Called when XML end element was reached.
+        """
         if name == self.get_name():
             self._data = u""
         else:
@@ -207,16 +245,21 @@ class Rule (object):
             self.descriptions[self._lang] = self._data
 
     def compile_data (self):
-        """Register this rule. Called when all XML parsing of rule is
-           finished."""
+        """
+        Register this rule. Called when all XML parsing of rule is finished.
+        """
         wc.filter.rules.register_rule(self)
 
     def get_name (self):
-        """Class name without "Rule" suffix, in lowercase."""
+        """
+        Class name without "Rule" suffix, in lowercase.
+        """
         return self.__class__.__name__[:-4].lower()
 
     def toxml (self):
-        """Rule data as XML for storing, must be overridden in subclass"""
+        """
+        Rule data as XML for storing, must be overridden in subclass.
+        """
         s = u'<%s sid="%s"' % (self.get_name(),
                                wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
@@ -224,7 +267,9 @@ class Rule (object):
         return s
 
     def title_desc_toxml (self, prefix=""):
-        """XML for rule title and description."""
+        """
+        XML for rule title and description.
+        """
         t = [u'%s<title lang="%s">%s</title>' % \
              (prefix, wc.XmlUtils.xmlquoteattr(key),
               wc.XmlUtils.xmlquote(value)) \
@@ -236,7 +281,9 @@ class Rule (object):
         return u"\n".join(t+d)
 
     def __str__ (self):
-        """Basic rule data as ISO-8859-1 encoded string."""
+        """
+        Basic rule data as ISO-8859-1 encoded string.
+        """
         s = "Rule %s\n" % self.get_name()
         if self.sid is not None:
             s += "sid     %s\n" % self.sid.encode("iso-8859-1")
@@ -245,5 +292,7 @@ class Rule (object):
         return s
 
     def tiptext (self):
-        """Short info for gui display."""
+        """
+        Short info for gui display.
+        """
         return u"%s #%s" % (self.get_name().capitalize(), self.sid)

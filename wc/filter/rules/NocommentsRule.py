@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter HTML comments"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,15 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+HTML comments filter rule.
+"""
 
 import wc.filter.rules.UrlRule
 
 
 class NocommentsRule (wc.filter.rules.UrlRule.UrlRule):
-    """if enabled, this rule tells the Rewriter to remove HTML comments"""
+    """
+    If enabled, this rule tells the Rewriter to remove HTML comments.
+    """
 
     def toxml (self):
-        """Rule data as XML for storing"""
+        """
+        Rule data as XML for storing.
+        """
         s = super(NocommentsRule, self).toxml()
         s += self.endxml()
         return s

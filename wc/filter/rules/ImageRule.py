@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter images by size"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,18 +14,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter images by size.
+"""
 
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 
 
 class ImageRule (wc.filter.rules.UrlRule.UrlRule):
-    """if enabled, tells the Image filter to block certain images"""
+    """
+    If enabled, tells the Image filter to block certain images.
+    """
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, width=0, height=0, formats=None, url="",
                   matchurls=None, nomatchurls=None):
-        """initalize rule data"""
+        """
+        Initalize rule data.
+        """
         super(ImageRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
@@ -42,7 +48,9 @@ class ImageRule (wc.filter.rules.UrlRule.UrlRule):
         self.attrnames.extend(('formats', 'url', 'width', 'height'))
 
     def toxml (self):
-        """Rule data as XML for storing"""
+        """
+        Rule data as XML for storing.
+        """
         s = super(ImageRule, self).toxml()
         if self.width:
             s += u'\n width="%d"' % self.width
