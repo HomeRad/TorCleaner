@@ -24,12 +24,15 @@
 
 <header title="No x-meta tags" oid="4"
  desc="What the hell are x-meta tags? Definitely not something I need."
- name="x-meta"/>
+ name="X-Meta"/>
 
 <header title="No via" oid="5"
  desc="Proxies (including WebCleaner) add a &apos;Via&apos; header in the outgoing request. This rule prevents this."
- name="via"/>
+ name="Via"/>
 
 <header title="No X-Forwarded-For" oid="6"
  name="X-Forwarded-For"/>
+
+<header title="No From" oid="7"
+ name="From$"/>
 </folder>
