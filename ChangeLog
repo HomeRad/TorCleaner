@@ -1,5 +1,6 @@
 2.3
-  *
+  * oops, add google.html to distribution files
+    Changed: setup.py
 
 2.2 (released 19.10.2003)
   * removed unused imports, better debugging
