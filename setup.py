@@ -16,9 +16,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os, re, sys
+import os, re, sys, string
 from types import StringType, TupleType
-from distutils.core import setup, Extension
+from distutils.core import setup, Extension, DEBUG
 from distutils.dist import Distribution
 from distutils.command.install import install
 from distutils.file_util import write_file
@@ -43,6 +43,25 @@ class MyInstall(install):
         from pprint import pformat
         data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
+
+
+    # sent a patch for this, but here it is for compatibility
+    def dump_dirs (self, msg):
+        if DEBUG:
+            from distutils.fancy_getopt import longopt_xlate
+            print msg + ":"
+            for opt in self.user_options:
+                opt_name = opt[0]
+                if opt_name[-1] == "=":
+                    opt_name = opt_name[0:-1]
+                if self.negative_opt.has_key(opt_name):
+                    opt_name = string.translate(self.negative_opt[opt_name],
+                                                longopt_xlate)
+                    val = not getattr(self, opt_name)
+                else:
+                    opt_name = string.translate(opt_name, longopt_xlate)
+                    val = getattr(self, opt_name)
+                print "  %s: %s" % (opt_name, val)
 
 
 class MyDistribution(Distribution):
@@ -111,7 +130,7 @@ else:
                         'wcheaders.bat']))
 
 setup (name = "webcleaner",
-       version = "0.26",
+       version = "0.27",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,

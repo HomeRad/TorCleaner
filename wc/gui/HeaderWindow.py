@@ -1,14 +1,18 @@
 import sys
 
+# make sure that local Python modules get loaded first
 if __name__=='__main__':
     sys.path.insert(0, ".")
 
-import wc,os
+# disable proxy for urllib
+import os
+os.environ['http_proxy'] = ""
+
+import wc
 from wc import debug,_,error, BaseParser, ConfigDir
 from wc.debug_levels import *
 from wc.gui import loadIcon
 from FXPy.fox import *
-os.environ['http_proxy'] = ""
 
 SCROLLING_NONE = 0
 SCROLLING_AUTO = 1
@@ -26,7 +30,7 @@ def scrollnum(s):
 
 def parse_headers():
     headers = []
-    url = "http://localhost:%d/headers/"%wc.config['port']
+    url = "http://localhost:%(port)d/headers/"%wc.config
     from urllib2 import urlopen
     s = urlopen(url).read()
     if s=="-": return headers
@@ -75,7 +79,10 @@ class HeaderWindow(FXMainWindow):
      ID_STATUS,
      ID_SETSAVEDHEADERS,
      ID_SAVEOPTIONS,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+10)
+     ID_ADDHEADER,
+     ID_EDITHEADER,
+     ID_REMOVEHEADER,
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+13)
 
 
     def __init__(self, app):
@@ -129,18 +136,23 @@ class HeaderWindow(FXMainWindow):
 
     def eventMap(self):
         """attach all events to (member) functions"""
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_ABOUT, HeaderWindow.onCmdAbout)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_QUIT, HeaderWindow.onCmdQuit)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_REFRESH, HeaderWindow.onCmdRefresh)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_OPTIONS, HeaderWindow.onCmdOptions)
-        FXMAPFUNC(self,SEL_TIMEOUT, HeaderWindow.ID_REFRESH, HeaderWindow.onTimerRefresh)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETREFRESH, HeaderWindow.onSetRefresh)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETONLYFIRST, HeaderWindow.onSetOnlyfirst)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETSCROLLING, HeaderWindow.onSetScrolling)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETSAVEDHEADERS, HeaderWindow.onSetSavedHeaders)
-        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SAVEOPTIONS, HeaderWindow.onCmdSaveOptions)
-        FXMAPFUNC(self,SEL_UPDATE, HeaderWindow.ID_SAVEOPTIONS, HeaderWindow.onUpdSaveOptions)
-        FXMAPFUNC(self,SEL_UPDATE, HeaderWindow.ID_STATUS, HeaderWindow.onUpdStatus)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_ABOUT, HeaderWindow.onCmdAbout)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_QUIT, HeaderWindow.onCmdQuit)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_REFRESH, HeaderWindow.onCmdRefresh)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_OPTIONS, HeaderWindow.onCmdOptions)
+        FXMAPFUNC(self, SEL_TIMEOUT, HeaderWindow.ID_REFRESH, HeaderWindow.onTimerRefresh)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_SETREFRESH, HeaderWindow.onSetRefresh)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_SETONLYFIRST, HeaderWindow.onSetOnlyfirst)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_SETSCROLLING, HeaderWindow.onSetScrolling)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_SETSAVEDHEADERS, HeaderWindow.onSetSavedHeaders)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_SAVEOPTIONS, HeaderWindow.onCmdSaveOptions)
+        FXMAPFUNC(self, SEL_UPDATE, HeaderWindow.ID_SAVEOPTIONS, HeaderWindow.onUpdSaveOptions)
+        FXMAPFUNC(self, SEL_UPDATE, HeaderWindow.ID_STATUS, HeaderWindow.onUpdStatus)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_ADDHEADER, HeaderWindow.onCmdAddHeader)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_REMOVEHEADER, HeaderWindow.onCmdRemoveHeader)
+        FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_EDITHEADER, HeaderWindow.onCmdEditHeader)
+        FXMAPFUNC(self, SEL_UPDATE, HeaderWindow.ID_EDITHEADER, HeaderWindow.onUpdHeader)
+        FXMAPFUNC(self, SEL_UPDATE, HeaderWindow.ID_REMOVEHEADER, HeaderWindow.onUpdHeader)
 
 
     def onCmdAbout(self, sender, sel, ptr):
@@ -154,6 +166,73 @@ class HeaderWindow(FXMainWindow):
         self.doShow(self.options)
         return 1
 
+    def onCmdAddHeader(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "Add header")
+        dialog = FXDialogBox(self,_("Add Header"),DECOR_TITLE|DECOR_BORDER)
+        frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        FXLabel(matrix, _("Header:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        header = FXTextField(matrix, 20)
+        f = FXHorizontalFrame(frame)
+        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        if dialog.execute():
+            header = header.getText().strip().lower()
+            if not header:
+                error(_("Empty header"))
+	        return 1
+            if header in self.config['nodisplay']:
+                error(_("Duplicate header"))
+	        return 1
+            self.config['nodisplay'].append(header)
+            self.options.headers.appendItem(header)
+            self.getApp().dirty = 1
+            debug(BRING_IT_ON, "Added nodisplay header")
+        return 1
+
+    def onCmdRemoveHeader(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "Remove header")
+        headers = self.options.headers
+        index = headers.getCurrentItem()
+        item = headers.retrieveItem(index)
+        header = item.getText()
+        self.config['nodisplay'].remove(header)
+        headers.removeItem(index)
+        self.getApp().dirty = 1
+        debug(BRING_IT_ON, "Removed nodisplay header")
+        return 1
+
+    def onCmdEditHeader(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "Edit header")
+        headers = self.options.headers
+        index = headers.getCurrentItem()
+        item = headers.retrieveItem(index)
+        header = item.getText()
+        dialog = FXDialogBox(self, _("Edit Header"),DECOR_TITLE|DECOR_BORDER)
+        frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        FXLabel(matrix, _("New header:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        nametf = FXTextField(matrix, 20)
+        nametf.setText(header)
+        f = FXHorizontalFrame(frame)
+        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        if dialog.execute():
+            newheader = nametf.getText().strip().lower()
+            self.config['nodisplay'].remove(header)
+            self.config['nodisplay'].append(item)
+            headers.replaceItem(index, newheader)
+            self.getApp().dirty = 1
+            debug(BRING_IT_ON, "Changed nodisplay header")
+        return 1
+
+    def onUpdHeader(self, sender, sel, ptr):
+        i = self.options.headers.getCurrentItem()
+        if self.options.headers.isItemSelected(i):
+            sender.enable()
+        else:
+            sender.disable()
+        return 1
 
     def onCmdQuit(self, sender, sel, ptr):
         debug(BRING_IT_ON, "Quit")
@@ -336,20 +415,20 @@ class OptionsWindow(FXDialogBox):
         FXDialogBox.__init__(self, owner, "Options",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE,0,0,0,0, 4,4,4,4, 4,4)
         frame = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
         # options
-        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         # refresh
         FXLabel(matrix, _("Refresh"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETREFRESH, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
-        widget.setRange(0,65535)
-        widget.setValue(owner.config['refresh'])
+        w = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETREFRESH, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN)
+        w.setRange(0,65535)
+        w.setValue(owner.config['refresh'])
         # only first
         FXLabel(matrix, _("Only first\tDisplay only the first hit in a series of headers for the same host"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXCheckButton(matrix, None, owner, HeaderWindow.ID_SETONLYFIRST, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
-        widget.setCheck(owner.config['onlyfirst'])
+        w = FXCheckButton(matrix, None, owner, HeaderWindow.ID_SETONLYFIRST, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP|LAYOUT_FILL_COLUMN)
+        w.setCheck(owner.config['onlyfirst'])
         # scrolling
         FXLabel(matrix, _("Scrolling"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         cols=0
-        d = FXComboBox(matrix,0,3,owner, HeaderWindow.ID_SETSCROLLING,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
+        w = FXComboBox(matrix,0,3,owner, HeaderWindow.ID_SETSCROLLING,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP|LAYOUT_FILL_COLUMN)
         levels = [
             _("none"),
             _("auto"),
@@ -357,28 +436,34 @@ class OptionsWindow(FXDialogBox):
         ]
         for text in levels:
             cols = max(len(text), cols)
-            d.appendItem(text)
-        d.setEditable(0)
-        d.setNumColumns(cols-3) 
-        d.setCurrentItem(owner.config['scrolling'])
+            w.appendItem(text)
+        w.setEditable(0)
+        w.setNumColumns(cols)
+        w.setCurrentItem(owner.config['scrolling'])
         # number of cached headers
         FXLabel(matrix, _("No. of saved Headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETSAVEDHEADERS, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
-        widget.setRange(1, 65535)
-        widget.setValue(owner.config['headersave'])
+        w = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETSAVEDHEADERS, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN)
+        w.setRange(1, 65535)
+        w.setValue(owner.config['headersave'])
         # display headers
         FXLabel(matrix, _("Suppress headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXList(matrix, 4, None, 0, opts=LIST_MULTIPLESELECT)
-        for h in owner.config['nodisplay']:
-            widget.appendItem(str(h))
-        widget.recalc();
-        # XXX
-
+        self.headers = FXList(matrix, 4, None, 0, opts=LIST_SINGLESELECT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        self.update_headers(owner)
+        # header buttons
+        w = FXHorizontalFrame(frame, LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
+        FXButton(w, "&Add",None,owner,HeaderWindow.ID_ADDHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, "&Edit",None,owner,HeaderWindow.ID_EDITHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, "&Remove",None,owner,HeaderWindow.ID_REMOVEHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
 
         # close button
-        close = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
-        FXButton(close,"&Save",None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5);
-        FXButton(close,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5);
+        w = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
+        FXButton(w,"&Save",None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
+        FXButton(w,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
+
+    def update_headers(self, owner):
+        self.headers.clearItems()
+        for h in owner.config['nodisplay']:
+            self.headers.appendItem(str(h))
 
 
 if __name__=='__main__':
