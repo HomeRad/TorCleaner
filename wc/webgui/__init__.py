@@ -25,6 +25,7 @@ import mimetypes
 import cStringIO as StringIO
 
 import wc
+import wc.configuration
 import wc.i18n
 import wc.log
 import wc.proxy.auth

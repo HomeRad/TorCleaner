@@ -20,7 +20,9 @@ import re
 import os
 import gzip
 import urllib
+
 import wc
+import wc.configuration
 import wc.url
 import wc.filter
 import wc.filter.Filter

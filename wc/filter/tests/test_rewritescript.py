@@ -3,6 +3,7 @@
 
 import unittest
 import wc
+import wc.configuration
 from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException

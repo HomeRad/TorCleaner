@@ -19,7 +19,9 @@
 import socket
 import os
 import cStringIO as StringIO
+
 import wc
+import wc.configuration
 import wc.log
 import wc.filter
 import wc.filter.Filter

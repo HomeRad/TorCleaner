@@ -2,6 +2,7 @@
 """Allowance classes to filter out infalid proxy requests"""
 
 import wc
+import wc.configuration
 
 
 class AllowedHttpClient (object):

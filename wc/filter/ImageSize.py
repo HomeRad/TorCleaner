@@ -19,7 +19,9 @@
 import Image
 import os
 import cStringIO as StringIO
+
 import wc
+import wc.configuration
 import wc.filter
 
 

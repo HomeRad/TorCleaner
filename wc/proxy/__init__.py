@@ -8,7 +8,9 @@ import socket
 import select
 import re
 import time
+
 import wc
+import wc.configuration
 import wc.log
 
 

@@ -1,6 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
 import wc
+import wc.configuration
 import wc.update
 
 

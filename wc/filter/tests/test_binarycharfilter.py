@@ -2,7 +2,9 @@
 """test script to test filtering"""
 
 import unittest
+
 import wc
+import wc.configuration
 import wc.proxy.Headers
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 

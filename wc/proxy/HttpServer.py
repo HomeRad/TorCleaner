@@ -9,6 +9,7 @@ import urllib
 import cStringIO as StringIO
 
 import wc
+import wc.configuration
 import wc.url
 import wc.filter
 import wc.filter.Rating

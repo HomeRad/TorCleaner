@@ -3,6 +3,7 @@
 
 import socket
 import wc
+import wc.configuration
 import wc.log
 import wc.proxy.Dispatcher
 

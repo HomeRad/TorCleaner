@@ -3,7 +3,9 @@
 """test script to test filtering"""
 
 import unittest
+
 import wc
+import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
 
 class TestBlocker (unittest.TestCase):

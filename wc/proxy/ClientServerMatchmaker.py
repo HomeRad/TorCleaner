@@ -5,6 +5,7 @@ import socket
 import cStringIO as StringIO
 
 import wc
+import wc.configuration
 import wc.url
 import wc.proxy.dns_lookups
 import wc.proxy.Headers

@@ -5,6 +5,7 @@
 wc_realm = "unknown"
 
 import wc
+import wc.configuration
 import wc.log
 import wc.url
 
@@ -59,7 +60,7 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    if wc.config['auth_ntlm']:
+    if wc.configuration.config['auth_ntlm']:
         chals = [get_ntlm_challenge(**args)]
     else:
         chals = [get_digest_challenge(),
@@ -121,7 +122,7 @@ def check_credentials (creds, **attrs):
                  creds, attrs)
     if not creds:
         res = False
-    elif wc.config['auth_ntlm'] and 'NTLM' not in creds:
+    elif wc.configuration.config['auth_ntlm'] and 'NTLM' not in creds:
         # forced NTLM auth
         res = False
     elif 'NTLM' in creds:

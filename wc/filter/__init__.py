@@ -31,7 +31,9 @@ to work properly.
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import re
+
 import wc
+import wc.configuration
 import wc.filter.rules
 import wc.proxy.Headers
 

@@ -3,6 +3,7 @@
 
 import socket
 import wc
+import wc.configuration
 import wc.proxy.HttpServer
 import wc.proxy.SslConnection
 import wc.proxy.ssl
