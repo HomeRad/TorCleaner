@@ -23,7 +23,7 @@ def start (parent_exit=1):
     # already running?
     if os.path.exists(pidfile):
         return i18n._("""WebCleaner already started (lock file found).
-Do 'webcleaner stop' first.""")
+Do 'webcleaner stop' first."""), 1
     # forking (only under POSIX systems)
     
     # the parent exits
@@ -74,7 +74,7 @@ def startwatch (parent_exit=1, sleepsecs=5):
     """start a monitoring daemon for webcleaner"""
     import time
     if os.path.exists(watchfile):
-        return i18n._("""Watch program already started (lock file found).""")
+        return i18n._("""Watch program already started (lock file found)."""), 1
     pid = os.fork()
     if pid!=0:
         if parent_exit:
@@ -93,20 +93,22 @@ def startwatch (parent_exit=1, sleepsecs=5):
         else:
             start(parent_exit=0)
         time.sleep(sleepsecs)
+    return "", 0
 
 
 def stopwatch ():
     """stop webcleaner and the monitor"""
-    msg = stop() or ""
+    msg, status = stop() or ""
     if not os.path.exists(watchfile):
         if msg: msg += "\n"
-        return msg+i18n._("Watcher was not running (no lock file found)")
-    _stop(watchfile)
+        return msg+i18n._("Watcher was not running (no lock file found)"), 1
+    return _stop(watchfile)
 
 
 def reload ():
     if not os.path.exists(pidfile):
-        return i18n._("WebCleaner is not running. Do 'webcleaner start' first.")
+        return i18n._("WebCleaner is not running. Do 'webcleaner start' first."), 1
     pid = int(open(pidfile).read())
     import signal
     os.kill(pid, signal.SIGHUP)
+    return "", 0
