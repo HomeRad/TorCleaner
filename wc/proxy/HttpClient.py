@@ -5,8 +5,7 @@ from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip, remove_headers
-from wc.proxy import log, match_host, set_via_header
-from wc.proxy import remove_warning_headers
+from wc.proxy import log, match_host
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.debug import *
@@ -123,7 +122,7 @@ class HttpClient (Connection):
             msg.rewindbody()
             self.recv_buffer = fp.read() + self.recv_buffer
             # work on these headers
-            self.compress = set_proxy_headers(msg)
+            self.compress = client_set_proxy_headers(msg)
             # filter headers
             self.headers = applyfilter(FILTER_REQUEST_HEADER,
                               msg, fun="finish", attrs=self.nofilter)
@@ -135,7 +134,7 @@ class HttpClient (Connection):
                 # XXX don't look at value, assume chunked encoding for now
                 debug(BRING_IT_ON, 'Client: Transfer-encoding:', `self.headers['transfer-encoding']`)
                 self.decoders.append(UnchunkStream())
-                remove_encoding_headers(self.headers)
+                client_remove_encoding_headers(self.headers)
                 self.bytes_remaining = None
             debug(HURT_ME_PLENTY, "Client: Headers", `str(self.headers)`)
             if config["proxyuser"]:
@@ -253,68 +252,6 @@ class HttpClient (Connection):
         Connection.close(self)
 
 
-def set_proxy_headers (headers):
-    remove_hop_by_hop_headers(headers)
-    remove_warning_headers(headers)
-    set_via_header(headers)
-    set_connection_headers(headers)
-    return set_encoding_headers(headers)
-
-
-def remove_hop_by_hop_headers (headers):
-    """Remove hop-by-hop headers"""
-    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer', 'TE']
-    remove_headers(headers, to_remove)
-
-
-def set_connection_headers (headers):
-    """Rename Proxy-Connection to Connection"""
-    # XXX handle Connection values
-    if headers.has_key('Proxy-Connection'):
-        val = headers['Proxy-Connection'].strip()
-        headers['Connection'] = val+"\r"
-        remove_headers(headers, ['Proxy-Connection'])
-
-
-def set_encoding_headers (headers):
-    """set encoding headers and return compression type"""
-    # remember if client understands gzip
-    compress = 'identity'
-    encodings = headers.get('Accept-Encoding', '')
-    for accept in encodings.split(','):
-        if ';' in accept:
-            accept, q = accept.split(';', 1)
-        if accept.strip().lower() in ('gzip', 'x-gzip'):
-            compress = 'gzip'
-            break
-    # we understand gzip, deflate and identity
-    headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
-    return compress
-
-
-def remove_encoding_headers (headers):
-    # remove encoding header
-    to_remove = ["Transfer-Encoding"]
-    if headers.get("Content-Length") is not None:
-        print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
-        to_remove.append("Content-Length")
-    remove_headers(headers, to_remove)
-    # add warning
-    headers['Warning'] = "214 Transformation applied\r"
-
-
-def get_max_forwards (headers):
-    """get Max-Forwards value as int and decrement it if its > 0"""
-    try:
-        mf = int(headers.get('Max-Forwards', -1))
-    except ValueError:
-        print >>sys.stderr, "Invalid Max-Forwards header value", headers.get('Max-Forwards')
-        mf = -1
-    if mf>0:
-        headers['Max-Forwards'] = "%d\r" % (mf-1)
-    return mf
-
-
 def get_content_length (headers):
     """get content length as int or 0 on error"""
     try:
@@ -322,3 +259,5 @@ def get_content_length (headers):
     except ValueError:
         print >>sys.stderr, "Invalid Content-Length value", headers.get('Content-Length')
     return 0
+
+

@@ -4,8 +4,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 from cStringIO import StringIO
 from Server import Server
-from wc.proxy import make_timer, get_http_version, set_via_header
-from wc.proxy import remove_warning_headers
+from wc.proxy import make_timer, get_http_version
 from wc import i18n, config, remove_headers, has_header_value
 from wc.debug import *
 from ClientServerMatchmaker import serverpool
@@ -252,7 +251,7 @@ class HttpServer (Server):
             self.state = 'recycle'
             self.reuse()
             return
-        set_proxy_headers(self.headers)
+        server_set_proxy_headers(self.headers)
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()
@@ -489,26 +488,6 @@ class HttpServer (Server):
         Server.handle_close(self)
         if self.client:
             self.flush()
-
-def set_proxy_headers (headers):
-    remove_hop_by_hop_headers(headers)
-    set_via_header(headers)
-    set_date_header(headers)
-    remove_warning_headers(headers)
-
-
-def remove_hop_by_hop_headers (headers):
-    """Remove hop-by-hop headers"""
-    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer',
-                 'Proxy-Authenticate']
-    remove_headers(headers, to_remove)
-
-
-def set_date_header (headers):
-    """add rfc2822 date if it was missing"""
-    if not headers.has_key('Date'):
-        from email import Utils
-        headers['Date'] = "%s\r"%Utils.formatdate()
 
 
 def speedcheck_print_status ():
