@@ -60,6 +60,12 @@
     Type: feature
     Changed: webcleaner{,.1}, webcleaner-certificates{,.1}
 
+  * added new network package with ability to find all configured
+    local ip addresses in a system
+    Type: feature
+    Added: wc/network/*.py
+    Changed: setup.py, Makefile.am
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix
