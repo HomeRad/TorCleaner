@@ -31,6 +31,7 @@ import wc.proxy.auth
 import wc.proxy.Headers
 import wc.webgui
 import wc.webgui.templatecache
+import wc.webgui.TAL
 
 
 class WebConfig (object):
@@ -205,7 +206,6 @@ def add_i18n_context (context, lang):
     try:
         translator = wc.get_translator(lang, translatorklass=Translator)
     except IOError, msg:
-        print "XXX", lang, msg
         translator = NullTranslator()
     context_add(context, "i18n", translator)
 
@@ -223,8 +223,7 @@ class Translator (gettext.GNUTranslations):
         _msg = self.gettext(msgid)
         wc.log.debug(wc.LOG_TAL, "TRANSLATE %s %s %s %s",
                      msgid, _msg, mapping, context)
-        _msg = TALInterpreter.interpolate(_msg, mapping)
-        return _msg
+        return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
 
     def gettext (self, msgid):
         return self.ugettext(msgid).encode(self.OUTPUT_ENCODING)
@@ -238,4 +237,4 @@ class NullTranslator (gettext.NullTranslations):
 
     def translate (self, domain, msgid, mapping=None,
                    context=None, target_language=None, default=None):
-        return msgid
+        return wc.webgui.TAL.TALInterpreter.interpolate(msgid, mapping)
