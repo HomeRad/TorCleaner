@@ -37,7 +37,7 @@ except ImportError:
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy.Headers import WcMessage
-from wc.proxy import make_timer
+from wc.proxy import make_timer, norm_url
 from HtmlTags import check_spelling
 from HtmlSecurity import HtmlSecurity
 
@@ -478,6 +478,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             url = urlparse.urljoin(self.base_url, url)
         else:
             url = urlparse.urljoin(self.url, url)
+        url = norm_url(url)
         if _has_ws(url):
             warn(PARSER, "HtmlParser[%d]: broken JS url %s at %s", self.level,
                          `url`, `self.url`)

@@ -13,13 +13,61 @@ random.seed()
 nonces = {} # nonce to timestamp
 max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
 
-# 4-byte NTLM message flags
-NTLM_OEM =            0x00000002 # Negotiate OEM (ASCII, basically)
-NTLM_REQUEST_TARGET = 0x00000004 # Request Target
-NTLM_NTLM =           0x00000200 # Negotiate NTLM
-NTLM_DOMAIN =         0x00001000 # Negotiate Domain Supplied
-NTLM_WORKSTATION =    0x00002000 # Negotiate Workstation Supplied
-NTLM_SIGN =           0x00008000 # Negotiate Always Sign
+# These constants are stolen from samba-2.2.4 and other sources
+NTLMSSP_SIGNATURE = 'NTLMSSP'
+
+# NTLMSSP Message Types
+NTLMSSP_NEGOTIATE = 1
+NTLMSSP_CHALLENGE = 2
+NTLMSSP_AUTH      = 3
+NTLMSSP_UNKNOWN   = 4
+
+# NTLMSSP Flags
+
+# Text strings are in unicode
+NTLMSSP_NEGOTIATE_UNICODE                  = 0x00000001
+# Text strings are in OEM
+NTLMSSP_NEGOTIATE_OEM                      = 0x00000002
+# Server should return its authentication realm
+NTLMSSP_REQUEST_TARGET                     = 0x00000004
+# Request signature capability
+NTLMSSP_NEGOTIATE_SIGN                     = 0x00000010 
+# Request confidentiality
+NTLMSSP_NEGOTIATE_SEAL                     = 0x00000020
+# Use datagram style authentication
+NTLMSSP_NEGOTIATE_DATAGRAM                 = 0x00000040
+# Use LM session key for sign/seal
+NTLMSSP_NEGOTIATE_LM_KEY                   = 0x00000080
+# NetWare authentication
+NTLMSSP_NEGOTIATE_NETWARE                  = 0x00000100
+# NTLM authentication
+NTLMSSP_NEGOTIATE_NTLM                     = 0x00000200
+# Domain Name supplied on negotiate
+NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED      = 0x00001000
+# Workstation Name supplied on negotiate
+NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED = 0x00002000
+# Indicates client/server are same machine
+NTLMSSP_NEGOTIATE_LOCAL_CALL               = 0x00004000
+# Sign for all security levels
+NTLMSSP_NEGOTIATE_ALWAYS_SIGN              = 0x00008000
+# TargetName is a domain name
+NTLMSSP_TARGET_TYPE_DOMAIN                 = 0x00010000
+# TargetName is a server name
+NTLMSSP_TARGET_TYPE_SERVER                 = 0x00020000
+# TargetName is a share name
+NTLMSSP_TARGET_TYPE_SHARE                  = 0x00040000
+# TargetName is a share name
+NTLMSSP_NEGOTIATE_NTLM2                    = 0x00080000
+# get back session keys
+NTLMSSP_REQUEST_INIT_RESPONSE              = 0x00100000
+# get back session key, LUID
+NTLMSSP_REQUEST_ACCEPT_RESPONSE            = 0x00200000
+# request non-ntsession key
+NTLMSSP_REQUEST_NON_NT_SESSION_KEY         = 0x00400000
+NTLMSSP_NEGOTIATE_TARGET_INFO              = 0x00800000
+NTLMSSP_NEGOTIATE_128                      = 0x20000000
+NTLMSSP_NEGOTIATE_KEY_EXCH                 = 0x40000000
+NTLMSSP_NEGOTIATE_80000000                 = 0x80000000
 
 
 def check_nonces ():
@@ -176,6 +224,60 @@ def create_NT_hashed_password (passwd):
     return "%s%s" % (res, '\000' * 5)
 
 
+negotiate_flags = NTLMSSP_NEGOTIATE_80000000 | \
+   NTLMSSP_NEGOTIATE_128 | \
+   NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
+   NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED | \
+   NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED | \
+   NTLMSSP_NEGOTIATE_NTLM | \
+   NTLMSSP_NEGOTIATE_UNICODE | \
+   NTLMSSP_NEGOTIATE_OEM | \
+   NTLMSSP_REQUEST_TARGET
+
+
+def create_message1 (flags=negotiate_flags):
+    """create negotiate message (NTLM msg type 1)"""
+    # overall length is 48 bytes
+    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
+    msg += struct.pack("<l", NTLMSSP_NEGOTIATE) # message type
+    msg += struct.pack("<l", flags) # flags
+    offset = len(msg) + 8*2
+    domain = "WORKGROUP"     # domain name
+    host = "UNKNOWN"         # hostname
+    msg += struct.pack("<h", len(domain)) # domain name length
+    msg += struct.pack("<h", len(domain)) # given twice
+    msg += struct.pack("<l", offset + len(host)) # offset
+    msg += struct.pack("<h", len(host)) # host name length
+    msg += struct.pack("<h", len(host)) # given twice
+    msg += struct.pack("<l", offset);
+    msg += host + domain
+    return msg
+
+
+challenge_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
+   NTLMSSP_NEGOTIATE_NTLM | \
+   NTLMSSP_REQUEST_INIT_RESPONSE | \
+   NTLMSSP_NEGOTIATE_UNICODE | \
+   NTLMSSP_REQUEST_TARGET
+
+
+def create_message2 (flags=challenge_flags):
+    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
+    msg += struct.pack("<l", NTLMSSP_CHALLENGE) # message type
+    #XXX
+    type = '\x02'
+    zero7 = '\x00'*7
+    msglen = '\x00\x28'
+    zero2 = '\x00'*2
+    flags="\x01\x82"
+    # zero2 again
+    nonce = "%08d" % (random.random()*100000000) # eight random bytes
+    assert nonce not in nonces
+    nonces[nonce] = time.time()
+    zero8 = '\x00'*8
+    return "%(protocol)s%(type)s%(zero7)s%(msglen)s%(zero2)s%(flags)s%(zero2)s%(nonce)s%(zero8)s" % locals()
+
+
 ##########################################################################
 # This file is part of 'NTLM Authorization Proxy Server'
 # Copyright 2001 Dmitry A. Rozmanov <dima@xenon.spb.ru>
@@ -195,56 +297,6 @@ def create_NT_hashed_password (passwd):
 # Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 #
-
-class record (object):
-
-    def __init__ (self, data, offset=0):
-        self.data = data
-        self.len = len(data)
-        self.offset = 0
-        self.next_offset = self.offset + self.len
-
-    def create_record_info (self, offset):
-        """helper function for creation info field in message 3"""
-        self.offset = offset
-        len1 = utils.int2chrs(self.len)
-        len2 = len1
-        data_off = utils.int2chrs(self.offset)
-        self.record_info = len1 + len2 + data_off + '\000\000'
-        # looks like the length is always = 8 bytes
-        self.next_offset = offset + self.len
-
-
-def create_message1 ():
-    # overall lenght = 48 bytes
-    protocol = 'NTLMSSP\x00' # name
-    type = '\x01'            # type 1
-    zero3 = '\x00'*3         # zero padding
-    flags="\xb2\x03"         # flags
-    zero2 = '\x00'*2         # zero padding
-    domain = "WORKGROUP"     # domain name
-    dom_len = len(domain)    # domain length
-    host = "UNKNOWN"         # hostname
-    host_len = len(host)     # host length
-    host_off = 32            # index of hostname in message
-    dom_off = host_off + len(host) # index of domain name in message
-    return "%(protocol)s%(type)s%(zero3)s%(flags)s%(zero2)s%(dom_len)02d%(dom_len)02d%(dom_off)02d00%(host_len)02d%(host_len)02d%(host_off)02d00%(host)s%(domain)s" % locals()
-
-
-def create_message2 ():
-    protocol = 'NTLMSSP\x00'    #name
-    type = '\x02'
-    zero7 = '\x00'*7
-    msglen = '\x00\x28'
-    zero2 = '\x00'*2
-    flags="\x01\x82"
-    # zero2 again
-    nonce = "%08d" % (random.random()*100000000) # eight random bytes
-    assert nonce not in nonces
-    nonces[nonce] = time.time()
-    zero8 = '\x00'*8
-    return "%(protocol)s%(type)s%(zero7)s%(msglen)s%(zero2)s%(flags)s%(zero2)s%(nonce)s%(zero8)s" % locals()
-
 
 def create_message3 (nonce, domain, username, host,
                      lm_hashed_pw=None, nt_hashed_pw=None, ntlm_mode=0):

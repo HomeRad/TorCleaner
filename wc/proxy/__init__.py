@@ -9,7 +9,7 @@ __date__    = "$Date$"[7:-2]
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import time, select, asyncore, re, urlparse
+import time, select, asyncore, re, urlparse, os
 # fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 def fileno(self):
@@ -33,6 +33,18 @@ def stripsite (url):
     """remove scheme and host from url. return host, newurl"""
     url = urlparse.urlparse(url)
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
+
+
+def norm_url (url):
+    """replace empty paths with / and normalize them"""
+    urlparts = list(urlparse.urlparse(url))
+    if not urlparts[2]:
+        urlparts[2] = '/'
+    else:
+        # collapse redundant path segments
+        # XXX only windows and posix??
+        urlparts[2] = os.path.normpath(urlparts[2]).replace('\\', '/')
+    return urlparse.urlunparse(urlparts)
 
 
 is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search

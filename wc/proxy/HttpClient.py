@@ -3,14 +3,14 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, cgi, urlparse
+import time, cgi, urlparse, os
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config
-from wc.proxy import fix_http_version
+from wc.proxy import fix_http_version, norm_url
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers
 from wc.proxy.auth import *
@@ -102,6 +102,8 @@ class HttpClient (Connection):
                 config['requests']['error'] += 1
                 self.error(400, i18n._("Can't parse request"))
                 return
+            # fix broken url paths
+            self.url = norm_url(self.url)
             self.nofilter = {'nofilter': config.nofilter(self.url)}
             debug(PROXY, "%s request %s", str(self), `self.request`)
             self.url = applyfilter(FILTER_REQUEST, self.url,
