@@ -142,6 +142,8 @@ class DnsResponse (object):
         return self.kind == 'redirect'
 
 
+has_whitespace = re.compile(r'\s').search
+
 class DnsExpandHostname (object):
     "Try looking up a hostname and its expansions"
     # This routine calls DnsCache to do the individual lookups
@@ -164,10 +166,13 @@ class DnsExpandHostname (object):
                 # because it's very likely that none of the
                 # search_domains matter.
                 self.delay = 3
-        if re.search(r'\s', hostname):
+        if has_whitespace(hostname):
             # If there's whitespace, it's almost certainly a copy/paste error,
             # so also try the same thing with whitespace removed
             self.queries.append(re.sub(r'\s+', '', hostname))
+        if ".." in hostname:
+            # another possible typo
+            self.queries.append(re.sub(r'\.\.+', '.', hostname))
         self.requests = self.queries[1:] # queries we haven't yet made
         # Issue the primary request
         make_timer(0, lambda h=hostname, s=self:
