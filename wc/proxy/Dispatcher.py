@@ -49,23 +49,6 @@ import wc.log
 # map of sockets
 socket_map = {}
 
-def create_socket (family, socktype, sslctx=None):
-    """Create a socket with given family and type. If SSL context
-       is given an SSL socket is created"""
-    if sslctx is not None:
-        import OpenSSL
-        sock = OpenSSL.SSL.Connection(sslctx, socket.socket(family, socktype))
-    else:
-        sock = socket.socket(family, socktype)
-        if family in (socket.AF_INET, socket.AF_INET6) and \
-           socktype == socket.SOCK_STREAM:
-            # disable NAGLE algorithm, which means sending pending data
-            # immediately, possibly wasting bandwidth but improving
-            # responsiveness for fast networks
-            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    return sock
-
-
 # test for IPv6, both in Python build and in kernel build
 has_ipv6 = False
 if socket.has_ipv6:
@@ -79,6 +62,26 @@ if socket.has_ipv6:
         # socket.error: (97, 'Address family not supported by protocol')
         if msg[0] != 97:
             raise
+
+def create_socket (family, socktype, sslctx=None):
+    """Create a socket with given family and type. If SSL context
+       is given an SSL socket is created"""
+    if sslctx is not None:
+        import OpenSSL
+        sock = OpenSSL.SSL.Connection(sslctx, socket.socket(family, socktype))
+    else:
+        sock = socket.socket(family, socktype)
+        socktypes_inet = [socket.AF_INET]
+        if has_ipv6:
+            socktypes_inet.append(socket.AF_INET6)
+        if family in socktypes_inet and \
+           socktype == socket.SOCK_STREAM:
+            # disable NAGLE algorithm, which means sending pending data
+            # immediately, possibly wasting bandwidth but improving
+            # responsiveness for fast networks
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    return sock
+
 
 class Dispatcher (object):
     """dispatch socket events to handler functions"""
