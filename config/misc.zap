@@ -60,4 +60,10 @@
  parameters=""
  query=""
  fragment=""/>
+
+<rewrite title="Replace MARQUEE with SPAN" oid="10"
+ desc="Jeeesus, as if blinking isn&apos;t enough."
+ tag="marquee">
+<replace part="tagname">span</replace>
+</rewrite>
 </folder>
