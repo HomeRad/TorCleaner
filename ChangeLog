@@ -6,6 +6,10 @@
   * When Content-Type header is not what we guessed, fix only some
     contents, not all
     Changed files: wc/proxy/HttpServer.py
+  * - use flex memory management interface
+    - use only double quotes for attribute quoting
+    - check quoting of all attributes
+    Changed files: wc/parser/htmllex.l
 
 1.4
   * blocked.html has no content anymore and displays much cleaner

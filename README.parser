@@ -62,4 +62,4 @@ The parser converts tag and attribute names to lower case for easier
 matching.
 The parser quotes all attribute values with minimal necessity (this is
 not standard compliant, but who cares when the browsers understand it).
-
+The Python memory management interface is being used.

@@ -15,7 +15,7 @@
 
 <rewrite title="Ad servers 10" oid="2"
  desc="Kill links with &apos;click&apos; words in the host name.">
-<attr>http://[^/]*((fast|double)?click(it|finders|burst|here.egroups))\.</attr>
+<attr>http://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
 </rewrite>
 
 <rewrite title="Ad servers 02" oid="3"
