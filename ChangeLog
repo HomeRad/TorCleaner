@@ -8,6 +8,9 @@
     o remove _blank and _new targets
     Changed files: config/*.zap
   * Removed unneeded guruguru.bmp
+  * #define YY_NO_UNISTD_H on Windows systems, fixes build error with
+    Visual Studio compiler
+    Changed files: setup.py
 
 1.6
   * updated filters:
