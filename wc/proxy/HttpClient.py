@@ -10,7 +10,7 @@ from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config
-from wc.proxy import fix_http_version, norm_url
+from wc.proxy import get_http_version, fix_http_version, norm_url
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers
 from wc.proxy.auth import *
@@ -38,12 +38,14 @@ class HttpClient (Connection):
         self.addr = addr
         self.state = 'request'
         self.server = None
+        self.sequence_number = 1
         self.request = ''
         self.decoders = [] # Handle each of these, left to right
         self.headers = {}
         self.bytes_remaining = None # for content only
         self.content = ''
         self.protocol = 'HTTP/1.0'
+        self.persistent = False
         self.url = ''
         host = self.addr[0]
         if not config.allowed(host):
@@ -96,91 +98,97 @@ class HttpClient (Connection):
 
 
     def process_request (self):
+        # One newline ends request
         i = self.recv_buffer.find('\r\n')
-        if i >= 0: # One newline ends request
-            # self.read(i) is not including the newline
-            self.request = self.read(i)
-            info(ACCESS, '%s - %s - %s', self.addr[0],
-                 time.ctime(time.time()), self.request)
-            try:
-                self.method, self.url, protocol = self.request.split()
-            except ValueError:
-                config['requests']['error'] += 1
-                self.error(400, i18n._("Can't parse request"))
-                return
-            # fix broken url paths
-            self.url = norm_url(self.url)
-            self.nofilter = {'nofilter': config.nofilter(self.url)}
-            debug(PROXY, "%s request %s", str(self), `self.request`)
-            self.url = applyfilter(FILTER_REQUEST, self.url,
-                                   fun="finish", attrs=self.nofilter)
-            self.protocol = fix_http_version(protocol)
-            self.request = "%s %s %s" % (self.method, self.url, self.protocol)
-            if not self.url:
-                config['requests']['error'] += 1
-                self.error(400, i18n._("Empty URL"))
-                return
-            # note: we do not enforce a maximum url length
-            self.state = 'headers'
+        if i < 0: return
+        # self.read(i) is not including the newline
+        self.request = self.read(i)
+        info(ACCESS, '%s - %s - %s', self.addr[0],
+             time.ctime(time.time()), self.request)
+        try:
+            self.method, self.url, protocol = self.request.split()
+        except ValueError:
+            config['requests']['error'] += 1
+            self.error(400, i18n._("Can't parse request"))
+            return
+        # fix broken url paths
+        self.url = norm_url(self.url)
+        self.nofilter = {'nofilter': config.nofilter(self.url)}
+        debug(PROXY, "%s request %s", str(self), `self.request`)
+        self.url = applyfilter(FILTER_REQUEST, self.url,
+                               fun="finish", attrs=self.nofilter)
+        self.protocol = fix_http_version(protocol)
+        self.http_ver = get_http_version(protocol)
+        self.request = "%s %s %s" % (self.method, self.url, self.protocol)
+        if not self.url:
+            config['requests']['error'] += 1
+            self.error(400, i18n._("Empty URL"))
+            return
+        # note: we do not enforce a maximum url length
+        self.state = 'headers'
 
 
     def process_headers (self):
+        # Two newlines ends headers
         i = self.recv_buffer.find('\r\n\r\n')
-        if i >= 0: # Two newlines ends headers
-            i += 4 # Skip over newline terminator
-            # the first 2 chars are the newline of request
-            fp = StringIO(self.read(i)[2:])
-            msg = WcMessage(fp)
-            # put unparsed data (if any) back to the buffer
-            msg.rewindbody()
-            self.recv_buffer = fp.read() + self.recv_buffer
-            # work on these headers
-            self.compress = client_set_headers(msg)
-            # filter headers
-            self.headers = applyfilter(FILTER_REQUEST_HEADER,
-                              msg, fun="finish", attrs=self.nofilter)
-            if config['parentproxy']:
-                self.headers['Proxy-Connection'] = 'Keep-Alive\r'
-                self.headers['Keep-Alive'] = 'timeout=300\r'
-            # add decoders
-            self.decoders = []
-            self.bytes_remaining = get_content_length(self.headers)
-            # chunked encoded
-            if self.headers.has_key('Transfer-Encoding'):
-                # XXX don't look at value, assume chunked encoding for now
-                debug(PROXY, '%s Transfer-encoding %s', str(self), `self.headers['Transfer-encoding']`)
-                self.decoders.append(UnchunkStream())
-                client_remove_encoding_headers(self.headers)
-                self.bytes_remaining = None
-            debug(PROXY, "%s client headers (filtered)\n%s", str(self), str(self.headers))
-            if config["proxyuser"]:
-                creds = get_header_credentials(self.headers, 'Proxy-Authorization')
-                if not creds:
-                    auth = ", ".join(get_challenges())
-                    self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
-                    return
-                if 'NTLM' in creds:
-                    if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
-                        auth = ",".join(creds['NTLM'][0])
-                        self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
-                        return
-                # XXX the data=None argument should hold POST data
-                if not check_credentials(creds, username=config['proxyuser'],
-                                         password_b64=config['proxypass'],
-                                         uri=get_auth_uri(self.url),
-                                         method=self.method, data=None):
-                    warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
-                    auth = ", ".join(get_challenges())
-                    self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
-                    return
-            if self.method in ['OPTIONS', 'TRACE'] and \
-               client_get_max_forwards(self.headers)==0:
-                # XXX display options ?
-                self.state = 'done'
-                ServerHandleDirectly(self, '%s 200 OK'%self.protocol, 200,
-                                     'Content-Type: text/plain\r\n\r\n', '')
+        if i < 0: return
+        i += 4 # Skip over newline terminator
+        # the first 2 chars are the newline of request
+        fp = StringIO(self.read(i)[2:])
+        msg = WcMessage(fp)
+        # put unparsed data (if any) back to the buffer
+        msg.rewindbody()
+        self.recv_buffer = fp.read() + self.recv_buffer
+        # look if client wants persistent connections
+        if self.http_ver >= (1,1):
+            self.persistent = not has_header_value(msg, 'Connection', 'Close')
+        # work on these headers
+        self.compress = client_set_headers(msg)
+        # filter headers
+        self.headers = applyfilter(FILTER_REQUEST_HEADER,
+                                   msg, fun="finish", attrs=self.nofilter)
+        if config['parentproxy']:
+            self.headers['Proxy-Connection'] = 'Keep-Alive\r'
+            self.headers['Keep-Alive'] = 'timeout=300\r'
+        # add decoders
+        self.decoders = []
+        self.bytes_remaining = get_content_length(self.headers)
+        # chunked encoded
+        if self.headers.has_key('Transfer-Encoding'):
+            # XXX don't look at value, assume chunked encoding for now
+            debug(PROXY, '%s Transfer-encoding %s', str(self), `self.headers['Transfer-encoding']`)
+            self.decoders.append(UnchunkStream())
+            client_remove_encoding_headers(self.headers)
+            self.bytes_remaining = None
+        debug(PROXY, "%s client headers (filtered)\n%s", str(self), str(self.headers))
+        if config["proxyuser"]:
+            creds = get_header_credentials(self.headers, 'Proxy-Authorization')
+            if not creds:
+                auth = ", ".join(get_challenges())
+                self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
                 return
-            self.state = 'content'
+            if 'NTLM' in creds:
+                if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
+                    auth = ",".join(creds['NTLM'][0])
+                    self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
+                    return
+            # XXX the data=None argument should hold POST data
+            if not check_credentials(creds, username=config['proxyuser'],
+                                     password_b64=config['proxypass'],
+                                     uri=get_auth_uri(self.url),
+                                     method=self.method, data=None):
+                warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
+                auth = ", ".join(get_challenges())
+                self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
+                return
+        if self.method in ['OPTIONS', 'TRACE'] and \
+           client_get_max_forwards(self.headers)==0:
+            # XXX display options ?
+            self.state = 'done'
+            ServerHandleDirectly(self, '%s 200 OK'%self.protocol, 200,
+                                 'Content-Type: text/plain\r\n\r\n', '')
+            return
+        self.state = 'content'
 
 
     def process_content (self):
@@ -269,7 +277,6 @@ class HttpClient (Connection):
     def server_abort (self):
         debug(PROXY, '%s server_abort', str(self))
         self.close()
-        self.server = None
 
 
     def handle_error (self, what):
@@ -322,8 +329,11 @@ class HttpClient (Connection):
 
     def close (self):
         debug(PROXY, '%s close', str(self))
-        self.state = 'closed'
-        super(HttpClient, self).close()
+        if self.persistent:
+            self.state = 'receive'
+        else:
+            self.state = 'closed'
+            super(HttpClient, self).close()
 
 
 def get_content_length (headers):
