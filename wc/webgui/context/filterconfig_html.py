@@ -264,7 +264,7 @@ def _form_rewrite_removeattrs (form):
     toremove = _getlist(form, 'delattr')
     if toremove:
         for attr in toremove:
-            if not attrs.has_key(attr):
+            if not currule.attrs.has_key(attr):
                 error['rewrite_delattr'] = True
                 return
         for attr in toremove:

@@ -36,7 +36,7 @@ Do 'webcleaner stop' first."""), 1
         if parent_exit:
             os._exit(0)
         else:
-            return
+            return None
     # create new session and fork once more
     os.setsid()
     pid = os.fork()
@@ -54,6 +54,7 @@ Do 'webcleaner stop' first."""), 1
     f.close()
     # start function
     startfunc()
+    return None
 
 
 def stop ():
@@ -62,15 +63,15 @@ def stop ():
     return _stop(pidfile)
 
 
-def _stop (pidfile):
-    pid = int(file(pidfile).read())
+def _stop (_pidfile):
+    pid = int(file(_pidfile).read())
     import signal
     msg = None
     try:
         os.kill(pid, signal.SIGTERM)
     except OSError:
         msg = i18n._("warning: could not terminate process PID %d")%pid
-    os.remove(pidfile)
+    os.remove(_pidfile)
     return msg, 0
 
 

@@ -23,7 +23,7 @@ def check_nonces ():
     for key, value in nonces.items():
         noncetime = time.time() - value
         if noncetime > max_noncesecs:
-            del nonces[nonce]
+            del nonces[key]
 
 
 def get_digest_challenge (stale="false"):
@@ -177,7 +177,7 @@ def get_response_digest (challenge, **attrs):
 _hexchars = "0123456789abcdef"
 def get_cnonce ():
     """return 16 random hex characters"""
-    return "".join([ _hexchars[random.randint(0, 15)] for i in range(16) ])
+    return "".join([ _hexchars[random.randint(0, 15)] for _ in range(16) ])
 
 
 _nonce_count = 0

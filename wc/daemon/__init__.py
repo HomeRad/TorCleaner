@@ -39,22 +39,22 @@ def get_user ():
 
 
 # determine pid lockfile name
-fname = "%s-%s.pid" % (AppName, Version)
+_fname = "%s-%s.pid" % (AppName, Version)
 if os.name=="nt":
-    pidfile = os.path.join(os.environ.get("TEMP"), fname)
+    pidfile = os.path.join(os.environ.get("TEMP"), _fname)
 else:
-    pidfile = os.path.join('/var/run', fname)
+    pidfile = os.path.join('/var/run', _fname)
     if not iswriteable(pidfile):
         # an unwriteable /var/run means we are not running as root
         # to enable multiple running webcleaner instances, we use a
         # user-specific lock file name
-        fname = get_user() + fname
-        pidfile = os.path.join('/var/tmp', fname)
+        _fname = get_user() + _fname
+        pidfile = os.path.join('/var/tmp', _fname)
     if not iswriteable(pidfile):
-        pidfile = os.path.join('/tmp', fname)
+        pidfile = os.path.join('/tmp', _fname)
 # last fallback: the current directory
 if not iswriteable(pidfile):
-    pidfile = fname
+    pidfile = _fname
 watchfile = pidfile+".watch"
 
 

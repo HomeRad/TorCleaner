@@ -20,6 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import i18n
+from wc.daemon import startfunc
 
 def start (parent_exit=True):
     """does not return"""

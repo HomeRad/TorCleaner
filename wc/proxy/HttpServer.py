@@ -103,7 +103,7 @@ class HttpServer (Server):
         self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         try:
 	    self.connect(self.addr)
-        except socket.error, err:
+        except socket.error:
             self.handle_error('connect error')
             return
 
@@ -465,7 +465,7 @@ def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        debug(PROXY, '%s speed: %4d b/s', str(self), (SPEEDCHECK_BYTES/elapsed))
+        debug(PROXY, 'speed: %4d b/s', (SPEEDCHECK_BYTES/elapsed))
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0

@@ -40,6 +40,7 @@ class HttpProxyClient (object):
 
 
     def error (self, status, msg, txt=''):
+        error(PROXY, '%s error %s %s %s', str(self), status, msg, txt)
         self.finish()
 
 

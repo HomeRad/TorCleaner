@@ -86,7 +86,7 @@ class Connection (asyncore.dispatcher, object):
         data = self.send_buffer[:SEND_BUFSIZE]
         try:
             num_sent = self.send(data)
-        except socket.error, err:
+        except socket.error:
             self.handle_error('write error')
             return
         debug(PROXY, '%s <= wrote %d', str(self), num_sent)
