@@ -21,6 +21,26 @@ img {
   border: 0;
 }
 
+h1 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+h2 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+h3 {
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+h4 {
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+p {
+  margin-top: 5px;
+}
+
 acronym {
     border-bottom: 1px dotted black;
 }

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Dec 19 22:16:25 2003\n"
+"POT-Creation-Date: Fri Dec 19 23:26:34 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,9 +376,6 @@ msgid "Proxy user"
 msgstr ""
 
 msgid "return window.confirm('Really remove this folder?')"
-msgstr ""
-
-msgid "Internet Explorer (Macintosh OS)"
 msgstr ""
 
 msgid "Folder name"
@@ -997,6 +994,12 @@ msgid "%(AppName)s"
 msgstr ""
 
 msgid ""
+"%(AppName)s uses a modular filter design allowing\n"
+"a lot of flexibility for different uses. Each of these modules can\n"
+"be further customized by separate rules in the filter configuration.\n"
+msgstr ""
+
+msgid ""
 "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
 "<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
 msgstr ""
@@ -1038,15 +1041,6 @@ msgid "PICS service successfully disabled."
 msgstr ""
 
 msgid "Enable rule"
-msgstr ""
-
-msgid ""
-"Select <b>Edit -&gt; Options -&gt; Proxy</b>.<br>\n"
-"Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Under <b>HTTPS</b> enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Click <b>Ok</b> to use your new settings."
 msgstr ""
 
 msgid "Google Cache for"
