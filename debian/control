@@ -3,11 +3,11 @@ Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@debian.org>
 Standards-Version: 3.6.1
-Build-Depends: python2.3-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), dpatch, gettext
+Build-Depends: python2.3-dev (>= 2.3.1), debhelper (>= 4.1.16), debconf (>= 1.2.9), dpatch, gettext
 
 Package: webcleaner
 Architecture: any
-Depends: python2.3, debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto
+Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto
 Suggests: webcleanertools
 Description: a filtering HTTP proxy
  Features:
@@ -28,7 +28,7 @@ Package: webcleanertools
 Section: x11
 Priority: extra
 Architecture: all
-Depends: fxpy-python2.3 (>= 1.0.0), python2.3, webcleaner
+Depends: fxpy-python2.3 (>= 1.0.0), python2.3 (>= 2.3.1), webcleaner
 Description: miscellaneous helpers and tools for webcleaner
  webcleanerconf is a GUI configuration tool for the WebCleaner proxy.
  The standard configuration interface however is the web GUI.
