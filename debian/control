@@ -20,6 +20,7 @@ Description: a filtering HTTP proxy
   o customizable to suit your (filtering) needs
   o HTTP/1.1 support
   o Per-host access control
+  o embedded JavaScript engine and filtering
 
 Package: webcleanertools
 Section: x11

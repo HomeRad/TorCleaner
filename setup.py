@@ -177,6 +177,7 @@ o single process proxy with select() I/O
 o HTTP/1.1 support
 o Proxy Authentication (requires HTTP/1.1 capable browser)
 o Per-host access control
+o embedded JavaScript engine and filtering
 """,
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
