@@ -20,7 +20,6 @@ import sys
 import weakref
 from wc.webgui import ZTUtils
 from MultiMapping import MultiMapping
-from GlobalTranslationService import getGlobalTranslationService
 
 ustr = str
 
@@ -176,6 +175,8 @@ class Context (object):
         # Keep track of what needs to be popped as each scope ends.
         self._scope_stack = []
 
+        self.i18n = self.contexts['i18n']
+
     def getCompiler (self):
         return self._compiler
 
@@ -259,10 +260,8 @@ class Context (object):
                   context=None, target_language=None, default=None):
         if context is None:
             context = self.contexts.get('here')
-        return getGlobalTranslationService().translate(
-            domain, msgid, mapping=mapping,
-            context=context,
-            default=default,
+        return self.i18n.translate(domain, msgid,
+            mapping=mapping, context=context, default=default,
             target_language=target_language)
 
 
