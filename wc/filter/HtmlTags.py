@@ -145,9 +145,9 @@ def check_spelling (tag, url):
     for htmltag in HtmlTags.keys():
          if distance(tag, htmltag)==1:
              print >>sys.stderr, "Warning: HTML tag", `tag`, \
-                                 "corrected to", `htmltag`, "at", `url
+                                 "corrected to", `htmltag`, "at", `url`
              return htmltag
-    print >>sys.stderr, "Error: unknown HTML tag", `tag`, "at", `url
+    print >>sys.stderr, "Error: unknown HTML tag", `tag`, "at", `url`
     return tag
 
 
