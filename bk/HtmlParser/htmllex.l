@@ -199,25 +199,34 @@ RX_DATA  [-a-zA-Z0-9_:]+
     BEGIN(S_COMMENT);
 }
 
-<S_COMMENT>-*--[ ]*> {
+<S_COMMENT>--[ ]*> {
     UPDATE_COLUMN;
-    APPEND_TO_TMP(yyleng-3);
     SETLVAL;
     BEGIN(INITIAL);
     RETURN(T_COMMENT);
 }
 
+<S_COMMENT>-/-- {
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_COMMENT>-/[^-] {
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_COMMENT>--/[^- >] {
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_COMMENT>--[ ]+/[^ >] {
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+}
+
 <S_COMMENT>[^-]+ {
-    UPDATE_LINE;
-    APPEND_TO_TMP(yyleng);
-}
-
-<S_COMMENT>-+[^ \->]+ {
-    UPDATE_LINE;
-    APPEND_TO_TMP(yyleng);
-}
-
-<S_COMMENT>-+[ ]+([^ \->]+) {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
 }
