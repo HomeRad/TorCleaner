@@ -9,11 +9,11 @@ from wc.proxy import create_inet_socket
 
 class ClientConnection (asyncore.dispatcher, object):
 
-    def __init__(self, config, data):
+    def __init__(self, config, test):
         super(ClientConnection, self).__init__()
         create_inet_socket(self, socket.SOCK_STREAM)
         self.connect(('localhost', config['port']))
-        self.buf = data
+        self.outbuf, self.inbuf = get_data(config, test)
 
 
     def handle_connect (self):
@@ -32,24 +32,27 @@ class ClientConnection (asyncore.dispatcher, object):
 
 
     def writable(self):
-        return len(self.buf) > 0
+        return len(self.outbuf) > 0
 
 
     def handle_write (self):
-        sent = self.send(self.buf)
-        self.buf = self.buf[sent:]
+        sent = self.send(self.outbuf)
+        self.outbuf = self.outbuf[sent:]
 
 
     def handle_expt (self):
         exception(PROXY, "%s exception", str(self))
 
 
+def get_data (config, test):
+    im = "from test.tests.%s import client_send, client_recv" % test
+    exec im
+    return [ s%config for s in [client_send, client_recv] ]
+
+
 def main (params):
     initlog("test/logging.conf")
-    config = wc.Configuration()
-    # XXX read data from file?
-    data = "GET http://localhost:%(port)d/ HTTP/1.0\r\n\r\n" % config
-    client = ClientConnection(config, data)
+    client = ClientConnection(wc.Configuration(), sys.argv[1])
     asyncore.loop()
 
 

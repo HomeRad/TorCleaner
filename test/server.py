@@ -1,10 +1,11 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
-"""proxy server simulator"""
+"""server simulator"""
 
 import sys
 import wc
-from wc.proxy import Listener, HttpClient, proxy_poll, run_timers
+from wc.log import *
+from wc.proxy import HttpClient
 
 
 class TestClient (HttpClient.HttpClient):
@@ -14,14 +15,23 @@ class TestClient (HttpClient.HttpClient):
         print "huiiiii"
 
 
-def main (port):
+def get_data (config, test):
+    im = "from test.tests.%s import server_send, server_recv" % test
+    exec im
+    return [ s%config for s in [server_send, server_recv] ]
+
+
+def main ():
+    initlog("test/logging.conf")
+    wc.config = wc.Configuration()
+    # disable all filters
+    wc.config['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
+    port = wc.config['port']+1
+    from wc.proxy import Listener, proxy_poll, run_timers
     Listener.Listener(port, TestClient)
     while True:
         proxy_poll(timeout=max(0, run_timers()))
 
 
 if __name__=='__main__':
-    wc.config = wc.Configuration()
-    wc.config['filters'] = [] #['Replacer', 'Rewriter', 'BinaryCharFilter']
-    wc.config.init_filter_modules()
-    main(wc.config['port']+1)
+    main()
