@@ -22,11 +22,9 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
                                                              'connect')
         # default values
         self.addr = (ipaddr, port)
-        self.reset()
         # attempt connect
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM,
+        self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM,
          sslctx=wc.proxy.ssl.get_clientctx(wc.configuration.config.configdir))
-        self.socket.settimeout(wc.configuration.config['timeout'])
         self.try_connect()
         self.socket.set_connect_state()
 
