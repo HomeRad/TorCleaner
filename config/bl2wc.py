@@ -8,10 +8,15 @@ The XXX folder name is the blacklist folder.
 Required are the "tarfile" module and Python 2.2
 """
 
-import sys, time, os, re, urllib2, gzip
-from tarfile import TarFile
-from wc import ConfigCharset
-from wc.XmlUtils import xmlify
+import sys
+import time
+import os
+import re
+import urllib2
+import gzip
+import tarfile
+import wc
+import wc.XmlUtils
 
 # global vars
 date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -101,12 +106,12 @@ def write_filters ():
 def write_folder (cat, ftype, data, f):
     print "write", cat, "folder"
     d = {
-        "charset": ConfigCharset,
-        "title_en": xmlify("%s %s" % (ftype.capitalize(), cat)),
-        "title_de": xmlify("%s %s" % (transtypes[ftype]['de'].capitalize(),
+        "charset": wc.ConfigCharset,
+        "title_en": wc.XmlUtils.xmlquote("%s %s" % (ftype.capitalize(), cat)),
+        "title_de": wc.XmlUtils.xmlquote("%s %s" % (transtypes[ftype]['de'].capitalize(),
                                       transcats[cat]['de'].capitalize())),
-        "desc_en": xmlify("Automatically generated on %s" % date),
-        "desc_de": xmlify("Automatisch generiert am %s" % date),
+        "desc_en": wc.XmlUtils.xmlquote("Automatically generated on %s" % date),
+        "desc_de": wc.XmlUtils.xmlquote("Automatisch generiert am %s" % date),
     }
     f.write("""<?xml version="1.0" encoding="%(charset)s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
@@ -182,7 +187,7 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
     }
     print "write", cat, "expressions"
     for expr in expressions[cat]:
-        d['path'] = xmlify(expr)
+        d['path'] = wc.XmlUtils.xmlquote(expr)
         f.write("""<%(type)s
  scheme=""
  host=""
@@ -205,7 +210,7 @@ def blacklist (fname):
     if fname.endswith(".tar.gz"):
         print "extracting archive..."
         d = os.path.join("extracted", fname[:-7])
-        f = TarFile.gzopen(source)
+        f = tarfile.TarFile.gzopen(source)
         for m in f:
             a, b = os.path.split(m.name)
             a = os.path.basename(a)
