@@ -85,7 +85,7 @@ def wstartfunc (handle=None):
     # support reload on posix systems
     if os.name=='posix':
         import signal
-        signal.signal(signal.SIGHUP, reload_config)
+        signal.signal(signal.SIGHUP, sighup_reload_config)
         # change dir to avoid open files on umount
         os.chdir("/")
     # read configuration
@@ -97,10 +97,13 @@ def wstartfunc (handle=None):
     mainloop(handle=handle)
 
 
-def reload_config (*dummy):
-    """reload configuration function with dummy params for (signum, frame)
-    from the signal handler prototype
-    """
+def sighup_reload_config (signum, frame):
+    """store timer for reloading configuration data"""
+    make_timer(1, lambda: reload_config())
+
+
+def reload_config ():
+    """reload configuration"""
     config.reset()
     config.read_proxyconf()
     config.read_filterconf()
@@ -186,7 +189,6 @@ class Configuration (dict):
         self['parentproxypass'] = ""
         # dynamically stored parent proxy authorization credentials
         self['parentproxycreds'] = None
-        self['strict_whitelist'] = 0
         self['folderrules'] = []
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
@@ -469,8 +471,7 @@ class WConfigParser (BaseParser):
             for key,val in attrs.items():
                 self.config[key] = unxmlify(val)
             for key in ('port', 'parentproxyport', 'timeout', 'auth_ntlm',
-	                'colorize', 'strict_whitelist', 'development',
-                        'try_google'):
+	                'colorize', 'development', 'try_google'):
                 self.config[key] = int(self.config[key])
             if self.config['nofilterhosts'] is not None:
                 strhosts = self.config['nofilterhosts']
