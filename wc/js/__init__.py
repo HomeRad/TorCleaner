@@ -20,6 +20,20 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
+import wc.log
+
+
+_start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
+_end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
+
+def remove_html_comments (script):
+    mo = _start_js_comment(script)
+    if mo:
+        script = script[mo.end():]
+    mo = _end_js_comment(script)
+    if mo:
+        script = script[:mo.start()]
+    return script.strip()
 
 
 def escape_js (script):
