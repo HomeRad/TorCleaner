@@ -1,4 +1,7 @@
-import time,socket,rfc822,re,sys
+import time,socket,rfc822,re,sys,mimetypes
+# add bzip encoding
+mimetypes.encodings_map['.bz2'] = 'bzip'
+
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
@@ -142,6 +145,8 @@ class HttpServer(Server):
             # We have no idea what it is!?
             print >> sys.stderr, 'Warning: puzzling header received:', `self.response`
 
+
+
     def process_headers(self):
         # Headers are terminated by a blank line .. now in the regexp,
         # we want to say it's either a newline at the beginning of
@@ -166,7 +171,7 @@ class HttpServer(Server):
             return
 
         if self.headers.get('content-type') in config['mime_no_length']:
-            # XXX HACK - remove content length
+            # remove content length
             debug(HURT_ME_PLENTY, "remove content length")
             for h in self.headers.headers[:]:
                 if re.match('(?i)content-length:', h):
@@ -174,7 +179,6 @@ class HttpServer(Server):
                     #self.bytes_remaining = None
 
         self.decoders = []
-
         if self.headers.has_key('transfer-encoding'):
             debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
@@ -186,6 +190,12 @@ class HttpServer(Server):
                     assert 0, 'chunked encoding should not have content-length'
                     self.headers.headers.remove(h)
                     #self.bytes_remainig = None
+
+        # check for .bz2 files
+        if self.document.endswith(".bz2"):
+            gm = mimetypes.guess_type(self.document)
+            self.headers['content-encoding'] = gm[1]
+            self.headers['content-type'] = gm[0]
 
         if self.headers.get('content-encoding')=='gzip' and \
            self.headers.get('content-type') in config['mime_gunzip_ok']:

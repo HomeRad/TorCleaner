@@ -3,11 +3,10 @@ webcleaner (0.20) unstable; urgency=low
   * documentation updates
   * removed debian/conffile and debian/webcleanerconf.dirs
   * use Python2.1 in Debian scripts
-  * parser enhancements:
-    line continuations in parameter names
-    white space around parameter attributes equal sign
+  * new HTML parser based on libxml2
+  * add bzip encoding for .bz2 files
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri, 26 Oct 2001 14:24:07 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Thu,  1 Nov 2001 20:12:26 +0100
 
 webcleaner (0.19) unstable; urgency=low
 
