@@ -41,7 +41,7 @@ _ipv6_ipv4_abbr_re = re.compile(r"^((%s:){0,4}%s)?::((%s:){0,5})?" % \
                            "%s$" % _ipv4_num_4)
 # netmask regex
 _host_netmask_re = re.compile(r"^%s/%s$" % (_ipv4_num_4, _ipv4_num_4))
-_host_bitmask_re = re.compile(r"^%s/\d{1,2}$" % _ipv4_num_4)
+_host_cidrmask_re = re.compile(r"^%s/\d{1,2}$" % _ipv4_num_4)
 
 
 def expand_ipv6 (ip, num):
@@ -104,9 +104,9 @@ def is_valid_ipv6 (ip):
     return True
 
 
-def is_valid_bitmask (mask):
-    """Return True if given mask is a valid network bitmask"""
-    return 1 <= mask <= 32
+def is_valid_cidrmask (mask):
+    """check if given mask is a valid network bitmask in CIDR notation"""
+    return 0 <= mask <= 32
 
 
 def dq2num (ip):
@@ -119,34 +119,24 @@ def num2dq (n):
     return socket.inet_ntoa(struct.pack('!L', n))
 
 
-def suffix2mask (n):
-    "return a mask of n bits as a long integer"
-    return (1L << (32 - n)) - 1
+def cidr2mask (n):
+    "return a mask where the n left-most of 32 bits are set"
+    return ((1L << n) - 1) << (32-n)
 
 
-def mask2suffix (mask):
-    """return suff for given bit mask"""
-    return 32 - int(math.log(mask+1, 2))
-
-
-def dq2mask (ip):
+def netmask2mask (ip):
     "return a mask of bits as a long integer"
-    n = dq2num(ip)
-    return -((-n+1) | n)
+    return dq2num(ip)
 
 
 def dq2net (ip, mask):
     "return a tuple (network ip, network mask) for given ip and mask"
-    n = dq2num(ip)
-    net = n - (n & mask)
-    return (net, mask)
+    return dq2num(ip) & mask
 
 
-def dq_in_net (n, net, mask):
-    """return True iff numerical ip n is in given net with mask.
-       (net,mask) must be returned previously by ip2net"""
-    m = n - (n & mask)
-    return m == net
+def dq_in_net (n, mask):
+    """return True iff numerical ip n is in given network"""
+    return (n & mask) == mask
 
 
 def host_in_set (ip, hosts, nets):
@@ -155,8 +145,8 @@ def host_in_set (ip, hosts, nets):
         return True
     if is_valid_ipv4(ip):
         n = dq2num(ip)
-        for net, mask in nets:
-            if dq_in_net(n, net, mask):
+        for net in nets:
+            if dq_in_net(n, net):
                 return True
     return False
 
@@ -175,18 +165,18 @@ def hosts2map (hosts):
     hostset = sets.Set()
     nets = []
     for host in hosts:
-        if _host_bitmask_re.match(host):
+        if _host_cidrmask_re.match(host):
             host, mask = host.split("/")
             mask = int(mask)
-            if not is_valid_bitmask(mask):
+            if not is_valid_cidrmask(mask):
                 wc.log.error(wc.LOG_NET,
-                             "bitmask %d is not a valid network mask", mask)
+                             "CIDR mask %d is not a valid network mask", mask)
                 continue
             if not is_valid_ipv4(host):
                 wc.log.error(wc.LOG_NET,
                              "host %r is not a valid ip address", host)
                 continue
-            nets.append(dq2net(host, suffix2mask(mask)))
+            nets.append(dq2net(host, cidr2mask(mask)))
         elif _host_netmask_re.match(host):
             host, mask = host.split("/")
             if not is_valid_ipv4(host):
@@ -197,7 +187,7 @@ def hosts2map (hosts):
                 wc.log.error(wc.LOG_NET,
                              "mask %r is not a valid ip network mask", mask)
                 continue
-            nets.append(dq2net(host, dq2mask(mask)))
+            nets.append(dq2net(host, netmask2mask(mask)))
         elif is_valid_ip(host):
             hostset.add(expand_ip(host)[0])
         else:
