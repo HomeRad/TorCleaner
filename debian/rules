@@ -26,11 +26,9 @@ CONFIG_PATHS := --prefix=/usr \
 	--infodir=\$${prefix}/share/info
 CONFIG_DEB := --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE)
 
-configure: configure.in
-	./autogen.sh
-
-configure-stamp: configure
+configure-stamp:
 	dh_testdir
+	./autogen.sh
 	./configure $(CONFIG_DEB) $(CONFIG_PATHS) $(CONFIG_OPTS)
 	touch configure-stamp
 
