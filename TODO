@@ -2,38 +2,6 @@ TODO
 
 version 2.10 and above
 
-- HTTPS Gateway data flux:
-
-                        DOWN			UP
-  WWW BROWSER
-	|
-	|
-  WEBCLEANER PROXY
-	|
-     HttpClient         init server, fiter	pass data back to
-	|		request data and pass	browser
-        |		it to Https server
-	|
-     ClientServerMatchmaker
-	|
-     HttpsServer	make connection to	receive filtered data,
-     	|		localhost on ssl port	encrypt it with WebCleaner
-	|		and pass request data	certificate and pass it on
-	|					to HttpClient
-  WEBCLEANER SSL SERVER
-	|
-     SslClient		init server, filter	pass data back to
-    	|		request data and pass	HttpsServer
-        |		it to ssl server
-        |
-     ClientServerMatchmaker
-	|
-     SslServer		connect to ssl server,	filter data, pass it to
-	|		make request		SslClient
-  REMOTE SSL SERVER
-
-- DNS resolve for allowed/nofilter hosts
-
 - memory leaks while operating the proxy
 
 - convert remaining tests to unit testing where appropriate
