@@ -254,7 +254,8 @@ class DnsExpandHostname (object):
 
 class DnsCache (object):
     """Provides a lookup function that will either get a value from the cache
-    or initiate a DNS lookup, fill the cache, and return that value"""
+       or initiate a DNS lookup, fill the cache, and return that value
+    """
     # lookup() can create zero or one DnsLookupHostname objects
 
     ValidCacheEntryExpires = 1800
