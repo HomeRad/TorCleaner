@@ -114,12 +114,12 @@ class DnsExpandHostname:
         self.handle_issue_request()
             
 class DnsCache:
-    """Provides a lookup function that will either get a value from the cache or
-    initiate a DNS lookup, fill the cache, and return that value"""
+    """Provides a lookup function that will either get a value from the cache
+    or initiate a DNS lookup, fill the cache, and return that value"""
     # lookup() can create zero or one DnsLookupHostname objects
 
     ValidCacheEntryExpires = 1800
-    InvalidCacheEntryExpires = 30
+    InvalidCacheEntryExpires = 0 # dont cache errors
 
     def __init__(self):
         self.cache = {} # hostname to DNS answer
@@ -204,7 +204,7 @@ class DnsCache:
         del self.pending[hostname]
 
         assert (not answer.isFound() or len(answer.data) > 0), \
-                'Received empty DNS lookup .. should be error? %s' % (answer,)
+               'Received empty DNS lookup .. should be error? %s' % (answer,)
 
         self.cache[hostname] = answer
         if not answer.isError():

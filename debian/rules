@@ -46,7 +46,7 @@ install: build
 	# remove example and config files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
 	# install configuration
-	install -c -m 644 config/*.{zap,dtd,gif,png,conf} debian/$(PACKAGE)/etc/webcleaner
+	install -c -m 644 config/*.{html,zap,dtd,gif,png,conf} debian/$(PACKAGE)/etc/webcleaner
 
 
 # Build architecture-independent files here.

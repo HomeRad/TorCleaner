@@ -2,15 +2,12 @@ TODO
 
 - new filtering:
   Stop/limit Javascript Pop-ups/alert/confirms
-    javascript:window.onload=window.onunload=window.onbeforeunload=null;window.close();
+    javascript:
+     window.onload=window.onunload=window.onbeforeunload=null;window.close();
   Stop refreshs for specific ad frames
   Remove dynamic HTML
   Control sounds
   Highlight keywords
-
-- Update help text and .po files
-
-- NT specific functions in daemon module (works now with generic functions)
 
 - HTTPS support
   It's sort of an extension to HTTP - you just send the proxy the request

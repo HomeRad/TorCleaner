@@ -1,4 +1,4 @@
-import rfc822,time
+import rfc822,time,sys
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
