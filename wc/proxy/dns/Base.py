@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """
 $Id$
 
@@ -254,6 +255,9 @@ class DnsAsyncRequest(DnsRequest,asyncore.dispatcher_with_send):
 
 #
 # $Log$
+# Revision 1.3  2003/04/01 23:29:22  calvin
+# add encding comment
+#
 # Revision 1.2  2003/01/05 17:42:49  calvin
 # pychecker fixes
 #

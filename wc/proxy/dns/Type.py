@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """
  $Id$
 
@@ -52,6 +53,9 @@ def typestr(type):
     return typemap.get(type, `type`)
 #
 # $Log$
+# Revision 1.2  2003/04/01 23:29:22  calvin
+# add encding comment
+#
 # Revision 1.1  2002/11/27 23:27:05  calvin
 # update tests
 #
