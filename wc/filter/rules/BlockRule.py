@@ -51,9 +51,10 @@ class BlockRule (AllowRule):
         """Rule data as XML for storing"""
         s =  super(AllowRule, self).toxml() + \
              '\n url="%s">' % xmlify(self.url)
-        s += "\n"+self.title_desc_toxml()
-        s += "\n"+self.matchestoxml()
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.matchurls or self.nomatchurls:
+            s += "\n"+self.matchestoxml(prefix="  ")
         if self.replacement:
-            s += "\n<replacement>%s</replacement>"%xmlify(self.replacement)
+            s += "\n  <replacement>%s</replacement>"%xmlify(self.replacement)
         s += "\n</%s>" % self.get_name()
         return s

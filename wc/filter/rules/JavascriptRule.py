@@ -30,7 +30,8 @@ class JavascriptRule (UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(JavascriptRule, self).toxml()+">"
-        s += "\n"+self.title_desc_toxml()
-        s += "\n" + self.matchestoxml()
-        s += "</%s>" % self.get_name()
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.matchurls or self.nomatchurls:
+            s += "\n"+self.matchestoxml(prefix="  ")
+        s += "\n</%s>" % self.get_name()
 	return s

@@ -50,11 +50,12 @@ class ImageRule (UrlRule):
         if self.height:
             s += '\n height="%d"' % self.height
         if self.formats:
-            s += '\n formats="%s"\n' % xmlify(",".join(self.formats))
+            s += '\n formats="%s"' % xmlify(",".join(self.formats))
         if self.url:
-            s += '\n url="%s"\n' % xmlify(self.url)
+            s += '\n url="%s"' % xmlify(self.url)
         s += ">"
-        s += "\n"+self.title_desc_toxml()
-        s += "\n"+self.matchestoxml()
-        s += "</%s>" % self.get_name()
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.matchurls or self.nomatchurls:
+            s += "\n"+self.matchestoxml(prefix="  ")
+        s += "\n</%s>" % self.get_name()
         return s

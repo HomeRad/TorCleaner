@@ -27,13 +27,20 @@ class ReplaceRule (UrlRule):
     """This rule can Replace parts of text data according to regular
     expressions"""
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, search="", replace=""):
+                  disable=0, search="", replacement=""):
         """initialize rule attributes"""
         super(ReplaceRule, self).__init__(sid=sid, titles=titles,
                                    descriptions=descriptions, disable=disable)
         self.search = search
-        self.replace = replace
-        self.attrnames.extend(('search', 'replacement'))
+        self.replacement = replacement
+        self.attrnames.append('search')
+
+
+    def end_data (self, name):
+        if name=='replacement':
+            self.replacement = unxmlify(self._data).encode('iso8859-1')
+        else:
+            super(ReplaceRule, self).end_data(name)
 
 
     def compile_data (self):
@@ -50,7 +57,7 @@ class ReplaceRule (UrlRule):
     def update (self, rule, dryrun=False, log=None):
         """update rule attributes with given rule data"""
         chg = super(ReplaceRule, self).update(rule, dryrun=dryrun, log=log)
-        return self.update_attrs(['replace'], rule, dryrun, log) or chg
+        return self.update_attrs(['replacement'], rule, dryrun, log) or chg
 
 
     def toxml (self):
@@ -58,10 +65,11 @@ class ReplaceRule (UrlRule):
 	s = super(ReplaceRule, self).toxml()
         if self.search:
             s += '\n search="%s"'%xmlify(self.search)
-        if self.replace:
-            s += '\n replacement="%s"'%xmlify(self.replace)
-        s += ">\n"
-        s += "\n  "+self.title_desc_toxml()
-        s += "\n  "+self.matchestoxml()
-        s += "</%s>" % self.get_name()
+        s += ">"
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.matchurls or self.nomatchurls:
+            s += "\n"+self.matchestoxml(prefix="  ")
+        if self.replacement:
+            s += '\n  <replacement>%s</replacement>'%xmlify(self.replacement)
+        s += "\n</%s>" % self.get_name()
         return s

@@ -75,10 +75,12 @@ class UrlRule (Rule):
         self.nomatchurls_ro = [re.compile(s) for s in self.nomatchurls]
 
 
-    def matchestoxml (self):
+    def matchestoxml (self, prefix=""):
         """match url rule data as XML for storing"""
-        m = ["<matchurl>%s</matchurl>"%xmlify(r) for r in self.matchurls]
-        n = ["<nomatchurl>%s</nomatchurl>"%xmlify(r) for r in self.nomatchurls]
+        m = ["%s<matchurl>%s</matchurl>" % \
+             (prefix, xmlify(r)) for r in self.matchurls]
+        n = ["%s<nomatchurl>%s</nomatchurl>" % \
+             (prefix, xmlify(r)) for r in self.nomatchurls]
         return "\n".join(m+n)
 
 

@@ -109,7 +109,8 @@ class FolderRule (Rule):
         """Rule data as XML for storing"""
         s = """<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-%s oid="%d">\n""" % (ConfigCharset, super(FolderRule, self).toxml(), self.oid)
+%s oid="%d">""" % (ConfigCharset, super(FolderRule, self).toxml(), self.oid)
+        s += "\n"+self.title_desc_toxml()+"\n"
         for r in self.rules:
             s += "\n%s\n"%r.toxml()
         return s+"</folder>\n"

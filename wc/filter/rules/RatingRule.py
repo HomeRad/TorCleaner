@@ -109,15 +109,16 @@ class RatingRule (UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-	s = "%s>\n" % super(RatingRule, self).toxml()
-        s += "\n  "+self.title_desc_toxml()
-        s += "\n  "+self.matchestoxml()
+	s = "%s>" % super(RatingRule, self).toxml()
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.matchurls or self.nomatchurls:
+            s += "\n"+self.matchestoxml(prefix="  ")
         if self.url:
-            s += "  <url>%s</url>\n" % xmlify(self.url)
+            s += "\n  <url>%s</url>" % xmlify(self.url)
         for category, value in self.ratings.items():
             if value:
-                s += "  <category name=\"%s\">%s</category>\n"% \
+                s += "\n  <category name=\"%s\">%s</category>"% \
                       (xmlify(category), xmlify(value))
-        s += "</%s>" % self.get_name()
+        s += "\n</%s>" % self.get_name()
         return s
 

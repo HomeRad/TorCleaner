@@ -46,6 +46,6 @@ class ExternfileRule (Rule):
         """Rule data as XML for storing"""
         s = super(ExternfileRule, self).toxml()
         s += ' filename="%s">' % xmlify(self.filename)
-        s += "\n"+self.title_desc_toxml()
-        s += "</%s>"%self.get_name()
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        s += "\n</%s>"%self.get_name()
         return s

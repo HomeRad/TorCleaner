@@ -57,9 +57,10 @@ class HeaderRule (UrlRule):
         """Rule data as XML for storing"""
         s = '%s\n name="%s">' % \
             (super(HeaderRule, self).toxml(), xmlify(self.name))
-        s += "\n"+self.title_desc_toxml()
-        s += "\n"+self.matchestoxml()
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.matchurls or self.nomatchurls:
+            s += "\n"+self.matchestoxml(prefix="  ")
         if self.value:
-            s += ' <replacement>%s</replacement>' % xmlify(self.value)
-        s += "</%s>" % self.get_name()
+            s += '\n  <replacement>%s</replacement>' % xmlify(self.value)
+        s += "\n</%s>" % self.get_name()
         return s

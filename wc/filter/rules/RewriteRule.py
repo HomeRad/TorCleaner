@@ -145,7 +145,7 @@ class RewriteRule (UrlRule):
         elif name=='replacement':
             self.replacement = unxmlify(self._data).encode('iso8859-1')
         else:
-            super(UrlRule, self).end_data(name)
+            super(RewriteRule, self).end_data(name)
 
 
     def compile_data (self):
@@ -285,11 +285,12 @@ class RewriteRule (UrlRule):
         s = super(RewriteRule, self).toxml()
         if self.tag!='a':
             s += '\n tag="%s"' % xmlify(self.tag)
-        s += ">\n"
-        s += "\n  "+self.title_desc_toxml()
-        s += "\n  "+self.matchestoxml()
+        s += ">"
+        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.matchurls or self.nomatchurls:
+            s += "\n"+self.matchestoxml(prefix="  ")
         for key, val in self.attrs.items():
-            s += "  <attr"
+            s += "\n  <attr"
             if key!='href':
                 s += ' name="%s"' % key
             if val:

@@ -193,11 +193,12 @@ class Rule (object):
         return '<%s sid="%s"' % (self.get_name(), xmlify(self.sid))
 
 
-    def title_desc_toxml (self):
-        t = ['<title lang="%s">%s</title>'%(xmlify(key), xmlify(value)) \
+    def title_desc_toxml (self, prefix=""):
+        t = ['%s<title lang="%s">%s</title>' % \
+             (prefix, xmlify(key), xmlify(value)) \
              for key,value in self.titles.iteritems()]
-        d = ['<description lang="%s">%s</description>'% \
-             (xmlify(key), xmlify(value)) \
+        d = ['%s<description lang="%s">%s</description>'% \
+             (prefix, xmlify(key), xmlify(value)) \
              for key,value in self.descriptions.iteritems()]
         return "\n".join(t+d)
 
