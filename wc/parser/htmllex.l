@@ -742,7 +742,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     UPDATE_LINE;
 }
 
-<S_ATTR5>[^\012 \t\b\r\n>]+ {
+<S_ATTR5>[^\012 \t\b\r\n>\"\']+ {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
 }
@@ -781,7 +781,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RETURN(T_ELEMENT_START_END);
 }
 
-<S_ATTR5>{RX_WHITE_SPACE}+ {
+<S_ATTR5>{RX_WHITE_SPACE}+|[\'\"] {
     UPDATE_LINE;
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
