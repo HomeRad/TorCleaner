@@ -112,7 +112,7 @@ class HttpClient (Connection):
             try:
                 self.method, self.url, protocol = self.request.split()
                 self.protocol = fix_http_version(protocol)
-            except:
+            except ValueError:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Can't parse request"))
             if not self.url:
