@@ -1,4 +1,4 @@
-a# -*- coding: iso-8859-1 -*-
+# -*- coding: iso-8859-1 -*-
 """ test script to test filtering"""
 import unittest
 import random
