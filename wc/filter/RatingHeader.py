@@ -47,7 +47,7 @@ class RatingHeader (wc.filter.Filter.Filter):
                     wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
         rules = attrs['rating_rules']
         for rule in rules:
-            msg = wc.filter.rating.rating_allow(url, rule)
+            msg = rule.rating_allow(url)
             if msg:
                 raise wc.filter.FilterRating(msg)
         return data

@@ -143,7 +143,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             if self.ratings:
                 # headers finished, check rating data
                 for rule in self.ratings:
-                    msg = wc.filter.rating.rating_allow(self.url, rule)
+                    msg = rule.rating_allow(self.url)
                     if msg:
                         raise wc.filter.FilterRating(msg)
                 self.ratings = []
