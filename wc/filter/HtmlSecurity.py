@@ -22,6 +22,14 @@ __date__    = "$Date$"[7:-2]
 import os, sys
 from wc.log import *
 
+_percent_encodings = re.compile('%+').findall
+def _has_lots_of_percents (href):
+    for match in _percent_encodings(href):
+        if len(match) > 10:
+            return True
+    return False
+
+
 class HtmlSecurity (object):
     """Scan and repair known security exploits in HTML start/end tags.
        XXX would be fixed with file(1) like scanning of documents and
@@ -96,6 +104,12 @@ class HtmlSecurity (object):
                 # prevent CVE-2001-0130
                 warn(FILTER, "%s %s\n Detected and prevented Lotus Domino font size overflow crash", str(htmlfilter), `attrs['size']`)
                 del attrs['size']
+        elif tag=='a' and attrs.has_key('href'):
+            href = attrs['href']
+            if _has_lots_of_percents(href):
+                # prevent CAN-2003-0870
+                warn(FILTER, "%s %s\n Detected and prevented Opera percent encoding overflow crash", str(htmlfilter), `href`)
+                del attrs['href']
 
 
     def scan_end_tag (self, tag):
