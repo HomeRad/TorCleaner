@@ -14,17 +14,31 @@
 <div metal:use-macro="macros/nav">Navigation</div>
 <div class="content" id="main">
 <span i18n:translate="">The <b>Update filter configuration</b> button
-downloads new filter files from <a href="%(baseurl)s">%(baseurl)s</a>
+downloads new filter files from <a href="%(updatezapperurl)s">%(updatezapperurl)s</a>
 and merges their changes into the current configuration.<br>
 If something has changed, the new filter configuration files
 are saved and reloaded into the proxy.</span>
-<br><br>
+<br>
 <form action="update_doit.html" method="POST"
  tal:attributes="action string:update_doit.html.${lang}">
-<input type="submit" class="submit" name="doit"
+<input type="submit" class="submit" name="updatezapper"
  value="Update filter configuration"
  i18n:attributes="value string:Update filter configuration">
 </form>
+<br><br>
+
+<span i18n:translate="">The <b>Update content ratings</b> button
+downloads new content ratings from <a href="%(updateratingurl)s">%(updateratingurl)s</a>
+and adds new ratings into the current configuration.<br>
+Existing content ratings are not changed.</span>
+<br>
+<form action="update_doit.html" method="POST"
+ tal:attributes="action string:update_doit.html.${lang}">
+<input type="submit" class="submit" name="updaterating"
+ value="Update content ratings"
+ i18n:attributes="value string:Update content ratings">
+</form>
+
 </div>
 
 <div metal:use-macro="macros/footer">Footer...</div>
