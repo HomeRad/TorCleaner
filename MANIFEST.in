@@ -9,5 +9,4 @@ include filtertest filtertest.html
 include webcleaner.1 webcleanerconf.1
 include rpm_build_script
 recursive-include config *
-exclude webcleanerConf.py
-exclude _webcleaner_configdata.py
+exclude _webcleaner2_configdata.py

@@ -18,7 +18,7 @@ clean:
 .PHONY: distclean
 distclean:	clean cleandeb
 	rm -rf dist build # just to be sure: clean build dir too
-	rm -f VERSION MANIFEST _webcleaner_configdata.*
+	rm -f VERSION MANIFEST _*_configdata.*
 
 .PHONY: cleandeb
 cleandeb:
@@ -49,6 +49,10 @@ dist:	locale
 test:
 	#./filtertest filter filtertest.html
 	env http_proxy="http://localhost:9090" wget -t1 http://localhost/
+
+.PHONY: test_remote
+test_remote:
+	env http_proxy="http://localhost:9090" wget -t1 http://freshmeat.net/
 
 .PHONY: md5sums
 md5sums:

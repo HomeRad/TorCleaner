@@ -64,7 +64,7 @@ class ClientServerMatchmaker:
         self.port = port
         self.document = document
         self.state = 'dns'
-        #dns_lookups.background_lookup(self.hostname, self.handle_dns)
+        dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
     def handle_dns(self, hostname, answer):
         assert self.state == 'dns'

@@ -2,9 +2,11 @@ import time,socket,rfc822,re
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import message
+from wc import message,color
 from ClientServerMatchmaker import serverpool
 from string import find,strip,split,join,lower
+from UnchunkStream import UnchunkStream
+from GunzipStream import GunzipStream
 
 # DEBUGGING
 PRINT_SERVER_HEADERS = 0
@@ -13,6 +15,7 @@ SPEEDCHECK_BYTES = 0
 
 class HttpServer(Server):
     def __init__(self, ipaddr, port, client):
+        print "init HttpServer"
         Server.__init__(self, client)
         self.addr = (ipaddr, port)
         self.hostname = ''
@@ -146,7 +149,7 @@ class HttpServer(Server):
         if self.headers.has_key('transfer-encoding'):
             print 'Transfer-encoding:', \
                   color(2, self.headers['transfer-encoding'])
-            self.decoders.append(encoding_chunked.UnchunkStream())
+            self.decoders.append(UnchunkStream())
             # HACK - remove encoding header
             for h in self.headers.headers[:]:
                 if re.match('transfer-encoding:', lower(h)):
@@ -156,7 +159,7 @@ class HttpServer(Server):
 
         if self.headers.has_key('content-encoding') and self.headers['content-encoding'] == 'gzip':
             print 'Content-encoding:', color(2, 'gzip')
-            self.decoders.append(encoding_gzip.GunzipStream())
+            self.decoders.append(GunzipStream())
             # HACK - remove content length and encoding
             for h in self.headers.headers[:]:
                 if re.match('content-length:', lower(h)):
@@ -178,7 +181,7 @@ class HttpServer(Server):
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
-            self.bytes_remaining = self.bytes_remaining - len(data)
+            self.bytes_remaining -= len(data)
 
         filtered_data = data
         is_closed = 0

@@ -19,7 +19,7 @@ natively, the other OSes use a generic interface with no fork().
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import os
-from wc import startfunc
+from wc import startfunc,Version
 
 def iswriteable(file):
     if os.path.isdir(file) or os.path.islink(file):
@@ -39,13 +39,13 @@ def iswriteable(file):
     return 0
 
 
-pidfile='/var/run/webcleaner.pid'
+pidfile='/var/run/webcleaner-%s.pid'%Version
 if not iswriteable(pidfile):
-    pidfile = '/var/tmp/webcleaner.pid'
+    pidfile = '/var/tmp/webcleaner-%s.pid'%Version
 if not iswriteable(pidfile):
-    pidfile = '/tmp/webcleaner.pid'
+    pidfile = '/tmp/webcleaner-%s.pid'%Version
 if not iswriteable(pidfile):
-    pidfile = 'webcleaner.pid'
+    pidfile = 'webcleaner-%s.pid'%Version
 
 
 def restart():

@@ -6,6 +6,7 @@
 #    http://www.apache.org/
 
 from string import strip,find,atoi
+from wc import color
 
 class UnchunkStream:
     # States:

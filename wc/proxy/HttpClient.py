@@ -12,6 +12,7 @@ class HttpClient(Connection):
     # data (read any additional data and forward it to the server)
     
     def __init__(self, socket, addr):
+        print "init HttpClient"
         Connection.__init__(self, socket)
         self.addr = addr
         self.state = 'request'

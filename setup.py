@@ -1,20 +1,20 @@
 #!/usr/bin/env python2
 """setup file for the distuils module"""
-#    Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000,2001  Bastian Kleineidam
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os, string, re, sys
 from types import StringType, TupleType
@@ -148,7 +148,7 @@ class my_build_scripts(build_scripts):
 class MyDistribution(Distribution):
     def __init__(self, attrs=None):
         Distribution.__init__(self, attrs=attrs)
-        self.config_file = "_"+self.get_name()+"_configdata.py"
+        self.config_file = "_%s2_configdata.py"%self.get_name()
 
 
     def run_commands(self):
@@ -178,7 +178,7 @@ myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
 setup (name = "webcleaner",
-       version = "0.10",
+       version = "0.11",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -188,7 +188,7 @@ setup (name = "webcleaner",
        licence = "GPL (Python 2.0 usage granted)",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
-       ext_modules = [Extension('wc.parser',['wc/parser/sgmlop.c'])],
+       ext_modules = [Extension('wc.parser.sgmlop',['wc/parser/sgmlop.c'])],
        scripts = ['webcleaner', 'webcleanerconf'],
        long_description =
 """WebCleaner can

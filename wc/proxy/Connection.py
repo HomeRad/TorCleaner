@@ -46,6 +46,8 @@ class Connection(asyncore.dispatcher):
 
     def read(self, bytes=RECV_BUFSIZE):
         """read up to LEN bytes from the internal buffer"""
+        if bytes is None:
+            bytes = RECV_BUFSIZE
         data = self.recv_buffer[:bytes]
         self.recv_buffer = self.recv_buffer[bytes:]
         return data
@@ -89,6 +91,7 @@ class Connection(asyncore.dispatcher):
     def handle_read(self):
         if not self.connected:
             # It's been closed (presumably recently)
+            message(0, 'read from connected')
             return
         try:
             data = self.recv(RECV_BUFSIZE)

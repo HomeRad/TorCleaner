@@ -15,28 +15,29 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import _webcleaner_configdata,os,sys,UserDict
+import os,sys,UserDict
+import _webcleaner2_configdata as configdata
 from string import ljust,rjust,replace,join
 
-Version = _webcleaner_configdata.version
-AppName = _webcleaner_configdata.name
+Version = configdata.version
+AppName = configdata.name
 App = AppName+" "+Version
 UserAgent = AppName+"/"+Version
-Author =  _webcleaner_configdata.author
+Author =  configdata.author
 HtmlAuthor = replace(Author, ' ', '&nbsp;')
 Copyright = "Copyright © 2000,2001 by "+Author
 HtmlCopyright = "Copyright &copy; 2000,2001 by "+HtmlAuthor
 AppInfo = App+"              "+Copyright
 HtmlAppInfo = App+", "+HtmlCopyright
-Url = _webcleaner_configdata.url
-Email = _webcleaner_configdata.author_email
+Url = configdata.url
+Email = configdata.author_email
 Freeware = AppName+""" comes with ABSOLUTELY NO WARRANTY!
 This is free software, and you are welcome to redistribute it
 under certain conditions. Look at the file `LICENSE' whithin this
 distribution."""
 ConfigVersion = "0.7"
-ConfigDir = _webcleaner_configdata.config_dir
-LocaleDir = os.path.join(_webcleaner_configdata.install_data, 'locale')
+ConfigDir = configdata.config_dir
+LocaleDir = os.path.join(configdata.install_data, 'locale')
 DebugLevel = 0
 Colorize = 0
 
@@ -247,9 +248,12 @@ class WConfigParser(BaseParser):
         if name=='webcleaner':
             for key,val in attrs.items():
                 self.config[str(key)] = val
-            for key in ['port','parentproxyport','buffersize','timeout',
-	                'obfuscateip','debuglevel','colorize']:
+            for key in ('port','parentproxyport','buffersize','timeout',
+	                'obfuscateip','debuglevel','colorize'):
                 self.config[key] = int(self.config[key])
+            for key in ('version','parentproxy','logfile'):
+                if self.config[key] is not None:
+                    self.config[key] = str(self.config[key])
         elif name=='filter':
             self.config['filters'].append(attrs['name'])
 

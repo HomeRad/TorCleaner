@@ -1,3 +1,18 @@
+webcleaner (0.11) unstable; urgency=low
+
+  * new proxy code: HTTP/1.1 and select() I/O
+  * use versioned PID file
+  * new CVS module webcleaner2
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 10 Apr 2001 17:26:55 +0200
+
+webcleaner (0.10) unstable; urgency=low
+
+  * convert config values from unicode to strings
+  * rename FilterRule to FolderRule (and all other occurences)
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 10 Apr 2001 00:22:14 +0200
+
 webcleaner (0.9) unstable; urgency=low
 
   * rename from WebCleaner to webcleaner
