@@ -121,17 +121,17 @@ class HttpClient (Connection):
             return
         # fix broken url paths
         self.url = norm_url(self.url)
-        self.nofilter = {'nofilter': config.nofilter(self.url)}
-        debug(PROXY, "%s request %s", str(self), `self.request`)
-        self.url = applyfilter(FILTER_REQUEST, self.url,
-                               fun="finish", attrs=self.nofilter)
-        self.protocol = fix_http_version(protocol)
-        self.http_ver = get_http_version(protocol)
-        self.request = "%s %s %s" % (self.method, self.url, self.protocol)
         if not self.url:
             config['requests']['error'] += 1
             self.error(400, i18n._("Empty URL"))
             return
+        self.nofilter = {'nofilter': config.nofilter(self.url)}
+        self.protocol = fix_http_version(protocol)
+        self.http_ver = get_http_version(self.protocol)
+        self.request = "%s %s %s" % (self.method, self.url, self.protocol)
+        debug(PROXY, "%s request %s", str(self), `self.request`)
+        self.request = applyfilter(FILTER_REQUEST, self.request,
+                                   fun="finish", attrs=self.nofilter)
         # note: we do not enforce a maximum url length
         self.state = 'headers'
 

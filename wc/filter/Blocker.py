@@ -125,23 +125,25 @@ class Blocker (Filter):
 
 
     def doit (self, data, **args):
-        debug(FILTER, "block filter working on url %s", `data`)
-        if self.allowed(data):
+        # note: data is the complete request
+        method, url, httpver = data.split()
+        debug(FILTER, "block filter working on url %s", `url`)
+        if self.allowed(url):
             return data
-        blocked = self.strict_whitelist or self.blocked(data)
+        blocked = self.strict_whitelist or self.blocked(url)
         if blocked:
-            debug(FILTER, "blocked url %s", data)
+            debug(FILTER, "blocked url %s", url)
             if isinstance(blocked, basestring):
                 doc = blocked
             # index 3, not 2!
-            elif is_image(data):
+            elif is_image(url):
                 doc = self.block_image
             else:
                 # XXX hmmm, what about CGI images?
                 # make HTTP HEAD request?
                 doc = self.block_url
             port = config['port']
-            return 'http://localhost:%d%s' % (port, doc)
+            return 'GET http://localhost:%d%s HTTP/1.1'%(port, doc)
         return data
 
 
