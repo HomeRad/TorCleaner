@@ -131,8 +131,7 @@ class TemplateInterpreter:
                         return msg
                 val = self.translator.gettext(msg) % \
                       self.context.getVariableMap()
-                self.log.debug("Translated %s to %s with %s", `msg`, `val`,
-                               self.translator.info())
+                self.log.debug("Translated %s to %s", `msg`, `val`)
                 return val
 
 	def cleanState (self):

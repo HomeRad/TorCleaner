@@ -623,29 +623,25 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdProxyStart (self, sender, sel, ptr):
-        from wc import daemon
-        daemon.start(parent_exit=0)
+        os.system('invoke-rc.d webcleaner start')
         debug(GUI, "webcleaner start")
         return 1
 
 
     def onCmdProxyStop (self, sender, sel, ptr):
-        from wc import daemon
-        daemon.stop()
+        os.system('invoke-rc.d webcleaner stop')
         debug(GUI, "webcleaner stop")
         return 1
 
 
     def onCmdProxyRestart (self, sender, sel, ptr):
-        from wc import daemon
-        daemon.restart(parent_exit=0)
+        os.system('invoke-rc.d webcleaner restart')
         debug(GUI, "webcleaner restart")
         return 1
 
 
     def onCmdProxyReload (self, sender, sel, ptr):
-        from wc import daemon
-        daemon.reload()
+        os.system('invoke-rc.d webcleaner reload')
         debug(GUI, "webcleaner reload")
         return 1
 

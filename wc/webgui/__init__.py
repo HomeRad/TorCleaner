@@ -46,6 +46,7 @@ class WebConfig (object):
                 context = get_context(dirs, form, context, lang)
                 # get translator
                 translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
+                debug(GUI, "Using translator %s", str(translator.info()))
                 # expand template
                 data = expand_template(f, context, translator=translator)
             else:
