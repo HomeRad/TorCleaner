@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "POT-Creation-Date: 2004-09-15 08:29+CEST\n"
-"PO-Revision-Date: 2004-09-15 08:35+0100\n"
+"PO-Revision-Date: 2004-09-24 11:29+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -931,11 +931,8 @@ msgid "Content rating for ${appname}"
 msgstr "Inhaltsbewertung für ${appname}"
 
 #: ../templates/classic/help.html:124
-#, fuzzy
 msgid "Convert images to low quality JPEG files to reduce bandwidth"
-msgstr ""
-"Konvertiere Bilder zu JPEG Bilddateien niedriger Qualität\n"
-"um Bandbreite zu sparen"
+msgstr "Konvertiere Bilder zu JPEG Bilddateien niedriger Qualität, um Bandbreite zu sparen"
 
 #: ../templates/classic/help.html:107
 #, fuzzy
@@ -972,9 +969,8 @@ msgid "Disable rule"
 msgstr "Deaktiviere Regel"
 
 #: ../templates/classic/config.html:359
-#, fuzzy
 msgid "Disabled filter module(s) ${disabled-filter}."
-msgstr "Filter Modul(e) %(filterdisabled)s wurde(n) deaktiviert."
+msgstr "Filter Modul(e) ${disabled-filter} wurde(n) deaktiviert."
 
 #: ../templates/classic/filterconfig.html:49
 msgid "Disabled folder icon"
@@ -1002,9 +998,8 @@ msgid "Edit this rating"
 msgstr "Ändere diese Bewertung"
 
 #: ../templates/classic/rating_mail.html:19
-#, fuzzy
 msgid "Email URL rating to ${email}"
-msgstr "Versende Mail nach %(Email)s mit dieser URL Bewertung"
+msgstr "Versende Mail nach ${email} mit dieser URL Bewertung"
 
 #: ../templates/classic/rating.html:103
 msgid "Email this rating to the author"
@@ -1044,9 +1039,8 @@ msgid "Enable rule"
 msgstr "Aktiviere Regel"
 
 #: ../templates/classic/config.html:357
-#, fuzzy
 msgid "Enabled filter module(s) ${enabled-filter}."
-msgstr "Filter Modul(e) %(filterenabled)s wurde(n) aktiviert."
+msgstr "Filter Modul(e) ${enabled-filter} wurde(n) aktiviert."
 
 #: ../templates/classic/rating_mail.html:53
 msgid "Error sending mail."
@@ -1871,9 +1865,8 @@ msgid "Search for"
 msgstr "Suche nach"
 
 #: ../templates/classic/google.html:120
-#, fuzzy
 msgid "Search in ${site}"
-msgstr "Suche in %(site)s"
+msgstr "Suche in ${site}"
 
 #: ../templates/classic/help.html:28
 #, fuzzy
@@ -1963,11 +1956,8 @@ msgstr ""
 "ändern.\n"
 
 #: ../templates/classic/rated.html:16
-#, fuzzy
 msgid "The content of the requested page ${url} was rated for the following reason:"
-msgstr ""
-"Der Inhalt der angeforderten Seite <b>%(url)s</b>\n"
-"wurde aus folgendem Grund gesperrt:"
+msgstr "Der Inhalt der angeforderten Seite ${url} wurde aus folgendem Grund gesperrt:"
 
 #: ../templates/classic/macros/rules.html:21
 #, fuzzy
@@ -2050,9 +2040,8 @@ msgid "Value"
 msgstr "Wert"
 
 #: ../templates/classic/macros/standard.html:89
-#, fuzzy
 msgid "WebCleaner feedback information"
-msgstr "%(AppName)s Feedback Information"
+msgstr "WebCleaner Feedback Information"
 
 #: ../templates/classic/index.html:18
 msgid "Welcome to the wonderful world of ${appname}."
@@ -2156,11 +2145,10 @@ msgid "response"
 msgstr "Antwort"
 
 #: ../templates/classic/google.html:98
-#, fuzzy
 msgid "resulted in the following error:<br> Server response ${response}"
 msgstr ""
 "ergab den folgenden Fehler:<br>\n"
-"Server Antwort <b>%(response)s</b>"
+"Server Antwort ${response}"
 
 #: ../templates/classic/rating.html:97
 msgid "return window.confirm('Really delete this rating?')"
