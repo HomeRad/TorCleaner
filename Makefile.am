@@ -116,7 +116,8 @@ release: releasecheck dist upload homepage
 	$(MAKE) -C ~/public_html/webcleaner.sf.net upload
 
 upload:
-	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz webcleaner-$(VERSION).win32-py2.4.exe
+	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
+	-ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).win32-py2.4.exe
 
 homepage: homepage-zapper
 	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
