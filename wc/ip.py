@@ -19,7 +19,6 @@
 import re
 import socket
 import struct
-import math
 import sets
 import wc
 import wc.log
