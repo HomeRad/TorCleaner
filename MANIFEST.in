@@ -70,6 +70,7 @@ include wc/filter/tests/*.py
 include wc/proxy/tests/*.py
 include wc/proxy/auth/tests/*.py
 recursive-include wc/webgui/simpletal/tests *.py
+include test*.py
 include po/*.po
 include po/*.pot
 include po/*.py
