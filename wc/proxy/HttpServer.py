@@ -175,7 +175,6 @@ class HttpServer (Server):
                     self.hostname, `self.response`
 
 
-
     def process_headers (self):
         # Headers are terminated by a blank line .. now in the regexp,
         # we want to say it's either a newline at the beginning of
@@ -186,7 +185,10 @@ class HttpServer (Server):
         if not m: return
         # handle continue requests (XXX should be in process_response?)
         response = self.response.split()
-        if response and response[1] == '100':
+        self.statuscode = None
+        if response:
+            self.statuscode = response[1]
+        if self.statuscode == '100':
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
@@ -196,36 +198,9 @@ class HttpServer (Server):
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
         #debug(HURT_ME_PLENTY, "S/Headers", `self.headers.headers`)
-        # check content-type against our own guess
-        gm = mimetypes.guess_type(self.document, None)
-        if gm[0]:
-            # guessed an own content type
-            if self.headers.get('Content-Type') is None:
-                print >>sys.stderr, _("Warning: add Content-Type %s to %s") % \
-                                      (`gm[0]`, `self.url`)
-                self.headers['Content-Type'] = gm[0]
-           # fix some content types
-            elif not self.headers['Content-Type'].startswith(gm[0]) and \
-                 gm[0] in _fix_content_types:
-                print >>sys.stderr, _("Warning: change Content-Type from %s to %s in %s") % \
-                 (`self.headers['Content-Type']`, `gm[0]`, `self.url`)
-                self.headers['Content-Type'] = gm[0]
-        if gm[1]:
-            # guessed an own encoding type
-            if self.headers.get('Content-Encoding') is None:
-                self.headers['Content-Encoding'] = gm[1]
-                print >>sys.stderr, _("Warning: add Content-Encoding %s to %s") % \
-                                      (`gm[1]`, `self.url`)
-            elif self.headers.get('Content-Encoding') != gm[1]:
-                print >>sys.stderr, _("Warning: change Content-Encoding from %s to %s in %s") % \
-                 (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
-                self.headers['Content-Encoding'] = gm[1]
+        self.check_headers()
         # will content be rewritten?
-        rewrite = None
-        for ro in config['mime_content_rewriting']:
-            if ro.match(self.headers.get('Content-Type', '')):
-                rewrite = "True"
-                break
+        rewrite = self.is_rewrite()
         # add client accept-encoding value
         self.headers['Accept-Encoding'] = self.client.compress
         if self.headers.get('Content-Length') is not None:
@@ -235,10 +210,8 @@ class HttpServer (Server):
                 remove_headers(self.headers, ['Content-Length'])
         else:
             self.bytes_remaining = None
-
         # add decoders
         self.decoders = []
-
         # Chunked encoded
         if self.headers.get('Transfer-Encoding') is not None:
             #debug(BRING_IT_ON, 'S/Transfer-encoding:', `self.headers['transfer-encoding']`)
@@ -286,6 +259,45 @@ class HttpServer (Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
+
+
+    def check_headers (self):
+        """add missing content-type and/or encoding headers if
+           needed"""
+        # 304 Not Modified does not send any type or encoding info,
+        # because this info was cached
+        if self.statuscode == '304':
+            return
+        # check content-type against our own guess
+        gm = mimetypes.guess_type(self.document, None)
+        if gm[0]:
+            # guessed an own content type
+            if self.headers.get('Content-Type') is None:
+                print >>sys.stderr, _("Warning: add Content-Type %s to %s") % \
+                                      (`gm[0]`, `self.url`)
+                self.headers['Content-Type'] = gm[0]
+           # fix some content types
+            elif not self.headers['Content-Type'].startswith(gm[0]) and \
+                 gm[0] in _fix_content_types:
+                print >>sys.stderr, _("Warning: change Content-Type from %s to %s in %s") % \
+                 (`self.headers['Content-Type']`, `gm[0]`, `self.url`)
+                self.headers['Content-Type'] = gm[0]
+        if gm[1]:
+            # guessed an own encoding type
+            if self.headers.get('Content-Encoding') is None:
+                self.headers['Content-Encoding'] = gm[1]
+                print >>sys.stderr, _("Warning: add Content-Encoding %s to %s") % \
+                                      (`gm[1]`, `self.url`)
+            elif self.headers.get('Content-Encoding') != gm[1]:
+                print >>sys.stderr, _("Warning: change Content-Encoding from %s to %s in %s") % \
+                 (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
+                self.headers['Content-Encoding'] = gm[1]
+
+
+    def is_rewrite (self):
+        for ro in config['mime_content_rewriting']:
+            if ro.match(self.headers.get('Content-Type', '')):
+                return "True"
 
 
     def process_content (self):
