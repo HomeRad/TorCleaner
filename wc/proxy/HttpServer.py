@@ -110,8 +110,11 @@ class HttpServer (wc.proxy.Server.Server):
         # number of content bytes remaining
         self.bytes_remaining = None
         # flag indicating to hold sending of data
-        self.defer_data = \
-                     'MimeRecognizer' in wc.configuration.config['filters']
+        self.defer_data = False
+        for f in ['MimeRecognizer', 'Compress']:
+            # defer for all filters that change headers
+            if f in wc.configuration.config['filters']:
+                self.defer_data = True
         wc.log.debug(wc.LOG_PROXY, "%s resetted", self)
 
     def __repr__ (self):
