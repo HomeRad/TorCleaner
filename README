@@ -62,9 +62,7 @@ therefore not included in WebCleaner. See www.burnallgifs.org.
 
 Credits
 -------
-Credits go to munchy.py from Neil Schemenauer <nascheme@enme.ucalgary.ca>.
-The original proxy class is based on his code.
-The new proxy code is based on the fourth incarnation of Amit's web proxy.
+The proxy code is based on the fourth incarnation of Amit's web proxy.
 
 The filter code design is inspired from FilterProxy, a Perl program from
 Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
@@ -72,10 +70,8 @@ Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
 Me, Bob and the author of AIFilter (Tels) had a nice discussion about
 filter formats with good ideas. Tels convinced me to try stateful
 filtering and I realize that it is very nice indeed.
+
 Disabling animated GIFs is a question of honor, but the idea goes back to
 the Webwasher.
-
-Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
-HTTP/1.1 proxy written in Java.
 
 The HTML parser is inspired from HotSAX.

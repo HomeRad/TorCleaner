@@ -1,3 +1,9 @@
+webcleaner (0.60-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Sun, 13 Oct 2002 21:16:16 +0200
+
 webcleaner (0.59-1) unstable; urgency=low
 
   * New upstream release.
