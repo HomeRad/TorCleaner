@@ -22,7 +22,7 @@
 <td>
 <label for="port" i18n:translate=""
  i18n:attributes="title Port number the proxy is listening on for requests"
- >Port number</label><sup>*</sup>
+ >Port number</label> <sup>1)</sup>
 </td>
 <td>
 <input class="number" type="text" name="port" id="port" maxlength="5"
@@ -52,7 +52,7 @@
 <tr>
 <td>
 <label i18n:attributes="title Password used for proxy authentitaction"
- for="proxypass" i18n:translate="">Password</label>
+ for="proxypass" i18n:translate="">Password</label> <sup>2)</sup>
 </td>
 <td>
 <input class="text" type="password" name="proxypass" id="proxypass"
@@ -63,8 +63,10 @@
 </tr>
 </table>
 <div class="footnote">
-<sup>*</sup>
-<span i18n:translate="">Changes to this option require a proxy restart to take effect.</span>
+<sup>1)</sup>
+<span i18n:translate="">Changes to this option require a proxy restart to take effect.</span><br>
+<sup>2)</sup>
+<span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
 </div>
 </fieldset>
 
@@ -104,7 +106,7 @@
 <tr>
 <td>
 <label i18n:attributes="title Password used for parent proxy authentication"
- for="parentproxypass" i18n:translate="">Password</label>
+ for="parentproxypass" i18n:translate="">Password</label> <sup>3)</sup>
 </td>
 <td>
 <input class="text" type="password" name="parentproxypass" value="__dummy__"
@@ -114,6 +116,10 @@
 </td>
 </tr>
 </table>
+<div class="footnote">
+<sup>3)</sup>
+<span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
+</div>
 </fieldset>
 </td>
 <td>
@@ -148,7 +154,7 @@
 </tr>
 <tr>
 <td>
-<input class="text" type="text" name="newallowed" value=""><sup>*</sup>
+<input class="text" type="text" name="newallowed" value=""><sup>4)</sup>
 </td>
 <td>
 <input type="submit" name="addallowed" value="Add new" class="submit"
@@ -157,7 +163,7 @@
 </tr>
 </table>
 <div class="footnote">
-<sup>*</sup>
+<sup>4)</sup>
 <span i18n:translate="">Only numeric IPs/networks are useful as DNS resolution is not performed.</span>
 </div>
 </fieldset>
@@ -181,7 +187,7 @@
 </tr>
 <tr>
 <td>
-<input class="text" type="text" name="newnofilter" value=""><sup>*</sup>
+<input class="text" type="text" name="newnofilter" value=""><sup>5)</sup>
 </td>
 <td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"
@@ -190,7 +196,7 @@
 </tr>
 </table>
 <div class="footnote">
-<sup>*</sup>
+<sup>5)</sup>
 <span i18n:translate="">Be sure to supply all host aliases and IPs as DNS resolution is not performed.</span>
 </div>
 </fieldset>
