@@ -123,4 +123,9 @@
   <description lang="en">Just a silly example.</description>
   <replacement>The Dude</replacement>
 </replace>
+
+<antivirus sid="wc.29">
+  <title lang="de">Antivirus scanning</title>
+  <description lang="de">Enables anti virus scanning if the virusfilter module is enabled.</description>
+</antivirus>
 </folder>
