@@ -1,7 +1,8 @@
 """helper functions to start, stop, restart and reload daemons.
 
 Of course this is OS dependent and currently we support only Unix
-natively, the other OSes use a generic interface with no fork().
+and Windows natively, the other OSes use a generic interface with no
+fork().
 """
 # Copyright (C) 2001  Bastian Kleineidam
 #
@@ -45,6 +46,7 @@ if not iswriteable(pidfile):
 if not iswriteable(pidfile):
     pidfile = '/tmp/webcleaner-%s.pid'%Version
 if not iswriteable(pidfile):
+    # current dir
     pidfile = 'webcleaner-%s.pid'%Version
 
 
