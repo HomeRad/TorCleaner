@@ -37,7 +37,7 @@ myfiles = ['domains', 'expressions', 'urls']
 def read_blacklists (fname):
     if os.path.isdir(fname):
         for f in os.listdir(fname):
-            read_blacklists(fname+"/"+f)
+            read_blacklists(os.path.join(fname, f))
     else:
         if fname.endswith(".gz"):
             f = gzip.open(fname)
@@ -157,11 +157,11 @@ def write_expressions (cat, b, ftype, f):
 ##################### other functions ############################
 
 def blacklist (fname):
-    source = "downloads/"+fname
+    source = os.path.join("downloads", fname)
     # extract tar
     if fname.endswith(".tar.gz"):
         print "extracting archive..."
-        d = "extracted/"+fname[:-7]
+        d = os.path.join("extracted", fname[:-7])
         f = TarFile.gzopen(source)
         for m in f:
             a, b = os.path.split(m.name)
@@ -191,7 +191,7 @@ def dmozlists (fname):
                   "gzip --best > downloads/%s") % (fname, smallfname))
     fname = smallfname
     print "dmozlist %s..." % fname
-    f = gzip.GzipFile("downloads/"+fname)
+    f = gzip.GzipFile(os.path.join("downloads",fname))
     line = f.readline()
     topic = None
     while line:
@@ -219,16 +219,16 @@ def geturl (basedir, fname, fun, saveas=None):
         target = saveas
     else:
         target = fname
-    if os.path.exists("downloads/"+target):
+    if os.path.exists(os.path.join("downloads",target)):
         print "downloads/%s already exists"%target
     else:
         print "downloading", basedir+fname
-        d = os.path.dirname("downloads/"+target)
+        d = os.path.dirname(os.path.join("downloads",target))
         if not os.path.isdir(d):
             os.makedirs(d)
         try:
             urldata = urllib2.urlopen(basedir+fname)
-            f = file("downloads/"+target, 'w')
+            f = file(os.path.join("downloads", target), 'w')
             f.write(urldata.read())
             f.close()
         except urllib2.HTTPError, msg:
@@ -281,16 +281,17 @@ def open_files (directory):
             d='whitelists'
         else:
             d='blacklists'
-        basedir = "%s/%s/%s" % (directory, d, cat)
+        basedir = os.path.join(directory, d, cat)
         if not os.path.isdir(basedir):
             os.makedirs(basedir)
         for ftype in categories[cat].keys():
             if ftype=="expressions": continue
-            fname = "%s/%s.gz" % (basedir, ftype)
+            fname = os.path.join(basedir, "%s.gz" % ftype)
             if os.path.exists(fname):
                 os.remove(fname)
             print "opening", fname
             categories[cat][ftype] = gzip.GzipFile(fname, 'wb')
+
 
 def close_files ():
     for cat in categories.keys():
@@ -299,6 +300,7 @@ def close_files ():
             if f is not None:
                 print "closing", f.filename
                 f.close()
+
 
 def remove_old_data ():
     print "remove old extracted data..."
