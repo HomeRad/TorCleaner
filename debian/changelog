@@ -1,8 +1,12 @@
 webcleaner (0.49) unstable; urgency=low
 
   * wc/parser/htmllex.l: fix quoting of values with tags
+  * put all rules in a new package wc.filter.rules
+  * add new filter rules 'blockdomains' and 'blockurls'
+  * bl2wc.py: script to generate WebCleaner rules from SquidGuard
+    blacklists
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 25 Jun 2002 22:39:44 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sat, 29 Jun 2002 12:46:30 +0200
 
 webcleaner (0.48) unstable; urgency=low
 
