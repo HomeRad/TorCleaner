@@ -132,7 +132,7 @@ class HttpServer(Server):
 	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
             self.decoders = []
-            self.attrs = initStateObjects(self.headers)
+            self.attrs = initStateObjects(self.headers, self.url)
             self.attrs['nofilter'] = self.nofilter['nofilter']
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
@@ -207,7 +207,7 @@ class HttpServer(Server):
                     self.headers.headers.remove(h)
 
         self.client.server_response(self.response, self.headers)
-        self.attrs = initStateObjects(self.headers)
+        self.attrs = initStateObjects(self.headers, self.url)
         self.attrs['nofilter'] = self.nofilter['nofilter']
         if ((response and response[1] in ('204', '304')) or
             self.method == 'HEAD'):
