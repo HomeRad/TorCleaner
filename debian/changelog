@@ -1,3 +1,9 @@
+webcleaner (0.43) unstable; urgency=low
+
+  * wc/parser/htmllex.l: fix segfault with unterminated end tags
+
+ -- Bastian Kleineidam <calvin@debian.org>  Mon,  3 Jun 2002 21:00:19 +0200
+
 webcleaner (0.42) unstable; urgency=low
 
   * wc/parser/htmllex.l: match doctype case insensitive
