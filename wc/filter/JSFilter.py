@@ -307,7 +307,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                 self.js_script = u"// "+\
                       _("error fetching script from %r") % url
             self.htmlparser.tagbuf.append(
-                 [wc.filter.rules.RewriteRule.STARTTAG, "script",
+                 [wc.filter.rules.RewriteRule.STARTTAG, u"script",
                   {'type': 'text/javascript'}])
             # norm html comments
             script = wc.js.remove_html_comments(self.js_script)
