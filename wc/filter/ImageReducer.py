@@ -123,7 +123,7 @@ class ImageReducer (wc.filter.Filter.Filter):
             return d
         d['imgreducer_buf'] = StringIO.StringIO()
         # some images have to be convert()ed before saving
-        ctype = headers['server']['Content-Type']
+        ctype = headers['server'].get('Content-Type')
         d['imgreducer_convert'] = convert(ctype)
         return d
 
