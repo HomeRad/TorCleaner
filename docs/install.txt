@@ -32,13 +32,11 @@ Requirements for Unix/Linux or Max OS X
 5. *Optional (used for NTLM authentication)* Python Crypto Module from
    http://www.amk.ca/python/code/crypto.html
 
-6. *Optional (used for SSL connections)* openssl from
-   http://www.openssl.org/
-
-7. *Optional (used for SSL connections)* PyOpenSSL from
+6. *Optional (used for SSL connections)* OpenSSL and PyOpenSSL from
+   http://www.openssl.org/ and
    http://pyopenssl.sourceforge.net/
 
-8. *Optional (used by VirusFilter module)* ClamAv from
+7. *Optional (used by VirusFilter module)* ClamAv from
    http://www.clamav.net/
 
 Requirements for Windows:
