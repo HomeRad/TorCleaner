@@ -155,14 +155,14 @@ class RewriteRule (UrlRule):
         part = self.replace[0]
         #debug(NIGHTMARE, "original tag", `tag`, "attrs", attrs)
         #debug(NIGHTMARE, "replace", num_part(part), "with", `self.replace[1]`)
+        if part==COMPLETE:
+            return [DATA, ""]
         if part==TAGNAME:
             return (STARTTAG, self.replace[1], attrs)
         if part==TAG:
             return (DATA, self.replace[1])
         if part==ENCLOSED:
             return (STARTTAG, tag, attrs)
-        if part==COMPLETE:
-            return [DATA, ""]
         newattrs = {}
         # look for matching tag attributes
         for attr,val in attrs.items():
@@ -172,10 +172,14 @@ class RewriteRule (UrlRule):
                 if mo:
                     if part==ATTR:
                         # replace complete attr
-                        if self.replace[1]:
-                            newattrs[self.replace[1][0]] = self.replace[1][1]
-                    else:
-                        # part has to be ATTRVAL
+                        # XXX split does not honor quotes
+                        for f in self.replace[1].split():
+                            if '=' in self.replace[1]:
+                                k,v = f.split('=')
+                                newattrs[k] = v
+                            else:
+                                newattrs[self.replace[1]] = None
+                    elif part==ATTRVAL:
                         # Python has named submatches, and we can use them
                         # the name 'replace' replaces the value,
                         # all other names are given as format strings
@@ -184,6 +188,8 @@ class RewriteRule (UrlRule):
                             newattrs[attr] = dict['replace']
                         else:
                             newattrs[attr] = self.replace[1] % dict
+                    else:
+                        error("Invalid part value %s" % part)
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
@@ -229,11 +235,7 @@ class RewriteRule (UrlRule):
             if self.replace[0]!=COMPLETE:
                 s += ' part="%s"' % num_part(self.replace[0])
             if self.replace[1]:
-                if self.replace[0]==ATTR:
-                    val = self.replace[0][0]+'="'+self.replace[0][1]+'"'
-                else:
-                    val = self.replace[1]
-                s += '>'+xmlify(val)+"</replace>\n"
+                s += '>'+xmlify(self.replace[1])+"</replace>\n"
             else:
                 s += "/>\n"
         return s + "</rewrite>"
