@@ -99,7 +99,11 @@ def _resolve_html_entity (mo):
     """resolve html entity, helper function for resolve_html_entities"""
     ent = mo.group("entity")
     s = mo.group()
-    return unicode(htmlentitydefs.entitydefs.get(ent, s))
+    entdef = htmlentitydefs.entitydefs.get(ent)
+    if entdef is None:
+        return s
+    # note: entdef is latin-1 encoded
+    return entdef.decode("iso8859-1")
 
 
 _entity_re = re.compile(ur'(?i)&(?P<entity>[a-z]+);')
