@@ -18,8 +18,11 @@ __date__    = "$Date$"[7:-2]
 import asyncore, socket, errno
 from wc.log import *
 
-RECV_BUFSIZE = 1024
-SEND_BUFSIZE = 1024
+# this is a critical value: setting it too low produces a lot of
+# applyfilter() calls with very few data
+# setting it too high produces lags if bandwidth is low
+RECV_BUFSIZE = 4096
+SEND_BUFSIZE = 4096
 
 # to prevent DoS attacks, specify a maximum buffer size
 MAX_BUFSIZE = 1024*1024
@@ -59,7 +62,7 @@ class Connection (asyncore.dispatcher, object):
             return
         if not data: # It's been closed, and handle_close has been called
             return
-        debug(PROXY, 'Proxy: read %d <= %s', len(data), str(self))
+        debug(PROXY, '%s <= read %d', str(self), len(data))
 	self.recv_buffer += data
         self.process_read()
 
@@ -86,7 +89,7 @@ class Connection (asyncore.dispatcher, object):
         except socket.error, err:
             self.handle_error('write error')
             return
-        debug(PROXY, 'Proxy: wrote %d => %s', num_sent, str(self))
+        debug(PROXY, '%s <= wrote %d', str(self), num_sent)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = False
@@ -114,13 +117,13 @@ class Connection (asyncore.dispatcher, object):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            debug(PROXY, 'Proxy: close ready channel %s', `self`)
+            debug(PROXY, '%s close ready channel', str(self))
             self.close_pending = True
         else:
             self.close()
 
 
     def handle_error (self, what):
-        exception(PROXY, "%s, closing %s", what, `self`)
+        exception(PROXY, "%s error %s, closing", str(self), what)
         self.close()
         self.del_channel()
