@@ -573,7 +573,13 @@ class DnsLookupConnection (Connection):
         if self.callback:
             callback, self.callback = self.callback, None
             if ip_addrs:
-                callback(self.hostname, DnsResponse('found', ip_addrs))
+                # doh, verisign has a catch-all ip 64.94.110.11 for
+                # .com and .net domains
+                if self.hostname[-4:] in ('.com','.net') and \
+                   '64.94.110.11' in ip_addrs:
+                    callback(self.hostname, DnsResponse('error', 'not found'))
+                else:
+                    callback(self.hostname, DnsResponse('found', ip_addrs))
             else:
                 callback(self.hostname, DnsResponse('error', 'not found'))
         self.close()
