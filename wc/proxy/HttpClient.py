@@ -228,7 +228,8 @@ class HttpClient (StatefulConnection):
                                    msg, "finish", self.attrs)
         # add decoders
         self.decoders = []
-        self.bytes_remaining = get_content_length(self.headers)
+        # if content-length header is missing, assume zero length
+        self.bytes_remaining = get_content_length(self.headers, 0)
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now

@@ -12,7 +12,7 @@ from wc.proxy.Server import Server
 from wc.proxy import make_timer, get_http_version, create_inet_socket
 from wc.proxy.auth import *
 from wc.proxy.Headers import server_set_headers, server_set_content_headers, server_set_encoding_headers, remove_headers
-from wc.proxy.Headers import has_header_value, WcMessage, get_content_length
+from wc.proxy.Headers import has_header_value, WcMessage, get_content_length, is_header
 from wc.proxy.ServerPool import serverpool
 from wc import i18n, config
 from wc.log import *
@@ -215,8 +215,7 @@ class HttpServer (Server):
             # Okay, we got a valid response line
             protocol, self.statuscode, tail = get_response_data(self.response, self.url)
             # reconstruct cleaned response
-            self.response = "%s %d %s" % (self.protocol, self.statuscode, tail)
-            self.state = 'headers'
+            self.response = "%s %d %s" % (protocol, self.statuscode, tail)
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, get_http_version(protocol))
         elif not self.response:
@@ -225,26 +224,27 @@ class HttpServer (Server):
             serverpool.set_http_version(self.addr, (0,9))
             self.response = "%s 200 Ok"%self.protocol
             self.statuscode = 200
-            self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER])
-            self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	                   WcMessage(), "finish", self.attrs)
-            self.decoders = []
-            self.state = 'content'
+            self.recv_buffer = '\r\n' + self.recv_buffer
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
-            warn(PROXY, i18n._('invalid or missing response from %s: %r'),
+            warn(PROXY, i18n._('invalid or missing response from %r: %r'),
                  self.url, self.response)
             serverpool.set_http_version(self.addr, (1,0))
-            # put the read bytes back to the buffer and fix the response
+            # put the read bytes back to the buffer
             self.recv_buffer = self.response + self.recv_buffer
+            # look if the response line was a header
+            # Example: http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
+            if not is_header(self.response):
+                warn(PROXY, i18n._("missing headers in response from %r"), self.url)
+                self.recv_buffer = '\r\n' + self.recv_buffer
+            # fix the response
             self.response = "%s 200 Ok"%self.protocol
             self.statuscode = 200
-            self.state = 'headers'
-        if self.response:
-            self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE])
-            self.response = applyfilter(FILTER_RESPONSE, self.response,
-                                        "finish", self.attrs).strip()
+        self.state = 'headers'
+        self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE])
+        self.response = applyfilter(FILTER_RESPONSE, self.response,
+                                    "finish", self.attrs).strip()
         if self.statuscode >= 400:
             self.mime = None
         debug(PROXY, "%s response %r", self, self.response)
@@ -258,7 +258,8 @@ class HttpServer (Server):
         # The cleaner alternative would be to read one line at a time
         # until we get to a blank line...
         m = re.match(r'^((?:[^\r\n]+\r?\n)*\r?\n)', self.recv_buffer)
-        if not m: return
+        if not m:
+            return
         # get headers
         fp = StringIO(self.read(m.end()))
         msg = WcMessage(fp)

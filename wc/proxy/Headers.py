@@ -4,6 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import re
 from wc import i18n, magic
 from wc.log import *
 from rfc822 import Message
@@ -64,13 +65,12 @@ class WcMessage (Message, object):
         return "\n".join([ repr(s) for s in self.headers ])
 
 
-def get_content_length (headers):
+def get_content_length (headers, default=None):
     """get content length as int or None on error"""
     if not headers.has_key("Content-Length"):
         if has_header_value(headers, "Transfer-Encoding", "chunked"):
             return None
-        # assume content has zero length
-        return 0
+        return default
     try:
         return int(headers['Content-Length'])
     except ValueError:
@@ -295,3 +295,5 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         headers['Connection'] = 'close\r'
     return bytes_remaining
 
+
+is_header = re.compile("\s*[-a-zA-Z_]+:\s+").search
