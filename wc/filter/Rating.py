@@ -48,21 +48,21 @@ service = dict(
        violence = dict(
              name = _('violence'),
              rvalues = ["0", "1", "2"],
-             rrange = None,
+             rrange = [],
            ),
        sex = dict(
              name = _('sex'),
              rvalues = ["0", "1", "2"],
-             rrange = None,
+             rrange = [],
            ),
        language = dict(
              name = _('language'),
              rvalues = ["0", "1", "2"],
-             rrange = None,
+             rrange = [],
            ),
        agerange = dict(
              name = _('age range'),
-             rvalues = None,
+             rvalues = [],
              rrange = [0, None],
            ),
    ),
