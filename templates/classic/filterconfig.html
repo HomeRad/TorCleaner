@@ -17,17 +17,20 @@
 <table>
 <tr>
 <td><big tal:content="t_folders">Folders</big></td>
-<td><big tal:content="t_filters">Filters</big></td>
+<td><big tal:content="t_rules">Rules</big></td>
 <td><big tal:content="t_rule">Rule</big></td>
 </tr>
 <tr valign="top">
 <!-- folders -->
 <td>
 <div tal:repeat="folder folders">
-<input type="checkbox" checked tal:condition="not:folder/disable"
- tal:attributes="name string:enablefolder${folder/oid}">
-<input type="checkbox" tal:condition="folder/disable"
- tal:attributes="name string:enablefolder${folder/oid}">
+<input type="checkbox" checked title="Enable/disable folder"
+ tal:condition="not:folder/disable"
+ tal:attributes="name string:enablefolder${folder/oid}; title tt_enablefolder">
+<input type="checkbox" title="Enable/disable folder"
+ tal:condition="folder/disable"
+ tal:attributes="name string:enablefolder${folder/oid}; title tt_enablefolder">
+<a href="#">r</a>
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
 </div>
@@ -38,28 +41,40 @@
 <input type="submit" name="newfolder" value="New folder"
  tal:attributes="value t_newfolder">
 </td>
-<!-- filter -->
+<!-- rules -->
 <td>
-<div tal:repeat="filt filters">
-<input type="checkbox" checked tal:condition="not:filt/disable"
- tal:attributes="name string:enablefilter${filt/oid}">
-<input type="checkbox" tal:condition="filt/disable"
- tal:attributes="name string:enablefilter${filt/oid}">
+<div tal:condition="curfolder" tal:repeat="rule curfolder/rules">
+<input type="checkbox" checked title="Enable/disable rule"
+ tal:condition="not:rule/disable"
+ tal:attributes="name string:enablerule${rule/oid} title tt_enablerule">
+<input type="checkbox" title="Enable/disable rule"
+ tal:condition="rule/disable"
+ tal:attributes="name string:enablerule${rule/oid} title tt_enablerule">
 <a href="#">r</a>
-<a href="#" tal:content="filt/title"
- tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selfilter=${filt/oid}">On focus</a>
+<a href="#" tal:content="rule/title"
+ tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}">On focus</a>
 </div>
 <br>
-<select name="newruletype">
+<select name="newruletype" tal:condition="curfolder">
 <option tal:repeat="rule ruletypes" tal:content="rule">Rewrite</option>
 </select>
 <input type="submit" name="newrule" value="New rule"
- tal:attributes="value t_newrule; title tt_newrule">
+ tal:condition="curfolder" tal:attributes="value t_newrule; title tt_newrule">
 </td>
 <!-- rule -->
 <td>
-<div tal:condition="curfilter">
-<div tal:content="curfilter/desc">Rule description</div>
+
+<div tal:condition="currule">
+<!-- rewrite -->
+<span tal:repeat="rule ruletypes">
+<!-- XXX metal fill-slot with the rule object -->
+<span tal:condition="ruletype/?rule">
+<div metal:use-macro="rulemacros/macros/?rule">
+Here is the rule configuration...
+</div>
+</span>
+</span>
+
 </div>
 </td>
 </tr>

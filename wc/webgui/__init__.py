@@ -35,7 +35,7 @@ class WebConfig:
         self.connected = True
         try:
             # get the template filename
-            path, dirs = get_template(url)
+            path, dirs = get_template_url(url)
             if headers['Content-Type'] == 'text/html':
                 f = file(path)
                 # get TAL context
@@ -94,11 +94,17 @@ def get_relative_path (path):
     return dirs
 
 
-def get_template (url):
+def get_template_url (url):
+    """return tuple (path, dirs)"""
+    parts = urlparse.urlsplit(url)
+    return get_template_path(parts[2])
+
+
+def get_template_path (path):
+    """return tuple (path, dirs)"""
     base = os.path.join(TemplateDir, config['webgui_theme'])
     base = norm(base)
-    parts = urlparse.urlsplit(url)
-    dirs = get_relative_path(parts[2])
+    dirs = get_relative_path(path)
     if not dirs:
         # default template
         dirs = ['index.html']
@@ -120,13 +126,18 @@ def get_context (dirs, form, localcontext):
     template = dirs[-1].replace(".", "_")
     # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
-    if hasattr(template_context, "exec_form") and form:
+    if hasattr(template_context, "exec_form") and form is not None:
         # handle form action
         template_context.exec_form(form)
     # make TAL context
     context = simpleTALES.Context()
     # add default context values
     context.addGlobal("form", form)
+    path, dirs = get_template_path("macros/rules.html")
+    f = file(path, 'r')
+    rulemacros = simpleTAL.compileHTMLTemplate(f)
+    f.close()
+    context.addGlobal("rulemacros", rulemacros)
     # augment the context
     attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     for attr in attrs:
