@@ -15,13 +15,18 @@ set -e
 # for details, see /usr/doc/packaging-manual/
 
 PACKAGE=webcleaner
+DIRS=wc/parser wc/daemon wc/filter wc/proxy/dns wc/proxy wc
 
+# delete all generated .pyc and .pyo files
 dpkg --listfiles $PACKAGE |
         awk '$0~/\.py$/ {print $0"c\n" $0"o"}' |
         xargs rm -f >&2
 
-rmdir /usr/lib/python2.0/site-packages/webfilter 2>/dev/null || true
-rmdir /usr/lib/python2.0/site-packages/webparser 2>/dev/null || true
+# delete all dirs, ignore if they are not empty (for example
+# the user generated some files in these directories)
+for d in $DIRS; do
+    rm -f /usr/lib/python2.0/site-packages/$d 2>/dev/null;
+done
 
 
 # dh_installdeb will replace this with shell code automatically

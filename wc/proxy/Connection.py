@@ -13,7 +13,7 @@
 
 from wc import debug
 from wc.debug_levels import *
-import asyncore,socket
+import asyncore,socket,sys
 old_compact_traceback = asyncore.compact_traceback
 def new_compact_traceback(a,b,c):
     x,y = old_compact_traceback(a,b,c)
@@ -77,7 +77,7 @@ class Connection(asyncore.dispatcher):
         try:
             num_sent = self.send(self.send_buffer[:SEND_BUFSIZE])
         except socket.error, err:
-            #debug(ALWAYS, 'write error', self, err)
+            print >> sys.stderr, 'write error', self, err
             self.handle_error(socket.error, err)
             return
         self.send_buffer = self.send_buffer[num_sent:]
@@ -103,7 +103,7 @@ class Connection(asyncore.dispatcher):
                 return
             #debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
         except socket.error, err:
-            #debug(ALWAYS, 'read error', self, err)
+            print >> sys.stderr, 'read error', self, err
             self.handle_error(socket.error, err)
             return
 	self.recv_buffer += data
@@ -116,7 +116,7 @@ class Connection(asyncore.dispatcher):
 
 
     def handle_error(self, type, value, tb=None):
-        #debug(ALWAYS, 'error', self, type, value)
+        print >> sys.stderr, 'error', self, type, value
 	#import traceback
         #if tb: traceback.print_tb(tb)
         self.close()

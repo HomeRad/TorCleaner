@@ -1,4 +1,4 @@
-import time,socket,rfc822,re
+import time,socket,rfc822,re,sys
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
@@ -59,16 +59,13 @@ class HttpServer(Server):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         try: self.connect(self.addr)
         except socket.error, err:
-            #debug(ALWAYS, 'connect error', err)
+            print >> sys.stderr, 'connect error', err
             self.handle_error(socket.error, err)
             return
         except Exception, msg:
-            #debug(ALWAYS, 'connect error', self.addr, msg)
-            pass
+            print >> sys.stderr, 'connect error', self.addr, msg
 
     def handle_connect(self):
-        if not self.connected:
-            return
         assert self.state == 'connect'
         #debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
@@ -131,7 +128,7 @@ class HttpServer(Server):
             self.client.server_response(self.response, self.headers)
         else:
             # We have no idea what it is!?
-            #debug(ALWAYS, 'Warning', 'puzzling header received ', `self.response`)
+            print >> sys.stderr, 'Warning', 'puzzling header received ', `self.response`
 
     def process_headers(self):
         # Headers are terminated by a blank line .. now in the regexp,

@@ -132,7 +132,7 @@ class HttpClient(Connection):
         
     def handle_error(self, type, value, traceback=None):
         # We should also close the server connection
-        #debug(ALWAYS, 'client error', self, type, value)
+        print >> sys.stderr, 'client error', self, type, value
         Connection.handle_error(self, type, value, traceback)
         if self.server:
             server, self.server = self.server, None
