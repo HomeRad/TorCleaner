@@ -235,7 +235,7 @@ class HttpServer (Server):
                 self.decoders.append(GunzipStream())
             # remove encoding because we unzip the stream
             remove_headers(self.headers, ['Content-Encoding'])
-        elif encoding:
+        elif encoding and encoding!='identity':
             print >>sys.stderr, "Warning: unsupported encoding", `encoding`
         # initStateObject can modify headers (see Compress.py)!
         self.attrs = initStateObjects(self.headers, self.url)
