@@ -13,7 +13,7 @@ from wc import i18n, config, ip
 from wc.proxy import fix_http_version
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers
-from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
+from wc.proxy.auth import *
 from wc.log import *
 from wc.webgui import WebConfig
 from wc.filter import FILTER_REQUEST
@@ -144,14 +144,16 @@ class HttpClient (Connection):
                 self.bytes_remaining = None
             debug(PROXY, "Client: Headers %s", `str(self.headers)`)
             if config["proxyuser"]:
-                if not self.headers.has_key('Proxy-Authorization'):
+                creds = get_header_credentials(headers, 'Proxy-Authorization')
+                if not creds:
                     self.error(407, i18n._("Proxy Authentication Required"),
-                               auth=get_proxy_auth_challenge())
+                               auth=get_challenges())
                     return
-                auth = check_proxy_auth(self.headers['Proxy-Authorization'])
-                if auth:
+                if not check_credentials(creds, username=config['proxyuser'],
+                                         password_b64=config['proxypass']):
+                    warn(PROXY, "Bad proxy authentication from %s", self.addr[0])
                     self.error(407, i18n._("Proxy Authentication Required"),
-                               auth=auth)
+                               auth=get_challenges())
                     return
             if self.method in ['OPTIONS', 'TRACE'] and \
                client_get_max_forwards(self.headers)==0:
