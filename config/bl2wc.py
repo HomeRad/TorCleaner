@@ -1,4 +1,5 @@
 #!/usr/bin/python2.2
+# -*- coding: iso-8859-1 -*-
 # this script has to be executed in the config parent dir
 """Generate blacklist_XXX folders with blocking and rewriting
 filters for the given blacklist files.
