@@ -2,6 +2,7 @@
 <html>
 <head>
 <title tal:content="t_title">WebCleaner Filter Configuration</title>
+<link href="wc.css" type="text/css" rel="Stylesheet">
 </head>
 <body bgcolor="#ffffff">
 
@@ -17,10 +18,10 @@
  name="filterform">
 <table rules="cols" cellpadding="5">
 <thead>
-<tr style="border-bottom:1px solid black;" >
-<td style="width:25%;"><big tal:content="t_folders">Folders</big></td>
-<td style="width:30%;"><big tal:content="t_rules">Folder rules</big></td>
-<td style="width:45%;"><big tal:content="t_rule">Rule</big></td>
+<tr style="border-bottom:1px solid black;">
+<th style="width:25%;" tal:content="t_folders">Folders</th>
+<th style="width:30%;" tal:content="t_rules">Folder rules</th>
+<th style="width:45%;" tal:content="t_rule">Rule</th>
 </tr>
 </thead>
 <tbody>
