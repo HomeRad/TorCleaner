@@ -1,7 +1,8 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.53)
-AC_INIT(webcleaner)
-AM_CONFIG_HEADER(config.h:config.h.in)
+AC_PREREQ(2.58)
+AC_INIT
+AC_CONFIG_SRCDIR([webcleaner])
+AC_CONFIG_HEADERS([config.h:config.h.in])
 AM_INIT_AUTOMAKE(webcleaner, 2.7)
 
 AC_PROG_CC
@@ -9,10 +10,9 @@ AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 
 if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
-  CFLAGS="$CFLAGS -Wall -pedantic"
+    CFLAGS="$CFLAGS -Wall -pedantic"
 fi
 
-dnl conditional to force jscpucfg executable to be built for Linux
 case "$host" in
 *-*-mingw32*)
     case "$build" in
@@ -98,7 +98,7 @@ fi
 
 AC_CACHE_CHECK([whether va_lists can be copied by value],wc_cv_va_val_copy,[
 
-	AC_TRY_RUN([#include <stdarg.h>
+	AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdarg.h>
 
 	void f (int i, ...) {
 	va_list args1, args2;
@@ -111,12 +111,7 @@ AC_CACHE_CHECK([whether va_lists can be copied by value],wc_cv_va_val_copy,[
 	int main() {
 	  f (0, 42);
 	  return 0;
-	}],
-
-	[wc_cv_va_val_copy=yes],
-	[wc_cv_va_val_copy=no],
-
-	[wc_cv_va_val_copy=yes])
+	}]])],[wc_cv_va_val_copy=yes],[wc_cv_va_val_copy=no],[wc_cv_va_val_copy=yes])
 
 ])
 
@@ -124,9 +119,10 @@ if test "x$wc_cv_va_val_copy" = "xno"; then
   AC_DEFINE(HAVE_VA_LIST_AS_ARRAY,1, ['va_lists' cannot be copies as values])
 fi
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 po/Makefile
 libjs/Makefile
 libjs/fdlibm/Makefile
 ])
+AC_OUTPUT
