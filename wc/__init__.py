@@ -75,15 +75,17 @@ def sort_seq (seq):
     l.sort()
     return l
 
-import ip, i18n
-from wc.proxy.dns_lookups import init_dns_resolver
-from wc.filter.VirusFilter import init_clamav_conf
+import wc.ip
+import wc.i18n
+import wc.proxy
+import wc.proxy.dns_lookups
+import wc.filter.VirusFilter
 
 # set this to an empty dictionary so that webgui/context/*.py can
 # safely set config values upon import
 config = {}
 
-def wstartfunc (handle=None, stoppable=False, configfile=None, filterdir=None):
+def wstartfunc (handle=None, abort=None, configfile=None, filterdir=None):
     """Initalize configuration, start psyco compiling and the proxy loop.
        This function does not return until Ctrl-C is pressed."""
     global config
@@ -91,8 +93,8 @@ def wstartfunc (handle=None, stoppable=False, configfile=None, filterdir=None):
     initlog(os.path.join(ConfigDir, "logging.conf"))
     # read configuration
     config = Configuration(configfile=configfile, filterdir=filterdir)
-    if stoppable:
-        config.set_abort(False)
+    if abort is not None:
+        abort(False)
     # support reload on posix systems
     elif os.name=='posix':
         import signal
@@ -100,7 +102,7 @@ def wstartfunc (handle=None, stoppable=False, configfile=None, filterdir=None):
         # change dir to avoid open files on umount
         os.chdir("/")
     config.init_filter_modules()
-    init_clamav_conf()
+    wc.filter.VirusFilter.init_clamav_conf()
     # psyco library for speedup
     try:
         import psyco
@@ -110,14 +112,12 @@ def wstartfunc (handle=None, stoppable=False, configfile=None, filterdir=None):
     # start the proxy
     info(PROXY, "Starting proxy on port %d", config['port'])
     from wc.proxy import mainloop
-    mainloop(handle=handle, stoppable=stoppable)
+    mainloop(handle=handle, abort=abort)
 
-
-from wc.proxy import make_timer
 
 def sighup_reload_config (signum, frame):
     """store timer for reloading configuration data"""
-    make_timer(1, reload_config)
+    wc.proxy.make_timer(1, reload_config)
 
 
 def reload_config ():
@@ -126,8 +126,8 @@ def reload_config ():
     config.read_proxyconf()
     config.read_filterconf()
     config.init_filter_modules()
-    init_dns_resolver()
-    init_clamav_conf()
+    wc.proxy.dns_lookups.init_dns_resolver()
+    wc.filter.VirusFilter.init_clamav_conf()
 
 
 def get_localhosts ():
@@ -323,7 +323,7 @@ class Configuration (dict):
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
-            print >>log, " ", i18n._("inserting %s")%folder.tiptext()
+            print >>log, " ", wc.i18n._("inserting %s")%folder.tiptext()
             if not dryrun:
                 folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)
@@ -377,26 +377,26 @@ class Configuration (dict):
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
         hostset = self['allowedhostset']
-        return ip.host_in_set(host, hostset[0], hostset[1])
+        return wc.ip.host_in_set(host, hostset[0], hostset[1])
 
 
 ##### xml parsers #########
 
 rulenames = (
-  'rewrite',
-  'block',
-  'blockurls',
-  'blockdomains',
-  'allowurls',
-  'allowdomains',
-  'allow',
-  'header',
-  'image',
-  'nocomments',
-  'javascript',
-  'replace',
-  'rating',
-  'antivirus',
+  u'rewrite',
+  u'block',
+  u'blockurls',
+  u'blockdomains',
+  u'allowurls',
+  u'allowdomains',
+  u'allow',
+  u'header',
+  u'image',
+  u'nocomments',
+  u'javascript',
+  u'replace',
+  u'rating',
+  u'antivirus',
 )
 _nestedtags = (
   'title', 'description',
@@ -464,12 +464,7 @@ class BaseParser (object):
 
 
     def start_element (self, name, attrs):
-        # all strings are unicode, but internal representation of
-        # rule data has to be in ConfigCharset
-        newattrs = attrs.copy()
-        attrs.clear()
-        for key,value in newattrs.items():
-            attrs[key.encode(ConfigCharset)] = value.encode(ConfigCharset)
+        pass
 
 
     def end_element (self, name):
@@ -508,7 +503,7 @@ class ZapperParser (BaseParser):
         elif name=='folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            raise ParseException, i18n._("unknown tag name %s")%name
+            raise ParseException, wc.i18n._("unknown tag name %s")%name
 
 
     def end_element (self, name):
@@ -552,7 +547,7 @@ class WConfigParser (BaseParser):
             if self.config['allowedhosts'] is not None:
                 hosts = self.config['allowedhosts'].split(',')
                 self.config['allowedhosts'] = hosts
-                self.config['allowedhostset'] = ip.hosts2map(hosts)
+                self.config['allowedhostset'] = wc.ip.hosts2map(hosts)
             else:
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]
