@@ -22,8 +22,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.filter.Filter import Filter
-from wc.filter.PICS import pics_add, pics_is_cached, pics_allow
-from wc.filter import FILTER_RESPONSE_HEADER, FilterPics
+from wc.filter.PICS import pics_add, pics_is_cached, pics_allow, FilterPics
+from wc.filter import FILTER_RESPONSE_HEADER
 
 class PicsHeader (Filter):
     """Adds PICS data supplied in header values of 'PICS-Label'"""

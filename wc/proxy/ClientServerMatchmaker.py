@@ -146,7 +146,7 @@ class ClientServerMatchmaker (object):
         if self.method=='CONNECT':
             self.state = 'response'
             headers = WcMessage(StringIO(''))
-            self.server_response('HTTP/1.1 200 OK', 200, headers)
+            self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
             return
         # check expectations
         addr = (self.ipaddr, self.port)
@@ -199,15 +199,15 @@ class ClientServerMatchmaker (object):
             self.client.error(503, i18n._("Server closed connection"))
 
 
-    def server_response (self, response, status, headers):
+    def server_response (self, server, response, status, headers):
         """the server got a response"""
         debug(PROXY, "%s server_response, match client/server", self)
         # Okay, transfer control over to the real client
         if self.client.connected:
-            self.server.client = self.client
-            self.client.server_response(self.server, response, status, headers)
+            server.client = self.client
+            self.client.server_response(server, response, status, headers)
         else:
-            self.server.client_abort()
+            server.client_abort()
 
 
     def __repr__ (self):

@@ -23,9 +23,9 @@ import sys, re, urlparse, wc
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser, quote_attrval
 from wc.parser import resolve_html_entities, strip_quotes
-from wc.filter import FilterWait, FilterPics
+from wc.filter import FilterWait
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
-from wc.filter.PICS import pics_add, pics_is_cached, pics_allow
+from wc.filter.PICS import pics_add, pics_is_cached, pics_allow, FilterPics
 from wc.log import *
 # JS imports
 from wc.js.JSListener import JSListener

@@ -56,6 +56,17 @@ import re, os
 import cPickle as pickle
 from wc.log import *
 from wc import i18n, ConfigDir
+from wc.filter import FilterException
+
+
+class FilterPics (FilterException):
+    """Raised when filter detected PICS rated content.
+       Proxy must not have sent any content.
+    """
+    MISSING = i18n._("Unknown page")
+    def isPicsMissing (self):
+        return str(self)==FilterPics.MISSING
+
 
 # rating phrase searcher
 ratings = re.compile(r'r(atings)?\s*\((?P<rating>[^)]*)\)').finditer
@@ -193,7 +204,7 @@ def pics_allow (url, rule):
     Looks up cache to find PICS data, if not find will not allow the url
     """
     if not pics_is_cached(url):
-        return
+        return FilterPics.MISSING
     return check_pics(rule, pics_cache[url])
 
 

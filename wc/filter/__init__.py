@@ -61,13 +61,6 @@ class FilterWait (FilterException):
     pass
 
 
-class FilterPics (FilterException):
-    """Raised when filter detected PICS rated content.
-       Proxy must not have sent any content.
-    """
-    pass
-
-
 def printFilterOrder (i):
     if i==FILTER_REQUEST:
         s = "Request"

@@ -32,6 +32,7 @@ from wc.proxy.Headers import WcMessage
 class WebConfig (object):
     def __init__ (self, client, url, form, protocol, clientheaders,
                   status=200, msg=i18n._('Ok'), context={}, auth=''):
+        debug(GUI, "WebConfig %s %s", url, form)
         self.client = client
         # we pretend to be the server
         self.connected = True
