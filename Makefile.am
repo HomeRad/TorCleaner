@@ -112,8 +112,8 @@ ccheck:
 
 installservice:
 	install -d $(SERVICEDIR)/log
-	install -m 0755 service/run2 $(SERVICEDIR)/run
-	install -m 0755 service/log/run $(SERVICEDIR)/log/
+	install -m 0755 service/webcleaner/run2 $(SERVICEDIR)/run
+	install -m 0755 service/webcleaner/log/run $(SERVICEDIR)/log/
 	if [ ! -e /var/service/webcleaner ]; then \
           ln -s /etc/webcleaner/service /var/service/webcleaner; \
 	fi
