@@ -71,9 +71,9 @@ onlinetest: restart
 	# get a standard page with included adverts
 	env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/
 	# get a blocked page
-	env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/advert/
+	#env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/advert/
 	# get a blocked image
-	env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/advert/test.gif
+	#env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/advert/test.gif
 
 offlinetest: restart
 	# get own config

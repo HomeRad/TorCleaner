@@ -66,6 +66,7 @@ staticforward PyTypeObject parser_type;
 %token T_ELEMENT_START_END
 %token T_ELEMENT_END
 %token T_SCRIPT
+%token T_STYLE
 %token T_PI
 %token T_COMMENT
 %token T_CDATA
@@ -280,6 +281,36 @@ finish_doctype:
 	if (result==NULL) { error=1; goto finish_script; }
     }
 finish_script:
+    Py_XDECREF(callback);
+    Py_XDECREF(result);
+    Py_DECREF($1);
+    if (error) {
+	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+	YYABORT;
+    }
+}
+| T_STYLE
+{
+    UserData* ud = yyget_extra(scanner);
+    PyObject* callback = NULL;
+    PyObject* result = NULL;
+    int error = 0;
+    if (PyObject_HasAttrString(ud->handler, "characters")==1) {
+	callback = PyObject_GetAttrString(ud->handler, "characters");
+	if (callback==NULL) { error=1; goto finish_style; }
+	result = PyObject_CallFunction(callback, "O", $1);
+	if (result==NULL) { error=1; goto finish_style; }
+	Py_DECREF(callback);
+	Py_DECREF(result);
+        callback=result=NULL;
+    }
+    if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
+	callback = PyObject_GetAttrString(ud->handler, "endElement");
+	if (callback==NULL) { error=1; goto finish_style; }
+	result = PyObject_CallFunction(callback, "s", "style");
+	if (result==NULL) { error=1; goto finish_style; }
+    }
+finish_style:
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);

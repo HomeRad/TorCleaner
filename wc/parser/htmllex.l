@@ -41,6 +41,8 @@
 #define SCRIPT_CHECK \
     if (strcmp("script", PyString_AS_STRING(yyextra->tmp_tag))==0) \
 	BEGIN(S_SCRIPT); \
+    else if (strcmp("style", PyString_AS_STRING(yyextra->tmp_tag))==0) \
+        BEGIN(S_STYLE); \
     else \
 	BEGIN(INITIAL)
 
@@ -126,6 +128,7 @@ static PyObject* quote_string (PyObject* val) {
 %x S_TAGSTART
 %x S_TAGEND
 %x S_SCRIPT
+%x S_STYLE
 %x S_ATTR1
 %x S_ATTR2
 %x S_ATTR3
@@ -159,7 +162,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_COMMENT);
 }
 
-<S_COMMENT>-[^-] {
+<S_COMMENT>-[^-]* {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
 }
@@ -353,6 +356,59 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
 <S_SCRIPT>. {
+    return T_WAIT;
+}
+
+  /*********************** STYLE ************************/
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][Ll][Ee]{RX_WHITE_SPACE}*> {
+    UPDATE_BUFPOS;
+    SETLVAL;
+    BEGIN(INITIAL);
+    RETURN(T_STYLE);
+}
+
+<S_STYLE>[^<]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+  /* this is so shitty */
+<S_STYLE><[^/] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_STYLE><\/{RX_WHITE_SPACE}*[^Ss] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][^Tt] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][^Yy] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][^Ll] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][Ll][^Ee] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][Ll][Ee]{RX_WHITE_SPACE}*[^>] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_STYLE>. {
     return T_WAIT;
 }
 

@@ -10,10 +10,11 @@
 # define	T_ELEMENT_START_END	261
 # define	T_ELEMENT_END	262
 # define	T_SCRIPT	263
-# define	T_PI	264
-# define	T_COMMENT	265
-# define	T_CDATA	266
-# define	T_DOCTYPE	267
+# define	T_STYLE	264
+# define	T_PI	265
+# define	T_COMMENT	266
+# define	T_CDATA	267
+# define	T_DOCTYPE	268
 
 #line 2 "htmlparse.y"
 
@@ -77,12 +78,12 @@ staticforward PyTypeObject parser_type;
 
 
 
-#define	YYFINAL		16
+#define	YYFINAL		17
 #define	YYFLAG		-32768
-#define	YYNTBASE	14
+#define	YYNTBASE	15
 
 /* YYTRANSLATE(YYLEX) -- Bison token number corresponding to YYLEX. */
-#define YYTRANSLATE(x) ((unsigned)(x) <= 267 ? yytranslate[x] : 16)
+#define YYTRANSLATE(x) ((unsigned)(x) <= 268 ? yytranslate[x] : 17)
 
 /* YYTRANSLATE[YYLEX] -- Bison token number corresponding to YYLEX. */
 static const char yytranslate[] =
@@ -113,20 +114,20 @@ static const char yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     3,     4,     5,
-       6,     7,     8,     9,    10,    11,    12,    13
+       6,     7,     8,     9,    10,    11,    12,    13,    14
 };
 
 #if YYDEBUG
 static const short yyprhs[] =
 {
        0,     0,     2,     5,     7,     9,    11,    13,    15,    17,
-      19,    21,    23,    25
+      19,    21,    23,    25,    27
 };
 static const short yyrhs[] =
 {
-      15,     0,    14,    15,     0,     3,     0,     4,     0,     6,
-       0,     7,     0,     8,     0,    11,     0,    10,     0,    12,
-       0,    13,     0,     9,     0,     5,     0
+      16,     0,    15,    16,     0,     3,     0,     4,     0,     6,
+       0,     7,     0,     8,     0,    12,     0,    11,     0,    13,
+       0,    14,     0,     9,     0,    10,     0,     5,     0
 };
 
 #endif
@@ -135,8 +136,8 @@ static const short yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined. */
 static const short yyrline[] =
 {
-       0,    76,    77,    80,    81,    88,   115,   154,   177,   198,
-     219,   240,   261,   291
+       0,    77,    78,    81,    82,    89,   116,   155,   178,   199,
+     220,   241,   262,   292,   322
 };
 #endif
 
@@ -148,22 +149,23 @@ static const char *const yytname[] =
 {
   "$", "error", "$undefined.", "T_WAIT", "T_ERROR", "T_TEXT", 
   "T_ELEMENT_START", "T_ELEMENT_START_END", "T_ELEMENT_END", "T_SCRIPT", 
-  "T_PI", "T_COMMENT", "T_CDATA", "T_DOCTYPE", "elements", "element", 0
+  "T_STYLE", "T_PI", "T_COMMENT", "T_CDATA", "T_DOCTYPE", "elements", 
+  "element", 0
 };
 #endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives. */
 static const short yyr1[] =
 {
-       0,    14,    14,    15,    15,    15,    15,    15,    15,    15,
-      15,    15,    15,    15
+       0,    15,    15,    16,    16,    16,    16,    16,    16,    16,
+      16,    16,    16,    16,    16
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN. */
 static const short yyr2[] =
 {
        0,     1,     2,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1
+       1,     1,     1,     1,     1
 };
 
 /* YYDEFACT[S] -- default rule to reduce with in state S when YYTABLE
@@ -171,42 +173,42 @@ static const short yyr2[] =
    error. */
 static const short yydefact[] =
 {
-       0,     3,     4,    13,     5,     6,     7,    12,     9,     8,
-      10,    11,     0,     1,     2,     0,     0
+       0,     3,     4,    14,     5,     6,     7,    12,    13,     9,
+       8,    10,    11,     0,     1,     2,     0,     0
 };
 
 static const short yydefgoto[] =
 {
-      12,    13
+      13,    14
 };
 
 static const short yypact[] =
 {
-      11,-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
-  -32768,-32768,     0,-32768,-32768,     1,-32768
+      12,-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
+  -32768,-32768,-32768,     0,-32768,-32768,     1,-32768
 };
 
 static const short yypgoto[] =
 {
-  -32768,   -10
+  -32768,   -11
 };
 
 
-#define	YYLAST		24
+#define	YYLAST		26
 
 
 static const short yytable[] =
 {
-      15,    16,    14,     1,     2,     3,     4,     5,     6,     7,
-       8,     9,    10,    11,     1,     2,     3,     4,     5,     6,
-       7,     8,     9,    10,    11
+      16,    17,    15,     1,     2,     3,     4,     5,     6,     7,
+       8,     9,    10,    11,    12,     1,     2,     3,     4,     5,
+       6,     7,     8,     9,    10,    11,    12
 };
 
 static const short yycheck[] =
 {
-       0,     0,    12,     3,     4,     5,     6,     7,     8,     9,
-      10,    11,    12,    13,     3,     4,     5,     6,     7,     8,
-       9,    10,    11,    12,    13
+       0,     0,    13,     3,     4,     5,     6,     7,     8,     9,
+      10,    11,    12,    13,    14,     3,     4,     5,     6,     7,
+       8,     9,    10,    11,    12,    13,    14
 };
 #define YYPURE 1
 
@@ -918,19 +920,19 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 76 "htmlparse.y"
-{;
-    break;}
-case 2:
 #line 77 "htmlparse.y"
 {;
     break;}
+case 2:
+#line 78 "htmlparse.y"
+{;
+    break;}
 case 3:
-#line 80 "htmlparse.y"
+#line 81 "htmlparse.y"
 { YYACCEPT; /* wait for more lexer input */ ;
     break;}
 case 4:
-#line 82 "htmlparse.y"
+#line 83 "htmlparse.y"
 {
     /* a python error occured in the scanner */
     UserData* ud = yyget_extra(scanner);
@@ -939,7 +941,7 @@ case 4:
 ;
     break;}
 case 5:
-#line 89 "htmlparse.y"
+#line 90 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
@@ -968,7 +970,7 @@ finish_start:
 ;
     break;}
 case 6:
-#line 116 "htmlparse.y"
+#line 117 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
@@ -1009,7 +1011,7 @@ finish_start_end:
 ;
     break;}
 case 7:
-#line 155 "htmlparse.y"
+#line 156 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1034,7 +1036,7 @@ finish_end:
 ;
     break;}
 case 8:
-#line 178 "htmlparse.y"
+#line 179 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1057,7 +1059,7 @@ finish_comment:
 ;
     break;}
 case 9:
-#line 199 "htmlparse.y"
+#line 200 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1080,7 +1082,7 @@ finish_pi:
 ;
     break;}
 case 10:
-#line 220 "htmlparse.y"
+#line 221 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1103,7 +1105,7 @@ finish_cdata:
 ;
     break;}
 case 11:
-#line 241 "htmlparse.y"
+#line 242 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1126,7 +1128,7 @@ finish_doctype:
 ;
     break;}
 case 12:
-#line 262 "htmlparse.y"
+#line 263 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1158,7 +1160,39 @@ finish_script:
 ;
     break;}
 case 13:
-#line 292 "htmlparse.y"
+#line 293 "htmlparse.y"
+{
+    UserData* ud = yyget_extra(scanner);
+    PyObject* callback = NULL;
+    PyObject* result = NULL;
+    int error = 0;
+    if (PyObject_HasAttrString(ud->handler, "characters")==1) {
+	callback = PyObject_GetAttrString(ud->handler, "characters");
+	if (callback==NULL) { error=1; goto finish_style; }
+	result = PyObject_CallFunction(callback, "O", yyvsp[0]);
+	if (result==NULL) { error=1; goto finish_style; }
+	Py_DECREF(callback);
+	Py_DECREF(result);
+        callback=result=NULL;
+    }
+    if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
+	callback = PyObject_GetAttrString(ud->handler, "endElement");
+	if (callback==NULL) { error=1; goto finish_style; }
+	result = PyObject_CallFunction(callback, "s", "style");
+	if (result==NULL) { error=1; goto finish_style; }
+    }
+finish_style:
+    Py_XDECREF(callback);
+    Py_XDECREF(result);
+    Py_DECREF(yyvsp[0]);
+    if (error) {
+	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+	YYABORT;
+    }
+;
+    break;}
+case 14:
+#line 323 "htmlparse.y"
 {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1414,7 +1448,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 315 "htmlparse.y"
+#line 346 "htmlparse.y"
 
 
 /* create parser */
