@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Mon Mar  1 15:22:06 2004\n"
-"PO-Revision-Date: 2004-03-01 15:30+0100\n"
+"POT-Creation-Date: Tue Mar  9 00:49:48 2004\n"
+"PO-Revision-Date: 2004-03-09 00:51+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -430,9 +430,6 @@ msgstr "Ungültige Bewertung."
 msgid "%(AppName)s configuration"
 msgstr "%(AppName)s Konfiguration"
 
-msgid "Attributes"
-msgstr "Attribute"
-
 msgid "List of hostnames the proxy must not filter."
 msgstr "Liste von Rechnernamen die dieser Proxy nicht filtern darf"
 
@@ -468,6 +465,9 @@ msgid ""
 "The supplied value resembles a\n"
 "<a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
 msgstr "Dieser Wert ist ein <a href=\"http://www.amk.ca/python/howto/regex/\">regulärer Ausdruck</a>."
+
+msgid "Client and server request"
+msgstr "Browser und Server Anfragen"
 
 msgid "Response content data of mime types image/gif"
 msgstr "Antwortdaten des Mimetyps image/gif"
@@ -594,8 +594,14 @@ msgstr "Rewrite-Regel eingeschlossener Block wurde erfolgreich geändert."
 msgid "Content rated by %(AppName)s"
 msgstr "Inhalt gesperrt von %(AppName)s"
 
+msgid "Attributes"
+msgstr "Attribute"
+
 msgid "Parse and evaluate content rating system header values."
 msgstr "Parse und evaluiere Header Werte der Inhaltsbewertung."
+
+msgid "Header rules apply either to client request, server request or both"
+msgstr "Regen für Kopfdaten gelten entweder für Browser Anfragen, Server Anfragen oder für beide."
 
 msgid ""
 "Block images with a certain size which is replacing\n"
@@ -879,6 +885,9 @@ msgstr "Administrator erfolgreich geändert."
 msgid "Password used for parent proxy authentication"
 msgstr "Passwort zur Authentifizierung des übergeordneten Proxy"
 
+msgid "Rule header filter request value successfully changed."
+msgstr "Kopfdaten-Regel Filterwert wurde erfolgreich geändert."
+
 msgid "Rule title successfully changed."
 msgstr "Regel Titel wurde erfolgreich geändert."
 
@@ -1077,6 +1086,9 @@ msgstr ""
 
 msgid "Nofilter host(s) successfully removed."
 msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
+
+msgid "Search Google"
+msgstr "Suche mit Google"
 
 msgid "Move folder up"
 msgstr "Ordner nach oben schieben"
@@ -1329,11 +1341,17 @@ msgstr "Bild von inaktiver Regel"
 msgid "Rating"
 msgstr "Bewertung"
 
+msgid "Header filters"
+msgstr "Header filtert"
+
 msgid "Rule header value successfully changed."
 msgstr "Regel Header-Wert wurde erfolgreich geändert."
 
 msgid "Invalid url."
 msgstr "Ungültige URL."
+
+msgid "Server request"
+msgstr "Server Anfrage"
 
 msgid "Invalid folder move down id."
 msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
@@ -1497,8 +1515,8 @@ msgstr "Fußnote 3"
 msgid "Empty attribute name."
 msgstr "Leerer Attributname."
 
-msgid "Search Google"
-msgstr "Suche mit Google"
+msgid "Client request"
+msgstr "Browser Anfrage"
 
 msgid "All pages define the following access keys:"
 msgstr "Alle Seiten definieren folgende Tastaturkommandos:"

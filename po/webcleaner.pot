@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Mar  1 15:22:06 2004\n"
+"POT-Creation-Date: Tue Mar  9 00:49:48 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -399,9 +399,6 @@ msgstr ""
 msgid "%(AppName)s configuration"
 msgstr ""
 
-msgid "Attributes"
-msgstr ""
-
 msgid "List of hostnames the proxy must not filter."
 msgstr ""
 
@@ -436,6 +433,9 @@ msgstr ""
 msgid ""
 "The supplied value resembles a\n"
 "<a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
+msgstr ""
+
+msgid "Client and server request"
 msgstr ""
 
 msgid "Response content data of mime types image/gif"
@@ -542,7 +542,13 @@ msgstr ""
 msgid "Content rated by %(AppName)s"
 msgstr ""
 
+msgid "Attributes"
+msgstr ""
+
 msgid "Parse and evaluate content rating system header values."
+msgstr ""
+
+msgid "Header rules apply either to client request, server request or both"
 msgstr ""
 
 msgid ""
@@ -798,6 +804,9 @@ msgstr ""
 msgid "Password used for parent proxy authentication"
 msgstr ""
 
+msgid "Rule header filter request value successfully changed."
+msgstr ""
+
 msgid "Rule title successfully changed."
 msgstr ""
 
@@ -964,6 +973,9 @@ msgid ""
 msgstr ""
 
 msgid "Nofilter host(s) successfully removed."
+msgstr ""
+
+msgid "Search Google"
 msgstr ""
 
 msgid "Move folder up"
@@ -1197,10 +1209,16 @@ msgstr ""
 msgid "Rating"
 msgstr ""
 
+msgid "Header filters"
+msgstr ""
+
 msgid "Rule header value successfully changed."
 msgstr ""
 
 msgid "Invalid url."
+msgstr ""
+
+msgid "Server request"
 msgstr ""
 
 msgid "Invalid folder move down id."
@@ -1343,7 +1361,7 @@ msgstr ""
 msgid "Empty attribute name."
 msgstr ""
 
-msgid "Search Google"
+msgid "Client request"
 msgstr ""
 
 msgid "All pages define the following access keys:"
