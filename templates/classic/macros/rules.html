@@ -38,7 +38,7 @@
 <table summary="">
 <div metal:define-macro="matchurl">
 <tr valign="top"><td>
-<label for="rule_matchurls" i18n:translator="">Match urls</label>:
+<label for="rule_matchurls" i18n:translate="">Match urls</label>:
 </td><td>
 <select name="rule_matchurls" id="rule_matchurls" multiple size="3"
  i18n:attributes="title List of urls this rule should apply to">
@@ -52,7 +52,7 @@
  i18n:attributes="value Add new">
 </td></tr>
 <tr valign="top"><td>
-<label for="rule_nomatchurls" i18n:translator="">Don't match urls</label>:
+<label for="rule_nomatchurls" i18n:translate="">Don't match urls</label>:
 </td><td>
 <select name="rule_nomatchurls" id="rule_nomatchurls" multiple size="3"
  i18n:attributes="title List of urls this rule must not apply to">
@@ -317,8 +317,8 @@ Rule (don't) match url
 </thead>
 <tbody>
 <tr tal:repeat="category service/categories/keys">
-<td
- tal:content="service/categories/?category/name">adult</td>
+<td i18n:translate=""
+ tal:content="service/categories/?category/name">violence</td>
 <td tal:condition="service/categories/?category/rrange" colspan="3">
 <input type="text" size="4"
  tal:attributes="name string:category_${category};value currule/ratings/?category"
@@ -329,8 +329,9 @@ Rule (don't) match url
  type="radio"><input
  tal:attributes="name string:category_${category};value value"
  tal:condition="not:currule/values/?category/?value"
- type="radio">&nbsp;<span tal:replace="rangenames/?value">Mild</span>
-</td>
+ type="radio">&nbsp;<span i18n:translate=""
+ tal:replace="rangenames/?value">Mild</span>
+ </td>
 </tr>
 </tbody>
 </table>
