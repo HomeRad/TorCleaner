@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Aug  4 21:39:19 2003\n"
+"POT-Creation-Date: Tue Feb 24 20:42:56 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,19 +15,21 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: html translation
+msgid "Transe test successful"
+msgstr ""
+
 msgid "English image description"
 msgstr ""
 
-#: html translation
 msgid "This will be translated"
 msgstr ""
 
-#: html translation
 msgid "Hello english speaking friend"
 msgstr ""
 
-#: html translation
+msgid "replace example"
+msgstr ""
+
 msgid "this is a %(parameter)s example"
 msgstr ""
 

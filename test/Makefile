@@ -5,7 +5,7 @@ GETTEXT := $(PYTHON) $(I18NTOOLS)/pygettext.py
 MSGFMT := $(PYTHON) $(I18NTOOLS)/msgfmt.py
 #MSGFMT=msgfmt
 MSGMERGE := msgmerge
-SOURCES = html/taltest.html
+SOURCES = html/taltest.html test_simpletal.py
 
 LDIR := $(CURDIR)/share/locale
 PACKAGE=webcleaner

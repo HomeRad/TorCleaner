@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Mon Aug  4 21:39:19 2003\n"
+"POT-Creation-Date: Tue Feb 24 20:42:56 2004\n"
 "PO-Revision-Date: 2003-08-04 19:10+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -14,18 +14,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: html translation
+msgid "Transe test successful"
+msgstr "Transe Test erfolgreich"
+
 msgid "English image description"
 msgstr "Deutsche Bildbeschreibung"
 
-#: html translation
 msgid "This will be translated"
 msgstr "Das ist übersetzt"
 
-#: html translation
 msgid "Hello english speaking friend"
 msgstr "Hallo deutschsprachiger Freund"
 
-#: html translation
+msgid "replace example"
+msgstr ""
+
 msgid "this is a %(parameter)s example"
 msgstr "dies ist ein %(parameter)s Beispiel"
