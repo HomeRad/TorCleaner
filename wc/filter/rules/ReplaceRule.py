@@ -40,6 +40,9 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
         self.attrnames.append('search')
 
     def end_data (self, name):
+        """
+        Store replacement data.
+        """
         super(ReplaceRule, self).end_data(name)
         if name == 'replacement':
             self.replacement = self._data

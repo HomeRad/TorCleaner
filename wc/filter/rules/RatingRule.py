@@ -37,10 +37,13 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
 
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
                   matchurls=None, nomatchurls=None):
+        """
+        Call super.__init__(), store ratings in a mapping, initialize url.
+        Rating mapping has the form {category name -> limit}.
+        """
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
-        # map {category name -> limit}
         self.ratings = {}
         for category in wc.filter.rating.categories:
             if category.iterable:
@@ -58,6 +61,9 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             self._category = attrs.get('name')
 
     def end_data (self, name):
+        """
+        Store category or url data.
+        """
         super(RatingRule, self).end_data(name)
         if name == 'category':
             assert self.ratings.has_key(self._category), repr(self._category)
@@ -66,10 +72,19 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             self.url = self._data
 
     def compile_data (self):
+        """
+        Call super.compile_data() and compile_values().
+        """
         super(RatingRule, self).compile_data()
         self.compile_values()
 
     def compile_values (self):
+        """
+        Fill rating values mapping of the form
+        {category name -> value -> value_is_set}
+        with types
+        {string -> string -> bool}
+        """
         self.values = {}
         for name, value in self.ratings.items():
             category = wc.filter.rating.get_category(name)

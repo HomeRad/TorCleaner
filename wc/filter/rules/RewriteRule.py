@@ -162,6 +162,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             self.part = part_num(attrs['part'])
 
     def end_data (self, name):
+        """
+        Store attr, enclosed or replacement data.
+        """
         super(RewriteRule, self).end_data(name)
         if name == 'attr':
             self.attrs[self.current_attr] = self._data

@@ -38,6 +38,13 @@ class RatingHeader (wc.filter.Filter.Filter):
         super(RatingHeader, self).__init__(stages=stages, rulenames=rulenames)
 
     def doit (self, data, attrs):
+        """
+        Parse and check Content-Rating header according to rating rules.
+
+        @return: data
+        @rtype: string
+        @raise: FilterRating when page is rated too high
+        """
         url = attrs['url']
         headers = attrs['headers']['server']
         if headers.has_key('Content-Rating'):
@@ -57,6 +64,9 @@ class RatingHeader (wc.filter.Filter.Filter):
         return data
 
     def get_attrs (self, url, localhost, stages, headers):
+        """
+        Store rating rules in data.
+        """
         if not self.applies_to_stages(stages):
             return {}
         d = super(RatingHeader, self).get_attrs(url, localhost, stages, headers)

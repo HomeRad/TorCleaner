@@ -60,6 +60,9 @@ class UrlRule (wc.filter.rules.Rule.Rule):
         return True
 
     def end_data (self, name):
+        """
+        Store matchurl and nomatchurl data.
+        """
         super(UrlRule, self).end_data(name)
         if name == 'matchurl':
             self.matchurls.append(self._data)
@@ -75,9 +78,15 @@ class UrlRule (wc.filter.rules.Rule.Rule):
         self.compile_nomatchurls()
 
     def compile_matchurls (self):
+        """
+        Compile matchurls regular expressions.
+        """
         self.matchurls_ro = [re.compile(s) for s in self.matchurls]
 
     def compile_nomatchurls (self):
+        """
+        Compile nomatchurls regular expressions.
+        """
         self.nomatchurls_ro = [re.compile(s) for s in self.nomatchurls]
 
     def matchestoxml (self, prefix=u""):

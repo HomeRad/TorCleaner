@@ -320,6 +320,9 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
 
 
 def get_encoding_dict (msg):
+    """
+    Get encodings and their associated preference values.
+    """
     res = {}
     encs = msg.get('Accept-Encoding', '').split(",")
     for enc in encs:
