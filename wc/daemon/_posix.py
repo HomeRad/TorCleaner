@@ -134,3 +134,19 @@ def reload (pidfile):
     import signal
     os.kill(pid, signal.SIGHUP)
     return "", 0
+
+
+def status (pidfile, watchfile):
+    if os.path.exists(watchfile):
+        watchpid = int(file(watchfile).read())
+    else:
+        watchpid = None
+    if os.path.exists(pidfile):
+        pid = int(file(pidfile).read())
+        if watchpid is None:
+            return i18n._("WebCleaner (PID %d) is running")%pid, 0
+        return i18n._("WebCleaner (PID %d) and watch daemon (PID %d) are running")%(pid, watchpid), 0
+    else:
+        if watchpid is None:
+            return i18n._("WebCleaner and watch daemon are not running (no lock files found)"), 3
+        return i18n._("WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)")%watchpid, 3

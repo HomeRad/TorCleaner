@@ -25,14 +25,27 @@ def start (startfunc, pidfile, parent_exit=True):
     """does not return"""
     startfunc()
 
+
 def stop (pidfile):
     return "", 0
+
 
 def reload (pidfile):
     return i18n._("reload not supported for this platform"), 1
 
+
 def startwatch (startfunc, pidfile, watchfile, parent_exit=True, sleepsecs=5):
     return start(startfunc, pidfile)
 
+
 def stopwatch (pidfile, watchfile):
     return stop(pidfile)
+
+
+def status (pidfile, watchfile):
+    if os.path.exists(pidfile):
+        pid = int(file(pidfile).read())
+        return i18n._("WebCleaner (PID %d) is running")%pid, 0
+    else:
+        return i18n._("WebCleaner is not running (no lock file found)"), 3
+

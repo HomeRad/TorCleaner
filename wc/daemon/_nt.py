@@ -64,6 +64,37 @@ class ProxyService (win32serviceutil.ServiceFramework):
            (self._svc_name_,''))
 
 
+def _service_status (status):
+    svcType, svcState, svcControls, err, svcErr, svcCP, svcWH = status
+    msg = ""
+    if svcType & win32service.SERVICE_WIN32_OWN_PROCESS:
+        msg += "\n"+i18n._("The %s service runs in its own process.")%AppName
+    if svcType & win32service.SERVICE_WIN32_SHARE_PROCESS:
+        msg += "\n"+i18n._("The %s service shares a process with other services.")%AppName
+    if svcType & win32service.SERVICE_INTERACTIVE_PROCESS:
+        msg += "\n"+i18n._("The %s service can interact with the desktop.")%AppName
+    # Other svcType flags not shown.
+    if svcState==win32service.SERVICE_STOPPED:
+        msg += "\n"+i18n._("The %s service is stopped.")%AppName
+    elif svcState==win32service.SERVICE_START_PENDING:
+        msg += "\n"+i18n._("The %s service is starting.")%AppName
+    elif svcState==win32service.SERVICE_STOP_PENDING:
+        msg += "\n"+i18n._("The %s service is stopping.")%AppName
+    elif svcState==win32service.SERVICE_RUNNING:
+        msg += "\n"+i18n._("The %s service is running.")%AppName
+    # Other svcState flags not shown.
+    if svcControls & win32service.SERVICE_ACCEPT_STOP:
+        msg += "\n"+i18n._("The %s service can be stopped.")%AppName
+    if svcControls & win32service.SERVICE_ACCEPT_PAUSE_CONTINUE:
+        msg += "\n"+i18n._("The %s service can be paused.")%AppName
+    # Other svcControls flags not shown
+    return msg.strip()
+
+
+def status ():
+    return _service_status(win32serviceutil.QueryServiceStatus(AppName)), 0
+
+
 # XXX the code below is currently unused
 
 def start (startfunc, pidfile, parent_exit=True):
@@ -92,11 +123,11 @@ Do 'webcleaner stop' first."""), 0
     except OSError, exc:
         # this seems to happen when the command isn't found
         raise Exception, \
-              i18n._("command '%s' failed: %s") % (command, exc[-1])
+              i18n._("command %r failed: %s") % (command, exc[-1])
     if ret < 0:
         # and this reflects the command running but failing
         raise Exception, \
-              i18n._("command '%s' killed by signal %d") % (command, -ret)
+              i18n._("command %r killed by signal %d") % (command, -ret)
     return "", 0
 
 

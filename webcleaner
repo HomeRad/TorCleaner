@@ -180,11 +180,11 @@ restart
 status
         Print info if the proxy is running or not.
 debug
-        XXX
+        Start the proxy printing service debug messages.
 install [options]
         Install WebCleaner Windows service.
 update [options]
-        XXX
+        Update WebCleaner Windows service.
 remove
         Remove WebCleaner Windows service.
 
@@ -231,11 +231,17 @@ def _print_help (usage):
 
 
 def main ():
+    if os.name=='nt':
+        return _main_nt()
+    return _main_posix()
+
+
+def _main_posix ():
     # read command line arguments
     import getopt
     try:
         # Note: cut out the name of the script
-        options, args = getopt.getopt(sys.argv[1:], "h", ["help","pidfile="])
+        options, args = getopt.getopt(sys.argv[1:], "h", ["help", "pidfile="])
     except getopt.error:
         type, value = sys.exc_info()[:2]
         _print_usage(value)
@@ -246,14 +252,14 @@ def main ():
         elif opt=='--pidfile':
             pidfile = arg
         else:
-            _print_usage(i18n._("Unknown option %(option)s") % {'option':`opt`})
+            _print_usage(i18n._("Unknown option %(option)r")%{'option': opt})
     watchfile = pidfile+".watch"
     if len(args) < 1:
         _print_usage(i18n._("No command given."))
     else:
         command = args[0]
         if len(args) > 1:
-            print i18n._("warning: only first command is valid")
+            print >>sys.stderr, i18n._("warning: only first command is valid")
     # start the command
     if command=='start':
         msg, status = daemon.start(wstartfunc, pidfile)
@@ -271,12 +277,10 @@ def main ():
         msg, status = daemon.reload(pidfile)
     else:
         _print_usage(i18n._("Unknown command %s") % `command`)
-    if msg:
-        print >>sys.stderr, msg
-    sys.exit(status)
+    return msg, status
 
 
-def main_nt ():
+def _main_nt ():
     # read command line arguments
     import getopt
     try:
@@ -289,13 +293,24 @@ def main_nt ():
         if opt=="-h" or opt=="--help":
             _print_help(_nt_usage)
         else:
-            _print_usage(i18n._("Unknown option %(option)s") % {'option':`opt`})
-    import win32serviceutil
-    win32serviceutil.HandleCommandLine(daemon.ProxyService)
+            _print_usage(i18n._("Unknown option %(option)r")%{'option': opt})
+    if len(args) < 1:
+        _print_usage(i18n._("No command given."))
+    else:
+        command = args[0]
+    if command=='status':
+        msg, status = daemon.status()
+    elif command in ['start', 'stop', 'restart', 'install', 'remove']:
+        import win32serviceutil
+        win32serviceutil.HandleCommandLine(daemon.ProxyService)
+        msg, status = None, 0
+    else:
+        _print_usage(i18n._("Unknown command %s") % `command`)
+    return msg, status
 
 
 if __name__ == '__main__':
-    if os.name=='nt':
-        main_nt()
-    else:
-        main()
+    msg, status = main()
+    if msg:
+        print >>sys.stderr, msg
+    sys.exit(status)
