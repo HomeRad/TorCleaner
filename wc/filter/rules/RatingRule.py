@@ -31,8 +31,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
-        # category -> rating value
-        self.ratings = {}
+        # list of RuleRating objects
+        self.ratings = []
         self.url = ""
 
     def fill_attrs (self, attrs, name):
@@ -45,58 +45,10 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         super(RatingRule, self).end_data(name)
         if name == 'category':
             assert self._category
-            self.ratings[self._category] = self._data
+            self.ratings.append((self._category, self._data))
+            pass
         elif name == 'url':
             self.url = self._data
-
-    def compile_data (self):
-        """fill rating structure"""
-        super(RatingRule, self).compile_data()
-        for category, catdata in \
-            wc.filter.rating.service['categories'].items():
-            if category not in self.ratings:
-                if catdata.has_key('rvalues'):
-                    self.ratings[category] = catdata['rvalues'][0]
-                else:
-                    self.ratings[category] = ""
-        self.compile_values()
-
-    def compile_values (self):
-        """initialize rating data"""
-        self.values = {}
-        for category, val in self.ratings.items():
-            if val:
-                self.values[category] = {val:True}
-
-    def check_against (self, rating):
-        """rating is a mapping category -> value
-           return None if allowed, else a reason of why not"""
-        for category, value in rating.items():
-            if category not in self.ratings:
-                wc.log.warn(wc.LOG_FILTER,
-                            "Unknown rating category %r specified", category)
-                continue
-            if not value:
-                # empty value implicates not rated
-                continue
-            limit = self.ratings[category]
-            if not limit:
-                # no limit is set for this category
-                continue
-            elif wc.filter.rating.service['categories'][category].has_key(
-                                                                    'rrange'):
-                # check if value is in range
-                if (limit[0] is not None and value < limit[0]) or \
-                   (limit[1] is not None and value > limit[1]):
-                    return _(
-                         "Rating %r for category %r is not in range %s") % \
-                         (value, category, limit)
-            elif value > limit:
-                return _(
-                           "Rating %r for category %r exceeds limit %r") % \
-                           (value, category, limit)
-        # not exceeded
-        return None
 
     def toxml (self):
         """Rule data as XML for storing"""
@@ -106,7 +58,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.url:
             s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
-        for category, value in self.ratings.items():
+        for category, value in self.ratings:
             if value:
                 s += u"\n  <category name=\"%s\">%s</category>" % \
                       (wc.XmlUtils.xmlquoteattr(category),
