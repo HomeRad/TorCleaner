@@ -8,6 +8,7 @@ Build-Depends: python (>= 2.3.1), python2.3-dev (>= 2.3.1), debhelper (>= 4.1.16
 Package: webcleaner
 Architecture: any
 Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto, daemontools (>= 0.75)
+Conflicts: python2.3-psyco (<< 1.1.1)
 Description: a filtering HTTP proxy
  Features:
   * HTTP/1.1 support
