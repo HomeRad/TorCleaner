@@ -386,11 +386,11 @@ class TestUrl (unittest.TestCase):
             ("", ("", "")),
             ("/", ("/", "")),
             ("a", ("a", "")),
-            ("a;", ("a", ";")),
-            ("a/b;c/d;e", ("a/b;c/d", ";e")),
+            ("a;", ("a", "")),
+            ("a/b;c/d;e", ("a/b;c/d", "e")),
         ]
         for x in p:
-            self._splitparam (self, x)
+            self._splitparam(x)
 
     def _splitparam (self, x):
         self.assertEqual(wc.url.splitparams(x[0]), (x[1][0], x[1][1]))
