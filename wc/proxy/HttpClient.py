@@ -177,7 +177,7 @@ class HttpClient (StatefulConnection):
         if not self.scheme:
             # default scheme is http
             self.scheme = 'http'
-        elif not self.allow.scheme(self.scheme):
+        if not self.allow.scheme(self.scheme):
             warn(PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
             self.error(403, i18n._("Forbidden"))
             return False
