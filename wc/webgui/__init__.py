@@ -27,8 +27,6 @@ import cStringIO as StringIO
 import wc
 import wc.i18n
 import wc.log
-from wc.webgui.simpletal import simpleTAL
-from wc.webgui.simpletal import simpleTALES
 import wc.proxy.auth
 import wc.proxy.Headers
 
@@ -69,7 +67,6 @@ class WebConfig (object):
             # get the template filename
             path, dirs, lang = get_template_url(url, lang)
             if path.endswith('.html'):
-                fp = file(path)
                 # get TAL context
                 context, newstatus = \
                      get_context(dirs, form, localcontext, lang)
@@ -77,15 +74,14 @@ class WebConfig (object):
                     client.error(401, _("Authentication Required"),
                                  auth=wc.proxy.auth.get_challenges())
                     return
-                # get translator
-                translator = gettext.translation(wc.Name, wc.get_locdir(),
-                                                 [lang], fallback=True)
+                # get (compiled) template
+                template = wc.webgui.TemplateCache.templates[path]
                 # expand template
-                data = expand_template(fp, context, translator=translator)
+                data = expand_template(template, context)
             else:
                 fp = file(path, 'rb')
                 data = fp.read()
-            fp.close()
+                fp.close()
         except IOError:
             wc.log.exception(wc.LOG_GUI, "Wrong path %r:", url)
             # XXX this can actually lead to a maximum recursion
@@ -100,9 +96,8 @@ class WebConfig (object):
         # not catched builtin exceptions are:
         # SystemExit, StopIteration and all warnings
 
-        # write response
+        # finally write response to client
         self.put_response(data, protocol, status, msg, headers)
-
 
     def put_response (self, data, protocol, status, msg, headers):
         """write response to client"""
@@ -110,7 +105,6 @@ class WebConfig (object):
         self.client.server_response(self, response, status, headers)
         self.client.server_content(data)
         self.client.server_close(self)
-
 
     def client_abort (self):
         """client has aborted the connection"""
@@ -122,13 +116,11 @@ def norm (path):
     return os.path.realpath(os.path.normpath(os.path.normcase(path)))
 
 
-def expand_template (fp, context, translator=None):
+def expand_template (template, context):
     """expand the given template file fp in context
-       return expanded data"""
-    # note: standard input and output encoding is iso-8859-1
-    template = simpleTAL.compileHTMLTemplate(fp)
-    out = StringIO.StringIO()
-    template.expand(context, out, translator=translator)
+       return expanded data
+    """
+    return template(**context)
     return out.getvalue()
 
 
@@ -198,7 +190,7 @@ def get_context (dirs, form, localcontext, lang):
     # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
     # make TAL context
-    context = simpleTALES.Context()
+    context = {}
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
         wc.log.debug(wc.LOG_GUI, "got form %s", form)
@@ -222,11 +214,11 @@ def add_default_context (context, filename, lang):
     """add context variables used by all templates"""
     # rule macros
     path, dirs = _get_template_path("macros/rules.html")
-    rulemacros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
+    rulemacros = wc.webgui.TemplateCache.templates[path]
     context_add(context, "rulemacros", rulemacros.macros)
     # standard macros
     path, dirs = _get_template_path("macros/standard.html")
-    macros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
+    macros = wc.webgui.TemplateCache.templates[path]
     context_add(context, "macros", macros.macros)
     # used by navigation macro
     context_add(context, "nav", {filename.replace('.', '_'): True})
@@ -250,7 +242,4 @@ def add_default_context (context, filename, lang):
 
 
 def context_add (context, key, val):
-    if type(val) == type(""):
-        context.addGlobal(unicode(key), unicode(val))
-    else:
-        context.addGlobal(unicode(key), val)
+    context[unicode(key)] = unicode(val)
