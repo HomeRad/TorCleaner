@@ -52,8 +52,7 @@ class HttpClient (Connection):
         # this object will call server_connected at some point
         context = {
             'title': i18n._('Proxy Error %d %s') % (status, msg),
-            'error': i18n._('Proxy Error %d %s<br>%s<br>') % \
-                        (status, msg, txt),
+            'error': txt,
         }
         headers = {
             'Server': 'Proxy',
@@ -62,9 +61,7 @@ class HttpClient (Connection):
         if auth:
             headers['Proxy-Authenticate'] = auth
         form = {}
-        if not self.url:
-            self.url = '/error.html'
-        WebConfig(self, self.url, form, self.protocol,
+        WebConfig(self, '/error.html', form, self.protocol,
                   context=context,
                   headers=headers,
                   status=status,

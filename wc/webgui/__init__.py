@@ -39,6 +39,8 @@ class WebConfig:
             context = get_context(dirs, form, context)
         except IOError, e:
             exception(GUI, "Wrong path `%s'", url)
+            # XXX this can actually lead to a maximum recursion
+            # error when client.error caused the exception
             return client.error(404, i18n._("Not Found"))
         # expand template
         data = expand_template(f, context)
