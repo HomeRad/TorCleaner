@@ -92,8 +92,8 @@
  value="" tal:condition="not:config/proxypass">
 </td>
 </tr>
-<!--
-<tr>
+<tr tal:replace="nothing">
+<!-- XXX disabled -->
 <td>
 <label i18n:attributes="title string:Use NTLM authentication (Windows domain controller)"
  for="auth_ntlm" i18n:translate="">NTLM authentication</label>
@@ -105,9 +105,8 @@
  type="checkbox" name="auth_ntlm" id="auth_ntlm" value="1">
 </td>
 </tr>
--->
-<!--
-<tr>
+<tr tal:replace="nothing">
+<!-- XXX disabled -->
 <td>
 <label i18n:attributes="title string:Display Google search options for invalid pages"
  for="try_google" i18n:translate="">Try Google</label>
@@ -119,7 +118,6 @@
  type="checkbox" name="try_google" id="try_google" value="1">
 </td>
 </tr>
--->
 </table>
 <div class="footnote">
 <sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
