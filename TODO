@@ -2,8 +2,6 @@ TODO
 
 version 2.20
 
-- replace `localhost` hostname with interface IP/host in config templates
-
 - document how to install a proxy that can be used from outside
   (intranet or internet)
 

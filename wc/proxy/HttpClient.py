@@ -400,8 +400,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = \
-                      "http://localhost:%d/adminpass.html\r" % \
-                      wc.configuration.config['port']
+                      "http://%s:%d/adminpass.html\r" % \
+                  (self.socket.getsockname(), wc.configuration.config['port'])
                     self.error(302, _("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call

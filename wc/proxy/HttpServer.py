@@ -392,8 +392,9 @@ class HttpServer (wc.proxy.Server.Server):
         response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-type'] = 'text/plain\r'
-        headers['Location'] = 'http://localhost:%d/rated.html?%s\r' % \
-                              (wc.configuration.config['port'], query)
+        headers['Location'] = 'http://%s:%d/rated.html?%s\r' % \
+               (self.client.socket.getsockname(),
+                wc.configuration.config['port'], query)
         headers['Content-Length'] = '%d\r' % len(msg)
         wc.log.debug(wc.LOG_PROXY, "%s headers\n%s", self, headers)
         self.client.server_response(self, response, self.statuscode, headers)
