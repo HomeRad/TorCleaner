@@ -10,6 +10,8 @@
 
 <!-- navigation -->
 <div class="tabs" metal:define-macro="nav">
+<p class="skip"><a accesskey="2" href="#main"
+ i18n:translate="">Skip to main content</a></p>
 <a href="index.html" class="plain" accesskey="1"
  tal:condition="not:nav/index_html"
  i18n:translate="">%(AppName)s</a>
@@ -28,6 +30,12 @@
 <a href="filterconfig.html" class="selected"
  tal:condition="nav/filterconfig_html"
  i18n:translate="">Filter configuration</a>
+<a href="update.html" class="plain"
+ tal:condition="not:nav/update_html"
+ i18n:translate="">Filter update</a>
+<a href="update.html" class="selected"
+ tal:condition="nav/update_html"
+ i18n:translate="">Filter update</a>
 </div>
 
 <!-- footer -->
