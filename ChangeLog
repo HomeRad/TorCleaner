@@ -47,6 +47,10 @@
   * fixed the magic(5) rule checking for string types
     Type: bugfix
     Changed: wc/magic/{convert,magic}.py
+  
+  * prevent CAN-2004-0380 (Microsoft ITS protocol vulnerability)
+    Type: feature
+    Changed: wc/filter/HtmlSecurity.py, tests/TestRewriter.py
 
 
 2.10 (released 27.3.2004)
