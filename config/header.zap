@@ -19,6 +19,7 @@
 
 <header title="No referer" oid="3"
  desc="Remove the Referer header. Some sites may not work with this option, because they check the referer. In this case add them to &apos;dont match url&apos; and write me an email."
+ dontmatchurl="(printerfriendly\.abcnews\.com|/cgi-bin/fosi\.cgi|\.ask\.com|www\.amazon\.de/exec/obidos/clipserve/|\.lufthansa\.)"
  name="Referer"/>
 
 <header title="No x-meta tags" oid="4"

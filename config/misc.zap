@@ -40,7 +40,7 @@
  disable="1"
  search="Bastian">The Dude</replacer>
 
-<rewrite title="Tracker images" oid="7"
+<rewrite title="1x1 Tracker images" oid="7"
  desc="Several sites use 1x1 images to track users."
  tag="img">
 <attr name="width">^1$</attr>
