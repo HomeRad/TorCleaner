@@ -392,7 +392,10 @@ Rule (don't) match url
 <tr valign="top"><td>
 <label for="attrname" i18n:translate="">Name</label>:
 </td><td>
-<input type="text" class="text" name="attrname" id="attrname" value="href">
+<input type="text" class="text" name="attrname" id="attrname" value="href"
+ tal:condition="not:currule/attrs">
+<input type="text" class="text" name="attrname" id="attrname" value=""
+ tal:condition="currule/attrs">
 </td></tr>
 <tr valign="top"><td>
 <label for="attrval" i18n:translate="">Value</label>:
