@@ -1305,7 +1305,7 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler):
 			if (SINGLETON_XML_REGEX.match (xmlText)):
 				# This is a singleton!
 				self.singletonElement=1
-		except xml.sax.SAXException, e:
+		except xml.sax.SAXException:
 			# Parser doesn't support this property
 			pass
 		# Convert attributes into a list of tuples

@@ -22,6 +22,8 @@ config = _Configuration()
 curfolder = None
 # current selected rule
 currule = None
+# current parts
+curparts = None
 # only some rules allowed for new
 newrulenames = list(rulenames[:])
 newrulenames.remove('allowdomains')
@@ -35,9 +37,9 @@ ruletype = {}
 pics_services = pics_data.keys()
 pics_services.sort()
 pics_categories = {}
-for service in pics_services:
-    pics_categories[service] = pics_data[service]['categories'].keys()
-    pics_categories[service].sort()
+for _service in pics_services:
+    pics_categories[_service] = pics_data[_service]['categories'].keys()
+    pics_categories[_service].sort()
 
 
 def _exec_form (form):
@@ -208,12 +210,12 @@ def _form_removefolder (folder):
     info.append(i18n._("Folder removed."))
 
 
-def _form_newrule (ruletype):
-    if ruletype not in rulenames:
+def _form_newrule (rtype):
+    if rtype not in rulenames:
         error.append(i18n._("Invalid rule type."))
         return
     # add new rule
-    rule = _GetRuleFromName(ruletype)
+    rule = _GetRuleFromName(rtype)
     rule.parent = curfolder
     _register_rule(rule)
     _generate_sids(prefix="lc")

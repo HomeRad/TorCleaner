@@ -37,7 +37,7 @@
 __version__ = "3.3"
 
 
-import StringIO, os, stat, threading, sys, codecs, sgmllib, cgi, re
+import StringIO, os, stat, threading, codecs, sgmllib, cgi, re
 
 import simpleTAL
 

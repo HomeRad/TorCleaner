@@ -8,9 +8,10 @@ from wc.log import *
 # XXX there should be an API for this class, and it should be moved
 # elsewhere
 class Server (Connection):
-    def __init__ (self, client):
+    def __init__ (self, client, state):
         super(Server, self).__init__()
         self.client = client
+        self.state = state
 
 
     def client_abort (self):
@@ -27,3 +28,7 @@ class Server (Connection):
             self.connected = False
             return
         self.process_connect()
+
+
+    def process_connect (self):
+        raise NotImplementedError("must be implemented in a subclass")

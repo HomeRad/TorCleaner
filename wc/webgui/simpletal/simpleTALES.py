@@ -86,7 +86,7 @@ class ContextVariable:
 	def __str__ (self):
 		try:
 			return str (self.ourValue)
-		except UnicodeError, e:
+		except UnicodeError:
 			# Ignore - just return the value decoded
 			return self.ourValue.encode ('ASCII', 'replace')
 		

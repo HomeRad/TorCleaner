@@ -59,7 +59,7 @@ class HttpServer (Server):
      but could also be a HttpProxyClient (for Javascript sources)
     """
     def __init__ (self, ipaddr, port, client):
-        super(HttpServer, self).__init__(client)
+        super(HttpServer, self).__init__(client, 'connect')
         self.addr = (ipaddr, port)
         self.hostname = ''
         self.document = ''
@@ -98,7 +98,6 @@ class HttpServer (Server):
 
 
     def attempt_connect (self):
-        self.state = 'connect'
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         try:

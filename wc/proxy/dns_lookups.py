@@ -525,8 +525,8 @@ class DnsLookupConnection (Connection):
                       tc, self.nameserver, self.hostname)
                 self.handle_error("dns error")
             else:
-                warning(PROXY, 'truncated UDP DNS packet: %s from %s for %s',
-                        tc, self.nameserver, self.hostname)
+                warn(PROXY, 'truncated UDP DNS packet: %s from %s for %s',
+                     tc, self.nameserver, self.hostname)
             # we ignore this read, and let the timeout take its course
             return
 

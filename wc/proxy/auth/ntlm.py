@@ -7,7 +7,7 @@ def get_ntlm_challenge ():
     pass # XXX
 
 
-def check_proxy_auth_ntlm (self, auth):
+def check_ntlm_auth (auth):
     # XXX
     return 'NTLM realm="unknown"'
 

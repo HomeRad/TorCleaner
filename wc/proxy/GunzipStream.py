@@ -54,10 +54,10 @@ class GunzipStream (DeflateStream):
 
         if flag & self.FEXTRA:
             # Read & discard the extra field, if present
-            if len(s) < 2: return '' # Incomplete
+            if len(s) < 2: return # Incomplete
             xlen = ord(s[0])
             xlen += 256*ord(s[1])
-            if len(s) < 2+xlen: return '' # Incomplete
+            if len(s) < 2+xlen: return # Incomplete
             s = s[2+xlen:]
 
         if flag & self.FNAME:

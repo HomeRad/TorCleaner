@@ -8,7 +8,7 @@ def get_digest_challenge ():
     pass # XXX
 
 
-def check_proxy_auth_digest (self, auth):
+def check_digest_auth (auth):
     # XXX
     return 'Digest realm="unknown"'
 

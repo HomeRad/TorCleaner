@@ -64,6 +64,10 @@ class Connection (asyncore.dispatcher, object):
         self.process_read()
 
 
+    def process_read (self):
+        raise NotImplementedError("must be implemented in a subclass")
+
+
     def writable (self):
         return len(self.send_buffer)
 
