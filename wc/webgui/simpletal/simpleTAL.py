@@ -41,7 +41,8 @@ try:
 except:
 	import DummyLogger as logging
 	
-import sgmllib, xml.sax, cgi, StringIO, codecs, re
+import sgmllib, xml.sax, cgi, codecs, re
+from StringIO import StringIO
 
 import simpleTALES
 
@@ -1179,7 +1180,7 @@ def compileHTMLTemplate (template, inputEncoding="ISO8859-1"):
 	"""
 	if (isinstance (template, type ("")) or isinstance (template, type (u""))):
 		# It's a string!
-		templateFile = StringIO.StringIO (template)
+		templateFile = StringIO (template)
 	else:
 		templateFile = template
 	compiler = HTMLTemplateCompiler()
@@ -1193,7 +1194,7 @@ def compileXMLTemplate (template):
 	"""
 	if (isinstance (template, type (""))):
 		# It's a string!
-		templateFile = StringIO.StringIO (template)
+		templateFile = StringIO (template)
 	else:
 		templateFile = template
 	compiler = XMLTemplateCompiler()
