@@ -53,7 +53,7 @@ class HttpClient (Connection):
 
     def error (self, status, msg, txt='', auth=''):
         self.state = 'done'
-        if config['try_google']:
+        if status in google_try_status and config['try_google']:
             self.try_google(self.url, msg)
         else:
             err = i18n._('Proxy Error %d %s') % (status, msg)
@@ -233,7 +233,7 @@ class HttpClient (Connection):
         # try google options
         assert server.connected
         debug(PROXY, '%s server_response %s', str(self), `response`)
-        if status >= 400 and config['try_google']:
+        if status in google_try_status and config['try_google']:
             server.client_abort()
             self.try_google(self.url, response)
         else:

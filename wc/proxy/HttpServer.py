@@ -34,17 +34,17 @@ _RESPONSE_FILTERS = (
 
 
 is_http_status = re.compile(r'^\d\d\d$').search
-def get_response_data (response):
+def get_response_data (response, url):
     """parse a response status line into tokens (protocol, status, msg)"""
     parts = response.split(None, 2)
     if len(parts)==2:
-        warn(PROXY, "Empty response message")
+        warn(PROXY, "Empty response message from %s", `url`)
         parts += ['Bummer']
     elif len(parts)!=3:
-        error(PROXY, "Invalid response %s", `response`)
+        error(PROXY, "Invalid response %s from %s", `response`, `url`)
         parts = ['HTTP/1.0', 200, 'Ok']
     if not is_http_status(parts[1]):
-        error(PROXY, "Invalid http statuscode %s", parts[1])
+        error(PROXY, "Invalid http statuscode %s from %s", parts[1], `url`)
         parts[1] = 200
     parts[1] = int(parts[1])
     return parts
@@ -189,7 +189,7 @@ class HttpServer (Server):
         self.response = self.read(i+1).strip()
         if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
-            protocol, self.statuscode, tail = get_response_data(self.response)
+            protocol, self.statuscode, tail = get_response_data(self.response, self.url)
             # reconstruct cleaned response
             self.response = "%s %d %s" % (protocol, self.statuscode, tail)
             self.state = 'headers'
