@@ -134,6 +134,8 @@ class HttpServer(Server):
 	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
             self.decoders = []
+            self.attrs = initStateObjects(self.headers)
+            self.attrs['nofilter'] = self.nofilter['nofilter']
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
         else:

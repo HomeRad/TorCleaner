@@ -79,7 +79,7 @@ class Connection(asyncore.dispatcher):
         try:
             num_sent = self.send(self.send_buffer[:SEND_BUFSIZE])
         except socket.error, err:
-            self.handle_error('write error', socket.error, err, tb=sys.exc_info()[2])
+            self.handle_error('write error', socket.error, err)
             return
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
