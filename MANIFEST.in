@@ -1,7 +1,7 @@
 include MANIFEST.in
 include README
 include TODO
-include cross-build.sh
+include crossbuild.sh
 include webcleaner
 include install-webcleaner.py
 include webcleaner-certificates
