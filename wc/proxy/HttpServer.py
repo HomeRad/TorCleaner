@@ -27,6 +27,12 @@ PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
 
+_response_filters = [
+    FILTER_RESPONSE_DECODE,
+    FILTER_RESPONSE_MODIFY,
+    FILTER_RESPONSE_ENCODE,
+]
+
 is_http_status = re.compile(r'^\d\d\d$').search
 def get_response_data (response, url):
     """parse a response status line into tokens (protocol, status, msg)"""
@@ -195,6 +201,7 @@ class HttpServer (Server):
             serverpool.set_http_version(self.addr, get_http_version(protocol))
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
+            warn(PROXY, "%s got HTTP/0.9 response", str(self))
             serverpool.set_http_version(self.addr, (0,9))
             self.statuscode = 200
             self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER])
@@ -251,12 +258,7 @@ class HttpServer (Server):
             self.persistent = has_header_value(msg, 'Connection', 'Keep-Alive')
         else:
             self.persistent = False
-        filters = [FILTER_RESPONSE_HEADER,
-                   FILTER_RESPONSE_DECODE,
-                   FILTER_RESPONSE_MODIFY,
-                   FILTER_RESPONSE_ENCODE,
-                  ]
-        self.attrs = get_filterattrs(self.url, filters, headers=msg)
+        self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER], headers=msg)
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER, msg,
                                        "finish", self.attrs)
@@ -290,6 +292,8 @@ class HttpServer (Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
+        self.attrs = get_filterattrs(self.url, _response_filters, headers=msg)
+        debug(PROXY, "%s filtered headers %s", str(self), str(self.headers))
 
 
     def is_rewrite (self):
@@ -309,10 +313,11 @@ class HttpServer (Server):
         is_closed = False
         for decoder in self.decoders:
             data = decoder.decode(data)
-            is_closed = decoder.closed or is_closed
+            debug(PROXY, "%s have run decoder %s", str(self), str(decoder))
+            if not is_closed and decoder.closed:
+                is_closed = True
         try:
-            for i in [FILTER_RESPONSE_DECODE, FILTER_RESPONSE_MODIFY,
-                      FILTER_RESPONSE_ENCODE]:
+            for i in _response_filters:
                 data = applyfilter(i, data, "filter", self.attrs)
             if data:
                 if self.statuscode!=407:
@@ -391,13 +396,13 @@ class HttpServer (Server):
         self.flushing = True
         data = ""
         while self.decoders:
+            debug(PROXY, "%s flush decoder %s", str(self), str(self.decoders[0]))
             data = self.decoders[0].flush()
             del self.decoders[0]
             for decoder in self.decoders:
                 data = decoder.decode(data)
         try:
-            for i in [FILTER_RESPONSE_DECODE, FILTER_RESPONSE_MODIFY,
-                      FILTER_RESPONSE_ENCODE]:
+            for i in _response_filters:
                 data = applyfilter(i, data, "finish", self.attrs)
         except FilterWait, msg:
             debug(PROXY, "%s FilterWait %s", str(self), `msg`)
