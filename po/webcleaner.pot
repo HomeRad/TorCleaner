@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Mar  9 01:24:33 2004\n"
+"POT-Creation-Date: Tue Mar 16 22:34:16 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -348,9 +348,6 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-msgid "Update content ratings"
-msgstr ""
-
 msgid "Allowed hosts"
 msgstr ""
 
@@ -402,9 +399,6 @@ msgstr ""
 msgid "Attributes"
 msgstr ""
 
-msgid "List of hostnames the proxy must not filter."
-msgstr ""
-
 msgid "Rewrite attribute added."
 msgstr ""
 
@@ -414,10 +408,10 @@ msgstr ""
 msgid "Header name"
 msgstr ""
 
-msgid "Image height"
+msgid "This page is also available in"
 msgstr ""
 
-msgid "Saved ratings"
+msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
 msgid "before"
@@ -472,6 +466,9 @@ msgid "Match urls"
 msgstr ""
 
 msgid "Page blocked by %(AppName)s"
+msgstr ""
+
+msgid "Saved ratings"
 msgstr ""
 
 msgid "Back to update overview"
@@ -539,10 +536,10 @@ msgstr ""
 msgid "Rule enclosed block successfully changed."
 msgstr ""
 
-msgid "Content rated by %(AppName)s"
+msgid "Filter https traffic through a local SSL server"
 msgstr ""
 
-msgid "Parse and evaluate content rating system header values."
+msgid "All pages define the following access keys:"
 msgstr ""
 
 msgid "Header rules apply either to client request, server request or both"
@@ -568,10 +565,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-msgid ""
-"Block or allow specific sites by URL name.\n"
-"Before matching a URL the hostname and path is unquoted to avoid\n"
-"spoofing attacks."
+msgid "Rating limits for"
 msgstr ""
 
 msgid "Parent proxy settings"
@@ -643,7 +637,7 @@ msgstr ""
 msgid "Response data of html pages"
 msgstr ""
 
-msgid "Port successfully changed."
+msgid "Port number the local SSL server is listening on for requests"
 msgstr ""
 
 msgid "Folder successfully renamed."
@@ -700,9 +694,6 @@ msgstr ""
 msgid ""
 "The configuration also allows you to change the\n"
 "password.\n"
-msgstr ""
-
-msgid "This page is also available in"
 msgstr ""
 
 msgid "Invalid image width value."
@@ -789,7 +780,7 @@ msgid ""
 "unsure, leave it at <code>localhost</code>.\n"
 msgstr ""
 
-msgid "Proxy configuration"
+msgid "Invalid SSL server port."
 msgstr ""
 
 msgid "Rule description successfully changed."
@@ -812,7 +803,10 @@ msgid ""
 "extensions (for example GIF comments)."
 msgstr ""
 
-msgid "Error sending mail."
+msgid ""
+"Execute and filter JavaScript (JS) in HTML pages using\n"
+"the integrated Spidermonkey JS engine. The filter deletes popups and places\n"
+"dynamic content emitted with document.write() into the HTML file."
 msgstr ""
 
 msgid "Request and response headers of all mime types."
@@ -865,7 +859,7 @@ msgstr ""
 msgid "Allowed host successfully added."
 msgstr ""
 
-msgid "Opera 6"
+msgid "Content rated by %(AppName)s"
 msgstr ""
 
 msgid "Go to rule:"
@@ -874,7 +868,7 @@ msgstr ""
 msgid "Rule moved up."
 msgstr ""
 
-msgid "Invalid proxy port."
+msgid "Proxy configuration"
 msgstr ""
 
 msgid "The content of this page is blocked by rule %(rule)s"
@@ -913,7 +907,7 @@ msgstr ""
 msgid "Folder moved up."
 msgstr ""
 
-msgid "Rating limits for"
+msgid "Configure rule %(rule)s."
 msgstr ""
 
 msgid "Accessibility statement for %(AppName)s"
@@ -927,7 +921,7 @@ msgid ""
 "be further customized by separate rules in the filter configuration.\n"
 msgstr ""
 
-msgid "see footnote 2"
+msgid "Rule rewrite tag successfully changed."
 msgstr ""
 
 msgid "Your request"
@@ -948,9 +942,6 @@ msgid "Rule replacement successfully changed."
 msgstr ""
 
 msgid "New rule"
-msgstr ""
-
-msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
 msgstr ""
 
 msgid "Changes to this option require a proxy restart to take effect."
@@ -995,7 +986,7 @@ msgstr ""
 msgid "Don't filter hosts"
 msgstr ""
 
-msgid "All pages define the following access keys:"
+msgid "SSL gateway"
 msgstr ""
 
 msgid "Filter update"
@@ -1021,7 +1012,7 @@ msgid ""
 "%(AppName)s as a proxy."
 msgstr ""
 
-msgid "Rewrite attribute(s) removed."
+msgid "Update content ratings"
 msgstr ""
 
 msgid "Disable folder"
@@ -1053,12 +1044,13 @@ msgstr ""
 msgid "Folder moved down."
 msgstr ""
 
+msgid "Error sending mail."
+msgstr ""
+
 msgid "Rule match-url successfully changed."
 msgstr ""
 
-msgid ""
-"An allow rule specifies regular expressions for urls\n"
-"which must be allowed, even if a matching block rule exists."
+msgid "Add, modify and delete HTTP headers of request and response."
 msgstr ""
 
 msgid "Folders"
@@ -1073,7 +1065,7 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
+msgid "Opera 6"
 msgstr ""
 
 msgid "List of urls this rule must not apply to"
@@ -1182,16 +1174,16 @@ msgstr ""
 msgid "see footnote 1"
 msgstr ""
 
+msgid "%(AppName)s"
+msgstr ""
+
 msgid "see footnote 3"
 msgstr ""
 
-msgid "Rule rewrite tag successfully changed."
+msgid "see footnote 2"
 msgstr ""
 
-msgid "see footnote 5"
-msgstr ""
-
-msgid "see footnote 4"
+msgid "Image height"
 msgstr ""
 
 msgid "Admin password"
@@ -1200,16 +1192,13 @@ msgstr ""
 msgid "Invalid selection index."
 msgstr ""
 
-msgid "Add, modify and delete HTTP headers of request and response."
+msgid "SSL port successfully changed."
 msgstr ""
 
 msgid "Rule don't-match-url successfully changed."
 msgstr ""
 
-msgid ""
-"Execute and filter JavaScript (JS) in HTML pages using\n"
-"the integrated Spidermonkey JS engine. The filter deletes popups and places\n"
-"dynamic content emitted with document.write() into the HTML file."
+msgid "List of domain names the proxy must not filter."
 msgstr ""
 
 msgid "Display Google search options for invalid pages"
@@ -1245,7 +1234,15 @@ msgstr ""
 msgid "Disable rule"
 msgstr ""
 
+msgid ""
+"An allow rule specifies regular expressions for urls\n"
+"which must be allowed, even if a matching block rule exists."
+msgstr ""
+
 msgid "Description"
+msgstr ""
+
+msgid "Port successfully changed."
 msgstr ""
 
 msgid "Accessibility statement"
@@ -1321,7 +1318,7 @@ msgstr ""
 msgid "after"
 msgstr ""
 
-msgid "%(AppName)s"
+msgid "SSL port number"
 msgstr ""
 
 msgid ""
@@ -1364,10 +1361,7 @@ msgstr ""
 msgid "response"
 msgstr ""
 
-msgid "footnote 4"
-msgstr ""
-
-msgid "footnote 5"
+msgid "Rewrite attribute(s) removed."
 msgstr ""
 
 msgid "Enabled filter module(s) %(filterenabled)s."
@@ -1388,10 +1382,16 @@ msgstr ""
 msgid "New folder successfully created."
 msgstr ""
 
-msgid "Configure rule %(rule)s."
+msgid "Invalid proxy port."
 msgstr ""
 
 msgid "request"
+msgstr ""
+
+msgid ""
+"Block or allow specific sites by URL name.\n"
+"Before matching a URL the hostname and path is unquoted to avoid\n"
+"spoofing attacks."
 msgstr ""
 
 msgid ""
