@@ -28,6 +28,11 @@
 #error please install Python >= 2.3
 #endif
 
+/* this will be in Python 2.4 */
+#ifndef Py_RETURN_NONE
+#define Py_RETURN_NONE do {Py_INCREF(Py_None); return Py_None;} while (0)
+#endif
+
 /* user_data type for SAX calls */
 typedef struct {
     /* the Python SAX class instance to issue callbacks */

@@ -517,8 +517,7 @@ static PyObject* parser_feed(PyObject* self, PyObject* args) {
 	PyErr_SetString(PyExc_MemoryError, "could not stop scanner");
 	return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 
@@ -545,8 +544,7 @@ static PyObject* parser_reset(PyObject* self, PyObject* args) {
         PyErr_SetString(PyExc_MemoryError, "could not initialize scanner data");
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 
