@@ -125,17 +125,17 @@ def update (config, baseurl, dryrun=False, log=None):
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
     """
-    url = baseurl+"md5sums.gz"
+    url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
     except IOError, msg:
         print >>log, "error fetching", url
         return False
+    chg = False
     filemap = {}
     for filename in wc.filterconf_files():
         filemap[os.path.basename(filename)] = filename
     lines = page.read().splitlines()
-    chg = False
     for line in lines:
         if "<" in line:
             print >>log, "error fetching", url
@@ -147,20 +147,63 @@ def update (config, baseurl, dryrun=False, log=None):
         fullname = os.path.join(ConfigDir, filename)
         # compare checksums
         if filemap.has_key(filename):
-            data = file(fullname).read()
+            f = file(fullname)
+            data = f.read()
             digest = list(md5.new(data).digest())
+            f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
                 print >>log, "filter", filename, "not changed, ignoring"
                 continue
             print >>log, "updating filter", filename
         else:
-            print >>log, "inserting new filter", filename
+            print >>log, "adding new filter", filename
         url = baseurl+filename+".gz"
         page = open_url(url)
         p = ZapperParser(fullname)
         p.parse(page)
         chg = config.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
+
+    url = baseurl+"extern-md5sums.txt"
+    try:
+        page = open_url(url)
+    except IOError, msg:
+        print >>log, "error fetching", url
+        return False
+    lines = page.read().splitlines()
+    for line in lines:
+        if "<" in line:
+            print >>log, "error fetching", url
+            return False
+        if not line:
+            continue
+        md5sum, filename = line.split()
+        # XXX UNIX-generated md5sum filenames with subdirs are not portable
+        fullname = os.path.join(ConfigDir, filename)
+        # compare checksums
+        if os.path.exists(fullname):
+            f = file(fullname)
+            data = f.read()
+            digest = list(md5.new(data).digest())
+            f.close()
+            digest = "".join([ "%0.2x"%ord(c) for c in digest ])
+            if digest==md5sum:
+                print >>log, "extern filter", filename, "not changed, ignoring"
+                continue
+            print >>log, "updating extern filter", filename
+        else:
+            print >>log, "adding new extern filter", filename
+        chg = True
+        if not dryrun:
+            url = baseurl+filename
+            try:
+                page = open_url(url)
+            except IOError, msg:
+                print >>log, "error fetching", url
+                continue
+            f = file(fullname, 'wb')
+            f.write(page.read())
+            f.close()
     return chg
 
 
