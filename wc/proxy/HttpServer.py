@@ -75,7 +75,6 @@ class HttpServer (wc.proxy.Server.Server):
         super(HttpServer, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
-        self.reset()
         self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
         self.try_connect()
 
@@ -92,6 +91,8 @@ class HttpServer (wc.proxy.Server.Server):
 
     def reset (self):
         """reset connection values"""
+        super(HttpServer, self).reset()
+        wc.log.debug(wc.LOG_PROXY, '%s reset', self)
         self.hostname = ''
         self.method = None
         self.document = ''
@@ -119,14 +120,14 @@ class HttpServer (wc.proxy.Server.Server):
 
     def __repr__ (self):
         """object description"""
-        extra = self.persistent and "persistent " or ""
-        if self.addr[1] != 80:
+        extra = ""
+        if hasattr(self, "persistent") and self.persistent:
+            extra += "persistent "
+        if hasattr(self, "addr") and self.addr and self.addr[1] != 80:
             portstr = ':%d' % self.addr[1]
-        else:
-            portstr = ''
-        extra += '%s%s%s' % (self.hostname or self.addr[0],
+            extra += '%s%s%s' % (self.hostname or self.addr[0],
                              portstr, self.document)
-        if self.client:
+        if hasattr(self, "client") and self.client:
             extra += " client"
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)

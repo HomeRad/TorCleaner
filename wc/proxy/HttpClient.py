@@ -61,7 +61,6 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.debug(wc.LOG_PROXY, "Connection to %s from %s",
                      self.socket.getsockname(), self.addr)
         self.allow = wc.proxy.Allowed.AllowedHttpClient()
-        self.reset()
         host = self.addr[0]
         if not self.allow.host(host):
             wc.log.warn(wc.LOG_PROXY, "host %s access denied", host)
@@ -69,6 +68,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def reset (self):
         """reset connection state"""
+        super(HttpClient, self).reset()
+        wc.log.debug(wc.LOG_PROXY, '%s reset', self)
         self.state = 'request'
         self.server = None
         self.request = ''
@@ -101,11 +102,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def __repr__ (self):
         """object representation"""
         extra = ""
-        if self.persistent:
+        if hasattr(self, "persistent") and self.persistent:
             extra += "persistent "
-        if self.server:
+        if hasattr(self, "server") and self.server:
             extra += "server "
-        if self.request:
+        if hasattr(self, "request") and self.request:
             try:
                 extra += self.request.split()[1]
             except IndexError:
@@ -567,12 +568,12 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def close_reuse (self):
         """Reset connection state, leave connection alive for pipelining"""
-        wc.log.debug(wc.LOG_PROXY, '%s reuse', self)
+        wc.log.debug(wc.LOG_PROXY, '%s close_reuse', self)
         super(HttpClient, self).close_reuse()
         self.reset()
 
     def close_close (self):
         """close this connection"""
-        wc.log.debug(wc.LOG_PROXY, '%s close', self)
+        wc.log.debug(wc.LOG_PROXY, '%s close_close', self)
         self.state = 'closed'
         super(HttpClient, self).close_close()
