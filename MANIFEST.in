@@ -2,8 +2,6 @@ include MANIFEST.in
 include README
 include TODO
 include cross-build.sh
-include noop
-include proxy.pac
 include webcleaner
 include webcleaner-service
 include webcleaner-certificates
@@ -34,6 +32,7 @@ include debian/webcleaner.templates
 include webcleaner.1
 include webcleaner.conf.5
 include webcleaner-certificates.1
+include config/proxy.pac
 include config/*.txt
 include config/*.zap
 include config/*.conf
@@ -46,6 +45,7 @@ include templates/classic/*.txt
 include templates/classic/*.png
 include templates/classic/*.js
 include templates/classic/*.css
+include templates/classic/*.xcf
 include templates/classic/blocked.*
 include templates/classic/macros/*.html
 include test/*.py
@@ -53,9 +53,7 @@ include test/*.sh
 include test/*.pot
 include test/*.po
 include test/Makefile
-include test/logging.conf
 include test/rating/rating.txt
-recursive-include tests *.py test*
 include bk/HtmlParser/htmllex.l
 include bk/HtmlParser/htmlparse.y
 include bk/HtmlParser/*.h
