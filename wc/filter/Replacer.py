@@ -36,7 +36,8 @@ class Replacer (Filter):
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['replacer']
-    mimelist = [compileMime(x) for x in ['text/html', 'text/javascript']]
+    mimelist = [compileMime(x) for x in ['text/html', 'text/javascript',
+                                         'application/x-javascript']]
 
 
     def addrule (self, rule):
