@@ -158,9 +158,10 @@ class ClientServerMatchmaker:
             new_url += self.document
             self.state = 'done'
             config['requests']['valid'] += 1
+            # XXX find http version!
             ServerHandleDirectly(
               self.client,
-              'HTTP/1.1 301 Use different host\r\n',
+              'HTTP/1.0 301 Use different host\r\n',
               'Content-type: text/html\r\n'
               'Location: http://%s\r\n'
               '\r\n' % new_url,

@@ -148,9 +148,10 @@ class HttpServer (Server):
             bytes_before = len(self.recv_buffer)
             state_before = self.state
             try:
-                getattr(self, 'process_'+self.state)()
+                handler = getattr(self, 'process_'+self.state)
             except AttributeError:
                 pass # NO-OP
+            handler()
             bytes_after = len(self.recv_buffer)
             state_after = self.state
             if self.client is None or \
@@ -217,18 +218,28 @@ class HttpServer (Server):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
+        debug(HURT_ME_PLENTY, "Server: Headers", `str(msg)`)
         if self.statuscode == '100':
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
         # filter headers
+        key = 'Connection'
+        http_ver = serverpool.http_versions[self.addr]
+        if http_ver >= 1.1:
+            self.can_reuse = not has_header_value(msg, key, 'Close')
+        elif http_ver >= 1.0:
+            self.can_reuse = has_header_value(msg, key, 'Keep-Alive')
+        else:
+            self.can_reuse = None
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
                                        msg, attrs=self.nofilter)
         except FilterPics, msg:
             debug(NIGHTMARE, "Server: FilterPics", msg)
-            response = "HTTP/1.1 200 OK"
+            # XXX get version
+            response = "HTTP/1.0 200 OK"
             headers = {
                 "Content-Type": "text/plain",
                 "Content-Length": len(msg),
@@ -240,15 +251,6 @@ class HttpServer (Server):
             self.state = 'recycle'
             self.reuse()
             return
-        debug(HURT_ME_PLENTY, "Server: Headers", `str(self.headers)`)
-        key = 'Connection'
-        http_ver = serverpool.http_versions[self.addr]
-        if http_ver >= 1.1:
-            self.can_reuse = not has_header_value(self.headers, key, 'Close')
-        elif http_ver >= 1.0:
-            self.can_reuse = has_header_value(self.headers, key, 'Keep-Alive')
-        else:
-            self.can_reuse = None
         set_proxy_headers(self.headers)
         self.check_headers()
         # add encoding specific headers and objects
@@ -501,7 +503,7 @@ def remove_hop_by_hop_headers (headers):
 
 def set_date_header (headers):
     """add rfc2822 date if it was missing"""
-    if not headers.hey_key('Date'):
+    if not headers.has_key('Date'):
         from email import Utils
         headers['Date'] = "%s\r"%Utils.formatdate()
 
