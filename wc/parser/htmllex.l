@@ -102,7 +102,9 @@ static PyObject* quote_string (PyObject* val) {
     int i;
     PyObject* prefix;
     for (i=0; i<len; i++) {
-	if (isspace(internal[i]) && !quote) {
+	if (!quote && (isspace(internal[i]) ||
+		       internal[i]=='<' ||
+		       internal[i]=='>')) {
             quote = "\"";
 	}
 	else if (internal[i]=='\'') {
