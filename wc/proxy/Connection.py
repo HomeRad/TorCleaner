@@ -47,14 +47,15 @@ class Connection (asyncore.dispatcher):
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
-            if not data: # It's been closed, and handle_close has been called
-                return
-            debug(HURT_ME_PLENTY, 'Proxy: read', len(data), '<=', self)
         except socket.error, err:
             if err==errno.EAGAIN:
                 return
             self.handle_error('read error', socket.error, err)
             return
+        if not data: # It's been closed, and handle_close has been called
+            return
+        debug(HURT_ME_PLENTY, 'Proxy: read', len(data), '<=', self)
+        debug(NIGHTMARE, 'Proxy: data', `data`)
 	self.recv_buffer += data
         self.process_read()
 
@@ -77,6 +78,7 @@ class Connection (asyncore.dispatcher):
             self.handle_error('write error', socket.error, err)
             return
         debug(HURT_ME_PLENTY, 'Proxy: wrote', num_sent, '=>', self)
+        debug(NIGHTMARE, 'Proxy: data', `data`)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = 0
