@@ -5,13 +5,13 @@ version 2.20
 - document how to install a proxy that can be used from outside
   (intranet or internet)
 
-- make JS filtering unicode aware
-
 - fix all test cases
 
 version 2.21 and above
 
 - use ssl-cert-check bash script
+
+- Test "www.%s" DNS search pattern for automationpartnership.com
 
 - Python 2.4 made socket.sslerror a subclass of socket.error; can we
   use that?
