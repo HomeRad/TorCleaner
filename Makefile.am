@@ -45,14 +45,14 @@ dist-hook:
 	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
 	rm -f webcleaner-md5sums.txt
 
-mytest:
+testwc:
 	$(ENV) $(PYTHON) test/regrtest.py
 
-gentest:
+testgen:
 	$(ENV) $(PYTHON) test/regrtest.py -g
 
 # filter and parse random data
-randomtest:
+testrandom:
 	@echo "parse random data..."
 	rm -f randomparse.txt
 	head -c 20000 /dev/urandom | $(ENV) $(PYTHON) test/parsefile.py - > /dev/null 2> randomparse.txt
@@ -62,6 +62,8 @@ randomtest:
 	head -c 20000 /dev/urandom | $(ENV) $(PYTHON) test/filterfile.py - > /dev/null 2> randomfilter.txt
 	@echo "done."
 
+testupdate:
+	$(ENV) $(PYTHON) wc/update.py
 
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
