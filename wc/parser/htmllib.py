@@ -43,23 +43,10 @@ class HtmlParser:
     def __init__ (self, debug=0):
         """initialize the internal parser"""
         self.parser = htmlsax.new_parser(self)
-        self.debug = self.parser.debug
 
-
-    def feed (self, data):
-        """feed some data to the parser"""
-        self.parser.feed(data)
-
-
-    def flush (self):
-        """flush all data"""
-        self.parser.flush()
-
-
-    def reset (self):
-        """reset the parser (without flushing)"""
-        self.parser.reset()
-
+    def __getattr__ (self, name):
+        """delegate unknown attrs to self.parser"""
+        return getattr(self.parser, name)
 
 
 class HtmlPrinter (HtmlParser):

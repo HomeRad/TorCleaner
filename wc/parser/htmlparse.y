@@ -515,7 +515,8 @@ static PyObject* parser_reset(PyObject* self, PyObject* args) {
     /* reset buffer */
     RESIZE_BUF(p->userData->buf);
     RESIZE_BUF(p->userData->tmp_buf);
-    p->userData->bufpos = 0;
+    p->userData->bufpos =
+        p->userData->nextpos = 0;
     p->userData->tmp_tag = p->userData->tmp_attrs =
         p->userData->tmp_attrval = p->userData->tmp_attrname = NULL;
     p->scanner = NULL;
@@ -543,9 +544,13 @@ static PyObject* parser_debug(PyObject* self, PyObject* args) {
 
 /* type interface */
 static PyMethodDef parser_methods[] = {
+    /* incremental parsing */
     {"feed",  parser_feed, METH_VARARGS, "feed data to parse incremental"},
+    /* reset the parser (no flushing) */
     {"reset", parser_reset, METH_VARARGS, "reset the parser (no flushing)"},
+    /* flush the parser buffers */
     {"flush", parser_flush, METH_VARARGS, "flush parser buffers"},
+    /* set debugging on/off */
     {"debug", parser_debug, METH_VARARGS, "set debug level"},
     {NULL, NULL, 0, NULL}
 };
@@ -578,7 +583,7 @@ static PyTypeObject parser_type = {
 
 /* python module interface */
 static PyMethodDef htmlsax_methods[] = {
-    {"new_parser", (PyCFunction)htmlsax_parser_new, METH_VARARGS,
+    {"new_parser", htmlsax_parser_new, METH_VARARGS,
      "Create a new HTML parser object."},
     {NULL, NULL, 0, NULL}
 };
