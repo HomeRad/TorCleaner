@@ -12,7 +12,7 @@ def _main():
     import wc, time
     wc.config = wc.Configuration()
     # set debug level
-    wc.set_debuglevel(wc.HURT_ME_PLENTY)
+    wc.set_debuglevel(wc.NIGHTMARE)
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
     from wc.proxy import proxy_poll, run_timers
@@ -22,22 +22,23 @@ def _main():
     data = f.read(1024)
     while data:
         try:
-            filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                             data, 'filter', attrs)
+            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
+                                              data, 'filter', attrs)
         except FilterException, msg:
             pass
         data = f.read(1024)
     i = 1
     while 1:
         try:
-            filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
+            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
                                              "", 'finish', attrs)
             break
         except FilterException, msg:
-            print "Test: finish: exception:", msg
+            print >>sys.stderr, "Test: finish: exception:", msg
             proxy_poll(timeout=max(0, run_timers()))
         i+=1
         if i==99:
+            # background downloading if javascript is too slow
             print "Test: oooooops"
             break
     print filtered
