@@ -18,6 +18,3 @@ The HTML parser is inspired from HotSAX.
 Thanks to CoAdvisor, for extracting all the important RFC stuff for
 non-caching proxies in their test case documentation.
 
-Thanks to Colin Stewart for making simpleTAL.
-
-
