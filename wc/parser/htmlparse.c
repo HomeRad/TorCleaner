@@ -1581,6 +1581,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     p->userData->handler = handler;
     NEW_BUF(p->userData->buf);
     p->userData->nextpos = 0;
+    p->userData->bufpos = 0;
     NEW_BUF(p->userData->tmp_buf);
     p->userData->tmp_tag = p->userData->tmp_attrname =
 	p->userData->tmp_attrval = p->userData->tmp_attrs =
@@ -1596,6 +1597,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 
 
 static void parser_dealloc(parser_object* self) {
+    htmllexDestroy(self->scanner);
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
     PyMem_Del(self->userData);
@@ -1631,10 +1633,6 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
     RESIZE_BUF(self->userData->tmp_buf);
     self->userData->tmp_tag = self->userData->tmp_attrs =
 	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
-    if (htmllexInit(&(self->scanner), self->userData)!=0) {
-        PyErr_SetString(PyExc_MemoryError, "could not initialize scanner data");
-        return NULL;
-    }
     return Py_BuildValue("i", res);
 }
 
@@ -1642,8 +1640,8 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 /* feed a chunk of data to the parser */
 static PyObject* parser_feed(parser_object* self, PyObject* args) {
     /* set up the parse string */
-    int slen;
-    char* s;
+    int slen = 0;
+    char* s = NULL;
     if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
