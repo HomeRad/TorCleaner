@@ -9,6 +9,8 @@
     Changed files: wc/proxy/HttpClient.py
   * import errno
     Changed files: wc/proxy/Connection.py
+  * import sys
+    Changed files: wc/proxy/Listener.py
   * use tuple of allowed Content-Encodings instead of regex
     Changed files: wc/filter/Compress.py
   * updated squid example config with no-digest peer option
@@ -18,6 +20,9 @@
       wc/parser/htmlparse.c wc/parser/htmlparse.h
   * enable the referrer HTTP header filter per default
     Changed files: config/header.zap
+  * add allowed host acls for client connects
+    Changed files: wc/proxy/HttpClient.py, wc/gui/ConfWindow.py,
+      config/webcleaner.conf, wc/__init__.py
 
 0.58:
   * Set the 'Via' HTTP header when forwarding requests/responses
