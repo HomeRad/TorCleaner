@@ -46,6 +46,9 @@ localbuild: all
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/
 
+crossdist: distclean
+	./crossbuild.sh
+
 # cross compilation Linux -> Win32 script
 crossbuild: all
 # build the .exe
@@ -96,7 +99,7 @@ releasecheck:
 	  echo "Could not release: update TODO for next version"; false; \
 	fi
 
-release: releasecheck dist upload homepage
+release: releasecheck dist crossdist upload homepage
 	mozilla -remote "openUrl(https://sourceforge.net/projects/webcleaner, new-tab)"
 	@echo "Make SF release and press return..."
 	@read
@@ -104,7 +107,7 @@ release: releasecheck dist upload homepage
 	$(MAKE) -C ~/public_html/webcleaner.sf.net upload
 
 upload:
-	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
+	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz dist/webcleaner-$(VERSION).win32-py$(PYVER).exe
 
 homepage: homepage-zapper
 	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
