@@ -1,0 +1,20 @@
+Specification of rating data
+----------------------------
+
+A rating database consists of
+
+- a set of single ratings with unique URLs
+
+A single rating consists of
+
+- a normed http: URL, satisfying the _safe* patterns in wc/url.py
+- a boolean flag specifying if the URL is generic or not
+- a set of categories with unique names
+
+A single category consists of
+
+- a name
+- a value
+- an indicator about the value vadility which is either
+  + a set of allowed values
+  + a range specification

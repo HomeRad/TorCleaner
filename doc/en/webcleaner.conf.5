@@ -1,0 +1,124 @@
+.TH WEBCLEANER.CONF 5 "3 January 2003"
+.SH NAME
+webcleaner.conf \- configuration file for WebCleaner
+.SH DESCRIPTION
+\fBwebcleaner.conf\fP is the main configuration file for the
+WebCleaner proxy. The file has a custom XML format following
+the Document Type Definition in the file \fBwebcleaner.dtd\fP.
+.SH SETTINGS
+.TP
+\fBversion\fP
+The configuration format version.
+.TP
+\fBport\fP
+The port number the WebCleaner Proxy is running on.
+.TP
+\fBsslport\fP
+The port number for the WebCleaner SSL server.
+.TP
+\fBsslgateway\fP
+If set to one, WebCleaner will start an SSL server on the above port
+for delegating and filtering HTTPS traffic.
+.TP
+\fBadminuser\fP
+The user name for the proxy configuration interface.
+.TP
+\fBadminpass\fP
+The base64 encoded password for the proxy configuration interface.
+.TP
+\fBproxyuser\fP
+The user name for proxy authentication.
+.TP
+\fBproxypass\fP
+The base64 encoded password for proxy authentication.
+.TP
+\fBparentproxy\fP
+The hostname of the HTTP parent proxy. Leave empty to
+not use a parent proxy.
+.TP
+\fBparentproxyport\fP
+The port number the parent proxy is running on.
+.TP
+\fBparentproxyuser\fP
+The user name for parent proxy authentication.
+.TP
+\fBparentproxypass\fP
+The base64 encoded password for parent proxy authentication.
+.TP
+\fBtimeout\fP
+Connection timeout in seconds.
+.TP
+\fBgui\_theme\fP
+Web configuration gui theme selection.
+.TP
+\fBnofilterhosts\fP
+Comma separated list of hosts for which filtering is disabled.
+.TP
+\fBallowedhosts\fP
+Comma separated list of hosts which are allowed to use this proxy.
+.TP
+\fBauth_ntlm\fP
+If set to one, will authenticate with NTLM algorithm.
+.TP
+\fBtry_google\fP
+If set to one, will display on timeouts or other fatal server errors
+a page with links to google cache for the requested page.
+.SH FILTER
+.TP
+\fBBlocker\fP
+Block specific urls; this replaces advert images and frames.
+.TP
+\fBCompress\fP
+Compress documents with good compression ratio (HTML, WAV, ...).
+.TP
+\fBBinaryCharFilter\fP
+Replace some binary chars (espacially those illegal Microsoft
+quote chars).
+.TP
+\fBGifImage\fP
+Deanimate GIF images and remove GIF comments.
+.TP
+\fBHeader\fP
+Replace, modify and add arbitrary HTTP headers.
+.TP
+\fBImageReducer\fP
+Reduce all images to low-quality JPEG images. Useful for users
+with very low bandwidth.
+.TP
+\fBImageSize\fP
+Filter images by size.
+.TP
+\fBMimeRecognizer\fP
+Detect and correct missing or wrong Content-Type headers.
+.TP
+\fBPicsHeader\fP
+PICS filtering.
+.TP
+\fBReplacer\fP
+Replace text pieces in text data files (HTML, plain text, ...).
+.TP
+\fBRewriter\fP
+Parse the HTML stream and replace arbitrary tag constructs; filters
+most advertising.
+.TP
+\fBVirusFilter\fP
+Turns on clamav virus filtering (if clamav is installed).
+.SH EXAMPLE
+ <?xml version="1.0"?>
+ <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
+ <webcleaner 
+  version="0.8"
+  port="8000"
+  parentproxy="squid.company.com"
+  parentproxyport="3128"
+  >
+   <filter name="Rewriter"/>
+   <filter name="Blocker"/>
+   <filter name="Header"/>
+   <filter name="Replacer"/>
+   <filter name="GifImage"/>
+  </webcleaner>
+.SH "SEE ALSO"
+webcleaner(1)
+.SH AUTHOR
+Bastian Kleineidam <calvin@users.sourceforge.net>
