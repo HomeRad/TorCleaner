@@ -118,8 +118,7 @@ class Compress (wc.filter.Filter.Filter):
         encoding = headers['server'].get('Content-Encoding', '').lower()
         if 'gzip' not in accepts:
             # browser does not accept gzip encoding
-            wc.log.warn(wc.LOG_FILTER,
-                    "browser does not support gzip compression (%s)", accepts)
+            pass
         elif encoding and encoding not in _compress_encs:
             compressobj = get_compress_object()
             headers['data']['Content-Encoding'] = encoding+', gzip\r'
