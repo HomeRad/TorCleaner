@@ -212,7 +212,7 @@
 <rewrite title="IMDB Advert" oid="35"
  desc="redirect CGI at the Internet Movie database Unfortunately they forgot one &lt;/a&gt; tag, so I have to filter everything manually :/ "
  matchurl="\.imdb\.">
-<attr>/tiger_redirect\?((TITLE|FIND)_TOP|(COVER|CREDITS|COMMENTS)_RHS|QUOTES|(P|E)GALLERY|(PLOT|NAME|BIO|SB|TURLS)_TOP|SOUNDTRACKS|INTLHS)</attr>
+<attr>/tiger_redirect\?((TITLE|FIND)_TOP|(COVER|CREDITS|COMMENTS)_RHS|QUOTES|(P|E)?GALLERY|(PLOT|NAME|BIO|SB|(T|N)URLS)_TOP|SOUNDTRACKS|(INT|EGAL_)LHS)</attr>
 </rewrite>
 
 <rewrite title="OSDN navbar" oid="36"
