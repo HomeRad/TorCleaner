@@ -13,7 +13,7 @@ def _main ():
         f = file(sys.argv[1])
     from wc.parser.htmllib import HtmlPrinter
     from wc.parser import htmlsax
-    p = htmlsax.new_parser(HtmlPrinter())
+    p = htmlsax.parser(HtmlPrinter())
     #p.debug(1)
     data = f.read(1024)
     while data:
