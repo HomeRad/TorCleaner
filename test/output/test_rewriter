@@ -43,11 +43,11 @@ test_rewriter
 
 <!-- transform erotic link :) -->
 <!-- <a href="http://playboy.com/issue/">blubba</a> -->
-     <a href="http://www.calvinandhobbes.com/">blubba</a>
+     <a href=http://playboy.com/issue/>blubba</a>
 
 <!-- redirect -->
 <!-- <a href="http://www.fileleech.com/dl/?filepath=http://www.counter-strike.de/downloads/ghl10full.exe&download=1">CS 1.0</a> -->
-     <a href="http://www.counter-strike.de/downloads/ghl10full.exe">CS 1.0</a>
+     <a href=http://www.counter-strike.de/downloads/ghl10full.exe>CS 1.0</a>
 
 <!-- unquoted ampersand -->
 <!-- Hallo Ernie & Bert, was geht? --><p>
@@ -67,7 +67,7 @@ test_rewriter
 
 <!-- unquoted attribute ending with slash -->
 <!-- <a href=http://www/>link</a> -->
-<a href="http://www/">link</a>
+<a href=http://www/>link</a>
 
 <!-- illegal binary chars (see source) -->
 These &#145;Microsoft chars&#145; are history.
@@ -84,7 +84,7 @@ These &#145;Microsoft chars&#145; are history.
 <!-- <a href="bla>link</a> -->
 <a href=bla>link</a>
 
-<script defer type="text/javascript">
+<script defer type=text/javascript>
 <!-- Hide code for older browsers...
 // window instance
 w = self;
