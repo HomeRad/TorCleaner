@@ -1,6 +1,7 @@
 webcleaner (1.0-1) unstable; urgency=low
 
   * New upstream release.
+  * exit 1 on errors in postinst and prerm
 
  -- Bastian Kleineidam <calvin@debian.org>  Tue, 15 Oct 2002 11:33:17 +0200
 
