@@ -3,6 +3,7 @@ from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
+from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip, remove_headers
 from wc.proxy import log, match_host
 from wc.webgui.WebConfig import HTML_TEMPLATE
