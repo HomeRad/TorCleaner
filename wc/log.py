@@ -151,7 +151,6 @@ def blocktext2 (s, width):
     ret = ""
     cache = ""
     verbatim = 0
-    quote = 0
     for line in s:
         if not line.strip():
             ret += cache+"\n"

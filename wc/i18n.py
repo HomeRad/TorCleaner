@@ -31,7 +31,7 @@ def init_gettext ():
     global _, default_language
     try:
         _ = gettext.translation(Name, LocaleDir).gettext
-    except IOError, msg:
+    except IOError:
         # default gettext function
         _ = lambda s: s
     # get supported languages

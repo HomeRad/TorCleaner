@@ -1,13 +1,7 @@
 #!/usr/bin/python2.3
 import os, md5
-try:
-    import wc
-except ImportError:
-    import sys
-    sys.path.insert(0, os.getcwd())
-    import wc
-    print "using local development version"
-from wc import ConfigDir, ZapperParser
+from wc import ConfigDir, ZapperParser, Configuration, filterconf_files
+from wc import Name, Version
 from wc.log import *
 
 #
@@ -37,7 +31,6 @@ from wc.log import *
 # modified by Bastian Kleineidam <calvin@users.sf.net> for WebCleaner
 
 import httplib, urllib, urllib2, re, socket
-from wc import Name, Version
 UA_STR = '%s/%s' % (Name, Version)
 
 def decode (page):
@@ -133,7 +126,7 @@ def update (config, baseurl, dryrun=False, log=None):
         return False
     chg = False
     filemap = {}
-    for filename in wc.filterconf_files():
+    for filename in filterconf_files():
         filemap[os.path.basename(filename)] = filename
     lines = page.read().splitlines()
     for line in lines:
@@ -161,7 +154,7 @@ def update (config, baseurl, dryrun=False, log=None):
         url = baseurl+filename+".gz"
         page = open_url(url)
         p = ZapperParser(fullname)
-        p.parse(page)
+        p.parse(page, config)
         chg = config.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
 
     url = baseurl+"extern-md5sums.txt"
@@ -209,7 +202,7 @@ def update (config, baseurl, dryrun=False, log=None):
 
 def _test ():
     # read local configuration
-    config = wc.Configuration()
+    config = Configuration()
     # test base url for all files
     baseurl = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
     update(config, baseurl, dryrun=True)
