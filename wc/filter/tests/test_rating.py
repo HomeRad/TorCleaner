@@ -2,12 +2,15 @@
 """test rating routines"""
 
 import unittest
-#from wc.filter.Rating import *
+
+import wc.filter.rating
+import wc.filter.rating.category
 
 
 class TestRating (unittest.TestCase):
 
-    def XXXtestRating_split_url (self):
+    def test_split_url (self):
+        """test url splitting"""
         urls = (
             ('', []),
             ('a', []),
@@ -21,21 +24,41 @@ class TestRating (unittest.TestCase):
             ('http://imadoofus.com/forum/', ['http://', 'imadoofus.com', '/', 'forum']),
         )
         for url, res in urls:
-            self.assertEqual(rating_split_url(url), res)
+            self.assertEqual(wc.filter.rating.split_url(url), res)
 
-    def XXXtestRating_in_range (self):
-        # rating_in_range (prange, value)
-        self.assert_(rating_in_range((None, None), (1, 1)))
-        self.assert_(rating_in_range((1, 1), (None, None)))
-        self.assert_(rating_in_range((None, 1), (1, None)))
-        self.assert_(rating_in_range((1, None), (None, 1)))
-        self.assert_(rating_in_range((1, 2), (1, 2)))
-        self.assert_(not rating_in_range((1, 2), (0, 1)))
-        self.assert_(not rating_in_range((1, 2), (1, 3)))
-        self.assert_(not rating_in_range((1, 2), (0, None)))
-        self.assert_(not rating_in_range((1, 2), (None, 3)))
+    def test_range_range (self):
+        """test range in range"""
+        in_range = wc.filter.rating.category.range_in_range
+        # in_range(vrange, prange)
+        self.assert_(in_range((1, 1), (None, None)))
+        self.assert_(in_range((None, None), (1, 1)))
+        self.assert_(in_range((1, None), (None, 1)))
+        self.assert_(in_range((None, 1), (1, None)))
+        self.assert_(in_range((1, 2), (1, 2)))
+        self.assert_(not in_range((0, 1), (1, 2)))
+        self.assert_(not in_range((1, 3), (1, 2)))
+        self.assert_(not in_range((0, None), (1, 2)))
+        self.assert_(not in_range((None, 3), (1, 2)))
+        self.assert_(not in_range((1, 3), (4, 7)))
+
+    def test_range_value (self):
+        """test value in range"""
+        in_range = wc.filter.rating.category.value_in_range
+        # in_range(value, prange)
+        self.assert_(in_range(1, (None, None)))
+        self.assert_(in_range(None, (1, 1)))
+        self.assert_(in_range(None, (None, 1)))
+        self.assert_(in_range(1, (None, 1)))
+        self.assert_(in_range(None, (1, None)))
+        self.assert_(in_range(1, (1, None)))
+        self.assert_(in_range(1, (1, 2)))
+        self.assert_(in_range(2, (1, 2)))
+        self.assert_(not in_range(0, (1, 2)))
+        self.assert_(not in_range(3, (1, 2)))
+        self.assert_(not in_range(1, (4, 7)))
 
     def XXXtestRating_range (self):
+        """test range parsing"""
         # rating_range (range)
         self.assertEqual(rating_range("-"), (None, None))
         self.assertEqual(rating_range("1-"), (1, None))
