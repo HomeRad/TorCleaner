@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Thu Sep 25 13:38:51 2003\n"
+"POT-Creation-Date: Sat Oct  4 10:32:50 2003\n"
 "PO-Revision-Date: 2003-09-16 09:03+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -926,7 +926,7 @@ msgid ""
 "touched on a filter update."
 msgstr ""
 "Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden\n"
-"bei einem Filter update nicht gelöscht."
+"bei einer Filteraktualisierung nicht gelöscht."
 
 msgid "Folder successfully removed."
 msgstr "Ordner erfolgreich gelöscht."
@@ -976,6 +976,9 @@ msgstr "Rechnername des übergeordneten Proxy"
 
 msgid "Username"
 msgstr "Benutzername"
+
+msgid "Rewrite attribute(s) removed."
+msgstr "Rewrite Attribut(e) wurde(n) gelöscht."
 
 msgid "Invalid image width value."
 msgstr "Ungültige Bildbreite."
@@ -1051,8 +1054,8 @@ msgstr "Nicht zu filternde Rechner"
 msgid "Password used for parent proxy authentication"
 msgstr "Passwort zur Authentifizierung des übergeordneten Proxy"
 
-msgid "Rule title successfully changed."
-msgstr "Regel Titel wurde erfolgreich geändert."
+msgid "Parent proxy user successfully changed."
+msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
 
 msgid "Rule successfully enabled."
 msgstr "Regel wurde erfolgreich aktiviert."
@@ -1142,8 +1145,8 @@ msgstr "Filterkonfiguration"
 msgid "Empty attribute name."
 msgstr "Leerer Attributname."
 
-msgid "Parent proxy user successfully changed."
-msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
+msgid "Use Google cache contents for invalid pages"
+msgstr ""
 
 msgid "Nofilter host(s) successfully removed."
 msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
@@ -1181,8 +1184,8 @@ msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
 msgid "Blank page due to block by %(AppName)s"
 msgstr "Leere Seite aufgrund von Blockierung durch %(AppName)s"
 
-msgid "Rewrite attribute(s) removed."
-msgstr "Rewrite Attribut(e) wurde(n) gelöscht."
+msgid "Rule title successfully changed."
+msgstr "Regel Titel wurde erfolgreich geändert."
 
 msgid "Disable folder"
 msgstr "Ordner deaktivieren"
@@ -1406,6 +1409,9 @@ msgstr "Ungültige Proxy Portnummer."
 
 msgid "Invalid attribute name."
 msgstr "Ungültiger Attributname."
+
+msgid "Use Google cache"
+msgstr ""
 
 msgid "Apply"
 msgstr "Übernehmen"

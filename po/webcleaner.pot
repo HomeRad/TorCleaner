@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Thu Sep 25 13:38:51 2003\n"
+"POT-Creation-Date: Sat Oct  4 10:32:50 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -873,6 +873,9 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
+msgid "Rewrite attribute(s) removed."
+msgstr ""
+
 msgid "Invalid image width value."
 msgstr ""
 
@@ -942,7 +945,7 @@ msgstr ""
 msgid "Password used for parent proxy authentication"
 msgstr ""
 
-msgid "Rule title successfully changed."
+msgid "Parent proxy user successfully changed."
 msgstr ""
 
 msgid "Rule successfully enabled."
@@ -1025,7 +1028,7 @@ msgstr ""
 msgid "Empty attribute name."
 msgstr ""
 
-msgid "Parent proxy user successfully changed."
+msgid "Use Google cache contents for invalid pages"
 msgstr ""
 
 msgid "Nofilter host(s) successfully removed."
@@ -1064,7 +1067,7 @@ msgstr ""
 msgid "Blank page due to block by %(AppName)s"
 msgstr ""
 
-msgid "Rewrite attribute(s) removed."
+msgid "Rule title successfully changed."
 msgstr ""
 
 msgid "Disable folder"
@@ -1279,6 +1282,9 @@ msgid "Invalid proxy port."
 msgstr ""
 
 msgid "Invalid attribute name."
+msgstr ""
+
+msgid "Use Google cache"
 msgstr ""
 
 msgid "Apply"
