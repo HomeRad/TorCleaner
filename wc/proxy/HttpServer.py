@@ -93,26 +93,26 @@ class HttpServer(Server):
         self.write('Connection: Keep-Alive\r\n') # TODO: modify existing header
         self.write('\r\n')
         self.write(self.content)
-
         self.state = 'response'
-        
+
+
     def client_send_request(self, method, hostname, document, headers,
-                            content, client):
+                            content, client, nofilter):
         assert self.state == 'client'
-        
         self.client = client
         self.method = method
         self.hostname = hostname
         self.document = document
         self.content = content
-
+        self.nofilter = nofilter
         self.send_request()
-        
+
+
     def process_response(self):
         i = find(self.recv_buffer, '\n')
         if i < 0: return
-        
-        self.response = applyfilter(FILTER_RESPONSE, self.read(i+1))
+        self.response = applyfilter(FILTER_RESPONSE, self.read(i+1),
+	                attrs=self.nofilter)
         if find(self.response, 'HTTP') >= 0:
             # Okay, we got a valid response line
             self.state = 'headers'
@@ -121,7 +121,7 @@ class HttpServer(Server):
         elif not strip(self.response):
             # It's a blank line, so assume HTTP/0.9
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	                   rfc822.Message(StringIO('')))
+	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
             self.decoders = []
             self.state = 'content'
@@ -141,7 +141,8 @@ class HttpServer(Server):
         if not m: return
         
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	               rfc822.Message(StringIO(self.read(m.end()))))
+	               rfc822.Message(StringIO(self.read(m.end()))),
+		       attrs=self.nofilter)
         if self.headers.has_key('content-length'):
             self.bytes_remaining = int(self.headers.getheader('content-length'))
         else:
@@ -179,6 +180,7 @@ class HttpServer(Server):
         self.client.server_response(self.response, self.headers)
         mime = self.headers.get('content-type', 'application/octeet-stream')
         self.attrs = initStateObjects(mime, self.headers)
+        self.attrs['nofilter'] = self.nofilter['nofilter']
         if ((response and response[1] in ('204', '304')) or
             self.method == 'HEAD'):
             # These response codes indicate no content

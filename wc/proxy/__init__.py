@@ -6,17 +6,18 @@ used by Bastian Kleineidam for WebCleaner
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import sys, os, urlparse, time, select, asyncore, wc
-from wc import debug
+import sys, re, os, urlparse, time, select, asyncore
+from wc import debug,_,config
 from wc.debug_levels import *
+from string import lower
 
 TIMERS = [] # list of (time, function)
 
 def log(msg):
     """If _LOGFILE is defined write the msg into it. The message msg
        must be in common log file format."""
-    if _LOGFILE:
-        _LOGFILE.write(msg)
+    if config['logfile']:
+        config['logfile'].write(msg)
 
 
 # XXX better name/implementation for this function
@@ -25,9 +26,6 @@ def stripsite(url):
     url = urlparse.urlparse(url)
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
 
-class ProxyConfig:
-    local_sockets_only = 0
-    
 def make_timer(delay, callback):
     "After DELAY seconds, run the CALLBACK function"
     TIMERS.append( (time.time() + delay, callback) )
@@ -49,8 +47,22 @@ def run_timers():
     else:      return 60
 
 
-def print_socketlist():
-    s = 'connections: ['
+def status_info():
+    s = """
+WebCleaner Proxy Status Info
+----------------------------
+
+Uptime: %s
+
+Valid Requests:   %d
+Invalid Requests: %d
+Failed Requests:  %d
+
+Active connections: [""" % \
+    (format_seconds(time.time() - config['starttime']),
+     config['requests']['valid'],
+     config['requests']['invalid'],
+     config['requests']['failed'])
     first = 1
     for conn in asyncore.socket_map.values():
         if first:
@@ -58,14 +70,30 @@ def print_socketlist():
             first = 0
         else:
             s += '\n              %s\n' % conn
-    s += ']\n'
-    s += 'dnscache: %s' % dns_lookups.dnscache
+    s += ']\n\ndnscache: %s' % dns_lookups.dnscache
     return s
 
 
-def periodic_print_socketlist():
-    print print_socketlist()
-    make_timer(60, periodic_print_socketlist)
+def format_seconds(seconds):
+    minutes = 0
+    hours = 0
+    days = 0
+    if seconds > 60:
+        minutes = seconds / 60
+        seconds = seconds % 60
+        if minutes > 60:
+            hours = minutes / 60
+            minutes = minutes % 60
+            if hours > 24:
+                days = hours / 24
+                hours = hours % 24
+    return _("%d days, %02d:%02d:%02d") % (days, hours, minutes, seconds)
+
+
+def periodic_print_status():
+    print status_info()
+    make_timer(60, periodic_print_status)
+
 
 def proxy_poll(timeout=0.0):
     smap = asyncore.socket_map
@@ -115,29 +143,14 @@ def proxy_poll(timeout=0.0):
                 x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
         return handlerCount
 
-
-def configure(config):
-    global _PORT,_LOGFILE,_PARENT_PROXY,_PARENT_PROXY_PORT,_NO_PROXY_FOR
-    _PORT = config['port']
-    _PARENT_PROXY_PORT = config['parentproxyport']
-    _PARENT_PROXY = config['parentproxy']
-    _LOGFILE = config['logfile']
-    _TIMEOUT = config['timeout']
-    _OBFUSCATE_IP = config['obfuscateip']
-    wc.filter._FILTER_LIST = config['filterlist']
-    _NO_PROXY_FOR = config['noproxyfor'].keys()
-    if _LOGFILE == 'stdout':
-        _LOGFILE = sys.stdout
-    elif _LOGFILE:
-        _LOGFILE = open(_LOGFILE, 'a')
-    config.init_filtermodules()
+    #_OBFUSCATE_IP = config['obfuscateip']
 
 
-def proxy_filters(host):
-    for domain in _NO_PROXY_FOR:
-        if domain in host:
-            return 0
-    return 1
+def match_host(host):
+    for domain in config['noproxyfor'].keys():
+        if host.find(domain) != -1:
+            return 1
+    return 0
 
 
 def mainloop():
@@ -145,7 +158,7 @@ def mainloop():
     from Listener import Listener
     # I wrap these in a lambda/apply so that if the module is
     # reloaded, I can use the NEW classes
-    Listener(_PORT, lambda *args: apply(HttpClient.HttpClient, args))
+    Listener(config['port'], lambda *args: apply(HttpClient.HttpClient, args))
     #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))
     # make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)

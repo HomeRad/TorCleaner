@@ -1,13 +1,11 @@
 import asyncore,socket
-from wc import debug
+from wc import debug,config
 from wc.debug_levels import *
-
-local_sockets_only = 1
 
 class Listener(asyncore.dispatcher):
     def __init__(self, port, handler):
         asyncore.dispatcher.__init__(self)
-        self.addr = (('', 'localhost')[local_sockets_only], port)
+        self.addr = (('', 'localhost')[config['local_sockets_only']], port)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.set_reuse_addr()
         self.bind(self.addr)

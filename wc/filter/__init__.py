@@ -23,7 +23,7 @@ to see how its done.
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import string,sys
+import string,sys,wc
 from wc import debug
 from wc.debug_levels import *
 
@@ -63,6 +63,7 @@ def GetRuleFromName(name):
         return klass()
     raise ValueError, "unknown rule name "+name
 
+
 def applyfilter(i, arg, fun='filter', attrs={}):
     """Apply all filters which are registered in filter level i.
     For different filter levels we have different arg objects.
@@ -71,7 +72,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     if attrs.get('nofilter'): return arg
     try:
         debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
-        for f in _FILTER_LIST[i]:
+        for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
             if hasattr(f, 'mimelist'):
                 if attrs['mime'] in f.mimelist:
@@ -84,13 +85,15 @@ def applyfilter(i, arg, fun='filter', attrs={}):
         pass
     return arg
 
+
 def initStateObjects(mime="text/html", headers={}):
     attrs = {'mime': mime}
     for i in range(10):
-        for f in _FILTER_LIST[i]:
+        for f in wc.config['filterlist'][i]:
             if hasattr(f, 'mimelist'):
                 if mime in f.mimelist:
                     attrs.update(f.getAttrs(headers))
             else:
                 attrs.update(f.getAttrs(headers))
     return attrs
+

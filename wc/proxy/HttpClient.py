@@ -4,7 +4,7 @@ from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from string import split,find,join
 from wc import debug
-from wc.proxy import log
+from wc.proxy import log,match_host
 from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
@@ -45,8 +45,9 @@ class HttpClient(Connection):
             if i >= 0: # One newline ends request
                 # self.read(i) is not including the newline
                 self.request = self.read(i)
-                self.request = applyfilter(FILTER_REQUEST,
-		        self.request, fun="finish")
+                self.nofilter = {'nofilter': match_host(self.request)}
+                self.request = applyfilter(FILTER_REQUEST, self.request,
+                               fun="finish", attrs=self.nofilter)
                 log('%s - %s - %s\n' % (self.addr,
 		    time.ctime(time.time()), self.request))
                 self.state = 'headers'
@@ -59,7 +60,7 @@ class HttpClient(Connection):
                 i -= 2 # Skip over newline before headers
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
 		               rfc822.Message(StringIO(self.read(i))),
-			       fun="finish")
+			       fun="finish", attrs=self.nofilter)
                 self.state = 'content'
                 if self.headers.has_key('content-length'):
                     self.bytes_remaining = int(self.headers.getheader('content-length'))
@@ -74,20 +75,26 @@ class HttpClient(Connection):
                 # won't work; we have to deal with chunks
                 data = self.read()
                 self.bytes_remaining -= len(data)
-                data = applyfilter(FILTER_REQUEST_DECODE, data)
-                data = applyfilter(FILTER_REQUEST_MODIFY, data)
-                data = applyfilter(FILTER_REQUEST_ENCODE, data)
+                data = applyfilter(FILTER_REQUEST_DECODE, data,
+		                   attrs=self.nofilter)
+                data = applyfilter(FILTER_REQUEST_MODIFY, data,
+		                   attrs=self.nofilter)
+                data = applyfilter(FILTER_REQUEST_ENCODE, data,
+		                   attrs=self.nofilter)
                 self.content += data
             else:
-                data = applyfilter(FILTER_REQUEST_DECODE, "", fun="finish")
-                data = applyfilter(FILTER_REQUEST_DECODE, data, fun="finish")
-                data = applyfilter(FILTER_REQUEST_DECODE, data, fun="finish")
+                data = applyfilter(FILTER_REQUEST_DECODE, "",
+		                   fun="finish", attrs=self.nofilter)
+                data = applyfilter(FILTER_REQUEST_DECODE, data,
+		                   fun="finish", attrs=self.nofilter)
+                data = applyfilter(FILTER_REQUEST_DECODE, data,
+		                   fun="finish", attrs=self.nofilter)
                 self.content += data
                 # We're done reading content
                 self.state = 'receive'
                 # This object will call server_connected at some point
-                ClientServerMatchmaker(self, self.request,
-                                       self.headers, self.content)
+                ClientServerMatchmaker(self, self.request, self.headers,
+		                       self.content, self.nofilter)
 
         if self.state in ('receive', 'closed') and self.recv_buffer:
             assert 0, 'client in state %s sent data %s' % \

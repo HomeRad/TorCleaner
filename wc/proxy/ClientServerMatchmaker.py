@@ -3,7 +3,6 @@ import wc.proxy
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import _,debug
-from wc.proxy import print_socketlist
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
 from string import split
@@ -53,11 +52,12 @@ class ClientServerMatchmaker:
             '%s<br></center></body></html>' % (code, msg, code, msg, txt),
             msg)
 
-    def __init__(self, client, request, headers, content):
+    def __init__(self, client, request, headers, content, nofilter):
         self.client = client
         self.request = request
         self.headers = headers
         self.content = content
+        self.nofilter = nofilter
         url = ""
         try: self.method, url, protocol = split(request)
         except: self.error(400, _("Can't parse request"))
@@ -74,7 +74,7 @@ class ClientServerMatchmaker:
                 'HTTP/1.0 200 OK\r\n',
                 'Content-Type: text/plain\r\n'
                 '\r\n',
-                print_socketlist())
+                wc.proxy.status_info())
             return
         elif scheme == 'file':
             # a blocked url is a local file:// link
@@ -84,9 +84,9 @@ class ClientServerMatchmaker:
 	        'HTTP/1.0 200 OK\r\n',
                 'Content-Type: %s\r\n\r\n' % (mtype or 'text/plain'),
                 open(document, 'rb').read())
-        if wc.proxy._PARENT_PROXY:
-            self.hostname = wc.proxy._PARENT_PROXY
-            self.port = wc.proxy._PARENT_PROXY_PORT
+        if wc.config['parentproxy']:
+            self.hostname = wc.config['parentproxy']
+            self.port = wc.config['parentproxyport']
             self.document = url
         else:
             self.hostname = hostname
@@ -94,6 +94,7 @@ class ClientServerMatchmaker:
             self.document = document
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
+
 
     def handle_dns(self, hostname, answer):
         assert self.state == 'dns'
@@ -147,7 +148,7 @@ class ClientServerMatchmaker:
             self.state = 'connect'
             server = HttpServer(self.ipaddr, self.port, self)
             serverpool.register_server(addr, server)
-        
+
     def server_connected(self, server):
         if not self.client.connected:
             # The client has aborted, so let's return this server
@@ -164,7 +165,8 @@ class ClientServerMatchmaker:
                                         self.document,
                                         self.headers,
                                         self.content,
-                                        self)
+                                        self,
+					self.nofilter)
 
     def server_abort(self):
         # The server had an error, so we need to tell the client

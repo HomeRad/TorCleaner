@@ -3,8 +3,11 @@ webcleaner (0.12) unstable; urgency=low
   * always initialize filter attributes in HttpServer.py
   * minor bugfixes with unintialized vars
   * require and use FOX and FXPy >= 0.99.167
+  * config var "no proxy for"
+  * global config object in wc.proxy
+  * more status info
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat, 21 Apr 2001 13:34:05 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sun, 22 Apr 2001 19:00:54 +0200
 
 webcleaner (0.11) unstable; urgency=low
 

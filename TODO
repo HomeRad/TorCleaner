@@ -1,11 +1,6 @@
 TODO
 
-- additionally give _all_ modules the URL info
-
 - more status info (look at surfboard: the WM applet is cool)
-  o uptime
-  o successful handled requests
-  o invalid requests
   o active connections
   o cookies
 

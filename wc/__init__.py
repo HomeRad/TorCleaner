@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os,sys,UserDict
+import os,sys,UserDict,time
 import _webcleaner2_configdata as configdata
 from string import ljust,rjust,replace,join,split
 from debug_levels import *
@@ -84,24 +84,17 @@ WebCleaner Proxy Error %d %s<br>
 %s<br></center></body></html>""")
 ErrorLen = len(ErrorText)
 
-
-from wc import proxy
-
 def startfunc():
     if os.name=='posix':
         import signal
-        signal.signal(signal.SIGHUP, configure)
-    configure(None, None)
+        signal.signal(signal.SIGHUP, reload_config)
+    from wc import proxy
     proxy.mainloop()
 
 
-# configuration
-def configure(signum, frame):
-    """The signum and frame args are needed for signal.signal()
-       You can fill them with (None, None) values"""
-    global _config
-    _config = Configuration()
-    proxy.configure(_config)
+# reload configuration
+def reload_config(signum, frame):
+    config.read_filerconf()
 
 
 class Configuration(UserDict.UserDict):
@@ -111,7 +104,8 @@ class Configuration(UserDict.UserDict):
         # reset to default
         self.reset()
         # read configuration
-        self.read()
+        self.read_proxyconf()
+        self.read_filterconf()
 
     def reset(self):
         """Reset to default values"""
@@ -130,37 +124,36 @@ class Configuration(UserDict.UserDict):
         self['errortext'] = ErrorText
         self['colorize'] = 0
         self['noproxyfor'] = {}
+        self['starttime'] = time.time()
+        self['requests'] = {'valid':0, 'invalid':0, 'failed':0}
+        self['local_sockets_only'] = 1
 
-    def read(self):
-        # proxy configuration
+    def read_proxyconf(self):
         p = WConfigParser()
         p.parse(os.path.join(ConfigDir, "webcleaner.conf"), self)
         global DebugLevel
         DebugLevel = self['debuglevel']
+
+    def read_filterconf(self):
         from glob import glob
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
             ZapperParser().parse(f, self)
-
-    def init_filtermodules(self):
-        for f in self[u'filters']:
+        for f in self['filters']:
             exec "from filter import %s" % f
             _module = getattr(sys.modules['wc.filter'], f)
             for order in getattr(_module, 'orders'):
                 instance = getattr(_module, f)()
-                for rules in self[u'rules']:
+                for rules in self['rules']:
                     if rules.disable: continue
                     for rule in rules.rules:
                         if rule.disable: continue
                         if rule.get_name() in getattr(_module, 'rulenames'):
                             instance.addrule(rule)
-                self[u'filterlist'][order].append(instance)
-
-
+                self['filterlist'][order].append(instance)
 
 ##### xml parsers #########
 import xml.parsers.expat
-from wc.filter import Rules
 
 _rulenames = ('rewrite','block','allow','header','image','nocomments')
 _nestedtags = ('attr','enclosed','replace')
@@ -200,7 +193,8 @@ class ZapperParser(BaseParser):
         if name=='folder':
             self.rules.fill_attrs(attrs, name)
         elif name in _rulenames:
-            self.rule = filter.GetRuleFromName(name)
+            from wc.filter import GetRuleFromName
+            self.rule = GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.rules.append_rule(self.rule)
         # tag has character data
@@ -220,6 +214,7 @@ class ZapperParser(BaseParser):
             self.rule.fill_data(data, self.cmode)
 
     def reset(self):
+        from wc.filter import Rules
         self.rules = Rules.FolderRule()
         self.cmode = None
         self.rule = None
@@ -245,7 +240,12 @@ class WConfigParser(BaseParser):
                 for host in split(self.config['noproxyfor'], ','):
                     d[str(host)] = 1
                 self.config['noproxyfor'] = d
+            if self.config['logfile'] == 'stdout':
+                self.config['logfile'] = sys.stdout
+            elif self.config['logfile']:
+                self.config['logfile'] = open(self.config['logfile'], 'a')
         elif name=='filter':
             debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 
+config = Configuration()
