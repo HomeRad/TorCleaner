@@ -8,7 +8,7 @@ data = file(f).read()
 import wc, time
 wc.DebugLevel = 3
 wc.config = wc.Configuration()
-wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
+wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()
 attrs = wc.filter.initStateObjects(url=f)
 name = "filter.prof"
