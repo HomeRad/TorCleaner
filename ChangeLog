@@ -1,5 +1,5 @@
 2.4
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20031028
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031101
     Changed: js/*
   * enabled persistent client connections
     Changed: wc/proxy/{HttpClient,Connection}.py
@@ -23,9 +23,12 @@
   * fix bug in XML character data decoding
     Changed: wc/__init__.py, wc/filter/rule/*.py
   * optimize rule sorting; sort only once after config read; rule.oid
-    is now generated dynamically
+    is now generated dynamically, updated *.zap files accordingly
     Changed: wc/__init__.py, wc/filter/__init__.py, wc/filter/rules/*.py,
-      config/filter.dtd
+      config/filter.dtd, config/*.zap
+  * limit number of displayed folder rules, added prev/next stuff
+    Changed: wc/webgui/context/filterconfig_html.py,
+      templates/classic/filterconfig.html
 
 2.3 (released 21.10.2003)
   * oops, add some mising files to distribution
