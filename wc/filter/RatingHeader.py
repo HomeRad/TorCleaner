@@ -41,7 +41,7 @@ class RatingHeader (Filter):
             if cached_rating is None:
                 rating = headers['Content-Rating']
                 try:
-                    url, rating = rating_parse(url, rating)
+                    url, rating = rating_import(url, rating)
                     rating_add(url, rating)
                 except RatingParseError, msg:
                     warn(FILTER, "rating parse error: %s", msg)
