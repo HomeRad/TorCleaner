@@ -1,3 +1,13 @@
+1.10
+  * fix rule title updating (again)
+    Changed files: wc/gui/FXRuleFrame.py
+  * Add PICS rating system
+    Added files: wc/filter/{PICS, PicsHeader}.py,
+      wc/filter/rules/PicsRule.py, wc/gui/FXPicsRuleFrame.py,
+      config/pics_raiting.zap
+    Changed files: wc/filter/Rewriter.py, wc/__init__.py,
+      wc/gui/FXRuleFrameFactory.py
+
 1.9
   * use the original headers list in rfc822 Message objects to preserve
     header case sensitivity; some servers dont like lowercase headers
