@@ -165,7 +165,7 @@ def get_filterattrs (url, filterstage, browser='Calzilla/6.0',
     for f in wc.configuration.config['filterlist'][filterstage]:
         # note: get attributes of _all_ filters since the
         # mime type can change dynamically
-        attrs.update(f.get_attrs(url, attrheaders))
+        attrs.update(f.get_attrs(url, filterstage, attrheaders))
     return attrs
 
 

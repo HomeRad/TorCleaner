@@ -66,9 +66,9 @@ class GifImage (wc.filter.Filter.Filter):
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
 
-    def get_attrs (self, url, headers):
+    def get_attrs (self, url, stage, headers):
         """add GIF parser to attributes"""
-        d = super(GifImage, self).get_attrs(url, headers)
+        d = super(GifImage, self).get_attrs(url, stage, headers)
         d['gifparser'] = GifParser()
         return d
 

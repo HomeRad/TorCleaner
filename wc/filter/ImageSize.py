@@ -136,8 +136,8 @@ class ImageSize (wc.filter.Filter.Filter):
                 assert buf.tell() < self.min_bufsize
         return True
 
-    def get_attrs (self, url, headers):
-        d = super(ImageSize, self).get_attrs(url, headers)
+    def get_attrs (self, url, stage, headers):
+        d = super(ImageSize, self).get_attrs(url, stage, headers)
         # check PIL support
         if not wc.HasPil:
             return d

@@ -56,10 +56,12 @@ class Filter (object):
         """
         return data
 
-    def get_attrs (self, url, headers):
+    def get_attrs (self, url, stage, headers):
         """get filter-specific state data
 
            @param url the complete request url
+           @param STAGE_* filter stage, must be one of the configured
+            stages this filter applies to
            @param headers dictionary with WcMessage objects under the keys
                   ``client``, ``server`` and ``data``
         """
