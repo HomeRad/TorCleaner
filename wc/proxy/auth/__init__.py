@@ -24,10 +24,10 @@ from ntlm import *
 def get_header_challenges (headers, key):
     auths = {}
     for auth in get_header_values(headers, key):
-        debug(AUTH, "%s header challenge:\n  %s", key, cred)
+        debug(AUTH, "%s header challenge:\n  %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
-    debug(AUTH, "parsed challenges: %s", str(creds))
+    debug(AUTH, "parsed challenges: %s", str(auths))
     return auths
 
 
