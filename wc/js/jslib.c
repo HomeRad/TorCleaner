@@ -638,7 +638,7 @@ static PyObject* shutdown (JSEnvObject* env, char* msg) {
 
 
 /* create */
-static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
+static PyObject* JSEnv_new (PyObject* self, PyObject* args) {
     JSEnvObject* env;
     /* local objects */
     JSObject* location_obj;
@@ -1158,7 +1158,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
 
 
 /* destroy */
-static void JSEnv_dealloc(PyObject* self) {
+static void JSEnv_dealloc (PyObject* self) {
     JSEnvObject* env = (JSEnvObject*)self;
     destroy(env);
     Py_DECREF(env->listeners);
@@ -1178,7 +1178,7 @@ static PyMethodDef JSEnv_methods[] = {
 };
 
 
-static PyObject* JSEnv_getattr(PyObject* self, char* name) {
+static PyObject* JSEnv_getattr (PyObject* self, char* name) {
     return Py_FindMethod(JSEnv_methods, self, name);
 }
 
@@ -1212,13 +1212,15 @@ static PyMethodDef jslib_methods[] = {
 
 
 /* initialization of the module */
-DL_EXPORT(void) initjslib(void) {
-    PyObject *m, *d;
+PyMODINIT_FUNC initjslib (void) {
+    PyObject *m;
     JSEnvType.ob_type = &PyType_Type;
     m = Py_InitModule("jslib", jslib_methods);
-    d = PyModule_GetDict(m);
     JSError = PyErr_NewException("jslib.error", NULL, NULL);
-    PyDict_SetItemString(d, "error", JSError);
+    if (PyModule_AddObject(m, "error", JSError)==-1) {
+        /* init error */
+        PyErr_Print();
+    }
 }
 
 #ifdef WIN32
