@@ -41,7 +41,7 @@ several given categories.</p>
 </tr>
 </thead>
 <tbody>
-<!-- loop over categories  -->
+<!-- loop over categories -->
 <tr tal:repeat="category categories">
 <td tal:define="global catname category/name"><label
  tal:attributes="for string:category_${catname}"
@@ -83,6 +83,7 @@ several given categories.</p>
 <tr style="border-bottom:1px solid black;">
 <th>&nbsp;</th>
 <th i18n:translate="">URL</th>
+<th i18n:translate="">Generic</th>
 <th i18n:translate="">Rated</th>
 <th i18n:translate="">Modified</th>
 </tr>
@@ -109,17 +110,18 @@ several given categories.</p>
 </tr></table></td>
 <td><a href="#" tal:attributes="href url"
  tal:content="url">http://imadoofus.com</a></td>
+<td><span i18n:translate="" tal:content="rating/generic">True</span></td>
 <td><span
  tal:repeat="category rating/category_values/keys">
-<span tal:content="category" i18n:translate="">violence</span>=<span
- tal:replace="rating/category_values/?category">0</span>
+<span tal:content="category" i18n:translate="">violence</span>="<span
+ tal:replace="rating/category_values/?category">0</span>"
 </span>
 </td>
-<td><span tal:replace="structure rating/modified_string">1. Jan 2004</span></td>
+<td><span tal:replace="structure rating_modified/?url">1. Jan 2004</span></td>
 </tr>
 <tr tal:condition="not:ratings_display">
 <td>&nbsp;</td>
-<td colspan="3" i18n:translate="">There are no url ratings saved.</td>
+<td colspan="4" i18n:translate="">There are no url ratings saved.</td>
 </tr>
 </table>
 
