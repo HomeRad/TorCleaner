@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Miscellaneous" oid="9"
+<folder title="Miscellaneous" oid="5"
  desc="Misc things we dont like in our HTML source :)">
 
 <rewrite title="No meta tags 1" oid="0"

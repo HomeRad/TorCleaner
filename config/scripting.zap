@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Scripting" oid="1"
+<folder title="Scripting" oid="3"
  desc="Scripting related.">
 
 <rewrite title="&lt;a&gt; onfocus" oid="0">

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Adverts" oid="6"
+<folder title="Adverts" oid="0"
  desc="A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&amp;quot;http://company.com&amp;quot;&gt;&lt;img  src=&amp;quot;http://adserver.de/banner.gif&amp;quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.">
 
 <rewrite title="Ad servers 01" oid="0"
@@ -69,7 +69,7 @@
 
 <rewrite title="Adverts in the path name 02" oid="10"
  desc="Kill links with ad words in the path name.">
-<attr>/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew)/</attr>
+<attr>/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick)/</attr>
 <replacement part="complete"/>
 </rewrite>
 
@@ -86,7 +86,7 @@
 </rewrite>
 
 <rewrite title="Adverts in the path name 7" oid="13">
-<attr>/l.click\?clickId=</attr>
+<attr>(l.click\?clickId=|smartserve/click)</attr>
 <replacement part="complete"/>
 </rewrite>
 
@@ -226,7 +226,7 @@
 <rewrite title="IMDB Advert" oid="34"
  desc="adverts are redirections"
  matchurl="imdb">
-<attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS|TSEARCH|TSEARCH_RHS|[A-Z_]*AD_LOWRES|[A-Z_]*LOWRES_BUY)</attr>
+<attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS|TSEARCH|TSEARCH_RHS|[A-Z_]*AD_LOWRES|[A-Z_]*LOWRES_BUY|EGAL_[A-Z]+)</attr>
 <replacement part="complete"/>
 </rewrite>
 
@@ -281,15 +281,15 @@
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite title="EOnline ads" oid="42">
-<attr>/cgi-bin/acc_clickthru\?</attr>
-<replacement part="complete"/>
-</rewrite>
-
-<rewrite title="slashdot ad" oid="43"
+<rewrite title="slashdot ad" oid="42"
  desc="JS ad at slashdot"
  tag="script">
 <attr name="src">s0b\.bluestreak\.com</attr>
+<replacement part="complete"/>
+</rewrite>
+
+<rewrite title="EOnline ads" oid="43">
+<attr>/cgi-bin/acc_clickthru\?</attr>
 <replacement part="complete"/>
 </rewrite>
 
