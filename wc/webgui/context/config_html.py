@@ -65,9 +65,8 @@ config['newsslgateway'] = config.get('sslgateway', 0)
 filterenabled = u""
 filterdisabled = u""
 
-# form execution
-def _exec_form (form, lang):
-    # reset info/error
+def _form_reset ():
+    """reset info/error and global vars"""
     global filterenabled, filterdisabled
     filterenabled = u""
     filterdisabled = u""
@@ -76,6 +75,10 @@ def _exec_form (form, lang):
     for key in error.keys():
         error[key] = False
     res = [None]
+
+# form execution
+def _exec_form (form, lang):
+    _form_reset()
     # proxy port
     if form.has_key('port'):
         _form_proxyport(_getval(form, 'port'))
