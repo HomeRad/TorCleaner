@@ -29,7 +29,7 @@ class HttpProxyClient (object):
             handler = self.handler.func_name
             if hasattr(self.handler, 'im_class'):
                 handler = self.handler.im_class.__name__+"."+handler
-        return '<%s: %s %s>' % ('proxyclient', str(self.args), handler)
+        return '<%s: %s %s>' % ('proxyclient', self.args[0], handler)
 
 
     def finish (self):
@@ -78,7 +78,7 @@ class HttpProxyClient (object):
 
     def server_content (self, data):
         assert self.server
-        debug(PROXY, '%s server_content', str(self))
+        debug(PROXY, '%s server_content with %d bytes', str(self), len(data))
         self.write(data)
 
 

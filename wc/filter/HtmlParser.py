@@ -480,29 +480,6 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_env.addForm(name, action, target)
 
 
-    def jsScriptData (self, data, url, ver):
-        """Callback for loading <script src=""> data in the background
-           If downloading is finished, data is None"""
-        assert self.state[0]=='wait', "non-wait state %s" % str(self.state)
-        if data is None:
-            if not self.js_script:
-                warn(PARSER, "HtmlParser[%d]: empty JS src %s", self.level, url)
-                self.js_script = "// error fetching script from %s" % `url`
-            self.buf.append([STARTTAG, "script", {'type': 'text/javascript'}])
-            script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
-            self.buf.append([DATA, script])
-            # Note: <script src=""> could be missing an end tag,
-            # but now we need one. Look later for a duplicate </script>.
-            self.buf.append([ENDTAG, "script"])
-            self.js_script = ''
-            self.state = ('parse',)
-            self._debug("switching back to parse with")
-            self._debugbuf()
-        else:
-            self._debug("JS read %d <= %s", len(data), url)
-            self.js_script += data
-
-
     def jsScriptSrc (self, url, language):
         """Start a background download for <script src=""> tags"""
         assert self.state[0]=='parse', "non-parse state %s" % str(self.state)
@@ -527,6 +504,29 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                                'identity', # compress
                                mime = "application/x-javascript",
                                )
+
+
+    def jsScriptData (self, data, url, ver):
+        """Callback for loading <script src=""> data in the background
+           If downloading is finished, data is None"""
+        assert self.state[0]=='wait', "non-wait state %s" % str(self.state)
+        if data is None:
+            if not self.js_script:
+                warn(PARSER, "HtmlParser[%d]: empty JS src %s", self.level, url)
+                self.js_script = "// error fetching script from %s" % `url`
+            self.buf.append([STARTTAG, "script", {'type': 'text/javascript'}])
+            script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
+            self.buf.append([DATA, script])
+            # Note: <script src=""> could be missing an end tag,
+            # but now we need one. Look later for a duplicate </script>.
+            self.buf.append([ENDTAG, "script"])
+            self.js_script = ''
+            self.state = ('parse',)
+            self._debug("switching back to parse with")
+            self._debugbuf()
+        else:
+            self._debug("JS read %d <= %s", len(data), url)
+            self.js_script += data
 
 
     def jsScript (self, script, ver, item):

@@ -205,9 +205,10 @@ def server_set_encoding_headers (headers, rewrite, decoders, compress, bytes_rem
     """set encoding headers"""
     # add client accept-encoding value
     headers['Accept-Encoding'] = "%s\r"%compress
+    debug(PROXY, "XXX hui")
     if headers.has_key('Content-Length'):
         bytes_remaining = int(headers['Content-Length'])
-        debug(PROXY, "%d bytes remaining", bytes_remaining)
+        debug(PROXY, "%d bytes content length", bytes_remaining)
         if rewrite:
             remove_headers(headers, ['Content-Length'])
     else:
@@ -229,7 +230,8 @@ def server_set_encoding_headers (headers, rewrite, decoders, compress, bytes_rem
         # add warning
         headers['Warning'] = "214 Transformation applied\r"
     # only decompress on rewrite
-    if not rewrite: return
+    if not rewrite:
+        return bytes_remaining
     # Compressed content (uncompress only for rewriting modules)
     encoding = headers.get('Content-Encoding', '').lower()
     # XXX test for .gz files ???
