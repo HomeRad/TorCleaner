@@ -133,8 +133,6 @@ class TemplateInterpreter (object):
             result.append(att[0])
             result.append('="')
             val = att[1]
-            if self.translateContent:
-                val = self.translate(val)
             if self.escapeAttributes:
                 val = cgi.escape(val, quote=1)
             result.append(val)
@@ -337,9 +335,9 @@ def cmdContent (self, command, args):
         return
 
 
-def cmdAttributes (self, command, args):
+def cmdAttributes (self, command, args, translateAttributes=False):
     """ args: [(attributeName, expression)]
-    Add, leave, or remove attributes from the start tag
+        Add, leave, or remove attributes from the start tag
     """
     attsToRemove = {}
     newAtts = []
@@ -351,14 +349,13 @@ def cmdAttributes (self, command, args):
         elif not result.isDefault():
             # We have a value - let's use it!
             attsToRemove[attName]=1
-            resultVal = result.value()
+            val = result.value()
+            if translateAttributes:
+                val = self.translate(val)
             if not self.escapeAttributes:
                 # XML will get escaped automatically, HTML will not...
-                escapedAttVal = cgi.escape(resultVal, quote=1)
-            else:
-                escapedAttVal = resultVal
-
-            newAtts.append((attName,escapedAttVal))
+                val = cgi.escape(val, quote=1)
+            newAtts.append((attName, val))
     # Copy over the old attributes
     for oldAtt in self.currentAttributes:
         if not attsToRemove.has_key(oldAtt[0]):
@@ -557,25 +554,19 @@ def cmdI18nTranslate (self, command, args):
 
 def cmdI18nAttributes (self, command, args):
     """ args: [(attributeName, expression)]
-    Add, leave, or remove translated attributes from the start tag
+        translate attributes from the start tag
     """
     if self.translator is None:
         self.programCounter += 1
         return
-    attsToRemove = {}
-    newAtts = []
-    for attName, attExpr in args:
-        result = self.translate(attExpr)
-        # We have a value - let's use it!
-        attsToRemove[attName] = 1
-        escapedAttVal = cgi.escape(result).replace('"', '&quot;')
-        newAtts.append((attName, escapedAttVal))
-    # Copy over the old attributes
-    for oldAtt in self.currentAttributes:
-        if oldAtt[0] not in attsToRemove:
-            newAtts.append(oldAtt)
-    self.currentAttributes = newAtts
-    # Evaluate all other commands
+    if args:
+        cmdAttributes(self, command, args, translateAttributes=True)
+        return
+    # an empty attribute list means translate every attribute
+    newAttrs = []
+    for name, value in self.currentAttributes:
+        newAttrs.append((name, self.translate(value)))
+    self.currentAttributes = newAttrs
     self.programCounter += 1
 
 
