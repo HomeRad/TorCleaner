@@ -3,39 +3,39 @@
 """filter given .html file with Replacer, Rewriter and BinaryCharFilter
 module"""
 
+import sys
+import os
+import wc
+import wc.filter
+import wc.proxy
+import wc.proxy.Headers
+
 def _main ():
-    """USAGE: test/run.sh test/filterfile.py <.html file>"""
-    import sys
-    if len(sys.argv)!=2:
+    """USAGE: test/run.sh test/filterfile.py <config dir> <.html file>"""
+    if len(sys.argv)!=3:
         print _main.__doc__
         sys.exit(1)
-    fname = sys.argv[1]
+    confdir = sys.argv[1]
+    fname = sys.argv[2]
     if fname=="-":
         f = sys.stdin
     else:
         f = file(fname)
-    from test import initlog, disable_rating_rules
-    initlog("test/logging.conf")
-    import wc
-    wc.config = wc.Configuration()
-    disable_rating_rules(wc.config)
-    wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
+    logfile = os.path.join(confdir, "logging.conf")
+    wc.initlog(logfile, wc.Name, filelogs=False)
+    wc.config = wc.Configuration(confdir=confdir)
     wc.config.init_filter_modules()
-    from wc.proxy import proxy_poll, run_timers
-    from wc.proxy.Headers import WcMessage
-    from wc.filter import FilterException, applyfilter, get_filterattrs
-    from wc.filter import FILTER_RESPONSE_MODIFY
-    headers = WcMessage()
+    headers = wc.proxy.Headers.WcMessage()
     headers['Content-Type'] = "text/html"
-    attrs = get_filterattrs(fname, [FILTER_RESPONSE_MODIFY], headers=headers)
+    attrs = wc.filter.get_filterattrs(fname, [wc.filter.FILTER_RESPONSE_MODIFY],
+                                      headers=headers, serverheaders=headers)
     filtered = ""
     data = f.read(2048)
     while data:
         print >>sys.stderr, "Test: data", len(data)
         try:
-            filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter',
-                                    attrs)
-        except FilterException, msg:
+            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, 'filter', attrs)
+        except wc.filter.FilterException, msg:
             print >>sys.stderr, "Test: exception:", msg
             pass
         data = f.read(2048)
@@ -44,12 +44,12 @@ def _main ():
     while True:
         print >>sys.stderr, "Test: finish", i
         try:
-            filtered += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish',
+            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, "", 'finish',
                                     attrs)
             break
-        except FilterException, msg:
+        except wc.filter.FilterException, msg:
             print >>sys.stderr, "Test: finish: exception:", msg
-            proxy_poll(timeout=max(0, run_timers()))
+            wc.proxy.proxy_poll(timeout=max(0, wc.proxy.run_timers()))
         i += 1
         if i==200:
             # background downloading if javascript is too slow
