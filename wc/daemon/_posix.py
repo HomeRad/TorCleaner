@@ -49,12 +49,7 @@ Do 'webcleaner stop' first.""")
     f.write("%d" % os.getpid())
     f.close()
     # starting
-    try:
-        startfunc()
-    except:
-        if os.path.exists(pidfile):
-	    os.remove(pidfile)
-        raise
+    startfunc()
 
 
 def stop ():
