@@ -5,7 +5,7 @@
 import unittest, os
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 class TestBlocker (StandardTest):
 

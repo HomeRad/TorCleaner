@@ -5,7 +5,7 @@ import unittest, os
 import wc
 from wc.proxy.Headers import WcMessage
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestBinaryCharFilter (StandardTest):

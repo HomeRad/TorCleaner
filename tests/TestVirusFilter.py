@@ -7,7 +7,7 @@ from wc.proxy.Headers import WcMessage
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.filter import FilterProxyError, VirusFilter
 from cStringIO import StringIO
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestVirusFilter (StandardTest):

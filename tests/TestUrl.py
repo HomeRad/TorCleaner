@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
 from wc.url import url_norm, url_quote, is_valid_url, is_valid_js_url
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestUrl (StandardTest):

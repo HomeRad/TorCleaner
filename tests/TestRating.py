@@ -3,7 +3,7 @@
 
 import unittest, os
 from wc.filter.Rating import *
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestRating (StandardTest):

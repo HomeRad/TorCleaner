@@ -1,4 +1,4 @@
-import threading, random, string, time
+import threading, random, string, time, socket
 import BaseHTTPServer
 
 _lock = None
@@ -130,10 +130,10 @@ def startServer (log, server_class=LogHttpServer,
 
 
 def stopServer (log):
+    log.write("About to stop server...\n")
     global _server
     _acquireLock()
     _server.abort = True
     _releaseLock()
-    stopped = False
-    time.sleep(3)
+    time.sleep(2)
 

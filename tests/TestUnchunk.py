@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
 from wc.proxy.UnchunkStream import UnchunkStream
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestUnchunk (StandardTest):

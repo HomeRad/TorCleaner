@@ -17,7 +17,7 @@ def main ():
     wc.config['filters'] = ['ImageReducer']
     wc.config.init_filter_modules()
     from wc.proxy.Headers import WcMessage
-    headers = WcMessage(StringIO('')
+    headers = WcMessage(StringIO(''))
     headers['Content-Type'] = mimetypes.guess_type(f)[0]
     headers['Content-Size'] = os.stat(f)[stat.ST_SIZE]
     from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY

@@ -8,7 +8,7 @@ from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestRewriteScript (StandardTest):
@@ -31,14 +31,14 @@ class TestRewriteScript (StandardTest):
         filtered = ""
         try:
             filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', self.attrs)
-        except FilterException, msg:
+        except FilterException:
             pass
         i = 1
         while 1:
             try:
                 filtered += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish', self.attrs)
                 break
-            except FilterException, msg:
+            except FilterException:
                 proxy_poll(timeout=max(0, run_timers()))
             i+=1
             if i==100:

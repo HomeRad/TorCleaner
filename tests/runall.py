@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
+
 import unittest, os, getopt, sys
 
 
@@ -54,9 +55,10 @@ def addtest (dirname, fname, mysuite):
     pkg = dirname.replace(os.path.sep, ".")
     klass = os.path.splitext(fname)[0]
     try:
+        suite = None
         exec 'from %s.%s import suite' % (pkg, klass)
         mysuite.addTest(suite)
-    except ImportError, msg:
+    except ImportError:
         pass
 
 

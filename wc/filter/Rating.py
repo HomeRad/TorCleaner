@@ -87,7 +87,7 @@ def rating_import (url, ratingdata, debug=0):
             continue
         try:
             category, value = line.split(None, 1)
-        except ValueError, msg:
+        except ValueError:
             raise RatingParseError(i18n._("malformed rating line %r")%line)
         if category=="modified" and not is_time(value):
             raise RatingParseError(i18n._("malfored modified time %r")%value)

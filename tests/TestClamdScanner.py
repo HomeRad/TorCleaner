@@ -4,7 +4,7 @@
 import unittest, os
 import wc
 from wc.filter.VirusFilter import ClamavConfig, ClamdScanner
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestClamdScanner (StandardTest):

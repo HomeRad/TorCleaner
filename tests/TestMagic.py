@@ -3,7 +3,7 @@
 
 import unittest, os
 from wc.magic import convert, classify
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 class TestMagic (StandardTest):
 

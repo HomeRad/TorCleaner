@@ -2,7 +2,7 @@
 
 import unittest, os
 from wc import ip
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestIp (StandardTest):

@@ -14,7 +14,7 @@ def _main ():
     from wc.parser.htmllib import HtmlPrettyPrinter
     from wc.parser import htmlsax
     p = htmlsax.parser(HtmlPrettyPrinter())
-    #p.debug(1)
+    p.debug(1)
     data = f.read(1024)
     while data:
         p.feed(data)

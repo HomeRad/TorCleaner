@@ -1,15 +1,14 @@
 # -*- coding: iso-8859-1 -*-
 """base and utility classes for Proxy testing"""
 
-import unittest, os, sys, threading, time
+import os, sys, threading, time
 import wc
-import HttpServer, HttpClient
 from wc.log import *
 from wc.update import update_filter, update_ratings
-from tests import StandardTest
+from tests import HttpServer, HttpClient, StandardTest
 
 
-class ProxyTest (StandardTest):
+class ProxyTest (StandardTest.StandardTest):
     """Base class for all tests involving a started WebCleaner Proxy.
        After the proxy is started, http clients submit configurable
        request data and check the result validity"""
@@ -66,11 +65,9 @@ class ProxyTest (StandardTest):
             server_class = proxytest[2]
             handler_class = proxytest[3]
             self.log.write("running test %r\n"%request.name())
-            serverthread = None
             try:
-                serverthread = HttpServer.startServer(self.log,
-                                           server_class=server_class,
-                                           handler_class=handler_class)
+                HttpServer.startServer(self.log, server_class=server_class,
+                                       handler_class=handler_class)
                 client = client_class(self.log, self.proxyconfig)
                 # send request
                 client.doRequest(request)

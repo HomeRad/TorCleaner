@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
 from wc.proxy.dns.Lib import Packer, Unpacker
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestDns (StandardTest):

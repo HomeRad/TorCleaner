@@ -24,6 +24,7 @@ def get_context ():
     return context
 
 
-fp = file(os.path.join(os.getcwd(), "test", "html", "taltest.html"))
-context = get_context()
-print expand_template(fp, context)
+if __name__=='__main__':
+    fp = file(os.path.join(os.getcwd(), "test", "html", "taltest.html"))
+    context = get_context()
+    print expand_template(fp, context)

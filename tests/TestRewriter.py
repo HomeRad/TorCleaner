@@ -6,7 +6,7 @@ import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog
 from wc.proxy.Headers import WcMessage
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestRewriter (StandardTest):

@@ -5,7 +5,7 @@ from cStringIO import StringIO
 
 import unittest
 from wc import ip
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestParser (StandardTest):

@@ -4,7 +4,7 @@
 
 import unittest
 from wc.js import jslib, JSListener
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class JSTester (JSListener.JSListener):

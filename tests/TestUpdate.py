@@ -3,7 +3,7 @@ import unittest
 import wc
 from wc.log import *
 from wc.update import update_filter, update_ratings
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class NoLog (object):

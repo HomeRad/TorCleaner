@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 import unittest, base64
 from wc.proxy import auth
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 # XXX test Basic authentication
 
@@ -16,7 +16,7 @@ class TestAuth (StandardTest):
                  "uri": "/logo.gif", "method": "GET",
                  "requireExtraQuotes": False}
         creds = auth.parse_credentials(auth.get_credentials(chals, **attrs))
-        wccreds = creds['Digest'][0]
+        #wccreds = creds['Digest'][0]
         # XXX test this data
 
     def testNtlm (self):

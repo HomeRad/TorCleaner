@@ -3,7 +3,7 @@
 import unittest, random, os
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 class TestReplacer (StandardTest):
 
@@ -17,7 +17,7 @@ class TestReplacer (StandardTest):
         attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])
         # filter random data, should not raise any exception
         data = []
-        for i in range(1024):
+        for dummy in range(1024):
             data.append(chr(random.randint(0, 255)))
         data = "".join(data)
         applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)

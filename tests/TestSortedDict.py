@@ -3,7 +3,7 @@
 
 import unittest, random
 from wc.parser import SortedDict
-from tests import StandardTest
+from tests.StandardTest import StandardTest
 
 
 class TestSortedDict (StandardTest):

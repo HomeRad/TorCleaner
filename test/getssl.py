@@ -2,7 +2,7 @@
 # -*- coding: iso-8859-1 -*-
 """print headers of an url"""
 
-import httplib, urlparse, sys, os, socket
+import httplib, urlparse, sys, socket
 from OpenSSL import SSL
 
 def request (url, port):

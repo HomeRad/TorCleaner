@@ -9,7 +9,6 @@ class LogHttpClient (object):
         self.debug = 0
 
     def doRequest (self, request):
-        scheme = "http"
         self.sock = self.create_socket(self.addr)
         self.send(request.get_request())
 
