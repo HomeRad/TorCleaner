@@ -38,7 +38,6 @@ The following changes were made:
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 # ======================================================================
 
-import sys
 import os
 import socket
 import errno

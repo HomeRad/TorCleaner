@@ -313,7 +313,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         s = super(RewriteRule, self).__str__()
         s += "tag %s\n" % self.tag
         for key, val in self.attrs.items():
-            s += "attr: %s, %r\n"%(key, val)
+            s += "attr: %s, %r\n" % (key, val)
         s += "enclosed %r\n" % self.enclosed
         s += "part %s\n" % num_part(self.part)
         s += "replacement %r\n" % self.replacement

@@ -87,7 +87,7 @@ class ServerPool (object):
         """keep these limits reasonably high (at least twenty or more)
            since having background downloads with no available servers
            can lead to aborted downloads"""
-        if self.http_versions.get(addr, (1,1)) <= (1,0):
+        if self.http_versions.get(addr, (1, 1)) <= (1, 0):
             # For older versions of HTTP, we open lots of connections
             return 60
         else:
@@ -109,7 +109,7 @@ class ServerPool (object):
             for server, status in set.items():
                 if status[0] == 'available' and status[1] < expire_time:
                     # It's old .. let's get rid of it
-                    to_expire.append((addr,server))
+                    to_expire.append((addr, server))
         for addr, server in to_expire:
             wc.log.debug(wc.LOG_PROXY, "expire %s server %s", addr, server)
             server.close()

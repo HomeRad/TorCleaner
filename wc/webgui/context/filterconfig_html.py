@@ -73,7 +73,7 @@ def _exec_form (form, lang):
             _calc_selindex(curfolder, curindex)
         else:
             curfolder.selindex = []
-        curfolder.indexstr = u"(%d-%d/%d)"%(curindex+1,
+        curfolder.indexstr = u"(%d-%d/%d)" % (curindex+1,
                                          min(curindex+_rules_per_page, l), l)
     # select a rule
     if form.has_key('selrule') and curfolder:
@@ -85,25 +85,25 @@ def _exec_form (form, lang):
     elif curfolder and form.has_key('renamefolder'):
         _form_renamefolder(_getval(form, 'foldername'), lang)
     # disable current folder
-    elif curfolder and form.has_key('disablefolder%d'%curfolder.oid):
+    elif curfolder and form.has_key('disablefolder%d' % curfolder.oid):
         _form_disablefolder(curfolder)
     # enable current folder
-    elif curfolder and form.has_key('enablefolder%d'%curfolder.oid):
+    elif curfolder and form.has_key('enablefolder%d' % curfolder.oid):
         _form_enablefolder(curfolder)
     # remove current folder
-    elif curfolder and form.has_key('removefolder%d'%curfolder.oid):
+    elif curfolder and form.has_key('removefolder%d' % curfolder.oid):
         _form_removefolder(curfolder)
     # make a new rule in current folder
     elif curfolder and form.has_key('newrule'):
         _form_newrule(_getval(form, 'newruletype'), lang)
     # disable current rule
-    elif currule and form.has_key('disablerule%d'%currule.oid):
+    elif currule and form.has_key('disablerule%d' % currule.oid):
         _form_disablerule(currule)
     # enable current rule
-    elif currule and form.has_key('enablerule%d'%currule.oid):
+    elif currule and form.has_key('enablerule%d' % currule.oid):
         _form_enablerule(currule)
     # remove current rule
-    elif currule and form.has_key('removerule%d'%currule.oid):
+    elif currule and form.has_key('removerule%d' % currule.oid):
         _form_removerule(currule)
 
     # rule specific submit buttons
@@ -594,7 +594,7 @@ def _form_apply_nocomments (form):
 def _form_apply_rating (form):
     # rating categories
     for category, catdata in service['categories'].items():
-        key = "category_%s"%category
+        key = "category_%s" % category
         if form.has_key(key):
             value = _getval(form, key)
             if not _rating_is_valid_value(catdata, value):

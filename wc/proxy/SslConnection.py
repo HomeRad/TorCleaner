@@ -1,9 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """ssl connection, usable for both client and server connections"""
 
-import socket
-import errno
-import sys
 import wc
 import wc.proxy.Connection
 from OpenSSL import SSL

@@ -255,13 +255,13 @@ def parse_ntlm_credentials (credentials):
 
 def check_ntlm_credentials (credentials, **attrs):
     """return True if given credentials validate with given attrs"""
-    if credentials.has_key('host') and credentials['host']!="UNKNOWN":
+    if credentials.has_key('host') and credentials['host'] != "UNKNOWN":
         wc.log.warn(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
         return False
-    if credentials.has_key('domain') and credentials['domain']!='WORKGROUP':
+    if credentials.has_key('domain') and credentials['domain'] != 'WORKGROUP':
         wc.log.warn(wc.LOG_AUTH, "NTLM wrong domain %r", credentials['domain'])
         return False
-    if credentials['username']!=attrs['username']:
+    if credentials['username'] != attrs['username']:
         wc.log.warn(wc.LOG_AUTH, "NTLM wrong username")
         return False
     nonce = attrs['nonce']
@@ -365,7 +365,7 @@ def parse_message2 (msg):
     if not msg.startswith('%s\x00' % NTLMSSP_SIGNATURE):
         wc.log.warn(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
         return res
-    if getint32(msg[8:12])!=NTLMSSP_CHALLENGE:
+    if getint32(msg[8:12]) != NTLMSSP_CHALLENGE:
         wc.log.warn(wc.LOG_AUTH, "NTLM challenge type not found %r", msg)
         return res
     res['type'] = NTLMSSP_CHALLENGE
@@ -451,7 +451,7 @@ def parse_message3 (msg):
 
 def compute_nonce ():
     """return a random nonce integer value as 8-byte string"""
-    return "%08d" % (random.random()*100000000)
+    return "%08d" % (random.random() * 100000000)
 
 
 def get_session_key ():
@@ -526,12 +526,12 @@ def set_odd_parity (byte):
     parity = 0
     ordbyte = ord(byte)
     for dummy in range(8):
-        if (ordbyte & 0x01)!=0:
+        if (ordbyte & 0x01) != 0:
             parity += 1
         ordbyte >>= 1
     ordbyte = ord(byte)
     if parity % 2 == 0:
-        if (ordbyte & 0x01)!=0:
+        if (ordbyte & 0x01) != 0:
             ordbyte &= 0xFE
         else:
             ordbyte |= 0x01

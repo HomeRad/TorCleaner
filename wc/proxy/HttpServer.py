@@ -137,7 +137,7 @@ class HttpServer (wc.proxy.Server.Server):
     def client_send_request (self, method, protocol, hostname, port,
                              document, headers, content, client, url, mime):
         """the client (matchmaker) sends the request to the server"""
-        assert self.state == 'client', "%s invalid state %r" %( self, self.state)
+        assert self.state == 'client', "%s invalid state %r" % (self, self.state)
         self.method = method
         # the client protocol
         self.protocol = protocol
@@ -176,7 +176,7 @@ class HttpServer (wc.proxy.Server.Server):
 
     def process_read (self):
         """process read event by delegating it to process_* functions"""
-        assert self.state != 'closed', "%s invalid state %r"%(self, self.state)
+        assert self.state != 'closed', "%s invalid state %r" % (self, self.state)
         while True:
             if not self.client:
                 # By the time this server object was ready to receive
@@ -364,7 +364,7 @@ class HttpServer (wc.proxy.Server.Server):
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://localhost:%d/rated.html?%s\r' % \
                               (wc.config['port'], query)
-        headers['Content-Length'] = '%d\r'%len(msg)
+        headers['Content-Length'] = '%d\r' % len(msg)
         wc.log.debug(wc.LOG_PROXY, "%s headers\n%s", self, headers)
         self.client.server_response(self, response, self.statuscode, headers)
         if not self.client:
