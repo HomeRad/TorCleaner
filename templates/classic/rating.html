@@ -40,8 +40,7 @@ several given categories.</p>
 <td><input type="checkbox"><!-- XXX attributes --></td>
 </tr>
 <tr>
-<td i18n:translate="">Rating</td>
-<td>
+<td colspan="2">
 <table rules="cols" border="0" cellpadding="5" cellspacing="0" summary="">
 <thead>
 <tr style="border-bottom:1px solid black;">
@@ -50,18 +49,23 @@ several given categories.</p>
 </tr>
 </thead>
 <tbody>
-<tr tal:repeat="category categories">
+<tr tal:repeat="category service/categories/keys">
 <!-- XXX radio checked attrs -->
-<td tal:content="category">Violence</td>
-<td><input type="radio" name="rating" value="none"
- tal:attributes="name string:rating${category}">
-<span i18n:translate="">None</span></td>
-<td><input type="radio" name="rating" value="mild"
- tal:attributes="name string:rating${category}">
-<span i18n:translate="">Mild</span></td>
-<td><input type="radio" name="rating" value="heavy"
- tal:attributes="name string:rating${category}">
-<span i18n:translate="">Heavy</span></td>
+<td><span tal:replace="service/categories/?category/name">Violence</span>
+(<span tal:replace="category">violence</span>)</td>
+
+<td tal:condition="service/categories/?category/rrange" colspan="3">
+<input type="text" size="4"
+ tal:attributes="name string:category_${category};value ratings/?category"
+></td>
+<td tal:repeat="value service/categories/?category/rvalues"><input
+ tal:attributes="name string:category_${category};value value"
+ tal:condition="values/?category/?value" checked
+ type="radio"><input
+ tal:attributes="name string:category_${category};value value"
+ tal:condition="not:values/?category/?value"
+ type="radio">&nbsp;<span tal:replace="rangenames/?value">Mild</span>
+</td>
 </tr>
 </tbody>
 </table>

@@ -20,9 +20,14 @@ __date__    = "$Date$"[7:-2]
 
 from wc import AppName, Version, ConfigDir, config
 from wc.webgui.context import getval as _getval
-import cgi as _cgi
+from wc.filter.Rating import service, rangenames
 _entries_per_page = 50
 
+# config vars
+info = {}
+error = {}
+ratings = {}
+values = {}
 url = ""
 # current index of entry to display
 curindex = 0
@@ -30,6 +35,16 @@ entries_display = []
 
 # form execution
 def _exec_form (form):
+    # reset info/error and form vals
+    _form_reset()
     global url
     if form.has_key('url'):
         url = _getval(form, 'url')
+
+def _form_reset ():
+    info.clear()
+    error.clear()
+    ratings.clear()
+    global ratings, url
+    url = ""
+    curindex = 0
