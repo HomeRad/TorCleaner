@@ -4,7 +4,7 @@
 <title lang="de">Inhaltsbewertung</title>
 <title lang="en">Content Rating</title>
 
-<rating sid="wc.8" disable="1">
+<rating sid="wc.99" disable="1">
   <title lang="de">Inhaltsbewertung</title>
   <title lang="en">Content Rating</title>
   <description lang="de">Aktivieren Sie die Inhaltsbewertung um ihre Kinder vor ungeeigneten Inhalten zu schützen.</description>
