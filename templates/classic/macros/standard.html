@@ -48,14 +48,14 @@
  tal:condition="nav/update_html"
  tal:attributes="href string:update.html.${lang}"
  i18n:translate="">Filter update</a>
-<a href="pics.html" class="plain"
- tal:condition="not:nav/pics_html"
- tal:attributes="href string:pics.html.${lang}"
- i18n:translate="">PICS data</a>
-<a href="pics.html" class="selected"
- tal:condition="nav/pics_html"
- tal:attributes="href string:pics.html.${lang}"
- i18n:translate="">PICS data</a>
+<a href="rating.html" class="plain"
+ tal:condition="not:nav/rating_html"
+ tal:attributes="href string:rating.html.${lang}"
+ i18n:translate="">Content rating</a>
+<a href="rating.html" class="selected"
+ tal:condition="nav/rating_html"
+ tal:attributes="href string:rating.html.${lang}"
+ i18n:translate="">Content rating</a>
 <a href="help.html" class="plain"
  tal:condition="not:nav/help_html"
  tal:attributes="href string:help.html.${lang}"

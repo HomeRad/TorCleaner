@@ -4,6 +4,8 @@
  
  Changes:
 
+ 20040106 Bastian Kleineidam
+ * removed pics, added rating stuff
  20031031 Bastian Kleineidam
  * remove oid attr from all rules except folder
  20031029 Bastian Kleineidam
@@ -303,12 +305,12 @@
  search    CDATA #REQUIRED
 >
 
-<!--                        PICS filter
+<!--                        Rating
 
-   A rule enabling the PICS system in WebCleaner.
+   A rule enabling the rating system in WebCleaner.
 -->
-<!ELEMENT pics (url?,service*)>
-<!ATTLIST pics
+<!ELEMENT rating (url?,category*)>
+<!ATTLIST rating
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
@@ -318,19 +320,9 @@
  name     CDATA #REQUIRED
 >
 
-<!--                      PICS service
+<!--                      rating category
 
-   Each PICS service must specify a name by which it is identified.
--->
-<!ELEMENT service (#PCDATA)>
-<!ATTLIST service
- name CDATA #REQUIRED
->
-
-<!--                      PICS service category
-
-   a category has an identification label matching the one defined
-   in PICS.py, and a rating value as content
+   a category has an identification label and a rating value as content
 -->
 <!ELEMENT category (#PCDATA)>
 

@@ -136,13 +136,13 @@ Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.
 <h4 i18n:translate="">Filter configuration rules</h4>
 Image
 
-<h3>PicsHeader</h3>
+<h3>RatingHeader</h3>
 <h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Parse and evaluate PICS rating system header values.</p>
+<p i18n:translate="">Parse and evaluate content rating system header values.</p>
 <h4 i18n:translate="">Applies to</h4>
 <p i18n:translate="">Response headers of all mime types.</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
-Pics
+Rating
 
 <h3>Replacer</h3>
 <h4 i18n:translate="">Description</h4>
@@ -155,12 +155,12 @@ Replace
 <h3>Rewriter</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Parse HTML code and rewrite single tags, attributes
-and values. Execute and filter JavaScript. Parse and filter PICS rated
+and values. Execute and filter JavaScript. Parse and filter content rated
 pages. Filter HTML comments.</p>
 <h4 i18n:translate="">Applies to</h4>
 <p i18n:translate="">Response data of html pages</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
-Javascript, Nocomments, Pics, Rewrite
+Javascript, Nocomments, Rating, Rewrite
 
 
 <h2 i18n:translate="">Filter configuration rules</h2>
@@ -195,8 +195,8 @@ dynamic content emitted with document.write() into the HTML file.</p>
 <p i18n:translate="">Remove comments from HTML source. Comments inside
 &lt;script&gt; or &lt;style&gt; tags are not removed.</p>
 
-<h3>Pics</h3>
-<p i18n:translate="">One activated Pics rule enables the PICS content rating
+<h3>Rating</h3>
+<p i18n:translate="">One activated Rating rule enables the content rating
 system in %(AppName)s. Several distinct content rating services including
 the one defined by %(AppName)s itself can be configured.</p>
 

@@ -17,7 +17,7 @@
 several given categories.</p>
 
 <h2 i18n:translate="">URL rating</h2>
-<form action="pics.html" method="POST" name="picsform"
+<form action="rating.html" method="POST" name="ratingform"
  tal:attributes="action string:${filename}.${lang}">
 <table border="0" cellpadding="5" cellspacing="0" summary="">
 <tr>
@@ -50,7 +50,7 @@ several given categories.</p>
 </tr>
 </thead>
 <tbody>
-<tr tal:repeat="category pics_categories">
+<tr tal:repeat="category categories">
 <!-- XXX radio checked attrs -->
 <td tal:content="category">Violence</td>
 <td><input type="radio" name="rating" value="none"
