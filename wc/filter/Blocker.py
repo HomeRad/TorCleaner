@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, urlparse, os, wc
+import re, urlparse, os, gzip, wc
 from wc.filter.rules.AllowRule import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
@@ -80,7 +80,7 @@ class Blocker (Filter):
 
     def add_blockdomains (self, rule):
         print "blockdomains", rule.file
-        lines = get_file_data(rule.file)
+        lines = self.get_file_data(rule.file)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
@@ -88,7 +88,7 @@ class Blocker (Filter):
 
     def add_blockurls (self, rule):
         print "blockurls", rule.file
-        lines = get_file_data(rule.file)
+        lines = self.get_file_data(rule.file)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
@@ -132,7 +132,7 @@ class Blocker (Filter):
         # check blocked domains
         for _block in self.blocked_domains:
             debug(NIGHTMARE, "block domain", _block)
-            if urltuple[1] == _block:
+            if urlTuple[1] == _block:
                 return 0
         # check blocked urls
         for _block in self.blocked_urls:

@@ -124,8 +124,8 @@ ndebug:
 	done
 
 update-blacklists:
-	# remove old file
-	rm -f blacklists.tar.gz
+	# remove old files
+	rm -rf blacklists.tar.gz config/blacklists
 	# get new file
 	wget http://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/blacklists.tar.gz
 	# unpack the files we are interested in
