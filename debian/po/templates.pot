@@ -35,7 +35,7 @@ msgstr ""
 
 #. Description
 #: ../templates:4
-msgid "This is the port number the proxy will listen on for requests."
+msgid "This is the port number this proxy will listen on for requests."
 msgstr ""
 
 #. Description

@@ -35,8 +35,8 @@ msgstr "Standard Proxy port"
 
 #. Description
 #: ../templates:4
-msgid "This is the port number the proxy will listen on for requests."
-msgstr "Dies ist die Port Nummer, unter der der Proxy Anfragen akzeptiert."
+msgid "This is the port number this proxy will listen on for requests."
+msgstr "Dies ist die Portnummer, unter der dieser Proxy Anfragen akzeptiert."
 
 #. Description
 #: ../templates:10
