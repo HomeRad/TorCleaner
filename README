@@ -4,7 +4,7 @@
 
 Features
 --------
-* HTTP/1.1 support
+* HTTP/1.1 and HTTPS support
 * integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
 * integrated JavaScript engine, allows popup filtering
 * compress documents on-the-fly (with gzip)

@@ -3,10 +3,9 @@
     Changed: config/blacklists/*
   * prevent Opera vulnerability CAN-2003-0870
     Changed: wc/filter/HtmlSecurity.py
-  * since most JavaScript server are just braindamaged, do not accept
-    gzip or deflate encodings from them
+  * do not accept encoded pages for JavaScript background downloading
     Changed: wc/filter/HtmlParser.py, wc/proxy/HttpProxyClient.java
-  * remove compress parameter
+  * remove unused compress parameter
     Changed: wc/proxy/Http{Client,Server}.py,
       wc/proxy/ClientServerMatchmaker.py
   * new file(1)-like content guessing with a magic(5) database
@@ -24,6 +23,8 @@
     Added: test/get.py
   * new test test_url for url norming tests
     Added: test/test_url.py, test/output/test_url
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031126
+    Changed: libjs/*
 
 2.6 (released 25.11.2003)
   * fixed background downloading with 30x redirects
