@@ -253,7 +253,8 @@ class Rule (object):
     def __str__ (self):
         """return basic rule data as string"""
         s = self.get_name()+"\n"
-        s += "sid     %s\n" % self.sid.encode("iso-8859-1")
+        if self.sid is not None:
+            s += "sid     %s\n" % self.sid.encode("iso-8859-1")
         s += "disable %d\n" % self.disable
         s += "title %s\n" % self.titles['en'].encode("iso-8859-1")
         return s
