@@ -74,24 +74,24 @@ class FolderRule (Rule):
         recalc_up_down(self.rules)
 
 
-    def update (self, folder, dryrun=False):
+    def update (self, folder, dryrun=False, log=None):
         """update this folder with given folder data"""
-        super(FolderRule, self).update(folder, dryrun=dryrun)
+        super(FolderRule, self).update(folder, dryrun=dryrun, log=log)
         for rule in folder.rules:
             if not rule.sid.startswith("wc"):
                 # ignore local rules
                 continue
             oldrule = self.get_rule(rule.sid)
             if oldrule is not None:
-                oldrule.update(rule, dryrun=dryrun)
-            elif dryrun:
-                print "inserting new rule", rule.tiptext()
+                oldrule.update(rule, dryrun=dryrun, log=log)
             else:
+                print >>log, "inserting new rule", rule.tiptext()
                 # XXX new rules get appended at the end. this may be
                 # suboptimal, so try harder to insert it a better position
-                rules.append(rule)
-                recalc_oids(self.rules)
-                recalc_up_down(self.rules)
+                if not dryrun:
+                    self.rules.append(rule)
+                    recalc_oids(self.rules)
+                    recalc_up_down(self.rules)
 
 
     def get_rule (self, sid):

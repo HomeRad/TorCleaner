@@ -43,9 +43,9 @@ class HeaderRule (UrlRule):
         return factory.fromHeaderRule(self)
 
 
-    def update (self, rule, dryrun=False):
-        super(HeaderRule, self).update(rule, dryrun=dryrun)
-        self.update_attrs(['value'], rule, dryrun)
+    def update (self, rule, dryrun=False, log=None):
+        super(HeaderRule, self).update(rule, dryrun=dryrun, log=log)
+        self.update_attrs(['value'], rule, dryrun, log)
 
 
     def toxml (self):

@@ -33,20 +33,20 @@ from wc.log import *
 from ToolWindow import ToolWindow
 
 UpdateHelp = \
-i18n._("Updating procedure:\n\n"
-"We download the new configuration files from\n"
-"'%s'.\n"
-"Changed config files are renamed to .old files, new\n"
-"files are copied into the config directory.\n"
-"\n"
-"If something has changed, we restart the proxy.")
+i18n._("""Updating procedure:
 
+We download the new configuration files from
+'%s'
+and merge their changes into the current configuration.
+
+If something has changed, we save the new filter
+configuration files and reload them into the proxy.""")
 
 RemoveText = \
-i18n._("You cannot remove folders. If you really want to get rid\n"
-"of this folder, delete the appropriate configuration file.\n"
-"It is always safer to disable a folder or filter instead of\n"
-"deleting it!")
+i18n._("""You cannot remove folders. If you really want to get rid
+of this folder, delete the appropriate configuration file.
+It is always safer to disable a folder or filter instead of
+deleting it.""")
 
 ModuleHelp = {
 "Rewriter" : i18n._("""Rewrite HTML code. This is very powerful and can filter
@@ -686,49 +686,18 @@ class ConfWindow (ToolWindow):
         """download files from http://webcleaner.sourceforge.net/zapper/
            and copy them over the existing config"""
         # base url for all files
-        url = "http://webcleaner.sourceforge.net/zapper/"
-        dialog = FXMessageBox(self,i18n._("Update Help"),UpdateHelp % url,None,MBOX_OK_CANCEL)
+        from wc import BaseUrl
+        dialog = FXMessageBox(self,i18n._("Update Help"),UpdateHelp % BaseUrl,None,MBOX_OK_CANCEL)
         if self.getApp().doShow(dialog) != MBOX_CLICKED_OK:
             return 1
         try:
-            doreload = 0
-            import urllib,md5
-            lines = urllib.urlopen(url+"md5sums").readlines()
-            filemap = {}
-            for fname in wc.filterconf_files():
-                filemap[os.path.basename(fname)] = fname
-            for line in lines:
-                if "<" in line:
-                    raise IOError, "could not fetch "+url+"md5sums"
-                if not line: continue
-                md5sum,filename = line.split()
-                # compare checksums
-                if filemap.has_key(filename):
-                    fname = filemap[filename]
-                    data = file(fname).read()
-                    digest = list(md5.new(data).digest())
-                    digest = map(lambda c: "%0.2x" % ord(c), digest)
-                    digest = "".join(digest)
-                    if digest==md5sum:
-                        debug(GUI, "%s is uptodate", filename)
-		        continue
-                    # move away old file
-                    os.rename(fname, fname+".old")
-                    # copy new file
-                    f = file(fname, 'w')
-                    f.write(urllib.urlopen(url+filename).read())
-                    f.close()
-                    doreload = 1
-                else: # new file, just download it
-                    f = file(fname, 'w')
-                    f.write(urllib.urlopen(url+filename).read())
-                    f.close()
-                    doreload = 1
+            wc.update.update(wc.config, BaseUrl)
+            wc.config.write_filterconf()
         except IOError, msg:
             self.getApp().error(i18n._("Update Error"), "%s: %s" % (i18n._("Update Error"), msg))
         else:
             if doreload:
-                self.handle(self, MKUINT(ConfWindow.ID_PROXYRESTART,SEL_COMMAND), None)
+                self.handle(self, MKUINT(ConfWindow.ID_PROXYRELOAD,SEL_COMMAND), None)
         return 1
 
 

@@ -54,25 +54,23 @@ class Rule (object):
         self.listattrs = []
 
 
-    def update (self, rule, dryrun=False):
+    def update (self, rule, dryrun=False, log=None):
         """update title and description with given rule data"""
         assert self.sid==rule.sid, "updating %s with invalid rule %s" % \
                 (str(self), str(rule))
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
-        if dryrun:
-            print "updating rule", self.tiptext()
+        print >>log, "updating rule", self.tiptext()
         l = [a for a in self.attrnames if a not in ['sid', 'oid', 'disable'] ]
-        self.update_attrs(l, rule, dryrun)
+        self.update_attrs(l, rule, dryrun, log)
 
 
-    def update_attrs (self, attrs, rule, dryrun):
+    def update_attrs (self, attrs, rule, dryrun, log):
         for attr in attrs:
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
-                if dryrun:
-                    print attr, `oldval`, "==>", `newval`
-                else:
+                print >>log, attr, `oldval`, "==>", `newval`
+                if not dryrun:
                     setattr(self, attr, newval)
 
 

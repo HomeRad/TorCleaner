@@ -269,19 +269,18 @@ class Configuration (dict):
         recalc_up_down(self['folderrules'])
 
 
-    def merge_folder (self, folder, dryrun=False):
+    def merge_folder (self, folder, dryrun=False, log=None):
         # test for correct category
         assert folder.sid.startswith("wc")
         found = False
         for rule in self['folderrules']:
             if rule.sid==folder.sid:
-                rule.update(folder, dryrun=dryrun)
+                rule.update(folder, dryrun=dryrun, log=log)
                 found = True
                 break
         if not found:
-            if dryrun:
-                print "inserting", folder.tiptext()
-            else:
+            print >>log, "inserting", folder.tiptext()
+            if not dryrun:
                 self['folderrules'].append(folder)
 
 

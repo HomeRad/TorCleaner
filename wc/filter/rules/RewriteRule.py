@@ -121,10 +121,10 @@ class RewriteRule (UrlRule):
         return factory.fromRewriteRule(self)
 
 
-    def update (self, rule, dryrun=False):
-        super(RewriteRule, self).update(rule, dryrun=dryrun)
+    def update (self, rule, dryrun=False, log=None):
+        super(RewriteRule, self).update(rule, dryrun=dryrun, log=log)
         attrs = ['attrs', 'part', 'replacement', 'enclosed']
-        self.update_attrs(attrs, rule, dryrun)
+        self.update_attrs(attrs, rule, dryrun, log)
 
 
     def _compute_start_sufficient (self):

@@ -40,9 +40,9 @@ class ReplaceRule (UrlRule):
         return factory.fromReplaceRule(self)
 
 
-    def update (self, rule, dryrun=False):
-        super(ReplaceRule, self).update(rule, dryrun=dryrun)
-        self.update_attrs(['replace'], rule, dryrun)
+    def update (self, rule, dryrun=False, log=None):
+        super(ReplaceRule, self).update(rule, dryrun=dryrun, log=log)
+        self.update_attrs(['replace'], rule, dryrun, log)
 
 
     def toxml (self):
