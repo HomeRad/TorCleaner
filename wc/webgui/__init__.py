@@ -27,6 +27,7 @@ import gettext
 import mimetypes
 import cStringIO as StringIO
 import wc
+import wc.log
 from wc.webgui.simpletal import simpleTAL
 from wc.webgui.simpletal import simpleTALES
 import wc.proxy.auth
@@ -87,14 +88,14 @@ class WebConfig (object):
                 data = fp.read()
             fp.close()
         except IOError:
-            exception(GUI, "Wrong path %r", url)
+            wc.log.exception(GUI, "Wrong path %r", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
             client.error(404, wc.i18n._("Not Found"))
             return
         except StandardError:
             # catch standard exceptions and report internal error
-            exception(GUI, "Template error")
+            wc.log.exception(GUI, "Template error")
             client.error(500, wc.i18n._("Internal Error"))
             return
         # not catched builtin exceptions are:
