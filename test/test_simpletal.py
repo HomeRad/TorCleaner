@@ -22,7 +22,9 @@ def expand_template (f, context):
 
 def get_context ():
     # make TAL context
-    return simpleTALES.Context()
+    context = simpleTALES.Context()
+    context.addGlobal("option", "hullabulla")
+    return context
 
 
 path = "test/html/taltest.html"
