@@ -116,7 +116,10 @@ def _test():
 
 def _broken ():
     p = HtmlPrinter()
-    p.feed("<img bo\\\nrder=0>")
+    # turn on debugging
+    p.debug(1)
+    for c in """</td <td a="b" >""":
+        p.feed(c)
     p.flush()
 
 
