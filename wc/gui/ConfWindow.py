@@ -465,10 +465,10 @@ class ConfWindow(FXMainWindow):
 
 
     def onCmdConfUpdate(self, sender, sel, ptr):
-        """download files from http://webcleaner.sourceforge.net/zappers/
+        """download files from http://webcleaner.sourceforge.net/zapper/
            and copy them over the existing config"""
         # base url for all files
-        url = "http://webcleaner.sourceforge.net/zappers/"
+        url = "http://webcleaner.sourceforge.net/zapper/"
         dialog = FXMessageBox(self,_("Update Help"),UpdateHelp % url,None,MBOX_OK_CANCEL)
         if self.doShow(dialog) != MBOX_CLICKED_OK:
             return 1

@@ -22,7 +22,7 @@ from wc.daemon import startfunc,pidfile
 from wc.debug_levels import *
 from wc import debug
 
-def start():
+def start(parent_exit=1):
     # already running?
     if os.path.exists(pidfile):
         return """webcleaner already started (lock file found).

@@ -23,17 +23,17 @@ case "$1" in
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	$DAEMON stop
+	$DAEMON stop >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
 	;;
   reload)
         echo -n "Reloading $DESC: "
-	$DAEMON reload
+	$DAEMON reload >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
-	$DAEMON restart
+	$DAEMON restart >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
 	;;
   status)

@@ -64,5 +64,5 @@ def reload():
         return "webcleaner is not running. Do 'webcleaner start' first."
     pid = int(open(pidfile).read())
     import signal
-    os.kill(int(open(pidfile).read()), signal.SIGHUP)
+    os.kill(pid, signal.SIGHUP)
 

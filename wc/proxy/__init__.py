@@ -5,7 +5,7 @@ used by Bastian Kleineidam for WebCleaner
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import sys, re, os, urlparse, time, select, asyncore
+import sys, time, select, asyncore
 from wc import debug,_,config
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
@@ -80,14 +80,12 @@ def format_seconds(seconds):
     hours = 0
     days = 0
     if seconds > 60:
-        minutes = seconds / 60
-        seconds = seconds % 60
+        minutes, seconds = divmod(seconds, 60)
         if minutes > 60:
-            hours = minutes / 60
+            hours, minutes = divmod(minutes, 60)
             minutes = minutes % 60
             if hours > 24:
-                days = hours / 24
-                hours = hours % 24
+                days, hours = divmod(hours, 24)
     return _("%d days, %02d:%02d:%02d") % (days, hours, minutes, seconds)
 
 
@@ -192,7 +190,7 @@ def mainloop():
         # dealing with handlers, we come to the main loop, so we don't
         # have to worry about being in asyncore.poll when a timer goes
         # off.
-        handlerCount = proxy_poll(timeout=max(0, run_timers()))
+        proxy_poll(timeout=max(0, run_timers()))
 
 if __name__=='__main__':
     mainloop()

@@ -87,8 +87,8 @@ def startfunc():
         import signal
         signal.signal(signal.SIGHUP, reload_config)
     config.init_filter_modules()
-    from wc import proxy
-    proxy.mainloop()
+    import wc.proxy
+    wc.proxy.mainloop()
 
 
 # reload configuration
@@ -190,7 +190,6 @@ _rulenames = (
   'nocomments',
   'replacer')
 _nestedtags = ('attr','enclosed','replace')
-_plaindatatags = ('replace',)
 
 class ParseException(Exception): pass
 
@@ -247,8 +246,8 @@ class ZapperParser(BaseParser):
             self.rule.fill_data(data, self.cmode)
 
     def reset(self):
-        from wc.filter import Rules
-        self.rules = Rules.FolderRule()
+        import wc.filter.Rules
+        self.rules = wc.filter.Rules.FolderRule()
         self.cmode = None
         self.rule = None
 
