@@ -338,8 +338,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         if tag=="meta":
             if attrs.get('http-equiv', '').lower() =='pics-label':
                 labels = resolve_html_entities(attrs.get('content', ''))
-                if not pics_is_cached(self.url):
-                    pics_add(self.url, labels)
+                # note: always put this in the cache, since this overrides
+                # any http header setting, and page content changes more
+                # often
+                pics_add(self.url, labels)
         elif tag=="body":
             if self.pics:
                 # headers finished, check PICS data
