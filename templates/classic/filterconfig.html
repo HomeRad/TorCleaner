@@ -11,7 +11,7 @@
 <title i18n:translate="">%(AppName)s filter rule configuration</title>
 </head>
 <body>
-<div metal:use-macro="macros/macros/nav">Navigation</div>
+<div metal:use-macro="macros/nav">Navigation</div>
 <div class="content" id="main">
 <form action="filterconfig.html" method="POST" name="filterform"
  tal:attributes="action string:${filename}.${lang}">
@@ -158,7 +158,7 @@
 <span tal:content="rule/capitalize">Javascript</span>
 <span i18n:translate="">Rule</span>
 </div>
-<div metal:use-macro="rulemacros/macros/?rule">
+<div metal:use-macro="rulemacros/?rule">
 Here is the rule configuration...
 </div></div>
 </div>
@@ -245,6 +245,6 @@ Here is the rule configuration...
 
 </div>
 
-<div metal:use-macro="macros/macros/footer">Footer...</div>
+<div metal:use-macro="macros/footer">Footer...</div>
 </body>
 </html>
