@@ -23,9 +23,9 @@
 import sys
 import re
 
-_oct='01234567'
-_dec='0123456789'
-_hex='0123456789abcdefABCDEF'
+#_oct = '01234567'
+#_dec = '0123456789'
+_hex = '0123456789abcdefABCDEF'
 
 _is_oct_start = re.compile(r"^[0\\][1-7]").match
 _is_dec_start = re.compile(r"^([1-9]|0$)").match

@@ -46,7 +46,7 @@ def init_dns_resolver ():
     debug(DNS, "search domains %s", DnsConfig.search_domains)
     # re-read config every 10 minutes
     # disabled, there is a reload option in webcleaner
-    #make_timer(600, init_dns_resolver)
+    #wc.proxy.make_timer(600, init_dns_resolver)
 
 
 def init_dns_resolver_posix ():
@@ -194,11 +194,11 @@ class DnsExpandHostname (object):
             self.queries.append(re.sub(r'\.\.+', '.', hostname))
         self.requests = self.queries[1:] # queries we haven't yet made
         # Issue the primary request
-        make_timer(0, lambda h=hostname, s=self:
+        wc.proxy.make_timer(0, lambda h=hostname, s=self:
                    dnscache.lookup(h, s.handle_dns))
         # and then start another request as well
         if self.delay < 1: # (it's likely to be needed)
-            make_timer(self.delay, self.handle_issue_request)
+            wc.proxy.make_timer(self.delay, self.handle_issue_request)
 
 
     def handle_issue_request (self):
@@ -207,13 +207,14 @@ class DnsExpandHostname (object):
         if self.requests and self.callback:
             request = self.requests[0]
             del self.requests[0]
-            make_timer(0, lambda r=request, s=self:
+            wc.proxy.make_timer(0, lambda r=request, s=self:
                        dnscache.lookup(r, s.handle_dns))
 
             # XXX: Yes, it's possible that several DNS lookups are
             # being executed at once.  To avoid that, we could check
             # if there's already a timer for this object ..
-            if self.requests: make_timer(self.delay, self.handle_issue_request)
+            if self.requests:
+                wc.proxy.make_timer(self.delay, self.handle_issue_request)
 
 
     def handle_dns (self, hostname, answer):
@@ -411,7 +412,7 @@ class DnsLookupHostname (object):
             self.requests[-1].TIMEOUT = self.outstanding_requests * 2
             if self.nameservers:
                 # Let's create another one soon
-                make_timer(1, self.issue_request)
+                wc.proxy.make_timer(1, self.issue_request)
 
 
     def handle_dns (self, hostname, answer):
@@ -452,7 +453,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if self.conntype == 'tcp':
             wc.proxy.create_inet_socket(self, socket.SOCK_STREAM)
             self.connect((self.nameserver, self.PORT))
-            make_timer(30, self.handle_connect_timeout)
+            wc.proxy.make_timer(30, self.handle_connect_timeout)
             # XXX: we have to fill the buffer because otherwise we
             # won't consider this object writable, and we will never
             # call handle_connect.  This needs to be fixed somehow.
@@ -511,7 +512,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.send_buffer = wc.proxy.dns.Lib.pack16bit(len(msg))+msg
         else:
             self.send_buffer = msg
-        make_timer(self.TIMEOUT + 0.2*self.retries, self.handle_timeout)
+        wc.proxy.make_timer(self.TIMEOUT + 0.2*self.retries, self.handle_timeout)
 
 
     def handle_timeout (self):
@@ -652,6 +653,5 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             callback(self.hostname, DnsResponse('error', 'closed with no answer .. %s' % self))
 
 
-from wc.proxy import make_timer
 dnscache = DnsCache()
 

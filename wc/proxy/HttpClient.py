@@ -279,7 +279,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds, username=wc.config['proxyuser'],
                                      password_b64=wc.config['proxypass'],
-                                     uri=get_auth_uri(self.url),
+                                     uri=wc.proxy.auth.get_auth_uri(self.url),
                                      method=self.method, data=None):
                 warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
@@ -468,9 +468,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             return
         # check admin pass
         if not is_public_doc and wc.config["adminuser"]:
-            creds = get_header_credentials(self.headers, 'Authorization')
+            creds = wc.proxy.auth.get_header_credentials(self.headers, 'Authorization')
             if not creds:
-                auth = ", ".join(get_challenges())
+                auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                 return
             if 'NTLM' in creds:
@@ -479,9 +479,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                     self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                     return
             # XXX the data=None argument should hold POST data
-            if not check_credentials(creds, username=wc.config['adminuser'],
+            if not wc.proxy.auth.check_credentials(creds, username=wc.config['adminuser'],
                                      password_b64=wc.config['adminpass'],
-                                     uri=get_auth_uri(self.url),
+                                     uri=wc.proxy.auth.get_auth_uri(self.url),
                                      method=self.method, data=None):
                 warn(AUTH, "Bad authentication from %s", self.addr[0])
                 auth = ", ".join(get_challenges())

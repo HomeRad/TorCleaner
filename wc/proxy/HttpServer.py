@@ -8,7 +8,6 @@ __date__    = "$Date$"[7:-2]
 import time
 import socket
 import re
-import urlparse
 import urllib
 import cStringIO as StringIO
 import wc
