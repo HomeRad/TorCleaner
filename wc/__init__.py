@@ -17,7 +17,6 @@
 import os, re, sys, UserDict, time, socket, ip, i18n
 import _webcleaner2_configdata as configdata
 from debug import *
-sys.setcheckinterval(100)
 
 Version = configdata.version
 AppName = configdata.name
@@ -49,6 +48,8 @@ def remove_headers (headers, to_remove):
 config = None
 
 def startfunc ():
+    # we run single-threaded, decrease check interval
+    sys.setcheckinterval(500)
     # support reload on posix systems
     if os.name=='posix':
         import signal
