@@ -57,16 +57,22 @@
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.377" title="Remove _blank and _new targets"
+<rewrite sid="wc.377" title="Remove dumb href targets"
  desc="Can&apos;t believe I have to make this case-insensitive 8-)">
+<attr name="target">(?i)_(blank|new|top)</attr>
+<replacement part="attr"/>
+</rewrite>
+
+<rewrite sid="wc.378" title="Remove dumb area targets"
+ tag="area">
 <attr name="target">(?i)_(blank|new)</attr>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.378" title="Remove _blank and _new area targets"
- tag="area">
-<attr name="target">(?i)_(blank|new)</attr>
-<replacement part="attr"/>
+<rewrite sid="wc.3" title="Mark href targets"
+ desc="Display a little marker when links point to unknown targets.">
+<attr name="target">(.+)</attr>
+<replacement part="attr">target=\1 style=border-bottom-width:1px;border-bottom-style:dashed;</replacement>
 </rewrite>
 
 <rewrite sid="wc.379" title="Eselfilme layer"
@@ -79,5 +85,5 @@
 <replace sid="wc.380" title="The Dude"
  desc="Just a silly example."
  disable="1"
- search="Bastian"/>
+ search="Bastian">The Dude</replace>
 </folder>
