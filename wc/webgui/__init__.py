@@ -37,8 +37,8 @@ class WebConfig:
             f, dirs = get_template(url)
             # get TAL context
             context = get_context(dirs, form, context)
-        except IOError, msg:
-            exception(GUI, "Wrong path")
+        except IOError, e:
+            exception(GUI, "Wrong path `%s'", url)
             return client.error(404, i18n._("Not Found"))
         # expand template
         data = expand_template(f, context)
