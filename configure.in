@@ -142,5 +142,8 @@ Makefile
 po/Makefile
 libjs/Makefile
 libjs/fdlibm/Makefile
+service/Makefile
+service/log/Makefile
+service/env/Makefile
 ])
 AC_OUTPUT
