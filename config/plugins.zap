@@ -4,13 +4,15 @@
  desc="The filter rules found here remove plugin (eg flash) contents, but only for selected sites." oid="3">
 <rewrite sid="wc.287" title="Remove EMBEDded content"
  desc="Kill &lt;embed&gt; things."
- matchurl="www\.heise\.de"
- tag="embed"/>
+ tag="embed">
+<matchurl>www\.heise\.de</matchurl>
+</rewrite>
 
 
 <rewrite sid="wc.288" title="Remove OBJECTs"
  desc="Kill &lt;object&gt; things."
- matchurl="www\.heise\.de"
- tag="object"/>
+ tag="object">
+<matchurl>www\.heise\.de</matchurl>
+</rewrite>
 
 </folder>

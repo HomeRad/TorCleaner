@@ -4,12 +4,18 @@
  desc="Add, delete and modify HTTP headers." oid="2">
 <header sid="wc.313" title="My own user-agent"
  desc="The user-agent is the most widely used HTTP header to detect your browser. Some people might like it, some dont. I dont. Some sites may not be displayed correctly with this option (mail them to me and I add them to the dont match url). A common User-Agent value could be &amp;quot;Mozilla (compatible; MSIE 6.0b; Window NT 5.0)&amp;quot;"
- name="User-Agent">Calzilla/6.0</header>
+ name="User-Agent" value="Calzilla/6.0"/>
 
 <header sid="wc.314" title="No referer"
  desc="Remove the Referer header. Some sites may not work with this option, because they check the referer. In this case add them to &apos;dont match url&apos; and write me an email."
- dontmatchurl="(printerfriendly\.abcnews\.com|/cgi-bin/fosi\.cgi|\.ask\.com|www\.amazon\.de/exec/obidos/clipserve/|\.lufthansa\.|www\.nba\.com)"
- name="Referer"/>
+ name="Referer">
+<nomatchurl>printerfriendly\.abcnews\.com</nomatchurl>
+<nomatchurl>/cgi-bin/fosi\.cgi</nomatchurl>
+<nomatchurl>\.ask\.com</nomatchurl>
+<nomatchurl>www\.amazon\.de/exec/obidos/clipserve/</nomatchurl>
+<nomatchurl>\.lufthansa\.</nomatchurl>
+<nomatchurl>www\.nba\.com</nomatchurl>
+</header>
 
 <header sid="wc.315" title="No x-meta tags"
  desc="What the hell are x-meta tags? Definitely not something I need."

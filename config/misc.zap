@@ -18,8 +18,10 @@
 
 <rewrite sid="wc.369" title="Remove IFRAMEs"
  desc="&lt;iframe&gt; content is almost always advertising. So remove it."
- dontmatchurl="(www\.eselfilme\.de|coverviewer\.sourceforge\.net)"
- tag="iframe"/>
+ tag="iframe">
+<nomatchurl>www\.eselfilme\.de</nomatchurl>
+<nomatchurl>coverviewer\.(sourceforge|sf)\.net</nomatchurl>
+</rewrite>
 
 
 <rewrite sid="wc.370" title="Remove NOFRAMES"
@@ -27,8 +29,11 @@
  tag="noframes"/>
 
 
-<nocomments sid="wc.371" title="Remove all HTML comments"
- dontmatchurl="(oreillynet.com|www.onlamp.com|www.onjava.com)"/>
+<nocomments sid="wc.371" title="Remove all HTML comments">
+<nomatchurl>oreillynet\.com</nomatchurl>
+<nomatchurl>www\.onlamp\.com</nomatchurl>
+<nomatchurl>www\.onjava\.com</nomatchurl>
+</nocomments>
 
 <rewrite sid="wc.372" title="Replace BLINK with B"
  desc="Dont we all hate the &lt;blink&gt; tag?"
@@ -76,8 +81,8 @@
 </rewrite>
 
 <rewrite sid="wc.379" title="Eselfilme layer"
- matchurl="eselfilme.de"
  tag="div">
+<matchurl>eselfilme\.de</matchurl>
 <attr name="id">Layer1</attr>
 <replacement part="complete"/>
 </rewrite>
@@ -85,5 +90,6 @@
 <replace sid="wc.380" title="The Dude"
  desc="Just a silly example."
  disable="1"
- search="Bastian">The Dude</replace>
+ search="Bastian"
+ replacement="The Dude"/>
 </folder>

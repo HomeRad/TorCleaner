@@ -129,14 +129,19 @@
 
 <rewrite sid="wc.356" title="Remove &lt;ilayer&gt; tag"
  desc="Lots of ads come nowadays in ilayer tags."
- dontmatchurl="www\.mplayerhq\.hu"
- tag="ilayer"/>
+ tag="ilayer">
+<nomatchurl>www\.mplayerhq\.hu</nomatchurl>
+</rewrite>
 
 
 <rewrite sid="wc.357" title="Remove &lt;layer&gt; tag"
- desc="Don&apos;t know some example sites, but I dont want layers."
- dontmatchurl="www\.on2\.com|www\.mplayerhq\.hu|\.imdb\.com|www\.spielen-lernen-bewegen\.de"
- tag="layer"/>
+ desc="Don&apos;t know some example sites, but I don&apos;t want layers."
+ tag="layer">
+ <nomatchurl>www\.on2\.com</nomatchurl>
+ <nomatchurl>www\.mplayerhq\.hu</nomatchurl>
+ <nomatchurl>\.imdb\.com</nomatchurl>
+ <nomatchurl>www\.spielen-lernen-bewegen\.de</nomatchurl>
+</rewrite>
 
 
 <rewrite sid="wc.358" title="Use the &lt;nolayer&gt; tag"

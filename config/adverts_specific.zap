@@ -10,19 +10,22 @@
 
 <rewrite sid="wc.399" title="Heise advert"
  desc="www.heise.de has an advert tag. Nice :)"
- matchurl="^http://(www\.)heise\.de/"
- tag="heiseadvert"/>
+ tag="heiseadvert">
+<matchurl>^http://(www\.)heise\.de/</matchurl>
+</rewrite>
 
 
 <rewrite sid="wc.400" title="Heise contentbanner"
  desc="heise.de"
- matchurl="^http://(www\.)heise\.de/"
- tag="contentbanner"/>
+ tag="contentbanner">
+<matchurl>^http://(www\.)heise\.de/</matchurl>
+</rewrite>
 
 
 <rewrite sid="wc.12" title="Heise skyscraper"
- matchurl="^http://(www\.)heise\.de/"
- tag="skyscraper"/>
+ tag="skyscraper">
+<matchurl>^http://(www\.)heise\.de/</matchurl>
+</rewrite>
 
 
 <rewrite sid="wc.11" title="Heise Onlinemarkt"
@@ -53,32 +56,32 @@
 </rewrite>
 
 <rewrite sid="wc.404" title="Salon.com"
- desc="Jump ads at Salon"
- matchurl="salon.com">
+ desc="Jump ads at Salon">
+<matchurl>salon\.com</matchurl>
 <attr>jump.salon.com</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.405" title="Freshmeat OSDN navbar"
  desc="I don&apos;t like the OSDN navigation bar."
- matchurl="^http://freshmeat\.net/"
  tag="table">
+<matchurl>^http://freshmeat\.net/</matchurl>
 <attr name="style">border-top: 1px #6f6f6f solid; border-bottom: 1px #6f6f6f solid;</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.9" title="Slashdot OSDN navbar"
  desc="I don&apos;t like the OSDN navbar."
- matchurl="^http://slashdot\.org/"
  tag="table">
+<matchurl>^http://slashdot\.org/</matchurl>
 <attr name="style">border-top: 1px #999999 solid; border-bottom: 5px #000000 solid</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.10" title="Sourceforge ODSN navbar"
  desc="I don&apos;t like the navbar"
- matchurl="^http://(sf|sourceforge)\.net/"
  tag="table">
+<matchurl>^http://(sf|sourceforge)\.net/</matchurl>
 <attr name="style">border-top: 2px #666666 solid; border-bottom:\s*1px #222222 solid;</attr>
 <replacement part="complete"/>
 </rewrite>
@@ -91,47 +94,47 @@
 </rewrite>
 
 <rewrite sid="wc.407" title="IMDB Advert"
- desc="adverts are redirections"
- matchurl="imdb">
+ desc="adverts are redirections">
+<matchurl>imdb\.</matchurl>
 <attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS|TSEARCH|TSEARCH_RHS|[A-Z_]*AD_LOWRES|[A-Z_]*LOWRES_BUY|EGAL_[A-Z]+)</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.408" title="IMDB Advert 2"
  desc="image map adverts"
- matchurl="imdb"
  tag="area">
+<matchurl>imdb\.</matchurl>
 <attr>/tiger_redirect\?</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.409" title="IMDB Advert 3"
  desc="The ultimate solution"
- matchurl="imdb"
  tag="img">
+<matchurl>imdb\.</matchurl>
 <attr name="usemap">^#m_pro-</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.410" title="IMDB Advert 4"
- desc="/r/ stuff and imdb pro"
- matchurl="imdb">
+ desc="/r/ stuff and imdb pro">
+<matchurl>imdb\.</matchurl>
 <attr>(/r/|/register/subscribe)</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.411" title="IMDB Advert 5"
  desc="Remove ad pictures"
- matchurl="imdb"
  tag="img">
+<matchurl>imdb\.</matchurl>
 <attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.412" title="IMDB Advert 6"
  desc="image tag"
- matchurl="imdb"
  tag="image">
+<matchurl>imdb\.</matchurl>
 <attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
 <replacement part="complete"/>
 </rewrite>
@@ -188,16 +191,16 @@
 </rewrite>
 
 <rewrite sid="wc.422" title="LWN ad"
- desc="Pagead at linux weekly news"
- matchurl="lwn\.net">
+ desc="Pagead at linux weekly news">
+<matchurl>lwn\.net</matchurl>
 <attr>oasis\.lwn\.net/oasisc\.php</attr>
 <replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.423" title="Freshmeat ads"
  desc="Freshmeat ad server"
- matchurl="freshmeat.net"
  tag="img">
+<matchurl>freshmeat\.net</matchurl>
 <attr name="src">fmads\.osdn\.com</attr>
 <replacement part="complete"/>
 </rewrite>
@@ -209,8 +212,8 @@
 </rewrite>
 
 <rewrite sid="wc.425" title="Schmidtie"
- desc="Harald-Schmidt-Show homepage sux"
- matchurl="www.sat1.de">
+ desc="Harald-Schmidt-Show homepage sux">
+<matchurl>www\.sat1\.de</matchurl>
 <attr>/jump\.hbs</attr>
 <replacement part="complete"/>
 </rewrite>
