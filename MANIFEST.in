@@ -4,7 +4,7 @@ include draft-luotonen-web-proxy-tunneling-01.txt
 include Makefile webcleaner webcleanerconf webcleaner.bat
 include debian/changelog debian/conffiles debian/config debian/control
 include debian/dirs debian/docs debian/init debian/postinst debian/prerm
-include debian/rules debian/templates
+include debian/rules debian/templates debian/copyright
 include filtertest filtertest.html
 include webcleaner.1 webcleanerconf.1
 include rpm_build_script

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """A parser for SGML"""
 
 # XXX This only supports those SGML features used by HTML.

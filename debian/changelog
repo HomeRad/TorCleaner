@@ -11,8 +11,9 @@ webcleaner (0.12) unstable; urgency=low
   * new proxy config option "no proxy for" to disable filtering
     for specific sites
   * POST requests no longer block forever
+  * include debian/copyright in dist
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 25 Apr 2001 01:23:50 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 25 Apr 2001 02:53:53 +0200
 
 webcleaner (0.11) unstable; urgency=low
 

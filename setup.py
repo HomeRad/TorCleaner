@@ -214,7 +214,6 @@ o HTTP/1.1 support
 		       'config/adverts.zap',
 		       'config/css.zap',
 		       'config/erotic.zap',
-		       'config/finance.zap',
 		       'config/misc.zap',
 		       'config/plugins.zap',
 		       'config/redirects.zap',

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """fourth incarnation of Amit's web proxy
 
 used by Bastian Kleineidam for WebCleaner
