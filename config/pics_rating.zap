@@ -7,9 +7,7 @@
  disable="1">
 <url>http://www.calvinandhobbes.com/</url>
 <service name="webcleaner">
-<category name="language">1</category>
-<category name="sex">1</category>
-<category name="violence">1</category>
+<category name="v">2</category>
 </service>
 </pics>
 </folder>

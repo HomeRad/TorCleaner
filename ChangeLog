@@ -33,7 +33,7 @@
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031222
     Changed: libjs/*
   * disabled psyco for now, it is unstable
-    Changed: webcleaner
+    Changed: webcleaner, debian/control
   * do not (un)quote query parts of urls
     Changed: wc/proxy/__init__.py
     Closes: SF #868823
