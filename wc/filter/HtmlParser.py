@@ -29,7 +29,7 @@ from wc.filter.PICS import check_pics
 from wc.log import *
 # JS imports
 from wc.js.JSListener import JSListener
-from wc.js import escape_js, unescape_js
+from wc.js import escape_js, unescape_js, get_js_ver
 try:
    from wc.js import jslib
 except ImportError:
@@ -509,11 +509,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsScriptSrc (self, url, language):
         """Start a background download for <script src=""> tags"""
         assert self.state[0]=='parse', "non-parse state %s" % str(self.state)
-        ver = 0.0
-        if language:
-            mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
-            if mo:
-                ver = float(mo.group('num'))
+        ver = get_js_ver(language)
         if self.base_url:
             url = urlparse.urljoin(self.base_url, url)
         else:
@@ -603,6 +599,16 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.buf[-2][0]!=STARTTAG or self.buf[-2][1]!='script':
             # syntax error, ignore
             return
+        attrs = self.buf[-2][2]
+        lang = attrs.get('language', '').lower()
+        scrtype = attrs.get('type', '').lower()
+        is_js = scrtype=='text/javascript' or \
+                lang.startswith('javascript') or \
+                not (lang or scrtype)
+        if not is_js:
+            # no JavaScript, ignore
+            return
+        ver = get_js_ver(lang)
         # get script data
         script = self.buf[-1][1].strip()
         # remove html comments
@@ -620,4 +626,4 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # put correctly quoted script data into buffer
         self.buf[-1][1] = "\n<!--\n%s\n//-->\n"%escape_js(script)
         # execute script
-        self.jsScript(script, 0.0, item)
+        self.jsScript(script, ver, item)
