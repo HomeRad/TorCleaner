@@ -23,8 +23,9 @@ document.write("</OBJECT>");
 import wc, time
 reload(wc)
 wc.DebugLevel = 0
-wc.config['filters'] = ['Replacer']
-wc.config.init_filter_modules()
+config = wc.Configuration()
+config['filters'] = ['Replacer']
+config.init_filter_modules()
 start = time.clock()
 attrs = wc.filter.initStateObjects()
 filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
