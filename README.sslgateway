@@ -31,16 +31,16 @@ Data flux
 	|
   WEBCLEANER PROXY
 	|
-     HttpClient         init server, fiter	pass data back to
+     HttpClient         init server, filter	pass data back to
 	|		request data and pass	browser
-        |		it to Https server
+        |		it to HttpServer
 	|
      ClientServerMatchmaker
 	|
-     HttpsServer	make connection to	receive filtered data,
-     	|		localhost on ssl port	encrypt it with WebCleaner
-	|		and pass request data	certificate and pass it on
-	|					to HttpClient
+     HttpServer		make connection to	receive filtered data,
+     	|		localhost on ssl port	pass it on to HttpClient
+	|		and pass request data
+	|
   WEBCLEANER SSL SERVER
 	|
      SslClient		init server, filter	pass data back to

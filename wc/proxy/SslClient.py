@@ -57,8 +57,9 @@ class SslClient (HttpClient, SslConnection):
         # some clients send partial URI's without scheme, hostname
         # and port to clients, so we have to handle this
         if not self.scheme:
-            # default scheme is https
-            self.scheme = 'https'
+            warn(PROXY, "%s missing scheme in url %r", self, self.url)
+            self.error(403, i18n._("Forbidden"))
+            return False
         if not self.allow.scheme(self.scheme):
             warn(PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
             self.error(403, i18n._("Forbidden"))

@@ -12,7 +12,6 @@ from wc.log import *
 from wc.url import document_quote
 
 from HttpServer import HttpServer
-from HttpsServer import HttpsServer
 from SslServer import SslServer
 
 BUSY_LIMIT = 10
@@ -51,6 +50,7 @@ class ClientServerMatchmaker (object):
 
     def __init__ (self, client, request, headers, content, mime=None):
         self.client = client
+        warn(PROXY, "XXX CS request %s", request)
         self.request = request
         self.headers = headers
         self.content = content
@@ -67,7 +67,7 @@ class ClientServerMatchmaker (object):
                 auth = config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r"%auth
         else:
-            if client.method=='CONNECT' and config['sslgateway']:
+            if self.method=='CONNECT' and config['sslgateway']:
                 # delegate to SSL gateway
                 self.hostname = 'localhost'
                 self.port = config['sslport']
@@ -148,9 +148,7 @@ class ClientServerMatchmaker (object):
             # Let's make a new one
             self.state = 'connect'
             # All Server objects eventually call server_connected
-            if self.client.method=='CONNECT' and config['sslgateway']:
-                server = HttpsServer(self.ipaddr, self.port, self)
-            elif self.client.scheme=="https" and config['sslgateway']:
+            if self.url.startswith("https://") and config['sslgateway']:
                 server = SslServer(self.ipaddr, self.port, self)
             else:
                 server = HttpServer(self.ipaddr, self.port, self)
@@ -172,11 +170,12 @@ class ClientServerMatchmaker (object):
             headers = WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
             if config['sslgateway']:
-                server.client_send_request('GET', self.protocol,
-                                       self.hostname, self.port,
-                                       self.document, self.headers,
-                                       self.content, self,
-                                       self.url, self.mime)
+                server.client_send_request(self.method, self.protocol,
+                                   self.hostname, self.port,
+                                   self.document, self.headers,
+                                   self.content, self,
+                                   self.url, self.mime)
+                server.client = self.client
             return
         # check expectations
         addr = (self.ipaddr, self.port)

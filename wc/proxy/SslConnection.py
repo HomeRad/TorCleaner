@@ -17,7 +17,6 @@ class SslConnection (Connection):
         try:
             data = self.socket.read(RECV_BUFSIZE)
         except SSL.WantReadError:
-            warn(PROXY, "%s wants to read while reading; weird", self)
             return
         except SSL.WantWriteError:
             # you want to write? here you go
@@ -58,7 +57,6 @@ class SslConnection (Connection):
             self.handle_read()
             return
         except SSL.WantWriteError:
-            warn(PROXY, "%s wants to write while writing; weird", self)
             return
         except SSL.WantX509LookupError, err:
             exception(PROXY, "%s ssl write message", self)

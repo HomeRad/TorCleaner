@@ -11,6 +11,12 @@ def absfile (fname):
     return os.path.join(ConfigDir, fname)
 
 
+def dumpCertificate (cert, filetype=crypto.FILETYPE_PEM):
+    ''' a helper to dump an incoming cert as a PEM '''
+    return crypto.dump_certificate(filetype, cert)
+
+
+# http://www.post1.com/home/ngps/m2/howto.smime.html
 def verify_server_cb (conn, cert, errnum, depth, ok):
     # This obviously has to be updated
     debug(PROXY, '%s (%s) got client certificate %s', conn, ok, cert.get_subject())
@@ -25,8 +31,8 @@ def get_serverctx ():
         serverctx = SSL.Context(SSL.SSLv23_METHOD)
         #serverctx.set_options(SSL.OP_NO_SSLv2)
         # Demand a certificate
-        serverctx.set_verify(SSL.VERIFY_PEER|SSL.VERIFY_FAIL_IF_NO_PEER_CERT, verify_server_cb)
-        #serverctx.set_verify(SSL.VERIFY_NONE, verify_server_cb)
+        #serverctx.set_verify(SSL.VERIFY_PEER|SSL.VERIFY_FAIL_IF_NO_PEER_CERT, verify_server_cb)
+        serverctx.set_verify(SSL.VERIFY_NONE, verify_server_cb)
         serverctx.use_privatekey_file(absfile('server.pkey'))
         serverctx.use_certificate_file(absfile('server.cert'))
         serverctx.load_verify_locations(absfile('CA.cert'))
@@ -34,6 +40,7 @@ def get_serverctx ():
 
 
 def verify_client_cb (conn, cert, errnum, depth, ok):
+    #return dumpCertificate(cert) == file(absfile("server.cert")).read()
     # XXX this obviously has to be updated
     debug(PROXY, '%s (%s) got server certificate %s', conn, ok, cert.get_subject())
     return 1

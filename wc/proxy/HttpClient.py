@@ -233,14 +233,13 @@ class HttpClient (StatefulConnection):
             self.bytes_remaining = None
         if self.bytes_remaining is None:
             self.persistent = False
-        if self.method=='CONNECT':
-            if not self.headers.has_key('Host'):
-                warn(PROXY, "%s CONNECT method without Host header encountered", self)
-                self.error(403, i18n._("Forbidden"))
-                return
-        elif not self.hostname and self.headers.has_key('Host'):
+        if not self.hostname and self.headers.has_key('Host'):
+            if self.method=='CONNECT':
+                defaultport = 443
+            else:
+                defaultport = 80
             host = self.headers['Host']
-            self.hostname, self.port = splitnport(host, 80)
+            self.hostname, self.port = splitnport(host, defaultport)
         if not self.hostname:
             error(PROXY, "%s missing hostname in request", self)
             self.error(400, i18n._("Bad Request"))
@@ -252,7 +251,7 @@ class HttpClient (StatefulConnection):
         # add missing host headers for HTTP/1.1
         if not self.headers.has_key('Host'):
             warn(PROXY, "%s request without Host header encountered", self)
-            if port!=80:
+            if self.port!=80:
                 self.headers['Host'] = "%s:%d\r"%(self.hostname, self.port)
             else:
                 self.headers['Host'] = "%s\r"%self.hostname
@@ -357,6 +356,7 @@ class HttpClient (StatefulConnection):
             # server is not yet there, delay
             return
         if self.method=="CONNECT":
+            debug(PROXY, "%s write SSL tunneled data to server %s", self, self.server)
             self.server.write(self.read())
         #elif not self.persistent:
         #    warn(PROXY, "%s data in non-persistent receive state", self)

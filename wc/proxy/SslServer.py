@@ -1,15 +1,31 @@
 # -*- coding: iso-8859-1 -*-
 """connection handling WebCleaner SSL server <--> Remote SSL server"""
 
+import socket
 from wc.log import *
-from HttpsServer import HttpsServer
-from HttpServer import flush_decoders
+from HttpServer import HttpServer, flush_decoders
+from SslConnection import SslConnection
 from Headers import server_set_encoding_headers, server_set_content_headers
+from ssl import get_clientctx
 
 
-class SslServer (HttpsServer):
+class SslServer (HttpServer, SslConnection):
     """Server object for SSL connections. Since this class must not have Proxy
        functionality, the header mangling is different."""
+    def __init__ (self, ipaddr, port, client):
+        super(HttpServer, self).__init__(client, 'connect')
+        # default values
+        self.addr = (ipaddr, port)
+        self.reset()
+        # attempt connect
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
+        try:
+	    self.connect(self.addr)
+            self.socket.set_connect_state()
+        except socket.error:
+            self.handle_error('connect error')
+
+
     def __repr__ (self):
         """object description"""
         if self.addr[1] != 80:

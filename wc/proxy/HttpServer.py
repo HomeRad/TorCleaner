@@ -150,8 +150,9 @@ class HttpServer (Server):
         self.mime = mime
         # remember client header for authorization resend
         self.clientheaders = headers
-        self.mangle_request_headers()
-        self.send_request()
+        if self.method!='CONNECT':
+            self.mangle_request_headers()
+            self.send_request()
 
 
     def mangle_request_headers (self):
@@ -163,12 +164,8 @@ class HttpServer (Server):
     def send_request (self):
         """send the request to the server, is also used to send a request
            twice for NTLM authentication"""
-        if self.method=='CONNECT':
-            return
-            # XXX enable this when https is natively supported
-            #request = 'CONNECT %s:%d HTTP/1.1\r\n'%(self.hostname, self.port)
-        else:
-            request = '%s %s HTTP/1.1\r\n'%(self.method, self.document)
+        assert self.method!='CONNECT'
+        request = '%s %s HTTP/1.1\r\n'%(self.method, self.document)
         debug(PROXY, '%s write request\n%r', self, request)
         self.write(request)
         debug(PROXY, "%s write headers\n%s", self, self.clientheaders)
@@ -198,7 +195,8 @@ class HttpServer (Server):
     def process_response (self):
         """look for response line and process it if found"""
         i = self.recv_buffer.find('\n')
-        if i < 0: return
+        if i < 0:
+            return
         self.response = self.read(i+1).strip()
         if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
@@ -394,6 +392,7 @@ class HttpServer (Server):
         if not self.client:
             # delay
             return
+        debug(PROXY, "%s write SSL tunneled data to client %s", self, self.client)
         self.client.write(self.read())
 
 
