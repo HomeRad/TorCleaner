@@ -57,6 +57,11 @@
     Changed: wc/webgui/simpletal/*.py, templates/classic/filterconfig.html
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031016
     Changed: js/*
+  * try to use psyco for speedup
+    Changed: webcleaner
+  * do not try to write bytes when there is nothing to send (ie do
+    not send 0 bytes)
+    Changed: wc/proxy/Connection.py
 
 2.1
   * lots of minor bugs fixed running pychecker
