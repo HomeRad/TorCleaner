@@ -6,6 +6,7 @@ from wc.webgui.context import getval, getlist
 from wc.filter.rules.RewriteRule import partvalnames, partnames, part_num
 from wc.filter.rules.FolderRule import FolderRule
 from wc.filter import GetRuleFromName
+from wc.filter.PICS import services as pics_services
 
 t_title = i18n._("%s filter configuration") % AppName
 t_back = i18n._("Back")
@@ -56,6 +57,9 @@ t_enclosedblock = i18n._("Enclosed block")
 t_replacepart = i18n._("Replace part")
 t_replacevalue = i18n._("Replace value")
 t_rulefallback = i18n._("Fallback URL")
+t_service = i18n._("Service")
+t_category = i18n._("Category")
+t_picsratings = i18n._("PICS ratings")
 
 # config vars
 info = []

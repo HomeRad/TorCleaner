@@ -25,7 +25,10 @@ from wc.XmlUtils import xmlify, unxmlify
 class PicsRule (UrlRule):
     """holds configured PICS rating data"""
     def __init__ (self, title="No title", desc="", disable=0, oid=0):
-        super(PicsRule, self).__init__(title=title, desc=desc,disable=disable,oid=oid)
+        super(PicsRule, self).__init__(title=title, desc=desc,
+                                       disable=disable, oid=oid)
+        # per-service ratings:
+        # service -> category -> int rating value
         self.ratings = {}
         self.url = ""
 
