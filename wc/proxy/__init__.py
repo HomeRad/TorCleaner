@@ -47,21 +47,24 @@ def run_timers():
 
     if TIMERS: return TIMERS[0][0] - time.time() 
     else:      return 60
-    
 
-            
 
-def periodic_print_socketlist():
-    print 'connections: [',
+def print_socketlist():
+    s = 'connections: ['
     first = 1
     for conn in asyncore.socket_map.values():
         if first:
-            print conn,
+            s += str(conn)
             first = 0
         else:
-            print '\n              %s' % conn
-    print ']'
-    #print 'dnscache:', proxy4_dns.DnsCache
+            s += '\n              %s\n' % conn
+    s += ']\n'
+    s += 'dnscache: %s' % dns_lookups.dnscache
+    return s
+
+
+def periodic_print_socketlist():
+    print print_socketlist()
     make_timer(60, periodic_print_socketlist)
 
 def proxy_poll(timeout=0.0):

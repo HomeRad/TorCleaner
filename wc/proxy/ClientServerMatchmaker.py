@@ -2,6 +2,7 @@ import dns_lookups,socket
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import _,debug
+from wc.proxy import print_socketlist
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
 from string import split
@@ -38,9 +39,8 @@ class ClientServerMatchmaker:
 
      done:     We are done matching up the client and server
     """
-    def error(self, code, msg):
-        ServerHandleDirectly(
-            self.client,
+    def error(self, code, msg, txt=""):
+        ServerHandleDirectly(self.client,
             'HTTP/1.0 %d %s\r\n',
             'Server: WebCleaner Proxy\r\n'
             'Content-type: text/html\r\n'
@@ -49,7 +49,7 @@ class ClientServerMatchmaker:
             '<title>WebCleaner Proxy Error %d %s</title>'
             '</head><body bgcolor="#fff7e5"><br><center><b>Bummer!</b><br>'
             'WebCleaner Proxy Error %d %s<br>'
-            '%s<br></center></body></html>' % (code, msg, code, msg),
+            '%s<br></center></body></html>' % (code, msg, code, msg, txt),
             msg)
 
     def __init__(self, client, request, headers, content):
@@ -69,6 +69,14 @@ class ClientServerMatchmaker:
         self.hostname = hostname
         self.port = port
         self.document = document
+        # Temporary HACK
+        if hostname == '_proxy':
+            ServerHandleDirectly(self.client,
+                'HTTP/1.0 200 OK\r\n',
+                'Content-type: text/plain\r\n'
+                '\r\n',
+                print_socketlist())
+            return
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
@@ -101,11 +109,7 @@ class ClientServerMatchmaker:
         else:
             # Couldn't look up the host, so close this connection
             self.state = 'done'
-            ServerHandleDirectly(
-                self.client,
-                'HTTP/1.0 504 Host not found\r\n',
-                'Content-type: text/html\r\n'
-                '\r\n',
+            self.error(504, "Host not found",
                 'Host %s not found .. %s\r\n' % (hostname, answer.data))
 
     def find_server(self):
