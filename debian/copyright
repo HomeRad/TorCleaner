@@ -4,7 +4,8 @@ This is WebCleaner, written and maintained by Bastian Kleineidam
 The original source can always be found at:
 	http://webcleaner.sourceforge.net/
 
-Copyright (C) 1999-2002  Bastian Kleineidam
+=====================================================================
+Copyright (C) 1999-2003  Bastian Kleineidam
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,16 +22,20 @@ Copyright (C) 1999-2002  Bastian Kleineidam
   if not, write to the Free Software Foundation, Inc., 59 Temple Place,
   Suite 330, Boston, MA  02111-1307  USA
 
+=====================================================================
 The web proxy is based on amits web proxy, downloaded from
 http://theory.stanford.edu/~amitp/proxy.html
 and is licensed under a BSD license.
 
+=====================================================================
 The included dns package is part of the pydns project and covered by
 the Standard Python license.
 
-The wc/update.py file includes the urlutils.py from reportbug and
+=====================================================================
+The wc/update.py file includes the urlutils.py from reportbug which
 is licensed under the GPL.
 
+=====================================================================
 The included simpleTAL package is written by Colin Stewart and distributed
 under the following license:
 	Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
@@ -60,6 +65,7 @@ under the following license:
 
 	If you make any bug fixes or feature enhancements please let me know!
 
+=====================================================================
 The included Spidermonkey JavaScript engine is licensed under the
 following license:
  * The contents of this file are subject to the Netscape Public
@@ -93,6 +99,7 @@ following license:
  * the provisions above, a recipient may use your version of this
  * file under either the NPL or the GPL.
 
+=====================================================================
 The included bits from the bfilter proxy are licensed under the GPL:
 #  BFilter - a smart ad-filtering web proxy
 #  Copyright (C) 2002-2003  Joseph Artsimovich <joseph_a@mail.ru>
@@ -110,4 +117,8 @@ The included bits from the bfilter proxy are licensed under the GPL:
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+=====================================================================
+The included blacklists are generated from SquidGuard blacklists and are
+licensed under the GPL.
 

@@ -263,8 +263,8 @@ def download_and_merge ():
     #geturl("http://squidguard.mesd.k12.or.us/", "squidguard.tar.gz", blacklist)
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
-    # dmoz category dumps (this big fucker is 195MB !!!)
-    geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
+    # dmoz category dumps (license not GPL-compatible !!!)
+    #geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
 
 def write_lists ():
     open_files("config")
