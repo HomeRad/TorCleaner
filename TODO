@@ -1,6 +1,6 @@
 TODO
 
-version 2.20 and above
+version 2.20
 
 - use ZTP tal implementation, having i18n support
 
@@ -22,6 +22,8 @@ version 2.20 and above
     callback()
   File "/usr/lib/python2.3/site-packages/wc/__init__.py", line 164, in reload_config
     wc.proxy.dns_lookups.init_dns_resolver()
+
+version 2.21 and above
 
 - add functional tests
 

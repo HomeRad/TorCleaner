@@ -1,3 +1,9 @@
+webcleaner (2.20-0.1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Sat, 28 Aug 2004 10:55:39 +0200
+
 webcleaner (2.19-0.2) unstable; urgency=low
 
   * added debian/watch file
