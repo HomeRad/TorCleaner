@@ -41,11 +41,15 @@ def _exec_form (form):
         config['proxyuser'] = ''
     # proxy pass
     if form.has_key('proxypass'):
-        _form_proxypass(base64.encodestring(_getval(form, 'proxypass').strip()), res)
+        val = _getval(form, 'proxypass')
+        if val=='__dummy__':
+            # ignore the dummy value
+            val = ""
+        _form_proxypass(base64.encodestring(val).strip(), res)
     else:
-        if config['proxypass']:
-            res[0] = 407
         config['proxypass'] = ''
+        if config['proxypass'] and config['proxyuser']:
+            res[0] = 407
     # parent proxy host
     if form.has_key('parentproxy'):
         _form_parentproxy(_getval(form, 'parentproxy').strip())
@@ -67,7 +71,7 @@ def _exec_form (form):
         if val=='__dummy__':
             # ignore the dummy value
             val = ""
-        _form_parentproxypass(base64.encodestring(val))
+        _form_parentproxypass(base64.encodestring(val).strip())
     else:
         config['parentproxypass'] = ''
     # timeout
@@ -107,16 +111,17 @@ def _form_proxyport (port):
 
 def _form_proxyuser (proxyuser, res):
     if proxyuser != config['proxyuser']:
-        res[0] = 407
         config['proxyuser'] = proxyuser
         info['proxyuser'] = True
+        res[0] = 407
 
 
 def _form_proxypass (proxypass, res):
-    if proxypass != config['proxypass'] and proxypass!='__dummy__':
-        res[0] = 407
-        config['proxypass'] = base64.encodestring(proxypass)
+    if proxypass != config['proxypass']:
+        config['proxypass'] = proxypass
         info['proxypass'] = True
+        if config['proxyuser']:
+            res[0] = 407
 
 
 def _form_parentproxy (parentproxy):
