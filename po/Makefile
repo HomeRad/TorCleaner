@@ -2,8 +2,8 @@
 PYTHON := python2.3
 I18NTOOLS := .
 GETTEXT := $(PYTHON) $(I18NTOOLS)/pygettext.py -k i18n._
-MSGFMT := $(PYTHON) $(I18NTOOLS)/msgfmt.py
-#MSGFMT=msgfmt
+#MSGFMT := $(PYTHON) $(I18NTOOLS)/msgfmt.py
+MSGFMT := msgfmt -c
 MSGMERGE := msgmerge
 SOURCES = $(shell find ../wc -name \*.py) \
 ../wcheaders \
