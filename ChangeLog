@@ -10,11 +10,14 @@
   * - correctly propagate and display parsing errors
     - really cope with missing ">" end tags
     - enable yydebug on debug() call
-    Changed files: wc/parser/html{lex.l, parse.y}
+    - minor cleanups
+    Changed files: wc/parser/html{lex.*, parse.*}
   * Do not add Content-Length: 0 header to client requests, only if
     length is > 0. This makes WebCleaner compatible with publicfile
     servers again.
     Changed files: wc/proxy/HttpClient.py
+  * add mime hints
+    Changed files: wc/proxy/{HttpServer.py, ClientServerMatchmaker.py}
 
 1.9
   * use the original headers list in rfc822 Message objects to preserve
