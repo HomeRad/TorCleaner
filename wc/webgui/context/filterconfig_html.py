@@ -459,15 +459,17 @@ def _form_rule_addmatchurl (form):
     if matchurl not in currule.matchurls:
         currule.matchurls.append(matchurl)
         currule.compile_matchurls()
+        curfolder.write()
         info['rulematchurl'] = True
 
 
 def _form_rule_delmatchurls (form):
-    toremove = _getlist(form, 'rule_matchurls')
+    toremove = [u for u in _getlist(form, 'rule_matchurls') if u in currule.matchurls]
     if toremove:
         for matchurl in toremove:
             currule.matchurls.remove(matchurl)
         currule.compile_matchurls()
+        curfolder.write()
         info['rulematchurl'] = True
 
 
@@ -478,15 +480,17 @@ def _form_rule_addnomatchurl (form):
     if nomatchurl not in currule.nomatchurls:
         currule.nomatchurls.append(nomatchurl)
         currule.compile_nomatchurls()
+        curfolder.write()
         info['rulenomatchurl'] = True
 
 
 def _form_rule_delnomatchurls (form):
-    toremove = _getlist(form, 'rule_nomatchurls')
+    toremove = [u for u in _getlist(form, 'rule_nomatchurls') if u in currule.nomatchurls]
     if toremove:
         for nomatchurl in toremove:
             currule.nomatchurls.remove(nomatchurl)
         currule.compile_nomatchurls()
+        curfolder.write()
         info['rulenomatchurl'] = True
 
 
