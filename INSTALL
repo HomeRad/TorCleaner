@@ -12,22 +12,36 @@ Requirements for Unix/Linux:
 
 Requirements for Windows:
 -------------------------
+Direct download links are in brackets.
 1. Install the MinGW suite from http://mingw.sourceforge.net.
    Be sure to install in the given order:
    a) MingGW
+     [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-3.1.0-1.exe ]
    b) MSYS
+     [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.9.exe ]
    c) libiconv
+     [ http://osdn.dl.sourceforge.net/sourceforge/mingw/libiconv-1.8.0-2003.02.01-1.exe ]
    d) gettext
-2. Python >= 2.3.1 from http://www.python.org/
-3. Python for Windows Extensions from http://starship.python.net/crew/mhammond/
-4. PExports from http://starship.python.net/crew/kernr/mingw32/pexports-0.42h.zip
-5. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
-6. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
+     [ http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe ]
+2. Install Python >= 2.3.1 from http://www.python.org/
+   [ http://www.python.org/ftp/python/2.3.2/Python-2.3.2-1.exe ]
+3. Install Python for Windows Extensions from
+   http://starship.python.net/crew/mhammond/
+   [ http://starship.python.net/crew/mhammond/downloads/win32all-163.exe ]
+4. Install Python Imaging Library (PIL) from
+   http://www.pythonware.com/products/pil/
+   [ http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe ]
+5. Download Python Crypto Module from
+   http://www.amk.ca/python/code/crypto.html
+   [ http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz ]
+   For Installation of PyCrypto see below.
 
 Optional requirements (all platforms)
 -------------------------------------
 For faster code execution you can install psyco from
 http://psyco.sourceforge.net/
+[ http://osdn.dl.sourceforge.net/psyco/psyco-1.1.1-win-2.3.zip ]
+[ http://osdn.dl.sourceforge.net/psyco/psyco-1.1.1-linux.i386-2.3.tar.gz ]
 
 Setup for Unix/Linux:
 ---------------------
@@ -41,7 +55,16 @@ generate the configure and Makefile files.
 
 Setup for Windows:
 ------------------
-1. Compile the JavaScript library
+1. Preparing Python for the MinGW compiler
+   Search the file python23.dll in your windows folder.
+   After you found it, launch MSYS and do:
+   % pexports python23.dll > python23.def
+   Then use the dlltool
+   % dlltool --dllname python23.dll --def python23.def --output-lib libpython23.a
+   The resulting library has to be placed in the same directory as
+   python23.lib. (Should be the libs directory under your Python installation
+   directory.)
+3. Compile the JavaScript library
    First, copy the webcleaner-X.X.tar.gz into your MSYS home directory,
    which is usually under c:\msys\1.0\home\user\.
    Launch MSYS and extract the tarball:
@@ -50,16 +73,10 @@ Setup for Windows:
    % cd webcleaner-X.X
    Configure and compile the JavaScript library:
    % ./configure; make
-2. Preparing Python for the MinGW compiler
-   Search the file python23.dll in your windows folder.
-   After you found it, use the pexports tool you downloaded above:
-   % pexports python23.dll > python23.def
-   Then use the dlltool
-   % dlltool --dllname python23.dll --def python23.def --output-lib libpython23.a
-   The resulting library has to be placed in the same directory as
-   python23.lib. (Should be the libs directory under your Python installation
-   directory.)
-3. Compile and install the Python modules
+4. Compile and install PyCrypto
    Close the MSYS application and open a DOS command prompt.
-   Compile and install everything with:
+   Change to the pycrypto-1.9a6 directory and do:
+   c:> python setup.py build -c mingw32 install
+5. Compile and install the Python modules
+   Change to the webcleaner-X.X directory and do:
    c:> python setup.py build -c mingw32 install
