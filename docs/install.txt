@@ -45,7 +45,8 @@ Requirements for Windows:
 -------------------------
 Direct download links are in brackets.
 
-1. Install the MinGW suite from http://mingw.sourceforge.net.
+1. *Not needed if you install from the binary .exe installer* Install the
+   MinGW suite from http://mingw.sourceforge.net.
    Be sure to install in the given order:
    
    a) MingGW
@@ -129,8 +130,18 @@ Setup for Unix/Linux:
    .. _main page:
       index.html
 
-Setup for Windows:
-------------------
+Setup for Windows - the binary .exe installer:
+----------------------------------------------
+
+1. Install check
+   
+   Be sure to have installed all required windows software listed above.
+
+2. Execute the ``webcleaner-x.xx.win32-py2.3.exe`` file and follow
+   the instructions.
+
+Setup for Windows - compiling from source:
+------------------------------------------
 
 1. Install check
    
