@@ -6,7 +6,9 @@ version 2.0
 
 - test and fix all BADURLS
 
-- test nofilterhosts
+- nofilterhosts and allowedhosts dns name resolution
+
+- test nofilter mode
 
 version 2.1
 
@@ -24,18 +26,16 @@ version 2.1
   (Mozilla Windows >= 1.4b can test NTLM auth)
   in README.squid, add example ntlm and digest auth module config
 
-- testing of persistent connections
-
-- unicode parsing for flex
-  the HTML parser (written with flex) does not support unicode, so
-  sometimes you'll see '?' chars in the HTML output.
+- test parent proxy authentication
+  I never tested this.
 
 - dockapp to visualize config and status
   I made machine-parseable config and status output, so write a tool
   that uses it :)
 
-- test parent proxy authentication
-  I never tested this.
+- unicode parsing for flex
+  the HTML parser (written with flex) does not support unicode, so
+  sometimes you'll see '?' chars in the HTML output.
 
 - webcleanerconf: sortable filters (with up/down)
   The order in which filters are applied should be customizable through
