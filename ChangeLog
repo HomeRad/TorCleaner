@@ -1,6 +1,9 @@
 1.13
-  * when the HTTP server closes, flush any existing data
+  * - when the HTTP server closes, flush any existing data
+    - limit the time we wait for background javascript downloads
     Changed files: wc/proxy/HttpServer.py
+  * more template stuff, minor debug updates
+    Changed files: various
 
 1.12
   * distribution fixes:

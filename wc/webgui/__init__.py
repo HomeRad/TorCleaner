@@ -104,6 +104,9 @@ def get_context (dirs, form, localcontext):
     modulepath = ".".join(['context'] + dirs[:-1])
     template = dirs[-1].replace(".", "_")
     exec "from %s import %s as template_context" % (modulepath, template)
+    if hasattr(template_context, "exec_form"):
+        # handle form action
+        template_context.exec_form(form)
     attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     # make TAL context
     context = simpleTALES.Context()

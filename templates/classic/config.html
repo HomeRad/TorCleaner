@@ -1,16 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title tal:content="title">WebCleaner Configuration</title>
 </head>
 <body bgcolor="#ffffff">
-<form action="">
+
+<div tal:repeat="item info">
+<span tal:replace="item">Info</span>
+</div>
+
+<div tal:repeat="item error">
+<span tal:replace="item">Error</span>
+</div>
+
+<form action="config.html" method="POST">
 <table>
 <caption><big><span tal:replace="title">WebCleaner Configuration</span>
 </big><caption>
 <tr>
-  <td><span tal:replace="port">Port number</span></td>
-  <td><input type="text" name="port" value="8080"
-       tal:attributes="value config/port"></td>
+<td><span tal:replace="port">Port number</span></td>
+<td>
+  <input type="text" name="port" tal:attributes="value config/port">
+</td>
+</tr>
+<tr>
+<td colspan="2">
+  <input type="submit" value="Apply" tal:attributes="value configapply">
+</td>
 </tr>
 </table>
 </form>
