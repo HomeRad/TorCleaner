@@ -23,7 +23,7 @@ from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
 from wc.filter import FILTER_REQUEST_MODIFY
 from wc.filter import FILTER_REQUEST_ENCODE
-from wc.filter import applyfilter
+from wc.filter import applyfilter, FilterException
 
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
 
@@ -130,8 +130,14 @@ class HttpClient (Connection):
         self.http_ver = get_http_version(self.protocol)
         self.request = "%s %s %s" % (self.method, self.url, self.protocol)
         debug(PROXY, "%s request %s", str(self), `self.request`)
-        self.request = applyfilter(FILTER_REQUEST, self.request,
-                                   fun="finish", attrs=self.nofilter)
+        try:
+            self.request = applyfilter(FILTER_REQUEST, self.request,
+                                       fun="finish", attrs=self.nofilter)
+        except FilterException, msg:
+            # request is blocked and cannot be fullfilled
+            ServerHandleDirectly(self, 'HTTP/1.1 301 Found', 301,
+                    WcMessage(StringIO('Location: %s\r\n\r\n' % msg)), '')
+            return
         # note: we do not enforce a maximum url length
         self.state = 'headers'
 
@@ -197,7 +203,7 @@ class HttpClient (Connection):
             # XXX display options ?
             self.state = 'done'
             ServerHandleDirectly(self, '%s 200 OK'%self.protocol, 200,
-                                 'Content-Type: text/plain\r\n\r\n', '')
+                      WcMessage(StringIO('Content-Type: text/plain\r\n\r\n')), '')
             return
         self.state = 'content'
 
