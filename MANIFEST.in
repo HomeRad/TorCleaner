@@ -16,5 +16,5 @@ include config/*.png config/*.html
 include templates/classic/*.html
 include test/*.py test/output/test_* test/html/*.html
 include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparse.y
-include wc/parser/*.h
+include wc/parser/*.h wc/parser/Makefile
 include po/*.po po/*.pot po/*.py po/Makefile
