@@ -50,6 +50,7 @@ class Rewriter(Filter):
 
 
     def filter(self, data, **attrs):
+        debug(NIGHTMARE, `data`)
         p = attrs['filter']
         p.feed(data)
         return p.flush()

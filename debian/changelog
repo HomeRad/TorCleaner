@@ -2,8 +2,11 @@ webcleaner (0.13) unstable; urgency=low
 
   * fix an assertion error in HttpServer.py: only close the server when
     it is connected
+  * add missing second argument to handle_proc function, this prevented
+    xml files to be parsed correctly
+  * fixed the parser so he correct recognizes <tag/> tags
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 16 May 2001 21:54:45 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Mon, 21 May 2001 21:26:58 +0200
 
 webcleaner (0.12) unstable; urgency=low
 

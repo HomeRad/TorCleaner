@@ -262,8 +262,9 @@ feed(FastSGMLParserObject* self, char* string, int stringlen, int last)
 
     self->feed = 0;
 
-    if (length < 0)
+    if (length < 0) {
 	return NULL;
+    }
 
     if (length > self->bufferlen) {
 	/* ran beyond the end of the buffer (internal error)*/
@@ -271,10 +272,11 @@ feed(FastSGMLParserObject* self, char* string, int stringlen, int last)
 	return NULL;
     }
 
-    if (length > 0 && length < self->bufferlen)
+    if (length > 0 && length < self->bufferlen) {
 	/* adjust buffer */
 	memmove(self->buffer, self->buffer + length,
 		self->bufferlen - length);
+    }
 
     self->bufferlen = self->bufferlen - length;
 
@@ -401,9 +403,7 @@ initsgmlop(void)
 #define CHARREF 0x401
 #define COMMENT 0x800
 
-static int
-fastfeed(FastSGMLParserObject* self)
-{
+static int fastfeed(FastSGMLParserObject* self) {
     CHAR_T *end; /* tail */
     CHAR_T *p, *q, *s; /* scanning pointers */
     CHAR_T *b, *t, *e; /* token start/end */
@@ -412,7 +412,6 @@ fastfeed(FastSGMLParserObject* self)
 
     s = q = p = (CHAR_T*) self->buffer;
     end = (CHAR_T*) (self->buffer + self->bufferlen);
-
     while (p < end) {
 
 	q = p; /* start of token */
@@ -542,11 +541,12 @@ fastfeed(FastSGMLParserObject* self)
 
 		e = p++;
 
-		//if (last == '/') {
+                // XXX remove this ??
+		if (last == '/') {
 		    /* <tag/> */
-		//    e--;
-		//    token = TAG_EMPTY;
-                //} else if {
+		    e--;
+		    token = TAG_EMPTY;
+                }
 		if (token == PI && last == '?')
 		    e--;
 

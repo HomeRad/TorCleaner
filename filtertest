@@ -15,7 +15,7 @@ if __name__=='__main__':
         data = sys.argv[2]
     else:
         raise SystemExit, "unknown command"
-    wc.configure(None, None)
+    wc.config.init_filter_modules()
     start = time.clock()
     wc.DebugLevel = 3
     attrs = wc.filter.initStateObjects()

@@ -49,15 +49,15 @@ class SGMLParser:
 
     # handlers, can be overridden
     def handle_entityref(self, name): pass
-    def handle_charref(self, name):   pass
-    def handle_proc(self, name):      pass
-    def handle_special(self, name):   pass
-    def handle_data(self, data):      pass
-    def handle_cdata(self, data):     pass
-    def handle_comment(self, data):   pass
+    def handle_charref(self, name): pass
+    def handle_proc(self, name, attrs): pass
+    def handle_special(self, name): pass
+    def handle_data(self, data): pass
+    def handle_cdata(self, data): pass
+    def handle_comment(self, data): pass
     def unknown_starttag(self, tag, attrs): pass
-    def unknown_endtag(self, tag):    pass
-    def unknown_charref(self, ref):   pass
+    def unknown_endtag(self, tag): pass
+    def unknown_charref(self, ref): pass
     def unknown_entityref(self, ref): pass
 
 if __name__ == '__main__':
