@@ -101,7 +101,7 @@ filterfiles:	md5sums
 	cp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
 
-upload: dist homepage
+upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(WCVERSION).tar.gz
 
 homepage: VERSION

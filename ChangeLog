@@ -2,7 +2,9 @@
   * distribution fixes:
     - install template files
     - generate md5sums and gpg signatures for dist file
-    Changed files: Makefile.am, setup.py
+    - removed unused make targets
+    - add misssing files to MANIFEST
+    Changed files: Makefile.am, setup.py, MANIFEST.in
 
 1.11
   * added "What you can do" entry
