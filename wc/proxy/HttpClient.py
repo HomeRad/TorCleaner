@@ -60,7 +60,7 @@ class HttpClient (Connection):
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
                                rfc822.Message(StringIO(self.read(i))),
 			       fun="finish", attrs=self.nofilter)
-                debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
+                #debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
                 if self.headers.has_key('content-length'):
                     self.bytes_remaining = int(self.headers['content-length'])
                 else:
@@ -104,34 +104,34 @@ class HttpClient (Connection):
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'S/response', self)
+        #debug(NIGHTMARE, 'S/response', self)
         self.write(response)
         self.write(''.join(headers.headers))
         self.write('\r\n')
 
 
     def server_no_response (self):
-        debug(NIGHTMARE, 'S/failed', self)
+        #debug(NIGHTMARE, 'S/failed', self)
         self.write('**No response from server. Aborted**')
         self.delayed_close()
 
 
     def server_content (self, data):
         assert self.server
-        debug(NIGHTMARE, 'S/content', self)
+        #debug(NIGHTMARE, 'S/content', self)
         self.write(data)
 
 
     def server_close (self):
         assert self.server
-        debug(NIGHTMARE, 'S/close', self)
+        #debug(NIGHTMARE, 'S/close', self)
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
 
     def server_abort (self):
-        debug(NIGHTMARE, 'S/abort', self)
+        #debug(NIGHTMARE, 'S/abort', self)
         self.close()
         self.server = None
 
@@ -147,7 +147,7 @@ class HttpClient (Connection):
     def handle_close (self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
-        debug(HURT_ME_PLENTY, 'C/handle_close', self)
+        #debug(HURT_ME_PLENTY, 'C/handle_close', self)
         Connection.handle_close(self)
         if self.server:
             server, self.server = self.server, None
@@ -158,6 +158,6 @@ class HttpClient (Connection):
 
 
     def close (self):
-        debug(HURT_ME_PLENTY, 'C/close', self)
+        #debug(HURT_ME_PLENTY, 'C/close', self)
         self.state = 'closed'
         Connection.close(self)

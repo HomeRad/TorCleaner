@@ -22,7 +22,7 @@ class Listener (asyncore.dispatcher):
         return 0
     
     def handle_accept (self):
-        debug(HURT_ME_PLENTY, 'accept', self)
+        #debug(HURT_ME_PLENTY, 'accept', self)
         apply(self.handler, self.accept())
 
     def handle_error (self, what, type, value, tb=None):
