@@ -370,6 +370,7 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     BEGIN(INITIAL);
     if (!strlen(yyextra->tmp_buf)) {
+        /* the tag name was empty, assume a stray "</>" */
 	RESIZE_BUF(yyextra->tmp_buf, 4);
         strcpy(yyextra->tmp_buf, "</>");
         yyextra->tmp_attrs = NULL;
@@ -386,6 +387,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_TAGSTART>> {
     UPDATE_BUFPOS;
     if (!strlen(yyextra->tmp_buf)) {
+        /* the tag name was empty, assume a stray "<>" */
 	RESIZE_BUF(yyextra->tmp_buf, 3);
         strcpy(yyextra->tmp_buf, "<>");
         yyextra->tmp_attrs = NULL;
@@ -564,7 +566,8 @@ RX_DATA [-a-zA-Z0-9_]+
     if (yyextra->tmp_attrval!=NULL) return T_ERROR;
     Py_INCREF(Py_None);
     yyextra->tmp_attrval = Py_None;
-    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) return T_ERROR;
+    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, 
+                       yyextra->tmp_attrval)==-1) return T_ERROR;
     /*Py_DECREF(yyextra->tmp_attrname);*/
     /*Py_DECREF(yyextra->tmp_attrval);*/
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
