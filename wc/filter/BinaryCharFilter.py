@@ -24,6 +24,9 @@ from wc.filter.Filter import Filter
 import string
 
 class BinaryCharFilter (Filter):
+    """replace binary characters, often found in Microsoft HTML documents,
+        with their correct HTML equivalent
+    """
     # which filter stages this filter applies to (see filter/__init__.py)
     orders = [FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
@@ -33,5 +36,6 @@ class BinaryCharFilter (Filter):
     mimelist = [compileMime(x) for x in ['text/html']]
 
     def doit (self, data, **attrs):
+        """filter given data"""
         return data.translate(string.maketrans('\x00\x84\x91\x92\x93\x94',
                                                ' "`\'""'))
