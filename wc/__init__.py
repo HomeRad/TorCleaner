@@ -24,6 +24,7 @@ import xml.parsers.expat
 import _webcleaner2_configdata as configdata
 from glob import glob
 from sets import Set
+from cStringIO import StringIO
 
 Version = configdata.version
 AppName = configdata.appname
@@ -44,7 +45,7 @@ under certain conditions. Look at the file `LICENSE' whithin this
 distribution."""
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
-LocaleDir = os.path.join(os.path.join(configdata.install_data, 'share'), 'locale')
+LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 
 from XmlUtils import xmlify, unxmlify
 
@@ -201,8 +202,16 @@ class Configuration (dict):
 
     def read_proxyconf (self):
         """read proxy configuration"""
-        p = WConfigParser()
-        p.parse(proxyconf_file(), self)
+        self.parse(WConfigParser, proxyconf_file())
+
+
+    def parse (self, klass, filename, data=None):
+        p = klass()
+        if data is not None:
+            fp = StringIO(data)
+        else:
+            fp = file(filename)
+        p.parse(fp, filename, self)
 
 
     def write_proxyconf (self):
@@ -239,8 +248,8 @@ class Configuration (dict):
     def read_filterconf (self):
         """read filter rules"""
         # filter configuration
-        for f in filterconf_files():
-            ZapperParser().parse(f, self)
+        for filename in filterconf_files():
+            self.parse(ZapperParser, filename)
         self.sort()
 
 
@@ -327,7 +336,7 @@ _nestedtags = (
 class ParseException (Exception): pass
 
 class BaseParser (object):
-    def parse (self, filename, config):
+    def parse (self, fp, filename, config):
         debug(WC, "Parsing %s", filename)
         self.p = xml.parsers.expat.ParserCreate()
         self.p.returns_unicode = 0
@@ -337,7 +346,7 @@ class BaseParser (object):
         self.reset(filename)
         self.config = config
         try:
-            self.p.ParseFile(open(filename))
+            self.p.ParseFile(fp)
         except xml.parsers.expat.ExpatError:
             error(WC, "Error parsing %s"%filename)
             raise
@@ -360,8 +369,8 @@ class BaseParser (object):
 
 
 class ZapperParser (BaseParser):
-    def parse (self, filename, config):
-        super(ZapperParser, self).parse(filename, config)
+    def parse (self, fp, filename, config):
+        super(ZapperParser, self).parse(fp, filename, config)
         from wc.filter.rules import register_rule, generate_sids
         if self.folder.sid is None:
             register_rule(self.folder)
@@ -409,8 +418,8 @@ class ZapperParser (BaseParser):
 
 
 class WConfigParser (BaseParser):
-    def parse (self, filename, config):
-        super(WConfigParser, self).parse(filename, config)
+    def parse (self, fp, filename, config):
+        super(WConfigParser, self).parse(fp, filename, config)
         self.config['configfile'] = filename
         self.config['filters'].sort()
 
