@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-12-27 15:17+0100\n"
+"POT-Creation-Date: 2004-12-27 22:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,7 +95,7 @@ msgid "Invalid Method"
 msgstr ""
 
 #: ../wc/proxy/HttpClient.py:532 ../wc/proxy/HttpClient.py:538
-#: ../wc/proxy/HttpClient.py:549 ../wc/webgui/webconfig.py:57
+#: ../wc/proxy/HttpClient.py:549 ../wc/webgui/webconfig.py:58
 msgid "Authentication Required"
 msgstr ""
 
@@ -269,11 +269,11 @@ msgstr ""
 msgid "Clamd is not ready for stream scanning"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:75
+#: ../wc/filter/rating/__init__.py:68
 msgid "Unknown page"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:142
+#: ../wc/filter/rating/__init__.py:135
 #, python-format
 msgid "adding new rating for %r"
 msgstr ""
@@ -297,7 +297,7 @@ msgstr ""
 
 #: ../wc/filter/rating/storage/filesystem.py:46
 #, python-format
-msgid "malfored modified time %r"
+msgid "malformed modified time %r"
 msgstr ""
 
 #: ../wc/filter/rating/storage/filesystem.py:50
@@ -332,11 +332,11 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:73
+#: ../wc/webgui/webconfig.py:74
 msgid "Not Found"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:78
+#: ../wc/webgui/webconfig.py:79
 msgid "Internal Error"
 msgstr ""
 
@@ -415,7 +415,7 @@ msgstr ""
 msgid "hours"
 msgstr ""
 
-#: ../wc/win32start.py:37 ../webcleaner:115
+#: ../wc/win32start.py:37
 #, python-format
 msgid "%s Proxy"
 msgstr ""
@@ -500,7 +500,7 @@ msgid ""
 "restart\n"
 "        Restart %(service)s service.\n"
 "status\n"
-"        Print status info of %(AppName)s service.\n"
+"        Print status info of %(appname)s service.\n"
 "debug\n"
 "        Start %(service)s service with debug messages.\n"
 "install [options]\n"
@@ -524,9 +524,9 @@ msgstr ""
 #: ../webcleaner:75
 #, python-format
 msgid ""
-"USAGE\twebcleaner [options]\n"
+"USAGE\twebcleaner [options] [command]\n"
 "\n"
-"The %(AppName)s proxy is started as a foreground process.\n"
+"The %(appname)s proxy is started as a foreground process.\n"
 "\n"
 "OPTIONS\n"
 "-h, --help\n"
@@ -538,27 +538,38 @@ msgid ""
 "\n"
 "--no-file-logs\n"
 "        Log to stdout instead of *.log files.\n"
+"\n"
+"COMMANDS\n"
+"start\n"
+"        Start %(appname)s.\n"
+"restart\n"
+"        Restart %(appname)s.\n"
 msgstr ""
 
-#: ../webcleaner:95
+#: ../webcleaner:101
 msgid "execute 'webcleaner -h' for help\n"
 msgstr ""
 
-#: ../webcleaner:108
+#: ../webcleaner:114
 msgid "press return to continue..."
 msgstr ""
 
-#: ../webcleaner:144 ../webcleaner-certificates:94
+#: ../webcleaner:122
+#, python-format
+msgid "%(appname)s Proxy"
+msgstr ""
+
+#: ../webcleaner:151 ../webcleaner-certificates:94
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr ""
 
-#: ../webcleaner:160 ../webcleaner:179
+#: ../webcleaner:167 ../webcleaner:186
 #, python-format
 msgid "Unknown command %r"
 msgstr ""
 
-#: ../webcleaner:166 ../webcleaner-certificates:101
+#: ../webcleaner:173 ../webcleaner-certificates:101
 msgid "No command given."
 msgstr ""
 
@@ -683,8 +694,8 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: ../templates/classic/config.html:325
-#: ../templates/classic/config.html:360
+#: ../templates/classic/config.html:327
+#: ../templates/classic/config.html:365
 #: ../templates/classic/macros/rules.html:64
 #: ../templates/classic/macros/rules.html:81
 msgid "Add new"
@@ -706,7 +717,7 @@ msgstr ""
 msgid "Admin password"
 msgstr ""
 
-#: ../templates/classic/config.html:382
+#: ../templates/classic/config.html:393
 msgid "Admin password successfully changed."
 msgstr ""
 
@@ -714,7 +725,7 @@ msgstr ""
 msgid "Admin user"
 msgstr ""
 
-#: ../templates/classic/config.html:381
+#: ../templates/classic/config.html:392
 msgid "Admin user successfully changed."
 msgstr ""
 
@@ -744,15 +755,15 @@ msgstr ""
 msgid "All pages define the following access keys:"
 msgstr ""
 
-#: ../templates/classic/config.html:394
+#: ../templates/classic/config.html:405
 msgid "Allowed host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:395
+#: ../templates/classic/config.html:406
 msgid "Allowed host(s) successfully removed."
 msgstr ""
 
-#: ../templates/classic/config.html:302
+#: ../templates/classic/config.html:304
 msgid "Allowed hosts"
 msgstr ""
 
@@ -761,7 +772,7 @@ msgid "Allowed limit"
 msgstr ""
 
 #: ../templates/classic/config.html:221
-#: ../templates/classic/config.html:280
+#: ../templates/classic/config.html:281
 msgid "Always change the complete password since the displayed value is only a dummy."
 msgstr ""
 
@@ -786,7 +797,7 @@ msgstr ""
 msgid "Applies to all pages starting with url?"
 msgstr ""
 
-#: ../templates/classic/config.html:370
+#: ../templates/classic/config.html:381
 #: ../templates/classic/macros/rules.html:144
 #: ../templates/classic/macros/rules.html:209
 #: ../templates/classic/macros/rules.html:260
@@ -900,7 +911,7 @@ msgstr ""
 msgid "Disable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:393
+#: ../templates/classic/config.html:404
 msgid "Disabled filter module(s) ${disabled-filter}."
 msgstr ""
 
@@ -912,7 +923,7 @@ msgstr ""
 msgid "Disabled rule icon"
 msgstr ""
 
-#: ../templates/classic/config.html:339
+#: ../templates/classic/config.html:342
 msgid "Don't filter hosts"
 msgstr ""
 
@@ -970,7 +981,7 @@ msgstr ""
 msgid "Enable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:391
+#: ../templates/classic/config.html:402
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr ""
 
@@ -1120,11 +1131,11 @@ msgstr ""
 msgid "Home page"
 msgstr ""
 
-#: ../templates/classic/config.html:231
+#: ../templates/classic/config.html:232
 msgid "Hostname"
 msgstr ""
 
-#: ../templates/classic/config.html:231
+#: ../templates/classic/config.html:232
 msgid "Hostname of the parent proxy"
 msgstr ""
 
@@ -1164,7 +1175,7 @@ msgstr ""
 msgid "Internet Explorer"
 msgstr ""
 
-#: ../templates/classic/config.html:402
+#: ../templates/classic/config.html:413
 msgid "Invalid SSL server port."
 msgstr ""
 
@@ -1189,7 +1200,7 @@ msgstr ""
 msgid "Invalid folder move up id."
 msgstr ""
 
-#: ../templates/classic/config.html:405
+#: ../templates/classic/config.html:416
 msgid "Invalid host name."
 msgstr ""
 
@@ -1217,11 +1228,11 @@ msgstr ""
 msgid "Invalid or missing sender address."
 msgstr ""
 
-#: ../templates/classic/config.html:403
+#: ../templates/classic/config.html:414
 msgid "Invalid parent proxy port."
 msgstr ""
 
-#: ../templates/classic/config.html:401
+#: ../templates/classic/config.html:412
 msgid "Invalid proxy port."
 msgstr ""
 
@@ -1254,7 +1265,7 @@ msgstr ""
 msgid "Invalid selection index."
 msgstr ""
 
-#: ../templates/classic/config.html:404
+#: ../templates/classic/config.html:415
 msgid "Invalid timeout value."
 msgstr ""
 
@@ -1266,11 +1277,11 @@ msgstr ""
 msgid "Invalid url. The url has to start with <code>http://</code>, <code>https://</code> or <code>ftp://</code>."
 msgstr ""
 
-#: ../templates/classic/config.html:343
+#: ../templates/classic/config.html:346
 msgid "List of domain names the proxy must not filter."
 msgstr ""
 
-#: ../templates/classic/config.html:306
+#: ../templates/classic/config.html:308
 msgid "List of hosts allowed to use this proxy."
 msgstr ""
 
@@ -1359,11 +1370,11 @@ msgstr ""
 msgid "New rule successfully created."
 msgstr ""
 
-#: ../templates/classic/config.html:396
+#: ../templates/classic/config.html:407
 msgid "Nofilter host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:397
+#: ../templates/classic/config.html:408
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
@@ -1386,23 +1397,23 @@ msgstr ""
 msgid "Page blocked by ${appname}"
 msgstr ""
 
-#: ../templates/classic/config.html:388
+#: ../templates/classic/config.html:399
 msgid "Parent proxy password successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:386
+#: ../templates/classic/config.html:397
 msgid "Parent proxy port successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:227
+#: ../templates/classic/config.html:228
 msgid "Parent proxy settings"
 msgstr ""
 
-#: ../templates/classic/config.html:385
+#: ../templates/classic/config.html:396
 msgid "Parent proxy successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:387
+#: ../templates/classic/config.html:398
 msgid "Parent proxy user successfully changed."
 msgstr ""
 
@@ -1414,11 +1425,11 @@ msgstr ""
 msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
-#: ../templates/classic/config.html:264
+#: ../templates/classic/config.html:265
 msgid "Password"
 msgstr ""
 
-#: ../templates/classic/config.html:264
+#: ../templates/classic/config.html:265
 msgid "Password used for parent proxy authentication"
 msgstr ""
 
@@ -1439,11 +1450,11 @@ msgid "Please specify an SMTP host to send the mail to. If unsure, leave it at <
 msgstr ""
 
 #: ../templates/classic/config.html:54
-#: ../templates/classic/config.html:242
+#: ../templates/classic/config.html:243
 msgid "Port number"
 msgstr ""
 
-#: ../templates/classic/config.html:242
+#: ../templates/classic/config.html:243
 msgid "Port number of the parent proxy"
 msgstr ""
 
@@ -1455,7 +1466,7 @@ msgstr ""
 msgid "Port number the proxy is listening on for requests"
 msgstr ""
 
-#: ../templates/classic/config.html:379
+#: ../templates/classic/config.html:390
 msgid "Port successfully changed."
 msgstr ""
 
@@ -1464,12 +1475,12 @@ msgstr ""
 msgid "Proxy configuration"
 msgstr ""
 
-#: ../templates/classic/config.html:286
+#: ../templates/classic/config.html:287
 #: ../templates/classic/help.html:65
 msgid "Proxy filter modules"
 msgstr ""
 
-#: ../templates/classic/config.html:378
+#: ../templates/classic/config.html:389
 msgid "Proxy network address successfully changed."
 msgstr ""
 
@@ -1477,11 +1488,11 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-#: ../templates/classic/config.html:384
+#: ../templates/classic/config.html:395
 msgid "Proxy password successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:24
+#: ../templates/classic/config.html:25
 msgid "Proxy settings"
 msgstr ""
 
@@ -1489,7 +1500,7 @@ msgstr ""
 msgid "Proxy user"
 msgstr ""
 
-#: ../templates/classic/config.html:383
+#: ../templates/classic/config.html:394
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -1541,8 +1552,8 @@ msgstr ""
 msgid "Remove rule"
 msgstr ""
 
-#: ../templates/classic/config.html:314
-#: ../templates/classic/config.html:351
+#: ../templates/classic/config.html:316
+#: ../templates/classic/config.html:354
 #: ../templates/classic/macros/rules.html:61
 #: ../templates/classic/macros/rules.html:78
 msgid "Remove selected"
@@ -1621,7 +1632,7 @@ msgstr ""
 msgid "Response headers of all mime types."
 msgstr ""
 
-#: ../templates/classic/config.html:411
+#: ../templates/classic/config.html:422
 msgid "Restart proxy"
 msgstr ""
 
@@ -1754,7 +1765,7 @@ msgstr ""
 msgid "SSL port number"
 msgstr ""
 
-#: ../templates/classic/config.html:380
+#: ../templates/classic/config.html:391
 msgid "SSL port successfully changed."
 msgstr ""
 
@@ -1825,7 +1836,7 @@ msgid "This page is also available in"
 msgstr ""
 
 #: ../templates/classic/restart.html:23
-msgid "This proxy is restarting. You will be redirected to the <a href=\"\">main configuration page</a> automatically in 10 seconds."
+msgid "This proxy is restarting. You will be redirected to the new <a href=\"\">main configuration page</a> automatically in 10 seconds."
 msgstr ""
 
 #: ../templates/classic/accessibility.html:21
@@ -1836,7 +1847,7 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-#: ../templates/classic/config.html:389
+#: ../templates/classic/config.html:400
 msgid "Timeout sucessfully changed."
 msgstr ""
 
@@ -1872,11 +1883,11 @@ msgstr ""
 msgid "Update log"
 msgstr ""
 
-#: ../templates/classic/config.html:253
+#: ../templates/classic/config.html:254
 msgid "Username"
 msgstr ""
 
-#: ../templates/classic/config.html:253
+#: ../templates/classic/config.html:254
 msgid "Username used for parent proxy authentication"
 msgstr ""
 
@@ -1917,7 +1928,11 @@ msgstr ""
 msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
 msgstr ""
 
-#: ../templates/classic/config.html:332
+#: ../templates/classic/config.html:372
+msgid "You can specify complete domains or only their last parts with a leading dot. For example <code>.intra</code> will match any hosts ending with <code>.intra</code>."
+msgstr ""
+
+#: ../templates/classic/config.html:334
 msgid "You can specify network masks for whole subnets. For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host)."
 msgstr ""
 
@@ -1958,12 +1973,16 @@ msgstr ""
 msgid "footnote 2"
 msgstr ""
 
-#: ../templates/classic/config.html:279
+#: ../templates/classic/config.html:280
 msgid "footnote 3"
 msgstr ""
 
-#: ../templates/classic/config.html:331
+#: ../templates/classic/config.html:333
 msgid "footnote 4"
+msgstr ""
+
+#: ../templates/classic/config.html:371
+msgid "footnote 5"
 msgstr ""
 
 #: ../templates/classic/help.html:192
@@ -2018,12 +2037,16 @@ msgstr ""
 msgid "see footnote 2"
 msgstr ""
 
-#: ../templates/classic/config.html:267
+#: ../templates/classic/config.html:268
 msgid "see footnote 3"
 msgstr ""
 
-#: ../templates/classic/config.html:321
+#: ../templates/classic/config.html:323
 msgid "see footnote 4"
+msgstr ""
+
+#: ../templates/classic/config.html:361
+msgid "see footnote 5"
 msgstr ""
 
 #: ../templates/classic/rated.html:21

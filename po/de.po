@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-12-27 15:17+0100\n"
-"PO-Revision-Date: 2004-12-27 15:25+0100\n"
+"POT-Creation-Date: 2004-12-27 22:05+0100\n"
+"PO-Revision-Date: 2004-12-27 22:10+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgstr "Ungültige Anfrage"
 #: ../wc/proxy/HttpClient.py:532
 #: ../wc/proxy/HttpClient.py:538
 #: ../wc/proxy/HttpClient.py:549
-#: ../wc/webgui/webconfig.py:57
+#: ../wc/webgui/webconfig.py:58
 msgid "Authentication Required"
 msgstr "Authorisierung benötigt"
 
@@ -273,11 +273,11 @@ msgstr "Sie müssen entwender TCPSocket oder LocalSocket in Ihrer Clamd Konfigura
 msgid "Clamd is not ready for stream scanning"
 msgstr "Clamd ist nicht bereit zum Prüfen eines Datenstroms"
 
-#: ../wc/filter/rating/__init__.py:75
+#: ../wc/filter/rating/__init__.py:68
 msgid "Unknown page"
 msgstr "Unbekannte Seite"
 
-#: ../wc/filter/rating/__init__.py:142
+#: ../wc/filter/rating/__init__.py:135
 #, python-format
 msgid "adding new rating for %r"
 msgstr "füge neuen externen Filter %r hinzu"
@@ -301,7 +301,7 @@ msgstr "ungültige Bewertungszeile %r"
 
 #: ../wc/filter/rating/storage/filesystem.py:46
 #, python-format
-msgid "malfored modified time %r"
+msgid "malformed modified time %r"
 msgstr "ungültige Änderungszeit %r"
 
 #: ../wc/filter/rating/storage/filesystem.py:50
@@ -336,11 +336,11 @@ msgstr "Unbekannter Grund"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../wc/webgui/webconfig.py:73
+#: ../wc/webgui/webconfig.py:74
 msgid "Not Found"
 msgstr "Nicht vorhanden"
 
-#: ../wc/webgui/webconfig.py:78
+#: ../wc/webgui/webconfig.py:79
 msgid "Internal Error"
 msgstr "Interner Fehler"
 
@@ -428,7 +428,6 @@ msgid "hours"
 msgstr "Stunden"
 
 #: ../wc/win32start.py:37
-#: ../webcleaner:115
 #, python-format
 msgid "%s Proxy"
 msgstr "%s Proxy"
@@ -514,7 +513,7 @@ msgid ""
 "restart\n"
 "        Restart %(service)s service.\n"
 "status\n"
-"        Print status info of %(AppName)s service.\n"
+"        Print status info of %(appname)s service.\n"
 "debug\n"
 "        Start %(service)s service with debug messages.\n"
 "install [options]\n"
@@ -554,7 +553,7 @@ msgstr ""
 "restart\n"
 "        Starte den %(service)s Dienst neu.\n"
 "status\n"
-"        Gebe Info aus, ob der %(AppName)s Dienst gestartet ist oder nicht.\n"
+"        Gebe Info aus, ob der %(appname)s Dienst gestartet ist oder nicht.\n"
 "debug\n"
 "        Starte den %(service)s Dienst unter Ausgabe von Debugmeldungen.\n"
 "install [Optionen]\n"
@@ -577,9 +576,9 @@ msgstr ""
 #: ../webcleaner:75
 #, python-format
 msgid ""
-"USAGE\twebcleaner [options]\n"
+"USAGE\twebcleaner [options] [command]\n"
 "\n"
-"The %(AppName)s proxy is started as a foreground process.\n"
+"The %(appname)s proxy is started as a foreground process.\n"
 "\n"
 "OPTIONS\n"
 "-h, --help\n"
@@ -591,10 +590,16 @@ msgid ""
 "\n"
 "--no-file-logs\n"
 "        Log to stdout instead of *.log files.\n"
-msgstr ""
-"SYNTAX\twebcleaner [Optionen]\n"
 "\n"
-"Der %(AppName)s Proxy wird als Vordergrundprozess gestartet.\n"
+"COMMANDS\n"
+"start\n"
+"        Start %(appname)s.\n"
+"restart\n"
+"        Restart %(appname)s.\n"
+msgstr ""
+"SYNTAX\twebcleaner [Optionen] [Kommando]\n"
+"\n"
+"Der %(appname)s Proxy wird als Vordergrundprozess gestartet.\n"
 "\n"
 "OPTIONEN\n"
 "-h, --help\n"
@@ -606,28 +611,39 @@ msgstr ""
 "\n"
 "--no-file-logs\n"
 "        Protokolliere zur Standardausgabe anstatt .log Dateien.\n"
+"\n"
+"KOMMANDOS\n"
+"start\n"
+"        Starte %(appname)s.\n"
+"restart\n"
+"        Starte %(appname)s neu.\n"
 
-#: ../webcleaner:95
+#: ../webcleaner:101
 msgid "execute 'webcleaner -h' for help\n"
 msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
 
-#: ../webcleaner:108
+#: ../webcleaner:114
 msgid "press return to continue..."
 msgstr "drücken Sie Return, um fortzufahren..."
 
-#: ../webcleaner:144
+#: ../webcleaner:122
+#, python-format
+msgid "%(appname)s Proxy"
+msgstr "%(appname)s Proxy"
+
+#: ../webcleaner:151
 #: ../webcleaner-certificates:94
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr "Unbekannte Option %(option)r"
 
-#: ../webcleaner:160
-#: ../webcleaner:179
+#: ../webcleaner:167
+#: ../webcleaner:186
 #, python-format
 msgid "Unknown command %r"
 msgstr "Unbekannter Befehl %r"
 
-#: ../webcleaner:166
+#: ../webcleaner:173
 #: ../webcleaner-certificates:101
 msgid "No command given."
 msgstr "Kein Befehl angegeben."
@@ -774,8 +790,8 @@ msgstr "Zugänglichkeitserklärung für ${appname}"
 msgid "Action"
 msgstr "Aktion"
 
-#: ../templates/classic/config.html:325
-#: ../templates/classic/config.html:360
+#: ../templates/classic/config.html:327
+#: ../templates/classic/config.html:365
 #: ../templates/classic/macros/rules.html:64
 #: ../templates/classic/macros/rules.html:81
 msgid "Add new"
@@ -797,7 +813,7 @@ msgstr "Attribut hinzufügen/ersetzen"
 msgid "Admin password"
 msgstr "Administrator Passwort"
 
-#: ../templates/classic/config.html:382
+#: ../templates/classic/config.html:393
 msgid "Admin password successfully changed."
 msgstr "Administratorpasswort erfolgreich geändert."
 
@@ -805,7 +821,7 @@ msgstr "Administratorpasswort erfolgreich geändert."
 msgid "Admin user"
 msgstr "Administrator"
 
-#: ../templates/classic/config.html:381
+#: ../templates/classic/config.html:392
 msgid "Admin user successfully changed."
 msgstr "Administrator erfolgreich geändert."
 
@@ -840,15 +856,15 @@ msgstr "Alle Rechner"
 msgid "All pages define the following access keys:"
 msgstr "Alle Seiten definieren folgende Tastaturkommandos:"
 
-#: ../templates/classic/config.html:394
+#: ../templates/classic/config.html:405
 msgid "Allowed host successfully added."
 msgstr "Erlaubter Rechner wurde erfolgreich hinzugefügt."
 
-#: ../templates/classic/config.html:395
+#: ../templates/classic/config.html:406
 msgid "Allowed host(s) successfully removed."
 msgstr "Erlaubte(r) Rechner wurde(n) erfolgreich entfernt."
 
-#: ../templates/classic/config.html:302
+#: ../templates/classic/config.html:304
 msgid "Allowed hosts"
 msgstr "Erlaubte Rechner"
 
@@ -857,7 +873,7 @@ msgid "Allowed limit"
 msgstr "Erlaubnisgrenze"
 
 #: ../templates/classic/config.html:221
-#: ../templates/classic/config.html:280
+#: ../templates/classic/config.html:281
 msgid "Always change the complete password since the displayed value is only a dummy."
 msgstr "Ändern sie stets das ganze Passwort, da der angezeigte Wert nur ein Platzhalter ist."
 
@@ -882,7 +898,7 @@ msgstr "Trifft zu auf"
 msgid "Applies to all pages starting with url?"
 msgstr "Gilt für alle Seiten die mit dieser URL beginnen?"
 
-#: ../templates/classic/config.html:370
+#: ../templates/classic/config.html:381
 #: ../templates/classic/macros/rules.html:144
 #: ../templates/classic/macros/rules.html:209
 #: ../templates/classic/macros/rules.html:260
@@ -996,7 +1012,7 @@ msgstr "Ordner deaktivieren"
 msgid "Disable rule"
 msgstr "Deaktiviere Regel"
 
-#: ../templates/classic/config.html:393
+#: ../templates/classic/config.html:404
 msgid "Disabled filter module(s) ${disabled-filter}."
 msgstr "Filter Modul(e) ${disabled-filter} wurde(n) deaktiviert."
 
@@ -1008,7 +1024,7 @@ msgstr "Bild für inaktiven Ordner"
 msgid "Disabled rule icon"
 msgstr "Bild von inaktiver Regel"
 
-#: ../templates/classic/config.html:339
+#: ../templates/classic/config.html:342
 msgid "Don't filter hosts"
 msgstr "Nicht zu filternde Rechner"
 
@@ -1066,7 +1082,7 @@ msgstr "Ordner aktivieren"
 msgid "Enable rule"
 msgstr "Aktiviere Regel"
 
-#: ../templates/classic/config.html:391
+#: ../templates/classic/config.html:402
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr "Filter Modul(e) ${enabled-filter} wurde(n) aktiviert."
 
@@ -1216,11 +1232,11 @@ msgstr "Hilfe"
 msgid "Home page"
 msgstr "Startseite"
 
-#: ../templates/classic/config.html:231
+#: ../templates/classic/config.html:232
 msgid "Hostname"
 msgstr "Rechnername"
 
-#: ../templates/classic/config.html:231
+#: ../templates/classic/config.html:232
 msgid "Hostname of the parent proxy"
 msgstr "Rechnername des übergeordneten Proxy"
 
@@ -1264,7 +1280,7 @@ msgstr "Bildbreite"
 msgid "Internet Explorer"
 msgstr "Internet Explorer"
 
-#: ../templates/classic/config.html:402
+#: ../templates/classic/config.html:413
 msgid "Invalid SSL server port."
 msgstr "Ungültige SSL Server Portnummer."
 
@@ -1289,7 +1305,7 @@ msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
 msgid "Invalid folder move up id."
 msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
 
-#: ../templates/classic/config.html:405
+#: ../templates/classic/config.html:416
 msgid "Invalid host name."
 msgstr "Ungültiger Rechnername."
 
@@ -1317,11 +1333,11 @@ msgstr "Ungültiger oder fehlender SMTP Rechnername."
 msgid "Invalid or missing sender address."
 msgstr "Ungültige oder fehlende Absenderadresse."
 
-#: ../templates/classic/config.html:403
+#: ../templates/classic/config.html:414
 msgid "Invalid parent proxy port."
 msgstr "Ungültige übergeordnete Proxy Portnummer."
 
-#: ../templates/classic/config.html:401
+#: ../templates/classic/config.html:412
 msgid "Invalid proxy port."
 msgstr "Ungültige Proxy Portnummer."
 
@@ -1354,7 +1370,7 @@ msgstr "Ungültiger Regeltyp."
 msgid "Invalid selection index."
 msgstr "Ungültiger Auswahlindex."
 
-#: ../templates/classic/config.html:404
+#: ../templates/classic/config.html:415
 msgid "Invalid timeout value."
 msgstr "Ungültiger Timeoutwert."
 
@@ -1366,11 +1382,11 @@ msgstr "Ungültige URL."
 msgid "Invalid url. The url has to start with <code>http://</code>, <code>https://</code> or <code>ftp://</code>."
 msgstr "Ungültige URL. Die URL muss mit <code>http://</code>, <code>https://</code> oder <code>ftp://</code> beginnen."
 
-#: ../templates/classic/config.html:343
+#: ../templates/classic/config.html:346
 msgid "List of domain names the proxy must not filter."
 msgstr "Liste von Domainnamen die dieser Proxy nicht filtern darf"
 
-#: ../templates/classic/config.html:306
+#: ../templates/classic/config.html:308
 msgid "List of hosts allowed to use this proxy."
 msgstr "Liste der Rechner die diesen Proxy benutzen dürfen"
 
@@ -1459,11 +1475,11 @@ msgstr "Neue Regel"
 msgid "New rule successfully created."
 msgstr "Neue Regel wurde erfolgreich erstellt."
 
-#: ../templates/classic/config.html:396
+#: ../templates/classic/config.html:407
 msgid "Nofilter host successfully added."
 msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
 
-#: ../templates/classic/config.html:397
+#: ../templates/classic/config.html:408
 msgid "Nofilter host(s) successfully removed."
 msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
 
@@ -1490,23 +1506,23 @@ msgstr "Opera 6"
 msgid "Page blocked by ${appname}"
 msgstr "Seite wurde blockiert von ${appname}"
 
-#: ../templates/classic/config.html:388
+#: ../templates/classic/config.html:399
 msgid "Parent proxy password successfully changed."
 msgstr "Passwort des übergeordneten Proxy wurde erfolgreich geändert."
 
-#: ../templates/classic/config.html:386
+#: ../templates/classic/config.html:397
 msgid "Parent proxy port successfully changed."
 msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
 
-#: ../templates/classic/config.html:227
+#: ../templates/classic/config.html:228
 msgid "Parent proxy settings"
 msgstr "Übergeordnete Proxy Einstellungen"
 
-#: ../templates/classic/config.html:385
+#: ../templates/classic/config.html:396
 msgid "Parent proxy successfully changed."
 msgstr "Übergeordneter Proxy erfolgreich geändert."
 
-#: ../templates/classic/config.html:387
+#: ../templates/classic/config.html:398
 msgid "Parent proxy user successfully changed."
 msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
 
@@ -1518,11 +1534,11 @@ msgstr "Parse HTML Daten und schreibe einzelne Tags, Attribute und Werte um. Füh
 msgid "Parse and evaluate content rating system header values."
 msgstr "Parse und evaluiere Header Werte der Inhaltsbewertung."
 
-#: ../templates/classic/config.html:264
+#: ../templates/classic/config.html:265
 msgid "Password"
 msgstr "Passwort"
 
-#: ../templates/classic/config.html:264
+#: ../templates/classic/config.html:265
 msgid "Password used for parent proxy authentication"
 msgstr "Passwort zur Authentifizierung des übergeordneten Proxy"
 
@@ -1543,11 +1559,11 @@ msgid "Please specify an SMTP host to send the mail to. If unsure, leave it at <
 msgstr "Geben Sie bitte einen SMTP Rechnernamen ein, an den die Email versandt wird. Falls Sie unsicher sind, lassen Sie <code>localhost</code> stehen."
 
 #: ../templates/classic/config.html:54
-#: ../templates/classic/config.html:242
+#: ../templates/classic/config.html:243
 msgid "Port number"
 msgstr "Portnummer"
 
-#: ../templates/classic/config.html:242
+#: ../templates/classic/config.html:243
 msgid "Port number of the parent proxy"
 msgstr "Die Portnummer des übergeordneten Proxy"
 
@@ -1559,7 +1575,7 @@ msgstr "Portnummer auf der der lokale SSL Server auf Anfragen wartet"
 msgid "Port number the proxy is listening on for requests"
 msgstr "Portnummer auf der dieser Proxy auf Anfragen wartet"
 
-#: ../templates/classic/config.html:379
+#: ../templates/classic/config.html:390
 msgid "Port successfully changed."
 msgstr "Portnummer erfolgreich geändert."
 
@@ -1568,12 +1584,12 @@ msgstr "Portnummer erfolgreich geändert."
 msgid "Proxy configuration"
 msgstr "Proxykonfiguration"
 
-#: ../templates/classic/config.html:286
+#: ../templates/classic/config.html:287
 #: ../templates/classic/help.html:65
 msgid "Proxy filter modules"
 msgstr "Proxy Filtermodule"
 
-#: ../templates/classic/config.html:378
+#: ../templates/classic/config.html:389
 msgid "Proxy network address successfully changed."
 msgstr "Proxy Netzwerkaddresse erfolgreich geändert."
 
@@ -1581,11 +1597,11 @@ msgstr "Proxy Netzwerkaddresse erfolgreich geändert."
 msgid "Proxy password"
 msgstr "Proxy Passwort"
 
-#: ../templates/classic/config.html:384
+#: ../templates/classic/config.html:395
 msgid "Proxy password successfully changed."
 msgstr "Proxypasswort erfolgreich geändert."
 
-#: ../templates/classic/config.html:24
+#: ../templates/classic/config.html:25
 msgid "Proxy settings"
 msgstr "Proxy Einstellungen"
 
@@ -1593,7 +1609,7 @@ msgstr "Proxy Einstellungen"
 msgid "Proxy user"
 msgstr "Proxy Benutzer"
 
-#: ../templates/classic/config.html:383
+#: ../templates/classic/config.html:394
 msgid "Proxy user successfully changed."
 msgstr "Proxybenutzer erfolgreich geändert."
 
@@ -1647,8 +1663,8 @@ msgstr "Entferne Bilder bestimmter Breite und/oder Höhe."
 msgid "Remove rule"
 msgstr "Regel löschen"
 
-#: ../templates/classic/config.html:314
-#: ../templates/classic/config.html:351
+#: ../templates/classic/config.html:316
+#: ../templates/classic/config.html:354
 #: ../templates/classic/macros/rules.html:61
 #: ../templates/classic/macros/rules.html:78
 msgid "Remove selected"
@@ -1727,7 +1743,7 @@ msgstr "Antwortdaten von HTML Seiten"
 msgid "Response headers of all mime types."
 msgstr "Antwort Header von allem Mime-Typen."
 
-#: ../templates/classic/config.html:411
+#: ../templates/classic/config.html:422
 msgid "Restart proxy"
 msgstr "Proxy Neustart"
 
@@ -1860,7 +1876,7 @@ msgstr "SSL Zugang"
 msgid "SSL port number"
 msgstr "SSL Portnummer"
 
-#: ../templates/classic/config.html:380
+#: ../templates/classic/config.html:391
 msgid "SSL port successfully changed."
 msgstr "SSL Portnummer erfolgreich geändert."
 
@@ -1931,8 +1947,8 @@ msgid "This page is also available in"
 msgstr "Diese Seite ist auch verfügbar auf"
 
 #: ../templates/classic/restart.html:23
-msgid "This proxy is restarting. You will be redirected to the <a href=\"\">main configuration page</a> automatically in 10 seconds."
-msgstr "Der Proxy startet neu. Sie werden in 10 Sekunden automatisch zur <a href=\"\">Hauptseite</a> weitergeleitet."
+msgid "This proxy is restarting. You will be redirected to the new <a href=\"\">main configuration page</a> automatically in 10 seconds."
+msgstr "Der Proxy startet neu. Sie werden in 10 Sekunden automatisch zur neuen <a href=\"\">Hauptseite</a> weitergeleitet."
 
 #: ../templates/classic/accessibility.html:21
 msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims ${accessibility-link}."
@@ -1942,7 +1958,7 @@ msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behinderte
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
 
-#: ../templates/classic/config.html:389
+#: ../templates/classic/config.html:400
 msgid "Timeout sucessfully changed."
 msgstr "Zeitüberschreitung wurde erfolgreich geändert."
 
@@ -1978,11 +1994,11 @@ msgstr "Aktualisierung der Filterkonfiguration"
 msgid "Update log"
 msgstr "Aktualisierungsprotokoll"
 
-#: ../templates/classic/config.html:253
+#: ../templates/classic/config.html:254
 msgid "Username"
 msgstr "Benutzername"
 
-#: ../templates/classic/config.html:253
+#: ../templates/classic/config.html:254
 msgid "Username used for parent proxy authentication"
 msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
 
@@ -2028,7 +2044,11 @@ msgstr "Sie können Webseiten nachschlagen und anhand einiger Kategorien bewerten
 msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
 msgstr "Sie können mir geänderte oder neue Seitenbewertungen per Mail schicken so daß ich diese anschauen und in eine aktualisierte Bewertungsdatenbank einfügen kann."
 
-#: ../templates/classic/config.html:332
+#: ../templates/classic/config.html:372
+msgid "You can specify complete domains or only their last parts with a leading dot. For example <code>.intra</code> will match any hosts ending with <code>.intra</code>."
+msgstr "Sie könne ganze Domains oder nur den letzten Teil davon mit einem Punkt am Anfang angeben. Zum Beispiel trifft <code>.intra</code> auf alle Rechnernamen zu, die auf <code>.intra</code> enden."
+
+#: ../templates/classic/config.html:334
 msgid "You can specify network masks for whole subnets. For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host)."
 msgstr "Sie können Netzwerkmasken für ganze Subnetze angeben. Zum Beispiel 192.168.1.1/8 (lokales Subnetz) oder 1.1.1.1/0 (jeder Rechner)."
 
@@ -2071,13 +2091,17 @@ msgstr "Fußnote 1"
 msgid "footnote 2"
 msgstr "Fußnote 2"
 
-#: ../templates/classic/config.html:279
+#: ../templates/classic/config.html:280
 msgid "footnote 3"
 msgstr "Fußnote 3"
 
-#: ../templates/classic/config.html:331
+#: ../templates/classic/config.html:333
 msgid "footnote 4"
 msgstr "Fußnote 4"
+
+#: ../templates/classic/config.html:371
+msgid "footnote 5"
+msgstr "Fußnote 5"
 
 #: ../templates/classic/help.html:192
 msgid "replace part"
@@ -2133,13 +2157,17 @@ msgstr "siehe Fußnote 1"
 msgid "see footnote 2"
 msgstr "siehe Fußnote 2"
 
-#: ../templates/classic/config.html:267
+#: ../templates/classic/config.html:268
 msgid "see footnote 3"
 msgstr "siehe Fußnote 3"
 
-#: ../templates/classic/config.html:321
+#: ../templates/classic/config.html:323
 msgid "see footnote 4"
 msgstr "siehe Fußnote 4"
+
+#: ../templates/classic/config.html:361
+msgid "see footnote 5"
+msgstr "siehe Fußnote 5"
 
 #: ../templates/classic/rated.html:21
 msgid "supply a different rating for this page"
