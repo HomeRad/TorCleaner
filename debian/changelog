@@ -5,8 +5,10 @@ webcleaner (0.51) unstable; urgency=low
   * remove old unused buffersize option, the buffer size is now 4k (see
     wc/proxy/Connection)
   * print a warning when more bytes are received than content-length
+  * new option Strict Whitelist which lets parents allow only specific
+    urls and nothing else
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri,  2 Aug 2002 00:12:27 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  2 Aug 2002 19:49:23 +0200
 
 webcleaner (0.50) unstable; urgency=low
 
