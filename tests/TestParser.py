@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 from wc.parser.htmllib import HtmlPrettyPrinter
-from wc.parser import htmlsax
+from wc.parser import htmlsax, resolve_entities
 from cStringIO import StringIO
 
 import unittest
@@ -141,6 +141,11 @@ class TestParser (unittest.TestCase):
             res = out.getvalue()
             self.assertEqual(res, _out)
             self.htmlparser.reset()
+
+
+    def testEntities (self):
+        for c in "abcdefghijklmnopqrstuvwxyz":
+            self.assertEqual(resolve_entities("&#%d;"%ord(c)), c)
 
 
 if __name__ == '__main__':
