@@ -19,66 +19,70 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import winreg
+import wc.winreg
 
 
 def get_localaddrs ():
     """all active interfaces' ip addresses"""
+    addrs = []
     try: # search interfaces
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+        key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
            r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
         for subkey in key.subkeys():
-            pass # XXX todo
+            if subkey.get('EnableDHCP'):
+                # XXX use DhcpIPAddress
+            else:
+                # XXX use IPAddress
     except EnvironmentError:
         pass
-    return []
+    return addrs
 
 
 def resolver_config (config):
     """get DNS config from Windows registry settings"""
     key = None
     try:
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+        key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
                r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
     except EnvironmentError:
         try: # for Windows ME
-            key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+            key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
                     r"SYSTEM\CurrentControlSet\Services\VxD\MSTCP")
         except EnvironmentError:
             pass
     if key:
-        for server in winreg.stringdisplay(key.get("NameServer", "")):
+        for server in wc.winreg.stringdisplay(key.get("NameServer", "")):
             if server:
                 config.nameservers.append(str(server))
-        for item in winreg.stringdisplay(key.get("SearchList", "")):
+        for item in wc.winreg.stringdisplay(key.get("SearchList", "")):
             if item:
                 config.search_domains.append(str(item))
         if not config.nameservers:
             # XXX the proper way to test this is to search for
             # the "EnableDhcp" key in the interface adapters...
-            for server in winreg.stringdisplay(key.get("DhcpNameServer", "")):
+            for server in wc.winreg.stringdisplay(key.get("DhcpNameServer", "")):
                 if server:
                     config.nameservers.append(str(server))
-            for item in winreg.stringdisplay(key.get("DhcpDomain", "")):
+            for item in wc.winreg.stringdisplay(key.get("DhcpDomain", "")):
                 if item:
                     config.search_domains.append(str(item))
 
     try: # search adapters
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+        key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
   r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\DNSRegisteredAdapters")
         for subkey in key.subkeys():
             values = subkey.get('DNSServerAddresses', "")
-            for server in winreg.binipdisplay(values):
+            for server in wc.winreg.binipdisplay(values):
                 if server:
                     config.nameservers.append(server)
     except EnvironmentError:
         pass
 
     try: # search interfaces
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+        key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
            r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
         for subkey in key.subkeys():
-            for server in winreg.stringdisplay(subkey.get('NameServer', '')):
+            for server in wc.winreg.stringdisplay(subkey.get('NameServer', '')):
                 if server:
                     config.nameservers.append(server)
     except EnvironmentError:
