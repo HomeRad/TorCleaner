@@ -91,8 +91,7 @@ def init_dns_resolver_nt ():
         key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
   r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\DNSRegisteredAdapters")
         for subkey in key.subkeys():
-            count, counttype = subkey['DNSServerAddressCount']
-            values, valuestype = subkey['DNSServerAddresses']
+            values = subkey.get('DNSServerAddresses', "")
             for server in winreg.binipdisplay(values):
                 if server:
                     DnsConfig.nameservers.append(server)
