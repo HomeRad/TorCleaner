@@ -19,6 +19,7 @@ from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, \
                       compileMime, compileRegex
 from wc.filter.Filter import Filter
 from wc.debug import *
+from wc import remove_headers
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
@@ -35,12 +36,11 @@ class ImageReducer (Filter):
     def __init__ (self, mimelist):
         Filter.__init__(self, mimelist)
         # minimal number of bytes before we start reducing
-        self.minimal_size_bytes = 10240
+        self.minimal_size_bytes = 5120
 
 
     def filter (self, data, **attrs):
-        if not (attrs.has_key('buffer') and data): return data
-        # XXX catch IOError
+        if not attrs.has_key('buffer'): return data
         attrs['buffer'].write(data)
         return ''
 
@@ -65,10 +65,11 @@ class ImageReducer (Filter):
 
     def getAttrs (self, headers, url):
         # don't filter tiny images
-        if headers.get('Content-Size', 0) < self.minimal_size_bytes:
+        if headers.get('Content-Length', 0) < self.minimal_size_bytes:
             return {}
         ctype = headers['Content-Type']
         headers['Content-Type'] = 'image/jpeg'
+        remove_headers(headers, ['Content-Length'])
         return {
             'buffer': cStringIO.StringIO(),
             # some images have to be convert()ed before saving

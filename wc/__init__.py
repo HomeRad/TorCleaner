@@ -135,7 +135,6 @@ class Configuration (UserDict.UserDict):
         from glob import glob
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
-            #debug(BRING_IT_ON, "parsing", f)
             ZapperParser().parse(f, self)
         for f in self['rules']:
             f.sort()
@@ -201,7 +200,7 @@ class ParseException (Exception): pass
 
 class BaseParser:
     def parse (self, filename, config):
-        #debug(HURT_ME_PLENTY, "Parsing "+filename)
+        #debug(BRING_IT_ON, "Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate("ISO-8859-1")
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element

@@ -53,12 +53,11 @@ class GifImage (Filter):
     def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
         gifparser = attrs['gifparser']
-        if data:
-            gifparser.addData(data)
-            try:
-                gifparser.parse()
-            except RewindException:
-                pass
+        gifparser.addData(data)
+        try:
+            gifparser.parse()
+        except RewindException:
+            pass
         return gifparser.getOutput()
 
 

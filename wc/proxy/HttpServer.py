@@ -169,8 +169,14 @@ class HttpServer (Server):
 	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
             self.decoders = []
-            self.attrs = initStateObjects(self.headers, self.url)
             self.attrs['nofilter'] = self.nofilter['nofilter']
+            # initStateObject can modify headers (see Compress.py)!
+            if self.attrs['nofilter']:
+                self.attrs = self.nofilter
+            else:
+                self.attrs = initStateObjects(self.headers, self.url)
+            #debug(HURT_ME_PLENTY, "S/Headers filtered", `self.headers.headers`)
+            wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
         else:
@@ -206,14 +212,17 @@ class HttpServer (Server):
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()
+        self.attrs['nofilter'] = self.nofilter['nofilter']
         # initStateObject can modify headers (see Compress.py)!
-        self.attrs = initStateObjects(self.headers, self.url)
+        if self.attrs['nofilter']:
+            self.attrs = self.nofilter
+        else:
+            self.attrs = initStateObjects(self.headers, self.url)
         if self.headers.get('Content-Length') is None:
             self.headers['Connection'] = 'close'
         #debug(HURT_ME_PLENTY, "S/Headers filtered", `self.headers.headers`)
         wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
         self.client.server_response(self.response, self.headers)
-        self.attrs['nofilter'] = self.nofilter['nofilter']
         if self.statuscode in ('204', '304') or self.method == 'HEAD':
             # These response codes indicate no content
             self.state = 'recycle'

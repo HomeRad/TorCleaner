@@ -69,13 +69,10 @@ class Compress (Filter):
             if header:
                 compobj['header'] = ''
                 #debug(NIGHTMARE, 'writing gzip header')
-            if data:
-                compobj['size'] += len(data)
-                compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                #debug(NIGHTMARE, 'compressing', `data`)
-                data = "%s%s"%(header, compobj['compressor'].compress(data))
-            else:
-                data = header
+            compobj['size'] += len(data)
+            compobj['crc'] = zlib.crc32(data, compobj['crc'])
+            #debug(NIGHTMARE, 'compressing', `data`)
+            data = "%s%s"%(header, compobj['compressor'].compress(data))
         return data
 
     def finish (self, data, **attrs):

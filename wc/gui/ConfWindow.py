@@ -46,7 +46,7 @@ extensions (for example GIF comments)."""),
 "Compress": i18n._("""Compression of documents with good compression ratio
 like HTML, WAV, etc."""),
 
-"ImageReduce": i18n._("""Convert images to low quality JPEG files to reduce
+"ImageReducer": i18n._("""Convert images to low quality JPEG files to reduce
 bandwidth"""),
 }
 
@@ -700,7 +700,7 @@ class ConfWindow (ToolWindow):
 	    "Header": 0,
 	    "Blocker": 0,
 	    "GifImage": 0,
-            "ImageReduce": 0,
+            "ImageReducer": 0,
 	    "BinaryCharFilter": 0,
 	    "Rewriter": 0,
             "Replacer": 0,

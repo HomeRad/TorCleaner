@@ -41,19 +41,8 @@
 <replace part="attrval"/>
 </rewrite>
 
-<rewrite title="Sourceforge Downloads" oid="113"
- desc="Use swiss mirror for all SF downloads.
-Choose your own mirror if you dont want this.
-Available are:
-Phoenix, AZ, North America (easynews.dl...)
-Reston, VA, North America (telia.dl...)
-Chapel Hill, NC, North America (unc.dl...)
-Minneapolis, MN, North America (umn.dl...)
-Brookfield, WI, North America (twtelecom.dl...)
-Brussels, Belgium, Europe (belnet.dl...)
-Zurich, Switzerland, Europe (swiss.dl...)
-Prague, Czech Republic, Europe (cesnet.dl...)
-">
+<rewrite title="Sourceforge Downloads" oid="6"
+ desc="Use swiss mirror for all SF downloads. Choose your own mirror if you dont want this. Available are: Phoenix, AZ, North America (easynews.dl...) Reston, VA, North America (telia.dl...) Chapel Hill, NC, North America (unc.dl...) Minneapolis, MN, North America (umn.dl...) Brookfield, WI, North America (twtelecom.dl...) Brussels, Belgium, Europe (belnet.dl...) Zurich, Switzerland, Europe (swiss.dl...) Prague, Czech Republic, Europe (cesnet.dl...) ">
 <attr>http://prdownloads\.sourceforge\.net(?P&lt;value&gt;.+)\?download</attr>
 <replace part="attrval">http://switch.dl.sourceforge.net%(value)s</replace>
 </rewrite>

@@ -72,29 +72,29 @@ def GetRuleFromName (name):
     return klass()
 
 
-def applyfilter (i, arg, fun='filter', attrs={}):
+def applyfilter (i, data, fun='filter', attrs={}):
     """Apply all filters which are registered in filter level i.
-    For different filter levels we have different arg objects.
+    For different filter levels we have different data objects.
     Look at the filter examples.
     """
-    if attrs.get('nofilter') or (fun!='finish' and not arg):
-        return arg
+    if attrs.get('nofilter') or (fun!='finish' and not data):
+        return data
     try:
         #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
         for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
             if attrs.has_key('mime'):
                 if f.applies_to_mime(attrs['mime']):
-                    arg = apply(ffun, (arg,), attrs)
+                    data = apply(ffun, (data,), attrs)
             else:
-                arg = apply(ffun, (arg,), attrs)
+                data = apply(ffun, (data,), attrs)
     except FilterException, msg:
         #debug(NIGHTMARE, msg)
         pass
-    return arg
+    return data
 
 
-def initStateObjects (headers={'content-type': 'text/html'}, url=None):
+def initStateObjects (headers={'Content-Type': 'text/html'}, url=None):
     """init external state objects"""
     attrs = {'mime': headers.get('Content-Type', 'application/octet-stream')}
     for i in range(10):
