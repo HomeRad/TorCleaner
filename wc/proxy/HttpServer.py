@@ -183,17 +183,19 @@ class HttpServer (Server):
             # it's a Continue request, so go back to waiting for headers
             self.state = 'response'
             return
-        # check for unusual compressed files
-        if self.document.endswith(".bz2") or \
-           self.document.endswith(".tgz") or \
-           self.document.endswith(".gz"):
-            gm = mimetypes.guess_type(self.document, False)
-            if gm[1]: self.headers['Content-Encoding'] = gm[1]
-            if gm[0]: self.headers['Content-Type'] = gm[0]
         # filter headers
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
+        # check for unusual compressed files
+        if not self.headers.has_key('Content-Type') and \
+           (self.document.endswith(".bz2") or \
+           self.document.endswith(".tgz") or \
+           self.document.endswith(".gz")):
+            gm = mimetypes.guess_type(self.document, False)
+            if gm[0] and gm[1]:
+                self.headers['Content-Encoding'] = gm[1]
+                self.headers['Content-Type'] = gm[0]
         # will content be rewritten?
         rewrite = False
         for ro in config['mime_content_rewriting']:
