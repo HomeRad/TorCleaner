@@ -10,7 +10,7 @@ from Server import Server
 from wc.proxy import make_timer, get_http_version
 from wc.proxy.auth import *
 from Headers import server_set_headers, server_set_content_headers, server_set_encoding_headers, remove_headers
-from Headers import has_header_value, WcMessage, str_headers
+from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
@@ -249,7 +249,7 @@ class HttpServer (Server):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
-        debug(PROXY, "Server: Headers %s", str_headers(msg))
+        debug(PROXY, "Server: Headers\n%s", str(msg))
         if self.statuscode==100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this

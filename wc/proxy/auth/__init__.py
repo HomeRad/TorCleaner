@@ -5,13 +5,12 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 try:
-    from wc.proxy.Headers import get_header_values
+    from wc.proxy import stripsite
 except ImportError:
     print "using local development version"
     import sys, os
     sys.path.insert(0, os.getcwd())
-    from wc.proxy.Headers import get_header_values
-from wc.proxy import stripsite
+    from wc.proxy import stripsite
 
 # default realm for authentication
 wc_realm = "unknown"
@@ -28,7 +27,7 @@ def get_auth_uri (url):
 
 def get_header_challenges (headers, key):
     auths = {}
-    for auth in get_header_values(headers, key):
+    for auth in headers.getallmatchingheadervalues(key):
         debug(AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
@@ -70,7 +69,7 @@ def get_challenges (**args):
 
 def get_header_credentials (headers, key):
     creds = {}
-    for cred in get_header_values(headers, key):
+    for cred in headers.getallmatchingheadervalues(key):
         debug(AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)

@@ -12,7 +12,7 @@ from UnchunkStream import UnchunkStream
 from wc import i18n, config
 from wc.proxy import fix_http_version
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
-from Headers import client_remove_encoding_headers, str_headers
+from Headers import client_remove_encoding_headers
 from wc.proxy.auth import *
 from wc.log import *
 from wc.webgui import WebConfig
@@ -144,7 +144,7 @@ class HttpClient (Connection):
                 self.decoders.append(UnchunkStream())
                 client_remove_encoding_headers(self.headers)
                 self.bytes_remaining = None
-            debug(PROXY, "Client: Headers %s", str_headers(self.headers))
+            debug(PROXY, "Client: Headers\n%s", str(self.headers))
             if config["proxyuser"]:
                 creds = get_header_credentials(self.headers, 'Proxy-Authorization')
                 if not creds:

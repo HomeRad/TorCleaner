@@ -15,10 +15,11 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 
 class WcMessage (Message):
-    """Represents a single RFC 2822-compliant message."""
+    """Represents a single RFC 2822-compliant message, adding functions
+       handling multiple headers with the same name"""
 
-    def getall (self, name):
-        """return a list of all values matching name"""
+    def getallmatchingheadervalues (self, name):
+        """return a list of all header values for the given header name"""
         name = name.lower() + ':'
         n = len(name)
         vals = []
@@ -29,7 +30,7 @@ class WcMessage (Message):
                 val = line[n:].strip()
                 hit = True
             elif line[:1].isspace() and hit:
-                val += "\n "+line.strip()
+                val += " "+line.strip()
             else:
                 if hit:
                     vals.append(val)
@@ -38,15 +39,18 @@ class WcMessage (Message):
         return vals
 
 
+    def addheader (self, name, value):
+        """add given header name and value to the end of the header list.
+        Multiple headers with the same name are supported"""
+        self.headers.append("%s: %s\r" % (name, value))
+
+
     def __contains__(self, name):
         """Determine whether a message contains the named header."""
         return name.lower() in self.dict
 
-
-def str_headers (headers):
-    if hasattr(headers, "headers"):
-        return "\n".join([ repr(s) for s in headers.headers ])
-    return "\n".join([ repr("%s: %s\r"%(key, item)) for key, item in headers.items() ])
+    def __str__ (self):
+        return "\n".join([ repr(s) for s in self.headers ])
 
 
 def remove_headers (headers, to_remove):
@@ -58,27 +62,20 @@ def remove_headers (headers, to_remove):
 
 
 def has_header_value (headers, key, value):
-    if hasattr(headers, "getallmatchingheaders"):
-        # rfc822.Message() object
-        for h in headers.getallmatchingheaders(key):
-            if h.strip().lower() == value.lower():
-                return True
-        return False
-    return headers.get(key, '').lower() == value.lower()
+    """return true iff headers contain given value, case of key or value
+    is not important"""
+    value = value.lower()
+    for val in headers.getallmatchingheadervalues(key):
+        if val.lower() == value:
+            return True
+    return False
 
 
-def get_header_values (headers, key):
-    return [ h.split(':')[1].strip() \
-             for h in headers.getallmatchingheaders(key) ]
-
+########## HttpServer/Client header helper functions ##############
 
 def set_via_header (headers):
     """set via header"""
-    # XXX does not work with multiple existing via headers
-    via = headers.get('Via', "").strip()
-    if via: via += ", "
-    via += "1.1 unknown\r"
-    headers['Via'] = via
+    headers.addheader("Via", "1.1 unknown")
 
 
 def remove_warning_headers (headers):
@@ -97,7 +94,8 @@ def client_set_headers (headers):
 def client_remove_hop_by_hop_headers (headers):
     """Remove hop-by-hop headers"""
     to_remove = ['Proxy-Connection', 'Connection', 'Upgrade', 'Trailer', 'TE']
-    hs = headers.getall('Connection') + headers.getall('Proxy-Connection')
+    hs = headers.getallmatchingheadervalues('Connection') + \
+         headers.getallmatchingheadervalues('Proxy-Connection')
     for h in hs:
         for v in h.split(','):
             if v not in to_remove:
