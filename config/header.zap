@@ -35,6 +35,7 @@
  name="X-Forwarded-For"/>
 
 <header title="No From" oid="7"
+ desc="Enhance privacy by removing the from: header."
  name="From$"/>
 
 <header title="No Client-ip" oid="8"

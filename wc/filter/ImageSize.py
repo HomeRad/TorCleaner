@@ -41,6 +41,7 @@ class ImageSize (Filter):
     def __init__ (self, mimelist):
         super(ImageSize, self).__init__(mimelist)
         # minimal amount of image data for PIL to read header info
+        # 6000 bytes should be enough, even for JPEG images
         self.min_bufsize = 6000
 
 
