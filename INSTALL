@@ -19,3 +19,5 @@ Setup
 -----
 Run "./configure; make" to compile everything.
 Install with "make install".
+Note: if you work from CVS, you must run "./autogen.sh" first to
+generate the configure and Makefile files.

@@ -21,6 +21,8 @@ TODO
     There is also a new module variable, has_ipv6, which is True iff the
     current Python has IPv6 support. See SF patch #658327.
 
+- testing of persistent connections
+
 - unicode parsing for flex
   the HTML parser (written with flex) does not support unicode, so
   sometimes you'll see '?' chars in the HTML output.
