@@ -380,6 +380,21 @@ class TestUrl (unittest.TestCase):
         self.assert_(wc.url.match_host("a.localhost", [".localhost"]))
         self.assert_(wc.url.match_host("localhost", ["localhost"]))
 
+    def test_splitparam (self):
+        """path parameter split test"""
+        p = [
+            ("", ("", "")),
+            ("/", ("/", "")),
+            ("a", ("a", "")),
+            ("a;", ("a", ";")),
+            ("a/b;c/d;e", ("a/b;c/d", ";e")),
+        ]
+        for x in p:
+            self._splitparam (self, x)
+
+    def _splitparam (self, x):
+        self.assertEqual(wc.url.splitparams(x[0]), (x[1][0], x[1][1]))
+
 
 def test_suite ():
     """build and return a TestSuite"""

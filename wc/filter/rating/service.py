@@ -30,6 +30,7 @@ class Service (object):
         self.categories = categories
 
     def __cmp__ (self, other):
+        """Compare two service objects by name."""
         return cmp(self.name, other.name)
 
 

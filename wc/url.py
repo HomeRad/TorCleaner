@@ -70,12 +70,15 @@ is_safe_fragment = re.compile("(?i)^%s$" % _safe_fragment_pattern).match
 
 # snatched form urlparse.py
 def splitparams (path):
+    """Split off parameter part from path.
+       Returns tuple (path-without-param, param)
+    """
     if '/'  in path:
         i = path.find(';', path.rfind('/'))
-        if i < 0:
-            return path, ''
     else:
         i = path.find(';')
+    if i < 0:
+        return path, ''
     return path[:i], path[i+1:]
 
 
