@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 from Rule import compileRegex
 from UrlRule import UrlRule
-from wc.XmlUtils import xmlify, unxmlify
+from wc.XmlUtils import xmlify
 
 class ReplaceRule (UrlRule):
     """This rule can Replace parts of text data according to regular
@@ -37,10 +37,9 @@ class ReplaceRule (UrlRule):
 
 
     def end_data (self, name):
+        super(ReplaceRule, self).end_data(name)
         if name=='replacement':
-            self.replacement = unxmlify(self._data).encode('iso8859-1')
-        else:
-            super(ReplaceRule, self).end_data(name)
+            self.replacement = self._data
 
 
     def compile_data (self):

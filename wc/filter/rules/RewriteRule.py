@@ -22,7 +22,7 @@ __date__    = "$Date$"[7:-2]
 import re
 from UrlRule import UrlRule
 from Rule import compileRegex
-from wc.XmlUtils import xmlify, unxmlify
+from wc.XmlUtils import xmlify
 from wc.log import *
 from wc import i18n
 from cStringIO import StringIO
@@ -130,22 +130,21 @@ class RewriteRule (UrlRule):
         """set attribute values"""
         super(RewriteRule, self).fill_attrs(attrs, name)
         if name=='attr':
-            val = unxmlify(attrs.get('name', 'href')).encode('iso8859-1')
+            val = attrs.get('name', 'href')
             self.current_attr = val
             self.attrs[self.current_attr] = ""
         elif name=='replacement' and attrs.has_key('part'):
-            self.part = part_num(unxmlify(attrs['part']).encode('iso8859-1'))
+            self.part = part_num(attrs['part'])
 
 
     def end_data (self, name):
+        super(RewriteRule, self).end_data(name)
         if name=='attr':
-            self.attrs[self.current_attr] = unxmlify(self._data).encode('iso8859-1')
+            self.attrs[self.current_attr] = self._data
         elif name=='enclosed':
-            self.enclosed = unxmlify(self._data).encode('iso8859-1')
+            self.enclosed = self._data
         elif name=='replacement':
-            self.replacement = unxmlify(self._data).encode('iso8859-1')
-        else:
-            super(RewriteRule, self).end_data(name)
+            self.replacement = self._data
 
 
     def compile_data (self):

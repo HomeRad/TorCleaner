@@ -141,13 +141,13 @@ def filterconf_files ():
 
 
 def encode_string (s):
-    return s.decode("utf8").encode(ConfigCharset)
+    return s.decode(ConfigCharset)
 
 
-def encode_values (d):
+def encode_xml_values (d):
     for key,val in d.items():
         key = encode_string(key)
-        val = encode_string(val)
+        val = unxmlify(encode_string(val))
         d[key] = val
 
 
@@ -439,7 +439,7 @@ class ZapperParser (BaseParser):
 
 
     def start_element (self, name, attrs):
-        encode_values(attrs)
+        encode_xml_values(attrs)
         self.cmode = name
         if name in rulenames:
             self.rule = wc.filter.GetRuleFromName(name)

@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from AllowRule import AllowRule
-from wc.XmlUtils import xmlify, unxmlify
+from wc.XmlUtils import xmlify
 
 class BlockRule (AllowRule):
     """Define a regular expression for urls to be blocked, and a
@@ -36,10 +36,9 @@ class BlockRule (AllowRule):
 
 
     def end_data (self, name):
+        super(BlockRule, self).end_data(name)
         if name=='replacement':
-            self.replacement = unxmlify(self._data).encode('iso8859-1')
-        else:
-            super(BlockRule, self).end_data(name)
+            self.replacement = self._data
 
 
     def fromFactory (self, factory):

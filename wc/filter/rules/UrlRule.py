@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import re
 from Rule import Rule, compileRegex
-from wc.XmlUtils import xmlify, unxmlify
+from wc.XmlUtils import xmlify
 from wc.log import *
 
 
@@ -52,12 +52,11 @@ class UrlRule (Rule):
 
 
     def end_data (self, name):
+        super(UrlRule, self).end_data(name)
         if name=='matchurl':
-            self.matchurls.append(unxmlify(self._data).encode('iso8859-1'))
+            self.matchurls.append(self._data)
         elif name=='nomatchurl':
-            self.nomatchurls.append(unxmlify(self._data).encode('iso8859-1'))
-        else:
-            super(UrlRule, self).end_data(name)
+            self.nomatchurls.append(self._data)
 
 
     def compile_data (self):

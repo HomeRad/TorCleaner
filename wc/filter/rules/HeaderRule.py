@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from UrlRule import UrlRule
-from wc.XmlUtils import xmlify, unxmlify
+from wc.XmlUtils import xmlify
 
 class HeaderRule (UrlRule):
     """rule for filtering HTTP headers"""
@@ -36,10 +36,9 @@ class HeaderRule (UrlRule):
 
 
     def end_data (self, name):
+        super(HeaderRule, self).end_data(name)
         if name=='replacement':
-            self.value = unxmlify(self._data).encode('iso8859-1')
-        else:
-            super(HeaderRule, self).end_data(name)
+            self.value = self._data
 
 
     def fromFactory (self, factory):
