@@ -8,5 +8,8 @@ Template: webcleaner/adminpass
 Type: password
 _Description: Administrator password
  The administrator password protects the web configuration frontend of
- WebCleaner. The default username is "admin" (without the quotes) if
- you did not already specify one from a previous installation.
+ WebCleaner.
+ .
+ The default username is "admin" (without the quotes).
+ .
+ You have to enter a non-empty password.

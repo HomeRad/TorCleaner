@@ -14,54 +14,53 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-22 13:44+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2004-02-29 10:41+0100\n"
+"PO-Revision-Date: 2004-02-29 10:43+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. Type: string
-#. Default
-#: ../templates:3
+#  Type: string
+#  Default
+#: ../webcleaner.templates:3
 msgid "8080"
 msgstr "8080"
 
 #. Type: string
 #. Description
-#: ../templates:4
+#: ../webcleaner.templates:4
 msgid "Default proxy port"
 msgstr "Standard Proxy port"
 
 #. Type: string
 #. Description
-#: ../templates:4
+#: ../webcleaner.templates:4
 msgid "This is the port number this proxy will listen on for requests."
 msgstr "Dies ist die Portnummer, unter der dieser Proxy Anfragen akzeptiert."
 
-#. Type: password
-#. Description
-#: ../templates:9
+#  Type: password
+#  Description
+#: ../webcleaner.templates:9
 msgid "Administrator password"
-msgstr ""
+msgstr "Administrator Passwort"
 
-#. Type: password
-#. Description
-#: ../templates:9
-msgid ""
-"The administrator password protects the web configuration frontend of "
-"WebCleaner. The default username is \"admin\" (without the quotes) if you "
-"did not already specify one from a previous installation."
-msgstr ""
+#  Type: password
+#  Description
+#: ../webcleaner.templates:9
+msgid "The administrator password protects the web configuration frontend of WebCleaner."
+msgstr "Das Administrator Passwort schützt die Webkonfiguration von WebCleaner."
 
-#~ msgid "Start WebCleaner with monitor daemon?"
-#~ msgstr "WebCleaner mit Monitor-Dämon starten?"
+#  Type: password
+#  Description
+#: ../webcleaner.templates:9
+msgid "The default username is \"admin\" (without the quotes)."
+msgstr "Der Standardbenutzername ist \"admin\" (ohne die Anführungszeichen)."
 
-#~ msgid ""
-#~ "You can start WebCleaner with an additional monitor daemon that restarts "
-#~ "the proxy automatically if it crashes."
-#~ msgstr ""
-#~ "Sie können WebCleaner mit einem zusätzlichen Monitor-Dämon starten, der "
-#~ "den Proxy bei Ausfall automatisch neu startet."
+#  Type: password
+#  Description
+#: ../webcleaner.templates:9
+msgid "You have to enter a non-empty password."
+msgstr "Sie müssen ein nicht-leeres Passwort eingeben."
+
