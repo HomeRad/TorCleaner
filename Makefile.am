@@ -122,10 +122,10 @@ homepage-zapper: md5sums
 	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
 
-pycheck:
+pycheck: localbuild
 	$(PYCHECKER) $(PYCHECKEROPTS) $(PYFILES) $(TESTFILES)
 
-pylint:
+pylint: localbuild
 	$(PYLINT) $(PYLINTOPTS) $(PYLINTFILES) $(TESTFILES)
 
 ccheck:
