@@ -2,8 +2,9 @@ webcleaner (0.42) unstable; urgency=low
 
   * wc/parer/htmllex.l: match doctype case insensitive
   * wc/filter/Rules.py: use search(), not match() for url matching
+  * config/adverts.zap: added imdb and osdn ad-remover
 
- -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Jun 2002 19:47:23 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Jun 2002 22:18:17 +0200
 
 webcleaner (0.41) unstable; urgency=low
 
