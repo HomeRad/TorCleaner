@@ -252,7 +252,9 @@ class ConfWindow (ToolWindow):
         frame = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
         filters = FXGroupBox(frame, i18n._("Filter Modules"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         hframe = FXVerticalFrame(filters, LAYOUT_SIDE_TOP)
-        for m in self.modules.keys():
+        mkeys = self.modules.keys()
+        mkeys.sort()
+        for m in mkeys:
             cb = FXCheckButton(hframe, m+"\t"+ModuleHelp[m], self, self.ID_FILTERMODULE,opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
             if self.modules[m]:
 	        cb.setCheck()
