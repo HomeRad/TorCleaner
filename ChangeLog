@@ -3,6 +3,15 @@
     Type: bugfix
     Changed: Makefile.am
 
+  * Added BinaryCharFilter to the list of content-rewriting filters
+    Type: bugfix
+    Changed: wc/__init__.py
+
+  * use dnspython for DNS resolving
+    Type: feature
+    Added: wc/dns/*
+    Changed: wc/proxy/dns_lookups.py
+
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.
