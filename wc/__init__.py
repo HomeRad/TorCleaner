@@ -113,7 +113,7 @@ def sort_seq (seq):
 import wc.i18n
 import wc.url
 import bk.net
-import bk.net.ip
+import wc.ip
 import wc.proxy
 import wc.proxy.dns_lookups
 import wc.filter
@@ -375,7 +375,7 @@ class Configuration (dict):
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
         hostset = self['allowedhostset']
-        return bk.net.ip.host_in_set(host, hostset[0], hostset[1])
+        return wc.ip.host_in_set(host, hostset[0], hostset[1])
 
 
 ##### xml parsers #########
@@ -538,7 +538,7 @@ class WConfigParser (BaseParser):
             if self.config['allowedhosts'] is not None:
                 hosts = self.config['allowedhosts'].split(',')
                 self.config['allowedhosts'] = hosts
-                self.config['allowedhostset'] = bk.net.ip.hosts2map(hosts)
+                self.config['allowedhostset'] = wc.ip.hosts2map(hosts)
             else:
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]

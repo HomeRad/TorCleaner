@@ -15,7 +15,6 @@ import wc.proxy.Connection
 import bk.net
 import bk.net.dns
 import bk.net.dns.Lib
-import bk.net.ip
 
 
 resolver = None
