@@ -9,21 +9,10 @@ version 2.20
   http://config.privoxy.org/toggle?set=enable
   http://config.privoxy.org/toggle
 
-- Offer list of interfaces the proxy can listen on. The default right
-  now is to listen on all network interfaces for connections.
-
 - replace `localhost` hostname with interface IP/host in config templates
-
-- IP network mask/range is not working
 
 - document how to install a proxy that can be used from outside
   (intranet or internet)
-
-- kein Text: http://www.osnews.com/story.php?news_id=7314
-
-- HTML scan: 
-  ERROR 2004-09-01 09:46:23,992 wc.filter unknown HTML tag "scr'+'ipt" at 
-  'http://servedby.netshelter.net/serve.cgi?pid=OSNEWS&g=1&m=4&j=1&k=1&id=537309467594&d=js'
 
 - Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/webcleaner", line 170, in ?

@@ -26,6 +26,7 @@ from wc.webgui.context import getlist as _getlist
 from wc.ip import lookup_ips as _lookup_ips
 from wc.ip import resolve_host as _resolve_host
 from wc.ip import hosts2map as _hosts2map
+from wc.proxy.dns_lookups import resolver as _resolver
 
 # config vars
 info = {
@@ -40,6 +41,7 @@ info = {
     'parentproxyuser': False,
     'parentproxypass': False,
     'timeout': False,
+    'bindaddress': False,
     'port': False,
     'sslport': False,
     'sslgateway': False,
@@ -59,11 +61,18 @@ for _i in filtermodules:
     config['filterdict'][_i] = False
 for _i in config.get('filters', []):
     config['filterdict'][_i] = True
+config['newbindaddress'] = config.get('bindaddress', '')
 config['newport'] = config.get('port', 8080)
 config['newsslport'] = config.get('sslport', 8443)
 config['newsslgateway'] = config.get('sslgateway', 0)
 filterenabled = u""
 filterdisabled = u""
+ifnames = []
+ifvalues = {'all_hosts': config['newbindaddress']==""}
+for _i in _resolver.interfaces:
+    ifnames.append(_i)
+    ifvalues[_i] = _i==config['newbindaddress']
+
 
 def _form_reset ():
     """reset info/error and global vars"""
@@ -75,10 +84,14 @@ def _form_reset ():
     for key in error.keys():
         error[key] = False
 
+
 # form execution
 def _exec_form (form, lang):
     _form_reset()
     res = [None]
+    # bind address
+    if form.has_key('bindaddress'):
+        _form_bindaddress(_getval(form, 'bindaddress'))
     # proxy port
     if form.has_key('port'):
         _form_proxyport(_getval(form, 'port'))
@@ -201,6 +214,17 @@ def _exec_form (form, lang):
     elif form.has_key('delnofilter') and form.has_key('nofilterhosts'):
         _form_delnofilter(form)
     return res[0]
+
+
+def _form_bindaddress (addr):
+    if addr != config['newbindaddress']:
+        # note: bind address change takes effect after restart
+        config['newbindaddress'] = addr
+        oldaddr = config['bindaddress']
+        config['bindaddress'] = addr
+        config.write_proxyconf()
+        config['bindaddress'] = oldaddr
+        info['bindaddress'] = True
 
 
 def _form_proxyport (port):

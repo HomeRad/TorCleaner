@@ -38,6 +38,12 @@
     Type: bugfix
     Changed: wc/url.py
 
+  * Configurable socket bind address. The configuration displays a list of
+    network interface addresses to listen on.
+    Type: feature
+    Changed: wc/configuration.py, wc/proxy/Listener.py,
+      wc/webgui/context/config_html.py, template/classic/config.html
+
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.

@@ -23,6 +23,32 @@ proxy configuration</title>
 <fieldset>
 <legend i18n:translate="">Proxy settings</legend>
 <table border="0" cellpadding="5" cellspacing="0" summary="">
+
+<tr>
+<td>
+<label for="bindaddress" i18n:translate=""
+ i18n:attributes="title"
+ title="Network address the proxy should listen on."
+ >Network address</label>
+<sup><a href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title">1)</a></sup>
+</td>
+<td>
+<select name="bindaddress" id="bindaddress">
+<option tal:condition="ifvalues/all_hosts" value="" selected
+ i18n:translate="">All hosts</option>
+<option tal:condition="not:ifvalues/all_hosts" value=""
+ i18n:translate="">All hosts</option>
+<span tal:repeat="host ifnames" tal:omit-tag="">
+<option tal:condition="ifvalues/?host" tal:attributes="value host"
+ tal:content="host" selected>localhost</option>
+<option tal:condition="not:ifvalues/?host" tal:attributes="value host"
+ tal:content="host">localhost</option>
+</span>
+</select>
+</td>
+</tr>
+
 <tr>
 <td>
 <label for="port" i18n:translate=""
@@ -342,6 +368,7 @@ proxy configuration</title>
 </form>
 
 <div class="info">
+<div tal:condition="info/bindaddress" i18n:translate="">Proxy network address successfully changed.</div>
 <div tal:condition="info/port" i18n:translate="">Port successfully changed.</div>
 <div tal:condition="info/sslport" i18n:translate="">SSL port successfully changed.</div>
 <div tal:condition="info/adminuser" i18n:translate="">Admin user successfully changed.</div>
