@@ -2,8 +2,6 @@ TODO
 
 - timeouts do not cancel the request, they occur more than once. Why?
 
-- test this: http://www.nba.com/allstar2003/AS_Ballot.html
-
 - Python 2.3:
   use Bool type
   use builtin timeout in socket module
