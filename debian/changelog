@@ -9,8 +9,10 @@ webcleaner (0.16) unstable; urgency=low
   * send Content-Length: header in ServerHandleDirectly class
   * return after calling ServerHandleDirectly
   * check for blocked links before giving config and statistics data
+  * added replacer filter which can replace arbitrary strings in the
+    data stream. For now only the response content gets filtered.
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat, 11 Aug 2001 01:16:01 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sat, 11 Aug 2001 11:22:47 +0200
 
 webcleaner (0.15) unstable; urgency=low
 

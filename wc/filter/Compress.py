@@ -45,17 +45,17 @@ def getCompressObject():
 
 
 class Compress(Filter):
-    mimelist = ('text/html',
+    # XXX I want to write text/*, requires re.match in mimelist matching
+    mimelist = (
+            'text/css',
+            'text/html',
+            'text/javascript',
             'text/plain',
+            'text/richtext',
+            'text/xml',
 	    'application/postscript',
             'application/pdf',
-            'application/x-javascript',
-            'application/msword',
-            'application/powerpoint',
             'application/x-dvi',
-            'application/x-latex',
-            'application/x-perl',
-            'application/x-tar',
             'audio/basic',
             'audio/midi',
             'audio/x-wav',
@@ -76,11 +76,11 @@ class Compress(Filter):
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                debug(NIGHTMARE, 'writing gzip header\n')
+                #debug(NIGHTMARE, 'writing gzip header\n')
             if data:
-                compobj['size'] = compobj['size'] + len(data)
+                compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                debug(NIGHTMARE, 'compressing %s\n' % `data`)
+                #debug(NIGHTMARE, 'compressing %s\n' % `data`)
                 data = header + compobj['compressor'].compress(data)
             else:
                 data = header
@@ -90,15 +90,14 @@ class Compress(Filter):
         compobj = attrs['compressobj']
         if compobj:
             if data:
-                compobj['size'] = compobj['size'] + len(data)
+                compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                debug(NIGHTMARE, 'final compressing %s\n' % `data`)
+                #debug(NIGHTMARE, 'final compressing %s\n' % `data`)
                 data = compobj['compressor'].compress(data)
-            debug(NIGHTMARE, 'finishing compressor\n')
-            data = data + \
-	           compobj['compressor'].flush() + \
-	           struct.pack('<l', compobj['crc']) + \
-		   struct.pack('<l', compobj['size'])
+            #debug(NIGHTMARE, 'finishing compressor\n')
+            data += compobj['compressor'].flush() + \
+	            struct.pack('<l', compobj['crc']) + \
+		    struct.pack('<l', compobj['size'])
         return data
 
     def getAttrs(self, headers):
@@ -107,8 +106,7 @@ class Compress(Filter):
                 compressobj = None
             else:
                 compressobj = getCompressObject()
-                headers['content-encoding'] = \
-                    headers['content-encoding'] + ', gzip'
+                headers['content-encoding'] += ', gzip'
         else:
             compressobj = getCompressObject()
             headers['content-encoding'] = 'gzip'

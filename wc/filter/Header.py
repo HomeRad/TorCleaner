@@ -39,8 +39,8 @@ class Header(Filter):
         for h in data.keys()[:]:
             for name in self.delete:
                 if re.match(name, h):
-                    data.headers.remove(h)
+                    del data[h]
         for key,val in self.add.items():
             data[key] = val
-        debug(HURT_ME_PLENTY, "Headers\n", data)
+        #debug(HURT_ME_PLENTY, "Headers\n", data)
         return data

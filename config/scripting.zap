@@ -86,7 +86,4 @@
  tag="noscript">
 <replace part="tag"/>
 </rewrite>
-
-<replacer title="test"
- regex="window.onload">if (0) window.onload</replacer>
 </folder>

@@ -21,18 +21,18 @@ import dnsopcode
 # Low-level 16 and 32 bit integer packing and unpacking
 
 def pack16bit(n):
-	return chr((n>>8)&0xFF) + chr(n&0xFF)
+    return chr((n>>8)&0xFF) + chr(n&0xFF)
 
 def pack32bit(n):
-	return chr((n>>24)&0xFF) + chr((n>>16)&0xFF) \
-		  + chr((n>>8)&0xFF) + chr(n&0xFF)
+    return chr((n>>24)&0xFF) + chr((n>>16)&0xFF) \
+          + chr((n>>8)&0xFF) + chr(n&0xFF)
 
 def unpack16bit(s):
-	return (ord(s[0])<<8) | ord(s[1])
+    return (ord(s[0])<<8) | ord(s[1])
 
 def unpack32bit(s):
-	return (ord(s[0])<<24) | (ord(s[1])<<16) \
-		  | (ord(s[2])<<8) | ord(s[3])
+    return (ord(s[0])<<24) | (ord(s[1])<<16) \
+          | (ord(s[2])<<8) | ord(s[3])
 
 def addr2bin(addr):
 	if type(addr) == type(0):
@@ -45,8 +45,8 @@ def addr2bin(addr):
 	return n
 
 def bin2addr(n):
-	return '%d.%d.%d.%d' % ((n>>24)&0xFF, (n>>16)&0xFF,
-		  (n>>8)&0xFF, n&0xFF)
+    return '%d.%d.%d.%d' % ((n>>24)&0xFF, (n>>16)&0xFF,
+           (n>>8)&0xFF, n&0xFF)
 
 
 class PackError(Exception):
@@ -567,7 +567,7 @@ def test():
 			return
 	u = Munpacker(reply)
 	dumpM(u)
-	if protocol == 'tcp' and qtype == dnstype.AXFR:
+	if protocol=='tcp' and qtype==dnstype.AXFR:
 		while 1:
 			header = f.read(2)
 			if len(header) < 2:

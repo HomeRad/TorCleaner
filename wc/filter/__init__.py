@@ -39,7 +39,7 @@ FILTER_RESPONSE_DECODE = 7 # May decode incoming content
 FILTER_RESPONSE_MODIFY = 8 # May modify incoming content
 FILTER_RESPONSE_ENCODE = 9 # May encode incoming content
 
-def FilterException(Exception): pass
+class FilterException(Exception): pass
 
 
 def printFilterOrder(i):
@@ -72,7 +72,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     if attrs.get('nofilter'):
         return arg
     try:
-        debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
+        #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
         for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
             if hasattr(f, 'mimelist'):
@@ -82,7 +82,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
                 # no mimelist? then this filter applies to all files!
                 arg = apply(ffun, (arg,), attrs)
     except FilterException, msg:
-        debug(NIGHTMARE, msg)
+        #debug(NIGHTMARE, msg)
         pass
     return arg
 

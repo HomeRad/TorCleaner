@@ -22,10 +22,10 @@ class Listener(asyncore.dispatcher):
         return 0
     
     def handle_accept(self):
-        debug(HURT_ME_PLENTY, 'accept', self)
+        #debug(HURT_ME_PLENTY, 'accept', self)
         apply(self.handler, self.accept())
 
     def handle_error(self, type, value, tb=None):
-        debug(ALWAYS, 'error', self, type, value)
+        print >> sys.stderr 'error', self, type, value
 	import traceback
         if tb: traceback.print_tb(tb)

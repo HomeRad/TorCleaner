@@ -1,7 +1,7 @@
 """replace expressions in a data stream
 you can use this for
 - highlighting
-- removing certain strings
+- removing/replacing certain strings
 """
 # Copyright (C) 2000,2001  Bastian Kleineidam
 #
@@ -26,9 +26,11 @@ from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter.Filter import Filter
 
 orders = [FILTER_RESPONSE_MODIFY]
-rulenames = ['replace']
+rulenames = ['replacer']
 
 
+# XXX buffering
+# XXX group matches?
 class Replacer(Filter):
     """replace regular expressions in a data stream"""
     mimelist = ('text/html', 'text/javascript')
@@ -38,25 +40,27 @@ class Replacer(Filter):
 
     def addrule(self, rule):
         debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
-        if rule.get_name()=='replace':
+        if rule.get_name()=='replacer':
             if rule.search:
                 rule.search = re.compile(rule.search)
-            self.rules.append(rule.search, rule.replacement)
+            self.rules.append((rule.search, rule.replace))
 
     def filter(self, data, **args):
-        # add to buffer
-        apply(self.doit, (data, host), args)
+        return apply(self.doit, (data,), args)
 
     def finish(self, data, **args):
-        # add to buffer
-        apply(self.doit, (data, host), args)
-        # flush buffer
+        return apply(self.doit, (data,), args)
 
     def doit(self, data, **args):
         for ro,repl in self.rules:
-            data = self.replace_one(self, ro, repl, data)
+            data = self.replace_one(ro, repl, data)
         return data
 
     def replace_one(self, ro, repl, data):
-        # XXX
+        offset = 0
+        mo = ro.search(data, offset)
+        while mo:
+            data = data[:mo.start()] + repl + data[mo.end():]
+            offset = mo.start()+len(repl)
+            mo = ro.search(data, offset)
         return data

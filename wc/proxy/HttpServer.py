@@ -66,7 +66,7 @@ class HttpServer(Server):
 
     def handle_connect(self):
         assert self.state == 'connect'
-        debug(HURT_ME_PLENTY, 'handle_connect', self)
+        #debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
         Server.handle_connect(self)
 
@@ -154,7 +154,7 @@ class HttpServer(Server):
 
         if self.headers.get('content-type') in config['mime_no_length']:
             # XXX HACK - remove content length
-            debug(HURT_ME_PLENTY, "remove content length")
+            #debug(HURT_ME_PLENTY, "remove content length")
             for h in self.headers.headers[:]:
                 if re.match('(?i)content-length:', h):
                     self.headers.headers.remove(h)
@@ -163,7 +163,7 @@ class HttpServer(Server):
         self.decoders = []
 
         if self.headers.has_key('transfer-encoding'):
-            debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
+            #debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
             # XXX HACK - remove encoding header
             for h in self.headers.headers[:]:
@@ -175,7 +175,7 @@ class HttpServer(Server):
                     #self.bytes_remainig = None
 
         if self.headers.get('content-encoding')=='gzip':
-            debug(BRING_IT_ON, 'Content-encoding: gzip')
+            #debug(BRING_IT_ON, 'Content-encoding: gzip')
             self.decoders.append(GunzipStream())
             # XXX HACK - remove content length and encoding
             # because we unzipped the stream
@@ -197,7 +197,7 @@ class HttpServer(Server):
             self.state = 'content'
 
     def process_content(self):
-        debug(HURT_ME_PLENTY, "processing server content")
+        #debug(HURT_ME_PLENTY, "processing server content")
         data = self.read(self.bytes_remaining)
 
         if self.bytes_remaining is not None:
@@ -292,7 +292,7 @@ class HttpServer(Server):
             # We can't reuse this connection
             self.close()
         else:
-            debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
+            #debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
             self.sequence_number = self.sequence_number + 1
             self.state = 'client'
             self.document = ''
@@ -314,7 +314,7 @@ class HttpServer(Server):
             client.server_abort()
 
     def handle_close(self):
-        debug(HURT_ME_PLENTY, 'server close;', self.state, self)
+        #debug(HURT_ME_PLENTY, 'server close;', self.state, self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None

@@ -490,7 +490,7 @@ def init_dns_resolver_posix():
     if not DnsConfig.search_domains:
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
-        debug(ALWAYS, 'Warning: no nameservers found')
+        print >> sys.stderr, 'WebCleaner: warning: no nameservers found'
         DnsConfig.nameservers.append('127.0.0.1')
 
 def init_dns_resolver_nt():

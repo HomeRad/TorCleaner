@@ -28,6 +28,7 @@ def i16(c):
     """merge two bytes to an integer"""
     return ord(c[0]) + (ord(c[1])<<8)
 
+class RewindException(Exception): pass
 
 class GifImage(Filter):
     """Base filter class which is using the GifParser to deanimate the
@@ -46,20 +47,22 @@ class GifImage(Filter):
 
     def filter(self, data, **attrs):
         gifparser = attrs.get('gifparser')
-        if not gifparser: return data
+        if not gifparser:
+	    return data
         if data:
             gifparser.addData(data)
             try:
                 gifparser.parse()
-            except:
-                debug(NIGHTMARE, '%s %s\n' % sys.exc_info()[:2])
+            except RewindException:
+                pass
 
         return gifparser.getOutput()
 
     def finish(self, data, **attrs):
         data = apply(GifImage.filter, (self, data), attrs)
         gifparser = attrs.get('gifparser')
-        if not gifparser: return data
+        if not gifparser:
+	    return data
         return data + (gifparser.finish and ';' or '')
 
     def getAttrs(self, headers):
@@ -90,12 +93,12 @@ class GifParser:
     NOFILTER = 5
 
     def strState(self):
-        if self.state == GifParser.SKIP:     return 'SKIP'
-        if self.state == GifParser.INIT:     return 'INIT'
-        if self.state == GifParser.FRAME:    return 'FRAME'
-        if self.state == GifParser.IMAGE:    return 'IMAGE'
-        if self.state == GifParser.DATA:     return 'DATA'
-        if self.state == GifParser.NOFILTER: return 'NOFILTER'
+        if self.state==GifParser.SKIP:     return 'SKIP'
+        if self.state==GifParser.INIT:     return 'INIT'
+        if self.state==GifParser.FRAME:    return 'FRAME'
+        if self.state==GifParser.IMAGE:    return 'IMAGE'
+        if self.state==GifParser.DATA:     return 'DATA'
+        if self.state==GifParser.NOFILTER: return 'NOFILTER'
         return 'UNKNOWN'
 
 
@@ -107,12 +110,12 @@ class GifParser:
 
 
     def addData(self, data):
-        self.data = self.data + data
+        self.data += data
 
 
     def flush(self):
         if self.consumed:
-            self.output = self.output + self.consumed
+            self.output += self.consumed
             self.consumed = ''
 
 
@@ -120,11 +123,11 @@ class GifParser:
         if i<=0: return
         if len(self.data)<i:
             # rewind and stop filtering; wait for next data chunk
-            debug(NIGHTMARE, 'rewinding\n')
+            #debug(NIGHTMARE, 'rewinding\n')
             self.data = self.consumed + self.data
             self.consumed = ''
-            raise FilterException, "GifImage data delay => rewinding"
-        self.consumed = self.consumed + self.data[:i]
+            raise RewindException, "GifImage data delay => rewinding"
+        self.consumed += self.data[:i]
         self.data = self.data[i:]
         return self.consumed[-i:]
 
@@ -142,29 +145,28 @@ class GifParser:
 
     def parse(self):
         """Big parse function. The trick is the usage of self.read(),
-	   which throws an IOError when it cant give enough data.
+	   which throws an Exception  when it cant give enough data.
 	   In this case we just bail out ('rewind'), and continue
 	   the next time in the saved state."""
         while 1:
-            debug(NIGHTMARE, 'GifImage state: %s\n' % self.strState())
+            #debug(NIGHTMARE, 'GifImage state: %s\n' % self.strState())
             self.flush()
             if self.state == GifParser.NOFILTER:
-                self.output = self.output + self.consumed + self.data
+                self.output += self.consumed + self.data
                 self.consumed = self.data = ''
                 break
             elif self.state == GifParser.INIT:
                 self.header = self.read(6)
-                if self.header != 'GIF89a':
-                    debug(NIGHTMARE, 'Non-animated GIF\n')
-                    # it seems that some animated gifs have a wrong
-                    # version (i.e. GIF87a, not GIF89a)
-                    # and it seems that Netscape animates them
-                    # so we ignore the version and filter nonetheless
-                    #self.state == GifParser.NOFILTER
-                    #continue
-                    pass
+                # it seems that some animated gifs have a wrong
+                # version (i.e. GIF87a, not GIF89a)
+                # and it seems that Netscape animates them
+                # so we ignore the version and filter nonetheless
+                #if self.header != 'GIF89a':
+                #    #debug(NIGHTMARE, 'Non-animated GIF\n')
+                #    self.state == GifParser.NOFILTER
+                #    continue
                 self.size = (i16(self.read(2)), i16(self.read(2)))
-                debug(NIGHTMARE, 'width=%d, height=%d\n' % self.size)
+                #debug(NIGHTMARE, 'width=%d, height=%d\n' % self.size)
                 if self.size in _SIZES:
                     self.output = base64.decodestring(_TINY_GIF)
                     self.data = self.consumed = ''
@@ -176,9 +178,9 @@ class GifParser:
                 if flags & 128:
                     # global palette
                     self.background = ord(misc[0])
-                    debug(NIGHTMARE, 'background %d\n' % self.background)
+                    #debug(NIGHTMARE, 'background %d\n' % self.background)
                     size = 3<<bits
-                    debug(NIGHTMARE, 'global palette size %d\n' % size)
+                    #debug(NIGHTMARE, 'global palette size %d\n' % size)
                     self.read(size)
                 self.state = GifParser.FRAME
             elif self.state == GifParser.FRAME:
@@ -189,7 +191,7 @@ class GifParser:
                 elif s == '!':
                     # extensions
                     s = self.read(1)
-                    debug(NIGHTMARE, 'extension %d\n' % ord(s))
+                    #debug(NIGHTMARE, 'extension %d\n' % ord(s))
                     # remove all extensions except graphic controls (249)
                     self.removing = (ord(s) != 249)
                     if self.removing:
@@ -199,20 +201,20 @@ class GifParser:
                 elif s == ',':
                     self.state = GifParser.IMAGE
                     continue
-                raise Exception, "unknown frame %s"%`s`
+                raise FilterException, "unknown frame %s"%`s`
             elif self.state == GifParser.IMAGE:
                 #extent
                 self.x0 = i16(self.read(2))
                 self.y0 = i16(self.read(2))
                 self.x1 = i16(self.read(2)) + self.x0
                 self.y1 = i16(self.read(2)) + self.y0
-                debug(NIGHTMARE, 'x0=%d, y0=%d, x1=%d, y1=%d\n' % (self.x0, self.y0, self.x1, self.y1))
+                #debug(NIGHTMARE, 'x0=%d, y0=%d, x1=%d, y1=%d\n' % (self.x0, self.y0, self.x1, self.y1))
                 flags = ord(self.read(1))
                 if flags & 128:
                     # local color table
                     bits = (flags & 7) + 1
                     size = 3<<bits
-                    debug(NIGHTMARE, 'local palette size %d\n' % size)
+                    #debug(NIGHTMARE, 'local palette size %d\n' % size)
                     self.read(size)
                 # image data
                 misc = ord(self.read(1))
@@ -220,7 +222,7 @@ class GifParser:
                 self.finish = 1 # not more than one image frame :)
             elif self.state == GifParser.DATA:
                 size = ord(self.read(1))
-                debug(NIGHTMARE, 'data size %d\n' % size)
+                #debug(NIGHTMARE, 'data size %d\n' % size)
                 if size:
                     self.read(size)
                     if self.removing:
@@ -235,7 +237,7 @@ class GifParser:
                     self.removing = 0
             elif self.state == GifParser.SKIP:
                 if self.consumed:
-                    self.output = self.output + self.consumed
+                    self.output += self.consumed
                     self.consumed = ''
                 self.data = ''
                 break

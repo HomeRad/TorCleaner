@@ -37,6 +37,10 @@
 <replace part="tagname">b</replace>
 </rewrite>
 
+<replacer title="The Dude"
+ disable="1"
+ search="Bastian">The Dude</replacer>
+
 <rewrite title="Tracker images"
  desc="Several sites use 1x1 images to track users."
  tag="img">

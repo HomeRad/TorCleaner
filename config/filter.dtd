@@ -205,5 +205,5 @@
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
- regex    CDATA #REQUIRED
+ search    CDATA #REQUIRED
 >

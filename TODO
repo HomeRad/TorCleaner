@@ -1,6 +1,5 @@
 TODO
 
-- Zapperparser for Replacer
 - better DNS lib (hangs sometimes ?)
 
 - new filtering:
@@ -11,6 +10,8 @@ TODO
   Remove dynamic HTML
   Control sounds
   Highlight keywords
+
+- Buffering Replacer
 
 - HTTPS support (only proxy, no filtering)
   It's sort of an extension to HTTP - you just send the proxy the request
