@@ -1,6 +1,15 @@
 1.4
   * blocked.html has no content anymore and displays much cleaner
     Changed files: config/blocked.html
+  * remove old and superfluous options from webcleanerconf, added
+    tooltip help, fixed host config parsing
+    Changed files: wc/gui/*.py, wc/__init__.py
+  * dont print out invalid html attribute characters, just ignore them
+    Changed files: wc/parser/htmllex.l
+  * fixed debugging code with flex
+    Changed files: wc/parser/htmllex.l
+  * build with flex 2.5.25
+    Changed files: wc/parser/{Makefile, htmllex.c}
 
 1.3
   * Updated advert filters
