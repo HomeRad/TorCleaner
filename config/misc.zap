@@ -19,6 +19,7 @@
 
 <rewrite title="Remove IFRAMEs" oid="2"
  desc="&lt;iframe&gt; content is almost always advertising. So remove it."
+ dontmatchurl="www\.eselfilme\.de"
  tag="iframe">
 </rewrite>
 
