@@ -105,7 +105,7 @@ class HttpServer (Server):
         self.write('%s %s HTTP/1.1\r\n' % (self.method, self.document))
         for header in self.client.headers.headers:
             self.write(header)
-        if not self.client.headers.has_key('Connection'):
+        if self.client.headers.get('Connection') is None:
             self.write('Connection: Keep-Alive\r\n')
         self.write('\r\n')
         self.write(self.content)
@@ -200,25 +200,25 @@ class HttpServer (Server):
         gm = mimetypes.guess_type(self.document, None)
         if gm[0]:
             # guessed an own content type
-            if not self.headers.has_key('Content-Type'):
+            if self.headers.get('Content-Type') is None:
+                print >>sys.stderr, _("Warning: add Content-Type %s to %s") % \
+                                      (`gm[0]`, `self.url`)
                 self.headers['Content-Type'] = gm[0]
-                print >>sys.stderr, _("Warning: %s guessed Content-Type (%s)") % \
-                                      (self.url, gm[0])
            # fix some content types
             elif not self.headers['Content-Type'].startswith(gm[0]) and \
                  gm[0] in _fix_content_types:
-                print >>sys.stderr, _("Warning: %s guessed Content-Type (%s) != server Content-Type (%s)") % \
-                          (self.url, gm[0], self.headers.get('Content-Type'))
+                print >>sys.stderr, _("Warning: change Content-Type from %s to %s in %s") % \
+                 (`self.headers['Content-Type']`, `gm[0]`, `self.url`)
                 self.headers['Content-Type'] = gm[0]
         if gm[1]:
             # guessed an own encoding type
-            if not self.headers.has_key('Content-Encoding'):
+            if self.headers.get('Content-Encoding') is None:
                 self.headers['Content-Encoding'] = gm[1]
-                print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s)") % \
-                                      (self.url, gm[1])
+                print >>sys.stderr, _("Warning: add Content-Encoding %s to %s") % \
+                                      (`gm[1]`, `self.url`)
             elif self.headers.get('Content-Encoding') != gm[1]:
-                print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)") % \
-                                      (self.url, gm[1], self.headers.get('Content-Encoding'))
+                print >>sys.stderr, _("Warning: change Content-Encoding from %s to %s in %s") % \
+                 (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
                 self.headers['Content-Encoding'] = gm[1]
         # will content be rewritten?
         rewrite = None
@@ -228,7 +228,7 @@ class HttpServer (Server):
                 break
         # add client accept-encoding value
         self.headers['Accept-Encoding'] = self.client.compress
-        if self.headers.has_key('Content-Length'):
+        if self.headers.get('Content-Length') is not None:
             self.bytes_remaining = int(self.headers['Content-Length'])
             #debug(HURT_ME_PLENTY, "%d bytes remaining"%self.bytes_remaining)
             if rewrite:
@@ -240,12 +240,12 @@ class HttpServer (Server):
         self.decoders = []
 
         # Chunked encoded
-        if self.headers.has_key('Transfer-Encoding'):
+        if self.headers.get('Transfer-Encoding') is not None:
             #debug(BRING_IT_ON, 'S/Transfer-encoding:', `self.headers['transfer-encoding']`)
             self.decoders.append(UnchunkStream())
             # remove encoding header
             to_remove = ["Transfer-Encoding"]
-            if self.headers.has_key("Content-Length"):
+            if self.headers.get("Content-Length") is not None:
                 print >>sys.stderr, _('Warning: chunked encoding should not have Content-Length')
                 to_remove.append("Content-Length")
                 self.bytes_remaining = None
@@ -274,7 +274,7 @@ class HttpServer (Server):
             # as content-encoding)
         # initStateObject can modify headers (see Compress.py)!
         self.attrs = initStateObjects(self.headers, self.url)
-        if not self.headers.has_key('Content-Length'):
+        if self.headers.get('Content-Length') is None:
             self.headers['Connection'] = 'close'
         #debug(HURT_ME_PLENTY, "S/Headers filtered", `self.headers.headers`)
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))

@@ -121,7 +121,7 @@ class ClientServerMatchmaker:
 
 
     def check_proxy_auth (self):
-        if not self.headers.has_key("Proxy-Authorization"):
+        if self.headers.get("Proxy-Authorization") is None:
             return
         auth = self.headers['Proxy-Authorization']
         if not auth.startswith("Basic "):
