@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -30,9 +31,8 @@
 		
 """
 
-import unittest, os, codecs, os.path, time
+import unittest, os, os.path, time
 import StringIO
-import logging, logging.config
 
 from wc.webgui.simpletal import simpleTALUtils, simpleTALES, simpleTAL
 
@@ -68,9 +68,9 @@ class TemplateCacheTestCases (unittest.TestCase):
 			pass
 		# This should error out...
 		try:
-			template = self.cache.getTemplate (name)
+			self.cache.getTemplate (name)
 			self.fail ("Expected exception trying to retrieve anavailable template")
-		except Exception, e:
+		except Exception:
 			# Pass!
 			pass
 			
@@ -137,9 +137,9 @@ class TemplateCacheTestCases (unittest.TestCase):
 			pass
 		# This should error out...
 		try:
-			template = self.cache.getTemplate (name)
+			self.cache.getTemplate (name)
 			self.fail ("Expected exception trying to retrieve anavailable template")
-		except Exception, e:
+		except Exception:
 			# Pass!
 			pass
 			

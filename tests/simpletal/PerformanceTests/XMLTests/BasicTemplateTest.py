@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -125,23 +126,23 @@ def NGTemplates (count):
 	compiler = simpleTAL.XMLTemplateCompiler()
 	compiler.parseTemplate (tempFile)
 	template = compiler.getTemplate()
-	file = simpleTALUtils.FastStringOutput()
+	f = simpleTALUtils.FastStringOutput()
 	start = time.clock()
-	for attempt in xrange (count):
-		template.expand (context, file)
+	for dummy in xrange (count):
+		template.expand (context, f)
 	end = time.clock()
 	#print "Resuling file: " + file.getvalue()
 	return (end - start)
 	
 def NGTemplateOverhead (count):
-	file = simpleTALUtils.FastStringOutput()
+	f = simpleTALUtils.FastStringOutput()
 	start = time.clock()
-	for attempt in xrange (count):
+	for dummy in xrange (count):
 		tempFile = StringIO.StringIO (performanceTemplate)
 		compiler = simpleTAL.XMLTemplateCompiler()
 		compiler.parseTemplate (tempFile)
 		template = compiler.getTemplate()
-		template.expand (context, file)
+		template.expand (context, f)
 	end = time.clock()
 	#print "Resuling file: " + file.getvalue()
 	return (end - start)

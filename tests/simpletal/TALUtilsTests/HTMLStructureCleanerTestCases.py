@@ -31,11 +31,10 @@
 		
 """
 
-import unittest, os, codecs
+import unittest
 import StringIO
-import logging, logging.config
 
-from wc.webgui.simpletal import simpleTALUtils
+from wc.webgui.simpletal import simpleTAL, simpleTALUtils
 
 isoText = """<html>
 <h1>Some bad html follows</h1>
@@ -67,9 +66,9 @@ class HTMLStructureCleanerTestCases (unittest.TestCase):
 		
 	def _runTest_ (self, txt, result, errMsg="Error"):
 		template = simpleTAL.compileHTMLTemplate (txt)
-		file = StringIO.StringIO ()
-		template.expand (self.context, file)
-		realResult = file.getvalue()
+		f = StringIO.StringIO ()
+		template.expand (self.context, f)
+		realResult = f.getvalue()
 		self.failUnless (realResult == result, "%s - \npassed in: %s \ngot back %s \nexpected %s\n\nTemplate: %s" % (errMsg, txt, realResult, result, template))
 						
 	def testCleaningISOString (self):

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -58,9 +59,9 @@ class DefineMacroTests (unittest.TestCase):
 	def _runTest_ (self, txt, result, errMsg="Error"):
 		macroTemplate = simpleTAL.compileXMLTemplate (txt)
 		self.context.addGlobal ("site", macroTemplate)
-		file = StringIO.StringIO ()
-		pageTemplate.expand (self.context, file)
-		realResult = file.getvalue()
+		f = StringIO.StringIO ()
+		pageTemplate.expand (self.context, f)
+		realResult = f.getvalue()
 		self.failUnless (realResult == result, "%s - \npassed in: %s \ngot back %s \nexpected %s\n\nTemplate: %s" % (errMsg, txt, realResult, result, pageTemplate))
 	
 	def _runCompileTest_ (self, txt, result, errMsg="Error"):

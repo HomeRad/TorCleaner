@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """ 	Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -59,9 +60,9 @@ class NoCallTests (unittest.TestCase):
 		
 	def _runTest_ (self, txt, result, errMsg="Error", expectedRecorderVal=0):
 		template = simpleTAL.compileHTMLTemplate (txt)
-		file = StringIO.StringIO ()
-		template.expand (self.context, file)
-		realResult = file.getvalue()
+		f = StringIO.StringIO ()
+		template.expand (self.context, f)
+		realResult = f.getvalue()
 		self.failUnless (realResult == result, "%s - \npassed in: %s \ngot back %s \nexpected %s\n\nTemplate: %s" % (errMsg, txt, realResult, result, template))
 		self.failUnless (self.recorder.called == expectedRecorderVal, 'Call recorder detected that the call recorder object has state %s' % str (self.recorder.called))
 			

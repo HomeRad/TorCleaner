@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -98,7 +99,7 @@ class XMLChecksumHandler (xml.sax.handler.ContentHandler, xml.sax.handler.DTDHan
 		self.digest.update (publicId)
 		self.digest.update (systemId)
 		
-	def unparsedEntityDecl(name, publicId, systemId, ndata):
+	def unparsedEntityDecl(self, name, publicId, systemId, ndata):
 		self.digest.update (name)
 		self.digest.update (publicId)
 		self.digest.update (systemId)

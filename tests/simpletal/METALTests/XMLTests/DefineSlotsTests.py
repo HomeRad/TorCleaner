@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -54,16 +55,16 @@ class DefineSlotsTests (unittest.TestCase):
 		pageTemplate = simpleTAL.compileXMLTemplate (page)
 		self.context.addGlobal ("site", macroTemplate)
 		self.context.addGlobal ("here", pageTemplate)
-		file = StringIO.StringIO ()
-		pageTemplate.expand (self.context, file)
-		realResult = file.getvalue()
+		f = StringIO.StringIO ()
+		pageTemplate.expand (self.context, f)
+		realResult = f.getvalue()
 		self.failUnless (realResult == result, "%s - \npassed in macro: %s \npage: %s\ngot back %s \nexpected %s\n" % (errMsg, macros, page, realResult, result))
 	
 	def _runCompileTest_ (self, txt, result, errMsg="Error"):
 		try:
 			macroTemplate = simpleTAL.compileXMLTemplate (txt)
 		except simpleTAL.TemplateParseException, e:
-			self.failUnless (str (e) == result, "%s - \npassed in: %s \ngot back %s \nexpected %s\n\nTemplate: %s" % (errMsg, txt, str(e), result, pageTemplate))
+			self.failUnless (str (e) == result, "%s - \npassed in: %s \ngot back %s \nexpected %s\n\nTemplate: %s" % (errMsg, txt, str(e), result, txt))
 			return
 		self.fail ("Expected exception '%s' during compile - but got no exception" % result)				
 					

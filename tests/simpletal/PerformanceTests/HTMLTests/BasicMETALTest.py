@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -30,7 +31,7 @@
 """
 from wc.webgui.simpletal import simpleTAL, simpleTALES, simpleTALUtils
 
-import time, StringIO, cStringIO, sys
+import time
 
 macroTemplate = """<html>
 <body>
@@ -99,23 +100,27 @@ macTemplate = simpleTAL.compileHTMLTemplate (macroTemplate)
 context.addGlobal ("macTemp", macTemplate)
 
 def METALTime (count, template):
-	file = simpleTALUtils.FastStringOutput()
+	f = simpleTALUtils.FastStringOutput()
 	start = time.clock()
-	for attempt in xrange (count):
-		template.expand (context, file)
+	for dummy in xrange (count):
+		template.expand (context, f)
 	end = time.clock()
 	#print "Resuling file: " + file.getvalue()
 	return (end - start)
 
-#print "Timing TAL templates"
-#result = NGTemplates (2000)
-#print "Result: " + str(result) + " for 2000 template expansions"
+def main ():
+    #print "Timing TAL templates"
+    #result = NGTemplates (2000)
+    #print "Result: " + str(result) + " for 2000 template expansions"
+    
+    # Pre-expand macros
+    expanded = simpleTALUtils.ExpandMacros (context, template)
+    #print expanded
+    realTemplate = simpleTAL.compileHTMLTemplate (expanded)
+    
+    print "Timing macro expansion..."
+    result = METALTime (400, realTemplate)
+    print "Total time %s for 400 itterations" % (str (result))
 
-# Pre-expand macros
-expanded = simpleTALUtils.ExpandMacros (context, template)
-#print expanded
-realTemplate = simpleTAL.compileHTMLTemplate (expanded)
-
-print "Timing macro expansion..."
-result = METALTime (400, realTemplate)
-print "Total time %s for 400 itterations" % (str (result))
+if __name__=='__main__':
+    main()

@@ -1,8 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 """unit test for parsing all supported i18n: constructs"""
-import unittest, os
+import unittest
 import StringIO
-import logging, logging.config
 
 from wc.webgui.simpletal import simpleTAL, simpleTALES
 
@@ -34,10 +33,10 @@ class TranslateTests (unittest.TestCase):
         result = result.encode(encoding)
         txt = txt.encode(encoding)
         template = simpleTAL.compileHTMLTemplate (txt)
-        file = StringIO.StringIO ()
-        template.expand(self.context, file, outputEncoding=encoding,
+        f = StringIO.StringIO ()
+        template.expand(self.context, f, outputEncoding=encoding,
                         translator=self.translator)
-        realResult = file.getvalue()
+        realResult = f.getvalue()
         res = (errMsg, txt, realResult, result, template)
         self.failUnless((realResult == result), "%s - \npassed in: %s \ngot back %s \nexpected %s\n\nTemplate: %s" % res)
 

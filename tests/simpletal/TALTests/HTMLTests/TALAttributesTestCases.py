@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -53,9 +54,9 @@ class TALAttributesTestCases (unittest.TestCase):
 		
 	def _runTest_ (self, txt, result, errMsg="Error"):
 		template = simpleTAL.compileHTMLTemplate (txt)
-		file = StringIO.StringIO ()
-		template.expand (self.context, file)
-		realResult = file.getvalue()
+		f = StringIO.StringIO ()
+		template.expand (self.context, f)
+		realResult = f.getvalue()
 		self.failUnless (realResult == result, "%s - \npassed in: %s \ngot back %s \nexpected %s\n\nTemplate: %s" % (errMsg, txt, realResult, result, template))
 						
 	def testAddingAnAttribute (self):
@@ -103,7 +104,7 @@ class TALAttributesTestCases (unittest.TestCase):
 						,"""<html href="5" existingatt="&quot;Testing&quot;">Hello</html>"""
 						,"Escaping of new attributes failed.")
 		
-	def testNumberAttributeEscaping (self):
+	def testUniQuoteAttributeEscaping (self):
 		self._runTest_ ('<html existingAtt="&quot;Testing&quot;" tal:attributes="href uniQuote">Hello</html>'
 						,"""<html href="Does &quot;this&quot; work?" existingatt="&quot;Testing&quot;">Hello</html>"""
 						,"Escaping of new attributes failed.")

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -29,7 +30,7 @@
 """
 from wc.webgui.simpletal import simpleTAL, simpleTALES, simpleTALUtils
 
-import time, StringIO, cStringIO, sys
+import time, StringIO
 
 performanceTemplate = """<html>
 <head>
@@ -66,38 +67,43 @@ context = simpleTALES.Context()
 context.addGlobal ("title", "Performance testing!")
 context.addGlobal ("myList", firstLevelList )
 
+
 def NGTemplates (count):
 	tempFile = StringIO.StringIO (performanceTemplate)
 	compiler = simpleTAL.HTMLTemplateCompiler()
 	compiler.parseTemplate (tempFile)
 	template = compiler.getTemplate()
-	file = simpleTALUtils.FastStringOutput()
+	f = simpleTALUtils.FastStringOutput()
 	start = time.clock()
-	for attempt in xrange (count):
-		template.expand (context, file)
+	for dummy in xrange (count):
+		template.expand (context, f)
 	end = time.clock()
 	#print "Resuling file: " + file.getvalue()
 	return (end - start)
-	
+
+
 def NGTemplateOverhead (count):
-	file = simpleTALUtils.FastStringOutput()
+	f = simpleTALUtils.FastStringOutput()
 	start = time.clock()
-	for attempt in xrange (count):
+	for dummy in xrange (count):
 		tempFile = StringIO.StringIO (performanceTemplate)
 		compiler = simpleTAL.HTMLTemplateCompiler()
 		compiler.parseTemplate (tempFile)
 		template = compiler.getTemplate()
-		template.expand (context, file)
+		template.expand (context, f)
 	end = time.clock()
 	#print "Resuling file: " + file.getvalue()
 	return (end - start)
 
 
-print "Timing TAL templates"
-result = NGTemplates (200)
-print "Result: " + str(result) + " for 200 template expansions"
+def main ():
+    print "Timing TAL templates"
+    result = NGTemplates (200)
+    print "Result: " + str(result) + " for 200 template expansions"
 
-print "Timing TAL templates (with template parsing)"
-result = NGTemplateOverhead (200)
-print "Result: " + str(result) + " for 200 template expansions"
+    print "Timing TAL templates (with template parsing)"
+    result = NGTemplateOverhead (200)
+    print "Result: " + str(result) + " for 200 template expansions"
 
+if __name__=='__main__':
+    main()

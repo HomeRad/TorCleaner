@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -29,7 +30,7 @@
 """
 from wc.webgui.simpletal import simpleTAL, simpleTALES, simpleTALUtils
 
-import time, StringIO, cStringIO, sys
+import time, StringIO
 
 #import hotshot, hotshot.stats
 
@@ -80,42 +81,46 @@ def NGTemplates (count):
 	compiler = simpleTAL.HTMLTemplateCompiler()
 	compiler.parseTemplate (tempFile)
 	template = compiler.getTemplate()
-	file = simpleTALUtils.FastStringOutput()
+	f = simpleTALUtils.FastStringOutput()
 	start = time.clock()
-	for attempt in xrange (count):
-		template.expand (context, file)
+	for dummy in xrange (count):
+		template.expand (context, f)
 	end = time.clock()
 	#print "Resuling file: " + file.getvalue()
 	return (end - start)
 	
 def NGTemplateOverhead (count):
-	file = file = simpleTALUtils.FastStringOutput()
+	f = simpleTALUtils.FastStringOutput()
 	start = time.clock()
-	for attempt in xrange (count):
+	for dummy in xrange (count):
 		tempFile = StringIO.StringIO (performanceTemplate)
 		compiler = simpleTAL.HTMLTemplateCompiler()
 		compiler.parseTemplate (tempFile)
 		template = compiler.getTemplate()
-		#template.expand (context, file)
+		template.expand (context, f)
 	end = time.clock()
 	#print "Resuling file: " + file.getvalue()
 	return (end - start)
 
 
-print "Timing TAL templates"
-#profiler = hotshot.Profile ("profile.data")
-profiler = profile.run("NGTemplates (20)", "profile.data")
-#profiler = profile.run("NGTemplateOverhead (20)", "profile.data")
-#profiler.runcall (NGTemplates, 20)
-print "Re-enabling garbage collection."
-gc.enable()
-print "Loading profile data."
+def main ():
+    print "Timing TAL templates"
+    #profiler = hotshot.Profile ("profile.data")
+    profiler = profile.run("NGTemplates (20)", "profile.data")
+    #profiler = profile.run("NGTemplateOverhead (20)", "profile.data")
+    #profiler.runcall (NGTemplates, 20)
+    print "Re-enabling garbage collection."
+    gc.enable()
+    print "Loading profile data."
+    
+    #data = hotshot.stats.load ("profile.data")
+    data = pstats.Stats("profile.data")
+    data = data.strip_dirs()
+    sortedData = data.sort_stats ('time', 'calls')
+    sortedData.print_stats (25)
+    #sortedData.print_callees ('cmdRepeat')
+    #sortedData.print_callees ('cmdContent')
+    data.print_callees ('cmdEndTagEndScope')
 
-#data = hotshot.stats.load ("profile.data")
-data = pstats.Stats("profile.data")
-data = data.strip_dirs()
-sortedData = data.sort_stats ('time', 'calls')
-sortedData.print_stats (25)
-#sortedData.print_callees ('cmdRepeat')
-#sortedData.print_callees ('cmdContent')
-data.print_callees ('cmdEndTagEndScope')
+if __name__=='__main__':
+    main()

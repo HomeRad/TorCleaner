@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
 		All rights reserved.
 		
@@ -30,9 +31,7 @@
 		
 """
 
-import unittest, os, codecs
-import StringIO
-import logging, logging.config
+import unittest
 
 from wc.webgui.simpletal import simpleTALUtils, simpleTALES, simpleTAL
 
