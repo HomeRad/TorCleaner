@@ -100,14 +100,14 @@ from wc.filter.VirusFilter import init_clamav_conf
 # safely set config values upon import
 config = {}
 
-def wstartfunc (handle=None, stoppable=False):
+def wstartfunc (handle=None, stoppable=False, configfile=None):
     """Initalize configuration, start psyco compiling and the proxy loop.
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
     initlog(os.path.join(ConfigDir, "logging.conf"))
     # read configuration
-    config = Configuration()
+    config = Configuration(configfile=configfile)
     if stoppable:
         config.set_abort(False)
     # support reload on posix systems
@@ -172,9 +172,9 @@ def proxyconf_file ():
     return os.path.join(ConfigDir, "webcleaner.conf")
 
 
-def filterconf_files ():
+def filterconf_files (dirname):
     """return list of filter configuration filenames"""
-    return glob(os.path.join(ConfigDir, "*.zap"))
+    return glob(os.path.join(dirname, "*.zap"))
 
 
 # available filter modules
@@ -189,10 +189,18 @@ from wc.XmlUtils import xmlquote, xmlquoteattr
 class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
 
-    def __init__ (self):
+    def __init__ (self, configfile=None):
         """Initialize the options"""
         dict.__init__(self)
-        # reset to default
+        if configfile is None:
+            self.configfile = proxyconf_file()
+        else:
+            self.configfile = configfile
+        if filterdir is None:
+            self.filterdir = ConfigDir
+        else:
+            self.filterdir = filterdir
+        # reset to default values
         self.reset()
         # read configuration
         self.read_proxyconf()
@@ -209,7 +217,6 @@ class Configuration (dict):
 
     def reset (self):
         """Reset to default values"""
-        self['configfile'] = proxyconf_file()
         self['port'] = 8080
         self['sslport'] = 8443
         self['sslgateway'] = 0
@@ -256,7 +263,7 @@ class Configuration (dict):
 
     def read_proxyconf (self):
         """read proxy configuration"""
-        WConfigParser(self['configfile'], self).parse()
+        WConfigParser(self.configfile, self).parse()
 
 
     def set_abort (self, val):
@@ -317,7 +324,7 @@ class Configuration (dict):
     def read_filterconf (self):
         """read filter rules"""
         from wc.filter.rules import generate_sids, recalc_up_down
-        for filename in filterconf_files():
+        for filename in filterconf_files(self.filterdir):
             if os.stat(filename)[ST_SIZE]==0:
                 warn(PROXY, "Skipping empty file %r", filename)
                 continue
