@@ -341,8 +341,8 @@ class Resolver(object):
 
     def read_local_ifaddrs (self):
         """all active interfaces' ip addresses"""
-        if os.name!='posix':
-            # only posix is supported
+        if not sys.platform.startswith('linux'):
+            # only Linux is supported right now
             return []
         import wc.dns.ifconfig
         ifc = wc.dns.ifconfig.IfConfig()
