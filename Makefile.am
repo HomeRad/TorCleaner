@@ -1,5 +1,5 @@
-# This Makefile is only used by developers! 
-# There is no need for users to call make.
+SUBDIRS 		= libjs
+
 PYVER=2.2
 PYTHON=python$(PYVER)
 VERSION=$(shell $(PYTHON) setup.py --version)
@@ -13,10 +13,7 @@ SPLINTOPTS := +posixlib \
 	      -nestcomment -ifempty
 
 
-all:
-	@echo "Read the file INSTALL to see how to build and install"
-
-clean:
+clean-local:
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
 	$(MAKE) -C po clean
 	rm -f wc/parser/htmlsax.so wc/js/jslib.so
@@ -34,7 +31,7 @@ localbuild:
 localtest:
 	cd wc/parser && python htmllib.py
 
-distclean:	clean cleandeb
+distclean-local:
 	rm -rf dist build # just to be sure: clean build dir too
 	rm -f VERSION MANIFEST _*_configdata.*
 
@@ -58,7 +55,7 @@ deb_signed: distclean locale
 deb_unsigned: distclean locale
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/usr/local/src/debian -Mwebcleaner2 -us -uc -rfakeroot
 
-dist:	locale
+localdist:	locale
 	$(PYTHON) setup.py sdist --formats=gztar,zip
 	rm -f $(MD5SUMS)
 	md5sum dist/* > $(MD5SUMS)
@@ -153,6 +150,7 @@ update-blacklists:
 	$(PYTHON) config/bl2wc.py
 
 
-.PHONY: all clean localbuild distclean cleandeb deb_local deb_signed 
+.PHONY: localbuild distclean cleandeb deb_local deb_signed 
 .PHONY: deb_unsigned dist test gentest onlinetest offlinetest md5sums package
 .PHONY: filterfiles upload doc tar debug ndebug
+

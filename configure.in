@@ -1,0 +1,31 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.53)
+AC_INIT(webcleaner)
+AM_CONFIG_HEADER(config.h:config.h.in)
+AM_INIT_AUTOMAKE(webcleaner, 1.11)
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_DISABLE_SHARED
+AC_PROG_LIBTOOL
+
+if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
+  CFLAGS="$CFLAGS -Wall -pedantic -std=gnu99"
+  CXXFLAGS="$CXXFLAGS -Wall -pedantic -std=gnu99"
+fi
+
+case "$build" in
+  *-*-mingw32*)
+    AM_CONDITIONAL(WIN32, true)
+    AC_DEFINE(NOMINMAX,, [Prevent windows.h from declaring the min()/max() macros.])
+  ;;
+  *)
+    AM_CONDITIONAL(WIN32, false)
+  ;;
+esac
+
+AC_OUTPUT([
+Makefile
+libjs/Makefile
+libjs/fdlibm/Makefile
+])
