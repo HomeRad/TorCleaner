@@ -2,7 +2,6 @@ SUBDIRS 		= po libjs
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
-WCVERSION := $(shell $(PYTHON) setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/parser -Ilibjs -I/usr/include/$(PYTHON) \
@@ -42,7 +41,7 @@ deb_signed: clean
 dist-hook:
 	rm -rf debian/webcleaner debian/webcleanertools
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
-	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
+	rm -f $(distdir)/webcleaner-$(VERSION).tar.gz
 	rm -f webcleaner-md5sums.txt
 
 testwc:
@@ -68,7 +67,7 @@ testupdate:
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
 	(cd test/filter && md5sum *.zap > filter-md5sums.txt)
-	for f in webcleaner-$(WCVERSION).tar.gz; do \
+	for f in webcleaner-$(VERSION).tar.gz; do \
 	  if [ ! -f $$f ]; then break; fi; \
 	  md5sum $$f > webcleaner-md5sums.txt; \
 	  gpg --detach-sign --armor $$f; \
@@ -76,10 +75,10 @@ md5sums:
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
 
 VERSION:
-	echo $(WCVERSION) > VERSION
+	echo $(VERSION) > VERSION
 
 upload:
-	ncftpput upload.sourceforge.net /incoming webcleaner-$(WCVERSION).tar.gz
+	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
 
 homepage: VERSION md5sums
 	cp config/*.dtd config/webcleaner.conf config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/zapper
