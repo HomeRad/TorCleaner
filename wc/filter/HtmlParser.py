@@ -304,7 +304,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         pending rules. No rules can be removed from the list."""
         # default data
         #self._debug(NIGHTMARE, "startElement", `tag`)
-        tag = check_spelling(tag)
+        tag = check_spelling(tag, self.url)
         item = [STARTTAG, tag, attrs]
         if self.state=='wait':
             return self.waitbuf.append(item)

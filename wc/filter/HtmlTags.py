@@ -21,7 +21,7 @@ if __name__=='__main__':
     sys.path.insert(0, os.getcwd())
 from wc.levenshtein import distance
 
-# no comment means HTML 4.01 tag
+# HTML 4.01 tags
 HtmlTags = {
     "a" : None,
     "abbr" : None,
@@ -75,15 +75,12 @@ HtmlTags = {
     "isindex" : None,
     "kbd" : None,
     "label" : None,
-    "layer" : None, # Netscape Navigator 4
     "legend" : None,
     "li" : None,
     "link" : None,
-    "listing" : None, # HTML 3.2
     "map" : None,
     "menu" : None,
     "meta" : None,
-    "nobr" : None, # Netscape Navigator 1.1 (!)
     "noframes" : None,
     "noscript" : None,
     "object" : None,
@@ -92,7 +89,6 @@ HtmlTags = {
     "option" : None,
     "p" : None,
     "param" : None,
-    "plaintext" : None, # HTML 3.2
     "pre" : None,
     "q" : None,
     "s" : None,
@@ -119,15 +115,27 @@ HtmlTags = {
     "u" : None,
     "ul" : None,
     "var" : None,
-    "wbr" : None, # Netscape Navigator 1.1 (!)
+}
+
+# invalid and old tags
+OldTags = {
+    "image" : None, # ??? unknown
+    "layer" : None, # Netscape Navigator 4
+    "listing" : None, # HTML 3.2
+    "nobr" : None, # Netscape Navigator 1.1
+    "plaintext" : None, # HTML 3.2
+    "wbr" : None, # Netscape Navigator 1.1
     "xmp" : None, # HTML 3.2
 }
 
-def check_spelling (tag):
+def check_spelling (tag, url):
     """check if tag (must be lowercase) is a valid HTML tag and if not,
     tries to correct it to the first tag with a levenshtein distance of 1
     """
     if tag in HtmlTags:
+        return tag
+    if tag in OldTags:
+        print >>sys.stderr, "Warning: non-HTML4 tag", `tag`, "at", `url`
         return tag
     for htmltag in HtmlTags.keys():
          if distance(tag, htmltag)==1:
