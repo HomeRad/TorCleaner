@@ -24,6 +24,20 @@
   * enable py2exe inclusion
     Type: feature
     Changed: setup.py
+  
+  * updated simpletal to upstream version 3.9, had to use unicode
+    strings in context vars
+    Type: feature
+    Changed: wc/webgui/simpletal/*, wc/__init__.py, wc/webgui/__init__.py
+      wc/webgui/context/*
+
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040505
+    Type: feature
+    Changed: libjs/*
+
+  * updated squidguard blacklists
+    Type: feature
+    Changed: config/blacklist/*, config/blacklist_*.zap
 
 2.11 (released 25.4.2004)
   * - preserve the order in which HTML attributes have been parsed
