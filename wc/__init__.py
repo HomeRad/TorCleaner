@@ -76,6 +76,13 @@ def get_locdir ():
         locdir = os.path.join(configdata.install_data, 'share', 'locale')
     return locdir
 
+
+def get_translator (lang, translatorklass=None):
+    """return TAL translator class"""
+    return wc.i18n.get_translator(configdata.name, get_locdir(), lang,
+         translatorklass=translatorklass)
+
+
 def initlog (filename, appname, filelogs=True):
     """initialize logfiles and configuration"""
     logging.config.fileConfig(filename)
