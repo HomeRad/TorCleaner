@@ -511,6 +511,7 @@ class FolderRule (Rule):
 
     def sort (self):
         self.rules.sort()
+        recalc_oids(self.rules)
 
     def toxml (self):
         s = """<?xml version="1.0"?>
@@ -523,3 +524,9 @@ class FolderRule (Rule):
             s += "\n%s\n"%r.toxml()
         return s+"</folder>\n"
 
+
+def recalc_oids (rules):
+    i = 0
+    for r in rules:
+        r.oid = i
+        i += 1

@@ -114,6 +114,7 @@ class HeaderWindow (ToolWindow):
         # start refresh timer
         if self.config['refresh']:
             self.timer = app.addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
+        self.eventMap()
 
 
     def connectionFrame (self, frame):
@@ -454,6 +455,7 @@ class OptionsWindow (FXDialogBox):
         w = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
         FXButton(w,"&Save",None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
         FXButton(w,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
+
 
     def update_headers (self, owner):
         self.headers.clearItems()

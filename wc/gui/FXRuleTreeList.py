@@ -74,7 +74,11 @@ class FXRuleTreeList (FXTreeList):
                     return r
 
     def createRuleItem (self, rule):
-        item = FXTreeItem(rule.title)
+        if rule.get_name()!="folder":
+            title = "[%s] %s" % (rule.get_name(), rule.title)
+        else:
+            title = rule.title
+        item = FXTreeItem(title)
         self.setItemIcons(item, rule)
         return item
 
@@ -92,3 +96,49 @@ class FXRuleTreeList (FXTreeList):
             self.setItemOpenIcon(item, self.icon_doc)
 	    self.setItemClosedIcon(item, self.icon_doc)
 
+    def onCmdUp (self):
+        item = self.getCurrentItem()
+        if self.isItemSelected(item):
+            index = item.getData()
+            #debug(BRING_IT_ON, "onCmdUp: tree item index %d" % index)
+            rule = self.searchRule(index)
+            debug(BRING_IT_ON, "onCmdUp: rule %s" % rule)
+            # XXX todo
+
+    def onCmdUpUpdate (self, sender):
+        item = self.getCurrentItem()
+        if self.isItemSelected(item):
+            index = item.getData()
+            #debug(BRING_IT_ON, "onCmdUp: tree item index %d" % index)
+            rule = self.searchRule(index)
+            if rule.oid!=0:
+                sender.enable()
+                return 1
+        sender.disable()
+        return 1
+
+    def onCmdDown (self):
+        # XXX todo
+        return
+
+    def onCmdDownUpdate (self, sender):
+        item = self.getCurrentItem()
+        if self.isItemSelected(item):
+            index = item.getData()
+            rule = self.searchRule(index)
+            #debug(BRING_IT_ON, "onCmdDown: tree item index %d" % index)
+            # last rule of last folder?
+            if self.searchRule(index+1) is None:
+                sender.disable()
+                return 1
+            # last rule of a folder?
+            if self.searchFolder(index+1) is not None:
+                sender.disable()
+                return 1
+            # last folder?
+            if rule == self.folders[-1]:
+                sender.disable()
+                return 1
+            sender.enable()
+        else: sender.disable()
+        return 1

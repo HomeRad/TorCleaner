@@ -147,6 +147,7 @@ class Configuration (UserDict.UserDict):
         for f in self['rules']:
             f.sort()
         self['rules'].sort()
+        filter.Rules.recalc_oids(self['rules'])
 
     def init_filter_modules (self):
         """go through list of rules and store them in the filter

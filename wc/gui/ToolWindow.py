@@ -8,7 +8,6 @@ class ToolWindow (FXMainWindow):
     def __init__ (self, app, name):
 	FXMainWindow.__init__(self, app, name)
         self.setIcon(loadIcon(app, 'iconbig.png'))
-        self.eventMap()
         self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
 
     def create (self):
@@ -16,5 +15,3 @@ class ToolWindow (FXMainWindow):
 	FXMainWindow.create(self)
 	self.show()
 
-    def eventMap (self):
-        raise Exception, "subclass responsibility"

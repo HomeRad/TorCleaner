@@ -77,7 +77,6 @@ class ConfWindow (ToolWindow):
     def __init__ (self, app):
 	ToolWindow.__init__(self, app, "webcleanerconf")
         self.readconfig()
-        self.eventMap()
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
         FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
         self.help = FXDialogBox(self, _("webcleanerconf Help"))
@@ -108,6 +107,7 @@ class ConfWindow (ToolWindow):
         FXMenuCommand(daemonmenu, "Status", None, self, self.ID_PROXYSTATUS)
         FXMenuButton(frame, "Proxy", None, daemonmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(frame, "Update...", None, self, self.ID_CONFUPDATE)
+        self.eventMap()
 
 
     def eventMap (self):
@@ -145,9 +145,9 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onCmdNoProxyForRemove)
         FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onUpdNoProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_UP,ConfWindow.onCmdUp)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_UP,ConfWindow.onCmdUpUpdate)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DOWN,ConfWindow.onCmdDown)
-        FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_UP,ConfWindow.onCmdUpUpdate)
-        FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_DOWN,ConfWindow.onCmdDownUpdate)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_DOWN,ConfWindow.onCmdDownUpdate)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYUSER,ConfWindow.onCmdProxyUser)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYPASS,ConfWindow.onCmdProxyPass)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYUSER,ConfWindow.onCmdParentProxyUser)
@@ -560,29 +560,21 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdUp (self, sender, sel, ptr):
-        item = self.tree.getCurrentItem()
-        if self.tree.isItemSelected(item):
-            index = item.getData()
-            debug(BRING_IT_ON, "unCmdUp: tree item index %d" % index)
-        # XXX todo
-        return 1
-
-
-    def onCmdDown (self, sender, sel, ptr):
-        # XXX todo
+        self.tree.onCmdUp()
         return 1
 
 
     def onCmdUpUpdate (self, sender, sel, ptr):
-        # XXX todo
-        sender.enable()
+        return self.tree.onCmdUpUpdate(sender)
+
+
+    def onCmdDown (self, sender, sel, ptr):
+        self.tree.onCmdDown()
         return 1
 
 
     def onCmdDownUpdate (self, sender, sel, ptr):
-        # XXX todo
-        sender.disable()
-        return 1
+        return self.tree.onCmdDownUpdate(sender)
 
 
     def onCmdConfUpdate (self, sender, sel, ptr):
