@@ -4,8 +4,6 @@ version 2.9 and above
 
 - memory leaks while operating the proxy
 
-- .deb update does not work
-
 - content rating:
   o feature: content rating cache update rating_cache_merge_with(ratings)
   o feature: mail ratings to author
