@@ -4,7 +4,7 @@ __date__    = "$Date$"[7:-2]
 
 from wc.log import *
 from wc.proxy.Headers import get_wc_client_headers
-from wc.proxy import stripsite
+from wc.proxy import stripsite, url_norm, url_quote
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse, urllib
@@ -62,7 +62,7 @@ class HttpProxyClient (object):
             url = self.server.headers.getheader("Location",
                          self.server.headers.getheader("Uri", ""))
             url = urlparse.urljoin(self.server.url, url)
-            url = urllib.unquote(url)
+            url = url_norm(url)
             host = stripsite(url)[0]
             self.args = (url, self.args[1])
             # close the server and try again
@@ -70,7 +70,7 @@ class HttpProxyClient (object):
             headers = get_wc_client_headers(host)
             headers['Accept-Encoding'] = 'identity\r'
             ClientServerMatchmaker(self,
-                           "GET %s HTTP/1.1" % url, #request
+                           "GET %s HTTP/1.1" % url_quote(url), #request
                            headers,
                            '', #content
                            mime=self.server.mime,

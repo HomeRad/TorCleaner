@@ -37,14 +37,18 @@ TIMERS = [] # list of (time, function)
 # XXX better name/implementation for this function
 def stripsite (url):
     """remove scheme and host from url. return host, newurl"""
-    url = urlparse.urlparse(url)
-    return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
+    url = urlparse.urlsplit(url)
+    return url[1], urlparse.urlunsplit( (0,0,url[2],url[3],url[4]) )
 
 
-def norm_url (url):
-    """replace empty paths with / and normalize them"""
-    url = urllib.unquote(url)
-    urlparts = list(urlparse.urlparse(url))
+def url_norm (url):
+    """unquote and normalize url which must be quoted"""
+    urlparts = list(urlparse.urlsplit(url))
+    urlparts[0] = urllib.unquote(urlparts[0])
+    urlparts[1] = urllib.unquote(urlparts[1])
+    urlparts[2] = urllib.unquote(urlparts[2])
+    urlparts[3] = urllib.unquote_plus(urlparts[3])
+    urlparts[4] = urllib.unquote(urlparts[4])
     path = urlparts[2].replace('\\', '/')
     if not path or path=='/':
         urlparts[2] = '/'
@@ -54,10 +58,18 @@ def norm_url (url):
         urlparts[2] = os.path.normpath(path).replace('\\', '/')
         if path.endswith('/'):
             urlparts[2] += '/'
-    urlparts = [ urllib.quote(p, '/=&') for p in urlparts ]
-    url = urlparse.urlunparse(urlparts)
-    return url
+    return urlparse.urlunsplit(urlparts)
 
+
+def url_quote (url):
+    """quote given url"""
+    urlparts = list(urlparse.urlsplit(url))
+    urlparts[0] = urllib.quote(urlparts[0])
+    urlparts[1] = urllib.quote(urlparts[1], ':')
+    urlparts[2] = urllib.quote(urlparts[2], '/')
+    urlparts[3] = urllib.quote_plus(urlparts[3], '=&')
+    urlparts[4] = urllib.quote(urlparts[4])
+    return urlparse.urlunsplit(urlparts)
 
 is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
 

@@ -125,8 +125,9 @@ class Blocker (Filter):
 
 
     def doit (self, data, **args):
-        # note: data is the complete request
-        method, url, httpver = data.split()
+        # note: data is the complete request (with quoted url)
+        # note: we get the unquoted url from args
+        url = args['url']
         debug(FILTER, "block filter working on url %s", `url`)
         if self.allowed(url):
             return data

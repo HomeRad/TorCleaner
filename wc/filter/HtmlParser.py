@@ -38,7 +38,7 @@ except ImportError, msg:
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy.Headers import get_wc_client_headers
-from wc.proxy import make_timer, norm_url, stripsite
+from wc.proxy import make_timer, url_norm, url_quote, stripsite
 from HtmlTags import check_spelling
 from HtmlSecurity import HtmlSecurity
 
@@ -478,11 +478,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             url = urlparse.urljoin(self.base_url, url)
         else:
             url = urlparse.urljoin(self.url, url)
-        url = norm_url(url)
-        if _has_ws(url):
-            warn(PARSER, "HtmlParser[%d]: broken JS url %s at %s", self.level,
-                         `url`, `self.url`)
-            return
+        # unquote and norm
+        url = url_norm(url)
         self.state = ('wait', url)
         self.waited = 1
         self.js_src = True
@@ -493,7 +490,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # so only accept non-encoded content here
         headers['Accept-Encoding'] = 'identity\r'
         ClientServerMatchmaker(self.js_client,
-                               "GET %s HTTP/1.1" % url, # request
+                               "GET %s HTTP/1.1" % url_quote(url), # request
                                headers,
                                '', # content
                                mime="application/x-javascript",

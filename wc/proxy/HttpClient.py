@@ -10,7 +10,7 @@ from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config
-from wc.proxy import get_http_version, fix_http_version, norm_url
+from wc.proxy import get_http_version, fix_http_version, url_norm, url_quote
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers, has_header_value
 from wc.proxy.auth import *
@@ -116,15 +116,15 @@ class HttpClient (Connection):
         if self.method not in allowed_methods:
             self.error(405, i18n._("Method Not Allowed"))
             return
-        # fix broken url paths
-        self.url = norm_url(self.url)
+        # fix broken url paths, and unquote
+        self.url = url_norm(self.url)
         if not self.url:
             self.error(400, i18n._("Empty URL"))
             return
         self.attrs = get_filterattrs(self.url, [FILTER_REQUEST])
         self.protocol = fix_http_version(protocol)
         self.http_ver = get_http_version(self.protocol)
-        self.request = "%s %s %s" % (self.method, self.url, self.protocol)
+        self.request = "%s %s %s" % (self.method, url_quote(self.url), self.protocol)
         debug(PROXY, "%s request %s", str(self), `self.request`)
         self.request = applyfilter(FILTER_REQUEST, self.request,
                                    "finish", self.attrs)
@@ -137,6 +137,8 @@ class HttpClient (Connection):
             return
         if len(self.url) > 255:
             warn(PROXY, "%s request url length %d chars is very long", str(self), len(self.url))
+        # and unquote again
+        self.url = url_norm(self.url)
         self.state = 'headers'
 
 
