@@ -114,7 +114,7 @@ class SubPathExpr (object):
         dp.reverse()
 
     def _eval (self, econtext,
-              list=list, isinstance=isinstance, StringType=type('')):
+              list=list, isinstance=isinstance, StringType=basestring):
         vars = econtext.vars
         path = self._path
         if self._dp:
@@ -135,6 +135,7 @@ class SubPathExpr (object):
             ob = vars[base]
         if isinstance(ob, DeferWrapper):
             ob = ob()
+        #wc.log.debug(wc.LOG_TALES, "eval subpath %s (%s)", path, self._path)
         if path:
             ob = restrictedTraverse(ob, path, getSecurityManager())
         return ob
