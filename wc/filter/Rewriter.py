@@ -129,12 +129,7 @@ class HtmlFilter (HtmlParser):
                 for name,val in n[2].items():
                     s += ' %s'%name
                     if val:
-                        if _noquoteval.match(val):
-                            s += "=%s"%val
-                        elif val.find('"')!=-1:
-                            s += "='%s'"%val
-                        else:
-                            s += '="%s"'%val
+                        s += "=%s"%val
                 self.data += s+">"
             elif n[0]==ENDTAG:
                 self.data += "</%s>"%n[1]
