@@ -269,6 +269,7 @@ OldTags = {
 KnownInvalidTags = {
     "cadv" : None, # www.heise.de
     "contentbanner" : None, # www.heise.de
+    "forum" : None, # www.heise.de
     "heiseadvert" : None, # www.heise.de
     "heisetext" : None, # www.heise.de
     "skyscraper" : None, # www.heise.de
