@@ -508,7 +508,7 @@ class DnsLookupConnection (Connection):
         if self.conntype == 'tcp':
             if len(self.recv_buffer) < 2: return
             header = self.recv_buffer[:2]
-            count = dnslib.unpack16bit(header)
+            count = DNS.Lib.unpack16bit(header)
             if len(self.recv_buffer) < 2+count: return
             self.read(2) # header
             data = self.read(count)
