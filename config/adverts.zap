@@ -14,7 +14,7 @@
 </rewrite>
 
 <rewrite title="Ad servers 10">
-<attr>(ad\.krutilka\.ru|fastclick\.net)</attr>
+<attr>(ad\.krutilka\.ru|fastclick\.net|click\.atdmt\.com)</attr>
 </rewrite>
 
 <rewrite title="Ad servers 2"
