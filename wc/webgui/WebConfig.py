@@ -16,6 +16,7 @@
 
 from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
 from wc import config
+import wc.proxy
 
 HTML_TEMPLATE = """<html><head>
 <title>%(title)s</title>
@@ -70,7 +71,7 @@ def text_status ():
 
 
 def text_headers ():
-    return "\n".join(HEADERS.getall()) or "-"
+    return "\n".join(wc.proxy.HEADERS.getall()) or "-"
 
 
 def text_connections ():
