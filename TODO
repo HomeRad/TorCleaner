@@ -2,7 +2,7 @@ TODO
 
 version 2.4
 
-- add robots.txt to templates
+- web gui: add prev/next button
 
 - test proxy.pac stuff
   http://wp.netscape.com/eng/mozilla/2.0/relnotes/demo/proxy-live.html
