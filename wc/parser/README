@@ -22,7 +22,7 @@ c) Self-generated bison parsers
    They allow to skip invalid tokens.
 All solutions are not acceptable for WebCleaner: a) and b) change
 information which may not be available any more (until we buffer all
-HTML data until EOF). c) looses information. So the solution is
+HTML data until EOF); c) looses information. So the solution is
 d) The parser recognizes as much as it can and passes the rest
    of the data as TEXT tokens.
 
@@ -52,7 +52,8 @@ e) invalid characters inside tags or tag attributes
 
 Additionally the WebCleaner parser has the following features:
 a) NULL bytes are changed into spaces
-b) <!-- ... --> inside a <script> or <style> are not treated as comments
+b) <!-- ... --> inside a <script> or <style> are not treated as
+   comments, so you can safely turn on the comment delete rule
 
 
 3) The FLEX code has options to generate a large but fast scanner.
