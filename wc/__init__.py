@@ -349,15 +349,11 @@ class WConfigParser (BaseParser):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
             if self.config['noproxyfor']:
-                d = {}
-                for host in self.config['noproxyfor'].split(','):
-                    d[str(host)] = 1
-                self.config['noproxyfor'] = d
+                strhosts = str(self.config['noproxyfor'])
+                self.config['noproxyfor'] = host_set(strhosts)
             if self.config['allowedhosts']:
-                d = {}
-                for host in self.config['allowedhosts'].split(','):
-                    d[str(host)] = 1
-                self.config['allowedhosts'] = d
+                strhosts = str(self.config['noproxyfor'])
+                self.config['allowedhosts'] = host_set(strhosts)
             if self.config['logfile'] == '<stdout>':
                 self.config['logfile'] = sys.stdout
             elif self.config['logfile']:
@@ -366,3 +362,7 @@ class WConfigParser (BaseParser):
             #debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 
+
+def host_set (strhosts):
+    hosts = [s.strip() for s in strhosts.split(",")]
+    return ip.host_man(hosts)
