@@ -3,7 +3,7 @@
 # this script has to be executed in the config parent dir
 """Generate WebCleaner .zap files from an AdZapper squid_redirect file"""
 
-import sys, os, re, time
+import sys, os, re, time, urlparse
 try:
     from wc.XmlUtils import xmlify
 except ImportError:
@@ -92,7 +92,7 @@ def remove (filename):
 
 
 def parse_adzapper_file (filename):
-    res = {}
+    res = []
     is_comment = re.compile('^\s*(#.*)?$').match
     content = False # skip content until __DATA__ marker
     for line in open(filename):
@@ -104,11 +104,10 @@ def parse_adzapper_file (filename):
 
 
 def parse_adzapper_line (line, res):
-    adclass, pattern = line.split(None, 1)
-    res.setdefault(adclass.lower(), []).append(pattern)
+    res.append(line.split(None, 1))
 
 
-def write_filters (ads):
+def write_filters (res):
     filename = os.path.join("config", "adzapper.zap")
     if os.path.exists(filename):
         remove(filename)
@@ -122,15 +121,20 @@ def write_filters (ads):
  desc="%(desc)s"
  disable="0">
 """ % d)
-    for adclass, pattern in res.items():
-        pattern = convert_adzapper_pattern(pattern)
-        if adclass=='pass':
-            write_allow(pattern)
-        elif adclass='print':
+    for adclass, pattern in res:
+        if adclass=='NOZAP':
+            # no NOZAP stuff
+            continue
+        elif adclass=='PASS':
+            pattern = convert_adzapper_pattern(pattern)
+            write_allow(zapfile, adclass, pattern)
+        elif adclass=='PRINT':
             pattern, replace = pattern.split(None, 1)
+            pattern = convert_adzapper_pattern(pattern)
             replace = convert_adzapper_replace(replace)
             write_block(zapfile, adclass, pattern, replace)
         else:
+            pattern = convert_adzapper_pattern(pattern)
             write_block(zapfile, adclass, pattern)
     zapfile.write("</folder>\n")
     zapfile.close()
@@ -140,54 +144,46 @@ def convert_adzapper_pattern (pattern):
     pattern = pattern.replace(".", "\\.")
     pattern = pattern.replace("?", "\\?")
     pattern = pattern.replace("**", ".*?")
-    pattern = re.sub(r"[^.]*[^?]", pattern, "[^/]*")
+    pattern = re.sub(r"([^.])\*([^?])", r"\1[^/]*\2", pattern)
     return pattern
 
 
 def convert_adzapper_replace (replace):
     # replace Perl back references with Python ones
-    replace = re.sub(r"$(\d)", replace, r"\\1")
+    replace = re.sub(r"\$(\d)", r"\\1", replace)
     return replace
 
 
-def write_allow (zapfile, pattern):
-    title = "AdZapper PASS filter"
-    desc = "Automatically generated, you should not edit this filter."
-    scheme, host, path, query, fragment = urlparse.urlsplit(pattern)
-    d = locals()
-    for key, value in d:
-        d[key] = xmlify(value)
+def write_allow (zapfile, adclass, pattern):
+    #print "%s allow %s" % (adclass, `pattern`)
+    d = get_rule_dict(adclass, pattern)
     zapfile.write("""<allow
  title="%(title)s"
  desc="%(desc)s"
- scheme="%(scheme)s"
- host="%(host)s"
- path="%(path)s"
- query="%(query)s"
- fragment="%(fragment)s"/>
+ url="%(url)s"
 """ % d)
 
 
 def write_block (zapfile, adclass, pattern, replacement=None):
-    title = "AdZapper %s filter" % adclass
-    desc = "Automatically generated, you should not edit this filter."
-    scheme, host, path, query, fragment = urlparse.urlsplit(pattern)
-    d = locals()
-    for key, value in d:
-        d[key] = xmlify(value)
+    #print "%s block %s => %s" % (adclass, `pattern`, `replacement`)
+    d = get_rule_dict(adclass, pattern)
     zapfile.write("""<block
  title="%(title)s"
  desc="%(desc)s"
- scheme="%(scheme)s"
- host="%(host)s"
- path="%(path)s"
- query="%(query)s"
- fragment="%(fragment)s" """ % d)
-    if replacement:
-        zapfile.write(">%(replacement)s</block>" % d)
+ url="%(url)s" """ % d)
+    if replacement is not None:
+        zapfile.write(">%s</block>" % xmlify(replacement))
     else:
         zapfile.write("/>")
     zapfile.write("\n")
+
+
+def get_rule_dict (adclass, pattern):
+    return {
+        'title': xmlify("AdZapper %s filter" % adclass),
+        'desc': xmlify("Automatically generated, you should not edit this filter."),
+        'url': xmlify(pattern),
+    }
 
 
 def download_and_parse ():
