@@ -29,6 +29,6 @@
  desc="Proxies (including WebCleaner) add a &apos;Via&apos; header in the outgoing request. This rule prevents this."
  name="via"/>
 
-<header title="No X-Forwarded-For" oid="102"
+<header title="No X-Forwarded-For" oid="6"
  name="X-Forwarded-For"/>
 </folder>
