@@ -26,8 +26,11 @@ def start(parent_exit=1):
     # forking (only under POSIX systems)
     pid = os.fork()
     # the parent exits
-    if pid!=0 and parent_exit:
-        raise SystemExit
+    if pid!=0:
+        if parent_exit:
+            raise SystemExit
+        else:
+            return
     # write pid in pidfile
     f = open(pidfile, 'w')
     f.write("%d" % os.getpid())
@@ -36,7 +39,8 @@ def start(parent_exit=1):
     try:
         startfunc()
     except:
-        os.remove(pidfile)
+        if os.path.exists(pidfile):
+	    os.remove(pidfile)
         raise
 
 

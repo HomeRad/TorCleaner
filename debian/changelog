@@ -2,12 +2,16 @@ webcleaner (0.12) unstable; urgency=low
 
   * always initialize filter attributes in HttpServer.py
   * minor bugfixes with unintialized vars
-  * require and use FOX and FXPy >= 0.99.167
+  * use FOX and FXPy >= 0.99.167
   * config var "no proxy for"
   * global config object in wc.proxy
   * more status info
+  * added missing return in daemon/posix.py:start()
+    now the GUI Proxy buttons are working for POSIX systems
+  * new proxy config option "no proxy for" to disable filtering
+    for specific sites
 
- -- Bastian Kleineidam <calvin@debian.org>  Sun, 22 Apr 2001 19:00:54 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 24 Apr 2001 00:21:14 +0200
 
 webcleaner (0.11) unstable; urgency=low
 

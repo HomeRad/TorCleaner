@@ -9,7 +9,7 @@ used by Bastian Kleineidam for WebCleaner
 import sys, re, os, urlparse, time, select, asyncore
 from wc import debug,_,config
 from wc.debug_levels import *
-from string import lower
+from urllib import splittype, splithost, splitport
 
 TIMERS = [] # list of (time, function)
 
@@ -146,9 +146,22 @@ def proxy_poll(timeout=0.0):
     #_OBFUSCATE_IP = config['obfuscateip']
 
 
-def match_host(host):
+def match_host(request):
+    if not request:
+        return 0
+    try:
+        foo, url, bar = request.split()
+    except Exception, why:
+        debug(ALWAYS, "bad request?", why)
+        return 0
+    scheme, netloc = splittype(url)
+    netloc, document = splithost(netloc)
+    hostname, port = splitport(netloc)
+    hostname = hostname.lower()
+    if not hostname:
+        return 0
     for domain in config['noproxyfor'].keys():
-        if host.find(domain) != -1:
+        if hostname.find(domain) != -1:
             return 1
     return 0
 
