@@ -18,7 +18,7 @@
 
 import re
 import urlparse
-import bk.HtmlParser
+import wc.HtmlParser
 import wc.i18n
 import wc
 import wc.log
@@ -93,7 +93,7 @@ class JSFilter (wc.js.JSListener.JSListener):
     def jsPopup (self, attrs, name):
         """check if attrs[name] javascript opens a popup window"""
         wc.log.debug(wc.LOG_JS, "%s jsPopup %r", self, attrs[name])
-        val = bk.HtmlParser.resolve_html_entities(attrs[name])
+        val = wc.HtmlParser.resolve_html_entities(attrs[name])
         if not val:
             return
         self.js_env.listeners.append(self)
@@ -241,7 +241,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             url = attrs.get('src', '')
             # sanitize script src url
             url = _replace_ws("", url)
-            url = bk.HtmlParser.resolve_html_entities(url)
+            url = wc.HtmlParser.resolve_html_entities(url)
             if js_ok and url:
                 self.jsScriptSrc(url, js_lang)
                 return

@@ -17,7 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import urllib
-import bk.HtmlParser
+import wc.HtmlParser
 import wc.url
 import wc.log
 import wc.filter
@@ -134,7 +134,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                 self.stackcount[-1][1] += 1
         if tag=="meta":
             if attrs.get('http-equiv', '').lower() == 'content-rating':
-                rating = bk.HtmlParser.resolve_html_entities(attrs.get('content', ''))
+                rating = wc.HtmlParser.resolve_html_entities(attrs.get('content', ''))
                 url, rating = wc.filter.Rating.rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
