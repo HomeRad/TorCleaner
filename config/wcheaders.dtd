@@ -4,6 +4,7 @@
  refresh   CDATA "5"
  scrolling (auto|always|none)
  onlyfirst (1|0)
+ headersave CDATA "100"
 >
 
 <!ELEMENT nodisplay (#PCDATA)>

@@ -1,9 +1,7 @@
 TODO
 
-- FXPy program to watch headers and connections:
-  * dirty options (update save button)
-  * widget for nodisplay
-  * onlyfirst functionality
+- wcheaders:
+  * widget buttons for nodisplay
 
 - Windows installation routine
 

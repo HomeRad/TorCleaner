@@ -74,14 +74,16 @@ class HeaderWindow(FXMainWindow):
      ID_SETONLYFIRST,
      ID_SETSCROLLING,
      ID_STATUS,
+     ID_SETSAVEDHEADERS,
      ID_SAVEOPTIONS,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+9)
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+10)
 
 
     def __init__(self, app):
 	FXMainWindow.__init__(self, app, "wcheaders", w=640, h=500)
         self.setIcon(loadIcon(app, 'iconbig.png'))
         self.eventMap()
+        self.getApp().dirty = 0
         self.timer = None
         self.status = "Ready."
         self.read_config()
@@ -136,7 +138,9 @@ class HeaderWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETREFRESH, HeaderWindow.onSetRefresh)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETONLYFIRST, HeaderWindow.onSetOnlyfirst)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETSCROLLING, HeaderWindow.onSetScrolling)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETSAVEDHEADERS, HeaderWindow.onSetSavedHeaders)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SAVEOPTIONS, HeaderWindow.onCmdSaveOptions)
+        FXMAPFUNC(self,SEL_UPDATE, HeaderWindow.ID_SAVEOPTIONS, HeaderWindow.onUpdSaveOptions)
         FXMAPFUNC(self,SEL_UPDATE, HeaderWindow.ID_STATUS, HeaderWindow.onUpdStatus)
 
 
@@ -165,6 +169,7 @@ class HeaderWindow(FXMainWindow):
             'refresh': 5,
             'scrolling': SCROLLING_AUTO,
             'nodisplay': [],
+            'headersave': 100,
         }
         p = WHeadersParser()
         p.parse(os.path.join(ConfigDir, "wcheaders.conf"), self.config)
@@ -178,9 +183,18 @@ class HeaderWindow(FXMainWindow):
             file = open(file, 'w')
             file.write(self.toxml())
             file.close()
+            self.getApp().dirty = 0
         except IOError:
             error(_("cannot write to file %s") % file)
         self.getApp().endWaitCursor()
+
+
+    def onUpdSaveOptions(self, sender, sel, ptr):
+        if self.getApp().dirty:
+            sender.enable()
+        else:
+            sender.disable()
+        return 1
 
 
     def toxml(self):
@@ -189,7 +203,8 @@ class HeaderWindow(FXMainWindow):
 <wcheaders
 """
         s += ' version="%s"\n' % self.config['version'] +\
-             ' refresh="%d"\n' % self.config['refresh']
+             ' refresh="%d"\n' % self.config['refresh'] +\
+             ' headersave="%d"\n' % self.config['headersave']
         s += '>\n'
         for header in self.config['nodisplay']:
             s += '<nodisplay>%s</nodisplay>\n' % header
@@ -206,18 +221,28 @@ class HeaderWindow(FXMainWindow):
     def onSetRefresh(self, sender, sel, ptr):
         debug(BRING_IT_ON, "SetRefresh", sender.getValue())
         self.config['refresh'] = sender.getValue()
+        self.getApp().dirty = 1
         return 1
 
 
     def onSetOnlyfirst(self, sender, sel, ptr):
         debug(BRING_IT_ON, "SetOnlyFirst", sender.getCheck())
         self.config['onlyfirst'] = sender.getCheck()
+        self.getApp().dirty = 1
         return 1
 
 
     def onSetScrolling(self, sender, sel, ptr):
         debug(BRING_IT_ON, "SetScrolling", sender.getCurrentItem())
         self.config['scrolling'] = sender.getCurrentItem()
+        self.getApp().dirty = 1
+        return 1
+
+
+    def onSetSavedHeaders(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "SetSavedHeaders", sender.getValue())
+        self.config['headersave'] = sender.getValue()
+        self.getApp().dirty = 1
         return 1
 
 
@@ -234,21 +259,30 @@ class HeaderWindow(FXMainWindow):
         self.getApp().beginWaitCursor()
         try:
             self.status = "Getting headers..."
+            oldhost = None
             for header in parse_headers():
+                url = header[0][7:]
+                host = url.split("/", 1)[0]
+                if host==oldhost and self.config['onlyfirst']:
+                    continue
+                oldhost = host
                 if header[1]:
-                    header[0] = "<- "+header[0][7:]
+                    url = "<- "+url
                 else:
-                    header[0] = "-> "+header[0][7:]
-                first = 1
+                    url = "-> "+url
                 for name, value in header[2]:
                     if name.lower() in self.config['nodisplay']:
                         continue
-                    if first:
-                        url = header[0]
-                        first = 0
-                    else:
-                        url = ""
+                    if self.headers.getNumItems() >= self.config['headersave']:
+                        self.headers.removeItem(0)
                     self.headers.appendItem("%s\t%s\t%s"%(url, name, value))
+                    if url:
+                        url = ""
+            last = self.headers.getNumItems()-1
+            if self.config['scrolling']==SCROLLING_ALWAYS or \
+               (self.config['scrolling']==SCROLLING_AUTO and \
+                self.headers.isItemVisible(last)):
+                self.headers.makeItemVisible(last)
             self.status = "Getting connections..."
             connections = parse_connections()
             self.status = "Ready."
@@ -278,7 +312,7 @@ class WHeadersParser(BaseParser):
         if name=='wcheaders':
             for key,val in attrs.items():
                 self.config[str(key)] = val
-            for key in ('onlyfirst', 'refresh'):
+            for key in ('onlyfirst', 'refresh', 'headersave'):
                 self.config[key] = int(self.config[key])
             for key in ('version',):
                 if self.config[key] is not None:
@@ -292,7 +326,7 @@ class WHeadersParser(BaseParser):
 
 
     def character_data(self, data):
-        if self.cmode:
+        if self.cmode=='nodisplay':
             self.config['nodisplay'].append(data.lower())
 
 
@@ -326,9 +360,21 @@ class OptionsWindow(FXDialogBox):
             cols = max(len(text), cols)
             d.appendItem(text)
         d.setEditable(0)
-        # subtract 3 because acolumn is wider than text character
         d.setNumColumns(cols-3) 
         d.setCurrentItem(owner.config['scrolling'])
+        # number of cached headers
+        FXLabel(matrix, _("No. of saved Headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        widget = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETSAVEDHEADERS, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
+        widget.setRange(1, 65535)
+        widget.setValue(owner.config['headersave'])
+        # display headers
+        FXLabel(matrix, _("Suppress headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        widget = FXList(matrix, 4, None, 0, opts=LIST_MULTIPLESELECT)
+        for h in owner.config['nodisplay']:
+            widget.appendItem(str(h))
+        widget.recalc();
+        # XXX
+
 
         # close button
         close = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
