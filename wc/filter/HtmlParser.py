@@ -17,12 +17,12 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import cStringIO as StringIO
-import bk.HtmlParser.htmlsax
+import wc.HtmlParser.htmlsax
 import wc.filter
 import wc.filter.rules.RewriteRule
 
 
-class HtmlParser (bk.HtmlParser.htmlsax.parser):
+class HtmlParser (wc.HtmlParser.htmlsax.parser):
     """HTML parser with ability to buffer incoming and outgoing data.
 
        States:

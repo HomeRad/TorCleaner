@@ -4,7 +4,7 @@
 import socket
 import cStringIO as StringIO
 import wc.i18n
-import bk.url
+import wc.url
 import wc
 import wc.proxy.dns_lookups
 import wc.proxy.Headers
@@ -79,7 +79,7 @@ class ClientServerMatchmaker (object):
             else:
                 self.hostname = client.hostname
                 self.port = client.port
-            self.document = bk.url.document_quote(client.document)
+            self.document = wc.url.document_quote(client.document)
         assert self.hostname
         # start DNS lookup
         wc.log.debug(wc.LOG_PROXY, "background dns lookup %r", self.hostname)

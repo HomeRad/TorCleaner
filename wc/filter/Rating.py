@@ -23,7 +23,7 @@ import cPickle as pickle
 import wc.i18n
 import wc
 import wc.log
-import bk.url
+import wc.url
 
 
 MISSING = wc.i18n._("Unknown page")
@@ -111,7 +111,7 @@ def rating_exportall ():
     """
     fp = file(os.path.join(wc.ConfigDir, "rating.txt"), 'w')
     for url, rating in rating_cache.iteritems():
-        if not bk.url.is_valid_url(url):
+        if not wc.url.is_valid_url(url):
             wc.log.error(wc.LOG_RATING, "invalid url %r", url)
             continue
         fp.write("url %s\n"%url)
@@ -143,7 +143,7 @@ def rating_cache_load ():
         # remove invalid entries
         toremove = []
         for url in rating_cache:
-            if not bk.url.is_valid_url(url):
+            if not wc.url.is_valid_url(url):
                 wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
                 toremove.append(url)
         if toremove:
@@ -222,7 +222,7 @@ def rating_split_path (path):
 
 def rating_add (url, rating):
     """add new or update rating in cache and write changes to disk"""
-    if bk.url.is_valid_url(url):
+    if wc.url.is_valid_url(url):
         # XXX norm url?
         rating_cache[url] = rating
         rating_cache_write()

@@ -21,7 +21,7 @@ import os
 import gzip
 import urllib
 import wc
-import bk.url
+import wc.url
 import wc.filter
 import wc.filter.Filter
 
@@ -174,7 +174,7 @@ class Blocker (wc.filter.Filter.Filter):
         mime = attrs['mime']
         if mime is None:
             mime = "text/html"
-        parts = bk.url.spliturl(url)
+        parts = wc.url.spliturl(url)
         wc.log.debug(wc.LOG_FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
         if allowed:
@@ -220,7 +220,7 @@ class Blocker (wc.filter.Filter.Filter):
         """return True if url is blocked. Parts are the splitted url parts."""
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
-            if blockdomain == parts[bk.url.DOMAIN]:
+            if blockdomain == parts[wc.url.DOMAIN]:
                 wc.log.debug(wc.LOG_FILTER, "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
@@ -242,7 +242,7 @@ class Blocker (wc.filter.Filter.Filter):
     def allowed (self, url, parts):
         """return True if url is allowed. Parts are the splitted url parts."""
         for allowdomain, sid in self.allowed_domains:
-            if allowdomain == parts[bk.url.DOMAIN]:
+            if allowdomain == parts[wc.url.DOMAIN]:
                 return True, sid
         for allowurl, sid in self.allowed_urls:
             if allowurl in url:

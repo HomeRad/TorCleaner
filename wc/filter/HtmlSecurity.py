@@ -21,7 +21,7 @@ import urllib
 import sys
 import re
 import wc.log
-import bk.url
+import wc.url
 import wc
 
 
@@ -95,7 +95,7 @@ class HtmlSecurity (object):
             self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
         if attrs.has_key('data'):
-            url = bk.url.url_norm(attrs['data'])
+            url = wc.url.url_norm(attrs['data'])
             url = urllib.unquote(url)
             if url.startswith('its:') or \
                url.startswith('mk:') or \

@@ -7,7 +7,7 @@ import wc.proxy.HttpServer
 import wc.proxy.ClientServerMatchmaker
 import wc.filter
 import wc.log
-import bk.url
+import wc.url
 
 
 class HttpProxyClient (object):
@@ -23,8 +23,8 @@ class HttpProxyClient (object):
         self.handler = handler
         self.args = args
         self.method = "GET"
-        self.url = bk.url.url_norm(self.args[0])
-        self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
+        self.url = wc.url.url_norm(self.args[0])
+        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
@@ -125,15 +125,15 @@ class HttpProxyClient (object):
         url = self.server.headers.getheader("Location",
                      self.server.headers.getheader("Uri", ""))
         url = urlparse.urljoin(self.server.url, url)
-        self.url = bk.url.url_norm(url)
+        self.url = wc.url.url_norm(url)
         self.args = (self.url, self.args[1])
         self.isredirect = False
         wc.log.debug(wc.LOG_PROXY, "%s redirected", self)
-        self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
+        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
-        host = bk.url.stripsite(self.url)[0]
+        host = wc.url.stripsite(self.url)[0]
         mime = self.server.mime
         content = ''
         # note: use HTTP/1.0 for JavaScript

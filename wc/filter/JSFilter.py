@@ -24,7 +24,7 @@ import wc
 import wc.log
 import wc.filter
 import wc.filter.HtmlParser
-import bk.url
+import wc.url
 import wc.proxy
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.HttpProxyClient
@@ -267,7 +267,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             url = urlparse.urljoin(self.base_url, url)
         else:
             url = urlparse.urljoin(self.url, url)
-        if not bk.url.is_valid_js_url(url):
+        if not wc.url.is_valid_js_url(url):
             wc.log.error(wc.LOG_JS, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
             return
         self.htmlparser.state = ('wait', url)

@@ -5,7 +5,7 @@
 wc_realm = "unknown"
 
 import wc.log
-import bk.url
+import wc.url
 import wc
 from basic import parse_basic_challenge, get_basic_challenge
 from basic import parse_basic_credentials, get_basic_credentials
@@ -21,7 +21,7 @@ from ntlm import check_ntlm_credentials
 
 def get_auth_uri (url):
     """return uri ready for authentication purposes"""
-    return bk.url.stripsite(url)[1]
+    return wc.url.stripsite(url)[1]
 
 
 def get_header_challenges (headers, key):

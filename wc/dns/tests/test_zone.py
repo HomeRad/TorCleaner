@@ -28,7 +28,7 @@ import wc.dns.zone
 
 
 def fname (name):
-    return os.path.join("bk", "dns", "tests", name)
+    return os.path.join("wc", "dns", "tests", name)
 
 
 example_text = """$TTL 3600

@@ -8,7 +8,7 @@ import os
 import urllib
 import cStringIO as StringIO
 import wc.i18n
-import bk.url
+import wc.url
 import wc
 import wc.proxy.StatefulConnection
 import wc.proxy.ClientServerMatchmaker
@@ -131,7 +131,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.error(405, wc.i18n._("Method Not Allowed"))
             return
         # fix broken url paths
-        self.url = bk.url.url_norm(self.url)
+        self.url = wc.url.url_norm(self.url)
         if not self.url:
             self.error(400, wc.i18n._("Empty URL"))
             return
@@ -166,7 +166,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             wc.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # unquote and norm url
         self.needs_redirect = "\\" in self.url
-        self.url = bk.url.url_norm(self.url)
+        self.url = wc.url.url_norm(self.url)
         # fix CONNECT urls
         if self.method=='CONNECT':
             # XXX scheme could also be nntps
@@ -174,7 +174,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.hostname, self.port = urllib.splitnport(self.url, 443)
             self.document = '/'
         else:
-            self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
+            self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
             # fix missing trailing /
             if not self.document:
                 self.document = '/'

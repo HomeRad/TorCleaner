@@ -9,6 +9,7 @@ import urllib
 import cStringIO as StringIO
 import wc.i18n
 import wc
+import wc.url
 import wc.filter
 import wc.filter.Rating
 import wc.proxy
@@ -283,7 +284,7 @@ class HttpServer (wc.proxy.Server.Server):
         if self.statuscode in (301, 302):
             location = self.headers.get('Location')
             if location:
-                host = bk.url.spliturl(location)[1]
+                host = wc.url.spliturl(location)[1]
                 if host in wc.config['localhosts']:
                     self.handle_error(wc.i18n._('redirection to localhost'))
                     return
