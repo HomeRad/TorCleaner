@@ -468,4 +468,4 @@ class WConfigParser (BaseParser):
             self.config['filters'].append(attrs['name'])
 
 from log import *
-from wc.proxy import match_url, match_host
+from url import match_url, match_host

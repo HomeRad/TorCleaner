@@ -11,8 +11,8 @@ from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config
-from wc.proxy import get_http_version, fix_http_version, url_norm, url_quote
-from wc.proxy import spliturl, splitnport
+from wc.proxy import get_http_version, fix_http_version
+from wc.url import spliturl, splitnport, url_norm, url_quote
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers, has_header_value
 from wc.proxy.auth import *

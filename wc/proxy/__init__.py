@@ -7,7 +7,8 @@ used by Bastian Kleineidam for WebCleaner
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, socket, select, asyncore, re, urlparse, urllib, os, cgi
+import socket, select, asyncore, re
+from time import time
 # remove asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 # add the fileno function
@@ -16,7 +17,6 @@ def fileno (self):
 asyncore.dispatcher.fileno = fileno
 from wc import i18n, ip
 from wc.log import *
-from urllib import splittype, splithost, splitnport
 from LimitQueue import LimitQueue
 
 # test for IPv6, both in Python build and in kernel build
@@ -33,51 +33,6 @@ if socket.has_ipv6:
 
 
 TIMERS = [] # list of (time, function)
-
-# XXX better name/implementation for this function
-def stripsite (url):
-    """remove scheme and host from url. return host, newurl"""
-    url = urlparse.urlsplit(url)
-    return url[1], urlparse.urlunsplit( (0,0,url[2],url[3],url[4]) )
-
-
-def url_norm (url):
-    """unquote and normalize url which must be quoted"""
-    urlparts = list(urlparse.urlsplit(url))
-    urlparts[0] = urllib.unquote(urlparts[0])
-    urlparts[1] = urllib.unquote(urlparts[1])
-    urlparts[2] = urllib.unquote(urlparts[2])
-    urlparts[4] = urllib.unquote(urlparts[4])
-    path = urlparts[2].replace('\\', '/')
-    if not path or path=='/':
-        urlparts[2] = '/'
-    else:
-        # XXX this works only under windows and posix??
-        # collapse redundant path segments
-        urlparts[2] = os.path.normpath(path).replace('\\', '/')
-        if path.endswith('/'):
-            urlparts[2] += '/'
-    return urlparse.urlunsplit(urlparts)
-
-
-def url_quote (url):
-    """quote given url"""
-    urlparts = list(urlparse.urlsplit(url))
-    urlparts[0] = urllib.quote(urlparts[0])
-    urlparts[1] = urllib.quote(urlparts[1], ':')
-    urlparts[2] = urllib.quote(urlparts[2], '/')
-    urlparts[4] = urllib.quote(urlparts[4])
-    return urlparse.urlunsplit(urlparts)
-
-
-def document_quote (document):
-    """quote given document"""
-    doc, query = urllib.splitquery(document)
-    doc = urllib.quote(doc, '/')
-    if query:
-        return "%s?%s" % (doc, query)
-    return doc
-
 
 is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
 
@@ -117,7 +72,7 @@ def create_inet_socket (dispatch, socktype):
 
 def make_timer (delay, callback):
     "After DELAY seconds, run the CALLBACK function"
-    TIMERS.append( [time.time() + delay, callback] )
+    TIMERS.append( [time() + delay, callback] )
     TIMERS.sort()
 
 
@@ -127,13 +82,13 @@ def run_timers ():
     # 10 ms.  This is because the select() statement doesn't have
     # infinite precision and may end up returning slightly earlier.
     # We're willing to run the event a few millisecond earlier.
-    while TIMERS and TIMERS[0][0] <= time.time() + 0.01:
+    while TIMERS and TIMERS[0][0] <= time() + 0.01:
         # This timeout handler should be called
         callback = TIMERS[0][1]
         del TIMERS[0]
         callback()
 
-    if TIMERS: return TIMERS[0][0] - time.time()
+    if TIMERS: return TIMERS[0][0] - time()
     else:      return 60
 
 
@@ -166,53 +121,24 @@ def proxy_poll (timeout=0.0):
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
-            t = time.time()
+            t = time()
             if x not in e and x.writable():
                 debug(PROXY, "%s handle write", x)
                 x.handle_write_event()
                 handlerCount += 1
-                #if time.time() - t > 0.1:
-                #    debug(PROXY, 'wslow %4.1f %r %s', (time.time()-t), s, x)
+                #if time() - t > 0.1:
+                #    debug(PROXY, 'wslow %4.1f %r %s', (time()-t), s, x)
                 #    pass
         for x in r:
-            t = time.time()
+            t = time()
             if x not in e and x not in w and x.readable():
                 debug(PROXY, "%s handle read", x)
                 x.handle_read_event()
                 handlerCount += 1
-                #if time.time() - t > 0.1:
-                #    debug(PROXY, 'rslow %4.1f %r %s', (time.time()-t), s, x)
+                #if time() - t > 0.1:
+                #    debug(PROXY, 'rslow %4.1f %r %s', (time()-t), s, x)
                 #    pass
         return handlerCount
-
-
-def match_url (url, hostset):
-    if not url:
-        return False
-    return match_host(spliturl(url)[1], hostset)
-
-
-def match_host (host, hostset):
-    if not host:
-        return False
-    return ip.host_in_set(host, hostset[0], hostset[1])
-
-default_ports = {
-    'http' : 80,
-    'https' : 443,
-    'nntps' : 563,
-}
-
-def spliturl (url):
-    """split url in a tuple (scheme, hostname, port, document) where
-    hostname is always lowercased"""
-    scheme, netloc = splittype(url)
-    host, document = splithost(netloc)
-    port = default_ports.get(scheme, 80)
-    if host:
-        host = host.lower()
-        host, port = splitnport(host, port)
-    return scheme, host, port, document
 
 
 def mainloop (handle=None):

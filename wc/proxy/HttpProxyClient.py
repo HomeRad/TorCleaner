@@ -5,7 +5,7 @@ __date__    = "$Date$"[7:-2]
 
 from wc.log import *
 from wc.proxy.Headers import get_wc_client_headers
-from wc.proxy import stripsite, spliturl, url_norm, url_quote
+from wc.url import stripsite, spliturl, url_norm, url_quote
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse, urllib

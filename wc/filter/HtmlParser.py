@@ -37,7 +37,8 @@ except ImportError, msg:
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy.Headers import get_wc_client_headers
-from wc.proxy import make_timer, url_norm, url_quote, stripsite
+from wc.proxy import make_timer
+from wc.url import url_norm, url_quote, stripsite
 from HtmlTags import check_spelling
 from HtmlSecurity import HtmlSecurity
 

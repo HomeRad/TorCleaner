@@ -4,7 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc.proxy import stripsite
+from wc.url import stripsite
 
 # default realm for authentication
 wc_realm = "unknown"
