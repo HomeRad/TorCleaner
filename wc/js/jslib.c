@@ -30,7 +30,7 @@
 /* javascript exception */
 static PyObject* JSError;
 
-/* class type definition and check macro*/
+/* class type definition and check macro */
 staticforward PyTypeObject JSEnvType;
 #define check_jsenvobject(v) if (!((v)->ob_type == &JSEnvType)) { \
     PyErr_SetString(PyExc_TypeError, "function arg not a JSEnv object"); \
@@ -44,8 +44,10 @@ static JSClass generic_class = {
     JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
+/* hard branching limit to avoid recursive loops */
 static const int BRANCH_LIMIT = 1000;
 
+/* object for JS environment */
 typedef struct {
     PyObject_HEAD
     PyObject* listeners;
@@ -70,11 +72,11 @@ typedef struct {
 } JSEnvObject;
 
 
-static JSEnvObject* getEnvironment (JSContext* cx) {
-    return (JSEnvObject*)JS_GetPrivate(cx, JS_GetGlobalObject(cx));
-}
+/* macro for environment access */
+#define get_environment(cx) ((JSEnvObject*)JS_GetPrivate(cx, JS_GetGlobalObject(cx)))
 
 
+/* apply python callbacks for JS output */
 static int dispatchOutput (JSEnvObject* env, PyObject* output) {
     PyObject* keys;
     int size;
@@ -99,6 +101,7 @@ disp_error:
 }
 
 
+/* apply python callbacks for JS popups */
 static int dispatchPopupNotification (JSEnvObject* env) {
     PyObject* keys;
     int size;
@@ -168,7 +171,7 @@ static void errorReporter (JSContext* cx, const char* msg,
         PyFile_WriteString("^\n", io);
     }
     if (!(err = PyObject_CallMethod(io, "getvalue", NULL))) goto rep_error;
-    dispatchError(getEnvironment(cx), err);
+    dispatchError(get_environment(cx), err);
 rep_error:
     Py_XDECREF(err);
     Py_XDECREF(io);
@@ -176,8 +179,9 @@ rep_error:
 }
 
 
+/* callback to prevent recursive loops */
 static JSBool branchCallback (JSContext *cx, JSScript *script) {
-    JSEnvObject* env = getEnvironment(cx);
+    JSEnvObject* env = get_environment(cx);
     if (++(env->branch_cnt) < BRANCH_LIMIT) {
         return JS_TRUE;
     }
@@ -188,7 +192,7 @@ static JSBool branchCallback (JSContext *cx, JSScript *script) {
 
 
 static JSBool cookieGetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
-    JSEnvObject* env = getEnvironment(cx);
+    JSEnvObject* env = get_environment(cx);
     if (env->document_cookie) {
         JSString* cookie = JS_NewStringCopyN(cx, PyString_AsString(env->document_cookie),
                                              PyString_Size(env->document_cookie));
@@ -203,7 +207,7 @@ static JSBool cookieGetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
 
 
 static JSBool cookieSetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
-    JSEnvObject* env = getEnvironment(cx);
+    JSEnvObject* env = get_environment(cx);
     char* cookie = JS_GetStringBytes(JS_ValueToString(cx, *vp));
     if (!env->document_cookie) {
         env->document_cookie = PyString_FromString(cookie);
@@ -219,7 +223,7 @@ static JSBool cookieSetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
 
 
 static JSBool onloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
-    JSEnvObject* env = getEnvironment(cx);
+    JSEnvObject* env = get_environment(cx);
     PyObject* functup;
     PyObject* delay = NULL;
     PyObject* funcname = NULL;
@@ -253,7 +257,7 @@ static JSBool onloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
 
 
 static JSBool onunloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
-    JSEnvObject* env = getEnvironment(cx);
+    JSEnvObject* env = get_environment(cx);
     PyObject* functup;
     PyObject* delay = NULL;
     PyObject* funcname = NULL;
@@ -293,7 +297,7 @@ static JSBool javaEnabled (JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 
 
 static JSBool windowOpen (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
-    int res = dispatchPopupNotification(getEnvironment(cx));
+    int res = dispatchPopupNotification(get_environment(cx));
     *rval = JSVAL_NULL;
     return (res==0 ? JS_TRUE : JS_FALSE);
 }
@@ -308,7 +312,7 @@ static JSBool setTimeout (JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
     *rval = INT_TO_JSVAL(idc++);
     if (argc < 2)
         return JS_TRUE;
-    env = getEnvironment(cx);
+    env = get_environment(cx);
     if (!(functup = PyTuple_New(2))) return JS_FALSE;
     if (!(delay = PyInt_FromLong(JSVAL_TO_INT(argv[1])))) {
         Py_DECREF(functup);
@@ -341,7 +345,7 @@ static JSBool documentWrite (JSContext *cx, JSObject *obj, uintN argc, jsval *ar
         return JS_TRUE;
     data = PyString_FromString(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
     if (!data) return JS_FALSE;
-    return (dispatchOutput(getEnvironment(cx), data)==0 ? JS_TRUE : JS_FALSE);
+    return (dispatchOutput(get_environment(cx), data)==0 ? JS_TRUE : JS_FALSE);
 }
 
 
@@ -352,12 +356,12 @@ static JSBool documentWriteln (JSContext *cx, JSObject *obj, uintN argc, jsval *
         return JS_TRUE;
     data = PyString_FromFormat("%s\r\n", JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
     if (!data) return JS_FALSE;
-    return (dispatchOutput(getEnvironment(cx), data)==0 ? JS_TRUE : JS_FALSE);
+    return (dispatchOutput(get_environment(cx), data)==0 ? JS_TRUE : JS_FALSE);
 }
 
 
 static JSBool imageConstructor (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
-    JSObject* image_obj = JS_NewObject(cx, &getEnvironment(cx)->image_class, 0, 0);
+    JSObject* image_obj = JS_NewObject(cx, &get_environment(cx)->image_class, 0, 0);
     if (!image_obj)
         return JS_FALSE;
     if (JS_DefineProperty(cx, image_obj, "complete", JSVAL_TRUE, 0, 0,
@@ -376,7 +380,7 @@ static JSBool formSubmit (JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
     JS_GetProperty(cx, obj, "target", &target);
     if (JSVAL_IS_STRING(target)) {
         if (JS_GetStringLength(JSVAL_TO_STRING(target)) > 0) {
-            res = dispatchPopupNotification(getEnvironment(cx));
+            res = dispatchPopupNotification(get_environment(cx));
         }
     }
     *rval = JSVAL_VOID;
