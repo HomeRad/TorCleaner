@@ -24,6 +24,7 @@ from distutils.command.install import install
 from distutils.file_util import write_file
 from distutils import util
 
+
 class MyInstall(install):
     def run(self):
         install.run(self)
@@ -127,7 +128,7 @@ if os.name=='nt':
     macros = [('YY_NO_UNISTD_H', None)]
     cargs = []
 else:
-    macros = []
+    macros = [('_REENTRANT', None)]
     # use -std=gnu99 because
     # - Python 2.2 defines long long int, which is C99
     # - and flex uses fileno(3), which is a gnu extension
@@ -143,7 +144,7 @@ ext_parser = Extension('wc.parser.htmlsax',
 # javascript extension
 ext_js = Extension('wc.js.jslib',
                     ['wc/js/jslib.c'],
-                    include_dirs = ["/usr/include/smjs"],
+                    include_dirs = ["/usr/include/smjs",],
                     libraries = ['smjs'],
                     extra_compile_args = cargs,
                   )
