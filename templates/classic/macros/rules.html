@@ -218,37 +218,27 @@ Rule (don't) match url
 <br>
 <span tal:replace="t_picsratings">Pics ratings</span>:
 <br>
-<div tal:repeat="service pics_services/keys">
+<div tal:repeat="service pics_services">
 <input tal:condition="currule/ratings/?service"
- type="checkbox" name="picsservice" checked
- tal:attributes="value ?service">
+ type="checkbox" tal:attributes="name string:service_${service}" checked >
 <input tal:condition="not:currule/ratings/?service"
- type="checkbox" name="picsservice" tal:attributes="value ?service">
+ type="checkbox" tal:attributes="name string:service_${service}">
 <span tal:content="t_service">Service</span>
-<span tal:content="pics_services/?service/name">Netnanny</span>
+<span tal:content="pics_data/?service/name">Netnanny</span>
 <br>
-<div tal:repeat="category pics_services/?service/categories/keys"
+<div tal:condition="currule/ratings/?service"
+ tal:repeat="category pics_categories/?service"
  style="margin-left:30px;">
 <input tal:condition="currule/ratings/?service/?category"
  type="checkbox" checked
- tal:attributes="value ?category; name string:picscat${service}">
+ tal:attributes="name string:category_${service}_${category}">
 <input tal:condition="not:currule/ratings/?service/?category"
  type="checkbox"
- tal:attributes="value ?category; name string:picscat${service}">
+ tal:attributes="name string:category_${service}_${category}">
 <span tal:content="t_category">Category</span>
 <span tal:content="category">adult</span>
 </div>
 </div>
-<!--
-<div tal:repeat="service currule/ratings/keys">
-Service <span tal:replace="service">Netnanny pics service</span>
-<div tal:repeat="category currule/ratings/?service/keys">
-Category <span tal:replace="category">adult</span>
-<br>
-Value <span tal:replace="currule/ratings/?service/?category">1.0</span>
-</div>
-</div>
--->
 <br>
 <input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">

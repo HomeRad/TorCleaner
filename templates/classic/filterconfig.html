@@ -50,10 +50,12 @@
 <img tal:condition="not:rule/disable" src="minidoc.png"
  tal:attributes="alt t_ruleicon">
 <b tal:omit-tag="not:rule/selected">
-<a href="#" tal:content="rule/title"
+<a href="#" tal:content="string:[${rule/get_name}] ${rule/title}"
  tal:condition="not:curfolder/disable"
- tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}">On focus</a>
-<span tal:condition="curfolder/disable" tal:replace="rule/title">On focus</span>
+ tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}"
+ >[rewrite] On focus</a>
+<span tal:condition="curfolder/disable"
+ tal:replace="string:[${rule/get_name}] ${rule/title}">[rewrite] On focus</span>
 </b>
 </div>
 <hr noshade size="1">
