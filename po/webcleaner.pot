@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun May 25 01:39:53 2003\n"
+"POT-Creation-Date: Wed Jun  4 16:27:07 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,6 +166,9 @@ msgid "Password\tRequire proxy authentication with the given password which is s
 msgstr ""
 
 msgid "Port\tThe port adress the WebCleaner proxy is listening on."
+msgstr ""
+
+msgid "Web GUI theme"
 msgstr ""
 
 msgid "No filtering for"
@@ -521,13 +524,7 @@ msgstr ""
 msgid "Incomplete Proxy Request"
 msgstr ""
 
-msgid "Forbidden"
-msgstr ""
-
-msgid "Not found"
-msgstr ""
-
-msgid "Invalid path %s"
+msgid "Invalid Proxy Request"
 msgstr ""
 
 msgid "Host %s is an abbreviation for %s"
@@ -554,6 +551,15 @@ msgstr ""
 msgid "Server closed connection"
 msgstr ""
 
+msgid "zlib error: not gzip format, disabling gunzip"
+msgstr ""
+
+msgid "zlib error: unknown compression method, disabling gunzip"
+msgstr ""
+
+msgid "Proxy Error %d %s"
+msgstr ""
+
 msgid "Can't parse request"
 msgstr ""
 
@@ -563,7 +569,55 @@ msgstr ""
 msgid "Proxy Authentication Required"
 msgstr ""
 
-msgid "%d days, %02d:%02d:%02d"
+msgid "invalid or missing response from %s: %s"
+msgstr ""
+
+msgid "set Content-Type from %s to %s in %s"
+msgstr ""
+
+msgid "add Content-Type %s to %s"
+msgstr ""
+
+msgid "change Content-Type from %s to %s in %s"
+msgstr ""
+
+msgid "add Content-Encoding %s to %s"
+msgstr ""
+
+msgid "change Content-Encoding from %s to %s in %s"
+msgstr ""
+
+msgid "fix x-httpd-php Content-Type"
+msgstr ""
+
+msgid "chunked encoding should not have Content-Length"
+msgstr ""
+
+msgid "unsupported encoding: %s"
+msgstr ""
+
+msgid "server received %d bytes more than content-length"
+msgstr ""
+
+msgid "Invalid Method"
+msgstr ""
+
+msgid "unsupported HTTP version %s"
+msgstr ""
+
+msgid "invalid HTTP version %s"
+msgstr ""
+
+msgid "bad request: %s"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Not Found"
+msgstr ""
+
+msgid "%s error"
 msgstr ""
 
 msgid ""

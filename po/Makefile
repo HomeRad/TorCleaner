@@ -41,6 +41,7 @@ SOURCES=\
 ../wc/proxy/Interpreter.py \
 ../wc/proxy/LimitQueue.py \
 ../wc/proxy/Listener.py \
+../wc/proxy/LocalClient.py \
 ../wc/proxy/Server.py \
 ../wc/proxy/ServerHandleDirectly.py \
 ../wc/proxy/ServerPool.py \
@@ -81,7 +82,9 @@ SOURCES=\
 ../wc/__init__.py \
 ../wc/ip.py \
 ../wc/webgui/__init__.py \
-../wc/webgui/WebConfig.py
+../wc/webgui/context/__init__.py \
+../wc/webgui/context/error_html.py \
+../wc/webgui/context/index_html.py
 
 LDIR=../share/locale
 LFILE=LC_MESSAGES/$(PACKAGE).mo
