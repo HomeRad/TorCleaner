@@ -11,6 +11,7 @@ PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
                   wc/parser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
 		  wc/webgui/*.py wc/webgui/context/*.py \
 		  wc/webgui/simpletal/*.py
+SERVICEDIR := /etc/webcleaner/service
 
 clean-local: clean-log
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
@@ -94,9 +95,9 @@ homepage: VERSION homepage-zapper
 	$(MAKE) -C $(HTMLDIR) chmod
 
 homepage-zapper: md5sums
-	cp config/*.dtd config/webcleaner.conf config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/zapper
+	cp config/*.dtd config/webcleaner.conf config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/filter
 	cp config/*.zap $(HTMLDIR)/htdocs/filter/
-	cp -r config/blacklists/ $(HTMLDIR)/htdocs/zapper
+	cp -r config/blacklists/ $(HTMLDIR)/htdocs/filter
 	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
 
@@ -121,6 +122,14 @@ pycheck:
 
 ccheck:
 	-splint $(SPLINTOPTS) wc/js/jslib.c
+
+installservice:
+	install -d $(SERVICEDIR)/log
+	install -m 0755 service/run2 $(SERVICEDIR)/run
+	install -m 0755 service/log/run $(SERVICEDIR)/log/
+	if [ ! -e /var/service/webcleaner ]; then \
+          ln -s /etc/webcleaner/service /var/service/webcleaner; \
+	fi
 
 # (re)generate webcleaner rules
 update-blacklists:
