@@ -33,7 +33,6 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <stdint.h> /* May break IA64 test-noansi-r */
 /* %endif */
 
 /* %if-tables-serialization */
@@ -8933,7 +8932,7 @@ static PyObject* quote_string (PyObject* val) {
 
 
 
-#line 8937 "htmllex.c"
+#line 8936 "htmllex.c"
 
 #define INITIAL 0
 #define S_PI 1
@@ -9229,7 +9228,7 @@ YY_DECL
 
 
   /*********************** EOF ************************/
-#line 9233 "htmllex.c"
+#line 9232 "htmllex.c"
 
     yylval = yylval_param;
 
@@ -10588,7 +10587,7 @@ YY_RULE_SETUP
 #line 998 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 10592 "htmllex.c"
+#line 10591 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
