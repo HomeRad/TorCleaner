@@ -440,7 +440,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def server_response (self, server, response, status, headers):
         """read and filter server response data"""
         assert server.connected, "%s server was not connected" % self
-        wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%d)',
+        wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%r)',
                      self, response, status)
         # try google options
         if status in wc.google.google_try_status and \
