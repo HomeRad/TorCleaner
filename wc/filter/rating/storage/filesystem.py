@@ -40,10 +40,10 @@ def rating_import (url, ratingdata, debug=0):
             category, value = line.split(None, 1)
         except ValueError:
             raise RatingParseError(_(
-                                        "malformed rating line %r") % line)
+                                     "malformed rating line %r") % line)
         if category == "modified" and not is_time(value):
             raise RatingParseError(_(
-                                         "malfored modified time %r") % value)
+                                     "malformed modified time %r") % value)
         if category == "generic" and value not in ["true", "false"] and \
            not url.startswith(value):
             raise RatingParseError(_(

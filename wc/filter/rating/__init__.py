@@ -17,9 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import re
-import os
 import urlparse
-import cPickle as pickle
 
 import wc
 import wc.configuration
@@ -63,11 +61,6 @@ def split_path (path):
     for p in parts:
         ret.extend(['/', p])
     return ret
-
-
-
-
-
 
 
 

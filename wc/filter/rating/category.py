@@ -28,7 +28,7 @@ class Category (object):
 
 
 class ValueCategory (Category):
-    """Rating category holding a the discrete values none, mild,
+    """Rating category that can hold the discrete values none, mild,
        heavy."""
 
     def __init__ (self, name):
@@ -40,7 +40,7 @@ class ValueCategory (Category):
 
 
 class RangeCategory (Category):
-    """Rating category holding a range of value between a given
+    """Rating category that can hold values in a range between a given
        minimum and maximum.
     """
 
