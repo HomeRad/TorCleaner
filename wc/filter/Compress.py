@@ -52,7 +52,7 @@ COMPRESS_RE = re.compile(r'(?i)(compress|gzip|bzip2)')
 
 
 def getCompressObject ():
-    return {'compressor': zlib.compressobj(9, zlib.DEFLATED,
+    return {'compressor': zlib.compressobj(6, zlib.DEFLATED,
                                              -zlib.MAX_WBITS,
                                               zlib.DEF_MEM_LEVEL, 0),
             'header': gzip_header(),
@@ -61,8 +61,6 @@ def getCompressObject ():
            }
 
 
-# XXX there is room for optimization here, but it works, and thats
-# important enough that I dont touch this thing for now
 class Compress (Filter):
 
     def filter (self, data, **attrs):

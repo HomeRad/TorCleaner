@@ -7,7 +7,7 @@ Build-Depends: python2.1-dev, debhelper (>= 3.0.0), debconf
 
 Package: webcleaner
 Architecture: any
-Depends: python (>= 2.1), python2.1-xmlbase, debconf
+Depends: python (>= 2.1), python2.1-xmlbase, debconf, python-dns
 Conflicts: python (>= 2.2)
 Suggests: webcleanertools
 Description: a filtering HTTP proxy
