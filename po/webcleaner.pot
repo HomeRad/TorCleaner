@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Sep 12 08:45:23 2003\n"
+"POT-Creation-Date: Tue Sep 16 09:01:39 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -667,6 +667,9 @@ msgstr ""
 msgid "PICS category successfully enabled."
 msgstr ""
 
+msgid "Rule match-url successfully changed."
+msgstr ""
+
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -679,7 +682,7 @@ msgstr ""
 msgid "Invalid timeout value."
 msgstr ""
 
-msgid "return window.confirm('Really remove this rule?')"
+msgid "Service"
 msgstr ""
 
 msgid "Title"
@@ -703,10 +706,10 @@ msgstr ""
 msgid "Filename"
 msgstr ""
 
-msgid "Add new"
+msgid "Replace regex"
 msgstr ""
 
-msgid "Parent proxy successfully changed."
+msgid "Don't match URL"
 msgstr ""
 
 msgid "Enable rule"
@@ -721,23 +724,16 @@ msgstr ""
 msgid "Port number the proxy is listening on for requests"
 msgstr ""
 
-msgid "Header name"
-msgstr ""
-
 msgid "This page is also available in"
 msgstr ""
 
 msgid "Rule description successfully changed."
 msgstr ""
 
-msgid ""
-"Most browsers support jumping to specific links by typing keys defined on\n"
-"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
-"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
-"access key."
+msgid "return window.confirm('Really remove this rule?')"
 msgstr ""
 
-msgid "Service"
+msgid "Empty rewrite tag name."
 msgstr ""
 
 msgid "Empty folder name."
@@ -749,10 +745,7 @@ msgstr ""
 msgid "Folder name"
 msgstr ""
 
-msgid "Rule blocked url successfully changed."
-msgstr ""
-
-msgid "Header value"
+msgid "Blocked image URL"
 msgstr ""
 
 msgid "Disabled filter module(s) %(filterdisabled)s."
@@ -770,7 +763,12 @@ msgstr ""
 msgid "accessibility features of these pages"
 msgstr ""
 
-msgid "Access key 9"
+msgid "Rule blocked url successfully changed."
+msgstr ""
+
+msgid ""
+"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
+"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
 msgstr ""
 
 msgid "Folder successfully disabled."
@@ -793,19 +791,19 @@ msgid ""
 "are saved and reloaded into the proxy."
 msgstr ""
 
-msgid "Replace regex"
+msgid "Add new"
 msgstr ""
 
 msgid "Rule already disabled."
 msgstr ""
 
-msgid "Timeout sucessfully changed."
+msgid "Password"
 msgstr ""
 
 msgid "%(AppName)s feedback information"
 msgstr ""
 
-msgid "Don't match URL"
+msgid "Parent proxy successfully changed."
 msgstr ""
 
 msgid "Parent proxy settings"
@@ -834,7 +832,7 @@ msgstr ""
 msgid "Update filter configuration"
 msgstr ""
 
-msgid "Access key 1"
+msgid "Invalid folder index."
 msgstr ""
 
 msgid "Allowed host successfully added."
@@ -852,7 +850,10 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-msgid "Invalid rule move up id."
+msgid "Rule url host successfully changed."
+msgstr ""
+
+msgid "Filter update"
 msgstr ""
 
 msgid "Folder successfully enabled."
@@ -915,10 +916,12 @@ msgstr ""
 msgid "Rule rewrite replacement successfully changed."
 msgstr ""
 
-msgid "Match URL"
+msgid "Header value"
 msgstr ""
 
-msgid "Rule url host successfully changed."
+msgid ""
+"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
+"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr ""
 
 msgid "Rule url parameters successfully changed."
@@ -972,11 +975,6 @@ msgstr ""
 msgid "Rule moved up."
 msgstr ""
 
-msgid ""
-"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
-"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
-msgstr ""
-
 msgid "Category"
 msgstr ""
 
@@ -1016,7 +1014,7 @@ msgstr ""
 msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
 msgstr ""
 
-msgid "Folder successfully renamed."
+msgid "Match URL"
 msgstr ""
 
 msgid "Filter configuration"
@@ -1040,13 +1038,13 @@ msgstr ""
 msgid "%(AppName)s web interface main page"
 msgstr ""
 
-msgid "All pages define the following access keys:"
-msgstr ""
-
-msgid "Filter update"
+msgid "Invalid rule move up id."
 msgstr ""
 
 msgid "Rule url port successfully changed."
+msgstr ""
+
+msgid "Use NTLM authentication (Windows domain controller)"
 msgstr ""
 
 msgid "Folder icon"
@@ -1070,7 +1068,7 @@ msgstr ""
 msgid "Rename folder"
 msgstr ""
 
-msgid "PICS service successfully disabled."
+msgid "Feedback for %(AppName)s"
 msgstr ""
 
 msgid "Folder already disabled."
@@ -1091,19 +1089,19 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-msgid "Blocked image URL"
-msgstr ""
-
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
 msgstr ""
 
 msgid "New folder"
 msgstr ""
 
+msgid "Folder successfully renamed."
+msgstr ""
+
 msgid "Replacement"
 msgstr ""
 
-msgid "Invalid folder index."
+msgid "Access key 9"
 msgstr ""
 
 msgid "Feedback"
@@ -1121,7 +1119,7 @@ msgstr ""
 msgid "Access key 2"
 msgstr ""
 
-msgid "Enable folder"
+msgid "Access key 1"
 msgstr ""
 
 msgid "Access key 0"
@@ -1148,9 +1146,6 @@ msgstr ""
 msgid "see footnote 4"
 msgstr ""
 
-msgid "Feedback for %(AppName)s"
-msgstr ""
-
 msgid "Add attribute"
 msgstr ""
 
@@ -1158,6 +1153,9 @@ msgid "URL fragment"
 msgstr ""
 
 msgid "Proxy settings"
+msgstr ""
+
+msgid "PICS service successfully disabled."
 msgstr ""
 
 msgid "Disabled rule icon"
@@ -1175,7 +1173,7 @@ msgstr ""
 msgid "Port successfully changed."
 msgstr ""
 
-msgid "Disable rule"
+msgid "%(AppName)s"
 msgstr ""
 
 msgid "Description"
@@ -1187,7 +1185,7 @@ msgstr ""
 msgid "Rule moved down."
 msgstr ""
 
-msgid "Empty rewrite tag name."
+msgid "Header name"
 msgstr ""
 
 msgid "Remove selected attributes"
@@ -1207,7 +1205,7 @@ msgid ""
 "world of %(AppName)s, the land of lounge lizards."
 msgstr ""
 
-msgid "Password"
+msgid "Timeout sucessfully changed."
 msgstr ""
 
 msgid "Port number"
@@ -1222,12 +1220,13 @@ msgstr ""
 msgid "Rule image height successfully changed."
 msgstr ""
 
-msgid "%(AppName)s"
+msgid "Rule url path successfully changed."
 msgstr ""
 
-msgid ""
-"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
-"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
+msgid "NTLM authentication"
+msgstr ""
+
+msgid "Disable rule"
 msgstr ""
 
 msgid "Empty rule title."
@@ -1236,7 +1235,11 @@ msgstr ""
 msgid "Rule successfully disabled."
 msgstr ""
 
-msgid "Rule match-url successfully changed."
+msgid ""
+"Most browsers support jumping to specific links by typing keys defined on\n"
+"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
+"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
+"access key."
 msgstr ""
 
 msgid "URL parameters"
@@ -1251,7 +1254,7 @@ msgstr ""
 msgid "footnote 1"
 msgstr ""
 
-msgid "Rule url path successfully changed."
+msgid "All pages define the following access keys:"
 msgstr ""
 
 msgid "footnote 4"
@@ -1270,6 +1273,9 @@ msgid "New folder successfully created."
 msgstr ""
 
 msgid "Invalid proxy port."
+msgstr ""
+
+msgid "Enable folder"
 msgstr ""
 
 msgid "Invalid attribute name."
