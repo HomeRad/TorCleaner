@@ -52,7 +52,7 @@ def decode (page):
         if encoding == 'deflate':
             fp = StringIO.StringIO(zlib.decompress(content))
         else:
-            fp = gzip.GzipFile('', 'rb', 9, StringIO(content))
+            fp = gzip.GzipFile('', 'rb', 9, StringIO.StringIO(content))
         # remove content-encoding header
         headers = {}
         ceheader = re.compile(r"(?i)content-encoding:")
