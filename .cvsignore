@@ -8,3 +8,5 @@ locale
 *.pyo
 _webcleaner2_configdata.py
 blacklists.tar.gz
+downloads
+extracted
