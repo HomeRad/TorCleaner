@@ -52,11 +52,12 @@ class ClientServerMatchmaker (object):
     """
 
     def __init__ (self, client, request, headers, content,
-                  mime_types=None):
+                  mime_types=None, sslserver=False):
         """if mime is not None, the response will have the specified
            mime type, regardless of the Content-Type header value.
            This is useful for JavaScript fetching and blocked pages.
         """
+        self.sslserver = sslserver
         self.client = client
         self.request = request
         self.headers = headers
@@ -164,7 +165,7 @@ class ClientServerMatchmaker (object):
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
             try:
-                if self.url.startswith("https://") and \
+                if self.sslserver and \
                    wc.configuration.config['sslgateway']:
                     import wc.proxy.SslServer
                     klass = wc.proxy.SslServer.SslServer
