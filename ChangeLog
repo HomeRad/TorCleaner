@@ -1,7 +1,8 @@
 2.4
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20031026
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031028
     Changed: js/*
-  *
+  * enable persistent client connections
+    Changed: wc/proxy/{HttpClient,Connection}.py
 
 2.3
   * oops, add some mising files to distribution
