@@ -1,8 +1,20 @@
 TODO
 
-- webgui filter configuration (2.0)
+version 2.0
 
-- automatic filter update (post-2.0)
+- On new rule creation, the new rule is not correclty highlighted
+
+- Rewrite rules cannot be fully edited
+
+- Pics rules cannot be fully edited
+
+- Order of rules/folders cannot be changed
+
+- the html layout sucks
+
+version 2.1
+
+- automatic filter update
 
 - HTTPS tunneling (RFC 2818)
 
