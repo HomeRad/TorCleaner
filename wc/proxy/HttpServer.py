@@ -7,6 +7,7 @@ import socket
 import re
 import urllib
 import cStringIO as StringIO
+
 import wc
 import wc.url
 import wc.filter
@@ -37,10 +38,12 @@ def get_response_data (response, url):
         wc.log.warn(wc.LOG_PROXY, "Empty response message from %r", url)
         parts += ['Bummer']
     elif len(parts) != 3:
-        wc.log.error(wc.LOG_PROXY, "Invalid response %r from %r", response, url)
+        wc.log.error(wc.LOG_PROXY, "Invalid response %r from %r",
+                     response, url)
         parts = ['HTTP/1.0', 200, 'Ok']
     if not is_http_status(parts[1]):
-        wc.log.error(wc.LOG_PROXY, "Invalid http statuscode %r from %r", parts[1], url)
+        wc.log.error(wc.LOG_PROXY, "Invalid http statuscode %r from %r",
+                     parts[1], url)
         parts[1] = 200
     parts[1] = int(parts[1])
     return parts
@@ -80,7 +83,8 @@ class HttpServer (wc.proxy.Server.Server):
         try:
             self.connect(self.addr)
         except (socket.timeout, socket.error):
-            # we never connected, but still the socket is in the socket map so remove it
+            # we never connected, but still the socket is in the socket map
+            # so remove it
             self.del_channel()
             raise
 
@@ -128,7 +132,8 @@ class HttpServer (wc.proxy.Server.Server):
             # from the client.  THEN the timer runs and we can't say
             # we've connected, because we really haven't.  XXX: we
             # really should hide these sorts of cases inside Connection.
-            wc.proxy.make_timer(0, lambda s=self: s.client and s.client.server_connected(s))
+            wc.proxy.make_timer(0,
+                     lambda s=self: s.client and s.client.server_connected(s))
         else:
             # Hm, the client no longer cares about us, so close
             self.close()
@@ -136,7 +141,8 @@ class HttpServer (wc.proxy.Server.Server):
     def client_send_request (self, method, protocol, hostname, port,
                              document, headers, content, client, url, mime):
         """the client (matchmaker) sends the request to the server"""
-        assert self.state == 'client', "%s invalid state %r" % (self, self.state)
+        assert self.state == 'client', \
+                                   "%s invalid state %r" % (self, self.state)
         self.method = method
         # the client protocol
         self.protocol = protocol
@@ -158,7 +164,8 @@ class HttpServer (wc.proxy.Server.Server):
         """modify request headers"""
         if wc.config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
-            self.clientheaders['Proxy-Authorization'] = "%s\r" % wc.config['parentproxycreds']
+            self.clientheaders['Proxy-Authorization'] = \
+                                     "%s\r" % wc.config['parentproxycreds']
 
     def send_request (self):
         """send the request to the server, is also used to send a request
@@ -167,7 +174,8 @@ class HttpServer (wc.proxy.Server.Server):
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         wc.log.debug(wc.LOG_PROXY, '%s write request\n%r', self, request)
         self.write(request)
-        wc.log.debug(wc.LOG_PROXY, "%s write headers\n%s", self, self.clientheaders)
+        wc.log.debug(wc.LOG_PROXY, "%s write headers\n%s",
+                     self, self.clientheaders)
         self.write("".join(self.clientheaders.headers))
         self.write('\r\n')
         self.write(self.content)
@@ -175,7 +183,8 @@ class HttpServer (wc.proxy.Server.Server):
 
     def process_read (self):
         """process read event by delegating it to process_* functions"""
-        assert self.state != 'closed', "%s invalid state %r" % (self, self.state)
+        assert self.state != 'closed', \
+                                  "%s invalid state %r" % (self, self.state)
         while True:
             if not self.client:
                 # By the time this server object was ready to receive
@@ -197,11 +206,13 @@ class HttpServer (wc.proxy.Server.Server):
         self.response = self.read(i+1).strip()
         if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
-            protocol, self.statuscode, tail = get_response_data(self.response, self.url)
+            protocol, self.statuscode, tail = \
+                                   get_response_data(self.response, self.url)
             # reconstruct cleaned response
             self.response = "%s %d %s" % (protocol, self.statuscode, tail)
             # Let the server pool know what version this is
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr, wc.proxy.get_http_version(protocol))
+            wc.proxy.ServerPool.serverpool.set_http_version(self.addr,
+                                         wc.proxy.get_http_version(protocol))
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
@@ -212,15 +223,18 @@ class HttpServer (wc.proxy.Server.Server):
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
-            wc.log.warn(wc.LOG_PROXY, _('invalid or missing response from %r: %r'),
-                 self.url, self.response)
+            wc.log.warn(wc.LOG_PROXY,
+                        _('invalid or missing response from %r: %r'),
+                        self.url, self.response)
             wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (1, 0))
             # put the read bytes back to the buffer
             self.recv_buffer = self.response + self.recv_buffer
             # look if the response line was a header
-            # Example: http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
+            # Example:
+            # http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
             if not wc.proxy.Headers.is_header(self.response):
-                wc.log.warn(wc.LOG_PROXY, _("missing headers in response from %r"), self.url)
+                wc.log.warn(wc.LOG_PROXY,
+                          _("missing headers in response from %r"), self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
             # fix the response
             self.response = "%s 200 Ok" % self.protocol
@@ -228,8 +242,8 @@ class HttpServer (wc.proxy.Server.Server):
         self.state = 'headers'
         self.attrs = wc.filter.get_filterattrs(self.url,
                                [wc.filter.FILTER_RESPONSE])
-        self.response = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE, self.response,
-                                    "finish", self.attrs).strip()
+        self.response = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE,
+                              self.response, "finish", self.attrs).strip()
         if self.statuscode >= 400:
             self.mime = None
         wc.log.debug(wc.LOG_PROXY, "%s response %r", self, self.response)
@@ -253,13 +267,15 @@ class HttpServer (wc.proxy.Server.Server):
         fp.close()
         # make a copy for later
         serverheaders = msg.copy()
-        wc.log.debug(wc.LOG_PROXY, "%s server headers\n%s", self, serverheaders)
+        wc.log.debug(wc.LOG_PROXY, "%s server headers\n%s",
+                     self, serverheaders)
         if self.statuscode == 100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
-        self.set_persistent(msg, wc.proxy.ServerPool.serverpool.http_versions[self.addr])
+        self.set_persistent(msg,
+                     wc.proxy.ServerPool.serverpool.http_versions[self.addr])
         self.attrs = wc.filter.get_filterattrs(self.url,
                         [wc.filter.FILTER_RESPONSE_HEADER],
                         clientheaders=self.client.headers,
@@ -269,7 +285,8 @@ class HttpServer (wc.proxy.Server.Server):
                wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_HEADER, msg,
                                      "finish", self.attrs)
         except wc.filter.FilterRating, msg:
-            wc.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s", self, msg)
+            wc.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s",
+                         self, msg)
             if msg == wc.filter.Rating.MISSING:
                 # still have to look at content
                 self.defer_data = True
@@ -297,7 +314,8 @@ class HttpServer (wc.proxy.Server.Server):
                                      clientheaders=self.client.headers,
                                      serverheaders=serverheaders,
                                      headers=self.headers)
-        wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s", self, self.headers)
+        wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s",
+                     self, self.headers)
         if not self.defer_data:
             self.client.server_response(self, self.response, self.statuscode,
                                         self.headers)
@@ -306,7 +324,8 @@ class HttpServer (wc.proxy.Server.Server):
     def mangle_response_headers (self):
         """modify response headers"""
         wc.proxy.Headers.server_set_headers(self.headers)
-        self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
+        self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(
+         self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
             self.persistent = False
         # 304 Not Modified does not send any type info, because it was cached
@@ -323,9 +342,11 @@ class HttpServer (wc.proxy.Server.Server):
     def set_persistent (self, headers, http_ver):
         """return True iff this server connection is persistent"""
         if http_ver >= (1,1):
-            self.persistent = not wc.proxy.Headers.has_header_value(headers, 'Connection', 'Close')
+            self.persistent = not wc.proxy.Headers.has_header_value(
+                                              headers, 'Connection', 'Close')
         elif http_ver >= (1,0):
-            self.persistent = wc.proxy.Headers.has_header_value(headers, 'Connection', 'Keep-Alive')
+            self.persistent = wc.proxy.Headers.has_header_value(
+                                         headers, 'Connection', 'Keep-Alive')
         else:
             self.persistent = False
 
@@ -384,19 +405,23 @@ class HttpServer (wc.proxy.Server.Server):
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
-            wc.log.debug(wc.LOG_PROXY, "%s %d bytes remaining", self, self.bytes_remaining)
+            wc.log.debug(wc.LOG_PROXY, "%s %d bytes remaining",
+                         self, self.bytes_remaining)
         is_closed = False
         for decoder in self.decoders:
             data = decoder.decode(data)
-            wc.log.debug(wc.LOG_PROXY, "%s have run decoder %s", self, decoder)
+            wc.log.debug(wc.LOG_PROXY, "%s have run decoder %s",
+                         self, decoder)
             if not is_closed and decoder.closed:
                 is_closed = True
         try:
-            data = wc.filter.applyfilters(FilterLevels, data, "filter", self.attrs)
+            data = wc.filter.applyfilters(FilterLevels, data, "filter",
+                                          self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
         except wc.filter.FilterRating, msg:
-            wc.log.debug(wc.LOG_PROXY, "%s FilterRating from content %s", self, msg)
+            wc.log.debug(wc.LOG_PROXY, "%s FilterRating from content %s",
+                         self, msg)
             self._show_rating_deny(str(msg))
             return
         except wc.filter.FilterProxyError, e:
@@ -406,8 +431,9 @@ class HttpServer (wc.proxy.Server.Server):
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
         if underflow:
-            wc.log.warn(wc.LOG_PROXY, _("server received %d bytes more than content-length"),
-                 (-self.bytes_remaining))
+            wc.log.warn(wc.LOG_PROXY,
+                      _("server received %d bytes more than content-length"),
+                      (-self.bytes_remaining))
         if data and self.statuscode != 407:
             if self.defer_data:
                 self.defer_data = False
@@ -426,14 +452,16 @@ class HttpServer (wc.proxy.Server.Server):
         if not self.client:
             # delay
             return
-        wc.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to client %s", self, self.client)
+        wc.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to client %s",
+                     self, self.client)
         self.client.write(self.read())
 
     def process_recycle (self):
         """recycle the server connection and put it in the server pool"""
         wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
         if self.statuscode == 407 and wc.config['parentproxy']:
-            wc.log.debug(wc.LOG_PROXY, "%s need parent proxy authentication", self)
+            wc.log.debug(wc.LOG_PROXY, "%s need parent proxy authentication",
+                         self)
             if self.authtries:
                 # we failed twice, abort
                 self.authtries = 0
@@ -441,8 +469,10 @@ class HttpServer (wc.proxy.Server.Server):
                 wc.config['parentproxycreds'] = None
                 return
             self.authtries += 1
-            challenges = wc.proxy.auth.get_header_challenges(self.headers, 'Proxy-Authenticate')
-            wc.proxy.Headers.remove_headers(self.headers, ['Proxy-Authentication'])
+            challenges = wc.proxy.auth.get_header_challenges(self.headers,
+                              'Proxy-Authenticate')
+            wc.proxy.Headers.remove_headers(self.headers,
+                                                  ['Proxy-Authentication'])
             attrs = {'password_b64': wc.config['parentproxypass'],
                      'username': wc.config['parentproxyuser']}
             if 'NTLM' in challenges:
@@ -456,7 +486,8 @@ class HttpServer (wc.proxy.Server.Server):
                 attrs['uri'] = wc.proxy.auth.get_auth_uri(self.document)
                 # with https, this is CONNECT
                 attrs['method'] = self.method
-                attrs['requireExtraQuotes'] = self.headers.get('Server', '').lower().startswith('microsoft-iis')
+                attrs['requireExtraQuotes'] = \
+           self.headers.get('Server', '').lower().startswith('microsoft-iis')
             creds = wc.proxy.auth.get_credentials(challenges, **attrs)
             # resubmit the request with proxy credentials
             self.state = 'client'
@@ -475,7 +506,8 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
         data = flush_decoders(self.decoders)
         try:
-            data = wc.filter.applyfilters(FilterLevels, data, "finish", self.attrs)
+            data = wc.filter.applyfilters(FilterLevels, data, "finish",
+                                          self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data
@@ -546,7 +578,8 @@ class HttpServer (wc.proxy.Server.Server):
     def handle_error (self, what):
         """tell the client that connection had an error, and close the
            connection"""
-        wc.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_error %r", self, what)
+        wc.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_error %r",
+                     self, what)
         if self.client:
             client, self.client = self.client, None
             client.server_abort(what)
@@ -580,7 +613,8 @@ def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        wc.log.debug(wc.LOG_PROXY, 'speed: %4d b/s', (SPEEDCHECK_BYTES/elapsed))
+        wc.log.debug(wc.LOG_PROXY, 'speed: %4d b/s',
+                     (SPEEDCHECK_BYTES/elapsed))
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
