@@ -1,13 +1,15 @@
 #!/usr/bin/env python
-from wc.parser.htmllib import HtmlPrinter
 import sys
+sys.path.insert(0, ".")
+from wc.parser.htmllib import HtmlPrinter
 
-def main():
+def _main():
     file = sys.argv[1]
     data = open(file).read()
     p = HtmlPrinter()
     p.feed(data)
+    p.flush()
 
 
 if __name__=='__main__':
-    main()
+    _main()

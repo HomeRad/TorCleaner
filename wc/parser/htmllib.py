@@ -48,10 +48,6 @@ class HtmlPrinter(HtmlParser):
         self.mem = name
         return self._print
 
-    def comment(self, s):
-        print "mycomment", s
-
-
     def _print (self, *attrs):
         print self.mem, attrs
 

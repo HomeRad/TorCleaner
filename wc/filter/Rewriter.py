@@ -196,6 +196,17 @@ class HtmlFilter(HtmlParser):
             self.buffer2data()
 
 
+    def internalSubset (self, name, externId, systemId):
+        s = "<!DOCTYPE HTML "
+        if externId:
+            s += 'PUBLIC "%s">'%name
+        elif systemId:
+            s += 'SYSTEM "%s">'%name
+        else
+            s += '"%s"'%name
+        self.buffer_append_data([DATA, s])
+
+
     def error(self, line, col, msg):
         print >> sys.stderr, "error parsing", \
                  "%s:%d:%d: %s" % (self.document, line, col, msg.strip())

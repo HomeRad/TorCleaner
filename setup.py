@@ -123,7 +123,8 @@ setup (name = "webcleaner",
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
        ext_modules = [Extension('wc.parser.htmlsax',
                       ['wc/parser/htmlsax.c'],
-                      libraries = ["xml2"]
+                      libraries = ["xml2"],
+                      include_dirs = ["/usr/include/libxml2"],
                       )],
        scripts = scripts,
        long_description =

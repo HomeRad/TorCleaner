@@ -1,6 +1,6 @@
 tmp
 webcleaner
-webcleanerconf
+webcleanertools
 files
 *substvars
 *.debhelper

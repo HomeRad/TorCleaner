@@ -7,8 +7,9 @@ webcleaner (0.22) unstable; urgency=low
   * encode UTF-8 chars to HTML in the HTML parser
   * misc cleanups and corrections for the release
   * add stubs for the wcheaders tool
+  * do not suppress DOCTYPE tags
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue,  6 Nov 2001 11:55:25 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Tue,  6 Nov 2001 15:51:30 +0100
 
 webcleaner (0.21) unstable; urgency=low
 

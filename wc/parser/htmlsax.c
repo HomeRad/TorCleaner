@@ -48,20 +48,16 @@ static unsigned char encbuf[ENC_BUF_LEN];
 
 static void _internalSubset (void* user_data, const xmlChar* name,
 			    const xmlChar* externId, const xmlChar* systemId) {
-    //UserData* ud = (UserData*) user_data;
-    //PyObject* callback = PyObject_GetAttrString(ud->handler,
-    //    					"internalSubset");
+    UserData* ud = (UserData*) user_data;
+    PyObject* callback = PyObject_GetAttrString(ud->handler,
+        					"internalSubset");
+    PyObject* arglist = Py_BuildValue("(sss)", name, externId, systemId);
+    if (PyEval_CallObject(callback, arglist)==NULL) {
+	ud->error = 1;
+	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+    }
+    Py_DECREF(arglist);
 }
-
-//static xmlEntity entity;
-//static char* entityname;
-
-
-//static xmlEntityPtr getEntity(void *user_data, const xmlChar *name) {
-//    entityname = PyMem_Resize(entityname, char, strlen(name));
-//    entity.name = entityname;
-//    return &entity;
-//}
 
 
 static void _entityDecl (void* user_data, const xmlChar* name, int type,
@@ -129,13 +125,16 @@ static void _attributeDecl (void* user_data, const xmlChar* elem,
 
 static void _elementDecl (void* user_data, const xmlChar* name, int type,
 			xmlElementContentPtr content) {
-    //UserData* ud = (UserData*) user_data;
-    //PyObject* callback = PyObject_GetAttrString(ud->handler,
-    //    					"elementDecl");
-    //PyObject* obj = newXmlelementcontentobject(content);
-    //PyObject* arglist = Py_BuildValue("(siO)", name, type, obj);
-    //PyEval_CallObject(callback, arglist);
-    //Py_DECREF(arglist);
+    UserData* ud = (UserData*) user_data;
+    PyObject* callback = PyObject_GetAttrString(ud->handler,
+						"elementDecl");
+    // XXX content object wrapper
+    PyObject* arglist = Py_BuildValue("(si)", name, type);
+    if (PyEval_CallObject(callback, arglist)==NULL) {
+	ud->error = 1;
+	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+    }
+    Py_DECREF(arglist);
 }
 
 
@@ -157,13 +156,16 @@ static void _unparsedEntityDecl (void* user_data, const xmlChar* name,
 
 
 static void _setDocumentLocator (void* user_data, xmlSAXLocatorPtr loc) {
-    //UserData* ud = (UserData*) user_data;
-    //PyObject* callback = PyObject_GetAttrString(ud->handler,
-    //    					"setDocumentLocator");
-    //locatorobject* locatorObject = newlocatorobject(ud->context, loc);
-    //PyObject* arglist = Py_BuildValue("(O)", locatorObject);
-    //PyEval_CallObject(callback, arglist);
-    //Py_DECREF(arglist);
+    UserData* ud = (UserData*) user_data;
+    PyObject* callback = PyObject_GetAttrString(ud->handler,
+						"setDocumentLocator");
+    // XXX locator object wrapper
+    PyObject* arglist = Py_BuildValue("(s)", "documentlocator");
+    if (PyEval_CallObject(callback, arglist)==NULL) {
+	ud->error = 1;
+	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+    }
+    Py_DECREF(arglist);
 }
 
 
@@ -417,7 +419,10 @@ static void _cdataBlock (void* user_data, const xmlChar* ch, int len) {
     int outlen = ENC_BUF_LEN;
     PyObject* arglist;
     if (UTF8ToHtml(encbuf, &outlen, ch, &len)!=0) {
-        // XXX
+	ud->exc_type = PyExc_ValueError;
+	ud->exc_val = PyString_FromString("UTF8ToHtml encoding error");
+	ud->exc_tb = NULL;
+        return;
     }
     arglist = Py_BuildValue("(s#)", encbuf, outlen);
     if (PyEval_CallObject(callback, arglist)==NULL) {
