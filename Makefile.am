@@ -55,11 +55,13 @@ deb_signed: distclean locale
 deb_unsigned: distclean locale
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/usr/local/src/debian -Mwebcleaner2 -us -uc -rfakeroot
 
-localdist:	locale
-	$(PYTHON) setup.py sdist --formats=gztar,zip
-	rm -f $(MD5SUMS)
-	md5sum dist/* > $(MD5SUMS)
-	for f in dist/*; do gpg --detach-sign --armor $$f; done
+# add setup.py generated files to $(distdir)
+dist-hook:	locale
+	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
+
+#	rm -f $(MD5SUMS)
+#	md5sum dist/* > $(MD5SUMS)
+#	for f in dist/*; do gpg --detach-sign --armor $$f; done
 
 test:
 	env http_proxy="" ftp_proxy="" LANG=C $(PYTHON) test/regrtest.py

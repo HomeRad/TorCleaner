@@ -1,6 +1,6 @@
 include MANIFEST.in TODO
-include INSTALL LICENSE README README.squid README.sshtunnel README.parser
-include Makefile webcleaner webcleanerconf wcheaders
+include README.squid README.sshtunnel README.parser
+include webcleaner webcleanerconf wcheaders _webcleaner2_configdata.py
 include wcheaders.bat webcleanerconf.bat
 include debian/changelog debian/config debian/control debian/ConfWindow.patch
 include debian/webcleaner.dirs debian/webcleaner.docs
@@ -10,13 +10,11 @@ include debian/webcleanertools.postinst debian/webcleanertools.prerm
 include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
 include webcleaner.1 webcleanerconf.1 webcleaner.conf.5 wcheaders.1
-include rpm_build_script
 include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif config/*.py
 recursive-include config/blacklists *.gz README
 include config/*.png config/*.html
-include templates/*.html
+include templates/classic/*.html
 include test/*.py test/output/test_* test/html/*.html
 include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparse.y
 include wc/parser/*.h
 include po/*.po po/*.pot po/*.py po/Makefile
-exclude _webcleaner2_configdata.py
