@@ -494,7 +494,7 @@ def set_proxy_headers (headers):
     remove_hop_by_hop_headers(headers)
     set_via_header(headers)
     set_date_header(headers)
-    remove_old_warning_headers(headers)
+    remove_warning_headers(headers)
 
 
 def remove_hop_by_hop_headers (headers):
