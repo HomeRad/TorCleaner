@@ -66,4 +66,8 @@
  tag="marquee">
 <replace part="tagname">span</replace>
 </rewrite>
+
+<replacer title="Love and Peace" oid="11"
+ desc="Love &amp; Peace!"
+ search="(US-Präsident|George( W.)?) Bush">Love and Peace</replacer>
 </folder>

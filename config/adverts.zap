@@ -44,8 +44,9 @@
 </rewrite>
 
 <block title="Ad servers 08" oid="8"
+ desc="matches ad. ads. adserver."
  scheme=""
- host="^ads?\."
+ host="^ad(s|server)?\."
  port=""
  path=""
  parameters=""
@@ -191,7 +192,7 @@
 <rewrite title="IMDB Advert" oid="32"
  desc="adverts are redirections"
  matchurl="imdb">
-<attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT)</attr>
+<attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP)</attr>
 </rewrite>
 
 <rewrite title="IMDB Advert 3" oid="33"
@@ -221,14 +222,14 @@
  desc="Remove ad pics"
  matchurl="imdb"
  tag="img">
-<attr name="src">/Icons/apix/</attr>
+<attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
 </rewrite>
 
 <rewrite title="IMDB Advert 6" oid="38"
  desc="image tag"
  matchurl="imdb"
  tag="image">
-<attr name="src">/Icons/apix/</attr>
+<attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
 </rewrite>
 
 <rewrite title="EOnline ads" oid="39">
