@@ -45,6 +45,15 @@
     Type: bugfix
     Changed: bk/url.py
 
+  * added a favicon
+    Type: feature
+    Changed: templates/classic/*.html
+    Added: templates/classic/favicon.*
+
+  * fixed HTML comment parsing
+    Type: bugfix
+    Changed: bk/HtmlParser/htmllex.l
+
 2.18 "Bubba Ho-tep" (released 1.6.2004)
   * rename local var 'data' to correct name 'content'
     Type: bugfix
