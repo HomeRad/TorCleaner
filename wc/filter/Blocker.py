@@ -178,11 +178,14 @@ class Blocker (Filter):
                 return False
         # check block patterns
         for _block in self.block:
-            match = True
+            match = None
             for i in range(len(urlTuple)):
-                if _block[i] and not _block[i].search(urlTuple[i]):
-                    match = False
-                    break
+                if _block[i]:
+                    if match is None:
+                        match = True
+                    if not _block[i].search(urlTuple[i]):
+                        match = False
+                        break
             if match:
                 debug(FILTER, "blocked %s\n         with %s", urlTuple,
                       strblock(_block))
@@ -198,11 +201,14 @@ class Blocker (Filter):
             if urlTuple[1]==_allow[0] and urlTuple[3].startswith(_allow[1]):
                 return True
         for _allow in self.allow:
-            match = True
+            match = None
             for i in range(len(urlTuple)):
                 if _allow[i]:
+                    if match is None:
+                        match = True
 		    if not _allow[i].search(urlTuple[i]):
                         match = False
+                        break
             if match:
                 debug(FILTER, "allowed %s", str(urlTuple))
 	        return True
