@@ -505,14 +505,16 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         ip_addrs = []
         for dummy in range(ancount):
             name, rtype, klass, ttl, rdlength = msg.getRRheader()
-            mname = 'get%sdata' % bk.net.dns.Type.typestr(rtype)
-            if hasattr(msg, mname): data = getattr(msg, mname)()
-            else: data = msg.getbytes(rdlength)
-            if rtype == bk.net.dns.Type.A:
+            mname = 'get%sdata' % wc.dns.rdatatype.typestr(rtype)
+            if hasattr(msg, mname):
+                data = getattr(msg, mname)()
+            else:
+                data = msg.getbytes(rdlength)
+            if rtype == wc.dns.rdatatype.A:
                 ip_addrs.append(data)
-            elif rtype == bk.net.dns.Type.AAAA:
+            elif rtype == wc.dns.rdatatype.AAAA:
                 ip_addrs.append(data)
-            elif rtype == bk.net.dns.Type.CNAME:
+            elif rtype == wc.dns.rdatatype.CNAME:
                 # XXX: should we do anything with CNAMEs?
                 wc.log.debug(wc.LOG_DNS, 'cname record %s=%r',
                              self.hostname, data)

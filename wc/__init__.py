@@ -112,7 +112,6 @@ def sort_seq (seq):
 
 import wc.i18n
 import wc.url
-import bk.net
 import wc.ip
 import wc.proxy
 import wc.proxy.dns_lookups
@@ -225,7 +224,6 @@ class Configuration (dict):
         # if set to one the bound socket does not accept connections from
         # hosts except localhost; normally not needed
         self['local_sockets_only'] = 0
-        self['localhosts'] = bk.net.get_localhosts()
         self['mime_content_rewriting'] = sets.Set()
         self['gui_theme'] = "classic"
         self['timeout'] = 10

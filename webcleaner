@@ -30,11 +30,11 @@ import os
 # since webcleaner is single-threaded, increase the check interval
 sys.setcheckinterval(1000)
 import wc
-import bk.i18n
+import wc.i18n
 
-bk.i18n.init(wc.Name, wc.LocaleDir)
+wc.i18n.init(wc.Name, wc.LocaleDir)
 
-nt_usage = bk.i18n._("""USAGE\twebcleaner [options] <command> [command options]
+nt_usage = wc.i18n._("""USAGE\twebcleaner [options] <command> [command options]
 
 OPTIONS
 -h, --help
@@ -78,7 +78,7 @@ COMMAND OPTIONS (for 'install' and 'update' commands only)
 """)
 
 
-usage = bk.i18n._("""USAGE\twebcleaner [options]
+usage = wc.i18n._("""USAGE\twebcleaner [options]
 
 The %(AppName)s proxy is started as a foreground process.
 
@@ -98,7 +98,7 @@ OPTIONS
 def print_usage (msg):
     """print short usage info and exit"""
     print msg
-    print bk.i18n._("execute 'webcleaner -h' for help\n")
+    print wc.i18n._("execute 'webcleaner -h' for help\n")
     sys.exit(1)
 
 
@@ -111,14 +111,14 @@ def paginate (text, lines=22):
         curline = curline + 1
         if curline >= lines and sys.stdin.isatty():
             curline = 1
-            print bk.i18n._("press return to continue...")
+            print wc.i18n._("press return to continue...")
             sys.stdin.read(1)
 
 
 def print_help ():
     """print long usage info"""
     if os.name=='nt':
-        service = bk.i18n._("%s Proxy") % wc.AppName
+        service = wc.i18n._("%s Proxy") % wc.AppName
         paginate(nt_usage % {'service': service, 'AppName': wc.AppName})
     else:
         print usage % {'AppName': wc.AppName}
@@ -147,7 +147,7 @@ def parse_options (sysargs):
         elif opt=="--no-file-logs":
             filelogs = False
         else:
-            print_usage(bk.i18n._("Unknown option %(option)r")%{'option': opt})
+            print_usage(wc.i18n._("Unknown option %(option)r")%{'option': opt})
     return (configdir, filelogs, args)
 
 
@@ -159,7 +159,7 @@ def main_posix (configdir, filelogs):
 def main_nt (configdir, filelogs, args):
     """start nt proxy service"""
     if len(args) < 1:
-        print_usage(bk.i18n._("No command given."))
+        print_usage(wc.i18n._("No command given."))
     else:
         command = args[0]
     import wc.win32start
@@ -172,7 +172,7 @@ def main_nt (configdir, filelogs, args):
         import win32serviceutil
         win32serviceutil.HandleCommandLine(win32start.ProxyService)
     else:
-        print_usage(bk.i18n._("Unknown command %r") % command)
+        print_usage(wc.i18n._("Unknown command %r") % command)
 
 
 def main (sysargs):
