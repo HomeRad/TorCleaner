@@ -1,7 +1,7 @@
 <html>
 <body>
 
-<!-- macro definitions for rule editing 
+<!-- macro definitions for rule editing
   Note: the TAL contexts from the calling templates are used here
  -->
 
@@ -80,7 +80,7 @@ Rule title and description
 Rule url parts
 </div>
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 
@@ -124,7 +124,7 @@ Rule url parts
 <input type="text" name="rule_blockedurl" value="http://www.calvinandhobbes.com/"
  tal:attributes="value currule/url">
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 
@@ -144,7 +144,7 @@ Rule (don't) match url
 <input type="text" name="rule_headervalue" value=""
  tal:attributes="value currule/value">
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 
@@ -158,20 +158,23 @@ Rule (don't) match url
 </div>
 <span tal:replace="t_ruleimgwidth">Image width</span>:
 <input type="text" name="rule_imgwidth" value="1"
- tal:attributes="value currule/width">
+ tal:attributes="value string:${currule/width}">
+<br>
 <span tal:replace="t_ruleimgheight">Image height</span>:
 <input type="text" name="rule_imgheight" value="1"
- tal:attributes="value currule/height">
+ tal:attributes="value string:${currule/height}">
  <!-- XXX todo
+<br>
 <span tal:replace="t_ruleimgtype">Image type</span>:
 <input type="text" name="rule_imgtype" value=""
  tal:attributes="value currule/type">
 -->
+<br>
 <span tal:replace="t_ruleimgurl">Blocked image URL</span>:
 <input type="text" name="rule_imgurl" value="myblocked.gif"
  tal:attributes="value currule/url">
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 
@@ -184,7 +187,7 @@ Rule title and description
 Rule (don't) match url
 </div>
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 
@@ -197,7 +200,7 @@ Rule title and description
 Rule (don't) match url
 </div>
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 
@@ -215,7 +218,7 @@ Rule (don't) match url
 <br>
 <!-- XXX more config -->
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 
@@ -235,7 +238,7 @@ Rule (don't) match url
 <input type="text" name="rule_replace" value="Something good"
  tal:attributes="value currule/replace">
 <br>
-<input type="submit" name="apply" value="Apply" 
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 

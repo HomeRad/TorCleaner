@@ -20,7 +20,7 @@ __date__    = "$Date$"[7:-2]
 
 from AllowRule import AllowRule
 from Rule import Rule
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlify, unxmlify
 
 class BlockRule (AllowRule):
     def __init__ (self, title="No title", desc="", disable=0, scheme="",
@@ -35,7 +35,7 @@ class BlockRule (AllowRule):
 
     def fill_data (self, data, name):
         if name=='block':
-            self.url += umxlify(data).encode('iso8859-1')
+            self.url += unxmlify(data).encode('iso8859-1')
 
 
     def fromFactory (self, factory):
