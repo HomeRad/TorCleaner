@@ -17,3 +17,8 @@ error.log
 Makefile.in
 Makefile
 stamp-h1
+webcleaner.log
+webcleaner-access.log
+autom4te.cache
+config.log
+config.status
