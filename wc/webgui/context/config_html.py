@@ -74,11 +74,11 @@ def _form_reset ():
         info[key] = False
     for key in error.keys():
         error[key] = False
-    res = [None]
 
 # form execution
 def _exec_form (form, lang):
     _form_reset()
+    res = [None]
     # proxy port
     if form.has_key('port'):
         _form_proxyport(_getval(form, 'port'))
