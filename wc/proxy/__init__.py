@@ -12,6 +12,31 @@ from urllib import splittype, splithost, splitport
 
 TIMERS = [] # list of (time, function)
 
+HTML_TEMPLATE = """<html><head>
+<title>%(title)s</title>
+</head>
+<body bgcolor="#fff7e5">
+<center><h3>%(header)s</h3></center>
+%(content)s
+</body></html>"""
+
+STATUS_TEMPLATE = """
+WebCleaner Proxy Status Info
+============================
+
+Uptime: %(uptime)s
+
+Valid Requests:   %(valid)d
+Invalid Requests: %(invalid)d
+Failed Requests:  %(failed)d
+
+A failed request indicates that we could not connect to
+the server (either the request was not syntactical correct,
+the host was not found or the connection was down).
+
+Active connections: ["""
+
+
 def log(msg):
     """If _LOGFILE is defined write the msg into it. The message msg
        must be in common log file format."""
@@ -48,22 +73,14 @@ def run_timers():
     else:      return 60
 
 
-def status_info():
-    s = """
-WebCleaner Proxy Status Info
-----------------------------
-
-Uptime: %s
-
-Valid Requests:   %d
-Invalid Requests: %d
-Failed Requests:  %d
-
-Active connections: [""" % \
-    (format_seconds(time.time() - config['starttime']),
-     config['requests']['valid'],
-     config['requests']['invalid'],
-     config['requests']['failed'])
+def text_status():
+    data = {
+    'uptime': format_seconds(time.time() - config['starttime']),
+    'valid':  config['requests']['valid'],
+    'invalid': config['requests']['invalid'],
+    'failed': config['requests']['failed'],
+    }
+    s = STATUS_TEMPLATE % data
     first = 1
     for conn in asyncore.socket_map.values():
         if first:
@@ -71,8 +88,27 @@ Active connections: [""" % \
             first = 0
         else:
             s += '\n              %s\n' % conn
-    s += ']\n\ndnscache: %s' % dns_lookups.dnscache
-    return str(config)+s
+    s += ']\n\ndnscache: '+dns_lookups.dnscache
+    return s
+
+
+def html_portal():
+    content = """
+    <ul>
+    <li><a href="/status">Status information</a>
+    <li><a href="/config">Configuration</a>
+    </ul>
+    """
+    data = {
+    'title': 'WebCleaner Proxy',
+    'header': 'WebCleaner Proxy',
+    'content': content,
+    }
+    return HTML_TEMPLATE % data
+
+
+def text_config():
+    return str(config)
 
 
 def format_seconds(seconds):

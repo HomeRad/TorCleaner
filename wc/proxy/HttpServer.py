@@ -37,15 +37,18 @@ class HttpServer(Server):
         self.sequence_number = 0 # For persistent connections
         self.attempt_connect()
 
+
     def __repr__(self):
         extra = self.request()
         if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)
 
+
     def writable(self):
         # It's writable if we're connecting .. TODO: move this
         # logic into the Connection class
         return self.state == 'connect' or self.send_buffer != ''
+
 
     def request(self):
         if self.addr[1] != 80:
@@ -53,7 +56,8 @@ class HttpServer(Server):
         else:
             portstr = ''
         return '%s%s%s' % (self.hostname or self.addr[0],
-                            portstr, self.document)
+                           portstr, self.document)
+
 
     def attempt_connect(self):
         self.state = 'connect'
@@ -63,9 +67,7 @@ class HttpServer(Server):
         except socket.error, err:
             self.handle_error('connect error', socket.error, err)
             return
-        # XXX
-        #except Exception, msg:
-        #    print >> sys.stderr, 'connect error', self.addr, msg
+
 
     def handle_connect(self):
         if self.state != 'connect':
@@ -92,6 +94,7 @@ class HttpServer(Server):
         else:
             # Hm, the client no longer cares about us, so close
             self.reuse()
+
 
     def send_request(self):
         self.write('%s %s HTTP/1.1\r\n' % (self.method, self.document))
@@ -317,7 +320,7 @@ class HttpServer(Server):
         Server.close(self)
 
     def handle_error(self, what, type, value, tb=None):
-        Server.handle_error(self, what, type, value, tb=tb)
+        Server.handle_error(self, what, type, value, tb)
         if self.client:
             client, self.client = self.client, None
             client.server_abort()

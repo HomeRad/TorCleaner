@@ -27,5 +27,6 @@ class Listener(asyncore.dispatcher):
 
     def handle_error(self, what, type, value, tb=None):
         print >> sys.stderr, what, self, type, value
-	import traceback
-        if tb: traceback.print_tb(tb)
+        if tb:
+            import traceback
+            traceback.print_tb(tb)

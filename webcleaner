@@ -64,7 +64,7 @@ import sys
 if sys.version[:5] < "2.0":
     raise SystemExit, "This program requires Python 2.0 or later."
 # for pydoc testing
-#sys.path.append(".")
+sys.path.insert(0, ".")
 from wc import _,daemon
 
 _usage = _("""USAGE\twebcleaner command

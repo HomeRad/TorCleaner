@@ -57,7 +57,7 @@ class Connection(asyncore.dispatcher):
                 return
             debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
         except socket.error, err:
-            self.handle_error('read error', socket.error, err, tb=sys.exc_info()[2])
+            self.handle_error('read error', socket.error, err)
             return
 	self.recv_buffer += data
         self.process_read()

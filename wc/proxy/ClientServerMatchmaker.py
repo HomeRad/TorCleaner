@@ -58,8 +58,11 @@ class ClientServerMatchmaker:
         self.nofilter = nofilter
         url = ""
         try: self.method, url, protocol = request.split()
-        except: self.error(400, _("Can't parse request"))
+        except:
+            config['requests']['failed'] += 1
+            self.error(400, _("Can't parse request"))
         if not url:
+            config['requests']['failed'] += 1
             self.error(400, _("Empty URL"))
         scheme, hostname, port, document = wc.proxy.spliturl(url)
         debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
@@ -68,19 +71,16 @@ class ClientServerMatchmaker:
             # this means we should _not_ use this proxy for local
             # file links :)
             mtype = mimetypes.guess_type(url)[0]
+            config['requests']['valid'] += 1
             ServerHandleDirectly(self.client,
 	        'HTTP/1.0 200 OK\r\n',
                 'Content-Type: %s\r\n\r\n' % (mtype or 'text/plain'),
                 open(document, 'rb').read())
             return
+
         if hostname.lower()=='localhost' and port==config['port']:
-            # proxy info
-            ServerHandleDirectly(self.client,
-                'HTTP/1.0 200 OK\r\n',
-                'Content-Type: text/plain\r\n'
-                '\r\n',
-                wc.proxy.status_info())
-            return
+            return self.handle_local(document)
+
         if config['parentproxy']:
             self.hostname = config['parentproxy']
             self.port = config['parentproxyport']
@@ -91,6 +91,28 @@ class ClientServerMatchmaker:
             self.document = document
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
+
+
+    def handle_local(self, document):
+        if document.startswith("/status"):
+            # proxy info
+            ServerHandleDirectly(self.client,
+                'HTTP/1.0 200 OK\r\n',
+                'Content-Type: text/plain\r\n'
+                '\r\n',
+                wc.proxy.text_status())
+        elif document.startswith("/config"):
+            ServerHandleDirectly(self.client,
+                'HTTP/1.0 200 OK\r\n',
+                'Content-Type: text/plain\r\n'
+                '\r\n',
+                wc.proxy.text_config())
+        else:
+            ServerHandleDirectly(self.client,
+                'HTTP/1.0 200 OK\r\n',
+                'Content-Type: text/html\r\n'
+                '\r\n',
+                wc.proxy.html_portal())
 
 
     def handle_dns(self, hostname, answer):
@@ -132,6 +154,7 @@ class ClientServerMatchmaker:
         else:
             # Couldn't look up the host, so close this connection
             self.state = 'done'
+            config['requests']['failed'] += 1
             self.error(504, "Host not found",
                 'Host %s not found .. %s\r\n' % (hostname, answer.data))
 

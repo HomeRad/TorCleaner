@@ -1,3 +1,9 @@
+webcleaner (0.20) unstable; urgency=low
+
+  * documentation updates
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 23 Oct 2001 11:03:25 +0200
+
 webcleaner (0.19) unstable; urgency=low
 
   * htmlop.l:
