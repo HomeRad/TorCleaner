@@ -48,11 +48,11 @@ class Replacer(Filter):
 
 
     def filter(self, data, **args):
-        return attrs['buf'].replace(data)
+        return args['buf'].replace(data)
 
 
     def finish(self, data, **args):
-        buf = attrs['buf']
+        buf = args['buf']
         data = buf.replace(data)
         return data+buf.flush()
 
@@ -74,19 +74,22 @@ class Buf:
     def replace(self, data):
         data = self.buf + data
         for ro,repl in self.rules:
-            data = buf.replace_one(ro, repl, data)
-        self.buf = data[:BUF_SIZE]
-        return data[BUF_SIZE:]
+            data = self.replace_one(ro, repl, data)
+        self.buf = data[-BUF_SIZE:]
+        return data[:-BUF_SIZE]
 
 
     def replace_one(self, ro, repl, data):
+        debug(NIGHTMARE, "checking replacer rule", ro.pattern, "...")
         offset = 0
         mo = ro.search(data, offset)
         while mo:
+            debug(NIGHTMARE, "matched")
             data = data[:mo.start()] + repl + data[mo.end():]
             offset = mo.start()+len(repl)
             mo = ro.search(data, offset)
+        return data
 
 
-    def flush():
+    def flush(self):
         return self.buf

@@ -3,8 +3,9 @@ webcleaner (0.25) unstable; urgency=low
   * wcheaders: scrolling fix
   * flush data if server is closed
   * more quoting in .xml files
+  * use buffering in the replacer
 
- -- Bastian Kleineidam <calvin@debian.org>  Thu, 15 Nov 2001 15:08:45 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Fri, 16 Nov 2001 10:07:08 +0100
 
 webcleaner (0.24) unstable; urgency=low
 
