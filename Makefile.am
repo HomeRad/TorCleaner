@@ -17,8 +17,12 @@ clean-local:
 	rm -f wc/parser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
-	rm -f webcleaner.log* webcleaner.err*
+	rm -f webcleaner*.log* webcleaner.err*
 	rm -f config/magic.mime.mgc
+	rm -f webcleaner-md5sums.txt
+	rm -f _webcleaner2_configdata.py
+# delete possible aborted dist build
+	rm -rf webcleaner-$(VERSION)
 
 # to build in the current directory
 localbuild: all
