@@ -15,50 +15,96 @@
 <form action="config.html" method="POST">
 
 <table>
-<tr>
+<tr valign="top">
 <td>
 <fieldset>
 <legend tal:content="t_proxy_settings">Proxy settings</legend>
+<table>
+<tr>
+<td>
 <label for="port" tal:content="t_port" tal:attributes="title tt_port"
  >Port number</label><a href="#restart">*</a>
+</td>
+<td>
 <input class="number" type="text" name="port" id="port" maxlength="5"
  tal:attributes="value string:${config/port}">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <label for="timeout" tal:content="t_timeout"
  tal:attributes="title tt_timeout">Timeout (seconds)</label>
+</td>
+<td>
 <input class="number" type="text" name="timeout" id="timeout" value=""
  maxlength="5" tal:attributes="value string:${config/timeout}">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <label for="proxyuser" tal:content="t_proxyuser"
  tal:attributes="title tt_proxyuser">Proxy user</label>
+</td>
+<td>
 <input class="text" type="text" name="proxyuser" id="proxyuser"
  tal:attributes="value config/proxyuser">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <label for="proxypass" tal:content="t_proxypass"
  tal:attributes="title tt_proxypass">Proxy pass</label>
+</td>
+<td>
 <input class="text" type="password" name="proxypass" id="proxypass" value="">
+</td>
+</tr>
+</table>
 </fieldset>
 
 <fieldset>
 <legend tal:content="t_parentproxy_settings">Parent proxy settings</legend>
+<table>
+<tr>
+<td>
 <label for="parentproxy" tal:content="t_parentproxy">Parent proxy</label>
+</td>
+<td>
 <input class="text" type="text" name="parentproxy" id="parentproxy"
  tal:attributes="value config/parentproxy">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <label for="parentproxyport" tal:content="t_parentproxyport"
  tal:attributes="title tt_parentproxyport">Parent proxy port number</label>
+</td>
+<td>
 <input class="number" type="text" name="parentproxyport" id="parentproxyport"
  maxlength="5" tal:attributes="value string:${config/parentproxyport}">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <label for="parentproxyuser" tal:content="t_parentproxyuser"
  tal:attributes="title tt_parentproxyuser">Parent proxy user</label>
+</td>
+<td>
 <input class="text" type="text" name="parentproxyuser" id="parentproxyuser"
  tal:attributes="value config/parentproxyuser">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <label for="parentproxypass" tal:content="t_parentproxypass"
  tal:attributes="title tt_parentproxypass">Parent proxy pass</label>
+</td>
+<td>
 <input class="text" type="password" name="parentproxypass"
  id="parentproxypass" value="">
+</td>
+</tr>
+</table>
 </fieldset>
 </td>
 <td>
@@ -72,36 +118,62 @@
 </fieldset>
 </td>
 </tr>
-<tr>
+<tr valign="top">
 <td>
 <fieldset>
 <legend tal:content="t_allowedhosts">Allowed hosts</legend>
+<table>
+<tr>
+<td>
 <select name="allowedhosts" id="allowedhosts" multiple size="5">
 <option tal:repeat="host config/allowedhostlist" tal:attributes="value host">
 <span tal:replace="host">127.0.0.1</span>
 </option>
 </select>
+</td>
+<td>
 <input type="submit" name="delallowed" value="Remove selected" class="submit"
  tal:attributes="value t_remove">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <input class="text" type="text" name="newallowed" value="">
+</td>
+<td>
 <input type="submit" name="addallowed" value="Add new" class="submit"
  tal:attributes="value t_add">
+</td>
+</tr>
+</table>
 </fieldset>
 </td>
 <td>
 <fieldset>
 <legend tal:content="t_nofilterhosts">Don't filter hosts</legend>
-<select name="nofilterhosts" id="nofilterhosts" size="5" multiple>
+<table>
+<tr>
+<td>
+<select name="nofilterhosts" id="nofilterhosts" multiple size="5">
 <option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
- tal:content="t_host">127.0.0.1</option>
+ tal:content="host">127.0.0.1</option>
 </select>
+</td>
+<td>
 <input type="submit" name="delnofilter" value="Remove selected" class="submit"
  tal:attributes="value t_remove">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <input class="text" type="text" name="newnofilter" value="">
+</td>
+<td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"
  tal:attributes="value t_add">
+</td>
+</tr>
+</table>
 </fieldset>
 </td>
 </tr>
