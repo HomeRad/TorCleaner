@@ -24,6 +24,8 @@ from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.url import is_safe_url as _is_safe_url
 from wc.strformat import strtime as _strtime
 from wc.filter.rating import services, categories
+from wc.filter.rating import get_category as _get_category
+from wc.filter.rating.rating import Rating as _Rating
 from wc.filter.rating.storage import get_rating_store as _get_rating_store
 from wc.filter.rating.storage.pickle import PickleStorage as _PickleStorage
 
@@ -118,6 +120,7 @@ def _form_reset ():
 
 
 def _form_url (form):
+    """Check url validity"""
     global url
     if form.has_key('url'):
         val = _getval(form, 'url')
@@ -129,6 +132,7 @@ def _form_url (form):
 
 
 def _form_generic (form):
+    """Check generic validity"""
     global generic
     if form.has_key('generic'):
         generic = True
@@ -136,15 +140,17 @@ def _form_generic (form):
 
 
 def _form_ratings (form):
+    """Check category value validity"""
     for key, value in _get_prefix_vals(form, 'category_'):
         category = _get_category(key)
+        if category is None:
+            # unknown category
+            error['categoryvalue'] = True
+            return False
         if not category.is_valid_value(value):
             error['categoryvalue'] = True
             return False
-        else:
-            ratings[category] = value
-            if category not in ["generic", "modified"]:
-                values[category] = {value: True}
+        values[key] = value
     return True
 
 
@@ -165,15 +171,20 @@ def _calc_selindex (index):
 
 
 def _form_apply ():
-    global url
-    rating = {}
-    rating.update(ratings)
-    if generic:
-        rating['generic'] = u"true"
-    rating['modified'] = u"%d" % int(_time.time())
-    if _rating_add(url, rating):
-        info['ratingupdated'] = True
+    # store rating
+    if url in rating_store:
+        rating = rating_store[url]
     else:
+        rating = _Rating(url, generic)
+    rating.remove_categories()
+    for catname, value in values.items():
+        category = _get_category(catname)
+        rating.add_category_value(category, value)
+    rating_store[url] = rating
+    try:
+        rating_store.write()
+        info['ratingupdated'] = True
+    except:
         error['ratingupdated'] = True
 
 
