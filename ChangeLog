@@ -51,6 +51,11 @@
     Type: feature
     Changed: wc/webgui/context/config_html.py
 
+  * Fixed the "server_content without server" bug by reordering
+    the handle_close calls
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.
