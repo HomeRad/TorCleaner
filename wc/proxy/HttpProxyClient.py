@@ -38,7 +38,7 @@ class HttpProxyClient (object):
 
 
     def error (self, status, msg, txt=''):
-        pass
+        self.finish()
 
 
     def write (self, data):
@@ -91,4 +91,9 @@ class HttpProxyClient (object):
 
     def server_abort (self):
         debug(PROXY, 'ProxyClient: server_abort %s', str(self))
+        self.finish()
+
+
+    def handle_local (self):
+        error(PROXY, "ProxyClient handle_local %s", str(self.args))
         self.finish()
