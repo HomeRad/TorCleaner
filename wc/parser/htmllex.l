@@ -10,34 +10,39 @@
 #define YYSTYPE PyObject*
 #define YY_EXTRA_TYPE UserData*
 
+/* reset buffer a to empty string */
 #define CLEAR_BUF(a) \
     a = PyMem_Resize(a, char, 1); \
-    if (!a) return T_ERROR; \
-    a[0] = '\0';
+    if (a==NULL) return T_ERROR; \
+    a[0] = '\0'
 
+/* make python string from tmp_buf and assign it to a */
+#define PYSTRING_TMP(a) \
+    a = PyString_FromString(yyextra->tmp_buf); \
+    if (a==NULL) return T_ERROR
+
+/* set return value from tmp_buf */
 #define SETLVAL {\
-    PyObject* s = PyString_FromString(yyextra->tmp_buf); \
-    if (s==NULL) return T_ERROR; \
+    PyObject* s; \
+    PYSTRING_TMP(s); \
     CLEAR_BUF(yyextra->tmp_buf); \
     *yylval = s; \
     }
 
+/* append yytext to tmp_buf */
 #define APPEND_TO_TMP(n) {\
     int len = strlen(yyextra->tmp_buf); \
     yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, len+n+1); \
     strncat(yyextra->tmp_buf, yytext, n); \
     }
 
+/* lowercase the tmp_buf */
 #define LOWER_TMP {\
     char* p = yyextra->tmp_buf; \
     while (*p) { *p = tolower(*p); p++; } \
     }
 
-#define PYSTRING_TMP(a) \
-    a = PyString_FromString(yyextra->tmp_buf); \
-    if (!a) { return T_ERROR; }
-
-/* must be before SET_ATTR_LVAL */
+/* check for JavaScript or CSS tags; must be before SET_ATTR_LVAL */
 #define SCRIPT_CHECK \
     if (strcmp("script", PyString_AS_STRING(yyextra->tmp_tag))==0) \
 	BEGIN(S_SCRIPT); \
@@ -46,6 +51,7 @@
     else \
 	BEGIN(INITIAL)
 
+/* set return value from tag with attributes */
 #define SET_ATTR_LVAL \
     if (yyextra->tmp_tag==NULL || yyextra->tmp_attrs==NULL) { \
     PyErr_SetString(PyExc_TypeError, "tmp_tag or tmp_attrs is NULL"); \
@@ -53,8 +59,9 @@
     } \
     *yylval = Py_BuildValue("(OO)", yyextra->tmp_tag, yyextra->tmp_attrs); \
     if ((*yylval)==NULL) return T_ERROR; \
-    yyextra->tmp_tag = yyextra->tmp_attrs = NULL;
+    yyextra->tmp_tag = yyextra->tmp_attrs = NULL
 
+/* store collected attribute values in dictionary */
 #define FLUSH_ATTRS \
     if (strlen(yyextra->tmp_buf)) { \
         PYSTRING_TMP(yyextra->tmp_attrname); \
@@ -65,13 +72,20 @@
 	} \
         if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) { return T_ERROR; } \
     } \
-    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL
 
+/* update the buffer position */
 #define UPDATE_BUFPOS yyextra->bufpos += yyleng
+/* return a token, adjusting the nextpos value */
 #define RETURN(tok) yyextra->nextpos = yyextra->bufpos; return tok
 
 /* XXX todo */
 #define SET_ERROR(s)
+
+/* use Pythons memory management */
+#define malloc PyMem_Malloc
+#define realloc PyMem_Realloc
+#define free PyMem_Free
 
 #include "htmlparse.h"
 
@@ -661,6 +675,10 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
 %%
+
+#undef malloc
+#undef realloc
+#undef free
 
 int htmllexInit (void** scanner, UserData* data) {
     yylex_init(scanner);

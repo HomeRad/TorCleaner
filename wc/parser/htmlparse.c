@@ -19,7 +19,6 @@
 #line 2 "htmlparse.y"
 
 /* SAX parser, optimized for WebCleaner */
-#include <malloc.h>
 #include <string.h>
 #include <stdio.h>
 #include "htmlsax.h"
@@ -35,6 +34,8 @@ extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
 int yyerror(char* msg);
+
+/* test whether tag does not need a HTML end tag */
 #define NO_HTML_END_TAG(tag) !(strcmp(tag, "area")==0 || \
     strcmp(tag, "base")==0 || \
     strcmp(tag, "basefont")==0 || \
@@ -49,15 +50,17 @@ int yyerror(char* msg);
     strcmp(tag, "meta")==0 || \
     strcmp(tag, "param")==0)
 
+/* resize buf to an empty string */
 #define RESIZE_BUF(buf) \
     buf = PyMem_Resize(buf, char, 1); \
-    if (!buf) return NULL; \
+    if (buf==NULL) return NULL; \
     buf[0] = '\0'
 
+/* set buf to an empty string */
 #define NEW_BUF(buf) \
     buf = PyMem_New(char, 1); \
-    if (!buf) return NULL; \
-    buf[0] = '\0';
+    if (buf==NULL) return NULL; \
+    buf[0] = '\0'
 
 /* parser type definition */
 typedef struct {
@@ -67,6 +70,11 @@ typedef struct {
 } parser_object;
 
 staticforward PyTypeObject parser_type;
+
+/* use Pythons memory management */
+#define malloc PyMem_Malloc
+#define realloc PyMem_Realloc
+#define free PyMem_Free
 
 #ifndef YYSTYPE
 # define YYSTYPE int
@@ -136,8 +144,8 @@ static const short yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined. */
 static const short yyrline[] =
 {
-       0,    77,    78,    81,    82,    89,   126,   175,   208,   239,
-     270,   301,   332,   372,   412
+       0,    85,    86,    89,    90,    97,   134,   183,   216,   247,
+     278,   309,   340,   380,   420
 };
 #endif
 
@@ -920,19 +928,19 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 77 "htmlparse.y"
+#line 85 "htmlparse.y"
 {;
     break;}
 case 2:
-#line 78 "htmlparse.y"
+#line 86 "htmlparse.y"
 {;
     break;}
 case 3:
-#line 81 "htmlparse.y"
+#line 89 "htmlparse.y"
 { YYACCEPT; /* wait for more lexer input */ ;
     break;}
 case 4:
-#line 83 "htmlparse.y"
+#line 91 "htmlparse.y"
 {
     /* a python error occured in the scanner */
     UserData* ud = yyget_extra(scanner);
@@ -941,7 +949,7 @@ case 4:
 ;
     break;}
 case 5:
-#line 90 "htmlparse.y"
+#line 98 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
@@ -980,7 +988,7 @@ finish_start:
 ;
     break;}
 case 6:
-#line 127 "htmlparse.y"
+#line 135 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
@@ -1031,7 +1039,7 @@ finish_start_end:
 ;
     break;}
 case 7:
-#line 176 "htmlparse.y"
+#line 184 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1066,7 +1074,7 @@ finish_end:
 ;
     break;}
 case 8:
-#line 209 "htmlparse.y"
+#line 217 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1099,7 +1107,7 @@ finish_comment:
 ;
     break;}
 case 9:
-#line 240 "htmlparse.y"
+#line 248 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1132,7 +1140,7 @@ finish_pi:
 ;
     break;}
 case 10:
-#line 271 "htmlparse.y"
+#line 279 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1165,7 +1173,7 @@ finish_cdata:
 ;
     break;}
 case 11:
-#line 302 "htmlparse.y"
+#line 310 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1198,7 +1206,7 @@ finish_doctype:
 ;
     break;}
 case 12:
-#line 333 "htmlparse.y"
+#line 341 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1240,7 +1248,7 @@ finish_script:
 ;
     break;}
 case 13:
-#line 373 "htmlparse.y"
+#line 381 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1282,7 +1290,7 @@ finish_style:
 ;
     break;}
 case 14:
-#line 413 "htmlparse.y"
+#line 421 "htmlparse.y"
 {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1548,8 +1556,12 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 446 "htmlparse.y"
+#line 454 "htmlparse.y"
 
+
+#undef malloc
+#undef realloc
+#undef free
 
 /* create parser */
 static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {

@@ -1,7 +1,6 @@
 /* bla */
 %{
 /* SAX parser, optimized for WebCleaner */
-#include <malloc.h>
 #include <string.h>
 #include <stdio.h>
 #include "htmlsax.h"
@@ -17,6 +16,8 @@ extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
 int yyerror(char* msg);
+
+/* test whether tag does not need a HTML end tag */
 #define NO_HTML_END_TAG(tag) !(strcmp(tag, "area")==0 || \
     strcmp(tag, "base")==0 || \
     strcmp(tag, "basefont")==0 || \
@@ -31,15 +32,17 @@ int yyerror(char* msg);
     strcmp(tag, "meta")==0 || \
     strcmp(tag, "param")==0)
 
+/* resize buf to an empty string */
 #define RESIZE_BUF(buf) \
     buf = PyMem_Resize(buf, char, 1); \
-    if (!buf) return NULL; \
+    if (buf==NULL) return NULL; \
     buf[0] = '\0'
 
+/* set buf to an empty string */
 #define NEW_BUF(buf) \
     buf = PyMem_New(char, 1); \
-    if (!buf) return NULL; \
-    buf[0] = '\0';
+    if (buf==NULL) return NULL; \
+    buf[0] = '\0'
 
 /* parser type definition */
 typedef struct {
@@ -49,6 +52,11 @@ typedef struct {
 } parser_object;
 
 staticforward PyTypeObject parser_type;
+
+/* use Pythons memory management */
+#define malloc PyMem_Malloc
+#define realloc PyMem_Realloc
+#define free PyMem_Free
 
 %}
 
@@ -444,6 +452,10 @@ finish_characters:
 ;
 
 %%
+
+#undef malloc
+#undef realloc
+#undef free
 
 /* create parser */
 static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
