@@ -27,26 +27,15 @@ from wc.filter import FILTER_REQUEST_DECODE
 from wc.filter import FILTER_REQUEST_MODIFY
 from wc.filter import FILTER_REQUEST_ENCODE
 from wc.filter import applyfilter, get_filterattrs, FilterRating
-
-allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
-all_methods = allowed_methods + ['PUT']
-allowed_schemes = ['http', 'https'] # 'nntps' is untested
-allowed_connect_ports = [443] # 563 (NNTP over SSL) is untested
-allowed_local_docs = ['/blocked.html', '/blocked.png', '/error.html',
-    '/wc.css', '/adminpass.html', '/rated.html', '/robots.txt',]
-
-def is_allowed_document (doc):
-    for f in allowed_local_docs:
-        if doc.startswith(f):
-            return True
-    return False
+from Allowed import AllowedHttpClient
 
 
+_all_methods = ['GET', 'HEAD', 'CONNECT', 'POST', 'PUT']
 def is_http_method (s):
     if len(s)<7:
         # not enough data, say yes for now
         return True
-    for m in all_methods:
+    for m in _all_methods:
         if s.startswith(m):
             return True
     return False
@@ -65,9 +54,10 @@ class HttpClient (StatefulConnection):
     def __init__ (self, sock, addr):
         super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
+        self.allow = AllowedHttpClient()
         self.reset()
         host = self.addr[0]
-        if not config.allowed(host):
+        if not self.allow.host(host):
             warn(PROXY, "host %s access denied", host)
             self.close()
 
@@ -135,7 +125,7 @@ class HttpClient (StatefulConnection):
         except ValueError:
             self.error(400, i18n._("Can't parse request"))
             return
-        if self.method not in allowed_methods:
+        if  not self.allow.method(self.method):
             self.error(405, i18n._("Method Not Allowed"))
             return
         # fix broken url paths, and unquote
@@ -187,7 +177,7 @@ class HttpClient (StatefulConnection):
         if not self.scheme:
             # default scheme is http
             self.scheme = 'http'
-        elif self.scheme not in allowed_schemes:
+        elif not self.allow.scheme(self.scheme):
             warn(PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
             self.error(403, i18n._("Forbidden"))
             return False
@@ -197,8 +187,8 @@ class HttpClient (StatefulConnection):
                 warn(PROXY, "%s CONNECT method with forbidden scheme %r encountered", self, self.scheme)
                 self.error(403, i18n._("Forbidden"))
                 return False
-            if self.port != 443:
-                warn(PROXY, "%s CONNECT method with invalid port %r encountered", self, str(port))
+            if not self.allow.connect_port(self.port):
+                warn(PROXY, "%s CONNECT method with invalid port %r encountered", self, str(self.port))
                 self.error(403, i18n._("Forbidden"))
                 return False
         # request is ok
@@ -338,8 +328,8 @@ class HttpClient (StatefulConnection):
             is_local = self.hostname in config['localhosts'] and \
                self.port in (config['port'], config['sslport'])
             if config['adminuser'] and not config['adminpass']:
-                if is_local and is_allowed_document(self.document):
-                    self.handle_local()
+                if is_local and self.allow.public_document(self.document):
+                    self.handle_local(is_public_doc=True)
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = "http://localhost:%d/adminpass.html\r"%config['port']
@@ -440,7 +430,7 @@ class HttpClient (StatefulConnection):
             # check to see if the client is still connected.
 
 
-    def handle_local (self):
+    def handle_local (self, is_public_doc=False):
         assert self.state=='receive'
         debug(PROXY, '%s handle_local', self)
         # reject invalid methods
@@ -448,7 +438,7 @@ class HttpClient (StatefulConnection):
             self.error(403, i18n._("Invalid Method"))
             return
         # check admin pass
-        if self.document not in allowed_local_docs and config["adminuser"]:
+        if not is_public_doc and config["adminuser"]:
             creds = get_header_credentials(self.headers, 'Authorization')
             if not creds:
                 auth = ", ".join(get_challenges())

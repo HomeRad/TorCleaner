@@ -23,7 +23,7 @@ class SslConnection (Connection):
             self.handle_error('read error')
             return
         except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
-            exception(PROXY, "%s ssl read message", self)
+            exception(PROXY, "%s ssl read message %s", self, err)
             return
         except (SSL.Error, SSL.ZeroReturnError), err:
             self.handle_error('read error')
@@ -31,7 +31,7 @@ class SslConnection (Connection):
         if not data: # It's been closed, and handle_close has been called
             debug(PROXY, "%s closed, got empty data", self)
             return
-        debug(PROXY, '%s <= read %d', self, len(data))
+        debug(CONNECTION, '%s <= read %d', self, len(data))
         debug(CONNECTION, 'data %r', data)
 	self.recv_buffer += data
         self.process_read()
@@ -47,8 +47,8 @@ class SslConnection (Connection):
         data = self.send_buffer[:SEND_BUFSIZE]
         try:
             num_sent = self.send(data)
-        except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError):
-            exception(PROXY, "%s ssl write message", self)
+        except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
+            exception(PROXY, "%s ssl write message %s", self, err)
             return
         except SSL.Error, err:
             self.handle_error('write error')
@@ -59,7 +59,7 @@ class SslConnection (Connection):
                 return
             self.handle_error('write error')
             return
-        debug(PROXY, '%s => wrote %d', self, num_sent)
+        debug(CONNECTION, '%s => wrote %d', self, num_sent)
         debug(CONNECTION, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and self.close_ready():

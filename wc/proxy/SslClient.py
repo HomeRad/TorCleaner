@@ -3,6 +3,7 @@ from HttpClient import HttpClient
 from wc.webgui import WebConfig
 from ClientServerMatchmaker import ClientServerMatchmaker
 from SslConnection import SslConnection
+from Allowed import AllowedSslClient
 
 
 class SslClient (HttpClient, SslConnection):
@@ -16,7 +17,7 @@ class SslClient (HttpClient, SslConnection):
 
     def __init__ (self, sock, addr):
         super(SslClient, self).__init__(sock, addr)
-        debug(PROXY, "%s init with %s", self, addr)
+        self.allow = AllowedSslClient()
 
 
     def __repr__ (self):
