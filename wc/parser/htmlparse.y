@@ -499,7 +499,7 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
-    Py_DECREF(self->handler);
+    Py_XDECREF(self->handler);
     self->handler = NULL;
     self->userData->handler = NULL;
     return 0;
