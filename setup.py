@@ -100,10 +100,10 @@ class MyDistribution(Distribution):
         filename = os.path.join(directory, self.config_file)
         # add metadata
         metanames = ("name", "version", "author", "author_email",
-                         "maintainer", "maintainer_email", "url",
-                         "licence", "description", "long_description",
-                         "keywords", "platforms", "fullname", "contact",
-                         "contact_email", "licence", "fullname")
+                     "maintainer", "maintainer_email", "url",
+                     "licence", "description", "long_description",
+                     "keywords", "platforms", "fullname", "contact",
+                     "contact_email", "licence", "fullname")
         for name in metanames:
               method = "get_" + name
               cmd = "%s = %s" % (name, `getattr(self.metadata, method)()`)
