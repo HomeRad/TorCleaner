@@ -106,6 +106,14 @@ def _exec_form (form):
         _form_removerule(currule)
 
     # rule specific submit buttons
+    elif currule and form.has_key('addmatchurl'):
+        _form_rule_addmatchurl(form)
+    elif currule and form.has_key('delmatchurls'):
+        _form_rule_delmatchurls(form)
+    elif currule and form.has_key('addnomatchurl'):
+        _form_rule_addnomatchurl(form)
+    elif currule and form.has_key('delnomatchurls'):
+        _form_rule_delnomatchurls(form)
     elif currule and form.has_key('addattr'):
         _form_rewrite_addattr(form)
     elif currule and form.has_key('removeattrs') and form.has_key('delattr'):
@@ -444,17 +452,42 @@ def _form_rule_titledesc (form):
         info['ruledesc'] = True
 
 
-def _form_rule_matchurl (form):
-    matchurl = _getval(form, 'rule_matchurl').strip()
-    if matchurl!=currule.matchurl:
-        currule.matchurl = matchurl
-        _compileRegex(currule, "matchurl")
+def _form_rule_addmatchurl (form):
+    if not form.has_key('newmatchurl'):
+        return
+    matchurl = _getval(form, 'newmatchurl').strip()
+    if matchurl not in currule.matchurls:
+        currule.matchurls.append(matchurl)
+        currule.compile_matchurls()
         info['rulematchurl'] = True
-    dontmatchurl = _getval(form, 'rule_dontmatchurl').strip()
-    if dontmatchurl!=currule.dontmatchurl:
-        currule.dontmatchurl = dontmatchurl
-        _compileRegex(currule, "dontmatchurl")
-        info['ruledontmatchurl'] = True
+
+
+def _form_rule_delmatchurls (form):
+    toremove = _getlist(form, 'rule_matchurls')
+    if toremove:
+        for matchurl in toremove:
+            currule.matchurls.remove(matchurl)
+        currule.compile_matchurls()
+        info['rulematchurl'] = True
+
+
+def _form_rule_addnomatchurl (form):
+    if not form.has_key('newnomatchurl'):
+        return
+    nomatchurl = _getval(form, 'newnomatchurl').strip()
+    if nomatchurl not in currule.nomatchurls:
+        currule.nomatchurls.append(nomatchurl)
+        currule.compile_nomatchurls()
+        info['rulenomatchurl'] = True
+
+
+def _form_rule_delnomatchurls (form):
+    toremove = _getlist(form, 'rule_nomatchurls')
+    if toremove:
+        for nomatchurl in toremove:
+            currule.nomatchurls.remove(nomatchurl)
+        currule.compile_nomatchurls()
+        info['rulenomatchurl'] = True
 
 
 def _form_apply_allow (form):
@@ -473,7 +506,6 @@ def _form_apply_block (form):
 
 
 def _form_apply_header (form):
-    _form_rule_matchurl(form)
     name = _getval(form, 'rule_headername').strip()
     if not name:
         error['ruleheadername'] = True
@@ -487,7 +519,6 @@ def _form_apply_header (form):
 
 
 def _form_apply_image (form):
-    _form_rule_matchurl(form)
     width = _getval(form, 'rule_imgwidth').strip()
     try:
         width = int(width)
@@ -510,15 +541,13 @@ def _form_apply_image (form):
 
 
 def _form_apply_javascript (form):
-    _form_rule_matchurl(form)
-
+    pass
 
 def _form_apply_nocomments (form):
-    _form_rule_matchurl(form)
+    pass
 
 
 def _form_apply_rating (form):
-    _form_rule_matchurl(form)
     # rating categories
     for category, catdata in service['categories'].items():
         key = "category_%s"%category
@@ -541,7 +570,6 @@ def _form_apply_rating (form):
 
 
 def _form_apply_replace (form):
-    _form_rule_matchurl(form)
     # note: do not strip() the search and replace form values
     search = _getval(form, 'rule_search')
     if not search:
@@ -558,7 +586,6 @@ def _form_apply_replace (form):
 
 
 def _form_apply_rewrite (form):
-    _form_rule_matchurl(form)
     tag = _getval(form, 'rule_tag').strip()
     if not tag:
         error['ruletag'] = True
