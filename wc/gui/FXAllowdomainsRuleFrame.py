@@ -32,6 +32,6 @@ class FXAllowdomainsRuleFrame (FXRuleFrame):
         matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, i18n._("Domainfile\tExternal file with domains; one per line"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(matrix, 25, self, self.ID_NOTHING)
-        tf.setText(self.rule.file)
+        tf.setText(self.rule.filename)
         tf.setEditable(0)
 
