@@ -35,6 +35,7 @@ def log (msg):
 
 # XXX better name/implementation for this function
 def stripsite (url):
+    """remove scheme and host from url. return host, newurl"""
     import urlparse
     url = urlparse.urlparse(url)
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
@@ -42,7 +43,7 @@ def stripsite (url):
 
 def make_timer (delay, callback):
     "After DELAY seconds, run the CALLBACK function"
-    TIMERS.append( (time.time() + delay, callback) )
+    TIMERS.append( [time.time() + delay, callback] )
     TIMERS.sort()
 
 
@@ -58,7 +59,7 @@ def run_timers ():
         del TIMERS[0]
         callback()
 
-    if TIMERS: return TIMERS[0][0] - time.time() 
+    if TIMERS: return TIMERS[0][0] - time.time()
     else:      return 60
 
 
