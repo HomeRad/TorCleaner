@@ -138,6 +138,7 @@ def wstartfunc (handle=None, abort=None, confdir=ConfigDir, filelogs=True):
         signal.signal(signal.SIGHUP, sighup_reload_config)
     config.init_filter_modules()
     wc.filter.VirusFilter.init_clamav_conf()
+    wc.proxy.dns_lookups.init_resolver()
     # psyco library for speedup
     try:
         import psyco
