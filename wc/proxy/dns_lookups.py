@@ -11,6 +11,7 @@ import socket
 import struct
 import re
 import pprint
+
 import wc.proxy
 import wc.proxy.Connection
 import wc.dns.resolver
