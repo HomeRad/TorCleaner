@@ -107,6 +107,7 @@ input.submit {
 input.submit:hover {
     color: Black;
     background: #f8c218;
+    cursor: pointer;
 }
 
 input.submit:focus {
