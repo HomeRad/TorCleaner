@@ -38,41 +38,41 @@ class Header (wc.filter.Filter.Filter):
     # which mime types this filter applies to
     mimelist = []
 
-    def __init__ (self):
-        """initalize filter delete/add lists"""
-        super(Header, self).__init__()
-        self.delete = {
+    def get_attrs (self, url, headers):
+        """configure header rules to add/delete"""
+        d = super(Header, self).get_attrs(url, headers)
+        delete = {
             wc.filter.FILTER_REQUEST_HEADER: [],
             wc.filter.FILTER_RESPONSE_HEADER: [],
         }
-        self.add = {
+        add = {
             wc.filter.FILTER_REQUEST_HEADER: [],
             wc.filter.FILTER_RESPONSE_HEADER: [],
         }
-
-    def addrule (self, rule):
-        """add given rule to filter, filling header delete/add lists"""
-        super(Header, self).addrule(rule)
-        # ignore empty rules
-        if not rule.name:
-            return
-        # name is a regular expression match object
-        if not rule.value:
-            # no value --> header name should be deleted
-            # deletion can apply to many headers
-            matcher = re.compile(rule.name, re.I).match
-            if rule.filterstage in ('both', 'request'):
-                self.delete[wc.filter.FILTER_REQUEST_HEADER].append(matcher)
-            if rule.filterstage in ('both', 'response'):
-                self.delete[wc.filter.FILTER_RESPONSE_HEADER].append(matcher)
-        else:
-            # name, value must be ASCII strings
-            name = str(rule.name)
-            val = str(rule.value)
-            if rule.filterstage in ('both', 'request'):
-                self.add[wc.filter.FILTER_REQUEST_HEADER].append((name, val))
-            if rule.filterstage in ('both', 'response'):
-                self.add[wc.filter.FILTER_RESPONSE_HEADER].append((name, val))
+        for rule in self.rules:
+            # filter out unwanted rules
+            if not rule.appliesTo(url) or not rule.name:
+                continue
+            # name is a regular expression match object
+            if not rule.value:
+                # no value --> header name should be deleted
+                # deletion can apply to many headers
+                matcher = re.compile(rule.name, re.I).match
+                if rule.filterstage in ('both', 'request'):
+                    delete[wc.filter.FILTER_REQUEST_HEADER].append(matcher)
+                if rule.filterstage in ('both', 'response'):
+                    delete[wc.filter.FILTER_RESPONSE_HEADER].append(matcher)
+            else:
+                # name, value must be ASCII strings
+                name = str(rule.name)
+                val = str(rule.value)
+                if rule.filterstage in ('both', 'request'):
+                    add[wc.filter.FILTER_REQUEST_HEADER].append((name, val))
+                if rule.filterstage in ('both', 'response'):
+                    add[wc.filter.FILTER_RESPONSE_HEADER].append((name, val))
+        d['header_add'] = add
+        d['header_delete'] = delete
+        return d
 
     def doit (self, data, attrs):
         """apply stored header rules to data, which is a WcMessage object"""
@@ -80,7 +80,7 @@ class Header (wc.filter.Filter.Filter):
         # stage is FILTER_REQUEST_HEADER or FILTER_RESPONSE_HEADER
         stage = attrs['filterstage']
         for h in data.keys():
-            for name_match in self.delete[stage]:
+            for name_match in attrs['header_delete'][stage]:
                 if name_match(h):
                     wc.log.debug(wc.LOG_FILTER,
                                  "%s removing header %r", self, h)
@@ -88,7 +88,7 @@ class Header (wc.filter.Filter.Filter):
                     # go to next header name
                     break
         wc.proxy.Headers.remove_headers(data, delete)
-        for name, val in self.add[stage]:
+        for name, val in attrs['header_add'][stage]:
             wc.log.debug(wc.LOG_FILTER,
                          "%s adding header %r: %r", self, name, val)
             data[name] = val+"\r"
