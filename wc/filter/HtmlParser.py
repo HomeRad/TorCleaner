@@ -24,7 +24,7 @@ from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser, quote_attrval
 from wc.parser import resolve_html_entities, strip_quotes
 from wc.filter import FilterWait
-from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
+from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT, buf2data
 from wc.log import *
 # JS imports
 from wc.js.JSListener import JSListener
@@ -114,22 +114,7 @@ class BufferHtmlParser (HtmlParser):
 
     def buf2data (self):
         """Append all tags of the tag buffer to the output buffer"""
-        for item in self.buf:
-            if item[0]==DATA:
-                self.outbuf.write(item[1])
-            elif item[0]==STARTTAG:
-                s = "<"+item[1]
-                for name,val in item[2].items():
-                    s += ' %s'%name
-                    if val:
-                        s += "=\"%s\""%quote_attrval(val)
-                self.outbuf.write(s+">")
-            elif item[0]==ENDTAG:
-                self.outbuf.write("</%s>"%item[1])
-            elif item[0]==COMMENT:
-                self.outbuf.write("<!--%s-->"%item[1])
-            else:
-                error(FILTER, "unknown buffer element %s", item[0])
+        buf2data(self.buf, self.outbuf)
         self.buf = []
 
 

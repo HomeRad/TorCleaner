@@ -20,11 +20,12 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
+from wc.log import *
+
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter import compileMime, compileRegex
 from wc.filter.Filter import Filter
 from wc.filter.HtmlParser import FilterHtmlParser
-from wc.log import *
 
 
 class Rewriter (Filter):

@@ -23,6 +23,8 @@ from UrlRule import UrlRule
 from wc.XmlUtils import xmlify, unxmlify
 from wc.log import *
 from wc import i18n
+from cStringIO import StringIO
+from wc.parser.htmllib import quote_attrval
 
 # tag ids
 STARTTAG = 0
@@ -36,6 +38,28 @@ ATTR = 2
 ATTRVAL = 3
 COMPLETE = 4
 ENCLOSED = 5
+
+def buf2data (buf, out):
+    """write buffered data items to output stream out"""
+    for item in buf:
+        if item[0]==DATA:
+            out.write(item[1])
+        elif item[0]==STARTTAG:
+            s = "<"+item[1]
+            for name,val in item[2].items():
+                s += ' %s'%name
+                if val:
+                    s += "=\"%s\""%quote_attrval(val)
+            out.write(s+">")
+        elif item[0]==ENDTAG:
+            out.write("</%s>"%item[1])
+        elif item[0]==COMMENT:
+            out.write("<!--%s-->"%item[1])
+        else:
+            error(FILTER, "unknown buffer element %s", item[0])
+    return out
+
+
 # a list
 partvalnames = [
     'tag',
@@ -174,12 +198,9 @@ class RewriteRule (UrlRule):
         if not self.enclosed:
             # no enclosed expression => match
             return True
-        # check every data for a match
-        # remember that data is _not_ splitted across multiple items
-        for n in buf[pos:]:
-            if n[0]==DATA and self.enclosed_ro.search(n[1]):
-                return True
-        return False
+        # put buf items together for matching
+        data = buf2data(buf[pos:], StringIO()).getvalue()
+        return self.enclosed_ro.search(data)
 
 
     def filter_tag (self, tag, attrs):
