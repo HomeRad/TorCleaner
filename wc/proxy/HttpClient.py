@@ -51,14 +51,13 @@ class HttpClient (Connection):
 
     def error (self, status, msg, txt='', auth=''):
         self.state = 'done'
-        # this object will call server_connected at some point
-        context = {
-            'title': i18n._('Proxy Error %d %s') % (status, msg),
-            'error': txt,
-        }
+        err = i18n._('Proxy Error %d %s') % (status, msg)
+        if txt:
+            err = "%s (%s)" % (err, txt)
         form = None
+        # this object will call server_connected at some point
         WebConfig(self, '/error.html', form, self.protocol, self.headers,
-                  context=context, status=status, msg=msg, auth=auth)
+                  context={'error': err,}, status=status, msg=msg, auth=auth)
 
 
     def __repr__ (self):
