@@ -24,31 +24,36 @@
 <!-- folders -->
 <td>
 <div tal:repeat="folder folders">
+<input type="checkbox" checked tal:condition="not:folder/disable"
+ tal:attributes="name string:enablefolder${folder/oid}">
+<input type="checkbox" tal:condition="folder/disable"
+ tal:attributes="name string:enablefolder${folder/oid}">
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
 </div>
 <br>
-<input type="submit" value="Remove selected" tal:attributes="value t_remove">
-<br>
-<input type="text" value="Folder name" tal:attributes="value t_foldername"
+<input type="text" name="foldername" value="Folder name"
+ tal:attributes="value t_foldername"
  size="10">
-<input type="submit" value="New folder" tal:attributes="value t_newfolder">
+<input type="submit" name="newfolder" value="New folder"
+ tal:attributes="value t_newfolder">
 </td>
 <!-- filter -->
 <td>
 <div tal:repeat="filt filters">
+<input type="checkbox" checked tal:condition="not:filt/disable"
+ tal:attributes="name string:enablefilter${filt/oid}">
+<input type="checkbox" tal:condition="filt/disable"
+ tal:attributes="name string:enablefilter${filt/oid}">
+<a href="#">r</a>
 <a href="#" tal:content="filt/title"
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selfilter=${filt/oid}">On focus</a>
 </div>
 <br>
-<input type="submit" value="Remove selected"
- tal:attributes="value t_remove">
-<br>
-<select>
-<option tal:repeat="rule ruletypes" tal:attributes="value rule"
- tal:content="rule">Rewrite rule</option>
+<select name="newruletype">
+<option tal:repeat="rule ruletypes" tal:content="rule">Rewrite</option>
 </select>
-<input type="submit" value="New rule"
+<input type="submit" name="newrule" value="New rule"
  tal:attributes="value t_newrule; title tt_newrule">
 </td>
 <!-- rule -->
@@ -60,7 +65,8 @@
 </tr>
 </table>
 <br>
-<input type="submit" value="Apply" tal:attributes="value t_apply">
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 <a href="/" tal:content="t_back">Back</a>
 </form>
 </body>

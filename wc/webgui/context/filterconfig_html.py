@@ -5,7 +5,9 @@ from wc.webgui.context import getval
 
 t_title = i18n._("%s filter configuration") % AppName
 t_back = i18n._("Back")
+t_apply = i18n._("Apply")
 t_remove = i18n._("Remove selected")
+t_disable = i18n._("Disable selected")
 t_newfolder = i18n._("New folder")
 t_newrule = i18n._("New rule")
 t_folders = i18n._("Folders")
@@ -20,6 +22,15 @@ folders = [ r for r in config['rules'] if r.get_name()=='folder' ]
 curfolder = None
 filters = []
 curfilter = None
+ruletypes = [
+    "Allow",
+    "Block",
+    "Header",
+    "Image",
+    "Nocomments",
+    "Rewrite",
+    "Replacer",
+]
 
 # form execution
 def exec_form (form):
@@ -35,6 +46,18 @@ def exec_form (form):
         _form_selfolder(getval(form['selfolder']))
     if form.has_key('selfilter') and curfolder:
         _form_selfilter(getval(form['selfilter']))
+    # make a new folder
+    # XXX
+    # disable selected folders
+    # XXX
+    # make a new rule
+    if form.has_key('newrule') and form.has_key('newruletype') and \
+        curfilter:
+        _form_newrule(getval(form['newruletype']))
+    # remove selected filters
+    # XXX
+    # disable selected filters
+    # XXX
     # XXX submit buttons
     if info:
         # XXX write changed config
