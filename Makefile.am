@@ -92,7 +92,7 @@ md5sums:
 	  md5sum $$f > webcleaner-md5sums.txt; \
 	  gpg --detach-sign --armor $$f; \
 	done
-	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz whitelists/kids_and_teens/*.gz > extern-md5sums.txt)
+	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
 
 VERSION:
 	echo $(WCVERSION) > VERSION
@@ -109,7 +109,7 @@ homepage: VERSION md5sums
 	(cd test/filter && for f in *.zap; do \
 	    cat $$f | gzip --best > $(HTMLDIR)/htdocs/test/$${f}.gz; \
 	done)
-	cp -r config/{blacklists,whitelists}/ $(HTMLDIR)/htdocs/zapper
+	cp -r config/blacklists/ $(HTMLDIR)/htdocs/zapper
 	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
 	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
