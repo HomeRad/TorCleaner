@@ -24,6 +24,7 @@ from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
 from wc import ConfigDir, config
 from wc.log import *
+from wc.url import DOMAIN, spliturl
 
 # regular expression for image filenames
 is_image = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
@@ -129,12 +130,13 @@ class Blocker (Filter):
            we get the unquoted url from args
         """
         url = args['url']
+        parts = spliturl(url)
         debug(FILTER, "block filter working on url %r", url)
-        allowed, sid = self.allowed(url)
+        allowed, sid = self.allowed(url, parts)
         if allowed:
             debug(FILTER, "allowed url %s by rule %s", url, sid)
             return data
-        blocked, sid = self.blocked(url)
+        blocked, sid = self.blocked(url, parts)
         if blocked:
             debug(FILTER, "blocked url %s by rule %s", url, sid)
             if isinstance(blocked, basestring):
@@ -155,10 +157,10 @@ class Blocker (Filter):
         return data
 
 
-    def blocked (self, url):
+    def blocked (self, url, parts):
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
-            if blockdomain in url:
+            if blockdomain == parts[DOMAIN]:
                 debug(FILTER, "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
@@ -177,9 +179,9 @@ class Blocker (Filter):
         return False, None
 
 
-    def allowed (self, url):
+    def allowed (self, url, parts):
         for allowdomain, sid in self.allowed_domains:
-            if allowdomain in url:
+            if allowdomain == parts[DOMAIN]:
                 return True, sid
         for allowurl, sid in self.allowed_urls:
             if allowurl in url:
