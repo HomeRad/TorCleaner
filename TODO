@@ -1,10 +1,13 @@
 TODO
 
- File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 244, in server_content
+- if we know the mime type (eg <script src="">) then add it if its missing
+
+- http://searchenterpriselinux.techtarget.com/qna/0,289202,sid39_gci892814,00.html
+   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 244, in server_content
      assert self.server
      AssertionError
 
-- Python 2.3:
+- Python 2.3: (note: wait for Pthon 2.3.1 :)
   use Bool type
   use builtin timeout in socket module
   use logging package (get rid of debug, warn, info, error functions)

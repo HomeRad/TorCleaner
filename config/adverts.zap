@@ -192,7 +192,7 @@
 <rewrite title="IMDB Advert" oid="32"
  desc="adverts are redirections"
  matchurl="imdb">
-<attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH)</attr>
+<attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS)</attr>
 </rewrite>
 
 <rewrite title="IMDB Advert 3" oid="33"
@@ -278,9 +278,16 @@
 <attr name="src">pagead\.googlesyndication\.com</attr>
 </rewrite>
 
-<rewrite title="LWN ad" oid="121"
+<rewrite title="LWN ad" oid="46"
  desc="Pagead at linux weekly news"
  matchurl="lwn\.net">
 <attr>oasis\.lwn\.net/oasisc\.php</attr>
+</rewrite>
+
+<rewrite title="Freshmeat ads" oid="47"
+ desc="Freshmeat ad server"
+ matchurl="freshmeat.net"
+ tag="img">
+<attr name="src">fmads.osdn.com</attr>
 </rewrite>
 </folder>
