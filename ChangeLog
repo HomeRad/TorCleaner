@@ -1,6 +1,12 @@
 2.5
   * updated blacklist filters
     Changed: config/blacklist*, config/bl2wc.py
+  * make AllowRule a subclass of UrlRule
+    Changed: wc/filter/rule/AllowRule.py, wc/filter/Blocker.py,
+      templates/classic/macros/rules.html
+  * remove unnecessary bits from the dns library
+    Removed: wc/proxy/dns/{lazy,Base,win32dns}.py
+    Changed: wc/proxy/dns/*.py
 
 2.4 (released 1.11.2003)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031101
