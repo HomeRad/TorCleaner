@@ -62,7 +62,7 @@ class Rewriter (Filter):
         if not attrs.has_key('filter'): return data
         #debug(NIGHTMARE, "Rewriter finish", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
-        p.feed(data)
+        if data: p.feed(data)
         p.flush()
         p.buffer2data()
         return p.flushbuf()

@@ -2,8 +2,9 @@ webcleaner (0.39) unstable; urgency=low
 
   * wc/parser/: various fixes for HTML comment and tag parsing
   * debian/logrotate: stop and start daemon on log rotating
+  * wc/filter/Compress.py: flush with Z_FINISH
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat,  1 Jun 2002 14:45:27 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Jun 2002 00:04:28 +0200
 
 webcleaner (0.38) unstable; urgency=low
 
