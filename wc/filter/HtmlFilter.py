@@ -49,7 +49,7 @@ class HtmlFilter (JSFilter):
         self.security = HtmlSecurity()
 
 
-    def new_instance (self, opts):
+    def new_instance (self, **opts):
         return HtmlFilter(self.rules, self.ratings, self.url, **opts)
 
 
@@ -73,21 +73,32 @@ class HtmlFilter (JSFilter):
         return "<HtmlFilter[%d] %s>" % (self.level, self.url)
 
 
+    def _is_waiting (self, item):
+        """if parser is in wait state put item on waitbuffer and return
+           True"""
+        if self.htmlparser.state[0]=='wait':
+            self.htmlparser.waitbuf.append(item)
+            return True
+        return False
+
+
     def _data (self, d):
         """general handler for data"""
         item = [DATA, d]
+        if self._is_waiting(item):
+            return
         self.htmlparser.tagbuf.append(item)
 
 
     def cdata (self, data):
         """character data"""
-        self._debug("cdata %r", data)
+        debug(FILTER, "%s cdata %r", self, data)
         return self._data(data)
 
 
     def characters (self, data):
         """characters"""
-        self._debug("characters %r", data)
+        debug(FILTER, "%s characters %r", self, data)
         return self._data(data)
 
 
@@ -95,18 +106,20 @@ class HtmlFilter (JSFilter):
         """a comment; accept only non-empty comments"""
         if not (self.comments and data):
             return
-        self._debug("comment %r", data)
+        debug(FILTER, "%s comment %r", self, data)
         item = [COMMENT, data]
+        if self._is_waiting(item):
+            return
         self.htmlparser.tagbuf.append(item)
 
 
     def doctype (self, data):
-        self._debug("doctype %r", data)
+        debug(FILTER, "%s doctype %r", self, data)
         return self._data("<!DOCTYPE%s>"%data)
 
 
     def pi (self, data):
-        self._debug("pi %r", data)
+        debug(FILTER, "%s pi %r", self, data)
         return self._data("<?%s?>"%data)
 
 
@@ -114,7 +127,9 @@ class HtmlFilter (JSFilter):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         # default data
-        self._debug("startElement %r", tag)
+        debug(FILTER, "%s startElement %r", self, tag)
+        if self._is_waiting([STARTTAG, tag, attrs]):
+            return
         tag = check_spelling(tag, self.url)
         if self.stackcount:
             if self.stackcount[-1][0]==tag:
@@ -141,24 +156,24 @@ class HtmlFilter (JSFilter):
             if not urllib.splittype(self.base_url)[0]:
                 self.base_url = "%s://%s" % \
                                 (urllib.splittype(self.url)[0], self.base_url)
-            self._debug("using base url %r", self.base_url)
+            debug(FILTER, "%s using base url %r", self, self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply
-        self._filterStartElement(tag, attrs)
+        self.filterStartElement(tag, attrs)
         # if rule stack is empty, write out the buffered data
         if not self.rulestack and not self.javascript:
             self.htmlparser.tagbuf2data()
 
 
-    def _filterStartElement (self, tag, attrs):
+    def filterStartElement (self, tag, attrs):
         """filter the start element according to filter rules"""
         rulelist = []
         filtered = False
         item = [STARTTAG, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                self._debug("matched rule %r on tag %r", rule.title, tag)
+                debug(FILTER, "%s matched rule %r on tag %r", self, rule.title, tag)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = True
@@ -169,7 +184,7 @@ class HtmlFilter (JSFilter):
                     else:
                         break
                 else:
-                    self._debug("put on buffer")
+                    debug(FILTER, "%s put rule %r on buffer", self, rule.title)
                     rulelist.append(rule)
         if rulelist:
             # remember buffer position for end tag matching
@@ -181,7 +196,7 @@ class HtmlFilter (JSFilter):
             self.htmlparser.tagbuf.append(item)
         elif self.javascript:
             # if it's not yet filtered, try filter javascript
-            self._jsStartElement(tag, attrs)
+            self.jsStartElement(tag, attrs)
         else:
             # put original item on tag buffer
             self.htmlparser.tagbuf.append(item)
@@ -193,17 +208,18 @@ class HtmlFilter (JSFilter):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the tag buffer (calling tagbuf2data)"""
-        self._debug("endElement %r", tag)
+        debug(FILTER, "%s endElement %r", self, tag)
+        if self._is_waiting([ENDTAG, tag]):
+            return
         tag = check_spelling(tag, self.url)
         if self.stackcount and self.stackcount[-1][0]==tag:
             self.stackcount[-1][1] -= 1
-
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
         item = [ENDTAG, tag]
-        if not self._filterEndElement(tag):
+        if not self.filterEndElement(tag):
             if self.javascript and tag=='script':
-                self._jsEndElement(item)
+                self.jsEndElement(item)
                 self.js_src = False
                 return
             self.htmlparser.tagbuf.append(item)
@@ -214,7 +230,8 @@ class HtmlFilter (JSFilter):
             self.htmlparser.tagbuf2data()
 
 
-    def _filterEndElement (self, tag):
+    def filterEndElement (self, tag):
+        """filters an end tag, return True if tag was filtered, else False"""
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
         # matches, all other match too
