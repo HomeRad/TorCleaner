@@ -1,38 +1,40 @@
 # use scripts found in Tools/i18n of the Python distribution
-PYTHON := python2.3
-GETTEXT := $(PYTHON) pygettext.py -k bk.i18n._
-#MSGFMT := $(PYTHON) msgfmt.py
-MSGFMT := @MSGFMT@ -c
-MSGMERGE := @MSGMERGE@
+PYTHON = env PYTHONPATH=$(top_srcdir) python
+GETTEXT = python pygettext.py
+MSGFMT = @MSGFMT@
+MSGMERGE = @MSGMERGE@
+TALGETTEXT = $(PYTHON) ../wc/webgui/TAL/talgettext.py
 POSOURCES = $(shell find ../wc -name \*.py) \
-	$(shell find ../bk -name \*.py) \
-	../webcleaner ../webcleaner-service ../webcleaner-certificates \
-	$(shell find ../templates -name \*.html)
-
+	../webcleaner ../webcleaner-certificates
+TEMPLATES = $(shell find ../templates -name \*.html)
 LDIR = ../share/locale
 PACKAGE = webcleaner
+TEMPLATE = $(PACKAGE).pot
 LFILE = LC_MESSAGES/$(PACKAGE).mo
 # defined language (add new languages here)
 LANGUAGES = de
-MOS = $(patsubst %, %.mo, $(LANGUAGES) )
 
-all:	$(MOS)
+mofiles:
+	for la in $(LANGUAGES); do \
+	  if [ ! -d $(LDIR)/$$la/LC_MESSAGES ]; then \
+	    mkdir -p $(LDIR)/$$la/LC_MESSAGES; \
+	  fi; \
+          $(MSGFMT) -c --statistics -o $(LDIR)/$$la/$(LFILE) $$la.po; \
+        done
 
-%.po:	webcleaner.pot
-	$(MSGMERGE) $@ $(PACKAGE).pot -o $@
+%.po:	$(TEMPLATE)
+	$(MSGMERGE) -U --suffix=.bak $@ $<
 
-webcleaner.pot: $(POSOURCES)
-if BUILD_WINDOWS
-else
-	$(GETTEXT) --default-domain=$(PACKAGE) --no-location $(POSOURCES)
-endif
+$(TEMPLATE): $(POSOURCES)
+	$(GETTEXT) -w 80 --default-domain=$(PACKAGE) $(POSOURCES)
+	$(TALGETTEXT) -u $(TEMPLATE) $(TEMPLATES)
 
 %.mo:	%.po
 	if [ ! -d $(LDIR)/$*/LC_MESSAGES ]; then \
 	  mkdir -p $(LDIR)/$*/LC_MESSAGES; \
 	fi
-	$(MSGFMT) -o $(LDIR)/$*/$(LFILE) $<
+	$(MSGFMT) -c --statistics -o $(LDIR)/$*/$(LFILE) $<
 
 clean-local:
-	for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
+	@for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
 	rm -f *.mo
