@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.381" oid="6">
+<folder sid="wc.381" oid="8">
 <title lang="en">Miscellaneous</title>
 <description lang="en">Misc things we dont like in our HTML source :)</description>
 
@@ -104,7 +104,7 @@
   <replacement part="attr">target=\1 style=cursor:ne-resize</replacement>
 </rewrite>
 
-<replace sid="wc.380"
+<replace sid="wc.380" disable="1"
  search="Bastian">
   <title lang="en">The Dude</title>
   <description lang="en">Just a silly example.</description>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.323" oid="2">
+<folder sid="wc.323" oid="5">
 <title lang="en">HTTP Headers</title>
 <description lang="en">Add, delete and modify HTTP headers.</description>
 
@@ -35,7 +35,7 @@
   <description lang="en">Proxies (including WebCleaner) add a &apos;Via&apos; header in the outgoing request. This rule prevents this.</description>
 </header>
 
-<header sid="wc.317"
+<header sid="wc.317" disable="1"
  name="Accept.*">
   <title lang="en">No accepts</title>
   <description lang="en">This is really paranoid. Most browsers send Accept, Accept-Language, Accept-Encoding and Accept-Charset headers. These headers can reveal private information (eg. if you accept certain languages your ethnic group can be guessed). This rule is disabled per default because I use the Accept-Language headers.</description>
@@ -65,7 +65,7 @@
   <description lang="en">The Client-ip header is an extension header used by some older clients and some proxies to transmit the IP address of the machine on which the client is running.</description>
 </header>
 
-<header sid="wc.322"
+<header sid="wc.322" disable="1"
  name="Set-Cookie">
   <title lang="en">No Cookies</title>
   <description lang="en">Remove all set-cookie headers. Some sites may not work with this option because they require Cookies. This rule is disabled per default because I use the browser&apos;s Cookie management interface: everytime someone wants to set a cookie the browser displays a question if I want to set it.</description>

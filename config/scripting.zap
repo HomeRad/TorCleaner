@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.312" oid="4">
+<folder sid="wc.312" oid="7">
 <title lang="en">Scripting</title>
 <description lang="en">Scripting related.</description>
 
@@ -52,7 +52,7 @@
   <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.296"
+<rewrite sid="wc.296" disable="1"
  tag="body">
   <title lang="en">&lt;body&gt; onload</title>
   <description lang="en">Remove onload javascript attribute</description>
@@ -89,13 +89,13 @@
   <matchurl>apnews\.excite\.com</matchurl>
 </rewrite>
 
-<rewrite sid="wc.301">
+<rewrite sid="wc.301" disable="1">
   <title lang="en">Remove Javascript links</title>
   <description lang="en">Only activate this rule if Javascript is disabled in your browser.</description>
   <attr>javascript:.*</attr>
 </rewrite>
 
-<rewrite sid="wc.302"
+<rewrite sid="wc.302" disable="1"
  tag="noscript">
   <title lang="en">Use noscript tag</title>
   <description lang="en">Only activate this rule if Javascript is disabled in your browser.</description>
