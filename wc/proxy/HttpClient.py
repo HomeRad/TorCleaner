@@ -360,7 +360,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
-            is_local = self.hostname in wc.config['localhosts'] and \
+            is_local = self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
                self.port in (wc.config['port'], wc.config['sslport'])
             if is_local:
                 is_public_doc = self.allow.public_document(self.document)
