@@ -263,7 +263,8 @@
 
 <rewrite sid="wc.28"
  tag="table">
-  <title lang="de">Google search ads</title>
+  <title lang="en">Google search ads</title>
+  <title lang="de">Google Suche Werbungen</title>
   <matchurl>www\.google\.</matchurl>
   <attr name="width">^(25|100)%$</attr>
   <enclosed>&amp;ai=A</enclosed>
@@ -274,10 +275,11 @@
   <title lang="de">Google pageads</title>
 </block>
 
-<rewrite sid="wc.32"
- tag="div">
-  <title lang="de">suprnova.org</title>
-  <attr name="class">float-side-div</attr>
-  <enclosed>http://ad\.suprnova\.org</enclosed>
+<rewrite sid="wc.32">
+  <title lang="en">Blog ads</title>
+  <title lang="de">Blog Werbungen</title>
+  <attr>blogads\.com</attr>
 </rewrite>
+</folder>
+
 </folder>
