@@ -66,7 +66,7 @@ config = None
 
 def startfunc (handle=None):
     # init logging
-    loginit(os.path.join(ConfigDir, "logging.conf"))
+    initlog(os.path.join(ConfigDir, "logging.conf"))
     # we run single-threaded, decrease check interval
     sys.setcheckinterval(500)
     # support reload on posix systems
