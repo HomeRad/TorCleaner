@@ -227,7 +227,7 @@ class HttpServer (Server):
         else:
             self.attrs = initStateObjects(self.headers, self.url)
         if self.headers.get('Content-Length') is None:
-            self.headers['Connection'] = 'close'
+            self.headers['Connection'] = 'close\r'
         debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", `self.headers.headers`)
         wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
         self.client.server_response(self.response, self.headers)
