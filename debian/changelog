@@ -2,7 +2,8 @@ webcleaner (0.36) unstable; urgency=low
 
   * use getheader(), not get() on HTTP header object
   * fix returned status line on errors in ClientServerMatchmaker
-  * implemented Proxy Authentication
+  * implemented Proxy Authentication; the wcheaders tool does not yet
+    work with this!
 
  -- Bastian Kleineidam <calvin@debian.org>  Wed, 10 Apr 2002 21:47:34 +0200
 

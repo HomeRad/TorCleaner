@@ -1,4 +1,4 @@
-import wc, os, sha
+import wc, os, sha, re
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
@@ -27,6 +27,7 @@ _("You cannot remove folders. If you really want to get rid\n"
 "It is always safer to disable a folder or filter instead of\n"
 "deleting it!")
 
+_proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
 
 import tempfile
 # set the directory for new files
@@ -160,8 +161,8 @@ class ConfWindow(ToolWindow):
         proxy = FXVerticalFrame(tabbook, FRAME_THICK|FRAME_RAISED)
         proxy_top = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
 
-	basics = FXGroupBox(proxy_top, _("Basic Values"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
-        matrix = FXMatrix(basics, 2, MATRIX_BY_COLUMNS)
+	f = FXGroupBox(proxy_top, _("Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        matrix = FXMatrix(f, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, _("Version"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXLabel(matrix, wc.Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXLabel(matrix, _("User"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
@@ -364,9 +365,9 @@ class ConfWindow(ToolWindow):
 
 
     def onCmdProxyUser (self, sender, sel, ptr):
-        if ":" in sender.getText():
+        if not _proxy_user_ro.match(sender.getText()):
             self.error(_("Invalid Proxy User"),
-                       _("You must not use a colon in the proxy user name."))
+                       _("You have to use -A-Za-z0-9._ for the proxy user name."))
             sender.setText(self.proxyuser)
             return 1
         self.proxyuser = sender.getText()
