@@ -18,7 +18,7 @@ class HttpsServer (HttpServer):
         # default values
         self.addr = (ipaddr, port)
         self.reset()
-        assert config['sslgateway'], "%s unwanted ssl gateway usage", self
+        assert config['sslgateway'], "%s unwanted ssl gateway usage"%str(self)
         # attempt connect
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=clientctx)
         try:
