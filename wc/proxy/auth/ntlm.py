@@ -165,10 +165,14 @@ def str_flags (flags):
 
 def check_nonces ():
     # deprecate old nonces
+    todelete = []
     for nonce, value in nonces.items():
         noncetime = time.time() - value
         if noncetime > max_noncesecs:
-            del nonces[nonce]
+            todelete.append(nonce)
+    for nonce in todelete:
+        del nonces[nonce]
+    make_timer(300, check_nonces)
 
 
 def get_ntlm_challenge (**attrs):
@@ -581,9 +585,13 @@ def _test ():
         print "finished ok"
 
 
+from wc.proxy import make_timer
+def init ():
+    # check for timed out nonces every 5 minutes
+    make_timer(300, check_nonces)
+    pass
+
 if __name__=='__main__':
     _test()
 else:
-    from wc.proxy import make_timer
-    # check for timed out nonces every 5 minutes
-    make_timer(300, check_nonces)
+    init()

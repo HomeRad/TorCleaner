@@ -21,11 +21,15 @@ max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
 
 
 def check_nonces ():
-    # deprecate old nonce
-    for key, value in nonces.items():
+    # deprecate old nonces
+    todelete = []
+    for nonce, value in nonces.items():
         noncetime = time.time() - value
         if noncetime > max_noncesecs:
-            del nonces[key]
+            todelete.append(nonce)
+    for nonce in todelete:
+        del nonces[nonce]
+    make_timer(300, check_nonces)
 
 
 def get_digest_challenge (stale="false"):
@@ -205,6 +209,13 @@ def encode_digest (digest):
     return ''.join(hexrep)
 
 
+def init ():
+    # check for timed out nonces every 5 minutes
+    make_timer(300, check_nonces)
+    pass
+
 from wc.proxy import make_timer
-# check for timed out nonces every 5 minutes
-make_timer(300, check_nonces)
+if __name__=='__main__':
+    _test()
+else:
+    init()
