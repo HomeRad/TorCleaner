@@ -66,9 +66,9 @@ def status():
 # import platform specific functions
 if os.name=='posix':
     from _posix import *
-# process things for Windoze: not yet implemented
-#elif os.name=='nt':
-#    from _nt import *
+# Windoof
+elif os.name=='nt':
+    from _nt import *
 else:
     from _other import *
 

@@ -4,7 +4,7 @@ webcleaner (0.13) unstable; urgency=low
     it is connected
   * add missing second argument to handle_proc function, this prevented
     xml files to be parsed correctly
-  * fixed the parser so he correct recognizes <tag/> tags
+  * fixed the parser so that <tag/> tags are handled correctly
 
  -- Bastian Kleineidam <calvin@debian.org>  Mon, 21 May 2001 21:26:58 +0200
 

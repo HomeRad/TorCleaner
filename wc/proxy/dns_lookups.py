@@ -456,6 +456,14 @@ class DnsLookupConnection(Connection):
             callback(self.hostname, DnsResponse('error', 'closed with no answer .. %s' % self))
 
 def init_dns_resolver():
+    import os
+    if os.name=="posix":
+        init_dns_resolver_posix()
+    elif os.name=="nt":
+        init_dns_resolver_nt()
+
+
+def init_dns_resolver_posix():
     "Set up the DnsLookupConnection class with /etc/resolv.conf information"
     for line in open('/etc/resolv.conf', 'r').readlines():
         line = strip(line)
@@ -472,6 +480,24 @@ def init_dns_resolver():
     if not DnsConfig.nameservers:
         debug(ALWAYS, 'Warning: no nameservers found')
         DnsConfig.nameservers.append('127.0.0.1')
+
+def init_dns_resolver_nt():
+    """requires at least Python >= 2.1"""
+    import _winreg
+    try:
+        key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,
+                 "SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
+    except WindowsError:
+        debug(ALWAYS, 'Warning: no network config found in registry')
+        DnsConfig.nameservers.append('127.0.0.1')
+        return
+    dhcp = _winreg.QueryValue(key, "EnableDhcp")
+    if dhcp:
+        debug(BRING_IT_ON, _winreg.QueryValue(key, "DhcpNameServer"))
+    else:
+        debug(BRING_IT_ON, _winreg.QueryValue(key, "NameServer"))
+    debug(BRING_IT_ON, _winreg.QueryValue(key, "SearchList"))
+
 
 init_dns_resolver()
 dnscache = DnsCache()

@@ -15,6 +15,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+#import _winreg, sys
+#>>> key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\Python\\PythonCore\\" + sys.winver + "\\PythonPath")
+#>>> _winreg.QueryValue(key, "")
+#'f:\\src\\python-cvs\\lib;f:\\src\\python-cvs\\pcbuild'
+#>>> _winreg.EnumKey(key, 0)
+#'Pythonwin'
+#>>> _winreg.EnumKey(key, 1)
+#'win32'
+#>>>
+
+
+
+from wc import startfunc,Version
+
 def _find_executable(executable, path=None):
     """Try to find 'executable' in the directories listed in 'path' (a
     string listing directories separated by 'os.pathsep'; defaults to

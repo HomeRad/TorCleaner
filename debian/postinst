@@ -25,7 +25,7 @@ db_version 2.0
 #     `abort-remove' or `abort-deconfigure'.
 
 package=webcleaner
-DIRLIST="/usr/lib/python2.0/site-packages/webfilter /usr/lib/python2.0/site-packages/webparser"
+DIRLIST="/usr/lib/python2.0/site-packages/wc"
 FILELIST="_webcleaner_configdata.py"
 SITEPACKAGES="/usr/lib/python2.0/site-packages"
 COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
