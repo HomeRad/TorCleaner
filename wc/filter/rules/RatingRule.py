@@ -20,7 +20,7 @@ import wc
 import wc.log
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
-import wc.filter.Rating
+import wc.filter.rating
 
 
 class RatingRule (wc.filter.rules.UrlRule.UrlRule):
@@ -55,7 +55,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         """fill rating structure"""
         super(RatingRule, self).compile_data()
         for category, catdata in \
-            wc.filter.Rating.service['categories'].items():
+            wc.filter.rating.service['categories'].items():
             if category not in self.ratings:
                 if catdata.has_key('rvalues'):
                     self.ratings[category] = catdata['rvalues'][0]
@@ -86,7 +86,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             if not limit:
                 # no limit is set for this category
                 continue
-            elif wc.filter.Rating.service['categories'][category].has_key(
+            elif wc.filter.rating.service['categories'][category].has_key(
                                                                     'rrange'):
                 # check if value is in range
                 if (limit[0] is not None and value < limit[0]) or \

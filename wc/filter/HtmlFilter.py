@@ -27,7 +27,7 @@ import wc.filter.JSFilter
 import wc.filter.rules.RewriteRule
 import wc.filter.HtmlSecurity
 import wc.filter.HtmlTags
-import wc.filter.Rating
+import wc.filter.rating
 
 
 class HtmlFilter (wc.filter.JSFilter.JSFilter):
@@ -135,16 +135,16 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             if attrs.get('http-equiv', u'').lower() == 'content-rating':
                 rating = wc.HtmlParser.resolve_html_entities(
                                                   attrs.get('content', u''))
-                url, rating = wc.filter.Rating.rating_import(self.url, rating)
+                url, rating = wc.filter.rating.rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
                 # often
-                wc.filter.Rating.rating_add(url, rating)
+                wc.filter.rating.rating_add(url, rating)
         elif tag == "body":
             if self.ratings:
                 # headers finished, check rating data
                 for rule in self.ratings:
-                    msg = wc.filter.Rating.rating_allow(self.url, rule)
+                    msg = wc.filter.rating.rating_allow(self.url, rule)
                     if msg:
                         raise wc.filter.FilterRating(msg)
                 self.ratings = []
