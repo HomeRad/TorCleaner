@@ -4,6 +4,8 @@ version 2.10
 
 - convert remaining tests to unit testing where appropriate
 
+- test parent proxy functionality (esp. with HTTPS)
+
 version 2.11 and above
 
 - display a stripped version of server error messages inline in
