@@ -14,8 +14,14 @@
     Changed: config/adverts{_specific,}.zap
   * added script to parser AdZapper squid_redirect files
     Added: config/adzap2wc.py
-  * use python regex replacements instead of named groups
+  * use python regex backreference expanding instead of named groups
     Changed: config/redirects.zap, wc/filter/rule/RewriteRule.py
+  * in Block/AllowRule merge all url attributes into a single url regex
+    Changed: wc/filter/rule/*.py, config/filter.dtd,
+      templates/classic/macros/rules.html,
+      templates/classic/filterconfig.html,
+      wc/gui/FX{Allow,Block}RuleFrame.py,
+      wc/webgui/context/filterconfig_html.py
   * fix bug in XML character data decoding
     Changed: wc/__init__.py, wc/filter/rule/*.py
 
