@@ -3,10 +3,12 @@ TODO
 version 2.8 and above
 
 - content rating:
+  o feature: content rating cache update rating_cache_merge_with(ratings)
+  o feature: mail ratings to author
   o command line script to put squidguard blacklists into content rating
-    cache?
-  o cgi script for site rating submissions
-  o cgi script for site rating requests
+    cache
+
+- bfilter has Flash parse and generation library, I want that too .)
 
 - use test/client.py, test/server.py for testing
 
@@ -17,6 +19,14 @@ version 2.8 and above
 
 - NTLM: reconnect to parent proxy after first 407 error (squid closes
   the connection)
+
+- unicode parsing for flex
+  the HTML parser (written with flex) does not support unicode, so
+  sometimes you'll see '?' chars in the HTML output.
+
+- HTTP/1.1 pipelining
+  if used, an assertion is triggered like this:
+  AssertionError: client in state receive sent data 'GET http://XXX HTTP/1.1
 
 - blocked HTTPS urls are broken because we switch to http://
   instead the proxy should support https requests.
@@ -66,25 +76,5 @@ for your application make sure to deny these requests: add
     HeadDeny X-SSL-notAfter ".*"
     HeadDeny X-SSL-serial ".*"
 
-- dockapp to visualize config and status
-  I made machine-parseable config and status output, so write a tool
-  that uses it :)
-
-- unicode parsing for flex
-  the HTML parser (written with flex) does not support unicode, so
-  sometimes you'll see '?' chars in the HTML output.
-
-- webcleanerconf: sortable filters (with up/down)
-  The order in which filters are applied should be customizable through
-  the GUI.
-
-- Use FOX 1.2 Python bindings (fxpy 1.2)
-  When FOX 1.2 is released, help to update fxpy to this release using
-  the new SWIG 1.3 code.
-
-- HTTP/1.1 pipelining
-
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
-
-- bfilter has Flash parse and generation library, I want that too .)
