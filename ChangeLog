@@ -39,6 +39,8 @@
     - prevent CVE-2001-0130, Lotus Domino font size overflow crash
     Changed: wc/filter/HtmlParser.py
     Added: wc/filter/HtmlSecurity.py
+  * norm the path of urls in request and script src tags
+    Changed: wc/proxy/HttpClient.py, wc/filter/HtmlParser.py
 
 2.1
   * lots of minor bugs fixed running pychecker

@@ -12,10 +12,10 @@ Features
 * filter images by size, removes certain banner adverts
 * reduce images to low-bandwidth JPEGs
 * remove/add/modify arbitrary HTTP headers
-* usage of SquidGuard domain and url blacklists
+* usage of SquidGuard blacklists
 * Basic, Digest and NTLM proxy authentication for both clients and servers
 * per-host access control
-* customizable with a themable web interface
+* customizable over a web interface
 
 
 Installing
