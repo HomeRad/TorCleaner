@@ -37,6 +37,13 @@
     a = PyString_FromString(yyextra->tmp_buf); \
     if (!a) { return T_ERROR; }
 
+/* must be before SET_ATTR_LVAL */
+#define SCRIPT_CHECK \
+    if (strcmp("script", PyString_AS_STRING(yyextra->tmp_tag))==0) \
+	BEGIN(S_SCRIPT); \
+    else \
+	BEGIN(INITIAL)
+
 #define SET_ATTR_LVAL \
     *yylval = Py_BuildValue("(OO)", yyextra->tmp_tag, yyextra->tmp_attrs); \
     if ((*yylval)==NULL) return T_ERROR; \
@@ -285,11 +292,8 @@ RX_DATA [-a-zA-Z0-9_]+
     }
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_tag);
-    if (strcmp("script", yyextra->tmp_buf)==0)
-	BEGIN(S_SCRIPT);
-    else
-	BEGIN(INITIAL);
     CLEAR_BUF(yyextra->tmp_buf);
+    SCRIPT_CHECK;
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START);
 }
@@ -306,9 +310,18 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_SCRIPT);
 }
 
-<S_SCRIPT>[^<]+|< {
+<S_SCRIPT>[^<]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
+}
+
+<S_SCRIPT><[^\/][^Ss] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_SCRIPT>. {
+    return T_WAIT;
 }
 
   /*********************** ATTRS ************************/
@@ -329,7 +342,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_ATTR1,S_ATTR2,S_ATTR3>">" {
     UPDATE_BUFPOS;
     FLUSH_ATTRS;
-    BEGIN(INITIAL);
+    SCRIPT_CHECK;
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START);
 }
@@ -390,7 +403,7 @@ RX_DATA [-a-zA-Z0-9_]+
     CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
-    BEGIN(INITIAL);
+    SCRIPT_CHECK;
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START);
 }
@@ -417,7 +430,7 @@ RX_DATA [-a-zA-Z0-9_]+
     CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
-    BEGIN(INITIAL);
+    SCRIPT_CHECK;
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START);
 }
