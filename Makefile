@@ -94,6 +94,7 @@ upload: distclean dist VERSION
 	scp debian/changelog $(HTMLDIR)/changes.txt
 	scp VERSION $(HTMLDIR)/raw/
 	#scp dist/* $(HTMLDIR)
+	ncftpput upload.sourceforge.net /incoming dist/* && read -p "Make new SF file releases and then press Enter:"
 	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
 
 locale:
