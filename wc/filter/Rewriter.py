@@ -45,7 +45,6 @@ class Rewriter (wc.filter.Filter.Filter):
             raise wc.filter.FilterWait("wait for rating decision")
         return p.getoutput()
 
-
     def finish (self, data, **attrs):
         if not attrs.has_key('rewriter_filter'):
             return data
@@ -59,7 +58,6 @@ class Rewriter (wc.filter.Filter.Filter):
             raise wc.filter.FilterRating("missing rating")
         p.tagbuf2data()
         return p.getoutput()
-
 
     def get_attrs (self, url, headers):
         """We need a separate filter instance for stateful filtering"""
