@@ -30,12 +30,13 @@ from wc.proxy.Headers import WcMessage
 
 class WebConfig (object):
     def __init__ (self, client, url, form, protocol, clientheaders,
-                  status=200, msg=i18n._('Ok'), context={}, auth=''):
+                  status=200, msg=i18n._('Ok'), localcontext=None, auth=''):
         debug(GUI, "WebConfig %s %s", url, form)
         self.client = client
         # we pretend to be the server
         self.connected = True
-        headers = WcMessage(StringIO('Server: Proxy\r\n'))
+        headers = WcMessage()
+        headers['Server'] = 'Proxy\r'
         if auth:
             if status==407:
                 headers['Proxy-Authenticate'] = "%s\r"%auth
@@ -58,7 +59,7 @@ class WebConfig (object):
             if path.endswith('.html'):
                 fp = file(path)
                 # get TAL context
-                context, newstatus = get_context(dirs, form, context, lang)
+                context, newstatus = get_context(dirs, form, localcontext, lang)
                 if newstatus==401 and status!=newstatus:
                     client.error(401, i18n._("Authentication Required"),
                                  auth=get_challenges())
@@ -78,11 +79,14 @@ class WebConfig (object):
             # error when client.error caused the exception
             client.error(404, i18n._("Not Found"))
             return
-        except:
-            # catch all other exceptions and report internal error
+        except StandardError:
+            # catch standard exceptions and report internal error
             exception(GUI, "Template error")
             client.error(500, i18n._("Internal Error"))
             return
+        # not catched builtin exceptions are:
+        # SystemExit, StopIteration and all warnings
+
         # write response
         self.put_response(data, protocol, status, msg, headers)
 
@@ -103,11 +107,11 @@ def norm (path):
     return os.path.realpath(os.path.normpath(os.path.normcase(path)))
 
 
-def expand_template (f, context, translator=None):
-    """expand the given template file in context
+def expand_template (fp, context, translator=None):
+    """expand the given template file fp in context
        return expanded data"""
     # note: standard input encoding is iso-8859-1 for html templates
-    template = simpleTAL.compileHTMLTemplate(f)
+    template = simpleTAL.compileHTMLTemplate(fp)
     out = StringIO()
     template.expand(context, out, translator=translator)
     return out.getvalue()
@@ -132,8 +136,8 @@ def get_template_url (url, lang):
     return get_template_path(urllib.unquote(parts[2]), lang)
 
 
-def get_template_path (path, lang):
-    """return tuple (path, dirs, lang)"""
+def _get_template_path (path):
+    """return tuple (path, dirs)"""
     base = os.path.join(TemplateDir, config['gui_theme'])
     base = norm(base)
     dirs = get_relative_path(path)
@@ -146,6 +150,13 @@ def get_template_path (path, lang):
         raise IOError("Relative path %r" % path)
     if not path.startswith(base):
         raise IOError("Invalid path %r" % path)
+    return path, dirs
+
+
+def get_template_path (path, defaultlang):
+    """return tuple (path, dirs, lang)"""
+    path, dirs = _get_template_path(path)
+    lang = defaultlang
     for la in i18n.supported_languages:
         assert len(la)==2
         if path.endswith(".html.%s"%la):
@@ -170,35 +181,35 @@ def get_context (dirs, form, localcontext, lang):
     template = dirs[-1].replace(".", "_")
     # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
+    # make TAL context
+    context = simpleTALES.Context()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
         debug(GUI, "got form %s", form)
         status = template_context._exec_form(form)
-    # make TAL context
-    context = simpleTALES.Context()
+        context.addGlobal("form", form)
     # add default context values
-    add_default_context(context, form, dirs[-1], lang)
+    add_default_context(context, dirs[-1], lang)
     # augment the context
     attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     for attr in attrs:
         context.addGlobal(attr, getattr(template_context, attr))
     # add local context
-    for key, value in localcontext.items():
-        context.addGlobal(key, value)
+    if localcontext is not None:
+        for key, value in localcontext.items():
+            context.addGlobal(key, value)
     return context, status
 
 
-def add_default_context (context, form, filename, lang):
-    # form values
-    context.addGlobal("form", form)
+def add_default_context (context, filename, lang):
     # rule macros
-    path, dirs, lang = get_template_path("macros/rules.html", lang)
+    path, dirs = _get_template_path("macros/rules.html")
     rulemacros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
-    context.addGlobal("rulemacros", rulemacros)
+    context.addGlobal("rulemacros", rulemacros.macros)
     # standard macros
-    path, dirs, lang = get_template_path("macros/standard.html", lang)
+    path, dirs = _get_template_path("macros/standard.html")
     macros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
-    context.addGlobal("macros", macros)
+    context.addGlobal("macros", macros.macros)
     # used by navigation macro
     context.addGlobal("nav", {filename.replace('.', '_'): True})
     # page template name
