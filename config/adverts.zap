@@ -189,9 +189,9 @@
 </rewrite>
 
 <rewrite title="IMDB Advert" oid="32"
- desc="adverts are redirections"
+ desc="adverts are redirections or this new /r/ link"
  matchurl="imdb">
-<attr>/tiger_redirect\?</attr>
+<attr>(/tiger_redirect\?|/r/)</attr>
 </rewrite>
 
 <rewrite title="IMDB Advert 3" oid="33"
