@@ -44,15 +44,18 @@ class Rewriter (Filter):
         if not attrs.has_key('rewriter_filter'): return data
         p = attrs['rewriter_filter']
         p.feed(data)
-        return p.flush()
+        return p.getoutput()
 
 
     def finish (self, data, **attrs):
         if not attrs.has_key('rewriter_filter'): return data
         p = attrs['rewriter_filter']
-        # note: feed even if data is empty
+        # feed even if data is empty
         p.feed(data)
-        return p.flush(finish=True)
+        # flushing can raise FilterWait exception
+        p.flush()
+        p.tagbuf2data()
+        return p.getoutput()
 
 
     def getAttrs (self, url, headers):
