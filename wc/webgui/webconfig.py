@@ -42,27 +42,7 @@ class WebConfig (object):
         self.client = client
         # we pretend to be the server
         self.connected = True
-        headers = wc.proxy.Headers.WcMessage()
-        headers['Server'] = 'Proxy\r'
-        if auth:
-            if status == 407:
-                headers['Proxy-Authenticate'] = "%s\r" % auth
-            elif status == 401:
-                headers['WWW-Authenticate'] = "%s\r" % auth
-            else:
-                wc.log.error(wc.LOG_GUI,
-                             "Authentication with wrong status %d", status)
-        if status in [301, 302]:
-            headers['Location'] = clientheaders['Location']
-        gm = mimetypes.guess_type(url, None)
-        if gm[0] is not None:
-            ctype = gm[0]
-        else:
-            # note: index.html is appended to directories
-            ctype = 'text/html'
-        if ctype == 'text/html':
-            ctype += "; charset=iso-8859-1"
-        headers['Content-Type'] = "%s\r" % ctype
+        headers = self.get_headers(url, status, auth, clientheaders)
         path = ""
         try:
             lang = wc.i18n.get_headers_lang(clientheaders)
@@ -99,8 +79,12 @@ class WebConfig (object):
         # not catched builtin exceptions are:
         # SystemExit, StopIteration and all warnings
 
-        # finally write response to client
+        # write response to client
         self.put_response(data, protocol, status, msg, headers)
+        # restart?
+        if newstatus == "restart":
+            wc.restart()
+
 
     def put_response (self, data, protocol, status, msg, headers):
         """write response to client"""
@@ -119,6 +103,32 @@ def expand_template (template, context):
        return expanded data
     """
     return template.render(context)
+
+
+def get_headers (url, status, auth, clientheaders):
+    """get proxy headers to send"""
+    headers = wc.proxy.Headers.WcMessage()
+    headers['Server'] = 'Proxy\r'
+    if auth:
+        if status == 407:
+            headers['Proxy-Authenticate'] = "%s\r" % auth
+        elif status == 401:
+            headers['WWW-Authenticate'] = "%s\r" % auth
+        else:
+            wc.log.error(wc.LOG_GUI,
+                         "Authentication with wrong status %d", status)
+    if status in [301, 302]:
+        headers['Location'] = clientheaders['Location']
+    gm = mimetypes.guess_type(url, None)
+    if gm[0] is not None:
+        ctype = gm[0]
+    else:
+        # note: index.html is appended to directories
+        ctype = 'text/html'
+    if ctype == 'text/html':
+        ctype += "; charset=iso-8859-1"
+    headers['Content-Type'] = "%s\r" % ctype
+    return headers
 
 
 def get_context (dirs, form, localcontext, lang):
