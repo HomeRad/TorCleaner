@@ -294,19 +294,19 @@ def check_spelling (tag, url):
     if tag in HtmlTags or tag in MathTags:
         return tag
     if tag in OldTags:
-        #warn(PARSER, "non-HTML4 tag %r at %r", tag, url)
+        #warn(FILTER, "non-HTML4 tag %r at %r", tag, url)
         return tag
     if tag in KnownInvalidTags:
-        #warn(PARSER, "known invalid tag %r at %r", tag, url)
+        #warn(FILTER, "known invalid tag %r at %r", tag, url)
         return tag
     if is_other_namespace(tag):
         # ignore other namespaces
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
          if distance(tag, htmltag)==1:
-             warn(PARSER, "HTML tag %r corrected to %r at %r", tag, htmltag, url)
+             warn(FILTER, "HTML tag %r corrected to %r at %r", tag, htmltag, url)
              return htmltag
-    error(PARSER, "unknown HTML tag %r at %r", tag, url)
+    error(FILTER, "unknown HTML tag %r at %r", tag, url)
     # filter possibly trailing garbage the parser accepted
     mo = filter_tag_garbage(tag)
     if mo:

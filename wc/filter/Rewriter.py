@@ -25,7 +25,8 @@ from wc.log import *
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter import compileMime
 from wc.filter.Filter import Filter
-from wc.filter.HtmlParser import FilterHtmlParser
+from wc.filter.HtmlParser import HtmlParser
+from wc.filter.HtmlFilter import HtmlFilter
 
 
 class Rewriter (Filter):
@@ -43,17 +44,15 @@ class Rewriter (Filter):
         if not attrs.has_key('rewriter_filter'): return data
         p = attrs['rewriter_filter']
         p.feed(data)
-        return p.flushbuf()
+        return p.flush()
 
 
     def finish (self, data, **attrs):
         if not attrs.has_key('rewriter_filter'): return data
         p = attrs['rewriter_filter']
-        # feed even if data is empty
+        # note: feed even if data is empty
         p.feed(data)
-        p.flush()
-        p.buf2data(finish=True)
-        return p.flushbuf()
+        return p.flush(finish=True)
 
 
     def getAttrs (self, url, headers):
@@ -75,5 +74,9 @@ class Rewriter (Filter):
             elif rule.get_name()=='rating':
                 ratings.append(rule)
         # generate the HTML filter
-        d['rewriter_filter'] = FilterHtmlParser(rewrites, ratings, url, **opts)
+        handler = HtmlFilter(rewrites, ratings, url, **opts)
+        htmlparser = HtmlParser(handler)
+        # the handler is modifying parser buffers and state
+        handler.htmlparser = htmlparser
+        d['rewriter_filter'] = htmlparser
         return d
