@@ -48,7 +48,7 @@ class ContextVariable:
 		self.ourValue = value
 		
 	def isDefault (self):
-		return 0
+		return False
 		
 	def isNothing (self):
 		return self.value() is None
@@ -57,22 +57,22 @@ class ContextVariable:
 		# Return the length of the sequence - if it's zero length then it's handled
 		# as though it wasn't a sequence at all.
 		try:
-			seqLength = len (self.value())
+			seqLength = len(self.value())
 			dummy = self.value()[1:1]
-			return seqLength
+			return seqLength>0
 		except:
-			return 0
+			return False
 		
 	def isCallable (self):
-		return callable (self.ourValue)
+		return callable(self.ourValue)
 		
 	def isTrue (self):
 		if (self.isNothing()):
-			return 0
+			return False
 		if (self.isDefault()):
-			return 1
+			return True
 		if (self.isSequence()):
-			return len (self.value())
+			return len(self.value())>0
 		return self.value()
 		
 	def value (self, currentPath=None):
@@ -95,10 +95,10 @@ class DefaultVariable (ContextVariable):
 		ContextVariable.__init__ (self, 1)
 		
 	def isNothing (self):
-		return 0
+		return False
 		
 	def isDefault (self):
-		return 1
+		return True
 		
 	def value (self, currentPath=None):
 		# We return our self so that define works properly.
@@ -112,7 +112,7 @@ class NothingVariable (ContextVariable):
 		ContextVariable.__init__ (self, None)
 				
 	def isNothing (self):
-		return 1
+		return True
 		
 class NoCallVariable (ContextVariable):
 	def __init__ (self, variable):
