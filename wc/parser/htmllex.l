@@ -366,6 +366,7 @@ RX_DATA [-a-zA-Z0-9_]+
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(INITIAL);
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START);
@@ -376,6 +377,7 @@ RX_DATA [-a-zA-Z0-9_]+
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(INITIAL);
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START_END);
@@ -383,7 +385,10 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR5>{RX_WHITE_SPACE}+ {
     UPDATE_BUFPOS;
+    PYSTRING_TMP(yyextra->tmp_attrval);
+    CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(S_ATTR1);
 }
 

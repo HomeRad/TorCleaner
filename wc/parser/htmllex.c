@@ -3845,8 +3845,8 @@ static yyconst long int yy_rule_linenum[49] =
       142,  147,  154,  159,  165,  170,  177,  183,  188,  195,
       200,  206,  211,  218,  224,  231,  236,  244,  254,  267,
       274,  281,  287,  293,  301,  309,  314,  321,  328,  333,
-      341,  347,  353,  359,  364,  374,  384,  390,  400,  406,
-      417,  423,  428,  433,  439,  444,  449,  454
+      341,  347,  353,  359,  364,  375,  386,  395,  405,  411,
+      422,  428,  433,  438,  444,  449,  454,  459
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -4804,6 +4804,7 @@ YY_RULE_SETUP
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(INITIAL);
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START);
@@ -4811,12 +4812,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 374 "htmllex.l"
+#line 375 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(INITIAL);
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START_END);
@@ -4824,16 +4826,19 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 384 "htmllex.l"
+#line 386 "htmllex.l"
 {
     UPDATE_BUFPOS;
+    PYSTRING_TMP(yyextra->tmp_attrval);
+    CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(S_ATTR1);
 }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 390 "htmllex.l"
+#line 395 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -4846,7 +4851,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 400 "htmllex.l"
+#line 405 "htmllex.l"
 { 
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
@@ -4854,7 +4859,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 406 "htmllex.l"
+#line 411 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -4868,7 +4873,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 417 "htmllex.l"
+#line 422 "htmllex.l"
 { 
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
@@ -4877,7 +4882,7 @@ YY_RULE_SETUP
 /*********************** TAGEND ************************/
 case 42:
 YY_RULE_SETUP
-#line 423 "htmllex.l"
+#line 428 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_TAGEND);
@@ -4885,7 +4890,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 428 "htmllex.l"
+#line 433 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
@@ -4893,7 +4898,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 433 "htmllex.l"
+#line 438 "htmllex.l"
 {
     UPDATE_BUFPOS;
     SETLVAL;
@@ -4902,7 +4907,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 439 "htmllex.l"
+#line 444 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_TAGSTART);
@@ -4910,7 +4915,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 444 "htmllex.l"
+#line 449 "htmllex.l"
 {
     UPDATE_BUFPOS;
 }
@@ -4918,7 +4923,7 @@ YY_RULE_SETUP
 /*********************** ERROR ************************/
 case 47:
 YY_RULE_SETUP
-#line 449 "htmllex.l"
+#line 454 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
@@ -4926,7 +4931,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 454 "htmllex.l"
+#line 459 "htmllex.l"
 {
     UPDATE_BUFPOS;
     SETLVAL;
@@ -4937,10 +4942,10 @@ YY_RULE_SETUP
 /*********************** END ************************/
 case 49:
 YY_RULE_SETUP
-#line 462 "htmllex.l"
+#line 467 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 4944 "htmllex.c"
+#line 4949 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -6219,7 +6224,7 @@ int main()
 #endif
 /* %e */
 #endif /* !yyIN_HEADER */
-#line 462 "htmllex.l"
+#line 467 "htmllex.l"
 #ifndef yyIN_HEADER
 
 
