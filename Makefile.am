@@ -7,21 +7,21 @@ PYTHON := python$(PYVER)
 VERSION := $(shell python setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
-              -Iwc/parser -Ilibjs -I/usr/include/$(PYTHON) \
+              -Ibk/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 PYCHECKEROPTS := -F pycheckrc
 PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
-                  wc/parser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
-		  wc/proxy/dns/*.py wc/network/*.py \
-		  wc/webgui/*.py wc/webgui/context/*.py \
-		  wc/webgui/simpletal/*.py wc/magic/*.py
-#		  test/*.py tests/*.py tests/server/*.py
+	bk/*.py bk/HtmlParser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
+	wc/proxy/dns/*.py wc/network/*.py \
+	wc/webgui/*.py wc/webgui/context/*.py \
+	wc/webgui/simpletal/*.py wc/magic/*.py
+#	test/*.py tests/*.py tests/server/*.py
 
 SERVICEDIR := /etc/webcleaner/service
 
 clean-local: clean-log
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
-	rm -f wc/parser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
+	rm -f bk/HtmlParser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 	rm -f config/magic.mime.mgc
@@ -36,7 +36,7 @@ clean-log:
 # to build in the current directory
 localbuild: all
 	$(PYTHON) setup.py build
-	cp -f build/lib.linux-i686-$(PYVER)/wc/parser/htmlsax.so wc/parser/
+	cp -f build/lib.linux-i686-$(PYVER)/bk/HtmlParser/htmlsax.so bk/HtmlParser/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/ || true
 
