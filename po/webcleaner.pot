@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Nov  4 23:19:51 2003\n"
+"POT-Creation-Date: Wed Nov  5 19:44:14 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -724,14 +724,6 @@ msgstr ""
 msgid "Blocked image URL"
 msgstr ""
 
-msgid ""
-"The following button downloads new\n"
-"filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a> and merges their\n"
-"changes into the current configuration.<br>\n"
-"If something has changed, the new filter configuration files\n"
-"are saved and reloaded into the proxy."
-msgstr ""
-
 msgid "Header value"
 msgstr ""
 
@@ -1100,6 +1092,14 @@ msgid "Access key 0"
 msgstr ""
 
 msgid "%(AppName)s Google Selection"
+msgstr ""
+
+msgid ""
+"The <b>Update filter configuration</b> button\n"
+"downloads new filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a>\n"
+"and merges their changes into the current configuration.<br>\n"
+"If something has changed, the new filter configuration files\n"
+"are saved and reloaded into the proxy."
 msgstr ""
 
 msgid "Rule description successfully changed."
