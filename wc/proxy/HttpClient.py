@@ -112,17 +112,14 @@ class HttpClient (Connection):
         try:
             self.method, self.url, protocol = self.request.split()
         except ValueError:
-            config['requests']['error'] += 1
             self.error(400, i18n._("Can't parse request"))
             return
         if self.method not in allowed_methods:
-            config['requests']['error'] += 1
             self.error(405, i18n._("Method Not Allowed"))
             return
         # fix broken url paths
         self.url = norm_url(self.url)
         if not self.url:
-            config['requests']['error'] += 1
             self.error(400, i18n._("Empty URL"))
             return
         self.nofilter = {'nofilter': config.nofilter(self.url)}
@@ -138,7 +135,13 @@ class HttpClient (Connection):
             ServerHandleDirectly(self, 'HTTP/1.1 301 Found', 301,
                     WcMessage(StringIO('Location: %s\r\n\r\n' % msg)), '')
             return
-        # note: we do not enforce a maximum url length
+        # enforce a maximum url length
+        if len(self.url) > 1024:
+            error(PROXY, "%s request url length %d chars is too long", str(self), len(self.url))
+            self.error(400, i18n._("URL too long"))
+            return
+        if len(self.url) > 255:
+            warn(PROXY, "%s request url length %d chars is very long", str(self), len(self.url))
         self.state = 'headers'
 
 
