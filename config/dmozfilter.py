@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.3
 # filter the big dmoz file
 # usage:
 # zcat content.rdf.u8.gz | dmozfilter.py | gzip --best > dmoz.rdf.stripped.gz
