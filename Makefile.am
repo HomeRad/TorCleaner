@@ -65,10 +65,12 @@ authtest: restart
 # filter and parse random data
 randomtest:
 	@echo "parse random data..."
-	head -c 20000 /dev/random | $(PYTHON) test/parsefile.py - > /dev/null
+	rm -f randomparse.txt
+	head -c 20000 /dev/random | $(PYTHON) test/parsefile.py - > /dev/null 2> randomparse.txt
 	@echo "done."
+	rm -f randomfilter.txt
 	@echo "filter random data..."
-	head -c 20000 /dev/random | $(PYTHON) test/filterfile.py - > /dev/null
+	head -c 20000 /dev/random | $(PYTHON) test/filterfile.py - > /dev/null 2> randomfilter.txt
 	@echo "done."
 
 
@@ -84,13 +86,14 @@ offlinetest: restart
 	rm -f index.html
 
 md5sums:
-	(cd config && md5sum *.zap | gzip --best > md5sums.gz)
-	(cd test/filter && md5sum *.zap | gzip --best > md5sums.gz)
+	(cd config && md5sum *.zap > filter-md5sums.txt)
+	(cd test/filter && md5sum *.zap > filter-md5sums.txt)
 	for f in webcleaner-$(WCVERSION).tar.gz; do \
 	  if [ ! -f $$f ]; then break; fi; \
-	  md5sum $$f > $(MD5SUMS); \
+	  md5sum $$f > webcleaner-md5sums.txt; \
 	  gpg --detach-sign --armor $$f; \
 	done
+	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz whitelists/kids_and_teens/*.gz > extern-md5sums.txt)
 
 package:
 	cd dist && dpkg-scanpackages . ../override.txt | gzip --best > Packages.gz
