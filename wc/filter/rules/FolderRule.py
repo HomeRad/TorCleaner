@@ -103,7 +103,8 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         s = u"""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
 %s oid="%d">""" % \
-      (wc.ConfigCharset, super(FolderRule, self).toxml(), self.oid)
+      (wc.configuration.ConfigCharset, super(FolderRule, self).toxml(),
+       self.oid)
         s += u"\n"+self.title_desc_toxml()+u"\n"
         for r in self.rules:
             s += u"\n%s\n" % r.toxml()
