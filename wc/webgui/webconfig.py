@@ -172,16 +172,6 @@ def add_default_context (context, filename, lang):
     context_add(context, "baseurl",
                 "http://localhost:%d/" % wc.configuration.config['port'])
     add_i18n_context(context, lang)
-    # other available languges
-    otherlanguages = []
-    for la in wc.i18n.supported_languages:
-        if lang == la:
-            continue
-        otherlanguages.append({'code': la,
-                               'name': wc.i18n.lang_name(la),
-                               'trans': wc.i18n.lang_trans(la, lang),
-                              })
-    context_add(context, "otherlanguages", otherlanguages)
 
 
 nav_filenames = [
@@ -206,8 +196,19 @@ def add_i18n_context (context, lang):
     try:
         translator = wc.get_translator(lang, translatorklass=Translator)
     except IOError, msg:
+        wc.log.warn(wc.LOG_GUI, "IOError %s", msg)
         translator = NullTranslator()
     context_add(context, "i18n", translator)
+    # other available languges
+    otherlanguages = []
+    for la in wc.i18n.supported_languages:
+        if lang == la:
+            continue
+        otherlanguages.append({'code': la,
+                               'name': wc.i18n.lang_name(la),
+                               'trans': wc.i18n.lang_trans(la, lang),
+                              })
+    context_add(context, "otherlanguages", otherlanguages)
 
 
 def context_add (context, key, val):
