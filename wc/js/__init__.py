@@ -17,7 +17,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import re
-import bk.log
 
 
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search

@@ -19,7 +19,6 @@
 import Image
 import os
 import cStringIO as StringIO
-import bk.i18n
 import wc
 import wc.filter
 
@@ -116,16 +115,16 @@ class ImageSize (wc.filter.Filter.Filter):
                 if size==img.size:
                     # size matches, look for format restriction
                     if not formats:
-                        bk.log.debug(wc.LOG_FILTER, "Blocking image size %s",
+                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s",
                                      size)
                         return False
                     elif img.format.lower() in formats:
-                        bk.log.debug(wc.LOG_FILTER, "Blocking image size %s",
+                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s",
                                      size)
                         return False
         except IOError:
             if finish:
-                bk.log.exception(wc.LOG_FILTER, "Could not get image size from %r", url)
+                wc.log.exception(wc.LOG_FILTER, "Could not get image size from %r", url)
             else:
                 assert pos > self.min_bufsize
                 # wait for more data

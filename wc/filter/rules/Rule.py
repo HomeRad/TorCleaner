@@ -17,7 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import re
-import bk.i18n
+import wc.i18n
 import wc
 import wc.XmlUtils
 import wc.filter.rules
@@ -102,7 +102,7 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", bk.i18n._("updating rule title for language %s:")%key
+                print >>log, " ", wc.i18n._("updating rule title for language %s:")%key
                 print >>log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.titles[key] = value
@@ -115,7 +115,7 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", bk.i18n._("updating rule description for language %s:")%key
+                print >>log, " ", wc.i18n._("updating rule description for language %s:")%key
                 print >>log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.descriptions[key] = value
@@ -128,7 +128,7 @@ class Rule (object):
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
-                print >>log, " ", bk.i18n._("updating rule %s:")%self.tiptext()
+                print >>log, " ", wc.i18n._("updating rule %s:")%self.tiptext()
                 print >>log, " ", attr, repr(oldval), "==>", repr(newval)
                 chg = True
                 if not dryrun:

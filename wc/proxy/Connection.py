@@ -8,7 +8,6 @@
 
 import socket
 import errno
-import bk.i18n
 import wc
 import wc.proxy.Dispatcher
 
@@ -58,9 +57,9 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """read data from connection, put it into recv_buffer and call
            process_read"""
         assert self.connected
-        bk.log.debug(wc.LOG_PROXY, '%s Connection.handle_read', self)
+        wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_read', self)
 	if len(self.recv_buffer) > MAX_BUFSIZE:
-            bk.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
+            wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
@@ -71,11 +70,11 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             self.handle_error('read error')
             return
         if not data: # It's been closed, and handle_close has been called
-            bk.log.debug(wc.LOG_PROXY, "%s closed, got empty data", self)
+            wc.log.debug(wc.LOG_PROXY, "%s closed, got empty data", self)
             self.persistent = False
             return
-        bk.log.debug(wc.LOG_CONNECTION, '%s <= read %d', self, len(data))
-        bk.log.debug(wc.LOG_CONNECTION, 'data %r', data)
+        wc.log.debug(wc.LOG_CONNECTION, '%s <= read %d', self, len(data))
+        wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)
 	self.recv_buffer += data
         self.process_read()
 
@@ -100,7 +99,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
            Execute a possible pending close."""
         assert self.connected
         assert self.send_buffer
-        bk.log.debug(wc.LOG_PROXY, '%s handle_write', self)
+        wc.log.debug(wc.LOG_PROXY, '%s handle_write', self)
         num_sent = 0
         data = self.send_buffer[:SEND_BUFSIZE]
         try:
@@ -111,8 +110,8 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
                 return
             self.handle_error('write error')
             return
-        bk.log.debug(wc.LOG_CONNECTION, '%s => wrote %d', self, num_sent)
-        bk.log.debug(wc.LOG_CONNECTION, 'data %r', data)
+        wc.log.debug(wc.LOG_CONNECTION, '%s => wrote %d', self, num_sent)
+        wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and self.close_ready():
             self.close()
@@ -125,7 +124,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
 
     def close (self):
         """close connection"""
-        bk.log.debug(wc.LOG_PROXY, '%s Connection.close', self)
+        wc.log.debug(wc.LOG_PROXY, '%s Connection.close', self)
         self.close_pending = False
         if self.persistent:
             self.close_reuse()
@@ -135,7 +134,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
 
     def close_close (self):
         """close the connection socket"""
-        bk.log.debug(wc.LOG_PROXY, '%s Connection.close_close', self)
+        wc.log.debug(wc.LOG_PROXY, '%s Connection.close_close', self)
         if self.connected:
             self.connected = False
             super(Connection, self).close()
@@ -144,7 +143,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
     def handle_close (self):
         """if we are still connected, wait until all data is sent, then close
            otherwise just close"""
-        bk.log.debug(wc.LOG_PROXY, "%s Connection.handle_close", self)
+        wc.log.debug(wc.LOG_PROXY, "%s Connection.handle_close", self)
         if self.connected:
             self.delayed_close()
         else:
@@ -160,10 +159,10 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
     def delayed_close (self):
         """Close whenever the data has been sent"""
         assert self.connected
-        bk.log.debug(wc.LOG_PROXY, '%s Connection.delayed_close', self)
+        wc.log.debug(wc.LOG_PROXY, '%s Connection.delayed_close', self)
         if not self.close_ready():
             # We can't close yet because there's still data to send
-            bk.log.debug(wc.LOG_PROXY, '%s close ready channel', self)
+            wc.log.debug(wc.LOG_PROXY, '%s close ready channel', self)
             self.close_pending = True
         else:
             self.close()
@@ -174,17 +173,17 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
            Must only be called for persistent connections"""
         assert self.persistent
         assert self.connected
-        bk.log.debug(wc.LOG_PROXY, '%s Connection.close_reuse %d', self, self.sequence_number)
+        wc.log.debug(wc.LOG_PROXY, '%s Connection.close_reuse %d', self, self.sequence_number)
         self.sequence_number += 1
 
 
     def handle_error (self, what):
         """print error and close the connection"""
-        bk.log.debug(wc.LOG_PROXY, "%s error %s", self, what)
+        wc.log.debug(wc.LOG_PROXY, "%s error %s", self, what)
         super(Connection, self).handle_error(what)
         self.close()
 
 
     def handle_expt (self):
         """print exception"""
-        bk.log.exception(wc.LOG_PROXY, "%s exception", self)
+        wc.log.exception(wc.LOG_PROXY, "%s exception", self)

@@ -17,7 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import tempfile, os, re
-import bk.i18n
+import wc.i18n
 from wc import AppName, ConfigDir, rulenames, Version, config
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
@@ -289,7 +289,7 @@ def _form_newrule (rtype, lang):
     # add new rule
     rule = _GetRuleFromName(rtype)
     rule.parent = curfolder
-    rule.titles[lang] = bk.i18n._("No title")
+    rule.titles[lang] = wc.i18n._("No title")
     # compile data and register
     rule.compile_data()
     prefix = config['development'] and u"wc" or u"lc"

@@ -20,7 +20,7 @@ from wc import AppName, Email, Version, ConfigDir, config
 from wc.webgui.context import getval as _getval
 from wc.filter.Rating import rating_cache_get as _rating_cache_get
 from wc.filter.Rating import rating_export as _rating_export
-from bk.url import is_valid_url as _is_valid_url
+from wc.url import is_valid_url as _is_valid_url
 from wc.mail import valid_mail as _valid_mail
 from wc.mail import send_mail as _send_mail
 from wc.mail import mail_date as _mail_date

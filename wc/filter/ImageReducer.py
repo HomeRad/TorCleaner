@@ -21,7 +21,7 @@ import cStringIO as StringIO
 import wc.filter
 import wc.filter.Filter
 import wc.proxy.Headers
-import bk.log
+import wc.log
 
 
 class ImageReducer (wc.filter.Filter.Filter):
@@ -78,7 +78,7 @@ class ImageReducer (wc.filter.Filter.Filter):
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if rules:
             if len(rules) > 1:
-                bk.log.warn(wc.LOG_FILTER, "more than one rule matched %r: %s", url, str(rules))
+                wc.log.warn(wc.LOG_FILTER, "more than one rule matched %r: %s", url, str(rules))
             # first rule wins
             quality = rules[0].quality
             minimal_size_bytes = rules[0].minimal_size_bytes
@@ -88,13 +88,13 @@ class ImageReducer (wc.filter.Filter.Filter):
         try:
             length = int(headers['server'].get('Content-Length', 0))
         except ValueError:
-            bk.log.warn(wc.LOG_FILTER, "invalid content length at %r", url)
+            wc.log.warn(wc.LOG_FILTER, "invalid content length at %r", url)
             return d
         if length < 0:
-            bk.log.warn(wc.LOG_FILTER, "negative content length at %r", url)
+            wc.log.warn(wc.LOG_FILTER, "negative content length at %r", url)
             return d
         if length==0:
-            bk.log.warn(wc.LOG_FILTER, "missing content length at %r", url)
+            wc.log.warn(wc.LOG_FILTER, "missing content length at %r", url)
         elif 0 < length < minimal_size_bytes:
             return d
         ctype = headers['server']['Content-Type']

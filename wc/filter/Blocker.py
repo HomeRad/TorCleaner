@@ -20,7 +20,6 @@ import re
 import os
 import gzip
 import urllib
-import bk.i18n
 import wc
 import bk.url
 import wc.filter
@@ -71,7 +70,7 @@ def append_lines (lines, lst, sid):
 
 def get_file_data (filename):
     """return plain file object, possible gunzipping the file"""
-    bk.log.debug(wc.LOG_FILTER, "reading %s", filename)
+    wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
     filename = os.path.join(wc.ConfigDir, filename)
     if filename.endswith(".gz"):
         f = gzip.GzipFile(filename, 'rb')
@@ -86,7 +85,7 @@ def try_append_lines (lst, rule):
         lines = get_file_data(rule.filename)
         append_lines(lines, lst, rule.sid)
     except IOError, msg:
-        bk.log.error(wc.LOG_FILTER, "could not read file %r: %s",
+        wc.log.error(wc.LOG_FILTER, "could not read file %r: %s",
                      rule.filename, str(msg))
         return
 
@@ -176,15 +175,15 @@ class Blocker (wc.filter.Filter.Filter):
         if mime is None:
             mime = "text/html"
         parts = bk.url.spliturl(url)
-        bk.log.debug(wc.LOG_FILTER, "block filter working on url %r", url)
+        wc.log.debug(wc.LOG_FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
         if allowed:
-            bk.log.debug(wc.LOG_FILTER, "allowed url %s by rule %s", url, sid)
+            wc.log.debug(wc.LOG_FILTER, "allowed url %s by rule %s", url, sid)
             return data
         blocked, sid = self.blocked(url, parts)
         if blocked:
             # XXX hmmm, make HTTP HEAD request to get content type???
-            bk.log.debug(wc.LOG_FILTER, "blocked url %s by rule %s", url, sid)
+            wc.log.debug(wc.LOG_FILTER, "blocked url %s by rule %s", url, sid)
             if isinstance(blocked, basestring):
                 doc = blocked
             elif is_image_mime(mime) or is_image_url(url):
@@ -198,7 +197,7 @@ class Blocker (wc.filter.Filter.Filter):
                 attrs['mime'] = 'application/x-javascript'
             else:
                 if not is_html_mime(mime):
-                    bk.log.warn(wc.LOG_PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
+                    wc.log.warn(wc.LOG_PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
                 attrs['mime'] = 'text/html'
                 rule = [r for r in self.rules if r.sid==sid][0]
@@ -222,18 +221,18 @@ class Blocker (wc.filter.Filter.Filter):
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
             if blockdomain == parts[bk.url.DOMAIN]:
-                bk.log.debug(wc.LOG_FILTER, "blocked by blockdomain %s", blockdomain)
+                wc.log.debug(wc.LOG_FILTER, "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
         for blockurl, sid in self.blocked_urls:
             if blockurl in url:
-                bk.log.debug(wc.LOG_FILTER, "blocked by blockurl %s", blockurl)
+                wc.log.debug(wc.LOG_FILTER, "blocked by blockurl %s", blockurl)
                 return True, sid
         # check block patterns
         for ro, replacement, sid in self.block:
             mo = ro.search(url)
             if mo:
-                bk.log.debug(wc.LOG_FILTER, "blocked by pattern %s", ro.pattern)
+                wc.log.debug(wc.LOG_FILTER, "blocked by pattern %s", ro.pattern)
                 if replacement:
                     return mo.expand(replacement), sid
                 return True, sid

@@ -20,7 +20,7 @@
 import wc.filter
 import wc.filter.Filter
 import wc.filter.Rating
-import bk.log
+import wc.log
 
 
 class RatingHeader (wc.filter.Filter.Filter):
@@ -44,7 +44,7 @@ class RatingHeader (wc.filter.Filter.Filter):
                     url, rating = wc.filter.Rating.rating_import(url, rating)
                     wc.filter.Rating.rating_add(url, rating)
                 except wc.filter.Rating.RatingParseError, msg:
-                    bk.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
+                    wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
         rules = attrs['rating_rules']
         for rule in rules:
             msg = wc.filter.Rating.rating_allow(url, rule)

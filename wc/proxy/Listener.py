@@ -2,8 +2,8 @@
 """TCP socket listener"""
 
 import socket
-import bk.i18n
 import wc
+import wc.log
 import wc.proxy.Dispatcher
 
 
@@ -42,7 +42,7 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
 
     def handle_accept (self):
         """start the handler class with the new socket"""
-        bk.log.debug(wc.LOG_PROXY, '%s accept', self)
+        wc.log.debug(wc.LOG_PROXY, '%s accept', self)
         args = self.accept()
         self.handler(*args)
 

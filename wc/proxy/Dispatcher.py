@@ -44,7 +44,7 @@ import socket
 import errno
 import OpenSSL
 import wc
-import bk.log
+import wc.log
 
 
 # map of sockets
@@ -292,24 +292,24 @@ class Dispatcher (object):
         self.handle_expt()
 
     def handle_error (self, what):
-        bk.log.exception(wc.LOG_PROXY, "%s %s", self, what)
+        wc.log.exception(wc.LOG_PROXY, "%s %s", self, what)
 
     def handle_expt (self):
-        bk.log.warn(wc.LOG_PROXY, '%s unhandled exception', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled exception', self)
 
     def handle_read (self):
-        bk.log.warn(wc.LOG_PROXY, '%s unhandled read event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled read event', self)
 
     def handle_write (self):
-        bk.log.warn(wc.LOG_PROXY, '%s unhandled write event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled write event', self)
 
     def handle_connect (self):
-        bk.log.warn(wc.LOG_PROXY, '%s unhandled connect event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled connect event', self)
 
     def handle_accept (self):
-        bk.log.warn(wc.LOG_PROXY, '%s unhandled accept event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled accept event', self)
 
     def handle_close (self):
-        bk.log.warn(wc.LOG_PROXY, '%s unhandled close event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled close event', self)
         self.close()
 

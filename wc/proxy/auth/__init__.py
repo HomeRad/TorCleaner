@@ -4,7 +4,7 @@
 # default realm for authentication
 wc_realm = "unknown"
 
-import bk.log
+import wc.log
 import bk.url
 import wc
 from basic import parse_basic_challenge, get_basic_challenge
@@ -28,10 +28,10 @@ def get_header_challenges (headers, key):
     """get parsed challenge(s) out of headers[key]"""
     auths = {}
     for auth in headers.getallmatchingheadervalues(key):
-        bk.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
+        wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
-    bk.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
+    wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
     return auths
 
 
@@ -65,7 +65,7 @@ def get_challenges (**args):
         chals = [get_digest_challenge(),
                  get_basic_challenge(),
                 ]
-    bk.log.debug(wc.LOG_AUTH, "challenges %s", chals)
+    wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
     return chals
 
 
@@ -73,10 +73,10 @@ def get_header_credentials (headers, key):
     """Return parsed credentials out of headers[key]"""
     creds = {}
     for cred in headers.getallmatchingheadervalues(key):
-        bk.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
+        wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)
-    bk.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
+    wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
     return creds
 
 
@@ -111,13 +111,13 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    bk.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
+    wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
     return creds
 
 
 def check_credentials (creds, **attrs):
     """check credentials agains given attributes"""
-    bk.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s", creds, attrs)
+    wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s", creds, attrs)
     if not creds:
         res = False
     elif wc.config['auth_ntlm'] and 'NTLM' not in creds:
@@ -130,7 +130,7 @@ def check_credentials (creds, **attrs):
     elif 'Basic' in creds:
         res = check_basic_credentials(creds['Basic'][0], **attrs)
     else:
-        bk.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s", creds)
+        wc.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s", creds)
         res = False
     return res
 

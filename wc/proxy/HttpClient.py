@@ -7,7 +7,7 @@ import urlparse
 import os
 import urllib
 import cStringIO as StringIO
-import bk.i18n
+import wc.i18n
 import bk.url
 import wc
 import wc.proxy.StatefulConnection
@@ -59,7 +59,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.reset()
         host = self.addr[0]
         if not self.allow.host(host):
-            bk.log.warn(wc.LOG_PROXY, "host %s access denied", host)
+            wc.log.warn(wc.LOG_PROXY, "host %s access denied", host)
             self.close()
 
     def reset (self):
@@ -79,11 +79,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def error (self, status, msg, txt='', auth=''):
         """display error page"""
         self.state = 'done'
-        bk.log.debug(wc.LOG_PROXY, '%s error %r (%d)', self, msg, status)
+        wc.log.debug(wc.LOG_PROXY, '%s error %r (%d)', self, msg, status)
         if status in wc.google.google_try_status and wc.config['try_google']:
             self.try_google(self.url, msg)
         else:
-            err = bk.i18n._('Proxy Error %d %s') % (status, msg)
+            err = wc.i18n._('Proxy Error %d %s') % (status, msg)
             if txt:
                 err = "%s (%s)" % (err, txt)
             form = None
@@ -125,15 +125,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         try:
             self.method, self.url, protocol = self.request.split()
         except ValueError:
-            self.error(400, bk.i18n._("Can't parse request"))
+            self.error(400, wc.i18n._("Can't parse request"))
             return
         if not self.allow.method(self.method):
-            self.error(405, bk.i18n._("Method Not Allowed"))
+            self.error(405, wc.i18n._("Method Not Allowed"))
             return
         # fix broken url paths
         self.url = bk.url.url_norm(self.url)
         if not self.url:
-            self.error(400, bk.i18n._("Empty URL"))
+            self.error(400, wc.i18n._("Empty URL"))
             return
         self.attrs = wc.filter.get_filterattrs(self.url,
                                                [wc.filter.FILTER_REQUEST])
@@ -141,14 +141,14 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.http_ver = wc.proxy.get_http_version(self.protocol)
         # build request
         self.request = "%s %s %s" % (self.method, self.url, self.protocol)
-        bk.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
+        wc.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
         # filter request
         self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, self.request,
                                    "finish", self.attrs)
         # final request checking
         if not self.fix_request():
             return
-        bk.log.info(wc.LOG_ACCESS, '%s - %s - %s', self.addr[0],
+        wc.log.info(wc.LOG_ACCESS, '%s - %s - %s', self.addr[0],
                     time.ctime(time.time()), self.request)
         self.state = 'headers'
 
@@ -158,12 +158,12 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > 2048:
-            bk.log.error(wc.LOG_PROXY, "%s request url length %d chars is too long", self, len(self.url))
-            self.error(400, bk.i18n._("URL too long"),
-                       txt=bk.i18n._('URL length limit is %d bytes.')%2048)
+            wc.log.error(wc.LOG_PROXY, "%s request url length %d chars is too long", self, len(self.url))
+            self.error(400, wc.i18n._("URL too long"),
+                       txt=wc.i18n._('URL length limit is %d bytes.')%2048)
             return False
         if len(self.url) > 255:
-            bk.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
+            wc.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # unquote and norm url
         self.needs_redirect = "\\" in self.url
         self.url = bk.url.url_norm(self.url)
@@ -184,18 +184,18 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # default scheme is http
             self.scheme = 'http'
         if not self.allow.scheme(self.scheme):
-            bk.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
-            self.error(403, bk.i18n._("Forbidden"))
+            wc.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
+            self.error(403, wc.i18n._("Forbidden"))
             return False
         # check CONNECT values sanity
         if self.method == 'CONNECT':
             if self.scheme != 'https':
-                bk.log.warn(wc.LOG_PROXY, "%s CONNECT method with forbidden scheme %r encountered", self, self.scheme)
-                self.error(403, bk.i18n._("Forbidden"))
+                wc.log.warn(wc.LOG_PROXY, "%s CONNECT method with forbidden scheme %r encountered", self, self.scheme)
+                self.error(403, wc.i18n._("Forbidden"))
                 return False
             if not self.allow.connect_port(self.port):
-                bk.log.warn(wc.LOG_PROXY, "%s CONNECT method with invalid port %r encountered", self, str(self.port))
-                self.error(403, bk.i18n._("Forbidden"))
+                wc.log.warn(wc.LOG_PROXY, "%s CONNECT method with invalid port %r encountered", self, str(self.port))
+                self.error(403, wc.i18n._("Forbidden"))
                 return False
         # request is ok
         return True
@@ -214,7 +214,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
-        bk.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
+        wc.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
         self.fix_request_headers(msg)
         clientheaders = msg.copy()
         self.attrs = wc.filter.get_filterattrs(self.url,
@@ -235,7 +235,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
-            bk.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r', self, self.headers['Transfer-encoding'])
+            wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r', self, self.headers['Transfer-encoding'])
             self.decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
             wc.proxy.Headers.client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
@@ -249,8 +249,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             host = self.headers['Host']
             self.hostname, self.port = urllib.splitnport(host, defaultport)
         if not self.hostname:
-            bk.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
-            self.error(400, bk.i18n._("Bad Request"))
+            wc.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
+            self.error(400, wc.i18n._("Bad Request"))
         # local request?
         if self.hostname in wc.config['localhosts'] and self.port==wc.config['port']:
             # this is a direct proxy call, jump directly to content
@@ -258,7 +258,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             return
         # add missing host headers for HTTP/1.1
         if not self.headers.has_key('Host'):
-            bk.log.warn(wc.LOG_PROXY, "%s request without Host header encountered", self)
+            wc.log.warn(wc.LOG_PROXY, "%s request without Host header encountered", self)
             if self.port!=80:
                 self.headers['Host'] = "%s:%d\r"%(self.hostname, self.port)
             else:
@@ -267,7 +267,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             creds = wc.proxy.auth.get_header_credentials(self.headers, 'Proxy-Authorization')
             if not creds:
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(407, bk.i18n._("Proxy Authentication Required"),
+                self.error(407, wc.i18n._("Proxy Authentication Required"),
                            auth=auth)
                 return
             if 'NTLM' in creds:
@@ -278,7 +278,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                         'type': wc.proxy.auth.ntlm.NTLMSSP_CHALLENGE,
                     }
                     auth = ",".join(wc.proxy.auth.get_challenges(**attrs))
-                    self.error(407, bk.i18n._("Proxy Authentication Required"),
+                    self.error(407, wc.i18n._("Proxy Authentication Required"),
                                auth=auth)
                     return
             # XXX the data=None argument should hold POST data
@@ -286,9 +286,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                                      password_b64=wc.config['proxypass'],
                                      uri=wc.proxy.auth.get_auth_uri(self.url),
                                      method=self.method, data=None):
-                bk.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s", self.addr[0])
+                wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s", self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(407, bk.i18n._("Proxy Authentication Required"),
+                self.error(407, wc.i18n._("Proxy Authentication Required"),
                            auth=auth)
                 return
         if self.method in ['OPTIONS', 'TRACE'] and \
@@ -350,7 +350,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
         if underflow:
-            bk.log.warn(wc.LOG_PROXY, "client received %d bytes more than content-length",
+            wc.log.warn(wc.LOG_PROXY, "client received %d bytes more than content-length",
                  (-self.bytes_remaining))
         if is_closed or self.bytes_remaining <= 0:
             data = wc.filter.applyfilters(FilterLevels, "", "finish", self.attrs)
@@ -369,7 +369,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = "http://localhost:%d/adminpass.html\r"%wc.config['port']
-                    self.error(302, bk.i18n._("Moved Temporarily"))
+                    self.error(302, wc.i18n._("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call
                 self.handle_local(is_public_doc=is_public_doc)
@@ -383,10 +383,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # server is not yet there, delay
             return
         if self.method=="CONNECT":
-            bk.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to server %s", self, self.server)
+            wc.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to server %s", self, self.server)
             self.server.write(self.read())
         else:
-            bk.log.error(wc.LOG_PROXY, "%s invalid data", self)
+            wc.log.error(wc.LOG_PROXY, "%s invalid data", self)
 
     def server_request (self):
         """issue server request through ClientServerMatchmaker object"""
@@ -399,7 +399,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def server_response (self, server, response, status, headers):
         """read and filter server response data"""
         assert server.connected, "%s server was not connected"%self
-        bk.log.debug(wc.LOG_PROXY, '%s server_response %r (%d)', self, response, status)
+        wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%d)', self, response, status)
         # try google options
         if status in wc.google.google_try_status and wc.config['try_google']:
             server.client_abort()
@@ -418,7 +418,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def try_google (self, url, response):
         """display page with google cache links for requests page"""
-        bk.log.debug(wc.LOG_PROXY, '%s try_google %r', self, response)
+        wc.log.debug(wc.LOG_PROXY, '%s try_google %r', self, response)
         form = None
         wc.webgui.WebConfig(self, '/google.html', form, self.protocol, self.headers,
                   localcontext=wc.google.get_google_context(url, response))
@@ -432,7 +432,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def server_close (self, server):
         """The server closed"""
         assert self.server, "%s server_close had no server"%self
-        bk.log.debug(wc.LOG_PROXY, '%s server_close', self)
+        wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
         if self.connected:
             self.delayed_close()
         else:
@@ -441,7 +441,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def server_abort (self, reason=""):
         """The server aborted the connection"""
-        bk.log.debug(wc.LOG_PROXY, '%s server_abort', self)
+        wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.close()
 
     def handle_error (self, what):
@@ -455,7 +455,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def handle_close (self):
         """The client closed the connection, so cancel the server
            connection"""
-        bk.log.debug(wc.LOG_PROXY, '%s handle_close', self)
+        wc.log.debug(wc.LOG_PROXY, '%s handle_close', self)
         self.send_buffer = ''
         super(HttpClient, self).handle_close()
         if self.server:
@@ -468,31 +468,31 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def handle_local (self, is_public_doc=False):
         """handle local request by delegating it to the web configuration"""
         assert self.state=='receive'
-        bk.log.debug(wc.LOG_PROXY, '%s handle_local', self)
+        wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
-            self.error(403, bk.i18n._("Invalid Method"))
+            self.error(403, wc.i18n._("Invalid Method"))
             return
         # check admin pass
         if not is_public_doc and wc.config["adminuser"]:
             creds = wc.proxy.auth.get_header_credentials(self.headers, 'Authorization')
             if not creds:
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(401, bk.i18n._("Authentication Required"), auth=auth)
+                self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                 return
             if 'NTLM' in creds:
                 if creds['NTLM'][0]['type']==wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     auth = ",".join(creds['NTLM'][0])
-                    self.error(401, bk.i18n._("Authentication Required"), auth=auth)
+                    self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                     return
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds, username=wc.config['adminuser'],
                                      password_b64=wc.config['adminpass'],
                                      uri=wc.proxy.auth.get_auth_uri(self.url),
                                      method=self.method, data=None):
-                bk.log.warn(wc.LOG_AUTH, "Bad authentication from %s", self.addr[0])
+                wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s", self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(401, bk.i18n._("Authentication Required"), auth=auth)
+                self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                 return
         # get cgi form data
         form = self.get_form_data()
@@ -516,13 +516,13 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def close_reuse (self):
         """Reset connection state, leave connection alive for pipelining"""
-        bk.log.debug(wc.LOG_PROXY, '%s reuse', self)
+        wc.log.debug(wc.LOG_PROXY, '%s reuse', self)
         super(HttpClient, self).close_reuse()
         self.reset()
 
     def close_close (self):
         """close this connection"""
-        bk.log.debug(wc.LOG_PROXY, '%s close', self)
+        wc.log.debug(wc.LOG_PROXY, '%s close', self)
         self.state = 'closed'
         super(HttpClient, self).close_close()
 

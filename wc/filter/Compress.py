@@ -19,8 +19,8 @@
 import struct
 import time
 import zlib
-import bk.i18n
 import wc
+import wc.log
 import wc.filter
 import wc.filter.Filter
 import wc.proxy.Headers
@@ -78,7 +78,7 @@ class Compress (wc.filter.Filter.Filter):
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                bk.log.debug(wc.LOG_FILTER, 'writing gzip header')
+                wc.log.debug(wc.LOG_FILTER, 'writing gzip header')
             compobj['size'] += len(data)
             compobj['crc'] = zlib.crc32(data, compobj['crc'])
             data = "%s%s"%(header, compobj['compressor'].compress(data))
@@ -92,7 +92,7 @@ class Compress (wc.filter.Filter.Filter):
         if compobj:
             header = compobj['header']
             if header:
-                bk.log.debug(wc.LOG_FILTER, 'final writing gzip header')
+                wc.log.debug(wc.LOG_FILTER, 'final writing gzip header')
                 pass
             if data:
                 compobj['size'] += len(data)
@@ -100,7 +100,7 @@ class Compress (wc.filter.Filter.Filter):
                 data = "%s%s"%(header, compobj['compressor'].compress(data))
             else:
                 data = header
-            bk.log.debug(wc.LOG_FILTER, 'finishing compressor')
+            wc.log.debug(wc.LOG_FILTER, 'finishing compressor')
             data += "%s%s%s" % (compobj['compressor'].flush(zlib.Z_FINISH),
                                 struct.pack('<l', compobj['crc']),
                                 struct.pack('<l', compobj['size']))
@@ -114,13 +114,13 @@ class Compress (wc.filter.Filter.Filter):
         encoding = headers['server'].get('Content-Encoding', '').lower()
         if 'gzip' not in accepts:
             # browser does not accept gzip encoding
-            bk.log.warn(wc.LOG_FILTER, "browser does not support gzip compression (%s)", accepts)
+            wc.log.warn(wc.LOG_FILTER, "browser does not support gzip compression (%s)", accepts)
         elif encoding and encoding not in _compress_encs:
             compressobj = getCompressObject()
             headers['data']['Content-Encoding'] = encoding+', gzip\r'
         else:
             compressobj = getCompressObject()
             headers['data']['Content-Encoding'] = 'gzip\r'
-        bk.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
+        wc.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
         d['compressobj'] = compressobj
         return d

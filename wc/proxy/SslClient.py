@@ -7,9 +7,9 @@ import wc.proxy.HttpClient
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.SslConnection
 import wc.proxy.Allowed
-import bk.log
+import wc.log
 import bk.url
-import bk.i18n
+import wc.i18n
 
 
 class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConnection):
@@ -47,12 +47,12 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > 2048:
-            bk.log.error(wc.LOG_PROXY, "%s request url length %d chars is too long", self, len(self.url))
-            self.error(400, bk.i18n._("URL too long"),
-                       txt=bk.i18n._('URL length limit is %d bytes.')%2048)
+            wc.log.error(wc.LOG_PROXY, "%s request url length %d chars is too long", self, len(self.url))
+            self.error(400, wc.i18n._("URL too long"),
+                       txt=wc.i18n._('URL length limit is %d bytes.')%2048)
             return False
         if len(self.url) > 255:
-            bk.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
+            wc.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # and unquote again
         self.url = bk.url.url_norm(self.url)
         self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
@@ -64,8 +64,8 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         if not self.scheme:
             self.scheme = "https"
         if not self.allow.scheme(self.scheme):
-            bk.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
-            self.error(403, bk.i18n._("Forbidden"))
+            wc.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
+            self.error(403, wc.i18n._("Forbidden"))
             return False
         # request is ok
         return True
@@ -73,14 +73,14 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
 
     def server_request (self):
         assert self.state=='receive', "%s server_request in non-receive state"%self
-        bk.log.debug(wc.LOG_PROXY, "%s server_request", self)
+        wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self, self.request, self.headers, self.content)
 
 
     def handle_local (self, is_public_doc=False):
         assert self.state=='receive'
-        bk.log.debug(wc.LOG_PROXY, '%s handle_local', self)
+        wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
         form = None
         self.url = "/blocked.html"
         self.headers['Host'] = 'localhost\r'

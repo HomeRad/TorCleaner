@@ -8,7 +8,8 @@ import mimetypes
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 import cStringIO as StringIO
-import bk.log
+import wc.log
+import wc.i18n
 import wc
 import wc.magic
 import wc.proxy.UnchunkStream
@@ -71,7 +72,7 @@ def get_content_length (headers, default=None):
     try:
         return int(headers['Content-Length'])
     except ValueError:
-        bk.log.warn(wc.LOG_PROXY, "invalid Content-Length value %r", headers['Content-Length'])
+        wc.log.warn(wc.LOG_PROXY, "invalid Content-Length value %r", headers['Content-Length'])
     return None
 
 
@@ -157,7 +158,7 @@ def client_remove_encoding_headers (headers):
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
     if headers.has_key("Content-Length"):
-        bk.log.warn(wc.LOG_PROXY, 'chunked encoding should not have Content-Length')
+        wc.log.warn(wc.LOG_PROXY, 'chunked encoding should not have Content-Length')
         to_remove.append("Content-Length")
     remove_headers(headers, to_remove)
     # add warning
@@ -169,7 +170,7 @@ def client_get_max_forwards (headers):
     try:
         mf = int(headers.get('Max-Forwards', -1))
     except ValueError:
-        bk.log.error(wc.LOG_PROXY, "invalid Max-Forwards header value %s", headers.get('Max-Forwards', ''))
+        wc.log.error(wc.LOG_PROXY, "invalid Max-Forwards header value %s", headers.get('Max-Forwards', ''))
         mf = -1
     if mf>0:
         headers['Max-Forwards'] = "%d\r" % (mf-1)
@@ -211,12 +212,12 @@ def server_set_content_headers (headers, content, document, mime, url):
         try:
             mime = wc.magic.classify(StringIO.StringIO(content))
         except StandardError, msg:
-            bk.log.warn(wc.LOG_PROXY, "Could not classify data %r at %r: %s",
+            wc.log.warn(wc.LOG_PROXY, "Could not classify data %r at %r: %s",
                         content, url, msg)
     ct = headers.get('Content-Type', None)
     if mime:
         if ct is None:
-            bk.log.warn(wc.LOG_PROXY, bk.i18n._("add Content-Type %r in %r"), mime, url)
+            wc.log.warn(wc.LOG_PROXY, wc.i18n._("add Content-Type %r in %r"), mime, url)
             headers['Content-Type'] = "%s\r"%mime
         elif not ct.startswith(mime) and mime.startswith('text/html'):
             i = ct.find(';')
@@ -225,7 +226,7 @@ def server_set_content_headers (headers, content, document, mime, url):
                 val = mime + ct[i:]
             else:
                 val = mime
-            bk.log.warn(wc.LOG_PROXY, bk.i18n._("set Content-Type from %r to %r in %r"),
+            wc.log.warn(wc.LOG_PROXY, wc.i18n._("set Content-Type from %r to %r in %r"),
                  str(ct), val, url)
             headers['Content-Type'] = "%s\r"%val
     else:
@@ -233,7 +234,7 @@ def server_set_content_headers (headers, content, document, mime, url):
         if gm[0]:
             # guessed an own content type
             if ct is None:
-                bk.log.warn(wc.LOG_PROXY, bk.i18n._("add Content-Type %r to %r"), gm[0], url)
+                wc.log.warn(wc.LOG_PROXY, wc.i18n._("add Content-Type %r to %r"), gm[0], url)
                 headers['Content-Type'] = "%s\r"%gm[0]
 
 
@@ -249,12 +250,12 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # chunked encoded
         tenc = headers['Transfer-Encoding']
         if tenc != 'chunked':
-            bk.log.error(wc.LOG_PROXY, "unknown transfer encoding %r, assuming chunked encoding", tenc)
+            wc.log.error(wc.LOG_PROXY, "unknown transfer encoding %r, assuming chunked encoding", tenc)
         decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
         # remove encoding header
         to_remove = ["Transfer-Encoding"]
         if headers.has_key("Content-Length"):
-            bk.log.warn(wc.LOG_PROXY, bk.i18n._('chunked encoding should not have Content-Length'))
+            wc.log.warn(wc.LOG_PROXY, wc.i18n._('chunked encoding should not have Content-Length'))
             to_remove.append("Content-Length")
             bytes_remaining = None
         remove_headers(headers, to_remove)
@@ -281,7 +282,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # add warning
         headers['Warning'] = "214 Transformation applied\r"
     elif encoding and encoding!='identity':
-        bk.log.warn(wc.LOG_PROXY, bk.i18n._("unsupported encoding: %r"), encoding)
+        wc.log.warn(wc.LOG_PROXY, wc.i18n._("unsupported encoding: %r"), encoding)
         # do not disable filtering for unknown content-encodings
         # this could result in a DoS attack (server sending garbage
         # as content-encoding)

@@ -26,7 +26,7 @@ import xml.parsers.expat
 import logging.config
 import logging.handlers
 import _webcleaner2_configdata as configdata
-import bk.log
+import wc.log
 
 Version = configdata.version
 AppName = configdata.appname
@@ -71,14 +71,14 @@ def initlog (filename, appname, filelogs=True):
         if os.name=="nt":
             trydirs.append(ConfigDir)
         logname = "%s.log"%appname
-        logfile = bk.log.get_log_file(appname, logname, trydirs=trydirs)
+        logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_wc_handler(logfile)
         logging.getLogger("wc").addHandler(handler)
         logging.getLogger("simpleTAL").addHandler(handler)
         logging.getLogger("simpleTALES").addHandler(handler)
         # access log is always a file
         logname = "%s-access.log"%appname
-        logfile = bk.log.get_log_file(appname, logname, trydirs=trydirs)
+        logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_access_handler(logfile)
         logging.getLogger("wc.access").addHandler(handler)
 
@@ -89,7 +89,7 @@ def get_wc_handler (logfile):
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
     handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
-    return bk.log.set_format(handler)
+    return wc.log.set_format(handler)
 
 
 def get_access_handler (logfile):
@@ -110,7 +110,7 @@ def sort_seq (seq):
     l.sort()
     return l
 
-import bk.i18n
+import wc.i18n
 import bk.url
 import bk.net
 import bk.net.ip
@@ -146,7 +146,7 @@ def wstartfunc (handle=None, abort=None, confdir=ConfigDir, filelogs=True):
     except ImportError:
         pass
     # start the proxy
-    bk.log.info(LOG_PROXY, "Starting proxy on port %d", config['port'])
+    wc.log.info(LOG_PROXY, "Starting proxy on port %d", config['port'])
     wc.proxy.mainloop(handle=handle, abort=abort)
 
 
@@ -295,7 +295,7 @@ class Configuration (dict):
         from wc.filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
             if os.stat(filename)[stat.ST_SIZE]==0:
-                bk.log.warn(LOG_PROXY, "Skipping empty file %r", filename)
+                wc.log.warn(LOG_PROXY, "Skipping empty file %r", filename)
                 continue
             p = ZapperParser(filename, self)
             p.parse()
@@ -322,7 +322,7 @@ class Configuration (dict):
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
-            print >>log, " ", bk.i18n._("inserting %s")%folder.tiptext()
+            print >>log, " ", wc.i18n._("inserting %s")%folder.tiptext()
             if not dryrun:
                 folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)
@@ -443,7 +443,7 @@ class BaseParser (object):
         self.xmlparser = None
 
     def parse (self, fp=None):
-        bk.log.debug(LOG_PROXY, "Parsing %s", self.filename)
+        wc.log.debug(LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
         self._preparse()
@@ -451,7 +451,7 @@ class BaseParser (object):
             try:
                 self.xmlparser.ParseFile(fp)
             except (xml.parsers.expat.ExpatError, ParseException):
-                bk.log.exception(LOG_PROXY, "Error parsing %s", self.filename)
+                wc.log.exception(LOG_PROXY, "Error parsing %s", self.filename)
                 raise SystemExit("parse error in %s"%self.filename)
         finally:
             self._postparse()
@@ -494,7 +494,7 @@ class ZapperParser (BaseParser):
         elif name=='folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            raise ParseException, bk.i18n._("unknown tag name %s")%name
+            raise ParseException, wc.i18n._("unknown tag name %s")%name
 
 
     def end_element (self, name):
@@ -543,7 +543,7 @@ class WConfigParser (BaseParser):
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]
         elif name=='filter':
-            bk.log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
+            wc.log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
 
 

@@ -6,7 +6,7 @@ import wc
 import wc.proxy.HttpServer
 import wc.proxy.SslConnection
 import wc.proxy.ssl
-import bk.log
+import wc.log
 
 
 class SslServer (wc.proxy.HttpServer.HttpServer,
@@ -64,7 +64,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
 
     def process_recycle (self):
         """recycle this server connection into the connection pool"""
-        bk.log.debug(wc.LOG_PROXY, "%s recycling", self)
+        wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
         # flush pending client data and try to reuse this connection
         self.delayed_close()
 

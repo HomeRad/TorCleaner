@@ -22,7 +22,7 @@ from wc.webgui.context import getval as _getval
 from wc.filter.Rating import service, rangenames, rating_cache
 from wc.filter.Rating import rating_cache_write as _rating_cache_write
 from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
-from bk.url import is_valid_url as _is_valid_url
+from wc.url import is_valid_url as _is_valid_url
 from bk.strtime import strtime as _strtime
 
 _entries_per_page = 50

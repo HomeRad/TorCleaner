@@ -16,7 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import bk.i18n
+import wc.i18n
 from wc import AppName, Version
 
-error = bk.i18n._("%s error") % AppName
+error = wc.i18n._("%s error") % AppName

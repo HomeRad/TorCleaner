@@ -12,7 +12,6 @@ import re
 import pprint
 import wc.proxy
 import wc.proxy.Connection
-import bk.i18n
 import bk.net
 import bk.net.dns
 import bk.net.dns.Lib
@@ -32,7 +31,7 @@ def init_resolver ():
 def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    bk.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
+    wc.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
@@ -107,7 +106,7 @@ class DnsExpandHostname (object):
             wc.proxy.make_timer(self.delay, self.handle_issue_request)
 
     def handle_issue_request (self):
-        bk.log.debug(wc.LOG_DNS, 'issue_request')
+        wc.log.debug(wc.LOG_DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             hostname = self.requests[0]
@@ -121,7 +120,7 @@ class DnsExpandHostname (object):
                 wc.proxy.make_timer(self.delay, self.handle_issue_request)
 
     def handle_dns (self, hostname, answer):
-        bk.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
+        wc.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
         if not self.callback:
             # Already handled this query
             return
@@ -208,7 +207,7 @@ class DnsCache (object):
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
-        bk.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
+        wc.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
         if hostname[-1:] == '.':
             # We should just remove the trailing '.'
             DnsResponse('redirect', hostname[:-1])
@@ -217,7 +216,7 @@ class DnsCache (object):
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
-                bk.log.debug(wc.LOG_DNS, 'cached! %r', hostname)
+                wc.log.debug(wc.LOG_DNS, 'cached! %r', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -410,7 +409,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         # timeout (see send_dns_request).
         if not self.callback:
             return # It's already handled, so ignore this
-        bk.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
+        wc.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
         if not self.connected:
             self.callback(self.hostname,
                           DnsResponse('error', 'timed out connecting'))
@@ -467,12 +466,12 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # See http://cr.yp.to/djbdns/notes.html
             if self.tcp:
                 # socket.error((84, ''))
-                bk.log.error(wc.LOG_DNS,
+                wc.log.error(wc.LOG_DNS,
                              'Truncated TCP DNS packet: %s from %s for %r',
                              tc, self.nameserver, self.hostname)
                 self.handle_error("dns error")
             else:
-                bk.log.warn(wc.LOG_DNS,
+                wc.log.warn(wc.LOG_DNS,
                             'truncated UDP DNS packet: %s from %s for %r',
                             tc, self.nameserver, self.hostname)
             # we ignore this read, and let the timeout take its course
@@ -515,7 +514,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                 ip_addrs.append(data)
             elif rtype == bk.net.dns.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                bk.log.debug(wc.LOG_DNS, 'cname record %s=%r',
+                wc.log.debug(wc.LOG_DNS, 'cname record %s=%r',
                              self.hostname, data)
                 pass
         # Ignore (nscount) authority records

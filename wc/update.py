@@ -4,8 +4,8 @@
 import os
 import md5
 import wc
-import bk.i18n
-import bk.log
+import wc.i18n
+import wc.log
 from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
@@ -113,13 +113,13 @@ def open_url (url, proxies=None):
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
-        bk.log.error(wc.LOG_GUI, "could not open url %r", url)
+        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
         raise IOError, x
     except (socket.gaierror, socket.error, urllib2.URLError), x:
-        bk.log.error(wc.LOG_GUI, "could not open url %r", url)
+        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
         raise IOError, "no network access available"
     except IOError, data:
-        bk.log.error(wc.LOG_GUI, "could not open url %r", url)
+        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
         if data and data[0] == 'http error' and data[1] == 404:
             raise IOError, data
         else:
@@ -136,15 +136,15 @@ def update_filter (wconfig, dryrun=False, log=None):
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
     """
-    print >>log, bk.i18n._("updating filters"), "..."
+    print >>log, wc.i18n._("updating filters"), "..."
     chg = False
     baseurl = wconfig['baseurl']+"filter/"
     url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, bk.i18n._("error fetching %s")%url, msg
-        print >>log, "...", bk.i18n._("done")
+        print >>log, wc.i18n._("error fetching %s")%url, msg
+        print >>log, "...", wc.i18n._("done")
         return chg
     # remember all local config files
     filemap = {}
@@ -153,8 +153,8 @@ def update_filter (wconfig, dryrun=False, log=None):
     # read md5sums
     for line in page.read().splitlines():
         if "<" in line:
-            print >>log, bk.i18n._("error fetching %s")%url
-            print >>log, "...", bk.i18n._("done")
+            print >>log, wc.i18n._("error fetching %s")%url
+            print >>log, "...", wc.i18n._("done")
             return chg
         if not line:
             continue
@@ -169,11 +169,11 @@ def update_filter (wconfig, dryrun=False, log=None):
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
-                print >>log, bk.i18n._("filter %s not changed, ignoring")%filename
+                print >>log, wc.i18n._("filter %s not changed, ignoring")%filename
                 continue
-            print >>log, bk.i18n._("updating filter %s")%filename
+            print >>log, wc.i18n._("updating filter %s")%filename
         else:
-            print >>log, bk.i18n._("adding new filter %s")%filename
+            print >>log, wc.i18n._("adding new filter %s")%filename
         # parse new filter
         url = baseurl+filename
         page = open_url(url)
@@ -187,15 +187,15 @@ def update_filter (wconfig, dryrun=False, log=None):
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, bk.i18n._("error fetching %s:")%url, msg
-        print >>log, "...", bk.i18n._("done")
+        print >>log, wc.i18n._("error fetching %s:")%url, msg
+        print >>log, "...", wc.i18n._("done")
         return chg
     lines = page.read().splitlines()
     page.close()
     for line in lines:
         if "<" in line:
-            print >>log, bk.i18n._("error fetching %s:")%url, bk.i18n._("invalid content")
-            print >>log, "...", bk.i18n._("done")
+            print >>log, wc.i18n._("error fetching %s:")%url, wc.i18n._("invalid content")
+            print >>log, "...", wc.i18n._("done")
             return chg
         if not line:
             continue
@@ -210,44 +210,44 @@ def update_filter (wconfig, dryrun=False, log=None):
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
-                print >>log, bk.i18n._("extern filter %s not changed, ignoring")%filename
+                print >>log, wc.i18n._("extern filter %s not changed, ignoring")%filename
                 continue
-            print >>log, bk.i18n._("updating extern filter %s")%filename
+            print >>log, wc.i18n._("updating extern filter %s")%filename
         else:
-            print >>log, bk.i18n._("adding new extern filter %s")%filename
+            print >>log, wc.i18n._("adding new extern filter %s")%filename
         chg = True
         if not dryrun:
             url = baseurl+filename
             try:
                 page = open_url(url)
             except IOError, msg:
-                print >>log, bk.i18n._("error fetching %s:")%url, msg
+                print >>log, wc.i18n._("error fetching %s:")%url, msg
                 continue
             data = page.read()
             if not data:
-                print >>log, bk.i18n._("error fetching %s:")%url, \
-                             bk.i18n._("got no data")
+                print >>log, wc.i18n._("error fetching %s:")%url, \
+                             wc.i18n._("got no data")
                 continue
             f = file(fullname, 'wb')
             f.write(data)
             f.close()
-    print >>log, "...", bk.i18n._("done")
+    print >>log, "...", wc.i18n._("done")
     return chg
 
 
 def update_ratings (wconfig, dryrun=False, log=None):
     """update rating database from configured online rating service"""
-    print >>log, bk.i18n._("updating ratings...")
+    print >>log, wc.i18n._("updating ratings...")
     chg = False
     baseurl = wconfig['baseurl']+"rating/"
     url = baseurl+"rating.txt"
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, bk.i18n._("error fetching %s:")%url, msg
-        print >>log, "...", bk.i18n._("done")
+        print >>log, wc.i18n._("error fetching %s:")%url, msg
+        print >>log, "...", wc.i18n._("done")
         return chg
     # build local rating cache, and merge
     chg = rating_cache_merge(rating_cache_parse(page), dryrun=dryrun, log=log)
-    print >>log, "...", bk.i18n._("done")
+    print >>log, "...", wc.i18n._("done")
     return chg

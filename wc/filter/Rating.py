@@ -20,12 +20,13 @@ import re
 import os
 import urlparse
 import cPickle as pickle
-import bk.i18n
+import wc.i18n
 import wc
+import wc.log
 import bk.url
 
 
-MISSING = bk.i18n._("Unknown page")
+MISSING = wc.i18n._("Unknown page")
 
 # rating cache filename
 rating_cachefile = os.path.join(wc.ConfigDir, "rating.dat")
@@ -45,28 +46,28 @@ service = dict(
    # rating categories
    categories = dict(
        violence = dict(
-             name = bk.i18n._('violence'),
+             name = wc.i18n._('violence'),
              rvalues = ["0", "1", "2"],
            ),
        sex = dict(
-             name = bk.i18n._('sex'),
+             name = wc.i18n._('sex'),
              rvalues = ["0", "1", "2"],
            ),
        language = dict(
-             name = bk.i18n._('language'),
+             name = wc.i18n._('language'),
              rvalues = ["0", "1", "2"],
            ),
        agerange = dict(
-             name = bk.i18n._('age range'),
+             name = wc.i18n._('age range'),
              rrange = [0, None],
            ),
    ),
 )
 
 rangenames = {
-    "0": bk.i18n._("None"),
-    "1": bk.i18n._("Mild"),
-    "2": bk.i18n._("Heavy"),
+    "0": wc.i18n._("None"),
+    "1": wc.i18n._("Mild"),
+    "2": wc.i18n._("Heavy"),
 }
 
 
@@ -77,7 +78,7 @@ def rating_import (url, ratingdata, debug=0):
     categories = {}
     for line in ratingdata.splitlines():
         if debug:
-            bk.log.debug(wc.LOG_RATING, "Read line %r", line)
+            wc.log.debug(wc.LOG_RATING, "Read line %r", line)
         line = line.strip()
         if not line:
             # ignore empty lines
@@ -88,12 +89,12 @@ def rating_import (url, ratingdata, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError:
-            raise RatingParseError(bk.i18n._("malformed rating line %r")%line)
+            raise RatingParseError(wc.i18n._("malformed rating line %r")%line)
         if category=="modified" and not is_time(value):
-            raise RatingParseError(bk.i18n._("malfored modified time %r")%value)
+            raise RatingParseError(wc.i18n._("malfored modified time %r")%value)
         if category=="generic" and value not in ["true", "false"] and \
            not url.startswith(value):
-            raise RatingParseError(bk.i18n._("generic url %r doesn't match %r")%\
+            raise RatingParseError(wc.i18n._("generic url %r doesn't match %r")%\
                                    (value, url))
         categories[category] = value
     return categories
@@ -111,7 +112,7 @@ def rating_exportall ():
     fp = file(os.path.join(wc.ConfigDir, "rating.txt"), 'w')
     for url, rating in rating_cache.iteritems():
         if not bk.url.is_valid_url(url):
-            bk.log.error(wc.LOG_RATING, "invalid url %r", url)
+            wc.log.error(wc.LOG_RATING, "invalid url %r", url)
             continue
         fp.write("url %s\n"%url)
         fp.write(rating_export(rating))
@@ -143,7 +144,7 @@ def rating_cache_load ():
         toremove = []
         for url in rating_cache:
             if not bk.url.is_valid_url(url):
-                bk.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
+                wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
                 toremove.append(url)
         if toremove:
             for url in toremove:
@@ -193,7 +194,7 @@ def rating_split_url (url):
     # split into [scheme, host, path, query, fragment]
     parts = list(urlparse.urlsplit(url))
     if not (parts[0] and parts[1]):
-        bk.log.warn(wc.LOG_FILTER, "invalid url for rating split: %r", url)
+        wc.log.warn(wc.LOG_FILTER, "invalid url for rating split: %r", url)
         return []
     # fix scheme
     parts[0] += ":"
@@ -226,7 +227,7 @@ def rating_add (url, rating):
         rating_cache[url] = rating
         rating_cache_write()
     else:
-        bk.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
+        wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
 
 
 def rating_allow (url, rule):
@@ -289,7 +290,7 @@ def rating_cache_merge (newrating_cache, dryrun=False, log=None):
     for url, rating in newrating_cache.iteritems():
         if url not in rating_cache:
             chg = True
-            print >>log, bk.i18n._("adding new rating for %r")%url
+            print >>log, wc.i18n._("adding new rating for %r")%url
             if not dryrun:
                 rating_cache[url] = rating
     if not dryrun and chg:
