@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-10-02 10:40+0200\n"
-"PO-Revision-Date: 2004-10-02 11:07+0100\n"
+"POT-Creation-Date: 2004-10-16 13:00+0200\n"
+"PO-Revision-Date: 2004-10-16 13:01+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -97,18 +97,17 @@ msgid "Proxy Authentication Required"
 msgstr "Proxy Authorisierung benötigt"
 
 #: ../wc/proxy/HttpClient.py:411
-#: ../wc/proxy/HttpServer.py:376
-#: ../wc/proxy/HttpServer.py:396
+#: ../wc/proxy/HttpServer.py:375
 msgid "Moved Temporarily"
 msgstr "Vorübergehend verschoben"
 
-#: ../wc/proxy/HttpClient.py:519
+#: ../wc/proxy/HttpClient.py:522
 msgid "Invalid Method"
 msgstr "Ungültige Anfrage"
 
-#: ../wc/proxy/HttpClient.py:527
-#: ../wc/proxy/HttpClient.py:533
-#: ../wc/proxy/HttpClient.py:544
+#: ../wc/proxy/HttpClient.py:530
+#: ../wc/proxy/HttpClient.py:536
+#: ../wc/proxy/HttpClient.py:547
 #: ../wc/webgui/webconfig.py:77
 msgid "Authentication Required"
 msgstr "Authorisierung benötigt"
@@ -123,11 +122,11 @@ msgstr "ungültige oder fehlende Antwort von %r: %r"
 msgid "missing headers in response from %r"
 msgstr "fehlende Kopfdaten in Antwort von %r"
 
-#: ../wc/proxy/HttpServer.py:319
+#: ../wc/proxy/HttpServer.py:314
 msgid "redirection to localhost"
 msgstr "Weiterleitung zu localhost"
 
-#: ../wc/proxy/HttpServer.py:450
+#: ../wc/proxy/HttpServer.py:429
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
@@ -295,7 +294,7 @@ msgstr "Bewertung %r für Kategorie %r ist nicht im Bereich %s"
 msgid "Rating %r for category %r exceeds limit %r"
 msgstr "Bewertung %r für Kategorie %r überschreitet Grenze %r"
 
-#: ../wc/filter/JSFilter.py:314
+#: ../wc/filter/JSFilter.py:315
 #, python-format
 msgid "error fetching script from %r"
 msgstr "Fehler beim Laden von %r"
@@ -443,53 +442,53 @@ msgstr "Minuten"
 msgid "hours"
 msgstr "Stunden"
 
-#: ../wc/win32start.py:36
+#: ../wc/win32start.py:37
 #: ../webcleaner:115
 #, python-format
 msgid "%s Proxy"
 msgstr "%s Proxy"
 
-#: ../wc/win32start.py:79
+#: ../wc/win32start.py:80
 #, python-format
 msgid "The %s service runs in its own process."
 msgstr "Der %s Dienst läuft in einem eigenen Prozess."
 
-#: ../wc/win32start.py:82
+#: ../wc/win32start.py:83
 #, python-format
 msgid "The %s service shares a process with other services."
 msgstr "Der %s Dienst teilt sich ein Prozess mit anderen Diensten."
 
-#: ../wc/win32start.py:85
+#: ../wc/win32start.py:86
 #, python-format
 msgid "The %s service can interact with the desktop."
 msgstr "Der %s Dienst kann mit dem Desktop interagieren."
 
-#: ../wc/win32start.py:88
+#: ../wc/win32start.py:89
 #, python-format
 msgid "The %s service is stopped."
 msgstr "Der %s Dienst ist angehalten."
 
-#: ../wc/win32start.py:90
+#: ../wc/win32start.py:91
 #, python-format
 msgid "The %s service is starting."
 msgstr "Der %s Dienst startet."
 
-#: ../wc/win32start.py:92
+#: ../wc/win32start.py:93
 #, python-format
 msgid "The %s service is stopping."
 msgstr "Der %s Dienst stoppt."
 
-#: ../wc/win32start.py:94
+#: ../wc/win32start.py:95
 #, python-format
 msgid "The %s service is running."
 msgstr "Der %s Dienst ist gestartet."
 
-#: ../wc/win32start.py:97
+#: ../wc/win32start.py:98
 #, python-format
 msgid "The %s service can be stopped."
 msgstr "Der %s Dienst kann angehalten werden."
 
-#: ../wc/win32start.py:99
+#: ../wc/win32start.py:100
 #, python-format
 msgid "The %s service can be paused."
 msgstr "Der %s Dienst kann pausieren."
@@ -1865,7 +1864,7 @@ msgstr "SSL Portnummer erfolgreich geändert."
 msgid "Saved ratings"
 msgstr "Gespeicherte Bewertungen"
 
-#: ../templates/classic/google.html:152
+#: ../templates/classic/google.html:151
 msgid "Search Google"
 msgstr "Suche mit Google"
 
@@ -1883,7 +1882,7 @@ msgstr "Wählen Sie <b>Bearbeiten -&gt; Einstellungen -&gt; Erweitert -&gt; Proxi
 
 #: ../templates/classic/help.html:52
 msgid "Select <b>File -&gt; Preferences -&gt; Network -&gt; Proxy servers</b>.<br> Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>Do not use Proxy on the adresses below</b> and enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
-msgstr "Wählen Sie <b>Datei -&gt; Einstellungen -&gt; Netzwerk -&gt; Proxyserver</b>.<br> Aktivieren Sie <b>HTTP</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist <i>${port}.<br> Aktivieren Sie <b>HTTPS</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Aktivieren Sie <b>Proxyserver für folgende Adressen nicht benutzen</b> und geben Sie <i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu übernehmen."
+msgstr "Wählen Sie <b>Datei -&gt; Einstellungen -&gt; Netzwerk -&gt; Proxyserver</b>.<br> Aktivieren Sie <b>HTTP</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Aktivieren Sie <b>HTTPS</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Aktivieren Sie <b>Proxyserver für folgende Adressen nicht benutzen</b> und geben Sie <i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu übernehmen."
 
 #: ../templates/classic/help.html:43
 msgid "Select <b>Tools -&gt; Internet Options -&gt; Connections</b>.<br> Click on <b>LAN Settings</b>. If you have a dialup connection to the internet, select your dialup connection and click on <b>Settings</b>.<br> Activate <b>Use a proxy server</b>.<br> If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br> Click on <b>Advanced</b>.<br> Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Click <b>Ok</b> to use your new settings."
