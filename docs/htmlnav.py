@@ -1,3 +1,21 @@
+# -*- coding: iso-8859-1 -*-
+# Copyright (C) 2004  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""docutils HTML writer with navigation placeholder and information"""
+
 from docutils import writers, nodes, languages, utils
 from docutils.writers import html4css1
 from docutils.parsers.rst.directives.html import MetaBody
@@ -6,12 +24,12 @@ import sys, os
 
 class NavInfo (object):
     """store nav info"""
+
     def __init__ (self, name, level, visible=True, order=sys.maxint):
         self.name = name
         self.level = level
         self.visible = visible
         self.order = order
-
 
     def export (self):
         """return machine-parseable navigation information, suitable
@@ -23,7 +41,6 @@ class NavInfo (object):
           "order = %d" % self.order,
         ])
 
-
     def __str__ (self):
         return "[%d]%r %s order=%d"%\
           (self.level, self.name,
@@ -32,6 +49,7 @@ class NavInfo (object):
 
 class Writer (html4css1.Writer):
     """writer using custom nav class"""
+
     def __init__ (self):
         writers.Writer.__init__(self)
         self.translator_class = HTMLFileNavTranslator
@@ -48,7 +66,6 @@ class HTMLNavTranslator (html4css1.HTMLTranslator):
         self.parse_meta_nav(document)
         self.process_meta_nav()
 
-
     def parse_meta_nav (self, document):
         # look for meta tags in document with nav info
         i = document.first_child_matching_class(MetaBody.meta)
@@ -58,10 +75,8 @@ class HTMLNavTranslator (html4css1.HTMLTranslator):
                 self.add_meta_nav(meta.attributes)
             i = document.first_child_matching_class(MetaBody.meta, start=i+1)
 
-
     def process_meta_nav (self):
         pass
-
 
     def add_meta_nav (self, attributes):
         navattr = attributes['name'][11:]
@@ -91,7 +106,6 @@ class HTMLFileNavTranslator (HTMLNavTranslator):
             "</body>\n</html>\n",
         ]
 
-
     def get_topframe_bashing (self):
         return """<script type="text/javascript">
 window.onload = function() {
@@ -102,10 +116,8 @@ window.onload = function() {
 </script>
 """
 
-
     def get_nav_placeholder (self):
-        return "<bfk:navigation/>\n"
-
+        return "<!-- bfknav -->\nImagine a navigation\n<!-- /bfknav -->\n"
 
     def process_meta_nav (self):
         prefix = os.path.splitext(self.settings._destination)[0]
@@ -114,7 +126,6 @@ window.onload = function() {
         nav.write(self.nav_info.export())
         nav.write("\n")
         nav.close()
-
 
     def get_nav_css (self):
         p = self.settings.stylesheet_path.split("/")[:-1]

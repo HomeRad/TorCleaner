@@ -1,7 +1,27 @@
+# -*- coding: iso-8859-1 -*-
+# Copyright (C) 2004  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""General navigation writer reading .nav file info"""
+
 import sys, os
 from cStringIO import StringIO
 
 class Node (object):
+    """Node class for use in a navigation tree, with abilities to write
+       HTML output."""
 
     def __init__ (self, name, order, filename):
         self.name = name
@@ -13,17 +33,14 @@ class Node (object):
         self.active = False
         self.parent = None
 
-
     def get_url (self, level):
         return "../"*level + self.filename
-
 
     def addChildren (self, nodes):
         for node in nodes:
             node.parent = self
             node.level = self.level + 1
             self.children.append(node)
-
 
     def write_nav (self, fp, active):
         """write node navigation"""
@@ -39,52 +56,44 @@ class Node (object):
             self.write_nextlevel(fp)
             self.children[0].write_nav(fp, active)
 
-
     def write_inactive (self, fp, level):
         fp.write('<a href="%s">%s</a>\n'%(self.get_url(level), self.name))
-
 
     def write_active (self, fp):
         fp.write("%s\n"%self.name)
 
-
     def write_nextlevel (self, fp):
         fp.write('<br>\n')
-
 
     def new_node (self):
         return Node(self.name, sys.maxint, self.filename)
 
-
     def __repr__ (self):
         return "<Node %r>"%self.name
-
 
     def __lt__(self, other):
         return self.order < other.order
 
-
     def __le__(self, other):
         return self.order <= other.order
-
 
     def __eq__(self, other):
         return self.order == other.order
 
-
     def __ne__(self, other):
         return self.order != other.order
 
-
     def __gt__(self, other):
         return self.order > other.order
-
 
     def __ge__(self, other):
         return self.order >= other.order
 
 
 def parse_navtree (dirname):
+    """parse a hierarchy of .nav files into a tree structure,
+       consisting of lists of lists. The list entries are sorted in
+       navigation order."""
     nodes = []
     files = os.listdir(dirname)
     for f in files:
@@ -109,6 +118,7 @@ def parse_navtree (dirname):
 
 
 def print_nodes (nodes):
+    """print a tree structure to stdout"""
     for node in nodes:
         print " "*node.level+node.name
         if node.children:
@@ -116,6 +126,10 @@ def print_nodes (nodes):
 
 
 def has_node (node, nodes):
+    """look for node in a tree structure
+
+       @return True if node is found
+    """
     for n in nodes:
         if node.filename == n.filename:
             return True
@@ -125,6 +139,8 @@ def has_node (node, nodes):
 
 
 def generate_nav (start, nodes):
+    """write one navigation tree level into HTML files, with given
+       start node as root node"""
     for node in nodes:
         print node.filename
         if node.children:
@@ -133,15 +149,30 @@ def generate_nav (start, nodes):
             node.active = True
             fp = StringIO()
             start.write_nav(fp, node)
-            nav = '<div class="navigation">\n%s\n</div>' % fp.getvalue()
+            nav = '<div class="navigation">\n%s\n</div>\n' % fp.getvalue()
             node.active = False
-            f = file(node.filename)
-            data = f.read()
-            f.close()
-            data = data.replace("<bfk:navigation/>", nav)
-            f = file(node.filename, 'w')
-            f.write(data)
-            f.close()
+            write_nav(node.filename, nav)
+
+
+def write_nav (filename, nav):
+    """write navigation into filename"""
+    lines = []
+    skip = False
+    f = file(filename)
+    for line in f:
+        if not skip:
+            lines.append(line)
+        if line.startswith("<!-- bfknav -->"):
+            skip = True
+            lines.append(nav)
+        elif line.startswith("<!-- /bfknav -->"):
+            skip = False
+            lines.append(line)
+    f.close()
+    f = file(filename, 'w')
+    for line in lines:
+        f.write(line)
+    f.close()
 
 
 if __name__=='__main__':
