@@ -18,6 +18,8 @@
     Changed: README
   * line and column counting has been added to the HTML parser
     Changed: wc/parser/{htmlparse.y,htmllex.l,htmlsax.h}
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040128
+    Changed: libjs/*
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way
