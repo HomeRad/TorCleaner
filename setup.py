@@ -1,7 +1,9 @@
 #!/usr/bin/python -O
-"""setup file for the distuils module"""
 # -*- coding: iso-8859-1 -*-
-
+"""
+Setup file for the distuils module.
+XXX Some patches here can be removed when moving to Python >= 2.4.
+"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -27,6 +29,7 @@ import os
 import stat
 import re
 import string
+import glob
 from types import StringType, TupleType, ListType
 from distutils.core import setup, Extension, DEBUG
 #try:
@@ -43,11 +46,14 @@ from distutils.command.install import install
 from distutils.command.bdist_wininst import bdist_wininst
 from distutils.command.install_data import install_data
 from distutils.command.build_ext import build_ext
+from distutils.command.build import build
+from distutils.command.clean import clean
 from distutils.file_util import write_file
 from distutils.dir_util import create_tree, remove_tree
 from distutils import util, log
 from distutils.sysconfig import get_python_version
 
+from wc import msgfmt
 
 # cross compile config
 cc = os.environ.get("CC")
@@ -164,8 +170,9 @@ class MyDistribution (distklass, object):
         return os.path.join(directory, "_%s2_configdata.py"%self.get_name())
 
     def create_conf_file (self, data, directory=None):
-        """create local config file from given data (list of lines) in
-           the directory (or current directory if not given)
+        """
+        Create local config file from given data (list of lines) in
+        the directory (or current directory if not given).
         """
         data.insert(0, "# this file is automatically created by setup.py")
         data.insert(0, "# -*- coding: iso-8859-1 -*-")
@@ -188,7 +195,9 @@ class MyDistribution (distklass, object):
 
 
 class MyBdistWininst (bdist_wininst, object):
-    """bdist_wininst command supporting cross compilation"""
+    """
+    Custom bdist_wininst command supporting cross compilation.
+    """
 
     def run (self):
         if (not win_compiling and
@@ -287,8 +296,14 @@ def cc_supports_option (cc, option):
 
 
 class MyBuildExt (build_ext, object):
+    """
+    Custom build extension command.
+    """
 
     def build_extensions (self):
+        """
+        Add -std=gnu99 to build options if supported.
+        """
         # For gcc 3.x we can add -std=gnu99 to get rid of warnings.
         extra = []
         if self.compiler.compiler_type == 'unix':
@@ -302,6 +317,56 @@ class MyBuildExt (build_ext, object):
                 if opt not in ext.extra_compile_args:
                     ext.extra_compile_args.append(opt)
             self.build_extension(ext)
+
+
+def list_message_files(package, suffix=".po"):
+    """
+    Return list of all found message files and their installation paths.
+    """
+    _files = glob.glob("po/*" + suffix)
+    _list = []
+    for _file in _files:
+        # basename (without extension) is a locale name
+        _locale = os.path.splitext(os.path.basename(_file))[0]
+        _list.append((_file, os.path.join(
+            "share", "locale", _locale, "LC_MESSAGES", "%s.mo" % package)))
+    return _list
+
+
+class MyBuild (build, object):
+    """
+    Custom build command.
+    """
+
+    def build_message_files (self):
+        """
+        For each po/*.po, build .mo file in target locale directory.
+        """
+        for (_src, _dst) in list_message_files(self.distribution.get_name()):
+            _build_dst = os.path.join("build", _dst)
+            self.mkpath(os.path.dirname(_build_dst))
+            self.announce("Compiling %s -> %s" % (_src, _build_dst))
+            msgfmt.make(_src, _build_dst)
+
+    def run (self):
+        self.build_message_files()
+        build.run(self)
+
+
+class MyClean (clean, object):
+    """
+    Custom clean command.
+    """
+
+    def run (self):
+        if self.all:
+            # remove share directory
+            directory = os.path.join("build", "share")
+            if os.path.exists(directory):
+                remove_tree(directory, dry_run=self.dry_run)
+            else:
+                log.warn("'%s' does not exist -- can't clean it", directory)
+        clean.run(self)
 
 
 # global include dirs
@@ -461,9 +526,6 @@ data_files = [('share/webcleaner/config',
       ['config/bl2wc.py',
        'config/dmozfilter.py',
       ]),
-     ('share/locale/de/LC_MESSAGES',
-      ['share/locale/de/LC_MESSAGES/webcleaner.mo',
-      ]),
      ]
 if os.name == 'posix':
     data_files.append(('share/man/man1', [
@@ -533,6 +595,8 @@ setup (name = "webcleaner",
                    'install_data': MyInstallData,
                    'bdist_wininst': MyBdistWininst,
                    'build_ext': MyBuildExt,
+                   'build': MyBuild,
+                   'clean': MyClean,
                   },
        data_files = data_files,
 )
