@@ -283,7 +283,7 @@ class HttpServer (Server):
         # will content be rewritten?
         rewrite = self.is_rewrite()
         # add client accept-encoding value
-        self.headers['Accept-Encoding'] = self.client.compress
+        self.headers['Accept-Encoding'] = "%s\r"%self.client.compress
         if self.headers.get('Content-Length') is not None:
             self.bytes_remaining = int(self.headers['Content-Length'])
             debug(HURT_ME_PLENTY, "Proxy: %d bytes remaining"%self.bytes_remaining)
@@ -305,7 +305,7 @@ class HttpServer (Server):
                 self.bytes_remaining = None
             remove_headers(self.headers, to_remove)
             # add warning
-            self.headers['Warning'] = "214 Transformation applied"
+            self.headers['Warning'] = "214 Transformation applied\r"
         # only decompress on rewrite
         if not rewrite: return
         # Compressed content (uncompress only for rewriting modules)
