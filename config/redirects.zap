@@ -45,4 +45,10 @@
 <attr>http://prdownloads\.sourceforge\.net(.+)\?download</attr>
 <replacement part="attrval">http://osdn.dl.sourceforge.net\1</replacement>
 </rewrite>
+
+<rewrite sid="wc.4" title="dockapps.org"
+ desc="dockapps">
+<attr>http://www\.dockapps\.org/click\.php\?send=(.+)</attr>
+<replacement part="attrval">\1</replacement>
+</rewrite>
 </folder>
