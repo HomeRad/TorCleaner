@@ -11,7 +11,7 @@ from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
 from DeflateStream import DeflateStream
-from wc.filter import applyfilter, initStateObjects
+from wc.filter import applyfilter, initStateObjects, FilterException
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
