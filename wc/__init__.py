@@ -17,6 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os
+import sys
 import time
 import socket
 import glob
@@ -26,6 +27,11 @@ import logging.handlers
 import _webcleaner2_configdata as configdata
 import wc.log
 import wc.i18n
+
+def abspath (path):
+    if not os.path.isabs(path):
+        path = os.path.join(sys.prefix, path)
+    return path
 
 Version = configdata.version
 AppName = configdata.appname
@@ -45,8 +51,9 @@ Freeware = """%(appname)s comes with ABSOLUTELY NO WARRANTY!
 This is free software, and you are welcome to redistribute it
 under certain conditions. Look at the file `LICENSE' whithin this
 distribution.""" % {'appname': AppName}
-ConfigDir = configdata.config_dir
-TemplateDir = configdata.template_dir
+ConfigDir = abspath(configdata.config_dir)
+TemplateDir = abspath(configdata.template_dir)
+InstallData = abspath(configdata.install_data)
 
 # optional features
 try:
@@ -83,7 +90,7 @@ def get_locdir ():
     """return locale directory"""
     locdir = os.environ.get('LOCPATH')
     if locdir is None:
-        locdir = os.path.join(configdata.install_data, 'share', 'locale')
+        locdir = os.path.join(InstallData, 'share', 'locale')
     return locdir
 
 
