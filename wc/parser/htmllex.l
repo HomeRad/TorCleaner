@@ -723,23 +723,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RETURN(T_ELEMENT_START);
 }
 
-<S_ATTR4>\/> {
-    UPDATE_COLUMN;
-    PYSTRING_TMP(yyextra->tmp_attrval);
-    RESIZE_BUF(yyextra->tmp_buf, 1);
-    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (yyextra->tmp_attrval==NULL) return T_ERROR;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-		       PyString_AsString(yyextra->tmp_attrname),
-		       yyextra->tmp_attrval)==-1) return T_ERROR;
-    /*Py_DECREF(yyextra->tmp_attrname);*/
-    /*Py_DECREF(yyextra->tmp_attrval);*/
-    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
-    BEGIN(INITIAL);
-    SET_ATTR_LVAL;
-    RETURN(T_ELEMENT_START_END);
-}
-
 <S_ATTR4>{RX_WHITE_SPACE}+ {
     UPDATE_LINE;
 }
