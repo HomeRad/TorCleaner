@@ -11,13 +11,27 @@
     Type: bugfix
     Changed: wc/proxy/HttpClient.py
 
-  * fix urls with (leading) backslashes in the path
+  * fix urls with (leading) backslashes or double slashes in the path
     Type: bugfix
     Changed: wc/url.py
 
   * when url had backslashes, give a 302 redirect to correct url
     Type: feature
     Changed: wc/proxy/HttpClient.py
+
+  * add Host: header, not host: on client requests
+    Type: bugifx
+    Changed: wc/proxy/Headers.py
+
+  * added new network package with ability to find all configured
+    local ip addresses in a system
+    Type: feature
+    Added: wc/network/*.py
+    Changed: setup.py, Makefile.am
+
+  * reread DNS config every minute
+    Type: feature
+    Changed: wc/proxy/dns_lookups.py
 
 2.15 (released 22.5.2004)
   * set default config dir in webcleaner script
@@ -59,16 +73,6 @@
     accept both now a --configdir option
     Type: feature
     Changed: webcleaner{,.1}, webcleaner-certificates{,.1}
-
-  * added new network package with ability to find all configured
-    local ip addresses in a system
-    Type: feature
-    Added: wc/network/*.py
-    Changed: setup.py, Makefile.am
-
-  * reread DNS config every minute
-    Type: feature
-    Changed: wc/proxy/dns_lookups.py
 
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
