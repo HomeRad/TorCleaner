@@ -1076,15 +1076,15 @@ static PyObject* JSEnv_executeScript (JSEnvObject* self, PyObject* args) {
 
 static PyObject* JSEnv_executeScriptAsFunction (JSEnvObject* self, PyObject* args) {
     PyObject* script;
-    PyObject* version;
+    double version;
     jsval rval;
     JSBool res;
     JSFunction* func;
-    if (!PyArg_ParseTuple(args, "OO", &script, &version)) {
+    if (!PyArg_ParseTuple(args, "Sd", &script, &version)) {
 	PyErr_SetString(PyExc_TypeError, "script and version arg required");
         return NULL;
     }
-    setJSVersion(self->ctx, PyFloat_AsDouble(version));
+    setJSVersion(self->ctx, version);
     func = JS_CompileFunction(self->ctx, self->global_obj, 0, 0, 0,
                                           PyString_AsString(script),
                                           PyString_Size(script),
@@ -1106,7 +1106,7 @@ static PyObject* JSEnv_addForm (JSEnvObject* self, PyObject* args) {
     JSObject* form_obj;
     jsval form_jsval;
     jsuint nforms;
-    if (!PyArg_ParseTuple(args, "OOO", &name, &action, &target)) {
+    if (!PyArg_ParseTuple(args, "SSS", &name, &action, &target)) {
 	PyErr_SetString(PyExc_TypeError, "name, action and target arg required");
         return NULL;
     }
@@ -1114,17 +1114,20 @@ static PyObject* JSEnv_addForm (JSEnvObject* self, PyObject* args) {
 	PyErr_SetString(JSError, "JS_NewObject failed");
         return NULL;
     }
-    if (JS_DefineProperty(self->ctx, form_obj, "name", STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(name), PyString_Size(name))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
+    if (JS_DefineProperty(self->ctx, form_obj, "name",
+                          STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(name), PyString_Size(name))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
 	PyErr_SetString(JSError, "Could not set form.name property");
         return NULL;
     }
-    if (JS_DefineProperty(self->ctx, form_obj, "action", STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(action), PyString_Size(action))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
+    if (JS_DefineProperty(self->ctx, form_obj, "action",
+                          STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(action), PyString_Size(action))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
 	PyErr_SetString(JSError, "Could not set form.action property");
         return NULL;
     }
-    if (JS_DefineProperty(self->ctx, form_obj, "target", STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(target), PyString_Size(target))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
+    if (JS_DefineProperty(self->ctx, form_obj, "target",
+                          STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(target), PyString_Size(target))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
 	PyErr_SetString(JSError, "Could not set form.target property");
         return NULL;
