@@ -65,8 +65,11 @@ import sys, os
 if sys.version[:5] < "2.2":
     raise SystemExit, "This program requires Python 2.2 or later."
 # for pydoc testing, and local running. XXX should be a config entry
-sys.path.insert(0, os.getcwd())
-from wc import i18n, daemon
+try:
+    from wc import i18n, daemon
+except ImportError:
+    sys.path.insert(0, os.getcwd())
+    from wc import i18n, daemon
 
 _usage = i18n._("""USAGE\twebcleaner command
 
@@ -113,7 +116,6 @@ def _paginate(text, lines=22):
 
 def _print_help():
     """print long usage info"""
-    import os
     if os.name!='posix':
         _paginate(_usage)
     else:
@@ -123,7 +125,7 @@ def _print_help():
 
 def main():
     # Read command line arguments
-    import getopt,sys
+    import getopt
     try:
         # Note: cut out the name of the script
         options, args = getopt.getopt(sys.argv[1:], "h", ["help","pidfile="])

@@ -9,8 +9,11 @@ Required are the "tarfile" module and Python 2.2
 
 import sys, time, os, re, urllib2, gzip
 from tarfile import TarFile
-sys.path.insert(0, os.getcwd())
-from wc.XmlUtils import xmlify
+try:
+    from wc.XmlUtils import xmlify
+except ImportError:
+    sys.path.insert(0, os.getcwd())
+    from wc.XmlUtils import xmlify
 
 # global vars
 date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())

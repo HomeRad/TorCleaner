@@ -25,11 +25,15 @@ runtime. This is also a FAQ entry in the FOX documentation.
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import sys
+import sys, os
 if sys.version[:5] < "2.2":
     raise SystemExit, "This program requires Python 2.2 or later."
 
-from wc.gui.ConfWindow import ConfWindow
+try:
+    from wc.gui.ConfWindow import ConfWindow
+except ImportError:
+    sys.path.insert(0, os.getcwd())
+    from wc.gui.ConfWindow import ConfWindow
 from wc.gui.ToolApp import ToolApp
 
 if __name__=='__main__':

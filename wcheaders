@@ -21,12 +21,16 @@ runtime. This is also a FAQ entry in the FOX documentation.
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import sys
+import sys, os
 if sys.version[:5] < "2.2":
     raise SystemExit, "This program requires Python 2.2 or later."
 
+try:
+    from wc.gui.HeaderWindow import HeaderWindow
+except ImportError:
+    sys.path.insert(0, os.getcwd())
+    from wc.gui.HeaderWindow import HeaderWindow
 from wc.gui.ToolApp import ToolApp
-from wc.gui.HeaderWindow import HeaderWindow
 
 if __name__=='__main__':
     app = ToolApp("wcheaders")
