@@ -9,7 +9,10 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 22 
+#define YY_FLEX_SUBMINOR_VERSION 23
+#if YY_FLEX_SUBMINOR_VERSION > 0
+#define FLEX_BETA
+#endif
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
 
@@ -27,7 +30,7 @@
 #define FLEXINT_H
 
 #ifndef FLEX_NEED_INTEGRAL_TYPE_DEFINITIONS
-#include <inttypes.h>
+#include <sys/types.h>
 #else
 /* Exact integral types.  */
 
@@ -37,7 +40,7 @@ typedef signed char int8_t;
 typedef short int int16_t;
 typedef int int32_t;
 
-# if __WORDSIZE == 64 || defined __arch64__
+# if __WORDSIZE == 64 || defined __arch64__ || defined __cplusplus
 typedef long int int64_t;
 # else
 typedef long long int int64_t;
@@ -49,7 +52,7 @@ typedef unsigned char uint8_t;
 typedef unsigned short int uint16_t;
 typedef unsigned int uint32_t;
 
-#if __WORDSIZE == 64 || defined __arch64__
+#if __WORDSIZE == 64 || defined __arch64__ || defined __cplusplus
 typedef unsigned long int uint64_t;
 #else
 typedef unsigned long long int uint64_t;
@@ -6681,7 +6684,7 @@ static PyObject* quote_string (PyObject* val) {
 
 #define S_STRING 15
 
-#line 6685 "htmllex.c"
+#line 6688 "htmllex.c"
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
@@ -6999,7 +7002,7 @@ YY_DECL
 
 
   /*********************** EOF ************************/
-#line 7003 "htmllex.c"
+#line 7006 "htmllex.c"
 
     yylval = yylvalp;
 #ifdef YYLTYPE
@@ -7972,7 +7975,7 @@ YY_RULE_SETUP
 #line 717 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 7976 "htmllex.c"
+#line 7979 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{

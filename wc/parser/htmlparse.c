@@ -1,4 +1,4 @@
-/* A Bison parser, made from htmlparse.y, by GNU bison 1.50.  */
+/* A Bison parser, made from htmlparse.y, by GNU bison 1.75.  */
 
 /* Skeleton parser for Yacc-like parsing with Bison,
    Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002 Free Software Foundation, Inc.
@@ -41,6 +41,42 @@
 
 /* Using locations.  */
 #define YYLSP_NEEDED 0
+
+
+
+/* Tokens.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     T_WAIT = 258,
+     T_ERROR = 259,
+     T_TEXT = 260,
+     T_ELEMENT_START = 261,
+     T_ELEMENT_START_END = 262,
+     T_ELEMENT_END = 263,
+     T_SCRIPT = 264,
+     T_STYLE = 265,
+     T_PI = 266,
+     T_COMMENT = 267,
+     T_CDATA = 268,
+     T_DOCTYPE = 269
+   };
+#endif
+#define T_WAIT 258
+#define T_ERROR 259
+#define T_TEXT 260
+#define T_ELEMENT_START 261
+#define T_ELEMENT_START_END 262
+#define T_ELEMENT_END 263
+#define T_SCRIPT 264
+#define T_STYLE 265
+#define T_PI 266
+#define T_COMMENT 267
+#define T_CDATA 268
+#define T_DOCTYPE 269
+
 
 
 
@@ -115,45 +151,6 @@ staticforward PyTypeObject parser_type;
 
 
 
-/* Tokens.  */
-#ifndef YYTOKENTYPE
-# if defined (__STDC__) || defined (__cplusplus)
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     T_WAIT = 258,
-     T_ERROR = 259,
-     T_TEXT = 260,
-     T_ELEMENT_START = 261,
-     T_ELEMENT_START_END = 262,
-     T_ELEMENT_END = 263,
-     T_SCRIPT = 264,
-     T_STYLE = 265,
-     T_PI = 266,
-     T_COMMENT = 267,
-     T_CDATA = 268,
-     T_DOCTYPE = 269
-   };
-# endif
-  /* POSIX requires `int' for tokens in interfaces.  */
-# define YYTOKENTYPE int
-#endif /* !YYTOKENTYPE */
-#define T_WAIT 258
-#define T_ERROR 259
-#define T_TEXT 260
-#define T_ELEMENT_START 261
-#define T_ELEMENT_START_END 262
-#define T_ELEMENT_END 263
-#define T_SCRIPT 264
-#define T_STYLE 265
-#define T_PI 266
-#define T_COMMENT 267
-#define T_CDATA 268
-#define T_DOCTYPE 269
-
-
-
-
 /* Enabling traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -189,7 +186,7 @@ typedef struct yyltype
 
 
 /* Line 213 of /usr/share/bison/yacc.c.  */
-#line 193 "htmlparse.c"
+#line 190 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -279,6 +276,12 @@ union yyalloc
 
 #endif
 
+#if defined (__STDC__) || defined (__cplusplus)
+   typedef signed char yysigned_char;
+#else
+   typedef short yysigned_char;
+#endif
+
 /* YYFINAL -- State number of the termination state. */
 #define YYFINAL  15
 #define YYLAST   26
@@ -341,7 +344,7 @@ static const unsigned char yyprhs[] =
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS. */
-static const signed char yyrhs[] =
+static const yysigned_char yyrhs[] =
 {
       16,     0,    -1,    17,    -1,    16,    17,    -1,     3,    -1,
        4,    -1,     6,    -1,     7,    -1,     8,    -1,    12,    -1,
@@ -403,7 +406,7 @@ static const unsigned char yydefact[] =
 };
 
 /* YYDEFGOTO[NTERM-NUM]. */
-static const signed char yydefgoto[] =
+static const yysigned_char yydefgoto[] =
 {
       -1,    13,    14
 };
@@ -411,21 +414,22 @@ static const signed char yydefgoto[] =
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
 #define YYPACT_NINF -13
-static const signed char yypact[] =
+static const yysigned_char yypact[] =
 {
       12,   -13,   -13,   -13,   -13,   -13,   -13,   -13,   -13,   -13,
      -13,   -13,   -13,     0,   -13,   -13,   -13
 };
 
 /* YYPGOTO[NTERM-NUM].  */
-static const signed char yypgoto[] =
+static const yysigned_char yypgoto[] =
 {
      -13,   -13,   -12
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
    positive, shift that token.  If negative, reduce the rule which
-   number is the opposite.  If zero, do what YYDEFACT says.  */
+   number is the opposite.  If zero, do what YYDEFACT says.
+   If YYTABLE_NINF, parse error.  */
 #define YYTABLE_NINF -1
 static const unsigned char yytable[] =
 {
@@ -434,7 +438,7 @@ static const unsigned char yytable[] =
        6,     7,     8,     9,    10,    11,    12
 };
 
-static const signed char yycheck[] =
+static const yysigned_char yycheck[] =
 {
        0,    13,    -1,     3,     4,     5,     6,     7,     8,     9,
       10,    11,    12,    13,    14,     3,     4,     5,     6,     7,
@@ -660,77 +664,6 @@ yysymprint (yyout, yytype, yyvalue)
   YYFPRINTF (yyout, ")");
 }
 #endif /* YYDEBUG. */
-
-
-/*----------------------------------------------------------.
-| yyreport_parse_error -- report a parse error in YYSTATE.  |
-`----------------------------------------------------------*/
-
-static void
-#if defined (__STDC__) || defined (__cplusplus)
-yyreport_parse_error (int yystate, int yychar, YYSTYPE yyvalue)
-#else
-yyreport_parse_error (yystate, yychar, yyvalue)
-    int yystate;
-    int yychar;
-    YYSTYPE yyvalue;
-#endif
-{
-#if YYERROR_VERBOSE
-  int yyn = yypact[yystate];
-
-  if (YYPACT_NINF < yyn && yyn < YYLAST)
-    {
-      YYSIZE_T yysize = 0;
-      int yytype = YYTRANSLATE (yychar);
-      char *yymsg;
-      int yyx, yycount;
-
-      yycount = 0;
-      /* Start YYX at -YYN if negative to avoid negative indexes in
-	 YYCHECK.  */
-      for (yyx = yyn < 0 ? -yyn : 0;
-	   yyx < (int) (sizeof (yytname) / sizeof (char *)); yyx++)
-	if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
-	  yysize += yystrlen (yytname[yyx]) + 15, yycount++;
-      yysize += yystrlen ("parse error, unexpected ") + 1;
-      yysize += yystrlen (yytname[yytype]);
-      yymsg = (char *) YYSTACK_ALLOC (yysize);
-      if (yymsg != 0)
-	{
-	  char *yyp = yystpcpy (yymsg, "parse error, unexpected ");
-	  yyp = yystpcpy (yyp, yytname[yytype]);
-
-	  if (yycount < 5)
-	    {
-	      yycount = 0;
-	      for (yyx = yyn < 0 ? -yyn : 0;
-		   yyx < (int) (sizeof (yytname) / sizeof (char *));
-		   yyx++)
-		if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
-		  {
-		    const char *yyq = ! yycount ? ", expecting " : " or ";
-		    yyp = yystpcpy (yyp, yyq);
-		    yyp = yystpcpy (yyp, yytname[yyx]);
-		    yycount++;
-		  }
-	    }
-	  yyerror (yymsg);
-	  YYSTACK_FREE (yymsg);
-	}
-      else
-	yyerror ("parse error; also virtual memory exhausted");
-    }
-  else
-#endif /* YYERROR_VERBOSE */
-    yyerror ("parse error");
-
-  /* Pacify ``unused variable'' warnings.  */
-  (void) yystate;
-  (void) yychar;
-  (void) yyvalue;
-  
-}
 
 
 /*-----------------------------------------------.
@@ -987,28 +920,19 @@ yybackup:
       YYDPRINTF ((stderr, "\n"));
     }
 
+  /* If the proper action on seeing token YYCHAR1 is to reduce or to
+     detect an error, take that action.  */
   yyn += yychar1;
   if (yyn < 0 || YYLAST < yyn || yycheck[yyn] != yychar1)
     goto yydefault;
-
   yyn = yytable[yyn];
-
-  /* yyn is what to do for this token type in this state.
-     Negative => reduce, -yyn is rule number.
-     Positive => shift, yyn is new state.
-       New state is final state => don't bother to shift,
-       just return success.
-     0, or most negative number => error.  */
-
-  if (yyn < 0)
+  if (yyn <= 0)
     {
-      if (yyn == YYTABLE_NINF)
+      if (yyn == 0 || yyn == YYTABLE_NINF)
 	goto yyerrlab;
       yyn = -yyn;
       goto yyreduce;
     }
-  else if (yyn == 0)
-    goto yyerrlab;
 
   if (yyn == YYFINAL)
     YYACCEPT;
@@ -1493,8 +1417,8 @@ finish_characters:
 
     }
 
-/* Line 1086 of /usr/share/bison/yacc.c.  */
-#line 1498 "htmlparse.c"
+/* Line 1016 of /usr/share/bison/yacc.c.  */
+#line 1422 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1537,7 +1461,54 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
-      yyreport_parse_error (yystate, yychar, yylval);
+#if YYERROR_VERBOSE
+      yyn = yypact[yystate];
+
+      if (YYPACT_NINF < yyn && yyn < YYLAST)
+	{
+	  YYSIZE_T yysize = 0;
+	  int yytype = YYTRANSLATE (yychar);
+	  char *yymsg;
+	  int yyx, yycount;
+
+	  yycount = 0;
+	  /* Start YYX at -YYN if negative to avoid negative indexes in
+	     YYCHECK.  */
+	  for (yyx = yyn < 0 ? -yyn : 0;
+	       yyx < (int) (sizeof (yytname) / sizeof (char *)); yyx++)
+	    if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
+	      yysize += yystrlen (yytname[yyx]) + 15, yycount++;
+	  yysize += yystrlen ("parse error, unexpected ") + 1;
+	  yysize += yystrlen (yytname[yytype]);
+	  yymsg = (char *) YYSTACK_ALLOC (yysize);
+	  if (yymsg != 0)
+	    {
+	      char *yyp = yystpcpy (yymsg, "parse error, unexpected ");
+	      yyp = yystpcpy (yyp, yytname[yytype]);
+
+	      if (yycount < 5)
+		{
+		  yycount = 0;
+		  for (yyx = yyn < 0 ? -yyn : 0;
+		       yyx < (int) (sizeof (yytname) / sizeof (char *));
+		       yyx++)
+		    if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR)
+		      {
+			const char *yyq = ! yycount ? ", expecting " : " or ";
+			yyp = yystpcpy (yyp, yyq);
+			yyp = yystpcpy (yyp, yytname[yyx]);
+			yycount++;
+		      }
+		}
+	      yyerror (yymsg);
+	      YYSTACK_FREE (yymsg);
+	    }
+	  else
+	    yyerror ("parse error; also virtual memory exhausted");
+	}
+      else
+#endif /* YYERROR_VERBOSE */
+	yyerror ("parse error");
     }
   goto yyerrlab1;
 

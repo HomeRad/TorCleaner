@@ -1,4 +1,4 @@
-/* A Bison parser, made from htmlparse.y, by GNU bison 1.50.  */
+/* A Bison parser, made from htmlparse.y, by GNU bison 1.75.  */
 
 /* Skeleton parser for Yacc-like parsing with Bison,
    Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002 Free Software Foundation, Inc.
@@ -28,7 +28,7 @@
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
-# if defined (__STDC__) || defined (__cplusplus)
+# define YYTOKENTYPE
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
@@ -45,10 +45,7 @@
      T_CDATA = 268,
      T_DOCTYPE = 269
    };
-# endif
-  /* POSIX requires `int' for tokens in interfaces.  */
-# define YYTOKENTYPE int
-#endif /* !YYTOKENTYPE */
+#endif
 #define T_WAIT 258
 #define T_ERROR 259
 #define T_TEXT 260
