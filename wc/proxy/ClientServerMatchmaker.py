@@ -77,7 +77,8 @@ class ClientServerMatchmaker (object):
             client.handle_local()
             return
         # fix missing trailing /
-        if not document: document = '/'
+        if not document:
+            document = '/'
         # add missing host headers for HTTP/1.1
         if self.protocol=='HTTP/1.1' and not self.headers.has_key('Host'):
             if port!=80:
@@ -104,7 +105,9 @@ class ClientServerMatchmaker (object):
 
     def handle_dns (self, hostname, answer):
         assert self.state == 'dns'
+        debug(PROXY, "%s handle dns", str(self))
         if not self.client.connected:
+            warn(PROXY, "%s client closed after DNS", str(self))
             # The browser has already closed this connection, so abort
             return
         if answer.isFound():
@@ -117,7 +120,7 @@ class ClientServerMatchmaker (object):
             if self.port != 80:
 	        new_url += ':%d' % self.port
             new_url += self.document
-            info(PROXY, "Redirecting %s to %s", str(self), `new_url`)
+            info(PROXY, "%s redirecting %s", str(self), `new_url`)
             self.state = 'done'
             config['requests']['valid'] += 1
             # XXX find http version!
@@ -137,6 +140,7 @@ class ClientServerMatchmaker (object):
 
     def find_server (self):
         assert self.state == 'server'
+        debug(PROXY, "%s find server", str(self))
         addr = (self.ipaddr, self.port)
         if not self.client.connected:
             # The browser has already closed this connection, so abort
@@ -227,4 +231,9 @@ class ClientServerMatchmaker (object):
 
 
     def __repr__ (self):
-        return '<%s:%-8s %s>' % ('clientserver', self.state, self.url)
+        if self.client:
+            extra = "client"
+        else:
+            extra = ""
+        extra += " "+self.url
+        return '<%s:%-8s %s>' % ('clientserver', self.state, extra)
