@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Fri Oct 11 00:17:03 2002\n"
+"POT-Creation-Date: Tue Oct 15 01:24:52 2002\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -706,6 +706,12 @@ msgstr "Keine Antwort vom Server"
 
 msgid "Server closed connection"
 msgstr "Server hat Verbindung geschlossen"
+
+msgid "zlib error: not gzip format, disabling gunzip"
+msgstr "zlib Fehler: kein gzip-Format, gunzip wird nicht ausgeführt"
+
+msgid "zlib error: unknown compression method, disabling gunzip"
+msgstr "zlib Fehler: unbekannte Kompressionsmethode, gunzip wird nicht ausgeführt"
 
 msgid "Warning: client received %d bytes more than content-length"
 msgstr "Warnung: client empfing %d Bytes mehr als angegebene Inhaltslänge"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Oct 11 00:17:03 2002\n"
+"POT-Creation-Date: Tue Oct 15 01:24:52 2002\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -670,6 +670,12 @@ msgid "No response from server"
 msgstr ""
 
 msgid "Server closed connection"
+msgstr ""
+
+msgid "zlib error: not gzip format, disabling gunzip"
+msgstr ""
+
+msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr ""
 
 msgid "Warning: client received %d bytes more than content-length"
