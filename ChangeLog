@@ -55,8 +55,7 @@
     Changed: wc/proxy/HttpClient.py
   * merge upstream changes of simpleTAL 3.5 and 3.6
     Changed: wc/webgui/simpletal/*.py, templates/classic/filterconfig.html
-  * merge upstream changes of libjs (spidermonkey) 1.5rc5a, fixes
-    remaining pages in BADURLS
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031016
     Changed: js/*
 
 2.1
