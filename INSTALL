@@ -3,7 +3,7 @@
 
 Requirements
 ------------
-You need a C compiler (most notably the GNU C Compiler gcc).
+You need a C compiler (for example the GNU C Compiler gcc).
 
 Python >= 2.2 from http://www.python.org/
 Your Python installation has to be compiled with the
@@ -18,7 +18,8 @@ FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
 
 Setup
 -----
-Run "./configure; make" to compile everything.
-Install with "make install".
+Run "./configure; make" to compile the JavaScript library.
+Run "python setup.py build" to byte-compile the Python files.
+Run "python setup.py install" to install everything.
 Note: if you work from CVS, you must run "./autogen.sh" first to
 generate the configure and Makefile files.

@@ -10,10 +10,13 @@
     Changed files: config/{scripting,adverts,misc}.zap
   * Html filtering:
     - fixed nasty bug in HTML filter buffer handling which resulted in
-       lost HTML data
+      lost HTML data
     - also apply filter rules to document.write content
     - support <base href> for JS src fetching
     Changed files: wc/filter/HtmlParser.py
+  * HTML parser:
+    - handle missing > in "</a <a b=c>"
+    Changed files: wc/parser/htmllex.l
   * fix return types in the daemon package
     Changed files: wc/daemon/_posix.py
   * use builtin dict type for configuration

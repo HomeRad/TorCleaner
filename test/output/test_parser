@@ -87,6 +87,7 @@ HTML '< /a>'
 endElement ('a',)
 HTML '</td <td a="b" >'
 endElement ('td',)
+error: missing > in end tag `td'
 startElement ('td', {'a': 'b'})
 HTML '<a/>'
 startElement ('a', {})
@@ -207,6 +208,7 @@ HTML '< /a>'
 endElement ('a',)
 HTML '</td <td a="b" >'
 endElement ('td',)
+error: missing > in end tag `td'
 startElement ('td', {'a': 'b'})
 HTML '<a/>'
 startElement ('a', {})
