@@ -25,13 +25,16 @@ import sys
 import string
 from types import StringType, TupleType
 from distutils.core import setup, Extension, DEBUG
-try:
-    import py2exe
-    distklass = py2exe.Distribution
-except ImportError:
-    import distutils.dist
-    distklass = distutils.dist.Distribution
+#try:
+#    import py2exe
+#    distklass = py2exe.Distribution
+#except ImportError:
+#    import distutils.dist
+#    distklass = distutils.dist.Distribution
+import distutils.dist
+distklass = distutils.dist.Distribution
 from distutils.command.install import install
+from distutils.command.build_ext import build_ext
 from distutils.command.install_data import install_data
 from distutils.file_util import write_file
 from distutils import util
@@ -174,36 +177,69 @@ class MyDistribution (distklass, object):
         util.execute(write_file, (filename, data),
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
+# global include dirs
+include_dirs = []
+# global macros
+define_macros = []
+# compiler args
+extra_compile_args = []
+# library directories
+library_dirs = []
+# libraries
+libraries = []
+
+# cross compile config
+cc = os.environ.get("CC")
+win_cross_compiling = cc is not None and "mingw32" in cc
+# directory with cross compiled (for win32) python
+win_python_dir = "/home/calvin/src/python-cvs/dist/src/"
+
+
+# distinguish the different platforms
 if os.name=='nt':
     # windows does not have unistd.h
-    macros = [('YY_NO_UNISTD_H', None)]
-    cargs = []
+    define_macros.append(('YY_NO_UNISTD_H', None))
 else:
-    macros = []
     # for gcc 3.x we could add -std=gnu99 to get rid of warnings, but
     # that breaks other compilers
-    cargs = ["-pedantic"]
+    extra_compile_args.append("-pedantic")
+    if win_cross_compiling:
+        # we are cross compiling with mingw
+        # add directory for pyconfig.h
+        include_dirs.append(win_python_dir)
+        # add directory for Python.h
+        include_dirs.append(os.path.join(win_python_dir, "Include"))
+        # for finding libpythonX.Y.a
+        library_dirs.append(win_python_dir)
+        libraries.append("python%d.%d" % tuple(sys.version_info[0:2]))
 
-# extensions
-extensions = [
-    Extension('wc.HtmlParser.htmlsax',
+# C extension modules
+extensions = []
+
+# HTML parser
+extensions.append(Extension('wc.HtmlParser.htmlsax',
               sources = [p('wc/HtmlParser/htmllex.c'),
                          p('wc/HtmlParser/htmlparse.c'),
                          p('wc/HtmlParser/s_util.c'),
                         ],
               depends = [p("wc/HtmlParser/htmlsax.h"),
                          p('wc/HtmlParser/s_util.h')],
-              include_dirs = [p("wc/HtmlParser")],
-              define_macros = macros,
-              extra_compile_args = cargs,
-             ),
-    Extension('wc.levenshtein',
-              sources = [p('wc/levenshtein.c'),],
-              define_macros = macros,
-              extra_compile_args = cargs,
-             ),
-]
+              include_dirs = include_dirs + [p("wc/HtmlParser")],
+              define_macros = define_macros,
+              extra_compile_args = extra_compile_args,
+              library_dirs = library_dirs,
+              libraries = libraries,
+             ))
 
+# levenshtein distance method
+extensions.append(Extension('wc.levenshtein',
+              sources = [p('wc/levenshtein.c'),],
+              include_dirs = include_dirs,
+              define_macros = define_macros,
+              extra_compile_args = extra_compile_args,
+              library_dirs = library_dirs,
+              libraries = libraries,
+             ))
 
 # javascript extension
 if os.name=='nt':
@@ -212,16 +248,28 @@ if os.name=='nt':
                     # since we are not compiling with configure/make, put
                     # all needed defines here
                     define_macros = [('WIN32', None), ('XP_WIN', None), ('EXPORT_JS_API', None)],
-                    include_dirs = ['libjs'],
-                    extra_compile_args = cargs,
+                    include_dirs = include_dirs + ['libjs'],
+                    extra_compile_args = extra_compile_args,
                     extra_objects = ['libjs/.libs/libjs.a'],
+                    library_dirs = library_dirs,
+                    libraries = libraries,
                   ))
 else:
+    if win_cross_compiling:
+        define_macros = [('WIN32', None),
+                         ('XP_WIN', None),
+                         ('EXPORT_JS_API', None),
+                        ]
+    else:
+        define_macros = []
     extensions.append(Extension('wc.js.jslib',
                     sources=['wc/js/jslib.c'],
-                    include_dirs = ['libjs'],
-                    extra_compile_args = cargs,
+                    include_dirs = include_dirs + ['libjs'],
+                    define_macros = define_macros,
+                    extra_compile_args = extra_compile_args,
                     extra_objects = ['libjs/.libs/libjs.a'],
+                    library_dirs = library_dirs,
+                    libraries = libraries,
                   ))
 
 # no to the main stuff
