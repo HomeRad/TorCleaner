@@ -569,7 +569,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 				 NULL, /* chunk of data */
 				 0, /* size of chunk */
 				 NULL, /* filename (optional) */
-				 0 /* encoding */
+				 XML_CHAR_ENCODING_8859_1 /* encoding */
 				);
     p->userData->error = 0;
     p->userData->exc_type = NULL;
@@ -658,7 +658,7 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 				 NULL,
 				 0,
 				 NULL,
-				 0);
+				 XML_CHAR_ENCODING_8859_1);
     Py_INCREF(Py_None);
     return Py_None;
 }
