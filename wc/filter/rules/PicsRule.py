@@ -42,8 +42,8 @@ class PicsRule (UrlRule):
         elif name=='pics':
             UrlRule.fill_attrs(self, attrs, name)
         else:
-            raise ValueError(i18n._("Invalid pics rule tag name `%s',"+\
-                                    " check your configuration")%name)
+            raise ValueError(
+    i18n._("Invalid pics rule tag name `%s', check your configuration")%name)
 
 
     def fill_data (self, data, name):
