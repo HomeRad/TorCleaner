@@ -87,6 +87,12 @@ def wstartfunc (handle=None):
     # read configuration
     config = Configuration()
     config.init_filter_modules()
+    # psyco library for speedup
+    try:
+        import psyco
+        psyco.full()
+    except ImportError:
+        pass
     # start the proxy
     info(PROXY, "Starting proxy on port %d", config['port'])
     from wc.proxy import mainloop
@@ -161,6 +167,10 @@ class Configuration (dict):
         else:
             socket.setdefaulttimeout(None)
         if self['development']:
+            # avoid conflicting servers if an official WebCleaner release
+            # is installed
+            self['port'] += 1
+            # test data directory url
             self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
 
 
@@ -168,6 +178,7 @@ class Configuration (dict):
         """Reset to default values"""
         self['configfile'] = proxyconf_file()
         self['port'] = 8080
+        self['sslport'] = 8443
         self['adminuser'] = ""
         self['adminpass'] = ""
         self['proxyuser'] = ""
@@ -194,8 +205,7 @@ class Configuration (dict):
         self['gui_theme'] = "classic"
         self['timeout'] = 30
         self['auth_ntlm'] = 0
-        # in development mode, new filter rules get the official
-        # WebCleaner prefix and the base url is different
+        # in development mode some values have different defaults
         self['development'] = os.environ.get("WC_DEVELOPMENT", 0)
         self['baseurl'] = Url
         self['try_google'] = 0
