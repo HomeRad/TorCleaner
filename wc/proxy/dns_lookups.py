@@ -12,9 +12,10 @@ import re
 import pprint
 import wc.proxy
 import wc.proxy.Connection
-import bk.net
-import bk.net.dns
-import bk.net.dns.Lib
+import wc.dns.resolver
+import wc.dns.rdataclass
+import wc.dns.rdatatype
+import wc.dns.message
 
 
 resolver = None
@@ -24,7 +25,7 @@ def init_resolver ():
     Should be called on SIGHUP (config reload)
     """
     global resolver
-    resolver = bk.dns.resolver.Resolver()
+    resolver = wc.dns.resolver.Resolver()
 
 
 def background_lookup (hostname, callback):
@@ -386,9 +387,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # Only issue if we have someone waiting
             return
 
-        rdtype = bk.dns.rdatatype.A
-        rdclass = bk.dns.rdataclass.IN
-        self.query = bk.dns.message.make_query(self.hostname, rdtype, rdclass)
+        rdtype = wc.dns.rdatatype.A
+        rdclass = wc.dns.rdataclass.IN
+        self.query = wc.dns.message.make_query(self.hostname, rdtype, rdclass)
         if not self.keyname is None:
             self.query.use_tsig(self.keyring, self.keyname)
         self.query.use_edns(self.edns, self.ednsflags, self.payload)
@@ -453,7 +454,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                 pass
         else:
             wire = self.read(1024)
-        r = bk.dns.message.from_wire(wire, keyring=self.query.keyring,
+        r = wc.dns.message.from_wire(wire, keyring=self.query.keyring,
                                      request_mac=self.query.mac)
         if not self.query.is_response(r):
             return
