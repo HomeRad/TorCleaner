@@ -11,8 +11,6 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-# Modifications for WebCleaner:
-# 1. implemented ustr as str
 """
 Interpreter for a pre-compiled TAL program.
 """
@@ -25,7 +23,7 @@ from cgi import escape
 # Do not use cStringIO here!  It's not unicode aware. :(
 from StringIO import StringIO
 #from DocumentTemplate.DT_Util import ustr
-ustr = str
+ustr = unicode
 
 from TALDefs import TAL_VERSION, TALError, METALError, attrEscape
 from TALDefs import isCurrentVersion, getProgramVersion, getProgramMode
@@ -194,7 +192,7 @@ class TALInterpreter (object):
         assert self.scopeLevel == 0
         assert self.i18nContext.parent is None
         if self.col > 0:
-            self._stream_write("\n")
+            self._stream_write(ustr("\n"))
             self.col = 0
 
     def stream_write (self, s, len=len):
@@ -296,15 +294,15 @@ class TALInterpreter (object):
                 if (wrap and
                     col >= align and
                     col + 1 + slen > wrap):
-                    append("\n")
-                    append(" "*align)
+                    append(ustr("\n"))
+                    append(ustr(" ")*align)
                     col = align + slen
                 else:
-                    append(" ")
+                    append(ustr(" "))
                     col = col + 1 + slen
                 append(s)
             append(end)
-            self._stream_write("".join(L))
+            self._stream_write(ustr("").join(L))
             col = col + endlen
         finally:
             self.col = col
@@ -397,7 +395,7 @@ class TALInterpreter (object):
         self.interpret(start)
         if not isend:
             self.interpret(program)
-            s = '</%s>' % name
+            s = ustr('</%s>') % name
             self._stream_write(s)
             self.col = self.col + len(s)
 
@@ -520,7 +518,7 @@ class TALInterpreter (object):
         # case we can just output the ${name} to the stream
         i18ndict, srepr = self.i18nStack[-1]
         i18ndict[varname] = value
-        placeholder = '${%s}' % varname
+        placeholder = ustr('${%s}') % varname
         srepr.append(placeholder)
         self._stream_write(placeholder)
     bytecode_handlers['i18nVariable'] = do_i18nVariable
@@ -749,6 +747,8 @@ class FasterStringIO (StringIO):
 
     def write (self, s):
         #assert self.pos == self.len
+        if not isinstance(s, unicode):
+            s = ustr(s)
         self.buflist.append(s)
         self.len = self.pos = self.pos + len(s)
 
