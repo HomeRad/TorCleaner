@@ -1,4 +1,4 @@
-1.7.1
+1.8
   * add document.layers property to jslib
   * escape inlined javascript
   * add wc.js to packages in setup.py
