@@ -6,6 +6,7 @@ from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip, remove_headers
 from wc.proxy import log, match_host
+from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.debug import *
 from wc.filter import FILTER_REQUEST
@@ -40,7 +41,7 @@ class HttpClient (Connection):
             self.close()
 
 
-    def error (self, code, msg, txt=''):
+    def error (self, code, msg, txt='', auth=''):
         self.state = 'done'
         content = HTML_TEMPLATE % \
             {'title': 'Proxy Error %d %s' % (code, msg),
@@ -48,17 +49,16 @@ class HttpClient (Connection):
              'content': 'Proxy Error %d %s<br>%s<br>' % \
                         (code, msg, txt),
             }
-        if config['proxyuser']:
-            auth = 'Proxy-Authenticate: Basic realm="unknown"\r\n'
+        if auth:
+            auth = 'Proxy-Authenticate: %s\r\n'%auth
             http_ver = '1.1'
         else:
-            auth = ''
             http_ver = '1.0'
         ServerHandleDirectly(self,
             'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
             'Server: Proxy\r\n' +\
             'Content-type: text/html\r\n' +\
-            '%s'%auth +\
+            auth +\
             '\r\n', content)
 
 
@@ -153,8 +153,15 @@ class HttpClient (Connection):
                 # add warning
                 self.headers['Warning'] = "214 Transformation applied\r"
             debug(HURT_ME_PLENTY, "Proxy: C/Headers", self.headers.items())
-            if config["proxyuser"] and not self.check_proxy_auth():
-                return self.error(407, i18n._("Proxy Authentication Required"))
+            if config["proxyuser"]:
+                if not self.headers.has_key('Proxy-Authentication'):
+                    auth = get_proxy_auth_challenge()
+                    return self.error(407,
+                          i18n._("Proxy Authentication Required"), auth=auth)
+                auth = check_proxy_auth(self.headers['Proxy-Authentication'])
+                if auth:
+                    return self.error(407,
+                          i18n._("Proxy Authentication Required"), auth=auth)
             if self.method=='OPTIONS':
                 mf = int(self.headers.get('Max-Forwards', -1))
                 if mf==0:
@@ -212,24 +219,6 @@ class HttpClient (Connection):
             ClientServerMatchmaker(self, self.request, self.headers,
                                    self.content, self.nofilter,
                                    self.compress)
-
-
-    def check_proxy_auth (self):
-        if self.headers.get("Proxy-Authorization") is None:
-            return None
-        auth = self.headers['Proxy-Authorization']
-        if not auth.startswith("Basic "):
-            return None
-        auth = base64.decodestring(auth[6:])
-        if ':' not in auth:
-            return None
-        _user,_pass = auth.split(":", 1)
-        if _user!=config['proxyuser']:
-            return None
-        if config['proxypass'] and \
-           _pass!=base64.decodestring(config['proxypass']):
-            return None
-        return "True"
 
 
     def server_response (self, server, response, headers):

@@ -11,7 +11,7 @@ from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
 from DeflateStream import DeflateStream
-from wc.filter import applyfilter, initStateObjects, FilterException
+from wc.filter import applyfilter, initStateObjects, FilterWait
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
@@ -353,8 +353,8 @@ class HttpServer (Server):
                 data = applyfilter(i, data, attrs=self.attrs)
             if data:
                 self.client.server_content(data)
-        except FilterException, msg:
-            debug(NIGHTMARE, "FilterException", msg)
+        except FilterWait, msg:
+            debug(NIGHTMARE, "FilterWait", msg)
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
         if underflow:
@@ -385,8 +385,8 @@ class HttpServer (Server):
         try:
             for i in _RESPONSE_FILTERS:
                 data = applyfilter(i, data, fun="finish", attrs=self.attrs)
-        except FilterException, msg:
-            debug(NIGHTMARE, "Proxy: FilterException", msg)
+        except FilterWait, msg:
+            debug(NIGHTMARE, "Proxy: FilterWait", msg)
             # the filter still needs some data so try flushing again
             # after a while
             make_timer(0.2, lambda : HttpServer.flush(self, client, reuse))
