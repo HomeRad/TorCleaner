@@ -488,11 +488,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_src = True
         self.js_client = HttpProxyClient(self.jsScriptData, (url, ver))
         host = stripsite(url)[0]
+        headers = get_wc_client_headers(host)
+        # note: some javascript servers do not specify content encoding
+        # so only accept non-encoded content here
+        headers['Accept-Encoding'] = 'identity\r'
         ClientServerMatchmaker(self.js_client,
                                "GET %s HTTP/1.1" % url, # request
-                               get_wc_client_headers(host), # headers
+                               headers,
                                '', # content
-                               'identity', # compress
                                mime="application/x-javascript",
                                )
 

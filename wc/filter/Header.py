@@ -25,7 +25,6 @@ from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, compileRege
 from wc.filter.Filter import Filter
 
 
-
 class Header (Filter):
     # which filter stages this filter applies to (see filter/__init__.py)
     orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]
