@@ -3,7 +3,7 @@ import unittest
 import base64
 import wc
 import wc.proxy.auth
-import StandardTest
+
 
 class TestNtlm (unittest.TestCase):
     """Test ntlm authentication routines"""
@@ -50,3 +50,13 @@ class TestNtlm (unittest.TestCase):
         nt_resp = wc.proxy.auth.ntlm.calc_resp(nt_hashed_pw, nonce)
         self.assertEqual(correct_lm_resp, lm_resp)
         self.assertEqual(correct_nt_resp, nt_resp)
+
+
+def test_suite ():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestNtlm))
+    return suite
+
+if __name__ == '__main__':
+    unittest.main()
+

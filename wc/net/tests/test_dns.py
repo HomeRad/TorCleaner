@@ -1,11 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
-import wc.network
-from wc.proxy.dns.Lib import Packer, Unpacker
-import StandardTest
+import wc.net
+from wc.net.dns.Lib import Packer, Unpacker
 
 
-class TestDns (StandardTest.StandardTest):
+class TestDns (unittest.TestCase):
     """Test DNS routines"""
 
     def testPacker (self):
@@ -32,9 +31,9 @@ class TestDns (StandardTest.StandardTest):
         self.assertEqual(u.getname(), '')
 
     def testHostLowercase (self):
-        for host in wc.network.get_localhosts():
+        for host in wc.net.get_localhosts():
             self.assertEqual(host, host.lower())
-        config = wc.network.resolver_config()
+        config = wc.net.resolver_config()
         for host in config.nameservers:
             self.assertEqual(host, host.lower())
         for host in config.search_domains:
@@ -43,7 +42,11 @@ class TestDns (StandardTest.StandardTest):
             self.assertEqual(host, host.lower())
 
 
+def test_suite ():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestDns))
+    return suite
+
 if __name__ == '__main__':
-    unittest.main(defaultTest='TestDns')
-else:
-    suite = unittest.makeSuite(TestDns, 'test')
+    unittest.main()
+

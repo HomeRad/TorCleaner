@@ -1,11 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 
 import unittest
-import wc.network.ip
-import StandardTest
+import wc.net.ip
 
 
-class TestIp (StandardTest.StandardTest):
+class TestIp (unittest.TestCase):
 
     def testNames (self):
         hosts, nets = wc.network.ip.hosts2map(["www.kampfesser.net",
@@ -83,7 +82,11 @@ class TestIp (StandardTest.StandardTest):
             hosts, nets = wc.network.ip.hosts2map(["144.145.146.1/%d"%i])
 
 
+def test_suite ():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestIp))
+    return suite
+
 if __name__ == '__main__':
-    unittest.main(defaultTest='TestIp')
-else:
-    suite = unittest.makeSuite(TestIp, 'test')
+    unittest.main()
+
