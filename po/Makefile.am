@@ -20,13 +20,11 @@ MOS=$(patsubst %, %.mo, $(LANGUAGES) )
 
 all:	$(MOS)
 
-%.po:	pot-stamp
+%.po:	webcleaner.pot
 	$(MSGMERGE) $@ $(PACKAGE).pot -o $@
 
-pot-stamp: $(SOURCES)
-	rm -f $(PACKAGE).pot
+webcleaner.pot: $(SOURCES)
 	$(GETTEXT) --default-domain=$(PACKAGE) --no-location $(SOURCES)
-	touch pot-stamp
 
 %.mo:	%.po
 	if [ ! -d $(LDIR)/$*/LC_MESSAGES ]; then \
@@ -34,10 +32,5 @@ pot-stamp: $(SOURCES)
 	fi
 	$(MSGFMT) -o$(LDIR)/$*/$(LFILE) $<
 
-clean:
+clean-local:
 	for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
-
-distclean:	clean
-	rm -f pot-stamp
-
-.PHONY: all clean distclean

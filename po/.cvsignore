@@ -1,1 +1,6 @@
-pot-stamp
+Makefile
+Makefile.in
+.deps
+.libs
+*.lo
+*.la
