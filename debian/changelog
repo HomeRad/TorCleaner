@@ -1,8 +1,12 @@
 webcleaner (0.18) unstable; urgency=low
 
   * fixes for debian install scripts
+  * flush logfile when logging
+  * fix log format
+  * norm config_dir path in configdata for platform independency
+  * HTML parser fixes
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri,  5 Oct 2001 16:48:31 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sat,  6 Oct 2001 12:53:46 +0200
 
 webcleaner (0.17) unstable; urgency=low
 

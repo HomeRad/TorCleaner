@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re,urlparse,wc
+import re, urlparse, os, wc
 from Rules import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
@@ -32,6 +32,13 @@ def strblock(block):
         s = s + ","+(b and b.pattern or "")
     return s+")"
 
+
+def _file_url(fname):
+    u = os.path.join(wc.ConfigDir, fname)
+    u = os.path.normcase(u).replace("\\", "/")
+    return "file://"+u
+
+
 class Blocker(Filter):
     def __init__(self):
         """With no blocker and no allower we never block.
@@ -39,12 +46,12 @@ class Blocker(Filter):
         from os.path import join
         self.block = []
         self.allow = []
-        self.blocked_url="file://"+join(wc.ConfigDir, "blocked.html")
-        self.blocked_image="file://"+join(wc.ConfigDir, "blocked.gif")
+        self.blocked_url = _file_url("blocked.html")
+        self.blocked_image = _file_url("blocked.gif")
 
 
     def addrule(self, rule):
-        #debug(BRING_IT_ON, "enable %s '%s'" % (rule.get_name(),rule.title))
+        debug(BRING_IT_ON, "enable %s '%s'" % (rule.get_name(),rule.title))
         _rule = []
         for part in Netlocparts:
             _rule.append(getattr(rule, part))
@@ -55,7 +62,7 @@ class Blocker(Filter):
 
 
     def doit(self, data, **args):
-        #debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
+        debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
         splitted = data.split()
         if len(splitted)==3:
             method,url,protocol = splitted
@@ -68,7 +75,7 @@ class Blocker(Filter):
                 urlTuple[1:2] = [netloc,80]
             blocked = self.blocked(urlTuple)
             if blocked is not None:
-                #debug(BRING_IT_ON, "blocked url %s" % url)
+                debug(BRING_IT_ON, "blocked url %s" % url)
                 # index 3, not 2!
                 if image_re.match(urlTuple[3][-4:]):
                     return '%s %s %s' % (method,
@@ -86,12 +93,12 @@ class Blocker(Filter):
             match = 1
             for i in range(len(urlTuple)):
                 if _block[i]:
-                    #debug(NIGHTMARE, "block pattern "+_block[i].pattern)
+                    debug(NIGHTMARE, "block pattern "+_block[i].pattern)
                     if not _block[i].search(urlTuple[i]):
-                        #debug(NIGHTMARE, "no match")
+                        debug(NIGHTMARE, "no match")
                         match = 0
             if match and not self.allowed(urlTuple):
-                #debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
+                debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
                 return _block[-1]
         return None
 
@@ -101,11 +108,11 @@ class Blocker(Filter):
             match = 1
             for i in range(len(urlTuple)):
                 if _allow[i]:
-                    #debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
+                    debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
 		    if not _allow[i].search(urlTuple[i]):
-                        #debug(NIGHTMARE, "no match")
+                        debug(NIGHTMARE, "no match")
                         match = 0
             if match:
-                #debug(NIGHTMARE, "allowed")
+                debug(NIGHTMARE, "allowed")
 	        return 1
         return 0

@@ -73,8 +73,7 @@ except ImportError, msg:
 _ = gettext
 
 def error(s):
-    sys.stderr.write("error: %s\n" % s)
-
+    print >>sys.stderr, "error:", s
 
 ErrorText = _("""<html><head>
 <title>WebCleaner Proxy Error %d %s</title>

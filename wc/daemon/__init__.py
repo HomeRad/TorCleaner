@@ -40,14 +40,19 @@ def iswriteable(file):
     return 0
 
 
-pidfile='/var/run/webcleaner-%s.pid'%Version
+fname = "webcleaner-%s.pid"%Version
+if os.name=="nt":
+    pidfile=os.path.join(os.environ("TEMP"), fname)
+else:
+    pidfile=os.path.join('/var/run', fname)
+    if not iswriteable(pidfile):
+        pidfile = os.path.join('/var/tmp', fname)
+    if not iswriteable(pidfile):
+        pidfile = os.path.join('/tmp', fname)
+
+# last fallback: the current directory
 if not iswriteable(pidfile):
-    pidfile = '/var/tmp/webcleaner-%s.pid'%Version
-if not iswriteable(pidfile):
-    pidfile = '/tmp/webcleaner-%s.pid'%Version
-if not iswriteable(pidfile):
-    # current dir
-    pidfile = 'webcleaner-%s.pid'%Version
+    pidfile = fname
 
 
 def restart(parent_exit=1):
@@ -67,11 +72,13 @@ def status():
         return "WebCleaner is not running (no lock file found)"
 
 # import platform specific functions
+# POSIX
 if os.name=='posix':
     from _posix import *
-# Windoof
+# Windows
 elif os.name=='nt':
     from _nt import *
+# other
 else:
     from _other import *
 

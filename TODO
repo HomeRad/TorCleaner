@@ -1,11 +1,9 @@
 TODO
 
-- Windows: the block files are not found because of mixing slashes
-  and backslashes in the path name (use os.path.norm)
-
 - htmlop.l:
   better support for <! > tags
-  support for <? ?> tags
+
+- Debian: purge does not remove all .pyc files (why??)
 
 - test Cookies
 

@@ -64,7 +64,7 @@ p endtag 'br/'
 HTML '<!DOCTYPE adrbook SYSTEM "adrbook.dtd">'
 p decl 'DOCTYPE' [('adrbook', None), ('SYSTEM', None), ('"adrbook.dtd"', None)]
 HTML '<?xml version="1.0" encoding="latin1"?>'
-p starttag '?xml' [('version', '1.0'), ('encoding', 'latin1"?')]
+p xmldecl 'xml' [('version', '1.0'), ('encoding', 'latin1')]
 subsequent interwoven parsing
 p starttag 'html' []
 p1 starttag 'html' []

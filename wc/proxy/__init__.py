@@ -15,8 +15,10 @@ TIMERS = [] # list of (time, function)
 def log(msg):
     """If _LOGFILE is defined write the msg into it. The message msg
        must be in common log file format."""
+    debug(HURT_ME_PLENTY, "logging", `msg`)
     if config['logfile']:
         config['logfile'].write(msg)
+        config['logfile'].flush()
 
 
 # XXX better name/implementation for this function
@@ -125,8 +127,8 @@ def proxy_poll(timeout=0.0):
                 if x not in e:
                     x.handle_write_event()
                     handlerCount = handlerCount + 1
-#                    if time.time() - t > 0.1:
-#                        debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
+                    if time.time() - t > 0.1:
+                        debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
         for x in r:
@@ -135,8 +137,8 @@ def proxy_poll(timeout=0.0):
                 if x not in e and x not in w:
                     x.handle_read_event()
                     handlerCount = handlerCount + 1
-#                    if time.time() - t > 0.1:
-#                        debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
+                    if time.time() - t > 0.1:
+                        debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
         return handlerCount

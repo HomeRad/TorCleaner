@@ -30,7 +30,7 @@ class ServerPool:
             if status[0] == 'available':
                 # Let's reuse this one
                 self.map[addr][server] = ('busy', )
-                #debug(BRING_IT_ON, 'reserve_server', addr, server)
+                debug(BRING_IT_ON, 'reserve_server', addr, server)
                 return server
         return None
 

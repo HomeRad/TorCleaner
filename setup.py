@@ -41,8 +41,8 @@ class MyInstall(install):
             else:
                 val = getattr(self, attr)
             if attr=="install_data":
-                data.append('config_dir = %s' % `os.path.join(val,
-                            'share/webcleaner/config')`)
+                data.append('config_dir = %s' % \
+             `os.path.normcase(os.path.join(val, 'share/webcleaner/config'))`)
             data.append("%s = %s" % (attr, `val`))
         from pprint import pformat
         data.append('outputs = %s' % pformat(self.get_outputs()))

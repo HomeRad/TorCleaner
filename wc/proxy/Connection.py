@@ -55,7 +55,7 @@ class Connection(asyncore.dispatcher):
             data = self.recv(RECV_BUFSIZE)
             if not data: # It's been closed, and handle_close has been called
                 return
-            #debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
+            debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
         except socket.error, err:
             self.handle_error('read error', socket.error, err)
             return
@@ -69,7 +69,7 @@ class Connection(asyncore.dispatcher):
 
     def write(self, data):
         """write data to the internal buffer"""
-        #debug(NIGHTMARE, 'sending', repr(data))
+        debug(NIGHTMARE, 'sending', repr(data))
         self.send_buffer += data
 
 
@@ -102,7 +102,7 @@ class Connection(asyncore.dispatcher):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            #debug(HURT_ME_PLENTY, 'close ready', self)
+            debug(HURT_ME_PLENTY, 'close ready', self)
             self.close_pending = 1
         else:
             self.close()

@@ -15,5 +15,6 @@ rem    You should have received a copy of the GNU General Public License
 rem    along with this program; if not, write to the Free Software
 rem    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-rem Limited to 9 parameters? Is there a * for Windows?
-"python.exe" "webcleaner" %1 %2 %3 %4 %5 %6 %7 %8 %9
+rem uncomment the next line to enable german output
+rem set LC_MESSAGES=de
+"python.exe" "webcleaner" %*
