@@ -31,8 +31,8 @@
 <rewrite title="&lt;area&gt; onmouseout" oid="4"
  disable="1"
  tag="area">
-<attr name="onmouseout"/>
 <attr name="onmouseover"/>
+<attr name="onmouseout"/>
 <replace part="attr"/>
 </rewrite>
 

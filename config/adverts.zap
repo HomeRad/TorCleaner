@@ -200,21 +200,24 @@
 <attr>jump.salon.com</attr>
 </rewrite>
 
-<rewrite title="IMDB Advert" oid="34"
- desc="redirect CGI at the Internet Movie database Unfortunately they forgot one &lt;/a&gt; tag, so I have to filter everything manually :/ "
- matchurl="\.imdb\.">
-<attr>/tiger_redirect\?((TITLE|FIND)_TOP|(COVER|CREDITS|COMMENTS)_RHS|QUOTES|(P|E)?GALLERY|(PLOT|NAME|BIO|SB|(T|N)URLS)_TOP|SOUNDTRACKS|(INT|EGAL_)LHS|PRO_FINDBOX)</attr>
-</rewrite>
-
-<rewrite title="OSDN navbar" oid="35"
+<rewrite title="OSDN navbar" oid="34"
  desc="Navigation bar form"
  tag="form">
 <attr name="action">http://www\.osdn\.com/osdnsearch\.pl</attr>
 </rewrite>
 
-<rewrite title="SF tracker image" oid="36"
+<rewrite title="SF tracker image" oid="35"
  desc="akamai tracker image at sourceforge"
  tag="img">
 <attr name="src">e\.akamai\.net</attr>
+</rewrite>
+
+<rewrite title="IMDB Advert 2" oid="36"
+ tag="area">
+<attr>/tiger_redirect\?</attr>
+</rewrite>
+
+<rewrite title="IMDB Advert" oid="37">
+<attr>/tiger_redirect\?</attr>
 </rewrite>
 </folder>

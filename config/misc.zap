@@ -42,8 +42,8 @@
 <rewrite title="Tracker images" oid="7"
  desc="Several sites use 1x1 images to track users."
  tag="img">
-<attr name="height">^1$</attr>
 <attr name="width">^1$</attr>
+<attr name="height">^1$</attr>
 </rewrite>
 
 <replacer title="Replace blink CSS" oid="8"

@@ -33,7 +33,7 @@ ENCLOSED = 5
 # tags where close tag is missing
 # note that this means that if the ending tag is there, it will not
 # be filtered...
-NO_CLOSE_TAGS = ('img', 'meta', 'br', 'link')
+NO_CLOSE_TAGS = ('img', 'meta', 'br', 'link', 'area')
 
 def part_num (s):
     """translation: tag name ==> tag number"""
