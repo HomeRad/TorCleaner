@@ -5,9 +5,11 @@
 <title tal:content="t_title">WebCleaner Filter Configuration</title>
 </head>
 <body bgcolor="#ffffff">
+<p class="skip"><a accesskey="2" href="#main"
+ tal:content="t_skip_to_main">Skip to main content</a></p>
 <div metal:use-macro="macros/macros/nav">Navigation</div>
 
-<div class="content">
+<div class="content" id="main">
 <div tal:repeat="item info">
 <span tal:replace="item">Info</span>
 </div>

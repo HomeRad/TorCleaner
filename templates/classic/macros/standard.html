@@ -8,10 +8,10 @@
 
 <!-- navigation -->
 <div class="tabs" metal:define-macro="nav">
-<a href="index.html" class="plain"
+<a href="index.html" class="plain" accesskey="1"
  tal:condition="not:nav/index_html"
  tal:content="t_webcleaner">WebCleaner</a>
-<a href="index.html" class="selected"
+<a href="index.html" class="selected" accesskey="1"
  tal:condition="nav/index_html"
  tal:content="t_webcleaner">WebCleaner (selected)</a>
 <a href="config.html" class="plain"
