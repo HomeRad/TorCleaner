@@ -29,7 +29,7 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
 
 
 serverctx = None
-def get_serverctx ():
+def get_serverctx (configdir):
     global serverctx
     if serverctx is None:
         # Initialize context
@@ -38,9 +38,9 @@ def get_serverctx ():
         # Demand a certificate
         #serverctx.set_verify(SSL.VERIFY_PEER|SSL.VERIFY_FAIL_IF_NO_PEER_CERT, verify_server_cb)
         serverctx.set_verify(SSL.VERIFY_NONE, verify_server_cb)
-        serverctx.use_privatekey_file(absfile('server.pkey'))
-        serverctx.use_certificate_file(absfile('server.cert'))
-        serverctx.load_verify_locations(absfile('CA.cert'))
+        serverctx.use_privatekey_file(os.path.join(configdir, 'server.pkey'))
+        serverctx.use_certificate_file(os.path.join(configdir, 'server.cert'))
+        serverctx.load_verify_locations(os.path.join(configdir, 'CA.cert'))
     return serverctx
 
 
@@ -52,27 +52,27 @@ def verify_client_cb (conn, cert, errnum, depth, ok):
 
 
 clientctx = None
-def get_clientctx ():
+def get_clientctx (configdir):
     global clientctx
     if clientctx is None:
         # construct client context
         clientctx = SSL.Context(SSL.SSLv23_METHOD)
         clientctx.set_verify(SSL.VERIFY_NONE, verify_client_cb)
-        clientctx.use_privatekey_file(absfile('client.pkey'))
-        clientctx.use_certificate_file(absfile('client.cert'))
-        clientctx.load_verify_locations(absfile('CA.cert'))
+        clientctx.use_privatekey_file(os.path.join(configdir, 'client.pkey'))
+        clientctx.use_certificate_file(os.path.join(configdir, 'client.cert'))
+        clientctx.load_verify_locations(os.path.join(configdir, 'CA.cert'))
     return clientctx
 
 
-def create_certificates ():
+def create_certificates (configdir):
     """Create certificates and private keys for webcleaner"""
     cakey = createKeyPair(TYPE_RSA, 1024)
     careq = createCertRequest(cakey, CN='Certificate Authority')
     cacert = createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5)) # five years
-    f = file(absfile('CA.pkey'), 'w')
+    f = file(os.path.join(configdir, 'CA.pkey'), 'w')
     f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))
     f.close()
-    f = file(absfile('CA.cert'), 'w')
+    f = file(os.path.join(configdir, 'CA.cert'), 'w')
     f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))
     f.close()
     for (fname, cname) in [('client', '%s Client'%wc.AppName),
@@ -80,13 +80,12 @@ def create_certificates ():
         pkey = createKeyPair(TYPE_RSA, 1024)
         req = createCertRequest(pkey, CN=cname)
         cert = createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5)) # five years
-        f = file(absfile('%s.pkey'%fname), 'w')
+        f = file(os.path.join(configdir, '%s.pkey'%fname), 'w')
         f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))
         f.close()
-        f = file(absfile('%s.cert'%fname), 'w')
+        f = file(os.path.join(configdir, '%s.cert'%fname), 'w')
         f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
         f.close()
-
 
 
 #

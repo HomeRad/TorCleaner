@@ -145,21 +145,21 @@ class Packer (object):
            The case of the first occurrence of a name is preserved.
            Redundant dots are ignored.
         """
-        list = []
+        lst = []
         for label in name.split('.'):
             if label:
                 if len(label) > 63:
                     raise PackError, 'label too long'
-                list.append(label)
+                lst.append(label)
         keys = []
-        for i in range(len(list)):
-            key = '.'.join(list[i:]).upper()
+        for i in range(len(lst)):
+            key = '.'.join(lst[i:]).upper()
             keys.append(key)
             if self.index.has_key(key):
                 pointer = self.index[key]
                 break
         else:
-            i = len(list)
+            i = len(lst)
             pointer = None
         # Do it into temporaries first so exceptions don't
         # mess up self.index and self.buf
@@ -167,7 +167,7 @@ class Packer (object):
         offset = len(self.buf)
         index = []
         for j in range(i):
-            label = list[j]
+            label = lst[j]
             n = len(label)
             if offset + len(buf) < 0x3FFF:
                 index.append((keys[j], offset + len(buf)))
@@ -379,11 +379,11 @@ class RRpacker (Packer):
         self.endRR()
 
 
-    def addTXT (self, name, klass, ttl, list):
+    def addTXT (self, name, klass, ttl, lst):
         self.addRRheader(name, Type.TXT, klass, ttl)
-        if type(list) is types.StringType:
-            list = [list]
-        for txtdata in list:
+        if type(lst) is types.StringType:
+            lst = [lst]
+        for txtdata in lst:
             self.addstring(txtdata)
         self.endRR()
     # Internet specific RRs (section 3.4) -- class = IN
@@ -480,10 +480,10 @@ class RRunpacker (Unpacker):
 
 
     def getTXTdata (self):
-        list = []
+        lst = []
         while self.offset != self.rdend:
-            list.append(self.getstring())
-        return list
+            lst.append(self.getstring())
+        return lst
 
 
     def getAdata (self):
@@ -517,9 +517,9 @@ class RRunpacker (Unpacker):
 
 class Hpacker (Packer):
 
-    def addHeader (self, id, qr, opcode, aa, tc, rd, ra, z, rcode,
+    def addHeader (self, rid, qr, opcode, aa, tc, rd, ra, z, rcode,
               qdcount, ancount, nscount, arcount):
-        self.add16bit(id)
+        self.add16bit(rid)
         self.add16bit((qr&1)<<15 | (opcode&0xF)<<11 | (aa&1)<<10
                   | (tc&1)<<9 | (rd&1)<<8 | (ra&1)<<7
                   | (z&7)<<4 | (rcode&0xF))

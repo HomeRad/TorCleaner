@@ -473,7 +473,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             data = self.read(1024)
 
         msg = wc.proxy.dns.Lib.Munpacker(data)
-        (id, qr, opcode, aa, tc, rd, ra, z, rcode,
+        (rid, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
             # dont handle truncated packets; try to switch to TCP
@@ -519,15 +519,15 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
 
         ip_addrs = []
         for dummy in range(ancount):
-            name, type, klass, ttl, rdlength = msg.getRRheader()
-            mname = 'get%sdata' % wc.proxy.dns.Type.typestr(type)
+            name, rtype, klass, ttl, rdlength = msg.getRRheader()
+            mname = 'get%sdata' % wc.proxy.dns.Type.typestr(rtype)
             if hasattr(msg, mname): data = getattr(msg, mname)()
             else: data = msg.getbytes(rdlength)
-            if type == wc.proxy.dns.Type.A:
+            if rtype == wc.proxy.dns.Type.A:
                 ip_addrs.append(data)
-            elif type == wc.proxy.dns.Type.AAAA:
+            elif rtype == wc.proxy.dns.Type.AAAA:
                 ip_addrs.append(data)
-            elif type == wc.proxy.dns.Type.CNAME:
+            elif rtype == wc.proxy.dns.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
                 wc.log.debug(wc.LOG_DNS, 'cname record %s=%r',
                              self.hostname, data)
