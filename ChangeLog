@@ -17,11 +17,11 @@
     Changed: wc/filter/HtmlParser.py
   * add index.html template
     Added: templates/classic/index.html
-  * proxy configuration at http://localhost:<proxy port>/config.html
-    Added: templates/classic/config.html, wc/webgui/context/config_html.py
-  * filter config at http://localhost:<proxy port>/filterconfig.html
-    Added: templates/classic/filterconfig.html,
+  * proxy and filter web configuration
+    Added: templates/classic/config.html,
+           templates/classic/filterconfig.html,
            templates/classic/macros/rules.html,
+           wc/webgui/context/config_html.py,
            wc/webgui/context/filterconfig_html.py
     Changed: wc/webgui/__init__.py
   * new filter module ImageSize that filters images by size
@@ -29,6 +29,8 @@
   * - parse JS strings and comments
     - accept "<!- " as comment begin
     Changed: wc/parser/htmlex.l
+  * handle empty status messages like 'HTTP/1.1 302 \r\n'
+    Changed: wc/proxy/HttpServer.py
 
 1.13
   * - when the HTTP server closes, flush any existing data

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Redirection and meta" oid="5"
+<folder title="Redirection and meta" oid="10"
  desc="These are Python specific rules to rewrite some nasty URLs, notably redirections, and get rid of the rest of the meta tags. ">
 
 <rewrite title="No meta tags 2" oid="0"

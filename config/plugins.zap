@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Plugins" oid="3"
+<folder title="Plugins" oid="0"
  desc="The filter rules found here remove plugin (eg flash) contents, but only for selected sites.">
 
 <rewrite title="Remove EMBEDded content" oid="0"

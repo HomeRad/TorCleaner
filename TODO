@@ -2,10 +2,11 @@ TODO
 
 version 2.0
 
-- parse response lines with empty status message:
-  ERROR Invalid response 'HTTP/1.1 302 \r\n'
-
 - the html layout sucks
+
+- test and fix all BADURLS
+
+- test nofilterhosts
 
 version 2.1
 
