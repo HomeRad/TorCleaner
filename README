@@ -1,33 +1,59 @@
-This is the PostScript version of the standard Python documentation.
-If you plan to print this, be aware that some of the documents are
-long.  It is formatted for printing on two-sided paper; if you do plan
-to print this, *please* print two-sided if you have a printer capable
-of it!  To locate published copies of the larger manuals, or other
-Python reference material, consult the PSA Online Bookstore at:
-
-             http://www.python.org/psa/bookstore/
-
-The following manuals are included:
-
-Python/C API                                    (api.ps, 87 pages)
-Extending and Embedding the Python Interpreter  (ext.ps, 50 pages)
-Python Library Reference                        (lib.ps, 512 pages)
-Macintosh Module Reference                      (mac.ps, 48 pages)
-Python Reference Manual                         (ref.ps, 79 pages)
-Python Tutorial                                 (tut.ps, 78 pages)
-Documenting Python                              (doc.ps, 19 pages)
-Installing Python Modules                       (inst.ps, 14 pages)
-Distributing Python Modules                     (dist.ps, 19 pages)
-
-  Total page count:  906
+            WebCleaner - a filtering HTTP proxy
+	   =====================================
 
 
-If you have any questions, comments, or suggestions regarding these
-documents, please send them via email to python-docs@python.org.
+Features
+--------
+o disable animated GIFs
+o compress documents on-the-fly (with gzip)
+o remove/add HTTP headers
+o remove unwanted HTML (adverts, javascript, ...)
+o customizable to suit your (filtering) needs
+o HTTP/1.1 support
 
-If you would like to support the development and maintenance of
-documentation for Python, please consider joining the Python Software
-Activity (PSA; see http://www.python.org/psa/), or urging your
-organization to join the PSA or the Python Consortium (see
-http://www.python.org/consortium/).
 
+Installing
+----------
+Read the file INSTALL
+
+
+Configuration
+-------------
+Run the nice GUI config tool "webcleanerconf".
+The underlying configuration format is a custom XML format which is
+explained in config/filter.dtd and config/webcleaner.dtd.
+Of course the current configuration is tuned to websites I visit
+regularly. You can help me extend the current config data by sending
+me patches!
+
+
+Notes
+-----
+WebCleaner is _not_ a HTTP compliant proxy because it modifies requests,
+headers and data!
+
+Obfuscate IP address does not spoof your address, it just encodes the
+IP numbers in one big integer. This is known to *not* work with
+a Squid parent proxy.
+
+Yes, surf performance will decrease, espacially with the Rewriter module
+enabled.
+
+
+Credits
+-------
+Credits go to munchy.py from Neil Schemenauer <nascheme@enme.ucalgary.ca>.
+The original proxy class is based on his code.
+The new proxy code is based on the fourth incarnation of Amit's web proxy.
+
+The filter code design is inspired from FilterProxy, a Perl program from
+Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
+
+Me, Bob and the author of AIFilter (Tels) had a nice discussion about
+filter formats with good ideas. Tels convinced me to try stateful
+filtering and I realize that it is very nice indeed.
+Disabling animated GIFs is a question of honor, but the idea goes back to
+the Webwasher.
+
+Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
+HTTP/1.1 proxy written in Java.

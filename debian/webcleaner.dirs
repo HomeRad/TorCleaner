@@ -1,9 +1,9 @@
 usr/sbin
 etc/webcleaner
 var/log/webcleaner
-usr/lib/python2.0/site-packages/wc
+usr/lib/python2.0/site-packages/wc/proxy/dns
+usr/lib/python2.0/site-packages/wc/proxy
 usr/lib/python2.0/site-packages/wc/daemon
 usr/lib/python2.0/site-packages/wc/filter
 usr/lib/python2.0/site-packages/wc/parser
-usr/lib/python2.0/site-packages/wc/proxy
-usr/lib/python2.0/site-packages/wc/proxy/dns
+usr/lib/python2.0/site-packages/wc

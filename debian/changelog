@@ -8,11 +8,12 @@ webcleaner (0.18) unstable; urgency=low
     add support for XML declaration tags <?...?>
     better parsing of <script> tags without inside comments
     better <!...> parsing
-  * search for TEMP dir under Windows
+  * search for TEMP dir under Windows when generating daemon .pid file
   * fix error handling: pass the traceback object
   * only gunzip certain MIME types, not all (for example .tar.gz files)
+  * resorted the README, it somehow got overridden
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri, 12 Oct 2001 12:07:20 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Mon, 15 Oct 2001 13:28:16 +0200
 
 webcleaner (0.17) unstable; urgency=low
 

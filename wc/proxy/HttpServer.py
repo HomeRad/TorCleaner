@@ -311,9 +311,9 @@ class HttpServer(Server):
             serverpool.unreserve_server(self.addr, self)
 
     def close(self):
-        self.state = 'closed'
         if self.connected:
             serverpool.unregister_server(self.addr, self)
+        self.state = 'closed'
         Server.close(self)
 
     def handle_error(self, what, type, value, tb=None):
