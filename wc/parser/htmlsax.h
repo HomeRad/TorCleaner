@@ -35,7 +35,7 @@
 
 /* user_data type for SAX calls */
 typedef struct {
-    /* the Python SAX class instance to issue callbacks */
+    /* the Python SAX object to issue callbacks */
     PyObject* handler;
     /* Buffer to store still-to-be-scanned characters. After recognizing
      * a complete syntax element, all data up to bufpos will be removed.
@@ -46,12 +46,17 @@ typedef struct {
     int bufpos;
     /* current position of next syntax element */
     int nextpos;
-    /* temporary vars */
+    /* input buffer of lexer, must be deleted when the parsing stops */
     void* lexbuf;
+    /* temporary character buffer */
     char* tmp_buf;
+    /* temporary HTML start or end tag name */
     PyObject* tmp_tag;
+    /* temporary HTML start tag attribute name */
     PyObject* tmp_attrname;
+    /* temporary HTML start tag attribute value */
     PyObject* tmp_attrval;
+    /* temporary HTML start tag attribute list */
     PyObject* tmp_attrs;
     /* wc.parser.resolve_entities */
     PyObject* resolve_entities;

@@ -86,7 +86,7 @@
 /* Copy the first part of user declarations.  */
 #line 1 "htmlparse.y"
 
-/* Copyright (C) 2000-2003  Bastian Kleineidam
+/* Copyright (C) 2000-2004  Bastian Kleineidam
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -1813,7 +1813,7 @@ static PyMethodDef htmlsax_methods[] = {
 };
 
 
-/* initialization of the htmlsaxhtmlop module */
+/* initialization of the htmlsax module */
 DL_EXPORT(void) inithtmlsax(void) {
     PyObject* m;
     if (!Py_InitModule("htmlsax", htmlsax_methods)) {
