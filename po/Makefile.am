@@ -1,6 +1,5 @@
-# use scripts found in Tools/i18n of the Python distribution
 PYTHON = env PYTHONPATH=$(top_srcdir) python
-GETTEXT = python pygettext.py
+XGETTEXT = @XGETTEXT@
 MSGFMT = @MSGFMT@
 MSGMERGE = @MSGMERGE@
 TALGETTEXT = $(PYTHON) ../wc/webgui/TAL/talgettext.py
@@ -25,8 +24,12 @@ mofiles:
 %.po:	$(TEMPLATE)
 	$(MSGMERGE) -U --suffix=.bak $@ $<
 
+template: $(TEMPLATE)
 $(TEMPLATE): $(POSOURCES)
-	$(GETTEXT) -w 80 --default-domain=$(PACKAGE) $(POSOURCES)
+	$(XGETTEXT) -w 80 --default-domain=$(PACKAGE) --language=Python \
+	  --copyright-holder="Bastian Kleineidam <calvin@users.sf.net>" \
+	  --msgid-bugs-address=calvin@users.sf.net \
+	  $(POSOURCES)
 	$(TALGETTEXT) -u $(TEMPLATE) $(TEMPLATES)
 
 %.mo:	%.po
@@ -37,4 +40,4 @@ $(TEMPLATE): $(POSOURCES)
 
 clean-local:
 	@for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
-	rm -f *.mo
+	rm -f *.mo *.bak *.poedit
