@@ -99,7 +99,7 @@ releasecheck:
 	  echo "Could not release: update TODO for next version"; false; \
 	fi
 
-release: releasecheck dist crossdist upload homepage
+release: releasecheck dist upload homepage
 	mozilla -remote "openUrl(https://sourceforge.net/projects/webcleaner, new-tab)"
 	@echo "Make SF release and press return..."
 	@read
