@@ -1,3 +1,9 @@
+webcleaner (2.8-0.2) unstable; urgency=low
+
+  * do not add newline to password
+
+ -- Bastian Kleineidam <calvin@debian.org>  Fri, 16 Jan 2004 00:24:45 +0100
+
 webcleaner (2.8-0.1) unstable; urgency=low
 
   * New upstream release.
