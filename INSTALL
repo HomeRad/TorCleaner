@@ -19,13 +19,13 @@ Direct download links are in brackets.
    a) MingGW
      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-3.1.0-1.exe ]
    b) MSYS
-     [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.9.exe ]
+     [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe ]
    c) libiconv
      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/libiconv-1.8.0-2003.02.01-1.exe ]
    d) gettext
      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe ]
 2. Install Python >= 2.3.1 from http://www.python.org/
-   [ http://www.python.org/ftp/python/2.3.2/Python-2.3.2-1.exe ]
+   [ http://www.python.org/ftp/python/2.3.3/Python-2.3.3.exe ]
 3. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
    [ http://starship.python.net/crew/mhammond/downloads/win32all-163.exe ]
@@ -72,7 +72,7 @@ Setup for Windows:
    % dlltool --dllname python23.dll --def python23.def --output-lib libpython23.a
    The resulting library has to be placed in the same directory as
    python23.lib. (Should be the libs directory under your Python installation
-   directory.)
+   directory, for example c:\Python23\Libs\.)
 2. Compile the JavaScript library
    Copy the webcleaner-X.X.tar.gz into your MSYS home directory,
    which is usually under c:\msys\1.0\home\user\.
@@ -82,13 +82,20 @@ Setup for Windows:
    % cd webcleaner-X.X
    Configure and compile the JavaScript library:
    % ./configure; make
-4. Compile and install PyCrypto
+3. Compile and install PyCrypto
    Close the MSYS application and open a DOS command prompt.
    Change to the pycrypto-1.9a6 directory and do:
    c:> python setup.py build -c mingw32 install
-5. Compile and install the Python modules
+4. Compile and install the Python modules
    Change to the webcleaner-X.X directory and do:
    c:> python setup.py build -c mingw32 install
+5. Install and start the WebCleaner NT service
+   Change to the directory where you installed Python into
+   (for example c:\Python23\).
+   Then run the webcleaner-service script to install the WebCleaner service:
+   c:> python scripts\webcleaner-service install
+   To remove the service later, you can run:
+   c:> python scripts\webcleaner-service remove
 6. Enjoy
    WebCleaner is now installed and started as a regular Windows service.
    See the README on how to configure the proxy filters.
