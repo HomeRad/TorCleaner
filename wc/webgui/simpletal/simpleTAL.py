@@ -480,6 +480,7 @@ class TemplateInterpreter:
 		Add, leave, or remove translated attributes from the start tag
 		"""
                 if self.translator is None:
+                        self.programCounter += 1
                         return
 		attsToRemove = {}
 		newAtts = []
