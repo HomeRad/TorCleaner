@@ -2,13 +2,19 @@
 <!ATTLIST webcleaner
  version     CDATA #REQUIRED
  port        CDATA "8080"
+ proxyuser   CDATA #IMPLIED
+ proxypass   CDATA #IMPLIED
+ parentproxyuser CDATA #IMPLIED
+ parentproxypass CDATA #IMPLIED
+ gui_theme   CDATA "classic"
+ timeout     CDATA "30"
+ development CDATA #IMPLIED
+ auth_ntlm   CDATA #IMPLIED
+ try_google  CDATA #IMPLIED
+ nofilterhosts   CDATA #IMPLIED
+ allowhosts      CDATA #IMPLIED
  parentproxy     CDATA #IMPLIED
  parentproxyport CDATA "8080"
- buffersize  CDATA "1024"
- timeout     CDATA "300"
- obfuscateip (0|1)
- showerrors  (0|1)
- webgui_theme CDATA "classic"
 >
 
 <!ELEMENT filter EMPTY>
