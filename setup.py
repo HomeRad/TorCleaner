@@ -97,9 +97,10 @@ class MyInstall (install, object):
 
 
 class MyInstallData (install_data, object):
-    """My own data installer to handle permissions and .man pages"""
+    """My own data installer to handle permissions"""
 
     def run (self):
+        """adjust permissions on POSIX systems"""
         super(MyInstallData, self).run()
         if os.name == 'posix' and not self.dry_run:
             # Make the data files we just installed world-readable,
@@ -110,13 +111,6 @@ class MyInstallData (install_data, object):
                     mode |= 011
                 mode |= 044
                 os.chmod(path, mode)
-
-    def copy_file (self, filename, dirname):
-        (out, _) = install_data.copy_file(self, filename, dirname)
-        # match for man pages
-        if re.search(r'/man/man\d/.+\.\d$', out):
-            return (out+".gz", _)
-        return (out, _)
 
 
 class MyDistribution (distklass, object):
@@ -233,8 +227,8 @@ setup (name = "webcleaner",
        license = "GPL",
        packages = ['wc', 'wc.filter', 'wc.js', 'wc.magic',
            'wc.dns', 'wc.HtmlParser', 'wc.proxy', 'wc.proxy.auth',
-           'wc.filter.rules', 'wc.webgui', 'wc.webgui.simpletal',
-           'wc.webgui.context',
+           'wc.filter.rules', 'wc.webgui', 'wc.webgui.PageTemplates',
+           'wc.webgui.TAL', 'wc.webgui.ZTUtils', 'wc.webgui.context',
            'wc.dns.tests', 'wc.tests', ],
        ext_modules = extensions,
        scripts = ['webcleaner', 'webcleaner-certificates'],
