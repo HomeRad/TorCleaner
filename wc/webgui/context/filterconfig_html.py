@@ -36,8 +36,71 @@ from wc.filter.Rating import service, rangenames
 from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
 
 # config vars
-info = {}
-error = {}
+info = {
+    "newfolder": False,
+    "renamefolder": False,
+    "disablefolder": False,
+    "enablefolder": False,
+    "removefolder": False,
+    "newrule": False,
+    "disablerule": False,
+    "enablerule": False,
+    "removerule": False,
+    "rewrite_addattr": False,
+    "rewrite_delattr": False,
+    "folderup": False,
+    "folderdown": False,
+    "ruleup": False,
+    "ruledown": False,
+    "ruletitle": False,
+    "ruledesc": False,
+    "rulematchurl": False,
+    "rulenomatchurl": False,
+    "ruleurl": False,
+    "rulereplacement": False,
+    "ruleheadername": False,
+    "ruleheadervalue": False,
+    "ruleheaderfilter": False,
+    "ruleimgwidth": False,
+    "ruleimgheight": False,
+    "rulecategory": False,
+    "rulesearch": False,
+    "rulereplace": False,
+    "ruletag": False,
+    "ruleenclosedblock": False,
+    "rulerewritepart": False,
+    "rulerewritereplacement": False,
+}
+
+error = {
+    "newfolder": False,
+    "renamefolder": False,
+    "disablefolder": False,
+    "enablefolder": False,
+    "newrule": False,
+    "disablerule": False,
+    "enablerule": False,
+    "rewrite_addattr": False,
+    "rewrite_delattr": False,
+    "folderup": False,
+    "folderdown": False,
+    "ruleup": False,
+    "ruledown": False,
+    "ruletitle": False,
+    "ruleheadername": False,
+    "ruleimgwidth": False,
+    "ruleimgheight": False,
+    "ruleimgquality": False,
+    "ruleimgminsize": False,
+    "rulesearch": False,
+    "ruletag": False,
+    "rulerewritepart": False,
+    "folderindex": False,
+    "ruleindex": False,
+    "selindex": False,
+    "categoryvalue": False,
+}
+
 _rules_per_page = 50
 # current selected folder
 curfolder = None
@@ -148,8 +211,12 @@ def _exec_form (form, lang):
 
 
 def _form_reset ():
-    info.clear()
-    error.clear()
+    for key in info.keys():
+        info[key] = False
+    for key in error.keys():
+        error[key] = False
+    for f in config['folderrules']:
+        f.selected = False
     global curfolder, currule, curparts, curindex, curfilterstage
     curfolder = None
     currule = None
