@@ -7,6 +7,7 @@ def _main():
     data = open(file).read()
     import wc, time
     wc.DebugLevel = 3
+    wc.config = wc.Configuration()
     wc.config['filters'] = ['Rewriter']
     wc.config.init_filter_modules()
     attrs = wc.filter.initStateObjects(url=file)

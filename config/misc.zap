@@ -46,7 +46,7 @@
 <attr name="width">^1$</attr>
 </rewrite>
 
-<replacer title="Replace blink CSS" oid="121"
+<replacer title="Replace blink CSS" oid="8"
  desc="Unfuckingbelievable they made a blink CSS entry."
  search="text-decoration:\s*blink">text-decoration: none</replacer>
 </folder>

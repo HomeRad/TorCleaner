@@ -258,6 +258,7 @@ class ConfWindow (ToolWindow):
         FXButton(f, _("Dwn"), None, self, self.ID_DOWN)
         # filterSettings
 
+
     def onUpdNoProxy (self, sender, sel, ptr):
         i = self.noproxylist.getCurrentItem()
         if i<0:
