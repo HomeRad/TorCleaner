@@ -48,17 +48,19 @@ def get_log_file (name, logname, trydirs=[]):
     """get full path name to writeable logfile"""
     dirs = []
     if os.name =='nt':
+        dirs.append(wc.ConfigDir)
         dirs.append(os.environ.get("TEMP"))
     else:
         dirs.append(os.path.join('/', 'var', 'log', name))
         dirs.append(os.path.join('/', 'var', 'tmp', name))
         dirs.append(os.path.join('/', 'tmp', name))
     dirs.append(os.getcwd())
-    for d in trydirs+dirs:
+    trydirs = trydirs+dirs
+    for d in trydirs:
         fullname = os.path.join(d, logname)
         if iswritable(fullname):
             return fullname
-    return logname
+    raise IOError("Could not find writable directory for %s in %s" % (logname, str(trydirs)))
 
 
 def set_format (handler):
