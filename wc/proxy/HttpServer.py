@@ -10,6 +10,7 @@ from wc.debug_levels import *
 from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
+from DeflateStream import DeflateStream
 from wc.filter import applyfilter, initStateObjects
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
