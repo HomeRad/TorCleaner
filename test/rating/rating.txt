@@ -1,0 +1,16 @@
+url http://freshmeat.net/
+language 1
+generic true
+violence 1
+modified 1077986258
+sex 0
+agerange 10-
+
+url http://www.tagesschau.de/
+language 0
+generic true
+violence 0
+modified 1073757650
+sex 0
+agerange 8-
+
