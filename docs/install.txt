@@ -56,7 +56,7 @@ Direct download links are in brackets.
 
 5. Download Python Crypto Module from
    http://www.amk.ca/python/code/crypto.html
-   [http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz]
+   [http://www.amk.ca/files/python/crypto/pycrypto-2.0.tar.gz]
    For Installation of PyCrypto see below.
 
 6. Install OpenSSL for Windows from
@@ -143,7 +143,7 @@ Setup for Windows:
 4. Compile and install PyCrypto
    
    Close the MSYS application and open a DOS command prompt.
-   Change to the pycrypto-1.9a6 directory and run
+   Change to the pycrypto-2.0 directory and run
    ``c:> python setup.py build -c mingw32 install``
 
 5. Install OpenSSL and compile PyOpenSSL
