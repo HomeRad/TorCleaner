@@ -17,6 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os
+import urllib
 import sys
 import re
 import bk.log
@@ -95,6 +96,7 @@ class HtmlSecurity (object):
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
         if attrs.has_key('data'):
             url = bk.url.url_norm(attrs['data'])
+            url = urllib.unquote(url)
             if url.startswith('its:') or \
                url.startswith('mk:') or \
                url.startswith('ms-its:') or \
