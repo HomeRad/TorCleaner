@@ -23,7 +23,7 @@ nav: all
 	python bfknav.py
 
 apidocs:
-	epydoc --html -o devel/api --name "WebCleaner Development" --url ../../devel.html ../wc/ ../test ../tests
+	epydoc --html -o devel/api --name "WebCleaner Development" --url ../../devel.html ../wc/ ../bk/ ../test ../tests
 
 homepage: nav apidocs
 	cp *.html *.css *.jpg *.png $(HTMLDIR)/htdocs
