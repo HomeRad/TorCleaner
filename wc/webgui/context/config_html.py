@@ -8,12 +8,16 @@ info = []
 error = []
 
 def exec_form (form):
+    # reset info/error
+    del info[:]
+    del error[:]
     if form.has_key('port'):
         try:
-            print "port", form['port'].value
-            #config['port'] = int(form['port'].value)
+            _config['port'] = int(form['port'].value)
             info.append(i18n._("Port successfully changed"))
         except ValueError:
             error.append(i18n._("Invalid proxy port"))
-    # XXX save changed config!
+    # save changed config
+    if info:
+        _config.write_proxyconf()
 
