@@ -67,15 +67,16 @@ restart:
 	sleep 4
 
 authtest: restart
-	env http_proxy="http://localhost:9090" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://www.heise.de/
+	env http_proxy="http://localhost:8080" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://www.heise.de/
 
 onlinetest: restart
 	# get a standard page with included adverts
-	env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/
+	env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/
 	# get a blocked page
-	#env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/advert/
+	#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/
 	# get a blocked image
-	#env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/advert/test.gif
+	#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/test.gif
+	less index.html
 
 offlinetest: restart
 	# get own config
