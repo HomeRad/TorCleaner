@@ -105,10 +105,11 @@ def init_i18n ():
 # init i18n on import
 wc.init_i18n()
 
-def get_translator (lang, translatorklass=None):
-    """return TAL translator class"""
+def get_translator (lang, translatorklass=None, fallbackklass=None):
+    """return translator class"""
     return wc.i18n.get_translator(configdata.name, get_locdir(), lang,
-         translatorklass=translatorklass)
+         translatorklass=translatorklass,
+         fallbackklass=fallbackklass)
 
 
 def iswritable (fname):
