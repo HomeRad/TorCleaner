@@ -943,9 +943,8 @@ RX_DATA [-a-zA-Z0-9_:]+
     RETURN(T_ELEMENT_END);
 }
 
-<S_TAGEND2>[^<]+ {
+<S_TAGEND2>[^<>]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP(yyleng);
 }
 
 <S_TAGEND2><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}*/[A-Za-z] {
