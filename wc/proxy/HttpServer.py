@@ -14,7 +14,7 @@ import wc.configuration
 import wc.url
 import wc.magic
 import wc.filter
-import wc.filter.Rating
+import wc.filter.rating
 import wc.proxy
 import wc.proxy.Server
 import wc.proxy.auth
@@ -281,7 +281,7 @@ class HttpServer (wc.proxy.Server.Server):
         except wc.filter.FilterRating, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s",
                          self, msg)
-            if msg == wc.filter.Rating.MISSING:
+            if msg == wc.filter.rating.MISSING:
                 # still have to look at content
                 self.defer_data = True
             else:

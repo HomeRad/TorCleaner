@@ -37,8 +37,8 @@ pending_reload = False
 def init (confdir=wc.ConfigDir):
     global config
     config = Configuration(confdir)
-    import wc.filter.Rating
-    wc.filter.Rating.rating_cache_load()
+    import wc.filter.rating
+    wc.filter.rating.rating_cache_load()
     return config
 
 
