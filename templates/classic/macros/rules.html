@@ -428,16 +428,17 @@ Rule (don't) match url
  tal:content="catname" i18n:translate="">violence</td>
 <td tal:condition="not:category/iterable" colspan="3">
 <input type="text" size="4"
- tal:attributes="name string:category_${catname};value currule/ratings/?catname"
+ tal:attributes="name string:category_${catname};value currule/values/?catname"
 ></td>
 <td tal:condition="category/iterable"
- tal:repeat="value category/values"><input
+ tal:repeat="value category/values">
+<input type="radio" checked
+ tal:condition="currule/values/?catname/?value"
  tal:attributes="name string:category_${catname};value value"
- tal:condition="currule/ratings/?catname" checked
- type="radio"><input
+><input type="radio"
+ tal:condition="not:currule/values/?catname/?value"
  tal:attributes="name string:category_${catname};value value"
- tal:condition="not:currule/ratings/?catname"
- type="radio">&nbsp;<span tal:content="value" i18n:translate="">Mild</span>
+>&nbsp;<span tal:content="value" i18n:translate="">Mild</span>
  </td>
 </tr>
 </tbody>
