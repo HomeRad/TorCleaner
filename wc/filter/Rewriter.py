@@ -17,6 +17,7 @@
 import re, sys, urlparse, wc
 from wc import urlutils
 from wc.parser.htmllib import HtmlParser
+from wc.parser import resolve_html_entities
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.debug import *
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
@@ -73,8 +74,6 @@ class Rewriter (Filter):
 
     def getAttrs (self, headers, url):
         """We need a separate filter instance for stateful filtering"""
-        # first: weed out the rules that dont apply to this url
-        rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
         rewrites = []
         opts = {'comments': 1, 'javascript': 0}
         for rule in self.rules:
@@ -233,10 +232,13 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def jsPopup (self, attrs, name):
         """check if attrs[name] javascript opens a popup window"""
-        val = attrs[name]
+        val = resolve_html_entities(attrs[name])
         if not val: return
         self.jsEnv.attachListener(self)
-        self.jsEnv.executeScriptAsFunction(val, 0.0)
+        try:
+            self.jsEnv.executeScriptAsFunction(val, 0.0)
+        except jslib.error, msg:
+            pass
         self.jsEnv.detachListener(self)
         res = self.popup_counter
         self.popup_counter = 0
@@ -351,6 +353,7 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def doctype (self, data):
         self.buffer_append_data([DATA, "<!DOCTYPE%s>"%data])
+
 
     def pi (self, data):
         self.buffer_append_data([DATA, "<?%s?>"%data])
