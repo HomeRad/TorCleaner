@@ -9,7 +9,7 @@
     Changed: wc/proxy/dns/*.py
   * corrected the reversed google cache urls
     Changed: templates/classic/google.html
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20031107
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031110
     Changed: libjs/*
   * FILTER_REQUEST must have the complete request for filtering, not
     only the URL
@@ -19,6 +19,8 @@
     - checks the sanity of the username before returning it, since it
       is used as a filename part
     Changed: wc/daemon/__init__.py
+  * get rid of sys.path.insert, use PYTHONPATH instead
+    Changed: all scripts
 
 2.4 (released 1.11.2003)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031101
