@@ -75,16 +75,20 @@ class Blocker (Filter):
 
 
     def add_block (self, rule):
-        self.block.append(self.get_netloc_rule(rule))
+        _rule = self.get_netloc_rule(rule)
+        # append the block url (if any)
+        _rule.append(rule.url)
+        self.block.append(_rule)
 
 
     def get_netloc_rule (self, rule):
         _rule = []
         for part in Netlocparts:
-            _rule.append(getattr(rule, part))
-        _rule = map(lambda x: x and re.compile(x) or None, _rule)
-        # append the block url (if any)
-        _rule.append(rule.url)
+            x = getattr(rule, part)
+            if x:
+                _rule.append(re.compile(x))
+            else:
+                _rule.append(None)
         return _rule
 
 

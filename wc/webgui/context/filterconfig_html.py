@@ -61,7 +61,6 @@ t_rulefallback = i18n._("Fallback URL")
 info = []
 error = []
 config = _Configuration()
-folders = [ r for r in config['rules'] if r.get_name()=='folder' ]
 # current selected folder
 curfolder = None
 # current selected rule
@@ -79,8 +78,7 @@ ruletype = {}
 
 # form execution
 def exec_form (form):
-    # reset info/error
-    # reset form vals
+    # reset info/error and form vals
     _form_reset()
     # select a folder
     if form.has_key('selfolder'):
@@ -101,7 +99,8 @@ def exec_form (form):
     elif curfolder and form.has_key('enablefolder%d'%curfolder.oid):
         _form_enablefolder(curfolder)
     # remove current folder
-    # XXX
+    elif curfolder and form.has_key('removefolder%d'%curfolder.oid):
+        _form_removefolder(curfolder)
     # make a new rule in current folder
     elif curfolder and form.has_key('newrule') and form.has_key('newruletype'):
         _form_newrule(getval(form['newruletype']))
@@ -112,27 +111,41 @@ def exec_form (form):
     elif currule and form.has_key('enablerule%d'%currule.oid):
         _form_enablerule(currule)
     # remove current rule
-    # XXX
+    elif currule and form.has_key('removerule%d'%currule.oid):
+        _form_removerule(currule)
+    # apply rule values
     elif currule and form.has_key('apply'):
-        _form_apply()
+        _form_apply(form)
     if info:
         config.write_filterconf()
+    _form_set_selected()
 
 
 def _form_reset ():
     del info[:]
     del error[:]
-    global curfolder, currule
+    global curfolder, currule, curparts
     curfolder = None
     currule = None
     curparts = None
+
+
+def _form_set_selected ():
+    for f in config['folderrules']:
+        f.selected = False
+        for r in f.rules:
+            r.selected = False
+    if curfolder:
+        curfolder.selected = True
+    if currule:
+        currule.selected = True
 
 
 def _form_selfolder (index):
     try:
         index = int(index)
         global curfolder
-        curfolder = [ f for f in folders if f.oid==index ][0]
+        curfolder = [ f for f in config['folderrules'] if f.oid==index ][0]
     except (ValueError, IndexError):
         error.append(i18n._("Invalid folder index"))
 
@@ -142,8 +155,10 @@ def _form_selrule (index):
         index = int(index)
         global currule
         currule = [ r for r in curfolder.rules if r.oid==index ][0]
+        # fill ruletype flags
         for rt in rulenames:
             ruletype[rt] = (currule.get_name()==rt)
+        # fill part flags
         if currule.get_name()=="rewrite":
             global curparts
             curparts = {}
@@ -161,8 +176,7 @@ def _form_newfolder (foldername):
     # select the new folder
     global curfolder
     curfolder = FolderRule(title=foldername, desc="", disable=0, filename=filename)
-    config['rules'].append(curfolder)
-    folders.append(curfolder)
+    config['folderrules'].append(curfolder)
     info.append(i18n._("New folder %s created")%`os.path.basename(filename)`)
 
 
@@ -190,6 +204,15 @@ def _form_enablefolder (folder):
     info.append(i18n._("Folder enabled"))
 
 
+def _form_removefolder (folder):
+    config['folderrules'].remove(folder)
+    global curfolder, currule
+    curfolder = None
+    currule = None
+    os.remove(folder.filename)
+    info.append(i18n._("Folder removed"))
+
+
 def _form_newrule (ruletype):
     if ruletype not in rulenames:
         error.append(i18n._("Invalid rule type"))
@@ -198,7 +221,6 @@ def _form_newrule (ruletype):
     rule = GetRuleFromName(ruletype)
     rule.parent = curfolder
     curfolder.append_rule(rule)
-    config['rules'].append(rule)
     # select new rule
     global currule
     currule = rule
@@ -221,43 +243,159 @@ def _form_enablerule (rule):
     info.append(i18n._("Rule enabled"))
 
 
-def _form_apply ():
+def _form_removerule (rule):
+    curfolder.rules.remove(rule)
+    global currule
+    currule = None
+    info.append("Rule removed")
+
+
+def _form_apply (form):
     """delegate rule apply to different apply_* functions"""
+    print "apply", form
+    # values for all rules:
+    _form_rule_titledesc(form)
+    # delegate
     attr = "_form_apply_%s" % currule.get_name()
-    globals()[attr]()
+    globals()[attr](form)
 
 
-def _form_apply_allow ():
-    print "XXX apply allow"
+def _form_rule_titledesc (form):
+    title = get_val(form['rule_title'])
+    if not title:
+        error.append("Empty rule title")
+        return
+    if title!=currule.title:
+        currule.title = title
+        info.append("Rule title changed")
+    desc = get_val(form['rule_description'])
+    if desc!=currule.desc:
+        currule.desc = desc
+        info.append("Rule description changed")
 
 
-def _form_apply_block ():
-    print "XXX apply block"
+def _form_rule_matchurl (form):
+    matchurl = get_val(form['rule_matchurl']).strip()
+    if matchurl!=currule.matchurl:
+        currule.matchurl = matchurl
+        info.append("Rule match url changed")
+    dontmatchurl = get_val(form['rule_dontmatchurl']).strip()
+    if dontmatchurl!=currule.dontmatchurl:
+        currule.dontmatchurl = dontmatchurl
+        info.append("Rule dontmatch url changed")
 
 
-def _form_apply_header ():
-    print "XXX apply header"
+def _form_rule_urlparts (form):
+    scheme = get_val(form['rule_urlscheme']).strip()
+    if scheme!=currule.scheme:
+        currule.scheme = scheme
+        info.append("Rule url scheme changed")
+    host = get_val(form['rule_urlhost']).strip()
+    if host!=currule.host:
+        currule.host = host
+        info.append("Rule url host changed")
+    port = get_val(form['rule_urlport']).strip()
+    if port!=currule.port:
+        currule.port = port
+        info.append("Rule url port changed")
+    path = get_val(form['rule_urlpath']).strip()
+    if path!=currule.path:
+        currule.path = path
+        info.append("Rule url path changed")
+    parameters = get_val(form['rule_urlparameters']).strip()
+    if parameters!=currule.parameters:
+        currule.parameters = parameters
+        info.append("Rule url parameters changed")
+    query = get_val(form['rule_urlquery']).strip()
+    if query!=currule.query:
+        currule.query = query
+        info.append("Rule url query changed")
+    fragment = get_val(form['rule_urlfragment']).strip()
+    if fragment!=currule.fragment:
+        currule.fragment = fragment
+        info.append("Rule url fragment changed")
 
 
-def _form_apply_image ():
-    print "XXX apply image"
+def _form_apply_allow (form):
+    _form_rule_urlparts(form)
 
 
-def _form_apply_javascript ():
-    print "XXX apply javascript"
+def _form_apply_block (form):
+    _form_rule_urlparts(form)
+    url = get_val(form['rule_blockedurl']).strip()
+    if url!=currule.url:
+        currule.url = url
+        info.append("Rule blocked url changed")
 
 
-def _form_apply_nocomments ():
-    print "XXX apply nocomments"
+def _form_apply_header (form):
+    _form_rule_matchurl(form)
+    name = get_val(form['rule_headername']).strip()
+    if name!=currule.name:
+        currule.name = name
+        info.append("Rule header name changed")
+    value = get_val(form['rule_headervalue']).strip()
+    if value!=currule.value:
+        currule.value = value
+        info.append("Rule header value changed")
 
 
-def _form_apply_pics ():
+def _form_apply_image (form):
+    _form_rule_matchurl(form)
+    width = get_val(form['rule_imgwidth']).strip()
+    if width!=currule.width:
+        currule.width = width
+        info.append("Rule image width changed")
+    height = get_val(form['rule_imgheight']).strip()
+    if height!=currule.height:
+        currule.height = height
+        info.append("Rule image height changed")
+    # XXX todo: image types
+
+
+def _form_apply_javascript (form):
+    _form_rule_matchurl(form)
+
+
+def _form_apply_nocomments (form):
+    _form_rule_matchurl(form)
+
+
+def _form_apply_pics (form):
+    _form_rule_matchurl(form)
     print "XXX apply pics"
 
 
-def _form_apply_rewrite ():
-    print "XXX apply rewrite"
+def _form_apply_replace (form):
+    _form_rule_matchurl(form)
+    # note: do not strip() the search and replace form values
+    search = get_val(form['rule_search'])
+    if search!=currule.search:
+        currule.search = search
+        info.append("Rule replace search changed")
+    replace = get_val(form['rule_replace'])
+    if replace!=currule.replace:
+        currule.replace = replace
+        info.append("Rule replacement changed")
 
 
-def _form_apply_replace ():
-    print "XXX apply replace"
+# XXX other submit buttons
+def _form_apply_rewrite (form):
+    _form_rule_matchurl(form)
+    tag = get_val(form['rule_tag']).strip()
+    if tag!=currule.tag:
+        currule.tag = tag
+        info.append("Rule rewrite tag changed")
+    enclosed = get_val(form['rule_enclosedblock']).strip()
+    if enclosed!=currule.enclosed:
+        currule.enclosed = enclosed
+        info.append("Rule rewrite enclosed block changed")
+    part = get_val(form['rule_rewritepart'])
+    if part!=currule.part:
+        currule.part = part
+        info.append("Rule rewrite part changed")
+    replacement = get_val(form['rule_rewritereplacement']).strip()
+    if replacement!=currule.replacement:
+        currule.replacement = replacement
+        info.append("Rule rewrite replacement changed")
+

@@ -79,6 +79,7 @@ Rule title and description
 <div metal:use-macro="rulemacros/macros/urlparts">
 Rule url parts
 </div>
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -122,6 +123,7 @@ Rule url parts
 <span tal:replace="t_ruleblockedurl">Blocked URL</span>:
 <input type="text" name="rule_blockedurl" value="http://www.calvinandhobbes.com/"
  tal:attributes="value currule/url">
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -141,6 +143,7 @@ Rule (don't) match url
 <span tal:replace="t_ruleheadervalue">Header value</span>:
 <input type="text" name="rule_headervalue" value=""
  tal:attributes="value currule/value">
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -167,6 +170,7 @@ Rule (don't) match url
 <span tal:replace="t_ruleimgurl">Blocked image URL</span>:
 <input type="text" name="rule_imgurl" value="myblocked.gif"
  tal:attributes="value currule/url">
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -179,6 +183,7 @@ Rule title and description
 <div metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </div>
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -191,6 +196,7 @@ Rule title and description
 <div metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </div>
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -208,6 +214,7 @@ Rule (don't) match url
  tal:attributes="value currule/url">
 <br>
 <!-- XXX more config -->
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -227,6 +234,7 @@ Rule (don't) match url
 <span tal:replace="t_rulereplace">Replacement</span>:
 <input type="text" name="rule_replace" value="Something good"
  tal:attributes="value currule/replace">
+<br>
 <input type="submit" name="apply" value="Apply" 
  tal:attributes="value t_apply">
 </p>
@@ -271,12 +279,11 @@ Rule (don't) match url
  tal:attributes="value t_addattr">
 <br>
 <span tal:replace="t_enclosedblock">Enclosed block</span>:
-<input type="text" name="enclosedblock" value=""
+<input type="text" name="rule_enclosedblock" value=""
  tal:attributes="value currule/enclosed">
 <br>
 <span tal:replace="t_replacepart">Replace part</span>:
-<span tal:condition="curparts/tag">Teest</span>
-<select name="replacepart">
+<select name="rule_rewritepart">
 <span tal:repeat="part partvalnames" tal:omit-tag="">
 <option tal:condition="not:curparts/?part"
  tal:attributes="value part" tal:content="partnames/?part">a part</option>
@@ -286,9 +293,10 @@ Rule (don't) match url
 </select>
 <br>
 <span tal:replace="t_replacevalue">Replace value</span>:
-<input type="text" name="replacevalue" value=""
+<input type="text" name="rule_rewritereplacement" value=""
  tal:attributes="value currule/replacement">
-<input type="submit" name="apply" value="Apply" 
+<br>
+<input type="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
 </p>
 

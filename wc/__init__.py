@@ -184,7 +184,7 @@ class Configuration (dict):
         self['parentproxyuser'] = ""
         self['parentproxypass'] = ""
         self['strict_whitelist'] = 0
-        self['rules'] = []
+        self['folderrules'] = []
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['colorize'] = 0
@@ -243,16 +243,15 @@ class Configuration (dict):
         # filter configuration
         for f in filterconf_files():
             ZapperParser().parse(f, self)
-        for f in self['rules']:
+        for f in self['folderrules']:
             f.sort()
-        self['rules'].sort()
-        filter.rules.FolderRule.recalc_oids(self['rules'])
+        self['folderrules'].sort()
+        filter.rules.FolderRule.recalc_oids(self['folderrules'])
 
 
     def write_filterconf (self):
         """write filter rules"""
-        folders = [r for r in self['rules'] if r.get_name()=="folder"]
-        for folder in folders:
+        for folder in self['folderrules']:
             f = file(folder.filename, 'w')
             f.write(folder.toxml())
             f.close()
@@ -274,9 +273,9 @@ class Configuration (dict):
             # class has same name as module
             instance = getattr(_module, f)(getattr(_module, "mimelist"))
             for order in getattr(_module, 'orders'):
-                for rules in self['rules']:
-                    if rules.disable: continue
-                    for rule in rules.rules:
+                for folder in self['folderrules']:
+                    if folder.disable: continue
+                    for rule in folder.rules:
                         if rule.disable: continue
                         if rule.get_name() in getattr(_module, 'rulenames'):
                             instance.addrule(rule)
@@ -342,17 +341,17 @@ class BaseParser (object):
 class ZapperParser (BaseParser):
     def parse (self, filename, config):
         super(ZapperParser, self).parse(filename, config)
-        config['rules'].append(self.rules)
+        config['folderrules'].append(self.folder)
 
 
     def start_element (self, name, attrs):
         self.cmode = name
         if name=='folder':
-            self.rules.fill_attrs(attrs, name)
+            self.folder.fill_attrs(attrs, name)
         elif name in rulenames:
             self.rule = wc.filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
-            self.rules.append_rule(self.rule)
+            self.folder.append_rule(self.rule)
         # tag has character data
         elif name in _nestedtags:
             self.rule.fill_attrs(attrs, name)
@@ -362,9 +361,8 @@ class ZapperParser (BaseParser):
 
     def end_element (self, name):
         self.cmode = None
-        if name in rulenames:
-            if name=='rewrite':
-                self.rule.set_start_sufficient()
+        if name=='rewrite':
+            self.rule.set_start_sufficient()
 
 
     def character_data (self, data):
@@ -374,7 +372,7 @@ class ZapperParser (BaseParser):
 
     def reset (self, filename):
         from wc.filter.rules import FolderRule
-        self.rules = FolderRule.FolderRule(filename=filename)
+        self.folder = FolderRule.FolderRule(filename=filename)
         self.cmode = None
         self.rule = None
 

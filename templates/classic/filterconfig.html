@@ -23,19 +23,20 @@
 <tr valign="top">
 <!-- folders -->
 <td>
-<div tal:repeat="folder folders">
+<div tal:repeat="folder config/folderrules">
 <img tal:condition="folder/disable" src="disabled.png"
  tal:attributes="alt t_disabledfoldericon">
 <img tal:condition="not:folder/disable" src="minifolder.png"
  tal:attributes="alt t_foldericon">
+<b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
+</b>
 </div>
 <br>
 <hr noshade size="1">
 <input type="text" name="newfoldername" size="10"
- tal:attributes="value t_foldername"
- size="10">
+ tal:attributes="value t_foldername">
 <input type="submit" name="newfolder" value="New folder"
  tal:attributes="value t_newfolder">
 </td>
@@ -48,10 +49,12 @@
  tal:attributes="alt t_disabledruleicon">
 <img tal:condition="not:rule/disable" src="minidoc.png"
  tal:attributes="alt t_ruleicon">
+<b tal:omit-tag="not:rule/selected">
 <a href="#" tal:content="rule/title"
  tal:condition="not:curfolder/disable"
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}">On focus</a>
 <span tal:condition="curfolder/disable" tal:replace="rule/title">On focus</span>
+</b>
 </div>
 <hr noshade size="1">
 <input type="text" name="foldername" size="10"

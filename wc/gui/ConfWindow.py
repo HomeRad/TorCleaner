@@ -757,7 +757,7 @@ class ConfWindow (ToolWindow):
             self.modules[f] = 0
         for f in self.config['filters']:
             self.modules[f] = 1
-        self.folders = self.config['rules']
+        self.folders = self.config['folderrules']
         self.themes = get_available_themes()
 
 
