@@ -181,7 +181,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.pics = pics
         self.comments = opts['comments']
         self.level = opts.get('level', 0)
-        self.state = 'parse'
+        self.state = ('parse',)
         self.waited = 0
         self.rulestack = []
         self.inbuf = StringIO()
@@ -192,12 +192,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def __repr__ (self):
         """representation with recursion level and state"""
-        return "<HtmlParser[%d] %s>" % (self.level, self.state)
+        return "<HtmlParser[%d] %s>" % (self.level, str(self.state))
 
 
     def _debug (self, msg, *args):
         """debug with recursion level and state"""
-        debug(FILTER, "%d,%s: %s"%(self.level, self.state, msg), *args)
+        debug(FILTER, "HtmlParser[%d,%s]: %s"%\
+              (self.level, self.state[0], msg), *args)
 
 
     def _debugbuf (self):
@@ -210,13 +211,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def feed (self, data):
         """feed some data to the parser"""
-        if self.state=='parse':
+        if self.state[0]=='parse':
             # look if we must replay something
             if self.waited:
                 self.waited = 0
                 waitbuf, self.waitbuf = self.waitbuf, []
                 self.replay(waitbuf)
-                if self.state!='parse':
+                if self.state[0]!='parse':
                     self.inbuf.write(data)
                     return
                 data = self.inbuf.getvalue() + data
@@ -238,8 +239,12 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def flush (self):
         self._debug("flush")
         # flushing in wait state raises a filter exception
-        if self.state=='wait':
-            raise FilterWait("HtmlParser[%d]: waiting for data"%self.level)
+        if self.waited > 100:
+            error(FILTER, "Waited too long for %s"%self.state[1])
+        elif self.state[0]=='wait':
+            self.waited += 1
+            raise FilterWait("HtmlParser[%d,wait]: waited %d times for %s"%\
+                             (self.level, self.waited, self.state[1]))
         self.parser.flush()
 
 
@@ -260,7 +265,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def _data (self, d):
         """general handler for data"""
         item = [DATA, d]
-        if self.state=='wait':
+        if self.state[0]=='wait':
             return self.waitbuf.append(item)
         self.buf_append_data(item)
 
@@ -288,7 +293,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         """a comment; accept only non-empty comments"""
         self._debug("comment %s", `data`)
         item = [COMMENT, data]
-        if self.state=='wait':
+        if self.state[0]=='wait':
             return self.waitbuf.append(item)
         if self.comments and data:
             self.buf.append(item)
@@ -311,7 +316,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self._debug("startElement %s", `tag`)
         tag = check_spelling(tag, self.url)
         item = [STARTTAG, tag, attrs]
-        if self.state=='wait':
+        if self.state[0]=='wait':
             return self.waitbuf.append(item)
         rulelist = []
         filtered = 0
@@ -374,7 +379,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self._debug("endElement %s", `tag`)
         tag = check_spelling(tag, self.url)
         item = [ENDTAG, tag]
-        if self.state=='wait':
+        if self.state[0]=='wait':
             return self.waitbuf.append(item)
         if not self.filterEndElement(tag):
             if self.js_filter and tag=='script':
@@ -452,7 +457,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsScriptData (self, data, url, ver):
         """Callback for loading <script src=""> data in the background
            If downloading is finished, data is None"""
-        assert self.state=='wait'
+        assert self.state[0]=='wait'
         if data is None:
             if not self.js_script:
                 warn(PARSER, "HtmlParser[%d]: empty JS src %s", self.level, url)
@@ -465,7 +470,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 # but now we need one. Look later for a duplicate </script>.
                 self.buf.append([ENDTAG, "script"])
                 self.js_script = ''
-            self.state = 'parse'
+            self.state = ('parse',)
             self._debug("switching back to parse with")
             self._debugbuf()
         else:
@@ -475,7 +480,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsScriptSrc (self, url, language):
         """Start a background download for <script src=""> tags"""
-        assert self.state=='parse'
+        assert self.state[0]=='parse'
         ver = 0.0
         if language:
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
@@ -489,8 +494,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             warn(PARSER, "HtmlParser[%d]: broken JS url %s at %s", self.level,
                          `url`, `self.url`)
             return
-        self.state = 'wait'
-        self.waited = 'True'
+        self.state = ('wait', url)
+        self.waited = 1
         self.js_src = 'True'
         client = HttpProxyClient(self.jsScriptData, (url, ver))
         ClientServerMatchmaker(client,
@@ -506,7 +511,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
         self._debug("JS: jsScript %s %s", ver, `script`)
-        assert self.state == 'parse'
+        assert self.state[0]=='parse'
         assert len(self.buf) >= 2
         self.js_output = 0
         self.js_env.attachListener(self)
@@ -528,9 +533,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.js_html.feed('')
                 self.js_html.flush()
             except FilterWait:
-                self.state = 'wait'
-                self.waited = 'True'
-                make_timer(0.1, lambda : self.jsEndScript(item))
+                self.state = ('wait', 'recursive script')
+                self.waited = 1
+                make_timer(0.2, lambda : self.jsEndScript(item))
                 return
             self.js_html._debugbuf()
             assert not self.js_html.inbuf.getvalue()
@@ -546,7 +551,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.buf.append(item)
         self._debug("JS: switching back to parse with")
         self._debugbuf()
-        self.state = 'parse'
+        self.state = ('parse',)
 
 
     def jsEndElement (self, item):
