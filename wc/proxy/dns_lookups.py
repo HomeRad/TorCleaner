@@ -390,9 +390,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         rdtype = wc.dns.rdatatype.A
         rdclass = wc.dns.rdataclass.IN
         self.query = wc.dns.message.make_query(self.hostname, rdtype, rdclass)
-        if not self.keyname is None:
-            self.query.use_tsig(self.keyring, self.keyname)
-        self.query.use_edns(self.edns, self.ednsflags, self.payload)
+        if resolver.keyname is not None:
+            self.query.use_tsig(resolver.keyring, resolver.keyname)
+        self.query.use_edns(resolver.edns, resolver.ednsflags, resolver.payload)
         wire = self.query.to_wire()
         if self.tcp:
             l = len(wire)
@@ -457,8 +457,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         r = wc.dns.message.from_wire(wire, keyring=self.query.keyring,
                                      request_mac=self.query.mac)
         if not self.query.is_response(r):
+            wc.log.warn(wc.LOG_DNS, '%s was no response to %s', r, self.query)
             return
-
+        # XXX read query
         (rid, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
