@@ -34,6 +34,40 @@
  tal:attributes="value string:${config/newport}">
 </td>
 </tr>
+
+<tr>
+<td>
+<label i18n:attributes="title string:Filter https traffic through a local SSL server"
+ for="sslgateway" i18n:translate="">SSL gateway</label>
+<sup><a href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title string:see footnote 1">1)</a></sup></td>
+<td>
+<input tal:condition="config/newsslgateway" class="checkbox"
+ type="checkbox" checked name="sslgateway" id="sslgateway" value="1">
+<input tal:condition="not:config/newsslgateway" class="checkbox"
+ type="checkbox" name="sslgateway" id="sslgateway" value="1">
+</td>
+</tr>
+
+<tr>
+<td>
+<label for="sslport" i18n:translate=""
+ i18n:attributes="title string:Port number the local SSL server is listening on for requests"
+ >SSL port number</label>
+<sup><a href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title string:see footnote 1">1)</a></sup>
+</td>
+<td>
+<input class="number" type="text" name="sslport" id="sslport" maxlength="5"
+ tal:condition="config/newsslgateway"
+ tal:attributes="value string:${config/newsslport}">
+<input class="number" type="text" name="sslport" id="sslport" maxlength="5"
+ disabled tal:condition="not:config/newsslgateway"
+ style="color: #444444;"
+ tal:attributes="value string:${config/newsslport}">
+</td>
+</tr>
+
 <tr>
 <td>
 <label for="timeout" i18n:translate=""
@@ -44,6 +78,7 @@
  maxlength="5" tal:attributes="value string:${config/timeout}">
 </td>
 </tr>
+
 <tr>
 <td>
 <label i18n:attributes="title string:Administrator username"
@@ -54,6 +89,7 @@
  tal:attributes="value config/adminuser">
 </td>
 </tr>
+
 <tr>
 <td>
 <label i18n:attributes="title string:Administrator password"
@@ -68,6 +104,7 @@
  value="" tal:condition="not:config/adminpass">
 </td>
 </tr>
+
 <tr>
 <td>
 <label i18n:attributes="title string:Username used for proxy authentication"
@@ -78,6 +115,7 @@
  tal:attributes="value config/proxyuser">
 </td>
 </tr>
+
 <tr>
 <td>
 <label i18n:attributes="title string:Password used for proxy authentitaction"
@@ -92,6 +130,7 @@
  value="" tal:condition="not:config/proxypass">
 </td>
 </tr>
+
 <tr tal:replace="nothing">
 <!-- XXX disabled -->
 <td>
@@ -99,12 +138,13 @@
  for="auth_ntlm" i18n:translate="">NTLM authentication</label>
 </td>
 <td>
-<input tal:condition="config/auth_ntlm"
+<input tal:condition="config/auth_ntlm" class="checkbox"
  type="checkbox" checked name="auth_ntlm" id="auth_ntlm" value="1">
-<input tal:condition="not:config/auth_ntlm"
+<input tal:condition="not:config/auth_ntlm" class="checkbox"
  type="checkbox" name="auth_ntlm" id="auth_ntlm" value="1">
 </td>
 </tr>
+
 <tr tal:replace="nothing">
 <!-- XXX disabled -->
 <td>
@@ -112,9 +152,9 @@
  for="try_google" i18n:translate="">Try Google</label>
 </td>
 <td>
-<input tal:condition="config/try_google"
+<input tal:condition="config/try_google" class="checkbox"
  type="checkbox" checked name="try_google" id="try_google" value="1">
-<input tal:condition="not:config/try_google"
+<input tal:condition="not:config/try_google" class="checkbox"
  type="checkbox" name="try_google" id="try_google" value="1">
 </td>
 </tr>
@@ -126,7 +166,8 @@
 <span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
 </div>
 </fieldset>
-
+</td>
+<td>
 <fieldset>
 <legend i18n:translate="">Parent proxy settings</legend>
 <table summary="" border="0" cellpadding="5" cellspacing="0">
@@ -180,13 +221,17 @@
 <span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
 </div>
 </fieldset>
-</td>
-<td>
+<br>
+
 <fieldset>
 <legend i18n:translate="">Proxy filter modules</legend>
 <div tal:repeat="module filtermodules">
-  <input tal:condition="config/filterdict/?module" type="checkbox" checked tal:attributes="value module;name string:filter${module}">
-  <input tal:condition="not:config/filterdict/?module" type="checkbox" tal:attributes="value module;name string:filter${module}">
+  <input tal:condition="config/filterdict/?module" checked
+   type="checkbox" class="checkbox"
+   tal:attributes="value module;name string:filter${module}">
+  <input tal:condition="not:config/filterdict/?module"
+   type="checkbox" class="checkbox"
+   tal:attributes="value module;name string:filter${module}">
   <span tal:replace="module">SomeFilter</span>
 </div>
 </fieldset>
@@ -202,7 +247,7 @@
 <select name="allowedhosts" id="allowedhosts" multiple size="5"
  i18n:attributes="title string:List of hosts allowed to use this proxy.">
 <option tal:repeat="host config/allowedhostlist" tal:attributes="value host"
- tal:content="host">127.0.0.1</option>
+ tal:content="host">localhost</option>
 </select>
 </td>
 <td>
@@ -212,9 +257,7 @@
 </tr>
 <tr>
 <td>
-<input class="text" type="text" name="newallowed" value=""><sup><a
- href="#footnote4" class="footnote" title="see footnote 4"
- i18n:attributes="title string:see footnote 4">4)</a></sup>
+<input class="text" type="text" name="newallowed" value="">
 </td>
 <td>
 <input type="submit" name="addallowed" value="Add new" class="submit"
@@ -222,10 +265,6 @@
 </td>
 </tr>
 </table>
-<div class="footnote">
-<sup id="footnote4" title="footnote 4" i18n:attributes="title string:footnote 4">4)</sup>
-<span i18n:translate="">Only numeric IPs/networks are useful as DNS resolution is not performed.</span>
-</div>
 </fieldset>
 </td>
 <td>
@@ -235,9 +274,9 @@
 <tr>
 <td>
 <select name="nofilterhosts" id="nofilterhosts" multiple size="5"
- i18n:attributes="title string:List of hostnames the proxy must not filter.">
+ i18n:attributes="title string:List of domain names the proxy must not filter.">
 <option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
- tal:content="host">127.0.0.1</option>
+ tal:content="host">localhost</option>
 </select>
 </td>
 <td>
@@ -247,9 +286,7 @@
 </tr>
 <tr>
 <td>
-<input class="text" type="text" name="newnofilter" value=""><sup><a
- href="#footnote5" class="footnote" title="see footnote 5"
- i18n:attributes="title string:see footnote 5">5)</a></sup>
+<input class="text" type="text" name="newnofilter" value="">
 </td>
 <td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"
@@ -257,10 +294,6 @@
 </td>
 </tr>
 </table>
-<div class="footnote">
-<sup id="footnote5" title="footnote 5" i18n:attributes="title string:footnote 5">5)</sup>
-<span i18n:translate="">Be sure to supply all host aliases and IPs as DNS resolution is not performed.</span>
-</div>
 </fieldset>
 </td>
 </tr>
@@ -275,6 +308,7 @@
 
 <div class="info">
 <div tal:condition="info/port" i18n:translate="">Port successfully changed.</div>
+<div tal:condition="info/sslport" i18n:translate="">SSL port successfully changed.</div>
 <div tal:condition="info/adminuser" i18n:translate="">Admin user successfully changed.</div>
 <div tal:condition="info/adminpass" i18n:translate="">Admin password successfully changed.</div>
 <div tal:condition="info/proxyuser" i18n:translate="">Proxy user successfully changed.</div>
@@ -294,6 +328,7 @@
 
 <div class="error">
 <div tal:condition="error/port" i18n:translate="">Invalid proxy port.</div>
+<div tal:condition="error/sslport" i18n:translate="">Invalid SSL server port.</div>
 <div tal:condition="error/parentproxyport" i18n:translate="">Invalid parent proxy port.</div>
 <div tal:condition="error/timeout" i18n:translate="">Invalid timeout value.</div>
 </div>
