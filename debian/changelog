@@ -4,8 +4,9 @@ webcleaner (2.0-0.1) unstable; urgency=low
   * adjust depends for Python 2.3
   * downgrade webcleanertools dependency to "Suggests" since there is
     now a web configuration.
+  * install dmozfilter.py example
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri, 20 Jun 2003 17:26:16 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  8 Aug 2003 12:12:59 +0200
 
 webcleaner (1.13-0.1) unstable; urgency=low
 
