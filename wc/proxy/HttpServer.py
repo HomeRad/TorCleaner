@@ -1,6 +1,6 @@
 import time, socket, rfc822, re, sys, mimetypes
 # add bzip encoding
-mimetypes.encodings_map['.bz2'] = 'bzip'
+mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 from cStringIO import StringIO
 from Server import Server
@@ -37,7 +37,7 @@ _fix_content_types = [
 ]
 
 _fix_content_encodings = [
-    'bzip',
+    'x-bzip2',
 ]
 
 class HttpServer (Server):
