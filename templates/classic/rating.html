@@ -17,7 +17,7 @@
 several given categories.</p>
 
 <h2 i18n:translate="">URL rating</h2>
-<form action="rating.html" method="POST" name="ratingform"
+<form action="#" method="POST" name="ratingform"
  tal:attributes="action string:${filename}.${lang}">
 <table border="0" cellpadding="5" cellspacing="0" summary="">
 <tr>
@@ -37,7 +37,12 @@ several given categories.</p>
  i18n:attributes="title Applies to all pages starting with url">Generic
 </label>
 </td>
-<td><input type="checkbox"><!-- XXX attributes --></td>
+<td>
+<input type="checkbox" name="generic" value="generic"
+ tal:condition="generic" checked>
+<input type="checkbox" name="generic" value="generic"
+ tal:condition="not:generic">
+</td>
 </tr>
 <tr>
 <td colspan="2">
@@ -50,10 +55,9 @@ several given categories.</p>
 </thead>
 <tbody>
 <tr tal:repeat="category service/categories/keys">
-<!-- XXX radio checked attrs -->
-<td><span tal:replace="service/categories/?category/name">Violence</span>
-(<span tal:replace="category">violence</span>)</td>
-
+<td><label tal:attributes="title category;for string:category_${category}"
+ tal:content="service/categories/?category/name">Violence</label>
+</td>
 <td tal:condition="service/categories/?category/rrange" colspan="3">
 <input type="text" size="4"
  tal:attributes="name string:category_${category};value ratings/?category"
@@ -73,18 +77,60 @@ several given categories.</p>
 </tr>
 <tr>
 <td colspan="2">
-<input type="submit" value="Apply" class="submit"
+<input type="submit" name="apply" value="Apply" class="submit"
  i18n:attributes="value Apply">
+<input type="submit" name="delete" value="Delete" class="submit"
+ i18n:attributes="value Delete; onclick return window.confirm('Really remove this rating?')">
 </td>
 </tr>
 </table>
 </form>
 
 <h2 i18n:translate="">Saved ratings</h2>
-<table tal:repeat="rating ratings_display" summary=""
- border="0" cellpadding="5" cellspacing="0">
-<!-- XXX -->
+<div tal:condition="selindex">
+<span i18n:translate="">Go to rating:</span>
+<span tal:repeat="number selindex"><a href="#"
+ tal:attributes="href string:${filename}.${lang}?selindex=${number}"
+ tal:content="number">50</a> </span>
+</div>
+<table rules="cols" summary="" border="0" cellpadding="5" cellspacing="0"
+ style="border-bottom:1px solid black;width:80%;">
+<thead>
+<tr style="border-bottom:1px solid black;">
+<th i18n:translate="" style="width:30%">URL</th>
+<th i18n:translate="">Rated</th>
+</tr>
+</thead>
+<tbody>
+<tr tal:repeat="url ratings_display">
+<td>
+<a href="#" i18n:attributes="title Edit/delete this rating"
+ tal:attributes="href string:${filename}.${lang}?url=${url}"><img
+ src="edit.png" border="0"></a>
+<a href="http://imadoofus.com/"
+ tal:attributs="href url" tal:content="url">http://imadoofus.com</a></td>
+<td><span tal:repeat="category rating_cache/?url/keys">
+<span tal:replace="category">violence</span>=<span 
+ tal:replace="rating_cache/?url/?category">0</span>
+</span>
+</td>
+</tr>
+<tr tal:condition="not:ratings_display">
+<td>&nbsp;</td>
+<td i18n:translate="">There are no url ratings saved.</td>
+</tr>
 </table>
+
+<div class="info">
+<div tal:condition="info/ratingupdated" i18n:translate="">Rating successfully updated.</div>
+<div tal:condition="info/ratingdeleted" i18n:translate="">Rating successfully deleted.</div>
+</div>
+
+<div class="error">
+<div tal:condition="error/categoryvalue" i18n:translate="">Invalid category value.</div>
+<div tal:condition="error/selindex" i18n:translate="">Invalid selection index.</div>
+</div>
+
 </div>
 
 <div metal:use-macro="macros/macros/footer">Footer...</div>

@@ -217,12 +217,12 @@ def spliturl (url):
 
 def mainloop (handle=None):
     from HttpClient import HttpClient
-    #from Interpreter import Interpreter
     from Listener import Listener
     from wc import config
     Listener(config['port'], HttpClient)
     # experimental interactive command line
-    #Listener(8081, lambda *args: Interpreter.Interpreter(*args))
+    #from Interpreter import Interpreter
+    #Listener(config['port']+1, Interpreter)
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)

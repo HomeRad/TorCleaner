@@ -20,8 +20,8 @@ class Listener (asyncore.dispatcher, object):
         create_inet_socket(self, socket.SOCK_STREAM)
         self.set_reuse_addr()
         self.bind(self.addr)
-        # 5 is the maximum number of queued connections
-        self.listen(5)
+        # maximum number of queued connections
+        self.listen(50)
         self.handler = handler
 
 

@@ -90,7 +90,8 @@ class RatingRule (UrlRule):
         if self.url:
             s += "<url>%s</url>\n" % xmlify(self.url)
         for category, value in self.ratings.items():
-            s += "<category name=\"%s\">%s</category>\n"% \
-                  (xmlify(category), xmlify(value))
+            if value:
+                s += "<category name=\"%s\">%s</category>\n"% \
+                      (xmlify(category), xmlify(value))
         return s+"</rating>"
 
