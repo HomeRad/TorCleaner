@@ -6,13 +6,29 @@ import StandardTest
 
 class TestUrl (StandardTest.StandardTest):
 
-    def testUrl (self):
+    def testUrlPathAttack (self):
         url = "http://server/..%5c..%5c..%5c..%5c..%5c..%5..%5c..%5ccskin.zip"
-        nurl = wc.url.url_quote(wc.url.url_norm(url))
-        self.assertEquals(nurl, "http://server/cskin.zip")
+        nurl = "http://server/cskin.zip"
+        self.assertEquals(wc.url.url_quote(wc.url.url_norm(url)), nurl)
+
+    def testUrlQuoting (self):
         url = "http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&threadm=3845B54D.E546F9BD%40monmouth.com&rnum=2&prev=/groups%3Fq%3Dlogitech%2Bwingman%2Bextreme%2Bdigital%2B3d%26hl%3Den%26lr%3D%26ie%3DUTF-8%26selm%3D3845B54D.E546F9BD%2540monmouth.com%26rnum%3D2"
-        nurl = wc.url.url_quote(wc.url.url_norm(url))
-        self.assertEqual(url, nurl)
+        nurl = url
+        self.assertEqual(wc.url.url_quote(wc.url.url_norm(url)), nurl)
+
+    def testUrlFixing (self):
+        url = r"http://groups.google.com\test.html"
+        nurl = "http://groups.google.com/test.html"
+        self.assertEqual(wc.url.url_norm(url), nurl)
+        url = r"http://groups.google.com/a\test.html"
+        nurl = "http://groups.google.com/a/test.html"
+        self.assertEqual(wc.url.url_norm(url), nurl)
+        url = r"http://groups.google.com\a\test.html"
+        nurl = "http://groups.google.com/a/test.html"
+        self.assertEqual(wc.url.url_norm(url), nurl)
+        url = r"http://groups.google.com\a/test.html"
+        nurl = "http://groups.google.com/a/test.html"
+        self.assertEqual(wc.url.url_norm(url), nurl)
 
     def testValid (self):
         self.assert_(wc.url.is_valid_url("http://www.imadoofus.com"))
