@@ -40,3 +40,6 @@ AssertionError: '<script type="text/javascript">\n<!--\ndocument.write(\'<iframe
 
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
+
+- integrate with http://mute-net.sourceforge.net/ somehow?
+

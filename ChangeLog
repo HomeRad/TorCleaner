@@ -8,6 +8,10 @@
     Type: bugfix
     Changed: wc/filter/rules/RewriteRule.py
 
+  * fix challenge writing when given a wrong password
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix
