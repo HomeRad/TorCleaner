@@ -28,8 +28,32 @@ from wc.ip import resolve_host as _resolve_host
 from wc.ip import hosts2map as _hosts2map
 
 # config vars
-info = {}
-error = {}
+info = {
+    'adminuser': False,
+    'adminpass': False,
+    'proxyuser': False,
+    'proxypass': False,
+    'auth_ntlm': False,
+    'try_google': False,
+    'parentproxy': False,
+    'parentproxyport': False,
+    'parentproxyuser': False,
+    'parentproxypass': False,
+    'timeout': False,
+    'port': False,
+    'sslport': False,
+    'sslgateway': False,
+    'addallowed': False,
+    'delallowed': False,
+    'addnofilter': False,
+    'delnofilter': False,
+}
+error = {
+    'port': False,
+    'sslport': False,
+    'parentproxyport': False,
+    'timeout': False,
+}
 config['filterdict'] = {}
 for _i in filtermodules:
     config['filterdict'][_i] = False
@@ -47,8 +71,10 @@ def _exec_form (form, lang):
     global filterenabled, filterdisabled
     filterenabled = u""
     filterdisabled = u""
-    info.clear()
-    error.clear()
+    for key in info.keys():
+        info[key] = False
+    for key in error.keys():
+        error[key] = False
     res = [None]
     # proxy port
     if form.has_key('port'):
