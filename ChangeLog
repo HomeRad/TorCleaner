@@ -4,9 +4,9 @@
   * remove old and superfluous options from webcleanerconf, added
     tooltip help, fixed host config parsing
     Changed files: wc/gui/*.py, wc/__init__.py
-  * dont print out invalid html attribute characters, just ignore them
-    Changed files: wc/parser/htmllex.l
-  * fixed debugging code with flex
+  * - ignore invalid html attribute characters
+    - ignore trailing garbage on html end tags
+    - fixed debugging code with flex
     Changed files: wc/parser/htmllex.l
   * build with flex 2.5.25
     Changed files: wc/parser/{Makefile, htmllex.c}
