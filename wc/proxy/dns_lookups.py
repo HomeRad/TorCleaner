@@ -19,15 +19,14 @@ import bk.net.dns.Lib
 import bk.net.ip
 
 
-dns_config = None
+resolver = None
 
-def init_config ():
-    global dns_config
-    dns_config = bk.net.resolver_config()
-    # re-read dns config every minute
-    wc.proxy.make_timer(60, init_config)
-
-init_config()
+def init_resolver ():
+    """Initialize DNS resolver config. Must be called on startup.
+    Should be called on SIGHUP (config reload)
+    """
+    global resolver
+    resolver = bk.dns.resolver.Resolver()
 
 
 def background_lookup (hostname, callback):
@@ -48,21 +47,17 @@ class DnsResponse (object):
         self.kind = kind
         self.data = data
 
-
     def __repr__ (self):
         """object representation"""
         return "DnsResponse(%s, %s)" % (self.kind, self.data)
-
 
     def isError (self):
         """return True if dns response is an error"""
         return self.kind == 'error'
 
-
     def isFound (self):
         """return True if dns response is found valid"""
         return self.kind == 'found'
-
 
     def isRedirect (self):
         """return True if dns response is a redirection"""
@@ -76,56 +71,54 @@ class DnsExpandHostname (object):
 
     # This routine calls DnsCache to do the individual lookups
     def __init__ (self, hostname, callback):
+        global resolver
+        if has_whitespace(hostname):
+            # If there's whitespace, it's a copy/paste error
+            hostname = re.sub(r'\s+', '', hostname)
+        if ".." in hostname:
+            # another possible typo
+            hostname = re.sub(r'\.\.+', '.', hostname)
+        if bk.ip.is_valid_ip(hostname):
+            # it is already an ip adress
+            callback(DnsResponse('found', [hostname]))
+            return
         self.erroranswer = None # set if one answer failed
         self.hostname = hostname
         self.callback = callback
         self.queries = [hostname] # all queries to be made
         self.answers = {} # Map hostname to DNS answer
         # How long do we wait before trying another expansion?
-        self.delay = 0.2
+        self.delay = 3
         if not dnscache.well_known_hosts.has_key(hostname):
-            for domain in dns_config.search_domains:
+            for domain in resolver.search:
                 self.queries.append(hostname + domain)
-            if hostname.find('.') < 0 and hostname.find(':') < 0:
+            if hostname.find('.') < 0:
                 # If there's no dot, we should try expanding patterns
-                for pattern in dns_config.search_patterns:
+                for pattern in resolver.search_patterns:
                     self.queries.append(pattern % hostname)
-            else:
-                # But if there is a dot, let's increase the delay
-                # because it's very likely that none of the
-                # search_domains matter.
-                self.delay = 3
-        if has_whitespace(hostname):
-            # If there's whitespace, it's almost certainly a copy/paste error,
-            # so also try the same thing with whitespace removed
-            self.queries.append(re.sub(r'\s+', '', hostname))
-        if ".." in hostname:
-            # another possible typo
-            self.queries.append(re.sub(r'\.\.+', '.', hostname))
+                # it is likely that search_domains matter
+                self.delay = 0.2
         self.requests = self.queries[1:] # queries we haven't yet made
         # Issue the primary request
-        wc.proxy.make_timer(0, lambda h=hostname, s=self:
-                   dnscache.lookup(h, s.handle_dns))
-        # and then start another request as well
-        if self.delay < 1: # (it's likely to be needed)
+        wc.proxy.make_timer(0,
+                          lambda: dnscache.lookup(hostname, self.handle_dns))
+        # and then start another request as well if it's needed
+        if self.delay < 1 and len(self.requests) > 0:
             wc.proxy.make_timer(self.delay, self.handle_issue_request)
-
 
     def handle_issue_request (self):
         bk.log.debug(wc.LOG_DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
-            request = self.requests[0]
+            hostname = self.requests[0]
             del self.requests[0]
-            wc.proxy.make_timer(0, lambda r=request, s=self:
-                       dnscache.lookup(r, s.handle_dns))
-
+            wc.proxy.make_timer(0,
+                          lambda: dnscache.lookup(hostname, self.handle_dns))
             # XXX: Yes, it's possible that several DNS lookups are
-            # being executed at once.  To avoid that, we could check
+            # being executed at once. To avoid that, we could check
             # if there's already a timer for this object ..
             if self.requests:
                 wc.proxy.make_timer(self.delay, self.handle_issue_request)
-
 
     def handle_dns (self, hostname, answer):
         bk.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
@@ -145,11 +138,11 @@ class DnsExpandHostname (object):
                              DnsResponse('redirect', current_query))
                 else:
                     callback(self.hostname, answer)
-                break
+                return
             elif not self.erroranswer:
                 self.erroranswer = answer
 
-        if self.callback and not self.queries:
+        if not self.queries:
             # Someone's still waiting for an answer, and we
             # are expecting no more answers
             callback, self.callback = self.callback, None
@@ -158,6 +151,7 @@ class DnsExpandHostname (object):
             else:
                 answer = DnsResponse('error', 'host not expanded')
             callback(self.hostname, answer)
+            return
 
         # Since one DNS request is satisfied, issue another
         self.handle_issue_request()
@@ -179,10 +173,8 @@ class DnsCache (object):
         self.well_known_hosts = {} # hostname to 1, if it's from /etc/hosts
         self.read_localhosts()
 
-
     def __repr__ (self):
         return pprint.pformat(self.cache)
-
 
     def read_localhosts (self):
         "Fill DnsCache with /etc/hosts information"
@@ -215,26 +207,13 @@ class DnsCache (object):
                 self.cache[name] = DnsResponse('found', [fields[0]])
                 self.expires[name] = sys.maxint
 
-
     def lookup (self, hostname, callback):
         bk.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
-        # see if hostname is already a resolved IP address
-        hostname, numeric = bk.net.ip.expand_ip(hostname)
-        if numeric:
-            callback(hostname, DnsResponse('found', [hostname]))
-            return
-
         if hostname[-1:] == '.':
             # We should just remove the trailing '.'
             DnsResponse('redirect', hostname[:-1])
             return
 
-        if len(hostname) > 100:
-            # It's too long .. assume it's an error
-            callback(hostname,
-                     DnsResponse('error', 'hostname %r too long'%hostname))
-            return
-        
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
@@ -256,7 +235,6 @@ class DnsCache (object):
             # Create a new lookup object
             self.pending[hostname] = [callback]
             DnsLookupHostname(hostname, self.handle_dns)
-
 
     def handle_dns (self, hostname, answer):
         assert self.pending.has_key(hostname)
@@ -283,9 +261,10 @@ class DnsLookupHostname (object):
     # harder.
 
     def __init__ (self, hostname, callback):
+        global resolver
         self.hostname = hostname
         self.callback = callback
-        self.nameservers = dns_config.nameservers[:]
+        self.nameservers = resolver.nameservers[:]
         self.requests = []
         self.outstanding_requests = 0
         self.issue_request()
@@ -330,7 +309,7 @@ class DnsLookupHostname (object):
         if not answer.isError():
             self.callback(hostname, answer)
             self.cancel()
-        elif not self.outstanding_requests:
+        elif self.outstanding_requests == 0:
             self.issue_request()
 
 
@@ -346,7 +325,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         self.callback = callback
         self.nameserver = nameserver
         self.retries = 0
-        self.conntype = 'udp'
+        self.tcp = False
         super(DnsLookupConnection, self).__init__()
         try:
             self.establish_connection()
@@ -357,8 +336,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.callback = None
 
     def establish_connection (self):
-        if self.conntype == 'tcp':
-            wc.proxy.create_inet_socket(self, socket.SOCK_STREAM)
+        family = self.get_family(self.nameserver)
+        if self.tcp:
+            self.create_socket(family, socket.SOCK_STREAM)
             self.connect((self.nameserver, self.PORT))
             wc.proxy.make_timer(30, self.handle_connect_timeout)
             # XXX: we have to fill the buffer because otherwise we
@@ -366,10 +346,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # call handle_connect.  This needs to be fixed somehow.
             self.send_dns_request()
         else:
-            wc.proxy.create_inet_socket(self, socket.SOCK_DGRAM)
+            self.create_socket(family, socket.SOCK_DGRAM)
             self.connect((self.nameserver, self.PORT))
             self.send_dns_request()
-
 
     def __repr__ (self):
         where = ''
@@ -378,46 +357,49 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         retry = ''
         if self.retries != 0:
             retry = ' retry #%s'%self.retries
-        conntype = ''
-        if self.conntype == 'tcp':
+        if self.tcp:
             conntype = 'TCP'
+        else:
+            conntype = ''
         return '<%s %3s  %s%s%s>' % \
                ('dns-lookup', conntype, self.hostname, retry, where)
 
     def cancel (self):
         if self.callback:
-            if self.connected: self.close()
+            if self.connected:
+                self.close()
             self.callback = None
 
     def handle_connect (self):
         # For TCP requests only
-        DnsLookupConnection.accepts_tcp[self.nameserver] = 1
+        DnsLookupConnection.accepts_tcp[self.nameserver] = True
 
     def handle_connect_timeout (self):
         # We're trying to perform a TCP connect
         if self.callback and not self.connected:
-            DnsLookupConnection.accepts_tcp[self.nameserver] = 0
+            DnsLookupConnection.accepts_tcp[self.nameserver] = False
             self.callback(self.hostname,
                   DnsResponse('error', 'timed out connecting .. %s' % self))
             self.callback = None
-            return
 
     def send_dns_request (self):
         # Issue the request and set a timeout
-        if not self.callback: return # Only issue if we have someone waiting
-        msg = bk.net.dns.Lib.Mpacker()
-        msg.addHeader(0, 0, bk.net.dns.Opcode.QUERY,
-                      0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-        # XXX could send Type.AAAA for IPv6 nameservers, but who decides when
-        # to do that? This is the dilemma with IPv6 not having an update
-        # solution...
-        msg.addQuestion(self.hostname, bk.net.dns.Type.A,
-                        bk.net.dns.Class.IN)
-        msg = msg.getbuf()
-        if self.conntype == 'tcp':
-            self.send_buffer = bk.net.dns.Lib.pack16bit(len(msg))+msg
+        if not self.callback:
+            # Only issue if we have someone waiting
+            return
+
+        rdtype = bk.dns.rdatatype.A
+        rdclass = bk.dns.rdataclass.IN
+        self.query = bk.dns.message.make_query(self.hostname, rdtype, rdclass)
+        if not self.keyname is None:
+            self.query.use_tsig(self.keyring, self.keyname)
+        self.query.use_edns(self.edns, self.ednsflags, self.payload)
+        wire = self.query.to_wire()
+        if self.tcp:
+            l = len(wire)
+            self.send_buffer = struct.pack("!H", l) + wire
         else:
-            self.send_buffer = msg
+            self.send_buffer = wire
         wc.proxy.make_timer(self.TIMEOUT + 0.2*self.retries,
                             self.handle_timeout)
 
@@ -435,17 +417,17 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.callback = None
             return
         self.retries += 1
-        if (self.conntype == 'udp' and
+        if (not self.tcp and
             self.accepts_tcp.get(self.nameserver, 1) and
             self.retries == 1):
             # Switch to TCP
             self.TIMEOUT = 20
             self.close()
-            self.conntype = 'tcp'
+            self.tcp = True
             self.establish_connection()
         elif self.retries < 5:
             self.send_dns_request()
-        elif self.conntype == 'udp' and self.retries < 12:
+        elif not self.tcp and self.retries < 12:
             self.send_dns_request()
         else:
             if self.callback:
@@ -454,30 +436,36 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                 self.callback = None
             if self.connected: self.close()
 
-
     def process_read (self):
+        if not self.callback:
+            self.close()
         # Assume that the entire answer comes in one packet
-        if self.conntype == 'tcp':
-            if len(self.recv_buffer) < 2: return
+        if self.tcp:
+            if len(self.recv_buffer) < 2:
+                return
             header = self.recv_buffer[:2]
-            count = bk.net.dns.Lib.unpack16bit(header)
-            if len(self.recv_buffer) < 2+count: return
+            (l,) = struct.unpack("!H", header)
+            if len(self.recv_buffer) < 2+l:
+                return
             self.read(2) # header
-            data = self.read(count)
+            wire = self.read(l)
             try:
                 self.socket.shutdown(1)
             except socket.error:
                 pass
         else:
-            data = self.read(1024)
+            wire = self.read(1024)
+        r = bk.dns.message.from_wire(wire, keyring=self.query.keyring,
+                                     request_mac=self.query.mac)
+        if not self.query.is_response(r):
+            return
 
-        msg = bk.net.dns.Lib.Munpacker(data)
         (rid, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
             # dont handle truncated packets; try to switch to TCP
             # See http://cr.yp.to/djbdns/notes.html
-            if self.conntype == 'tcp':
+            if self.tcp:
                 # socket.error((84, ''))
                 bk.log.error(wc.LOG_DNS,
                              'Truncated TCP DNS packet: %s from %s for %r',
@@ -491,10 +479,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             return
 
         if rcode:
-            if self.callback:
-                callback, self.callback = self.callback, None
-                callback(self.hostname,
-                         DnsResponse('error', 'not found .. %s' % self))
+            callback, self.callback = self.callback, None
+            callback(self.hostname,
+                     DnsResponse('error', 'not found .. %s' % self))
             self.close()
             return
 
@@ -533,20 +520,18 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records
-        if self.callback:
-            callback, self.callback = self.callback, None
-            if ip_addrs:
-                # doh, verisign has a catch-all ip 64.94.110.11 for
-                # .com and .net domains
-                if self.hostname[-4:] in ('.com','.net') and \
-                   '64.94.110.11' in ip_addrs:
-                    callback(self.hostname, DnsResponse('error', 'not found'))
-                else:
-                    callback(self.hostname, DnsResponse('found', ip_addrs))
-            else:
+        callback, self.callback = self.callback, None
+        if ip_addrs:
+            # doh, verisign has a catch-all ip 64.94.110.11 for
+            # .com and .net domains
+            if self.hostname[-4:] in ('.com','.net') and \
+               '64.94.110.11' in ip_addrs:
                 callback(self.hostname, DnsResponse('error', 'not found'))
+            else:
+                callback(self.hostname, DnsResponse('found', ip_addrs))
+        else:
+            callback(self.hostname, DnsResponse('error', 'not found'))
         self.close()
-
 
     def handle_error (self, what):
         super(DnsLookupConnection, self).handle_error(what)
@@ -566,4 +551,3 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
 
 
 dnscache = DnsCache()
-
