@@ -33,6 +33,7 @@ def register_rule (rule):
 
 
 def register_sid (sid):
+    assert sid not in _sids, "%s is not a unique id"%sid
     _sids.add(sid)
 
 
