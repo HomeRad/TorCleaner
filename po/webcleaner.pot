@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat Jan  3 14:59:29 2004\n"
+"POT-Creation-Date: Sun Jan  4 11:20:24 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,6 +15,9 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
+msgid "inserting %s"
+msgstr ""
+
 msgid "unknown tag name %s"
 msgstr ""
 
@@ -22,6 +25,9 @@ msgid "Unknown page"
 msgstr ""
 
 msgid "PICS %s match"
+msgstr ""
+
+msgid "inserting new rule %s"
 msgstr ""
 
 msgid "with 1 rule"
@@ -49,6 +55,9 @@ msgid "Complete tag"
 msgstr ""
 
 msgid "Enclosed block"
+msgstr ""
+
+msgid "updating rule %s"
 msgstr ""
 
 msgid "Host %s is an abbreviation for %s"
@@ -142,6 +151,33 @@ msgid "unsupported HTTP version %s"
 msgstr ""
 
 msgid "invalid HTTP version %r"
+msgstr ""
+
+msgid "filter %s not changed, ignoring"
+msgstr ""
+
+msgid "updating filter %s"
+msgstr ""
+
+msgid "adding new filter %s"
+msgstr ""
+
+msgid "error fetching %s:"
+msgstr ""
+
+msgid "invalid content"
+msgstr ""
+
+msgid "extern filter %s not changed, ignoring"
+msgstr ""
+
+msgid "updating extern filter %s"
+msgstr ""
+
+msgid "adding new extern filter %s"
+msgstr ""
+
+msgid "got no data"
 msgstr ""
 
 msgid "Ok"
