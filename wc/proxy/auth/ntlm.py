@@ -35,9 +35,12 @@ __date__    = "$Date$"[7:-2]
 
 __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "get_ntlm_credentials", "parse_ntlm_credentials",
-           "check_ntlm_credentials"]
+           "check_ntlm_credentials",
+           "NTLMSSP_INIT", "NTLMSSP_NEGOTIATE",
+           "NTLMSSP_CHALLENGE", "NTLMSSP_AUTH",
+ ]
 
-import des, md4, utils, base64, random
+import des, md4, utils, base64, random, struct, time
 from wc.log import *
 random.seed()
 
@@ -48,6 +51,7 @@ max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
 NTLMSSP_SIGNATURE = 'NTLMSSP'
 
 # NTLMSSP Message Types
+NTLMSSP_INIT      = 0
 NTLMSSP_NEGOTIATE = 1
 NTLMSSP_CHALLENGE = 2
 NTLMSSP_AUTH      = 3
@@ -102,7 +106,7 @@ NTLMSSP_NEGOTIATE_80000000                 = 0x80000000
 
 
 def check_nonces ():
-    # deprecate old nonce
+    # deprecate old nonces
     for key, value in nonces.items():
         noncetime = time.time() - value
         if noncetime > max_noncesecs:
@@ -111,39 +115,42 @@ def check_nonces ():
 
 def get_ntlm_challenge (**attrs):
     """return initial challenge token for ntlm authentication"""
-    ctype = attrs.get('type', 0)
-    if ctype==0:
-        # initial challenge
+    ctype = attrs.get('type', NTLMSSP_INIT)
+    if ctype==NTLMSSP_INIT:
+        # initial challenge (message type 0)
         return "NTLM"
-    elif ctype==2:
-        # after getting first credentials
-        return "NTLM %s" % base64.encodestring(create_message2()).strip()
+    elif ctype==NTLMSSP_CHALLENGE:
+        # after getting first credentials (message type 2)
+        msg = create_message2(attrs['domain'])
+        return "NTLM %s" % base64.encodestring(msg).strip()
     else:
         raise IOError("Invalid NTLM challenge type")
 
 
 def parse_ntlm_challenge (challenge):
     """parse both type0 and type2 challenges"""
-    res = {}
     if "," in challenge:
         chal, remainder = challenge.split(",", 1)
     else:
         chal, remainder = challenge, ""
-    chal = base64.decodestring(chal.strip())
-    if not chal.startswith('NTLMSSP\x00'):
+    chal = chal.strip()
+    reaminder = remainder.strip()
+    if not chal:
         # empty challenge (type0) encountered
-        res['type'] = 0
-        return res, challenge
-    res['type'] = 2
-    res['nonce'] = chal[24:32]
-    return res, remainder.strip()
+        res = {'type': NTLMSSP_INIT}
+    else:
+        msg = base64.decodestring(chal)
+        res = parse_message2(msg)
+        if not res:
+            warn(AUTH, "invalid NTLM challenge %s", `msg`)
+    return res, remainder
 
 
 def get_ntlm_credentials (challenge, **attrs):
-    ctype = attrs.get('type', 1)
-    if ctype==1:
+    ctype = attrs.get('type', NTLMSSP_NEGOTIATE)
+    if ctype==NTLMSSP_NEGOTIATE:
         msg = create_message1()
-    elif ctype==3:
+    elif ctype==NTLMSSP_AUTH:
         nonce = challenge['nonce']
         domain = attrs['domain']
         username = attrs['username']
@@ -156,34 +163,27 @@ def get_ntlm_credentials (challenge, **attrs):
 
 def parse_ntlm_credentials (credentials):
     """parse both type1 and type3 credentials"""
-    res = {}
     if "," in credentials:
         creds, remainder = credentials.split(",", 1)
     else:
         creds, remainder = credentials, ""
     creds = base64.decodestring(creds.strip())
-    if not creds.startswith('NTLMSSP\x00'):
+    remainder = remainder.strip()
+    if not creds.startswith('%s\x00'%NTLMSSP_SIGNATURE):
         # invalid credentials, skip
-        return res, remainder.strip()
-    msgtype = ord(creds[8])
-    if msgtype==1:
-        res['type'] = 1
-        debug(AUTH, "ntlm msgtype 1 %s", `creds`)
-        domain_len = int(creds[16:18])
-        domain_off = int(creds[20:22])
-        host_len = int(creds[24:26])
-        host_off = int(creds[28:30])
-        res['host'] = creds[host_off:host_off+host_len]
-        res['domain'] = creds[domain_off:domain_off+domain_len]
-    elif msgtype==3:
-        res['type'] = 3
-        debug(AUTH, "ntlm msgtype 3 %s", `creds`)
-        lm_res_len = int(creds[12:14])
-        # XXX
+        res = {}
     else:
-        # invalid credentials, skip
-        return res, remainder.strip()
-    return res, remainder.strip()
+        msgtype = getint32(creds[8:12])
+        if msgtype==NTLMSSP_NEGOTIATE:
+            res = parse_message1(creds)
+        elif msgtype==NTLMSSP_AUTH:
+            res = parse_message3(creds)
+        else:
+            # invalid type, skip
+            res = {}
+    if not res:
+        warn(AUTH, "invalid NTLM credential %s", `creds`)
+    return res, remainder
 
 
 def check_ntlm_credentials (credentials, **attrs):
@@ -191,8 +191,145 @@ def check_ntlm_credentials (credentials, **attrs):
     return False
 
 
+################## message construction and parsing ####################
+
+negotiate_flags = NTLMSSP_NEGOTIATE_80000000 | \
+   NTLMSSP_NEGOTIATE_128 | \
+   NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
+   NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED | \
+   NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED | \
+   NTLMSSP_NEGOTIATE_NTLM | \
+   NTLMSSP_NEGOTIATE_UNICODE | \
+   NTLMSSP_NEGOTIATE_OEM | \
+   NTLMSSP_REQUEST_TARGET
+
+def create_message1 (flags=negotiate_flags):
+    """create negotiate message (NTLM msg type 1)"""
+    # overall length is 48 bytes
+    msg = '%s\x00'%NTLMSSP_SIGNATURE # name
+    msg += struct.pack("<l", NTLMSSP_NEGOTIATE) # message type
+    msg += struct.pack("<l", flags) # flags
+    offset = len(msg) + 8*2
+    domain = "WORKGROUP"     # domain name
+    host = "UNKNOWN"         # hostname
+    msg += struct.pack("<h", len(domain)) # domain name length
+    msg += struct.pack("<h", len(domain)) # given twice
+    msg += struct.pack("<l", offset + len(host)) # domain offset
+    msg += struct.pack("<h", len(host)) # host name length
+    msg += struct.pack("<h", len(host)) # given twice
+    msg += struct.pack("<l", offset) # host offset
+    msg += host + domain
+    return msg
+
+
+def parse_message1 (msg):
+    res = {'type': NTLMSSP_NEGOTIATE}
+    res['flags'] = getint32(msg[12:16])
+    domain_offset = getint32(msg[20:24])
+    host_offset = getint32(msg[28:32])
+    res['host'] = msg[host_offset:domain_offset]
+    res['domain'] = msg[domain_offset:]
+    return res
+
+
+challenge_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
+   NTLMSSP_NEGOTIATE_NTLM | \
+   NTLMSSP_REQUEST_INIT_RESPONSE | \
+   NTLMSSP_NEGOTIATE_UNICODE | \
+   NTLMSSP_REQUEST_TARGET
+
+def create_message2 (domain, flags=challenge_flags):
+    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
+    msg += struct.pack("<l", NTLMSSP_CHALLENGE) # message type
+    msg += struct.pack("<h", len(domain))
+    msg += struct.pack("<h", len(domain))
+    msg += struct.pack("<l", 48) # domain offset (always 48)
+    msg += struct.pack("<l", flags) # flags
+    # compute nonce
+    nonce = compute_nonce() # eight random bytes
+    assert nonce not in nonces
+    nonces[nonce] = time.time()
+    msg += nonce
+    msg += struct.pack("<l", 0) # 8 bytes of reserved 0s
+    msg += struct.pack("<l", 0)
+    msg += struct.pack("<l", 0)    # ServerContextHandleLower
+    msg += struct.pack("<l", 0x3c) # ServerContextHandleUpper
+    msg += utils.str2unicode(domain)
+    return msg
+
+
+def parse_message2 (msg):
+    res = {}
+    if not msg.startswith('%s\x00'%NTLMSSP_SIGNATURE):
+        warn(AUTH, "NTLM challenge signature not found %s", `msg`)
+        return res
+    if getint32(msg[8:12])!=NTLMSSP_CHALLENGE:
+        warn(AUTH, "NTLM challenge type not found %s", `msg`)
+        return res
+    res['type'] = NTLMSSP_CHALLENGE
+    res['flags'] = getint32(msg[20:24])
+    res['nonce'] = msg[24:32]
+    res['domain'] = utils.unicode2str(msg[48:])
+    return res
+
+
+auth_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
+   NTLMSSP_NEGOTIATE_NTLM | \
+   NTLMSSP_NEGOTIATE_UNICODE | \
+   NTLMSSP_REQUEST_TARGET
+
+def create_message3 (nonce, domain, username, host,
+                     lm_hashed_pw=None, nt_hashed_pw=None, flags=auth_flags):
+    if lm_hashed_pw:
+        lm_resp = calc_resp(lm_hashed_pw, nonce)
+    else:
+        lm_resp = ''
+    if nt_hashed_pw:
+        nt_resp = calc_resp(nt_hashed_pw, nonce)
+    else:
+        nt_resp = ''
+    session_key = get_session_key()
+    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
+    msg += struct.pack("<l", NTLMSSP_AUTH) # message type
+    offset = len(msg) + 8*6 + 4
+    lm_offset = offset + 2*len(domain) + 2*len(username) + 2*len(host) + len(session_key)
+    nt_offset = lm_offset + len(lm_resp)
+    msg += struct.pack("<h", len(lm_resp))
+    msg += struct.pack("<h", len(lm_resp))
+    msg += struct.pack("<l", lm_offset)
+    msg += struct.pack("<h", len(nt_resp))
+    msg += struct.pack("<h", len(nt_resp))
+    msg += struct.pack("<l", nt_offset)
+    msg += struct.pack("<l", flags) # flags
+    msg += utils.str2unicode(domain)
+    msg += utils.str2unicode(username)
+    msg += utils.str2unicode(host)
+    msg += lm_resp + nt_resp + session_key
+    return msg
+
+
+def parse_message3 (msg):
+    res = {'type': NTLMSSP_AUTH}
+    lm_offset = getint32(msg[16:20])
+    nt_len = getint16(msg[20:22])
+    nt_offset = getint32(msg[24:28])
+    res['flags'] = getint32(msg[28:32])
+    res['lm_resp'] = msg[lm_offset:nt_offset]
+    res['nt_resp'] = msg[nt_offset:(nt_offset+nt_len)]
+    res['session_key'] = msg[(nt_offset+nt_len):]
+    return res
+
+
+############################ helper functions ###########################
+
 def compute_nonce ():
     return "%08d" % (random.random()*100000000)
+
+
+def get_session_key ():
+    """return ntlm session key"""
+    # XXX not implemented
+    return ""
 
 
 def calc_resp (key, nonce):
@@ -211,22 +348,34 @@ def calc_resp (key, nonce):
     return "%s%s%s" % (res1, res2, res3)
 
 
+def getint32 (s):
+    """called internally to get a 32-bit integer in an NTLM message"""
+    assert len(s)==4
+    return struct.unpack("<l", s)[0]
+
+
+def getint16 (s):
+    """called internally to get a 16-bit integer in an NTLM message"""
+    assert len(s)==2
+    return struct.unpack("<h", s)[0]
+
+
 def create_LM_hashed_password (passwd):
     "setup LanManager password"
     "create LanManager hashed password"
-    lm_pw = '\000' * 14
     passwd = passwd.upper()
     if len(passwd) < 14:
-        lm_pw = passwd + lm_pw[len(passwd) - 14:]
+        lm_pw = passwd + ('\x00'*(len(passwd)-14))
     else:
         lm_pw = passwd[0:14]
     # do hash
     magic_lst = [0x4B, 0x47, 0x53, 0x21, 0x40, 0x23, 0x24, 0x25]
     magic_str = utils.lst2str(magic_lst)
-    res1 = des.DES(lm_pw[0:7]).encrypt(magic_str)
-    res2 = des.DES(lm_pw[7:14]).encrypt(magic_str)
-    # adding zeros to get 21 bytes string
-    return "%s%s%s" % (res1, res2, '\000' * 5)
+    lm_hpw = des.DES(convert_key(lm_pw[0:7])).encrypt(magic_str)
+    lm_hpw += des.DES(convert_key(lm_pw[7:14])).encrypt(magic_str)
+    # adding zeros for padding
+    lm_hpw += '\x00'*5
+    return lm_hpw
 
 
 def create_NT_hashed_password (passwd):
@@ -236,93 +385,10 @@ def create_NT_hashed_password (passwd):
     # do MD4 hash
     md4_context = md4.new()
     md4_context.update(pw)
-    res = md4_context.digest()
-    # adding zeros to get 21 bytes string
-    return "%s%s" % (res, '\000' * 5)
-
-
-negotiate_flags = NTLMSSP_NEGOTIATE_80000000 | \
-   NTLMSSP_NEGOTIATE_128 | \
-   NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
-   NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED | \
-   NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED | \
-   NTLMSSP_NEGOTIATE_NTLM | \
-   NTLMSSP_NEGOTIATE_UNICODE | \
-   NTLMSSP_NEGOTIATE_OEM | \
-   NTLMSSP_REQUEST_TARGET
-
-
-def create_message1 (flags=negotiate_flags):
-    """create negotiate message (NTLM msg type 1)"""
-    # overall length is 48 bytes
-    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
-    msg += struct.pack("<l", NTLMSSP_NEGOTIATE) # message type
-    msg += struct.pack("<l", flags) # flags
-    offset = len(msg) + 8*2
-    domain = "WORKGROUP"     # domain name
-    host = "UNKNOWN"         # hostname
-    msg += struct.pack("<h", len(domain)) # domain name length
-    msg += struct.pack("<h", len(domain)) # given twice
-    msg += struct.pack("<l", offset + len(host)) # offset
-    msg += struct.pack("<h", len(host)) # host name length
-    msg += struct.pack("<h", len(host)) # given twice
-    msg += struct.pack("<l", offset);
-    msg += host + domain
-    return msg
-
-
-challenge_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
-   NTLMSSP_NEGOTIATE_NTLM | \
-   NTLMSSP_REQUEST_INIT_RESPONSE | \
-   NTLMSSP_NEGOTIATE_UNICODE | \
-   NTLMSSP_REQUEST_TARGET
-
-
-def create_message2 (domain, flags=challenge_flags):
-    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
-    msg += struct.pack("<l", NTLMSSP_CHALLENGE) # message type
-    msg += struct.pack("<h", len(domain))
-    msg += struct.pack("<h", len(domain))
-    msg += struct.pack("<l", 48)
-    msg += struct.pack("<l", flags) # flags
-    # compute nonce
-    nonce = compute_nonce() # eight random bytes
-    assert nonce not in nonces
-    nonces[nonce] = time.time()
-    msg += nonce
-    msg += struct.pack("<l<l", 0, 0) # 8 bytes of reserved 0s
-    msg += struct.pack("<l", 0)      # ServerContextHandleLower
-    msg += struct.pack("<l", 0x3c)   # ServerContextHandleUpper
-    msg += unicode(domain)
-    return msg
-
-
-def create_message3 (nonce, domain, username, host,
-                     lm_hashed_pw=None, nt_hashed_pw=None):
-    if lm_hashed_pw:
-        lm_resp = calc_resp(lm_hashed_pw, nonce)
-    else:
-        lm_resp = ''
-    if nt_hashed_pw:
-        nt_resp = calc_resp(nt_hashed_pw, nonce)
-    else:
-        nt_resp = ''
-    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
-    msg += struct.pack("<l", NTLMSSP_AUTH) # message type
-    offset = len(msg) + 8*6 + 4
-    lm_offset = offset + 2*len(domain) + 2*len(username) + 2*len(host) + len(session_key)
-    nt_offset = lm_offset + len(lm_resp)
-    msg += struct.pack("<h", len(lm_resp))
-    msg += struct.pack("<h", len(lm_resp))
-    msg += struct.pack("<l", lm_offset)
-    msg += struct.pack("<h", len(nt_resp))
-    msg += struct.pack("<h", len(nt_resp))
-    msg += struct.pack("<l", nt_offset)
-    msg += struct.pack("<l", flags) # flags
-    msg += unicode(domain) + unicode(username) + unicode(host)
-    msg += lm_resp + nt_resp + session_key
-    return msg
-
+    nt_hpw = md4_context.digest()
+    # adding zeros for padding
+    nt_hpw += '\x00'*5
+    return nt_hpw
 
 
 from wc.proxy import make_timer

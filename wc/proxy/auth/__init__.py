@@ -128,6 +128,38 @@ def check_credentials (creds, **attrs):
 
 
 def _test ():
+    from wc.log import initlog
+    initlog("test/logging.conf")
+    _test_ntlm()
+
+
+def _test_ntlm ():
+    challenges = get_challenges(type=NTLMSSP_INIT)
+    print "challenges 0", challenges
+    challenges = parse_challenges(", ".join(challenges))
+    print "parsed challenges 0", challenges
+    attrs = {"username": "calvin", "type": NTLMSSP_NEGOTIATE,}
+    creds = get_credentials(challenges, **attrs)
+    print "credentials 1", creds
+    creds = parse_credentials(creds)
+    print "parsed credentials 1", creds
+    attrs['host'] = creds['NTLM'][0]['host']
+    attrs['domain'] = creds['NTLM'][0]['domain']
+    print check_credentials(creds, **attrs)
+    attrs['type'] = NTLMSSP_CHALLENGE
+    challenges = get_challenges(**attrs)
+    print "challenges 2", challenges
+    challenges = parse_challenges(", ".join(challenges))
+    print "parsed challenges 2", challenges
+    attrs['type'] = NTLMSSP_AUTH
+    creds = get_credentials(challenges, **attrs)
+    print "credentials 3", creds
+    creds = parse_credentials(creds)
+    print "parsed credentials 3", creds
+    print check_credentials(creds, **attrs)
+
+
+def _test_digest ():
     chals = parse_challenges("Digest realm=\"This is my digest auth\", nonce=\"i5tbP9h2RAiGbccW\", qop=\"auth\", stale=false")
     print "chals:", chals
     attrs = {"username": "calvin", "password_b64": "Y2Fsdmlu",
@@ -145,29 +177,6 @@ def _test ():
             print "key", key, "is not in mozcreds"
         elif item != mozcreds[key]:
             print "key", key, "creds=", item, "mozcreds=", mozcreds[key]
-    #attrs = {"username": "calvin", "type":1,}
-    #challenges = get_challenges(type=0)
-    #print "challenges 0", challenges
-    #challenges = parse_challenges(", ".join(challenges))
-    #print "parsed challenges 0", challenges
-    #creds = get_credentials(challenges, **attrs)
-    #print "credentials 1", creds
-    #creds = parse_credentials(creds)
-    #print "parsed credentials 1", creds
-    #attrs['host'] = creds['NTLM'][0]['host']
-    #attrs['domain'] = creds['NTLM'][0]['domain']
-    #print check_credentials(creds, **attrs)
-    #creds['type'] = 2
-    #challenges = get_challenges(**creds)
-    #print "challenges 2", challenges
-    #challenges = parse_challenges(", ".join(challenges))
-    #print "parsed challenges 2", challenges
-    #attrs['type'] = 3
-    #creds = get_credentials(challenges, **attrs)
-    #print "credentials 3", creds
-    #creds = parse_credentials(creds)
-    #print "parsed credentials 3", creds
-    #print check_credentials(creds, **attrs)
 
 
 if __name__=='__main__':

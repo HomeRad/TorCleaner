@@ -112,10 +112,12 @@ def int2hex_str (number_int16):
 
 def str2unicode (s):
     "converts ascii string to dumb unicode"
-    res = ''
-    for i in s:
-        res += i + '\000'
-    return res
+    return "".join([ c+'\x00' for c in s ])
+
+
+def unicode2str (s):
+    """converts dumb unicode back to ascii string"""
+    return s[::2]
 
 
 def _test ():
