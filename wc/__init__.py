@@ -33,6 +33,7 @@ def abspath (path):
         path = os.path.join(sys.prefix, path)
     return path
 
+# config data
 Version = configdata.version
 AppName = configdata.appname
 Name = configdata.name
