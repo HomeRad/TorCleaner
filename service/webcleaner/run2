@@ -1,4 +1,4 @@
 #!/bin/sh
 exec 2>&1
 echo "starting WebCleaner"
-exec webcleaner
+exec webcleaner --no-file-logs
