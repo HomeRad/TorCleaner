@@ -1,4 +1,5 @@
 SUBDIRS = po libjs service
+DIST_SUBDIRS = $(SUBDIRS) docs
 TESTS = noop
 
 PYVER := 2.3
