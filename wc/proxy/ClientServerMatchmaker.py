@@ -44,6 +44,7 @@ class ClientServerMatchmaker:
     def __init__ (self, client, request, headers, content, nofilter,
                   compress, mime=None):
         self.client = client
+        self.server = None
         self.request = request
         self.headers = headers
         self.compress = compress
