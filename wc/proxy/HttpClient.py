@@ -456,7 +456,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.server = None
 
 
-    def server_abort (self):
+    def server_abort (self, reason=""):
         """The server aborted the connection"""
         wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.close()

@@ -217,11 +217,11 @@ class ClientServerMatchmaker (object):
                                    self.url, self.mime)
 
 
-    def server_abort (self):
+    def server_abort (self, reason=wc.i18n._("No response from server")):
         """The server had an error, so we need to tell the client
            that we couldn't connect"""
         if self.client.connected:
-            self.client.error(503, wc.i18n._("No response from server"))
+            self.client.error(503, reason)
 
 
     def server_close (self, server):
