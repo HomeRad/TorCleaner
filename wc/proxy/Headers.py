@@ -16,9 +16,19 @@ import mimetypes
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 
-class WcMessage (Message):
+class WcMessage (Message, object):
     """Represents a single RFC 2822-compliant message, adding functions
        handling multiple headers with the same name"""
+
+
+    def __init__ (self, fp=None, seekable=1):
+        generate = fp is None
+        if generate:
+            fp = StringIO()
+        super(WcMessage, self).__init__(fp, seekable=seekable)
+        if generate:
+            fp.close()
+
 
     def getallmatchingheadervalues (self, name):
         """return a list of all header values for the given header name"""
@@ -51,12 +61,17 @@ class WcMessage (Message):
         """Determine whether a message contains the named header."""
         return name.lower() in self.dict
 
+
     def __str__ (self):
         return "\n".join([ repr(s) for s in self.headers ])
 
 
+    def close (self):
+        self.fp.close()
+
+
 def get_wc_client_headers (host):
-    headers = WcMessage(StringIO(''))
+    headers = WcMessage()
     headers['host'] = '%s\r' % host
     headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
     headers['Connection'] = 'Keep-Alive\r'

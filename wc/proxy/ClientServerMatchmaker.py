@@ -147,7 +147,7 @@ class ClientServerMatchmaker (object):
             return
         if self.method=='CONNECT':
             self.state = 'response'
-            headers = WcMessage(StringIO(''))
+            headers = WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
             return
         # check expectations

@@ -205,6 +205,7 @@ class HttpClient (Connection):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
+        fp.close()
         debug(PROXY, "%s client headers \n%s", self, msg)
         filters = [FILTER_REQUEST_HEADER,
                    FILTER_REQUEST_DECODE,
@@ -461,9 +462,10 @@ class HttpClient (Connection):
                 form = cgi.parse_qs(qs)
         elif self.method=='POST':
             # XXX this uses FieldStorage internals
-            form = cgi.FieldStorage(fp=StringIO(self.content),
-                                    headers=self.headers,
+            fp = StringIO(self.content)
+            form = cgi.FieldStorage(fp=fp, headers=self.headers,
                                     environ={'REQUEST_METHOD': 'POST'})
+            fp.close()
         return form
 
 

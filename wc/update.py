@@ -156,6 +156,7 @@ def update (wconfig, baseurl, dryrun=False, log=None):
         page = open_url(url)
         p = wc.ZapperParser(fullname, compile_data=False)
         p.parse(page, wconfig)
+        page.close()
         chg = wconfig.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
 
     url = baseurl+"extern-md5sums.txt"
@@ -164,7 +165,9 @@ def update (wconfig, baseurl, dryrun=False, log=None):
     except IOError, msg:
         print >>log, i18n._("error fetching %s:")%url, msg
         return chg
-    for line in page.read().splitlines():
+    lines = page.read().splitlines()
+    page.close()
+    for line in lines:
         if "<" in line:
             print >>log, i18n._("error fetching %s:")%url, i18n._("invalid content")
             return chg

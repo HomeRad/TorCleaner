@@ -86,7 +86,7 @@ class HttpServer (Server):
         self.hostname = ''
         self.document = ''
         self.response = ''
-        self.headers = WcMessage(StringIO(''))
+        self.headers = WcMessage()
         self.data_written = False # delay data writing flag
         self.decoders = [] # Handle each of these, left to right
         self.persistent = False # for persistent connections
@@ -228,7 +228,7 @@ class HttpServer (Server):
             self.statuscode = 200
             self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER])
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	                   WcMessage(StringIO('')), "finish", self.attrs)
+	                   WcMessage(), "finish", self.attrs)
             self.decoders = []
             self.state = 'content'
         else:
@@ -266,6 +266,7 @@ class HttpServer (Server):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
+        fp.close()
         debug(PROXY, "%s server headers\n%s", self, msg)
         if self.statuscode==100:
             # it's a Continue request, so go back to waiting for headers
@@ -330,7 +331,7 @@ class HttpServer (Server):
         self.statuscode = 302
         # XXX get version
         response = "HTTP/1.1 302 %s"%i18n._("Moved Temporarily")
-        headers = WcMessage(StringIO(""))
+        headers = WcMessage()
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://localhost:%d/rated.html?%s\r'%\
                               (config['port'], query)
