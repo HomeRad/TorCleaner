@@ -30,7 +30,7 @@
 
 <rewrite title="Ad servers 05" oid="5"
  desc="Kill links with ad words in the host name.">
-<attr>http://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange|)\.</attr>
+<attr>http://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
 </rewrite>
 
 <rewrite title="Ad servers 06" oid="6"
