@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="wc.css" type="text/css" rel="Stylesheet">
+<link href="index.html" rel="home" title="Home"
+ tal:attributes="href string:index.html.${lang}">
 <title i18n:translate="">%(AppName)s filter update</title>
 </head>
 <body>
@@ -14,7 +16,8 @@ into the current configuration.<br>
 If something has changed, the new filter configuration files
 are saved and reloaded into the proxy.</span>
 <br><br>
-<form action="update_doit.html" method="POST">
+<form action="update_doit.html" method="POST"
+ tal:attributes="action string:${filename}.${lang}">
 <input type="submit" class="submit" name="doit"
  value="Update filter configuration"
  i18n:attributes="value Update filter configuration">

@@ -3,13 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="wc.css" type="text/css" rel="Stylesheet">
-<link href="/" rel="home" title="Home">
+<link href="index.html" rel="home" title="Home"
+ tal:attributes="href string:index.html.${lang}">
 <title i18n:translate="">%(AppName)s filter rule configuration</title>
 </head>
 <body>
 <div metal:use-macro="macros/macros/nav">Navigation</div>
 <div class="content" id="main">
-<form action="filterconfig.html" method="POST" name="filterform">
+<form action="filterconfig.html" method="POST" name="filterform"
+ tal:attributes="action string:${filename}.${lang}">
 <table rules="cols" cellpadding="5">
 <thead>
 <tr style="border-bottom:1px solid black;">
