@@ -226,9 +226,10 @@ class Configuration (dict):
         return True if something has changed
         """
         # test for correct category
-        assert folder.sid and folder.sid.startswith("wc")
+        assert folder.sid and folder.sid.startswith("wc"), \
+          "Invalid SID in folder %s" % str(folder)
         f = [ rule for rule in self['folderrules'] if rule.sid == folder.sid ]
-        assert len(f) <= 1
+        assert len(f) <= 1, "Duplicate SID found: %s" % str(f)
         if f:
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
