@@ -154,14 +154,6 @@ class ClamdScanner (object):
 _clamav_conf = None
 def init_clamav_conf ():
     """initialize clamav configuration"""
-    if os.name=='posix':
-        init_clamav_conf_posix()
-    else:
-        # other platforms not supported
-        pass
-
-
-def init_clamav_conf_posix ():
     from wc import config
     if not os.path.exists(config['clamavconf']):
         return
