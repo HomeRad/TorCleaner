@@ -1,10 +1,29 @@
 """ simpleTALES Implementation
 
-		Copyright 2003 Colin Stewart (http://www.owlfish.com/)
+		Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
+		All rights reserved.
 		
-		This code is made freely available for commercial and non-commercial
-		use.  No warranties, expressed or implied, are made as to the
-		fitness of this code for any purpose.
+		Redistribution and use in source and binary forms, with or without
+		modification, are permitted provided that the following conditions
+		are met:
+		1. Redistributions of source code must retain the above copyright
+		   notice, this list of conditions and the following disclaimer.
+		2. Redistributions in binary form must reproduce the above copyright
+		   notice, this list of conditions and the following disclaimer in the
+		   documentation and/or other materials provided with the distribution.
+		3. The name of the author may not be used to endorse or promote products
+		   derived from this software without specific prior written permission.
+		
+		THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+		IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+		OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+		IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+		INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+		NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+		DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+		THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+		(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+		THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		
 		If you make any bug fixes or feature enhancements please let me know!
 		
@@ -14,9 +33,9 @@
 		Module Dependencies: logging
 """
 
-__version__ = "3.1"
+__version__ = "3.3"
 
-import copy, string
+import copy
 
 try:
 	import logging
@@ -58,13 +77,15 @@ class ContextVariable:
 			return len (self.value())
 		return self.value()
 		
-	def value (self):
+	def value (self, currentPath=None):
 		if (callable (self.ourValue)):
 			return apply (self.ourValue, ())
 		return self.ourValue
 		
+	def rawValue (self):
+		return self.ourValue
+		
 	def __str__ (self):
-		return 
 		try:
 			return str (self.ourValue)
 		except UnicodeError, e:
@@ -81,7 +102,7 @@ class DefaultVariable (ContextVariable):
 	def isDefault (self):
 		return 1
 		
-	def value (self):
+	def value (self, currentPath=None):
 		# We return our self so that define works properly.
 		return self
 		
@@ -100,7 +121,7 @@ class NoCallVariable (ContextVariable):
 		ContextVariable.__init__ (self, variable.ourValue)
 		self.variable = variable
 		
-	def value (self):
+	def value (self, currentPath=None):
 		return self.ourValue
 		
 class RepeatVariable (ContextVariable):
@@ -111,10 +132,13 @@ class RepeatVariable (ContextVariable):
 		self.position = 0	
 		self.map = None
 		
-	def value (self):
+	def value (self, currentPath=None):
 		if (self.map is None):
 			self.createMap()
 		return self.map
+		
+	def rawValue (self):
+		return self.value()
 		
 	def increment (self):
 		self.position += 1
@@ -172,7 +196,7 @@ class RepeatVariable (ContextVariable):
 		return result
 	
 	def getUpperLetter (self):
-		return string.upper (self.getLowerLetter())
+		return self.getLowerLetter().upper()
 		
 	def getLowerRoman (self):
 		romanNumeralList = (('m', 1000)
@@ -201,24 +225,78 @@ class RepeatVariable (ContextVariable):
 		return result
 		
 	def getUpperRoman (self):
-		return string.upper (self.getLowerRoman())
+		return self.getLowerRoman().upper()
 		
-				
+class PathFunctionVariable (ContextVariable):
+	def __init__ (self, func):
+		ContextVariable.__init__ (self, value = func)
+		self.func = func
+		
+	def value (self, currentPath=None):
+		if (currentPath is not None):
+			index, paths = currentPath
+			result = ContextVariable (apply (self.func, ('/'.join (paths[index:]),)))
+			# Fast track the result
+			raise result
+		
+class PythonPathFunctions:
+	def __init__ (self, context):
+		self.context = context
+		
+	def path (self, expr):
+		result = self.context.evaluatePath (expr)
+		if (isinstance (result, ContextVariable)):
+			return result.value()
+		else:
+			return result
+			
+	def string (self, expr):
+		result = self.context.evaluateString (expr)
+		if (isinstance (result, ContextVariable)):
+			return result.value()
+		else:
+			return result
+	
+	def exists (self, expr):
+		result = self.context.evaluateExists (expr)
+		if (isinstance (result, ContextVariable)):
+			return result.value()
+		else:
+			return result
+			
+	def nocall (self, expr):
+		result = self.context.evaluateNoCall (expr)
+		if (isinstance (result, ContextVariable)):
+			return result.value()
+		else:
+			return result
+
 class Context:
-	def __init__ (self, options=None):
+	def __init__ (self, options=None, allowPythonPath=0):
+		self.allowPythonPath = allowPythonPath
 		self.globals = {}
 		self.locals = {}
 		self.localStack = []
+		self.repeatStack = []
 		self.populateDefaultVariables (options)
 		self.log = logging.getLogger ("simpleTALES.Context")
 		self.true = ContextVariable (1)
 		self.false = ContextVariable (0)
+		self.pythonPathFuncs = PythonPathFunctions (self)
 		
 	def addRepeat (self, name, var):
+		# Pop the current repeat map onto the stack
+		self.repeatStack.append (self.repeatMap)
+		self.repeatMap = copy.copy (self.repeatMap)
 		self.repeatMap [name] = var
+		# Map this repeatMap into the global space
+		self.addGlobal ('repeat', self.repeatMap)
 		
 	def removeRepeat (self, name):
-		del self.repeatMap [name]
+		# Bring the old repeat map back
+		self.repeatMap = self.repeatStack.pop()
+		# Map this repeatMap into the global space
+		self.addGlobal ('repeat', self.repeatMap)
 		
 	def addGlobal (self, name, value):
 		if (isinstance (value, ContextVariable)):
@@ -230,8 +308,7 @@ class Context:
 		# Pop the current locals onto the stack
 		self.localStack.append (self.locals)
 		self.locals = copy.copy (self.locals)
-		for var in localVarList:
-			name, value = var
+		for name,value in localVarList:
 			if (isinstance (value, ContextVariable)):
 				self.locals [name] = value
 			else:
@@ -253,35 +330,59 @@ class Context:
 		if (originalAtts is not None):
 			# Call from outside
 			self.globals['attrs'] = ContextVariable(originalAtts)
-			# Check for an correct for trailing/leading quotes
-			if (expr[0] == '"' or expr[0] == "'"):
-				expr = expr [1:]
-			if (expr[-1] == '"' or expr[-1] == "'"):
-				expr = expr [0:-1]
 			
 		# Supports path, exists, nocall, not, and string
-		expr = string.strip(expr)
-		if (expr[0:5] == 'path:'):
-			return self.evaluatePath (string.strip (expr[5:]))
-		elif (expr[0:7] == 'exists:'):
-			return self.evaluateExists (string.strip (expr[7:]))
-		elif (expr[0:7] == 'nocall:'):
-			return self.evaluateNoCall (string.strip (expr[7:]))
-		elif (expr[0:4] == 'not:'):
-			return self.evaluateNot (string.strip (expr[4:]))
-		elif (expr[0:7] == 'string:'):
-			return self.evaluateString (string.strip (expr[7:]))
+		expr = expr.strip ()
+		if expr.startswith ('path:'):
+			return self.evaluatePath (expr[5:].lstrip ())
+		elif expr.startswith ('exists:'):
+			return self.evaluateExists (expr[7:].lstrip())
+		elif expr.startswith ('nocall:'):
+			return self.evaluateNoCall (expr[7:].lstrip())
+		elif expr.startswith ('not:'):
+			return self.evaluateNot (expr[4:].lstrip())
+		elif expr.startswith ('string:'):
+			return self.evaluateString (expr[7:].lstrip())
+		elif expr.startswith ('python:'):
+			return self.evaluatePython (expr[7:].lstrip())
 		else:
 			# Not specified - so it's a path
 			return self.evaluatePath (expr)
 		
+	def evaluatePython (self, expr):
+		if (not self.allowPythonPath):
+			self.log.warn ("Parameter allowPythonPath is false.  NOT Evaluating python expression %s" % expr)
+			return self.false
+		
+		self.log.debug ("Evaluating python expression %s" % expr)
+		
+		globals={}
+		for name, value in self.globals.items():
+			globals [name] = value.rawValue()
+		globals ['path'] = self.pythonPathFuncs.path
+		globals ['string'] = self.pythonPathFuncs.string
+		globals ['exists'] = self.pythonPathFuncs.exists
+		globals ['nocall'] = self.pythonPathFuncs.nocall
+			
+		locals={}
+		for name, value in self.locals.items():
+			locals [name] = value.rawValue()
+			
+		try:
+			result = eval(expr, globals, locals)
+		except Exception, e:
+			# An exception occured evaluating the template, return the exception as text
+			self.log.warn ("Exception occured evaluting python path, exception: " + str (e))
+			return ContextVariable ("Exception: %s" % str (e))
+		return ContextVariable(result)
+
 	def evaluatePath (self, expr):
 		self.log.debug ("Evaluating path expression %s" % expr)
 		allPaths = expr.split ('|')
 		if (len (allPaths) > 1):
 			for path in allPaths:
 				# Evaluate this path
-				pathResult = self.evaluate (string.strip (path))
+				pathResult = self.evaluate (path.strip ())
 				if (pathResult is not None):
 					return pathResult
 			return None
@@ -301,7 +402,7 @@ class Context:
 			
 			for path in allPaths[1:]:
 				# Evaluate this path
-				pathResult = self.evaluate (string.strip (path))
+				pathResult = self.evaluate (path.strip ())
 				if (pathResult is not None):
 					return self.true
 			return None
@@ -323,7 +424,7 @@ class Context:
 				
 			for path in allPaths[1:]:
 				# Evaluate this path
-				pathResult = self.evaluate (string.strip (path))
+				pathResult = self.evaluate (path.strip ())
 				if (pathResult is not None):
 					return pathResult
 			return None
@@ -400,7 +501,13 @@ class Context:
 					
 	def traversePath (self, expr, canCall=1):
 		self.log.debug ("Traversing path %s" % expr)
+		# Check for and correct for trailing/leading quotes
+		if (expr[0] == '"' or expr[0] == "'"):
+			expr = expr [1:]
+		if (expr[-1] == '"' or expr[-1] == "'"):
+			expr = expr [0:-1]
 		pathList = expr.split ('/')
+		
 		path = pathList[0]
 		if self.locals.has_key(path):
 			val = self.locals[path]
@@ -409,13 +516,17 @@ class Context:
 		else:
 			# If we can't find it then return None
 			return None
+		index = 1
 		for path in pathList[1:]:
 			self.log.debug ("Looking for path element %s" % path)
 			if (canCall):
-				temp = val.value()
+				try:
+					temp = val.value((index,pathList))
+				except ContextVariable, e:
+					return e
 			else:
 				temp = NoCallVariable (val).value()
-			
+				
 			if (hasattr (temp, path)):
 				val = getattr (temp, path)
 				if (not isinstance (val, ContextVariable)):
@@ -431,7 +542,8 @@ class Context:
 			else:
 				self.log.debug ("Not found.")
 				return None
-		#self.log.debug ("Found value %s" % str (val))
+			index = index + 1
+		self.log.debug ("Found value %s" % str (val))
 		if (not canCall):
 			return NoCallVariable (val)
 		return val
