@@ -50,7 +50,6 @@ class ClientServerMatchmaker (object):
 
     def __init__ (self, client, request, headers, content, mime=None):
         self.client = client
-        warn(PROXY, "XXX CS request %s", request)
         self.request = request
         self.headers = headers
         self.content = content

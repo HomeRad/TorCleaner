@@ -1,4 +1,6 @@
 # -*- coding: iso-8859-1 -*-
+"""Allowance classes to filter out infalid proxy requests"""
+
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -21,14 +23,17 @@ class AllowedHttpClient (object):
 
 
     def method (self, meth):
+        """return True iff method is allowed"""
         return meth in self.methods
 
 
     def scheme (self, schem):
+        """return True iff scheme is allowed"""
         return schem in self.schemes
 
 
     def public_document (self, doc):
+        """return True iff doc is a public document"""
         for f in self.public_docs:
             if doc.startswith(f):
                 return True
@@ -36,10 +41,12 @@ class AllowedHttpClient (object):
 
 
     def host (self, host):
+        """return True iff host is allowed"""
         return config.allowed(host)
 
 
     def connect_port (self, port):
+        """return True iff port is a valid port for CONNECT method"""
         return port in self.connect_ports
 
 
