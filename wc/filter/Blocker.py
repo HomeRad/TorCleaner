@@ -68,6 +68,7 @@ class Blocker (Filter):
         # urls for blocked types
         self.block_url = "/blocked.html"
         self.block_image = "/blocked.png"
+        self.block_flash = "/blocked.swf"
 
 
     def addrule (self, rule):
