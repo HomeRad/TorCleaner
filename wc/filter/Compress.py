@@ -41,7 +41,6 @@ def gzip_header ():
 	      struct.pack('<L', long(time.time())), # time
               '\002\377',     # end header
               )
-BASIC_CRC = zlib.crc32('')
 COMPRESS_RE = re.compile(r'(?i)(compress|gzip|bzip2)')
 
 
@@ -50,7 +49,7 @@ def getCompressObject ():
                                              -zlib.MAX_WBITS,
                                               zlib.DEF_MEM_LEVEL, 0),
             'header': gzip_header(),
-            'crc': BASIC_CRC,
+            'crc': 0,
             'size': 0,
            }
 
@@ -95,9 +94,9 @@ class Compress (Filter):
             else:
                 data = header
             #debug(NIGHTMARE, 'finishing compressor')
-            data += compobj['compressor'].flush(zlib.Z_FINISH) + \
-	            struct.pack('<l', compobj['crc']) + \
-		    struct.pack('<l', compobj['size'])
+            data += "%s%s%s" % (compobj['compressor'].flush(zlib.Z_FINISH),
+                                struct.pack('<l', compobj['crc']),
+                                struct.pack('<l', compobj['size']))
         return data
 
     def getAttrs (self, headers, url):
@@ -110,7 +109,8 @@ class Compress (Filter):
         else:
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
-        #debug(HURT_ME_PLENTY, "compress filter getAttrs", `headers.headers`)
+        #debug(HURT_ME_PLENTY, "compress content encoding", headers['content-encoding'])
+        #debug(HURT_ME_PLENTY, "compress object", compressobj)
         d = Filter.getAttrs(self, headers, url)
         d['compressobj'] = compressobj
         return d
