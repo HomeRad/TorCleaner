@@ -100,14 +100,14 @@ from wc.filter.VirusFilter import init_clamav_conf
 # safely set config values upon import
 config = {}
 
-def wstartfunc (handle=None, stoppable=False, configfile=None):
+def wstartfunc (handle=None, stoppable=False, configfile=None, filterdir=None):
     """Initalize configuration, start psyco compiling and the proxy loop.
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
     initlog(os.path.join(ConfigDir, "logging.conf"))
     # read configuration
-    config = Configuration(configfile=configfile)
+    config = Configuration(configfile=configfile, filterdir=filterdir)
     if stoppable:
         config.set_abort(False)
     # support reload on posix systems
