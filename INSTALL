@@ -39,32 +39,32 @@ Direct download links are in brackets.
 
 Setup for Unix/Linux:
 ---------------------
-0. Install check
+1. Install check
    Be sure to have installed all required Unix/Linux software listed above.
-1. Compilation
+2. Compilation
    Run "./configure; make" to compile the included C libraries.
    Run "python setup.py build" to compile the Python files.
    The CC environment variable is checked before compilation, so you can
    change the default C compiler with "export CC=myccompiler".
    If you work from CVS, you must run "./autogen.sh" first to generate the
    configure and Makefile files.
-2a.Installation as root
+3a.Installation as root
    Run "su -c 'python setup.py install'" to install the proxy.
    Run "su -c 'make installservice'" to install the runit service.
-2b.Installation as a normal user
+3b.Installation as a normal user
    Run "python setup.py install --home $HOME"
    Now read the runsvdir(8) documentation on how to setup a local
    runit service.
-3. Enjoy
+4. Enjoy
    WebCleaner is now installed as a runit service and will start
    automatically in 5 seconds.
    See the README on how to configure the proxy filters.
 
 Setup for Windows:
 ------------------
-0. Install check
+1. Install check
    Be sure to have installed all required windows software listed above.
-1. Preparing Python for the MinGW compiler
+2. Preparing Python for the MinGW compiler
    Search the file python23.dll in your windows folder.
    After you found it, launch MSYS and do:
    % pexports python23.dll > python23.def
@@ -73,7 +73,7 @@ Setup for Windows:
    The resulting library has to be placed in the same directory as
    python23.lib. (Should be the libs directory under your Python installation
    directory, for example c:\Python23\Libs\.)
-2. Compile the JavaScript library
+3. Compile the JavaScript library
    Copy the webcleaner-X.X.tar.gz into your MSYS home directory,
    which is usually under c:\msys\1.0\home\user\.
    Launch MSYS and extract the tarball:
@@ -82,20 +82,20 @@ Setup for Windows:
    % cd webcleaner-X.X
    Configure and compile the JavaScript library:
    % ./configure; make
-3. Compile and install PyCrypto
+4. Compile and install PyCrypto
    Close the MSYS application and open a DOS command prompt.
    Change to the pycrypto-1.9a6 directory and do:
    c:> python setup.py build -c mingw32 install
-4. Compile and install the Python modules
+5. Compile and install the Python modules
    Change to the webcleaner-X.X directory and do:
    c:> python setup.py build -c mingw32 install
-5. Install and start the WebCleaner NT service
+6. Install and start the WebCleaner NT service
    Change to the directory where you installed Python into
    (for example c:\Python23\).
-   Then run the webcleaner-service script to install the WebCleaner service:
+   Run the webcleaner-service script to install the WebCleaner service:
    c:> python scripts\webcleaner-service install
    To remove the service later, you can run:
    c:> python scripts\webcleaner-service remove
-6. Enjoy
+7. Enjoy
    WebCleaner is now installed and started as a regular Windows service.
    See the README on how to configure the proxy filters.
