@@ -3,7 +3,7 @@
 
 Requirements
 ------------
-Python >= 2.1 from http://www.python.org/
+Python >= 2.2 from http://www.python.org/
 
 For the GUI config tool webcleanerconf you need
 FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html

@@ -25,8 +25,8 @@ runtime. This is also a FAQ entry in the FOX documentation.
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import sys
-if sys.version[:5] < "2.0":
-    raise SystemExit, "This program requires Python 2.0 or later."
+if sys.version[:5] < "2.2":
+    raise SystemExit, "This program requires Python 2.2 or later."
 
 from wc.gui.ConfWindow import ConfWindow
 from wc.gui.ToolApp import ToolApp

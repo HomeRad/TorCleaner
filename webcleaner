@@ -61,8 +61,8 @@ Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
 HTTP/1.1 Proxy written in Java."""
 
 import sys
-if sys.version[:5] < "2.0":
-    raise SystemExit, "This program requires Python 2.0 or later."
+if sys.version[:5] < "2.2":
+    raise SystemExit, "This program requires Python 2.2 or later."
 # for pydoc testing
 sys.path.insert(0, ".")
 from wc import _,daemon
