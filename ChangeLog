@@ -27,11 +27,23 @@
     local ip addresses in a system
     Type: feature
     Added: wc/network/*.py
+    Moved: wc/ip.py -> wc/network/ip.py
     Changed: setup.py, Makefile.am
 
   * reread DNS config every minute
     Type: feature
     Changed: wc/proxy/dns_lookups.py
+
+  * do not build documentation per default, fixes install problems on
+    some platforms
+    Type: bugfix
+    Changed: Makefile.am
+
+  * move special container classes into own submodule and use them
+    Type: feature
+    Added: wc/containers.py
+    Changed: wc/parser/{htmllex.l,htmlparse.y,htmlsax.h},
+      wc/network/__init__.py
 
 2.15 (released 22.5.2004)
   * set default config dir in webcleaner script
