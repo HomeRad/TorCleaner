@@ -20,6 +20,7 @@ import re
 import socket
 import struct
 import sets
+
 import wc
 import wc.log
 
@@ -220,9 +221,12 @@ def lookup_ips (ips):
 def resolve_host (host):
     """return set of ip numbers for given host"""
     ips = sets.Set()
-    for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
-        # res is a tuple (address family, socket type, protocol,
-        #  canonical name, socket address)
-        # add first ip of socket address
-        ips.add(res[4][0])
+    try:
+        for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
+            # res is a tuple (address family, socket type, protocol,
+            #  canonical name, socket address)
+            # add first ip of socket address
+            ips.add(res[4][0])
+    except socket.error:
+        wc.log.error(wc.LOG_NET, "Ignored invalid host %r", host)
     return ips
