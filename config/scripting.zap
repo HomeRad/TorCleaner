@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.312" oid="7">
+<folder sid="wc.312" oid="8">
 <title lang="de">Skripte (Javascript)</title>
 <title lang="en">Scripting</title>
 <description lang="en">Scripting related.</description>
@@ -60,7 +60,7 @@
   <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.297"
+<rewrite sid="wc.297" disable="1"
  tag="body">
   <title lang="de">Entferne &lt;body&gt; onresize</title>
   <title lang="en">&lt;body&gt; onresize</title>
@@ -154,7 +154,7 @@
   <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.310"
+<rewrite sid="wc.310" disable="1"
  tag="body">
   <title lang="de">Entferne &lt;body&gt; onselectstart</title>
   <title lang="en">&lt;body&gt; onselectstart</title>
@@ -169,6 +169,7 @@
   <nomatchurl>msdn\.microsoft\.com</nomatchurl>
   <nomatchurl>www\.mvhs\.de</nomatchurl>
   <nomatchurl>suprnova\.org</nomatchurl>
+  <nomatchurl>www\.litek(-gmbh)?\.de</nomatchurl>
 </javascript>
 
 <rewrite sid="wc.307"
