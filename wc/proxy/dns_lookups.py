@@ -564,8 +564,8 @@ class DnsLookupConnection (Connection):
                 callback(self.hostname, DnsResponse('error', 'not found'))
         self.close()
 
-    def handle_error (self, what, type, value, tb=None):
-        Connection.handle_error(self, what, type, value, tb=tb)
+    def handle_error (self, what):
+        Connection.handle_error(self, what)
         if self.callback:
             callback, self.callback = self.callback, None
             callback(self.hostname,

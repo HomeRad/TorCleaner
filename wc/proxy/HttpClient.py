@@ -231,8 +231,8 @@ class HttpClient (Connection):
         self.server = None
 
 
-    def handle_error (self):
-        Connection.handle_error(self)
+    def handle_error (self, what):
+        Connection.handle_error(self, what)
         # We should close the server connection
         if self.server:
             server, self.server = self.server, None
