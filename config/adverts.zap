@@ -317,4 +317,10 @@
  desc="adclick stuff">
 <attr>/adclick\.(exe|php)</attr>
 </rewrite>
+
+<rewrite title="Schmidtie" oid="53"
+ desc="Harald-Schmidt-Show homepage sux"
+ matchurl="www.sat1.de">
+<attr>/jump\.hbs</attr>
+</rewrite>
 </folder>
