@@ -2,8 +2,6 @@ TODO
 
 version 2.16 and above
 
-- debug messages for DNS timeouts
-
 ======================================================================
 FAIL: testRecursionSrc (tests.server.TestScriptSrc.TestScriptSrc)
 ----------------------------------------------------------------------
