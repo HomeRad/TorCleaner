@@ -1,3 +1,9 @@
+2.8 (released xx.xx.xxxx)
+  * removed old webcleanerconf gui and wcheaders tool; the preferred way
+    to configure webcleaner is over the web interface.
+    Removed: wc/gui/*, webcleanerconf*, wcheaders*
+    Changed: setup.py, MANIFEST.in, debian/control, debian/rules
+
 2.7 (released 04.12.2003)
   * updated filters:
     - remove _top targets

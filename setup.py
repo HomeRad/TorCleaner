@@ -60,13 +60,13 @@ class MyInstall(install):
                 path = os.path.join(os.environ["ALLUSERSPROFILE"], "Desktop")
             elif os.environ.has_key("USERPROFILE"):
                 path = os.path.join(os.environ["USERPROFILE"], "Desktop")
-            for fname in ('wcheaders.bat', 'webcleanerconf.bat'):
-                data = open(fname).readlines()
-                data = map(string.strip, data)
-                data = map(lambda s: s.replace("$python", sys.executable), data)
-                data = map(lambda s, self=self: s.replace("$install_scripts",
-                  self.install_scripts), data)
-                self.distribution.create_batch_file(path, data, fname)
+            #for fname in ('wcheaders.bat',):
+            #    data = open(fname).readlines()
+            #    data = map(string.strip, data)
+            #    data = map(lambda s: s.replace("$python", sys.executable), data)
+            #    data = map(lambda s, self=self: s.replace("$install_scripts",
+            #      self.install_scripts), data)
+            #    self.distribution.create_batch_file(path, data, fname)
 
 
     # sent a patch for this, but here it is for compatibility
@@ -133,12 +133,12 @@ class MyDistribution(Distribution):
 if os.name=='nt':
     macros = [('YY_NO_UNISTD_H', None)]
     cargs = []
-    scripts = ['webcleanerconf', 'wcheaders']
+    scripts = []
 else:
     macros = []
     # XXX for gcc 3.x we could add -std=gnu99
     cargs = ["-pedantic"]
-    scripts = ['webcleaner', 'webcleanerconf', 'wcheaders']
+    scripts = ['webcleaner']
 
 # extensions
 extensions = [Extension('wc.parser.htmlsax',
@@ -176,7 +176,7 @@ else:
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
-       version = "2.7",
+       version = "2.8",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -185,7 +185,7 @@ setup (name = "webcleaner",
        url = "http://webcleaner.sourceforge.net/",
        license = "GPLv2",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon', 'wc/js', 'wc/magic',
-           'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns', 'wc/proxy/auth',
+           'wc/parser', 'wc/proxy', 'wc/proxy/dns', 'wc/proxy/auth',
            'wc/filter/rules', 'wc/webgui', 'wc/webgui/simpletal',
            'wc/webgui/context',],
        ext_modules = extensions,
@@ -248,8 +248,6 @@ setup (name = "webcleaner",
       ['config/blacklists/violence/domains.gz']),
      ('man/man1',
       ['webcleaner.1',
-       'webcleanerconf.1',
-       'wcheaders.1',
        'webcleaner.conf.5',
       ]),
      ('share/webcleaner/templates/classic',
@@ -279,9 +277,7 @@ setup (name = "webcleaner",
        'templates/classic/macros/standard.html',
       ]),
      ('share/webcleaner/examples',
-      ['webcleanerconf.bat',
-       'wcheaders.bat',
-       'config/bl2wc.py',
+      ['config/bl2wc.py',
        'config/dmozfilter.py',
       ]),
      ('share/locale/de/LC_MESSAGES',

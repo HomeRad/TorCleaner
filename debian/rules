@@ -4,15 +4,11 @@
 PYTHON=python2.3
 PACKAGE=webcleaner
 DOCDIR=debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)
-PATCHED=debian/$(PACKAGE)/usr/lib/$(PYTHON)/site-packages/wc/gui/ConfWindow.py
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
-
-# use dpatch targets `patch' and `unpatch'
-include /usr/share/dpatch/dpatch.make
 
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
@@ -33,13 +29,13 @@ configure-stamp: configure
 	./configure $(CONFIG_DEB) $(CONFIG_PATHS) $(CONFIG_OPTS)
 	touch configure-stamp
 
-build: patch build-stamp
+build: build-stamp
 build-stamp: configure-stamp
 	dh_testdir
 	$(MAKE)
 	touch build-stamp
 
-clean: unpatch
+clean:
 	dh_testdir
 	rm -f build-stamp configure-stamp
 	$(PYTHON) setup.py clean --all
@@ -59,8 +55,6 @@ install: build
 	rm -f debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/INSTALL
 	# move webcleaner binaries to /usr/sbin
 	mv debian/$(PACKAGE)/usr/bin/webcleaner debian/$(PACKAGE)/usr/sbin
-	mv debian/$(PACKAGE)/usr/bin/webcleanerconf debian/$(PACKAGE)/usr/sbin
-	mv debian/$(PACKAGE)/usr/bin/wcheaders debian/$(PACKAGE)/usr/sbin
 	rmdir debian/$(PACKAGE)/usr/bin
 	# move config files
 	mv debian/$(PACKAGE)/usr/share/webcleaner/config/* debian/$(PACKAGE)/etc/webcleaner/
@@ -77,8 +71,6 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_movefiles --sourcedir=debian/$(PACKAGE) -pwebcleanertools \
-            usr/sbin/webcleanerconf usr/sbin/wcheaders usr/lib/$(PYTHON)/site-packages/wc/gui/
 	dh_installdebconf
 	dh_installdocs
 	dh_installexamples config/bl2wc.py config/dmozfilter.py
@@ -87,7 +79,6 @@ binary-arch: build install
 	dh_installinit
 #	dh_installcron
 	dh_installman webcleaner.1 webcleaner.conf.5
-	dh_installman -pwebcleanertools webcleanerconf.1 wcheaders.1
 #	dh_installinfo
 	dh_installchangelogs
 	dh_python -V 2.3
