@@ -291,11 +291,12 @@ def get_encoding_dict (msg):
     res = {}
     encs = msg.get('Accept-Encoding', '').split(",")
     for enc in encs:
-        enc = enc.trim()
+        enc = enc.strip()
         pref = None
         if ";" in enc:
             enc, pref = enc.split(";")
-        res[enc.trim().lower()] = pref.trim()
+            pref = pref.strip()
+        res[enc.lower()] = pref
     return res
 
 
