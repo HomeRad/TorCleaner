@@ -25,6 +25,7 @@ import wc.filter.HtmlParser
 import wc.filter.HtmlFilter
 from wc.log import *
 
+DefaultCharset = 'iso-8859-1'
 
 class Rewriter (wc.filter.Filter.Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
@@ -38,7 +39,8 @@ class Rewriter (wc.filter.Filter.Filter):
 
 
     def filter (self, data, **attrs):
-        if not attrs.has_key('rewriter_filter'): return data
+        if not attrs.has_key('rewriter_filter'):
+            return data
         p = attrs['rewriter_filter']
         p.feed(data)
         if p.handler.ratings:
@@ -48,7 +50,8 @@ class Rewriter (wc.filter.Filter.Filter):
 
 
     def finish (self, data, **attrs):
-        if not attrs.has_key('rewriter_filter'): return data
+        if not attrs.has_key('rewriter_filter'):
+            return data
         p = attrs['rewriter_filter']
         # feed even if data is empty
         p.feed(data)
