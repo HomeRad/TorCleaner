@@ -1,3 +1,9 @@
+webcleaner (0.52) unstable; urgency=low
+
+  * fix setup.py
+
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  2 Aug 2002 20:12:53 +0200
+
 webcleaner (0.51) unstable; urgency=low
 
   * further updates to advert filters
