@@ -112,7 +112,7 @@ def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
     d = {'title': cat+" domain filter",
          'desc': """You should not edit this filter, only disable or delete it.
-To update the filter data, run config/bl2wc.py from a WebCleaner source tree."""",
+To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
          'filename': "%s/%s/domains.gz" % (b, cat),
          'type': ftype,
         }
