@@ -4,7 +4,6 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.log import *
-from wc.proxy import make_timer
 from Headers import get_wc_client_headers
 from wc.url import stripsite, spliturl, url_norm, url_quote
 from HttpServer import get_response_data
