@@ -76,8 +76,8 @@ Example program::
   print expand_template(f, get_context())
 
 
-Diff agains SimpleTAL 3.9
--------------------------
+Diff against SimpleTAL 3.9
+--------------------------
 See the diffs for `simpleTAL with i18n support`_ and
 `pygettext.py with i18n support`_.
 
