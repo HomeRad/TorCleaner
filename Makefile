@@ -1,6 +1,6 @@
 # This Makefile is only used by developers! 
 # There is no need for users to call make.
-PYTHON=python
+PYTHON=python2.1
 VERSION=$(shell $(PYTHON) setup.py --version)
 PACKAGE=webcleaner
 GROUPDIR=shell1.sourceforge.net:/home/groups

@@ -3,7 +3,7 @@ webcleaner (0.53-1) unstable; urgency=low
   * only filter some <meta name> tags, not all
   * updated ConfWindow patch
   * webcleanertools: add dependency on python
-  * bump up standards version to 3.5.6.1
+  * bump up standards version to 3.5.7.0
   * made this a non-native debian package
   * remove all configuration dirs on postrm, purge does not remove them
     automatically due to mis-sorting of dirs

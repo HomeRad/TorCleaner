@@ -9,7 +9,7 @@ db_version 2.0
 
 package=webcleaner
 PYTHON=python
-PYVER=2.2
+PYVER=2.1
 PYTHONXY=${PYTHON}${PYVER}
 SITEPACKAGES=/usr/lib/$PYTHONXY/site-packages
 DIRLIST="wc"
@@ -19,13 +19,13 @@ COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
 case "$1" in
     configure|reconfigure|abort-upgrade|abort-remove|abort-deconfigure)
         for i in $DIRLIST; do
-            $PYTHON -O /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
-            $PYTHON /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
+            $PYTHONXY -O /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
+            $PYTHONXY /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
         done
 	# use /bin/sh -c, otherwise I get a SyntaxError from Python
         for i in $FILELIST; do
-            /bin/sh -c "$PYTHON -O -c $COMMAND $SITEPACKAGES/$i"
-            /bin/sh -c "$PYTHON -c $COMMAND $SITEPACKAGES/$i"
+            /bin/sh -c "$PYTHONXY -O -c $COMMAND $SITEPACKAGES/$i"
+            /bin/sh -c "$PYTHONXY -c $COMMAND $SITEPACKAGES/$i"
         done
     ;;
     *)
