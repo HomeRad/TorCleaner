@@ -275,7 +275,7 @@
 <td>
 <select name="nofilterhosts" id="nofilterhosts" multiple size="5"
  i18n:attributes="title string:List of domain names the proxy must not filter.">
-<option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
+<option tal:repeat="host config/nofilterhosts" tal:attributes="value host"
  tal:content="host">localhost</option>
 </select>
 </td>

@@ -251,7 +251,7 @@ class Configuration (dict):
         f.write(' gui_theme="%s"\n' % xmlquoteattr(self['gui_theme']))
         f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
         f.write(' try_google="%d"\n' % self['try_google'])
-        hosts = ip.lookup_ips(self['nofilterhosts'])
+        hosts = self['nofilterhosts']
         f.write(' nofilterhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
         hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
         f.write(' allowedhosts="%s"\n'%xmlquoteattr(",".join(hosts)))

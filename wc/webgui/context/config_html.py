@@ -36,7 +36,6 @@ for _i in filtermodules:
 for _i in config['filters']:
     config['filterdict'][_i] = True
 config['allowedhostlist'] = _sort_seq(ip.map2hosts(config['allowedhosts']))
-config['nofilterhostlist'] = _lookup_ips(config['nofilterhosts'])
 config['newport'] = config['port']
 config['newsslport'] = config['sslport']
 config['newsslgateway'] = config['sslgateway']
@@ -347,11 +346,8 @@ def _form_delallowed (form):
 
 
 def _form_addnofilter (host):
-    try:
-        hostip = _resolve_host(host)
     if host not in config['nofilterhosts']:
-        config['nofilterhosts'].add(hostip)
-        config['nofilterhostlist'] = _lookup_ips(config['nofilterhosts'])
+        config['nofilterhosts'].append(host)
         config.write_proxyconf()
         info['addnofilter'] = True
 
