@@ -7,6 +7,7 @@ import sys
 import wc
 import wc.proxy.Connection
 from OpenSSL import SSL
+import bk.log
 
 
 class SslConnection (wc.proxy.Connection.Connection):

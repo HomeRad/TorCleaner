@@ -6,6 +6,7 @@ import wc
 import wc.proxy.HttpServer
 import wc.proxy.SslConnection
 import wc.proxy.ssl
+import bk.log
 
 
 class SslServer (wc.proxy.HttpServer.HttpServer,

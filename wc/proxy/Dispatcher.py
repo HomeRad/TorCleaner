@@ -44,6 +44,7 @@ import socket
 import errno
 import OpenSSL
 import wc
+import bk.log
 
 
 # map of sockets

@@ -20,6 +20,7 @@
 import wc.filter
 import wc.filter.Filter
 import wc.filter.Rating
+import bk.log
 
 
 class RatingHeader (wc.filter.Filter.Filter):

@@ -8,6 +8,8 @@ import wc.proxy.HttpClient
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.SslConnection
 import wc.proxy.Allowed
+import bk.log
+import bk.i18n
 
 
 class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConnection):

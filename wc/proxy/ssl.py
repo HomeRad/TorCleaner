@@ -4,6 +4,7 @@
 import os
 import wc
 from OpenSSL import SSL, crypto
+import bk.log
 
 
 def exist_certificates (configdir):

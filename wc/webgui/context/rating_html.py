@@ -22,8 +22,8 @@ from wc.webgui.context import getval as _getval
 from wc.filter.Rating import service, rangenames, rating_cache
 from wc.filter.Rating import rating_cache_write as _rating_cache_write
 from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
-from wc.url import is_valid_url as _is_valid_url
-from wc.strtime import strtime as _strtime
+from wc.net.url import is_valid_url as _is_valid_url
+from bk.strtime import strtime as _strtime
 
 _entries_per_page = 50
 
@@ -71,6 +71,7 @@ selindex = []
 
 # form execution
 def _exec_form (form, lang):
+    global url
     # reset info/error and form vals
     _form_reset()
     # calculate global vars
@@ -158,6 +159,7 @@ def _calc_selindex (index):
 
 
 def _form_apply ():
+    global url
     rating = {}
     rating.update(ratings)
     if generic:
@@ -169,13 +171,14 @@ def _form_apply ():
 
 
 def _form_delete ():
+    global url
     del rating_cache[url]
     _rating_cache_write()
     info['ratingdeleted'] = True
 
 
 def _form_load ():
-    global generic
+    global generic, url
     if url in rating_cache:
         rating = rating_cache[url]
         for category, value in rating.items():

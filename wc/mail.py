@@ -20,6 +20,7 @@ import socket
 import smtplib
 import email.Utils
 import wc
+import bk.log
 
 
 def valid_mail (address):
