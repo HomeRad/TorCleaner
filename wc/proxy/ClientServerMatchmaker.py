@@ -54,7 +54,6 @@ class ClientServerMatchmaker:
         self.compress = compress
         self.content = content
         self.nofilter = nofilter
-        debug(HURT_ME_PLENTY, "request", `self.request`)
         self.method, self.url, protocol = self.request.split()
         scheme, hostname, port, document = spliturl(self.url)
         # fix missing trailing /
