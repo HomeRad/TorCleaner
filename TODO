@@ -3,7 +3,6 @@ TODO
 version 2.9 and above
 
 - memory leaks while operating the proxy
-  (StringIO needs close() calls?)
 
 - .deb update does not work
 

@@ -1,3 +1,8 @@
+2.9 (released xx.xx.xxxx)
+  * do not ship _webcleaner2_configdata.py, and adjust file permissions
+    for the tarball
+    Changed: MANIFEST.in, Makefile.am
+
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way
     to configure webcleaner is over the web interface.
