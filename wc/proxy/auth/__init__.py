@@ -11,9 +11,16 @@ wc_realm = "unknown"
 
 from wc.log import *
 from wc import config
-from basic import *
-from digest import *
-from ntlm import *
+from basic import parse_basic_challenge, get_basic_challenge
+from basic import parse_basic_credentials, get_basic_credentials
+from digest import parse_digest_challenge, get_digest_challenge
+from digest import parse_digest_credentials, get_digest_credentials
+from ntlm import parse_ntlm_challenge, get_ntlm_challenge
+from ntlm import parse_ntlm_credentials, get_ntlm_credentials
+
+from basic import check_basic_credentials
+from digest import check_digest_credentials
+from ntlm import check_ntlm_credentials
 
 
 def get_auth_uri (url):
