@@ -306,11 +306,6 @@ class HttpServer (wc.proxy.Server.Server):
             else:
                 self._show_rating_deny(str(msg))
                 return
-        #except wc.filter.FilterMime, msg:
-        #    wc.log.debug(wc.LOG_PROXY, "%s FilterMime from header: %s",
-        #                 self, msg)
-        #    self._show_mime_replacement(str(msg))
-        #    return
         if self.statuscode in (301, 302):
             location = self.headers.get('Location')
             if location:
@@ -330,7 +325,9 @@ class HttpServer (wc.proxy.Server.Server):
                                      headers=self.headers)
         wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s",
                      self, self.headers)
-        if not self.defer_data:
+        if self.defer_data:
+            wc.log.debug(wc.LOG_PROXY, "deferring header data")
+        else:
             self.client.server_response(self, self.response, self.statuscode,
                                         self.headers)
             # note: self.client could be None here
@@ -370,23 +367,6 @@ class HttpServer (wc.proxy.Server.Server):
             if ro.match(self.headers.get('Content-Type', '')):
                 return True
         return False
-
-    def _show_mime_replacement (self, url):
-        self.statuscode = 302
-        response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
-        headers = wc.proxy.Headers.WcMessage()
-        headers['Content-type'] = 'text/plain\r'
-        headers['Location'] = url
-        headers['Content-Length'] = '0\r'
-        wc.log.debug(wc.LOG_PROXY, "%s headers\n%s", self, headers)
-        self.client.server_response(self, response, self.statuscode, headers)
-        if not self.client:
-            return
-        self.client.server_close(self)
-        self.client = None
-        self.state = 'recycle'
-        self.persistent = False
-        self.close()
 
     def _show_rating_deny (self, msg):
         """requested page is rated"""
@@ -448,14 +428,16 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY,
                       _("server received %d bytes more than content-length"),
                       (-self.bytes_remaining))
-        if data and self.statuscode != 407:
+        if self.statuscode != 407:
             if self.defer_data:
+                # only hold off data for one recv() call, not more
                 self.defer_data = False
                 self.client.server_response(self, self.response,
                                             self.statuscode, self.headers)
                 if not self.client:
                     return
-            self.client.server_content(data)
+            if data:
+                self.client.server_content(data)
         if is_closed or self.bytes_remaining == 0:
             # either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
@@ -466,9 +448,12 @@ class HttpServer (wc.proxy.Server.Server):
         if not self.client:
             # delay
             return
-        wc.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to client %s",
-                     self, self.client)
-        self.client.write(self.read())
+        data = self.read()
+        if data:
+            wc.log.debug(wc.LOG_PROXY,
+                     "%s send %d bytes SSL tunneled data to client %s",
+                     self, len(data), self.client)
+            self.client.write(data)
 
     def process_recycle (self):
         """recycle the server connection and put it in the server pool"""
