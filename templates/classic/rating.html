@@ -41,14 +41,17 @@ several given categories.</p>
 </tr>
 </thead>
 <tbody>
+<!-- loop over categories (violence, sex, language, agerange) -->
 <tr tal:repeat="category service/categories/keys">
 <td><label tal:attributes="title category;for string:category_${category}"
- i18n:translate="" tal:content="service/categories/?category/name">violence</label>
+ i18n:translate=""
+ tal:content="service/categories/?category/name">violence</label>
 </td>
 <td tal:condition="service/categories/?category/rrange" colspan="3">
 <input type="text" size="4"
  tal:attributes="name string:category_${category};value ratings/?category"
 ></td>
+<!-- loop over rvalues -->
 <td tal:repeat="value service/categories/?category/rvalues"><input
  tal:attributes="name string:category_${category};value value"
  tal:condition="values/?category/?value" checked
