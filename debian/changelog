@@ -1,3 +1,9 @@
+webcleaner (2.11-0.2) unstable; urgency=low
+
+  * remove service dir on purge
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 28 Apr 2004 00:23:13 +0200
+
 webcleaner (2.11-0.1) unstable; urgency=low
 
   * New upstream release.

@@ -6,7 +6,7 @@
 package=webcleaner
 service=/var/service/$package
 
-if [ "$1" = "remove" ]; then
+if [ "$1" = "remove" -o "$1" = "purge" ]; then
     # stop service
     svwaitdown $service
     # remove service link

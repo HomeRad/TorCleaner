@@ -9,7 +9,7 @@ Package: webcleaner
 Architecture: any
 Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto, runit, webcleaner-common (>= ${Source-Version}), python2.3-pyopenssl
 Conflicts: python2.3-psyco (<< 1.1.1)
-Suggests: python2.3-psyco, clamav-daemon, webcleaner-doc
+Suggests: python2.3-psyco, clamav-daemon
 Description: a filtering HTTP proxy
  Features:
   * HTTP/1.1 support
