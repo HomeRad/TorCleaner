@@ -16,6 +16,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import os
+import cPickle as pickle
+
+import wc
+import wc.log
+import wc.url
+import wc.filter.rating
+
+
 class PickleStorage (Storage):
     """Store ratings in pickled dictionary."""
 
@@ -24,22 +33,21 @@ class PickleStorage (Storage):
         self.filename = os.path.join(config.configdir, "rating.dat")
         self.cache = {}
 
-    def add (self, url, rating):
+    def add (self, rating):
         self.check_url(url)
-        self.cache[url] = rating
+        self.cache[rating.url] = rating
 
     def get (self, url):
-        """return a tuple (url, rating) if cache has entry for given url,
-           else None"""
+        """return rating if cache has entry for given url, else None"""
         self.check_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
-        parts = rating_split_url(url)
+        parts = wc.filter.rating.split_url(url)
         # the range selects from all parts (full url) down to the first two parts
         for i in range(len(parts), 1, -1):
             url = "".join(parts[:i])
-            if url in rating_cache:
-                return (url, rating_cache[url])
+            if url in self.cache:
+                return self.cache[url]
         return None
 
     def remove (self, url):
