@@ -252,18 +252,37 @@ static void _startElement (void* user_data, const xmlChar* name,
 		/* strip leading and ending quotes, which occurs
 		 * with invalid HTML
 		 */
-                int p = 0;
+                int p;
 		int len = strlen(attrs[i]);
-		if (len > 1) {
-		    if (attrs[i][len-1]=='"' || attrs[i][len-1]=='\'') {
-			len--;
+		// calculate space needed for encoding
+		int outlen = encodedStrlen(attrs[i], len);
+		if (outlen > ud->buflen) {
+		    ud->buf = PyMem_Resize(ud->buf, unsigned char, outlen);
+		    ud->buflen = outlen;
+		}
+		// re-encode entities
+		if ((p=htmlEncodeEntities(ud->buf, &outlen, attrs[i], &len, 0))!=0) {
+		    ud->exc_type = PyExc_ValueError;
+		    if (p==-2) {
+			ud->exc_val = PyString_FromString("htmlEncodeEntities: transcoding error");
 		    }
-		    if (attrs[i][0]=='"' || attrs[i][0]=='\'') {
+		    else {
+			ud->exc_val = PyString_FromString("htmlEncodeEntities: internal error");
+		    }
+		    ud->exc_tb = NULL;
+		    return;
+		}
+                p = 0;
+		if (outlen > 1) {
+		    if (ud->buf[outlen-1]=='"' || ud->buf[outlen-1]=='\'') {
+			outlen--;
+		    }
+		    if (ud->buf[0]=='"' || ud->buf[0]=='\'') {
 			p++;
-                        len--;
+                        outlen--;
 		    }
 		}
-		value = PyString_FromStringAndSize(attrs[i]+p, len);
+		value = PyString_FromStringAndSize(ud->buf + p, outlen);
 	    }
 	    else {
 		Py_INCREF(Py_None);

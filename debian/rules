@@ -3,8 +3,8 @@
 # GNU copyright 1997 to 1999 by Joey Hess.
 PYTHON=python2.1
 PACKAGE=webcleaner
-DOCDIR = debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)
-
+DOCDIR=debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)
+PATCHED=debian/$(PACKAGE)/usr/lib/$(PYTHON)/site-packages/wc/gui/ConfWindow.py
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
@@ -54,7 +54,7 @@ install: build
 	# install configuration
 	install -c -m 644 config/*.{html,zap,dtd,gif,png,conf} debian/$(PACKAGE)/etc/webcleaner
 	# patch ConfWindow
-	patch debian/$(PACKAGE)/usr/lib/$(PYTHON)/site-packages/wc/gui/ConfWindow.py debian/ConfWindow.patch
+	patch $(PATCHED) debian/ConfWindow.patch && rm -f $(PATCHED)~
 
 
 # Build architecture-independent files here.
