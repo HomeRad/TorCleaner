@@ -387,12 +387,14 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # Only issue if we have someone waiting
             return
 
-        rdtype = wc.dns.rdatatype.A
-        rdclass = wc.dns.rdataclass.IN
-        self.query = wc.dns.message.make_query(self.hostname, rdtype, rdclass)
+        self.rdtype = wc.dns.rdatatype.A
+        self.rdclass = wc.dns.rdataclass.IN
+        self.query = wc.dns.message.make_query(
+                                    self.hostname, self.rdtype, self.rdclass)
         if resolver.keyname is not None:
             self.query.use_tsig(resolver.keyring, resolver.keyname)
         self.query.use_edns(resolver.edns, resolver.ednsflags, resolver.payload)
+        wc.log.debug(wc.LOG_DNS, "sending DNS query %s", self.query)
         wire = self.query.to_wire()
         if self.tcp:
             l = len(wire)
@@ -454,43 +456,11 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                 pass
         else:
             wire = self.read(1024)
-        r = wc.dns.message.from_wire(wire, keyring=self.query.keyring,
-                                     request_mac=self.query.mac)
-        if not self.query.is_response(r):
-            wc.log.warn(wc.LOG_DNS, '%s was no response to %s', r, self.query)
-            return
-        # XXX read query
-        (rid, qr, opcode, aa, tc, rd, ra, z, rcode,
-         qdcount, ancount, nscount, arcount) = msg.getHeader()
-        if tc:
-            # dont handle truncated packets; try to switch to TCP
-            # See http://cr.yp.to/djbdns/notes.html
-            if self.tcp:
-                # socket.error((84, ''))
-                wc.log.error(wc.LOG_DNS,
-                             'Truncated TCP DNS packet: %s from %s for %r',
-                             tc, self.nameserver, self.hostname)
-                self.handle_error("dns error")
-            else:
-                wc.log.warn(wc.LOG_DNS,
-                            'truncated UDP DNS packet: %s from %s for %r',
-                            tc, self.nameserver, self.hostname)
-            # we ignore this read, and let the timeout take its course
-            return
-
-        if rcode:
-            callback, self.callback = self.callback, None
-            callback(self.hostname,
-                     DnsResponse('error', 'not found .. %s' % self))
-            self.close()
-            return
-
-        for dummy in range(qdcount):
-            hostname, _, _ = msg.getQuestion()
-            if hostname == self.hostname:
-                # This DOES answer the question we asked
-                break
-        else:
+        response = wc.dns.message.from_wire(
+                 wire, keyring=self.query.keyring, request_mac=self.query.mac)
+        wc.log.debug(wc.LOG_DNS, "got DNS response %s", response)
+        if not self.query.is_response(response):
+            wc.log.warn(wc.LOG_DNS, '%s was no response to %s', response, self.query)
             # Oops, this doesn't answer the right question.  This can
             # happen because we're using UDP, and UDP replies might end
             # up in the wrong place: open conn A, send question to A,
@@ -502,26 +472,36 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # Anyway, if this is the answer to a different question,
             # we ignore this read, and let the timeout take its course
             return
-
-        ip_addrs = []
-        for dummy in range(ancount):
-            name, rtype, klass, ttl, rdlength = msg.getRRheader()
-            mname = 'get%sdata' % wc.dns.rdatatype.typestr(rtype)
-            if hasattr(msg, mname):
-                data = getattr(msg, mname)()
+        #(rid, qr, opcode, aa, tc, rd, ra, z, rcode,
+        # qdcount, ancount, nscount, arcount) = msg.getHeader()
+        # check truncate flag
+        if (response.flags & wc.dns.flags.TC) != 0:
+            # dont handle truncated packets; try to switch to TCP
+            # See http://cr.yp.to/djbdns/notes.html
+            if self.tcp:
+                # socket.error((84, ''))
+                wc.log.error(wc.LOG_DNS,
+                             'Truncated TCP DNS packet: %s from %s for %r',
+                             tc, self.nameserver, self.hostname)
+                self.handle_error("dns error: truncated TCP packet")
             else:
-                data = msg.getbytes(rdlength)
-            if rtype == wc.dns.rdatatype.A:
-                ip_addrs.append(data)
-            elif rtype == wc.dns.rdatatype.AAAA:
-                ip_addrs.append(data)
-            elif rtype == wc.dns.rdatatype.CNAME:
-                # XXX: should we do anything with CNAMEs?
-                wc.log.debug(wc.LOG_DNS, 'cname record %s=%r',
-                             self.hostname, data)
-                pass
-        # Ignore (nscount) authority records
-        # Ignore (arcount) additional records
+                wc.log.warn(wc.LOG_DNS,
+                            'truncated UDP DNS packet from %s for %r',
+                            self.nameserver, self.hostname)
+            # we ignore this read, and let the timeout take its course
+            return
+
+        if response.rcode()!=wc.dns.rcode.NOERROR:
+            callback, self.callback = self.callback, None
+            callback(self.hostname,
+                     DnsResponse('error', 'not found .. %s' % self))
+            self.close()
+            return
+        # construct answer
+        name = wc.dns.name.from_text(self.hostname)
+        answer = wc.dns.resolver.Answer(
+                                   name, self.rdtype, self.rdclass, response)
+        ip_addrs = [rdata.address for rdata in answer]
         callback, self.callback = self.callback, None
         if ip_addrs:
             # doh, verisign has a catch-all ip 64.94.110.11 for
