@@ -6,6 +6,12 @@ __date__    = "$Date$"[7:-2]
 
 from wc.log import *
 from rfc822 import Message
+from UnchunkStream import UnchunkStream
+from GunzipStream import GunzipStream
+from DeflateStream import DeflateStream
+import mimetypes
+# add bzip encoding
+mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 
 class WcMessage (Message):
@@ -157,4 +163,89 @@ def server_set_date_header (headers):
     if not 'Date' in headers:
         from email import Utils
         headers['Date'] = "%s\r"%Utils.formatdate()
+
+
+def server_set_content_headers (headers, document, mime, url):
+    """add missing content-type headers"""
+    # check content-type against our own guess
+    i = document.find('?')
+    if i>0:
+        document = document[:i]
+    gm = mimetypes.guess_type(document, None)
+    ct = headers.get('Content-Type', None)
+    if mime:
+        if ct is None:
+            warn(PROXY, i18n._("add Content-Type %s in %s"), `mime`, `url`)
+            headers['Content-Type'] = "%s\r"%mime
+        elif not ct.startswith(mime):
+            i = ct.find(';')
+            if i == -1:
+                val = mime
+            else:
+                val = mime + ct[i:]
+            warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
+                 `str(ct)`, `val`, `url`)
+            headers['Content-Type'] = "%s\r"%val
+    elif gm[0]:
+        # guessed an own content type
+        if ct is None:
+            warn(PROXY, i18n._("add Content-Type %s to %s"), `gm[0]`, `url`)
+            headers['Content-Type'] = "%s\r"%gm[0]
+    # hmm, fix application/x-httpd-php*
+    if headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
+        warn(PROXY, i18n._("fix x-httpd-php Content-Type"))
+        headers['Content-Type'] = 'text/html\r'
+
+
+def server_set_encoding_headers (headers, rewrite, decoders, compress, bytes_remaining):
+    """set encoding headers"""
+    # add client accept-encoding value
+    headers['Accept-Encoding'] = "%s\r"%compress
+    if headers.has_key('Content-Length'):
+        bytes_remaining = int(headers['Content-Length'])
+        debug(PROXY, "Server: %d bytes remaining", bytes_remaining)
+        if rewrite:
+            remove_headers(headers, ['Content-Length'])
+    else:
+        bytes_remaining = None
+    # add decoders
+    if headers.has_key('Transfer-Encoding'):
+        # chunked encoded
+        tenc = headers['Transfer-Encoding']
+        if tenc != 'chunked':
+            error(PROXY, "Server: unknown transfer encoding %s, assuming chunked encoding", `tenc`)
+        decoders.append(UnchunkStream())
+        # remove encoding header
+        to_remove = ["Transfer-Encoding"]
+        if headers.has_key("Content-Length"):
+            warn(PROXY, i18n._('chunked encoding should not have Content-Length'))
+            to_remove.append("Content-Length")
+            bytes_remaining = None
+        remove_headers(headers, to_remove)
+        # add warning
+        headers['Warning'] = "214 Transformation applied\r"
+    # only decompress on rewrite
+    if not rewrite: return
+    # Compressed content (uncompress only for rewriting modules)
+    encoding = headers.get('Content-Encoding', '').lower()
+    # XXX test for .gz files ???
+    if encoding in ('gzip', 'x-gzip', 'deflate'):
+        if encoding=='deflate':
+            decoders.append(DeflateStream())
+        else:
+            decoders.append(GunzipStream())
+        # remove encoding because we unzip the stream
+        to_remove = ['Content-Encoding']
+        # remove no-transform cache control
+        if headers.get('Cache-Control', '').lower()=='no-transform':
+            to_remove.append('Cache-Control')
+        remove_headers(headers, to_remove)
+        # add warning
+        headers['Warning'] = "214 Transformation applied\r"
+    elif encoding and encoding!='identity':
+        warn(PROXY, i18n._("unsupported encoding: %s"), `encoding`)
+        # do not disable filtering for unknown content-encodings
+        # this could result in a DoS attack (server sending garbage
+        # as content-encoding)
+    return bytes_remaining
 

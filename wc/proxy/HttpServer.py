@@ -3,22 +3,17 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, socket, re, mimetypes
-# add bzip encoding
-mimetypes.encodings_map['.bz2'] = 'x-bzip2'
+import time, socket, re
 
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer, get_http_version
 from wc.proxy.auth import *
-from Headers import server_set_headers, remove_headers
+from Headers import server_set_headers, server_set_content_headers, server_set_encoding_headers, remove_headers
 from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
-from UnchunkStream import UnchunkStream
-from GunzipStream import GunzipStream
-from DeflateStream import DeflateStream
 from wc.filter import applyfilter, initStateObjects, FilterWait, FilterPics
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
@@ -37,12 +32,6 @@ _RESPONSE_FILTERS = (
    FILTER_RESPONSE_MODIFY,
    FILTER_RESPONSE_ENCODE)
 
-_fix_content_types = [
-#'text/html'
-]
-_fix_content_encodings = [
-#    'x-bzip2',
-]
 
 is_http_status = re.compile(r'^\d\d\d$').search
 def get_response_data (response):
@@ -78,10 +67,11 @@ class HttpServer (Server):
         self.decoders = [] # Handle each of these, left to right
         self.sequence_number = 0 # For persistent connections
         self.attrs = {} # initial filter attributes are empty
-        self.attempt_connect()
         self.can_reuse = False
         self.flushing = False
         self.authtries = 0
+        self.bytes_remaining = None
+        self.attempt_connect()
 
 
     def __repr__ (self):
@@ -169,7 +159,7 @@ class HttpServer (Server):
         self.clientheaders = headers
         if config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
-            self.clientheaders['Proxy-Authorization'] = "%s\r"%config['parentproxycreds']
+            headers['Proxy-Authorization'] = "%s\r"%config['parentproxycreds']
         self.send_request()
 
 
@@ -216,7 +206,6 @@ class HttpServer (Server):
             self.statuscode = 200
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	                   WcMessage(StringIO('')), attrs=self.nofilter)
-            self.bytes_remaining = None
             self.decoders = []
             self.attrs['nofilter'] = self.nofilter['nofilter']
             # initStateObject can modify headers (see Compress.py)!
@@ -287,9 +276,12 @@ class HttpServer (Server):
             self.reuse()
             return
         server_set_headers(self.headers)
-        self.check_headers()
-        # add encoding specific headers and objects
-        self.add_encoding_headers()
+        self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.client.compress, self.bytes_remaining)
+        if config['parentproxy']:
+            self.headers['Proxy-Connection'] = 'keep-alive\r'
+        # 304 Not Modified does not send any type info, because it was cached
+        if self.statuscode != 304:
+            server_set_content_headers(self.headers, self.document, self.mime, self.url)
         self.attrs['nofilter'] = self.nofilter['nofilter']
         # initStateObject can modify headers (see Compress.py)!
         if self.attrs['nofilter']:
@@ -310,118 +302,6 @@ class HttpServer (Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
-
-
-
-    def check_headers (self):
-        """add missing content-type and/or encoding headers"""
-        # 304 Not Modified does not send any type or encoding info,
-        # because this info was cached
-        if self.statuscode == 304:
-            return
-        # check content-type against our own guess
-        i = self.document.find('?')
-        if i>0:
-            document = self.document[:i]
-        else:
-            document = self.document
-        gm = mimetypes.guess_type(document, None)
-        ct = self.headers.get('Content-Type', None)
-        if self.mime:
-            if ct is None:
-                warn(PROXY, i18n._("add Content-Type %s in %s"),
-                     `self.mime`, `self.url`)
-                self.headers['Content-Type'] = "%s\r"%self.mime
-            elif not ct.startswith(self.mime):
-                i = ct.find(';')
-                if i == -1:
-                    val = self.mime
-                else:
-                    val = self.mime + ct[i:]
-                warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
-                     `str(ct)`, `val`, `self.url`)
-                self.headers['Content-Type'] = "%s\r"%val
-        elif gm[0]:
-            # guessed an own content type
-            if ct is None:
-                warn(PROXY, i18n._("add Content-Type %s to %s"),
-                     `gm[0]`, `self.url`)
-                self.headers['Content-Type'] = "%s\r"%gm[0]
-            # fix some content types
-            #elif not ct.startswith(gm[0]) and \
-            #     gm[0] in _fix_content_types:
-            #    warn(PROXY, i18n._("change Content-Type from %s to %s in %s"),
-            #         `ct`, `gm[0]`, `self.url`)
-            #    self.headers['Content-Type'] = "%s\r"%gm[0]
-        #if gm[1] and gm[1] in _fix_content_encodings:
-        #    ce = self.headers.get('Content-Encoding', None)
-        #    # guessed an own encoding type
-        #    if ce is None:
-        #        self.headers['Content-Encoding'] = "%s\r"%gm[1]
-        #        warn(PROXY, i18n._("add Content-Encoding %s to %s"),
-        #             `gm[1]`, `self.url`)
-        #    elif ce != gm[1]:
-        #        warn(PROXY, i18n._("change Content-Encoding from %s to %s in %s"),
-        #             `ce`, `gm[1]`, `self.url`)
-        #        self.headers['Content-Encoding'] = "%s\r"%gm[1]
-        # hmm, fix application/x-httpd-php*
-        if self.headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
-            warn(PROXY, i18n._("fix x-httpd-php Content-Type"))
-            self.headers['Content-Type'] = 'text/html\r'
-
-
-    def add_encoding_headers (self):
-        debug(PROXY, "Server: encoding headers %s", blocktext(`str(self.headers)`, 72))
-        # will content be rewritten?
-        rewrite = self.is_rewrite()
-        # add client accept-encoding value
-        self.headers['Accept-Encoding'] = "%s\r"%self.client.compress
-        if self.headers.has_key('Content-Length'):
-            self.bytes_remaining = int(self.headers['Content-Length'])
-            debug(PROXY, "Server: %d bytes remaining", self.bytes_remaining)
-            if rewrite:
-                remove_headers(self.headers, ['Content-Length'])
-        else:
-            self.bytes_remaining = None
-        # add decoders
-        self.decoders = []
-        # Chunked encoded
-        if self.headers.has_key('Transfer-Encoding'):
-            # XXX don't look at value, assume chunked encoding for now
-            debug(PROXY, 'Server: Transfer-encoding: %s', `self.headers['Transfer-Encoding']`)
-            self.decoders.append(UnchunkStream())
-            # remove encoding header
-            to_remove = ["Transfer-Encoding"]
-            if self.headers.has_key("Content-Length"):
-                warn(PROXY, i18n._('chunked encoding should not have Content-Length'))
-                to_remove.append("Content-Length")
-                self.bytes_remaining = None
-            remove_headers(self.headers, to_remove)
-            # add warning
-            self.headers['Warning'] = "214 Transformation applied\r"
-        # only decompress on rewrite
-        if not rewrite: return
-        # Compressed content (uncompress only for rewriting modules)
-        encoding = self.headers.get('Content-Encoding', '').lower()
-        # XXX test for .gz files ???
-        if encoding in ('gzip', 'x-gzip', 'deflate'):
-            if encoding=='deflate':
-                self.decoders.append(DeflateStream())
-            else:
-                self.decoders.append(GunzipStream())
-            # remove encoding because we unzip the stream
-            to_remove = ['Content-Encoding']
-            # remove no-transform cache control
-            if self.headers.get('Cache-Control', '').lower()=='no-transform':
-                to_remove.append('Cache-Control')
-            remove_headers(self.headers, to_remove)
-            # add warning
-            self.headers['Warning'] = "214 Transformation applied\r"
-        elif encoding and encoding!='identity':
-            warn(PROXY, i18n._("unsupported encoding: %s"), `encoding`)
-            # do not disable filtering for unknown content-encodings
-            # this could result in a DoS attack (server sending garbage
-            # as content-encoding)
 
 
     def is_rewrite (self):
@@ -493,7 +373,7 @@ class HttpServer (Server):
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
             if 'Digest' in challenges:
-                attrs['uri'] = self.document
+                attrs['uri'] = "/"
                 attrs['method'] = self.method
             creds = get_credentials(challenges, **attrs)
             # resubmit the request with proxy credentials
@@ -590,5 +470,3 @@ def speedcheck_print_status ():
     #                                          status[0], server.hostname)
 
 import wc
-
-
