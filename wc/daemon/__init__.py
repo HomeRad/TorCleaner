@@ -24,9 +24,9 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os
-from wc import i18n, startfunc, Version, iswriteable
+from wc import i18n, startfunc, Version, iswriteable, AppName
 
-fname = "webcleaner-%s.pid"%Version
+fname = "%s-%s.pid"%(AppName, Version)
 if os.name=="nt":
     pidfile=os.path.join(os.environ.get("TEMP"), fname)
 else:
