@@ -146,7 +146,8 @@ po/Makefile
 libjs/Makefile
 libjs/fdlibm/Makefile
 service/Makefile
-service/log/Makefile
-service/env/Makefile
+service/webcleaner/Makefile
+service/webcleaner/log/Makefile
+service/webcleaner/env/Makefile
 ])
 AC_OUTPUT
