@@ -2,7 +2,7 @@ webcleaner (0.30) unstable; urgency=low
 
   * wcheaders, webcleanerconf: only enable() edit/remove buttons when
     they can do something
-  * add emerchandise.com to the advert filters
+  * more advert filters
 
  -- Bastian Kleineidam <calvin@debian.org>  Fri, 30 Nov 2001 16:22:41 +0100
 

@@ -113,7 +113,7 @@
  scheme=""
  host=""
  port=""
- path="/(advert|banner|adid|profileid)/"
+ path="/(advert|banners?|adid|profileid)/"
  parameters=""
  query=""
  fragment=""/>
@@ -188,4 +188,13 @@
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
 </rewrite>
+
+<block title="Adserver 9"
+ scheme=""
+ host="216.200.201.212"
+ port=""
+ path=""
+ parameters=""
+ query=""
+ fragment=""/>
 </folder>
