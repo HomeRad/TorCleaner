@@ -1,8 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 from wc.parser.htmllib import HtmlPrettyPrinter
 from wc.parser import htmlsax
-import sys
-sys.stderr = sys.stdout
 from cStringIO import StringIO
 
 import unittest
@@ -77,6 +75,8 @@ class TestParser (unittest.TestCase):
         #XXX("""<a href=/>""", """<a href=""></a>"""),
         ("""<a href="'">""", """<a href="'">"""),
         ("""<a href='"'>""", """<a href="&quot;">"""),
+        ("""<a href="bla" %]">""", """<a href="bla">"""),
+        ("""<a href=bla">""", """<a href="bla">"""),
         # entities
         ("""<a href="&#109;ailto:">""", """<a href="mailto:">"""),
         )

@@ -1,8 +1,11 @@
+#!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
-""" test script to test filtering"""
+"""test script to test filtering"""
+
 import unittest
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
+
 
 class TestBlocker (unittest.TestCase):
 
@@ -18,6 +21,7 @@ class TestBlocker (unittest.TestCase):
         attrs = get_filterattrs(self.url, [FILTER_REQUEST])
         filtered = applyfilter(FILTER_REQUEST, data, 'finish', attrs)
         self.assert_(filtered.find("blocked.html")!=-1)
+
 
 if __name__ == '__main__':
     unittest.main()

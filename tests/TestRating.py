@@ -1,4 +1,6 @@
 # -*- coding: iso-8859-1 -*-
+"""test rating routines"""
+
 import unittest
 from wc.filter.Rating import *
 
