@@ -170,6 +170,7 @@ class MyDistribution (distklass, object):
 	data.append('config_dir = %r' % os.path.join(cwd, "config"))
         data.append('template_dir = %r' % os.path.join(cwd, "templates"))
         data.append("install_data = %r" % cwd)
+        data.append("install_scripts = %r" % cwd)
         self.create_conf_file(data)
         super(MyDistribution, self).run_commands()
 
