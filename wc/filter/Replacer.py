@@ -2,7 +2,7 @@
 """replace expressions in a data stream
    you can use this for highlighting and removing/replacing certain strings
 """
-# Copyright (C) 2000-2004  Bastian Kleineidam
+# Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

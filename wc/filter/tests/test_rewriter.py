@@ -153,7 +153,13 @@ class TestRewriter (unittest.TestCase):
 
     def testITSVuln (self):
         """Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability"""
-        self.filt("""<object data="&#109;s-its:mhtml:file://C:\\foo.mht!${PATH}/EXPLOIT.CHM::/exploit.htm">""",
+        # To avoid virus alarms we obfuscate the exploit URL. This
+        # code is harmless.
+        data_url = "&#109;s-its:mhtml:file://"+
+                   "C:\\foo.mht!${PATH}/"+
+                   "EXPLOIT.CHM::"+
+                   "/exploit.htm"
+        self.filt("""<object data="%s">""" % data_url,
                   """<object data="ms-its:mhtml:file:/C:/foo.mht">""")
 
 

@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """compress documents on-the-fly with zlib"""
-# Copyright (C) 2000-2004  Bastian Kleineidam
+# Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
