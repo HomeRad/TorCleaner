@@ -7,6 +7,7 @@ from wc.log import *
 from ssl import get_clientctx
 from HttpServer import HttpServer
 from SslConnection import SslConnection
+from OpenSSL import SSL
 
 
 class HttpsServer (HttpServer, SslConnection):
@@ -21,6 +22,7 @@ class HttpsServer (HttpServer, SslConnection):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
         try:
 	    self.connect(self.addr)
+            self.socket.set_connect_state()
         except socket.error:
             self.handle_error('connect error')
 

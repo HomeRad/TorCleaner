@@ -1,4 +1,4 @@
-import socket, errno
+import socket, errno, sys
 from wc.log import *
 from Connection import Connection, MAX_BUFSIZE, RECV_BUFSIZE, SEND_BUFSIZE
 from OpenSSL import SSL
@@ -23,9 +23,13 @@ class SslConnection (Connection):
             self.handle_error('read error')
             return
         except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
-            exception(PROXY, "%s ssl read message %s", self, err)
+            exc = sys.exc_info()[0]
+            debug(PROXY, "%s ssl read message %s", self, exc)
             return
-        except (SSL.Error, SSL.ZeroReturnError), err:
+        except SSL.ZeroReturnError, err:
+            self.delayed_close()
+            return
+        except SSL.Error, err:
             self.handle_error('read error')
             return
         if not data: # It's been closed, and handle_close has been called
@@ -48,7 +52,11 @@ class SslConnection (Connection):
         try:
             num_sent = self.socket.write(data)
         except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
-            exception(PROXY, "%s ssl write message %s", self, err)
+            exc = sys.exc_info()[0]
+            debug(PROXY, "%s ssl write message %s", self, exc)
+            return
+        except SSL.ZeroReturnError, err:
+            self.delayed_close()
             return
         except SSL.Error, err:
             self.handle_error('write error')
