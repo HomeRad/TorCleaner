@@ -59,7 +59,9 @@ class ContextVariable:
 		# Return the length of the sequence - if it's zero length then it's handled
 		# as though it wasn't a sequence at all.
 		try:
-			return len (self.value())
+			seqLength = len (self.value())
+                        temp = self.value()[1:1]
+                        return seqLength
 		except:
 			return 0
 		
