@@ -89,7 +89,6 @@ def _form_reset ():
 
 # form execution
 def _exec_form (form, lang):
-    _form_reset()
     res = [None]
     # bind address
     if form.has_key('bindaddress'):

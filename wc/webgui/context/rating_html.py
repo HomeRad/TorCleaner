@@ -79,8 +79,6 @@ selindex = []
 # form execution
 def _exec_form (form, lang):
     global url
-    # reset info/error and form vals
-    _form_reset()
     # calculate global vars
     if not _form_url(form):
         return

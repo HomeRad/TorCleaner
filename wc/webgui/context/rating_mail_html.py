@@ -34,8 +34,6 @@ smtphost = "localhost"
 
 # form execution
 def _exec_form (form, lang):
-    # reset info/error and form vals
-    _form_reset()
     # calculate global vars
     if not _form_url(form):
         return

@@ -32,7 +32,6 @@ def _form_reset ():
 # form execution
 def _exec_form (form, lang):
     global url, reason
-    _form_reset()
     if form.has_key('url'):
         url = _getval(form, 'url')
     if form.has_key('reason'):
