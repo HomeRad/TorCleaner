@@ -1,6 +1,8 @@
 # -*- coding: iso-8859-1 -*-
+
 from wc.parser.htmllib import HtmlPrettyPrinter
 import wc.parser
+import wc.parser.htmlsax
 import cStringIO as StringIO
 import unittest
 import StandardTest
