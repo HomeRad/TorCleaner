@@ -115,13 +115,13 @@
 
 <rewrite title="Heise advert tag" oid="19"
  desc="www.heise.de has an advert tag. Nice :)"
- tag="heiseadvert">
-</rewrite>
+ tag="heiseadvert"/>
+
 
 <rewrite title="Heise advert tag 2" oid="20"
  desc="heise.de"
- tag="contentbanner">
-</rewrite>
+ tag="contentbanner"/>
+
 
 <block title="Hosts without DNS name" oid="21"
  desc="If a host has no DNS name it consists only of numbers, for  example &amp;quot;http://34.55.124.2&amp;quot;. A lot of adverts are loaded from such servers. We restrict it further more for CGI queries which fetch GIF images."
@@ -136,19 +136,19 @@
 <rewrite title="Remove &lt;ilayer&gt; tag" oid="22"
  desc="Lots of ads come nowadays in ilayer tags."
  dontmatchurl="www\.mplayerhq\.hu"
- tag="ilayer">
-</rewrite>
+ tag="ilayer"/>
+
 
 <rewrite title="Remove &lt;layer&gt; tag" oid="23"
  desc="Dont know some example sites, but I dont want layers."
  dontmatchurl="www\.on2\.com|www\.mplayerhq\.hu"
- tag="layer">
-</rewrite>
+ tag="layer"/>
+
 
 <rewrite title="Use the &lt;nolayer&gt; tag" oid="24"
  desc="If we remove the &lt;ilayer&gt; and &lt;layer&gt;, use the &lt;nolayer&gt; content."
  tag="nolayer">
-<replace part="tag"/>
+<replacement part="tag"/>
 </rewrite>
 
 <rewrite title="Userfriendly outbound links" oid="25"
@@ -211,7 +211,7 @@
 <rewrite title="Onmouseover ads" oid="35"
  desc="This gets rid of the latest generation of JavaScript annoyances. ">
 <attr name="onmouseover">parent\.location\s*=</attr>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="IMDB Advert 4" oid="36"

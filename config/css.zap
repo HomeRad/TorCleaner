@@ -6,6 +6,6 @@
 
 <rewrite title="Remove STYLE tag" oid="0"
  desc="Remove the &lt;style&gt; tag."
- tag="style">
-</rewrite>
+ tag="style"/>
+
 </folder>

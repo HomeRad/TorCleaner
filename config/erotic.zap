@@ -24,11 +24,11 @@
 
 <rewrite title="Bad words in the url 1" oid="2">
 <attr>http://.*\.(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn).*\.com</attr>
-<replace part="attrval">http://www.calvinandhobbes.com/</replace>
+<replacement part="attrval">http://www.calvinandhobbes.com/</replacement>
 </rewrite>
 
 <rewrite title="Bad words in the url 2" oid="3">
 <attr>http://.*(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn)\..*com</attr>
-<replace part="attrval">http://www.calvinandhobbes.com/</replace>
+<replacement part="attrval">http://www.calvinandhobbes.com/</replacement>
 </rewrite>
 </folder>

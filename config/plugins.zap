@@ -6,12 +6,12 @@
 <rewrite title="Remove EMBEDded content" oid="0"
  desc="Kill &lt;embed&gt; things."
  matchurl="www\.heise\.de"
- tag="embed">
-</rewrite>
+ tag="embed"/>
+
 
 <rewrite title="Remove OBJECTs" oid="1"
  desc="Kill &lt;object&gt; things."
  matchurl="www\.heise\.de"
- tag="object">
-</rewrite>
+ tag="object"/>
+
 </folder>

@@ -5,36 +5,36 @@
 
 <rewrite title="&lt;a&gt; onfocus" oid="0">
 <attr name="onfocus"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;a&gt; onmouseout" oid="1">
 <attr name="onmouseout"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;a&gt; onmouseover" oid="2">
 <attr name="onmouseover"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;area&gt; onfocus" oid="3"
  tag="area">
 <attr name="onfocus"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;area&gt; onmouseout" oid="4"
  tag="area">
 <attr name="onmouseover"/>
 <attr name="onmouseout"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;area&gt; onmouseover" oid="5"
  tag="area">
 <attr name="onmouseover"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;body&gt; onload" oid="6"
@@ -42,33 +42,33 @@
  disable="1"
  tag="body">
 <attr name="onload"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;body&gt; onresize" oid="7"
  desc="filter the onresize tag"
  tag="body">
 <attr name="onresize"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;body&gt; onunload" oid="8"
  desc="onunload is used for advert popups "
  tag="body">
 <attr name="onunload"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;noscript&gt;" oid="9"
  desc="Remove &lt;noscript&gt; tag (use if you allowed scripting)"
- tag="noscript">
-</rewrite>
+ tag="noscript"/>
+
 
 <rewrite title="&lt;script&gt;" oid="10"
  desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1"
- tag="script">
-</rewrite>
+ tag="script"/>
+
 
 <rewrite title="Javascript links" oid="11"
  desc="Only activate this rule if Javascript is disabled in your browser."
@@ -80,10 +80,10 @@
  desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1"
  tag="noscript">
-<replace part="tag"/>
+<replacement part="tag"/>
 </rewrite>
 
-<replacer title="top frame bashing" oid="13"
+<replace title="top frame bashing" oid="13"
  desc="Some sites disable surrounding frames and install themselves as the top frame."
  search="top\.location\.href\s*=\s*self\.location\.href"/>
 
@@ -94,14 +94,14 @@
  desc="onunload is used for advert popups"
  tag="frameset">
 <attr name="onunload"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;frame&gt; onunload" oid="16"
  desc="onunload is used for advert popups"
  tag="frame">
 <attr name="onunload"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="Prevent right-click disablement" oid="17"
@@ -113,24 +113,24 @@
 <rewrite title="&lt;body&gt; ondragstart" oid="18"
  tag="body">
 <attr name="ondragstart"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;body&gt; oncontextmenu" oid="19"
  tag="body">
 <attr name="oncontextmenu"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;body&gt; onselectstart" oid="20"
  tag="body">
 <attr name="onselectstart"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;body&gt; onkeydown" oid="21"
  tag="body">
 <attr name="onkeydown"/>
-<replace part="attr"/>
+<replacement part="attr"/>
 </rewrite>
 </folder>
