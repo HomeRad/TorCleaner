@@ -1,3 +1,9 @@
+webcleaner (0.54-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Mon,  9 Sep 2002 22:43:12 +0200
+
 webcleaner (0.53-1) unstable; urgency=low
 
   * updated ConfWindow patch
