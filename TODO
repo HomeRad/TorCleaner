@@ -1,5 +1,10 @@
 TODO
 
+version 2.12 and above
+
+- set charset
+- UnicodeDecodeError: 'ascii' codec can't decode byte 0xb7 in position 1410: ordinal not in range(128)
+
 version 2.13 and above
 
 ======================================================================
