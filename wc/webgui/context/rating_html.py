@@ -26,6 +26,8 @@ from wc.strformat import strtime as _strtime
 from wc.filter.rating import services, categories
 from wc.filter.rating import get_category as _get_category
 from wc.filter.rating.rating import Rating as _Rating
+from wc.filter.rating.category import intrange_from_string as _intrange_from_string
+from wc.filter.rating.category import string_from_intrange as _string_from_intrange
 from wc.filter.rating.storage import get_rating_store as _get_rating_store
 from wc.filter.rating.storage.pickle import PickleStorage as _PickleStorage
 
@@ -43,6 +45,7 @@ error = {
 }
 values = {}
 rating_modified = {}
+
 
 def _reset_values ():
     for category in categories:
@@ -147,7 +150,11 @@ def _form_ratings (form):
             # unknown category
             error['categoryvalue'] = True
             return False
-        if not category.valid_value(value):
+        if category.iterable:
+            realvalue = value
+        else:
+           realvalue = _intrange_from_string(value)
+        if not category.valid_value(realvalue):
             error['categoryvalue'] = True
             return False
         if category.iterable:
@@ -185,6 +192,11 @@ def _form_apply ():
         category = _get_category(catname)
         if category.iterable:
             value = [x for x in value if value[x]][0]
+        else:
+            value = _intrange_from_string(value)
+            if value is None:
+                error['ratingupdated'] = True
+                return
         rating.add_category_value(category, value)
     rating_store[url] = rating
     try:
@@ -216,4 +228,4 @@ def _form_load ():
                     values[catname][x] = False
                 values[catname][value] = True
             else:
-                values[catname] = value
+                values[catname] = _string_from_intrange(value)
