@@ -374,6 +374,13 @@ class TestUrl (unittest.TestCase):
         self.assert_(not is_idn)
         self.assert_(not encurl)
 
+    def test_match_host (self):
+        """test host matching"""
+        self.assert_(not wc.url.match_host("localhost", [".localhost"]))
+        self.assert_(wc.url.match_host("a.localhost", [".localhost"]))
+        self.assert_(wc.url.match_host("localhost", ["localhost"]))
+
+
 def test_suite ():
     """build and return a TestSuite"""
     suite = unittest.TestSuite()

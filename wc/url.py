@@ -367,7 +367,10 @@ def match_host (host, domainlist):
     if not host:
         return False
     for domain in domainlist:
-        if host.endswith(domain):
+        if domain.startswith('.'):
+            if host.endswith(domain):
+                return True
+        elif host == domain:
             return True
     return False
 
