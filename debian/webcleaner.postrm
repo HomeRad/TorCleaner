@@ -9,6 +9,12 @@ case "$1" in
     purge)
        # remove log files
        rm -rf /var/log/webcleaner || true
+       # remove local configuration dirs
+       rmdir /etc/webcleaner/blacklists/ads || true
+       rmdir /etc/webcleaner/blacklists/aggressive || true
+       rmdir /etc/webcleaner/blacklists/violence || true
+       rmdir /etc/webcleaner/blacklists || true
+       rmdir /etc/webcleaner || true
        ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
        # nothing to do
