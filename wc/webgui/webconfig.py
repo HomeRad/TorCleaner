@@ -164,7 +164,7 @@ def add_default_context (context, filename, lang):
     macros = wc.webgui.templatecache.templates[path]
     context_add(context, "macros", macros.macros)
     # used by navigation macro
-    context_add(context, "nav", {filename.replace('.', '_'): True})
+    add_nav_context(context, filename)
     # page template name
     context_add(context, "filename", filename)
     # base url
@@ -182,6 +182,22 @@ def add_default_context (context, filename, lang):
                                'trans': wc.i18n.lang_trans(la, lang),
                               })
     context_add(context, "otherlanguages", otherlanguages)
+
+
+nav_filenames = [
+    "index_html",
+    "config_html",
+    "filterconfig_html",
+    "update_html",
+    "rating_html",
+    "help_html",
+]
+def add_nav_context (context, filename):
+    filename = filename.replace('.', '_')
+    nav = {}
+    for fname in nav_filenames:
+        nav[fname] = fname==filename
+    context_add(context, "nav", nav)
 
 
 def context_add (context, key, val):
