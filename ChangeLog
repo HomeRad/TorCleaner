@@ -19,6 +19,15 @@
     Added: templates/classic/restart.html,
       wc/webgui/context/restart_html.py
 
+  * Reenabled and fixed the rating edit pages.
+    Type: bugfix
+    Changed: templates/classic/rating*.html, wc/webgui/context/rating*.py
+
+  * Reenabled and fixed the rating rules.
+    Type: bugfix
+    Changed: wc/filter/rules/RatingRule.py,
+      templates/classic/macors/rules.html
+
 2.25 "Elf" (released 23.12.2004)
 
   * Filter rating is disabled for now until it works again.
