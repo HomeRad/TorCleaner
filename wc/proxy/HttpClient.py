@@ -115,74 +115,41 @@ class HttpClient (Connection):
         if i >= 0: # Two newlines ends headers
             i += 4 # Skip over newline terminator
             # the first 2 chars are the newline of request
-            data = self.read(i)[2:]
-            self.headers = rfc822.Message(StringIO(data))
-            # set via header
-            via = self.headers.get('Via', "").strip()
-            if via: via += " "
-            via += "1.1 unknown\r"
-            self.headers['Via'] = via
+            fp = StringIO(self.read(i)[2:])
+            msg = rfc822.Message(fp)
+            # put unparsed data (if any) back to the buffer
+            msg.rewindbody()
+            self.recv_buffer = fp.read() + self.recv_buffer
+            # work on these headers
+            self.compress = set_proxy_headers(msg)
+            # filter headers
             self.headers = applyfilter(FILTER_REQUEST_HEADER,
-                 self.headers, fun="finish", attrs=self.nofilter)
-            # remember if client understands gzip
-            self.compress = 'identity'
-            encodings = self.headers.get('Accept-Encoding', '')
-            for accept in encodings.split(','):
-                if ';' in accept:
-                    accept, q = accept.split(';', 1)
-                if accept.strip().lower() in ('gzip', 'x-gzip'):
-                    self.compress = 'gzip'
-                    break
-            # we understand gzip, deflate and identity
-            self.headers['Accept-Encoding'] = \
-                    'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
+                              msg, fun="finish", attrs=self.nofilter)
             # add decoders
             self.decoders = []
-            self.bytes_remaining = int(self.headers.get('Content-Length', 0))
-            # Chunked encoded
-            if self.headers.get('Transfer-Encoding') is not None:
+            self.bytes_remaining = get_content_length(self.headers)
+            # chunked encoded
+            if self.headers.has_key('Transfer-Encoding'):
+                # XXX don't look at value, assume chunked encoding for now
                 debug(BRING_IT_ON, 'Proxy: C/Transfer-encoding:', `self.headers['transfer-encoding']`)
                 self.decoders.append(UnchunkStream())
-                # remove encoding header
-                to_remove = ["Transfer-Encoding"]
-                if self.headers.get("Content-Length") is not None:
-                    print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
-                    to_remove.append("Content-Length")
+                remove_encoding_headers(self.headers)
                 self.bytes_remaining = None
-                remove_headers(self.headers, to_remove)
-                # add warning
-                self.headers['Warning'] = "214 Transformation applied\r"
-            # XXX handle Connection values
-            if self.headers.has_key('Connection'):
-                to_remove = ['Connection']
-                print >>sys.stderr, "XXX connection", self.headers['Connection']
-                remove_headers(self.headers, to_remove)
-            elif self.headers.has_key('Proxy-Connection'):
-                val = self.headers['Proxy-Connection'].strip()
-                self.headers['Connection'] = val+"\r"
-                remove_headers(self.headers, ['Proxy-Connection'])
             debug(HURT_ME_PLENTY, "Proxy: C/Headers", self.headers.items())
             if config["proxyuser"]:
                 if not self.headers.has_key('Proxy-Authentication'):
-                    auth = get_proxy_auth_challenge()
                     return self.error(407,
-                          i18n._("Proxy Authentication Required"), auth=auth)
+                          i18n._("Proxy Authentication Required"),
+                          auth=get_proxy_auth_challenge())
                 auth = check_proxy_auth(self.headers['Proxy-Authentication'])
                 if auth:
                     return self.error(407,
                           i18n._("Proxy Authentication Required"), auth=auth)
-            if self.method=='OPTIONS':
-                mf = int(self.headers.get('Max-Forwards', -1))
-                if mf==0:
-                    # XXX display options ?
-                    self.state = 'done'
-                    ServerHandleDirectly(self,
-                       'HTTP/1.0 200 OK\r\n',
-                       'Content-Type: text/plain\r\n\r\n',
-                       '')
-                    return
-                if mf>0:
-                    self.headers['Max-Forwards'] = "%d\r" % (mf-1)
+            if self.method=='OPTIONS' and get_max_forwards(self.headers)==0:
+                # XXX display options ?
+                self.state = 'done'
+                return ServerHandleDirectly(self, 'HTTP/1.0 200 OK\r\n',
+                                   'Content-Type: text/plain\r\n\r\n', '')
             self.state = 'content'
 
 
@@ -281,3 +248,78 @@ class HttpClient (Connection):
         debug(HURT_ME_PLENTY, 'Proxy: C/close', self)
         self.state = 'closed'
         Connection.close(self)
+
+
+def set_proxy_headers (headers):
+    set_via_headers(headers)
+    set_connection_headers(headers)
+    return set_encoding_headers(headers)
+
+
+def set_via_headers (headers):
+    """set via header"""
+    via = headers.get('Via', "").strip()
+    if via: via += " "
+    via += "1.1 unknown\r"
+    headers['Via'] = via
+
+
+def set_connection_headers (headers):
+    """Remove Connection header, rename Proxy-Connection to Connection"""
+    # XXX handle Connection values
+    if headers.has_key('Connection'):
+        to_remove = ['Connection']
+        print >>sys.stderr, "XXX connection", headers['Connection']
+        remove_headers(headers, to_remove)
+    elif headers.has_key('Proxy-Connection'):
+        val = headers['Proxy-Connection'].strip()
+        headers['Connection'] = val+"\r"
+        remove_headers(headers, ['Proxy-Connection'])
+
+
+def set_encoding_headers (headers):
+    """set encoding headers and return compression type"""
+    # remember if client understands gzip
+    compress = 'identity'
+    encodings = headers.get('Accept-Encoding', '')
+    for accept in encodings.split(','):
+        if ';' in accept:
+            accept, q = accept.split(';', 1)
+        if accept.strip().lower() in ('gzip', 'x-gzip'):
+            compress = 'gzip'
+            break
+    # we understand gzip, deflate and identity
+    headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
+    return compress
+
+
+def remove_encoding_headers (headers):
+    # remove encoding header
+    to_remove = ["Transfer-Encoding"]
+    if headers.get("Content-Length") is not None:
+        print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
+        to_remove.append("Content-Length")
+    remove_headers(headers, to_remove)
+    # add warning
+    headers['Warning'] = "214 Transformation applied\r"
+
+
+def get_max_forwards (headers):
+    """get Max-Forwards value as int and decrement it if its > 0"""
+    try:
+        mf = int(headers.get('Max-Forwards', -1))
+    except ValueError:
+        print >>sys.stderr, "Invalid Max-Forwards header value", headers.get('Max-Forwards')
+        mf = -1
+    if mf>0:
+        headers['Max-Forwards'] = "%d\r" % (mf-1)
+    return mf
+
+
+def get_content_length (headers):
+    """get content length as int or 0 on error"""
+    try:
+        return int(headers.get('Content-Length', 0))
+    except ValueError:
+        print >>sys.stderr, "Invalid Content-Length value", headers.get('Content-Length')
+    return 0
