@@ -61,9 +61,9 @@ def get_prefix_vals (form, prefix):
     """return a list of (key, value) pairs where ``prefix+key'' is a valid
        form field"""
     res = []
-    for key, item in form.items():
+    for key in form:
         if key.startswith(prefix):
-            res.append(key[len(prefix):], get_item_value(item))
+            res.append(key[len(prefix):], get_item_value(form[key]))
     return res
 
 
