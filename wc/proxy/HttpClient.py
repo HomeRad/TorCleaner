@@ -153,7 +153,8 @@ class HttpClient (Connection):
                 # add warning
                 self.headers['Warning'] = "214 Transformation applied\r"
             debug(HURT_ME_PLENTY, "Proxy: C/Headers", `str(self.headers)`)
-            self.bytes_remaining = int(self.headers.get('Content-Length', 0))
+            if self.headers.has_key('Content-Length'):
+                self.bytes_remaining = int(self.headers['Content-Length'])
             if config["proxyuser"] and not self.check_proxy_auth():
                 return self.error(407, i18n._("Proxy Authentication Required"))
             if self.method=='OPTIONS':
@@ -190,11 +191,11 @@ class HttpClient (Connection):
         data = applyfilter(FILTER_REQUEST_ENCODE, data,
                            attrs=self.nofilter)
         self.content += data
-        if (is_closed or
-            (self.bytes_remaining is not None and
-             self.bytes_remaining <= 0)):
-            if self.bytes_remaining < 0:
-                print >>sys.stderr, "Warning: client received %d bytes more than content-length" % (-self.bytes_remaining)
+        underflow = self.bytes_remaining is not None and \
+                    self.bytes_remaining <= 0
+        if underflow:
+            print >>sys.stderr, "Warning: client received %d bytes more than content-length" % (-self.bytes_remaining)
+        if is_closed or underflow:
             data = applyfilter(FILTER_REQUEST_DECODE, "",
     	                   fun="finish", attrs=self.nofilter)
             data = applyfilter(FILTER_REQUEST_DECODE, data,
@@ -206,8 +207,8 @@ class HttpClient (Connection):
             self.state = 'receive'
             # This object will call server_connected at some point
             ClientServerMatchmaker(self, self.request, self.headers,
-    	                       self.content, self.nofilter,
-                                       self.compress)
+                                   self.content, self.nofilter,
+                                   self.compress)
 
 
     def check_proxy_auth (self):
