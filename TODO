@@ -4,8 +4,6 @@ version 2.3
 
 - HTTP/1.1 persistent client connections
 
-- HTTP/1.1 pipelining
-
 - HTTPS tunneling (RFC 2817/2818)
 
 - parse and import adzapper.sf.net filters
@@ -95,3 +93,6 @@ for your application make sure to deny these requests: add
 - Use FOX 1.2 Python bindings (fxpy 1.2)
   When FOX 1.2 is released, help to update fxpy to this release using
   the new SWIG 1.3 code.
+
+- HTTP/1.1 pipelining
+
