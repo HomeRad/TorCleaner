@@ -553,7 +553,7 @@ setup (name = "webcleaner",
            'wc.dns.rdtypes.IN', 'wc.dns.rdtypes.ANY', 'wc.HtmlParser',
            'wc.proxy', 'wc.proxy.auth', 'wc.proxy.decoder', 'wc.webgui',
            'wc.webgui.PageTemplates', 'wc.webgui.TAL', 'wc.webgui.ZTUtils',
-           'wc.webgui.context', 'wc.dns.tests', 'wc.tests', ],
+           'wc.webgui.context', ],
        ext_modules = extensions,
        scripts = scripts,
        long_description = """WebCleaner features:
