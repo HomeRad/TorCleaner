@@ -15,7 +15,7 @@ filter test/html/script2.html
 
       </td>
    </tr>
-</table> 
+</table>
 
 filter test/html/script3.html
 
@@ -131,8 +131,6 @@ filter test/html/script7.html
 // error fetching script from 'http://localhost/notfound.js'
 //-->
 </script>
-
-</html>
 
 filter test/html/script8.html
 
