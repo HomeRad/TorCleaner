@@ -14,8 +14,8 @@
     Changed: wc/proxy/HttpClient.py
     Added: templates/classic/adminpass.html,
       wc/webgui/context/adminpass_html.py
-  * added PICS data config interface
-    Added: templates/classic/pics.html, wc/webgui/context/pics_html.py
+  * added rating config interface
+    Added: templates/classic/rating.html, wc/webgui/context/rating_html.py
   * updated magic database to newest upstream
     Changed: config/magic.mime
   * added dhcp nameserver config support on windows dns resolver

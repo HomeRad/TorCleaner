@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Jan  5 00:29:40 2004\n"
+"POT-Creation-Date: Tue Jan  6 17:59:45 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,9 +24,6 @@ msgstr ""
 msgid "Unknown page"
 msgstr ""
 
-msgid "PICS %s match"
-msgstr ""
-
 msgid "violence"
 msgstr ""
 
@@ -36,10 +33,19 @@ msgstr ""
 msgid "language"
 msgstr ""
 
-msgid "other"
+msgid "age range"
 msgstr ""
 
-msgid "age range"
+msgid "None"
+msgstr ""
+
+msgid "Mild"
+msgstr ""
+
+msgid "Heavy"
+msgstr ""
+
+msgid "Malformed rating line %r"
 msgstr ""
 
 msgid "inserting new rule %s"
@@ -51,7 +57,7 @@ msgstr ""
 msgid "with %d rules"
 msgstr ""
 
-msgid "Invalid pics rule tag name %r, check your configuration"
+msgid "Invalid rating rule tag name %r, check your configuration"
 msgstr ""
 
 msgid "Tag"
@@ -285,9 +291,6 @@ msgstr ""
 msgid "Unknown command %s"
 msgstr ""
 
-msgid "PICS category successfully enabled."
-msgstr ""
-
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -338,8 +341,15 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Generic\n"
+msgstr ""
+
+msgid ""
 "Compression of documents with good compression ratio\n"
 "like HTML, WAV, etc."
+msgstr ""
+
+msgid "Attributes"
 msgstr ""
 
 msgid "List of hostnames the proxy must not filter."
@@ -360,9 +370,6 @@ msgstr ""
 msgid "before"
 msgstr ""
 
-msgid "Service"
-msgstr ""
-
 msgid "Response content data of mime types image/gif"
 msgstr ""
 
@@ -376,6 +383,9 @@ msgid "return window.confirm('Really remove this folder?')"
 msgstr ""
 
 msgid "Folder name"
+msgstr ""
+
+msgid "Content rating for %(AppName)s"
 msgstr ""
 
 msgid "Blocked image URL"
@@ -393,7 +403,7 @@ msgstr ""
 msgid "Rule icon"
 msgstr ""
 
-msgid "Fallback URL"
+msgid "Invalid category value."
 msgstr ""
 
 msgid ""
@@ -433,22 +443,13 @@ msgstr ""
 msgid "Filter configuration rules"
 msgstr ""
 
-msgid ""
-"If you specified zero or more than one attributes\n"
-"to match, 'attr' and 'attrvalue' replace the first occuring or matching\n"
-"attribute or nothing."
+msgid "Limit"
 msgstr ""
 
 msgid "Rule enclosed block successfully changed."
 msgstr ""
 
-msgid "Attributes"
-msgstr ""
-
-msgid ""
-"Parse HTML code and rewrite single tags, attributes\n"
-"and values. Execute and filter JavaScript. Parse and filter PICS rated\n"
-"pages. Filter HTML comments."
+msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
 msgid ""
@@ -456,7 +457,7 @@ msgid ""
 "them with a transparent 1x1 image."
 msgstr ""
 
-msgid "Replace regex"
+msgid "Rating category limit successfully changed."
 msgstr ""
 
 msgid "Rule already disabled."
@@ -486,7 +487,7 @@ msgstr ""
 msgid "Parent proxy port successfully changed."
 msgstr ""
 
-msgid "Replace value"
+msgid "Fallback URL"
 msgstr ""
 
 msgid "Admin password successfully changed."
@@ -506,9 +507,6 @@ msgstr ""
 msgid "Folder successfully removed."
 msgstr ""
 
-msgid "Parse and evaluate PICS rating system header values."
-msgstr ""
-
 msgid "Update filter configuration"
 msgstr ""
 
@@ -521,9 +519,6 @@ msgid ""
 msgstr ""
 
 msgid "Response data of html and javascript"
-msgstr ""
-
-msgid "PICS data for %(AppName)s"
 msgstr ""
 
 msgid "Access key 1"
@@ -556,10 +551,7 @@ msgstr ""
 msgid "Folder successfully enabled."
 msgstr ""
 
-msgid "Remove images with certain width and/or height."
-msgstr ""
-
-msgid "Invalid PICS category value."
+msgid "New rule successfully created."
 msgstr ""
 
 msgid ""
@@ -568,7 +560,7 @@ msgid ""
 "administrator password, every proxy user can change the proxy configuration.\n"
 msgstr ""
 
-msgid "PICS ratings"
+msgid "Replace value"
 msgstr ""
 
 msgid ""
@@ -610,9 +602,6 @@ msgstr ""
 msgid "Empty header rule name."
 msgstr ""
 
-msgid "Mild"
-msgstr ""
-
 msgid "%(AppName)s filter rule configuration"
 msgstr ""
 
@@ -648,9 +637,6 @@ msgid ""
 "<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr ""
 
-msgid "None"
-msgstr ""
-
 msgid "Response headers of all mime types."
 msgstr ""
 
@@ -662,9 +648,6 @@ msgid ""
 "the quote chars often found in Microsoft pages."
 msgstr ""
 
-msgid "PICS service successfully enabled."
-msgstr ""
-
 msgid "Up"
 msgstr ""
 
@@ -674,7 +657,16 @@ msgstr ""
 msgid "Move rule down"
 msgstr ""
 
+msgid ""
+"If you specified zero or more than one attributes\n"
+"to match, 'attr' and 'attrvalue' replace the first occuring or matching\n"
+"attribute or nothing."
+msgstr ""
+
 msgid "Proxy configuration"
+msgstr ""
+
+msgid "Replace regex"
 msgstr ""
 
 msgid "Rule description successfully changed."
@@ -697,7 +689,7 @@ msgstr ""
 msgid "Request and response headers of all mime types."
 msgstr ""
 
-msgid "Opera 6"
+msgid "Content rating"
 msgstr ""
 
 msgid ""
@@ -715,16 +707,10 @@ msgid ""
 "several given categories."
 msgstr ""
 
-msgid "New rule successfully created."
+msgid "Nofilter host successfully added."
 msgstr ""
 
 msgid "Matching"
-msgstr ""
-
-msgid ""
-"One activated Pics rule enables the PICS content rating\n"
-"system in %(AppName)s. Several distinct content rating services including\n"
-"the one defined by %(AppName)s itself can be configured."
 msgstr ""
 
 msgid "Rule replace search successfully changed."
@@ -739,9 +725,7 @@ msgstr ""
 msgid "Allowed host successfully added."
 msgstr ""
 
-msgid ""
-"Replace regular expressions in a HTML or JavaScript\n"
-"pages."
+msgid "Opera 6"
 msgstr ""
 
 msgid "Go to rule:"
@@ -781,7 +765,16 @@ msgstr ""
 msgid "Netscape/Mozilla"
 msgstr ""
 
+msgid ""
+"Parse HTML code and rewrite single tags, attributes\n"
+"and values. Execute and filter JavaScript. Parse and filter content rated\n"
+"pages. Filter HTML comments."
+msgstr ""
+
 msgid "Folder moved up."
+msgstr ""
+
+msgid "Rating limits for"
 msgstr ""
 
 msgid "Accessibility statement for %(AppName)s"
@@ -893,7 +886,7 @@ msgstr ""
 msgid "Rename folder"
 msgstr ""
 
-msgid "Enabled filter module(s) %(filterenabled)s."
+msgid "Feedback for %(AppName)s"
 msgstr ""
 
 msgid ""
@@ -921,9 +914,6 @@ msgid ""
 "which must be allowed, even if a matching block rule exists."
 msgstr ""
 
-msgid "PICS data"
-msgstr ""
-
 msgid "Folders"
 msgstr ""
 
@@ -946,9 +936,6 @@ msgid "accessibility features of these pages"
 msgstr ""
 
 msgid "Replacement"
-msgstr ""
-
-msgid "Heavy"
 msgstr ""
 
 msgid "Invalid folder index."
@@ -984,8 +971,7 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-msgid ""
-"Generic\n"
+msgid "Remove images with certain width and/or height."
 msgstr ""
 
 msgid "Down"
@@ -1042,13 +1028,12 @@ msgstr ""
 msgid "Admin password"
 msgstr ""
 
-msgid "Feedback for %(AppName)s"
+msgid ""
+"Response content data of all image types supported by the\n"
+"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
 msgstr ""
 
 msgid "Add, modify and delete HTTP headers of request and response."
-msgstr ""
-
-msgid "PICS category successfully disabled."
 msgstr ""
 
 msgid "Rule don't-match-url successfully changed."
@@ -1069,10 +1054,12 @@ msgstr ""
 msgid "Rule header value successfully changed."
 msgstr ""
 
-msgid "Nofilter host successfully added."
+msgid "Invalid folder move down id."
 msgstr ""
 
-msgid "Invalid folder move down id."
+msgid ""
+"Replace regular expressions in a HTML or JavaScript\n"
+"pages."
 msgstr ""
 
 msgid "Rule header name successfully changed."
@@ -1094,6 +1081,12 @@ msgid "Rule moved down."
 msgstr ""
 
 msgid "Admin user"
+msgstr ""
+
+msgid ""
+"One activated Rating rule enables the content rating\n"
+"system in %(AppName)s. Several distinct content rating services including\n"
+"the one defined by %(AppName)s itself can be configured."
 msgstr ""
 
 msgid "Empty rewrite tag name."
@@ -1207,7 +1200,7 @@ msgstr ""
 msgid "footnote 5"
 msgstr ""
 
-msgid "PICS service successfully disabled."
+msgid "Enabled filter module(s) %(filterenabled)s."
 msgstr ""
 
 msgid "Enable rule"
@@ -1259,11 +1252,6 @@ msgid "Connection timeout in seconds"
 msgstr ""
 
 msgid "Port number of the parent proxy"
-msgstr ""
-
-msgid ""
-"Response content data of all image types supported by the\n"
-"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
 msgstr ""
 
 msgid "Invalid image height value."
