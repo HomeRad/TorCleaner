@@ -38,6 +38,9 @@
     a modem.
     Added files: wc/filter/ImageReducer.py, test/imagereduce.py
     Changed files: wc/gui/ConfWindow.py
+  * 1k recv and send buffer (instead of 8k) to improve responsiveness
+    for slow connections.
+    Changed files: wc/proxy/Connection.py
 
 1.5
   * - increase TCP dns query timeout from 10 to 20 seconds
