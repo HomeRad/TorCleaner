@@ -204,7 +204,7 @@ class HttpClient (Connection):
             data = applyfilter(FILTER_REQUEST_DECODE, data,
     	                   fun="finish", attrs=self.nofilter)
             self.content += data
-            if not self.headers.has_key('Content-Length'):
+            if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
