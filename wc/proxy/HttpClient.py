@@ -103,18 +103,18 @@ class HttpClient (Connection):
         if i >= 0: # One newline ends request
             # self.read(i) is not including the newline
             self.request = self.read(i)
-            self.nofilter = {'nofilter': match_host(self.request)}
-            debug(PROXY, "Client: request %s", self.request)
-            self.request = applyfilter(FILTER_REQUEST, self.request,
-                           fun="finish", attrs=self.nofilter)
             info(ACCESS, '%s - %s - %s', self.addr[0],
                  time.ctime(time.time()), self.request)
             try:
                 self.method, self.url, protocol = self.request.split()
-                self.protocol = fix_http_version(protocol)
             except ValueError:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Can't parse request"))
+            self.nofilter = {'nofilter': match_host(self.request)}
+            debug(PROXY, "Client: request %s", self.request)
+            self.url = applyfilter(FILTER_REQUEST, self.url,
+                                   fun="finish", attrs=self.nofilter)
+            self.protocol = fix_http_version(protocol)
             if not self.url:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Empty URL"))

@@ -136,12 +136,7 @@ class Blocker (Filter):
 
     def doit (self, data, **args):
         debug(FILTER, "block filter working on %s", `data`)
-        splitted = data.split()
-        if len(splitted)!=3:
-            error(FILTER, "invalid request: %s", `data`)
-            return data
-        method,url,protocol = splitted
-        urlTuple = list(urlparse.urlparse(url))
+        urlTuple = list(urlparse.urlparse(data))
         netloc = urlTuple[1]
         s = netloc.split(":")
         if len(s)==2:
@@ -152,7 +147,7 @@ class Blocker (Filter):
             return data
         blocked = self.strict_whitelist or self.blocked(urlTuple)
         if blocked is not False:
-            debug(FILTER, "blocked url %s", url)
+            debug(FILTER, "blocked url %s", data)
             # index 3, not 2!
             if blocked:
                 doc = blocked
@@ -163,7 +158,7 @@ class Blocker (Filter):
                 # make HTTP HEAD request?
                 doc = self.block_url
             port = config['port']
-            return '%s http://localhost:%d%s HTTP/1.1' % (method, port, doc)
+            return 'http://localhost:%d%s' % (port, doc)
         return data
 
 

@@ -140,15 +140,15 @@ def match_host (request):
        The String "noproxy" indicates a turned off filtering by the
        noproxy suffix before the hostname."""
     if not request:
-        return None
+        return False
     try:
         foo, url, bar = request.split()
-    except Exception, why:
+    except ValueError, why:
         error(PROXY, i18n._("bad request: %s"), why)
-        return None
+        return False
     hostname = spliturl(url)[1]
     if not hostname:
-        return None
+        return False
     # XXX test this...
     if hostname.startswith('noproxy.'):
         return "noproxy"
@@ -175,8 +175,6 @@ def mainloop (handle=None):
     #from Interpreter import Interpreter
     from Listener import Listener
     Listener(config['port'], HttpClient)
-    # try to handle local requests on the same port
-    #Listener(config['port']+1, LocalClient)
     # experimental interactive command line
     #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))
     # periodic statistics (only useful for speed profiling)
