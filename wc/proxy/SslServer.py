@@ -63,7 +63,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
                 data = decoder.decode(data)
             data += wc.proxy.HttpServer.flush_decoders(decoders)
             wc.proxy.Headers.server_set_content_headers(
-                                        self.headers, self.mime, self.url)
+                                        self.headers, self.mime_types, self.url)
 
     def process_recycle (self):
         """recycle this server connection into the connection pool"""
