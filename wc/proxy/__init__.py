@@ -118,7 +118,11 @@ def proxy_poll (timeout=0.0):
 
 
 def match_host (request):
-    """decide whether to filter this request or not"""
+    """Decide whether to filter this request or not.
+       Return a boolean false value if the request must be filtered,
+       a boolean true value if the request must not be filtered.
+       The String "noproxy" indicates a turned off filtering by the
+       noproxy suffix before the hostname."""
     if not request:
         return None
     try:
@@ -130,12 +134,15 @@ def match_host (request):
     if not hostname:
         return None
     if hostname.startswith('noproxy.'):
-        return "True"
+        return "noproxy"
     hosts, nets, foo = config['noproxyfor']
     return ip.host_in_set(hostname, hosts, nets)
 
 
 def spliturl (url):
+    """split url in a tuple (scheme, hostname, port, document) where
+    hostname is always lowercased"""
+    # XXX this relies on scheme==http!
     scheme, netloc = splittype(url)
     host, document = splithost(netloc)
     if not host:
