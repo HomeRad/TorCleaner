@@ -45,7 +45,6 @@
 #include "jsprf.h"
 #include "jslong.h"
 #include "jsutil.h" /* Added by JSIFY */
-#include "../config.h"
 
 /*
 ** Note: on some platforms va_list is defined as an array,
