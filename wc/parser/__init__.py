@@ -69,7 +69,9 @@ def strip_quotes (s):
 
 
 def _test ():
-    print resolve_entities("&#%d;"%ord('a'))
+    for c in "abcdefghijklmnopqrstuvwxyz":
+        print resolve_entities("&#%d;"%ord(c)),
+    print
 
 if __name__=='__main__':
     _test()
