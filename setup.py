@@ -156,12 +156,21 @@ extensions = [Extension('wc.parser.htmlsax',
              ]
 # javascript extension
 if USE_JS:
-    extensions.append(Extension('wc.js.jslib',
-                    ['wc/js/jslib.c'],
-                    include_dirs = ["/usr/include/smjs",],
-                    libraries = ['smjs'],
-                    extra_compile_args = cargs,
-                  ))
+    if os.name=='nt':
+        extensions.append(Extension('wc.js.jslib',
+                        ['wc/js/jslib.c'],
+                        define_macros = [('WIN32', None)],
+                        include_dirs = ['c:\\js\\src'],
+                        libraries = ['js32'],
+                        extra_compile_args = cargs,
+                      ))
+    else:
+        extensions.append(Extension('wc.js.jslib',
+                        ['wc/js/jslib.c'],
+                        include_dirs = ['/usr/include/smjs'],
+                        libraries = ['smjs'],
+                        extra_compile_args = cargs,
+                      ))
 
 # no to the main stuff
 myname = "Bastian Kleineidam"
