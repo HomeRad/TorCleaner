@@ -1,8 +1,9 @@
 webcleaner (0.51) unstable; urgency=low
 
-  * further updates to imdb advert filter
+  * further updates to advert filters
+  * wc/proxy/HttpClient.py: fixed request parsing with no headers sent
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 17 Jul 2002 00:22:52 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 31 Jul 2002 01:48:04 +0200
 
 webcleaner (0.50) unstable; urgency=low
 
