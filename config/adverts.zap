@@ -231,4 +231,8 @@
  tag="img">
 <attr name="usemap">^#m_pro-</attr>
 </rewrite>
+
+<rewrite title="Adverts in the path name 7" oid="103">
+<attr>/l.click\?clickId=</attr>
+</rewrite>
 </folder>
