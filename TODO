@@ -1,11 +1,5 @@
 TODO
 
-- Incorrect MIME adjusting:
-  Adjusting MIME 'application/x-javascript' -> 'text/html' at u'http://www-106.ibm.com/developerworks/js/spinbox.js'
-
-- support a list of mime types to be checked upon in the HTTP server
-  right now we only support a single mime type
-
 version 2.23 and above
 
 - SSL gateway seems to have a recursive redirection problem.
