@@ -195,11 +195,8 @@ def add_nav_context (context, filename):
 def add_i18n_context (context, lang):
     # language and i18n
     context_add(context, "lang", lang)
-    try:
-        translator = wc.get_translator(lang, translatorklass=Translator)
-    except IOError, msg:
-        wc.log.warn(wc.LOG_GUI, "IOError %s", msg)
-        translator = NullTranslator()
+    translator = wc.get_translator(lang, translatorklass=Translator,
+                                   fallbackklass=NullTranslator)
     context_add(context, "i18n", translator)
     # other available languges
     otherlanguages = []
