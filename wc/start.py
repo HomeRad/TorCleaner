@@ -52,5 +52,6 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
     except ImportError:
         pass
     # start the proxy
-    wc.log.info(wc.LOG_PROXY, "Starting proxy on port %d", config['port'])
+    addr = (config['bindaddress'], config['port'])
+    wc.log.info(wc.LOG_PROXY, "Starting proxy on address %s", addr)
     wc.proxy.mainloop(handle=handle, abort=abort)
