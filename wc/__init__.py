@@ -144,9 +144,7 @@ class Configuration (UserDict.UserDict):
         self['parentproxyuser'] = ""
         self['parentproxypass'] = ""
         self['logfile'] = ""
-        self['timeout'] = 30
         self['strict_whitelist'] = False
-        self['obfuscateip'] = False
         self['debuglevel'] = 0
         self['rules'] = []
         self['filters'] = []
@@ -214,8 +212,6 @@ WebCleaner Configuration
 Port:          %(port)d
 Parent proxy:  %(parentproxy)s
 Logfile:       %(logfile)s
-TCP timeout:   %(timeout)d
-Obfuscate IP:  %(obfuscateip)d
 Debug level:   %(debuglevel)d
 Show errors:   %(showerrors)d
 Headers saved: %(headersave)d
@@ -338,8 +334,8 @@ class WConfigParser (BaseParser):
         if name=='webcleaner':
             for key,val in attrs.items():
                 self.config[str(key)] = unxmlify(val)
-            for key in ('port','parentproxyport','timeout',
-	                'obfuscateip','debuglevel','colorize','showerrors',
+            for key in ('port','parentproxyport',
+	                'debuglevel','colorize','showerrors',
                         'strict_whitelist'):
                 self.config[key] = int(self.config[key])
             for key in ('version', 'parentproxy', 'logfile', 'proxyuser',

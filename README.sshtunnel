@@ -1,4 +1,21 @@
+Here are some scripts to let you use WebCleaner over ssh and dialup.
+
+-- start ~/bin/f.sh --
 #!/bin/sh
 # I use this from work to my home dsl box
-# dont forget to add your external IP to the allowed host list!
 ssh -X -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
+-- end ~/bin/f.sh --
+
+-- start /etc/ppp/ip-up.d/30webcleaner --
+# add external IP to the allowed host list
+# tested under Debian Linux
+#!/bin/sh
+D=/etc/webcleaner
+O=$D/webcleaner.conf
+N=$D/webcleaner.new
+R="s/^ allowedhosts=.*/ allowedhosts=\"127.0.0.1,localhost,$PPP_LOCAL\"/"
+test -f $O || exit 0
+rm -f $N
+sed  -e "$R" $O > $N
+mv -f $N $O
+-- end /etc/ppp/ip-up.d/30webcleaner --

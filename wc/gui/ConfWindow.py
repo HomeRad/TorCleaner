@@ -48,8 +48,6 @@ class ConfWindow (ToolWindow):
      ID_ACCEPT,
      ID_CANCEL,
      ID_APPLY,
-     ID_TIMEOUT,
-     ID_OBFUSCATEIP,
      ID_STRICT_WHITELIST,
      ID_SHOWERRORS,
      ID_LOGFILE,
@@ -75,7 +73,7 @@ class ConfWindow (ToolWindow):
      ID_ALLOWEDHOSTS_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+39)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+37)
 
 
     def __init__ (self, app):
@@ -121,8 +119,6 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_APPLY,ConfWindow.onCmdApply)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_APPLY,ConfWindow.onUpdApply)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_TIMEOUT,ConfWindow.onCmdTimeout)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_OBFUSCATEIP,ConfWindow.onCmdObfuscateIp)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_STRICT_WHITELIST,ConfWindow.onCmdStrictWhitelist)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_STRICT_WHITELIST,ConfWindow.onUpdStrictWhitelist)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_SHOWERRORS,ConfWindow.onCmdShowErrors)
@@ -187,12 +183,6 @@ class ConfWindow (ToolWindow):
         FXTextField(matrix, 10, self, self.ID_LOGFILE).setText(self.logfile)
         FXLabel(matrix, _("Log HTML errors"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXCheckButton(matrix, None, self, self.ID_SHOWERRORS, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.showerrors)
-        FXLabel(matrix, _("Timeout (sec.)"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXSpinner(matrix, 3, self, self.ID_TIMEOUT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
-        widget.setRange(1,600)
-        widget.setValue(self.timeout)
-        FXLabel(matrix, _("Obfuscate IP"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        FXCheckButton(matrix, None, self, self.ID_OBFUSCATEIP, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.obfuscateip)
         FXLabel(matrix, _("Strict whitelist"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXCheckButton(matrix, None, self, self.ID_STRICT_WHITELIST, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.strict_whitelist)
         FXLabel(matrix, _("Debug level"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
@@ -421,21 +411,6 @@ class ConfWindow (ToolWindow):
             self.debuglevel = sender.getCurrentItem()
             self.getApp().dirty = 1
             #debug(BRING_IT_ON, "Debuglevel=%d"%self.debuglevel)
-        return 1
-
-
-    def onCmdTimeout (self, sender, sel, ptr):
-        if self.timeout != sender.getValue():
-            self.timeout = sender.getValue()
-            self.getApp().dirty = 1
-            #debug(BRING_IT_ON, "Timeout=%d" % self.timeout)
-        return 1
-
-
-    def onCmdObfuscateIp (self, sender, sel, ptr):
-        self.obfuscateip = sender.getCheck()
-        self.getApp().dirty = 1
-        #debug(BRING_IT_ON, "Obfuscateip=%d" % self.obfuscateip)
         return 1
 
 
@@ -762,7 +737,7 @@ class ConfWindow (ToolWindow):
         #debug(BRING_IT_ON, "reading config")
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
-         'timeout','obfuscateip','debuglevel','logfile','strict_whitelist',
+         'debuglevel','logfile','strict_whitelist',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass', 'allowedhosts'):
             setattr(self, key, self.config[key])
@@ -822,8 +797,6 @@ class ConfWindow (ToolWindow):
         s += ' parentproxyuser="%s"\n' % xmlify(self.parentproxyuser)
         s += ' parentproxypass="%s"\n' % xmlify(self.parentproxypass)
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
-             ' timeout="%d"\n' % self.timeout +\
-             ' obfuscateip="%d"\n' % self.obfuscateip +\
              ' strict_whitelist="%d"\n' % self.strict_whitelist +\
              ' debuglevel="%d"\n' % self.debuglevel +\
              ' showerrors="%d"\n' % self.showerrors

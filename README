@@ -38,10 +38,6 @@ Notes
 WebCleaner is _not_ a HTTP compliant proxy because it modifies requests,
 headers and data!
 
-Obfuscate IP address does not spoof your address, it just encodes the
-IP numbers in one big integer. This is known to *not* work with a
-Squid parent proxy.
-
 Yes, surf performance will decrease, especially with the Rewriter and
 the Replacer module enabled.
 WebCleaner is intended for a single user system; it does not scale well

@@ -1,5 +1,5 @@
 # This is an example Squid 2.x configuration for WebCleaner.
-# Copy it into /etc/squid.conf and you can have the following
+# Copy it into /etc/squid.conf and you have the following
 # constellation:
 # HTTP request --> Squid Proxy --> WebCleaner Proxy --> Internet
 # FTP  request --> Squid Proxy --> Internet

@@ -1,5 +1,8 @@
 0.61
   * Print access denied messages on stderr
+    Changed files: wc/proxy/HttpClient.py
+  * Remove unsupported timeout and obfuscateip config options
+    Changed files: wc/gui/ConfWindow.py, wc/__init__.py, README
 
 0.60
   * Dont filter comments in *.oreillynet.com - they have some funky
