@@ -127,7 +127,7 @@ static int yyerror (char* msg) {
     return 0;
 }
 
-/* wc.parser.resolve_entities */
+/* parser.resolve_entities */
 static PyObject* resolve_entities;
 
 /* macros for easier scanner state manipulation */

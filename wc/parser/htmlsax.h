@@ -58,7 +58,7 @@ typedef struct {
     PyObject* tmp_attrval;
     /* temporary HTML start tag attribute list */
     PyObject* tmp_attrs;
-    /* wc.parser.resolve_entities */
+    /* parser.resolve_entities */
     PyObject* resolve_entities;
     /* stored Python exception (if error occurred in scanner) */
     PyObject* exc_type;
