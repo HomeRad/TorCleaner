@@ -54,7 +54,7 @@ install: build
 	# remove example files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
 	# patch ConfWindow
-	patch $(PATCHED) debian/ConfWindow.patch && rm -f $(PATCHED)~
+	patch $(PATCHED) debian/ConfWindow.patch && rm -f $(PATCHED)~ $(PATCHED).orig
 
 
 # Build architecture-independent files here.
