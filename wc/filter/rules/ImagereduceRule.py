@@ -34,7 +34,6 @@ class ImagereduceRule (wc.filter.rules.UrlRule.UrlRule):
         self.intattrs.extend(('quality', 'minimal_size_bytes'))
         self.attrnames.extend(('quality', 'minimal_size_bytes'))
 
-
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(ImagereduceRule, self).toxml()

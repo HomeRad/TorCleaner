@@ -24,6 +24,7 @@ import wc.XmlUtils
 class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
     """This rule can Replace parts of text data according to regular
     expressions"""
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, search="", replacement=""):
         """initialize rule attributes"""

@@ -25,6 +25,7 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
        replacement url with back references for matched subgroups.
        See also the Blocker filter module.
     """
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, url="", replacement="", matchurls=None,
                   nomatchurls=None):
@@ -34,12 +35,10 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
                           matchurls=matchurls, nomatchurls=nomatchurls)
         self.replacement = replacement
 
-
     def end_data (self, name):
         super(BlockRule, self).end_data(name)
         if name == 'replacement':
             self.replacement = self._data
-
 
     def toxml (self):
         """Rule data as XML for storing"""

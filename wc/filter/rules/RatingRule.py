@@ -25,6 +25,7 @@ import wc.filter.rating
 
 class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     """holds configured rating data"""
+
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
                   matchurls=None, nomatchurls=None):
         super(RatingRule, self).__init__(sid=sid, titles=titles,
@@ -34,13 +35,11 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         self.ratings = {}
         self.url = ""
 
-
     def fill_attrs (self, attrs, name):
         """init rating and url attrs"""
         super(RatingRule, self).fill_attrs(attrs, name)
         if name == 'category':
             self._category = attrs.get('name')
-
 
     def end_data (self, name):
         super(RatingRule, self).end_data(name)
@@ -49,7 +48,6 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             self.ratings[self._category] = self._data
         elif name == 'url':
             self.url = self._data
-
 
     def compile_data (self):
         """fill rating structure"""
@@ -62,7 +60,6 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                 else:
                     self.ratings[category] = ""
         self.compile_values()
-
 
     def compile_values (self):
         """initialize rating data"""
@@ -100,7 +97,6 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                            (value, category, limit)
         # not exceeded
         return None
-
 
     def toxml (self):
         """Rule data as XML for storing"""

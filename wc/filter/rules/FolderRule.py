@@ -55,7 +55,6 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         return self._filename
     filename = property(filename_get)
 
-
     def append_rule (self, r):
         """append rule to folder"""
         r.oid = len(self.rules)
@@ -96,7 +95,6 @@ class FolderRule (wc.filter.rules.Rule.Rule):
                 return rule
         return None
 
-
     def toxml (self):
         """Rule data as XML for storing"""
         s = u"""<?xml version="1.0" encoding="%s"?>
@@ -109,14 +107,12 @@ class FolderRule (wc.filter.rules.Rule.Rule):
             s += u"\n%s\n" % r.toxml()
         return s+u"</folder>\n"
 
-
     def write (self):
         """write xml data into filename"""
         s = self.toxml().encode("iso-8859-1", "replace")
         f = file(self.filename, 'w')
         f.write(s)
         f.close()
-
 
     def tiptext (self):
         """return short info for gui display"""

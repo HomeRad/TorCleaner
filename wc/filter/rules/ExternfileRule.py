@@ -25,6 +25,7 @@ class ExternfileRule (wc.filter.rules.Rule.Rule):
     """rule with data stored in a (compressed) external file, used for
        huge url and domain block lists
     """
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, filename=None):
         """initialize rule attributes"""
@@ -33,12 +34,10 @@ class ExternfileRule (wc.filter.rules.Rule.Rule):
         self.filename = filename
         self.attrnames.append('filename')
 
-
     def __str__ (self):
         """return rule data as string"""
         return "%sfile %s\n" % \
             (super(ExternfileRule, self).__str__(), repr(self.filename))
-
 
     def toxml (self):
         """Rule data as XML for storing"""

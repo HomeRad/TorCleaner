@@ -146,7 +146,6 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         elif name == 'replacement' and attrs.has_key('part'):
             self.part = part_num(attrs['part'])
 
-
     def end_data (self, name):
         super(RewriteRule, self).end_data(name)
         if name == 'attr':

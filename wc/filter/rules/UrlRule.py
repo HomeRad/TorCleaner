@@ -24,6 +24,7 @@ import wc.XmlUtils
 
 class UrlRule (wc.filter.rules.Rule.Rule):
     """rule which applies only to urls which match a regular expression"""
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, matchurls=None, nomatchurls=None):
         """initialize rule attributes"""
@@ -38,7 +39,6 @@ class UrlRule (wc.filter.rules.Rule.Rule):
         else:
             self.nomatchurls = nomatchurls
 
-
     def applies_to (self, url):
         """return True iff this rule can be applied to given url"""
         for mo in self.matchurls_ro:
@@ -51,7 +51,6 @@ class UrlRule (wc.filter.rules.Rule.Rule):
                 return False
         return True
 
-
     def end_data (self, name):
         super(UrlRule, self).end_data(name)
         if name == 'matchurl':
@@ -59,21 +58,17 @@ class UrlRule (wc.filter.rules.Rule.Rule):
         elif name == 'nomatchurl':
             self.nomatchurls.append(self._data)
 
-
     def compile_data (self):
         """compile url regular expressions"""
         super(UrlRule, self).compile_data()
         self.compile_matchurls()
         self.compile_nomatchurls()
 
-
     def compile_matchurls (self):
         self.matchurls_ro = [re.compile(s) for s in self.matchurls]
 
-
     def compile_nomatchurls (self):
         self.nomatchurls_ro = [re.compile(s) for s in self.nomatchurls]
-
 
     def matchestoxml (self, prefix=""):
         """match url rule data as XML for storing"""
@@ -82,7 +77,6 @@ class UrlRule (wc.filter.rules.Rule.Rule):
         n = [u"%s<nomatchurl>%s</nomatchurl>" % \
              (prefix, wc.XmlUtils.xmlquote(r)) for r in self.nomatchurls]
         return u"\n".join(m+n)
-
 
     def __str__ (self):
         """return rule data as string"""

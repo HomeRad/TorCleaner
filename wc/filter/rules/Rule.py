@@ -60,6 +60,7 @@ class Rule (object):
           rule. leave empty to apply to all urls.
         - parent - the parent folder (if any); look at FolderRule class
     """
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, parent=None):
         """initialize basic rule data"""
