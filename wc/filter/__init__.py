@@ -148,13 +148,15 @@ def applyfilters (levels, data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, filters, headers=wc.proxy.Headers.WcMessage()):
+def get_filterattrs (url, filters, headers=wc.proxy.Headers.WcMessage(),
+                     browser='Calzilla/6.0'):
     """init external state objects"""
     attrs = {
         'url': url,
         'nofilter': wc.config.nofilter(url),
         'mime' : headers.get('Content-Type'),
         'headers': headers,
+        'browser': browser,
     }
     if attrs['mime']:
         charset = get_mime_charset(attrs['mime'])
