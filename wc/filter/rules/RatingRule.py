@@ -21,6 +21,11 @@ import wc.log
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 import wc.filter.rating
+import wc.filter.rating.storage
+import wc.filter.rating.storage.pickle
+
+
+MISSING = _("Unknown page")
 
 
 class RatingRule (wc.filter.rules.UrlRule.UrlRule):
@@ -68,6 +73,37 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                     self.values[name][v] = v==value
             else:
                 self.values[name] = value
+
+    def rating_allow (self, url):
+        """asks cache if the rule allows the rating data for given url
+        Looks up cache to find rating data, if not returns a MISSING message.
+        """
+        klass = wc.filter.rating.storage.pickle.PickleStorage
+        rating_store = wc.filter.rating.storage.get_rating_store(klass)
+        if url in rating_store:
+            return self.check_against(rating_store[url])
+        return MISSING
+
+    def check_against (self, rating):
+        """return None if allowed, else a reason of why not"""
+        for catname, value in rating.category_values.items():
+            if catname not in self.ratings:
+                wc.log.warn(wc.LOG_FILTER,
+                            "Unknown rating category %r specified", catname)
+                continue
+            if not value:
+                # empty value implicates not rated
+                continue
+            limit = self.ratings[catname]
+            if not limit:
+                # no limit is set for this category
+                continue
+            category = wc.filter.rating.get_category(catname)
+            reason = category.allowance(value, limit)
+            if reason:
+                return reason
+        # not exceeded
+        return None
 
     def toxml (self):
         """Rule data as XML for storing"""
