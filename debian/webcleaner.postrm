@@ -33,6 +33,6 @@ if [ "$1"=="purge" ]; then
     rm -rf /etc/webcleaner/log || true
     rm -rf /etc/webcleaner/supervise || true
     # directory should be empty now
-    #rmdir /etc/webcleaner || true
+    rmdir /etc/webcleaner || true
 fi
 exit 0
