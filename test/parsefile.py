@@ -3,8 +3,8 @@
 import sys
 try:
     from wc.parser.htmllib import HtmlPrinter
-    raise SystemExit("Global WebCleaner installation found")
 except ImportError:
+    print "using local development version"
     import os
     sys.path.insert(0, os.getcwd())
     from wc.parser.htmllib import HtmlPrinter

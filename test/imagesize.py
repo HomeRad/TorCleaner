@@ -4,8 +4,8 @@ import Image, sys
 from StringIO import StringIO
 try:
     from wc.update import open_url
-    raise SystemExit("Global WebCleaner installation found")
 except ImportError:
+    print "using local development version"
     import os
     sys.path.insert(0, os.getcwd())
     from wc.update import open_url
@@ -27,7 +27,7 @@ def test ():
     print "downloaded", len(data), "bytes"
     buf.write(data[:bufsize])
     buf.seek(0)
-    img = Image.open(buf, 'r')
+    dummy = Image.open(buf, 'r')
 
 
 if __name__=='__main__':

@@ -46,6 +46,6 @@ tests = [
 ]
 for config in configs:
     print "config", config
-    hosts, nets = ip.host_map(config)
+    hosts, nets = ip.hosts2map(config)
     for host in tests:
         print "ip", host, ip.host_in_set(host, hosts, nets)

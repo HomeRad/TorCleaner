@@ -3,8 +3,8 @@
 import sys
 try:
     import wc
-    raise SystemExit("Global WebCleaner installation found")
 except ImportError:
+    print "using local development version"
     import os
     sys.path.insert(0, os.getcwd())
     import wc
@@ -35,7 +35,7 @@ def _main():
             pass
         data = f.read(1024)
     i = 1
-    while 1:
+    while True:
         print >>sys.stderr, "Test: finish", i
         try:
             filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
@@ -44,7 +44,7 @@ def _main():
         except FilterException, msg:
             print >>sys.stderr, "Test: finish: exception:", msg
             proxy_poll(timeout=max(0, run_timers()))
-        i+=1
+        i += 1
         if i==200:
             # background downloading if javascript is too slow
             print "Test: oooooops"

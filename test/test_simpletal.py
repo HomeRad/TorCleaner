@@ -1,5 +1,5 @@
 from StringIO import StringIO
-import sys, os, gettext
+import os, gettext
 from wc.webgui.simpletal import simpleTAL, simpleTALES
 from wc import Name
 
@@ -23,5 +23,5 @@ def get_context ():
     return context
 
 
-f = file(os.path.join(os.getcwd(), "test", "html", "taltest.html"))
-print expand_template(f, get_context())
+fp = file(os.path.join(os.getcwd(), "test", "html", "taltest.html"))
+print expand_template(fp, get_context())

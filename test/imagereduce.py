@@ -3,8 +3,8 @@
 import sys, os, stat, mimetypes
 try:
     import wc
-    raise SystemExit("Global WebCleaner installation found")
 except ImportError:
+    print "using local development version"
     sys.path.insert(0, os.getcwd())
     import wc
 

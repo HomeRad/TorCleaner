@@ -95,6 +95,7 @@ def main(tests=None, testdir=None, verbose=0, quiet=0, generate=0,
         args = []
     tests = tests or args or findtests(testdir, stdtests, nottests)
     if randomize:
+        import random
         random.shuffle(tests)
     test_support.verbose = verbose      # Tell tests to be moderately quiet
     save_modules = sys.modules.keys()
@@ -249,6 +250,5 @@ class Compare:
         return 0
 
 if __name__ == '__main__':
-    import os
     sys.path.insert(0, os.getcwd())
     sys.exit(main())
