@@ -67,7 +67,7 @@ class UnchunkStream:
         return s
 
     def flush (self):
-        s = self.buffer
+        s = self.buffer.strip()
         self.buffer = ''
         return s
 
