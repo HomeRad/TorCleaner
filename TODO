@@ -5,6 +5,8 @@ version 2.11 and above
 - display a stripped version of server error messages inline in
   the standard webcleaner error page
 
+- virus scanning with clamav http://localhost/doc/clamav/html/node45.html
+
 - I keep duplicating README and INSTALL content on the web page.
   Use the docutils to avoid this?
 
@@ -12,9 +14,7 @@ version 2.11 and above
 
 - use test/client.py, test/server.py for testing
 
-- allow filtering/blocking  by MIME type?
-
-- virus scanning with clamav http://localhost/doc/clamav/html/node45.html
+- allow filtering/blocking by MIME type?
 
 - bfilter has Flash parse and generation library, I want that too .)
 
