@@ -1,4 +1,4 @@
-SUBDIRS = po libjs service
+SUBDIRS = po libjs service docs
 TESTS = unittests
 
 PYVER := 2.3
@@ -10,8 +10,9 @@ SPLINTOPTS := +posixlib \
 PYCHECKEROPTS := -F pycheckrc
 PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
                   wc/parser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
+		  wc/proxy/dns/*.py \
 		  wc/webgui/*.py wc/webgui/context/*.py \
-		  wc/webgui/simpletal/*.py
+		  wc/webgui/simpletal/*.py wc/magic/*.py
 SERVICEDIR := /etc/webcleaner/service
 
 clean-local: clean-log
@@ -95,10 +96,6 @@ homepage-zapper: md5sums
 	cp -r config/blacklists/ $(HTMLDIR)/htdocs/filter
 	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
-
-doc:
-	rm -f README
-	pydoc$(PYVER) ./webcleaner > README
 
 pycheck:
 	-env PYTHONVER=2.3 pychecker $(PYCHECKEROPTS) $(PYCHECKERFILES)
