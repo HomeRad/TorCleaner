@@ -128,4 +128,10 @@
   <title lang="de">Antivirus scanning</title>
   <description lang="de">Enables anti virus scanning if the virusfilter module is enabled.</description>
 </antivirus>
+
+<replace sid="wc.31"
+ search="(?i)CLSID:8856F961-340A-11D0-A96B-00C04FD705A2">
+  <title lang="de">IE print web object</title>
+  <description lang="de">See discussion at http://www.securityfocus.com/archive/1/360128/2004-04-09/2004-04-15/0</description>
+</replace>
 </folder>
