@@ -24,9 +24,9 @@ if !( autoconf --version ) </dev/null > /dev/null 2>&1; then
     echo "autoconf not found -- aborting"
     exit
 fi
+echo "Building ltmain" && libtoolize --copy --force --automake && \
 echo "Building macros" && aclocal && \
 echo "Building config header template" && autoheader && \
-echo "Building ltmain" && libtoolize --copy --force --automake && \
 echo "Building Makefiles" && automake --add-missing --gnu --copy && \
 echo "Building configure" && autoconf
 RES=$?
