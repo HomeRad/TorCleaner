@@ -95,29 +95,40 @@ several given categories.</p>
  style="border-bottom:1px solid black;width:80%;">
 <thead>
 <tr style="border-bottom:1px solid black;">
-<th i18n:translate="" style="width:30%">URL</th>
+<th>&nbsp;</th>
+<th i18n:translate="">URL</th>
 <th i18n:translate="">Rated</th>
+<th i18n:translate="">Modified</th>
 </tr>
 </thead>
 <tbody>
 <tr tal:repeat="url ratings_display">
 <td>
-<a href="#" i18n:attributes="title Edit this rating"
+<table border="0" cellpadding="0" cellspacing="0" summary="">
+<tr><td><a href="#" i18n:attributes="title Edit this rating"
  tal:attributes="href string:${filename}.${lang}?url=${url}"><img
- src="edit.png" border="0"></a>
-<a href="#" i18n:attributes="title Delete this rating; onclick return window.confirm('Really delete this rating?')"
+ src="edit.png"></a></td>
+<td><a href="#"
+ i18n:attributes="title Delete this rating; onclick return window.confirm('Really delete this rating?')"
  tal:attributes="href string:${filename}.${lang}?url=${url}&delete=1"><img
- src="delete.png" border="0"></a>
-<a href="#" tal:attributes="href url" tal:content="url">http://imadoofus.com</a></td>
+ src="delete.png"></a></td>
+<td><a href="#"
+ i18n:attributes="title Email this rating to the author"
+ tal:attributes="href string:rating_mail.html.${lang}?url=${url}"><img
+ src="mail.png"></a></td>
+</tr></table></td>
+<td><a href="#" tal:attributes="href url"
+ tal:content="url">http://imadoofus.com</a></td>
 <td><span tal:repeat="category rating_cache/?url/keys">
+<span tal:condition="values/?category">
 <span tal:replace="category">violence</span>=<span 
  tal:replace="rating_cache/?url/?category">0</span>
-</span>
-</td>
+</span></span></td>
+<td><span tal:replace="structure rating_modified/?url">1. Jan 2004</span></td>
 </tr>
 <tr tal:condition="not:ratings_display">
 <td>&nbsp;</td>
-<td i18n:translate="">There are no url ratings saved.</td>
+<td colspan="3" i18n:translate="">There are no url ratings saved.</td>
 </tr>
 </table>
 

@@ -116,7 +116,7 @@ init_dns_resolver()
 def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    debug(DNS, 'background_lookup %s', hostname.lower())
+    debug(DNS, 'background_lookup %r', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
@@ -191,7 +191,7 @@ class DnsExpandHostname (object):
             if self.requests: make_timer(self.delay, self.handle_issue_request)
 
     def handle_dns (self, hostname, answer):
-        debug(DNS, 'handle_dns %s %s', hostname, answer)
+        debug(DNS, 'handle_dns %r %s', hostname, answer)
         if not self.callback:
             # Already handled this query
             return
@@ -275,7 +275,7 @@ class DnsCache (object):
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
-        debug(DNS, 'dnscache lookup %s', hostname)
+        debug(DNS, 'dnscache lookup %r', hostname)
         # see if hostname is already a resolved IP address
         hostname, numeric = ip.expand_ip(hostname)
         if numeric:
@@ -289,13 +289,13 @@ class DnsCache (object):
 
         if len(hostname) > 100:
             # It's too long .. assume it's an error
-            callback(hostname, DnsResponse('error', 'hostname %s too long' % hostname))
+            callback(hostname, DnsResponse('error', 'hostname %r too long'%hostname))
             return
         
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
-                debug(DNS, 'cached! %s', hostname)
+                debug(DNS, 'cached! %r', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -431,10 +431,10 @@ class DnsLookupConnection (Connection):
     def __repr__ (self):
         where = ''
         if self.nameserver != DnsConfig.nameservers[0]:
-            where = ' @ %s' % self.nameserver
+            where = ' @ %s'%self.nameserver
         retry = ''
         if self.retries != 0:
-            retry = ' retry #%s' % self.retries
+            retry = ' retry #%s'%self.retries
         conntype = ''
         if self.conntype == 'tcp':
             conntype = 'TCP'
@@ -531,11 +531,11 @@ class DnsLookupConnection (Connection):
             # See http://cr.yp.to/djbdns/notes.html
             if self.conntype == 'tcp':
                 # socket.error((84, ''))
-                error(PROXY, 'Truncated TCP DNS packet: %s from %s for %s',
+                error(PROXY, 'Truncated TCP DNS packet: %s from %s for %r',
                       tc, self.nameserver, self.hostname)
                 self.handle_error("dns error")
             else:
-                warn(PROXY, 'truncated UDP DNS packet: %s from %s for %s',
+                warn(PROXY, 'truncated UDP DNS packet: %s from %s for %r',
                      tc, self.nameserver, self.hostname)
             # we ignore this read, and let the timeout take its course
             return

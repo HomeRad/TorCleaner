@@ -68,18 +68,29 @@ rangenames = {
     "2": i18n._("Heavy"),
 }
 
-def rating_parse (data, debug=0):
+def rating_import (data, debug=0):
     """parse given rating data, throws ParseError on error"""
     categories = {}
     for line in data.splitlines():
         if debug:
             debug(RATING, "Read line %r", line)
+        line = line.strip()
+        if not line:
+            # ignore empty lines
+            continue
+        if line.startswith("#"):
+            # ignore comments
+            continue
         try:
             category, value = line.split(None, 1)
         except ValueError, msg:
             raise RatingParseError(i18n._("malformed rating line %r")%line)
         categories[category] = value
     return categories
+
+
+def rating_export (rating):
+    return "\n".join([ "%s %s" for key, value in rating.items() ])
 
 
 class RatingParseError (Exception):
@@ -118,8 +129,9 @@ rating_cache = {}
 rating_cache_load()
 
 
-def rating_is_cached (url):
-    """return True if cache has entry for given url, else False"""
+def rating_cached_get (url):
+    """return a tuple (url, rating) if cache has entry for given url,
+       else None"""
     # use a specialized form of longest prefix matching:
     # split the url in parts and the longest matching part wins
     parts = rating_split_url(url)
@@ -127,7 +139,7 @@ def rating_is_cached (url):
     for i in range(len(parts), 1, -1):
         url = "".join(parts[:i])
         if url in rating_cache:
-            return rating_cache[url]
+            return (url, rating_cache[url])
     return None
 
 
@@ -178,9 +190,9 @@ def rating_allow (url, rule):
     """asks cache if the rule allows the rating data for given url
     Looks up cache to find rating data, if not returns a MISSING message.
     """
-    rating = rating_is_cached(url)
-    if rating:
-        return rule.check_against(rating)
+    rating = rating_cache_get(url)
+    if rating is not None:
+        return rule.check_against(rating[1])
     return MISSING
 
 
@@ -229,4 +241,4 @@ if __name__=='__main__':
                 'http://imadoofus.com/forum/',
                ]:
         print rating_split_url(url)
-    print rating_is_cached('http://www.heise.de/foren/')
+    print rating_cache_get('http://www.heise.de/foren/')

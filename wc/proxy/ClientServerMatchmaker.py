@@ -67,6 +67,7 @@ class ClientServerMatchmaker (object):
             self.hostname = client.hostname
             self.port = client.port
             self.document = document_quote(client.document)
+        assert self.hostname
         # start DNS lookup
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 

@@ -18,12 +18,14 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc import AppName, Version, ConfigDir, config
+import time as _time
+from wc import AppName, Email, Version, ConfigDir, config
 from wc.webgui.context import getval as _getval
 from wc.filter.Rating import service, rangenames, rating_cache
 from wc.filter.Rating import rating_cache_write as _rating_cache_write
 from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
 from wc.url import is_valid_url as _is_valid_url
+from wc.strtime import strtime as _strtime
 
 _entries_per_page = 50
 
@@ -37,6 +39,7 @@ def _reset_ratings ():
     values.clear()
     for category, value in ratings.items():
         values[category] = {value: True}
+    rating_modified.clear()
 
 
 def _calc_ratings_display ():
@@ -44,6 +47,9 @@ def _calc_ratings_display ():
     urls = rating_cache.keys()
     urls.sort()
     ratings_display = urls[curindex:curindex+_entries_per_page]
+    for url in ratings_display:
+        t = _strtime(float(rating_cache[url]['modified']))
+        rating_modified[url] = t.replace(" ", "&nbsp;")
 
 
 # config vars
@@ -51,6 +57,7 @@ info = {}
 error = {}
 ratings = {}
 values = {}
+rating_modified = {}
 _reset_ratings()
 url = ""
 generic = False
@@ -155,6 +162,7 @@ def _form_apply ():
     rating.update(ratings)
     if generic:
         rating['generic'] = "true"
+    rating['modified'] = "%d"%int(_time.time())
     rating_cache[url] = rating
     _rating_cache_write()
     info['ratingupdated'] = True
