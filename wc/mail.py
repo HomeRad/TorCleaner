@@ -19,11 +19,15 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import socket, smtplib, email
+import socket, smtplib
+from email.Utils import formatdate, parseaddr
 
 def valid_mail (address):
     """return cleaned up mail, or an empty string on errors"""
-    return email.parseaddr(address)[1]
+    cleaned = parseaddr(address)
+    if not cleaned[0]:
+        return cleaned[1]
+    return '%s <%s>'%cleaned
 
 
 def send_mail (smtphost, fromaddr, toaddrs, message):
@@ -36,3 +40,7 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
     except (socket.error, smtplib.SMTPException), x:
         exception('SMTP send failure: %s\n', x)
     return False
+
+
+def mail_date ():
+    return formatdate()
