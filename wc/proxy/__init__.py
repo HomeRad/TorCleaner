@@ -129,7 +129,7 @@ def mainloop (handle=None, abort=None):
     host = str(wc.configuration.config['bindaddress'])
     port = wc.configuration.config['port']
     wc.proxy.Listener.Listener(host, port, wc.proxy.HttpClient.HttpClient)
-    if wc.configuration.config['sslgateway']:
+    if wc.configuration.config['sslgateway'] and wc.HasSsl:
         import wc.proxy.SslClient
         import wc.proxy.ssl
         port = wc.configuration.config['sslport']
