@@ -52,7 +52,6 @@ class Rule (object):
         """update title and description with given rule data"""
         assert self.sid==rule.sid, "updating %s with invalid rule %s"%(self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
-        print >>log, " ", i18n._("updating rule %s")%self.tiptext()
         l = [a for a in self.attrnames if a not in ['sid', 'disable'] ]
         return self.update_attrs(l, rule, dryrun, log)
 
@@ -63,6 +62,7 @@ class Rule (object):
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
+                print >>log, " ", i18n._("updating rule %s:")%self.tiptext()
                 print >>log, " ", attr, repr(oldval), "==>", repr(newval)
                 chg = True
                 if not dryrun:
