@@ -32,14 +32,15 @@
     Changed: templates/classic/macros/standard.html, po/*.po
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031222
     Changed: libjs/*
-  * disabled psyco for now, it is unstable
-    Changed: webcleaner, debian/control
+  * added conflict for unstable psyco versions (I am using a cvs version
+    of psyco)
+    Changed: debian/control
   * do not (un)quote query parts of urls
     Changed: wc/proxy/__init__.py
     Closes: SF #868823
   * unquote network ips in configuration interface
     Changed: wc/ip.py, wc/webgui/context/config_html.py
-    Closes: SF #868811
+    Closes: SF #868811, SF #877191
   * enclosed block matches can match complete HTML markup, not only data
     Changed: wc/filter/rule/RewriteRule.py
   * Accept all 2xx responses in background downloading, not only 200
