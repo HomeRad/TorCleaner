@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Mon Jan  6 21:23:04 2003\n"
+"POT-Creation-Date: Mon Jan 13 18:51:53 2003\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -108,6 +108,11 @@ msgstr ""
 "Es ist immer sicherer, einen Ordner oder Filter zu deaktivieren\n"
 "anstatt ihn zu löschen!"
 
+msgid ""
+"Rewrite HTML code. This is very powerful and can filter\n"
+"almost all advertising and other crap."
+msgstr ""
+
 msgid "Replace regular expressions in (HTML) data streams."
 msgstr "Ersetze reguläre Ausdrücke in (HTML) Daten"
 
@@ -132,6 +137,11 @@ msgid ""
 "like HTML, WAV, etc."
 msgstr ""
 
+msgid ""
+"Convert images to low quality JPEG files to reduce\n"
+"bandwidth"
+msgstr ""
+
 msgid "Remove Folder"
 msgstr "Lösche Ordner"
 
@@ -147,11 +157,31 @@ msgstr "Ü&bernehmen"
 msgid "A&bout"
 msgstr "Ü&ber"
 
-msgid "P&roxy Settings"
+msgid "Start"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Reload"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
 msgstr "P&roxy Einstellungen"
 
 msgid "Proxy"
 msgstr "Proxy"
+
+#, fuzzy
+msgid "Update..."
+msgstr "Update Fehler"
+
+msgid "P&roxy Settings"
+msgstr "P&roxy Einstellungen"
 
 msgid "Version"
 msgstr "Version"
@@ -514,6 +544,24 @@ msgstr "Nr. des gesp. Headers"
 
 msgid "Suppress headers"
 msgstr "Unterdrücke Header"
+
+#, fuzzy
+msgid "&Add"
+msgstr "Hinzufügen"
+
+#, fuzzy
+msgid "&Edit"
+msgstr "Bearbeiten"
+
+#, fuzzy
+msgid "&Remove"
+msgstr "Löschen"
+
+msgid "&Save"
+msgstr ""
+
+msgid "&Close"
+msgstr ""
 
 #, fuzzy
 msgid "About WebCleaner"

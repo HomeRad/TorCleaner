@@ -1,7 +1,5 @@
 TODO
 
-- Append "noproxy." before all href and src urls when its used
-
 - timeouts do not cancel the request, they occur more than once. Why?
 
 - Python 2.3:

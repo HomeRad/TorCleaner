@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Jan  6 21:23:04 2003\n"
+"POT-Creation-Date: Mon Jan 13 18:51:53 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,6 +85,11 @@ msgid ""
 "deleting it!"
 msgstr ""
 
+msgid ""
+"Rewrite HTML code. This is very powerful and can filter\n"
+"almost all advertising and other crap."
+msgstr ""
+
 msgid "Replace regular expressions in (HTML) data streams."
 msgstr ""
 
@@ -109,6 +114,11 @@ msgid ""
 "like HTML, WAV, etc."
 msgstr ""
 
+msgid ""
+"Convert images to low quality JPEG files to reduce\n"
+"bandwidth"
+msgstr ""
+
 msgid "Remove Folder"
 msgstr ""
 
@@ -124,10 +134,28 @@ msgstr ""
 msgid "A&bout"
 msgstr ""
 
-msgid "P&roxy Settings"
+msgid "Start"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Reload"
+msgstr ""
+
+msgid "Status"
 msgstr ""
 
 msgid "Proxy"
+msgstr ""
+
+msgid "Update..."
+msgstr ""
+
+msgid "P&roxy Settings"
 msgstr ""
 
 msgid "Version"
@@ -477,6 +505,21 @@ msgid "No. of saved Headers"
 msgstr ""
 
 msgid "Suppress headers"
+msgstr ""
+
+msgid "&Add"
+msgstr ""
+
+msgid "&Edit"
+msgstr ""
+
+msgid "&Remove"
+msgstr ""
+
+msgid "&Save"
+msgstr ""
+
+msgid "&Close"
 msgstr ""
 
 msgid "About WebCleaner"
