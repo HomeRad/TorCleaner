@@ -83,7 +83,7 @@ class ClientServerMatchmaker (object):
         if not document:
             document = '/'
         # add missing host headers for HTTP/1.1
-        if self.protocol=='HTTP/1.1' and not self.headers.has_key('Host'):
+        if not self.headers.has_key('Host'):
             if port!=80:
                 self.headers['Host'] = "%s:%d\r"%(hostname, port)
             else:
