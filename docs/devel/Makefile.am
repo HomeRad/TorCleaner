@@ -5,10 +5,7 @@ htmldir = $(prefix)/html
 html_DATA = $(patsubst %.txt, %.html, $(RESTFILES) )
 
 %.html: %.txt ../htmlnav.py ../bfknav.py
-	$(DOCDIR)/rest2htmlnav --stylesheet-path=../wc.css --time --source-link $< $@
-
-apidocs:
-	epydoc --html -o api --name "WebCleaner Development" --url ../../devel.html ../../wc/ ../../test ../../tests
+	$(DOCDIR)/rest2htmlnav --stylesheet-path=../wc.css --time $< $@
 
 clean-local:
 	rm -f *.html *.nav
