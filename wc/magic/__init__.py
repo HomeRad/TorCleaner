@@ -3,8 +3,7 @@
 
 import os
 import wc
-import wc.magic
-
+import magic
 
 _magic = None
 
@@ -16,5 +15,5 @@ def classify (fp):
         magicfile = os.path.join(wc.ConfigDir, "magic.mime")
         assert os.path.exists(magicfile)
         magiccache = magicfile+".mgc"
-        _magic = wc.magic.Magic(magicfile, magiccache)
+        _magic = magic.Magic(magicfile, magiccache)
     return _magic.classify(fp)

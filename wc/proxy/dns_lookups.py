@@ -10,19 +10,19 @@ import time
 import socket
 import re
 import pprint
-import bk.i18n
 import wc.proxy
-import wc.net.dns
 import wc.proxy.Connection
-import wc.net
-import wc.net.ip
+import bk.i18n
+import bk.net
+import bk.net.dns
+import bk.net.ip
 
 
 dns_config = None
 
 def init_config ():
     global dns_config
-    dns_config = wc.net.resolver_config()
+    dns_config = bk.net.resolver_config()
     # re-read dns config every minute
     wc.proxy.make_timer(60, init_config)
 
@@ -218,7 +218,7 @@ class DnsCache (object):
     def lookup (self, hostname, callback):
         bk.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
         # see if hostname is already a resolved IP address
-        hostname, numeric = wc.net.ip.expand_ip(hostname)
+        hostname, numeric = bk.net.ip.expand_ip(hostname)
         if numeric:
             callback(hostname, DnsResponse('found', [hostname]))
             return
@@ -404,17 +404,17 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     def send_dns_request (self):
         # Issue the request and set a timeout
         if not self.callback: return # Only issue if we have someone waiting
-        msg = wc.net.dns.Lib.Mpacker()
-        msg.addHeader(0, 0, wc.net.dns.Opcode.QUERY,
+        msg = bk.net.dns.Lib.Mpacker()
+        msg.addHeader(0, 0, bk.net.dns.Opcode.QUERY,
                       0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
         # XXX could send Type.AAAA for IPv6 nameservers, but who decides when
         # to do that? This is the dilemma with IPv6 not having an update
         # solution...
-        msg.addQuestion(self.hostname, wc.net.dns.Type.A,
-                        wc.net.dns.Class.IN)
+        msg.addQuestion(self.hostname, bk.net.dns.Type.A,
+                        bk.net.dns.Class.IN)
         msg = msg.getbuf()
         if self.conntype == 'tcp':
-            self.send_buffer = wc.net.dns.Lib.pack16bit(len(msg))+msg
+            self.send_buffer = bk.net.dns.Lib.pack16bit(len(msg))+msg
         else:
             self.send_buffer = msg
         wc.proxy.make_timer(self.TIMEOUT + 0.2*self.retries,
@@ -459,7 +459,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if self.conntype == 'tcp':
             if len(self.recv_buffer) < 2: return
             header = self.recv_buffer[:2]
-            count = wc.net.dns.Lib.unpack16bit(header)
+            count = bk.net.dns.Lib.unpack16bit(header)
             if len(self.recv_buffer) < 2+count: return
             self.read(2) # header
             data = self.read(count)
@@ -470,7 +470,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         else:
             data = self.read(1024)
 
-        msg = wc.net.dns.Lib.Munpacker(data)
+        msg = bk.net.dns.Lib.Munpacker(data)
         (rid, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
@@ -518,14 +518,14 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         ip_addrs = []
         for dummy in range(ancount):
             name, rtype, klass, ttl, rdlength = msg.getRRheader()
-            mname = 'get%sdata' % wc.net.dns.Type.typestr(rtype)
+            mname = 'get%sdata' % bk.net.dns.Type.typestr(rtype)
             if hasattr(msg, mname): data = getattr(msg, mname)()
             else: data = msg.getbytes(rdlength)
-            if rtype == wc.net.dns.Type.A:
+            if rtype == bk.net.dns.Type.A:
                 ip_addrs.append(data)
-            elif rtype == wc.net.dns.Type.AAAA:
+            elif rtype == bk.net.dns.Type.AAAA:
                 ip_addrs.append(data)
-            elif rtype == wc.net.dns.Type.CNAME:
+            elif rtype == bk.net.dns.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
                 bk.log.debug(wc.LOG_DNS, 'cname record %s=%r',
                              self.hostname, data)

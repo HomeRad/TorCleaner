@@ -21,6 +21,7 @@ import sys
 import re
 import bk.log
 import bk.url
+import wc
 
 
 _percent_encodings = re.compile('%+').findall

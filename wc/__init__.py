@@ -111,8 +111,8 @@ def sort_seq (seq):
 
 import bk.i18n
 import bk.url
-import wc.net
-import wc.net.ip
+import bk.net
+import bk.net.ip
 import wc.proxy
 import wc.proxy.dns_lookups
 import wc.filter
@@ -224,7 +224,7 @@ class Configuration (dict):
         # if set to one the bound socket does not accept connections from
         # hosts except localhost; normally not needed
         self['local_sockets_only'] = 0
-        self['localhosts'] = wc.net.get_localhosts()
+        self['localhosts'] = bk.net.get_localhosts()
         self['mime_content_rewriting'] = sets.Set()
         self['gui_theme'] = "classic"
         self['timeout'] = 10
@@ -374,7 +374,7 @@ class Configuration (dict):
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
         hostset = self['allowedhostset']
-        return wc.net.ip.host_in_set(host, hostset[0], hostset[1])
+        return bk.net.ip.host_in_set(host, hostset[0], hostset[1])
 
 
 ##### xml parsers #########
@@ -537,7 +537,7 @@ class WConfigParser (BaseParser):
             if self.config['allowedhosts'] is not None:
                 hosts = self.config['allowedhosts'].split(',')
                 self.config['allowedhosts'] = hosts
-                self.config['allowedhostset'] = wc.net.ip.hosts2map(hosts)
+                self.config['allowedhostset'] = bk.net.ip.hosts2map(hosts)
             else:
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]
