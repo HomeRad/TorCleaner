@@ -10,6 +10,7 @@ htmldir = $(prefix)/html
 html_DATA = $(HTMLFILES)
 
 EXTRA_DIST = $(RESTFILES) \
+$(HTMLFILES) \
 $(wildcard *.py) \
 $(wildcard *.css) \
 $(wildcard *.png) \
