@@ -286,6 +286,10 @@ class HttpServer (Server):
             else:
                 self._show_rating_deny(str(msg))
                 return
+        except FilterMime, msg:
+            debug(PROXY, "%s FilterMime from header: %s", self, msg)
+            self._show_mime_replacement(str(msg))
+            return
         self.mangle_response_headers()
         if self.statuscode in (204, 304) or self.method == 'HEAD':
             # these response codes indicate no content
@@ -334,6 +338,24 @@ class HttpServer (Server):
             if ro.match(self.headers.get('Content-Type', '')):
                 return True
         return False
+
+
+    def _show_mime_replacement (self, url):
+        self.statuscode = 302
+        response = "%s 302 %s"%(self.protocol, i18n._("Moved Temporarily"))
+        headers = WcMessage()
+        headers['Content-type'] = 'text/plain\r'
+        headers['Location'] = url
+        headers['Content-Length'] = '0\r'
+        debug(PROXY, "%s headers\n%s", self, headers)
+        self.client.server_response(self, response, self.statuscode, headers)
+        if not self.client:
+            return
+        self.client.server_close(self)
+        self.client = None
+        self.state = 'recycle'
+        self.persistent = False
+        self.close()
 
 
     def _show_rating_deny (self, msg):
@@ -488,7 +510,6 @@ class HttpServer (Server):
         # the client might already have closed
         if self.client:
             self.state = state
-            self.delayed_close()
         else:
             debug(PROXY, "%s client is gone", self)
 
