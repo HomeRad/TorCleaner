@@ -26,19 +26,6 @@ from wc.filter.Filter import Filter
 from wc import ConfigDir, config
 from wc.log import *
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_REQUEST]
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = [
-    'block',
-    'blockdomains',
-    'blockurls',
-    'allow',
-    'allowdomains',
-    'allowurls',
-]
-mimelist = []
 # regular expression for image filenames
 is_image = re.compile(r'^(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
 
@@ -48,10 +35,23 @@ def strblock (block):
 
 
 class Blocker (Filter):
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_REQUEST]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = [
+        'block',
+        'blockdomains',
+        'blockurls',
+        'allow',
+        'allowdomains',
+        'allowurls',
+    ]
+    mimelist = []
 
-    def __init__ (self, apply_to_mimelist):
+    def __init__ (self):
         """load blocked/allowed urls/regex."""
-        super(Blocker, self).__init__(apply_to_mimelist)
+        super(Blocker, self).__init__()
         # block and allow regular expressions
         self.block = []
         self.allow = []

@@ -26,17 +26,18 @@ __date__    = "$Date$"[7:-2]
 from wc.filter import FILTER_RESPONSE_MODIFY, compileRegex, compileMime
 from wc.filter.Filter import Filter
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_RESPONSE_MODIFY]
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = ['replacer']
-mimelist = [compileMime(x) for x in ['text/html', 'text/javascript']]
-
 
 # XXX group matches?
 class Replacer (Filter):
     """replace regular expressions in a data stream"""
+
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_RESPONSE_MODIFY]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = ['replacer']
+    mimelist = [compileMime(x) for x in ['text/html', 'text/javascript']]
+
 
     def addrule (self, rule):
         super(Replacer, self).addrule(rule)
@@ -44,15 +45,18 @@ class Replacer (Filter):
         compileRegex(rule, "dontmatchurl")
         compileRegex(rule, "search")
 
+
     def filter (self, data, **attrs):
         if not attrs.has_key('buf'): return data
         return attrs['buf'].replace(data)
+
 
     def finish (self, data, **attrs):
         if not attrs.has_key('buf'): return data
         buf = attrs['buf']
         if data: data = buf.replace(data)
         return data+buf.flush()
+
 
     def getAttrs (self, headers, url):
         # weed out the rules that don't apply to this url
@@ -67,6 +71,7 @@ class Buf (object):
         self.rules = rules
         self.buf = ""
 
+
     def replace (self, data):
         self.buf += data
         if len(self.buf) > 512:
@@ -77,10 +82,12 @@ class Buf (object):
                 return data[:-256]
         return ""
 
+
     def _replace (self):
         for rule in self.rules:
             if rule.search:
                 self.buf = rule.search.sub(rule.replace, self.buf)
+
 
     def flush (self):
         self._replace()

@@ -25,18 +25,6 @@ from wc.filter import FILTER_RESPONSE_ENCODE, compileMime
 from wc.filter.Filter import Filter
 from wc.log import *
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_RESPONSE_ENCODE]
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = []
-# which mime types this filter applies to
-mimelist = [compileMime(x) for x in [r'text/[a-z.\-+]+',
-            'application/(postscript|pdf|x-dvi)',
-            'audio/(basic|midi|x-wav)',
-            'image/x-portable-(any|bit|gray|pix)map',
-            'x-world/x-vrml',
-            ]]
 
 _compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
 
@@ -60,6 +48,19 @@ def getCompressObject ():
 
 
 class Compress (Filter):
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_RESPONSE_ENCODE]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = []
+    # which mime types this filter applies to
+    mimelist = [compileMime(x) for x in [r'text/[a-z.\-+]+',
+            'application/(postscript|pdf|x-dvi)',
+            'audio/(basic|midi|x-wav)',
+            'image/x-portable-(any|bit|gray|pix)map',
+            'x-world/x-vrml',
+            ]]
+
     def filter (self, data, **attrs):
         """compress the string s.
         Note that compression state is saved outside of this function

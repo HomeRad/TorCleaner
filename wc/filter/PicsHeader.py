@@ -25,16 +25,14 @@ from wc.filter.Filter import Filter
 from wc.filter.PICS import check_pics
 from wc.filter import FilterPics, FILTER_RESPONSE_HEADER
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_RESPONSE_HEADER,]
-
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = ['pics']
-
-mimelist = []
-
 class PicsHeader (Filter):
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_RESPONSE_HEADER,]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = ['pics']
+    mimelist = []
+
     def doit (self, data, **attrs):
         rules = attrs['rules']
         headers = attrs['headers']

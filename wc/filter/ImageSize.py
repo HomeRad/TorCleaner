@@ -26,21 +26,21 @@ from wc.filter.Filter import Filter
 from wc.log import *
 from wc import TemplateDir, config
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_RESPONSE_MODIFY]
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = ['image']
-# which mime types this filter applies to
-mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
-
 class ImageSize (Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
 
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_RESPONSE_MODIFY]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = ['image']
+    # which mime types this filter applies to
+    mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
-    def __init__ (self, apply_to_mimelist):
-        super(ImageSize, self).__init__(apply_to_mimelist)
+
+    def __init__ (self):
+        super(ImageSize, self).__init__()
         # minimal amount of image data for PIL to read header info
         # 6000 bytes should be enough, even for JPEG images
         self.min_bufsize = 6000
@@ -98,6 +98,9 @@ class ImageSize (Filter):
 
 
     def check_sizes (self, buf, sizes, url):
+        if buf.tell()==0:
+            error(FILTER, "Empty image data found at %s", `url`)
+            return True
         try:
             buf.seek(0)
             img = Image.open(buf, 'r')
@@ -111,9 +114,7 @@ class ImageSize (Filter):
                         debug(FILTER, "Blocking image size %s", str(size))
                         return False
         except IOError:
-            buf.seek(0)
-            data = buf.getvalue()
-            exception(FILTER, "Could not get image size from %s, data %s", `url`, `data`)
+            exception(FILTER, "Could not get image size from %s, data %s (%d)", `url`, `data`, pos)
         return True
 
 

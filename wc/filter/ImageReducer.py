@@ -26,17 +26,16 @@ from wc.filter.Filter import Filter
 from wc.log import *
 from wc.proxy.Headers import remove_headers
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_RESPONSE_MODIFY]
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = []
-# which mime types this filter applies to
-mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
-
 
 class ImageReducer (Filter):
     """Reduce the image size by making low quality JPEGs"""
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_RESPONSE_MODIFY]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = []
+    # which mime types this filter applies to
+    mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
     def __init__ (self, apply_to_mimelist):
         super(ImageReducer, self).__init__(apply_to_mimelist)

@@ -24,16 +24,6 @@ from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
 from wc.filter.Filter import Filter
 from wc.log import *
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_RESPONSE_MODIFY]
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = []
-# which mime types this filter applies to
-mimelist = [compileMime(x) for x in ['image/gif']]
-# XXX also filter other image types than gif: at least jpg and png
-# should work with PIL
-
 def i16 (c):
     """merge two bytes to an integer"""
     return ord(c[0]) | (ord(c[1])<<8)
@@ -45,10 +35,15 @@ class RewindException (Exception): pass
 class GifImage (Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
-    def __init__ (self, apply_to_mimelist):
-        super(GifImage, self).__init__(apply_to_mimelist)
-        self.tiny_gif = None
-
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_RESPONSE_MODIFY]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = []
+    # which mime types this filter applies to
+    mimelist = [compileMime(x) for x in ['image/gif']]
+    # XXX also filter other image types than gif: at least jpg and png
+    # should work with PIL
 
     def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data

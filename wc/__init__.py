@@ -210,7 +210,7 @@ class Configuration (dict):
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
         self['localhosts'] = get_localhosts()
-        self['mime_content_rewriting'] = []
+        self['mime_content_rewriting'] = Set()
         self['showerrors'] = 0
         self['gui_theme'] = "classic"
         self['timeout'] = 30
@@ -303,25 +303,30 @@ class Configuration (dict):
         objects. This will also compile regular expression strings
         to regular expression objects"""
         import wc.filter
-        for f in self['filters']:
-            exec "from filter import %s" % f
-            _module = getattr(wc.filter, f)
+        for filtername in self['filters']:
+            exec "from filter import %s" % filtername
+            # filter class has same name as module
+            clazz = getattr(getattr(wc.filter, filtername), filtername)
             # add content-rewriting mime types to special list
-            # XXX ImageReducer and ImageSize???
-            if f in ('Rewriter', 'Replacer', 'GifImage', 'Compress'):
-                for mime in getattr(_module, "mimelist"):
-                    if mime not in self['mime_content_rewriting']:
-                        self['mime_content_rewriting'].append(mime)
-            # class has same name as module
-            instance = getattr(_module, f)(getattr(_module, "mimelist"))
-            for order in getattr(_module, 'orders'):
+            if filtername in ['Rewriter', 'Replacer', 'GifImage',
+                              'Compress', 'ImageReducer', 'ImageSize']:
+                self['mime_content_rewriting'].update(clazz.mimelist)
+            instance = clazz()
+            for order in clazz.orders:
                 for folder in self['folderrules']:
                     if folder.disable: continue
                     for rule in folder.rules:
                         if rule.disable: continue
-                        if rule.get_name() in getattr(_module, 'rulenames'):
+                        if rule.get_name() in clazz.rulenames:
                             instance.addrule(rule)
                 self['filterlist'][order].append(instance)
+        self.sort_filter_modules()
+
+
+    def sort_filter_modules (self):
+        for l in self['filterlist']:
+            # see Filter.__cmp__ on how sorting is done
+            l.sort()
 
 
     def nofilter (self, url):

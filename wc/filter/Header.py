@@ -24,17 +24,18 @@ from wc.proxy.Headers import remove_headers
 from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, compileRegex
 from wc.filter.Filter import Filter
 
-# which filter stages this filter applies to (see filter/__init__.py)
-orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]
-# which rule types this filter applies to (see Rules.py)
-# all rules of these types get added with Filter.addrule()
-rulenames = ['header']
-mimelist = []
 
 
 class Header (Filter):
-    def __init__ (self, apply_to_mimelist):
-        super(Header, self).__init__(apply_to_mimelist)
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = ['header']
+    mimelist = []
+
+    def __init__ (self):
+        super(Header, self).__init__()
         self.delete = []
         self.add = {}
 

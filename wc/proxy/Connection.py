@@ -114,13 +114,13 @@ class Connection (asyncore.dispatcher, object):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            debug(PROXY, 'Proxy: close ready %s', str(self))
+            debug(PROXY, 'Proxy: close ready channel %s', `self`)
             self.close_pending = True
         else:
             self.close()
 
 
     def handle_error (self, what):
-        exception(PROXY, what)
+        exception(PROXY, "%s, closing %s", what, `self`)
         self.close()
         self.del_channel()

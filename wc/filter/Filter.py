@@ -22,9 +22,9 @@ from wc.log import *
 
 class Filter (object):
     """the base filter class"""
-    def __init__ (self, apply_to_mimelist):
+    def __init__ (self):
         self.rules = []
-        self.apply_to_mimelist = apply_to_mimelist
+        self.prio = -1
 
 
     def addrule (self, rule):
@@ -49,9 +49,13 @@ class Filter (object):
 
 
     def applies_to_mime (self, mime):
-        if not self.apply_to_mimelist:
+        if not self.mimelist:
             return True
-        for ro in self.apply_to_mimelist:
+        for ro in self.mimelist:
             if ro.match(mime):
                 return True
         return False
+
+
+    def __cmp__ (self, other):
+        return cmp(self.prio, other.prio)
