@@ -76,6 +76,20 @@ def register_category (category):
     categories.append(category)
 
 
+def get_service (service_name):
+    for service in services:
+        if service.name == service_name:
+            return service
+    # not found
+    return None
+
+
+def get_category (category_name):
+    for category in categories:
+        if category.name == category_name:
+            return category
+    # not found
+    return None
 
 
 
