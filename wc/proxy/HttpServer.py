@@ -251,6 +251,7 @@ class HttpServer (Server):
             self.attrs = self.nofilter
         else:
             self.attrs = initStateObjects(self.headers, self.url)
+        # XXX doh
         if self.headers.get('Content-Length') is None:
             self.headers['Connection'] = 'close\r'
         debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", self.headers)
