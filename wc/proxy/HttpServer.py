@@ -37,7 +37,7 @@ _fix_content_types = [
 ]
 
 _fix_content_encodings = [
-    'x-bzip2',
+#    'x-bzip2',
 ]
 
 class HttpServer (Server):

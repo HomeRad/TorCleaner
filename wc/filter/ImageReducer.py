@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, os, sys, base64, ImageFile, cStringIO
+import re, os, sys, base64, Image, cStringIO
 from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, \
                       compileMime, compileRegex
 from wc.filter.Filter import Filter
@@ -39,21 +39,27 @@ class ImageReducer (Filter):
 
 
     def filter (self, data, **attrs):
-        if not (attrs.has_key('parser') and data): return data
+        if not (attrs.has_key('buffer') and data): return data
         # XXX catch IOError
-        attrs['parser'].feed(data)
+        attrs['buffer'].write(data)
         return ''
 
 
     def finish (self, data, **attrs):
-        if not attrs.has_key('parser'): return data
-        p = attrs['parser']
-        if data: p.feed(data)
-        img = p.close()
-        data = cStringIO.StringIO()
-        if attrs.get('convert'):
-            img = img.convert()
-        img.save(data, "JPEG", quality=10, optimize=1)
+        if not attrs.has_key('buffer'): return data
+        p = attrs['buffer']
+        if data: p.write(data)
+        p.seek(0)
+        try:
+            img = Image.open(p)
+            data = cStringIO.StringIO()
+            if attrs.get('convert'):
+                img = img.convert()
+            img.save(data, "JPEG", quality=10, optimize=1)
+        except IOError:
+            # return original image data on error
+            # XXX the content type is pretty sure wrong
+            return p.getvalue()
         return data.getvalue()
 
 
@@ -64,7 +70,7 @@ class ImageReducer (Filter):
         ctype = headers['Content-Type']
         headers['Content-Type'] = 'image/jpeg'
         return {
-            'parser': ImageFile.Parser(),
+            'buffer': cStringIO.StringIO(),
             # some images have to be convert()ed before saving
             'convert': convert(ctype),
         }

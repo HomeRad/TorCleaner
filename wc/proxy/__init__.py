@@ -118,6 +118,7 @@ def proxy_poll (timeout=0.0):
 
 
 def match_host (request):
+    """decide whether to filter this request or not"""
     if not request:
         return None
     try:
@@ -128,7 +129,8 @@ def match_host (request):
     hostname = spliturl(url)[1]
     if not hostname:
         return None
-    hostname = hostname.lower()
+    if hostname.startswith('noproxy.'):
+        return "True"
     hosts, nets, foo = config['noproxyfor']
     return ip.host_in_set(hostname, hosts, nets)
 
@@ -145,7 +147,7 @@ def spliturl (url):
             port = 80
         else:
             port = int(port)
-    return scheme, hostname, port, document
+    return scheme, hostname.lower(), port, document
 
 
 def mainloop ():

@@ -47,8 +47,7 @@ class ClientServerMatchmaker:
 
      done:     We are done matching up the client and server
     """
-    def __init__ (self, client, request, headers, content, nofilter,
-                  compress):
+    def __init__ (self, client, request, headers, content, nofilter,compress):
         self.client = client
         self.request = request
         self.headers = headers
@@ -97,8 +96,11 @@ class ClientServerMatchmaker:
               open(document, 'rb').read())
             return
 
-        if hostname.lower() in _localhosts and port==config['port']:
+        if hostname in _localhosts and port==config['port']:
             return self.handle_local(document)
+        if hostname.startswith('noproxy.'):
+            hostname = hostname[8:]
+            self.url = "%s://%s:%d%s" % (scheme, hostname, port, document)
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']
