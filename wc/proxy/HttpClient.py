@@ -114,6 +114,7 @@ class HttpClient (Connection):
             self.url = applyfilter(FILTER_REQUEST, self.url,
                                    fun="finish", attrs=self.nofilter)
             self.protocol = fix_http_version(protocol)
+            self.request = "%s %s %s" % (self.method, self.url, self.protocol)
             if not self.url:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Empty URL"))
