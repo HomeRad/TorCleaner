@@ -1,4 +1,4 @@
-#!/usr/bin/python -O
+#!/usr/bin/python2.3 -O
 """setup file for the distuils module"""
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.3
 """
     Copyright (C) 2000  Bastian Kleineidam
 

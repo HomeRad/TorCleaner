@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.3
 """print headers of an url"""
 
 import httplib, urlparse, sys

@@ -1,6 +1,6 @@
 SUBDIRS 		= libjs
 
-PYVER := 2.2
+PYVER := 2.3
 PYTHON := python$(PYVER)
 WCVERSION := $(shell $(PYTHON) setup.py --version)
 WCPACKAGE := webcleaner

@@ -1,7 +1,7 @@
 #! /usr/bin/make -f
 # Sample debian/rules that uses debhelper.
 # GNU copyright 1997 to 1999 by Joey Hess.
-PYTHON=python2.2
+PYTHON=python2.3
 PACKAGE=webcleaner
 DOCDIR=debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)
 PATCHED=debian/$(PACKAGE)/usr/lib/$(PYTHON)/site-packages/wc/gui/ConfWindow.py

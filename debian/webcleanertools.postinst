@@ -5,7 +5,7 @@
 set -e
 
 PYTHON=python
-PYVER=2.2
+PYVER=2.3
 PYTHONXY=${PYTHON}${PYVER}
 SITEPACKAGES=/usr/lib/$PYTHONXY/site-packages
 DIRLIST="wc/gui"

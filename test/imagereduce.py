@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2.3
 import sys, os, stat, mimetypes
 sys.path.insert(0, os.getcwd())
 
