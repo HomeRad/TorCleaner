@@ -22,17 +22,18 @@ __date__    = "$Date$"[7:-2]
 
 import re
 
+charset = 'iso-8859-1'
 
 def getval (form, key):
     """return a formfield value"""
     if not form.has_key(key):
-        return ''
+        return u''
     item = form[key]
     if isinstance(item, list):
-        return item[0]
-    if hasattr(item, "value"):
-        return item.value
-    return item
+        item = item[0]
+    elif hasattr(item, "value"):
+        item =item.value
+    return item.decode(charset)
 
 
 def getlist (form, key):
@@ -41,13 +42,15 @@ def getlist (form, key):
         return []
     item = form[key]
     if isinstance(item, list):
-        return [x.value for x in item]
-    if hasattr(item, "value"):
-        return [item.value]
-    return [item]
+        l = [x.value for x in item]
+    elif hasattr(item, "value"):
+        l = [item.value]
+    else:
+        l = [item]
+    return [ x.decode(charset) for x in l ]
 
 
 is_safe = re.compile(r"^[a-zA-Z0-9 ]$").match
 def filter_safe (text):
     """safe whitelist quoting for html content"""
-    return "".join([c for c in text if is_safe(c)])
+    return u"".join([c for c in text if is_safe(c)])
