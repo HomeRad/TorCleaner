@@ -24,12 +24,11 @@ def init_dns_resolver():
     elif os.name=='nt':
         init_dns_resolver_nt()
     else:
-        # not supported
+        # other platforms not supported (what about Mac?)
         pass
     if not DnsConfig.search_domains:
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
-        #print >> sys.stderr, 'DNS: warning: no nameservers found'
         DnsConfig.nameservers.append('127.0.0.1')
     debug(BRING_IT_ON, "DnsConfig", DnsConfig)
 
@@ -61,29 +60,33 @@ def init_dns_resolver_nt():
         except EnvironmentError:
             pass
     if key:
-        nameserver = key["NameServer"][0] or ""
-        for server in nameserver.split(","):
-            DnsConfig.nameservers.append(server)
-    # XXX search for "EnableDhcp", "DhcpNameServer", "SearchList"
+        for server in winreg.stringdisplay(key["NameServer"]):
+            if server:
+                DnsConfig.nameservers.append(server)
+        for item in winreg.stringdisplay(key["SearchList"]):
+            if item:
+                DnsConfig.search_domains.append(item)
+    # XXX search for "EnableDhcp", "DhcpNameServer"
 
-    try: # for win2000
+    try: # search adapters
         key = winreg.handle_key(winreg.HKEY_LOCAL_MACHINE,
   r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\DNSRegisteredAdapters")
         for subkey in key.subkeys():
             count, counttype = subkey['DNSServerAddressCount']
             values, valuestype = subkey['DNSServerAddresses']
             for server in winreg.binipdisplay(values):
-                DnsConfig.nameservers.append(server)
+                if server:
+                    DnsConfig.nameservers.append(server)
     except EnvironmentError:
         pass
 
-    try: # for whistler
+    try: # search interfaces
         key = winreg.handle_key(winreg.HKEY_LOCAL_MACHINE,
            r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
         for subkey in key.subkeys():
-            nameserver = subkey['NameServer'][0] or ""
-            for server in winreg.stringdisplay(nameserver):
-	        DnsConfig.nameservers.append(server)
+            for server in winreg.stringdisplay(subkey.get('NameServer', '')):
+                if server:
+                    DnsConfig.nameservers.append(server)
     except EnvironmentError:
         pass
 
