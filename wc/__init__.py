@@ -111,8 +111,8 @@ def startfunc (handle=None):
     config = Configuration()
     config.init_filter_modules()
     # start the proxy
-    import wc.proxy
-    wc.proxy.mainloop(handle=handle)
+    from wc.proxy import mainloop
+    mainloop(handle=handle)
 
 
 def reload_config (*dummy):
@@ -258,7 +258,7 @@ class Configuration (dict):
         # filter configuration
         for filename in filterconf_files():
             p = ZapperParser(filename)
-            p.parse(file(filename))
+            p.parse(file(filename), self)
             self['folderrules'].append(p.folder)
         self.sort()
 
@@ -372,7 +372,8 @@ class BaseParser (object):
         self.filename = filename
 
 
-    def parse (self, fp):
+    def parse (self, fp, _config):
+        self.config = _config
         debug(WC, "Parsing %s", self.filename)
         try:
             self.p.ParseFile(fp)
@@ -434,8 +435,7 @@ class ZapperParser (BaseParser):
 
 class WConfigParser (BaseParser):
     def parse (self, fp, _config):
-        self.config = _config
-        super(WConfigParser, self).parse(fp)
+        super(WConfigParser, self).parse(fp, _config)
         self.config['configfile'] = self.filename
         self.config['filters'].sort()
 
