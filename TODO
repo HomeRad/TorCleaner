@@ -4,9 +4,9 @@ version 2.10
 
 - convert remaining tests to unit testing where appropriate
 
-- test parent proxy functionality (esp. with HTTPS)
-
 version 2.11 and above
+
+- DNS automatic spell fix: replace ".." with "."
 
 - display a stripped version of server error messages inline in
   the standard webcleaner error page
@@ -17,6 +17,8 @@ version 2.11 and above
 - memory leaks while operating the proxy
 
 - use test/client.py, test/server.py for testing
+
+- allow filtering/blocking  by MIME type?
 
 - virus scanning with clamav http://localhost/doc/clamav/html/node45.html
 
