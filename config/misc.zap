@@ -62,7 +62,7 @@
  search="&lt;/bllnk&gt;">&lt;/blink&gt;</replacer>
 
 <rewrite title="Remove LOWSRC" oid="11"
- desc="The lowsrc is waste of bandwidth."
+ desc="The lowsrc is waste of bandwidth if you have enough of it ;)"
  tag="img">
 <attr name="lowsrc"/>
 <replace part="attr"/>

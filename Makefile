@@ -28,6 +28,7 @@ localbuild:
 	$(MAKE) -C wc/parser
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-$(PYVER)/wc/parser/htmlsax.so wc/parser/
+	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/ || true
 
 localtest:
