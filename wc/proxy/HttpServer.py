@@ -71,7 +71,7 @@ class HttpServer (wc.proxy.Server.Server):
 
     def __init__ (self, ipaddr, port, client):
         """initialize connection data and connect to remove server"""
-        super(HttpServer, self).__init__(client, 'connect')
+        super(self.__class__, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
         self.reset()
@@ -560,7 +560,7 @@ class HttpServer (wc.proxy.Server.Server):
            connection in server pool"""
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.close_reuse", self)
         assert not self.client, "reuse with open client"
-        super(HttpServer, self).close_reuse()
+        super(self.__class__, self).close_reuse()
         self.state = 'client'
         self.reset()
         # be sure to unreserve _after_ reset because of callbacks
@@ -575,7 +575,7 @@ class HttpServer (wc.proxy.Server.Server):
             return True
         if not self.flush():
             return False
-        if super(HttpServer, self).close_ready():
+        if super(self.__class__, self).close_ready():
             if self.client:
                 self.client.server_close(self)
                 self.client = None
@@ -590,7 +590,7 @@ class HttpServer (wc.proxy.Server.Server):
         unregister = (self.connected and self.state != 'closed')
         if unregister:
             self.state = 'closed'
-        super(HttpServer, self).close_close()
+        super(self.__class__, self).close_close()
         if unregister:
             wc.proxy.ServerPool.serverpool.unregister_server(self.addr, self)
         assert not self.connected
@@ -603,13 +603,13 @@ class HttpServer (wc.proxy.Server.Server):
         if self.client:
             client, self.client = self.client, None
             client.server_abort(what)
-        super(HttpServer, self).handle_error(what)
+        super(self.__class__, self).handle_error(what)
 
     def handle_close (self):
         """close the connection"""
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_close", self)
         self.persistent = False
-        super(HttpServer, self).handle_close()
+        super(self.__class__, self).handle_close()
 
     def reconnect (self):
         """reconnect to server"""

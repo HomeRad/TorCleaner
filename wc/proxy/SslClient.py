@@ -21,7 +21,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
     """
 
     def __init__ (self, sock, addr):
-        super(SslClient, self).__init__(sock, addr)
+        super(self.__class__, self).__init__(sock, addr)
         self.allow = wc.proxy.Allowed.AllowedSslClient()
 
     def __repr__ (self):

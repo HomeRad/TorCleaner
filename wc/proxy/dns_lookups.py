@@ -327,7 +327,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         self.nameserver = nameserver
         self.retries = 0
         self.tcp = False
-        super(DnsLookupConnection, self).__init__()
+        super(self.__class__, self).__init__()
         try:
             self.establish_connection()
         except socket.error:
@@ -520,7 +520,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         self.close()
 
     def handle_error (self, what):
-        super(DnsLookupConnection, self).handle_error(what)
+        super(self.__class__, self).handle_error(what)
         if self.callback:
             callback, self.callback = self.callback, None
             callback(self.hostname,
@@ -529,7 +529,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     def handle_close (self):
         # If we ever get here, we want to make sure we notify the
         # callbacks so that they don't get stuck
-        super(DnsLookupConnection, self).handle_close()
+        super(self.__class__, self).handle_close()
         if self.callback:
             callback, self.callback = self.callback, None
             callback(self.hostname,
