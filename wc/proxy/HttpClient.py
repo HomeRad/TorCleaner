@@ -253,27 +253,30 @@ class HttpClient (Connection):
 
 
 def set_proxy_headers (headers):
+    remove_hop_by_hop_headers(headers)
     set_via_headers(headers)
     set_connection_headers(headers)
     return set_encoding_headers(headers)
 
 
+def remove_hop_by_hop_headers (headers):
+    """Remove hop-by-hop headers"""
+    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer', 'TE']
+    remove_headers(headers, to_remove)
+
+
 def set_via_headers (headers):
     """set via header"""
     via = headers.get('Via', "").strip()
-    if via: via += " "
+    if via: via += ", "
     via += "1.1 unknown\r"
     headers['Via'] = via
 
 
 def set_connection_headers (headers):
-    """Remove Connection header, rename Proxy-Connection to Connection"""
+    """Rename Proxy-Connection to Connection"""
     # XXX handle Connection values
-    if headers.has_key('Connection'):
-        to_remove = ['Connection']
-        print >>sys.stderr, "XXX connection", headers['Connection']
-        remove_headers(headers, to_remove)
-    elif headers.has_key('Proxy-Connection'):
+    if headers.has_key('Proxy-Connection'):
         val = headers['Proxy-Connection'].strip()
         headers['Connection'] = val+"\r"
         remove_headers(headers, ['Proxy-Connection'])

@@ -241,6 +241,7 @@ class HttpServer (Server):
             self.reuse()
             return
         debug(HURT_ME_PLENTY, "Server: Headers", `str(self.headers)`)
+        remove_hop_by_hop_headers(self.headers)
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()
@@ -486,6 +487,13 @@ class HttpServer (Server):
             self.flush()
 
 
+def remove_hop_by_hop_headers (headers):
+    """Remove hop-by-hop headers"""
+    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer',
+                 'Proxy-Authenticate']
+    remove_headers(headers, to_remove)
+
+
 def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
@@ -503,3 +511,5 @@ def speedcheck_print_status ():
     #                                          status[0], server.hostname)
 
 import wc
+
+
