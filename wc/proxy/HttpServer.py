@@ -296,8 +296,9 @@ class HttpServer(Server):
 
     def close(self):
         self.state = 'closed'
+        if self.connected:
+            serverpool.unregister_server(self.addr, self)
         Server.close(self)
-        serverpool.unregister_server(self.addr, self)
 
     def handle_error(self, type, value, traceback=None):
         Server.handle_error(self, type, value, traceback)

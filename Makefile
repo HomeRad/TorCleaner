@@ -31,8 +31,8 @@ deb:	locale
 	# clean deb files because distutils chokes on broken symlinks
 	# (webcleaner.1 -> undocumented.1)
 	$(MAKE) cleandeb
-	#fakeroot debian/rules binary
-	fakeroot dpkg-buildpackage -sgpg -pgpg -k959C340F
+	fakeroot debian/rules binary
+	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k959C340F -rfakeroot
 
 
 .PHONY: dist

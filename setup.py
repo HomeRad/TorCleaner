@@ -48,39 +48,6 @@ class MyInstall(install):
         data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
 
-class MyInstallData(install_data):
-    """My own data installer to handle .man pages"""
-    def run (self):
-        self.mkpath(self.install_dir)
-        for f in self.data_files:
-            if type(f) == StringType:
-                # it's a simple file, so copy it
-                if self.warn_dir:
-                    self.warn("setup script did not provide a directory for "
-                              "'%s' -- installing right in '%s'" %
-                              (f, self.install_dir))
-                self._install_file(f, self.install_dir)
-            else:
-                # it's a tuple with path to install to and a list of files
-                dir = f[0]
-                if not os.path.isabs(dir):
-                    dir = os.path.join(self.install_dir, dir)
-                elif self.root:
-                    dir = change_root(self.root, dir)
-                self.mkpath(dir)
-                for data in f[1]:
-                    self._install_file(data, dir)
-
-    def _install_file(self, filename, dirname):
-        out = self.copy_file(filename, dirname)
-        if type(out) == TupleType:
-            out = out[0]
-        # match for man pages .[0-9]
-        if re.search(r'/man/.+\.\d$', out):
-            out = out+".gz"
-        self.outfiles.append(out)
-
-
 
 class my_build_scripts(build_scripts):
 
@@ -178,7 +145,7 @@ myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
 setup (name = "webcleaner",
-       version = "0.12",
+       version = "0.13",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -202,7 +169,6 @@ o HTTP/1.1 support
 """,
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
-                   'install_data': MyInstallData,
 		   'build_scripts': my_build_scripts,
                   },
        data_files = [('share/webcleaner/config',

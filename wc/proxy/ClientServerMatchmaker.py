@@ -132,9 +132,10 @@ class ClientServerMatchmaker:
 
     def find_server(self):
         assert self.state == 'server'
-        if not self.client.connected: return
         addr = (self.ipaddr, self.port)
-
+        if not self.client.connected:
+            # The browser has already closed this connection, so abort
+            return
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
@@ -152,6 +153,7 @@ class ClientServerMatchmaker:
             serverpool.register_server(addr, server)
 
     def server_connected(self, server):
+        assert self.state == 'connect'
         if not self.client.connected:
             # The client has aborted, so let's return this server
             # connection to the pool

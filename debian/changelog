@@ -1,3 +1,10 @@
+webcleaner (0.13) unstable; urgency=low
+
+  * fix an assertion error in HttpServer.py: only close the server when
+    it is connected
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 16 May 2001 21:54:45 +0200
+
 webcleaner (0.12) unstable; urgency=low
 
   * always initialize filter attributes in HttpServer.py
