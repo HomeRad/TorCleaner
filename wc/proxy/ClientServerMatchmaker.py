@@ -57,13 +57,11 @@ class ClientServerMatchmaker (object):
 
      done:     We are done matching up the client and server
     """
-    def __init__ (self, client, request, headers, content, compress,
-                  mime=None):
+    def __init__ (self, client, request, headers, content, mime=None):
         self.client = client
         self.server = None
         self.request = request
         self.headers = headers
-        self.compress = compress
         self.content = content
         self.mime = mime
         self.state = 'dns'

@@ -168,7 +168,7 @@ class HttpClient (Connection):
         else:
             self.persistent = False
         # work on these headers
-        self.compress = client_set_headers(msg)
+        client_set_headers(msg)
         # filter headers
         self.headers = applyfilter(FILTER_REQUEST_HEADER,
                                    msg, "finish", self.attrs)
@@ -259,7 +259,7 @@ class HttpClient (Connection):
         assert self.state=='receive', "%s server_request in state receive" % str(self)
         # This object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
-                               self.content, self.compress)
+                               self.content)
 
 
     def server_response (self, server, response, status, headers):

@@ -67,11 +67,13 @@ class HttpProxyClient (object):
             self.args = (url, self.args[1])
             # close the server and try again
             self.server.client_abort()
+            headers = get_wc_client_headers(host)
+            headers['Accept-Encoding'] = 'identity\r'
             ClientServerMatchmaker(self,
                            "GET %s HTTP/1.1" % url, #request
-                           get_wc_client_headers(host), #headers
+                           headers,
                            '', #content
-                           'identity', # compress
+                           mime=self.server.mime,
                            )
             return
         elif status!=200:
