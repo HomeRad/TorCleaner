@@ -41,6 +41,17 @@ _fix_content_encodings = [
 #    'x-bzip2',
 ]
 
+def get_response_data (response):
+    """parse a response status line into tokens (protocol, status, msg)"""
+    parts = response.split(None, 2)
+    if len(parts)==3:
+        return parts
+    if len(parts)==2:
+        return parts[0], parts[1], "Bummer"
+    error(PROXY, "Invalid response %s", `response`)
+    return "HTTP/1.0", 200, "Ok"
+
+
 class HttpServer (Server):
     """HttpServer handles the connection between the proxy and a http server.
      It writes the client request to the server and sends answer data back
@@ -180,11 +191,7 @@ class HttpServer (Server):
 	                attrs=self.nofilter)
         if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
-            try:
-                protocol, self.statuscode, tail = self.response.split(None, 2)
-            except ValueError, e:
-                error(PROXY, "Invalid response %s", `self.response`)
-                raise
+            protocol, self.statuscode, tail = get_response_data(self.response)
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, get_http_version(protocol))
