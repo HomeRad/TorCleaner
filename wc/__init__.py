@@ -162,7 +162,7 @@ def get_log_file (name, logname, trydirs=None):
         fullname = os.path.join(d, logname)
         if iswritable(fullname):
             return fullname
-    raise IOError, "Could not find writable directory for %s in %s" %
+    raise IOError, "Could not find writable directory for %s in %s" % \
                    (logname, str(trydirs))
 
 
