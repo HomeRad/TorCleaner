@@ -67,6 +67,8 @@ class Rewriter (Filter):
         """We need a separate filter instance for stateful filtering"""
         rewrites = []
         pics = []
+        # look if headers already have PICS label info
+        picsheader = headers.has_key('PICS-Label')
         opts = {'comments': 1, 'javascript': 0}
         for rule in self.rules:
             if not rule.appliesTo(url): continue
@@ -76,7 +78,7 @@ class Rewriter (Filter):
                 opts['comments'] = 0
             elif rule.get_name()=='javascript':
                 opts['javascript'] = 1
-            elif rule.get_name()=='pics':
+            elif rule.get_name()=='pics' and not picsheader:
                 pics.append(rule)
         # generate the HTML filter
         return {'filter': FilterHtmlParser(rewrites, pics, url, **opts)}

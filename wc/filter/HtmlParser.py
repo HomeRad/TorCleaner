@@ -312,11 +312,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 msg = check_pics(rule, labels)
                 if msg:
                     raise FilterPics(msg)
-            # first labels match
+            # first labels match counts
             self.pics = []
         elif tag=="body":
             # headers finished
-            self.pics = []
+            if self.pics:
+                # no pics data found
+                self.pics = []
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
