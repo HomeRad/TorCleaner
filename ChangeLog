@@ -5,6 +5,15 @@
     Changed: setup.py, MANIFEST.in, debian/control, debian/rules
   * fixed and updated status command and some return values
     Changed: wc/daemon/{__init__,_posix}.py
+  * added separate administrator user/password for the configuration
+    interface
+    Changed: wc/__init__.py, wc/proxy/HttpClient.py,
+      wc/proxy/ClientServerMatchmaker.py, wc/webgui/config_html.py,
+      templates/classic/config.html, FAQ
+  * disable the proxy until an administrator password was given.
+    Changed: wc/proxy/HttpClient.py
+    Added: templates/classic/adminpass.html,
+      wc/webgui/context/adminpass_html.py
 
 2.7 (released 04.12.2003)
   * updated filters:
