@@ -88,13 +88,15 @@ def startfunc():
     if os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, reload_config)
+    config.init_filter_modules()
     from wc import proxy
     proxy.mainloop()
 
 
 # reload configuration
 def reload_config(signum, frame):
-    config.read_filerconf()
+    config.read_filterconf()
+    config.init_filter_modules()
 
 
 class Configuration(UserDict.UserDict):
@@ -139,6 +141,8 @@ class Configuration(UserDict.UserDict):
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
             ZapperParser().parse(f, self)
+
+    def init_filter_modules(self):
         for f in self['filters']:
             exec "from filter import %s" % f
             _module = getattr(sys.modules['wc.filter'], f)

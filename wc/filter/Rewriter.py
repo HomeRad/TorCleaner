@@ -195,3 +195,6 @@ class HtmlFilter(SGMLParser):
         SGMLParser.close(self)
         self.buffer2data()
         return self.flush()
+
+
+# XXX helper functions

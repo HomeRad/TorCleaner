@@ -1,9 +1,9 @@
 TODO
 
-- more status info (look at surfboard: the WM applet is cool)
-  o active connections
-  o cookies
-
+- test:
+  - no proxy for
+  - proxy daemon funcs from GUI
+  
 - new filtering:
   Stop/limit Javascript Pop-ups/alert/confirms
     javascript:window.onload=window.onunload=window.onbeforeunload=null;window.close();
