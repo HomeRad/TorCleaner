@@ -131,6 +131,9 @@ class HttpClient (Connection):
             # filter headers
             self.headers = applyfilter(FILTER_REQUEST_HEADER,
                               msg, fun="finish", attrs=self.nofilter)
+            if config['parentproxy']:
+                self.headers['Proxy-Connection'] = 'Keep-Alive\r'
+                self.headers['Keep-Alive'] = 'timeout=300\r'
             # add decoders
             self.decoders = []
             self.bytes_remaining = get_content_length(self.headers)
@@ -151,8 +154,8 @@ class HttpClient (Connection):
                 # XXX the data=None argument should hold POST data
                 if not check_credentials(creds, username=config['proxyuser'],
                                          password_b64=config['proxypass'],
-                                         uri=self.url, method=self.method,
-                                         data=None):
+                                         uri=urlparse.urlparse(self.url)[2],
+                                         method=self.method, data=None):
                     warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
                     auth = ", ".join(get_challenges())
                     self.error(407, i18n._("Proxy Authentication Required"), auth=auth)

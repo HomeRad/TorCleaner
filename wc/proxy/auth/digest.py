@@ -43,19 +43,30 @@ def parse_digest_credentials (credentials):
 def check_digest_credentials (credentials, **attrs):
     """check digest credentials"""
     if not check_digest_values(credentials):
+        debug(AUTH, "digest wrong values")
         return False
     # note: opaque value _should_ be there, but is not in apache mod_digest
     if credentials.get("opaque") != wc_opaque:
+        debug(AUTH, "digest wrong opaque")
         return False
     if credentials["realm"] != wc_realm:
+        debug(AUTH, "digest wrong realm")
         return False
     if credentials["nonce"] not in nonces:
+        debug(AUTH, "digest wrong nonce")
         return False
     # deprecate old nonce
     del nonces[credentials["nonce"]]
+    if credentials['uri'] != attrs['uri']:
+        debug(AUTH, "digest wrong uri")
+        return False
     # compare responses
     response = credentials.get('response')
-    return response == get_response_digest(credentials, **attrs)
+    our_response = get_response_digest(credentials, **attrs)[2]
+    if response != our_response:
+        debug(AUTH, "digest wrong response %s!=%s", response, our_response)
+        return False
+    return True
 
 
 def check_digest_values (auth):
@@ -120,9 +131,10 @@ def get_response_digest (challenge, **attrs):
         H = lambda x: md5.new(x).digest()
     elif algorithm=='SHA':
         H = lambda x: sha.new(x).digest()
-    # XXX POST data digest not implemented yet
-    if attrs.has_key('data'):
-        entdig = get_entity_digest(attrs['data'], challenge)
+    data = attrs.get('data')
+    if data:
+        # XXX POST data digest not implemented yet
+        entdig = get_entity_digest(data, challenge)
         assert attrs['method'] == "POST"
     else:
         entdig = None

@@ -70,6 +70,7 @@ class HttpServer (Server):
         self.can_reuse = False
         self.flushing = False
         self.authtries = 0
+        self.statuscode = None
         self.bytes_remaining = None
         self.attempt_connect()
 
@@ -245,7 +246,7 @@ class HttpServer (Server):
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
         debug(PROXY, "Server: Headers %s", `str(msg)`)
-        if self.statuscode == 100:
+        if self.statuscode==100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
@@ -277,8 +278,6 @@ class HttpServer (Server):
             return
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.client.compress, self.bytes_remaining)
-        if config['parentproxy']:
-            self.headers['Proxy-Connection'] = 'keep-alive\r'
         # 304 Not Modified does not send any type info, because it was cached
         if self.statuscode != 304:
             server_set_content_headers(self.headers, self.document, self.mime, self.url)
