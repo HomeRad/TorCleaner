@@ -21,7 +21,7 @@ Options:
 
 """
 
-import sys, getopt, struct, array, string
+import sys, getopt, struct, array
 
 __version__ = "1.0"
 MESSAGES = {}
@@ -56,8 +56,8 @@ def generate():
         # For each string, we need size and file offset.  Each string is NUL
         # terminated; the NUL does not count into the size.
         offsets.append((len(ids), len(id), len(strs), len(MESSAGES[id])))
-        ids = ids + id + '\0'
-        strs = strs + MESSAGES[id] + '\0'
+        ids += id + '\0'
+        strs += MESSAGES[id] + '\0'
     output = ''
     # The header is 7 32-bit unsigned integers.  We don't use hash tables, so
     # the keys start right after the index tables.
@@ -70,8 +70,8 @@ def generate():
     # The string table first has the list of keys, then the list of values.
     # Each entry has first the size of the string, then the file offset.
     for o1, l1, o2, l2 in offsets:
-        koffsets = koffsets + [l1, o1+keystart]
-        voffsets = voffsets + [l2, o2+valuestart]
+        koffsets += [l1, o1+keystart]
+        voffsets += [l2, o2+valuestart]
     offsets = koffsets + voffsets
     output = struct.pack("iiiiiii",
                          0x950412de,        # Magic
@@ -80,9 +80,9 @@ def generate():
                          7*4,               # start of key index
                          7*4+len(keys)*8,   # start of value index
                          0, 0)              # size and offset of hash table
-    output = output + array.array("i", offsets).tostring()
-    output = output + ids
-    output = output + strs
+    output += array.array("i", offsets).tostring()
+    output += ids
+    output += strs
     return output
 
 
@@ -110,14 +110,14 @@ def make(filename):
     # Parse the catalog
     lno = 0
     for l in lines:
-        lno = lno + 1
+        lno += 1
         # If we get a comment line after a msgstr, this is a new entry
         if l[0] == '#' and section == STR:
             add(msgid, msgstr, fuzzy)
             section = None
             fuzzy = 0
         # Record a fuzzy mark
-        if l[:2] == '#,' and string.find(l, 'fuzzy') != -1:
+        if l[:2] == '#,' and l.find('fuzzy') != -1:
             fuzzy = 1
         # Skip comments
         if l[0] == '#':
@@ -134,15 +134,15 @@ def make(filename):
             section = STR
             l = l[6:]
         # Skip empty lines
-        l = string.strip(l)
+        l = l.strip()
         if not l:
             continue
         # XXX: Does this always follow Python escape semantics?
         l = eval(l)
         if section == ID:
-            msgid = msgid + l
+            msgid += l
         elif section == STR:
-            msgstr = msgstr + l
+            msgstr += l
         else:
             sys.stderr.write('Syntax error on %s:%d\n'
 	                     'before: %s\n' % (infile, lno, l))

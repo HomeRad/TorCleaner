@@ -134,11 +134,11 @@ If `inputfile' is -, standard input is read.
 
 """)
 
-import os, sys, time, getopt, tokenize, string
+import os, sys, time, getopt, tokenize
 
 __version__ = '1.1'
 default_keywords = ['_']
-DEFAULTKEYWORDS = string.join(default_keywords, ', ')
+DEFAULTKEYWORDS = ", ".join(default_keywords)
 EMPTYSTRING = ''
 
 
@@ -199,7 +199,7 @@ def escape(s):
     s = list(s)
     for i in range(len(s)):
         s[i] = escapes[ord(s[i])]
-    return string.join(s, EMPTYSTRING)
+    return EMPTYSTRING.join(s)
 
 
 def safe_eval(s):
@@ -210,17 +210,17 @@ def safe_eval(s):
 def normalize(s):
     # This converts the various Python string types into a format that is
     # appropriate for .po files, namely much closer to C style.
-    lines = string.split(s, '\n')
+    lines = s.split('\n')
     if len(lines) == 1:
         s = '"' + escape(s) + '"'
     else:
         if not lines[-1]:
             del lines[-1]
-            lines[-1] = lines[-1] + '\n'
+            lines[-1] += '\n'
         for i in range(len(lines)):
             lines[i] = escape(lines[i])
         lineterm = '\\n"\n"'
-        s = '""\n"' + string.join(lines, lineterm) + '"'
+        s = '""\n"' + lineterm.join(lines) + '"'
     return s
 
 
@@ -256,7 +256,7 @@ class TokenEater:
             # of messages seen.  Reset state for the next batch.  If there
             # were no strings inside _(), then just ignore this entry.
             if self.__data:
-                msg = string.join(self.__data, EMPTYSTRING)
+                msg = EMPTYSTRING.join(self.__data)
                 if not msg in self.__options.toexclude:
                     entry = (self.__curfile, self.__lineno)
                     linenos = self.__messages.get(msg)
@@ -297,7 +297,7 @@ class TokenEater:
                         d = {'filename': filename, 'lineno': lineno}
                         s = _(' %(filename)s:%(lineno)d') % d
                         if len(locline) + len(s) <= options.width:
-                            locline = locline + s
+                            locline += s
                         else:
                             print locline
                             locline = "#:" + s

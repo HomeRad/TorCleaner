@@ -65,10 +65,10 @@ except ImportError:
         # TODO: This should somehow try to find out locale information on
         #       Non-unix platforms like WinXX and MacOS.  Suggestions welcome!
         languages = []
-        import os, string
+        import os
         for envvar in ('LANGUAGE', 'LC_ALL', 'LC_MESSAGES', 'LANG'):
             if os.environ.has_key(envvar):
-                languages = string.split(os.environ[envvar], ':')
+                languages = os.environ[envvar].split(':')
                 break
         # use locale 'C' as default fallback:
         if 'C' not in _languages:
