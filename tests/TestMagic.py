@@ -18,7 +18,6 @@ class TestMagic (unittest.TestCase):
 
     def doMagic (self, filename, expected):
         fp = file(os.path.join(self.basedir, filename), 'rb')
-        print fp.read()
         classify = magic.classify(fp)
         self.assertEqual(classify, expected)
 

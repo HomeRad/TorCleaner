@@ -21,7 +21,7 @@
 
 # modified by Bastian Kleineidam
 
-import re, string, convert
+import os, re, string, convert
 
 # Need to have a checksum on the cache and source file to update at object creation
 # Could use circle safe_pickle (see speed performance impact)
@@ -59,7 +59,6 @@ class Magic (object):
         self._datadict = {}
         self._lengthdict = {}
         self._mimedict = {}
-        import os
         if not os.path.isfile(cachename):
             self.read_magic(filename)
             self.write_cache(cachename)
@@ -279,9 +278,7 @@ class Magic (object):
         mime=''
         for name in list:
             mime += name + " "
-
         mime = mime.rstrip()
-
         mime = mime.replace("\\a","\a")
         mime = mime.replace("\\b","\b")
         mime = mime.replace("\\f","\f")
@@ -290,7 +287,6 @@ class Magic (object):
         mime = mime.replace("\\t","\t")
         mime = mime.replace("\\v","\v")
         mime = mime.replace("\\0","\0")
-
         return mime
 
 
@@ -301,7 +297,6 @@ class Magic (object):
             f = file(magic_file, 'rb')
         except:
             raise StandardError("No valid magic file called %r"%magic_file)
-    
         index = 0
         for line in f.readlines():
             line = line.strip()
@@ -321,7 +316,7 @@ class Magic (object):
 
                 # offset such as (<number>[.[bslBSL]][+-][<number>]) are indirect offset
                 (direct,offset_type,offset_delta,offset_relatif) = self._offset(offset_string)
-        
+
                 # The type can be associated to a netmask
                 (oper,mask,rest) = self._oper_mask(part[1])
 
@@ -333,13 +328,13 @@ class Magic (object):
 
                 # Get the comparaison test and result
                 (test,result) = self._test_result(part[2])
-                
+
                 # Get the value to check against
                 data = self._data(kind,result)
 
                 # Get the length of the data
                 length = self._length(kind,data)
-                
+
                 # Special characters
                 mime = self._mime(part[3:])
 
@@ -420,8 +415,8 @@ class Magic (object):
             delta = ord(self._read(f,1))
         elif type == 'B':
             delta = ord(self._read(f,1))
-
         return offset + delta
+
 
     def _read (self, fp, number):
         # This may retun IOError
@@ -440,7 +435,6 @@ class Magic (object):
             if len(data) < 1:
                 raise StandardError("Should never happen, not enough data")
             value= ord(data[0])
-        
         elif kind == 'short':
             if len(data) < 2:
                 raise StandardError("Should never happen, not enough data")
@@ -452,7 +446,6 @@ class Magic (object):
                 value= convert.big2(data)
             else:
                 raise StandardError("Endian type unknown")
-
         elif kind == 'long':
             if len(data) < 4:
                 raise StandardError("Should never happen, not enough data")
@@ -464,7 +457,6 @@ class Magic (object):
                 value= convert.big4(data)
             else:
                 raise StandardError("Endian type unknown")
-            
         elif kind == 'date':
             # XXX: Not done yet
             pass
@@ -486,7 +478,6 @@ class Magic (object):
             #        kind = "string"
         else:
             raise StandardError("Type %r not recognised"%kind)
-
         return value
 
 
@@ -504,7 +495,7 @@ class Magic (object):
 
     def _read_string (self, fp):
         # This may retun IOError
-        limit=0
+        limit = 0
         result = "" 
         while limit < 100:
             char = self._read(fp, 1)
@@ -586,7 +577,6 @@ class Magic (object):
                 else:
                     offset = self._indirect_offset(f,offset_type,offset_delta)
 
-
                 # If it is out of the file then the test fails.
                 if file_length < offset:
                     raise Failed("Data length %d too small, needed %d"%(file_length, offset))
@@ -597,13 +587,11 @@ class Magic (object):
                 if not extract:
                     raise Failed("Could not extract %d bytes from offset %d"%(leng, offset))
 
-
                 # Convert the little/big endian value from the file
                 value = self._convert(kind,endian,extract)
 
                 # If the value is masked, remove the unwanted bits
                 value = self._binary_mask(oper,value,mask)
-
 
                 # Perform the test
                 if test == '=':

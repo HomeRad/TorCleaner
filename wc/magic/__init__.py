@@ -1,6 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 """magic(5) module"""
 
+import os
+
 _magic = None
 
 def classify (fp):
@@ -10,8 +12,8 @@ def classify (fp):
         # initialize mime data
         from magic import Magic
         from wc import ConfigDir
-        import os
         magicfile = os.path.join(ConfigDir, "magic.mime")
+        assert os.path.exists(magicfile)
         magiccache = magicfile+".mgc"
         _magic = Magic(magicfile, magiccache)
     return _magic.classify(fp)
