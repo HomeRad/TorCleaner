@@ -115,8 +115,8 @@ class Configuration (UserDict.UserDict):
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['colorize'] = 0
-        self['noproxyfor'] = [{}, [], {}]
-        self['allowedhosts'] = [{}, [], {}]
+        self['noproxyfor'] = None
+        self['allowedhosts'] = None
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
@@ -276,12 +276,16 @@ class WConfigParser (BaseParser):
                         ):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
-            if self.config['noproxyfor']:
+            if self.config['noproxyfor'] is not None:
                 strhosts = str(self.config['noproxyfor'])
                 self.config['noproxyfor'] = host_set(strhosts)
-            if self.config['allowedhosts']:
+            else:
+                self.config['noproxyfor'] = [{}, [], {}]
+            if self.config['allowedhosts'] is not None:
                 strhosts = str(self.config['allowedhosts'])
                 self.config['allowedhosts'] = host_set(strhosts)
+            else:
+                self.config['allowedhosts'] = [{}, [], {}]
             if self.config['logfile'] == '<stdout>':
                 self.config['logfile'] = sys.stdout
             elif self.config['logfile']:
