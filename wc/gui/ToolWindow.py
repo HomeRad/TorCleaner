@@ -5,8 +5,8 @@ from wc import _
 
 class ToolWindow(FXMainWindow):
     """common base class for webcleaner tools"""
-    def __init__ (self, app):
-	FXMainWindow.__init__(self, app, "wcheaders", w=640, h=520)
+    def __init__ (self, app, name):
+	FXMainWindow.__init__(self, app, name)
         self.setIcon(loadIcon(app, 'iconbig.png'))
         self.eventMap()
         self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
