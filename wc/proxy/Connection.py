@@ -114,6 +114,8 @@ class Connection (asyncore.dispatcher, object):
         if self.connected:
             self.connected = False
             super(Connection, self).close()
+            del self.send_buffer
+            del self.recv_buffer
 
 
     def handle_close (self):
