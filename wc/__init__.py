@@ -35,6 +35,9 @@ import wc.log
 import wc.i18n
 
 def abspath (path):
+    """
+    If path is not absolute, make it absolute with sys.prefix.
+    """
     if not os.path.isabs(path):
         path = os.path.join(sys.prefix, path)
     return path
