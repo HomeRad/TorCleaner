@@ -119,7 +119,7 @@ def restart_service ():
     start_service()
 
 
-def stop_service ()
+def stop_service ():
     """stop WebCleaner NT service (if it is running)"""
     print _("Stopping %s proxy...") % wc.AppName
     oldargs = sys.argv
