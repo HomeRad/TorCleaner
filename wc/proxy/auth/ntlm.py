@@ -164,7 +164,7 @@ def str_flags (flags):
 
 
 def check_nonces ():
-    # deprecate old nonces
+    """deprecate old nonces"""
     todelete = []
     for nonce, value in nonces.items():
         noncetime = time.time() - value
@@ -209,6 +209,7 @@ def parse_ntlm_challenge (challenge):
 
 
 def get_ntlm_credentials (challenge, **attrs):
+    """return NTLM credentials for given challenge"""
     ctype = attrs.get('type', NTLMSSP_NEGOTIATE)
     if ctype==NTLMSSP_NEGOTIATE:
         msg = create_message1()
@@ -252,6 +253,7 @@ def parse_ntlm_credentials (credentials):
 
 
 def check_ntlm_credentials (credentials, **attrs):
+    """return True if given credentials validate with given attrs"""
     if credentials.has_key('host') and credentials['host']!="UNKNOWN":
         warn(AUTH, "NTLM wrong host %r", credentials['host'])
         return False
@@ -287,7 +289,7 @@ negotiate_flags = NTLMSSP_NEGOTIATE_80000000 | \
    NTLMSSP_REQUEST_TARGET
 
 def create_message1 (flags=negotiate_flags):
-    """create negotiate message (NTLM msg type 1)"""
+    """create and return NTLM message type 2 (NTLMSSP_NEGOTIATE)"""
     # overall length is 48 bytes
     msg = '%s\x00'%NTLMSSP_SIGNATURE # name
     msg += struct.pack("<l", NTLMSSP_NEGOTIATE) # message type
@@ -306,6 +308,7 @@ def create_message1 (flags=negotiate_flags):
 
 
 def parse_message1 (msg):
+    """parse and return NTLM message type 1 (NTLMSSP_NEGOTIATE)"""
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
     debug(AUTH, "msg1 flags %s", "\n".join(str_flags(res['flags'])))
@@ -324,7 +327,9 @@ challenge_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
    NTLMSSP_NEGOTIATE_UNICODE | \
    NTLMSSP_REQUEST_TARGET
 
+
 def create_message2 (domain, flags=challenge_flags):
+    """create and return NTLM message type 2 (NTLMSSP_SIGNATURE)"""
     msg = '%s\x00'% NTLMSSP_SIGNATURE # name
     msg += struct.pack("<l", NTLMSSP_CHALLENGE) # message type
     if flags & NTLMSSP_TARGET_TYPE_DOMAIN:
@@ -351,6 +356,7 @@ def create_message2 (domain, flags=challenge_flags):
 
 
 def parse_message2 (msg):
+    """parse and return NTLM message type 2 (NTLMSSP_SIGNATURE)"""
     res = {}
     if not msg.startswith('%s\x00'%NTLMSSP_SIGNATURE):
         warn(AUTH, "NTLM challenge signature not found %r", msg)
@@ -375,6 +381,7 @@ auth_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
 
 def create_message3 (nonce, domain, username, host,
                      lm_hashed_pw, nt_hashed_pw, flags=auth_flags):
+    """create and return NTLM message type 3 (NTLMSSP_AUTH)"""
     if lm_hashed_pw:
         lm_resp = calc_resp(lm_hashed_pw, nonce)
     else:
@@ -416,6 +423,7 @@ def create_message3 (nonce, domain, username, host,
 
 
 def parse_message3 (msg):
+    """parse and return NTLM message type 3 (NTLMSSP_AUTH)"""
     res = {'type': NTLMSSP_AUTH}
     lm_offset = getint32(msg[16:20])
     nt_len = getint16(msg[20:22])
@@ -438,6 +446,7 @@ def parse_message3 (msg):
 ############################ helper functions ###########################
 
 def compute_nonce ():
+    """return a random nonce integer value as 8-byte string"""
     return "%08d" % (random.random()*100000000)
 
 
@@ -486,6 +495,7 @@ def unicode2str (s):
 
 
 def lst2str (lst):
+    """converts a string to ascii string"""
     return "".join([chr(i & 0xFF) for i in lst])
 
 
@@ -539,6 +549,7 @@ def create_lm_hashed_password (passwd):
 
 
 def create_lm_password (passwd):
+    """create Lan Manager hashed password"""
     passwd = passwd.upper()
     if len(passwd) < 14:
         lm_pw = passwd + ('\x00'*(14-len(passwd)))
@@ -561,37 +572,8 @@ def create_nt_hashed_password (passwd):
     return nt_hpw
 
 
-def _test ():
-    password = "Beeblebrox"
-    nonce = "SrvNonce"
-    lm_hashed_pw = create_lm_hashed_password(password)
-    nt_hashed_pw = create_nt_hashed_password(password)
-    correct_lm_resp = "\xad\x87\xca\x6d\xef\xe3\x46\x85\xb9\xc4\x3c\x47\x7a\x8c\x42\xd6\x00\x66\x7d\x68\x92\xe7\xe8\x97"
-    correct_nt_resp = "\xe0\xe0\x0d\xe3\x10\x4a\x1b\xf2\x05\x3f\x07\xc7\xdd\xa8\x2d\x3c\x48\x9a\xe9\x89\xe1\xb0\x00\xd3"
-    lm_resp = calc_resp(lm_hashed_pw, nonce)
-    nt_resp = calc_resp(nt_hashed_pw, nonce)
-    error = False
-    if lm_resp!=correct_lm_resp:
-        print "lm_resp"
-        print repr(lm_resp)
-        print repr(correct_lm_resp)
-        error = True
-    if nt_resp!=correct_nt_resp:
-        print "nt_resp"
-        print repr(nt_resp)
-        print repr(correct_nt_resp)
-        error = True
-    if not error:
-        print "finished ok"
-
-
 from wc.proxy import make_timer
 def init ():
-    # check for timed out nonces every 5 minutes
+    """check for timed out nonces every 5 minutes"""
     make_timer(300, check_nonces)
-    pass
 
-if __name__=='__main__':
-    _test()
-else:
-    init()

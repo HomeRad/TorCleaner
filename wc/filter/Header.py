@@ -66,11 +66,11 @@ class Header (Filter):
                 self.add[FILTER_RESPONSE_HEADER][rule.name] = rule.value
 
 
-    def doit (self, data, **args):
+    def doit (self, data, **attrs):
         """apply stored header rules to data, which is a WcMessage object"""
         delete = {}
         # stage is FILTER_REQUEST_HEADER or FILTER_RESPONSE_HEADER
-        stage = args['filterstage']
+        stage = attrs['filterstage']
         for h in data.keys():
             for name in self.delete[stage]:
                 if re.match(name, h):

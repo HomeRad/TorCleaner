@@ -22,7 +22,7 @@ max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
 
 
 def check_nonces ():
-    # deprecate old nonces
+    """deprecate old digest nonces"""
     todelete = []
     for nonce, value in nonces.items():
         noncetime = time.time() - value
@@ -190,17 +190,19 @@ def get_cnonce ():
 
 _nonce_count = 0
 def get_nonce_count ():
+    """increment nonce count and return it as formatted string"""
     global _nonce_count
     _nonce_count += 1
     return "%08d" % _nonce_count
 
 
 def get_entity_digest (data, chal):
-    # XXX not implemented yet
+    """XXX not implemented yet, returns None"""
     return None
 
 
 def encode_digest (digest):
+    """encode given digest in hexadecimal representation and return it"""
     hexrep = []
     for c in digest:
         n = (ord(c) >> 4) & 0xf
@@ -210,9 +212,8 @@ def encode_digest (digest):
     return ''.join(hexrep)
 
 
-def init ():
-    # check for timed out nonces every 5 minutes
-    make_timer(300, check_nonces)
-    pass
-
 from wc.proxy import make_timer
+def init ():
+    """check for timed out nonces every 5 minutes"""
+    make_timer(300, check_nonces)
+

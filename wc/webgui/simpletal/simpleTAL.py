@@ -1585,9 +1585,9 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml
             self.doctype = '<!DOCTYPE %s SYSTEM "%s">' % (name, system_id,)
 
 
-    def startElement (self, tag, attributes):
+    def startElement (self, name, attrs):
         """handle start element"""
-        self.log.debug("Recieved Real Start Tag: " + tag + " Attributes: " + str(attributes))
+        self.log.debug("Received Real Start Tag: "+name+" Attributes: "+str(attrs))
         try:
             xmlText = self.ourParser.getProperty(xml.sax.handler.property_xml_string)
             if SINGLETON_XML_REGEX.match(xmlText):
@@ -1598,24 +1598,24 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml
             pass
         # Convert attributes into a list of tuples
         atts = []
-        for att in attributes.getNames():
-            self.log.debug("Attribute name %s has value %s" % (att, attributes[att]))
-            atts.append((att, attributes[att]))
-        self.parseStartTag(tag, atts, singletonElement=self.singletonElement)
+        for att in attrs.getNames():
+            self.log.debug("Attribute name %s has value %s" % (att, attrs[att]))
+            atts.append((att, attrs[att]))
+        self.parseStartTag(name, atts, singletonElement=self.singletonElement)
 
 
-    def endElement (self, tag):
+    def endElement (self, name):
         """handle end element"""
-        self.log.debug("Recieved Real End Tag: " + tag)
-        self.parseEndTag(tag)
+        self.log.debug("Recieved Real End Tag: "+name)
+        self.parseEndTag(name)
         self.singletonElement = 0
 
 
-    def characters (self, data):
+    def characters (self, content):
         """handle characters"""
-        #self.log.debug("Recieved Real Data: " + data)
+        #self.log.debug("Recieved Real Data: " + content)
         # Escape any data we recieve - we don't want any: <&> in there.
-        self.parseData(cgi.escape(data))
+        self.parseData(cgi.escape(content))
 
 
     def processingInstruction (self, target, data):
