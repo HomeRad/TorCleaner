@@ -160,6 +160,8 @@ class Configuration (dict):
         # read configuration
         self.read_proxyconf()
         self.read_filterconf()
+        if self['timeout']:
+            socket.setdefaulttimeout(self['timeout'])
 
     def reset (self):
         """Reset to default values"""
