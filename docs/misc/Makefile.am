@@ -8,5 +8,5 @@ html_DATA = $(HTMLFILES)
 EXTRA_DIST = $(RESTFILES)
 
 %.html: %.txt ../htmlnav.py ../bfknav.py
-	$(DOCDIR)/rest2htmlnav --stylesheet-path=../wc.css --time $< $@
+	-$(DOCDIR)/rest2htmlnav --stylesheet-path=../wc.css --time $< $@
 
