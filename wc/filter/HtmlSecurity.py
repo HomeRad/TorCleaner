@@ -84,6 +84,8 @@ class HtmlSecurity (object):
                 warn(FILTER, "%s\n Detected and prevented IE <object type> bug", str(htmlfilter))
                 t = t.replace("/", "", c-1)
                 attrs['type'] = t
+        if attrs.has_key('codebase'):
+            self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
 
 
     def table_start (self, attrs, htmlfilter):
@@ -92,11 +94,6 @@ class HtmlSecurity (object):
             if attrs['width']=='-1':
                 warn(FILTER, "%s\n Detected and prevented ICQ table width crash bug", str(htmlfilter))
                 del attrs['width']
-
-
-    def object_start (self, attrs, htmlfilter):
-        if attrs.has_key('codebase'):
-            self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
 
 
     def object_end (self):
