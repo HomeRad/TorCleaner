@@ -13,6 +13,18 @@
     Type: bugfix
     Changed: wc/parser/htmllex.l
 
+  * fixed webcleaner -h call of print_help
+    Type: bugfix
+    Changed: webcleaner
+
+  * fixed win32 startup
+    Type: bugfix
+    Changed: webcleaner
+
+  * enable py2exe inclusion
+    Type: feature
+    Changed: setup.py
+
 2.11 (released 25.4.2004)
   * - preserve the order in which HTML attributes have been parsed
     - cope with trailing space in HTML comments

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sun Apr 25 18:55:34 2004\n"
+"POT-Creation-Date: Thu Apr 29 22:38:14 2004\n"
 "PO-Revision-Date: 2004-04-25 08:57+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -217,7 +217,12 @@ msgstr "Ungültige Anfrage"
 msgid "Authentication Required"
 msgstr "Authorisierung benötigt"
 
-msgid "invalid or missing response from %s: %r"
+#, fuzzy
+msgid "invalid or missing response from %r: %r"
+msgstr "ungültige oder fehlende Antwort von %s: %r"
+
+#, fuzzy
+msgid "missing headers in response from %r"
 msgstr "ungültige oder fehlende Antwort von %s: %r"
 
 msgid "server received %d bytes more than content-length"
@@ -316,8 +321,9 @@ msgstr "Der %s Dienst kann angehalten werden."
 msgid "The %s service can be paused."
 msgstr "Der %s Dienst kann pausieren."
 
+#, fuzzy
 msgid ""
-"USAGE\twebcleaner [options] command [command options]\n"
+"USAGE\twebcleaner [options] <command> [command options]\n"
 "\n"
 "OPTIONS\n"
 "-h      Print this help.\n"
