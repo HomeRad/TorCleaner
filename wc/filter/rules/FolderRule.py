@@ -21,10 +21,8 @@ __date__    = "$Date$"[7:-2]
 from Rule import Rule
 
 def recalc_oids (rules):
-    i = 0
-    for r in rules:
+    for i, r in enumerate(rules):
         r.oid = i
-        i += 1
 
 
 class FolderRule (Rule):
@@ -35,6 +33,12 @@ class FolderRule (Rule):
         self.__filename = filename
         self.lang = lang
         self.rules = []
+
+
+    def __str__ (self):
+        return super(FolderRule, self).__str__()+\
+            ("\nrules:   %d"%len(self.rules))+\
+            ("\nlang:    %s"%self.lang)
 
 
     def filename_get (self):
@@ -49,6 +53,8 @@ class FolderRule (Rule):
     def append_rule (self, r):
         self.rules.append(r)
         r.parent = self
+        # sort to recalculate rule oids
+        self.sort()
 
 
     def delete_rule (self, i):
@@ -57,8 +63,8 @@ class FolderRule (Rule):
 
 
     def sort (self):
-        self.rules.sort()
         recalc_oids(self.rules)
+        self.rules.sort()
 
 
     def toxml (self):

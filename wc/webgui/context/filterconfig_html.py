@@ -222,8 +222,7 @@ def _form_newrule (ruletype):
     rule.parent = curfolder
     curfolder.append_rule(rule)
     # select new rule
-    global currule
-    currule = rule
+    _form_selrule(rule.oid)
     info.append(i18n._("New rule created"))
 
 

@@ -101,9 +101,9 @@ class Rule (object):
 
     def __str__ (self):
         s = self.get_name()+"\n"
-        s += "title   %s\n" % self.title
+        s += "title   %s\n" % `self.title`
 	s += "oid     %d\n" % self.oid
-        s += "desc    %s\n" % self.desc
+        s += "desc    %s\n" % `self.desc`
         s += "disable %d\n" % self.disable
         return s
 
