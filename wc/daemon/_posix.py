@@ -108,9 +108,20 @@ def stopwatch (pidfile, watchfile):
     """stop webcleaner and the monitor"""
     if not os.path.exists(watchfile):
         return i18n._("Watcher was not running (no lock file found)"), 1
-    msg, status = _stop(watchfile)
+    msg1, status1 = _stop(watchfile)
     msg2, status2 = stop(pidfile)
-    return "%s\n%s"%(msg,msg2), status2
+    if msg1:
+        if msg2:
+            msg = "%s\n%s"%(msg1,msg2)
+        else:
+            msg = msg1
+    else:
+        msg = msg2
+    if status1:
+        status = status1
+    else:
+        status = status2
+    return msg, status
 
 
 def reload (pidfile):
