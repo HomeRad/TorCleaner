@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Tue Jul 20 17:00:17 2004\n"
+"POT-Creation-Date: Fri Jul 23 12:39:08 2004\n"
 "PO-Revision-Date: 2004-05-25 22:41+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -522,8 +522,8 @@ msgstr "Öffe Oberfläche für Proxykonfiguration..."
 msgid "Removing %s service..."
 msgstr "Entferne %s Dienst..."
 
-msgid "Category"
-msgstr "Kategorie"
+msgid "Rule match-url successfully changed."
+msgstr "Regel Treffer-URL wurde erfolgreich geändert."
 
 msgid "Proxy user successfully changed."
 msgstr "Proxybenutzer erfolgreich geändert."
@@ -1178,8 +1178,8 @@ msgstr "Regel wurde nach oben geschoben"
 msgid "Invalid SSL server port."
 msgstr "Ungültige SSL Server Portnummer."
 
-msgid "The content of this page is blocked by rule %(rule)s"
-msgstr "Der Inhalt dieser Seite ist von Regel %(rule)s blockiert worden."
+msgid "Category"
+msgstr "Kategorie"
 
 msgid ""
 "You can send me changed or new page ratings per\n"
@@ -1276,6 +1276,9 @@ msgstr "Ordner erfolgreich umbenannt."
 msgid "Filter configuration"
 msgstr "Filterkonfiguration"
 
+msgid "Blocked by %(ruletitle)s."
+msgstr ""
+
 msgid "Search for"
 msgstr "Suche nach"
 
@@ -1360,8 +1363,8 @@ msgstr ""
 msgid "Rule title successfully changed."
 msgstr "Regel Titel wurde erfolgreich geändert."
 
-msgid "Invalid image height value."
-msgstr "Ungültige Bildhöhe."
+msgid "Disable folder"
+msgstr "Ordner deaktivieren"
 
 msgid "Rename folder"
 msgstr "Ordner umbenennen"
@@ -1553,9 +1556,6 @@ msgstr ""
 msgid "SSL port successfully changed."
 msgstr "SSL Portnummer erfolgreich geändert."
 
-msgid "Rule match-url successfully changed."
-msgstr "Regel Treffer-URL wurde erfolgreich geändert."
-
 msgid "Proxy settings"
 msgstr "Proxy Einstellungen"
 
@@ -1645,9 +1645,6 @@ msgstr "Ungültige übergeordnete Proxy Portnummer."
 
 msgid "Parent proxy password successfully changed."
 msgstr "Passwort des übergeordneten Proxy wurde erfolgreich geändert."
-
-msgid "Disable folder"
-msgstr "Ordner deaktivieren"
 
 msgid "There are no url ratings saved."
 msgstr "Es sind keine URL Bewertungen gespeichert."
@@ -1834,5 +1831,11 @@ msgstr "Verbindungszeitüberschreitung in Sekunden"
 msgid "Port number of the parent proxy"
 msgstr "Die Portnummer des übergeordneten Proxy"
 
-msgid "Configure rule %(rule)s."
-msgstr "Konfiguriere Regel %(rule)s."
+msgid "Invalid image height value."
+msgstr "Ungültige Bildhöhe."
+
+#~ msgid "The content of this page is blocked by rule %(rule)s"
+#~ msgstr "Der Inhalt dieser Seite ist von Regel %(rule)s blockiert worden."
+
+#~ msgid "Configure rule %(rule)s."
+#~ msgstr "Konfiguriere Regel %(rule)s."

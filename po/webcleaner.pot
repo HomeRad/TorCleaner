@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Jul 20 17:00:17 2004\n"
+"POT-Creation-Date: Fri Jul 23 12:39:08 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -452,7 +452,7 @@ msgstr ""
 msgid "Removing %s service..."
 msgstr ""
 
-msgid "Category"
+msgid "Rule match-url successfully changed."
 msgstr ""
 
 msgid "Proxy user successfully changed."
@@ -1003,7 +1003,7 @@ msgstr ""
 msgid "Invalid SSL server port."
 msgstr ""
 
-msgid "The content of this page is blocked by rule %(rule)s"
+msgid "Category"
 msgstr ""
 
 msgid ""
@@ -1084,6 +1084,9 @@ msgstr ""
 msgid "Filter configuration"
 msgstr ""
 
+msgid "Blocked by %(ruletitle)s."
+msgstr ""
+
 msgid "Search for"
 msgstr ""
 
@@ -1154,7 +1157,7 @@ msgstr ""
 msgid "Rule title successfully changed."
 msgstr ""
 
-msgid "Invalid image height value."
+msgid "Disable folder"
 msgstr ""
 
 msgid "Rename folder"
@@ -1325,9 +1328,6 @@ msgstr ""
 msgid "SSL port successfully changed."
 msgstr ""
 
-msgid "Rule match-url successfully changed."
-msgstr ""
-
 msgid "Proxy settings"
 msgstr ""
 
@@ -1411,9 +1411,6 @@ msgid "Invalid parent proxy port."
 msgstr ""
 
 msgid "Parent proxy password successfully changed."
-msgstr ""
-
-msgid "Disable folder"
 msgstr ""
 
 msgid "There are no url ratings saved."
@@ -1575,6 +1572,6 @@ msgstr ""
 msgid "Port number of the parent proxy"
 msgstr ""
 
-msgid "Configure rule %(rule)s."
+msgid "Invalid image height value."
 msgstr ""
 
