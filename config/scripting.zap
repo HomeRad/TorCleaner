@@ -3,33 +3,28 @@
 <folder title="Scripting" oid="4"
  desc="Scripting related.">
 
-<rewrite title="&lt;a&gt; onfocus" oid="0"
- disable="1">
+<rewrite title="&lt;a&gt; onfocus" oid="0">
 <attr name="onfocus"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;a&gt; onmouseout" oid="1"
- disable="1">
+<rewrite title="&lt;a&gt; onmouseout" oid="1">
 <attr name="onmouseout"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;a&gt; onmouseover" oid="2"
- disable="1">
+<rewrite title="&lt;a&gt; onmouseover" oid="2">
 <attr name="onmouseover"/>
 <replace part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;area&gt; onfocus" oid="3"
- disable="1"
  tag="area">
 <attr name="onfocus"/>
 <replace part="attr"/>
 </rewrite>
 
 <rewrite title="&lt;area&gt; onmouseout" oid="4"
- disable="1"
  tag="area">
 <attr name="onmouseover"/>
 <attr name="onmouseout"/>
@@ -37,13 +32,12 @@
 </rewrite>
 
 <rewrite title="&lt;area&gt; onmouseover" oid="5"
- disable="1"
  tag="area">
 <attr name="onmouseover"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="[rewrite] &lt;body&gt; onload" oid="6"
+<rewrite title="&lt;body&gt; onload" oid="6"
  desc="Remove onload javascript attribute"
  disable="1"
  tag="body">
