@@ -48,6 +48,7 @@ class HttpServer (Server):
         self.sequence_number = 0 # For persistent connections
         self.attrs = {} # initial filter attributes are empty
         self.attempt_connect()
+        self.can_reuse = None
 
 
     def __repr__ (self):
@@ -226,8 +227,6 @@ class HttpServer (Server):
             self.can_reuse = not has_header_value(msg, key, 'Close')
         elif http_ver >= 1.0:
             self.can_reuse = has_header_value(msg, key, 'Keep-Alive')
-        else:
-            self.can_reuse = None
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
                                        msg, attrs=self.nofilter)
