@@ -1,10 +1,11 @@
 #! /usr/bin/make -f
 # Sample debian/rules that uses debhelper.
 # GNU copyright 1997 to 1999 by Joey Hess.
-PYTHON=python2.3
-PACKAGE=webcleaner
-DOCDIR=debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)
-ETCDIR=debian/$(PACKAGE)/etc/$(PACKAGE)
+PYTHON := python2.3
+PACKAGE := webcleaner
+BASE := debian/$(PACKAGE)
+DOCDIR := $(BASE)/usr/share/doc/$(PACKAGE)
+ETCDIR := $(BASE)/etc/$(PACKAGE)
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
@@ -49,25 +50,27 @@ install: build
 	dh_testdir
 	dh_clean -k
 	dh_installdirs
-	$(PYTHON) setup.py install --root=$(CURDIR)/debian/$(PACKAGE) --no-compile
+	$(PYTHON) setup.py install --root=$(CURDIR)/$(BASE) --no-compile
 	# delete man pages, we install them with dh_installmanpages
-	rm -rf debian/$(PACKAGE)/usr/man
+	rm -rf $(BASE)/usr/man
 	# delete INSTALL file
-	rm -f debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/INSTALL
+	rm -f $(BASE)/usr/share/doc/$(PACKAGE)/INSTALL
 	# move webcleaner binaries to /usr/sbin
-	mv debian/$(PACKAGE)/usr/bin/webcleaner debian/$(PACKAGE)/usr/sbin
-	rmdir debian/$(PACKAGE)/usr/bin
+	mv $(BASE)/usr/bin/webcleaner $(BASE)/usr/sbin
+	rmdir $(BASE)/usr/bin
 	# move config files
-	mv debian/$(PACKAGE)/usr/share/webcleaner/config/* debian/$(PACKAGE)/etc/webcleaner/
-	rmdir debian/$(PACKAGE)/usr/share/webcleaner/config
+	mv $(BASE)/usr/share/webcleaner/config/* $(BASE)/etc/webcleaner/
+	rmdir $(BASE)/usr/share/webcleaner/config
 	# fix config permission
-	chmod go-rwx debian/$(PACKAGE)/etc/webcleaner/webcleaner.conf
+	chmod go-rwx $(BASE)/etc/webcleaner/webcleaner.conf
 	# remove example files, we install them ourselves
-	rm -rf debian/$(PACKAGE)/usr/share/webcleaner/examples
+	rm -rf $(BASE)/usr/share/webcleaner/examples
 	# install into /service directory
 	install -m 0755 service/run $(ETCDIR)
 	install -m 0755 service/run2 $(ETCDIR)
 	install -m 0755 service/log/run $(ETCDIR)/log
+	# move files to packages
+	dh_movefiles --sourcedir=$(BASE)
 
 
 # Build architecture-independent files here.

@@ -7,8 +7,9 @@ Build-Depends: python (>= 2.3.1), python2.3-dev (>= 2.3.1), debhelper (>= 4.1.16
 
 Package: webcleaner
 Architecture: any
-Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto, daemontools (>= 0.75)
+Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto, daemontools (>= 0.75), webcleaner-common (>= ${Source-Version})
 Conflicts: python2.3-psyco (<< 1.1.1)
+Suggests: python2.3-psyco
 Description: a filtering HTTP proxy
  Features:
   * HTTP/1.1 support
@@ -23,3 +24,10 @@ Description: a filtering HTTP proxy
   * Basic, Digest and (untested) NTLM proxy authentication support
   * per-host access control
   * configurable over a themable web interface
+
+Package: webcleaner-common
+Architecture: all
+Suggests: webcleaner
+Description: data files for the WebCleaner filtering HTTP proxy
+ Included are HTML templates, images, and other architecture
+ independent data files used by the webcleaner package.
