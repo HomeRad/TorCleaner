@@ -20,6 +20,8 @@ __date__    = "$Date$"[7:-2]
 
 import os, sys, time, socket
 import _webcleaner2_configdata as configdata
+from glob import glob
+from wc.XmlUtils import xmlify
 
 Version = configdata.version
 AppName = configdata.name
@@ -187,11 +189,11 @@ class Configuration (dict):
 
     def write_proxyconf (self):
         """write proxy configuration"""
-        f = file(proxyconf_file())
+        f = file(proxyconf_file(), 'w')
         f.write("""<?xml version="1.0"?>
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner
-"""
+""")
         f.write(' version="%s"\n' % xmlify(self['version']))
         f.write(' port="%d"\n' % self['port'])
         f.write(' proxyuser="%s"\n' % xmlify(self['proxyuser']))
@@ -208,7 +210,7 @@ class Configuration (dict):
             keys = self['noproxyfor'][2].keys()
             keys.sort()
             f.write(' noproxyfor="%s"\n'%xmlify(",".join(keys)))
-        if self.allowedhosts:
+        if self['allowedhosts']:
             keys = self['allowedhosts'][2].keys()
             keys.sort()
             f.write(' allowedhosts="%s"\n'%xmlify(",".join(keys)))
@@ -221,7 +223,6 @@ class Configuration (dict):
 
     def read_filterconf (self):
         """read filter rules"""
-        from glob import glob
         # filter configuration
         for f in filterconf_files():
             ZapperParser().parse(f, self)
