@@ -70,12 +70,12 @@ class HtmlParser (bk.HtmlParser.htmlsax.parser):
         return "%s in state %s"%(self.__class__.__name__, str(self.state))
 
 
-    def debugbuf (self):
+    def debugbuf (self, cat=wc.LOG_FILTER):
         """print debugging information about buffered data"""
-        bk.log.debug(wc.LOG_FILTER, "self.outbuf %r", self.outbuf.getvalue())
-        bk.log.debug(wc.LOG_FILTER, "self.tagbuf %r", self.tagbuf)
-        bk.log.debug(wc.LOG_FILTER, "self.waitbuf %r", self.waitbuf)
-        bk.log.debug(wc.LOG_FILTER, "self.inbuf %r", self.inbuf.getvalue())
+        bk.log.debug(cat, "self.outbuf %r", self.outbuf.getvalue())
+        bk.log.debug(cat, "self.tagbuf %r", self.tagbuf)
+        bk.log.debug(cat, "self.waitbuf %r", self.waitbuf)
+        bk.log.debug(cat, "self.inbuf %r", self.inbuf.getvalue())
 
 
     def tagbuf2data (self):
