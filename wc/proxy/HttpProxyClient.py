@@ -9,6 +9,12 @@ import wc.filter
 import wc.log
 import wc.url
 
+FilterStages = [
+    wc.filter.STAGE_REQUEST_DECODE,
+    wc.filter.STAGE_REQUEST_MODIFY,
+    wc.filter.STAGE_REQUEST_ENCODE,
+]
+
 
 class HttpProxyClient (object):
     """A class buffering all incoming data from a server for later use.
@@ -31,16 +37,12 @@ class HttpProxyClient (object):
         self.connected = True
         self.addr = ('localhost', 80)
         self.isredirect = False
-        attrs = wc.filter.get_filterattrs(self.url,
-                                          [wc.filter.STAGE_REQUEST])
         # note: use HTTP/1.0 for JavaScript
         request = "GET %s HTTP/1.0" % self.url
-        request = wc.filter.applyfilter(wc.filter.STAGE_REQUEST_DECODE,
-                                        request, "filter", attrs)
-        request = wc.filter.applyfilter(wc.filter.STAGE_REQUEST_MODIFY,
-                                        request, "filter", attrs)
-        self.request = wc.filter.applyfilter(wc.filter.STAGE_REQUEST_ENCODE,
-                                             request, "filter", attrs)
+        for stage in FilterStages:
+            attrs = wc.filter.get_filterattrs(self.url, stage)
+            request = wc.filter.applyfilter(request, "filter", attrs)
+        self.request = request
         wc.log.debug(wc.LOG_PROXY, '%s init', self)
 
     def __repr__ (self):
