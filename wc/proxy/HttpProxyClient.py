@@ -19,7 +19,6 @@ class HttpProxyClient (object):
 
     def __init__ (self, handler, args):
         """args is a tuple (url, JS version)"""
-        assert callable(handler)
         self.handler = handler
         self.args = args
         self.method = "GET"
@@ -35,6 +34,7 @@ class HttpProxyClient (object):
         attrs = wc.filter.get_filterattrs(self.url,
                                           [wc.filter.FILTER_REQUEST])
         attrs['mime'] = 'application/x-javascript'
+        # note: use HTTP/1.0 for JavaScript
         request = "GET %s HTTP/1.0" % self.url
         request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE,
                                         request, "filter", attrs)
