@@ -102,8 +102,8 @@ class JSFilter (wc.js.JSListener.JSListener):
         """
         Process javascript syntax error.
         """
-        wc.log.error(wc.LOG_JS, "JS error at %s", self.url)
-        wc.log.error(wc.LOG_JS, msg)
+        wc.log.debug(wc.LOG_JS, "JS error at %s", self.url)
+        wc.log.debug(wc.LOG_JS, msg.rstrip())
 
     def jsPopup (self, attrs, name):
         """
