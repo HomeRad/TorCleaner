@@ -19,7 +19,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from Rule import Rule
-from wc import i18n
+from wc import i18n, ConfigCharset
 
 def recalc_oids (rules):
     for i, rule in enumerate(rules):
@@ -34,23 +34,21 @@ def recalc_up_down (rules):
 
 class FolderRule (Rule):
     def __init__ (self, sid=None, oid=None, title="No title", desc="",
-                  disable=0, lang="", filename=""):
+                  disable=0, filename=""):
         super(FolderRule, self).__init__(sid=sid, oid=oid, title=title,
                                          desc=desc, disable=disable)
         # make filename read-only
-        self.__filename = filename
-        self.lang = lang
+        self._filename = filename
         self.rules = []
 
 
     def __str__ (self):
         return super(FolderRule, self).__str__()+ \
-            ("\nrules:   %d"%len(self.rules))+ \
-            ("\nlang:    %s"%self.lang)
+            ("\nrules:   %d"%len(self.rules))
 
 
     def filename_get (self):
-        return self.__filename
+        return self._filename
     filename = property(filename_get)
 
 
@@ -76,13 +74,39 @@ class FolderRule (Rule):
         recalc_up_down(self.rules)
 
 
+    def update (self, folder, dryrun=False):
+        """update this folder with given folder data"""
+        super(FolderRule, self).update(folder, dryrun=dryrun)
+        for rule in folder.rules:
+            if not rule.sid.startswith("wc"):
+                # ignore local rules
+                continue
+            oldrule = self.get_rule(rule.sid)
+            if oldrule is not None:
+                oldrule.update(rule, dryrun=dryrun)
+            elif dryrun:
+                print "inserting new rule", rule.tiptext()
+            else:
+                # XXX new rules get appended at the end. this may be
+                # suboptimal, so try harder to insert it a better position
+                rules.append(rule)
+                recalc_oids(self.rules)
+                recalc_up_down(self.rules)
+
+
+    def get_rule (self, sid):
+        """return rule with given sid or None if not found"""
+        for rule in self.rules:
+            if rule.sid==sid:
+                return rule
+        return None
+
+
     def toxml (self):
-        s = """<?xml version="1.0" encoding="iso-8859-1"?>
+        s = """<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-%s""" % super(FolderRule, self).toxml()
-        if self.lang:
-            s += '\n lang="%s"' % self.lang
-        s += ">\n"
+%s>
+""" % (ConfigCharset, super(FolderRule, self).toxml())
         for r in self.rules:
             s += "\n%s\n"%r.toxml()
         return s+"</folder>\n"

@@ -43,6 +43,11 @@ class HeaderRule (UrlRule):
         return factory.fromHeaderRule(self)
 
 
+    def update (self, rule, dryrun=False):
+        super(HeaderRule, self).update(rule, dryrun=dryrun)
+        self.update_attrs(['value'], rule, dryrun)
+
+
     def toxml (self):
         s = '%s\n name="%s"' % \
             (super(HeaderRule, self).toxml(), xmlify(self.name))

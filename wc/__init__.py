@@ -46,6 +46,7 @@ distribution."""
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
+ConfigCharset = "iso-8859-1"
 
 from XmlUtils import xmlify, unxmlify
 
@@ -151,6 +152,17 @@ def filterconf_files ():
     return glob(os.path.join(ConfigDir, "*.zap"))
 
 
+def encode_string (s):
+    return s.decode("utf8").encode(ConfigCharset)
+
+
+def encode_values (d):
+    for key,val in d.items():
+        key = encode_string(key)
+        val = encode_string(val)
+        d[key] = val
+
+
 # available filter modules
 filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                  "BinaryCharFilter", "Rewriter", "Replacer", "Compress", ]
@@ -209,10 +221,10 @@ class Configuration (dict):
     def write_proxyconf (self):
         """write proxy configuration"""
         f = file(proxyconf_file(), 'w')
-        f.write("""<?xml version="1.0" encoding="iso-8859-1"?>
+        f.write("""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner
-""")
+""" % ConfigCharset)
         f.write(' version="%s"\n' % xmlify(self['version']))
         f.write(' port="%d"\n' % self['port'])
         f.write(' proxyuser="%s"\n' % xmlify(self['proxyuser']))
@@ -257,15 +269,20 @@ class Configuration (dict):
         recalc_up_down(self['folderrules'])
 
 
-    def merge_folder (self, folder):
+    def merge_folder (self, folder, dryrun=False):
+        # test for correct category
+        assert folder.sid.startswith("wc")
         found = False
         for rule in self['folderrules']:
             if rule.sid==folder.sid:
-                rule.merge(folder)
+                rule.update(folder, dryrun=dryrun)
                 found = True
                 break
         if not found:
-            self['folderrules'].append(folder)
+            if dryrun:
+                print "inserting", folder.tiptext()
+            else:
+                self['folderrules'].append(folder)
 
 
     def write_filterconf (self):
@@ -381,6 +398,7 @@ class ZapperParser (BaseParser):
 
 
     def start_element (self, name, attrs):
+        encode_values(attrs)
         self.cmode = name
         if name=='folder':
             self.folder.fill_attrs(attrs, name)

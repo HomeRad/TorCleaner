@@ -64,6 +64,10 @@ class PicsRule (UrlRule):
             pass
 
 
+    def fromFactory (self, factory):
+        return factory.fromPicsRule(self)
+
+
     def toxml (self):
 	s = "%s>\n" % super(PicsRule, self).toxml()
         if self.url:
@@ -81,7 +85,3 @@ class PicsRule (UrlRule):
                       (xmlify(category), value)
             s += "</service>\n"
         return s+"</pics>"
-
-
-    def fromFactory (self, factory):
-        return factory.fromPicsRule(self)

@@ -121,6 +121,12 @@ class RewriteRule (UrlRule):
         return factory.fromRewriteRule(self)
 
 
+    def update (self, rule, dryrun=False):
+        super(RewriteRule, self).update(rule, dryrun=dryrun)
+        attrs = ['attrs', 'part', 'replacement', 'enclosed']
+        self.update_attrs(attrs, rule, dryrun)
+
+
     def _compute_start_sufficient (self):
         if self.tag in NO_CLOSE_TAGS:
             return True
