@@ -125,7 +125,8 @@ class Rule (object):
         return chg
 
     def update_attrs (self, attrs, rule, dryrun, log):
-        """update rule attributes (specified by attrs) with given rule data"""
+        """Update rule attributes (specified by attrs) with given rule
+           data."""
         chg = False
         for attr in attrs:
             oldval = getattr(self, attr)
@@ -164,7 +165,7 @@ class Rule (object):
         return self.oid >= other.oid
 
     def __hash__ (self):
-        """return hash value"""
+        """Hash value."""
         return self.sid
 
     def fill_attrs (self, attrs, name):
@@ -190,11 +191,11 @@ class Rule (object):
                 setattr(self, attr, [])
 
     def fill_data (self, data, name):
-        """called when XML character data was parsed to fill rule values"""
+        """called when XML character data was parsed to fill rule values."""
         self._data += data
 
     def end_data (self, name):
-        """called when XML end element was reached"""
+        """Called when XML end element was reached."""
         if name == self.get_name():
             self._data = u""
         else:
@@ -205,23 +206,24 @@ class Rule (object):
             self.descriptions[self._lang] = self._data
 
     def compile_data (self):
-        """register this rule; called when all XML parsing of rule finished"""
+        """Register this rule. Called when all XML parsing of rule is
+           finished."""
         wc.filter.rules.register_rule(self)
 
     def get_name (self):
-        """class name without "Rule" suffix, in lowercase"""
+        """Class name without "Rule" suffix, in lowercase."""
         return self.__class__.__name__[:-4].lower()
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        s = u'<%s sid="%s"' % (self.get_name(),
+        s = u'<Rule %s sid="%s"' % (self.get_name(),
                                wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
             s += u' disable="%d"' % self.disable
         return s
 
     def title_desc_toxml (self, prefix=""):
-        """return XML for rule title and description"""
+        """XML for rule title and description."""
         t = [u'%s<title lang="%s">%s</title>' % \
              (prefix, wc.XmlUtils.xmlquoteattr(key),
               wc.XmlUtils.xmlquote(value)) \
@@ -233,8 +235,8 @@ class Rule (object):
         return u"\n".join(t+d)
 
     def __str__ (self):
-        """return basic rule data as ISO-8859-1 encoded string"""
-        s = self.get_name()+"\n"
+        """Basic rule data as ISO-8859-1 encoded string."""
+        s = "Rule %s\n" % self.get_name()
         if self.sid is not None:
             s += "sid     %s\n" % self.sid.encode("iso-8859-1")
         s += "disable %d\n" % self.disable
@@ -242,5 +244,5 @@ class Rule (object):
         return s
 
     def tiptext (self):
-        """return short info for gui display"""
+        """Short info for gui display."""
         return u"%s #%s" % (self.get_name().capitalize(), self.sid)
