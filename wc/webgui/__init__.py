@@ -25,17 +25,26 @@ from wc.webgui.context import getval
 from cStringIO import StringIO
 from wc import i18n, config, TemplateDir, App, filtermodules, Name, LocaleDir
 from wc.log import *
-import os, re, urllib, urlparse, gettext
+import os, re, urllib, urlparse, gettext, mimetypes
 
 class WebConfig (object):
-    def __init__ (self, client, url, form, protocol,
-                  status=200, msg=i18n._('Ok'), context={},
-                  headers={'Content-Type': 'text/html'}):
+    def __init__ (self, client, url, form, protocol, clientheaders,
+                  status=200, msg=i18n._('Ok'), context={}, auth=''):
         self.client = client
         # we pretend to be the server
         self.connected = True
+        headers = {'Server': 'Proxy'}
+        if auth:
+            headers['Proxy-Authenticate'] = auth
+        headers = {}
+        gm = mimetypes.guess_type(url, None)
+        if gm[0] is not None:
+            headers['Content-Type'] = gm[0]
+        else:
+            # note: index.html is appended to directories
+            headers['Content-Type'] = 'text/html'
         try:
-            lang = i18n.get_headers_lang(headers)
+            lang = i18n.get_headers_lang(clientheaders)
             # get the template filename
             path, dirs, lang = get_template_url(url, lang)
             # do not rely on content-type header value

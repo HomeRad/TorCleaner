@@ -37,7 +37,7 @@ class HttpClient (Connection):
         self.server = None
         self.request = ''
         self.decoders = [] # Handle each of these, left to right
-        self.headers = None
+        self.headers = {}
         self.bytes_remaining = None # for content only
         self.content = ''
         self.protocol = 'HTTP/1.0'
@@ -55,19 +55,9 @@ class HttpClient (Connection):
             'title': i18n._('Proxy Error %d %s') % (status, msg),
             'error': txt,
         }
-        headers = {
-            'Server': 'Proxy',
-            'Content-Type': 'text/html',
-        }
-        if auth:
-            headers['Proxy-Authenticate'] = auth
         form = None
-        WebConfig(self, '/error.html', form, self.protocol,
-                  context=context,
-                  headers=headers,
-                  status=status,
-                  msg=msg,
-                  )
+        WebConfig(self, '/error.html', form, self.protocol, self.headers,
+                  context=context, status=status, msg=msg, auth=auth)
 
 
     def __repr__ (self):
@@ -290,14 +280,8 @@ class HttpClient (Connection):
             form = cgi.FieldStorage(fp=StringIO(self.content),
                                     headers=self.headers,
                                     environ={'REQUEST_METHOD': 'POST'})
-        gm = mimetypes.guess_type(self.url, None)
-        if gm[0] is not None:
-            headers = {'Content-Type': gm[0]}
-        else:
-            # note: index.html is appended to directories
-            headers = {'Content-Type': 'text/html'}
         # this object will call server_connected at some point
-        WebConfig(self, self.url, form, self.protocol, headers=headers)
+        WebConfig(self, self.url, form, self.protocol, self.headers)
 
 
 

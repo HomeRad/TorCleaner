@@ -35,12 +35,12 @@ def init_gettext ():
         # default gettext function
         _ = lambda s: s
     # get supported languages
-    for d in os.listdir(LocaleDir):
-        path = os.path.join(LocaleDir, d)
+    for lang in os.listdir(LocaleDir):
+        path = os.path.join(LocaleDir, lang)
         if not os.path.isdir(path):
             continue
         if os.path.exists(os.path.join(path, 'LC_MESSAGES', '%s.mo'%Name)):
-            supported_languages.append(d)
+            supported_languages.append(lang)
     loc = get_locale()
     if loc in supported_languages:
         default_language = loc
