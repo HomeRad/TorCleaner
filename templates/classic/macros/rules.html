@@ -14,7 +14,7 @@
 
 <!-- title and description (used below) -->
 <h2>Title and description</h2>
-<table>
+<table summary="">
 <div metal:define-macro="titledesc">
 <tr valign="top"><td>
 <label for="rule_title" i18n:translate="">Title</label>:
@@ -34,7 +34,7 @@
 
 <!-- matchurl and dontmatchurl (used below) -->
 <h2>Match url</h2>
-<table>
+<table summary="">
 <div metal:define-macro="matchurl">
 <tr valign="top"><td>
 <label for="rule_matchurl" i18n:translate="">Match URL</label>:
@@ -54,7 +54,7 @@
 
 <!-- url parts (used by AllowRule and BlockRule) -->
 <h2>Url parts</h2>
-<table>
+<table summary="">
 <div metal:define-macro="urlparts">
 <tr valign="top"><td>
 <label for="rule_url" i18n:translate="">URL</label>:
@@ -68,7 +68,7 @@
 
 <!-- externfile (used by Allowdomains, Allowurls, Blockdomains, Blockurls) -->
 <h2>Extern file</h2>
-<table>
+<table summary="">
 <div metal:define-macro="externfile">
 <tr valign="top"><td>
 <span i18n:translate="">Title</span>:
@@ -94,7 +94,7 @@
 
 <!-- AllowRule -->
 <h2>Allowrule</h2>
-<table metal:define-macro="allow">
+<table metal:define-macro="allow" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -113,7 +113,7 @@ Rule url parts
 
 <!-- Allowdomains -->
 <h2>Allowdomains</h2>
-<table metal:define-macro="allowdomains">
+<table metal:define-macro="allowdomains" summary="">
 <tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name allowdomains
 </tr>
@@ -122,7 +122,7 @@ Extern file name allowdomains
 
 <!-- Allowurls -->
 <h2>Allowurls</h2>
-<table metal:define-macro="allowurls">
+<table metal:define-macro="allowurls" summary="">
 <tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name allowurls
 </tr>
@@ -131,7 +131,7 @@ Extern file name allowurls
 
 <!-- Blockdomains -->
 <h2>Blockdomains</h2>
-<table metal:define-macro="blockdomains">
+<table metal:define-macro="blockdomains" summary="">
 <tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name blockdomains
 </tr>
@@ -140,7 +140,7 @@ Extern file name blockdomains
 
 <!-- Blockurls -->
 <h2>Blockurls</h2>
-<table metal:define-macro="blockurls">
+<table metal:define-macro="blockurls" summary="">
 <tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name blockurls
 </tr>
@@ -149,7 +149,7 @@ Extern file name blockurls
 
 <!-- BlockRule -->
 <h2>BlockRule</h2>
-<table metal:define-macro="block">
+<table metal:define-macro="block" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -175,7 +175,7 @@ Rule url parts
 
 <!-- HeaderRule -->
 <h2>HeaderRule</h2>
-<table metal:define-macro="header">
+<table metal:define-macro="header" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -203,7 +203,7 @@ Rule (don't) match url
 
 <!-- ImageRule -->
 <h2>ImageRule</h2>
-<table metal:define-macro="image">
+<table metal:define-macro="image" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -238,7 +238,7 @@ Rule (don't) match url
 
 <!-- JavascriptRule -->
 <h2>JavascriptRule</h2>
-<table metal:define-macro="javascript">
+<table metal:define-macro="javascript" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -254,7 +254,7 @@ Rule (don't) match url
 
 <!-- NocommentsRule -->
 <h2>NocommentsRule</h2>
-<table metal:define-macro="nocomments">
+<table metal:define-macro="nocomments" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -270,7 +270,7 @@ Rule (don't) match url
 
 <!-- PicsRule -->
 <h2>PicsRule</h2>
-<table metal:define-macro="pics">
+<table metal:define-macro="pics" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -316,7 +316,7 @@ Rule (don't) match url
 
 <!-- ReplaceRule -->
 <h2>ReplaceRule</h2>
-<table metal:define-macro="replace">
+<table metal:define-macro="replace" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -345,7 +345,7 @@ Rule (don't) match url
 
 <!-- RewriteRule -->
 <h2>RewriteRule</h2>
-<table metal:define-macro="rewrite">
+<table metal:define-macro="rewrite" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 <td>Rule title and description</td>
 </tr>
