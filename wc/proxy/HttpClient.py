@@ -358,17 +358,15 @@ class HttpClient (StatefulConnection):
         if self.method=="CONNECT":
             debug(PROXY, "%s write SSL tunneled data to server %s", self, self.server)
             self.server.write(self.read())
-        #elif not self.persistent:
-        #    warn(PROXY, "%s data in non-persistent receive state", self)
-        # all other received data will be handled when the ongoing request
-        # is finished
+        else:
+            error(PROXY, "%s invalid data", self)
 
 
     def server_request (self):
         assert self.state=='receive', "%s server_request in non-receive state"%self
         # this object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
-                               self.content)
+                               self.content, mime=self.attrs['mime'])
 
 
     def server_response (self, server, response, status, headers):
