@@ -5,8 +5,6 @@ version 2.20
 - document how to install a proxy that can be used from outside
   (intranet or internet)
 
-- fix all test cases
-
 version 2.21 and above
 
 - use ssl-cert-check bash script
