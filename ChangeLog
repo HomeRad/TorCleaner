@@ -18,6 +18,10 @@
     a name of a really good movie - and watch this movie. After that,
     any error in the release will be a little less bad :)
 
+  * add bgsound to old html tags
+    Type: feature
+    Changed: wc/filter/HtmlTags.py
+
 2.16 (released 26.5.2004)
   * parse and quote query parts of urls
     Type: bugfix
