@@ -5,7 +5,7 @@ mimetypes.encodings_map['.bz2'] = 'bzip'
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import debug,config
+from wc import debug, config, remove_headers
 from wc.debug_levels import *
 from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
@@ -177,67 +177,60 @@ class HttpServer (Server):
         # until we get to a blank line...
         m = re.match(r'^((?:[^\r\n]+\r?\n)*\r?\n)', self.recv_buffer)
         if not m: return
-
-        self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	               rfc822.Message(StringIO(self.read(m.end()))),
-		       attrs=self.nofilter)
-        #debug(HURT_ME_PLENTY, "S/Headers ", `self.headers.headers`)
-        if self.headers.has_key('content-length'):
-            self.bytes_remaining = int(self.headers.getheader('content-length'))
-        else:
-            self.bytes_remaining = None
+        # handle continue requests (XXX should be in process_response?)
         response = self.response.split()
         if response and response[1] == '100':
             # it's a Continue request, so go back to waiting for headers
             self.state = 'response'
             return
+        # check for unusual compressed files
+        if self.document.endswith(".bz2") or \
+           self.document.endswith(".tgz") or \
+           self.document.endswith(".gz"):
+            gm = mimetypes.guess_type(self.document, False)
+            if gm[1]: self.headers['Content-Encoding'] = gm[1]
+            if gm[0]: self.headers['Content-Type'] = gm[0]
+        # filter headers
+        self.headers = applyfilter(FILTER_RESPONSE_HEADER,
+	               rfc822.Message(StringIO(self.read(m.end()))),
+		       attrs=self.nofilter)
+        # will content be rewritten?
+        rewrite = False
+        for ro in config['mime_content_rewriting']:
+            if ro.match(self.headers.get('Content-Type', "")):
+                rewrite = True
+                break
+        #debug(HURT_ME_PLENTY, "S/Headers ", `self.headers.headers`)
+        if self.headers.has_key('Content-Length'):
+            if rewrite:
+                remove_headers(self.headers, ['Content-Length'])
+                self.bytes_remaining = None
+            else:
+                self.bytes_remaining = int(self.headers['Content-Length'])
+        else:
+            self.bytes_remaining = None
 
-        if self.bytes_remaining is not None:
-            for ro in config['mime_content_rewriting']:
-                #debug(BRING_IT_ON, "S/Content-Type:", `self.headers.getheader('content-type')`)
-                # XXX there are corner cases where getheader() returns None
-                if ro.match(self.headers.getheader('content-type') or ""):
-                    # remove content length
-                    for h in self.headers.headers[:]:
-                        if re.match('(?i)content-length:', h):
-                            self.headers.headers.remove(h)
-                            self.bytes_remaining = None
-                        break
-                    break
+        # add decoders
         self.decoders = []
-        if self.headers.has_key('transfer-encoding'):
+
+        # Chunked encoded
+        if self.headers.has_key('Transfer-Encoding'):
             #debug(BRING_IT_ON, 'S/Transfer-encoding:', `self.headers['transfer-encoding']`)
             self.decoders.append(UnchunkStream())
             # remove encoding header
-            for h in self.headers.headers[:]:
-                if re.match('(?i)transfer-encoding:', h):
-                    self.headers.headers.remove(h)
-                elif re.match('(?i)content-length:', h):
-                    assert 0, 'chunked encoding should not have content-length'
-                    self.headers.headers.remove(h)
-                    self.bytes_remainig = None
+            to_remove = ["Transfer-Encoding"]
+            if self.headers.has_key("Content-Length"):
+                assert 0, 'chunked encoding should not have content-length'
+                to_remove.append("Content-Length")
+                self.bytes_remaining = None
+            remove_headers(self.headers, to_remove)
+        # Compressed content (uncompress only for rewriting modules)
+        if self.headers.get('Content-Encoding')=='gzip' and rewrite:
+            #debug(BRING_IT_ON, 'S/Content-encoding: gzip')
+            self.decoders.append(GunzipStream())
+            # remove encoding because we unzip the stream
+            remove_headers(self.headers, ['Content-Encoding'])
 
-        # check for unusual compressed files
-        if self.document.endswith(".bz2") or \
-           self.document.endswith(".tgz"):
-            gm = mimetypes.guess_type(self.document, False)
-            if gm[1]: self.headers['content-encoding'] = gm[1]
-            if gm[0]: self.headers['content-type'] = gm[0]
-        # uncompress server-compressed content
-        if self.headers.getheader('content-encoding')=='gzip':
-            for ro in config['mime_content_rewriting']:
-                if ro.match(self.headers.get('content-type')):
-                    #debug(BRING_IT_ON, 'S/Content-encoding: gzip')
-                    self.decoders.append(GunzipStream())
-                    # remove content length and encoding
-                    # because we unzip the stream
-                    for h in self.headers.headers[:]:
-                        if re.match('(?i)content-length:', h):
-                            self.headers.headers.remove(h)
-                            self.bytes_remaining = None
-                        elif re.match('(?i)content-encoding:', h):
-                            self.headers.headers.remove(h)
-                    break
         # initStateObject can modify headers (see Compress.py)!
         self.attrs = initStateObjects(self.headers, self.url)
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))

@@ -1,6 +1,8 @@
 Changes since 0.53:
   * add <area> to tags-with-no-end-tag in Rewriter rule
   * added more advert filters
+  * remove unused blacklist zappers from CVS
+  * fix string joining in wc.__init__.text_status()
 
 Changes since 0.52:
   * only filter some <meta name> tags, not all

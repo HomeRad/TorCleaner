@@ -18,7 +18,7 @@ import re,struct,time,zlib,wc
 
 from wc.filter import FILTER_RESPONSE_ENCODE, compileMime
 from wc.filter.Filter import Filter
-from wc import debug
+from wc import debug, remove_headers
 from wc.debug_levels import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
@@ -109,6 +109,13 @@ class Compress (Filter):
         else:
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
+        # fix for wget not supporting content-encoding gzip
+        # this works only if the User-Agent value is left intact,
+        # else you will have to deal with wget writing gzip-compressed
+        # files without .gz extension
+        is_wget = headers.get('user-agent', "").startswith('Wget/')
+        if is_wget and compressobj:
+            compressobj = None
         #debug(HURT_ME_PLENTY, "compress content encoding", headers['content-encoding'])
         #debug(HURT_ME_PLENTY, "compress object", compressobj)
         d = Filter.getAttrs(self, headers, url)

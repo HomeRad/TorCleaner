@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import os, sys, UserDict, time, socket
+import os, re, sys, UserDict, time, socket
 import _webcleaner2_configdata as configdata
 from debug_levels import *
 
@@ -65,6 +65,13 @@ try:
 except IOError:
     _ = lambda s: s
 
+
+def remove_headers (headers, to_remove):
+    """utility function to remove entries from RFC822 headers"""
+    for h in headers.headers[:]:
+        for pat in ["(?i)%s:"%s for s in to_remove]:
+            if re.match(pat, h):
+                headers.headers.remove(h)
 
 def error (s):
     print >>sys.stderr, "error:", s
