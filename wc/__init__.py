@@ -96,6 +96,8 @@ import ip, i18n
 from wc.proxy.dns_lookups import init_dns_resolver
 from wc.filter.VirusFilter import init_clamav_conf
 
+# set this to an empty dictionary so that webgui/context/*.py can
+# safely set config values upon import
 config = {}
 
 def wstartfunc (handle=None, stoppable=False):
