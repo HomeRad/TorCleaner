@@ -66,6 +66,7 @@ def split_path (path):
 
 services = wc.containers.SetList()
 def register_service (service):
+    """register the given service in the services list"""
     services.append(service)
     for category in service.categories:
         register_category(category)
@@ -73,10 +74,12 @@ def register_service (service):
 
 categories = wc.containers.SetList()
 def register_category (category):
+    """register the given category in the categories list"""
     categories.append(category)
 
 
 def get_service (service_name):
+    """get service instance for given name or None if not found"""
     for service in services:
         if service.name == service_name:
             return service
@@ -85,11 +88,16 @@ def get_service (service_name):
 
 
 def get_category (category_name):
+    """get category instance for given name or None if not found"""
     for category in categories:
         if category.name == category_name:
             return category
     # not found
     return None
+
+
+
+
 
 
 

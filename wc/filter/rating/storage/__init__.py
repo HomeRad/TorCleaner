@@ -35,10 +35,11 @@ class Storage (object):
         raise NotImplementedError, "must be implemented in subclass"
 
     def __iter__ (self):
-        """Get list of stored urls."""
+        """Iterate over stored urls."""
         raise NotImplementedError, "must be implemented in subclass"
 
     def keys (self):
+        """Return list of urls for whom ratings are stored."""
         return [x for x in self]
 
     def __len__ (self):
@@ -50,20 +51,24 @@ class Storage (object):
         raise NotImplementedError, "must be implemented in subclass"
 
     def check_url (self, url):
+        """If url is not safe raise a RatingParseError."""
         if not wc.url.is_safe_url(url):
             raise wc.filter.rating.RatingParseError(
                                   "Invalid rating url %s." % repr(url))
 
     def load (self):
+        """Load stored data into this instance."""
         pass
 
     def write (self):
+        """Write data of this instance."""
         pass
 
 
 # mapping {class name -> storage class instance}
 _stored = {}
 def get_rating_store (klass):
+    """Get instance of rating store klass or create a new one."""
     name = klass.__name__
     if name not in _stored:
         _stored[name] = klass()

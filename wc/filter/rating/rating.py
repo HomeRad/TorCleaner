@@ -52,7 +52,7 @@ class Rating (object):
             self.modified = time.time()
 
     def serialize (self):
-        """Return serialized string of this rating"""
+        """Return serialized string of this rating."""
         lines = []
         lines.append("url %s" % self.url)
         lines.append("generic %s" % str(self.generic))

@@ -27,9 +27,10 @@ import wc.filter.rating.storage
 
 
 class PickleStorage (wc.filter.rating.storage.Storage):
-    """Store ratings in pickled dictionary."""
+    """Store ratings in a pickled dictionary."""
 
     def __init__ (self):
+        """Initialize and load."""
         super(PickleStorage, self).__init__()
         config = wc.configuration.config
         self.filename = os.path.join(config.configdir, "rating.dat")
@@ -37,10 +38,12 @@ class PickleStorage (wc.filter.rating.storage.Storage):
         self.load()
 
     def __setitem__ (self, url, rating):
+        """Add rating for given url."""
         self.check_url(url)
         self.cache[url] = rating
 
     def __getitem__ (self, url):
+        """Get rating for given url."""
         self.check_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
@@ -53,6 +56,7 @@ class PickleStorage (wc.filter.rating.storage.Storage):
         raise KeyError(url)
 
     def __contains__ (self, url):
+        """True if rating for given url is stored."""
         self.check_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
@@ -65,21 +69,26 @@ class PickleStorage (wc.filter.rating.storage.Storage):
         return False
 
     def __iter__ (self):
+        """Iterate over stored rating urls."""
         return iter(self.cache)
 
     def __len__ (self):
+        """Number of stored ratings."""
         return len(self.cache)
 
     def __delitem__ (self, url):
+        """Remove rating for given url."""
         self.check_url(url)
         del self.cache[url]
 
     def write (self):
+        """Write pickled cache to disk."""
         fp = file(self.filename, 'wb')
         pickle.dump(self.cache, fp, 1)
         fp.close()
 
     def load (self):
+        """Load pickled cache from disk."""
         if os.path.isfile(self.filename):
             fp = file(self.filename, 'rb')
             self.cache = pickle.load(fp)

@@ -32,6 +32,7 @@ class Category (object):
         raise NotImplementedError, "unimplemented"
 
     def __cmp__ (self, other):
+        """Compare with another category by name."""
         return cmp(self.name, other.name)
 
 
@@ -65,8 +66,9 @@ class RangeCategory (Category):
         """Check range value."""
         if not isinstance(value, tuple):
             return value_in_range(value, self.values)
-        assert len(value) == 2, "Invalid value %r" % repr(value)
-        return range_in_range(value, self.values)
+        else:
+            assert len(value) == 2, "Invalid value %r" % repr(value)
+            return range_in_range(value, self.values)
 
 
 def value_in_range (num, prange):
@@ -74,6 +76,8 @@ def value_in_range (num, prange):
        prange - tuple (min, max)
        value - a number
     """
+    assert value is None or isinstance(value, int) or \
+           isinstance(value, float), "Invalid value %r" % repr(value)
     if prange[0] is not None and num is not None and num < prange[0]:
         return False
     if prange[1] is not None and num is not None and num > prange[1]:
@@ -89,3 +93,20 @@ def range_in_range (vrange, prange):
     return value_in_range(vrange[0], prange) and \
            value_in_range(vrange[1], prange)
 
+
+_range_re = re.compile(r'^(\d*)-(\d*)$')
+def intrange_from_string (value):
+    """parse value as range; return tuple (rmin, rmax) or None on error"""
+    mo = _range_re.match(value)
+    if not mo:
+        return None
+    vmin, vmax = mo.group(1), mo.group(2)
+    if vmin == "":
+        vmin = None
+    else:
+        vmin = int(vmin)
+    if vmax == "":
+        vmax = None
+    else:
+        vmax = int(vmax)
+    return (vmin, vmax)

@@ -103,20 +103,3 @@ def rating_cache_parse (fp):
             ratingdata.append(line)
     return newrating_cache
 
-
-_range_re = re.compile(r'^(\d*)-(\d*)$')
-def range_from_string (value):
-    """parse value as range; return tuple (rmin, rmax) or None on error"""
-    mo = _range_re.match(value)
-    if not mo:
-        return None
-    vmin, vmax = mo.group(1), mo.group(2)
-    if vmin == "":
-        vmin = None
-    else:
-        vmin = int(vmin)
-    if vmax == "":
-        vmax = None
-    else:
-        vmax = int(vmax)
-    return (vmin, vmax)
