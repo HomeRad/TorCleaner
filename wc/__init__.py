@@ -80,8 +80,6 @@ config = None
 def wstartfunc (handle=None):
     # init logging
     initlog(os.path.join(ConfigDir, "logging.conf"))
-    # we run single-threaded, decrease check interval
-    sys.setcheckinterval(500)
     # support reload on posix systems
     if os.name=='posix':
         import signal
@@ -101,7 +99,7 @@ def wstartfunc (handle=None):
         #        os.setgid(nogroup)
         #        os.setuid(nobody)
         #    except KeyError:
-        #        warn(WC, "could not drop root privileges, user nobody "+\
+        #        warn(PROXY, "could not drop root privileges, user nobody "+\
         #                 "and/or group nogroup not found")
         #        pass
     # read configuration
@@ -382,11 +380,11 @@ class BaseParser (object):
 
     def parse (self, fp, _config):
         self.config = _config
-        debug(WC, "Parsing %s", self.filename)
+        debug(PROXY, "Parsing %s", self.filename)
         try:
             self.p.ParseFile(fp)
         except xml.parsers.expat.ExpatError:
-            error(WC, "Error parsing %s", self.filename)
+            error(PROXY, "Error parsing %s", self.filename)
             raise
 
 

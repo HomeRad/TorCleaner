@@ -140,19 +140,19 @@ def hosts2map (hosts):
             host, mask = host.split("/")
             mask = int(mask)
             if not is_valid_bitmask(mask):
-                error(WC, "bitmask %d is not a valid network mask", mask)
+                error(PROXY, "bitmask %d is not a valid network mask", mask)
                 continue
             if not is_valid_dq(host):
-                error(WC, "host %s is not a valid ip address", host)
+                error(PROXY, "host %s is not a valid ip address", host)
                 continue
             nets.append(dq2net(host, suffix2mask(mask)))
         elif _host_netmask_re.match(host):
             host, mask = host.split("/")
             if not is_valid_dq(host):
-                error(WC, "host %s is not a valid ip address", host)
+                error(PROXY, "host %s is not a valid ip address", host)
                 continue
             if not is_valid_dq(mask):
-                error(WC, "mask %s is not a valid ip network mask", mask)
+                error(PROXY, "mask %s is not a valid ip network mask", mask)
                 continue
             nets.append(dq2net(host, dq2mask(mask)))
         else:
