@@ -1,4 +1,5 @@
 """filter a HTML stream."""
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -49,7 +50,7 @@ class JSHtmlListener (JSListener):
     def __init__ (self, opts):
         self.js_filter = opts['javascript'] and jslib
         self.js_html = None
-        self.js_src = None
+        self.js_src = False
         self.js_script = ''
         if self.js_filter:
             self.js_env = jslib.new_jsenv()
@@ -213,7 +214,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         """feed some data to the parser"""
         if self.state[0]=='parse':
             # look if we must replay something
-            if self.waited:
+            if self.waited > 0:
                 self.waited = 0
                 waitbuf, self.waitbuf = self.waitbuf, []
                 self.replay(waitbuf)
@@ -319,7 +320,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         if self.state[0]=='wait':
             return self.waitbuf.append(item)
         rulelist = []
-        filtered = 0
+        filtered = False
         if tag=="meta" and \
            attrs.get('http-equiv', '').lower() =='pics-label':
             labels = resolve_html_entities(attrs.get('content', ''))
@@ -344,7 +345,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self._debug("matched rule %s on tag %s", `rule.title`, `tag`)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
-                    filtered = "True"
+                    filtered = True
                     if item[0]==STARTTAG and item[1]==tag:
                         foo,tag,attrs = item
                         # give'em a chance to replace more than one attribute
@@ -384,7 +385,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         if not self.filterEndElement(tag):
             if self.js_filter and tag=='script':
                 self.jsEndElement(item)
-                self.js_src = None
+                self.js_src = False
                 return
             self.buf.append(item)
         if not self.rulestack:
@@ -400,15 +401,15 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             for rule in rulelist:
                 if rule.match_complete(pos, self.buf):
                     rule.filter_complete(pos, self.buf)
-                    return "True"
-        return None
+                    return True
+        return False
 
 
     def jsStartElement (self, tag, attrs):
         """Check popups for onmouseout and onmouseover.
            Inline extern javascript sources"""
         changed = 0
-        self.js_src = None
+        self.js_src = False
         self.js_output = 0
         self.js_popup = 0
         for name in ('onmouseover', 'onmouseout'):
@@ -496,7 +497,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             return
         self.state = ('wait', url)
         self.waited = 1
-        self.js_src = 'True'
+        self.js_src = True
         client = HttpProxyClient(self.jsScriptData, (url, ver))
         ClientServerMatchmaker(client,
                                "GET %s HTTP/1.1" % url, #request

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """connection handling client <--> proxy"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -29,8 +30,8 @@ class HttpClient (Connection):
         done    (done reading data, response already sent)
     """
 
-    def __init__ (self, socket, addr):
-        Connection.__init__(self, socket)
+    def __init__ (self, sock, addr):
+        Connection.__init__(self, sock=sock)
         self.addr = addr
         self.state = 'request'
         self.server = None
@@ -85,7 +86,7 @@ class HttpClient (Connection):
         assert not (self.state in ('receive','closed') and self.recv_buffer),\
          'client in state %s sent data %s'%(self.state, `self.recv_buffer`)
 
-        while "True":
+        while True:
             bytes_before = len(self.recv_buffer)
             state_before = self.state
             try: handler = getattr(self, 'process_'+self.state)

@@ -1,4 +1,5 @@
 """deanimate GIFs"""
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -114,8 +115,8 @@ class GifParser:
     def __init__ (self, sizes=[]):
         self.state = GifParser.INIT
         self.data = self.consumed = self.output = ''
-        self.finish = 0
-        self.removing = 0
+        self.finish = False
+        self.removing = False
         self.sizes = sizes
 
     def addData (self, data):
@@ -225,7 +226,7 @@ class GifParser:
                 # image data
                 misc = ord(self.read(1))
                 self.state = GifParser.DATA
-                self.finish = 1 # not more than one image frame :)
+                self.finish = True # not more than one image frame :)
             elif self.state == GifParser.DATA:
                 size = ord(self.read(1))
                 debug(FILTER, 'GIF data size %d', size)
@@ -240,7 +241,7 @@ class GifParser:
                         self.state = GifParser.SKIP
                     else:
                         self.state = GifParser.FRAME
-                    self.removing = 0
+                    self.removing = False
             elif self.state == GifParser.SKIP:
                 if self.consumed:
                     self.output += self.consumed

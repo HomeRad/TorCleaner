@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 #  BFilter - a smart ad-filtering web proxy
 #  Copyright (C) 2002-2003  Joseph Artsimovich <joseph_a@mail.ru>
 #

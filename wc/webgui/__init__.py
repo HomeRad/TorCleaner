@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """HTML configuration interface functions
 """
 # Copyright (C) 2003  Bastian Kleineidam
@@ -31,7 +32,7 @@ class WebConfig:
                   headers={'Content-Type': 'text/html'}):
         self.client = client
         # we pretend to be the server
-        self.connected = "True"
+        self.connected = True
         try:
             # get the template filename
             path, dirs = get_template(url)

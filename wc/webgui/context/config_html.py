@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # be sure not to import something in the context namespace we do not want
 import base64
 from wc import i18n, AppName, filtermodules
@@ -21,9 +22,9 @@ for _i in ['port', 'parentproxyport']:
     config["str"+_i] = str(config[_i])
 config['filterdict'] = {}
 for _i in filtermodules:
-    config['filterdict'][_i] = None
+    config['filterdict'][_i] = False
 for _i in config['filters']:
-    config['filterdict'][_i] = "True"
+    config['filterdict'][_i] = True
 
 def exec_form (form):
     # reset info/error
@@ -85,11 +86,11 @@ def exec_form (form):
     for m in filtermodules:
         if m in newfilters and m not in config['filters']:
             config['filters'].append(m)
-            config['filterdict'][m] = "True"
+            config['filterdict'][m] = True
             info.append(i18n._("Enabled filter modules %s") % m)
         if m not in newfilters and m in config['filters']:
             config['filters'].remove(m)
-            config['filterdict'][m] = None
+            config['filterdict'][m] = False
             info.append(i18n._("Disabled filter modules %s") % m)
     if info:
         # write changed config

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,12 +30,14 @@ class UrlRule (Rule):
         self.dontmatchurl = dontmatchurl
         self.attrnames.extend(('matchurl', 'dontmatchurl'))
 
+
     def appliesTo (self, url):
         if self.matchurl:
             return self.matchurl.search(url)
         if self.dontmatchurl:
             return not self.dontmatchurl.search(url)
-        return 1
+        return True
+
 
     def toxml (self):
         s = Rule.toxml(self)
@@ -43,6 +46,7 @@ class UrlRule (Rule):
         if self.dontmatchurl:
             s += '\n dontmatchurl="%s"' % xmlify(self.dontmatchurl)
         return s
+
 
     def __str__ (self):
         s = Rule.__str__(self)

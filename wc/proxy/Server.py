@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -23,6 +24,6 @@ class Server (Connection):
         debug(PROXY, "class Server: handle_connect")
         if self.state != 'connect':
             # the client has closed, and thus this server has too
-            self.connected = 0
+            self.connected = False
             return
         self.process_connect()

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """fourth incarnation of Amit's web proxy
 
 used by Bastian Kleineidam for WebCleaner

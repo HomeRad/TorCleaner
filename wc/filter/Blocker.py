@@ -1,4 +1,5 @@
 """block specific URLs"""
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -146,7 +147,7 @@ class Blocker (Filter):
         if self.allowed(urlTuple):
             return data
         blocked = self.strict_whitelist or self.blocked(urlTuple)
-        if blocked is not None:
+        if blocked is not False:
             debug(FILTER, "blocked url %s", url)
             # index 3, not 2!
             if blocked:
@@ -166,38 +167,38 @@ class Blocker (Filter):
         # check blocked domains
         for _block in self.blocked_domains:
             if urlTuple[1] == _block:
-                return 0
+                return False
         # check blocked urls
         for _block in self.blocked_urls:
             if urlTuple[1]==_block[0] and urlTuple[3].startswith(_block[1]):
-                return 0
+                return False
         # check block patterns
         for _block in self.block:
-            match = 1
+            match = True
             for i in range(len(urlTuple)):
                 if _block[i]:
                     if not _block[i].search(urlTuple[i]):
-                        match = 0
+                        match = False
             if match:
                 debug(FILTER, "blocked %s with %s", urlTuple, _block[-1])
                 return _block[-1]
-        return None
+        return False
 
 
     def allowed (self, urlTuple):
         for _allow in self.allowed_domains:
             if urlTuple[1] == _allow:
-                return 1
+                return True
         for _allow in self.allowed_urls:
             if urlTuple[1]==_allow[0] and urlTuple[3].startswith(_allow[1]):
-                return 1
+                return True
         for _allow in self.allow:
-            match = 1
+            match = True
             for i in range(len(urlTuple)):
                 if _allow[i]:
 		    if not _allow[i].search(urlTuple[i]):
-                        match = 0
+                        match = False
             if match:
                 debug(FILTER, "allowed %s", str(urlTuple))
-	        return 1
-        return 0
+	        return True
+        return False

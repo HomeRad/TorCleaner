@@ -1,4 +1,5 @@
 """support for different HTTP proxy authentication schemes"""
+# -*- coding: iso-8859-1 -*-
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]

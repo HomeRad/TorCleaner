@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # $Id$
 #
 # This file is part of the pydns project.
@@ -30,6 +31,9 @@ def mxlookup(name):
 
 #
 # $Log$
+# Revision 1.2  2003/07/01 15:46:17  calvin
+# use bool type, add encoding comment, add timeout config value
+#
 # Revision 1.1  2002/11/27 23:27:05  calvin
 # update tests
 #

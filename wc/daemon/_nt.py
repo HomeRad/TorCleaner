@@ -1,6 +1,7 @@
 """Windows specific daemon helper functions.
    Needs Active Python (with win32api module) installed.
 """
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2001-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify

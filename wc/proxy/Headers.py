@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """Header mangling"""
 
 __version__ = "$Revision$"[11:-2]
@@ -16,18 +17,18 @@ class WcMessage (Message):
         n = len(name)
         vals = []
         val = ""
-        hit = 0
+        hit = False
         for line in self.headers:
             if line[:n].lower() == name:
                 val = line[n:].strip()
-                hit = 1
+                hit = True
             elif line[:1].isspace() and hit:
                 val += "\n "+line.strip()
             else:
                 if hit:
                     vals.append(val)
                 val = ""
-                hit = 0
+                hit = False
         return vals
 
     def __contains__(self, name):
@@ -48,8 +49,8 @@ def has_header_value (headers, key, value):
         # rfc822.Message() object
         for h in headers.getallmatchingheaders(key):
             if h.strip().lower() == value.lower():
-                return "True"
-        return None
+                return True
+        return False
     return headers.get(key, '').lower() == value.lower()
 
 

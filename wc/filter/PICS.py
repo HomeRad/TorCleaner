@@ -33,6 +33,7 @@ Name: Vancouver Web Pages
 Url: http://vancouver-webpages.com/VWP1.0/
 Servicematch: vancouver
 """
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """connection handling proxy <--> http server"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -53,13 +54,13 @@ class HttpServer (Server):
         self.document = ''
         self.response = ''
         self.headers = {}
-        self.data_written = None
+        self.data_written = False
         self.decoders = [] # Handle each of these, left to right
         self.sequence_number = 0 # For persistent connections
         self.attrs = {} # initial filter attributes are empty
         self.attempt_connect()
-        self.can_reuse = None
-        self.flushing = None
+        self.can_reuse = False
+        self.flushing = False
 
 
     def __repr__ (self):
@@ -150,7 +151,7 @@ class HttpServer (Server):
         assert self.state not in ('connect', 'client'), \
             'server should not receive data in %s state'%self.state
 
-        while "True":
+        while True:
             if not self.client:
                 # By the time this server object was ready to receive
                 # data, the client has already closed the connection!
@@ -238,7 +239,7 @@ class HttpServer (Server):
         elif http_ver >= (1,0):
             self.can_reuse = has_header_value(msg, key, 'Keep-Alive')
         else:
-            self.can_reuse = None
+            self.can_reuse = False
         # filter headers
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
@@ -387,7 +388,8 @@ class HttpServer (Server):
     def is_rewrite (self):
         for ro in config['mime_content_rewriting']:
             if ro.match(self.headers.get('Content-Type', '')):
-                return "True"
+                return True
+        return False
 
 
     def process_content (self):
@@ -407,7 +409,7 @@ class HttpServer (Server):
                 data = applyfilter(i, data, attrs=self.attrs)
             if data:
                 self.client.server_content(data)
-                self.data_written = "True"
+                self.data_written = True
         except FilterWait, msg:
             debug(PROXY, "Server: FilterWait %s", msg)
         except FilterPics, msg:
@@ -432,7 +434,7 @@ class HttpServer (Server):
     def process_recycle (self):
         debug(PROXY, "Server: recycling %s", str(self))
         # flush pending client data and try to reuse this connection
-        self.flushing = "True"
+        self.flushing = True
         self.flush()
 
 
@@ -471,7 +473,7 @@ class HttpServer (Server):
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
-            self.flushing = None
+            self.flushing = False
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
         else:
@@ -496,7 +498,7 @@ class HttpServer (Server):
 
     def handle_close (self):
         debug(PROXY, "Server: handle_close %s", str(self))
-        self.can_reuse = None
+        self.can_reuse = False
         Server.handle_close(self)
         # flush unhandled data
         if not self.flushing:

@@ -1,4 +1,5 @@
 """configuration data"""
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -45,20 +46,20 @@ LocaleDir = os.path.join(configdata.install_data, 'locale')
 
 def iswriteable (fname):
     if os.path.isdir(fname) or os.path.islink(fname):
-        return 0
+        return False
     try:
         if os.path.exists(fname):
             f = file(fname, 'a')
             f.close()
-            return 1
+            return True
         else:
             f = file(fname, 'w')
             f.close()
             os.remove(fname)
-            return 1
+            return True
     except IOError, msg:
         pass
-    return 0
+    return False
 
 
 import ip, i18n
@@ -77,6 +78,7 @@ def startfunc (handle=None):
         signal.signal(signal.SIGHUP, reload_config)
         # drop privileges
         os.chdir("/")
+        # for web configuration, we cannot drop privileges
         #if os.geteuid()==0:
         #    import pwd, grp
         #    try:
@@ -183,6 +185,7 @@ class Configuration (dict):
         self['headersave'] = 100
         self['showerrors'] = 0
         self['webgui_theme'] = "classic"
+        self['timeout'] = 30
 
 
     def read_proxyconf (self):
@@ -209,6 +212,8 @@ class Configuration (dict):
         f.write(' parentproxyport="%d"\n' % self['parentproxyport'])
         if self['showerrors']:
             f.write(' showerrors="1"\n')
+        if self['timeout']:
+            f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' webgui_theme="%s"\n' % xmlify(self['webgui_theme']))
         if self['noproxyfor']:
             keys = self['noproxyfor'][2].keys()
@@ -258,17 +263,6 @@ class Configuration (dict):
                             instance.addrule(rule)
                 self['filterlist'][order].append(instance)
 
-    def __repr__ (self):
-        return i18n._("""
-WebCleaner Configuration
-========================
-
-Port:          %(port)d
-Parent proxy:  %(parentproxy)s
-Show errors:   %(showerrors)d
-Headers saved: %(headersave)d
-
-""") % self
 
 ##### xml parsers #########
 import xml.parsers.expat
@@ -365,7 +359,7 @@ class WConfigParser (BaseParser):
         if name=='webcleaner':
             for key,val in attrs.items():
                 self.config[str(key)] = unxmlify(val)
-            for key in ('port', 'parentproxyport',
+            for key in ('port', 'parentproxyport', 'timeout',
 	                'colorize', 'showerrors', 'strict_whitelist'):
                 self.config[key] = int(self.config[key])
             for key in ('version', 'parentproxy', 'proxyuser',

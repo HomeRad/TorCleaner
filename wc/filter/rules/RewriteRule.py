@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -121,11 +122,11 @@ class RewriteRule (UrlRule):
 
     def _compute_start_sufficient (self):
         if self.tag in NO_CLOSE_TAGS:
-            return 1
+            return True
         part = self.replace[0]
         if part not in [ENCLOSED, COMPLETE, TAG, TAGNAME]:
-            return 1
-        return 0
+            return True
+        return False
 
 
     def set_start_sufficient (self):
@@ -145,11 +146,11 @@ class RewriteRule (UrlRule):
             occurred.append(attr)
             ro = self.attrs.get(attr)
             if ro and not ro.search(val):
-                return 0
+                return False
         for attr in self.attrs.keys():
             if attr not in occurred:
-                return 0
-        return 1
+                return False
+        return True
 
 
     def match_complete (self, pos, buf):
@@ -157,13 +158,13 @@ class RewriteRule (UrlRule):
 	   the enclosing block."""
         if not self.enclosed:
             # no enclosed expression => match
-            return 1
+            return True
         # check every data for a match
         # remember that data is _not_ splitted across multiple items
         for n in buf[pos:]:
             if n[0]==DATA and self.enclosed.search(n[1]):
-                return 1
-        return 0
+                return True
+        return False
 
 
     def filter_tag (self, tag, attrs):

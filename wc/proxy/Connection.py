@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # asyncore problem -- we can't separately register for reading/writing
 # (less efficient: it calls writable(), readable() a LOT)
 # (however, for the proxy it may not be a big deal)  I'd like to
@@ -29,7 +30,7 @@ class Connection (asyncore.dispatcher):
         asyncore.dispatcher.__init__(self, sock)
         self.recv_buffer = ''
         self.send_buffer = ''
-        self.close_pending = 0
+        self.close_pending = False
 
 
     def read (self, bytes=RECV_BUFSIZE):
@@ -83,7 +84,7 @@ class Connection (asyncore.dispatcher):
         debug(PROXY, 'Proxy: wrote %d => %s', num_sent, str(self))
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
-            self.close_pending = 0
+            self.close_pending = False
             self.close()
         return num_sent
 
@@ -94,7 +95,7 @@ class Connection (asyncore.dispatcher):
 
     def close (self):
         if self.connected:
-            self.connected = 0
+            self.connected = False
             asyncore.dispatcher.close(self)
 
 
@@ -109,7 +110,7 @@ class Connection (asyncore.dispatcher):
         if self.send_buffer:
             # We can't close yet because there's still data to send
             debug(PROXY, 'Proxy: close ready %s', str(self))
-            self.close_pending = 1
+            self.close_pending = True
         else:
             self.close()
 

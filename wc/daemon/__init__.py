@@ -4,6 +4,7 @@ Of course this is OS dependent and currently we support only Posix
 and Windows systems natively, the other OSes use a generic interface
 with no fork().
 """
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2001-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify

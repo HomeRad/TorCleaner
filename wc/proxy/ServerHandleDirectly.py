@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -10,8 +11,8 @@ class ServerHandleDirectly (Server):
         Server.__init__(self, client)
         headers = "Content-Length: %d\r\n%s" % (len(content), headers)
         headers = WcMessage(StringIO(headers))
-        self.connected = "True"
+        self.connected = True
         client.server_response(self, response, headers)
         client.server_content(content)
         client.server_close()
-        self.connected = None
+        self.connected = False

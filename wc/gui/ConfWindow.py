@@ -1,4 +1,5 @@
 """configuration main window class"""
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -85,6 +86,7 @@ def get_available_themes ():
 class ConfWindow (ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_PORT,
+     ID_TIMEOUT,
      ID_PROXYUSER,
      ID_PROXYPASS,
      ID_FILTERMODULE,
@@ -117,7 +119,7 @@ class ConfWindow (ToolWindow):
      ID_ALLOWEDHOSTS_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+33)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+34)
 
 
     def __init__ (self, app):
@@ -156,6 +158,7 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_APPLY,ConfWindow.onUpdApply)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PORT,ConfWindow.onCmdPort)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_TIMEOUT,ConfWindow.onCmdTimeout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXY,ConfWindow.onCmdParentProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYPORT,ConfWindow.onCmdParentProxyPort)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_FILTERMODULE,ConfWindow.onCmdFilterModule)
@@ -210,17 +213,18 @@ class ConfWindow (ToolWindow):
         widget = FXSpinner(matrix, 4, self, self.ID_PORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.port)
+        FXLabel(matrix, i18n._("Timeout\tConnection timeout in seconds, a zero value uses the default platform timeout."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        widget = FXSpinner(matrix, 4, self, self.ID_TIMEOUT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
+        widget.setRange(0,300)
+        widget.setValue(self.timeout)
         FXLabel(matrix, i18n._("Web GUI theme"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         cols=0
         d = FXComboBox(matrix,0,len(self.themes),self, self.ID_THEME,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        # XXX use enumerate() in Python 2.3
-        i = 0
-        for theme in self.themes:
+        for i, theme in enumerate(self.themes):
              cols = max(len(theme), cols)
              d.appendItem(theme)
              if theme == self.webgui_theme:
                  d.setCurrentItem(i)
-             i += 1
         d.setEditable(0)
         d.setNumColumns(cols)
         f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
@@ -410,6 +414,13 @@ class ConfWindow (ToolWindow):
         self.port = sender.getValue()
         self.getApp().dirty = 1
         debug(GUI, "Port=%d", self.port)
+        return 1
+
+
+    def onCmdTimeout (self, sender, sel, ptr):
+        self.timeout = sender.getValue()
+        self.getApp().dirty = 1
+        debug(GUI, "Timeout=%d", self.timeout)
         return 1
 
 
@@ -727,7 +738,7 @@ class ConfWindow (ToolWindow):
         for key in ['version','port','parentproxy','parentproxyport',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass', 'allowedhosts',
-         'webgui_theme',]:
+         'webgui_theme', 'timeout',]:
             setattr(self, key, self.config[key])
         self.noproxyfor = self.noproxyfor[2]
         self.allowedhosts = self.allowedhosts[2]
@@ -787,7 +798,8 @@ class ConfWindow (ToolWindow):
         s += ' parentproxyuser="%s"\n' % xmlify(self.parentproxyuser)
         s += ' parentproxypass="%s"\n' % xmlify(self.parentproxypass)
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
-             ' showerrors="%d"\n' % self.showerrors
+             ' showerrors="%d"\n' % self.showerrors +\
+             ' timeout="%d"\n' % self.timeout
         s += ' webgui_theme="%s"\n' % xmlify(self.webgui_theme)
         if self.noproxyfor:
             keys = self.noproxyfor.keys()

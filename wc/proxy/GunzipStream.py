@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # gunzip.py, amitp@cs.stanford.edu, March 2000a
 #
 # Implements the minimal amount of work needed to ungzip an input stream
@@ -26,8 +27,8 @@ class GunzipStream (DeflateStream):
     def __init__ (self):
         DeflateStream.__init__(self)
         self.buf = ''
-        self.header_seen = None
-        self.error = None
+        self.header_seen = False
+        self.error = False
 
     def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
@@ -37,13 +38,13 @@ class GunzipStream (DeflateStream):
         magic = self.buf[:2]
         if magic != '\037\213':
             warn(PROXY, i18n._("zlib error: not gzip format, disabling gunzip"))
-            self.error = "True"
+            self.error = True
             return
 
         method = ord(self.buf[2])
         if method != 8:
             warn(PROXY, i18n._("zlib error: unknown compression method, disabling gunzip"))
-            self.error = "True"
+            self.error = True
             return
 
         flag = ord(self.buf[3])
@@ -77,7 +78,7 @@ class GunzipStream (DeflateStream):
 
         # We actually got through the header
         self.buf = s
-        self.header_seen = "True"
+        self.header_seen = True
 
     def decode (self, s):
         if self.error: return s

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # For a high level overview of DNS, see
 # http://www.rad.com/networks/1998/dns/main.html
 

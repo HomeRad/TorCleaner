@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """_winreg convenience wrapper (currently readonly)"""
 # Copyright (C) 2001  Bastian Kleineidam (except helper functions below)
 #

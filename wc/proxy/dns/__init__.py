@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # $Id$
 #
 # This file is part of the pydns project.
@@ -20,6 +21,9 @@ Result = DnsResult
 
 #
 # $Log$
+# Revision 1.6  2003/07/01 15:46:17  calvin
+# use bool type, add encoding comment, add timeout config value
+#
 # Revision 1.5  2003/01/05 17:55:19  calvin
 # fix
 #

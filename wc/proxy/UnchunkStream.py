@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # encoding_chunked, amitp@cs.stanford.edu, March 2000
 #
 # Deal with Transfer-encoding: chunked [HTTP/1.1]
@@ -21,7 +22,7 @@ class UnchunkStream:
     def __init__ (self):
         self.buffer = ''
         self.bytes_remaining = None
-        self.closed = 0
+        self.closed = False
 
 
     def decode (self, s):
@@ -51,7 +52,7 @@ class UnchunkStream:
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:
                             # End of stream
-                            self.closed = 1
+                            self.closed = True
                             # XXX: at this point, we should read
                             # footers until we get to a blank line
                 else:

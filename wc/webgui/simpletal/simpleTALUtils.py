@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """ simpleTALUtils
 
 		Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)

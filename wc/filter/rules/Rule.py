@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -20,6 +21,7 @@ __date__    = "$Date$"[7:-2]
 import wc, wc.filter.rules
 from wc.XmlUtils import xmlify, unxmlify
 from types import IntType
+
 
 class Rule:
     """Basic rule class for filtering.
@@ -47,8 +49,10 @@ class Rule:
         self.attrnames = ['title', 'desc', 'disable', 'oid']
         self.intattrs = ['disable', 'oid']
 
+
     def __cmp__ (self, other):
         return cmp(self.oid, other.oid)
+
 
     def fill_attrs (self, attrs, name):
         for attr in self.attrnames:
@@ -60,15 +64,19 @@ class Rule:
             if val and type(val) != IntType:
                 setattr(self, attr, int(getattr(self, attr)))
 
+
     def fill_data (self, data, name):
         pass
+
 
     def fromFactory (self, factory):
         return factory.fromRule(self)
 
+
     def get_name (self):
         """class name without "Rule" suffix, in lowercase"""
         return self.__class__.__name__[:-4].lower()
+
 
     def toxml (self):
         s = "<"+self.get_name()
@@ -79,6 +87,7 @@ class Rule:
         if self.disable:
             s += '\n disable="1"'
         return s
+
 
     def __str__ (self):
         s = self.get_name()+"\n"

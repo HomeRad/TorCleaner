@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -14,7 +15,7 @@ class HttpProxyClient:
         assert callable(handler)
         self.handler = handler
         self.args = args
-        self.connected = "True"
+        self.connected = True
         self.addr = ('localhost', 80)
         debug(PROXY, 'ProxyClient: init %s', str(self))
 

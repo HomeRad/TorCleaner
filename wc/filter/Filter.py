@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,26 +26,32 @@ class Filter:
         self.rules = []
         self.mimelist = mimelist
 
+
     def addrule (self, rule):
         debug(FILTER, "enable %s rule %s", rule.get_name(), `rule.title`)
         self.rules.append(rule)
 
+
     def filter (self, data, **args):
         return apply(self.doit, (data,), args)
+
 
     def finish (self, data, **args):
         return apply(self.doit, (data,), args)
 
+
     def doit (self, data, **args):
         return data
+
 
     def getAttrs (self, headers, url):
         return {'url': url, 'headers': headers}
 
+
     def applies_to_mime (self, mime):
         if not self.mimelist:
-            return "True"
+            return True
         for ro in self.mimelist:
             if ro.match(mime):
-                return "True"
-        return None
+                return True
+        return False

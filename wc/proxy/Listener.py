@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -23,21 +24,26 @@ class Listener (asyncore.dispatcher):
         self.listen(5)
         self.handler = handler
 
+
     def __repr__ (self):
         return '<Listener:%s>' % self.addr[1]
+
 
     def log (self, msg):
         """standard logging is disabled, we dont need it here"""
         pass
 
+
     def writable (self):
         """The listener is never writable, it returns None"""
         return None
+
 
     def handle_accept (self):
         """start the handler class with the new socket"""
         debug(PROXY, 'Proxy: accept %s', str(self))
         apply(self.handler, self.accept())
+
 
     def handle_error (self, what):
         exception(PROXY, what)
