@@ -199,7 +199,7 @@ setup (name = "webcleaner",
 * reduce images to low-bandwidth JPEGs
 * remove/add/modify arbitrary HTTP headers
 * usage of SquidGuard domain and url blacklists
-* Basic and Digest proxy authentication for both clients and servers
+* Basic, Digest and NTLM proxy authentication for both clients and servers
 * per-host access control
 * customizable with a themable web interface
 """,
