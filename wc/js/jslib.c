@@ -748,32 +748,36 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         ==JS_FALSE) {
         return shutdown(env, "Could not set global history property");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "open", &windowOpen, 1,
-                           JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "open", &windowOpen,
+                           1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global open function");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "setTimeout",
-                           &setTimeout, 2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "setTimeout", &setTimeout,
+                           2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global setTimeout function");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "setInterval",
-                           &setTimeout, 2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "setInterval", &setTimeout,
+                           2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global setInterval function");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "clearTimeout",
-                           &doNothing, 1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "clearTimeout", &doNothing,
+                           1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global clearTimeout function");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "clearInterval",
-                           &doNothing, 1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "clearInterval", &doNothing,
+                           1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global clearInterval function");
+    }
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "alert", &doNothing,
+                           1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+        return shutdown(env, "Could not set global alert function");
     }
     if (!JS_DefineFunction(env->ctx, env->global_obj, "focus", &doNothing,
                            0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global focus function");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "blur", &doNothing, 0,
-                           JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "blur", &doNothing,
+                           0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global blur function");
     }
     if (!JS_DefineFunction(env->ctx, env->global_obj, "resizeTo", &doNothing,
@@ -784,13 +788,12 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
                            2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global moveTo function");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "Image",
-                           &imageConstructor, 0,
-                           JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "Image", &imageConstructor,
+                           0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global Image function");
     }
-    if (!JS_DefineFunction(env->ctx, env->global_obj, "wcDebugLog",
-                           &wcDebugLog, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "wcDebugLog", &wcDebugLog,
+                           0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global wcDebugLog function");
     }
     /* init location object */
