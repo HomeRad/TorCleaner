@@ -80,7 +80,7 @@ div.tabs a:hover {
 
 div.content {
     /* the content container */
-    padding: 1em 2em 1em 2em;
+    padding: 25px 25px 15px 25px;
     color: #222222;
 }
 
@@ -177,7 +177,7 @@ div.footnote {
 
 div.footer {
     /* the footer container */
-    padding: 1em 2em 1em 2em;
+    padding: 15px 25px 25px 25px;
     color: #555555;
     font-size: 70%;
 }
