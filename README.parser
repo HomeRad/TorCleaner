@@ -2,7 +2,7 @@ Goals for the HTML parser:
 ==========================
 
 1) Reentrant
-As soon as any HTML string data is available, WebCleaner tries to feed it
+As soon as any HTML string data is available, we try to feed it
 to the HTML parser. This means that the parser has to scan possible
 incomplete data, recognizing as much as it can. Incomplete trailing
 data is saved for subsequent calls (or it is just flushed away with the
@@ -20,7 +20,7 @@ b) libxml's HTML parser
    <p> at the beginning, <html><body> is inserted before that).
 c) Self-generated bison parsers
    They allow to skip invalid tokens.
-All solutions are not acceptable for WebCleaner: a) and b) change
+All solutions are not acceptable for us: a) and b) change
 information which may not be available any more (until we buffer all
 HTML data until EOF); c) looses information. So the solution is
 d) The parser recognizes as much as it can and passes the rest
@@ -33,8 +33,8 @@ Parsing has to be fast.
 Solutions:
 ==========
 
-1) I use a beta FLEX snapshot from ftp://ftp.uncg.edu/people/wlestes/ to
-have a reentrant scanner. It works together with a pure (reentrant)
+1) I use a beta FLEX snapshot from http://lex.sf.net/ to have
+a reentrant scanner. It works together with a pure (reentrant)
 bison parser.
 
 2) The scanner only passes complete recognized HTML syntax elements to
@@ -50,7 +50,7 @@ c) missing ">" in tags
 d) invalid tag names
 e) invalid characters inside tags or tag attributes
 
-Additionally the WebCleaner parser has the following features:
+Additionally the parser has the following features:
 a) NULL bytes are changed into spaces
 b) <!-- ... --> inside a <script> or <style> are not treated as
    comments, so you can safely turn on the comment delete rule

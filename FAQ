@@ -7,7 +7,7 @@ A: Look in the HTML source. Some adverts (eg. freshmeat.net) are
      (dont) want to have JavaScript
      This works only with JS in <script> tags.
    * generate a Blocker filter which at least blocks the image download
-     (I normally prefer this solution).
+     (I usually prefer this solution).
 
 Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
    some tags or is completely crippled

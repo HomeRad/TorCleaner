@@ -2,7 +2,7 @@
 # Copy it into /etc/squid.conf and you have the following
 # constellation:
 # HTTP request --> Squid Proxy --> WebCleaner Proxy --> Internet
-# FTP  request --> Squid Proxy --> Internet
+# FTP request  --> Squid Proxy --> Internet
 # This way, you are caching only filtered, "clean" HTML files :)
 
 # You must configure your browser to use the Squid Proxy (running
@@ -20,7 +20,7 @@ icp_port 0
 # Remember to configure WebCleaner to run on port 8080 or change the
 # port number below
 cache_peer 127.0.0.1 parent 8080 0 no-query no-digest
-# if you enabled a WebCleaner user and password:
+# if you enabled a WebCleaner user and password use this instead:
 # cache_peer 127.0.0.1 parent 8080 0 no-query no-digest login=myuser:mypassword
 
 
