@@ -153,13 +153,14 @@ def main_posix (configdir, file_logs):
     wc.wstartfunc(confdir=configdir, file_logs=file_logs)
 
 
-def main_nt (configdir, args):
+def main_nt (configdir, file_logs, args):
     """start nt proxy service"""
     if len(args) < 1:
         print_usage(wc.i18n._("No command given."))
     else:
         command = args[0]
     import wc.win32start
+    wc.win32start.ProxyService.file_logs = file_logs
     if configdir:
         wc.win32start.ProxyService.configdir = configdir
     if command=='status':
