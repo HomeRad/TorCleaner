@@ -79,7 +79,7 @@ def addr2bin (addr):
         return addr
     bytes = addr.split('.')
     if len(bytes) != 4: raise ValueError, 'bad IP address'
-    n = 0
+    n = 0L
     for byte in bytes:
         n = n<<8 | int(byte)
     return n
