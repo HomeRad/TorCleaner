@@ -1,12 +1,12 @@
-import time, socket, rfc822, re, mimetypes
+import time, socket, re, mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer, get_http_version
-from wc.proxy.Headers import server_set_headers, remove_headers
-from wc.proxy.Headers import has_header_value
+from Headers import server_set_headers, remove_headers
+from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
@@ -110,7 +110,7 @@ class HttpServer (Server):
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         self.write(request)
         if hasattr(headers, "headers"):
-            # write original rfc822 Message object headers to preserve
+            # write original Message object headers to preserve
             # case sensitivity (!)
             self.write("".join(headers.headers))
         else:
@@ -175,9 +175,9 @@ class HttpServer (Server):
             serverpool.set_http_version(self.addr, get_http_version(protocol))
         elif not self.response.strip():
             # It's a blank line, so assume HTTP/0.9
-            serverpool.set_http_version(self.addr, 0.9)
+            serverpool.set_http_version(self.addr, (0,9))
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
+	                   WcMessage(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
             self.decoders = []
             self.attrs['nofilter'] = self.nofilter['nofilter']
@@ -194,7 +194,7 @@ class HttpServer (Server):
             # Example: http://ads.adcode.de/frame?11?3?10
             warn(PROXY, 'invalid or missing response from %s: %s',
                  self.url, `self.response`)
-            serverpool.set_http_version(self.addr, 1.0)
+            serverpool.set_http_version(self.addr, (1,0))
             # put the read bytes back to the buffer and fix the response
             self.recv_buffer = self.response + self.recv_buffer
             self.response = "HTTP/1.0 200 Ok"
@@ -211,7 +211,7 @@ class HttpServer (Server):
         if not m: return
         # get headers
         fp = StringIO(self.read(m.end()))
-        msg = rfc822.Message(fp)
+        msg = WcMessage(fp)
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
@@ -223,9 +223,9 @@ class HttpServer (Server):
             return
         key = 'Connection'
         http_ver = serverpool.http_versions[self.addr]
-        if http_ver >= 1.1:
+        if http_ver >= (1,1):
             self.can_reuse = not has_header_value(msg, key, 'Close')
-        elif http_ver >= 1.0:
+        elif http_ver >= (1,0):
             self.can_reuse = has_header_value(msg, key, 'Keep-Alive')
         else:
             self.can_reuse = None
@@ -452,6 +452,7 @@ class HttpServer (Server):
 
 
     def reuse (self):
+        debug(PROXY, "Server: reuse %s", str(self))
         self.client = None
         if self.connected and self.can_reuse:
             debug(PROXY, 'Server: reusing %d %s', self.sequence_number, str(self))
@@ -467,6 +468,8 @@ class HttpServer (Server):
 
     def close (self):
         debug(PROXY, "Server: close %s", str(self))
+        if self.can_reuse:
+            error(PROXY, "oops, could reuse, but closing %s", str(self))
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'

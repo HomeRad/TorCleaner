@@ -1,12 +1,43 @@
 """Header mangling"""
 from wc.log import *
+from rfc822 import Message
+
+
+class WcMessage (Message):
+    """Represents a single RFC 2822-compliant message."""
+
+    def getall (self, name):
+        """return a list of all values matching name"""
+        name = name.lower() + ':'
+        n = len(name)
+        vals = []
+        val = ""
+        hit = 0
+        for line in self.headers:
+            if line[:n].lower() == name:
+                val = line[n:].strip()
+                hit = 1
+            elif line[:1].isspace() and hit:
+                val += "\n "+line.strip()
+            else:
+                if hit:
+                    vals.append(val)
+                val = ""
+                hit = 0
+        return vals
+
+    def __contains__(self, name):
+        """Determine whether a message contains the named header."""
+        return name.lower() in self.dict
+
 
 def remove_headers (headers, to_remove):
     """remove entries from RFC822 headers"""
     for h in to_remove:
-        if headers.has_key(h):
+        if h in headers:
             # note: this removes all headers with that name
             del headers[h]
+
 
 def has_header_value (headers, key, value):
     if hasattr(headers, "getallmatchingheaders"):
@@ -16,6 +47,11 @@ def has_header_value (headers, key, value):
                 return "True"
         return None
     return headers.get(key, '').lower() == value.lower()
+
+
+def get_header_values (headers, key):
+    return [ h.split(':')[1].strip() \
+             for h in headers.getallmatchingheaders(key) ]
 
 
 def set_via_header (headers):
@@ -42,17 +78,19 @@ def client_set_headers (headers):
 
 def client_remove_hop_by_hop_headers (headers):
     """Remove hop-by-hop headers"""
-    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer', 'TE']
+    to_remove = ['Proxy-Connection', 'Connection', 'Upgrade', 'Trailer', 'TE']
+    hs = headers.getall('Connection') + headers.getall('Proxy-Connection')
+    for h in hs:
+        for v in h.split(','):
+            if v not in to_remove:
+                to_remove.append(v)
     remove_headers(headers, to_remove)
 
 
 def client_set_connection_headers (headers):
-    """Rename Proxy-Connection to Connection"""
-    # XXX handle Connection values
-    if headers.has_key('Proxy-Connection'):
-        val = headers['Proxy-Connection'].strip()
-        headers['Connection'] = val+"\r"
-        remove_headers(headers, ['Proxy-Connection'])
+    """Set our own connection headers"""
+    headers['Connection'] = 'Keep-Alive\r'
+    headers['Keep-Alive'] = 'timeout=200\r'
 
 
 def client_set_encoding_headers (headers):
@@ -110,8 +148,7 @@ def server_remove_hop_by_hop_headers (headers):
 
 def server_set_date_header (headers):
     """add rfc2822 date if it was missing"""
-    if not headers.has_key('Date'):
+    if not 'Date' in headers:
         from email import Utils
         headers['Date'] = "%s\r"%Utils.formatdate()
-
 

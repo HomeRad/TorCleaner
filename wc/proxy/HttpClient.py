@@ -1,4 +1,4 @@
-import rfc822, time
+import time
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
@@ -6,7 +6,7 @@ from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip
 from wc.proxy import match_host, fix_http_version
-from wc.proxy.Headers import client_set_headers, remove_headers
+from Headers import client_set_headers, remove_headers, WcMessage
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.log import *
 from wc.filter import FILTER_REQUEST
@@ -51,11 +51,8 @@ class HttpClient (Connection):
             }
         if auth:
             auth = 'Proxy-Authenticate: %s\r\n'%auth
-            http_ver = '1.1'
-        else:
-            http_ver = '1.0'
         ServerHandleDirectly(self,
-            'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
+            '%s %d %s\r\n' % (self.protocol, code, msg),
             'Server: Proxy\r\n' +\
             'Content-type: text/html\r\n' +\
             auth +\
@@ -119,7 +116,7 @@ class HttpClient (Connection):
             i += 4 # Skip over newline terminator
             # the first 2 chars are the newline of request
             fp = StringIO(self.read(i)[2:])
-            msg = rfc822.Message(fp)
+            msg = WcMessage(fp)
             # put unparsed data (if any) back to the buffer
             msg.rewindbody()
             self.recv_buffer = fp.read() + self.recv_buffer
@@ -148,11 +145,12 @@ class HttpClient (Connection):
                 if auth:
                     return self.error(407,
                           i18n._("Proxy Authentication Required"), auth=auth)
-            if self.method in ['OPTIONS','TRACE'] and \
+            if self.method in ['OPTIONS', 'TRACE'] and \
                get_max_forwards(self.headers)==0:
                 # XXX display options ?
                 self.state = 'done'
-                return ServerHandleDirectly(self, 'HTTP/1.0 200 OK\r\n',
+                return ServerHandleDirectly(self,
+                                   '%s 200 OK\r\n'%self.protocol,
                                    'Content-Type: text/plain\r\n\r\n', '')
             self.state = 'content'
 
@@ -210,7 +208,7 @@ class HttpClient (Connection):
         debug(PROXY, 'Client: server_response %s %s', str(self), `response`)
         self.write(response)
         if hasattr(headers, "headers"):
-            # write original rfc822 Message object headers to preserve
+            # write original Message object headers to preserve
             # case sensitivity (!)
             self.write("".join(headers.headers))
         else:
