@@ -19,6 +19,11 @@
     Type: bugfix
     Changed: wc/webgui/webconfig.py
 
+  * ANSI color support for the colored text logger is now detected
+    on Windows systems.
+    Type: feature
+    Changed: wc/ansicolor.py
+
 2.23 "The fog of war" (released 27.10.2004)
 
   * Fixed MIME type changing.
