@@ -380,6 +380,7 @@ def _form_newrule (rtype, lang):
     # select new rule
     _form_selrule(rule.oid)
     info['newrule'] = True
+    print "XXX new rule", rule
 
 
 def _form_disablerule (rule):

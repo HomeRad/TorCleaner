@@ -20,7 +20,8 @@ import re
 import sys
 from TALES import Engine, CompilerError, _valid_name, NAME_RE, \
      Undefined, Default, _parse_expr
-
+import wc
+import wc.log
 
 _engine = None
 def getEngine ():
@@ -321,6 +322,7 @@ def restrictedTraverse (object, path, securityManager,
             object = o
             continue
 
+        wc.log.debug(wc.TALES, "expressing %r/%r", object, name)
         # Try an attribute.
         o = guarded_getattr(object, name, M)
         if o is M:
