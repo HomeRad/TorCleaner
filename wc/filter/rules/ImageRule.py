@@ -53,9 +53,5 @@ class ImageRule (wc.filter.rules.UrlRule.UrlRule):
                  wc.XmlUtils.xmlquoteattr(",".join(self.formats))
         if self.url:
             s += u'\n url="%s"' % wc.XmlUtils.xmlquoteattr(self.url)
-        s += u">"
-        s += u"\n"+self.title_desc_toxml(prefix=u"  ")
-        if self.matchurls or self.nomatchurls:
-            s += u"\n"+self.matchestoxml(prefix=u"  ")
-        s += u"\n</%s>" % self.get_name()
+        s += self.endxml()
         return s

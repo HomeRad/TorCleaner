@@ -39,9 +39,5 @@ class ImagereduceRule (wc.filter.rules.UrlRule.UrlRule):
         s = super(ImagereduceRule, self).toxml()
         s += u'\n quality="%d"' % self.quality
         s += u'\n minimal_size_bytes="%d"' % self.minimal_size_bytes
-        s += u">"
-        s += u"\n"+self.title_desc_toxml(prefix=u"  ")
-        if self.matchurls or self.nomatchurls:
-            s += u"\n"+self.matchestoxml(prefix=u"  ")
-        s += u"\n</%s>" % self.get_name()
+        s += self.endxml()
         return s

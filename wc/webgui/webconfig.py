@@ -169,7 +169,7 @@ def get_context (dirs, form, localcontext, hostname, lang):
 
 
 def add_default_context (context, filename, hostname, lang):
-    """add context variables used by all templates"""
+    """Add context variables used by all templates."""
     # rule macros
     path, dirs = wc.webgui.get_safe_template_path("macros/rules.html")
     rulemacros = wc.webgui.templatecache.templates[path]
@@ -199,14 +199,16 @@ nav_filenames = [
     "help_html",
 ]
 def add_nav_context (context, filename):
+    """Add 'nav' variable to context."""
     filename = filename.replace('.', '_')
     nav = {}
     for fname in nav_filenames:
-        nav[fname] = fname==filename
+        nav[fname] = fname == filename
     context_add(context, "nav", nav)
 
 
 def add_i18n_context (context, lang):
+    """Add i18n variables 'lang', 'i18n' and 'otherlanguages' to context."""
     # language and i18n
     context_add(context, "lang", lang)
     translator = wc.get_translator(lang, translatorklass=Translator,
@@ -225,26 +227,33 @@ def add_i18n_context (context, lang):
 
 
 def context_add (context, key, val):
+    """Add key/val pair to context."""
     context[key] = val
 
 
 class Translator (gettext.GNUTranslations):
+    """Translator which interpolates TAL expressions."""
 
     def translate (self, domain, msgid, mapping=None,
+        """Interpolates and translate TAL expression."""
                    context=None, target_language=None, default=None):
         _msg = self.gettext(msgid)
         wc.log.debug(wc.LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
         return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
 
     def gettext (self, msgid):
+        """Return unicode with ugettext()."""
         return self.ugettext(msgid)
 
     def ngettext (self, singular, plural, number):
+        """Return unicode with ungettext()."""
         return self.ungettext(singular, plural, number)
 
 
 class NullTranslator (gettext.NullTranslations):
+    """Fallback translator which interpolates TAL expressions."""
 
     def translate (self, domain, msgid, mapping=None,
+        """Interpolates TAL expression."""
                    context=None, target_language=None, default=None):
         return wc.webgui.TAL.TALInterpreter.interpolate(msgid, mapping)

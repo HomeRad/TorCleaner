@@ -70,10 +70,10 @@ config['newsslgateway'] = config.get('sslgateway', 0)
 filterenabled = u""
 filterdisabled = u""
 ifnames = []
-ifvalues = {'all_hosts': config['newbindaddress']==""}
+ifvalues = {'all_hosts': config['newbindaddress'] == ""}
 for _i in _resolver.interfaces:
     ifnames.append(_i)
-    ifvalues[_i] = _i==config['newbindaddress']
+    ifvalues[_i] = _i == config['newbindaddress']
 
 
 def _form_reset ():

@@ -70,13 +70,21 @@ class UrlRule (wc.filter.rules.Rule.Rule):
     def compile_nomatchurls (self):
         self.nomatchurls_ro = [re.compile(s) for s in self.nomatchurls]
 
-    def matchestoxml (self, prefix=""):
+    def matchestoxml (self, prefix=u""):
         """match url rule data as XML for storing"""
         m = [u"%s<matchurl>%s</matchurl>" % \
              (prefix, wc.XmlUtils.xmlquote(r)) for r in self.matchurls]
         n = [u"%s<nomatchurl>%s</nomatchurl>" % \
              (prefix, wc.XmlUtils.xmlquote(r)) for r in self.nomatchurls]
         return u"\n".join(m+n)
+
+    def endxml (self):
+        """Return ending part of XML serialization with title and matches."""
+        s = u">\n"+self.title_desc_toxml(prefix=u"  ")
+        if self.matchurls or self.nomatchurls:
+            s += u"\n"+self.matchestoxml(prefix=u"  ")
+        s += u"\n</%s>" % self.get_name()
+        return s
 
     def __str__ (self):
         """return rule data as string"""
