@@ -247,7 +247,7 @@ def _main_nt ():
         import win32serviceutil
         win32serviceutil.HandleCommandLine(win32start.ProxyService)
     else:
-        _print_usage(i18n._("Unknown command %s") % `command`)
+        _print_usage(i18n._("Unknown command %r") % command)
 
 
 if __name__ == '__main__':
