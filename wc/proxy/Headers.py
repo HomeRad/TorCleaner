@@ -287,4 +287,17 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
     return bytes_remaining
 
 
+def get_encoding_dict (msg):
+    res = {}
+    encs = msg.get('Accept-Encoding', '').split(",")
+    for enc in encs:
+        enc = enc.trim()
+        pref = None
+        if ";" in enc:
+            enc, pref = enc.split(";")
+        res[enc.trim().lower()] = pref.trim()
+    return res
+
+
+
 is_header = re.compile("\s*[-a-zA-Z_]+:\s+").search
