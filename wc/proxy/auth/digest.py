@@ -47,7 +47,7 @@ def get_digest_challenge (stale="false"):
     opaque = wc_opaque
     auth = 'realm="%s", nonce="%s", opaque="%s", stale=%s' % \
            (realm, nonce, opaque, stale)
-    return "Digest %s"%auth
+    return "Digest %s" % auth
 
 
 def parse_digest_challenge (challenge):

@@ -182,8 +182,8 @@ def _form_load ():
     if url in rating_cache:
         rating = rating_cache[url]
         for category, value in rating.items():
-            if category==u'generic':
-                generic = (value==u'true')
+            if category == u'generic':
+                generic = (value == u'true')
             else:
                 ratings[category] = value
                 if category not in [u"modified"]:

@@ -225,7 +225,7 @@ class DnsCache (object):
                 callback(hostname, self.cache[hostname])
                 # We *don't* return; instead, we trigger a new cache
                 # fill and use a dummy callback
-                callback = lambda h,a:None
+                callback = lambda h, a: None
 
         if self.pending.has_key(hostname):
             # Add this guy to the list of interested parties

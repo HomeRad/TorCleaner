@@ -70,7 +70,7 @@ class ClientServerMatchmaker (object):
             self.document = self.url
             if wc.config['parentproxycreds']:
                 auth = wc.config['parentproxycreds']
-                self.headers['Proxy-Authorization'] = "%s\r"%auth
+                self.headers['Proxy-Authorization'] = "%s\r" % auth
         else:
             if self.method == 'CONNECT' and wc.config['sslgateway']:
                 # delegate to SSL gateway

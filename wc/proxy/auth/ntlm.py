@@ -236,7 +236,7 @@ def parse_ntlm_credentials (credentials):
         creds, remainder = credentials, ""
     creds = base64.decodestring(creds.strip())
     remainder = remainder.strip()
-    if not creds.startswith('%s\x00'%NTLMSSP_SIGNATURE):
+    if not creds.startswith('%s\x00' % NTLMSSP_SIGNATURE):
         # invalid credentials, skip
         res = {}
     else:
@@ -292,7 +292,7 @@ negotiate_flags = NTLMSSP_NEGOTIATE_80000000 | \
 def create_message1 (flags=negotiate_flags):
     """create and return NTLM message type 2 (NTLMSSP_NEGOTIATE)"""
     # overall length is 48 bytes
-    msg = '%s\x00'%NTLMSSP_SIGNATURE # name
+    msg = '%s\x00' % NTLMSSP_SIGNATURE # name
     msg += struct.pack("<l", NTLMSSP_NEGOTIATE) # message type
     msg += struct.pack("<l", flags) # flags
     offset = len(msg) + 8*2
@@ -362,7 +362,7 @@ def create_message2 (domain, flags=challenge_flags):
 def parse_message2 (msg):
     """parse and return NTLM message type 2 (NTLMSSP_SIGNATURE)"""
     res = {}
-    if not msg.startswith('%s\x00'%NTLMSSP_SIGNATURE):
+    if not msg.startswith('%s\x00' % NTLMSSP_SIGNATURE):
         wc.log.warn(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
         return res
     if getint32(msg[8:12])!=NTLMSSP_CHALLENGE:

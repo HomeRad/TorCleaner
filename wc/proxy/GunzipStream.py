@@ -28,7 +28,7 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
 
     def __repr__ (self):
         """object representation"""
-        return '<%s closed=%s buflen=%d error=%s>'%\
+        return '<%s closed=%s buflen=%d error=%s>' % \
                ('gunzip', self.closed, len(self.buf), self.error)
 
     def attempt_header_read (self):

@@ -169,7 +169,7 @@ def client_get_max_forwards (headers):
     except ValueError:
         wc.log.error(wc.LOG_PROXY, "invalid Max-Forwards header value %s", headers.get('Max-Forwards', ''))
         mf = -1
-    if mf>0:
+    if mf > 0:
         headers['Max-Forwards'] = "%d\r" % (mf-1)
     return mf
 
@@ -185,7 +185,7 @@ def server_set_headers (headers):
 def server_remove_hop_by_hop_headers (headers):
     """Remove hop-by-hop headers"""
     # note: do not remove Proxy-Authenticate, we still need it
-    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer',]
+    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer']
     remove_headers(headers, to_remove)
 
 
@@ -193,7 +193,7 @@ def server_set_date_header (headers):
     """add rfc2822 date if it was missing"""
     if not 'Date' in headers:
         from email import Utils
-        headers['Date'] = "%s\r"%Utils.formatdate()
+        headers['Date'] = "%s\r" % Utils.formatdate()
 
 
 def server_set_content_headers (headers, mime, url):
@@ -204,7 +204,7 @@ def server_set_content_headers (headers, mime, url):
             # we have a hint what mime type we can apply
             wc.log.warn(wc.LOG_PROXY,
                         wc.i18n._("Set content type of %r to %r"), url, mime)
-            headers['Content-Type'] = "%s\r"%mime
+            headers['Content-Type'] = "%s\r" % mime
 
 
 def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,

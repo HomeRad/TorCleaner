@@ -8,7 +8,7 @@ class LimitQueue (object):
 
     def __init__ (self, capacity=100):
         """capacity must be > 0"""
-        if capacity<1:
+        if capacity < 1:
             raise ValueError("capacity must be > 0")
         self._capacity = capacity
         self._queue = []

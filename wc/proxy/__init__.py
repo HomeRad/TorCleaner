@@ -28,12 +28,12 @@ def get_http_version (protocol):
     mo = is_http(protocol)
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
-        if f > (1,1):
+        if f > (1, 1):
             wc.log.error(wc.LOG_PROXY, wc.i18n._("unsupported HTTP version %s"), f)
-            f = (1,1)
+            f = (1, 1)
         return f
     wc.log.error(wc.LOG_PROXY, wc.i18n._("invalid HTTP version %r"), protocol)
-    return (1,0)
+    return (1, 0)
 
 
 def make_timer (delay, callback):
@@ -68,21 +68,21 @@ def proxy_poll (timeout=0.0):
        connection handlers"""
     handlerCount = 0
     if wc.proxy.Dispatcher.socket_map:
-        r = [ x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.readable() ]
-        w = [ x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.writable() ]
+        r = [x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.readable()]
+        w = [x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.writable()]
         e = wc.proxy.Dispatcher.socket_map.values()
         wc.log.debug(wc.LOG_PROXY, "select with %f timeout:", timeout)
         for x in e:
             wc.log.debug(wc.LOG_PROXY, "  %s", x)
         try:
-            (r,w,e) = select.select(r,w,e, timeout)
+            (r, w, e) = select.select(r, w, e, timeout)
         except select.error, why:
             if why.args == (4, 'Interrupted system call'):
                 # this occurs on UNIX systems with a sighup signal
                 return
             else:
                 raise
-        wc.log.debug(wc.LOG_PROXY, "poll result %s", (r,w,e))
+        wc.log.debug(wc.LOG_PROXY, "poll result %s", (r, w, e))
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it

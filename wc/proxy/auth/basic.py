@@ -27,7 +27,7 @@ def get_basic_credentials (challenge, **attrs):
     password = base64.decodestring(attrs['password_b64'])
     username = attrs['username']
     auth = base64.encodestring("%s:%s"%(username, password)).strip()
-    return "Basic %s"%auth
+    return "Basic %s" % auth
 
 
 def parse_basic_credentials (credentials):

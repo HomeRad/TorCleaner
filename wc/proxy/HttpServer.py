@@ -37,7 +37,7 @@ def get_response_data (response, url):
     if len(parts) == 2:
         wc.log.warn(wc.LOG_PROXY, "Empty response message from %r", url)
         parts += ['Bummer']
-    elif len(parts)!=3:
+    elif len(parts) != 3:
         wc.log.error(wc.LOG_PROXY, "Invalid response %r from %r", response, url)
         parts = ['HTTP/1.0', 200, 'Ok']
     if not is_http_status(parts[1]):
@@ -151,7 +151,7 @@ class HttpServer (wc.proxy.Server.Server):
         self.mime = mime
         # remember client header for authorization resend
         self.clientheaders = headers
-        if self.method!='CONNECT':
+        if self.method != 'CONNECT':
             self.mangle_request_headers()
             self.send_request()
 
@@ -164,7 +164,7 @@ class HttpServer (wc.proxy.Server.Server):
     def send_request (self):
         """send the request to the server, is also used to send a request
            twice for NTLM authentication"""
-        assert self.method!='CONNECT'
+        assert self.method != 'CONNECT'
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         wc.log.debug(wc.LOG_PROXY, '%s write request\n%r', self, request)
         self.write(request)
@@ -176,7 +176,7 @@ class HttpServer (wc.proxy.Server.Server):
 
     def process_read (self):
         """process read event by delegating it to process_* functions"""
-        assert self.state!='closed', "%s invalid state %r"%(self, self.state)
+        assert self.state != 'closed', "%s invalid state %r"%(self, self.state)
         while True:
             if not self.client:
                 # By the time this server object was ready to receive
@@ -206,7 +206,7 @@ class HttpServer (wc.proxy.Server.Server):
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (0,9))
+            wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (0, 9))
             self.response = "%s 200 Ok" % self.protocol
             self.statuscode = 200
             self.recv_buffer = '\r\n' + self.recv_buffer
@@ -215,7 +215,7 @@ class HttpServer (wc.proxy.Server.Server):
             # Example: http://ads.adcode.de/frame?11?3?10
             wc.log.warn(wc.LOG_PROXY, wc.i18n._('invalid or missing response from %r: %r'),
                  self.url, self.response)
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (1,0))
+            wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (1, 0))
             # put the read bytes back to the buffer
             self.recv_buffer = self.response + self.recv_buffer
             # look if the response line was a header
@@ -311,7 +311,7 @@ class HttpServer (wc.proxy.Server.Server):
         if self.bytes_remaining is None:
             self.persistent = False
         # 304 Not Modified does not send any type info, because it was cached
-        if self.statuscode!=304:
+        if self.statuscode != 304:
             # copy decoders
             decoders = [d.__class__() for d in self.decoders]
             data = self.recv_buffer
@@ -409,7 +409,7 @@ class HttpServer (wc.proxy.Server.Server):
         if underflow:
             wc.log.warn(wc.LOG_PROXY, wc.i18n._("server received %d bytes more than content-length"),
                  (-self.bytes_remaining))
-        if data and self.statuscode!=407:
+        if data and self.statuscode != 407:
             if self.defer_data:
                 self.defer_data = False
                 self.client.server_response(self, self.response,
@@ -449,7 +449,7 @@ class HttpServer (wc.proxy.Server.Server):
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
                 # must use GET for ntlm handshake
-                if self.method!='GET':
+                if self.method != 'GET':
                     self.oldmethod = self.method
                     self.method = 'GET'
             if 'Digest' in challenges:
@@ -484,7 +484,7 @@ class HttpServer (wc.proxy.Server.Server):
             self.set_unreadable(0.5)
             return False
         # the client might already have closed
-        if self.client and data and self.statuscode!=407:
+        if self.client and data and self.statuscode != 407:
             self.client.server_content(data)
         return True
 
@@ -536,7 +536,7 @@ class HttpServer (wc.proxy.Server.Server):
            the connection pool"""
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.close_close", self)
         assert not self.client, "close with open client"
-        unregister = (self.connected and self.state!='closed')
+        unregister = (self.connected and self.state != 'closed')
         if unregister:
             self.state = 'closed'
         super(HttpServer, self).close_close()

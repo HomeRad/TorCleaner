@@ -37,7 +37,7 @@ class ServerPool (object):
         """Try to return an existing server connection for given addr,
            or return None if on connection is available at the moment"""
         wc.log.debug(wc.LOG_PROXY, "pool reserve server %s", addr)
-        for server,status in self.smap.get(addr, {}).items():
+        for server, status in self.smap.get(addr, {}).items():
             if status[0] == 'available':
                 # Let's reuse this one
                 self.smap[addr][server] = ('busy', )
@@ -105,12 +105,12 @@ class ServerPool (object):
         wc.log.debug(wc.LOG_PROXY, "pool expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
-        for addr,set in self.smap.items():
-            for server,status in set.items():
+        for addr, set in self.smap.items():
+            for server, status in set.items():
                 if status[0] == 'available' and status[1] < expire_time:
                     # It's old .. let's get rid of it
                     to_expire.append((addr,server))
-        for addr,server in to_expire:
+        for addr, server in to_expire:
             wc.log.debug(wc.LOG_PROXY, "expire %s server %s", addr, server)
             server.close()
             if addr in self.smap:

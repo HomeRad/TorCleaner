@@ -172,7 +172,7 @@ def _form_selfolder (index):
     try:
         index = int(index)
         global curfolder
-        curfolder = [ f for f in config['folderrules'] if f.oid==index ][0]
+        curfolder = [f for f in config['folderrules'] if f.oid == index][0]
     except (ValueError, IndexError):
         error['folderindex'] = True
 
@@ -181,23 +181,23 @@ def _form_selrule (index):
     try:
         index = int(index)
         global currule
-        currule = [ r for r in curfolder.rules if r.oid==index ][0]
+        currule = [r for r in curfolder.rules if r.oid == index][0]
         # fill ruletype flags
         for rt in rulenames:
-            ruletype[rt] = (currule.get_name()==rt)
+            ruletype[rt] = (currule.get_name() == rt)
         # XXX this side effect is bad :(
         # fill part flags
-        if currule.get_name()==u"rewrite":
+        if currule.get_name() == u"rewrite":
             global curparts
             curparts = {}
             for i, part in enumerate(partvalnames):
-                curparts[part] = (currule.part==i)
-        elif currule.get_name()==u"header":
+                curparts[part] = (currule.part == i)
+        elif currule.get_name() == u"header":
             global curfilterstage
             curfilterstage = {
-                u'both': currule.filterstage==u'both',
-                u'request': currule.filterstage==u'request',
-                u'response': currule.filterstage==u'response',
+                u'both': currule.filterstage == u'both',
+                u'request': currule.filterstage == u'request',
+                u'response': currule.filterstage == u'response',
             }
     except (ValueError, IndexError):
         error['ruleindex'] = True
@@ -214,7 +214,7 @@ def _form_selindex (index):
 
 def _calc_selindex (folder, index):
     res = [index-1000, index-250, index-50, index, index+50, index+250, index+1000]
-    folder.selindex = [ x for x in res if 0 <= x < len(folder.rules) and x!=index ]
+    folder.selindex = [x for x in res if 0 <= x < len(folder.rules) and x != index]
 
 
 def _reinit_filters ():
@@ -453,11 +453,11 @@ def _form_rule_titledesc (form, lang):
     if not title:
         error['ruletitle'] = True
         return
-    if title!=currule.titles[lang]:
+    if title != currule.titles[lang]:
         currule.titles[lang] = title
         info['ruletitle'] = True
     desc = _getval(form, 'rule_description')
-    if desc!=currule.descriptions[lang]:
+    if desc != currule.descriptions[lang]:
         currule.descriptions[lang] = desc
         info['ruledesc'] = True
 
@@ -506,7 +506,7 @@ def _form_rule_delnomatchurls (form):
 
 def _form_apply_allow (form):
     url = _getval(form, 'rule_url').strip()
-    if url!=currule.url:
+    if url != currule.url:
         currule.url = url
         info['ruleurl'] = True
 
@@ -514,7 +514,7 @@ def _form_apply_allow (form):
 def _form_apply_block (form):
     _form_apply_allow(form)
     replacement = _getval(form, 'rule_replacement').strip()
-    if replacement!=currule.replacement:
+    if replacement != currule.replacement:
         currule.replacement = replacement
         info['rulereplacement'] = True
 
@@ -523,15 +523,15 @@ def _form_apply_header (form):
     name = _getval(form, 'rule_headername').strip()
     if not name:
         error['ruleheadername'] = True
-    elif name!=currule.name:
+    elif name != currule.name:
         currule.name = name
         info['ruleheadername'] = True
     value = _getval(form, 'rule_headervalue').strip()
-    if value!=currule.value:
+    if value != currule.value:
         currule.value = value
         info['ruleheadervalue'] = True
     filterstage = _getval(form, 'rule_headerfilter')
-    if filterstage!=currule.filterstage:
+    if filterstage != currule.filterstage:
         currule.filterstage = filterstage
         info['ruleheaderfilter'] = True
         # select again because of side effect (XXX see above)
@@ -545,7 +545,7 @@ def _form_apply_image (form):
     except ValueError:
         error['ruleimgwidth'] = True
         return
-    if width!=currule.width:
+    if width != currule.width:
         currule.width = width
         info['ruleimgwidth'] = True
     height = _getval(form, 'rule_imgheight').strip()
@@ -554,7 +554,7 @@ def _form_apply_image (form):
     except ValueError:
         error['ruleimgheight'] = True
         return
-    if height!=currule.height:
+    if height != currule.height:
         currule.height = height
         info['ruleimgheight'] = True
     # XXX todo: image types
@@ -567,7 +567,7 @@ def _form_apply_imagereduce (form):
     except ValueError:
         error['ruleimgquality'] = True
         return
-    if quality!=currule.quality:
+    if quality != currule.quality:
         currule.quality = quality
         info['ruleimgquality'] = True
     minsize = _getval(form, 'rule_imgminsize').strip()
@@ -576,7 +576,7 @@ def _form_apply_imagereduce (form):
     except ValueError:
         error['ruleimgminsize'] = True
         return
-    if minsize!=currule.minimal_size_bytes:
+    if minsize != currule.minimal_size_bytes:
         currule.minimal_size_bytes = minsize
         info['ruleimgminsize'] = True
 
@@ -603,7 +603,7 @@ def _form_apply_rating (form):
             if category not in currule.ratings:
                 currule.ratings[category] = value
                 info['rulecategory'] = True
-            elif currule.ratings[category]!=value:
+            elif currule.ratings[category] != value:
                 currule.ratings[category] = value
                 info['rulecategory'] = True
         elif category in currule.ratings:
@@ -619,12 +619,12 @@ def _form_apply_replace (form):
     if not search:
         error['rulesearch'] = True
         return
-    if search!=currule.search:
+    if search != currule.search:
         currule.search = search
         _compileRegex(currule, "search")
         info['rulesearch'] = True
     replacement = _getval(form, 'rule_replace')
-    if replacement!=currule.replacement:
+    if replacement != currule.replacement:
         currule.replacement = replacement
         info['rulereplace'] = True
 
@@ -634,11 +634,11 @@ def _form_apply_rewrite (form):
     if not tag:
         error['ruletag'] = True
         return
-    if tag!=currule.tag:
+    if tag != currule.tag:
         currule.tag = tag
         info['ruletag'] = True
     enclosed = _getval(form, 'rule_enclosedblock').strip()
-    if enclosed!=currule.enclosed:
+    if enclosed != currule.enclosed:
         currule.enclosed = enclosed
         _compileRegex(currule, "enclosed")
         info['ruleenclosedblock'] = True
@@ -647,12 +647,12 @@ def _form_apply_rewrite (form):
     if partnum is None:
         error['rulerewritepart'] = True
         return
-    if partnum!=currule.part:
+    if partnum != currule.part:
         currule.part = partnum
         info['rulerewritepart'] = True
         # select again because of side effect (XXX see above)
         _form_selrule(currule.oid)
     replacement = _getval(form, 'rule_rewritereplacement').strip()
-    if replacement!=currule.replacement:
+    if replacement != currule.replacement:
         currule.replacement = replacement
         info['rulerewritereplacement'] =  True

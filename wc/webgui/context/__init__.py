@@ -29,7 +29,7 @@ def getval (form, key):
     if isinstance(item, list):
         item = item[0]
     elif hasattr(item, "value"):
-        item =item.value
+        item = item.value
     return item.decode(charset)
 
 

@@ -52,7 +52,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         if self.bytes_remaining is None:
             self.persistent = False
         # 304 Not Modified does not send any type info, because it was cached
-        if self.statuscode!=304:
+        if self.statuscode != 304:
             # copy decoders
             decoders = [d.__class__() for d in self.decoders]
             data = self.recv_buffer

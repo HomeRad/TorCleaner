@@ -45,10 +45,10 @@ class WebConfig (object):
         headers = wc.proxy.Headers.WcMessage()
         headers['Server'] = 'Proxy\r'
         if auth:
-            if status==407:
-                headers['Proxy-Authenticate'] = "%s\r"%auth
-            elif status==401:
-                headers['WWW-Authenticate'] = "%s\r"%auth
+            if status == 407:
+                headers['Proxy-Authenticate'] = "%s\r" % auth
+            elif status == 401:
+                headers['WWW-Authenticate'] = "%s\r" % auth
             else:
                 wc.log.error(wc.LOG_GUI, "Authentication with wrong status %d", status)
         if status in [301,302]:
@@ -59,9 +59,9 @@ class WebConfig (object):
         else:
             # note: index.html is appended to directories
             ctype = 'text/html'
-        if ctype=='text/html':
+        if ctype == 'text/html':
             ctype += "; charset=iso-8859-1"
-        headers['Content-Type'] = "%s\r"%ctype
+        headers['Content-Type'] = "%s\r" % ctype
         try:
             lang = wc.i18n.get_headers_lang(clientheaders)
             # get the template filename
@@ -71,7 +71,7 @@ class WebConfig (object):
                 # get TAL context
                 context, newstatus = \
                      get_context(dirs, form, localcontext, lang)
-                if newstatus==401 and status!=newstatus:
+                if newstatus == 401 and status != newstatus:
                     client.error(401, wc.i18n._("Authentication Required"),
                                  auth=wc.proxy.auth.get_challenges())
                     return
@@ -105,7 +105,7 @@ class WebConfig (object):
 
     def put_response (self, data, protocol, status, msg, headers):
         """write response to client"""
-        response = "%s %d %s"%(protocol, status, msg)
+        response = "%s %d %s" % (protocol, status, msg)
         self.client.server_response(self, response, status, headers)
         self.client.server_content(data)
         self.client.server_close(self)
@@ -173,8 +173,8 @@ def get_template_path (path, defaultlang):
     path, dirs = _get_template_path(path)
     lang = defaultlang
     for la in wc.i18n.supported_languages:
-        assert len(la)==2
-        if path.endswith(".html.%s"%la):
+        assert len(la) == 2
+        if path.endswith(".html.%s" % la):
             path = path[:-3]
             dirs[-1] = dirs[-1][:-3]
             lang = la
@@ -238,7 +238,8 @@ def add_default_context (context, filename, lang):
     # other available languges
     otherlanguages = []
     for la in wc.i18n.supported_languages:
-        if lang==la: continue
+        if lang == la:
+            continue
         otherlanguages.append({'code': la,
                                'name': wc.i18n.lang_name(la),
                                'trans': wc.i18n.lang_trans(la, lang),
@@ -247,7 +248,7 @@ def add_default_context (context, filename, lang):
 
 
 def context_add (context, key, val):
-    if type(val)==type(""):
+    if type(val) == type(""):
         context.addGlobal(unicode(key), unicode(val))
     else:
         context.addGlobal(unicode(key), val)

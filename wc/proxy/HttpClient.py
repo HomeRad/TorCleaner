@@ -4,7 +4,6 @@
 import time
 import cgi
 import urlparse
-import os
 import urllib
 import cStringIO as StringIO
 import wc.i18n
@@ -106,7 +105,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def process_read (self):
         """delegate read according to current connection state"""
-        assert self.state!='closed'
+        assert self.state != 'closed'
         while True:
             if self.state == 'done':
                 break
@@ -260,7 +259,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # add missing host headers for HTTP/1.1
         if not self.headers.has_key('Host'):
             wc.log.warn(wc.LOG_PROXY, "%s request without Host header encountered", self)
-            if self.port!=80:
+            if self.port != 80:
                 self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
             else:
                 self.headers['Host'] = "%s\r" % self.hostname
@@ -314,7 +313,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def set_persistent (self, headers, http_ver):
         """return True if connection is persistent"""
         # look if client wants persistent connections
-        if http_ver >= (1,1):
+        if http_ver >= (1, 1):
             self.persistent = \
               not (wc.proxy.Headers.has_header_value(headers, 'Proxy-Connection', 'Close') or
                    wc.proxy.Headers.has_header_value(headers, 'Connection', 'Close'))

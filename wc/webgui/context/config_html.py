@@ -52,12 +52,12 @@ def _exec_form (form, lang):
     # proxy port
     if form.has_key('port'):
         _form_proxyport(_getval(form, 'port'))
-    elif config['port']!=8080:
+    elif config['port'] != 8080:
         _form_proxyport(8080)
     # ssl server port
     if form.has_key('sslport'):
         _form_sslport(_getval(form, 'sslport'))
-    elif config['sslport']!=8443:
+    elif config['sslport'] != 8443:
         _form_sslport(8443)
     # ssl gateway
     if form.has_key('sslgateway'):
@@ -75,7 +75,7 @@ def _exec_form (form, lang):
     if form.has_key('adminpass'):
         val = _getval(form, 'adminpass')
         # ignore dummy values
-        if val!=u'__dummy__':
+        if val != u'__dummy__':
             _form_adminpass(base64.encodestring(val).strip(), res)
     elif config['adminpass']:
         config['adminpass'] = u''
@@ -94,7 +94,7 @@ def _exec_form (form, lang):
     if form.has_key('proxypass'):
         val = _getval(form, 'proxypass')
         # ignore dummy values
-        if val!=u'__dummy__':
+        if val != u'__dummy__':
             _form_proxypass(base64.encodestring(val).strip())
     elif config['proxypass']:
         config['proxypass'] = u''
@@ -145,7 +145,7 @@ def _exec_form (form, lang):
     if form.has_key('parentproxypass'):
         val = _getval(form, 'parentproxypass')
         # ignore dummy values
-        if val!=u'__dummy__':
+        if val != u'__dummy__':
             _form_parentproxypass(base64.encodestring(val).strip())
     elif config['parentproxypass']:
         config['parentproxypass'] = u''
