@@ -27,6 +27,11 @@ regularly. You can help me extend the current config data by sending
 me patches!
 
 
+Running
+-------
+You can start the proxy by executing "webcleaner start".
+
+
 Notes
 -----
 WebCleaner is _not_ a HTTP compliant proxy because it modifies requests,
