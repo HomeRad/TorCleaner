@@ -26,6 +26,9 @@
     Changed files: wc/proxy/HttpClient.py, wc/__init__.py
   * handle partial proxy request uris
     Changed files: wc/proxy/{__init__,ClientServerMatchmaker}.py
+  * embedded the spidermonkey javascript engine to reduce dependencies
+    Added files: libjs/*, configure.in, autogen.sh, Makefile.am
+    Removed files: Makefile
 
 1.10
   * fix rule title updating (again)

@@ -5,9 +5,6 @@ Requirements
 ------------
 Python >= 2.2 from http://www.python.org/
 
-For JavaScript filtering you'll need the SpiderMonkey JS engine
-from ftp://ftp.mozilla.org/pub/js/js-1.5-rc5.tar.gz
-
 For the GUI config tool webcleanerconf you need
 FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
 FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
@@ -17,19 +14,5 @@ found at http://expat.sourceforge.net/.
 
 Setup
 -----
-To install, execute "python setup.py install".
-Run "python setup.py install --help" for help on install options.
-
-To enable JavaScript filtering, edit setup.py and set USE_JS=1.
-
-The HTML parser
----------------
-If you want (but its not necessary), you can rebuild the htmlparse.c 
-and htmllex.c files from the .l and .y source files.
-You will need
-- bison parser generator
-- the flex snapshot release, available from the WebCleaner homepage
-  or from ftp://ftp.uncg.edu/people/wlestes/.
-You have to adjust the FLEX variable in wc/parser/Makefile to point
-to your flex binary.
-Then, do a "make localbuild".
+Run "./configure; make" to compile everything.
+Install with "make install".
