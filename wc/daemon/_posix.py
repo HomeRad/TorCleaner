@@ -40,12 +40,15 @@ Do 'webcleaner stop' first."""), 1
     os.setsid()
     if os.fork() != 0:
         os._exit(0)
-    # set umask
+    # change to root dir
+    os.chdir("/")
+    # set umask (used when writing new filter config files)
     os.umask(0177)
-    # we are logging into files, so close unused handles (except stderr
-    # used by the logging module)
-    os.close(sys.__stdin__.fileno())
-    os.close(sys.__stdout__.fileno())
+    # we are logging into files, so redirect unused handles to /dev/null
+    # (except stderr used by the logging module)
+    devnull = os.open('/dev/null', 0)
+    os.dup2(devnull, 0)
+    os.dup2(devnull, 1)
     # write pid in pidfile
     f = file(pidfile, 'w')
     f.write("%d" % os.getpid())

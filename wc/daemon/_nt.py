@@ -26,7 +26,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os, sys
-from wc.debug import *
+from wc.log import *
 from wc import i18n, configdata
 
 def start (startfunc, pidfile, parent_exit=True):
