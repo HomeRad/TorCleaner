@@ -54,7 +54,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	chown root:adm $(BASE)/var/log/webcleaner
-	chmod -m 0750 $(BASE)/var/log/webcleaner
+	chmod 0750 $(BASE)/var/log/webcleaner
 	$(PYTHON) setup.py install --root=$(CURDIR)/$(BASE) --no-compile
 	# delete man pages, we install them with dh_installmanpages
 	rm -rf $(BASE)/usr/man
