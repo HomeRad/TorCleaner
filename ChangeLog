@@ -1,38 +1,40 @@
 2.0
   * require and use python 2.3
     Changed: a lot config and build files
-  * remove -std=gnu99 option from compiler call, fixes gcc 2.95.x compile.
+  * remove -std=gnu99 option from compiler call, fixes compilation on
+    platforms which do not have GNU gcc 3.x.
     Changed: setup.py
-  * do not setuid/setgid any more to enable web config
+    Closes: SF bug #757361
+  * do not setuid/setgid any more to enable web configuration
     Changed: wc/__init__.py
-  * updated simpleTAL to 3.3
+  * updated simpleTAL to 3.4
     Changed: wc/webgui/simpletal/*.py
   * - fix blocking filter
     - burn gif and switch to blocked.png
-    Added: templates/classic/blocked.png
     Changed: wc/filter/Blocker.py, wc/webgui/__init__.py
+    Added: templates/classic/blocked.png
   * - CAN-???: detect and prevent IE <input type> crash
     - CAN-???: detect and prevent Mozilla <fieldset style> crash
     - CAN-2003-0469: detect and prevent IE <hr align> crash
     - CAN-2003-0344: detect and prevent <object type> crash
     Changed: wc/filter/HtmlParser.py
-  * add index.html template
-    Added: templates/classic/index.html
-  * proxy and filter web configuration
-    Added: templates/classic/config.html,
-           templates/classic/filterconfig.html,
-           templates/classic/macros/rules.html,
-           wc/webgui/context/config_html.py,
-           wc/webgui/context/filterconfig_html.py
-    Changed: wc/webgui/__init__.py
+  * added a web configuration interface with "classic" theme
+    Added: templates/classic/*,
+           wc/webgui/context/*.py,
+  * added a templating mechanism
+    Added: wc/webgui/*.py
   * new filter module ImageSize that filters images by size
-    Added: wc/filter/ImageSize
+    Added: wc/filter/ImageSize.py
   * - parse JS strings and comments
     - accept "<!- " as comment begin
     - allow colons in attribute names for namespaces
     Changed: wc/parser/htmlex.l
-  * handle empty status messages like 'HTTP/1.1 302 \r\n'
+  * - handle empty status messages like 'HTTP/1.1 302 \r\n'
+    - fix Message.get() usage by always providing default value
     Changed: wc/proxy/HttpServer.py
+    Closes: SF bug #760434
+  * added a new filter update mechanism that actually works
+    Closes: SF bug #776076
 
 1.13
   * - when the HTTP server closes, flush any existing data

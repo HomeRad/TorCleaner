@@ -34,20 +34,16 @@ the user name for parent proxy authentication
 \fBparentproxypass\fP
 the base64 encoded password for parent proxy authentication
 .TP
-\fBdebuglevel\fP
-  0 - no debugging
-  1 - basic debug info
-  2 - more debug info
-  3 - nightmare debug info
-.TP
-\fBlogfile\fP
-name of the file to log to; use \fI<stdout>\fP for standard out; leave
-empty to disable logging
-.TP
 \fBshowerrors\fP
 print detected html parse errors to stderr
 .TP
-\fBnoproxyfor\fP
+\fBtimeout\fP
+connection timeout in seconds
+.TP
+\fBgui\_theme\fP
+web configuration gui theme selection
+.TP
+\fBnofilterhosts\fP
 comma separated list of hosts for which filtering is disabled
 .TP
 \fBallowedhosts\fP
@@ -56,27 +52,37 @@ comma separated list of hosts which are allowed to use this proxy
 The following filters are available:
 .TP
 \fBRewriter\fP
-the most important filter for ads; the Rewriter parses
-the HTML stream and can replace arbitrary tag constructs
+Parse the HTML stream and replace arbitrary tag constructs; filters
+most advertising.
 .TP
 \fBBlocker\fP
-block specific urls; this replaces advert images and frames
+Block specific urls; this replaces advert images and frames.
 .TP
 \fBBinaryCharFilter\fP
-replaces some binary chars (espacially those illegal Microsoft
-quote chars). You dont need this if you enabled the Rewriter filter!
+Replace some binary chars (espacially those illegal Microsoft
+quote chars). You don't need this if you already enabled the Rewriter filter.
 .TP
 \fBHeader\fP
-replace, modify and add arbitrary HTTP headers
+Replace, modify and add arbitrary HTTP headers.
 .TP
 \fBReplacer\fP
-replace text pieces in text data files (HTML, plain text, ...)
+Replace text pieces in text data files (HTML, plain text, ...).
 .TP
 \fBGifImage\fP
-deanimate GIFs and remove the comment section
+Deanimate GIFs and remove GIF comments.
 .TP
 \fBCompress\fP
-compress documents with good compression ratio (HTML, WAV, ...)
+Compress documents with good compression ratio (HTML, WAV, ...).
+.TP
+\fBPicsHeader\fP
+PICS filtering.
+.TP
+\fBImageReducer\fP
+Reduce all images to low-quality jpegs. Useful for dialup users
+with very low bandwidth.
+.TP
+\fBImageSize\fP
+Filter images by size.
 .SH EXAMPLE
  <?xml version="1.0"?>
  <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
@@ -85,7 +91,6 @@ compress documents with good compression ratio (HTML, WAV, ...)
   port="8000"
   parentproxy="squid.company.com"
   parentproxyport="3128"
-  debuglevel="0"
   >
    <filter name="Rewriter"/>
    <filter name="Blocker"/>

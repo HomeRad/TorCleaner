@@ -4,6 +4,8 @@
  
  Changes:
 
+ 20030806 Bastian Kleineidam
+ * removed lang attribute, it was not used
  20030730 Bastian Kleineidam
  * renamed file attribute to filename
  * changed oid attribute from #IMPLIED to #REQUIRED
@@ -48,12 +50,6 @@
    filters and rules and can enable/disable each of them separately.
 
    The filter is identified by filename.
-   
-   The lang attribute can restrict the filter only to this language,
-   which is used for language-specific regular expressions.
-   If there is no lang attribute, this filter can be used by all
-   languages. This is because some programs might do language specific
-   things with regular expressions.
 -->
 <!ELEMENT folder ((rewrite|replacer|block|blockurls|blockdomains|allow|header|image|nocomments)*)>
 <!ATTLIST folder
@@ -61,7 +57,6 @@
  oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
- lang     (Perl|Python) #IMPLIED
  disable  CDATA "0"
 >
 

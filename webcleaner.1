@@ -7,8 +7,7 @@ webcleaner \- a filtering HTTP proxy
 \fIcommand\fP
 .SH DESCRIPTION
 .LP
-WebCleaner is a filtering HTTP proxy inspired by Junkbuster,
-WebWasher and FilterProxy. You can encode, decode and modify
+WebCleaner is a filtering HTTP proxy. You can encode, decode and modify
 each part of an HTTP request. WebCleaner enhances your privacy and
 efficiency on the web and comes with several ready-to-use
 filters to remove advertisement and unwanted HTML content,
@@ -43,7 +42,13 @@ Stop the monitor program and the proxy.
 \fB-h\fP
 Display help text.
 .SH CONFIGURATION
-Run the nice GUI tool \fIwebcleanerconf(1)\fP.
+To configure WebCleaner, point your favourite webbrowser to
+\fBhttp://localhost:\fP\fIport\fP\fB/\fP
+where \fIport\fP is your configured WebCleaner port number
+(default 8080).
+
+There is also a GUI tool \fIwebcleanerconf(1)\fP.
+
 The underlying configuration format is a custom XML format which
 is explained in \fIwebcleaner.conf(5)\fP.
 .SH "SEE ALSO"
