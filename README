@@ -43,7 +43,7 @@ beyond 2-5 users.
 
 Note that the Rewriter module parses the HTML. It optimizes HTML by making
 tags and attribute names lowercase, quoting attribute values only
-when necessary and removing some ignorable whitespace.
+when necessary and removing some (but not all) ignorable whitespace.
 
 Credits
 -------

@@ -95,7 +95,7 @@ filterfiles:	md5sums
 	scp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
 
 upload: distclean dist VERSION
-	scp debian/changelog $(HTMLDIR)/changes.txt
+	scp ChangeLog $(HTMLDIR)/changes.txt
 	scp VERSION $(HTMLDIR)/raw/
 	#scp dist/* $(HTMLDIR)
 	ncftpput upload.sourceforge.net /incoming dist/* && read -p "Make new SF file releases and then press Enter:"

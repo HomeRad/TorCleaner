@@ -14,8 +14,6 @@ Setup
 To install, execute "python setup.py install".
 Run "python setup.py install --help" for help on install options.
 
-Now you can start the proxy by executing "webcleaner start".
-
 
 The HTML parser
 ---------------
