@@ -27,6 +27,7 @@ import cPickle
 import pickle
 import wc.magic.convert
 
+
 # Need to have a checksum on the cache and source file to update at object creation
 # Could use circle safe_pickle (see speed performance impact)
 # This program take some input file, we should check the permission on those files ..

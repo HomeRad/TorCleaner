@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc.log import *
+import wc
 
 separators = ("()<>@,;:\\\"/[]?={} \t")
 token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
@@ -30,7 +30,7 @@ def parse_token (s, tok="", relax=False, more_chars=""):
        If tok is empty, parse a default token"""
     if tok:
         if not s.startswith(tok):
-            warn(AUTH, "expected %r start with %r", s, tok)
+            wc.log.warn(wc.LOG_AUTH, "expected %r start with %r", s, tok)
         if not relax:
             s = s[len(tok):]
     else:
@@ -70,7 +70,7 @@ def parse_auth (auth, data):
      - data - string data to parse
     returns augmented auth dict and unparsed data
     """
-    debug(AUTH, "parse authentication %r", data)
+    wc.log.debug(wc.LOG_AUTH, "parse authentication %r", data)
     while data:
         key, data = parse_token(data)
         if not data.startswith("="):

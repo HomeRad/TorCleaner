@@ -22,6 +22,7 @@ __date__    = "$Date$"[7:-2]
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 
+
 class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
     """rule for filtering HTTP headers"""
 

@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os
-from wc.log import *
+import wc
 
 # Escape for ANSI colors
 AnsiEsc="\x1b[%sm"
@@ -66,14 +66,16 @@ def esc_ansicolor (color):
     if ";" in color:
         ctype, color = color.split(";", 1)
         if not AnsiType.has_key(ctype):
-            error(PROXY, "invalid ANSI color type %r, valid values are %s",
-                  ctype, AnsiType.keys())
+            wc.log.error(wc.LOG_PROXY,
+                      "invalid ANSI color type %r, valid values are %s",
+                      ctype, AnsiType.keys())
             ctype = ''
         else:
             ctype = AnsiType[ctype]+";"
     if not AnsiColor.has_key(color):
-        error(PROXY, "invalid ANSI color name %r, valid values are %s",
-              color, AnsiColor.keys())
+        wc.log.error(wc.LOG_PROXY,
+                  "invalid ANSI color name %r, valid values are %s",
+                  color, AnsiColor.keys())
         cnum = '0'
     else:
         cnum = AnsiColor[color]

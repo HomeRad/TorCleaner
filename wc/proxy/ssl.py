@@ -4,7 +4,6 @@
 import os
 import wc
 from OpenSSL import SSL, crypto
-from wc.log import *
 
 
 def absfile (fname):
@@ -21,7 +20,7 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
     """the browser (or commandline client) has sent a SSL certificate to
     the webcleaner server"""
     # XXX this obviously has to be updated
-    debug(PROXY, '%s (%s) got client certificate %s', conn, ok, cert.get_subject())
+    wc.log.debug(wc.LOG_PROXY, '%s (%s) got client certificate %s', conn, ok, cert.get_subject())
     return 1
 
 
@@ -44,7 +43,7 @@ def get_serverctx ():
 def verify_client_cb (conn, cert, errnum, depth, ok):
     #return dumpCertificate(cert) == file(absfile("server.cert")).read()
     # XXX this obviously has to be updated
-    info(PROXY, '%s (%s) got server certificate %s', conn, ok, cert.get_subject())
+    wc.log.info(wc.LOG_PROXY, '%s (%s) got server certificate %s', conn, ok, cert.get_subject())
     return 1
 
 

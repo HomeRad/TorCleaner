@@ -5,8 +5,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import time
+import wc
 import wc.proxy
-from wc.log import *
 
 
 class ServerPool (object):
@@ -39,19 +39,19 @@ class ServerPool (object):
     def reserve_server (self, addr):
         """Try to return an existing server connection for given addr,
            or return None if on connection is available at the moment"""
-        debug(PROXY, "pool reserve server %s", addr)
+        wc.log.debug(wc.LOG_PROXY, "pool reserve server %s", addr)
         for server,status in self.smap.get(addr, {}).items():
             if status[0] == 'available':
                 # Let's reuse this one
                 self.smap[addr][server] = ('busy', )
-                debug(PROXY, 'pool reserve %s %s', addr, server)
+                wc.log.debug(wc.LOG_PROXY, 'pool reserve %s %s', addr, server)
                 return server
         return None
 
 
     def unreserve_server (self, addr, server):
         """make given server connection available"""
-        debug(PROXY, "pool unreserve %s %s", addr, server)
+        wc.log.debug(wc.LOG_PROXY, "pool unreserve %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
                '%s missing %s' % (self.smap[addr], server)
@@ -63,13 +63,13 @@ class ServerPool (object):
 
     def register_server (self, addr, server):
         """Register the server as being used"""
-        debug(PROXY, "pool register %s %s", addr, server)
+        wc.log.debug(wc.LOG_PROXY, "pool register %s %s", addr, server)
         self.smap.setdefault(addr, {})[server] = ('busy',)
 
 
     def unregister_server (self, addr, server):
         """Unregister the server and remove it from the pool"""
-        debug(PROXY, "pool unregister %s %s", addr, server)
+        wc.log.debug(wc.LOG_PROXY, "pool unregister %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
                '%s missing %s' % (self.smap[addr], server)
@@ -105,7 +105,7 @@ class ServerPool (object):
 
     def expire_servers (self):
         """expire server connection that have been unused for too long"""
-        debug(PROXY, "pool expire servers")
+        wc.log.debug(wc.LOG_PROXY, "pool expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
         for addr,set in self.smap.items():
@@ -114,7 +114,7 @@ class ServerPool (object):
                     # It's old .. let's get rid of it
                     to_expire.append((addr,server))
         for addr,server in to_expire:
-            debug(PROXY, "expire %s server %s", addr, server)
+            wc.log.debug(wc.LOG_PROXY, "expire %s server %s", addr, server)
             server.close()
             if addr in self.smap:
                 assert not self.smap[addr].has_key(server), "Not expired: %s"%str(self.smap[addr])

@@ -6,7 +6,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from wc.log import *
+import wc
 
 
 match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
@@ -35,7 +35,7 @@ class UnchunkStream (object):
 
     def decode (self, s):
         """unchunk given data s"""
-        debug(PROXY, "chunked data %r", s)
+        wc.log.debug(wc.LOG_PROXY, "chunked data %r", s)
         self.buf += s
         s = ''
 
@@ -56,7 +56,7 @@ class UnchunkStream (object):
                             # chunklen is hex
                             self.bytes_remaining = int(mo.group('bytes'), 16)
                         else:
-                            warn(PROXY, "invalid chunk size %r", line)
+                            wc.log.warn(wc.LOG_PROXY, "invalid chunk size %r", line)
                             self.bytes_remaining = 0
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:
@@ -76,7 +76,7 @@ class UnchunkStream (object):
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
-        debug(PROXY, "decoded chunk %r", s)
+        wc.log.debug(wc.LOG_PROXY, "decoded chunk %r", s)
         return s
 
 

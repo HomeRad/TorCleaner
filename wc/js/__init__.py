@@ -21,6 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import re
 
+
 def escape_js (script):
     """escape HTML stuff in JS script"""
     script = script.replace('--', '-&#45;')

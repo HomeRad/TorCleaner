@@ -7,7 +7,6 @@ __date__    = "$Date$"[7:-2]
 import socket
 import wc
 import wc.proxy.Dispatcher
-from wc.log import *
 
 
 class Listener (wc.proxy.Dispatcher.Dispatcher):
@@ -45,7 +44,7 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
 
     def handle_accept (self):
         """start the handler class with the new socket"""
-        debug(PROXY, '%s accept', self)
+        wc.log.debug(wc.LOG_PROXY, '%s accept', self)
         args = self.accept()
         self.handler(*args)
 

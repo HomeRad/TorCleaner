@@ -3,6 +3,7 @@
 
 import os
 
+
 _magic = None
 
 def classify (fp):

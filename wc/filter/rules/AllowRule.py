@@ -22,11 +22,13 @@ __date__    = "$Date$"[7:-2]
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 
+
 class AllowRule (wc.filter.rules.UrlRule.UrlRule):
     """Define a regular expression for urls to be allowed, even if they
        would be blocked by a block rule otherwise.
        See also the Blocker filter module.
     """
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, url="", matchurls=[], nomatchurls=[]):
         """initialize rule data"""
@@ -36,11 +38,9 @@ class AllowRule (wc.filter.rules.UrlRule.UrlRule):
         self.url = url
         self.attrnames.append('url')
 
-
     def fromFactory (self, factory):
         """rule factory"""
         return factory.fromAllowRule(self)
-
 
     def toxml (self):
         """Rule data as XML for storing"""

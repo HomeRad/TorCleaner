@@ -22,6 +22,7 @@ __date__    = "$Date$"[7:-2]
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 
+
 class ImageRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, tells the Image filter to block certain images"""
 

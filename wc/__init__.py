@@ -20,14 +20,16 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os
-import sys
 import time
 import socket
 import glob
 import sets
 import stat
 import xml.parsers.expat
+import logging.config
+import logging.handlers
 import _webcleaner2_configdata as configdata
+import log
 
 Version = configdata.version
 AppName = configdata.appname
@@ -52,21 +54,51 @@ TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
 
-def iswriteable (fname):
-    """return True if given file is writable"""
-    if os.path.isdir(fname) or os.path.islink(fname):
-        return False
-    try:
-        if os.path.exists(fname):
-            file(fname, 'a').close()
-            return True
-        else:
-            file(fname, 'w').close()
-            os.remove(fname)
-            return True
-    except IOError:
-        pass
-    return False
+# logger areas
+LOG_FILTER = "wc.filter"
+LOG_CONNECTION = "wc.connection"
+LOG_PROXY = "wc.proxy"
+LOG_AUTH = "wc.proxy.auth"
+LOG_DNS = "wc.proxy.dns"
+LOG_GUI = "wc.gui"
+LOG_ACCESS = "wc.access"
+LOG_RATING = "wc.rating"
+
+
+def initlog (filename, appname):
+    """initialize logfiles and configuration"""
+    logging.config.fileConfig(filename)
+    logname = "%s.log" % appname
+    logfile = log.get_log_file(appname, logname)
+    handler = get_wc_handler(logfile)
+    logging.getLogger("wc").addHandler(handler)
+    logging.getLogger("simpleTAL").addHandler(handler)
+    logging.getLogger("simpleTALES").addHandler(handler)
+    # access log is always a file
+    logfile = log.get_log_file(appname, "%s-access.log"%appname)
+    handler = get_access_handler(logfile)
+    logging.getLogger("wc.access").addHandler(handler)
+
+
+def get_wc_handler (logfile):
+    """return a handler for webcleaner logging"""
+    mode = 'a'
+    maxBytes = 1024*1024*2 # 2 MB
+    backupCount = 5 # number of files to generate
+    handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    return log.set_format(handler)
+
+
+def get_access_handler (logfile):
+    """return a handler for access logging"""
+    mode = 'a'
+    maxBytes = 1024*1024*2 # 2 MB
+    backupCount = 5 # number of files to generate
+    handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    # log only the message
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    return handler
+
 
 
 def sort_seq (seq):
@@ -77,8 +109,10 @@ def sort_seq (seq):
 
 import wc.ip
 import wc.i18n
+import wc.url
 import wc.proxy
 import wc.proxy.dns_lookups
+import wc.filter
 import wc.filter.VirusFilter
 
 # set this to an empty dictionary so that webgui/context/*.py can
@@ -90,7 +124,7 @@ def wstartfunc (handle=None, abort=None, configfile=None, filterdir=None):
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
-    initlog(os.path.join(ConfigDir, "logging.conf"))
+    initlog(os.path.join(ConfigDir, "logging.conf"), AppName)
     # read configuration
     config = Configuration(configfile=configfile, filterdir=filterdir)
     if abort is not None:
@@ -110,9 +144,8 @@ def wstartfunc (handle=None, abort=None, configfile=None, filterdir=None):
     except ImportError:
         pass
     # start the proxy
-    info(PROXY, "Starting proxy on port %d", config['port'])
-    from wc.proxy import mainloop
-    mainloop(handle=handle, abort=abort)
+    log.info(LOG_PROXY, "Starting proxy on port %d", config['port'])
+    wc.proxy.mainloop(handle=handle, abort=abort)
 
 
 def sighup_reload_config (signum, frame):
@@ -296,7 +329,7 @@ class Configuration (dict):
         from wc.filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
             if os.stat(filename)[stat.ST_SIZE]==0:
-                warn(PROXY, "Skipping empty file %r", filename)
+                log.warn(LOG_PROXY, "Skipping empty file %r", filename)
                 continue
             p = ZapperParser(filename, self)
             p.parse()
@@ -340,7 +373,6 @@ class Configuration (dict):
         """go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects"""
-        import wc.filter
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['mime_content_rewriting'] = sets.Set()
         for filtername in self['filters']:
@@ -371,7 +403,7 @@ class Configuration (dict):
         """Decide whether to filter this url or not.
            returns True if the request must not be filtered, else False
         """
-        return match_url(url, self['nofilterhosts'])
+        return wc.url.match_url(url, self['nofilterhosts'])
 
 
     def allowed (self, host):
@@ -407,8 +439,6 @@ _nestedtags = (
   # rating rule nested tag names
   'url', 'category',
 )
-
-import wc.filter
 
 
 def make_xmlparser ():
@@ -449,7 +479,7 @@ class BaseParser (object):
 
 
     def parse (self, fp=None):
-        debug(PROXY, "Parsing %s", self.filename)
+        log.debug(LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
         self._preparse()
@@ -457,7 +487,7 @@ class BaseParser (object):
             try:
                 self.xmlparser.ParseFile(fp)
             except (xml.parsers.expat.ExpatError, ParseException):
-                exception(PROXY, "Error parsing %s", self.filename)
+                log.exception(LOG_PROXY, "Error parsing %s", self.filename)
                 raise SystemExit("parse error in %s"%self.filename)
         finally:
             self._postparse()
@@ -552,9 +582,7 @@ class WConfigParser (BaseParser):
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]
         elif name=='filter':
-            debug(FILTER, "enable filter module %s", attrs['name'])
+            log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
 
 
-from log import *
-from url import match_url

@@ -43,7 +43,8 @@ import os
 import socket
 import errno
 import OpenSSL
-from wc.log import *
+import wc
+
 
 # map of sockets
 socket_map = {}
@@ -259,24 +260,24 @@ class Dispatcher (object):
         self.handle_expt()
 
     def handle_error (self, what):
-        exception(PROXY, "%s %s", self, what)
+        wc.log.exception(wc.LOG_PROXY, "%s %s", self, what)
 
     def handle_expt (self):
-        warn(PROXY, '%s unhandled exception', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled exception', self)
 
     def handle_read (self):
-        warn(PROXY, '%s unhandled read event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled read event', self)
 
     def handle_write (self):
-        warn(PROXY, '%s unhandled write event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled write event', self)
 
     def handle_connect (self):
-        warn(PROXY, '%s unhandled connect event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled connect event', self)
 
     def handle_accept (self):
-        warn(PROXY, '%s unhandled accept event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled accept event', self)
 
     def handle_close (self):
-        warn(PROXY, '%s unhandled close event', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled close event', self)
         self.close()
 

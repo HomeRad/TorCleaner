@@ -17,7 +17,7 @@ import wc.proxy
 import wc.proxy.dns
 import wc.proxy.Connection
 import wc.ip
-from wc.log import *
+
 
 ###################### configuration ########################
 
@@ -42,8 +42,8 @@ def init_dns_resolver ():
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
-    debug(DNS, "nameservers %s", DnsConfig.nameservers)
-    debug(DNS, "search domains %s", DnsConfig.search_domains)
+    wc.log.debug(wc.LOG_DNS, "nameservers %s", DnsConfig.nameservers)
+    wc.log.debug(wc.LOG_DNS, "search domains %s", DnsConfig.search_domains)
     # re-read config every 10 minutes
     # disabled, there is a reload option in webcleaner
     #wc.proxy.make_timer(600, init_dns_resolver)
@@ -124,7 +124,7 @@ init_dns_resolver()
 def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    debug(DNS, 'background_lookup %r', hostname.lower())
+    wc.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
@@ -202,7 +202,7 @@ class DnsExpandHostname (object):
 
 
     def handle_issue_request (self):
-        debug(DNS, 'issue_request')
+        wc.log.debug(wc.LOG_DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             request = self.requests[0]
@@ -218,7 +218,7 @@ class DnsExpandHostname (object):
 
 
     def handle_dns (self, hostname, answer):
-        debug(DNS, 'handle_dns %r %s', hostname, answer)
+        wc.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
         if not self.callback:
             # Already handled this query
             return
@@ -305,7 +305,7 @@ class DnsCache (object):
 
 
     def lookup (self, hostname, callback):
-        debug(DNS, 'dnscache lookup %r', hostname)
+        wc.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
         # see if hostname is already a resolved IP address
         hostname, numeric = wc.ip.expand_ip(hostname)
         if numeric:
@@ -325,7 +325,7 @@ class DnsCache (object):
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
-                debug(DNS, 'cached! %r', hostname)
+                wc.log.debug(wc.LOG_DNS, 'cached! %r', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -570,12 +570,14 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # See http://cr.yp.to/djbdns/notes.html
             if self.conntype == 'tcp':
                 # socket.error((84, ''))
-                error(PROXY, 'Truncated TCP DNS packet: %s from %s for %r',
-                      tc, self.nameserver, self.hostname)
+                wc.log.error(wc.LOG_DNS,
+                             'Truncated TCP DNS packet: %s from %s for %r',
+                             tc, self.nameserver, self.hostname)
                 self.handle_error("dns error")
             else:
-                warn(PROXY, 'truncated UDP DNS packet: %s from %s for %r',
-                     tc, self.nameserver, self.hostname)
+                wc.log.warn(wc.LOG_DNS,
+                            'truncated UDP DNS packet: %s from %s for %r',
+                            tc, self.nameserver, self.hostname)
             # we ignore this read, and let the timeout take its course
             return
 
@@ -617,7 +619,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                 ip_addrs.append(data)
             elif type == wc.proxy.dns.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                debug(DNS, 'cname record %s=%r', self.hostname, data)
+                wc.log.debug(wc.LOG_DNS, 'cname record %s=%r',
+                             self.hostname, data)
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records

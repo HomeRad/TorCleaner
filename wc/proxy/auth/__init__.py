@@ -9,8 +9,7 @@ from wc.url import stripsite
 # default realm for authentication
 wc_realm = "unknown"
 
-from wc.log import *
-from wc import config
+import wc
 from basic import parse_basic_challenge, get_basic_challenge
 from basic import parse_basic_credentials, get_basic_credentials
 from digest import parse_digest_challenge, get_digest_challenge
@@ -32,10 +31,10 @@ def get_header_challenges (headers, key):
     """get parsed challenge(s) out of headers[key]"""
     auths = {}
     for auth in headers.getallmatchingheadervalues(key):
-        debug(AUTH, "%s header challenge: %s", key, auth)
+        wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
-    debug(AUTH, "parsed challenges: %s", auths)
+    wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
     return auths
 
 
@@ -63,13 +62,13 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    if config['auth_ntlm']:
+    if wc.config['auth_ntlm']:
         chals = [get_ntlm_challenge(**args)]
     else:
         chals = [get_digest_challenge(),
                  get_basic_challenge(),
                 ]
-    debug(AUTH, "challenges %s", chals)
+    wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
     return chals
 
 
@@ -77,10 +76,10 @@ def get_header_credentials (headers, key):
     """Return parsed credentials out of headers[key]"""
     creds = {}
     for cred in headers.getallmatchingheadervalues(key):
-        debug(AUTH, "%s header credential: %s", key, cred)
+        wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)
-    debug(AUTH, "parsed credentials: %s", creds)
+    wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
     return creds
 
 
@@ -115,16 +114,16 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    debug(AUTH, "credentials: %s", creds)
+    wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
     return creds
 
 
 def check_credentials (creds, **attrs):
     """check credentials agains given attributes"""
-    debug(AUTH, "check credentials %s with attrs %s", creds, attrs)
+    wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s", creds, attrs)
     if not creds:
         res = False
-    elif config['auth_ntlm'] and 'NTLM' not in creds:
+    elif wc.config['auth_ntlm'] and 'NTLM' not in creds:
         # forced NTLM auth
         res = False
     elif 'NTLM' in creds:
@@ -134,7 +133,7 @@ def check_credentials (creds, **attrs):
     elif 'Basic' in creds:
         res = check_basic_credentials(creds['Basic'][0], **attrs)
     else:
-        error(AUTH, "Unknown authentication credentials %s", creds)
+        wc.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s", creds)
         res = False
     return res
 

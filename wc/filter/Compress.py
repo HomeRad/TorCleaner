@@ -22,9 +22,9 @@ __date__    = "$Date$"[7:-2]
 import struct
 import time
 import zlib
+import wc
 import wc.filter
 import wc.filter.Filter
-from wc.log import *
 
 
 _compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
@@ -77,7 +77,7 @@ class Compress (wc.filter.Filter.Filter):
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                debug(FILTER, 'writing gzip header')
+                wc.log.debug(wc.LOG_FILTER, 'writing gzip header')
             compobj['size'] += len(data)
             compobj['crc'] = zlib.crc32(data, compobj['crc'])
             data = "%s%s"%(header, compobj['compressor'].compress(data))
@@ -90,7 +90,7 @@ class Compress (wc.filter.Filter.Filter):
         if compobj:
             header = compobj['header']
             if header:
-                debug(FILTER, 'final writing gzip header')
+                wc.log.debug(wc.LOG_FILTER, 'final writing gzip header')
                 pass
             if data:
                 compobj['size'] += len(data)
@@ -98,7 +98,7 @@ class Compress (wc.filter.Filter.Filter):
                 data = "%s%s"%(header, compobj['compressor'].compress(data))
             else:
                 data = header
-            debug(FILTER, 'finishing compressor')
+            wc.log.debug(wc.LOG_FILTER, 'finishing compressor')
             data += "%s%s%s" % (compobj['compressor'].flush(zlib.Z_FINISH),
                                 struct.pack('<l', compobj['crc']),
                                 struct.pack('<l', compobj['size']))
@@ -118,6 +118,6 @@ class Compress (wc.filter.Filter.Filter):
         else:
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
-        debug(FILTER, "compress object %s", compressobj)
+        wc.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
         d['compressobj'] = compressobj
         return d

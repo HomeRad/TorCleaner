@@ -24,6 +24,7 @@ __date__    = "$Date$"[7:-2]
 import wc.filter
 import wc.filter.Filter
 
+
 DefaultCharset = 'iso-8859-1'
 
 # XXX group matches?

@@ -26,7 +26,6 @@ import wc
 import wc.filter
 import wc.filter.Filter
 import wc.proxy.Connection
-from wc.log import *
 
 
 def strsize (b):
@@ -96,13 +95,13 @@ class VirusFilter (wc.filter.Filter.Filter):
             buf.write(data)
         scanner.close()
         for msg in scanner.errors:
-            warn(FILTER, "Virus scanner error %r", msg)
+            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
         if not scanner.infected:
             data = buf.getvalue()
         else:
             data = ""
             for msg in scanner.infected:
-                warn(FILTER, "Found virus %r in %r", msg, attrs['url'])
+                wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r", msg, attrs['url'])
         buf.close()
         return data
 

@@ -31,7 +31,6 @@ from wc.webgui.simpletal import simpleTAL
 from wc.webgui.simpletal import simpleTALES
 import wc.proxy.auth
 import wc.proxy.Headers
-from wc.log import *
 
 
 class WebConfig (object):
@@ -40,7 +39,7 @@ class WebConfig (object):
     def __init__ (self, client, url, form, protocol, clientheaders,
                  status=200, msg=wc.i18n._('Ok'), localcontext=None, auth=''):
         """load a web configuration template and return response"""
-        debug(GUI, "WebConfig %s %s", url, form)
+        wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
         self.client = client
         # we pretend to be the server
         self.connected = True
@@ -80,7 +79,7 @@ class WebConfig (object):
                 # get translator
                 translator = gettext.translation(wc.Name, wc.LocaleDir,
                                                  [lang], fallback=True)
-                #debug(GUI, "Using translator %s", translator.info())
+                #wc.log.debug(wc.LOG_GUI, "Using translator %s", translator.info())
                 # expand template
                 data = expand_template(fp, context, translator=translator)
             else:
@@ -202,7 +201,7 @@ def get_context (dirs, form, localcontext, lang):
     context = simpleTALES.Context()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
-        debug(GUI, "got form %s", form)
+        wc.log.debug(wc.LOG_GUI, "got form %s", form)
         status = template_context._exec_form(form, lang)
         context_add(context, "form", form)
     # add default context values

@@ -24,7 +24,8 @@ import socket
 import struct
 import math
 import sets
-from wc.log import *
+import wc
+
 
 # IP Adress regular expressions
 _ipv4_num = r"\d{1,3}"
@@ -179,19 +180,23 @@ def hosts2map (hosts):
             host, mask = host.split("/")
             mask = int(mask)
             if not is_valid_bitmask(mask):
-                error(PROXY, "bitmask %d is not a valid network mask", mask)
+                wc.log.error(wc.LOG_PROXY,
+                             "bitmask %d is not a valid network mask", mask)
                 continue
             if not is_valid_ipv4(host):
-                error(PROXY, "host %s is not a valid ip address", host)
+                wc.log.error(wc.LOG_PROXY,
+                             "host %r is not a valid ip address", host)
                 continue
             nets.append(dq2net(host, suffix2mask(mask)))
         elif _host_netmask_re.match(host):
             host, mask = host.split("/")
             if not is_valid_ipv4(host):
-                error(PROXY, "host %s is not a valid ip address", host)
+                wc.log.error(wc.LOG_PROXY,
+                             "host %r is not a valid ip address", host)
                 continue
             if not is_valid_ipv4(mask):
-                error(PROXY, "mask %s is not a valid ip network mask", mask)
+                wc.log.error(wc.LOG_PROXY,
+                             "mask %r is not a valid ip network mask", mask)
                 continue
             nets.append(dq2net(host, dq2mask(mask)))
         elif is_valid_ip(host):
@@ -200,7 +205,7 @@ def hosts2map (hosts):
             try:
                 hostset |= resolve_host(host)
             except socket.gaierror:
-                pass
+                wc.log.error(wc.LOG_PROXY, "invalid host %r", host)
     return (hostset, nets)
 
 

@@ -21,6 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import wc.filter.rules.UrlRule
 
+
 class JavascriptRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, this rule tells the Rewriter to filter JavaScript"""
 

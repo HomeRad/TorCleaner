@@ -23,6 +23,7 @@ import string
 import wc.filter
 import wc.filter.Filter
 
+
 class BinaryCharFilter (wc.filter.Filter.Filter):
     """replace binary characters, often found in Microsoft HTML documents,
         with their correct HTML equivalent

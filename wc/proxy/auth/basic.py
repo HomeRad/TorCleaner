@@ -8,7 +8,6 @@ __all__ = ["get_basic_challenge", "parse_basic_challenge",
            "get_basic_credentials", "parse_basic_credentials",
            "check_basic_credentials"]
 import base64
-from wc.log import *
 # wc_realm is the default realm
 from wc.proxy.auth import wc_realm
 from parse import *
@@ -37,7 +36,7 @@ def parse_basic_credentials (credentials):
     auth, credentials = parse_token(credentials, more_chars="=")
     auth = base64.decodestring(auth)
     if ':' not in auth:
-        warn(AUTH, "invalid Basic credentials %s", auth)
+        wc.log.warn(wc.LOG_AUTH, "invalid Basic credentials %s", auth)
         _user, _pw = auth, ''
     else:
         _user, _pw = auth.split(':', 1)

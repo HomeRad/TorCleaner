@@ -25,7 +25,7 @@ import urlparse
 import cPickle as pickle
 import wc
 import wc.url
-from wc.log import *
+
 
 MISSING = wc.i18n._("Unknown page")
 
@@ -79,7 +79,7 @@ def rating_import (url, ratingdata, debug=0):
     categories = {}
     for line in ratingdata.splitlines():
         if debug:
-            debug(RATING, "Read line %r", line)
+            wc.log.debug(wc.LOG_RATING, "Read line %r", line)
         line = line.strip()
         if not line:
             # ignore empty lines
@@ -113,7 +113,7 @@ def rating_exportall ():
     fp = file(os.path.join(wc.ConfigDir, "rating.txt"), 'w')
     for url, rating in rating_cache.iteritems():
         if not wc.url.is_valid_url(url):
-            error(RATING, "invalid url %r", url)
+            wc.log.error(wc.LOG_RATING, "invalid url %r", url)
             continue
         fp.write("url %s\n"%url)
         fp.write(rating_export(rating))
@@ -145,7 +145,7 @@ def rating_cache_load ():
         toremove = []
         for url in rating_cache:
             if not wc.url.is_valid_url(url):
-                error(RATING, "Invalid rating url %r", url)
+                wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
                 toremove.append(url)
         if toremove:
             for url in toremove:
@@ -195,7 +195,7 @@ def rating_split_url (url):
     # split into [scheme, host, path, query, fragment]
     parts = list(urlparse.urlsplit(url))
     if not (parts[0] and parts[1]):
-        warn(FILTER, "invalid url for rating split: %r", url)
+        wc.log.warn(wc.LOG_FILTER, "invalid url for rating split: %r", url)
         return []
     # fix scheme
     parts[0] += ":"
@@ -228,7 +228,7 @@ def rating_add (url, rating):
         rating_cache[url] = rating
         rating_cache_write()
     else:
-        error(RATING, "Invalid rating url %r", url)
+        wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
 
 
 def rating_allow (url, rule):

@@ -24,7 +24,6 @@ import cStringIO as StringIO
 import wc.filter
 import wc.filter.Filter
 import wc.proxy.Headers
-from wc.log import *
 
 
 class ImageReducer (wc.filter.Filter.Filter):

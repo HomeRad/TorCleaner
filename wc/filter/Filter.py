@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc.log import *
+import wc
 
 
 class Filter (object):
@@ -34,7 +34,7 @@ class Filter (object):
 
     def addrule (self, rule):
         """append given rule to rule list"""
-        debug(FILTER, "enable %s ", rule)
+        wc.log.debug(wc.LOG_FILTER, "enable %s ", rule)
         self.rules.append(rule)
 
     def filter (self, data, **attrs):

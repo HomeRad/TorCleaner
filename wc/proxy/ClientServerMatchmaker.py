@@ -14,7 +14,6 @@ from wc.proxy.ServerPool import serverpool
 import wc.proxy.ServerHandleDirectly
 import wc.proxy.HttpServer
 import wc.proxy.SslServer
-from wc.log import *
 
 
 BUSY_LIMIT = 10
@@ -85,16 +84,16 @@ class ClientServerMatchmaker (object):
             self.document = wc.url.document_quote(client.document)
         assert self.hostname
         # start DNS lookup
-        debug(PROXY, "background dns lookup %r", self.hostname)
+        wc.log.debug(wc.LOG_PROXY, "background dns lookup %r", self.hostname)
         wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
 
     def handle_dns (self, hostname, answer):
         """got dns answer, look for server"""
         assert self.state == 'dns'
-        debug(PROXY, "%s handle dns %r", self, hostname)
+        wc.log.debug(wc.LOG_PROXY, "%s handle dns %r", self, hostname)
         if not self.client.connected:
-            warn(PROXY, "%s client closed after DNS", self)
+            wc.log.warn(wc.LOG_PROXY, "%s client closed after DNS", self)
             # The browser has already closed this connection, so abort
             return
         if answer.isFound():
@@ -108,7 +107,7 @@ class ClientServerMatchmaker (object):
 	        new_url += ':%d' % self.port
             # XXX does not work with parent proxy
             new_url += self.document
-            info(PROXY, "%s redirecting %r", self, new_url)
+            wc.log.info(wc.LOG_PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(
               self.client,
@@ -128,24 +127,24 @@ class ClientServerMatchmaker (object):
         """search for a connected server or make a new one"""
         assert self.state == 'server'
         addr = (self.ipaddr, self.port)
-        debug(PROXY, "%s find server %s", self, addr)
+        wc.log.debug(wc.LOG_PROXY, "%s find server %s", self, addr)
         if not self.client.connected:
-            debug(PROXY, "%s client not connected", self)
+            wc.log.debug(wc.LOG_PROXY, "%s client not connected", self)
             # The browser has already closed this connection, so abort
             return
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            debug(PROXY, '%s resurrecting %s', self, server)
+            wc.log.debug(wc.LOG_PROXY, '%s resurrecting %s', self, server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr) >= \
              serverpool.connection_limit(addr):
-            debug(PROXY, '%s server %s busy', self, addr)
+            wc.log.debug(wc.LOG_PROXY, '%s server %s busy', self, addr)
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
             if self.server_busy > BUSY_LIMIT:
-                warn(PROXY, "Waited too long for available connection at %s"+\
+                wc.log.warn(wc.LOG_PROXY, "Waited too long for available connection at %s"+\
                     ", consider increasing the server pool connection limit"+\
                      " (currently at %d)", addr, BUSY_LIMIT)
                 self.client.error(503, wc.i18n._("Service unavailable"))
@@ -154,7 +153,7 @@ class ClientServerMatchmaker (object):
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
         else:
-            debug(PROXY, "%s new connect to server", self)
+            wc.log.debug(wc.LOG_PROXY, "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
@@ -173,7 +172,7 @@ class ClientServerMatchmaker (object):
 
     def server_connected (self, server):
         """the server has connected"""
-        debug(PROXY, "%s server_connected", self)
+        wc.log.debug(wc.LOG_PROXY, "%s server_connected", self)
         assert self.state=='connect'
         assert server.connected
         if not self.client.connected:
@@ -227,7 +226,7 @@ class ClientServerMatchmaker (object):
 
     def server_close (self, server):
         """the server has closed"""
-        debug(PROXY, '%s resurrection failed %d %s', self, server.sequence_number, server)
+        wc.log.debug(wc.LOG_PROXY, '%s resurrection failed %d %s', self, server.sequence_number, server)
         # Look for a server again
         if server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
@@ -242,7 +241,7 @@ class ClientServerMatchmaker (object):
 
     def server_response (self, server, response, status, headers):
         """the server got a response"""
-        debug(PROXY, "%s server_response, match client/server", self)
+        wc.log.debug(wc.LOG_PROXY, "%s server_response, match client/server", self)
         # Okay, transfer control over to the real client
         if self.client.connected:
             server.client = self.client

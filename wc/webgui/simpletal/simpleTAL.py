@@ -35,11 +35,7 @@
 		Module Dependencies: logging, simpleTALES, simpleTALTemplates
 """
 
-try:
-	import logging
-except:
-	import DummyLogger as logging
-	
+import logging
 import sgmllib, xml.sax, cgi, StringIO, codecs, re, htmlentitydefs
 import copy
 

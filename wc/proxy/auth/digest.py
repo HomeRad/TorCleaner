@@ -17,7 +17,7 @@ from parse import *
 
 # the default realm
 from wc.proxy.auth import wc_realm
-from wc.log import *
+import wc
 
 
 random.seed()
@@ -65,30 +65,30 @@ def parse_digest_credentials (credentials):
 def check_digest_credentials (credentials, **attrs):
     """check digest credentials"""
     if not check_digest_values(credentials):
-        warn(AUTH, "digest wrong values")
+        wc.log.warn(wc.LOG_AUTH, "digest wrong values")
         return False
     # note: opaque value _should_ be there, but is not in apache mod_digest
     opaque = credentials.get("opaque")
     if opaque != wc_opaque:
-        warn(AUTH, "digest wrong opaque %s!=%s", opaque, wc_opaque)
+        wc.log.warn(wc.LOG_AUTH, "digest wrong opaque %s!=%s", opaque, wc_opaque)
         return False
     realm = credentials["realm"]
     if realm != wc_realm:
-        warn(AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
+        wc.log.warn(wc.LOG_AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
         return False
     nonce = credentials["nonce"]
     if nonce not in nonces:
-        warn(AUTH, "digest wrong nonce %s", nonce)
+        wc.log.warn(wc.LOG_AUTH, "digest wrong nonce %s", nonce)
         return False
     uri = credentials['uri']
     if uri != attrs['uri']:
-        warn(AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
+        wc.log.warn(wc.LOG_AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
         return False
     # compare responses
     response = credentials.get('response')
     our_response = get_response_digest(credentials, **attrs)[2]
     if response != our_response:
-        debug(AUTH, "digest wrong response %s!=%s", response, our_response)
+        wc.log.debug(wc.LOG_AUTH, "digest wrong response %s!=%s", response, our_response)
         return False
     return True
 
@@ -98,14 +98,14 @@ def check_digest_values (auth):
        challenge or credential"""
     # check data
     if auth.get('algorithm') not in ("MD5", "MD5-sess", "SHA", None):
-        error(AUTH, "unsupported digest algorithm value %r", auth['algorithm'])
+        wc.log.error(wc.LOG_AUTH, "unsupported digest algorithm value %r", auth['algorithm'])
         return False
     if auth.get('qop') not in ("auth", "auth-int", None):
-        error(AUTH, "unsupported digest qop value %r", auth['qop'])
+        wc.log.error(wc.LOG_AUTH, "unsupported digest qop value %r", auth['qop'])
         return False
     for key in ('realm', 'nonce'):
         if key not in auth:
-            error(AUTH, "missing digest challenge value for %r", key)
+            wc.log.error(wc.LOG_AUTH, "missing digest challenge value for %r", key)
             return False
     return True
 

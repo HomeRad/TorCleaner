@@ -4,7 +4,6 @@
 import os
 import md5
 import wc
-from wc.log import *
 from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
@@ -33,21 +32,26 @@ from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 #
 # modified by Bastian Kleineidam <calvin@users.sf.net> for WebCleaner
 
-import httplib, urllib, urllib2, re, socket
+import httplib
+import urllib
+import urllib2
+import re
+import socket
+import zlib
+import gzip
+import cStringIO as StringIO
+
 UA_STR = '%s/%s' % (wc.Name, wc.Version)
 
 def decode (page):
     "gunzip or deflate a compressed page"
     encoding = page.info().get("Content-Encoding") 
     if encoding in ('gzip', 'x-gzip', 'deflate'):
-        from cStringIO import StringIO
         # cannot seek in socket descriptors, so must get content now
         content = page.read()
         if encoding == 'deflate':
-            import zlib
-            fp = StringIO(zlib.decompress(content))
+            fp = StringIO.StringIO(zlib.decompress(content))
         else:
-            import gzip
             fp = gzip.GzipFile('', 'rb', 9, StringIO(content))
         # remove content-encoding header
         headers = {}
@@ -105,13 +109,13 @@ def open_url (url, proxies=None):
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
-        error(GUI, "could not open url %r", url)
+        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
         raise IOError, x
     except (socket.gaierror, socket.error, urllib2.URLError), x:
-        error(GUI, "could not open url %r", url)
+        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
         raise IOError, "no network access available"
     except IOError, data:
-        error(GUI, "could not open url %r", url)
+        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
         if data and data[0] == 'http error' and data[1] == 404:
             raise IOError, data
         else:
@@ -219,7 +223,6 @@ def update_filter (wconfig, dryrun=False, log=None):
             f.write(data)
             f.close()
     return chg
-
 
 
 def update_ratings (wconfig, dryrun=False, log=None):

@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-"""url utils"""
+"""url utils, can be used as a standalone module"""
 # Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify

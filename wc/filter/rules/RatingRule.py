@@ -23,7 +23,6 @@ import wc
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 import wc.filter.Rating
-from wc.log import *
 
 
 class RatingRule (wc.filter.rules.UrlRule.UrlRule):
@@ -84,7 +83,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
            return None if allowed, else a reason of why not"""
         for category, value in rating.items():
             if category not in self.ratings:
-                warn(FILTER, "Unknown rating category %r specified", category)
+                wc.log.warn(wc.LOG_FILTER, "Unknown rating category %r specified", category)
                 continue
             if not value:
                 # empty value implicates not rated

@@ -23,6 +23,7 @@ __date__    = "$Date$"[7:-2]
 import wc.filter.rules.Rule
 import wc.XmlUtils
 
+
 class ExternfileRule (wc.filter.rules.Rule.Rule):
     """rule with data stored in a (compressed) external file, used for
        huge url and domain block lists

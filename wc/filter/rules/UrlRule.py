@@ -20,9 +20,9 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
+import wc
 import wc.filter.rules.Rule
 import wc.XmlUtils
-from wc.log import *
 
 
 class UrlRule (wc.filter.rules.Rule.Rule):

@@ -24,7 +24,7 @@ import os
 import cStringIO as StringIO
 import wc
 import wc.filter
-from wc.log import *
+
 
 class ImageSize (wc.filter.Filter.Filter):
     """Base filter class which is using the GifParser to deanimate the
@@ -95,7 +95,7 @@ class ImageSize (wc.filter.Filter.Filter):
         url = attrs['url']
         pos = buf.tell()
         if pos <= 0:
-            error(FILTER, "Empty image data found at %r", url)
+            wc.log.error(wc.LOG_FILTER, "Empty image data found at %r", url)
         else:
             attrs['imgsize_blocked'] = \
           not self.check_sizes(buf, attrs['imgsize_sizes'], url, finish=True)
@@ -117,14 +117,14 @@ class ImageSize (wc.filter.Filter.Filter):
                 if size==img.size:
                     # size matches, look for format restriction
                     if not formats:
-                        debug(FILTER, "Blocking image size %s", size)
+                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s", size)
                         return False
                     elif img.format.lower() in formats:
-                        debug(FILTER, "Blocking image size %s", size)
+                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s", size)
                         return False
         except IOError:
             if finish:
-                exception(FILTER, "Could not get image size from %r", url)
+                wc.log.exception(wc.LOG_FILTER, "Could not get image size from %r", url)
             else:
                 assert pos > self.min_bufsize
                 # wait for more data

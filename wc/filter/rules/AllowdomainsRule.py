@@ -22,6 +22,7 @@ __date__    = "$Date$"[7:-2]
 
 import wc.filter.rules.ExternfileRule
 
+
 class AllowdomainsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
     """Specifies a list of domains to allow, even if they would be blocked
        otherwise.

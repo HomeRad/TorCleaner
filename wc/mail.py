@@ -22,7 +22,7 @@ __date__    = "$Date$"[7:-2]
 import socket
 import smtplib
 import email.Utils
-from wc.log import *
+import wc
 
 
 def valid_mail (address):
@@ -41,7 +41,7 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
         conn.quit()
         return True
     except (socket.error, smtplib.SMTPException), x:
-        exception(GUI, 'SMTP send failure: %s', x)
+        wc.log.exception(wc.LOG_GUI, 'SMTP send failure: %s', x)
     return False
 
 

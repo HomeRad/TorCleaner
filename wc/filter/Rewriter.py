@@ -23,7 +23,7 @@ import wc.filter
 import wc.filter.Filter
 import wc.filter.HtmlParser
 import wc.filter.HtmlFilter
-from wc.log import *
+
 
 DefaultCharset = 'iso-8859-1'
 

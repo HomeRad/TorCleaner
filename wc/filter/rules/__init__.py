@@ -21,6 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import sets
 
+
 _rules_without_sid = []
 _sids = sets.Set()
 _sidcounter = 0

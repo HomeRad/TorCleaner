@@ -16,6 +16,10 @@
     Type: feature
     Changed: libjs/*
 
+  * use wc.log, not "from wc.log import *"
+    Type: code cleanup
+    Changed: *.py
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix

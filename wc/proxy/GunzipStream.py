@@ -13,7 +13,6 @@ __date__    = "$Date$"[7:-2]
 
 import wc
 import wc.proxy.DeflateStream
-from wc.log import *
 
 
 class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
@@ -41,13 +40,13 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            warn(PROXY, wc.i18n._("zlib error: not gzip format, disabling gunzip"))
+            wc.log.warn(wc.LOG_PROXY, wc.i18n._("zlib error: not gzip format, disabling gunzip"))
             self.error = True
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            warn(PROXY, wc.i18n._("zlib error: unknown compression method, disabling gunzip"))
+            wc.log.warn(wc.LOG_PROXY, wc.i18n._("zlib error: unknown compression method, disabling gunzip"))
             self.error = True
             return
 

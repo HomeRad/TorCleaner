@@ -27,7 +27,6 @@ import wc
 import wc.url
 import wc.filter
 import wc.filter.Filter
-from wc.log import *
 
 
 def is_flash_mime (mime):
@@ -156,7 +155,7 @@ class Blocker (wc.filter.Filter.Filter):
 
     def get_file_data (self, filename):
         """return plain file object, possible gunzipping the file"""
-        debug(FILTER, "reading %s", filename)
+        wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
         filename = os.path.join(wc.ConfigDir, filename)
         if filename.endswith(".gz"):
             f = gzip.GzipFile(filename, 'rb')
@@ -175,15 +174,15 @@ class Blocker (wc.filter.Filter.Filter):
         if mime is None:
             mime = "text/html"
         parts = wc.url.spliturl(url)
-        debug(FILTER, "block filter working on url %r", url)
+        wc.log.debug(wc.LOG_FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
         if allowed:
-            debug(FILTER, "allowed url %s by rule %s", url, sid)
+            wc.log.debug(wc.LOG_FILTER, "allowed url %s by rule %s", url, sid)
             return data
         blocked, sid = self.blocked(url, parts)
         if blocked:
             # XXX hmmm, make HTTP HEAD request to get content type???
-            debug(FILTER, "blocked url %s by rule %s", url, sid)
+            wc.log.debug(wc.LOG_FILTER, "blocked url %s by rule %s", url, sid)
             if isinstance(blocked, basestring):
                 doc = blocked
             elif is_image_mime(mime) or is_image_url(url):
@@ -197,7 +196,7 @@ class Blocker (wc.filter.Filter.Filter):
                 attrs['mime'] = 'application/x-javascript'
             else:
                 if not is_html_mime(mime):
-                    warn(PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
+                    wc.log.warn(wc.LOG_PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
                 attrs['mime'] = 'text/html'
                 rule = [r for r in self.rules if r.sid==sid][0]
@@ -221,18 +220,18 @@ class Blocker (wc.filter.Filter.Filter):
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
             if blockdomain == parts[wc.url.DOMAIN]:
-                debug(FILTER, "blocked by blockdomain %s", blockdomain)
+                wc.log.debug(wc.LOG_FILTER, "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
         for blockurl, sid in self.blocked_urls:
             if blockurl in url:
-                debug(FILTER, "blocked by blockurl %s", blockurl)
+                wc.log.debug(wc.LOG_FILTER, "blocked by blockurl %s", blockurl)
                 return True, sid
         # check block patterns
         for ro, replacement, sid in self.block:
             mo = ro.search(url)
             if mo:
-                debug(FILTER, "blocked by pattern %s", ro.pattern)
+                wc.log.debug(wc.LOG_FILTER, "blocked by pattern %s", ro.pattern)
                 if replacement:
                     return mo.expand(replacement), sid
                 return True, sid
