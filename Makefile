@@ -17,6 +17,11 @@ clean:
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 
+.PHONY: localbuild
+localbuild:
+	./setup.py build
+	cp -f build/lib.linux-i686-2.0/wc/parser/htmlop.so wc/parser
+
 .PHONY: distclean
 distclean:	clean cleandeb
 	rm -rf dist build # just to be sure: clean build dir too
@@ -38,11 +43,9 @@ deb:	locale
 dist:	locale
 	./setup.py sdist --formats=gztar
 
-# only visual test
 .PHONY: test
 test:
-	./filtertest filter filtertest.html
-	./filtertest block "GET http://ads.realmedia.com/ HTTP/1.0"
+	python2 test/regrtest.py
 
 .PHONY: onlinetest
 onlinetest:
@@ -51,7 +54,7 @@ onlinetest:
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/
 	# get own config
 	env http_proxy="http://localhost:9090" wget -t1 http://localhost:9090/
-	# get a blocked site
+	# get a blocked page
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/advert/
 	# get a blocked image
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/advert/test.gif

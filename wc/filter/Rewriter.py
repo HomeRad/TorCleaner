@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
-from wc.parser.sgmllib import SGMLParser
+from wc.parser.htmllib import HTMLParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
 from wc.debug_levels import *
@@ -52,7 +52,7 @@ class Rewriter(Filter):
         #debug(NIGHTMARE, `data`)
         p = attrs['filter']
         p.feed(data)
-        return p.flush()
+        return p.flushbuf()
 
 
     def finish(self, data, **attrs):
@@ -68,10 +68,10 @@ class Rewriter(Filter):
 
 
 
-class HtmlFilter(SGMLParser):
+class HtmlFilter(HTMLParser):
     """The parser has the rules, a data buffer and a rule stack."""
     def __init__(self, rules, comments):
-        SGMLParser.__init__(self)
+        HTMLParser.__init__(self)
         self.rules = rules
         self.comments = comments
         self.data = ""
@@ -98,7 +98,7 @@ class HtmlFilter(SGMLParser):
         self.buffer_append_data([DATA, d])
 
 
-    def flush(self):
+    def flushbuf(self):
         """flush internal data buffer"""
         data = self.data
         if data:
@@ -132,23 +132,17 @@ class HtmlFilter(SGMLParser):
             self.buffer.append([COMMENT, data])
 
 
-    def handle_entityref(self, name):
+    def handle_ref(self, name):
         """dont translate, we leave that for the browser"""
         if name:
             name = "&%s;"%name
         else:
-            # a single &, parsed by the FastSGMLParser
-            # leads to an empty name
+            # a single & leads to an empty name (XXX untested)
             name = "&"
         self.buffer_append_data([DATA, name])
 
 
-    def handle_charref(self, name):
-        """dont translate, we leave that for the browser"""
-        self.buffer_append_data([DATA, "&#"+name+";"])
-
-
-    def unknown_starttag(self, tag, attrs):
+    def handle_starttag(self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         rulelist = []
@@ -174,7 +168,7 @@ class HtmlFilter(SGMLParser):
             self.buffer2data()
 
 
-    def unknown_endtag(self, tag):
+    def handle_endtag(self, tag):
         """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
@@ -191,10 +185,19 @@ class HtmlFilter(SGMLParser):
             self.buffer2data()
 
 
+    def handle_decl(self, tag, data):
+        # XXX
+        pass
+
+
+    def handle_xmldecl(self, data):
+        # XXX
+        pass
+
+
     def close(self):
-        SGMLParser.close(self)
+        # XXX get rid of close, its ugly
+        self.flush()
         self.buffer2data()
-        return self.flush()
+        return self.flushbuf()
 
-
-# XXX helper functions

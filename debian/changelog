@@ -1,9 +1,17 @@
+webcleaner (0.17) unstable; urgency=low
+
+  * webcleaner: import os only when really needed
+  * wc/parser/htmlop.c: new HTML parser, adapted from libhtmlparser
+    package
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue,  2 Oct 2001 18:21:05 +0200
+
 webcleaner (0.16) unstable; urgency=low
 
   * add PackError and UnpackError exception classes to dnslib.py
   * add logrotating in debian package
   * cosmetic cleanups
-  * remove content-length header when we enabled content-changing
+  * remove Content-Length: header when we enabled content changing
     modules like the HTML Rewriter
   * improved onlinetests
   * send Content-Length: header in ServerHandleDirectly class
@@ -11,8 +19,9 @@ webcleaner (0.16) unstable; urgency=low
   * check for blocked links before giving config and statistics data
   * added replacer filter which can replace arbitrary strings in the
     data stream. For now only the response content gets filtered.
+  * DNS config for Windows platforms improved
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat, 11 Aug 2001 11:22:47 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri, 24 Aug 2001 16:52:28 +0200
 
 webcleaner (0.15) unstable; urgency=low
 

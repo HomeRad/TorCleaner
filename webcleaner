@@ -107,6 +107,7 @@ def _paginate(text, lines=22):
 
 def _print_help():
     """print long usage info"""
+    import os
     if os.name!='posix':
         _paginate(_usage)
     else:
@@ -116,7 +117,7 @@ def _print_help():
 
 def main():
     # Read command line arguments
-    import getopt,sys,string,os
+    import getopt,sys,string
     try:
         # Note: cut out the name of the script
         options, args = getopt.getopt(sys.argv[1:], "h", ["help","pidfile="])

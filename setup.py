@@ -145,7 +145,7 @@ myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
 setup (name = "webcleaner",
-       version = "0.16",
+       version = "0.17",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -155,7 +155,7 @@ setup (name = "webcleaner",
        licence = "GPL (Python 2.0 usage granted)",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
-       ext_modules = [Extension('wc.parser.sgmlop',['wc/parser/sgmlop.c'])],
+       ext_modules = [Extension('wc.parser.htmlop',['wc/parser/htmlop.c'])],
        scripts = ['webcleaner', 'webcleanerconf'],
        long_description =
 """WebCleaner features:
