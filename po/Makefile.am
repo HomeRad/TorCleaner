@@ -1,10 +1,11 @@
 # use scripts found in Tools/i18n of the Python distribution
 PYTHON := python2.3
-GETTEXT := $(PYTHON) pygettext.py -k i18n._ -k wc.i18n._
+GETTEXT := $(PYTHON) pygettext.py -k bk.i18n._
 #MSGFMT := $(PYTHON) msgfmt.py
 MSGFMT := @MSGFMT@ -c
 MSGMERGE := @MSGMERGE@
 POSOURCES = $(shell find ../wc -name \*.py) \
+	$(shell find ../bk -name \*.py) \
 	../webcleaner ../webcleaner-service ../webcleaner-certificates \
 	$(shell find ../templates -name \*.html)
 
