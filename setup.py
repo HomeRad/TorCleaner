@@ -131,14 +131,14 @@ class MyDistribution(Distribution):
                  "creating %s" % filename, self.verbose>=1, self.dry_run)
 
 if os.name=='nt':
+    # windows does not have unistd.h
     macros = [('YY_NO_UNISTD_H', None)]
     cargs = []
-    scripts = []
 else:
     macros = []
-    # XXX for gcc 3.x we could add -std=gnu99
+    # for gcc 3.x we could add -std=gnu99 to get rid of warnings, but
+    # that breaks other compilers
     cargs = ["-pedantic"]
-    scripts = ['webcleaner']
 
 # extensions
 extensions = [Extension('wc.parser.htmlsax',
@@ -159,6 +159,8 @@ extensions = [Extension('wc.parser.htmlsax',
 if os.name=='nt':
     extensions.append(Extension('wc.js.jslib',
                     sources=['wc/js/jslib.c'],
+                    # since we are not compiling with configure/make, put
+                    # all needed defines here
                     define_macros = [('WIN32', None), ('XP_WIN', None), ('EXPORT_JS_API', None)],
                     include_dirs = ['libjs'],
                     extra_compile_args = cargs,
@@ -189,7 +191,7 @@ setup (name = "webcleaner",
            'wc/filter/rules', 'wc/webgui', 'wc/webgui/simpletal',
            'wc/webgui/context',],
        ext_modules = extensions,
-       scripts = scripts,
+       scripts = ['webcleaner'],
        long_description = """WebCleaner features:
 * HTTP/1.1 and HTTPS support
 * integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
