@@ -114,6 +114,60 @@ NTLMSSP_NEGOTIATE_KEY_EXCH                 = 0x40000000
 NTLMSSP_NEGOTIATE_80000000                 = 0x80000000
 
 
+def str_flags (flags):
+    """return list of names of all set flags"""
+    res = []
+    if flags & NTLMSSP_NEGOTIATE_UNICODE:
+        res.append("NTLMSSP_NEGOTIATE_UNICODE")
+    if flags & NTLMSSP_NEGOTIATE_OEM:
+        res.append("NTLMSSP_NEGOTIATE_OEM")
+    if flags & NTLMSSP_REQUEST_TARGET:
+        res.append("NTLMSSP_REQUEST_TARGET")
+    if flags & NTLMSSP_NEGOTIATE_SIGN:
+        res.append("NTLMSSP_NEGOTIATE_SIGN")
+    if flags & NTLMSSP_NEGOTIATE_SEAL:
+        res.append("NTLMSSP_NEGOTIATE_SEAL")
+    if flags & NTLMSSP_NEGOTIATE_DATAGRAM:
+        res.append("NTLMSSP_NEGOTIATE_DATAGRAM")
+    if flags & NTLMSSP_NEGOTIATE_LM_KEY:
+        res.append("NTLMSSP_NEGOTIATE_LM_KEY")
+    if flags & NTLMSSP_NEGOTIATE_NETWARE:
+        res.append("NTLMSSP_NEGOTIATE_NETWARE")
+    if flags & NTLMSSP_NEGOTIATE_NTLM:
+        res.append("NTLMSSP_NEGOTIATE_NTLM")
+    if flags & NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED:
+        res.append("NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED")
+    if flags & NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED:
+        res.append("NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED")
+    if flags & NTLMSSP_NEGOTIATE_LOCAL_CALL:
+        res.append("NTLMSSP_NEGOTIATE_LOCAL_CALL")
+    if flags & NTLMSSP_NEGOTIATE_ALWAYS_SIGN:
+        res.append("NTLMSSP_NEGOTIATE_ALWAYS_SIGN")
+    if flags & NTLMSSP_TARGET_TYPE_DOMAIN:
+        res.append("NTLMSSP_TARGET_TYPE_DOMAIN")
+    if flags & NTLMSSP_TARGET_TYPE_SERVER:
+        res.append("NTLMSSP_TARGET_TYPE_SERVER")
+    if flags & NTLMSSP_TARGET_TYPE_SHARE:
+        res.append("NTLMSSP_TARGET_TYPE_SHARE")
+    if flags & NTLMSSP_NEGOTIATE_NTLM2:
+        res.append("NTLMSSP_NEGOTIATE_NTLM2")
+    if flags & NTLMSSP_REQUEST_INIT_RESPONSE:
+        res.append("NTLMSSP_REQUEST_INIT_RESPONSE")
+    if flags & NTLMSSP_REQUEST_ACCEPT_RESPONSE:
+        res.append("NTLMSSP_REQUEST_ACCEPT_RESPONSE")
+    if flags & NTLMSSP_REQUEST_NON_NT_SESSION_KEY:
+        res.append("NTLMSSP_REQUEST_NON_NT_SESSION_KEY")
+    if flags & NTLMSSP_NEGOTIATE_TARGET_INFO:
+        res.append("NTLMSSP_NEGOTIATE_TARGET_INFO")
+    if flags & NTLMSSP_NEGOTIATE_128:
+        res.append("NTLMSSP_NEGOTIATE_128")
+    if flags & NTLMSSP_NEGOTIATE_KEY_EXCH:
+        res.append("NTLMSSP_NEGOTIATE_KEY_EXCH")
+    if flags & NTLMSSP_NEGOTIATE_80000000:
+        res.append("NTLMSSP_NEGOTIATE_80000000")
+    return res
+
+
 def check_nonces ():
     # deprecate old nonces
     for key, value in nonces.items():
@@ -255,6 +309,7 @@ def create_message1 (flags=negotiate_flags):
 def parse_message1 (msg):
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
+    debug(AUTH, "msg1 flags %s", "\n".join(str_flags(res['flags'])))
     domain_offset = getint32(msg[20:24])
     host_offset = getint32(msg[28:32])
     res['host'] = msg[host_offset:domain_offset]
@@ -304,6 +359,7 @@ def parse_message2 (msg):
         return res
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])
+    debug(AUTH, "msg2 flags %s", "\n".join(str_flags(res['flags'])))
     res['nonce'] = msg[24:32]
     if res['flags'] & NTLMSSP_TARGET_TYPE_DOMAIN:
         offset = getint32(msg[16:20])
@@ -368,6 +424,7 @@ def parse_message3 (msg):
     host_offset = getint32(msg[48:52])
     session_offset = getint32(msg[56:60])
     res['flags'] = getint16(msg[60:62])
+    debug(AUTH, "msg3 flags %s", "\n".join(str_flags(res['flags'])))
     res['domain'] = unicode2str(msg[domain_offset:username_offset])
     res['username'] = unicode2str(msg[username_offset:host_offset])
     res['host'] = unicode2str(msg[host_offset:lm_offset])
