@@ -12,9 +12,17 @@ from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
 from wc.log import *
 
-allowed_schemes = ['http', 'https']
-allowed_connect_ports = [443]
+allowed_schemes = [
+    'http',
+    'https',
+#    'nntps', # untested
+]
+allowed_connect_ports = [
+    443, # HTTP over SSL
+    563, # NNTP over SSL
+]
 
+# connection pool for persistent server connections
 serverpool = ServerPool()
 
 from HttpServer import HttpServer
@@ -66,6 +74,7 @@ class ClientServerMatchmaker (object):
         self.protocol = fix_http_version(protocol)
         # fix CONNECT urls
         if self.method=='CONNECT':
+            # XXX scheme could also be nntps
             self.scheme = 'https'
             hostname, port = splitnport(self.url, 443)
             document = ''
