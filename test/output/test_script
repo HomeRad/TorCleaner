@@ -134,3 +134,11 @@ filter test/html/script7.html
 
 </html>
 
+filter test/html/script8.html
+
+<script language=JavaScript1.1>
+<!--
+var words = navigator.plugins["Shockwave Flash"].description.split(" ");
+//-->
+</script>
+
