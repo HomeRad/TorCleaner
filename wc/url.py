@@ -163,17 +163,15 @@ def parse_qsl (qs, keep_blank_values=0, strict_parsing=0):
 def idna_encode (host):
     """Encode hostname as internationalized domain name (IDN) according
        to RFC 3490."""
-    if isinstance(host, unicode):
-        return host.encode('idna').decode('ascii')
-    return host
+    if host and isinstance(host, unicode):
+        uhost = host.encode('idna').decode('ascii')
+        return uhost, uhost != host
+    return host, False
 
 
-def url_norm (url):
-    """Fix and normalize URL which must be quoted. Supports unicode
-       hostnames according to RFC 3490."""
-    urlparts = list(urlparse.urlsplit(url))
-    urlparts[0] = urllib.unquote(urlparts[0]).lower() # scheme
-    urlparts[1] = idna_encode(urllib.unquote(urlparts[1]).lower()) # host
+def url_fix_host (urlparts):
+    """Unquote and fix hostname. Returns is_idn."""
+    urlparts[1], is_idn = idna_encode(urllib.unquote(urlparts[1]).lower())
     # a leading backslash in path causes urlsplit() to add the
     # path components up to the first slash to host
     # try to find this case...
@@ -187,7 +185,13 @@ def url_norm (url):
             urlparts[2] = "%s%s" % (comps, urllib.unquote(urlparts[2]))
         urlparts[1] = urlparts[1][:i]
     else:
-        urlparts[2] = urllib.unquote(urlparts[2]) # path
+        # a leading ? in path causes urlsplit() to add the query to the
+        # host name
+        i = urlparts[1].find("?")
+        if i != -1:
+            urlparts[1], urlparts[3] = urlparts[1].split('?', 1)
+        # path
+        urlparts[2] = urllib.unquote(urlparts[2])
     if urlparts[1]:
         userpass, host = urllib.splituser(urlparts[1])
         if userpass:
@@ -204,8 +208,22 @@ def url_norm (url):
             urlparts[1] = userpass+host
         else:
             urlparts[1] = "%s%s:%d" % (userpass, host, port)
+
+
+def url_norm (url):
+    """Fix and normalize URL which must be quoted. Supports unicode
+       hostnames (IDNA encoding) according to RFC 3490.
+
+       @return (normed url, idna flag)
+    """
+    urlparts = list(urlparse.urlsplit(url))
+    # scheme
+    urlparts[0] = urllib.unquote(urlparts[0]).lower()
+    # host (with path or query side effects)
+    is_idn = url_fix_host(urlparts)
+    # query
     l = []
-    for k, v in parse_qsl(urlparts[3], True): # query
+    for k, v in parse_qsl(urlparts[3], True):
         k = urllib.quote(k, '/-:,')
         if v:
             v = urllib.quote(v, '/-:,')
@@ -233,7 +251,7 @@ def url_norm (url):
     if url.endswith('#') and not urlparts[4]:
         # re-append trailing empty fragment
         res += '#'
-    return res
+    return (res, is_idn)
 
 
 _slashes_ro = re.compile(r"/+")
