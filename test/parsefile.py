@@ -7,8 +7,9 @@ def _main():
     file = sys.argv[1]
     data = open(file).read()
     p = HtmlPrinter()
-    for c in data:
-        p.feed(c)
+    #for c in data:
+    #    p.feed(c)
+    p.feed(data)
     p.flush()
 
 
