@@ -8,7 +8,6 @@ from wc import i18n, config, ip
 from wc.proxy import match_host, fix_http_version
 from wc.proxy.Headers import client_set_headers, remove_headers
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
-from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.log import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
@@ -269,3 +268,10 @@ def get_content_length (headers):
     return 0
 
 
+HTML_TEMPLATE = """<html><head>
+<title>%(title)s</title>
+</head>
+<body bgcolor="#fff7e5">
+<center><h3>%(header)s</h3></center>
+%(content)s
+</body></html>"""

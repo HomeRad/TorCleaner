@@ -18,7 +18,7 @@
 
 from simpletal import simpleTAL, simpleTALES
 from cStringIO import StringIO
-from wc import config, TemplateDir
+from wc import i18n, config, TemplateDir
 from wc.log import *
 import os, urllib, urlparse
 
@@ -34,7 +34,7 @@ class WebConfig:
             context = self.get_context(dirs, form)
         except IOError, msg:
             exception(GUI, "Wrong path")
-            client.error(404, i18n._("Not Found"))
+            return client.error(404, i18n._("Not Found"))
         # expand template
         data = self.expand_template(f, context)
         f.close()
@@ -59,9 +59,9 @@ class WebConfig:
         parts = urlparse.urlsplit(url)
         dirs = get_relative_path(parts[2])
         path = os.path.splitdrive(os.path.join(*tuple(dirs)))[1]
+        path = norm(os.path.join(base, path))
         if not os.path.isabs(path):
             raise IOError("Relative path %s" % `path`)
-        path = norm(os.path.join(base, path))
         if not path.startswith(base):
             raise IOError("Invalid path %s" % `path`)
         if not os.path.isfile(path):
@@ -101,7 +101,8 @@ def norm (path):
 
 def get_relative_path (path):
     # get non-empty url path components, remove path fragments
-    dirs = [ urldefrag(d)[0] for d in urllib.unquote(path).split("/") if d ]
+    dirs = [ urlparse.urldefrag(d)[0] \
+             for d in urllib.unquote(path).split("/") if d ]
     # remove ".." paths
     dirs = [ d for d in dirs if d!=".." ]
     return dirs
