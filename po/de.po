@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Tue Aug  5 17:39:45 2003\n"
-"PO-Revision-Date: 2003-08-05 17:41+0100\n"
+"POT-Creation-Date: Tue Aug  5 17:53:51 2003\n"
+"PO-Revision-Date: 2003-08-05 17:54+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1107,15 +1107,6 @@ msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
 
 #: html
 #: translation
-msgid ""
-"This page is also available in\n"
-"<a tal:repeat=\"la otherlanguages\" tal:content=\"la/name\" href=\"index.html.de\" tal:attributes=\"href string:${filename}.${la/code}; title la/trans\" title=\"German\">Deutsch</a>."
-msgstr ""
-"Diese Seite ist verfügbar auf\n"
-"<a tal:repeat=\"la otherlanguages\" tal:content=\"la/name\" href=\"index.html.de\" tal:attributes=\"href string:${filename}.${la/code}; title la/trans\" title=\"German\">Deutsch</a>."
-
-#: html
-#: translation
 msgid "Blank page due to block by %(AppName)s"
 msgstr "Leere Seite aufgrund von Blockierung durch %(AppName)s"
 
@@ -1358,6 +1349,11 @@ msgstr "Beschreibung"
 #: translation
 msgid "Image width"
 msgstr "Bildbreite"
+
+#: html
+#: translation
+msgid "This page is also available in"
+msgstr "Diese Seite ist auch verfügbar auf"
 
 #: html
 #: translation

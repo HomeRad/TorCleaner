@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Aug  5 17:39:45 2003\n"
+"POT-Creation-Date: Tue Aug  5 17:53:51 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1030,12 +1030,6 @@ msgid "Username used for parent proxy authentication"
 msgstr ""
 
 #: html translation
-msgid ""
-"This page is also available in\n"
-"<a tal:repeat=\"la otherlanguages\" tal:content=\"la/name\" href=\"index.html.de\" tal:attributes=\"href string:${filename}.${la/code}; title la/trans\" title=\"German\">Deutsch</a>."
-msgstr ""
-
-#: html translation
 msgid "Blank page due to block by %(AppName)s"
 msgstr ""
 
@@ -1230,6 +1224,10 @@ msgstr ""
 
 #: html translation
 msgid "Image width"
+msgstr ""
+
+#: html translation
+msgid "This page is also available in"
 msgstr ""
 
 #: html translation
