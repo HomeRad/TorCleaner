@@ -207,6 +207,8 @@ _rulenames = (
   'block',
   'blockurls',
   'blockdomains',
+  'allowurls',
+  'allowdomains',
   'allow',
   'header',
   'image',
