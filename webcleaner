@@ -94,7 +94,7 @@ def _print_usage(msg):
 
 def _paginate(text, lines=22):
     """print text in pages of lines size"""
-    textlines = string.split(text, "\n")
+    textlines = text.split("\n")
     curline = 1
     for line in textlines:
         print line
@@ -117,7 +117,7 @@ def _print_help():
 
 def main():
     # Read command line arguments
-    import getopt,sys,string
+    import getopt,sys
     try:
         # Note: cut out the name of the script
         options, args = getopt.getopt(sys.argv[1:], "h", ["help","pidfile="])
