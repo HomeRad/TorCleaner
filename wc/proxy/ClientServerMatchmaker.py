@@ -1,5 +1,6 @@
 import dns_lookups, socket, mimetypes, re, base64, sha
 import wc.proxy
+from wc.proxy import spliturl
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
@@ -51,37 +52,12 @@ class ClientServerMatchmaker:
         self.request = request
         self.headers = headers
         self.compress = compress
-        if config["proxyuser"]:
-            if not self.check_proxy_auth():
-                self.client.error(407, i18n._("Proxy Authentication Required"))
-                return
         self.content = content
         self.nofilter = nofilter
-        self.url = ""
-        try: self.method, self.url, protocol = request.split()
-        except:
-            config['requests']['error'] += 1
-            self.client.error(400, i18n._("Can't parse request"))
-            return
-        if not self.url:
-            config['requests']['error'] += 1
-            self.client.error(400, i18n._("Empty URL"))
-            return
-        if self.method=='OPTIONS':
-            mf = int(self.headers.get('Max-Forwards', -1))
-            if mf==0:
-                # XXX display options
-                ServerHandleDirectly(self.client,
-                   'HTTP/1.0 200 OK\r\n',
-                   'Content-Type: text/plain\r\n\r\n',
-                   'WebCleaner')
-                return
-            if mf>0:
-                self.headers['Max-Forwards'] = mf-1
-
-        scheme, hostname, port, document = wc.proxy.spliturl(self.url)
+        self.method, self.url, protocol = self.request.split()
+        scheme, hostname, port, document = spliturl(self.url)
         if not document: document = '/'
-        #debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
+        debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
             # this means we should _not_ use this proxy for local
@@ -121,26 +97,8 @@ class ClientServerMatchmaker:
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
 
-    def check_proxy_auth (self):
-        if self.headers.get("Proxy-Authorization") is None:
-            return
-        auth = self.headers['Proxy-Authorization']
-        if not auth.startswith("Basic "):
-            return
-        auth = base64.decodestring(auth[6:])
-        if ':' not in auth:
-            return
-        _user,_pass = auth.split(":", 1)
-        if _user!=config['proxyuser']:
-            return
-        if config['proxypass'] and \
-           _pass!=base64.decodestring(config['proxypass']):
-            return
-        return "True"
-
-
     def handle_local (self, document):
-        #debug(HURT_ME_PLENTY, "handle local request for", document)
+        debug(HURT_ME_PLENTY, "handle local request for", document)
         if self.client and self.client.addr[0] not in _localhosts:
             self.client.error(403, i18n._("Forbidden"),
                               wc.proxy.access_denied(self.client.addr))
@@ -197,7 +155,7 @@ class ClientServerMatchmaker:
                            i18n._("Server does not understand HTTP/1.1"))
                 return
             # Let's reuse it
-            #debug(BRING_IT_ON, 'resurrecting', server)
+            debug(BRING_IT_ON, 'resurrecting', server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -241,7 +199,7 @@ class ClientServerMatchmaker:
 
 
     def server_close (self):
-        #debug(BRING_IT_ON, 'resurrection failed', self.server.sequence_number, self.server)
+        debug(BRING_IT_ON, 'resurrection failed', self.server.sequence_number, self.server)
 
         # Look for a server again
         if self.server.sequence_number > 0:

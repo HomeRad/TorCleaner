@@ -27,7 +27,7 @@ HEADERS = LimitQueue(config['headersave'])
 def log (msg):
     """If logfile is defined write the msg into it. The message msg
        should be in common log file format."""
-    #debug(HURT_ME_PLENTY, "logging", `msg`)
+    debug(HURT_ME_PLENTY, "logging", `msg`)
     if config['logfile']:
         config['logfile'].write(msg)
         config['logfile'].flush()
@@ -100,7 +100,7 @@ def proxy_poll (timeout=0.0):
                     x.handle_write_event()
                     handlerCount += 1
                     #if time.time() - t > 0.1:
-                    #    #debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
+                    #    debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
                     #    pass
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
@@ -111,7 +111,7 @@ def proxy_poll (timeout=0.0):
                     x.handle_read_event()
                     handlerCount += 1
                     #if time.time() - t > 0.1:
-                    #    #debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
+                    #    debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
                     #    pass
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
