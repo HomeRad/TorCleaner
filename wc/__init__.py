@@ -165,7 +165,9 @@ def encode_values (d):
 
 # available filter modules
 filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
-                 "BinaryCharFilter", "Rewriter", "Replacer", "Compress", ]
+                 "BinaryCharFilter", "Rewriter", "Replacer", "Compress",
+                 "PicsHeader",
+                ]
 filtermodules.sort()
 
 class Configuration (dict):
