@@ -5,6 +5,7 @@ VERSION=$(shell $(PYTHON) setup.py --version)
 PACKAGE=webcleaner
 GROUPDIR=shell1.sourceforge.net:/home/groups
 HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
+MD5SUMS=$(PACKAGE)-md5sums.txt
 
 all:
 	@echo "Read the file INSTALL to see how to build and install"
@@ -51,6 +52,8 @@ deb_unsigned:	locale
 
 dist:	locale
 	$(PYTHON) setup.py sdist --formats=gztar,zip
+	rm -f $(MD5SUMS)
+	md5sum dist/* > $(MD5SUMS)
 
 test:
 	$(PYTHON) test/regrtest.py
@@ -97,6 +100,7 @@ filterfiles:	md5sums
 upload: distclean dist VERSION
 	scp ChangeLog $(HTMLDIR)/changes.txt
 	scp VERSION $(HTMLDIR)/raw/
+	scp $(MD5SUMS) $(HTMLDIR)/
 	#scp dist/* $(HTMLDIR)
 	ncftpput upload.sourceforge.net /incoming dist/* && read -p "Make new SF file releases and then press Enter:"
 	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
