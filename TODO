@@ -2,6 +2,18 @@ TODO
 
 version 2.1
 
+- parse authentication challenge into tokens according to rfc2617
+
+- support Digest authentication (rfc 2069)
+  see urllib2.py for basic implementation
+
+- fix BADURLS entry for JS src fetching with content
+
+version 2.2 and above
+
+- support NTLM authentication, add README.squid example config
+  (Mozilla Windows >= 1.4b can test NTLM auth)
+
 - HTTPS tunneling (RFC 2818)
 
 - PICS features:
@@ -9,10 +21,6 @@ version 2.1
   when no PICS info is available, display dialog to build own PICS
   database (after password authentication)
   this should integrate with the webgui configuration somehow
-
-- Digest and NTLM authentication schemes
-  (Mozilla Windows >= 1.4b can test NTLM auth)
-  in README.squid, add example ntlm and digest auth module config
 
 - documentation for the webgui interface
 
