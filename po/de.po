@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-10-01 12:07+0200\n"
-"PO-Revision-Date: 2004-10-01 12:11+0100\n"
+"POT-Creation-Date: 2004-10-02 10:40+0200\n"
+"PO-Revision-Date: 2004-10-02 11:07+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -97,8 +97,8 @@ msgid "Proxy Authentication Required"
 msgstr "Proxy Authorisierung benötigt"
 
 #: ../wc/proxy/HttpClient.py:411
-#: ../wc/proxy/HttpServer.py:373
-#: ../wc/proxy/HttpServer.py:393
+#: ../wc/proxy/HttpServer.py:376
+#: ../wc/proxy/HttpServer.py:396
 msgid "Moved Temporarily"
 msgstr "Vorübergehend verschoben"
 
@@ -113,21 +113,21 @@ msgstr "Ungültige Anfrage"
 msgid "Authentication Required"
 msgstr "Authorisierung benötigt"
 
-#: ../wc/proxy/HttpServer.py:237
+#: ../wc/proxy/HttpServer.py:240
 #, python-format
 msgid "invalid or missing response from %r: %r"
 msgstr "ungültige oder fehlende Antwort von %r: %r"
 
-#: ../wc/proxy/HttpServer.py:247
+#: ../wc/proxy/HttpServer.py:250
 #, python-format
 msgid "missing headers in response from %r"
 msgstr "fehlende Kopfdaten in Antwort von %r"
 
-#: ../wc/proxy/HttpServer.py:316
+#: ../wc/proxy/HttpServer.py:319
 msgid "redirection to localhost"
 msgstr "Weiterleitung zu localhost"
 
-#: ../wc/proxy/HttpServer.py:447
+#: ../wc/proxy/HttpServer.py:450
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
@@ -734,24 +734,13 @@ msgid "${appname} web interface main page"
 msgstr "${appname} Weboberfläche Hauptseite"
 
 #: ../templates/classic/help.html:245
-#, fuzzy
 msgid "A block rule specifies regular expressions for urls which must be blocked.<br> The replacement URL specifies the URL to show when the block matches. If none is given a default block message is shown.<br> Back references to matched subgroups can be specified in the replacement url with a backslash and the subgroup number (ie. , , ...)."
-msgstr ""
-"Eine Block Regel gibt Reguläre Ausdrücke für URLs an welche\n"
-"geblockt werden müssen.<br>\n"
-"Die Ersatz-URL gibt die URL an welche stattdessen angezeigt werden soll\n"
-"wenn die Regel zutrifft. Falls keines angegeben wurde wird eine Standardnachricht\n"
-"angezeigt.<br>\n"
-"Referenzen auf zugeordnete Untergruppen können in der Ersatz-URL durch\n"
-"einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden\n"
-"(z.B. \\1, \\2, ...)."
+msgstr "Eine Block Regel gibt Reguläre Ausdrücke für URLs an welche geblockt werden müssen.<br> Die Ersatz-URL gibt die URL an welche stattdessen angezeigt werden soll wenn die Regel zutrifft. Falls keines angegeben wurde wird eine Standardnachricht angezeigt.<br> Referenzen auf zugeordnete Untergruppen können in der Ersatz-URL durch einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden (z.B. \\1, \\2, ...)."
 
 #: ../templates/classic/help.html:174
-#, fuzzy
 msgid "A rewrite rule applies to one specified HTML tag and can replace (or delete if the replacement data is empty) parts of or the complete tag. The tag name is a case insensitive string.<br> If attributes are given, they must match too before the rule applies."
 msgstr ""
-"Eine Rewrite-Regel wird auf ein angegebenes HTML-Tag angewendet\n"
-"und kann Teile oder das ganze Tag ersetzen (oder löschen wenn der\n"
+"Eine Rewrite-Regel wird auf ein angegebenes HTML-Tag angewendet und kann Teile oder das ganze Tag ersetzen (oder löschen wenn der\n"
 "angegebene Ersatz leer ist). Der Tagname ist unempfindlich gegenüber\n"
 "Groß- und Kleinschreibung.<br>\n"
 "Falls Attribute angegeben sind müssen diese auch zum Inhalt passen ehe diese Regel\n"
@@ -778,9 +767,8 @@ msgid "Access keys"
 msgstr "Tastaturkommandos"
 
 #: ../templates/classic/accessibility.html:22
-#, fuzzy
 msgid "Accessibility pages"
-msgstr "Zugänglichkeitserklärung"
+msgstr "Zugänglichkeitseiten"
 
 #: ../templates/classic/macros/standard.html:83
 #: ../templates/classic/accessibility.html:12
@@ -884,12 +872,8 @@ msgid "Always change the complete password since the displayed value is only a d
 msgstr "Ändern sie stets das ganze Passwort, da der angezeigte Wert nur ein Platzhalter ist."
 
 #: ../templates/classic/help.html:253
-#, fuzzy
 msgid "An allow rule specifies regular expressions for urls which must be allowed, even if a matching block rule exists."
-msgstr ""
-"Eine allow-Regel gibt reguläre Ausdrücke für URL an\n"
-"die zugelassen werden müssen, auch wenn bereits eine\n"
-"zutreffende Block-Regel existiert."
+msgstr "Eine allow-Regel gibt reguläre Ausdrücke für URL an die zugelassen werden müssen, auch wenn bereits eine zutreffende Block-Regel existiert."
 
 #: ../templates/classic/help.html:78
 #: ../templates/classic/help.html:88
@@ -933,19 +917,12 @@ msgid "Back to update overview"
 msgstr "Zurück zur Aktualisierungsübersicht"
 
 #: ../templates/classic/help.html:262
-#, fuzzy
 msgid "Block images with a certain size which is replacing them with a transparent 1x1 image."
-msgstr ""
-"Blockiert Bilder einer bestimmten Größe und ersetzt\n"
-"diese durch ein transparentes 1x1 Bild."
+msgstr "Blockiert Bilder einer bestimmten Größe und ersetzt diese durch ein transparentes 1x1 Bild."
 
 #: ../templates/classic/help.html:85
-#, fuzzy
 msgid "Block or allow specific sites by URL name. Before matching a URL the hostname and path is unquoted to avoid spoofing attacks."
-msgstr ""
-"Blockiere oder erlaube bestimmte Seiten nach URL Name.\n"
-"Bevor eine URL zutrifft wird der Rechnername und der Pfad\n"
-"dekodiert, um Verschleirungs-Attacken zu vermeiden."
+msgstr "Blockiere oder erlaube bestimmte Seiten nach URL Name. Bevor eine URL zutrifft wird der Rechnername und der Pfad dekodiert, um Verschleierungs-Attacken zu vermeiden."
 
 #: ../templates/classic/blocked.html:22
 msgid "Blocked by ${ruletitle}."
@@ -973,11 +950,8 @@ msgid "Clamav Config"
 msgstr "Clamav Konfiguration"
 
 #: ../templates/classic/help.html:95
-#, fuzzy
 msgid "Compression of documents with good compression ratio like HTML, WAV, etc."
-msgstr ""
-"Komprimierung von Dokumenten mit guter Komprimierungsrate\n"
-"wie z.B. HTML, WAV, etc."
+msgstr "Komprimierung von Dokumenten mit guter Komprimierungsrate wie z.B. HTML, WAV, etc."
 
 #: ../templates/classic/config.html:104
 msgid "Connection timeout in seconds"
@@ -1003,16 +977,12 @@ msgid "Convert images to low quality JPEG files to reduce bandwidth"
 msgstr "Konvertiere Bilder zu JPEG Bilddateien niedriger Qualität, um Bandbreite zu sparen"
 
 #: ../templates/classic/google.html:117
-#, fuzzy
 msgid "Coral Cache for"
-msgstr "Google Cache für"
+msgstr "Coral Cache für"
 
 #: ../templates/classic/help.html:107
-#, fuzzy
 msgid "Deanimates GIFs and removes all unwanted GIF image extensions (for example GIF comments)."
-msgstr ""
-"Deanimiere GIF Bilder und lösche alle unerwünschten GIF\n"
-"Bilddaten (wie z.B. GIF Kommentare)."
+msgstr "Deanimiert GIF Bilder und löscht alle unerwünschten GIF Bilderweiterungsdaten (wie z.B. GIF Kommentare)."
 
 #: ../templates/classic/rating.html:97
 msgid "Delete this rating"
@@ -1120,13 +1090,8 @@ msgid "Error sending mail."
 msgstr "Fehler beim Mailversand."
 
 #: ../templates/classic/help.html:266
-#, fuzzy
 msgid "Execute and filter JavaScript (JS) in HTML pages using the integrated Spidermonkey JS engine. The filter deletes popups and places dynamic content emitted with document.write() into the HTML file."
-msgstr ""
-"Ausführen und Filtern von JavaScript (JS) in HTML Seiten\n"
-"durch die integrierte Spidermonkey JS Bibliothek. Der Filter löscht\n"
-"Popups und schreibt dynamischen Inhalt generiert durch document.write()\n"
-"in die HTML Seite."
+msgstr "Ausführen und Filtern von JavaScript (JS) in HTML Seiten durch die integrierte Spidermonkey JS Bibliothek. Der Filter löscht Popups und schreibt dynamischen Inhalt generiert durch document.write() in die HTML Seite."
 
 #: ../templates/classic/macros/rules.html:405
 msgid "Fallback URL"
@@ -1283,32 +1248,20 @@ msgstr ""
 "zu entfernen."
 
 #: ../templates/classic/help.html:180
-#, fuzzy
 msgid "If there is no replacement given the specified tag part will be removed, else it will be replaced.<br> Back references to matched subgroups can be specified in the replacement string with a backslash and the subgroup number (ie. , , ...)."
-msgstr ""
-"Falls kein Ersatzwert angegeben wurde wird\n"
-"das angegebene Tag gelöscht, ansonsten wird es\n"
-"ersetzt.<br>\n"
-"Referenzen auf zugeordnete Untergruppen können im Ersatzwert durch\n"
-"einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden\n"
-"(z.B. \\1, \\2, ...)."
+msgstr "Falls kein Ersatzwert angegeben wurde wird das angegebene Tag gelöscht, ansonsten wird es ersetzt.<br> Referenzen auf zugeordnete Untergruppen können im Ersatzwert durch einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden (z.B. \\1, \\2, ...)."
 
 #: ../templates/classic/accessibility.html:25
-#, fuzzy
 msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>."
-msgstr "Falls sie Vorschläge oder Kommentare zu ${appname} haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
+msgstr "Falls sie Vorschläge oder Kommentare zur Zugänglichkeit dieser Seiten haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
 
 #: ../templates/classic/feedback.html:27
 msgid "If you have any suggestions or comments about ${appname}, feel free to email me at <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>."
 msgstr "Falls sie Vorschläge oder Kommentare zu ${appname} haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
 
 #: ../templates/classic/help.html:236
-#, fuzzy
 msgid "If you specified zero or more than one attributes to match, 'attr' and 'attrvalue' replace the first occuring or matching attribute or nothing."
-msgstr ""
-"Falls Sie keines oder mehr als ein Attribut angegeben haben,\n"
-"ersetzen die 'attr' und 'attrvalue' Teile entweder das zuerst vorkommende\n"
-"Attribut oder gar keines."
+msgstr "Falls Sie keines oder mehr als ein Attribut angegeben haben, ersetzen die 'attr' und 'attrvalue' Teile entweder das zuerst vorkommende Attribut oder gar keines."
 
 #: ../templates/classic/macros/rules.html:317
 msgid "Image JPEG quality"
@@ -1352,9 +1305,8 @@ msgid "Invalid folder move up id."
 msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
 
 #: ../templates/classic/config.html:405
-#, fuzzy
 msgid "Invalid host name."
-msgstr "Ungültiger Attributname."
+msgstr "Ungültiger Rechnername."
 
 #: ../templates/classic/filterconfig.html:234
 msgid "Invalid image height value."
@@ -1463,17 +1415,12 @@ msgid "Modified"
 msgstr "Geändert"
 
 #: ../templates/classic/help.html:257
-#, fuzzy
 msgid "Modify HTTP headers. If the replacement value is empty, the header is deleted, else it gets replaced or added if it did not exist before."
-msgstr ""
-"Verändere HTTP Header. Falls der Ersatzwert leer ist, wird\n"
-"der Header gelöscht. Ansonsten wird er ersetzt oder hinzugefügt\n"
-"falls er vorher noch nicht existierte."
+msgstr "Verändere HTTP Header. Falls der Ersatzwert leer ist, wird der Header gelöscht. Ansonsten wird er ersetzt oder hinzugefügt falls er vorher noch nicht existierte."
 
 #: ../templates/classic/accessibility.html:36
-#, fuzzy
 msgid "Most browsers support jumping to specific links by typing keys defined on the web site. On Windows, you can press ${alt-key} + an access key; on Macintosh, you can press ${control-key} + an access key."
-msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können sie <acronym>ALT</acronym> + Tastaturkommando tippen, unter Macintoshkönnen sie <acronym>Control</acronym> + Tastaturkommando tippen."
+msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können sie ${alt-key} + Tastaturkommando tippen, unter Macintosh können sie ${control-key} + Tastaturkommando tippen."
 
 #: ../templates/classic/filterconfig.html:44
 msgid "Move folder down"
@@ -1569,12 +1516,8 @@ msgid "Parent proxy user successfully changed."
 msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
 
 #: ../templates/classic/help.html:161
-#, fuzzy
 msgid "Parse HTML code and rewrite single tags, attributes and values. Execute and filter JavaScript. Parse and filter content rated pages. Filter HTML comments."
-msgstr ""
-"Parst HTML Daten und schreibe einzelne Tags, Attribute und\n"
-"Werte um. Führt JavaScript aus und filtert es. Parst in Seiten angegebene\n"
-"Inhaltsbewertungen und filtert diese Seiten. Filtert HTML Kommentare."
+msgstr "Parse HTML Daten und schreibe einzelne Tags, Attribute und Werte um. Führt JavaScript aus und filtert es. Parst in Seiten angegebene Inhaltsbewertungen und filtert diese Seiten. Filtert HTML Kommentare."
 
 #: ../templates/classic/help.html:145
 msgid "Parse and evaluate content rating system header values."
@@ -1636,9 +1579,8 @@ msgid "Proxy filter modules"
 msgstr "Proxy Filtermodule"
 
 #: ../templates/classic/config.html:378
-#, fuzzy
 msgid "Proxy network address successfully changed."
-msgstr "Proxypasswort erfolgreich geändert."
+msgstr "Proxy Netzwerkaddresse erfolgreich geändert."
 
 #: ../templates/classic/config.html:156
 msgid "Proxy password"
@@ -1695,11 +1637,8 @@ msgstr ""
 "Einstellungen Ihr Browser benötigt, um mit ${appname} zusammenzuarbeiten."
 
 #: ../templates/classic/help.html:271
-#, fuzzy
 msgid "Remove comments from HTML source. Comments inside &lt;script&gt; or &lt;style&gt; tags are not removed."
-msgstr ""
-"Lösche Kommentar aus dem HTML Quelltext. Kommentare\n"
-"innerhalb von &lt;script&gt; or &lt;style&gt; Tags werden nicht gelöscht."
+msgstr "Lösche Kommentare aus dem HTML Quelltext. Kommentare innerhalb von &lt;script&gt; or &lt;style&gt; Tags werden nicht gelöscht."
 
 #: ../templates/classic/filterconfig.html:131
 msgid "Remove folder"
@@ -1729,22 +1668,16 @@ msgid "Rename folder"
 msgstr "Ordner umbenennen"
 
 #: ../templates/classic/help.html:76
-#, fuzzy
 msgid "Replace illegal binary characters in HTML code like the quote chars often found in Microsoft pages."
-msgstr ""
-"Ersetze illegale Zeichen in HTML code wie z.B.\n"
-"Anführungszeichen wie man sie oft in Microsoft Seiten findet."
+msgstr "Ersetze illegale Zeichen in HTML code wie z.B. Anführungszeichen wie man sie oft in Microsoft Seiten findet."
 
 #: ../templates/classic/macros/rules.html:564
 msgid "Replace part"
 msgstr "Ersetzter Teil"
 
 #: ../templates/classic/help.html:241
-#, fuzzy
 msgid "Replace regular expressions in HTML or JavaScript pages."
-msgstr ""
-"Ersetze reguläre Ausdrücke in HTML oder JavaScript\n"
-"Seiten."
+msgstr "Ersetze reguläre Ausdrücke in HTML oder JavaScript Seiten."
 
 #: ../templates/classic/help.html:153
 msgid "Replace regular expressions in data streams."
@@ -1780,13 +1713,8 @@ msgid "Response content data of mime types image/gif"
 msgstr "Antwortdaten des Mimetyps image/gif"
 
 #: ../templates/classic/help.html:98
-#, fuzzy
 msgid "Response content data of mime types text/*, application/postscript, application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav, image/x-portable-*map, x-world/x-vrml."
-msgstr ""
-"Antwortdaten mit Mime-Typ\n"
-"text/*, application/postscript, application/pdf, application/x-dvi,\n"
-"audio/basic, audio/midi, audio/x-wav,\n"
-"image/x-portable-*map, x-world/x-vrml."
+msgstr "Antwortdaten mit Mime-Typ text/*, application/postscript, application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav, image/x-portable-*map, x-world/x-vrml."
 
 #: ../templates/classic/help.html:79
 msgid "Response content data of text/html mime type."
@@ -1950,49 +1878,16 @@ msgid "Search in ${site}"
 msgstr "Suche in ${site}"
 
 #: ../templates/classic/help.html:28
-#, fuzzy
 msgid "Select <b>Edit -&gt; Preferences -&gt; Advanced -&gt; Proxies</b>.<br> Activate <b>Manual proxy configuration</b>.<br> Under <b>HTTP Proxy</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>HTTPS Proxy</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
-msgstr ""
-"Wählen Sie <b>Bearbeiten -&gt; Einstellungen -&gt; Erweitert\n"
-"-&gt; Proxies</b>.<br>\n"
-"Aktivieren Sie <b>Manuelle Proxy-Konfiguration</b>.<br>\n"
-"Unter <b>HTTP-Proxy</b> geben Sie <i>localhost</i> ein, der\n"
-"<b>Port</b> ist <i>%(port)d</i>.<br>\n"
-"Unter <b>HTTPS-Proxy</b> geben Sie <i>localhost</i> ein, der\n"
-"<b>Port</b> ist <i>%(port)d</i>.<br>\n"
-"Unter <b>Kein Proxy für</b> geben Sie <i>localhost, 127.0.0.1</i> ein.<br>\n"
-"Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu verwenden."
+msgstr "Wählen Sie <b>Bearbeiten -&gt; Einstellungen -&gt; Erweitert -&gt; Proxies</b>.<br> Aktivieren Sie <b>Manuelle Proxy-Konfiguration</b>.<br> Unter <b>HTTP-Proxy</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>HTTPS-Proxy</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Kein Proxy für</b> geben Sie <i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu verwenden."
 
 #: ../templates/classic/help.html:52
-#, fuzzy
 msgid "Select <b>File -&gt; Preferences -&gt; Network -&gt; Proxy servers</b>.<br> Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>Do not use Proxy on the adresses below</b> and enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
-msgstr ""
-"Wählen Sie <b>Datei -&gt; Einstellungen -&gt; Netzwerk\n"
-"-&gt; Proxyserver</b>.<br>\n"
-"Aktivieren Sie <b>HTTP</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist\n"
-"<i>%(port)d</i>.<br>\n"
-"Aktivieren Sie <b>HTTPS</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist\n"
-"<i>%(port)d</i>.<br>\n"
-"Aktivieren Sie <b>Proxyserver für folgende Adressen nicht benutzen</b> und geben Sie\n"
-"<i>localhost, 127.0.0.1</i> ein.<br>\n"
-"Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu übernehmen."
+msgstr "Wählen Sie <b>Datei -&gt; Einstellungen -&gt; Netzwerk -&gt; Proxyserver</b>.<br> Aktivieren Sie <b>HTTP</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist <i>${port}.<br> Aktivieren Sie <b>HTTPS</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Aktivieren Sie <b>Proxyserver für folgende Adressen nicht benutzen</b> und geben Sie <i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu übernehmen."
 
 #: ../templates/classic/help.html:43
-#, fuzzy
 msgid "Select <b>Tools -&gt; Internet Options -&gt; Connections</b>.<br> Click on <b>LAN Settings</b>. If you have a dialup connection to the internet, select your dialup connection and click on <b>Settings</b>.<br> Activate <b>Use a proxy server</b>.<br> If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br> Click on <b>Advanced</b>.<br> Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Click <b>Ok</b> to use your new settings."
-msgstr ""
-"Wählen Sie <b>Extras -&gt; Internetoptionen -&gt; Verbindungen</b><br>\n"
-"Klicken Sie auf <b>LAN-Einstellungen</b>. Falls Sie eine DFÜ oder VPN\n"
-"Verbindung haben, wählen Sie die entsprechende Verbindung aus und\n"
-"klicken Sie unter DFÜ- und VPN-Einstellungen auf <b>Einstellungen</b>.<br>\n"
-"Aktivieren Sie <b>Proxyserver verwenden</b>.<br>\n"
-"Falls aktiviert, deaktivieren Sie <b>Proxyserver für lokale Adressen umgehen</b>.<br>\n"
-"Klicken Sie auf <b>Erweitert</b>.Unter <b>HTTP</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist\n"
-"<i>%(port)d</i>.<br>\n"
-"Unter <b>Secure</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist\n"
-"<i>%(port)d</i>.<br>\n"
-"Unter <b>Ausnahmen</b> geben Sie <i>localhost; 127.0.0.1</i> ein.<br>\n"
-"Klicken Sie <b>Ok</b> um die neuen Einstellungen zu übernehmen."
+msgstr "Wählen Sie <b>Extras -&gt; Internetoptionen -&gt; Verbindungen</b><br> Klicken Sie auf <b>LAN-Einstellungen</b>. Falls Sie eine DFÜ oder VPN Verbindung haben, wählen Sie die entsprechende Verbindung aus und klicken Sie unter DFÜ- und VPN-Einstellungen auf <b>Einstellungen</b>.<br> Aktivieren Sie <b>Proxyserver verwenden</b>.<br> Falls aktiviert, deaktivieren Sie <b>Proxyserver für lokale Adressen umgehen</b>.<br> Klicken Sie auf <b>Erweitert</b>.Unter <b>HTTP</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Secure</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Ausnahmen</b> geben Sie <i>localhost; 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b> um die neuen Einstellungen zu übernehmen."
 
 #: ../templates/classic/rating_mail.html:42
 msgid "Send"
@@ -2004,22 +1899,12 @@ msgid "Skip to main content"
 msgstr "Zum Hauptinhalt springen"
 
 #: ../templates/classic/update.html:37
-#, fuzzy
 msgid "The <b>Update content ratings</b> button downloads new content ratings from ${url} and adds new ratings into the current configuration.<br> Existing content ratings are not changed."
-msgstr ""
-"Der Knopf <b>Aktualisierung der Inhaltsbewertung</b> lädt neue Inhaltsbewertungen\n"
-"von <a href=\"%(updateratingurl)s\">%(updateratingurl)s</a>\n"
-"und fügt neue Bewertungen in die aktuelle Konfiguration ein.<br>\n"
-"Existierende Bewertungen werden nicht verändert."
+msgstr "Der Knopf <b>Aktualisierung der Inhaltsbewertung</b> lädt neue Inhaltsbewertungen von ${url} und fügt neue Bewertungen in die aktuelle Konfiguration ein.<br> Existierende Bewertungen werden nicht verändert."
 
 #: ../templates/classic/update.html:20
-#, fuzzy
 msgid "The <b>Update filter configuration</b> button downloads new filter files from ${url} and merges their changes into the current configuration.<br> If something has changed, the new filter configuration files are saved and reloaded into the proxy."
-msgstr ""
-"Der Knopf <b>Aktualisierung der Filterkonfiguration</b> lädt neue Filterdateien von <a href=\"%(updatezapperurl)s\">%(updatezapperurl)s</a>\n"
-"und fügt ihre Änderungen in die aktuelle Konfiguration ein.<br>\n"
-"Falls etwas geändert wurde, wird die neue Filterkonfiguration gespeichert und\n"
-"in den Proxy neu geladen."
+msgstr "Der Knopf <b>Aktualisierung der Filterkonfiguration</b> lädt neue Filterdateien von ${url} und fügt ihre Änderungen in die aktuelle Konfiguration ein.<br> Falls etwas geändert wurde, wird die neue Filterkonfiguration gespeichert und in den Proxy neu geladen."
 
 #: ../templates/classic/adminpass.html:16
 msgid "The administrator password was not yet initialized. This password protects the web configuration pages. Without an administrator password, every user can change the proxy configuration."
@@ -2034,9 +1919,8 @@ msgid "The content of the requested page ${url} was rated for the following reas
 msgstr "Der Inhalt der angeforderten Seite ${url} wurde aus folgendem Grund gesperrt:"
 
 #: ../templates/classic/macros/rules.html:21
-#, fuzzy
 msgid "The supplied value resembles a <a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
-msgstr "Dieser Wert ist ein <a href=\"http://www.amk.ca/python/howto/regex/\">regulärer Ausdruck</a>."
+msgstr "Der Wert ist ein <a href=\"http://www.amk.ca/python/howto/regex/\">regulärer Ausdruck</a>."
 
 #: ../templates/classic/rating.html:121
 msgid "There are no url ratings saved."
@@ -2134,18 +2018,12 @@ msgstr ""
 "${email} geschickt:"
 
 #: ../templates/classic/feedback.html:24
-#, fuzzy
 msgid "You can of course always add your own filter rules, they will not be touched on a filter update."
-msgstr ""
-"Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden\n"
-"bei einer Filteraktualisierung nicht gelöscht."
+msgstr "Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden bei einer Filteraktualisierung nicht gelöscht."
 
 #: ../templates/classic/rating.html:18
-#, fuzzy
 msgid "You can rate and review web pages according to several given categories."
-msgstr ""
-"Sie können Webseiten nachschlagen und anhand einiger\n"
-"Kategorien bewerten."
+msgstr "Sie können Webseiten nachschlagen und anhand einiger Kategorien bewerten."
 
 #: ../templates/classic/rating_mail.html:20
 msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
