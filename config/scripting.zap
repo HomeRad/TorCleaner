@@ -87,7 +87,7 @@
 <replace part="tag"/>
 </rewrite>
 
-<replacer title="top frame bashing" oid="115"
+<replacer title="top frame bashing" oid="13"
  desc="Some sites disable surrounding frames and install themselves as the top frame."
  search="top\.location\.href\s*=\s*self\.location\.href"/>
 </folder>

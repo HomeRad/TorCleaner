@@ -10,6 +10,7 @@
     o remove _blank and _new targets
     o prevent javascript top frame bashing
     o use Calzilla/6.0 as user agent
+    * more ad filters
     Changed files: config/*.zap
   * Removed unneeded guruguru.bmp
   * #define YY_NO_UNISTD_H on Windows systems, fixes build error with
@@ -19,6 +20,8 @@
     Changed files: wc/proxy/HttpServer.py
   * handle chunked encoding for client requests
     Changed files: wc/proxy/HttpClient.py
+  * fix some typos and grammar
+    Changed files: FAQ, README*
 
 1.6
   * updated filters:
