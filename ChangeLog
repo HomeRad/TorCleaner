@@ -1,4 +1,6 @@
 1.11
+  * added "What you can do" entry
+    Changed files: README
   * - remove <body ondragstart, oncontextmenu, onselectstart>
     - prevent document.onmousedown rebinding
     - some ad filter updates
@@ -14,6 +16,12 @@
     Changed files: setup.py
   * 100 continue: switch back to response state only after reading headers
     Changed files: wc/proxy/HttpServer.py
+  * use python logging framework
+    Changed files: XXX
+  * remove client Connection: and Proxy-Connection: headers
+    Changed files: wc/proxy/HttpClient.py
+  * handle partial proxy request uris
+    Changed files: wc/proxy/{__init__,ClientServerMatchmaker}.py
 
 1.10
   * fix rule title updating (again)
