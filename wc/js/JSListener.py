@@ -21,7 +21,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-class JSListener:
+class JSListener (object):
     """Define handler functions for javascript events"""
 
     def jsProcessData (self, data):

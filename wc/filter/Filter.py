@@ -20,7 +20,7 @@ __date__    = "$Date$"[7:-2]
 
 from wc.log import *
 
-class Filter:
+class Filter (object):
     """the base filter class"""
     def __init__ (self, mimelist):
         self.rules = []

@@ -23,7 +23,7 @@ from wc.XmlUtils import xmlify, unxmlify
 from types import IntType
 
 
-class Rule:
+class Rule(object):
     """Basic rule class for filtering.
     A basic rule has:
        title - the title
@@ -34,7 +34,8 @@ class Rule:
                leave empty to apply to all urls.
        parent - the parent folder (if any); look at FolderRule class
     """
-    def __init__ (self, title="No title", desc="", disable=0, parent=None, oid=0):
+    def __init__ (self, title="No title", desc="", disable=0, parent=None,
+                  oid=0):
         self.title = title
         if not oid:
             self.oid = wc.filter.rules.rulecounter

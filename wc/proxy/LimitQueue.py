@@ -2,7 +2,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-class LimitQueue:
+class LimitQueue (object):
     def __init__ (self, capacity=100):
         if capacity<1:
             raise ValueError("capacity must be > 0")

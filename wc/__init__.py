@@ -301,31 +301,36 @@ _nestedtags = (
 
 class ParseException (Exception): pass
 
-class BaseParser:
+class BaseParser (object):
     def parse (self, filename, config):
         debug(WC, "Parsing %s", filename)
         self.p = xml.parsers.expat.ParserCreate("ISO-8859-1")
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
         self.p.CharacterDataHandler = self.character_data
-        self.reset()
+        self.reset(filename)
         self.config = config
         self.p.ParseFile(open(filename))
 
     def start_element (self, name, attrs):
         pass
+
+
     def end_element (self, name):
         pass
+
+
     def character_data (self, data):
         pass
-    def reset (self):
+
+
+    def reset (self, filename):
         pass
 
 
 class ZapperParser (BaseParser):
     def parse (self, filename, config):
         BaseParser.parse(self, filename, config)
-        self.rules.filename = filename
         config['rules'].append(self.rules)
 
     def start_element (self, name, attrs):
@@ -352,9 +357,9 @@ class ZapperParser (BaseParser):
         if self.cmode and self.rule:
             self.rule.fill_data(data, self.cmode)
 
-    def reset (self):
+    def reset (self, filename):
         from wc.filter.rules import FolderRule
-        self.rules = FolderRule.FolderRule()
+        self.rules = FolderRule.FolderRule(filename=filename)
         self.cmode = None
         self.rule = None
 

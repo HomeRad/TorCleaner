@@ -44,7 +44,7 @@ except:
 	import DummyLogger as logging
 
 
-class ContextVariable:
+class ContextVariable (object):
 	def __init__ (self, value = None):
 		self.ourValue = value
 		
@@ -240,7 +240,7 @@ class PathFunctionVariable (ContextVariable):
 			# Fast track the result
 			raise result
 		
-class PythonPathFunctions:
+class PythonPathFunctions (object):
 	def __init__ (self, context):
 		self.context = context
 		
@@ -272,7 +272,7 @@ class PythonPathFunctions:
 		else:
 			return result
 
-class Context:
+class Context (object):
 	def __init__ (self, options=None, allowPythonPath=0):
 		self.allowPythonPath = allowPythonPath
 		self.globals = {}

@@ -93,7 +93,7 @@ class HTMLStructureCleaner (sgmllib.SGMLParser):
 	def handle_entityref (self, ref):
 		self.outputFile.write (u'&%s;' % ref)
 		
-class TemplateCache:
+class TemplateCache (object):
 	""" A TemplateCache is a multi-thread safe object that caches compiled templates.
 			This cache only works with file based templates, the ctime of the file is 
 			checked on each hit, if the file has changed the template is re-compiled.

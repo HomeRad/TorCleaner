@@ -5,7 +5,7 @@ __date__    = "$Date$"[7:-2]
 from wc.log import *
 import urlparse
 
-class HttpProxyClient:
+class HttpProxyClient (object):
     """A class buffering all incoming data from a server for later use.
        Used to fetch javascript content in background.
        On completion the handler function is called.

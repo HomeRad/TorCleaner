@@ -6,7 +6,7 @@ import time
 from wc.proxy import make_timer
 from wc.log import *
 
-class ServerPool:
+class ServerPool (object):
     """server connection pool for reusing server connections
 
        Usage:

@@ -328,7 +328,11 @@ class ConfWindow (ToolWindow):
 
     def onCmdNewFolder (self, sender, sel, ptr):
         debug(GUI, "new folder")
-        f = FolderRule("No title","",0,0,tempfile.mktemp()+".zap")
+        # use the special case of filename with the mkstemp tuple
+        f, filename = tempfile.mkstemp("", ".zap", ConfigDir, text=True)
+        f.write("Wummel")
+        f.close()
+        f = FolderRule(title="No title", desc="", disable=0,filename=filename)
         self.tree.addFolder(f, create=1)
         self.getApp().dirty = 1
         return 1

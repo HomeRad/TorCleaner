@@ -89,7 +89,7 @@ def compileMime (mime):
 
 
 def GetRuleFromName (name):
-    name = name.capitalize()+'Rule'
+    name = '%sRule' % name.capitalize()
     exec "from wc.filter.rules.%s import %s"%(name,name)
     klass = locals()[name]
     return klass()

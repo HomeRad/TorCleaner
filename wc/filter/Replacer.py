@@ -62,7 +62,7 @@ class Replacer (Filter):
         return {'buf': Buf(rules)}
 
 
-class Buf:
+class Buf (object):
     def __init__ (self, rules):
         self.rules = rules
         self.buf = ""

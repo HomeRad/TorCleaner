@@ -90,7 +90,7 @@ METAL_DEFINE_MACRO=17
 											
 METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
 									  
-class TemplateInterpreter:
+class TemplateInterpreter (object):
 	def __init__ (self):
 		self.programStack = []
 		self.commandList = None
@@ -428,7 +428,7 @@ class TemplateInterpreter:
 		self.programCounter += 1
 		return
 	
-class Template:
+class Template (object):
 	def __init__ (self, commands, macros, symbols):
 		self.commandList = commands
 		self.macros = macros
@@ -560,7 +560,7 @@ def tagAsText ((tag,atts)):
 	result += ">"
 	return result
 	
-class TemplateCompiler:
+class TemplateCompiler (object):
 	def __init__ (self):
 		self.commandList = []
 		self.tagStack = []

@@ -26,7 +26,7 @@ from wc import i18n, config, TemplateDir, filtermodules
 from wc.log import *
 import os, urllib, urlparse
 
-class WebConfig:
+class WebConfig (object):
     def __init__ (self, client, url, form, protocol,
                   status=200, msg=i18n._('Ok'), context={},
                   headers={'Content-Type': 'text/html'}):

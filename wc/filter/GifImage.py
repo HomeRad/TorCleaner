@@ -73,7 +73,7 @@ class GifImage (Filter):
 
 
 
-class GifParser:
+class GifParser (object):
     """Here we have a parser (and filter) for GIF images.
     This parser filters all GIF image extensions (eg. comment and
     application extensions) except graphic control extensions.

@@ -7,7 +7,7 @@ __date__    = "$Date$"[7:-2]
 
 import zlib
 
-class DeflateStream:
+class DeflateStream (object):
     def __init__ (self):
         self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
         self.closed = False

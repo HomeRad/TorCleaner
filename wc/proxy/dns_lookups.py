@@ -15,7 +15,7 @@ from pprint import pformat
 
 ###################### configuration ########################
 
-class DnsConfig:
+class DnsConfig (object):
     pass
 
 
@@ -113,7 +113,7 @@ def background_lookup (hostname, callback):
     DnsExpandHostname(hostname.lower(), callback)
 
 
-class DnsResponse:
+class DnsResponse (object):
     """ A DNS answer can be:
         ('found', [ipaddrs])
         ('error', why-str)
@@ -135,7 +135,7 @@ class DnsResponse:
         return self.kind == 'redirect'
 
 
-class DnsExpandHostname:
+class DnsExpandHostname (object):
     "Try looking up a hostname and its expansions"
     # This routine calls DnsCache to do the individual lookups
     def __init__ (self, hostname, callback):
@@ -218,7 +218,7 @@ class DnsExpandHostname:
         self.handle_issue_request()
 
 
-class DnsCache:
+class DnsCache (object):
     """Provides a lookup function that will either get a value from the cache
     or initiate a DNS lookup, fill the cache, and return that value"""
     # lookup() can create zero or one DnsLookupHostname objects
@@ -323,7 +323,7 @@ class DnsCache:
             c(hostname, answer)
 
 
-class DnsLookupHostname:
+class DnsLookupHostname (object):
     "Perform DNS lookup on many nameservers"
     # Use a DnsLookupConnection per nameserver
     

@@ -23,7 +23,7 @@ __date__    = "$Date$"[7:-2]
 from _winreg import *
 from types import StringType
 
-class key_handle:
+class key_handle (object):
     """represent an opened key with dictionary-like access"""
     def __init__ (self, key, sub_key):
         self._key = OpenKey(key, sub_key)

@@ -13,7 +13,7 @@ from wc.log import *
 import re
 match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
 
-class UnchunkStream:
+class UnchunkStream (object):
     # States:
     #   if bytes_remaining is None:
     #      we're in the "need chunk size" state

@@ -36,7 +36,7 @@ from FXAllowdomainsRuleFrame import FXAllowdomainsRuleFrame
 from FXPicsRuleFrame import FXPicsRuleFrame
 
 
-class FXRuleFrameFactory:
+class FXRuleFrameFactory (object):
     """Every Rule (see wc/filter/rules/) has a "fromFactory" function.
        A factory has a function fromXYZRule for every different Rule
        class.

@@ -14,7 +14,7 @@ serverpool = ServerPool()
 
 from HttpServer import HttpServer
 
-class ClientServerMatchmaker:
+class ClientServerMatchmaker (object):
     """
      States:
 

@@ -31,7 +31,7 @@ except ImportError, msg:
     print >>sys.stderr, "Please check your installation of WebCleaner."
     sys.exit(1)
 
-class HtmlParser:
+class HtmlParser (object):
     """Use an internal C SAX parser. We do not define any callbacks
     here for compatibility. Currently recognized callbacks are:
     comment(data): <!--data-->

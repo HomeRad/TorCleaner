@@ -12,7 +12,7 @@ This code is covered by the standard Python License.
 
 import select, socket, string, types, time, asyncore
 
-class DNSError(Exception): pass
+class DNSError (Exception): pass
 
 import Lib, Type, Class, Opcode
 
@@ -57,7 +57,7 @@ def DiscoverNameServers():
     else:
         return ParseResolvConf()
 
-class DnsRequest:
+class DnsRequest (object):
     """ high level Request object """
     def __init__(self,*name,**args):
         self.donefunc=None
@@ -220,7 +220,7 @@ class DnsRequest:
             raise DNSError,'no working nameservers found'
 
 #class DnsAsyncRequest(DnsRequest):
-class DnsAsyncRequest(DnsRequest,asyncore.dispatcher_with_send):
+class DnsAsyncRequest (DnsRequest, asyncore.dispatcher_with_send):
     " an asynchronous request object. out of date, probably broken "
     def __init__(self,*name,**args):
         DnsRequest.__init__(self, *name, **args)
@@ -255,6 +255,9 @@ class DnsAsyncRequest(DnsRequest,asyncore.dispatcher_with_send):
 
 #
 # $Log$
+# Revision 1.4  2003/07/05 09:21:43  calvin
+# use new-style classes where possible
+#
 # Revision 1.3  2003/04/01 23:29:22  calvin
 # add encding comment
 #

@@ -32,8 +32,8 @@ import Status
 
 from Base import DNSError
 
-class UnpackError(DNSError): pass
-class PackError(DNSError): pass
+class UnpackError (DNSError): pass
+class PackError (DNSError): pass
 
 # Low-level 16 and 32 bit integer packing and unpacking
 
@@ -67,7 +67,7 @@ def bin2addr(n):
 
 # Packing class
 
-class Packer:
+class Packer (object):
     " packer base class. supports basic byte/16bit/32bit/addr/string/name "
     def __init__(self):
         self.buf = ''
@@ -161,7 +161,7 @@ class Packer:
 # Unpacking class
 
 
-class Unpacker:
+class Unpacker (object):
     def __init__(self, buf):
         self.buf = buf
         self.offset = 0
@@ -263,7 +263,7 @@ def testpacker():
 
 # Pack/unpack RR toplevel format (section 3.2.1)
 
-class RRpacker(Packer):
+class RRpacker (Packer):
     def __init__(self):
         Packer.__init__(self)
         self.rdstart = None
@@ -368,7 +368,7 @@ def prettyTime(seconds):
         return seconds,"%d weeks"%(seconds/604800)
 
 
-class RRunpacker(Unpacker):
+class RRunpacker (Unpacker):
     def __init__(self, buf):
         Unpacker.__init__(self, buf)
         self.rdend = None
@@ -427,7 +427,7 @@ class RRunpacker(Unpacker):
 
 # Pack/unpack Message Header (section 4.1)
 
-class Hpacker(Packer):
+class Hpacker (Packer):
     def addHeader(self, id, qr, opcode, aa, tc, rd, ra, z, rcode,
               qdcount, ancount, nscount, arcount):
         self.add16bit(id)
@@ -439,7 +439,7 @@ class Hpacker(Packer):
         self.add16bit(nscount)
         self.add16bit(arcount)
 
-class Hunpacker(Unpacker):
+class Hunpacker (Unpacker):
     def getHeader(self):
         id = self.get16bit()
         flags = self.get16bit()
@@ -462,13 +462,13 @@ class Hunpacker(Unpacker):
 
 # Pack/unpack Question (section 4.1.2)
 
-class Qpacker(Packer):
+class Qpacker (Packer):
     def addQuestion(self, qname, qtype, qclass):
         self.addname(qname)
         self.add16bit(qtype)
         self.add16bit(qclass)
 
-class Qunpacker(Unpacker):
+class Qunpacker (Unpacker):
     def getQuestion(self):
         return self.getname(), self.get16bit(), self.get16bit()
 
@@ -476,10 +476,10 @@ class Qunpacker(Unpacker):
 # Pack/unpack Message(section 4)
 # NB the order of the base classes is important for __init__()!
 
-class Mpacker(RRpacker, Qpacker, Hpacker):
+class Mpacker (RRpacker, Qpacker, Hpacker):
     pass
 
-class Munpacker(RRunpacker, Qunpacker, Hunpacker):
+class Munpacker (RRunpacker, Qunpacker, Hunpacker):
     pass
 
 
@@ -510,7 +510,7 @@ def dumpM(u):
         print 'ADDITIONAL RECORD %d:' % i,
         dumpRR(u)
 
-class DnsResult:
+class DnsResult (object):
 
     def __init__(self,u,args):
         self.header={}
@@ -632,6 +632,9 @@ if __name__ == "__main__":
     testpacker()
 #
 # $Log$
+# Revision 1.4  2003/07/05 09:21:43  calvin
+# use new-style classes where possible
+#
 # Revision 1.3  2003/07/01 15:46:17  calvin
 # use bool type, add encoding comment, add timeout config value
 #
