@@ -387,6 +387,9 @@ class HttpServer (Server):
                  (-self.bytes_remaining))
         if is_closed or self.bytes_remaining==0:
             # Either we ran out of bytes, or the decoder says we're done
+            if not self.data_written:
+                self.client.server_response(self, self.response,
+                                            self.statuscode, self.headers)
             self.state = 'recycle'
 
 
