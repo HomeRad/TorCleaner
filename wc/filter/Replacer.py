@@ -24,6 +24,7 @@ __date__    = "$Date$"[7:-2]
 import wc.filter
 import wc.filter.Filter
 
+DefaultCharset = 'iso-8859-1'
 
 # XXX group matches?
 class Replacer (wc.filter.Filter.Filter):
@@ -34,22 +35,34 @@ class Replacer (wc.filter.Filter.Filter):
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['replace']
-    mimelist = [wc.filter.compileMime(x) for x in ['text/html', 'text/javascript',
-                                         'application/x-javascript']]
+    mimelist = [ wc.filter.compileMime(x)
+       for x in ['text/html', 'text/javascript', 'application/x-javascript'] ]
 
 
     def filter (self, data, **attrs):
         """feed data to replacer buffer"""
-        if not attrs.has_key('replacer_buf'): return data
-        return attrs['replacer_buf'].replace(data)
+        if not attrs.has_key('replacer_buf') or not data:
+            return data
+        buf = attrs['replacer_buf']
+        charset = attrs.get('charset', DefaultCharset)
+        return self.replace(data, charset, buf)
 
 
     def finish (self, data, **attrs):
         """feed data to replacer buffer, flush and return it"""
-        if not attrs.has_key('replacer_buf'): return data
+        if not attrs.has_key('replacer_buf'):
+            return data
         buf = attrs['replacer_buf']
-        if data: data = buf.replace(data)
-        return data+buf.flush()
+        charset = attrs.get('charset', DefaultCharset)
+        if data:
+            data = self.replace(data, charset, buf)
+        return data+buf.flush().encode(charset, 'ignore')
+
+
+    def replace (self, data, charset, buf):
+        udata = data.decode(charset, 'ignore')
+        udata = buf.replace(udata)
+        return udata.encode(charset, 'ignore')
 
 
     def getAttrs (self, url, headers):
@@ -64,12 +77,13 @@ class Replacer (wc.filter.Filter.Filter):
 
 
 class Buf (object):
-    """buffer data ready for replacing, with overlapping scans"""
+    """Holds buffer data ready for replacing, with overlapping scans.
+       Strings must be unicode."""
 
     def __init__ (self, rules):
         """store rules and initialize buffer"""
         self.rules = rules
-        self.buf = ""
+        self.buf = u""
 
 
     def replace (self, data):
@@ -81,7 +95,7 @@ class Buf (object):
                 data = self.buf
                 self.buf = self.buf[-256:]
                 return data[:-256]
-        return ""
+        return u""
 
 
     def _replace (self):
@@ -94,5 +108,5 @@ class Buf (object):
     def flush (self):
         """flush buffered data and return it"""
         self._replace()
-        self.buf, data = "", self.buf
+        self.buf, data = u"", self.buf
         return data
