@@ -5,8 +5,6 @@
 # TEST CASE:
 #    http://www.apache.org/
 
-from string import atoi
-
 class UnchunkStream:
     # States:
     #   if bytes_remaining is None:
@@ -35,7 +33,7 @@ class UnchunkStream:
                     self.buffer = self.buffer[i+1:]
                     if line:
                         # NOTE: chunklen can be followed by r";.*"
-                        self.bytes_remaining = atoi(line, 16) # chunklen is hex
+                        self.bytes_remaining = int(line, 16) # chunklen is hex
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:
                             # End of stream

@@ -3,8 +3,9 @@ webcleaner (0.30) unstable; urgency=low
   * wcheaders, webcleanerconf: only enable() edit/remove buttons when
     they can do something
   * more advert filters
+  * use string methods where possible
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri, 30 Nov 2001 16:22:41 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Sat,  1 Dec 2001 11:36:28 +0100
 
 webcleaner (0.29) unstable; urgency=low
 

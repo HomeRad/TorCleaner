@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import string
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter.Filter import Filter
 
@@ -24,7 +23,5 @@ rulenames = []
 class BinaryCharFilter(Filter):
     mimelist = ('text/html',)
 
-    TRANS = string.maketrans('\x00\x84\x91\x92\x93\x94', ' "`\'""')
-
     def doit(self, data, **attrs):
-        return string.translate(data, self.TRANS)
+        return data.translate('\x00\x84\x91\x92\x93\x94', ' "`\'""')
