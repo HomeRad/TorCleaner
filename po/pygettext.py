@@ -531,10 +531,8 @@ class HtmlGettext (sgmllib.SGMLParser, object):
         elif self.tag:
             # nested tag to translate
             self.data += "<%s"%tag
-            if attrs:
-                self.data += " "
-                for key,val in attrs.items():
-                    self.data += "%s=\"%s\"" % (key, cgi.escape(val, True))
+            for key,val in attrs.items():
+                self.data += " %s=\"%s\"" % (key, cgi.escape(val, True))
             self.data += ">"
         argument = attrs.get('i18n:attributes', None)
         if argument is not None:
