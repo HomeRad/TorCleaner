@@ -77,7 +77,7 @@ def get_content_length (headers, default=None):
 def get_wc_client_headers (host):
     """get default webcleaner proxy request headers"""
     headers = WcMessage()
-    headers['host'] = '%s\r' % host
+    headers['Host'] = '%s\r' % host
     headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
     headers['Connection'] = 'Keep-Alive\r'
     headers['Keep-Alive'] = 'timeout=300\r'
