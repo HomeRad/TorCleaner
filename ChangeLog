@@ -11,6 +11,12 @@
     Type: feature
     Changed: config/*.zap
 
+  * Added restart button to proxy configuration HTML page.
+    Type: feature
+    Changed: wc/__init__.py, webcleaner, wc/webgui/webconfig.py,
+    Added: templates/classic/restart.html,
+      wc/webgui/context/restart_html.py
+
 2.25 "Elf" (released 23.12.2004)
 
   * Filter rating is disabled for now until it works again.
