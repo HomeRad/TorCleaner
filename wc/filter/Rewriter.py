@@ -24,6 +24,8 @@ from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter import compileMime, compileRegex
 from wc.filter.Filter import Filter
 from wc.filter.HtmlParser import FilterHtmlParser
+from wc.log import *
+
 
 class Rewriter (Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
@@ -75,15 +77,16 @@ class Rewriter (Filter):
         pics = []
         # look if headers already have PICS label info
         picsheader = headers.has_key('PICS-Label')
-        opts = {'comments': 1, 'javascript': 0}
+        opts = {'comments': True, 'javascript': False}
         for rule in self.rules:
-            if not rule.appliesTo(url): continue
+            if not rule.appliesTo(url):
+                continue
             if rule.get_name()=='rewrite':
                 rewrites.append(rule)
             elif rule.get_name()=='nocomments':
-                opts['comments'] = 0
+                opts['comments'] = False
             elif rule.get_name()=='javascript':
-                opts['javascript'] = 1
+                opts['javascript'] = True
             elif rule.get_name()=='pics' and not picsheader:
                 pics.append(rule)
         # generate the HTML filter
