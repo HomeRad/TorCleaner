@@ -144,7 +144,7 @@ if sys.version[:5] < "2.3":
 try:
     import psyco
     psyco.profile()
-except:
+except ImportError:
     pass
 from wc import i18n, wstartfunc
 
