@@ -4,10 +4,6 @@ version 2.20
 
 - only headers visible: http://www.photocritique.net/g/shl?0b00001
 
-- crashes: http://web2.callisto.twam.info/ger/index.php
-
-- empty page: http://sport.ard.de/sp/allgemein/verletzungen/index.jhtml
-
 - proper MIME magic scanning on the body content, not on response content
 
 - use ZPT tal implementation, having i18n support
