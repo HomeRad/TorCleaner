@@ -25,10 +25,10 @@ class ImageRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, width=0,
                   height=0, type="gif", url="", oid=0):
         UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
-        self.width=width
-        self.height=height
+        self.width = width
+        self.height = height
         self.intattrs.extend(('width','height'))
-        self.type=type
+        self.type = type
         self.url = url
         self.attrnames.extend(('type','url','width','height'))
 

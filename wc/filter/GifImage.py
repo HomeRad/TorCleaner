@@ -31,6 +31,8 @@ orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['image']
 # which mime types this filter applies to
 mimelist = map(compileMime, ['image/gif'])
+# XXX also filter other image types than gif: at least jpg and png
+# should work with PIL
 
 def i16 (c):
     """merge two bytes to an integer"""
@@ -77,7 +79,7 @@ class GifImage (Filter):
         rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
         if not rules:
             return {}
-        sizes = map(lambda r: (r.width, r.height), rules)
+        sizes = [ (r.width, r.height) for r in rules if r.type=='gif' ]
         return {'gifparser': GifParser(sizes)}
 
 

@@ -70,14 +70,14 @@ class FXRuleFrame (FXVerticalFrame):
 
     def get_name (self):
         """display this name at the top of the window"""
-        s = self.rule.get_name().capitalize()+i18n._(" rule")
+        s = self.rule.get_name().capitalize()+" "+i18n._("rule")
         s += " (ID %d)" % self.rule.oid
         return s
 
     def onCmdTitle (self, sender, sel, ptr):
         title = sender.getText().strip()
         if not title:
-            error(i18n._("empty title"))
+            self.getApp().error(i18n._("Error"), i18n._("Empty title"))
             sender.setText(self.rule.title)
             return 1
         self.rule.title = title

@@ -206,7 +206,7 @@ class RewriteRule (UrlRule):
                         else:
                             newattrs[attr] = self.replace[1] % dict
                     else:
-                        error("Invalid part value %s" % part)
+                        error(FILTER, "Invalid part value %s" % str(part))
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val

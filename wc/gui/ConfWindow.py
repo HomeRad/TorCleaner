@@ -427,7 +427,7 @@ class ConfWindow (ToolWindow):
     def onCmdProxyUser (self, sender, sel, ptr):
         if not _proxy_user_ro.match(sender.getText()):
             self.getApp().error(i18n._("Invalid Proxy User"),
-                       i18n._("You have to use -A-Za-z0-9._ for the proxy user name."))
+             i18n._("You have to use -A-Za-z0-9._ for the proxy user name."))
             sender.setText(self.proxyuser)
             return 1
         self.proxyuser = sender.getText()
@@ -494,7 +494,7 @@ class ConfWindow (ToolWindow):
         dialog = FXDialogBox(self,i18n._("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, i18n._("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Hostname")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         host = FXTextField(matrix, 20)
         f = FXHorizontalFrame(frame)
         FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
@@ -502,10 +502,12 @@ class ConfWindow (ToolWindow):
         if dialog.execute():
             host = host.getText().strip().lower()
             if not host:
-                self.getApp().error(i18n._("Add proxy"), i18n._("Empty hostname"))
+                self.getApp().error(i18n._("Add proxy"),
+                                    i18n._("Empty hostname"))
 	        return 1
             if host in self.nofilterhosts:
-                self.getApp().error(i18n._("Add proxy"), i18n._("Duplicate hostname"))
+                self.getApp().error(i18n._("Add proxy"),
+                                    i18n._("Duplicate hostname"))
 	        return 1
             self.nofilterhosts.add(host)
             self.nofilterlist.appendItem(host)
@@ -521,7 +523,7 @@ class ConfWindow (ToolWindow):
         dialog = FXDialogBox(self, i18n._("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, i18n._("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("New hostname")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         nametf = FXTextField(matrix, 20)
         nametf.setText(host)
         f = FXHorizontalFrame(frame)
@@ -552,7 +554,7 @@ class ConfWindow (ToolWindow):
         dialog = FXDialogBox(self,i18n._("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, i18n._("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Hostname")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         host = FXTextField(matrix, 20)
         f = FXHorizontalFrame(frame)
         FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
@@ -560,10 +562,12 @@ class ConfWindow (ToolWindow):
         if dialog.execute():
             host = host.getText().strip().lower()
             if not host:
-                self.getApp().error(i18n._("Add proxy"), i18n._("Empty hostname"))
+                self.getApp().error(i18n._("Add proxy"),
+                                    i18n._("Empty hostname"))
 	        return 1
             if host in self.allowedhosts:
-                self.getApp().error(i18n._("Add proxy"), i18n._("Duplicate hostname"))
+                self.getApp().error(i18n._("Add proxy"),
+                                    i18n._("Duplicate hostname"))
 	        return 1
             self.allowedhosts.add(host)
             self.allowedlist.appendItem(host)
@@ -579,7 +583,7 @@ class ConfWindow (ToolWindow):
         dialog = FXDialogBox(self, i18n._("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, i18n._("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("New hostname")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         nametf = FXTextField(matrix, 20)
         nametf.setText(host)
         f = FXHorizontalFrame(frame)

@@ -16,6 +16,26 @@ t_rules = i18n._("Rules")
 t_rule = i18n._("Rule")
 t_ruletitle = i18n._("Title")
 t_ruledescription = i18n._("Description")
+t_rulematchurl = i18n._("Match url")
+t_ruledontmatchurl = i18n._("Don't match url")
+t_ruleurlscheme = i18n._("URL scheme")
+t_ruleurlhost = i18n._("URL host")
+t_ruleurlport = i18n._("URL port")
+t_ruleurlpath = i18n._("URL path")
+t_ruleurlparameters = i18n._("URL parameters")
+t_ruleurlquery = i18n._("URL query")
+t_ruleurlfragment = i18n._("URL fragment")
+t_ruleblockedurl = i18n._("Blocked URL")
+t_rulefile = i18n._("Filename")
+t_ruleheadername = i18n._("Header name")
+t_ruleheadervalue = i18n._("Header value")
+t_ruleimgwidth = i18n._("Image width")
+t_ruleimgheight = i18n._("Image height")
+t_ruleimgurl = i18n._("Blocked image url")
+t_rulesearch = i18n._("Replace regex")
+t_rulereplace = i18n._("Replacement")
+t_ruletag = i18n._("Tag name")
+t_ruleattrs = i18n._("Attributes")
 
 # config vars
 info = []
@@ -28,10 +48,16 @@ curfolder = None
 currule = None
 ruletypes = [
     "Allow",
+    "Allowdomains",
+    "Allowurls",
+    "Blockdomains",
+    "Blockurls",
     "Block",
     "Header",
     "Image",
+    "Javascript",
     "Nocomments",
+    "Pics",
     "Rewrite",
     "Replacer",
 ]
