@@ -2,6 +2,9 @@ TODO
 
 version 2.19 and above
 
+- no connection close? Wullert immer und ewig
+  http://der-pro-clan.goracer.de/gexx/page/main.php?site=members/index&action=member&mid=12
+
 - Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/webcleaner", line 170, in ?
     main(sys.argv[1:])
@@ -29,28 +32,6 @@ version 2.19 and above
     assert self.server, "%s server_content had no server"%self
 AssertionError: <client:request  being read> server_content had no server
 
-Adblock regexes:
-[Adblock]
-/\D\d{2,3}x\d{2,3}\D/
-googlesyndication
-us.yimg.com/a/
-/\/buy_assets\//
-/[\W\d_](top|bottom|left|right|)?banner(s|id=|\d|_)[\W\d]/
-/[\W\d](double|fast)click[\W\d]/
-/[\W\d]click(stream|thrutraffic|thru|xchange)[\W\d]/
-/[\W\d]value(stream|xchange|click)[\W\d]/
-/[\W\d]dime(xchange|click)[\W\d]/
-/[\W\d](onlineads?|ad(banner|click|-?flow|frame|ima?g(es?)?|_id|js|log|serv(er|e)?|stream|_string|s|trix|type|vertisements?|v|vert|xchange)?)[\W\d]/
-
-Adblock]
-/(hot|spy)log/
-/[\W_](b(an|nr)s?|jump|redir(ect|s)?|stat)[\W_]/
-/\W(cy|r)?c(ou)?nt(er|ed)?\W/
-/p(artner|ing\.cgi|romotion)/
-reklama
-/sp(onsor|ymagic)/
-/top(100|cto)/
-
 geht net:
 http://redirect.alexa.com/redirect?http%3A%2F%2Fwww.offeroptimizer.com
 
@@ -60,10 +41,6 @@ http://creativecommons.org/images/public/somerights
 invalid js url:
 http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
 http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
-
-- advert <a href="http://adlog.com.com/">
-
-- <embed loop="TRUE">
 
 - http://www.sane.com/demo/NetTracker/intranet/index.html
   JS navi not there
@@ -75,8 +52,6 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
 - allow filtering/blocking by MIME type
 
 - bfilter has Flash parse and generation library, I want that too .)
-
-- the error "Empty image data found" - what causes it??
 
 - test NTLM authentication
   Mozilla >= 1.6b can test NTLM server auth, squid can test client auth
