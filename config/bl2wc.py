@@ -7,7 +7,8 @@ The XXX folder name is the blacklist folder.
 Required are the "tarfile" module and Python 2.2
 """
 
-import sys, time, os, re, urllib2, tarfile, gzip
+import sys, time, os, re, urllib2, gzip
+from tarfile import TarFile
 sys.path.insert(0, os.getcwd())
 from wc import xmlify
 
@@ -157,7 +158,7 @@ def blacklist (file):
     if file.endswith(".tar.gz"):
         print "extracting archive..."
         d = "extracted/"+file[:-7]
-        f = tarfile.gzopen(source)
+        f = TarFile.gzopen(source)
         for m in f:
             a, b = os.path.split(m.name)
             a = os.path.basename(a)
@@ -181,7 +182,7 @@ def blacklist (file):
 def dmozlists (file):
     print "filtering %s..." % file
     smallfile = "small_%s"%file
-    if not os.path.exists(small_file):
+    if not os.path.exists("downloads/%s"%smallfile):
         os.system(("zcat downloads/%s | config/dmozfilter.py | "+ \
                   "gzip --best > downloads/%s") % (file, smallfile))
     file = smallfile
