@@ -245,8 +245,8 @@ class HttpServer (Server):
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
         self.client.server_response(self.response, self.headers)
         self.attrs['nofilter'] = self.nofilter['nofilter']
-        if ((response and response[1] in ('204', '304')) or
-            self.method == 'HEAD'):
+        if ((response and response[1] in ('204', '304')) or \
+           self.method == 'HEAD'):
             # These response codes indicate no content
             self.state = 'recycle'
         else:
