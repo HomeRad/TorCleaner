@@ -61,11 +61,12 @@ class VirusFilter (Filter):
             warn(FILTER, "Virus scanner error %r", msg)
         if not scanner.infected:
             data = buf.getvalue()
-            buf.close()
-            return data
-        for msg in scanner.infected:
-            warn(FILTER, "Found virus %r in %r", msg, attrs['url'])
-        return ""
+        else:
+            data = ""
+            for msg in scanner.infected:
+                warn(FILTER, "Found virus %r in %r", msg, attrs['url'])
+        buf.close()
+        return data
 
 
     def getAttrs (self, url, headers):

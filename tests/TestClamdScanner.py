@@ -3,7 +3,7 @@
 
 import unittest, os
 import wc
-from wc.filter.VirusFilter import ClamavConfig
+from wc.filter.VirusFilter import ClamavConfig, ClamdScanner
 from wc.log import initlog
 
 
@@ -12,32 +12,20 @@ class TestClamdScanner (unittest.TestCase):
 
     def setUp (self):
         wc.config = wc.Configuration()
-        self.clamav_conf = ClamavConfig(wc.config['clamavconf'])
         initlog(os.path.join("test", "logging.conf"))
+        clamav_conf = ClamavConfig(wc.config['clamavconf'])
+        self.scanner = ClamdScanner(clamav_conf)
 
 
     def test1 (self):
         data = file(os.path.join("tests", "virus", "test1")).read()
-        self.scan(data)
-
-
-    def scan (self, data):
-        sock, host = self.clamav_conf.new_connection()
-        wsock = self.clamav_conf.new_scansock(sock, host)
-        wsock.sendall(data)
-        wsock.close()
-        infected = []
-        errors = []
-        data = sock.recv(4096)
-        while data:
-            if "FOUND\n" in data:
-                infected.append(data)
-            if "ERROR\n" in data:
-                errors.append(data)
-            data = sock.recv(4096)
-        self.assert_(infected)
-        self.assert_("ClamAV-Test-Signature FOUND" in infected[0])
-        self.assert_(not errors)
+        self.scanner.scan(data)
+        self.scanner.scan(data)
+        self.scanner.scan(data)
+        self.scanner.close()
+        self.assert_(self.scanner.infected)
+        self.assert_("ClamAV-Test-Signature FOUND" in self.scanner.infected[0])
+        self.assert_(not self.scanner.errors)
 
 
 if __name__ == '__main__':
