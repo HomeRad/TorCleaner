@@ -61,9 +61,9 @@ class Rewriter (wc.filter.Filter.Filter):
         return p.getoutput()
 
 
-    def getAttrs (self, url, headers):
+    def getAttrs (self, url, clientheaders, serverheaders):
         """We need a separate filter instance for stateful filtering"""
-        d = super(Rewriter, self).getAttrs(url, headers)
+        d = super(Rewriter, self).getAttrs(url, clientheaders, serverheaders)
         rewrites = []
         ratings = []
         # look if headers already have rating info

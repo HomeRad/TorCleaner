@@ -227,7 +227,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         bk.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
         self.fix_request_headers(msg)
         self.attrs = wc.filter.get_filterattrs(self.url,
-                               [wc.filter.FILTER_REQUEST_HEADER], headers=msg)
+                       [wc.filter.FILTER_REQUEST_HEADER], clientheaders=msg)
         self.set_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
         self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)

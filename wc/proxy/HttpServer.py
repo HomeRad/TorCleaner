@@ -235,7 +235,8 @@ class HttpServer (wc.proxy.Server.Server):
             self.response = "%s 200 Ok"%self.protocol
             self.statuscode = 200
         self.state = 'headers'
-        self.attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_RESPONSE])
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                               [wc.filter.FILTER_RESPONSE])
         self.response = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE, self.response,
                                     "finish", self.attrs).strip()
         if self.statuscode >= 400:
@@ -267,7 +268,9 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'response'
             return
         self.set_persistent(msg, wc.proxy.ServerPool.serverpool.http_versions[self.addr])
-        self.attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_RESPONSE_HEADER], headers=msg)
+        self.attrs = wc.filter.get_filterattrs(self.url,
+              [wc.filter.FILTER_RESPONSE_HEADER],
+              clientheaders=self.client.headers, serverheaders=msg)
         try:
             self.headers = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_HEADER, msg,
                                        "finish", self.attrs)
@@ -279,10 +282,10 @@ class HttpServer (wc.proxy.Server.Server):
             else:
                 self._show_rating_deny(str(msg))
                 return
-        except wc.filter.FilterMime, msg:
-            bk.log.debug(wc.LOG_PROXY, "%s FilterMime from header: %s", self, msg)
-            self._show_mime_replacement(str(msg))
-            return
+        #except wc.filter.FilterMime, msg:
+        #    bk.log.debug(wc.LOG_PROXY, "%s FilterMime from header: %s", self, msg)
+        #    self._show_mime_replacement(str(msg))
+        #    return
         if self.statuscode in (301, 302):
             location = self.headers.get('Location')
             if location:
@@ -296,7 +299,8 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
-        self.attrs = wc.filter.get_filterattrs(self.url, FilterLevels, headers=msg)
+        self.attrs = wc.filter.get_filterattrs(self.url, FilterLevels,
+                     clientheaders=self.client.headers, serverheaders=msg)
         bk.log.debug(wc.LOG_PROXY, "%s filtered headers %s", self, self.headers)
         if not self.defer_data:
             self.client.server_response(self, self.response, self.statuscode,

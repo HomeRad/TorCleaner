@@ -77,16 +77,16 @@ class ImageReducer (wc.filter.Filter.Filter):
         return data.getvalue()
 
 
-    def getAttrs (self, url, headers):
+    def getAttrs (self, url, clientheaders, serverheaders):
         """initialize image reducer buffer and flags"""
         # don't filter tiny images
-        d = super(ImageReducer, self).getAttrs(url, headers)
-        length = headers.get('Content-Length')
+        d = super(ImageReducer, self).getAttrs(url, clientheaders, serverheaders)
+        length = serverheaders.get('Content-Length')
         if length is not None and length < self.minimal_size_bytes:
             return d
-        ctype = headers['Content-Type']
+        ctype = serverheaders['Content-Type']
         headers['Content-Type'] = 'image/jpeg'
-        wc.proxy.Headers.remove_headers(headers, ['Content-Length'])
+        wc.proxy.Headers.remove_headers(serverheaders, ['Content-Length'])
         d['imgreducer_buf'] = StringIO.StringIO()
         # some images have to be convert()ed before saving
         d['imgreducer_convert'] = convert(ctype)

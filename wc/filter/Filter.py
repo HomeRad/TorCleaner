@@ -58,7 +58,7 @@ class Filter (object):
         """
         return data
 
-    def getAttrs (self, url, headers):
+    def getAttrs (self, url, clientheaders, serverheaders):
         """get filter-specific state data"""
         return {}
 

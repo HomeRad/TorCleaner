@@ -107,20 +107,20 @@ class Compress (wc.filter.Filter.Filter):
         return data
 
 
-    def getAttrs (self, url, headers):
-        d = super(Compress, self).getAttrs(url, headers)
+    def getAttrs (self, url, clientheaders, serverheaders):
+        d = super(Compress, self).getAttrs(url, clientheaders, serverheaders)
         compressobj = None
-        accepts = wc.proxy.Headers.get_encoding_dict(headers)
-        encoding = headers.get('Content-Encoding', '').lower()
+        accepts = wc.proxy.Headers.get_encoding_dict(clientheaders)
+        encoding = serverheaders.get('Content-Encoding', '').lower()
         if 'gzip' not in accepts:
             # browser does not accept gzip encoding
-            pass
+            bk.log.warn(wc.LOG_FILTER, "browser does not support gzip compression (%s)", accepts)
         elif encoding and encoding not in _compress_encs:
             compressobj = getCompressObject()
-            headers['Content-Encoding'] = encoding+', gzip\r'
+            serverheaders['Content-Encoding'] = encoding+', gzip\r'
         else:
             compressobj = getCompressObject()
-            headers['Content-Encoding'] = 'gzip\r'
+            serverheaders['Content-Encoding'] = 'gzip\r'
         bk.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
         d['compressobj'] = compressobj
         return d
