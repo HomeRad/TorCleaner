@@ -287,7 +287,7 @@ setup (name = "webcleaner",
        'config/dmozfilter.py',
       ]),
      ('share/locale/de/LC_MESSAGES',
-      ['locale/de/LC_MESSAGES/webcleaner.mo',
+      ['share/locale/de/LC_MESSAGES/webcleaner.mo',
       ]),
      ]
 )
