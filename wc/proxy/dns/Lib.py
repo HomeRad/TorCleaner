@@ -30,8 +30,7 @@ import Class
 import Opcode
 import Status
 
-from Base import DNSError
-
+class DNSError (Exception): pass
 class UnpackError (DNSError): pass
 class PackError (DNSError): pass
 
@@ -527,13 +526,13 @@ class DnsResult (object):
             self.args['qtype'])
         opt=""
         if self.args['rd']:
-            opt=opt+'recurs '
+            opt += 'recurs '
         h=self.header
         print ';; options: '+opt
         print ';; got answer:'
         print ';; ->>HEADER<<- opcode %s, status %s, id %d'%(
             h['opcode'],h['status'],h['id'])
-        flags=filter(lambda x,h=h:h[x],('qr','aa','rd','ra','tc'))
+        flags = filter(lambda x,h=h:h[x],('qr','aa','rd','ra','tc'))
         print ';; flags: %s; Ques: %d, Ans: %d, Auth: %d, Addit: %d'%(
             string.join(flags),h['qdcount'],h['ancount'],h['nscount'],
             h['arcount'])
@@ -630,75 +629,4 @@ def dumpRR(u):
 
 if __name__ == "__main__":
     testpacker()
-#
-# $Log$
-# Revision 1.4  2003/07/05 09:21:43  calvin
-# use new-style classes where possible
-#
-# Revision 1.3  2003/07/01 15:46:17  calvin
-# use bool type, add encoding comment, add timeout config value
-#
-# Revision 1.2  2003/01/05 17:42:49  calvin
-# pychecker fixes
-#
-# Revision 1.1  2002/11/27 23:27:05  calvin
-# update tests
-#
-# Revision 1.3  2002/11/26 23:27:43  calvin
-# update to Python >= 2.2.1
-#
-# Revision 1.11  2002/03/19 13:05:02  anthonybaxter
-# converted to class based exceptions (there goes the python1.4 compatibility :)
-#
-# removed a quite gross use of 'eval()'.
-#
-# Revision 1.10  2002/03/19 12:41:33  anthonybaxter
-# tabnannied and reindented everything. 4 space indent, no tabs.
-# yay.
-#
-# Revision 1.9  2002/03/19 10:30:33  anthonybaxter
-# first round of major bits and pieces. The major stuff here (summarised
-# from my local, off-net CVS server :/ this will cause some oddities with
-# the
-#
-# tests/testPackers.py:
-#   a large slab of unit tests for the packer and unpacker code in DNS.Lib
-#
-# DNS/Lib.py:
-#   placeholder for addSRV.
-#   added 'klass' to addA, make it the same as the other A* records.
-#   made addTXT check for being passed a string, turn it into a length 1 list.
-#   explicitly check for adding a string of length > 255 (prohibited).
-#   a bunch of cleanups from a first pass with pychecker
-#   new code for pack/unpack. the bitwise stuff uses struct, for a smallish
-#     (disappointly small, actually) improvement, while addr2bin is much
-#     much faster now.
-#
-# DNS/Base.py:
-#   added DiscoverNameServers. This automatically does the right thing
-#     on unix/ win32. No idea how MacOS handles this.  *sigh*
-#     Incompatible change: Don't use ParseResolvConf on non-unix, use this
-#     function, instead!
-#   a bunch of cleanups from a first pass with pychecker
-#
-# Revision 1.8  2001/08/09 09:08:55  anthonybaxter
-# added identifying header to top of each file
-#
-# Revision 1.7  2001/07/19 07:50:44  anthony
-# Added SRV (RFC 2782) support. Code from Michael Ströder.
-#
-# Revision 1.6  2001/07/19 07:39:18  anthony
-# 'type' -> 'rrtype' in getRRheader(). Fix from Michael Ströder.
-#
-# Revision 1.5  2001/07/19 07:34:19  anthony
-# oops. glitch in storeRR (fixed now).
-# Reported by Bastian Kleineidam and by greg lin.
-#
-# Revision 1.4  2001/07/19 07:16:42  anthony
-# Changed (opcode&0xF)<<11 to (opcode*0xF)<<11.
-# Patch from Timothy J. Miller.
-#
-# Revision 1.3  2001/07/19 06:57:07  anthony
-# cvs keywords added
-#
-#
+

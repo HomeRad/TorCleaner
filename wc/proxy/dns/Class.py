@@ -25,16 +25,19 @@ ANY = 255       # any class
 
 # Construct reverse mapping dictionary
 
-_names = dir()
-classmap = {}
-for _name in _names:
-    if _name[0] != '_': classmap[eval(_name)] = _name
+_classmap = {}
+for _name in dir():
+    if not _name.startswith('_'):
+        _classmap[eval(_name)] = _name
 
-def classstr(klass):
-    return classmap.get(klass, `klass`)
+def classstr (klass):
+    return _classmap.get(klass, `klass`)
 
 #
 # $Log$
+# Revision 1.3  2003/11/04 21:38:55  calvin
+# removed unnecessary stuff
+#
 # Revision 1.2  2003/07/01 15:46:17  calvin
 # use bool type, add encoding comment, add timeout config value
 #
