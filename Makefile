@@ -125,19 +125,20 @@ ndebug:
 
 update-blacklists:
 	# remove old file
-	rm -rf blacklists.tar.gz
+	rm -rf blacklists.tar.gz config/blacklists/README
 	# remove old data, but leave directory structure
-	find config/blacklists -name \*.gz -o -name README -exec rm -f {} \;
+	find config/blacklists -name \*.gz -exec rm -f {} \;
 	# get new file
 	wget http://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/blacklists.tar.gz
 	# unpack the files we are interested in
 	cd config && tar xzvf ../blacklists.tar.gz '*domains' '*urls' '*expressions'
 	# (re)generate webcleaner rules for these files
-	$(PYTHON) config/bl2wc.py `find config/blacklists -type f`
+	$(PYTHON) config/bl2wc.py `find config/blacklists -type f | grep -v CVS`
 	# delete unused files
 	find config/blacklists -name expressions -exec rm -f {} \;
 	# compress (some files are very big)
-	find config/blacklists -type f -exec gzip --best {} \;
+	find config/blacklists -name domains -exec gzip --best {} \;
+	find config/blacklists -name urls -exec gzip --best {} \;
 	# extract README
 	cd config && tar xzvf ../blacklists.tar.gz '*README'
 

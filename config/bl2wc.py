@@ -8,6 +8,7 @@ The XXX folder name is the blacklist folder.
 """
 
 import sys, time, os, re, urlparse
+sys.path.insert(0, os.getcwd())
 from wc import xmlify
 
 date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
