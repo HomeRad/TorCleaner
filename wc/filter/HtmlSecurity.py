@@ -97,7 +97,7 @@ class HtmlSecurity (object):
             self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
         if attrs.has_key('data'):
-            url = wc.url.url_norm(attrs['data'])
+            url = wc.url.url_norm(attrs['data'])[0]
             url = urllib.unquote(url)
             if url.startswith('its:') or \
                url.startswith('mk:') or \

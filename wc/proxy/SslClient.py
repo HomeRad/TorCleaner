@@ -58,7 +58,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
                         "%s request url length %d chars is very long",
                         self, len(self.url))
         # and unquote again
-        self.url = wc.url.url_norm(self.url)
+        self.url = wc.url.url_norm(self.url)[0]
         self.scheme, self.hostname, self.port, self.document = \
                                                 wc.url.spliturl(self.url)
         # fix missing trailing /

@@ -22,7 +22,7 @@ class HttpProxyClient (object):
         self.handler = handler
         self.args = args
         self.method = "GET"
-        self.url = wc.url.url_norm(self.args[0])
+        self.url = wc.url.url_norm(self.args[0])[0]
         self.scheme, self.hostname, self.port, self.document = \
                                                   wc.url.spliturl(self.url)
         # fix missing trailing /
@@ -124,7 +124,7 @@ class HttpProxyClient (object):
         url = self.server.headers.getheader("Location",
                      self.server.headers.getheader("Uri", ""))
         url = urlparse.urljoin(self.server.url, url)
-        self.url = wc.url.url_norm(url)
+        self.url = wc.url.url_norm(url)[0]
         self.args = (self.url, self.args[1])
         self.isredirect = False
         wc.log.debug(wc.LOG_PROXY, "%s redirected", self)

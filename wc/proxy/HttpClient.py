@@ -142,7 +142,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.error(405, _("Method Not Allowed"))
             return
         # fix broken url paths
-        self.url = wc.url.url_norm(self.url)
+        self.url = wc.url.url_norm(self.url)[0]
         if not self.url:
             self.error(400, _("Empty URL"))
             return
@@ -181,7 +181,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                         self, len(self.url))
         # unquote and norm url
         self.needs_redirect = "\\" in self.url
-        self.url = wc.url.url_norm(self.url)
+        self.url = wc.url.url_norm(self.url)[0]
         # fix CONNECT urls
         if self.method == 'CONNECT':
             # XXX scheme could also be nntps

@@ -169,7 +169,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             if not urllib.splittype(self.base_url)[0]:
                 self.base_url = "%s://%s" % \
                                 (urllib.splittype(self.url)[0], self.base_url)
-            self.base_url = wc.url.url_norm(self.base_url)
+            self.base_url = wc.url.url_norm(self.base_url)[0]
             wc.log.debug(wc.LOG_FILTER, "%s using base url %r",
                          self, self.base_url)
         # search for and prevent known security flaws in HTML
