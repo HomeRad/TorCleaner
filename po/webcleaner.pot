@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon May 10 01:41:14 2004\n"
+"POT-Creation-Date: Tue May 11 10:36:12 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -283,6 +283,9 @@ msgid "Unknown reason"
 msgstr ""
 
 msgid "Error: nothing to update."
+msgstr ""
+
+msgid "Error: %s"
 msgstr ""
 
 msgid "%s Proxy"

@@ -3,6 +3,22 @@
     Type: bugfix
     Changed: wc/webgui/simpletal/simpleTAL.py
 
+  * added docutils to requirements
+    Type: bugfix
+    Changed: docs/install.txt
+
+  * more encoding fixes
+    Type: bugfix
+    Changed: wc/filter/rules/*.py, wc/webgui/context/*.py
+
+  * add charset to filter attrs
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
+  * add charset to content type header
+    Type: bugfix
+    Changed: wc/webgui/__init__.py
+
 2.12 (released 8.5.2004)
   * do not assume zero content size if Content-Length header is
     missing in a server reply
