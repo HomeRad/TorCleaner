@@ -3,7 +3,7 @@ include README
 include TODO
 include cross-build.sh
 include webcleaner
-include webcleaner-service
+include install-webcleaner.py
 include webcleaner-certificates
 include debian/changelog
 include debian/compat
