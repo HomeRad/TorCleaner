@@ -489,17 +489,15 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # Anyway, if this is the answer to a different question,
             # we ignore this read, and let the timeout take its course
             return
-        #(rid, qr, opcode, aa, tc, rd, ra, z, rcode,
-        # qdcount, ancount, nscount, arcount) = msg.getHeader()
         # check truncate flag
         if (response.flags & wc.dns.flags.TC) != 0:
-            # dont handle truncated packets; try to switch to TCP
+            # don't handle truncated packets; try to switch to TCP
             # See http://cr.yp.to/djbdns/notes.html
             if self.tcp:
                 # socket.error((84, ''))
                 wc.log.error(wc.LOG_DNS,
                              'Truncated TCP DNS packet: %s from %s for %r',
-                             tc, self.nameserver, self.hostname)
+                             response, self.nameserver, self.hostname)
                 self.handle_error("dns error: truncated TCP packet")
             else:
                 wc.log.warn(wc.LOG_DNS,
@@ -533,11 +531,12 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if ip_addrs:
             # doh, verisign has a catch-all ip 64.94.110.11 for
             # .com and .net domains
-            if self.hostname[-4:] in ('.com','.net') and \
-               '64.94.110.11' in ip_addrs:
-                callback(self.hostname, DnsResponse('error', 'not found'))
-            else:
-                callback(self.hostname, DnsResponse('found', ip_addrs))
+            # note: this is disabled until they switch it back on ;)
+            #if self.hostname[-4:] in ('.com','.net') and \
+            #   '64.94.110.11' in ip_addrs:
+            #    callback(self.hostname, DnsResponse('error', 'not found'))
+            #else:
+            callback(self.hostname, DnsResponse('found', ip_addrs))
         else:
             callback(self.hostname, DnsResponse('error', 'not found'))
         self.close()
