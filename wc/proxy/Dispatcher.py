@@ -59,9 +59,10 @@ if socket.has_ipv6:
         socket.socket(socket.AF_INET6, socket.SOCK_STREAM).close()
         has_ipv6 = True
     except socket.error, msg:
-        # only catch this one:
+        # only catch these one:
         # socket.error: (97, 'Address family not supported by protocol')
-        if msg[0] != 97:
+        # socket.error: (10047, 'Address family not supported by protocol')
+        if msg[0] not in (97, 10047):
             raise
 
 def create_socket (family, socktype, sslctx=None):
