@@ -62,6 +62,10 @@ class ClientServerMatchmaker (object):
         if not scheme:
             # default scheme is http
             scheme = "http"
+        elif scheme != 'http':
+            warn(PROXY, "Forbidden scheme encountered at %s", self.url)
+            client.error(403, i18n._("Forbidden"))
+            return
         if not hostname and self.headers.has_key('Host'):
             host = self.headers['Host']
             hostname, port = splitnport(host, 80)
