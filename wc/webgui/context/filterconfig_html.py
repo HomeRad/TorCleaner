@@ -12,8 +12,6 @@ from wc.filter.rules import recalc_up_down as _recalc_up_down
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.PICS import services as pics_data
-from wc.log import debug as _debug
-from wc.log import GUI as _GUI
 
 # config vars
 info = {}

@@ -155,6 +155,7 @@ def get_response_digest (challenge, **attrs):
     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
     HA1 = encode_digest(H(A1))
     if algorithm=='MD5-sess':
+        cnonce = get_cnonce()
         A1 = "%s:%s:%s" % (HA1, challenge['nonce'], cnonce)
         HA1 = encode_digest(H(A1))
     # calculate H(A2)
