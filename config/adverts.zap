@@ -265,4 +265,10 @@
  tag="script">
 <attr name="src">ar\.atwola\.com</attr>
 </rewrite>
+
+<rewrite title="JS .au ad" oid="117"
+ desc="Fairfax advert"
+ tag="script">
+<attr name="src">http://campaigns\.f2\.com\.au</attr>
+</rewrite>
 </folder>
