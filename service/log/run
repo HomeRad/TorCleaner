@@ -1,2 +1,2 @@
 #!/bin/sh
-exec multilog t ./main
+exec svlogd -t ./main

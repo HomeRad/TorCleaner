@@ -7,7 +7,7 @@ BASE := debian/$(PACKAGE)
 DOCDIR := $(BASE)/usr/share/doc/$(PACKAGE)
 SHAREDIR := $(BASE)/usr/share/$(PACKAGE)
 ETCDIR := $(BASE)/etc/$(PACKAGE)
-SERVICEDIR := $(BASE)/var/service/$(PACKAGE)
+SERVICEDIR := $(ETCDIR)/service
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
