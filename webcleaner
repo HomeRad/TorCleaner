@@ -145,7 +145,7 @@ def parse_options (sysargs):
     return (configdir, filelogs, args)
 
 
-def main_posix (configdir, filelogs):
+def main_posix (configdir, filelogs, args):
     """start the proxy"""
     if len(args) < 1:
         command = "start"
@@ -182,8 +182,8 @@ def main_nt (configdir, filelogs, args):
 def main (sysargs):
     configdir, filelogs, args = parse_options(sysargs)
     if os.name=='nt':
-        return main_nt(configdir, args)
-    return main_posix(configdir, filelogs)
+        return main_nt(configdir, filelogs, args)
+    return main_posix(configdir, filelogs, args)
 
 
 if __name__ == '__main__':
