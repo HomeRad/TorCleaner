@@ -20,6 +20,18 @@
     Type: bugfix
     Changed: wc/webgui/webconfig.py
 
+  * Regenerate the HTML parser with new Bison version 1.875d.
+    Also use the now supported Bison memory macros YYMALLOC and
+    YYFREE.
+    Type: feature
+    Changed: wc/HtmlParser/htmlparse.y
+
+  * Do not try to detect CSS Mime type with the magic(5) database, since
+    it is not supported there.
+    Introduced an wc.magic.unsupported_types list for that.
+    Type: bugfix
+    Changed: wc/magic/__init__.py, wc/proxy/HttpServer.py
+
 2.23 "The fog of war" (released 27.10.2004)
 
   * Fixed MIME type changing.

@@ -30,6 +30,8 @@ import wc
 import wc.configuration
 import wc.magic.convert
 
+unsupported_types = ['text/css',]
+
 _magic = None
 
 def classify (fp):

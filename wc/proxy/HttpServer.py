@@ -12,6 +12,7 @@ import wc
 import wc.log
 import wc.configuration
 import wc.url
+import wc.magic
 import wc.filter
 import wc.filter.Rating
 import wc.proxy
@@ -304,7 +305,11 @@ class HttpServer (wc.proxy.Server.Server):
                                      clientheaders=self.client.headers,
                                      serverheaders=serverheaders,
                                      headers=self.headers)
-        if self.mime_types:
+        # tell the MIME recognizer to ignore the type if
+        # a) a MIME type is enforced
+        # b) the MIME type is not supported
+        mime = serverheaders.get('Content-Type')
+        if self.mime_types or mime in wc.magic.unsupported_types:
             self.attrs['mimerecognizer_ignore'] = True
         wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s",
                      self, self.headers)
