@@ -117,7 +117,8 @@ def proxy_poll (timeout=0.0):
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
-            if x in e or not x.writable():
+            # note: do _not_ put this if in a list filter
+            if not x.writable():
                 continue
             t = time.time()
             debug(PROXY, "%s poll handle write", x)
@@ -125,7 +126,8 @@ def proxy_poll (timeout=0.0):
             handlerCount += 1
             _slow_check(x, t, 'wslow')
         for x in r:
-            if x in e or x in w or not x.readable():
+            # note: do _not_ put this if in a list filter
+            if not x.readable():
                 continue
             t = time.time()
             debug(PROXY, "%s poll handle read", x)
