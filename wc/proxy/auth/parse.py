@@ -1,3 +1,4 @@
+"""parse basic and digest HTTP auth strings into key/value tokens"""
 from wc.log import *
 
 separators = ("()<>@,;:\\\"/[]?={} \t")

@@ -58,9 +58,9 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    chals = [get_digest_challenge(),
-             get_basic_challenge(),
-             #get_ntlm_challenge(**args),
+    chals = [#get_digest_challenge(),
+             #get_basic_challenge(),
+             get_ntlm_challenge(**args),
             ]
     debug(AUTH, "challenges %s", str(chals))
     return chals

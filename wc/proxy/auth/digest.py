@@ -11,6 +11,7 @@ from parse import *
 random.seed()
 # the default realm
 from wc.proxy.auth import wc_realm
+from wc.log import *
 # the default opaque value
 wc_opaque = base64.encodestring("unknown").strip()
 # XXX regularly delete all old nonces

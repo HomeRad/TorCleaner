@@ -7,10 +7,19 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "check_ntlm_credentials"]
 
 import des, md4, utils, base64, random
+from wc.log import *
 random.seed()
 
 nonces = {} # nonce to timestamp
 max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
+
+# 4-byte NTLM message flags
+NTLM_OEM =            0x00000002 # Negotiate OEM (ASCII, basically)
+NTLM_REQUEST_TARGET = 0x00000004 # Request Target
+NTLM_NTLM =           0x00000200 # Negotiate NTLM
+NTLM_DOMAIN =         0x00001000 # Negotiate Domain Supplied
+NTLM_WORKSTATION =    0x00002000 # Negotiate Workstation Supplied
+NTLM_SIGN =           0x00008000 # Negotiate Always Sign
 
 
 def check_nonces ():
@@ -77,17 +86,19 @@ def parse_ntlm_credentials (credentials):
     if not creds.startswith('NTLMSSP\x00'):
         # invalid credentials, skip
         return res, remainder.strip()
-    type = ord(creds[8])
-    if type==1:
+    msgtype = ord(creds[8])
+    if msgtype==1:
         res['type'] = 1
+        debug(AUTH, "ntlm msgtype 1 %s", `creds`)
         domain_len = int(creds[16:18])
         domain_off = int(creds[20:22])
         host_len = int(creds[24:26])
         host_off = int(creds[28:30])
         res['host'] = creds[host_off:host_off+host_len]
         res['domain'] = creds[domain_off:domain_off+domain_len]
-    elif type==3:
+    elif msgtype==3:
         res['type'] = 3
+        debug(AUTH, "ntlm msgtype 3 %s", `creds`)
         lm_res_len = int(creds[12:14])
         # XXX
     else:

@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # This file is part of 'NTLM Authorization Proxy Server'
 # Copyright 2001 Dmitry A. Rozmanov <dima@xenon.spb.ru>
 #
