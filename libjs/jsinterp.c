@@ -1303,7 +1303,7 @@ have_fun:
             frame.scopeChain = funobj;
 #endif
         }
-        ok = js_Interpret(cx, &v);
+        ok = js_Interpret(cx, script->code, &v);
     } else {
         /* fun might be onerror trying to report a syntax error in itself. */
         frame.scopeChain = NULL;
@@ -1513,7 +1513,7 @@ js_Execute(JSContext *cx, JSObject *chain, JSScript *script,
      * Use frame.rval, not result, so the last result stays rooted across any
      * GC activations nested within this js_Interpret.
      */
-    ok = js_Interpret(cx, &frame.rval);
+    ok = js_Interpret(cx, script->code, &frame.rval);
     *result = frame.rval;
 
     if (hookData) {
@@ -1774,7 +1774,7 @@ InternNonIntElementId(JSContext *cx, jsval idval, jsid *idp)
 #define MAX_INLINE_CALL_COUNT 1000
 
 JSBool
-js_Interpret(JSContext *cx, jsval *result)
+js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
 {
     JSRuntime *rt;
     JSStackFrame *fp;
@@ -1788,7 +1788,7 @@ js_Interpret(JSContext *cx, jsval *result)
     jsint depth, len;
     jsval *sp, *newsp;
     void *mark;
-    jsbytecode *pc, *pc2, *endpc;
+    jsbytecode *endpc, *pc2;
     JSOp op, op2;
     const JSCodeSpec *cs;
     JSAtom *atom;
@@ -1876,31 +1876,28 @@ js_Interpret(JSContext *cx, jsval *result)
 
     LOAD_INTERRUPT_HANDLER(rt);
 
-    pc = script->code;
-    endpc = pc + script->length;
-    depth = (jsint) script->depth;
-    len = -1;
-
     /* Check for too much js_Interpret nesting, or too deep a C stack. */
     if (++cx->interpLevel == MAX_INTERP_LEVEL ||
         !JS_CHECK_STACK_SIZE(cx, stackDummy)) {
         JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL, JSMSG_OVER_RECURSED);
         ok = JS_FALSE;
-        goto out;
+        goto out2;
     }
 
     /*
      * Allocate operand and pc stack slots for the script's worst-case depth.
      */
+    depth = (jsint) script->depth;
     newsp = js_AllocRawStack(cx, (uintN)(2 * depth), &mark);
     if (!newsp) {
         ok = JS_FALSE;
-        goto out;
+        goto out2;
     }
     sp = newsp + depth;
     fp->spbase = sp;
     SAVE_SP(fp);
 
+    endpc = script->code + script->length;
     while (pc < endpc) {
         fp->pc = pc;
         op = (JSOp) *pc;
@@ -2814,67 +2811,7 @@ js_Interpret(JSContext *cx, jsval *result)
             break;
 
           case JSOP_NE:
-#if 1
             EQUALITY_OP(!=, JS_TRUE);
-#else
-    {
-        rval = FETCH_OPND(-1);
-        lval = FETCH_OPND(-2);
-        ltmp = JSVAL_TAG(lval);
-        rtmp = JSVAL_TAG(rval);
-        if (ltmp == JSVAL_OBJECT &&
-            (obj2 = JSVAL_TO_OBJECT(lval)) &&
-            ((clasp = OBJ_GET_CLASS(cx, obj2)->flags & JSCLASS_IS_EXTENDED))) {
-            JSExtendedClass *xclasp;
-
-            xclasp = (JSExtendedClass *) clasp;
-            ok = xclasp->equality(cx, obj2, rval, &cond);
-            if (!ok)
-                goto out;
-            cond = cond != JS_TRUE;
-        }
-        if (ltmp == rtmp) {
-            if (ltmp == JSVAL_STRING) {
-                str  = JSVAL_TO_STRING(lval);
-                str2 = JSVAL_TO_STRING(rval);
-                cond = js_CompareStrings(str, str2) != 0;
-            } else if (ltmp == JSVAL_DOUBLE) {
-                d  = *JSVAL_TO_DOUBLE(lval);
-                d2 = *JSVAL_TO_DOUBLE(rval);
-                cond = JSDOUBLE_COMPARE(d, !=, d2, JS_TRUE);
-            } else {
-                XML_NAME_EQUALITY_OP(!=)
-                /* Handle all undefined (=>NaN) and int combinations. */
-                cond = lval != rval;
-            }
-        } else {
-            if (JSVAL_IS_NULL(lval) || JSVAL_IS_VOID(lval)) {
-                cond = (JSVAL_IS_NULL(rval) || JSVAL_IS_VOID(rval)) != 1;
-            } else if (JSVAL_IS_NULL(rval) || JSVAL_IS_VOID(rval)) {
-                cond = 1 != 0;
-            } else {
-                if (ltmp == JSVAL_OBJECT) {
-                    VALUE_TO_PRIMITIVE(cx, lval, JSTYPE_VOID, &lval);
-                    ltmp = JSVAL_TAG(lval);
-                } else if (rtmp == JSVAL_OBJECT) {
-                    VALUE_TO_PRIMITIVE(cx, rval, JSTYPE_VOID, &rval);
-                    rtmp = JSVAL_TAG(rval);
-                }
-                if (ltmp == JSVAL_STRING && rtmp == JSVAL_STRING) {
-                    str  = JSVAL_TO_STRING(lval);
-                    str2 = JSVAL_TO_STRING(rval);
-                    cond = js_CompareStrings(str, str2) != 0;
-                } else {
-                    VALUE_TO_NUMBER(cx, lval, d);
-                    VALUE_TO_NUMBER(cx, rval, d2);
-                    cond = JSDOUBLE_COMPARE(d, !=, d2, JS_TRUE);
-                }
-            }
-        }
-        sp--;
-        STORE_OPND(-1, BOOLEAN_TO_JSVAL(cond));
-    }
-#endif
             break;
 
 #if !JS_BUG_FALLIBLE_EQOPS
@@ -5141,12 +5078,15 @@ js_Interpret(JSContext *cx, jsval *result)
             VALUE_TO_OBJECT(cx, lval, obj);
             len = GET_JUMP_OFFSET(pc);
             SAVE_SP(fp);
-            ok = js_FilterXMLList(cx, obj, pc + cs->length, len - cs->length,
-                                  &rval);
+            ok = js_FilterXMLList(cx, obj, pc + cs->length, &rval);
             if (!ok)
                 goto out;
             STORE_OPND(-1, rval);
             break;
+
+          case JSOP_ENDFILTER:
+            *result = POP_OPND();
+            goto out;
 
           case JSOP_TOXML:
             rval = FETCH_OPND(-1);
@@ -5326,8 +5266,8 @@ js_Interpret(JSContext *cx, jsval *result)
     }
 out:
 
-    if (!ok) {
 #if JS_HAS_EXCEPTIONS
+    if (!ok) {
         /*
          * Has an exception been raised?
          */
@@ -5363,25 +5303,29 @@ out:
                 len = 0;
                 cx->throwing = JS_FALSE;    /* caught */
                 ok = JS_TRUE;
+#if JS_HAS_XML_SUPPORT
+                foreach = JS_FALSE;
+#endif
                 goto advance_pc;
             }
         }
 no_catch:;
-#endif
-
-#if JS_HAS_XML_SUPPORT
-        foreach = JS_FALSE;
-#endif
     }
+#endif
 
     /*
      * Check whether control fell off the end of a lightweight function, or an
      * exception thrown under such a function was not caught by it.  If so, go
      * to the inline code under JSOP_RETURN.
      */
-    if (inlineCallCount)
+    if (inlineCallCount) {
+#if JS_HAS_XML_SUPPORT
+        foreach = JS_FALSE;
+#endif
         goto inline_return;
+    }
 
+out2:
     /*
      * Reset sp before freeing stack slots, because our caller may GC soon.
      * Clear spbase to indicate that we've popped the 2 * depth operand slots.
