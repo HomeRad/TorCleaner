@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, sys, urlparse, wc
+import re, sys, urlparse, time, wc
 from wc import urlutils
 from wc.parser.htmllib import HtmlParser
 from wc.parser import resolve_html_entities
@@ -219,14 +219,15 @@ class HtmlFilter (HtmlParser,JSListener):
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
             self.jsForm(name, attrs.get('action', ''), attrs.get('target', ''))
-        elif tag=='script':
-            lang = attrs.get('language', '').lower()
-            scrtype = attrs.get('type', '').lower()
-            if scrtype=='text/javascript' or \
-               lang.startswith('javascript') or \
-               not (lang or scrtype):
-                if self.jsScriptSrc(attrs.get('src', ''), lang):
-                    return
+        # fetching JS script src is too much delay
+        #elif tag=='script':
+        #    lang = attrs.get('language', '').lower()
+        #    scrtype = attrs.get('type', '').lower()
+        #    if scrtype=='text/javascript' or \
+        #       lang.startswith('javascript') or \
+        #       not (lang or scrtype):
+        #        if self.jsScriptSrc(attrs.get('src', ''), lang):
+        #            return
         self.buffer.append((STARTTAG, tag, attrs))
 
 
@@ -256,9 +257,13 @@ class HtmlFilter (HtmlParser,JSListener):
         url = urlparse.urljoin(self.url, url)
         debug(HURT_ME_PLENTY, "Filter: jsScriptSrc", url, language)
         try:
+            debug(BRING_IT_ON, "fetching", url, time.ctime(time.time()))
             script = urlutils.open_url(url).read()
+            debug(BRING_IT_ON, "...fetched", time.ctime(time.time()))
         except:
             print >>sys.stderr, "exception fetching script url", `url`
+            import traceback
+            traceback.print_exc()
             return
         if not script: return
         ver = 0.0
@@ -266,7 +271,9 @@ class HtmlFilter (HtmlParser,JSListener):
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
             if mo:
                 ver = float(mo.group('num'))
-        return self.jsScript(script, ver)
+        if self.jsScript(script, ver):
+            print >> sys.stderr, "JS popup src", url, "url", url
+            return "True"
 
 
     def jsScript (self, script, ver):
