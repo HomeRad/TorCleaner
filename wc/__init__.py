@@ -54,7 +54,7 @@ ConfigCharset = "iso-8859-1"
 # logger areas
 LOG_FILTER = "wc.filter"
 LOG_JS = "wc.filter.js"
-LOG_CONNECTION = "wc.connection"
+LOG_NET = "wc.net"
 LOG_PROXY = "wc.proxy"
 LOG_AUTH = "wc.proxy.auth"
 LOG_DNS = "wc.proxy.dns"

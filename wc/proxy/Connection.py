@@ -73,8 +73,8 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             wc.log.debug(wc.LOG_PROXY, "%s closed, got empty data", self)
             self.persistent = False
             return
-        wc.log.debug(wc.LOG_CONNECTION, '%s <= read %d', self, len(data))
-        wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)
+        wc.log.debug(wc.LOG_NET, '%s <= read %d', self, len(data))
+        wc.log.debug(wc.LOG_NET, 'data %r', data)
         self.recv_buffer += data
         self.process_read()
 
@@ -110,8 +110,8 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
                 return
             self.handle_error(str(err))
             return
-        wc.log.debug(wc.LOG_CONNECTION, '%s => wrote %d', self, num_sent)
-        wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)
+        wc.log.debug(wc.LOG_NET, '%s => wrote %d', self, num_sent)
+        wc.log.debug(wc.LOG_NET, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and self.close_ready():
             self.close()
