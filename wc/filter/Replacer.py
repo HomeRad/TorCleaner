@@ -47,7 +47,7 @@ class Replacer (Filter):
     def finish (self, data, **attrs):
         if not attrs.has_key('buf'): return data
         buf = attrs['buf']
-        data = buf.replace(data)
+        if data: data = buf.replace(data)
         return data+buf.flush()
 
     def getAttrs (self, headers, url):
