@@ -26,6 +26,7 @@ import xml.parsers.expat
 import wc
 import wc.ip
 
+ConfigCharset = "iso-8859-1"
 
 # set this to an empty dictionary so that webgui/context/*.py can
 # safely set config values upon import
@@ -65,7 +66,7 @@ def filterconf_files (dirname):
 # available filter modules
 filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                  "BinaryCharFilter", "Rewriter", "Replacer", "Compress",
-                 "RatingHeader", "VirusFilter",
+                 "RatingHeader", "VirusFilter", "MimeRecognizer",
                 ]
 filtermodules.sort()
 
@@ -134,42 +135,44 @@ class Configuration (dict):
 
     def write_proxyconf (self):
         """write proxy configuration"""
-        f = file(self.configfile, 'w')
-        f.write("""<?xml version="1.0" encoding="%s"?>
-<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
-<webcleaner
-""" % ConfigCharset)
-        f.write(' version="%s"\n' % xmlquoteattr(self['version']))
+        lines = []
+        lines.append('<?xml version="1.0" encoding="%s"?>' % ConfigCharset)
+        lines.append('<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">')
+        lines.append('<webcleaner')
+        lines.append(' version="%s"' % xmlquoteattr(self['version']))
         port = self['port']
         sslport = self['sslport']
-        f.write(' port="%d"\n' % port)
-        f.write(' sslport="%d"\n' % sslport)
+        lines.append(' port="%d"' % port)
+        lines.append(' sslport="%d"' % sslport)
         if self['sslgateway']:
-            f.write(' sslgateway="%d"\n' % self['sslgateway'])
-        f.write(' adminuser="%s"\n' % xmlquoteattr(self['adminuser']))
-        f.write(' adminpass="%s"\n' % xmlquoteattr(self['adminpass']))
-        f.write(' proxyuser="%s"\n' % xmlquoteattr(self['proxyuser']))
-        f.write(' proxypass="%s"\n' % xmlquoteattr(self['proxypass']))
+            lines.append(' sslgateway="%d"' % self['sslgateway'])
+        lines.append(' adminuser="%s"' % xmlquoteattr(self['adminuser']))
+        lines.append(' adminpass="%s"' % xmlquoteattr(self['adminpass']))
+        lines.append(' proxyuser="%s"' % xmlquoteattr(self['proxyuser']))
+        lines.append(' proxypass="%s"' % xmlquoteattr(self['proxypass']))
         if self['parentproxy']:
-            f.write(' parentproxy="%s"\n' % xmlquoteattr(self['parentproxy']))
-        f.write(' parentproxyuser="%s"\n' %
+            lines.append(' parentproxy="%s"' %
+                         xmlquoteattr(self['parentproxy']))
+        lines.append(' parentproxyuser="%s"' %
                 xmlquoteattr(self['parentproxyuser']))
-        f.write(' parentproxypass="%s"\n' %
+        lines.append(' parentproxypass="%s"' %
                 xmlquoteattr(self['parentproxypass']))
-        f.write(' parentproxyport="%d"\n' % self['parentproxyport'])
-        f.write(' timeout="%d"\n' % self['timeout'])
-        f.write(' gui_theme="%s"\n' % xmlquoteattr(self['gui_theme']))
-        f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
-        f.write(' try_google="%d"\n' % self['try_google'])
-        f.write(' clamavconf="%s"\n' % xmlquoteattr(self['clamavconf']))
+        lines.append(' parentproxyport="%d"' % self['parentproxyport'])
+        lines.append(' timeout="%d"' % self['timeout'])
+        lines.append(' gui_theme="%s"' % xmlquoteattr(self['gui_theme']))
+        lines.append(' auth_ntlm="%d"' % self['auth_ntlm'])
+        lines.append(' try_google="%d"' % self['try_google'])
+        lines.append(' clamavconf="%s"' % xmlquoteattr(self['clamavconf']))
         hosts = self['nofilterhosts']
-        f.write(' nofilterhosts="%s"\n' % xmlquoteattr(",".join(hosts)))
+        lines.append(' nofilterhosts="%s"' % xmlquoteattr(",".join(hosts)))
         hosts = self['allowedhosts']
-        f.write(' allowedhosts="%s"\n' % xmlquoteattr(",".join(hosts)))
-        f.write('>\n')
+        lines.append(' allowedhosts="%s"' % xmlquoteattr(",".join(hosts)))
+        lines.append('>')
         for key in self['filters']:
-            f.write('<filter name="%s"/>\n' % xmlquoteattr(key))
-        f.write('</webcleaner>\n')
+            lines.append('<filter name="%s"/>' % xmlquoteattr(key))
+        lines.append('</webcleaner>')
+        f = file(self.configfile, 'w')
+        f.write(os.linesep.join(lines))
         f.close()
 
     def read_filterconf (self):
