@@ -5,11 +5,6 @@
 
 case "$1" in
 purge)
-    # remove service link
-    rm -f /service/webcleaner
-    # exit supervise
-    svc -dx /etc/webcleaner
-    svc -dx /etc/webcleaner/log
     # remove log files
     rm -rf /var/log/webcleaner || true
     # old log file locations
@@ -33,6 +28,6 @@ esac
 
 if [ "$1"=="purge" ]; then
     # delete remaining supervise stuff
-    rm -rf /etc/webcleaner || true
+    #rm -rf /etc/webcleaner/log || true
 fi
 exit 0

@@ -1,0 +1,17 @@
+#!/bin/sh -e
+# prerm script for webcleaner
+#
+# see: dh_installdeb(1)
+
+# note: debhelper of dh_installinit calls svc -d
+
+#DEBHELPER#
+
+if [ "$1"=="remove" ]; then
+    # remove service link
+    rm -f /service/webcleaner
+    # exit supervise
+    svc -x /etc/webcleaner
+    svc -x /etc/webcleaner/log
+fi
+exit 0
