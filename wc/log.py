@@ -122,13 +122,14 @@ def set_format (handler):
     return handler
 
 
+import gc
+gc.enable()
 # memory leak debugging
-#import gc
 #gc.set_debug(gc.DEBUG_LEAK)
 def debug (log, msg, *args):
     """log a debug message"""
     logging.getLogger(log).debug(msg, *args)
-    #logging.getLogger(log).debug("Mem: %d kB"%usedmemory())
+    #logging.getLogger(log).info("Mem: %d kB"%usedmemory())
 
 
 def usedmemory ():
