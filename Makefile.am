@@ -60,11 +60,6 @@ dist-hook:
 	rm -f $(distdir)/_webcleaner2_configdata.py
 	rm -f webcleaner-md5sums.txt
 
-# noop is a script doing nothing, to fool automake check routines
-noop: localbuild
-	test/run.sh tests/runall.py
-	test/run.sh tests/runsimpletaltests.py
-
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
 	(cd test/filter && md5sum *.zap > filter-md5sums.txt)
