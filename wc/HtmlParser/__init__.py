@@ -128,6 +128,8 @@ def strip_quotes (s):
     return s
 
 
+_encoding_ro = re.compile(r"charset=(?P<encoding>[-0-9a-zA-Z]+)")
+
 def set_encoding (self, tag, attrs):
     """Set document encoding for given parser. Tag must be a meta tag."""
     if tag != u'meta':

@@ -29,8 +29,6 @@ import wc.filter.HtmlSecurity
 import wc.filter.HtmlTags
 import wc.filter.Rating
 
-_encoding_ro = re.compile(r"charset=(?P<encoding>[-0-9a-zA-Z]+)")
-
 
 class HtmlFilter (wc.filter.JSFilter.JSFilter):
     """Filtering HTML parser handler. Has filter rules and a rule stack.
