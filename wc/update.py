@@ -2,6 +2,7 @@
 import os, md5, wc
 from wc.log import *
 from wc import i18n
+from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
 # urlutils.py - Simplified urllib handling
@@ -118,7 +119,7 @@ def update_filter (wconfig, dryrun=False, log=None):
     throws IOError on error
     """
     chg = False
-    baseurl = wconfig['updateurl']+"zapper/"
+    baseurl = wconfig['baseurl']+"filter/"
     url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
@@ -210,4 +211,14 @@ def update_filter (wconfig, dryrun=False, log=None):
 
 
 def update_ratings (wconfig, dryrun=False, log=None):
-    pass # XXX
+    chg = False
+    baseurl = wconfig['baseurl']+"rating/"
+    url = baseurl+"rating.txt"
+    try:
+        page = open_url(url)
+    except IOError, msg:
+        print >>log, "error fetching %s:"%url, msg
+        return chg
+    # build local rating cache, and merge
+    chg = rating_cache_merge(rating_cache_parse(page), dryrun=dryrun, log=log)
+    return chg

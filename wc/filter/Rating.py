@@ -69,6 +69,9 @@ rangenames = {
     "2": i18n._("Heavy"),
 }
 
+
+is_time = re.compile(r"^\d+$").search
+
 def rating_import (url, ratingdata, debug=0):
     """parse given rating data, throws ParseError on error"""
     categories = {}
@@ -151,12 +154,13 @@ def rating_cache_parse (fp):
     """parse previously exported rating data from given file"""
     url = None
     ratingdata = []
-    newrating_cache
+    newrating_cache = {}
     for line in fp:
         line = line.rstrip('\r\n')
         if not line:
             if url:
-                newrating_cache[url] = rating_import("\n".join(ratingdata))
+                data = "\n".join(ratingdata)
+                newrating_cache[url] = rating_import(url, data)
             url = None
             ratingdata = []
             continue
@@ -277,12 +281,19 @@ def rating_range (value):
     return (vmin, vmax)
 
 
-def rating_cache_merge (newrating_cache):
+def rating_cache_merge (newrating_cache, dryrun=False, log=None):
     """add new ratings, but do not change existing ones"""
+    chg = False
     for url, rating in newrating_cache.iteritems():
         if url not in rating_cache:
-            rating_cache[url] = rating
+            chg = True
+            print >>log, i18n._("adding new rating for %r")%url
+            if not dryrun:
+                rating_cache[url] = rating
+    if not dryrun and chg:
+        rating_cache_write()
+    return chg
 
 
+# initialize rating cache
 rating_cache_load()
-
