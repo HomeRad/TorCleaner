@@ -43,7 +43,7 @@ from HtmlTags import check_spelling
 _has_ws = re.compile("\s").search
 
 _start_js_comment = re.compile(r"^<!--\s*").search
-_end_js_comment = re.compile(r"\s*-->$").search
+_end_js_comment = re.compile(r"\s*//\s*-->$").search
 
 class JSHtmlListener (JSListener):
     """defines callback handlers for Javascript code"""
@@ -490,15 +490,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         if data is None:
             if not self.js_script:
                 warn(PARSER, "HtmlParser[%d]: empty JS src %s", self.level, url)
-            else:
-                self.buf.append([STARTTAG, "script", {'type':
-                                                      'text/javascript'}])
-                script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
-                self.buf.append([DATA, script])
-                # Note: <script src=""> could be missing an end tag,
-                # but now we need one. Look later for a duplicate </script>.
-                self.buf.append([ENDTAG, "script"])
-                self.js_script = ''
+                self.js_script = "// error fetching script from %s" % `url`
+            self.buf.append([STARTTAG, "script", {'type': 'text/javascript'}])
+            script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
+            self.buf.append([DATA, script])
+            # Note: <script src=""> could be missing an end tag,
+            # but now we need one. Look later for a duplicate </script>.
+            self.buf.append([ENDTAG, "script"])
+            self.js_script = ''
             self.state = ('parse',)
             self._debug("switching back to parse with")
             self._debugbuf()
@@ -588,8 +587,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self._debug("jsEndElement buf %s", `self.buf`)
         if len(self.buf)<2:
             # syntax error, ignore
+            print "XXX oops", `self.buf`
             return
         if self.js_src:
+            debug(FILTER, "JS src with buf %s", `self.buf`)
             del self.buf[-1]
             if len(self.buf)<2:
                 # syntax error, ignore
