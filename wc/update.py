@@ -192,8 +192,12 @@ def update (wconfig, baseurl, dryrun=False, log=None):
             except IOError, msg:
                 print >>log, "error fetching", url
                 continue
+            data = page.read()
+            if not data:
+                print >>log, "got no data from", url
+                continue
             f = file(fullname, 'wb')
-            f.write(page.read())
+            f.write(data)
             f.close()
     return chg
 
