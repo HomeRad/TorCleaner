@@ -21,13 +21,13 @@
 <label for="rule_title" i18n:translate="">Title</label>:
 </td><td>
 <input type="text" class="text" name="rule_title" id="rule_title"
- value="Rule title" tal:attributes="value currule/title">
+ value="Rule title" tal:attributes="value currule/titles/?lang">
 </td></tr>
 <tr valign="top"><td>
 <label for="rule_description" i18n:translate="">Description</label>:
 </td><td>
 <textarea name="rule_description" id="rule_description" cols="50" rows="5"
- tal:content="currule/desc">Rule description</textarea>
+ tal:content="currule/descriptions/?lang">Rule description</textarea>
 </td></tr>
 </div>
 </table>

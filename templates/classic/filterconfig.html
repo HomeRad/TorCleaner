@@ -49,7 +49,7 @@
 ><img tal:condition="folder/selected" src="minifolderopen.png"
  i18n:attributes="alt string:Folder icon" alt="Folder icon"></span></td>
 <td><b tal:omit-tag="not:folder/selected">
-<a href="#" tal:content="folder/title"
+<a href="#" tal:content="folder/titles/?lang"
  tal:attributes="href string:${filename}.${lang}?selfolder=${folder/oid}; title folder/tiptext"
  >Scripting</a>
 </b></td>
@@ -91,10 +91,10 @@
  tal:condition="not:rule/disable" src="minidoc.png" alt="Rule icon"
  i18n:attributes="alt string:Rule icon"></td>
 <td><b tal:omit-tag="not:rule/selected">
-<a href="#" tal:condition="not:curfolder/disable" tal:content="rule/title"
+<a href="#" tal:condition="not:curfolder/disable" tal:content="rule/titles/?lang"
  tal:attributes="href string:${filename}.${lang}?selfolder=${curfolder/oid}&amp;selrule=${rule/oid}; title rule/tiptext"
  >On focus</a>
-<span tal:condition="curfolder/disable" tal:content="rule/title"
+<span tal:condition="curfolder/disable" tal:content="rule/titles/?lang"
  tal:attributes="title rule/tiptext">On focus</span>
 </b></td>
 </tr>
@@ -110,7 +110,7 @@
 <tr>
 <td>
 <input type="text" class="text" name="foldername" size="10"
- tal:attributes="value curfolder/title">
+ tal:attributes="value curfolder/titles/?lang">
 </td>
 <td>
 <input type="submit" class="submit" name="renamefolder" value="Rename folder"
