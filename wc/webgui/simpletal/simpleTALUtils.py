@@ -1,48 +1,49 @@
 """ simpleTALUtils
 
-        Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
-        All rights reserved.
+Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
+All rights reserved.
 
-        Redistribution and use in source and binary forms, with or without
-        modification, are permitted provided that the following conditions
-        are met:
-        1. Redistributions of source code must retain the above copyright
-           notice, this list of conditions and the following disclaimer.
-        2. Redistributions in binary form must reproduce the above copyright
-           notice, this list of conditions and the following disclaimer in the
-           documentation and/or other materials provided with the distribution.
-        3. The name of the author may not be used to endorse or promote products
-           derived from this software without specific prior written permission.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+   derived from this software without specific prior written permission.
 
-        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-        IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-        OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-        IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-        INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-        NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-        DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-        THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-        (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-        THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-        If you make any bug fixes or feature enhancements please let me know!
+If you make any bug fixes or feature enhancements please let me know!
 
-        This module is holds utilities that make using SimpleTAL easier.
-        Initially this is just the HTMLStructureCleaner class, used to clean
-        up HTML that can then be used as 'structure' content.
+This module is holds utilities that make using SimpleTAL easier.
+Initially this is just the HTMLStructureCleaner class, used to clean
+up HTML that can then be used as 'structure' content.
 
-        Module Dependencies: None
+Module Dependencies: None
 """
 
-import StringIO, os, stat, threading, codecs, sgmllib, cgi, re
+import os, stat, threading, codecs, sgmllib, cgi, re
 from wc.webgui import simpletal, simpleTAL
+from StringIO import StringIO
 
 __version__ = simpletal.__version__
 
 # This is used to check for already escaped attributes.
-ESCAPED_TEXT_REGEX=re.compile (r"\&\S+?;")
+ESCAPED_TEXT_REGEX= re.compile(r"\&\S+?;")
 
-class HTMLStructureCleaner (sgmllib.SGMLParser):
+class HTMLStructureCleaner (sgmllib.SGMLParser, object):
     """ A helper class that takes HTML content and parses it, so converting
             any stray '&', '<', or '>' symbols into their respective entity references.
     """
@@ -56,41 +57,42 @@ class HTMLStructureCleaner (sgmllib.SGMLParser):
                 The method returns a unicode string which is suitable for addition to a
                 simpleTALES.Context object.
         """
-        if (type (content) == type ("")):
+        if type(content) == type(""):
             # Not unicode, convert
-            converter = codecs.lookup (encoding)[1]
-            file = StringIO.StringIO (converter (content)[0])
-        elif (type (content) == type (u"")):
-            file = StringIO.StringIO (content)
+            converter = codecs.lookup(encoding)[1]
+            fp = StringIO(converter(content)[0])
+        elif type(content) == type(u""):
+            fp = StringIO(content)
         else:
             # Treat it as a file type object - and convert it if we have an encoding
-            if (encoding is not None):
-                converterStream = codecs.lookup (encoding)[2]
-                file = converterStream (content)
+            if encoding is not None:
+                converterStream = codecs.lookup(encoding)[2]
+                fp = converterStream(content)
             else:
-                file = content
+                fp = content
 
-        self.outputFile = StringIO.StringIO (u"")
-        self.feed (file.read())
+        self.outputFile = StringIO(u"")
+        self.feed(fp.read())
         self.close()
         return self.outputFile.getvalue()
 
     def unknown_starttag (self, tag, attributes):
-        self.outputFile.write (tagAsText (tag, attributes))
+        self.outputFile.write(tagAsText(tag, attributes))
 
     def unknown_endtag (self, tag):
-        self.outputFile.write ('</' + tag + '>')
+        self.outputFile.write('</' + tag + '>')
 
     def handle_data (self, data):
-        self.outputFile.write (cgi.escape (data))
+        self.outputFile.write(cgi.escape(data))
 
     def handle_charref (self, ref):
-        self.outputFile.write (u'&#%s;' % ref)
+        self.outputFile.write(u'&#%s;' % ref)
 
     def handle_entityref (self, ref):
-        self.outputFile.write (u'&%s;' % ref)
+        self.outputFile.write(u'&%s;' % ref)
 
-class TemplateCache:
+
+class TemplateCache (object):
     """ A TemplateCache is a multi-thread safe object that caches compiled templates.
             This cache only works with file based templates, the ctime of the file is
             checked on each hit, if the file has changed the template is re-compiled.
@@ -109,28 +111,28 @@ class TemplateCache:
             inputEncoding is only used for HTML templates, and should be the encoding that the template
             is stored in.
         """
-        if (self.templateCache.has_key (name)):
+        if self.templateCache.has_key(name):
             template, oldctime = self.templateCache[name]
-            ctime = os.stat (name)[stat.ST_MTIME]
-            if (oldctime == ctime):
+            ctime = os.stat(name)[stat.ST_MTIME]
+            if oldctime == ctime:
                 # Cache hit!
                 self.hits += 1
                 return template
         # Cache miss, let's cache this template
-        return self._cacheTemplate_ (name, inputEncoding)
+        return self._cacheTemplate_(name, inputEncoding)
 
     def _cacheTemplate_ (self, name, inputEncoding):
-        self.cacheLock.acquire ()
+        self.cacheLock.acquire()
         try:
-            tempFile = open (name, 'r')
+            tempFile = file(name, 'r')
             firstline = tempFile.readline()
             tempFile.seek(0)
-            if (name[-3:] == "xml") or (firstline.strip ()[:5] == '<?xml') or (firstline[:9] == '<!DOCTYPE' and firstline.find('XHTML') != -1):
-                template = simpleTAL.compileXMLTemplate (tempFile)
+            if (name[-3:] == "xml") or (firstline.strip()[:5] == '<?xml') or (firstline[:9] == '<!DOCTYPE' and firstline.find('XHTML') != -1):
+                template = simpleTAL.compileXMLTemplate(tempFile)
             else:
-                template = simpleTAL.compileHTMLTemplate (tempFile, inputEncoding)
+                template = simpleTAL.compileHTMLTemplate(tempFile, inputEncoding)
             tempFile.close()
-            self.templateCache[name] = (template, os.stat (name)[stat.ST_MTIME])
+            self.templateCache[name] = (template, os.stat(name)[stat.ST_MTIME])
             self.misses += 1
         except Exception, e:
             self.cacheLock.release()
@@ -142,17 +144,17 @@ class TemplateCache:
 def tagAsText (tag,atts):
     result = "<" + tag
     for name,value in atts:
-        if (ESCAPED_TEXT_REGEX.search (value) is not None):
+        if ESCAPED_TEXT_REGEX.search(value) is not None:
             # We already have some escaped characters in here, so assume it's all valid
             result += ' %s="%s"' % (name, value)
         else:
-            result += ' %s="%s"' % (name, cgi.escape (value))
+            result += ' %s="%s"' % (name, cgi.escape(value))
     result += ">"
     return result
 
 class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
     def __init__ (self):
-        simpleTAL.TemplateInterpreter.__init__ (self)
+        super(MacroExpansionInterpreter, self).__init__()
         # Override the standard interpreter way of doing things.
         self.macroStateStack = []
         self.commandHandler[simpleTAL.TAL_DEFINE] = self.cmdNoOp
@@ -176,42 +178,42 @@ class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
 
     def popProgram (self):
         self.inMacro = self.macroStateStack.pop()
-        simpleTAL.TemplateInterpreter.popProgram (self)
+        simpleTAL.TemplateInterpreter.popProgram(self)
 
     def pushProgram (self):
-        self.macroStateStack.append (self.inMacro)
-        simpleTAL.TemplateInterpreter.pushProgram (self)
+        self.macroStateStack.append(self.inMacro)
+        simpleTAL.TemplateInterpreter.pushProgram(self)
 
     def cmdOutputStartTag (self, command, args):
         newAtts = []
         for att in self.originalAttributes:
-            if (self.macroArg is not None and att[0] == "metal:define-macro"):
-                newAtts.append (("metal:use-macro",self.macroArg))
-            elif (self.inMacro and att[0]=="metal:define-slot"):
-                newAtts.append (("metal:fill-slot", att[1]))
+            if self.macroArg is not None and att[0] == "metal:define-macro":
+                newAtts.append(("metal:use-macro",self.macroArg))
+            elif self.inMacro and att[0]=="metal:define-slot":
+                newAtts.append(("metal:fill-slot", att[1]))
             else:
-                newAtts.append (att)
+                newAtts.append(att)
         self.macroArg = None
         self.currentAttributes = newAtts
-        simpleTAL.TemplateInterpreter.cmdOutputStartTag (self, command, args)
+        simpleTAL.TemplateInterpreter.cmdOutputStartTag(self, command, args)
 
     def cmdUseMacro (self, command, args):
-        simpleTAL.TemplateInterpreter.cmdUseMacro (self, command, args)
-        if (self.tagContent is not None):
+        simpleTAL.TemplateInterpreter.cmdUseMacro(self, command, args)
+        if self.tagContent is not None:
             # We have a macro, add the args to the in-macro list
             self.inMacro = 1
             self.macroArg = args[0]
 
     def cmdEndTagEndScope (self, command, args):
         # Args: tagName, omitFlag
-        if (self.tagContent is not None):
+        if self.tagContent is not None:
             contentType, resultVal = self.tagContent
-            if (contentType):
-                if (isinstance (resultVal, simpleTAL.Template)):
+            if contentType:
+                if isinstance(resultVal, simpleTAL.Template):
                     # We have another template in the context, evaluate it!
                     # Save our state!
                     self.pushProgram()
-                    resultVal.expandInline (self.context, self.file, self)
+                    resultVal.expandInline(self.context, self.file, self)
                     # Restore state
                     self.popProgram()
                     # End of the macro expansion (if any) so clear the parameters
@@ -220,35 +222,35 @@ class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
                     self.inMacro = 0
                 else:
                     if isinstance(resultVal, basestring):
-                        self.file.write (resultVal)
+                        self.file.write(resultVal)
                     else:
-                        self.file.write (str (resultVal))
+                        self.file.write(str(resultVal))
             else:
                 if isinstance(resultVal, basestring):
-                    self.file.write (cgi.escape (resultVal))
+                    self.file.write(cgi.escape(resultVal))
                 else:
-                    self.file.write (cgi.escape (str (resultVal)))
+                    self.file.write(cgi.escape(str(resultVal)))
 
-        if (self.outputTag and not args[1]):
-            self.file.write ('</' + args[0] + '>')
+        if self.outputTag and not args[1]:
+            self.file.write('</' + args[0] + '>')
 
-        if (self.movePCBack is not None):
+        if self.movePCBack is not None:
             self.programCounter = self.movePCBack
             return
 
-        if (self.localVarsDefined):
+        if self.localVarsDefined:
             self.context.popLocals()
 
         self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined = self.scopeStack.pop()
         self.programCounter += 1
 
 def ExpandMacros (context, template, outputEncoding="ISO-8859-1"):
-    out = StringIO.StringIO()
+    out = StringIO()
     interp = MacroExpansionInterpreter()
-    interp.initialise (context, out)
-    template.expand (context, out, outputEncoding=outputEncoding, interpreter=interp)
+    interp.initialise(context, out)
+    template.expand(context, out, outputEncoding=outputEncoding, interpreter=interp)
     # StringIO returns unicode, so we need to turn it back into native string
     result = out.getvalue()
-    reencoder = codecs.lookup (outputEncoding)[0]
-    return reencoder (result)[0]
+    reencoder = codecs.lookup(outputEncoding)[0]
+    return reencoder(result)[0]
 
