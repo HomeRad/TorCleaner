@@ -373,6 +373,7 @@ finish_script:
     Py_XDECREF(ud->error);
     ud->error = NULL;
     Py_XDECREF(callback);
+    Py_XDECREF(script);
     Py_XDECREF(result);
     Py_DECREF($1);
     if (error) {
@@ -397,6 +398,7 @@ finish_style:
     Py_XDECREF(ud->error);
     ud->error = NULL;
     Py_XDECREF(callback);
+    Py_XDECREF(style);
     Py_XDECREF(result);
     Py_DECREF($1);
     if (error) {

@@ -402,7 +402,7 @@ static const yysigned_char yyrhs[] =
 static const unsigned short yyrline[] =
 {
        0,   145,   145,   146,   149,   150,   157,   192,   242,   276,
-     297,   318,   339,   360,   384,   408
+     297,   318,   339,   360,   385,   410
 };
 #endif
 
@@ -1372,6 +1372,7 @@ finish_script:
     Py_XDECREF(ud->error);
     ud->error = NULL;
     Py_XDECREF(callback);
+    Py_XDECREF(script);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
     if (error) {
@@ -1383,7 +1384,7 @@ finish_script:
     break;
 
   case 14:
-#line 385 "htmlparse.y"
+#line 386 "htmlparse.y"
     {
     /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
@@ -1399,6 +1400,7 @@ finish_style:
     Py_XDECREF(ud->error);
     ud->error = NULL;
     Py_XDECREF(callback);
+    Py_XDECREF(style);
     Py_XDECREF(result);
     Py_DECREF(yyvsp[0]);
     if (error) {
@@ -1410,7 +1412,7 @@ finish_style:
     break;
 
   case 15:
-#line 409 "htmlparse.y"
+#line 411 "htmlparse.y"
     {
     /* $1 is a PyUnicode */
     /* Remember this is also called as a lexer error fallback */
@@ -1438,7 +1440,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1442 "htmlparse.c"
+#line 1444 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1632,7 +1634,7 @@ yyreturn:
 }
 
 
-#line 432 "htmlparse.y"
+#line 434 "htmlparse.y"
 
 
 /* disable python memory interface */
