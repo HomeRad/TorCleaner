@@ -169,16 +169,14 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#, fuzzy
 msgid "Status"
-msgstr "P&roxy Einstellungen"
+msgstr "Status"
 
 msgid "Proxy"
 msgstr "Proxy"
 
-#, fuzzy
 msgid "Update..."
-msgstr "Update Fehler"
+msgstr "Update..."
 
 msgid "P&roxy Settings"
 msgstr "P&roxy Einstellungen"
@@ -545,25 +543,21 @@ msgstr "Nr. des gesp. Headers"
 msgid "Suppress headers"
 msgstr "Unterdrücke Header"
 
-#, fuzzy
 msgid "&Add"
 msgstr "Hinzufügen"
 
-#, fuzzy
 msgid "&Edit"
-msgstr "Bearbeiten"
+msgstr "&Bearbeiten"
 
-#, fuzzy
 msgid "&Remove"
 msgstr "Löschen"
 
 msgid "&Save"
-msgstr ""
+msgstr "&Sichern"
 
 msgid "&Close"
-msgstr ""
+msgstr "Schliessen"
 
-#, fuzzy
 msgid "About WebCleaner"
 msgstr "Über WebCleaner"
 
