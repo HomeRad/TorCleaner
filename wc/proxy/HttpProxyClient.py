@@ -11,6 +11,7 @@ class HttpProxyClient:
         self.handler = handler
         self.args = args
         self.connected = "True"
+        self.addr = ('localhost', 80)
         debug(NIGHTMARE, 'Proxy: CP/init', self)
 
 
@@ -24,6 +25,8 @@ class HttpProxyClient:
             self.handler(None, *self.args)
             self.handler = None
 
+    def error (self, status, msg, txt=''):
+        pass
 
     def write (self, data):
         if self.handler:
