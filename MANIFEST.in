@@ -1,4 +1,4 @@
-include MANIFEST.in guruguru.bmp TODO
+include MANIFEST.in TODO
 include INSTALL LICENSE README README.squid README.sshtunnel README.parser
 include Makefile webcleaner webcleanerconf wcheaders
 include wcheaders.bat webcleanerconf.bat
