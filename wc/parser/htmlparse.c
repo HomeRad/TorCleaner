@@ -27,15 +27,13 @@
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM scanner
 extern int htmllexInit(void** scanner, void* data);
-extern int htmllexStart(void* scanner, const char* s, int slen);
-extern int htmllexStop(void* scanner);
+extern int htmllexStart(void* scanner, UserData* data, const char* s, int slen);
+extern int htmllexStop(UserData* data);
+extern int htmllexDestroy(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
-extern void* yyget_lval(void*);
 #define YYERROR_VERBOSE 1
-extern char* stpcpy(char* src, const char* dest);
 int yyerror(char* msg);
-PyObject* quote_string (PyObject* val);
 
 /* parser type definition */
 typedef struct {
@@ -114,8 +112,8 @@ static const short yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined. */
 static const short yyrline[] =
 {
-       0,    55,    56,    59,    60,    67,    94,   130,   151,   172,
-     193,   214,   235,   265
+       0,    53,    54,    57,    58,    65,    92,   128,   149,   170,
+     191,   212,   233,   263
 };
 #endif
 
@@ -897,19 +895,19 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 55 "htmlparse.y"
+#line 53 "htmlparse.y"
 {;
     break;}
 case 2:
-#line 56 "htmlparse.y"
+#line 54 "htmlparse.y"
 {;
     break;}
 case 3:
-#line 59 "htmlparse.y"
+#line 57 "htmlparse.y"
 { YYACCEPT; /* wait for more lexer input */ ;
     break;}
 case 4:
-#line 61 "htmlparse.y"
+#line 59 "htmlparse.y"
 {
     /* a python error occured in the scanner */
     UserData* ud = yyget_extra(scanner);
@@ -918,26 +916,26 @@ case 4:
 ;
     break;}
 case 5:
-#line 68 "htmlparse.y"
+#line 66 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
-    PyObject* ltag = PyTuple_GET_ITEM(yyvsp[0], 0);
+    PyObject* tag = PyTuple_GET_ITEM(yyvsp[0], 0);
     PyObject* attrs = PyTuple_GET_ITEM(yyvsp[0], 1);
     int error = 0;
-    if (!ltag || !attrs) { error = 1; goto finish_start; }
+    if (!tag || !attrs) { error = 1; goto finish_start; }
     if (PyObject_HasAttrString(ud->handler, "startElement")==1) {
 	callback = PyObject_GetAttrString(ud->handler, "startElement");
 	if (!callback) { error=1; goto finish_start; }
-	result = PyObject_CallFunction(callback, "OO", ltag, attrs);
+	result = PyObject_CallFunction(callback, "OO", tag, attrs);
 	if (!result) { error=1; goto finish_start; }
     }
 finish_start:
     Py_XDECREF(callback);
     Py_XDECREF(result);
-    Py_XDECREF(ltag);
+    Py_XDECREF(tag);
     Py_XDECREF(attrs);
     Py_DECREF(yyvsp[0]);
     if (error) {
@@ -947,20 +945,20 @@ finish_start:
 ;
     break;}
 case 6:
-#line 95 "htmlparse.y"
+#line 93 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>) */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
-    PyObject* ltag = PyTuple_GET_ITEM(yyvsp[0], 0);
+    PyObject* tag = PyTuple_GET_ITEM(yyvsp[0], 0);
     PyObject* attrs = PyTuple_GET_ITEM(yyvsp[0], 1);
     int error = 0;
-    if (!ltag || !attrs) { error = 1; goto finish_start_end; }
+    if (!tag || !attrs) { error = 1; goto finish_start_end; }
     if (PyObject_HasAttrString(ud->handler, "startElement")==1) {
 	callback = PyObject_GetAttrString(ud->handler, "startElement");
 	if (!callback) { error=1; goto finish_start_end; }
-	result = PyObject_CallFunction(callback, "OO", ltag, attrs);
+	result = PyObject_CallFunction(callback, "OO", tag, attrs);
 	if (!result) { error=1; goto finish_start_end; }
 	Py_DECREF(callback);
         Py_DECREF(result);
@@ -969,13 +967,13 @@ case 6:
     if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
 	callback = PyObject_GetAttrString(ud->handler, "endElement");
 	if (callback==NULL) { error=1; goto finish_start_end; }
-	result = PyObject_CallFunction(callback, "O", ltag);
+	result = PyObject_CallFunction(callback, "O", tag);
 	if (result==NULL) { error=1; goto finish_start_end; }
     }
 finish_start_end:
     Py_XDECREF(callback);
     Py_XDECREF(result);
-    Py_XDECREF(ltag);
+    Py_XDECREF(tag);
     Py_XDECREF(attrs);
     Py_DECREF(yyvsp[0]);
     if (error) {
@@ -985,7 +983,7 @@ finish_start_end:
 ;
     break;}
 case 7:
-#line 131 "htmlparse.y"
+#line 129 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1008,7 +1006,7 @@ finish_end:
 ;
     break;}
 case 8:
-#line 152 "htmlparse.y"
+#line 150 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1031,7 +1029,7 @@ finish_comment:
 ;
     break;}
 case 9:
-#line 173 "htmlparse.y"
+#line 171 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1054,7 +1052,7 @@ finish_pi:
 ;
     break;}
 case 10:
-#line 194 "htmlparse.y"
+#line 192 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1077,7 +1075,7 @@ finish_cdata:
 ;
     break;}
 case 11:
-#line 215 "htmlparse.y"
+#line 213 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1100,7 +1098,7 @@ finish_doctype:
 ;
     break;}
 case 12:
-#line 236 "htmlparse.y"
+#line 234 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1132,7 +1130,7 @@ finish_script:
 ;
     break;}
 case 13:
-#line 266 "htmlparse.y"
+#line 264 "htmlparse.y"
 {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1388,7 +1386,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 289 "htmlparse.y"
+#line 287 "htmlparse.y"
 
 
 /* create parser */
@@ -1404,14 +1402,17 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "Allocating parser object failed");
 	return NULL;
     }
+    /* reset userData */
     p->userData = PyMem_New(UserData, sizeof(UserData));
     p->userData->handler = handler;
     p->userData->buf = PyMem_New(char, 1);
     if (!p->userData->buf) return PyErr_NoMemory();
     p->userData->buf[0] = '\0';
-    p->userData->tmp = PyMem_New(char, 1);
-    if (!p->userData->tmp) return PyErr_NoMemory();
-    p->userData->tmp[0] = '\0';
+    p->userData->tmp_buf = PyMem_New(char, 1);
+    if (!p->userData->tmp_buf) return PyErr_NoMemory();
+    p->userData->tmp_buf[0] = '\0';
+    p->userData->tmp_tag = p->userData->tmp_attrname =
+	p->userData->tmp_attrval = p->userData->tmp_attrs = NULL;
     p->userData->exc_type = NULL;
     p->userData->exc_val = NULL;
     p->userData->exc_tb = NULL;
@@ -1421,8 +1422,9 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 }
 
 
-static void parser_dealloc(parser_object* self)
-{
+static void parser_dealloc(parser_object* self) {
+    PyMem_Del(self->userData->buf);
+    PyMem_Del(self->userData->tmp_buf);
     PyMem_Del(self->userData);
     PyMem_DEL(self);
 }
@@ -1430,12 +1432,12 @@ static void parser_dealloc(parser_object* self)
 
 static PyObject* parser_flush(parser_object* self, PyObject* args) {
     /* flush parser buffers */
-    int res=0, error;
+    int res=0;
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
     }
-    if (self->userData->buf) {
+    if (strlen(self->userData->buf)) {
 	PyObject* s = PyString_FromString(self->userData->buf);
 	PyObject* callback = NULL;
 	PyObject* result = NULL;
@@ -1449,20 +1451,10 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	Py_DECREF(callback);
 	Py_DECREF(result);
 	Py_DECREF(s);
-    }
-    htmllexStop(self->scanner);
-    self->userData->exc_type = NULL;
-    self->userData->exc_val = NULL;
-    self->userData->exc_tb = NULL;
-    error = 0;
-    if (error!=0) {
-        if (self->userData->exc_type!=NULL) {
-            /* note: we give away these objects, so dont decref */
-            PyErr_Restore(self->userData->exc_type,
-        		  self->userData->exc_val,
-        		  self->userData->exc_tb);
-        }
-        return NULL;
+	// reset buffer
+	self->userData->buf = PyMem_Resize(self->userData->buf, char, 1);
+	if (!self->userData->buf) return NULL;
+	self->userData->buf[0] = '\0';
     }
     return Py_BuildValue("i", res);
 }
@@ -1477,29 +1469,34 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
     }
-
-    /* reset error state */
-    self->userData->exc_type = NULL;
-    self->userData->exc_val = NULL;
-    self->userData->exc_tb = NULL;
-    
     /* parse */
-    htmllexStart(self->scanner, s, slen);
-    yyparse(self->scanner);
+    htmllexStart(self->scanner, self->userData, s, slen);
+    if (yyparse(self->scanner)!=0) {
+        if (self->userData->exc_type!=NULL) {
+            /* note: we give away these objects, so dont decref */
+            PyErr_Restore(self->userData->exc_type,
+        		  self->userData->exc_val,
+        		  self->userData->exc_tb);
+        }
+        return NULL;
+    }
+    htmllexStop(self->userData);
     Py_INCREF(Py_None);
     return Py_None;
 }
 
 
+/* reset the parser. This will erase all buffered data! */
 static PyObject* parser_reset(parser_object* self, PyObject* args) {
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
 	return NULL;
     }
-    htmllexStop(self->scanner);
-    self->userData->exc_type = NULL;
-    self->userData->exc_val = NULL;
-    self->userData->exc_tb = NULL;
+    htmllexDestroy(self->scanner);
+    // reset buffer
+    self->userData->buf = PyMem_Resize(self->userData->buf, char, 1);
+    if (!self->userData->buf) return NULL;
+    self->userData->buf[0] = '\0';
     self->scanner = NULL;
     htmllexInit(&(self->scanner), self->userData);
     Py_INCREF(Py_None);
@@ -1508,7 +1505,6 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 
 
 /* type interface */
-
 static PyMethodDef parser_methods[] = {
     /* incremental parsing */
     {"feed",  (PyCFunction) parser_feed, METH_VARARGS},
@@ -1540,7 +1536,6 @@ statichere PyTypeObject parser_type = {
 
 
 /* python module interface */
-
 static PyMethodDef htmlsax_methods[] = {
     {"parser", htmlsax_parser, METH_VARARGS},
     {NULL, NULL}
@@ -1548,58 +1543,14 @@ static PyMethodDef htmlsax_methods[] = {
 
 
 /* initialization of the htmlsaxhtmlop module */
-
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
     yydebug = 1;
 }
 
+/* standard error reporting, indicating an internal error */
 int yyerror (char* msg) {
-    fprintf(stderr, "htmlsax: error: %s\n", msg);
+    fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
     return 0;
 }
 
-/* Find out if and how we must quote the value as an HTML attribute.
- - quote if it contains white space or <>
- - quote with " if it contains '
- - quote with ' if it contains "
-
- val is a Python String object
-*/
-PyObject* quote_string (PyObject* val) {
-    char* quote = NULL;
-    int len = PyString_GET_SIZE(val);
-    char* internal = PyString_AS_STRING(val);
-    int i;
-    PyObject* prefix;
-    for (i=0; i<len; i++) {
-	if (isspace(internal[i]) && !quote) {
-            quote = "\"";
-	}
-	else if (internal[i]=='\'') {
-	    quote = "\"";
-            break;
-	}
-	else if (internal[i]=='"') {
-	    quote = "'";
-            break;
-	}
-    }
-    if (quote==NULL) {
-        return val;
-    }
-    // quote suffix
-    if ((prefix = PyString_FromString(quote))==NULL) return NULL;
-    PyString_Concat(&val, prefix);
-    if (val==NULL) {
-        Py_DECREF(prefix);
-	return NULL;
-    }
-    // quote prefix
-    PyString_ConcatAndDel(&prefix, val);
-    if (prefix==NULL) {
-        Py_DECREF(val);
-	return NULL;
-    }
-    return prefix;
-}

@@ -16,18 +16,26 @@
 typedef struct {
     /* the Python SAX class instance to issue callbacks */
     PyObject* handler;
-    /* buffer to store scanned but still unparsed characters */
+    /* Buffer to store still-to-be-scanned characters. After recognizing
+     * a complete syntax element, all data up to bufpos will be removed.
+     * Before scanning you should append new data to this buffer.
+     */
     char* buf;
+    /* current position in the buffer counting from zero */
+    int bufpos;
+    /* current position of next syntax element */
+    int nextpos;
     /* temporary vars */
-    char* tmp;
-    PyObject* ltag;
-    PyObject* attrname;
-    PyObject* attrval;
-    PyObject* attrs;
-    /* stored Python exception (if error occurred) */
+    char* tmp_buf;
+    PyObject* tmp_tag;
+    PyObject* tmp_attrname;
+    PyObject* tmp_attrval;
+    PyObject* tmp_attrs;
+    /* stored Python exception (if error occurred in scanner) */
     PyObject* exc_type;
     PyObject* exc_val;
     PyObject* exc_tb;
 } UserData;
+extern char* stpcpy(char* src, const char* dest);
 
 #endif
