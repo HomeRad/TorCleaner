@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Feb 29 12:34:06 2004\n"
+"POT-Creation-Date: Sun Feb 29 12:35:43 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -764,9 +764,6 @@ msgstr ""
 msgid "return window.confirm('Really delete this rating?')"
 msgstr ""
 
-msgid "Rule"
-msgstr ""
-
 msgid ""
 "Replace illegal binary characters in HTML code like\n"
 "the quote chars often found in Microsoft pages."
@@ -1041,7 +1038,7 @@ msgstr ""
 msgid "Folder moved down."
 msgstr ""
 
-msgid "Rule match-url successfully changed."
+msgid "Rule"
 msgstr ""
 
 msgid ""
@@ -1185,9 +1182,6 @@ msgid ""
 "dynamic content emitted with document.write() into the HTML file."
 msgstr ""
 
-msgid "Display Google search options for invalid pages"
-msgstr ""
-
 msgid "Disabled rule icon"
 msgstr ""
 
@@ -1317,7 +1311,7 @@ msgstr ""
 msgid "Disabled folder icon"
 msgstr ""
 
-msgid "Try Google"
+msgid "Rule match-url successfully changed."
 msgstr ""
 
 msgid ""
