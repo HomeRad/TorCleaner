@@ -180,8 +180,7 @@ def check_pics (rule, labellist):
                                     sdata['name'], options)
                 # stop on the first match
                 if msg: return msg
-    #return None
-    return "PICS TEST"
+    return None
 
 
 def check_service (rating, categories, name, options):
