@@ -27,7 +27,8 @@
     to handle and filter https connections.
     Type: feature
     Changed: wc/__init__.py, wc/proxy/{__init__,ClientServerMatchmaker}.py
-    Added: wc/proxy/{HttpsServer,SslClient,SslServer}.py, test/getssl.py
+    Added: wc/proxy/{HttpsServer,SslClient,SslServer}.py, test/getssl.py,
+      webcleaner-service*
   * web gui configuration for ssl gateway
     Type: feature
     Changed: wc/webgui/context/config_html.py, templates/classic/config.html

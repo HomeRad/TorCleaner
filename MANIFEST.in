@@ -10,7 +10,7 @@ include debian/po/*.py debian/po/Makefile
 include debian/webcleanertools.postinst debian/webcleanertools.prerm
 include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
-include webcleaner.1 webcleaner.conf.5
+include webcleaner.1 webcleaner-service.1 webcleaner.conf.5
 include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
 include config/*.py config/magic.mime
 recursive-include config/blacklists *.gz README
