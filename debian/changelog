@@ -1,6 +1,7 @@
 webcleaner (2.26-0.1) unstable; urgency=low
 
   * New upstream release.
+  * Moved optional packages to Recommends and Suggests lines.
 
  -- Bastian Kleineidam <calvin@debian.org>  Sun, 26 Dec 2004 20:59:18 +0100
 

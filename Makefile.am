@@ -154,4 +154,4 @@ reindent:
 
 
 .PHONY: localbuild distclean deb_signed update-blacklists
-.PHONY: md5sums pycheck pylint ccheck installservice homepage upload doc
+.PHONY: md5sums pycheck pylint ccheck installservice homepage upload
