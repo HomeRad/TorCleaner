@@ -10,8 +10,8 @@
       and Solaris/SunOS platforms
     - ignore first leading invalid backslash in a=\"b\" attributes
     Changed: wc/parser/htmllex.{l,c}
-  * cope with falsely advertised GIF images, the GIF parsers ignores
-    them now
+  * cope with falsely advertised GIF images, the GIF parser skips
+    invalid GIF data now
     Changed: wc/filter/GifImage.py
   * - fixed setting of missing host header
     - fixed redirection response data
@@ -44,8 +44,8 @@
   * use Python 2.3.1, fixes socket host name mem leak, and adds
     cStringIO().closed attribute
     Changed: INSTALL, wc/filter/ImageSize.py
-  * the DNS server returns valid "host not found" messages for .com and
-    .net, fixing the verisign wildcard DNS change
+  * for non-existing .com and .net hosts, the DNS server returns valid
+    "host not found" messages , fixing the verisign wildcard DNS change
     Changed: wc/proxy/dns_lookups.py
 
 2.1
