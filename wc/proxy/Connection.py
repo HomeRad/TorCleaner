@@ -11,8 +11,9 @@ __date__    = "$Date$"[7:-2]
 
 import socket
 import errno
+import wc.proxy.Dispatcher
 from wc.log import *
-from wc.proxy.Dispatcher import Dispatcher
+
 
 # *_BUFSIZE values are critical: setting them too low produces a lot of
 # applyfilter() calls with very few data
@@ -25,7 +26,7 @@ RECV_BUFSIZE = 4096
 MAX_BUFSIZE = 1024*1024
 
 
-class Connection (Dispatcher):
+class Connection (wc.proxy.Dispatcher.Dispatcher):
     """add buffered input and output capabilities"""
 
     def __init__(self, sock=None):

@@ -65,7 +65,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, htmlentitydefs
+import re
+import htmlentitydefs
+
 
 class SortedDict (dict):
     """a dictionary whose listing functions for keys and values preserve

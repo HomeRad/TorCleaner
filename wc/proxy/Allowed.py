@@ -4,7 +4,8 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc import config
+import wc
+
 
 class AllowedHttpClient (object):
     """Allowance data for http clients"""
@@ -45,7 +46,7 @@ class AllowedHttpClient (object):
 
     def host (self, host):
         """return True iff host is allowed"""
-        return config.allowed(host)
+        return wc.config.allowed(host)
 
 
     def connect_port (self, port):

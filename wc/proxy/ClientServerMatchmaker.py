@@ -4,19 +4,21 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import dns_lookups
 import socket
-from cStringIO import StringIO
-from wc import i18n, config
+import cStringIO as StringIO
+import wc
+import wc.url
+import wc.proxy.dns_lookups
+import wc.proxy.Headers
+import wc.proxy.ServerPool
+import wc.proxy.ServerHandleDirectly
+import wc.proxy.HttpServer
+import wc.proxy.SslServer
 from wc.log import *
-from wc.url import document_quote
-from wc.proxy.Headers import WcMessage
-from wc.proxy.ServerPool import serverpool
-from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
-from wc.proxy.HttpServer import HttpServer
-from wc.proxy.SslServer import SslServer
+
 
 BUSY_LIMIT = 10
+
 
 class ClientServerMatchmaker (object):
     """ The Matchmaker waits until the server connection is established
@@ -65,26 +67,26 @@ class ClientServerMatchmaker (object):
         self.server_busy = 0
         self.method, self.url, self.protocol = self.request.split()
         # prepare DNS lookup
-        if config['parentproxy']:
-            self.hostname = config['parentproxy']
-            self.port = config['parentproxyport']
+        if wc.config['parentproxy']:
+            self.hostname = wc.config['parentproxy']
+            self.port = wc.config['parentproxyport']
             self.document = self.url
-            if config['parentproxycreds']:
-                auth = config['parentproxycreds']
+            if wc.config['parentproxycreds']:
+                auth = wc.config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r"%auth
         else:
-            if self.method=='CONNECT' and config['sslgateway']:
+            if self.method=='CONNECT' and wc.config['sslgateway']:
                 # delegate to SSL gateway
                 self.hostname = 'localhost'
-                self.port = config['sslport']
+                self.port = wc.config['sslport']
             else:
                 self.hostname = client.hostname
                 self.port = client.port
-            self.document = document_quote(client.document)
+            self.document = wc.url.document_quote(client.document)
         assert self.hostname
         # start DNS lookup
         debug(PROXY, "background dns lookup %r", self.hostname)
-        dns_lookups.background_lookup(self.hostname, self.handle_dns)
+        wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
 
     def handle_dns (self, hostname, answer):
@@ -108,18 +110,18 @@ class ClientServerMatchmaker (object):
             new_url += self.document
             info(PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
-            ServerHandleDirectly(
+            wc.proxy.ServerHandleDirectly.ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol, 301,
-              WcMessage(StringIO('Content-type: text/plain\r\n'
+              wc.proxy.Headers.WcMessage(StringIO.StringIO('Content-type: text/plain\r\n'
               'Location: %s\r\n\r\n' % new_url)),
-              i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
+              wc.i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host,
             # close this connection
             self.state = 'done'
-            self.client.error(504, i18n._("Host not found"),
-                i18n._('Host %s not found .. %s')%(hostname, answer.data))
+            self.client.error(504, wc.i18n._("Host not found"),
+                wc.i18n._('Host %s not found .. %s')%(hostname, answer.data))
 
 
     def find_server (self):
@@ -131,13 +133,14 @@ class ClientServerMatchmaker (object):
             debug(PROXY, "%s client not connected", self)
             # The browser has already closed this connection, so abort
             return
-        server = serverpool.reserve_server(addr)
+        server = wc.proxy.ServerPool.serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
             debug(PROXY, '%s resurrecting %s', self, server)
             self.state = 'connect'
             self.server_connected(server)
-        elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
+        elif wc.proxy.ServerPool.serverpool.count_servers(addr) >= \
+             wc.proxy.ServerPool.serverpool.connection_limit(addr):
             debug(PROXY, '%s server %s busy', self, addr)
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
@@ -145,26 +148,27 @@ class ClientServerMatchmaker (object):
                 warn(PROXY, "Waited too long for available connection at %s"+\
                     ", consider increasing the server pool connection limit"+\
                      " (currently at %d)", addr, BUSY_LIMIT)
-                self.client.error(503, i18n._("Service unavailable"))
+                self.client.error(503, wc.i18n._("Service unavailable"))
                 return
             # There are too many connections right now, so register us
             # as an interested party for getting a connection later
-            serverpool.register_callback(addr, self.find_server)
+            wc.proxy.ServerPool.serverpool.register_callback(addr, self.find_server)
         else:
             debug(PROXY, "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
             try:
-                if self.url.startswith("https://") and config['sslgateway']:
-                    server = SslServer(self.ipaddr, self.port, self)
+                if self.url.startswith("https://") and wc.config['sslgateway']:
+                    klass = wc.proxy.SslServer.SslServer
                 else:
-                    server = HttpServer(self.ipaddr, self.port, self)
-                serverpool.register_server(addr, server)
+                    klass = wc.proxy.HttpServer.HttpServer
+                server = klass(self.ipaddr, self.port, self)
+                wc.proxy.ServerPool.serverpool.register_server(addr, server)
             except socket.timeout:
-                self.client.error(504, i18n._('Connection timeout'))
+                self.client.error(504, wc.i18n._('Connection timeout'))
             except socket.error:
-                self.client.error(503, i18n._('Connect error'))
+                self.client.error(503, wc.i18n._('Connect error'))
 
 
     def server_connected (self, server):
@@ -179,9 +183,9 @@ class ClientServerMatchmaker (object):
             return
         if self.method=='CONNECT':
             self.state = 'response'
-            headers = WcMessage()
+            headers = wc.proxy.Headers.WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
-            if config['sslgateway']:
+            if wc.config['sslgateway']:
                 server.client_send_request(self.method, self.protocol,
                                    self.hostname, self.port,
                                    self.document, self.headers,
@@ -195,13 +199,13 @@ class ClientServerMatchmaker (object):
         docontinue = expect.startswith('100-continue') or \
                      expect.startswith('0100-continue')
         if docontinue:
-            if serverpool.http_versions.get(addr, 1.1) < 1.1:
-                self.client.error(417, i18n._("Expectation failed"),
-                             i18n._("Server does not understand HTTP/1.1"))
+            if wc.proxy.ServerPool.serverpool.http_versions.get(addr, 1.1) < 1.1:
+                self.client.error(417, wc.i18n._("Expectation failed"),
+                             wc.i18n._("Server does not understand HTTP/1.1"))
                 return
         elif expect:
-            self.client.error(417, i18n._("Expectation failed"),
-                       i18n._("Unsupported expectation %r")%expect)
+            self.client.error(417, wc.i18n._("Expectation failed"),
+                       wc.i18n._("Unsupported expectation %r")%expect)
             return
         # switch to response status
         self.state = 'response'
@@ -218,7 +222,7 @@ class ClientServerMatchmaker (object):
         """The server had an error, so we need to tell the client
            that we couldn't connect"""
         if self.client.connected:
-            self.client.error(503, i18n._("No response from server"))
+            self.client.error(503, wc.i18n._("No response from server"))
 
 
     def server_close (self, server):
@@ -233,7 +237,7 @@ class ClientServerMatchmaker (object):
         elif self.client.connected:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
-            self.client.error(503, i18n._("Server closed connection"))
+            self.client.error(503, wc.i18n._("Server closed connection"))
 
 
     def server_response (self, server, response, status, headers):
