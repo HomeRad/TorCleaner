@@ -67,15 +67,19 @@ LOG_RATING = "wc.rating"
 
 def initlog (filename, appname):
     """initialize logfiles and configuration"""
+    trydirs = []
+    if os.environ.get("WC_DEVELOPMENT"):
+        trydirs.append(os.getcwd())
     logging.config.fileConfig(filename)
-    logname = "%s.log" % appname
-    logfile = log.get_log_file(appname, logname)
+    logname = "%s.log"%appname
+    logfile = log.get_log_file(appname, logname, trydirs=trydirs)
     handler = get_wc_handler(logfile)
     logging.getLogger("wc").addHandler(handler)
     logging.getLogger("simpleTAL").addHandler(handler)
     logging.getLogger("simpleTALES").addHandler(handler)
     # access log is always a file
-    logfile = log.get_log_file(appname, "%s-access.log"%appname)
+    logname = "%s-access.log"%appname
+    logfile = log.get_log_file(appname, logname, trydirs=trydirs)
     handler = get_access_handler(logfile)
     logging.getLogger("wc.access").addHandler(handler)
 
@@ -124,7 +128,7 @@ def wstartfunc (handle=None, abort=None, configfile=None, filterdir=None):
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
-    initlog(os.path.join(ConfigDir, "logging.conf"), AppName)
+    initlog(os.path.join(ConfigDir, "logging.conf"), Name)
     # read configuration
     config = Configuration(configfile=configfile, filterdir=filterdir)
     if abort is not None:
