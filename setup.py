@@ -143,7 +143,7 @@ setup (name = "webcleaner",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
        ext_modules = ext_modules,
-       scripts = ['webcleaner', 'webcleanerconf', 'wcheaders']
+       scripts = ['webcleaner', 'webcleanerconf', 'wcheaders'],
        long_description =
 """WebCleaner features:
 o disable animated GIFs
