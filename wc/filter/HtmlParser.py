@@ -32,6 +32,7 @@ except ImportError:
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy import make_timer
+from HtmlTags import check_spelling
 
 # whitespace matcher
 _has_ws = re.compile("\s").search
@@ -303,6 +304,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         pending rules. No rules can be removed from the list."""
         # default data
         #self._debug(NIGHTMARE, "startElement", `tag`)
+        tag = check_spelling(tag)
         item = [STARTTAG, tag, attrs]
         if self.state=='wait':
             return self.waitbuf.append(item)
@@ -362,6 +364,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buf2data)"""
         #self._debug(NIGHTMARE, "endElement", `tag`)
+        tag = check_spelling(tag)
         item = [ENDTAG, tag]
         if self.state=='wait':
             return self.waitbuf.append(item)
