@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en" tal:attributes="lang lang">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -12,7 +12,7 @@
 <div class="content" id="main">
 <form action="filterconfig.html" method="POST" name="filterform"
  tal:attributes="action string:${filename}.${lang}">
-<table rules="cols" cellpadding="5">
+<table rules="cols" cellpadding="5" summary="">
 <thead>
 <tr style="border-bottom:1px solid black;">
 <th style="width:25%;" i18n:translate="">Folders</th>
@@ -27,7 +27,7 @@
 <tr valign="top">
 <!-- folders -->
 <td>
-<table tal:repeat="folder config/folderrules">
+<table tal:repeat="folder config/folderrules" summary="">
 <tr>
 <td><img
  tal:condition="not:folder/up" src="blocked.png" width="10" alt=""><input
@@ -39,12 +39,12 @@
  tal:attributes="name string:folder_down_${folder/oid}"
  i18n:attributes="title Move folder down; alt Down"
 ><img tal:condition="folder/disable" src="disabled.png"
- i18n:attributes="alt Disabled folder icon"><span
+ i18n:attributes="alt Disabled folder icon" alt="Disabled folder icon"><span
  tal:condition="not:folder/disable"
 ><img tal:condition="not:folder/selected" src="minifolder.png"
- i18n:attributes="alt Folder icon"
+ i18n:attributes="alt Folder icon" alt="Folder icon"
 ><img tal:condition="folder/selected" src="minifolderopen.png"
- i18n:attributes="alt Folder icon"></span></td>
+ i18n:attributes="alt Folder icon" alt="Folder icon"></span></td>
 <td><b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:${filename}.${lang}?selfolder=${folder/oid}; title folder/tiptext"
@@ -53,7 +53,7 @@
 </tr>
 </table>
 <hr noshade size="1">
-<table>
+<table summary="" cellpadding="5" border="0" cellspacing="0">
 <tr>
 <td>
 <input type="text" class="text" name="newfoldername" value="Folder name"
@@ -70,7 +70,8 @@
 <td>
 <div tal:condition="curfolder">
 <input type="hidden" name="selfolder" tal:attributes="value string:${curfolder/oid}">
-<table tal:repeat="rule curfolder/rules_display">
+<table tal:repeat="rule curfolder/rules_display" summary=""
+ border="0" cellpadding="5" cellspacing="0">
 <tr>
 <td><img
  tal:condition="not:rule/up" src="blocked.png" width="10" alt=""><input
@@ -102,7 +103,7 @@
  tal:content="number">50</a> </span>
 </div>
 <hr noshade size="1">
-<table>
+<table border="0" cellspacing="0" cellpadding="5" summary="">
 <tr>
 <td>
 <input type="text" class="text" name="foldername" size="10"
@@ -148,16 +149,16 @@
 <div tal:condition="currule">
 <input type="hidden" name="selrule"
  tal:attributes="value string:${currule/oid}">
-<span tal:repeat="rule rulenames" tal:omit-tag="">
-<span tal:condition="ruletype/?rule" tal:omit-tag="">
+<div tal:repeat="rule rulenames" tal:omit-tag="">
+<div tal:condition="ruletype/?rule" tal:omit-tag="">
 <div>
 <span tal:content="rule/capitalize">Javascript</span>
 <span i18n:translate="">Rule</span>
 </div>
 <div metal:use-macro="rulemacros/macros/?rule">
 Here is the rule configuration...
-</div></span>
-</span>
+</div></div>
+</div>
 <hr noshade size="1">
 <input type="submit" class="submit" value="Remove rule"
  tal:attributes="name string:removerule${currule/oid}"

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en" tal:attributes="lang lang">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -111,9 +111,9 @@ Server response <b>%(response)s</b></span>
 >www.imadoofus.org/</a>
 </p>
 
+<p>
 <span style="" tal:replace="nothing">XXX use safeSearch parameter,
 see http://www.google.com/apis/reference.html</span>
-<p>
 <span i18n:translate="">Search in %(site)s</span>
 <form method="POST" action="http://www.google.com/custom"
  tal:attributes="action custom_path">
