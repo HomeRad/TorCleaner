@@ -388,7 +388,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.persistent = False
         self.close()
 
-
     def _show_rating_deny (self, msg):
         """requested page is rated"""
         query = urllib.urlencode({"url":self.url, "reason":msg})

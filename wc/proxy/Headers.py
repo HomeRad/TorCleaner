@@ -282,5 +282,4 @@ def get_encoding_dict (msg):
     return res
 
 
-
 is_header = re.compile("\s*[-a-zA-Z_]+:\s+").search
