@@ -88,7 +88,9 @@
 <table summary="">
 <div metal:define-macro="urlparts">
 <tr valign="top"><td>
-<label for="rule_url" i18n:translate="">URL</label>:
+<label for="rule_url" i18n:translate="">URL</label><sup><a
+ href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title string:see footnote 1">1)</a></sup>:
 </td><td>
 <input type="text" class="text" name="rule_url" value=""
  tal:attributes="value currule/url">
@@ -138,6 +140,9 @@ Rule url parts
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
+</div>
 </td></tr>
 </table>
 <hr noshade size="1">
