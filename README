@@ -26,7 +26,7 @@ explained in config/filter.dtd and config/webcleaner.dtd.
 
 Notes
 -----
-WebCleaner is _not_ an HTTP compliant proxy because it modifies requests,
+WebCleaner is _not_ a HTTP compliant proxy because it modifies requests,
 headers and data!
 
 Obfuscate IP address does not spoof your address, it just encodes the

@@ -43,6 +43,7 @@ install: build
 	# move webcleaner binaries to /usr/sbin
 	mv -f debian/$(PACKAGE)/usr/bin/webcleaner debian/$(PACKAGE)/usr/sbin
 	mv -f debian/$(PACKAGE)/usr/bin/webcleanerconf debian/$(PACKAGE)/usr/sbin
+	rmdir debian/$(PACKAGE)/usr/bin
 	# remove example and config files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
 	# install configuration
@@ -51,6 +52,10 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: build install
+# nothing to do
+
+# Build architecture-dependent files here.
+binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_movefiles --sourcedir=debian/$(PACKAGE) -pwebcleanerconf \
@@ -73,17 +78,14 @@ binary-indep: build install
 	dh_strip
 	dh_compress
 	dh_fixperms
-#	dh_makeshlibs
+	dh_makeshlibs
 	dh_installdeb
 #	dh_perl
-#	dh_shlibdeps
+	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
 
-# Build architecture-dependent files here.
-binary-arch: build install
-# We have nothing to do by default.
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure

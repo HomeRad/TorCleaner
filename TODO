@@ -1,5 +1,9 @@
 TODO
 
+- log rotating (and remove logs in postrm)
+- blocking does not work (displays status config instead)
+  ==> make a blocking test
+- doh! i am blocking my own links (adverts.zap.txt)
 - better DNS lib (hangs sometimes ?)
 
 - new filtering:

@@ -1,3 +1,9 @@
+webcleaner (0.16) unstable; urgency=low
+
+  * add PackError and UnpackError exception classes to dnslib.py
+
+ -- Bastian Kleineidam <calvin@debian.org>  Fri, 10 Aug 2001 17:14:55 +0200
+
 webcleaner (0.15) unstable; urgency=low
 
   * fix parser with unquoted tag attributes ending in a slash

@@ -38,7 +38,8 @@ def addr2bin(addr):
 	if type(addr) == type(0):
 		return addr
 	bytes = string.splitfields(addr, '.')
-	if len(bytes) != 4: raise ValueError, 'bad IP address'
+	if len(bytes) != 4:
+            raise ValueError, 'bad IP address'
 	n = 0
 	for byte in bytes: n = n<<8 | string.atoi(byte)
 	return n
@@ -48,16 +49,19 @@ def bin2addr(n):
 		  (n>>8)&0xFF, n&0xFF)
 
 
-# Packing class
+class PackError(Exception):
+    pass
 
 class Packer:
+        """Packing class"""
 	def __init__(self):
 		self.buf = ''
 		self.index = {}
 	def getbuf(self):
 		return self.buf
 	def addbyte(self, c):
-		if len(c) != 1: raise TypeError, 'one character expected'
+		if len(c) != 1:
+                    raise TypeError, 'one character expected'
 		self.buf = self.buf + c
 	def addbytes(self, bytes):
 		self.buf = self.buf + bytes
@@ -138,8 +142,8 @@ class Packer:
 
 
 # Unpacking class
-
-UnpackError = 'dnslib.UnpackError'	# Exception
+class UnpackError(Exception):
+    pass
 
 class Unpacker:
 	def __init__(self, buf):
@@ -493,7 +497,8 @@ def test():
 	qname = 'ghoti.stanford.edu'
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], 'Trs:tu')
-		if len(args) > 2: raise getopt.error, 'too many arguments'
+		if len(args) > 2:
+                    raise getopt.error, 'too many arguments'
 	except getopt.error, msg:
 		print msg
 		print 'Usage: python dnslib.py',
