@@ -37,6 +37,10 @@ class Connection (asyncore.dispatcher, object):
         self.close_pending = False
 
 
+    def readable (self):
+        return self.connected
+
+
     def read (self, bytes=RECV_BUFSIZE):
         """read up to LEN bytes from the internal buffer"""
         if bytes is None:
@@ -47,9 +51,7 @@ class Connection (asyncore.dispatcher, object):
 
 
     def handle_read (self):
-        if not self.connected:
-            # It's been closed (presumably recently)
-            return
+        assert self.connected
 	if len(self.recv_buffer) > MAX_BUFSIZE:
             warn(PROXY, '%s read buffer full', str(self))
 	    return
