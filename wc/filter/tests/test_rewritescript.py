@@ -17,6 +17,7 @@ class TestRewriteScript (unittest.TestCase):
         wc.config = wc.Configuration()
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
+        wc.proxy.dns_lookups.init_resolver()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
         self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY],
