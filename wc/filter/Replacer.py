@@ -84,9 +84,9 @@ class Buf:
         offset = 0
         mo = ro.search(data, offset)
         while mo:
-            debug(NIGHTMARE, "matched")
+            debug(NIGHTMARE, "matched, replacing", `repl`)
             data = data[:mo.start()] + repl + data[mo.end():]
-            offset = mo.start()+len(repl)
+            offset = mo.start()+len(repl)+1
             mo = ro.search(data, offset)
         return data
 
