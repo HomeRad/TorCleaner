@@ -3,7 +3,7 @@
 # this script has to be executed in the config parent dir
 """Generate WebCleaner .zap files from an AdZapper squid_redirect file"""
 
-import sys, os, re, time, gzip
+import sys, os, re, time
 try:
     from wc.XmlUtils import xmlify
 except ImportError:
@@ -108,11 +108,7 @@ def parse_adzapper_line (line, res):
     res.setdefault(adclass.lower(), []).append(pattern)
 
 
-def open_files ():
-    filename = os.path.join("config", "adzapper_urls.gz")
-    if os.path.exists(filename):
-        remove(filename)
-    urlfile = gzip.GzipFile(filename, 'wb')
+def write_filters (ads):
     filename = os.path.join("config", "adzapper.zap")
     if os.path.exists(filename):
         remove(filename)
@@ -126,27 +122,18 @@ def open_files ():
  desc="%(desc)s"
  disable="0">
 """ % d)
-    return urlfile, zapfile
-
-
-def close_files (urlfile, zapfile):
-    urlfile.close()
-    zapfile.write("</folder>\n")
-    zapfile.close()
-
-
-def write_filters (ads):
-    urlfile, zapfile = open_files()
     for adclass, pattern in res.items():
         pattern = convert_adzapper_pattern(pattern)
-        if adclass!='print':
-            replace = None
-            urlfile.write("%s\n" % pattern)
-        else:
+        if adclass=='pass':
+            write_allow(pattern)
+        elif adclass='print':
             pattern, replace = pattern.split(None, 1)
             replace = convert_adzapper_replace(replace)
-        write_rewrite(zapfile, pattern, replace)
-    close_files(urlfile, zapfile)
+            write_block(zapfile, adclass, pattern, replace)
+        else:
+            write_block(zapfile, adclass, pattern)
+    zapfile.write("</folder>\n")
+    zapfile.close()
 
 
 def convert_adzapper_pattern (pattern):
@@ -158,13 +145,49 @@ def convert_adzapper_pattern (pattern):
 
 
 def convert_adzapper_replace (replace):
+    # replace Perl back references with Python ones
     replace = re.sub(r"$(\d)", replace, r"\\1")
     return replace
 
 
-def write_rewrite(zapfile, pattern, replacement):
-    # XXX
-    pass
+def write_allow (zapfile, pattern):
+    title = "AdZapper PASS filter"
+    desc = "Automatically generated, you should not edit this filter."
+    scheme, host, path, query, fragment = urlparse.urlsplit(pattern)
+    d = locals()
+    for key, value in d:
+        d[key] = xmlify(value)
+    zapfile.write("""<allow
+ title="%(title)s"
+ desc="%(desc)s"
+ scheme="%(scheme)s"
+ host="%(host)s"
+ path="%(path)s"
+ query="%(query)s"
+ fragment="%(fragment)s"/>
+""" % d)
+
+
+def write_block (zapfile, adclass, pattern, replacement=None):
+    title = "AdZapper %s filter" % adclass
+    desc = "Automatically generated, you should not edit this filter."
+    scheme, host, path, query, fragment = urlparse.urlsplit(pattern)
+    d = locals()
+    for key, value in d:
+        d[key] = xmlify(value)
+    zapfile.write("""<block
+ title="%(title)s"
+ desc="%(desc)s"
+ scheme="%(scheme)s"
+ host="%(host)s"
+ path="%(path)s"
+ query="%(query)s"
+ fragment="%(fragment)s" """ % d)
+    if replacement:
+        zapfile.write(">%(replacement)s</block>" % d)
+    else:
+        zapfile.write("/>")
+    zapfile.write("\n")
 
 
 def download_and_parse ():
