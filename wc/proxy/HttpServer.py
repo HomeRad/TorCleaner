@@ -118,11 +118,10 @@ class HttpServer (Server):
 
 
     def process_read (self):
-        if self.state in ('connect', 'client'):
-            assert 0, ('server should not receive data in %s state' %
-                       self.state)
+        assert self.state not in ('connect', 'client'), \
+            ('server should not receive data in %s state'%self.state)
 
-        while 1:
+        while True:
             if not self.client:
                 # By the time this server object was ready to receive
                 # data, the client has already closed the connection!

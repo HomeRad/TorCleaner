@@ -92,13 +92,7 @@ def text_status ():
     'blocked': config['requests']['blocked'],
     }
     s = STATUS_TEMPLATE % data
-    first = 1
-    for conn in asyncore.socket_map.values():
-        if first:
-            s += str(conn)
-            first = 0
-        else:
-            s += '\n              %s\n' % conn
+    s += '\n              '.join(asyncore.socket_map.values())
     s += ']\n\ndnscache: %s'%dns_lookups.dnscache
     return s
 
@@ -107,7 +101,7 @@ def html_portal ():
     data = {
     'title': 'WebCleaner Proxy',
     'header': 'WebCleaner Proxy',
-    'content': "<pre>"+text_config()+"\n"+text_status()+"</pre>",
+    'content': "<pre>%s\n%s</pre>" % (text_config(), text_status()),
     }
     return HTML_TEMPLATE % data
 
@@ -207,20 +201,20 @@ def proxy_poll (timeout=0.0):
 
 def match_host (request):
     if not request:
-        return 0
+        return False
     try:
         foo, url, bar = request.split()
     except Exception, why:
         print >> sys.stderr, "bad request", why
-        return 0
+        return False
     hostname = spliturl(url)[1]
     if not hostname:
-        return 0
+        return False
     hostname = hostname.lower()
     for domain in config['noproxyfor'].keys():
         if hostname.find(domain) != -1:
-            return 1
-    return 0
+            return True
+    return False
 
 
 def spliturl (url):

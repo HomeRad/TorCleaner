@@ -99,9 +99,8 @@ class HttpClient (Connection):
                 ClientServerMatchmaker(self, self.request, self.headers,
 		                       self.content, self.nofilter)
         # this occurs with WebCleaner as a parent of Oops Http Proxy
-        if self.state in ('receive', 'closed') and self.recv_buffer:
-            assert 0, 'client in state %s sent data %s' % \
-	              (self.state, `self.recv_buffer`)
+        assert not (self.state in ('receive', 'closed') and self.recv_buffer),\
+         'client in state %s sent data %s' % (self.state, `self.recv_buffer`)
 
 
     def server_response (self, server, response, headers):

@@ -38,7 +38,8 @@ class ServerPool:
 
     def unreserve_server (self, addr, server):
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
-        assert self.map[addr].has_key(server), '%s missing %s' % (self.map[addr], server)
+        assert self.map[addr].has_key(server), \
+               '%s missing %s' % (self.map[addr], server)
         assert self.map[addr][server][0] == 'busy'
         self.map[addr][server] = ('available', time.time())
         self.invoke_callbacks(addr)
@@ -54,7 +55,8 @@ class ServerPool:
     def unregister_server (self, addr, server):
         "Unregister the server"
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
-        assert self.map[addr].has_key(server), '%s missing %s' % (self.map[addr], server)
+        assert self.map[addr].has_key(server), \
+               '%s missing %s' % (self.map[addr], server)
         del self.map[addr][server]
         if not self.map[addr]: del self.map[addr]
         self.invoke_callbacks(addr)
