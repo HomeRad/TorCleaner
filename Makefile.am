@@ -12,8 +12,9 @@ PYCHECKER := env PYTHONVER=$(PYVER) pychecker
 PYCHECKEROPTS := -F test/pycheckrc
 PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint
 PYLINTOPTS :=
-PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
-	wc/proxy/*.py wc/proxy/auth/*.py wc/webgui/*.py \
+PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
+        wc/filter/rating/*.py wc/js/*.py wc/proxy/*.py wc/proxy/decoder/*.py \
+	wc/proxy/auth/*.py wc/webgui/*.py \
 	wc/webgui/context/*.py wc/magic/*.py)
 PYLINTBROKEN = wc/win32start.py
 PYLINTFILES = $(filter-out $(PYLINTBROKEN),$(PYFILES))
