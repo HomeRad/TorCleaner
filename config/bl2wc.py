@@ -54,6 +54,7 @@ def read_blacklists (fname):
         elif fname.endswith("expressions"):
             read_data(fname, "expressions", expressions)
 
+
 def read_data (fname, name, data):
     cat = os.path.basename(os.path.dirname(fname))
     if cat not in mycats: return
@@ -89,14 +90,19 @@ def write_filters ():
 
 def write_folder (cat, ftype, data, f):
     print "write", cat, "folder"
-    d = {"title": xmlify("%s %s" % (ftype.capitalize(), cat)),
-         "desc": xmlify("Automatically generated on %s" % date),
+    d = {
+        "title_en": xmlify("%s %s" % (ftype.capitalize(), cat)),
+        "title_de": xmlify("%s %s" % (ftype.capitalize(), cat)),
+        "desc_en": xmlify("Automatically generated on %s" % date),
+        "desc_de": xmlify("Automatisch generiert am %s" % date),
     }
-    f.write("""<?xml version="1.0"?>
-<!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="%(title)s"
- desc="%(desc)s"
- disable="0">
+    f.write("""<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE folder SYSTEM "filter.dtd">
+<folder disable="0">
+<title lang="en">%(title_en)s</title>
+<title lang="de">%(title_de)s</title>
+<description lang="en">%(desc_en)s</description>
+<description lang="de">%(desc_de)s</description>
 """ % d)
     for t in data.keys():
         if cat=='kids_and_teens':
@@ -110,50 +116,71 @@ def write_folder (cat, ftype, data, f):
 
 def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
-    d = {'title': cat+" domain filter",
-         'desc': """You should not edit this filter, only disable or delete it.
+    d = {
+        'title_en': cat+" domain filter",
+        'title_de': cat+" Rechnername Filter",
+        'desc_en': """You should not edit this filter, only disable or delete it.
 To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
-         'filename': "%s/%s/domains.gz" % (b, cat),
-         'type': ftype,
-        }
+        'desc_de': """Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
+Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCleaner Quellverzeichnis.""",
+        'filename': "%s/%s/domains.gz" % (b, cat),
+        'type': ftype,
+    }
     f.write("""<%(type)sdomains
- title="%(title)s"
- desc="%(desc)s"
- filename="%(filename)s"/>
+ filename="%(filename)s">
+  <title lang="en">%(title_en)s</title>
+  <title lang="de">%(title_de)s</title>
+  <description lang="en">%(desc_en)s</description>
+  <description lang="de">%(desc_de)s</description>
 """ % d)
+    f.write("</%(type)sdomains>" % d)
 
 def write_urls (cat, b, ftype, f):
     print "write", cat, "urls"
-    d = {'title': cat+" url filter",
-         'desc': """You should not edit this filter, only disable or delete it.
+    d = {
+        'title_en': cat+" url filter",
+        'title_de': cat+" URL Filter",
+        'desc_en': """You should not edit this filter, only disable or delete it.
 To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
-         'filename': "%s/%s/urls.gz" % (b, cat),
-         'type': ftype,
-        }
+        'desc_de': """Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
+Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCleaner Quellverzeichnis.""",
+        'filename': "%s/%s/urls.gz" % (b, cat),
+        'type': ftype,
+    }
     f.write("""<%(type)surls
- title="%(title)s"
- desc="%(desc)s"
- filename="%(filename)s"/>
+ filename="%(filename)s">
+  <title lang="en">%(title_en)s</title>
+  <title lang="de">%(title_de)s</title>
+  <description lang="en">%(desc_en)s</description>
+  <description lang="de">%(desc_de)s</description>
 """ % d)
+    f.write("</%(type)surls>" % d)
 
 def write_expressions (cat, b, ftype, f):
-    d = {'title': cat+" expression filter",
-         'desc': """Automatically generated, you should not edit this filter.
+    d = {
+        'title_en': cat+" expression filter",
+        'title_de': cat+" Ausdruckfilter",
+        'desc_en': """Automatically generated, you should not edit this filter.
 To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
-         'type': ftype,
-        }
+        'desc_de': """Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
+Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCleaner Quellverzeichnis.""",
+        'type': ftype,
+    }
     print "write", cat, "expressions"
     for expr in expressions[cat]:
         d['path'] = xmlify(expr)
         f.write("""<%(type)s
- title="%(title)s"
- desc="%(desc)s"
  scheme=""
  host=""
  path="%(path)s"
  query=""
- fragment=""/>
+ fragment="">
+  <title lang="en">%(title_en)s</title>
+  <title lang="de">%(title_de)s</title>
+  <description lang="en">%(desc_en)s</description>
+  <description lang="de">%(desc_de)s</description>
 """ % d)
+    f.write("</%(type)s>" % d)
 
 
 ##################### other functions ############################
@@ -328,4 +355,4 @@ if __name__=='__main__':
     remove_old_data()
     download_and_merge()
     write_lists()
-    #write_filters()
+    write_filters()
