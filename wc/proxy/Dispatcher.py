@@ -35,6 +35,7 @@
 # ======================================================================
 
 from wc.log import *
+from OpenSSL import SSL
 import sys, os, socket
 from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
      ENOTCONN, ESHUTDOWN, EINTR, EISCONN
@@ -43,8 +44,7 @@ from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
 socket_map = {}
 
 def create_socket (family, socktype, sslctx=None):
-    if sslctx:
-        from OpenSSL import SSL
+    if sslctx is not None:
         sock = SSL.Connection(sslctx, socket.socket(family, socktype))
     else:
         sock = socket.socket(family, socktype)
@@ -230,6 +230,11 @@ class Dispatcher (object):
 
     def close (self):
         self.del_channel()
+        if hasattr(self.socket, "do_handshake"):
+            # shutdown ssl socket
+            self.socket.shutdown()
+        else:
+            self.socket.shutdown(2)
         self.socket.close()
 
 
