@@ -1,14 +1,47 @@
 # -*- coding: iso-8859-1 -*-
 """base and utility classes for Proxy testing"""
 
-import os, sys, threading, time
+import sys
+import threading
+import time
 import wc
-from wc.log import *
-from wc.update import update_filter, update_ratings
-from tests import HttpServer, HttpClient, StandardTest
+import tests.StandardTest
+import HttpServer
+import HttpClient
 
 
-class ProxyTest (StandardTest.StandardTest):
+_lock = None
+_abort = False
+
+def _acquireLock ():
+    """
+    Acquire the module-level lock for serializing access to shared data.
+
+    This should be released with _releaseLock().
+    """
+    global _lock
+    if not _lock:
+        _lock = threading.RLock()
+    if _lock:
+        _lock.acquire()
+
+
+def _releaseLock ():
+    """Release the module-level lock acquired by calling _acquireLock()."""
+    if _lock:
+        _lock.release()
+
+
+def abort (val=None):
+    global _abort
+    _acquireLock()
+    if val is not None:
+        _abort = val
+    _releaseLock()
+    return _abort
+
+
+class ProxyTest (tests.StandardTest.StandardTest):
     """Base class for all tests involving a started WebCleaner Proxy.
        After the proxy is started, http clients submit configurable
        request data and check the result validity"""
@@ -40,21 +73,15 @@ class ProxyTest (StandardTest.StandardTest):
         """start proxy"""
         port = self.proxyconfig['port']
         self.log.write("starting WebCleaner proxy on port %d\n"%port)
-        kwargs = {'stoppable': True}
+        kwargs = {"abort": abort,}
         self.proxythread = threading.Thread(target=wc.wstartfunc, kwargs=kwargs)
         self.proxythread.start()
         # wait until proxy is started
-        running = False
-        while not running:
-            running = hasattr(wc.config, "get_abort")
-            if not running:
-                self.log.write("wait until proxy is started\n")
-                time.sleep(1)
         time.sleep(2)
 
     def stopProxy (self):
         self.log.write("stopping WebCleaner proxy\n")
-        wc.config.set_abort(True)
+        abort(True)
         time.sleep(1)
 
     def testProxy (self):

@@ -1,5 +1,6 @@
-import socket, httplib
-from wc.proxy.Dispatcher import create_socket
+import socket
+import httplib
+import wc.proxy.Dispatcher
 
 class LogHttpClient (object):
     def __init__ (self, log, proxyconfig):
@@ -38,7 +39,7 @@ class LogHttpClient (object):
 
     def create_socket (self, addr, sslctx=None):
         self.log.write("connecting to %s\n"%str(addr))
-        sock = create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=sslctx)
+        sock = wc.proxy.Dispatcher.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=sslctx)
         sock.connect(addr)
         return sock
 
