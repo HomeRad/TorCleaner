@@ -34,6 +34,7 @@ def init_gettext ():
     except IOError, msg:
         # default gettext function
         _gettext = lambda s: s
+    # get supported languages
     for d in os.listdir(LocaleDir):
         path = os.path.join(LocaleDir, d)
         if not os.path.isdir(path):
