@@ -59,12 +59,7 @@ try:
     psyco.profile()
 except:
     pass
-# for pydoc testing, and local running. XXX should be a config entry
-try:
-    from wc import i18n, daemon
-except ImportError:
-    sys.path.insert(0, os.getcwd())
-    from wc import i18n, daemon
+from wc import i18n, daemon
 
 _usage = i18n._("""USAGE\twebcleaner command
 
