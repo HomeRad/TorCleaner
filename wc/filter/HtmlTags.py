@@ -75,6 +75,7 @@ HtmlTags = {
     "isindex" : None,
     "kbd" : None,
     "label" : None,
+    "layer" : None, # Netscape Navigator 4
     "legend" : None,
     "li" : None,
     "link" : None,
