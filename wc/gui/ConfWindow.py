@@ -3,7 +3,6 @@ from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
 from wc import debug, _, xmlify
-from wc.gui import HelpText
 from FXPy.fox import *
 from types import IntType
 from wc.filter.rules.FolderRule import FolderRule
@@ -27,6 +26,26 @@ _("You cannot remove folders. If you really want to get rid\n"
 "It is always safer to disable a folder or filter instead of\n"
 "deleting it!")
 
+ModuleHelp = {
+"Rewriter" : """Rewrite HTML code. This is very powerful and can filter
+almost all advertising and other crap.""",
+
+"Replacer": _("""Replace regular expressions in (HTML) data streams."""),
+
+"BinaryCharFilter": _("""Replace illegal binary characters in HTML code like the quote
+chars often found in Microsoft pages."""),
+
+"Header": _("""Add, modify and delete HTTP headers of request and response."""),
+
+"Blocker": _("""Block or allow specific sites by URL name."""),
+
+"GifImage": _("""Deanimates GIFs and removes all unwanted GIF image
+extensions (for example GIF comments)."""),
+
+"Compress": _("""Compression of documents with good compression ratio
+like HTML, WAV, etc."""),
+}
+
 _proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
 
 import tempfile
@@ -39,7 +58,6 @@ class ConfWindow (ToolWindow):
     (ID_PORT,
      ID_PROXYUSER,
      ID_PROXYPASS,
-     ID_DEBUGLEVEL,
      ID_FILTERMODULE,
      ID_PARENTPROXY,
      ID_PARENTPROXYUSER,
@@ -48,11 +66,8 @@ class ConfWindow (ToolWindow):
      ID_ACCEPT,
      ID_CANCEL,
      ID_APPLY,
-     ID_STRICT_WHITELIST,
-     ID_SHOWERRORS,
      ID_LOGFILE,
      ID_ABOUT,
-     ID_HELP,
      ID_TITLE,
      ID_FILTER,
      ID_NEWFOLDER,
@@ -73,7 +88,7 @@ class ConfWindow (ToolWindow):
      ID_ALLOWEDHOSTS_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+37)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+33)
 
 
     def __init__ (self, app):
@@ -81,13 +96,6 @@ class ConfWindow (ToolWindow):
         self.readconfig()
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
         FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
-        self.help = FXDialogBox(self, _("webcleanerconf Help"))
-        w = FXVerticalFrame(self.help)
-        t = FXText(w, opts=TEXT_READONLY|TEXT_WORDWRAP)
-        t.setVisCols(60)
-        t.setVisRows(40)
-        t.setText(HelpText)
-        FXButton(w, _(" &Ok "), None, self.help, FXDialogBox.ID_ACCEPT)
         self.removeDialog = FXMessageBox(self, _("Remove Folder"), RemoveText, None, MBOX_OK)
         # main frame
         mainframe = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -100,7 +108,6 @@ class ConfWindow (ToolWindow):
         FXButton(frame, _("&Cancel"), None, self, self.ID_CANCEL)
         FXButton(frame, _("A&pply"), None, self, self.ID_APPLY)
         FXButton(frame, _("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
-        FXButton(frame, _("&Help"), None, self, self.ID_HELP, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
         daemonmenu = FXMenuPane(self)
         FXMenuCommand(daemonmenu, "Start", None, self, self.ID_PROXYSTART)
         FXMenuCommand(daemonmenu, "Stop", None, self, self.ID_PROXYSTOP)
@@ -119,17 +126,12 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_APPLY,ConfWindow.onCmdApply)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_APPLY,ConfWindow.onUpdApply)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_STRICT_WHITELIST,ConfWindow.onCmdStrictWhitelist)
-        FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_STRICT_WHITELIST,ConfWindow.onUpdStrictWhitelist)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_SHOWERRORS,ConfWindow.onCmdShowErrors)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PORT,ConfWindow.onCmdPort)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DEBUGLEVEL,ConfWindow.onCmdDebuglevel)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXY,ConfWindow.onCmdParentProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYPORT,ConfWindow.onCmdParentProxyPort)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_LOGFILE,ConfWindow.onCmdLogfile)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_FILTERMODULE,ConfWindow.onCmdFilterModule)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_FILTER,ConfWindow.onCmdFilter)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_HELP,ConfWindow.onCmdHelp)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NEWFOLDER,ConfWindow.onCmdNewFolder)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NEWRULE,ConfWindow.onCmdNewRule)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_REMOVE,ConfWindow.onCmdRemove)
@@ -171,35 +173,16 @@ class ConfWindow (ToolWindow):
         matrix = FXMatrix(f, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, _("Version"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXLabel(matrix, wc.Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        FXLabel(matrix, _("User"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, _("User\tRequire proxy authentication with the given user."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_PROXYUSER).setText(self.proxyuser)
-        FXLabel(matrix, _("Password"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, _("Password\tRequire proxy authentication with the given password which is stored base64 encoded."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_PROXYPASS, opts=TEXTFIELD_PASSWD|TEXTFIELD_NORMAL).setText(self.proxypass)
-        FXLabel(matrix, _("Port"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, _("Port\tThe port adress the WebCleaner proxy is listening on."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         widget = FXSpinner(matrix, 4, self, self.ID_PORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.port)
-        FXLabel(matrix, _("Logfile"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, _("Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n(standard out) or a filename (relative or absolute)."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_LOGFILE).setText(self.logfile)
-        FXLabel(matrix, _("Log HTML errors"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        FXCheckButton(matrix, None, self, self.ID_SHOWERRORS, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.showerrors)
-        FXLabel(matrix, _("Strict whitelist"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        FXCheckButton(matrix, None, self, self.ID_STRICT_WHITELIST, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.strict_whitelist)
-        FXLabel(matrix, _("Debug level"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        cols=0
-        d = FXComboBox(matrix,0,4,self, self.ID_DEBUGLEVEL,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        levels = [
-            _("No debugging"),
-            _("Bring it on"),
-            _("Hurt me plenty"),
-            _("Nightmare"),
-        ]
-        for text in levels:
-            cols = max(len(text), cols)
-            d.appendItem(text)
-        d.setEditable(0)
-        d.setNumColumns(cols)
-        d.setCurrentItem(self.debuglevel)
 
         f = FXGroupBox(proxy_top, _("No proxy for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -207,7 +190,7 @@ class ConfWindow (ToolWindow):
         for host in self.noproxyfor.keys():
             self.noproxylist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
-        FXButton(f, _("Add"), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
+        FXButton(f, _("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
         FXButton(f, _("Edit"), None, self, ConfWindow.ID_NOPROXYFOR_EDIT)
         FXButton(f, _("Remove"), None, self, ConfWindow.ID_NOPROXYFOR_REMOVE)
 
@@ -217,7 +200,7 @@ class ConfWindow (ToolWindow):
         for host in self.allowedhosts.keys():
             self.allowedlist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
-        FXButton(f, _("Add"), None, self, ConfWindow.ID_ALLOWEDHOSTS_ADD)
+        FXButton(f, _("Add\tAdd hostname and networks that are allowed to use this proxy.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_ALLOWEDHOSTS_ADD)
         FXButton(f, _("Edit"), None, self, ConfWindow.ID_ALLOWEDHOSTS_EDIT)
         FXButton(f, _("Remove"), None, self, ConfWindow.ID_ALLOWEDHOSTS_REMOVE)
 
@@ -225,20 +208,20 @@ class ConfWindow (ToolWindow):
         filters = FXGroupBox(frame, _("Filter Modules"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         hframe = FXVerticalFrame(filters, LAYOUT_SIDE_TOP)
         for m in self.modules.keys():
-            cb = FXCheckButton(hframe, m, self, self.ID_FILTERMODULE,opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
+            cb = FXCheckButton(hframe, m+"\t"+ModuleHelp[m], self, self.ID_FILTERMODULE,opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
             if self.modules[m]:
 	        cb.setCheck()
         groupbox = FXGroupBox(frame, _("Parent Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         matrix = FXMatrix(groupbox, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Host"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, _("Host\tThe hostname of the parent proxy WebCleaner should use."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXTextField(matrix, 16, self, self.ID_PARENTPROXY).setText(self.parentproxy)
-        FXLabel(matrix, _("Port"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, _("Port\tThe port number of the parent proxy WebCleaner should use."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         widget = FXSpinner(matrix, 4, self, self.ID_PARENTPROXYPORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.parentproxyport)
-        FXLabel(matrix, _("User"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, _("User\tAuthentication user for the parent proxy."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXTextField(matrix, 16, self, self.ID_PARENTPROXYUSER).setText(self.parentproxyuser)
-        FXLabel(matrix, _("Password"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, _("Password\tAuthentication password for the parent proxy.\nThe password is saved base64 encoded."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXTextField(matrix, 16, self, self.ID_PARENTPROXYPASS, opts=TEXTFIELD_NORMAL|TEXTFIELD_PASSWD).setText(self.parentproxypass)
         # proxySettings
 
@@ -374,12 +357,6 @@ class ConfWindow (ToolWindow):
         return 1
 
 
-    def onCmdHelp (self, sender, sel, ptr):
-        #debug(BRING_IT_ON, "Help")
-        self.getApp().doShow(self.help)
-        return 1
-
-
     def onCmdPort (self, sender, sel, ptr):
         self.port = sender.getValue()
         self.getApp().dirty = 1
@@ -403,36 +380,6 @@ class ConfWindow (ToolWindow):
         self.proxypass = base64.encodestring(sender.getText()).strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Proxy password was changed")
-        return 1
-
-
-    def onCmdDebuglevel (self, sender, sel, ptr):
-        if self.debuglevel != sender.getCurrentItem():
-            self.debuglevel = sender.getCurrentItem()
-            self.getApp().dirty = 1
-            #debug(BRING_IT_ON, "Debuglevel=%d"%self.debuglevel)
-        return 1
-
-
-    def onCmdStrictWhitelist (self, sender, sel, ptr):
-        self.strict_whitelist = sender.getCheck()
-        self.getApp().dirty = 1
-        #debug(BRING_IT_ON, "Strict Whitelist=%d" % self.strict_whitelist)
-        return 1
-
-
-    def onUpdStrictWhitelist (self, sender, sel, ptr):
-        if self.modules['Blocker']:
-            sender.enable()
-        else:
-            sender.disable()
-        return 1
-
-
-    def onCmdShowErrors (self, sender, sel, ptr):
-        self.showerrors = sender.getCheck()
-        self.getApp().dirty = 1
-        #debug(BRING_IT_ON, "Showerrors=%d" % self.showerrors)
         return 1
 
 
@@ -737,10 +684,12 @@ class ConfWindow (ToolWindow):
         #debug(BRING_IT_ON, "reading config")
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
-         'debuglevel','logfile','strict_whitelist',
+         'debuglevel','logfile',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass', 'allowedhosts'):
             setattr(self, key, self.config[key])
+        self.noproxyfor = self.noproxyfor[2]
+        self.allowedhosts = self.allowedhosts[2]
         if self.logfile:
             self.logfile = self.logfile.name
         self.modules = {
@@ -797,7 +746,6 @@ class ConfWindow (ToolWindow):
         s += ' parentproxyuser="%s"\n' % xmlify(self.parentproxyuser)
         s += ' parentproxypass="%s"\n' % xmlify(self.parentproxypass)
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
-             ' strict_whitelist="%d"\n' % self.strict_whitelist +\
              ' debuglevel="%d"\n' % self.debuglevel +\
              ' showerrors="%d"\n' % self.showerrors
         if self.logfile:

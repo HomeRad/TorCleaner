@@ -17,7 +17,7 @@ class FXHeaderRuleFrame (FXRuleFrame):
         FXLabel(matrix, _("Header name:\tRegular expression to match the header name"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(matrix, 15, self, FXHeaderRuleFrame.ID_NAME)
         tf.setText(self.rule.name)
-        FXLabel(matrix, _("Header value:\tHeader value (empty means delete)"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, _("Header value:\tIf empty, delete the header. Else add or, if already there modify the header."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(matrix, 15, self, FXHeaderRuleFrame.ID_VALUE)
         tf.setText(self.rule.value)
 
