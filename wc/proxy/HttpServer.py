@@ -32,9 +32,7 @@ _RESPONSE_FILTERS = (
 # http request matcher
 _http_re = re.compile(r'(?i).*HTTP/(\d+\.?\d*)\s*$')
 
-_fix_content_types = [
-    'text/html',
-]
+_fix_content_types = ['text/html']
 
 _fix_content_encodings = [
 #    'x-bzip2',
@@ -188,8 +186,8 @@ class HttpServer (Server):
         else:
             # the HTTP line was missing, just assume that it was there
             print >> sys.stderr, \
-                    'Warning: puzzling header received from host %s:' % \
-                    self.hostname, `self.response`
+                  'Warning: puzzling header received from %s:' % self.url, \
+                  `self.response`
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, self.http_version())
