@@ -132,12 +132,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
                 self.getApp().error(i18n._("Error"),
                          i18n._("Duplicate attribute name"))
                 return 1
-            try:
-                value = valuetf.getText().strip()
-            except:
-                self.getApp().error(i18n._("Error"),
-                   i18n._("Invalid regex %s: %s") % (value,sys.exc_info()[1]))
-                return 1
+            value = valuetf.getText().strip()
             self.rule.attrs[name] = value
             self.getApp().dirty = 1
             self.iconlist.appendItem(name+"\t"+value)
@@ -163,12 +158,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
         FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newname = nametf.getText().strip().lower()
-            try:
-                value = valuetf.getText().strip()
-            except:
-                self.getApp().error(i18n._("Error"),
-                   i18n._("Invalid regex %s: %s")%(value,sys.exc_info()[1]))
-                return 1
+            value = valuetf.getText().strip()
             del self.rule.attrs[name]
             self.rule.attrs[newname] = value
             self.getApp().dirty = 1
