@@ -1,10 +1,10 @@
 #!/bin/sh
-# prerm script for webcleanerconf
+# prerm script for webcleanertools
 #
 # see: dh_installdeb(1)
 set -e
 
-PACKAGE=webcleanerconf
+PACKAGE=webcleanertools
 
 # delete all generated .pyc and .pyo files
 dpkg --listfiles $PACKAGE |
