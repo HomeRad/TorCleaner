@@ -15,10 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import sys
 try:
     import htmlsax
 except ImportError:
-    import sys
     sys.stderr.write("""
 Could not import the "htmlsax" module.
 Please run 'python setup.py install' to install WebCleaner
@@ -47,6 +47,10 @@ class HtmlPrinter(HtmlParser):
     def __getattr__(self, name):
         self.mem = name
         return self._print
+
+    def comment(self, s):
+        print "mycomment", s
+
 
     def _print (self, *attrs):
         print self.mem, attrs

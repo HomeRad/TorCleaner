@@ -5,4 +5,5 @@ build
 locale
 *-stamp
 *.pyc
+*.pyo
 _webcleaner2_configdata.py

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from wc.parser.htmllib import HtmlPrinter
 import sys
 

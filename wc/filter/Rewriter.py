@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re
+import re, sys
 from wc.parser.htmllib import HtmlParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
@@ -81,6 +81,7 @@ class HtmlFilter(HtmlParser):
         self.rulestack = []
         self.buffer = []
         self.document = "unknown"
+        self.printerrors = printerrors
 
 
     def __repr__(self):
@@ -198,5 +199,15 @@ class HtmlFilter(HtmlParser):
 
     def error(self, line, col, msg):
         print >> sys.stderr, "error parsing", \
-                 "%s:%d:%d" % (self.document,line,col)
-        print >> sys.stderr, " ", msg
+                 "%s:%d:%d: %s" % (self.document, line, col, msg.strip())
+
+
+    def warning(self, line, col, msg):
+        print >> sys.stderr, "warning parsing", \
+                 "%s:%d:%d: %s" % (self.document, line, col, msg.strip())
+
+
+    def fatalError(self, line, col, msg):
+        print >> sys.stderr, "fatal error parsing", \
+                 "%s:%d:%d: %s" % (self.document, line, col, msg.strip())
+

@@ -2,8 +2,9 @@ webcleaner (0.22) unstable; urgency=low
 
   * implemented header logging
   * print HTML parser errors to stderr
+  * fixed broken header parsing
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon,  5 Nov 2001 22:47:46 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Mon,  5 Nov 2001 22:49:52 +0100
 
 webcleaner (0.21) unstable; urgency=low
 
