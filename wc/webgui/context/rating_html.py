@@ -23,7 +23,7 @@ from wc.filter.Rating import service, rangenames, rating_cache
 from wc.filter.Rating import rating_cache_write as _rating_cache_write
 from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
 from wc.url import is_valid_url as _is_valid_url
-from bk.strtime import strtime as _strtime
+from wc.strformat import strtime as _strtime
 
 _entries_per_page = 50
 

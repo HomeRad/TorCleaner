@@ -76,7 +76,7 @@ class DnsExpandHostname (object):
         if ".." in hostname:
             # another possible typo
             hostname = re.sub(r'\.\.+', '.', hostname)
-        if bk.ip.is_valid_ip(hostname):
+        if wc.ip.is_valid_ip(hostname):
             # it is already an ip adress
             callback(DnsResponse('found', [hostname]))
             return
