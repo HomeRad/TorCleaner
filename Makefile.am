@@ -7,7 +7,7 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/parser -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
-
+PYCHECKEROPTS := --varlist=__all__,__date__,__version__,__copyright__
 
 clean-local:
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
@@ -134,8 +134,9 @@ ndebug:
 	  mv -f $$f.bak $$f; \
 	done
 
-splint:
-	rm -f splint.txt; splint $(SPLINTOPTS) wc/parser/htmllex.c > splint.txt
+syntaxcheck:
+	-env PYTHONVER=2.3 pychecker $(PYCHECKEROPTS) wc/__init__.py
+#	-splint $(SPLINTOPTS) wc/parser/htmllex.c
 
 # (re)generate webcleaner rules
 update-blacklists:
