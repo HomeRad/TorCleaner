@@ -311,7 +311,43 @@ RX_DATA [-a-zA-Z0-9_]+
     APPEND_TO_TMP;
 }
 
+  /* this is so shitty */
+<S_SCRIPT><[^/] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
 <S_SCRIPT><\/{RX_WHITE_SPACE}*[^Ss] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][^Cc] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][^Rr] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][^Ii] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][^Pp] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][Pp][^Tt] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+}
+
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][Pp][Tt]{RX_WHITE_SPACE}*[^>] {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
 }
@@ -539,11 +575,9 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     strncat(data->buf, s, slen);
     if (len > data->bufpos) {
         int rewind = len - data->bufpos;
-	//fprintf(stderr, "REWIND %d\n", rewind);
 	slen += rewind;
 	len -= rewind;
     }
-    //fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
     /* reset userdata */
     data->bufpos = len;
     data->nextpos = 0;

@@ -17,12 +17,14 @@ Run "python setup.py install --help" for help on install options.
 Now you can start the proxy by executing "webcleaner start".
 
 
-The HTML parser, flex, bison
-----------------------------
-If you want, you can rebuilt the parser .c files from the .l and .y
-source files.
-The parser is built with a patched flex snapshot release available
-from the WebCleaner homepage.
+The HTML parser
+---------------
+If you want (but its not necessary), you can rebuild the htmlparse.c 
+and htmllex.c files from the .l and .y source files.
+You will need
+- bison parser generator
+- the flex snapshot release, available from the WebCleaner homepage
+  or from ftp://ftp.uncg.edu/people/wlestes/.
 You have to adjust the FLEX variable in wc/parser/Makefile to point
 to your flex binary.
-
+Then, do a "make localbuild".
