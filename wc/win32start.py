@@ -27,6 +27,7 @@ except ImportError:
     # assume non-windows platform
     service_klass = object
 import wc
+import wc.start
 
 
 class ProxyService (service_klass):
@@ -60,7 +61,7 @@ class ProxyService (service_klass):
            servicemanager.EVENTLOG_INFORMATION_TYPE,
            servicemanager.PYS_SERVICE_STARTED,
            (self._svc_name_, ''))
-        wc.wstartfunc(handle=self.hWaitStop, confdir=self.configdir,
+        wc.start.wstartfunc(handle=self.hWaitStop, confdir=self.configdir,
                       filelogs=self.filelogs)
         # Now log a "service stopped" message
         servicemanager.LogMsg(
