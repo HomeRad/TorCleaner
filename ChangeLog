@@ -1,3 +1,6 @@
+2.7 (released xx.xx.xxxx)
+  * updated squidguard blacklist filters as of 20031126
+
 2.6 (released 25.11.2003)
   * fixed background downloading with 30x redirects
     Changed: wc/proxy/HttpProxyClient.py
