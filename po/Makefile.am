@@ -4,9 +4,9 @@ GETTEXT := $(PYTHON) pygettext.py -k i18n._
 #MSGFMT := $(PYTHON) msgfmt.py
 MSGFMT := @MSGFMT@ -c
 MSGMERGE := @MSGMERGE@
-SOURCES = $(shell find ../wc -name \*.py) \
-../webcleaner ../webcleaner-service ../webcleaner-certificates \
-$(shell find ../templates -name \*.html)
+POSOURCES = $(shell find ../wc -name \*.py) \
+	../webcleaner ../webcleaner-service ../webcleaner-certificates \
+	$(shell find ../templates -name \*.html)
 
 LDIR = ../share/locale
 PACKAGE = webcleaner
@@ -20,10 +20,10 @@ all:	$(MOS)
 %.po:	webcleaner.pot
 	$(MSGMERGE) $@ $(PACKAGE).pot -o $@
 
-webcleaner.pot: $(SOURCES)
+webcleaner.pot: $(POSOURCES)
 if BUILD_WINDOWS
 else
-	$(GETTEXT) --default-domain=$(PACKAGE) --no-location $(SOURCES)
+	$(GETTEXT) --default-domain=$(PACKAGE) --no-location $(POSOURCES)
 endif
 
 %.mo:	%.po
