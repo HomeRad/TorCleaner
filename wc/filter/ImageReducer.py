@@ -45,11 +45,15 @@ class ImageReducer (wc.filter.Filter.Filter):
         self.minimal_size_bytes = 5120
         # reduced JPEG quality (in percent)
         self.quality = 20
+        self.init_image_reducer = True
 
     def filter (self, data, attrs):
         """
         Feed image data to buffer.
         """
+        if self.init_image_reducer:
+            self.set_ctype_header(attrs)
+            self.init_image_reducer = False
         if not attrs.has_key('imgreducer_buf'):
             return data
         attrs['imgreducer_buf'].write(data)
@@ -59,6 +63,9 @@ class ImageReducer (wc.filter.Filter.Filter):
         """
         Feed image data to buffer, then convert it and return result.
         """
+        if self.init_image_reducer:
+            self.set_ctype_header(attrs)
+            self.init_image_reducer = False
         if not attrs.has_key('imgreducer_buf'):
             return data
         p = attrs['imgreducer_buf']
@@ -76,6 +83,11 @@ class ImageReducer (wc.filter.Filter.Filter):
             # XXX the content type is pretty sure wrong
             return p.getvalue()
         return data.getvalue()
+
+    def set_ctype_header (self, attrs):
+        headers = attrs['headers']
+        headers['data']['Content-Type'] = 'image/jpeg'
+        wc.proxy.Headers.remove_headers(headers['data'], ['Content-Length'])
 
     def get_attrs (self, url, localhost, stages, headers):
         """
@@ -109,11 +121,9 @@ class ImageReducer (wc.filter.Filter.Filter):
             wc.log.warn(wc.LOG_FILTER, "missing content length at %r", url)
         elif 0 < length < minimal_size_bytes:
             return d
-        ctype = headers['server']['Content-Type']
-        headers['data']['Content-Type'] = 'image/jpeg'
-        wc.proxy.Headers.remove_headers(headers['data'], ['Content-Length'])
         d['imgreducer_buf'] = StringIO.StringIO()
         # some images have to be convert()ed before saving
+        ctype = headers['server']['Content-Type']
         d['imgreducer_convert'] = convert(ctype)
         return d
 
