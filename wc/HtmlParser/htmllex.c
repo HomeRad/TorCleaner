@@ -12107,9 +12107,9 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     data->exc_val = NULL;
     data->exc_tb = NULL;
     if (yyget_debug(scanner)) {
-        fprintf(stderr, "SCANNING `%s'\n", data->buf+len);
+        fprintf(stderr, "SCANNING `%s'\n", data->buf + len);
     }
-    data->lexbuf = yy_scan_bytes(data->buf+len,slen,scanner);
+    data->lexbuf = yy_scan_bytes(data->buf + len,slen,scanner);
     return 0;
 }
 
@@ -12119,11 +12119,11 @@ int htmllexStop (void* scanner, UserData* data) {
     if (data->nextpos > 0) {
 	int len = strlen(data->buf);
 	int i, j;
-	for (i=data->nextpos,j=0; i<len; i++,j++) {
+	for (i=data->nextpos, j=0; i<len; i++, j++) {
             data->buf[j] = data->buf[i];
 	}
 	data->buf[j] = '\0';
-	RESIZE_BUF(data->buf, len-data->nextpos+1);
+	RESIZE_BUF(data->buf, len-data->nextpos + 1);
         data->bufpos -= data->nextpos;
 	data->nextpos = 0;
     }
