@@ -2,6 +2,11 @@
  Document Type Definition (DTD) for WWW filters.
  See http://webcleaner.sourceforge.net/filter.html
  
+ Changes:
+
+ 10.8.2001 Bastian Kleineidam
+ * added Replacer
+ 
  WWW filters are configuration files for blocking URLs and rewriting
  HTML and image data and HTTP headers.
  Each file must have exactly one filter element (the "root" element).
@@ -33,7 +38,7 @@
    languages. This is because some programs might do language specific
    things with regular expressions.
 -->
-<!ELEMENT folder ((rewrite|block|allow|header|image|nocomments)*)>
+<!ELEMENT folder ((rewrite|replacer|block|allow|header|image|nocomments)*)>
 <!ATTLIST folder
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
@@ -189,4 +194,16 @@
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
+>
+
+<!--                      Replacer
+
+   Replace regular expressions in a data stream
+-->
+<!ELEMENT replacer (#PCDATA)>
+<!ATTLIST replacer
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ disable  CDATA "0"
+ regex    CDATA #REQUIRED
 >

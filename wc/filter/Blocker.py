@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re,string,urlparse,wc
+import re,urlparse,wc
 from Rules import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
@@ -55,20 +55,20 @@ class Blocker(Filter):
 
 
     def doit(self, data, **args):
-        #debug(HURT_ME_PLENTY, "block filter working on %s" % data)
-        splitted = string.split(data)
+        debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
+        splitted = data.split()
         if len(splitted)==3:
             method,url,protocol = splitted
             urlTuple = list(urlparse.urlparse(url))
             netloc = urlTuple[1]
-            s = string.split(netloc, ":")
+            s = netloc.split(":")
             if len(s)==2:
                 urlTuple[1:2] = s
             else:
                 urlTuple[1:2] = [netloc,80]
             blocked = self.blocked(urlTuple)
             if blocked is not None:
-                #debug(BRING_IT_ON, "blocked url %s" % url)
+                debug(BRING_IT_ON, "blocked url %s" % url)
                 # index 3, not 2!
                 if image_re.match(urlTuple[3][-4:]):
                     return '%s %s %s' % (method,
@@ -86,12 +86,12 @@ class Blocker(Filter):
             match = 1
             for i in range(len(urlTuple)):
                 if _block[i]:
-                    #debug(NIGHTMARE, "block pattern "+_block[i].pattern)
+                    debug(NIGHTMARE, "block pattern "+_block[i].pattern)
                     if not _block[i].search(urlTuple[i]):
-                        #debug(NIGHTMARE, "no match")
+                        debug(NIGHTMARE, "no match")
                         match = 0
             if match and not self.allowed(urlTuple):
-                #debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
+                debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
                 return _block[-1]
         return None
 
@@ -101,11 +101,11 @@ class Blocker(Filter):
             match = 1
             for i in range(len(urlTuple)):
                 if _allow[i]:
-                    #debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
+                    debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
 		    if not _allow[i].search(urlTuple[i]):
-                        #debug(NIGHTMARE, "no match")
+                        debug(NIGHTMARE, "no match")
                         match = 0
             if match:
-                #debug(NIGHTMARE, "allowed")
+                debug(NIGHTMARE, "allowed")
 	        return 1
         return 0

@@ -1,4 +1,4 @@
-import sys,os,string,time,wc
+import sys,os,time,wc
 from wc import _
 from FXPy.fox import *
 
@@ -56,6 +56,10 @@ Rewriter
 --------
 Rewrite HTML code. This is very powerful and can filter
 almost all advertising and other crap.
+
+Replacer
+--------
+Replace regular expressions in data streams.
 
 BinaryCharFilter
 ----------------
@@ -148,7 +152,7 @@ def error(msg):
 def loadIcon(app, filename):
     """load PNG icons from the ConfigDir directory"""
     filename = os.path.join(wc.ConfigDir, filename)
-    if string.lower(filename[-3:])=='png':
+    if filename[-3:].lower()=='png':
         return FXPNGIcon(app, open(filename, 'rb').read())
     raise Exception, "only PNG graphics supported"
 

@@ -17,9 +17,8 @@
 import re
 from wc.filter import FILTER_REQUEST_HEADER,FILTER_RESPONSE_HEADER
 from wc.filter.Filter import Filter
-from wc import debug
+from wc import debug,config
 from wc.debug_levels import *
-from string import lower
 
 orders = [FILTER_REQUEST_HEADER,
           FILTER_RESPONSE_HEADER]
@@ -32,17 +31,16 @@ class Header(Filter):
 
     def addrule(self, rule):
         if not rule.value:
-            self.delete.append(lower(rule.name))
+            self.delete.append(rule.name.lower())
         else:
             self.add[rule.name] = rule.value
 
     def doit(self, data, **args):
-        headers = data.keys()[:]
-        for header in headers:
+        for h in data.keys()[:]:
             for name in self.delete:
-                if header.find(name) != -1:
-                    del data[header]
+                if re.match(name, h):
+                    data.headers.remove(h)
         for key,val in self.add.items():
             data[key] = val
-        #debug(HURT_ME_PLENTY, "Headers\n", data)
+        debug(HURT_ME_PLENTY, "Headers\n", data)
         return data

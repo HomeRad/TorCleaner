@@ -44,7 +44,7 @@ class FXRuleFrame(FXVerticalFrame):
         return s
 
     def onCmdTitle(self, sender, sel, ptr):
-        title = string.strip(sender.getText())
+        title = sender.getText().strip()
         if not title:
             error(_("empty title"))
             sender.setText(self.rule.title)

@@ -18,7 +18,7 @@ test -x $DAEMON || exit 0
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	$DAEMON start > $ACCESSLOG 2>$ERRORLOG
+	$DAEMON start >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
 	;;
   stop)

@@ -103,7 +103,6 @@ def proxy_poll(timeout=0.0):
         try:
 	    (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
-            #debug(BRING_IT_ON, why)
             if why.args == (4, 'Interrupted system call'):
                 # this occurs on UNIX systems with a sighup signal
                 return
@@ -170,7 +169,6 @@ def spliturl (url):
         hostname = "localhost"
         port = config['port']
     else:
-        debug(BRING_IT_ON, "host", host)
         hostname, port = splitport(host)
         if port is None:
             port = 80

@@ -12,7 +12,7 @@
 >
 <!ELEMENT filter EMPTY>
 <!ATTLIST filter
- name (Header|Blocker|GifImage|BinaryCharFilter|Rewriter|Compress) #REQUIRED
+ name (Header|Blocker|GifImage|BinaryCharFilter|Rewriter|Replacer|Compress) #REQUIRED
 >
 <!ELEMENT Blocker EMPTY>
 <!ATTLIST Blocker

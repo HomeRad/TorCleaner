@@ -17,7 +17,6 @@
 
 import os,sys,UserDict,time,socket
 import _webcleaner2_configdata as configdata
-from string import ljust,rjust,replace,join,split
 from debug_levels import *
 
 Version = configdata.version
@@ -25,7 +24,7 @@ AppName = configdata.name
 App = AppName+" "+Version
 UserAgent = AppName+"/"+Version
 Author =  configdata.author
-HtmlAuthor = replace(Author, ' ', '&nbsp;')
+HtmlAuthor = Author.replace(' ', '&nbsp;')
 Copyright = "Copyright © 2000,2001 by "+Author
 HtmlCopyright = "Copyright &copy; 2000,2001 by "+HtmlAuthor
 AppInfo = App+"              "+Copyright
@@ -58,7 +57,7 @@ else:
 # XXX colorize?
 def debug(level, *args):
     if level <= DebugLevel:
-        print >>sys.stderr, join(map(str, args), " ")
+        print >>sys.stderr, " ".join(map(str, args))
 
 try:
     import fintl
@@ -130,6 +129,7 @@ class Configuration(UserDict.UserDict):
         self['requests'] = {'valid':0, 'invalid':0, 'failed':0}
         self['local_sockets_only'] = 1
         self['localip'] = socket.gethostbyname(socket.gethostname())
+        self['mime_no_length'] = []
 
     def read_proxyconf(self):
         p = WConfigParser()
@@ -148,6 +148,10 @@ class Configuration(UserDict.UserDict):
             exec "from filter import %s" % f
             _module = getattr(sys.modules['wc.filter'], f)
             for order in getattr(_module, 'orders'):
+                if f in ('Rewriter', 'Replacer'):
+                    for mime in getattr(_module, f).mimelist:
+                        if mime not in self['mime_no_length']:
+                            self['mime_no_length'].append(mime)
                 instance = getattr(_module, f)()
                 for rules in self['rules']:
                     if rules.disable: continue
@@ -175,7 +179,14 @@ Debug level:   %(debuglevel)d
 ##### xml parsers #########
 import xml.parsers.expat
 
-_rulenames = ('rewrite','block','allow','header','image','nocomments')
+_rulenames = (
+  'rewrite',
+  'block',
+  'allow',
+  'header',
+  'image',
+  'nocomments',
+  'replacer')
 _nestedtags = ('attr','enclosed','replace')
 _plaindatatags = ('replace',)
 
@@ -257,7 +268,7 @@ class WConfigParser(BaseParser):
                     self.config[key] = str(self.config[key])
             if self.config['noproxyfor']:
                 d = {}
-                for host in split(self.config['noproxyfor'], ','):
+                for host in self.config['noproxyfor'].split(','):
                     d[str(host)] = 1
                 self.config['noproxyfor'] = d
             if self.config['logfile'] == 'stdout':

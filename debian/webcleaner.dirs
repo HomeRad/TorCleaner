@@ -1,2 +1,3 @@
 usr/sbin
 etc/webcleaner
+var/log/webcleaner

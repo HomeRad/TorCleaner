@@ -17,8 +17,7 @@
 from wc import debug, error
 from wc.debug_levels import *
 from types import StringType, IntType
-import re
-from string import joinfields, lower, join
+import re,string
 
 # tag ids
 STARTTAG = 0
@@ -55,7 +54,7 @@ def quote(s):
     for i in range(len(res)):
         c = res[i]
         res[i] = EntityTable.get(c, c)
-    return joinfields(res, '')
+    return string.joinfields(res, '')
 
 
 def part_num(s):
@@ -210,13 +209,13 @@ class RewriteRule(Rule):
 
 
     def match_tag(self, tag):
-        return self.tag == lower(tag)
+        return self.tag == tag.lower()
 
 
     def match_attrs(self, attrs):
         occurred = []
         for attr,val in attrs:
-            attr = lower(attr)
+            attr = attr.lower()
             occurred.append(attr)
             ro = self.attrs.get(attr)
             if ro and not ro.search(val):
@@ -241,10 +240,10 @@ class RewriteRule(Rule):
 
 
     def filter_tag(self, tag, attrs):
-        #debug(NIGHTMARE, "rule %s filter_tag" % self.title)
+        debug(NIGHTMARE, "rule %s filter_tag" % self.title)
         part = self.replace[0]
-        #debug(NIGHTMARE, "original tag", tag, "attrs", attrs)
-        #debug(NIGHTMARE, "replace", num_part(part), "with", self.replace[1])
+        debug(NIGHTMARE, "original tag", tag, "attrs", attrs)
+        debug(NIGHTMARE, "replace", num_part(part), "with", self.replace[1])
         if part==TAGNAME:
             return (STARTTAG, self.replace[1], attrs)
         if part==TAG:
@@ -256,7 +255,7 @@ class RewriteRule(Rule):
         newattrs = []
         # look for matching tag attributes
         for attr,val in attrs:
-            ro = self.attrs.get(lower(attr))
+            ro = self.attrs.get(attr.lower())
             if ro:
                 mo = ro.search(val)
                 if mo:
@@ -273,15 +272,15 @@ class RewriteRule(Rule):
                     continue
             # nothing matched, just append the attribute as is
             newattrs.append((attr, val))
-        #debug(NIGHTMARE, "filtered tag", tag, "attrs", newattrs)
+        debug(NIGHTMARE, "filtered tag", tag, "attrs", newattrs)
         return (STARTTAG, tag, newattrs)
 
 
     def filter_complete(self, i, buf):
-        #debug(NIGHTMARE, "rule %s filter_complete" % self.title)
+        debug(NIGHTMARE, "rule %s filter_complete" % self.title)
         part = self.replace[0]
-        #debug(NIGHTMARE, "original buffer", `buf`)
-        #debug(NIGHTMARE, "part",num_part(part))
+        debug(NIGHTMARE, "original buffer", `buf`)
+        debug(NIGHTMARE, "part",num_part(part))
         if part==COMPLETE:
             buf[i:] = [[DATA, self.replace[1]]]
         elif part==TAG:
@@ -292,7 +291,7 @@ class RewriteRule(Rule):
             buf[-1] = (ENDTAG, self.replace[1])
         elif part==ENCLOSED:
             buf[i+1:-1] = [(DATA, self.replace[1])]
-        #debug(NIGHTMARE, "filtered buffer", `buf`)
+        debug(NIGHTMARE, "filtered buffer", `buf`)
 
     def get_name(self):
         return "rewrite"
@@ -327,7 +326,7 @@ class RewriteRule(Rule):
                 s += '>'+quote(val)+"</replace>\n"
             else:
                 s += "/>\n"
-        return s + "</rewrite>\n"
+        return s + "</rewrite>"
 
 
     def __str__(self):
@@ -365,7 +364,7 @@ class AllowRule(Rule):
 
     def toxml(self):
         s = Rule.toxml(self) + self.netlocxml()
-        return s+"/>\n"
+        return s+"/>"
 
     def netlocxml(self):
         s = ""
@@ -399,10 +398,8 @@ class BlockRule(AllowRule):
     def toxml(self):
         s = Rule.toxml(self) + self.netlocxml()
         if self.url:
-            s += ">"+quote(self.url)+"</block>\n"
-        else:
-            s += "/>\n"
-        return s
+            return s+">"+quote(self.url)+"</block>"
+        return s+"/>"
 
 
 
@@ -428,10 +425,8 @@ class HeaderRule(Rule):
     def toxml(self):
         s = Rule.toxml(self) + '\n name="%s"' % self.name
         if self.value:
-            s += ">"+self.value+"</header>\n"
-        else:
-            s += "/>\n"
-        return s
+            return s+">"+self.value+"</header>"
+        return s+"/>"
 
 
 
@@ -461,10 +456,8 @@ class ImageRule(Rule):
         if self.type!='gif':
             s += '\n type="%s"\n' % self.type
         if self.url:
-            s += ">"+self.url+"</image>\n"
-        else:
-            s += "/>\n"
-        return s
+            return s+">"+self.url+"</image>\n"
+        return s+"/>"
 
 
 
@@ -479,11 +472,11 @@ class NocommentsRule(Rule):
         return "nocomments"
 
     def toxml(self):
-	return Rule.toxml(self) + "/>\n"
+	return Rule.toxml(self) + "/>"
 
 
 
-class ReplaceRule(Rule):
+class ReplacerRule(Rule):
     def __init__(self, title="No title", desc="", disable=0,
                  search="", replace=""):
         Rule.__init__(self, title, desc, disable)
@@ -491,19 +484,18 @@ class ReplaceRule(Rule):
         self.replace = replace
 
     def fromFactory(self, factory):
-        return factory.fromReplaceRule(self)
+        return factory.fromReplacerRule(self)
 
     def get_name(self):
-        return "replace"
+        return "replacer"
 
     def toxml(self):
 	s = Rule.toxml(self);
         if self.search:
-            s += '\n search="%s"'%self.search
+            s += '\n regex="%s"'%self.search
         if self.replace:
-            s += '\n replace="%s"'%self.replace
-        s += "/>\n"
-        return s
+            return s+">"+self.replace+"</replacer>"
+        return s+"/>"
 
 
 
@@ -558,6 +550,6 @@ class FolderRule(Rule):
             s += '\n lang="%s"' % self.lang
         s += ">\n"
         for r in self.rules:
-            s += "\n" + r.toxml()
-        return s + "</folder>"
+            s += "\n"+r.toxml()+"\n"
+        return s+"</folder>\n"
 

@@ -9,7 +9,6 @@ from types import IntType
 from wc.filter.Rules import FolderRule
 from wc.filter import GetRuleFromName
 from wc.debug_levels import *
-from string import join
 
 UpdateHelp = \
 _("Updating procedure:\n\n"
@@ -223,7 +222,7 @@ class ConfWindow(FXMainWindow):
         FXMenuCommand(filtermenu, "Image", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Nocomments", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Rewrite", None, self, self.ID_NEWRULE)
-        FXMenuCommand(filtermenu, "Replace", None, self, self.ID_NEWRULE)
+        FXMenuCommand(filtermenu, "Replacer", None, self, self.ID_NEWRULE)
         FXMenuCascade(addmenu, _("Filter"), None, filtermenu)
         FXMenuButton(f, _("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(f, _("Remove"), None, self, self.ID_REMOVE)
@@ -493,7 +492,7 @@ class ConfWindow(FXMainWindow):
                     data = open(file).read()
                     digest = list(md5.new(data).digest())
                     digest = map(lambda c: "%0.2x" % ord(c), digest)
-                    digest = join(digest, "")
+                    digest = "".join(digest)
                     if digest==md5sum:
                         debug(BRING_IT_ON, "%s is uptodate" % filename)
 		        continue
@@ -591,7 +590,7 @@ class ConfWindow(FXMainWindow):
         if self.logfile:
             s += ' logfile="%s"\n' % self.logfile
         if self.noproxyfor:
-            s += ' noproxyfor="%s"\n' % join(self.noproxyfor.keys(), ",")
+            s += ' noproxyfor="%s"\n' % ",".join(self.noproxyfor.keys())
         s += '>\n'
         for key,val in self.modules.items():
             if val:

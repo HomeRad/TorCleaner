@@ -2,7 +2,7 @@ import time,socket,rfc822,re,sys
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import debug
+from wc import debug,config
 from wc.debug_levels import *
 from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
@@ -66,7 +66,7 @@ class HttpServer(Server):
 
     def handle_connect(self):
         assert self.state == 'connect'
-        #debug(HURT_ME_PLENTY, 'handle_connect', self)
+        debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
         Server.handle_connect(self)
 
@@ -127,7 +127,7 @@ class HttpServer(Server):
             self.client.server_response(self.response, self.headers)
         else:
             # We have no idea what it is!?
-            print >> sys.stderr, 'Warning', 'puzzling header received ', `self.response`
+            print >> sys.stderr, 'Warning: puzzling header received:', `self.response`
 
     def process_headers(self):
         # Headers are terminated by a blank line .. now in the regexp,
@@ -152,32 +152,42 @@ class HttpServer(Server):
             self.state = 'response'
             return
 
+        if self.headers.get('content-type') in config['mime_no_length']:
+            # XXX HACK - remove content length
+            debug(HURT_ME_PLENTY, "remove content length")
+            for h in self.headers.headers[:]:
+                if re.match('(?i)content-length:', h):
+                    self.headers.headers.remove(h)
+                    #self.bytes_remaining = None
+
         self.decoders = []
 
         if self.headers.has_key('transfer-encoding'):
             debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
-            # HACK - remove encoding header
+            # XXX HACK - remove encoding header
             for h in self.headers.headers[:]:
-                if re.match('transfer-encoding:', h.lower()):
+                if re.match('(?i)transfer-encoding:', h):
                     self.headers.headers.remove(h)
-                elif re.match('content-length:', h.lower()):
+                elif re.match('(?i)content-length:', h):
                     assert 0, 'chunked encoding should not have content-length'
+                    self.headers.headers.remove(h)
+                    #self.bytes_remainig = None
 
         if self.headers.get('content-encoding')=='gzip':
             debug(BRING_IT_ON, 'Content-encoding: gzip')
             self.decoders.append(GunzipStream())
-            # HACK - remove content length and encoding
+            # XXX HACK - remove content length and encoding
             # because we unzipped the stream
             for h in self.headers.headers[:]:
-                if re.match('content-length:', h.lower()):
+                if re.match('(?i)content-length:', h):
                     self.headers.headers.remove(h)
-                elif re.match('content-encoding:', h.lower()):
+                    #self.bytes_remaining = None
+                elif re.match('(?i)content-encoding:', h):
                     self.headers.headers.remove(h)
 
         self.client.server_response(self.response, self.headers)
-        mime = self.headers.get('content-type', 'application/octeet-stream')
-        self.attrs = initStateObjects(mime, self.headers)
+        self.attrs = initStateObjects(self.headers)
         self.attrs['nofilter'] = self.nofilter['nofilter']
         if ((response and response[1] in ('204', '304')) or
             self.method == 'HEAD'):
@@ -187,7 +197,7 @@ class HttpServer(Server):
             self.state = 'content'
 
     def process_content(self):
-        #debug(NIGHTMARE, "processing server content")
+        debug(HURT_ME_PLENTY, "processing server content")
         data = self.read(self.bytes_remaining)
 
         if self.bytes_remaining is not None:
@@ -282,7 +292,7 @@ class HttpServer(Server):
             # We can't reuse this connection
             self.close()
         else:
-            #debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
+            debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
             self.sequence_number = self.sequence_number + 1
             self.state = 'client'
             self.document = ''
@@ -304,7 +314,7 @@ class HttpServer(Server):
             client.server_abort()
 
     def handle_close(self):
-        #debug(HURT_ME_PLENTY, 'server close; '+self.state, self)
+        debug(HURT_ME_PLENTY, 'server close;', self.state, self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None

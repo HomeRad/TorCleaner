@@ -1,4 +1,3 @@
-import string
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import _,debug
@@ -23,13 +22,13 @@ class FXHeaderRuleFrame(FXRuleFrame):
         tf.setText(self.rule.value)
 
     def onCmdName(self, sender, sel, ptr):
-        self.rule.name = string.strip(sender.getText())
+        self.rule.name = sender.getText().strip()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Changed rule header name")
         return 1
 
     def onCmdValue(self, sender, sel, ptr):
-        self.rule.value = string.strip(sender.getText())
+        self.rule.value = sender.getText().strip()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Changed rule header value")
         return 1

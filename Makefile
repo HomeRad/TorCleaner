@@ -41,14 +41,19 @@ dist:	locale
 .PHONY: test
 test:
 	./filtertest filter filtertest.html
+	./filtertest block "GET http://ads.realmedia.com/ HTTP/1.0"
 
 .PHONY: onlinetest
 onlinetest:
+	rm -f index.html* top-12-09.gif
+	# get a standard page with included adverts
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/
-
-.PHONY: selftest
-selftest:
+	# get own config
 	env http_proxy="http://localhost:9090" wget -t1 http://localhost:9090/
+	# get a blocked site
+	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/advert/
+	# get a blocked image
+	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/advert/test.gif
 
 .PHONY: md5sums
 md5sums:

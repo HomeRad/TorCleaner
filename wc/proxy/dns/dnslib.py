@@ -62,16 +62,16 @@ class Packer:
 	def addbyte(self, c):
 		if len(c) != 1:
                     raise TypeError, 'one character expected'
-		self.buf = self.buf + c
+		self.buf += c
 	def addbytes(self, bytes):
-		self.buf = self.buf + bytes
+		self.buf += bytes
 	def add16bit(self, n):
-		self.buf = self.buf + pack16bit(n)
+		self.buf += pack16bit(n)
 	def add32bit(self, n):
-		self.buf = self.buf + pack32bit(n)
+		self.buf += pack32bit(n)
 	def addaddr(self, addr):
 		n = addr2bin(addr)
-		self.buf = self.buf + pack32bit(n)
+		self.buf += pack32bit(n)
 	def addstring(self, s):
 		self.addbyte(chr(len(s)))
 		self.addbytes(s)
@@ -109,12 +109,12 @@ class Packer:
 			else:
 				print 'dnslib.Packer.addname:',
 				print 'warning: pointer too big'
-			buf = buf + (chr(n) + label)
+			buf += chr(n) + label
 		if pointer:
-			buf = buf + pack16bit(pointer | 0xC000)
+			buf += pack16bit(pointer | 0xC000)
 		else:
-			buf = buf + '\0'
-		self.buf = self.buf + buf
+			buf += '\0'
+		self.buf += buf
 		for key, value in index:
 			self.index[key] = value
 	def dump(self):
@@ -141,7 +141,6 @@ class Packer:
 		print '-'*40
 
 
-# Unpacking class
 class UnpackError(Exception):
     pass
 
@@ -151,12 +150,12 @@ class Unpacker:
 		self.offset = 0
 	def getbyte(self):
 		c = self.buf[self.offset]
-		self.offset = self.offset + 1
+		self.offset += 1
 		return c
 	def getbytes(self, n):
 		s = self.buf[self.offset : self.offset + n]
 		if len(s) != n: raise UnpackError, 'not enough data left'
-		self.offset = self.offset + n
+		self.offset += n
 		return s
 	def get16bit(self):
 		return unpack16bit(self.getbytes(2))
@@ -265,7 +264,7 @@ class RRpacker(Packer):
 		try:
 			self.buf = self.buf[:self.rdstart-2]
 			self.add16bit(len(rdata))
-			self.buf = self.buf + rdata
+			self.buf += rdata
 			ok = 1
 		finally:
 			if not ok: self.buf = save_buf
@@ -517,7 +516,7 @@ def test():
 		qtypes.sort()
 		n = 0
 		for qtype in qtypes:
-			n = n+1
+			n += 1
 			if n >= 8: n = 1; print
 			print '%s = %d' % (dnstype.typemap[qtype], qtype),
 		print

@@ -72,7 +72,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     if attrs.get('nofilter'):
         return arg
     try:
-        #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
+        debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
         for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
             if hasattr(f, 'mimelist'):
@@ -82,17 +82,18 @@ def applyfilter(i, arg, fun='filter', attrs={}):
                 # no mimelist? then this filter applies to all files!
                 arg = apply(ffun, (arg,), attrs)
     except FilterException, msg:
-        #debug(NIGHTMARE, msg)
+        debug(NIGHTMARE, msg)
         pass
     return arg
 
 
-def initStateObjects(mime="text/html", headers={}):
-    attrs = {'mime': mime}
+def initStateObjects(headers={'content-type': 'text/html'}):
+    """init external state objects"""
+    attrs = {'mime': headers.get('content-type', 'application/octet-stream')}
     for i in range(10):
         for f in wc.config['filterlist'][i]:
             if hasattr(f, 'mimelist'):
-                if mime in f.mimelist:
+                if attrs['mime'] in f.mimelist:
                     attrs.update(f.getAttrs(headers))
             else:
                 attrs.update(f.getAttrs(headers))

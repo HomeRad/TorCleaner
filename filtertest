@@ -6,6 +6,7 @@ if __name__=='__main__':
     if len(sys.argv)<3:
         raise SystemExit, "usage: filtertest command filename_or_url"
     import wc, time
+
     command = sys.argv[1]
     if command=='filter':
         data = open(sys.argv[2]).read()
@@ -16,8 +17,9 @@ if __name__=='__main__':
     else:
         raise SystemExit, "unknown command"
     wc.config.init_filter_modules()
-    start = time.clock()
+
     wc.DebugLevel = 3
+    start = time.clock()
     attrs = wc.filter.initStateObjects()
     filtered = wc.filter.applyfilter(i, data, 'finish', attrs)
     stop = time.clock()

@@ -1,4 +1,3 @@
-import string
 from FXAllowRuleFrame import FXAllowRuleFrame
 from FXPy.fox import *
 from wc import _,debug
@@ -16,7 +15,7 @@ class FXBlockRuleFrame(FXAllowRuleFrame):
         tf.setText(self.rule.fragment)
 
     def onCmdUrl(self, sender, sel, ptr):
-        self.rule.url = string.strip(sender.getText())
+        self.rule.url = sender.getText().strip()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Changed rule blocked url")
         return 1

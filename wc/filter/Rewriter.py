@@ -15,7 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
-from string import lower
 from wc.parser.sgmllib import SGMLParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
@@ -50,7 +49,7 @@ class Rewriter(Filter):
 
 
     def filter(self, data, **attrs):
-        #debug(NIGHTMARE, `data`)
+        debug(NIGHTMARE, `data`)
         p = attrs['filter']
         p.feed(data)
         return p.flush()
@@ -100,6 +99,7 @@ class HtmlFilter(SGMLParser):
 
 
     def flush(self):
+        """flush internal data buffer"""
         data = self.data
         if data:
             self.data = ""
@@ -155,17 +155,17 @@ class HtmlFilter(SGMLParser):
         tobuffer = (STARTTAG, tag, attrs)
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                #debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
+                debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute
-                    if tobuffer[0]==STARTTAG and lower(tobuffer[1])==tag:
+                    if tobuffer[0]==STARTTAG and tobuffer[1].lower()==tag:
                         foo,tag,attrs = tobuffer
                         continue
                     else:
                         break
                 else:
-                    #debug(NIGHTMARE, "put on buffer")
+                    debug(NIGHTMARE, "put on buffer")
                     rulelist.append(rule)
         if rulelist:
             self.rulestack.append((len(self.buffer), rulelist))

@@ -43,9 +43,18 @@
 <attr>http://banner.*\.(com|de)</attr>
 </rewrite>
 
+<block title="Ad servers 8"
+ scheme=""
+ host="^ads\."
+ port=""
+ path=""
+ parameters=""
+ query=""
+ fragment=""/>
+
 <rewrite title="Adverts in the path name 1"
  desc="Kill links with ad words in the path name.">
-<attr>/(web)?ad(vert(s)?|click|s/)</attr>
+<attr>/(web)?ad(vert(s)?|click|s)/</attr>
 </rewrite>
 
 <rewrite title="Adverts in the path name 2"
@@ -94,7 +103,7 @@
  scheme=""
  host=""
  port=""
- path="(advert|banner|adid|profileid)"
+ path="/(advert|banner|adid|profileid)/"
  parameters=""
  query=""
  fragment=""/>

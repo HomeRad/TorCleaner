@@ -1,8 +1,8 @@
-import dns_lookups,socket
+import dns_lookups, socket, mimetypes
 import wc.proxy
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
-from wc import _,debug
+from wc import _,debug,config
 from wc.debug_levels import *
 
 serverpool = ServerPool()
@@ -62,8 +62,18 @@ class ClientServerMatchmaker:
         if not url:
             self.error(400, _("Empty URL"))
         scheme, hostname, port, document = wc.proxy.spliturl(url)
-
-        if hostname.lower()=='localhost' and port==wc.config['port']:
+        debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
+        if scheme=='file':
+            # a blocked url is a local file:// link
+            # this means we should _not_ use this proxy for local
+            # file links :)
+            mtype = mimetypes.guess_type(url)[0]
+            ServerHandleDirectly(self.client,
+	        'HTTP/1.0 200 OK\r\n',
+                'Content-Type: %s\r\n\r\n' % (mtype or 'text/plain'),
+                open(document, 'rb').read())
+            return
+        if hostname.lower()=='localhost' and port==config['port']:
             # proxy info
             ServerHandleDirectly(self.client,
                 'HTTP/1.0 200 OK\r\n',
@@ -71,17 +81,9 @@ class ClientServerMatchmaker:
                 '\r\n',
                 wc.proxy.status_info())
             return
-        if scheme == 'file':
-            # a blocked url is a local file:// link
-            import mimetypes
-            mtype = mimetypes.guess_type(url)[0]
-            ServerHandleDirectly(self.client,
-	        'HTTP/1.0 200 OK\r\n',
-                'Content-Type: %s\r\n\r\n' % (mtype or 'text/plain'),
-                open(document, 'rb').read())
-        if wc.config['parentproxy']:
-            self.hostname = wc.config['parentproxy']
-            self.port = wc.config['parentproxyport']
+        if config['parentproxy']:
+            self.hostname = config['parentproxy']
+            self.port = config['parentproxyport']
             self.document = url
         else:
             self.hostname = hostname
@@ -100,22 +102,23 @@ class ClientServerMatchmaker:
 
         if answer.isFound():
             self.ipaddr = answer.data[0]
-	    if self.ipaddr==wc.config['localip'] and \
-	       self.port==wc.config['port']:
-                # proxy config
-                ServerHandleDirectly(self.client,
-                    'HTTP/1.0 200 OK\r\n',
-                    'Content-Type: text/plain\r\n'
-                    '\r\n',
-                wc.proxy.status_info())
-                return
+	    #if self.ipaddr==config['localip'] and \
+	    #   self.port==config['port']:
+            #    # proxy config
+            #    ServerHandleDirectly(self.client,
+            #        'HTTP/1.0 200 OK\r\n',
+            #        'Content-Type: text/plain\r\n'
+            #        '\r\n',
+            #    wc.proxy.status_info())
+            #    return
 	    self.state = 'server'
             self.find_server()
         elif answer.isRedirect():
             # Let's use a different hostname
             new_url = answer.data
-            if self.port != 80: new_url = new_url + ':%s' % self.port
-            new_url = new_url + self.document
+            if self.port != 80:
+	        new_url += ':%s' % self.port
+            new_url += self.document
 
             self.state = 'done'
             ServerHandleDirectly(

@@ -1,4 +1,3 @@
-import string
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import _,debug
@@ -41,7 +40,7 @@ class FXFolderRuleFrame(FXRuleFrame):
         t.setCurrentItem(_lang_num(self.rule.lang))
 
     def onCmdFilename(self, sender, sel, ptr):
-        filename = string.strip(sender.getText())
+        filename = sender.getText().strip()
         if filename:
             self.rule.filename = filename
             self.getApp().dirty = 1

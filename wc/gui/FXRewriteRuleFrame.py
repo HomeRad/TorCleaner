@@ -1,4 +1,4 @@
-import string,sys
+import sys
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import _,debug,error
@@ -60,7 +60,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
 
 
     def onCmdTag(self, sender, sel, ptr):
-        tag = string.strip(sender.getText())
+        tag = sender.getText().strip()
         if not tag:
             error("empty tag name")
             sender.setText(self.rule.tag)
@@ -72,7 +72,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
 
 
     def onCmdEnclosed(self, sender, sel, ptr):
-        enclosed = string.strip(sender.getText())
+        enclosed = sender.getText().strip()
         if enclosed:
             self.rule.enclosed = enclosed
         else:
@@ -100,7 +100,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
-            name = string.lower(string.strip(nametf.getText()))
+            name = nametf.getText().strip().lower()
             if not name:
                 error(_("Empty attribute name"))
 	        return 1
@@ -108,7 +108,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
                 error(_("Duplicate attribute name"))
                 return 1
             try:
-                value = string.strip(valuetf.getText())
+                value = valuetf.getText().strip()
             except:
                 error(_("Invalid regex %s: %s") % (value,sys.exc_info()[1]))
                 return 1
@@ -123,7 +123,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         if index < 0: return 1
         item = self.iconlist.retrieveItem(index)
         if not item.isSelected(): return 1
-        name,value = string.split(item.getText(), '\t')
+        name,value = item.getText().split('\t')
         dialog = FXDialogBox(self, _("Edit Attribute"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
@@ -137,9 +137,9 @@ class FXRewriteRuleFrame(FXRuleFrame):
         FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
-            newname = string.lower(string.strip(nametf.getText()))
+            newname = nametf.getText().strip().lower()
             try:
-                value = string.strip(valuetf.getText())
+                value = valuetf.getText().strip()
             except:
                 error(_("Invalid regex %s: %s")%(value,sys.exc_info()[1]))
                 return 1
@@ -155,7 +155,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         if index < 0: return 1
         item = self.iconlist.retrieveItem(index)
         if not item.isSelected(): return 1
-        name,value = string.split(item.getText(), '\t')
+        name,value = item.getText().split('\t')
         del self.rule.attrs[name]
         self.getApp().dirty = 1
         self.iconlist.removeItem(index)

@@ -1,8 +1,16 @@
 webcleaner (0.16) unstable; urgency=low
 
   * add PackError and UnpackError exception classes to dnslib.py
+  * add logrotating in debian package
+  * cosmetic cleanups
+  * remove content-length header when we enabled content-changing
+    modules like the HTML Rewriter
+  * improved onlinetests
+  * send Content-Length: header in ServerHandleDirectly class
+  * return after calling ServerHandleDirectly
+  * check for blocked links before giving config and statistics data
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri, 10 Aug 2001 17:14:55 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sat, 11 Aug 2001 01:16:01 +0200
 
 webcleaner (0.15) unstable; urgency=low
 

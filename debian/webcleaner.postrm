@@ -17,10 +17,15 @@ set -e
 # for details, see /usr/share/doc/packaging-manual/
 
 case "$1" in
-       purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-
-
-        ;;
+       purge)
+       # remove all log files
+       rm -rf /var/log/webcleaner || true
+       # remove old log files
+       rm -f /var/log/webcleaner.{debug,info}
+       ;;
+       remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+       # nothing to do
+       ;;
 
     *)
         echo "postrm called with unknown argument \`$1'" >&2

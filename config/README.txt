@@ -42,6 +42,9 @@ Rewriter (Rewriter):
         Rewrite HTML code. This is very powerful and can filter almost all
         advertising and other crap.
 
+Replacer (Replacer):
+	Replace regular expressions in a data stream.
+
 BinaryCharFilter (BinaryCharFilter):
         Replace illegal binary characters in HTML code like the quote chars
         often found in Microsoft pages.
