@@ -38,12 +38,8 @@ class Filter:
         return {'url': url, 'headers': headers}
 
     def applies_to_mime (self, mime):
-        debug(HURT_ME_PLENTY, "Filter:", self.__class__.__name__, "applies_to_mime", mime, "...")
         if not self.mimelist:
-            debug(HURT_ME_PLENTY, "Filter: no mimelist")
             return 1
         for ro in self.mimelist:
             if ro.match(mime):
-                debug(HURT_ME_PLENTY, "Filter: match")
                 return 1
-        debug(HURT_ME_PLENTY, "Filter: no match")
