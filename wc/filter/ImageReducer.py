@@ -40,9 +40,8 @@ class ImageReducer (wc.filter.Filter.Filter):
         super(ImageReducer, self).__init__()
         # minimal number of bytes before we start reducing
         self.minimal_size_bytes = 5120
-        # reduced JPEG quality
+        # reduced JPEG quality (in percent)
         self.quality = 20
-
 
     def filter (self, data, **attrs):
         """feed image data to buffer"""
@@ -50,7 +49,6 @@ class ImageReducer (wc.filter.Filter.Filter):
             return data
         attrs['imgreducer_buf'].write(data)
         return ''
-
 
     def finish (self, data, **attrs):
         """feed image data to buffer, then convert it and return result"""
