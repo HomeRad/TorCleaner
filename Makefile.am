@@ -80,7 +80,14 @@ VERSION:
 upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
 
-homepage: VERSION md5sums
+homepage: VERSION homepage-zapper
+	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
+	cp README $(HTMLDIR)/htdocs/readme.txt
+	cp VERSION $(HTMLDIR)/htdocs/raw/
+	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
+	$(MAKE) -C $(HTMLDIR) chmod
+
+homepage-zapper: md5sums
 	cp config/*.dtd config/webcleaner.conf config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/zapper
 	cp test/filter/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/test
 	(cd config && for f in *.zap; do \
@@ -92,11 +99,6 @@ homepage: VERSION md5sums
 	cp -r config/blacklists/ $(HTMLDIR)/htdocs/zapper
 	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
-	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
-	cp README $(HTMLDIR)/htdocs/readme.txt
-	cp VERSION $(HTMLDIR)/htdocs/raw/
-	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
-	$(MAKE) -C $(HTMLDIR) chmod
 
 doc:
 	rm -f README
