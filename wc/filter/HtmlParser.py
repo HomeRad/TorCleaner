@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import sys, re, urlparse, wc
+import sys, re, urlparse, urllib, wc
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser, quote_attrval
 from wc.parser import resolve_html_entities, strip_quotes
@@ -354,7 +354,11 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                         raise FilterRating(msg)
                 self.ratings = []
         elif tag=="base" and attrs.has_key('href'):
-            self.base_url = strip_quotes(attrs['href'])
+            self.base_url = attrs['href']
+            # some base urls are just the host name, eg. www.imadoofus.com
+            if not urllib.splittype(self.base_url)[0]:
+                self.base_url = "%s://%s" % \
+                                (urllib.splittype(self.url)[0], self.base_url)
             self._debug("using base url %r", self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
@@ -495,11 +499,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             url = urlparse.urljoin(self.url, url)
         # unquote and norm
         url = url_norm(url)
+        host = stripsite(url)[0]
+        if not host:
+            error(FILTER, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
+            return
         self.state = ('wait', url)
         self.waited = 1
         self.js_src = True
         self.js_client = HttpProxyClient(self.jsScriptData, (url, ver))
-        host = stripsite(url)[0]
         headers = get_wc_client_headers(host)
         # note: some javascript servers do not specify content encoding
         # so only accept non-encoded content here
