@@ -37,7 +37,7 @@ class SetList (list):
 
     def __setitem__ (self, key, value):
         if value not in self:
-            super(SetList), self).__setitem__(key, value)
+            super(SetList, self).__setitem__(key, value)
 
 
 class ListDict (dict):
