@@ -147,7 +147,7 @@ def _slow_check (x, t, stype):
         warn(PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
 
 
-def mainloop (handle=None, stoppable=False):
+def mainloop (handle=None, abort=None):
     """proxy main loop, handles requests forever"""
     from HttpClient import HttpClient
     from Listener import Listener
@@ -163,7 +163,7 @@ def mainloop (handle=None, stoppable=False):
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
-    if stoppable:
+    if abort is not None:
         # regular abort check every second
         global MAX_TIMEOUT
         MAX_TIMEOUT = 1
@@ -173,9 +173,8 @@ def mainloop (handle=None, stoppable=False):
         # have to worry about being in asyncore.poll when a timer goes
         # off.
         proxy_poll(timeout=max(0, run_timers()))
-        if stoppable:
-            if config.get_abort():
-                break
+        if abort is not None and abort():
+            break
         if handle is not None:
             # win32 handle signaling stop
             import win32event
