@@ -1,0 +1,4 @@
+*.html
+*.nav
+Makefile
+Makefile.in
