@@ -22,6 +22,8 @@ from wc.log import *
 
 class Filter (object):
     """the base filter class"""
+    mimelist = []
+
     def __init__ (self):
         self.rules = []
         self.prio = -1

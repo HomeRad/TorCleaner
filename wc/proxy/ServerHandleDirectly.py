@@ -20,3 +20,6 @@ class ServerHandleDirectly (Server):
 
     def process_connect (self):
         pass
+
+    def process_read (self):
+        pass

@@ -58,7 +58,7 @@ class ContextVariable:
 		# as though it wasn't a sequence at all.
 		try:
 			seqLength = len (self.value())
-			temp = self.value()[1:1]
+			dummy = self.value()[1:1]
 			return seqLength
 		except:
 			return 0
@@ -498,7 +498,7 @@ class Context:
 								else:
 									result += str(resultVal)
 							skipCount = endPos - position - 1
-					except Exception, e:
+					except Exception:
 						# Trailing $ sign - just suppress it
 						self.log.warn ("Trailing $ detected")
 						pass

@@ -557,7 +557,7 @@ class DnsLookupConnection (Connection):
             return
 
         ip_addrs = []
-        for i in range(ancount):
+        for dummy in range(ancount):
             name, type, klass, ttl, rdlength = msg.getRRheader()
             mname = 'get%sdata' % dnslib.Type.typestr(type)
             if hasattr(msg, mname): data = getattr(msg, mname)()
