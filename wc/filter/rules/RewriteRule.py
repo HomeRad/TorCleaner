@@ -152,10 +152,10 @@ class RewriteRule (UrlRule):
         return 0
 
     def filter_tag (self, tag, attrs):
-        debug(NIGHTMARE, "rule %s filter_tag" % self.title)
+        debug(NIGHTMARE, "Filter: rule %s filter_tag" % self.title)
         part = self.replace[0]
-        debug(NIGHTMARE, "original tag", `tag`, "attrs", attrs)
-        debug(NIGHTMARE, "replace", num_part(part), "with", `self.replace[1]`)
+        debug(NIGHTMARE, "Filter: original tag", `tag`, "attrs", attrs)
+        debug(NIGHTMARE, "Filter: replace", num_part(part), "with", `self.replace[1]`)
         if part==COMPLETE:
             return [DATA, ""]
         if part==TAGNAME:
@@ -194,14 +194,14 @@ class RewriteRule (UrlRule):
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        debug(NIGHTMARE, "filtered tag", tag, "attrs", newattrs)
+        debug(NIGHTMARE, "Filter: filtered tag", tag, "attrs", newattrs)
         return (STARTTAG, tag, newattrs)
 
     def filter_complete (self, i, buf):
-        debug(NIGHTMARE, "rule %s filter_complete" % self.title)
+        debug(NIGHTMARE, "Filter: rule %s filter_complete" % self.title)
         part = self.replace[0]
-        debug(NIGHTMARE, "original buffer", `buf`)
-        debug(NIGHTMARE, "part",num_part(part))
+        debug(NIGHTMARE, "Filter: original buffer", `buf`)
+        debug(NIGHTMARE, "Filter: part",num_part(part))
         if part==COMPLETE:
             buf[i:] = [[DATA, self.replace[1]]]
         elif part==TAG:
@@ -212,7 +212,7 @@ class RewriteRule (UrlRule):
             buf[-1] = (ENDTAG, self.replace[1])
         elif part==ENCLOSED:
             buf[i+1:-1] = [(DATA, self.replace[1])]
-        debug(NIGHTMARE, "filtered buffer", `buf`)
+        debug(NIGHTMARE, "Filter: filtered buffer", `buf`)
 
     def toxml (self):
         s = UrlRule.toxml(self)

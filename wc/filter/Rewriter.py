@@ -61,14 +61,12 @@ class Rewriter (Filter):
 
     def filter (self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Filter: Rewrite", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         return p.flushbuf()
 
     def finish (self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Filter: Rewrite finish", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         if data: p.feed(data)
         p.flush()
@@ -368,7 +366,7 @@ class HtmlFilter (HtmlParser,JSListener):
                                rfc822.Message(StringIO('')), #headers
                                '', #content
                                {'nofilter': None},
-                               '', # compress
+                               'identity', # compress
                                )
 
 

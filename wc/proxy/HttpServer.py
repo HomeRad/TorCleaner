@@ -335,7 +335,6 @@ class HttpServer (Server):
 
     def process_content (self):
         data = self.read(self.bytes_remaining)
-        debug(NIGHTMARE, "Proxy: S/content", `data`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
