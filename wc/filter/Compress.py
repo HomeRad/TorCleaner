@@ -66,11 +66,19 @@ class Compress (wc.filter.Filter.Filter):
                  r'x-world/x-vrml',
                ]]
 
+    def __init__ (self):
+        """Set init compressor flag to True."""
+        super(Compress, self).__init__()
+        self.init_compressor = True
+
     def filter (self, data, **attrs):
-        """compress the string s.
-        Note that compression state is saved outside of this function
-        in the compression object.
+        """Compress the string s.
+           Note that compression state is saved outside of this function
+           in the compression object.
         """
+        if self.init_compressor:
+            self.set_encoding_header(attrs)
+            self.init_compressor = False
         if not attrs.has_key('compressobj'):
             return data
         compobj = attrs['compressobj']
@@ -106,22 +114,22 @@ class Compress (wc.filter.Filter.Filter):
                                 struct.pack('<l', compobj['size']))
         return data
 
-    def get_attrs (self, url, headers):
+    def set_encoding_header (self, attrs):
         """fix headers for compression, and add a compression object
-           to the filter attrs
+           to the filter attrs. Since the headers are modified this cannot
+           be done in get_attrs() but only when it is clear that the content
+           is going to be compressed.
         """
-        d = super(Compress, self).get_attrs(url, headers)
-        compressobj = None
+        headers = attrs['headers']
         accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])
         encoding = headers['server'].get('Content-Encoding', '').lower()
         if 'gzip' not in accepts:
             # browser does not accept gzip encoding
             pass
         elif encoding and encoding not in _compress_encs:
-            compressobj = get_compress_object()
+            attrs['compressobj'] = get_compress_object()
             headers['data']['Content-Encoding'] = encoding+', gzip\r'
         else:
-            compressobj = get_compress_object()
+            attrs['compressobj'] = get_compress_object()
             headers['data']['Content-Encoding'] = 'gzip\r'
-        d['compressobj'] = compressobj
-        return d
+
