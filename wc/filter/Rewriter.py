@@ -148,7 +148,6 @@ class HtmlFilter (HtmlParser,JSListener):
             if data:
                 debug(NIGHTMARE, "HtmlFilter: feed", `data`)
                 HtmlParser.feed(self, data)
-                debug(NIGHTMARE, "HtmlFilter: feed finished")
         else:
             self.inbuf.write(data)
 
@@ -213,13 +212,21 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def _data (self, d):
-        """handler for data"""
+        """general handler for data"""
         item = [DATA, d]
         if self.state=='wait':
             return self.waitbuf.append(item)
         self.buf_append_data(item)
-    cdata = _data
-    characters = _data
+
+
+    def cdata (self, data):
+        """character data"""
+        return self._data(data)
+
+
+    def characters (self, data):
+        """characters"""
+        return self._data(data)
 
 
     def comment (self, data):
@@ -232,17 +239,11 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def doctype (self, data):
-        item = [DATA, "<!DOCTYPE%s>"%data]
-        if self.state=='wait':
-            return self.waitbuf.append(item)
-        self.buf_append_data(item)
+        return self._data("<!DOCTYPE%s>"%data)
 
 
     def pi (self, data):
-        item = [DATA, "<?%s?>"%data]
-        if self.state=='wait':
-            return self.waitbuf.append(item)
-        self.buf_append_data(item)
+        return self._data("<?%s?>"%data)
 
 
     def startElement (self, tag, attrs):
@@ -307,10 +308,8 @@ class HtmlFilter (HtmlParser,JSListener):
                     filtered = "True"
                     break
         if not filtered:
-            if self.javascript and tag=='script' and \
-               self.jsEndElement(tag):
-                del self.buf[-1]
-                del self.buf[-1]
+            if self.javascript and tag=='script':
+                self.jsEndElement(item)
             else:
                 self.buf.append(item)
         if not self.rulestack:
@@ -319,8 +318,7 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def jsStartElement (self, tag, attrs):
         """Check popups for onmouseout and onmouseover.
-           Inline extern javascript sources (only in the
-           same domain)"""
+           Inline extern javascript sources"""
         changed = 0
         for name in ('onmouseover', 'onmouseout'):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
@@ -357,12 +355,15 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def jsForm (self, name, action, target):
+        """when hitting a (named) form, notify the JS engine about that"""
         if not name: return
         debug(HURT_ME_PLENTY, "JS: jsForm", `name`, `action`, `target`)
         self.jsEnv.addForm(name, action, target)
 
 
     def jsScriptData (self, data, url, ver):
+        """Callback for loading <script src=""> data in the background
+           If downloading is finished, data is None"""
         assert self.state=='wait'
         if data is None:
             if not self.script:
@@ -371,18 +372,22 @@ class HtmlFilter (HtmlParser,JSListener):
                 self.buf.append([STARTTAG, "script", {'type':
                                                       'text/javascript'}])
                 self.buf.append([DATA, "<!--\n%s\n//-->"%self.script])
+                # Note: <script src=""> could be missing an end tag,
+                # but now we need one. Look later for a duplicate </script>.
+                self.buf.append([ENDTAG, "script"])
             self.state = 'parse'
             self.script = ''
-            debug(NIGHTMARE, "Filter: switching back to parse with")
-            debug(NIGHTMARE, "Filter: self.buf", `self.buf`)
-            debug(NIGHTMARE, "Filter: self.waitbuf", `self.waitbuf`)
-            debug(NIGHTMARE, "Filter: self.inbuf", `self.inbuf.getvalue()`)
+            debug(NIGHTMARE, "HtmlFilter: switching back to parse with")
+            debug(NIGHTMARE, "HtmlFilter: self.buf", `self.buf`)
+            debug(NIGHTMARE, "HtmlFilter: self.waitbuf", `self.waitbuf`)
+            debug(NIGHTMARE, "HtmlFilter: self.inbuf", `self.inbuf.getvalue()`)
         else:
             debug(HURT_ME_PLENTY, "JS: read", len(data), "<=", url)
             self.script += data
 
 
     def jsScriptSrc (self, url, language):
+        """Start a background download for <script src=""> tags"""
         assert self.state=='parse'
         ver = 0.0
         if language:
@@ -432,19 +437,21 @@ class HtmlFilter (HtmlParser,JSListener):
         self.popup_counter += 1
 
 
-    def jsEndElement (self, tag):
+    def jsEndElement (self, item):
         """parse generated html for scripts
            return True if the script generates any output, else False"""
         if len(self.buf)<2:
             return
+        #assert len(self.buf)>=2
         if self.buf[-1][0]!=DATA:
-            # <script></script>
+            # no data means we had <script></script>
             return
-        script = self.buf[-1][1].strip()
         if not (self.buf[-2][0]==STARTTAG and \
                 self.buf[-2][1]=='script'):
             # there was a <script src="..."> already
             return
+        # get script data
+        script = self.buf[-1][1].strip()
         # remove html comments
         if script.startswith("<!--"):
             i = script.find('\n')
@@ -454,8 +461,16 @@ class HtmlFilter (HtmlParser,JSListener):
                 script = script[(i+1):]
         if script.endswith("-->"):
             script = script[:-3]
-        if not script: return
-        return self.jsScript(script, 0.0)
+        if not script:
+            # again, ignore an empty script
+            del self.buf[-1]
+            del self.buf[-1]
+            return
+        if self.jsScript(script, 0.0):
+            del self.buf[-1]
+            del self.buf[-1]
+            return
+        self.buf.append(item)
 
 
     def errorfun (self, msg, name):
