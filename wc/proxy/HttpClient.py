@@ -79,7 +79,8 @@ class HttpClient (Connection):
             form = None
             # this object will call server_connected at some point
             WebConfig(self, '/error.html', form, self.protocol, self.headers,
-                  context={'error': err,}, status=status, msg=msg, auth=auth)
+                      localcontext={'error': err,}, status=status, msg=msg,
+                      auth=auth)
 
 
     def __repr__ (self):
@@ -373,10 +374,9 @@ class HttpClient (Connection):
 
     def try_google (self, url, response):
         debug(PROXY, '%s try_google %r', self, response)
-        context = get_google_context(url, response)
         form = None
         WebConfig(self, '/google.html', form, self.protocol, self.headers,
-                  context=context)
+                  localcontext=get_google_context(url, response))
 
 
     def server_content (self, data):
