@@ -41,9 +41,10 @@ The following changes were made:
 import os
 import socket
 import errno
-import OpenSSL
+
 import wc
 import wc.log
+import OpenSSL
 
 
 # map of sockets

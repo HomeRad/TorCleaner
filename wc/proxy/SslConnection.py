@@ -1,11 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 """ssl connection, usable for both client and server connections"""
 
-from OpenSSL import SSL
-
 import wc
 import wc.log
 import wc.proxy.Connection
+from OpenSSL import SSL
 
 
 class SslConnection (wc.proxy.Connection.Connection):

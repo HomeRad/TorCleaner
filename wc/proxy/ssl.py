@@ -2,9 +2,10 @@
 """ssl related utility functions"""
 
 import os
+
 import wc
-from OpenSSL import SSL, crypto
 import wc.log
+from OpenSSL import SSL, crypto
 
 
 def exist_certificates (configdir):

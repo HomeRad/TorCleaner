@@ -42,11 +42,11 @@ import base64
 import random
 import struct
 import time
-from Crypto.Hash import MD4
-from Crypto.Cipher import DES
 
 import wc
 import wc.log
+from Crypto.Hash import MD4
+from Crypto.Cipher import DES
 
 random.seed()
 
