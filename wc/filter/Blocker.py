@@ -164,7 +164,7 @@ class Blocker (Filter):
         return False
 
 
-    def allowed (self, urlTuple):
+    def allowed (self, url):
         for allowdomain in self.allowed_domains:
             if allowdomain in url:
                 return True
@@ -172,7 +172,7 @@ class Blocker (Filter):
             if allowurl in url:
                 return True
         for ro in self.allow:
-            mo = re.search(url)
+            mo = ro.search(url)
             if mo:
                 return True
         return False
