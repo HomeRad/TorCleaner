@@ -13,7 +13,7 @@ class ServerHandleDirectly (Server):
         self.connected = True
         client.server_response(self, response, status, headers)
         client.server_content(content)
-        client.server_close()
+        client.server_close(self)
         self.connected = False
 
 
