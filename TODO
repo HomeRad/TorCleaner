@@ -6,6 +6,8 @@ version 2.2
   (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
    client auth)
 
+- timeout exception is not printed in error page
+
 version 2.3 and above
 
 - HTTPS tunneling (RFC 2818)
