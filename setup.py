@@ -157,7 +157,7 @@ if USE_JS:
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
-       version = "1.8",
+       version = "1.9",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
