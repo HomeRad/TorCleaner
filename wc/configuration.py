@@ -84,8 +84,7 @@ filtermodules = [
     "Rewriter",
     "Replacer",
     "Compress",
-# XXX disabled
-#    "RatingHeader",
+    "RatingHeader",
     "VirusFilter",
     "MimeRecognizer",
 ]
@@ -310,8 +309,7 @@ rulenames = (
   u'nocomments',
   u'javascript',
   u'replace',
-# XXX disabled
-#  u'rating',
+  u'rating',
   u'antivirus',
 )
 _nestedtags = (
