@@ -21,30 +21,28 @@ __date__    = "$Date$"[7:-2]
 
 import os, sys
 from wc import i18n
-from wc.daemon import pidfile, watchfile, startfunc
 
-def start (parent_exit=True, do_profile=False):
+def start (startfunc, pidfile, parent_exit=True, do_profile=False):
     """start a daemon using the appropriate pidfile"""
     # already running?
     if os.path.exists(pidfile):
         return i18n._("""WebCleaner already started (lock file found).
 Do 'webcleaner stop' first."""), 1
     # forking (only under POSIX systems)
-    
+
     # the parent exits
-    if os.fork()!=0:
+    if os.fork() != 0:
         if parent_exit:
             os._exit(0)
         else:
-            return None
+            return 0, None
     # create new session and fork once more
     os.setsid()
-    pid = os.fork()
-    if pid != 0:
+    if os.fork() != 0:
         os._exit(0)
     # set umask
     os.umask(0177)
-    # we are logging into files, so close these files (except stderr
+    # we are logging into files, so close unused handles (except stderr
     # used by the logging module)
     os.close(sys.__stdin__.fileno())
     os.close(sys.__stdout__.fileno())
@@ -59,34 +57,33 @@ Do 'webcleaner stop' first."""), 1
         profile.run("startfunc", "webcleaner.prof")
     else:
         startfunc()
-    return None
+    return 0, None
 
 
-def stop ():
+def stop (pidfile):
     if not os.path.exists(pidfile):
         return i18n._("WebCleaner was not running (no lock file found)"), 0
     return _stop(pidfile)
 
 
-def _stop (_pidfile):
-    pid = int(file(_pidfile).read())
+def _stop (pidfile):
+    pid = int(file(pidfile).read())
     import signal
     msg = None
     try:
         os.kill(pid, signal.SIGTERM)
     except OSError:
         msg = i18n._("warning: could not terminate process PID %d")%pid
-    os.remove(_pidfile)
+    os.remove(pidfile)
     return msg, 0
 
 
-def startwatch (parent_exit=True, sleepsecs=5):
+def startwatch (startfunc, pidfile, watchfile, parent_exit=True, sleepsecs=5):
     """start a monitoring daemon for webcleaner"""
     import time
     if os.path.exists(watchfile):
         return i18n._("""Watch program already started (lock file found)."""), 1
-    pid = os.fork()
-    if pid!=0:
+    if os.fork() != 0:
         if parent_exit:
             raise SystemExit
         else:
@@ -97,25 +94,27 @@ def startwatch (parent_exit=True, sleepsecs=5):
     while 1:
         if os.path.exists(pidfile):
             pid = int(file(pidfile).read())
-            # linux
+            # linux specific?
             if not os.path.isdir("/proc/%d"%pid):
-                start(parent_exit=0)
+                # XXX detect zombie state?
+                start(startfunc, pidfile, parent_exit=False)
         else:
-            start(parent_exit=False)
+            start(startfunc, pidfile, parent_exit=False)
         time.sleep(sleepsecs)
     return "", 0
 
 
-def stopwatch ():
+def stopwatch (watchfile):
     """stop webcleaner and the monitor"""
     msg, status = stop() or ""
     if not os.path.exists(watchfile):
-        if msg: msg += "\n"
+        if msg:
+            msg += "\n"
         return msg+i18n._("Watcher was not running (no lock file found)"), 1
     return _stop(watchfile)
 
 
-def reload ():
+def reload (pidfile):
     if not os.path.exists(pidfile):
         return i18n._("WebCleaner is not running. Do 'webcleaner start' first."), 1
     pid = int(file(pidfile).read())

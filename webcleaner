@@ -145,7 +145,7 @@ try:
     psyco.profile()
 except:
     pass
-from wc import i18n, daemon
+from wc import i18n, daemon, startfunc
 
 _usage = i18n._("""USAGE\twebcleaner command
 
@@ -208,27 +208,41 @@ def main ():
     except getopt.error:
         type, value = sys.exc_info()[:2]
         _print_usage(value)
+    pidfile = daemon.pidfile
     for opt,arg in options:
         if opt=="-h" or opt=="--help":
             _print_help()
         elif opt=='--pidfile':
-            daemon.pidfile = arg
+            pidfile = arg
         else:
             _print_usage(i18n._("Unknown option %(option)s") % {'option':`opt`})
+    watchfile = pidfile+".watch"
     if len(args) < 1:
         _print_usage(i18n._("No command given."))
     else:
-        command=args[0]
+        command = args[0]
         if len(args) > 1:
             print i18n._("warning: only first command is valid")
     # start the command
-    if hasattr(daemon, command):
-        msg, status = getattr(daemon, command)()
-        if msg:
-	    print >>sys.stderr, msg
-        sys.exit(status)
+    if command=='start':
+        msg, status = daemon.start(startfunc, pidfile)
+    elif command=='startwatch':
+        msg, status = daemon.startwatch(startfunc, pidfile, watchfile)
+    elif command=='stop':
+        msg, status = daemon.stop(pidfile)
+    elif command=='stopwatch':
+        msg, status = daemon.stop(pidfile, watchfile)
+    elif command=='restart':
+        msg, status = daemon.restart(startfunc, pidfile)
+    elif command=='status':
+        msg, status = daemon.status(pidfile)
+    elif command=='reload':
+        msg, status = daemon.reload(pidfile)
     else:
         _print_usage(i18n._("Unknown command %s") % `command`)
+    if msg:
+        print >>sys.stderr, msg
+    sys.exit(status)
 
 
 def main_nt ():

@@ -26,11 +26,10 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os, sys
-from wc.daemon import pidfile
 from wc.debug import *
-from wc import i18n, configdata, startfunc
+from wc import i18n, configdata
 
-def start (parent_exit=True):
+def start (startfunc, pidfile, parent_exit=True):
     # already running?
     if os.path.exists(pidfile):
         return i18n._("""WebCleaner already started (lock file found).
@@ -64,7 +63,7 @@ Do 'webcleaner stop' first."""), 0
     return None, 0
 
 
-def start_nt (parent_exit=True):
+def start_nt (startfunc, pidfile, parent_exit=True):
     # no need to spawn in this thing
     # write pid in pidfile
     f = file(pidfile, 'w')
@@ -74,7 +73,7 @@ def start_nt (parent_exit=True):
     startfunc()
 
 
-def stop ():
+def stop (pidfile):
     if not os.path.exists(pidfile):
         return i18n._("WebCleaner was not running (no lock file found)"), 0
     pid = int(file(pidfile).read())
@@ -89,12 +88,12 @@ def stop ():
     return msg, 0
 
 
-def startwatch (parent_exit=True, sleepsecs=5):
-    start()
+def startwatch (startfunc, pidfile, parent_exit=True, sleepsecs=5):
+    start(startfunc, pidfile)
 
 
-def stopwatch ():
-    pass
+def stopwatch (pidfile):
+    stop(pidfile)
 
 
 def reload ():

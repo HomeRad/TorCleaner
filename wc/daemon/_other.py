@@ -20,20 +20,19 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import i18n
-from wc.daemon import startfunc
 
-def start (parent_exit=True):
+def start (startfunc, pidfile, parent_exit=True):
     """does not return"""
     startfunc()
 
-def stop ():
+def stop (pidfile):
     return "", 0
 
-def reload ():
+def reload (pidfile):
     return i18n._("reload not supported for this platform"), 1
 
-def startwatch (parent_exit=True, sleepsecs=5):
-    start()
+def startwatch (startfunc, pidfile, watchfile, parent_exit=True, sleepsecs=5):
+    start(startfunc, pidfile)
 
-def stopwatch ():
+def stopwatch (pidfile, watchfile):
     pass

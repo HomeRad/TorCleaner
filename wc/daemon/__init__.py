@@ -25,7 +25,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os, sys, re
-from wc import i18n, startfunc, Version, iswriteable, AppName
+from wc import i18n, Version, iswriteable, AppName
 
 is_safe_username = re.compile(r"^(?i)[a-z][-a-z_]*$").match
 
@@ -62,24 +62,23 @@ else:
 # last fallback: the current directory
 if not iswriteable(pidfile):
     pidfile = _fname
-watchfile = pidfile+".watch"
 
 
-def restart (parent_exit=True):
-    msg1, status = stop()
+def restart (startfunc, pidfile, parent_exit=True):
+    msg1, status = stop(pidfile)
     if status:
         return msg1, status
     # sleep 2 seconds, should be enough to clean up
     import time
     time.sleep(2)
-    msg2, status = start(parent_exit=parent_exit)
+    msg2, status = start(startfunc, pidfile, parent_exit=parent_exit)
     return (msg1 or "") + (msg2 or ""), status
 
 
-def status ():
+def status (pidfile):
     if os.path.exists(pidfile):
-        pid = open(pidfile).read()
-        return i18n._("WebCleaner is running (PID %s)") % pid, 0
+        pid = ing(file(pidfile).read())
+        return i18n._("WebCleaner is running (PID %d)")%pid, 0
     else:
         return i18n._("WebCleaner is not running (no lock file found)"), 3
 
