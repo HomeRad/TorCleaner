@@ -9,7 +9,7 @@ __date__    = "$Date$"[7:-2]
 
 import sys, os, time, socket, re
 from pprint import pformat
-from Connection import Connection
+from wc.proxy.Connection import Connection
 from wc import ip
 from wc.log import *
 from wc.proxy import dns as dnslib

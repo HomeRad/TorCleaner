@@ -4,17 +4,16 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from cStringIO import StringIO
 import dns_lookups, socket
-from wc.proxy.Headers import WcMessage
-from ServerPool import serverpool
-from ServerHandleDirectly import ServerHandleDirectly
+from cStringIO import StringIO
 from wc import i18n, config
 from wc.log import *
 from wc.url import document_quote
-
-from HttpServer import HttpServer
-from SslServer import SslServer
+from wc.proxy.Headers import WcMessage
+from wc.proxy.ServerPool import serverpool
+from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
+from wc.proxy.HttpServer import HttpServer
+from wc.proxy.SslServer import SslServer
 
 BUSY_LIMIT = 10
 

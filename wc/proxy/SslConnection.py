@@ -3,7 +3,7 @@
 
 import socket, errno, sys
 from wc.log import *
-from Connection import Connection, MAX_BUFSIZE, RECV_BUFSIZE, SEND_BUFSIZE
+from wc.proxy.Connection import Connection, MAX_BUFSIZE, RECV_BUFSIZE, SEND_BUFSIZE
 from OpenSSL import SSL
 
 

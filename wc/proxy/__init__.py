@@ -10,7 +10,7 @@ __date__    = "$Date$"[7:-2]
 import socket, select, re, time
 from wc import i18n, ip
 from wc.log import *
-from LimitQueue import LimitQueue
+from wc.proxy.LimitQueue import LimitQueue
 
 # test for IPv6, both in Python build and in kernel build
 has_ipv6 = False
@@ -70,6 +70,7 @@ def make_timer (delay, callback):
     TIMERS.sort()
 
 
+MAX_TIMEOUT = 60
 def run_timers ():
     "Run all timers ready to be run, and return seconds to the next timer"
     # Note that we will run timers that are scheduled to be run within
@@ -81,8 +82,10 @@ def run_timers ():
         callback = TIMERS[0][1]
         del TIMERS[0]
         callback()
-    if TIMERS: return TIMERS[0][0] - time.time()
-    else:      return 60
+    if TIMERS:
+        return min(TIMERS[0][0] - time.time(), MAX_TIMEOUT)
+    else:
+        return MAX_TIMEOUT
 
 
 from Dispatcher import socket_map
@@ -157,6 +160,10 @@ def mainloop (handle=None, stoppable=False):
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
+    if stoppable:
+        # regular abort check every second
+        global MAX_TIMEOUT
+        MAX_TIMEOUT = 1
     while True:
         # Installing a timeout means we're in a handler, and after
         # dealing with handlers, we come to the main loop, so we don't

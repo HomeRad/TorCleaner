@@ -4,7 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from StatefulConnection import StatefulConnection
+from wc.proxy.StatefulConnection import StatefulConnection
 from wc.log import *
 
 

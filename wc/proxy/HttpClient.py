@@ -6,18 +6,19 @@ __date__    = "$Date$"[7:-2]
 
 import time, cgi, urlparse, os
 from cStringIO import StringIO
-from StatefulConnection import StatefulConnection
-from ClientServerMatchmaker import ClientServerMatchmaker
-from ServerHandleDirectly import ServerHandleDirectly
-from UnchunkStream import UnchunkStream
 from wc import i18n, config
+from wc.proxy.StatefulConnection import StatefulConnection
+from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
+from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
+from wc.proxy.UnchunkStream import UnchunkStream
+from wc.proxy.Allowed import AllowedHttpClient
 from wc.proxy import get_http_version, fix_http_version
-from wc.url import spliturl, splitnport, url_norm, url_quote
-from Headers import client_set_headers, client_get_max_forwards, WcMessage
-from Headers import client_remove_encoding_headers, has_header_value
-from Headers import get_content_length, client_set_encoding_headers
+from wc.proxy.Headers import client_set_headers, client_get_max_forwards, WcMessage
+from wc.proxy.Headers import client_remove_encoding_headers, has_header_value
+from wc.proxy.Headers import get_content_length, client_set_encoding_headers
 from wc.proxy.auth import *
 from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE, NTLMSSP_CHALLENGE
+from wc.url import spliturl, splitnport, url_norm, url_quote
 from wc.log import *
 from wc.google import google_try_status, get_google_context
 from wc.webgui import WebConfig
@@ -27,7 +28,6 @@ from wc.filter import FILTER_REQUEST_DECODE
 from wc.filter import FILTER_REQUEST_MODIFY
 from wc.filter import FILTER_REQUEST_ENCODE
 from wc.filter import applyfilter, get_filterattrs, FilterRating
-from Allowed import AllowedHttpClient
 
 
 _all_methods = ['GET', 'HEAD', 'CONNECT', 'POST', 'PUT']
@@ -311,8 +311,7 @@ class HttpClient (StatefulConnection):
               not (has_header_value(headers, 'Proxy-Connection', 'Close') or
                    has_header_value(headers, 'Connection', 'Close'))
         else:
-            # note: never do persistent connections for HTTP/1.0 clients
-            self.persistent = False
+            self.persistent = has_header_value(headers, "Proxy-Connection", "Keep-Alive")
 
 
     def mangle_request_headers (self, headers):

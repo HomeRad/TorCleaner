@@ -4,7 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from Server import Server
+from wc.proxy.Server import Server
 
 class ServerHandleDirectly (Server):
     """Answer a server request with static data"""

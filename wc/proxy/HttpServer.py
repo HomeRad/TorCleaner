@@ -8,14 +8,14 @@ __date__    = "$Date$"[7:-2]
 import time, socket, re, urlparse, urllib
 
 from cStringIO import StringIO
-from Server import Server
+from wc.proxy.Server import Server
 from wc.proxy import make_timer, get_http_version, create_inet_socket
 from wc.proxy.auth import *
-from Headers import server_set_headers, server_set_content_headers, server_set_encoding_headers, remove_headers
-from Headers import has_header_value, WcMessage, get_content_length
+from wc.proxy.Headers import server_set_headers, server_set_content_headers, server_set_encoding_headers, remove_headers
+from wc.proxy.Headers import has_header_value, WcMessage, get_content_length
+from wc.proxy.ServerPool import serverpool
 from wc import i18n, config
 from wc.log import *
-from ServerPool import serverpool
 from wc.filter import applyfilter, get_filterattrs
 from wc.filter import FilterWait, FilterRating, FilterProxyError
 from wc.filter import FILTER_RESPONSE

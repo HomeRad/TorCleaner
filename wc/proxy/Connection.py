@@ -11,7 +11,7 @@ __date__    = "$Date$"[7:-2]
 
 import socket, errno
 from wc.log import *
-from Dispatcher import Dispatcher
+from wc.proxy.Dispatcher import Dispatcher
 
 # this is a critical value: setting it too low produces a lot of
 # applyfilter() calls with very few data

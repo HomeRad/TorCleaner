@@ -7,7 +7,7 @@ __date__    = "$Date$"[7:-2]
 import socket
 from wc import config
 from wc.log import *
-from Dispatcher import Dispatcher
+from wc.proxy.Dispatcher import Dispatcher
 
 
 class Listener (Dispatcher):

@@ -7,9 +7,9 @@ __date__    = "$Date$"[7:-2]
 from wc import i18n, magic
 from wc.log import *
 from rfc822 import Message
-from UnchunkStream import UnchunkStream
-from GunzipStream import GunzipStream
-from DeflateStream import DeflateStream
+from wc.proxy.UnchunkStream import UnchunkStream
+from wc.proxy.GunzipStream import GunzipStream
+from wc.proxy.DeflateStream import DeflateStream
 from cStringIO import StringIO
 import mimetypes
 # add bzip encoding

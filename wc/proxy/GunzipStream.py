@@ -16,7 +16,7 @@ __date__    = "$Date$"[7:-2]
 
 # Changes: fall back to non-gzip on error to defeat b0rked servers
 
-from DeflateStream import DeflateStream
+from wc.proxy.DeflateStream import DeflateStream
 from wc import i18n
 from wc.log import *
 

@@ -2,13 +2,13 @@
 """ssl client connection"""
 
 from wc import i18n
-from wc.log import *
-from HttpClient import HttpClient
-from wc.webgui import WebConfig
-from ClientServerMatchmaker import ClientServerMatchmaker
-from SslConnection import SslConnection
-from Allowed import AllowedSslClient
 from wc.url import spliturl, url_norm
+from wc.log import *
+from wc.webgui import WebConfig
+from wc.proxy.HttpClient import HttpClient
+from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
+from wc.proxy.SslConnection import SslConnection
+from wc.proxy.Allowed import AllowedSslClient
 
 
 class SslClient (HttpClient, SslConnection):

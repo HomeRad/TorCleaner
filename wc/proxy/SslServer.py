@@ -4,10 +4,10 @@
 import socket
 from wc import config
 from wc.log import *
-from HttpServer import HttpServer, flush_decoders
-from SslConnection import SslConnection
-from Headers import server_set_encoding_headers, server_set_content_headers
-from ssl import get_clientctx
+from wc.proxy.HttpServer import HttpServer, flush_decoders
+from wc.proxy.SslConnection import SslConnection
+from wc.proxy.Headers import server_set_encoding_headers, server_set_content_headers
+from wc.proxy.ssl import get_clientctx
 
 
 class SslServer (HttpServer, SslConnection):
