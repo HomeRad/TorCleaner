@@ -247,6 +247,10 @@ o embedded JavaScript engine and filtering
        'wcheaders.1',
        'webcleaner.conf.5',
       ]),
+     ('share/webcleaner/templates/classic',
+      ['templates/classic/blocked.html',
+       'templates/classic/error.html',
+      ]),
      ('share/webcleaner/examples',
       ['webcleanerconf.bat', 'wcheaders.bat', 'config/bl2wc.py']),
      ]
