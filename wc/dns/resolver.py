@@ -287,7 +287,7 @@ class Resolver(object):
           'ip6-loopback',
         ])
         # connected and active network interfaces
-        self.interfaces = []
+        self.interfaces = sets.Set()
         self.search = []
         self.search_patterns = ['www.%s.com', 'www.%s.org', 'www.%s.net', ]
         self.port = 53
