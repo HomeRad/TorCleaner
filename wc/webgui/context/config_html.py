@@ -151,10 +151,12 @@ def _form_filtermodules (form):
     for m in filtermodules:
         if m in newfilters and m not in config['filters']:
             config['filters'].append(m)
+            config['filters'].sort()
             config['filterdict'][m] = True
             info.append(i18n._("Enabled filter modules %s") % m)
         if m not in newfilters and m in config['filters']:
             config['filters'].remove(m)
+            config['filters'].sort()
             config['filterdict'][m] = False
             info.append(i18n._("Disabled filter modules %s") % m)
 

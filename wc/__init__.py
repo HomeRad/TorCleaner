@@ -381,6 +381,7 @@ class WConfigParser (BaseParser):
     def parse (self, filename, config):
         super(WConfigParser, self).parse(filename, config)
         self.config['configfile'] = filename
+        self.config['filters'].sort()
 
 
     def start_element (self, name, attrs):
