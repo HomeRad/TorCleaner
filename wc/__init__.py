@@ -162,10 +162,6 @@ class Configuration (dict):
         # read configuration
         self.read_proxyconf()
         self.read_filterconf()
-        if self['timeout']:
-            socket.setdefaulttimeout(self['timeout'])
-        else:
-            socket.setdefaulttimeout(None)
         if self['development']:
             # avoid conflicting servers if an official WebCleaner release
             # is installed
@@ -206,7 +202,7 @@ class Configuration (dict):
         self['localhosts'] = get_localhosts()
         self['mime_content_rewriting'] = Set()
         self['gui_theme'] = "classic"
-        self['timeout'] = 30
+        self['timeout'] = 10
         self['auth_ntlm'] = 0
         # in development mode some values have different defaults
         self['development'] = os.environ.get("WC_DEVELOPMENT", 0)
