@@ -63,15 +63,19 @@ class Blocker (Filter):
 	# strict whitelist mode (for parents)
 	self.strict_whitelist = config['strict_whitelist']
 
+
     def addrule (self, rule):
         Filter.addrule(self, rule)
         getattr(self, "add_"+rule.get_name())(rule)
 
+
     def add_allow (self, rule):
         self.allow.append(self.get_netloc_rule(rule))
 
+
     def add_block (self, rule):
         self.block.append(self.get_netloc_rule(rule))
+
 
     def get_netloc_rule (self, rule):
         _rule = []
@@ -82,12 +86,14 @@ class Blocker (Filter):
         _rule.append(rule.url)
         return _rule
 
+
     def add_blockdomains (self, rule):
         lines = self.get_file_data(rule.file)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
             self.blocked_domains.append(line)
+
 
     def add_allowdomains (self, rule):
         lines = self.get_file_data(rule.file)
@@ -96,6 +102,7 @@ class Blocker (Filter):
             if not line or line[0]=='#': continue
             self.allowed_domains.append(line)
 
+
     def add_blockurls (self, rule):
         lines = self.get_file_data(rule.file)
         for line in lines:
@@ -103,12 +110,14 @@ class Blocker (Filter):
             if not line or line[0]=='#': continue
             self.blocked_urls.append(line.split("/", 1))
 
+
     def add_allowurls (self, rule):
         lines = self.get_file_data(rule.file)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
             self.allowed_urls.append(line.split("/", 1))
+
 
     def get_file_data (self, filename):
         debug(FILTER, "reading %s", filename)
@@ -118,6 +127,7 @@ class Blocker (Filter):
         else:
             f = file(filename)
         return f.readlines()
+
 
     def doit (self, data, **args):
         debug(FILTER, "block filter working on %s", `data`)
@@ -147,8 +157,10 @@ class Blocker (Filter):
                 # XXX hmmm, what about CGI images?
                 # make HTTP HEAD request?
                 doc = self.block_url
-            return '%s %s HTTP/1.1' % (method, doc)
+            port = config['port']
+            return '%s http://localhost:%d%s HTTP/1.1' % (method, port, doc)
         return data
+
 
     def blocked (self, urlTuple):
         # check blocked domains
