@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Feb 17 00:34:49 2004\n"
+"POT-Creation-Date: Tue Feb 24 19:45:11 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -384,9 +384,6 @@ msgstr ""
 msgid "%(AppName)s configuration"
 msgstr ""
 
-msgid "Attributes"
-msgstr ""
-
 msgid "List of hostnames the proxy must not filter."
 msgstr ""
 
@@ -402,6 +399,9 @@ msgstr ""
 msgid "This page is also available in"
 msgstr ""
 
+msgid "Saved ratings"
+msgstr ""
+
 msgid "before"
 msgstr ""
 
@@ -410,6 +410,11 @@ msgid ""
 "the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
 "access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
 "access key."
+msgstr ""
+
+msgid ""
+"You can rate and review web pages according to\n"
+"several given categories."
 msgstr ""
 
 msgid "Response content data of mime types image/gif"
@@ -506,6 +511,9 @@ msgstr ""
 msgid "Content rated by %(AppName)s"
 msgstr ""
 
+msgid "Attributes"
+msgstr ""
+
 msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
@@ -541,9 +549,6 @@ msgid ""
 "spoofing attacks."
 msgstr ""
 
-msgid "Don't match URL"
-msgstr ""
-
 msgid "Parent proxy settings"
 msgstr ""
 
@@ -569,11 +574,6 @@ msgid "Folder already enabled."
 msgstr ""
 
 msgid "Password used for proxy authentitaction"
-msgstr ""
-
-msgid ""
-"You can of course always add your own filter rules, they will not be\n"
-"touched on a filter update."
 msgstr ""
 
 msgid "Folder successfully removed."
@@ -655,7 +655,7 @@ msgstr ""
 msgid "Applies to all pages starting with url?"
 msgstr ""
 
-msgid "Search in %(site)s"
+msgid "List of urls this rule should apply to"
 msgstr ""
 
 msgid "Rule image width successfully changed."
@@ -682,6 +682,11 @@ msgid ""
 msgstr ""
 
 msgid "Empty header rule name."
+msgstr ""
+
+msgid ""
+"You can of course always add your own filter rules, they will not be\n"
+"touched on a filter update."
 msgstr ""
 
 msgid "%(AppName)s filter rule configuration"
@@ -791,11 +796,6 @@ msgid "Email URL rating to %(Email)s"
 msgstr ""
 
 msgid "Rule successfully enabled."
-msgstr ""
-
-msgid ""
-"You can rate and review web pages according to\n"
-"several given categories."
 msgstr ""
 
 msgid "Nofilter host successfully added."
@@ -987,6 +987,9 @@ msgstr ""
 msgid "Response content data of text/html mime type."
 msgstr ""
 
+msgid "Search in %(site)s"
+msgstr ""
+
 msgid "Folder moved down."
 msgstr ""
 
@@ -1013,7 +1016,7 @@ msgstr ""
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
 msgstr ""
 
-msgid "Saved ratings"
+msgid "List of urls this rule must not apply to"
 msgstr ""
 
 msgid "New folder"
@@ -1327,9 +1330,6 @@ msgid "Invalid rewrite part name."
 msgstr ""
 
 msgid "New folder successfully created."
-msgstr ""
-
-msgid "Match URL"
 msgstr ""
 
 msgid "Configure rule %(rule)s."
