@@ -56,7 +56,6 @@ def initlog (filename):
         # log to file
         logfile = get_log_file("%s.log"%Name)
         handler = get_wc_handler(logfile)
-    logging.getLogger("root").addHandler(handler)
     logging.getLogger("wc").addHandler(handler)
     logging.getLogger("simpleTAL").addHandler(handler)
     logging.getLogger("simpleTALES").addHandler(handler)
@@ -113,8 +112,7 @@ def _get_log_file_nt (fname, trydir):
 
 def set_format (handler):
     """set standard format for handler"""
-    #handler.setFormatter(logging.Formatter("%(levelname)s %(asctime)s %(name)s %(message)s"))
-    handler.setFormatter(logging.Formatter("%(name)s %(message)s"))
+    handler.setFormatter(logging.root.handlers[0].formatter)
     return handler
 
 
