@@ -80,6 +80,8 @@ typedef struct {
     PyObject* error;
     /* encoding string  (default iso8859-1) */
     PyObject* encoding;
+    /* doctype string  (default HTML) */
+    PyObject* doctype;
 } UserData;
 
 #endif
