@@ -230,14 +230,14 @@ staticforward PyTypeObject parser_type;
     }
 }
 
-<PARAM2>\"([^"]|\\\")+\"       {
+<PARAM2>\"([^"]|\\\")+\"/[ \r\n\t>]   {
     _debug;
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
     CFREE(self->paramname);
     BEGIN(PARAM);
 }
 
-<PARAM2>\'([^']|\\')+\'       {
+<PARAM2>\'([^']|\\\')+\'/[ \r\n\t>]   {
     _debug;
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
     CFREE(self->paramname);

@@ -1,12 +1,12 @@
 test_parser
 HTML '<a b="c">'
-p starttag 'a' [('b', '"c"')]
+p starttag 'a' [('b', 'c')]
 HTML "<a b='c'>"
-p starttag 'a' [('b', "'c'")]
+p starttag 'a' [('b', 'c')]
 HTML '<a b=c">'
-p starttag 'a' [('b', 'c"')]
+p starttag 'a' [('b', 'c')]
 HTML '<a b="c>'
-p starttag 'a' [('b', '"c')]
+p starttag 'a' [('b', 'c')]
 HTML '<a b=>'
 p starttag 'a' [('b', '')]
 HTML '<a =c>'
@@ -23,6 +23,12 @@ HTML '<>'
 p starttag '' []
 HTML '< >'
 p starttag '' []
+HTML '<a b=c"><a b="c">'
+p starttag 'a' [('b', 'c')]
+p starttag 'a' [('b', 'c')]
+HTML '<a b="c><a b="c">'
+p starttag 'a' [('b', 'c')]
+p starttag 'a' [('b', 'c')]
 HTML '<!---->'
 p comment ''
 HTML '<!----->'
@@ -58,7 +64,7 @@ p endtag 'br/'
 HTML '<!DOCTYPE adrbook SYSTEM "adrbook.dtd">'
 p decl 'DOCTYPE' [('adrbook', None), ('SYSTEM', None), ('"adrbook.dtd"', None)]
 HTML '<?xml version="1.0" encoding="latin1"?>'
-p starttag '?xml' [('version', '1.0'), ('encoding', '"latin1"?')]
+p starttag '?xml' [('version', '1.0'), ('encoding', 'latin1"?')]
 subsequent interwoven parsing
 p starttag 'html' []
 p1 starttag 'html' []
