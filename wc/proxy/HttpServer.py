@@ -181,7 +181,6 @@ class HttpServer (Server):
                 self.attrs = self.nofilter
             else:
                 self.attrs = initStateObjects(self.headers, self.url)
-            debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", `self.headers.headers`)
             wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
@@ -217,7 +216,7 @@ class HttpServer (Server):
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
-        debug(HURT_ME_PLENTY, "Proxy: S/Headers", `self.headers.headers`)
+        debug(HURT_ME_PLENTY, "Proxy: S/Headers", `str(self.headers)`)
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()
@@ -348,10 +347,13 @@ class HttpServer (Server):
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
-        for i in _RESPONSE_FILTERS:
-            data = applyfilter(i, data, attrs=self.attrs)
-        if data:
-            self.client.server_content(data)
+        try:
+            for i in _RESPONSE_FILTERS:
+                data = applyfilter(i, data, attrs=self.attrs)
+            if data:
+                self.client.server_content(data)
+        except FilterException, msg:
+            debug(NIGHTMARE, "FilterException", msg)
         if (is_closed or
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
@@ -359,20 +361,21 @@ class HttpServer (Server):
                 print >>sys.stderr, "Warning: server received %d bytes "+\
                      "more than content-length" % (-self.bytes_remaining)
             # Either we ran out of bytes, or the decoder says we're done
-            debug(HURT_ME_PLENTY, "Proxy: S/contentfinished")
             self.state = 'recycle'
 
 
     def process_recycle (self):
         # We're done sending things to the client, and we can reuse
         # this connection
+        debug(NIGHTMARE, "Proxy: recycling", self)
         client = self.client
-        self.reuse()
-        self.flush(client)
+        self.client = None
+        self.flush(client, reuse="True")
 
 
-    def flush (self, client):
+    def flush (self, client, reuse=None):
         """flush data of decoders (if any) and filters"""
+        debug(NIGHTMARE, "Proxy: flushing", self)
         data = ""
         while self.decoders:
             data = self.decoders[0].flush()
@@ -386,7 +389,10 @@ class HttpServer (Server):
 	        client.server_content(data)
             self.attrs = {}
             client.server_close()
+            if reuse:
+                self.reuse()
         except FilterException, msg:
+            debug(NIGHTMARE, "Proxy: FilterException", msg)
             # the filter still needs some data from a different client
             # connection, so try flushing again after a while
             make_timer(0.5, lambda : HttpServer.flush(self, client))
