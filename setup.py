@@ -58,8 +58,6 @@ class MyInstall (install, object):
                 data.append('template_dir = %r' % \
                             os.path.normcase(os.path.join(base, 'templates')))
             data.append("%s = %r" % (attr, val))
-        from pprint import pformat
-        data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
 
 
