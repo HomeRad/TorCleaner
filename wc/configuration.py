@@ -209,7 +209,7 @@ class Configuration (dict):
             if os.stat(filename)[stat.ST_SIZE] == 0:
                 wc.log.warn(wc.LOG_PROXY, "Skipping empty file %r", filename)
                 continue
-            p = ZapperParser(filename, self)
+            p = ZapperParser(filename)
             p.parse()
             self['folderrules'].append(p.folder)
         # sort folders according to oid
@@ -338,11 +338,10 @@ class ParseException (Exception):
 class BaseParser (object):
     """base class for parsing xml config files"""
 
-    def __init__ (self, filename, _config):
+    def __init__ (self, filename):
         """initialize filename and configuration for this parser"""
         super(BaseParser, self).__init__()
         self.filename = filename
-        self.config = _config
         # error condition
         self.error = None
         # set by _preparse() and _postparse()
@@ -395,9 +394,9 @@ class BaseParser (object):
 class ZapperParser (BaseParser):
     """parser class for *.zap filter configuration files"""
 
-    def __init__ (self, filename, _config, compile_data=True):
+    def __init__ (self, filename, compile_data=True):
         """initialize filename, configuration and compile flag"""
-        super(ZapperParser, self).__init__(filename, _config)
+        super(ZapperParser, self).__init__(filename)
         from wc.filter.rules.FolderRule import FolderRule
         self.folder = FolderRule(filename=filename)
         self.cmode = None
@@ -458,6 +457,11 @@ class ZapperParser (BaseParser):
 
 class WConfigParser (BaseParser):
     """parser class for webcleaner.conf configuration files"""
+
+    def __init__ (self, filename, _config):
+        """initialize filename, configuration and compile flag"""
+        super(WConfigParser, self).__init__(filename)
+        self.config = _config
 
     def start_element (self, name, attrs):
         """handle xml configuration for webcleaner attributes and filter
