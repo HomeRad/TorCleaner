@@ -318,7 +318,16 @@ class Context:
 			self.locals [name] = value
 		else:
 			self.locals [name] = ContextVariable (value)
-		
+
+        def getContextVarsMap (self):
+                """return a mapping of all context variables"""
+                d = {}
+                for key, var in self.globals.items():
+                    d[key] = var.value()
+                for key, var in self.locals.items():
+                    d[key] = var.value()
+                return d
+
 	def popLocals (self):
 		self.locals = self.localStack.pop()
 		

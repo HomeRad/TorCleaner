@@ -88,7 +88,7 @@ METAL_FILL_SLOT=16
 METAL_DEFINE_MACRO=17
 
 # I18N Starts here
-# Argument: ???
+# Argument: translation string, endTagSymbol
 I18N_TRANSLATE = 18
 
 METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
@@ -364,9 +364,9 @@ class TemplateInterpreter:
 		self.programCounter += 1
 
 	def cmdOutput (self, command, args):
-                print "output", `args`, self.translateContent
                 if self.translator is not None and self.translateContent:
-                        self.file.write(self.translator.gettext(args))
+                        self.file.write(self.translator.gettext(args) % \
+                                        self.context.getContextVarsMap())
                 else:
                         self.file.write (args)
 		self.programCounter += 1
@@ -449,24 +449,24 @@ class TemplateInterpreter:
 		return
 
 	def cmdI18nTranslate (self, command, args):
-		""" args: translation string, endTagSymbol
+		""" args: translation string, translation args, endTagSymbol
                         Translate tag content. If the translation string is
                         an empty string, the translate message id is the tag
                         content. Otherwise, the value of the tag content is
                         the message id.
 		"""
+                # an empty string means use tag content as message id
 		if args[0] == "":
-			# an empty string means use tag content as message id
                         self.translateContent = 1
                 else:
                         result = self.context.evaluate (args[0], self.originalAttributes)
                         if not (result is None or result.isNothing() or result.isDefault()):
                                 if self.translator is not None:
-                                        self.tagContent = (0, self.translator.gettext(result.value()))
+                                        self.tagContent = (0, self.translator.gettext(result.value()) % \
+                                                              self.context.getContextVarsMap())
                                 else:
                                         self.tagContent = (0, result.value())
         			self.movePCForward = self.symbolTable[args[1]]
-                # XXX add a HTML "lang=XX" attribute here ?
                 self.programCounter += 1
 
 class Template:
@@ -1228,22 +1228,22 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 		
 	def handle_entityref (self, ref):
 		self.parseData ('&%s;' % ref)
-		
+
 	# Handle document type declarations
 	def handle_decl (self, data):
 		self.parseData ('<!%s>' % data)
-		
+
 	# Pass comments through un-affected.
 	def handle_comment (self, data):
 		self.parseData ('<!--%s-->' % data)
-		
+
 	def report_unbalanced (self, tag):
 		self.log.warn ("End tag %s present with no corresponding open tag.")
-			
+
 	def getTemplate (self):
 		template = HTMLTemplate (self.commandList, self.macroMap, self.symbolLocationTable)
 		return template
-			
+
 class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler):
 	def __init__ (self):
 		TemplateCompiler.__init__ (self)
