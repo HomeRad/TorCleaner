@@ -2,6 +2,9 @@ TODO
 
 version 2.23 and above
 
+- Mac OS X support for network interface list:
+  http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
+
 - SSL gateway seems to have a recursive redirection problem.
   Investigate this.
 

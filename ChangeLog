@@ -8,6 +8,11 @@
     missing.
     Type: bugfix
     Changed: wc/filter/MimeRecognizer.py
+    
+  * Only enable support for network interface configuration on
+    Linux and Windows platforms. All other are currently not supported.
+    Type: bugfix
+    Changed: wc/dns/ifconfig.py
 
 2.22 "Monster" (released 20.10.2004)
 
