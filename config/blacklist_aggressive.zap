@@ -1,11 +1,14 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder sid="wc.392" oid="8" title="Blacklist aggressive"
- desc="Automatically generated on 2003-05-23 20:35:03">
-
-<blockdomains sid="wc.390" oid="0" title="aggressive domain filter"
- desc="You should not edit this filter, only disable or delete it." filename="blacklists/aggressive/domains.gz"/>
-
-<blockurls sid="wc.391" oid="1" title="aggressive url filter"
- desc="You should not edit this filter, only disable or delete it." filename="blacklists/aggressive/urls.gz"/>
+<folder title="Blacklist aggressive"
+ desc="Automatically generated on 2003-08-08 00:08:19"
+ disable="0">
+<blockdomains
+ title="aggressive domain filter"
+ desc="You should not edit this filter, only disable or delete it."
+ file="blacklists/aggressive/domains.gz"/>
+<blockurls
+ title="aggressive url filter"
+ desc="You should not edit this filter, only disable or delete it."
+ file="blacklists/aggressive/urls.gz"/>
 </folder>
