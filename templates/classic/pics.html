@@ -13,7 +13,74 @@
 <body>
 <div metal:use-macro="macros/macros/nav">Navigation...</div>
 <div class="content" id="main">
-<p>XXX to be done...<span tal:replace="url">url</span></p>
+<p i18n:translate="">You can rate and review web pages according to
+several given categories.</p>
+
+<h2 i18n:translate="">URL rating</h2>
+<form action="pics.html" method="POST" name="picsform"
+ tal:attributes="action string:${filename}.${lang}">
+<table border="0" cellpadding="5" cellspacing="0" summary="">
+<tr>
+<td>
+<label for="url" i18n:translate=""
+ i18n:attributes="title URL to rate"
+ >URL</label>
+</td>
+<td>
+<input class="text" type="text" name="url" id="url"
+ value="http://imadoofus.com/" tal:attributes="value url">
+</td>
+</tr>
+<tr>
+<td>
+<label for="generic" i18n:translate=""
+ i18n:attributes="title Applies to all pages starting with url">Generic
+</label>
+</td>
+<td><input type="checkbox"><!-- XXX attributes --></td>
+</tr>
+<tr>
+<td i18n:translate="">Rating</td>
+<td>
+<table rules="cols" border="0" cellpadding="5" cellspacing="0" summary="">
+<thead>
+<tr style="border-bottom:1px solid black;">
+<th i18n:translate="">Category</th>
+<th colspan="3" i18n:translate="">Rating</th>
+</tr>
+</thead>
+<tbody>
+<tr tal:repeat="category pics_categories">
+<!-- XXX radio checked attrs -->
+<td tal:content="category">Violence</td>
+<td><input type="radio" name="rating" value="none"
+ tal:attributes="name string:rating${category}">
+<span i18n:translate="">None</span></td>
+<td><input type="radio" name="rating" value="mild"
+ tal:attributes="name string:rating${category}">
+<span i18n:translate="">Mild</span></td>
+<td><input type="radio" name="rating" value="heavy"
+ tal:attributes="name string:rating${category}">
+<span i18n:translate="">Heavy</span></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<input type="submit" value="Apply" class="submit"
+ i18n:attributes="value Apply">
+</td>
+</tr>
+</table>
+</form>
+
+<h2 i18n:translate="">Saved ratings</h2>
+<table tal:repeat="rating ratings_display" summary=""
+ border="0" cellpadding="5" cellspacing="0">
+<!-- XXX -->
+</table>
 </div>
 
 <div metal:use-macro="macros/macros/footer">Footer...</div>

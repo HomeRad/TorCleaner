@@ -76,6 +76,7 @@ def sort_seq (seq):
     l.sort()
     return l
 
+import ip, i18n
 
 config = None
 
@@ -466,7 +467,5 @@ class WConfigParser (BaseParser):
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
 
-
 from log import *
-import ip, i18n
 from wc.proxy import match_url, match_host

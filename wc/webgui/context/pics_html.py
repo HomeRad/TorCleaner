@@ -21,8 +21,15 @@ __date__    = "$Date$"[7:-2]
 from wc import AppName, Version, ConfigDir, config
 from wc.webgui.context import getval as _getval
 import cgi as _cgi
+from wc.filter.PICS import services as pics_data
+_entries_per_page = 50
 
 url = ""
+# list of pics service categories
+pics_categories = pics_data['webcleaner']['categories'].keys()
+# current index of entry to display
+curindex = 0
+entries_display = []
 
 # form execution
 def _exec_form (form):

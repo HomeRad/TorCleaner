@@ -31,6 +31,7 @@ from wc.filter.rules import recalc_up_down as _recalc_up_down
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.PICS import services as pics_data
+from wc.filter.PICS import pics_is_valid_value as _pics_is_valid_value
 
 # config vars
 info = {}
@@ -53,13 +54,6 @@ newrulenames.remove('blockurls')
 newrulenames.sort()
 # ruletype flag for tal condition
 ruletype = {}
-# pics data
-pics_services = pics_data.keys()
-pics_services.sort()
-pics_categories = {}
-for _service in pics_services:
-    pics_categories[_service] = pics_data[_service]['categories'].keys()
-    pics_categories[_service].sort()
 
 
 def _exec_form (form):
@@ -508,29 +502,43 @@ def _form_apply_nocomments (form):
 def _form_apply_pics (form):
     _form_rule_matchurl(form)
     # PICS services
-    # XXX error handling
-    for service in pics_services:
+    for service in pics_data.keys():
         if form.has_key("service_%s"%service):
             if not currule.ratings.has_key(service):
+                # service enable
                 currule.ratings[service] = {}
-                for category in pics_categories[service]:
-                    currule.ratings[service][category] = 0
                 info['ruleserviceenable'] = True
-        else:
-            if currule.ratings.has_key(service):
-                del currule.ratings[service]
-                info['ruleservicedisable'] = True
+        elif currule.ratings.has_key(service):
+            # service disable
+            del currule.ratings[service]
+            info['ruleservicedisable'] = True
         # service categories
         if currule.ratings.has_key(service):
-            for category in pics_categories[service]:
-                if form.has_key("category_%s_%s" % (service, category)):
-                    if not currule.ratings[service][category]:
-                        currule.ratings[service][category] = 1
-                        info['rulecategoryenable'] = True
+            for cat, catdata in pics_data[service]['categories'].items():
+                key = "category_%s_%s"%(service, cat)
+                if form.has_key(key):
+                    value = _getval(form, key)
+                    if not _pics_is_valid_value(catdata, value):
+                        error['picscategoryvalue'] = True
+                        return
+                    if cat not in currule.ratings[service]:
+                        currule.ratings[service][cat] = value
+                        if value:
+                            info['rulecategoryenable'] = True
+                        else:
+                            info['rulecategorydisable'] = True
+                    elif currule.ratings[service][cat]!=value:
+                        currule.ratings[service][cat] = value
+                        if value:
+                            info['rulecategoryenable'] = True
+                        else:
+                            info['rulecategorydisable'] = True
                 else:
-                    if currule.ratings[service][category]:
-                        currule.ratings[service][category] = 0
+                    # note: if fresh enabled, the categories are not yet
+                    # initialized with empty strings
+                    if currule.ratings[service].get(cat):
                         info['rulecategorydisable'] = True
+                    currule.ratings[service][cat] = ""
 
 
 def _form_apply_replace (form):

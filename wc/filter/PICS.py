@@ -1,43 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """Parse and filter PICS data.
 See http://www.w3.org/PICS/labels.html for more info.
-
-The following rating standard associations are supported
-(Servicematch is used to identify a service in a PICS label):
-
-Name: Internet Content Rating Association (ICRA)
-Url: http://www.icra.org/ratingsv02.html
-Servicematch: icra
-
-Name: Recreational Software Advisory Council (RSAC)
-Url: http://www.rsac.org/ratingsv01.html
-Servicematch: rsac
-
-Name: Safesurf
-Url: http://www.classify.org/safesurf/
-Servicematch: safesurv
-
-Name: Safe For Kids
-Url: http://www.weburbia.com/safe/ratings.htm
-Servicematch: weburbia
-
-Name: EvaluWeb
-Url: http://www.sserv.com/evaluweb/pics.html
-Servicematch: evaluweb
-
-Name: CyberNOT list (from CyberPatrol)
-Url: http://www.microsys.com/support/top_questions.aspx#8
-     http://pics.microsys.com (??? not viewable)
-Servicematch: microsys
-
-Name: Vancouver Web Pages
-Url: http://vancouver-webpages.com/VWP1.0/
-Servicematch: vancouver
-
-Name: WebCleaner PICS Service
-Url: http://webcleaner.sourceforge.net/pics/
-Url: http://www.kampfwurst.net/pics/
-Servicematch: webcleaner
 """
 # Copyright (C) 2003-2004  Bastian Kleineidam
 #
@@ -60,7 +23,7 @@ __date__    = "$Date$"[7:-2]
 import re, os
 import cPickle as pickle
 from wc.log import *
-from wc import i18n, ConfigDir
+from wc import i18n, ConfigDir, AppName
 from wc.filter import FilterException
 
 
@@ -73,121 +36,21 @@ class FilterPics (FilterException):
         return str(self)==FilterPics.MISSING
 
 
-# rating phrase searcher
-ratings = re.compile(r'r(atings)?\s*\((?P<rating>[^)]*)\)').finditer
-
 # PICS rating associations and their categories
-services = {
-  "webcleaner": {'name': 'WebCleaner',
-                 'categories': {'violence': 'v',
-                                'sex':      's',
-                                'language': 'l',
-                               },
-                },
-  "safesurf": {'name': 'Safesurf',
-               'categories': {'agerange':                '000',
-                              'profanity':               '001',
-                              'heterosexualthemes':      '002',
-                              'homosexualthemes':        '003',
-                              'nudity':                  '004',
-                              'violence':                '005',
-                              'sexviolenceandprofanity': '006',
-                              'intolerance':             '007',
-                              'druguse':                 '008',
-                              'otheradultthemes':        '009',
-                              'gambling':                '00A',
-                             },
-              },
-  "evaluweb": {'name': 'evaluWEB',
-               'categories': {'agerange': 'rating',
-                             },
-              },
-  "microsys": {'name': 'CyberNOT',
-               'categories': {'sexrating':   'sex',
-                              'otherrating': 'other',
-                             },
-              },
-  "icra":     {'name': 'ICRA',
-               'categories': {'language':                   'la',
-                              'chat':                       'ca',
-                              'moderatedchat':              'cb',
-                              'languageprofanity':          'lb',
-                              'languagemildexpletives':     'lc',
-                              'nuditygraphic':              'na',
-                              'nuditymalegraphic':          'nb',
-                              'nudityfemalegraphic':        'nc',
-                              'nuditytopless':              'nd',
-                              'nuditybottoms':              'ne',
-                              'nuditysexualacts':           'nf',
-                              'nudityobscuredsexualacts':   'ng',
-                              'nuditysexualtouching':       'nh',
-                              'nuditykissing':              'ni',
-                              'nudityartistic':             'nr',
-                              'nudityeducational':          'ns',
-                              'nuditymedical':              'nt',
-                              'drugstobacco':               'oa',
-                              'drugsalcohol':               'ob',
-                              'drugsuse':                   'oc',
-                              'gambling':                   'od',
-                              'weaponuse':                  'oe',
-                              'intolerance':                'of',
-                              'badexample':                 'og',
-                              'pgmaterial':                 'oh',
-                              'violencerape':               'va',
-                              'violencetohumans':           'vb',
-                              'violencetoanimals':          'vc',
-                              'violencetofantasy':          'vd',
-                              'violencekillinghumans':      've',
-                              'violencekillinganimals':     'vf',
-                              'violencekillingfantasy':     'vg',
-                              'violencejuryhumans':         'vh',
-                              'violencejuryanimals':        'vi',
-                              'violencejuryfantasy':        'vj',
-                              'violenceartistic':           'vr',
-                              'violenceeducational':        'vs',
-                              'violencemedical':            'vt',
-                              'violencesports':             'vu',
-                              'violenceobjects':            'vk',
-                             },
-              },
-  "rsac":     {'name': 'RSAC',
-               'categories': {'violence': 'v',
-                              'sex':      's',
-                              'nudity':   'n',
-                              'language': 'l',
-                             },
-              },
-  "weburbia": {'name': 'Weburbia',
-               'categories': {'rating': 's',
-                             },
-              },
-  "vancouver": {'name': 'Vancouver',
-               'categories': {'multiculturalism':       'MC',
-                              'educationalcontent':     'Edu',
-                              'environmentalawareness': 'Env',
-                              'tolerance':              'Tol',
-                              'violence':               'V',
-                              'sex':                    'S',
-                              'profanity':              'P',
-                              'safety':                 'SF',
-                              'canadiancontent':        'Can',
-                              'commercialcontent':      'Com',
-                              'gambling':               'Gam',
-                             },
-               },
-}
-
+services = {}
 
 pics_cachefile = os.path.join(ConfigDir, "pics.dat")
 
-
 def pics_cache_write ():
+    """write cached pics data to disk"""
     fp = file(pics_cachefile, 'wb')
     pickle.dump(pics_cache, fp, 1)
     fp.close()
 
 
 def pics_cache_load ():
+    """load cached pics data from disk or return an empty cache if no
+    cached data is found"""
     if os.path.isfile(pics_cachefile):
         fp = file(pics_cachefile)
         data = pickle.load(fp)
@@ -195,17 +58,22 @@ def pics_cache_load ():
         return data
     return {}
 
-
 pics_cache = pics_cache_load()
-
 
 def pics_is_cached (url):
     """return True iff PICS cache has entry for given url"""
-    return url in pics_cache
+    if url in pics_cache:
+        # exact match
+        return pics_cache[url]
+    for key in pics_cache.keys():
+        if url.startswith(key) and pics_cache[key].generic:
+            # prefix match
+            return pics_cache[key]
+    return None
 
 
 def pics_add (url, data):
-    """add new PICS data for given url in cache"""
+    """add new PICS data for given url in cache and write changes to disk"""
     pics_cache[url] = data
     pics_cache_write()
 
@@ -214,82 +82,111 @@ def pics_allow (url, rule):
     """asks cache if the rule allows the PICS data for given url
     Looks up cache to find PICS data, if not find will not allow the url
     """
-    if not pics_is_cached(url):
+    entry = pics_is_cached(url)
+    if entry is None:
         return FilterPics.MISSING
-    return check_pics(rule, pics_cache[url])
+    return check_pics(rule, entry)
 
 
-def check_pics (rule, labellist):
-    """parse and check PICS labels according to given PicsRule
-       return None if no rating is exceeded
-       return non-empty match message if some rating exceeds the configured
-       PicsRule rating levels
+_range_re = re.compile(r'^(\d*)-(\d*)$')
+def pics_is_valid_value (data, value):
+    if data["type"]=='int':
+        try:
+            value = int(value)
+        except ValueError:
+            return False
+        return (data["range"][0] <= value <= data["range"][1])
+    if data["type"]=='range':
+        mo = _range_re.match(value)
+        if not mo:
+            return False
+        rmin, rmax = mo.group(1), mo.group(2)
+        if data["range"][0] is not None and rmin is not None and \
+           rmin < data["range"][0]:
+            return False
+        if data["range"][1] is not None and rmax is not None and \
+           rmax > data["range"][1]:
+            return False
+        return True
+    return False
+
+
+# rating phrase searcher
+ratings = re.compile(r'r(atings)?\s*\((?P<rating>[^)]*)\)').finditer
+
+def check_pics_rule (pics, rule):
+    """check PICS labels according to given PicsRule
+
+       rule - the PicsRule object to check against
+       pics - the PICS label data
+
+       return -  non-empty match message if some rating exceeds the
+                 configured rule rating levels,
+                 else None
     """
-    last = 0
-    for mo in ratings(labellist):
-        rating = mo.group('rating')
-        debug(PICS, "rating %s", rating)
-        # the blurb contains the service name and options
-        blurb = labellist[last:mo.start()].lower()
-        debug(PICS, "blurb %s", blurb)
-        last = mo.end()
-        # check all in the rule configured PICS services
-        for service, options in rule.ratings.items():
-            # options has the configured rating values which get
-            # compared with the given rating
-            if blurb.find(service) != -1:
-                # sdata contains category names
-                sdata = services[service]
-                # check one PICS service
-                msg = check_service(rating, sdata['categories'],
-                                    sdata['name'], options)
-                # stop on the first match
-                if msg: return msg
+    # check all in the rule configured PICS services
+    for service, categories in rule.ratings.items():
+        if pics.service == service:
+            for category, data in categories.items():
+                if category in pics.categories:
+                    value = pics.categories[category].value
+                    if pics_in_range(data, value):
+                        return i18n._("PICS %s match") % category
+    # no match
     return None
 
 
-def check_service (rating, categories, name, options):
-    """find given categories in rating and compare the according option
-       value with the rating value.
-       If one of the ratings exceed its option value, return a non-empty
-       message, else return None.
-    """
-    for category, value in options.items():
-        category_label = categories[category]
-        msg = check_pics_option(rating, category_label, value,
-                                "%s %s" % (name, category));
-        # stop on the first match
-        if msg: return msg
-    return None
-
-
-def check_pics_option (rating, category_label, option, category):
-    """find the given label in rating and compare the value with
-       option. If the rating exceeds the option, a non-empty message
-       is returned, else None"""
-    mo = re.search(r'%s\s+(?P<val>\d+)'%category_label, rating)
-    if not mo:
-        # label not found
-        return None
-    # get the rating value
-    rating = int(mo.group("val"))
-    # XXX we do not support intervals (the PICS standard does)
-    # XXX we cast to an integer
-    if rating > option:
-        return i18n._("PICS %s match") % category
-    return None
+services['webcleaner'] = dict(
+   name = AppName,
+   # service homepage
+   home = 'http://webcleaner.sourceforge.net/pics/',
+   # submit ratings to service
+   submit = 'http://webcleaner.sourceforge.net/pics/submit',
+   # request ratings from service
+   request = 'http://webcleaner.sourceforge.net/pics/request',
+   # rating categories
+   # rating values are 0: None, 1: mild, 2: heavy
+   # age range is 0-.., for example "5-10" or "14-"
+   categories = dict(
+       v = dict(
+             name = i18n._('violence'),
+             type = 'int',
+             range = [0,2],
+           ),
+       s = dict(
+             name = i18n._('sex'),
+             type = 'int',
+             range = [0,2],
+           ),
+       l = dict(
+             name = i18n._('language'),
+             type = 'int',
+             range = [0,2],
+           ),
+       o = dict(
+             name = i18n._('other'),
+             type = 'int',
+             range = [0,2],
+           ),
+       a = dict(
+             name = i18n._('age range'),
+             type = 'range',
+             range = [0,None],
+           ),
+   ),
+)
 
 
 def _test ():
     from wc.filter.rules.PicsRule import PicsRule
-    labellist = """(pics-1.1
-"http://www.rsac.org/ratingsv01.html"
- l gen true for "http://www.jesusfilm.org"
- r (n  0 s
-    0 v 0 l 0))
-"http://www.icra.org/ratingsv02.html"
- l gen true for "http://www.jesusfilm.org"
- r (cz 1 lz 1 nz 1 oh 1 vz 1)
+    labellist = """
+(PICS-1.1
+ "http://webcleaner.sourceforge.net/pics/"
+ labels
+     generic true for "http://kampfesser.net/"
+     ratings (a 10-)
+     generic true for http://rotten.com/"
+     ratings (v 2 l 2 s 2)
  """
     rule = PicsRule()
     print check_pics(rule, labellist)

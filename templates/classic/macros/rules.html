@@ -287,23 +287,22 @@ Rule (don't) match url
 <tr valign="top"><td>
 <span i18n:translate="">PICS ratings</span>:
 </td><td>
-<div tal:repeat="service pics_services">
+<div tal:repeat="service pics_data/keys">
 <input tal:condition="currule/ratings/?service"
  type="checkbox" tal:attributes="name string:service_${service}" checked ><input 
  tal:condition="not:currule/ratings/?service"
  type="checkbox" tal:attributes="name string:service_${service}">&nbsp;<span
- i18n:translate="">Service</span>&nbsp;<span tal:content="pics_data/?service/name">Netnanny</span>
+ i18n:translate="">Service</span>&nbsp;<a href="http://imadoofus.com"
+ tal:attributes="href pics_data/?service/home"
+ tal:content="pics_data/?service/name">WebCleaner</a>
 <br>
 <div tal:condition="currule/ratings/?service"
- tal:repeat="category pics_categories/?service"
+ tal:repeat="category pics_data/?service/categories/keys"
  style="margin-left:30px;">
-<input tal:condition="currule/ratings/?service/?category"
- type="checkbox" checked
- tal:attributes="name string:category_${service}_${category}"><input
- tal:condition="not:currule/ratings/?service/?category"
- type="checkbox"
- tal:attributes="name string:category_${service}_${category}">&nbsp;<span
- i18n:translate="">Category</span>&nbsp;<span tal:content="category">adult</span>
+<input type="text" size="4"
+ tal:attributes="name string:category_${service}_${category};value currule/ratings/?service/?category"
+>&nbsp;<span
+ i18n:translate="">Category</span>&nbsp;<span tal:content="pics_data/?service/categories/?category/name">adult</span>
 </div>
 </div>
 </td>
@@ -362,7 +361,7 @@ Rule (don't) match url
 <tr valign="top"><td>
 <span i18n:translate="">Attributes</span>:
 </td><td>
-<table rules="cols" cellpadding="2">
+<table rules="cols" cellpadding="2" cellspacing="0" border="0">
 <thead>
 <tr style="border-bottom:1px solid black;">
 <td>&nbsp;</td>
