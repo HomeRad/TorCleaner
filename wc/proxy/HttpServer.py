@@ -194,15 +194,16 @@ class HttpServer(Server):
             return
 
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
-        for ro in config['mime_content_rewriting']:
-            if ro.match(self.headers.get('content-type')):
-                # remove content length
-                for h in self.headers.headers[:]:
-                    if re.match('(?i)content-length:', h):
-                        self.headers.headers.remove(h)
-                        self.bytes_remaining = None
+        if self.bytes_remaining is not None:
+            for ro in config['mime_content_rewriting']:
+                if ro.match(self.headers.get('content-type')):
+                    # remove content length
+                    for h in self.headers.headers[:]:
+                        if re.match('(?i)content-length:', h):
+                            self.headers.headers.remove(h)
+                            self.bytes_remaining = None
+                        break
                     break
-                break
         self.decoders = []
         if self.headers.has_key('transfer-encoding'):
             #debug(BRING_IT_ON, 'S/Transfer-encoding:', self.headers['transfer-encoding'])
@@ -356,7 +357,8 @@ def speedcheck_print_status():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        debug(BRING_IT_ON, 'speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
+        #debug(BRING_IT_ON, 'speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
+        pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
     make_timer(5, speedcheck_print_status)

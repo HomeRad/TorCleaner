@@ -104,6 +104,18 @@ doc:
 tar:	distclean
 	cd .. && tar cjvf webcleaner.tar.bz2 webcleaner2
 
+debug:
+	@for f in `find . -name \*.py`; do \
+	  cat $$f | sed 's/#debug(/debug(/' > $$f.bak; \
+	  mv -f $$f.bak $$f; \
+	done
+
+ndebug:
+	@for f in `find . -name \*.py`; do \
+	  cat $$f | sed 's/debug(/#debug(/' > $$f.bak; \
+	  mv -f $$f.bak $$f; \
+	done
+
 .PHONY: all clean localbuild distclean cleandeb deb_local deb_signed 
 .PHONY: deb_unsigned dist test gentest onlinetest offlinetest md5sums package
-.PHONY: filterfiles upload doc tar
+.PHONY: filterfiles upload doc tar debug ndebug

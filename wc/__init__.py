@@ -40,7 +40,7 @@ DebugLevel = 0
 Colorize = 0
 
 if Colorize:
-    def color(text, col=None, bgcol=None):
+    def color (text, col=None, bgcol=None):
         if (col is not None) and os.environ.get('TERM'):
             if bgcol is not None:
                 col = '%s;4%s' % (col, bgcol)
@@ -48,13 +48,13 @@ if Colorize:
         else:
             return text
 else:
-    def color(text, col=None, bgcol=None):
+    def color (text, col=None, bgcol=None):
         return text
 
 
 # debug function, using the debug level
 # XXX colorize?
-def debug(level, *args):
+def debug (level, *args):
     if level <= DebugLevel:
         print >>sys.stderr, " ".join(map(str, args))
 
@@ -66,7 +66,7 @@ except IOError:
     _ = lambda s: s
 
 
-def error(s):
+def error (s):
     print >>sys.stderr, "error:", s
 
 ErrorText = _("""<html><head>
@@ -76,7 +76,7 @@ WebCleaner Proxy Error %d %s<br>
 %s<br></center></body></html>""")
 ErrorLen = len(ErrorText)
 
-def startfunc():
+def startfunc ():
     if os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, reload_config)
@@ -85,13 +85,13 @@ def startfunc():
     wc.proxy.mainloop()
 
 # reload configuration
-def reload_config(signum, frame):
+def reload_config (signum, frame):
     config.read_filterconf()
     config.init_filter_modules()
 
 
 class Configuration(UserDict.UserDict):
-    def __init__(self):
+    def __init__ (self):
         """Initialize the options"""
         UserDict.UserDict.__init__(self)
         # reset to default
@@ -194,7 +194,7 @@ class ParseException(Exception): pass
 
 class BaseParser:
     def parse(self, filename, config):
-        debug("Parsing "+filename)
+        #debug("Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate()
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
@@ -276,7 +276,7 @@ class WConfigParser(BaseParser):
             elif self.config['logfile']:
                 self.config['logfile'] = open(self.config['logfile'], 'a')
         elif name=='filter':
-            debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
+            #debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 
 config = Configuration()

@@ -67,17 +67,18 @@ class Compress (Filter):
         Note that compression state is saved outside of this function
         in the compression object.
         """
-        if not attrs.has_key('compressobj'): return data
+        if not attrs.has_key('compressobj'):
+            return data
         compobj = attrs['compressobj']
         if compobj:
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                debug(NIGHTMARE, 'writing gzip header\n')
+                #debug(NIGHTMARE, 'writing gzip header\n')
             if data:
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                debug(NIGHTMARE, 'compressing %s\n' % `data`)
+                #debug(NIGHTMARE, 'compressing %s\n' % `data`)
                 data = header + compobj['compressor'].compress(data)
             else:
                 data = header
@@ -90,9 +91,9 @@ class Compress (Filter):
             if data:
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                debug(NIGHTMARE, 'final compressing %s\n' % `data`)
+                #debug(NIGHTMARE, 'final compressing %s\n' % `data`)
                 data = compobj['compressor'].compress(data)
-            debug(NIGHTMARE, 'finishing compressor\n')
+            #debug(NIGHTMARE, 'finishing compressor\n')
             data += compobj['compressor'].flush() + \
 	            struct.pack('<l', compobj['crc']) + \
 		    struct.pack('<l', compobj['size'])
@@ -104,10 +105,11 @@ class Compress (Filter):
                 compressobj = None
             else:
                 compressobj = getCompressObject()
-                headers['content-encoding'] += ', gzip'
+                headers['Content-Encoding'] += ', gzip'
         else:
             compressobj = getCompressObject()
-            headers['content-encoding'] = 'gzip'
+            headers['Content-Encoding'] = 'gzip'
+        #debug(HURT_ME_PLENTY, "compress filter getAttrs", headers)
         d = Filter.getAttrs(self, headers, url)
         d['compressobj'] = compressobj
         return d

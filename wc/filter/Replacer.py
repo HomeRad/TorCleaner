@@ -20,8 +20,6 @@ you can use this for
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
-from wc import debug,error
-from wc.debug_levels import *
 from wc.filter import FILTER_RESPONSE_MODIFY, Filter, compileRegex, compileMime
 
 # which filter stages this filter applies to (see filter/__init__.py)

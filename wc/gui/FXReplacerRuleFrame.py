@@ -24,12 +24,12 @@ class FXReplacerRuleFrame(FXRuleFrame):
     def onCmdSearch(self, sender, sel, ptr):
         self.rule.search = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed replace rule search value")
+        #debug(BRING_IT_ON, "Changed replace rule search value")
         return 1
 
     def onCmdReplace(self, sender, sel, ptr):
         self.rule.replace = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed replace rule replace value")
+        #debug(BRING_IT_ON, "Changed replace rule replace value")
         return 1
 

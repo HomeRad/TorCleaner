@@ -213,8 +213,7 @@ class ClientServerMatchmaker:
 
 
     def server_close(self):
-        #debug(BRING_IT_ON, 'resurrection failed',
-	#      self.server.sequence_number, self.server)
+        #debug(BRING_IT_ON, 'resurrection failed', self.server.sequence_number, self.server)
 
         # Look for a server again
         if self.server.sequence_number > 0:

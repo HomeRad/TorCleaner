@@ -16,8 +16,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
 from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, Filter, compileRegex
-from wc import debug,config
-from wc.debug_levels import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]

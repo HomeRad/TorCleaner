@@ -1,6 +1,4 @@
 from Connection import Connection
-from wc import debug
-from wc.debug_levels import *
 
 # XXX there should be an API for this class, and it should be moved
 # elsewhere
