@@ -1,3 +1,7 @@
+0.59
+  * add missing import of _, correct warning of unknown encoding
+    Changed files: wc/proxy/HttpServer.py
+  
 0.58:
   * Set the 'Via' HTTP header when forwarding requests/responses
   * Remove the Via header in the default filter configuration,
