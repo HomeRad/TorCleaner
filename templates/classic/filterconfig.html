@@ -14,6 +14,7 @@
  tal:content="t_filterconf">Filter configuration</a>
 </div>
 
+<div class="content">
 <div tal:repeat="item info">
 <span tal:replace="item">Info</span>
 </div>
@@ -38,13 +39,16 @@
 <td>
 <div tal:repeat="folder config/folderrules">
 <img tal:condition="folder/disable" src="disabled.png"
- tal:attributes="alt t_disabledfoldericon"><img 
- tal:condition="not:folder/disable" src="minifolder.png"
- tal:attributes="alt t_foldericon"><img 
+ tal:attributes="alt t_disabledfoldericon"><span
+ tal:condition="not:folder/disable"><img
+ tal:condition="not:folder/selected" src="minifolder.png"
+ tal:attributes="alt t_foldericon"><img
+ tal:condition="folder/selected" src="minifolderopen.png"
+ tal:attributes="alt t_foldericon"></span><img
  tal:condition="not:folder/up" src="blocked.png" width="12" alt=""><input
  type="image" src="up.png" border="0" tal:condition="folder/up"
  tal:attributes="name string:folder_up_${folder/oid}; title t_foldermoveup; alt t_up"
- ><img tal:condition="not:folder/down" src="blocked.png" width="12" alt=""><input 
+ ><img tal:condition="not:folder/down" src="blocked.png" width="12" alt=""><input
  type="image" src="down.png" border="0" tal:condition="folder/down"
  tal:attributes="name string:folder_down_${folder/oid}; title t_foldermovedown; alt t_down">
 <b tal:omit-tag="not:folder/selected">
@@ -131,7 +135,6 @@ Here is the rule configuration...
 </tbody>
 </table>
 </form>
-<br>
-<a href="/" tal:content="t_back">Back</a>
+</div>
 </body>
 </html>

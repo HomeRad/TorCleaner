@@ -1,6 +1,6 @@
 body {
     font-family: Verdana, Helvetica, Arial, sans-serif;
-    background: White;
+    background: #f7ebd3;
     color: Black;
     margin: 0;
     padding: 0;
@@ -14,59 +14,78 @@ body {
     scrollbar-arrow-color: #436976;
 }
 
-
 div.tabs {
     /* Navigational Plone Tabs(tm), implemented by customizing the a tag - they are surprisingly elegant. The power of CSS runs strong in these :) */
     background: transparent;
     border-collapse: collapse;
-    border-bottom-color: #8CACBB;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    padding: 0.5em 0em 0em 2em;
+    border-bottom-width: 2px;
+    border-bottom-style: dotted;
+    border-bottom-color: #f86821;
+    padding: 0em 0em 0em 2em;
     white-space: nowrap;
 }
 
 div.tabs a {
     /* The normal, unselected tabs. They are all links */
     background: transparent;
-    border-color: #8CACBB;
-    border-width: 1px; 
-    border-style: solid solid none solid;
-    color: #436976;
+    border-left-width: 10px;
+    border-left-style: solid;
+    border-left-color: #f86821;
+    color: #222222;
     font-weight: normal;
-    height: 1.2em;
-    margin-right: 0.5em;
-    padding: 0em 2em;
-    text-transform: lowercase;
+    /*height: 1.2em;*/
+    margin-right: 1.5em;
+    padding: 0em 0.5em;
+    text-decoration: none;
 }
 
 div.tabs a.selected {
     /* The selected tab. There's only one of this */
-    background: #DEE7EC;
-    border: 1px solid #8CACBB;
-    border-bottom: #DEE7EC 1px solid;
-    color: #436976;
+    background: #f8c218;
+    border-left-width: 10px;
+    border-left-style: solid;
+    border-left-color: #f85b0d;
+    color: #222222;
     font-weight: normal;
 }
 
 div.tabs a:hover {
-    background: #DEE7EC;
-    border-color: #8CACBB;
-    border-bottom-color: #DEE7EC;
-    color: #436976;
+    background: #f8c218;
+    border-color: #f85b0d;
+    color: black;
 }
 
+div.content {
+    /* the content container */
+    padding: 1em 2em 1em 2em;
+    color: #222222;
+}
+
+form {
+    border: none;
+    margin: 0;
+}
 
 input.context {
-    background-color: #8c0000;
-    color: #ffffff;
-    cursor: pointer;
-    font-family: Verdana, Helvetica, Arial, sans-serif;
-    font-size: 10pt;
-    margin: 0;
-    padding: 1px 4px 1px 4px;
-    border-top: 1px solid #d58686;
-    border-left: 1px solid #d58686;
-    border-right: 1px solid #2c0000;
-    border-bottom: 1px solid #2c0000;
+    font: 100% Verdana, Helvetica, Arial, sans-serif;
+    border: 1px solid #777777;
+    color: black;
+    background-color: white;
+    vertical-align: middle;
+    margin-bottom: 1px; /* IE bug fix */
+    padding: 0 0 0 0.1em;
+}
+
+textarea {
+    border: 1px solid #8cacbb;
+    color: Black;
+    background-color: white;
+    width: 88%;
+    padding: 0.1em;
+}
+
+select {
+    font: 100% Verdana, Helvetica, Arial, sans-serif;
+    border: 1px solid #8cacbb;
+    vertical-align: top;
 }

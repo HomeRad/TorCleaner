@@ -14,6 +14,7 @@
  tal:content="t_filterconf">Filter configuration</a>
 </div>
 
+<div class="content">
 <div tal:repeat="item info">
 <span tal:replace="item">Info</span>
 </div>
@@ -35,55 +36,55 @@
 <tr valign="top">
 <td><span tal:replace="port">Port number</span><a href="#restart">*</a></td>
 <td>
-  <input type="text" name="port" size="5" maxlength="5"
+  <input class="context" type="text" name="port" size="5" maxlength="5"
    tal:attributes="value config/strport">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="proxyuser">Proxy user</span></td>
 <td>
-  <input type="text" name="proxyuser" size="15"
+  <input class="context" type="text" name="proxyuser" size="20"
    tal:attributes="value config/proxyuser">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="proxypass">Proxy pass</span></td>
 <td>
-  <input type="password" name="proxypass" value="">
+  <input class="context" type="password" name="proxypass" value="" size="20">
+</td>
+</tr>
+<tr valign="top">
+<td><span tal:replace="timeout">Timeout (seconds)</span></td>
+<td>
+  <input class="context" type="text" name="timeout" value="" size="5" maxlength="5"
+   tal:attributes="value config/strtimeout">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxy">Parent proxy</span></td>
 <td>
-  <input type="text" name="parentproxy" size="20"
+  <input class="context" type="text" name="parentproxy" size="20"
    tal:attributes="value config/parentproxy">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxyport">Parent proxy port number</span></td>
 <td>
-  <input type="text" name="parentproxyport" size="5" maxlength="5"
+  <input class="context" type="text" name="parentproxyport" size="5" maxlength="5"
    tal:attributes="value config/strparentproxyport">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxyuser">Parent proxy user</span></td>
 <td>
-  <input type="text" name="parentproxyuser" size="15"
+  <input class="context" type="text" name="parentproxyuser" size="20"
    tal:attributes="value config/parentproxyuser">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxypass">Parent proxy pass</span></td>
 <td>
-  <input type="password" name="parentproxypass" value="">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="timeout">Timeout (seconds)</span></td>
-<td>
-  <input type="text" name="timeout" value="" size="5" maxlength="5"
-   tal:attributes="value config/strtimeout">
+  <input class="context" type="password" name="parentproxypass" value="" size="20">
 </td>
 </tr>
 <tr valign="top">
@@ -110,7 +111,7 @@
 <br>
 <input type="submit" name="addallowed" value="Add new"
  tal:attributes="value add">
-<input type="text" name="newallowed" value="" size="20">
+<input class="context" type="text" name="newallowed" value="" size="20">
 
 <br><br>
 
@@ -126,19 +127,19 @@
 <br>
 <input type="submit" name="addnofilter" value="Add new"
  tal:attributes="value add">
-<input type="text" name="newnofilter" value="" size="20">
+<input class="context" type="text" name="newnofilter" value="" size="20">
 
 </td>
 </tr>
 <tr>
 <td colspan="2">
   <input type="submit" value="Apply" tal:attributes="value configapply">
-  <a href="/" tal:content="back">Back</a>
 </td>
 </tr>
 </table>
 </form>
 <a name="restart">*</a>
 The marked options require a proxy restart to take effect.
+</div>
 </body>
 </html>
