@@ -125,7 +125,7 @@ class Connection (Dispatcher):
     def close_close (self):
         if self.connected:
             self.connected = False
-        super(Connection, self).close()
+            super(Connection, self).close()
 
 
     def handle_close (self):
