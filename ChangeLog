@@ -11,6 +11,10 @@
     Type: bugfix
     Changed: wc/__init__.py
 
+  * more fixes for the .exe binary installer
+    Type: bugfix
+    Changed: Makefile.am
+
 2.20 "The machinist" (released 16.10.2004)
   * Fixed service install (SF bug #1001556)
     Type: bugfix
