@@ -24,7 +24,7 @@
     - recognize IE window.createPopup() as a popup function
   * fixed parent proxy authentication in Basic and Digest mode
     Changed: wc/proxy/{basic,digest}.py, wc/proxy/HttpServer.py
-  * added NTLM proxy authentication
+  * added NTLM proxy authentication (UNTESTED)
     Changed: wc/proxy/Http{Client,Server}.py, wc/proxy/auth/__init__.py
     Added: wc/proxy/auth/{ntlm,des,des_c,des_data,md4,utils}.py
   * increase requested read/write data size on sockets to 4kB
@@ -57,7 +57,7 @@
     Changed: wc/webgui/simpletal/*.py, templates/classic/filterconfig.html
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031016
     Changed: js/*
-  * try to use psyco for speedup
+  * try to use psyco for speedup; see http://psyco.sf.net/ for more info
     Changed: webcleaner
   * do not try to write bytes when there is nothing to send (ie do
     not send 0 bytes)
