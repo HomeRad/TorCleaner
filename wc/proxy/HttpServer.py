@@ -76,6 +76,7 @@ class HttpServer (Server):
         self.reset()
         # attempt connect
         create_inet_socket(self, socket.SOCK_STREAM)
+        self.socket.settimeout(config['timeout'])
         try:
 	    self.connect(self.addr)
         except socket.error:
