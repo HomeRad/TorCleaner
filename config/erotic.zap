@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder sid="wc.330" oid="13" title="Erotic"
+<folder sid="wc.330" oid="12" title="Erotic"
  desc="Protect your children from looking erotic sites."
  disable="1">
 

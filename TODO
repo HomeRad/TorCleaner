@@ -2,8 +2,6 @@ TODO
 
 version 2.2
 
-- Zap ads at http://www.osnews.com/story.php?news_id=4521
-
 - support NTLM authentication, add README.squid example config
   (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
    client auth)
@@ -33,6 +31,7 @@ The file should be in PEM format. The OpenSSL command to generate a self-signed 
     openssl req -x509 -newkey rs:1024 -keyout test.pem -out test.pem -days 365 -nodes
 
 Note the '-nodes' flag - it's important!
+http://www.post1.com/home/ngps/m2/howto.ca.html
 
 
 HTTPS CERTIFICATES
