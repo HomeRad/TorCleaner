@@ -1,5 +1,5 @@
 --- /usr/share/doc/python2.3/examples/Tools/i18n/pygettext.py	2004-05-01 08:16:58.000000000 +0200
-+++ pygettext.py	2004-05-05 22:22:15.000000000 +0200
++++ pygettext.py	2004-05-05 22:25:33.000000000 +0200
 @@ -12,6 +12,8 @@
  # directory (including globbing chars, important for Win32).
  # Made docstring fit in 80 chars wide displays using pydoc.
@@ -9,7 +9,16 @@
  
  # for selftesting
  try:
-@@ -443,6 +445,9 @@
+@@ -164,6 +166,8 @@
+ import token
+ import tokenize
+ import operator
++import re
++import cgi
+ 
+ __version__ = '1.5'
+ 
+@@ -443,6 +447,9 @@
          self.__curfile = filename
          self.__freshmodule = 1
  
@@ -19,7 +28,7 @@
      def write(self, fp):
          options = self.__options
          timestamp = time.ctime(time.time())
-@@ -501,6 +506,110 @@
+@@ -501,6 +508,110 @@
                  print >> fp, 'msgstr ""\n'
  
  
@@ -130,7 +139,7 @@
  
  def main():
      global default_keywords
-@@ -620,6 +729,7 @@
+@@ -620,6 +731,7 @@
              expanded.extend(getFilesForName(arg))
      args = expanded
  
@@ -138,7 +147,7 @@
      # slurp through all the files
      eater = TokenEater(options)
      for filename in args:
-@@ -631,15 +741,21 @@
+@@ -631,15 +743,21 @@
          else:
              if options.verbose:
                  print _('Working on %s') % filename
@@ -167,7 +176,7 @@
          finally:
              if closep:
                  fp.close()
-@@ -651,10 +767,14 @@
+@@ -651,10 +769,14 @@
      else:
          if options.outpath:
              options.outfile = os.path.join(options.outpath, options.outfile)
