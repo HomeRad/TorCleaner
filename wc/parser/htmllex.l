@@ -61,21 +61,16 @@
     if ((*yylval)==NULL) return T_ERROR; \
     yyextra->tmp_tag = yyextra->tmp_attrs = NULL
 
-/* store collected attributes in dictionary
+/* store collected name as attribute in dictionary
  * tmp_attrname and tmp_attrval must be NULL
  */
 #define FLUSH_ATTRS \
     if (strlen(yyextra->tmp_buf) > 0) { \
         PYSTRING_TMP(yyextra->tmp_attrname); \
 	CLEAR_BUF(yyextra->tmp_buf); \
-	if (yyextra->tmp_attrval==NULL) { \
-	    Py_INCREF(Py_None); \
-	    yyextra->tmp_attrval = Py_None; \
-	} \
-        if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) return T_ERROR; \
+        if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) return T_ERROR; \
         Py_DECREF(yyextra->tmp_attrname); \
-        Py_DECREF(yyextra->tmp_attrval); \
-        yyextra->tmp_attrname = yyextra->tmp_attrval = NULL; \
+        yyextra->tmp_attrname = NULL; \
     }
 
 /* update the buffer position */
