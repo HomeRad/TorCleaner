@@ -17,13 +17,23 @@
 /* First, we deal with  platform-specific or compiler-specific issues. */
 
 /* begin standard C headers. */
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+/* %pop */
+/*(state = (true) */
 
+/* %if-tables-serialization */
+/* %endif */
 /* end standard C headers. */
 
+/* %push */
+/*(state = (true) */
+/* %c-or-c++ */
 /* flex integer type definitions */
 
 #ifndef FLEXINT_H
@@ -80,7 +90,14 @@ typedef unsigned int flex_uint32_t;
 
 #endif /* ! FLEXINT_H */
 
+/* %pop */
+/*(state = (true) */
 
+/* %push */
+/*(state = (true) */
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 
 #ifdef __cplusplus
 
@@ -139,6 +156,7 @@ typedef unsigned int flex_uint32_t;
  */
 #define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
 
+/* %if-reentrant */
 
 /* An opaque pointer. */
 #ifndef YY_TYPEDEF_YY_SCANNER_T
@@ -178,7 +196,10 @@ typedef void* yyscan_t;
 #define yy_flex_debug YY_G(yy_flex_debug_r)
 
 int yylex_init YY_PARAMS((yyscan_t* scanner));
+/* %endif */
 
+/* %if-not-reentrant */
+/* %endif */
 
 
 /* For compilers that need traditional function definitions.
@@ -241,7 +262,16 @@ int yylex_init YY_PARAMS((yyscan_t* scanner));
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
+/* %if-not-reentrant */
+/* %endif */
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
+/* %if-not-reentrant */
+/* %endif */
+/* %pop */
+/*(state = (true) */
 
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
@@ -311,8 +341,18 @@ typedef unsigned int yy_size_t;
 #define YY_STRUCT_YY_BUFFER_STATE
 struct yy_buffer_state
 	{
+/* %push */
+/*(state = (true) */
+/* %c-only */
 	FILE *yy_input_file;
+/* %pop */
+/*(state = (true) */
 
+/* %push */
+/*(state = (true) */
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 
 
 	char *yy_ch_buf;		/* input buffer */
@@ -369,8 +409,17 @@ struct yy_buffer_state
 	};
 #endif /* !YY_STRUCT_YY_BUFFER_STATE */
 
+/* %push */
+/*(state = (true) */
+/* %c-only Standard (non-C++) definition */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
+/* %if-not-reentrant */
+/* %endif */
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %pop */
+/*(state = (true) */
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -378,9 +427,16 @@ struct yy_buffer_state
  */
 #define YY_CURRENT_BUFFER yy_current_buffer
 
+/* %push */
+/*(state = (true) */
+/* %c-only Standard (non-C++) definition */
 
+/* %if-not-reentrant */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %endif */
 
 void yyrestart YY_PARAMS(( FILE *input_file YY_PROTO_LAST_ARG ));
 
@@ -398,6 +454,8 @@ YY_BUFFER_STATE yy_scan_buffer YY_PARAMS(( char *base, yy_size_t size YY_PROTO_L
 YY_BUFFER_STATE yy_scan_string YY_PARAMS(( yyconst char *yy_str YY_PROTO_LAST_ARG ));
 YY_BUFFER_STATE yy_scan_bytes YY_PARAMS(( yyconst char *bytes, int len YY_PROTO_LAST_ARG ));
 
+/* %pop */
+/*(state = (true) */
 
 void *yyalloc YY_PARAMS(( yy_size_t YY_PROTO_LAST_ARG ));
 void *yyrealloc YY_PARAMS(( void *, yy_size_t YY_PROTO_LAST_ARG ));
@@ -423,10 +481,13 @@ void yyfree YY_PARAMS(( void * YY_PROTO_LAST_ARG ));
 
 #define YY_AT_BOL() (YY_G(yy_current_buffer)->yy_at_bol)
 
+/* %% [1.0] yytext/yyin/yyout/yy_state_type/yylineno etc. def's & init go here */
 /* Begin user sect3 */
 
 #define yywrap(n) 1
 #define YY_SKIP_YYWRAP
+
+#define FLEX_DEBUG
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 typedef unsigned char YY_CHAR;
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
@@ -6827,24 +6888,35 @@ static yyconst flex_int32_t yy_nxt[][256] =
     } ;
 
 
+/* %push */
+/*(state = (true) */
+/* %c-only Standard (non-C++) definition */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 static yy_state_type yy_get_previous_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 static yy_state_type yy_try_NUL_trans YY_PARAMS(( yy_state_type current_state  YY_PROTO_LAST_ARG));
 static int yy_get_next_buffer YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 static void yy_fatal_error YY_PARAMS(( yyconst char msg[] YY_PROTO_LAST_ARG ));
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %pop */
+/*(state = (true) */
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
  */
 #define YY_DO_BEFORE_ACTION \
 	YY_G(yytext_ptr) = yy_bp; \
+/* %% [2.0] code to fiddle yytext and yyleng for yymore() goes here \ */\
 	yyleng = (size_t) (yy_cp - yy_bp); \
 	YY_G(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
+/* %% [3.0] code to copy yytext_ptr to yytext[] goes here, if %array \ */\
 	YY_G(yy_c_buf_p) = yy_cp;
 
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
+/* %% [4.0] data tables for the DFA and the user's section 1 definitions go here */
 #define YY_NUM_RULES 85
 #define YY_END_OF_BUFFER 86
 /* This struct is not used in this scanner,
@@ -6906,6 +6978,19 @@ static yyconst yy_state_type yy_NUL_trans[202] =
         0,    0,  199,    0,  194,    0,    0,    0,    0,  199,
 
         0
+    } ;
+
+static yyconst flex_int32_t yy_rule_linenum[85] =
+    {   0,
+      195,  200,  208,  213,  218,  223,  228,  235,  240,  245,
+      251,  256,  263,  269,  274,  282,  287,  292,  297,  302,
+      310,  315,  320,  326,  333,  340,  348,  366,  384,  389,
+      396,  402,  407,  412,  417,  422,  427,  432,  437,  442,
+      447,  454,  460,  465,  470,  475,  480,  485,  490,  495,
+      500,  506,  514,  522,  527,  532,  540,  556,  561,  567,
+      573,  579,  595,  611,  615,  620,  636,  652,  666,  681,
+      687,  702,  708,  713,  718,  726,  737,  743,  751,  762,
+      766,  773,  780,  787
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -7073,7 +7158,6 @@ static PyObject* quote_string (PyObject* val) {
 #define YY_NO_FLEX_REALLOC 1
 #define YY_NO_FLEX_FREE 1
 /* uncomment the next line for debugging */
-/*%option debug */
 #define YY_NO_UNPUT 1
 #define YY_MAIN 0
 #define YY_NEVER_INTERACTIVE 1
@@ -7111,7 +7195,8 @@ static PyObject* quote_string (PyObject* val) {
 
 #define S_STRING 17
 
-#line 7115 "htmllex.c"
+#line 7199 "htmllex.c"
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
@@ -7119,14 +7204,29 @@ static PyObject* quote_string (PyObject* val) {
  * The user has a chance to override it with an option.
  */
 #ifndef YY_NO_UNISTD_H
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #include <unistd.h>
+/* %pop */
+/*(state = (true) */
+/* %push */
+/*(state = (true) */
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 #endif /* !YY_NO_UNISTD_H */
 
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *
 #endif
 
+/* %push */
+/*(state = (true) */
+/* %c-only Reentrant structure and macros (non-C++). */
+/* %if-reentrant */
 
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t
@@ -7172,28 +7272,40 @@ struct yyguts_t
     int yy_more_len;
 #endif
 
+/* %if-bison-bridge */
     YYSTYPE * yylval_r;
 #if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
     YYLTYPE * yylloc_r;
 #endif
+/* %endif */
 
     };
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
+/* %not-for-header These go in the .c file only. */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 /* This must go here because YYSTYPE and YYLTYPE are included
  * from bison output in section 1.*/
+/* %if-reentrant */
+/* %if-bison-bridge */
 #    define yylval YY_G(yylval_r)
 #  if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
 #    define yylloc YY_G(yylloc_r)
 #  endif
+/* %endif */
+/* %endif */
 
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
+/* %endif */
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
@@ -7250,6 +7362,7 @@ int yyget_lineno YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 void yyset_lineno YY_PARAMS(( int line_number YY_PROTO_LAST_ARG ));
 #endif
 
+/* %if-bison-bridge */
 #ifndef YY_NO_GET_LVAL
 YYSTYPE * yyget_lval YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
@@ -7262,6 +7375,7 @@ void yyset_lval YY_PARAMS(( YYSTYPE * yylvalp YY_PROTO_LAST_ARG ));
     void yyset_lloc YY_PARAMS(( YYLTYPE * yyllocp YY_PROTO_LAST_ARG ));
 #endif
 #endif /* YYLTYPE */
+/* %endif */
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -7275,11 +7389,15 @@ extern int yywrap YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
 #endif
 
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 #ifndef YY_NO_UNPUT
 static void yyunput YY_PARAMS(( int c, char *buf_ptr  YY_PROTO_LAST_ARG));
 #endif
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %pop */
+/*(state = (true) */
 
 #ifndef yytext_ptr
 static void yy_flex_strncpy YY_PARAMS(( char *, yyconst char *, int YY_PROTO_LAST_ARG));
@@ -7290,19 +7408,33 @@ static int yy_flex_strlen YY_PARAMS(( yyconst char * YY_PROTO_LAST_ARG));
 #endif
 
 #ifndef YY_NO_INPUT
+/* %push */
+/*(state = (true) */
+/* %c-only Standard (non-C++) definition */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 #ifdef __cplusplus
 static int yyinput YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #else
 static int input YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #endif
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %pop */
+/*(state = (true) */
 #endif
 
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #if YY_STACK_USED
+/* %if-not-reentrant */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %endif */
 
 #ifndef YY_NO_PUSH_STATE
 static void yy_push_state YY_PARAMS(( int new_state YY_PROTO_LAST_ARG));
@@ -7319,6 +7451,8 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #define YY_NO_POP_STATE 1
 #define YY_NO_TOP_STATE 1
 #endif
+/* %pop */
+/*(state = (true) */
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
@@ -7328,10 +7462,16 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 /* Copy whatever the last rule matched to the standard output. */
 
 #ifndef ECHO
+/* %push */
+/*(state = (true) */
+/* %c-only Standard (non-C++) definition */
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
 #define ECHO (void) fwrite( yytext, yyleng, 1, yyout )
+/* %c++-only C++ definition */
+/* %pop */
+/*(state = (true) */
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -7339,6 +7479,7 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
  */
 #ifndef YY_INPUT
 #define YY_INPUT(buf,result,max_size) \
+/* %% [5.0] fread()/read() definition of YY_INPUT goes here unless we're doing C++ \ */\
 	errno=0; \
 	while ( (result = read( fileno(yyin), (char *) buf, max_size )) < 0 ) \
 	{ \
@@ -7351,6 +7492,11 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 		clearerr(yyin); \
 	}
 \
+/* %push\ */\
+/*(state = (true) */\
+/* %c++-only C++ definition \ */\
+/* %pop */
+/*(state = (true) */
 #endif
 
 /* No semi-colon after return; correct usage is to write "yyterminate();" -
@@ -7368,24 +7514,41 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 
 /* Report a fatal error. */
 #ifndef YY_FATAL_ERROR
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #define YY_FATAL_ERROR(msg) yy_fatal_error( msg YY_CALL_LAST_ARG)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 #endif
 
+/* %if-tables-serialization structures and prototypes */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
+/* %tables-yydmap generated elements */
+/* %endif */
 /* end tables serialization structures and prototypes */
 
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
 /* Default declaration of generated scanner - a define so the user can
  * easily add parameters.
  */
 #ifndef YY_DECL
+/* %push */
+/*(state = (true) */
+/* %c-only Standard (non-C++) definition */
 
 /* If the bison pure parser is used, then bison will provide
    one or two additional arguments. */
 
+/* %if-bison-bridge */
 #  if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
 #        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp, YYLTYPE * yyllocp YY_PROTO_LAST_ARG))
 #        define YY_LEX_DECLARATION YYFARGS2(YYSTYPE *,yylvalp, YYLTYPE *,yyllocp)
@@ -7393,12 +7556,18 @@ static int yy_top_state YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #        define YY_LEX_PROTO YY_PARAMS((YYSTYPE * yylvalp YY_PROTO_LAST_ARG))
 #        define YY_LEX_DECLARATION YYFARGS1(YYSTYPE *,yylvalp)
 #  endif
+/* %endif */
 
+/* %if-not-bison-bridge */
+/* %endif */
 
 
 extern int yylex YY_LEX_PROTO;
 
 #define YY_DECL int yylex YY_LEX_DECLARATION
+/* %c++-only C++ definition */
+/* %pop */
+/*(state = (true) */
 #endif
 
 
@@ -7414,27 +7583,36 @@ extern int yylex YY_LEX_PROTO;
 #define YY_BREAK break;
 #endif
 
+/* %% [6.0] YY_RULE_SETUP definition goes here */
 #define YY_RULE_SETUP \
 	YY_USER_ACTION
 
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 YY_DECL
 	{
 	register yy_state_type yy_current_state;
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
+/* %if-bison-bridge */
+/* %if-not-reentrant */
+/* %endif */
+/* %endif */
 
+/* %% [7.0] user's declarations go here */
 #line 185 "htmllex.l"
 #define YY_TABLES_VERIFY 0
 
 
   /*********************** EOF ************************/
-#line 7433 "htmllex.c"
+#line 7609 "htmllex.c"
 
+/* %if-bison-bridge */
     yylval = yylvalp;
 #if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)
     yylloc = yyllocp;
 #endif
+/* %endif */
 
 	if ( YY_G(yy_init) )
 		{
@@ -7453,10 +7631,22 @@ YY_DECL
 			YY_G(yy_start) = 1;	/* first start state */
 
 		if ( ! yyin )
+/* %push */
+/*(state = (true) */
+/* %c-only */
 			yyin = stdin;
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 
 		if ( ! yyout )
+/* %push */
+/*(state = (true) */
+/* %c-only */
 			yyout = stdout;
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 
 		if ( ! YY_G(yy_current_buffer) )
 			YY_G(yy_current_buffer) =
@@ -7467,6 +7657,7 @@ YY_DECL
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
+/* %% [8.0] yymore()-related code goes here */
 		yy_cp = YY_G(yy_c_buf_p);
 
 		/* Support of yytext. */
@@ -7477,6 +7668,7 @@ YY_DECL
 		 */
 		yy_bp = yy_cp;
 
+/* %% [9.0] code to set up and find next match goes here */
 		yy_current_state = YY_G(yy_start);
 yy_match:
 		while ( (yy_current_state = yy_nxt[yy_current_state][YY_SC_TO_UI(*yy_cp)]) > 0 )
@@ -7493,10 +7685,12 @@ yy_match:
 		yy_current_state = -yy_current_state;
 
 yy_find_action:
+/* %% [10.0] code to find the action number goes here */
 		yy_act = yy_accept[yy_current_state];
 
 		YY_DO_BEFORE_ACTION;
 
+/* %% [11.0] code for yylineno update goes here */
 #ifdef YY_USE_LINENO
 		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
 			{
@@ -7509,9 +7703,26 @@ yy_find_action:
 
 do_action:	/* This label is used only to access EOF actions. */
 
+/* %% [12.0] debug code goes here */
+		if ( yy_flex_debug )
+			{
+			if ( yy_act == 0 )
+				fprintf( stderr, "--scanner backing up\n" );
+			else if ( yy_act < 85 )
+				fprintf( stderr, "--accepting rule at line %ld (\"%s\")\n",
+				         (long)yy_rule_linenum[yy_act], yytext );
+			else if ( yy_act == 85 )
+				fprintf( stderr, "--accepting default rule (\"%s\")\n",
+				         yytext );
+			else if ( yy_act == 86 )
+				fprintf( stderr, "--(end of buffer or a NUL)\n" );
+			else
+				fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
+			}
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
+/* %% [13.0] actions go here */
 			case 0: /* must back up */
 			/* undo the effects of YY_DO_BEFORE_ACTION */
 			*yy_cp = YY_G(yy_hold_char);
@@ -8489,7 +8700,7 @@ YY_RULE_SETUP
 #line 791 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 8493 "htmllex.c"
+#line 8704 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -8554,6 +8765,7 @@ ECHO;
 
 			else
 				{
+/* %% [14.0] code to do back-up for compressed tables and set up yy_cp goes here */
 				yy_cp = YY_G(yy_c_buf_p);
 				goto yy_find_action;
 				}
@@ -8619,10 +8831,18 @@ ECHO;
 	} /* end of action switch */
 		} /* end of scanning one token */
 	} /* end of yylex */
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
+/* %push */
+/*(state = (true) */
+/* %c++-only */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
+/* %pop */
+/*(state = (true) */
 
 /* yy_get_next_buffer - try to read in a new buffer
  *
@@ -8632,8 +8852,15 @@ ECHO;
  *	EOB_ACT_END_OF_FILE - end of file
  */
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 static int yy_get_next_buffer YYFARGS0(void)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	register char *dest = YY_G(yy_current_buffer)->yy_ch_buf;
 	register char *source = YY_G(yytext_ptr);
@@ -8761,20 +8988,30 @@ static int yy_get_next_buffer YYFARGS0(void)
 
 	return ret_val;
 	}
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
 /* yy_get_previous_state - get the state just before the EOB char was reached */
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
+/* %not-for-header */
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
     static yy_state_type yy_get_previous_state YYFARGS0(void)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	register yy_state_type yy_current_state;
 	register char *yy_cp;
 
+/* %% [15.0] code to get the start state into yy_current_state goes here */
 	yy_current_state = YY_G(yy_start);
 
 	for ( yy_cp = YY_G(yytext_ptr) + YY_MORE_ADJ; yy_cp < YY_G(yy_c_buf_p); ++yy_cp )
 		{
+/* %% [16.0] code to find the next state goes here */
 		if ( *yy_cp )
 			{
 			yy_current_state = yy_nxt[yy_current_state][YY_SC_TO_UI(*yy_cp)];
@@ -8797,9 +9034,16 @@ static int yy_get_next_buffer YYFARGS0(void)
  * synopsis
  *	next_state = yy_try_NUL_trans( current_state );
  */
+/* %push */
+/*(state = (true) */
+/* %c-only */
     static yy_state_type yy_try_NUL_trans  YYFARGS1( yy_state_type, yy_current_state)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	register int yy_is_jam;
+/* %% [17.0] code to find the next state, and perhaps do backing up, goes here */
 	register char *yy_cp = YY_G(yy_c_buf_p);
 
 	yy_current_state = yy_NUL_trans[yy_current_state];
@@ -8818,8 +9062,14 @@ static int yy_get_next_buffer YYFARGS0(void)
 	}
 
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #ifndef YY_NO_UNPUT
     static void yyunput YYFARGS2( int,c, register char *,yy_bp)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	register char *yy_cp = YY_G(yy_c_buf_p);
 
@@ -8849,6 +9099,7 @@ static int yy_get_next_buffer YYFARGS0(void)
 
 	*--yy_cp = (char) c;
 
+/* %% [18.0] update yylineno here */
 #ifdef YY_USE_LINENO
     if ( c == '\n' )
         --yylineno;
@@ -8857,8 +9108,16 @@ static int yy_get_next_buffer YYFARGS0(void)
 	YY_G(yy_hold_char) = *yy_cp;
 	YY_G(yy_c_buf_p) = yy_cp;
 	}
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #endif	/* ifndef YY_NO_UNPUT */
+/* %pop */
+/*(state = (true) */
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
     static int yyinput YYFARGS0(void)
@@ -8866,6 +9125,9 @@ static int yy_get_next_buffer YYFARGS0(void)
     static int input  YYFARGS0(void)
 #endif
 
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 
 	{
 	int c;
@@ -8930,12 +9192,24 @@ static int yy_get_next_buffer YYFARGS0(void)
 	*YY_G(yy_c_buf_p) = '\0';	/* preserve yytext */
 	YY_G(yy_hold_char) = *++YY_G(yy_c_buf_p);
 
+/* %% [19.0] update BOL and yylineno */
 
 	return c;
 	}
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #endif	/* ifndef YY_NO_INPUT */
+/* %pop */
+/*(state = (true) */
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
     void yyrestart  YYFARGS1( FILE *,input_file)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	if ( ! YY_G(yy_current_buffer) )
 		YY_G(yy_current_buffer) =
@@ -8945,7 +9219,13 @@ static int yy_get_next_buffer YYFARGS0(void)
 	yy_load_buffer_state( YY_CALL_ONLY_ARG );
 	}
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
     void yy_switch_to_buffer  YYFARGS1( YY_BUFFER_STATE ,new_buffer)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	if ( YY_G(yy_current_buffer) == new_buffer )
 		return;
@@ -8970,7 +9250,13 @@ static int yy_get_next_buffer YYFARGS0(void)
 	}
 
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
     void yy_load_buffer_state  YYFARGS0(void)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	YY_G(yy_n_chars) = YY_G(yy_current_buffer)->yy_n_chars;
 	YY_G(yytext_ptr) = YY_G(yy_c_buf_p) = YY_G(yy_current_buffer)->yy_buf_pos;
@@ -8978,7 +9264,13 @@ static int yy_get_next_buffer YYFARGS0(void)
 	YY_G(yy_hold_char) = *YY_G(yy_c_buf_p);
 	}
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
     YY_BUFFER_STATE yy_create_buffer  YYFARGS2( FILE *,file, int ,size)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	YY_BUFFER_STATE b;
 
@@ -9002,7 +9294,13 @@ static int yy_get_next_buffer YYFARGS0(void)
 	return b;
 	}
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
     void yy_delete_buffer YYFARGS1( YY_BUFFER_STATE ,b)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	if ( ! b )
 		return;
@@ -9017,6 +9315,9 @@ static int yy_get_next_buffer YYFARGS0(void)
 	}
 
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #ifndef YY_ALWAYS_INTERACTIVE
 #ifndef YY_NEVER_INTERACTIVE
 #ifndef __cplusplus
@@ -9024,8 +9325,16 @@ extern int isatty YY_PARAMS(( int ));
 #endif /* __cplusplus */
 #endif /* !YY_NEVER_INTERACTIVE */
 #endif /* !YY_ALWAYS_INTERACTIVE */
+/* %pop */
+/*(state = (true) */
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
     void yy_init_buffer  YYFARGS2( YY_BUFFER_STATE ,b, FILE *,file)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 
 	{
 	int oerrno = errno;
@@ -9035,6 +9344,9 @@ extern int isatty YY_PARAMS(( int ));
 	b->yy_input_file = file;
 	b->yy_fill_buffer = 1;
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
 #if YY_ALWAYS_INTERACTIVE
 	b->yy_is_interactive = 1;
 #else
@@ -9044,10 +9356,19 @@ extern int isatty YY_PARAMS(( int ));
 	b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
 #endif
 #endif
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	errno = oerrno;
 	}
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
     void yy_flush_buffer YYFARGS1( YY_BUFFER_STATE ,b)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	if ( ! b )
 		return;
@@ -9072,6 +9393,9 @@ extern int isatty YY_PARAMS(( int ));
 
 
 #ifndef YY_NO_SCAN_BUFFER
+/* %push */
+/*(state = (true) */
+/* %c-only */
 YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 	{
 	YY_BUFFER_STATE b;
@@ -9100,10 +9424,15 @@ YY_BUFFER_STATE yy_scan_buffer  YYFARGS2( char *,base, yy_size_t ,size)
 
 	return b;
 	}
+/* %pop */
+/*(state = (true) */
 #endif
 
 
 #ifndef YY_NO_SCAN_STRING
+/* %push */
+/*(state = (true) */
+/* %c-only */
 YY_BUFFER_STATE yy_scan_string YYFARGS1( yyconst char *,yy_str)
 	{
 	int len;
@@ -9112,10 +9441,15 @@ YY_BUFFER_STATE yy_scan_string YYFARGS1( yyconst char *,yy_str)
 
 	return yy_scan_bytes( yy_str, len YY_CALL_LAST_ARG);
 	}
+/* %pop */
+/*(state = (true) */
 #endif
 
 
 #ifndef YY_NO_SCAN_BYTES
+/* %push */
+/*(state = (true) */
+/* %c-only */
 YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
 	{
 	YY_BUFFER_STATE b;
@@ -9145,11 +9479,19 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
 
 	return b;
 	}
+/* %pop */
+/*(state = (true) */
 #endif
 
 
 #ifndef YY_NO_PUSH_STATE
+/* %push */
+/*(state = (true) */
+/* %c-only */
     static void yy_push_state YYFARGS1( int ,new_state)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	if ( YY_G(yy_start_stack_ptr) >= YY_G(yy_start_stack_depth) )
 		{
@@ -9178,7 +9520,13 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
 
 
 #ifndef YY_NO_POP_STATE
+/* %push */
+/*(state = (true) */
+/* %c-only */
     static void yy_pop_state  YYFARGS0(void)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	if ( --YY_G(yy_start_stack_ptr) < 0 )
 		YY_FATAL_ERROR( "start-condition stack underflow" );
@@ -9189,7 +9537,13 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
 
 
 #ifndef YY_NO_TOP_STATE
+/* %push */
+/*(state = (true) */
+/* %c-only */
     static int yy_top_state  YYFARGS0(void)
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 	{
 	return YY_G(yy_start_stack)[YY_G(yy_start_stack_ptr) - 1];
 	}
@@ -9199,11 +9553,17 @@ YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,bytes, int ,len)
 #define YY_EXIT_FAILURE 2
 #endif
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
 static void yy_fatal_error YYFARGS1(yyconst char*, msg)
 	{
 	(void) fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 	}
+/* %c++-only */
+/* %pop */
+/*(state = (true) */
 
 /* Redefine yyless() so it works in section 3 code. */
 
@@ -9226,12 +9586,17 @@ static void yy_fatal_error YYFARGS1(yyconst char*, msg)
 
 /* Accessor  methods (get/set functions) to struct members. */
 
+/* %push */
+/*(state = (true) */
+/* %c-only */
+/* %if-reentrant */
 #ifndef YY_NO_GET_EXTRA
 YY_EXTRA_TYPE yyget_extra  YYFARGS0(void)
 {
     return yyextra;
 }
 #endif /* !YY_NO_GET_EXTRA */
+/* %endif */
 
 #ifndef YY_NO_GET_LINENO
 int yyget_lineno  YYFARGS0(void)
@@ -9268,12 +9633,14 @@ char *yyget_text  YYFARGS0(void)
 }
 #endif /* !YY_NO_GET_TEXT */
 
+/* %if-reentrant */
 #ifndef YY_NO_SET_EXTRA
 void yyset_extra YYFARGS1( YY_EXTRA_TYPE ,user_defined)
 {
     yyextra = user_defined ;
 }
 #endif /* !YY_NO_SET_EXTRA */
+/* %endif */
 
 #ifndef YY_NO_SET_LINENO
 void yyset_lineno YYFARGS1( int ,line_number)
@@ -9311,9 +9678,13 @@ void yyset_debug YYFARGS1( int ,bdebug)
     yy_flex_debug = bdebug ;
 }
 #endif /* !YY_NO_SET_DEBUG */
+/* %pop */
+/*(state = (true) */
 
+/* %if-reentrant */
 /* Accessor methods for yylval and yylloc */
 
+/* %if-bison-bridge */
 #ifndef YY_NO_GET_LVAL
 YYSTYPE * yyget_lval  YYFARGS0(void)
 {
@@ -9344,6 +9715,7 @@ void yyset_lloc YYFARGS1( YYLTYPE * ,yyllocp)
 #endif /* !YY_NO_SET_LLOC */
 
 #endif /* YYLTYPE */
+/* %endif */
 
 
 static int yy_init_globals YYFARGS0(void)
@@ -9421,7 +9793,11 @@ int yylex_init( ptr_yy_globals )
     return yy_init_globals ( *ptr_yy_globals );
     }
 
+/* %endif */
 
+/* %push */
+/*(state = (true) */
+/* %c-only SNIP! this currently causes conflicts with the c++ scanner */
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  YYFARGS0(void)
 {
@@ -9441,10 +9817,14 @@ int yylex_destroy  YYFARGS0(void)
     yyfree ( YY_G(yy_state_buf) YY_CALL_LAST_ARG);
 #endif
 
+/* %if-reentrant */
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner YY_CALL_LAST_ARG );
+/* %endif */
     return 0;
 }
+/* %pop */
+/*(state = (true) */
 
 
 /* Internal utility routines. */
@@ -9503,7 +9883,10 @@ void yyfree YYFARGS1( void *,ptr)
 	}
 #endif
 
+/* %if-tables-serialization definitions */
+/* %define-yytables   The name for this specific scanner's tables. */
 #define YYTABLES_NAME "yytables"
+/* %endif */
 
 #if YY_MAIN
 int main YY_PARAMS((void));
@@ -9511,15 +9894,20 @@ int main YY_PARAMS((void));
 int main ()
 	{
 
+/* %if-reentrant */
     yyscan_t lexer;
     yylex_init(&lexer);
     yylex( lexer );
     yylex_destroy( lexer);
 
+/* %endif */
+/* %if-not-reentrant */
+/* %endif */
 
 	return 0;
 	}
 #endif
+/* %ok-for-header */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 #line 791 "htmllex.l"
 #ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
@@ -9527,10 +9915,14 @@ int main ()
 
 int htmllexInit (void** scanner, UserData* data) {
     yylex_init(scanner);
-    /* uncomment the next line for debugging */
-    /*yyset_debug(1, *scanner);*/
     yyset_extra(data, *scanner);
     return 0;
+}
+
+int htmllexDebug (void** scanner, int debug) {
+    int old = yyget_debug(*scanner);
+    yyset_debug(debug, *scanner);
+    return old;
 }
 
 /* prepare scanner for calls to yylex() */

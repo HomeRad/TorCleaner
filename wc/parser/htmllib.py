@@ -40,9 +40,10 @@ class HtmlParser:
     warning(msg)
     fatalError(msg)
     """
-    def __init__ (self):
+    def __init__ (self, debug=0):
         """initialize the internal parser"""
         self.parser = htmlsax.parser(self)
+        self.debug = self.parser.debug
 
     def feed (self, data):
         """feed some data to the parser"""

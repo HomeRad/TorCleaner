@@ -97,6 +97,7 @@
 #define YYLEX_PARAM scanner
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern int htmllexInit (void** scanner, UserData* data);
+extern int htmllexDebug (void** scanner, int debug);
 extern int htmllexStart (void* scanner, UserData* data, const char* s, int slen);
 extern int htmllexStop (void* scanner, UserData* data);
 extern int htmllexDestroy (void* scanner);
@@ -180,7 +181,7 @@ typedef int YYSTYPE;
 
 
 /* Line 214 of yacc.c.  */
-#line 184 "htmlparse.c"
+#line 185 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -350,8 +351,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,    94,    94,    95,    98,    99,   106,   143,   192,   225,
-     256,   287,   318,   349,   389,   429
+       0,    95,    95,    96,    99,   100,   107,   144,   193,   226,
+     257,   288,   319,   350,   390,   430
 };
 #endif
 
@@ -1056,22 +1057,22 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 94 "htmlparse.y"
-    {;}
-    break;
-
-  case 3:
 #line 95 "htmlparse.y"
     {;}
     break;
 
+  case 3:
+#line 96 "htmlparse.y"
+    {;}
+    break;
+
   case 4:
-#line 98 "htmlparse.y"
+#line 99 "htmlparse.y"
     { YYACCEPT; /* wait for more lexer input */ ;}
     break;
 
   case 5:
-#line 100 "htmlparse.y"
+#line 101 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1081,7 +1082,7 @@ yyreduce:
     break;
 
   case 6:
-#line 107 "htmlparse.y"
+#line 108 "htmlparse.y"
     {
     /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
@@ -1121,7 +1122,7 @@ finish_start:
     break;
 
   case 7:
-#line 144 "htmlparse.y"
+#line 145 "htmlparse.y"
     {
     /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
@@ -1173,7 +1174,7 @@ finish_start_end:
     break;
 
   case 8:
-#line 193 "htmlparse.y"
+#line 194 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1209,7 +1210,7 @@ finish_end:
     break;
 
   case 9:
-#line 226 "htmlparse.y"
+#line 227 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1243,7 +1244,7 @@ finish_comment:
     break;
 
   case 10:
-#line 257 "htmlparse.y"
+#line 258 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1277,7 +1278,7 @@ finish_pi:
     break;
 
   case 11:
-#line 288 "htmlparse.y"
+#line 289 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1311,7 +1312,7 @@ finish_cdata:
     break;
 
   case 12:
-#line 319 "htmlparse.y"
+#line 320 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1345,7 +1346,7 @@ finish_doctype:
     break;
 
   case 13:
-#line 350 "htmlparse.y"
+#line 351 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1388,7 +1389,7 @@ finish_script:
     break;
 
   case 14:
-#line 390 "htmlparse.y"
+#line 391 "htmlparse.y"
     {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1431,7 +1432,7 @@ finish_style:
     break;
 
   case 15:
-#line 430 "htmlparse.y"
+#line 431 "htmlparse.y"
     {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1469,7 +1470,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1473 "htmlparse.c"
+#line 1474 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1663,7 +1664,7 @@ yyreturn:
 }
 
 
-#line 463 "htmlparse.y"
+#line 464 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1676,14 +1677,13 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     PyObject* handler;
     parser_object* p;
     if (!PyArg_ParseTuple(args, "O", &handler)) {
-	PyErr_SetString(PyExc_TypeError, "SAX2 handler object arg required");
 	return NULL;
     }
-    Py_INCREF(handler);
     if (!(p=PyObject_NEW(parser_object, &parser_type))) {
 	PyErr_SetString(PyExc_TypeError, "Allocating parser object failed");
 	return NULL;
     }
+    Py_INCREF(handler);
     /* reset userData */
     p->userData = PyMem_New(UserData, sizeof(UserData));
     p->userData->handler = handler;
@@ -1772,7 +1772,7 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
     }
     if (yyparse(self->scanner)!=0) {
         if (self->userData->exc_type!=NULL) {
-            /* note: we give away these objects, so dont decref */
+            /* note: we give away these objects, so don't decref */
             PyErr_Restore(self->userData->exc_type,
         		  self->userData->exc_val,
         		  self->userData->exc_tb);
@@ -1814,14 +1814,27 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 }
 
 
+/* set the debug level, if its >0, debugging is on, =0 means off */
+static PyObject* parser_debug(parser_object* self, PyObject* args) {
+    int debug;
+    if (!PyArg_ParseTuple(args, "i", &debug)) {
+        return NULL;
+    }
+    debug = htmllexDebug(&(self->scanner), debug);
+    return PyInt_FromLong((long)debug);
+}
+
+
 /* type interface */
 static PyMethodDef parser_methods[] = {
     /* incremental parsing */
-    {"feed",  (PyCFunction) parser_feed, METH_VARARGS},
+    {"feed",  (PyCFunction)parser_feed, METH_VARARGS},
     /* reset the parser (no flushing) */
-    {"reset", (PyCFunction) parser_reset, METH_VARARGS},
+    {"reset", (PyCFunction)parser_reset, METH_VARARGS},
     /* flush the parser buffers */
-    {"flush", (PyCFunction) parser_flush, METH_VARARGS},
+    {"flush", (PyCFunction)parser_flush, METH_VARARGS},
+    /* set debug level */
+    {"debug", (PyCFunction)parser_debug, METH_VARARGS},
     {NULL, NULL}
 };
 
@@ -1847,7 +1860,7 @@ statichere PyTypeObject parser_type = {
 
 /* python module interface */
 static PyMethodDef htmlsax_methods[] = {
-    {"parser", htmlsax_parser, METH_VARARGS},
+    {"parser", (PyCFunction)htmlsax_parser, METH_VARARGS},
     {NULL, NULL}
 };
 

@@ -11,6 +11,7 @@
 #define YYLEX_PARAM scanner
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern int htmllexInit (void** scanner, UserData* data);
+extern int htmllexDebug (void** scanner, int debug);
 extern int htmllexStart (void* scanner, UserData* data, const char* s, int slen);
 extern int htmllexStop (void* scanner, UserData* data);
 extern int htmllexDestroy (void* scanner);
@@ -472,14 +473,13 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     PyObject* handler;
     parser_object* p;
     if (!PyArg_ParseTuple(args, "O", &handler)) {
-	PyErr_SetString(PyExc_TypeError, "SAX2 handler object arg required");
 	return NULL;
     }
-    Py_INCREF(handler);
     if (!(p=PyObject_NEW(parser_object, &parser_type))) {
 	PyErr_SetString(PyExc_TypeError, "Allocating parser object failed");
 	return NULL;
     }
+    Py_INCREF(handler);
     /* reset userData */
     p->userData = PyMem_New(UserData, sizeof(UserData));
     p->userData->handler = handler;
@@ -568,7 +568,7 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
     }
     if (yyparse(self->scanner)!=0) {
         if (self->userData->exc_type!=NULL) {
-            /* note: we give away these objects, so dont decref */
+            /* note: we give away these objects, so don't decref */
             PyErr_Restore(self->userData->exc_type,
         		  self->userData->exc_val,
         		  self->userData->exc_tb);
@@ -610,14 +610,27 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 }
 
 
+/* set the debug level, if its >0, debugging is on, =0 means off */
+static PyObject* parser_debug(parser_object* self, PyObject* args) {
+    int debug;
+    if (!PyArg_ParseTuple(args, "i", &debug)) {
+        return NULL;
+    }
+    debug = htmllexDebug(&(self->scanner), debug);
+    return PyInt_FromLong((long)debug);
+}
+
+
 /* type interface */
 static PyMethodDef parser_methods[] = {
     /* incremental parsing */
-    {"feed",  (PyCFunction) parser_feed, METH_VARARGS},
+    {"feed",  (PyCFunction)parser_feed, METH_VARARGS},
     /* reset the parser (no flushing) */
-    {"reset", (PyCFunction) parser_reset, METH_VARARGS},
+    {"reset", (PyCFunction)parser_reset, METH_VARARGS},
     /* flush the parser buffers */
-    {"flush", (PyCFunction) parser_flush, METH_VARARGS},
+    {"flush", (PyCFunction)parser_flush, METH_VARARGS},
+    /* set debug level */
+    {"debug", (PyCFunction)parser_debug, METH_VARARGS},
     {NULL, NULL}
 };
 
@@ -643,7 +656,7 @@ statichere PyTypeObject parser_type = {
 
 /* python module interface */
 static PyMethodDef htmlsax_methods[] = {
-    {"parser", htmlsax_parser, METH_VARARGS},
+    {"parser", (PyCFunction)htmlsax_parser, METH_VARARGS},
     {NULL, NULL}
 };
 
