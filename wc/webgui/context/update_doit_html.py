@@ -18,7 +18,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc import AppName, Version, BaseUrl, config
+from wc import AppName, Version, config
 from wc.update import update as _update
 from cStringIO import StringIO as _StringIO
 
@@ -29,7 +29,7 @@ def _exec_form (form, lang):
     log = _StringIO()
     doreload = False
     try:
-        doreload = _update(config, BaseUrl, log=log, dryrun=False)
+        doreload = _update(config, log=log, dryrun=False)
         updatelog = log.getvalue()
         config.write_filterconf()
     except IOError, msg:
