@@ -28,17 +28,29 @@ from wc.strformat import strtime as _strtime
 
 _entries_per_page = 50
 
+# config vars
+info = {
+    "ratingupdated": False,
+    "ratingdeleted": False,
+}
+error = {
+    "categoryvalue": False,
+    "selindex": False,
+    "url": False,
+}
+ratings = {}
+values = {}
+rating_modified = {}
+
 def _reset_ratings ():
-    ratings.clear()
     for category, catdata in service['categories'].items():
         if catdata['rvalues']:
             ratings[category] = catdata['rvalues'][0]
         else:
             ratings[category] = ""
-    values.clear()
-    for category, value in ratings.items():
-        if category not in ["generic", "modified"]:
-            values[category] = {value: True}
+        values[category] = {}
+        for value in catdata['rvalues']:
+            values[category][value] = False
     rating_modified.clear()
 
 
@@ -52,12 +64,6 @@ def _calc_ratings_display ():
         rating_modified[_url] = t.replace(u" ", u"&nbsp;")
 
 
-# config vars
-info = {}
-error = {}
-ratings = {}
-values = {}
-rating_modified = {}
 _reset_ratings()
 url = u""
 generic = False
@@ -102,8 +108,10 @@ def _exec_form (form, lang):
 
 
 def _form_reset ():
-    info.clear()
-    error.clear()
+    for key in info.keys():
+        info[key] = False
+    for key in error.keys():
+        error[key] = False
     _reset_ratings()
     global url, generic, curindex
     url = u""
