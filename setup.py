@@ -159,7 +159,7 @@ extensions = [Extension('wc.parser.htmlsax',
 if os.name=='nt':
     extensions.append(Extension('wc.js.jslib',
                     sources=['wc/js/jslib.c'],
-                    define_macros = [('WIN32', None)],
+                    define_macros = [('WIN32', None), ('XP_WIN', None), ('EXPORT_JS_API', None)],
                     include_dirs = ['libjs'],
                     extra_compile_args = cargs,
                     extra_objects = ['libjs/.libs/libjs.a'],
