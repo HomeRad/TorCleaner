@@ -19,7 +19,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import tempfile, os, re
-from wc import AppName, ConfigDir, rulenames, Version, config
+from wc import AppName, ConfigDir, rulenames, Version, config, i18n
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
@@ -79,7 +79,7 @@ def _exec_form (form, lang):
         _form_selrule(_getval(form, 'selrule'))
     # make a new folder
     if form.has_key('newfolder'):
-        _form_newfolder(_getval(form, 'newfoldername'))
+        _form_newfolder(_getval(form, 'newfoldername'), lang)
     # rename current folder
     elif curfolder and form.has_key('renamefolder'):
         _form_renamefolder(_getval(form, 'foldername'), lang)
@@ -94,7 +94,7 @@ def _exec_form (form, lang):
         _form_removefolder(curfolder)
     # make a new rule in current folder
     elif curfolder and form.has_key('newrule'):
-        _form_newrule(_getval(form, 'newruletype'))
+        _form_newrule(_getval(form, 'newruletype'), lang)
     # disable current rule
     elif currule and form.has_key('disablerule%d'%currule.oid):
         _form_disablerule(currule)
@@ -212,14 +212,14 @@ def _reinit_filters ():
     config.init_filter_modules()
 
 
-def _form_newfolder (foldername):
+def _form_newfolder (foldername, lang):
     if not foldername:
         error['newfolder'] = True
         return
     fd, filename = tempfile.mkstemp(".zap", "local_", ConfigDir, text=True)
-    # select the new folder
+    # create and select the new folder
     global curfolder
-    curfolder = _FolderRule(titles={'en':foldername}, filename=filename)
+    curfolder = _FolderRule(titles={lang:foldername}, filename=filename)
     _register_rule(curfolder)
     prefix = config['development'] and "wc" or "lc"
     _generate_sids(prefix)
@@ -273,13 +273,14 @@ def _form_removefolder (folder):
     info['removefolder'] = True
 
 
-def _form_newrule (rtype):
+def _form_newrule (rtype, lang):
     if rtype not in rulenames:
         error['newrule'] = True
         return
     # add new rule
     rule = _GetRuleFromName(rtype)
     rule.parent = curfolder
+    rule.titles[lang] = i18n._("No title")
     # compile data and register
     rule.compile_data()
     prefix = config['development'] and "wc" or "lc"
