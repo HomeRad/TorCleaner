@@ -3,7 +3,7 @@ from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
-from wc import i18n
+from wc import i18n, ConfigDir, Configuration, Version
 from wc.XmlUtils import xmlify
 from FXPy.fox import *
 from wc.filter.rules.FolderRule import FolderRule
@@ -28,7 +28,7 @@ i18n._("You cannot remove folders. If you really want to get rid\n"
 "deleting it!")
 
 ModuleHelp = {
-"Rewriter" : i18n."""Rewrite HTML code. This is very powerful and can filter
+"Rewriter" : i18n._("""Rewrite HTML code. This is very powerful and can filter
 almost all advertising and other crap."""),
 
 "Replacer": i18n._("""Replace regular expressions in (HTML) data streams."""),
@@ -51,7 +51,7 @@ _proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
 
 import tempfile
 # set the directory for new files
-tempfile.tempdir = wc.ConfigDir
+tempfile.tempdir = ConfigDir
 
 
 class ConfWindow (ToolWindow):
@@ -110,13 +110,13 @@ class ConfWindow (ToolWindow):
         FXButton(frame, i18n._("A&pply"), None, self, self.ID_APPLY)
         FXButton(frame, i18n._("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
         daemonmenu = FXMenuPane(self)
-        FXMenuCommand(daemonmenu, i18n.("Start"), None, self, self.ID_PROXYSTART)
-        FXMenuCommand(daemonmenu, i18n.("Stop"), None, self, self.ID_PROXYSTOP)
-        FXMenuCommand(daemonmenu, i18n.("Restart"), None, self, self.ID_PROXYRESTART)
-        FXMenuCommand(daemonmenu, i18n.("Reload"), None, self, self.ID_PROXYRELOAD)
-        FXMenuCommand(daemonmenu, i18n.("Status"), None, self, self.ID_PROXYSTATUS)
-        FXMenuButton(frame, i18n.("Proxy"), None, daemonmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
-        FXButton(frame, i18n.("Update..."), None, self, self.ID_CONFUPDATE)
+        FXMenuCommand(daemonmenu, i18n._("Start"), None, self, self.ID_PROXYSTART)
+        FXMenuCommand(daemonmenu, i18n._("Stop"), None, self, self.ID_PROXYSTOP)
+        FXMenuCommand(daemonmenu, i18n._("Restart"), None, self, self.ID_PROXYRESTART)
+        FXMenuCommand(daemonmenu, i18n._("Reload"), None, self, self.ID_PROXYRELOAD)
+        FXMenuCommand(daemonmenu, i18n._("Status"), None, self, self.ID_PROXYSTATUS)
+        FXMenuButton(frame, i18n._("Proxy"), None, daemonmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
+        FXButton(frame, i18n._("Update..."), None, self, self.ID_CONFUPDATE)
         self.eventMap()
 
 
@@ -173,7 +173,7 @@ class ConfWindow (ToolWindow):
 	f = FXGroupBox(proxy_top, i18n._("Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         matrix = FXMatrix(f, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, i18n._("Version"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        FXLabel(matrix, wc.Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXLabel(matrix, i18n._("User\tRequire proxy authentication with the given user."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_PROXYUSER).setText(self.proxyuser)
         FXLabel(matrix, i18n._("Password\tRequire proxy authentication with the given password which is stored base64 encoded."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
@@ -634,7 +634,7 @@ class ConfWindow (ToolWindow):
             lines = urllib.urlopen(url+"md5sums").readlines()
             from glob import glob
             filemap = {}
-            for file in glob(wc.ConfigDir+"/*.zap"):
+            for file in glob(ConfigDir+"/*.zap"):
                 filemap[os.path.basename(file)] = file
             for line in lines:
                 if "<" in line:
@@ -683,7 +683,7 @@ class ConfWindow (ToolWindow):
     def readconfig (self):
         """read the configuration from disc"""
         #debug(BRING_IT_ON, "reading config")
-        self.config = wc.Configuration()
+        self.config = Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
          'debuglevel','logfile',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',

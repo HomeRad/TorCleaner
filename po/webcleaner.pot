@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Jan  5 15:38:51 2003\n"
+"POT-Creation-Date: Mon Jan  6 21:23:04 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,14 +14,6 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
-
-msgid ""
-"<html><head>\n"
-"<title>WebCleaner Proxy Error %d %s</title>\n"
-"</head><body bgcolor=\"#fff7e5\"><br><center><b>Bummer!</b><br>\n"
-"WebCleaner Proxy Error %d %s<br>\n"
-"%s<br></center></body></html>"
-msgstr ""
 
 msgid ""
 "\n"
@@ -73,15 +65,6 @@ msgid "Watcher was not running (no lock file found)"
 msgstr ""
 
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
-msgstr ""
-
-msgid "unknown buffer element %s"
-msgstr ""
-
-msgid "parsing %s: %s"
-msgstr ""
-
-msgid "Dont specify <enclose> with tag name %s"
 msgstr ""
 
 msgid ""
@@ -164,7 +147,7 @@ msgid ""
 "(standard out) or a filename (relative or absolute)."
 msgstr ""
 
-msgid "No proxy for"
+msgid "No filtering for"
 msgstr ""
 
 msgid ""
@@ -496,7 +479,7 @@ msgstr ""
 msgid "Suppress headers"
 msgstr ""
 
-msgid "About webcleaner"
+msgid "About WebCleaner"
 msgstr ""
 
 msgid "Proxy Authentication Required"
@@ -536,42 +519,6 @@ msgid "No response from server"
 msgstr ""
 
 msgid "Server closed connection"
-msgstr ""
-
-msgid "zlib error: not gzip format, disabling gunzip"
-msgstr ""
-
-msgid "zlib error: unknown compression method, disabling gunzip"
-msgstr ""
-
-msgid "%s access denied"
-msgstr ""
-
-msgid "Warning: client received %d bytes more than content-length"
-msgstr ""
-
-msgid "Warning: puzzling header received from host %s:"
-msgstr ""
-
-msgid "Warning: add Content-Type %s to %s"
-msgstr ""
-
-msgid "Warning: change Content-Type from %s to %s in %s"
-msgstr ""
-
-msgid "Warning: add Content-Encoding %s to %s"
-msgstr ""
-
-msgid "Warning: change Content-Encoding from %s to %s in %s"
-msgstr ""
-
-msgid "Warning: chunked encoding should not have Content-Length"
-msgstr ""
-
-msgid "Warning: unsupported encoding:"
-msgstr ""
-
-msgid "Warning: server received %d bytes more than content-length"
 msgstr ""
 
 msgid "%d days, %02d:%02d:%02d"

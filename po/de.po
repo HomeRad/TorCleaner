@@ -4,26 +4,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Sun Jan  5 15:38:51 2003\n"
+"POT-Creation-Date: Mon Jan  6 21:23:04 2003\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: latin1\n"
 "Generated-By: pygettext.py 1.5\n"
-
-msgid ""
-"<html><head>\n"
-"<title>WebCleaner Proxy Error %d %s</title>\n"
-"</head><body bgcolor=\"#fff7e5\"><br><center><b>Bummer!</b><br>\n"
-"WebCleaner Proxy Error %d %s<br>\n"
-"%s<br></center></body></html>"
-msgstr ""
-"<html><head>\n"
-"<title>WebCleaner Proxy Fehler %d %s</title>\n"
-"</head><body bgcolor=\"#fff7e5\"><br><center><b>Ja mei!</b><br>\n"
-"WebCleaner Proxy Fehler %d %s<br>\n"
-"%s<br></center></body></html>"
 
 msgid ""
 "\n"
@@ -89,15 +76,6 @@ msgstr "WebCleaner lief nicht (keine Lockdatei gefunden)"
 
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
 msgstr "WebCleaner läuft nicht. Führen Sie zuerst 'webcleaner start' aus."
-
-msgid "unknown buffer element %s"
-msgstr "Unbekannte Option %s"
-
-msgid "parsing %s: %s"
-msgstr "parse %s: %s"
-
-msgid "Dont specify <enclose> with tag name %s"
-msgstr "Keine Angabe von <enclose> mit Tagname %s"
 
 msgid ""
 "Updating procedure:\n"
@@ -194,8 +172,8 @@ msgid ""
 "(standard out) or a filename (relative or absolute)."
 msgstr ""
 
-msgid "No proxy for"
-msgstr "Kein Proxy für"
+msgid "No filtering for"
+msgstr ""
 
 msgid ""
 "Add\tAdd hostname and networks that are not filtered.\n"
@@ -537,7 +515,8 @@ msgstr "Nr. des gesp. Headers"
 msgid "Suppress headers"
 msgstr "Unterdrücke Header"
 
-msgid "About webcleaner"
+#, fuzzy
+msgid "About WebCleaner"
 msgstr "Über WebCleaner"
 
 msgid "Proxy Authentication Required"
@@ -578,47 +557,6 @@ msgstr "Keine Antwort vom Server"
 
 msgid "Server closed connection"
 msgstr "Server hat Verbindung geschlossen"
-
-msgid "zlib error: not gzip format, disabling gunzip"
-msgstr "zlib Fehler: kein gzip-Format, gunzip wird nicht ausgeführt"
-
-msgid "zlib error: unknown compression method, disabling gunzip"
-msgstr ""
-"zlib Fehler: unbekannte Kompressionsmethode, gunzip wird nicht ausgeführt"
-
-msgid "%s access denied"
-msgstr "%s Zugriff verboten"
-
-msgid "Warning: client received %d bytes more than content-length"
-msgstr "Warnung: client empfing %d Bytes mehr als angegebene Inhaltslänge"
-
-msgid "Warning: puzzling header received from host %s:"
-msgstr "Warnung: rätselhaften Header von Rechner %s empfangen"
-
-#, fuzzy
-msgid "Warning: add Content-Type %s to %s"
-msgstr "Warnung: %s erratener Inhaltstyp (%s)"
-
-#, fuzzy
-msgid "Warning: change Content-Type from %s to %s in %s"
-msgstr "Warnung: %s erratener Inhaltstyp (%s)"
-
-#, fuzzy
-msgid "Warning: add Content-Encoding %s to %s"
-msgstr "Warnung: %s erratene Kodierung (%s)"
-
-#, fuzzy
-msgid "Warning: change Content-Encoding from %s to %s in %s"
-msgstr "Warnung: %s erratene Kodierung (%s)"
-
-msgid "Warning: chunked encoding should not have Content-Length"
-msgstr "Warnung: chunked Kodierung darf keine Inhaltslänge besitzen"
-
-msgid "Warning: unsupported encoding:"
-msgstr "Warnung: nicht unterstützte Kodierung"
-
-msgid "Warning: server received %d bytes more than content-length"
-msgstr "Warnung: Server empfing %d Bytes mehr als angegebene Inhaltslänge"
 
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d Tage, %02d:%02d:%02d"
@@ -682,6 +620,72 @@ msgstr "Warnung: nur der erste Befehl ist gültig"
 
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
+
+#~ msgid ""
+#~ "<html><head>\n"
+#~ "<title>WebCleaner Proxy Error %d %s</title>\n"
+#~ "</head><body bgcolor=\"#fff7e5\"><br><center><b>Bummer!</b><br>\n"
+#~ "WebCleaner Proxy Error %d %s<br>\n"
+#~ "%s<br></center></body></html>"
+#~ msgstr ""
+#~ "<html><head>\n"
+#~ "<title>WebCleaner Proxy Fehler %d %s</title>\n"
+#~ "</head><body bgcolor=\"#fff7e5\"><br><center><b>Ja mei!</b><br>\n"
+#~ "WebCleaner Proxy Fehler %d %s<br>\n"
+#~ "%s<br></center></body></html>"
+
+#~ msgid "unknown buffer element %s"
+#~ msgstr "Unbekannte Option %s"
+
+#~ msgid "parsing %s: %s"
+#~ msgstr "parse %s: %s"
+
+#~ msgid "Dont specify <enclose> with tag name %s"
+#~ msgstr "Keine Angabe von <enclose> mit Tagname %s"
+
+#~ msgid "No proxy for"
+#~ msgstr "Kein Proxy für"
+
+#~ msgid "zlib error: not gzip format, disabling gunzip"
+#~ msgstr "zlib Fehler: kein gzip-Format, gunzip wird nicht ausgeführt"
+
+#~ msgid "zlib error: unknown compression method, disabling gunzip"
+#~ msgstr ""
+#~ "zlib Fehler: unbekannte Kompressionsmethode, gunzip wird nicht ausgeführt"
+
+#~ msgid "%s access denied"
+#~ msgstr "%s Zugriff verboten"
+
+#~ msgid "Warning: client received %d bytes more than content-length"
+#~ msgstr "Warnung: client empfing %d Bytes mehr als angegebene Inhaltslänge"
+
+#~ msgid "Warning: puzzling header received from host %s:"
+#~ msgstr "Warnung: rätselhaften Header von Rechner %s empfangen"
+
+#, fuzzy
+#~ msgid "Warning: add Content-Type %s to %s"
+#~ msgstr "Warnung: %s erratener Inhaltstyp (%s)"
+
+#, fuzzy
+#~ msgid "Warning: change Content-Type from %s to %s in %s"
+#~ msgstr "Warnung: %s erratener Inhaltstyp (%s)"
+
+#, fuzzy
+#~ msgid "Warning: add Content-Encoding %s to %s"
+#~ msgstr "Warnung: %s erratene Kodierung (%s)"
+
+#, fuzzy
+#~ msgid "Warning: change Content-Encoding from %s to %s in %s"
+#~ msgstr "Warnung: %s erratene Kodierung (%s)"
+
+#~ msgid "Warning: chunked encoding should not have Content-Length"
+#~ msgstr "Warnung: chunked Kodierung darf keine Inhaltslänge besitzen"
+
+#~ msgid "Warning: unsupported encoding:"
+#~ msgstr "Warnung: nicht unterstützte Kodierung"
+
+#~ msgid "Warning: server received %d bytes more than content-length"
+#~ msgstr "Warnung: Server empfing %d Bytes mehr als angegebene Inhaltslänge"
 
 #~ msgid "Warning: %s guessed Content-Type (%s) != server Content-Type (%s)"
 #~ msgstr "Warnung: %s erratener Inhaltstyp (%s) != Server Inhaltstyp (%s)"

@@ -15,6 +15,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import wc, wc.filter.rules
+from wc.XmlUtils import xmlify, unxmlify
 from types import IntType
 
 class Rule:
@@ -49,7 +50,7 @@ class Rule:
     def fill_attrs (self, attrs, name):
         for attr in self.attrnames:
             if attrs.has_key(attr):
-                val = wc.unxmlify(attrs[attr]).encode('iso8859-1')
+                val = unxmlify(attrs[attr]).encode('iso8859-1')
                 setattr(self, attr, val)
         for attr in self.intattrs:
             val = getattr(self, attr)
@@ -68,10 +69,10 @@ class Rule:
 
     def toxml (self):
         s = "<"+self.get_name()
-        s += ' title="%s"' % wc.xmlify(self.title)
+        s += ' title="%s"' % xmlify(self.title)
 	s += ' oid="%d"' % self.oid
         if self.desc:
-            s += '\n desc="%s"' % wc.xmlify(self.desc)
+            s += '\n desc="%s"' % xmlify(self.desc)
         if self.disable:
             s += '\n disable="1"'
         return s

@@ -27,7 +27,10 @@ SOURCES=\
 ../wc/gui/ToolApp.py \
 ../wc/gui/ToolWindow.py \
 ../wc/gui/__init__.py \
-../wc/debug_levels.py \
+../wc/debug.py \
+../wc/i18n.py \
+../wc/AnsiColor.py \
+../wc/XmlUtils.py \
 ../wc/proxy/ClientServerMatchmaker.py \
 ../wc/proxy/Connection.py \
 ../wc/proxy/DeflateStream.py \
