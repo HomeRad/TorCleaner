@@ -517,27 +517,37 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
     }
+    /* reset parser variables */
+    RESIZE_BUF(self->userData->tmp_buf);
+    Py_XDECREF(self->userData->tmp_tag);
+    Py_XDECREF(self->userData->tmp_attrs);
+    Py_XDECREF(self->userData->tmp_attrval);
+    Py_XDECREF(self->userData->tmp_attrname);
+    self->userData->tmp_tag = self->userData->tmp_attrs =
+	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
+    self->userData->bufpos = 0;
     if (strlen(self->userData->buf)) {
+        int error = 0;
 	PyObject* s = PyString_FromString(self->userData->buf);
 	PyObject* callback = NULL;
 	PyObject* result = NULL;
-	if (s==NULL) return NULL;
-	if (PyObject_HasAttrString(self->userData->handler, "characters")==1) {
-	    callback = PyObject_GetAttrString(self->userData->handler, "characters");
-	    if (callback==NULL) return NULL;
-	    result = PyObject_CallFunction(callback, "O", s);
-	    if (result==NULL) return NULL;
-	}
-	Py_DECREF(callback);
-	Py_DECREF(result);
-	Py_DECREF(s);
 	/* reset buffer */
 	RESIZE_BUF(self->userData->buf);
-        self->userData->bufpos = 0;
+	if (s==NULL) { error=1; goto finish_flush; }
+	if (PyObject_HasAttrString(self->userData->handler, "characters")==1) {
+	    callback = PyObject_GetAttrString(self->userData->handler, "characters");
+	    if (callback==NULL) { error=1; goto finish_flush; }
+	    result = PyObject_CallFunction(callback, "O", s);
+	    if (result==NULL) { error=1; goto finish_flush; }
+	}
+    finish_flush:
+	Py_XDECREF(callback);
+	Py_XDECREF(result);
+	Py_XDECREF(s);
+	if (error==1) {
+	    return NULL;
+	}
     }
-    RESIZE_BUF(self->userData->tmp_buf);
-    self->userData->tmp_tag = self->userData->tmp_attrs =
-	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
     return Py_BuildValue("i", res);
 }
 
