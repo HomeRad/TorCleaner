@@ -682,23 +682,18 @@ def _form_apply_rating (form):
         if category is None:
             # unknown category
             error['categoryvalue'] = True
-            return False
+            return
         if category.iterable:
             realvalue = value
         else:
             realvalue = _intrange_from_string(value)
         if not category.valid_value(realvalue):
             error['categoryvalue'] = True
-            return False
-            if catname not in currule.ratings:
-                currule.ratings[catname] = value
-                info['rulecategory'] = True
-            elif currule.ratings[catname] != value:
-                currule.ratings[catname] = value
-                info['rulecategory'] = True
-        elif catname in currule.ratings:
+            return
+        if currule.ratings[catname] != value:
+            currule.ratings[catname] = value
+            currule.compile_values()
             info['rulecategory'] = True
-            del currule.ratings[catname]
 
 
 def _form_apply_replace (form):
