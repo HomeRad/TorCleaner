@@ -56,6 +56,8 @@ class HttpServer (Server):
 
     def __repr__ (self):
         extra = self.request()
+        if self.client:
+            extra += " client"
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)
 
