@@ -63,7 +63,7 @@
 
 <rewrite title="Adverts in the path name 2" oid="11"
  desc="Kill links with ad words in the path name.">
-<attr>/(banner(s|_redirect)|clickit|werbung)/</attr>
+<attr>/(banner(s|_redirect)|clickit|werbung|phpAdsNew)/</attr>
 </rewrite>
 
 <rewrite title="Adverts in the path name 3" oid="12"
