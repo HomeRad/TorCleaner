@@ -65,9 +65,11 @@ class ClientServerMatchmaker:
         except:
             config['requests']['error'] += 1
             self.error(400, _("Can't parse request"))
+            return
         if not self.url:
             config['requests']['error'] += 1
             self.error(400, _("Empty URL"))
+            return
         scheme, hostname, port, document = wc.proxy.spliturl(self.url)
         debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
         if scheme=='file':
@@ -150,7 +152,7 @@ class ClientServerMatchmaker:
             config['requests']['error'] += 1
             self.error(504, "Host not found",
                 'Host %s not found .. %s\r\n' % (hostname, answer.data))
-
+            return
 
     def find_server(self):
         assert self.state == 'server'

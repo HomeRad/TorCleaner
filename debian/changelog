@@ -6,8 +6,9 @@ webcleaner (0.32) unstable; urgency=low
   * wc/filter/Rewriter.py: add some characters to _noquoteval to prevent
     unnecessary quoting
   * debian/templates: s/webcleanerconf/webcleanertools/
+  * wc/proxy/ClientServerMatchmaker.py: return on errors
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed,  6 Feb 2002 17:48:11 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 12 Feb 2002 21:15:06 +0100
 
 webcleaner (0.31) unstable; urgency=low
 
