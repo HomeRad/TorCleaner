@@ -32,7 +32,6 @@ def parse_headers ():
     if s=="-": return headers
     lines = s.split("\n")
     for l in lines:
-        print "line", `l`
         # strip off paranthesis
         l = l[1:-1]
         # split into three parts
