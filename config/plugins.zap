@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
 <folder sid="wc.289" oid="3">
+<title lang="de">Plugins und Medien</title>
 <title lang="en">Plugins</title>
 <description lang="en">The filter rules found here remove plugin (eg flash) contents, but only for selected sites.</description>
 
@@ -20,5 +21,12 @@
   <description lang="de">Entferne alle mit &lt;embed&gt; eingebundenen Daten.</description>
   <description lang="en">Kill &lt;embed&gt; things.</description>
   <matchurl>www\.heise\.de</matchurl>
+</rewrite>
+
+<rewrite sid="wc.39"
+ tag="embed">
+  <title lang="de">Entferne embed loops</title>
+  <attr name="loop">true</attr>
+  <replacement part="attr"/>
 </rewrite>
 </folder>

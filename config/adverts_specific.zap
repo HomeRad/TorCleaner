@@ -270,7 +270,7 @@
 </rewrite>
 
 <block sid="wc.30"
- url="pagead\d+\.googlesyndication\.com">
+ url="\.googlesyndication\.">
   <title lang="de">Google pageads</title>
 </block>
 

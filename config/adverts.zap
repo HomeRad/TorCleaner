@@ -47,7 +47,7 @@
   <title lang="de">Verknüpfungen mit 'ads'</title>
   <title lang="en">Ad servers 03</title>
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'ads' im Rechnernamen.</description>
-  <attr>https?://ad(s|server)?\.</attr>
+  <attr>https?://(servedby\.)?ad(s|server|vertising)?\.</attr>
 </rewrite>
 
 <rewrite sid="wc.335">
@@ -64,14 +64,6 @@
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'linkexchange' u.a. im Rechnernamen.</description>
   <description lang="en">Kill links with ad words in the host name.</description>
   <attr>https?://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
-</rewrite>
-
-<rewrite sid="wc.339">
-  <title lang="de">Verknüpfungen mit 'banner'</title>
-  <title lang="en">Ad servers 07</title>
-  <description lang="de">Entferne Verknüpfungen mit dem Wort 'banner' im Rechnernamen.</description>
-  <description lang="en">Kill links with 'banner' in the host name.</description>
-  <attr>banner.*\.</attr>
 </rewrite>
 
 <rewrite sid="wc.343">
@@ -109,7 +101,7 @@
 <rewrite sid="wc.348">
   <title lang="de">Verknüpfungen mit 'click' u.a.</title>
   <title lang="en">Adverts in the path name 7</title>
-  <attr>([\.\?]click\?|clickId=|smartserve/click)</attr>
+  <attr>([\.\?]click\?|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
 </rewrite>
 
 <rewrite sid="wc.355">
@@ -225,6 +217,31 @@
   <title lang="de">Verknüpfungen mit 'doubleclick'</title>
   <title lang="en">Script adverts</title>
   <description lang="en">JavaScript adverts</description>
-  <attr>doubleclick\.(net|com)</attr>
+  <attr>(double|fast)click\.(net|com)</attr>
+</rewrite>
+
+<rewrite sid="wc.34">
+  <title lang="de">Verknüpfungen mit buy_assets</title>
+  <attr>/buy_assets/</attr>
+</rewrite>
+
+<rewrite sid="wc.35">
+  <title lang="de">Verknüpfungen mit value</title>
+  <attr>value(stream|xchange|click)</attr>
+</rewrite>
+
+<rewrite sid="wc.36">
+  <title lang="de">Verknüpfungen mit banner</title>
+  <attr>(top|bottom|left|right|)?banner(s|id=|\d|_)</attr>
+</rewrite>
+
+<rewrite sid="wc.37">
+  <title lang="de">Verknüpfungen mit 'dime'</title>
+  <attr>dime(xchange|click)</attr>
+</rewrite>
+
+<rewrite sid="wc.38">
+  <title lang="de">Verknüpfungen mit 'adlog'</title>
+  <attr>adlog\.com\.</attr>
 </rewrite>
 </folder>
