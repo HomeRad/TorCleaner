@@ -39,7 +39,8 @@ class Filter:
 
     def applies_to_mime (self, mime):
         if not self.mimelist:
-            return 1
+            return "True"
         for ro in self.mimelist:
             if ro.match(mime):
-                return 1
+                return "True"
+        return None
