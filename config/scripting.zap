@@ -4,7 +4,10 @@
  desc="Scripting related." oid="4">
 <javascript sid="wc.304" title="Enable JavaScript engine"
  desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"
- dontmatchurl="(msdn\.microsoft\.com|www\.mvhs\.de)"/>
+ disable="1">
+<nomatchurl>msdn\.microsoft\.com</nomatchurl>
+<nomatchurl>www\.mvhs\.de</nomatchurl>
+<nomatchurl>suprnova\.org</nomatchurl></javascript>
 
 <rewrite sid="wc.290" title="&lt;a&gt; onfocus">
 <attr name="onfocus"/>
@@ -64,20 +67,18 @@
 
 <rewrite sid="wc.299" title="&lt;noscript&gt;"
  desc="Remove &lt;noscript&gt; tag (use if you allowed scripting)"
- tag="noscript"/>
-
+ tag="noscript">
+</rewrite>
 
 <rewrite sid="wc.300" title="Disable Javascript"
  desc="Remove Javascript for certain pages."
- matchurl="apnews\.excite\.com"
- tag="script"/>
-
+ tag="script">
+<matchurl>apnews\.excite\.com</matchurl></rewrite>
 
 <rewrite sid="wc.301" title="Remove Javascript links"
  desc="Only activate this rule if Javascript is disabled in your browser."
  disable="1">
 <attr>javascript:.*</attr>
-<replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.302" title="Use noscript tag"
@@ -89,7 +90,8 @@
 
 <replace sid="wc.303" title="Disable top frame bashing"
  desc="Some sites disable surrounding frames and install themselves as the top frame."
- search="top\.location\.href\s*=\s*self\.location\.href"/>
+ search="top\.location\.href\s*=\s*self\.location\.href">
+</replace>
 
 <rewrite sid="wc.305" title="&lt;frameset&gt; onunload"
  desc="onunload is used for advert popups"
@@ -109,7 +111,6 @@
  desc="Good! Adaptation, improvisation, but your weakness is not your technique."
  tag="script">
 <enclosed>(?i)document\.onmousedown</enclosed>
-<replacement part="complete"/>
 </rewrite>
 
 <rewrite sid="wc.308" title="&lt;body&gt; ondragstart"
