@@ -108,13 +108,19 @@ class RewriteRule (UrlRule):
 
 
     def fill_data (self, data, name):
-        data = unxmlify(data).encode('iso8859-1')
         if name=='attr':
             self.attrs[self.current_attr] += data
         elif name=='enclosed':
             self.enclosed += data
         elif name=='replacement':
             self.replacement += data
+
+
+    def compile_data (self):
+        self.enclosed = unxmlify(self.enclosed).encode('iso8859-1')
+        self.replacement = unxmlify(self.replacement).encode('iso8859-1')
+        for attr, val in self.attrs.items():
+            self.attrs[attr] = unxmlify(val).encode('iso8859-1')
 
 
     def fromFactory (self, factory):
@@ -172,9 +178,9 @@ class RewriteRule (UrlRule):
 
 
     def filter_tag (self, tag, attrs):
-        #debug(FILTER, "rule %s filter_tag", self.title)
-        #debug(FILTER, "original tag %s attrs %s", `tag`, attrs)
-        #debug(FILTER, "replace %s with %s", num_part(self.part), `self.replacement`)
+        debug(FILTER, "rule %s filter_tag", self.title)
+        debug(FILTER, "original tag %s attrs %s", `tag`, attrs)
+        debug(FILTER, "replace %s with %s", num_part(self.part), `self.replacement`)
         if self.part==COMPLETE:
             return [DATA, ""]
         if self.part==TAGNAME:
@@ -188,10 +194,13 @@ class RewriteRule (UrlRule):
         for attr,val in attrs.items():
             ro = self.attrs.get(attr)
             if ro:
+                debug(FILTER, "ro=%s", ro.pattern)
                 mo = ro.search(val)
                 if mo:
                     if self.part==ATTR:
-                        # replace complete attr
+                        # replace complete attr, and make it possible
+                        # for replacement to generate multiple attributes,
+                        # eg "a=b c=d"
                         # XXX split does not honor quotes
                         for f in self.replacement.split():
                             if '=' in self.replacement:
@@ -200,20 +209,15 @@ class RewriteRule (UrlRule):
                             else:
                                 newattrs[self.replacement] = None
                     elif self.part==ATTRVAL:
-                        # Python has named submatches, and we can use them
-                        # the name 'replace' replaces the value,
-                        # all other names are given as format strings
-                        dict = mo.groupdict()
-                        if dict.has_key('replace'):
-                            newattrs[attr] = dict['replace']
-                        else:
-                            newattrs[attr] = self.replacement % dict
+                        # backreferences are replaced
+                        debug(FILTER, "mo=%s", str(mo.groups()))
+                        newattrs[attr] = mo.expand(self.replacement)
                     else:
                         error(FILTER, "Invalid part value %s" % str(self.part))
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        #debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
+        debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
         return [STARTTAG, tag, newattrs]
 
 
