@@ -144,14 +144,14 @@ def _slow_check (x, t, stype):
 
 def mainloop (handle=None):
     from HttpClient import HttpClient
-    #from HttpsClient import HttpsClient
+    #from HttpsServer import serverctx, HttpsServer
     from Listener import Listener
     from wc import config
     Listener(config['port'], HttpClient)
-    #Listener(config['sslport'], HttpsClient, ssl=True)
+    #Listener(config['sslport'], HttpsServer, sslctx=serverctx)
     # experimental interactive command line
     #from Interpreter import Interpreter
-    #Listener(config['port']+1, Interpreter)
+    #Listener(config['cmdport'], Interpreter)
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
