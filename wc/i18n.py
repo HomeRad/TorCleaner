@@ -28,7 +28,6 @@ def init_gettext ():
     try:
         _ = gettext.translation(Name, LocaleDir).gettext
     except IOError, msg:
-        print msg
         # default gettext function
         _ = lambda s: s
 

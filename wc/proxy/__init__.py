@@ -15,7 +15,7 @@ del asyncore.dispatcher.__getattr__
 def fileno(self):
     return self.socket.fileno()
 asyncore.dispatcher.fileno = fileno
-from wc import i18n, config, ip
+from wc import i18n, ip
 from wc.log import *
 from urllib import splittype, splithost, splitnport
 from LimitQueue import LimitQueue
@@ -25,7 +25,7 @@ TIMERS = [] # list of (time, function)
 # list of gathered headers
 # entries have the form
 # (url, 0(incoming)/1(outgoing), headers)
-HEADERS = LimitQueue(config['headersave'])
+HEADERS = LimitQueue(100)
 
 
 # XXX better name/implementation for this function
@@ -145,6 +145,12 @@ def match_host (host, hostset):
     return ip.host_in_set(host, hostset[0], hostset[1])
 
 
+def resolve_hostmap (hostmap):
+    hosts, nets = hostmap
+    # XXX
+    return hostmap
+
+
 def spliturl (url):
     """split url in a tuple (scheme, hostname, port, document) where
     hostname is always lowercased"""
@@ -163,6 +169,7 @@ def mainloop (handle=None):
     from LocalClient import LocalClient
     #from Interpreter import Interpreter
     from Listener import Listener
+    from wc import config
     Listener(config['port'], HttpClient)
     # experimental interactive command line
     #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))

@@ -20,6 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import os, sys, time, socket
+import xml.parsers.expat
 import _webcleaner2_configdata as configdata
 from glob import glob
 from sets import Set
@@ -45,6 +46,7 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(os.path.join(configdata.install_data, 'share'), 'locale')
 
+from XmlUtils import xmlify, unxmlify
 
 def iswriteable (fname):
     if os.path.isdir(fname) or os.path.islink(fname):
@@ -70,11 +72,6 @@ def sort_seq (seq):
     l.sort()
     return l
 
-
-from wc.XmlUtils import xmlify
-from filter.rules.FolderRule import recalc_oids, recalc_up_down
-import ip, i18n
-from log import *
 
 config = None
 
@@ -143,9 +140,6 @@ def get_localhosts ():
     return localhosts.keys()
 
 
-import wc.filter
-
-
 def proxyconf_file ():
     """return proxy configuration filename"""
     return os.path.join(ConfigDir, "webcleaner.conf")
@@ -193,13 +187,14 @@ class Configuration (dict):
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['colorize'] = 0
         self['nofilterhosts'] = None
+        # DNS resolved nofilterhosts
+        self['xnofilterhosts'] = None
         self['allowedhosts'] = None
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
         self['localhosts'] = get_localhosts()
         self['mime_content_rewriting'] = []
-        self['headersave'] = 100
         self['showerrors'] = 0
         self['gui_theme'] = "classic"
         self['timeout'] = 30
@@ -252,6 +247,7 @@ class Configuration (dict):
 
     def sort (self):
         """sort rules"""
+        from filter.rules.FolderRule import recalc_oids, recalc_up_down
         for f in self['folderrules']:
             f.sort()
         recalc_oids(self['folderrules'])
@@ -271,6 +267,7 @@ class Configuration (dict):
         """go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects"""
+        import wc.filter
         for f in self['filters']:
             exec "from filter import %s" % f
             _module = getattr(wc.filter, f)
@@ -307,8 +304,6 @@ class Configuration (dict):
 
 
 ##### xml parsers #########
-import xml.parsers.expat
-from XmlUtils import unxmlify
 
 rulenames = (
   'rewrite',
@@ -373,6 +368,7 @@ class ZapperParser (BaseParser):
         if name=='folder':
             self.folder.fill_attrs(attrs, name)
         elif name in rulenames:
+            import wc.filter
             self.rule = wc.filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.folder.append_rule(self.rule)
@@ -426,6 +422,8 @@ class WConfigParser (BaseParser):
                 self.config['nofilterhosts'] = ip.strhosts2map(strhosts)
             else:
                 self.config['nofilterhosts'] = [Set(), []]
+            self.config['xnofilterhosts'] = \
+                              resolve_hostmap(self.config['nofilterhosts'])
             if self.config['allowedhosts'] is not None:
                 strhosts = str(self.config['allowedhosts'])
                 self.config['allowedhosts'] = ip.strhosts2map(strhosts)
@@ -434,3 +432,8 @@ class WConfigParser (BaseParser):
         elif name=='filter':
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
+
+
+from log import *
+import ip, i18n
+from proxy import resolve_hostmap
