@@ -24,7 +24,7 @@ from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from wc import i18n, ConfigDir, TemplateDir, Configuration, Version, \
-     filterconf_files, ip, sort_seq, filtermodules
+     ip, sort_seq, filtermodules
 from wc.XmlUtils import xmlify
 from FXPy.fox import *
 from wc.filter.rules.FolderRule import FolderRule

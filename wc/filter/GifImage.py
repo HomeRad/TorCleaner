@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import base64
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
+from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter
 from wc.log import *
 

@@ -19,7 +19,6 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import sys
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n

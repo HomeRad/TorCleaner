@@ -20,7 +20,6 @@ __date__    = "$Date$"[7:-2]
 
 import wc, wc.filter.rules
 from wc.XmlUtils import xmlify, unxmlify
-from types import IntType
 
 
 class Rule (object):

@@ -29,10 +29,10 @@ __date__    = "$Date$"[7:-2]
 import sys, os, re, logging, logging.config, textwrap
 from logging.handlers import RotatingFileHandler
 try:
-    from wc import ConfigDir, Name, iswriteable
+    from wc import Name, iswriteable
 except ImportError:
     sys.path.append(os.getcwd())
-    from wc import ConfigDir, Name, iswriteable
+    from wc import Name, iswriteable
 
 
 def initlog (filename):

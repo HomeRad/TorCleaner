@@ -10,7 +10,6 @@ __date__    = "$Date$"[7:-2]
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
 import time, select, asyncore, re, urlparse
-from sets import Set
 # fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 def fileno(self):
@@ -160,7 +159,6 @@ def spliturl (url):
 
 def mainloop (handle=None):
     from HttpClient import HttpClient
-    from LocalClient import LocalClient
     #from Interpreter import Interpreter
     from Listener import Listener
     from wc import config

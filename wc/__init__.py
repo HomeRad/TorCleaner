@@ -24,7 +24,6 @@ import xml.parsers.expat
 import _webcleaner2_configdata as configdata
 from glob import glob
 from sets import Set
-from cStringIO import StringIO
 
 Version = configdata.version
 AppName = configdata.appname

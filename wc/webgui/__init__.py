@@ -21,9 +21,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.webgui.simpletal import simpleTAL, simpleTALES
-from wc.webgui.context import getval
 from cStringIO import StringIO
-from wc import i18n, config, TemplateDir, App, filtermodules, Name, LocaleDir
+from wc import i18n, config, TemplateDir, Name, LocaleDir
 from wc.log import *
 import os, re, urllib, urlparse, gettext, mimetypes
 from wc.proxy.auth import get_challenges

@@ -3,13 +3,13 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, cgi, mimetypes, urlparse
+import time, cgi, urlparse
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
-from wc import i18n, config, ip
+from wc import i18n, config
 from wc.proxy import fix_http_version
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers
