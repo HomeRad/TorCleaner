@@ -47,6 +47,7 @@ class WebConfig (object):
                 # get translator
                 translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
                 debug(GUI, "Using translator %s", str(translator.info()))
+                debug(GUI, "Translator catalog %s", str(translator._catalog))
                 # expand template
                 data = expand_template(f, context, translator=translator)
             else:
