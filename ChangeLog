@@ -19,6 +19,11 @@
     Type: feature
     Changed: wc/proxy/HttpClient.py
 
+  * sanitize JavaScript urls before background download, fixes "invalid
+    script src" errors
+    Type: bugfix
+    Changed: wc/filter/JSFilter.py
+
   * add Host: header, not host: on client requests
     Type: bugifx
     Changed: wc/proxy/Headers.py
