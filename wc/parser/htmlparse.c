@@ -27,14 +27,19 @@
 #define YYSTYPE PyObject*
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM scanner
-extern int htmllexInit(void** scanner, void* data);
-extern int htmllexStart(void* scanner, UserData* data, const char* s, int slen);
-extern int htmllexStop(void* scanner, UserData* data);
-extern int htmllexDestroy(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
+extern int htmllexInit (void** scanner, UserData* data);
+extern int htmllexStart (void* scanner, UserData* data, const char* s, int slen);
+extern int htmllexStop (void* scanner, UserData* data);
+extern int htmllexDestroy (void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
-int yyerror(char* msg);
+/* standard error reporting, indicating an internal error */
+
+static int yyerror (char* msg) {
+    fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
+    return 0;
+}
 
 /* macros for easier scanner state manipulation */
 
@@ -147,8 +152,8 @@ static const short yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined. */
 static const short yyrline[] =
 {
-       0,    89,    90,    93,    94,   101,   138,   187,   220,   251,
-     282,   313,   344,   384,   424
+       0,    94,    95,    98,    99,   106,   143,   192,   225,   256,
+     287,   318,   349,   389,   429
 };
 #endif
 
@@ -931,19 +936,19 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 89 "htmlparse.y"
+#line 94 "htmlparse.y"
 {;
     break;}
 case 2:
-#line 90 "htmlparse.y"
+#line 95 "htmlparse.y"
 {;
     break;}
 case 3:
-#line 93 "htmlparse.y"
+#line 98 "htmlparse.y"
 { YYACCEPT; /* wait for more lexer input */ ;
     break;}
 case 4:
-#line 95 "htmlparse.y"
+#line 100 "htmlparse.y"
 {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -952,7 +957,7 @@ case 4:
 ;
     break;}
 case 5:
-#line 102 "htmlparse.y"
+#line 107 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
@@ -991,7 +996,7 @@ finish_start:
 ;
     break;}
 case 6:
-#line 139 "htmlparse.y"
+#line 144 "htmlparse.y"
 {
     /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
@@ -1042,7 +1047,7 @@ finish_start_end:
 ;
     break;}
 case 7:
-#line 188 "htmlparse.y"
+#line 193 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1077,7 +1082,7 @@ finish_end:
 ;
     break;}
 case 8:
-#line 221 "htmlparse.y"
+#line 226 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1110,7 +1115,7 @@ finish_comment:
 ;
     break;}
 case 9:
-#line 252 "htmlparse.y"
+#line 257 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1143,7 +1148,7 @@ finish_pi:
 ;
     break;}
 case 10:
-#line 283 "htmlparse.y"
+#line 288 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1176,7 +1181,7 @@ finish_cdata:
 ;
     break;}
 case 11:
-#line 314 "htmlparse.y"
+#line 319 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1209,7 +1214,7 @@ finish_doctype:
 ;
     break;}
 case 12:
-#line 345 "htmlparse.y"
+#line 350 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1251,7 +1256,7 @@ finish_script:
 ;
     break;}
 case 13:
-#line 385 "htmlparse.y"
+#line 390 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1293,7 +1298,7 @@ finish_style:
 ;
     break;}
 case 14:
-#line 425 "htmlparse.y"
+#line 430 "htmlparse.y"
 {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1559,7 +1564,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 458 "htmlparse.y"
+#line 463 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1575,7 +1580,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "SAX2 handler object arg required");
 	return NULL;
     }
-
+    Py_INCREF(handler);
     if (!(p=PyObject_NEW(parser_object, &parser_type))) {
 	PyErr_SetString(PyExc_TypeError, "Allocating parser object failed");
 	return NULL;
@@ -1602,6 +1607,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 
 static void parser_dealloc(parser_object* self) {
     htmllexDestroy(self->scanner);
+    Py_DECREF(self->userData->handler);
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
     PyMem_Del(self->userData);
@@ -1741,11 +1747,4 @@ static PyMethodDef htmlsax_methods[] = {
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
     /*yydebug = 1;*/
-}
-
-
-/* standard error reporting, indicating an internal error */
-int yyerror (char* msg) {
-    fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
-    return 0;
 }

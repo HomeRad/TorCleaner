@@ -9,14 +9,19 @@
 #define YYSTYPE PyObject*
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM scanner
-extern int htmllexInit(void** scanner, void* data);
-extern int htmllexStart(void* scanner, UserData* data, const char* s, int slen);
-extern int htmllexStop(void* scanner, UserData* data);
-extern int htmllexDestroy(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
+extern int htmllexInit (void** scanner, UserData* data);
+extern int htmllexStart (void* scanner, UserData* data, const char* s, int slen);
+extern int htmllexStop (void* scanner, UserData* data);
+extern int htmllexDestroy (void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
-int yyerror(char* msg);
+/* standard error reporting, indicating an internal error */
+
+static int yyerror (char* msg) {
+    fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
+    return 0;
+}
 
 /* macros for easier scanner state manipulation */
 
@@ -470,7 +475,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "SAX2 handler object arg required");
 	return NULL;
     }
-
+    Py_INCREF(handler);
     if (!(p=PyObject_NEW(parser_object, &parser_type))) {
 	PyErr_SetString(PyExc_TypeError, "Allocating parser object failed");
 	return NULL;
@@ -497,6 +502,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 
 static void parser_dealloc(parser_object* self) {
     htmllexDestroy(self->scanner);
+    Py_DECREF(self->userData->handler);
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
     PyMem_Del(self->userData);
@@ -636,11 +642,4 @@ static PyMethodDef htmlsax_methods[] = {
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
     /*yydebug = 1;*/
-}
-
-
-/* standard error reporting, indicating an internal error */
-int yyerror (char* msg) {
-    fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
-    return 0;
 }
