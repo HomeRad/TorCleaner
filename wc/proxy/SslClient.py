@@ -26,8 +26,10 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
         self.allow = wc.proxy.Allowed.AllowedSslClient()
 
     def __repr__ (self):
-        extra = self.persistent and "persistent " or ""
-        if self.request:
+        extra = ""
+        if hasattr(self, "persistent") and self.persistent:
+            extra += "persistent "
+        if hasattr(self, "request") and self.request:
             try:
                 extra += self.request.split()[1]
             except IndexError:
