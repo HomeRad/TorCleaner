@@ -29,44 +29,6 @@ except ImportError, msg:
     sys.exit(1)
 
 
-class SortedDict (dict):
-    """a dictionary whose listing functions for keys and values preserve
-       the order in which elements were added
-    """
-    def __init__ (self):
-        # sorted list of keys
-        self._keys = []
-
-
-    def __setitem__ (self, key, value):
-        self._keys.append(key)
-        super(SortedDict, self).__setitem__(key, value)
-
-
-    def values (self):
-        return [self[k] for k in self._keys]
-
-
-    def items (self):
-        return [(k, self[k]) for k in self._keys]
-
-
-    def keys (self):
-        return self._keys[:]
-
-
-    def itervalues (self):
-        return iter(self.values())
-
-
-    def iteritems (self):
-        return iter(self.items())
-
-
-    def iterkeys (self):
-        return iter(self.keys())
-
-
 class HtmlPrinter (object):
     """handles all functions by printing the function name and attributes"""
     def __init__ (self, fd=sys.stdout):

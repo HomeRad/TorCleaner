@@ -131,6 +131,7 @@ static int yyerror (char* msg) {
 
 /* parser.resolve_entities */
 static PyObject* resolve_entities;
+static PyObject* sorted_dict;
 
 /* macros for easier scanner state manipulation */
 
@@ -229,7 +230,7 @@ typedef int YYSTYPE;
 
 
 /* Line 214 of yacc.c.  */
-#line 233 "htmlparse.c"
+#line 234 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -399,8 +400,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   143,   143,   144,   147,   148,   155,   190,   237,   268,
-     289,   310,   331,   352,   374,   396
+       0,   144,   144,   145,   148,   149,   156,   191,   238,   269,
+     290,   311,   332,   353,   375,   397
 };
 #endif
 
@@ -1105,22 +1106,22 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 143 "htmlparse.y"
-    {;}
-    break;
-
-  case 3:
 #line 144 "htmlparse.y"
     {;}
     break;
 
+  case 3:
+#line 145 "htmlparse.y"
+    {;}
+    break;
+
   case 4:
-#line 147 "htmlparse.y"
+#line 148 "htmlparse.y"
     { YYACCEPT; /* wait for more lexer input */ ;}
     break;
 
   case 5:
-#line 149 "htmlparse.y"
+#line 150 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1130,7 +1131,7 @@ yyreduce:
     break;
 
   case 6:
-#line 156 "htmlparse.y"
+#line 157 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1168,7 +1169,7 @@ finish_start:
     break;
 
   case 7:
-#line 191 "htmlparse.y"
+#line 192 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1218,7 +1219,7 @@ finish_start_end:
     break;
 
   case 8:
-#line 238 "htmlparse.y"
+#line 239 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1252,7 +1253,7 @@ finish_end:
     break;
 
   case 9:
-#line 269 "htmlparse.y"
+#line 270 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1276,7 +1277,7 @@ finish_comment:
     break;
 
   case 10:
-#line 290 "htmlparse.y"
+#line 291 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1300,7 +1301,7 @@ finish_pi:
     break;
 
   case 11:
-#line 311 "htmlparse.y"
+#line 312 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1324,7 +1325,7 @@ finish_cdata:
     break;
 
   case 12:
-#line 332 "htmlparse.y"
+#line 333 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1348,7 +1349,7 @@ finish_doctype:
     break;
 
   case 13:
-#line 353 "htmlparse.y"
+#line 354 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1373,7 +1374,7 @@ finish_script:
     break;
 
   case 14:
-#line 375 "htmlparse.y"
+#line 376 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1398,7 +1399,7 @@ finish_style:
     break;
 
   case 15:
-#line 397 "htmlparse.y"
+#line 398 "htmlparse.y"
     {
     /* $1 is a PyString */
     /* Remember this is also called as a lexer error fallback */
@@ -1426,7 +1427,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1430 "htmlparse.c"
+#line 1431 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1620,7 +1621,7 @@ yyreturn:
 }
 
 
-#line 420 "htmlparse.y"
+#line 421 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1660,6 +1661,7 @@ static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds)
         self->userData->tmp_attrval = self->userData->tmp_attrs =
         self->userData->lexbuf = NULL;
     self->userData->resolve_entities = resolve_entities;
+    self->userData->sorted_dict = sorted_dict;
     self->userData->exc_type = NULL;
     self->userData->exc_val = NULL;
     self->userData->exc_tb = NULL;
@@ -2031,6 +2033,9 @@ PyMODINIT_FUNC inithtmlsax (void) {
         return;
     }
     if ((resolve_entities = PyObject_GetAttrString(m, "resolve_entities"))==NULL) {
+        return;
+    }
+    if ((sorted_dict = PyObject_GetAttrString(m, "SortedDict"))==NULL) {
         return;
     }
 }
