@@ -182,7 +182,7 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** DOCTYPE ************************/
-<INITIAL><!DOCTYPE {
+<INITIAL><![Dd][Oo][Cc][Tt][Yy][Pp][Ee] {
     UPDATE_BUFPOS;
     BEGIN(S_DOCTYPE);
 }
