@@ -6,6 +6,8 @@
 . /usr/share/debconf/confmodule
 db_version 2.0
 
+# set secure umask for .tmp file creation below
+umask 0077
 package=webcleaner
 
 case "$1" in
@@ -25,7 +27,8 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
     RET=""
     db_get $package/adminpass
-    sed -e "s/ adminpass=.*/ adminpass=\"$RET\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
+    P=`echo $RET | python -c "import sys, base64; print base64.encodestring(sys.stdin.read()).strip()"`
+    sed -e "s/ adminpass=.*/ adminpass=\"$P\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
     db_unregister $package/adminpass
 fi
