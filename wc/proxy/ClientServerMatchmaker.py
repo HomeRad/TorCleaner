@@ -2,6 +2,7 @@ import dns_lookups,socket
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import _
+from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
 from string import split
 
@@ -116,7 +117,7 @@ class ClientServerMatchmaker:
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            #message(6, 'resurrecting', None, None, server)
+            debug(BRING_IT_ON, 'resurrecting', server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -154,8 +155,8 @@ class ClientServerMatchmaker:
             self.client.server_no_response()
         
     def server_close(self):
-        #message(6, 'resurrection failed', None,
-        #        self.server.sequence_number, self.server)
+        debug(BRING_IT_ON, 'resurrection failed',
+	      self.server.sequence_number, self.server)
 
         # Look for a server again
         if self.server.sequence_number > 0:

@@ -35,7 +35,6 @@ Freeware = AppName+""" comes with ABSOLUTELY NO WARRANTY!
 This is free software, and you are welcome to redistribute it
 under certain conditions. Look at the file `LICENSE' whithin this
 distribution."""
-ConfigVersion = "0.7"
 ConfigDir = configdata.config_dir
 LocaleDir = os.path.join(configdata.install_data, 'locale')
 DebugLevel = 0
@@ -54,26 +53,11 @@ else:
         return text
 
 
-def message(labelcolor=0, label='info', field1=None, field2=None, *args):
-    output = []
-    labelwidth = 6
-    if field1:
-        labelwidth = 11
-        if field2:
-            labelwidth = 13
-    output.append(color(ljust(label, labelwidth), labelcolor))
-    if field1: output.append(rjust(str(field1), 5))
-    output.append(' ')
-    if field2: output.append(ljust(str(field2), 2))
-    for a in args:
-        output.append(' ')
-        output.append(str(a))
-    print join(output, '')
-
 # debug function, using the debug level
-def debug(s, level=1):
+# XXX colorize?
+def debug(level, *args):
     if level <= DebugLevel:
-        sys.stderr.write("DEBUG: %s\n" % s)
+        print >>sys.stderr, join(map(str, args), " ")
 
 try:
     import fintl

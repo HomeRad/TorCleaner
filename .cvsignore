@@ -7,5 +7,5 @@ locale
 build-stamp
 configure-stamp
 *.pyc
-_webcleaner_configdata.py
+_webcleaner2_configdata.py
 test.html

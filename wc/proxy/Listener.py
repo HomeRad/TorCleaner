@@ -1,5 +1,5 @@
 import asyncore,socket
-from wc import message
+from wc import debug
 
 local_sockets_only = 1
 
@@ -23,10 +23,10 @@ class Listener(asyncore.dispatcher):
         return 0
     
     def handle_accept(self):
-        #message(None, 'accept', None, None, self)
+        debug(HURT_ME_PLENTY, 'accept', self)
         apply(self.handler, self.accept())
 
     def handle_error(self, type, value, tb=None):
-        message(1, 'error', None, None, self, type, value)
+        debug(ALWAYS, 'error', self, type, value)
 	import traceback
         if tb: traceback.print_tb(tb)

@@ -2,7 +2,7 @@ import time,socket,rfc822,re
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import message,color
+from wc import debug,color
 from ClientServerMatchmaker import serverpool
 from string import find,strip,split,join,lower
 from UnchunkStream import UnchunkStream
@@ -58,13 +58,13 @@ class HttpServer(Server):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         try: self.connect(self.addr)
         except socket.error, err:
-            #message(6, 'connect error', None, None, err)
+            debug(ALWAYS, 'connect error', err)
             self.handle_error(socket.error, err)
             return
 
     def handle_connect(self):
         assert self.state == 'connect'
-        #message(None, 'handle_conn', None, None, self)
+        debug(HURT_ME_PLENTY, 'handle_conn', self)
         self.state = 'client'
         Server.handle_connect(self)
 
@@ -125,9 +125,8 @@ class HttpServer(Server):
             self.client.server_response(self.response, self.headers)
         else:
             # We have no idea what it is!?
-            #message(6, 'Warning', None, None, 'puzzling header received ',
-	    #        `self.response`)
-            pass
+            debug(ALWAYS, 'Warning', 'puzzling header received ',
+	           `self.response`)
 
     def process_headers(self):
         # Headers are terminated by a blank line .. now in the regexp,
@@ -286,7 +285,7 @@ class HttpServer(Server):
             # We can't reuse this connection
             self.close()
         else:
-            #message(6, 'recycling', None, self.sequence_number, self)
+            debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
             self.sequence_number = self.sequence_number + 1
             self.state = 'client'
             self.document = ''
@@ -307,7 +306,7 @@ class HttpServer(Server):
             client.server_abort()
         
     def handle_close(self):
-        #message(1, 'server close; '+self.state, None, None, self)
+        debug(HURT_ME_PLENTY, 'server close; '+self.state, self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None

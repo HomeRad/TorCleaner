@@ -6,7 +6,7 @@ from Connection import Connection
 from dns import dnslib,dnsclass,dnsopcode,dnstype
 from wc.proxy import make_timer
 from string import lower,find,strip,split
-from wc import message,color
+from wc import debug,color
 
 def background_lookup(hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
@@ -422,8 +422,7 @@ class DnsLookupConnection(Connection):
                 ip_addrs.append(data)
             if type == dnstype.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                #message(2, 'cname record', None, None, self.hostname, '=', repr(data))
-                pass
+                debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
             
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records

@@ -3,7 +3,7 @@ from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from string import split,find,join
-from wc import message,color
+from wc import debug,color
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
@@ -85,13 +85,13 @@ class HttpClient(Connection):
     def server_response(self, server, response, headers):
         self.server = server
         assert self.server.connected
-        #message(None, 'S/response', None, None, self
+        debug(NIGHTMARE, 'S/response', self)
         self.write(response)
         self.write(join(headers.headers, ''))
         self.write('\r\n')
 
     def server_no_response(self):
-        #message(None, 'S/failed', None, None, self)
+        debug(NIGHTMARE, 'S/failed', self)
         self.write('**Aborted**')
         self.delayed_close()
 
@@ -101,19 +101,19 @@ class HttpClient(Connection):
 
     def server_close(self):
         assert self.server
-        #message(None, 'S/close', None, None, self)
+        debug(NIGHMARE, 'S/close', self)
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
     def server_abort(self):
-        #message(None, 'S/abort', None, None, self)
+        debug(NIGHTMARE, 'S/abort', self)
         self.close()
         self.server = None
         
     def handle_error(self, type, value, traceback=None):
         # We should also close the server connection
-        #message(1, 'client error', None, None, self, type, value)
+        debug(ALWAYS, 'client error', self, type, value)
         Connection.handle_error(self, type, value, traceback)
         if self.server:
             server, self.server = self.server, None
@@ -122,7 +122,7 @@ class HttpClient(Connection):
     def handle_close(self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
-        #message(1, 'client close', None, None, self)
+        debug(HURT_ME_PLENTY, 'client close', self)
         Connection.handle_close(self)
         if self.server:
             server, self.server = self.server, None

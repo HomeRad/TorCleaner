@@ -7,7 +7,7 @@ used by Bastian Kleineidam for WebCleaner
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
 import sys, os, urlparse, time, select, asyncore, wc
-from wc import message
+from wc import debug
 
 TIMERS = [] # list of (time, function)
 
@@ -81,7 +81,7 @@ def proxy_poll(timeout=0.0):
                     x.handle_write_event()
                     handlerCount = handlerCount + 1
                     if time.time() - t > 0.1:
-                        message(5, 'wslow', '%4.1f'%(time.time()-t), 's', x)
+                        debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
         for x in r:
@@ -91,7 +91,7 @@ def proxy_poll(timeout=0.0):
                     x.handle_read_event()
                     handlerCount = handlerCount + 1
                     if time.time() - t > 0.1:
-                        message(5, 'rslow', '%4.1f'%(time.time()-t), 's', x)
+                        debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
         return handlerCount
