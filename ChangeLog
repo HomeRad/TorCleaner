@@ -1,6 +1,12 @@
 2.25 "" (released xx.xx.xxxx)
 
-  *
+  * Filter rating is disabled for now until it works again.
+    Changed: wc/configuration.py, templates/classic/macros/standard.html,
+      wc/webgui/context/filterconfig_html.py
+
+  * Put documentation in language specific directories.
+    Added: doc/en/*, doc/de/*
+    Changed: MANIFEST.in, setup.py
 
 2.24 "Tootsie" (released 10.12.2004)
 
