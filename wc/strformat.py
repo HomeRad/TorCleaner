@@ -24,24 +24,56 @@ import textwrap
 import sys
 import os
 import time
+import urlparse
 
 
-def unquote (s):
+def unicode_safe (s, encoding="iso-8859-1"):
     """
-    Remove leading and ending quotes.
+    Get unicode string without raising encoding errors. Unknown
+    characters of the given encoding will be ignored.
+
+    @param s: the string to be decoded
+    @type s: any object except None
+    @return: if s is already unicode, return s unchanged; else return
+        decoded unicode string of str(s)
+    @rtype: unicode
+    """
+    assert s is not None, "argument to unicode_safe was None"
+    if isinstance(s, unicode):
+        # s is already unicode, nothing to do
+        return s
+    return unicode(str(s), encoding, "ignore")
+
+
+def url_unicode_split (url):
+    """
+    Like urlparse.urlsplit(), but always returning unicode parts.
+    """
+    return [unicode_safe(s) for s in urlparse.urlsplit(url)]
+
+
+def unquote (s, matching=False):
+    """
+    Remove leading and ending single and double quotes.
+    The quotes need to match if matching is True. Only one quote from each
+    end will be stripped.
 
     @return: if s evaluates to False, return s as is, else return
         string with stripped quotes
-    @rtype: string or type of s if evaluting to False
+    @rtype: unquoted string, or s unchanged if it is evaluting to False
     """
     if not s:
         return s
     if len(s) < 2:
         return s
-    if s[0] in ("\"'"):
-        s = s[1:]
-    if s[-1] in ("\"'"):
-        s = s[:-1]
+    if matching:
+        if s[0] in ("\"'") and s[0] == s[-1]:
+            s = s[1:-1]
+    else:
+        if s[0] in ("\"'"):
+            s = s[1:]
+        if s[-1] in ("\"'"):
+            s = s[:-1]
     return s
 
 

@@ -33,20 +33,24 @@ class TestStrFormat (unittest.TestCase):
         """
         Test quote stripping.
         """
-        self.assertEquals(wc.strformat.unquote(""), "")
-        self.assertEquals(wc.strformat.unquote(None), None)
-        self.assertEquals(wc.strformat.unquote("'"), "'")
-        self.assertEquals(wc.strformat.unquote("\""), "\"")
-        self.assertEquals(wc.strformat.unquote("\"\""), "")
-        self.assertEquals(wc.strformat.unquote("''"), "")
-        self.assertEquals(wc.strformat.unquote("'a'"), "a")
-        self.assertEquals(wc.strformat.unquote("'a\"'"), "a\"")
-        self.assertEquals(wc.strformat.unquote("'\"a'"), "\"a")
-        self.assertEquals(wc.strformat.unquote('"a\'"'), 'a\'')
-        self.assertEquals(wc.strformat.unquote('"\'a"'), '\'a')
+        u = wc.strformat.unquote
+        self.assertEquals(u(""), "")
+        self.assertEquals(u(None), None)
+        self.assertEquals(u("'"), "'")
+        self.assertEquals(u("\""), "\"")
+        self.assertEquals(u("\"\""), "")
+        self.assertEquals(u("''"), "")
+        self.assertEquals(u("'a'"), "a")
+        self.assertEquals(u("'a\"'"), "a\"")
+        self.assertEquals(u("'\"a'"), "\"a")
+        self.assertEquals(u('"a\'"'), 'a\'')
+        self.assertEquals(u('"\'a"'), '\'a')
         # even mis-matching quotes should be removed...
-        self.assertEquals(wc.strformat.unquote("'a\""), "a")
-        self.assertEquals(wc.strformat.unquote("\"a'"), "a")
+        self.assertEquals(u("'a\""), "a")
+        self.assertEquals(u("\"a'"), "a")
+        # ...but not when matching is True
+        self.assertEquals(u("'a\"", matching=True), "'a\"")
+        self.assertEquals(u("\"a'", matching=True), "\"a'")
 
     def test_wrap (self):
         """
