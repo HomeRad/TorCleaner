@@ -37,6 +37,9 @@
   * translatable rule title and description
     Changed: wc/filter/rules/*.py, wc/__init__.py, config/filter.dtd,
       config/*.{zap,py}
+  * added a rating update service to the filter update page
+    Changed: wc/filter/Rating.py, wc/update.py,
+      templates/classic/update.html
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way

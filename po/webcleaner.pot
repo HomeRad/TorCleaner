@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat Feb 28 17:34:38 2004\n"
+"POT-Creation-Date: Sat Feb 28 22:04:15 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,6 +52,9 @@ msgid "malfored modified time %r"
 msgstr ""
 
 msgid "generic url %r doesn't match %r"
+msgstr ""
+
+msgid "adding new rating for %r"
 msgstr ""
 
 msgid "inserting new rule %s"
@@ -244,6 +247,9 @@ msgid "No title"
 msgstr ""
 
 msgid "Unknown reason"
+msgstr ""
+
+msgid "Error: nothing to update."
 msgstr ""
 
 msgid "%s Proxy"
@@ -646,6 +652,9 @@ msgstr ""
 msgid "Invalid rule move up id."
 msgstr ""
 
+msgid "Request url of all mime types."
+msgstr ""
+
 msgid "Folder successfully enabled."
 msgstr ""
 
@@ -769,9 +778,6 @@ msgstr ""
 msgid "Modified"
 msgstr ""
 
-msgid "Filter update log"
-msgstr ""
-
 msgid "Move rule down"
 msgstr ""
 
@@ -831,6 +837,9 @@ msgid ""
 msgstr ""
 
 msgid "Nofilter host successfully added."
+msgstr ""
+
+msgid "%(AppName)s update script"
 msgstr ""
 
 msgid ""
@@ -957,13 +966,10 @@ msgstr ""
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
-msgid "%(AppName)s filter update script"
-msgstr ""
-
 msgid "Move folder up"
 msgstr ""
 
-msgid "Request url of all mime types."
+msgid "Update log"
 msgstr ""
 
 msgid "Rule url successfully changed."
