@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Aug 27 13:02:07 2003\n"
+"POT-Creation-Date: Tue Sep  9 23:10:39 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -565,24 +565,6 @@ msgstr ""
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr ""
 
-msgid "Proxy Error %d %s"
-msgstr ""
-
-msgid "Can't parse request"
-msgstr ""
-
-msgid "Empty URL"
-msgstr ""
-
-msgid "Proxy Authentication Required"
-msgstr ""
-
-msgid "Invalid Method"
-msgstr ""
-
-msgid "invalid or missing response from %s: %s"
-msgstr ""
-
 msgid "add Content-Type %s in %s"
 msgstr ""
 
@@ -599,6 +581,24 @@ msgid "chunked encoding should not have Content-Length"
 msgstr ""
 
 msgid "unsupported encoding: %s"
+msgstr ""
+
+msgid "Proxy Error %d %s"
+msgstr ""
+
+msgid "Can't parse request"
+msgstr ""
+
+msgid "Empty URL"
+msgstr ""
+
+msgid "Proxy Authentication Required"
+msgstr ""
+
+msgid "Invalid Method"
+msgstr ""
+
+msgid "invalid or missing response from %s: %s"
 msgstr ""
 
 msgid "server received %d bytes more than content-length"

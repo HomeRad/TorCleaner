@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Wed Aug 27 13:02:07 2003\n"
+"POT-Creation-Date: Tue Sep  9 23:10:39 2003\n"
 "PO-Revision-Date: 2003-08-27 13:01+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -631,24 +631,6 @@ msgstr "zlib Fehler: nicht in gzip Format, deaktiviere gunzip"
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr "zlib Fehler: unbekannte Komprimierungsart, deaktiviere gunzip"
 
-msgid "Proxy Error %d %s"
-msgstr "Proxy Fehler %d %s"
-
-msgid "Can't parse request"
-msgstr "Kann Anfrage nicht parsen"
-
-msgid "Empty URL"
-msgstr "Leere URL"
-
-msgid "Proxy Authentication Required"
-msgstr "Proxy Authorisierung benötigt"
-
-msgid "Invalid Method"
-msgstr "Ungültige Anfrage"
-
-msgid "invalid or missing response from %s: %s"
-msgstr "ungültige oder fehlende Antwort von %s: %s"
-
 msgid "add Content-Type %s in %s"
 msgstr "füge Content-Type %s zu %s hinzu"
 
@@ -666,6 +648,24 @@ msgstr "chunked encoding darf kein Content-Length besitzen"
 
 msgid "unsupported encoding: %s"
 msgstr "Nicht unterstütztes Encoding: %s"
+
+msgid "Proxy Error %d %s"
+msgstr "Proxy Fehler %d %s"
+
+msgid "Can't parse request"
+msgstr "Kann Anfrage nicht parsen"
+
+msgid "Empty URL"
+msgstr "Leere URL"
+
+msgid "Proxy Authentication Required"
+msgstr "Proxy Authorisierung benötigt"
+
+msgid "Invalid Method"
+msgstr "Ungültige Anfrage"
+
+msgid "invalid or missing response from %s: %s"
+msgstr "ungültige oder fehlende Antwort von %s: %s"
 
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
