@@ -41,7 +41,7 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "NTLMSSP_CHALLENGE", "NTLMSSP_AUTH",
  ]
 
-import utils, base64, random, struct, time
+import base64, random, struct, time
 from Crypto.Hash import MD4
 from Crypto.Cipher import DES
 try:
@@ -290,7 +290,7 @@ def create_message2 (domain, flags=challenge_flags):
     if flags & NTLMSSP_TARGET_TYPE_DOMAIN:
         msg += struct.pack("<l", 0)    # ServerContextHandleLower
         msg += struct.pack("<l", 0x3c) # ServerContextHandleUpper
-        msg += utils.str2unicode(domain)
+        msg += str2unicode(domain)
     return msg
 
 
@@ -307,7 +307,7 @@ def parse_message2 (msg):
     res['nonce'] = msg[24:32]
     if res['flags'] & NTLMSSP_TARGET_TYPE_DOMAIN:
         offset = getint32(msg[16:20])
-        res['domain'] = utils.unicode2str(msg[offset:])
+        res['domain'] = unicode2str(msg[offset:])
     return res
 
 
@@ -351,9 +351,9 @@ def create_message3 (nonce, domain, username, host,
     msg += struct.pack("<h", len(session_key))
     msg += struct.pack("<l", offset + 2*len(domain) + 2*len(username) + 2*len(host)+ 48) # session offset
     msg += struct.pack("<l", flags) # flags
-    msg += utils.str2unicode(domain)
-    msg += utils.str2unicode(username)
-    msg += utils.str2unicode(host)
+    msg += str2unicode(domain)
+    msg += str2unicode(username)
+    msg += str2unicode(host)
     msg += lm_resp + nt_resp + session_key
     return msg
 
@@ -368,9 +368,9 @@ def parse_message3 (msg):
     host_offset = getint32(msg[48:52])
     session_offset = getint32(msg[56:60])
     res['flags'] = getint16(msg[60:62])
-    res['domain'] = utils.unicode2str(msg[domain_offset:username_offset])
-    res['username'] = utils.unicode2str(msg[username_offset:host_offset])
-    res['host'] = utils.unicode2str(msg[host_offset:lm_offset])
+    res['domain'] = unicode2str(msg[domain_offset:username_offset])
+    res['username'] = unicode2str(msg[username_offset:host_offset])
+    res['host'] = unicode2str(msg[host_offset:lm_offset])
     res['lm_resp'] = msg[lm_offset:nt_offset]
     res['nt_resp'] = msg[nt_offset:(nt_offset+nt_len)]
     res['session_key'] = msg[session_offset:]
@@ -417,6 +417,20 @@ def getint16 (s):
     return struct.unpack("<h", s)[0]
 
 
+def str2unicode (s):
+    "converts ascii string to dumb unicode"
+    return "".join([ c+'\x00' for c in s ])
+
+
+def unicode2str (s):
+    """converts dumb unicode back to ascii string"""
+    return s[::2]
+
+
+def lst2str (lst):
+    return "".join([chr(i & 0xFF) for i in lst])
+
+
 def convert_key (key):
     """converts a 7-bytes key to an 8-bytes key based on an algorithm"""
     assert len(key)==7, "NTLM convert_key needs 7-byte key"
@@ -458,7 +472,7 @@ def create_lm_hashed_password (passwd):
     lm_pw = create_lm_password(passwd)
     # do hash
     magic_lst = [0x4B, 0x47, 0x53, 0x21, 0x40, 0x23, 0x24, 0x25]
-    magic_str = utils.lst2str(magic_lst)
+    magic_str = lst2str(magic_lst)
     lm_hpw = DES.new(convert_key(lm_pw[0:7])).encrypt(magic_str)
     lm_hpw += DES.new(convert_key(lm_pw[7:14])).encrypt(magic_str)
     # adding zeros for padding
@@ -479,7 +493,7 @@ def create_lm_password (passwd):
 def create_nt_hashed_password (passwd):
     """create NT hashed password"""
     # we have to have UNICODE password
-    pw = utils.str2unicode(passwd)
+    pw = str2unicode(passwd)
     # do MD4 hash
     md4_context = MD4.new()
     md4_context.update(pw)
