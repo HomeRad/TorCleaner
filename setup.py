@@ -112,9 +112,9 @@ class MyDistribution(Distribution):
         # add metadata
         metanames = ("name", "version", "author", "author_email",
                      "maintainer", "maintainer_email", "url",
-                     "licence", "description", "long_description",
+                     "license", "description", "long_description",
                      "keywords", "platforms", "fullname", "contact",
-                     "contact_email", "licence", "fullname")
+                     "contact_email", "fullname")
         for name in metanames:
               method = "get_" + name
               cmd = "%s = %s" % (name, `getattr(self.metadata, method)()`)
@@ -179,7 +179,7 @@ setup (name = "webcleaner",
        maintainer = myname,
        maintainer_email = myemail,
        url = "http://webcleaner.sourceforge.net/",
-       licence = "GPLv2",
+       license = "GPLv2",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon', 'wc/js',
            'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns', 'wc/proxy/auth',
            'wc/filter/rules', 'wc/webgui', 'wc/webgui/simpletal',
