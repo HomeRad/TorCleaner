@@ -27,6 +27,7 @@ except ImportError:
     # assume non-windows platform
     service_klass = object
 import wc
+import bk.i18n
 
 
 class ProxyService (service_klass):
