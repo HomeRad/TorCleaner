@@ -4,7 +4,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 from cStringIO import StringIO
 from Server import Server
-from wc.proxy import make_timer, get_http_version
+from wc.proxy import make_timer, get_http_version, set_via_header
 from wc import i18n, config, remove_headers, has_header_value
 from wc.debug import *
 from ClientServerMatchmaker import serverpool
@@ -491,6 +491,7 @@ class HttpServer (Server):
 
 def set_proxy_headers (headers):
     remove_hop_by_hop_headers(headers)
+    set_via_header(headers)
     set_date_header(headers)
 
 

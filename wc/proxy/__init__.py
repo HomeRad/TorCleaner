@@ -62,6 +62,15 @@ def get_http_version (protocol):
     return 1.0
 
 
+def set_via_header (headers):
+    """set via header"""
+    # XXX does not work with multiple existing via headers
+    via = headers.get('Via', "").strip()
+    if via: via += ", "
+    via += "1.1 unknown\r"
+    headers['Via'] = via
+
+
 def make_timer (delay, callback):
     "After DELAY seconds, run the CALLBACK function"
     TIMERS.append( [time.time() + delay, callback] )

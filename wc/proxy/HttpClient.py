@@ -5,7 +5,7 @@ from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip, remove_headers
-from wc.proxy import log, match_host
+from wc.proxy import log, match_host, set_via_header
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.debug import *
@@ -254,7 +254,7 @@ class HttpClient (Connection):
 
 def set_proxy_headers (headers):
     remove_hop_by_hop_headers(headers)
-    set_via_headers(headers)
+    set_via_header(headers)
     set_connection_headers(headers)
     return set_encoding_headers(headers)
 
@@ -263,14 +263,6 @@ def remove_hop_by_hop_headers (headers):
     """Remove hop-by-hop headers"""
     to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer', 'TE']
     remove_headers(headers, to_remove)
-
-
-def set_via_headers (headers):
-    """set via header"""
-    via = headers.get('Via', "").strip()
-    if via: via += ", "
-    via += "1.1 unknown\r"
-    headers['Via'] = via
 
 
 def set_connection_headers (headers):
