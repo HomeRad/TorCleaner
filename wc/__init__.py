@@ -341,7 +341,8 @@ class Configuration (dict):
 
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
-        return match_host(host, self['allowedhosts'])
+        hostset = self['allowedhosts']
+        return ip.host_in_set(host, hostset[0], hostset[1])
 
 
 ##### xml parsers #########
@@ -514,4 +515,4 @@ class WConfigParser (BaseParser):
 
 
 from log import *
-from url import match_url, match_host
+from url import match_url
