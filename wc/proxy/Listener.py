@@ -17,8 +17,10 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
         super(Listener, self).__init__()
         self.addr = (sockaddr, port)
         wc.log.info(wc.LOG_PROXY, "Starting to listen on %s", self.addr)
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=sslctx)
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         if sslctx is not None:
+            import OpenSSL.SSL
+            self.socket = OpenSSL.SSL.Connection(sslctx, self.socket)
             self.socket.set_accept_state()
         self.set_reuse_addr()
         self.bind(self.addr)
