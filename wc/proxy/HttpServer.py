@@ -208,7 +208,7 @@ class HttpServer (Server):
             if not self.headers.has_key('Content-Encoding'):
                 self.headers['Content-Encoding'] = gm[1]
                 print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s)") % \
-                                      (self.url, gm[1]))
+                                      (self.url, gm[1])
             elif self.headers.get('Content-Encoding') != gm[1]:
                 print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)") % \
                                       (self.url, gm[1], self.headers.get('Content-Encoding'))

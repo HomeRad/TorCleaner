@@ -11,7 +11,7 @@ del asyncore.dispatcher.__getattr__
 def fileno(self):
     return self.socket.fileno()
 asyncore.dispatcher.fileno = fileno
-from wc import debug,_,config,xmlify
+from wc import debug,_,config,xmlify,ip
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
 from LimitQueue import LimitQueue
@@ -193,10 +193,8 @@ def match_host (request):
     if not hostname:
         return None
     hostname = hostname.lower()
-    for domain in config['noproxyfor'].keys():
-        if hostname.find(domain) != -1:
-            return "True"
-    return None
+    hosts, nets = config['noproxyfor']
+    return ip.host_in_set(hostname, hosts, nets)
 
 
 def spliturl (url):

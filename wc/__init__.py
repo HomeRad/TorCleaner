@@ -352,7 +352,7 @@ class WConfigParser (BaseParser):
                 strhosts = str(self.config['noproxyfor'])
                 self.config['noproxyfor'] = host_set(strhosts)
             if self.config['allowedhosts']:
-                strhosts = str(self.config['noproxyfor'])
+                strhosts = str(self.config['allowedhosts'])
                 self.config['allowedhosts'] = host_set(strhosts)
             if self.config['logfile'] == '<stdout>':
                 self.config['logfile'] = sys.stdout

@@ -5,7 +5,7 @@ import sys, os, time, socket, re
 from Connection import Connection
 from wc.proxy import make_timer
 from wc.proxy import dns as DNS
-from wc import debug, warning
+from wc import debug, warning, ip
 from wc.debug_levels import *
 from pprint import pformat
 

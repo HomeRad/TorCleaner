@@ -3,8 +3,9 @@ from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
-from wc import debug, config, _
-from wc.proxy import log, match_host, HTML_TEMPLATE
+from wc import debug, config, _, ip
+from wc.proxy import log, match_host
+from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
@@ -29,7 +30,8 @@ class HttpClient (Connection):
         self.bytes_remaining = None # for content only
         self.content = ''
         host = self.addr[0]
-        if not config['allowedhosts'].has_key(host):
+        hosts, nets = config['allowedhosts']
+        if not ip.host_in_set(host, hosts, nets):
             print >>sys.stderr, _("%s access denied")%host
             self.close()
 
