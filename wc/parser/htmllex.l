@@ -574,7 +574,7 @@ RX_DATA [-a-zA-Z0-9_:]+
     return T_WAIT;
 }
 
-<S_SCRIPT_MCOMMENT>[^*]+|\*[^/]+ {
+<S_SCRIPT_MCOMMENT>[^*]+|\* {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
@@ -583,10 +583,6 @@ RX_DATA [-a-zA-Z0-9_:]+
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
     BEGIN(S_SCRIPT);
-}
-
-<S_SCRIPT_MCOMMENT>. {
-    return T_WAIT;
 }
 
   /*********************** STYLE ************************/
