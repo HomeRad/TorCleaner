@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-12-10 12:40+0100\n"
+"POT-Creation-Date: 2004-12-21 23:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,25 +77,25 @@ msgstr ""
 msgid "Empty URL"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:274
+#: ../wc/proxy/HttpClient.py:275
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:294 ../wc/proxy/HttpClient.py:307
-#: ../wc/proxy/HttpClient.py:319
+#: ../wc/proxy/HttpClient.py:295 ../wc/proxy/HttpClient.py:308
+#: ../wc/proxy/HttpClient.py:320
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:413 ../wc/proxy/HttpServer.py:362
+#: ../wc/proxy/HttpClient.py:414 ../wc/proxy/HttpServer.py:362
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:523
+#: ../wc/proxy/HttpClient.py:524
 msgid "Invalid Method"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:531 ../wc/proxy/HttpClient.py:537
-#: ../wc/proxy/HttpClient.py:548 ../wc/webgui/webconfig.py:76
+#: ../wc/proxy/HttpClient.py:532 ../wc/proxy/HttpClient.py:538
+#: ../wc/proxy/HttpClient.py:549 ../wc/webgui/webconfig.py:76
 msgid "Authentication Required"
 msgstr ""
 
@@ -174,31 +174,31 @@ msgstr ""
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:83
+#: ../wc/filter/rules/FolderRule.py:82
 #, python-format
 msgid "inserting new rule %s"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:125
+#: ../wc/filter/rules/FolderRule.py:121
 msgid "with 1 rule"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:127
+#: ../wc/filter/rules/FolderRule.py:123
 #, python-format
 msgid "with %d rules"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:106
+#: ../wc/filter/rules/Rule.py:107
 #, python-format
 msgid "updating rule title for language %s:"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:120
+#: ../wc/filter/rules/Rule.py:121
 #, python-format
 msgid "updating rule description for language %s:"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:136
+#: ../wc/filter/rules/Rule.py:137
 #, python-format
 msgid "updating rule %s:"
 msgstr ""
@@ -227,12 +227,12 @@ msgstr ""
 msgid "Enclosed block"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:95
+#: ../wc/filter/rules/RatingRule.py:92
 #, python-format
 msgid "Rating %r for category %r is not in range %s"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:99
+#: ../wc/filter/rules/RatingRule.py:96
 #, python-format
 msgid "Rating %r for category %r exceeds limit %r"
 msgstr ""
@@ -269,56 +269,40 @@ msgstr ""
 msgid "Clamd is not ready for stream scanning"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:30
+#: ../wc/filter/rating/__init__.py:75
 msgid "Unknown page"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:47
-msgid "violence"
+#: ../wc/filter/rating/__init__.py:142
+#, python-format
+msgid "adding new rating for %r"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:52
-msgid "sex"
+#: ../wc/filter/rating/category.py:37
+msgid "none"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:57
-msgid "language"
+#: ../wc/filter/rating/category.py:37
+msgid "mild"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:62
-msgid "age range"
+#: ../wc/filter/rating/category.py:37
+msgid "heavy"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:70
-msgid "None"
-msgstr ""
-
-#: ../wc/filter/rating/__init__.py:71
-msgid "Mild"
-msgstr ""
-
-#: ../wc/filter/rating/__init__.py:72
-msgid "Heavy"
-msgstr ""
-
-#: ../wc/filter/rating/__init__.py:102
+#: ../wc/filter/rating/storage/filesystem.py:43
 #, python-format
 msgid "malformed rating line %r"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:105
+#: ../wc/filter/rating/storage/filesystem.py:46
 #, python-format
 msgid "malfored modified time %r"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:109
+#: ../wc/filter/rating/storage/filesystem.py:50
 #, python-format
 msgid "generic url %r doesn't match %r"
-msgstr ""
-
-#: ../wc/filter/rating/__init__.py:321
-#, python-format
-msgid "adding new rating for %r"
 msgstr ""
 
 #: ../wc/webgui/context/error_html.py:21
@@ -336,7 +320,7 @@ msgstr ""
 msgid "Error: %s"
 msgstr ""
 
-#: ../wc/webgui/context/filterconfig_html.py:369
+#: ../wc/webgui/context/filterconfig_html.py:370
 msgid "No title"
 msgstr ""
 
@@ -481,12 +465,12 @@ msgstr ""
 msgid "The %s service can be paused."
 msgstr ""
 
-#: ../wc/configuration.py:224
+#: ../wc/configuration.py:236
 #, python-format
 msgid "inserting %s"
 msgstr ""
 
-#: ../wc/configuration.py:409
+#: ../wc/configuration.py:426 ../wc/configuration.py:492
 #, python-format
 msgid "unknown tag name %r"
 msgstr ""
@@ -681,7 +665,7 @@ msgstr ""
 msgid "Accessibility pages"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:83
+#: ../templates/classic/macros/standard.html:85
 #: ../templates/classic/accessibility.html:12
 #: ../templates/classic/accessibility.html:50
 msgid "Accessibility statement"
@@ -868,11 +852,6 @@ msgstr ""
 msgid "Content rated by ${appname}"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:51
-#: ../templates/classic/macros/standard.html:55
-msgid "Content rating"
-msgstr ""
-
 #: ../templates/classic/rating.html:13
 #: ../templates/classic/rating_mail.html:13
 msgid "Content rating for ${appname}"
@@ -1003,7 +982,7 @@ msgstr ""
 msgid "Fallback URL"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:89
+#: ../templates/classic/macros/standard.html:91
 #: ../templates/classic/accessibility.html:48
 msgid "Feedback"
 msgstr ""
@@ -1094,8 +1073,8 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:81
-#: ../templates/classic/macros/standard.html:112
+#: ../templates/classic/macros/standard.html:83
+#: ../templates/classic/macros/standard.html:114
 msgid "Generated by ${appname} ${version}"
 msgstr ""
 
@@ -1128,8 +1107,8 @@ msgstr ""
 msgid "Header value"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:59
-#: ../templates/classic/macros/standard.html:63
+#: ../templates/classic/macros/standard.html:61
+#: ../templates/classic/macros/standard.html:65
 msgid "Help"
 msgstr ""
 
@@ -1382,6 +1361,13 @@ msgstr ""
 
 #: ../templates/classic/config.html:397
 msgid "Nofilter host(s) successfully removed."
+msgstr ""
+
+#: ../templates/classic/help.html:81
+#: ../templates/classic/help.html:103
+#: ../templates/classic/help.html:112
+#: ../templates/classic/help.html:131
+msgid "None"
 msgstr ""
 
 #: ../templates/classic/help.html:277
@@ -1797,10 +1783,6 @@ msgstr ""
 msgid "Skip to main content"
 msgstr ""
 
-#: ../templates/classic/update.html:37
-msgid "The <b>Update content ratings</b> button downloads new content ratings from ${url} and adds new ratings into the current configuration.<br> Existing content ratings are not changed."
-msgstr ""
-
 #: ../templates/classic/update.html:20
 msgid "The <b>Update filter configuration</b> button downloads new filter files from ${url} and merges their changes into the current configuration.<br> If something has changed, the new filter configuration files are saved and reloaded into the proxy."
 msgstr ""
@@ -1825,8 +1807,8 @@ msgstr ""
 msgid "There are no url ratings saved."
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:73
-#: ../templates/classic/macros/standard.html:104
+#: ../templates/classic/macros/standard.html:75
+#: ../templates/classic/macros/standard.html:106
 msgid "This page is also available in"
 msgstr ""
 
@@ -1866,10 +1848,6 @@ msgstr ""
 msgid "Up"
 msgstr ""
 
-#: ../templates/classic/update.html:45
-msgid "Update content ratings"
-msgstr ""
-
 #: ../templates/classic/update.html:29
 msgid "Update filter configuration"
 msgstr ""
@@ -1895,7 +1873,7 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:89
+#: ../templates/classic/macros/standard.html:91
 msgid "WebCleaner feedback information"
 msgstr ""
 
@@ -1935,7 +1913,7 @@ msgstr ""
 msgid "Your request"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:83
+#: ../templates/classic/macros/standard.html:85
 msgid "accessibility features of these pages"
 msgstr ""
 
