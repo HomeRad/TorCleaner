@@ -22,7 +22,6 @@ clean-local:
 
 # to build in the current directory
 localbuild: all
-	$(MAKE) -C wc/parser
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-$(PYVER)/wc/parser/htmlsax.so wc/parser/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
