@@ -30,6 +30,9 @@ class Storage (object):
     def get (self, url):
         pass
 
+    def get_urls (self):
+        raise NotImplementedError, "must be implemented in subclass"
+
     def check_url (self, url):
         if not wc.url.is_safe_url(url):
             raise RatingParseError("Invalid rating url %s." % repr(url))

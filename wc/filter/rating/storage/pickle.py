@@ -50,6 +50,9 @@ class PickleStorage (Storage):
                 return self.cache[url]
         return None
 
+    def get_urls (self):
+        return self.cache.keys()
+
     def remove (self, url):
         self.check_url(url)
         del self.cache[url]
