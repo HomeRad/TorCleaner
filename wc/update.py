@@ -45,8 +45,10 @@ UA_STR = '%s/%s' % (wc.Name, wc.Version)
 
 def decode (page):
     "gunzip or deflate a compressed page"
-    encoding = page.info().get("Content-Encoding") 
-    if encoding in ('gzip', 'x-gzip', 'deflate'):
+    encoding = page.info().get("Content-Encoding")
+    # note: some servers send content encoding gzip if file ends with ".gz"
+    # but we don't want to decompress such files
+    if encoding in ('gzip', 'x-gzip', 'deflate') and not page.geturl().endswith(".gz"):
         # cannot seek in socket descriptors, so must get content now
         content = page.read()
         if encoding == 'deflate':
