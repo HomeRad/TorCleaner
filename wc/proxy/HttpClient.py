@@ -225,7 +225,7 @@ class HttpClient (StatefulConnection):
                    FILTER_REQUEST_ENCODE,
                   ]
         self.attrs['headers'] = msg
-        self.persistent = self.get_persistent(msg, self.http_ver)
+        self.set_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
         self.compress = client_set_encoding_headers(msg)
         # filter headers
@@ -298,16 +298,16 @@ class HttpClient (StatefulConnection):
         self.state = 'content'
 
 
-    def get_persistent (self, headers, http_ver):
+    def set_persistent (self, headers, http_ver):
         """return True if connection is persistent"""
         # look if client wants persistent connections
         if http_ver >= (1,1):
-            persistent = not has_header_value(headers, 'Proxy-Connection', 'Close') and \
-                         not has_header_value(headers, 'Connection', 'Close')
+            self.persistent = \
+              not (has_header_value(headers, 'Proxy-Connection', 'Close') or
+                   has_header_value(headers, 'Connection', 'Close'))
         else:
             # note: never do persistent connections for HTTP/1.0 clients
-            persistent = False
-        return persistent
+            self.persistent = False
 
 
     def mangle_request_headers (self, headers):
@@ -398,6 +398,7 @@ class HttpClient (StatefulConnection):
                 # without content length the client can not determine
                 # when all data is sent
                 self.persistent = False
+            #self.set_persistent(headers, self.http_ver)
             # note: headers is a WcMessage object, not a dict
             self.write("".join(headers.headers))
             self.write('\r\n')

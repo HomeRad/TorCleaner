@@ -271,7 +271,7 @@ class HttpServer (Server):
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
-        self.persistent = self.get_persistent(msg, serverpool.http_versions[self.addr])
+        self.set_persistent(msg, serverpool.http_versions[self.addr])
         self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER], headers=msg)
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER, msg,
@@ -316,15 +316,14 @@ class HttpServer (Server):
                                        self.mime, self.url)
 
 
-    def get_persistent (self, headers, http_ver):
+    def set_persistent (self, headers, http_ver):
         """return True iff this server connection is persistent"""
         if http_ver >= (1,1):
-            persistent = not has_header_value(headers, 'Connection', 'Close')
+            self.persistent = not has_header_value(headers, 'Connection', 'Close')
         elif http_ver >= (1,0):
-            persistent = has_header_value(headers, 'Connection', 'Keep-Alive')
+            self.persistent = has_header_value(headers, 'Connection', 'Keep-Alive')
         else:
-            persistent = False
-        return persistent
+            self.persistent = False
 
 
     def is_rewrite (self):
