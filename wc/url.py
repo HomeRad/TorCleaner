@@ -102,7 +102,8 @@ default_ports = {
 
 def spliturl (url):
     """split url in a tuple (scheme, hostname, port, document) where
-    hostname is always lowercased"""
+    hostname is always lowercased
+    precondition: url is syntactically correct URI (eg has no whitespace)"""
     scheme, netloc = splittype(url)
     host, document = splithost(netloc)
     port = default_ports.get(scheme, 80)
