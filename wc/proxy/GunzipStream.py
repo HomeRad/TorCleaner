@@ -29,7 +29,7 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
 
     def __repr__ (self):
         """object representation"""
-        if self.closed
+        if self.closed:
             s = "closed"
         else:
             s = "open"

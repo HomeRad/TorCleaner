@@ -26,7 +26,7 @@ class UnchunkStream (object):
 
     def __repr__ (self):
         """representation of stream filter state"""
-        if self.closed
+        if self.closed:
             s = "closed"
         else:
             s = "open"
@@ -35,7 +35,7 @@ class UnchunkStream (object):
 
     def decode (self, s):
         """unchunk given data s"""
-        wc.log.debug(wc.LOG_PROXY, "chunked data %r", s)
+        wc.log.debug(wc.LOG_NET, "chunked data %r", s)
         self.buf += s
         s = ''
 
@@ -77,7 +77,7 @@ class UnchunkStream (object):
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
-        wc.log.debug(wc.LOG_PROXY, "decoded chunk %r", s)
+        wc.log.debug(wc.LOG_NET, "decoded chunk %r", s)
         return s
 
     def flush (self):
