@@ -1,3 +1,10 @@
+2.27 "" (released xx.xx.2005)
+
+  * Add <nbr> to the list of known deprecated tags so it does not get
+    corrected to <br> anymore.
+    Type: feature
+    Changed: wc/filter/HtmlTags.py
+
 2.26 "Tokyo Raiders" (released 2.1.2005)
 
   * Do not include test packages in installed binaries. This prevents
