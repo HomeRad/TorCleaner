@@ -29,6 +29,11 @@
     Type: feature
     Changed: wc/filter/__init__.py, wc/proxy/Http{Client,Server}.py
 
+  * changed command line options: webcleaner and webcleaner-certificates
+    accept both now a --configdir option
+    Type: feature
+    Changed: webcleaner{,.1}, webcleaner-certificates{,.1}
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix
