@@ -79,23 +79,6 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             return True
         return False
 
-    def _check_encoding (self, tag, attrs):
-        if tag == 'meta':
-            if attrs.get('http-equiv', '').lower() == "content-type":
-                content = attrs.get('content', '')
-                mo = _encoding_ro.search(content)
-                if mo:
-                    encoding = mo.group("encoding").encode("ascii")
-                    try:
-                        encoding = encoding.encode("ascii")
-                        codecs.lookup(encoding)
-                        wc.log.debug(wc.LOG_FILTER,
-                                  "%s switch to encoding %r", self, encoding)
-                        self.htmlparser.encoding = encoding
-                    except LookupError:
-                        wc.log.warn(wc.LOG_FILTER,
-                                    "unknown encoding %r", encoding)
-
     def _data (self, data):
         """general handler for data"""
         item = [wc.filter.rules.RewriteRule.DATA, data]
@@ -126,6 +109,8 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
     def doctype (self, data):
         """HTML doctype"""
         wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
+        if "XHTML" in data:
+            self.htmlparser.doctype = "XHTML"
         return self._data(u"<!DOCTYPE%s>" % data)
 
     def pi (self, data):
@@ -133,10 +118,27 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
         return self._data(u"<?%s?>" % data)
 
+    def _set_encoding (self, attrs):
+        if attrs.get('http-equiv', '').lower() == "content-type":
+            content = attrs.get('content', '')
+            mo = _encoding_ro.search(content)
+            if mo:
+                encoding = mo.group("encoding").encode("ascii")
+                try:
+                    encoding = encoding.encode("ascii")
+                    codecs.lookup(encoding)
+                    wc.log.debug(wc.LOG_FILTER,
+                                 "%s switch to encoding %r", self, encoding)
+                    self.htmlparser.encoding = encoding
+                except LookupError:
+                    wc.log.warn(wc.LOG_FILTER,
+                                "%s unknown encoding %r", self, encoding)
+
     def start_element (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
-        self._check_encoding(tag, attrs)
+        if tag == 'meta':
+            self._set_encoding(attrs)
         # default data
         wc.log.debug(wc.LOG_FILTER, "%s start_element %r %s", self, tag, attrs)
         if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG,
