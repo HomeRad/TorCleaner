@@ -157,7 +157,7 @@ Options:
 If `inputfile' is -, standard input is read.
 """)
 
-import os, sys, re, time, getopt, token, tokenize, operator
+import os, sys, re, time, getopt, token, tokenize, operator, cgi
 
 __version__ = '1.5'
 
@@ -516,15 +516,26 @@ class HtmlGettext (sgmllib.SGMLParser, object):
         for key,val in attributes:
             attrs[key] = val
         msgid = attrs.get('i18n:translate', None)
-        self.tag = None
         if msgid == '':
+            if self.tag:
+                raise Exception, "nested i18n:translate is unsupported"
             self.tag = tag
             self.data = ""
         elif msgid is not None:
+            if self.tag:
+                raise Exception, "nested i18n:translate is unsupported"
             if msgid.startswith("string:"):
                 self.translations.add(msgid[7:]).replace(';;', ';')
             else:
                 print >>sys.stderr, "tag <%s> has unsupported dynamic msgid %s" % (tag, `msgid`)
+        elif self.tag:
+            # nested tag to translate
+            self.data += "<%s"%tag
+            if attrs:
+                self.data += " "
+                for key,val in attrs.items():
+                    self.data += "%s=%s" % (key, cgi.escape(val, True))
+            self.data += ">"
         argument = attrs.get('i18n:attributes', None)
         if argument is not None:
             for name, msgid in get_attribute_list(argument):
@@ -534,11 +545,15 @@ class HtmlGettext (sgmllib.SGMLParser, object):
     def unknown_endtag (self, tag):
         if tag==self.tag:
             self.translations.add(self.data)
+            self.tag = None
             self.data = ""
+        elif self.tag:
+            self.data += "</%s>"%tag
 
 
     def handle_data (self, data):
-        self.data += data
+        if self.tag:
+            self.data += data
 
 
     def handle_charref (self, ref):
