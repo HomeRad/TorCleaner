@@ -17,7 +17,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import time
-import wc.strformat
 
 class Rating (object):
     """A single rating applies to a given URL and specifies a list
@@ -35,6 +34,8 @@ class Rating (object):
 
     def add_category_value (self, category, value):
         """Add value for given category. Updates modified time."""
+        assert category.valid_value(value), \
+          "Invalid value %s for category %s" % (repr(value), str(category))
         self.category_values[category.name] = value
         self.modified = time.time()
 
@@ -49,7 +50,3 @@ class Rating (object):
         if self.category_values:
             self.category_values = {}
             self.modified = time.time()
-
-    def modified_string (self):
-        """return ISO formatted modified time string"""
-        return wc.strformat.strtime(self.modified)
