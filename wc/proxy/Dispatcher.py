@@ -116,10 +116,7 @@ class Dispatcher (object):
                 status.append('%s:%d' % self.addr)
             except TypeError:
                 status.append(repr(self.addr))
-        # On some systems (RH10) id() can be a negative number. 
-        # work around this.
-        MAX = 2L*sys.maxint+1
-        return '<%s at %#x>' % (' '.join(status), id(self)&MAX)
+        return '<%s at %#x>' % (' '.join(status), id(self))
 
     def add_channel (self):
         socket_map[self.fileno()] = self
@@ -172,14 +169,8 @@ class Dispatcher (object):
     def readable (self):
         return True
 
-    if os.name == 'mac':
-        # The macintosh will select a listening socket for
-        # write if you let it.  What might this mean?
-        def writable (self):
-            return not self.accepting
-    else:
-        def writable (self):
-            return True
+    def writable (self):
+        return True
 
     # ==================================================
     # socket object methods.
@@ -220,7 +211,7 @@ class Dispatcher (object):
             if why[0] == errno.EWOULDBLOCK:
                 pass
             else:
-                raise socket.error, why
+                raise
 
     def send (self, data):
         try:
@@ -255,7 +246,7 @@ class Dispatcher (object):
                 self.handle_close()
                 return ''
             else:
-                raise socket.error, why
+                raise
 
     def close (self):
         self.del_channel()
