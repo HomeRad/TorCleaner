@@ -44,7 +44,7 @@ def resolve_entities (s):
 
 entities = htmlentitydefs.entitydefs.items()
 
-UnHtmlTable = map(lambda x: ("&"+x[0]+";", x[1]), entities)
+UnHtmlTable = [("&"+x[0]+";", x[1]) for x in entities]
 # order matters!
 UnHtmlTable.sort()
 UnHtmlTable.reverse()

@@ -28,8 +28,8 @@ xmlentities = {
     'apos': "'",
 }
 
-_xml_table = map(lambda x: (x[1], "&"+x[0]+";"), xmlentities.items())
-_unxml_table = map(lambda x: ("&"+x[0]+";", x[1]), xmlentities.items())
+_xml_table = [(x[1], "&"+x[0]+";") for x in xmlentities.items()]
+_unxml_table = [("&"+x[0]+";", x[1]) for x in xmlentities.items()]
 # order matters!
 _xml_table.sort()
 _unxml_table.sort()
