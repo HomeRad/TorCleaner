@@ -166,6 +166,12 @@ def initlog (filename, appname, filelogs=True):
         logging.getLogger("wc.access").addHandler(handler)
 
 
+def set_format (handler):
+    """set standard format for handler"""
+    handler.setFormatter(logging.root.handlers[0].formatter)
+    return handler
+
+
 def get_wc_handler (logfile):
     """return a handler for webcleaner logging"""
     mode = 'a'
@@ -173,7 +179,7 @@ def get_wc_handler (logfile):
     backup_count = 5 # number of files to generate
     handler = logging.handlers.RotatingFileHandler(
                                      logfile, mode, max_bytes, backup_count)
-    return wc.log.set_format(handler)
+    return set_format(handler)
 
 
 def get_access_handler (logfile):
