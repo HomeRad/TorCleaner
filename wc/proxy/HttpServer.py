@@ -369,7 +369,7 @@ class HttpServer (Server):
         if underflow:
             warn(PROXY, i18n._("server received %d bytes more than content-length"),
                  (-self.bytes_remaining))
-        if self.statuscode!=407:
+        if data and self.statuscode!=407:
             self.client.server_content(data)
         if is_closed or self.bytes_remaining==0:
             # either we ran out of bytes, or the decoder says we're done
@@ -435,13 +435,23 @@ class HttpServer (Server):
                 data = applyfilter(i, data, "finish", self.attrs)
         except FilterWait, msg:
             debug(PROXY, "%s FilterWait %r", self, msg)
-            # the filter still needs some data so try flushing again
-            # after a while
+            # the filter still needs some data
+            # to save CPU time make connection unreadable for a while
+            self.set_unreadable(0.5)
             return False
         # the client might already have closed
-        if self.client and self.statuscode!=407:
+        if self.client and data and self.statuscode!=407:
             self.client.server_content(data)
         return True
+
+
+    def set_unreadable (self, secs):
+        self.connected = False
+        make_timer(secs, self.set_readable)
+
+
+    def set_readable (self):
+        self.connected = True
 
 
     def close_reuse (self):
@@ -456,8 +466,10 @@ class HttpServer (Server):
 
     def close_ready (self):
         debug(PROXY, "%s close ready", self)
+        if not (self.client and self.connected):
+            # client has lost interest, or we closed already
+            return True
         if not self.flush():
-            make_timer(0.1, lambda: self.close_ready())
             return False
         if super(HttpServer, self).close_ready():
             if self.client:
@@ -470,13 +482,16 @@ class HttpServer (Server):
     def close_close (self):
         debug(PROXY, "%s close", self)
         assert not self.client, "close with open client"
-        if self.connected and self.state!='closed':
+        unregister = (self.connected and self.state!='closed')
+        if unregister:
             self.state = 'closed'
         super(HttpServer, self).close_close()
-        serverpool.unregister_server(self.addr, self)
+        if unregister:
+            serverpool.unregister_server(self.addr, self)
 
 
     def handle_error (self, what):
+        debug(PROXY, "%s handle_error", self)
         if self.client:
             client, self.client = self.client, None
             client.server_abort()
