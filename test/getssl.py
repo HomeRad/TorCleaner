@@ -5,14 +5,12 @@
 import httplib, urlparse, sys, os, socket
 from OpenSSL import SSL
 
-def request (url):
+def request (url, port):
+    """httplib request"""
     parts = urlparse.urlsplit(url)
     host = parts[1]
-    port = 8443
-    if os.environ.get("WC_DEVELOPMENT", 0):
-        port += 1
     path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
-    h = httplib.HTTPSConnection("localhost:%s"%port)
+    h = httplib.HTTPSConnection("localhost:%d"%port)
     h.connect()
     h.putrequest("GET", url, skip_host=1)
     h.putheader("Host", host)
@@ -22,17 +20,17 @@ def request (url):
         url = req.msg.get('Location')
         print "redirected to", url
         return request(url)
-    return req
+    print "HTTP version", req.version, req.status, req.reason
+    print req.msg
+    print req.read()
 
 
-def rawrequest (url):
+def rawrequest (url, port):
+    """raw request with PyOpenSSL"""
     from wc.proxy.Dispatcher import create_socket
     from wc.proxy.ssl import get_clientctx
     parts = urlparse.urlsplit(url)
     host = parts[1]
-    port = 8443
-    if os.environ.get("WC_DEVELOPMENT", 0):
-        port += 1
     path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
     sock = create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
     addr = (socket.gethostbyname('localhost'), port)
@@ -41,11 +39,10 @@ def rawrequest (url):
     sock.do_handshake()
     sock.write('GET %s HTTP/1.1\r\n' % url)
     sock.write('Host: %s\r\n' % host)
-    sock.write('Content-Length: 0\r\n')
     sock.write('\r\n')
     while True:
         try:
-            print sock.recv(1024)
+            print repr(sock.recv(80))
         except SSL.ZeroReturnError, msg:
             # finished
             break
@@ -53,13 +50,11 @@ def rawrequest (url):
     sock.close()
 
 
-def rawrequest2 (url):
+def rawrequest2 (url, port):
+    """raw request with socket.ssl"""
     from wc.proxy.Dispatcher import create_socket
     parts = urlparse.urlsplit(url)
     host = parts[1]
-    port = 8443
-    if os.environ.get("WC_DEVELOPMENT", 0):
-        port += 1
     path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
     _sock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
     addr = (socket.gethostbyname('localhost'), port)
@@ -67,12 +62,48 @@ def rawrequest2 (url):
     sock = socket.ssl(_sock)
     sock.write('GET %s HTTP/1.1\r\n' % url)
     sock.write('Host: %s\r\n' % host)
-    sock.write('Content-Length: 0\r\n')
     sock.write('\r\n')
     while True:
         try:
-            print sock.read(1024)
+            print repr(sock.read(80))
         except socket.sslerror, msg:
+            print "Oops"
+            break
+    _sock.close()
+
+
+def rawrequest3 (url, port):
+    """raw request with proxy CONNECT protocol"""
+    from wc.proxy.Dispatcher import create_socket
+    from urllib import splitnport
+    parts = urlparse.urlsplit(url)
+    host, sslport = splitnport(parts[1], 443)
+    path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
+    _sock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
+    addr = (socket.gethostbyname('localhost'), port)
+    _sock.connect(addr)
+    _sock.send('CONNECT %s:%d HTTP/1.1\r\n' % (host, sslport))
+    _sock.send('User-Agent: getssl\r\n')
+    _sock.send('\r\n')
+    buf = ""
+    while True:
+        buf += _sock.recv(1024)
+        if "\r\n\r\n" in buf:
+            break
+    print repr(buf)
+    print "initiating SSL handshake"
+    sock = socket.ssl(_sock)
+    print "write SSL request...",
+    sock.write("GET %s HTTP/1.1\r\n" % url)
+    sock.write("Host: %s\r\n" % host)
+    sock.write("\r\n")
+    print " ok."
+    while True:
+        try:
+            print "XXX read"
+            print repr(sock.read(80))
+        except socket.sslerror, msg:
+            print "Oops"
             break
     _sock.close()
 
@@ -82,11 +113,14 @@ def _main ():
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)
-    #req = request(sys.argv[1])
-    #print "HTTP version", req.version, req.status, req.reason
-    #print req.msg
-    #print req.read()
-    rawrequest(sys.argv[1])
+    import wc
+    config = wc.Configuration()
+    port = config['port']
+    sslport = config['sslport']
+    #request(sys.argv[1], sslport)
+    #rawrequest(sys.argv[1], sslport)
+    #rawrequest2(sys.argv[1], sslport)
+    rawrequest3(sys.argv[1], port)
 
 
 if __name__=='__main__':
