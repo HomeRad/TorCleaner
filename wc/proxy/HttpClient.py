@@ -71,12 +71,11 @@ class HttpClient (Connection):
 
 
     def __repr__ (self):
-        if self.state != 'request':
+        if self.request:
             try:
                 extra = self.request.split()[1]
             except IndexError:
                 extra = '???' + self.request
-            #if len(extra) > 46: extra = extra[:43] + '...'
         else:
             extra = 'being read'
         return '<%s:%-8s persistent=%s %s>'%('client', self.state, self.persistent, extra)
