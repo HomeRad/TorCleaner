@@ -18,6 +18,7 @@ clean-local:
 	rm -f wc/parser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
+	rm -f webcleaner.log* webcleaner.err*
 
 # to build in the current directory
 localbuild: all
