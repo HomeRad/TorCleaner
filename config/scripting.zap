@@ -126,4 +126,10 @@
 <attr name="onselectstart"/>
 <replace part="attr"/>
 </rewrite>
+
+<rewrite title="&lt;body&gt; onkeydown" oid="137"
+ tag="body">
+<attr name="onkeydown"/>
+<replace part="attr"/>
+</rewrite>
 </folder>

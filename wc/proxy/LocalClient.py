@@ -7,14 +7,13 @@ class LocalClient (HttpClient):
     """delegate all requests to the web config class"""
     def server_request (self):
         assert self.state == 'receive'
-        method, url, protocol = request.split()
         # reject invalid methods
-        if method not in ['GET', 'POST', 'HEAD']:
+        if self.method not in ['GET', 'POST', 'HEAD']:
             return self.error(403, i18n._("Invalid Method"))
         # get cgi form data
-        # XXX this exploits FieldStorage internals
+        # XXX uses FieldStorage internals
         form = cgi.FieldStorage(fp=StringIO(self.content),
                                 headers=self.headers,
-                                environ={'REQUEST_METHOD': method})
-        # This object will call server_connected at some point
-        WebConfig(self, url, form)
+                                environ={'REQUEST_METHOD': self.method})
+        # this object will call server_connected at some point
+        WebConfig(self, self.url, form, self.protocol)

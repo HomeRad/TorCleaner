@@ -5,7 +5,7 @@ from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip
-from wc.proxy import match_host
+from wc.proxy import match_host, fix_http_version
 from wc.proxy.Headers import client_set_headers, remove_headers
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
@@ -101,11 +101,13 @@ class HttpClient (Connection):
                            fun="finish", attrs=self.nofilter)
             info(ACCESS, '%s - %s - %s', self.addr[0],
                  time.ctime(time.time()), self.request)
-            try: self.method, url, protocol = self.request.split()
+            try:
+                self.method, self.url, protocol = self.request.split()
+                self.protocol = fix_http_version(protocol)
             except:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Can't parse request"))
-            if not url:
+            if not self.url:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Empty URL"))
             # note: we do not enforce a maximum url length
