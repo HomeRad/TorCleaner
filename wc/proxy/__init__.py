@@ -84,10 +84,10 @@ def get_http_version (protocol):
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
         if f > (1,1):
-            error(PROXY, i18n._("unsupported HTTP version %s"), str(f))
+            error(PROXY, i18n._("unsupported HTTP version %s"), f)
             f = (1,1)
         return f
-    error(PROXY, i18n._("invalid HTTP version %s"), `protocol`)
+    error(PROXY, i18n._("invalid HTTP version %r"), protocol)
     return (1,0)
 
 
@@ -154,26 +154,26 @@ def proxy_poll (timeout=0.0):
         # don't want to call another handle_* on it
         handlerCount = 0
         for x in e:
-            debug(PROXY, "%s handle exception event", str(x))
+            debug(PROXY, "%s handle exception event", x)
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
             t = time.time()
             if x not in e and x.writable():
-                debug(PROXY, "%s handle write", str(x))
+                debug(PROXY, "%s handle write", x)
                 x.handle_write_event()
                 handlerCount += 1
                 #if time.time() - t > 0.1:
-                #    debug(PROXY, 'wslow %4.1f %s %s', (time.time()-t), 's', str(x))
+                #    debug(PROXY, 'wslow %4.1f %r %s', (time.time()-t), s, x)
                 #    pass
         for x in r:
             t = time.time()
             if x not in e and x not in w and x.readable():
-                debug(PROXY, "%s handle read", str(x))
+                debug(PROXY, "%s handle read", x)
                 x.handle_read_event()
                 handlerCount += 1
                 #if time.time() - t > 0.1:
-                #    debug(PROXY, 'rslow %4.1f %s %s', (time.time()-t), 's', str(x))
+                #    debug(PROXY, 'rslow %4.1f %r %s', (time.time()-t), s, x)
                 #    pass
         return handlerCount
 

@@ -49,8 +49,7 @@ class Rule (object):
 
     def update (self, rule, dryrun=False, log=None):
         """update title and description with given rule data"""
-        assert self.sid==rule.sid, "updating %s with invalid rule %s" % \
-                (str(self), str(rule))
+        assert self.sid==rule.sid, "updating %s with invalid rule %s"%(self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
         print >>log, "updating rule", self.tiptext()
         l = [a for a in self.attrnames if a not in ['sid', 'disable'] ]
@@ -63,7 +62,7 @@ class Rule (object):
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
-                print >>log, attr, `oldval`, "==>", `newval`
+                print >>log, attr, repr(oldval), "==>", repr(newval)
                 chg = True
                 if not dryrun:
                     setattr(self, attr, newval)
@@ -150,8 +149,8 @@ class Rule (object):
     def __str__ (self):
         s = self.get_name()+"\n"
         s += "sid     %s\n" % self.sid
-        s += "title   %s\n" % `self.title`
-        s += "desc    %s\n" % `self.desc`
+        s += "title   %r\n" % self.title
+        s += "desc    %r\n" % self.desc
         s += "disable %d\n" % self.disable
         return s
 

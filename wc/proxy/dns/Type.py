@@ -50,4 +50,4 @@ for _name in dir():
         _typemap[eval(_name)] = _name
 
 def typestr (dnstype):
-    return _typemap.get(dnstype, `dnstype`)
+    return _typemap.get(dnstype, repr(dnstype))

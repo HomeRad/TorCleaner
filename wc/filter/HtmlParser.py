@@ -63,7 +63,7 @@ class JSHtmlListener (JSListener):
 
     def jsProcessData (self, data):
         """process data produced by document.write() JavaScript"""
-        self._debug("JS document.write %s", `data`)
+        self._debug("JS document.write %r", data)
         self.js_output += 1
         # parse recursively
         self.js_html.feed(data)
@@ -197,7 +197,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def __repr__ (self):
         """representation with recursion level and state"""
-        return "<HtmlParser[%d] %s %s>" % (self.level, str(self.state), self.url)
+        return "<HtmlParser[%d] %s %s>" % (self.level, self.state, self.url)
 
 
     def _debug (self, msg, *args):
@@ -208,10 +208,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def _debugbuf (self):
         """print debugging information about data buffer status"""
-        self._debug("self.outbuf %s", `self.outbuf.getvalue()`)
-        self._debug("self.buf %s", `self.buf`)
-        self._debug("self.waitbuf %s", `self.waitbuf`)
-        self._debug("self.inbuf %s", `self.inbuf.getvalue()`)
+        self._debug("self.outbuf %r", self.outbuf.getvalue())
+        self._debug("self.buf %r", self.buf)
+        self._debug("self.waitbuf %r", self.waitbuf)
+        self._debug("self.inbuf %r", self.inbuf.getvalue())
 
 
     def feed (self, data):
@@ -230,7 +230,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.inbuf = StringIO()
             if data:
                 # only feed non-empty data
-                self._debug("feed %s", `data`)
+                self._debug("feed %r", data)
                 self.parser.feed(data)
             else:
                 self._debug("feed")
@@ -262,7 +262,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def replay (self, waitbuf):
         """call the handler functions again with buffer data"""
-        self._debug("replay %s", `waitbuf`)
+        self._debug("replay %r", waitbuf)
         for item in waitbuf:
             if item[0]==DATA:
                 self._data(item[1])
@@ -292,19 +292,19 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def cdata (self, data):
         """character data"""
-        self._debug("cdata %s", `data`)
+        self._debug("cdata %r", data)
         return self._data(data)
 
 
     def characters (self, data):
         """characters"""
-        self._debug("characters %s", `data`)
+        self._debug("characters %r", data)
         return self._data(data)
 
 
     def comment (self, data):
         """a comment; accept only non-empty comments"""
-        self._debug("comment %s", `data`)
+        self._debug("comment %r", data)
         item = [COMMENT, data]
         if self.state[0]=='wait':
             self.waitbuf.append(item)
@@ -314,12 +314,12 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
 
     def doctype (self, data):
-        self._debug("doctype %s", `data`)
+        self._debug("doctype %r", data)
         return self._data("<!DOCTYPE%s>"%data)
 
 
     def pi (self, data):
-        self._debug("pi %s", `data`)
+        self._debug("pi %r", data)
         return self._data("<?%s?>"%data)
 
 
@@ -327,7 +327,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         # default data
-        self._debug("startElement %s", `tag`)
+        self._debug("startElement %r", tag)
         tag = check_spelling(tag, self.url)
         item = [STARTTAG, tag, attrs]
         if self.state[0]=='wait':
@@ -352,14 +352,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.pics = []
         elif tag=="base" and attrs.has_key('href'):
             self.base_url = strip_quotes(attrs['href'])
-            self._debug("using base url %s", `self.base_url`)
+            self._debug("using base url %r", self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
 
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                self._debug("matched rule %s on tag %s", `rule.title`, `tag`)
+                self._debug("matched rule %r on tag %r", rule.title, tag)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = True
@@ -394,7 +394,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buf2data)"""
-        self._debug("endElement %s", `tag`)
+        self._debug("endElement %r", tag)
         tag = check_spelling(tag, self.url)
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
@@ -433,7 +433,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_popup = 0
         for name in ('onmouseover', 'onmouseout'):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
-                self._debug("JS: del %s from %s", `name`, `tag`)
+                self._debug("JS: del %r from %r", name, tag)
                 del attrs[name]
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
@@ -466,13 +466,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsForm (self, name, action, target):
         """when hitting a (named) form, notify the JS engine about that"""
         if not name: return
-        self._debug("jsForm %s action %s %s", `name`, `action`, `target`)
+        self._debug("jsForm %r action %r %r", name, action, target)
         self.js_env.addForm(name, action, target)
 
 
     def jsScriptSrc (self, url, language):
         """Start a background download for <script src=""> tags"""
-        assert self.state[0]=='parse', "non-parse state %s" % str(self.state)
+        assert self.state[0]=='parse', "non-parse state %s" % self.state
         ver = get_js_ver(language)
         if self.base_url:
             url = urlparse.urljoin(self.base_url, url)
@@ -500,11 +500,11 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsScriptData (self, data, url, ver):
         """Callback for loading <script src=""> data in the background
            If downloading is finished, data is None"""
-        assert self.state[0]=='wait', "non-wait state %s" % str(self.state)
+        assert self.state[0]=='wait', "non-wait state %s" % self.state
         if data is None:
             if not self.js_script:
                 warn(PARSER, "HtmlParser[%d]: empty JS src %s", self.level, url)
-                self.js_script = "// error fetching script from %s" % `url`
+                self.js_script = "// error fetching script from %r"%url
             self.buf.append([STARTTAG, "script", {'type': 'text/javascript'}])
             script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
             self.buf.append([DATA, script])
@@ -522,9 +522,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
-        self._debug("JS: jsScript %s %s", ver, `script`)
-        assert self.state[0]=='parse', "non-parse state %s" % str(self.state)
-        assert len(self.buf) >= 2, "too small buffer %s" % str(self.buf)
+        self._debug("JS: jsScript %s %r", ver, script)
+        assert self.state[0]=='parse', "non-parse state %s" % self.state
+        assert len(self.buf) >= 2, "too small buffer %s" % self.buf
         self.js_output = 0
         self.js_env.attachListener(self)
         # start recursive html filter (used by jsProcessData)
@@ -540,7 +540,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsEndScript (self, item):
         self._debug("JS: endScript")
-        assert len(self.buf) >= 2, "too small buffer %s" % str(self.buf)
+        assert len(self.buf) >= 2, "too small buffer %s" % self.buf
         if self.js_output:
             try:
                 self.js_html.feed('')
@@ -554,7 +554,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.js_html._debugbuf()
             assert not self.js_html.inbuf.getvalue()
             assert not self.js_html.waitbuf
-            assert len(self.buf) >= 2, "too small buffer %s" % str(self.buf)
+            assert len(self.buf) >= 2, "too small buffer %s" % self.buf
             self.buf[-2:-2] = [[DATA, self.js_html.outbuf.getvalue()]]+self.js_html.buf
         self.js_html = None
         if (self.js_popup + self.js_output) > 0:
@@ -570,17 +570,17 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsEndElement (self, item):
         """parse generated html for scripts"""
-        self._debug("jsEndElement buf %s", `self.buf`)
+        self._debug("jsEndElement buf %r", self.buf)
         if len(self.buf)<2:
             # syntax error, ignore
-            warn(PARSER, "JS syntax error, self.buf %s", `self.buf`)
+            warn(PARSER, "JS syntax error, self.buf %r", self.buf)
             return
         if self.js_src:
-            debug(FILTER, "JS src, self.buf %s", `self.buf`)
+            debug(FILTER, "JS src, self.buf %r", self.buf)
             del self.buf[-1]
             if len(self.buf)<2:
                 # syntax error, ignore
-                warn(PARSER, "JS end, self.buf %s", str(self.buf))
+                warn(PARSER, "JS end, self.buf %s", self.buf)
                 return
             if len(self.buf) > 2 and \
                self.buf[-3][0]==STARTTAG and self.buf[-3][1]=='script':

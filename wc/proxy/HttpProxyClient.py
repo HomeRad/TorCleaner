@@ -21,7 +21,7 @@ class HttpProxyClient (object):
         self.args = args
         self.connected = True
         self.addr = ('localhost', 80)
-        debug(PROXY, '%s init', str(self))
+        debug(PROXY, '%s init', self)
 
 
     def __repr__ (self):
@@ -35,14 +35,14 @@ class HttpProxyClient (object):
 
 
     def finish (self):
-        debug(PROXY, '%s finish', str(self))
+        debug(PROXY, '%s finish', self)
         if self.handler:
             self.handler(None, *self.args)
             self.handler = None
 
 
     def error (self, status, msg, txt=''):
-        error(PROXY, '%s error %s %s %s', str(self), status, msg, txt)
+        error(PROXY, '%s error %s %s %s', self, status, msg, txt)
         self.finish()
 
 
@@ -54,7 +54,7 @@ class HttpProxyClient (object):
     def server_response (self, server, response, status, headers):
         self.server = server
         assert self.server.connected
-        debug(PROXY, '%s server_response %s', str(self), `response`)
+        debug(PROXY, '%s server_response %r', self, response)
         protocol, status, msg = get_response_data(response, self.args[0])
         if status in (302, 301):
             # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
@@ -77,28 +77,27 @@ class HttpProxyClient (object):
                            )
             return
         elif status!=200:
-            error(PROXY, "%s got %s status %d %s",
-                          str(self), protocol, status, `msg`)
+            error(PROXY, "%s got %s status %d %r", self, protocol, status, msg)
             self.finish()
 
 
     def server_content (self, data):
         assert self.server
-        debug(PROXY, '%s server_content with %d bytes', str(self), len(data))
+        debug(PROXY, '%s server_content with %d bytes', self, len(data))
         self.write(data)
 
 
     def server_close (self):
         assert self.server
-        debug(PROXY, '%s server_close', str(self))
+        debug(PROXY, '%s server_close', self)
         self.finish()
 
 
     def server_abort (self):
-        debug(PROXY, '%s server_abort', str(self))
+        debug(PROXY, '%s server_abort', self)
         self.finish()
 
 
     def handle_local (self):
-        error(PROXY, "%s handle_local %s", str(self), str(self.args))
+        error(PROXY, "%s handle_local %s", self, self.args)
         self.finish()

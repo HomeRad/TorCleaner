@@ -300,7 +300,7 @@ class Magic (object):
         try:
             f = file(magic_file, 'rb')
         except:
-            raise StandardError("No valid magic file called %s"%`magic_file`)
+            raise StandardError("No valid magic file called %r"%magic_file)
     
         index = 0
         for line in f.readlines():
@@ -485,7 +485,7 @@ class Magic (object):
             #        leng = size
             #        kind = "string"
         else:
-            raise StandardError("Type %s not recognised"%`kind`)
+            raise StandardError("Type %r not recognised"%kind)
 
         return value
 
@@ -498,7 +498,7 @@ class Magic (object):
         elif oper == '':
             pass
         else:
-            raise StandardError("Binary operator unknown %s"%`oper`)
+            raise StandardError("Binary operator unknown %r"%oper)
         return value
 
 
@@ -691,7 +691,7 @@ class Magic (object):
                         success = True
                         replace = value
                 else:
-                    raise StandardError("test used %s is not defined"%`test`)
+                    raise StandardError("test used %r is not defined"%test)
 
                 if success:
                     found_rule = True

@@ -57,7 +57,7 @@ class HttpClient (Connection):
 
     def error (self, status, msg, txt='', auth=''):
         self.state = 'done'
-        debug(PROXY, '%s error %s (%d)', str(self), `msg`, status)
+        debug(PROXY, '%s error %r (%d)', self, msg, status)
         if status in google_try_status and config['try_google']:
             self.try_google(self.url, msg)
         else:
@@ -84,7 +84,7 @@ class HttpClient (Connection):
     def process_read (self):
         # hmm, this occurs with WebCleaner as a parent of Oops Http Proxy
         assert not (self.state in ('receive','closed') and self.recv_buffer and self.method!='CONNECT'),\
-         'client in state %s sent data %s'%(self.state, `self.recv_buffer`)
+         'client in state %s sent data %r'%(self.state, self.recv_buffer)
 
         while True:
             bytes_before = len(self.recv_buffer)
@@ -125,18 +125,18 @@ class HttpClient (Connection):
         self.protocol = fix_http_version(protocol)
         self.http_ver = get_http_version(self.protocol)
         self.request = "%s %s %s" % (self.method, url_quote(self.url), self.protocol)
-        debug(PROXY, "%s request %s", str(self), `self.request`)
+        debug(PROXY, "%s request %r", self, self.request)
         self.request = applyfilter(FILTER_REQUEST, self.request,
                                    "finish", self.attrs)
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > 1024:
-            error(PROXY, "%s request url length %d chars is too long", str(self), len(self.url))
+            error(PROXY, "%s request url length %d chars is too long", self, len(self.url))
             self.error(400, i18n._("URL too long"))
             return
         if len(self.url) > 255:
-            warn(PROXY, "%s request url length %d chars is very long", str(self), len(self.url))
+            warn(PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # and unquote again
         self.url = url_norm(self.url)
         self.state = 'headers'
@@ -153,7 +153,7 @@ class HttpClient (Connection):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
-        debug(PROXY, "%s client headers \n%s", str(self), str(msg))
+        debug(PROXY, "%s client headers \n%s", self, msg)
         filters = [FILTER_REQUEST_HEADER,
                    FILTER_REQUEST_DECODE,
                    FILTER_REQUEST_MODIFY,
@@ -180,7 +180,7 @@ class HttpClient (Connection):
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
-            debug(PROXY, '%s Transfer-encoding %s', str(self), `self.headers['Transfer-encoding']`)
+            debug(PROXY, '%s Transfer-encoding %r', self, self.headers['Transfer-encoding'])
             self.decoders.append(UnchunkStream())
             client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
@@ -258,7 +258,7 @@ class HttpClient (Connection):
 
 
     def server_request (self):
-        assert self.state=='receive', "%s server_request in state receive" % str(self)
+        assert self.state=='receive', "%s server_request in state receive"%self
         # This object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
                                self.content)
@@ -266,8 +266,8 @@ class HttpClient (Connection):
 
     def server_response (self, server, response, status, headers):
         # try google options
-        assert server.connected, "%s server was not connected" % str(self)
-        debug(PROXY, '%s server_response %s (%d)', str(self), `response`, status)
+        assert server.connected, "%s server was not connected"%self
+        debug(PROXY, '%s server_response %r (%d)', self, response, status)
         if status in google_try_status and config['try_google']:
             server.client_abort()
             self.try_google(self.url, response)
@@ -284,7 +284,7 @@ class HttpClient (Connection):
 
 
     def try_google (self, url, response):
-        debug(PROXY, '%s try_google %s', str(self), `response`)
+        debug(PROXY, '%s try_google %r', self, response)
         context = get_google_context(url, response)
         form = None
         WebConfig(self, '/google.html', form, self.protocol, self.headers,
@@ -292,20 +292,20 @@ class HttpClient (Connection):
 
 
     def server_content (self, data):
-        assert self.server, "%s server_content had no server" % str(self)
+        assert self.server, "%s server_content had no server"%self
         self.write(data)
 
 
     def server_close (self):
-        assert self.server, "%s server_close had no server" % str(self)
-        debug(PROXY, '%s server_close', str(self))
+        assert self.server, "%s server_close had no server"%self
+        debug(PROXY, '%s server_close', self)
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
 
     def server_abort (self):
-        debug(PROXY, '%s server_abort', str(self))
+        debug(PROXY, '%s server_abort', self)
         self.close()
 
 
@@ -319,7 +319,7 @@ class HttpClient (Connection):
 
     def handle_close (self):
         # The client closed the connection, so cancel the server connection
-        debug(PROXY, '%s handle_close', str(self))
+        debug(PROXY, '%s handle_close', self)
         self.send_buffer = ''
         super(HttpClient, self).handle_close()
         if self.server:
@@ -338,7 +338,7 @@ class HttpClient (Connection):
             return
         # get cgi form data
         form = self.get_form_data()
-        debug(PROXY, '%s handle_local', str(self))
+        debug(PROXY, '%s handle_local', self)
         # this object will call server_connected at some point
         WebConfig(self, self.url, form, self.protocol, self.headers)
 
@@ -359,13 +359,13 @@ class HttpClient (Connection):
 
 
     def close (self):
-        debug(PROXY, '%s close', str(self))
+        debug(PROXY, '%s close', self)
         self.state = 'closed'
         super(HttpClient, self).close()
 
 
     def reuse (self):
-        debug(PROXY, '%s reuse', str(self))
+        debug(PROXY, '%s reuse', self)
         self.state = 'request'
         self.persistent = False
 

@@ -66,14 +66,14 @@ def esc_ansicolor (color):
     if ";" in color:
         ctype, color = color.split(";", 1)
         if not AnsiType.has_key(ctype):
-            error(PROXY, "invalid ANSI color type %s, valid values are %s",
-                  `ctype`, str(AnsiType.keys()))
+            error(PROXY, "invalid ANSI color type %r, valid values are %s",
+                  ctype, AnsiType.keys())
             ctype = ''
         else:
             ctype = AnsiType[ctype]+";"
     if not AnsiColor.has_key(color):
-        error(PROXY, "invalid ANSI color name %s, valid values are %s",
-              `color`, str(AnsiColor.keys()))
+        error(PROXY, "invalid ANSI color name %r, valid values are %s",
+              color, AnsiColor.keys())
         cnum = '0'
     else:
         cnum = AnsiColor[color]

@@ -8,7 +8,7 @@ token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
 def parse_token (s, tok="", relax=False, more_chars=""):
     if tok:
         if not s.startswith(tok):
-            warn(PROXY, "expected %s start with %s", `s`, `tok`)
+            warn(PROXY, "expected %r start with %r", s, tok)
         if not relax:
             s = s[len(tok):]
     else:

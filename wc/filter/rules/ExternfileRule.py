@@ -33,7 +33,7 @@ class ExternfileRule (Rule):
 
     def __str__ (self):
         return "%sfile %s\n" % \
-            (super(ExternfileRule, self).__str__(), `self.filename`)
+            (super(ExternfileRule, self).__str__(), repr(self.filename))
 
 
     def toxml (self):

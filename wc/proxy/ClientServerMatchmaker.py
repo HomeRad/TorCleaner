@@ -82,28 +82,28 @@ class ClientServerMatchmaker (object):
             # default scheme is http
             self.scheme = 'http'
         elif self.scheme not in allowed_schemes:
-            warn(PROXY, "Forbidden scheme %s encountered at %s", `self.scheme`, str(self))
+            warn(PROXY, "Forbidden scheme %r encountered at %s", self.scheme, self)
             client.error(403, i18n._("Forbidden"))
             return
         # check CONNECT values sanity
         if self.method == 'CONNECT':
             if self.scheme != 'https':
-                warn(PROXY, "CONNECT method with forbidden scheme %s encountered at %s", `self.scheme`, str(self))
+                warn(PROXY, "CONNECT method with forbidden scheme %r encountered at %s", self.scheme, self)
                 client.error(403, i18n._("Forbidden"))
                 return
             if not self.headers.has_key('Host'):
-                warn(PROXY, "CONNECT method without Host header encountered at %s", str(self))
+                warn(PROXY, "CONNECT method without Host header encountered at %s", self)
                 client.error(403, i18n._("Forbidden"))
                 return
             if port != 443:
-                warn(PROXY, "CONNECT method with invalid port %s encountered at %s", `str(port)`, str(self))
+                warn(PROXY, "CONNECT method with invalid port %r encountered at %s", str(port), self)
                 client.error(403, i18n._("Forbidden"))
                 return
         elif not hostname and self.headers.has_key('Host'):
             host = self.headers['Host']
             hostname, port = splitnport(host, 80)
         if not hostname:
-            error(PROXY, "%s missing hostname in request", str(self))
+            error(PROXY, "%s missing hostname in request", self)
             client.error(400, i18n._("Bad Request"))
         if hostname in config['localhosts'] and port==config['port']:
             # this is a direct proxy call, delegate it to local handler
@@ -136,9 +136,9 @@ class ClientServerMatchmaker (object):
 
     def handle_dns (self, hostname, answer):
         assert self.state == 'dns'
-        debug(PROXY, "%s handle dns", str(self))
+        debug(PROXY, "%s handle dns", self)
         if not self.client.connected:
-            warn(PROXY, "%s client closed after DNS", str(self))
+            warn(PROXY, "%s client closed after DNS", self)
             # The browser has already closed this connection, so abort
             return
         if answer.isFound():
@@ -151,7 +151,7 @@ class ClientServerMatchmaker (object):
             if self.port != 80:
 	        new_url += ':%d' % self.port
             new_url += self.document
-            info(PROXY, "%s redirecting %s", str(self), `new_url`)
+            info(PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
             # XXX find http version!
             ServerHandleDirectly(
@@ -171,16 +171,16 @@ class ClientServerMatchmaker (object):
     def find_server (self):
         """search for a connected server or make a new one"""
         assert self.state == 'server'
-        debug(PROXY, "%s find server", str(self))
+        debug(PROXY, "%s find server", self)
         addr = (self.ipaddr, self.port)
         if not self.client.connected:
-            debug(PROXY, "%s client not connected", str(self))
+            debug(PROXY, "%s client not connected", self)
             # The browser has already closed this connection, so abort
             return
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            debug(PROXY, '%s resurrecting %s', str(self), str(server))
+            debug(PROXY, '%s resurrecting %s', self, server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -188,7 +188,7 @@ class ClientServerMatchmaker (object):
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
         else:
-            debug(PROXY, "%s new connect to server", str(self))
+            debug(PROXY, "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
             # HttpServer eventually call server_connected
@@ -198,7 +198,7 @@ class ClientServerMatchmaker (object):
 
     def server_connected (self, server):
         """the server has connected"""
-        debug(PROXY, "%s server_connected", str(self))
+        debug(PROXY, "%s server_connected", self)
         assert self.state=='connect'
         if not self.client.connected:
             # The client has aborted, so let's return this server
@@ -223,7 +223,7 @@ class ClientServerMatchmaker (object):
                 return
         elif expect:
             self.client.error(417, i18n._("Expectation failed"),
-                       i18n._("Unsupported expectation `%s'")%expect)
+                       i18n._("Unsupported expectation %r")%expect)
             return
         # switch to response status
         self.state = 'response'
@@ -249,7 +249,7 @@ class ClientServerMatchmaker (object):
 
     def server_close (self):
         """the server has closed"""
-        debug(PROXY, '%s resurrection failed %d %s', str(self), self.server.sequence_number, str(self.server))
+        debug(PROXY, '%s resurrection failed %d %s', self, self.server.sequence_number, self.server)
         # Look for a server again
         if self.server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
@@ -264,7 +264,7 @@ class ClientServerMatchmaker (object):
 
     def server_response (self, response, status, headers):
         """the server got a response"""
-        debug(PROXY, "%s server_response, match client/server", str(self))
+        debug(PROXY, "%s server_response, match client/server", self)
         # Okay, transfer control over to the real client
         if self.client.connected:
             self.server.client = self.client

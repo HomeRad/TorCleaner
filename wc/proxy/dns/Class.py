@@ -31,5 +31,5 @@ for _name in dir():
         _classmap[eval(_name)] = _name
 
 def classstr (klass):
-    return _classmap.get(klass, `klass`)
+    return _classmap.get(klass, repr(klass))
 

@@ -38,13 +38,13 @@ def get_response_data (response, url):
     """parse a response status line into tokens (protocol, status, msg)"""
     parts = response.split(None, 2)
     if len(parts)==2:
-        warn(PROXY, "Empty response message from %s", `url`)
+        warn(PROXY, "Empty response message from %r", url)
         parts += ['Bummer']
     elif len(parts)!=3:
-        error(PROXY, "Invalid response %s from %s", `response`, `url`)
+        error(PROXY, "Invalid response %r from %r", response, url)
         parts = ['HTTP/1.0', 200, 'Ok']
     if not is_http_status(parts[1]):
-        error(PROXY, "Invalid http statuscode %s from %s", parts[1], `url`)
+        error(PROXY, "Invalid http statuscode %s from %r", parts[1], url)
         parts[1] = 200
     parts[1] = int(parts[1])
     return parts
@@ -53,7 +53,7 @@ def get_response_data (response, url):
 def flush_decoders (decoders):
     data = ""
     while decoders:
-        debug(PROXY, "flush decoder %s", str(decoders[0]))
+        debug(PROXY, "flush decoder %s", decoders[0])
         data = decoders[0].flush()
         del decoders[0]
         for decoder in decoders:
@@ -162,9 +162,9 @@ class HttpServer (Server):
             #request = 'CONNECT %s:%d HTTP/1.1\r\n'%(self.hostname, self.port)
         else:
             request = '%s %s HTTP/1.1\r\n'%(self.method, self.document)
-        debug(PROXY, '%s write request\n%s', str(self), `request`)
+        debug(PROXY, '%s write request\n%r', self, request)
         self.write(request)
-        debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
+        debug(PROXY, "%s write headers\n%s", self, self.clientheaders)
         self.write("".join(self.clientheaders.headers))
         self.write('\r\n')
         self.write(self.content)
@@ -212,7 +212,7 @@ class HttpServer (Server):
             serverpool.set_http_version(self.addr, get_http_version(protocol))
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
-            warn(PROXY, "%s got HTTP/0.9 response", str(self))
+            warn(PROXY, "%s got HTTP/0.9 response", self)
             serverpool.set_http_version(self.addr, (0,9))
             self.statuscode = 200
             self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER])
@@ -225,8 +225,8 @@ class HttpServer (Server):
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
-            warn(PROXY, i18n._('invalid or missing response from %s: %s'),
-                 self.url, `self.response`)
+            warn(PROXY, i18n._('invalid or missing response from %s: %r'),
+                 self.url, self.response)
             serverpool.set_http_version(self.addr, (1,0))
             # put the read bytes back to the buffer and fix the response
             self.recv_buffer = self.response + self.recv_buffer
@@ -239,7 +239,7 @@ class HttpServer (Server):
                                         "finish", self.attrs).strip()
         if self.statuscode >= 400:
             self.mime = None
-        debug(PROXY, "%s response %s", str(self), `self.response`)
+        debug(PROXY, "%s response %r", self, self.response)
 
 
     def process_headers (self):
@@ -256,7 +256,7 @@ class HttpServer (Server):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
-        debug(PROXY, "%s server headers\n%s", str(self), str(msg))
+        debug(PROXY, "%s server headers\n%s", self, msg)
         if self.statuscode==100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
@@ -275,7 +275,7 @@ class HttpServer (Server):
                                        "finish", self.attrs)
         except FilterPics, msg:
             self.statuscode = 403
-            debug(PROXY, "%s FilterPics %s", str(self), `msg`)
+            debug(PROXY, "%s FilterPics %r", self, msg)
             # XXX get version
             response = "HTTP/1.1 403 Forbidden"
             headers = WcMessage(StringIO('Content-type: text/plain\r\n'
@@ -311,7 +311,7 @@ class HttpServer (Server):
         else:
             self.state = 'content'
         self.attrs = get_filterattrs(self.url, _response_filters, headers=msg)
-        debug(PROXY, "%s filtered headers %s", str(self), str(self.headers))
+        debug(PROXY, "%s filtered headers %s", self, self.headers)
 
 
     def is_rewrite (self):
@@ -327,11 +327,11 @@ class HttpServer (Server):
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
-            debug(PROXY, "%s %d bytes remaining", str(self), self.bytes_remaining)
+            debug(PROXY, "%s %d bytes remaining", self, self.bytes_remaining)
         is_closed = False
         for decoder in self.decoders:
             data = decoder.decode(data)
-            debug(PROXY, "%s have run decoder %s", str(self), str(decoder))
+            debug(PROXY, "%s have run decoder %s", self, decoder)
             if not is_closed and decoder.closed:
                 is_closed = True
         try:
@@ -342,9 +342,9 @@ class HttpServer (Server):
                     self.client.server_content(data)
                 self.data_written = True
         except FilterWait, msg:
-            debug(PROXY, "%s FilterWait %s", str(self), `msg`)
+            debug(PROXY, "%s FilterWait %r", self, msg)
         except FilterPics, msg:
-            debug(PROXY, "%s FilterPics %s", str(self), `msg`)
+            debug(PROXY, "%s FilterPics %r", self, msg)
             assert not self.data_written
             # XXX interactive options here
             self.client.server_content(str(msg))
@@ -371,9 +371,9 @@ class HttpServer (Server):
 
 
     def process_recycle (self):
-        debug(PROXY, "%s recycling", str(self))
+        debug(PROXY, "%s recycling", self)
         if self.statuscode==407 and config['parentproxy']:
-            debug(PROXY, "%s need parent proxy authentication", str(self))
+            debug(PROXY, "%s need parent proxy authentication", self)
             if self.authtries:
                 # we failed twice, abort
                 self.authtries = 0
@@ -410,14 +410,14 @@ class HttpServer (Server):
 
     def flush (self):
         """flush data of decoders (if any) and filters"""
-        debug(PROXY, "%s flushing", str(self))
+        debug(PROXY, "%s flushing", self)
         self.flushing = True
         data = flush_decoders(self.decoders)
         try:
             for i in _response_filters:
                 data = applyfilter(i, data, "finish", self.attrs)
         except FilterWait, msg:
-            debug(PROXY, "%s FilterWait %s", str(self), `msg`)
+            debug(PROXY, "%s FilterWait %r", self, msg)
             # the filter still needs some data so try flushing again
             # after a while
             make_timer(0.2, lambda : self.flush())
@@ -433,10 +433,10 @@ class HttpServer (Server):
 
 
     def reuse (self):
-        debug(PROXY, "%s reuse", str(self))
+        debug(PROXY, "%s reuse", self)
         self.client = None
         if self.connected and self.persistent:
-            debug(PROXY, '%s reusing %d', str(self), self.sequence_number)
+            debug(PROXY, '%s reusing %d', self, self.sequence_number)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
@@ -450,7 +450,7 @@ class HttpServer (Server):
 
 
     def close (self):
-        debug(PROXY, "%s close", str(self))
+        debug(PROXY, "%s close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -465,7 +465,7 @@ class HttpServer (Server):
 
 
     def handle_close (self):
-        debug(PROXY, "%s handle_close", str(self))
+        debug(PROXY, "%s handle_close", self)
         self.persistent = False
         super(HttpServer, self).handle_close()
         # flush unhandled data
@@ -476,10 +476,10 @@ class HttpServer (Server):
 
 
     def reconnect (self):
-        debug(PROXY, "%s reconnect", str(self))
+        debug(PROXY, "%s reconnect", self)
         # we still must have the client connection
         if not self.client:
-            error(PROXY, "%s lost client on reconnect", str(self))
+            error(PROXY, "%s lost client on reconnect", self)
             return
         from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
         # note: self.client still the matchmaker object

@@ -33,7 +33,7 @@ class GunzipStream (DeflateStream):
 
     def __repr__ (self):
         return '<%s closed=%s buflen=%d error=%s>'%\
-               ('gunzip', str(self.closed), len(self.buf), str(self.error))
+               ('gunzip', self.closed, len(self.buf), self.error)
 
 
     def attempt_header_read (self):

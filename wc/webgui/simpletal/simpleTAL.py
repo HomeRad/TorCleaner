@@ -103,10 +103,10 @@ I18N_TRANSLATE = 18
 # Argument: [(attributeName, expression)]
 I18N_ATTRIBUTES = 19
 
-METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
-#SINGLETON_XML_REGEX = re.compile ('^<[^\s>]+?([\s]*?[^\s]+?=".+?")*?[\s]*?/>')
-SINGLETON_XML_REGEX = re.compile ('^<[^\s/>]+(?:\s*[^=>]+="[^">]+")*\s*/>')
-ESCAPED_ENTITIES_REGEX = re.compile ('(?:.*?)(&.*?;)')
+METAL_NAME_REGEX = re.compile("[a-zA-Z_][a-zA-Z0-9_]*")
+#SINGLETON_XML_REGEX = re.compile('^<[^\s>]+?([\s]*?[^\s]+?=".+?")*?[\s]*?/>')
+SINGLETON_XML_REGEX = re.compile('^<[^\s/>]+(?:\s*[^=>]+="[^">]+")*\s*/>')
+ESCAPED_ENTITIES_REGEX = re.compile('(?:.*?)(&.*?;)')
 
 class TemplateInterpreter:
 	def __init__ (self, translator=None):
@@ -140,21 +140,21 @@ class TemplateInterpreter:
                  escaped.
                 """
                 result = ["<"]
-                result.append (tag)
+                result.append(tag)
                 for att in atts:
-                        result.append (' ')
-                        result.append (att[0])
-                        result.append ('="')
+                        result.append(' ')
+                        result.append(att[0])
+                        result.append('="')
                         if (self.escapeAttributes):
-                                result.append (cgi.escape (att[1], quote=1))
+                                result.append(cgi.escape(att[1], quote=1))
                         else:
-                                result.append (att[1])
-                        result.append ('"')
+                                result.append(att[1])
+                        result.append('"')
                 if (singletonFlag):
-                        result.append (" />")
+                        result.append(" />")
                 else:
-                        result.append (">")
-                return "".join (result)
+                        result.append(">")
+                return "".join(result)
 
 	def initialise (self, context, outputFile):
 		self.context = context
@@ -165,7 +165,7 @@ class TemplateInterpreter:
                         return msg
                 val = self.translator.gettext(msg) % \
                       self.context.getVariableMap()
-                self.log.debug("Translated %s to %s", `msg`, `val`)
+                self.log.debug("Translated %r to %r", msg, val)
                 return val
 
 	def cleanState (self):
@@ -207,7 +207,7 @@ class TemplateInterpreter:
 			 ,self.repeatSequence
 			 ,self.tagContent
 			 ,self.localVarsDefined)
-		self.programStack.append ((vars,self.commandList, self.symbolTable))
+		self.programStack.append((vars,self.commandList, self.symbolTable))
 
         def execute (self, template, escapeAttributes=0):
                 oldState = self.escapeAttributes
@@ -218,23 +218,23 @@ class TemplateInterpreter:
 		while (self.programCounter < programLength):
 			cmnd = cmndList [self.programCounter]
 			#print "PC: %s  -  Executing command: %s" % (str (self.programCounter), str (cmnd))
-			self.commandHandler[cmnd[0]] (cmnd[0], cmnd[1])
+			self.commandHandler[cmnd[0]](cmnd[0], cmnd[1])
                 self.escapeAttributes = oldState
 
 	def cmdDefine (self, command, args):
-		""" args: [(isLocalFlag (Y/n), variableName, variablePath),...]
+		""" args: [(isLocalFlag(Y/n), variableName, variablePath),...]
 				Define variables in either the local or global context
 		"""
 		localVarList = []
 		for isLocal, varName, varPath in args:
-			result = self.context.evaluate (varPath, self.originalAttributes)
+			result = self.context.evaluate(varPath, self.originalAttributes)
 			if (isLocal):
-				localVarList.append ((varName, result.value()))
+				localVarList.append((varName, result.value()))
 			else:
-				self.context.addGlobal (varName, result.value())
+				self.context.addGlobal(varName, result.value())
 		if (len (localVarList) > 0):
 			self.localVarsDefined = 1
-			self.context.addLocals (localVarList)
+			self.context.addLocals(localVarList)
 		self.programCounter += 1
 
 	def cmdCondition (self, command, args):
@@ -841,7 +841,7 @@ class TemplateCompiler:
 			'singletonTag'    - A boolean to indicate that this is a singleton flag
 		"""
 		# Add the tag to the tagStack (list of tuples (tag, properties, useMacroLocation))
-		self.log.debug ("Adding tag %s to stack" % `tag[0]`)
+		self.log.debug ("Adding tag %r to stack" % tag[0])
 		command = tagProperties.get ('command',None)
 		originalAtts = tagProperties.get ('originalAtts', None)
 		singletonTag = tagProperties.get ('singletonTag', 0)
@@ -874,7 +874,7 @@ class TemplateCompiler:
 			singletonTag = tagProperties.get ('singletonTag', 0)
 			for func in popCommandList:
 				apply (func, ())
-			self.log.debug ("Popped tag %s off stack" % `oldTag[0]`)
+			self.log.debug ("Popped tag %r off stack" % oldTag[0])
 			if (oldTag[0] == tag[0]):
 				# We've found the right tag, now check to see if we have any TAL commands on it
 				if (endTagSymbol is not None):					
@@ -902,7 +902,7 @@ class TemplateCompiler:
 					msg = "TAL/METAL Elements must be balanced - found close tag %s expecting %s" % (tag[0], oldTag[0])
 					self.log.error (msg)
 					raise TemplateParseException (self.tagAsText(oldTag), msg)
-		self.log.error ("Close tag %s found with no corresponding open tag." % `tag[0]`)
+		self.log.error ("Close tag %r found with no corresponding open tag." % tag[0])
 		raise TemplateParseException ("</%s>" % tag[0], "Close tag encountered with no corresponding open tag.")
 					
 	def parseStartTag (self, tag, attributes, singletonElement=0):
@@ -1323,12 +1323,12 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 		#encodedFile = codecs.lookup (encoding)[2](fd)
 		#self.encoding = encoding
                 #data = encodedFile.read()
-                #print `data`
+                #print repr(data)
 		self.feed (fd.read())
 		self.close()
 		
 	def unknown_starttag (self, tag, attributes):
-		self.log.debug("Received Start Tag: "+`tag`+" Attributes: "+str(attributes))
+		self.log.debug("Received Start Tag: %r Attributes: %s"%(tag,attributes))
 		atts = []
 		for att in attributes:
 			if (att[0] == att[1]):
@@ -1347,7 +1347,7 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 			self.parseStartTag (tag, atts)
 		
 	def unknown_endtag (self, tag):
-		self.log.debug ("Received End Tag: " + `tag`)
+		self.log.debug ("Received End Tag: %r"%tag)
 		if (HTML_FORBIDDEN_ENDTAG.has_key (tag.upper())):
 			self.log.warn ("HTML 4.01 forbids end tags for the %s element" % tag)
 		else:
@@ -1355,8 +1355,8 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 			self.popTag ((tag, None))
 			
 	def handle_data (self, data):
-		self.log.debug ("Received Real Data: " + `data`)
-		self.parseData (cgi.escape (data))
+		self.log.debug("Received Real Data: %r"%data)
+		self.parseData(cgi.escape(data))
 
 	# These two methods are required so that we pass through entity references that we don't
 	# know about.  NOTE:  They are not escaped on purpose.

@@ -203,7 +203,7 @@ class GifParser (object):
                 elif s == ',':
                     self.state = GifParser.IMAGE
                     continue
-                error(FILTER, "unknown GIF frame %s", `s`)
+                error(FILTER, "unknown GIF frame %r", s)
             elif self.state == GifParser.IMAGE:
                 #extent
                 self.x0 = i16(self.read(2))

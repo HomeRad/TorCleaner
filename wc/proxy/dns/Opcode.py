@@ -26,5 +26,5 @@ for _name in dir():
         _opcodemap[eval(_name)] = _name
 
 def opcodestr (opcode):
-    return _opcodemap.get(opcode, `opcode`)
+    return _opcodemap.get(opcode, repr(opcode))
 

@@ -37,5 +37,5 @@ for _name in dir():
         _statusmap[eval(_name)] = _name
 
 def statusstr (status):
-    return _statusmap.get(status, `status`)
+    return _statusmap.get(status, repr(status))
 

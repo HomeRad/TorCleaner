@@ -26,7 +26,7 @@ def get_header_challenges (headers, key):
         debug(AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
-    debug(AUTH, "parsed challenges: %s", str(auths))
+    debug(AUTH, "parsed challenges: %s", auths)
     return auths
 
 
@@ -59,7 +59,7 @@ def get_challenges (**args):
         chals = [get_digest_challenge(),
                  get_basic_challenge(),
                 ]
-    debug(AUTH, "challenges %s", str(chals))
+    debug(AUTH, "challenges %s", chals)
     return chals
 
 
@@ -69,7 +69,7 @@ def get_header_credentials (headers, key):
         debug(AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)
-    debug(AUTH, "parsed credentials: %s", str(creds))
+    debug(AUTH, "parsed credentials: %s", creds)
     return creds
 
 
@@ -103,12 +103,12 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    debug(AUTH, "credentials: %s", str(creds))
+    debug(AUTH, "credentials: %s", creds)
     return creds
 
 
 def check_credentials (creds, **attrs):
-    debug(AUTH, "check credentials %s with attrs %s", str(creds), str(attrs))
+    debug(AUTH, "check credentials %s with attrs %s", creds, attrs)
     if not creds:
         res = False
     elif config['auth_ntlm'] and 'NTLM' not in creds:
@@ -121,7 +121,7 @@ def check_credentials (creds, **attrs):
     elif 'Basic' in creds:
         res = check_basic_credentials(creds['Basic'][0], **attrs)
     else:
-        error(AUTH, "Unknown authentication credentials %s", str(creds))
+        error(AUTH, "Unknown authentication credentials %s", creds)
         res = False
     return res
 
@@ -164,7 +164,7 @@ def _test_ntlm ():
     attrs['password_b64'] = base64.encodestring("Beeblebrox")
     creds = get_credentials(challenges, **attrs)
     print "credentials type 3"
-    print `creds`
+    print repr(creds)
     creds = parse_credentials(creds)
     print "parsed credentials type 3"
     pprint.pprint(creds)

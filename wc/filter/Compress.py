@@ -113,6 +113,6 @@ class Compress (Filter):
         else:
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
-        debug(FILTER, "compress object %s", str(compressobj))
+        debug(FILTER, "compress object %s", compressobj)
         d['compressobj'] = compressobj
         return d

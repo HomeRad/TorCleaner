@@ -186,11 +186,11 @@ def server_set_content_headers (headers, content, document, mime, url):
         try:
             mime = magic.classify(StringIO(content))
         except StandardError, msg:
-            error(PROXY, "Could not classify %s: %s", `url`, msg)
+            error(PROXY, "Could not classify %r: %s", url, msg)
     ct = headers.get('Content-Type', None)
     if mime:
         if ct is None:
-            warn(PROXY, i18n._("add Content-Type %s in %s"), `mime`, `url`)
+            warn(PROXY, i18n._("add Content-Type %r in %r"), mime, url)
             headers['Content-Type'] = "%s\r"%mime
         elif not ct.startswith(mime):
             i = ct.find(';')
@@ -199,15 +199,15 @@ def server_set_content_headers (headers, content, document, mime, url):
                 val = mime + ct[i:]
             else:
                 val = mime
-            warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
-                 `str(ct)`, `val`, `url`)
+            warn(PROXY, i18n._("set Content-Type from %r to %r in %r"),
+                 str(ct), val, url)
             headers['Content-Type'] = "%s\r"%val
     else:
         gm = mimetypes.guess_type(document, None)
         if gm[0]:
             # guessed an own content type
             if ct is None:
-                warn(PROXY, i18n._("add Content-Type %s to %s"), `gm[0]`, `url`)
+                warn(PROXY, i18n._("add Content-Type %r to %r"), gm[0], url)
                 headers['Content-Type'] = "%s\r"%gm[0]
     # hmm, fix application/x-httpd-php*
     if headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
@@ -230,7 +230,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining):
         # chunked encoded
         tenc = headers['Transfer-Encoding']
         if tenc != 'chunked':
-            error(PROXY, "unknown transfer encoding %s, assuming chunked encoding", `tenc`)
+            error(PROXY, "unknown transfer encoding %r, assuming chunked encoding", tenc)
         decoders.append(UnchunkStream())
         # remove encoding header
         to_remove = ["Transfer-Encoding"]
@@ -261,7 +261,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining):
         # add warning
         headers['Warning'] = "214 Transformation applied\r"
     elif encoding and encoding!='identity':
-        warn(PROXY, i18n._("unsupported encoding: %s"), `encoding`)
+        warn(PROXY, i18n._("unsupported encoding: %r"), encoding)
         # do not disable filtering for unknown content-encodings
         # this could result in a DoS attack (server sending garbage
         # as content-encoding)

@@ -94,13 +94,13 @@ def open_url (url, proxies=None):
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
-        error(GUI, "could not open url %s", `url`)
+        error(GUI, "could not open url %r", url)
         raise IOError, x
     except (socket.gaierror, socket.error, urllib2.URLError), x:
-        error(GUI, "could not open url %s", `url`)
+        error(GUI, "could not open url %r", url)
         raise IOError, "no network access available"
     except IOError, data:
-        error(GUI, "could not open url %s", `url`)
+        error(GUI, "could not open url %r", url)
         if data and data[0] == 'http error' and data[1] == 404:
             raise IOError, data
         else:

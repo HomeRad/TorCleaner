@@ -45,7 +45,7 @@ class Connection (asyncore.dispatcher, object):
     def handle_read (self):
         assert self.connected
 	if len(self.recv_buffer) > MAX_BUFSIZE:
-            warn(PROXY, '%s read buffer full', str(self))
+            warn(PROXY, '%s read buffer full', self)
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
@@ -54,8 +54,8 @@ class Connection (asyncore.dispatcher, object):
                 return
             self.handle_error('read error')
             return
-        debug(PROXY, '%s <= read %d', str(self), len(data))
-        debug(CONNECTION, 'data %s', `data`)
+        debug(PROXY, '%s <= read %d', self, len(data))
+        debug(CONNECTION, 'data %r', data)
         if not data: # It's been closed, and handle_close has been called
             return
 	self.recv_buffer += data
@@ -95,8 +95,8 @@ class Connection (asyncore.dispatcher, object):
         except socket.error:
             self.handle_error('write error')
             return
-        debug(PROXY, '%s => wrote %d', str(self), num_sent)
-        debug(CONNECTION, 'data %s', `data`)
+        debug(PROXY, '%s => wrote %d', self, num_sent)
+        debug(CONNECTION, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = False
@@ -126,7 +126,7 @@ class Connection (asyncore.dispatcher, object):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            debug(PROXY, '%s close ready channel', str(self))
+            debug(PROXY, '%s close ready channel', self)
             self.close_pending = True
         elif self.persistent:
             self.reuse()
@@ -135,10 +135,10 @@ class Connection (asyncore.dispatcher, object):
 
 
     def handle_error (self, what):
-        exception(PROXY, "%s error %s, closing", str(self), what)
+        exception(PROXY, "%s error %s, closing", self, what)
         self.close()
         self.del_channel()
 
 
     def handle_expt (self):
-        exception(PROXY, "%s exception", str(self))
+        exception(PROXY, "%s exception", self)

@@ -58,14 +58,14 @@ class WebConfig (object):
                     return
                 # get translator
                 translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
-                #debug(GUI, "Using translator %s", str(translator.info()))
+                #debug(GUI, "Using translator %s", translator.info())
                 # expand template
                 data = expand_template(f, context, translator=translator)
             else:
                 f = file(path, 'rb')
                 data = f.read()
         except IOError:
-            exception(GUI, "Wrong path `%s'", url)
+            exception(GUI, "Wrong path %r", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
             client.error(404, i18n._("Not Found"))
@@ -139,9 +139,9 @@ def get_template_path (path, lang):
     path = os.path.splitdrive(os.path.join(*tuple(dirs)))[1]
     path = norm(os.path.join(base, path))
     if not os.path.isabs(path):
-        raise IOError("Relative path %s" % `path`)
+        raise IOError("Relative path %r" % path)
     if not path.startswith(base):
-        raise IOError("Invalid path %s" % `path`)
+        raise IOError("Invalid path %r" % path)
     for la in i18n.supported_languages:
         assert len(la)==2
         if path.endswith(".html.%s"%la):
@@ -150,7 +150,7 @@ def get_template_path (path, lang):
             lang = la
             break
     if not os.path.isfile(path):
-        raise IOError("Non-file path %s" % `path`)
+        raise IOError("Non-file path %r" % path)
     return path, dirs, lang
 
 
@@ -168,7 +168,7 @@ def get_context (dirs, form, localcontext, lang):
     exec "from %s import %s as template_context" % (modulepath, template)
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
-        debug(GUI, "got form %s", str(form))
+        debug(GUI, "got form %s", form)
         status = template_context._exec_form(form)
     # make TAL context
     context = simpleTALES.Context()

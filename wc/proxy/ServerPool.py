@@ -35,13 +35,13 @@ class ServerPool (object):
             if status[0] == 'available':
                 # Let's reuse this one
                 self.smap[addr][server] = ('busy', )
-                debug(PROXY, 'pool reserve %s %s', str(addr), str(server))
+                debug(PROXY, 'pool reserve %s %s', addr, server)
                 return server
         return None
 
 
     def unreserve_server (self, addr, server):
-        debug(PROXY, "pool unreserve %s %s", str(addr), str(server))
+        debug(PROXY, "pool unreserve %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
                '%s missing %s' % (self.smap[addr], server)
@@ -53,13 +53,13 @@ class ServerPool (object):
 
     def register_server (self, addr, server):
         "Register the server as being used"
-        debug(PROXY, "pool register %s %s", str(addr), str(server))
+        debug(PROXY, "pool register %s %s", addr, server)
         self.smap.setdefault(addr, {})[server] = ('busy',)
 
 
     def unregister_server (self, addr, server):
         "Unregister the server"
-        debug(PROXY, "pool unregister %s %s", str(addr), str(server))
+        debug(PROXY, "pool unregister %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
                '%s missing %s' % (self.smap[addr], server)
@@ -98,7 +98,7 @@ class ServerPool (object):
                     # It's old .. let's get rid of it
                     to_expire.append(server)
         for server in to_expire:
-            debug(PROXY, "expire server %s", str(server))
+            debug(PROXY, "expire server %s", server)
             server.close()
         make_timer(60, self.expire_servers)
 

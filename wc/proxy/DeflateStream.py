@@ -14,7 +14,7 @@ class DeflateStream (object):
 
 
     def __repr__ (self):
-        return '<%s closed=%s>'%('deflate', str(self.closed))
+        return '<%s closed=%s>'%('deflate', self.closed)
 
 
     def decode (self, s):

@@ -375,7 +375,7 @@ class Context:
 		else:
 			# Not specified - so it's a path
 			res = self.evaluatePath (expr)
-                self.log.debug("... result %s", str(res))
+                self.log.debug("... result %s", res)
                 return res
 
 

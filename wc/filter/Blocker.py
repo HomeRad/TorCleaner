@@ -128,12 +128,12 @@ class Blocker (Filter):
         # note: data is the complete request (with quoted url)
         # note: we get the unquoted url from args
         url = args['url']
-        debug(FILTER, "block filter working on url %s", `url`)
+        debug(FILTER, "block filter working on url %r", url)
         if self.allowed(url):
             return data
         blocked = self.strict_whitelist or self.blocked(url)
         if blocked:
-            debug(FILTER, "blocked url %s: %s", url, str(blocked))
+            debug(FILTER, "blocked url %s: %s", url, blocked)
             if isinstance(blocked, basestring):
                 doc = blocked
             elif is_image(url):

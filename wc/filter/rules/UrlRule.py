@@ -52,5 +52,5 @@ class UrlRule (Rule):
 
     def __str__ (self):
         return super(UrlRule, self).__str__() + \
-            "matchurl %s\n" % `self.matchurl` + \
-            "dontmatchurl %s\n" % `self.dontmatchurl`
+            "matchurl %r\n" % self.matchurl + \
+            "dontmatchurl %r\n" % self.dontmatchurl

@@ -40,7 +40,7 @@ class Listener (asyncore.dispatcher, object):
 
     def handle_accept (self):
         """start the handler class with the new socket"""
-        debug(PROXY, '%s accept', str(self))
+        debug(PROXY, '%s accept', self)
         apply(self.handler, self.accept())
 
 

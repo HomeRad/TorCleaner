@@ -200,7 +200,7 @@ def parse_ntlm_challenge (challenge):
         msg = base64.decodestring(chal)
         res = parse_message2(msg)
         if not res:
-            warn(AUTH, "invalid NTLM challenge %s", `msg`)
+            warn(AUTH, "invalid NTLM challenge %r", msg)
     return res, remainder
 
 
@@ -243,16 +243,16 @@ def parse_ntlm_credentials (credentials):
             # invalid type, skip
             res = {}
     if not res:
-        warn(AUTH, "invalid NTLM credential %s", `creds`)
+        warn(AUTH, "invalid NTLM credential %r", creds)
     return res, remainder
 
 
 def check_ntlm_credentials (credentials, **attrs):
     if credentials.has_key('host') and credentials['host']!="UNKNOWN":
-        warn(AUTH, "NTLM wrong host %s", `credentials['host']`)
+        warn(AUTH, "NTLM wrong host %r", credentials['host'])
         return False
     if credentials.has_key('domain') and credentials['domain']!='WORKGROUP':
-        warn(AUTH, "NTLM wrong domain %s", `credentials['domain']`)
+        warn(AUTH, "NTLM wrong domain %r", credentials['domain'])
         return False
     if credentials['username']!=attrs['username']:
         warn(AUTH, "NTLM wrong username")
@@ -349,10 +349,10 @@ def create_message2 (domain, flags=challenge_flags):
 def parse_message2 (msg):
     res = {}
     if not msg.startswith('%s\x00'%NTLMSSP_SIGNATURE):
-        warn(AUTH, "NTLM challenge signature not found %s", `msg`)
+        warn(AUTH, "NTLM challenge signature not found %r", msg)
         return res
     if getint32(msg[8:12])!=NTLMSSP_CHALLENGE:
-        warn(AUTH, "NTLM challenge type not found %s", `msg`)
+        warn(AUTH, "NTLM challenge type not found %r", msg)
         return res
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])
@@ -569,13 +569,13 @@ def _test ():
     error = False
     if lm_resp!=correct_lm_resp:
         print "lm_resp"
-        print `lm_resp`
-        print `correct_lm_resp`
+        print repr(lm_resp)
+        print repr(correct_lm_resp)
         error = True
     if nt_resp!=correct_nt_resp:
         print "nt_resp"
-        print `nt_resp`
-        print `correct_nt_resp`
+        print repr(nt_resp)
+        print repr(correct_nt_resp)
         error = True
     if not error:
         print "finished ok"

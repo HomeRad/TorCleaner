@@ -57,7 +57,7 @@ def check_digest_credentials (credentials, **attrs):
     # note: opaque value _should_ be there, but is not in apache mod_digest
     opaque = credentials.get("opaque")
     if opaque != wc_opaque:
-        warn(AUTH, "digest wrong opaque %s!=%s", str(opaque), wc_opaque)
+        warn(AUTH, "digest wrong opaque %s!=%s", opaque, wc_opaque)
         return False
     realm = credentials["realm"]
     if realm != wc_realm:
@@ -85,14 +85,14 @@ def check_digest_values (auth):
        challenge or credential"""
     # check data
     if auth.get('algorithm') not in ("MD5", "MD5-sess", "SHA", None):
-        error(AUTH, "unsupported digest algorithm value %s", `auth['algorithm']`)
+        error(AUTH, "unsupported digest algorithm value %r", auth['algorithm'])
         return False
     if auth.get('qop') not in ("auth", "auth-int", None):
-        error(AUTH, "unsupported digest qop value %s", `auth['qop']`)
+        error(AUTH, "unsupported digest qop value %r", auth['qop'])
         return False
     for key in ('realm', 'nonce'):
         if key not in auth:
-            error(AUTH, "missing digest challenge value for %s", `key`)
+            error(AUTH, "missing digest challenge value for %r", key)
             return False
     return True
 

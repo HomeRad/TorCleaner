@@ -101,7 +101,7 @@ class ImageSize (Filter):
         url = attrs['url']
         pos = buf.tell()
         if pos <= 0:
-            error(FILTER, "Empty image data found at %s", `url`)
+            error(FILTER, "Empty image data found at %r", url)
         else:
             attrs['imgsize_blocked'] = not self.check_sizes(buf, attrs['imgsize_sizes'], url,
                                                     finish=True)
@@ -123,14 +123,14 @@ class ImageSize (Filter):
                 if size==img.size:
                     # size matches, look for format restriction
                     if not formats:
-                        debug(FILTER, "Blocking image size %s", str(size))
+                        debug(FILTER, "Blocking image size %s", size)
                         return False
                     elif img.format.lower() in formats:
-                        debug(FILTER, "Blocking image size %s", str(size))
+                        debug(FILTER, "Blocking image size %s", size)
                         return False
         except IOError:
             if finish:
-                exception(FILTER, "Could not get image size from %s", `url`)
+                exception(FILTER, "Could not get image size from %r", url)
             else:
                 assert pos > self.min_bufsize
                 # wait for more data

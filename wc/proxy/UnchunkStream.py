@@ -27,11 +27,11 @@ class UnchunkStream (object):
 
     def __repr__ (self):
         return '<%s closed=%s buflen=%d bytes_remaining=%s>'%\
-      ('unchunk', str(self.closed), len(self.buf), str(self.bytes_remaining))
+      ('unchunk', self.closed, len(self.buf), self.bytes_remaining)
 
 
     def decode (self, s):
-        #debug(PROXY, "chunked data %s", `s`)
+        #debug(PROXY, "chunked data %r", s)
         self.buf += s
         s = ''
 
@@ -52,7 +52,7 @@ class UnchunkStream (object):
                             # chunklen is hex
                             self.bytes_remaining = int(mo.group('bytes'), 16)
                         else:
-                            warn(PROXY, "invalid chunk size %s", `line`)
+                            warn(PROXY, "invalid chunk size %r", line)
                             self.bytes_remaining = 0
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:
@@ -72,7 +72,7 @@ class UnchunkStream (object):
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
-        #debug(PROXY, "decoded chunk %s", `s`)
+        #debug(PROXY, "decoded chunk %r", s)
         return s
 
 
