@@ -5,8 +5,8 @@
 Installation
 ============
 
-Requirements for Unix/Linux:
-----------------------------
+Requirements for Unix/Linux or Max OS X
+---------------------------------------
 
 1. You need a standard GNU development environment with
    
@@ -83,6 +83,8 @@ Setup for Unix/Linux:
    
    Run ``./configure; make`` to compile the included C libraries.
    Run ``python setup.py build`` to compile the Python files.
+   For help about the setup.py script options, run
+   ``python setup.py --help``.
    The CC environment variable is checked before compilation, so you can
    change the default C compiler with ``export CC=myccompiler``.
    If you work from CVS, you must run ``./autogen.sh`` first to generate the
@@ -107,7 +109,10 @@ Setup for Unix/Linux:
    
    WebCleaner is now installed as a runit service and will start
    automatically in 5 seconds.
-   See the README on how to configure the proxy filters.
+   See the `main page`_ on how to configure the proxy filters.
+   
+   .. _main page:
+      index.html
 
 Setup for Windows:
 ------------------
