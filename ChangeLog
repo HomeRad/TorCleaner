@@ -1,12 +1,14 @@
 2.2
-  * removed unused imports
-    Changed: wc/*.py
+  * removed unused imports, better debugging
+    Changed: wc/*.py, config/logging.conf
   * updated filters, whitelists removed due to conflict with GPL
     Changed: config/*.zap
   * parser fixes:
     - fixed parsing of end tags with trailing garbage
     - fixed parsing of script single comment lines
-    Changed: wc/parser/htmllex.l
+    - do not #include <stdint.h>, fixes build on some FreeBSD, Windows
+      and Solaris/SunOS platforms
+    Changed: wc/parser/htmllex.{l,c}
   * cope with falsely advertised GIF images, the GIF parsers ignores
     them now
     Changed: wc/filter/GifImage.py
@@ -17,6 +19,17 @@
     - set navigator.plugins['Shockwave Flash'] object
     - set location.hostname and document.location.hostname properties
     - add alert() function (doing nothing)
+    - recognize IE window.createPopup() as a popup function
+  * fixed parent proxy authentication in Basic and Digest mode
+    Changed: wc/proxy/{basic,digest}.py, wc/proxy/HttpServer.py
+  * added NTLM proxy authentication
+    Changed: wc/proxy/Http{Client,Server}.py, wc/proxy/auth/__init__.py
+    Added: wc/proxy/auth/{ntlm,des,des_c,des_data,md4,utils}.py
+  * increase requested read/write data size on sockets to 4kB
+    Changed: wc/proxy/Connection.py
+  * use WcMessage always for headers which copes with header entries
+    that have identical names
+    Changed: wc/proxy/Headers.py
 
 2.1
   * lots of minor bugs fixed running pychecker
