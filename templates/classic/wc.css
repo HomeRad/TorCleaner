@@ -1,6 +1,6 @@
 body {
     font-family: Verdana, Helvetica, Arial, sans-serif;
-    background: #f7ebd3;
+    background: #fff7ee;/*#f7ebd3;*/
     margin: 0;
     padding: 0;
 /* These work in IE only, changes the look of the scrollbar + textareas */
@@ -97,7 +97,7 @@ input.text {
     font-size: 85%;
     border: 1px solid #777777;
     color: Black;
-    background: #fff7ee;
+    background: #fdf9f4;
     vertical-align: middle;
     margin-bottom: 1px; /* IE bug fix */
     padding: 0 0 0 0.1em;
@@ -108,7 +108,7 @@ input.number {
     font-size: 85%;
     border: 1px solid #777777;
     color: Black;
-    background: #fff7ee;
+    background: #fdf9f4;
     vertical-align: middle;
     margin-bottom: 1px; /* IE bug fix */
     padding: 0 0 0 0.1em;
@@ -139,7 +139,7 @@ textarea {
     font-size: 85%;
     border: 1px solid #777777;
     color: Black;
-    background: #fff7ee;
+    background: #fdf9f4;
     width: 88%;
     padding: 0.1em;
 }
@@ -148,7 +148,7 @@ select {
     font-size: 85%;
     border: 1px solid #777777;
     color: Black;
-    background: #fff7ee;
+    background: #fdf9f4;
     vertical-align: top;
     width: 180px;
 }
