@@ -197,7 +197,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def _debug (self, msg, *args):
         """debug with recursion level and state"""
-        debug(PARSER, "%d,%s: %s"%(self.level, self.state, msg), *args)
+        debug(FILTER, "%d,%s: %s"%(self.level, self.state, msg), *args)
 
 
     def _debugbuf (self):
@@ -332,7 +332,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.pics = []
         elif tag=="base" and attrs.has_key('href'):
             self.base_url = strip_quotes(attrs['href'])
-            debug(FILTER, "using base url %s", `self.base_url`)
+            self._debug("using base url %s", `self.base_url`)
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):

@@ -1043,6 +1043,12 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         ==JS_FALSE) {
         return shutdown(env, "Could not set document.referrer property");
     }
+    if (JS_DefineProperty(env->ctx, env->doc_obj, "URL",
+                          STRING_TO_JSVAL(JS_NewStringCopyZ(env->ctx, "http://imadoofus/")), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
+        ==JS_FALSE) {
+        return shutdown(env, "Could not set document.URL property");
+    }
     if (!(images_array=JS_NewArrayObject(env->ctx, 0, 0))) {
         return shutdown(env, "Could not create images array");
     }
