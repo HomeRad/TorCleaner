@@ -36,6 +36,7 @@ from wc.url import url_norm, url_quote, stripsite
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
 _end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
 
+_replace_ws = re.compile(r"\s+").sub
 
 class JSFilter (JSListener):
     """defines callback handlers for filtering Javascript code"""
@@ -252,22 +253,22 @@ class JSFilter (JSListener):
            After that, self.js_client points to the proxy client object"""
         debug(FILTER, "%s jsScriptSrc %r", self, url)
         assert self.htmlparser.state[0]=='parse', "non-parse state %s" % self.htmlparser.state
+        # sanitize script src url by removing any whitespace
+        url = _replace_ws("", url)
         ver = get_js_ver(language)
+        # some urls are relative, need to make absolut
         if self.base_url:
             url = urlparse.urljoin(self.base_url, url)
         else:
             url = urlparse.urljoin(self.url, url)
-        # unquote and norm
-        url = url_norm(url)
-        host = stripsite(url)[0]
-        if not host:
+        if not url:
             error(FILTER, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
             return
         self.htmlparser.state = ('wait', url)
         self.htmlparser.waited = 1
         self.js_src = True
         self.js_client = HttpProxyClient(self.jsScriptData, (url, ver))
-        headers = get_wc_client_headers(host)
+        headers = get_wc_client_headers(self.js_client.hostname)
         # note: some javascript servers do not specify content encoding
         # so only accept non-encoded content here
         headers['Accept-Encoding'] = 'identity\r'
@@ -276,7 +277,7 @@ class JSFilter (JSListener):
                                headers,
                                '', # content
                                mime="application/x-javascript",
-                               )
+                              )
 
 
     def jsScriptData (self, data, url, ver):
