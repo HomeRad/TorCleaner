@@ -192,7 +192,7 @@ class HtmlFilter (HtmlParser):
             self.buffer2data()
 
     def doctype (self, data):
-        self.buffer_append_data([DATA, "<!DOCTYPE %s>"%data])
+        self.buffer_append_data([DATA, "<!DOCTYPE%s>"%data])
 
     def pi (self, data):
         self.buffer_append_data([DATA; "<?%s?>"%data])

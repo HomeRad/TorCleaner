@@ -61,18 +61,18 @@ flushtests = (
 def _test():
     print "============ syntax tests ============="
     p = HtmlPrinter()
-    for t in tests:
-        print "HTML", `t`
-        p.feed(t)
-        p.flush()
-        #p.reset()
-    #print "======== sequential feed tests ========="
     #for t in tests:
     #    print "HTML", `t`
-    #    for c in t:
-    #        p.feed(c)
+    #    p.feed(t)
     #    p.flush()
     #    #p.reset()
+    print "======== sequential feed tests ========="
+    for t in tests:
+        print "HTML", `t`
+        for c in t:
+            p.feed(c)
+        p.flush()
+        #p.reset()
     #print "===== subsequent interwoven parsing ===="
     #p1 = HtmlPrinter()
     #p.feed("<")

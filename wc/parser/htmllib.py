@@ -99,9 +99,7 @@ def _test():
 
 def _broken ():
     p = HtmlPrinter()
-    p.feed('<a b="c>')
-    p.flush()
-    p.feed('<a b="">')
+    p.feed('<a b = "c">')
     p.flush()
 
 if __name__ == '__main__':

@@ -331,12 +331,10 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR2>{RX_WHITE_SPACE}+ {
     UPDATE_BUFPOS;
-    PYSTRING_TMP(yyextra->tmp_attrname);
-    CLEAR_BUF(yyextra->tmp_buf);
     BEGIN(S_ATTR3);
 }
 
-<S_ATTR2,S_ATTR3>{RX_EQUAL}{RX_WHITE_SPACE}* {
+<S_ATTR2,S_ATTR3>{RX_WHITE_SPACE}*{RX_EQUAL}{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrname);
     CLEAR_BUF(yyextra->tmp_buf);
@@ -350,6 +348,8 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR3>{RX_NAME} {
     UPDATE_BUFPOS;
+    PYSTRING_TMP(yyextra->tmp_attrname);
+    CLEAR_BUF(yyextra->tmp_buf);
     Py_INCREF(Py_None);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) { return T_ERROR; }
     APPEND_TO_TMP;
@@ -465,7 +465,7 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** TAGEND ************************/
-<INITIAL>"</"{RX_WHITE_SPACE}* {
+<INITIAL><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
     BEGIN(S_TAGEND);
 }
