@@ -80,6 +80,7 @@ class Compress (wc.filter.Filter.Filter):
             self.set_encoding_header(attrs)
             self.init_compressor = False
         if not attrs.has_key('compressobj'):
+            wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
             return data
         compobj = attrs['compressobj']
         header = compobj['header']
@@ -89,8 +90,7 @@ class Compress (wc.filter.Filter.Filter):
         compobj['size'] += len(data)
         compobj['crc'] = zlib.crc32(data, compobj['crc'])
         wc.log.debug(wc.LOG_FILTER, "compressing %d bytes", len(data))
-        data = "%s%s" % (header, compobj['compressor'].compress(data))
-        return data
+        return "%s%s" % (header, compobj['compressor'].compress(data))
 
     def finish (self, data, attrs):
         """final compression of data, flush gzip buffers"""
@@ -98,6 +98,7 @@ class Compress (wc.filter.Filter.Filter):
             self.set_encoding_header(attrs)
             self.init_compressor = False
         if not attrs.has_key('compressobj'):
+            wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
             return data
         compobj = attrs['compressobj']
         header = compobj['header']
