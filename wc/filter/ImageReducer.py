@@ -19,7 +19,8 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import Image, cStringIO
+import Image
+from cStringIO import StringIO
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter
 from wc.log import *
@@ -38,7 +39,7 @@ class ImageReducer (Filter):
     """Reduce the image size by making low quality JPEGs"""
 
     def __init__ (self, mimelist):
-        Filter.__init__(self, mimelist)
+        super(ImageReducer, self).__init__(mimelist)
         # minimal number of bytes before we start reducing
         self.minimal_size_bytes = 5120
 
@@ -56,7 +57,7 @@ class ImageReducer (Filter):
         p.seek(0)
         try:
             img = Image.open(p)
-            data = cStringIO.StringIO()
+            data = StringIO()
             if attrs.get('convert'):
                 img = img.convert()
             img.save(data, "JPEG", quality=10, optimize=1)
@@ -75,7 +76,7 @@ class ImageReducer (Filter):
         headers['Content-Type'] = 'image/jpeg'
         remove_headers(headers, ['Content-Length'])
         return {
-            'buffer': cStringIO.StringIO(),
+            'buffer': StringIO(),
             # some images have to be convert()ed before saving
             'convert': convert(ctype),
         }

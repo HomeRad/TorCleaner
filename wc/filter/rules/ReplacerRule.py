@@ -24,23 +24,25 @@ from wc.XmlUtils import xmlify, unxmlify
 class ReplacerRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0,
                   search="", replace="", oid=0):
-        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
+        super(ReplacerRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
         self.search = search
         self.replace = replace
         self.attrnames.append('search')
+
 
     def fill_data (self, data, name):
         if name=='replacer':
             self.replace += unxmlify(data).encode('iso8859-1')
 
+
     def fromFactory (self, factory):
         return factory.fromReplacerRule(self)
 
+
     def toxml (self):
-	s = UrlRule.toxml(self);
+	s = super(ReplacerRule, self).toxml()
         if self.search:
             s += '\n search="%s"'%xmlify(self.search)
         if self.replace:
             return s+">"+xmlify(self.replace)+"</replacer>"
         return s+"/>"
-

@@ -60,7 +60,6 @@ def getCompressObject ():
 
 
 class Compress (Filter):
-
     def filter (self, data, **attrs):
         """compress the string s.
         Note that compression state is saved outside of this function
@@ -77,6 +76,7 @@ class Compress (Filter):
             compobj['crc'] = zlib.crc32(data, compobj['crc'])
             data = "%s%s"%(header, compobj['compressor'].compress(data))
         return data
+
 
     def finish (self, data, **attrs):
         if not attrs.has_key('compressobj'): return data
@@ -98,6 +98,7 @@ class Compress (Filter):
                                 struct.pack('<l', compobj['size']))
         return data
 
+
     def getAttrs (self, headers, url):
         compressobj = None
         accept = headers.get('Accept-Encoding', '')
@@ -111,6 +112,6 @@ class Compress (Filter):
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
         debug(FILTER, "compress object %s", str(compressobj))
-        d = Filter.getAttrs(self, headers, url)
+        d = super(Compress, self).getAttrs(headers, url)
         d['compressobj'] = compressobj
         return d

@@ -23,7 +23,7 @@ from wc.XmlUtils import xmlify, unxmlify
 from types import IntType
 
 
-class Rule(object):
+class Rule (object):
     """Basic rule class for filtering.
     A basic rule has:
        title - the title

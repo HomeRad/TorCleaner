@@ -25,7 +25,7 @@ class UrlRule (Rule):
     """rule which applies only to urls which match a regular expression"""
     def __init__ (self, title="No title", desc="", disable=0, matchurl="",
                   dontmatchurl="", oid=0):
-        Rule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
+        super(UrlRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
         self.matchurl = matchurl
         self.dontmatchurl = dontmatchurl
         self.attrnames.extend(('matchurl', 'dontmatchurl'))
@@ -40,7 +40,7 @@ class UrlRule (Rule):
 
 
     def toxml (self):
-        s = Rule.toxml(self)
+        s = super(UrlRule, self).toxml()
         if self.matchurl:
             s += '\n matchurl="%s"' % xmlify(self.matchurl)
         if self.dontmatchurl:
@@ -49,8 +49,6 @@ class UrlRule (Rule):
 
 
     def __str__ (self):
-        s = Rule.__str__(self)
-        s += "matchurl %s\n" % `self.matchurl`
-        s += "dontmatchurl %s\n" % `self.dontmatchurl`
-        return s
-
+        return super(UrlRule, self).__str__() + \
+            "matchurl %s\n" % `self.matchurl` + \
+            "dontmatchurl %s\n" % `self.dontmatchurl`

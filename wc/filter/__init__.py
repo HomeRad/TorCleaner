@@ -51,11 +51,13 @@ class FilterException (Exception):
     """Generic filter exception"""
     pass
 
+
 class FilterWait (FilterException):
     """Raised when filter wait for more data to filter. The filter
        has to buffer already passed data until the next call.
     """
     pass
+
 
 class FilterPics (FilterException):
     """Raised when filter detected PICS rated content.
@@ -120,4 +122,3 @@ def initStateObjects (headers={'Content-Type': 'text/html'}, url=None):
             if f.applies_to_mime(attrs['mime']):
                 attrs.update(f.getAttrs(headers, url))
     return attrs
-

@@ -330,7 +330,7 @@ class BaseParser (object):
 
 class ZapperParser (BaseParser):
     def parse (self, filename, config):
-        BaseParser.parse(self, filename, config)
+        super(ZapperParser, self).parse(filename, config)
         config['rules'].append(self.rules)
 
     def start_element (self, name, attrs):
@@ -366,7 +366,7 @@ class ZapperParser (BaseParser):
 
 class WConfigParser (BaseParser):
     def parse (self, filename, config):
-        BaseParser.parse(self, filename, config)
+        super(WConfigParser, self).parse(filename, config)
         self.config['configfile'] = filename
 
     def start_element (self, name, attrs):

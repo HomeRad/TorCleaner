@@ -46,7 +46,7 @@ class Blocker (Filter):
 
     def __init__ (self, mimelist):
         """load blocked/allowed urls/regex."""
-        Filter.__init__(self, mimelist)
+        super(Blocker, self).__init__(mimelist)
         # block and allow regular expressions
         self.block = []
         self.allow = []
@@ -66,7 +66,7 @@ class Blocker (Filter):
 
 
     def addrule (self, rule):
-        Filter.addrule(self, rule)
+        super(Blocker, self).addrule(rule)
         getattr(self, "add_"+rule.get_name())(rule)
 
 

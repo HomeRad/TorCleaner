@@ -34,13 +34,13 @@ mimelist = []
 
 class Header (Filter):
     def __init__ (self, mimelist):
-        Filter.__init__(self, mimelist)
+        super(Header, self).__init__(mimelist)
         self.delete = []
         self.add = {}
 
 
     def addrule (self, rule):
-        Filter.addrule(self, rule)
+        super(Header, self).addrule(rule)
         compileRegex(rule, "matchurl")
         compileRegex(rule, "dontmatchurl")
         if not rule.value:

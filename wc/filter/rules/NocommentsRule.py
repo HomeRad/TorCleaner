@@ -22,11 +22,12 @@ from UrlRule import UrlRule
 
 class NocommentsRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, oid=0):
-        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
+        super(NocommentsRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
+
 
     def fromFactory (self, factory):
         return factory.fromNocommentsRule(self)
 
-    def toxml (self):
-	return UrlRule.toxml(self) + "/>"
 
+    def toxml (self):
+	return "%s/>" % super(NocommentsRule, self).toxml()

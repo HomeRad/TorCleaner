@@ -39,13 +39,13 @@ class ImageSize (Filter):
 
 
     def __init__ (self, mimelist):
-        Filter.__init__(self, mimelist)
+        super(ImageSize, self).__init__(mimelist)
         # minimal amount of image data for PIL to read header info
         self.min_bufsize = 256
 
 
     def addrule (self, rule):
-        Filter.addrule(self, rule)
+        super(ImageSize, self).addrule(rule)
         compileRegex(rule, "matchurl")
         compileRegex(rule, "dontmatchurl")
 

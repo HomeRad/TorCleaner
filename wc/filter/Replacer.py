@@ -39,7 +39,7 @@ class Replacer (Filter):
     """replace regular expressions in a data stream"""
 
     def addrule (self, rule):
-        Filter.addrule(self, rule)
+        super(Replacer, self).addrule(rule)
         compileRegex(rule, "matchurl")
         compileRegex(rule, "dontmatchurl")
         compileRegex(rule, "search")

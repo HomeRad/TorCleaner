@@ -25,15 +25,16 @@ class ExternfileRule (Rule):
     """rule with data stored in an external file"""
     def __init__ (self, title="No title", desc="", disable=0, oid=0,
                   file=None):
-        Rule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
+        super(ExternfileRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
         self.file = file
         self.attrnames.append('file')
 
+
     def __str__ (self):
-        s = Rule.__str__(self)
-        s += "file %s\n" % `self.file`
-        return s
+        return "%sfile %s\n" % \
+            (super(ExternfileRule, self).__str__(), `self.file`)
+
 
     def toxml (self):
-        return Rule.toxml(self) + ' file="%s"/>' % xmlify(self.file)
-
+        return '%s file="%s"/>' % \
+            (super(ExternfileRule, self).toxml(), xmlify(self.file))

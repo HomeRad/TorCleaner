@@ -27,21 +27,24 @@ class HeaderRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, name="",
                   value="", oid=0):
         """init rule name and value"""
-        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
+        super(HeaderRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
         self.name = name
         self.value = value
         self.attrnames.append('name')
+
 
     def fill_data (self, data, name):
         if name=='header':
             self.value = unxmlify(data).encode('iso8859-1')
 
+
     def fromFactory (self, factory):
         return factory.fromHeaderRule(self)
 
+
     def toxml (self):
-        s = '%s\n name="%s"'%(UrlRule.toxml(self), xmlify(self.name))
+        s = '%s\n name="%s"' % \
+            (super(HeaderRule, self).toxml(), xmlify(self.name))
         if self.value:
             return s+">"+xmlify(self.value)+"</header>"
         return s+"/>"
-

@@ -82,7 +82,7 @@ class RewriteRule (UrlRule):
     """
     def __init__ (self, title="No title", desc="", disable=0, tag="a",
                attrs=None, enclosed="", part=COMPLETE, replacement="", oid=0):
-        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
+        super(RewriteRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
         self.tag = tag
         if attrs is None:
             self.attrs = {}
@@ -98,7 +98,7 @@ class RewriteRule (UrlRule):
 
     def fill_attrs (self, attrs, name):
         if name=='rewrite':
-            UrlRule.fill_attrs(self, attrs, name)
+            super(RewriteRule, self).fill_attrs(attrs, name)
         elif name=='attr':
             val = unxmlify(attrs.get('name', 'href')).encode('iso8859-1')
             self.current_attr = val
@@ -229,7 +229,7 @@ class RewriteRule (UrlRule):
 
 
     def toxml (self):
-        s = UrlRule.toxml(self)
+        s = super(RewriteRule, self).toxml()
         if self.tag!='a':
             s += '\n tag="%s"' % self.tag
         if not (self.attrs or self.part!=COMPLETE or self.replacement or \
@@ -258,7 +258,7 @@ class RewriteRule (UrlRule):
 
 
     def __str__ (self):
-        s = UrlRule.__str__(self)
+        s = super(RewriteRule, self).__str__()
         s += "tag %s\n" % self.tag
         for key,val in self.attrs.items():
             s += "attr: %s, %s\n" % (key,`val`)

@@ -45,10 +45,10 @@ class RewindException (Exception): pass
 class GifImage (Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
-
     def __init__ (self, mimelist):
-        Filter.__init__(self, mimelist)
+        super(GifImage, self).__init__(mimelist)
         self.tiny_gif = None
+
 
     def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
@@ -103,6 +103,7 @@ class GifParser (object):
         if self.state==GifParser.NOFILTER: return 'NOFILTER'
         return 'UNKNOWN'
 
+
     def __init__ (self, sizes=[]):
         self.state = GifParser.INIT
         self.data = self.consumed = self.output = ''
@@ -110,13 +111,16 @@ class GifParser (object):
         self.removing = False
         self.sizes = sizes
 
+
     def addData (self, data):
         self.data += data
+
 
     def flush (self):
         if self.consumed:
             self.output += self.consumed
             self.consumed = ''
+
 
     def read (self, i):
         if i<=0: return
@@ -130,8 +134,10 @@ class GifParser (object):
         self.data = self.data[i:]
         return self.consumed[-i:]
 
+
     def remove (self, i):
         self.consumed = self.consumed[:-i]
+
 
     def getOutput (self):
         if self.output:
@@ -139,6 +145,7 @@ class GifParser (object):
             self.output = ''
             return res
         return self.output
+
 
     def parse (self):
         """Big parse function. The trick is the usage of self.read(),

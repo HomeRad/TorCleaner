@@ -36,7 +36,7 @@ class AllowRule (Rule):
     def __init__ (self, title="No title", desc="", disable=0, scheme="",
                   host="", port="", path="", parameters="", query="",
 		  fragment="", oid=0):
-        Rule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
+        super(AllowRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)
         self.scheme = scheme
         self.host = host
         self.port = port
@@ -47,17 +47,15 @@ class AllowRule (Rule):
         self.attrnames.extend(('scheme','host','port','path','parameters',
                                 'query','fragment'))
 
+
     def fromFactory (self, factory):
         return factory.fromAllowRule(self)
 
-    def toxml (self):
-        return "%s%s/>"%(Rule.toxml(self),self.netlocxml())
 
-    def netlocxml (self):
-        s = ""
+    def toxml (self):
+        s = super(AllowRule, self).toxml()
         for attr in Netlocparts:
             a = getattr(self, attr)
             if a is not None:
                 s += '\n %s="%s"' % (attr, xmlify(a))
-        return s
-
+        return s+"/>"

@@ -25,7 +25,7 @@ from wc.XmlUtils import xmlify, unxmlify
 class PicsRule (UrlRule):
     """holds configured PICS rating data"""
     def __init__ (self, title="No title", desc="", disable=0, oid=0):
-        UrlRule.__init__(self, title=title, desc=desc,disable=disable,oid=oid)
+        super(PicsRule, self).__init__(title=title, desc=desc,disable=disable,oid=oid)
         self.ratings = {}
         self.url = ""
 
@@ -61,7 +61,7 @@ class PicsRule (UrlRule):
 
 
     def toxml (self):
-	s = UrlRule.toxml(self)+">\n"
+	s = "%s>\n" % super(PicsRule, self).toxml()
         if self.url:
             s += "<url>%s</url>\n" % xmlify(self.url)
         services = self.ratings.keys()

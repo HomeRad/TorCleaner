@@ -84,7 +84,7 @@ class BufferHtmlParser (HtmlParser):
          self.outbuf - StringIO with already filtered HTML data
     """
     def __init__ (self):
-        HtmlParser.__init__(self)
+        super(BufferHtmlParser, self).__init__()
         if wc.config['showerrors']:
             self.error = self._error
             self.warning = self._warning
@@ -176,6 +176,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def __init__ (self, rules, pics, url, **opts):
         "init rules and buffers"
+        # XXX use super()?
         BufferHtmlParser.__init__(self)
         JSHtmlListener.__init__(self, opts)
         self.rules = rules

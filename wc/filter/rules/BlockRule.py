@@ -26,22 +26,25 @@ class BlockRule (AllowRule):
     def __init__ (self, title="No title", desc="", disable=0, scheme="",
                   host="", port="", path="", parameters="", query="",
 		  fragment="", url="", oid=0):
-        AllowRule.__init__(self, title=title, desc=desc, disable=disable,
+        super(BlockRule, self).__init__(title=title, desc=desc, disable=disable,
                            scheme=scheme, host=host, port=port, path=path,
                            parameters=parameters, query=query,
                            fragment=fragment, oid=oid)
         self.url = url
 
+
     def fill_data (self, data, name):
         if name=='block':
             self.url += umxlify(data).encode('iso8859-1')
 
+
     def fromFactory (self, factory):
         return factory.fromBlockRule(self)
 
+
     def toxml (self):
-        s = Rule.toxml(self)+self.netlocxml()
+        # chop off the last two chars '/>'
+        s = super(BlockRule, self).toxml()[:-2]
         if self.url:
             return s+">"+xmlify(self.url)+"</block>"
         return s+"/>"
-

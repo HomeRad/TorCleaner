@@ -36,11 +36,12 @@ class Rewriter (Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
 
     def __init__ (self, mimelist):
-        Filter.__init__(self, mimelist)
+        super(Rewriter, self).__init__(mimelist)
         self.comments = 1
 
+
     def addrule (self, rule):
-        Filter.addrule(self, rule)
+        super(Rewriter, self).addrule(rule)
         compileRegex(rule, "matchurl")
         compileRegex(rule, "dontmatchurl")
         if rule.get_name()=='rewrite':
@@ -50,11 +51,13 @@ class Rewriter (Filter):
         elif rule.get_name()=='nocomments':
             self.comments = 0
 
+
     def filter (self, data, **attrs):
         if not attrs.has_key('filter'): return data
         p = attrs['filter']
         p.feed(data)
         return p.flushbuf()
+
 
     def finish (self, data, **attrs):
         if not attrs.has_key('filter'): return data
@@ -64,6 +67,7 @@ class Rewriter (Filter):
         p.flush()
         p.buf2data()
         return p.flushbuf()
+
 
     def getAttrs (self, headers, url):
         """We need a separate filter instance for stateful filtering"""
@@ -84,4 +88,3 @@ class Rewriter (Filter):
                 pics.append(rule)
         # generate the HTML filter
         return {'filter': FilterHtmlParser(rewrites, pics, url, **opts)}
-
