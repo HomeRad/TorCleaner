@@ -95,6 +95,8 @@ staticforward PyTypeObject parser_type;
 
 %}
 
+%option 8bit
+
 %x COMMENT
 %x SCRIPT
 %x STARTTAG
