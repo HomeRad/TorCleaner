@@ -26,6 +26,10 @@
     Type: bugfix
     Changed: wc/webgui/PageTemplates/Expressions.py
 
+  * do not set client mime for server content
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
 2.21 "Bugsy" (released 18.10.2004)
   * make string of domain before concatenating
     Type: bugfix
