@@ -10,7 +10,7 @@ Required are the "tarfile" module and Python 2.2
 import sys, time, os, re, urllib2, gzip
 from tarfile import TarFile
 sys.path.insert(0, os.getcwd())
-from wc import xmlify
+from wc.XmlUtils import xmlify
 
 # global vars
 date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -286,7 +286,7 @@ def open_files (directory):
             if os.path.exists(fname):
                 os.remove(fname)
             print "opening", fname
-            categories[cat][type] = gzip.GzipFile(fname, 'wb')
+            categories[cat][ftype] = gzip.GzipFile(fname, 'wb')
 
 def close_files ():
     for cat in categories.keys():
