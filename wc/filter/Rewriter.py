@@ -171,8 +171,6 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def flush (self):
         if self.state=='wait':
-            self.inbuf.close()
-            self.inbuf = StringIO()
             raise FilterException("HtmlFilter: still waiting for data")
         HtmlParser.flush(self)
 
