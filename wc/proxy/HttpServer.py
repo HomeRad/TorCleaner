@@ -190,6 +190,7 @@ class HttpServer(Server):
             self.state = 'content'
 
     def process_content(self):
+        debug(NIGHTMARE, "processing server content")
         data = self.read(self.bytes_remaining)
 
         if self.bytes_remaining is not None:
@@ -205,7 +206,6 @@ class HttpServer(Server):
         for i in _RESPONSE_FILTERS:
             filtered_data = applyfilter(i, filtered_data, attrs=self.attrs)
         if filtered_data:
-            # XXX FILTER_RESPONSE_MODIFY
 	    self.client.server_content(filtered_data)
 
         if (is_closed or
@@ -228,7 +228,7 @@ class HttpServer(Server):
             for decoder in self.decoders:
                 data = decoder.decode(data)
             for i in _RESPONSE_FILTERS:
-                data = applyfilter(i, data, attrs=self.attrs)
+                data = applyfilter(i, data, fun="finish", attrs=self.attrs)
             if data: client.server_content(data)
 
         client.server_close()

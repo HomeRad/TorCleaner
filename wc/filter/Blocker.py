@@ -81,7 +81,6 @@ class Blocker(Filter):
 
 
     def blocked(self, urlTuple):
-        debug(NIGHTMARE, "checking block")
         for _block in self.block:
             match = 1
             for i in range(len(urlTuple)):
@@ -97,7 +96,6 @@ class Blocker(Filter):
 
 
     def allowed(self, urlTuple):
-        debug(NIGHTMARE, "checking allow")
         for _allow in self.allow:
             match = 1
             for i in range(len(urlTuple)):

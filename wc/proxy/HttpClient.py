@@ -72,6 +72,8 @@ class HttpClient(Connection):
                 self.bytes_remaining -= len(data)
                 self.content += data
             else:
+                # XXX finish
+
                 # We're done reading content
                 self.state = 'receive'
                 # This object will call server_connected at some point

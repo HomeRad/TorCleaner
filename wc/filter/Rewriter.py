@@ -18,6 +18,7 @@ import re,string
 from wc.parser.sgmllib import SGMLParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
+from wc.debug_levels import *
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter.Filter import Filter
 
@@ -49,6 +50,7 @@ class Rewriter(Filter):
 
     def filter(self, data, **attrs):
         p = attrs['filter']
+        debug(NIGHTMARE, "Rewriting filter", p)
         p.feed(data)
         return p.flush()
 
@@ -77,6 +79,9 @@ class HtmlFilter(SGMLParser):
         self.buffer = []
 
 
+    def __repr__(self):
+        return "<HtmlFilter with buffer %s >" % self.buffer
+
     def buffer_append_data(self, data):
         """we have to make sure that we have no two following
         DATA things in the buffer. Why? well, just to be 100% sure
@@ -90,7 +95,6 @@ class HtmlFilter(SGMLParser):
 
     def handle_data(self, d):
         """handler for data"""
-        debug(NIGHTMARE, "data: "+d)
         self.buffer_append_data([DATA, d])
 
 
@@ -123,14 +127,12 @@ class HtmlFilter(SGMLParser):
     def handle_comment(self, data):
         """a comment. either delete it or print it, nothing more
 	   because we dont filter inside comments"""
-        debug(NIGHTMARE, "comment: "+data)
         if self.comments:
             self.buffer.append((COMMENT,data))
 
 
     def handle_entityref(self, name):
         """dont translate, we leave that for the browser"""
-        debug(NIGHTMARE, "entityref: "+`name`)
         if name:
             name = "&"+name+";"
         else:
@@ -142,14 +144,12 @@ class HtmlFilter(SGMLParser):
 
     def handle_charref(self, name):
         """dont translate, we leave that for the browser"""
-        debug(NIGHTMARE, "charref: "+`name`)
         self.buffer_append_data([DATA, "&#"+name+";"])
 
 
     def unknown_starttag(self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
-        debug(NIGHTMARE, "start tag: %s %s" % (tag, attrs))
         rulelist = []
         tobuffer = (STARTTAG, tag, attrs)
         for rule in self.rules:
@@ -180,7 +180,6 @@ class HtmlFilter(SGMLParser):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buffer2data)"""
-        debug(NIGHTMARE, 'end tag: </%s>' % tag)
         self.buffer.append((ENDTAG, tag))
         if self.rulestack and self.rulestack[-1][1][0].match_tag(tag):
             i, rulelist = self.rulestack.pop()

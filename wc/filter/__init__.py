@@ -24,6 +24,8 @@ to see how its done.
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import string
+from wc import debug
+from wc.debug_levels import *
 
 # filter order
 FILTER_REQUEST         = 0 # Filter complete request (blocking)
