@@ -72,7 +72,7 @@ staticforward PyTypeObject parser_type;
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 
 
@@ -1575,7 +1575,7 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
-    //yydebug = 1;
+    yydebug = 1;
 }
 
 /* standard error reporting, indicating an internal error */
