@@ -5,6 +5,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer, get_http_version, set_via_header
+from wc.proxy import remove_warning_headers
 from wc import i18n, config, remove_headers, has_header_value
 from wc.debug import *
 from ClientServerMatchmaker import serverpool

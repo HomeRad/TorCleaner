@@ -71,7 +71,7 @@ def set_via_header (headers):
     headers['Via'] = via
 
 
-def remove_old_warning_headers (headers):
+def remove_warning_headers (headers):
     # XXX todo
     pass
 
