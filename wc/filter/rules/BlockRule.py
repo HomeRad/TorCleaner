@@ -23,22 +23,20 @@ from wc.XmlUtils import xmlify, unxmlify
 
 class BlockRule (AllowRule):
     def __init__ (self, sid=None, oid=None, title="No title", desc="",
-                  disable=0, scheme="", host="", port="", path="",
-                  query="", fragment="", url=""):
+                  disable=0, url="", replacement=""):
         super(BlockRule, self).__init__(sid=sid, oid=oid, title=title,
-                           desc=desc, disable=disable,
-                           scheme=scheme, host=host, port=port, path=path,
-                           query=query, fragment=fragment)
-        self.url = url
+                                        desc=desc, disable=disable, url=url)
+        self.replacement = replacement
 
 
     def fill_data (self, data, name):
         if name=='block':
-            self.url += data
+            self.replacement += data
 
 
     def compile_data (self):
-        self.url = unxmlify(self.url).encode('iso8859-1')
+        super(BlockRule, self).compile_data()
+        self.replacement = unxmlify(self.replacement).encode('iso8859-1')
 
 
     def fromFactory (self, factory):
@@ -48,6 +46,6 @@ class BlockRule (AllowRule):
     def toxml (self):
         # chop off the last two chars '/>'
         s = super(BlockRule, self).toxml()[:-2]
-        if self.url:
-            return s+">"+xmlify(self.url)+"</block>"
+        if self.replacement:
+            return s+">"+xmlify(self.replacement)+"</block>"
         return s+"/>"

@@ -117,6 +117,7 @@ class RewriteRule (UrlRule):
 
 
     def compile_data (self):
+        super(RewriteRule, self).compile_data()
         self.enclosed = unxmlify(self.enclosed).encode('iso8859-1')
         self.replacement = unxmlify(self.replacement).encode('iso8859-1')
         for attr, val in self.attrs.items():

@@ -130,7 +130,9 @@ class Rule (object):
 
     def compile_data (self):
         """called when all XML parsing of rule finished"""
-        pass
+        if self.sid is None:
+            from wc.filter.rules import register_rule
+            register_rule(self)
 
 
     def fromFactory (self, factory):

@@ -40,6 +40,7 @@ class HeaderRule (UrlRule):
 
 
     def compile_data (self):
+        super(HeaderRule, self).compile_data()
         self.value = unxmlify(self.value).encode('iso8859-1')
 
 

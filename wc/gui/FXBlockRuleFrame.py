@@ -26,18 +26,18 @@ from wc.log import *
 
 class FXBlockRuleFrame (FXAllowRuleFrame):
     """display all variables found in a BlockRule"""
-    ID_URL = FXAllowRuleFrame.ID_LAST
+    ID_REPLACEMENT = FXAllowRuleFrame.ID_LAST
 
     def __init__ (self, parent, rule, index):
         FXAllowRuleFrame.__init__(self, parent, rule, index)
-        FXMAPFUNC(self,SEL_COMMAND,FXBlockRuleFrame.ID_URL,FXBlockRuleFrame.onCmdUrl)
-        FXLabel(self.matrix, i18n._("Blocked URL\tThe URL we want to show instead"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXBlockRuleFrame.ID_URL)
-        tf.setText(self.rule.fragment)
+        FXMAPFUNC(self,SEL_COMMAND,FXBlockRuleFrame.ID_REPLACEMENT,FXBlockRuleFrame.onCmdReplacement)
+        FXLabel(self.matrix, i18n._("URL replacement\tThe URL we want to show instead"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        tf = FXTextField(self.matrix, 25, self, FXBlockRuleFrame.ID_REPLACEMENT)
+        tf.setText(self.rule.replacement)
 
     def onCmdUrl (self, sender, sel, ptr):
-        self.rule.url = sender.getText().strip()
+        self.rule.replacement = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(GUI, "Changed rule blocked url")
+        debug(GUI, "Changed rule blocked url replacement")
         return 1
 

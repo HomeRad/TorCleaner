@@ -5,12 +5,7 @@
 
 <block sid="wc.363" oid="0" title="Statistic sites"
  desc="Some tracker sites"
- scheme=""
- host="(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"
- port=""
- path=""
- query=""
- fragment=""/>
+ url="https?://(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"/>
 
 <rewrite sid="wc.364" oid="1" title="1x1 tracker images"
  desc="Several sites use 1x1 images to track users."

@@ -21,30 +21,14 @@ __date__    = "$Date$"[7:-2]
 from Rule import Rule
 from wc.XmlUtils import xmlify
 
-# all parts of a URL
-Netlocparts = [
-        'scheme',
-        'host',
-        'port',
-        'path',
-        'query',
-        'fragment',
-    ]
 
 class AllowRule (Rule):
     def __init__ (self, sid=None, oid=None, title="No title", desc="",
-                  disable=0, scheme="", host="", port="", path="",
-                  query="", fragment=""):
+                  disable=0, scheme="", url=""):
         super(AllowRule, self).__init__(sid=sid, oid=oid, title=title,
                                         desc=desc, disable=disable)
-        self.scheme = scheme
-        self.host = host
-        self.port = port
-        self.path = path
-        self.query = query
-        self.fragment = fragment
-        self.attrnames.extend(('scheme', 'host', 'port', 'path', 'query',
-                               'fragment'))
+        self.url = url
+        self.attrnames.append('url')
 
 
     def fromFactory (self, factory):
@@ -52,9 +36,5 @@ class AllowRule (Rule):
 
 
     def toxml (self):
-        s = super(AllowRule, self).toxml()
-        for attr in Netlocparts:
-            a = getattr(self, attr)
-            if a is not None:
-                s += '\n %s="%s"' % (attr, xmlify(a))
-        return s+"/>"
+        return super(AllowRule, self).toxml() + \
+           '\n url="%s"/>' % xmlify(self.url)

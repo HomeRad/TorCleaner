@@ -376,43 +376,19 @@ def _form_rule_matchurl (form):
         info['ruledontmatchurl'] = True
 
 
-def _form_rule_urlparts (form):
-    scheme = _getval(form, 'rule_urlscheme').strip()
-    if scheme!=currule.scheme:
-        currule.scheme = scheme
-        info['ruleurlscheme'] = True
-    host = _getval(form, 'rule_urlhost').strip()
-    if host!=currule.host:
-        currule.host = host
-        info['ruleurlhost'] = True
-    port = _getval(form, 'rule_urlport').strip()
-    if port!=currule.port:
-        currule.port = port
-        info['ruleurlport'] = True
-    path = _getval(form, 'rule_urlpath').strip()
-    if path!=currule.path:
-        currule.path = path
-        info['ruleurlpath'] = True
-    query = _getval(form, 'rule_urlquery').strip()
-    if query!=currule.query:
-        currule.query = query
-        info['ruleurlquery'] = True
-    fragment = _getval(form, 'rule_urlfragment').strip()
-    if fragment!=currule.fragment:
-        currule.fragment = fragment
-        info['ruleurlfragment'] = True
-
-
 def _form_apply_allow (form):
-    _form_rule_urlparts(form)
+    url = _getval(form, 'rule_url').strip()
+    if url!=currule.url:
+        currule.url = url
+        info['ruleurl'] = True
 
 
 def _form_apply_block (form):
-    _form_rule_urlparts(form)
-    url = _getval(form, 'rule_blockedurl').strip()
-    if url!=currule.url:
-        currule.url = url
-        info['ruleblockedurl'] = True
+    _form_apply_allow(form)
+    replacement = _getval(form, 'rule_replacement').strip()
+    if replacement!=currule.replacement:
+        currule.replacement = replacement
+        info['rulereplacement'] = True
 
 
 def _form_apply_header (form):

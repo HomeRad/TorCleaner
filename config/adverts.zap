@@ -40,12 +40,7 @@
 
 <block sid="wc.340" oid="6" title="Ad servers 08"
  desc="matches url hosts beginning with &amp;quot;ad.&amp;quot;, &amp;quot;ads.&amp;quot; or &amp;quot;adserver.&amp;quot;"
- scheme=""
- host="^ad(s|server)?\."
- port=""
- path=""
- query=""
- fragment=""/>
+ url="https?://ad(s|server)?\."/>
 
 <rewrite sid="wc.341" oid="7" title="Ad servers 10"
  desc="Kill links with &apos;click&apos; words in the host name.">
@@ -66,12 +61,7 @@
 </rewrite>
 
 <block sid="lc.1" oid="10" title="Ad servers 13"
- scheme=""
- host="ad(s|server)?\."
- port=""
- path=""
- query=""
- fragment=""/>
+ url="https?://ad(s|server)?\."/>
 
 <rewrite sid="wc.344" oid="11" title="Adverts in the path name 01"
  desc="Kill links with ad words in the path name.">
@@ -104,12 +94,7 @@
 
 <block sid="wc.349" oid="16" title="CGI adverts 1"
  desc="Search for the words &amp;quot;ad&amp;quot; and &amp;quot;click&amp;quot;  in the path and a non-empty query."
- scheme=""
- host=""
- port=""
- path="(ad.*click|click.*thr|click.*ad)"
- query=".+"
- fragment=""/>
+ url="https?://.*(ad.*click|click.*thr|click.*ad).*\?.+"/>
 
 <rewrite sid="wc.350" oid="17" title="CGI adverts 2"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
@@ -119,12 +104,7 @@
 
 <block sid="wc.351" oid="18" title="CGI adverts 3"
  desc="Search for advert,banner,adid,profileid in the path."
- scheme=""
- host=""
- port=""
- path="/(advert|banners?|adid|profileid)/"
- query=""
- fragment=""/>
+ url="https?://.*/(advert|banners?|adid|profileid)/"/>
 
 <rewrite sid="wc.352" oid="19" title="CGI adverts 4"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
@@ -134,12 +114,7 @@
 
 <block sid="wc.353" oid="20" title="Hosts without DNS name"
  desc="If a host has no DNS name it consists only of numbers, for  example &amp;quot;http://34.55.124.2&amp;quot;. A lot of adverts are loaded from such servers. We restrict it further more for CGI queries which fetch GIF images."
- scheme=""
- host="^[\d.]+$"
- port=""
- path=""
- query="\.gif$"
- fragment=""/>
+ url="https?://[\d.]+/.*\?.*\.gif"/>
 
 <rewrite sid="wc.354" oid="21" title="Counter and tracker"
  desc="Kill tracker and counter cgi scripts.">

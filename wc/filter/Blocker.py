@@ -20,7 +20,6 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re, urlparse, os, gzip
-from wc.filter.rules.AllowRule import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
 from wc import ConfigDir, config
@@ -76,25 +75,11 @@ class Blocker (Filter):
 
 
     def add_allow (self, rule):
-        self.allow.append(self.get_netloc_rule(rule))
+        self.allow.append(re.compile(rule.url))
 
 
     def add_block (self, rule):
-        _rule = self.get_netloc_rule(rule)
-        # append the block url (if any)
-        _rule.append(rule.url)
-        self.block.append(_rule)
-
-
-    def get_netloc_rule (self, rule):
-        _rule = []
-        for part in Netlocparts:
-            x = getattr(rule, part)
-            if x:
-                _rule.append(re.compile(x))
-            else:
-                _rule.append(None)
-        return _rule
+        self.block.append((re.compile(rule.url), rule.replacement))
 
 
     def add_blockdomains (self, rule):
@@ -118,7 +103,7 @@ class Blocker (Filter):
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
-            self.blocked_urls.append(line.split("/", 1))
+            self.blocked_urls.append(line)
 
 
     def add_allowurls (self, rule):
@@ -126,7 +111,7 @@ class Blocker (Filter):
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
-            self.allowed_urls.append(line.split("/", 1))
+            self.allowed_urls.append(line)
 
 
     def get_file_data (self, filename):
@@ -139,24 +124,17 @@ class Blocker (Filter):
         return f.readlines()
 
 
-    def doit (self, data, **args):
-        debug(FILTER, "block filter working on %s", `data`)
-        urlTuple = list(urlparse.urlsplit(data))
-        netloc = urlTuple[1]
-        s = netloc.split(":")
-        if len(s)==2:
-            urlTuple[1:2] = s
-        else:
-            urlTuple[1:2] = [netloc,80]
-        if self.allowed(urlTuple):
-            return data
-        blocked = self.strict_whitelist or self.blocked(urlTuple)
-        if blocked is not False:
-            debug(FILTER, "blocked url %s", data)
-            # index 3, not 2!
-            if blocked:
+    def doit (self, url, **args):
+        debug(FILTER, "block filter working on url %s", `url`)
+        if self.allowed(url):
+            return url
+        blocked = self.strict_whitelist or self.blocked(url)
+        if blocked:
+            debug(FILTER, "blocked url %s", url)
+            if isinstance(blocked, basestring):
                 doc = blocked
-            elif is_image(urlTuple[3][-4:]):
+            # index 3, not 2!
+            elif is_image(url):
                 doc = self.block_image
             else:
                 # XXX hmmm, what about CGI images?
@@ -164,52 +142,37 @@ class Blocker (Filter):
                 doc = self.block_url
             port = config['port']
             return 'http://localhost:%d%s' % (port, doc)
-        return data
+        return url
 
 
-    def blocked (self, urlTuple):
+    def blocked (self, url):
         # check blocked domains
-        for _block in self.blocked_domains:
-            if urlTuple[1] == _block:
-                return False
+        for blockdomain in self.blocked_domains:
+            if blockdomain in url:
+                return True
         # check blocked urls
-        for _block in self.blocked_urls:
-            if urlTuple[1]==_block[0] and urlTuple[3].startswith(_block[1]):
-                return False
+        for blockurl in self.blocked_urls:
+            if blockurl in url:
+                return True
         # check block patterns
-        for _block in self.block:
-            match = None
-            for i in range(len(urlTuple)):
-                if _block[i]:
-                    if match is None:
-                        match = True
-                    if not _block[i].search(urlTuple[i]):
-                        match = False
-                        break
-            if match:
-                debug(FILTER, "blocked %s\n         with %s", urlTuple,
-                      strblock(_block))
-                return _block[-1]
+        for ro, replacement in self.block:
+            mo = ro.search(url)
+            if mo:
+                if replacement:
+                    return mo.expand(replacement)
+                return True
         return False
 
 
     def allowed (self, urlTuple):
-        for _allow in self.allowed_domains:
-            if urlTuple[1] == _allow:
+        for allowdomain in self.allowed_domains:
+            if allowdomain in url:
                 return True
-        for _allow in self.allowed_urls:
-            if urlTuple[1]==_allow[0] and urlTuple[3].startswith(_allow[1]):
+        for allowurl in self.allowed_urls:
+            if allowurl in url:
                 return True
-        for _allow in self.allow:
-            match = None
-            for i in range(len(urlTuple)):
-                if _allow[i]:
-                    if match is None:
-                        match = True
-		    if not _allow[i].search(urlTuple[i]):
-                        match = False
-                        break
-            if match:
-                debug(FILTER, "allowed %s", str(urlTuple))
-	        return True
+        for ro in self.allow:
+            mo = re.search(url)
+            if mo:
+                return True
         return False

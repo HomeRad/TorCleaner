@@ -5,7 +5,8 @@
  Changes:
 
  20031029 Bastian Kleineidam
- * removed parameters attributes
+ * replace attributes [scheme, host, port, path, query, parameters, fragment]
+   with url
  20030806 Bastian Kleineidam
  * removed lang attribute, it was not used
  20030730 Bastian Kleineidam
@@ -132,10 +133,7 @@
 
 <!--                       Blocker
 
-    Here we can specify urls to block. We split urls in 
-    scheme://host:port/path?query#fragment
-    and can specify regular expressions to match each fragment.
-    The host and scheme regular expressions are case insensitive.
+    Here we can specify regular expressions for urls to block.
 
     The element data specifies the URL to show when the block matches.
     Applications should have a default URL.
@@ -146,12 +144,7 @@
  oid      CDATA #REQUIRED
  title      CDATA #REQUIRED
  desc       CDATA #IMPLIED
- scheme     CDATA #IMPLIED
- host       CDATA #IMPLIED
- port       CDATA #IMPLIED
- path       CDATA #IMPLIED
- query      CDATA #IMPLIED
- fragment   CDATA #IMPLIED
+ url        CDATA #IMPLIED
  disable    CDATA "0"
 >
 
@@ -232,12 +225,7 @@
  oid        CDATA #REQUIRED
  title      CDATA #REQUIRED
  desc       CDATA #IMPLIED
- scheme     CDATA #IMPLIED
- host       CDATA #IMPLIED
- port       CDATA #IMPLIED
- path       CDATA #IMPLIED
- query      CDATA #IMPLIED
- fragment   CDATA #IMPLIED
+ url        CDATA #IMPLIED
  disable    CDATA "0"
 >
 

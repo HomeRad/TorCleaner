@@ -434,7 +434,6 @@ class ZapperParser (BaseParser):
         if name=='rewrite':
             self.rule.set_start_sufficient()
         if name in rulenames:
-            assert self.rule.sid is not None
             self.rule.compile_data()
 
 

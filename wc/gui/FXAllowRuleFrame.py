@@ -26,76 +26,20 @@ from wc.log import *
 
 class FXAllowRuleFrame (FXRuleFrame):
     """display all variables found in an AllowRule"""
-    (ID_SCHEME,
-     ID_HOST,
-     ID_PORT,
-     ID_PATH,
-     ID_QUERY,
-     ID_FRAGMENT,
+    (ID_URL,
      ID_LAST,
-    ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+7)
+    ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+2)
 
     def __init__ (self, parent, rule, index):
         FXRuleFrame.__init__(self, parent, rule, index)
-        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_SCHEME,FXAllowRuleFrame.onCmdScheme)
-        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_HOST,FXAllowRuleFrame.onCmdHost)
-        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_PORT,FXAllowRuleFrame.onCmdPort)
-        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_PATH,FXAllowRuleFrame.onCmdPath)
-        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_QUERY,FXAllowRuleFrame.onCmdQuery)
-        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_FRAGMENT,FXAllowRuleFrame.onCmdFragment)
+        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_URL,FXAllowRuleFrame.onCmdUrl)
         self.matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
-        FXLabel(self.matrix, i18n._("URL Scheme:\tRegular expression to match the URL scheme"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_SCHEME)
-        tf.setText(self.rule.scheme)
-        FXLabel(self.matrix, i18n._("URL Host:\tRegular expression to match the host"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_HOST)
-        tf.setText(self.rule.host)
-        FXLabel(self.matrix, i18n._("URL Port:\tRegular expression to match the port"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_PORT)
-        tf.setText(self.rule.port)
-        FXLabel(self.matrix, i18n._("URL Path:\tRegular expression to match the path"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_PATH)
-        tf.setText(self.rule.path)
-        FXLabel(self.matrix, i18n._("URL Query:\tRegular expression to match the query"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_QUERY)
-        tf.setText(self.rule.query)
-        FXLabel(self.matrix, i18n._("URL Fragment:\tRegular expression to match the fragment"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_FRAGMENT)
-        tf.setText(self.rule.fragment)
+        FXLabel(self.matrix, i18n._("URL:\tRegular expression to match the URL"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_URL)
+        tf.setText(self.rule.url)
 
-    def onCmdScheme (self, sender, sel, ptr):
-        self.rule.scheme = sender.getText().strip()
+    def onCmdUrl (self, sender, sel, ptr):
+        self.rule.url = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(GUI, "Changed rule scheme")
+        debug(GUI, "Changed rule url")
         return 1
-
-    def onCmdHost (self, sender, sel, ptr):
-        self.rule.host = sender.getText().strip()
-        self.getApp().dirty = 1
-        debug(GUI, "Changed rule host")
-        return 1
-
-    def onCmdPort (self, sender, sel, ptr):
-        self.rule.host = sender.getText().strip()
-        self.getApp().dirty = 1
-        debug(GUI, "Changed rule port")
-        return 1
-
-    def onCmdPath (self, sender, sel, ptr):
-        self.rule.path = sender.getText().strip()
-        self.getApp().dirty = 1
-        debug(GUI, "Changed rule path")
-        return 1
-
-    def onCmdQuery (self, sender, sel, ptr):
-        self.rule.query = sender.getText().strip()
-        self.getApp().dirty = 1
-        debug(GUI, "Changed rule query")
-        return 1
-
-    def onCmdFragment (self, sender, sel, ptr):
-        self.rule.fragment = sender.getText().strip()
-        self.getApp().dirty = 1
-        debug(GUI, "Changed rule fragment")
-        return 1
-

@@ -129,20 +129,10 @@
 </rewrite>
 
 <block sid="wc.417" oid="19" title="Slashdot JS ad 1"
- scheme="http"
- host="images2.slashdot.org"
- port=""
- path="/Slashdot/pc.gif"
- query=""
- fragment=""/>
+ url="https?://images2.slashdot.org/Slashdot/pc.gif"/>
 
 <block sid="wc.418" oid="20" title="Slashdot JS ad 2"
- scheme="http"
- host="images.slashdot.org"
- port=""
- path="/banner/"
- query=""
- fragment=""/>
+ url="https?://images.slashdot.org/banner/"/>
 
 <rewrite sid="wc.419" oid="21" title="Atwola JS ad"
  desc="found at fortune.com"

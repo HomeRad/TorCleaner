@@ -37,6 +37,7 @@ class ReplaceRule (UrlRule):
 
 
     def compile_data (self):
+        super(ReplaceRule, self).compile_data()
         self.replace = unxmlify(self.replace).encode('iso8859-1')
 
 

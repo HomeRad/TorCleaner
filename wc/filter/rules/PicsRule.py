@@ -67,6 +67,7 @@ class PicsRule (UrlRule):
 
 
     def compile_data (self):
+        super(PicsRule, self).compile_data()
         self.url = unxmlify(self.url).encode('iso8859-1')
         for service in self.ratings:
             for category in self.ratings[service]:

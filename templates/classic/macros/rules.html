@@ -57,40 +57,10 @@
 <table>
 <div metal:define-macro="urlparts">
 <tr valign="top"><td>
-<label for="rule_urlscheme" i18n:translate="">URL scheme</label>:
+<label for="rule_url" i18n:translate="">URL</label>:
 </td><td>
-<input type="text" class="text" name="rule_urlscheme" value="http"
- tal:attributes="value currule/scheme">
-</td></tr>
-<tr valign="top"><td>
-<label for="rule_urlhost" i18n:translate="">URL host</label>:
-</td><td>
-<input type="text" class="text" name="rule_urlhost" value="www.imadoofus.com"
- tal:attributes="value currule/host">
-</td></tr>
-<tr valign="top"><td>
-<label for="rule_urlport" i18n:translate="">URL port</label>:
-</td><td>
-<input type="text" class="text" name="rule_urlport" value="80"
- tal:attributes="value currule/port">
-</td></tr>
-<tr valign="top"><td>
-<label for="rule_urlpath" i18n:translate="">URL path</label>:
-</td><td>
-<input type="text" class="text" name="rule_urlpath" value="/hulla/bulla"
- tal:attributes="value currule/path">
-</td></tr>
-<tr valign="top"><td>
-<label for="rule_urlquery" i18n:translate="">URL query</label>:
-</td><td>
-<input type="text" class="text" name="rule_urlquery" value=""
- tal:attributes="value currule/query">
-</td></tr>
-<tr valign="top"><td>
-<label for="rule_urlfragment" i18n:translate="">URL fragment</label>:
-</td><td>
-<input type="text" class="text" name="rule_urlfragment" value=""
- tal:attributes="value currule/fragment">
+<input type="text" class="text" name="rule_url" value=""
+ tal:attributes="value currule/url">
 </td></tr>
 </div>
 </table>
@@ -184,10 +154,11 @@ Rule title and description
 Rule url parts
 </tr>
 <tr valign="top"><td>
-<label for="rule_blockedurl" i18n:translate="">Blocked URL</label>:
+<label for="rule_replacement" i18n:translate="">Replacement URL</label>:
 </td><td>
-<input type="text" class="text" name="rule_blockedurl" id="rule_blockedurl"
- value="http://www.calvinandhobbes.com/" tal:attributes="value currule/url">
+<input type="text" class="text" name="rule_replacement" id="rule_replacement"
+ value="http://www.calvinandhobbes.com/"
+ tal:attributes="value currule/replacement">
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
