@@ -74,6 +74,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             return
         if not data: # It's been closed, and handle_close has been called
             debug(PROXY, "%s closed, got empty data", self)
+            self.persistent = False
             return
         debug(CONNECTION, '%s <= read %d', self, len(data))
         debug(CONNECTION, 'data %r', data)

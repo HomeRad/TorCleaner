@@ -22,7 +22,7 @@ class StatefulConnection (wc.proxy.Connection.Connection):
 
 
     def writable (self):
-        """a connection is writable if we're connecting"""
+        """a connection is writable if we're connecting or if data is available"""
         return self.send_buffer or self.state=='connect'
 
 
