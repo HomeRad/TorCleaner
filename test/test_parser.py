@@ -123,3 +123,4 @@ def _test():
     print "finished"
 
 _test()
+sys.stderr = sys.__stderr__

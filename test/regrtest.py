@@ -168,7 +168,7 @@ def runtest(test, generate, verbose, quiet, testdir = None):
     outputfile = os.path.join(outputdir, test)
     try:
         if generate:
-            cfp = open(outputfile, "w")
+            cfp = file(outputfile, "w")
         elif verbose:
             cfp = sys.stdout
         else:
