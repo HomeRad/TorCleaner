@@ -55,13 +55,15 @@ Data flux
 	|
   WEBCLEANER SSL SERVER (localhost:8443)
 	|
-     SslClient		init server, filter	pass data back to
-    	|		request data and pass	HttpsServer
+     SslClient		init server and ssl	pass data back to
+        |               handshake; filter	HttpsServer
+    	|		request data and pass
         |		it to SslServer
         |
      ClientServerMatchmaker
 	|
      SslServer		connect to remote ssl	filter data, pass it to
-	|		server, make request	SslClient
+	|		server, make (SSL)	SslClient
+        |               request
   REMOTE SSL SERVER
 
