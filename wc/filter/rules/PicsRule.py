@@ -15,6 +15,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 from UrlRule import UrlRule
+from wc import i18n
 from wc.XmlUtils import xmlify, unxmlify
 
 # PICS ratings (default to zero which means disabled)
@@ -100,7 +101,35 @@ _default_ratings = {
 class PicsRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, oid=0):
         UrlRule.__init__(self, title=title, desc=desc,disable=disable,oid=oid)
-        self.ratings = _default_ratings
+        self.ratings = {}
+        self.service = None
+        self.category = None
+
+
+    def fill_attrs (self, attrs, name):
+        if name=='pics':
+            UrlRule.fill_attrs(self, attrs, name)
+        elif name=='service':
+            self.service = unxmlify(attrs.get('name')).encode('iso8859-1')
+            self.ratings[service] = {}
+        elif name=='category':
+            assert self.service
+            self.category = unxmlify(attrs.get('name')).encode('iso8859-1')
+        else:
+            raise ValueError(i18n._("Invalid pics rule tag name `%s',"+\
+                                    " check your configuration")%name)
+
+
+    def fill_data (self, data, name):
+        data = unxmlify(data).encode('iso8859-1')
+        if name=='category':
+            assert self.service
+            assert self.category
+            assert self.ratings.has_key(self.service)
+            self.ratings[self.service][self.category] = int(data)
+        else:
+            # ignore other content
+            pass
 
     def fromFactory (self, factory):
         return factory.fromPicsRule(self)
