@@ -100,6 +100,7 @@ class Compress (Filter):
         return data
 
     def getAttrs (self, headers, url):
+        compressobj = None
         do_compress = False
         for accept in headers.get('Accept-Encoding', '').split(','):
             if ';' in accept:
@@ -107,7 +108,7 @@ class Compress (Filter):
             if accept.strip() in ('gzip', 'x-gzip'):
                 do_compress = True
                 break
-        if do_compres:
+        if do_compress:
             if headers.has_key('Content-Encoding'):
                 if not COMPRESS_RE.search(headers['Content-Encoding']):
                     compressobj = getCompressObject()
