@@ -23,12 +23,14 @@ from wc.webgui.context import getval as _getval
 from wc.filter.Rating import rating_cache_get as _rating_cache_get
 from wc.filter.Rating import rating_export as _rating_export
 from wc.url import is_valid_url as _is_valid_url
+import socket as _socket
+import smtplib as _smtplib
 
 info = {}
 error = {}
 url = ""
 rating = ""
-
+smtphost = "localhost"
 
 # form execution
 def _exec_form (form, lang):
@@ -40,7 +42,8 @@ def _exec_form (form, lang):
     if not _get_rating():
         return
     if form.has_key('send'):
-        _form_send()
+        if not _form_send(form):
+            return
 
 
 def _form_reset ():
@@ -72,8 +75,30 @@ def _get_rating ():
         return False
     global rating
     rating = "url %r\n%s\n"%(url, _rating_export(val[1]))
+    return True
 
 
-def _form_send ():
-    XXX
-    info["sent"] = True
+def _form_send (form):
+    if not form.has_key('smtphost'):
+        error['smtphost'] = True
+        return
+    global smtphost
+    smtphost = _getval(form, 'smtphost')
+    message = rating
+    if form.has_key('fromaddr'):
+        fromaddr = _getval(form, 'fromaddr')
+    else:
+        fromaddr = Email
+    if not fromaddr:
+        error['fromaddr'] = True
+        return
+    toaddrs = [Email]
+    try:
+        conn = _smtplib.SMTP(smtphost)
+        conn.sendmail(fromaddr, toaddrs, message)
+        conn.quit()
+        info["sent"] = True
+        return True
+    except (_socket.error, _smtplib.SMTPException), x:
+        error['sent'] = True
+        exception('SMTP send failure: %s\n', x)
