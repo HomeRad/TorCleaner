@@ -1,0 +1,50 @@
+# -*- coding: iso-8859-1 -*-
+"""Services."""
+# Copyright (C) 2004  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+class Service (object):
+    """A named service with url and list of supported categories."""
+
+    def __init__ (self, name, url, categories):
+        """Initialize name, url and category list."""
+        self.name = name
+        self.url = url
+        self.categories = categories
+
+
+class WebCleanerService (Service):
+    """WebCleaner rating service supporting some basic categories:
+       violence, sex, language, age."""
+
+    def __init__ (self):
+        """Initialize service data and a submit and request CGI url."""
+        # service name
+        name = wc.AppName
+        # service homepage
+        url = '%s/rating/' % wc.Url,
+        # rating categories
+        categories = [
+            ValueCategory("violence"),
+            ValueCategory("sex"),
+            ValueCategory("language"),
+            RangeCategory("age", minval=0),
+        ]
+        super(WebCleanerService, self).__init__(name, url, categories)
+        # submit ratings to service
+        self.submit = '%s/submit' % self.url,
+        # request ratings from service
+        self.request = '%s/request' % self.url,

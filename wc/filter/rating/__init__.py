@@ -27,179 +27,12 @@ import wc.log
 import wc.url
 
 
-MISSING = _("Unknown page")
-
-# rating cache
-rating_cache = {}
-
-# rating associations and their categories
-service = dict(
-   name = wc.AppName,
-   # service homepage
-   home = '%s/rating/'%wc.Url,
-   # submit ratings to service
-   submit = '%s/rating/submit'%wc.Url,
-   # request ratings from service
-   request = '%s/rating/request'%wc.Url,
-   # rating categories
-   categories = dict(
-       violence = dict(
-             name = _('violence'),
-             rvalues = ["0", "1", "2"],
-             rrange = [],
-           ),
-       sex = dict(
-             name = _('sex'),
-             rvalues = ["0", "1", "2"],
-             rrange = [],
-           ),
-       language = dict(
-             name = _('language'),
-             rvalues = ["0", "1", "2"],
-             rrange = [],
-           ),
-       agerange = dict(
-             name = _('age range'),
-             rvalues = [],
-             rrange = [0, None],
-           ),
-   ),
-)
-
-rangenames = {
-    "0": _("None"),
-    "1": _("Mild"),
-    "2": _("Heavy"),
-}
-
-
-is_time = re.compile(r"^\d+$").search
-
-
-def get_rating_cachefile ():
-    """rating cache filename"""
-    config = wc.configuration.config
-    return os.path.join(config.configdir, "rating.dat")
-
-
-def rating_import (url, ratingdata, debug=0):
-    """parse given rating data, throws ParseError on error"""
-    categories = {}
-    for line in ratingdata.splitlines():
-        if debug:
-            wc.log.debug(wc.LOG_RATING, "Read line %r", line)
-        line = line.strip()
-        if not line:
-            # ignore empty lines
-            continue
-        if line.startswith("#"):
-            # ignore comments
-            continue
-        try:
-            category, value = line.split(None, 1)
-        except ValueError:
-            raise RatingParseError(_(
-                                        "malformed rating line %r") % line)
-        if category == "modified" and not is_time(value):
-            raise RatingParseError(_(
-                                         "malfored modified time %r") % value)
-        if category == "generic" and value not in ["true", "false"] and \
-           not url.startswith(value):
-            raise RatingParseError(_(
-                            "generic url %r doesn't match %r") % (value, url))
-        categories[category] = value
-    return categories
-
-
-def rating_export (rating):
-    """return string representation of given rating data"""
-    return "\n".join([ "%s %s"%item for item in rating.items() ])
-
-
-def rating_exportall ():
-    """export all ratings in a text file called `rating.txt', located
-       in the same directory as the file `rating.dat'
-    """
-    config = wc.configuration.config
-    fp = file(os.path.join(config.configdir, "rating.txt"), 'w')
-    for url, rating in rating_cache.iteritems():
-        if not wc.url.is_safe_url(url):
-            wc.log.error(wc.LOG_RATING, "invalid url %r", url)
-            continue
-        fp.write("url %s\n"%url)
-        fp.write(rating_export(rating))
-        fp.write("\n\n")
-    fp.close()
-
-
 class RatingParseError (Exception):
     """Raised on parsing errors."""
     pass
 
 
-def rating_cache_write ():
-    """write cached rating data to disk"""
-    fp = file(get_rating_cachefile(), 'wb')
-    pickle.dump(rating_cache, fp, 1)
-    fp.close()
-
-
-def rating_cache_load ():
-    """load cached rating data from disk and fill the rating_cache.
-       If no rating data file is found, do nothing."""
-    global rating_cache
-    if os.path.isfile(get_rating_cachefile()):
-        fp = file(get_rating_cachefile())
-        rating_cache = pickle.load(fp)
-        fp.close()
-        # remove invalid entries
-        toremove = []
-        for url in rating_cache:
-            if not wc.url.is_safe_url(url):
-                wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
-                toremove.append(url)
-        if toremove:
-            for url in toremove:
-                del rating_cache[url]
-            rating_cache_write()
-
-
-def rating_cache_parse (fp):
-    """parse previously exported rating data from given file"""
-    url = None
-    ratingdata = []
-    newrating_cache = {}
-    for line in fp:
-        line = line.rstrip('\r\n')
-        if not line:
-            if url:
-                data = "\n".join(ratingdata)
-                newrating_cache[url] = rating_import(url, data)
-            url = None
-            ratingdata = []
-            continue
-        if line.startswith('url'):
-            url = line.split()[1]
-        elif url:
-            ratingdata.append(line)
-    return newrating_cache
-
-
-def rating_cache_get (url):
-    """return a tuple (url, rating) if cache has entry for given url,
-       else None"""
-    # use a specialized form of longest prefix matching:
-    # split the url in parts and the longest matching part wins
-    parts = rating_split_url(url)
-    # the range selects from all parts (full url) down to the first two parts
-    for i in range(len(parts), 1, -1):
-        url = "".join(parts[:i])
-        if url in rating_cache:
-            return (url, rating_cache[url])
-    return None
-
-
-def rating_split_url (url):
+def split_url (url):
     """split an url into parts suitable for longest prefix match
        return parts so that "".join(parts) == url
     """
@@ -215,11 +48,11 @@ def rating_split_url (url):
     # remove query and fragment
     del parts[3:5]
     # further split path in components
-    parts[2:] = rating_split_path(parts[2])
+    parts[2:] = split_path(parts[2])
     return parts
 
 
-def rating_split_path (path):
+def split_path (path):
     """split a path into parts suitable for longest prefix match
        return parts so that "".join(parts) == path
     """
@@ -232,28 +65,16 @@ def rating_split_path (path):
     return ret
 
 
-def rating_add (url, rating):
-    """add new or update rating in cache and write changes to disk"""
-    if wc.url.is_safe_url(url):
-        # XXX norm url?
-        rating_cache[url] = rating
-        rating_cache_write()
-        return True
-    else:
-        wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
-        return False
 
 
-def rating_delete (url, rating):
-    """remove rating from cache and write changes to disk"""
-    if wc.url.is_safe_url(url):
-        # XXX norm url?
-        del rating_cache[url]
-        rating_cache_write()
-        return True
-    else:
-        wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
-        return False
+
+
+
+
+
+MISSING = _("Unknown page")
+
+is_time = re.compile(r"^\d+$").search
 
 
 def rating_allow (url, rule):
