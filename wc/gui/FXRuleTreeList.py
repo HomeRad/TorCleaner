@@ -87,6 +87,7 @@ class FXRuleTreeList (FXTreeList):
         self.setItemIcons(rule.item, rule)
         frame = rule.fromFactory(self.factory)
         rule.item.setData(rule.index)
+        return frame
 
     def onCmdUp (self):
         item = self.getCurrentItem()
