@@ -128,7 +128,8 @@ def mainloop (handle=None, abort=None):
     import wc.proxy.Listener
     import wc.proxy.SslClient
     import wc.proxy.ssl
-    wc.proxy.Listener.Listener(wc.configuration.config['port'],
+    wc.proxy.Listener.Listener(wc.configuration.config['bindaddress'],
+                               wc.configuration.config['port'],
                                wc.proxy.HttpClient.HttpClient)
     if wc.configuration.config['sslgateway']:
         wc.proxy.Listener.Listener(wc.configuration.config['sslport'],

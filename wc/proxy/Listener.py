@@ -12,11 +12,10 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
     """A listener accepts connections on a specified port. Each
        accepted incoming connection gets delegated to an instance of the
        handler class"""
-    def __init__ (self, port, handler, sslctx=None):
+    def __init__ (self, sockaddr, port, handler, sslctx=None):
         """create a socket on specified port and start listening to it"""
         super(Listener, self).__init__()
-        self.addr = (('', 'localhost')[
-                   wc.configuration.config['local_sockets_only']], port)
+        self.addr = (sockaddr, port)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=sslctx)
         if sslctx is not None:
             self.socket.set_accept_state()
@@ -28,7 +27,7 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
 
     def __repr__ (self):
         """return listener class and address"""
-        return '<Listener:%s>' % self.addr[1]
+        return '<Listener:%s>' % self.addr
 
     def log (self, msg):
         """standard logging is disabled, we dont need it here"""
