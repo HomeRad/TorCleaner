@@ -28,9 +28,11 @@ if not hasattr(sys, "version_info"):
 if sys.version_info < (2, 3, 1, 'final', 0):
     raise SystemExit, "This program requires Python 2.3.1 or later."
 import os
-from wc import i18n, wstartfunc, AppName
+# since webcleaner is single-threaded, increase the check interval
+sys.setcheckinterval(1000)
+import wc
 
-nt_usage = i18n._("""USAGE\twebcleaner [options] <command> [command options]
+nt_usage = wc.i18n._("""USAGE\twebcleaner [options] <command> [command options]
 
 OPTIONS
 -h      Print this help.
@@ -70,7 +72,7 @@ COMMAND OPTIONS (for 'install' and 'update' commands only)
 """)
 
 
-usage = i18n._("""USAGE\twebcleaner [options]
+usage = wc.i18n._("""USAGE\twebcleaner [options]
 
 The %(AppName)s proxy is started as a foreground process.
 
@@ -86,7 +88,7 @@ OPTIONS
 def print_usage (msg):
     """print short usage info and exit"""
     print msg
-    print i18n._("execute 'webcleaner -h' for help\n")
+    print wc.i18n._("execute 'webcleaner -h' for help\n")
     sys.exit(1)
 
 
@@ -99,17 +101,17 @@ def paginate (text, lines=22):
         curline = curline + 1
         if curline >= lines and sys.stdin.isatty():
             curline = 1
-            print i18n._("press return to continue...")
+            print wc.i18n._("press return to continue...")
             sys.stdin.read(1)
 
 
 def print_help ():
     """print long usage info"""
     if os.name=='nt':
-        service = i18n._("%s Proxy") % AppName
-        paginate(nt_usage % {'service': service, 'AppName': AppName})
+        service = wc.i18n._("%s Proxy") % wc.AppName
+        paginate(nt_usage % {'service': service, 'AppName': wc.AppName})
     else:
-        print usage % {'AppName': AppName}
+        print usage % {'AppName': wc.AppName}
     sys.exit(0)
 
 
@@ -136,31 +138,31 @@ def parse_options ():
         elif opt=="--filterdir":
             filterdir = arg
         else:
-            print_usage(i18n._("Unknown option %(option)r")%{'option': opt})
+            print_usage(wc.i18n._("Unknown option %(option)r")%{'option': opt})
     return (configfile, filterdir, args)
 
 
 def main_posix (configfile, filterdir):
     """start the proxy"""
-    wstartfunc(configfile=configfile, filterdir=filterdir)
+    wc.wstartfunc(configfile=configfile, filterdir=filterdir)
 
 
 def main_nt (configfile, filterdir, args):
     """start nt proxy service"""
     if len(args) < 1:
-        print_usage(i18n._("No command given."))
+        print_usage(wc.i18n._("No command given."))
     else:
         command = args[0]
-    from wc import win32start
-    win32start.ProxyService.configfile = configfile
-    win32start.ProxyService.filterdir = filterdir
+    import wc.win32start
+    wc.win32start.ProxyService.configfile = configfile
+    wc.win32start.ProxyService.filterdir = filterdir
     if command=='status':
         print win32start.status()
     elif command in ['start', 'stop', 'restart', 'install', 'remove']:
         import win32serviceutil
         win32serviceutil.HandleCommandLine(win32start.ProxyService)
     else:
-        print_usage(i18n._("Unknown command %r") % command)
+        print_usage(wc.i18n._("Unknown command %r") % command)
 
 
 def main ():
