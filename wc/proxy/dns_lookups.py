@@ -73,11 +73,19 @@ def init_dns_resolver_nt ():
     if key:
         for server in winreg.stringdisplay(key["NameServer"]):
             if server:
-                DnsConfig.nameservers.append(server)
+                DnsConfig.nameservers.append(str(server))
         for item in winreg.stringdisplay(key["SearchList"]):
             if item:
-                DnsConfig.search_domains.append(item)
-    # XXX search for "EnableDhcp", "DhcpNameServer"
+                DnsConfig.search_domains.append(str(item))
+        if not DnsConfig.nameservers:
+            # XXX the proper way to test this is to search for
+            # the "EnableDhcp" key in the interface adapters...
+            for server in winreg.stringdisplay(key["DhcpNameServer"]):
+                if server:
+                    DnsConfig.nameservers.append(str(server))
+            for item in winreg.stringdisplay(key["DhcpDomain"]):
+                if item:
+                    DnsConfig.search_domains.append(str(item))
 
     try: # search adapters
         key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
@@ -609,3 +617,9 @@ class DnsLookupConnection (Connection):
 
 from wc.proxy import make_timer
 dnscache = DnsCache()
+
+
+if __name__=='__main__':
+    init_dns_resolver()
+    print "Nameservers:", DnsConfig.nameservers
+    print "Search domains:", DnsConfig.search_domains
