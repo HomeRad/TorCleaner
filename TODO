@@ -2,13 +2,18 @@ TODO
 
 version 2.11 and above
 
+- integrate api docs
+- fix homepage generation
+
+version 2.12 and above
+
 - http://www.securityfocus.com/archive/1/360128/2004-04-09/2004-04-15/0
 
 - ssl certificate verification
 
 - memory leaks while operating the proxy
 
-- allow filtering/blocking by MIME type?
+- allow filtering/blocking by MIME type
 
 - bfilter has Flash parse and generation library, I want that too .)
 
