@@ -295,7 +295,7 @@ Rule (don't) match url
 <thead>
 <tr style="border-bottom:1px solid black;">
 <th i18n:translate="">Category</th>
-<th colspan="3">Value</th>
+<th colspan="3" i18n:translate="">Limit</th>
 </tr>
 </thead>
 <tbody>
@@ -308,6 +308,10 @@ Rule (don't) match url
 ></td>
 <td tal:repeat="value service/categories/?category/rvalues"><input
  tal:attributes="name string:category_${category};value value"
+ tal:condition="currule/values/?category/?value" checked
+ type="radio"><input
+ tal:attributes="name string:category_${category};value value"
+ tal:condition="not:currule/values/?category/?value"
  type="radio">&nbsp;<span tal:replace="rangenames/?value">Mild</span>
 </td>
 </tr>

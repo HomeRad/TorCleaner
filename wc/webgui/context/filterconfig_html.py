@@ -31,7 +31,7 @@ from wc.filter.rules import recalc_up_down as _recalc_up_down
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.Rating import service, rangenames
-
+from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
 
 # config vars
 info = {}
@@ -502,30 +502,24 @@ def _form_apply_nocomments (form):
 def _form_apply_rating (form):
     _form_rule_matchurl(form)
     # rating categories
-    for category, catdata in webcleaner_rating['categories'].items():
+    for category, catdata in service['categories'].items():
         key = "category_%s"%category
         if form.has_key(key):
             value = _getval(form, key)
-            if not _is_valid_rating_value(catdata, value):
+            if not _rating_is_valid_value(catdata, value):
                 error['categoryvalue'] = True
                 return
             if category not in currule.ratings:
                 currule.ratings[category] = value
-                if value:
-                    info['rulecategoryenable'] = True
-                else:
-                    info['rulecategorydisable'] = True
+                info['rulecategory'] = True
             elif currule.ratings[category]!=value:
                 currule.ratings[category] = value
-                if value:
-                    info['rulecategoryenable'] = True
-                else:
-                    info['rulecategorydisable'] = True
+                info['rulecategory'] = True
         else:
             # note: if fresh enabled, the categories are not yet
             # initialized with empty strings
             if currule.ratings.get(category):
-                info['rulecategorydisable'] = True
+                info['rulecategory'] = True
             currule.ratings[category] = ""
 
 

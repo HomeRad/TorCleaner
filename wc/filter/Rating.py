@@ -131,18 +131,16 @@ def rating_allow (url, rule):
 
 
 def rating_is_valid_value (data, value):
-    if data["type"]=='int':
-        try:
-            value = int(value)
-        except ValueError:
-            return False
-        return (data["range"][0] <= value <= data["range"][1])
-    if data["type"]=='range':
+    res = False
+    if data.has_key("rvalues"):
+        res = value in data["rvalues"]
+    elif data.has_key("rrange"):
         value = rating_range(value)
         if value is None:
-            return False
-        return rating_in_range(data["range"], value)
-    return False
+            res = False
+        else:
+            res = rating_in_range(data["rrange"], value)
+    return res
 
 
 def rating_in_range (prange, value):
