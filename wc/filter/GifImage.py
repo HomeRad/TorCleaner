@@ -42,8 +42,6 @@ class GifImage (Filter):
     rulenames = []
     # which mime types this filter applies to
     mimelist = [compileMime(x) for x in ['image/gif']]
-    # XXX also filter other image types than gif: at least jpg and png
-    # should work with PIL
 
     def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
