@@ -70,7 +70,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
             return 1
         self.rule.tag = tag
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule tag name")
+        #debug(BRING_IT_ON, "Changed rule tag name")
         return 1
 
 
@@ -81,14 +81,14 @@ class FXRewriteRuleFrame (FXRuleFrame):
         else:
             self.rule.enclosed = None
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule enclosed block")
+        #debug(BRING_IT_ON, "Changed rule enclosed block")
         return 1
 
 
     def onCmdReplacePart (self, sender, sel, ptr):
         self.rule.replace[0] = sender.getCurrentItem()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule replace part")
+        #debug(BRING_IT_ON, "Changed rule replace part")
         return 1
 
 
@@ -119,7 +119,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
             self.rule.attrs[name] = value
             self.getApp().dirty = 1
             self.iconlist.appendItem(name+"\t"+value)
-            debug(BRING_IT_ON, "Added rule attribute")
+            #debug(BRING_IT_ON, "Added rule attribute")
         return 1
 
 
@@ -150,7 +150,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
             self.rule.attrs[newname] = value
             self.getApp().dirty = 1
             self.iconlist.replaceItem(index, newname+"\t"+value)
-            debug(BRING_IT_ON, "Changed rule attribute")
+            #debug(BRING_IT_ON, "Changed rule attribute")
         return 1
 
 
@@ -161,7 +161,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
         del self.rule.attrs[name]
         self.getApp().dirty = 1
         self.iconlist.removeItem(index)
-        debug(BRING_IT_ON, "Removed rule attribute")
+        #debug(BRING_IT_ON, "Removed rule attribute")
         return 1
 
 
@@ -179,6 +179,6 @@ class FXRewriteRuleFrame (FXRuleFrame):
     def onCmdReplaceValue (self, sender, sel, ptr):
         self.rule.replace[1] = sender.getText()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule replace value")
+        #debug(BRING_IT_ON, "Changed rule replace value")
         return 1
 

@@ -13,7 +13,7 @@ _ipv4_num = r"\d{1,3}"
 _ipv4_num_4 = (_ipv4_num,)*4
 _ipv4_re = re.compile(r"^%s\.%s\.%s\.%s$" % _ipv4_num_4)
 # see rfc2373
-_ipv6_num = r"[\da-fA-F]{1,4}"
+_ipv6_num = r"[\da-f]{1,4}"
 _ipv6_re = re.compile(r"^%s:%s:%s:%s:%s:%s:%s:%s$" % ((_ipv6_num,)*8))
 _ipv6_ipv4_re = re.compile(r"^%s:%s:%s:%s:%s:%s:" % ((_ipv6_num,)*6) + \
                            r"%s\.%s\.%s\.%s$" % _ipv4_num_4)
@@ -25,7 +25,16 @@ _ipv6_ipv4_abbr_re = re.compile(r"^((%s:){0-4}%s)?::((%s:){0-5})?" % \
 
 def ipv6_expand (ip, num):
     """expand an IPv6 address with included :: to num octets"""
-    pass
+    i = ip.find("::")
+    prefix = ip[:i]
+    suffix = ip[i+2:]
+    count = prefix.count(":") + suffix.count(":")
+    if prefix: prefix = prefix+":"
+    if suffix: suffix = ":"+suffix
+    if count>=num: raise ValueError, "invalid ipv6 number: %s"%ip
+    fill = (num-count-1)*"0:" + "0"
+    return prefix+fill+suffix
+
 
 ###################### configuration ########################
 
@@ -48,7 +57,7 @@ def init_dns_resolver ():
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
-    debug(BRING_IT_ON, "DNS nameservers", DnsConfig.nameservers, "\nsearch", DnsConfig.search_domains)
+    #debug(BRING_IT_ON, "DNS nameservers", DnsConfig.nameservers, "\nsearch", DnsConfig.search_domains)
 
 
 def init_dns_resolver_posix ():
@@ -119,12 +128,13 @@ def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
     DnsExpandHostname(hostname.lower(), callback)
-    
+
+
 class DnsResponse:
-    # A DNS answer can be:
-    #    ('found', [ipaddrs])
-    #    ('error', why-str)
-    #    ('redirect', new-hostname)
+    """ A DNS answer can be:
+        ('found', [ipaddrs])
+        ('error', why-str)
+        ('redirect', new-hostname)"""
     def __init__ (self, kind, data):
         self.kind = kind
         self.data = data
@@ -154,7 +164,7 @@ class DnsExpandHostname:
         if not dnscache.well_known_hosts.has_key(hostname):
             for domain in DnsConfig.search_domains:
                 self.queries.append(hostname + domain)
-            if hostname.find('.') < 0:
+            if hostname.find('.') < 0 and hostname.find(':') < 0:
                 # If there's no dot, we should try expanding patterns
                 for pattern in DnsConfig.search_patterns:
                     self.queries.append(pattern % hostname)
@@ -168,7 +178,6 @@ class DnsExpandHostname:
             # so also try the same thing with whitespace removed
             self.queries.append(re.sub(r'\s+', '', hostname))
         self.requests = self.queries[1:] # queries we haven't yet made
-
         # Issue the primary request
         make_timer(0, lambda h=hostname, s=self:
                    dnscache.lookup(h, s.handle_dns))
@@ -188,7 +197,7 @@ class DnsExpandHostname:
             # being executed at once.  To avoid that, we could check
             # if there's already a timer for this object ..
             if self.requests: make_timer(self.delay, self.handle_issue_request)
-        
+
     def handle_dns (self, hostname, answer):
         if not self.callback: return # Already handled this query
 
@@ -206,14 +215,15 @@ class DnsExpandHostname:
                 break
 
         if self.callback and not self.queries:
-            # Someone's still waiting for an answer, and we 
+            # Someone's still waiting for an answer, and we
             # are expecting no more answers
             callback, self.callback = self.callback, None
             callback(self.hostname, DnsResponse('error', 'host not expanded'))
 
         # Since one DNS request is satisfied, issue another
         self.handle_issue_request()
-            
+
+
 class DnsCache:
     """Provides a lookup function that will either get a value from the cache
     or initiate a DNS lookup, fill the cache, and return that value"""
@@ -263,7 +273,7 @@ class DnsCache:
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
-        # see if hostname is already resolve IP address
+        # see if hostname is already a resolved IP address
         if _ipv4_re.match(hostname) or \
            _ipv6_re.match(hostname) or \
            _ipv6_ipv4_re.match(hostname):
@@ -323,6 +333,7 @@ class DnsCache:
         for c in callbacks:
             c(hostname, answer)
 
+
 class DnsLookupHostname:
     "Perform DNS lookup on many nameservers"
     # Use a DnsLookupConnection per nameserver
@@ -347,7 +358,7 @@ class DnsLookupHostname:
             for r in self.requests:
                 if r.callback == self.handle_dns:
                     r.cancel()
-                    self.outstanding_requests = self.outstanding_requests - 1
+                    self.outstanding_requests -= 1
                 assert r.callback is None
             assert self.outstanding_requests == 0
 
@@ -365,14 +376,14 @@ class DnsLookupHostname:
             self.requests.append(
                 DnsLookupConnection(nameserver, self.hostname,
                                     self.handle_dns))
-            self.outstanding_requests = self.outstanding_requests + 1
+            self.outstanding_requests += 1
             self.requests[-1].TIMEOUT = self.outstanding_requests * 2
             if self.nameservers:
                 # Let's create another one soon
                 make_timer(1, self.issue_request)
 
     def handle_dns (self, hostname, answer):
-        self.outstanding_requests = self.outstanding_requests - 1
+        self.outstanding_requests -= 1
         if not self.callback: return
         if not answer.isError():
             self.callback(hostname, answer)
@@ -470,7 +481,7 @@ class DnsLookupConnection (Connection):
             self.callback(self.hostname, DnsResponse('error', 'timed out connecting'))
             self.callback = None
             return
-        self.retries = self.retries + 1
+        self.retries += 1
         if (self.conntype == 'udp' and
             self.accepts_tcp.get(self.nameserver, 1) and
             self.retries == 1):
@@ -546,7 +557,7 @@ class DnsLookupConnection (Connection):
                 ip_addrs.append(data)
             if type == DNS.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
+                #debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records
