@@ -58,6 +58,7 @@ deb_unsigned: distclean locale
 # add setup.py generated files to $(distdir)
 dist-hook:	locale
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
+	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
 
 #	rm -f $(MD5SUMS)
 #	md5sum dist/* > $(MD5SUMS)
