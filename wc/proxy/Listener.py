@@ -27,7 +27,7 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
 
     def __repr__ (self):
         """return listener class and address"""
-        return '<Listener:%s>' % self.addr
+        return '<Listener:%s>' % str(self.addr)
 
     def log (self, msg):
         """standard logging is disabled, we dont need it here"""
