@@ -202,7 +202,9 @@ def geturl (basedir, file, fun, saveas=None):
         print "downloads/%s already exists"%target
     else:
         print "downloading", basedir+file
-        os.makedirs(os.path.dirname("downloads/"+target))
+        d = os.path.dirname("downloads/"+target)
+        if not os.path.isdir(d):
+            os.makedirs(d)
         urldata = urllib2.urlopen(basedir+file)
         f = open("downloads/"+target, 'w')
         f.write(urldata.read())
@@ -236,7 +238,7 @@ def download_and_merge ():
     geturl("http://squidguard.mesd.k12.or.us/", "squidguard.tar.gz", blacklist)
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
-    # dmoz category dumps
+    # dmoz category dumps (this big fucker is 195MB !!!)
     #geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
 
 def write_blacklists (directory):
@@ -270,16 +272,24 @@ def close_files ():
                 f.close()
 
 def remove_old_data ():
-    print "remove old data..."
+    print "remove old extracted data..."
     for d in ("extracted", "config/blacklists_new"):
         if os.path.isdir(d):
             rm_rf(d)
 
+def remove_gunziped_files (file):
+    if os.path.isdir(file):
+        for f in os.listdir(file):
+            remove_gunziped_files(file+"/"+f)
+    elif os.path.basename(file) in ("domains", "urls", "expressions"):
+        os.remove(file)
 
 if __name__=='__main__':
     remove_old_data()
-    print "read data..."
-    read_blacklists("config/blacklists")
+    #print "read data..."
+    #read_blacklists("config/blacklists")
     download_and_merge()
     write_blacklists("config/blacklists")
     write_filters("config")
+    #print "remove gunziped files"
+    #remove_gunziped_files("config/blacklists")
