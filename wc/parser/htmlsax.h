@@ -46,6 +46,16 @@ typedef struct {
     unsigned int bufpos;
     /* current position of next syntax element */
     unsigned int nextpos;
+    /* position in the stream of data already seen, counting from zero */
+    unsigned int pos;
+    /* line counter, counting from one */
+    unsigned int lineno;
+    /* last value of line counter */
+    unsigned int last_lineno;
+    /* column counter, counting from zero */
+    unsigned int column;
+    /* last value of column counter */
+    unsigned int last_column;
     /* input buffer of lexer, must be deleted when the parsing stops */
     void* lexbuf;
     /* temporary character buffer */
