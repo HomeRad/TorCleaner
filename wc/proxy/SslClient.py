@@ -32,6 +32,8 @@ class SslClient (HttpClient, SslConnection):
             extra += 'being read'
         if self.socket:
             extra += " (%s)"%self.socket.state_string()
+        if not self.connected:
+            extra += " (unconnected)"
         return '<%s:%-8s %s>'%('sslclient', self.state, extra)
 
 
@@ -79,3 +81,7 @@ class SslClient (HttpClient, SslConnection):
         self.headers['Host'] = 'localhost\r'
         WebConfig(self, self.url, form, self.protocol, self.headers)
 
+
+    def mangle_request_headers (self, headers):
+        # nothing to do
+        pass

@@ -15,7 +15,7 @@ from wc.proxy import get_http_version, fix_http_version
 from wc.url import spliturl, splitnport, url_norm, url_quote
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers, has_header_value
-from Headers import get_content_length
+from Headers import get_content_length, client_set_encoding_headers
 from wc.proxy.auth import *
 from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE
 from wc.log import *
@@ -215,15 +215,9 @@ class HttpClient (StatefulConnection):
                    FILTER_REQUEST_ENCODE,
                   ]
         self.attrs = get_filterattrs(self.url, filters, headers=msg)
-        # look if client wants persistent connections
-        if self.http_ver >= (1,1):
-            self.persistent = not has_header_value(msg, 'Proxy-Connection', 'Close') and \
-                              not has_header_value(msg, 'Connection', 'Close')
-        else:
-            # note: never do persistent connections for HTTP/1.0 clients
-            self.persistent = False
-        # work on these headers
-        self.compress = client_set_headers(msg)
+        self.persistent = self.get_persistent(msg, self.http_ver)
+        self.mangle_request_headers(msg)
+        self.compress = client_set_encoding_headers(msg)
         # filter headers
         self.headers = applyfilter(FILTER_REQUEST_HEADER,
                                    msg, "finish", self.attrs)
@@ -293,6 +287,21 @@ class HttpClient (StatefulConnection):
                  WcMessage(StringIO('Content-Type: text/plain\r\n\r\n')), '')
             return
         self.state = 'content'
+
+
+    def get_persistent (self, headers, http_ver):
+        # look if client wants persistent connections
+        if http_ver >= (1,1):
+            persistent = not has_header_value(headers, 'Proxy-Connection', 'Close') and \
+                         not has_header_value(headers, 'Connection', 'Close')
+        else:
+            # note: never do persistent connections for HTTP/1.0 clients
+            persistent = False
+        return persistent
+
+
+    def mangle_request_headers (self, headers):
+        client_set_headers(headers)
 
 
     def process_content (self):

@@ -18,6 +18,8 @@ class Listener (Dispatcher):
         super(Listener, self).__init__()
         self.addr = (('', 'localhost')[config['local_sockets_only']], port)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=sslctx)
+        if sslctx is not None:
+            self.socket.set_accept_state()
         self.set_reuse_addr()
         self.bind(self.addr)
         # maximum number of queued connections

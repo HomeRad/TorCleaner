@@ -118,7 +118,6 @@ def client_set_headers (headers):
     client_remove_hop_by_hop_headers(headers)
     remove_warning_headers(headers)
     set_via_header(headers)
-    return client_set_encoding_headers(headers)
 
 
 def client_remove_hop_by_hop_headers (headers):

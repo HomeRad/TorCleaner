@@ -150,10 +150,14 @@ class HttpServer (Server):
         self.mime = mime
         # remember client header for authorization resend
         self.clientheaders = headers
+        self.mangle_request_headers()
+        self.send_request()
+
+
+    def mangle_request_headers (self):
         if config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
-            headers['Proxy-Authorization'] = "%s\r"%config['parentproxycreds']
-        self.send_request()
+            self.clientheaders['Proxy-Authorization'] = "%s\r"%config['parentproxycreds']
 
 
     def send_request (self):
@@ -257,13 +261,7 @@ class HttpServer (Server):
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
-        http_ver = serverpool.http_versions[self.addr]
-        if http_ver >= (1,1):
-            self.persistent = not has_header_value(msg, 'Connection', 'Close')
-        elif http_ver >= (1,0):
-            self.persistent = has_header_value(msg, 'Connection', 'Keep-Alive')
-        else:
-            self.persistent = False
+        self.persistent = self.get_persistent(msg, serverpool.http_versions[self.addr])
         self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER], headers=msg)
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER, msg,
@@ -276,6 +274,21 @@ class HttpServer (Server):
             else:
                 self._show_rating_deny(str(msg))
                 return
+        self.mangle_response_headers()
+        if self.statuscode in (204, 304) or self.method == 'HEAD':
+            # these response codes indicate no content
+            self.state = 'recycle'
+        else:
+            self.state = 'content'
+        self.attrs = get_filterattrs(self.url, _response_filters, headers=msg)
+        debug(PROXY, "%s filtered headers %s", self, self.headers)
+        if not self.defer_data:
+            self.client.server_response(self, self.response, self.statuscode,
+                                        self.headers)
+            # note: self.client could be None here
+
+
+    def mangle_response_headers (self):
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
@@ -290,17 +303,16 @@ class HttpServer (Server):
             data += flush_decoders(decoders)
             server_set_content_headers(self.headers, data, self.document,
                                        self.mime, self.url)
-        if self.statuscode in (204, 304) or self.method == 'HEAD':
-            # these response codes indicate no content
-            self.state = 'recycle'
+
+
+    def get_persistent (self, headers, http_ver):
+        if http_ver >= (1,1):
+            persistent = not has_header_value(headers, 'Connection', 'Close')
+        elif http_ver >= (1,0):
+            persistent = has_header_value(headers, 'Connection', 'Keep-Alive')
         else:
-            self.state = 'content'
-        self.attrs = get_filterattrs(self.url, _response_filters, headers=msg)
-        debug(PROXY, "%s filtered headers %s", self, self.headers)
-        if not self.defer_data:
-            self.client.server_response(self, self.response, self.statuscode,
-                                        self.headers)
-            # note: self.client could be None here
+            persistent = False
+        return persistent
 
 
     def is_rewrite (self):

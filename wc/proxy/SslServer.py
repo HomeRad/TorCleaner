@@ -3,10 +3,13 @@
 
 from wc.log import *
 from HttpsServer import HttpsServer
+from HttpServer import flush_decoders
+from Headers import server_set_encoding_headers, server_set_content_headers
 
 
 class SslServer (HttpsServer):
-    """XXX """
+    """Server object for SSL connections. Since this class must not have Proxy
+       functionality, the header mangling is different."""
     def __repr__ (self):
         """object description"""
         if self.addr[1] != 80:
@@ -16,6 +19,35 @@ class SslServer (HttpsServer):
         extra = '%s%s' % (self.addr[0], portstr)
         if self.socket:
             extra += " (%s)"%self.socket.state_string()
+        if not self.connected:
+            extra += " (unconnected)"
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('sslserver', self.state, extra)
+
+
+    def mangle_request_headers (self):
+        # nothing to do
+        pass
+
+
+    def mangle_response_headers (self):
+        self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
+        if self.bytes_remaining is None:
+            self.persistent = False
+        # 304 Not Modified does not send any type info, because it was cached
+        if self.statuscode!=304:
+            # copy decoders
+            decoders = [d.__class__() for d in self.decoders]
+            data = self.recv_buffer
+            for decoder in decoders:
+                data = decoder.decode(data)
+            data += flush_decoders(decoders)
+            server_set_content_headers(self.headers, data, self.document,
+                                       self.mime, self.url)
+
+
+    def process_recycle (self):
+        debug(PROXY, "%s recycling", self)
+        # flush pending client data and try to reuse this connection
+        self.delayed_close()
 

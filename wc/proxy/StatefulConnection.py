@@ -12,14 +12,14 @@ class StatefulConnection (Connection):
         self.state = state
 
 
-    def writable (self):
-        """a connection is writable if we're connecting"""
-        return self.send_buffer or self.state=='connect'
-
-
     def readable (self):
         """a connection is readable if we're connected and not in a close state"""
         return self.connected and self.state!='closed'
+
+
+    def writable (self):
+        """a connection is writable if we're connecting"""
+        return self.send_buffer or self.state=='connect'
 
 
     def delegate_read (self):

@@ -10,28 +10,27 @@ class SslConnection (Connection):
         """read data from SSL connection, put it into recv_buffer and call
            process_read"""
         assert self.connected
-        debug(PROXY, '%s Connection.handle_read', self)
+        debug(PROXY, '%s SslConnection.handle_read', self)
 	if len(self.recv_buffer) > MAX_BUFSIZE:
             warn(PROXY, '%s read buffer full', self)
 	    return
         try:
             data = self.socket.read(RECV_BUFSIZE)
-        except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
-            exc = sys.exc_info()[0]
-            debug(PROXY, "%s ssl read message %s", self, exc)
+        except SSL.WantReadError:
+            warn(PROXY, "%s wants to read while reading; weird", self)
+            return
+        except SSL.WantWriteError:
+            # you want to write? here you go
+            self.handle_write()
+            return
+        except SSL.WantX509LookupError, err:
+            exception(PROXY, "%s ssl read message", self)
             return
         except SSL.ZeroReturnError, err:
             debug(PROXY, "%s ssl finished successfully", self)
             self.delayed_close()
             return
         except SSL.Error, err:
-            exception(PROXY, "read error %s", err)
-            self.handle_error('read error')
-            return
-        except socket.error, err:
-            if err==errno.EAGAIN:
-                # try again later
-                return
             exception(PROXY, "read error %s", err)
             self.handle_error('read error')
             return
@@ -49,14 +48,20 @@ class SslConnection (Connection):
            Execute a possible pending close."""
         assert self.connected
         assert self.send_buffer
-        debug(PROXY, '%s handle_write', self)
+        debug(PROXY, '%s SslConnection.handle_write', self)
         num_sent = 0
         data = self.send_buffer[:SEND_BUFSIZE]
         try:
             num_sent = self.socket.write(data)
-        except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
-            exc = sys.exc_info()[0]
-            debug(PROXY, "%s ssl write message %s", self, exc)
+        except SSL.WantReadError:
+            # you want to read? here you go
+            self.handle_read()
+            return
+        except SSL.WantWriteError:
+            warn(PROXY, "%s wants to write while writing; weird", self)
+            return
+        except SSL.WantX509LookupError, err:
+            exception(PROXY, "%s ssl write message", self)
             return
         except SSL.ZeroReturnError, err:
             debug(PROXY, "%s ssl finished successfully", self)
@@ -66,16 +71,10 @@ class SslConnection (Connection):
             exception(PROXY, "write error %s", err)
             self.handle_error('write error')
             return
-        except socket.error, err:
-            if err==errno.EAGAIN:
-                # try again later
-                return
-            exception(PROXY, "write error %s", err)
-            self.handle_error('write error')
-            return
         debug(CONNECTION, '%s => wrote %d', self, num_sent)
         debug(CONNECTION, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and self.close_ready():
             self.close()
+
 

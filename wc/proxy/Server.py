@@ -29,15 +29,5 @@ class Server (StatefulConnection):
         self.process_connect()
 
 
-    def writable (self):
-        """a server is writable if we're connecting"""
-        return self.send_buffer or self.state=='connect'
-
-
-    def readable (self):
-        """a server is readable if we're connected and in a readable state"""
-        return self.connected and self.state!='closed'
-
-
     def process_connect (self):
         raise NotImplementedError("must be implemented in a subclass")
