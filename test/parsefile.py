@@ -7,12 +7,12 @@ def _main ():
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)
-    if sys.argv[1]=='-':
+    if sys.argv[1] == '-':
         f = sys.stdin
     else:
         f = file(sys.argv[1])
-    from bk.HtmlParser.htmllib import HtmlPrinter
-    from bk.HtmlParser import htmlsax
+    from wc.HtmlParser.htmllib import HtmlPrinter
+    from wc.HtmlParser import htmlsax
     p = htmlsax.parser(HtmlPrinter())
     #p.debug(1)
     size = 1024
