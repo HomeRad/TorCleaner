@@ -83,13 +83,13 @@ def get_access_handler (logfile):
     return handler
 
 
-def get_log_file (fname):
+def get_log_file (fname, trydir=os.getcwd()):
     """get full path name to writeable logfile"""
     if os.name =='nt':
         return os.path.join(os.environ.get("TEMP"), fname)
     logfile = os.path.join('/', 'var', 'log', 'webcleaner', fname)
     if not iswriteable(logfile):
-        logfile = os.path.join(os.getcwd(), fname)
+        logfile = os.path.join(trydir, fname)
     if not iswriteable(logfile):
         logfile = os.path.join('/', 'var', 'tmp', fname)
     if not iswriteable(logfile):
