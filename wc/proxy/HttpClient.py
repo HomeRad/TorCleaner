@@ -29,7 +29,7 @@ from wc.filter import applyfilter, get_filterattrs, FilterException
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
 allowed_schemes = ['http', 'https'] # 'nntps' is untested
 allowed_connect_ports = [443] # 563 (NNTP over SSL) is untested
-
+allowed_local_docs = ['/blocked.png', '/error.html', '/wc.css', '/robots.txt']
 
 class HttpClient (Connection):
     """States:
@@ -408,7 +408,7 @@ class HttpClient (Connection):
             self.error(403, i18n._("Invalid Method"))
             return
         # check admin pass
-        if config["adminuser"]:
+        if self.document not in allowed_local_docs and config["adminuser"]:
             creds = get_header_credentials(self.headers, 'Authorization')
             if not creds:
                 auth = ", ".join(get_challenges())
