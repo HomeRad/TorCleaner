@@ -32,7 +32,7 @@ _basic = {
 }
 _safe_char = r"([%(_az09)s%(_path)s\+]|(%%[%(_hex_safe)s][%(_hex_full)s]))"%_basic
 _safe_scheme_pattern = r"(https?|ftp)"
-_safe_host_pattern = r"([%(_az09)s][%(_az09)s\-]*(\.[%(_az09)s][%(_az09)s\-]*)*\.?)"%_basic
+_safe_host_pattern = r"([%(_az09)s][%(_az09)s\-]*(\.[%(_az09)s][%(_az09)s\-]*)*\.?)(:(80|8080|8000))?"%_basic
 _safe_path_pattern = r"((/([%(_az09)s%(_path)s]|(%%[%(_hex_safe)s][%(_hex_full)s]))+)*/?)"%_basic
 _safe_fragment_pattern = r"%s*"%_safe_char
 _safe_cgi = r"%s+(=%s+)?" % (_safe_char, _safe_char)
