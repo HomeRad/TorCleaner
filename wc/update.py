@@ -166,7 +166,7 @@ def update_filter (wconfig, dryrun=False, log=None):
                 continue
             print >>log, wc.i18n._("updating filter %s")%filename
         else:
-            print >>log, wc.i18n._("adding new filter %s"), filename
+            print >>log, wc.i18n._("adding new filter %s")%filename
         # parse new filter
         url = baseurl+filename
         page = open_url(url)
