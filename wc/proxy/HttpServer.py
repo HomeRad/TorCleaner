@@ -1,4 +1,4 @@
-import time,socket,rfc822,re,sys,mimetypes
+import time, socket, rfc822, re, sys, mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'bzip'
 
@@ -28,6 +28,8 @@ _RESPONSE_FILTERS = (
    FILTER_RESPONSE_MODIFY,
    FILTER_RESPONSE_ENCODE)
 
+# http request matcher
+_http_re = re.compile(r'(?i).*HTTP/(\d+\.?\d*)\s*$')
 
 class HttpServer (Server):
     def __init__ (self, ipaddr, port, client):
@@ -130,14 +132,11 @@ class HttpServer (Server):
                 # didn't exist back when the client aborted.
                 self.client_abort()
                 return
-            
             bytes_before = len(self.recv_buffer)
             state_before = self.state
-            
             try: handler = getattr(self, 'process_'+self.state)
             except AttributeError: handler = lambda:None # NO-OP
             handler()
-
             bytes_after = len(self.recv_buffer)
             if (self.client is None or
                 (bytes_before==bytes_after and state_before==self.state)):
@@ -202,16 +201,15 @@ class HttpServer (Server):
         # will content be rewritten?
         rewrite = False
         for ro in config['mime_content_rewriting']:
-            if ro.match(self.headers.get('Content-Type', "")):
+            if ro.match(self.headers.get('Content-Type', '')):
                 rewrite = True
                 break
-        #debug(HURT_ME_PLENTY, "S/Headers ", `self.headers.headers`)
+        #debug(HURT_ME_PLENTY, "S/Headers", `self.headers.headers`)
         if self.headers.has_key('Content-Length'):
+            self.bytes_remaining = int(self.headers['Content-Length'])
+            #debug(HURT_ME_PLENTY, "%d bytes remaining"%self.bytes_remaining)
             if rewrite:
                 remove_headers(self.headers, ['Content-Length'])
-                self.bytes_remaining = None
-            else:
-                self.bytes_remaining = int(self.headers['Content-Length'])
         else:
             self.bytes_remaining = None
 
@@ -225,7 +223,7 @@ class HttpServer (Server):
             # remove encoding header
             to_remove = ["Transfer-Encoding"]
             if self.headers.has_key("Content-Length"):
-                assert 0, 'chunked encoding should not have content-length'
+                print >>sys.stderr, _('Warning: chunked encoding should not have Content-Length')
                 to_remove.append("Content-Length")
                 self.bytes_remaining = None
             remove_headers(self.headers, to_remove)
@@ -237,10 +235,11 @@ class HttpServer (Server):
             else:
                 self.decoders.append(GunzipStream())
             # remove encoding because we unzip the stream
-            remove_headers(self.headers, ['Content-Encoding'])
+            to_remove = ['Content-Encoding']
             # remove no-transform cache control
-            if self.headers.get('Cache-Control') == 'no-transform':
-                remove_headers(self.headers, ['Cache-Control'])
+            if self.headers.get('Cache-Control', '').lower()=='no-transform':
+                to_remove.append('Cache-Control')
+            remove_headers(self.headers, to_remove)
             # add warning
             self.headers['Warning'] = "214 WebCleaner Transformation applied"
         elif encoding and encoding!='identity' and rewrite:
@@ -252,6 +251,7 @@ class HttpServer (Server):
         self.attrs = initStateObjects(self.headers, self.url)
         if not self.headers.has_key('Content-Length'):
             self.headers['Connection'] = 'close'
+        #debug(HURT_ME_PLENTY, "S/Headers filtered", `self.headers.headers`)
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
         self.client.server_response(self.response, self.headers)
         self.attrs['nofilter'] = self.nofilter['nofilter']
@@ -270,9 +270,9 @@ class HttpServer (Server):
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
+            #debug(HURT_ME_PLENTY, "%d bytes remaining"%self.bytes_remaining)
             if self.bytes_remaining < 0:
                 print >>sys.stderr, _("Warning: server received %d bytes more than content-length") % (-self.bytes_remaining)
-
         filtered_data = data
         is_closed = 0
         for decoder in self.decoders:
@@ -282,7 +282,6 @@ class HttpServer (Server):
             filtered_data = applyfilter(i, filtered_data, attrs=self.attrs)
         if filtered_data:
 	    self.client.server_content(filtered_data)
-
         if (is_closed or
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
@@ -317,7 +316,7 @@ class HttpServer (Server):
 
     def http_version (self):
         if not self.response: return 0
-        version = re.match(r'.*HTTP/(\d+\.?\d*)\s*$', self.response)
+        version = _http_re.match(self.response)
         if version:
             return float(version.group(1))
         else:
@@ -327,13 +326,10 @@ class HttpServer (Server):
     def reuse (self):
         if self.http_version() >= 1.1:
             can_reuse = not (self.headers and
-                self.headers.has_key('connection') and
-                self.headers['connection'] == 'close')
+                self.headers.get('Connection', '').lower()=='close')
         else:
-            can_reuse = (self.headers and
-                self.headers.has_key('connection') and
-                self.headers['connection'].lower() == 'keep-alive')
-
+            can_reuse = self.headers and \
+               self.headers.get('Connection', '').lower()=='keep-alive'
         if not can_reuse:
             # We can't reuse this connection
             self.close()
