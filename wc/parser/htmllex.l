@@ -162,7 +162,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_COMMENT);
 }
 
-<S_COMMENT>-[^-]* {
+<S_COMMENT>-[^-]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
 }
