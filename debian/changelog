@@ -3,6 +3,7 @@ webcleaner (2.18-0.1) unstable; urgency=low
   * New upstream release.
   * added webcleaner-ctl script to control the proxy daemon, removed the
     old init.d stuff
+  * put combined log in /var/log/webcleaner/current
 
  -- Bastian Kleineidam <calvin@debian.org>  Mon, 31 May 2004 19:45:54 +0200
 

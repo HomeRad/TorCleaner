@@ -68,4 +68,15 @@ fi
 
 #DEBHELPER#
 
+# stop webcleaner
+webcleaner-ctl stop || true
+# move old log files
+if [ -f /var/log/webcleaner/main/current ]; then
+    rm -f /var/log/webcleaner/*.log
+    mv -f /var/log/webcleaner/main/* /var/log/webcleaner
+    rmdir /var/log/webcleaner/main || true
+fi
+# start webcleaner
+webcleaner-ctl start || true
+
 exit 0

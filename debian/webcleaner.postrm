@@ -13,6 +13,8 @@ purge)
     rm -f /var/log/webcleaner.log
     rm -f /var/log/webcleaner.err
     rm -f /var/log/webcleaner-access.log
+    rm -f /var/log/webcleaner/webcleaner.log
+    rm -f /var/log/webcleaner/webcleaner-access.log
     # remove local configuration dirs
     rm -rf /etc/webcleaner/blacklists || true
     # old config files

@@ -1,4 +1,4 @@
-var/log/webcleaner/main
+var/log/webcleaner
 var/run/webcleaner
 var/run/webcleaner.log
 etc/webcleaner/service/log

@@ -63,6 +63,8 @@ install: build
 # move config files
 	mv $(SHAREDIR)/config/* $(ETCDIR)/
 	rmdir $(SHAREDIR)/config
+	rm $(ETCDIR)/logging.conf
+	install -m 0644 debian/logging.conf $(ETCDIR)/logging.conf
 # fix config permission
 	chmod go-rwx $(ETCDIR)/webcleaner.conf
 # remove example files, we install them ourselves
