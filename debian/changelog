@@ -4,8 +4,9 @@ webcleaner (0.30) unstable; urgency=low
     they can do something
   * more advert filters
   * use string methods where possible
+  * webcleanerconf: better help dialog window
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat,  1 Dec 2001 11:36:28 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Sat,  1 Dec 2001 13:13:52 +0100
 
 webcleaner (0.29) unstable; urgency=low
 

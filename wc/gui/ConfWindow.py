@@ -74,7 +74,14 @@ class ConfWindow(FXMainWindow):
         FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
         # About dialog
         self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
-        self.help = FXMessageBox(self, _("webcleanerconf Help"), HelpText, None, MBOX_OK)
+        self.help = FXDialogBox(self, _("webcleanerconf Help"))
+        w = FXVerticalFrame(self.help)
+        t = FXText(w, opts=TEXT_READONLY|TEXT_WORDWRAP)
+        t.setVisCols(60)
+        t.setVisRows(40)
+        t.setText(HelpText)
+        FXButton(w, _(" &Ok "), None, self.help, FXDialogBox.ID_ACCEPT)
+
         self.removeDialog = FXMessageBox(self, _("Remove Folder"), RemoveText, None, MBOX_OK)
         # main frame
         mainframe = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
