@@ -8,18 +8,6 @@ AM_INIT_AUTOMAKE(webcleaner, 2.28)
 AC_PROG_CC
 AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
-AC_PATH_PROG(MSGMERGE, "msgmerge")
-if test "x$MSGMERGE" = "x"; then
-    AC_MSG_ERROR([You must install the gettext package to have the msgmerge command available ])
-fi
-AC_PATH_PROG(MSGFMT, "msgfmt")
-if test "x$MSGFMT" = "x"; then
-    AC_MSG_ERROR([You must install the gettext package to have the msgfmt command available ])
-fi
-AC_PATH_PROG(XGETTEXT, "xgettext")
-if test "x$XGETTEXT" = "x"; then
-    AC_MSG_ERROR([You must install the gettext package to have the xgettext command available ])
-fi
 
 if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
     SAVE_CFLAGS="$CFLAGS"
