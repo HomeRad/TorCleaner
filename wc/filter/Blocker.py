@@ -163,6 +163,7 @@ class Blocker (Filter):
         for ro, replacement in self.block:
             mo = ro.search(url)
             if mo:
+                debug(FILTER, "blocked by pattern %s", ro.pattern)
                 if replacement:
                     return mo.expand(replacement)
                 return True
