@@ -11,11 +11,17 @@ Requirements for Unix/Linux or Max OS X
 1. You need a standard GNU development environment with
    
    a) C compiler (for example the GNU C Compiler gcc)
+      
       Depending on your distribution, several development packages
       might be needed to provide a fully functional C development
       environment.
-   b) gettext
    
+   b) gettext
+      
+      Note for developers: if you want to regenerate the .pot template
+      from the source files, you will need xgettext with Python support.
+      This is available in gettext >= 0.12.
+
 2. Python >= 2.3.1 from http://www.python.org/ with zlib support
 
 3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
