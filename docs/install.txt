@@ -45,8 +45,15 @@ Requirements for Windows:
 -------------------------
 Direct download links are in brackets.
 
-1. *Not needed if you install from the binary .exe installer* Install the
-   MinGW suite from http://mingw.sourceforge.net.
+1. Install Python >= 2.3.1 from http://www.python.org/
+   [http://www.python.org/ftp/python/2.3.4/Python-2.3.4.exe]
+
+2. Install Python for Windows Extensions from
+   http://starship.python.net/crew/mhammond/
+   [http://osdn.dl.sourceforge.net/sourceforge/pywin32/pywin32-203.win32-py2.3.exe]
+
+3. *Only needed if you compile from source:*
+   install the MinGW suite from http://mingw.sourceforge.net.
    Be sure to install in the given order:
    
    a) MingGW
@@ -58,13 +65,6 @@ Direct download links are in brackets.
    d) gettext
       [http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe]
    
-2. Install Python >= 2.3.1 from http://www.python.org/
-   [http://www.python.org/ftp/python/2.3.4/Python-2.3.4.exe]
-
-3. Install Python for Windows Extensions from
-   http://starship.python.net/crew/mhammond/
-   [http://osdn.dl.sourceforge.net/sourceforge/pywin32/pywin32-203.win32-py2.3.exe]
-
 4. *Optional (used by ImageSize and ImageReducer module)*
    Install Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
