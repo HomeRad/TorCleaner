@@ -1,4 +1,4 @@
-#!/usr/bin/python2.3
+#!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2004  Bastian Kleineidam
 #
@@ -103,7 +103,7 @@ def _main_nt ():
     # read command line arguments
     import getopt
     try:
-        # Note: cut out the name of the script
+        # Note: cut out the name of the script in sys.argv
         options, args = getopt.getopt(sys.argv[1:], "h", ["help"])
     except getopt.error:
         type, value = sys.exc_info()[:2]
