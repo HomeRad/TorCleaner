@@ -100,7 +100,7 @@ class JSFilter (JSListener):
 
 
     def new_instance (self, **opts):
-        JSFilter(self.url, **opts)
+        return JSFilter(self.url, opts)
 
 
     def jsScript (self, script, ver, item):
