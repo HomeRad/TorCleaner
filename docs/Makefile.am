@@ -9,7 +9,12 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 htmldir = $(prefix)/html
 html_DATA = $(HTMLFILES)
 
-EXTRA_DIST = $(RESTFILES) $(wildcard *.py)
+EXTRA_DIST = $(RESTFILES) \
+$(wildcard *.py) \
+$(wildcard *.css) \
+$(wildcard *.png) \
+$(wildcard *.jpg) \
+rest2htmlnav
 
 %.html: %.txt htmlnav.py bfknav.py
 	$(DOCDIR)/rest2htmlnav --stylesheet-path=wc.css --time $< $@
