@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-1 -*-
-from wc import i18n, AppName
+import tempfile
+from wc import i18n, AppName, ConfigDir
 from wc import Configuration as _Configuration
 from wc.webgui.context import getval
 from wc.filter.rules.RewriteRule import partvalnames, partnames
@@ -86,23 +87,34 @@ def exec_form (form):
     # reset info/error
     # reset form vals
     _form_reset()
+    # select a folder
     if form.has_key('selfolder'):
         _form_selfolder(getval(form['selfolder']))
+    # select a rule
     if form.has_key('selrule') and curfolder:
         _form_selrule(getval(form['selrule']))
     # make a new folder
+    if form.has_key('newfolder') and form.has_key('foldername'):
+        _form_newfolder(getval(form['foldername']))
+    # disable current folder
+    elif curfolder and form.has_key('disablefolder%d'%curfolder.oid):
+        _form_disablefolder(curfolder)
+    # enable current folder
+    elif curfolder and form.has_key('enablefolder%d'%curfolder.oid):
+        _form_enablefolder(curfolder)
+    # remove current folder
     # XXX
-    # disable selected folders
-    # XXX
-    # make a new rule
-    if form.has_key('newrule') and form.has_key('newruletype') and \
-        currule:
+    # make a new rule in current folder
+    elif curfolder and form.has_key('newrule') and form.has_key('newruletype'):
         _form_newrule(getval(form['newruletype']))
-    # remove selected rule
-    # XXX
-    # disable selected rule
-    # XXX
-    # XXX submit buttons
+    # disable current rule
+    elif currule and form.has_key('disablerule%d'%currule.oid):
+        _form_disablerule(currule)
+    # enable current rule
+    elif currule and form.has_key('enablerule%d'%currule.oid):
+        _form_enablerule(currule)
+    # remove current rule
+    # XXX more
     if info:
         # XXX write changed config
         pass
@@ -140,3 +152,52 @@ def _form_selrule (index):
                 curparts[part] = (currule.part==i)
     except (ValueError, IndexError):
         error.append(i18n._("Invalid filter index"))
+
+
+def _form_newfolder (foldername):
+    if not foldername:
+        error.append(i18n._("Empty folder name"))
+        return
+    f, filename = tempfile.mkstemp("", ".zap", ConfigDir, text=True)
+    f.write("Wummel")
+    f.close()
+    f = FolderRule(title=foldername, desc="", disable=0, filename=filename)
+    config['rule'].append(f)
+    info.append(i18n._("New folder created"))
+
+
+def _form_disablefolder (folder):
+    if folder.disable:
+        error.append(i18n._("Folder already disabled"))
+        return
+    folder.disable = 1
+    info.append(i18n._("Folder disabled"))
+
+
+def _form_enablefolder (folder):
+    if not folder.disable:
+        error.append(i18n._("Folder already enabled"))
+        return
+    folder.disable = 0
+    info.append(i18n._("Folder enabled"))
+
+
+def _form_newrule (ruletype):
+    pass
+    # XXX
+
+
+def _form_disablerule (rule):
+    if rule.disable:
+        error.append(i18n._("Rule already disabled"))
+        return
+    rule.disable = 1
+    info.append(i18n._("Rule disabled"))
+
+
+def _form_enablerule (rule):
+    if not rule.disable:
+        error.append(i18n._("Rule already enabled"))
+        return
+    rule.disable = 0
+    info.append(i18n._("Rule enabled"))
