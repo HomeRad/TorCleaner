@@ -27,9 +27,7 @@
  tag="noframes">
 </rewrite>
 
-<nocomments title="Remove all HTML comments" oid="4"
- desc="Enable this only if you disable the &lt;script&gt; tag because JavaScript content is often wrapped in a HTML comment!"
- disable="1"/>
+<nocomments title="Remove all HTML comments" oid="4"/>
 
 <rewrite title="Replace BLINK with B" oid="5"
  desc="Dont we all hate the &lt;blink&gt; tag?"
@@ -47,4 +45,8 @@
 <attr name="height">^1$</attr>
 <attr name="width">^1$</attr>
 </rewrite>
+
+<replacer title="Replace blink CSS" oid="121"
+ desc="Unfuckingbelievable they made a blink CSS entry."
+ search="text-decoration:\s*blink">text-decoration: none</replacer>
 </folder>
