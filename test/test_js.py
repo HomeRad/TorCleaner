@@ -2,8 +2,6 @@
 from wc.js import jslib, JSListener
 import sys
 sys.stderr = sys.stdout
-from wc.log import *
-initlog('test/logging.conf')
 
 class JSOutputter(JSListener.JSListener):
     def jsProcessData (self, data):

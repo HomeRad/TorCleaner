@@ -1,5 +1,10 @@
 test_js
+popup
+popup
+data <html>
 ReferenceError: ä is not defined
+
 SyntaxError: unterminated string literal
 a='
   ^
+
