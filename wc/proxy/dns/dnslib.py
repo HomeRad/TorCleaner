@@ -11,8 +11,6 @@
 # ------------------------------------------------------------------------
 
 
-import string
-
 import dnstype
 import dnsclass
 import dnsopcode
@@ -35,14 +33,15 @@ def unpack32bit(s):
           | (ord(s[2])<<8) | ord(s[3])
 
 def addr2bin(addr):
-	if type(addr) == type(0):
-		return addr
-	bytes = string.splitfields(addr, '.')
-	if len(bytes) != 4:
-            raise ValueError, 'bad IP address'
-	n = 0
-	for byte in bytes: n = n<<8 | string.atoi(byte)
-	return n
+    if type(addr) == type(0):
+        return addr
+    bytes = addr.split('.')
+    if len(bytes) != 4:
+        raise ValueError, 'bad IP address'
+    n = 0
+    for byte in bytes:
+        n = n<<8 | int(byte)
+    return n
 
 def bin2addr(n):
     return '%d.%d.%d.%d' % ((n>>24)&0xFF, (n>>16)&0xFF,
@@ -81,14 +80,14 @@ class Packer:
 		# The case of the first occurrence of a name is preserved.
 		# Redundant dots are ignored.
 		list = []
-		for label in string.splitfields(name, '.'):
+		for label in name.split('.'):
 			if label:
 				if len(label) > 63:
 					raise PackError, 'label too long'
 				list.append(label)
 		keys = []
 		for i in range(len(list)):
-			key = string.joinfields(list[i:], '.').upper()
+			key = '.'.join(list[i:]).upper()
 			keys.append(key)
 			if self.index.has_key(key):
 				pointer = self.index[key]
@@ -484,9 +483,7 @@ def dumpRR(u):
 # Test program
 
 def test():
-	import sys
-	import getopt
-	import socket
+	import sys, getopt, socket
 	protocol = 'udp'
 	server = '171.64.64.64' # XXX adapt this to your local 
 	port = 53

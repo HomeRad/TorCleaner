@@ -43,33 +43,11 @@
 
 #include <ctype.h>
 
-#ifdef SGMLOP_UNICODE_SUPPORT
-/* wide character set (experimental) */
-/* FIXME: under Python 1.6, the current version converts Unicode
- strings to UTF-8, and parses the result as if it was an ASCII
- string. */
-#define CHAR_T  Py_UNICODE
-#define ISALNUM Py_UNICODE_ISALNUM
-#define ISSPACE Py_UNICODE_ISSPACE
-#define TOLOWER Py_UNICODE_TOLOWER
-#else
 /* 8-bit character set */
 #define CHAR_T  char
 #define ISALNUM isalnum
 #define ISSPACE isspace
 #define TOLOWER tolower
-#endif
-
-#if 0
-static int memory = 0;
-#define ALLOC(size, comment)\
-    do { memory += size; printf("%8d - %s\n", memory, comment); } while (0)
-#define RELEASE(size, comment)\
-    do { memory -= size; printf("%8d - %s\n", memory, comment); } while (0)
-#else
-#define ALLOC(size, comment)
-#define RELEASE(size, comment)
-#endif
 
 /* ==================================================================== */
 /* parser data type */
@@ -82,8 +60,8 @@ static int memory = 0;
 typedef struct {
     PyObject_HEAD
 
-	/* state attributes */
-	int feed;
+    /* state attributes */
+    int feed;
     int shorttag; /* 0=normal 2=parsing shorttag */
     int doctype; /* 0=normal 1=dtd pending 2=parsing dtd */
 
@@ -118,8 +96,7 @@ static PyObject* attrparse(const CHAR_T *p, int len);
 static PyObject* _sgmlop_new(PyObject* item) {
     FastSGMLParserObject* self;
 
-    self = PyObject_NEW(FastSGMLParserObject, &FastSGMLParser_Type);
-    if (self == NULL)
+    if (!(self=PyObject_NEW(FastSGMLParserObject, &FastSGMLParser_Type)))
 	return NULL;
 
     self->feed = 0;
@@ -232,9 +209,7 @@ feed(FastSGMLParserObject* self, char* string, int stringlen, int last)
     self->bufferlen = length;
 
     self->feed = 1;
-
     length = fastfeed(self);
-
     self->feed = 0;
 
     if (length < 0) {
@@ -253,7 +228,7 @@ feed(FastSGMLParserObject* self, char* string, int stringlen, int last)
 		self->bufferlen - length);
     }
 
-    self->bufferlen = self->bufferlen - length;
+    self->bufferlen -= length;
 
     /* if data remains in the buffer even through this is the
      last call, do an extra handle_data to get rid of it */
@@ -272,12 +247,10 @@ static PyObject*
 _sgmlop_feed(FastSGMLParserObject* self, PyObject* args)
 {
     /* feed a chunk of data to the parser */
-
     char* string;
     int stringlen;
     if (!PyArg_ParseTuple(args, "t#", &string, &stringlen))
 	return NULL;
-
     return feed(self, string, stringlen, 0);
 }
 
@@ -285,10 +258,8 @@ static PyObject*
 _sgmlop_close(FastSGMLParserObject* self, PyObject* args)
 {
     /* flush parser buffers */
-
     if (!PyArg_NoArgs(args))
 	return NULL;
-
     return feed(self, "", 0, 1);
 }
 
@@ -296,12 +267,10 @@ static PyObject*
 _sgmlop_parse(FastSGMLParserObject* self, PyObject* args)
 {
     /* feed a single chunk of data to the parser */
-
     char* string;
     int stringlen;
     if (!PyArg_ParseTuple(args, "t#", &string, &stringlen))
 	return NULL;
-
     return feed(self, string, stringlen, 1);
 }
 
@@ -471,39 +440,36 @@ static int fastfeed(FastSGMLParserObject* self) {
 		/* skip attributes */
 		int quote = 0;
 		int last = 0;
-		int error = 0;
-		int state = 0;
-		while (*p != '>' || (quote && !error)) {
+                int attr_end = 0;
+		while (*p!='>' || quote) {
 		    if (!ISSPACE(*p)) {
-			if (state==3) {
-			    error=1;
-			}
 			has_attr = 1;
-			/* FIXME: note: end tags cannot have attributes! */
-		    }
-		    else if (state==3) state=0;
-		    if (quote) {
-			if (*p == quote) {
-			    quote = 0;
-			    state = 3;
+			if (attr_end==1) {
+                            attr_end=2;
+			}
+			if (quote) {
+			    if (*p == quote) {
+				quote = 0;
+			    }
+			}
+			else {
+			    if (*p=='=') {
+				attr_end = 1;
+			    }
+			    else if (*p=='"' || *p=='\'') {
+				quote = *p;
+				attr_end = 0;
+			    }
+                            else if (*p=='[' && self->doctype) {
+				self->doctype = SURE;
+				token = DTD_START;
+				e = p++;
+				goto eot;
+			    }
 			}
 		    }
-		    else {
-			if (*p=='=') {
-			    if (state==1) error=1;
-			    else state=1;
-			}
-			if (*p == '"' || *p == '\'') {
-			    if (state!=1) error=1;
-			    quote = *p;
-			    state=2;
-			}
-		    }
-		    if (*p == '[' && !quote && self->doctype) {
-			self->doctype = SURE;
-			token = DTD_START;
-			e = p++;
-			goto eot;
+		    else if (attr_end==2) {
+                        attr_end=0;
 		    }
 		    last = *p;
                     INC_P;
@@ -512,7 +478,10 @@ static int fastfeed(FastSGMLParserObject* self) {
 		e = p++;
 
 		// attention: it could be <a href=/foo/>bar</a>
-		if (last=='/' && state!=1) {
+                // thats why we have attr_end
+		if (last=='/' && !attr_end) {
+		    /* note: end tags cannot have attributes! */
+                    has_attr=0;
 		    /* <tag/> */
 		    e--;
 		    token = TAG_EMPTY;
@@ -522,10 +491,6 @@ static int fastfeed(FastSGMLParserObject* self) {
 
 		if (self->doctype == MAYBE)
 		    self->doctype = 0; /* there was no dtd */
-
-		if (has_attr)
-		    ; /* FIXME: process attributes */
-
 	    }
 	} // if p=='<'
 
@@ -637,7 +602,6 @@ static int fastfeed(FastSGMLParserObject* self) {
 		while (ISSPACE(*t)) {
 		    t++;
 		}
-                // XXX ending slash??
 		attr = attrparse(t, e-t);
 		if (!attr)
 		    return -1;

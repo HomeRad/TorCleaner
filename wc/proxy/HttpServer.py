@@ -25,9 +25,10 @@ _RESPONSE_FILTERS = (
    FILTER_RESPONSE_ENCODE)
 
 
-class HttpServer(Server):
+class HttpServer(Connection):
     def __init__(self, ipaddr, port, client):
-        Server.__init__(self, client)
+        Connection.__init__(self)
+        self.client = client
         self.addr = (ipaddr, port)
         self.hostname = ''
         self.document = ''
@@ -48,15 +49,18 @@ class HttpServer(Server):
         return self.state == 'connect' or self.send_buffer != ''
 
     def request(self):
-        portstr = ''
-        if self.addr[1] != 80: portstr = ':%s' % self.addr[1]
+        if self.addr[1] != 80:
+	    portstr = ':%s' % self.addr[1]
+        else:
+            portstr = ''
         return '%s%s%s' % (self.hostname or self.addr[0],
                             portstr, self.document)
 
     def attempt_connect(self):
         self.state = 'connect'
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        try: self.connect(self.addr)
+        try:
+	    self.connect(self.addr)
         except socket.error, err:
             print >> sys.stderr, 'connect error', err
             self.handle_error(socket.error, err)
@@ -65,6 +69,11 @@ class HttpServer(Server):
             print >> sys.stderr, 'connect error', self.addr, msg
 
     def handle_connect(self):
+        if self.state != 'connect':
+            # oops, the client has closed, and thus the server
+            # has too. XXX move this inside Connection :(
+            self.close()
+            return
         assert self.state == 'connect'
         #debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
@@ -78,7 +87,7 @@ class HttpServer(Server):
             # times out, and it calls handle_connect, then handle_write.
             # The handle_write notices the error, so it disconnects us
             # from the client.  THEN the timer runs and we can't say
-            # we've connected, because we really haven't.  NOTE: we
+            # we've connected, because we really haven't.  XXX: we
             # really should hide these sorts of cases inside Connection.
             make_timer(0, lambda s=self: s.client and s.client.server_connected(s))
         else:

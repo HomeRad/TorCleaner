@@ -5,7 +5,7 @@ class Server(Connection):
     def __init__(self, client):
         Connection.__init__(self)
         self.client = client
-        
+
     def client_abort(self):
         self.client = None
         if self.connected:

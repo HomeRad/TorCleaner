@@ -26,7 +26,7 @@ _SIZES = []
 
 def i16(c):
     """merge two bytes to an integer"""
-    return ord(c[0]) + (ord(c[1])<<8)
+    return ord(c[0]) | (ord(c[1])<<8)
 
 class RewindException(Exception): pass
 

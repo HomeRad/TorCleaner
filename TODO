@@ -1,14 +1,14 @@
 TODO
 
+- better Connection/Server/HttpServer - ClientServerMatchmaker - Client
+  distinction
+  
 - better DNS lib (hangs sometimes ?)
 
 - new filtering:
   Stop/limit Javascript Pop-ups/alert/confirms
     javascript:
      window.onload=window.onunload=window.onbeforeunload=null;window.close();
-  Stop refreshs for specific ad frames
-  Remove dynamic HTML
-  Control sounds
   Highlight keywords
 
 - Buffering Replacer

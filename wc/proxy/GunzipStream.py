@@ -18,32 +18,32 @@ class GunzipStream:
     
     def __init__(self):
         self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
-        self.buffer = ''
+        self.buf = ''
         self.header_seen = 0
         self.closed = 0
 
     def attempt_header_read(self):
         "Try to parse the header from buffer, and if we can, set flag"
-        if len(self.buffer) < 10: # Incomplete fixed part of header
+        if len(self.buf) < 10: # Incomplete fixed part of header
             return ''
 
-        magic = self.buffer[:2]
+        magic = self.buf[:2]
         if magic != '\037\213':
             raise zlib.error, 'not gzip format'
 
-        method = ord(self.buffer[2])
+        method = ord(self.buf[2])
         if method != 8:
             raise zlib.error, 'unknown compression method'
 
-        flag = ord(self.buffer[3])
+        flag = ord(self.buf[3])
         # Skip until byte 10
-        s = self.buffer[10:]
+        s = self.buf[10:]
 
         if flag & self.FEXTRA:
             # Read & discard the extra field, if present
             if len(s) < 2: return '' # Incomplete
-            xlen=ord(s[0])
-            xlen=xlen+256*ord(s[1])
+            xlen = ord(s[0])
+            xlen += 256*ord(s[1])
             if len(s) < 2+xlen: return '' # Incomplete
             s = s[2+xlen:]
 
@@ -65,20 +65,20 @@ class GunzipStream:
             s = s[2:]
 
         # We actually got through the header
-        self.buffer = s
+        self.buf = s
         self.header_seen = 1
 
     def decode(self, s):
         if not self.header_seen:
             # Try to parse the header
-            self.buffer += s
+            self.buf += s
             s = ''
             self.attempt_header_read()
             if self.header_seen:
                 # Put the rest of the buffer back into the string,
                 # for zlib use
-                s = self.buffer
-                self.buffer = ''
+                s = self.buf
+                self.buf = ''
             else:
                 # We haven't finished parsing the header
                 return ''

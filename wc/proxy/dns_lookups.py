@@ -9,6 +9,89 @@ from wc import debug
 from wc.debug_levels import *
 from pprint import pformat
 
+###################### configuration ########################
+
+class DnsConfig:
+    nameservers = []
+    search_domains = []
+    search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
+
+
+def init_dns_resolver():
+    import os
+    if os.name=='posix':
+        init_dns_resolver_posix()
+    elif os.name=='nt':
+        init_dns_resolver_nt()
+    else:
+        # not supported
+        pass
+    if not DnsConfig.search_domains:
+        DnsConfig.search_domains.append('')
+    if not DnsConfig.nameservers:
+        #print >> sys.stderr, 'DNS: warning: no nameservers found'
+        DnsConfig.nameservers.append('127.0.0.1')
+    debug(BRING_IT_ON, "DnsConfig", DnsConfig)
+
+
+def init_dns_resolver_posix():
+    "Set up the DnsLookupConnection class with /etc/resolv.conf information"
+    for line in open('/etc/resolv.conf', 'r').readlines():
+        line = line.strip()
+        if (not line) or line[0]==';' or line[0]=='#':
+            continue
+        m = re.match(r'^search\s+\.?(.*)$', line)
+        if m:
+            for domain in m.group(1).split():
+                DnsConfig.search_domains.append('.'+domain.lower())
+        m = re.match(r'^nameserver\s+(\S+)\s*$', line)
+        if m: DnsConfig.nameservers.append(m.group(1))
+
+
+def init_dns_resolver_nt():
+    import winreg
+    key = None
+    try:
+        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+               r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
+    except EnvironmentError:
+        try: # for Windows ME
+            key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+                    r"SYSTEM\CurrentControlSet\Services\VxD\MSTCP")
+        except EnvironmentError:
+            pass
+    if key:
+        nameserver = key["NameServer"][0] or ""
+        for server in nameserver.split(","):
+            DnsConfig.nameservers.append(server)
+    # XXX search for "EnableDhcp", "DhcpNameServer", "SearchList"
+
+    try: # for win2000
+        key = winreg.handle_key(winreg.HKEY_LOCAL_MACHINE,
+  r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\DNSRegisteredAdapters")
+        for subkey in key.subkeys():
+            count, counttype = subkey['DNSServerAddressCount']
+            values, valuestype = subkey['DNSServerAddresses']
+            for server in winreg.binipdisplay(values):
+                DnsConfig.nameservers.append(server)
+    except EnvironmentError:
+        pass
+
+    try: # for whistler
+        key = winreg.handle_key(winreg.HKEY_LOCAL_MACHINE,
+           r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
+        for subkey in key.subkeys():
+            nameserver = subkey['NameServer'][0] or ""
+            for server in winreg.stringdisplay(nameserver):
+	        DnsConfig.nameservers.append(server)
+    except EnvironmentError:
+        pass
+
+
+init_dns_resolver()
+
+######################################################################
+
 def background_lookup(hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
@@ -34,12 +117,8 @@ class DnsResponse:
 
     def isRedirect(self):
         return self.kind == 'redirect'
-    
-class DnsConfig:
-    nameservers = []
-    search_domains = []
-    search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
-    
+
+
 class DnsExpandHostname:
     "Try looking up a hostname and its expansions"
     # This routine calls DnsCache to do the individual lookups
@@ -467,47 +546,5 @@ class DnsLookupConnection(Connection):
             callback, self.callback = self.callback, None
             callback(self.hostname, DnsResponse('error', 'closed with no answer .. %s' % self))
 
-def init_dns_resolver():
-    import os
-    if os.name=="posix":
-        init_dns_resolver_posix()
-    elif os.name=="nt":
-        init_dns_resolver_nt()
 
-
-def init_dns_resolver_posix():
-    "Set up the DnsLookupConnection class with /etc/resolv.conf information"
-    for line in open('/etc/resolv.conf', 'r').readlines():
-        line = line.strip()
-        if (not line) or line[0]==';' or line[0]=='#':
-            continue
-        m = re.match(r'^search\s+\.?(.*)$', line)
-        if m:
-            for domain in m.group(1).split():
-                DnsConfig.search_domains.append('.'+domain.lower())
-        m = re.match(r'^nameserver\s+(\S+)\s*$', line)
-        if m: DnsConfig.nameservers.append(m.group(1))
-    if not DnsConfig.search_domains:
-        DnsConfig.search_domains.append('')
-    if not DnsConfig.nameservers:
-        print >> sys.stderr, 'WebCleaner: warning: no nameservers found'
-        DnsConfig.nameservers.append('127.0.0.1')
-
-def init_dns_resolver_nt():
-    import winreg
-    try:
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
-                 r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
-    except WindowsError:
-        debug(BRING_IT_ON, "no windows tcpip config found")
-        return
-    dhcp = key.get("EnableDhcp", None)
-    if dhcp:
-        debug(BRING_IT_ON, key.get("DhcpNameServer", "no dhcp server"))
-    else:
-        debug(BRING_IT_ON, key.get("NameServer", "no name server"))
-    debug(BRING_IT_ON, key.get("SearchList", "no search list"))
-
-
-init_dns_resolver()
 dnscache = DnsCache()

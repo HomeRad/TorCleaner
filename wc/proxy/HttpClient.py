@@ -28,6 +28,7 @@ class HttpClient(Connection):
         self.bytes_remaining = None # for content only
         self.content = ''
 
+
     def __repr__(self):
         if self.state != 'request':
             try: extra = self.request.split()[1][7:] # Remove http://
@@ -37,6 +38,7 @@ class HttpClient(Connection):
         else:
             extra = 'being read'
         return '<%s:%-8s %s>' % ('client', self.state, extra)
+
 
     def process_read(self):
         if self.state == 'request':
@@ -108,14 +110,17 @@ class HttpClient(Connection):
         self.write(''.join(headers.headers))
         self.write('\r\n')
 
+
     def server_no_response(self):
         #debug(NIGHTMARE, 'S/failed', self)
         self.write('**Aborted**')
         self.delayed_close()
 
+
     def server_content(self, data):
         assert self.server
         self.write(data)
+
 
     def server_close(self):
         assert self.server
@@ -124,18 +129,20 @@ class HttpClient(Connection):
             self.delayed_close()
         self.server = None
 
+
     def server_abort(self):
         #debug(NIGHTMARE, 'S/abort', self)
         self.close()
         self.server = None
-        
-    def handle_error(self, type, value, traceback=None):
-        # We should also close the server connection
-        print >> sys.stderr, 'client error', self, type, value
-        Connection.handle_error(self, type, value, traceback)
+
+
+    def handle_error(self, type, value, tb=None):
+        Connection.handle_error(self, 'client error', type, value, tb)
+        # We should close the server connection
         if self.server:
             server, self.server = self.server, None
             server.client_abort()
+
 
     def handle_close(self):
         # The client closed the connection, so cancel the server connection
@@ -148,6 +155,7 @@ class HttpClient(Connection):
             # If there isn't a server, then it's in the process of
             # doing DNS lookup or connecting.  The matchmaker will
             # check to see if the client is still connected.
+
 
     def close(self):
         self.state = 'closed'

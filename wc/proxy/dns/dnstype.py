@@ -1,3 +1,5 @@
+# See RFC 1035 for more info
+
 # TYPE values (section 3.2.2)
 
 A = 1		# a host address
@@ -34,8 +36,8 @@ ANY = 255	# A request for all records
 _names = dir()
 typemap = {}
 for _name in _names:
-	if _name[0] != '_': typemap[eval(_name)] = _name
+    if _name[0] != '_':
+        typemap[eval(_name)] = _name
 
 def typestr(type):
-	if typemap.has_key(type): return typemap[type]
-	else: return `type`
+    return typemap.get(type, `type`)
