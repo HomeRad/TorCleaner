@@ -29,9 +29,9 @@ mofiles:
 template: $(TEMPLATE)
 $(TEMPLATE): $(POSOURCES) $(TEMPLATES)
 	$(XGETTEXT) -w 80 --default-domain=$(PACKAGE) --language=Python \
-	  --copyright-holder="Bastian Kleineidam <calvin@users.sf.net>" \
-	  --msgid-bugs-address=calvin@users.sf.net -o $(TEMPLATE) \
-	  --keyword=_n:1,2 $(POSOURCES)
+     --copyright-holder="Bastian Kleineidam <calvin@users.sourceforge.net>" \
+     --msgid-bugs-address=calvin@users.sourceforge.net -o $(TEMPLATE) \
+     --keyword=_n:1,2 $(POSOURCES)
 	$(TALGETTEXT) -u $(TEMPLATE) $(TEMPLATES)
 
 %.mo:	%.po
