@@ -4,6 +4,8 @@
  
  Changes:
 
+ 20040225 Bastian Kleineidam
+ * multi-language rule title and description
  20040219 Bastian Kleineidam
  * added matchurl and nomatchurl as elements, and restructured the other
    elements according to this
@@ -61,16 +63,27 @@
 
    The filter is identified by filename.
 -->
-<!ELEMENT folder ((rewrite|replacer|block|blockurls|blockdomains|allow|header|image|nocomments)*)>
+<!ELEMENT folder (title+,description*,(rewrite|replace|javascript|block|blockurls|blockdomains|allow|header|image|nocomments|rating)*)>
 <!ATTLIST folder
  sid      CDATA #REQUIRED
  oid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  disable  CDATA "0"
 >
 
+<!--                      Title and description
 
+    Rules have a title, and possibly a description. Title and
+    description can be specified in multiple languages with the "lang"
+    attribute.
+-->
+<!ELEMENT title (#PCDATA)>
+<!ATTLIST title
+ lang     CDATA #REQUIRED
+>
+<!ELEMENT description (#PCDATA)>
+<!ATTLIST description
+ lang     CDATA #REQUIRED
+>
 
 <!--                      URL matching
 
@@ -89,11 +102,9 @@
 
    If there is no <replace> tag the complete tag will be removed.
 -->
-<!ELEMENT rewrite (matchurl*,nomatchurl*,attr*,enclosed?,replace?)>
+<!ELEMENT rewrite (title+,description*,matchurl*,nomatchurl*,attr*,enclosed?,replacement?)>
 <!ATTLIST rewrite
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  disable  CDATA "0"
  tag      CDATA "a"
 >
@@ -137,11 +148,10 @@
    'attr' and 'attrvalue' replace the first occuring or matching 
    attribute or nothing.
 -->
-<!ELEMENT replace (#PCDATA)>
-<!ATTLIST replace
+<!ELEMENT replacement (#PCDATA)>
+<!ATTLIST replacement
  part     (tag|tagname|attr|attrval|enclosed|complete) "complete"
 >
-
 
 
 <!--                       Blocker
@@ -151,11 +161,9 @@
     The element data specifies the URL to show when the block matches.
     Applications should have a default URL.
 -->
-<!ELEMENT block (#PCDATA)>
+<!ELEMENT block (title+,description*,replacement?)>
 <!ATTLIST block
  sid      CDATA #REQUIRED
- title      CDATA #REQUIRED
- desc       CDATA #IMPLIED
  url        CDATA #IMPLIED
  disable    CDATA "0"
 >
@@ -170,11 +178,9 @@
     WebCleaner .zap rules.
     The file can be gzip-compressed.
 -->
-<!ELEMENT blockdomains (#PCDATA)>
+<!ELEMENT blockdomains (title+,description*,replacement?)>
 <!ATTLIST blockdomains
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  filename CDATA #IMPLIED
 >
 
@@ -183,11 +189,9 @@
 
     Same as block for allowing entire domains.
 -->
-<!ELEMENT allowdomains (#PCDATA)>
+<!ELEMENT allowdomains (title+,description*,replacement?)>
 <!ATTLIST allowdomains
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  filename CDATA #IMPLIED
 >
 
@@ -200,11 +204,9 @@
     WebCleaner .zap rules.
     The file can be gzip-compressed.
 -->
-<!ELEMENT blockurls (#PCDATA)>
+<!ELEMENT blockurls (title+,description*,replacement?)>
 <!ATTLIST blockurls
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  filename CDATA #IMPLIED
 >
 
@@ -213,11 +215,9 @@
 
     Same as block urls for allowing.
 -->
-<!ELEMENT allowurls (#PCDATA)>
+<!ELEMENT allowurls (title+,description*,replacement?)>
 <!ATTLIST allowurls
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  filename CDATA #IMPLIED
 >
 
@@ -227,11 +227,9 @@
     Here we can specify urls to allow if they would be blocked
     otherwise.
 -->
-<!ELEMENT allow EMPTY>
+<!ELEMENT allow (title+,description*)>
 <!ATTLIST allow
  sid        CDATA #REQUIRED
- title      CDATA #REQUIRED
- desc       CDATA #IMPLIED
  url        CDATA #IMPLIED
  disable    CDATA "0"
 >
@@ -242,11 +240,9 @@
      Modify HTTP headers. If the replacement value is missing, the header
      gets deleted. Otherwise the specified header is added or replaced.
 -->
-<!ELEMENT header (matchurl*,nomatchurl*,replacement?)>
+<!ELEMENT header (title+,description*,matchurl*,nomatchurl*,replacement?)>
 <!ATTLIST header
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  name     CDATA #REQUIRED
  disable  CDATA "0"
 >
@@ -257,13 +253,11 @@
 
     Block images with a certain size. A replacement url can be specified.
 -->
-<!ELEMENT image (matchurl*,nomatchurl*,replacement?)>
+<!ELEMENT image (title+,description*,matchurl*,nomatchurl*,replacement?)>
 <!ATTLIST image
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
- width    CDATA #REQUIRED
- height   CDATA #REQUIRED
+ width    CDATA #IMPLIED
+ height   CDATA #IMPLIED
  type     (gif|jpg|png) "gif"
  disable  CDATA "0"
 >
@@ -272,11 +266,9 @@
 
     Remove comments from HTML source
 -->
-<!ELEMENT nocomments (matchurl*,nomatchurl*)>
+<!ELEMENT nocomments (title+,description*,matchurl*,nomatchurl*)>
 <!ATTLIST nocomments
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  disable  CDATA "0"
 >
 
@@ -284,11 +276,9 @@
 
     Execute and filter JavaScript in HTML source
 -->
-<!ELEMENT javascript (matchurl*,nomatchurl*)>
+<!ELEMENT javascript (title+,description*,matchurl*,nomatchurl*)>
 <!ATTLIST javascript
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  disable  CDATA "0"
 >
 
@@ -296,11 +286,9 @@
 
    Replace regular expressions in a data stream
 -->
-<!ELEMENT replace (matchurl*,nomatchurl*,replacement?)>
+<!ELEMENT replace (title+,description*,matchurl*,nomatchurl*,replacement?)>
 <!ATTLIST replace
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  disable  CDATA "0"
  search   CDATA #REQUIRED
 >
@@ -309,13 +297,10 @@
 
    A rule enabling the rating system in WebCleaner.
 -->
-<!ELEMENT rating (matchurl*,nomatchurl*,url?,category*)>
+<!ELEMENT rating (title+,description*,matchurl*,nomatchurl*,url?,category*)>
 <!ATTLIST rating
  sid      CDATA #REQUIRED
- title    CDATA #REQUIRED
- desc     CDATA #IMPLIED
  disable  CDATA "0"
- name     CDATA #REQUIRED
 >
 
 <!--                      rating category
@@ -323,4 +308,6 @@
    a category has an identification label and a rating value as content
 -->
 <!ELEMENT category (#PCDATA)>
-
+<!ATTLIST category
+ name     CDATA #REQUIRED
+>
