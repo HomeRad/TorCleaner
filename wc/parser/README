@@ -1,0 +1,41 @@
+Goals for the HTML parser:
+==========================
+
+1) Reentrant
+As soon as any HTML string data is available, WebCleaner tries to feed it
+to the HTML parser. This means that the parser has to scan possible
+incomplete data, recognizing as much as it can. Incomplete trailing
+data is saved for subsequent calls (or it is just flushed away with the
+flush() function).
+
+2) Coping with HTML syntax errors
+Most HTML pages do not have correct syntax. Browsers go to great length
+to recover from such errors and reconstruct the HTML parse tree.
+Other standalone HTML parsers try to do it too.
+But WebCleaner does not need reconstruction for two reasons:
+a) Reconstruction means changing information in the past. This means
+   the final HTML parse tree would only available at end-of-data time.
+b) Error recovery is complex and itself error prone. Duplicating the
+   effort of the browser is moot.
+Other parsers (especially bison parsers) allow to skip over errors and
+discard tokens. This is also not acceptable.
+The parser has to pass incorrect data as TEXT.
+
+3) Speed
+Parsing has to be fast.
+
+
+Solutions:
+==========
+
+1) I use a beta FLEX snapshot from ftp://ftp.uncg.edu/people/wlestes/ to
+have a reentrant scanner. It works together with a pure (reentrant)
+bison parser.
+
+
+2) The scanner only passes complete recognized HTML syntax elements to
+the parser. Invalid syntax elements are passed as TEXT.
+
+
+3) The module uses a C extension for parsing.
+The FLEX code has options to generate a large but fast scanner.

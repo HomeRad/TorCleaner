@@ -3,6 +3,7 @@ TODO
 - documentation of the GUI tools
 - webcleanerconf: sortable filters (with up/down)
 - parent proxy authentication
+- Py_XDECREF when error=1 (init with NULL!)
 
 WONTDO
 

@@ -89,17 +89,21 @@ def _test():
     p.feed("<a/>")
     p.feed("<a href/>")
     p.feed("<a href=a />")
+    p.feed("</a>")
     p.feed("<?bla foo?>")
     p.feed("<?bla?>")
     p.feed("<!-- - comment -->")
-    p.feed("<!-- -->")
+    p.feed("<!---->")
     p.feed("<!DOCTYPE \"vla foo>")
     p.flush()
 
 def _broken ():
     p = HtmlPrinter()
-    p.feed("<<>")
+    p.feed("<")
+    p.feed("a")
+    p.feed(">")
+    p.feed("A>")
     p.flush()
 
 if __name__ == '__main__':
-    _broken()
+    _test()

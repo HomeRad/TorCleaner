@@ -9,51 +9,50 @@
 
 #define YYSTYPE PyObject*
 #define YY_EXTRA_TYPE UserData*
+
+#define CLEAR_BUF(a) \
+    a = PyMem_Resize(a, char, 1); \
+    if (!a) return T_ERROR; \
+    a[0] = '\0';
+
 #define SETLVAL \
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng); \
-    if (s==NULL) { \
-        return EOF; \
-    } \
-    else *yylval = s
+    PyObject* s = PyString_FromString(yyextra->tmp); \
+    if (s==NULL) return T_ERROR; \
+    CLEAR_BUF(yyextra->tmp); \
+    *yylval = s;
+
+#define ADD_TO_TMP {\
+    int len = strlen(yyextra->tmp); \
+    yyextra->tmp = PyMem_Resize(yyextra->tmp, char, len+yyleng+1); \
+    strncat(yyextra->tmp, yytext, yyleng); \
+    }
 
 #include "htmlparse.h"
 %}
 
 %option 8bit outfile="htmllex.c"
-%option align
+%option align debug
 %option fast
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison
 %option warn
 %option never-interactive
 
-/* The INNER state represents all possibilities between any two angle
- * brackets <  INNER >
- */
-%x S_INNER
-/* we saw an EQUAL sign after a name, now we can be any where until the
- * next bit of whitespace (unquoted)
- */
-%x S_ATTRVAL
-/* PIs do recognize a name, then possibly some text */
+%x S_ERROR
 %x S_PI
-/* collect the rest of the PI if there is any */
-%x S_PI_COLLECT
 %x S_COMMENT
 %x S_DOCTYPE
 %x S_CDATA
-/* capture a string bounded by apostrophes "'" Aka single quotes
- * Ignore things like double quotes
- */
+%x S_TAGSTART
+%x S_TAGEND
+%x S_SCRIPT
+%x S_ATTR1
+%x S_ATTR2
+%x S_ATTR3
+%x S_ATTR4
+%x S_ATTR5
 %x S_APOSSTRING
-/* capture a string bounded by double quotes
- * Ignore things like single quotes
- */
 %x S_STRING
-/**
- * Try to recover from some scanner unmatch. Scan ahead for a closing '>'
- */
-%x S_ERROR_RECOVER
 
 RX_WHITE_SPACE	[\n\r\ \t\b\012]
 RX_EQUAL	=
@@ -61,200 +60,240 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 %%
 
-<INITIAL><<EOF>> {
-    return EOF;
+  /*********************** EOF ************************/
+<<EOF>> {
+    return T_WAIT;
 }
 
-<INITIAL>"</" {
-    BEGIN(S_INNER);
-    return T_ANGLE_END_OPEN;
-}
-
+  /*********************** COMMENT ************************/
 <INITIAL>"<!--" { 
     BEGIN(S_COMMENT);
-    return T_COMMENT_START;
 }
-
-
-<INITIAL>"<!DOCTYPE" {  
-    BEGIN(S_DOCTYPE);
-    return T_DOCTYPE_START;
-}
-
-<INITIAL>"<![CDATA[" { 
-    BEGIN(S_CDATA);
-    return T_CDATA_START;
-}
-
-<INITIAL>"<?" { 
-    BEGIN(S_PI);
-    return T_PI_OPEN;
-}
-
-<INITIAL>"<" {
-    SETLVAL;
-    BEGIN(S_INNER);
-    return T_ANGLE_OPEN;
-}
-
-<INITIAL>[^<]+ {
-    SETLVAL;
-    return T_TEXT;
-}
-
-
-<S_INNER>"/>" {
-    BEGIN(INITIAL);
-    return T_ANGLE_END_CLOSE;
-}
-
-<S_INNER>">" {
-    SETLVAL;
-    BEGIN(INITIAL);
-    return T_ANGLE_CLOSE;
-}
-
-<S_INNER>{RX_EQUAL} {
-    BEGIN(S_ATTRVAL);
-    return T_EQUAL;
-}
-
-<S_INNER>{RX_NAME} {
-    SETLVAL;
-    return T_NAME;
-}
-
-<S_INNER>{RX_WHITE_SPACE}* {
-    /* ignore whitespace */
-}
-
-
-<S_ATTRVAL>\" {
-    SETLVAL;
-    BEGIN(S_STRING);
-    return T_QUOTE;
-}
-
-
-<S_ATTRVAL>\' {
-    SETLVAL;
-    BEGIN(S_APOSSTRING);
-    return T_APOS;
-}
-
-
-<S_ATTRVAL>[^ \t\r\n>\'\"]+ {
-    SETLVAL;
-    BEGIN(S_INNER);
-    return T_NAME;
-}
-
-<S_ATTRVAL>">" { 
-    BEGIN(INITIAL);
-    return T_ANGLE_CLOSE;
-}
-
-<S_ATTRVAL>[ \t\r\n]* {
-}
-
-
-
-<S_PI>{RX_NAME} {
-    SETLVAL;
-    BEGIN(S_PI_COLLECT);
-    return T_NAME;
-}
-
-<S_PI_COLLECT>"?>" { 
-    BEGIN(INITIAL);
-    return T_PI_CLOSE;
-}
-
-<S_PI_COLLECT>[^?]* { 
-    SETLVAL;
-    return T_TEXT;
-}
-
 
 <S_COMMENT>"-->" {
+    SETLVAL;
     BEGIN(INITIAL);
-    return T_COMMENT_END;
+    return T_COMMENT;
 }
 
 <S_COMMENT>"-" {
-    /* handle any hanging minus signs E.g. i - 2; --a; etc. */
-    SETLVAL;
-    return T_TEXT;
+    ADD_TO_TMP;
 }
 
 <S_COMMENT>[^\-]* {
-    SETLVAL;
-    return T_TEXT;
+    ADD_TO_TMP;
 }
 
-<S_CDATA>"]]>" {
-    BEGIN(INITIAL);
-    return T_CDATA_END;
-}
-
-<S_CDATA>"]" {
-    SETLVAL;
-    return T_TEXT;
-}
-
-<S_CDATA>[^\]]* {
-    SETLVAL;
-    return T_TEXT;
+  /*********************** DOCTYPE ************************/
+<INITIAL>"<!DOCTYPE" {
+    BEGIN(S_DOCTYPE);
 }
 
 <S_DOCTYPE>">" {
+    SETLVAL;
     BEGIN(INITIAL);
-    return T_ANGLE_CLOSE;
+    return T_DOCTYPE;
 }
 
 <S_DOCTYPE>[^\>]* {
+    ADD_TO_TMP;
+}
+
+  /*********************** CDATA ************************/
+<INITIAL>"<![CDATA[" { 
+    BEGIN(S_CDATA);
+}
+
+<S_CDATA>"]]>" {
     SETLVAL;
-    return T_TEXT;
+    BEGIN(INITIAL);
+    return T_CDATA;
+}
+
+<S_CDATA>"]" {
+    ADD_TO_TMP;
+}
+
+<S_CDATA>[^\]]* {
+    ADD_TO_TMP;
+}
+
+  /*********************** PI ************************/
+<INITIAL>"<?" {
+    BEGIN(S_PI);
+}
+
+<S_PI>"?>" {
+    SETLVAL;
+    BEGIN(INITIAL);
+    return T_PI;
+}
+
+<S_PI>[^\?]*|\? {
+    ADD_TO_TMP;
+}
+
+  /*********************** TAGSTART ************************/
+<INITIAL><{RX_WHITE_SPACE}* {
+    BEGIN(S_TAGSTART);
+}
+
+<S_TAGSTART>{RX_NAME} {
+    ADD_TO_TMP;
+}
+
+<S_TAGSTART>{RX_WHITE_SPACE}+ {
+    char* p = yyextra->tmp;
+    while (p) { *p = tolower(*p); p++; }
+    yyextra->ltag = PyString_FromString(yyextra->tmp);
+    if (!yyextra->ltag) { return T_ERROR; }
+    BEGIN(S_ATTR1);
+}
+
+<S_TAGSTART>"/>" {
+    BEGIN(INITIAL);
+    return T_ELEMENT_START_END;
+}
+
+<S_TAGSTART>">" {
+    if (!strcmp("script", PyString_AS_STRING(yyextra->ltag))) BEGIN(S_SCRIPT);
+    else BEGIN(INITIAL);
+    return T_ELEMENT_START;
+}
+
+<S_TAGSTART>. {
+    BEGIN(S_ERROR);
+}
+
+  /*********************** SCRIPT ************************/
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][Pp][Tt]{RX_WHITE_SPACE}*> {
+    SETLVAL;
+    BEGIN(INITIAL);
+    return T_SCRIPT;
+}
+
+<S_SCRIPT>[^<]*|< {
+    ADD_TO_TMP;
+}
+
+  /*********************** ATTRS ************************/
+<S_ATTR1>{RX_NAME} {
+    ADD_TO_TMP;
+    BEGIN(S_ATTR2);
+}
+
+<S_ATTR1,S_ATTR2>"/>" {
+    BEGIN(INITIAL);
+    return T_ELEMENT_START_END;
+}
+
+<S_ATTR1,S_ATTR2>">" {
+    BEGIN(INITIAL);
+    return T_ELEMENT_START;
+}
+
+<S_ATTR1,S_ATTR2>. {
+}
+
+<S_ATTR2>{RX_NAME} {
+    ADD_TO_TMP;
+}
+
+<S_ATTR2>{RX_WHITE_SPACE}+ {
+    BEGIN(S_ATTR3);
+}
+
+<S_ATTR2,S_ATTR3>{RX_EQUAL}{RX_WHITE_SPACE}* {
+    BEGIN(S_ATTR4);
+}
+
+<S_ATTR3>{RX_NAME} {
+    // XXX add single attribute
+    ADD_TO_TMP;
+    BEGIN(S_ATTR2);
+}
+
+<S_ATTR4>\" {
+    BEGIN(S_STRING);
 }
 
 
+<S_ATTR4>\' {
+    BEGIN(S_APOSSTRING);
+}
+
+
+<S_ATTR4>[^\012 \t\b\r\n>\'\"]+ {
+    ADD_TO_TMP;
+    BEGIN(S_ATTR5);
+}
+
+<S_ATTR5>[^\012 \t\b\r\n>]+ {
+    ADD_TO_TMP;
+}
+
+<S_ATTR5>">" {
+    // XXX
+    BEGIN(INITIAL);
+}
+
+<S_ATTR5>{RX_WHITE_SPACE}+ {
+    // XXX
+    BEGIN(S_ATTR1);
+}
+
 <S_APOSSTRING>\' {
-    SETLVAL;
-    BEGIN(S_INNER);
-    return T_APOS;
+    // XXX
+    BEGIN(S_ATTR1);
 }
 
 <S_APOSSTRING>[^']* { 
-    SETLVAL;
-    return T_VALUE;
+    ADD_TO_TMP;
 }
 
 
 <S_STRING>\" {
-    SETLVAL;
-    BEGIN(S_INNER);
-    return T_QUOTE;
+    // XXX
+    BEGIN(S_ATTR1);
 }
 
 <S_STRING>[^"]* { 
-    SETLVAL;
-    return T_VALUE;
+    ADD_TO_TMP;
 }
 
+  /*********************** TAGEND ************************/
+<INITIAL>"</"{RX_WHITE_SPACE} {
+    BEGIN(S_TAGEND);
+}
 
-<S_ERROR_RECOVER>">" {
+<S_TAGEND>{RX_NAME} {
+    ADD_TO_TMP;
+}
+
+<S_TAGEND>">" {
+    SETLVAL;
+    return T_ELEMENT_END;
+}
+
+<S_TAGEND>"<"{RX_WHITE_SPACE} {
+    BEGIN(S_TAGSTART);
+}
+
+<S_TAGEND>. {
+}
+
+  /*********************** ERROR ************************/
+<S_ERROR>[^>]* {
+    ADD_TO_TMP;
+}
+
+<S_ERROR>">" {
     SETLVAL;
     BEGIN(INITIAL);
-    return T_ANGLE_CLOSE;
-}
-
-
-<S_ERROR_RECOVER>[^>]* {
-    /* ignore all this till recover */
-    SETLVAL;
     return T_TEXT;
 }
 
+  /*********************** END ************************/
 %%
 
 int htmllexInit (void** scanner, UserData* data) {

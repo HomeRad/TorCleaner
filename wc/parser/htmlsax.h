@@ -16,6 +16,14 @@
 typedef struct {
     /* the Python SAX class instance to issue callbacks */
     PyObject* handler;
+    /* buffer to store scanned but still unparsed characters */
+    char* buf;
+    /* temporary vars */
+    char* tmp;
+    PyObject* ltag;
+    PyObject* attrname;
+    PyObject* attrval;
+    PyObject* attrs;
     /* stored Python exception (if error occurred) */
     PyObject* exc_type;
     PyObject* exc_val;
