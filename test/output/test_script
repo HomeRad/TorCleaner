@@ -1,0 +1,127 @@
+test_script
+filter test/html/script0.html
+
+<script language=JavaScript>
+
+
+
+filter test/html/script1.html
+
+<script language=JavaScript>
+<!--
+document.write('foo');
+//-->
+
+      </td>
+   </tr>
+</table> 
+
+filter test/html/script2.html
+
+<script language=JavaScript>
+<!--
+document.write('<SCR'+'IPT LANGUAGE="JavaScript1.1" ' );
+document.write('SRC="http://localhost/~calvin/2.js">');
+document.write('</SCR'+'IPT>');
+//-->
+
+      </td>
+   </tr>
+</table> 
+
+filter test/html/script3.html
+
+<script type=text/javascript><!--
+// check url validity
+function isValid (thisForm) {
+    if (thisForm.url.value=="" || thisForm.url.value=="http://") {
+        alert(gettext("Empty URL was given."));
+        thisForm.url.select();
+        thisForm.url.focus();
+        return false;
+    }
+    if (!checkSyntax(thisForm.url.value)) {
+        alert(gettext("Invalid URL was given."));
+        thisForm.url.select();
+        thisForm.url.focus();
+        return false;
+    }
+    return true;
+}
+
+// check url syntax
+function checkSyntax (url) {
+    var syntax = /^https?:\/\/[-a-zA-Z.\/=%?~]+$/;
+    return syntax.test(url);
+}
+
+//-->
+
+</html>
+
+filter test/html/script4.html
+
+<script type=text/javascript><!--
+// check url validity
+function isValid (thisForm) {
+    if (thisForm.url.value=="" || thisForm.url.value=="http://") {
+        alert(gettext("Empty URL was given."));
+        thisForm.url.select();
+        thisForm.url.focus();
+        return false;
+    }
+    if (!checkSyntax(thisForm.url.value)) {
+        alert(gettext("Invalid URL was given."));
+        thisForm.url.select();
+        thisForm.url.focus();
+        return false;
+    }
+    return true;
+}
+
+// check url syntax
+function checkSyntax (url) {
+    var syntax = /^https?:\/\/[-a-zA-Z.\/=%?~]+$/;
+    return syntax.test(url);
+}
+
+//-->
+
+</html>
+
+filter test/html/script5.html
+
+
+<script type=text/javascript><!--
+// check url validity
+function isValid (thisForm) {
+    if (thisForm.url.value=="" || thisForm.url.value=="http://") {
+        alert(gettext("Empty URL was given."));
+        thisForm.url.select();
+        thisForm.url.focus();
+        return false;
+    }
+    if (!checkSyntax(thisForm.url.value)) {
+        alert(gettext("Invalid URL was given."));
+        thisForm.url.select();
+        thisForm.url.focus();
+        return false;
+    }
+    return true;
+}
+
+// check url syntax
+function checkSyntax (url) {
+    var syntax = /^https?:\/\/[-a-zA-Z.\/=%?~]+$/;
+    return syntax.test(url);
+}
+
+//-->
+<script type=JavaScript>
+<!--
+a = 1
+// -->
+
+
+</html>
+
