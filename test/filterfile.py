@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, ".")
+import sys, os
+sys.path.insert(0, os.getcwd())
 
 def _main():
-    file = sys.argv[1]
-    data = open(file).read()
+    f = sys.argv[1]
+    data = file(f).read()
     import wc, time
     wc.DebugLevel = 3
     wc.config = wc.Configuration()
     wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
-    attrs = wc.filter.initStateObjects(url=file)
+    attrs = wc.filter.initStateObjects(url=f)
     filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
            data, 'finish', attrs)
     print filtered

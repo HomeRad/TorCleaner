@@ -5,7 +5,7 @@ startElement ('a', {'b': 'c'})
 HTML "<a b='c'>"
 startElement ('a', {'b': 'c'})
 HTML '<a b=c">'
-startElement ('a', {'b': 'c"'})
+startElement ('a', {'b': 'c&quot;'})
 HTML '<a b="c>'
 characters ('<a b="c>',)
 HTML '<a b="">'
@@ -44,12 +44,12 @@ startElement ('h1', {})
 characters ('bla',)
 endElement ('h1',)
 HTML '<a b=c"><a b="c">'
-startElement ('a', {'b': 'c"'})
+startElement ('a', {'b': 'c&quot;'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
 startElement ('a', {'c': None, 'b': '"c><a b="'})
 HTML '<a b=/c/></a><br>'
-startElement ('a', {'b': '/c/'})
+startElement ('a', {'b': '"/c/"'})
 endElement ('a',)
 startElement ('br', {})
 HTML '<br/>'
@@ -107,13 +107,20 @@ HTML '<img bo\\\nrder=0 >'
 startElement ('img', {'bo': None, 'rder': '0'})
 HTML '<a href="123$456">'
 startElement ('a', {'href': '123$456'})
+HTML '<a href=/>'
+startElement ('a', {'href': ''})
+endElement ('a',)
+HTML '<a href="\'">'
+startElement ('a', {'href': '"\'"'})
+HTML '<a href=\'"\'>'
+startElement ('a', {'href': '&quot;'})
 ======== sequential feed tests =========
 HTML '<a b="c">'
 startElement ('a', {'b': 'c'})
 HTML "<a b='c'>"
 startElement ('a', {'b': 'c'})
 HTML '<a b=c">'
-startElement ('a', {'b': 'c"'})
+startElement ('a', {'b': 'c&quot;'})
 HTML '<a b="c>'
 characters ('<a b="c>',)
 HTML '<a b="">'
@@ -155,12 +162,12 @@ characters ('l',)
 characters ('a',)
 endElement ('h1',)
 HTML '<a b=c"><a b="c">'
-startElement ('a', {'b': 'c"'})
+startElement ('a', {'b': 'c&quot;'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
 startElement ('a', {'c': None, 'b': '"c><a b="'})
 HTML '<a b=/c/></a><br>'
-startElement ('a', {'b': '/c/'})
+startElement ('a', {'b': '"/c/"'})
 endElement ('a',)
 startElement ('br', {})
 HTML '<br/>'
@@ -218,6 +225,12 @@ HTML '<img bo\\\nrder=0 >'
 startElement ('img', {'bo': None, 'rder': '0'})
 HTML '<a href="123$456">'
 startElement ('a', {'href': '123$456'})
+HTML '<a href=/>'
+startElement ('a', {'href': '"/"'})
+HTML '<a href="\'">'
+startElement ('a', {'href': '"\'"'})
+HTML '<a href=\'"\'>'
+startElement ('a', {'href': '&quot;'})
 ===== subsequent interwoven parsing ====
 startElement ('html', {})
 startElement ('html', {})

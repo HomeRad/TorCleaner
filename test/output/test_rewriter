@@ -68,7 +68,7 @@ test_rewriter
 
 
 
-<a href=http://www/>link</a>
+<a href="http://www/">link</a>
 
 
 These `Microsoft chars` are history.
@@ -82,7 +82,7 @@ These `Microsoft chars` are history.
 
 
 
-<a href=bla">link</a>
+<a href=bla&quot;>link</a>
 
 
 

@@ -60,6 +60,11 @@ tests = (
     "<img bo\\\nrder=0 >",
     # href with $
     """<a href="123$456">""",
+    # quoting
+    """<a href=/>""",
+    """<a href="'">""",
+    """<a href='"'>""",
+
 )
 
 flushtests = (

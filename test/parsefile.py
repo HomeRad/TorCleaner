@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-import sys
-sys.path.insert(0, ".")
+import sys, os
+sys.path.insert(0, os.getcwd())
 from wc.parser.htmllib import HtmlPrinter
 
 def _main():
-    #pass
-    file = sys.argv[1]
-    data = open(file).read()
+    data = file(sys.argv[1]).read()
+    #data = """<a href=/ >"""
     p = HtmlPrinter()
     p.feed(data)
     p.flush()
