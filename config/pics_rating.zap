@@ -10,7 +10,6 @@
 <service name="icra">
 <category name="badexample">1</category>
 <category name="chat">1</category>
-<category name="drugsuse">1</category>
 <category name="intolerance">1</category>
 <category name="moderatedchat">1</category>
 <category name="nudityobscuredsexualacts">1</category>
@@ -34,6 +33,7 @@
 <category name="sexrating">1</category>
 </service>
 <service name="rsac">
+<category name="sex">1</category>
 <category name="violence">1</category>
 </service>
 <service name="safesurf">

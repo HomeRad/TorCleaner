@@ -291,7 +291,7 @@
 <attr name="src">fmads.osdn.com</attr>
 </rewrite>
 
-<rewrite title="MSN ads" oid="125"
+<rewrite title="MSN ads" oid="48"
  desc="Found at MSN">
 <attr>g\.msn(bc)?\.com</attr>
 </rewrite>
