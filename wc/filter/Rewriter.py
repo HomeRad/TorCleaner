@@ -26,6 +26,7 @@ from wc.filter import FilterException, compileMime, compileRegex
 from wc.filter.Filter import Filter
 # JS imports
 from wc.js.JSListener import JSListener
+from wc.js import escape_js
 try:
    from wc.js import jslib
 except ImportError:
@@ -414,10 +415,7 @@ class HtmlFilter (HtmlParser,JSListener):
             else:
                 self.buf.append([STARTTAG, "script", {'type':
                                                       'text/javascript'}])
-                if self.js_script.find("<!--")==-1:
-                    script = "<!--\n%s\n//-->"%self.js_script
-                else:
-                    script = self.js_script
+                script = "<!--\n%s\n//-->"%escape_js(self.js_script)
                 self.buf.append([DATA, script])
                 # Note: <script src=""> could be missing an end tag,
                 # but now we need one. Look later for a duplicate </script>.
