@@ -20,7 +20,6 @@ other projects."""
 # public api
 __all__ = ["debug", "info", "warn", "error", "critical",
            "exception", "get_log_file", "set_format", "usedmemory"]
-__author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
