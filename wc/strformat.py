@@ -37,7 +37,11 @@ def unquote (s):
     return s
 
 
-_para_ro = re.compile(r"(?:\r\n|\r|\n)(?:(?:\r\n|\r|\n)\s*)+")
+_para_mac = r"(?:%(sep)s)(?:(?:%(sep)s)\s*)+" % {'sep': '\r'}
+_para_posix = r"(?:%(sep)s)(?:(?:%(sep)s)\s*)+" % {'sep': '\n'}
+_para_win = r"(?:%(sep)s)(?:(?:%(sep)s)\s*)+" % {'sep': '\r\n'}
+_para_ro = re.compile("%s|%s|%s" % (_para_mac, _para_posix, _para_win))
+
 def get_paragraphs (text):
     """A new paragraph is considered to start at a line which follows
        one or more blank lines (lines containing nothing or just spaces).
@@ -54,10 +58,8 @@ def wrap (text, width, **kwargs):
        See textwrap.wrap() for a list of supported kwargs.
        Returns text with lines no longer than given width.
     """
-    if width <= 0:
+    if width <= 0 or not text:
         return text
-    if not text:
-        return ""
     ret = []
     for para in get_paragraphs(text):
         ret.extend(textwrap.wrap(para.strip(), width, **kwargs))
