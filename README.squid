@@ -18,7 +18,10 @@
 icp_port 0
 
 # the webcleaner parent proxy
-cache_peer 127.0.0.1 parent 8080 0 no-query
+cache_peer 127.0.0.1 parent 8080 0 no-query no-digest
+# if you enabled a WebCleaner user and password:
+# cache_peer 127.0.0.1 parent 8080 0 no-query no-digest login=myuser:mypassword
+
 
 # some acls
 acl QUERY urlpath_regex cgi-bin \?
