@@ -22,7 +22,8 @@ import os, re, base64
 from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
-from wc import i18n, ConfigDir, TemplateDir, Configuration, Version
+from wc import i18n, ConfigDir, TemplateDir, Configuration, Version, \
+     filterconf_files
 from wc.XmlUtils import xmlify
 from FXPy.fox import *
 from wc.filter.rules.FolderRule import FolderRule
@@ -672,10 +673,9 @@ class ConfWindow (ToolWindow):
             doreload = 0
             import urllib,md5
             lines = urllib.urlopen(url+"md5sums").readlines()
-            from glob import glob
             filemap = {}
-            for file in glob(ConfigDir+"/*.zap"):
-                filemap[os.path.basename(file)] = file
+            for fname in wc.filterconf_files():
+                filemap[os.path.basename(fname)] = fname
             for line in lines:
                 if "<" in line:
                     raise IOError, "could not fetch "+url+"md5sums"
