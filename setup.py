@@ -28,28 +28,27 @@ def p (path):
     """norm a path name to platform specific notation"""
     return os.path.normpath(path)
 
-# set to 1 to use JavaScript
-USE_JS = 1
 
 class MyInstall (install):
     def run (self):
-        install.run(self)
+        super(MyInstall, self).run()
         # we have to write a configuration file because we need the
         # <install_data> directory (and other stuff like author, url, ...)
         data = []
         for d in ['purelib', 'platlib', 'lib', 'headers', 'scripts', 'data']:
-            attr = 'install_'+d
+            attr = 'install_%s'%d
             if self.root:
+                # cut off root path prefix
                 val = getattr(self, attr)[len(self.root):]
             else:
                 val = getattr(self, attr)
             if attr=="install_data":
                 base = os.path.join(val, 'share', 'webcleaner')
-                data.append('config_dir = %s' % \
-                            `os.path.normcase(os.path.join(base, 'config'))`)
-                data.append('template_dir = %s' % \
-                          `os.path.normcase(os.path.join(base, 'templates'))`)
-            data.append("%s = %s" % (attr, `val`))
+                data.append('config_dir = %r' % \
+                            os.path.normcase(os.path.join(base, 'config')))
+                data.append('template_dir = %r' % \
+                            os.path.normcase(os.path.join(base, 'templates')))
+            data.append("%s = %r" % (attr, val))
         from pprint import pformat
         data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
@@ -122,9 +121,9 @@ class MyDistribution (Distribution):
     def run_commands (self):
         cwd = os.getcwd()
         data = []
-	data.append('config_dir = %s' % `os.path.join(cwd, "config")`)
-        data.append('template_dir = %s' % `os.path.join(cwd, "templates")`)
-        data.append("install_data = %s" % `cwd`)
+	data.append('config_dir = %r' % os.path.join(cwd, "config"))
+        data.append('template_dir = %r' % os.path.join(cwd, "templates"))
+        data.append("install_data = %r" % cwd)
         self.create_conf_file("", data)
         Distribution.run_commands(self)
 
@@ -142,7 +141,7 @@ class MyDistribution (Distribution):
                      "contact_email", "fullname")
         for name in metanames:
               method = "get_" + name
-              cmd = "%s = %s" % (name, `getattr(self.metadata, method)()`)
+              cmd = "%s = %r" % (name, getattr(self.metadata, method)())
               data.append(cmd)
         data.append('appname = "WebCleaner"')
         util.execute(write_file, (filename, data),
