@@ -3,7 +3,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, socket, re
+import time, socket, re, urlparse
 
 from cStringIO import StringIO
 from Server import Server
@@ -373,8 +373,11 @@ class HttpServer (Server):
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
             if 'Digest' in challenges:
-                attrs['uri'] = "/"
+                # note: assume self.document is already url-encoded
+                attrs['uri'] = urlparse.urlparse(self.document)[2]
+                # with https, this is CONNECT
                 attrs['method'] = self.method
+                attrs['requireExtraQuotes'] = self.headers.get('Server', '').lower().startswith('microsoft-iis')
             creds = get_credentials(challenges, **attrs)
             # resubmit the request with proxy credentials
             self.state = 'client'

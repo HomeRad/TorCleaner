@@ -7,6 +7,7 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "check_ntlm_credentials"]
 
 import des, md4, utils, base64, random
+random.seed()
 
 # nonce dictionary
 # XXX regularly delete nonces
