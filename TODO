@@ -2,7 +2,6 @@ TODO
 
 version 2.17 and above
 
-
 - ERROR 2004-05-22 13:03:32,973 wc.proxy Could not classify 'http://www.qnx.com/nc/': Should ne
 ver happen, not enough data
 
@@ -32,18 +31,6 @@ ver happen, not enough data
   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 443, in server_content
     assert self.server, "%s server_content had no server"%self
 AssertionError: <client:request  being read> server_content had no server
-
-======================================================================
-FAIL: testRecursionSrc (tests.server.TestScriptSrc.TestScriptSrc)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/calvin/projects/webcleaner/tests/server/TestScriptSrc.py", line 181, in testRecursionSrc         
-    </table>""")             
-  File "/home/calvin/projects/webcleaner/tests/server/TestScriptSrc.py", line 114, in filt                     
-    self.assertEqual(filtered, result)
-  File "/usr/lib/python2.3/unittest.py", line 302, in failUnlessEqual
-    raise self.failureException, \
-AssertionError: '<script type="text/javascript">\n<!--\ndocument.write(\'<iframe frameborder="0" framespacing="0" marginheight="0" marginwidth="0" scrolling="no" src="http://www.n24.de/service/dynabanner/n24_banner.html" vspace="0" width="468" height="60" border="0"></iframe>\');\n<!-&#45;\nsoi_place=escape("fullbanner2");soi_ad=escape("030219 dynamic banner 468 ohne Clicks (18095)");soi_adplace=soi_place+escape(" - ")+soi_ad+" \n";if (soi_adtrace) soi_adtrace+=soi_adplace;else var soi_adtrace=soi_adplace;soi_ad=soi_ad.toLowerCase();if (window.add2tag){if ((soi_ad.indexOf("powerlayer") > -1) || (soi_ad.indexOf("interstitial") > -1) || (soi_ad.indexOf("popup") > -1)) {add2tag += "&sowefo_ausschluss=powerlayer_popup_interstitial";}}\n//-&#45;>\n//-->\n</script>\n      </td>\n   </tr>\n</table>' != '\n      </td>\n   </tr>\n</table>'      
 
 - ssl certificate verification
 
