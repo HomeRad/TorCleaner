@@ -77,7 +77,7 @@ def rating_parse (data, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError, msg:
-            raise RatingParseError(i18n._(",alformed rating line %r")%line)
+            raise RatingParseError(i18n._("malformed rating line %r")%line)
         categories[category] = value
     return categories
 
