@@ -15,13 +15,13 @@ from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
-from wc.filter import applyfilter, get_filterattrs, FilterWait, rating
+from wc.filter import applyfilter, get_filterattrs, FilterWait
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter import FILTER_RESPONSE_ENCODE
-
+from wc.filter.Rating import MISSING
 
 # DEBUGGING
 PRINT_SERVER_HEADERS = 0
@@ -286,7 +286,7 @@ class HttpServer (Server):
         except FilterRating, msg:
             debug(PROXY, "%s FilterRating from header: %s", self, msg)
             msg = str(msg)
-            if msg==rating.MISSING:
+            if msg==MISSING:
                 self.show_rating_config(msg)
             else:
                 self.show_rating_deny(msg)
