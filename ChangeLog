@@ -3,7 +3,9 @@
     JavaScript stuff and Mozilla renders the page not good if there
     are no HTML comments.
     Changed files: config/misc.zap
-  
+  * Use lists and "".join(list) in HtmlFilter.buffer2data, which gives
+    a pretty good speedup when filtering big HTML files.
+
 0.59
   * - add missing import of _
     - correct warning of unknown encoding

@@ -89,7 +89,7 @@ class HtmlFilter (HtmlParser):
         HtmlParser.__init__(self)
         self.rules = rules
         self.comments = comments
-        self.data = ""
+        self.data = []
         self.rulestack = []
         self.buffer = []
         self.document = url or "unknown"
@@ -113,27 +113,27 @@ class HtmlFilter (HtmlParser):
 
     def flushbuf (self):
         """flush internal data buffer"""
-        data = self.data
+        data = "".join(self.data)
         if data:
-            self.data = ""
+            self.data = []
         return data
 
     def buffer2data (self):
         """Append all tags of the buffer to the data"""
         for n in self.buffer:
             if n[0]==DATA:
-                self.data += n[1]
+                self.data.append(n[1])
             elif n[0]==COMMENT:
-                self.data += "<!--%s-->"%n[1]
+                self.data.append("<!--%s-->"%n[1])
             elif n[0]==STARTTAG:
                 s = "<"+n[1]
                 for name,val in n[2].items():
                     s += ' %s'%name
                     if val:
                         s += "=%s"%val
-                self.data += s+">"
+                self.data.append(s+">")
             elif n[0]==ENDTAG:
-                self.data += "</%s>"%n[1]
+                self.data.append("</%s>"%n[1])
             else:
                 error(_("unknown buffer element %s") % n[0])
         self.buffer = []
