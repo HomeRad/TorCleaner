@@ -57,9 +57,11 @@ Setup for Unix/Linux:
    configure and Makefile files.
 3a.Installation as root
    Run "su -c 'python setup.py install'" to install the proxy.
+   Run "su -c 'webcleaner-certificates install'" to install the certificates.
    Run "su -c 'make installservice'" to install the runit service.
 3b.Installation as a normal user
    Run "python setup.py install --home $HOME"
+   Run "webcleaner-certificates install" to install the certificates.
    Now read the runsvdir(8) documentation on how to setup a local
    runit service.
 4. Enjoy
@@ -108,17 +110,31 @@ Setup for Windows:
 5. Compile and install the Python modules
    Change to the webcleaner-X.X directory and do:
    c:> python setup.py build -c mingw32 install
-6. Install and start the WebCleaner NT service
+6. Generate and install WebCleaner certificates
    Change to the directory where you installed Python into
    (for example c:\Python23\).
-   Run the webcleaner-service script to install the WebCleaner service:
+   Run the webcleaner-certificates script to install the certificates:
+   c:> python scripts\webcleaner-certificates install
+   To remove the certificates later, you can run:
+   c:> python scripts\webcleaner-certificates remove
+7. Install and start the WebCleaner NT service
+   Change to the directory where you installed Python into
+   (for example c:\Python23\).
+   Run the webcleaner-service script to install the service:
    c:> python scripts\webcleaner-service install
    To remove the service later, you can run:
    c:> python scripts\webcleaner-service remove
-7. Enjoy
+8. Enjoy
    WebCleaner is now installed and started as a regular Windows service.
    See the README on how to configure the proxy filters.
 
+Troubleshooting for Linux
+-------------------------
+Proxy startup errors are logged in the runit log file located at
+/var/service/webcleaner/log/main/current
+
 Troubleshooting for Windows
 ---------------------------
-Proxy startup errors are logged in the 
+Proxy startup errors are logged in the system event logger. Execute
+Settings -> Control Panel -> Administrative Tasks -> Event log
+and look at the "Application protocol" events.
