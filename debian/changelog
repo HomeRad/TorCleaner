@@ -1,6 +1,8 @@
 webcleaner (1.3-0.1) unstable; urgency=low
 
   * New upstream release.
+  * Standards-Version 3.5.8.0.
+  * Adjusted webcleanertools description
 
  -- Bastian Kleineidam <calvin@debian.org>  Mon,  9 Dec 2002 12:14:01 +0100
 
