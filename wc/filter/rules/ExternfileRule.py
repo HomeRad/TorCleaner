@@ -23,9 +23,9 @@ from wc.XmlUtils import xmlify
 
 class ExternfileRule (Rule):
     """rule with data stored in an external file"""
-    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+    def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, filename=None):
-        super(ExternfileRule, self).__init__(sid=sid, oid=oid, title=title,
+        super(ExternfileRule, self).__init__(sid=sid, title=title,
                                              desc=desc, disable=disable)
         self.filename = filename
         self.attrnames.append('filename')

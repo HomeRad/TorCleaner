@@ -259,22 +259,19 @@ class Configuration (dict):
 
     def read_filterconf (self):
         """read filter rules"""
-        # filter configuration
+        from wc.filter.rules.FolderRule import recalc_up_down
+        from wc.filter.rules import generate_sids
         for filename in filterconf_files():
             p = ZapperParser(filename)
             p.parse(file(filename), self)
             self['folderrules'].append(p.folder)
-        self.sort()
-
-
-    def sort (self):
-        """sort rules"""
-        from filter.rules.FolderRule import recalc_oids, recalc_up_down
-        for f in self['folderrules']:
-            f.sort()
+        # sort folders according to oid
         self['folderrules'].sort()
-        recalc_oids(self['folderrules'])
+        for i,folder in enumerate(self['folderrules']):
+            folder.oid = i
+            recalc_up_down(folder.rules)
         recalc_up_down(self['folderrules'])
+        generate_sids()
 
 
     def merge_folder (self, folder, dryrun=False, log=None):
@@ -284,12 +281,14 @@ class Configuration (dict):
         # test for correct category
         assert folder.sid.startswith("wc")
         f = [ rule for rule in self['folderrules'] if rule.sid==folder.sid ]
+        assert len(f) <= 1
         if f:
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
             print >>log, "inserting", folder.tiptext()
             if not dryrun:
+                folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)
         return chg
 
@@ -324,13 +323,9 @@ class Configuration (dict):
                         if rule.get_name() in clazz.rulenames:
                             instance.addrule(rule)
                 self['filterlist'][order].append(instance)
-        self.sort_filter_modules()
-
-
-    def sort_filter_modules (self):
-        for l in self['filterlist']:
+        for filters in self['filterlist']:
             # see Filter.__cmp__ on how sorting is done
-            l.sort()
+            filters.sort()
 
 
     def nofilter (self, url):
@@ -415,13 +410,13 @@ class ZapperParser (BaseParser):
     def start_element (self, name, attrs):
         encode_values(attrs)
         self.cmode = name
-        if name=='folder':
-            self.folder.fill_attrs(attrs, name)
-        elif name in rulenames:
+        if name in rulenames:
             import wc.filter
             self.rule = wc.filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.folder.append_rule(self.rule)
+        elif name=='folder':
+            self.folder.fill_attrs(attrs, name)
         # tag has character data
         elif name in _nestedtags:
             self.rule.fill_attrs(attrs, name)
@@ -431,8 +426,6 @@ class ZapperParser (BaseParser):
 
     def end_element (self, name):
         self.cmode = None
-        if name=='rewrite':
-            self.rule.set_start_sufficient()
         if name in rulenames:
             self.rule.compile_data()
 
@@ -446,7 +439,6 @@ class WConfigParser (BaseParser):
     def parse (self, fp, _config):
         super(WConfigParser, self).parse(fp, _config)
         self.config['configfile'] = self.filename
-        self.config['filters'].sort()
 
 
     def start_element (self, name, attrs):

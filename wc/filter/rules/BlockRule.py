@@ -22,9 +22,9 @@ from AllowRule import AllowRule
 from wc.XmlUtils import xmlify, unxmlify
 
 class BlockRule (AllowRule):
-    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+    def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, url="", replacement=""):
-        super(BlockRule, self).__init__(sid=sid, oid=oid, title=title,
+        super(BlockRule, self).__init__(sid=sid, title=title,
                                         desc=desc, disable=disable, url=url)
         self.replacement = replacement
 

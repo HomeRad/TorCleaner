@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 import tempfile, os
-from wc import AppName, ConfigDir, rulenames, Version
+from wc import AppName, ConfigDir, rulenames, Version, config
 from wc import Configuration as _Configuration
 from wc import daemon as _daemon
 from wc.webgui.context import getval as _getval
@@ -17,7 +17,7 @@ from wc.filter.PICS import services as pics_data
 # config vars
 info = {}
 error = {}
-config = _Configuration()
+#config = _Configuration()
 # current selected folder
 curfolder = None
 # current selected rule
@@ -272,74 +272,70 @@ def _form_rewrite_removeattrs (form):
         info['rewrite_delattr'] = True
 
 
-def _form_folder_up (oid):
-    """move folder with given oid one up"""
-    folders = config['folderrules']
-    for i, folder in enumerate(folders):
-        if folder.oid==oid and i>0:
-            # swap oids
-            folders[i-1].oid,folders[i].oid = folders[i].oid,folders[i-1].oid
-            # sort folders
-            config.sort()
-            # deselet rule and folder
-            global currule, curfolder
-            currule = None
-            curfolder = None
-            info['folderup'] = True
-            return
-    error['folderup'] = True
-
-
 def _form_folder_down (oid):
     """move folder with given oid one down"""
     folders = config['folderrules']
-    for i, folder in enumerate(folders):
-        if folder.oid==oid and i<(len(folders)-1):
-            # swap oids
-            folders[i].oid,folders[i+1].oid = folders[i+1].oid,folders[i].oid
-            # sort folders
-            config.sort()
-            # deselet rule and folder
-            global currule, curfolder
-            currule = None
-            curfolder = None
-            info['folderdown'] = True
-            return
-    error['folderdown'] = True
+    if not (0 <= oid < len(folders)):
+        error['folderdown'] = True
+        return
+    # swap folders
+    folders[oid], folders[oid+1] = folders[oid+1], folders[oid]
+    folders[oid].oid = oid
+    folders[oid+1].oid = oid+1
+    # deselet rule and folder
+    global currule, curfolder
+    currule = None
+    curfolder = None
+    info['folderdown'] = True
 
 
-def _form_rule_up (oid):
-    """move rule with given oid one up"""
-    rules = curfolder.rules
-    for i, rule in enumerate(rules):
-        if rule.oid==oid and i>0:
-            # swap oids
-            rules[i-1].oid,rules[i].oid = rules[i].oid,rules[i-1].oid
-            # sort folder
-            curfolder.sort()
-            # deselect rule
-            global currule
-            currule = None
-            info['ruleup'] = True
-            return
-    error['ruleup'] = True
+def _form_folder_up (oid):
+    """move folder with given oid one up"""
+    folders = config['folderrules']
+    if not (0 < oid <= len(folders)):
+        error['folderup'] = True
+        return
+    # swap folders
+    folders[oid-1], folders[oid] = folders[oid], folders[oid-1]
+    folders[oid-1].oid = oid-1
+    folders[oid].oid = oid
+    # deselet rule and folder
+    global currule, curfolder
+    currule = None
+    curfolder = None
+    info['folderup'] = True
 
 
 def _form_rule_down (oid):
     """move rule with given oid one down"""
     rules = curfolder.rules
-    for i, rule in enumerate(rules):
-        if rule.oid==oid and i<(len(rules)-1):
-            # swap oids
-            rules[i].oid,rules[i+1].oid = rules[i+1].oid,rules[i].oid
-            # sort folder
-            curfolder.sort()
-            # deselect rule
-            global currule
-            currule = None
-            info['ruledown'] = True
-            return
-    error['ruledown'] = True
+    if not (0 <= oid < len(rules)):
+        error['ruledown'] = True
+        return
+    # swap rules
+    rules[oid], rules[oid+1] = rules[oid+1], rules[oid]
+    rules[oid].oid = oid
+    rules[oid+1].oid = oid+1
+    # deselect rule
+    global currule
+    currule = None
+    info['ruledown'] = True
+
+
+def _form_rule_up (oid):
+    """move rule with given oid one up"""
+    rules = curfolder.rules
+    if not (0 < oid <= len(rules)):
+        error['ruleup'] = True
+        return
+    # swap rules
+    rules[oid-1], rules[oid] = rules[oid], rules[oid-1]
+    rules[oid-1].oid = oid-1
+    rules[oid].oid = oid
+    # deselect rule
+    global currule
+    currule = None
+    info['ruleup'] = True
 
 
 def _form_apply (form):

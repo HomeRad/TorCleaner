@@ -23,9 +23,9 @@ from wc.XmlUtils import xmlify
 
 
 class AllowRule (Rule):
-    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+    def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, scheme="", url=""):
-        super(AllowRule, self).__init__(sid=sid, oid=oid, title=title,
+        super(AllowRule, self).__init__(sid=sid, title=title,
                                         desc=desc, disable=disable)
         self.url = url
         self.attrnames.append('url')

@@ -23,7 +23,7 @@ import os, sys
 from wc import i18n
 from wc.daemon import pidfile, watchfile, startfunc
 
-def start (parent_exit=True):
+def start (parent_exit=True, do_profile=False):
     """start a daemon using the appropriate pidfile"""
     # already running?
     if os.path.exists(pidfile):
@@ -53,7 +53,12 @@ Do 'webcleaner stop' first."""), 1
     f.write("%d" % os.getpid())
     f.close()
     # start function
-    startfunc()
+    #do_profile = True
+    if do_profile:
+        import profile
+        profile.run("startfunc", "webcleaner.prof")
+    else:
+        startfunc()
     return None
 
 

@@ -18,38 +18,32 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import wc, wc.filter.rules
+import wc
 from wc.XmlUtils import xmlify, unxmlify
+from wc.filter.rules import register_rule
 
 
 class Rule (object):
     """Basic rule class for filtering.
     A basic rule has:
        title - the title
-       sid - identification string (unique among all sid)
-       oid - sorting number (unique only for sorting in one level)
+       sid - identification string (unique among all rules)
+       oid - dynamic sorting number (unique only for sorting in one level)
        desc - the description
        disable - flag to disable this rule
        urlre - regular expression that matches urls applicable for this rule.
                leave empty to apply to all urls.
        parent - the parent folder (if any); look at FolderRule class
     """
-    def __init__ (self, sid=None, oid=None, title="<title>", desc="",
+    def __init__ (self, sid=None, title="<title>", desc="",
                   disable=0, parent=None):
         self.sid = sid
         self.title = title
-        if oid is None:
-            self.oid = wc.filter.rules.oidcounter
-            wc.filter.rules.oidcounter += 1
-        else:
-            self.oid = oid
-	    if oid >= wc.filter.rules.oidcounter:
-	        wc.filter.rules.oidcounter = oid+1
         self.desc = desc
         self.disable = disable
         self.parent = parent
-        self.attrnames = ['title', 'desc', 'disable', 'sid', 'oid']
-        self.intattrs = ['disable', 'oid']
+        self.attrnames = ['title', 'desc', 'disable', 'sid']
+        self.intattrs = ['disable']
         self.listattrs = []
 
 
@@ -59,7 +53,7 @@ class Rule (object):
                 (str(self), str(rule))
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
         print >>log, "updating rule", self.tiptext()
-        l = [a for a in self.attrnames if a not in ['sid', 'oid', 'disable'] ]
+        l = [a for a in self.attrnames if a not in ['sid', 'disable'] ]
         return self.update_attrs(l, rule, dryrun, log)
 
 
@@ -101,7 +95,7 @@ class Rule (object):
 
 
     def __hash__ (self):
-        return self.oid
+        return self.sid
 
 
     def fill_attrs (self, attrs, name):
@@ -130,9 +124,7 @@ class Rule (object):
 
     def compile_data (self):
         """called when all XML parsing of rule finished"""
-        if self.sid is None:
-            from wc.filter.rules import register_rule
-            register_rule(self)
+        register_rule(self)
 
 
     def fromFactory (self, factory):
@@ -147,7 +139,6 @@ class Rule (object):
     def toxml (self):
         s = "<"+self.get_name()
         s += ' sid="%s"' % xmlify(self.sid)
-	s += ' oid="%d"' % self.oid
         s += ' title="%s"' % xmlify(self.title)
         if self.desc:
             s += '\n desc="%s"' % xmlify(self.desc)
@@ -160,7 +151,6 @@ class Rule (object):
         s = self.get_name()+"\n"
         s += "sid     %s\n" % self.sid
         s += "title   %s\n" % `self.title`
-	s += "oid     %d\n" % self.oid
         s += "desc    %s\n" % `self.desc`
         s += "disable %d\n" % self.disable
         return s

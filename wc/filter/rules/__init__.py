@@ -21,15 +21,16 @@ __date__    = "$Date$"[7:-2]
 
 from sets import Set
 
-# global counter in case the .zap rules dont yet have the oid entry
-oidcounter = 1
-
 _rules_without_sid = []
 _sids = Set()
 _sidcounter = 0
 
+
 def register_rule (rule):
-    _rules_without_sid.append(rule)
+    if rule.sid is None:
+        _rules_without_sid.append(rule)
+    else:
+        register_sid(rule.sid)
 
 
 def register_sid (sid):

@@ -21,10 +21,7 @@ __date__    = "$Date$"[7:-2]
 from Rule import Rule
 from wc import i18n, ConfigCharset
 
-def recalc_oids (rules):
-    for i, rule in enumerate(rules):
-        rule.oid = i
-
+# for display up/down arrows in GUIs
 def recalc_up_down (rules):
     upper = len(rules)-1
     for i, rule in enumerate(rules):
@@ -33,13 +30,16 @@ def recalc_up_down (rules):
 
 
 class FolderRule (Rule):
-    def __init__ (self, sid=None, oid=None, title="No title", desc="",
+    def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, filename=""):
-        super(FolderRule, self).__init__(sid=sid, oid=oid, title=title,
+        super(FolderRule, self).__init__(sid=sid, title=title,
                                          desc=desc, disable=disable)
         # make filename read-only
         self._filename = filename
         self.rules = []
+        self.attrnames.append('oid')
+        self.intattrs.append('oid')
+        self.oid = None
 
 
     def __str__ (self):
@@ -57,19 +57,14 @@ class FolderRule (Rule):
 
 
     def append_rule (self, r):
+        r.oid = len(self.rules)
+        # note: the rules are added in order
         self.rules.append(r)
         r.parent = self
-        # sort to recalculate rule oids
-        self.sort()
 
 
     def delete_rule (self, i):
         del self.rules[i]
-
-
-    def sort (self):
-        self.rules.sort()
-        recalc_oids(self.rules)
         recalc_up_down(self.rules)
 
 
@@ -85,13 +80,11 @@ class FolderRule (Rule):
                 chg = oldrule.update(rule, dryrun=dryrun, log=log) or chg
             else:
                 print >>log, "inserting new rule", rule.tiptext()
-                # XXX new rules get appended at the end. this may be
-                # suboptimal, so try harder to insert it a better position
                 if not dryrun:
                     self.rules.append(rule)
-                    recalc_oids(self.rules)
-                    recalc_up_down(self.rules)
                     chg = True
+        if chg:
+            recalc_up_down(self.rules)
         return chg
 
 
@@ -106,8 +99,7 @@ class FolderRule (Rule):
     def toxml (self):
         s = """<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-%s>
-""" % (ConfigCharset, super(FolderRule, self).toxml())
+%s oid="%d">""" % (ConfigCharset, super(FolderRule, self).toxml(), self.oid)
         for r in self.rules:
             s += "\n%s\n"%r.toxml()
         return s+"</folder>\n"
