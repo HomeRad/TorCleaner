@@ -241,6 +241,8 @@ class Configuration (dict):
         self['auth_ntlm'] = 0
         if os.name=='posix':
             self['clamavconf'] = "/etc/clamav/clamav.conf"
+        elif os.name=='nt':
+            self['clamavconf'] = r"c:\clamav-devel\etc\clamav.conf"
         else:
             self['clamavconf'] = os.path.join(os.getcwd(), "clamav.conf")
         # in development mode some values have different defaults
