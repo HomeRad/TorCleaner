@@ -20,10 +20,10 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 # i18n suppport
-import os
-from _webcleaner2_configdata import install_data
+import os, locale
 
 def init_gettext ():
+    from _webcleaner2_configdata import install_data
     global _
     try:
         import gettext
@@ -33,5 +33,20 @@ def init_gettext ():
     except (IOError, ImportError):
         # default gettext function
         _ = lambda s: s
+
+def get_language ():
+    loc = locale.getdefaultlocale()[0]
+    loc = locale.normalize(loc)
+    # split up the locale into its base components
+    pos = loc.find('@')
+    if pos >= 0:
+        loc = loc[:pos]
+    pos = loc.find('.')
+    if pos >= 0:
+        loc = loc[:pos]
+    pos = loc.find('_')
+    if pos >= 0:
+        loc = loc[:pos]
+    return loc
 
 init_gettext()
