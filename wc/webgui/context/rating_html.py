@@ -17,7 +17,8 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import time as _time
-from wc import AppName, Email, Version, ConfigDir, config
+from wc import AppName, Email, Version, ConfigDir
+from wc.configuration import config
 from wc.webgui.context import getval as _getval
 from wc.filter.Rating import service, rangenames, rating_cache
 from wc.filter.Rating import rating_cache_write as _rating_cache_write

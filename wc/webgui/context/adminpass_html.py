@@ -16,7 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from wc import AppName, Version, ConfigDir, config
+from wc import AppName, Version, ConfigDir
+from wc.configuration import config
 from os.path import join as _join
 from random import choice as _choice
 import string as _string

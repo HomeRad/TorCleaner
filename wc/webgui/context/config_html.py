@@ -18,7 +18,8 @@
 
 # be sure not to import something in the context namespace we do not want
 import base64
-from wc import AppName, filtermodules, Version, config
+from wc import AppName, filtermodules, Version
+from wc.configuration import config
 from wc import sort_seq as _sort_seq
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist

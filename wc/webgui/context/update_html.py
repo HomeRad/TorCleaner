@@ -16,6 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from wc import AppName, Version, config
+from wc import AppName, Version
+from wc.configuration import config
 updatezapperurl = config.get('baseurl', '') + u"zapper/"
 updateratingurl = config.get('baseurl', '') + u"rating/"
