@@ -7,7 +7,7 @@ The XXX folder name is the blacklist folder.
 Required are the "tarfile" module and Python 2.2
 """
 
-import sys, time, os, re, urllib2, tarfile, gzip
+import sys, time, os, re, urllib2, tarfile, gzip, urlparse
 sys.path.insert(0, os.getcwd())
 from wc import xmlify
 
@@ -22,27 +22,24 @@ urls = {}
 expressions = {}
 # <category> --> <type> --> <file>
 categories = {}
-cat_map = {
-    "porn": "adult",
-}
 dmoz_cats = [
-     'Top/Adult',
-     'Top/Arts',
-     'Top/Business',
-     'Top/Computers',
-     'Top/Games',
-     'Top/Health',
-     'Top/Home',
-     'Top/News',
-     'Top/Recreation',
-     'Top/Reference',
-     'Top/Regional',
-     'Top/Science',
-     'Top/Shopping',
-     'Top/Society',
-     'Top/Sports',
-     'Top/World',
-     'Top/Kids_and_Teens',
+     'adult',
+     'arts',
+     'business',
+     'computers',
+     'games',
+     'health',
+     'home',
+     'news',
+     'recreation',
+     'reference',
+     'regional',
+     'science',
+     'shopping',
+     'society',
+     'sports',
+     'world',
+     'kids_and_teens',
    ]
 dmoz_ages = [
      'kids',
@@ -183,15 +180,45 @@ def blacklist (file):
         f.close()
         read_data(file, "domains", domains)
 
+dmoz_topic_re = re.compile(r'^<Topic r:id="(?P<topic>[^"]+)">$')
+dmoz_url_re = re.compile(r'^<link r:resource="(?P<url>[^"]+)"/>$')
+
+def dmoz_get_topic (line):
+    match = dmoz_topic_re.match(line)
+    if match:
+        topic = match.group("topic").split("/", 2)
+        if len(topic)<2: return None
+        if topic[0]!="Top": return None
+        topic = topic[1].lower()
+        if topic in dmoz_cats: return topic
+        else: return None
+    print "dmoz warning: no topic match for", line
+
+def dmoz_get_url (line):
+    match = dmoz_url_re.match(line)
+    if match:
+        return match.group("url")
+    print "dmoz warning: no url match for", line
+
 def dmozlists (file):
     print "dmozlist %s..." % file
-    f = gzip.GzipFile(file)
+    f = gzip.GzipFile("downloads/"+file)
     line = f.readline()
+    topic = None
     while line:
         line = line.strip()
         if line.startswith("<Topic r:id="):
-            print "Topic", line
-        #if not line: continue
+            topic = dmoz_get_topic(line)
+        elif topic is not None and line.startswith("<link r:resource="):
+            #split url, and add to domains or urls
+            url = dmoz_get_url(line)
+            if url is not None:
+                tup = urlparse.urlparse(url)
+                if tup[2]:
+                    entry = "%s/%s" % tup[1:3]
+                    urls.setdefault(entry, {})[topic] = None
+                else:
+                    domains.setdefault(tup[1], {})[topic] = None
         line = f.readline()
     f.close()
 
@@ -241,7 +268,7 @@ def download_and_merge ():
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
     # dmoz category dumps (this big fucker is 195MB !!!)
-    #geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
+    geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
 
 def write_blacklists (directory):
     open_files(directory)
