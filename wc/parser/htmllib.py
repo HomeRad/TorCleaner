@@ -31,8 +31,12 @@ except ImportError, msg:
 
 class HtmlPrinter (object):
     """handles all functions by printing the function name and attributes"""
+    def __init__ (self, fd=sys.stdout):
+        self.fd = fd
+
+
     def _print (self, *attrs):
-        print self.mem, attrs
+        print >> self.fd, self.mem, attrs
 
 
     def _errorfun (self, msg, name):
@@ -61,43 +65,43 @@ class HtmlPrinter (object):
         return self._print
 
 
+class HtmlPrettyPrinter (object):
+    def __init__ (self, fd=sys.stdout):
+        self.fd = fd
+
+
+    def comment (self, data):
+        self.fd.write(data)
+
+
+    def startElement (self, tag, attrs):
+        self.fd.write("<%s"%tag)
+        for item in attrs.iteritems():
+            self.fd.write(" %s=\"%s\"" % item)
+        self.fd.write(">")
+
+
+    def endElement (self, tag):
+        self.fd.write("</%s>" % tag)
+
+
+    def doctype (self, data):
+        self.fd.write("<!DOCTYPE %s!>" % data)
+
+
+    def pi (self, name, data):
+        self.fd.write("<?%s %s?>" % (name, data))
+
+
+    def cdata (self, data):
+        self.fd.write("<![CDATA[%s]]>"%data)
+
+
+    def characters (self, data):
+        self.fd.write(data)
+
+
 def quote_attrval (val):
     """quote a HTML attribute to be able to wrap it in double quotes"""
     return val.replace('"', '&quot;')
 
-
-def _test():
-    p = htmlsax.parser(HtmlPrinter())
-    p.feed("<hTml>")
-    p.feed("<a href>")
-    p.feed("<a href=''>")
-    p.feed('<a href="">')
-    p.feed("<a href='a'>")
-    p.feed('<a href="a">')
-    p.feed("<a href=a>")
-    p.feed("<a href='\"'>")
-    p.feed("<a href=\"'\">")
-    p.feed("<a href=' '>")
-    p.feed("<a href=a href=b>")
-    p.feed("<a/>")
-    p.feed("<a href/>")
-    p.feed("<a href=a />")
-    p.feed("</a>")
-    p.feed("<?bla foo?>")
-    p.feed("<?bla?>")
-    p.feed("<!-- - comment -->")
-    p.feed("<!---->")
-    p.feed("<!DOCTYPE \"vla foo>")
-    p.flush()
-
-def _broken ():
-    p = htmlsax.parser(HtmlPrinter())
-    # turn on debugging
-    p.debug(1)
-    p.feed("""<base href="http://www.msnbc.com/news/">""")
-    p.flush()
-
-
-if __name__ == '__main__':
-    #_test()
-    _broken()
