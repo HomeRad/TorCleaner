@@ -1,4 +1,4 @@
-SUBDIRS = po libjs service
+SUBDIRS = libjs service
 DIST_SUBDIRS = $(SUBDIRS) doc
 EXTRA_DIST = wc/tests \
 	wc/dns/tests \
