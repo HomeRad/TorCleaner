@@ -51,7 +51,7 @@ class WebConfig (object):
                 f = file(path)
                 # get TAL context
                 context, newstatus = get_context(dirs, form, context, lang)
-                if newstatus==407:
+                if newstatus==407 and status!=newstatus:
                     client.error(407, i18n._("Proxy Authentication Required"),
                                  auth=get_proxy_auth_challenge())
                     return

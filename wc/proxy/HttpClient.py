@@ -143,13 +143,14 @@ class HttpClient (Connection):
             debug(PROXY, "Client: Headers %s", `str(self.headers)`)
             if config["proxyuser"]:
                 if not self.headers.has_key('Proxy-Authorization'):
-                    return self.error(407,
-                                     i18n._("Proxy Authentication Required"),
-                                     auth=get_proxy_auth_challenge())
+                    self.error(407, i18n._("Proxy Authentication Required"),
+                               auth=get_proxy_auth_challenge())
+                    return
                 auth = check_proxy_auth(self.headers['Proxy-Authorization'])
                 if auth:
-                    return self.error(407,
-                          i18n._("Proxy Authentication Required"), auth=auth)
+                    self.error(407, i18n._("Proxy Authentication Required"),
+                               auth=auth)
+                    return
             if self.method in ['OPTIONS', 'TRACE'] and \
                client_get_max_forwards(self.headers)==0:
                 # XXX display options ?

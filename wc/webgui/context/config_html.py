@@ -36,8 +36,7 @@ def _exec_form (form):
         _form_proxyport(_getval(form, 'port'))
     # proxy user
     if form.has_key('proxyuser'):
-        _form_proxyuser(_getval(form, 'proxyuser').strip())
-        res[0] = 407
+        _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
     else:
         config['proxyuser'] = ''
     # proxy pass
@@ -106,8 +105,9 @@ def _form_proxyport (port):
         error['port'] = True
 
 
-def _form_proxyuser (proxyuser):
+def _form_proxyuser (proxyuser, res):
     if proxyuser != config['proxyuser']:
+        res[0] = 407
         config['proxyuser'] = proxyuser
         info['proxyuser'] = True
 
