@@ -82,7 +82,7 @@ binary-arch: build install
             usr/sbin/webcleanerconf usr/sbin/wcheaders usr/lib/$(PYTHON)/site-packages/wc/gui/
 	dh_installdebconf
 	dh_installdocs
-	dh_installexamples config/bl2wc.py
+	dh_installexamples config/bl2wc.py config/dmozfilter.py
 	dh_installmenu
 #	dh_installlogrotate
 	dh_installinit
