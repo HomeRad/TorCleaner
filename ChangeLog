@@ -4,6 +4,14 @@
     Type: bugfix
     Changed: setup.py
 
+  * fix filter update imports
+    Type: bugfix
+    Changed: wc/update.py
+
+  * fix folder config charset import
+    Type: bugfix
+    Changed: wc/filter/rules/FolderRule.py
+
 2.21 "Bugsy" (released 18.10.2004)
   * make string of domain before concatenating
     Type: bugfix
