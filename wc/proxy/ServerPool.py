@@ -38,6 +38,7 @@ class ServerPool (object):
     def reserve_server (self, addr):
         """Try to return an existing server connection for given addr,
            or return None if on connection is available at the moment"""
+        debug(PROXY, "pool reserve server %s", addr)
         for server,status in self.smap.get(addr, {}).items():
             if status[0] == 'available':
                 # Let's reuse this one
@@ -103,7 +104,7 @@ class ServerPool (object):
 
     def expire_servers (self):
         """expire server connection that have been unused for too long"""
-        debug(PROXY, "expire servers")
+        debug(PROXY, "pool expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
         for addr,set in self.smap.items():
