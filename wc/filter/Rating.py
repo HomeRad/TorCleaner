@@ -68,10 +68,10 @@ rangenames = {
     "2": i18n._("Heavy"),
 }
 
-def rating_import (data, debug=0):
+def rating_import (url, ratingdata, debug=0):
     """parse given rating data, throws ParseError on error"""
     categories = {}
-    for line in data.splitlines():
+    for line in ratingdata.splitlines():
         if debug:
             debug(RATING, "Read line %r", line)
         line = line.strip()
@@ -85,12 +85,18 @@ def rating_import (data, debug=0):
             category, value = line.split(None, 1)
         except ValueError, msg:
             raise RatingParseError(i18n._("malformed rating line %r")%line)
+        if category=="modified" and not is_time(value):
+            raise RatingParseError(i18n._("malfored modified time %r")%value)
+        if category=="generic" and value not in ["true", "false"] and \
+           not url.startswith(value):
+            raise RatingParseError(i18n._("generic url %r doesn't match %r")%\
+                                   (value, url))
         categories[category] = value
     return categories
 
 
 def rating_export (rating):
-    return "\n".join([ "%s %s" for key, value in rating.items() ])
+    return "\n".join([ "%s %s"%item for item in rating.items() ])
 
 
 class RatingParseError (Exception):
@@ -129,7 +135,7 @@ rating_cache = {}
 rating_cache_load()
 
 
-def rating_cached_get (url):
+def rating_cache_get (url):
     """return a tuple (url, rating) if cache has entry for given url,
        else None"""
     # use a specialized form of longest prefix matching:
