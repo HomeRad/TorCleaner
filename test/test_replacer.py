@@ -27,7 +27,7 @@ wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer']
 wc.config.init_filter_modules()
 start = time.clock()
-attrs = wc.filter.initStateObjects()
+attrs = wc.filter.initStateObjects(url="")
 filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
            htmldata, 'finish', attrs)
 stop = time.clock()
