@@ -11,13 +11,14 @@ import des, md4, utils, base64
 def get_ntlm_challenge (**attrs):
     """return initial challenge token for ntlm authentication"""
     ctype = attrs.get('type', 1)
-    if ctype==1:
+    if ctype==0:
         # initial challenge
         return "NTLM"
     if ctype==2:
         # after getting first credentials
-        return "XXX"
+        return get_ntlm_type2_message(**attrs)
     raise IOError("Invalid NTLM challenge type")
+
 
 
 def parse_ntlm_challenge (challenge):
@@ -26,8 +27,29 @@ def parse_ntlm_challenge (challenge):
 
 
 def get_ntlm_credentials (challenge, **attrs):
-    # XXX
-    pass
+    ctype = attrs.get('type', 1)
+    if ctype==1:
+        return get_ntlm_type1_message(**attrs)
+    elif ctype==3:
+        return get_ntlm_type3_message(**attrs)
+    raise IOError("Invalid NTLM credentials type")
+
+
+def get_ntlm_type1_message (**attrs):
+    return "NTLM %s" % create_message1()
+
+
+def get_ntlm_type2_message (**attrs):
+    return "NTLM %s" % create_message2()
+
+
+def get_ntlm_type3_message (**attrs):
+    # extract the required attributes
+    nonce = attrs['nonce']
+    domain = attrs['domain']
+    username = attrs['username']
+    host = attrs['host']
+    return "NTLM %s"%create_message3(nonce, domain, username, host, **attrs)
 
 
 def parse_ntlm_credentials (credentials):
@@ -145,14 +167,14 @@ class record (object):
         self.next_offset = offset + self.len
 
 
-def create_message1 (env_dict):
+def create_message1 (flags=0xb203):
     ""
     # overall lenght = 48 bytes
     protocol = 'NTLMSSP\000'    #name
     type = '\001\000'               #type 1
     zeros1 = '\000\000'
 
-    flags = utils.hex2str(env_dict['FLAGS'])
+    flags = utils.hex2str(flags)
 
     zeros2 = '\000\000\000\000\000\000\000\000\000'
     zeros3 = '\000\000\000\000\000\000\000\000\000\000\000'
@@ -166,29 +188,29 @@ def create_message1 (env_dict):
     return msg1
 
 
-def create_message3 (nonce, environment_dict):
+def create_message3 (nonce, domain, username, host, flags=0x8201,
+                     lm_hashed_pw=None, nt_hashed_pw=None,
+                     ntlm_mode=0):
     ""
-    ed = environment_dict
-
-    flags = utils.hex2str(ed['FLAGS'])
+    flags = utils.hex2str(flags)
 
     protocol = 'NTLMSSP\000'            #name
     type = '\003\000'                   #type 3
     head = protocol + type + '\000\000'
 
-    domain_rec = record(ed['DOMAIN'])
-    user_rec = record(ed['USER'])
-    host_rec = record(ed['HOST'])
+    domain_rec = record(domain)
+    user_rec = record(username)
+    host_rec = record(host)
 
     additional_rec = record('')
 
-    if ed['LM']:
-        lm_rec = record(ntlm_procs.calc_resp(ed['LM_HASHED_PW'], nonce))
+    if lm_hashed_pw:
+        lm_rec = record(ntlm_procs.calc_resp(lm_hashed_pw, nonce))
     else:
         lm_rec = record('')
 
-    if ed['NT']:
-        nt_rec = record(ntlm_procs.calc_resp(ed['NT_HASHED_PW'], nonce))
+    if nt_hashed_pw:
+        nt_rec = record(ntlm_procs.calc_resp(nt_hashed_pw, nonce))
     else:
         nt_rec = record('')
 
@@ -196,7 +218,7 @@ def create_message3 (nonce, environment_dict):
     domain_offset = len(head) + 5 * 8
 
     # and unknown record info and flags' lenght
-    if ed['NTLM_MODE'] == 0:
+    if nltm_mode == 0:
         domain_offset = domain_offset + 8 + len(flags)
 
     # create info fields
@@ -211,18 +233,18 @@ def create_message3 (nonce, environment_dict):
     data_part = domain_rec.data + user_rec.data + host_rec.data + lm_rec.data + nt_rec.data
 
     # build message 3
-    m3 = head + lm_rec.record_info + nt_rec.record_info + domain_rec.record_info + \
-         user_rec.record_info + host_rec.record_info
+    m3 = head + lm_rec.record_info + nt_rec.record_info + \
+         domain_rec.record_info + user_rec.record_info + host_rec.record_info
 
     # Experimental feature !!!
-    if ed['NTLM_MODE'] == 0:
-        m3 = m3 + additional_rec.record_info + flags
+    if ntlm_mode == 0:
+        m3 += additional_rec.record_info + flags
 
-    m3 = m3 + data_part
+    m3 += data_part
 
     # Experimental feature !!!
-    if ed['NTLM_MODE'] == 0:
-        m3 = m3 + additional_rec.data
+    if ntlm_mode == 0:
+        m3 += additional_rec.data
 
     # base64 encode
     m3 = base64.encodestring(m3)
@@ -249,12 +271,12 @@ def item (item_str):
     item['len2'] = utils.bytes2int(item_str[2:4])
     item['offset'] = utils.bytes2int(item_str[4:6])
 
-    res = res + '%s\n\nlength (two times), offset, delimiter\n' % (utils.str2hex(item_str))
+    res += '%s\n\nlength (two times), offset, delimiter\n' % (utils.str2hex(item_str))
 
-    res = res + '%s decimal: %3d    # length 1\n' % (utils.int2hex_str(item['len1']), item['len1'])
-    res = res + '%s decimal: %3d    # length 2\n' % (utils.int2hex_str(item['len2']), item['len2'])
-    res = res + '%s decimal: %3d    # offset\n' % (utils.int2hex_str(item['offset']), item['offset'])
-    res = res + '%s                   # delimiter (two zeros)\n\n' % utils.str2hex(item_str[-2:])
+    res += '%s decimal: %3d    # length 1\n' % (utils.int2hex_str(item['len1']), item['len1'])
+    res += '%s decimal: %3d    # length 2\n' % (utils.int2hex_str(item['len2']), item['len2'])
+    res += '%s decimal: %3d    # offset\n' % (utils.int2hex_str(item['offset']), item['offset'])
+    res += '%s                   # delimiter (two zeros)\n\n' % utils.str2hex(item_str[-2:])
     item['string'] = res
 
     return item
@@ -263,29 +285,27 @@ def item (item_str):
 def flags (flag_str):
     ""
     res = ''
-    res = res + '%s\n\n' % utils.str2hex(flag_str)
+    res += '%s\n\n' % utils.str2hex(flag_str)
     flags = utils.bytes2int(flag_str[0:2])
-    res = res + '%s                   # flags\n' % (utils.int2hex_str(flags))
-    res = res + 'Binary:\nlayout 87654321 87654321\n'
-    res = res + '       %s %s\n' % (utils.byte2bin_str(flag_str[1]), utils.byte2bin_str(flag_str[0]))
+    res += '%s                   # flags\n' % (utils.int2hex_str(flags))
+    res += 'Binary:\nlayout 87654321 87654321\n'
+    res += '       %s %s\n' % (utils.byte2bin_str(flag_str[1]), utils.byte2bin_str(flag_str[0]))
 
     flags2 = utils.bytes2int(flag_str[2:4])
-    res = res + '%s                   # more flags ???\n' % (utils.int2hex_str(flags2))
-    res = res + 'Binary:\nlayout 87654321 87654321\n'
-    res = res + '       %s %s\n' % (utils.byte2bin_str(flag_str[3]), utils.byte2bin_str(flag_str[2]))
+    res += '%s                   # more flags ???\n' % (utils.int2hex_str(flags2))
+    res += 'Binary:\nlayout 87654321 87654321\n'
+    res += '       %s %s\n' % (utils.byte2bin_str(flag_str[3]), utils.byte2bin_str(flag_str[2]))
 
-    #res = res + '%s                   # delimiter ???\n' % m_hex[(cur + 2) * 2: (cur + 4) * 2]
+    #res += '%s                   # delimiter ???\n' % m_hex[(cur + 2) * 2: (cur + 4) * 2]
 
     return res
 
 
 def unknown_part (bin_str):
     ""
-    res = ''
-    res = res + 'Hex    :  %s\n' % utils.str2hex(bin_str, '  ')
-    res = res + 'String :   %s\n' % utils.str2prn_str(bin_str, '   ')
-    res = res + 'Decimal: %s\n' % utils.str2dec(bin_str, ' ')
-
+    res = 'Hex    :  %s\n' % utils.str2hex(bin_str, '  ')
+    res += 'String :   %s\n' % utils.str2prn_str(bin_str, '   ')
+    res += 'Decimal: %s\n' % utils.str2dec(bin_str, ' ')
     return res
 
 
@@ -294,101 +314,97 @@ def debug_message1 (msg):
     m_ = base64.decodestring(msg)
     m_hex = utils.str2hex(m_)
 
-    res = ''
-    res = res + '==============================================================\n'
-    res = res + 'NTLM Message 1 report:\n'
-    res = res + '---------------------------------\n'
-    res = res + 'Base64: %s\n' % msg
-    res = res + 'String: %s\n' % utils.str2prn_str(m_)
-    res = res + 'Hex: %s\n' % m_hex
+    res = '==============================================================\n'
+    res += 'NTLM Message 1 report:\n'
+    res += '---------------------------------\n'
+    res += 'Base64: %s\n' % msg
+    res += 'String: %s\n' % utils.str2prn_str(m_)
+    res += 'Hex: %s\n' % m_hex
     cur = 0
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 12
-    res = res + 'Header %d/%d:\n%s\n\n' % (cur, cur_len, m_hex[0:24])
-    res = res + '%s\nmethod name 0/8\n%s               # C string\n\n' % (m_hex[0:16], utils.str2prn_str(m_[0:8]))
-    res = res + '0x%s%s                 # message type\n' % (m_hex[18:20], m_hex[16:18])
-    res = res + '%s                   # delimiter (zeros)\n' % m_hex[20:24]
-    cur = cur + cur_len
+    res += 'Header %d/%d:\n%s\n\n' % (cur, cur_len, m_hex[0:24])
+    res += '%s\nmethod name 0/8\n%s               # C string\n\n' % (m_hex[0:16], utils.str2prn_str(m_[0:8]))
+    res += '0x%s%s                 # message type\n' % (m_hex[18:20], m_hex[16:18])
+    res += '%s                   # delimiter (zeros)\n' % m_hex[20:24]
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 4
-    res = res + 'Flags %d/%d\n' % (cur, cur_len)
-    res = res + flags(m_[cur: cur + cur_len])
-    cur = cur + cur_len
+    res += 'Flags %d/%d\n' % (cur, cur_len)
+    res += flags(m_[cur: cur + cur_len])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = len(m_) - cur
-    res = res + 'Rest of the message %d/%d:\n' % (cur, cur_len)
-    res = res + unknown_part(m_[cur: cur + cur_len])
+    res += 'Rest of the message %d/%d:\n' % (cur, cur_len)
+    res += unknown_part(m_[cur: cur + cur_len])
 
-    res = res + '\nEnd of message 1 report.\n'
-
+    res += '\nEnd of message 1 report.\n'
     return res
 
 
-def debug_message2(msg):
+def debug_message2 (msg):
     ""
     m_ = base64.decodestring(msg)
     m_hex = utils.str2hex(m_)
-    res = ''
-    res = res + '==============================================================\n'
-    res = res + 'NTLM Message 2 report:\n'
-    res = res + '---------------------------------\n'
-    res = res + 'Base64: %s\n' % msg
-    res = res + 'String: %s\n' % utils.str2prn_str(m_)
-    res = res + 'Hex: %s\n' % m_hex
+    res = '==============================================================\n'
+    res += 'NTLM Message 2 report:\n'
+    res += '---------------------------------\n'
+    res += 'Base64: %s\n' % msg
+    res += 'String: %s\n' % utils.str2prn_str(m_)
+    res += 'Hex: %s\n' % m_hex
     cur = 0
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 12
-    res = res + 'Header %d/%d:\n%s\n\n' % (cur, cur_len, m_hex[0:24])
-    res = res + '%s\nmethod name 0/8\n%s               # C string\n\n' % (m_hex[0:16], utils.str2prn_str(m_[0:8]))
-    res = res + '0x%s%s                 # message type\n' % (m_hex[18:20], m_hex[16:18])
-    res = res + '%s                   # delimiter (zeros)\n' % m_hex[20:24]
-    cur = cur + cur_len
+    res += 'Header %d/%d:\n%s\n\n' % (cur, cur_len, m_hex[0:24])
+    res += '%s\nmethod name 0/8\n%s               # C string\n\n' % (m_hex[0:16], utils.str2prn_str(m_[0:8]))
+    res += '0x%s%s                 # message type\n' % (m_hex[18:20], m_hex[16:18])
+    res += '%s                   # delimiter (zeros)\n' % m_hex[20:24]
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 8
-    res = res + 'Lengths and Positions %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
+    res += 'Lengths and Positions %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
 
     cur_len = 8
-    res = res + 'Domain ??? %d/%d\n' % (cur, cur_len)
+    res += 'Domain ??? %d/%d\n' % (cur, cur_len)
     dom = item(m_[cur:cur+cur_len])
-    res = res + dom['string']
-    cur = cur + cur_len
+    res += dom['string']
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 4
-    res = res + 'Flags %d/%d\n' % (cur, cur_len)
-    res = res + flags(m_[cur: cur + cur_len])
-    cur = cur + cur_len
+    res += 'Flags %d/%d\n' % (cur, cur_len)
+    res += flags(m_[cur: cur + cur_len])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 8
-    res = res + 'NONCE %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
-    cur = cur + cur_len
+    res += 'NONCE %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = dom['offset'] - cur
-    res = res + 'Unknown data %d/%d:\n' % (cur, cur_len)
-    res = res + unknown_part(m_[cur: cur + cur_len])
-    cur = cur + cur_len
+    res += 'Unknown data %d/%d:\n' % (cur, cur_len)
+    res += unknown_part(m_[cur: cur + cur_len])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = dom['len1']
-    res = res + 'Domain ??? %d/%d:\n' % (cur, cur_len)
-    res = res + 'Hex: %s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
-    res = res + 'String: %s\n\n' % utils.str2prn_str(m_[cur : cur + cur_len])
-    cur = cur + cur_len
+    res += 'Domain ??? %d/%d:\n' % (cur, cur_len)
+    res += 'Hex: %s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
+    res += 'String: %s\n\n' % utils.str2prn_str(m_[cur : cur + cur_len])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = len(m_) - cur
-    res = res + 'Rest of the message %d/%d:\n' % (cur, cur_len)
-    res = res + unknown_part(m_[cur: cur + cur_len])
+    res += 'Rest of the message %d/%d:\n' % (cur, cur_len)
+    res += unknown_part(m_[cur: cur + cur_len])
 
-    res = res + '\nEnd of message 2 report.\n'
-
+    res += '\nEnd of message 2 report.\n'
     return res
 
 
@@ -397,106 +413,105 @@ def debug_message3 (msg):
     m_ = base64.decodestring(msg)
     m_hex = utils.str2hex(m_)
 
-    res = ''
-    res = res + '==============================================================\n'
-    res = res + 'NTLM Message 3 report:\n'
-    res = res + '---------------------------------\n'
-    res = res + 'Base64: %s\n' % msg
-    res = res + 'String: %s\n' % utils.str2prn_str(m_)
-    res = res + 'Hex: %s\n' % m_hex
+    res = '==============================================================\n'
+    res += 'NTLM Message 3 report:\n'
+    res += '---------------------------------\n'
+    res += 'Base64: %s\n' % msg
+    res += 'String: %s\n' % utils.str2prn_str(m_)
+    res += 'Hex: %s\n' % m_hex
     cur = 0
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 12
-    res = res + 'Header %d/%d:\n%s\n\n' % (cur, cur_len, m_hex[0:24])
-    res = res + '%s\nmethod name 0/8\n%s               # C string\n\n' % (m_hex[0:16], utils.str2prn_str(m_[0:8]))
-    res = res + '0x%s%s                 # message type\n' % (m_hex[18:20], m_hex[16:18])
-    res = res + '%s                   # delimiter (zeros)\n' % m_hex[20:24]
-    cur = cur + cur_len
+    res += 'Header %d/%d:\n%s\n\n' % (cur, cur_len, m_hex[0:24])
+    res += '%s\nmethod name 0/8\n%s               # C string\n\n' % (m_hex[0:16], utils.str2prn_str(m_[0:8]))
+    res += '0x%s%s                 # message type\n' % (m_hex[18:20], m_hex[16:18])
+    res += '%s                   # delimiter (zeros)\n' % m_hex[20:24]
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 48
-    res = res + 'Lengths and Positions %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
+    res += 'Lengths and Positions %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
 
     cur_len = 8
-    res = res + 'LAN Manager response %d/%d\n' % (cur, cur_len)
+    res += 'LAN Manager response %d/%d\n' % (cur, cur_len)
     lmr = item(m_[cur:cur+cur_len])
-    res = res + lmr['string']
-    cur = cur + cur_len
+    res += lmr['string']
+    cur += cur_len
 
     cur_len = 8
-    res = res + 'NT response %d/%d\n' % (cur, cur_len)
+    res += 'NT response %d/%d\n' % (cur, cur_len)
     ntr = item(m_[cur:cur+cur_len])
-    res = res + ntr['string']
-    cur = cur + cur_len
+    res += ntr['string']
+    cur += cur_len
 
     cur_len = 8
-    res = res + 'Domain string %d/%d\n' % (cur, cur_len)
+    res += 'Domain string %d/%d\n' % (cur, cur_len)
     dom = item(m_[cur:cur+cur_len])
-    res = res + dom['string']
-    cur = cur + cur_len
+    res += dom['string']
+    cur += cur_len
 
     cur_len = 8
-    res = res + 'User string %d/%d\n' % (cur, cur_len)
-    user = item(m_[cur:cur+cur_len])
-    res = res + user['string']
-    cur = cur + cur_len
+    res += 'User string %d/%d\n' % (cur, cur_len)
+    username = item(m_[cur:cur+cur_len])
+    res += username['string']
+    cur += cur_len
 
     cur_len = 8
-    res = res + 'Host string %d/%d\n' % (cur, cur_len)
+    res += 'Host string %d/%d\n' % (cur, cur_len)
     host = item(m_[cur:cur+cur_len])
-    res = res + host['string']
-    cur = cur + cur_len
+    res += host['string']
+    cur += cur_len
 
     cur_len = 8
-    res = res + 'Unknow item record %d/%d\n' % (cur, cur_len)
+    res += 'Unknow item record %d/%d\n' % (cur, cur_len)
     unknown = item(m_[cur:cur+cur_len])
-    res = res + unknown['string']
-    cur = cur + cur_len
+    res += unknown['string']
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = 4
-    res = res + 'Flags %d/%d\n' % (cur, cur_len)
-    res = res + flags(m_[cur: cur + cur_len])
-    cur = cur + cur_len
+    res += 'Flags %d/%d\n' % (cur, cur_len)
+    res += flags(m_[cur: cur + cur_len])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = dom['len1'] + user['len1'] + host['len1']
-    res = res + 'Domain, User, Host strings %d/%d\n%s\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2], utils.str2prn_str(m_[cur:cur + cur_len]))
+    res += 'Domain, User, Host strings %d/%d\n%s\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2], utils.str2prn_str(m_[cur:cur + cur_len]))
 
     cur_len = dom['len1']
-    res = res + '%s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
-    res = res + 'Domain name %d/%d:\n' % (cur, cur_len)
-    res = res + '%s\n\n' % (utils.str2prn_str(m_[cur: (cur + cur_len)]))
-    cur = cur + cur_len
+    res += '%s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
+    res += 'Domain name %d/%d:\n' % (cur, cur_len)
+    res += '%s\n\n' % (utils.str2prn_str(m_[cur: (cur + cur_len)]))
+    cur += cur_len
 
     cur_len = user['len1']
-    res = res + '%s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
-    res = res + 'User name %d/%d:\n' % (cur, cur_len)
-    res = res + '%s\n\n' % (utils.str2prn_str(m_[cur: (cur + cur_len)]))
-    cur = cur + cur_len
+    res += '%s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
+    res += 'User name %d/%d:\n' % (cur, cur_len)
+    res += '%s\n\n' % (utils.str2prn_str(m_[cur: (cur + cur_len)]))
+    cur += cur_len
 
     cur_len = host['len1']
-    res = res + '%s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
-    res = res + 'Host name %d/%d:\n' % (cur, cur_len)
-    res = res + '%s\n\n' % (utils.str2prn_str(m_[cur: (cur + cur_len)]))
-    cur = cur + cur_len
+    res += '%s\n' % m_hex[cur * 2: (cur + cur_len) * 2]
+    res += 'Host name %d/%d:\n' % (cur, cur_len)
+    res += '%s\n\n' % (utils.str2prn_str(m_[cur: (cur + cur_len)]))
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = lmr['len1']
-    res = res + 'LAN Manager response %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
-    cur = cur + cur_len
+    res += 'LAN Manager response %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = ntr['len1']
-    res = res + 'NT response %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
-    cur = cur + cur_len
+    res += 'NT response %d/%d\n%s\n\n' % (cur, cur_len, m_hex[cur * 2 :(cur + cur_len) * 2])
+    cur += cur_len
 
-    res = res + '---------------------------------\n'
+    res += '---------------------------------\n'
     cur_len = len(m_) - cur
-    res = res + 'Rest of the message %d/%d:\n' % (cur, cur_len)
-    res = res + unknown_part(m_[cur: cur + cur_len])
+    res += 'Rest of the message %d/%d:\n' % (cur, cur_len)
+    res += unknown_part(m_[cur: cur + cur_len])
 
-    res = res + '\nEnd of message 3 report.\n'
+    res += '\nEnd of message 3 report.\n'
     return res
 
