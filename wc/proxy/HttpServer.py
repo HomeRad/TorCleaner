@@ -237,6 +237,9 @@ class HttpServer (Server):
             remove_headers(self.headers, ['Content-Encoding'])
         elif encoding and encoding!='identity':
             print >>sys.stderr, "Warning: unsupported encoding", `encoding`
+            # do not disable filtering for unknown content-encodings
+            # this could result in a DoS attack (server sending garbage
+            # as content-encoding)
         # initStateObject can modify headers (see Compress.py)!
         self.attrs = initStateObjects(self.headers, self.url)
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))

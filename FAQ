@@ -19,3 +19,14 @@ A: First, try to disable the WebCleaner proxy and look at the page again.
 Q: I am seeing the error "client sent data in state receive".
 A: Your client was sending data when it shouldn't have. This is mostly
    a broken HTTP proxy (eg. when WebCleaner is parent proxy of Oops).
+
+Q: Are there security concerns running this proxy?
+A: Yes.
+   1) Be sure no one but you or your users can access the proxy.
+      This must be configured in your operating system! Use a
+      firewall product.
+   2) Every localhost users can read the configuration.
+   3) Every localhost user can issue a DoS by sending an unlimited
+      amount of headers.
+      Under Unix systems you can use ulimit to start the process.
+

@@ -50,6 +50,15 @@ Note that the Rewriter module parses the HTML. It optimizes HTML by making
 tags and attribute names lowercase, quoting attribute values only
 when necessary and removing some (but not all) ignorable whitespace.
 
+The warning "unsupported content encoding" could lead to corrupted
+HTML pages! WebCleaner tries to filter even unknown-encoded content
+to prevent Denial of Service attacks (eg webservers sending always an
+unknown content-encoding).
+Currently, this affects only the "compress" or "x-compress" encoding,
+because the LZW algorithm to uncompress such content is patented and
+therefore not included in WebCleaner. See www.burnallgifs.org.
+
+
 Credits
 -------
 Credits go to munchy.py from Neil Schemenauer <nascheme@enme.ucalgary.ca>.
