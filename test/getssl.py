@@ -33,7 +33,7 @@ def proxyrequest1 (url, port):
     parts = urlparse.urlsplit(url)
     host = parts[1]
     #path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
-    h = httplib.HTTPSConnection("localhost:%d"%port)
+    h = httplib.HTTPSConnection("localhost:%d" % port)
     h.set_debuglevel(1)
     h.connect()
     h.putrequest("GET", url, skip_host=1)
@@ -57,17 +57,20 @@ def proxyrequest2 (url, port):
     parts = urlparse.urlsplit(url)
     host = parts[1]
     #path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
-    sock = create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
+    sock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
+    sslctx = get_clientctx('localconfig')
+    import OpenSSL.SSL
+    sock = OpenSSL.SSL.Connection(sslctx, sock)
     addr = (socket.gethostbyname('localhost'), port)
-    sock.connect(addr)
     sock.set_connect_state()
+    sock.connect(addr)
     sock.do_handshake()
     sock.write('GET %s HTTP/1.1\r\n' % url)
     sock.write('Host: %s\r\n' % host)
     sock.write('\r\n')
     while True:
         try:
-            print repr(sock.recv(80))
+            print repr(sock.read(80))
         except SSL.ZeroReturnError:
             # finished
             break
@@ -92,7 +95,7 @@ def proxyrequest3 (url, port):
         try:
             print repr(sock.read(80))
         except socket.sslerror, msg:
-            print "Oops", msg
+            print "Error", msg
             break
     _sock.close()
 
@@ -107,7 +110,7 @@ def proxyrequest4 (url, port):
     _sock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
     addr = (socket.gethostbyname('localhost'), port)
     _sock.connect(addr)
-    _sock.send('CONNECT %s:%d HTTP/1.1\r\n' % (host, sslport))
+    _sock.send('CONNECT %s:%d HTTP/1.0\r\n' % (host, sslport))
     _sock.send('User-Agent: getssl\r\n')
     _sock.send('\r\n')
     buf = ""
@@ -136,7 +139,7 @@ def proxyrequest4 (url, port):
 
 def _main ():
     """USAGE: test/run.sh test/getssl.py <https url>"""
-    if len(sys.argv)!=2:
+    if len(sys.argv) != 2:
         print _main.__doc__
         sys.exit(1)
     #request1(sys.argv[1])
@@ -144,11 +147,12 @@ def _main ():
     wc.configuration.config = wc.configuration.init("localconfig")
     port = wc.configuration.config['port']
     sslport = wc.configuration.config['sslport']
-    print "Get %s from localhost:%d" % (sys.argv[1], sslport)
-    proxyrequest1(sys.argv[1], sslport)
+    #print "Get %s from localhost:%d" % (sys.argv[1], sslport)
+    #proxyrequest1(sys.argv[1], sslport)
     #proxyrequest2(sys.argv[1], sslport)
     #proxyrequest3(sys.argv[1], sslport)
-    #proxyrequest4(sys.argv[1], port)
+    print "Get %s from localhost:%d" % (sys.argv[1], port)
+    proxyrequest4(sys.argv[1], port)
 
 
 if __name__=='__main__':
