@@ -153,7 +153,7 @@ def _form_ratings (form):
         if category.iterable:
             realvalue = value
         else:
-           realvalue = _intrange_from_string(value)
+            realvalue = _intrange_from_string(value)
         if not category.valid_value(realvalue):
             error['categoryvalue'] = True
             return False
