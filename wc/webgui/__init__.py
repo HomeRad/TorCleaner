@@ -26,6 +26,7 @@ from cStringIO import StringIO
 from wc import i18n, config, TemplateDir, App, filtermodules, Name, LocaleDir
 from wc.log import *
 import os, re, urllib, urlparse, gettext, mimetypes
+from wc.proxy.auth import get_proxy_auth_challenge
 
 class WebConfig (object):
     def __init__ (self, client, url, form, protocol, clientheaders,
@@ -49,7 +50,11 @@ class WebConfig (object):
             if path.endswith('.html'):
                 f = file(path)
                 # get TAL context
-                context = get_context(dirs, form, context, lang)
+                context, newstatus = get_context(dirs, form, context, lang)
+                if newstatus==407:
+                    client.error(407, i18n._("Proxy Authentication Required"),
+                                 auth=get_proxy_auth_challenge())
+                    return
                 # get translator
                 translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
                 debug(GUI, "Using translator %s", str(translator.info()))
@@ -151,8 +156,11 @@ def get_template_path (path, lang):
 def get_context (dirs, form, localcontext, lang):
     """Get template context, raise ImportError if not found.
        The context includes the given local context, plus all variables
-       defined by the imported context module"""
+       defined by the imported context module
+       Evaluation of the context can set a different HTTP status which is
+       returned."""
     # get template-specific context dict
+    status = None
     modulepath = ".".join(['context'] + dirs[:-1])
     template = dirs[-1].replace(".", "_")
     # this can raise an import error
@@ -160,7 +168,7 @@ def get_context (dirs, form, localcontext, lang):
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
         debug(GUI, "got form %s", str(form))
-        template_context._exec_form(form)
+        status = template_context._exec_form(form)
     # make TAL context
     context = simpleTALES.Context()
     # add default context values
@@ -172,7 +180,7 @@ def get_context (dirs, form, localcontext, lang):
     # add local context
     for key, value in localcontext.items():
         context.addGlobal(key, value)
-    return context
+    return context, status
 
 
 def add_default_context (context, form, filename, lang):
