@@ -15,9 +15,6 @@ version 2.26 and above
 
 - Test "www.%s" DNS search pattern for automationpartnership.com
 
-- Python 2.4 made socket.sslerror a subclass of socket.error; can we
-  use that?
-
 - add functional tests
 
 invalid js url:
