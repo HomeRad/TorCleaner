@@ -119,9 +119,12 @@ HtmlTags = {
 
 # invalid and old tags
 OldTags = {
+    "embed" : None, # Netscape Navigator 4
     "layer" : None, # Netscape Navigator 4
     "listing" : None, # HTML 3.2
     "nobr" : None, # Netscape Navigator 1.1
+    "noembed" : None, # Netscape Navigator 4
+    "nolayer" : None, # Netscape Navigator 4
     "plaintext" : None, # HTML 3.2
     "wbr" : None, # Netscape Navigator 1.1
     "xmp" : None, # HTML 3.2
