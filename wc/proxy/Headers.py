@@ -181,6 +181,8 @@ def server_set_content_headers (headers, content, document, mime, url):
     if i>0:
         document = document[:i]
     if not mime and not headers.has_key('Transfer-Encoding'):
+        # note: recognizing a mime type here fixes exploits like
+        # CVE-2002-0025 and CVE-2002-0024
         mime = magic.classify(StringIO(content))
     ct = headers.get('Content-Type', None)
     if mime:
