@@ -1,4 +1,5 @@
 #!/usr/bin/python2.3
+# -*- coding: iso-8859-1 -*-
 """graphical HTTP header observation tool for webcleaner.
 
 Developer note: you have to create() all windows which are created at

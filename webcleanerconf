@@ -1,4 +1,5 @@
 #!/usr/bin/python2.3
+# -*- coding: iso-8859-1 -*-
 """graphical GUI configuration tool for webcleaner.
 
 This is a nice graphical configuration tool for webcleaner. Because
