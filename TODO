@@ -2,6 +2,8 @@ TODO
 
 version 2.9 and above
 
+- translatable rule title and description
+
 - memory leaks while operating the proxy
 
 - content rating:
@@ -13,8 +15,6 @@ version 2.9 and above
 - convert remaining tests to unit testing where appropriate
 
 - use test/client.py, test/server.py for testing
-
-- translatable rule title and description
 
 - bfilter has Flash parse and generation library, I want that too .)
 
