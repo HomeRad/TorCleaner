@@ -29,7 +29,14 @@ def remove_html_comments (script):
         script = script[mo.end():]
     mo = _end_js_comment(script)
     if mo:
-        script = script[:mo.start()]
+        # note: this could have matched too much, for example:
+        # 'a="http://foo";//-->' matches '//foo";//-->'
+        # try to find this case:
+        last_comment = script.rindex("//")
+        if last_comment != mo.group().index("//"):
+            script = script[:last_comment]
+        else:
+            script = script[:mo.start()]
     return script.strip()
 
 
