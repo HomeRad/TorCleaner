@@ -72,6 +72,18 @@ md5sums:
 	done
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
 
+releasecheck:
+	@if grep xxxx ChangeLog; then \
+	  echo "Could not release: edit ChangeLog release date"; false; \
+	fi
+
+release: releasecheck dist upload homepage
+	mozilla -remote "openUrl(http://sourceforge.net/projects/webcleaner, new-tab)"
+	@echo "Make SF release and press return..."
+	@read
+	@echo "Uploading new WebCleaner Homepage..."
+	make -C ~/public_html/webcleaner.sf.net upload
+
 upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
 
