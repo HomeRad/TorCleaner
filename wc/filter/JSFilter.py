@@ -95,6 +95,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         if not val:
             return
         self.js_env.listeners.append(self)
+        val = val.encode(self.htmlparser.encoding)
         try:
             self.js_env.executeScriptAsFunction(val, 0.0)
         except wc.js.jslib.error:
@@ -122,6 +123,8 @@ class JSFilter (wc.js.JSListener.JSListener):
             javascript=self.javascript, level=self.level+1)
         self.js_htmlparser = wc.filter.HtmlParser.HtmlParser(handler)
         handler.htmlparser = self.js_htmlparser
+        # encode for JS engine
+        script = script.encode(self.htmlparser.encoding)
         # execute
         self.js_env.executeScript(script, ver)
         self.js_env.listeners.remove(self)
