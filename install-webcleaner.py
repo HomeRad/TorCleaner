@@ -40,7 +40,7 @@ def execute (pythonw, script, args):
 
 def fix_configdata ():
     """fix install and config paths in the config file"""
-    name = "_webcleaner_configdata.py"
+    name = "_webcleaner2_configdata.py"
     conffile = os.path.join(sys.prefix, "Lib", "site-packages", name)
     lines = []
     for line in file(conffile):

@@ -9,6 +9,11 @@
     Type: bugfix
     Changed: wc/magic/__init__.py
 
+  * Fix conffile name on windows installations
+    Type: bugfix
+    Closes: SF bug #1150918
+    Changed: install-webcleaner.py
+
 2.27 "Aliens" (released 11.2.2005)
 
   * Add <nbr> to the list of known deprecated tags so it does not get
