@@ -2,8 +2,6 @@ TODO
 
 version 2.3
 
-- HTTPS tunneling (RFC 2817/2818)
-
 - parse and import adzapper.sf.net filters
 
 version 2.4

@@ -1,8 +1,13 @@
 2.4
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031028
     Changed: js/*
-  * enable persistent client connections
+  * enabled persistent client connections
     Changed: wc/proxy/{HttpClient,Connection}.py
+  * new connection logger for printing all sent/received connection
+    data for debugging
+    Changed: wc/log.py, wc/proxy/Connection.py, config/logging.conf
+  * enabled CONNECT tunneling; WebCleaner can now be a HTTPS proxy
+    Changed: wc/proxy/[ClientServerMatchmaker,HttpClient,HttpServer}.py
 
 2.3
   * oops, add some mising files to distribution
