@@ -120,7 +120,7 @@ def url_quote (url):
     urlparts[2] = urllib.quote(urlparts[2], '/=,') # path
     l = []
     for k,v in cgi.parse_qsl(urlparts[3], True): # query
-        l.append("%s=%s" % (urllib.quote(k, '/-:'), urllib.quote(v, '/-:')))
+        l.append("%s=%s" % (urllib.quote(k, '/-:,'), urllib.quote(v, '/-:,')))
     urlparts[3] = '&'.join(l)
     urlparts[4] = urllib.quote(urlparts[4]) # anchor
     return urlparse.urlunsplit(urlparts)
