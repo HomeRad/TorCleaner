@@ -79,75 +79,94 @@ typedef struct {
 
 /* apply python callbacks for JS output */
 static int dispatchOutput (JSEnvObject* env, PyObject* output) {
-    PyObject* keys;
-    int size;
-    PyObject* listener = NULL;
-    PyObject* callback = NULL;
-    PyObject* result = NULL;
-    int error = 0;
-    int i;
-    if (!(keys = PyMapping_Keys(env->listeners))) return -1;
-    size = PySequence_Size(keys);
-    for (i=0; i<size; i++) {
-        if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto disp_error; }
-        if (!(callback = PyObject_GetAttrString(listener, "jsProcessData"))) { error=-1; goto disp_error; }
-        if (!(result = PyObject_CallFunction(callback, "O", output))) { error=-1; goto disp_error; }
+    PyObject* iterator = NULL;
+    PyObject* item = NULL;
+    if ((iterator = PyObject_GetIter(env->listeners))==NULL) {
+        return -1;
     }
-disp_error:
-    Py_XDECREF(keys);
-    Py_XDECREF(listener);
-    Py_XDECREF(callback);
-    Py_XDECREF(result);
-    return error;
+    while ((item = PyIter_Next(iterator))!=NULL) {
+        PyObject* callback;
+        PyObject* result;
+        if ((callback = PyObject_GetAttrString(item, "jsProcessData"))==NULL) {
+            Py_DECREF(item);
+            Py_DECREF(iterator);
+            return -1;
+        }
+        if ((result = PyObject_CallFunction(callback, "O", output))==NULL) {
+            Py_DECREF(callback);
+            Py_DECREF(item);
+            Py_DECREF(iterator);
+            return -1;
+        }
+        /* release references when done */
+        Py_DECREF(item);
+        Py_DECREF(result);
+        Py_DECREF(callback);
+    }
+    Py_DECREF(iterator);
+    return 0;
 }
 
 
 /* apply python callbacks for JS popups */
 static int dispatchPopupNotification (JSEnvObject* env) {
-    PyObject* keys;
-    int size;
-    PyObject* listener = NULL;
-    PyObject* callback = NULL;
-    PyObject* result = NULL;
-    int error = 0;
-    int i;
-    if (!(keys = PyMapping_Keys(env->listeners))) return -1;
-    size = PySequence_Size(keys);
-    for (i=0; i<PySequence_Size(keys); i++) {
-        if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto dispp_error; }
-        if (!(callback = PyObject_GetAttrString(listener, "jsProcessPopup"))) { error=-1; goto dispp_error; }
-        if (!(result = PyObject_CallFunction(callback, ""))) { error=-1; goto dispp_error; }
+    PyObject* iterator = NULL;
+    PyObject* item = NULL;
+    if ((iterator = PyObject_GetIter(env->listeners))==NULL) {
+        return -1;
     }
-dispp_error:
-    Py_XDECREF(keys);
-    Py_XDECREF(listener);
-    Py_XDECREF(callback);
-    Py_XDECREF(result);
-    return error;
+    while ((item = PyIter_Next(iterator))!=NULL) {
+        PyObject* callback;
+        PyObject* result;
+        if ((callback = PyObject_GetAttrString(item, "jsProcessPopup"))==NULL) {
+            Py_DECREF(item);
+            Py_DECREF(iterator);
+            return -1;
+        }
+        if ((result = PyObject_CallFunction(callback, ""))==NULL) {
+            Py_DECREF(callback);
+            Py_DECREF(item);
+            Py_DECREF(iterator);
+            return -1;
+        }
+        /* release references when done */
+        Py_DECREF(item);
+        Py_DECREF(result);
+        Py_DECREF(callback);
+    }
+    Py_DECREF(iterator);
+    return 0;
 }
 
 
 static int dispatchError (JSEnvObject* env, PyObject* err) {
-    PyObject* keys;
-    int size;
-    PyObject* listener = NULL;
-    PyObject* callback = NULL;
-    PyObject* result = NULL;
-    int error = 0;
-    int i;
-    if (!(keys = PyMapping_Keys(env->listeners))) return -1;
-    size = PySequence_Size(keys);
-    for (i=0; i<PySequence_Size(keys); i++) {
-        if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto dispe_error; }
-        if (!(callback = PyObject_GetAttrString(listener, "jsProcessError"))) { error=-1; goto dispe_error; }
-        if (!(result = PyObject_CallFunction(callback, "O", err))) { error=-1; goto dispe_error; }
+    PyObject* iterator = NULL;
+    PyObject* item = NULL;
+    if ((iterator = PyObject_GetIter(env->listeners))==NULL) {
+        return -1;
     }
-dispe_error:
-    Py_XDECREF(keys);
-    Py_XDECREF(listener);
-    Py_XDECREF(callback);
-    Py_XDECREF(result);
-    return error;
+    while ((item = PyIter_Next(iterator))!=NULL) {
+        PyObject* callback;
+        PyObject* result;
+        /* do something with item */
+        if ((callback = PyObject_GetAttrString(item, "jsProcessError"))==NULL) {
+            Py_DECREF(item);
+            Py_DECREF(iterator);
+            return -1;
+        }
+        if ((result = PyObject_CallFunction(callback, "O", err))==NULL) {
+            Py_DECREF(callback);
+            Py_DECREF(item);
+            Py_DECREF(iterator);
+            return -1;
+        }
+        /* release references when done */
+        Py_DECREF(item);
+        Py_DECREF(result);
+        Py_DECREF(callback);
+    }
+    Py_DECREF(iterator);
+    return 0;
 }
 
 
@@ -473,9 +492,10 @@ static void destroy (JSEnvObject* env) {
 
 
 /** set python memory exception and destroy JS engine */
-static PyObject* shutdown (JSEnvObject* env, char* msg) {
-    destroy(env);
+static PyObject* shutdown (JSEnvObject* self, char* msg) {
+    destroy(self);
     PyErr_SetString(JSError, msg);
+    Py_DECREF(self);
     return NULL;
 }
 
@@ -498,18 +518,21 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     JSObject* plugins_array;
     jsval flash_mimetype_jsval;
     jsval flash_plugin_jsval;
-
+    /* alloc JSEnv object */
     if ((self = (JSEnvObject*)type->tp_alloc(type, 0))==NULL) {
         return NULL;
     }
-
+    /* init python objects */
     if ((self->listeners = PyList_New(0))==NULL)
     {
         Py_DECREF(self);
         return NULL;
     }
+    if ((self->scheduled_actions = PyList_New(0))==NULL) {
+        Py_DECREF(self);
+        return NULL;
+    }
     self->document_cookie = NULL;
-    self->scheduled_actions = NULL;
     self->runtime = NULL;
     self->ctx = NULL;
     self->global_class = generic_class;
@@ -534,13 +557,6 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     self->plugin_class = generic_class;
     self->plugin_class.name = "Plugin";
     self->branch_cnt = 0;
-    /* init python objects */
-    if (!(self->listeners=PyDict_New())) {
-        return NULL;
-    }
-    if (!(self->scheduled_actions=PyList_New(0))) {
-        return NULL;
-    }
     /* init JS engine */
     if (!(self->runtime=JS_NewRuntime(500L*1024L))) {
         return shutdown(self, "Could not initialize JS runtime");
@@ -1022,6 +1038,7 @@ static int JSEnv_traverse (JSEnvObject* self, visitproc visit, void* arg) {
 /* clear all used subobjects participating in reference cycles */
 static int JSEnv_clear (JSEnvObject* self) {
     Py_XDECREF(self->listeners);
+    Py_XDECREF(self->scheduled_actions);
     return 0;
 }
 
@@ -1230,10 +1247,17 @@ PyMODINIT_FUNC initjslib (void) {
     if ((m = Py_InitModule3("jslib", jslib_methods, "JavaScript Environment module"))==NULL) {
         return;
     }
+    Py_INCREF(&JSEnvType);
+    if (PyModule_AddObject(m, "JSEnv", (PyObject *)&JSEnvType)==-1) {
+        /* init error */
+        PyErr_Print();
+        return;
+    }
     JSError = PyErr_NewException("jslib.error", NULL, NULL);
     if (PyModule_AddObject(m, "error", JSError)==-1) {
         /* init error */
         PyErr_Print();
+        return;
     }
 }
 
