@@ -6,14 +6,18 @@
 
 <rewrite sid="wc.288"
  tag="object">
+  <title lang="de">Entferne OBJECT Daten</title>
   <title lang="en">Remove OBJECTs</title>
+  <description lang="de">Entferne alle mit &lt;object&gt; eingebundenen Inhalte.</description>
   <description lang="en">Kill &lt;object&gt; things.</description>
   <matchurl>www\.heise\.de</matchurl>
 </rewrite>
 
 <rewrite sid="wc.287"
  tag="embed">
+  <title lang="de">Entferne EMBED Daten</title>
   <title lang="en">Remove EMBEDded content</title>
+  <description lang="de">Entferne alle mit &lt;embed&gt; eingebundenen Daten.</description>
   <description lang="en">Kill &lt;embed&gt; things.</description>
   <matchurl>www\.heise\.de</matchurl>
 </rewrite>

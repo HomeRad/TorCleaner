@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.389" oid="9">
+<folder sid="wc.389" oid="10">
+<title lang="de">Weiterleitungen</title>
 <title lang="en">Redirection and meta</title>
 <description lang="en">These are Python specific rules to rewrite some nasty URLs, notably redirections, and get rid of the rest of the meta tags.</description>
-
-<rewrite sid="wc.382" disable="1"
- tag="meta">
-  <title lang="en">No meta tags 2</title>
-  <description lang="en">Remove all meta tags except redirects. This is only recommended if you REALLY dont want to use &lt;meta http-equiv=&amp;quot;Content-Type&amp;quot;&gt; things. This just leaves the redirections.</description>
-  <attr name="http-equiv">^(?!(?i)refresh).+</attr>
-  <replacement part="tag"/>
-</rewrite>
 
 <rewrite sid="wc.383">
   <title lang="en">No redirection 1</title>

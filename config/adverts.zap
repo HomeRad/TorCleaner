@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.360" oid="0">
+<folder sid="wc.360" oid="3">
+<title lang="de">Allgemeine Werbung</title>
 <title lang="en">General adverts</title>
 <description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&amp;quot;http://company.com&amp;quot;&gt;&lt;img  src=&amp;quot;http://adserver.de/banner.gif&amp;quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
 

@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.381" oid="8">
+<folder sid="wc.381" oid="9">
+<title lang="de">Verschiedenes</title>
 <title lang="en">Miscellaneous</title>
 <description lang="en">Misc things we dont like in our HTML source :)</description>
-
-<rewrite sid="wc.367"
- tag="meta">
-  <title lang="en">No meta tags 1</title>
-  <description lang="en">Meta tags with name attribute are only for search engines.</description>
-  <attr name="name">(?i)(author|description|keywords|revisit-after|page-topic|url|allow-search|searchtitle|robots|audience|content-language|copyright|MSSmartTagsPreventParsing)</attr>
-  <replacement part="tag"/>
-</rewrite>
 
 <rewrite sid="wc.368"
  tag="link">
