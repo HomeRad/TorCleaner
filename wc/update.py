@@ -108,6 +108,8 @@ def open_url (url, proxies=None):
             raise IOError, data
         else:
             raise IOError, "no network access available"
+    except OSError, data:
+        raise IOError, data
     return page
 
 
@@ -154,7 +156,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         else:
             print >>log, i18n._("adding new filter %s"), filename
         # parse new filter
-        url = baseurl+filename+".gz"
+        url = baseurl+filename
         page = open_url(url)
         p = wc.ZapperParser(fullname, wconfig, compile_data=False)
         p.parse(fp=page)
