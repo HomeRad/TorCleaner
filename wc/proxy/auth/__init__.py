@@ -48,7 +48,8 @@ def get_challenges ():
        Note that HTTP/1.1 allows multiple authentication challenges
        separated by commas (",")"""
     # XXX add NTLM
-    return (get_basic_challenge(), get_digest_challenge())
+    #return [get_basic_challenge(), get_digest_challenge()]
+    return [get_digest_challenge()]
 
 
 def get_header_credentials (headers, key):

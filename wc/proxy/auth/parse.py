@@ -4,7 +4,7 @@ separators = ("()<>@,;:\\\"/[]?={} \t")
 token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
                'ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`0123456789|~')
 
-def parse_token (s, tok="", relax=False):
+def parse_token (s, tok="", relax=False, more_chars=""):
     if tok:
         if not s.startswith(tok):
             warn(PROXY, "expected %s start with %s", `s`, `tok`)
@@ -12,7 +12,7 @@ def parse_token (s, tok="", relax=False):
             s = s[len(tok):]
     else:
         for i, c in enumerate(s):
-            if c not in token_chars:
+            if c not in token_chars and c not in more_chars:
                 i -= 1
                 break
             tok += c

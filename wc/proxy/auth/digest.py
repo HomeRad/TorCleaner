@@ -46,6 +46,7 @@ def check_digest_credentials (credentials, **attrs):
     nonce = credentials.get("nonce", "")
     if nonce not in nonces:
         return False
+    nonces.clear()
     username = attrs['username']
     password = base64.decodestring(attrs['password_b64'])
     uri = attrs['uri']

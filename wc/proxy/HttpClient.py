@@ -149,8 +149,11 @@ class HttpClient (Connection):
                     self.error(407, i18n._("Proxy Authentication Required"),
                                auth=", ".join(get_challenges()))
                     return
+                # XXX should wait until POST data arrives
                 if not check_credentials(creds, username=config['proxyuser'],
-                                         password_b64=config['proxypass']):
+                                         password_b64=config['proxypass'],
+                                         uri=self.url, method=self.method,
+                                         data=None):
                     warn(PROXY, "Bad proxy authentication from %s", self.addr[0])
                     self.error(407, i18n._("Proxy Authentication Required"),
                                auth=", ".join(get_challenges()))
