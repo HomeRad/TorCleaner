@@ -28,9 +28,7 @@
 </rewrite>
 
 <nocomments title="Remove all HTML comments"
- desc="Enable this only if you disable the &lt;script&gt; tag
-because JavaScript content is often wrapped
-in a HTML comment!"
+ desc="Enable this only if you disable the &lt;script&gt; tag because JavaScript content is often wrapped in a HTML comment!"
  disable="1"/>
 
 <rewrite title="Replace BLINK with B"
