@@ -247,6 +247,7 @@ def _form_filtermodules (form):
 
 def _form_addallowed (host):
     hosts = ip.map2hosts(config['allowedhosts'])
+    host = list(ip.map2hosts(ip.hosts2map([host])))[0]
     if host not in hosts:
         hosts.add(host)
         config['allowedhosts'] = ip.hosts2map(hosts)
