@@ -36,6 +36,11 @@ def register_rule (rule):
 def register_sid (sid):
     assert sid not in _sids, "%s is not a unique id"%sid
     _sids.add(sid)
+    return sid
+
+
+def delete_registered_sids ():
+    _sids.clear()
 
 
 def has_sid (sid):
@@ -43,12 +48,8 @@ def has_sid (sid):
 
 
 def generate_sids (prefix="wc"):
-    sid = generate_sid(prefix)
-    while has_sid(sid):
-        sid = generate_sid(prefix)
     for rule in _rules_without_sid:
-        rule.sid = sid
-        sid = generate_sid(prefix)
+        rule.sid = generate_unique_sid(prefix)
     del _rules_without_sid[:]
 
 
@@ -56,8 +57,7 @@ def generate_unique_sid (prefix):
     sid = generate_sid(prefix)
     while has_sid(sid):
         sid = generate_sid(prefix)
-    register_sid(sid)
-    return sid
+    return register_sid(sid)
 
 
 def generate_sid (prefix):

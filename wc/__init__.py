@@ -216,6 +216,9 @@ class Configuration (dict):
         self['timeout'] = 30
         self['auth_ntlm'] = 0
         self['try_google'] = 0
+        # delete all registered sids
+        from wc.filter.rules import delete_registered_sids
+        delete_registered_sids()
 
 
     def read_proxyconf (self):
@@ -363,6 +366,8 @@ _nestedtags = (
   'url', 'service','category',
 )
 
+import wc.filter
+
 class ParseException (Exception): pass
 
 class BaseParser (object):
@@ -410,7 +415,6 @@ class ZapperParser (BaseParser):
         encode_values(attrs)
         self.cmode = name
         if name in rulenames:
-            import wc.filter
             self.rule = wc.filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.folder.append_rule(self.rule)
@@ -427,6 +431,8 @@ class ZapperParser (BaseParser):
         self.cmode = None
         if name in rulenames:
             self.rule.compile_data()
+        elif name=='folder':
+            self.folder.compile_data()
 
 
     def character_data (self, data):
