@@ -145,7 +145,8 @@ class HttpClient (Connection):
                 if auth:
                     return self.error(407,
                           i18n._("Proxy Authentication Required"), auth=auth)
-            if self.method=='OPTIONS' and get_max_forwards(self.headers)==0:
+            if self.method in ['OPTIONS','TRACE'] and \
+               get_max_forwards(self.headers)==0:
                 # XXX display options ?
                 self.state = 'done'
                 return ServerHandleDirectly(self, 'HTTP/1.0 200 OK\r\n',
