@@ -24,6 +24,7 @@ import cPickle as pickle
 from wc.log import *
 from wc import i18n, ConfigDir, AppName
 from wc.filter import FilterException
+from wc.url import is_valid_url
 
 MISSING = i18n._("Unknown page")
 
@@ -101,6 +102,11 @@ def rating_cache_load ():
         fp = file(rating_cachefile)
         data = pickle.load(fp)
         fp.close()
+        # remove invalid entries
+        for url in data:
+            if not is_valid_url(url):
+                error(FILTER, "Invalid rating url %r", url)
+                del data[url]
         return data
     return {}
 
@@ -110,15 +116,18 @@ rating_cache = rating_cache_load()
 
 def rating_is_cached (url):
     """return True if cache has entry for given url, else False"""
-    # XXX norm url ?
+    # XXX norm url?
     return url in rating_cache
 
 
 def rating_add (url, rating):
     """add new or update rating in cache and write changes to disk"""
-    # XXX norm url ?
-    rating_cache[url] = rating
-    rating_cache_write()
+    if is_valid_url(url):
+        # XXX norm url?
+        rating_cache[url] = rating
+        rating_cache_write()
+    else:
+        error(FILTER, "Invalid rating url %r", url)
 
 
 def rating_allow (url, rule):
