@@ -125,6 +125,12 @@ input.text {
     width: 180px;
 }
 
+input.checkbox {
+    border: 1px solid #777777;
+    color: Black;
+    background: #fdf9f4;
+}
+
 input.number {
     font-size: 85%;
     border: 1px solid #777777;
