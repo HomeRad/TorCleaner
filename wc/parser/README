@@ -7,6 +7,8 @@ to the HTML parser. This means that the parser has to scan possible
 incomplete data, recognizing as much as it can. Incomplete trailing
 data is saved for subsequent calls (or it is just flushed away with the
 flush() function).
+A reset() brings the parser back to its initial state, throwing away all
+buffered data.
 
 2) Coping with HTML syntax errors
 Most HTML pages do not have correct syntax. Browsers go to great length
@@ -19,7 +21,8 @@ b) Error recovery is complex and itself error prone. Duplicating the
    effort of the browser is moot.
 Other parsers (especially bison parsers) allow to skip over errors and
 discard tokens. This is also not acceptable.
-The parser has to pass incorrect data as TEXT.
+Instead, the parser has to recognize as much as it can and pass the rest
+of the data as TEXT.
 
 3) Speed
 Parsing has to be fast.
@@ -32,14 +35,15 @@ Solutions:
 have a reentrant scanner. It works together with a pure (reentrant)
 bison parser.
 
-
 2) The scanner only passes complete recognized HTML syntax elements to
-the parser. Invalid syntax elements are passed as TEXT.
+the parser. Invalid syntax elements are passed as TEXT. This way we do
+not need the bison error recovery.
+Incomplete data is rescanned the next time the parser calls yylex() or
+flush()ed.
 
-
-3) The module uses a C extension for parsing.
-The FLEX code has options to generate a large but fast scanner.
+3) The FLEX code has options to generate a large but fast scanner.
 The parser ignores forbidden or unnecessary HTML end tags.
-The parser converts tag names to lower case.
+The parser converts tag and attribute names to lower case for easier
+matching.
 The parser quotes all attribute values with minimal necessity.
 
