@@ -148,6 +148,7 @@ class ClientServerMatchmaker (object):
         debug(PROXY, "%s find server", str(self))
         addr = (self.ipaddr, self.port)
         if not self.client.connected:
+            debug(PROXY, "%s client not connected", str(self))
             # The browser has already closed this connection, so abort
             return
         server = serverpool.reserve_server(addr)
@@ -161,6 +162,7 @@ class ClientServerMatchmaker (object):
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
         else:
+            debug(PROXY, "%s new connect to server", str(self))
             # Let's make a new one
             self.state = 'connect'
             server = HttpServer(self.ipaddr, self.port, self)
@@ -169,6 +171,7 @@ class ClientServerMatchmaker (object):
 
     def server_connected (self, server):
         """the server has connected"""
+        debug(PROXY, "%s server_connected", str(self))
         assert self.state == 'connect'
         if not self.client.connected:
             # The client has aborted, so let's return this server

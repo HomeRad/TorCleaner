@@ -24,6 +24,7 @@ class Server (Connection):
     def handle_connect (self):
         debug(PROXY, "%s handle_connect", str(self))
         if self.state != 'connect':
+            debug(PROXY, "%s client has closed", str(self))
             # the client has closed, and thus this server has too
             self.connected = False
             return

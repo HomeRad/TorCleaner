@@ -53,6 +53,7 @@ class HttpClient (Connection):
 
     def error (self, status, msg, txt='', auth=''):
         self.state = 'done'
+        debug(PROXY, '%s error %s (%d)', str(self), `msg`, status)
         if status in google_try_status and config['try_google']:
             self.try_google(self.url, msg)
         else:
@@ -232,7 +233,7 @@ class HttpClient (Connection):
     def server_response (self, server, response, status, headers):
         # try google options
         assert server.connected
-        debug(PROXY, '%s server_response %s', str(self), `response`)
+        debug(PROXY, '%s server_response %s (%d)', str(self), `response`, status)
         if status in google_try_status and config['try_google']:
             server.client_abort()
             self.try_google(self.url, response)
@@ -245,7 +246,7 @@ class HttpClient (Connection):
 
 
     def try_google (self, url, response):
-        # form params
+        debug(PROXY, '%s try_google %s', str(self), `response`)
         context = get_google_context(url, response)
         form = None
         WebConfig(self, '/google.html', form, self.protocol, self.headers,

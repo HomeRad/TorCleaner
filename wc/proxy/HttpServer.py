@@ -118,7 +118,6 @@ class HttpServer (Server):
             # we've connected, because we really haven't.  XXX: we
             # really should hide these sorts of cases inside Connection.
             make_timer(0, lambda s=self: s.client and s.client.server_connected(s))
-            #self.client.server_connected(self)
         else:
             # Hm, the client no longer cares about us, so close
             self.reuse()
@@ -150,7 +149,7 @@ class HttpServer (Server):
         send a request twice for NTLM authentication"""
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         self.write(request)
-        debug(PROXY, "%s write headers", str(self))
+        debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
         self.write("".join(self.clientheaders.headers))
         self.write('\r\n')
         self.write(self.content)
@@ -347,7 +346,7 @@ class HttpServer (Server):
     def process_recycle (self):
         debug(PROXY, "%s recycling", str(self))
         if self.statuscode==407 and config['parentproxy']:
-            debug(PROXY, "%s send parent proxy authentication", str(self))
+            debug(PROXY, "%s need parent proxy authentication", str(self))
             if self.authtries:
                 # we failed twice, abort
                 self.authtries = 0
@@ -463,6 +462,7 @@ class HttpServer (Server):
         from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
         # note: self.client still the matchmaker object
         client = self.client.client
+        self.client = None
         ClientServerMatchmaker(client, client.request,
                                self.clientheaders, # with new auth
                                client.content, client.nofilter,
