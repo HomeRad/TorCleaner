@@ -163,7 +163,7 @@ def get_filterattrs (url, filters, clientheaders=None, serverheaders=None,
     attrs = {
         'url': url,
         'nofilter': wc.configuration.config.nofilter(url),
-        'mime' : serverheaders.get('Content-Type'),
+        'mime' : headers.get('Content-Type'),
         'headers': attrheaders,
         'browser': browser,
     }
