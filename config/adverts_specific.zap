@@ -8,15 +8,31 @@
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite sid="wc.399" title="Heise advert tag"
+<rewrite sid="wc.399" title="Heise advert"
  desc="www.heise.de has an advert tag. Nice :)"
+ matchurl="^http://(www\.)heise\.de/"
  tag="heiseadvert"/>
 
 
-<rewrite sid="wc.400" title="Heise advert tag 2"
+<rewrite sid="wc.400" title="Heise contentbanner"
  desc="heise.de"
+ matchurl="^http://(www\.)heise\.de/"
  tag="contentbanner"/>
 
+
+<rewrite sid="wc.12" title="Heise skyscraper"
+ matchurl="^http://(www\.)heise\.de/"
+ tag="skyscraper"/>
+
+
+<rewrite sid="wc.11" title="Heise Onlinemarkt"
+ tag="table">
+<attr name="cellpadding">^2$</attr>
+<attr name="bgcolor">^#EEEEEE$</attr>
+<attr name="width">^137$</attr>
+<enclosed>&lt;big&gt;O&lt;/big&gt;NLINE-&lt;big&gt;M&lt;/big&gt;</enclosed>
+<replacement part="complete"/>
+</rewrite>
 
 <rewrite sid="wc.401" title="Userfriendly outbound links"
  desc="Links on userfriendly.org which point outbound. This is a redirector host.">
@@ -43,10 +59,27 @@
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite sid="wc.405" title="OSDN navbar"
- desc="Navigation bar form"
- tag="form">
-<attr name="action">https?://www\.osdn\.com/osdnsearch\.pl</attr>
+<rewrite sid="wc.405" title="Freshmeat OSDN navbar"
+ desc="I don&apos;t like the OSDN navigation bar."
+ matchurl="^http://freshmeat\.net/"
+ tag="table">
+<attr name="style">border-top: 1px #6f6f6f solid; border-bottom: 1px #6f6f6f solid;</attr>
+<replacement part="complete"/>
+</rewrite>
+
+<rewrite sid="wc.9" title="Slashdot OSDN navbar"
+ desc="I don&apos;t like the OSDN navbar."
+ matchurl="^http://slashdot\.org/"
+ tag="table">
+<attr name="style">border-top: 1px #999999 solid; border-bottom: 5px #000000 solid</attr>
+<replacement part="complete"/>
+</rewrite>
+
+<rewrite sid="wc.10" title="Sourceforge ODSN navbar"
+ desc="I don&apos;t like the navbar"
+ matchurl="^http://(sf|sourceforge)\.net/"
+ tag="table">
+<attr name="style">border-top: 2px #666666 solid; border-bottom:\s*1px #222222 solid;</attr>
 <replacement part="complete"/>
 </rewrite>
 
