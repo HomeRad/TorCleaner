@@ -443,6 +443,9 @@ class TokenEater:
         self.__curfile = filename
         self.__freshmodule = 1
 
+    def has_entry (self, msg):
+        return self.__messages.has_key(msg)
+
     def write(self, fp):
         options = self.__options
         timestamp = time.ctime(time.time())
@@ -719,11 +722,10 @@ def main():
         closep = 1
     try:
         eater.write(fp)
-        for trans in html_translations:
+        msgs = [msg for msg in html_translations if not eater.has_entry(msg)]
+        for msg in msgs:
             print >> fp, '#, html translation'
-            # XXX html ignores whitespace, so we could strip multiple
-            # whitespace and make blocktext
-            print >> fp, 'msgid', normalize(trans)
+            print >> fp, 'msgid', normalize(msg)
             print >> fp, 'msgstr ""\n'
     finally:
         if closep:
