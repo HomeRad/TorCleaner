@@ -1,5 +1,5 @@
 include MANIFEST.in guruguru.bmp
-include INSTALL LICENSE README TODO wc/parser/README
+include INSTALL LICENSE README TODO
 include Makefile webcleaner webcleanerconf wcheaders
 include wcheaders.bat webcleanerconf.bat
 include debian/changelog debian/conffiles debian/config debian/control
@@ -15,4 +15,5 @@ include rpm_build_script
 include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
 include config/*.png config/*.html
 include test/*.py test/output/test_* test/html/*.html
+include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparser.y
 exclude _webcleaner2_configdata.py
