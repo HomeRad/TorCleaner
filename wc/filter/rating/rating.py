@@ -18,6 +18,9 @@
 
 import time
 
+import wc.filter.rating
+import wc.filter.rating.category
+
 class Rating (object):
     """A single rating applies to a given URL and specifies a list
        of categories with their associated value.
@@ -57,7 +60,10 @@ class Rating (object):
         lines.append("url %s" % self.url)
         lines.append("generic %s" % str(self.generic))
         lines.append("modified %d" % self.modified)
-        for item in self.category_values.items():
-            lines.append("category %s=%s" % item)
+        for name, value in self.category_values.items():
+            category = wc.filter.rating.get_category(name)
+            if not category.iterable:
+                value = wc.filter.rating.category.string_from_intrange(value)
+            lines.append("category %s=%s" % (name, value))
         return "\n".join(lines)
 
