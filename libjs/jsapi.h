@@ -145,7 +145,7 @@ JS_BEGIN_EXTERN_C
  * comment in jstypes.h regarding safe int64 usage.
  */
 extern JS_PUBLIC_API(int64)
-JS_Now();
+JS_Now(void);
 
 /* Don't want to export data, so provide accessors for non-inline jsvals. */
 extern JS_PUBLIC_API(jsval)
