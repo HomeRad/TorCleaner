@@ -58,7 +58,7 @@ def create_inet_socket (dispatch, socktype):
     """create an AF_INET(6) socket object for given dispatcher, testing
     for IPv6 capability and disabling the NAGLE algorithm for TCP sockets
     """
-    if has_ipv6:
+    if False: #has_ipv6:
         family = socket.AF_INET6
     else:
         family = socket.AF_INET
