@@ -15,17 +15,18 @@ nonces = {}
 def get_ntlm_challenge (**attrs):
     """return initial challenge token for ntlm authentication"""
     ctype = attrs.get('type', 0)
-    if ctype not in (0, 2):
-        raise IOError("Invalid NTLM challenge type")
     if ctype==0:
         # initial challenge
         return "NTLM"
-    if ctype==2:
+    elif ctype==2:
         # after getting first credentials
         return "NTLM %s" % base64.encodestring(create_message2()).strip()
+    else:
+        raise IOError("Invalid NTLM challenge type")
 
 
 def parse_ntlm_challenge (challenge):
+    """parse both type0 and type2 challenges"""
     res = {}
     if not challenge.startswith('NTLMSSP\x00'):
         return res, challenge
@@ -35,8 +36,6 @@ def parse_ntlm_challenge (challenge):
 
 def get_ntlm_credentials (challenge, **attrs):
     ctype = attrs.get('type', 1)
-    if ctype not in (1, 3):
-        raise IOError("Invalid NTLM credentials type")
     if ctype==1:
         msg = create_message1()
     elif ctype==3:
@@ -45,14 +44,13 @@ def get_ntlm_credentials (challenge, **attrs):
         username = attrs['username']
         host = attrs['host']
         msg = create_message3(nonce, domain, username, host)
+    else:
+        raise IOError("Invalid NTLM credentials type")
     return "NTLM %s" % base64.encodestring(msg).strip()
 
 
-def get_ntlm_type3_message (**attrs):
-    # extract the required attributes
-
-
 def parse_ntlm_credentials (credentials):
+    """parse both type1 and type3 credentials"""
     # XXX
     pass
 
