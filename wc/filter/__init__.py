@@ -83,9 +83,9 @@ def applyfilter (i, data, fun='filter', attrs={}):
         ffun = getattr(f, fun)
         if attrs.has_key('mime'):
             if f.applies_to_mime(attrs['mime']):
-                data = apply(ffun, (data,), attrs)
+                data = ffun(data, **attrs)
         else:
-            data = apply(ffun, (data,), attrs)
+            data = ffun(data, **attrs)
     return data
 
 
