@@ -82,7 +82,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
         wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(
-                              self, self.request, self.headers, self.content)
+              self, self.request, self.headers, self.content, sslserver=True)
 
     def handle_local (self, is_public_doc=False):
         assert self.state == 'receive'
