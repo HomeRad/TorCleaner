@@ -116,7 +116,7 @@ class TestUrl (unittest.TestCase):
         nurl = url
         self.assertEqual(wc.url.url_norm(url), nurl)
 
-    def test_norm_path (self):
+    def test_norm_empty_path (self):
         """test url norm empty path handling"""
         # For schemes that define an empty path to be equivalent to a
         # path of "/", use "/".
@@ -159,7 +159,7 @@ class TestUrl (unittest.TestCase):
         url = "http://example.com/a/../a/b"
         self.assertEqual(wc.url.url_norm(url), nurl)
 
-    def test_norm_path_dots (self):
+    def test_norm_path_relative_dots (self):
         """test url norm relative path handling with dots"""
         # normalize redundant path segments
         url = '/foo/bar/.'
@@ -225,8 +225,20 @@ class TestUrl (unittest.TestCase):
         url = '../../../images/miniXmlButton.gif'
         nurl = url
         self.assertEqual(wc.url.url_norm(url), nurl)
+        url = '/a..b/../images/miniXmlButton.gif'
+        nurl = '/images/miniXmlButton.gif'
+        self.assertEqual(wc.url.url_norm(url), nurl)
+        url = '/.a.b/../foo/'
+        nurl = '/foo/'
+        self.assertEqual(wc.url.url_norm(url), nurl)
+        url = '/..a.b/../foo/'
+        nurl = '/foo/'
+        self.assertEqual(wc.url.url_norm(url), nurl)
+        url = 'b/../../foo/'
+        nurl = '../foo/'
+        self.assertEqual(wc.url.url_norm(url), nurl)
 
-    def test_norm_path_slashes (self):
+    def test_norm_path_relative_slashes (self):
         """test url norm relative path handling with slashes"""
         url = '/foo//'
         nurl = '/foo/'
