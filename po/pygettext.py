@@ -515,29 +515,49 @@ class HtmlGettext (sgmllib.SGMLParser, object):
         attrs = {}
         for key,val in attributes:
             attrs[key] = val
-        msgid = attrs.get('i18n:translate', None)
-        if msgid == '':
+        self.i18nTranslate(tag, attributes, attrs)
+        self.i18nAttributes(tag, attributes, attrs)
+
+
+    def i18nAttributes (self, tag, attributes, attrs):
+        """add attribute values to translate"""
+        i18nval = attrs.get('i18n:attributes', None)
+        if i18nval == '':
+            # translate all attributes in this start tag
+            for key,val in attributes:
+                if ":" not in key: # skip namespace args
+                    self.translations.add(val)
+        elif i18nval is not None:
+            # translate given attributes
+            for name, msgid in get_attribute_list(i18nval):
+                if msgid.startswith("string:"):
+                    self.translations.add(msgid[7:].replace(';;', ';'))
+
+
+    def i18nTranslate (self, tag, attributes, attrs):
+        """add tag content to translate"""
+        i18nval = attrs.get('i18n:translate', None)
+        if i18nval == '':
             if self.tag:
                 raise Exception, "nested i18n:translate is unsupported"
             self.tag = tag
+            # search for tal:content and tal:replace string: vars
+            for key,val in attributes:
+                if key in ("tal:content", "tal:replace") and \
+                   val.startswith("string:"):
+                    self.translations.add(val[7:].replace(';;', ';'))
             self.data = ""
-        elif msgid is not None:
+        elif i18nval is not None:
             if self.tag:
                 raise Exception, "nested i18n:translate is unsupported"
-            if msgid.startswith("string:"):
-                self.translations.add(msgid[7:].replace(';;', ';'))
-            else:
-                print >>sys.stderr, "tag <%s> has unsupported dynamic msgid %s" % (tag, `msgid`)
+            if i18nval.startswith("string:"):
+                self.translations.add(i18nval[7:].replace(';;', ';'))
         elif self.tag:
             # nested tag to translate
             self.data += "<%s"%tag
-            for key,val in attrs.items():
+            for key,val in attributes:
                 self.data += " %s=\"%s\"" % (key, cgi.escape(val, True))
             self.data += ">"
-        argument = attrs.get('i18n:attributes', None)
-        if argument is not None:
-            for name, msgid in get_attribute_list(argument):
-                self.translations.add(msgid)
 
 
     def unknown_endtag (self, tag):
