@@ -72,17 +72,17 @@ VERSION:
 
 .PHONY: filterfiles
 filterfiles:	md5sums
-	scp -1 config/*.zap config/*.dtd config/*.conf config/md5sums $(HTMLDIR)/zapper
-	scp -1 config/filter.dtd $(HTMLDIR)/filter.dtd.txt
-	scp -1 config/adverts.zap $(HTMLDIR)/adverts.zap.txt
+	scp config/*.zap config/*.dtd config/*.conf config/md5sums $(HTMLDIR)/zapper
+	scp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
+	scp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
 
 .PHONY: upload
 upload: distclean dist VERSION
-	scp -1 debian/changelog $(HTMLDIR)/changes.txt
-	scp -1 VERSION $(HTMLDIR)/raw/
-	scp -1 dist/* $(HTMLDIR)
-	scp -1 dist/* $(FTPDIR)
-	ssh -1 -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
+	scp debian/changelog $(HTMLDIR)/changes.txt
+	scp VERSION $(HTMLDIR)/raw/
+	scp dist/* $(HTMLDIR)
+	scp dist/* $(FTPDIR)
+	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
 
 .PHONY: locale
 locale:
