@@ -1,1 +1,1 @@
-SUBDIRS = webcleaner testserver
+SUBDIRS = webcleaner
