@@ -20,13 +20,13 @@ logging. Look in logging.conf if you want to customize their behaviour
 # public api
 __all__ = ["WC", "FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS",
            "debug", "info", "warn", "error", "critical", "exception",
-           "initlog"]
+           "initlog", "blocktext"]
 __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import ConfigDir, AppName, iswriteable
-import os, logging, logging.config
+import os, re, logging, logging.config
 from logging.handlers import RotatingFileHandler, NTEventLogHandler
 
 def initlog (filename):
@@ -120,3 +120,59 @@ def critical (log, msg, *args):
 def exception (log, msg, *args):
     logging.getLogger(log).exception(msg, *args)
 
+
+################### text utility functions ###############
+
+
+def blocktext (s, width):
+    """Adjust lines of s to be not wider than width and fill up
+    the lines to maximal length.
+    We leave Returns if the previous sentence ended with a punctuation.
+    We leave the entire paragraph as is if it begins with "!" (but we
+    cut the "!").
+    """
+    # split into lines
+    s = s.split("\n")
+    ret = ""
+    cache = ""
+    verbatim = 0
+    quote = 0
+    for line in s:
+        if not line.strip():
+            ret += cache+"\n"
+            cache = ""
+            verbatim = 0
+        elif verbatim:
+            ret += "\n"+line
+        #elif re.compile("^!").match(line) and not verbatim:
+        #    ret = ret+cache+"\n"+line[1:]
+        #    cache = ""
+        #    verbatim = 1
+        #elif re.compile(r"^(>|\d\)|o\s+)").match(line):
+        #    ret = ret+cache+"\n"+line
+        #    cache = ""
+        else:
+            if cache:
+                cache += \
+                    ((cache[-1] in ['.','!',',','?']) and "\n" or " ") + \
+	            line.strip()
+            else:
+                cache = "\n"+line
+            while len(cache) > width:
+                j = get_last_word_boundary(cache, width)
+                ret += cache[:j].strip() + "\n"
+                cache = cache[j:].strip()
+    return ret+cache
+
+
+def get_last_word_boundary (s, width):
+    """Get maximal index i of a whitespace char in s with 0 < i < width.
+    Note: if s contains no whitespace this returns width-1"""
+    match = re.compile(".*\s").match(s[0:width])
+    if match:
+        return match.end()
+    return width-1
+
+
+if __name__=='__main__':
+    _test()
