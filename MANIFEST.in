@@ -1,5 +1,5 @@
 include MANIFEST.in TODO
-include README.squid README.sshtunnel README.parser
+include README.squid README.sshtunnel README.parser BADURLS
 include webcleaner webcleanerconf wcheaders _webcleaner2_configdata.py
 include wcheaders.bat webcleanerconf.bat
 include debian/changelog debian/config debian/control debian/ConfWindow.patch
