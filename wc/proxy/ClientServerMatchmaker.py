@@ -55,10 +55,10 @@ class ClientServerMatchmaker:
             }
         if config['proxyuser']:
             auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
-            http_ver = '1.0'
+            http_ver = '1.1'
         else:
             auth = ''
-            http_ver = '1.1'
+            http_ver = '1.0'
         ServerHandleDirectly(self.client,
             'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
             'Server: WebCleaner Proxy\r\n' +\
@@ -128,13 +128,13 @@ class ClientServerMatchmaker:
         auth = base64.decodestring(auth[6:])
         if ':' not in auth:
             return
-        _user,_pass = auth.split(":",1)
+        _user,_pass = auth.split(":", 1)
         if _user!=config['proxyuser']:
             return
         if config['proxypass'] and \
-           sha.new(_pass).hexdigest()!=config['proxypass']:
+           _pass!=base64.decodestring(config['proxypass']):
             return
-        return 1
+        return "True"
 
 
     def handle_local (self, document):

@@ -1,34 +1,34 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Scripting"
+<folder title="Scripting" oid="4"
  desc="Scripting related.">
 
-<rewrite title="&lt;a&gt; onfocus"
+<rewrite title="&lt;a&gt; onfocus" oid="0"
  disable="1">
 <attr name="onfocus"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;a&gt; onmouseout"
+<rewrite title="&lt;a&gt; onmouseout" oid="1"
  disable="1">
 <attr name="onmouseout"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;a&gt; onmouseover"
+<rewrite title="&lt;a&gt; onmouseover" oid="2"
  disable="1">
 <attr name="onmouseover"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;area&gt; onfocus"
+<rewrite title="&lt;area&gt; onfocus" oid="3"
  disable="1"
  tag="area">
 <attr name="onfocus"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;area&gt; onmouseout"
+<rewrite title="&lt;area&gt; onmouseout" oid="4"
  disable="1"
  tag="area">
 <attr name="onmouseout"/>
@@ -36,51 +36,51 @@
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;area&gt; onmouseover"
+<rewrite title="&lt;area&gt; onmouseover" oid="5"
  disable="1"
  tag="area">
 <attr name="onmouseover"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;body&gt; onload"
+<rewrite title="&lt;body&gt; onload" oid="6"
  disable="1"
  tag="body">
 <attr name="onload"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;body&gt; onresize"
+<rewrite title="&lt;body&gt; onresize" oid="7"
  desc="filter the onresize tag"
  tag="body">
 <attr name="onresize"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;body&gt; onunload"
+<rewrite title="&lt;body&gt; onunload" oid="8"
  desc="unonload is almost always used for advert popups "
  tag="body">
 <attr name="onunload"/>
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;noscript&gt;"
+<rewrite title="&lt;noscript&gt;" oid="9"
  desc="Remove &lt;noscript&gt; tag (use if you allowed scripting)"
  tag="noscript">
 </rewrite>
 
-<rewrite title="&lt;script&gt;"
+<rewrite title="&lt;script&gt;" oid="10"
  desc="remove script tag (use if you dont want javascript)"
  disable="1"
  tag="script">
 </rewrite>
 
-<rewrite title="Javascript links"
+<rewrite title="Javascript links" oid="11"
  disable="1">
 <attr>javascript:.*</attr>
 </rewrite>
 
-<rewrite title="use contents of noscript tag"
+<rewrite title="use contents of noscript tag" oid="12"
  desc="use if you are filtering script tags. This rule just removes the &lt;noscript&gt; tags, not the tag content."
  disable="1"
  tag="noscript">

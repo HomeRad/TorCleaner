@@ -1,10 +1,5 @@
-import sys
-from urllib2 import urlopen, URLError
+import sys, os, httplib
 from ToolWindow import ToolWindow
-
-# disable proxy for urllib (XXX parent proxy?)
-import os
-os.environ['http_proxy'] = ""
 
 import wc
 from wc import debug, _, BaseParser, ConfigDir
@@ -27,15 +22,15 @@ def scrollnum (s):
 
 def parse_headers ():
     headers = []
-    url = "http://localhost:%(port)d/headers/"%wc.config
     try:
-        s = urlopen(url).read()
-    except URLError:
+        s = get_data("/headers/")
+    except (IOError, ValueError):
         print >> sys.stderr, _("WebCleaner is not running")
         return headers
     if s=="-": return headers
     lines = s.split("\n")
     for l in lines:
+        print "line", `l`
         # strip off paranthesis
         l = l[1:-1]
         # split into three parts
@@ -51,18 +46,37 @@ def parse_headers ():
     return headers
 
 
+def get_data (selector):
+    h = httplib.HTTP()
+    host = "localhost:%d"%wc.config['port']
+    h.connect(host)
+    h.putrequest("GET", selector)
+    if wc.config["proxyuser"]:
+        import base64
+        p = base64.decodestring(wc.config['proxypass'])
+        auth = "%s:%s" % (wc.config['proxyuser'], p)
+        auth = "Basic "+base64.encodestring(auth).strip()
+        h.putheader("Proxy-Authorization", auth)
+    h.endheaders()
+    status, message, headers = h.getreply()
+    if status == 200:
+        return h.getfile().read()
+    else:
+        print status, message, headers
+        raise IOError, message
+
+
 def parse_connections ():
     connections = {
         'valid': 0,
         'error': 0,
         'blocked': 0,
     }
-    url = "http://localhost:%d/connections/"%wc.config['port']
     try:
-        s = urlopen(url).read()
-    except URLError:
+        s = get_data("/connections/")
+    except (IOError, ValueError):
         print >> sys.stderr, _("WebCleaner is not running")
-        return headers
+        return connections
     lines = s.split("\n")
     for l in lines:
         name, num = l.split(":")

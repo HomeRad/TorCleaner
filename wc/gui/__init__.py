@@ -10,8 +10,7 @@ Proxy settings
 User/Password
 -------------
 Require proxy authentication with the given user and password.
-Note that only a hash value of the password is stored, not the
-password itself, so only replace the complete password!
+The password is saved base64 encoded.
 
 Port
 ----

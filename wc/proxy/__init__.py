@@ -47,7 +47,7 @@ Active connections:
 
 
 def log (msg):
-    """If the logfile is defined write the msg into it. The message msg
+    """If logfile is defined write the msg into it. The message msg
        should be in common log file format."""
     #debug(HURT_ME_PLENTY, "logging", `msg`)
     if config['logfile']:

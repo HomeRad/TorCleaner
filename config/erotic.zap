@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Erotic"
+<folder title="Erotic" oid="2"
  desc="Protect your children from looking erotic sites."
  disable="1">
 
-<block title="Bad words in the host name"
+<block title="Bad words in the host name" oid="0"
  scheme=""
  host="naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn"
  port=""
@@ -13,7 +13,7 @@
  query=""
  fragment=""/>
 
-<block title="Bad words in the path name"
+<block title="Bad words in the path name" oid="1"
  scheme=""
  host=""
  port=""
@@ -22,12 +22,12 @@
  query=""
  fragment=""/>
 
-<rewrite title="Bad words in the url 1">
+<rewrite title="Bad words in the url 1" oid="2">
 <attr>http://.*\.(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn).*\.com</attr>
 <replace part="attrval">http://www.calvinandhobbes.com/</replace>
 </rewrite>
 
-<rewrite title="Bad words in the url 2">
+<rewrite title="Bad words in the url 2" oid="3">
 <attr>http://.*(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn)\..*com</attr>
 <replace part="attrval">http://www.calvinandhobbes.com/</replace>
 </rewrite>

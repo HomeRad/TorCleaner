@@ -157,7 +157,7 @@ class Configuration (UserDict.UserDict):
             exec "from filter import %s" % f
             _module = getattr(sys.modules['wc.filter'], f)
             # add content-rewriting mime types to special list
-            if f in ('Rewriter', 'Replacer', 'GifImage'):
+            if f in ('Rewriter', 'Replacer', 'GifImage', 'Compress'):
                 for mime in getattr(_module, "mimelist"):
                     if mime not in self['mime_content_rewriting']:
                         self['mime_content_rewriting'].append(mime)
