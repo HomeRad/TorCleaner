@@ -24,32 +24,28 @@ class ClientServerMatchmaker (object):
 
     States:
 
-     - dns
-       Client has sent all of the browser information
-               We have asked for a DNS lookup
-               We are waiting for an IP address
-           =>  Either we get an IP address, we redirect, or we fail
-
-     - server
-       We have an IP address
-               We are looking for a suitable server
-           =>  Either we find a server from ServerPool and use it
-               (go into 'response'), or we create a new server
-               (go into 'connect'), or we wait a bit (stay in 'server')
-
-     - connect
-       We have a brand new server object
-       We are waiting for it to connect
-       =>  Either it connects and we send the request (go into
-      'response'), or it fails and we notify the client
-
+      - dns
+        Client has sent all of the browser information
+        We have asked for a DNS lookup
+        We are waiting for an IP address
+        =>  Either we get an IP address, we redirect, or we fail
+      - server
+        We have an IP address
+        We are looking for a suitable server
+        =>  Either we find a server from ServerPool and use it
+        (go into 'response'), or we create a new server
+        (go into 'connect'), or we wait a bit (stay in 'server')
+      - connect
+        We have a brand new server object
+        We are waiting for it to connect
+        =>  Either it connects and we send the request (go into
+        'response'), or it fails and we notify the client
       - response
         We have sent a request to the server
         We are waiting for it to respond
         =>  Either it responds and we have a client/server match
         (go into 'done'), it doesn't and we retry (go into
         'server'), or it doesn't and we give up (go into 'done')
-
       - done
         We are done matching up the client and server
     """

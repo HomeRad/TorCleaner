@@ -121,8 +121,8 @@ class TemplateInterpreter (object):
 
     def tagAsText (self, (tag,atts), singletonFlag=False):
         """ This returns a tag as text.
-        If self.escapeAttributes is true then the value of the attributes will be
-         escaped.
+            If self.escapeAttributes is true then the value of the attributes
+            will be escaped.
         """
         result = ["<"]
         result.append(tag)
