@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""ssl connection, usable for both client and server connections"""
+"""
+SSL connection, usable for both client and server connections.
+"""
 
 import wc
 import wc.log
@@ -8,11 +10,15 @@ import OpenSSL.SSL
 
 
 class SslConnection (wc.proxy.Connection.Connection):
-    """mix-in class for SSL connections"""
+    """
+    Mix-in class for SSL connections.
+    """
 
     def handle_read (self):
-        """read data from SSL connection, put it into recv_buffer and call
-           process_read"""
+        """
+        Read data from SSL connection, put it into recv_buffer and call
+        process_read.
+        """
         assert self.connected
         wc.log.debug(wc.LOG_PROXY, '%s SslConnection.handle_read', self)
         if len(self.recv_buffer) > wc.proxy.Connection.MAX_BUFSIZE:
@@ -49,8 +55,10 @@ class SslConnection (wc.proxy.Connection.Connection):
         self.process_read()
 
     def handle_write (self):
-        """Write data from send_buffer to connection socket.
-           Execute a possible pending close."""
+        """
+        Write data from send_buffer to connection socket.
+        Execute a possible pending close.
+        """
         assert self.connected
         assert self.send_buffer
         wc.log.debug(wc.LOG_PROXY, '%s SslConnection.handle_write', self)

@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""HTTP digest authentication routines"""
+"""
+HTTP digest authentication routines.
+"""
 
 __all__ = ["get_digest_challenge", "parse_digest_challenge",
            "get_digest_credentials", "parse_digest_credentials",
@@ -28,7 +30,9 @@ max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
 
 
 def check_nonces ():
-    """deprecate old digest nonces"""
+    """
+    Deprecate old digest nonces.
+    """
     todelete = []
     for nonce, value in nonces.items():
         noncetime = time.time() - value
@@ -40,7 +44,9 @@ def check_nonces ():
 
 
 def get_digest_challenge (stale="false"):
-    """return initial challenge token for digest authentication"""
+    """
+    Return initial challenge token for digest authentication.
+    """
     realm = wc_realm
     nonce = encode_digest("%f:%f" % (time.time(), random.random()))
     assert nonce not in nonces
@@ -52,17 +58,23 @@ def get_digest_challenge (stale="false"):
 
 
 def parse_digest_challenge (challenge):
-    """parse a digest challenge into a dictionary"""
+    """
+    Parse a digest challenge into a dictionary.
+    """
     return parse_auth({}, challenge)
 
 
 def parse_digest_credentials (credentials):
-    """parse digest credentials into a dictionary"""
+    """
+    Parse digest credentials into a dictionary.
+    """
     return parse_auth({}, credentials)
 
 
 def check_digest_credentials (credentials, **attrs):
-    """check digest credentials"""
+    """
+    Check digest credentials.
+    """
     if not check_digest_values(credentials):
         wc.log.warn(wc.LOG_AUTH, "digest wrong values")
         return False
@@ -95,8 +107,10 @@ def check_digest_credentials (credentials, **attrs):
 
 
 def check_digest_values (auth):
-    """check basic digest values on vadility; auth can be a parsed
-       challenge or credential"""
+    """
+    Check basic digest values on vadility; auth can be a parsed
+    challenge or credential.
+    """
     # check data
     if auth.get('algorithm') not in ("MD5", "MD5-sess", "SHA", None):
         wc.log.error(wc.LOG_AUTH, "unsupported digest algorithm value %r",
@@ -115,7 +129,9 @@ def check_digest_values (auth):
 
 
 def get_digest_credentials (challenge, **attrs):
-    """return digest credentials for given challenge"""
+    """
+    Return digest credentials for given challenge.
+    """
     if not check_digest_values(challenge):
         return None
     # calculate response digest
@@ -144,13 +160,14 @@ def get_digest_credentials (challenge, **attrs):
 
 
 def get_response_digest (challenge, **attrs):
-    """Calculate the response digest.
-       The get_response_digest function is taken from the following sources
-       and falls under their respective licenses:
-         - Mozilla browser 1.4, netwerk/protocol/http/src/nsHttpDigestAuth.cpp
-         - Python 2.3, urllib2.py
-       You'll find both copyrights in the file debian/copyright that
-       comes with the WebCleaner source distribution.
+    """
+    Calculate the response digest.
+    The get_response_digest function is taken from the following sources
+    and falls under their respective licenses:
+     - Mozilla browser 1.4, netwerk/protocol/http/src/nsHttpDigestAuth.cpp
+     - Python 2.3, urllib2.py
+    You'll find both copyrights in the file debian/copyright that
+    comes with the WebCleaner source distribution.
     """
     # lambdas assume digest modules are imported at the top level
     algorithm = challenge.get('algorithm', 'MD5')
@@ -194,25 +211,33 @@ def get_response_digest (challenge, **attrs):
 
 _hexchars = "0123456789abcdef"
 def get_cnonce ():
-    """return 16 random hex characters"""
+    """
+    Return 16 random hex characters.
+    """
     return "".join([ _hexchars[random.randint(0, 15)] for _ in range(16) ])
 
 
 _nonce_count = 0
 def get_nonce_count ():
-    """increment nonce count and return it as formatted string"""
+    """
+    Increment nonce count and return it as formatted string.
+    """
     global _nonce_count
     _nonce_count += 1
     return "%08d" % _nonce_count
 
 
 def get_entity_digest (data, chal):
-    """XXX not implemented yet, returns None"""
+    """
+    XXX not implemented yet, returns None.
+    """
     return None
 
 
 def encode_digest (digest):
-    """encode given digest in hexadecimal representation and return it"""
+    """
+    Encode given digest in hexadecimal representation and return it.
+    """
     hexrep = []
     for c in digest:
         n = (ord(c) >> 4) & 0xf
@@ -224,5 +249,7 @@ def encode_digest (digest):
 
 from wc.proxy import make_timer
 def init ():
-    """check for timed out nonces every 5 minutes"""
+    """
+    Check for timed out nonces every 5 minutes.
+    """
     make_timer(300, check_nonces)

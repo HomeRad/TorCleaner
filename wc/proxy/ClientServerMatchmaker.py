@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""Mediator between client and server connection objects"""
+"""
+Mediator between client and server connection objects.
+"""
 
 import socket
 import cStringIO as StringIO
@@ -19,12 +21,12 @@ BUSY_LIMIT = 10
 
 
 class ClientServerMatchmaker (object):
-    """ The Matchmaker waits until the server connection is established
+    """
+    The Matchmaker waits until the server connection is established
     and a response was received from it. Then it matches the client
     and server connections together.
 
     States:
-
       - dns
         Client has sent all of the browser information
         We have asked for a DNS lookup
@@ -53,9 +55,10 @@ class ClientServerMatchmaker (object):
 
     def __init__ (self, client, request, headers, content,
                   mime_types=None, sslserver=False):
-        """if mime is not None, the response will have the specified
-           mime type, regardless of the Content-Type header value.
-           This is useful for JavaScript fetching and blocked pages.
+        """
+        If mime is not None, the response will have the specified
+        mime type, regardless of the Content-Type header value.
+        This is useful for JavaScript fetching and blocked pages.
         """
         self.sslserver = sslserver
         self.client = client
@@ -94,7 +97,9 @@ class ClientServerMatchmaker (object):
         wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
     def handle_dns (self, hostname, answer):
-        """got dns answer, look for server"""
+        """
+        Got dns answer, look for server.
+        """
         assert self.state == 'dns'
         wc.log.debug(wc.LOG_PROXY, "%s handle dns %r", self, hostname)
         if not self.client.connected:
@@ -129,7 +134,9 @@ class ClientServerMatchmaker (object):
                 _('Host %s not found .. %s')%(hostname, answer.data))
 
     def find_server (self):
-        """search for a connected server or make a new one"""
+        """
+        Search for a connected server or make a new one.
+        """
         assert self.state == 'server'
         addr = (self.ipaddr, self.port)
         # XXX why do I have to import wc again - python bug?
@@ -180,7 +187,9 @@ class ClientServerMatchmaker (object):
                 self.client.error(503, _('Connect error'))
 
     def server_connected (self, server):
-        """the server has connected"""
+        """
+        The server has connected.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s server_connected", self)
         assert self.state == 'connect'
         assert server.connected
@@ -226,13 +235,17 @@ class ClientServerMatchmaker (object):
                                    self.url, self.mime_types)
 
     def server_abort (self, reason=_("No response from server")):
-        """The server had an error, so we need to tell the client
-           that we couldn't connect"""
+        """
+        The server had an error, so we need to tell the client
+        that we couldn't connect.
+        """
         if self.client.connected:
             self.client.error(503, reason)
 
     def server_close (self, server):
-        """the server has closed"""
+        """
+        The server has closed.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s resurrection failed %d %s',
                      self, server.sequence_number, server)
         # Look for a server again
@@ -247,7 +260,9 @@ class ClientServerMatchmaker (object):
             self.client.error(503, _("Server closed connection"))
 
     def server_response (self, server, response, status, headers):
-        """the server got a response"""
+        """
+        The server got a response.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s server_response, match client/server",
                      self)
         # Okay, transfer control over to the real client
@@ -258,7 +273,9 @@ class ClientServerMatchmaker (object):
             server.client_abort()
 
     def __repr__ (self):
-        """object representation"""
+        """
+        Object representation.
+        """
         if self.client:
             extra = "client"
         else:

@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""connection handling WebCleaner SSL server <--> Remote SSL server"""
+"""
+Connection handling WebCleaner SSL server <--> Remote SSL server.
+"""
 
 import socket
 
@@ -13,11 +15,15 @@ import OpenSSL.SSL
 
 class SslServer (wc.proxy.HttpServer.HttpServer,
                  wc.proxy.SslConnection.SslConnection):
-    """Server object for SSL connections. Since this class must not have Proxy
-       functionality, the header mangling is different."""
+    """
+    Server object for SSL connections. Since this class must not have Proxy
+    functionality, the header mangling is different.
+    """
 
     def __init__ (self, ipaddr, port, client):
-        """initialize connection object and connect to remove server"""
+        """
+        Initialize connection object and connect to remove server.
+        """
         super(wc.proxy.HttpServer.HttpServer, self).__init__(client,
                                                              'connect')
         # default values
@@ -30,7 +36,9 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         self.try_connect()
 
     def __repr__ (self):
-        """object description"""
+        """
+        Object description.
+        """
         extra = ""
         if hasattr(self, "persistent") and self.persistent:
             extra += "persistent "
@@ -45,12 +53,16 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         return '<%s:%-8s %s>' % ('sslserver', self.state, extra)
 
     def mangle_request_headers (self):
-        """modify HTTP request headers"""
+        """
+        Modify HTTP request headers.
+        """
         # nothing to do
         pass
 
     def mangle_response_headers (self):
-        """modify HTTP response headers"""
+        """
+        Modify HTTP response headers.
+        """
         self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(
          self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
@@ -67,7 +79,9 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
                                         self.headers, self.mime_types, self.url)
 
     def process_recycle (self):
-        """recycle this server connection into the connection pool"""
+        """
+        Recycle this server connection into the connection pool.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
         # flush pending client data and try to reuse this connection
         self.delayed_close()

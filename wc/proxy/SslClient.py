@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""ssl client connection"""
+"""
+SSL client connection.
+"""
 
 import wc
 import wc.webgui
@@ -13,12 +15,13 @@ import wc.url
 
 class SslClient (wc.proxy.HttpClient.HttpClient,
                  wc.proxy.SslConnection.SslConnection):
-    """Handle SSL server requests, no proxy functionality is here.
-       Response data will be encrypted with the WebCleaner SSL server
-       certificate. The browser will complain about differing certificate
-       domains, which is the price to pay for an SSL gateway.
-       Despite having no proxying capabilities, this class is inherited
-       from HttpClient.
+    """
+    Handle SSL server requests, no proxy functionality is here.
+    Response data will be encrypted with the WebCleaner SSL server
+    certificate. The browser will complain about differing certificate
+    domains, which is the price to pay for an SSL gateway.
+    Despite having no proxying capabilities, this class is inherited
+    from HttpClient.
     """
 
     def __init__ (self, sock, addr):

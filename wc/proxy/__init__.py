@@ -1,7 +1,8 @@
 # -*- coding: iso-8859-1 -*-
-"""fourth incarnation of Amit's web proxy
+"""
+Fourth incarnation of Amit's web proxy
 
-used by Bastian Kleineidam for WebCleaner
+Used and modified by Bastian Kleineidam for WebCleaner
 """
 
 import socket
@@ -20,12 +21,16 @@ is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
 
 
 def fix_http_version (protocol):
-    """sanitize http protocol version string"""
+    """
+    Sanitize http protocol version string.
+    """
     return "HTTP/%d.%d" % get_http_version(protocol)
 
 
 def get_http_version (protocol):
-    """return http version number as a tuple"""
+    """
+    Return http version number as a tuple.
+    """
     mo = is_http(protocol)
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
@@ -38,7 +43,9 @@ def get_http_version (protocol):
 
 
 def make_timer (delay, callback):
-    """after DELAY seconds, run the CALLBACK function"""
+    """
+    After DELAY seconds, run the CALLBACK function.
+    """
     wc.log.debug(wc.LOG_PROXY, "Adding %s to %d timers", callback, len(TIMERS))
     TIMERS.append( (time.time()+delay, callback) )
     TIMERS.sort()
@@ -46,7 +53,9 @@ def make_timer (delay, callback):
 
 MAX_TIMEOUT = 60
 def run_timers ():
-    "Run all timers ready to be run, and return seconds to the next timer"
+    """
+    Run all timers ready to be run, and return seconds to the next timer.
+    """
     # Note that we will run timers that are scheduled to be run within
     # 10 ms.  This is because the select() statement doesn't have
     # infinite precision and may end up returning slightly earlier.
@@ -65,8 +74,10 @@ def run_timers ():
 import wc.proxy.Dispatcher
 
 def proxy_poll (timeout=0.0):
-    """look for sockets with pending data and call the appropriate
-       connection handlers"""
+    """
+    Look for sockets with pending data and call the appropriate
+    connection handlers.
+    """
     handlerCount = 0
     if wc.proxy.Dispatcher.socket_map:
         r = [x for x in wc.proxy.Dispatcher.socket_map.itervalues()
@@ -115,15 +126,18 @@ def proxy_poll (timeout=0.0):
 
 
 def _slow_check (x, t, stype):
-    """check if processing of connection x took too much time
-       and print a warning"""
+    """
+    Check if processing of connection x took too much time and print a
+    warning.
+    """
     if time.time()-t > 2:
         wc.log.warn(wc.LOG_PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
 
 
-
 def mainloop (handle=None, abort=None):
-    """proxy main loop, handles requests forever"""
+    """
+    Proxy main loop, handles requests forever.
+    """
     import wc.proxy.HttpClient
     import wc.proxy.Listener
     host = str(wc.configuration.config['bindaddress'])

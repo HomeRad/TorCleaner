@@ -1,21 +1,28 @@
 # -*- coding: iso-8859-1 -*-
-"""Implements the minimal amount of work needed to inflate an input stream
-example url is http://groups.yahoo.com/
+"""
+Implements the minimal amount of work needed to inflate an input stream.
+Example url is http://groups.yahoo.com/.
 """
 
 import zlib
 
 
 class DeflateStream (object):
-    """Filter object unzip'ing all data"""
+    """
+    Filter object unzip'ing all data.
+    """
 
     def __init__ (self):
-        """initialize unzipper"""
+        """
+        Initialize unzipper.
+        """
         self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
         self.closed = False
 
     def __repr__ (self):
-        """object representation"""
+        """
+        Object representation.
+        """
         if self.closed:
             s = "closed"
         else:
@@ -23,9 +30,13 @@ class DeflateStream (object):
         return '<deflate %s>' % s
 
     def decode (self, s):
-        """unzip given data s and return decompressed data"""
+        """
+        Unzip given data s and return decompressed data.
+        """
         return self.decompressor.decompress(s)
 
     def flush (self):
-        """flush all buffered data and return it"""
+        """
+        Flush all buffered data and return it.
+        """
         return self.decompressor.flush()

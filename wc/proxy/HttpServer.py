@@ -1,6 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-# -*- coding: iso-8859-1 -*-
-"""connection handling proxy <--> http server"""
+"""
+Connection handling proxy <--> http server.
+"""
 
 import time
 import socket
@@ -35,7 +36,9 @@ FilterStages = [
 
 is_http_status = re.compile(r'^\d\d\d$').search
 def get_response_data (response, url):
-    """parse a response status line into tokens (protocol, status, msg)"""
+    """
+    Parse a response status line into tokens (protocol, status, msg).
+    """
     parts = response.split(None, 2)
     if len(parts) == 2:
         wc.log.warn(wc.LOG_PROXY, "Empty response message from %r", url)
@@ -53,7 +56,9 @@ def get_response_data (response, url):
 
 
 def flush_decoders (decoders):
-    """flush given decoders and return flushed data"""
+    """
+    Flush given decoders and return flushed data.
+    """
     data = ""
     while decoders:
         wc.log.debug(wc.LOG_PROXY, "flush decoder %s", decoders[0])
@@ -65,23 +70,27 @@ def flush_decoders (decoders):
 
 
 class HttpServer (wc.proxy.Server.Server):
-    """HttpServer handles the connection between the proxy and a http server.
-     It writes the client request to the server and sends answer data back
-     to the client connection object, which is in most cases a HttpClient,
-     but could also be a HttpProxyClient (for Javascript sources)
+    """
+    HttpServer handles the connection between the proxy and a http server.
+    It writes the client request to the server and sends answer data back
+    to the client connection object, which is in most cases a HttpClient,
+    but could also be a HttpProxyClient (for Javascript sources).
     """
 
     def __init__ (self, ipaddr, port, client):
-        """initialize connection data and connect to remove server"""
+        """
+        Initialize connection data and connect to remove server.
+        """
         super(HttpServer, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
         self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
         self.try_connect()
 
-
     def reset (self):
-        """reset connection values"""
+        """
+        Reset connection values.
+        """
         super(HttpServer, self).reset()
         wc.log.debug(wc.LOG_PROXY, '%s reset', self)
         self.hostname = ''
@@ -110,7 +119,9 @@ class HttpServer (wc.proxy.Server.Server):
         wc.log.debug(wc.LOG_PROXY, "%s resetted", self)
 
     def __repr__ (self):
-        """object description"""
+        """
+        Object description.
+        """
         extra = ""
         if hasattr(self, "persistent") and self.persistent:
             extra += "persistent "
@@ -124,7 +135,9 @@ class HttpServer (wc.proxy.Server.Server):
         return '<%s:%-8s %s>' % ('server', self.state, extra)
 
     def process_connect (self):
-        """notify client that this server has connected"""
+        """
+        Notify client that this server has connected.
+        """
         assert self.state == 'connect'
         self.state = 'client'
         if self.client:
@@ -135,7 +148,9 @@ class HttpServer (wc.proxy.Server.Server):
 
     def client_send_request (self, method, protocol, hostname, port, document,
                              headers, content, client, url, mime_types):
-        """the client (matchmaker) sends the request to the server"""
+        """
+        The client (matchmaker) sends the request to the server.
+        """
         assert self.state == 'client', \
                                    "%s invalid state %r" % (self, self.state)
         self.method = method
@@ -156,15 +171,19 @@ class HttpServer (wc.proxy.Server.Server):
             self.send_request()
 
     def mangle_request_headers (self):
-        """modify request headers"""
+        """
+        Modify request headers.
+        """
         if wc.configuration.config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
             self.clientheaders['Proxy-Authorization'] = \
                           "%s\r" % wc.configuration.config['parentproxycreds']
 
     def send_request (self):
-        """send the request to the server, is also used to send a request
-           twice for NTLM authentication"""
+        """
+        Send the request to the server, is also used to send a request
+        twice for NTLM authentication.
+        """
         assert self.method != 'CONNECT'
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         wc.log.debug(wc.LOG_PROXY, '%s write request\n%r', self, request)
@@ -177,7 +196,9 @@ class HttpServer (wc.proxy.Server.Server):
         self.state = 'response'
 
     def process_read (self):
-        """process read event by delegating it to process_* functions"""
+        """
+        Process read event by delegating it to process_* functions.
+        """
         assert self.state != 'closed', \
                                   "%s invalid state %r" % (self, self.state)
         while True:
@@ -194,7 +215,9 @@ class HttpServer (wc.proxy.Server.Server):
                 break
 
     def process_response (self):
-        """look for response line and process it if found"""
+        """
+        Look for response line and process it if found.
+        """
         i = self.recv_buffer.find('\n')
         if i < 0:
             return
@@ -245,7 +268,9 @@ class HttpServer (wc.proxy.Server.Server):
         wc.log.debug(wc.LOG_PROXY, "%s response %r", self, self.response)
 
     def process_headers (self):
-        """look for headers and process them if found"""
+        """
+        Look for headers and process them if found.
+        """
         # Headers are terminated by a blank line .. now in the regexp,
         # we want to say it's either a newline at the beginning of
         # the document, or it's a lot of headers followed by two newlines.
@@ -323,7 +348,9 @@ class HttpServer (wc.proxy.Server.Server):
             # note: self.client could be None here
 
     def mangle_response_headers (self):
-        """modify response headers"""
+        """
+        Modify response headers.
+        """
         wc.proxy.Headers.server_set_headers(self.headers)
         self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(
          self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
@@ -341,7 +368,9 @@ class HttpServer (wc.proxy.Server.Server):
                                      self.headers, self.mime_types, self.url)
 
     def set_persistent (self, headers, http_ver):
-        """return True iff this server connection is persistent"""
+        """
+        Return True iff this server connection is persistent.
+        """
         if http_ver >= (1,1):
             self.persistent = not wc.proxy.Headers.has_header_value(
                                               headers, 'Connection', 'Close')
@@ -352,14 +381,18 @@ class HttpServer (wc.proxy.Server.Server):
             self.persistent = False
 
     def is_rewrite (self):
-        """return True iff this server will modify content"""
+        """
+        Return True iff this server will modify content.
+        """
         for ro in wc.configuration.config['mime_content_rewriting']:
             if ro.match(self.headers.get('Content-Type', '')):
                 return True
         return False
 
     def _show_rating_deny (self, msg):
-        """requested page is rated"""
+        """
+        Requested page is rated.
+        """
         query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
         response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
@@ -382,7 +415,9 @@ class HttpServer (wc.proxy.Server.Server):
         self.close()
 
     def process_content (self):
-        """process server data: filter it and write it to client"""
+        """
+        Process server data: filter it and write it to client.
+        """
         data = self.read(self.bytes_remaining)
         wc.log.debug(wc.LOG_PROXY, "%s process %d bytes", self, len(data))
         if self.bytes_remaining is not None:
@@ -433,8 +468,10 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'recycle'
 
     def process_client (self):
-        """gets called on SSL tunneled connections, delegates server data
-           directly to the client without filtering"""
+        """
+        Gets called on SSL tunneled connections, delegates server data
+        directly to the client without filtering.
+        """
         if not self.client:
             # delay
             return
@@ -446,7 +483,9 @@ class HttpServer (wc.proxy.Server.Server):
             self.client.write(data)
 
     def process_recycle (self):
-        """recycle the server connection and put it in the server pool"""
+        """
+        Recycle the server connection and put it in the server pool.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
         if self.statuscode == 407 and wc.configuration.config['parentproxy']:
             wc.log.debug(wc.LOG_PROXY, "%s need parent proxy authentication",
@@ -490,8 +529,10 @@ class HttpServer (wc.proxy.Server.Server):
             self.delayed_close()
 
     def flush (self):
-        """flush data of decoders (if any) and filters and write it to
-           the client. return True if flush was successful"""
+        """
+        Flush data of decoders (if any) and filters and write it to
+        the client. return True if flush was successful.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.flush", self)
         if not self.statuscode:
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
@@ -519,13 +560,17 @@ class HttpServer (wc.proxy.Server.Server):
         return True
 
     def set_unreadable (self, secs):
-        """make this connection unreadable for (secs) seconds"""
+        """
+        Make this connection unreadable for (secs) seconds.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.set_unreadable", self)
         oldstate, self.state = self.state, 'unreadable'
         wc.proxy.make_timer(secs, lambda: self.set_readable(oldstate))
 
     def set_readable (self, state):
-        """make the connection readable again and close"""
+        """
+        Make the connection readable again and close.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.set_readable", self)
         # the client might already have closed
         if self.client:
@@ -535,8 +580,10 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.debug(wc.LOG_PROXY, "%s client is gone", self)
 
     def close_reuse (self):
-        """reset connection data, but to not close() the socket. Put this
-           connection in server pool"""
+        """
+        Reset connection data, but to not close() the socket. Put this
+        connection in server pool.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.close_reuse", self)
         assert not self.client, "reuse with open client"
         super(HttpServer, self).close_reuse()
@@ -546,8 +593,9 @@ class HttpServer (wc.proxy.Server.Server):
         wc.proxy.ServerPool.serverpool.unreserve_server(self.addr, self)
 
     def close_ready (self):
-        """return True if connection has all data sent and is ready for
-           closing"""
+        """
+        Return True if connection has all data sent and is ready for closing.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.close_ready", self)
         if not (self.client and self.connected):
             # client has lost interest, or we closed already
@@ -562,8 +610,10 @@ class HttpServer (wc.proxy.Server.Server):
         return False
 
     def close_close (self):
-        """close the connection socket and remove this connection from
-           the connection pool"""
+        """
+        Close the connection socket and remove this connection from
+        the connection pool.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.close_close", self)
         assert not self.client, "close with open client"
         unregister = (self.connected and self.state != 'closed')
@@ -575,8 +625,10 @@ class HttpServer (wc.proxy.Server.Server):
         assert not self.connected
 
     def handle_error (self, what):
-        """tell the client that connection had an error, and close the
-           connection"""
+        """
+        Tell the client that connection had an error, and close the
+        connection.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_error %r",
                      self, what)
         if self.client:
@@ -585,13 +637,17 @@ class HttpServer (wc.proxy.Server.Server):
         super(HttpServer, self).handle_error(what)
 
     def handle_close (self):
-        """close the connection"""
+        """
+        Close the connection.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_close", self)
         self.persistent = False
         super(HttpServer, self).handle_close()
 
     def reconnect (self):
-        """reconnect to server"""
+        """
+        Reconnect to server.
+        """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.reconnect", self)
         # we still must have the client connection
         if not self.client:
@@ -608,7 +664,9 @@ class HttpServer (wc.proxy.Server.Server):
 
 
 def speedcheck_print_status ():
-    """print speed statistics for connections"""
+    """
+    Print speed statistics for connections.
+    """
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:

@@ -1,27 +1,33 @@
 # -*- coding: iso-8859-1 -*-
-"""stateful connections"""
+"""
+Stateful connections.
+"""
 
 import wc.proxy.Connection
 
 
 class StatefulConnection (wc.proxy.Connection.Connection):
-    """connection class allowing the connection to be in a specified state
+    """
+    Connection class allowing the connection to be in a specified state.
     """
 
     def __init__ (self, state, sock=None):
-        """initialize connection with given start state"""
+        """
+        Initialize connection with given start state.
+        """
         self.state = state
         super(StatefulConnection, self).__init__(sock=sock)
 
     def readable (self):
-        """a connection is readable if we're connected and not in a
-           close state
+        """
+        A connection is readable if we're connected and not in a close state.
         """
         return self.connected and self.state not in ('closed', 'unreadable')
 
     def delegate_read (self):
-        """delegate a read process to process_* funcs according to the
-           current state
+        """
+        Delegate a read process to process_* funcs according to the current
+        state.
         """
         bytes_before = len(self.recv_buffer)
         state_before = self.state

@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""ssl related utility functions"""
+"""
+SSL related utility functions.
+"""
 
 import os
 
@@ -9,7 +11,9 @@ from OpenSSL import SSL, crypto
 
 
 def exist_certificates (configdir):
-    """ensure that all certificates are present in given config directory"""
+    """
+    Ensure that all certificates are present in given config directory.
+    """
     for fname in "CA", "server", "client":
         if not (os.path.exists(os.path.join(configdir, '%s.cert'%fname)) and
                 os.path.exists(os.path.join(configdir, '%s.pkey'%fname))):
@@ -18,13 +22,17 @@ def exist_certificates (configdir):
 
 
 def dumpCertificate (cert, filetype=crypto.FILETYPE_PEM):
-    """a helper to dump an incoming cert as a PEM"""
+    """
+    A helper to dump an incoming cert as a PEM.
+    """
     return crypto.dump_certificate(filetype, cert)
 
 
 def verify_server_cb (conn, cert, errnum, depth, ok):
-    """the browser (or commandline client) has sent a SSL certificate to
-    the webcleaner server"""
+    """
+    The browser (or commandline client) has sent a SSL certificate to
+    the webcleaner server.
+    """
     expired = cert.has_expired()
     if expired:
         wc.log.error(wc.LOG_PROXY, "%s expired certificate %s", conn,
@@ -118,7 +126,8 @@ TYPE_RSA = crypto.TYPE_RSA
 TYPE_DSA = crypto.TYPE_DSA
 
 def createKeyPair (ktype, bits):
-    """Create a public/private key pair.
+    """
+    Create a public/private key pair.
 
     @param ktype: Key type, must be one of TYPE_RSA and TYPE_DSA
     @param bits:  Number of bits to use in the key
@@ -131,7 +140,8 @@ def createKeyPair (ktype, bits):
 
 
 def createCertRequest (pkey, digest="md5", **name):
-    """Create a certificate request.
+    """
+    Create a certificate request.
 
     @param pkey: The key to associate with the request
     @param digest: Digestion method to use for signing, default is md5
@@ -160,7 +170,8 @@ def createCertRequest (pkey, digest="md5", **name):
 
 def createCertificate (req, (issuerCert, issuerKey), serial,
                        (notBefore, notAfter), digest="md5"):
-    """Generate a certificate given a certificate request.
+    """
+    Generate a certificate given a certificate request.
 
     @param req:        Certificate request to use
     @param issuerCert: The certificate of the issuer

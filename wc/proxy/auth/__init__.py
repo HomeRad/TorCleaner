@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""support for different HTTP proxy authentication schemes"""
+"""
+Support for different HTTP proxy authentication schemes.
+"""
 
 # default realm for authentication
 wc_realm = "unknown"
@@ -22,12 +24,16 @@ if wc.HasCrypto:
 
 
 def get_auth_uri (url):
-    """return uri ready for authentication purposes"""
+    """
+    Return uri ready for authentication purposes.
+    """
     return wc.url.stripsite(url)[1]
 
 
 def get_header_challenges (headers, key):
-    """get parsed challenge(s) out of headers[key]"""
+    """
+    Get parsed challenge(s) out of headers[key].
+    """
     auths = {}
     for auth in headers.getallmatchingheadervalues(key):
         wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
@@ -38,7 +44,9 @@ def get_header_challenges (headers, key):
 
 
 def parse_challenges (challenge):
-    """return a parsed challenge dict"""
+    """
+    Return a parsed challenge dict.
+    """
     auths = {}
     while challenge:
         if challenge.startswith('Basic'):
@@ -57,10 +65,12 @@ def parse_challenges (challenge):
 
 
 def get_challenges (**args):
-    """return list of challenges for WebCleaner proxy authentication
-       Note that HTTP/1.1 allows multiple authentication challenges
-       either as multiple headers with the same key, or as one single
-       header whose value list is separated by commas"""
+    """
+    Return list of challenges for WebCleaner proxy authentication
+    Note that HTTP/1.1 allows multiple authentication challenges
+    either as multiple headers with the same key, or as one single
+    header whose value list is separated by commas.
+    """
     if wc.configuration.config['auth_ntlm'] and wc.HasCrypto:
         chals = [get_ntlm_challenge(**args)]
     else:
@@ -72,7 +82,9 @@ def get_challenges (**args):
 
 
 def get_header_credentials (headers, key):
-    """Return parsed credentials out of headers[key]"""
+    """
+    Return parsed credentials out of headers[key].
+    """
     creds = {}
     for cred in headers.getallmatchingheadervalues(key):
         wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
@@ -83,7 +95,9 @@ def get_header_credentials (headers, key):
 
 
 def parse_credentials (creds):
-    """return a parsed credential dict"""
+    """
+    Return a parsed credential dict.
+    """
     auths = {}
     while creds:
         if creds.startswith('Basic'):
@@ -102,9 +116,11 @@ def parse_credentials (creds):
 
 
 def get_credentials (challenges, **attrs):
-    """return a challenge response with supported authentication scheme
+    """
+    Return a challenge response with supported authentication scheme
     or None if challenge could not be fulfilled (eg on error or if
-    scheme is unsupported)"""
+    scheme is unsupported).
+    """
     if 'NTLM' in challenges and wc.HasCrypto:
         creds = get_ntlm_credentials(challenges['NTLM'][0], **attrs)
     elif 'Digest' in challenges:
@@ -118,7 +134,9 @@ def get_credentials (challenges, **attrs):
 
 
 def check_credentials (creds, **attrs):
-    """check credentials agains given attributes"""
+    """
+    Check credentials agains given attributes.
+    """
     wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s",
                  creds, attrs)
     if not creds:

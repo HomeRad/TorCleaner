@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""Header mangling"""
+"""
+Header mangling.
+"""
 
 import re
 import rfc822
@@ -14,17 +16,23 @@ import wc.proxy.decoder.DeflateStream
 
 
 class WcMessage (rfc822.Message, object):
-    """Represents a single RFC 2822-compliant message, adding functions
-       handling multiple headers with the same name"""
+    """
+    Represents a single RFC 2822-compliant message, adding functions
+    handling multiple headers with the same name.
+    """
 
     def __init__ (self, fp=None, seekable=True):
-        """initialize message reading from given optional file descriptor"""
+        """
+        Initialize message reading from given optional file descriptor.
+        """
         if fp is None:
             fp = StringIO.StringIO()
         super(WcMessage, self).__init__(fp, seekable=seekable)
 
     def getallmatchingheadervalues (self, name):
-        """return a list of all header values for the given header name"""
+        """
+        Return a list of all header values for the given header name.
+        """
         name = name.lower() + ':'
         n = len(name)
         vals = []
@@ -44,12 +52,16 @@ class WcMessage (rfc822.Message, object):
         return vals
 
     def addheader (self, name, value):
-        """add given header name and value to the end of the header list.
-        Multiple headers with the same name are supported"""
+        """
+        Add given header name and value to the end of the header list.
+        Multiple headers with the same name are supported.
+        """
         self.headers.append("%s: %s\r\n" % (name, value))
 
     def __contains__(self, name):
-        """Determine whether a message contains the named header."""
+        """
+        Determine whether a message contains the named header.
+        """
         return name.lower() in self.dict
 
     def __str__ (self):
@@ -60,7 +72,9 @@ class WcMessage (rfc822.Message, object):
 
 
 def get_content_length (headers, default=None):
-    """get content length as int or None on error"""
+    """
+    Get content length as int or None on error.
+    """
     if not headers.has_key("Content-Length"):
         if has_header_value(headers, "Transfer-Encoding", "chunked"):
             return None
@@ -74,7 +88,9 @@ def get_content_length (headers, default=None):
 
 
 def get_wc_client_headers (host):
-    """get default webcleaner proxy request headers"""
+    """
+    Get default webcleaner proxy request headers.
+    """
     headers = WcMessage()
     headers['Host'] = '%s\r' % host
     headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
@@ -85,7 +101,9 @@ def get_wc_client_headers (host):
 
 
 def remove_headers (headers, to_remove):
-    """remove entries from RFC822 headers"""
+    """
+    Remove entries from RFC822 headers.
+    """
     for h in to_remove:
         if h in headers:
             # note: this removes all headers with that name
@@ -93,8 +111,10 @@ def remove_headers (headers, to_remove):
 
 
 def has_header_value (headers, key, value):
-    """return true iff headers contain given value, case of key or value
-    is not important"""
+    """
+    Return true iff headers contain given value, case of key or value
+    is not important.
+    """
     value = value.lower()
     for val in headers.getallmatchingheadervalues(key):
         if val.lower() == value:
@@ -105,25 +125,33 @@ def has_header_value (headers, key, value):
 ########## HttpServer/Client header helper functions ##############
 
 def set_via_header (headers):
-    """set via header"""
+    """
+    Set "Via:" header.
+    """
     headers.addheader("Via", "1.1 unknown")
 
 
 def remove_warning_headers (headers):
-    """remove warning headers"""
+    """
+    Remove warning headers.
+    """
     # XXX todo
     pass
 
 
 def client_set_headers (headers):
-    """modify client request headers"""
+    """
+    Modify client request headers.
+    """
     client_remove_hop_by_hop_headers(headers)
     remove_warning_headers(headers)
     set_via_header(headers)
 
 
 def client_remove_hop_by_hop_headers (headers):
-    """Remove hop-by-hop headers"""
+    """
+    Remove hop-by-hop headers.
+    """
     to_remove = ['Proxy-Connection', 'Connection', 'Upgrade', 'Trailer', 'TE']
     hs = headers.getallmatchingheadervalues('Connection') + \
          headers.getallmatchingheadervalues('Proxy-Connection')
@@ -135,7 +163,9 @@ def client_remove_hop_by_hop_headers (headers):
 
 
 def client_set_encoding_headers (headers):
-    """set encoding headers and return compression type"""
+    """
+    Set encoding headers and return compression type.
+    """
     # remember if client understands gzip
     compress = 'identity'
     encodings = headers.get('Accept-Encoding', '')
@@ -151,7 +181,9 @@ def client_set_encoding_headers (headers):
 
 
 def client_remove_encoding_headers (headers):
-    """remove encoding headers of client request headers"""
+    """
+    Remove encoding headers of client request headers.
+    """
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
     if headers.has_key("Content-Length"):
@@ -164,7 +196,9 @@ def client_remove_encoding_headers (headers):
 
 
 def client_get_max_forwards (headers):
-    """get Max-Forwards value as int and decrement it if its > 0"""
+    """
+    Get Max-Forwards value as int and decrement it if its > 0.
+    """
     try:
         mf = int(headers.get('Max-Forwards', -1))
     except ValueError:
@@ -177,7 +211,9 @@ def client_get_max_forwards (headers):
 
 
 def server_set_headers (headers):
-    """modify server response headers"""
+    """
+    Modify server response headers.
+    """
     server_remove_hop_by_hop_headers(headers)
     set_via_header(headers)
     server_set_date_header(headers)
@@ -185,21 +221,27 @@ def server_set_headers (headers):
 
 
 def server_remove_hop_by_hop_headers (headers):
-    """Remove hop-by-hop headers"""
+    """
+    Remove hop-by-hop headers.
+    """
     # note: do not remove Proxy-Authenticate, we still need it
     to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer']
     remove_headers(headers, to_remove)
 
 
 def server_set_date_header (headers):
-    """add rfc2822 date if it was missing"""
+    """
+    Add rfc2822 date if it was missing.
+    """
     if not 'Date' in headers:
         from email import Utils
         headers['Date'] = "%s\r" % Utils.formatdate()
 
 
 def server_set_content_headers (headers, mime_types, url):
-    """add missing content-type headers"""
+    """
+    Add missing content-type headers.
+    """
     origmime = headers.get('Content-Type', None)
     if not origmime:
         wc.log.warn(wc.LOG_PROXY, _("Missing content type in %r"), url)
@@ -222,7 +264,9 @@ def server_set_content_headers (headers, mime_types, url):
 
 def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
                                  filename=None):
-    """set encoding headers"""
+    """
+    Set encoding headers.
+    """
     bytes_remaining = get_content_length(headers)
     # remove content length
     if rewrite:

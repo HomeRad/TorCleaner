@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""connection handling client <--> proxy"""
+"""
+Connection handling client <--> proxy.
+"""
 
 import time
 import cgi
@@ -29,7 +31,9 @@ import wc.google
 
 _all_methods = ['GET', 'HEAD', 'CONNECT', 'POST', 'PUT']
 def is_http_method (s):
-    """return True if s is a valid HTTP request method"""
+    """
+    Return True if s is a valid HTTP request method.
+    """
     if len(s)<7:
         # not enough data, say yes for now
         return True
@@ -45,17 +49,20 @@ FilterStages = [
 ]
 
 class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
-    """States:
-        request (read first line)
-        headers (read HTTP headers)
-        content (read HTTP POST content data)
-        receive (read any additional data and forward it to the server)
-        done    (done reading data, response already sent)
-        closed  (this connection is closed)
+    """
+    States:
+     - request (read first line)
+     - headers (read HTTP headers)
+     - content (read HTTP POST content data)
+     - receive (read any additional data and forward it to the server)
+     - done    (done reading data, response already sent)
+     - closed  (this connection is closed)
     """
 
     def __init__ (self, sock, addr):
-        """initialize connection data, test if client connection is allowed"""
+        """
+        Initialize connection data, test if client connection is allowed.
+        """
         super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
         self.localhost = self.socket.getsockname()[0]
@@ -68,7 +75,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.close()
 
     def reset (self):
-        """reset connection state"""
+        """
+        Reset connection state.
+        """
         super(HttpClient, self).reset()
         wc.log.debug(wc.LOG_PROXY, '%s reset', self)
         self.state = 'request'
@@ -84,7 +93,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.needs_redirect = False
 
     def error (self, status, msg, txt='', auth=''):
-        """display error page"""
+        """
+        Display error page.
+        """
         self.state = 'done'
         wc.log.debug(wc.LOG_PROXY, '%s error %r (%d)', self, msg, status)
         if status in wc.google.google_try_status and \
@@ -101,7 +112,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                       status=status, msg=msg, auth=auth)
 
     def __repr__ (self):
-        """object representation"""
+        """
+        Object representation.
+        """
         extra = ""
         if hasattr(self, "persistent") and self.persistent:
             extra += "persistent "
@@ -117,7 +130,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         return '<%s:%-8s %s>' % ('client', self.state, extra)
 
     def process_read (self):
-        """delegate read according to current connection state"""
+        """
+        Delegate read according to current connection state.
+        """
         assert self.state != 'closed'
         while True:
             if self.state == 'done':
@@ -126,7 +141,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 break
 
     def process_request (self):
-        """read request, split it up and filter it"""
+        """
+        Read request, split it up and filter it.
+        """
         # One newline ends request
         i = self.recv_buffer.find('\r\n')
         if i < 0:
@@ -166,7 +183,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.state = 'headers'
 
     def fix_request (self):
-        """try to fix requests. Return False on error, else True"""
+        """
+        Try to fix requests. Return False on error, else True.
+        """
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
@@ -224,7 +243,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         return True
 
     def process_headers (self):
-        """read and filter client request headers"""
+        """
+        Read and filter client request headers.
+        """
         # Two newlines ends headers
         i = self.recv_buffer.find('\r\n\r\n')
         if i < 0:
@@ -343,7 +364,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.state = 'content'
 
     def set_persistent (self, headers, http_ver):
-        """return True if connection is persistent"""
+        """
+        Return True if connection is persistent.
+        """
         # look if client wants persistent connections
         if http_ver >= (1, 1):
             self.persistent = \
@@ -363,11 +386,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 headers['Host'] = "%s\r" % headers['Host'][:i]
 
     def mangle_request_headers (self, headers):
-        """modify request headers"""
+        """
+        Modify request headers.
+        """
         wc.proxy.Headers.client_set_headers(headers)
 
     def process_content (self):
-        """read and filter client request content"""
+        """
+        Read and filter client request content.
+        """
         data = self.read(self.bytes_remaining)
         if self.bytes_remaining is not None:
             # Just pass everything through to the server
@@ -422,7 +449,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 self.server_request()
 
     def process_receive (self):
-        """called for tunneled ssl connections
+        """
+        Called for tunneled ssl connections.
         """
         if not self.server:
             # server is not yet there, delay
@@ -438,7 +466,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             wc.log.error(wc.LOG_PROXY, "%s invalid data", self)
 
     def server_request (self):
-        """issue server request through ClientServerMatchmaker object"""
+        """
+        Issue server request through ClientServerMatchmaker object.
+        """
         assert self.state == 'receive', \
                              "%s server_request in non-receive state" % self
         # this object will call server_connected at some point
@@ -446,7 +476,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                                 self.request, self.headers, self.content)
 
     def server_response (self, server, response, status, headers):
-        """read and filter server response data"""
+        """
+        Read and filter server response data.
+        """
         assert server.connected, "%s server was not connected" % self
         wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%r)',
                      self, response, status)
@@ -468,7 +500,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.write('\r\n')
 
     def try_google (self, url, response):
-        """display page with google cache links for requests page"""
+        """
+        Display page with google cache links for requests page.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s try_google %r', self, response)
         form = None
         wc.webgui.webconfig.WebConfig(self, '/google.html', form, self.protocol,
@@ -476,14 +510,18 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                      localcontext=wc.google.get_google_context(url, response))
 
     def server_content (self, data):
-        """The server received some content. Write it to the client."""
+        """
+        The server received some content. Write it to the client.
+        """
         assert self.server, "%s server_content(%r) had no server" % \
                             (self, data)
         if data:
             self.write(data)
 
     def server_close (self, server):
-        """The server closed"""
+        """
+        The server closed.
+        """
         assert self.server, "%s server_close had no server" % self
         wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
         if self.connected:
@@ -493,12 +531,16 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.server = None
 
     def server_abort (self, reason=""):
-        """The server aborted the connection"""
+        """
+        The server aborted the connection.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.close()
 
     def handle_error (self, what):
-        """An error occured, close the connection and inform the server"""
+        """
+        An error occured, close the connection and inform the server.
+        """
         super(HttpClient, self).handle_error(what)
         # We should close the server connection
         if self.server:
@@ -506,8 +548,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.server = None
 
     def handle_close (self):
-        """The client closed the connection, so cancel the server
-           connection"""
+        """
+        The client closed the connection, so cancel the server connection.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s handle_close', self)
         self.send_buffer = ''
         if self.server:
@@ -519,7 +562,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         super(HttpClient, self).handle_close()
 
     def handle_local (self, is_public_doc=False):
-        """handle local request by delegating it to the web configuration"""
+        """
+        Handle local request by delegating it to the web configuration.
+        """
         assert self.state == 'receive'
         wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
         # reject invalid methods
@@ -557,7 +602,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.webgui.webconfig.WebConfig(self, self.url, form, self.protocol, self.headers)
 
     def get_form_data (self):
-        """return CGI form data from stored request"""
+        """
+        Return CGI form data from stored request.
+        """
         form = None
         if self.method == 'GET':
             # split off query string and parse it
@@ -572,13 +619,17 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         return form
 
     def close_reuse (self):
-        """Reset connection state, leave connection alive for pipelining"""
+        """
+        Reset connection state, leave connection alive for pipelining.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s close_reuse', self)
         super(HttpClient, self).close_reuse()
         self.reset()
 
     def close_close (self):
-        """close this connection"""
+        """
+        Close this connection.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s close_close', self)
         self.state = 'closed'
         super(HttpClient, self).close_close()

@@ -1,12 +1,13 @@
 # -*- coding: iso-8859-1 -*-
-"""gunzip.py, amitp@cs.stanford.edu, March 2000a
+"""
+Gunzip.py, amitp@cs.stanford.edu, March 2000a
 
 Implements the minimal amount of work needed to ungzip an input stream
 
 Based on gzip.py in the standard Python distribution,
 but exports a proxy4 encoding interface:
-  - decode(string) => return as much of the string as can be decoded
-  - flush()        => return everything else
+ - decode(string) => return as much of the string as can be decoded
+ - flush()        => return everything else
 """
 
 import wc
@@ -15,20 +16,26 @@ import wc.proxy.decoder.DeflateStream
 
 
 class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
-    """stream filter ungzipp'ing data"""
+    """
+    Stream filter ungzipp'ing data.
+    """
 
     # Flags in the gzip header
     FTEXT, FHCRC, FEXTRA, FNAME, FCOMMENT = 1, 2, 4, 8, 16
 
     def __init__ (self):
-        """initialize internal data buffer and flags"""
+        """
+        Initialize internal data buffer and flags.
+        """
         super(GunzipStream, self).__init__()
         self.buf = ''
         self.header_seen = False
         self.error = False
 
     def __repr__ (self):
-        """object representation"""
+        """
+        Object representation.
+        """
         if self.closed:
             s = "closed"
         else:
@@ -37,7 +44,9 @@ class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
                    (s, len(self.buf), self.error)
 
     def attempt_header_read (self):
-        "Try to parse the header from buffer, and if we can, set flag"
+        """
+        Try to parse the header from buffer, and if we can, set flag.
+        """
         if len(self.buf) < 10: # Incomplete fixed part of header
             return
 
@@ -89,7 +98,9 @@ class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
         self.header_seen = True
 
     def decode (self, s):
-        """gunzip data s"""
+        """
+        Gunzip data s.
+        """
         if self.error:
             return s
         if not self.header_seen:
@@ -109,7 +120,9 @@ class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
         return super(GunzipStream, self).decode(s)
 
     def flush (self):
-        """flush buffer data and return it"""
+        """
+        Flush buffer data and return it.
+        """
         if self.error:
             return self.buf
         if not self.header_seen:

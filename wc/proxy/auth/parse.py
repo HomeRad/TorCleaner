@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""parse basic and digest HTTP auth strings into key/value tokens"""
 # Copyright (C) 2001-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Parse basic and digest HTTP auth strings into key/value tokens.
+"""
 
 import wc
 import wc.log
@@ -24,8 +26,10 @@ token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
                'ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`0123456789|~')
 
 def parse_token (s, tok="", relax=False, more_chars=""):
-    """Parse a token of data s, return tuple (tok, remaining data).
-       If tok is empty, parse a default token"""
+    """
+    Parse a token of data s, return tuple (tok, remaining data).
+    If tok is empty, parse a default token.
+    """
     if tok:
         if not s.startswith(tok):
             wc.log.warn(wc.LOG_AUTH, "expected %r start with %r", s, tok)
@@ -42,8 +46,11 @@ def parse_token (s, tok="", relax=False, more_chars=""):
 
 
 def parse_quotedstring (s):
-    """parse a quoted string token of s
-       return tuple (quoted, remaining data)"""
+    """
+    Parse a quoted string token of s.
+
+    @return: tuple (quoted, remaining data)
+    """
     dummy, s = parse_token(s, tok='"')
     quoted = ""
     esc = False
@@ -63,10 +70,12 @@ def parse_quotedstring (s):
 
 
 def parse_auth (auth, data):
-    """generic authentication tokenizer
-     - auth - default dictionary
-     - data - string data to parse
-    returns augmented auth dict and unparsed data
+    """
+    Generic authentication tokenizer
+
+    @param auth: default dictionary
+    @param data: string data to parse
+    @return: augmented auth dict and unparsed data
     """
     wc.log.debug(wc.LOG_AUTH, "parse authentication %r", data)
     while data:

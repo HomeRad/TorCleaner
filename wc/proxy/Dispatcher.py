@@ -1,17 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""A modified dispatcher class, taken from python2.3/asyncore.py.
-The following changes were made:
-
-- use new-style object inheritance
-- get rid of __getattr__ cludge
-- add fileno function
-- use True/False
-- use webcleaner logging functions
-- handle_write_event only calls handle_write if there is pending data
-- use a single global socket map
-
-"""
-# -*- Mode: Python -*-
 #   Id: asyncore.py,v 2.51 2000/09/07 22:29:26 rushing Exp
 #   Author: Sam Rushing <rushing@nightmare.com>
 
@@ -37,6 +24,17 @@ The following changes were made:
 # NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 # ======================================================================
+"""
+A modified dispatcher class, taken from python2.3/asyncore.py.
+The following changes were made:
+ - use new-style object inheritance
+ - get rid of __getattr__ cludge
+ - add fileno function
+ - use True/False
+ - use webcleaner logging functions
+ - handle_write_event only calls handle_write if there is pending data
+ - use a single global socket map
+"""
 
 import os
 import socket
@@ -66,8 +64,10 @@ if socket.has_ipv6:
             raise
 
 def create_socket (family, socktype):
-    """Create a socket with given family and type. If SSL context
-       is given an SSL socket is created"""
+    """
+    Create a socket with given family and type. If SSL context
+    is given an SSL socket is created.
+    """
     sock = socket.socket(family, socktype)
     # XXX disable custom timeouts for now
     #sock.settimeout(wc.configuration.config['timeout'])
@@ -83,7 +83,9 @@ def create_socket (family, socktype):
 
 
 class Dispatcher (object):
-    """dispatch socket events to handler functions"""
+    """
+    Dispatch socket events to handler functions.
+    """
 
     connected = False
     accepting = False
@@ -206,8 +208,9 @@ class Dispatcher (object):
         return err
 
     def check_connect (self, addr):
-        """Check if the connection is etablished.
-           See also http://cr.yp.to/docs/connect.html
+        """
+        Check if the connection is etablished.
+        See also http://cr.yp.to/docs/connect.html
         """
         wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
         try:

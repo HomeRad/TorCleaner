@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""internal http client"""
+"""
+Internal http client.
+"""
 
 import urlparse
 import wc.proxy.Headers
@@ -12,14 +14,17 @@ import wc.url
 
 
 class HttpProxyClient (object):
-    """A class buffering all incoming data from a server for later use.
-       Used to fetch javascript content in background.
-       On completion the handler function is called.
-       Buffered data is None on error, else the content string.
+    """
+    A class buffering all incoming data from a server for later use.
+    Used to fetch javascript content in background.
+    On completion the handler function is called.
+    Buffered data is None on error, else the content string.
     """
 
     def __init__ (self, handler, args, localhost):
-        """args is a tuple (url, JS version)"""
+        """
+        Args is a tuple (url, JS version).
+        """
         self.handler = handler
         self.args = args
         self.method = "GET"
@@ -43,7 +48,9 @@ class HttpProxyClient (object):
         wc.log.debug(wc.LOG_PROXY, '%s init', self)
 
     def __repr__ (self):
-        """object representation"""
+        """
+        Object representation.
+        """
         if self.handler is None:
             handler = "None"
         else:
@@ -53,26 +60,33 @@ class HttpProxyClient (object):
         return '<%s: %s %s>' % ('proxyclient', self.args[0], handler)
 
     def finish (self):
-        """tell handler all data is written and remove handler"""
+        """
+        Tell handler all data is written and remove handler.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s finish', self)
         if self.handler:
             self.handler(None, *self.args)
             self.handler = None
 
     def error (self, status, msg, txt=''):
-        """on error the client finishes"""
+        """
+        On error the client finishes.
+        """
         wc.log.error(wc.LOG_PROXY, '%s error %s %s %s',
                      self, status, msg, txt)
         self.finish()
 
     def write (self, data):
-        """give data to handler"""
+        """
+        Give data to handler.
+        """
         if self.handler:
             self.handler(data, *self.args)
 
     def server_response (self, server, response, status, headers):
-        """Follow redirects, and finish on errors. For HTTP status 2xx
-           continue."""
+        """
+        Follow redirects, and finish on errors. For HTTP status 2xx continue.
+        """
         self.server = server
         assert self.server.connected
         wc.log.debug(wc.LOG_PROXY, '%s server_response %r', self, response)
@@ -88,8 +102,10 @@ class HttpProxyClient (object):
             self.finish()
 
     def server_content (self, data):
-        """delegate server content to handler if it is not from a redirect
-           response"""
+        """
+        Delegate server content to handler if it is not from a redirect
+        response.
+        """
         assert self.server
         wc.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes',
                      self, len(data))
@@ -97,7 +113,9 @@ class HttpProxyClient (object):
             self.write(data)
 
     def server_close (self, server):
-        """The server has closed. Either redirect to new url, or finish"""
+        """
+        The server has closed. Either redirect to new url, or finish.
+        """
         assert self.server
         wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
         if self.isredirect:
@@ -106,17 +124,23 @@ class HttpProxyClient (object):
             self.finish()
 
     def server_abort (self):
-        """The server aborted, so finish"""
+        """
+        The server aborted, so finish.
+        """
         wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.finish()
 
     def handle_local (self):
-        """Local data is not allowed here, finish."""
+        """
+        Local data is not allowed here, finish.
+        """
         wc.log.error(wc.LOG_PROXY, "%s handle_local %s", self, self.args)
         self.finish()
 
     def redirect (self):
-        """handle redirection to new url"""
+        """
+        Handle redirection to new url.
+        """
         assert self.server
         # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
         # make a new ClientServerMatchmaker

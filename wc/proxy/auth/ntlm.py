@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""HTTP NTLM authentication routines"""
 # Used parts form NTLM auth proxy server and NTLM.py
 
 # NTLM.pm - An implementation of NTLM. In this version, I only
@@ -29,6 +28,9 @@
 # Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 #
+"""
+HTTP NTLM authentication routines.
+"""
 
 __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "get_ntlm_credentials", "parse_ntlm_credentials",
@@ -112,7 +114,9 @@ NTLMSSP_NEGOTIATE_80000000                 = -2147483648 # 0x80000000
 
 
 def str_flags (flags):
-    """return list of names of all set flags"""
+    """
+    Return list of names of all set flags.
+    """
     res = []
     if flags & NTLMSSP_NEGOTIATE_UNICODE:
         res.append("NTLMSSP_NEGOTIATE_UNICODE")
@@ -166,7 +170,9 @@ def str_flags (flags):
 
 
 def check_nonces ():
-    """deprecate old nonces"""
+    """
+    Deprecate old nonces.
+    """
     todelete = []
     for nonce, value in nonces.items():
         noncetime = time.time() - value
@@ -178,7 +184,9 @@ def check_nonces ():
 
 
 def get_ntlm_challenge (**attrs):
-    """return initial challenge token for ntlm authentication"""
+    """
+    Return initial challenge token for ntlm authentication.
+    """
     ctype = attrs.get('type', NTLMSSP_INIT)
     if ctype == NTLMSSP_INIT:
         # initial challenge (message type 0)
@@ -192,7 +200,9 @@ def get_ntlm_challenge (**attrs):
 
 
 def parse_ntlm_challenge (challenge):
-    """parse both type0 and type2 challenges"""
+    """
+    Parse both type0 and type2 challenges.
+    """
     if "," in challenge:
         chal, remainder = challenge.split(",", 1)
     else:
@@ -211,7 +221,9 @@ def parse_ntlm_challenge (challenge):
 
 
 def get_ntlm_credentials (challenge, **attrs):
-    """return NTLM credentials for given challenge"""
+    """
+    Return NTLM credentials for given challenge.
+    """
     ctype = attrs.get('type', NTLMSSP_NEGOTIATE)
     if ctype == NTLMSSP_NEGOTIATE:
         msg = create_message1()
@@ -230,7 +242,9 @@ def get_ntlm_credentials (challenge, **attrs):
 
 
 def parse_ntlm_credentials (credentials):
-    """parse both type1 and type3 credentials"""
+    """
+    Parse both type1 and type3 credentials.
+    """
     if "," in credentials:
         creds, remainder = credentials.split(",", 1)
     else:
@@ -255,7 +269,9 @@ def parse_ntlm_credentials (credentials):
 
 
 def check_ntlm_credentials (credentials, **attrs):
-    """return True if given credentials validate with given attrs"""
+    """
+    Return True if given credentials validate with given attrs.
+    """
     if credentials.has_key('host') and credentials['host'] != "UNKNOWN":
         wc.log.warn(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
         return False
@@ -292,7 +308,9 @@ negotiate_flags = NTLMSSP_NEGOTIATE_80000000 | \
    NTLMSSP_REQUEST_TARGET
 
 def create_message1 (flags=negotiate_flags):
-    """create and return NTLM message type 2 (NTLMSSP_NEGOTIATE)"""
+    """
+    Create and return NTLM message type 2 (NTLMSSP_NEGOTIATE).
+    """
     # overall length is 48 bytes
     msg = '%s\x00' % NTLMSSP_SIGNATURE # name
     msg += struct.pack("<l", NTLMSSP_NEGOTIATE) # message type
@@ -311,7 +329,9 @@ def create_message1 (flags=negotiate_flags):
 
 
 def parse_message1 (msg):
-    """parse and return NTLM message type 1 (NTLMSSP_NEGOTIATE)"""
+    """
+    Parse and return NTLM message type 1 (NTLMSSP_NEGOTIATE).
+    """
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
     wc.log.debug(wc.LOG_AUTH, "msg1 flags %s",
@@ -336,7 +356,9 @@ challenge_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
 
 
 def create_message2 (domain, flags=challenge_flags):
-    """create and return NTLM message type 2 (NTLMSSP_SIGNATURE)"""
+    """
+    Create and return NTLM message type 2 (NTLMSSP_SIGNATURE).
+    """
     msg = '%s\x00'% NTLMSSP_SIGNATURE # name
     msg += struct.pack("<l", NTLMSSP_CHALLENGE) # message type
     if flags & NTLMSSP_TARGET_TYPE_DOMAIN:
@@ -363,7 +385,9 @@ def create_message2 (domain, flags=challenge_flags):
 
 
 def parse_message2 (msg):
-    """parse and return NTLM message type 2 (NTLMSSP_SIGNATURE)"""
+    """
+    Parse and return NTLM message type 2 (NTLMSSP_SIGNATURE).
+    """
     res = {}
     if not msg.startswith('%s\x00' % NTLMSSP_SIGNATURE):
         wc.log.warn(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
@@ -389,7 +413,9 @@ auth_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
 
 def create_message3 (nonce, domain, username, host,
                      lm_hashed_pw, nt_hashed_pw, flags=auth_flags):
-    """create and return NTLM message type 3 (NTLMSSP_AUTH)"""
+    """
+    Create and return NTLM message type 3 (NTLMSSP_AUTH).
+    """
     if lm_hashed_pw:
         lm_resp = calc_resp(lm_hashed_pw, nonce)
     else:
@@ -440,7 +466,9 @@ def create_message3 (nonce, domain, username, host,
 
 
 def parse_message3 (msg):
-    """parse and return NTLM message type 3 (NTLMSSP_AUTH)"""
+    """
+    Parse and return NTLM message type 3 (NTLMSSP_AUTH).
+    """
     res = {'type': NTLMSSP_AUTH}
     lm_offset = getint32(msg[16:20])
     nt_len = getint16(msg[20:22])
@@ -464,23 +492,28 @@ def parse_message3 (msg):
 ############################ helper functions ###########################
 
 def compute_nonce ():
-    """return a random nonce integer value as 8-byte string"""
+    """
+    Return a random nonce integer value as 8-byte string.
+    """
     return "%08d" % (random.random() * 100000000)
 
 
 def get_session_key ():
-    """return ntlm session key"""
+    """
+    Return ntlm session key.
+    """
     # XXX not implemented
     return ""
 
 
 def calc_resp (key, nonce):
-    """takes a 21 byte array and treats it as 3 56-bit DES keys. The
-       8 byte plaintext is encrypted with each key and the resulting 24
-       bytes are stored in the result array
+    """
+    Takes a 21 byte array and treats it as 3 56-bit DES keys. The
+    8 byte plaintext is encrypted with each key and the resulting 24
+    bytes are stored in the result array
 
-       key - hashed password
-       nonce - nonce from server
+    @param key: hashed password
+    @param nonce: nonce from server
     """
     assert len(key) == 21, "key must be 21 bytes long"
     assert len(nonce) == 8, "nonce must be 8 bytes long"
@@ -491,34 +524,46 @@ def calc_resp (key, nonce):
 
 
 def getint32 (s):
-    """called internally to get a 32-bit integer in an NTLM message"""
+    """
+    Called internally to get a 32-bit integer in an NTLM message.
+    """
     assert len(s) == 4
     return struct.unpack("<l", s)[0]
 
 
 def getint16 (s):
-    """called internally to get a 16-bit integer in an NTLM message"""
+    """
+    Called internally to get a 16-bit integer in an NTLM message.
+    """
     assert len(s) == 2
     return struct.unpack("<h", s)[0]
 
 
 def str2unicode (s):
-    "converts ascii string to dumb unicode"
+    """
+    Converts ascii string to dumb unicode.
+    """
     return "".join([ c+'\x00' for c in s ])
 
 
 def unicode2str (s):
-    """converts dumb unicode back to ascii string"""
+    """
+    Converts dumb unicode back to ascii string.
+    """
     return s[::2]
 
 
 def lst2str (lst):
-    """converts a string to ascii string"""
+    """
+    Converts a string to ascii string.
+    """
     return "".join([chr(i & 0xFF) for i in lst])
 
 
 def convert_key (key):
-    """converts a 7-bytes key to an 8-bytes key based on an algorithm"""
+    """
+    Converts a 7-bytes key to an 8-bytes key based on an algorithm.
+    """
     assert len(key) == 7, "NTLM convert_key needs 7-byte key"
     bytes = [key[0],
              chr(((ord(key[0]) << 7) & 0xFF) | (ord(key[1]) >> 1)),
@@ -533,8 +578,9 @@ def convert_key (key):
 
 
 def set_odd_parity (byte):
-    """turns one-byte into odd parity. Odd parity means that a number in
-        binary has odd number of 1's.
+    """
+    Turns one-byte into odd parity. Odd parity means that a number in
+    binary has odd number of 1's.
     """
     assert len(byte) == 1
     parity = 0
@@ -553,7 +599,9 @@ def set_odd_parity (byte):
 
 
 def create_lm_hashed_password (passwd):
-    """create LanManager hashed password"""
+    """
+    Create LanManager hashed password.
+    """
     # get 14-byte LanManager-suitable password
     lm_pw = create_lm_password(passwd)
     # do hash
@@ -567,7 +615,9 @@ def create_lm_hashed_password (passwd):
 
 
 def create_lm_password (passwd):
-    """create Lan Manager hashed password"""
+    """
+    Create Lan Manager hashed password.
+    """
     passwd = passwd.upper()
     if len(passwd) < 14:
         lm_pw = passwd + ('\x00'*(14-len(passwd)))
@@ -578,7 +628,9 @@ def create_lm_password (passwd):
 
 
 def create_nt_hashed_password (passwd):
-    """create NT hashed password"""
+    """
+    Create NT hashed password.
+    """
     # we have to have UNICODE password
     pw = str2unicode(passwd)
     # do MD4 hash
@@ -592,5 +644,7 @@ def create_nt_hashed_password (passwd):
 
 from wc.proxy import make_timer
 def init ():
-    """check for timed out nonces every 5 minutes"""
+    """
+    Check for timed out nonces every 5 minutes.
+    """
     make_timer(300, check_nonces)

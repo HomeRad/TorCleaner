@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-1 -*-
-"""dns lookup routines
+"""
+DNS lookup routines
 For a high level overview of DNS, see
 http://www.rad.com/networks/1998/dns/main.html
 """
@@ -25,22 +26,27 @@ import wc.dns.message
 resolver = None
 
 def init_resolver ():
-    """Initialize DNS resolver config. Must be called on startup.
-    Should be called on SIGHUP (config reload)
+    """
+    Initialize DNS resolver config. Must be called on startup.
+    Should be called on SIGHUP (config reload).
     """
     global resolver
     resolver = wc.dns.resolver.Resolver()
 
 
 def background_lookup (hostname, callback):
-    "Return immediately, but call callback with a DnsResponse object later"
+    """
+    Return immediately, but call callback with a DnsResponse object later.
+    """
     # Hostnames are case insensitive, so canonicalize for lookup purposes
     wc.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
 def coerce_hostname (hostname):
-    """assure that hostname is a plain string"""
+    """
+    Assure that hostname is a plain string.
+    """
     if isinstance(hostname, unicode):
         # XXX encode?
         hostname = str(hostname)
@@ -50,37 +56,51 @@ def coerce_hostname (hostname):
 
 
 class DnsResponse (object):
-    """ A DNS answer can be:
-        ('found', [ipaddrs])
-        ('error', why-str)
-        ('redirect', new-hostname)"""
+    """
+    A DNS answer can be:
+     - ('found', [ipaddrs])
+     - ('error', why-str)
+     - ('redirect', new-hostname)
+    """
 
     def __init__ (self, kind, data):
-        """initialize response data"""
+        """
+        Initialize response data.
+        """
         self.kind = kind
         self.data = data
 
     def __repr__ (self):
-        """object representation"""
+        """
+        Object representation.
+        """
         return "DnsResponse(%s, %s)" % (self.kind, self.data)
 
     def isError (self):
-        """return True if dns response is an error"""
+        """
+        Return True if dns response is an error.
+        """
         return self.kind == 'error'
 
     def isFound (self):
-        """return True if dns response is found valid"""
+        """
+        Return True if dns response is found valid.
+        """
         return self.kind == 'found'
 
     def isRedirect (self):
-        """return True if dns response is a redirection"""
+        """
+        Return True if dns response is a redirection.
+        """
         return self.kind == 'redirect'
 
 
 has_whitespace = re.compile(r'\s').search
 
 class DnsExpandHostname (object):
-    "Try looking up a hostname and its expansions"
+    """
+    Try looking up a hostname and its expansions.
+    """
 
     # This routine calls DnsCache to do the individual lookups
     def __init__ (self, hostname, callback):
@@ -172,8 +192,9 @@ class DnsExpandHostname (object):
 
 
 class DnsCache (object):
-    """Provides a lookup function that will either get a value from the cache
-       or initiate a DNS lookup, fill the cache, and return that value
+    """
+    Provides a lookup function that will either get a value from the cache
+    or initiate a DNS lookup, fill the cache, and return that value.
     """
     # lookup() can create zero or one DnsLookupHostname objects
 
@@ -191,7 +212,9 @@ class DnsCache (object):
         return pprint.pformat(self.cache)
 
     def read_localhosts (self):
-        "Fill DnsCache with /etc/hosts information"
+        """
+        Fill DnsCache with /etc/hosts information.
+        """
         if os.name == 'posix':
             filename = '/etc/hosts'
         elif os.name == 'nt':
@@ -266,7 +289,9 @@ class DnsCache (object):
 
 
 class DnsLookupHostname (object):
-    "Perform DNS lookup on many nameservers"
+    """
+    Perform DNS lookup on many nameservers.
+    """
     # Use a DnsLookupConnection per nameserver
 
     # We start working with one nameserver per second, as long as we
@@ -328,7 +353,9 @@ class DnsLookupHostname (object):
 
 
 class DnsLookupConnection (wc.proxy.Connection.Connection):
-    "Look up a name by contacting a single nameserver"
+    """
+    Look up a name by contacting a single nameserver..
+    """
     # Switch from UDP to TCP after some time
     PORT = 53
     TIMEOUT = 2 # Resend the request every second

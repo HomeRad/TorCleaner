@@ -1,6 +1,8 @@
 # -*- coding: iso-8859-1 -*-
-"""encoding_chunked, amitp@cs.stanford.edu, March 2000
-Deal with Transfer-encoding: chunked [HTTP/1.1]"""
+"""
+Encoding_chunked, amitp@cs.stanford.edu, March 2000
+Deal with Transfer-encoding: chunked [HTTP/1.1].
+"""
 
 import re
 import wc
@@ -10,7 +12,8 @@ match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
 
 
 class UnchunkStream (object):
-    """stream filter for chunked transfer encoding
+    """
+    Stream filter for chunked transfer encoding
     States:
      - bytes_remaining is None:
        we're in the "need chunk size" state
@@ -19,13 +22,17 @@ class UnchunkStream (object):
     """
 
     def __init__ (self):
-        """initialize internal buffers and flags"""
+        """
+        Initialize internal buffers and flags.
+        """
         self.buf = ''
         self.bytes_remaining = None
         self.closed = False
 
     def __repr__ (self):
-        """representation of stream filter state"""
+        """
+        Representation of stream filter state.
+        """
         if self.closed:
             s = "closed"
         else:
@@ -34,7 +41,9 @@ class UnchunkStream (object):
                   (s, len(self.buf), self.bytes_remaining)
 
     def decode (self, s):
-        """unchunk given data s"""
+        """
+        Unchunk given data s.
+        """
         wc.log.debug(wc.LOG_NET, "chunked data %r", s)
         self.buf += s
         s = ''
@@ -81,7 +90,9 @@ class UnchunkStream (object):
         return s
 
     def flush (self):
-        """flush internal buffers and return flushed data"""
+        """
+        Flush internal buffers and return flushed data.
+        """
         s = self.buf.strip()
         self.buf = ''
         return s

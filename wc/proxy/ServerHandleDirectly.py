@@ -1,14 +1,20 @@
 # -*- coding: iso-8859-1 -*-
-"""direct request handling returning static data"""
+"""
+Direct request handling returning static data.
+"""
 
 import wc.proxy.Server
 
 
 class ServerHandleDirectly (wc.proxy.Server.Server):
-    """Answer a server request with static data"""
+    """
+    Answer a server request with static data.
+    """
 
     def __init__ (self, client, response, status, headers, content):
-        """write given response to client"""
+        """
+        Write given response to client.
+        """
         super(ServerHandleDirectly, self).__init__(client, 'default')
         if content:
             headers["Content-Length"] = "%d\r" % len(content)
@@ -19,9 +25,13 @@ class ServerHandleDirectly (wc.proxy.Server.Server):
         self.connected = False
 
     def process_connect (self):
-        """empty function; no server connection has to be made"""
+        """
+        Empty function; no server connection has to be made.
+        """
         pass
 
     def process_read (self):
-        """empty function; no server has to be read"""
+        """
+        Empty function; no server has to be read.
+        """
         pass
