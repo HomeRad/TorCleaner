@@ -9,7 +9,9 @@ from wc.filter import GetRuleFromName
 from wc.filter.PICS import services as pics_data
 
 # t_* variables are translated texts
-t_title = i18n._("%s filter configuration") % AppName
+t_webcleaner = "WebCleaner"
+t_proxyconf = i18n._("Proxy configuration")
+t_filterconf = i18n._("Filter configuration")
 t_back = i18n._("Back")
 t_apply = i18n._("Apply")
 t_removefolder = i18n._("Remove folder")

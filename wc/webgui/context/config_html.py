@@ -5,7 +5,9 @@ from wc import i18n, AppName, filtermodules, ip, sort_seq
 from wc import Configuration as _Configuration
 
 # translations
-title = i18n._("%s proxy configuration") % AppName
+t_webcleaner = "WebCleaner"
+t_proxyconf = i18n._("Proxy configuration")
+t_filterconf = i18n._("Filter configuration")
 port = i18n._("Port number")
 proxyuser = i18n._("Proxy user")
 proxypass = i18n._("Proxy password")

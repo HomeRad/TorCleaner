@@ -1,9 +1,68 @@
+body {
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    background: White;
+    color: Black;
+    margin: 0;
+    padding: 0;
+/* These work in IE only, changes the look of the scrollbar + textareas */
+    scrollbar-base-color: #DEE7EC;
+    scrollbar-highlight-color: #DEE7EC;
+    scrollbar-track-color: #F7F9FA;
+    scrollbar-darkshadow-color: #F7F9FA;
+    scrollbar-3dlight-color: #8CACBB;
+    scrollbar-shadow-color: #8CACBB;
+    scrollbar-arrow-color: #436976;
+}
+
+
+div.tabs {
+    /* Navigational Plone Tabs(tm), implemented by customizing the a tag - they are surprisingly elegant. The power of CSS runs strong in these :) */
+    background: transparent;
+    border-collapse: collapse;
+    border-bottom-color: #8CACBB;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding: 0.5em 0em 0em 2em;
+    white-space: nowrap;
+}
+
+div.tabs a {
+    /* The normal, unselected tabs. They are all links */
+    background: transparent;
+    border-color: #8CACBB;
+    border-width: 1px; 
+    border-style: solid solid none solid;
+    color: #436976;
+    font-weight: normal;
+    height: 1.2em;
+    margin-right: 0.5em;
+    padding: 0em 2em;
+    text-transform: lowercase;
+}
+
+div.tabs a.selected {
+    /* The selected tab. There's only one of this */
+    background: #DEE7EC;
+    border: 1px solid #8CACBB;
+    border-bottom: #DEE7EC 1px solid;
+    color: #436976;
+    font-weight: normal;
+}
+
+div.tabs a:hover {
+    background: #DEE7EC;
+    border-color: #8CACBB;
+    border-bottom-color: #DEE7EC;
+    color: #436976;
+}
+
+
 input.context {
     background-color: #8c0000;
     color: #ffffff;
     cursor: pointer;
-    font-family:Verdana, Helvetica, Arial, sans-serif;
-    font-size:10pt;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-size: 10pt;
     margin: 0;
     padding: 1px 4px 1px 4px;
     border-top: 1px solid #d58686;
