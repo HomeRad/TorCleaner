@@ -84,9 +84,10 @@ class ClientServerMatchmaker (object):
             self.find_server()
         elif answer.isRedirect():
             # Let's use a different hostname
-            new_url = self.scheme+"://"+answer.data
+            new_url = client.scheme+"://"+answer.data
             if self.port != 80:
 	        new_url += ':%d' % self.port
+            # XXX does not work with parent proxy
             new_url += self.document
             info(PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
