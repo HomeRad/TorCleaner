@@ -31,8 +31,10 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
-        # list of RuleRating objects
-        self.ratings = []
+        # map {category name -> limit}
+        self.ratings = {}
+        for category in wc.filter.rating.categories:
+            self.ratings[category.name] = None
         self.url = ""
 
     def fill_attrs (self, attrs, name):
@@ -45,7 +47,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         super(RatingRule, self).end_data(name)
         if name == 'category':
             assert self._category
-            self.ratings.append((self._category, self._data))
+            self.ratings[self._category] = self._data
             pass
         elif name == 'url':
             self.url = self._data
@@ -58,8 +60,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.url:
             s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
-        for category, value in self.ratings:
-            if value:
+        for category, value in self.ratings.items():
+            if value is not None:
                 s += u"\n  <category name=\"%s\">%s</category>" % \
                       (wc.XmlUtils.xmlquoteattr(category),
                        wc.XmlUtils.xmlquote(value))
