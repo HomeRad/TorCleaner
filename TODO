@@ -13,7 +13,7 @@ version 2.8 and above
   o rate sites
     web interface to rate sites (with password protection)
   o command line script to put squidguard blacklists into content rating
-    cache
+    cache?
   o cgi script for site rating submissions
   o cgi script for site rating requests
 
@@ -99,12 +99,3 @@ for your application make sure to deny these requests: add
   library is missing IPv6 support)
 
 - bfilter has Flash parse and generation library, I want that too .)
-
-- psyco:
-  Optional requirements (all platforms)
-  -------------------------------------
-  For faster code execution you can install psyco from
-  http://psyco.sourceforge.net/
-  [ http://osdn.dl.sourceforge.net/psyco/psyco-1.1.1-win-2.3.zip ]
-  [ http://osdn.dl.sourceforge.net/psyco/psyco-1.1.1-linux.i386-2.3.tar.gz ]
-
