@@ -22,11 +22,6 @@ import wc.filter.rules.UrlRule
 class JavascriptRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, this rule tells the Rewriter to filter JavaScript"""
 
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromJavascriptRule(self)
-
-
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(JavascriptRule, self).toxml()+u">"

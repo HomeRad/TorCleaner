@@ -22,11 +22,6 @@ import wc.filter.rules.UrlRule
 class AntivirusRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, tells the VirusFilter to scan web content for viruses"""
 
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromAntivirusRule(self)
-
-
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(AntivirusRule, self).toxml()+u">"

@@ -22,11 +22,6 @@ import wc.filter.rules.UrlRule
 class NocommentsRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, this rule tells the Rewriter to remove HTML comments"""
 
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromNocommentsRule(self)
-
-
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(NocommentsRule, self).toxml()+u">"

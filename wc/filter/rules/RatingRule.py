@@ -70,12 +70,6 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             if val:
                 self.values[category] = {val:True}
 
-
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromRatingRule(self)
-
-
     def check_against (self, rating):
         """rating is a mapping category -> value
            return None if allowed, else a reason of why not"""

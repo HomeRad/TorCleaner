@@ -75,12 +75,10 @@ class Rule (object):
         self.intattrs = ['disable']
         self.listattrs = []
 
-
     def _reset_parsed_data (self):
         """reset parsed rule data"""
         self._data = ""
         self._lang = "en"
-
 
     def update (self, rule, dryrun=False, log=None):
         """update title and description with given rule data"""
@@ -90,7 +88,6 @@ class Rule (object):
         chg = self.update_attrs(l, rule, dryrun, log)
         chg = self.update_titledesc(rule, dryrun, log) or chg
         return chg
-
 
     def update_titledesc (self, rule, dryrun, log):
         """update rule title and description with given rule data"""
@@ -123,7 +120,6 @@ class Rule (object):
                     self.descriptions[key] = value
         return chg
 
-
     def update_attrs (self, attrs, rule, dryrun, log):
         """update rule attributes (specified by attrs) with given rule data"""
         chg = False
@@ -138,41 +134,33 @@ class Rule (object):
                     setattr(self, attr, newval)
         return chg
 
-
     def __lt__ (self, other):
         """True iff self < other according to oid"""
         return self.oid < other.oid
-
 
     def __le__ (self, other):
         """True iff self <= other according to oid"""
         return self.oid <= other.oid
 
-
     def __eq__ (self, other):
         """True iff self == other according to oid"""
         return self.oid == other.oid
-
 
     def __ne__ (self, other):
         """True iff self != other according to oid"""
         return self.oid != other.oid
 
-
     def __gt__ (self, other):
         """True iff self > other according to oid"""
         return self.oid > other.oid
-
 
     def __ge__ (self, other):
         """True iff self >= other according to oid"""
         return self.oid >= other.oid
 
-
     def __hash__ (self):
         """return hash value"""
         return self.sid
-
 
     def fill_attrs (self, attrs, name):
         """initialize rule attributes with given attrs"""
@@ -196,11 +184,9 @@ class Rule (object):
             else:
                 setattr(self, attr, [])
 
-
     def fill_data (self, data, name):
         """called when XML character data was parsed to fill rule values"""
         self._data += data
-
 
     def end_data (self, name):
         """called when XML end element was reached"""
@@ -213,21 +199,13 @@ class Rule (object):
         elif name=='description':
             self.descriptions[self._lang] = self._data
 
-
     def compile_data (self):
         """register this rule; called when all XML parsing of rule finished"""
         wc.filter.rules.register_rule(self)
 
-
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromRule(self)
-
-
     def get_name (self):
         """class name without "Rule" suffix, in lowercase"""
         return self.__class__.__name__[:-4].lower()
-
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
@@ -235,7 +213,6 @@ class Rule (object):
         if self.disable:
             s+= u' disable="%d"' % self.disable
         return s
-
 
     def title_desc_toxml (self, prefix=""):
         """return XML for rule title and description"""

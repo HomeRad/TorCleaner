@@ -35,23 +35,15 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         self.filterstage = filterstage
         self.attrnames.extend(('name', 'filterstage'))
 
-
     def end_data (self, name):
         super(HeaderRule, self).end_data(name)
         if name=='replacement':
             self.value = self._data
 
-
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromHeaderRule(self)
-
-
     def update (self, rule, dryrun=False, log=None):
         """update header data"""
         chg = super(HeaderRule, self).update(rule, dryrun=dryrun, log=log)
         return self.update_attrs(['value'], rule, dryrun, log) or chg
-
 
     def toxml (self):
         """Rule data as XML for storing"""

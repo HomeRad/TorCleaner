@@ -33,29 +33,20 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
         self.replacement = replacement
         self.attrnames.append('search')
 
-
     def end_data (self, name):
         super(ReplaceRule, self).end_data(name)
         if name=='replacement':
             self.replacement = self._data
-
 
     def compile_data (self):
         """compile url regular expressions"""
         super(ReplaceRule, self).compile_data()
         wc.filter.rules.Rule.compileRegex(self, "search")
 
-
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromReplaceRule(self)
-
-
     def update (self, rule, dryrun=False, log=None):
         """update rule attributes with given rule data"""
         chg = super(ReplaceRule, self).update(rule, dryrun=dryrun, log=log)
         return self.update_attrs(['replacement'], rule, dryrun, log) or chg
-
 
     def toxml (self):
         """Rule data as XML for storing"""

@@ -25,6 +25,5 @@ class AllowdomainsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
        otherwise.
        See also the Blocker filter module.
     """
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromAllowdomainsRule(self)
+
+    pass

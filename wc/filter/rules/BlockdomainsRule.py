@@ -26,5 +26,4 @@ class BlockdomainsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
        See also the Blocker filter module.
     """
 
-    def fromFactory (self, factory):
-        return factory.fromBlockdomainsRule(self)
+    pass

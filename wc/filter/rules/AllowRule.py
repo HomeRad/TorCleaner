@@ -35,10 +35,6 @@ class AllowRule (wc.filter.rules.UrlRule.UrlRule):
         self.url = url
         self.attrnames.append('url')
 
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromAllowRule(self)
-
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(AllowRule, self).toxml() + \

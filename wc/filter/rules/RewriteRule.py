@@ -146,7 +146,6 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         elif name=='replacement':
             self.replacement = self._data
 
-
     def compile_data (self):
         """compile url regular expressions"""
         super(RewriteRule, self).compile_data()
@@ -156,18 +155,11 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             self.attrs_ro[attr] = re.compile(val)
         self.set_start_sufficient()
 
-
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromRewriteRule(self)
-
-
     def update (self, rule, dryrun=False, log=None):
         """update rewrite attributes with given rule data"""
         chg = super(RewriteRule, self).update(rule, dryrun=dryrun, log=log)
         attrs = ['attrs', 'part', 'replacement', 'enclosed']
         return self.update_attrs(attrs, rule, dryrun, log) or chg
-
 
     def _compute_start_sufficient (self):
         """return True if start tag is sufficient for rule application"""
@@ -175,11 +167,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             return True
         return self.part not in [ENCLOSED, COMPLETE, TAG, TAGNAME]
 
-
     def set_start_sufficient (self):
         """set flag to test if start tag is sufficient for rule application"""
         self.start_sufficient = self._compute_start_sufficient()
-
 
     def match_tag (self, tag):
         """return True iff tag name matches this rule"""

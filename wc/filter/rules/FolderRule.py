@@ -46,22 +46,15 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         self.intattrs.append('oid')
         self.oid = None
 
-
     def __str__ (self):
         """return rule data as string"""
         return super(FolderRule, self).__str__()+ \
             ("\nrules:   %d"%len(self.rules))
 
-
     def filename_get (self):
         """get filename where this folder is stored"""
         return self._filename
     filename = property(filename_get)
-
-
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromFolderRule(self)
 
 
     def append_rule (self, r):
@@ -71,12 +64,10 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         self.rules.append(r)
         r.parent = self
 
-
     def delete_rule (self, i):
         """delete rule from folder with index i"""
         del self.rules[i]
         recalc_up_down(self.rules)
-
 
     def update (self, rule, dryrun=False, log=None):
         """update this folder with given folder rule data"""

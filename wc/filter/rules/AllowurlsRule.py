@@ -25,7 +25,5 @@ class AllowurlsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
        otherwise.
        See also the Blocker filter module.
     """
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromAllowurlsRule(self)
 
+    pass

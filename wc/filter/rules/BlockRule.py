@@ -40,11 +40,6 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
             self.replacement = self._data
 
 
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromBlockRule(self)
-
-
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(wc.filter.rules.AllowRule.AllowRule, self).toxml() + \
