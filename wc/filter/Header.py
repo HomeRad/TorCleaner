@@ -17,6 +17,8 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import re
+import sets
+
 import wc.proxy.Headers
 import wc.filter
 import wc.filter.Filter
@@ -42,8 +44,8 @@ class Header (wc.filter.Filter.Filter):
             wc.filter.FILTER_RESPONSE_HEADER: [],
         }
         self.add = {
-            wc.filter.FILTER_REQUEST_HEADER: {},
-            wc.filter.FILTER_RESPONSE_HEADER: {},
+            wc.filter.FILTER_REQUEST_HEADER: [],
+            wc.filter.FILTER_RESPONSE_HEADER: [],
         }
 
     def addrule (self, rule):
@@ -52,29 +54,36 @@ class Header (wc.filter.Filter.Filter):
         # ignore empty rules
         if not rule.name:
             return
+        # name is a regular expression match object
         if not rule.value:
-            name = rule.name.lower()
+            # no value --> header name should be deleted
+            # deletion can apply to many headers
+            matcher = re.compile(rule.name, re.I).match
             if rule.filterstage in ('both', 'request'):
-                self.delete[wc.filter.FILTER_REQUEST_HEADER].append(name)
+                self.delete[wc.filter.FILTER_REQUEST_HEADER].append(matcher)
             if rule.filterstage in ('both', 'response'):
-                self.delete[wc.filter.FILTER_RESPONSE_HEADER].append(name)
+                self.delete[wc.filter.FILTER_RESPONSE_HEADER].append(matcher)
         else:
-            val = rule.value
+            # name, value must be ASCII strings
+            name = str(rule.name)
+            val = str(rule.value)
             if rule.filterstage in ('both', 'request'):
-                self.add[wc.filter.FILTER_REQUEST_HEADER][rule.name] = val
+                self.add[wc.filter.FILTER_REQUEST_HEADER].append((name, val))
             if rule.filterstage in ('both', 'response'):
-                self.add[wc.filter.FILTER_RESPONSE_HEADER][rule.name] = val
+                self.add[wc.filter.FILTER_RESPONSE_HEADER].append((name, val))
 
     def doit (self, data, **attrs):
         """apply stored header rules to data, which is a WcMessage object"""
-        delete = {}
+        delete = sets.Set()
         # stage is FILTER_REQUEST_HEADER or FILTER_RESPONSE_HEADER
         stage = attrs['filterstage']
         for h in data.keys():
-            for name in self.delete[stage]:
-                if re.match(name, h):
-                    delete[h.lower()] = h
-        wc.proxy.Headers.remove_headers(data, delete.values())
-        for key, val in self.add[stage].items():
-            data[key] = val+"\r"
+            for name_match in self.delete[stage]:
+                if name_match(h):
+                    delete.add(h.lower())
+                    # go to next header name
+                    break
+        wc.proxy.Headers.remove_headers(data, delete)
+        for name, val in self.add[stage]:
+            data[name] = val+"\r"
         return data
