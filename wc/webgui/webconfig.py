@@ -170,8 +170,7 @@ def add_default_context (context, filename, lang):
     # base url
     context_add(context, "baseurl",
                 "http://localhost:%d/" % wc.configuration.config['port'])
-    # language
-    context_add(context, "lang", lang)
+    add_i18n_context(context, lang)
     # other available languges
     otherlanguages = []
     for la in wc.i18n.supported_languages:
@@ -200,5 +199,43 @@ def add_nav_context (context, filename):
     context_add(context, "nav", nav)
 
 
+def add_i18n_context (context, lang):
+    # language and i18n
+    context_add(context, "lang", lang)
+    try:
+        translator = wc.get_translator(lang, translatorklass=Translator)
+    except IOError, msg:
+        print "XXX", lang, msg
+        translator = NullTranslator()
+    context_add(context, "i18n", translator)
+
+
 def context_add (context, key, val):
     context[key] = val
+
+
+class Translator (gettext.GNUTranslations):
+
+    OUTPUT_ENCODING = "utf-8"
+
+    def translate (self, domain, msgid, mapping=None,
+                   context=None, target_language=None, default=None):
+        _msg = self.gettext(msgid)
+        wc.log.debug(wc.LOG_TAL, "TRANSLATE %s %s %s %s",
+                     msgid, _msg, mapping, context)
+        _msg = TALInterpreter.interpolate(_msg, mapping)
+        return _msg
+
+    def gettext (self, msgid):
+        return self.ugettext(msgid).encode(self.OUTPUT_ENCODING)
+
+    def ngettext (self, singular, plural, number):
+        return self.ungettext(singular, plural, number).encode(
+            self.OUTPUT_ENCODING)
+
+
+class NullTranslator (gettext.NullTranslations):
+
+    def translate (self, domain, msgid, mapping=None,
+                   context=None, target_language=None, default=None):
+        return msgid
