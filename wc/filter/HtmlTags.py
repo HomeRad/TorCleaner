@@ -34,7 +34,6 @@ HtmlTags = {
     "basefont" : None,
     "bdo" : None,
     "big" : None,
-    "blink" : None,
     "blockquote" : None,
     "body" : None,
     "br" : None,
@@ -119,13 +118,17 @@ HtmlTags = {
 
 # invalid and old tags
 OldTags = {
+    "blink" : None, # Netscape Navigator
     "embed" : None, # Netscape Navigator 4
+    "keygen" : None, # Netscape Navigator
     "layer" : None, # Netscape Navigator 4
     "listing" : None, # HTML 3.2
+    "multicol" : None, # Netscape Navigator 3
     "nobr" : None, # Netscape Navigator 1.1
     "noembed" : None, # Netscape Navigator 4
     "nolayer" : None, # Netscape Navigator 4
     "plaintext" : None, # HTML 3.2
+    "spacer" : None, # Netscape Navigator 3
     "wbr" : None, # Netscape Navigator 1.1
     "xmp" : None, # HTML 3.2
 }
@@ -142,9 +145,9 @@ def check_spelling (tag, url):
     for htmltag in HtmlTags.keys():
          if distance(tag, htmltag)==1:
              print >>sys.stderr, "Warning: HTML tag", `tag`, \
-                                 "corrected to", `htmltag`
+                                 "corrected to", `htmltag`, "at", `url
              return htmltag
-    print >>sys.stderr, "Error: unknown HTML tag", `tag`
+    print >>sys.stderr, "Error: unknown HTML tag", `tag`, "at", `url
     return tag
 
 
