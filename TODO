@@ -2,8 +2,6 @@ TODO
 
 version 2.0
 
-- test and fix all BADURLS
-
 - nofilterhosts dns name resolution
 
 - test nofilter mode
