@@ -1,12 +1,11 @@
 # -*- coding: iso-8859-1 -*-
 """support for different HTTP proxy authentication schemes"""
 
-import wc.net.url
-
 # default realm for authentication
 wc_realm = "unknown"
 
 import bk.log
+import bk.url
 import wc
 from basic import parse_basic_challenge, get_basic_challenge
 from basic import parse_basic_credentials, get_basic_credentials
@@ -22,7 +21,7 @@ from ntlm import check_ntlm_credentials
 
 def get_auth_uri (url):
     """return uri ready for authentication purposes"""
-    return wc.net.url.stripsite(url)[1]
+    return bk.url.stripsite(url)[1]
 
 
 def get_header_challenges (headers, key):

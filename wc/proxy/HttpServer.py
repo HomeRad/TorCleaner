@@ -293,7 +293,7 @@ class HttpServer (wc.proxy.Server.Server):
         if self.statuscode in (301, 302):
             location = self.headers.get('Location')
             if location:
-                host = wc.net.url.spliturl(location)[1]
+                host = bk.url.spliturl(location)[1]
                 if host in wc.config['localhosts']:
                     self.handle_error(bk.i18n._('redirection to localhost'))
                     return

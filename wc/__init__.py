@@ -110,7 +110,7 @@ def sort_seq (seq):
     return l
 
 import bk.i18n
-import wc.net.url
+import bk.url
 import wc.net
 import wc.net.ip
 import wc.proxy
@@ -368,7 +368,7 @@ class Configuration (dict):
         """Decide whether to filter this url or not.
            returns True if the request must not be filtered, else False
         """
-        return wc.net.url.match_url(url, self['nofilterhosts'])
+        return bk.url.match_url(url, self['nofilterhosts'])
 
 
     def allowed (self, host):

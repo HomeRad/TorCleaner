@@ -2,13 +2,13 @@
 """ssl client connection"""
 
 import wc
-import wc.net.url
 import wc.webgui
 import wc.proxy.HttpClient
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.SslConnection
 import wc.proxy.Allowed
 import bk.log
+import bk.url
 import bk.i18n
 
 
@@ -54,8 +54,8 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         if len(self.url) > 255:
             bk.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # and unquote again
-        self.url = wc.net.url.url_norm(self.url)
-        self.scheme, self.hostname, self.port, self.document = wc.net.url.spliturl(self.url)
+        self.url = bk.url.url_norm(self.url)
+        self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'

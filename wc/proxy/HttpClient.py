@@ -8,6 +8,7 @@ import os
 import urllib
 import cStringIO as StringIO
 import bk.i18n
+import bk.url
 import wc
 import wc.proxy.StatefulConnection
 import wc.proxy.ClientServerMatchmaker
@@ -18,7 +19,6 @@ import wc.proxy
 import wc.proxy.Headers
 import wc.proxy.auth
 import wc.proxy.auth.ntlm
-import wc.net.url
 import wc.filter
 import wc.webgui
 import wc.google
@@ -136,7 +136,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.error(405, bk.i18n._("Method Not Allowed"))
             return
         # fix broken url paths, and unquote
-        self.url = wc.net.url.url_norm(self.url)
+        self.url = bk.url.url_norm(self.url)
         if not self.url:
             self.error(400, bk.i18n._("Empty URL"))
             return
@@ -147,7 +147,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # build request
         # be sure to quote url only where absolutely needed, as lots
         # of servers (eg. apple.com) cannot unquote properly
-        qurl = wc.net.url.url_quote(self.url)
+        qurl = bk.url.url_quote(self.url)
         self.request = "%s %s %s" % (self.method, qurl, self.protocol)
         bk.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
         # filter request
@@ -175,7 +175,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             bk.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # unquote and norm url
         self.needs_redirect = "\\" in self.url
-        self.url = wc.net.url.url_norm(self.url)
+        self.url = bk.url.url_norm(self.url)
         # fix CONNECT urls
         if self.method=='CONNECT':
             # XXX scheme could also be nntps
@@ -183,7 +183,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.hostname, self.port = urllib.splitnport(self.url, 443)
             self.document = '/'
         else:
-            self.scheme, self.hostname, self.port, self.document = wc.net.url.spliturl(self.url)
+            self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
             # fix missing trailing /
             if not self.document:
                 self.document = '/'
@@ -471,8 +471,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         super(HttpClient, self).handle_error(what)
         # We should close the server connection
         if self.server:
-            server, self.server = self.server, None
-            server.client_abort()
+            self.server.client_abort()
+            self.server = None
 
 
     def handle_close (self):
@@ -482,8 +482,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.send_buffer = ''
         super(HttpClient, self).handle_close()
         if self.server:
-            server, self.server = self.server, None
-            server.client_abort()
+            self.server.client_abort()
+            self.server = None
             # If there isn't a server, then it's in the process of
             # doing DNS lookup or connecting.  The matchmaker will
             # check to see if the client is still connected.

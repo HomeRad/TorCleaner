@@ -2,12 +2,12 @@
 """internal http client"""
 
 import urlparse
-import wc.net.url
 import wc.proxy.Headers
 import wc.proxy.HttpServer
 import wc.proxy.ClientServerMatchmaker
 import wc.filter
 import bk.log
+import bk.url
 
 
 class HttpProxyClient (object):
@@ -23,8 +23,8 @@ class HttpProxyClient (object):
         self.handler = handler
         self.args = args
         self.method = "GET"
-        self.url = wc.net.url.url_norm(self.args[0])
-        self.scheme, self.hostname, self.port, self.document = wc.net.url.spliturl(self.url)
+        self.url = bk.url.url_norm(self.args[0])
+        self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
@@ -33,7 +33,7 @@ class HttpProxyClient (object):
         self.isredirect = False
         attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_REQUEST])
         attrs['mime'] = 'application/x-javascript'
-        request = "GET %s HTTP/1.0" % wc.net.url.url_quote(self.url)
+        request = "GET %s HTTP/1.0" % bk.url.url_quote(self.url)
         request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, request, "filter", attrs)
         request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, request, "filter", attrs)
         self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, request, "filter", attrs)
@@ -125,19 +125,19 @@ class HttpProxyClient (object):
         url = self.server.headers.getheader("Location",
                      self.server.headers.getheader("Uri", ""))
         url = urlparse.urljoin(self.server.url, url)
-        self.url = wc.net.url.url_norm(url)
+        self.url = bk.url.url_norm(url)
         self.args = (self.url, self.args[1])
         self.isredirect = False
         bk.log.debug(wc.LOG_PROXY, "%s redirected", self)
-        self.scheme, self.hostname, self.port, self.document = wc.net.url.spliturl(self.url)
+        self.scheme, self.hostname, self.port, self.document = bk.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
-        host = wc.net.url.stripsite(self.url)[0]
+        host = bk.url.stripsite(self.url)[0]
         mime = self.server.mime
         content = ''
         # note: use HTTP/1.0 for JavaScript
-        request = "GET %s HTTP/1.0"%wc.net.url.url_quote(self.url)
+        request = "GET %s HTTP/1.0"%bk.url.url_quote(self.url)
         # close the server and try again
         self.server = None
         headers = wc.proxy.Headers.get_wc_client_headers(host)
