@@ -24,7 +24,7 @@ import wc.log
 
 
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
-_end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
+_end_js_comment = re.compile(r"\s*//[^\r\n]*-->[ \t]*$").search
 
 def remove_html_comments (script):
     mo = _start_js_comment(script)
@@ -38,15 +38,32 @@ def remove_html_comments (script):
 
 def escape_js (script):
     """escape HTML stuff in JS script"""
+    # if we encounter "</script>" in the script, we assume that is
+    # in a quoted string. The solution is to split it into
+    # "</scr"+"ipt>" (with the proper quotes of course)
+    quote = False
+    escape = False
+    i = 0
+    while i < len(script):
+        c = script[i]
+        if c=='"' or c=="'":
+            if not escape:
+                if quote==c:
+                    quote = False
+                elif not quote:
+                    quote = c
+            escape = False
+        elif c=='\\':
+            escape = not escape
+        elif c=='<':
+            if script[i:i+9].lower()=='</script>' and quote:
+                script = script[:i]+"</scr"+quote+"+"+quote+"ipt>"+\
+                         script[(i+9):]
+            escape = False
+        else:
+            escape = False
+        i += 1
     script = script.replace('-->', '--&#62;')
-    script = re.sub(r'(?i)</script>', '&#60;/script>', script)
-    return script
-
-
-def unescape_js (script):
-    """unescape HTML stuff in JS script"""
-    script = script.replace('--&#62;', '-->')
-    script = script.replace('&#60;/script>', '</script>')
     return script
 
 

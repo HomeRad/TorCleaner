@@ -124,7 +124,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_htmlparser = wc.filter.HtmlParser.HtmlParser(handler)
         handler.htmlparser = self.js_htmlparser
         # execute
-        self.js_env.executeScript(wc.js.unescape_js(script), ver)
+        self.js_env.executeScript(script, ver)
         self.js_env.listeners.remove(self)
         # wait for recursive filter to finish
         self.jsEndScript(item)
@@ -216,7 +216,8 @@ class JSFilter (wc.js.JSListener.JSListener):
             del self.htmlparser.tagbuf[-1]
             return
         # put correctly quoted script data into buffer
-        self.htmlparser.tagbuf[-1][1] = "\n<!--\n%s\n//-->\n"%wc.js.escape_js(script)
+        self.htmlparser.tagbuf[-1][1] = \
+                         "\n<!--\n%s\n//-->\n"%wc.js.escape_js(script)
         # execute script
         self.jsScript(script, ver, item)
 

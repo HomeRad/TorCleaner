@@ -3,11 +3,13 @@
 """test script to test JavaScript engine"""
 
 import unittest
-from wc.js import jslib, JSListener
+import wc.js
+import wc.js.jslib
+import wc.js.JSListener
 import StandardTest
 
 
-class JSTester (JSListener.JSListener):
+class JSTester (wc.js.JSListener.JSListener):
     """JavaScript engine event listener"""
     def __init__ (self):
         self.data = ""
@@ -31,7 +33,7 @@ class TestJavascript (StandardTest.StandardTest):
 
     def init (self):
         self.out = JSTester()
-        self.jsEnv = jslib.JSEnv()
+        self.jsEnv = wc.js.jslib.JSEnv()
         self.jsEnv.listeners.append(self.out)
 
     def testPopups (self):
@@ -57,6 +59,17 @@ document.write('<'+a+b+'>')""", 1.1)
         """test provoked syntax error"""
         self.jsEnv.executeScript("a='", 1.5)
         self.assert_(self.out.err.startswith("SyntaxError:"))
+
+    def testEscaping (self):
+        script = """
+document.write('<script>a=0;</script>');
+document.write("<script>a=0;</script>");
+"""
+        qscript = """
+document.write('<script>a=0;</scr'+'ipt>');
+document.write("<script>a=0;</scr"+"ipt>");
+"""
+        self.assertEquals(qscript, wc.js.escape_js(script))
 
     def shutdown (self):
         """remove js engine listener"""
