@@ -17,6 +17,29 @@ extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
 int yyerror(char* msg);
+#define NO_HTML_END_TAG(tag) !(strcmp(tag, "area")==0 || \
+    strcmp(tag, "base")==0 || \
+    strcmp(tag, "basefont")==0 || \
+    strcmp(tag, "br")==0 || \
+    strcmp(tag, "col")==0 || \
+    strcmp(tag, "frame")==0 || \
+    strcmp(tag, "hr")==0 || \
+    strcmp(tag, "img")==0 || \
+    strcmp(tag, "input")==0 || \
+    strcmp(tag, "isindex")==0 || \
+    strcmp(tag, "link")==0 || \
+    strcmp(tag, "meta")==0 || \
+    strcmp(tag, "param")==0)
+
+#define RESIZE_BUF(buf) \
+    buf = PyMem_Resize(buf, char, 1); \
+    if (!buf) return NULL; \
+    buf[0] = '\0'
+
+#define NEW_BUF(buf) \
+    buf = PyMem_New(char, 1); \
+    if (!buf) return NULL; \
+    buf[0] = '\0';
 
 /* parser type definition */
 typedef struct {
@@ -30,7 +53,6 @@ staticforward PyTypeObject parser_type;
 %}
 
 /* parser options */
-%debug
 %verbose
 %defines
 %output="htmlparse.c"
@@ -98,6 +120,7 @@ finish_start:
     PyObject* tag = PyTuple_GET_ITEM($1, 0);
     PyObject* attrs = PyTuple_GET_ITEM($1, 1);
     int error = 0;
+    char* tagname;
     if (!tag || !attrs) { error = 1; goto finish_start_end; }
     if (PyObject_HasAttrString(ud->handler, "startElement")==1) {
 	callback = PyObject_GetAttrString(ud->handler, "startElement");
@@ -108,7 +131,9 @@ finish_start:
         Py_DECREF(result);
         callback=result=NULL;
     }
-    if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
+    tagname = PyString_AS_STRING(tag);
+    if (PyObject_HasAttrString(ud->handler, "endElement")==1 &&
+	NO_HTML_END_TAG(tagname)) {
 	callback = PyObject_GetAttrString(ud->handler, "endElement");
 	if (callback==NULL) { error=1; goto finish_start_end; }
 	result = PyObject_CallFunction(callback, "O", tag);
@@ -131,7 +156,9 @@ finish_start_end:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
+    char* tagname = PyString_AS_STRING($1);
+    if (PyObject_HasAttrString(ud->handler, "endElement")==1 &&
+	NO_HTML_END_TAG(tagname)) {
 	callback = PyObject_GetAttrString(ud->handler, "endElement");
 	if (callback==NULL) { error=1; goto finish_end; }
 	result = PyObject_CallFunction(callback, "O", $1);
@@ -302,12 +329,8 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     /* reset userData */
     p->userData = PyMem_New(UserData, sizeof(UserData));
     p->userData->handler = handler;
-    p->userData->buf = PyMem_New(char, 1);
-    if (!p->userData->buf) return PyErr_NoMemory();
-    p->userData->buf[0] = '\0';
-    p->userData->tmp_buf = PyMem_New(char, 1);
-    if (!p->userData->tmp_buf) return PyErr_NoMemory();
-    p->userData->tmp_buf[0] = '\0';
+    NEW_BUF(p->userData->buf);
+    NEW_BUF(p->userData->tmp_buf);
     p->userData->tmp_tag = p->userData->tmp_attrname =
 	p->userData->tmp_attrval = p->userData->tmp_attrs = NULL;
     p->userData->exc_type = NULL;
@@ -349,9 +372,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	Py_DECREF(result);
 	Py_DECREF(s);
 	// reset buffer
-	self->userData->buf = PyMem_Resize(self->userData->buf, char, 1);
-	if (!self->userData->buf) return NULL;
-	self->userData->buf[0] = '\0';
+        RESIZE_BUF(self->userData->buf);
     }
     return Py_BuildValue("i", res);
 }
@@ -391,9 +412,7 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
     }
     htmllexDestroy(self->scanner);
     // reset buffer
-    self->userData->buf = PyMem_Resize(self->userData->buf, char, 1);
-    if (!self->userData->buf) return NULL;
-    self->userData->buf[0] = '\0';
+    RESIZE_BUF(self->userData->buf);
     self->scanner = NULL;
     htmllexInit(&(self->scanner), self->userData);
     Py_INCREF(Py_None);
@@ -442,7 +461,7 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
-    yydebug = 1;
+    //yydebug = 1;
 }
 
 /* standard error reporting, indicating an internal error */

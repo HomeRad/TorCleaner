@@ -39,7 +39,8 @@
 
 #define SET_ATTR_LVAL \
     *yylval = Py_BuildValue("(OO)", yyextra->tmp_tag, yyextra->tmp_attrs); \
-    if ((*yylval)==NULL) return T_ERROR
+    if ((*yylval)==NULL) return T_ERROR; \
+    yyextra->tmp_tag = yyextra->tmp_attrs = NULL;
 
 #define FLUSH_ATTRS \
     if (strlen(yyextra->tmp_buf)) { \
@@ -57,6 +58,7 @@
 #define RETURN(tok) yyextra->nextpos = yyextra->bufpos; return tok
 
 #include "htmlparse.h"
+
 /* Find out if and how we must quote the value as an HTML attribute.
  - quote if it contains white space or <>
  - quote with " if it contains '
@@ -105,7 +107,6 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align fast
-%option debug
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
@@ -278,7 +279,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_SCRIPT);
 }
 
-<S_SCRIPT>[^<]*|< {
+<S_SCRIPT>[^<]+|< {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
 }
@@ -425,7 +426,7 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** TAGEND ************************/
-<INITIAL>"</"{RX_WHITE_SPACE} {
+<INITIAL>"</"{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
     BEGIN(S_TAGEND);
 }
@@ -441,7 +442,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_END);
 }
 
-<S_TAGEND>"<"{RX_WHITE_SPACE} {
+<S_TAGEND>"<"{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
     BEGIN(S_TAGSTART);
 }
@@ -463,6 +464,14 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_TEXT);
 }
 
+  /*********************** TEXT ************************/
+<INITIAL>[^<]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+    SETLVAL;
+    RETURN(T_TEXT);
+}
+
   /*********************** END ************************/
 %%
 
@@ -475,16 +484,16 @@ int htmllexInit (void** scanner, UserData* data) {
 /* prepare scanner for calls to yylex() */
 int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     /* append s to data buffer and scan those bytes */
-    int len = strlen(data->buf)+slen+1;
-    data->buf = PyMem_Resize(data->buf, char, len);
+    int len = strlen(data->buf);
+    data->buf = PyMem_Resize(data->buf, char, len+slen+1);
     strncat(data->buf, s, slen);
     /* reset userdata */
-    data->bufpos = 0;
+    data->bufpos = len;
     data->nextpos = 0;
     data->exc_type = NULL;
     data->exc_val = NULL;
     data->exc_tb = NULL;
-    yy_scan_bytes(data->buf, len, scanner);
+    yy_scan_bytes(s, slen, scanner);
     return 0;
 }
 

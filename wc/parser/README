@@ -39,3 +39,7 @@ the parser. Invalid syntax elements are passed as TEXT.
 
 3) The module uses a C extension for parsing.
 The FLEX code has options to generate a large but fast scanner.
+The parser ignores forbidden or unnecessary HTML end tags.
+The parser converts tag names to lower case.
+The parser quotes all attribute values with minimal necessity.
+

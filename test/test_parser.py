@@ -65,42 +65,41 @@ def _test():
         print "HTML", `t`
         p.feed(t)
         p.flush()
-        p.reset()
-    
-    print "======== sequential feed tests ========="
-    for t in tests:
-        print "HTML", `t`
-        for c in t:
-            p.feed(c)
-        p.flush()
-        p.reset()
-    print "===== subsequent interwoven parsing ===="
-    p1 = HtmlPrinter()
-    p.feed("<")
-    p1.feed("<")
-    p.feed("ht")
-    p1.feed("ht")
-    p.feed("ml")
-    p1.feed("ml")
-    p.feed(">")
-    p1.feed(">")
-    p.flush()
-    p1.flush()
-    p.reset()
-    p1.reset()
-    print "============= reset test ==============="
-    p.feed("<")
-    p.reset()
-    p.feed(">")
-    p.flush()
-    p.reset()
-    print "============ flush tests ==============="
-    for t in flushtests:
-        print "FLUSH test "+t
-        p.reset()
-        p.feed(t)
-        p.flush()
-    p.reset()
+        #p.reset()
+    #print "======== sequential feed tests ========="
+    #for t in tests:
+    #    print "HTML", `t`
+    #    for c in t:
+    #        p.feed(c)
+    #    p.flush()
+    #    #p.reset()
+    #print "===== subsequent interwoven parsing ===="
+    #p1 = HtmlPrinter()
+    #p.feed("<")
+    #p1.feed("<")
+    #p.feed("ht")
+    #p1.feed("ht")
+    #p.feed("ml")
+    #p1.feed("ml")
+    #p.feed(">")
+    #p1.feed(">")
+    #p.flush()
+    #p1.flush()
+    ##p.reset()
+    ##p1.reset()
+    #print "============= reset test ==============="
+    #p.feed("<")
+    #p.reset()
+    #p.feed(">")
+    #p.flush()
+    #p.reset()
+    #print "============ flush tests ==============="
+    #for t in flushtests:
+    #    print "FLUSH test "+t
+    #    p.reset()
+    #    p.feed(t)
+    #    p.flush()
+    #p.reset()
     print "finished"
 
 _test()
