@@ -63,6 +63,10 @@ class TestRewriter (StandardTest.StandardTest):
             self.filt("""<body %s="window.open();">""" % tag,
                   """<body>""")
 
+    def testJavascriptError (self):
+        self.filt("""<body onload="uru,guru">""",
+                  """<body onload="uru,guru">""")
+
     def testAdvertLinks1 (self):
         """Doubleclick advert"""
         self.filt("""<a href="http://www.doubleclick.net/">...</a>""", "")

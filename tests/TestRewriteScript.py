@@ -229,6 +229,19 @@ tooooooot.
 //-->
 </script>""")
 
+    def testScriptError (self):
+        self.filt(
+"""<script language="JavaScript1.1">
+<!--
+tooooooot.
+//-->
+</script>""",
+"""<script language="JavaScript1.1">
+<!--
+tooooooot.
+//-->
+</script>""")
+
     def testCommentQuoting2 (self):
         self.filt(
 """<script>

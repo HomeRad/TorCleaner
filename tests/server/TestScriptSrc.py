@@ -53,6 +53,8 @@ if ((soi_ad.indexOf("powerlayer") > -1) || (soi_ad.indexOf("interstitial") > -1)
 
     "/3.js": r"""window.open("datei.htm","Fenster1","width=310,height=400,left=0,top=0");
 """,
+    "/4.js": r"""tooot.""",
+
 }
 
 class JSRequestHandler (tests.proxy.HttpServer.LogRequestHandler):
@@ -166,6 +168,21 @@ a = 1
 <script type="JavaScript">
 <!--
 a = 1
+//-->
+</script>
+
+</html>""")
+
+
+    def testScriptSrc4 (self):
+        """missing </script>"""
+        self.filt(
+"""<script src="http://localhost:%d/4.js"/>
+
+</html>""" % tests.proxy.HttpServer.defaultconfig['port'],
+"""<script type="text/javascript">
+<!--
+tooot.
 //-->
 </script>
 
