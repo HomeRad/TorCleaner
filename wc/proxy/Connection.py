@@ -186,7 +186,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         assert self.connected
         wc.log.debug(wc.LOG_PROXY, '%s Connection.delayed_close', self)
         if not self.close_ready():
-            # We can't close yet because there's still data to send
+            # Do not close yet because there is still data to send
             wc.log.debug(wc.LOG_PROXY, '%s close ready channel', self)
             self.close_pending = True
         else:
