@@ -178,8 +178,7 @@ class ConfWindow(FXMainWindow):
             cols = max(len(text), cols)
             d.appendItem(text)
         d.setEditable(0)
-        # subtract 3 because acolumn is wider than text character
-        d.setNumColumns(cols-3) 
+        d.setNumColumns(cols)
         d.setCurrentItem(self.debuglevel)
 
         f = FXGroupBox(proxy_top, _("No proxy for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)

@@ -160,8 +160,7 @@ class HttpServer(Server):
             self.bytes_remaining = None
         response = self.response.split()
         if response and response[1] == '100':
-            # It's a Continue request, so go back to waiting for
-            # headers.
+            # it's a Continue request, so go back to waiting for headers
             self.state = 'response'
             return
 
@@ -172,7 +171,7 @@ class HttpServer(Server):
             for h in self.headers.headers[:]:
                 if re.match('(?i)content-length:', h):
                     self.headers.headers.remove(h)
-                    #self.bytes_remaining = None
+                    self.bytes_remaining = None
 
         self.decoders = []
         if self.headers.has_key('transfer-encoding'):
@@ -185,7 +184,7 @@ class HttpServer(Server):
                 elif re.match('(?i)content-length:', h):
                     assert 0, 'chunked encoding should not have content-length'
                     self.headers.headers.remove(h)
-                    #self.bytes_remainig = None
+                    self.bytes_remainig = None
 
         # check for unusual compressed files
         if self.document[-4:] in (".bz2", ".tgz"):
@@ -202,7 +201,7 @@ class HttpServer(Server):
             for h in self.headers.headers[:]:
                 if re.match('(?i)content-length:', h):
                     self.headers.headers.remove(h)
-                    #self.bytes_remaining = None
+                    self.bytes_remaining = None
                 elif re.match('(?i)content-encoding:', h):
                     self.headers.headers.remove(h)
 
@@ -219,7 +218,7 @@ class HttpServer(Server):
 
     def process_content(self):
         data = self.read(self.bytes_remaining)
-
+        debug(NIGHTMARE, "data", `"..."+data[-30:]`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
@@ -238,17 +237,21 @@ class HttpServer(Server):
         if (is_closed or
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
-            # Either we ran out of bytes, or the filter says we're done
+            # Either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
 
 
     def process_recycle(self):
         # We're done sending things to the client, and we can reuse
         # this connection
-        client = self.client
         self.reuse()
+        self.flush()
+        if self.client:
+            self.client.server_close()
 
-        # flush data of decoders (if any) and filters
+
+    def flush(self):
+        """flush data of decoders (if any) and filters"""
         data = ""
         while self.decoders:
             data = self.decoders[0].flush()
@@ -258,8 +261,7 @@ class HttpServer(Server):
         for i in _RESPONSE_FILTERS:
             data = applyfilter(i, data, fun="finish", attrs=self.attrs)
         if data:
-	    client.server_content(data)
-        client.server_close()
+	    self.client.server_content(data)
 
 
     def process_read(self):
@@ -285,7 +287,7 @@ class HttpServer(Server):
 
             bytes_after = len(self.recv_buffer)
             if (self.client is None or
-                (bytes_before == bytes_after and state_before == self.state)):
+                (bytes_before==bytes_after and state_before==self.state)):
                 break
 
 
@@ -339,6 +341,7 @@ class HttpServer(Server):
     def handle_close(self):
         Server.handle_close(self)
         if self.client:
+            self.flush()
             client, self.client = self.client, None
             client.server_close()
 
