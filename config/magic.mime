@@ -96,7 +96,7 @@
 
 
 # MPEG Layer 3 sound files
-0       beshort		&0xffe0		audio/mpeg
+0       beshort&0xfffe  =0xfffa         audio/mpeg
 #MP3 with ID3 tag
 0	string		ID3		audio/mpeg
 # Ogg/Vorbis

@@ -2,6 +2,10 @@
   * do not ship _webcleaner2_configdata.py, and adjust file permissions
     for the tarball
     Changed: MANIFEST.in, Makefile.am
+  * break cyclic references in configuration parsers
+    Changed: wc/__init__.py
+  * break cyclic references in simpleTAL compilers
+    Changed: wc/webgui/simpletal/simpleTAL.py
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way
