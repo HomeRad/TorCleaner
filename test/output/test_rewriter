@@ -36,7 +36,7 @@ test_rewriter
 
 
 
-     <b>blinking text</b>
+     <b></b>
 
 
 
@@ -90,7 +90,7 @@ These `Microsoft chars` are history.
 
 <script type=" textjavascript>
 
-</script>
+
 
 </body></html>
 

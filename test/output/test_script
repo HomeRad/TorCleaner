@@ -1,29 +1,17 @@
 test_script
 filter test/html/script0.html
 
-<script language=JavaScript>
-
 
 
 filter test/html/script1.html
 
-<script language=JavaScript>
-<!--
-document.write('foo');
-//-->
-
+foo
       </td>
    </tr>
 </table> 
 
 filter test/html/script2.html
 
-<script language=JavaScript>
-<!--
-document.write('<SCR'+'IPT LANGUAGE="JavaScript1.1" ' );
-document.write('SRC="http://localhost/~calvin/2.js">');
-document.write('</SCR'+'IPT>');
-//-->
 
       </td>
    </tr>
@@ -55,7 +43,7 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
-//-->
+//--></script>
 
 </html>
 
@@ -85,7 +73,7 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
-//-->
+//--></script>
 
 </html>
 
@@ -116,12 +104,12 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
-//-->
+//--></script>
 <script type=JavaScript>
 <!--
 a = 1
 // -->
-
+</script>
 
 </html>
 
