@@ -7006,7 +7006,7 @@ char *yytext;
 #line 1 "htmllex.l"
 #define INITIAL 0
 /* Find recognizable tokens in (probably bad formatted) HTML streams.
-   Unrecognizable character data is passed on as a TEXT token. 
+   Unrecognizable character data is passed on as a TEXT token.
 */
 #line 6 "htmllex.l"
 #include "htmlsax.h"

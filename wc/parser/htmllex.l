@@ -1,5 +1,5 @@
 /* Find recognizable tokens in (probably bad formatted) HTML streams.
-   Unrecognizable character data is passed on as a TEXT token. 
+   Unrecognizable character data is passed on as a TEXT token.
 */
 
 %{

@@ -103,8 +103,8 @@ extern int htmllexStop (void* scanner, UserData* data);
 extern int htmllexDestroy (void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
-/* standard error reporting, indicating an internal error */
 
+/* standard error reporting, indicating an internal error */
 static int yyerror (char* msg) {
     fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
     return 0;
@@ -1785,6 +1785,7 @@ static PyObject* parser_feed(PyObject* self, PyObject* args) {
         		  p->userData->exc_val,
         		  p->userData->exc_tb);
         }
+        htmllexStop(p->scanner, p->userData);
         return NULL;
     }
     if (htmllexStop(p->scanner, p->userData)!=0) {
