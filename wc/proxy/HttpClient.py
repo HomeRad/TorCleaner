@@ -16,6 +16,7 @@ from Headers import client_remove_encoding_headers
 from wc.proxy.auth import *
 from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE
 from wc.log import *
+from wc.google import *
 from wc.webgui import WebConfig
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
@@ -52,13 +53,19 @@ class HttpClient (Connection):
 
     def error (self, status, msg, txt='', auth=''):
         self.state = 'done'
+        form = None
         err = i18n._('Proxy Error %d %s') % (status, msg)
         if txt:
             err = "%s (%s)" % (err, txt)
-        form = None
+        if config['try_google']:
+            page = '/google.html'
+            context = get_google_context(self.url, msg)
+        else:
+            page = '/error.html'
+            context={'error': err,}
         # this object will call server_connected at some point
-        WebConfig(self, '/error.html', form, self.protocol, self.headers,
-                  context={'error': err,}, status=status, msg=msg, auth=auth)
+        WebConfig(self, page, form, self.protocol, self.headers,
+                  context=context, status=status, msg=msg, auth=auth)
 
 
     def __repr__ (self):
@@ -225,20 +232,23 @@ class HttpClient (Connection):
                                self.compress)
 
 
-    def server_response (self, server, response, headers):
-        self.server = server
-        assert self.server.connected
+    def server_response (self, server, response, status, headers):
+        # try google options
+        assert server.connected
         debug(PROXY, '%s server_response %s', str(self), `response`)
-        self.write("%s\r\n"%response)
-        if hasattr(headers, "headers"):
-            # write original Message object headers to preserve
-            # case sensitivity (!)
-            self.write("".join(headers.headers))
+        if status >= 400 and config['try_google']:
+            server.client_abort()
+            form = None
+            context = get_google_context(self.url, response)
+            # this object will call server_connected at some point
+            WebConfig(self, "/google.html", form, self.protocol, self.headers,
+                      context=context)
         else:
-            for key,val in headers.items():
-                header = "%s: %s\r\n" % (key, val.rstrip())
-                self.write(header)
-        self.write('\r\n')
+            self.server = server
+            self.write("%s\r\n"%response)
+            # note: headers is a WcMessage object, not a dict
+            self.write("".join(headers.headers))
+            self.write('\r\n')
 
 
     def server_content (self, data):
@@ -288,6 +298,12 @@ class HttpClient (Connection):
             self.error(403, i18n._("Invalid Method"))
             return
         # get cgi form data
+        form = self.get_form_data()
+        # this object will call server_connected at some point
+        WebConfig(self, self.url, form, self.protocol, self.headers)
+
+
+    def get_form_data (self):
         form = None
         if self.method=='GET':
             # split off query string and parse it
@@ -299,9 +315,7 @@ class HttpClient (Connection):
             form = cgi.FieldStorage(fp=StringIO(self.content),
                                     headers=self.headers,
                                     environ={'REQUEST_METHOD': 'POST'})
-        # this object will call server_connected at some point
-        WebConfig(self, self.url, form, self.protocol, self.headers)
-
+        return form
 
 
     def close (self):

@@ -3,6 +3,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.log import *
+from wc.proxy.Headers import WcMessage
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse, urllib

@@ -264,10 +264,8 @@ class HttpServer (Server):
             debug(PROXY, "%s FilterPics %s", str(self), `msg`)
             # XXX get version
             response = "HTTP/1.1 403 Forbidden"
-            headers = {
-                "Content-Type": "text/plain",
-                "Content-Length": len(msg),
-            }
+            headers = WcMessage(StringIO('Content-type: text/plain\r\n'
+                        'Content-Length: %d\r\n\r\n' % len(msg)))
             self.client.server_response(response, self.statuscode, headers)
             self.client.server_content(msg)
             self.client.server_close()

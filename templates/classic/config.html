@@ -77,16 +77,16 @@
  type="checkbox" name="auth_ntlm" id="auth_ntlm" value="1">
 </td>
 </tr>
-<tr tal:condition="config/enable_google_cache">
+<tr>
 <td>
-<label i18n:attributes="title Use Google cache contents for invalid pages"
- for="use_google_cache" i18n:translate="">Use Google cache</label>
+<label i18n:attributes="title Display Google search options for invalid pages"
+ for="try_google" i18n:translate="">Try Google</label>
 </td>
 <td>
-<input tal:condition="config/use_google_cache"
- type="checkbox" checked name="use_google_cache" id="use_google_cache" value="1">
-<input tal:condition="not:config/use_google_cache"
- type="checkbox" name="use_google_cache" id="use_google_cache" value="1">
+<input tal:condition="config/try_google"
+ type="checkbox" checked name="try_google" id="try_google" value="1">
+<input tal:condition="not:config/try_google"
+ type="checkbox" name="try_google" id="try_google" value="1">
 </td>
 </tr>
 </table>

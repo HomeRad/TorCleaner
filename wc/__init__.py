@@ -24,12 +24,6 @@ import xml.parsers.expat
 import _webcleaner2_configdata as configdata
 from glob import glob
 from sets import Set
-try:
-    import wc.google
-    enable_google_cache = True
-except ImportError:
-    enable_google_cache = False
-
 Version = configdata.version
 AppName = configdata.appname
 Name = configdata.name
@@ -221,8 +215,7 @@ class Configuration (dict):
         self['gui_theme'] = "classic"
         self['timeout'] = 30
         self['auth_ntlm'] = 0
-        self['use_google_cache'] = 0
-        self['enable_google_cache'] = enable_google_cache
+        self['try_google'] = 0
 
 
     def read_proxyconf (self):
@@ -252,7 +245,7 @@ class Configuration (dict):
         f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' gui_theme="%s"\n' % xmlify(self['gui_theme']))
         f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
-        f.write(' use_google_cache="%d"\n' % self['use_google_cache'])
+        f.write(' try_google="%d"\n' % self['try_google'])
         hosts = sort_seq(ip.map2hosts(self['nofilterhosts']))
         f.write(' nofilterhosts="%s"\n'%xmlify(",".join(hosts)))
         hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
@@ -462,7 +455,7 @@ class WConfigParser (BaseParser):
                 self.config[key] = unxmlify(val)
             for key in ('port', 'parentproxyport', 'timeout', 'auth_ntlm',
 	                'colorize', 'showerrors', 'strict_whitelist',
-                        'use_google_cache'):
+                        'try_google'):
                 self.config[key] = int(self.config[key])
             if self.config['nofilterhosts'] is not None:
                 strhosts = self.config['nofilterhosts']

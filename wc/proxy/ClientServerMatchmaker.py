@@ -56,7 +56,6 @@ class ClientServerMatchmaker (object):
         self.compress = compress
         self.content = content
         self.nofilter = nofilter
-        self.asked_google_cache = False
         self.mime = mime
         self.state = 'dns'
         self.method, self.url, protocol = self.request.split()
@@ -209,8 +208,6 @@ class ClientServerMatchmaker (object):
     def server_abort (self):
         # The server had an error, so we need to tell the client
         # that we couldn't connect
-        if self.try_google_cache():
-            return
         if self.client.connected:
             self.client.error(503, i18n._("No response from server"))
 
@@ -227,67 +224,18 @@ class ClientServerMatchmaker (object):
         elif self.client.connected:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
-            if self.try_google_cache():
-                return
             self.client.error(503, i18n._("Server closed connection"))
 
 
     def server_response (self, response, statuscode, headers):
         """the server got a response"""
         # Okay, transfer control over to the real client
-        if statuscode >= 404:
-            if self.try_google_cache():
-                return
         if self.client.connected:
             config['requests']['valid'] += 1
             self.server.client = self.client
-            self.client.server_response(self.server, response, headers)
+            self.client.server_response(self.server, response, statuscode, headers)
         else:
             self.server.client_abort()
-
-
-    def try_google_cache (self):
-        if not (config['enable_google_cache'] and config['use_google_cache']):
-            # do not ask google cache
-            return False
-        if self.asked_google_cache:
-            # we already asked the google cache, don't do it twice
-            return False
-        if self.method!="GET":
-            # handle only GET requests
-            return False
-        from wc.google import get_google_cache_url
-        self.asked_google_cache = True
-        self.server.client_abort()
-        self.url = get_google_cache_url(self.url)
-        self.request = "GET %s HTTP/1.1" % self.url
-        self.content = ""
-        self.mime = "text/html"
-        self.state = 'dns'
-        self.protocol = "HTTP/1.1"
-        self.scheme, hostname, port, document = spliturl(self.url)
-        # fix host header
-        if port!=80:
-            self.headers['Host'] = "%s:%d\r"%(hostname, port)
-        else:
-            self.headers['Host'] = "%s\r"%hostname
-        # prepare DNS lookup
-        if config['parentproxy']:
-            self.hostname = config['parentproxy']
-            self.port = config['parentproxyport']
-            self.document = self.url
-            if config['parentproxycreds']:
-                auth = config['parentproxycreds']
-                self.headers['Proxy-Authorization'] = "%s\r"%auth
-        else:
-            self.hostname = hostname
-            self.port = port
-            self.document = document
-        # append information for wcheaders tool
-        wc.proxy.HEADERS.append((self.url, 'client', self.headers.items()))
-        # start DNS lookup
-        dns_lookups.background_lookup(self.hostname, self.handle_dns)
-        return True
 
 
     def __repr__ (self):

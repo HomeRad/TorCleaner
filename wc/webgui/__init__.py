@@ -26,6 +26,7 @@ from wc import i18n, config, TemplateDir, Name, LocaleDir
 from wc.log import *
 import os, re, urllib, urlparse, gettext, mimetypes
 from wc.proxy.auth import get_challenges
+from wc.proxy.Headers import WcMessage
 
 class WebConfig (object):
     def __init__ (self, client, url, form, protocol, clientheaders,
@@ -33,7 +34,7 @@ class WebConfig (object):
         self.client = client
         # we pretend to be the server
         self.connected = True
-        headers = {'Server': 'Proxy'}
+        headers = WcMessage(StringIO('Server: Proxy\r\n'))
         if auth:
             headers['Proxy-Authenticate'] = "%s\r"%auth
         gm = mimetypes.guess_type(url, None)
@@ -80,7 +81,7 @@ class WebConfig (object):
 
     def put_response (self, data, protocol, status, msg, headers):
         response = "%s %d %s"%(protocol, status, msg)
-        self.client.server_response(self, response, headers)
+        self.client.server_response(self, response, status, headers)
         self.client.server_content(data)
         self.client.server_close()
 
