@@ -49,6 +49,10 @@
   * after changing filter rules or folders all the filter modules are
     reinitialized
     Changed: wc/webgui/context/filterconfig_html.py
+  * fix script src urls with broken base href
+    Changed: wc/filter/HtmlParser.py
+  * accept empty url in _has_lots_of_percents
+    Changed: wc/filter/HtmlSecurity.py
 
 2.7 (released 04.12.2003)
   * updated filters:
