@@ -32,6 +32,9 @@ class TestUrl (StandardTest.StandardTest):
         url = "http://groups.google.com//a/test.html"
         nurl = "http://groups.google.com/a/test.html"
         self.assertEqual(wc.url.url_norm(url), nurl)
+        url = "http://groups.google.com//a/b/"
+        nurl = "http://groups.google.com/a/b/"
+        self.assertEqual(wc.url.url_norm(url), nurl)
 
     def testValid (self):
         self.assert_(wc.url.is_valid_url("http://www.imadoofus.com"))
