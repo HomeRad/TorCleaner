@@ -454,14 +454,16 @@ class HttpServer (wc.proxy.Server.Server):
                       _("server received %d bytes more than content-length"),
                       (-self.bytes_remaining))
         if self.statuscode != 407:
-            if self.defer_data and data:
-                # defer until data is non-empty, which ensures that
-                # every filter above has seen at least some data
-                self.defer_data = False
-                self.client.server_response(self, self.response,
-                                            self.statuscode, self.headers)
-                if not self.client:
-                    return
+            if data:
+                if self.defer_data:
+                    # defer until data is non-empty, which ensures that
+                    # every filter above has seen at least some data
+                    self.defer_data = False
+                    self.client.server_response(self, self.response,
+                                                self.statuscode, self.headers)
+                    if not self.client:
+                        # client is gone
+                        return
                 self.client.server_content(data)
         if is_closed or self.bytes_remaining == 0:
             # either we ran out of bytes, or the decoder says we're done
