@@ -128,7 +128,7 @@ def main():
         elif opt=='--pidfile':
             daemon.pidfile = arg
         else:
-            _print_usage(i18n._("Unknown option %s") % `opt`)
+            _print_usage(i18n._("Unknown option %(option)s") % {'option':`opt`})
     if len(args) < 1:
         _print_usage(i18n._("No command given."))
     else:
