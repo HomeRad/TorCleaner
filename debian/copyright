@@ -36,34 +36,33 @@ The wc/update.py file includes the urlutils.py from reportbug which
 is licensed under the GPL.
 
 =====================================================================
-The included simpleTAL package is written by Colin Stewart and distributed
+The included packages wc.webgui.{PageTemplate,TAL,ZTUtils} are released
 under the following license:
-	Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
-	All rights reserved.
+##############################################################################
+#
+# Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE
+#
+##############################################################################
 
-	Redistribution and use in source and binary forms, with or without
-	modification, are permitted provided that the following conditions
-	are met:
-	1. Redistributions of source code must retain the above copyright
-	   notice, this list of conditions and the following disclaimer.
-	2. Redistributions in binary form must reproduce the above copyright
-	   notice, this list of conditions and the following disclaimer in the
-	   documentation and/or other materials provided with the distribution.
-	3. The name of the author may not be used to endorse or promote products
-	   derived from this software without specific prior written permission.
-
-	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-	IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-	NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-	THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-	THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-	If you make any bug fixes or feature enhancements please let me know!
+Modifications to these packages where made (some of them stem from the
+roundup package at roundup.sf.net):
+- commented out some Zope-specific stuff:
+  * removed all template Acquisition
+  * removed blocking of leading-underscore URL components
+  * removed use of ExtensionClass
+  * removed use of ComputedAttribute
+  * implemented ustr as str in TranslationService
+  * removed import and use of Unauthorized from zExceptions
+- used the WebCleaner logging interface where appropriate
+- use new-style classes
+- cleaned up the syntax quite a bit
 
 =====================================================================
 The included Spidermonkey JavaScript engine is licensed under the
