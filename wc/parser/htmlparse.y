@@ -335,7 +335,6 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     p->userData->tmp_tag = p->userData->tmp_attrname =
 	p->userData->tmp_attrval = p->userData->tmp_attrs =
 	p->userData->lexbuf = NULL;
-    p->userData->rewind = 0;
     p->userData->exc_type = NULL;
     p->userData->exc_val = NULL;
     p->userData->exc_tb = NULL;
