@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Trackers and counters" oid="5"
+<folder sid="wc.366" oid="5" title="Trackers and counters"
  desc="Statistic links and tracker images deserve now a separate category as they became a lot more in the last couple of months.">
 
-<block title="Statistic sites" oid="0"
+<block sid="wc.363" oid="0" title="Statistic sites"
  desc="Some tracker sites"
  scheme=""
  host="(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"
@@ -13,7 +13,7 @@
  query=""
  fragment=""/>
 
-<rewrite title="1x1 tracker images" oid="1"
+<rewrite sid="wc.364" oid="1" title="1x1 tracker images"
  desc="Several sites use 1x1 images to track users."
  tag="img">
 <attr name="width">^1$</attr>
@@ -21,7 +21,7 @@
 <replacement part="complete"/>
 </rewrite>
 
-<image title="1x1 tracker images 2" oid="2"
+<image sid="wc.365" oid="2" title="1x1 tracker images 2"
  desc="In case the width and height attributes are missing"
  width="1"
  height="1"/>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Blacklist ads" oid="10"
+<folder sid="wc.397" oid="10" title="Blacklist ads"
  desc="Automatically generated on 2003-05-23 20:35:03">
 
-<blockurls title="ads url filter" oid="0"
+<blockurls sid="wc.395" oid="0" title="ads url filter"
  desc="You should not edit this filter, only disable or delete it." filename="blacklists/ads/urls.gz"/>
 
-<blockdomains title="ads domain filter" oid="1"
+<blockdomains sid="wc.396" oid="1" title="ads domain filter"
  desc="You should not edit this filter, only disable or delete it." filename="blacklists/ads/domains.gz"/>
 </folder>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Erotic" oid="13"
+<folder sid="wc.330" oid="13" title="Erotic"
  desc="Protect your children from looking erotic sites."
  disable="1">
 
-<block title="Bad words in the host name" oid="0"
+<block sid="wc.326" oid="0" title="Bad words in the host name"
  scheme=""
  host="naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn"
  port=""
@@ -13,7 +13,7 @@
  query=""
  fragment=""/>
 
-<block title="Bad words in the path name" oid="1"
+<block sid="wc.327" oid="1" title="Bad words in the path name"
  scheme=""
  host=""
  port=""
@@ -22,12 +22,12 @@
  query=""
  fragment=""/>
 
-<rewrite title="Bad words in the url 1" oid="2">
+<rewrite sid="wc.328" oid="2" title="Bad words in the url 1">
 <attr>http://.*\.(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn).*\.com</attr>
 <replacement part="attrval">http://www.calvinandhobbes.com/</replacement>
 </rewrite>
 
-<rewrite title="Bad words in the url 2" oid="3">
+<rewrite sid="wc.329" oid="3" title="Bad words in the url 2">
 <attr>http://.*(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn)\..*com</attr>
 <replacement part="attrval">http://www.calvinandhobbes.com/</replacement>
 </rewrite>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Blacklist violence" oid="9"
+<folder sid="wc.394" oid="9" title="Blacklist violence"
  desc="Automatically generated on 2003-05-23 20:35:03">
 
-<blockdomains title="violence domain filter" oid="0"
+<blockdomains sid="wc.393" oid="0" title="violence domain filter"
  desc="You should not edit this filter, only disable or delete it." filename="blacklists/violence/domains.gz"/>
 </folder>
