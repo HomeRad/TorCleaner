@@ -2,6 +2,8 @@
   * Set the 'Via' HTTP header when forwarding requests/responses
   * Add a 'Warning' HTTP header when content-encoding is changed
   * Honor the 'Max-Forwards' HTTP header for OPTIONS requests
+  * Adjust empty paths in requests to be '/'. This was causing
+    "puzzling header received" errors.
 
 0.57:
   * Oopsie, fix umask to 0177
