@@ -3,8 +3,11 @@
     to configure webcleaner is over the web interface.
     Removed: wc/gui/*, webcleanerconf*, wcheaders*
     Changed: setup.py, MANIFEST.in, debian/control, debian/rules
-  * fixed and updated status command and some return values
-    Changed: wc/daemon/{__init__,_posix}.py
+  * remove own daemon functions in favor of daemontools on Unix/Linux
+    and NT services on windows.
+    Removed: wc/daemon/*.py
+    Changed: webcleaner, wc/__init__.py, wc/proxy/__init__.py
+    Added: wc/win32start.py
   * added separate administrator user/password for the configuration
     interface
     Changed: wc/__init__.py, wc/proxy/HttpClient.py,
@@ -29,7 +32,7 @@
     Closes: SF #869424
   * added help for the web gui
     Added: templates/classic/help.html, wc/webgui/context/help_html.py
-    Changed: templates/classic/macros/standard.html, po/*.po
+    Changed: templates/classic/macros/standard.html
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031222
     Changed: libjs/*
   * added conflict for unstable psyco versions (I am using a cvs version
