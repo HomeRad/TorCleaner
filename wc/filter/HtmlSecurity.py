@@ -40,12 +40,14 @@ class HtmlSecurity (object):
 
 
     def scan_start_tag (self, tag, attrs, htmlfilter):
+        """delegate to individuals start tag handlers"""
         fun = "%s_start"%tag
         if hasattr(self, fun):
             getattr(self, fun)(attrs, htmlfilter)
 
 
     def scan_end_tag (self, tag):
+        """delegate to individuals end tag handlers"""
         fun = "%s_end"%tag
         if hasattr(self, fun):
             getattr(self, fun)()
