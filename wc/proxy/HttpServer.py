@@ -221,9 +221,9 @@ class HttpServer (Server):
         # check for unusual compressed files
         if self.document.endswith(".bz2") or \
            self.document.endswith(".tgz"):
-            gm = mimetypes.guess_type(self.document)
-            self.headers['content-encoding'] = gm[1]
-            self.headers['content-type'] = gm[0]
+            gm = mimetypes.guess_type(self.document, False)
+            if gm[1]: self.headers['content-encoding'] = gm[1]
+            if gm[0]: self.headers['content-type'] = gm[0]
         # uncompress server-compressed content
         if self.headers.getheader('content-encoding')=='gzip':
             for ro in config['mime_content_rewriting']:
