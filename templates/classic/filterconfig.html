@@ -66,13 +66,10 @@
 
 <div tal:condition="currule">
 <!-- rewrite -->
-<span tal:repeat="rule ruletypes">
-<!-- XXX metal fill-slot with the rule object -->
-<span tal:condition="ruletype/?rule">
+<span tal:repeat="rule ruletypes"><span tal:condition="ruletype/?rule">
 <div metal:use-macro="rulemacros/macros/?rule">
 Here is the rule configuration...
-</div>
-</span>
+</div></span>
 </span>
 
 </div>

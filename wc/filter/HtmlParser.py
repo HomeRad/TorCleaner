@@ -339,6 +339,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         elif tag=="base" and attrs.has_key('href'):
             self.base_url = strip_quotes(attrs['href'])
             self._debug("using base url %s", `self.base_url`)
+        elif tag=="input" and attrs.has_key('type'):
+            # fix IE crash bug on empty type attribute
+            if not attrs['type']:
+                del attrs['type']
+        elif tag=="fieldset" and attrs.has_key('style'):
+            # fix Mozilla crash bug on fieldsets
+            if "position" in attrs['style']:
+                del attrs['style']
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):

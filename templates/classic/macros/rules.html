@@ -1,26 +1,69 @@
 <html>
 <body>
 
+<!-- macro definitions for rule editing 
+  Note: the TAL contexts from the calling templates are used here
+ -->
+
+<!-- title and description -->
+<p metal:define-macro="titledesc">
+<span tal:replace="t_ruletitle">Title</span>:
+<input type="text" name="rule_title" value="Rule title"
+ tal:attributes="value currule/title">
+<br>
+<span tal:replace="t_ruledescription">Description</span>:
+<textarea name="rule_description" cols="50" rows="5"
+ tal:content="currule/desc">Rule description</textarea>
+</p>
+
+<!-- AllowRule -->
 <p metal:define-macro="Allow">
-    Allow macro
+<div metal:use-macro="rulemacros/macros/titledesc">
+Rule title and description
+</div>
 </p>
+
+<!-- BlockRule -->
 <p metal:define-macro="Block">
-    Block macro
+<div metal:use-macro="rulemacros/macros/titledesc">
+Rule title and description
+</div>
 </p>
+
+<!-- HeaderRule -->
 <p metal:define-macro="Header">
-    Header macro
+<div metal:use-macro="rulemacros/macros/titledesc">
+Rule title and description
+</div>
 </p>
+
+<!-- ImageRule -->
 <p metal:define-macro="Image">
-    Image macro
+<div metal:use-macro="rulemacros/macros/titledesc">
+Rule title and description
+</div>
 </p>
+
+<!-- NocommentsRule -->
 <p metal:define-macro="Nocomments">
-    Nocomments macro
+<div metal:use-macro="rulemacros/macros/titledesc">
+Rule title and description
+</div>
 </p>
+
+<!-- RewriteRule -->
 <p metal:define-macro="Rewrite">
-    Rewrite macro
+<div metal:use-macro="rulemacros/macros/titledesc">
+Rule title and description
+</div>
+<br>
 </p>
+
+<!-- ReplacerRule -->
 <p metal:define-macro="Replacer">
-    Replacer macro
+<div metal:use-macro="rulemacros/macros/titledesc">
+Rule title and description
+</div>
 </p>
 
 </body>

@@ -14,6 +14,8 @@ t_newrule = i18n._("New rule")
 t_folders = i18n._("Folders")
 t_rules = i18n._("Rules")
 t_rule = i18n._("Rule")
+t_ruletitle = i18n._("Title")
+t_ruledescription = i18n._("Description")
 
 # config vars
 info = []
