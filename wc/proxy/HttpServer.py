@@ -108,15 +108,13 @@ class HttpServer (Server):
             self.reuse()
 
 
-    def send_request (self):
+    def send_request (self, headers):
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
-        #print >> sys.stderr, 'XXX request', `request`
         self.write(request)
-        for key,val in self.client.headers.items():
+        for key,val in headers.items():
             header = "%s: %s\r\n" % (key, val.rstrip())
-            #print >> sys.stderr, 'XXX header', `header`
             self.write(header)
-        if self.client.headers.get('Connection') is None:
+        if headers.get('Connection') is None:
             self.write('Connection: Keep-Alive\r\n')
         self.write('\r\n')
         self.write(self.content)
@@ -133,7 +131,7 @@ class HttpServer (Server):
         self.content = content
         self.nofilter = nofilter
         self.url = url
-        self.send_request()
+        self.send_request(headers)
 
 
     def process_read (self):
