@@ -2,14 +2,23 @@
 <html lang="en" tal:attributes="lang lang">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="copyright" content="(C) 2004 Bastian Kleineidam">
 <title i18n:translate="">Page blocked by %(AppName)s</title></head>
-<body bgcolor="#ffffff">
-<h1 i18n:translate="">Page blocked by %(AppName)s</h1>
-<p i18n:translate="">The content of this page is blocked by rule %(rule)s</p>
+<style type="text/css">
+<!--
+a {
+    color: #222222;
+}
+
+a:hover {
+    color: black;
+}
+-->
+</style><body bgcolor="#ffffff">
 <p>
 <a i18n:translate="" href="#" target="_top"
  tal:attributes="href string:${baseurl}filterconfig.html.${lang}?selfolder=${selfolder}&selrule=${selrule}"
->Configure rule %(rule)s.</a>
+>Blocked by %(rule)s.</a>
 </p>
 </body>
 </html>
