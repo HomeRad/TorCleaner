@@ -6,8 +6,7 @@ __date__    = "$Date$"[7:-2]
 from StatefulConnection import StatefulConnection
 from wc.log import *
 
-# XXX there should be an API for this class, and it should be moved
-# elsewhere
+
 class Server (StatefulConnection):
     def __init__ (self, client, state):
         super(Server, self).__init__(state)
