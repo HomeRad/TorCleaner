@@ -3,8 +3,6 @@
 webcleaner \- a filtering HTTP proxy
 .SH SYNOPSIS
 \fBwebcleaner\fP
-[\fIoptions\fP]
-\fIcommand\fP
 .SH DESCRIPTION
 .LP
 WebCleaner is a filtering HTTP proxy. You can encode, decode and modify
@@ -12,46 +10,15 @@ each part of an HTTP request. WebCleaner enhances your privacy and
 efficiency on the web and comes with several ready-to-use
 filters to remove advertisement and unwanted HTML content,
 compress documents on-the-fly, disable animated GIFs and more.
-.SH COMMANDS
-.TP
-\fBstart\fP
-Start the proxy. If it is already started, do nothing.
-.TP
-\fBstop\fP
-Stop the proxy. If it is already stopped, do nothing.
-.TP
-\fBrestart\fP
-Try to stop the proxy, then start it.
-.TP
-\fBreload\fP
-If the proxy is running read the configuration files again. If it is
-not running, do nothing.
-.TP
-\fBstatus\fP
-Print info if the proxy is running or not.
-.TP
-\fBstartwatch\fP
-Start a monitor program. If the proxy is not running, it
-starts the proxy again.
-.TP
-\fBstopwatch\fP
-Stop the monitor program and the proxy.
-
-.SH OPTIONS
-.TP
-\fB-h\fP
-Display help text.
 .SH CONFIGURATION
 To configure WebCleaner, point your favourite webbrowser to
 \fBhttp://localhost:\fP\fIport\fP\fB/\fP
 where \fIport\fP is your configured WebCleaner port number
 (default 8080).
 
-There is also a GUI tool \fIwebcleanerconf(1)\fP.
-
 The underlying configuration format is a custom XML format which
 is explained in \fIwebcleaner.conf(5)\fP.
 .SH "SEE ALSO"
-webcleanerconf(1), webcleaner.conf(5)
+webcleaner.conf(5)
 .SH AUTHOR
 Bastian Kleineidam <calvin@users.sourceforge.net>
