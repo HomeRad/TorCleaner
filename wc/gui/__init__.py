@@ -7,20 +7,20 @@ HelpText = _("""
 Proxy settings
 ==============
 
+User/Password
+-------------
+Require proxy authentication with the given user and password.
+Note that only a hash value of the password is stored, not the
+password itself, so only replace the complete password!
+
 Port
 ----
 Set the port adress the WebCleaner proxy is listening on.
-Default value is 8080.
 
 Logfile
 -------
-The name for the logfile can be empty (no logging), 'stdout'
+The name for the logfile can be empty (no logging), '<stdout>'
 (standard out) or a filename (relative or absolute).
-
-Buffer size
------------
-The buffer size tells the proxy to read data in chunks with the
-given size.
 
 Timeout
 -------
@@ -34,6 +34,7 @@ When this checkbox is active (configuration file value = 1) the
 proxy translates the numerical IP name into an integer number.
 For example '5.7.9.11' gets mapped to
 5*2^24 + 7*2^16 + 9*2^8 + 11*2^0 = 84347147
+This is known NOT to work with a squid proxy as a parent proxy.
 
 Debug level
 -----------
@@ -44,13 +45,14 @@ Debug levels:
 2 - print requests and filtering
 3 - detailed filter messages
 
-Parent Proxy
-------------
-The parent proxy WebCleaner should use.
+Parent Proxy Host/Port
+----------------------
+The hostname/port adress of the parent proxy WebCleaner should use.
 
-Parent Proxy Port
------------------
-The parent proxy port WebCleaner should use.
+Parent Proxy User/Password
+--------------------------
+Authentication for the parent proxy. The password is saved base64
+encoded.
 
 Rewriter
 --------
@@ -90,50 +92,83 @@ Rule settings
 
 Title
 -----
-The title of the filter
+The title of the filter rule
 
 Description
 -----------
-A description what this filter does.
+A description what this filter rule does.
 
 Language
 --------
 If you specify incompatible regular expressions
-choose the appropriate language here.
+choose the appropriate programming language here.
 
 Filename
 --------
 The name of the configuration file where these
-filters are stored.
+filters are stored (cannot be changed).
 
 disable
 -------
-You can disable a whole folder (if its a FolderRule)
-or single filter rules.
+You can disable a single rule or all rules in a folder.
+
+Match url
+---------
+Applies this rule only to urls matching the regular expression
+
+Dont match url
+--------------
+Applies this rule only to urls not matching the regular expression
+Match url entries are tested first.
 
 
-ImageRule settings
+ImageRule settings (requires GifImage module)
 ==================
 
+Image width/height
+------------------
+The width/height of the image to be blocked.
 
-FolderRule settings
+
+HeaderRule settings (requires Header module)
 ===================
 
+Header name
+-----------
+Name of the header to be modified/added/deleted.
 
-HeaderRule settings
-===================
+Header value
+------------
+If empty, delete the header. Else add or, if already there modify the
+header.
 
 
-RewriteRule settings
+RewriteRule settings (requires Rewriter module)
 ====================
 
 
-BlockRule settings
+BlockRule settings (requires Blocker module)
 ==================
 
+URL Scheme/Host/Port/Path/Parameters/Query/Fragment
+---------------------------------------------------
+If any of these are non-empty, the respective url part must match
+the regular expression.
 
-AllowRule settings
+Blocked URL
+-----------
+Fetch data from this url instead the default block url. Be sure to
+provide the correct document type.
+
+
+AllowRule settings (requires Blocker module)
 ==================
+
+URL Scheme/Host/Port/Path/Parameters/Query/Fragment
+---------------------------------------------------
+If any of these are non-empty, the corresponding url part must match
+the regular expression.
+
 """)
 
 

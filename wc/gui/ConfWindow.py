@@ -313,7 +313,7 @@ class ConfWindow (ToolWindow):
             else:
                 self.removeDialog.execute()
         else:
-            self.error(_("filter selection"), _("no filter item selected"))
+            self.getApp().error(_("filter selection"), _("no filter item selected"))
         return 1
 
 
@@ -347,13 +347,13 @@ class ConfWindow (ToolWindow):
 
     def onCmdAbout (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "About")
-        self.doShow(self.about)
+        self.getApp().doShow(self.about)
         return 1
 
 
     def onCmdHelp (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Help")
-        self.doShow(self.help)
+        self.getApp().doShow(self.help)
         return 1
 
 
@@ -366,7 +366,7 @@ class ConfWindow (ToolWindow):
 
     def onCmdProxyUser (self, sender, sel, ptr):
         if not _proxy_user_ro.match(sender.getText()):
-            self.error(_("Invalid Proxy User"),
+            self.getApp().error(_("Invalid Proxy User"),
                        _("You have to use -A-Za-z0-9._ for the proxy user name."))
             sender.setText(self.proxyuser)
             return 1
@@ -479,10 +479,10 @@ class ConfWindow (ToolWindow):
         if dialog.execute():
             host = host.getText().strip().lower()
             if not host:
-                self.error(_("Add proxy"), _("Empty hostname"))
+                self.getApp().error(_("Add proxy"), _("Empty hostname"))
 	        return 1
             if self.noproxyfor.has_key(host):
-                self.error(_("Add proxy"), _("Duplicate hostname"))
+                self.getApp().error(_("Add proxy"), _("Duplicate hostname"))
 	        return 1
             self.noproxyfor[host] = 1
             self.noproxylist.appendItem(host)
@@ -556,7 +556,7 @@ class ConfWindow (ToolWindow):
     def onCmdProxyStatus (self, sender, sel, ptr):
         from wc import daemon
         dialog = FXMessageBox(self,_("Proxy Status"),daemon.status(),None,MBOX_OK)
-        self.doShow(dialog)
+        self.getApp().doShow(dialog)
         #debug(BRING_IT_ON, "webcleaner status")
         return 1
 
@@ -589,7 +589,7 @@ class ConfWindow (ToolWindow):
         # base url for all files
         url = "http://webcleaner.sourceforge.net/zapper/"
         dialog = FXMessageBox(self,_("Update Help"),UpdateHelp % url,None,MBOX_OK_CANCEL)
-        if self.doShow(dialog) != MBOX_CLICKED_OK:
+        if self.getApp().doShow(dialog) != MBOX_CLICKED_OK:
             return 1
         try:
             doreload = 0
@@ -627,7 +627,7 @@ class ConfWindow (ToolWindow):
                     f.close()
                     doreload = 1
         except IOError, msg:
-            self.error(_("Update Error"), "%s: %s" % (_("Update Error"), msg))
+            self.getApp().error(_("Update Error"), "%s: %s" % (_("Update Error"), msg))
         else:
             if doreload:
                 self.handle(self, MKUINT(ConfWindow.ID_PROXYRESTART,SEL_COMMAND), None)
@@ -692,7 +692,7 @@ class ConfWindow (ToolWindow):
         self.getApp().dirty = dirty
         self.getApp().endWaitCursor()
         if errors:
-            self.error(_("Write config"), "\n".join(errors))
+            self.getApp().error(_("Write config"), "\n".join(errors))
 
 
     def toxml (self):

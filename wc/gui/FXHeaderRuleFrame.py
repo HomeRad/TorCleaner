@@ -22,8 +22,13 @@ class FXHeaderRuleFrame(FXRuleFrame):
         tf.setText(self.rule.value)
 
     def onCmdName(self, sender, sel, ptr):
-        self.rule.name = sender.getText().strip()
-        self.getApp().dirty = 1
+        name = sender.getText().strip()
+        if name:
+            self.rule.name = name
+            self.getApp().dirty = 1
+        else:
+            sender.setText(self.rule.name)
+            self.getApp().error(_("Header rule"), _("Header name must not be empty"))
         #debug(BRING_IT_ON, "Changed rule header name")
         return 1
 

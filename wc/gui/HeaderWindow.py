@@ -151,13 +151,13 @@ class HeaderWindow (ToolWindow):
 
     def onCmdAbout (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "About")
-        self.doShow(self.about)
+        self.getApp().doShow(self.about)
         return 1
 
 
     def onCmdOptions (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "About")
-        self.doShow(self.options)
+        self.getApp().doShow(self.options)
         return 1
 
     def onCmdAddHeader (self, sender, sel, ptr):
@@ -173,10 +173,10 @@ class HeaderWindow (ToolWindow):
         if dialog.execute():
             header = header.getText().strip().lower()
             if not header:
-                self.error(_("Add header"), _("Empty header"))
+                self.getApp().error(_("Add header"), _("Empty header"))
 	        return 1
             if header in self.config['nodisplay']:
-                self.error(_("Add header"), _("Duplicate header"))
+                self.getApp().error(_("Add header"), _("Duplicate header"))
 	        return 1
             self.config['nodisplay'].append(header)
             self.options.headers.appendItem(header)
@@ -259,7 +259,7 @@ class HeaderWindow (ToolWindow):
             file.close()
             self.getApp().dirty = 0
         except IOError:
-            self.error(_("Save options"), _("cannot write to file %s") % file)
+            self.getApp().error(_("Save options"), _("cannot write to file %s") % file)
         self.getApp().endWaitCursor()
 
 
