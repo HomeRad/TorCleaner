@@ -17,4 +17,3 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 from wc import AppName, Version
-from wc import i18n
