@@ -15,6 +15,7 @@ webcleaner-md5sums.txt
 filter.prof
 error.log
 stamp-h
+stamp-h1
 stamp-h.in
 webcleaner.log*
 webcleaner.err*
