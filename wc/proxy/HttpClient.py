@@ -487,7 +487,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                                      uri=wc.proxy.auth.get_auth_uri(self.url),
                                      method=self.method, data=None):
                 warn(AUTH, "Bad authentication from %s", self.addr[0])
-                auth = ", ".join(get_challenges())
+                auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                 return
         # get cgi form data
