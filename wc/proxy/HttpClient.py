@@ -174,8 +174,12 @@ class HttpClient (Connection):
                     return
                 if mf>0:
                     self.headers['Max-Forwards'] = mf-1
-            if not self.headers.has_key('Connection'):
-                self.headers['Connection'] = 'Keep-Alive\r'
+            # XXX handle Connection values
+            if self.headers.has_key('Connection'):
+                remove_headers(self.headers, ['Connection'])
+            elif self.headers.has_key('Proxy-Connection'):
+                self.headers['Connection'] = self.headers['Proxy-Connection']
+                remove_headers(self.headers, ['Proxy-Connection'])
             self.state = 'content'
 
 
