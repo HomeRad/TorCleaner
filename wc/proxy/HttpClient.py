@@ -12,6 +12,7 @@ from wc.proxy import match_host, fix_http_version
 from Headers import client_set_headers, WcMessage
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.log import *
+from wc.webgui import WebConfig
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
@@ -37,6 +38,8 @@ class HttpClient (Connection):
         self.headers = None
         self.bytes_remaining = None # for content only
         self.content = ''
+        self.protocol = 'HTTP/1.0'
+        self.url = ''
         host = self.addr[0]
         hosts, nets, nil = config['allowedhosts']
         if not ip.host_in_set(host, hosts, nets):
@@ -44,22 +47,27 @@ class HttpClient (Connection):
             self.close()
 
 
-    def error (self, code, msg, txt='', auth=''):
+    def error (self, status, msg, txt='', auth=''):
         self.state = 'done'
-        content = HTML_TEMPLATE % \
-            {'title': 'Proxy Error %d %s' % (code, msg),
-             'header': 'Bummer!',
-             'content': 'Proxy Error %d %s<br>%s<br>' % \
-                        (code, msg, txt),
-            }
+        # this object will call server_connected at some point
+        context = {
+            'title': i18n._('Proxy Error %d %s') % (status, msg),
+            'error': i18n._('Proxy Error %d %s<br>%s<br>') % \
+                        (status, msg, txt),
+        }
+        headers = {
+            'Server': 'Proxy',
+            'Content-Type': 'text/html',
+        }
         if auth:
-            auth = 'Proxy-Authenticate: %s\r\n'%auth
-        ServerHandleDirectly(self,
-            '%s %d %s\r\n' % (self.protocol, code, msg),
-            'Server: Proxy\r\n' +\
-            'Content-type: text/html\r\n' +\
-            auth +\
-            '\r\n', content)
+            headers['Proxy-Authenticate'] = auth
+        form = {}
+        WebConfig(self, self.url, form, self.protocol,
+                  context=context,
+                  headers=headers,
+                  status=status,
+                  msg=msg,
+                  )
 
 
     def __repr__ (self):
@@ -275,11 +283,3 @@ def get_content_length (headers):
         warn(PROXY, "invalid Content-Length value %s", headers.get('Content-Length', ''))
     return 0
 
-
-HTML_TEMPLATE = """<html><head>
-<title>%(title)s</title>
-</head>
-<body bgcolor="#fff7e5">
-<center><h3>%(header)s</h3></center>
-%(content)s
-</body></html>"""
