@@ -187,9 +187,13 @@ class HttpServer (Server):
             self.client.server_response(self.response, self.headers)
         else:
             # the HTTP line was missing, just assume that it was there
+            # Example: http://ads.adcode.de/frame?11?3?10
             print >> sys.stderr, \
-                  'Warning: puzzling header received from %s:' % self.url, \
+                  'Warning: invalid or missing response from %s:'%self.url, \
                   `self.response`
+            # put the read bytes back to the buffer and fix the response
+            self.recv_buffer = self.response + self.recv_buffer
+            self.response = "HTTP/1.0 200 Ok"
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, self.http_version())
@@ -213,11 +217,16 @@ class HttpServer (Server):
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
+        # get headers
+        fp = StringIO(self.read(m.end()))
+        msg = rfc822.Message(fp)
+        # put unparsed data (if any) back to the buffer
+        msg.rewindbody()
+        self.recv_buffer = fp.read() + self.recv_buffer
         # filter headers
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-                   rfc822.Message(StringIO(self.read(m.end()))),
-                   attrs=self.nofilter)
+                                       msg, attrs=self.nofilter)
         except FilterPics, msg:
             debug(NIGHTMARE, "Proxy: FilterPics", msg)
             response = "HTTP/1.1 200 OK"
