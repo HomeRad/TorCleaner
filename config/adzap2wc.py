@@ -150,7 +150,7 @@ def convert_adzapper_pattern (pattern):
 
 def convert_adzapper_replace (replace):
     # replace Perl back references with Python ones
-    replace = re.sub(r"\$(\d)", r"\\1", replace)
+    replace = re.sub(r"\${?(\d)}?", r"\\\1", replace)
     return replace
 
 
