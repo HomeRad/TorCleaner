@@ -145,6 +145,7 @@ class ClientServerMatchmaker:
                 i18n._('Host %s not found .. %s')%(hostname, answer.data))
             return
 
+
     def find_server (self):
         assert self.state == 'server'
         addr = (self.ipaddr, self.port)
@@ -205,7 +206,6 @@ class ClientServerMatchmaker:
 
     def server_close (self):
         debug(BRING_IT_ON, 'Proxy: resurrection failed', self.server.sequence_number, self.server)
-
         # Look for a server again
         if self.server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
