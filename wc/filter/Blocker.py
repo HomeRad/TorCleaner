@@ -86,11 +86,11 @@ def try_append_lines (lst, rule):
     """read rule file, print log note on error"""
     try:
         lines = get_file_data(rule.filename)
+        append_lines(lines, lst, rule.sid)
     except IOError, msg:
         wc.log.error(wc.LOG_FILTER, "could not read file %r: %s",
                      rule.filename, str(msg))
         return
-    append_lines(lines, lst, rule.sid)
 
 
 class Blocker (wc.filter.Filter.Filter):
