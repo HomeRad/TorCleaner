@@ -29,6 +29,7 @@ clean-local: clean-log
 	rm -f config/magic.mime.mgc
 	rm -f webcleaner-md5sums.txt
 	rm -f _webcleaner2_configdata.py
+	rm -f crossbuild.log localbuild.log
 # delete possible aborted dist build
 	rm -rf webcleaner-$(VERSION)
 
@@ -44,32 +45,17 @@ localbuild: all
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-$(PYVER)/wc/HtmlParser/htmlsax.so wc/HtmlParser/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
-	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/ || true
+	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/
 
 # cross compilation Linux -> Win32 script
-crossbuild:	crossmake
+crossbuild: all
+# compile .mo files
+	$(MAKE) -C po mofiles
 # build the .exe
 	CC=i586-mingw32msvc-gcc \
 	  CXX=i586-mingw32msvc-g++ \
 	  LDSHARED="i586-mingw32msvc-gcc -shared" \
 	  $(PYTHON) setup.py build bdist_wininst
-
-CROSSTARGET = i386-mingw32
-CROSSHOST = i386-mingw32
-#CROSSHOST = i386-mingw32msvc
-CROSSBUILD = i686-pc-linux-gnu
-# for other build boxen you might want to use:
-# CROSSBUILD = i386-linux
-crossconfig:
-	CC=i586-mingw32msvc-gcc \
-	  CXX=i586-mingw32msvc-g++ \
-	  AR=i586-mingw32msvc-ar \
-	  RANLIB=i586-mingw32msvc-ranlib \
-	 ./configure --target=$(TARGET) --host=$(HOST) --build=$(BUILD)
-
-crossmake:	crossconfig all
-# compile .mo files
-	$(MAKE) -C po mofiles
 
 distclean-local:
 	rm -rf dist build # just to be sure: clean build dir too
