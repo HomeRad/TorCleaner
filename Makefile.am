@@ -85,8 +85,9 @@ offlinetest: restart
 
 md5sums:
 	cd config && md5sum *.zap > md5sums
-	md5sum webcleaner-$(WCVERSION).tar.gz > $(MD5SUMS)
 	for f in webcleaner-$(WCVERSION).tar.gz; do \
+	  if [ ! -f $$f ]; then break; fi; \
+	  md5sum $$f > $(MD5SUMS); \
 	  gpg --detach-sign --armor $$f; \
 	done
 
