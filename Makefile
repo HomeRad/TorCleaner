@@ -36,18 +36,18 @@ cleandeb:
 	rm -f configure-stamp build-stamp
 
 # produce the .deb Debian package
-deb_local:	locale
+deb_local: distclean locale
 	# standard for local use
 	fakeroot debian/rules binary
 
-deb_localsigned:
+deb_localsigned: distclean locale
 	debuild -sgpg -pgpg -k32EC6F3E -rfakeroot
 
-deb_signed:	locale
+deb_signed: distclean locale
 	# ready for upload, signed with my GPG key
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -rfakeroot
 
-deb_unsigned:	locale
+deb_unsigned: distclean locale
 	# same thing, but unsigned (for local archives)
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/usr/local/src/debian -Mwebcleaner2 -us -uc -rfakeroot
 
