@@ -25,13 +25,40 @@ def start (parent_exit=1):
         return _("""WebCleaner already started (lock file found).
 Do 'webcleaner stop' first.""")
     # forking (only under POSIX systems)
-    pid = os.fork()
+    
     # the parent exits
-    if pid!=0:
+    if os.fork()!=0:
         if parent_exit:
-            raise SystemExit
+            os._exit(0)
         else:
             return
+    # create new session and fork once more
+    os.setsid()
+    pid = os.fork()
+    if pid != 0:
+        os._exit(0)
+    # drop privileges
+    os.chdir("/")
+    os.umask(0)
+    if os.geteuid()==0:
+        # drop root privileges
+        import pwd, grp
+        try:
+            pentry = pwd.getpwnam("nobody")
+            pw_uid = 2
+            nobody = pentry[pw_uid]
+            gentry = grp.getgrnam("nogroup")
+            gr_gid = 2
+            nogroup = gentry[gr_gid]
+            os.setuid(nobody)
+            os.setgid(nogroup)
+        except KeyError:
+            print >>sys.stderr, "warning: could not drop root privileges, user nobody and/or group nogroup not found"
+            pass
+    # XXX close if we have a logfile?
+    #os.close(sys.__stdin__.fileno())
+    #os.close(sys.__stdout__.fileno())
+    #os.close(sys.__stderr__.fileno())
     # write pid in pidfile
     f = open(pidfile, 'w')
     f.write("%d" % os.getpid())
