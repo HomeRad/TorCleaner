@@ -5,7 +5,10 @@ PYTHON := python2.3
 PACKAGE := webcleaner
 BASE := debian/$(PACKAGE)
 DOCDIR := $(BASE)/usr/share/doc/$(PACKAGE)
+SHAREDIR := $(BASE)/usr/share/$(PACKAGE)
 ETCDIR := $(BASE)/etc/$(PACKAGE)
+SERVICEDIR := $(BASE)/var/service/$(PACKAGE)
+
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
@@ -54,21 +57,20 @@ install: build
 	# delete man pages, we install them with dh_installmanpages
 	rm -rf $(BASE)/usr/man
 	# delete INSTALL file
-	rm -f $(BASE)/usr/share/doc/$(PACKAGE)/INSTALL
+	rm -f $(DOCDIR)/INSTALL
 	# move webcleaner binaries to /usr/sbin
 	mv $(BASE)/usr/bin/webcleaner $(BASE)/usr/sbin
 	rmdir $(BASE)/usr/bin
 	# move config files
-	mv $(BASE)/usr/share/webcleaner/config/* $(BASE)/etc/webcleaner/
-	rmdir $(BASE)/usr/share/webcleaner/config
+	mv $(SHAREDIR)/config/* $(ETCDIR)/
+	rmdir $(SHAREDIR)/config
 	# fix config permission
-	chmod go-rwx $(BASE)/etc/webcleaner/webcleaner.conf
+	chmod go-rwx $(ETCDIR)/webcleaner.conf
 	# remove example files, we install them ourselves
-	rm -rf $(BASE)/usr/share/webcleaner/examples
-	# install into /service directory
-	install -m 0755 service/run $(ETCDIR)
-	install -m 0755 service/run2 $(ETCDIR)
-	install -m 0755 service/log/run $(ETCDIR)/log
+	rm -rf $(SHAREDIR)/examples
+	# install into /var/service directory
+	install -m 0755 service/run2 $(SERVICEDIR)/run
+	install -m 0755 service/log/run $(SERVICEDIR)/log/
 	# move files to packages
 	dh_movefiles --sourcedir=$(BASE)
 
