@@ -54,7 +54,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def __init__ (self, sock, addr):
         """initialize connection data, test if client connection is allowed"""
-        super(self.__class__, self).__init__('request', sock=sock)
+        super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
         self.allow = wc.proxy.Allowed.AllowedHttpClient()
         self.reset()
@@ -482,7 +482,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def handle_error (self, what):
         """An error occured, close the connection and inform the server"""
-        super(self.__class__, self).handle_error(what)
+        super(HttpClient, self).handle_error(what)
         # We should close the server connection
         if self.server:
             self.server.client_abort()
@@ -493,7 +493,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
            connection"""
         wc.log.debug(wc.LOG_PROXY, '%s handle_close', self)
         self.send_buffer = ''
-        super(self.__class__, self).handle_close()
+        super(HttpClient, self).handle_close()
         if self.server:
             self.server.client_abort()
             self.server = None
@@ -557,11 +557,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def close_reuse (self):
         """Reset connection state, leave connection alive for pipelining"""
         wc.log.debug(wc.LOG_PROXY, '%s reuse', self)
-        super(self.__class__, self).close_reuse()
+        super(HttpClient, self).close_reuse()
         self.reset()
 
     def close_close (self):
         """close this connection"""
         wc.log.debug(wc.LOG_PROXY, '%s close', self)
         self.state = 'closed'
-        super(self.__class__, self).close_close()
+        super(HttpClient, self).close_close()

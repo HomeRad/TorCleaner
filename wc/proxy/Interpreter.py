@@ -10,7 +10,7 @@ class Interpreter (wc.proxy.Connection.Connection):
     def __init__ (self, sock, addr):
         """start interpreter on given address"""
         self.addr = addr
-        super(self.__class__, self).__init__(sock=sock)
+        super(Interpreter, self).__init__(sock=sock)
         self.write('>> ')
 
     def __repr__ (self):

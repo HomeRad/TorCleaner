@@ -62,7 +62,7 @@ class AllowedSslClient (AllowedHttpClient):
 
     def __init__ (self):
         """initialize allowances"""
-        super(self.__class__, self).__init__()
+        super(AllowedSslClient, self).__init__()
         self.methods = ['GET', 'HEAD', 'POST']
         self.schemes = ['https']
         self.connect_ports = []

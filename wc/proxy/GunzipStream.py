@@ -20,7 +20,7 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
 
     def __init__ (self):
         """initialize internal data buffer and flags"""
-        super(self.__class__, self).__init__()
+        super(GunzipStream, self).__init__()
         self.buf = ''
         self.header_seen = False
         self.error = False
@@ -100,7 +100,7 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
                 # We haven't finished parsing the header
                 return ''
         # We have seen the header, so we can move on to zlib
-        return super(self.__class__, self).decode(s)
+        return super(GunzipStream, self).decode(s)
 
     def flush (self):
         """flush buffer data and return it"""
@@ -110,4 +110,4 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
             # We still haven't finished parsing the header .. oh well
             return self.buf
         else:
-            return super(self.__class__, self).flush()
+            return super(GunzipStream, self).flush()

@@ -9,7 +9,7 @@ class ServerHandleDirectly (wc.proxy.Server.Server):
 
     def __init__ (self, client, response, status, headers, content):
         """write given response to client"""
-        super(self.__class__, self).__init__(client, 'default')
+        super(ServerHandleDirectly, self).__init__(client, 'default')
         if content:
             headers["Content-Length"] = "%d\r" % len(content)
         self.connected = True

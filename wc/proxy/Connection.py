@@ -26,9 +26,9 @@ MAX_BUFSIZE = 1024*1024
 class Connection (wc.proxy.Dispatcher.Dispatcher):
     """add buffered input and output capabilities"""
 
-    def __init__(self, sock=None):
+    def __init__ (self, sock=None):
         """initialize buffers"""
-        super(self.__class__, self).__init__(sock)
+        super(Connection, self).__init__(sock=sock)
         self.recv_buffer = ''
         self.send_buffer = ''
         # True if data has still to be written before closing
@@ -127,7 +127,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         wc.log.debug(wc.LOG_PROXY, '%s Connection.close_close', self)
         if self.connected:
             self.connected = False
-            super(self.__class__, self).close()
+            super(Connection, self).close()
 
     def handle_close (self):
         """if we are still connected, wait until all data is sent, then close
@@ -166,7 +166,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
     def handle_error (self, what):
         """print error and close the connection"""
         wc.log.debug(wc.LOG_PROXY, "%s error %s", self, what)
-        super(self.__class__, self).handle_error(what)
+        super(Connection, self).handle_error(what)
         self.close()
 
     def handle_expt (self):

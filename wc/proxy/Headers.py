@@ -21,7 +21,7 @@ class WcMessage (rfc822.Message, object):
         """initialize message reading from given optional file descriptor"""
         if fp is None:
             fp = StringIO.StringIO()
-        super(self.__class__, self).__init__(fp, seekable=seekable)
+        super(WcMessage, self).__init__(fp, seekable=seekable)
 
     def getallmatchingheadervalues (self, name):
         """return a list of all header values for the given header name"""

@@ -11,7 +11,7 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
     def __init__ (self, client, state):
         """initialize server in given state, writing received data to
            client"""
-        super(self.__class__, self).__init__(state)
+        super(Server, self).__init__(state)
         self.client = client
 
     def client_abort (self):
