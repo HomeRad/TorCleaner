@@ -210,7 +210,7 @@ class HttpServer (Server):
         if self.headers.get('Content-Length') is None:
             self.headers['Connection'] = 'close'
         #debug(HURT_ME_PLENTY, "S/Headers filtered", `self.headers.headers`)
-        wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
+        wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
         self.client.server_response(self.response, self.headers)
         self.attrs['nofilter'] = self.nofilter['nofilter']
         if self.statuscode in ('204', '304') or self.method == 'HEAD':

@@ -89,7 +89,9 @@ def text_status ():
 
 
 def text_headers ():
-    return "\n".join(wc.proxy.HEADERS.getall()) or "-"
+    entries = map(lambda s: "%s\n%s\n%s\n"%(s[0], s[1], "".join(s[2])),
+                  wc.proxy.HEADERS.getall())
+    return "".join(entries)
 
 
 def text_connections ():

@@ -14,5 +14,5 @@ class LimitQueue:
 
     def getall (self):
         q, self._queue = self._queue, []
-        return map(str, q)
+        return q
 

@@ -20,6 +20,7 @@ def scrollnum (s):
 
 
 def parse_headers ():
+    URL, IO, HEADERS = range(3)
     headers = []
     try:
         s = get_data("/headers/")
@@ -27,21 +28,24 @@ def parse_headers ():
     except (IOError, ValueError):
         print >> sys.stderr, i18n._("WebCleaner is not running")
         return headers
-    if s=="-": return headers
-    lines = s.split("\n")
-    for l in lines:
-        # strip off paranthesis
-        l = l[1:-1]
-        # split into three parts
-        url, io, hlist = l.split(", ", 2)
-        # split headers
-        hlist = (hlist.strip())[2:-2].split("', '")
-        # strip headers
-        hlist = map(lambda x: x.replace("\\r", ""), hlist)
-        hlist = map(lambda x: x.replace("\\n", ""), hlist)
-        hlist = map(lambda x: x.split(":", 1), hlist)
-        # append
-        headers.append([url[1:-1], int(io), hlist])
+    url = ""
+    io = ""
+    hlist = []
+    mode = URL
+    for line in s.splitlines():
+        if mode==HEADERS:
+            if not line:
+                headers.append((url, io, hlist))
+                hlist = []
+                mode = URL
+            else:
+                hlist.append(line.split(':', 1))
+        elif mode==URL:
+            url = line
+            mode = IO
+        elif mode==IO:
+            io = line
+            mode = HEADERS
     return headers
 
 
@@ -363,7 +367,7 @@ class HeaderWindow (ToolWindow):
                 oldhost = host
                 oldio = io
                 self.headers.appendItem("\t")
-                if io:
+                if io=='server':
                     self.headers.appendItem("%s\t %s"%(i18n._('<- RESPONSE'), url))
                 else:
                     self.headers.appendItem("%s\t %s"%(i18n._('-> REQUEST'), url))
