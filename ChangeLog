@@ -12,6 +12,12 @@
     Removed: config/wcheaders.{conf,dtd}
     Changed: setup.py
 
+  * Added release names. Due to the somewhat shaky past releases,
+    those names should render each release a pearl of uniqueness.
+    Now all one has to do is look at the name - which will always be
+    a name of a really good movie - and watch this movie. After that,
+    any error in the release will be a little less bad :)
+
 2.16 (released 26.5.2004)
   * parse and quote query parts of urls
     Type: bugfix
