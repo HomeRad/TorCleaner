@@ -120,7 +120,7 @@ def open_url (url, proxies=None):
 
 # ====================== end of urlutils.py =================================
 
-def update (config, baseurl, dryrun=False, log=sys.stdout):
+def update (config, baseurl, dryrun=False, log=None):
     """Update the given configuration object with .zap files found at baseurl.
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
@@ -131,6 +131,7 @@ def update (config, baseurl, dryrun=False, log=sys.stdout):
     for filename in wc.filterconf_files():
         filemap[os.path.basename(filename)] = filename
     lines = page.read().splitlines()
+    chg = False
     for line in lines:
         if "<" in line:
             raise IOError, "error fetching url "+url
@@ -155,7 +156,8 @@ def update (config, baseurl, dryrun=False, log=sys.stdout):
         page = open_url(url)
         p = ZapperParser(filename)
         p.parse(page)
-        config.merge_folder(p.folder, dryrun=dryrun, log=log)
+        chg = config.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
+    return chg
 
 
 def _test ():
