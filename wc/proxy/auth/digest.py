@@ -125,9 +125,8 @@ def get_digest_credentials (challenge, **attrs):
     base = 'username="%s", realm="%s", nonce="%s", uri="%s"' % \
              (attrs['username'], challenge['realm'], challenge['nonce'],
               attrs['uri'])
-    if challenge.has_key('algorithm'):
-        base += ', algorithm="%s"' % challenge['algorithm']
-    base += ", response=\"%s\"" % response_digest
+    base += ', algorithm="%s"' % challenge.get('algorithm', 'MD5')
+    base += ', response="%s"' % response_digest
     # note: opaque value _should_ be there, but is not in apache mod_digest
     if challenge.has_key('opaque'):
         base += ', opaque="%s"' % challenge['opaque']
