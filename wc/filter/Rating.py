@@ -30,6 +30,9 @@ MISSING = i18n._("Unknown page")
 # rating cache filename
 rating_cachefile = os.path.join(ConfigDir, "rating.dat")
 
+# rating cache
+rating_cache = {}
+
 # rating associations and their categories
 service = dict(
    name = AppName,
@@ -97,6 +100,21 @@ def rating_export (rating):
     return "\n".join([ "%s %s"%item for item in rating.items() ])
 
 
+def rating_exportall ():
+    """export all ratings in a text file called `rating.txt', located
+       in the same directory as the file `rating.dat'
+    """
+    fp = file(os.path.join(ConfigDir, "rating.txt"), 'w')
+    for url, rating in rating_cache.iteritems():
+        if not is_valid_url(url):
+            error(RATING, "invalid url %r", url)
+            continue
+        fp.write("url %s\n"%url)
+        fp.write(rating_export(rating))
+        fp.write("\n\n")
+    fp.close()
+
+
 class RatingParseError (Exception):
     """Raised on parsing errors."""
     pass
@@ -110,8 +128,8 @@ def rating_cache_write ():
 
 
 def rating_cache_load ():
-    """load cached rating data from disk or return an empty cache if no
-    cached data is found"""
+    """load cached rating data from disk and fill the rating_cache.
+       If no rating data file is found, do nothing."""
     global rating_cache
     if os.path.isfile(rating_cachefile):
         fp = file(rating_cachefile)
@@ -121,7 +139,7 @@ def rating_cache_load ():
         toremove = []
         for url in rating_cache:
             if not is_valid_url(url):
-                error(FILTER, "Invalid rating url %r", url)
+                error(RATING, "Invalid rating url %r", url)
                 toremove.append(url)
         if toremove:
             for url in toremove:
@@ -129,8 +147,24 @@ def rating_cache_load ():
             rating_cache_write()
 
 
-rating_cache = {}
-rating_cache_load()
+def rating_cache_parse (fp):
+    """parse previously exported rating data from given file"""
+    url = None
+    ratingdata = []
+    newrating_cache
+    for line in fp:
+        line = line.rstrip('\r\n')
+        if not line:
+            if url:
+                newrating_cache[url] = rating_import("\n".join(ratingdata))
+            url = None
+            ratingdata = []
+            continue
+        if line.startswith('url'):
+            url = line.split()[1]
+        elif url:
+            ratingdata.append(line)
+    return newrating_cache
 
 
 def rating_cache_get (url):
@@ -187,7 +221,7 @@ def rating_add (url, rating):
         rating_cache[url] = rating
         rating_cache_write()
     else:
-        error(FILTER, "Invalid rating url %r", url)
+        error(RATING, "Invalid rating url %r", url)
 
 
 def rating_allow (url, rule):
@@ -241,4 +275,14 @@ def rating_range (value):
     else:
         vmax = int(vmax)
     return (vmin, vmax)
+
+
+def rating_cache_merge (newrating_cache):
+    """add new ratings, but do not change existing ones"""
+    for url, rating in newrating_cache.iteritems():
+        if url not in rating_cache:
+            rating_cache[url] = rating
+
+
+rating_cache_load()
 
