@@ -66,6 +66,10 @@
     Added: wc/network/*.py
     Changed: setup.py, Makefile.am
 
+  * reread DNS config every minute
+    Type: feature
+    Changed: wc/proxy/dns_lookups.py
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix
