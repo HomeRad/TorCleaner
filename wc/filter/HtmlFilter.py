@@ -18,6 +18,8 @@
 
 import urllib
 import codecs
+import re
+
 import wc.HtmlParser
 import wc.url
 import wc.log
@@ -27,6 +29,8 @@ import wc.filter.rules.RewriteRule
 import wc.filter.HtmlSecurity
 import wc.filter.HtmlTags
 import wc.filter.Rating
+
+_encoding_ro = re.compile(r"charset=(?P<encoding>[-0-9a-zA-Z]+)")
 
 
 class HtmlFilter (wc.filter.JSFilter.JSFilter):
@@ -80,17 +84,18 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         if tag == 'meta':
             if attrs.get('http-equiv', '').lower() == "content-type":
                 content = attrs.get('content', '')
-                i = content.lower().find("charset=")
-                if i != -1:
-                    encoding = content[i:]
+                mo = _encoding_ro.search(content)
+                if mo:
+                    encoding = mo.group("encoding").encode("ascii")
                     try:
+                        encoding = encoding.encode("ascii")
                         codecs.lookup(encoding)
                         wc.log.debug(wc.LOG_FILTER,
                                   "%s switch to encoding %r", self, encoding)
                         self.htmlparser.encoding = encoding
                     except LookupError:
                         wc.log.warn(wc.LOG_FILTER,
-                                    "unkown encoding %r", encoding)
+                                    "unknown encoding %r", encoding)
 
     def _data (self, d):
         """general handler for data"""
