@@ -2,13 +2,13 @@ TODO
 
 version 2.10 and above
 
-- make and install ssl certs
-
 - memory leaks while operating the proxy
 
 - convert remaining tests to unit testing where appropriate
 
 - use test/client.py, test/server.py for testing
+
+- virus scanning with clamav http://localhost/doc/clamav/html/node45.html
 
 - bfilter has Flash parse and generation library, I want that too .)
 
