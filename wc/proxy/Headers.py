@@ -10,6 +10,7 @@ from rfc822 import Message
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
 from DeflateStream import DeflateStream
+from cStringIO import StringIO
 import mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'
@@ -52,6 +53,16 @@ class WcMessage (Message):
 
     def __str__ (self):
         return "\n".join([ repr(s) for s in self.headers ])
+
+
+def get_wc_client_headers (host):
+    headers = WcMessage(StringIO(''))
+    headers['host'] = '%s\r' % host
+    headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
+    headers['Connection'] = 'Keep-Alive\r'
+    headers['Keep-Alive'] = 'timeout=300\r'
+    headers['User-Agent'] = 'Calzilla/6.0\r'
+    return headers
 
 
 def remove_headers (headers, to_remove):

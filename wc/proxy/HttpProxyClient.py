@@ -3,11 +3,10 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.log import *
-from wc.proxy.Headers import WcMessage
+from wc.proxy.Headers import get_wc_client_headers
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse, urllib
-from cStringIO import StringIO
 
 class HttpProxyClient (object):
     """A class buffering all incoming data from a server for later use.
@@ -63,11 +62,12 @@ class HttpProxyClient (object):
                          self.server.headers.getheader("Uri", ""))
             url = urlparse.urljoin(self.server.url, url)
             url = urllib.unquote(url)
+            host = stripsite(url)[0]
             self.args = (url, self.args[1])
             # try again
             ClientServerMatchmaker(self,
                            "GET %s HTTP/1.1" % url, #request
-                           WcMessage(StringIO('')), #headers
+                           get_wc_client_headers(host), #headers
                            '', #content
                            {'nofilter': None}, # nofilter
                            'identity', # compress

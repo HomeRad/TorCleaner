@@ -37,8 +37,8 @@ except ImportError, msg:
     jslib = None
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
-from wc.proxy.Headers import WcMessage
-from wc.proxy import make_timer, norm_url
+from wc.proxy.Headers import get_wc_client_headers
+from wc.proxy import make_timer, norm_url, stripsite
 from HtmlTags import check_spelling
 from HtmlSecurity import HtmlSecurity
 
@@ -489,9 +489,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.waited = 1
         self.js_src = True
         self.js_client = HttpProxyClient(self.jsScriptData, (url, ver))
+        host = stripsite(url)[0]
         ClientServerMatchmaker(self.js_client,
                                "GET %s HTTP/1.1" % url, # request
-                               WcMessage(StringIO('')), # headers
+                               get_wc_client_headers(host), # headers
                                '', # content
                                {'nofilter': None}, # nofilter
                                'identity', # compress
