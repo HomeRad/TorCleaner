@@ -20,12 +20,14 @@ found in SquidGuard"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from ExternfileRule import ExternfileRule
+import wc.filter.rules.ExternfileRule
 
-class BlockdomainsRule (ExternfileRule):
+
+class BlockdomainsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
     """Specifies a list of domains to block, displaying the standard
        block message page.
        See also the Blocker filter module.
     """
+
     def fromFactory (self, factory):
         return factory.fromBlockdomainsRule(self)

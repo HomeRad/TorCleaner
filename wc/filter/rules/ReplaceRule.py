@@ -19,11 +19,12 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from Rule import compileRegex
-from UrlRule import UrlRule
-from wc.XmlUtils import xmlquote, xmlquoteattr
+import wc.filter.rules.UrlRule
+import wc.filter.rules.Rule
+import wc.XmlUtils
 
-class ReplaceRule (UrlRule):
+
+class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
     """This rule can Replace parts of text data according to regular
     expressions"""
     def __init__ (self, sid=None, titles=None, descriptions=None,
@@ -45,7 +46,7 @@ class ReplaceRule (UrlRule):
     def compile_data (self):
         """compile url regular expressions"""
         super(ReplaceRule, self).compile_data()
-        compileRegex(self, "search")
+        wc.filter.rules.Rule.compileRegex(self, "search")
 
 
     def fromFactory (self, factory):
@@ -63,12 +64,13 @@ class ReplaceRule (UrlRule):
         """Rule data as XML for storing"""
 	s = super(ReplaceRule, self).toxml()
         if self.search:
-            s += '\n search="%s"'%xmlquoteattr(self.search)
+            s += '\n search="%s"'%wc.XmlUtils.xmlquoteattr(self.search)
         s += ">"
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.replacement:
-            s += '\n  <replacement>%s</replacement>'%xmlquote(self.replacement)
+            s += '\n  <replacement>%s</replacement>'%\
+              wc.XmlUtils.xmlquote(self.replacement)
         s += "\n</%s>" % self.get_name()
         return s

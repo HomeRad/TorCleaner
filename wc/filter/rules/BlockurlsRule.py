@@ -20,13 +20,15 @@ found in SquidGuard"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from ExternfileRule import ExternfileRule
+import wc.filter.rules.ExternfileRule
 
-class BlockurlsRule (ExternfileRule):
+
+class BlockurlsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
     """Specifies a list of url paths to block, displaying the standard
        block message page.
        See also the Blocker filter module.
     """
+
     def fromFactory (self, factory):
         """rule factory"""
         return factory.fromBlockurlsRule(self)

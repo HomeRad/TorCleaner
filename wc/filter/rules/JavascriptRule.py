@@ -19,9 +19,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from UrlRule import UrlRule
+import wc.filter.rules.UrlRule
 
-class JavascriptRule (UrlRule):
+class JavascriptRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, this rule tells the Rewriter to filter JavaScript"""
 
     def fromFactory (self, factory):

@@ -20,10 +20,10 @@ found in SquidGuard"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from Rule import Rule
-from wc.XmlUtils import xmlquoteattr
+import wc.filter.rules.Rule
+import wc.XmlUtils
 
-class ExternfileRule (Rule):
+class ExternfileRule (wc.filter.rules.Rule.Rule):
     """rule with data stored in a (compressed) external file, used for
        huge url and domain block lists
     """
@@ -45,7 +45,7 @@ class ExternfileRule (Rule):
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(ExternfileRule, self).toxml()
-        s += ' filename="%s">' % xmlquoteattr(self.filename)
+        s += ' filename="%s">' % wc.XmlUtils.xmlquoteattr(self.filename)
         s += "\n"+self.title_desc_toxml(prefix="  ")
         s += "\n</%s>"%self.get_name()
         return s

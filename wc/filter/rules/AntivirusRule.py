@@ -19,9 +19,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from UrlRule import UrlRule
+import wc.filter.rules.UrlRule
 
-class AntivirusRule (UrlRule):
+
+class AntivirusRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, tells the VirusFilter to scan web content for viruses"""
 
     def fromFactory (self, factory):

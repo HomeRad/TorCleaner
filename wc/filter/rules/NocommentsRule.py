@@ -19,9 +19,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from UrlRule import UrlRule
+import wc.filter.rules.UrlRule
 
-class NocommentsRule (UrlRule):
+
+class NocommentsRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, this rule tells the Rewriter to remove HTML comments"""
 
     def fromFactory (self, factory):

@@ -20,12 +20,12 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from Rule import Rule, compileRegex
-from wc.XmlUtils import xmlquote
+import wc.filter.rules.Rule
+import wc.XmlUtils
 from wc.log import *
 
 
-class UrlRule (Rule):
+class UrlRule (wc.filter.rules.Rule.Rule):
     """rule which applies only to urls which match a regular expression"""
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, matchurls=[], nomatchurls=[]):
@@ -77,9 +77,9 @@ class UrlRule (Rule):
     def matchestoxml (self, prefix=""):
         """match url rule data as XML for storing"""
         m = ["%s<matchurl>%s</matchurl>" % \
-             (prefix, xmlquote(r)) for r in self.matchurls]
+             (prefix, wc.XmlUtils.xmlquote(r)) for r in self.matchurls]
         n = ["%s<nomatchurl>%s</nomatchurl>" % \
-             (prefix, xmlquote(r)) for r in self.nomatchurls]
+             (prefix, wc.XmlUtils.xmlquote(r)) for r in self.nomatchurls]
         return "\n".join(m+n)
 
 

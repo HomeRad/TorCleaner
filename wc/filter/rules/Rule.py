@@ -20,9 +20,9 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from wc import i18n, ConfigCharset
-from wc.XmlUtils import xmlquote, xmlquoteattr, xmlunquote
-from wc.filter.rules import register_rule
+import wc
+import wc.XmlUtils
+import wc.filter.rules
 
 
 def compileRegex (obj, attr):
@@ -106,7 +106,7 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", i18n._("updating rule title for language %s:")%key
+                print >>log, " ", wc.i18n._("updating rule title for language %s:")%key
                 print >>log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.titles[key] = value
@@ -119,7 +119,7 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", i18n._("updating rule description for language %s:")%key
+                print >>log, " ", wc.i18n._("updating rule description for language %s:")%key
                 print >>log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.descriptions[key] = value
@@ -133,7 +133,7 @@ class Rule (object):
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
-                print >>log, " ", i18n._("updating rule %s:")%self.tiptext()
+                print >>log, " ", wc.i18n._("updating rule %s:")%self.tiptext()
                 print >>log, " ", attr, repr(oldval), "==>", repr(newval)
                 chg = True
                 if not dryrun:
@@ -209,7 +209,7 @@ class Rule (object):
         if name == self.get_name():
             self._data = ""
         else:
-            self._data = xmlunquote(self._data).encode(ConfigCharset)
+            self._data = wc.XmlUtils.xmlunquote(self._data).encode(wc.ConfigCharset)
         if name=='title':
             self.titles[self._lang] = self._data
         elif name=='description':
@@ -218,7 +218,7 @@ class Rule (object):
 
     def compile_data (self):
         """register this rule; called when all XML parsing of rule finished"""
-        register_rule(self)
+        wc.filter.rules.register_rule(self)
 
 
     def fromFactory (self, factory):
@@ -233,7 +233,7 @@ class Rule (object):
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        s = '<%s sid="%s"' % (self.get_name(), xmlquoteattr(self.sid))
+        s = '<%s sid="%s"' % (self.get_name(), wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
             s+= ' disable="%d"' % self.disable
         return s
@@ -242,10 +242,10 @@ class Rule (object):
     def title_desc_toxml (self, prefix=""):
         """return XML for rule title and description"""
         t = ['%s<title lang="%s">%s</title>' % \
-             (prefix, xmlquoteattr(key), xmlquote(value)) \
+             (prefix, wc.XmlUtils.xmlquoteattr(key), wc.XmlUtils.xmlquote(value)) \
              for key,value in self.titles.iteritems() if value]
         d = ['%s<description lang="%s">%s</description>'% \
-             (prefix, xmlquoteattr(key), xmlquote(value)) \
+             (prefix, wc.XmlUtils.xmlquoteattr(key), wc.XmlUtils.xmlquote(value)) \
              for key,value in self.descriptions.iteritems() if value]
         s = "\n".join(t+d)
         return s

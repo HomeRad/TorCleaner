@@ -19,10 +19,11 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from AllowRule import AllowRule
-from wc.XmlUtils import xmlquote, xmlquoteattr
+import wc.filter.rules.AllowRule
+import wc.XmlUtils
 
-class BlockRule (AllowRule):
+
+class BlockRule (wc.filter.rules.AllowRule.AllowRule):
     """Define a regular expression for urls to be blocked, and a
        replacement url with back references for matched subgroups.
        See also the Blocker filter module.
@@ -50,11 +51,12 @@ class BlockRule (AllowRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(AllowRule, self).toxml() + \
-             '\n url="%s">' % xmlquoteattr(self.url)
+             '\n url="%s">' % wc.XmlUtils.xmlquoteattr(self.url)
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.replacement:
-            s += "\n  <replacement>%s</replacement>"%xmlquote(self.replacement)
+            s += "\n  <replacement>%s</replacement>"%\
+              wc.XmlUtils.xmlquote(self.replacement)
         s += "\n</%s>" % self.get_name()
         return s

@@ -19,8 +19,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from Rule import Rule
-from wc import i18n, ConfigCharset
+import wc
+import wc.filter.rules.Rule
+
 
 def recalc_up_down (rules):
     """add .up and .down attributes to rules, used for display up/down
@@ -32,7 +33,7 @@ def recalc_up_down (rules):
         rule.down = (i<upper)
 
 
-class FolderRule (Rule):
+class FolderRule (wc.filter.rules.Rule.Rule):
     """container for a list of rules"""
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
@@ -90,7 +91,8 @@ class FolderRule (Rule):
             if oldrule is not None:
                 chg = oldrule.update(child, dryrun=dryrun, log=log) or chg
             else:
-                print >>log, i18n._("inserting new rule %s")%child.tiptext()
+                print >>log, wc.i18n._("inserting new rule %s") % \
+                             child.tiptext()
                 if not dryrun:
                     self.rules.append(child)
                     chg = True
@@ -111,7 +113,7 @@ class FolderRule (Rule):
         """Rule data as XML for storing"""
         s = """<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-%s oid="%d">""" % (ConfigCharset, super(FolderRule, self).toxml(), self.oid)
+%s oid="%d">"""%(wc.ConfigCharset, super(FolderRule, self).toxml(), self.oid)
         s += "\n"+self.title_desc_toxml()+"\n"
         for r in self.rules:
             s += "\n%s\n"%r.toxml()
@@ -129,7 +131,7 @@ class FolderRule (Rule):
         """return short info for gui display"""
         l = len(self.rules)
         if l==1:
-            text = i18n._("with 1 rule")
+            text = wc.i18n._("with 1 rule")
         else:
-            text = i18n._("with %d rules")%l
+            text = wc.i18n._("with %d rules")%l
         return "%s %s" % (super(FolderRule, self).tiptext(), text)

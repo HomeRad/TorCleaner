@@ -20,9 +20,9 @@ found in SquidGuard"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from ExternfileRule import ExternfileRule
+import wc.filter.rules.ExternfileRule
 
-class AllowdomainsRule (ExternfileRule):
+class AllowdomainsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
     """Specifies a list of domains to allow, even if they would be blocked
        otherwise.
        See also the Blocker filter module.

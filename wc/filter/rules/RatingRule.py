@@ -19,14 +19,14 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from UrlRule import UrlRule
-from wc import i18n
-from wc.XmlUtils import xmlquote, xmlquoteattr
-from wc.filter.Rating import service, rating_in_range
+import wc
+import wc.filter.rules.UrlRule
+import wc.XmlUtils
+import wc.filter.Rating
 from wc.log import *
 
 
-class RatingRule (UrlRule):
+class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     """holds configured rating data"""
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
                   matchurls=[], nomatchurls=[]):
@@ -57,7 +57,7 @@ class RatingRule (UrlRule):
     def compile_data (self):
         """fill rating structure"""
         super(RatingRule, self).compile_data()
-        for category, catdata in service['categories'].items():
+        for category, catdata in wc.filter.Rating.service['categories'].items():
             if category not in self.ratings:
                 if catdata.has_key('rvalues'):
                     self.ratings[category] = catdata['rvalues'][0]
@@ -93,14 +93,14 @@ class RatingRule (UrlRule):
             if not limit:
                 # no limit is set for this category
                 continue
-            elif service['categories'][category].has_key('rrange'):
+            elif wc.filter.Rating.service['categories'][category].has_key('rrange'):
                 # check if value is in range
                 if (limit[0] is not None and value < limit[0]) or \
                    (limit[1] is not None and value > limit[1]):
-                    return i18n._("Rating %r for category %r is not in range %s") %\
+                    return wc.i18n._("Rating %r for category %r is not in range %s") %\
                                   (value, category, limit)
             elif value > limit:
-                return i18n._("Rating %r for category %r exceeds limit %r")%\
+                return wc.i18n._("Rating %r for category %r exceeds limit %r")%\
                               (value, category, limit)
         # not exceeded
         return None
@@ -113,11 +113,12 @@ class RatingRule (UrlRule):
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.url:
-            s += "\n  <url>%s</url>" % xmlquote(self.url)
+            s += "\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
         for category, value in self.ratings.items():
             if value:
                 s += "\n  <category name=\"%s\">%s</category>"% \
-                      (xmlquoteattr(category), xmlquote(value))
+                      (wc.XmlUtils.xmlquoteattr(category),
+                       wc.XmlUtils.xmlquote(value))
         s += "\n</%s>" % self.get_name()
         return s
 

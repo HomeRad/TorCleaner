@@ -21,6 +21,13 @@ __date__    = "$Date$"[7:-2]
 
 import re
 import cStringIO as StringIO
+import wc
+import wc.XmlUtils
+import wc.filter.rules.UrlRule
+import wc.filter.rules.Rule
+import wc.parser.htmllib
+from wc.log import *
+
 
 # tag ids
 STARTTAG = 0
@@ -35,12 +42,6 @@ ATTRVAL = 3
 COMPLETE = 4
 ENCLOSED = 5
 
-from UrlRule import UrlRule
-from Rule import compileRegex
-from wc.XmlUtils import xmlquote, xmlquoteattr
-from wc.log import *
-from wc import i18n
-from wc.parser.htmllib import quote_attrval
 
 def tagbuf2data (tagbuf, out):
     """write tag buffer items to output stream out and returns out"""
@@ -52,7 +53,7 @@ def tagbuf2data (tagbuf, out):
             for name,val in item[2].items():
                 s += ' %s'%name
                 if val:
-                    s += "=\"%s\""%quote_attrval(val)
+                    s += "=\"%s\""%wc.parser.htmllib.quote_attrval(val)
             out.write(s+">")
         elif item[0]==ENDTAG:
             out.write("</%s>"%item[1])
@@ -73,12 +74,12 @@ partvalnames = [
     'enclosed',
 ]
 partnames = {
-    'tag': i18n._("Tag"),
-    'tagname': i18n._("Tag name"),
-    'attr': i18n._("Attribute"),
-    'attrval': i18n._("Attribute value"),
-    'complete': i18n._("Complete tag"),
-    'enclosed': i18n._("Enclosed block"),
+    'tag': wc.i18n._("Tag"),
+    'tagname': wc.i18n._("Tag name"),
+    'attr': wc.i18n._("Attribute"),
+    'attrval': wc.i18n._("Attribute value"),
+    'complete': wc.i18n._("Complete tag"),
+    'enclosed': wc.i18n._("Enclosed block"),
 }
 
 
@@ -101,7 +102,7 @@ def num_part (i):
     return partvalnames[i]
 
 
-class RewriteRule (UrlRule):
+class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
     """A rewrite rule applies to a specific tag, optional with attribute
        constraints (stored in self.attrs) or a regular expression to
        match the enclosed block (self.enclosed).
@@ -151,7 +152,7 @@ class RewriteRule (UrlRule):
     def compile_data (self):
         """compile url regular expressions"""
         super(RewriteRule, self).compile_data()
-        compileRegex(self, "enclosed")
+        wc.filter.rules.Rule.compileRegex(self, "enclosed")
         self.attrs_ro = {}
         for attr, val in self.attrs.items():
             self.attrs_ro[attr] = re.compile(val)
@@ -285,7 +286,7 @@ class RewriteRule (UrlRule):
         """Rule data as XML for storing"""
         s = super(RewriteRule, self).toxml()
         if self.tag!='a':
-            s += '\n tag="%s"' % xmlquoteattr(self.tag)
+            s += '\n tag="%s"' % wc.XmlUtils.xmlquoteattr(self.tag)
         s += ">"
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
@@ -295,15 +296,15 @@ class RewriteRule (UrlRule):
             if key!='href':
                 s += ' name="%s"' % key
             if val:
-                s += ">%s</attr>" % xmlquote(val)
+                s += ">%s</attr>" % wc.XmlUtils.xmlquote(val)
             else:
                 s += "/>"
         if self.enclosed:
-            s += "\n  <enclosed>%s</enclosed>" % xmlquote(self.enclosed)
+            s += "\n  <enclosed>%s</enclosed>" % wc.XmlUtils.xmlquote(self.enclosed)
         if self.part!=COMPLETE or self.replacement:
             s += '\n  <replacement part="%s"' % num_part(self.part)
             if self.replacement:
-                s += ">%s</replacement>" % xmlquote(self.replacement)
+                s += ">%s</replacement>" % wc.XmlUtils.xmlquote(self.replacement)
             else:
                 s += "/>"
         s += "\n</%s>" % self.get_name()

@@ -19,10 +19,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from UrlRule import UrlRule
-from wc.XmlUtils import xmlquote, xmlquoteattr
+import wc.filter.rules.UrlRule
+import wc.XmlUtils
 
-class HeaderRule (UrlRule):
+class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
     """rule for filtering HTTP headers"""
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
@@ -57,14 +57,15 @@ class HeaderRule (UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        s = '%s\n name="%s"' % \
-            (super(HeaderRule, self).toxml(), xmlquoteattr(self.name))
+        s = '%s\n name="%s"' % (super(HeaderRule, self).toxml(),
+                                wc.XmlUtils.xmlquoteattr(self.name))
         if self.filterstage!='request':
             s += '\n filterstage="%s"' % self.filterstage
         s += ">\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.value:
-            s += '\n  <replacement>%s</replacement>' % xmlquote(self.value)
+            s += '\n  <replacement>%s</replacement>' % \
+               wc.XmlUtils.xmlquote(self.value)
         s += "\n</%s>" % self.get_name()
         return s
