@@ -5,7 +5,6 @@ A: Send the URL to calvin@users.sf.net and I will add a filter rule for it.
 Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
    some tags or is completely crippled
 A: First, try to disable the WebCleaner proxy and look at the page again.
-   Or try adding "noproxy." before the url hostname to turn off filtering.
    If it renders ok, you most likely have encountered a bug in WebCleaner.
    Please write a bug report to calvin@users.sf.net and
    include the URL you have problems with.
@@ -37,15 +36,15 @@ A: The default config of WebCleaner is strict when it comes
      Mozilla -> Edit -> Preferences -> Advanced -> Scripts & Plugins
    - Disable Java. See
      Mozilla -> Edit -> Preferences -> Advanced
-   - Dont send your real email address to FTP servers. See
+   - Don't send your real email address to FTP servers. See
      Mozilla -> Edit -> Preferences -> Advanced
-   - Dont accept cookies, or at least set the browser to warn you
+   - Don't accept cookies, or at least set the browser to warn you
      of every attempt to store cookies. See
      Mozilla -> Edit -> Preferences -> Privacy & Security -> Cookies
    - Disable image animation. See
      Mozilla -> Edit -> Preferences -> Privacy & Security -> Images
-   - Dont save form data. See
+   - Don't save form data. See
      Mozilla -> Edit -> Preferences -> Privacy & Security -> Forms
-   - Dont save passwords. See
+   - Don't save passwords. See
      Mozilla -> Edit -> Preferences -> Privacy & Security -> Passwords
-   - Dont install the Flash Plugin. It has security problems.
+   - Don't install the Flash Plugin. It has security problems.
