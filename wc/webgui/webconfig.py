@@ -61,6 +61,7 @@ class WebConfig (object):
         if ctype == 'text/html':
             ctype += "; charset=iso-8859-1"
         headers['Content-Type'] = "%s\r" % ctype
+        path = ""
         try:
             lang = wc.i18n.get_headers_lang(clientheaders)
             # get the template filename
@@ -89,7 +90,7 @@ class WebConfig (object):
             return
         except StandardError:
             # catch standard exceptions and report internal error
-            wc.log.exception(wc.LOG_GUI, "Template error:")
+            wc.log.exception(wc.LOG_GUI, "Template error: %r", path)
             client.error(500, _("Internal Error"))
             return
         # not catched builtin exceptions are:
