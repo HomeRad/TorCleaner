@@ -437,8 +437,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                              "%s server_request in non-receive state" % self
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
-                             self.request, self.headers,
-                             self.content, mime=self.attrs['mime'])
+                             self.request, self.headers, self.content)
 
     def server_response (self, server, response, status, headers):
         """read and filter server response data"""
