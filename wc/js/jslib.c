@@ -136,7 +136,7 @@ static int dispatchError (JSEnvObject* env, PyObject* err) {
     for (i=0; i<PySequence_Size(keys); i++) {
         if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto dispe_error; }
         if (!(callback = PyObject_GetAttrString(listener, "jsProcessError"))) { error=-1; goto dispe_error; }
-        if (!(result = PyObject_CallFunction(callback, ""))) { error=-1; goto dispe_error; }
+        if (!(result = PyObject_CallFunction(callback, "O", err))) { error=-1; goto dispe_error; }
     }
 dispe_error:
     Py_XDECREF(keys);
