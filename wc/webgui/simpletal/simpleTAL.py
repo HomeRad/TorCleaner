@@ -1,4 +1,3 @@
-# -*- coding: iso-8859-1 -*-
 """ simpleTAL Interpreter
 
 		Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
@@ -42,8 +41,7 @@ try:
 except:
 	import DummyLogger as logging
 	
-import sgmllib, xml.sax, cgi, codecs, re
-from StringIO import StringIO
+import sgmllib, xml.sax, cgi, StringIO, codecs, re
 
 import simpleTALES
 
@@ -89,8 +87,10 @@ METAL_FILL_SLOT=16
 METAL_DEFINE_MACRO=17
 											
 METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
-									  
-class TemplateInterpreter (object):
+#SINGLETON_XML_REGEX = re.compile ('^<[^\s>]+?([\s]*?[^\s]+?=".+?")*?[\s]*?/>')
+SINGLETON_XML_REGEX = re.compile ('^<[^\s>]+?([\s]+?[^=]+?="[^"]+?")*?[\s]*?/>')
+
+class TemplateInterpreter:
 	def __init__ (self):
 		self.programStack = []
 		self.commandList = None
@@ -298,8 +298,12 @@ class TemplateInterpreter (object):
 		
 	def cmdOutputStartTag (self, command, args):
 		# Args: tagName
+		tagName, singletonTag = args
 		if (self.outputTag):
-			self.file.write (tagAsText ((args, self.currentAttributes)))
+			if (self.tagContent is None and singletonTag):
+				self.file.write (tagAsText ((tagName, self.currentAttributes), 1))
+			else:
+				self.file.write (tagAsText ((tagName, self.currentAttributes)))
 				
 		if (self.movePCForward is not None):
 			self.programCounter = self.movePCForward
@@ -308,7 +312,7 @@ class TemplateInterpreter (object):
 		return
 	
 	def cmdEndTagEndScope (self, command, args):
-		# Args: tagName, omitFlag
+		# Args: tagName, omitFlag, singletonTag
 		if (self.tagContent is not None):
 			contentType, resultVal = self.tagContent
 			if (contentType):
@@ -337,7 +341,9 @@ class TemplateInterpreter (object):
 					self.file.write (cgi.escape (unicode (str (resultVal), 'ascii')))
 					
 		if (self.outputTag and not args[1]):
-			self.file.write ('</' + args[0] + '>')
+			# Do NOT output end tag if a singleton with no content
+			if not (args[2] and self.tagContent is None):
+				self.file.write ('</' + args[0] + '>')
 		
 		if (self.movePCBack is not None):
 			self.programCounter = self.movePCBack
@@ -428,7 +434,7 @@ class TemplateInterpreter (object):
 		self.programCounter += 1
 		return
 	
-class Template (object):
+class Template:
 	def __init__ (self, commands, macros, symbols):
 		self.commandList = commands
 		self.macros = macros
@@ -537,10 +543,10 @@ class XMLTemplate (Template):
 	"""A specialised form of a template that knows how to output XML
 	"""
 	
-	def expand (self, context, outputFile, outputEncoding="iso8859-1", interpreter=None):
+	def expand (self, context, outputFile, outputEncoding="iso8859-1", docType=None, interpreter=None):
 		""" This method will write to the outputFile, using the encoding specified,
-				the expanded version of this template.  The context passed in is used to resolve
-				all expressions with the template.
+			the expanded version of this template.  The context passed in is used to resolve
+			all expressions with the template.
 		"""
 		# This method must wrap outputFile if required by the encoding, and write out
 		# any template pre-amble (DTD, Encoding, etc)
@@ -551,16 +557,27 @@ class XMLTemplate (Template):
 			encodingFile.write ('<?xml version="1.0" encoding="%s"?>\n' % outputEncoding.lower())
 		else:
 			encodingFile.write ('<?xml version="1.0"?>\n')
+		if (docType is not None):
+			encodingFile.write (docType)
+			encodingFile.write ('\n')
 		self.expandInline (context, encodingFile, interpreter)
 		
-def tagAsText ((tag,atts)):
-	result = "<" + tag 
+def tagAsText ((tag,atts), singletonFlag=0):
+	result = ["<"]
+	result.append (tag)
 	for att in atts:
-		result += ' ' + att[0] + '="' + att[1] + '"'
-	result += ">"
-	return result
+		result.append (' ')
+		result.append (att[0])
+		result.append ('="')
+		result.append (att[1])
+		result.append ('"')
+	if (singletonFlag):
+		result.append (" />")
+	else:
+		result.append (">")
+	return "".join (result)
 	
-class TemplateCompiler (object):
+class TemplateCompiler:
 	def __init__ (self):
 		self.commandList = []
 		self.tagStack = []
@@ -639,11 +656,13 @@ class TemplateCompiler (object):
 		    		'originalAtts'    - The original attributes that include any metal/tal attributes
 		    		'endTagSymbol'    - The symbol associated with the end tag for this element
 		    		'popFunctionList' - A list of functions to execute when this tag is popped
+					'singletonTag'    - A boolean to indicate that this is a singleton flag
 		"""
 		# Add the tag to the tagStack (list of tuples (tag, properties, useMacroLocation))
 		self.log.debug ("Adding tag %s to stack" % tag[0])
 		command = tagProperties.get ('command',None)
 		originalAtts = tagProperties.get ('originalAtts', None)
+		singletonTag = tagProperties.get ('singletonTag', 0)
 		if (command is not None):
 			if (command[0] == METAL_USE_MACRO):
 				self.tagStack.append ((tag, tagProperties, len (self.commandList)+1))
@@ -658,7 +677,7 @@ class TemplateCompiler (object):
 			self.addCommand(command)
 		else:
 			# It's just a straight output, so create an output command and append it
-			self.addCommand((TAL_OUTPUT, tagAsText (tag)))
+			self.addCommand((TAL_OUTPUT, tagAsText (tag, singletonTag)))
 	
 	def popTag (self, tag, omitTagFlag=0):
 		""" omitTagFlag is used to control whether the end tag should be included in the
@@ -670,6 +689,7 @@ class TemplateCompiler (object):
 			oldTag, tagProperties, useMacroLocation = self.tagStack.pop()
 			endTagSymbol = tagProperties.get ('endTagSymbol', None)
 			popCommandList = tagProperties.get ('popFunctionList', [])
+			singletonTag = tagProperties.get ('singletonTag', 0)
 			for func in popCommandList:
 				apply (func, ())
 			self.log.debug ("Popped tag %s off stack" % oldTag[0])
@@ -681,9 +701,9 @@ class TemplateCompiler (object):
 					self.symbolLocationTable [endTagSymbol] = len (self.commandList)
 					
 					# We need a "close scope and tag" command
-					self.addCommand((TAL_ENDTAG_ENDSCOPE, (tag[0], omitTagFlag)))
+					self.addCommand((TAL_ENDTAG_ENDSCOPE, (tag[0], omitTagFlag, singletonTag)))
 					return
-				elif (omitTagFlag == 0):
+				elif (omitTagFlag == 0 and singletonTag == 0):
 					# We are popping off an un-interesting tag, just add the close as text
 					self.addCommand((TAL_OUTPUT, '</' + tag[0] + '>'))
 					return
@@ -703,7 +723,7 @@ class TemplateCompiler (object):
 		self.log.error ("Close tag %s found with no corresponding open tag." % tag[0])
 		raise TemplateParseException ("</%s>" % tag[0], "Close tag encountered with no corresponding open tag.")
 					
-	def parseStartTag (self, tag, attributes):
+	def parseStartTag (self, tag, attributes, singletonElement=0):
 		# Note down the tag we are handling, it will be used for error handling during
 		# compilation
 		self.currentStartTag = (tag, attributes)
@@ -717,6 +737,7 @@ class TemplateCompiler (object):
 		popTagFuncList = []
 		TALElementNameSpace = 0
 		prefixToAdd = ""
+		tagProperties ['singletonTag'] = singletonElement
 		
 		# Determine whether this element is in either the METAL or TAL namespace
 		if (tag.find (':') > 0):
@@ -791,7 +812,7 @@ class TemplateCompiler (object):
 			# Just content, add it to the various stacks
 			self.addTag ((tag, cleanAttributes), tagProperties)
 			return
-			
+		
 		# Create a symbol for the end of the tag - we don't know what the offset is yet
 		self.endTagSymbol += 1
 		tagProperties ['endTagSymbol'] = self.endTagSymbol
@@ -820,11 +841,11 @@ class TemplateCompiler (object):
 		
 		if (firstTag):
 			tagProperties ['originalAtts'] = attributes
-			tagProperties ['command'] = (TAL_STARTTAG, tag)
+			tagProperties ['command'] = (TAL_STARTTAG, (tag, singletonElement))
 			self.addTag ((tag, cleanAttributes), tagProperties)
 		else:		
 			# Add the start tag command in as a child of the last TAL command
-			self.addCommand((TAL_STARTTAG, tag))
+			self.addCommand((TAL_STARTTAG, (tag,singletonElement)))
 		
 	def parseEndTag (self, tag):
 		""" Just pop the tag and related commands off the stack. """
@@ -1145,21 +1166,34 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler):
 		TemplateCompiler.__init__ (self)
 		xml.sax.handler.ContentHandler.__init__ (self)
 		self.log = logging.getLogger ("simpleTAL.XMLTemplateCompiler")
+		self.singletonElement = 0
 		
 	def parseTemplate (self, file):
-		xml.sax.parse (file, self)
+		self.ourParser = xml.sax.make_parser()
+		self.ourParser.setFeature (xml.sax.handler.feature_external_ges, 0)
+		self.ourParser.setContentHandler (self)
+		self.ourParser.parse (file)
 
 	def startElement (self, tag, attributes):
 		self.log.debug ("Recieved Real Start Tag: " + tag + " Attributes: " + str (attributes))
+		try:
+			xmlText = self.ourParser.getProperty (xml.sax.handler.property_xml_string)
+			if (SINGLETON_XML_REGEX.match (xmlText)):
+				# This is a singleton!
+				self.singletonElement=1
+		except xml.sax.SAXException, e:
+			# Parser doesn't support this property
+			pass
 		# Convert attributes into a list of tuples
 		atts = []
-		for att in attributes.keys():
+		for att in attributes.getNames():
 			atts.append ((att, attributes [att]))
-		self.parseStartTag (tag, atts)
+		self.parseStartTag (tag, atts, singletonElement=self.singletonElement)
 	
 	def endElement (self, tag):
 		self.log.debug ("Recieved Real End Tag: " + tag)
 		self.parseEndTag (tag)
+		self.singletonElement = 0
 		
 	def characters (self, data):
 		#self.log.debug ("Recieved Real Data: " + data)
@@ -1181,7 +1215,7 @@ def compileHTMLTemplate (template, inputEncoding="ISO8859-1"):
 	"""
 	if (isinstance (template, type ("")) or isinstance (template, type (u""))):
 		# It's a string!
-		templateFile = StringIO (template)
+		templateFile = StringIO.StringIO (template)
 	else:
 		templateFile = template
 	compiler = HTMLTemplateCompiler()
@@ -1195,7 +1229,7 @@ def compileXMLTemplate (template):
 	"""
 	if (isinstance (template, type (""))):
 		# It's a string!
-		templateFile = StringIO (template)
+		templateFile = StringIO.StringIO (template)
 	else:
 		templateFile = template
 	compiler = XMLTemplateCompiler()

@@ -1,4 +1,3 @@
-# -*- coding: iso-8859-1 -*-
 """ simpleTALES Implementation
 
 		Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
@@ -44,7 +43,7 @@ except:
 	import DummyLogger as logging
 
 
-class ContextVariable (object):
+class ContextVariable:
 	def __init__ (self, value = None):
 		self.ourValue = value
 		
@@ -61,8 +60,8 @@ class ContextVariable (object):
 		# as though it wasn't a sequence at all.
 		try:
 			seqLength = len (self.value())
-                        temp = self.value()[1:1]
-                        return seqLength
+			temp = self.value()[1:1]
+			return seqLength
 		except:
 			return 0
 		
@@ -79,7 +78,7 @@ class ContextVariable (object):
 		return self.value()
 		
 	def value (self, currentPath=None):
-		if self.isCallable():
+		if (callable (self.ourValue)):
 			return apply (self.ourValue, ())
 		return self.ourValue
 		
@@ -240,7 +239,7 @@ class PathFunctionVariable (ContextVariable):
 			# Fast track the result
 			raise result
 		
-class PythonPathFunctions (object):
+class PythonPathFunctions:
 	def __init__ (self, context):
 		self.context = context
 		
@@ -272,7 +271,7 @@ class PythonPathFunctions (object):
 		else:
 			return result
 
-class Context (object):
+class Context:
 	def __init__ (self, options=None, allowPythonPath=0):
 		self.allowPythonPath = allowPythonPath
 		self.globals = {}
@@ -510,6 +509,13 @@ class Context (object):
 		pathList = expr.split ('/')
 		
 		path = pathList[0]
+		if path.startswith ('?'):
+			path = path[1:]
+			if self.locals.has_key(path):
+				path = self.locals[path].value()
+			elif self.globals.has_key(path):
+				path = self.globals[path].value()
+				#self.log.debug ("Dereferenced to %s" % path)
 		if self.locals.has_key(path):
 			val = self.locals[path]
 		elif self.globals.has_key(path):
@@ -519,14 +525,14 @@ class Context (object):
 			return None
 		index = 1
 		for path in pathList[1:]:
-			self.log.debug ("Looking for path element %s" % path)
-                        if path.startswith('?'):
-                            path = path[1:]
-                            if self.locals.has_key(path):
-                                path = self.locals[path].value()
-                            elif self.globals.has_key(path):
-                                path = self.globals[path].value()
-                            self.log.debug ("Dereferenced to %s" % path)
+			#self.log.debug ("Looking for path element %s" % path)
+			if path.startswith ('?'):
+				path = path[1:]
+				if self.locals.has_key(path):
+					path = self.locals[path].value()
+				elif self.globals.has_key(path):
+					path = self.globals[path].value()
+				#self.log.debug ("Dereferenced to %s" % path)
 			if (canCall):
 				try:
 					temp = val.value((index,pathList))
@@ -539,19 +545,16 @@ class Context (object):
 				val = getattr (temp, path)
 				if (not isinstance (val, ContextVariable)):
 					val = ContextVariable (val)
-			elif (hasattr (temp, 'has_key')):
-				if (temp.has_key (path)):
+			else:
+				try:
 					val = temp[path]
 					if (not isinstance (val, ContextVariable)):
 						val = ContextVariable (val)
-				else:
-					self.log.debug ("Not found.")
+				except:
+					#self.log.debug ("Not found.")
 					return None		
-			else:
-				self.log.debug ("Not found.")
-				return None
 			index = index + 1
-		self.log.debug ("Found value %s" % `val.value()`)
+		#self.log.debug ("Found value %s" % str (val))
 		if (not canCall):
 			return NoCallVariable (val)
 		return val

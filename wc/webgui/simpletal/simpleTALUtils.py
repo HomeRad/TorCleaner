@@ -1,4 +1,3 @@
-# -*- coding: iso-8859-1 -*-
 """ simpleTALUtils
 
 		Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
@@ -47,7 +46,7 @@ ESCAPED_TEXT_REGEX=re.compile (r"\&\S+?;")
 
 class HTMLStructureCleaner (sgmllib.SGMLParser):
 	""" A helper class that takes HTML content and parses it, so converting
-	any stray '&', '<', or '>' symbols into their respective entity references.
+			any stray '&', '<', or '>' symbols into their respective entity references.
 	"""
 	def clean (self, content, encoding=None):
 		""" Takes the HTML content given, parses it, and converts stray markup.
@@ -93,7 +92,7 @@ class HTMLStructureCleaner (sgmllib.SGMLParser):
 	def handle_entityref (self, ref):
 		self.outputFile.write (u'&%s;' % ref)
 		
-class TemplateCache (object):
+class TemplateCache:
 	""" A TemplateCache is a multi-thread safe object that caches compiled templates.
 			This cache only works with file based templates, the ctime of the file is 
 			checked on each hit, if the file has changed the template is re-compiled.
@@ -114,7 +113,7 @@ class TemplateCache (object):
 		"""
 		if (self.templateCache.has_key (name)):
 			template, oldctime = self.templateCache [name]
-			ctime = os.stat (name)[stat.ST_CTIME]
+			ctime = os.stat (name)[stat.ST_MTIME]
 			if (oldctime == ctime):
 				# Cache hit!
 				self.hits += 1
@@ -126,11 +125,14 @@ class TemplateCache (object):
 		self.cacheLock.acquire ()
 		try:
 			tempFile = open (name, 'r')
-			if (name [-3:] == "xml"):
+			firstline = tempFile.readline()
+			tempFile.seek(0)
+			if (name [-3:] == "xml") or (firstline.strip ()[:5] == '<?xml'):
 				template = simpleTAL.compileXMLTemplate (tempFile)
 			else:
 				template = simpleTAL.compileHTMLTemplate (tempFile, inputEncoding)
-			self.templateCache [name] = (template, os.stat (name)[stat.ST_CTIME])
+			tempFile.close()
+			self.templateCache [name] = (template, os.stat (name)[stat.ST_MTIME])
 			self.misses += 1
 		except Exception, e:
 			self.cacheLock.release()
@@ -250,7 +252,7 @@ def ExpandMacros (context, template, outputEncoding="ISO8859-1"):
 	out = StringIO.StringIO()
 	interp = MacroExpansionInterpreter()
 	interp.initialise (context, out)
-	template.expand (context, out, outputEncoding, interp)
+	template.expand (context, out, outputEncoding=outputEncoding, interpreter=interp)
 	# StringIO returns unicode, so we need to turn it back into native string
 	result = out.getvalue()
 	reencoder = codecs.lookup (outputEncoding)[0]
