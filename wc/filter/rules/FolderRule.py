@@ -30,9 +30,14 @@ class FolderRule (Rule):
     def __init__ (self, title="No title", desc="", disable=0, lang="",
                   filename="", oid=0):
         Rule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
-        self.filename = filename
+        # make filename read-only
+        self.__filename = filename
         self.lang = lang
         self.rules = []
+
+    def filename_get (self):
+        return self.__filename
+    filename = property(filename_get)
 
     def fromFactory (self, factory):
         return factory.fromFolderRule(self)
