@@ -82,7 +82,6 @@ class ClientServerMatchmaker (object):
                 self.headers['Host'] = "%s:%d\r"%(hostname, port)
             else:
                 self.headers['Host'] = "%s\r"%hostname
-        debug(PROXY, "ClientServer: splitted url %s %s %d %s", self.scheme, hostname, port, document)
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']

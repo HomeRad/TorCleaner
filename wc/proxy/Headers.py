@@ -43,6 +43,12 @@ class WcMessage (Message):
         return name.lower() in self.dict
 
 
+def str_headers (headers):
+    if hasattr(headers, "headers"):
+        return "\n".join([ repr(s) for s in headers.headers ])
+    return "\n".join([ repr("%s: %s\r"%(key, item)) for key, item in headers.items() ])
+
+
 def remove_headers (headers, to_remove):
     """remove entries from RFC822 headers"""
     for h in to_remove:

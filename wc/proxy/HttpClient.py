@@ -12,7 +12,7 @@ from UnchunkStream import UnchunkStream
 from wc import i18n, config
 from wc.proxy import fix_http_version
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
-from Headers import client_remove_encoding_headers
+from Headers import client_remove_encoding_headers, str_headers
 from wc.proxy.auth import *
 from wc.log import *
 from wc.webgui import WebConfig
@@ -144,7 +144,7 @@ class HttpClient (Connection):
                 self.decoders.append(UnchunkStream())
                 client_remove_encoding_headers(self.headers)
                 self.bytes_remaining = None
-            debug(PROXY, "Client: Headers %s", `str(self.headers)`)
+            debug(PROXY, "Client: Headers %s", str_headers(self.headers))
             if config["proxyuser"]:
                 creds = get_header_credentials(self.headers, 'Proxy-Authorization')
                 if not creds:
@@ -179,12 +179,9 @@ class HttpClient (Connection):
             # won't work; we have to deal with chunks
             self.bytes_remaining -= len(data)
         is_closed = False
-        debug(PROXY, "Proxy: client data %s", blocktext(`data`, 72))
-        debug(PROXY, "decoders %s", str(self.decoders))
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
-        debug(PROXY, "Proxy: client data decoded %s", blocktext(`data`, 72))
         data = applyfilter(FILTER_REQUEST_DECODE, data,
                            attrs=self.nofilter)
         data = applyfilter(FILTER_REQUEST_MODIFY, data,
