@@ -71,21 +71,3 @@ def generate_sid (prefix):
     _sidcounter += 1
     return "%s.%d" % (prefix, _sidcounter)
 
-
-from AllowRule import *
-from AllowdomainsRule import *
-from AllowurlsRule import *
-from BlockRule import *
-from BlockdomainsRule import *
-from BlockurlsRule import *
-from ExternfileRule import *
-from FolderRule import *
-from HeaderRule import *
-from ImageRule import *
-from JavascriptRule import *
-from NocommentsRule import *
-from RatingRule import *
-from ReplaceRule import *
-from RewriteRule import *
-from UrlRule import *
-from AntivirusRule import *

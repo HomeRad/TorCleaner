@@ -51,6 +51,7 @@ FILTER_RESPONSE_DECODE = 7 # May decode incoming content
 FILTER_RESPONSE_MODIFY = 8 # May modify incoming content
 FILTER_RESPONSE_ENCODE = 9 # May encode incoming content
 
+
 class FilterException (Exception):
     """Generic filter exception"""
     pass
@@ -113,7 +114,8 @@ def compileMime (mime):
 def GetRuleFromName (name):
     """return new rule instance for given rule name"""
     name = '%sRule' % name.capitalize()
-    return getattr(wc.filter.rules, name)()
+    mod = __import__("wc.filter.rules.%s"%name, locals(), globals(), [name])
+    return getattr(mod, name)()
 
 
 def applyfilter (i, data, fun, attrs):

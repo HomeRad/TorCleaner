@@ -20,16 +20,17 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from wc.proxy.Headers import remove_headers
-from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER
-from wc.filter.Filter import Filter
+import wc.proxy.Headers
+import wc.filter
+import wc.filter.Filter
 
 
-class Header (Filter):
+class Header (wc.filter.Filter.Filter):
     """filter for adding, modifying and deleting headers"""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]
+    orders = [wc.filter.FILTER_REQUEST_HEADER,
+              wc.filter.FILTER_RESPONSE_HEADER]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['header']
@@ -39,14 +40,13 @@ class Header (Filter):
         """initalize filter delete/add lists"""
         super(Header, self).__init__()
         self.delete = {
-            FILTER_REQUEST_HEADER: [],
-            FILTER_RESPONSE_HEADER: [],
+            wc.filter.FILTER_REQUEST_HEADER: [],
+            wc.filter.FILTER_RESPONSE_HEADER: [],
         }
         self.add = {
-            FILTER_REQUEST_HEADER: {},
-            FILTER_RESPONSE_HEADER: {},
+            wc.filter.FILTER_REQUEST_HEADER: {},
+            wc.filter.FILTER_RESPONSE_HEADER: {},
         }
-
 
     def addrule (self, rule):
         """add given rule to filter, filling header delete/add lists"""
@@ -56,15 +56,14 @@ class Header (Filter):
             return
         if not rule.value:
             if rule.filterstage in ('both', 'request'):
-                self.delete[FILTER_REQUEST_HEADER].append(rule.name.lower())
+                self.delete[wc.filter.FILTER_REQUEST_HEADER].append(rule.name.lower())
             if rule.filterstage in ('both', 'response'):
-                self.delete[FILTER_RESPONSE_HEADER].append(rule.name.lower())
+                self.delete[wc.filter.FILTER_RESPONSE_HEADER].append(rule.name.lower())
         else:
             if rule.filterstage in ('both', 'request'):
-                self.add[FILTER_REQUEST_HEADER][rule.name] = rule.value
+                self.add[wc.filter.FILTER_REQUEST_HEADER][rule.name] = rule.value
             if rule.filterstage in ('both', 'response'):
-                self.add[FILTER_RESPONSE_HEADER][rule.name] = rule.value
-
+                self.add[wc.filter.FILTER_RESPONSE_HEADER][rule.name] = rule.value
 
     def doit (self, data, **attrs):
         """apply stored header rules to data, which is a WcMessage object"""
@@ -75,7 +74,7 @@ class Header (Filter):
             for name in self.delete[stage]:
                 if re.match(name, h):
                     delete[h.lower()] = h
-        remove_headers(data, delete.values())
+        wc.proxy.Headers.remove_headers(data, delete.values())
         for key,val in self.add[stage].items():
             data[key] = val+"\r"
         return data

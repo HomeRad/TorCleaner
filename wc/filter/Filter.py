@@ -21,39 +21,51 @@ __date__    = "$Date$"[7:-2]
 
 from wc.log import *
 
+
 class Filter (object):
     """the base filter class"""
+
     mimelist = []
 
     def __init__ (self):
+        """initialize rule list and priority"""
         self.rules = []
         self.prio = -1
 
-
     def addrule (self, rule):
+        """append given rule to rule list"""
         debug(FILTER, "enable %s ", rule)
         self.rules.append(rule)
 
-
     def filter (self, data, **attrs):
+        """Filter given data.
+
+           @param attrs filter-specific state data
+        """
         args = (data,)
         return self.doit(*args, **attrs)
-
 
     def finish (self, data, **attrs):
+        """Filter given data and finish filtering (eg flushing buffers).
+
+           @param attrs filter-specific state data
+        """
         args = (data,)
         return self.doit(*args, **attrs)
 
-
     def doit (self, data, **attrs):
+        """Filter given data.
+
+           @param attrs filter-specific state data
+        """
         return data
 
-
     def getAttrs (self, url, headers):
+        """get filter-specific state data"""
         return {}
 
-
     def applies_to_mime (self, mime):
+        """ask if this filter applies to a mime type"""
         if not self.mimelist:
             return True
         if mime is None:
@@ -63,6 +75,7 @@ class Filter (object):
                 return True
         return False
 
-
     def __cmp__ (self, other):
+        """compare function considering filter priority"""
         return cmp(self.prio, other.prio)
+

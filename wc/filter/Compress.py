@@ -22,8 +22,8 @@ __date__    = "$Date$"[7:-2]
 import struct
 import time
 import zlib
-from wc.filter import FILTER_RESPONSE_ENCODE, compileMime
-from wc.filter.Filter import Filter
+import wc.filter
+import wc.filter.Filter
 from wc.log import *
 
 
@@ -50,16 +50,16 @@ def getCompressObject ():
            }
 
 
-class Compress (Filter):
+class Compress (wc.filter.Filter.Filter):
     """filter class compressing its input with zlib"""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_ENCODE]
+    orders = [wc.filter.FILTER_RESPONSE_ENCODE]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [compileMime(x) for x in [r'text/[a-z.\-+]+',
+    mimelist = [wc.filter.compileMime(x) for x in [r'text/[a-z.\-+]+',
             'application/(postscript|pdf|x-dvi)',
             'audio/(basic|midi|x-wav)',
             'image/x-portable-(any|bit|gray|pix)map',

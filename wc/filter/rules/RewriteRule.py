@@ -20,13 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from UrlRule import UrlRule
-from Rule import compileRegex
-from wc.XmlUtils import xmlquote, xmlquoteattr
-from wc.log import *
-from wc import i18n
-from cStringIO import StringIO
-from wc.parser.htmllib import quote_attrval
+import cStringIO as StringIO
 
 # tag ids
 STARTTAG = 0
@@ -40,6 +34,13 @@ ATTR = 2
 ATTRVAL = 3
 COMPLETE = 4
 ENCLOSED = 5
+
+from UrlRule import UrlRule
+from Rule import compileRegex
+from wc.XmlUtils import xmlquote, xmlquoteattr
+from wc.log import *
+from wc import i18n
+from wc.parser.htmllib import quote_attrval
 
 def tagbuf2data (tagbuf, out):
     """write tag buffer items to output stream out and returns out"""
@@ -213,7 +214,7 @@ class RewriteRule (UrlRule):
             # no enclosed expression => match
             return True
         # put buf items together for matching
-        data = tagbuf2data(tagbuf[pos:], StringIO()).getvalue()
+        data = tagbuf2data(tagbuf[pos:], StringIO.StringIO()).getvalue()
         return self.enclosed_ro.search(data)
 
 

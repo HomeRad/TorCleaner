@@ -21,32 +21,31 @@ __date__    = "$Date$"[7:-2]
 
 import Image
 import os
-from cStringIO import StringIO
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
-from wc.filter.Filter import Filter
+import cStringIO as StringIO
+import wc
+import wc.filter
 from wc.log import *
-from wc import TemplateDir, config
 
-class ImageSize (Filter):
+class ImageSize (wc.filter.Filter.Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_MODIFY]
+    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['image']
     # which mime types this filter applies to
-    mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
+    mimelist = [wc.filter.compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
 
     def __init__ (self):
         super(ImageSize, self).__init__()
         # minimal amount of image data for PIL to read header info:
-        # 4000 bytes is enough for most images; the value is increased
+        # 4096 bytes is enough for most images; the value is increased
         # when it is not big enough
         self.min_bufsize = 4096
-        fname = os.path.join(TemplateDir, config['gui_theme'])
+        fname = os.path.join(wc.TemplateDir, wc.config['gui_theme'])
         fname = os.path.join(fname, "blocked.png")
         f = file(fname)
         self.blockdata = f.read()
@@ -67,8 +66,8 @@ class ImageSize (Filter):
         buf.write(data)
         if buf.tell() > self.min_bufsize:
             # test if image is blocked
-            attrs['imgsize_blocked'] = not self.check_sizes(buf, attrs['imgsize_sizes'],
-                                                    attrs['url'])
+            attrs['imgsize_blocked'] = \
+              not self.check_sizes(buf, attrs['imgsize_sizes'], attrs['url'])
             if buf.tell() < self.min_bufsize:
                 # wait for more data
                 return ''
@@ -98,8 +97,8 @@ class ImageSize (Filter):
         if pos <= 0:
             error(FILTER, "Empty image data found at %r", url)
         else:
-            attrs['imgsize_blocked'] = not self.check_sizes(buf, attrs['imgsize_sizes'], url,
-                                                    finish=True)
+            attrs['imgsize_blocked'] = \
+          not self.check_sizes(buf, attrs['imgsize_sizes'], url, finish=True)
         data = buf.getvalue()
         buf.close()
         if attrs['imgsize_blocked']:
@@ -142,7 +141,7 @@ class ImageSize (Filter):
         if not rules:
             return d
         d['imgsize_sizes'] = [((r.width, r.height), r.formats) for r in rules]
-        d['imgsize_buf'] = StringIO()
+        d['imgsize_buf'] = StringIO.StringIO()
         d['imgsize_blocked'] = False
         return d
 

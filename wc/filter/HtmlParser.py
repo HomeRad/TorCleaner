@@ -19,14 +19,14 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from cStringIO import StringIO
-from wc.parser import htmlsax
-from wc.filter import FilterWait
-from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT, tagbuf2data
+import cStringIO as StringIO
+import wc.parser.htmlsax
+import wc.filter
+import wc.filter.rules.RewriteRule
 from wc.log import *
 
 
-class HtmlParser (htmlsax.parser):
+class HtmlParser (wc.parser.htmlsax.parser):
     """HTML parser with ability to buffer incoming and outgoing data.
 
        States:
@@ -59,9 +59,9 @@ class HtmlParser (htmlsax.parser):
         # parse state either normal parse or wait
         self.state = ('parse',)
         # already filtered HTML data
-        self.outbuf = StringIO()
+        self.outbuf = StringIO.StringIO()
         # incoming data in wait state
-        self.inbuf = StringIO()
+        self.inbuf = StringIO.StringIO()
         # buffer of parsed HTML tags
         self.tagbuf = []
         # buffer for wait state of parsed HTML tags
@@ -86,7 +86,7 @@ class HtmlParser (htmlsax.parser):
         """append serialized tag items of the tag buffer to the output buffer
            and clear the tag buffer"""
         debug(FILTER, "%s tagbuf2data", self)
-        tagbuf2data(self.tagbuf, self.outbuf)
+        wc.filter.rules.RewriteRule.tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
 
@@ -105,7 +105,7 @@ class HtmlParser (htmlsax.parser):
                     return
                 data = self.inbuf.getvalue() + data
                 self.inbuf.close()
-                self.inbuf = StringIO()
+                self.inbuf = StringIO.StringIO()
             if data:
                 # only feed non-empty data
                 debug(FILTER, "%s parser feed %r", self, data)
@@ -127,7 +127,7 @@ class HtmlParser (htmlsax.parser):
         if self.state[0]=='wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
-            raise FilterWait("waited %d at parser %s"%(self.waited, str(self)))
+            raise wc.filter.FilterWait("waited %d at parser %s"%(self.waited, str(self)))
         super(HtmlParser, self).flush()
 
 
@@ -135,7 +135,7 @@ class HtmlParser (htmlsax.parser):
         """returns all data in output buffer and clears the output buffer"""
         data = self.outbuf.getvalue()
         self.outbuf.close()
-        self.outbuf = StringIO()
+        self.outbuf = StringIO.StringIO()
         return data
 
 
@@ -146,12 +146,12 @@ class HtmlParser (htmlsax.parser):
             if self.state[0]=='wait':
                 # the replaying itself can switch to wait state
                 self.waitbuf.append(item)
-            elif item[0]==DATA and hasattr(self.handler, "characters"):
+            elif item[0]==wc.filter.rules.RewriteRule.DATA and hasattr(self.handler, "characters"):
                 self.handler.characters(item[1])
-            elif item[0]==STARTTAG and hasattr(self.handler, "startElement"):
+            elif item[0]==wc.filter.rules.RewriteRule.STARTTAG and hasattr(self.handler, "startElement"):
                 self.handler.startElement(item[1], item[2])
-            elif item[0]==ENDTAG and hasattr(self.handler, "endElement"):
+            elif item[0]==wc.filter.rules.RewriteRule.ENDTAG and hasattr(self.handler, "endElement"):
                 self.handler.endElement(item[1])
-            elif item[0]==COMMENT and hasattr(self.handler, "comment"):
+            elif item[0]==wc.filter.rules.RewriteRule.COMMENT and hasattr(self.handler, "comment"):
                 self.handler.comment(item[1])
 

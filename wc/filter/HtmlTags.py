@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from wc.levenshtein import distance
+import wc.levenshtein
 from wc.log import *
 
 # checker for namespaces
@@ -304,7 +304,7 @@ def check_spelling (tag, url):
         # ignore other namespaces
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
-         if distance(tag, htmltag)==1:
+         if wc.levenshtein.distance(tag, htmltag)==1:
              warn(FILTER, "HTML tag %r corrected to %r at %r", tag, htmltag, url)
              return htmltag
     error(FILTER, "unknown HTML tag %r at %r", tag, url)

@@ -22,8 +22,8 @@ __date__    = "$Date$"[7:-2]
 import os
 import sys
 import re
+import wc.url
 from wc.log import *
-from wc.url import url_norm
 
 
 _percent_encodings = re.compile('%+').findall
@@ -96,7 +96,7 @@ class HtmlSecurity (object):
             self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
         if attrs.has_key('data'):
-            url = url_norm(attrs['data'])
+            url = wc.url.url_norm(attrs['data'])
             if url.startswith('its:') or \
                url.startswith('mk:') or \
                url.startswith('ms-its:') or \

@@ -292,7 +292,8 @@ class Configuration (dict):
 
     def read_filterconf (self):
         """read filter rules"""
-        from wc.filter.rules import generate_sids, recalc_up_down
+        from wc.filter.rules import generate_sids
+        from wc.filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
             if os.stat(filename)[stat.ST_SIZE]==0:
                 warn(PROXY, "Skipping empty file %r", filename)
@@ -484,7 +485,7 @@ class ZapperParser (BaseParser):
 
     def __init__ (self, filename, _config, compile_data=True):
         super(ZapperParser, self).__init__(filename, _config)
-        from wc.filter.rules import FolderRule
+        from wc.filter.rules.FolderRule import FolderRule
         self.folder = FolderRule(filename=filename)
         self.cmode = None
         self.rule = None

@@ -21,7 +21,8 @@ __date__    = "$Date$"[7:-2]
 
 import re
 import urlparse
-from wc import i18n
+import wc
+
 from wc.parser import resolve_html_entities
 from wc.filter import FilterWait
 from wc.filter.HtmlParser import HtmlParser
@@ -290,7 +291,8 @@ class JSFilter (JSListener):
         if data is None:
             if not self.js_script:
                 warn(FILTER, "empty JavaScript src %s", url)
-                self.js_script = "// "+i18n._("error fetching script from %r")%url
+                self.js_script = "// "+\
+                      wc.i18n._("error fetching script from %r")%url
             self.htmlparser.tagbuf.append([STARTTAG, "script", {'type': 'text/javascript'}])
             script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
             self.htmlparser.tagbuf.append([DATA, script])

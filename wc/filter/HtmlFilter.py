@@ -20,17 +20,17 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import urllib
-from wc.parser import resolve_html_entities
-from wc.filter import FilterRating
-from wc.filter.JSFilter import JSFilter
-from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
-from wc.filter.Rating import rating_import, rating_add, rating_allow
+import wc.parser
+import wc.filter
+import wc.filter.JSFilter
+import wc.filter.rules.RewriteRule
+import wc.filter.HtmlSecurity
+import wc.filter.HtmlTags
+import wc.filter.Rating
 from wc.log import *
-from HtmlTags import check_spelling
-from HtmlSecurity import HtmlSecurity
 
 
-class HtmlFilter (JSFilter):
+class HtmlFilter (wc.filter.JSFilter.JSFilter):
     """Filtering HTML parser handler. Has filter rules and a rule stack.
        The callbacks modify parser state and buffers.
 
@@ -46,7 +46,7 @@ class HtmlFilter (JSFilter):
         self.stackcount = []
         self.base_url = None
         # for security flaw scanning
-        self.security = HtmlSecurity()
+        self.security = wc.filter.HtmlSecurity.HtmlSecurity()
 
 
     def new_instance (self, **opts):
@@ -84,7 +84,7 @@ class HtmlFilter (JSFilter):
 
     def _data (self, d):
         """general handler for data"""
-        item = [DATA, d]
+        item = [wc.filter.rules.RewriteRule.DATA, d]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
@@ -107,7 +107,7 @@ class HtmlFilter (JSFilter):
         if not (self.comments and data):
             return
         debug(FILTER, "%s comment %r", self, data)
-        item = [COMMENT, data]
+        item = [wc.filter.rules.RewriteRule.COMMENT, data]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
@@ -128,27 +128,27 @@ class HtmlFilter (JSFilter):
         pending rules. No rules can be removed from the list."""
         # default data
         debug(FILTER, "%s startElement %r", self, tag)
-        if self._is_waiting([STARTTAG, tag, attrs]):
+        if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]):
             return
-        tag = check_spelling(tag, self.url)
+        tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
         if self.stackcount:
             if self.stackcount[-1][0]==tag:
                 self.stackcount[-1][1] += 1
         if tag=="meta":
             if attrs.get('http-equiv', '').lower() == 'content-rating':
-                rating = resolve_html_entities(attrs.get('content', ''))
-                url, rating = rating_import(self.url, rating)
+                rating = wc.parser.resolve_html_entities(attrs.get('content', ''))
+                url, rating = wc.filter.Rating.rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
                 # often
-                rating_add(url, rating)
+                wc.filter.Rating.rating_add(url, rating)
         elif tag=="body":
             if self.ratings:
                 # headers finished, check rating data
                 for rule in self.ratings:
-                    msg = rating_allow(self.url, rule)
+                    msg = wc.filter.Rating.rating_allow(self.url, rule)
                     if msg:
-                        raise FilterRating(msg)
+                        raise wc.filter.FilterRating(msg)
                 self.ratings = []
         elif tag=="base" and attrs.has_key('href'):
             self.base_url = attrs['href']
@@ -170,14 +170,14 @@ class HtmlFilter (JSFilter):
         """filter the start element according to filter rules"""
         rulelist = []
         filtered = False
-        item = [STARTTAG, tag, attrs]
+        item = [wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
                 debug(FILTER, "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = True
-                    if item[0]==STARTTAG and item[1]==tag:
+                    if item[0]==wc.filter.rules.RewriteRule.STARTTAG and item[1]==tag:
                         foo,tag,attrs = item
                         # give'em a chance to replace more than one attribute
                         continue
@@ -209,14 +209,14 @@ class HtmlFilter (JSFilter):
 	If it matches and the rule stack is now empty we can flush
 	the tag buffer (calling tagbuf2data)"""
         debug(FILTER, "%s endElement %r", self, tag)
-        if self._is_waiting([ENDTAG, tag]):
+        if self._is_waiting([wc.filter.rules.RewriteRule.ENDTAG, tag]):
             return
-        tag = check_spelling(tag, self.url)
+        tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
         if self.stackcount and self.stackcount[-1][0]==tag:
             self.stackcount[-1][1] -= 1
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
-        item = [ENDTAG, tag]
+        item = [wc.filter.rules.RewriteRule.ENDTAG, tag]
         if not self.filterEndElement(tag):
             if self.javascript and tag=='script':
                 self.jsEndElement(item)

@@ -20,22 +20,22 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import Image
-from cStringIO import StringIO
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
-from wc.filter.Filter import Filter
+import cStringIO as StringIO
+import wc.filter
+import wc.filter.Filter
+import wc.proxy.Headers
 from wc.log import *
-from wc.proxy.Headers import remove_headers
 
 
-class ImageReducer (Filter):
+class ImageReducer (wc.filter.Filter.Filter):
     """Reduce the image size by making low quality JPEGs"""
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_MODIFY]
+    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
+    mimelist = [wc.filter.compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
     def __init__ (self, apply_to_mimelist):
         """initialize image reducer flags"""
@@ -59,7 +59,7 @@ class ImageReducer (Filter):
         p.seek(0)
         try:
             img = Image.open(p)
-            data = StringIO()
+            data = StringIO.StringIO()
             if attrs.get('imgreducer_convert'):
                 img = img.convert()
             img.save(data, "JPEG", quality=10, optimize=1)
@@ -78,8 +78,8 @@ class ImageReducer (Filter):
             return d
         ctype = headers['Content-Type']
         headers['Content-Type'] = 'image/jpeg'
-        remove_headers(headers, ['Content-Length'])
-        d['imgreducer_buf'] = StringIO()
+        wc.proxy.Headers.remove_headers(headers, ['Content-Length'])
+        d['imgreducer_buf'] = StringIO.StringIO()
         # some images have to be convert()ed before saving
         d['imgreducer_convert'] = convert(ctype)
         return d

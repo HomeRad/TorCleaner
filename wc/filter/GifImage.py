@@ -20,8 +20,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import base64
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
-from wc.filter.Filter import Filter
+import wc.filter
+import wc.filter.Filter
 from wc.log import *
 
 def i16 (c):
@@ -34,16 +34,16 @@ class RewindException (Exception):
     pass
 
 
-class GifImage (Filter):
+class GifImage (wc.filter.Filter.Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [FILTER_RESPONSE_MODIFY]
+    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [compileMime(x) for x in ['image/gif']]
+    mimelist = [wc.filter.compileMime(x) for x in ['image/gif']]
 
     def filter (self, data, **attrs):
         """feed data to GIF image parser, return processed data"""
