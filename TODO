@@ -2,6 +2,9 @@ TODO
 
 version 2.24 and above
 
+- text/css is not (yet) an official MIME type (RFC 2318) so do not
+  try to detect it in the magic module.
+
 - UTF-8 encoded "" (gro geschriebene &Auml;) werden einfach                                 
   rausgefiltert. (Siehe http://de.wikipedia.org/wiki/Wasserzeichen                            
   (http://tinyurl.com/3oc5a) Abschnitt "Merkmale" unter "Robustheit" als                      
