@@ -2,6 +2,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+__all__ = ["get_digest_challenge", "parse_digest_challenge",
+           "get_digest_credentials", "parse_digest_credentials",
+           "check_digest_credentials"]
+
 import md5, sha, random, base64, time
 from parse import *
 random.seed()

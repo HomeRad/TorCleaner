@@ -4,6 +4,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+__all__ = ["get_basic_challenge", "parse_basic_challenge",
+           "get_basic_credentials", "parse_basic_credentials",
+           "check_basic_credentials"]
 import base64
 from wc.log import *
 # the default realm
