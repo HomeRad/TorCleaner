@@ -24,7 +24,6 @@ def _main ():
     else:
         f = file(fname)
     logfile = os.path.join(confdir, "logging.conf")
-    wc.init_i18n()
     wc.initlog(logfile, wc.Name, filelogs=False)
     wc.configuration.config = wc.configuration.Configuration(confdir=confdir)
     wc.configuration.config.init_filter_modules()
