@@ -15,8 +15,12 @@ import sys
 try:
     import sgmlop
 except ImportError:
-    sys.stderr.write("please compile sgmlop.so with setup.py build\n")
-    sys.stderr.write("and copy it into the wc/parser directory\n")
+    sys.stderr.write("""
+Please run 'python2 setup.py build_ext' and copy the file
+build/lib.../sgmlop.so into the wc/parser/ directory.
+Then you can run 'python2 webcleaner' from the source directory
+webcleaner-x.x/.
+""")
     sys.exit(1)
 
 # --------------------------------------------------------------------
