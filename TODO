@@ -2,7 +2,46 @@ TODO
 
 version 2.4
 
+- enable \1 .. back reference replacements, not only named ones
+
 - parse and import adzapper.sf.net filters
+   
+   Pattern File Format
+   The syntax of the pattern file is as follows:
+
+    * Blank lines and lines commencing with octothorpes (hashes: "#") are comments, and ignored.
+    * Most lines are of the form:
+
+          CLASS pattern
+
+      The CLASS specifies the type of object the pattern recognises.
+      The special class PASS means that URLs matching the pattern should
+      not be redirected, and is used to insert exceptions for general rules.
+      The pattern more resembles a Bourne shell glob than a regular
+      expression. In fact it is shorthand for a regular expression with
+      the following differences:
+         1. The dot (".") and question mark ("?") are not special i.e. they get converted into \. and \?.
+         2. The asterisk ("*") gets converted into [^/]* i.e. a wildcard which doesn't cross slashes ("/").
+         3. Two asterisks ("**") get converted into .* i.e. a wildcard which does cross slashes ("/").
+    * The other type of line looks like this:
+
+          CLASS pattern replacement
+
+      This rewrites a URL from one form to another. The syntax for the 
+      pattern is exactly as for the first type of line. The replacement is 
+      a perl string as would be found inside double quotes. In particular, 
+      the values $1, $2 etc match the bracketed substrings in the pattern 
+      as with perl. For example, this rule:
+
+          PRINT http://(www*.|)smh.com.au(/articles/**.html) http://www.smh.com.au/cgi-bin/common/popupPrintArticle.pl?path=$2
+
+      replaces an article with its "printer-friendly" version. The $2 comes from the pattern's second bracketed section.
+
+      Note: the PRINT rules are off by default. You need to turn it on with the wrapzap script. 
+
+- test proxy.pac stuff
+  http://wp.netscape.com/eng/mozilla/2.0/relnotes/demo/proxy-live.html
+
 
 version 2.5 and above
 

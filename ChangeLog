@@ -8,8 +8,18 @@
     Changed: wc/log.py, wc/proxy/Connection.py, config/logging.conf
   * enabled CONNECT tunneling; WebCleaner can now be a HTTPS proxy
     Changed: wc/proxy/[ClientServerMatchmaker,HttpClient,HttpServer}.py
+  * empty Allow/Block rules do not match
+    Changed: wc/filter/Blocker.py
+  * updated .zap filter for https urls
+    Changed: config/adverts{_specific,}.zap
+  * added script to parser AdZapper squid_redirect files
+    Added: config/adzap2wc.py
+  * use python regex replacements instead of named groups
+    Changed: config/redirects.zap, wc/filter/rule/RewriteRule.py
+  * fix bug in XML character data decoding
+    Changed: wc/__init__.py, wc/filter/rule/*.py
 
-2.3
+2.3 (released 21.10.2003)
   * oops, add some mising files to distribution
     Changed: setup.py, MANIFEST.in
 
