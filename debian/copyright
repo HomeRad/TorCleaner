@@ -20,3 +20,7 @@ Copyright (C) 1999-2002  Bastian Kleineidam
   the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
   if not, write to the Free Software Foundation, Inc., 59 Temple Place,
   Suite 330, Boston, MA  02111-1307  USA
+
+the web proxy is based on amits web proxy, downloaded from
+http://theory.stanford.edu/~amitp/proxy.html
+and is licensed under a BSD license

@@ -1,8 +1,11 @@
 1.6
-  * updated filters: remove more ads, replace <marquee> with
-    <span>, Love and Peace!
-  * Recognise "<! --" HTML comments (seen at Eonline)
-    Changed files: wc/parser/htmllex.l
+  * updated filters:
+    o remove more ads
+    o replace <marquee> with <span>
+    o Love and Peace!
+    o rewrite Sourceforge download links
+    o replace bllnk with blink at indian radio site
+    Changed files: config/*.zap
   * Reorganize some code
     Changed files: a lot
     Added files: wc/i18n.py, wc/AnsiColor.py, wc/debug.py,
@@ -13,8 +16,9 @@
   * working TAL template example, lets see how this integrates into
     WebCleaner local file handling. Anyway, most of the custom
     handlers except error handling is now in the webgui package.
-  * use yy_size_t for parser alloc definitions, fixes build errors on 64bit
-    architectures
+  * o use yy_size_t for parser alloc definitions, fixes build errors on 64bit
+      architectures
+    o recognise "<! --" HTML comments (seen at Eonline)
     Changed files: wc/parser/htmllex.l
   * Improve error message for failing htmlsax module import
     Changed files: wc/parser/htmllib.py
@@ -25,6 +29,15 @@
     on for the moment, you can report success or failure with this option
     to me.
     Changed files: wc/proxy/{dns_lookups,HttpServer}.py
+  * new module ImageReducer which converts all images into a low quality
+    JPEG file to save bandwidth (usually 70%-80%).
+    The Python Image Library (PIL) is required for this!
+    Unfortunately the complete image has to be loaded before it is
+    converted, so use this only when the proxy has a fast internet
+    connection (eg. your university) and you yourself are surfing over
+    a modem.
+    Added files: wc/filter/ImageReducer.py, test/imagereduce.py
+    Changed files: wc/gui/ConfWindow.py
 
 1.5
   * - increase TCP dns query timeout from 10 to 20 seconds
