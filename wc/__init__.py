@@ -90,7 +90,7 @@ def reload_config (signum, frame):
     config.init_filter_modules()
 
 
-class Configuration(UserDict.UserDict):
+class Configuration (UserDict.UserDict):
     def __init__ (self):
         """Initialize the options"""
         UserDict.UserDict.__init__(self)
@@ -100,7 +100,7 @@ class Configuration(UserDict.UserDict):
         self.read_proxyconf()
         self.read_filterconf()
 
-    def reset(self):
+    def reset (self):
         """Reset to default values"""
         self['port'] = 8080
         self['proxyuser'] = ""
@@ -129,19 +129,19 @@ class Configuration(UserDict.UserDict):
         self['headersave'] = 100
         self['showerrors'] = 0
 
-    def read_proxyconf(self):
+    def read_proxyconf (self):
         p = WConfigParser()
         p.parse(os.path.join(ConfigDir, "webcleaner.conf"), self)
         global DebugLevel
         DebugLevel = self['debuglevel']
 
-    def read_filterconf(self):
+    def read_filterconf (self):
         from glob import glob
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
             ZapperParser().parse(f, self)
 
-    def init_filter_modules(self):
+    def init_filter_modules (self):
         """go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects"""
@@ -164,7 +164,7 @@ class Configuration(UserDict.UserDict):
                             instance.addrule(rule)
                 self['filterlist'][order].append(instance)
 
-    def __repr__(self):
+    def __repr__ (self):
         return _("""
 WebCleaner Configuration
 ========================
@@ -224,10 +224,10 @@ def unxmlify (s):
     return applyTable(UnXmlTable, s)
 
 
-class ParseException(Exception): pass
+class ParseException (Exception): pass
 
 class BaseParser:
-    def parse(self, filename, config):
+    def parse (self, filename, config):
         #debug("Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate()
         self.p.StartElementHandler = self.start_element
@@ -237,23 +237,23 @@ class BaseParser:
         self.config = config
         self.p.ParseFile(open(filename))
 
-    def start_element(self, name, attrs):
+    def start_element (self, name, attrs):
         pass
-    def end_element(self, name):
+    def end_element (self, name):
         pass
-    def character_data(self, data):
+    def character_data (self, data):
         pass
-    def reset(self):
+    def reset (self):
         pass
 
 
-class ZapperParser(BaseParser):
-    def parse(self, filename, config):
+class ZapperParser (BaseParser):
+    def parse (self, filename, config):
         BaseParser.parse(self, filename, config)
         self.rules.filename = filename
         config['rules'].append(self.rules)
 
-    def start_element(self, name, attrs):
+    def start_element (self, name, attrs):
         self.cmode = name
         if name=='folder':
             self.rules.fill_attrs(attrs, name)
@@ -268,29 +268,29 @@ class ZapperParser(BaseParser):
         else:
             raise ParseException, _("unknown tag name %s")%name
 
-    def end_element(self, name):
+    def end_element (self, name):
         self.cmode = None
         if name in _rulenames:
             if name=='rewrite':
                 self.rule.set_start_sufficient()
 
-    def character_data(self, data):
+    def character_data (self, data):
         if self.cmode and self.rule:
             self.rule.fill_data(data, self.cmode)
 
-    def reset(self):
+    def reset (self):
         import wc.filter.Rules
         self.rules = wc.filter.Rules.FolderRule()
         self.cmode = None
         self.rule = None
 
 
-class WConfigParser(BaseParser):
-    def parse(self, filename, config):
+class WConfigParser (BaseParser):
+    def parse (self, filename, config):
         BaseParser.parse(self, filename, config)
         self.config['configfile'] = filename
 
-    def start_element(self, name, attrs):
+    def start_element (self, name, attrs):
         if name=='webcleaner':
             for key,val in attrs.items():
                 self.config[str(key)] = unxmlify(val)

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Advertisements"
- desc="A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&amp;quot;http://company.com&amp;quot;&gt;&lt;img  src=&amp;quot;http://adserver.de/banner.gif&amp;quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.">
+ desc="A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&quot;http://company.com&quot;&gt;&lt;img  src=&quot;http://adserver.de/banner.gif&quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.">
 
 <rewrite title="/werbung"
  desc="Kill links with the german ad word.">
@@ -108,7 +108,7 @@
  height="58"/>
 
 <block title="CGI adverts 1"
- desc="Search for the words &amp;quot;ad&amp;quot; and &amp;quot;click&amp;quot;  in the path and a non-empty query."
+ desc="Search for the words &quot;ad&quot; and &quot;click&quot;  in the path and a non-empty query."
  scheme=""
  host=""
  port=""
@@ -163,7 +163,7 @@
 </rewrite>
 
 <block title="Hosts without DNS name"
- desc="If a host has no DNS name it consists only of numbers, for  example &amp;quot;http://34.55.124.2&amp;quot;. A lot of adverts are loaded from such servers. We restrict it further more for CGI queries which fetch GIF images."
+ desc="If a host has no DNS name it consists only of numbers, for  example &quot;http://34.55.124.2&quot;. A lot of adverts are loaded from such servers. We restrict it further more for CGI queries which fetch GIF images."
  scheme=""
  host="^[\d.]+$"
  port=""

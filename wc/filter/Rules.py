@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-from wc import _, debug, error, xmlify
+from wc import _, debug, error, xmlify, unxmlify
 from wc.debug_levels import *
 from types import StringType, IntType
 import re
@@ -91,7 +91,8 @@ class Rule:
     def fill_attrs (self, attrs, name):
         for attr in self.attrnames:
             if attrs.has_key(attr):
-                setattr(self, attr, attrs[attr].encode('iso8859-1'))
+                val = unxmlify(attrs[attr]).encode('iso8859-1')
+                setattr(self, attr, val)
         for attr in self.intattrs:
             val = getattr(self, attr)
             if val and type(val) != IntType:
@@ -180,13 +181,14 @@ class RewriteRule (UrlRule):
         if name=='rewrite':
             UrlRule.fill_attrs(self, attrs, name)
         elif name=='attr':
-            self.current_attr = attrs.get('name','href').encode('iso8859-1')
+            val = unxmlify(attrs.get('name', 'href')).encode('iso8859-1')
+            self.current_attr = val
             self.attrs[self.current_attr] = ""
         elif name=='replace' and attrs.has_key('part'):
-            self.replace[0] = part_num(attrs['part'])
+            self.replace[0] = part_num(unxmlify(attrs['part']).encode('iso8859-1'))
 
     def fill_data (self, data, name):
-        data = data.encode('iso8859-1')
+        data = unxmlify(data).encode('iso8859-1')
         if name=='attr':
             self.attrs[self.current_attr] += data
         elif name=='enclosed':
@@ -374,7 +376,7 @@ class BlockRule (AllowRule):
 
     def fill_data (self, data, name):
         if name=='block':
-            self.url += data.encode('iso8859-1')
+            self.url += umxlify(data).encode('iso8859-1')
 
     def fromFactory (self, factory):
         return factory.fromBlockRule(self)
@@ -396,7 +398,7 @@ class HeaderRule (UrlRule):
 
     def fill_data (self, data, name):
         if name=='header':
-            self.value = data.encode('iso8859-1')
+            self.value = unxmlify(data).encode('iso8859-1')
 
     def fromFactory (self, factory):
         return factory.fromHeaderRule(self)
@@ -456,7 +458,7 @@ class ReplacerRule (UrlRule):
 
     def fill_data (self, data, name):
         if name=='replacer':
-            self.replace += data.encode('iso8859-1')
+            self.replace += unxmlify(data).encode('iso8859-1')
 
     def fromFactory (self, factory):
         return factory.fromReplacerRule(self)
