@@ -24,6 +24,49 @@
 </td>
 </tr>
 <tr>
+<td><span tal:replace="proxyuser">Proxy user</span></td>
+<td>
+  <input type="text" name="proxyuser" tal:attributes="value config/proxyuser">
+</td>
+</tr>
+<tr>
+<td><span tal:replace="proxypass">Proxy pass</span></td>
+<td>
+  <input type="password" name="proxypass" value="">
+</td>
+</tr>
+<tr>
+<td><span tal:replace="parentproxy">Parent proxy</span></td>
+<td>
+  <input type="text" name="parentproxy" tal:attributes="value config/parentproxy">
+</td>
+</tr>
+<tr>
+<td><span tal:replace="parentproxyport">Parent proxy port number</span></td>
+<td>
+  <input type="text" name="parentproxyport" tal:attributes="value config/parentproxyport">
+</td>
+</tr>
+<tr>
+<td><span tal:replace="parentproxyuser">Parent proxy user</span></td>
+<td>
+  <input type="text" name="parentproxyuser" tal:attributes="value config/parentproxyuser">
+</td>
+</tr>
+<tr>
+<td><span tal:replace="parentproxypass">Parent proxy pass</span></td>
+<td>
+  <input type="password" name="parentproxypass" value="">
+</td>
+</tr>
+<tr>
+<td><span tal:replace="proxyfiltermodules">Proxy filter modules</span></td>
+<td>
+<div tal:repeat="module filtermodules">
+  <input type="checkbox" tal:attributes="value module;name string:filter${module}">
+</div>
+</td>
+<tr>
 <td colspan="2">
   <input type="submit" value="Apply" tal:attributes="value configapply">
 </td>

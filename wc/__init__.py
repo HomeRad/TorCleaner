@@ -143,6 +143,10 @@ def filterconf_files ():
     return glob(os.path.join(ConfigDir, "*.zap"))
 
 
+# available filter modules
+filtermodules = ["Header", "Blocker", "GifImage", "ImageReducer",
+                 "BinaryCharFilter", "Rewriter", "Replacer", "Compress", ]
+
 class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
 
