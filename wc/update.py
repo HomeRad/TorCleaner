@@ -112,12 +112,13 @@ def open_url (url, proxies=None):
 
 # ====================== end of urlutils.py =================================
 
-def update (wconfig, baseurl, dryrun=False, log=None):
+def update (wconfig, dryrun=False, log=None):
     """Update the given configuration object with .zap files found at baseurl.
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
     """
     chg = False
+    baseurl = wconfig['updateurl']
     url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
@@ -154,8 +155,8 @@ def update (wconfig, baseurl, dryrun=False, log=None):
         # parse new filter
         url = baseurl+filename+".gz"
         page = open_url(url)
-        p = wc.ZapperParser(fullname, compile_data=False)
-        p.parse(page, wconfig)
+        p = wc.ZapperParser(fullname, wconfig, compile_data=False)
+        p.parse(fp=page)
         page.close()
         chg = wconfig.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
 
@@ -205,15 +206,4 @@ def update (wconfig, baseurl, dryrun=False, log=None):
             f.write(data)
             f.close()
     return chg
-
-
-def _test ():
-    # test base url for all files
-    initlog("test/logging.conf")
-    baseurl = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
-    update(wc.Configuration(), baseurl, dryrun=True)
-
-
-if __name__=='__main__':
-    _test()
 
