@@ -134,29 +134,42 @@ def _test ():
 
 
 def _test_ntlm ():
+    import base64, pprint
     challenges = get_challenges(type=NTLMSSP_INIT)
-    print "challenges 0", `challenges`
+    print "challenges type 0"
+    pprint.pprint(challenges)
     challenges = parse_challenges(", ".join(challenges))
-    print "parsed challenges 0", challenges
+    print "parsed challenges type 0"
+    pprint.pprint(challenges)
+    print
     attrs = {"username": "calvin", "type": NTLMSSP_NEGOTIATE,}
     creds = get_credentials(challenges, **attrs)
-    print "credentials 1", `creds`
+    print "credentials type 1"
+    pprint.pprint(creds)
     creds = parse_credentials(creds)
-    print "parsed credentials 1", creds
+    print "parsed credentials type 1"
+    pprint.pprint(creds)
+    print
     attrs['host'] = creds['NTLM'][0]['host']
     attrs['domain'] = creds['NTLM'][0]['domain']
     attrs['type'] = NTLMSSP_CHALLENGE
     challenges = get_challenges(**attrs)
-    print "challenges 2", `challenges`
+    print "challenges type 2"
+    pprint.pprint(challenges)
     challenges = parse_challenges(", ".join(challenges))
-    print "parsed challenges 2", challenges
+    print "parsed challenges type 2"
+    pprint.pprint(challenges)
+    print
     attrs['type'] = NTLMSSP_AUTH
+    attrs['nonce'] = challenges['NTLM'][0]['nonce']
     attrs['password_b64'] = base64.encodestring("Beeblebrox")
     creds = get_credentials(challenges, **attrs)
-    print "credentials 3", `creds`
+    print "credentials type 3"
+    print `creds`
     creds = parse_credentials(creds)
-    print "parsed credentials 3", creds
-    print check_credentials(creds, **attrs)
+    print "parsed credentials type 3"
+    pprint.pprint(creds)
+    print "Check:", check_credentials(creds, **attrs)
 
 
 def _test_digest ():

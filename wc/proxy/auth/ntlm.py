@@ -159,9 +159,9 @@ def get_ntlm_credentials (challenge, **attrs):
         username = attrs['username']
         host = attrs['host']
         password = base64.decodestring(attrs['password_b64'])
-        nt_hpw = create_nt_hashed_password(password)
         lm_hpw = create_lm_hashed_password(password)
-        msg = create_message3(nonce, domain, username, host, nt_hpw, lm_hpw)
+        nt_hpw = create_nt_hashed_password(password)
+        msg = create_message3(nonce, domain, username, host, lm_hpw, nt_hpw)
     else:
         raise IOError("Invalid NTLM credentials type")
     return "NTLM %s" % base64.encodestring(msg).strip()
@@ -202,7 +202,16 @@ def check_ntlm_credentials (credentials, **attrs):
     if credentials['username']!=attrs['username']:
         warn(AUTH, "NTLM wrong username")
         return False
-    # XXX
+    nonce = attrs['nonce']
+    password = base64.decodestring(attrs['password_b64'])
+    nt_hashed_pw = create_nt_hashed_password(password)
+    lm_hashed_pw = create_lm_hashed_password(password)
+    nt_resp = calc_resp(nt_hashed_pw, nonce)
+    lm_resp = calc_resp(lm_hashed_pw, nonce)
+    if nt_resp != credentials['nt_resp']:
+        return False
+    if lm_resp != credentials['lm_resp']:
+        return False
     return True
 
 
@@ -353,7 +362,6 @@ def parse_message3 (msg):
     host_offset = getint32(msg[48:52])
     session_offset = getint32(msg[56:60])
     res['flags'] = getint16(msg[60:62])
-    res['session_key'] = msg[(nt_offset+nt_len):]
     res['domain'] = utils.unicode2str(msg[domain_offset:username_offset])
     res['username'] = utils.unicode2str(msg[username_offset:host_offset])
     res['host'] = utils.unicode2str(msg[host_offset:lm_offset])
