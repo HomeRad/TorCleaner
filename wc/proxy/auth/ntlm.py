@@ -166,49 +166,39 @@ class record (object):
         self.next_offset = offset + self.len
 
 
-def create_message1 (flags=0xb203):
-    ""
+def create_message1 (flags="\xb2\x03"):
     # overall lenght = 48 bytes
-    protocol = 'NTLMSSP\000'    #name
-    type = '\001\000'               #type 1
-    zeros1 = '\000\000'
-
-    flags = utils.hex2str(flags)
-
-    zeros2 = '\000\000\000\000\000\000\000\000\000'
-    zeros3 = '\000\000\000\000\000\000\000\000\000\000\000'
-    smthg1 = '0\000\000\000\000\000\000\000'    # something with chr(48) length?
-    smthg2 = '0\000\000\000'                    # something with chr(48) lenght?
-
-    msg1 = protocol + type + zeros1 + flags + zeros2 + zeros3 + smthg1 + smthg2
-    msg1 = base64.encodestring(msg1)
-    msg1 = msg1.replace('\012', '')
-
-    return msg1
+    protocol = 'NTLMSSP\x00'    #name
+    type = '\x01'               #type 1
+    zero3 = '\x00'*3
+    zero2 = '\x00'*2
+    domain = "WORKGROUP"
+    dom_len = len(domain)
+    host = "UNKNOWN"
+    host_len = len(host)
+    host_off = 32
+    dom_off = host_off + len(host)
+    msg = "%(protocol)s%(type)s%(zero3)s%(flags)s%(zero2)s%(dom_len)02d%(dom_len)02d%(dom_off)02d00%(host_len)02d%(host_len)02d%(host_off)02d00%(host)s%(domain)s" % locals()
+    return base64.encodestring(msg).strip()
 
 
-def create_message2 (flags=0x8201):
-    ""
+def create_message2 (flags="\x82\x01"):
     protocol = 'NTLMSSP\x00'    #name
     type = '\x02'
     msglen = '\x28'
-    flags = utils.hex2str(flags)
     nonce = "%08f" % (random.random()*10)
     assert nonce not in nonces
     nonces[nonce] = None
     zero2 = '\x00' * 2
     zero7 = '\x00' * 7
     zero8 = '\x00' * 8
-    return "%(protocol)s%(type)s%(zero7)s%(msglen)s%(zero2)s%(nonce)s%(zero8)s" % locals()
+    msg = "%(protocol)s%(type)s%(zero7)s%(msglen)s%(zero2)s%(nonce)s%(zero8)s" % locals()
+    return base64.encodestring(msg).strip()
 
 
-
-def create_message3 (nonce, domain, username, host, flags=0x8201,
+def create_message3 (nonce, domain, username, host, flags="\x82\x01",
                      lm_hashed_pw=None, nt_hashed_pw=None,
                      ntlm_mode=0):
-    ""
-    flags = utils.hex2str(flags)
-
     protocol = 'NTLMSSP\000'            #name
     type = '\003\000'                   #type 3
     head = protocol + type + '\000\000'
@@ -262,10 +252,7 @@ def create_message3 (nonce, domain, username, host, flags=0x8201,
         m3 += additional_rec.data
 
     # base64 encode
-    m3 = base64.encodestring(m3)
-    m3 = m3.replace('\012', '')
-
-    return m3
+    return base64.encodestring(m3).strip()
 
 
 def parse_message2 (msg2):
