@@ -30,30 +30,30 @@ mycats = ['ads', 'violence', 'aggressive']
 myfiles = ['domains', 'expressions', 'urls']
 ###################### read blacklist data #########################
 
-def read_blacklists (file):
-    if os.path.isdir(file):
-        for f in os.listdir(file):
-            read_blacklists(file+"/"+f)
+def read_blacklists (fname):
+    if os.path.isdir(fname):
+        for f in os.listdir(fname):
+            read_blacklists(fname+"/"+f)
     else:
-        if file.endswith(".gz"):
-            f = gzip.open(file)
-            file = file[:-3]
-            w = open(file, 'wb')
+        if fname.endswith(".gz"):
+            f = gzip.open(fname)
+            fname = fname[:-3]
+            w = open(fname, 'wb')
             w.write(f.read())
             w.close()
             f.close()
-            os.remove(file+".gz")
-        if file.endswith("domains"):
-            read_data(file, "domains", domains)
-        elif file.endswith("urls"):
-            read_data(file, "urls", urls)
-        elif file.endswith("expressions"):
-            read_data(file, "expressions", expressions)
+            os.remove(fname+".gz")
+        if fname.endswith("domains"):
+            read_data(fname, "domains", domains)
+        elif fname.endswith("urls"):
+            read_data(fname, "urls", urls)
+        elif fname.endswith("expressions"):
+            read_data(fname, "expressions", expressions)
 
-def read_data (file, name, data):
-    cat = os.path.basename(os.path.dirname(file))
+def read_data (fname, name, data):
+    cat = os.path.basename(os.path.dirname(fname))
     if cat not in mycats: return
-    f = open(file)
+    f = open(fname)
     line = f.readline()
     while line:
         line = line.strip()
@@ -79,16 +79,16 @@ def write_filters ():
         print "writing", filename
         if os.path.exists(filename):
             os.remove(filename)
-	file = open(filename, 'wb')
-	write_folder(cat, d, data, file)
-        file.close()
+	f = open(filename, 'wb')
+	write_folder(cat, d, data, f)
+        f.close()
 
-def write_folder (cat, type, data, file):
+def write_folder (cat, ftype, data, f):
     print "write", cat, "folder"
-    d = {"title": xmlify("%s %s" % (type.capitalize(), cat)),
+    d = {"title": xmlify("%s %s" % (ftype.capitalize(), cat)),
          "desc": xmlify("Automatically generated on %s" % date),
     }
-    file.write("""<?xml version="1.0"?>
+    f.write("""<?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="%(title)s"
  desc="%(desc)s"
@@ -97,48 +97,48 @@ def write_folder (cat, type, data, file):
     for t in data.keys():
         if cat=='kids_and_teens':
             b = "whitelists"
-            type = "allow"
+            _type = "allow"
         else:
             b = "blacklists"
-            type = "block"
-        globals()["write_%s"%t](cat, b, type, file)
-    file.write("</folder>")
+            _type = "block"
+        globals()["write_%s"%t](cat, b, _type, f)
+    f.write("</folder>")
 
-def write_domains (cat, b, type, file):
+def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
     d = {'title': cat+" domain filter",
          'desc': "You should not edit this filter, only disable or delete it.",
          'file': "%s/%s/domains.gz" % (b, cat),
-         'type': type,
+         'type': ftype,
         }
-    file.write("""<%(type)sdomains
+    f.write("""<%(type)sdomains
  title="%(title)s"
  desc="%(desc)s"
  file="%(file)s"/>
 """ % d)
 
-def write_urls (cat, b, type, file):
+def write_urls (cat, b, ftype, f):
     print "write", cat, "urls"
     d = {'title': cat+" url filter",
          'desc': "You should not edit this filter, only disable or delete it.",
          'file': "%s/%s/urls.gz" % (b, cat),
-         'type': type,
+         'type': ftype,
         }
-    file.write("""<%(type)surls
+    f.write("""<%(type)surls
  title="%(title)s"
  desc="%(desc)s"
  file="%(file)s"/>
 """ % d)
 
-def write_expressions (cat, b, type, file):
+def write_expressions (cat, b, ftype, f):
     d = {'title': cat+" expression filter",
          'desc': "Automatically generated, you should not edit this filter.",
-         'type': type
+         'type': ftype,
         }
     print "write", cat, "expressions"
     for expr in expressions[cat]:
         d['path'] = xmlify(expr)
-        file.write("""<%(type)s
+        f.write("""<%(type)s
  title="%(title)s"
  desc="%(desc)s"
  scheme=""
@@ -152,12 +152,12 @@ def write_expressions (cat, b, type, file):
 
 ##################### other functions ############################
 
-def blacklist (file):
-    source = "downloads/"+file
+def blacklist (fname):
+    source = "downloads/"+fname
     # extract tar
-    if file.endswith(".tar.gz"):
+    if fname.endswith(".tar.gz"):
         print "extracting archive..."
-        d = "extracted/"+file[:-7]
+        d = "extracted/"+fname[:-7]
         f = TarFile.gzopen(source)
         for m in f:
             a, b = os.path.split(m.name)
@@ -167,27 +167,27 @@ def blacklist (file):
                 f.extract(m, d)
         f.close()
         read_blacklists(d)
-    elif file.endswith(".gz"):
+    elif fname.endswith(".gz"):
         print "gunzip..."
         f = gzip.open(source)
-        file = "extracted/"+file[:-3]
-        os.makedirs(os.path.dirname(file))
-        w = open(file, 'wb')
+        fname = "extracted/"+fname[:-3]
+        os.makedirs(os.path.dirname(fname))
+        w = open(fname, 'wb')
         w.write(f.read())
         w.close()
         f.close()
-        read_data(file, "domains", domains)
+        read_data(fname, "domains", domains)
 
 # for now, only kids_and_teens
-def dmozlists (file):
-    print "filtering %s..." % file
-    smallfile = "small_%s"%file
-    if not os.path.exists("downloads/%s"%smallfile):
+def dmozlists (fname):
+    print "filtering %s..." % fname
+    smallfname = "small_%s"%fname
+    if not os.path.exists("downloads/%s"%smallfname):
         os.system(("zcat downloads/%s | config/dmozfilter.py | "+ \
-                  "gzip --best > downloads/%s") % (file, smallfile))
-    file = smallfile
-    print "dmozlist %s..." % file
-    f = gzip.GzipFile("downloads/"+file)
+                  "gzip --best > downloads/%s") % (fname, smallfname))
+    fname = smallfname
+    print "dmozlist %s..." % fname
+    f = gzip.GzipFile("downloads/"+fname)
     line = f.readline()
     topic = None
     while line:
@@ -210,20 +210,20 @@ def dmozlists (file):
         line = f.readline()
     f.close()
 
-def geturl (basedir, file, fun, saveas=None):
+def geturl (basedir, fname, fun, saveas=None):
     if saveas is not None:
         target = saveas
     else:
-        target = file
+        target = fname
     if os.path.exists("downloads/"+target):
         print "downloads/%s already exists"%target
     else:
-        print "downloading", basedir+file
+        print "downloading", basedir+fname
         d = os.path.dirname("downloads/"+target)
         if not os.path.isdir(d):
             os.makedirs(d)
         try:
-            urldata = urllib2.urlopen(basedir+file)
+            urldata = urllib2.urlopen(basedir+fname)
             f = open("downloads/"+target, 'w')
             f.write(urldata.read())
             f.close()
@@ -280,18 +280,18 @@ def open_files (directory):
         basedir = "%s/%s/%s" % (directory, d, cat)
         if not os.path.isdir(basedir):
             os.makedirs(basedir)
-        for type in categories[cat].keys():
-            if type=="expressions": continue
-            file = "%s/%s.gz" % (basedir, type)
-            if os.path.exists(file):
-                os.remove(file)
-            print "opening", file
-            categories[cat][type] = gzip.GzipFile(file, 'wb')
+        for ftype in categories[cat].keys():
+            if ftype=="expressions": continue
+            fname = "%s/%s.gz" % (basedir, ftype)
+            if os.path.exists(fname):
+                os.remove(fname)
+            print "opening", fname
+            categories[cat][type] = gzip.GzipFile(fname, 'wb')
 
 def close_files ():
     for cat in categories.keys():
-        for type in categories[cat].keys():
-            f = categories[cat][type]
+        for ftype in categories[cat].keys():
+            f = categories[cat][ftype]
             if f is not None:
                 print "closing", f.filename
                 f.close()
@@ -302,12 +302,12 @@ def remove_old_data ():
         if os.path.isdir(d):
             rm_rf(d)
 
-def remove_gunziped_files (file):
-    if os.path.isdir(file):
-        for f in os.listdir(file):
-            remove_gunziped_files(file+"/"+f)
-    elif os.path.basename(file) in ("domains", "urls", "expressions"):
-        os.remove(file)
+def remove_gunziped_files (fname):
+    if os.path.isdir(fname):
+        for f in os.listdir(fname):
+            remove_gunziped_file(fname+"/"+f)
+    elif os.path.basename(fname) in ("domains", "urls", "expressions"):
+        os.remove(fname)
 
 if __name__=='__main__':
     remove_old_data()
