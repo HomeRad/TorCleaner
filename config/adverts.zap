@@ -178,4 +178,14 @@
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
 </rewrite>
+
+<block title="Adverts in the path name 6"
+ desc="the infamous realmedia ads"
+ scheme=""
+ host=""
+ port=""
+ path="/RealMedia/"
+ parameters=""
+ query=""
+ fragment=""/>
 </folder>
