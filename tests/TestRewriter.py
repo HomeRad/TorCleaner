@@ -16,10 +16,10 @@ class TestJavaScript (unittest.TestCase):
         wc.config.init_filter_modules()
 
 
-    def filt (self, data, result):
-        attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])
+    def filt (self, data, result, name=""):
+        attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY])
         filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
-        self.assertEqual(filtered, result, "data: %r"%data)
+        self.assertEqual(filtered, result)
 
 
     def testClosingTag (self):
