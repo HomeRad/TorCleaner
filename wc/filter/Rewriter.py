@@ -65,8 +65,9 @@ class Rewriter (Filter):
         return p.flushbuf()
 
 
-    def getAttrs (self, headers, url):
+    def getAttrs (self, url, headers):
         """We need a separate filter instance for stateful filtering"""
+        d = super(Rewriter, self).getAttrs(url, headers)
         rewrites = []
         pics = []
         # look if headers already have PICS label info
@@ -83,4 +84,5 @@ class Rewriter (Filter):
             elif rule.get_name()=='pics':
                 pics.append(rule)
         # generate the HTML filter
-        return {'filter': FilterHtmlParser(rewrites, pics, url, **opts)}
+        d['filter'] = FilterHtmlParser(rewrites, pics, url, **opts)
+        return d

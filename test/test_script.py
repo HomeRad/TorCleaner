@@ -4,21 +4,19 @@
 def filterfile (fname):
     print "filter", fname
     f = file(fname)
-    attrs = wc.filter.initStateObjects(url=fname)
-    filtered = ""
+    attrs = get_filterattrs(fname, [FILTER_RESPONSE_MODIFY])
+    s = ""
     data = f.read(4096)
     while data:
         try:
-            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                              data, 'filter', attrs)
+            s += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', attrs)
         except FilterException, msg:
             pass
         data = f.read(4096)
     i = 1
     while 1:
         try:
-            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                             "", 'finish', attrs)
+            s += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish', attrs)
             break
         except FilterException, msg:
             proxy_poll(timeout=max(0, run_timers()))
@@ -27,7 +25,7 @@ def filterfile (fname):
             # background downloading of javascript is too slow
             print "Test: oooooops"
             break
-    print filtered
+    print s
 
 from test import initlog, disable_pics_rules
 initlog("test/logging.conf")
@@ -38,7 +36,7 @@ wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()
 from wc.proxy import proxy_poll, run_timers
 from wc.filter import FilterException
+from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 for i in range(11):
     fname = "test/html/script%d.html"%i
     filterfile(fname)
-

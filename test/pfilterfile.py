@@ -15,9 +15,10 @@ def _main ():
     wc.config = wc.Configuration()
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
-    attrs = wc.filter.initStateObjects(url=f)
+    from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+    attrs = get_filterattrs(f, [FILTER_RESPONSE_MODIFY])
     import profile
-    profile.run("wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, 'finish', attrs)",
+    profile.run("applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)",
                 "filter.prof")
 
 

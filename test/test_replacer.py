@@ -21,16 +21,13 @@ document.write("</OBJECT>");
 </script>
 """
 
-import wc, time
 from test import initlog
 initlog("test/logging.conf")
+import wc
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer']
 wc.config.init_filter_modules()
-start = time.clock()
-attrs = wc.filter.initStateObjects(url="")
-filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-           htmldata, 'finish', attrs)
-stop = time.clock()
-print filtered
-#print "time: %.3f seconds" % (stop-start)
+import time
+from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])
+print applyfilter(FILTER_RESPONSE_MODIFY, htmldata, 'finish', attrs)

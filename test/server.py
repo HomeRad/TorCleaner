@@ -46,6 +46,7 @@ def _main ():
         print >>sys.stderr, msg
     sys.exit(status)
 
+
 if __name__=='__main__':
     #_main() # start the server process
     startfunc() # use this for testing

@@ -67,18 +67,18 @@ class ImageReducer (Filter):
         return data.getvalue()
 
 
-    def getAttrs (self, headers, url):
+    def getAttrs (self, url, headers):
         # don't filter tiny images
+        d = super(ImageReducer, self).getAttrs(url, headers)
         if headers.get('Content-Length', 0) < self.minimal_size_bytes:
-            return {}
+            return d
         ctype = headers['Content-Type']
         headers['Content-Type'] = 'image/jpeg'
         remove_headers(headers, ['Content-Length'])
-        return {
-            'buffer': StringIO(),
-            # some images have to be convert()ed before saving
-            'convert': convert(ctype),
-        }
+        d['buffer'] = StringIO()
+        # some images have to be convert()ed before saving
+        d['convert'] = convert(ctype)
+        return d
 
 
 def convert (ctype):

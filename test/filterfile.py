@@ -21,14 +21,15 @@ def _main ():
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
     from wc.proxy import proxy_poll, run_timers
-    from wc.filter import FilterException
-    attrs = wc.filter.initStateObjects(url=fname)
+    from wc.filter import FilterException, applyfilter, get_filterattrs
+    from wc.filter import FILTER_RESPONSE_MODIFY
+    attrs = get_filterattrs(fname, [FILTER_RESPONSE_MODIFY])
     filtered = ""
     data = f.read(2048)
     while data:
         try:
-            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                              data, 'filter', attrs)
+            filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter',
+                                    attrs)
         except FilterException, msg:
             pass
         data = f.read(2048)
@@ -36,8 +37,8 @@ def _main ():
     while True:
         print >>sys.stderr, "Test: finish", i
         try:
-            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                             "", 'finish', attrs)
+            filtered += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish',
+                                    attrs)
             break
         except FilterException, msg:
             print >>sys.stderr, "Test: finish: exception:", msg

@@ -140,14 +140,15 @@ class ImageSize (Filter):
         return True
 
 
-    def getAttrs (self, headers, url):
+    def getAttrs (self, url, headers):
+        d = super(ImageSize, self).getAttrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
-            return {}
-        sizes = [((rule.width, rule.height), rule.formats) for rule in rules]
-        return {'buffer': StringIO(),
-                'sizes': sizes,
-                'url': url,
-                'blocked': False}
+            return d
+        d['rules'] = rules
+        d['sizes'] = [((r.width, r.height), r.formats) for r in rules]
+        d['buffer'] = StringIO()
+        d['blocked'] = False
+        return d
 

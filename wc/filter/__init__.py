@@ -108,7 +108,7 @@ def GetRuleFromName (name):
     return getattr(wc.filter.rules, name)()
 
 
-def applyfilter (i, data, fun='filter', attrs={}):
+def applyfilter (i, data, fun, attrs):
     """Apply all filters which are registered in filter level i.
     For different filter levels we have different data objects.
     Look at the filter examples.
@@ -125,11 +125,15 @@ def applyfilter (i, data, fun='filter', attrs={}):
     return data
 
 
-def initStateObjects (headers={'Content-Type': 'text/html'}, url=None):
+def get_filterattrs (url, filters, headers={'Content-Type': 'text/html'}):
     """init external state objects"""
-    attrs = {'mime': headers.get('Content-Type', 'application/octet-stream')}
-    for i in range(10):
+    attrs = {
+        'url': url,
+        'nofilter': wc.config.nofilter(url),
+        'mime' : headers.get('Content-Type', 'application/octet-stream'),
+    }
+    for i in filters:
         for f in wc.config['filterlist'][i]:
             if f.applies_to_mime(attrs['mime']):
-                attrs.update(f.getAttrs(headers, url))
+                attrs.update(f.getAttrs(url, headers))
     return attrs

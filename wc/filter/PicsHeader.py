@@ -48,10 +48,8 @@ class PicsHeader (Filter):
         return data
 
 
-    def getAttrs (self, headers, url):
+    def getAttrs (self, url, headers):
+        d = super(PicsHeader, self).getAttrs(url, headers)
         # weed out the rules that don't apply to this url
-        rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
-        return {'rules': rules,
-                'headers': headers,
-                'url': url,
-               }
+        d['rules'] = [ rule for rule in self.rules if rule.appliesTo(url) ]
+        return d

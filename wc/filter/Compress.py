@@ -100,7 +100,8 @@ class Compress (Filter):
         return data
 
 
-    def getAttrs (self, headers, url):
+    def getAttrs (self, url, headers):
+        d = super(Compress, self).getAttrs(url, headers)
         compressobj = None
         accept = headers.get('Accept-Encoding', '')
         encoding = headers.get('Content-Encoding', '').lower()
@@ -113,6 +114,5 @@ class Compress (Filter):
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
         debug(FILTER, "compress object %s", str(compressobj))
-        d = super(Compress, self).getAttrs(headers, url)
         d['compressobj'] = compressobj
         return d

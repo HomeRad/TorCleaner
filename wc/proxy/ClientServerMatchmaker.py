@@ -57,15 +57,14 @@ class ClientServerMatchmaker (object):
 
      done:     We are done matching up the client and server
     """
-    def __init__ (self, client, request, headers, content, nofilter,
-                  compress, mime=None):
+    def __init__ (self, client, request, headers, content, compress,
+                  mime=None):
         self.client = client
         self.server = None
         self.request = request
         self.headers = headers
         self.compress = compress
         self.content = content
-        self.nofilter = nofilter
         self.mime = mime
         self.state = 'dns'
         self.method, self.url, protocol = self.request.split()
@@ -239,7 +238,6 @@ class ClientServerMatchmaker (object):
                                         self.headers,
                                         self.content,
                                         self,
-					self.nofilter,
                                         self.url,
                                         self.mime)
 

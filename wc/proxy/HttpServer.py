@@ -14,7 +14,7 @@ from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
-from wc.filter import applyfilter, initStateObjects, FilterWait, FilterPics
+from wc.filter import applyfilter, get_filterattrs, FilterWait, FilterPics
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
@@ -26,12 +26,6 @@ from wc.filter import FILTER_RESPONSE_ENCODE
 PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
-
-_RESPONSE_FILTERS = (
-   FILTER_RESPONSE_DECODE,
-   FILTER_RESPONSE_MODIFY,
-   FILTER_RESPONSE_ENCODE)
-
 
 is_http_status = re.compile(r'^\d\d\d$').search
 def get_response_data (response, url):
@@ -123,7 +117,7 @@ class HttpServer (Server):
 
 
     def client_send_request (self, method, hostname, port, document, headers,
-                            content, client, nofilter, url, mime):
+                            content, client, url, mime):
         """the client (matchmaker) sends the request to the server"""
         assert self.state == 'client'
         self.method = method
@@ -132,7 +126,6 @@ class HttpServer (Server):
         self.port = port
         self.document = document
         self.content = content
-        self.nofilter = nofilter
         self.url = url
         # fix mime content-type for eg JavaScript
         self.mime = mime
@@ -204,17 +197,13 @@ class HttpServer (Server):
             # It's a blank line, so assume HTTP/0.9
             serverpool.set_http_version(self.addr, (0,9))
             self.statuscode = 200
+            self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER])
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	                   WcMessage(StringIO('')), attrs=self.nofilter)
+	                   WcMessage(StringIO('')), "finish", self.attrs)
             self.decoders = []
-            self.attrs['nofilter'] = self.nofilter['nofilter']
-            # initStateObject can modify headers (see Compress.py)!
-            if self.attrs['nofilter']:
-                self.attrs = self.nofilter
-            else:
-                self.attrs = initStateObjects(self.headers, self.url)
             self.state = 'content'
-            self.client.server_response(self.response, self.statuscode, self.headers)
+            self.client.server_response(self.response, self.statuscode,
+                                        self.headers)
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
@@ -227,8 +216,9 @@ class HttpServer (Server):
             self.statuscode = 200
             self.state = 'headers'
         if self.response:
+            self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE])
             self.response = applyfilter(FILTER_RESPONSE, self.response,
-                              attrs=self.nofilter).strip()
+                                        "finish", self.attrs).strip()
         if self.statuscode >= 400:
             self.mime = None
         debug(PROXY, "%s response %s", str(self), `self.response`)
@@ -261,10 +251,15 @@ class HttpServer (Server):
             self.persistent = has_header_value(msg, 'Connection', 'Keep-Alive')
         else:
             self.persistent = False
-        # filter headers
+        filters = [FILTER_RESPONSE_HEADER,
+                   FILTER_RESPONSE_DECODE,
+                   FILTER_RESPONSE_MODIFY,
+                   FILTER_RESPONSE_ENCODE,
+                  ]
+        self.attrs = get_filterattrs(self.url, filters, headers=msg)
         try:
-            self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-                                       msg, attrs=self.nofilter)
+            self.headers = applyfilter(FILTER_RESPONSE_HEADER, msg,
+                                       "finish", self.attrs)
         except FilterPics, msg:
             self.statuscode = 403
             debug(PROXY, "%s FilterPics %s", str(self), `msg`)
@@ -283,12 +278,6 @@ class HttpServer (Server):
         # 304 Not Modified does not send any type info, because it was cached
         if self.statuscode!=304:
             server_set_content_headers(self.headers, self.document, self.mime, self.url)
-        self.attrs['nofilter'] = self.nofilter['nofilter']
-        # initStateObject can modify headers (see Compress.py)!
-        if self.attrs['nofilter']:
-            self.attrs = self.nofilter
-        else:
-            self.attrs = initStateObjects(self.headers, self.url)
         # XXX <doh>
         #if not self.headers.has_key('Content-Length'):
         #    self.headers['Connection'] = 'close\r'
@@ -322,8 +311,9 @@ class HttpServer (Server):
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
         try:
-            for i in _RESPONSE_FILTERS:
-                data = applyfilter(i, data, attrs=self.attrs)
+            for i in [FILTER_RESPONSE_DECODE, FILTER_RESPONSE_MODIFY,
+                      FILTER_RESPONSE_ENCODE]:
+                data = applyfilter(i, data, "filter", self.attrs)
             if data:
                 if self.statuscode!=407:
                     self.client.server_content(data)
@@ -406,8 +396,9 @@ class HttpServer (Server):
             for decoder in self.decoders:
                 data = decoder.decode(data)
         try:
-            for i in _RESPONSE_FILTERS:
-                data = applyfilter(i, data, fun="finish", attrs=self.attrs)
+            for i in [FILTER_RESPONSE_DECODE, FILTER_RESPONSE_MODIFY,
+                      FILTER_RESPONSE_ENCODE]:
+                data = applyfilter(i, data, "finish", self.attrs)
         except FilterWait, msg:
             debug(PROXY, "%s FilterWait %s", str(self), `msg`)
             # the filter still needs some data so try flushing again
@@ -480,8 +471,7 @@ class HttpServer (Server):
         self.client = None
         ClientServerMatchmaker(client, client.request,
                                self.clientheaders, # with new auth
-                               client.content, client.nofilter,
-                               client.compress)
+                               client.content, client.compress)
 
 
 def speedcheck_print_status ():

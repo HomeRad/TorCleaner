@@ -16,13 +16,13 @@ def main ():
     wc.config = wc.Configuration()
     wc.config['filters'] = ['ImageReducer']
     wc.config.init_filter_modules()
-    headers = {
-        'Content-Type': mimetypes.guess_type(f)[0],
-        'Content-Size': os.stat(f)[stat.ST_SIZE],
-    }
-    attrs = wc.filter.initStateObjects(headers=headers, url=f)
-    filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-           data, 'finish', attrs)
+    from wc.proxy.Headers import WcMessage
+    headers = WcMessage(StringIO('')
+    headers['Content-Type'] = mimetypes.guess_type(f)[0]
+    headers['Content-Size'] = os.stat(f)[stat.ST_SIZE]
+    from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+    attrs = get_filterattrs(f, [FILTER_RESPONSE_MODIFY], headers=headers)
+    filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
     print filtered,
 
 

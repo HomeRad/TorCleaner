@@ -20,6 +20,7 @@ __date__    = "$Date$"[7:-2]
 
 from Rule import Rule
 from wc.XmlUtils import xmlify
+from wc.log import *
 
 class UrlRule (Rule):
     """rule which applies only to urls which match a regular expression"""
@@ -36,6 +37,7 @@ class UrlRule (Rule):
         if self.matchurl:
             return self.matchurl_ro.search(url)
         if self.dontmatchurl:
+            info(FILTER, "XXX url=%s", str(url))
             return not self.dontmatchurl_ro.search(url)
         return True
 

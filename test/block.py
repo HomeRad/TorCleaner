@@ -15,9 +15,9 @@ def _main ():
     wc.config = wc.Configuration()
     wc.config['filters'] = ['Blocker',]
     wc.config.init_filter_modules()
-    from wc.filter import initStateObjects, applyfilter
-    attrs = initStateObjects(url=url)
-    print applyfilter(wc.filter.FILTER_REQUEST, data, 'finish', attrs)
+    from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
+    attrs = get_filterattrs(url, [FILTER_REQUEST])
+    print applyfilter(FILTER_REQUEST, data, 'finish', attrs)
 
 
 if __name__=='__main__':

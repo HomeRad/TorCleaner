@@ -23,7 +23,7 @@ from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
 from wc.filter import FILTER_REQUEST_MODIFY
 from wc.filter import FILTER_REQUEST_ENCODE
-from wc.filter import applyfilter, FilterException
+from wc.filter import applyfilter, get_filterattrs, FilterException
 
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
 
@@ -121,13 +121,13 @@ class HttpClient (Connection):
         if not self.url:
             self.error(400, i18n._("Empty URL"))
             return
-        self.nofilter = {'nofilter': config.nofilter(self.url)}
+        self.attrs = get_filterattrs(self.url, [FILTER_REQUEST])
         self.protocol = fix_http_version(protocol)
         self.http_ver = get_http_version(self.protocol)
         self.request = "%s %s %s" % (self.method, self.url, self.protocol)
         debug(PROXY, "%s request %s", str(self), `self.request`)
         self.request = applyfilter(FILTER_REQUEST, self.request,
-                                   fun="finish", attrs=self.nofilter)
+                                   "finish", self.attrs)
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
@@ -152,6 +152,12 @@ class HttpClient (Connection):
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
         debug(PROXY, "%s client headers \n%s", str(self), str(msg))
+        filters = [FILTER_REQUEST_HEADER,
+                   FILTER_REQUEST_DECODE,
+                   FILTER_REQUEST_MODIFY,
+                   FILTER_REQUEST_ENCODE,
+                  ]
+        self.attrs = get_filterattrs(self.url, filters, headers=msg)
         # look if client wants persistent connections
         if self.http_ver >= (1,1):
             self.persistent = not has_header_value(msg, 'Proxy-Connection', 'Close') and \
@@ -165,7 +171,7 @@ class HttpClient (Connection):
         self.compress = client_set_headers(msg)
         # filter headers
         self.headers = applyfilter(FILTER_REQUEST_HEADER,
-                                   msg, fun="finish", attrs=self.nofilter)
+                                   msg, "finish", self.attrs)
         # add decoders
         self.decoders = []
         self.bytes_remaining = get_content_length(self.headers)
@@ -218,12 +224,9 @@ class HttpClient (Connection):
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
-        data = applyfilter(FILTER_REQUEST_DECODE, data,
-                           attrs=self.nofilter)
-        data = applyfilter(FILTER_REQUEST_MODIFY, data,
-                           attrs=self.nofilter)
-        data = applyfilter(FILTER_REQUEST_ENCODE, data,
-                           attrs=self.nofilter)
+        data = applyfilter(FILTER_REQUEST_DECODE, data, "filter", self.attrs)
+        data = applyfilter(FILTER_REQUEST_MODIFY, data, "filter", self.attrs)
+        data = applyfilter(FILTER_REQUEST_ENCODE, data, "filter", self.attrs)
         self.content += data
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
@@ -231,12 +234,9 @@ class HttpClient (Connection):
             warn(PROXY, "client received %d bytes more than content-length",
                  (-self.bytes_remaining))
         if is_closed or self.bytes_remaining==0:
-            data = applyfilter(FILTER_REQUEST_DECODE, "",
-    	                   fun="finish", attrs=self.nofilter)
-            data = applyfilter(FILTER_REQUEST_DECODE, data,
-    	                   fun="finish", attrs=self.nofilter)
-            data = applyfilter(FILTER_REQUEST_DECODE, data,
-    	                   fun="finish", attrs=self.nofilter)
+            data = applyfilter(FILTER_REQUEST_DECODE, "", "finish", self.attrs)
+            data = applyfilter(FILTER_REQUEST_MODIFY, data, "finish", self.attrs)
+            data = applyfilter(FILTER_REQUEST_ENCODE, data, "finish", self.attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
@@ -259,7 +259,7 @@ class HttpClient (Connection):
         assert self.state=='receive', "%s server_request in state receive" % str(self)
         # This object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
-                               self.content, self.nofilter,
+                               self.content, self.attrs,
                                self.compress)
 
 

@@ -61,8 +61,10 @@ class GifImage (Filter):
         return data + (gifparser.finish and ';' or '')
 
 
-    def getAttrs (self, headers, url):
-        return {'gifparser': GifParser()}
+    def getAttrs (self, url, headers):
+        d = super(GifImage, self).getAttrs(url, headers)
+        d['gifparser'] = GifParser()
+        return d
 
 
 _TINY_GIF = """R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="""
