@@ -204,9 +204,11 @@ class HttpServer (Server):
                 self.headers['Content-Type'] = gm[0]
                 print >>sys.stderr, _("Warning: %s guessed Content-Type (%s)") % \
                                       (self.url, gm[0])
-            elif self.headers.get('Content-Type') != gm[0]:
+           # fix some content types
+            elif self.headers.get('Content-Type') != gm[0] and \
+                 gm[0] in _fix_content_types:
                 print >>sys.stderr, _("Warning: %s guessed Content-Type (%s) != server Content-Type (%s)") % \
-                                      (self.url, gm[0], self.headers.get('Content-Type'))
+                          (self.url, gm[0], self.headers.get('Content-Type'))
                 self.headers['Content-Type'] = gm[0]
         if gm[1]:
             # guessed an own encoding type
@@ -217,9 +219,7 @@ class HttpServer (Server):
             elif self.headers.get('Content-Encoding') != gm[1]:
                 print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)") % \
                                       (self.url, gm[1], self.headers.get('Content-Encoding'))
-                # only fix html content type
-                if gm[1] in _fix_content_types:
-                    self.headers['Content-Encoding'] = gm[1]
+                self.headers['Content-Encoding'] = gm[1]
         # will content be rewritten?
         rewrite = None
         for ro in config['mime_content_rewriting']:
