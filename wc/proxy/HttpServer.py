@@ -15,7 +15,7 @@ from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
-from wc.filter import applyfilter, get_filterattrs, FilterWait
+from wc.filter import applyfilter, get_filterattrs, FilterWait, FilterRating
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE

@@ -34,9 +34,9 @@ class RatingHeader (Filter):
 
     def doit (self, data, **attrs):
         url = attrs['url']
-        if not rating_is_cached(url):
-            headers = attrs['headers']
-            if headers.has_key('Content-Rating'):
+        headers = attrs['headers']
+        if headers.has_key('Content-Rating'):
+            if not rating_is_cached(url):
                 rating_add(url, headers['Content-Rating'])
         rules = attrs['rating_rules']
         if rules and not attrs['mime'].lower().startswith('text/html'):
