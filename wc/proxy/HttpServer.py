@@ -373,6 +373,10 @@ class HttpServer (Server):
             debug(PROXY, "%s FilterRating from content %s", self, msg)
             self._show_rating_deny(str(msg))
             return
+        except FilterProxyError, e:
+            self.client.error(e.status, e.msg, txt=e.text)
+            self.handle_error("filter proxy error")
+            return
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
         if underflow:
