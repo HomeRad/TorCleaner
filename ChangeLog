@@ -24,7 +24,9 @@
     Type: feature
     Changed: wc/filter/HtmlTags.py
   * added SSL gateway functionality, starting a local SSL server
-    to handle and filter https connections.
+    to handle and filter https connections. this feature is still
+    considered unstable, since SSL certificates are not yet verified.
+    So, do not (yet) do your bank accounting with this feature :)
     Type: feature
     Changed: wc/__init__.py, wc/proxy/{__init__,ClientServerMatchmaker}.py
     Added: wc/proxy/{HttpsServer,SslClient,SslServer}.py, test/getssl.py,
@@ -37,6 +39,9 @@
     Changed: wc/{url,ip,__init__}.py, wc/webgui/context/config_html.py
   * the "allowed hosts" list is now DNS resolved
     Changed: wc/ip.py
+  * the "edit rule" in blocked HTML pages has now a "_top" target,
+    removing any parent frames.
+    Changed: templates/classic/blocked.html
 
 2.9 (released 1.3.2004)
   * do not ship _webcleaner2_configdata.py, and adjust file permissions
