@@ -1,9 +1,9 @@
-import rfc822,time,sys
+import rfc822, time, sys
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
-from wc import debug,config
-from wc.proxy import log,match_host
+from wc import debug, config
+from wc.proxy import log, match_host
 from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
@@ -27,6 +27,8 @@ class HttpClient (Connection):
         self.headers = None
         self.bytes_remaining = None # for content only
         self.content = ''
+        if self.addr[0] not in config['allowed_hosts']:
+            self.close()
 
 
     def __repr__ (self):
@@ -80,8 +82,7 @@ class HttpClient (Connection):
                     # add supported encodings
                     encodings = "gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r"
                 self.headers['Accept-Encoding'] = encodings
-                #debug(HURT_ME_PLENTY, "C/Headers filtered",
-                      `self.headers.headers`)
+                #debug(HURT_ME_PLENTY, "C/Headers filtered", `self.headers.headers`)
                 self.bytes_remaining = int(self.headers.get('Content-Length', 0))
                 self.state = 'content'
 

@@ -154,6 +154,7 @@ class Configuration (UserDict.UserDict):
         self['errortext'] = ErrorText
         self['colorize'] = False
         self['noproxyfor'] = {}
+        self['allowedhosts'] = {}
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = False
@@ -350,6 +351,11 @@ class WConfigParser (BaseParser):
                 for host in self.config['noproxyfor'].split(','):
                     d[str(host)] = 1
                 self.config['noproxyfor'] = d
+            if self.config['allowedhosts']:
+                d = {}
+                for host in self.config['allowedhosts'].split(','):
+                    d[str(host)] = 1
+                self.config['allowedhosts'] = d
             if self.config['logfile'] == '<stdout>':
                 self.config['logfile'] = sys.stdout
             elif self.config['logfile']:

@@ -70,9 +70,12 @@ class ConfWindow (ToolWindow):
      ID_NOPROXYFOR_ADD,
      ID_NOPROXYFOR_EDIT,
      ID_NOPROXYFOR_REMOVE,
+     ID_ALLOWEDHOSTS_ADD,
+     ID_ALLOWEDHOSTS_EDIT,
+     ID_ALLOWEDHOSTS_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+36)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+39)
 
 
     def __init__ (self, app):
@@ -147,6 +150,11 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_EDIT,ConfWindow.onUpdNoProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onCmdNoProxyForRemove)
         FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onUpdNoProxy)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ALLOWEDHOSTS_ADD,ConfWindow.onCmdAllowedHostsAdd)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ALLOWEDHOSTS_EDIT,ConfWindow.onCmdAllowedHostsEdit)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_ALLOWEDHOSTS_EDIT,ConfWindow.onUpdAllowedHosts)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ALLOWEDHOSTS_REMOVE,ConfWindow.onCmdAllowedHostsRemove)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_ALLOWEDHOSTS_REMOVE,ConfWindow.onUpdAllowedHosts)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_UP,ConfWindow.onCmdUp)
         FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_UP,ConfWindow.onCmdUpUpdate)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DOWN,ConfWindow.onCmdDown)
@@ -213,6 +221,16 @@ class ConfWindow (ToolWindow):
         FXButton(f, _("Edit"), None, self, ConfWindow.ID_NOPROXYFOR_EDIT)
         FXButton(f, _("Remove"), None, self, ConfWindow.ID_NOPROXYFOR_REMOVE)
 
+        f = FXGroupBox(proxy_top, _("Allowed hosts"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        self.allowedlist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
+        for host in self.allowedhosts.keys():
+            self.allowedlist.appendItem(host)
+        f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
+        FXButton(f, _("Add"), None, self, ConfWindow.ID_ALLOWEDHOSTS_ADD)
+        FXButton(f, _("Edit"), None, self, ConfWindow.ID_ALLOWEDHOSTS_EDIT)
+        FXButton(f, _("Remove"), None, self, ConfWindow.ID_ALLOWEDHOSTS_REMOVE)
+
         frame = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
         filters = FXGroupBox(frame, _("Filter Modules"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         hframe = FXVerticalFrame(filters, LAYOUT_SIDE_TOP)
@@ -269,6 +287,17 @@ class ConfWindow (ToolWindow):
         if i<0:
             sender.disable()
         elif self.noproxylist.isItemSelected(i):
+            sender.enable()
+        else:
+            sender.disable()
+        return 1
+
+
+    def onUpdAllowedHosts (self, sender, sel, ptr):
+        i = self.allowedlist.getCurrentItem()
+        if i<0:
+            sender.disable()
+        elif self.allowedlist.isItemSelected(i):
             sender.enable()
         else:
             sender.disable()
@@ -544,6 +573,64 @@ class ConfWindow (ToolWindow):
         return 1
 
 
+    def onCmdAllowedHostsAdd (self, sender, sel, ptr):
+        dialog = FXDialogBox(self,_("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
+        frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        FXLabel(matrix, _("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        host = FXTextField(matrix, 20)
+        f = FXHorizontalFrame(frame)
+        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        if dialog.execute():
+            host = host.getText().strip().lower()
+            if not host:
+                self.getApp().error(_("Add proxy"), _("Empty hostname"))
+	        return 1
+            if self.allowedhosts.has_key(host):
+                self.getApp().error(_("Add proxy"), _("Duplicate hostname"))
+	        return 1
+            self.allowedhosts[host] = 1
+            self.allowedlist.appendItem(host)
+            self.getApp().dirty = 1
+            #debug(BRING_IT_ON, "Added allowed host")
+        return 1
+
+
+    def onCmdAllowedHostsEdit (self, sender, sel, ptr):
+        index = self.allowedlist.getCurrentItem()
+        item = self.allowedlist.retrieveItem(index)
+        host = item.getText()
+        dialog = FXDialogBox(self, _("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
+        frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        FXLabel(matrix, _("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        nametf = FXTextField(matrix, 20)
+        nametf.setText(host)
+        f = FXHorizontalFrame(frame)
+        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        if dialog.execute():
+            newhost = nametf.getText().strip().lower()
+            del self.allowedhosts[host]
+            self.allowedhosts[newhost] = 1
+            self.allowedlist.replaceItem(index, newhost)
+            self.getApp().dirty = 1
+            #debug(BRING_IT_ON, "Changed allowed host")
+        return 1
+
+
+    def onCmdAllowedHostsRemove (self, sender, sel, ptr):
+        index = self.allowedlist.getCurrentItem()
+        item = self.allowedlist.retrieveItem(index)
+        host = item.getText()
+        del self.allowedhosts[host]
+        self.allowedlist.removeItem(index)
+        self.getApp().dirty = 1
+        #debug(BRING_IT_ON, "Removed allowed host")
+        return 1
+
+
     def onCmdProxyStart (self, sender, sel, ptr):
         from wc import daemon
         daemon.start(parent_exit=0)
@@ -677,7 +764,7 @@ class ConfWindow (ToolWindow):
         for key in ('version','port','parentproxy','parentproxyport',
          'timeout','obfuscateip','debuglevel','logfile','strict_whitelist',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
-         'parentproxyuser', 'parentproxypass'):
+         'parentproxyuser', 'parentproxypass', 'allowedhosts'):
             setattr(self, key, self.config[key])
         if self.logfile:
             self.logfile = self.logfile.name
@@ -743,7 +830,9 @@ class ConfWindow (ToolWindow):
         if self.logfile:
             s += ' logfile="%s"\n' % xmlify(self.logfile)
         if self.noproxyfor:
-            s += ' noproxyfor="%s"\n' % xmlify(",".join(self.noproxyfor.keys()))
+            s += ' noproxyfor="%s"\n'%xmlify(",".join(self.noproxyfor.keys()))
+        if self.allowedhosts:
+            s += ' allowedhosts="%s"\n'%xmlify(",".join(self.allowedhosts.keys()))
         s += '>\n'
         for key,val in self.modules.items():
             if val:
