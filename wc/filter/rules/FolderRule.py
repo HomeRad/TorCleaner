@@ -19,6 +19,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from Rule import Rule
+from wc import i18n
 
 def recalc_oids (rules):
     for i, r in enumerate(rules):
@@ -77,3 +78,10 @@ class FolderRule (Rule):
         for r in self.rules:
             s += "\n%s\n"%r.toxml()
         return s+"</folder>\n"
+
+
+    def tiptext (self):
+        """return short info for gui display"""
+        return super(FolderRule, self).tiptext()+", "+\
+               (i18n._("%d rules")%len(self.rules))
+

@@ -107,3 +107,7 @@ class Rule (object):
         s += "disable %d\n" % self.disable
         return s
 
+
+    def tiptext (self):
+        """return short info for gui display"""
+        return "%s #%d" % (self.get_name().capitalize(), self.oid)
