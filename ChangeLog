@@ -1,7 +1,7 @@
 2.6 (released xx.xx.xxxx)
   * fixed background downloading with 30x redirects
     Changed: wc/proxy/HttpProxyClient.py
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20031119
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031125
     Changed: libjs/*
   * do not quote HTML attributes in the parser
     Changed: wc/parser/htmllex.[lc]
@@ -11,6 +11,9 @@
     Changed: webcleaner, wc/daemon/*.px
   * write changed filtermodules in web gui into config
     Changed: wc/webgui/context/config_html.py
+  * dynamic filter attributes are now acquired only for used filter
+    stages, not for all
+    Changed: wc/filter/*.py, wc/proxy/Http{Server,Client}.py
 
 2.5 (released 15.11.2003)
   * updated blacklist filters
