@@ -27,8 +27,8 @@ import gettext
 import mimetypes
 import cStringIO as StringIO
 import wc
-import wc.webgui.simpletal.simpleTAL
-import wc.webgui.simpletal.simpleTALES
+from wc.webgui.simpletal import simpleTAL
+from wc.webgui.simpletal import simpleTALES
 import wc.proxy.auth
 import wc.proxy.Headers
 from wc.log import *
@@ -38,7 +38,7 @@ class WebConfig (object):
     """class for web configuration templates"""
 
     def __init__ (self, client, url, form, protocol, clientheaders,
-                  status=200, msg=wc.i18n._('Ok'), localcontext=None, auth=''):
+                 status=200, msg=wc.i18n._('Ok'), localcontext=None, auth=''):
         """load a web configuration template and return response"""
         debug(GUI, "WebConfig %s %s", url, form)
         self.client = client
@@ -57,10 +57,13 @@ class WebConfig (object):
             headers['Location'] = clientheaders['Location']
         gm = mimetypes.guess_type(url, None)
         if gm[0] is not None:
-            headers['Content-Type'] = "%s\r"%gm[0]
+            ctype = gm[0]
         else:
             # note: index.html is appended to directories
-            headers['Content-Type'] = 'text/html\r'
+            ctype = 'text/html'
+        if ctype=='text/html':
+            ctype += "; charset=iso-8859-1"
+        headers['Content-Type'] = "%s\r"%ctype
         try:
             lang = wc.i18n.get_headers_lang(clientheaders)
             # get the template filename
@@ -68,13 +71,15 @@ class WebConfig (object):
             if path.endswith('.html'):
                 fp = file(path)
                 # get TAL context
-                context, newstatus = get_context(dirs, form, localcontext, lang)
+                context, newstatus = \
+                     get_context(dirs, form, localcontext, lang)
                 if newstatus==401 and status!=newstatus:
                     client.error(401, wc.i18n._("Authentication Required"),
                                  auth=wc.proxy.auth.get_challenges())
                     return
                 # get translator
-                translator = gettext.translation(wc.Name, wc.LocaleDir, [lang], fallback=True)
+                translator = gettext.translation(wc.Name, wc.LocaleDir,
+                                                 [lang], fallback=True)
                 #debug(GUI, "Using translator %s", translator.info())
                 # expand template
                 data = expand_template(fp, context, translator=translator)
@@ -121,8 +126,8 @@ def norm (path):
 def expand_template (fp, context, translator=None):
     """expand the given template file fp in context
        return expanded data"""
-    # note: standard input encoding is iso-8859-1 for html templates
-    template = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(fp)
+    # note: standard input and output encoding is iso-8859-1
+    template = simpleTAL.compileHTMLTemplate(fp)
     out = StringIO.StringIO()
     template.expand(context, out, translator=translator)
     return out.getvalue()
@@ -194,7 +199,7 @@ def get_context (dirs, form, localcontext, lang):
     # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
     # make TAL context
-    context = wc.webgui.simpletal.simpleTALES.Context()
+    context = simpleTALES.Context()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
         debug(GUI, "got form %s", form)
@@ -217,11 +222,11 @@ def add_default_context (context, filename, lang):
     """add context variables used by all templates"""
     # rule macros
     path, dirs = _get_template_path("macros/rules.html")
-    rulemacros = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(file(path, 'r'))
+    rulemacros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
     context_add(context, "rulemacros", rulemacros.macros)
     # standard macros
     path, dirs = _get_template_path("macros/standard.html")
-    macros = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(file(path, 'r'))
+    macros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
     context_add(context, "macros", macros.macros)
     # used by navigation macro
     context_add(context, "nav", {filename.replace('.', '_'): True})
