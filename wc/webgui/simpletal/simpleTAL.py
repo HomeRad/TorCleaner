@@ -120,6 +120,7 @@ class TemplateInterpreter (object):
         self.translator = translator
         self.log = logging.getLogger("simpleTAL.TemplateInterpreter")
 
+
     def tagAsText (self, (tag,atts), singletonFlag=0):
         """ This returns a tag as text.
         If self.escapeAttributes is true then the value of the attributes will be
@@ -142,17 +143,21 @@ class TemplateInterpreter (object):
             result.append(">")
         return "".join(result)
 
+
     def initialise (self, context, outputFile):
         self.context = context
         self.file = outputFile
 
+
     def translate (self, msg):
         if self.translator is None:
             return msg
+        self.log.debug("Translating %r...", msg)
         val = self.translator.gettext(msg) % \
               self.context.getVariableMap()
-        self.log.debug("Translated %r to %r", msg, val)
+        self.log.debug("...to %r", val)
         return val
+
 
     def cleanState (self):
         self.scopeStack = []
@@ -378,11 +383,10 @@ def cmdOutputStartTag (self, command, args):
     tagName, singletonTag = args
     if self.outputTag:
         if self.tagContent is None and singletonTag:
-            self.file.write(self.tagAsText((tagName, self.currentAttributes),
-                                           1))
+            val = self.tagAsText((tagName, self.currentAttributes), 1)
         else:
-            self.file.write(self.tagAsText((tagName, self.currentAttributes)))
-
+            val = self.tagAsText((tagName, self.currentAttributes))
+        self.file.write(val)
     if self.movePCForward is not None:
         self.programCounter = self.movePCForward
         return
@@ -407,15 +411,17 @@ def cmdEndTagEndScope (self, command, args):
                 # End of the macro expansion (if any) so clear the parameters
                 self.slotParameters = {}
             else:
-                if isinstance(resultVal, basestring):
-                    self.file.write(resultVal)
-                else:
-                    self.file.write(str(resultVal))
+                if not isinstance(resultVal, basestring):
+                    resultVal = str(resultVal)
+                if self.translateContent:
+                    resultVal = self.translate(resultVal)
+                self.file.write(resultVal)
         else:
-            if isinstance(resultVal, basestring):
-                self.file.write(cgi.escape(resultVal))
-            else:
-                self.file.write(cgi.escape(str(resultVal)))
+            if not isinstance(resultVal, basestring):
+                resultVal = str(resultVal)
+            if self.translateContent:
+                resultVal = self.translate(resultVal)
+            self.file.write(cgi.escape(resultVal))
 
     if self.outputTag and not args[1]:
         # Do NOT output end tag if a singleton with no content

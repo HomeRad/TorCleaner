@@ -3,7 +3,7 @@ from StringIO import StringIO
 import os, gettext
 from wc.webgui.simpletal import simpleTAL, simpleTALES
 from wc.webgui import add_default_context
-from wc import Name
+from wc import Name, i18n
 
 def expand_template (fp, context):
     """expand the given template file in context
@@ -20,6 +20,7 @@ def get_context ():
     # init and return TALES context
     context = simpleTALES.Context()
     context.addGlobal("parameter", "hullabulla")
+    context.addGlobal("transe", i18n._("Transe test successful"))
     return context
 
 
