@@ -7,18 +7,30 @@ used by Bastian Kleineidam for WebCleaner
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-# XXX investigate using TCP_NODELAY (disable Nagle)
-
 import time, socket, select, asyncore, re, urlparse, os
-# fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
+# remove asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
-def fileno(self):
+# add the fileno function
+def fileno (self):
     return self.socket.fileno()
 asyncore.dispatcher.fileno = fileno
 from wc import i18n, ip
 from wc.log import *
 from urllib import splittype, splithost, splitnport
 from LimitQueue import LimitQueue
+
+# test for IPv6, both in Python build and in kernel build
+has_ipv6 = False
+if socket.has_ipv6:
+    try:
+        socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+        has_ipv6 = True
+    except socket.error, msg:
+        # only catch this one:
+        # socket.error: (97, 'Address family not supported by protocol')
+        if msg[0]!=97:
+            raise
+
 
 TIMERS = [] # list of (time, function)
 
@@ -74,7 +86,7 @@ def create_inet_socket (dispatch, socktype):
     """create an AF_INET(6) socket object for given dispatcher, testing
     for IPv6 capability and disabling the NAGLE algorithm for TCP sockets
     """
-    if socket.has_ipv6:
+    if has_ipv6:
         family = socket.AF_INET6
     else:
         family = socket.AF_INET
