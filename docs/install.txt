@@ -77,7 +77,7 @@ Direct download links are in brackets.
 
 6. *Optional (used for SSL connections)* Install OpenSSL for Windows from
    http://www.slproweb.com/products/Win32OpenSSL.html
-   [http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe]
+   [http://www.slproweb.com/download/Win32OpenSSL-v0.9.7e.exe]
 
 7. *Optional (used for SSL connections)* Download PyOpenSSL from
    http://pyopenssl.sourceforge.net/
