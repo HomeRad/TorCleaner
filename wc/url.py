@@ -23,6 +23,7 @@ import re
 import urlparse
 import os
 import urllib
+import cgi
 
 
 # adapted from David Wheelers "Secure Programming for Linux and Unix HOWTO"
@@ -103,6 +104,10 @@ def url_quote (url):
     urlparts[0] = urllib.quote(urlparts[0]) # scheme
     urlparts[1] = urllib.quote(urlparts[1], ':') # host
     urlparts[2] = urllib.quote(urlparts[2], '/=,') # path
+    l = []
+    for k,v in cgi.parse_qsl(urlparts[3], True): # query
+        l.append("%s=%s" % (urllib.quote(k, '/-'), urllib.quote(v, '/-')))
+    urlparts[3] = '&'.join(l)
     urlparts[4] = urllib.quote(urlparts[4]) # anchor
     return urlparse.urlunsplit(urlparts)
 
