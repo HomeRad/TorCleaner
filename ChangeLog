@@ -4,10 +4,13 @@
     Changed files: wc/proxy/dns_lookups.py
   * recognize .ico and .jpeg as images
     Changed files: wc/filter/Blocker.py
-  * Updated and reorganized filters
+  * - Updated and reorganized filters
+    - remove onmouseover redirects
     Changed files: config/*.zap, config/bl2wc.py
-  * When Content-Type header is not what we guessed, fix only some
-    contents, not all
+  * - when Content-Type header is not what we guessed, fix only some
+      contents, not all
+    - dont guess content-type on 304 Not Modified answers, the type
+      info is already cached
     Changed files: wc/proxy/HttpServer.py
   * - use flex memory management interface
     - use only double quotes for attribute quoting
