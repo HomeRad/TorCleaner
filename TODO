@@ -2,12 +2,13 @@ TODO
 
 - webgui configuration
 
-- HTTPS tunneling
+- HTTPS tunneling (RFC 2818)
 
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS
   database (after password authentication)
+  this should integrate with the webgui configuration somehow
 
 - Digest and NTLM authentication schemes
   (Mozilla Windows >= 1.4b can test NTLM auth)
