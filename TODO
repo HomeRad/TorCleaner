@@ -2,6 +2,8 @@ TODO
 
 version 2.26 and above
 
+- Remove tests from precompiled and/or installed packages.
+
 - restart button
 
 - implement rating config and storage
