@@ -147,12 +147,21 @@ def parse_options (sysargs):
 
 def main_posix (configdir, filelogs):
     """start the proxy"""
+    if len(args) < 1:
+        command = "start"
+    else:
+        command = args[0]
     import wc.start
-    wc.start.wstartfunc(confdir=configdir, filelogs=filelogs)
+    if command == "start":
+        wc.start.wstartfunc(confdir=configdir, filelogs=filelogs)
+    elif command == "restart":
+        wc.start.restart()
+    else:
+        print_usage(_("Unknown command %r") % command)
 
 
 def main_nt (configdir, filelogs, args):
-    """start nt proxy service"""
+    """control nt proxy service"""
     if len(args) < 1:
         print_usage(_("No command given."))
     else:

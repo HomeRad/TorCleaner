@@ -53,3 +53,16 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
         pass
     # start the proxy
     wc.proxy.mainloop(handle=handle, abort=abort)
+
+
+def restart ():
+    # XXX this does not work on custom installations
+    service = "/var/service/webcleaner"
+    stop_cmd = "svwaitdown -k -t 5 %s" % service
+    start_cmd = "runsvctrl up %s" % service
+    status = os.system(stop_cmd)
+    if status != 0:
+        error["stopfail"] = True
+    status = os.system(start_cmd)
+    if status != 0:
+        error["startfail"] = True

@@ -205,3 +205,13 @@ def sort_seq (seq):
     l.sort()
     return l
 
+
+def restart ():
+    """restart the webcleaner proxy"""
+    if os.name == 'nt':
+        py_exe = os.path.join(sys.prefix, "pythonw.exe")
+    else:
+        py_exe = os.path.join(sys.prefix, "python")
+    script = os.path.join(wc.ScriptDir, "webcleaner")
+    wc.log.warn(LOG_PROXY, "restarting with: %s %s restart", py_exe, script)
+    os.spawnl(os.P_NOWAIT, py_exe, script, "restart")
