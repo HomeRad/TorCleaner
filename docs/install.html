@@ -19,16 +19,7 @@ window.onload = function() {
 </head>
 <body>
 <!-- bfknav -->
-<div class="navigation">
-<div class="navrow" style="padding: 0em 0em 0em 1em;">
-<a href="./index.html">WebCleaner</a>
-<a href="./faq.html">FAQ</a>
-<span>Installation</span>
-<a href="./devel/devel.html">Development &gt;</a>
-<a href="./misc/squid.html">Examples &gt;</a>
-
-</div>
-</div>
+Imagine a navigation
 <!-- /bfknav -->
 <h1 class="title">Installation</h1>
 <div class="document" id="installation">
@@ -162,36 +153,36 @@ Change to the pycrypto-1.9a6 directory and run
 </li>
 <li><p class="first">Install OpenSSL and compile PyOpenSSL</p>
 <p>Change to the directory where you installed OpenSSL (for example
-c:\OpenSSL).
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">cd</span> <span class="pre">c:\\OpenSSL\</span></tt>).
 Fix the library names for the mingw compiler:
-<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">move</span> <span class="pre">lib\MinGW\ssleay.a</span> <span class="pre">lib\MinGW\libssleay.a</span></tt>
-<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">move</span> <span class="pre">lib\MinGW\ssleay.def</span> <span class="pre">lib\MinGW\libssleay.def</span></tt>
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">cd</span> <span class="pre">lib\MinGW;</span> <span class="pre">move</span> <span class="pre">ssleay32.a</span> <span class="pre">libssleay32.a;</span> <span class="pre">move</span> <span class="pre">ssleay32.def</span>
+<span class="pre">libssleay32.def</span></tt>
 Change to the directory where you extracted PyOpenSSL (for
-example c:\pyOpenSSL-0.5.1)
+example <tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">cd</span> <span class="pre">c:\\pyOpenSSL-0.5.1</span></tt>).
 Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
 Then run:
 <tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">-c</span> <span class="pre">mingw32</span> <span class="pre">-I</span> <span class="pre">c:\OpenSSL\include</span>
 <span class="pre">-L</span> <span class="pre">c:\OpenSSL\lib\MinGW</span> <span class="pre">build</span> <span class="pre">install</span></tt></p>
 </li>
-<li><p class="first">Compile and install the Python modules</p>
+<li><p class="first">Compile and install the WebCleaner Python modules</p>
 <p>Change to the webcleaner-X.X directory and run
 <tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build</span> <span class="pre">-c</span> <span class="pre">mingw32</span> <span class="pre">install</span></tt>.</p>
 </li>
-<li><p class="first">Generate and install WebCleaner certificates</p>
+<li><p class="first">Generate and install the WebCleaner certificates</p>
 <p>Change to the directory where you installed Python into
-(for example c:\Python23\).
+(for example <tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">cd</span> <span class="pre">c:\\Python23\\</span></tt>).
 Run the webcleaner-certificates script to install the certificates:
-<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-certificates</span> <span class="pre">install</span></tt>
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-certificates</span> <span class="pre">install</span></tt>.
 To remove the certificates later, you can run
-<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-certificates</span> <span class="pre">remove</span></tt></p>
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-certificates</span> <span class="pre">remove</span></tt>.</p>
 </li>
 <li><p class="first">Install and start the WebCleaner NT service</p>
 <p>Change to the directory where you installed Python into
-(for example c:\Python23\).
+(for example <tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">cd</span> <span class="pre">c:\\Python23\\</span></tt>).
 Run the webcleaner-service script to install the service:
-<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-service</span> <span class="pre">install</span></tt>
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-service</span> <span class="pre">install</span></tt>.
 To remove the service later, you can run
-<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-service</span> <span class="pre">remove</span></tt></p>
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-service</span> <span class="pre">remove</span></tt>.</p>
 </li>
 <li><p class="first">Enjoy</p>
 <p>WebCleaner is now installed and started as a regular Windows service.
@@ -213,7 +204,7 @@ and look at the &quot;Application Log&quot; events.</p>
 </div>
 <hr class="footer" />
 <div class="footer">
-Generated on: 2004-06-01 16:24 UTC.
+Generated on: 2004-07-27 11:44 UTC.
 </div>
 </body>
 </html>

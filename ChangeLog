@@ -1,4 +1,4 @@
-2.19 "A Knight's Tale" (released xx.xx.xxxx)
+2.19 "A Knight's Tale" (released xx.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.
     This should fix custom installers (eg Gentoo scripts).

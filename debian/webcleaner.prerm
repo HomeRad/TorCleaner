@@ -3,12 +3,9 @@
 #
 # see: dh_installdeb(1)
 
-package=webcleaner
-service=/var/service/$package
-
 if [ "$1" = "remove" -o "$1" = "purge" ]; then
     # stop service
-    svwaitdown $service
+    webcleaner-ctl stop
     # remove service link
     if [ -h /var/service/webcleaner ]; then
         rm -f /var/service/webcleaner
@@ -17,7 +14,7 @@ if [ "$1" = "remove" -o "$1" = "purge" ]; then
     webcleaner-certificates remove
 fi
 
-dpkg -L $package |
+dpkg -L webcleaner |
 	awk '$0~/\.py$/ {print $0"c\n" $0"o"}' |
 	xargs rm -f >&2
 

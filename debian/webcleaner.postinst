@@ -70,9 +70,7 @@ fi
 
 #DEBHELPER#
 
-# stop webcleaner
-webcleaner-ctl stop || true
-# start webcleaner
-webcleaner-ctl start || true
+# (re)start webcleaner
+webcleaner-ctl restart || true
 
 exit 0
