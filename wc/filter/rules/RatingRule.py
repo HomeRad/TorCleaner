@@ -80,6 +80,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         """
         klass = wc.filter.rating.storage.pickle.PickleStorage
         rating_store = wc.filter.rating.storage.get_rating_store(klass)
+        # sanitize url
+        url = wc.filter.rating.make_safe_url(url)
         if url in rating_store:
             return self.check_against(rating_store[url])
         return MISSING
