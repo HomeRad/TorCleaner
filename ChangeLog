@@ -1,4 +1,4 @@
-1.14
+2.0
   * remove -std=gnu99 option from compiler call, fixes gcc 2.95.x compile.
     Changed files: setup.py
 
