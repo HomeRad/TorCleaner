@@ -1,3 +1,9 @@
+webcleaner (0.56-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Thu, 12 Sep 2002 02:21:14 +0200
+
 webcleaner (0.55-2) unstable; urgency=low
 
   * fix dropping root privileges
