@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 """for each template/<theme>/<file>.html there is a context/<file>_html.py
 module delivering the page content values"""
-# Copyright (C) 2003-2004  Bastian Kleineidam
+# Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
