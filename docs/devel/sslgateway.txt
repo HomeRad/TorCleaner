@@ -61,7 +61,7 @@ Data flux
         |
      ClientServerMatchmaker
 	|
-     SslServer		connect to remove ssl	filter data, pass it to
+     SslServer		connect to remote ssl	filter data, pass it to
 	|		server, make request	SslClient
   REMOTE SSL SERVER
 
