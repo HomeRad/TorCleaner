@@ -27,6 +27,7 @@ import logging.config
 import logging.handlers
 import _webcleaner2_configdata as configdata
 import wc.log
+import wc.i18n
 
 Version = configdata.version
 AppName = configdata.appname
@@ -42,13 +43,12 @@ AppInfo = App+"              "+Copyright
 HtmlAppInfo = App+", "+HtmlCopyright
 Url = configdata.url
 Email = configdata.author_email
-Freeware = """%s comes with ABSOLUTELY NO WARRANTY!
+Freeware = """%(appname)s comes with ABSOLUTELY NO WARRANTY!
 This is free software, and you are welcome to redistribute it
 under certain conditions. Look at the file `LICENSE' whithin this
-distribution.""" % AppName
+distribution.""" % {'appname': AppName}
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
-LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
 
 # logger areas
@@ -61,6 +61,12 @@ LOG_DNS = "wc.proxy.dns"
 LOG_GUI = "wc.gui"
 LOG_ACCESS = "wc.access"
 LOG_RATING = "wc.rating"
+
+def init_i18n ():
+    locdir = os.environ.get('LOCPATH')
+    if locdir is None:
+        locdir = os.path.join(configdata.install_data, 'share', 'locale')
+    wc.i18n.init(configdata.name, locdir)
 
 
 def initlog (filename, appname, filelogs=True):
