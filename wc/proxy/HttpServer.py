@@ -196,7 +196,8 @@ class HttpServer (Server):
         if self.bytes_remaining is not None:
             for ro in config['mime_content_rewriting']:
                 #debug(BRING_IT_ON, "content type", `self.headers.getheader('content-type')`)
-                if ro.match(self.headers.getheader('content-type')):
+                # XXX there are corner cases where getheader() returns None
+                if ro.match(self.headers.getheader('content-type') or ""):
                     # remove content length
                     for h in self.headers.headers[:]:
                         if re.match('(?i)content-length:', h):
