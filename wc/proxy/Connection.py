@@ -13,11 +13,12 @@ import socket, errno
 from wc.log import *
 from wc.proxy.Dispatcher import Dispatcher
 
-# this is a critical value: setting it too low produces a lot of
+# *_BUFSIZE values are critical: setting them too low produces a lot of
 # applyfilter() calls with very few data
-# setting it too high produces lags if bandwidth is low
-RECV_BUFSIZE = 4096
+# setting them too high produces lags if bandwidth is low
+# default values are in bytes
 SEND_BUFSIZE = 4096
+RECV_BUFSIZE = 4096
 
 # to prevent DoS attacks, specify a maximum buffer size
 MAX_BUFSIZE = 1024*1024
