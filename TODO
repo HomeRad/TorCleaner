@@ -1,9 +1,8 @@
 TODO
 
 - webcleanerconf: sortable filters (with up/down)
-- parent proxy authentication
+- test parent proxy authentication
 - more error/warning recognition in parser
-- flex should use pythons memory management
 - error recovery in parser (damn it!)
 
 WONTDO
