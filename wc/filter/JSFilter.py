@@ -40,6 +40,7 @@ _end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
 class JSFilter (JSListener):
     """defines callback handlers for filtering Javascript code"""
     def __init__ (self, url, opts):
+        # True if javascript has to be filtered
         self.javascript = opts['javascript']
         self.level = opts.get('level', 0)
         self.comments = opts['comments']
@@ -53,14 +54,13 @@ class JSFilter (JSListener):
             self.js_popup = 0
 
 
-    def _debug (self, msg, *args):
-        """debug with recursion level and state"""
-        debug(FILTER, "%s[%d]: %s"%(self.__class__.__name__, self.level, msg), *args)
+    def _str__ (self):
+        return "%s[%d]" % (self.__class__.__name__, self.level)
 
 
     def jsProcessData (self, data):
         """process data produced by document.write() JavaScript"""
-        self._debug("JS document.write %r", data)
+        debug(FILTER, "%s jsProcessData %r", self, data)
         self.js_output += 1
         # parse recursively
         self.js_htmlparser.feed(data)
@@ -68,7 +68,7 @@ class JSFilter (JSListener):
 
     def jsProcessPopup (self):
         """process javascript popup"""
-        self._debug("JS: popup")
+        debug(FILTER, "%s jsProcessPopup", self)
         self.js_popup += 1
 
 
@@ -78,17 +78,9 @@ class JSFilter (JSListener):
         error(FILTER, msg)
 
 
-    def jsForm (self, name, action, target):
-        """when hitting a named form, add it to the JS environment"""
-        if not name:
-            return
-        self._debug("jsForm %r action %r %r", name, action, target)
-        self.js_env.addForm(name, action, target)
-
-
     def jsPopup (self, attrs, name):
         """check if attrs[name] javascript opens a popup window"""
-        self._debug("JS: jsPopup")
+        debug(FILTER, "%s jsPopup", self)
         val = resolve_html_entities(attrs[name])
         if not val: return
         self.js_env.listeners.append(self)
@@ -101,21 +93,20 @@ class JSFilter (JSListener):
         return res
 
 
-    def new_instance (self, opts):
+    def new_instance (self, **opts):
         JSFilter(self.url, **opts)
 
 
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
-        self._debug("JS: jsScript %s %r", ver, script)
-        assert self.htmlparser.state[0]=='parse', "non-parse state"
-        assert len(self.htmlparser.tagbuf) >= 2, "too small buffer %s" % self.htmlparser.tagbuf
+        debug(FILTER, "%s jsScript %s %r", self, ver, script)
+        assert self.htmlparser.state[0]=='parse', "parser %s not in parse state" % self.htmlparser
+        assert len(self.htmlparser.tagbuf) >= 2, "parser %s must have script start and content tags in tag buffer" % self.htmlparser
         self.js_output = 0
         self.js_env.listeners.append(self)
         # start recursive html filter (used by jsProcessData)
-        opts = dict(comments=self.comments, javascript=self.javascript,
-                    level=self.level+1)
-        handler = self.new_instance(opts)
+        handler = self.new_instance(comments=self.comments,
+            javascript=self.javascript, level=self.level+1)
         self.js_htmlparser = HtmlParser(handler)
         handler.htmlparser = self.js_htmlparser
         # execute
@@ -125,90 +116,54 @@ class JSFilter (JSListener):
         self.jsEndScript(item)
 
 
-    def jsScriptSrc (self, url, language):
-        """Start a background download for <script src=""> tags"""
-        assert self.htmlparser.state[0]=='parse', "non-parse state %s" % self.htmlparser.state
-        ver = get_js_ver(language)
-        if self.base_url:
-            url = urlparse.urljoin(self.base_url, url)
-        else:
-            url = urlparse.urljoin(self.url, url)
-        # unquote and norm
-        url = url_norm(url)
-        host = stripsite(url)[0]
-        if not host:
-            error(FILTER, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
-            return
-        self.htmlparser.state = ('wait', url)
-        self.htmlparser.waited = 1
-        self.js_src = True
-        self.js_client = HttpProxyClient(self.jsScriptData, (url, ver))
-        headers = get_wc_client_headers(host)
-        # note: some javascript servers do not specify content encoding
-        # so only accept non-encoded content here
-        headers['Accept-Encoding'] = 'identity\r'
-        ClientServerMatchmaker(self.js_client,
-                               "GET %s HTTP/1.0" % url_quote(url), # request
-                               headers,
-                               '', # content
-                               mime="application/x-javascript",
-                               )
-
-
-    def jsScriptData (self, data, url, ver):
-        """Callback for loading <script src=""> data in the background
-           If downloading is finished, data is None"""
-        assert self.htmlparser.state[0]=='wait', "non-wait state"
-        if data is None:
-            if not self.js_script:
-                warn(FILTER, "HtmlParser[%d]: empty JS src %s", self.level, url)
-                self.js_script = "// error fetching script from %r"%url
-            self.htmlparser.tagbuf.append([STARTTAG, "script", {'type': 'text/javascript'}])
-            script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
-            self.htmlparser.tagbuf.append([DATA, script])
-            # Note: <script src=""> could be missing an end tag,
-            # but now we need one. Look later for a duplicate </script>.
-            self.htmlparser.tagbuf.append([ENDTAG, "script"])
-            self.js_script = ''
-            self.htmlparser.state = ('parse',)
-            self._debug("switching back to parse")
-        else:
-            self._debug("JS read %d <= %s", len(data), url)
-            self.js_script += data
-
-
     def jsEndScript (self, item):
-        self._debug("JS: endScript")
-        assert len(self.htmlparser.tagbuf) >= 2, "too small buffer %s" % self.htmlparser.tagbuf
+        debug(FILTER, "%s jsEndScript %s", self, item)
+        self.htmlparser.debugbuf()
+        if len(self.htmlparser.tagbuf) < 2:
+            assert False, "parser %s must have script start and content tags in tag buffer" % self.htmlparser
         if self.js_output:
             try:
                 self.js_htmlparser.feed('')
-                data = self.js_htmlparser.flush()
+                self.js_htmlparser.flush()
             except FilterWait:
-                self._debug("JS: subprocessor is waiting")
+                debug(FILTER, "%s JS subprocessor is waiting", self)
                 self.htmlparser.state = ('wait', 'recursive script')
                 self.htmlparser.waited = 1
                 make_timer(0.2, lambda : self.jsEndScript(item))
                 return
-            self.js_htmlparser._debugbuf()
+            self.js_htmlparser.debugbuf()
             assert not self.js_htmlparser.inbuf.getvalue()
             assert not self.js_htmlparser.waitbuf
             assert len(self.htmlparser.tagbuf) >= 2, "too small buffer %s" % self.htmlparser.tagbuf
+            data = self.js_htmlparser.getoutput()
             self.htmlparser.tagbuf[-2:-2] = [[DATA, data]]+self.js_htmlparser.tagbuf
+            self.htmlparser.debugbuf()
         self.js_htmlparser = None
-        if (self.js_popup + self.js_output) > 0:
-            # delete old script
+        if self.js_popup or self.js_output:
+            # either the javascript part popped up some windows or
+            # it wrote something with document.write()
+            # in both cases the javascript is deleted
+            # This could potentially delete too much as there might be
+            # valid JS functions defined that get used by other scripts.
+            # In this case use an exception url in the Javascript filter
+            # rule.
             del self.htmlparser.tagbuf[-1]
             del self.htmlparser.tagbuf[-1]
-        elif not self._filterEndElement(item[1]):
+        elif not self.filterEndElement(item[1]):
             self.htmlparser.tagbuf.append(item)
-        self._debug("JS: switching back to parse with")
+        debug(FILTER, "%s switching back to parse with", self)
+        self.htmlparser.debugbuf()
         self.htmlparser.state = ('parse',)
 
 
-    def _jsEndElement (self, item):
+    def filterEndElement (self, tag):
+        """filters an end tag, return True if tag was filtered, else False"""
+        raise NotImplementError("Must be overridden in subclass")
+
+
+    def jsEndElement (self, item):
         """parse generated html for scripts"""
-        self._debug("jsEndElement buf %r", self.htmlparser.tagbuf)
+        debug(FILTER, "%s jsEndElement buf %r", self, self.htmlparser.tagbuf)
         if len(self.htmlparser.tagbuf)<2:
             # syntax error, ignore
             warn(FILTER, "JS syntax error, self.tagbuf %r", self.htmlparser.tagbuf)
@@ -257,15 +212,16 @@ class JSFilter (JSListener):
         self.jsScript(script, ver, item)
 
 
-    def _jsStartElement (self, tag, attrs):
+    def jsStartElement (self, tag, attrs):
         """Check popups for onmouseout and onmouseover.
            Inline extern javascript sources"""
+        debug(FILTER, "%s jsStartElement", self)
         self.js_src = False
         self.js_output = 0
         self.js_popup = 0
         for name in ('onmouseover', 'onmouseout'):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
-                self._debug("JS: del %r from %r", name, tag)
+                debug(FILTER, "JS: del %r from %r", name, tag)
                 del attrs[name]
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
@@ -279,8 +235,71 @@ class JSFilter (JSListener):
         self.htmlparser.tagbuf.append([STARTTAG, tag, attrs])
 
 
+    def jsForm (self, name, action, target):
+        """when hitting a named form, add it to the JS environment"""
+        if not name:
+            return
+        debug(FILTER, "%s jsForm %r action %r %r", self, name, action, target)
+        self.js_env.addForm(name, action, target)
+
+
+    def jsScriptSrc (self, url, language):
+        """Start a background download for <script src=""> tags
+           After that, self.js_client points to the proxy client object"""
+        debug(FILTER, "%s jsScriptSrc %r", self, url)
+        assert self.htmlparser.state[0]=='parse', "non-parse state %s" % self.htmlparser.state
+        ver = get_js_ver(language)
+        if self.base_url:
+            url = urlparse.urljoin(self.base_url, url)
+        else:
+            url = urlparse.urljoin(self.url, url)
+        # unquote and norm
+        url = url_norm(url)
+        host = stripsite(url)[0]
+        if not host:
+            error(FILTER, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
+            return
+        self.htmlparser.state = ('wait', url)
+        self.htmlparser.waited = 1
+        self.js_src = True
+        self.js_client = HttpProxyClient(self.jsScriptData, (url, ver))
+        headers = get_wc_client_headers(host)
+        # note: some javascript servers do not specify content encoding
+        # so only accept non-encoded content here
+        headers['Accept-Encoding'] = 'identity\r'
+        ClientServerMatchmaker(self.js_client,
+                               "GET %s HTTP/1.0" % url_quote(url), # request
+                               headers,
+                               '', # content
+                               mime="application/x-javascript",
+                               )
+
+
+    def jsScriptData (self, data, url, ver):
+        """Callback for loading <script src=""> data in the background
+           If downloading is finished, data is None"""
+        assert self.htmlparser.state[0]=='wait', "non-wait state"
+        debug(FILTER, "%s jsScriptData %r", self, data)
+        if data is None:
+            if not self.js_script:
+                warn(FILTER, "empty JavaScript src %s", url)
+                self.js_script = "// error fetching script from %r"%url
+            self.htmlparser.tagbuf.append([STARTTAG, "script", {'type': 'text/javascript'}])
+            script = "\n<!--\n%s\n//-->\n"%escape_js(self.js_script)
+            self.htmlparser.tagbuf.append([DATA, script])
+            # Note: <script src=""> could be missing an end tag,
+            # but now we need one. Look later for a duplicate </script>.
+            self.htmlparser.tagbuf.append([ENDTAG, "script"])
+            self.js_script = ''
+            self.htmlparser.state = ('parse',)
+            debug(FILTER, "%s switching back to parse with", self)
+            self.htmlparser.debugbuf()
+        else:
+            debug(FILTER, "JS read %d <= %s", len(data), url)
+            self.js_script += data
+
+
     def finish (self):
-        """flush background download html parser"""
-        if self.js_htmlparser is not None:
-            self.js_htmlparser.flush(finish=True)
+        """stop background download"""
+        self.js_client.finish()
 
