@@ -16,7 +16,7 @@ from wc.proxy.LimitQueue import LimitQueue
 has_ipv6 = False
 if socket.has_ipv6:
     try:
-        socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+        socket.socket(socket.AF_INET6, socket.SOCK_STREAM).close()
         has_ipv6 = True
     except socket.error, msg:
         # only catch this one:
