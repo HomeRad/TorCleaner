@@ -18,4 +18,5 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc import AppName, Version, BaseUrl
+from wc import AppName, Version, config
+baseurl = config['updateurl']

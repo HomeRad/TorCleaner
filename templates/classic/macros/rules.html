@@ -13,6 +13,15 @@
   Note: the TAL contexts from the calling templates are used here
  -->
 
+<!-- regular expression footnote -->
+<div metal:define-macro="regexfoot">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<span i18n:translate="">The supplied value resembles a
+<a href="http://www.amk.ca/python/howto/regex/">regular expression</a>.</span>
+</div>
+</div>
+
 <!-- title and description (used below) -->
 <h2>Title and description</h2>
 <table summary="">
@@ -129,10 +138,6 @@ Rule url parts
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
-</div>
 </td></tr>
 </table>
 <hr noshade size="1">
@@ -195,9 +200,8 @@ Rule url parts
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
@@ -227,9 +231,8 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
@@ -266,9 +269,8 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
@@ -286,9 +288,8 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
@@ -306,9 +307,8 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
@@ -368,9 +368,8 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
@@ -403,9 +402,8 @@ Rule (don't) match url
 <td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
@@ -504,9 +502,8 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
-<div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
-<span i18n:translate="">The supplied value resembles a Python regular expression.</span>
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
 </div>
 </td></tr>
 </table>
