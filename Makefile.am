@@ -62,6 +62,8 @@ crossbuild: all
 
 distclean-local:
 	rm -rf dist build # just to be sure: clean build dir too
+	rm -f webcleaner-$(VERSION).tar.gz
+	rm -f webcleaner-$(VERSION).tar.gz.asc
 	rm -f MANIFEST _*_configdata.*
 
 # ready for upload, signed with my GPG key
