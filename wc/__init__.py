@@ -357,6 +357,11 @@ class BaseParser (object):
 class ZapperParser (BaseParser):
     def parse (self, filename, config):
         super(ZapperParser, self).parse(filename, config)
+        from wc.filter.rules import register_rule, generate_sids
+        if self.folder.sid is None:
+            register_rule(self.folder)
+        # generate unique numbers for rules with missing serial ids
+        generate_sids()
         config['folderrules'].append(self.folder)
 
 
@@ -380,6 +385,10 @@ class ZapperParser (BaseParser):
         self.cmode = None
         if name=='rewrite':
             self.rule.set_start_sufficient()
+        if name in rulenames:
+            if self.rule.sid is None:
+                from wc.filter.rules import register_rule
+                register_rule(self.rule)
 
 
     def character_data (self, data):
