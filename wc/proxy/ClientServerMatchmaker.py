@@ -129,7 +129,7 @@ class ClientServerMatchmaker (object):
             # XXX find http version!
             ServerHandleDirectly(
               self.client,
-              '%s 301 Moved Permanently' % self.protocol,
+              '%s 301 Moved Permanently' % self.protocol, 301,
               WcMessage(StringIO('Content-type: text/plain\r\n'
               'Location: %s\r\n\r\n' % new_url)),
               i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))

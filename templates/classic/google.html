@@ -2,15 +2,98 @@
 <html lang="en" tal:attributes="lang lang">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="wc.css" type="text/css" rel="Stylesheet">
 <title i18n:translate="">%(AppName)s Google Selection</title>
+<style>
+<!--
+body {
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    background: #fff7ee;/*#f7ebd3;*//*fdf9f4*/
+    margin: 0;
+    padding: 0;
+/* These work in IE only, changes the look of the scrollbar + textareas */
+    scrollbar-base-color: #DEE7EC;
+    scrollbar-highlight-color: #DEE7EC;
+    scrollbar-track-color: #F7F9FA;
+    scrollbar-darkshadow-color: #F7F9FA;
+    scrollbar-3dlight-color: #8CACBB;
+    scrollbar-shadow-color: #8CACBB;
+    scrollbar-arrow-color: #436976;
+}
+
+img {
+  border: 0;
+}
+
+acronym {
+    border-bottom: 1px dotted black;
+}
+
+label:hover {
+    cursor: text;
+}
+
+a {
+    color: #222222;
+}
+
+a:hover {
+    color: black;
+}
+
+div.content {
+    /* the content container */
+    padding: 25px 25px 15px 25px;
+    color: #222222;
+}
+
+form {
+    border: none;
+    margin: 0;
+}
+
+input.text {
+    font-size: 85%;
+    border: 1px solid #777777;
+    color: Black;
+    background: #fdf9f4;
+    vertical-align: middle;
+    margin-bottom: 1px; /* IE bug fix */
+    padding: 0 0 0 0.1em;
+    width: 180px;
+}
+
+input.submit {
+    font-size: 85%;
+    color: #222222;
+    background: transparent;
+    vertical-align: middle;
+    margin-bottom 1px;
+    border: 1px dotted #f85b0d;
+}
+
+input.submit:hover {
+    color: Black;
+    background: #f8c218;
+    cursor: pointer;
+}
+
+input.submit:focus {
+    color: Black;
+    background: #f8c218;
+}
+
+-->
+</style>
 </head>
 <body>
-<div class="content" id="main">
+<div class="content">
 <h2 i18n:translate="">%(AppName)s Google Selection</h2>
-<p i18n:translate="">Your request for <b>%(url)s</b> resulted in the
-following error:<br>
-Server response <b>%(response)s</b></p>
+<span i18n:translate="">Your request</span>
+<a href="http://www.imadoofus.org/index.pl"
+ tal:attributes="href url"
+ tal:content="url">http://www.imadoofus.org/index.pl</a>
+<span i18n:translate="">resulted in the following error:<br>
+Server response <b>%(response)s</b></span>
 
 <p>
 <span i18n:translate="">Google Cache for</span>
@@ -31,9 +114,9 @@ Server response <b>%(response)s</b></p>
 <p>
 <span i18n:translate="">Search in %(site)s</span>
 <form method="GET" action="http://www.google.com/custom">
-<input type="text" name="q" size="10" maxlength="255">
+<input class="text" type="text" name="q" size="10" maxlength="255">
 <input type="hidden" name="num" value="20">
-<input type="submit" name="sa" value="Search">
+<input class="submit" type="submit" name="sa" value="Search">
 <input type="hidden" name="hl" value="en">
 <input type="hidden" name="ie" value="ISO-8859-1">
 <input type="hidden" name="as_qdr" value="all">
@@ -47,9 +130,9 @@ Server response <b>%(response)s</b></p>
 <p>
 <span i18n:translate="">Search Google</span>
 <form method="GET" action="http://www.google.com/custom">
-<input type="text" name="q" size="10" maxlength="255">
+<input class="text" type="text" name="q" size="10" maxlength="255">
 <input type="hidden" name="num" value="20">
-<input type="submit" name="sa" value="Search">
+<input class="submit" type="submit" name="sa" value="Search">
 <input type="hidden" name="hl" value="en">
 <input type="hidden" name="ie" value="ISO-8859-1">
 <input type="hidden" name="as_qdr" value="all">
@@ -58,7 +141,6 @@ Server response <b>%(response)s</b></p>
 <input type="hidden" name="cof" value="GIMP:darkblue;LW:380;ALC:red;L:http://blogs.salon.com/0001111/images/rfbanner.jpg;GFNT:lightblue;LC:red;LH:100;AH:left;VLC:gray;S:http://blogs.salon.com/0001111/;GALT:blue;AWFID:ba6ecf243ae3d16f;">
 </form>
 </p>
-
 
 </div>
 </body>

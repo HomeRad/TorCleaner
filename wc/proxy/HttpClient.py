@@ -53,20 +53,16 @@ class HttpClient (Connection):
 
     def error (self, status, msg, txt='', auth=''):
         self.state = 'done'
-        form = None
-        err = i18n._('Proxy Error %d %s') % (status, msg)
-        if txt:
-            err = "%s (%s)" % (err, txt)
         if config['try_google']:
-            page = '/google.html'
-            status = 200
-            context = get_google_context(self.url, msg)
+            self.try_google(self.url, msg)
         else:
-            page = '/error.html'
-            context={'error': err,}
-        # this object will call server_connected at some point
-        WebConfig(self, page, form, self.protocol, self.headers,
-                  context=context, status=status, msg=msg, auth=auth)
+            err = i18n._('Proxy Error %d %s') % (status, msg)
+            if txt:
+                err = "%s (%s)" % (err, txt)
+            form = None
+            # this object will call server_connected at some point
+            WebConfig(self, '/error.html', form, self.protocol, self.headers,
+                  context={'error': err,}, status=status, msg=msg, auth=auth)
 
 
     def __repr__ (self):
@@ -180,7 +176,7 @@ class HttpClient (Connection):
                client_get_max_forwards(self.headers)==0:
                 # XXX display options ?
                 self.state = 'done'
-                ServerHandleDirectly(self, '%s 200 OK'%self.protocol,
+                ServerHandleDirectly(self, '%s 200 OK'%self.protocol, 200,
                                      'Content-Type: text/plain\r\n\r\n', '')
                 return
             self.state = 'content'
@@ -239,17 +235,21 @@ class HttpClient (Connection):
         debug(PROXY, '%s server_response %s', str(self), `response`)
         if status >= 400 and config['try_google']:
             server.client_abort()
-            form = None
-            context = get_google_context(self.url, response)
-            # this object will call server_connected at some point
-            WebConfig(self, "/google.html", form, self.protocol, self.headers,
-                      context=context)
+            self.try_google(self.url, response)
         else:
             self.server = server
             self.write("%s\r\n"%response)
             # note: headers is a WcMessage object, not a dict
             self.write("".join(headers.headers))
             self.write('\r\n')
+
+
+    def try_google (self, url, response):
+        # form params
+        context = get_google_context(url, response)
+        form = None
+        WebConfig(self, '/google.html', form, self.protocol, self.headers,
+                  context=context)
 
 
     def server_content (self, data):

@@ -55,7 +55,7 @@ def get_google_clean_url (url):
 def get_google_context (url, response):
     url_parts = urlparse.urlsplit(url)
     context = {
-      'url': get_google_clean_url(url),
+      'url': url,
       'response': response,
       'site': url_parts[1],
       'path': url_parts[2],
