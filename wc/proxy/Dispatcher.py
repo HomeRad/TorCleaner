@@ -213,14 +213,16 @@ class Dispatcher (object):
         See also http://cr.yp.to/docs/connect.html
         """
         wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
-        try:
-            self.socket.getpeername()
+        err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+        if err == 0:
             self.addr = addr
             self.connected = True
             wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
-        except socket.error:
+        elif err in (errno.EINPROGRESS, errno.EALREADY, errno.EWOULDBLOCK):
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
+        else:
+            self.handle_close()
 
     def accept (self):
         # XXX can return either an address pair or None
@@ -247,12 +249,7 @@ class Dispatcher (object):
 
     def recv (self, buffer_size):
         try:
-            if self.family_and_type[1] == socket.SOCK_DGRAM:
-                data, addr = self.socket.recvfrom(buffer_size)
-                if addr != self.addr:
-                    raise socket.error, (errno.EREMCHG, str(addr))
-            else:
-                data = self.socket.recv(buffer_size)
+            data = self.recv_bytes(buffer_size)
             if not data:
                 # a closed connection is indicated by signaling
                 # a read condition, and having recv() return 0.
@@ -267,6 +264,15 @@ class Dispatcher (object):
                 return ''
             else:
                 raise
+
+    def recv_bytes (self, buffer_size):
+        if self.family_and_type[1] == socket.SOCK_DGRAM:
+            data, addr = self.socket.recvfrom(buffer_size)
+            if addr != self.addr:
+                raise socket.error, (errno.EREMCHG, str(addr))
+        else:
+            data = self.socket.recv(buffer_size)
+        return data
 
     def close (self):
         self.del_channel()
