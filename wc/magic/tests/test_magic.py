@@ -8,7 +8,7 @@ from wc.magic import convert, classify
 class TestMagic (unittest.TestCase):
 
     def setUp (self):
-        self.basedir = os.path.join(os.getcwd(), "wc", "magic", "tests", "data")
+        self.basedir = os.path.join(os.getcwd(), "wc", "magic", "tests")
 
     def doMagic (self, filename, expected):
         fp = file(os.path.join(self.basedir, filename), 'rb')
