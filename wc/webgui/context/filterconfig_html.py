@@ -368,7 +368,10 @@ def _form_newrule (rtype, lang):
     rule.titles[lang] = _("No title")
     # compile data and register
     rule.compile_data()
-    prefix = config['development'] and u"wc" or u"lc"
+    if config['development']:
+        prefix = u"wc"
+    else:
+        prefix = u"lc"
     _generate_sids(prefix)
     curfolder.append_rule(rule)
     _recalc_up_down(curfolder.rules)
