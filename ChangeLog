@@ -6,6 +6,9 @@
     replaced
     Type: bugfix
     Changed: wc/filter/rule/RewriteRule.py, wc/filter/HTMLFilter.py
+  * correct ".." typos in domain names on DNS resolving
+    Type: feature
+    Changed: wc/proxy/dns_lookups.py
 
 
 2.10 (released 27.3.2004)

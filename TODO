@@ -2,8 +2,6 @@ TODO
 
 version 2.11 and above
 
-- DNS automatic spell fix: replace ".." with "."
-
 - display a stripped version of server error messages inline in
   the standard webcleaner error page
 
