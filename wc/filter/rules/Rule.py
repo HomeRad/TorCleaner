@@ -20,8 +20,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from wc import i18n, encode_string
-from wc.XmlUtils import xmlify, unxmlify
+from wc import i18n
+from wc.XmlUtils import xmlify
 from wc.filter.rules import register_rule
 
 
@@ -166,9 +166,7 @@ class Rule (object):
 
     def end_data (self, name):
         """called when XML end element was reached"""
-        if name != self.get_name():
-            self._data = unxmlify(encode_string(self._data))
-        else:
+        if name == self.get_name():
             self._data = ""
         if name=='title':
             self.titles[self._lang] = self._data

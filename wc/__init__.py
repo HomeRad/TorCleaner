@@ -140,17 +140,6 @@ def filterconf_files ():
     return glob(os.path.join(ConfigDir, "*.zap"))
 
 
-def encode_string (s):
-    return s.decode(ConfigCharset)
-
-
-def encode_xml_values (d):
-    for key,val in d.items():
-        key = encode_string(key)
-        val = unxmlify(encode_string(val))
-        d[key] = val
-
-
 # available filter modules
 filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                  "BinaryCharFilter", "Rewriter", "Replacer", "Compress",
@@ -373,7 +362,7 @@ import wc.filter
 def make_xmlparser ():
     """return a new xml parser object"""
     p = xml.parsers.expat.ParserCreate()
-    p.returns_unicode = 0
+    #p.returns_unicode = 0 # pass utf8-encoded strings to handlers
     return p
 
 
@@ -439,7 +428,6 @@ class ZapperParser (BaseParser):
 
 
     def start_element (self, name, attrs):
-        encode_xml_values(attrs)
         self.cmode = name
         if name in rulenames:
             self.rule = wc.filter.GetRuleFromName(name)
@@ -483,7 +471,7 @@ class WConfigParser (BaseParser):
     def start_element (self, name, attrs):
         if name=='webcleaner':
             for key,val in attrs.items():
-                self.config[key] = unxmlify(val)
+                self.config[key] = val
             for key in ('port', 'parentproxyport', 'timeout', 'auth_ntlm',
 	                'colorize', 'development', 'try_google'):
                 self.config[key] = int(self.config[key])
