@@ -17,6 +17,7 @@ include debian/rules
 include debian/watch
 include debian/webcleaner-ctl
 include debian/webcleaner-ctl.1
+include debian/webcleaner-ctl.de.1
 include debian/webcleaner-common.dirs
 include debian/webcleaner-common.files
 include debian/webcleaner.config
@@ -32,9 +33,12 @@ include debian/webcleaner.postrm
 include debian/webcleaner.preinst
 include debian/webcleaner.prerm
 include debian/webcleaner.templates
-include webcleaner.1
-include webcleaner.conf.5
-include webcleaner-certificates.1
+include docs/en/webcleaner.1
+include docs/en/webcleaner.conf.5
+include docs/en/webcleaner-certificates.1
+include docs/de/webcleaner.de.1
+include docs/de/webcleaner.conf.de.5
+include docs/de/webcleaner-certificates.de.1
 include config/proxy.pac
 include config/*.txt
 include config/*.zap

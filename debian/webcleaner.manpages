@@ -1,4 +1,8 @@
-webcleaner.1
-webcleaner-certificates.1
-webcleaner.conf.5
+docs/en/webcleaner.1
+docs/en/webcleaner-certificates.1
+docs/en/webcleaner.conf.5
+docs/de/webcleaner.de.1
+docs/de/webcleaner-certificates.de.1
+docs/de/webcleaner.conf.de.5
 debian/webcleaner-ctl.1
+debian/webcleaner-ctl.de.1
