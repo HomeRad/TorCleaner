@@ -22,7 +22,7 @@ __date__    = "$Date$"[7:-2]
 import re, os, sys, urlparse
 import cPickle as pickle
 from wc.log import *
-from wc import i18n, ConfigDir, AppName
+from wc import i18n, ConfigDir, AppName, Url
 from wc.url import is_valid_url
 
 MISSING = i18n._("Unknown page")
@@ -31,16 +31,14 @@ MISSING = i18n._("Unknown page")
 rating_cachefile = os.path.join(ConfigDir, "rating.dat")
 
 # rating associations and their categories
-#_base = "http://webcleaner.sourceforge.net"
-_base = "http://localhost/~calvin/webcleaner.sf.net/htdocs"
 service = dict(
    name = AppName,
    # service homepage
-   home = '%s/rating/'%_base,
+   home = '%s/rating/'%Url,
    # submit ratings to service
-   submit = '%s/rating/submit'%_base,
+   submit = '%s/rating/submit'%Url,
    # request ratings from service
-   request = '%s/rating/request'%_base,
+   request = '%s/rating/request'%Url,
    # rating categories
    categories = dict(
        violence = dict(

@@ -112,13 +112,13 @@ def open_url (url, proxies=None):
 
 # ====================== end of urlutils.py =================================
 
-def update (wconfig, dryrun=False, log=None):
+def update_filter (wconfig, dryrun=False, log=None):
     """Update the given configuration object with .zap files found at baseurl.
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
     """
     chg = False
-    baseurl = wconfig['updateurl']
+    baseurl = wconfig['updateurl']+"zapper/"
     url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
@@ -207,3 +207,7 @@ def update (wconfig, dryrun=False, log=None):
             f.close()
     return chg
 
+
+
+def update_ratings (wconfig, dryrun=False, log=None):
+    pass # XXX

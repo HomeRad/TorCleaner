@@ -161,9 +161,7 @@ class Configuration (dict):
         else:
             socket.setdefaulttimeout(None)
         if self['development']:
-            self['updateurl'] = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
-        else:
-            self['updateurl'] = "http://webcleaner.sourceforge.net/zapper/"
+            self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
 
 
     def reset (self):
@@ -197,8 +195,9 @@ class Configuration (dict):
         self['timeout'] = 30
         self['auth_ntlm'] = 0
         # in development mode, new filter rules get the official
-        # WebCleaner prefix
+        # WebCleaner prefix and the base url is different
         self['development'] = 0
+        self['baseurl'] = Url
         self['try_google'] = 0
         # delete all registered sids
         from wc.filter.rules import delete_registered_sids
