@@ -19,18 +19,27 @@
 from wc import AppName, Email, Version
 from wc.configuration import config
 from wc.webgui.context import getval as _getval
-from wc.filter.Rating import rating_cache_get as _rating_cache_get
-from wc.filter.Rating import rating_export as _rating_export
 from wc.url import is_safe_url as _is_safe_url
 from wc.mail import valid_mail as _valid_mail
 from wc.mail import send_mail as _send_mail
 from wc.mail import mail_date as _mail_date
+from wc.filter.rating.storage import get_rating_store as _get_rating_store
+from wc.filter.rating.storage.pickle import PickleStorage as _PickleStorage
 
-info = {}
-error = {}
+info = {
+    'send': False,
+}
+error = {
+    'url': False,
+    'rating': False,
+    'smtphost': False,
+    'fromaddr': False,
+    'send': False,
+}
 url = ""
-rating = ""
+rating = None
 smtphost = "localhost"
+rating_store = _get_rating_store(_PickleStorage)
 
 # form execution
 def _exec_form (form, lang):
@@ -45,11 +54,13 @@ def _exec_form (form, lang):
 
 
 def _form_reset ():
-    info.clear()
-    error.clear()
+    for key in info.keys():
+        info[key] = False
+    for key in error.keys():
+        error[key] = False
     global url, rating
     url = ""
-    rating = ""
+    rating = None
 
 
 def _form_url (form):
@@ -67,19 +78,18 @@ def _get_rating ():
     if not url:
         error["url"] = True
         return False
-    val = _rating_cache_get(url)
-    if val is None:
+    if url not in rating_store:
         error["rating"] = True
         return False
     global rating
-    rating = "url %r\n%s\n" % (url, _rating_export(val[1]))
+    rating = rating_store[url]
     return True
 
 
 def _form_send (form):
     if not form.has_key('smtphost'):
         error['smtphost'] = True
-        return
+        return False
     global smtphost
     smtphost = _getval(form, 'smtphost')
     if form.has_key('fromaddr'):
@@ -89,7 +99,7 @@ def _form_send (form):
     fromaddr = _valid_mail(fromaddr)
     if not fromaddr:
         error['fromaddr'] = True
-        return
+        return False
     toaddrs = [Email]
     headers = []
     headers.append("From: %s" % fromaddr)
@@ -97,9 +107,9 @@ def _form_send (form):
     headers.append("Date: %s" % _mail_date())
     headers.append("Subject: Webcleaner rating for %s" % url)
     headers.append("X-WebCleaner: rating")
-    message = "%s\r\n%s" % ("\r\n".join(headers), rating)
+    message = "%s\r\n%s" % ("\r\n".join(headers), rating.serialize())
     if not _send_mail(smtphost, fromaddr, toaddrs, message):
-        error['sent'] = True
-        return
-    info["sent"] = True
+        error['send'] = True
+        return False
+    info["send"] = True
     return True

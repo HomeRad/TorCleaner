@@ -52,14 +52,14 @@ def _reset_values ():
                 values[category.name][value] = value=='none'
         else:
             values[category.name] = ""
-    rating_modified.clear()
 
 
 def _calc_ratings_display ():
-    global ratings_display
+    global ratings_display, rating_modified
     urls = rating_store.keys()
     urls.sort()
     ratings_display = urls[curindex:curindex+_entries_per_page]
+    rating_modified.clear()
     for _url in ratings_display:
         t = _strtime(rating_store[_url].modified)
         rating_modified[_url] = t.replace(u" ", u"&nbsp;")

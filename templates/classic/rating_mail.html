@@ -16,7 +16,7 @@
 <div metal:use-macro="macros/nav">Navigation...</div>
 <div class="content" id="main">
 <h2 i18n:translate="">Email URL rating to
-<span tal.replace="Email" i18n:name="email">calvin@imadoofus.org</span></h2>
+<span tal:replace="Email" i18n:name="email">calvin@imadoofus.org</span></h2>
 <p i18n:translate="">You can send me changed or new page ratings per
 email so I can review them and include the changes into an updated
 rating database.
@@ -25,13 +25,13 @@ rating database.
 the following information will be mailed to the author of
 <span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
 at
-<span tal.replace="Email" i18n:name="email">calvin@imadoofus.org</span>:</p>
-<pre tal:content="rating">rating info...</pre>
+<span tal:replace="Email" i18n:name="email">calvin@imadoofus.org</span>:</p>
+<pre tal:content="rating/serialize">rating info...</pre>
 
 <form action="#" method="POST" name="ratingform"
  tal:attributes="action string:${filename}.${lang}">
 <input type="hidden" name="url" tal:attributes="value url">
-<input type="hidden" name="rating" tal:attributes="value rating">
+<input type="hidden" name="rating" tal:attributes="value rating/serialize">
 <p i18n:translate="">Please specify an SMTP host to send the mail to. If
 unsure, leave it at <code>localhost</code>.
 </p>
@@ -44,7 +44,7 @@ unsure, leave it at <code>localhost</code>.
 </form>
 
 <div class="info">
-<div tal:condition="info/sent" i18n:translate="">Rating data mailed successfully.</div>
+<div tal:condition="info/send" i18n:translate="">Rating data mailed successfully.</div>
 </div>
 
 <div class="error">
