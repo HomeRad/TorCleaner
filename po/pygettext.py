@@ -166,6 +166,8 @@ import getopt
 import token
 import tokenize
 import operator
+import re
+import cgi
 
 __version__ = '1.5'
 
