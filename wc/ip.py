@@ -163,14 +163,16 @@ def hosts2map (hosts):
 def map2hosts (hostmap):
     ret = hostmap[0].copy()
     for net, mask in hostmap[1]:
-        ret.add("%s/%d" % (net, mask2suffix(mask)))
+        ret.add("%s/%d" % (num2dq(net), mask2suffix(mask)))
     return ret
 
 
 def _test ():
-    hosts, nets = hosts2map(["192.168.1.1/16"])
-    for net, mask in nets:
-        print num2dq(net), mask2suffix(mask)
+    hosts = ["192.168.1.1/16"]
+    hostmap = hosts2map(hosts)
+    print hostmap
+    print map2hosts(hostmap)
+
 
 if __name__=='__main__':
     _test()
