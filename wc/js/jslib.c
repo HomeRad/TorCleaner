@@ -1187,7 +1187,7 @@ static PyMethodDef JSEnv_methods[] = {
 static PyTypeObject JSEnvType = {
     PyObject_HEAD_INIT(NULL)
     0,              /* ob_size */
-    "jslib.JSEnv",  /* tp_name */
+    "wc.js.jslib.JSEnv",  /* tp_name */
     sizeof(JSEnvObject), /* tp_size */
     0,              /* tp_itemsize */
     /* methods */
@@ -1253,7 +1253,7 @@ PyMODINIT_FUNC initjslib (void) {
         PyErr_Print();
         return;
     }
-    JSError = PyErr_NewException("jslib.error", NULL, NULL);
+    JSError = PyErr_NewException("wc.js.jslib.error", NULL, NULL);
     if (PyModule_AddObject(m, "error", JSError)==-1) {
         /* init error */
         PyErr_Print();
