@@ -1,4 +1,4 @@
-SUBDIRS = po libjs service docs
+SUBDIRS = po libjs service
 TESTS = noop
 
 PYVER := 2.3
