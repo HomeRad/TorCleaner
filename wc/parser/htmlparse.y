@@ -16,7 +16,6 @@ extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
 int yyerror(char* msg);
-
 /* test whether tag does not need a HTML end tag */
 #define NO_HTML_END_TAG(tag) !(strcmp(tag, "area")==0 || \
     strcmp(tag, "base")==0 || \

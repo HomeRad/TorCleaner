@@ -61,7 +61,9 @@
     if ((*yylval)==NULL) return T_ERROR; \
     yyextra->tmp_tag = yyextra->tmp_attrs = NULL
 
-/* store collected attribute values in dictionary */
+/* store collected attributes in dictionary
+ * tmp_attrname and tmp_attrval must be NULL
+ */
 #define FLUSH_ATTRS \
     if (strlen(yyextra->tmp_buf) > 0) { \
         PYSTRING_TMP(yyextra->tmp_attrname); \
@@ -71,8 +73,10 @@
 	    yyextra->tmp_attrval = Py_None; \
 	} \
         if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) return T_ERROR; \
-    } \
-    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL
+        Py_DECREF(yyextra->tmp_attrname); \
+        Py_DECREF(yyextra->tmp_attrval); \
+        yyextra->tmp_attrname = yyextra->tmp_attrval = NULL; \
+    }
 
 /* update the buffer position */
 #define UPDATE_BUFPOS yyextra->bufpos += yyleng
@@ -496,8 +500,13 @@ RX_DATA [-a-zA-Z0-9_]+
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_attrname);
     CLEAR_BUF(yyextra->tmp_buf);
+    if (yyextra->tmp_attrval!=NULL) return T_ERROR;
     Py_INCREF(Py_None);
-    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) { return T_ERROR; }
+    yyextra->tmp_attrval = Py_None;
+    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     APPEND_TO_TMP(yyleng);
     BEGIN(S_ATTR2);
 }
@@ -527,6 +536,8 @@ RX_DATA [-a-zA-Z0-9_]+
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     SCRIPT_CHECK;
     SET_ATTR_LVAL;
@@ -540,6 +551,8 @@ RX_DATA [-a-zA-Z0-9_]+
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(INITIAL);
     SET_ATTR_LVAL;
@@ -559,7 +572,11 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
-    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    if (PyDict_SetItem(yyextra->tmp_attrs,
+		       yyextra->tmp_attrname,
+		       yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     SCRIPT_CHECK;
     SET_ATTR_LVAL;
@@ -570,7 +587,11 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
-    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    if (PyDict_SetItem(yyextra->tmp_attrs,
+		       yyextra->tmp_attrname,
+		       yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(INITIAL);
     SET_ATTR_LVAL;
@@ -581,7 +602,11 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
-    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    if (PyDict_SetItem(yyextra->tmp_attrs,
+		       yyextra->tmp_attrname,
+		       yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(S_ATTR1);
 }
@@ -591,8 +616,13 @@ RX_DATA [-a-zA-Z0-9_]+
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) { return T_ERROR; }
-    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    if (!yyextra->tmp_attrval) return T_ERROR;
+    if (PyDict_SetItem(yyextra->tmp_attrs,
+		       yyextra->tmp_attrname,
+		       yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
+    yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(S_ATTR1);
 }
 
@@ -608,7 +638,11 @@ RX_DATA [-a-zA-Z0-9_]+
     CLEAR_BUF(yyextra->tmp_buf);
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) { return T_ERROR; }
-    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
+    if (PyDict_SetItem(yyextra->tmp_attrs,
+		       yyextra->tmp_attrname,
+		       yyextra->tmp_attrval)==-1) return T_ERROR;
+    Py_DECREF(yyextra->tmp_attrname);
+    Py_DECREF(yyextra->tmp_attrval);
     yyextra->tmp_attrval = yyextra->tmp_attrname = NULL;
     BEGIN(S_ATTR1);
 }
