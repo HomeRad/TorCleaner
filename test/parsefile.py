@@ -1,7 +1,12 @@
 #!/usr/bin/python2.3
-import sys, os
-sys.path.insert(0, os.getcwd())
-from wc.parser.htmllib import HtmlPrinter
+import sys
+try:
+    from wc.parser.htmllib import HtmlPrinter
+    raise SystemExit("Global WebCleaner installation found")
+except ImportError:
+    import os
+    sys.path.insert(0, os.getcwd())
+    from wc.parser.htmllib import HtmlPrinter
 
 def _main():
     fname = sys.argv[1]
@@ -10,7 +15,7 @@ def _main():
     else:
         f = file(fname)
     p = HtmlPrinter()
-    #p.debug(1)
+    p.debug(1)
     data = f.read(1024)
     while data:
         p.feed(data)

@@ -1,11 +1,14 @@
 #!/usr/bin/python2.3
-import sys, os
-sys.path.insert(0, os.getcwd())
-import profile, wc
+import sys, os, profile
+try:
+    import wc
+    raise SystemExit("Global WebCleaner installation found")
+except ImportError:
+    sys.path.insert(0, os.getcwd())
+    import wc
 
 f = sys.argv[1]
 data = file(f).read()
-import wc, time
 wc.DebugLevel = 3
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']

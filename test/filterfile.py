@@ -1,6 +1,12 @@
 #!/usr/bin/python2.3
-import sys, os
-sys.path.insert(0, os.getcwd())
+import sys
+try:
+    import wc
+    raise SystemExit("Global WebCleaner installation found")
+except ImportError:
+    import os
+    sys.path.insert(0, os.getcwd())
+    import wc
 
 
 def _main():
@@ -9,7 +15,6 @@ def _main():
         f = sys.stdin
     else:
         f = file(fname)
-    import wc, time
     from wc.log import initlog
     initlog("test/logging.conf")
     wc.config = wc.Configuration()
