@@ -122,13 +122,14 @@ def resolver_config (config):
         return
     for line in file('/etc/resolv.conf', 'r').readlines():
         line = line.strip()
-        if (not line) or line[0]==';' or line[0]=='#':
+        if (not line) or line.startswith(';') or line.startswith('#'):
             continue
         m = re.match(r'^search\s+(\.?.+)$', line)
         if m:
             for domain in m.group(1).split():
                 config.search_domains.append('.'+domain.lower())
         m = re.match(r'^nameserver\s+(\S+)\s*$', line)
-        if m: config.nameservers.append(m.group(1))
+        if m:
+            config.nameservers.append(m.group(1))
 
 
