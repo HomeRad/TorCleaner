@@ -25,7 +25,7 @@ from wc.filter.Filter import Filter
 orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['rewrite','nocomments']
 
-_noquoteval = re.compile("^[a-zA-Z0-9_]+$")
+_noquoteval = re.compile("^[a-zA-Z0-9_/.#%]+$")
 
 class Rewriter(Filter):
     """This class can rewrite HTML tags. It uses a parser class."""
@@ -51,7 +51,7 @@ class Rewriter(Filter):
 
     def filter(self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Rewriter filter", "\n"+`"..."+data[-70:]`)
+        debug(NIGHTMARE, "Rewriter filter", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         return p.flushbuf()
@@ -59,7 +59,7 @@ class Rewriter(Filter):
 
     def finish(self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Rewriter finish", "\n"+`"..."+data[-70:]`)
+        debug(NIGHTMARE, "Rewriter finish", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         p.flush()

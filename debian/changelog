@@ -1,3 +1,14 @@
+webcleaner (0.32) unstable; urgency=low
+
+  * setup.py: fix to work with Python 2.2
+  * wc/gui/ConfWindow.py: fix error message with unwritable config file
+  * wc/gui/ToolWindow.py: common base class for tools
+  * wc/filter/Rewriter.py: add some characters to _noquoteval to prevent
+    unnecessary quoting
+  * debian/templates: s/webcleanerconf/webcleanertools/
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed,  6 Feb 2002 17:48:11 +0100
+
 webcleaner (0.31) unstable; urgency=low
 
   * debian/webcleaner.docs, MANIFEST.in: remove draft-lutuonen...txt

@@ -99,8 +99,11 @@ class MyDistribution(Distribution):
             directory = os.getcwd()
         filename = os.path.join(directory, self.config_file)
         # add metadata
-        metanames = dir(self.metadata) + \
-                    ['fullname', 'contact', 'contact_email']
+        metanames = ("name", "version", "author", "author_email",
+                         "maintainer", "maintainer_email", "url",
+                         "licence", "description", "long_description",
+                         "keywords", "platforms", "fullname", "contact",
+                         "contact_email", "licence", "fullname")
         for name in metanames:
               method = "get_" + name
               cmd = "%s = %s" % (name, `getattr(self.metadata, method)()`)
@@ -133,7 +136,7 @@ else:
                       )]
 
 setup (name = "webcleaner",
-       version = "0.31",
+       version = "0.32",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,

@@ -2,13 +2,14 @@ import wc,os
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
-from wc import debug,_,error
-from wc.gui import HelpText,loadIcon
+from wc import debug,_
+from wc.gui import HelpText
 from FXPy.fox import *
 from types import IntType
 from wc.filter.Rules import FolderRule
 from wc.filter import GetRuleFromName
 from wc.debug_levels import *
+from ToolWindow import ToolWindow
 
 UpdateHelp = \
 _("Updating procedure:\n\n"
@@ -31,7 +32,7 @@ import tempfile
 # set the directory for new files
 tempfile.tempdir = wc.ConfigDir
 
-class ConfWindow(FXMainWindow):
+class ConfWindow(ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_PORT,
      ID_DEBUGLEVEL,
@@ -62,18 +63,15 @@ class ConfWindow(FXMainWindow):
      ID_NOPROXYFOR_ADD,
      ID_NOPROXYFOR_EDIT,
      ID_NOPROXYFOR_REMOVE,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+29)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+29)
 
 
     def __init__(self, app):
-	FXMainWindow.__init__(self, app, "webcleanerconf",w=640,h=550)
-        self.setIcon(loadIcon(app, 'iconbig.png'))
+	ToolWindow.__init__(self, app)
         self.readconfig()
         self.eventMap()
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
         FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
-        # About dialog
-        self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
         self.help = FXDialogBox(self, _("webcleanerconf Help"))
         w = FXVerticalFrame(self.help)
         t = FXText(w, opts=TEXT_READONLY|TEXT_WORDWRAP)
@@ -103,12 +101,6 @@ class ConfWindow(FXMainWindow):
         FXMenuCommand(daemonmenu, "Status", None, self, self.ID_PROXYSTATUS)
         FXMenuButton(frame, "Proxy", None, daemonmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(frame, "Update...", None, self, self.ID_CONFUPDATE)
-
-
-    def create(self):
-        """create the main window and show myself on the screen"""
-	FXMainWindow.create(self)
-	self.show()
 
 
     def eventMap(self):
@@ -230,7 +222,7 @@ class ConfWindow(FXMainWindow):
         self.tree = FXRuleTreeList(treeframe, self, self.ID_FILTER, self.folders, FXRuleFrameFactory(self.filterswitcher))
         f = FXHorizontalFrame(treeframe, LAYOUT_FILL_X)
         addmenu = FXMenuPane(self)
-        FXMenuCommand(addmenu, _("New Folder"), None, self, self.ID_NEWFOLDER, opts=MENU_DEFAULT)
+        FXMenuCommand(addmenu, _("New Folder"), None, self, self.ID_NEWFOLDER)
         # Make new filter popup menu
         filtermenu = FXMenuPane(self)
         FXMenuCommand(filtermenu, "Allow", None, self, self.ID_NEWRULE)
@@ -298,8 +290,9 @@ class ConfWindow(FXMainWindow):
             else:
                 self.removeDialog.execute()
         else:
-            error(_("no filter item selected"))
+            self.error(_("filter selection"), _("no filter item selected"))
         return 1
+
 
     def onCmdAccept(self, sender, sel, ptr):
         debug(BRING_IT_ON, "Accept")
@@ -308,10 +301,12 @@ class ConfWindow(FXMainWindow):
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
 
+
     def onCmdCancel(self, sender, sel, ptr):
         debug(BRING_IT_ON, "Cancel")
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
+
 
     def onUpdApply(self, sender, sel, ptr):
         if self.getApp().dirty:
@@ -320,23 +315,24 @@ class ConfWindow(FXMainWindow):
             sender.disable()
         return 1
 
+
     def onCmdApply(self, sender, sel, ptr):
         debug(BRING_IT_ON, "Apply")
         self.writeconfig()
         return 1
+
 
     def onCmdAbout(self, sender, sel, ptr):
         debug(BRING_IT_ON, "About")
         self.doShow(self.about)
         return 1
 
-    def doShow(self, win):
-        return win.execute(PLACEMENT_OWNER)
 
     def onCmdHelp(self, sender, sel, ptr):
         debug(BRING_IT_ON, "Help")
         self.doShow(self.help)
         return 1
+
 
     def onCmdPort(self, sender, sel, ptr):
         self.port = sender.getValue()
@@ -344,11 +340,13 @@ class ConfWindow(FXMainWindow):
         debug(BRING_IT_ON, "Port=%d"%self.port)
         return 1
 
+
     def onCmdDebuglevel(self, sender, sel, ptr):
         self.debuglevel = sender.getCurrentItem()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Debuglevel=%d"%self.debuglevel)
         return 1
+
 
     def onCmdTimeout(self, sender, sel, ptr):
         self.timeout = sender.getValue()
@@ -356,11 +354,13 @@ class ConfWindow(FXMainWindow):
         debug(BRING_IT_ON, "Timeout=%d" % self.timeout)
         return 1
 
+
     def onCmdObfuscateIp(self, sender, sel, ptr):
         self.obfuscateip = sender.getCheck()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Obfuscateip=%d" % self.obfuscateip)
         return 1
+
 
     def onCmdShowErrors(self, sender, sel, ptr):
         self.showerrors = sender.getCheck()
@@ -368,11 +368,13 @@ class ConfWindow(FXMainWindow):
         debug(BRING_IT_ON, "Showerrors=%d" % self.showerrors)
         return 1
 
+
     def onCmdParentProxy(self, sender, sel, ptr):
         self.parentproxy = sender.getText()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Parentproxy=%s"%self.parentproxy)
         return 1
+
 
     def onCmdParentProxyPort(self, sender, sel, ptr):
         self.parentproxyport = sender.getValue()
@@ -380,11 +382,13 @@ class ConfWindow(FXMainWindow):
         debug(BRING_IT_ON, "Parentproxyport=%d"%self.parentproxyport)
         return 1
 
+
     def onCmdLogfile(self, sender, sel, ptr):
         self.logfile = sender.getText()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Logfile=%s"%self.logfile)
         return 1
+
 
     def onCmdFilterModule(self, sender, sel, ptr):
         state = sender.getCheck()
@@ -394,6 +398,7 @@ class ConfWindow(FXMainWindow):
         debug(BRING_IT_ON, "Filtermodule %s = %d" % (module, state))
         return 1
 
+
     def onCmdFilter(self, sender, sel, ptr):
         if hasattr(ptr, "isSelected"):
             if not ptr.isSelected(): return 1
@@ -402,6 +407,7 @@ class ConfWindow(FXMainWindow):
         if type(index) is IntType:
             self.filterswitcher.setCurrent(index)
         return 1
+
 
     def onCmdNoProxyForAdd(self, sender, sel, ptr):
         dialog = FXDialogBox(self,_("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
@@ -415,16 +421,17 @@ class ConfWindow(FXMainWindow):
         if dialog.execute():
             host = host.getText().strip().lower()
             if not host:
-                error(_("Empty hostname"))
+                self.error(_("Add proxy"), _("Empty hostname"))
 	        return 1
             if self.noproxyfor.has_key(host):
-                error(_("Duplicate hostname"))
+                self.error(_("Add proxy"), _("Duplicate hostname"))
 	        return 1
             self.noproxyfor[host] = 1
             self.noproxylist.appendItem(host)
             self.getApp().dirty = 1
             debug(BRING_IT_ON, "Added no-proxy host")
         return 1
+
 
     def onCmdNoProxyForEdit(self, sender, sel, ptr):
         index = self.noproxylist.getCurrentItem()
@@ -448,6 +455,7 @@ class ConfWindow(FXMainWindow):
             debug(BRING_IT_ON, "Changed no-proxy host")
         return 1
 
+
     def onCmdNoProxyForRemove(self, sender, sel, ptr):
         index = self.noproxylist.getCurrentItem()
         item = self.noproxylist.retrieveItem(index)
@@ -457,6 +465,7 @@ class ConfWindow(FXMainWindow):
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Removed no-proxy host")
         return 1
+
 
     def onCmdProxyStart(self, sender, sel, ptr):
         from wc import daemon
@@ -538,8 +547,7 @@ class ConfWindow(FXMainWindow):
                     f.close()
                     doreload = 1
         except IOError, msg:
-            dialog = FXMessageBox(self,_("Update Error"),_("Update Error: %s") % msg,None,MBOX_OK)
-            self.doShow(dialog)
+            self.error(_("Update Error"), "%s: %s" % (_("Update Error"), msg))
         else:
             if doreload:
                 self.handle(self, MKUINT(ConfWindow.ID_PROXYRESTART,SEL_COMMAND), None)
@@ -584,12 +592,13 @@ class ConfWindow(FXMainWindow):
         """write the current configuration to disc"""
         self.getApp().beginWaitCursor()
         dirty = 0
+        errors = []
         try:
             file = open(self.configfile, 'w')
             file.write(self.toxml())
             file.close()
         except IOError:
-            error(_("cannot write to file %s") % configfile)
+            errors.append(_("cannot write to file %s") % self.configfile)
             dirty = 1
         for f in self.folders:
             try:
@@ -597,10 +606,12 @@ class ConfWindow(FXMainWindow):
                 file.write(f.toxml())
                 file.close()
             except IOError:
-                error(_("cannot write to file %s") % f.filename)
                 dirty = 1
-	self.getApp().dirty = dirty
+                errors.append(_("cannot write to file %s") % f.filename)
+        self.getApp().dirty = dirty
         self.getApp().endWaitCursor()
+        if errors:
+            self.error(_("Write config"), "\n".join(errors))
 
 
     def toxml(self):

@@ -1,14 +1,14 @@
 import sys
 from urllib2 import urlopen, URLError
+from ToolWindow import ToolWindow
 
-# disable proxy for urllib
+# disable proxy for urllib (XXX parent proxy?)
 import os
 os.environ['http_proxy'] = ""
 
 import wc
-from wc import debug,_,error, BaseParser, ConfigDir
+from wc import debug, _, BaseParser, ConfigDir
 from wc.debug_levels import *
-from wc.gui import loadIcon
 from FXPy.fox import *
 
 SCROLLING_NONE = 0
@@ -70,7 +70,7 @@ def parse_connections():
     return connections
 
 
-class HeaderWindow(FXMainWindow):
+class HeaderWindow(ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_ABOUT,
      ID_QUIT,
@@ -85,13 +85,11 @@ class HeaderWindow(FXMainWindow):
      ID_ADDHEADER,
      ID_EDITHEADER,
      ID_REMOVEHEADER,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+13)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+13)
 
 
     def __init__(self, app):
-	FXMainWindow.__init__(self, app, "wcheaders", w=640, h=500)
-        self.setIcon(loadIcon(app, 'iconbig.png'))
-        self.eventMap()
+	ToolWindow.__init__(self, app)
         self.getApp().dirty = 0
         self.timer = None
         self.status = "Ready."
@@ -99,7 +97,6 @@ class HeaderWindow(FXMainWindow):
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
         self.statusbar = FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
         # dialogs
-        self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
         self.options = OptionsWindow(self)
         # main frames
         frame = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -129,12 +126,6 @@ class HeaderWindow(FXMainWindow):
         self.headers.appendHeader(_("URL"),NULL,150)
         self.headers.appendHeader(_("Name"),NULL,100)
         self.headers.appendHeader(_("Value"),NULL,200)
-
-
-    def create(self):
-        """create the main window and show myself on the screen"""
-	FXMainWindow.create(self)
-	self.show()
 
 
     def eventMap(self):
@@ -182,10 +173,10 @@ class HeaderWindow(FXMainWindow):
         if dialog.execute():
             header = header.getText().strip().lower()
             if not header:
-                error(_("Empty header"))
+                self.error(_("Add header"), _("Empty header"))
 	        return 1
             if header in self.config['nodisplay']:
-                error(_("Duplicate header"))
+                self.error(_("Add header"), _("Duplicate header"))
 	        return 1
             self.config['nodisplay'].append(header)
             self.options.headers.appendItem(header)
@@ -268,7 +259,7 @@ class HeaderWindow(FXMainWindow):
             file.close()
             self.getApp().dirty = 0
         except IOError:
-            error(_("cannot write to file %s") % file)
+            self.error(_("Save options"), _("cannot write to file %s") % file)
         self.getApp().endWaitCursor()
 
 
@@ -380,10 +371,6 @@ class HeaderWindow(FXMainWindow):
             self.getApp().addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
         self.getApp().endWaitCursor()
         return 1
-
-
-    def doShow(self, win):
-        return win.execute(PLACEMENT_OWNER)
 
 
 

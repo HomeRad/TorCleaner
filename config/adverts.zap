@@ -13,9 +13,13 @@
 <attr>http://adse?rv.*\.(com|net|de)</attr>
 </rewrite>
 
+<rewrite title="Ad servers 10">
+<attr>(ad\.krutilka\.ru|fastclick\.net)</attr>
+</rewrite>
+
 <rewrite title="Ad servers 2"
  desc="Kill links with ad words in the host name.">
-<attr>http://.*(doubleclick|adforce|tradedoubler|netadsrv|adrunner|link4ads|emerchandise)\.</attr>
+<attr>http://.*(doubleclick|adforce|tradedoubler|netadsrv|adrunner|link4ads|emerchandise|ecommercetimes)\.</attr>
 </rewrite>
 
 <rewrite title="Ad servers 3"
@@ -196,9 +200,5 @@
 <rewrite title="easy-cash"
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
-</rewrite>
-
-<rewrite title="Ad servers 10">
-<attr>ad\.krutilka\.ru</attr>
 </rewrite>
 </folder>

@@ -9,7 +9,7 @@ Description-de: Standard Proxy port
 Template: webcleaner/note
 Type: note
 Description: Configuration of WebCleaner.
- The "webcleanerconf" package has a nice GUI configuration tool.
+ The "webcleanertools" package has a nice GUI configuration tool.
 Description-de: Konfiguration von WebCleaner
- Das "webcleanerconf" Paket besitzt ein nettes grafisches 
+ Das "webcleanertools" Paket besitzt ein nettes grafisches
  Konfigurationsprogramm.

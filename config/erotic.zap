@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Erotic"
- desc="Protect your children from looking erotic sites.">
+ desc="Protect your children from looking erotic sites."
+ disable="1">
 
 <block title="Bad words in the host name"
  scheme=""
