@@ -40,9 +40,9 @@ def has_sid (sid):
     return sid in _sids
 
 
-def generate_sids ():
+def generate_sids (prefix="wc"):
     for rule in _rules_without_sid:
-        rule.sid = generate_unique_sid("wc")
+        rule.sid = generate_unique_sid(prefix)
     del _rules_without_sid[:]
 
 
