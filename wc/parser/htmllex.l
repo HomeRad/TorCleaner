@@ -391,6 +391,7 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR2,S_ATTR3>{RX_WHITE_SPACE}*{RX_EQUAL}{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
+    LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_attrname);
     CLEAR_BUF(yyextra->tmp_buf);
     BEGIN(S_ATTR4);
@@ -403,6 +404,7 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR3>{RX_NAME} {
     UPDATE_BUFPOS;
+    LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_attrname);
     CLEAR_BUF(yyextra->tmp_buf);
     Py_INCREF(Py_None);
@@ -532,6 +534,7 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_TAGEND>">" {
     UPDATE_BUFPOS;
+    LOWER_TMP;
     SETLVAL;
     BEGIN(INITIAL);
     RETURN(T_ELEMENT_END);
@@ -548,6 +551,13 @@ RX_DATA [-a-zA-Z0-9_]+
 
   /*********************** TEXT ************************/
 <INITIAL>[^<]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP;
+    SETLVAL;
+    RETURN(T_TEXT);
+}
+
+<INITIAL><[^A-Za-z!?/] {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
     SETLVAL;
