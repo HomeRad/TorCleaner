@@ -165,9 +165,9 @@ class HttpServer (Server):
         if i < 0: return
         self.response = applyfilter(FILTER_RESPONSE, self.read(i+1),
 	                attrs=self.nofilter)
-        if self.response.lower().find('http') >= 0:
+        if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
-            protocol, status, msg = self.response.split()
+            protocol, self.statuscode, tail = self.response.split(None, 2)
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, get_http_version(protocol))
@@ -208,11 +208,6 @@ class HttpServer (Server):
         # until we get to a blank line...
         m = re.match(r'^((?:[^\r\n]+\r?\n)*\r?\n)', self.recv_buffer)
         if not m: return
-        # handle continue requests (XXX should be in process_response?)
-        response = self.response.split()
-        self.statuscode = None
-        if response:
-            self.statuscode = response[1]
         # get headers
         fp = StringIO(self.read(m.end()))
         msg = rfc822.Message(fp)
@@ -488,7 +483,8 @@ class HttpServer (Server):
         debug(HURT_ME_PLENTY, "Server: handle_close", self)
         Server.handle_close(self)
         if self.client:
-            self.flush()
+            client, self.client = self.client, None
+            client.server_close()
 
 
 def speedcheck_print_status ():

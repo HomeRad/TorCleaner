@@ -250,11 +250,10 @@ class ClientServerMatchmaker:
             # to kill the connection.  Let's find another server object.
             self.state = 'server'
             self.find_server()
-        else:
+        elif self.client.connected:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
-            if self.client.connected:
-                self.client.error(503, i18n._("Server closed connection"))
+            self.client.error(503, i18n._("Server closed connection"))
 
 
     def server_response (self, response, headers):

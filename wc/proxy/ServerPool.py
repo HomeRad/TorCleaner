@@ -40,7 +40,8 @@ class ServerPool:
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
         assert self.map[addr].has_key(server), \
                '%s missing %s' % (self.map[addr], server)
-        assert self.map[addr][server][0] == 'busy'
+        assert self.map[addr][server][0] == 'busy', \
+               '%s is not busy but %s' % (server, self.map[addr][server][0])
         self.map[addr][server] = ('available', time.time())
         self.invoke_callbacks(addr)
 
