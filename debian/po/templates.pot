@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-29 10:41+0100\n"
+"POT-Creation-Date: 2004-10-16 10:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,4 +66,19 @@ msgstr ""
 #. Description
 #: ../webcleaner.templates:9
 msgid "You have to enter a non-empty password."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../webcleaner.templates:19
+msgid "WebCleaner control script"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../webcleaner.templates:19
+msgid ""
+"Since WebCleaner is using the runit daemon package, it does not have the "
+"usual init.d script to control its service. Instead the WebCleaner proxy can "
+"be manually started or stopped by the webcleaner-ctl script."
 msgstr ""
