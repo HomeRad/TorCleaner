@@ -243,8 +243,8 @@ class JSFilter (wc.js.JSListener.JSListener):
                 del attrs[name]
         if tag == 'form':
             name = attrs.get('name', attrs.get('id'))
-            self.jsForm(name, attrs.get('action', ''),
-                        attrs.get('target', ''))
+            self.jsForm(name, attrs.get('action', u''),
+                        attrs.get('target', u''))
         elif tag == 'script':
             js_ok, js_lang = wc.js.get_js_data(attrs)
             url = attrs.get('src', u'')
@@ -263,6 +263,9 @@ class JSFilter (wc.js.JSListener.JSListener):
             return
         wc.log.debug(wc.LOG_JS, "%s jsForm %r action %r %r",
                      self, name, action, target)
+        name = name.encode(self.htmlparser.encoding)
+        action = action.encode(self.htmlparser.encoding)
+        target = target.encode(self.htmlparser.encoding)
         self.js_env.addForm(name, action, target)
 
     def jsScriptSrc (self, url, language):
