@@ -235,8 +235,8 @@ class Translator (gettext.GNUTranslations):
     """Translator which interpolates TAL expressions."""
 
     def translate (self, domain, msgid, mapping=None,
-        """Interpolates and translate TAL expression."""
                    context=None, target_language=None, default=None):
+        """Interpolates and translate TAL expression."""
         _msg = self.gettext(msgid)
         wc.log.debug(wc.LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
         return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
@@ -254,6 +254,6 @@ class NullTranslator (gettext.NullTranslations):
     """Fallback translator which interpolates TAL expressions."""
 
     def translate (self, domain, msgid, mapping=None,
-        """Interpolates TAL expression."""
                    context=None, target_language=None, default=None):
+        """Interpolates TAL expression."""
         return wc.webgui.TAL.TALInterpreter.interpolate(msgid, mapping)
