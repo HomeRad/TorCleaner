@@ -940,6 +940,12 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         ==JS_FALSE) {
         return shutdown(env, "Could not set plugin array element");
     }
+    if (JS_DefineProperty(env->ctx, plugins_array, "Shockwave Flash",
+                          flash_plugin_jsval, 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
+        ==JS_FALSE) {
+        return shutdown(env, "Could not set plugin array string");
+    }
     if (JS_DefineProperty(env->ctx, flash_plugin_obj, "name",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(env->ctx, "Shockwave Flash")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)

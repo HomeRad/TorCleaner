@@ -33,8 +33,19 @@ def unescape_js (script):
     return script
 
 
+def get_js_data (attrs):
+    """get js_ok flag and js_lang from given attrs"""
+    js_lang = attrs.get('language', '').lower()
+    js_type = attrs.get('type', '').lower()
+    js_ok = js_type=='text/javascript' or \
+            js_lang.startswith('javascript') or \
+            not (js_lang or js_type)
+    return js_ok, js_lang
+
+
 has_js_ver = re.compile(r'(?i)javascript(?P<num>\d\.\d)').search
 def get_js_ver (language):
+    """get js version as float"""
     ver = 0.0
     if language:
         mo = has_js_ver(language)
