@@ -88,7 +88,7 @@ def _form_proxyuser (proxyuser):
 
 def _form_proxypass (proxypass):
     if proxypass != config['proxypass']:
-        config['proxypass'] = proxypass
+        config['proxypass'] = base64.encodestring(proxypass)
         info.append(i18n._("Proxy password successfully changed."))
 
 

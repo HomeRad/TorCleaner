@@ -4,7 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from base64 import decodestring as base64decode
+import base64
 
 def get_basic_challenge ():
     """return initial challenge token for basic authentication"""
@@ -16,7 +16,7 @@ def check_basic_auth (auth, proxyuser, proxypass_b64):
        pass. The pass is also base64-encoded.
        returns None if authentication succeded, a new challenge if not
     """
-    auth = base64decode(auth[6:])
+    auth = base64.decodestring(auth[6:])
     if ':' not in auth:
         warn(PROXY, "invalid proxy authorization")
         return get_basic_challenge()
@@ -24,7 +24,7 @@ def check_basic_auth (auth, proxyuser, proxypass_b64):
     if _user!=proxyuser:
         warn(PROXY, "failed proxy authorization")
         return get_basic_challenge()
-    if _pass!=base64decode(proxypass_b64):
+    if _pass!=base64.decodestring(proxypass_b64):
         warn(PROXY, "failed proxy authorization")
         return get_basic_challenge()
     return None
