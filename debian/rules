@@ -75,7 +75,7 @@ binary-arch: build install
 	dh_installdocs
 	dh_installexamples config/bl2wc.py
 	dh_installmenu
-	dh_installlogrotate
+#	dh_installlogrotate
 	dh_installinit
 #	dh_installcron
 	dh_installman webcleaner.1 webcleaner.conf.5
