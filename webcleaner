@@ -121,10 +121,11 @@ def parse_options (sysargs):
     """
     import getopt
     configdir = wc.ConfigDir
+    file_logs = True
     try:
         # Note: cut out the name of the script in sys.argv
-        options, args = getopt.getopt(sysargs, "hd",
-                                      ["help", "configdir"])
+        options, args = getopt.getopt(sysargs, "hd:",
+                                      ["help", "configdir=", "no-file-logs"])
     except getopt.error:
         print_usage(sys.exc_info()[1])
     for opt,arg in options:
@@ -132,14 +133,16 @@ def parse_options (sysargs):
             print_help()
         elif opt=="--configdir" or opt=="-d":
             configdir = arg
+        elif opt=="--no-file-logs":
+            file_logs = False
         else:
             print_usage(wc.i18n._("Unknown option %(option)r")%{'option': opt})
-    return (configdir, args)
+    return (configdir, file_logs, args)
 
 
-def main_posix (configdir):
+def main_posix (configdir, file_logs):
     """start the proxy"""
-    wc.wstartfunc(confdir=configdir)
+    wc.wstartfunc(confdir=configdir, file_logs=file_logs)
 
 
 def main_nt (configdir, args):
@@ -161,10 +164,10 @@ def main_nt (configdir, args):
 
 
 def main (sysargs):
-    configdir, args = parse_options(sysargs)
+    configdir, file_logs, args = parse_options(sysargs)
     if os.name=='nt':
         return main_nt(configdir, args)
-    return main_posix(configdir)
+    return main_posix(configdir, file_logs)
 
 
 if __name__ == '__main__':
