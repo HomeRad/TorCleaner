@@ -7,16 +7,16 @@ set -e
 . /usr/share/debconf/confmodule
 db_version 2.0
 
-PYTHON=/usr/bin/python2
-SITEPACKAGES=/usr/lib/python2.0/site-packages
+PYTHON=python2.1
+SITEPACKAGES=/usr/lib/$PYTHON/site-packages
 DIRLIST="wc/gui"
 COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
 
 case "$1" in
     configure|abort-upgrade|abort-remove|abort-deconfigure)
         for i in $DIRLIST; do
-            $PYTHON -O /usr/lib/python2.0/compileall.py -q $SITEPACKAGES/$i
-            $PYTHON /usr/lib/python2.0/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON -O /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
         done
     ;;
     *)

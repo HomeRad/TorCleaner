@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/python -O
 """graphical GUI configuration tool for webcleaner.
 
 This is a nice graphical configuration tool for webcleaner. Because

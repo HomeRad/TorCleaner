@@ -1,9 +1,10 @@
 webcleaner (0.20) unstable; urgency=low
 
   * documentation updates
-  * removed superfluous debian/conffile
+  * removed debian/conffile and debian/webcleanerconf.dirs
+  * use Python2.1 in Debian scripts
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 23 Oct 2001 18:35:25 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Thu, 25 Oct 2001 20:59:04 +0200
 
 webcleaner (0.19) unstable; urgency=low
 

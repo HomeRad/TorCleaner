@@ -20,7 +20,7 @@ clean:
 .PHONY: localbuild
 localbuild:
 	./setup.py build
-	cp -f build/lib.linux-i686-2.0/wc/parser/htmlop.so wc/parser
+	cp -f build/lib.linux-i686-2.1/wc/parser/htmlop.so wc/parser
 
 .PHONY: distclean
 distclean:	clean cleandeb

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python2.1
 """setup file for the distuils module"""
 # Copyright (C) 2000,2001  Bastian Kleineidam
 #
@@ -18,15 +18,11 @@
 
 import os, re, sys
 from types import StringType, TupleType
-from distutils.core import setup, Extension, DEBUG
+from distutils.core import setup, Extension
 from distutils.dist import Distribution
 from distutils.command.install import install
-from distutils.command.config import config
-from distutils.command.install_data import install_data
-from distutils.command.build_scripts import build_scripts,first_line_re
 from distutils.file_util import write_file
 from distutils import util
-from distutils.dep_util import newer
 
 class MyInstall(install):
     def run(self):
@@ -47,69 +43,6 @@ class MyInstall(install):
         from pprint import pformat
         data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
-
-
-class my_build_scripts(build_scripts):
-
-    description = "\"build\" scripts (copy and fixup #! line)"
-
-    user_options = [
-        ('build-dir=', 'd', "directory to \"build\" (copy) to"),
-        ('force', 'f', "forcibly build everything (ignore file timestamps"),
-        ]
-
-    boolean_options = ['force']
-
-
-    def copy_scripts(self):
-        """patched because of a bug"""
-        outfiles = []
-        self.mkpath(self.build_dir)
-        for script in self.scripts:
-            adjust = 0
-            outfile = os.path.join(self.build_dir, os.path.basename(script))
-
-            if not self.force and not newer(script, outfile):
-                self.announce("not copying %s (output up-to-date)" % script)
-                continue
-
-            # Always open the file, but ignore failures in dry-run mode --
-            # that way, we'll get accurate feedback if we can read the
-            # script.
-            try:
-                f = open(script, "r")
-            except IOError:
-                if not self.dry_run:
-                   raise
-                f = None
-            else:
-                first_line = f.readline()
-                if not first_line:
-                    self.warn("%s is an empty file (skipping)" % script)
-                    continue
-
-                match = first_line_re.match(first_line)
-                if match:
-                    adjust = 1
-                    post_interp = match.group(1) or ""
-
-            if adjust:
-                self.announce("copying and adjusting %s -> %s" %
-                              (script, self.build_dir))
-                if not self.dry_run:
-                    outf = open(outfile, "w")
-                    outf.write("#!%s%s\n" % 
-                               (os.path.normpath(sys.executable), post_interp))
-                    outf.writelines(f.readlines())
-                    outf.close()
-                if f:
-                    f.close()
-            else:
-                f.close()
-                self.copy_file(script, outfile)
-
-    # copy_scripts ()
-
 
 
 class MyDistribution(Distribution):
@@ -181,7 +114,7 @@ setup (name = "webcleaner",
        maintainer = myname,
        maintainer_email = myemail,
        url = "http://webcleaner.sourceforge.net/",
-       licence = "GPL (Python 2.0 usage granted)",
+       licence = "GPLv2",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
        ext_modules = [Extension('wc.parser.htmlop',['wc/parser/htmlop.c'])],
@@ -198,7 +131,6 @@ o HTTP/1.1 support
 """,
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
-		   'build_scripts': my_build_scripts,
                   },
        data_files = data_files,
 )
