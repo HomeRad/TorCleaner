@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Jan 13 04:05:01 2004\n"
+"POT-Creation-Date: Wed Jan 14 03:05:51 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -466,6 +466,9 @@ msgid ""
 "If attributes are given, they must match too before the rule applies."
 msgstr ""
 
+msgid "Administrator password for %(AppName)s Proxy"
+msgstr ""
+
 msgid "Access key 9"
 msgstr ""
 
@@ -597,9 +600,6 @@ msgstr ""
 msgid "Rule successfully removed."
 msgstr ""
 
-msgid "Administrator password for %(AppName)s"
-msgstr ""
-
 msgid "Invalid rule type."
 msgstr ""
 
@@ -655,6 +655,11 @@ msgid "Rule image width successfully changed."
 msgstr ""
 
 msgid "replace part"
+msgstr ""
+
+msgid ""
+"The configuration also allows you to change the\n"
+"password.\n"
 msgstr ""
 
 msgid "Invalid image width value."
@@ -1334,11 +1339,6 @@ msgid ""
 msgstr ""
 
 msgid "Replacement URL"
-msgstr ""
-
-msgid ""
-"The configuration also allows you to change the\n"
-"above initial password.\n"
 msgstr ""
 
 msgid "Invalid attribute name."
