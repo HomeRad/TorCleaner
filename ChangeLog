@@ -8,6 +8,7 @@
     - fixed parsing of script single comment lines
     - do not #include <stdint.h>, fixes build on some FreeBSD, Windows
       and Solaris/SunOS platforms
+    - ignore first leading invalid backslash in a=\"b\" attributes
     Changed: wc/parser/htmllex.{l,c}
   * cope with falsely advertised GIF images, the GIF parsers ignores
     them now
