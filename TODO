@@ -14,6 +14,8 @@ version 2.24 and above
 
 - use ssl-cert-check bash script
 
+- install gettext _() with unicode=1
+
 - Test "www.%s" DNS search pattern for automationpartnership.com
 
 - Python 2.4 made socket.sslerror a subclass of socket.error; can we
