@@ -4,6 +4,10 @@
     Type: bugfix
     Changed: install-webcleaner.py
 
+  * Do no include generated .html pages in source tarball.
+    Type: bugfix
+    Changed: doc/en/Makefile.am
+
 2.28 "Shrek" (released 16.3.2005)
 
   * Initialize the ImageReducer attributes properly. Only change
