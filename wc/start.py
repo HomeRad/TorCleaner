@@ -69,7 +69,9 @@ def restart ():
     start_cmd = "runsvctrl up %s" % service
     status = os.system(stop_cmd)
     if status != 0:
-        error["stopfail"] = True
+        wc.log.error(wc.LOG_PROXY,
+                     "Stop command %r failed: %s", stop_cmd, str(status))
     status = os.system(start_cmd)
     if status != 0:
-        error["startfail"] = True
+        wc.log.error(wc.LOG_PROXY,
+                     "Start command %r failed: %s", start_cmd, str(status))
