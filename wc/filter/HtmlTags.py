@@ -277,6 +277,7 @@ KnownInvalidTags = {
     "image": None, # imdb.com
     "skyscraper" : None, # www.heise.de
     "u2uforen" : None, # www.heise.de
+    "update" : None, # slashdot.org
 }
 
 def check_spelling (tag, url):
