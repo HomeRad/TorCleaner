@@ -17,7 +17,7 @@ class HttpClient (Connection):
     # request (read first line)
     # headers (read HTTP headers)
     # data (read any additional data and forward it to the server)
-    
+
     def __init__ (self, socket, addr):
         Connection.__init__(self, socket)
         self.addr = addr
@@ -61,9 +61,13 @@ class HttpClient (Connection):
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
                                rfc822.Message(StringIO(data)),
 			       fun="finish", attrs=self.nofilter)
+                # add supported encodings
+                if not self.headers.has_key('Accept-Encoding'):
+                    self.headers['Accept-Encoding'] = \
+                                 "gzip;q=1.0, deflate;q=0.9, identity;q=0.5"
                 #debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
-                if self.headers.has_key('content-length'):
-                    self.bytes_remaining = int(self.headers['content-length'])
+                if self.headers.has_key('Content-Length'):
+                    self.bytes_remaining = int(self.headers['Content-Length'])
                 else:
                     self.bytes_remaining = 0
                 self.state = 'content'
