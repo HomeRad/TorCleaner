@@ -29,7 +29,7 @@
 </rewrite>
 
 <nocomments title="Remove all HTML comments" oid="4"
- dontmatchurl="(oreillynet.com|www.onlamp.com)"/>
+ dontmatchurl="(oreillynet.com|www.onlamp.com|www.onjava.com)"/>
 
 <rewrite title="Replace BLINK with B" oid="5"
  desc="Dont we all hate the &lt;blink&gt; tag?"
