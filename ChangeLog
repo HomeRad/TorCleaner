@@ -32,6 +32,10 @@
     Type: bugfix
     Changed: wc/magic/__init__.py, wc/proxy/HttpServer.py
 
+  * Added german man pages.
+    Type: documentation
+    Added: docs/de/*.[15]
+
 2.23 "The fog of war" (released 27.10.2004)
 
   * Fixed MIME type changing.

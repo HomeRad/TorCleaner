@@ -1,0 +1,127 @@
+.TH WEBCLEANER.CONF 5 "29. November 2004"
+.SH NAME
+webcleaner.conf \- Konfigurationsdatei für WebCleaner
+.SH BESCHREIBUNG
+\fBwebcleaner.conf\fP ist die Hauptkonfigurationsdatei für den
+WebCleaner Proxy. Die Datei besitzt ein eigenes XML Format, welches
+der Dokumentdefinition der Datei \fBwebcleaner.dtd\fP folgt.
+.SH EINSTELLUNGEN
+.TP
+\fBversion\fP
+Die Version des Konfigurationsformats.
+.TP
+\fBport\fP
+Die Portnummer unter der der WebCleaner Proxy läuft.
+.TP
+\fBsslport\fP
+Die Portnummer für den WebCleaner SSL Server.
+.TP
+\fBsslgateway\fP
+Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer
+einen SSL Server starten, um HTTPS Daten weiterzuleiten und zu
+filtern.
+.TP
+\fBadminuser\fP
+Der Benutzername für die Proxy Konfigurationsoberfläche.
+.TP
+\fBadminpass\fP
+Der base64-kodierte Passwort für die Proxy Konfigurationsoberfläche.
+.TP
+\fBproxyuser\fP
+Der Benutzername für Proxy Authentifizierung.
+.TP
+\fBproxypass\fP
+Das base64-kodierte Passwort für Proxy Authentifizierung.
+.TP
+\fBparentproxy\fP
+Der Rechnername des übergeordneten HTTP Proxy. Lassen Sie
+den Rechnername leer, um keinen übergeordneten Proxy zu benutzen.
+.TP
+\fBparentproxyport\fP
+Die Portnummer des übergeordneten Proxy.
+.TP
+\fBparentproxyuser\fP
+Der Benutzername zur Authentifizierung des übergeordneten Proxy.
+.TP
+\fBparentproxypass\fP
+Das base64-kodierte Passwort zur Authentifizierung des übergeordneten Proxy.
+.TP
+\fBtimeout\fP
+Zeitüberschreitungslimit für Verbindungen in Sekunden.
+.TP
+\fBgui\_theme\fP
+Themenauswahl für die Weboberfläche.
+.TP
+\fBnofilterhosts\fP
+Kommaseparierte Liste von Rechnernamen für die Filtern deaktiviert ist.
+.TP
+\fBallowedhosts\fP
+Kommaseparierte Liste von Rechnernamen die diesen Proxy benutzen dürfen.
+.TP
+\fBauth_ntlm\fP
+Falls auf Eins gesetzt, wird mit NTLM Algorithmus authentifiziert.
+.TP
+\fBtry_google\fP
+Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung
+eine Seite mit Verweisen zum Google Cache der angeforderten Seiten
+dargestellt.
+.SH FILTER
+.TP
+\fBBlocker\fP
+Blockiert bestimmte URLs. Dies ersetzt Werbebilder und -frames.
+.TP
+\fBCompress\fP
+Komprimiert Dokumente mit guter Kompressionsrate (HTML, WAV, ...).
+.TP
+\fBBinaryCharFilter\fP
+Ersetzt einige Binärzeichen (besonders die illegalen Microsoft
+Anführungszeichen).
+.TP
+\fBGifImage\fP
+Deanimiert GIF Bilder und entfernt GIF Kommentare.
+.TP
+\fBHeader\fP
+Ersetzen, modifizieren und hinzufügen von beliebigen HTTP Kopfdaten.
+.TP
+\fBImageReducer\fP
+Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.
+Nützlich für Benutzer mit sehr niedriger Bandbreite.
+.TP
+\fBImageSize\fP
+Filtere Bilder nach Größe.
+.TP
+\fBMimeRecognizer\fP
+Erkenne und korrigiere fehlende oder falsche Angaben im
+Content-Type Kopfdatum.
+.TP
+\fBPicsHeader\fP
+Ein PICS Filter.
+.TP
+\fBReplacer\fP
+Ersetzt Daten im Textdateien (HTML, reiner Text, ...).
+.TP
+\fBRewriter\fP
+Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filter
+die meiste Werbung heraus.
+.TP
+\fBVirusFilter\fP
+Aktivier den Clamav Virusfilter (falls Clamav installiert ist).
+.SH BEISPIEL
+ <?xml version="1.0"?>
+ <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
+ <webcleaner 
+  version="0.8"
+  port="8000"
+  parentproxy="squid.company.com"
+  parentproxyport="3128"
+  >
+   <filter name="Rewriter"/>
+   <filter name="Blocker"/>
+   <filter name="Header"/>
+   <filter name="Replacer"/>
+   <filter name="GifImage"/>
+  </webcleaner>
+.SH "SIEHE AUCH"
+webcleaner(1), webcleanerconf(1)
+.SH AUTHOR
+Bastian Kleineidam <calvin@users.sourceforge.net>
