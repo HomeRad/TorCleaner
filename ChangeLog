@@ -25,6 +25,13 @@
     Added: test/test_url.py, test/output/test_url
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031126
     Changed: libjs/*
+  * correct stopwatch message output
+    Changed: wc/daemon/_posix.py
+  * - properly initialize a RewriteRule added over the web interface
+    - allow regex back references also in attribute value replacement
+    Changed: wc/filter/rule/RewriteRule.py
+  * fix xml output and parsing name typos in replace rule
+    Changed: wc/filter/ReplaceRule.py
 
 2.6 (released 25.11.2003)
   * fixed background downloading with 30x redirects
