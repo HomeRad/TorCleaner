@@ -1,24 +1,5 @@
 TODO
 
-- Update help text and .po files
-
-- the reload throws and exception:
-  File "./webcleaner", line 152, in ?
-    main()
-  File "./webcleaner", line 141, in main
-    msg = getattr(daemon, command)()
-  File "./wc/daemon/__init__.py", line 56, in restart
-    start()
-  File "./wc/daemon/_posix.py", line 37, in start
-    startfunc()
-  File "./wc/__init__.py", line 95, in startfunc
-    proxy.mainloop()
-  File "./wc/proxy/__init__.py", line 143, in mainloop
-    handlerCount = proxy_poll(timeout=max(0, run_timers()))
-  File "./wc/proxy/__init__.py", line 76, in proxy_poll
-    (r,w,e) = select.select(r,w,e, timeout)
-  select.error: (4, 'Interrupted system call')
-
 - additionally give _all_ modules the URL info
 
 - more status info (look at surfboard: the WM applet is cool)
@@ -35,6 +16,8 @@ TODO
   Remove dynamic HTML
   Control sounds
   Highlight keywords
+
+- Update help text and .po files
 
 - NT specific functions in daemon module (works now with generic functions)
 

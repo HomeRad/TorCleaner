@@ -73,8 +73,16 @@ def proxy_poll(timeout=0.0):
         r = filter(lambda x: x.readable(), smap.values())
         w = filter(lambda x: x.writable(), smap.values())
         e = smap.values()
-        (r,w,e) = select.select(r,w,e, timeout)
-        
+        try:
+	    (r,w,e) = select.select(r,w,e, timeout)
+        except select.error, why:
+            debug(BRING_IT_ON, why)
+            if why==(4,'Interrupted system call'):
+                # this occurs on UNIX systems with a sighup signal
+                return
+            else:
+                raise
+
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it

@@ -83,9 +83,4 @@
  tag="noscript">
 <replace part="tag"/>
 </rewrite>
-
-<replace title="remove javascript popups"
- disable="1"
- desc="remove window.open"
- search="window.open\(.*?\)"/>
 </folder>

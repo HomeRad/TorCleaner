@@ -351,12 +351,8 @@ class ConfWindow(FXMainWindow):
 
 
     def onCmdProxyStart(self, sender, sel, ptr):
-        from wc import daemon,startfunc
-        try:
-            daemon.start(startfunc)
-        except SystemExit:
-            # parent does not exit
-            pass
+        from wc import daemon
+        daemon.start(parent_exit=0)
         debug(BRING_IT_ON, "webcleaner start")
         return 1
 
@@ -369,12 +365,8 @@ class ConfWindow(FXMainWindow):
 
 
     def onCmdProxyRestart(self, sender, sel, ptr):
-        from wc import daemon,startfunc
-        try:
-            daemon.restart(startfunc)
-        except SystemExit:
-            # parent does not exit
-            pass
+        from wc import daemon
+        daemon.restart(parent_exit=0)
         debug(BRING_IT_ON, "webcleaner restart")
         return 1
 

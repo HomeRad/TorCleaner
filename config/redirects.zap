@@ -33,4 +33,9 @@
 <attr>www\.fileleech\.com/dl/\?.*?filepath=(?P&lt;replace&gt;[^=&quot;&amp;]+)</attr>
 <replace part="attrval"/>
 </rewrite>
+
+<rewrite title="www.coolpix.de">
+<attr>www\.cool-pix\.de/cgi-bin/count/count\.pl\?zaehle,(?P&lt;replace&gt;.+)</attr>
+<replace part="attrval"/>
+</rewrite>
 </folder>
