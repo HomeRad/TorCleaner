@@ -96,3 +96,5 @@ for your application make sure to deny these requests: add
 
 - HTTP/1.1 pipelining
 
+- IPv6 support (there are some stubs already, but untested, and DNS
+  library is missing IPv6 support)
