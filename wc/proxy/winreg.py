@@ -20,28 +20,32 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 # import all from _winreg
-from _winreg import *
+import _winreg
 from types import StringType
 
 class key_handle (object):
     """represent an opened key with dictionary-like access"""
     def __init__ (self, key, sub_key):
-        self._key = OpenKey(key, sub_key)
+        self._key = _winreg.OpenKey(key, sub_key)
+        self.closed = False
+
 
     def __getitem__ (self, key):
         if type(key) != StringType:
             raise TypeError, "key type must be string"
         try:
-	    val = QueryValueEx(self._key, key)
+	    val = _winreg.QueryValueEx(self._key, key)
         except WindowsError:
             raise IndexError, "subkey %s not found"%key
         return val[0]
+
 
     def get (self, key, default=None):
         try:
             return self[key]
         except IndexError:
             return default
+
 
     def subkeys (self):
         """get the list of subkeys as key_handle objects"""
@@ -50,7 +54,7 @@ class key_handle (object):
         while 1:
             try:
                 #print repr(EnumKey(self._key, i))
-                keys.append(key_handle(self._key, EnumKey(self._key, i)))
+                keys.append(key_handle(self._key, _winreg.EnumKey(self._key, i)))
             except EnvironmentError:
                 break
             i += 1
@@ -58,7 +62,7 @@ class key_handle (object):
 
 
     def __len__ (self):
-        return QueryInfoKey(self._key)[0]
+        return _winreg.QueryInfoKey(self._key)[0]
 
 
     def __setitem__ (self, key, value):
@@ -66,13 +70,22 @@ class key_handle (object):
            value is a tuple (type, val). For available types
            see the _winreg module documentation."""
         key = self.__getitem__(key)
-        SetValueEx(self._key, key, value[0], value[1])
+        _winreg.SetValueEx(self._key, key, value[0], value[1])
 
 
     def __delitem__ (self, key):
         """XXX to be implemented"""
         pass
 
+
+    def close (self):
+        _winreg.CloseKey(self._key)
+        self.closed = True
+
+
+    def __del__ (self):
+        if not self.closed:
+            self.close()
 
 #################################################################
 # helper functions from pydns at sourceforge
