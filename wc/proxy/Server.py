@@ -27,7 +27,7 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
     def try_connect (self):
         """Attempt connect to server given by self.addr. Close on error."""
         try:
-            err = self.connect(self.addr)
+            return self.connect(self.addr)
         except (socket.timeout, socket.error):
             # we never connected, but still the socket is in the socket map
             # so remove it
