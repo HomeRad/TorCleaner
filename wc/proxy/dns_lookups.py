@@ -519,7 +519,10 @@ class DnsLookupConnection (Connection):
             if len(self.recv_buffer) < 2+count: return
             self.read(2) # header
             data = self.read(count)
-            self.socket.shutdown(1)
+            try:
+                self.socket.shutdown(1)
+            except socket.error:
+                pass
         else:
             data = self.read(1024)
 
