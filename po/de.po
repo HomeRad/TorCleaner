@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Mon Aug  4 16:41:19 2003\n"
-"PO-Revision-Date: 2003-08-04 13:56+0100\n"
+"POT-Creation-Date: Mon Aug  4 18:09:14 2003\n"
+"PO-Revision-Date: 2003-08-04 17:18+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -751,9 +751,6 @@ msgstr "Nicht zu filternder Rechner wurde erfolgreich entfernt."
 msgid "%d nofilter hosts successfully removed."
 msgstr "%d nicht zu filternde Rechner wurde erfolgreich entfernt."
 
-msgid "%s error"
-msgstr "%s Fehler"
-
 msgid "Invalid folder index"
 msgstr "Ungültiger Ordnerindex"
 
@@ -1185,7 +1182,8 @@ msgid "Image height"
 msgstr "Bildhöhe"
 
 msgid "Changes to this option require a proxy restart to take effect."
-msgstr "Änderungen dieser Option erfordern einen Proxy-Neustart um wirksam zu werden."
+msgstr ""
+"Änderungen dieser Option erfordern einen Proxy-Neustart um wirksam zu werden."
 
 msgid "Move rule up"
 msgstr "Regel nach oben schieben"
@@ -1239,7 +1237,7 @@ msgid "Skip to main content"
 msgstr "Zum Hauptinhalt springen"
 
 msgid "%(AppName)s error"
-msgstr "%(Appname)s error"
+msgstr "%(AppName)s error"
 
 msgid ""
 "Welcome to the wonderful\n"
@@ -1271,7 +1269,7 @@ msgid "Folders"
 msgstr "Ordner"
 
 msgid "%(AppName)s"
-msgstr "%(Appname)s"
+msgstr "%(AppName)s"
 
 msgid "Disabled folder icon"
 msgstr "Bild für inaktiven Ordner"
