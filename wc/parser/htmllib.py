@@ -99,9 +99,8 @@ def _test():
 
 def _broken ():
     p = HtmlPrinter()
-    s = """<h1>bla</h1>"""
-    for c in s:
-        p.feed(c)
+    p.feed("""<a><t""")
+    p.feed("""r>""")
     p.flush()
 
 
