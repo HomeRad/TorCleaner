@@ -12,6 +12,7 @@ A: Look in the HTML source. Some adverts (eg. freshmeat.net) are
 Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
    some tags or is completely crippled
 A: First, try to disable the WebCleaner proxy and look at the page again.
+   Or try adding "noproxy." before the url hostname to turn off filtering.
    If it renders ok, you most likely have encountered a bug in WebCleaner.
    Please write a bug report to calvin@users.sourceforge.net and
    include the URL you have problems with.
@@ -34,8 +35,9 @@ A: Some b0rked servers are sending Content-Type: gzip for pages
 
 Q: I am paranoid. What should I do besides running WebCleaner?
 A: The default config of WebCleaner is strict when it comes
-   to passing private information. Here are some more tips for
-   browser settings:
+   to passing private information, so there is not more that can
+   be done (except adding new filters yourself).
+   Here are some more tips for browser settings:
    - Use Mozillas JavaScript Popup filtering. See
      Mozilla -> Edit -> Preferences -> Advanced -> Scripts & Plugins
    - Disable Java. See
@@ -51,4 +53,4 @@ A: The default config of WebCleaner is strict when it comes
      Mozilla -> Edit -> Preferences -> Privacy & Security -> Forms
    - Dont save passwords. See
      Mozilla -> Edit -> Preferences -> Privacy & Security -> Passwords
-   - Dont install the Flash Plugin.
+   - Dont install the Flash Plugin. It has security problems.

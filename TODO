@@ -1,12 +1,6 @@
 TODO
 
-- Append "noproxy." before the ip or hostname, and the page does not get
-  filtered. Useful for temporary tests what is filtered or not.
-
-- ImageReducer: convert big .gif or .png images into lowquality JPEGs
-  This is especially hard, since the data streams in chunks into
-  the converter, and I want to begin output *before* all the original
-  image data is loaded.
+- Append "noproxy." before all href and src urls when its used
 
 - timeouts do not cancel the request, they occur more than once. Why?
 
