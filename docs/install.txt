@@ -14,10 +14,15 @@ Requirements for Unix/Linux:
    b) gettext
    
 2. Python >= 2.3.1 from http://www.python.org/ with zlib support
+
 3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
+
 4. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
+
 5. runit from http://smarden.org/runit/
+
 6. openssl from http://www.openssl.org/
+
 7. PyOpenSSL from http://pyopenssl.sourceforge.net/
 
 Requirements for Windows:
@@ -38,19 +43,24 @@ Direct download links are in brackets.
    
 2. Install Python >= 2.3.1 from http://www.python.org/
    [http://www.python.org/ftp/python/2.3.3/Python-2.3.3.exe]
+
 3. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
    [http://starship.python.net/crew/mhammond/downloads/win32all-163.exe]
+
 4. Install Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
    [http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe]
+
 5. Download Python Crypto Module from
    http://www.amk.ca/python/code/crypto.html
    [http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz]
    For Installation of PyCrypto see below.
+
 6. Install OpenSSL for Windows from
    http://www.slproweb.com/products/Win32OpenSSL.html
    [http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe]
+
 7. Download PyOpenSSL from
    http://pyopenssl.sourceforge.net/
    [http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz]
