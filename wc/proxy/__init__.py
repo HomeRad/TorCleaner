@@ -67,7 +67,7 @@ def url_quote (url):
     urlparts[0] = urllib.quote(urlparts[0])
     urlparts[1] = urllib.quote(urlparts[1], ':')
     urlparts[2] = urllib.quote(urlparts[2], '/')
-    urlparts[3] = urllib.quote_plus(urlparts[3], '=&')
+    urlparts[3] = urllib.quote_plus(urlparts[3], '=&/')
     urlparts[4] = urllib.quote(urlparts[4])
     return urlparse.urlunsplit(urlparts)
 
