@@ -180,6 +180,9 @@ static PyObject* quote_string (PyObject* val) {
 %option bison-bridge reentrant never-interactive
 /* print warnings on compiling */
 %option warn
+/* dont use unistd, windows does not have it (damn, there was a compile
+  option for that... */
+%option nounistd
 
 %x S_PI
 %x S_COMMENT
