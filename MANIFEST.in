@@ -1,8 +1,8 @@
 include MANIFEST.in guruguru.bmp
 include INSTALL LICENSE README TODO
 include draft-luotonen-web-proxy-tunneling-01.txt
-include Makefile webcleaner webcleanerconf webcleaner.bat webcleanerconf.bat
-include wcheaders.bat wcheaders
+include Makefile webcleaner webcleanerconf wcheaders
+include wcheaders.bat webcleanerconf.bat
 include debian/changelog debian/conffiles debian/config debian/control
 include debian/webcleaner.dirs debian/webcleaner.docs
 include debian/webcleaner.init debian/webcleaner.postinst

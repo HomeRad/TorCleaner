@@ -30,7 +30,8 @@ def parse_headers():
     url = "http://localhost:%(port)d/headers/"%wc.config
     try:
         s = urlopen(url).read()
-    except urllib2.URLError:
+    except URLError:
+        print >> sys.stderr, _("WebCleaner is not running")
         return headers
     if s=="-": return headers
     lines = s.split("\n")
@@ -57,8 +58,11 @@ def parse_connections():
         'blocked': 0,
     }
     url = "http://localhost:%d/connections/"%wc.config['port']
-    from urllib2 import urlopen
-    s = urlopen(url).read()
+    try:
+        s = urlopen(url).read()
+    except URLError:
+        print >> sys.stderr, _("WebCleaner is not running")
+        return headers
     lines = s.split("\n")
     for l in lines:
         name, num = l.split(":")

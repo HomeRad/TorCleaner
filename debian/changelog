@@ -12,8 +12,9 @@ webcleaner (0.29) unstable; urgency=low
   * compile fix for Windows in htmlsax.c
   * minor debug output improvements
   * use Pythons internal gettext module, get rid of fintl.py
+  * remove webcleaner.bat, we only need webcleanerconf.bat for Windows
 
- -- Bastian Kleineidam <calvin@debian.org>  Thu, 29 Nov 2001 11:29:31 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Thu, 29 Nov 2001 15:59:53 +0100
 
 webcleaner (0.28) unstable; urgency=low
 

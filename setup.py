@@ -50,8 +50,7 @@ class MyInstall(install):
                 path = os.path.join(os.environ["ALLUSERSPROFILE"], "Desktop")
             elif os.environ.has_key("USERPROFILE"):
                 path = os.path.join(os.environ["USERPROFILE"], "Desktop")
-            for fname in ('webcleaner.bat', 'wcheaders.bat',
-                 'webcleanerconf.bat'):
+            for fname in ('wcheaders.bat', 'webcleanerconf.bat'):
                 data = open(fname).readlines()
                 data = map(string.strip, data)
                 data = map(lambda s: s.replace("$python", sys.executable), data)
@@ -164,6 +163,8 @@ o HTTP/1.1 support
        'config/blocked.gif',
        'config/webcleaner.conf',
        'config/webcleaner.dtd',
+       'config/wcheaders.conf',
+       'config/wcheaders.dtd',
        'config/filter.dtd',
        'config/adverts.zap',
        'config/css.zap',
@@ -184,8 +185,7 @@ o HTTP/1.1 support
        'webcleaner.conf.5',
       ]),
      ('share/webcleaner/examples',
-      ['webcleaner.bat',
-       'webcleanerconf.bat',
+      ['webcleanerconf.bat',
        'wcheaders.bat']),
      ]
 )
