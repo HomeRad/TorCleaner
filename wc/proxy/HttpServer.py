@@ -446,12 +446,12 @@ class HttpServer (Server):
 
 
     def set_unreadable (self, secs):
-        self.connected = False
-        make_timer(secs, self.set_readable)
+        oldstate, self.state = self.state, 'client'
+        make_timer(secs, lambda: self.set_readable(oldstate))
 
 
-    def set_readable (self):
-        self.connected = True
+    def set_readable (self, state):
+        self.state = state
 
 
     def close_reuse (self):
