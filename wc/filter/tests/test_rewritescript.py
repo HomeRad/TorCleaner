@@ -2,7 +2,6 @@
 """test javascript filtering"""
 
 import unittest
-from test import disable_rating_rules
 import wc
 from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
@@ -16,7 +15,6 @@ class TestRewriteScript (unittest.TestCase):
 
     def setUp (self):
         wc.config = wc.Configuration()
-        disable_rating_rules(wc.config)
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
         self.headers = WcMessage()
