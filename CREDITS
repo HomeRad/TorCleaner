@@ -1,0 +1,23 @@
+Credits
+-------
+
+The proxy code is based on the fourth incarnation of Amit's web proxy.
+
+The filter code design is inspired from FilterProxy, a Perl program from
+Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
+
+Me, Bob and the author of AIFilter (Tels) had a nice discussion about
+filter formats with good ideas. Tels convinced me to try stateful
+filtering and I realize that it is very nice indeed.
+
+Disabling animated GIFs is a question of honor, but the idea goes back to
+the Webwasher.
+
+The HTML parser is inspired from HotSAX.
+
+Thanks to CoAdvisor, for extracting all the important RFC stuff for
+non-caching proxies in their test case documentation.
+
+Thanks to Colin Stewart for making simpleTAL.
+
+
