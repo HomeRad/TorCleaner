@@ -115,8 +115,8 @@ class Configuration (UserDict.UserDict):
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['colorize'] = 0
-        self['noproxyfor'] = {}
-        self['allowedhosts'] = {}
+        self['noproxyfor'] = [{}, [], {}]
+        self['allowedhosts'] = [{}, [], {}]
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
