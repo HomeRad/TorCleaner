@@ -2,11 +2,13 @@
 # -*- coding: iso-8859-1 -*-
 """configuration loading profiling
 """
+import wc
+
 def _main ():
     """USAGE: test/run.sh test/pconfig.py"""
     from test import initlog
     initlog("test/logging.conf")
-    import profile, wc
+    import profile
     profile.run("config = wc.Configuration()", "filter.prof")
 
 
