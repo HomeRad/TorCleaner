@@ -8,7 +8,8 @@
     Changed files: wc/filter/Rewriter.py, wc/__init__.py,
       wc/gui/FXRuleFrameFactory.py
   * - correctly propagate and display parsing errors
-    - also enable yydebug on debug() call
+    - really cope with missing ">" end tags
+    - enable yydebug on debug() call
     Changed files: wc/parser/html{lex.l, parse.y}
 
 1.9
