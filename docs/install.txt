@@ -68,23 +68,22 @@ Direct download links are in brackets.
 4. *Optional (used by ImageSize and ImageReducer module)*
    Install Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
-   [http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe]
+   [http://webcleaner.sf.net/PIL-1.1.4.win32-py2.4.exe]
 
 5. *Optional (used for NTLM authentication)* Download Python Crypto Module
    from http://www.amk.ca/python/code/crypto.html
-   [http://www.amk.ca/files/python/crypto/pycrypto-2.0.tar.gz]
+   [http://webcleaner.sf.net/pycrypto-2.0.win32-py2.4.exe]
    For Installation of PyCrypto see below.
 
-6. *Optional (used for SSL connections)* Install OpenSSL for Windows from
+6. *Optional (used for SSL connections)* Install OpenSSL and PyOpenSSL
+   for Windows from
    http://www.slproweb.com/products/Win32OpenSSL.html
    [http://www.slproweb.com/download/Win32OpenSSL-v0.9.7e.exe]
-
-7. *Optional (used for SSL connections)* Download PyOpenSSL from
+   and
    http://pyopenssl.sourceforge.net/
-   [http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.6.tar.gz]
-   For Installation of PyOpenSSL see below.
+   [http://webcleaner.sf.net/pyOpenSSL-0.6.win32-py2.4.exe]
 
-8. *Optional (used by VirusFilter module)* ClamAv from
+7. *Optional (used by VirusFilter module)* ClamAv from
    http://www.sosdg.org/clamav-win32/index.php
    [http://www.sosdg.org/clamav-win32/clamav-devel.exe]
 
@@ -152,7 +151,7 @@ Setup for Windows - the binary .exe installer:
    
    Be sure to have installed all required windows software listed above.
 
-2. Execute the ``webcleaner-x.xx.win32-py2.3.exe`` file and follow
+2. Execute the ``webcleaner-x.xx.win32-py2.4.exe`` file and follow
    the instructions.
 
 Setup for Windows - compiling from source:
@@ -186,12 +185,6 @@ Setup for Windows - compiling from source:
    library:
    ``% ./configure && make``.
 
-4. Compile and install PyCrypto
-   
-   Close the MSYS application and open a DOS command prompt.
-   Change to the pycrypto-2.0 directory and run
-   ``c:> python setup.py build -c mingw32 install``
-
 5. Install OpenSSL and compile PyOpenSSL
    
    Change to the directory where you installed OpenSSL (for example
@@ -212,7 +205,7 @@ Setup for Windows - compiling from source:
    ``c:> python setup.py build -c mingw32 bdist_wininst``.
 
    This generates a binary installer
-   ``dist\webcleaner-X.X.win32-py2.3.exe`` which you just have to
+   ``dist\webcleaner-X.X.win32-py2.4.exe`` which you just have to
    execute.
 
 7. Enjoy
