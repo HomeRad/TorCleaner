@@ -20,8 +20,8 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from simpletal import simpleTAL, simpleTALES
-from context import getval
+from wc.webgui.simpletal import simpleTAL, simpleTALES
+from wc.webgui.context import getval
 from cStringIO import StringIO
 from wc import i18n, config, TemplateDir, App, filtermodules, Name, LocaleDir
 from wc.log import *
