@@ -62,6 +62,37 @@ def strblock (block):
     return "[%s]" % ", ".join(patterns)
 
 
+def append_lines (lines, lst, sid):
+    """append lines to given list, augmented with sid"""
+    for line in lines:
+        line = line.strip()
+        if not line or line[0]=='#':
+            continue
+        lst.append((line, sid))
+
+
+def get_file_data (filename):
+    """return plain file object, possible gunzipping the file"""
+    wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
+    filename = os.path.join(wc.ConfigDir, filename)
+    if filename.endswith(".gz"):
+        f = gzip.GzipFile(filename, 'rb')
+    else:
+        f = file(filename)
+    return f
+
+
+def try_append_lines (lst, rule):
+    """read rule file, print log note on error"""
+    try:
+        lines = get_file_data(rule.filename)
+    except IOError, msg:
+        wc.log.error(wc.LOG_FILTER, "could not read file %r: %s",
+                     rule.filename, str(msg))
+        return
+    append_lines(lines, lst, rule.sid)
+
+
 class Blocker (wc.filter.Filter.Filter):
     """block urls and show replacement data instead"""
     # which filter stages this filter applies to (see filter/__init__.py)
@@ -119,49 +150,22 @@ class Blocker (wc.filter.Filter.Filter):
 
     def add_blockdomains (self, rule):
         """add BlockdomainsRule data"""
-        for line in self.get_file_data(rule.filename):
-            line = line.strip()
-            if not line or line[0]=='#':
-                continue
-            self.blocked_domains.append((line, rule.sid))
+        try_append_lines(self.blocked_domains, rule)
 
 
     def add_allowdomains (self, rule):
         """add AllowdomainsRule data"""
-        for line in self.get_file_data(rule.filename):
-            line = line.strip()
-            if not line or line[0]=='#':
-                continue
-            self.allowed_domains.append((line, rule.sid))
+        try_append_lines(self.allowed_domains, rule)
 
 
     def add_blockurls (self, rule):
         """add BlockurlsRule data"""
-        for line in self.get_file_data(rule.filename):
-            line = line.strip()
-            if not line or line[0]=='#':
-                continue
-            self.blocked_urls.append((line, rule.sid))
+        try_append_lines(self.blocked_urls, rule)
 
 
     def add_allowurls (self, rule):
         """add AllowurlsRule data"""
-        for line in self.get_file_data(rule.filename):
-            line = line.strip()
-            if not line or line[0]=='#':
-                continue
-            self.allowed_urls.append((line, rule.sid))
-
-
-    def get_file_data (self, filename):
-        """return plain file object, possible gunzipping the file"""
-        wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
-        filename = os.path.join(wc.ConfigDir, filename)
-        if filename.endswith(".gz"):
-            f = gzip.GzipFile(filename, 'rb')
-        else:
-            f = file(filename)
-        return f
+        try_append_lines(self.allowed_urls, rule)
 
 
     def doit (self, data, **attrs):
