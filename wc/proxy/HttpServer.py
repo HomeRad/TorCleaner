@@ -173,7 +173,7 @@ class HttpServer(Server):
         if self.headers.has_key('transfer-encoding'):
             debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
-            # XXX HACK - remove encoding header
+            # remove encoding header
             for h in self.headers.headers[:]:
                 if re.match('(?i)transfer-encoding:', h):
                     self.headers.headers.remove(h)
@@ -182,11 +182,12 @@ class HttpServer(Server):
                     self.headers.headers.remove(h)
                     #self.bytes_remainig = None
 
-        if self.headers.get('content-encoding')=='gzip':
+        if self.headers.get('content-encoding')=='gzip' and \
+           self.headers.get('content-type') in config['mime_gunzip_ok']:
             debug(BRING_IT_ON, 'Content-encoding: gzip')
             self.decoders.append(GunzipStream())
-            # XXX HACK - remove content length and encoding
-            # because we unzipped the stream
+            # remove content length and encoding
+            # because we unzip the stream
             for h in self.headers.headers[:]:
                 if re.match('(?i)content-length:', h):
                     self.headers.headers.remove(h)

@@ -1,5 +1,25 @@
 TODO
 
+- Assertion error:
+  File "./wc/__init__.py", line 91, in startfunc
+    proxy.mainloop()
+  File "./wc/proxy/__init__.py", line 195, in mainloop
+    handlerCount = proxy_poll(timeout=max(0, run_timers()))
+  File "./wc/proxy/__init__.py", line 143, in proxy_poll
+    x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
+  File "./wc/proxy/HttpServer.py", line 319, in handle_error
+    Server.handle_error(self, type, value, traceback)
+  File "./wc/proxy/Connection.py", line 116, in handle_error
+    self.close()
+  File "./wc/proxy/HttpServer.py", line 315, in close
+    serverpool.unregister_server(self.addr, self)
+  File "./wc/proxy/ServerPool.py", line 53, in unregister_server
+    assert self.map[addr].has_key(server), '%s missing %s' % (self.map[addr], server)
+  AssertionError: {<server:client   127.0.0.1:8000>: ('busy',), 
+  <server:content  localhost:8000http://www2.valinux.com/clear...>: ('busy',), 
+  <server:response localhost:8000http://sourceforge.net/images...>: ('busy',)} 
+  missing <server:closed   localhost:8000http://a248.e.akamai.net/7/24...>
+  
 - Debian: purge does not remove all .pyc files (why??)
 
 - test Cookies

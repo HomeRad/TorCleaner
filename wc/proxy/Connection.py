@@ -56,8 +56,8 @@ class Connection(asyncore.dispatcher):
             if not data: # It's been closed, and handle_close has been called
                 return
             debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
-        except socket.error, err:
-            self.handle_error('read error', socket.error, err)
+        except socket.error:
+            self.handle_error('read error', socket.error, sys.exc_info()[2])
             return
 	self.recv_buffer += data
         self.process_read()
@@ -78,8 +78,8 @@ class Connection(asyncore.dispatcher):
         num_sent = 0
         try:
             num_sent = self.send(self.send_buffer[:SEND_BUFSIZE])
-        except socket.error, err:
-            self.handle_error('write error', socket.error, err)
+        except socket.error:
+            self.handle_error('write error', socket.error, sys.exc_info()[2])
             return
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:

@@ -129,6 +129,7 @@ class Configuration(UserDict.UserDict):
         self['local_sockets_only'] = 1
         self['localip'] = socket.gethostbyname(socket.gethostname())
         self['mime_no_length'] = []
+        self['mime_gunzip_ok'] = []
 
     def read_proxyconf(self):
         p = WConfigParser()
@@ -151,6 +152,8 @@ class Configuration(UserDict.UserDict):
                     for mime in getattr(_module, f).mimelist:
                         if mime not in self['mime_no_length']:
                             self['mime_no_length'].append(mime)
+                        if mime not in self['mime_gunzip_ok']:
+                            self['mime_gunzip_ok'].append(mime)
                 instance = getattr(_module, f)()
                 for rules in self['rules']:
                     if rules.disable: continue
