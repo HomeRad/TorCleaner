@@ -24,17 +24,17 @@
 
 <rewrite title="Ad servers 3" oid="4"
  desc="Kill links with ad words in the host name.">
-<attr>http://ad.*\.flycast\.com</attr>
+<attr>ad.*\.flycast\.com</attr>
 </rewrite>
 
 <rewrite title="Ad servers 4" oid="5"
  desc="Kill links with ad words in the host name.">
-<attr>http://(eur\.)?rd\.yahoo\.com</attr>
+<attr>(eur\.)?rd\.yahoo\.com</attr>
 </rewrite>
 
 <rewrite title="Ad servers 5" oid="6"
  desc="Kill links with ad words in the host name.">
-<attr>((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange|creative-ads|click(it|finders|burst|here.egroups))\.com</attr>
+<attr>((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange|creative-ads|fmads\.osdn|click(it|finders|burst|here.egroups))\.com</attr>
 </rewrite>
 
 <rewrite title="Ad servers 6" oid="7"
