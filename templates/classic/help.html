@@ -277,7 +277,8 @@ the one defined by %(AppName)s itself can be configured.</p>
 </div>
 
 <div metal:use-macro="macros/footer">Footer...
-<span metal:fill-slot="pi"><a href="javascript:pi()">&piv;</a></span>
+<span metal:fill-slot="pi"><a onMouseOver="window.status='';return true"
+ href="javascript:pi()">&piv;</a></span>
 </div>
 </body>
 </html>
