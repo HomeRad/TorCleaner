@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Thu Jan  8 21:00:34 2004\n"
-"PO-Revision-Date: 2004-01-08 21:06+0100\n"
+"POT-Creation-Date: Fri Jan  9 19:33:49 2004\n"
+"PO-Revision-Date: 2004-01-09 19:36+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -42,8 +42,8 @@ msgstr "Etwas"
 msgid "Heavy"
 msgstr "Viel"
 
-msgid "Malformed rating line %r"
-msgstr "Ungültige Bewertungszeile %r"
+msgid "malformed rating line %r"
+msgstr "ungültige Bewertungszeile %r"
 
 msgid "inserting new rule %s"
 msgstr "füge neue Regel %s ein"
@@ -56,6 +56,12 @@ msgstr "mit %d Regeln"
 
 msgid "Invalid rating rule tag name %r, check your configuration"
 msgstr "Ungültiger Bewertungstagname %r, prüfen Sie ihre Konfiguration"
+
+msgid "Rating %r for category %r is not in range %s"
+msgstr "Bewertung %r für Kategorie %r ist nicht im Bereich %s"
+
+msgid "Rating %r for category %r exceeds limit %r"
+msgstr "Bewertung %r für Kategorie %r überschreitet Grenze %s"
 
 msgid "Tag"
 msgstr "Tag"
@@ -209,6 +215,9 @@ msgstr "Interner Fehler"
 
 msgid "%s error"
 msgstr "%s error"
+
+msgid "Unknown reason"
+msgstr "Unbekannter Grund"
 
 msgid "%s Proxy"
 msgstr "%s Proxy"
@@ -415,6 +424,9 @@ msgstr "Proxy Benutzer"
 msgid "return window.confirm('Really remove this folder?')"
 msgstr "return window.confirm('Diesen Ordner wirklich löschen?')"
 
+msgid "supply a different rating for this page"
+msgstr "ändern Sie die Bewertung dieser Seite"
+
 msgid "Folder name"
 msgstr "Ordnername"
 
@@ -504,6 +516,9 @@ msgstr ""
 
 msgid "Rule enclosed block successfully changed."
 msgstr "Rewrite-Regel eingeschlossener Block wurde erfolgreich geändert."
+
+msgid "Content rated by %(AppName)s"
+msgstr "Inhalt gesperrt von %(AppName)s"
 
 msgid "Parse and evaluate content rating system header values."
 msgstr "Parse und evaluiere Header Werte der Inhaltsbewertung."
@@ -775,7 +790,7 @@ msgid "Content rating"
 msgstr "Inhaltsbewertung"
 
 msgid "Rating successfully updated."
-msgstr "Bewerung erfolgreich geändert."
+msgstr "Bewertung erfolgreich geändert."
 
 msgid ""
 "If there is no replacement given the specified tag\n"
@@ -1042,6 +1057,9 @@ msgstr "Ordner"
 
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
+
+msgid "Please point your browser somewhere else or"
+msgstr "Bitte besuchen Sie eine andere Internetseite oder"
 
 msgid "Action"
 msgstr "Aktion"
@@ -1346,6 +1364,13 @@ msgstr "Bild für inaktiven Ordner"
 
 msgid "Try Google"
 msgstr "Google fragen"
+
+msgid ""
+"The content of the requested page <b>%(url)s</b>\n"
+"was rated for the following reason:"
+msgstr ""
+"Der Inhalt der angeforderten Seite <b>%(url)s</b>\n"
+"wurde aus folgendem Grund gesperrt:"
 
 msgid "Add/replace attribute"
 msgstr "Attribut hinzufügen/ersetzen"

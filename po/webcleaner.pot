@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Thu Jan  8 21:00:34 2004\n"
+"POT-Creation-Date: Fri Jan  9 19:33:49 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Heavy"
 msgstr ""
 
-msgid "Malformed rating line %r"
+msgid "malformed rating line %r"
 msgstr ""
 
 msgid "inserting new rule %s"
@@ -58,6 +58,12 @@ msgid "with %d rules"
 msgstr ""
 
 msgid "Invalid rating rule tag name %r, check your configuration"
+msgstr ""
+
+msgid "Rating %r for category %r is not in range %s"
+msgstr ""
+
+msgid "Rating %r for category %r exceeds limit %r"
 msgstr ""
 
 msgid "Tag"
@@ -211,6 +217,9 @@ msgid "Internal Error"
 msgstr ""
 
 msgid "%s error"
+msgstr ""
+
+msgid "Unknown reason"
 msgstr ""
 
 msgid "%s Proxy"
@@ -384,6 +393,9 @@ msgstr ""
 msgid "return window.confirm('Really remove this folder?')"
 msgstr ""
 
+msgid "supply a different rating for this page"
+msgstr ""
+
 msgid "Folder name"
 msgstr ""
 
@@ -455,6 +467,9 @@ msgid ""
 msgstr ""
 
 msgid "Rule enclosed block successfully changed."
+msgstr ""
+
+msgid "Content rated by %(AppName)s"
 msgstr ""
 
 msgid "Parse and evaluate content rating system header values."
@@ -941,6 +956,9 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
+msgid "Please point your browser somewhere else or"
+msgstr ""
+
 msgid "Action"
 msgstr ""
 
@@ -1204,6 +1222,11 @@ msgid "Disabled folder icon"
 msgstr ""
 
 msgid "Try Google"
+msgstr ""
+
+msgid ""
+"The content of the requested page <b>%(url)s</b>\n"
+"was rated for the following reason:"
 msgstr ""
 
 msgid "Add/replace attribute"
