@@ -215,6 +215,7 @@ class Configuration (dict):
         self['showerrors'] = 0
         self['gui_theme'] = "classic"
         self['timeout'] = 30
+        self['auth_ntlm'] = 0
 
 
     def read_proxyconf (self):
@@ -243,6 +244,7 @@ class Configuration (dict):
             f.write(' showerrors="1"\n')
         f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' gui_theme="%s"\n' % xmlify(self['gui_theme']))
+        f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
         hosts = sort_seq(ip.map2hosts(self['nofilterhosts']))
         f.write(' nofilterhosts="%s"\n'%xmlify(",".join(hosts)))
         hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
@@ -450,7 +452,7 @@ class WConfigParser (BaseParser):
         if name=='webcleaner':
             for key,val in attrs.items():
                 self.config[key] = unxmlify(val)
-            for key in ('port', 'parentproxyport', 'timeout',
+            for key in ('port', 'parentproxyport', 'timeout', 'auth_ntlm',
 	                'colorize', 'showerrors', 'strict_whitelist'):
                 self.config[key] = int(self.config[key])
             if self.config['nofilterhosts'] is not None:
