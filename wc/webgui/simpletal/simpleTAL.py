@@ -115,6 +115,7 @@ class TemplateInterpreter:
 		self.commandHandler [METAL_USE_MACRO] = self.cmdUseMacro
 		self.commandHandler [METAL_DEFINE_SLOT] = self.cmdDefineSlot
 		self.commandHandler [TAL_NOOP] = self.cmdNoOp
+                self.commandHandler [I18N_TRANSLATE] = self.cmdI18nTranslate
 	
 	def initialise (self, context, outputFile):
 		self.context = context
@@ -438,6 +439,10 @@ class TemplateInterpreter:
 		# Slot isn't filled, so just use our own content
 		self.programCounter += 1
 		return
+
+	def cmdI18nTranslate (self, command, args):
+                print "XXX", command, args
+                self.programCounter += 1
 
 class Template:
 	def __init__ (self, commands, macros, symbols):
@@ -862,7 +867,7 @@ class TemplateCompiler:
 		# Sort the tags by priority
 		foundTALAtts.sort()
 
-		# We handle the METAL before the TAL
+		# We handle the METAL before the I18N and TAL
 		allCommands = foundMETALAtts + foundI18NAtts + foundTALAtts
 		firstTag = 1
 		for talAtt in allCommands:
@@ -1122,9 +1127,9 @@ class TemplateCompiler:
 
 		return (METAL_DEFINE_SLOT, (argument, self.endTagSymbol))
 
-        def compileI18nTranslate (self, content):
-                # XXX
-                pass
+        def compileI18nTranslate (self, argument):
+		return (I18N_TRANSLATE, (argument, {}, self.endTagSymbol))
+
 
 class TemplateParseException (Exception):
 	def __init__ (self, location, errorDescription):
