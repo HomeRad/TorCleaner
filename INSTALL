@@ -9,6 +9,7 @@ Requirements for Unix/Linux:
 2. Python >= 2.3.1 from http://www.python.org/ with zlib support
 3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
 4. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
+5. runit from http://smarden.org/runit/
 
 Requirements for Windows:
 -------------------------
@@ -38,18 +39,31 @@ Direct download links are in brackets.
 
 Setup for Unix/Linux:
 ---------------------
-Run "./configure; make" to compile the included C libraries.
-Run "python setup.py build" to compile the Python files.
-The CC environment variable is checked before compilation, so you can
-change the default C compiler with "export CC=myccompiler".
-Run "python setup.py install" to install everything.
-Note: if you work from CVS, you must run "./autogen.sh" first to
-generate the configure and Makefile files.
+0. Install check
+   Be sure to have installed all required Unix/Linux software listed above.
+1. Compilation
+   Run "./configure; make" to compile the included C libraries.
+   Run "python setup.py build" to compile the Python files.
+   The CC environment variable is checked before compilation, so you can
+   change the default C compiler with "export CC=myccompiler".
+   If you work from CVS, you must run "./autogen.sh" first to generate the
+   configure and Makefile files.
+2a.Installation as root
+   Run "su -c 'python setup.py install'" to install the proxy.
+   Run "su -c 'make installservice'" to install the runit service.
+2b.Installation as a normal user
+   Run "python setup.py install --home $HOME"
+   Now read the runsvdir(8) documentation on how to setup a local
+   runit service.
+3. Enjoy
+   WebCleaner is now installed as a runit service and will start
+   automatically in 5 seconds.
+   See the README on how to configure the proxy filters.
 
 Setup for Windows:
 ------------------
 0. Install check
-   Be sure to have installed all required software listed above.
+   Be sure to have installed all required windows software listed above.
 1. Preparing Python for the MinGW compiler
    Search the file python23.dll in your windows folder.
    After you found it, launch MSYS and do:
@@ -75,3 +89,6 @@ Setup for Windows:
 5. Compile and install the Python modules
    Change to the webcleaner-X.X directory and do:
    c:> python setup.py build -c mingw32 install
+6. Enjoy
+   WebCleaner is now installed and started as a regular Windows service.
+   See the README on how to configure the proxy filters.
