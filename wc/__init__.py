@@ -202,16 +202,8 @@ class Configuration (dict):
 
     def read_proxyconf (self):
         """read proxy configuration"""
-        self.parse(WConfigParser, proxyconf_file())
-
-
-    def parse (self, klass, filename, data=None):
-        p = klass()
-        if data is not None:
-            fp = StringIO(data)
-        else:
-            fp = file(filename)
-        p.parse(fp, filename, self)
+        filename = proxyconf_file()
+        WConfigParser(filename).parse(file(filename), self)
 
 
     def write_proxyconf (self):
@@ -249,7 +241,9 @@ class Configuration (dict):
         """read filter rules"""
         # filter configuration
         for filename in filterconf_files():
-            self.parse(ZapperParser, filename)
+            p = ZapperParser(filename)
+            p.parse(file(filename))
+            self['folderrules'].append(p.folder)
         self.sort()
 
 
@@ -261,6 +255,17 @@ class Configuration (dict):
         self['folderrules'].sort()
         recalc_oids(self['folderrules'])
         recalc_up_down(self['folderrules'])
+
+
+    def merge_folder (self, folder):
+        found = False
+        for rule in self['folderrules']:
+            if rule.sid==folder.sid:
+                rule.merge(folder)
+                found = True
+                break
+        if not found:
+            self['folderrules'].append(folder)
 
 
     def write_filterconf (self):
@@ -336,19 +341,21 @@ _nestedtags = (
 class ParseException (Exception): pass
 
 class BaseParser (object):
-    def parse (self, fp, filename, config):
-        debug(WC, "Parsing %s", filename)
+    def __init__ (self, filename):
         self.p = xml.parsers.expat.ParserCreate()
         self.p.returns_unicode = 0
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
         self.p.CharacterDataHandler = self.character_data
-        self.reset(filename)
-        self.config = config
+        self.filename = filename
+
+
+    def parse (self, fp):
+        debug(WC, "Parsing %s", self.filename)
         try:
             self.p.ParseFile(fp)
         except xml.parsers.expat.ExpatError:
-            error(WC, "Error parsing %s"%filename)
+            error(WC, "Error parsing %s", self.filename)
             raise
 
 
@@ -364,19 +371,13 @@ class BaseParser (object):
         pass
 
 
-    def reset (self, filename):
-        pass
-
-
 class ZapperParser (BaseParser):
-    def parse (self, fp, filename, config):
-        super(ZapperParser, self).parse(fp, filename, config)
-        from wc.filter.rules import register_rule, generate_sids
-        if self.folder.sid is None:
-            register_rule(self.folder)
-        # generate unique numbers for rules with missing serial ids
-        generate_sids()
-        config['folderrules'].append(self.folder)
+    def __init__ (self, filename):
+        super(ZapperParser, self).__init__(filename)
+        from wc.filter.rules import FolderRule
+        self.folder = FolderRule.FolderRule(filename=filename)
+        self.cmode = None
+        self.rule = None
 
 
     def start_element (self, name, attrs):
@@ -400,9 +401,7 @@ class ZapperParser (BaseParser):
         if name=='rewrite':
             self.rule.set_start_sufficient()
         if name in rulenames:
-            if self.rule.sid is None:
-                from wc.filter.rules import register_rule
-                register_rule(self.rule)
+            assert self.rule.sid is not None
 
 
     def character_data (self, data):
@@ -410,17 +409,11 @@ class ZapperParser (BaseParser):
             self.rule.fill_data(data, self.cmode)
 
 
-    def reset (self, filename):
-        from wc.filter.rules import FolderRule
-        self.folder = FolderRule.FolderRule(filename=filename)
-        self.cmode = None
-        self.rule = None
-
-
 class WConfigParser (BaseParser):
-    def parse (self, fp, filename, config):
-        super(WConfigParser, self).parse(fp, filename, config)
-        self.config['configfile'] = filename
+    def parse (self, fp, config):
+        self.config = config
+        super(WConfigParser, self).parse(fp)
+        self.config['configfile'] = self.filename
         self.config['filters'].sort()
 
 
