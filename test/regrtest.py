@@ -128,6 +128,7 @@ STDTESTS = [
     'test_parser',
     'test_blocker',
     'test_rewriter',
+    'test_parserhtml',
    ]
 
 NOTTESTS = [

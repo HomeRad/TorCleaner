@@ -1,4 +1,5 @@
 test_parser
+hui
 ============ syntax tests =============
 HTML '<a b="c">'
 setDocumentLocator ('documentlocator',)

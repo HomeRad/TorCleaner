@@ -94,7 +94,6 @@ def initStateObjects(headers={'content-type': 'text/html'}, url=None):
         for f in wc.config['filterlist'][i]:
             if hasattr(f, 'mimelist'):
                 if attrs['mime'] in f.mimelist:
-                    #pass
                     attrs.update(f.getAttrs(headers, url))
             else:
                 attrs.update(f.getAttrs(headers, url))
