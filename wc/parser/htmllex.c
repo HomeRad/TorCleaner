@@ -6581,14 +6581,14 @@ static PyObject* quote_string (PyObject* val) {
     if (quote==NULL) {
         return val;
     }
-    // quote suffix
+    /* quote suffix */
     if ((prefix = PyString_FromString(quote))==NULL) return NULL;
     PyString_Concat(&val, prefix);
     if (val==NULL) {
         Py_DECREF(prefix);
 	return NULL;
     }
-    // quote prefix
+    /* quote prefix */
     PyString_ConcatAndDel(&prefix, val);
     if (prefix==NULL) {
         Py_DECREF(val);

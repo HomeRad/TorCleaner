@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include "htmlsax.h"
 
+/* bison type definitions */
 #define YYSTYPE PyObject*
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM scanner
@@ -34,7 +35,10 @@ extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
 int yyerror(char* msg);
-/* test whether tag does not need a HTML end tag */
+
+/* macros for easier scanner state manipulation */
+
+/* test whether tag does not need an HTML end tag */
 #define NO_HTML_END_TAG(tag) !(strcmp(tag, "area")==0 || \
     strcmp(tag, "base")==0 || \
     strcmp(tag, "basefont")==0 || \
@@ -143,8 +147,8 @@ static const short yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined. */
 static const short yyrline[] =
 {
-       0,    84,    85,    88,    89,    96,   133,   182,   215,   246,
-     277,   308,   339,   379,   419
+       0,    89,    90,    93,    94,   101,   138,   187,   220,   251,
+     282,   313,   344,   384,   424
 };
 #endif
 
@@ -927,30 +931,30 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 84 "htmlparse.y"
+#line 89 "htmlparse.y"
 {;
     break;}
 case 2:
-#line 85 "htmlparse.y"
+#line 90 "htmlparse.y"
 {;
     break;}
 case 3:
-#line 88 "htmlparse.y"
+#line 93 "htmlparse.y"
 { YYACCEPT; /* wait for more lexer input */ ;
     break;}
 case 4:
-#line 90 "htmlparse.y"
+#line 95 "htmlparse.y"
 {
-    /* a python error occured in the scanner */
+    /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
     PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
     YYABORT;
 ;
     break;}
 case 5:
-#line 97 "htmlparse.y"
+#line 102 "htmlparse.y"
 {
-    /* $1 is a tuple (<tag>, <attrs>) */
+    /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -987,9 +991,9 @@ finish_start:
 ;
     break;}
 case 6:
-#line 134 "htmlparse.y"
+#line 139 "htmlparse.y"
 {
-    /* $1 is a tuple (<tag>, <attrs>) */
+    /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1038,7 +1042,7 @@ finish_start_end:
 ;
     break;}
 case 7:
-#line 183 "htmlparse.y"
+#line 188 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1073,7 +1077,7 @@ finish_end:
 ;
     break;}
 case 8:
-#line 216 "htmlparse.y"
+#line 221 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1106,7 +1110,7 @@ finish_comment:
 ;
     break;}
 case 9:
-#line 247 "htmlparse.y"
+#line 252 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1139,7 +1143,7 @@ finish_pi:
 ;
     break;}
 case 10:
-#line 278 "htmlparse.y"
+#line 283 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1172,7 +1176,7 @@ finish_cdata:
 ;
     break;}
 case 11:
-#line 309 "htmlparse.y"
+#line 314 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1205,7 +1209,7 @@ finish_doctype:
 ;
     break;}
 case 12:
-#line 340 "htmlparse.y"
+#line 345 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1247,7 +1251,7 @@ finish_script:
 ;
     break;}
 case 13:
-#line 380 "htmlparse.y"
+#line 385 "htmlparse.y"
 {
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1289,7 +1293,7 @@ finish_style:
 ;
     break;}
 case 14:
-#line 420 "htmlparse.y"
+#line 425 "htmlparse.y"
 {
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
@@ -1555,9 +1559,10 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 453 "htmlparse.y"
+#line 458 "htmlparse.y"
 
 
+/* disable python memory interface */
 #undef malloc
 #undef realloc
 #undef free
@@ -1625,7 +1630,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	Py_DECREF(callback);
 	Py_DECREF(result);
 	Py_DECREF(s);
-	// reset buffer
+	/* reset buffer */
 	RESIZE_BUF(self->userData->buf);
         self->userData->bufpos = 0;
     }
@@ -1678,7 +1683,7 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
         PyErr_SetString(PyExc_MemoryError, "could not destroy scanner data");
         return NULL;
     }
-    // reset buffer
+    /* reset buffer */
     RESIZE_BUF(self->userData->buf);
     RESIZE_BUF(self->userData->tmp_buf);
     self->userData->bufpos = 0;
@@ -1738,9 +1743,9 @@ void inithtmlsax(void) {
     /*yydebug = 1;*/
 }
 
+
 /* standard error reporting, indicating an internal error */
 int yyerror (char* msg) {
     fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
     return 0;
 }
-
