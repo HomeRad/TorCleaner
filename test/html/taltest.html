@@ -24,12 +24,17 @@
 </li>
 
 <li>translate attributes 1<br>
-<img i18n:attributes="alt English image description">
+<img i18n:attributes="alt string:English image description">
 </li>
 
 <li>translate attributes 2<br>
-<input type="text" name="rule_title" i18n:translate=""
- value="error" tal:attributes="value transe">
+<input type="text" name="rule_title" value="error"
+ i18n:attributes="value transe">
+</li>
+
+<li>translate attributes 3<br>
+<input type="text" name="rule_title" value="This will be translated"
+ i18n:attributes="">
 </li>
 
 </ul>

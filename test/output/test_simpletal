@@ -32,6 +32,10 @@ Transe Test erfolgreich
 <input value="Transe Test erfolgreich" type="text" name="rule_title">
 </li>
 
+<li>translate attributes 3<br>
+<input type="text" name="rule_title" value="Das ist übersetzt">
+</li>
+
 </ul>
 </body>
 </html>
