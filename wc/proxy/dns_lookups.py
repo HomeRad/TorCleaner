@@ -460,6 +460,9 @@ class DnsLookupConnection (Connection):
         if not self.callback: return # Only issue if we have someone waiting
         msg = dnslib.Lib.Mpacker()
         msg.addHeader(0, 0, dnslib.Opcode.QUERY, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+        # XXX could send Type.AAAA for IPv6 nameservers, but who decides when
+        # to do that? This is the dilemma with IPv6 not having an update
+        # solution...
         msg.addQuestion(self.hostname, dnslib.Type.A, dnslib.Class.IN)
         msg = msg.getbuf()
         if self.conntype == 'tcp':

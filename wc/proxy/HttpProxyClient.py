@@ -65,7 +65,8 @@ class HttpProxyClient (object):
             url = urllib.unquote(url)
             host = stripsite(url)[0]
             self.args = (url, self.args[1])
-            # try again
+            # close the server and try again
+            self.server.client_abort()
             ClientServerMatchmaker(self,
                            "GET %s HTTP/1.1" % url, #request
                            get_wc_client_headers(host), #headers
