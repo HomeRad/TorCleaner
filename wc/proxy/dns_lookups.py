@@ -9,34 +9,6 @@ from wc import debug, warning
 from wc.debug_levels import *
 from pprint import pformat
 
-# IP Adress regular expressions
-_ipv4_num = r"\d{1,3}"
-_ipv4_num_4 = (_ipv4_num,)*4
-_ipv4_re = re.compile(r"^%s\.%s\.%s\.%s$" % _ipv4_num_4)
-# see rfc2373
-_ipv6_num = r"[\da-f]{1,4}"
-_ipv6_re = re.compile(r"^%s:%s:%s:%s:%s:%s:%s:%s$" % ((_ipv6_num,)*8))
-_ipv6_ipv4_re = re.compile(r"^%s:%s:%s:%s:%s:%s:" % ((_ipv6_num,)*6) + \
-                           r"%s\.%s\.%s\.%s$" % _ipv4_num_4)
-_ipv6_abbr_re = re.compile(r"^((%s:){0-6}%s)?::((%s:){0-6}%s)?$" % \
-                           ((_ipv6_num,)*4))
-_ipv6_ipv4_abbr_re = re.compile(r"^((%s:){0-4}%s)?::((%s:){0-5})?" % \
-                           ((_ipv6_num,)*3) + \
-                           "%s\.%s\.%s\.%s$" % _ipv4_num_4)
-
-def ipv6_expand (ip, num):
-    """expand an IPv6 address with included :: to num octets"""
-    i = ip.find("::")
-    prefix = ip[:i]
-    suffix = ip[i+2:]
-    count = prefix.count(":") + suffix.count(":")
-    if prefix: prefix = prefix+":"
-    if suffix: suffix = ":"+suffix
-    if count>=num: raise ValueError, "invalid ipv6 number: %s"%ip
-    fill = (num-count-1)*"0:" + "0"
-    return prefix+fill+suffix
-
-
 ###################### configuration ########################
 
 class DnsConfig:
@@ -278,16 +250,8 @@ class DnsCache:
 
     def lookup (self, hostname, callback):
         # see if hostname is already a resolved IP address
-        if _ipv4_re.match(hostname) or \
-           _ipv6_re.match(hostname) or \
-           _ipv6_ipv4_re.match(hostname):
-            return callback(hostname, DnsResponse('found', [hostname]))
-        if _ipv6_abbr_re.match(hostname):
-            hostname = ipv6_expand(hostname, 8)
-            return callback(hostname, DnsResponse('found', [hostname]))
-        if _ipv6_ipv4_abbr_re.match(hostname):
-            i = hostname.rfind(":") + 1
-            hostname = ipv6_expand(hostname[:i], 6) + hostname[i:]
+        hostname, numeric = ip.expand_ip(hostname)
+        if numeric:
             return callback(hostname, DnsResponse('found', [hostname]))
 
         if hostname[-1:] == '.':
