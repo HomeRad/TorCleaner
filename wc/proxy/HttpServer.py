@@ -229,6 +229,8 @@ class HttpServer (Server):
         if self.response:
             self.response = applyfilter(FILTER_RESPONSE, self.response,
                               attrs=self.nofilter).strip()
+        if self.statuscode >= 400:
+            self.mime = None
         debug(PROXY, "%s response %s", str(self), `self.response`)
 
 
