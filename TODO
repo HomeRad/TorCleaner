@@ -12,6 +12,8 @@ version 2.24 and above
 
 version 2.25 and above
 
+- set doctype and encoding in html parser, not in html filter
+
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
 
