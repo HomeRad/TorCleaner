@@ -44,8 +44,8 @@ from HtmlSecurity import HtmlSecurity
 # whitespace matcher
 _has_ws = re.compile("\s").search
 
-_start_js_comment = re.compile(r"^<!--\s*").search
-_end_js_comment = re.compile(r"\s*//\s*-->$").search
+_start_js_comment = re.compile(r"^<!--\s*(.*[\r\n]+)?").search
+_end_js_comment = re.compile(r"\s*//.*-->$").search
 
 class JSHtmlListener (JSListener):
     """defines callback handlers for Javascript code"""
