@@ -36,11 +36,11 @@ def usage(code, msg=''):
 
 
 
-def add(id, str, fuzzy):
+def add(_id, _str, fuzzy):
     "Add a non-fuzzy translation to the dictionary."
     global MESSAGES
-    if not fuzzy and str:
-        MESSAGES[id] = str
+    if not fuzzy and _str:
+        MESSAGES[_id] = _str
 
 
 
@@ -52,12 +52,12 @@ def generate():
     keys.sort()
     offsets = []
     ids = strs = ''
-    for id in keys:
+    for key in keys:
         # For each string, we need size and file offset.  Each string is NUL
         # terminated; the NUL does not count into the size.
-        offsets.append((len(ids), len(id), len(strs), len(MESSAGES[id])))
-        ids += id + '\0'
-        strs += MESSAGES[id] + '\0'
+        offsets.append((len(ids), len(key), len(strs), len(MESSAGES[key])))
+        ids += key + '\0'
+        strs += MESSAGES[key] + '\0'
     output = ''
     # The header is 7 32-bit unsigned integers.  We don't use hash tables, so
     # the keys start right after the index tables.
@@ -88,8 +88,8 @@ def generate():
 
 
 def make(filename):
-    ID = 1
-    STR = 2
+    _ID = 1
+    _STR = 2
 
     # Compute .mo name from .po name
     if filename[-3:] == '.po':
@@ -112,7 +112,7 @@ def make(filename):
     for l in lines:
         lno += 1
         # If we get a comment line after a msgstr, this is a new entry
-        if l[0] == '#' and section == STR:
+        if l[0] == '#' and section == _STR:
             add(msgid, msgstr, fuzzy)
             section = None
             fuzzy = 0
@@ -124,14 +124,14 @@ def make(filename):
             continue
         # Now we are in a msgid section, output previous section
         if l[:5] == 'msgid':
-            if section == STR:
+            if section == _STR:
                 add(msgid, msgstr, fuzzy)
-            section = ID
+            section = _ID
             l = l[5:]
             msgid = msgstr = ''
         # Now we are in a msgstr section
         elif l[:6] == 'msgstr':
-            section = STR
+            section = _STR
             l = l[6:]
         # Skip empty lines
         l = l.strip()
@@ -139,16 +139,16 @@ def make(filename):
             continue
         # XXX: Does this always follow Python escape semantics?
         l = eval(l)
-        if section == ID:
+        if section == _ID:
             msgid += l
-        elif section == STR:
+        elif section == _STR:
             msgstr += l
         else:
             sys.stderr.write('Syntax error on %s:%d\n'
 	                     'before: %s\n' % (infile, lno, l))
             sys.exit(1)
     # Add last entry
-    if section == STR:
+    if section == _STR:
         add(msgid, msgstr, fuzzy)
 
     # Compute output

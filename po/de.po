@@ -1,7 +1,6 @@
 # German translation for WebCleaner
 # Bastian Kleineidam <calvin@users.sourceforge.net>, 2000.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
@@ -27,7 +26,6 @@ msgstr "Rechnername:"
 msgid "No debugging"
 msgstr "Kein debugging"
 
-#, fuzzy
 msgid "warning: only first command is valid"
 msgstr "Warnung: nur der erste Befehl ist gültig"
 
@@ -120,11 +118,9 @@ msgstr ""
 "\n"
 "Falls sich Dateien geändert haben, wird der Proxy neu gestartet."
 
-#, fuzzy
 msgid "cannot write to file %s"
 msgstr "kann Datei %s nicht schreiben"
 
-#, fuzzy
 msgid "Empty hostname"
 msgstr "Leerer Attributname"
 
@@ -146,14 +142,12 @@ msgstr "Kein Proxy für"
 msgid "Can't parse request"
 msgstr "Kann Anfrage nicht parsen"
 
-#, fuzzy
 msgid "Name"
 msgstr "Neuer Name:"
 
 msgid "Refresh"
 msgstr ""
 
-#, fuzzy
 msgid "New Folder"
 msgstr "Neuer Filter"
 
@@ -169,7 +163,6 @@ msgstr "Doppelter Attributname"
 msgid "Unknown option %s"
 msgstr "Unbekannte Option %s"
 
-#, fuzzy
 msgid "Proxy Status"
 msgstr "P&roxy Einstellungen"
 
@@ -194,11 +187,9 @@ msgstr "Attribut hinzufügen"
 msgid "empty title"
 msgstr "leerer Titel"
 
-#, fuzzy
 msgid "Name:"
 msgstr "Neuer Name:"
 
-#, fuzzy
 msgid "Description"
 msgstr "Beschreibung:"
 
@@ -214,7 +205,6 @@ msgstr "Bildbreite:"
 msgid "Value:"
 msgstr "Text:"
 
-#, fuzzy
 msgid "Update Error: %s"
 msgstr "Fehler: %s\n"
 
@@ -381,7 +371,6 @@ msgid ""
 "==================\n"
 msgstr ""
 
-#, fuzzy
 msgid "Update Help"
 msgstr "Update Fehler"
 
@@ -401,7 +390,6 @@ msgstr "URL Host:\tRegulärer Ausdruck welcher den Host matcht"
 msgid "Tag"
 msgstr "Tag"
 
-#, fuzzy
 msgid "Replacement:\tReplacement value (empty means delete)"
 msgstr "Header Wert:\tHeader Wert (leer heißt löschen)"
 
@@ -432,7 +420,6 @@ msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
 msgid "Tag name"
 msgstr "Tag Name"
 
-#, fuzzy
 msgid "Duplicate hostname"
 msgstr "Doppelter Attributname"
 
@@ -448,7 +435,6 @@ msgstr "&Hilfe"
 msgid "Headers"
 msgstr "Header"
 
-#, fuzzy
 msgid "Filter"
 msgstr "Neuer Filter"
 
@@ -461,7 +447,6 @@ msgstr "Wert"
 msgid "auto"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "USAGE\twebcleaner command\n"
 "\n"
@@ -497,11 +482,9 @@ msgstr ""
 msgid "press return to continue..."
 msgstr "drücken Sie Return um fortzufahren..."
 
-#, fuzzy
 msgid "Replace regex:\tRegular expression to match the data stream"
 msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
 
-#, fuzzy
 msgid "Language"
 msgstr "Sprache:\t"
 
@@ -535,7 +518,6 @@ msgstr "leerer Dateiname"
 msgid "Host"
 msgstr "Rechner"
 
-#, fuzzy
 msgid "About webcleaner"
 msgstr "Über WebCleaner"
 
@@ -545,22 +527,18 @@ msgstr "%d Tage, %02d:%02d:%02d"
 msgid "No. of saved Headers"
 msgstr "Nr. des gesp. Headers"
 
-#, fuzzy
 msgid "unknown tag name %s"
 msgstr "Unbekannte Option %s"
 
 msgid " rule"
 msgstr " Regel"
 
-#, fuzzy
 msgid "&Ok"
 msgstr "&Ok"
 
-#, fuzzy
 msgid "webcleanerconf Help"
 msgstr "WebCleanerConf Hilfe"
 
-#, fuzzy
 msgid "execute 'webcleaner -h' for help\n"
 msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
 
@@ -576,7 +554,6 @@ msgstr "Hinzufügen"
 msgid "Header value:\tHeader value (empty means delete)"
 msgstr "Header Wert:\tHeader Wert (leer heißt löschen)"
 
-#, fuzzy
 msgid "Filename"
 msgstr "Dateiname:"
 
@@ -597,11 +574,9 @@ msgid ""
 "%s<br></center></body></html>"
 msgstr ""
 
-#, fuzzy
 msgid "New hostname:"
 msgstr "Neuer Name:"
 
-#, fuzzy
 msgid "Title"
 msgstr "Titel:"
 
