@@ -32,6 +32,7 @@ STARTTAG = 0
 ENDTAG = 1
 DATA = 2
 COMMENT = 3
+STARTENDTAG = 4
 # tag part ids
 TAG = 0
 TAGNAME = 1
@@ -208,7 +209,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         data = tagbuf2data(tagbuf[pos:], ZTUtils.FasterStringIO()).getvalue()
         return self.enclosed_ro.search(data)
 
-    def filter_tag (self, tag, attrs):
+    def filter_tag (self, tag, attrs, starttype):
         """return filtered tag data for given tag and attributes"""
         wc.log.debug(wc.LOG_FILTER, "rule %s filter_tag", self.titles['en'])
         wc.log.debug(wc.LOG_FILTER, "original tag %r attrs %s", tag, attrs)
@@ -217,11 +218,11 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         if self.part == COMPLETE:
             return [DATA, u""]
         if self.part == TAGNAME:
-            return [STARTTAG, self.replacement, attrs]
+            return [starttype, self.replacement, attrs]
         if self.part == TAG:
             return [DATA, self.replacement]
         if self.part == ENCLOSED:
-            return [STARTTAG, tag, attrs]
+            return [starttype, tag, attrs]
         newattrs = {}
         # look for matching tag attributes
         for attr, val in attrs.items():
@@ -252,7 +253,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             newattrs[attr] = val
         wc.log.debug(wc.LOG_FILTER,
                      "filtered tag %s attrs %s", tag, newattrs)
-        return [STARTTAG, tag, newattrs]
+        return [starttype, tag, newattrs]
 
     def filter_complete (self, i, buf, tag):
         """replace complete tag data in buf with replacement"""
