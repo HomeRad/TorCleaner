@@ -10,8 +10,8 @@ class StatefulConnection (wc.proxy.Connection.Connection):
 
     def __init__ (self, state, sock=None):
         """initialize connection with given start state"""
-        super(StatefulConnection, self).__init__(sock=sock)
         self.state = state
+        super(StatefulConnection, self).__init__(sock=sock)
 
     def readable (self):
         """a connection is readable if we're connected and not in a
