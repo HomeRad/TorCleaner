@@ -36,7 +36,9 @@ _RESPONSE_FILTERS = (
    FILTER_RESPONSE_MODIFY,
    FILTER_RESPONSE_ENCODE)
 
-_fix_content_types = ['text/html']
+_fix_content_types = [
+#'text/html'
+]
 _fix_content_encodings = [
 #    'x-bzip2',
 ]
@@ -336,23 +338,23 @@ class HttpServer (Server):
                 warn(PROXY, i18n._("add Content-Type %s to %s"),
                      `gm[0]`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%gm[0]
-           # fix some content types
-            elif not ct.startswith(gm[0]) and \
-                 gm[0] in _fix_content_types:
-                warn(PROXY, i18n._("change Content-Type from %s to %s in %s"),
-                     `ct`, `gm[0]`, `self.url`)
-                self.headers['Content-Type'] = "%s\r"%gm[0]
-        if gm[1] and gm[1] in _fix_content_encodings:
-            ce = self.headers.get('Content-Encoding', None)
-            # guessed an own encoding type
-            if ce is None:
-                self.headers['Content-Encoding'] = "%s\r"%gm[1]
-                warn(PROXY, i18n._("add Content-Encoding %s to %s"),
-                     `gm[1]`, `self.url`)
-            elif ce != gm[1]:
-                warn(PROXY, i18n._("change Content-Encoding from %s to %s in %s"),
-                     `ce`, `gm[1]`, `self.url`)
-                self.headers['Content-Encoding'] = "%s\r"%gm[1]
+            # fix some content types
+            #elif not ct.startswith(gm[0]) and \
+            #     gm[0] in _fix_content_types:
+            #    warn(PROXY, i18n._("change Content-Type from %s to %s in %s"),
+            #         `ct`, `gm[0]`, `self.url`)
+            #    self.headers['Content-Type'] = "%s\r"%gm[0]
+        #if gm[1] and gm[1] in _fix_content_encodings:
+        #    ce = self.headers.get('Content-Encoding', None)
+        #    # guessed an own encoding type
+        #    if ce is None:
+        #        self.headers['Content-Encoding'] = "%s\r"%gm[1]
+        #        warn(PROXY, i18n._("add Content-Encoding %s to %s"),
+        #             `gm[1]`, `self.url`)
+        #    elif ce != gm[1]:
+        #        warn(PROXY, i18n._("change Content-Encoding from %s to %s in %s"),
+        #             `ce`, `gm[1]`, `self.url`)
+        #        self.headers['Content-Encoding'] = "%s\r"%gm[1]
         # hmm, fix application/x-httpd-php*
         if self.headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
             warn(PROXY, i18n._("fix x-httpd-php Content-Type"))
