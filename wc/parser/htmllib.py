@@ -75,7 +75,7 @@ class HtmlPrinter(HtmlParser):
 
 def _test():
     p = HtmlPrinter()
-    p.feed("<html>")
+    p.feed("html")
     p.flush()
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 # use CVS snapshot flex for reentrant bison parser support
 FLEX=/home/pool/src/flex/flex
 
-all: testsax
+all: htmllex.c htmlparse.c
 
 testsax: htmllex.o htmlparse.o
 	gcc -lpython2.1 $^ -o testsax

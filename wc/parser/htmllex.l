@@ -11,9 +11,11 @@
 #define YY_EXTRA_TYPE UserData*
 #define SETLVAL \
     PyObject* s = PyString_FromStringAndSize(yytext, yyleng); \
+    fprintf(stderr, "Hui: %p\n", s); \
     if (s==NULL) { \
+        return EOF; \
     } \
-    else yyset_lval(&s, yy_globals)
+    else *yylval = s
 
 #include "htmlparse.h"
 %}
@@ -92,6 +94,7 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <INITIAL>"<" {
+    SETLVAL;
     BEGIN(S_INNER);
     return T_ANGLE_OPEN;
 }
@@ -108,6 +111,7 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_INNER>">" {
+    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }

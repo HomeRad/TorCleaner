@@ -14,6 +14,7 @@ extern int htmllexStart(void* scanner, const char* s, int slen);
 extern int htmllexStop(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
+extern void* yyget_lval(void*);
 #define YYERROR_VERBOSE 1
 extern char* stpcpy(char* src, const char* dest);
 int yyerror(char* msg);
@@ -131,7 +132,7 @@ element_start: T_ANGLE_OPEN T_NAME attributes T_ANGLE_CLOSE
         PyObject* callback = NULL;
         PyObject* result = NULL;
         int error = 0;
-        PyObject* ltag = PyObject_CallMethod($2, "lower", NULL);
+	PyObject* ltag = PyObject_CallMethod($2, "lower", NULL);
         if (ltag==NULL) { error=1; goto finish_start1; }
         if (PyObject_HasAttrString(ud->handler, "startElement")==1) {
             callback = PyObject_GetAttrString(ud->handler, "startElement");
@@ -474,6 +475,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
     }
+    htmllexStop(self->scanner);
     self->userData->exc_type = NULL;
     self->userData->exc_val = NULL;
     self->userData->exc_tb = NULL;
@@ -507,6 +509,7 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
     self->userData->exc_tb = NULL;
     
     /* parse */
+    htmllexStart(self->scanner, s, slen);
     if (yyparse(self->scanner)!=0) {
         if (self->userData->exc_type!=NULL) {
 	    /* note: we give away these objects, so dont decref */
