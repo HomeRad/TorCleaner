@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="wc.css" type="text/css" rel="Stylesheet">
-<title tal:content="t_title">WebCleaner Filter Configuration</title>
+<title tal:content="title">WebCleaner Filter Configuration</title>
 </head>
 <body>
 <p class="skip"><a accesskey="2" href="#main"
@@ -11,14 +11,6 @@
 <div metal:use-macro="macros/macros/nav">Navigation</div>
 
 <div class="content" id="main">
-<div tal:repeat="item info">
-<span tal:replace="item">Info</span>
-</div>
-
-<div tal:repeat="item error">
-<span tal:replace="item">Error</span>
-</div>
-
 <form action="filterconfig.html" method="POST" 
  name="filterform">
 <table rules="cols" cellpadding="5">
@@ -131,6 +123,16 @@ Here is the rule configuration...
 </tbody>
 </table>
 </form>
+
+<div tal:repeat="item info">
+<span tal:replace="item">Info</span>
+</div>
+
+<div tal:repeat="item error">
+<span tal:replace="item">Error</span>
+</div>
+
+
 </div>
 
 <div metal:use-macro="macros/macros/footer">Footer...</div>

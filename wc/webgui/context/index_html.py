@@ -7,4 +7,4 @@ tt_accessibility = i18n._("accessibility features of these pages")
 t_skip_to_main = i18n._("Skip to main content")
 t_webcleaner = AppName
 t_proxyconf = i18n._("Proxy configuration")
-t_filterconfig = i18n._("Filter configuration")
+t_filterconf = i18n._("Filter configuration")
