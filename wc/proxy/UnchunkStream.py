@@ -7,7 +7,7 @@
 from wc.debug import *
 
 import re
-match_bytes = re.compile(r"^(?P<bytes>\d+)(;.+)?$").search
+match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f])(;.+)?$").search
 
 class UnchunkStream:
     # States:
