@@ -268,12 +268,17 @@ Rule (don't) match url
 <td tal:content="attr"></td>
 <td tal:content="currule/attrs/?attr"></td>
 </tr>
+<tr tal:condition="not:currule/attrs">
+<td colspan="3">-</td>
+</tr>
 </table>
+<span tal:condition="currule/attrs">
 <input type="submit" name="removeattrs" value="Remove selected"
  tal:attributes="value t_removeattrs">
 <br>
+</span>
 <span tal:replace="t_attrname">Name</span>:
-<input type="text" name="attrname" value="">
+<input type="text" name="attrname" value="href">
 <br>
 <span tal:replace="t_attrval">Value</span>:
 <input type="text" name="attrval" value="">

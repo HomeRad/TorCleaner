@@ -12,3 +12,15 @@ def getval (form, key):
     if hasattr(item, "value"):
         return item.value
     return item
+
+
+def getlist (form, key):
+    """return a list of formfield values"""
+    if not form.has_key(key):
+        return []
+    item = form[key]
+    if isinstance(item, list):
+        return [x.value for x in item]
+    if hasattr(item, "value"):
+        return [item.value]
+    return [item]

@@ -2,8 +2,8 @@
 import tempfile, os
 from wc import i18n, AppName, ConfigDir, rulenames
 from wc import Configuration as _Configuration
-from wc.webgui.context import getval
-from wc.filter.rules.RewriteRule import partvalnames, partnames
+from wc.webgui.context import getval, getlist
+from wc.filter.rules.RewriteRule import partvalnames, partnames, part_num
 from wc.filter.rules.FolderRule import FolderRule
 from wc.filter import GetRuleFromName
 
@@ -113,7 +113,14 @@ def exec_form (form):
     # remove current rule
     elif currule and form.has_key('removerule%d'%currule.oid):
         _form_removerule(currule)
-    # apply rule values
+
+    # rule specific submit buttons
+    elif currule and form.has_key('addattr'):
+        _form_rewrite_addattr(form)
+    elif currule and form.has_key('removeattrs') and form.has_key('delattr'):
+        _form_rewrite_removeattrs(form)
+
+    # generic apply rule values
     elif currule and form.has_key('apply'):
         _form_apply(form)
     if info:
@@ -247,6 +254,24 @@ def _form_removerule (rule):
     global currule
     currule = None
     info.append("Rule removed")
+
+
+def _form_rewrite_addattr (form):
+    name = getval(form, "attrname").strip()
+    if not name:
+        error.append(i18n._("Empty attribute name"))
+        return
+    value = getval(form, "attrval")
+    currule.attrs[name] = value
+    info.append("Attribute added")
+
+
+def _form_rewrite_removeattrs (form):
+    toremove = getlist(form, 'delattr')
+    if toremove:
+        for attr in toremove:
+            del currule.attrs[attr]
+        info.append("Attributes removed")
 
 
 def _form_apply (form):
@@ -389,7 +414,6 @@ def _form_apply_replace (form):
         info.append("Rule replacement changed")
 
 
-# XXX other submit buttons
 def _form_apply_rewrite (form):
     _form_rule_matchurl(form)
     tag = getval(form, 'rule_tag').strip()
@@ -401,9 +425,15 @@ def _form_apply_rewrite (form):
         currule.enclosed = enclosed
         info.append("Rule rewrite enclosed block changed")
     part = getval(form, 'rule_rewritepart')
-    if part!=currule.part:
-        currule.part = part
+    partnum = part_num(part)
+    if partnum is None:
+        error.append("Invalid part value %s" % part)
+        return
+    if partnum!=currule.part:
+        currule.part = partnum
         info.append("Rule rewrite part changed")
+        # select again, XXX side effect :(
+        _form_selrule(currule.oid)
     replacement = getval(form, 'rule_rewritereplacement').strip()
     if replacement!=currule.replacement:
         currule.replacement = replacement
