@@ -145,7 +145,8 @@ def parse_qsl (qs, keep_blank_values=0, strict_parsing=0):
             if strict_parsing:
                 raise ValueError, "bad query field: %s" % `name_value`
             elif len(nv) == 1:
-                nv = (nv[0], "")
+                # None value indicates missing equal sign
+                nv = (nv[0], None)
             else:
                 continue
         if len(nv[1]) or keep_blank_values:
@@ -196,8 +197,11 @@ def url_norm (url):
         if v:
             v = urllib.quote(v, '/-:,')
             l.append("%s=%s" % (k, v))
-        else:
+        elif v is None:
             l.append(k)
+        else:
+            # some sites do not work when the equal sign is missing
+            l.append("%s=" % k)
     urlparts[3] = '&'.join(l)
     if not urlparts[2]:
         # empty path should be a slash, but not in certain schemes
