@@ -3,18 +3,18 @@
 
 Requirements
 ------------
-You need a C compiler (for example the GNU C Compiler gcc).
+1. You need a C compiler (for example the GNU C Compiler gcc).
+  For Windows, install MinGW and MSYS from http://mingw.sourceforge.net.
+  Install MinGW first, then MSYS
+2. Python >= 2.3.1 from http://www.python.org/
+  Your Python installation has to be compiled with the
+  expat XML parser module. The expat library needed for this can be
+  found at http://expat.sourceforge.net/.
+3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
+4. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
 
-Python >= 2.3.1 from http://www.python.org/
-Your Python installation has to be compiled with the
-expat XML parser module. The expat library needed for this can be
-found at http://expat.sourceforge.net/.
-
-Python Imageing Library (PIL) from http://www.pythonware.com/products/pil/
-
-Python Crypto Module from http://www.amk.ca/python/code/crypto.html
-
-The gettext package (for calling msgmerge).
+For compiling under Unix/Linux, the gettext package for calling
+msgmerge is needed.
 
 Optional requirements
 ---------------------
@@ -25,12 +25,20 @@ For the optional GUI config tool webcleanerconf you need
 FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
 FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
 
-Setup
------
+Setup for Unix/Linux:
+---------------------
 Run "./configure; make" to compile the included C libraries.
-Run "python setup.py build" to byte-compile the Python files.
+Run "python setup.py build" to compile the Python files.
 The CC environment variable is checked before compilation, so you can
 change the default C compiler with "export CC=myccompiler".
 Run "python setup.py install" to install everything.
 Note: if you work from CVS, you must run "./autogen.sh" first to
 generate the configure and Makefile files.
+
+Setup for Windows:
+------------------
+XXX this is incomplete, needs python patch...
+Inside mingw32 shell do "./configure; make" to compile the included
+C libraries.
+Run "python setup.py build -c mingw32" to compile the Python files.
+Run "python setup.py install" to install everything.

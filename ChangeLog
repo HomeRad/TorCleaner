@@ -1,6 +1,9 @@
-2.7 (released xx.xx.xxxx)
-  * updated squidguard blacklist filters as of 20031126
-    Changed: config/blacklists/*
+2.7 (released 04.12.2003)
+  * updated filters:
+    - remove _top targets
+    - mark <a href> custom targets with a dashed line
+    - squidguard blacklist filters as of 20031204
+    Changed: config/blacklists/*, config/misc.zap
   * prevent Opera vulnerability CAN-2003-0870
     Changed: wc/filter/HtmlSecurity.py
   * do not accept encoded pages for JavaScript background downloading
@@ -11,7 +14,7 @@
   * new file(1)-like content guessing with a magic(5) database
     Added: wc/magic/*, config/magic.mime
     Changed: MANIFEST.in, setup.py, Makefile.am
-  * wc.magic package enables us to correct some wrong advertised file types.
+  * wc.magic package enables correction of some wrong advertised file types.
     This also prevents exploits like those found in CVE-2002-0025 and
     CVE-2002-0024.
     Changed: wc/proxy/{Headers,HttpServer}.py
@@ -32,6 +35,8 @@
     Changed: wc/filter/rule/RewriteRule.py
   * fix xml output and parsing name typos in replace rule
     Changed: wc/filter/ReplaceRule.py
+  * introduced a Py_RETURN_NONE macro
+    Changed: wc/parser/{htmlsax.h,htmlparse.y}
 
 2.6 (released 25.11.2003)
   * fixed background downloading with 30x redirects
