@@ -1,5 +1,6 @@
-# use a beta from http://lex.sf.net/ for reentrant bison parser support
-FLEX=/home/calvin/src/flex-2.5.27/flex
+# parser needs flex >= 2.5.xx from http://lex.sf.net/
+# for reentrant bison parser support!
+FLEX=flex
 PYVER=2.2
 PYTHON=python$(PYVER)
 
