@@ -54,6 +54,7 @@ class ClientServerMatchmaker:
         self.compress = compress
         self.content = content
         self.nofilter = nofilter
+        debug(HURT_ME_PLENTY, "request", `self.request`)
         self.method, self.url, protocol = self.request.split()
         scheme, hostname, port, document = spliturl(self.url)
         # fix missing trailing /
@@ -62,7 +63,7 @@ class ClientServerMatchmaker:
         if protocol=='HTTP/1.1' and not self.headers.has_key('host'):
             self.headers['Host'] = hostname
             if port!=80:
-                self.headers['Host'] += ":"+port
+                self.headers['Host'] += ":%d"%port
         debug(HURT_ME_PLENTY, "Proxy: splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
@@ -126,7 +127,7 @@ class ClientServerMatchmaker:
             # Let's use a different hostname
             new_url = answer.data
             if self.port != 80:
-	        new_url += ':%s' % self.port
+	        new_url += ':%d' % self.port
             new_url += self.document
             self.state = 'done'
             config['requests']['valid'] += 1

@@ -70,7 +70,7 @@ class HttpServer (Server):
 
     def request (self):
         if self.addr[1] != 80:
-	    portstr = ':%s' % self.addr[1]
+	    portstr = ':%d' % self.addr[1]
         else:
             portstr = ''
         return '%s%s%s' % (self.hostname or self.addr[0],
