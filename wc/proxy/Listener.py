@@ -14,13 +14,13 @@ class Listener (asyncore.dispatcher):
 
     def __repr__ (self):
         return '<Listener:%s>' % self.addr[1]
-    
+
     def log (self, msg):
         pass
 
     def writable (self):
         return False
-    
+
     def handle_accept (self):
         #debug(HURT_ME_PLENTY, 'accept', self)
         apply(self.handler, self.accept())
