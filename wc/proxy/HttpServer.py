@@ -351,8 +351,9 @@ class HttpServer (Server):
         if (is_closed or
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
-            if self.bytes_remaining < 0:
-                print >>sys.stderr, "Warning: server received %d bytes more than content-length" % (-self.bytes_remaining)
+            if self.bytes_remaining is not None and self.bytes_remaining < 0:
+                print >>sys.stderr, "Warning: server received %d bytes "+\
+                     "more than content-length" % (-self.bytes_remaining)
             # Either we ran out of bytes, or the decoder says we're done
             #debug(HURT_ME_PLENTY, "S/contentfinished")
             self.state = 'recycle'
