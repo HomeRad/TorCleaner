@@ -285,6 +285,13 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.debug(wc.LOG_PROXY, "%s FilterMime from header: %s", self, msg)
             self._show_mime_replacement(str(msg))
             return
+        if self.statuscode in (301, 302):
+            location = self.headers.get('Location')
+            if location:
+                host = wc.url.spliturl(location)[1]
+                if host in wc.config['localhosts']:
+                    self.handle_error(wc.i18n._('redirection to localhost'))
+                    return
         self.mangle_response_headers()
         if self.statuscode in (204, 304) or self.method == 'HEAD':
             # these response codes indicate no content
@@ -555,10 +562,10 @@ class HttpServer (wc.proxy.Server.Server):
     def handle_error (self, what):
         """tell the client that connection had an error, and close the
            connection"""
-        wc.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_error", self)
+        wc.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_error %r", self, what)
         if self.client:
             client, self.client = self.client, None
-            client.server_abort()
+            client.server_abort(what)
         super(HttpServer, self).handle_error(what)
 
 
