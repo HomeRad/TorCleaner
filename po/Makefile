@@ -1,7 +1,8 @@
 # we use the scripts in Tools/i18n of the Python 2.0 distribution
+PYTHON=python2.2
 I18NTOOLS=.
-GETTEXT=python $(I18NTOOLS)/pygettext.py
-MSGFMT=python $(I18NTOOLS)/msgfmt.py
+GETTEXT=$(PYTHON) $(I18NTOOLS)/pygettext.py
+MSGFMT=$(PYTHON) $(I18NTOOLS)/msgfmt.py
 MSGMERGE=msgmerge
 SOURCES=\
 ../webcleaner \
