@@ -94,6 +94,7 @@ def size_base (base):
 
 
 def size_number (text):
+    text = text.lower()
     base = which_base(text)
     if base == 0:
         return 0
@@ -102,7 +103,7 @@ def size_number (text):
     end = size+1
     while end < length and text[end] in _hex[:base]:
         end += 1
-    return end
+    return end-size
 
 
 def index_number (text):
@@ -121,7 +122,7 @@ def index_number (text):
 def convert (text):
     base = which_base(text)
     start = size_base(base)
-    end = size_number(text)
+    end = start+size_number(text)
     return base10(text[start:end], base)
 
 
@@ -181,47 +182,4 @@ def local4 (number):
     if sys.byteorder == 'big':
         return big4(number)
     return little4(number)
-
-
-if __name__ == '__main__':
-    print "---"
-    print "base10(\"FF\",16) = ", 255, "\tgot ", base10("FF",16)
-    print "base10(\"77\", 8) = ",  63, "\tgot ", base10("77",8)
-    print "---"
-    print "convert(\"0xFF\"  ) = ",  255, "\tgot ", convert("0xFF")
-    print "convert(\"\\xFF\"  ) = ", 255, "\tgot ", convert("\\xFF")
-    print "convert(\"077\"   ) = ",   63, "\tgot ", convert("077")
-    print "convert(\"\\77\"   ) = ",  63, "\tgot ", convert("\\77")
-    print "convert(\"\\177E\"   ) = ",  127, "\tgot ", convert("\\177E"), "The E is not used"
-    print "---"
-    print "size_number(\"100FFF\") = ",   3, "\tgot", size_number("100qwerty")
-    print "size_number(\"\\7799\" ) = ",  3, "\tgot", size_number("\\77FF")
-    print "size_number(\"\\XFFG\" ) = ",  3, "\tgot", size_number("\\XFFG")
-    print "---"
-    print "index_number(\"0XF\"       ) = ",   0, "\tgot", index_number("0XF")
-    print "index_number(\"\\XF\"       ) = ",   0, "\tgot", index_number("\\XF")
-    print "index_number(\"FF\\FFGG\"   ) = ",  -1, "\tgot", index_number("FF\\FFGG")
-    print "index_number(\"FF\\7\"      ) = ",   2, "\tgot", index_number("FF\\7")
-    print "index_number(\"FFF\\XFFGG\" ) = ",   3, "\tgot", index_number("FFF\\XFFGG")
-    print "index_number(\"\\\\\\XFFGG\"  ) = ",   2, "\tgot", index_number("FF\\XFFGG")
-
-    # 0000 0001 -->     1
-    # 0001 0000 -->    16
-    # 0001 1000 -->    24
-    # 1000 0001 -->   129
-    # 0000 0001 1000 0000 -->   384
-    # 1000 0000 0000 0001 --> 32769
-    # 0000 0000 0000 0001 1000 0000 0000 0000 --> 98304
-    # 0000 0000 1000 0000 0000 0001 0000 0000 --> 8388864
-    # 1000 0000 0000 0000 0000 0000 0000 0001 --> 2147483649
-
-    print "---"
-    print "little2   ","1    ",little2(chr( 1)+chr(0))
-    print "little2   ","16   ",little2(chr(16)+chr(0))
-    print "---"
-    print "big2","1    ",big2(chr(0)+chr(1))
-    print "big2","16   ",big2(chr(0)+chr(16))
-    print "---"
-    print "little4","2147483649",little4(chr(1)+chr(0)+chr(0)+chr(128))
-    print "big4   ","2147483649",big4(chr(128)+chr(0)+chr(0)+chr(1))
 
