@@ -17,15 +17,15 @@ CONFIG_PATHS := --prefix=/usr \
 	--infodir=\$${prefix}/share/info
 CONFIG_DEB := --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE)
 
-configure: configure.in configure-stamp
+configure: configure.in
 	./autogen.sh
 
-configure-stamp:
+configure-stamp: configure
 	dh_testdir
 	./configure $(CONFIG_DEB) $(CONFIG_PATHS) $(CONFIG_OPTS)
 	touch configure-stamp
 
-build: configure build-stamp
+build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
 	$(MAKE)
