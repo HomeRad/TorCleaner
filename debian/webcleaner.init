@@ -5,15 +5,13 @@ DAEMON="/usr/sbin/webcleaner"
 NAME="webcleaner"
 DESC="WebCleaner"
 
-# dont change the LOGDIR, the logrotate script
+# dont change these filenames, the logrotate script
 # in /etc/logrotate.d relies on it!
-LOGDIR="/var/log/webcleaner"
-
-# You may change the log file names
 # beware, that if you purge the webcleaner package,
 # all files in this directory are removed!
-ACCESSLOG="$LOGDIR/$NAME.log"
-ERRORLOG="$LOGDIR/$NAME.err"
+LOGDIR="/var/log/webcleaner"
+ACCESSLOG="$LOGDIR/access.log"
+ERRORLOG="$LOGDIR/error.log"
 
 test -x $DAEMON || exit 0
 

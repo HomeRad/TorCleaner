@@ -63,16 +63,13 @@ binary-arch: build install
 	dh_installdebconf
 	dh_installdocs
 	dh_installexamples filtertest filtertest.html
-#	dh_installmenu
-#	dh_installemacsen
-#	dh_installpam
+	dh_installmenu
+	dh_installlogrotate
 	dh_installinit
 #	dh_installcron
 	dh_installman webcleaner.1
 	dh_installman -pwebcleanerconf webcleanerconf.1
 #	dh_installinfo
-#	dh_undocumented webcleaner.1
-#	dh_undocumented -pwebcleanerconf webcleanerconf.1
 	dh_installchangelogs 
 	dh_link
 	dh_strip
@@ -80,7 +77,6 @@ binary-arch: build install
 	dh_fixperms
 	dh_makeshlibs
 	dh_installdeb
-#	dh_perl
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums

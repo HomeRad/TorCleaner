@@ -1,0 +1,15 @@
+# Logrotate file for WebCleaner
+
+/var/log/webcleaner/access.log {
+	compress
+	daily
+	rotate 7
+	notifempty
+}
+
+/var/log/webcleaner/error.log {
+	compress
+	daily
+	rotate 7
+	notifempty
+}
