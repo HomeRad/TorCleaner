@@ -90,7 +90,7 @@ class Dispatcher (object):
 
 
     def __init__ (self, sock=None):
-        if sock:
+        if sock is not None:
             self.set_socket(sock)
             # I think it should inherit this anyway
             self.socket.setblocking(0)
@@ -146,6 +146,9 @@ class Dispatcher (object):
         self.add_channel()
 
     def set_socket (self, sock):
+        family = socket.AF_INET # XXX how to get socket family?
+        socktype = sock.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE)
+        self.family_and_type = family, socktype
         self.socket = sock
         self.add_channel()
 

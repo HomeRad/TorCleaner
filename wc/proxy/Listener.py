@@ -24,21 +24,17 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
         self.listen(50)
         self.handler = handler
 
-
     def __repr__ (self):
         """return listener class and address"""
         return '<Listener:%s>' % self.addr[1]
-
 
     def log (self, msg):
         """standard logging is disabled, we dont need it here"""
         pass
 
-
     def writable (self):
         """The listener is never writable, it returns None"""
         return None
-
 
     def handle_accept (self):
         """start the handler class with the new socket"""

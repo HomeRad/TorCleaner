@@ -252,7 +252,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             wc.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
             self.error(400, wc.i18n._("Bad Request"))
         # local request?
-        if self.hostname in wc.config['localhosts'] and self.port==wc.config['port']:
+        if self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
+           self.port==wc.config['port']:
             # this is a direct proxy call, jump directly to content
             self.state = 'content'
             return
