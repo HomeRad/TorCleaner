@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sun Dec  7 23:59:55 2003\n"
-"PO-Revision-Date: 2003-12-08 00:01+0100\n"
+"POT-Creation-Date: Thu Dec 11 14:12:32 2003\n"
+"PO-Revision-Date: 2003-12-11 14:15+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -355,8 +355,8 @@ msgstr "Ersetze"
 msgid "Rule already disabled."
 msgstr "Regel ist bereits deaktiviert."
 
-msgid "Password"
-msgstr "Passwort"
+msgid "Timeout sucessfully changed."
+msgstr "Zeitüberschreitung wurde erfolgreich geändert."
 
 msgid "%(AppName)s feedback information"
 msgstr "%(AppName)s Feedback Information"
@@ -509,11 +509,11 @@ msgstr "Proxykonfiguration"
 msgid "Rule description successfully changed."
 msgstr "Regelbeschreibung wurde erfolgreich geändert."
 
+msgid "Admin user successfully changed."
+msgstr "Administrator erfolgreich geändert."
+
 msgid "Password used for parent proxy authentication"
 msgstr "Passwort zur Authentifizierung des übergeordneten Proxy"
-
-msgid "Username"
-msgstr "Benutzername"
 
 msgid "Rule title successfully changed."
 msgstr "Regel Titel wurde erfolgreich geändert."
@@ -642,8 +642,8 @@ msgstr "Leere Seite aufgrund von Blockierung durch %(AppName)s"
 msgid "Rewrite attribute(s) removed."
 msgstr "Rewrite Attribut(e) wurde(n) gelöscht."
 
-msgid "Disable folder"
-msgstr "Ordner deaktivieren"
+msgid "Administrator user"
+msgstr "Administrator"
 
 msgid "Rename folder"
 msgstr "Ordner umbenennen"
@@ -670,6 +670,9 @@ msgstr "Ordner wurde nach unten geschoben."
 msgid "Rule match-url successfully changed."
 msgstr "Regel Treffer-URL wurde erfolgreich geändert."
 
+msgid "Folders"
+msgstr "Ordner"
+
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
 
@@ -687,6 +690,9 @@ msgstr "Ersetzter Teil"
 
 msgid "Invalid folder index."
 msgstr "Ungültiger Ordnerindex."
+
+msgid "Administrator username"
+msgstr "Administrator"
 
 msgid "Feedback"
 msgstr "Feedback"
@@ -714,6 +720,9 @@ msgstr "%(AppName)s Google Auswahl"
 
 msgid "Down"
 msgstr "Nach unten"
+
+msgid "Disable folder"
+msgstr "Ordner deaktivieren"
 
 msgid ""
 "The <b>Update filter configuration</b> button\n"
@@ -775,8 +784,8 @@ msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
 msgid "Rule header name successfully changed."
 msgstr "Regel Header-Name wurde erfolgreich geändert."
 
-msgid "Folders"
-msgstr "Ordner"
+msgid "Rule successfully disabled."
+msgstr "Ordner erfolgreich deaktiviert."
 
 msgid "Disable rule"
 msgstr "Deaktiviere Regel"
@@ -815,8 +824,8 @@ msgstr ""
 "Willkommen in der wundervollen Welt\n"
 "von %(AppName)s, im Land der Kampfsurfer."
 
-msgid "Timeout sucessfully changed."
-msgstr "Zeitüberschreitung wurde erfolgreich geändert."
+msgid "Password"
+msgstr "Passwort"
 
 msgid "Port number"
 msgstr "Portnummer"
@@ -824,8 +833,8 @@ msgstr "Portnummer"
 msgid "Add new rule to current folder."
 msgstr "Neue Regel zu aktuellem Ordner hinzufügen"
 
-msgid "Rule successfully disabled."
-msgstr "Ordner erfolgreich deaktiviert."
+msgid "Username"
+msgstr "Benutzername"
 
 msgid "Name"
 msgstr "Name"

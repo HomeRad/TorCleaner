@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Dec  7 23:59:55 2003\n"
+"POT-Creation-Date: Thu Dec 11 14:12:32 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -338,7 +338,7 @@ msgstr ""
 msgid "Rule already disabled."
 msgstr ""
 
-msgid "Password"
+msgid "Timeout sucessfully changed."
 msgstr ""
 
 msgid "%(AppName)s feedback information"
@@ -486,10 +486,10 @@ msgstr ""
 msgid "Rule description successfully changed."
 msgstr ""
 
-msgid "Password used for parent proxy authentication"
+msgid "Admin user successfully changed."
 msgstr ""
 
-msgid "Username"
+msgid "Password used for parent proxy authentication"
 msgstr ""
 
 msgid "Rule title successfully changed."
@@ -619,7 +619,7 @@ msgstr ""
 msgid "Rewrite attribute(s) removed."
 msgstr ""
 
-msgid "Disable folder"
+msgid "Administrator user"
 msgstr ""
 
 msgid "Rename folder"
@@ -645,6 +645,9 @@ msgstr ""
 msgid "Rule match-url successfully changed."
 msgstr ""
 
+msgid "Folders"
+msgstr ""
+
 msgid "Timeout"
 msgstr ""
 
@@ -661,6 +664,9 @@ msgid "Replacement"
 msgstr ""
 
 msgid "Invalid folder index."
+msgstr ""
+
+msgid "Administrator username"
 msgstr ""
 
 msgid "Feedback"
@@ -688,6 +694,9 @@ msgid "%(AppName)s Google Selection"
 msgstr ""
 
 msgid "Down"
+msgstr ""
+
+msgid "Disable folder"
 msgstr ""
 
 msgid ""
@@ -746,7 +755,7 @@ msgstr ""
 msgid "Rule header name successfully changed."
 msgstr ""
 
-msgid "Folders"
+msgid "Rule successfully disabled."
 msgstr ""
 
 msgid "Disable rule"
@@ -784,7 +793,7 @@ msgid ""
 "world of %(AppName)s, the land of lounge lizards."
 msgstr ""
 
-msgid "Timeout sucessfully changed."
+msgid "Password"
 msgstr ""
 
 msgid "Port number"
@@ -793,7 +802,7 @@ msgstr ""
 msgid "Add new rule to current folder."
 msgstr ""
 
-msgid "Rule successfully disabled."
+msgid "Username"
 msgstr ""
 
 msgid "Name"
