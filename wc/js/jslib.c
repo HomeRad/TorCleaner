@@ -423,6 +423,21 @@ static PyObject* JSEnv_attachListener (JSEnvObject* self, PyObject* args) {
 }
 
 
+static PyObject* JSEnv_hasListener (JSEnvObject* self, PyObject* args) {
+    PyObject* item;
+    if (!PyArg_ParseTuple(args, "O", &item)) {
+	PyErr_SetString(PyExc_TypeError, "listener arg required");
+        return NULL;
+    }
+    if (PyMapping_HasKey(self->listeners, item)==1) {
+        PyINCREF(Py_True);
+        return Py_True;
+    }
+    PyINCREF(Py_False);
+    return Py_False;
+}
+
+
 static PyObject* JSEnv_detachListener (JSEnvObject* self, PyObject* args) {
     PyObject* item;
     if (!PyArg_ParseTuple(args, "O", &item)) {
@@ -1155,6 +1170,7 @@ static void JSEnv_dealloc(PyObject* self) {
 static PyMethodDef JSEnv_methods[] = {
     {"attachListener", (PyCFunction)JSEnv_attachListener, METH_VARARGS, "attach listener"},
     {"detachListener", (PyCFunction)JSEnv_detachListener, METH_VARARGS, "detach listener"},
+    {"hasListener", (PyCFunction)JSEnv_hasListener, METH_VARARGS, "has listener"},
     {"executeScript", (PyCFunction)JSEnv_executeScript, METH_VARARGS, "execute script"},
     {"executeScriptAsFunction", (PyCFunction)JSEnv_executeScriptAsFunction, METH_VARARGS, "execute script as function"},
     {"addForm", (PyCFunction)JSEnv_addForm, METH_VARARGS, "add form element"},
