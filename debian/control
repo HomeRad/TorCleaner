@@ -9,7 +9,7 @@ Package: webcleaner
 Architecture: any
 Depends: python (>= 2.1), python2.1-xmlbase, debconf, libxml2
 Conflicts: python (>= 2.2)
-Suggests: webcleanerconf
+Suggests: webcleanertools
 Description: a filtering HTTP proxy
  Features:
   o disable animated GIFs

@@ -5,8 +5,9 @@ webcleaner (0.31) unstable; urgency=low
   * debian/rules: remove patch backup file from build dir
   * use _WIN32, not WIN32. Fixes compile error on Windows
   * _nt.py: use proper script directory
+  * debian/control: suggest webcleanertools
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon, 10 Dec 2001 09:36:44 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Mon, 10 Dec 2001 09:51:36 +0100
 
 webcleaner (0.30) unstable; urgency=low
 
