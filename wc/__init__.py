@@ -156,6 +156,21 @@ class Configuration(UserDict.UserDict):
                             instance.addrule(rule)
                 self['filterlist'][order].append(instance)
 
+    def __repr__(self):
+        return """
+WebCleaner Configuration
+========================
+
+Port:          %(port)d
+Parent proxy:  %(parentproxy)s
+Buffer size:   %(buffersize)d
+Logfile:       %(logfile)s
+TCP timeout:   %(timeout)d
+Obfuscate IP:  %(obfuscateip)d
+Debug level:   %(debuglevel)d
+
+""" % self
+
 ##### xml parsers #########
 import xml.parsers.expat
 
@@ -253,3 +268,4 @@ class WConfigParser(BaseParser):
             self.config['filters'].append(attrs['name'])
 
 config = Configuration()
+

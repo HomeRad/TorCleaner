@@ -2,8 +2,9 @@
 # call make.
 VERSION=$(shell ./setup.py --version)
 PACKAGE=webcleaner
-HTMLDIR=shell1.sourceforge.net:/home/groups/w/we/$(PACKAGE)/htdocs
-FTPDIR=shell1.sourceforge.net:/home/groups/ftp/pub/$(PACKAGE)/
+GROUPDIR=shell1.sourceforge.net:/home/groups
+HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
+FTPDIR=$(GROUPDIR)/ftp/pub/$(PACKAGE)/
 
 .PHONY: all
 all:
@@ -40,12 +41,14 @@ dist:	locale
 .PHONY: test
 test:
 	./filtertest filter filtertest.html
-	# try localhost
-	#env http_proxy="http://localhost:9090" wget -t1 http://localhost/
 
-.PHONY: test_remote
-test_remote:
+.PHONY: onlinetest
+onlinetest:
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/
+
+.PHONY: selftest
+selftest:
+	env http_proxy="http://localhost:9090" wget -t1 http://localhost:9090/
 
 .PHONY: md5sums
 md5sums:
@@ -70,7 +73,7 @@ upload: distclean dist VERSION
 	scp VERSION $(HTMLDIR)/raw/
 	scp dist/*.tar.gz $(HTMLDIR)
 	scp dist/* $(FTPDIR)
-	ssh -C -t shell1.sourceforge.net "cd /home/groups/$(PACKAGE) && make"
+	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
 
 .PHONY: locale
 locale:

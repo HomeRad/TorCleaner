@@ -70,7 +70,8 @@ class ClientServerMatchmaker:
             port = 80
         else:
             port = int(port)
-        if hostname == '_webcleaner':
+        if (hostname=='localhost' or hostname==wc.config['host']) and \
+	   port==wc.config['port']:
             # proxy info
             ServerHandleDirectly(self.client,
                 'HTTP/1.0 200 OK\r\n',

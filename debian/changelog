@@ -1,3 +1,11 @@
+webcleaner (0.14) unstable; urgency=low
+
+  * sanitize default config
+  * if you connect to your proxy directly (e.g. http://localhost:8080/),
+    you see config and statistic data
+
+ -- Bastian Kleineidam <calvin@debian.org>  Thu,  2 Aug 2001 21:44:42 +0200
+
 webcleaner (0.13) unstable; urgency=low
 
   * fix an assertion error in HttpServer.py: only close the server when

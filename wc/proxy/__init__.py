@@ -70,7 +70,7 @@ Active connections: [""" % \
         else:
             s += '\n              %s\n' % conn
     s += ']\n\ndnscache: %s' % dns_lookups.dnscache
-    return s
+    return str(config)+s
 
 
 def format_seconds(seconds):

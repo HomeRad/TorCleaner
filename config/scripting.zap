@@ -64,11 +64,6 @@
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="Javascript links"
- disable="1">
-<attr>javascript:.*</attr>
-</rewrite>
-
 <rewrite title="&lt;noscript&gt;"
  desc="Remove &lt;noscript&gt; tag (use if you allowed scripting)"
  tag="noscript">
@@ -80,10 +75,13 @@
  tag="script">
 </rewrite>
 
+<rewrite title="Javascript links"
+ disable="1">
+<attr>javascript:.*</attr>
+</rewrite>
+
 <rewrite title="use contents of noscript tag"
- desc="use if you are filtering script tags. This rule
-just removes the &lt;noscript&gt; tags, not the
-tag content."
+ desc="use if you are filtering script tags. This rule just removes the &lt;noscript&gt; tags, not the tag content."
  disable="1"
  tag="noscript">
 <replace part="tag"/>
