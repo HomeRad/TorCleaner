@@ -512,7 +512,7 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def jsEndElement (self, item):
         """parse generated html for scripts"""
-        self._debug(NIGHTMARE, "XXX", self.buf)
+        self._debug(NIGHTMARE, "jsEndElement buf", self.buf)
         if len(self.buf)<2:
             # syntax error, ignore
             return
