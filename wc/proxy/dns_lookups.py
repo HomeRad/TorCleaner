@@ -37,6 +37,16 @@ def background_lookup (hostname, callback):
     DnsExpandHostname(hostname.lower(), callback)
 
 
+def coerce_hostname (hostname):
+    """assure that hostname is a plain string"""
+    if isinstance(hostname, unicode):
+        # XXX encode?
+        hostname = str(hostname)
+    elif not isinstance(hostname, str):
+        raise ValueError("Invalid hostname type %r" % hostname)
+    return hostname
+
+
 class DnsResponse (object):
     """ A DNS answer can be:
         ('found', [ipaddrs])
@@ -73,6 +83,7 @@ class DnsExpandHostname (object):
     # This routine calls DnsCache to do the individual lookups
     def __init__ (self, hostname, callback):
         global resolver
+        hostname = coerce_hostname(hostname)
         if has_whitespace(hostname):
             # If there's whitespace, it's a copy/paste error
             hostname = re.sub(r'\s+', '', hostname)
