@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.429" oid="0">
+<folder sid="wc.429" oid="3">
 <title lang="de">Spezielle Werbung</title>
 <title lang="en">Specific adverts</title>
 <description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href="http://company.com"&gt;&lt;img  src="http://adserver.de/banner.gif"&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
@@ -273,4 +273,11 @@
  url="pagead\d+\.googlesyndication\.com">
   <title lang="de">Google pageads</title>
 </block>
+
+<rewrite sid="wc.32"
+ tag="div">
+  <title lang="de">suprnova.org</title>
+  <attr name="class">float-side-div</attr>
+  <enclosed>http://ad\.suprnova\.org</enclosed>
+</rewrite>
 </folder>
