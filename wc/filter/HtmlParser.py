@@ -597,7 +597,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             return
         js_ok, js_lang = get_js_data(self.buf[-2][2])
         if not js_ok:
-            # no JavaScript, ignore
+            # no JavaScript, add end tag and ignore
+            self.buf.append(item)
             return
         ver = get_js_ver(js_lang)
         # get script data
