@@ -267,10 +267,12 @@ OldTags = {
 
 # known invalid tags (to prevent correction)
 KnownInvalidTags = {
+    "cadv" : None, # www.heise.de
     "contentbanner" : None, # www.heise.de
     "heiseadvert" : None, # www.heise.de
     "heisetext" : None, # www.heise.de
     "skyscraper" : None, # www.heise.de
+    "u2uforen" : None, # www.heise.de
 }
 
 def check_spelling (tag, url):
@@ -280,10 +282,10 @@ def check_spelling (tag, url):
     if tag in HtmlTags or tag in MathTags:
         return tag
     if tag in OldTags:
-        print >>sys.stderr, "Warning: non-HTML4 tag", `tag`, "at", `url`
+        #print >>sys.stderr, "Warning: non-HTML4 tag", `tag`, "at", `url`
         return tag
     if tag in KnownInvalidTags:
-        print >>sys.stderr, "Warning: known invalid tag", `tag`, "at", `url`
+        #print >>sys.stderr, "Warning: known invalid tag", `tag`, "at", `url`
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
          if distance(tag, htmltag)==1:
