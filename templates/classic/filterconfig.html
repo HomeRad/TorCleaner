@@ -162,18 +162,73 @@ Here is the rule configuration...
 </table>
 </form>
 
-<div tal:condition="info"  class="info">
-<span i18n:translate="">Info</span>:
-<span tal:repeat="item info">
-<span tal:replace="item">something happened</span>
-</span>
+<div class="info">
+<div tal:condition="info/newfolder" i18n:translate="">New folder successfully created.</div>
+<div tal:condition="info/renamefolder" i18n:translate="">Folder successfully renamed.</div>
+<div tal:condition="info/disablefolder" i18n:translate="">Folder successfully disabled.</div>
+<div tal:condition="info/enablefolder" i18n:translate="">Folder successfully enabled.</div>
+<div tal:condition="info/removefolder" i18n:translate="">Folder successfully removed.</div>
+<div tal:condition="info/newrule" i18n:translate="">New rule successfully created.</div>
+<div tal:condition="info/disablerule" i18n:translate="">Rule successfully disabled.</div>
+<div tal:condition="info/enablerule" i18n:translate="">Rule successfully enabled.</div>
+<div tal:condition="info/removerule" i18n:translate="">Rule successfully removed.</div>
+<div tal:condition="info/rewrite_addattr" i18n:translate="">Rewrite attribute added.</div>
+<div tal:condition="info/rewrite_delattr" i18n:translate="">Rewrite attribute(s) removed.</div>
+<div tal:condition="info/folderup" i18n:translate="">Folder moved up.</div>
+<div tal:condition="info/folderdown" i18n:translate="">Folder moved down.</div>
+<div tal:condition="info/ruleup" i18n:translate="">Rule moved up.</div>
+<div tal:condition="info/ruledown" i18n:translate="">Rule moved down.</div>
+<div tal:condition="info/ruletitle" i18n:translate="">Rule title successfully changed.</div>
+<div tal:condition="info/ruledesc" i18n:translate="">Rule description successfully changed.</div>
+<div tal:condition="info/rulemarchurl" i18n:translate="">Rule match-url successfully changed.</div>
+<div tal:condition="info/ruledontmarchurl" i18n:translate="">Rule don't-match-url successfully changed.</div>
+<div tal:condition="info/ruleurlscheme" i18n:translate="">Rule url scheme successfully changed.</div>
+<div tal:condition="info/ruleurlhost" i18n:translate="">Rule url host successfully changed.</div>
+<div tal:condition="info/ruleurlport" i18n:translate="">Rule url port successfully changed.</div>
+<div tal:condition="info/ruleurlpath" i18n:translate="">Rule url path successfully changed.</div>
+<div tal:condition="info/ruleurlparameters" i18n:translate="">Rule url parameters successfully changed.</div>
+<div tal:condition="info/ruleurlquery" i18n:translate="">Rule url query successfully changed.</div>
+<div tal:condition="info/ruleurlfragment" i18n:translate="">Rule url fragment successfully changed.</div>
+<div tal:condition="info/ruleblockedurl" i18n:translate="">Rule blocked url successfully changed.</div>
+<div tal:condition="info/ruleheadername" i18n:translate="">Rule header name successfully changed.</div>
+<div tal:condition="info/ruleheadervalue" i18n:translate="">Rule header value successfully changed.</div>
+<div tal:condition="info/ruleimgwidth" i18n:translate="">Rule image width successfully changed.</div>
+<div tal:condition="info/ruleimgheight" i18n:translate="">Rule image height successfully changed.</div>
+<div tal:condition="info/ruleserviceenable" i18n:translate="">PICS service successfully enabled.</div>
+<div tal:condition="info/ruleservicedisable" i18n:translate="">PICS service successfully disabled.</div>
+<div tal:condition="info/rulecategoryenable" i18n:translate="">PICS category successfully enabled.</div>
+<div tal:condition="info/rulecategorydisable" i18n:translate="">PICS category successfully enabled.</div>
+<div tal:condition="info/rulesearch" i18n:translate="">Rule replace search successfully changed.</div>
+<div tal:condition="info/rulereplace" i18n:translate="">Rule replacement successfully changed.</div>
+<div tal:condition="info/ruletag" i18n:translate="">Rule rewrite tag successfully changed.</div>
+<div tal:condition="info/ruleenclosedblock" i18n:translate="">Rule enclosed block successfully changed.</div>
+<div tal:condition="info/rulerewritepart" i18n:translate="">Rule rewrite part successfully changed.</div>
+<div tal:condition="info/rulerewritereplacement" i18n:translate="">Rule rewrite replacement successfully changed.</div>
 </div>
 
-<div tal:condition="error" class="error">
-<span i18n:translate="">Error</span>:
-<span tal:repeat="item error">
-<span tal:replace="item">Error message</span>
-</span>
+<div class="error">
+<div tal:condition="error/newfolder" i18n:translate="">Empty folder name.</div>
+<div tal:condition="error/renamefolder" i18n:translate="">Empty folder name.</div>
+<div tal:condition="error/disablefolder" i18n:translate="">Folder already disabled.</div>
+<div tal:condition="error/enablefolder" i18n:translate="">Folder already enabled.</div>
+<div tal:condition="error/newrule" i18n:translate="">Invalid rule type.</div>
+<div tal:condition="error/disablerule" i18n:translate="">Rule already disabled.</div>
+<div tal:condition="error/enablerule" i18n:translate="">Rule already enabled.</div>
+<div tal:condition="error/rewrite_addattr" i18n:translate="">Empty attribute name.</div>
+<div tal:condition="error/rewrite_delattr" i18n:translate="">Invalid attribute name.</div>
+<div tal:condition="error/folderup" i18n:translate="">Invalid folder move up id.</div>
+<div tal:condition="error/folderdown" i18n:translate="">Invalid folder move down id.</div>
+<div tal:condition="error/ruleup" i18n:translate="">Invalid rule move up id.</div>
+<div tal:condition="error/ruledown" i18n:translate="">Invalid rule move down id.</div>
+<div tal:condition="error/ruletitle" i18n:translate="">Empty rule title.</div>
+<div tal:condition="error/ruleheadername" i18n:translate="">Empty header rule name.</div>
+<div tal:condition="error/ruleimgwidth" i18n:translate="">Invalid image width value.</div>
+<div tal:condition="error/ruleimgheight" i18n:translate="">Invalid image height value.</div>
+<div tal:condition="error/rulesearch" i18n:translate="">Empty replace search value.</div>
+<div tal:condition="error/ruletag" i18n:translate="">Empty rewrite tag name.</div>
+<div tal:condition="error/rulerewritepart" i18n:translate="">Invalid rewrite part name.</div>
+<div tal:condition="error/folderindex" i18n:translate="">Invalid folder index.</div>
+<div tal:condition="error/ruleindex" i18n:translate="">Invalid rule index.</div>
 </div>
 
 </div>

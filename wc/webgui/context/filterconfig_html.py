@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 import tempfile, os
-from wc import i18n, AppName, ConfigDir, rulenames, Version
+from wc import AppName, ConfigDir, rulenames, Version
 from wc import Configuration as _Configuration
 from wc import daemon as _daemon
 from wc.webgui.context import getval as _getval
@@ -15,8 +15,8 @@ from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.PICS import services as pics_data
 
 # config vars
-info = []
-error = []
+info = {}
+error = {}
 config = _Configuration()
 # current selected folder
 curfolder = None
@@ -116,8 +116,8 @@ def _exec_form (form):
 
 
 def _form_reset ():
-    del info[:]
-    del error[:]
+    info.clear()
+    error.clear()
     global curfolder, currule, curparts
     curfolder = None
     currule = None
@@ -141,7 +141,7 @@ def _form_selfolder (index):
         global curfolder
         curfolder = [ f for f in config['folderrules'] if f.oid==index ][0]
     except (ValueError, IndexError):
-        error.append(i18n._("Invalid folder index"))
+        error['folderindex'] = True
 
 
 def _form_selrule (index):
@@ -160,12 +160,12 @@ def _form_selrule (index):
             for i, part in enumerate(partvalnames):
                 curparts[part] = (currule.part==i)
     except (ValueError, IndexError):
-        error.append(i18n._("Invalid filter index"))
+        error['ruleindex'] = True
 
 
 def _form_newfolder (foldername):
     if not foldername:
-        error.append(i18n._("Empty folder name"))
+        error['newfolder'] = True
         return
     fd, filename = tempfile.mkstemp(".zap", "local_", ConfigDir, text=True)
     # select the new folder
@@ -174,45 +174,46 @@ def _form_newfolder (foldername):
     _register_rule(curfolder)
     _generate_sids(prefix="lc")
     config['folderrules'].append(curfolder)
-    info.append(i18n._("New folder %s created.")%`os.path.basename(filename)`)
+    info['newfolder'] = True
 
 
 def _form_renamefolder (foldername):
     if not foldername:
-        error.append(i18n._("Empty folder name."))
+        error['renamefolder'] = True
         return
     curfolder.title = foldername
-    info.append(i18n._("Folder successfully renamed."))
+    info['renamefolder'] = True
 
 
 def _form_disablefolder (folder):
     if folder.disable:
-        error.append(i18n._("Folder already disabled."))
+        error['disablefolder'] = True
         return
     folder.disable = 1
-    info.append(i18n._("Folder disabled."))
+    info['disablefolder'] = True
 
 
 def _form_enablefolder (folder):
     if not folder.disable:
-        error.append(i18n._("Folder already enabled."))
+        error['enablefolder'] = True
         return
     folder.disable = 0
-    info.append(i18n._("Folder enabled."))
+    info['enablefolder'] = True
 
 
 def _form_removefolder (folder):
+    # XXX error handling
     config['folderrules'].remove(folder)
     global curfolder, currule
     curfolder = None
     currule = None
     os.remove(folder.filename)
-    info.append(i18n._("Folder removed."))
+    info['removefolder'] = True
 
 
 def _form_newrule (rtype):
     if rtype not in rulenames:
-        error.append(i18n._("Invalid rule type."))
+        error['newrule'] = True
         return
     # add new rule
     rule = _GetRuleFromName(rtype)
@@ -222,48 +223,53 @@ def _form_newrule (rtype):
     curfolder.append_rule(rule)
     # select new rule
     _form_selrule(rule.oid)
-    info.append(i18n._("New rule created."))
+    info['newrule'] = True
 
 
 def _form_disablerule (rule):
     if rule.disable:
-        error.append(i18n._("Rule already disabled."))
+        error['disablerule'] = True
         return
     rule.disable = 1
-    info.append(i18n._("Rule disabled."))
+    info['disablerule'] = True
 
 
 def _form_enablerule (rule):
     if not rule.disable:
-        error.append(i18n._("Rule already enabled."))
+        error['enablerule'] = True
         return
     rule.disable = 0
-    info.append(i18n._("Rule enabled."))
+    info['enablerule'] = True
 
 
 def _form_removerule (rule):
+    # XXX error handling
     curfolder.rules.remove(rule)
     global currule
     currule = None
-    info.append(i18n._("Rule removed."))
+    info['removerule'] = True
 
 
 def _form_rewrite_addattr (form):
     name = _getval(form, "attrname").strip()
     if not name:
-        error.append(i18n._("Empty attribute name."))
+        error['rewrite_addattr'] = True
         return
     value = _getval(form, "attrval")
     currule.attrs[name] = value
-    info.append(i18n._("Rewrite attribute added."))
+    info['rewrite_addattr'] = True
 
 
 def _form_rewrite_removeattrs (form):
     toremove = _getlist(form, 'delattr')
     if toremove:
         for attr in toremove:
+            if not attrs.has_key(attr):
+                error['rewrite_delattr'] = True
+                return
+        for attr in toremove:
             del currule.attrs[attr]
-        info.append(i18n._("Rewrite attributes removed."))
+        info['rewrite_delattr'] = True
 
 
 def _form_folder_up (oid):
@@ -279,9 +285,9 @@ def _form_folder_up (oid):
             global currule, curfolder
             currule = None
             curfolder = None
-            info.append(i18n._("Folder moved up."))
+            info['folderup'] = True
             return
-    error.append(i18n._("Invalid folder move up id."))
+    error['folderup'] = True
 
 
 def _form_folder_down (oid):
@@ -297,9 +303,9 @@ def _form_folder_down (oid):
             global currule, curfolder
             currule = None
             curfolder = None
-            info.append(i18n._("Folder moved down."))
+            info['folderdown'] = True
             return
-    error.append(i18n._("Invalid folder move down id."))
+    error['folderdown'] = True
 
 
 def _form_rule_up (oid):
@@ -314,9 +320,9 @@ def _form_rule_up (oid):
             # deselect rule
             global currule
             currule = None
-            info.append(i18n._("Rule moved up."))
+            info['ruleup'] = True
             return
-    error.append(i18n._("Invalid rule move up id."))
+    error['ruleup'] = True
 
 
 def _form_rule_down (oid):
@@ -331,9 +337,9 @@ def _form_rule_down (oid):
             # deselect rule
             global currule
             currule = None
-            info.append(i18n._("Rule moved down."))
+            info['ruledown'] = True
             return
-    error.append(i18n._("Invalid rule move down id."))
+    error['ruledown'] = True
 
 
 def _form_apply (form):
@@ -348,57 +354,57 @@ def _form_apply (form):
 def _form_rule_titledesc (form):
     title = _getval(form, 'rule_title')
     if not title:
-        error.append(i18n._("Empty rule title"))
+        error['ruletitle'] = True
         return
     if title!=currule.title:
         currule.title = title
-        info.append(i18n._("Rule title changed."))
+        info['ruletitle'] = True
     desc = _getval(form, 'rule_description')
     if desc!=currule.desc:
         currule.desc = desc
-        info.append(i18n._("Rule description changed."))
+        info['ruledesc'] = True
 
 
 def _form_rule_matchurl (form):
     matchurl = _getval(form, 'rule_matchurl').strip()
     if matchurl!=currule.matchurl:
         currule.matchurl = matchurl
-        info.append(i18n._("Rule match url changed."))
+        info['rulematchurl'] = True
     dontmatchurl = _getval(form, 'rule_dontmatchurl').strip()
     if dontmatchurl!=currule.dontmatchurl:
         currule.dontmatchurl = dontmatchurl
-        info.append(i18n._("Rule dontmatch url changed."))
+        info['ruledontmatchurl'] = True
 
 
 def _form_rule_urlparts (form):
     scheme = _getval(form, 'rule_urlscheme').strip()
     if scheme!=currule.scheme:
         currule.scheme = scheme
-        info.append(i18n._("Rule url scheme changed."))
+        info['ruleurlscheme'] = True
     host = _getval(form, 'rule_urlhost').strip()
     if host!=currule.host:
         currule.host = host
-        info.append(i18n._("Rule url host changed."))
+        info['ruleurlhost'] = True
     port = _getval(form, 'rule_urlport').strip()
     if port!=currule.port:
         currule.port = port
-        info.append(i18n._("Rule url port changed."))
+        info['ruleurlport'] = True
     path = _getval(form, 'rule_urlpath').strip()
     if path!=currule.path:
         currule.path = path
-        info.append(i18n._("Rule url path changed."))
+        info['ruleurlpath'] = True
     parameters = _getval(form, 'rule_urlparameters').strip()
     if parameters!=currule.parameters:
         currule.parameters = parameters
-        info.append(i18n._("Rule url parameters changed."))
+        info['ruleurlparameters'] = True
     query = _getval(form, 'rule_urlquery').strip()
     if query!=currule.query:
         currule.query = query
-        info.append(i18n._("Rule url query changed."))
+        info['ruleurlquery'] = True
     fragment = _getval(form, 'rule_urlfragment').strip()
     if fragment!=currule.fragment:
         currule.fragment = fragment
-        info.append(i18n._("Rule url fragment changed."))
+        info['ruleurlfragment'] = True
 
 
 def _form_apply_allow (form):
@@ -410,21 +416,21 @@ def _form_apply_block (form):
     url = _getval(form, 'rule_blockedurl').strip()
     if url!=currule.url:
         currule.url = url
-        info.append(i18n._("Rule blocked url changed."))
+        info['ruleblockedurl'] = True
 
 
 def _form_apply_header (form):
     _form_rule_matchurl(form)
     name = _getval(form, 'rule_headername').strip()
     if not name:
-        error.append(i18n._("Empty header rule name."))
+        error['ruleheadername'] = True
     elif name!=currule.name:
         currule.name = name
-        info.append(i18n._("Rule header name changed."))
+        info['ruleheadername'] = True
     value = _getval(form, 'rule_headervalue').strip()
     if value!=currule.value:
         currule.value = value
-        info.append(i18n._("Rule header value changed."))
+        info['ruleheadervalue'] = True
 
 
 def _form_apply_image (form):
@@ -433,20 +439,20 @@ def _form_apply_image (form):
     try:
         width = int(width)
     except ValueError:
-        error.append(i18n._("Invalid image width value."))
+        error['ruleimgwidth'] = True
         return
     if width!=currule.width:
         currule.width = width
-        info.append(i18n._("Rule image width changed."))
+        info['ruleimgwidth'] = True
     height = _getval(form, 'rule_imgheight').strip()
     try:
         height = int(height)
     except ValueError:
-        error.append(i18n._("Invalid image height value."))
+        error['ruleimgheight'] = True
         return
     if height!=currule.height:
         currule.height = height
-        info.append(i18n._("Rule image height changed."))
+        info['ruleimgheight'] = True
     # XXX todo: image types
 
 
@@ -461,32 +467,29 @@ def _form_apply_nocomments (form):
 def _form_apply_pics (form):
     _form_rule_matchurl(form)
     # PICS services
+    # XXX error handling
     for service in pics_services:
         if form.has_key("service_%s"%service):
             if not currule.ratings.has_key(service):
                 currule.ratings[service] = {}
                 for category in pics_categories[service]:
                     currule.ratings[service][category] = 0
-                info.append(i18n._("PICS service %s enabled.") % \
-                            pics_data[service]['name'])
+                info['ruleserviceenable'] = True
         else:
             if currule.ratings.has_key(service):
                 del currule.ratings[service]
-                info.append(i18n._("PICS service %s disabled.") % \
-                            pics_data[service]['name'])
+                info['ruleservicedisable'] = True
         # service categories
         if currule.ratings.has_key(service):
             for category in pics_categories[service]:
                 if form.has_key("category_%s_%s" % (service, category)):
                     if not currule.ratings[service][category]:
                         currule.ratings[service][category] = 1
-                        info.append(i18n._("PICS service %s, category %s enabled.") %\
-                               (pics_data[service]['name'], category))
+                        info['rulecategoryenable'] = True
                 else:
                     if currule.ratings[service][category]:
                         currule.ratings[service][category] = 0
-                        info.append(i18n._("PICS service %s, category %s disabled.") %\
-                               (pics_data[service]['name'], category))
+                        info['rulecategorydisable'] = True
 
 
 def _form_apply_replace (form):
@@ -494,41 +497,41 @@ def _form_apply_replace (form):
     # note: do not strip() the search and replace form values
     search = _getval(form, 'rule_search')
     if not search:
-        error.append(i18n._("Empty replace search value."))
+        error['rulesearch'] = True
         return
     if search!=currule.search:
         currule.search = search
-        info.append(i18n._("Rule replace search changed."))
+        info['rulesearch'] = True
     replace = _getval(form, 'rule_replace')
     if replace!=currule.replace:
         currule.replace = replace
-        info.append(i18n._("Rule replacement changed."))
+        info['rulereplace'] = True
 
 
 def _form_apply_rewrite (form):
     _form_rule_matchurl(form)
     tag = _getval(form, 'rule_tag').strip()
     if not tag:
-        error.append(i18n._("Empty rewrite tag name."))
+        error['ruletag'] = True
         return
     if tag!=currule.tag:
         currule.tag = tag
-        info.append(i18n._("Rule rewrite tag changed."))
+        info['ruletag'] = True
     enclosed = _getval(form, 'rule_enclosedblock').strip()
     if enclosed!=currule.enclosed:
         currule.enclosed = enclosed
-        info.append(i18n._("Rule rewrite enclosed block changed."))
+        info['ruleenclosedblock'] = True
     part = _getval(form, 'rule_rewritepart')
     partnum = _part_num(part)
     if partnum is None:
-        error.append(i18n._("Invalid part value %s.") % _filter_safe(part))
+        error['rulerewritepart'] = True
         return
     if partnum!=currule.part:
         currule.part = partnum
-        info.append(i18n._("Rule rewrite part changed."))
+        info['rulerewritepart'] = True
         # select again because of side effect (XXX see above)
         _form_selrule(currule.oid)
     replacement = _getval(form, 'rule_rewritereplacement').strip()
     if replacement!=currule.replacement:
         currule.replacement = replacement
-        info.append(i18n._("Rule rewrite replacement changed."))
+        info['rulerewritereplacement'] =  True
