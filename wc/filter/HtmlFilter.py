@@ -48,6 +48,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
 
 
     def new_instance (self, **opts):
+        """make a new instance of this filter, for recursive filtering"""
         return HtmlFilter(self.rules, self.ratings, self.url, **opts)
 
 
@@ -112,11 +113,13 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
 
 
     def doctype (self, data):
+        """HTML doctype"""
         wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
         return self._data("<!DOCTYPE%s>"%data)
 
 
     def pi (self, data):
+        """HTML pi"""
         wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
         return self._data("<?%s?>"%data)
 

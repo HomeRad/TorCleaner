@@ -17,9 +17,10 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import cStringIO as StringIO
-import wc.HtmlParser.htmlsax
+
 import wc.filter
 import wc.filter.rules.RewriteRule
+import wc.HtmlParser.htmlsax
 
 
 class HtmlParser (wc.HtmlParser.htmlsax.parser):
@@ -49,7 +50,9 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
 
          After a wait state, replays the waitbuf and re-feed the inbuf data.
     """
+
     def __init__ (self, handler):
+        """initialize parser state and handler data"""
         # internal html parser, calls handler functions
         super(HtmlParser, self).__init__(handler)
         # parse state either normal parse or wait
@@ -65,10 +68,9 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         # wait indicator flag
         self.waited = 0
 
-
     def __str__ (self):
+        """string representation of parser with state info"""
         return "%s in state %s" % (self.__class__.__name__, str(self.state))
-
 
     def debugbuf (self, cat=wc.LOG_FILTER):
         """print debugging information about buffered data"""
@@ -77,14 +79,12 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         wc.log.debug(cat, "self.waitbuf %r", self.waitbuf)
         wc.log.debug(cat, "self.inbuf %r", self.inbuf.getvalue())
 
-
     def tagbuf2data (self):
         """append serialized tag items of the tag buffer to the output buffer
            and clear the tag buffer"""
         wc.log.debug(wc.LOG_FILTER, "%s tagbuf2data", self)
         wc.filter.rules.RewriteRule.tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
-
 
     def feed (self, data):
         """feed some data to the parser"""
@@ -116,7 +116,6 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         else:
             assert False, "parser %s has unknown parser state" % str(self)
 
-
     def flush (self):
         """flush pending data"""
         wc.log.debug(wc.LOG_FILTER, "%s flush", self)
@@ -127,14 +126,12 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                                        (self.waited, str(self)))
         super(HtmlParser, self).flush()
 
-
     def getoutput (self):
         """returns all data in output buffer and clears the output buffer"""
         data = self.outbuf.getvalue()
         self.outbuf.close()
         self.outbuf = StringIO.StringIO()
         return data
-
 
     def replay (self, waitbuf):
         """call the handler functions again with buffer data"""

@@ -71,7 +71,7 @@ def index_number (text):
 
 def convert (text):
     base = which_base(text)
-    if base==0:
+    if base == 0:
         return text
     start = size_base(base)
     end = start+size_number(text)

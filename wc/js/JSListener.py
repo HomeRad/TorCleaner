@@ -24,14 +24,14 @@
 class JSListener (object):
     """Define handler functions for javascript events"""
 
-    def jsProcessData (self, data):
+    def js_process_data (self, data):
         """handler for document.write content"""
-        raise NotImplementedError("abstract method jsProcessData")
+        raise NotImplementedError("abstract method js_process_data")
 
-    def jsProcessPopup (self):
+    def js_process_popup (self):
         """handler for popup windows"""
-        raise NotImplementedError("abstract method jsProcessPopup")
+        raise NotImplementedError("abstract method js_process_popup")
 
-    def jsProcessError (self, msg):
+    def js_process_error (self, msg):
         """handler for syntax errors"""
-        raise NotImplementedError("abstract method jsProcessError")
+        raise NotImplementedError("abstract method js_process_error")

@@ -87,7 +87,7 @@ static int dispatchOutput (JSEnvObject* env, PyObject* output) {
     while ((item = PyIter_Next(iterator))!=NULL) {
         PyObject* callback;
         PyObject* result;
-        if ((callback = PyObject_GetAttrString(item, "jsProcessData"))==NULL) {
+        if ((callback = PyObject_GetAttrString(item, "js_process_data"))==NULL) {
             Py_DECREF(item);
             Py_DECREF(iterator);
             return -1;
@@ -118,7 +118,7 @@ static int dispatchPopupNotification (JSEnvObject* env) {
     while ((item = PyIter_Next(iterator))!=NULL) {
         PyObject* callback;
         PyObject* result;
-        if ((callback = PyObject_GetAttrString(item, "jsProcessPopup"))==NULL) {
+        if ((callback = PyObject_GetAttrString(item, "js_process_popup"))==NULL) {
             Py_DECREF(item);
             Py_DECREF(iterator);
             return -1;
@@ -149,7 +149,7 @@ static int dispatchError (JSEnvObject* env, PyObject* err) {
         PyObject* callback;
         PyObject* result;
         /* do something with item */
-        if ((callback = PyObject_GetAttrString(item, "jsProcessError"))==NULL) {
+        if ((callback = PyObject_GetAttrString(item, "js_process_error"))==NULL) {
             Py_DECREF(item);
             Py_DECREF(iterator);
             return -1;
