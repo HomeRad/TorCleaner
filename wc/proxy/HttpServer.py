@@ -80,7 +80,6 @@ class HttpServer (wc.proxy.Server.Server):
 
     def try_connect (self):
         """attempt connect, close on error and raise exception"""
-        self.socket.settimeout(wc.configuration.config['timeout'])
         try:
             self.connect(self.addr)
         except (socket.timeout, socket.error):
