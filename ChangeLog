@@ -1,4 +1,4 @@
-2.6 (released xx.xx.xxxx)
+2.6 (released 25.11.2003)
   * fixed background downloading with 30x redirects
     Changed: wc/proxy/HttpProxyClient.py
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031125

@@ -2,6 +2,9 @@ TODO
 
 version 2.5 and above
 
+- wrong content type at http://flug.de/img/lastminute/
+  Solution: try to peek at content
+
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS
