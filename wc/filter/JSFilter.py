@@ -237,6 +237,9 @@ class JSFilter (wc.js.JSListener.JSListener):
         elif tag=='script':
             js_ok, js_lang = wc.js.get_js_data(attrs)
             url = attrs.get('src', '')
+            # sanitize script src url
+            url = _replace_ws("", url)
+            url = wc.parser.resolve_html_entities(url)
             if js_ok and url:
                 self.jsScriptSrc(url, js_lang)
                 return
@@ -256,8 +259,6 @@ class JSFilter (wc.js.JSListener.JSListener):
            After that, self.js_client points to the proxy client object"""
         wc.log.debug(wc.LOG_FILTER, "%s jsScriptSrc %r", self, url)
         assert self.htmlparser.state[0]=='parse', "non-parse state %s" % self.htmlparser.state
-        # sanitize script src url by removing any whitespace
-        url = _replace_ws("", url)
         ver = wc.js.get_js_ver(language)
         # some urls are relative, need to make absolut
         if self.base_url:
