@@ -1,8 +1,9 @@
 webcleaner (2.24-0.1) unstable; urgency=low
 
   * New upstream release.
+  * fixed import in wc/proxy/HttpClient.py
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri, 10 Dec 2004 14:28:49 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 14 Dec 2004 19:46:15 +0100
 
 webcleaner (2.23-0.1) unstable; urgency=low
 
