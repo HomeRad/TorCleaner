@@ -112,7 +112,7 @@
 <rewrite title="Prevent right-click disablement" oid="17"
  desc="Good! Adaptation, improvisation, but your weakness is not your technique."
  tag="script">
-<enclosed>document\.onmousedown</enclosed>
+<enclosed>(?i)document\.onmousedown</enclosed>
 </rewrite>
 
 <rewrite title="&lt;body&gt; ondragstart" oid="18"

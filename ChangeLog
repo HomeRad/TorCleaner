@@ -1,3 +1,13 @@
+1.11
+  * - remove <body ondragstart, oncontextmenu, onselectstart>
+    - prevent document.onmousedown rebinding
+    - some ad filter updates
+    Changed files: config/{scripting,adverts}.zap
+  * also apply filter rules to document.write content
+    Changed files: wc/filter/HtmlParser.py
+  * fix return types in the daemon package
+    Changed files: wc/daemon/_posix.py
+
 1.10
   * fix rule title updating (again)
     Changed files: wc/gui/FXRuleFrame.py
