@@ -5,7 +5,7 @@ test_simpletal
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
-<div>Unknown option hullabulla</div>
+<div alt="Unbekannte Option hullabulla">Unbekannte Option hullabulla</div>
 </body>
 </html>
 
