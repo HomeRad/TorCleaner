@@ -26,7 +26,7 @@ from wc import ip
 # adapted from David Wheelers "Secure Programming for Linux and Unix HOWTO"
 _basic = {
     "_az09": r"a-z0-9",
-    "_path": r"\-\_\.\!\~\*\'\(\)",
+    "_path": r"\-\_\.\!\~\*\'\(\),",
     "_hex_safe": r"2-9a-f",
     "_hex_full": r"0-9a-f",
 }
