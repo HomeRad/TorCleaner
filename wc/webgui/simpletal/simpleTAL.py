@@ -120,6 +120,7 @@ class TemplateInterpreter:
                 self.commandHandler [I18N_TRANSLATE] = self.cmdI18nTranslate
                 self.commandHandler [I18N_ATTRIBUTES] = self.cmdI18nAttributes
                 self.translator = translator
+		self.log = logging.getLogger("simpleTAL.TemplateInterpreter")
 	
 	def initialise (self, context, outputFile):
 		self.context = context
@@ -368,6 +369,7 @@ class TemplateInterpreter:
 
 	def cmdOutput (self, command, args):
                 if self.translator is not None and self.translateContent:
+                        self.log.debug("Translating %s" % `args`)
                         self.file.write(self.translator.gettext(args) % \
                                         self.context.getVariableMap())
                 else:
@@ -465,6 +467,7 @@ class TemplateInterpreter:
                         result = self.context.evaluate (args[0], self.originalAttributes)
                         if not (result is None or result.isNothing() or result.isDefault()):
                                 if self.translator is not None:
+                                        self.log.debug("Translating %s" % `result.value()`)
                                         self.tagContent = (0, self.translator.gettext(result.value()) % \
                                                               self.context.getVariableMap())
                                 else:
@@ -481,6 +484,7 @@ class TemplateInterpreter:
 		attsToRemove = {}
 		newAtts = []
 		for attName, attExpr in args:
+                        self.log.debug("Translating %s" % `attExpr`)
 			result = self.translator.gettext(attExpr) % \
                                       self.context.getVariableMap()
 			# We have a value - let's use it!
