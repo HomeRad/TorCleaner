@@ -142,3 +142,15 @@ def host_in_set (ip, hosts, nets):
         for net, mask in nets:
             if dq_in_net(n, net, mask): return 1
     return 0
+
+
+def host_set (strhosts):
+    hosts = [s.strip() for s in strhosts.split(",")]
+    ret = []
+    ret.extend(host_map(hosts))
+    ret.sort()
+    hostdict = {}
+    for h in hosts:
+        hostdict[h] = None
+    ret.append(hostdict)
+    return ret
