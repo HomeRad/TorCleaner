@@ -22,26 +22,25 @@ import re
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
 from wc.debug_levels import *
-from wc.filter import FILTER_RESPONSE_MODIFY
-from wc.filter.Filter import Filter
+from wc.filter import FILTER_RESPONSE_MODIFY, Filter, compileRegex, compileMime
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = ['replacer']
+mimelist = map(compileMime, ['text/html', 'text/javascript'])
 
 
 # XXX group matches?
 class Replacer (Filter):
     """replace regular expressions in a data stream"""
-    mimelist = ('text/html', 'text/javascript')
 
     def addrule (self, rule):
         Filter.addrule(self, rule)
-        self.compileRegex(rule, "matchurl")
-        self.compileRegex(rule, "dontmatchurl")
-        self.compileRegex(rule, "search")
+        compileRegex(rule, "matchurl")
+        compileRegex(rule, "dontmatchurl")
+        compileRegex(rule, "search")
 
     def filter (self, data, **attrs):
         if not attrs.has_key('buf'): return data

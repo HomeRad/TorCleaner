@@ -16,8 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re, urlparse, os, wc
 from Rules import Netlocparts
-from wc.filter import FILTER_REQUEST
-from wc.filter.Filter import Filter
+from wc.filter import FILTER_REQUEST, Filter
 from wc import debug
 from wc.debug_levels import *
 
@@ -26,6 +25,7 @@ orders = [FILTER_REQUEST]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = ['block','allow']
+mimelist = []
 # regular expression for image filenames
 image_re=re.compile(r'\.(?i)(gif|jpg|png)')
 
@@ -42,9 +42,10 @@ def _file_url (fname):
 
 
 class Blocker (Filter):
-    def __init__ (self):
+
+    def __init__ (self, mimelist):
         """With no blocker and no allower we never block."""
-        Filter.__init__(self)
+        Filter.__init__(self, mimelist)
         from os.path import join
         self.block = []
         self.allow = []

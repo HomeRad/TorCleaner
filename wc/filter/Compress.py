@@ -16,8 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re,struct,time,zlib,wc
 
-from wc.filter.Filter import Filter
-from wc.filter import FILTER_RESPONSE_ENCODE
+from wc.filter import FILTER_RESPONSE_ENCODE, Filter, compileMime
 from wc import debug
 from wc.debug_levels import *
 
@@ -26,6 +25,20 @@ orders = [FILTER_RESPONSE_ENCODE]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = []
+# which mime types this filter applies to
+mimelist = map(compileMime,  ['text/.+',
+            'application/postscript',
+            'application/pdf',
+            'application/x-dvi',
+            'audio/basic',
+            'audio/midi',
+            'audio/x-wav',
+            'image/x-portable-anymap',
+            'image/x-portable-bitmap',
+            'image/x-portable-graymap',
+            'image/x-portable-pixmap',
+            'x-world/x-vrml',
+            ])
 
 GZIP_HEADER = '%s%s%s%s' % (
               '\037\213\010', # header
@@ -48,26 +61,6 @@ def getCompressObject():
 
 
 class Compress (Filter):
-    # XXX I want to write text/*, requires re.match in mimelist matching
-    mimelist = (
-            'text/css',
-            'text/html',
-            'text/javascript',
-            'text/plain',
-            'text/richtext',
-            'text/xml',
-            'application/postscript',
-            'application/pdf',
-            'application/x-dvi',
-            'audio/basic',
-            'audio/midi',
-            'audio/x-wav',
-            'image/x-portable-anymap',
-            'image/x-portable-bitmap',
-            'image/x-portable-graymap',
-            'image/x-portable-pixmap',
-            'x-world/x-vrml',
-            )
 
     def filter (self, data, **attrs):
         """compress the string s.

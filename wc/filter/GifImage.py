@@ -15,8 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re, sys, base64, wc
-from wc.filter import FILTER_RESPONSE_MODIFY, FilterException
-from wc.filter.Filter import Filter
+from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, Filter, \
+                      compileMime, compileRegex
 from wc import debug
 from wc.debug_levels import *
 
@@ -25,26 +25,29 @@ orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = ['image']
+# which mime types this filter applies to
+mimelist = map(compileMime, ['image/gif'])
 
 def i16 (c):
     """merge two bytes to an integer"""
     return ord(c[0]) | (ord(c[1])<<8)
 
+
 class RewindException (Exception): pass
+
 
 class GifImage (Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
-    mimelist = ('image/gif',)
 
-    def __init__ (self):
-        Filter.__init__(self)
+    def __init__ (self, mimelist):
+        Filter.__init__(self, mimelist)
         self.tiny_gif = None
 
     def addrule (self, rule):
         Filter.addrule(self, rule)
-        self.compileRegex(rule, "matchurl")
-        self.compileRegex(rule, "dontmatchurl")
+        compileRegex(rule, "matchurl")
+        compileRegex(rule, "dontmatchurl")
 
     def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
@@ -70,7 +73,6 @@ class GifImage (Filter):
             return {}
         sizes = map(lambda r: (r.width, r.height), rules)
         return {'gifparser': GifParser(sizes)}
-
 
 
 class GifParser:

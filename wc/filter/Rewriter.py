@@ -19,14 +19,14 @@ from wc.parser.htmllib import HtmlParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import _,debug,error
 from wc.debug_levels import *
-from wc.filter import FILTER_RESPONSE_MODIFY
-from wc.filter.Filter import Filter
+from wc.filter import FILTER_RESPONSE_MODIFY, Filter, compileMime, compileRegex
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = ['rewrite','nocomments']
+mimelist = map(compileMime, ['text/html'])
 
 # regular expression which matches tag attributes that dont
 # need to be quoted
@@ -35,18 +35,17 @@ _noquoteval = re.compile("^[-+~a-zA-Z0-9_/.#%:?,]+$")
 
 class Rewriter (Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
-    mimelist = ('text/html',)
 
-    def __init__ (self):
-        Filter.__init__(self)
+    def __init__ (self, mimelist):
+        Filter.__init__(self, mimelist)
         self.comments = 1
 
     def addrule (self, rule):
         Filter.addrule(self, rule)
-        self.compileRegex(rule, "matchurl")
-        self.compileRegex(rule, "dontmatchurl")
+        compileRegex(rule, "matchurl")
+        compileRegex(rule, "dontmatchurl")
         if rule.get_name()=='rewrite':
-            self.compileRegex(rule, "enclosed")
+            compileRegex(rule, "enclosed")
             for key,val in rule.attrs.items():
                 rule.attrs[key] = re.compile(rule.attrs[key])
         elif rule.get_name()=='nocomments':

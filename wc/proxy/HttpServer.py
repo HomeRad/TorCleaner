@@ -194,13 +194,15 @@ class HttpServer(Server):
             return
 
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
-        if self.headers.get('content-type') in config['mime_no_length']:
-            # remove content length
-            for h in self.headers.headers[:]:
-                if re.match('(?i)content-length:', h):
-                    self.headers.headers.remove(h)
-                    self.bytes_remaining = None
-
+        for ro in config['mime_content_rewriting']:
+            if ro.match(self.headers.get('content-type')):
+                # remove content length
+                for h in self.headers.headers[:]:
+                    if re.match('(?i)content-length:', h):
+                        self.headers.headers.remove(h)
+                        self.bytes_remaining = None
+                    break
+                break
         self.decoders = []
         if self.headers.has_key('transfer-encoding'):
             #debug(BRING_IT_ON, 'S/Transfer-encoding:', self.headers['transfer-encoding'])
@@ -215,24 +217,26 @@ class HttpServer(Server):
                     self.bytes_remainig = None
 
         # check for unusual compressed files
-        if self.document[-4:] in (".bz2", ".tgz"):
+        if self.document.endswith(".bz2") or \
+           self.document.endswith(".tgz"):
             gm = mimetypes.guess_type(self.document)
             self.headers['content-encoding'] = gm[1]
             self.headers['content-type'] = gm[0]
 
-        if self.headers.get('content-encoding')=='gzip' and \
-             self.headers.get('content-type') in config['mime_gunzip_ok']:
-            #debug(BRING_IT_ON, 'S/Content-encoding: gzip')
-            self.decoders.append(GunzipStream())
-            # remove content length and encoding
-            # because we unzip the stream
-            for h in self.headers.headers[:]:
-                if re.match('(?i)content-length:', h):
-                    self.headers.headers.remove(h)
-                    self.bytes_remaining = None
-                elif re.match('(?i)content-encoding:', h):
-                    self.headers.headers.remove(h)
-
+        if self.headers.get('content-encoding')=='gzip':
+            for ro in config['mime_content_rewriting']:
+                if ro.match(self.headers.get('content-type')):
+                    #debug(BRING_IT_ON, 'S/Content-encoding: gzip')
+                    self.decoders.append(GunzipStream())
+                    # remove content length and encoding
+                    # because we unzip the stream
+                    for h in self.headers.headers[:]:
+                        if re.match('(?i)content-length:', h):
+                            self.headers.headers.remove(h)
+                            self.bytes_remaining = None
+                        elif re.match('(?i)content-encoding:', h):
+                            self.headers.headers.remove(h)
+                    break
         self.client.server_response(self.response, self.headers)
         self.attrs = initStateObjects(self.headers, self.url)
         self.attrs['nofilter'] = self.nofilter['nofilter']

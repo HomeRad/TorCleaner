@@ -1,7 +1,6 @@
 """ test script to test filtering"""
 
 htmldata = """GET http://ads.realmedia.com/ HTTP/1.0"""
-
 import wc, time
 reload(wc)
 wc.config.init_filter_modules()

@@ -121,8 +121,7 @@ class Configuration(UserDict.UserDict):
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
         self['localip'] = socket.gethostbyname(socket.gethostname())
-        self['mime_no_length'] = []
-        self['mime_gunzip_ok'] = []
+        self['mime_content_rewriting'] = []
         self['headersave'] = 100
         self['showerrors'] = 0
 
@@ -139,17 +138,20 @@ class Configuration(UserDict.UserDict):
             ZapperParser().parse(f, self)
 
     def init_filter_modules(self):
+        """go through list of rules and store them in the filter
+        objects. This will also compile regular expression strings
+        to regular expression objects"""
         for f in self['filters']:
             exec "from filter import %s" % f
             _module = getattr(sys.modules['wc.filter'], f)
+            # add content-rewriting mime types to special list
+            if f in ('Rewriter', 'Replacer', 'GifImage'):
+                for mime in getattr(_module, "mimelist"):
+                    if mime not in self['mime_content_rewriting']:
+                        self['mime_content_rewriting'].append(mime)
+            # class has same name as module
+            instance = getattr(_module, f)(getattr(_module, "mimelist"))
             for order in getattr(_module, 'orders'):
-                if f in ('Rewriter', 'Replacer', 'GifImage'):
-                    for mime in getattr(_module, f).mimelist:
-                        if mime not in self['mime_no_length']:
-                            self['mime_no_length'].append(mime)
-                        if mime not in self['mime_gunzip_ok']:
-                            self['mime_gunzip_ok'].append(mime)
-                instance = getattr(_module, f)()
                 for rules in self['rules']:
                     if rules.disable: continue
                     for rule in rules.rules:

@@ -15,8 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
-from wc.filter import FILTER_REQUEST_HEADER,FILTER_RESPONSE_HEADER
-from wc.filter.Filter import Filter
+from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, Filter, compileRegex
 from wc import debug,config
 from wc.debug_levels import *
 
@@ -25,17 +24,19 @@ orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = ['header']
+mimelist = []
+
 
 class Header (Filter):
-    def __init__ (self):
-        Filter.__init__(self)
+    def __init__ (self, mimelist):
+        Filter.__init__(self, mimelist)
         self.delete = []
         self.add = {}
 
     def addrule (self, rule):
         Filter.addrule(self, rule)
-        self.compileRegex(rule, "matchurl")
-        self.compileRegex(rule, "dontmatchurl")
+        compileRegex(rule, "matchurl")
+        compileRegex(rule, "dontmatchurl")
         if not rule.value:
             self.delete.append(rule.name.lower())
         else:

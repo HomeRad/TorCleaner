@@ -136,7 +136,7 @@ else:
                       )]
 
 setup (name = "webcleaner",
-       version = "0.33",
+       version = "0.34",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,

@@ -14,17 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-from wc.filter import FILTER_RESPONSE_MODIFY
-from wc.filter.Filter import Filter
+from wc.filter import FILTER_RESPONSE_MODIFY, Filter, compileMime
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = []
+# which mime types this filter applies to
+mimelist = map(compileMime, ['text/html'])
+
 
 class BinaryCharFilter (Filter):
-    mimelist = ('text/html',)
 
     def doit (self, data, **attrs):
         return data.translate('\x00\x84\x91\x92\x93\x94', ' "`\'""')

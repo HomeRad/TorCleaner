@@ -23,7 +23,7 @@ to see how its done.
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import sys, wc
+import sys, re, wc
 from wc import debug, _
 from wc.debug_levels import *
 
@@ -56,13 +56,21 @@ def printFilterOrder (i):
     return "Invalid"
 
 
+# compile object attribute
+def compileRegex (obj, attr):
+    if hasattr(obj, attr) and getattr(obj, attr):
+        setattr(obj, attr, re.compile(getattr(obj, attr)))
+
+# compile mimelist entry
+def compileMime (mime):
+    return re.compile("^%s$"%mime, re.I)
+
 def GetRuleFromName (name):
     name = name.capitalize()+'Rule'
     if hasattr(Rules, name):
         klass = getattr(Rules, name)
         return klass()
     raise ValueError, _("unknown rule name %s")+name
-
 
 def applyfilter (i, arg, fun='filter', attrs={}):
     """Apply all filters which are registered in filter level i.
@@ -75,27 +83,48 @@ def applyfilter (i, arg, fun='filter', attrs={}):
         #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
         for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
-            if hasattr(f, 'mimelist'):
-                if attrs['mime'] in f.mimelist:
-                    arg = apply(ffun, (arg,), attrs)
-            else:
-                # no mimelist? then this filter applies to all files!
+            if f.applies_to_mime(attrs['mime']):
                 arg = apply(ffun, (arg,), attrs)
     except FilterException, msg:
         debug(NIGHTMARE, msg)
         pass
     return arg
 
-
 def initStateObjects (headers={'content-type': 'text/html'}, url=None):
     """init external state objects"""
     attrs = {'mime': headers.get('content-type', 'application/octet-stream')}
     for i in range(10):
         for f in wc.config['filterlist'][i]:
-            if hasattr(f, 'mimelist'):
-                if attrs['mime'] in f.mimelist:
-                    attrs.update(f.getAttrs(headers, url))
-            else:
+            if f.applies_to_mime(attrs['mime']):
                 attrs.update(f.getAttrs(headers, url))
     return attrs
 
+
+# The base filter class
+class Filter:
+    def __init__ (self, mimelist):
+        self.rules = []
+        self.mimelist = mimelist
+
+    def addrule (self, rule):
+        debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
+        self.rules.append(rule)
+
+    def filter (self, data, **args):
+        return apply(self.doit, (data,), args)
+
+    def finish (self, data, **args):
+        return apply(self.doit, (data,), args)
+
+    def doit (self, data, **args):
+        return data
+
+    def getAttrs (self, headers, url):
+        return {'url': url, 'headers': headers}
+
+    def applies_to_mime (self, mime):
+        if not self.mimelist:
+            return 1
+        for ro in self.mimelist:
+            if ro.match(mime):
+                return 1
