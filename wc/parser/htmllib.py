@@ -118,8 +118,7 @@ def _broken ():
     p = HtmlPrinter()
     # turn on debugging
     p.debug(1)
-    for c in """</td <td a="b" >""":
-        p.feed(c)
+    p.feed("""<base href="http://www.msnbc.com/news/">""")
     p.flush()
 
 

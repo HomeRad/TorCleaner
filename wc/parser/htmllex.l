@@ -730,7 +730,7 @@ RX_DATA [-a-zA-Z0-9_]+
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) { return T_ERROR; }
+    if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;

@@ -2,6 +2,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.log import *
+import urlparse
 
 class HttpProxyClient:
     """A class buffering all incoming data from a server for later use.

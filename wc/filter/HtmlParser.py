@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 import re, urlparse, wc
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser
-from wc.parser import resolve_html_entities
+from wc.parser import resolve_html_entities, strip_quotes
 from wc.filter import FilterWait, FilterPics
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.filter.PICS import check_pics
@@ -40,6 +40,9 @@ from HtmlTags import check_spelling
 
 # whitespace matcher
 _has_ws = re.compile("\s").search
+
+_start_js_comment = re.compile(r"^<!--\s*").search
+_end_js_comment = re.compile(r"\s*-->$").search
 
 class JSHtmlListener (JSListener):
     """defines callback handlers for Javascript code"""
@@ -227,7 +230,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 #self._debug("feed")
                 pass
         else:
-            # wait state --> put in input buffer
+            # wait state ==> put in input buffer
             #self._debug("wait")
             self.inbuf.write(data)
 
@@ -328,7 +331,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 # no pics data found
                 self.pics = []
         elif tag=="base" and attrs.has_key('href'):
-            self.base_url = resolve_html_entities(attrs['href'])
+            self.base_url = strip_quotes(attrs['href'])
+            debug(FILTER, "using base url %s", `self.base_url`)
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
@@ -374,7 +378,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             return self.waitbuf.append(item)
         if not self.filterEndElement(tag):
             if self.js_filter and tag=='script':
-                return self.jsEndElement(item)
+                self.jsEndElement(item)
+                self.js_src = None
+                return
             self.buf.append(item)
         if not self.rulestack:
             self.buf2data()
@@ -479,7 +485,6 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             url = urlparse.urljoin(self.base_url, url)
         else:
             url = urlparse.urljoin(self.url, url)
-        #self._debug("JS jsScriptSrc %s %s", `url`, `ver`)
         if _has_ws(url):
             warn(PARSER, "HtmlParser[%d]: broken JS url %s at %s", self.level,
                          `url`, `self.url`)
@@ -566,17 +571,16 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # get script data
         script = self.buf[-1][1].strip()
         # remove html comments
-        if script.startswith("<!--"):
-            i = script.find('\n')
-            if i==-1:
-                script = script[4:]
-            else:
-                script = script[(i+1):]
-        if script.endswith("-->"):
-            script = script[:-3]
+        mo = _start_js_comment(script)
+        if mo:
+            script = script[mo.end():]
+        mo = _end_js_comment(script)
+        if mo:
+            script = script[:mo.start()]
         if not script:
             # again, ignore an empty script
             del self.buf[-1]
             del self.buf[-1]
-        else:
-            self.jsScript(script, 0.0, item)
+            return
+        # XXX invariant ?
+        self.jsScript(script, 0.0, item)

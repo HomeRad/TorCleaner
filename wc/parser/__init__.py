@@ -59,6 +59,14 @@ def resolve_html_entities (s):
     return applyTable(UnHtmlTable, s)
 
 
+def strip_quotes (s):
+    """remove possible double or single quotes"""
+    if (s.startswith("'") and s.endswith("'")) or \
+       (s.startswith('"') and s.endswith('"')):
+        return s[1:-1]
+    return s
+
+
 def _test ():
     print resolve_entities("&#%d;"%ord('a'))
 
