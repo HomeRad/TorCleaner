@@ -34,6 +34,7 @@ class PickleStorage (wc.filter.rating.storage.Storage):
         config = wc.configuration.config
         self.filename = os.path.join(config.configdir, "rating.dat")
         self.cache = {}
+        self.load()
 
     def __setitem__ (self, url, rating):
         self.check_url(url)
@@ -80,7 +81,7 @@ class PickleStorage (wc.filter.rating.storage.Storage):
 
     def load (self):
         if os.path.isfile(self.filename):
-            fp = file(self.filenamek, 'rb')
+            fp = file(self.filename, 'rb')
             self.cache = pickle.load(fp)
             fp.close()
             # remove invalid entries
@@ -91,6 +92,6 @@ class PickleStorage (wc.filter.rating.storage.Storage):
                     toremove.append(url)
             if toremove:
                 for url in toremove:
-                    self.remove(url)
+                    del self[url]
                 self.write()
 
