@@ -107,8 +107,7 @@ several given categories.</p>
 <a href="#" i18n:attributes="title Edit/delete this rating"
  tal:attributes="href string:${filename}.${lang}?url=${url}"><img
  src="edit.png" border="0"></a>
-<a href="http://imadoofus.com/"
- tal:attributs="href url" tal:content="url">http://imadoofus.com</a></td>
+<a href="#" tal:attributes="href url" tal:content="url">http://imadoofus.com</a></td>
 <td><span tal:repeat="category rating_cache/?url/keys">
 <span tal:replace="category">violence</span>=<span 
  tal:replace="rating_cache/?url/?category">0</span>
