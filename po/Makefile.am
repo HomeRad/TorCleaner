@@ -1,8 +1,8 @@
 # use scripts found in Tools/i18n of the Python distribution
 PYTHON := python2.3
 GETTEXT := $(PYTHON) pygettext.py -k i18n._
-MSGFMT := $(PYTHON) msgfmt.py
-#MSGFMT := msgfmt -c
+#MSGFMT := $(PYTHON) msgfmt.py
+MSGFMT := msgfmt -c
 MSGMERGE := msgmerge
 SOURCES = $(shell find ../wc -name \*.py) \
 ../webcleaner \
@@ -21,7 +21,10 @@ all:	$(MOS)
 	$(MSGMERGE) $@ $(PACKAGE).pot -o $@
 
 webcleaner.pot: $(SOURCES)
+if BUILD_WINDOWS
+else
 	$(GETTEXT) --default-domain=$(PACKAGE) --no-location $(SOURCES)
+endif
 
 %.mo:	%.po
 	if [ ! -d $(LDIR)/$*/LC_MESSAGES ]; then \
@@ -31,4 +34,4 @@ webcleaner.pot: $(SOURCES)
 
 clean-local:
 	for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
-	rm -f de.mo
+	rm -f *.mo
