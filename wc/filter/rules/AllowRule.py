@@ -24,8 +24,13 @@ from wc.XmlUtils import xmlify
 
 
 class AllowRule (UrlRule):
+    """Define a regular expression for urls to be allowed, even if they
+       would be blocked by a block rule otherwise.
+       See also the Blocker filter module.
+    """
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, scheme="", url=""):
+        """initialize rule data"""
         super(AllowRule, self).__init__(sid=sid, title=title,
                                         desc=desc, disable=disable)
         self.url = url
@@ -33,9 +38,11 @@ class AllowRule (UrlRule):
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromAllowRule(self)
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
         return super(AllowRule, self).toxml() + \
            '\n url="%s"/>' % xmlify(self.url)

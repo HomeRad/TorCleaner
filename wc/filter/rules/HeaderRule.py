@@ -36,25 +36,30 @@ class HeaderRule (UrlRule):
 
 
     def fill_data (self, data, name):
+        """add header data"""
         if name=='header':
             self.value += data
 
 
     def compile_data (self):
+        """compile header data"""
         super(HeaderRule, self).compile_data()
         self.value = unxmlify(self.value).encode('iso8859-1')
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromHeaderRule(self)
 
 
     def update (self, rule, dryrun=False, log=None):
+        """update header data"""
         chg = super(HeaderRule, self).update(rule, dryrun=dryrun, log=log)
         return self.update_attrs(['value'], rule, dryrun, log) or chg
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
         s = '%s\n name="%s"' % \
             (super(HeaderRule, self).toxml(), xmlify(self.name))
         if self.value:

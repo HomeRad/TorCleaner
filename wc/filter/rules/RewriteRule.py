@@ -108,6 +108,7 @@ class RewriteRule (UrlRule):
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, tag="a", attrs=None, enclosed="", part=COMPLETE,
                   replacement=""):
+        """initialize rule data"""
         super(RewriteRule, self).__init__(sid=sid, title=title,
                                           desc=desc, disable=disable)
         self.tag = tag
@@ -126,6 +127,7 @@ class RewriteRule (UrlRule):
 
 
     def fill_attrs (self, attrs, name):
+        """set attribute values"""
         if name=='rewrite':
             super(RewriteRule, self).fill_attrs(attrs, name)
         elif name=='attr':
@@ -137,6 +139,7 @@ class RewriteRule (UrlRule):
 
 
     def fill_data (self, data, name):
+        """set attribute data"""
         if name=='attr':
             self.attrs[self.current_attr] += data
         elif name=='enclosed':
@@ -146,6 +149,7 @@ class RewriteRule (UrlRule):
 
 
     def compile_data (self):
+        """compile url regular expressions"""
         super(RewriteRule, self).compile_data()
         self.enclosed = unxmlify(self.enclosed).encode('iso8859-1')
         compileRegex(self, "enclosed")
@@ -159,30 +163,37 @@ class RewriteRule (UrlRule):
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromRewriteRule(self)
 
 
     def update (self, rule, dryrun=False, log=None):
+        """update rewrite attributes with given rule data"""
         chg = super(RewriteRule, self).update(rule, dryrun=dryrun, log=log)
         attrs = ['attrs', 'part', 'replacement', 'enclosed']
         return self.update_attrs(attrs, rule, dryrun, log) or chg
 
 
     def _compute_start_sufficient (self):
+        """return True if start tag is sufficient for rule application"""
         if self.tag in NO_CLOSE_TAGS:
             return True
         return self.part not in [ENCLOSED, COMPLETE, TAG, TAGNAME]
 
 
     def set_start_sufficient (self):
+        """set flag to test if start tag is sufficient for rule application"""
         self.start_sufficient = self._compute_start_sufficient()
 
 
     def match_tag (self, tag):
+        """return True iff tag name matches this rule"""
+        # XXX support regular expressions for self.tag?
         return self.tag == tag
 
 
     def match_attrs (self, attrs):
+        """return True iff this rule matches given attributes"""
         occurred = []
         for attr,val in attrs.items():
             # attr or val could be None
@@ -200,7 +211,7 @@ class RewriteRule (UrlRule):
 
     def match_complete (self, pos, tagbuf):
         """We know that the tag (and tag attributes) match. Now match
-	   the enclosing block."""
+	   the enclosing block. Return True on a match."""
         if not self.enclosed:
             # no enclosed expression => match
             return True
@@ -210,6 +221,7 @@ class RewriteRule (UrlRule):
 
 
     def filter_tag (self, tag, attrs):
+        """return filtered tag data for given tag and attributes"""
         #debug(FILTER, "rule %s filter_tag", self.title)
         #debug(FILTER, "original tag %r attrs %s", tag, attrs)
         #debug(FILTER, "replace %s with %r", num_part(self.part), self.replacement)
@@ -253,6 +265,7 @@ class RewriteRule (UrlRule):
 
 
     def filter_complete (self, i, buf):
+        """replace complete tag data in buf with replacement"""
         #debug(FILTER, "rule %s filter_complete", self.title)
         #debug(FILTER, "original buffer %r", buf)
         #debug(FILTER, "part %s", num_part(self.part))
@@ -270,6 +283,7 @@ class RewriteRule (UrlRule):
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
         s = super(RewriteRule, self).toxml()
         if self.tag!='a':
             s += '\n tag="%s"' % self.tag
@@ -297,6 +311,7 @@ class RewriteRule (UrlRule):
 
 
     def __str__ (self):
+        """return rule data as string"""
         s = super(RewriteRule, self).__str__()
         s += "tag %s\n" % self.tag
         for key,val in self.attrs.items():

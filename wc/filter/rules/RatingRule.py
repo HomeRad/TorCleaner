@@ -37,6 +37,7 @@ class RatingRule (UrlRule):
 
 
     def fill_attrs (self, attrs, name):
+        """init rating and url attrs"""
         if name=='category':
             self._category = unxmlify(attrs.get('name')).encode('iso8859-1')
         elif name=='url':
@@ -49,6 +50,7 @@ class RatingRule (UrlRule):
 
 
     def fill_data (self, data, name):
+        """add rating and url data"""
         if name=='category':
             assert self._category
             if self._category not in self.ratings:
@@ -62,6 +64,7 @@ class RatingRule (UrlRule):
 
 
     def compile_data (self):
+        """fill rating structure"""
         super(RatingRule, self).compile_data()
         self.url = unxmlify(self.url).encode('iso8859-1')
         for category, val in self.ratings.items():
@@ -77,6 +80,7 @@ class RatingRule (UrlRule):
 
 
     def compile_values (self):
+        """initialize rating data"""
         self.values = {}
         for category, val in self.ratings.items():
             if val:
@@ -84,6 +88,7 @@ class RatingRule (UrlRule):
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromRatingRule(self)
 
 
@@ -115,6 +120,7 @@ class RatingRule (UrlRule):
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
 	s = "%s>\n" % super(RatingRule, self).toxml()
         if self.url:
             s += "<url>%s</url>\n" % xmlify(self.url)

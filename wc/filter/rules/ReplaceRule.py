@@ -28,6 +28,7 @@ class ReplaceRule (UrlRule):
     expressions"""
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, search="", replace=""):
+        """initialize rule attributes"""
         super(ReplaceRule, self).__init__(sid=sid, title=title,
                                           desc=desc, disable=disable)
         self.search = search
@@ -36,26 +37,31 @@ class ReplaceRule (UrlRule):
 
 
     def fill_data (self, data, name):
+        """add replace data"""
         if name=='replace':
             self.replace += data
 
 
     def compile_data (self):
+        """compile url regular expressions"""
         super(ReplaceRule, self).compile_data()
         self.replace = unxmlify(self.replace).encode('iso8859-1')
         compileRegex(self, "search")
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromReplaceRule(self)
 
 
     def update (self, rule, dryrun=False, log=None):
+        """update rule attributes with given rule data"""
         chg = super(ReplaceRule, self).update(rule, dryrun=dryrun, log=log)
         return self.update_attrs(['replace'], rule, dryrun, log) or chg
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
 	s = super(ReplaceRule, self).toxml()
         if self.search:
             s += '\n search="%s"'%xmlify(self.search)

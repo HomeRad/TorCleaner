@@ -23,8 +23,10 @@ from UrlRule import UrlRule
 
 class JavascriptRule (UrlRule):
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromJavascriptRule(self)
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
 	return "%s/>" % super(JavascriptRule, self).toxml()

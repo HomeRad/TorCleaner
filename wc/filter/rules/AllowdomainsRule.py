@@ -23,5 +23,10 @@ __date__    = "$Date$"[7:-2]
 from ExternfileRule import ExternfileRule
 
 class AllowdomainsRule (ExternfileRule):
+    """Specifies a list of domains to allow, even if they would be blocked
+       otherwise.
+       See also the Blocker filter module.
+    """
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromAllowdomainsRule(self)

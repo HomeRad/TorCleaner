@@ -23,8 +23,10 @@ from UrlRule import UrlRule
 
 class NocommentsRule (UrlRule):
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromNocommentsRule(self)
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
 	return "%s/>" % super(NocommentsRule, self).toxml()

@@ -33,18 +33,19 @@ def compileRegex (obj, attr):
 
 class Rule (object):
     """Basic rule class for filtering.
-    A basic rule has:
-       title - the title
-       sid - identification string (unique among all rules)
-       oid - dynamic sorting number (unique only for sorting in one level)
-       desc - the description
-       disable - flag to disable this rule
-       urlre - regular expression that matches urls applicable for this rule.
-               leave empty to apply to all urls.
-       parent - the parent folder (if any); look at FolderRule class
+       After loading from XML (and having called compile_data), a rule has:
+        title - the title
+        sid - identification string (unique among all rules)
+        oid - dynamic sorting number (unique only for sorting in one level)
+        desc - the description
+        disable - flag to disable this rule
+        urlre - regular expression that matches urls applicable for this rule.
+                leave empty to apply to all urls.
+        parent - the parent folder (if any); look at FolderRule class
     """
     def __init__ (self, sid=None, title="<title>", desc="",
                   disable=0, parent=None):
+        """initialize basic rule data"""
         self.sid = sid
         self.title = title
         self.desc = desc
@@ -64,6 +65,7 @@ class Rule (object):
 
 
     def update_attrs (self, attrs, rule, dryrun, log):
+        """update rule attributes (specified by attrs) with given rule data"""
         chg = False
         for attr in attrs:
             oldval = getattr(self, attr)
@@ -78,34 +80,42 @@ class Rule (object):
 
 
     def __lt__ (self, other):
+        """True iff self < other according to oid"""
         return self.oid < other.oid
 
 
     def __le__ (self, other):
+        """True iff self <= other according to oid"""
         return self.oid <= other.oid
 
 
     def __eq__ (self, other):
+        """True iff self == other according to oid"""
         return self.oid == other.oid
 
 
     def __ne__ (self, other):
+        """True iff self != other according to oid"""
         return self.oid != other.oid
 
 
     def __gt__ (self, other):
+        """True iff self > other according to oid"""
         return self.oid > other.oid
 
 
     def __ge__ (self, other):
+        """True iff self >= other according to oid"""
         return self.oid >= other.oid
 
 
     def __hash__ (self):
+        """return hash value"""
         return self.sid
 
 
     def fill_attrs (self, attrs, name):
+        """initialize rule attributes with given attrs"""
         for attr in self.attrnames:
             if attrs.has_key(attr):
                 val = unxmlify(attrs[attr])
@@ -130,11 +140,12 @@ class Rule (object):
 
 
     def compile_data (self):
-        """called when all XML parsing of rule finished"""
+        """register this rule; called when all XML parsing of rule finished"""
         register_rule(self)
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromRule(self)
 
 
@@ -144,6 +155,7 @@ class Rule (object):
 
 
     def toxml (self):
+        """Rule data as XML for storing, must be overridden in subclass"""
         s = "<"+self.get_name()
         s += ' sid="%s"' % xmlify(self.sid)
         s += ' title="%s"' % xmlify(self.title)
@@ -155,6 +167,7 @@ class Rule (object):
 
 
     def __str__ (self):
+        """return basic rule data as string"""
         s = self.get_name()+"\n"
         s += "sid     %s\n" % self.sid
         s += "title   %r\n" % self.title

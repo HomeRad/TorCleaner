@@ -23,5 +23,9 @@ __date__    = "$Date$"[7:-2]
 from ExternfileRule import ExternfileRule
 
 class BlockdomainsRule (ExternfileRule):
+    """Specifies a list of domains to block, displaying the standard
+       block message page.
+       See also the Blocker filter module.
+    """
     def fromFactory (self, factory):
         return factory.fromBlockdomainsRule(self)

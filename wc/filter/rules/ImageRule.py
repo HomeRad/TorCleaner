@@ -25,6 +25,7 @@ from wc.XmlUtils import xmlify
 class ImageRule (UrlRule):
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, width=0, height=0, formats=[], url=""):
+        """initalize rule data"""
         super(ImageRule, self).__init__(sid=sid, title=title,
                                         desc=desc, disable=disable)
         self.width = width
@@ -37,10 +38,12 @@ class ImageRule (UrlRule):
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromImageRule(self)
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
         s = super(ImageRule, self).toxml()
         if self.width:
             s += '\n width="%d"'%self.width

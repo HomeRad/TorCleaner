@@ -22,8 +22,10 @@ __date__    = "$Date$"[7:-2]
 from Rule import Rule
 from wc import i18n, ConfigCharset
 
-# for display up/down arrows in GUIs
 def recalc_up_down (rules):
+    """add .up and .down attributes to rules, used for display up/down
+       arrows in GUIs
+    """
     upper = len(rules)-1
     for i, rule in enumerate(rules):
         rule.up = (i>0)
@@ -33,6 +35,7 @@ def recalc_up_down (rules):
 class FolderRule (Rule):
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, filename=""):
+        """initialize rule data"""
         super(FolderRule, self).__init__(sid=sid, title=title,
                                          desc=desc, disable=disable)
         # make filename read-only
@@ -44,20 +47,24 @@ class FolderRule (Rule):
 
 
     def __str__ (self):
+        """return rule data as string"""
         return super(FolderRule, self).__str__()+ \
             ("\nrules:   %d"%len(self.rules))
 
 
     def filename_get (self):
+        """get filename where this folder is stored"""
         return self._filename
     filename = property(filename_get)
 
 
     def fromFactory (self, factory):
+        """rule factory"""
         return factory.fromFolderRule(self)
 
 
     def append_rule (self, r):
+        """append rule to folder"""
         r.oid = len(self.rules)
         # note: the rules are added in order
         self.rules.append(r)
@@ -65,6 +72,7 @@ class FolderRule (Rule):
 
 
     def delete_rule (self, i):
+        """delete rule from folder with index i"""
         del self.rules[i]
         recalc_up_down(self.rules)
 
@@ -98,6 +106,7 @@ class FolderRule (Rule):
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
         s = """<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 %s oid="%d">""" % (ConfigCharset, super(FolderRule, self).toxml(), self.oid)
@@ -107,6 +116,7 @@ class FolderRule (Rule):
 
 
     def write (self):
+        """write xml data into filename"""
         f = file(self.filename, 'w')
         f.write(self.toxml())
         f.close()

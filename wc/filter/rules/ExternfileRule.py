@@ -24,9 +24,12 @@ from Rule import Rule
 from wc.XmlUtils import xmlify
 
 class ExternfileRule (Rule):
-    """rule with data stored in an external file"""
+    """rule with data stored in a (compressed) external file, used for
+       huge url and domain block lists
+    """
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, filename=None):
+        """initialize rule attributes"""
         super(ExternfileRule, self).__init__(sid=sid, title=title,
                                              desc=desc, disable=disable)
         self.filename = filename
@@ -34,10 +37,12 @@ class ExternfileRule (Rule):
 
 
     def __str__ (self):
+        """return rule data as string"""
         return "%sfile %s\n" % \
             (super(ExternfileRule, self).__str__(), repr(self.filename))
 
 
     def toxml (self):
+        """Rule data as XML for storing"""
         return '%s filename="%s"/>' % \
             (super(ExternfileRule, self).toxml(), xmlify(self.filename))
