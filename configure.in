@@ -10,8 +10,8 @@ AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 
 if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
-  CFLAGS="$CFLAGS -Wall -pedantic -std=gnu99"
-  CXXFLAGS="$CXXFLAGS -Wall -pedantic -std=gnu99"
+  CFLAGS="$CFLAGS -Wall -pedantic"
+  CXXFLAGS="$CXXFLAGS -Wall -pedantic"
 fi
 
 case "$build" in
