@@ -2,18 +2,18 @@
 """base and utility classes for Proxy testing"""
 
 import unittest
-from tests.HttpServer import LogRequestHandler, random_chars
-from tests.HttpRequest import HttpRequest
-from tests.ProxyTest import ProxyTest
+import tests.proxy.HttpServer
+import tests.proxy.HttpRequest
+import tests.proxy.ProxyTest
 
 
-class ChunkRequestHandler (LogRequestHandler):
+class ChunkRequestHandler (tests.proxy.HttpServer.LogRequestHandler):
 
     body_length = 0x30
 
     def do_GET (self):
         """send chunk data"""
-        body = random_chars(self.body_length)
+        body = tests.proxy.HttpServer.random_chars(self.body_length)
         data = 'HTTP/1.1 200 OK\r\n'
         data += "Date: %s\r\n" % self.date_time_string()
         data += "Transfer-Encoding: chunked\r\n"
@@ -27,7 +27,7 @@ class ChunkRequestHandler (LogRequestHandler):
         self.wfile.write(data)
 
 
-class ChunkRequest (HttpRequest):
+class ChunkRequest (tests.proxy.HttpRequest.HttpRequest):
     def check_response (self, response):
         """check for 200 status and correct body data length"""
         if response.status!=200:
@@ -43,7 +43,7 @@ class ChunkRequest (HttpRequest):
         return 'chunked-leading-zeros'
 
 
-class TestChunkedEncoding (ProxyTest):
+class TestChunkedEncoding (tests.proxy.ProxyTest.ProxyTest):
 
     def init (self):
         super(TestChunkedEncoding, self).init()

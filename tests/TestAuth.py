@@ -1,11 +1,12 @@
 # -*- coding: iso-8859-1 -*-
-import unittest, base64
+import unittest
+import base64
 from wc.proxy import auth
-from tests.StandardTest import StandardTest
+import StandardTest
 
 # XXX test Basic authentication
 
-class TestAuth (StandardTest):
+class TestAuth (StandardTest.StandardTest):
     """Test authentication routines"""
 
     def testDigest (self):

@@ -4,7 +4,7 @@
 
 import unittest
 from wc.js import jslib, JSListener
-from tests.StandardTest import StandardTest
+import StandardTest
 
 
 class JSTester (JSListener.JSListener):
@@ -27,7 +27,7 @@ class JSTester (JSListener.JSListener):
         self.err = err
 
 
-class TestJavascript (StandardTest):
+class TestJavascript (StandardTest.StandardTest):
 
     def init (self):
         self.out = JSTester()

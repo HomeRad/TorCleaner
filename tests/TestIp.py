@@ -1,11 +1,11 @@
 # -*- coding: iso-8859-1 -*-
 
-import unittest, os
+import unittest
 from wc import ip
-from tests.StandardTest import StandardTest
+import StandardTest
 
 
-class TestIp (StandardTest):
+class TestIp (StandardTest.StandardTest):
 
     def testNames (self):
         hosts, nets = ip.hosts2map(["www.kampfesser.net",

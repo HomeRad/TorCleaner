@@ -1,13 +1,14 @@
 # -*- coding: iso-8859-1 -*-
 """test script to test clamav virus scanning"""
 
-import unittest, os
+import unittest
+import os
 import wc
 from wc.filter.VirusFilter import ClamavConfig, ClamdScanner
-from tests.StandardTest import StandardTest
+import StandardTest
 
 
-class TestClamdScanner (StandardTest):
+class TestClamdScanner (StandardTest.StandardTest):
     """Test the clamav daemon stream scanner"""
 
     def init (self):

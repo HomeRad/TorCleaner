@@ -1,15 +1,15 @@
 # -*- coding: iso-8859-1 -*-
 """test javascript filtering"""
 
-import unittest, os, sys
-from test import disable_rating_rules
+import unittest
+import sys
+import test
 import wc
-from tests import HttpServer
-from tests.StandardTest import StandardTest
-from wc.proxy import proxy_poll, run_timers
-from wc.proxy.Headers import WcMessage
-from wc.filter import FilterException
-from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+import tests.proxy.HttpServer
+import tests.StandardTest
+import wc.proxy
+import wc.proxy.Headers
+import wc.filter
 
 
 jsfiles = {
@@ -47,7 +47,7 @@ soi_place=escape("fullbanner2");soi_ad=escape("030219 dynamic banner 468 ohne Cl
 """,
 }
 
-class JSRequestHandler (HttpServer.LogRequestHandler):
+class JSRequestHandler (tests.proxy.HttpServer.LogRequestHandler):
 
     def do_GET (self):
         """serve JavaScript files"""
@@ -68,49 +68,49 @@ class JSRequestHandler (HttpServer.LogRequestHandler):
         self.wfile.write(data)
 
 
-class TestScriptSrc (StandardTest):
+class TestScriptSrc (tests.StandardTest.StandardTest):
     """All these tests work with a _default_ filter configuration.
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def init (self):
         super(TestScriptSrc, self).init()
         wc.config = wc.Configuration()
-        disable_rating_rules(wc.config)
+        test.disable_rating_rules(wc.config)
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
-        self.headers = WcMessage()
+        self.headers = wc.proxy.Headers.WcMessage()
         self.headers['Content-Type'] = "text/html"
         if self.showAll:
             self.log = sys.stdout
         else:
             self.log = file("servertests.txt", 'a')
-        self.serverthread = HttpServer.startServer(self.log,
+        self.serverthread = tests.proxy.HttpServer.startServer(self.log,
                                        handler_class=JSRequestHandler)
 
     def shutdown (self):
         """Stop server, close log"""
-        HttpServer.stopServer(self.log)
+        tests.proxy.HttpServer.stopServer(self.log)
         if not self.showAll:
             self.log.close()
 
     def filt (self, data, result, name=""):
-        attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY], headers=self.headers)
+        attrs = wc.filter.get_filterattrs(name, [wc.filter.FILTER_RESPONSE_MODIFY], headers=self.headers)
         filtered = ""
         try:
-            filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', attrs)
-        except FilterException, msg:
+            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, 'filter', attrs)
+        except wc.filter.FilterException, msg:
             pass
         i = 1
         while 1:
             try:
-                filtered += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish', attrs)
+                filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, "", 'finish', attrs)
                 break
-            except FilterException, msg:
-                proxy_poll(timeout=max(0, run_timers()))
+            except wc.filter.FilterException, msg:
+                wc.proxy.proxy_poll(timeout=max(0, wc.proxy.run_timers()))
             i+=1
             if i==100:
                 # background downloading of javascript is too slow
-                raise FilterException("Slow")
+                raise wc.filter.FilterException("Slow")
         self.assertEqual(filtered, result)
 
 
@@ -118,7 +118,7 @@ class TestScriptSrc (StandardTest):
         self.filt(
 """<script src="http://localhost:%d/1.js"></script>
 
-</html>""" % HttpServer.defaultconfig['port'],
+</html>""" % tests.proxy.HttpServer.defaultconfig['port'],
 """<script type="text/javascript">
 <!--
 %s//-->
@@ -133,7 +133,7 @@ class TestScriptSrc (StandardTest):
  
 </script>
 
-</html>""" % HttpServer.defaultconfig['port'],
+</html>""" % tests.proxy.HttpServer.defaultconfig['port'],
 """<script type="text/javascript">
 <!--
 %s//-->
@@ -152,7 +152,7 @@ a = 1
 //-->
 </script>
 
-</html>""" % HttpServer.defaultconfig['port'],
+</html>""" % tests.proxy.HttpServer.defaultconfig['port'],
 """
 <script type="JavaScript">
 <!--
@@ -174,7 +174,7 @@ document.write('</SCR'+'IPT>');
 </script>
       </td>
    </tr>
-</table>""" % HttpServer.defaultconfig['port'],
+</table>""" % tests.proxy.HttpServer.defaultconfig['port'],
 """
       </td>
    </tr>

@@ -1,11 +1,12 @@
 # -*- coding: iso-8859-1 -*-
 """ test script to test filtering"""
-import unittest, random, os
+import unittest
+import random
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from tests.StandardTest import StandardTest
+import StandardTest
 
-class TestReplacer (StandardTest):
+class TestReplacer (StandardTest.StandardTest):
 
     def init (self):
         super(TestReplacer, self).init()

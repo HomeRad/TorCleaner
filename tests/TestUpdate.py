@@ -2,8 +2,8 @@
 import unittest
 import wc
 from wc.log import *
-from wc.update import update_filter, update_ratings
-from tests.StandardTest import StandardTest
+import wc.update
+import StandardTest
 
 
 class NoLog (object):
@@ -11,7 +11,7 @@ class NoLog (object):
         pass
 
 
-class TestUpdate (StandardTest):
+class TestUpdate (StandardTest.StandardTest):
 
     def init (self):
         super(TestUpdate, self).init()
@@ -19,10 +19,10 @@ class TestUpdate (StandardTest):
         self.config = wc.Configuration()
 
     def testUpdateFilter (self):
-        update_filter(self.config, dryrun=True, log=self.nolog)
+        wc.update.update_filter(self.config, dryrun=True, log=self.nolog)
 
     def testUpdateRatings (self):
-        update_ratings(self.config, dryrun=True, log=self.nolog)
+        wc.update.update_ratings(self.config, dryrun=True, log=self.nolog)
 
 
 if __name__ == '__main__':

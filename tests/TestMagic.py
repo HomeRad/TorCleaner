@@ -1,11 +1,12 @@
 # -*- coding: iso-8859-1 -*-
 """magic(5) tester"""
 
-import unittest, os
+import unittest
+import os
 from wc.magic import convert, classify
-from tests.StandardTest import StandardTest
+import StandardTest
 
-class TestMagic (StandardTest):
+class TestMagic (StandardTest.StandardTest):
 
     def init (self):
         super(TestMagic, self).init()

@@ -2,12 +2,12 @@
 # -*- coding: iso-8859-1 -*-
 """test script to test filtering"""
 
-import unittest, os
+import unittest
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
-from tests.StandardTest import StandardTest
+import StandardTest
 
-class TestBlocker (StandardTest):
+class TestBlocker (StandardTest.StandardTest):
 
     def init (self):
         super(TestBlocker, self).init()

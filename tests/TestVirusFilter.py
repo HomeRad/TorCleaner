@@ -1,16 +1,14 @@
 # -*- coding: iso-8859-1 -*-
 """test script to test filtering"""
 
-import unittest, os
+import unittest
 import wc
-from wc.proxy.Headers import WcMessage
-from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from wc.filter import FilterProxyError, VirusFilter
-from cStringIO import StringIO
-from tests.StandardTest import StandardTest
+import wc.proxy.Headers
+import wc.filter
+import StandardTest
 
 
-class TestVirusFilter (StandardTest):
+class TestVirusFilter (StandardTest.StandardTest):
     """All these tests work with a _default_ filter configuration.
        If you change any of the *.zap filter configs, tests can fail..."""
 
@@ -19,15 +17,15 @@ class TestVirusFilter (StandardTest):
         wc.config = wc.Configuration()
         wc.config['filters'] = ['VirusFilter']
         wc.config.init_filter_modules()
-        VirusFilter.init_clamav_conf()
+        wc.filter.VirusFilter.init_clamav_conf()
 
     def setUp (self):
-        headers = WcMessage()
+        headers = wc.proxy.Headers.WcMessage()
         headers['Content-Type'] = "text/html"
-        self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY], headers=headers)
+        self.attrs = wc.filter.get_filterattrs("", [wc.filter.FILTER_RESPONSE_MODIFY], headers=headers)
 
     def filt (self, data, result):
-        filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', self.attrs)
+        filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, 'finish', self.attrs)
         self.assertEqual(filtered, result)
 
     def filtSize (self, size):
@@ -35,9 +33,9 @@ class TestVirusFilter (StandardTest):
         inc = 10000
         data = 'a'*inc
         while i <= size:
-            applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', self.attrs)
+            wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, 'filter', self.attrs)
             i += inc
-        applyfilter(FILTER_RESPONSE_MODIFY, data, "finish", self.attrs)
+        wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, "finish", self.attrs)
 
     def testBasic (self):
         self.filt("""Test""", """Test""")
@@ -47,8 +45,8 @@ class TestVirusFilter (StandardTest):
                   "")
 
     def testSizeLimit (self):
-        size = VirusFilter.VirusFilter.MAX_FILE_BYTES+1
-        self.assertRaises(FilterProxyError, self.filtSize, size)
+        size = wc.filter.VirusFilter.VirusFilter.MAX_FILE_BYTES+1
+        self.assertRaises(wc.filter.FilterProxyError, self.filtSize, size)
 
 
 if __name__ == '__main__':

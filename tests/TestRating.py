@@ -1,12 +1,12 @@
 # -*- coding: iso-8859-1 -*-
 """test rating routines"""
 
-import unittest, os
+import unittest
 from wc.filter.Rating import *
-from tests.StandardTest import StandardTest
+import StandardTest
 
 
-class TestRating (StandardTest):
+class TestRating (StandardTest.StandardTest):
 
     def testRating_split_url (self):
         urls = (

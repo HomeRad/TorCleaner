@@ -1,14 +1,14 @@
 # -*- coding: iso-8859-1 -*-
 from wc.parser.htmllib import HtmlPrettyPrinter
 from wc.parser import htmlsax, resolve_entities
-from cStringIO import StringIO
+import cStringIO as StringIO
 
 import unittest
 from wc import ip
-from tests.StandardTest import StandardTest
+import StandardTest
 
 
-class TestParser (StandardTest):
+class TestParser (StandardTest.StandardTest):
 
     def init (self):
         # list of tuples (<test pattern>, <expected parse output>)
@@ -100,7 +100,7 @@ class TestParser (StandardTest):
 
     def testParse (self):
         for _in, _out in self.htmltests:
-            out = StringIO()
+            out = StringIO.StringIO()
             self.htmlparser.handler = HtmlPrettyPrinter(out)
             self.htmlparser.feed(_in)
             self.htmlparser.flush()
@@ -110,7 +110,7 @@ class TestParser (StandardTest):
 
     def testFeed (self):
         for _in, _out in self.htmltests:
-            out = StringIO()
+            out = StringIO.StringIO()
             self.htmlparser.handler = HtmlPrettyPrinter(out)
             for c in _in:
                 self.htmlparser.feed(c)
@@ -121,8 +121,8 @@ class TestParser (StandardTest):
 
     def testInterwoven (self):
         for _in, _out in self.htmltests:
-            out = StringIO()
-            out2 = StringIO()
+            out = StringIO.StringIO()
+            out2 = StringIO.StringIO()
             self.htmlparser.handler = HtmlPrettyPrinter(out)
             self.htmlparser2.handler = HtmlPrettyPrinter(out2)
             for c in _in:
@@ -138,7 +138,7 @@ class TestParser (StandardTest):
 
     def testFlush (self):
         for _in, _out in self.flushtests:
-            out = StringIO()
+            out = StringIO.StringIO()
             self.htmlparser.handler = HtmlPrettyPrinter(out)
             self.htmlparser.feed(_in)
             self.htmlparser.flush()

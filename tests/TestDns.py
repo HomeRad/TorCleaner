@@ -1,10 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
 from wc.proxy.dns.Lib import Packer, Unpacker
-from tests.StandardTest import StandardTest
+import StandardTest
 
 
-class TestDns (StandardTest):
+class TestDns (StandardTest.StandardTest):
     """Test DNS routines"""
 
     def testPacker (self):

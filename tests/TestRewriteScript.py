@@ -1,17 +1,17 @@
 # -*- coding: iso-8859-1 -*-
 """test javascript filtering"""
 
-import unittest, os, sys
+import unittest
 from test import disable_rating_rules
 import wc
 from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from tests.StandardTest import StandardTest
+import StandardTest
 
 
-class TestRewriteScript (StandardTest):
+class TestRewriteScript (StandardTest.StandardTest):
     """All these tests work with a _default_ filter configuration.
        If you change any of the *.zap filter configs, tests can fail..."""
 

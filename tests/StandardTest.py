@@ -1,8 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 """basic test class"""
 
-import unittest, os
+import unittest
+import os
 from test import initlog
+
 
 class StandardTest (unittest.TestCase, object):
     """A class augmenting the default unittest TestCase by init() and
