@@ -54,6 +54,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
             if mime is not None and not attrs['mime'].startswith(mime):
                 wc.log.warn(wc.LOG_FILTER, "Adjusting MIME %r -> %r",
                             attrs['mime'], mime)
+                attrs['mime'] = mime
                 attrs['headers']['data']['Content-Type'] = "%s\r" % mime
         except StandardError, msg:
             wc.log.exception(wc.LOG_FILTER, "Mime recognize error")
