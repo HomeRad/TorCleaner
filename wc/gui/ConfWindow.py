@@ -657,9 +657,13 @@ class ConfWindow(ToolWindow):
 <webcleaner
 """
         s += ' version="%s"\n' % self.version +\
-             ' port="%d"\n' % self.port
+             ' port="%d"\n' % self.port +\
+             ' proxyuser="%s"\n' % self.proxyuser +\
+             ' proxypass="%s"\n' % self.proxypass
         if self.parentproxy:
             s += ' parentproxy="%s"\n' % self.parentproxy
+        s += ' parentproxyuser="%s"\n' % self.parentproxyuser
+        s += ' parentproxypass="%s"\n' % self.parentproxypass
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
              ' timeout="%d"\n' % self.timeout +\
              ' obfuscateip="%d"\n' % self.obfuscateip +\
