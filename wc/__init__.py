@@ -79,19 +79,25 @@ WebCleaner Proxy Error %d %s<br>
 %s<br></center></body></html>""")
 ErrorLen = len(ErrorText)
 
+config = None
+
 def startfunc ():
     if os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, reload_config)
+    global config
+    config = Configuration()
     config.init_filter_modules()
     import wc.proxy
     wc.proxy.mainloop()
 
 # reload configuration
 def reload_config (signum, frame):
+    global config
     config.read_filterconf()
     config.init_filter_modules()
 
+import wc.filter
 
 class Configuration (UserDict.UserDict):
     """hold all configuration data, inclusive filter rules"""
@@ -146,11 +152,12 @@ class Configuration (UserDict.UserDict):
         from glob import glob
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
+            debug(BRING_IT_ON, "parsing", f)
             ZapperParser().parse(f, self)
         for f in self['rules']:
             f.sort()
         self['rules'].sort()
-        filter.Rules.recalc_oids(self['rules'])
+        filter.rules.FolderRule.recalc_oids(self['rules'])
 
     def init_filter_modules (self):
         """go through list of rules and store them in the filter
@@ -158,7 +165,7 @@ class Configuration (UserDict.UserDict):
         to regular expression objects"""
         for f in self['filters']:
             exec "from filter import %s" % f
-            _module = getattr(sys.modules['wc.filter'], f)
+            _module = getattr(wc.filter, f)
             # add content-rewriting mime types to special list
             if f in ('Rewriter', 'Replacer', 'GifImage', 'Compress'):
                 for mime in getattr(_module, "mimelist"):
@@ -198,6 +205,8 @@ import xml.parsers.expat
 _rulenames = (
   'rewrite',
   'block',
+  'blockurls',
+  'blockdomains',
   'allow',
   'header',
   'image',
@@ -239,7 +248,7 @@ class ParseException (Exception): pass
 
 class BaseParser:
     def parse (self, filename, config):
-        #debug("Parsing "+filename)
+        debug("Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate()
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
@@ -269,8 +278,7 @@ class ZapperParser (BaseParser):
         if name=='folder':
             self.rules.fill_attrs(attrs, name)
         elif name in _rulenames:
-            from wc.filter import GetRuleFromName
-            self.rule = GetRuleFromName(name)
+            self.rule = wc.filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.rules.append_rule(self.rule)
         # tag has character data
@@ -290,8 +298,8 @@ class ZapperParser (BaseParser):
             self.rule.fill_data(data, self.cmode)
 
     def reset (self):
-        import wc.filter.Rules
-        self.rules = wc.filter.Rules.FolderRule()
+        from wc.filter.rules import FolderRule
+        self.rules = FolderRule.FolderRule()
         self.cmode = None
         self.rule = None
 
@@ -323,8 +331,6 @@ class WConfigParser (BaseParser):
             elif self.config['logfile']:
                 self.config['logfile'] = open(self.config['logfile'], 'a')
         elif name=='filter':
-            #debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
+            debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
-
-config = Configuration()
 
