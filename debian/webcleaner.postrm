@@ -5,6 +5,8 @@
 
 case "$1" in
 purge)
+    # magic mime database
+    rm -f /etc/webcleaner/magic.mime.mgc
     # remove log files
     rm -rf /var/log/webcleaner || true
     # old log file locations
@@ -28,6 +30,9 @@ esac
 
 if [ "$1"=="purge" ]; then
     # delete remaining supervise stuff
-    #rm -rf /etc/webcleaner/log || true
+    rm -rf /etc/webcleaner/log || true
+    rm -rf /etc/webcleaner/supervise || true
+    # directory should be empty now
+    #rmdir /etc/webcleaner || true
 fi
 exit 0
