@@ -1,5 +1,5 @@
-# This Makefile is only used by developers! No need for users to
-# call make.
+# This Makefile is only used by developers! 
+# There is no need for users to call make.
 PYTHON=python2.1
 VERSION=$(shell $(PYTHON) setup.py --version)
 PACKAGE=webcleaner
@@ -55,7 +55,7 @@ gentest:
 
 .PHONY: onlinetest
 onlinetest:
-	$(PYTHON) webcleaner restart
+	$(PYTHON) -O webcleaner restart
 	rm -f index.html* test.gif
 	sleep 4
 	# get a standard page with included adverts
@@ -67,7 +67,7 @@ onlinetest:
 
 .PHONY: offlinetest
 offlinetest:
-	$(PYTHON) webcleaner restart
+	$(PYTHON) -O webcleaner restart
 	rm -f index.html
 	sleep 4
 	# get own config

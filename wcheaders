@@ -1,4 +1,4 @@
-#!/usr/bin/python -O
+#!/usr/bin/env python -O
 """graphical HTTP header observation tool for webcleaner.
 
 Developer note: you have to create() all windows which are created at

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.1
+#!/usr/bin/env python
 """setup file for the distuils module"""
 # Copyright (C) 2000,2001  Bastian Kleineidam
 #
