@@ -5,7 +5,8 @@
     Type: bugfix
     Changed: setup.py
 
-  * Fixed ImageReducer initialization
+  * Fixed ImageReducer initialization, and filter always if image
+    size is not known
     Type: bugfix
     Changed: wc/filter/ImageReducer.py
 
@@ -17,6 +18,24 @@
     cannot unquote properly
     Type: feature
     Changed: wc/url.py
+
+  * improve parsing of Accept-Encoding values in Compress module
+    Type: feature
+    Changed: wc/filter/Compress.py
+
+  * construct filter config xml before opening file for write;
+    prevents null byte files
+    Type: bugfix
+    Changed: wc/filter/rules/FolderRule.py
+
+  * new and improved test script from the schooltool project
+    Type: feature
+    Changed: a lot of files were moved/updated
+    Added: test.py, testsimpletal.py
+
+  * factorized code into new packages and modules
+    Type: code cleanup
+    Changed: a lot :)
 
 2.18 "Bubba Ho-tep" (released 1.6.2004)
   * rename local var 'data' to correct name 'content'
