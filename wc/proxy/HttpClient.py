@@ -84,6 +84,8 @@ class HttpClient (Connection):
 		                   attrs=self.nofilter)
                 self.content += data
             if self.bytes_remaining <= 0:
+                if self.bytes_remaining < 0:
+                    print >>sys.stderr, _("warning: client received %d bytes more than content-length") % (-self.bytes_remaining)
                 data = applyfilter(FILTER_REQUEST_DECODE, "",
 		                   fun="finish", attrs=self.nofilter)
                 data = applyfilter(FILTER_REQUEST_DECODE, data,
@@ -96,7 +98,7 @@ class HttpClient (Connection):
                 # This object will call server_connected at some point
                 ClientServerMatchmaker(self, self.request, self.headers,
 		                       self.content, self.nofilter)
-
+        # this occurs with WebCleaner as a parent of Oops Http Proxy
         if self.state in ('receive', 'closed') and self.recv_buffer:
             assert 0, 'client in state %s sent data %s' % \
 	              (self.state, `self.recv_buffer`)

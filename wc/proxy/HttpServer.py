@@ -259,6 +259,8 @@ class HttpServer (Server):
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
+            if self.bytes_remaining < 0:
+                print >>sys.stderr, _("warning: server received %d bytes more than content-length") % (-self.bytes_remaining)
 
         filtered_data = data
         is_closed = 0
