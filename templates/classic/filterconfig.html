@@ -30,20 +30,20 @@
 <tr valign="top">
 <!-- folders -->
 <td>
-<div tal:repeat="folder config/folderrules">
-<img tal:condition="folder/disable" src="disabled.png"
- tal:attributes="alt t_disabledfoldericon"><span
- tal:condition="not:folder/disable"><img
- tal:condition="not:folder/selected" src="minifolder.png"
- tal:attributes="alt t_foldericon"><img
- tal:condition="folder/selected" src="minifolderopen.png"
- tal:attributes="alt t_foldericon"></span><img
+<div tal:repeat="folder config/folderrules"><img
  tal:condition="not:folder/up" src="blocked.png" width="12" alt=""><input
  type="image" src="up.png" border="0" tal:condition="folder/up"
  tal:attributes="name string:folder_up_${folder/oid}; title t_foldermoveup; alt t_up"
- ><img tal:condition="not:folder/down" src="blocked.png" width="12" alt=""><input
+><img tal:condition="not:folder/down" src="blocked.png" width="12" alt=""><input
  type="image" src="down.png" border="0" tal:condition="folder/down"
- tal:attributes="name string:folder_down_${folder/oid}; title t_foldermovedown; alt t_down">
+ tal:attributes="name string:folder_down_${folder/oid}; title t_foldermovedown; alt t_down"
+><img tal:condition="folder/disable" src="disabled.png"
+ tal:attributes="alt t_disabledfoldericon"><span
+ tal:condition="not:folder/disable"
+><img tal:condition="not:folder/selected" src="minifolder.png"
+ tal:attributes="alt t_foldericon"
+><img tal:condition="folder/selected" src="minifolderopen.png"
+ tal:attributes="alt t_foldericon"></span>
 <b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}; title folder/tiptext"
@@ -61,18 +61,18 @@
 <td>
 <div tal:condition="curfolder">
 <input type="hidden" name="selfolder" tal:attributes="value string:${curfolder/oid}">
-<div tal:repeat="rule curfolder/rules">
-<img tal:condition="rule/disable" src="disabled.png"
- tal:attributes="alt t_disabledruleicon"><img 
- tal:condition="not:rule/disable" src="minidoc.png"
- tal:attributes="alt t_ruleicon"><img 
+<div tal:repeat="rule curfolder/rules"><img
  tal:condition="not:rule/up" src="blocked.png" width="12" alt=""><input
  type="image" src="up.png" border="0" tal:condition="rule/up"
  tal:attributes="name string:rule_up_${rule/oid}; title t_rulemoveup; alt t_up"
- ><img tal:condition="not:rule/down" src="blocked.png" width="12" alt=""><input 
+><img tal:condition="not:rule/down" src="blocked.png" width="12" alt=""><input 
  type="image" src="down.png" border="0"
  tal:condition="rule/down"
- tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down">
+ tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down"
+><img tal:condition="rule/disable" src="disabled.png"
+ tal:attributes="alt t_disabledruleicon"><img 
+ tal:condition="not:rule/disable" src="minidoc.png"
+ tal:attributes="alt t_ruleicon">
 <b tal:omit-tag="not:rule/selected">
 <a href="#" tal:condition="not:curfolder/disable" tal:content="rule/title"
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}; title rule/tiptext"
