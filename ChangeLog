@@ -19,6 +19,11 @@
     Type: documentation
     Changed: *.py
 
+  * SSL certificates are now check for expiration. Expired certificates
+    are no longer accepted.
+    Type: feature
+    Changed: wc/proxy/ssl.py
+
 2.26 "Tokyo Raiders" (released 2.1.2005)
 
   * Do not include test packages in installed binaries. This prevents
