@@ -82,7 +82,8 @@ class DnsExpandHostname (object):
         self.callback = callback
         self.queries = [hostname] # all queries to be made
         self.answers = {} # Map hostname to DNS answer
-        self.delay = 0.2 # How long do we wait before trying another expansion?
+        # How long do we wait before trying another expansion?
+        self.delay = 0.2
         if not dnscache.well_known_hosts.has_key(hostname):
             for domain in dns_config.search_domains:
                 self.queries.append(hostname + domain)
@@ -141,7 +142,8 @@ class DnsExpandHostname (object):
             if not answer.isError():
                 callback, self.callback = self.callback, None
                 if self.hostname != current_query:
-                    callback(self.hostname, DnsResponse('redirect', current_query))
+                    callback(self.hostname,
+                             DnsResponse('redirect', current_query))
                 else:
                     callback(self.hostname, answer)
                 break
@@ -230,7 +232,8 @@ class DnsCache (object):
 
         if len(hostname) > 100:
             # It's too long .. assume it's an error
-            callback(hostname, DnsResponse('error', 'hostname %r too long'%hostname))
+            callback(hostname,
+                     DnsResponse('error', 'hostname %r too long'%hostname))
             return
         
         if self.cache.has_key(hostname):
@@ -260,16 +263,13 @@ class DnsCache (object):
         assert self.pending.has_key(hostname)
         callbacks = self.pending[hostname]
         del self.pending[hostname]
-
         assert (not answer.isFound() or len(answer.data) > 0), \
                'Received empty DNS lookup .. should be error? %s' % (answer,)
-
         self.cache[hostname] = answer
         if not answer.isError():
             self.expires[hostname] = time.time()+self.ValidCacheEntryExpires
         else:
             self.expires[hostname] = time.time()+self.InvalidCacheEntryExpires
-
         for c in callbacks:
             c(hostname, answer)
 
@@ -291,7 +291,6 @@ class DnsLookupHostname (object):
         self.outstanding_requests = 0
         self.issue_request()
 
-
     def cancel (self):
         if self.callback:
             self.callback = None
@@ -304,12 +303,12 @@ class DnsLookupHostname (object):
                 assert r.callback is None
             assert self.outstanding_requests == 0
 
-
     def issue_request (self):
         if not self.callback:
             return
         if not self.nameservers and not self.outstanding_requests:
-            self.callback(self.hostname, DnsResponse('error', 'no nameserver found host'))
+            self.callback(self.hostname,
+                          DnsResponse('error', 'no nameserver found host'))
             self.callback = None
         elif self.nameservers:
             nameserver = self.nameservers[0]
@@ -324,7 +323,6 @@ class DnsLookupHostname (object):
             if self.nameservers:
                 # Let's create another one soon
                 wc.proxy.make_timer(1, self.issue_request)
-
 
     def handle_dns (self, hostname, answer):
         self.outstanding_requests -= 1
@@ -344,7 +342,6 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     TIMEOUT = 2 # Resend the request every second
     accepts_tcp = {} # Map nameserver to 0/1, whether it accepts TCP requests
 
-
     def __init__ (self, nameserver, hostname, callback):
         self.hostname = hostname
         self.callback = callback
@@ -356,9 +353,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.establish_connection()
         except socket.error:
             # We couldn't even connect .. bah!
-            callback(hostname, DnsResponse('error', 'could not connect to DNS server'))
+            callback(hostname,
+                     DnsResponse('error', 'could not connect to DNS server'))
             self.callback = None
-
 
     def establish_connection (self):
         if self.conntype == 'tcp':
@@ -385,19 +382,17 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         conntype = ''
         if self.conntype == 'tcp':
             conntype = 'TCP'
-        return '<%s %3s  %s%s%s>' % ('dns-lookup', conntype, self.hostname, retry, where)
-
+        return '<%s %3s  %s%s%s>' % \
+               ('dns-lookup', conntype, self.hostname, retry, where)
 
     def cancel (self):
         if self.callback:
             if self.connected: self.close()
             self.callback = None
 
-
     def handle_connect (self):
         # For TCP requests only
         DnsLookupConnection.accepts_tcp[self.nameserver] = 1
-
 
     def handle_connect_timeout (self):
         # We're trying to perform a TCP connect
@@ -408,33 +403,36 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.callback = None
             return
 
-
     def send_dns_request (self):
         # Issue the request and set a timeout
         if not self.callback: return # Only issue if we have someone waiting
         msg = wc.proxy.dns.Lib.Mpacker()
-        msg.addHeader(0, 0, wc.proxy.dns.Opcode.QUERY, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+        msg.addHeader(0, 0, wc.proxy.dns.Opcode.QUERY,
+                      0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
         # XXX could send Type.AAAA for IPv6 nameservers, but who decides when
         # to do that? This is the dilemma with IPv6 not having an update
         # solution...
-        msg.addQuestion(self.hostname, wc.proxy.dns.Type.A, wc.proxy.dns.Class.IN)
+        msg.addQuestion(self.hostname, wc.proxy.dns.Type.A,
+                        wc.proxy.dns.Class.IN)
         msg = msg.getbuf()
         if self.conntype == 'tcp':
             self.send_buffer = wc.proxy.dns.Lib.pack16bit(len(msg))+msg
         else:
             self.send_buffer = msg
-        wc.proxy.make_timer(self.TIMEOUT + 0.2*self.retries, self.handle_timeout)
-
+        wc.proxy.make_timer(self.TIMEOUT + 0.2*self.retries,
+                            self.handle_timeout)
 
     def handle_timeout (self):
         # The DNS server hasn't responded to us, or we've lost the
         # packet somewhere, so let's try it again, unless the retry
         # count is too large.  Each time we retry, we increase the
         # timeout (see send_dns_request).
+        wc.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
         if not self.callback:
             return # It's already handled, so ignore this
         if not self.connected:
-            self.callback(self.hostname, DnsResponse('error', 'timed out connecting'))
+            self.callback(self.hostname,
+                          DnsResponse('error', 'timed out connecting'))
             self.callback = None
             return
         self.retries += 1
@@ -452,7 +450,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.send_dns_request()
         else:
             if self.callback:
-                self.callback(self.hostname, DnsResponse('error', 'timed out'))
+                self.callback(self.hostname,
+                              DnsResponse('error', 'timed out'))
                 self.callback = None
             if self.connected: self.close()
 
@@ -557,14 +556,14 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             callback(self.hostname,
                      DnsResponse('error', 'failed lookup .. %s' % self))
 
-
     def handle_close (self):
         # If we ever get here, we want to make sure we notify the
         # callbacks so that they don't get stuck
         super(DnsLookupConnection, self).handle_close()
         if self.callback:
             callback, self.callback = self.callback, None
-            callback(self.hostname, DnsResponse('error', 'closed with no answer .. %s' % self))
+            callback(self.hostname,
+                   DnsResponse('error', 'closed with no answer .. %s' % self))
 
 
 dnscache = DnsCache()
