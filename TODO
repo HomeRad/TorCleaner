@@ -5,11 +5,17 @@ version 2.8 and above
 
 - (redirects with) parent proxy
 
-- PICS features:
-  for non-PICS-enabled sites, try to fetch info from rating services
-  when no PICS info is available, display dialog to build own PICS
-  database (after password authentication)
-  this should integrate with the webgui configuration somehow
+- content rating:
+  o while browsing
+    for non-rated sites, try to fetch info from rating service
+    when no rating is available, display rating dialog (with password)
+    when rating is available, check rating rule and display site or block
+  o rate sites
+    web interface to rate sites (with password protection)
+  o cgi script for site rating submissions
+  o cgi script for site rating requests
+
+- fix edit.png transparency
 
 - re-enabling a rule does not reinit filters, but should
 
