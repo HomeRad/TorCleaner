@@ -1,5 +1,5 @@
 # Hint: if you get the error "unable to forward request",
-# restart the webcleaner proxy and reload the squid configuration
+# restart the WebCleaner proxy and reload the squid configuration
 
 
 # This is an example Squid 2.x configuration for WebCleaner.
@@ -13,14 +13,13 @@
 # at localhost, port 3128) for HTTP and FTP queries.
 # Remember, only localhost can connect to this squid proxy
 
-# Squid port is 3128
-# change it if you like
+# Squid port is 3128; change it if you like
 # http_port 3128
 
 # disable icp
 icp_port 0
 
-# the webcleaner parent proxy
+# the WebCleaner parent proxy
 # Remember to configure WebCleaner to run on port 8080 or change the
 # port number below
 cache_peer 127.0.0.1 parent 8080 0 no-query no-digest
@@ -34,6 +33,14 @@ no_cache deny QUERY
 
 # hihihi
 ftp_user postmaster@aol.com
+
+# proxy authentication (example)
+# the file /etc/squid.passwd was generated with the htpasswd(1) tool
+#auth_param basic program /usr/lib/squid/ncsa_auth /etc/squid.passwd
+#auth_param basic realm This is my auth
+#auth_param basic children 5
+#auth_param basic credentialsttl 2 hours
+
 
 # Recommended minimum configuration:
 acl all src 0.0.0.0/0.0.0.0
@@ -55,6 +62,9 @@ acl Safe_ports port 901		# SWAT
 acl purge method PURGE
 acl CONNECT method CONNECT
 acl FTP proto FTP
+# authentication configuration:
+#acl myauth proxy_auth REQUIRED
+
 
 # Only allow cachemgr access from localhost
 http_access allow manager localhost
