@@ -11,6 +11,8 @@ class TestNtlm (unittest.TestCase):
 
     def test_ntlm (self):
         """construct and parse NTLM authentication messages"""
+        if not wc.HasCrypto:
+            return
         wc.configuration.config['auth_ntlm'] = 1
         # challenge type 0
         challenges = wc.proxy.auth.get_challenges(type=wc.proxy.auth.ntlm.NTLMSSP_INIT)
@@ -41,6 +43,8 @@ class TestNtlm (unittest.TestCase):
 
     def test_ntlmpass (self):
         """construct NTLM hashed password responses"""
+        if not wc.HasCrypto:
+            return
         password = "Beeblebrox"
         nonce = "SrvNonce"
         lm_hashed_pw = wc.proxy.auth.ntlm.create_lm_hashed_password(password)
