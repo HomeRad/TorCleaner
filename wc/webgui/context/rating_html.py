@@ -45,6 +45,6 @@ def _form_reset ():
     info.clear()
     error.clear()
     ratings.clear()
-    global ratings, url
+    global url, curindex
     url = ""
     curindex = 0
