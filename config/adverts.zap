@@ -212,7 +212,7 @@
 <rewrite title="IMDB Advert" oid="35"
  desc="redirect CGI at the Internet Movie database"
  matchurl="\.imdb\.">
-<attr>/tiger_redirect\?TITLE_TOP</attr>
+<attr>/tiger_redirect\?((TITLE|FIND)_TOP|(COVER|CREDITS)_RHS|QUOTES|(P|E)GALLERY|(PLOT|BIO|TURLS)_TOP)</attr>
 <replace>&amp;nbsp;</replace>
 </rewrite>
 

@@ -58,6 +58,8 @@ tests = (
     """<sCrIpt lang="a">bla </a> fasel</scripT>""",
     # line continuation (Dr. Fun webpage)
     "<img bo\\\nrder=0 >",
+    # href with $
+    """<a href="123$456">""",
 )
 
 flushtests = (

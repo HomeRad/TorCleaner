@@ -50,7 +50,7 @@ install: build
 	mv -f debian/$(PACKAGE)/usr/bin/wcheaders debian/$(PACKAGE)/usr/sbin
 	rmdir debian/$(PACKAGE)/usr/bin
 	# move config files
-	mv debian/$(PACKAGE)/usr/share/webcleaner/config debian/$(PACKAGE)/etc/webcleaner
+	mv debian/$(PACKAGE)/usr/share/webcleaner/config/* debian/$(PACKAGE)/etc/webcleaner
 	# remove example files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
 	# patch ConfWindow
