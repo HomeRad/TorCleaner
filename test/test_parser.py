@@ -77,6 +77,8 @@ tests = (
 flushtests = (
     "<",
     "<a",
+    "<!a",
+    "<?a",
 )
 
 p = HTMLPrinter("p")
@@ -101,6 +103,9 @@ p.feed(">")
 
 print "flush tests"
 for t in flushtests:
+    print "FLUSH test "+t
     p.reset()
     p.feed(t)
     p.flush()
+
+print "finished"

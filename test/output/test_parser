@@ -81,5 +81,11 @@ p1 starttag 'html' []
 reset test
 p data '>'
 flush tests
+FLUSH test <
 p starttag '' []
+FLUSH test <a
 p starttag 'a' []
+FLUSH test <!a
+p decl 'a' []
+FLUSH test <?a
+finished

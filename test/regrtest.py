@@ -127,6 +127,8 @@ def main(tests=None, testdir=None, verbose=0, quiet=0, generate=0,
 
 STDTESTS = [
     'test_parser',
+    'test_blocker',
+    'test_rewriter',
    ]
 
 NOTTESTS = [

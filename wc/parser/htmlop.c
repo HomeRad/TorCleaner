@@ -604,8 +604,16 @@ char *yytext;
 */
 
 #include <string.h>
-/* tested with Python >= 2.0 only */
 #include <Python.h>
+
+/* require Python >= 2.0 */
+#ifndef PY_VERSION_HEX
+#error please install Python >= 2.0
+#endif
+
+#if PY_VERSION_HEX < 0x02000000
+#error please install Python >= 2.0
+#endif
 
 #define LHTML_EOF -128
 #define CFREE(a) PyMem_Del(a); a=NULL
@@ -679,7 +687,7 @@ staticforward PyTypeObject parser_type;
 
 #define ENDTAG 12
 
-#line 683 "htmlop.c"
+#line 691 "htmlop.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -830,10 +838,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 79 "htmlop.l"
+#line 87 "htmlop.l"
 
 
-#line 837 "htmlop.c"
+#line 845 "htmlop.c"
 
 	if ( yy_init )
 		{
@@ -938,7 +946,7 @@ do_action:	/* This label is used only to access EOF actions. */
 		switch ( yy_act )
 	{ /* beginning of action switch */
 case YY_STATE_EOF(INITIAL):
-#line 81 "htmlop.l"
+#line 89 "htmlop.l"
 {
     _debug;
     return LHTML_EOF;
@@ -946,7 +954,7 @@ case YY_STATE_EOF(INITIAL):
 	YY_BREAK
 case 1:
 YY_RULE_SETUP
-#line 86 "htmlop.l"
+#line 94 "htmlop.l"
 {
     _debug;
     PyObject_CallFunction(self->handle_ref, "s", yytext+1);
@@ -955,7 +963,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 92 "htmlop.l"
+#line 100 "htmlop.l"
 {
     char *tmp = yytext + strlen(yytext) - 1;
     int i;
@@ -973,7 +981,7 @@ case 3:
 yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 104 "htmlop.l"
+#line 112 "htmlop.l"
 {
     /* strip tag chars and whitespace */
     int i=2, j;
@@ -987,7 +995,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 115 "htmlop.l"
+#line 123 "htmlop.l"
 {
     _debug;
     BEGIN(INITIAL);
@@ -995,7 +1003,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 120 "htmlop.l"
+#line 128 "htmlop.l"
 {
     _debug;
     self->tag = PyMem_Resize(self->tag, char, 1);
@@ -1005,7 +1013,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 127 "htmlop.l"
+#line 135 "htmlop.l"
 {
     _debug;
     self->params = PyList_New(0);
@@ -1014,7 +1022,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 133 "htmlop.l"
+#line 141 "htmlop.l"
 {
     _debug;
     self->params = PyList_New(0);
@@ -1023,7 +1031,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 139 "htmlop.l"
+#line 147 "htmlop.l"
 {
     _debug;
     self->params = PyList_New(0);
@@ -1032,7 +1040,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 145 "htmlop.l"
+#line 153 "htmlop.l"
 {
     _debug;
     PyObject_CallFunction(self->handle_data, "s", yytext);
@@ -1040,7 +1048,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 150 "htmlop.l"
+#line 158 "htmlop.l"
 {
     _debug;
     PyObject_CallFunction(self->handle_endtag, "s", "script");
@@ -1049,7 +1057,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 156 "htmlop.l"
+#line 164 "htmlop.l"
 {
     _debug;
     PyObject_CallFunction(self->handle_data, "s", yytext);
@@ -1057,7 +1065,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 161 "htmlop.l"
+#line 169 "htmlop.l"
 {
     _debug;
     PyObject_CallFunction(self->handle_comment, "s", self->tag);
@@ -1067,7 +1075,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 168 "htmlop.l"
+#line 176 "htmlop.l"
 {
     int len = strlen(self->tag);
     _debug;
@@ -1078,7 +1086,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 176 "htmlop.l"
+#line 184 "htmlop.l"
 {
     char* tmp;
     int len = self->tag ? strlen(self->tag) : 0;
@@ -1091,7 +1099,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 186 "htmlop.l"
+#line 194 "htmlop.l"
 {
     int n;
     _debug;
@@ -1120,7 +1128,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 212 "htmlop.l"
+#line 220 "htmlop.l"
 {
     _debug;
     BEGIN(PARAM);
@@ -1128,7 +1136,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 217 "htmlop.l"
+#line 225 "htmlop.l"
 {
     _debug;
     self->paramname = PyMem_Resize(self->paramname, char, strlen(yytext)+1);
@@ -1138,7 +1146,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 224 "htmlop.l"
+#line 232 "htmlop.l"
 {
     int n;
     _debug;
@@ -1167,7 +1175,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 250 "htmlop.l"
+#line 258 "htmlop.l"
 {
     _debug;
     if (!self->paramname) {
@@ -1180,7 +1188,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 260 "htmlop.l"
+#line 268 "htmlop.l"
 {
     _debug;
     if (self->paramname) {
@@ -1193,7 +1201,7 @@ case 21:
 yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 267 "htmlop.l"
+#line 275 "htmlop.l"
 {
     _debug;
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
@@ -1206,7 +1214,7 @@ case 22:
 yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 274 "htmlop.l"
+#line 282 "htmlop.l"
 {
     _debug;
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
@@ -1216,7 +1224,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 281 "htmlop.l"
+#line 289 "htmlop.l"
 {
     _debug;
     CFREE(self->paramname);
@@ -1225,7 +1233,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 287 "htmlop.l"
+#line 295 "htmlop.l"
 {
     int i=0;
     int j=strlen(yytext)-1;
@@ -1240,7 +1248,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 299 "htmlop.l"
+#line 307 "htmlop.l"
 {
     int n;
     _debug;
@@ -1268,7 +1276,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 324 "htmlop.l"
+#line 332 "htmlop.l"
 {
     char* tmp;
     int len = self->tag ? strlen(self->tag) : 0;
@@ -1281,7 +1289,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 334 "htmlop.l"
+#line 342 "htmlop.l"
 {
     _debug;
     if (!self->tag) {
@@ -1296,7 +1304,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 346 "htmlop.l"
+#line 354 "htmlop.l"
 {
     _debug;
     BEGIN(DPARAM);
@@ -1304,7 +1312,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 351 "htmlop.l"
+#line 359 "htmlop.l"
 {
     _debug;
     self->paramname = PyMem_Resize(self->paramname, char, strlen(yytext)+1);
@@ -1314,7 +1322,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 358 "htmlop.l"
+#line 366 "htmlop.l"
 {
     _debug;
     if (self->paramname) {
@@ -1329,7 +1337,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 370 "htmlop.l"
+#line 378 "htmlop.l"
 {
     _debug;
     if (self->paramname) {
@@ -1339,7 +1347,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 377 "htmlop.l"
+#line 385 "htmlop.l"
 {
     char* tmp;
     int len = self->tag ? strlen(self->tag) : 0;
@@ -1352,7 +1360,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 387 "htmlop.l"
+#line 395 "htmlop.l"
 {
     _debug;
     if (!self->tag) {
@@ -1367,7 +1375,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 399 "htmlop.l"
+#line 407 "htmlop.l"
 {
     _debug;
     BEGIN(XPARAM);
@@ -1375,7 +1383,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 404 "htmlop.l"
+#line 412 "htmlop.l"
 {
     _debug;
     self->paramname = PyMem_Resize(self->paramname, char, strlen(yytext)+1);
@@ -1385,7 +1393,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 411 "htmlop.l"
+#line 419 "htmlop.l"
 {
     _debug;
     if (self->paramname) {
@@ -1400,7 +1408,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 423 "htmlop.l"
+#line 431 "htmlop.l"
 {
     _debug;
     if (!self->paramname) {
@@ -1413,7 +1421,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 433 "htmlop.l"
+#line 441 "htmlop.l"
 {
     _debug;
     if (self->paramname) {
@@ -1423,7 +1431,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 440 "htmlop.l"
+#line 448 "htmlop.l"
 {
     _debug;
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
@@ -1433,7 +1441,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 447 "htmlop.l"
+#line 455 "htmlop.l"
 {
     _debug;
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext+1, strlen(yytext)-2));
@@ -1443,7 +1451,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 454 "htmlop.l"
+#line 462 "htmlop.l"
 {
     _debug;
     CFREE(self->paramname);
@@ -1452,7 +1460,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 460 "htmlop.l"
+#line 468 "htmlop.l"
 {
     _debug;
     PyList_Append(self->params, Py_BuildValue("ss#", self->paramname, yytext, strlen(yytext)-1));
@@ -1462,10 +1470,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 467 "htmlop.l"
+#line 475 "htmlop.l"
 ECHO;
 	YY_BREAK
-#line 1469 "htmlop.c"
+#line 1477 "htmlop.c"
 			case YY_STATE_EOF(COMMENT):
 			case YY_STATE_EOF(SCRIPT):
 			case YY_STATE_EOF(STARTTAG):
@@ -2356,7 +2364,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 467 "htmlop.l"
+#line 475 "htmlop.l"
 
 
 /* create parser */
@@ -2445,6 +2453,18 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	    self->tag[0] = '\0';
         }
         PyObject_CallFunction(self->handle_decl, "sO", self->tag, self->params);
+        break;
+    case XMLTAG:
+    case XPARAM:
+    case XPARAM2:
+        if (!self->tag) {
+            self->tag = PyMem_New(char, 1);
+	    self->tag[0] = '\0';
+        }
+        if (!self->params) {
+            self->params = PyList_New(0);
+        }
+        PyObject_CallFunction(self->handle_xmldecl, "sO", self->tag, self->params);
         break;
     case COMMENT:
         if (!self->tag) {

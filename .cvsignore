@@ -1,11 +1,8 @@
 MANIFEST
 VERSION
 dist
-foo
 build
 locale
-build-stamp
-configure-stamp
+*-stamp
 *.pyc
 _webcleaner2_configdata.py
-test.html

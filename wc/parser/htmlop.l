@@ -10,8 +10,16 @@
 */
 
 #include <string.h>
-/* tested with Python >= 2.0 only */
 #include <Python.h>
+
+/* require Python >= 2.0 */
+#ifndef PY_VERSION_HEX
+#error please install Python >= 2.0
+#endif
+
+#if PY_VERSION_HEX < 0x02000000
+#error please install Python >= 2.0
+#endif
 
 #define LHTML_EOF -128
 #define CFREE(a) PyMem_Del(a); a=NULL
@@ -384,7 +392,7 @@ staticforward PyTypeObject parser_type;
     tmp = self->tag;
 }
 
-<XMLTAG>"\?>"   {
+<XMLTAG>\?>   {
     _debug;
     if (!self->tag) {
         self->tag = PyMem_New(char, 1);
@@ -552,6 +560,18 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	    self->tag[0] = '\0';
         }
         PyObject_CallFunction(self->handle_decl, "sO", self->tag, self->params);
+        break;
+    case XMLTAG:
+    case XPARAM:
+    case XPARAM2:
+        if (!self->tag) {
+            self->tag = PyMem_New(char, 1);
+	    self->tag[0] = '\0';
+        }
+        if (!self->params) {
+            self->params = PyList_New(0);
+        }
+        PyObject_CallFunction(self->handle_xmldecl, "sO", self->tag, self->params);
         break;
     case COMMENT:
         if (!self->tag) {

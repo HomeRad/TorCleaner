@@ -57,3 +57,6 @@ the Webwasher.
 
 Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
 HTTP/1.1 proxy written in Java.
+
+Mooneer Salem <mooneer@translator.cx> made the groundwork for the
+new HTML parser with is libhtmlparser package.
