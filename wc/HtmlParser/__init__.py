@@ -89,9 +89,10 @@ def _resolve_ascii_entity (mo):
     return ent
 
 
+_num_re = re.compile(r'(?i)&#x?(?P<num>\d+);')
 def resolve_ascii_entities (s):
     """resolve entities in 7-bit ASCII range to eliminate obfuscation"""
-    return re.sub(r'(?i)&#x?(?P<num>\d+);', _resolve_ascii_entity, s)
+    return _num_re.sub(_resolve_ascii_entity, s)
 
 
 def _resolve_html_entity (mo):
@@ -99,9 +100,10 @@ def _resolve_html_entity (mo):
     return htmlentitydefs.entitydefs.get(mo.group("entity"), mo.group())
 
 
+_entity_re = re.compile(r'(?i)&(?P<entity>[a-z]+);')
 def resolve_html_entities (s):
     """resolve html entites in s and return result"""
-    return re.sub(r'(?i)&(?P<entity>[a-z]+);', _resolve_html_entity, s)
+    return _entity_re.sub(_resolve_html_entity, s)
 
 
 def resolve_entities (s):
