@@ -8,40 +8,33 @@ DESC=WebCleaner
 # uncomment the following line to enable the watch monitor (see webcleaner(1))
 #MONITOR=watch
 
-# dont change these filenames, the logrotate script
-# in /etc/logrotate.d relies on it
-# be aware that if you purge the webcleaner package,
-# all files in LOGDIR are removed
-LOGDIR=/var/log/${NAME}
-ERRORLOG=$LOGDIR/${NAME}.critical
-
 test -x $DAEMON || exit 0
 
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	$DAEMON start${MONITOR} >> $ACCESSLOG 2>>$ERRORLOG
+	$DAEMON start${MONITOR}
         R=$?
 	echo "$NAME."
         exit $R
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	$DAEMON stop${MONITOR} 2>>$ERRORLOG
+	$DAEMON stop${MONITOR}
         R=$?
 	echo "$NAME."
         exit $R
 	;;
   reload|force-reload)
         echo -n "Reloading $DESC: "
-	$DAEMON reload 2>>$ERRORLOG
+	$DAEMON reload
         R=$?
 	echo "$NAME."
         exit $R
 	;;
   restart)
 	echo -n "Restarting $DESC: "
-	$DAEMON restart 2>>$ERRORLOG
+	$DAEMON restart
         R=$?
 	echo "$NAME."
         exit $R
