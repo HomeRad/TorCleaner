@@ -21,10 +21,25 @@ __date__    = "$Date$"[7:-2]
 
 import socket
 from cStringIO import StringIO
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
+from wc import i18n
+from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, FilterProxyError
 from wc.filter.Filter import Filter
 from wc.proxy.Connection import RECV_BUFSIZE
 from wc.log import *
+
+
+def strsize (b):
+    """return human representation of bytes b"""
+    if b<1024:
+        return "%d Byte"%b
+    b /= 1024.0
+    if b<1024:
+        return "%.2f kB"%b
+    b /= 1024.0
+    if b<1024:
+        return "%.2f MB"%b
+    b /= 1024.0
+    return "%.2f GB"
 
 
 class VirusFilter (Filter):
@@ -38,26 +53,44 @@ class VirusFilter (Filter):
     # applies to all mime types
     mimelist = []
 
+    # 5 MB maximum file size, everything bigger will generate a proxy error
+    MAX_FILE_BYTES = 1024L*1024L*5L
+
 
     def filter (self, data, **attrs):
         """write data to scanner and internal buffer"""
-        if not attrs.has_key('scanner'): return data
+        if not attrs.has_key('scanner'):
+            return data
         scanner = attrs['scanner']
         buf = attrs['virus_buf']
+        size = attrs['virus_buf_size'][0]
         if data:
+            if size+len(data) > VirusFilter.MAX_FILE_BYTES:
+                self.size_error()
+            attrs['virus_buf_size'][0] += len(data)
             scanner.scan(data)
             buf.write(data)
         return ""
+
+
+    def size_error (self):
+        raise FilterProxyError(406, i18n._("Not acceptable"),
+                i18n._("Maximum data size (%s) exceeded") % \
+                strsize(VirusFilter.MAX_FILE_BYTES))
 
 
     def finish (self, data, **attrs):
         """write data to scanner and internal buffer.
            If scanner is clean, return buffered data, else print error
            message and return an empty string."""
-        if not attrs.has_key('scanner'): return data
+        if not attrs.has_key('scanner'):
+            return data
         scanner = attrs['scanner']
         buf = attrs['virus_buf']
+        size = attrs['virus_buf_size'][0]
         if data:
+            if size+len(data) > VirusFilter.MAX_FILE_BYTES:
+                self.size_error()
             scanner.scan(data)
             buf.write(data)
         scanner.close()
@@ -82,6 +115,7 @@ class VirusFilter (Filter):
             return d
         d['scanner'] = ClamdScanner(get_clamav_conf())
         d['virus_buf'] = StringIO()
+        d['virus_buf_size'] = [0]
         return d
 
 
