@@ -198,6 +198,7 @@ class HttpServer (Server):
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             serverpool.set_http_version(self.addr, (0,9))
+            self.statuscode = 200
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	                   WcMessage(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
@@ -220,6 +221,7 @@ class HttpServer (Server):
             # put the read bytes back to the buffer and fix the response
             self.recv_buffer = self.response + self.recv_buffer
             self.response = "HTTP/1.0 200 Ok"
+            self.statuscode = 200
             self.state = 'headers'
 
 
