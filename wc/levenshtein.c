@@ -199,6 +199,7 @@ static PyMethodDef levenshtein_methods[] = {
 
 
 /* initialization of the module */
-DL_EXPORT(void) initlevenshtein(void) {
+PyMODINIT_FUNC
+initlevenshtein(void) {
     Py_InitModule("levenshtein", levenshtein_methods);
 }
