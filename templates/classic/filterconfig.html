@@ -42,7 +42,7 @@
  i18n:attributes="alt Folder icon"></span>
 <b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/title"
- tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}; title folder/tiptext"
+ tal:attributes="href string:${filename}.${lang}?selfolder=${folder/oid}; title folder/tiptext"
  >Scripting</a>
 </b>
 </div>
@@ -80,7 +80,7 @@
  i18n:attributes="alt Rule icon">
 <b tal:omit-tag="not:rule/selected">
 <a href="#" tal:condition="not:curfolder/disable" tal:content="rule/title"
- tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}; title rule/tiptext"
+ tal:attributes="href string:${filename}.${lang}?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}; title rule/tiptext"
  >On focus</a>
 <span tal:condition="curfolder/disable" tal:content="rule/title"
  tal:attributes="title rule/tiptext">On focus</span>
