@@ -528,6 +528,13 @@ class HttpServer (wc.proxy.Server.Server):
             return False
         # the client might already have closed
         if self.client and data and self.statuscode != 407:
+            if self.defer_data:
+                self.defer_data = False
+                self.client.server_response(self, self.response,
+                                            self.statuscode, self.headers)
+                if not self.client:
+                    return
+            self.client.server_content(data)
             self.client.server_content(data)
         return True
 
