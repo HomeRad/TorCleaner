@@ -27,12 +27,12 @@ orders = [FILTER_REQUEST]
 rulenames = ['block','allow']
 mimelist = []
 # regular expression for image filenames
-image_re=re.compile(r'\.(?i)(gif|jpg|png)')
+image_re=re.compile(r'\.(?i)(gif|jpg|png|bmp|pcx|tga|tiff?)')
 
 def strblock (block):
     s="("
     for b in block:
-        s = s + ","+(b and b.pattern or "")
+        s += ","+(b and b.pattern or "")
     return s+")"
 
 def _file_url (fname):
