@@ -235,7 +235,7 @@ class ClamavConfig (dict):
         return sock
 
 
-    def create_tcp_socket (self, sockinfo):
+    def create_tcp_socket (self):
         """create tcp socket, connect to it and return socket object"""
         host = self.get('TCPAddr', 'localhost')
         port = int(self['TCPSocket'])
