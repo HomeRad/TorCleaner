@@ -72,7 +72,7 @@ class Connection (asyncore.dispatcher, object):
 
 
     def writable (self):
-        return self.send_buffer
+        return (not self.connected) or self.send_buffer
 
 
     def write (self, data):
@@ -80,13 +80,21 @@ class Connection (asyncore.dispatcher, object):
         self.send_buffer += data
 
 
+    def handle_write_event (self):
+        """overrides asyncore.dispatcher.handle_write_event
+        only calls handle_write if there is pending data"""
+        if not self.connected:
+            self.handle_connect()
+            self.connected = True
+        else:
+            self.handle_write()
+
+
     def handle_write (self):
         assert self.connected
+        assert self.send_buffer
         num_sent = 0
         data = self.send_buffer[:SEND_BUFSIZE]
-        if not data:
-            warn(PROXY, '%s empty write', str(self))
-            return num_sent
         try:
             num_sent = self.send(data)
         except socket.error:
@@ -97,7 +105,6 @@ class Connection (asyncore.dispatcher, object):
         if self.close_pending and not self.send_buffer:
             self.close_pending = False
             self.close()
-        return num_sent
 
 
     def handle_connect (self):

@@ -122,7 +122,7 @@ def proxy_poll (timeout=0.0):
             handlerCount += 1
         for x in w:
             t = time.time()
-            if x not in e:
+            if x not in e and x.writable():
                 debug(PROXY, "%s handle write", str(x))
                 x.handle_write_event()
                 handlerCount += 1
@@ -131,7 +131,7 @@ def proxy_poll (timeout=0.0):
                 #    pass
         for x in r:
             t = time.time()
-            if x not in e and x not in w:
+            if x not in e and x not in w and x.readable():
                 debug(PROXY, "%s handle read", str(x))
                 x.handle_read_event()
                 handlerCount += 1
