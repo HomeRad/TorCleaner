@@ -45,6 +45,8 @@ def do_install ():
     install_shortcuts()
     install_certificates()
     install_service()
+    restart_service()
+    open_browser_config()
 
 
 def install_shortcuts ():
@@ -66,7 +68,7 @@ def install_shortcuts ():
             prg = get_special_folder_path("CSIDL_PROGRAMS")
         except OSError, reason:
             # give up - cannot install shortcuts
-            print "cannot install shortcuts: %s" % reason
+            print _("Cannot install shortcuts: %s") % reason
             sys.exit()
     lib_dir = distutils.sysconfig.get_python_lib(plat_specific=1)
     dest_dir = os.path.join(prg, "WebCleaner")
@@ -78,7 +80,7 @@ def install_shortcuts ():
     target = os.path.join(sys.prefix, "RemoveWebCleaner.exe")
     path = os.path.join(dest_dir, "Uninstall WebCleaner.lnk")
     arguments = "-u " + os.path.join(sys.prefix, "WebCleaner-wininst.log")
-    create_shortcut(target, "Uninstall WebCleaner", path, arguments)
+    create_shortcut(target, _("Uninstall WebCleaner"), path, arguments)
     file_created(path)
 
 
@@ -97,11 +99,30 @@ def state_nt_service (name):
 def install_service ():
     """install WebCleaner as NT service"""
     oldargs = sys.argv
-    print _("Installing %s service...")%wc.AppName
+    print _("Installing %s service...") % wc.AppName
     sys.argv = ['webcleaner', 'install']
     win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
-    print _("Restarting %s proxy...")%wc.AppName
-    # stop proxy (if it is running)
+    sys.argv = oldargs
+
+
+def remove_service ():
+    oldargs = sys.argv
+    print _("Removing %s service...") % wc.AppName
+    sys.argv  = ['webcleaner', 'remove']
+    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
+    sys.argv = oldargs
+
+
+def restart_service ():
+    """restart WebCleaner NT service"""
+    stop_service()
+    start_service()
+
+
+def stop_service ()
+    """stop WebCleaner NT service (if it is running)"""
+    print _("Stopping %s proxy...") % wc.AppName
+    oldargs = sys.argv
     state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_START_PENDING:
         time.sleep(1)
@@ -113,10 +134,19 @@ def install_service ():
     while state==win32service.SERVICE_STOP_PENDING:
         time.sleep(1)
         state = state_nt_service(wc.AppName)
-    # start proxy
+    sys.argv = oldargs
+
+
+def start_service ():
+    """start WebCleaner NT service"""
+    print _("Starting %s proxy...") % wc.AppName
+    oldargs = sys.argv
     sys.argv = ['webcleaner', 'start']
     win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     sys.argv = oldargs
+
+
+def open_browser_config ():
     # sleep a while to let the proxy start...
     state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_START_PENDING:
@@ -141,8 +171,10 @@ def open_browser (url):
 
 def do_remove ():
     """stop and remove the installed NT service"""
+    stop_service()
     remove_service()
     remove_certificates()
+    remove_tempfiles()
 
 
 def remove_certificates ():
@@ -152,12 +184,20 @@ def remove_certificates ():
     execute(pythonw, script, ["remove"])
 
 
-def remove_service ():
-    oldargs = sys.argv
-    print _("Removing %s service...")%wc.AppName
-    sys.argv  = ['webcleaner', 'remove']
-    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
-    sys.argv = oldargs
+def remove_tempfiles ():
+    """remove log files and magic(1) cache file"""
+    remove_file(os.path.join(wc.ConfigDir, "magic.mime.mgc"))
+    remove_file(os.path.join(wc.ConfigDir, "webcleaner.log"))
+    remove_file(os.path.join(wc.ConfigDir, "webcleaner-access.log"))
+
+
+def remove_file (fname):
+    """Remove a single file if it exists. Errors are printed to stdout"""
+    if os.path.exists(fname):
+        try:
+            os.remove(fname)
+        except OSError, msg:
+            print _("Could not remove %r: %s") % (fname, str(msg))
 
 
 if __name__ == '__main__':
