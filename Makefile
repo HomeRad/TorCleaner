@@ -1,6 +1,7 @@
 # This Makefile is only used by developers! 
 # There is no need for users to call make.
-PYTHON=python2.2
+PYVER=2.2
+PYTHON=python$(PYVER)
 VERSION=$(shell $(PYTHON) setup.py --version)
 PACKAGE=webcleaner
 GROUPDIR=shell1.sourceforge.net:/home/groups
@@ -17,12 +18,12 @@ clean:
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 
-# to build in the current directory (assumes python 2.2)
+# to build in the current directory
 localbuild:
 	$(MAKE) -C wc/parser
 	$(PYTHON) setup.py build
-	cp -f build/lib.linux-i686-2.2/wc/parser/htmlsax.so wc/parser/
-	cp -f build/lib.linux-i686-2.2/wc/js/jslib.so wc/js/
+	cp -f build/lib.linux-i686-$(PYVER)/wc/parser/htmlsax.so wc/parser/
+	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/
 
 localtest:
 	cd wc/parser && python htmllib.py

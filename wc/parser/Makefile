@@ -1,6 +1,7 @@
 # use a beta from http://lex.sf.net/ for reentrant bison parser support
 FLEX=/home/calvin/src/flex-2.5.27/flex
-PYTHON=python2.2
+PYVER=2.2
+PYTHON=python$(PYVER)
 
 all: htmllex.c htmlparse.c
 
