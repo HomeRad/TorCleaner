@@ -16,33 +16,13 @@ SPLINTOPTS := +posixlib \
 	      -nestcomment -ifempty
 PYCHECKER := env PYTHONVER=$(PYVER) pychecker
 PYCHECKEROPTS := -F test/pycheckrc
-PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint
+PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint.$(PYTHON)
 PYLINTOPTS :=
 PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
         wc/filter/rating/*.py wc/js/*.py wc/proxy/*.py wc/proxy/decoder/*.py \
 	wc/proxy/auth/*.py wc/webgui/*.py \
 	wc/webgui/context/*.py wc/magic/*.py)
-PYLINTBROKEN = wc/win32start.py \
-	wc/filter/Blocker.py \
-	wc/filter/Header.py \
-	wc/filter/Compress.py \
-	wc/filter/ImageSize.py \
-	wc/filter/JSFilter.py \
-	wc/filter/VirusFilter.py \
-	wc/filter/rules/FolderRule.py \
-	wc/filter/rules/RatingRule.py \
-	wc/filter/rules/RewriteRule.py \
-	wc/filter/rules/UrlRule.py \
-	wc/proxy/Connection.py \
-	wc/proxy/dns_lookups.py \
-	wc/proxy/HttpClient.py \
-	wc/proxy/HttpServer.py \
-	wc/proxy/Listener.py \
-	wc/proxy/Server.py \
-        wc/proxy/SslClient.py \
-	wc/proxy/SslServer.py \
-	wc/proxy/decoder/GunzipStream.py
-
+PYLINTBROKEN = wc/win32start.py
 PYLINTFILES = $(filter-out $(PYLINTBROKEN),$(PYFILES))
 # XXX add test files
 TESTFILES :=
