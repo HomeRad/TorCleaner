@@ -22,9 +22,6 @@ d
     return self.tag == tag   
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xac in position 1: ordinal not in range(128)               
 
-- changing of mime type should also apply dynamically to all filter
-  instances.
-
 version 2.21 and above
 
 - use ssl-cert-check bash script
