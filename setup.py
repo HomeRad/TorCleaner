@@ -96,15 +96,19 @@ data_files = [('share/webcleaner/config',
        'config/disabledrule.png',
        'config/minifolderopen.png']),
      ('man/man1',
-      ['webcleaner.1', 'webcleanerconf.1', 'webcleaner.conf.5']),
+      ['webcleaner.1', 'webcleanerconf.1', 'wcheaders.1', 'webcleaner.conf.5']),
     ]
-scripts = ['webcleaner', 'webcleanerconf']
+scripts = ['webcleaner', 'webcleanerconf', 'wcheaders']
 
 if os.name=="nt":
     scripts.append("webcleaner.bat")
     scripts.append("webcleanerconf.bat")
+    scripts.append("wcheaders.bat")
 else:
-    data_files.append(('share/webcleaner/examples', ['webcleaner.bat','webcleanerconf.bat']))
+    data_files.append(('share/webcleaner/examples',
+                       ['webcleaner.bat',
+                        'webcleanerconf.bat',
+                        'wcheaders.bat']))
 
 setup (name = "webcleaner",
        version = "0.22",

@@ -4,9 +4,6 @@
 # see: dh_installdeb(1)
 set -e
 
-. /usr/share/debconf/confmodule
-db_version 2.0
-
 PYTHON=python2.1
 SITEPACKAGES=/usr/lib/$PYTHON/site-packages
 DIRLIST="wc/gui"
