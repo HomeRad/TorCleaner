@@ -32,7 +32,7 @@
 <td>
 <table tal:repeat="folder config/folderrules" summary="">
 <tr>
-<td><img
+<td style="white-space:nowrap;"><img
  tal:condition="not:folder/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="folder/up"
  tal:attributes="name string:folder_up_${folder/oid}"
@@ -71,7 +71,7 @@
 <table tal:repeat="rule curfolder/rules_display" summary=""
  border="0" cellpadding="5" cellspacing="0">
 <tr>
-<td><img
+<td style="white-space:nowrap;"><img
  tal:condition="not:rule/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="rule/up"
  tal:attributes="name string:rule_up_${rule/oid}"
