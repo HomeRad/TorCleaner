@@ -69,12 +69,12 @@ typedef struct {
 } JSEnvObject;
 
 
-JSEnvObject* getEnvironment (JSContext* cx) {
+static JSEnvObject* getEnvironment (JSContext* cx) {
     return (JSEnvObject*)JS_GetPrivate(cx, JS_GetGlobalObject(cx));
 }
 
 
-int dispatchOutput (JSEnvObject* env, PyObject* output) {
+static int dispatchOutput (JSEnvObject* env, PyObject* output) {
     PyObject* keys;
     int size;
     PyObject* listener = NULL;
@@ -97,7 +97,7 @@ disp_error:
 }
 
 
-int dispatchPopupNotification (JSEnvObject* env) {
+static int dispatchPopupNotification (JSEnvObject* env) {
     PyObject* keys;
     int size;
     PyObject* listener = NULL;
@@ -396,7 +396,7 @@ static PyObject* JSEnv_detachListener (JSEnvObject* self, PyObject* args) {
 }
 
 
-void setJSVersion (JSContext* ctx, double vers) {
+static void setJSVersion (JSContext* ctx, double vers) {
     JSVersion jsv;
     if (vers==1.0) {
         jsv = JSVERSION_1_0;
