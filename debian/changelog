@@ -1,5 +1,6 @@
-webcleaner (2.4-0.2) unstable; urgency=low
+webcleaner (2.5-0.1) unstable; urgency=low
 
+  * New upstream release
   * Use dh_python
   * indent webcleaner description
   * remove hashbang from wc/update.py (fixes lintian warning)

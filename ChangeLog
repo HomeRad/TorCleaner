@@ -1,3 +1,7 @@
+2.5
+  * updated blacklist filters
+    Changed: config/blacklist*, config/bl2wc.py
+
 2.4 (released 1.11.2003)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031101
     Changed: js/*
