@@ -190,7 +190,7 @@ o HTTP/1.1 support
                        'config/disabledrule.png',
 		       'config/minifolderopen.png']),
                      ('share/webcleaner/examples',
-                      ['webcleaner.bat', 'filtertest', 'filtertest.html']),
+                      ['webcleaner.bat']),
                      ('man/man1',
 		      ['webcleaner.1', 'webcleanerconf.1']),
 		    ],

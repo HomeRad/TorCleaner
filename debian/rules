@@ -62,7 +62,7 @@ binary-arch: build install
             usr/sbin/webcleanerconf usr/lib/python2.0/site-packages/wc/gui/
 	dh_installdebconf
 	dh_installdocs
-	dh_installexamples filtertest filtertest.html
+#	dh_installexamples filtertest filtertest.html
 	dh_installmenu
 	dh_installlogrotate
 	dh_installinit
