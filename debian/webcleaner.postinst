@@ -24,7 +24,6 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     test -n "$RET" || RET="8080"
     sed -e "s/ port=.*/ port=\"$RET\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
-    
     db_get $package/monitor
     if [ "$RET" = "true" ]; then
         S="s/#MONITOR/MONITOR/"
@@ -33,6 +32,13 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     fi
     sed -e "$S" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
+    RET=""
+    while [ -z "$RET" ]; do
+       db_get $package/adminpass
+    done
+    sed -e "s/ adminpass=.*/ adminpass=\"$RET\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
+    mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
+    db_unregister $package/adminpass
 fi
 db_stop
 
