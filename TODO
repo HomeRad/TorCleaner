@@ -2,7 +2,7 @@ TODO
 
 version 2.9 and above
 
-- lots of timers are generated while background download. why?
+- inspect left open server in the socket map
 
 - memory leaks while operating the proxy
 
