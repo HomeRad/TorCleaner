@@ -14,6 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-02-29 10:41+0100\n"
 "PO-Revision-Date: 2004-02-29 10:43+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
@@ -24,6 +25,8 @@ msgstr ""
 
 #  Type: string
 #  Default
+#. Type: string
+#. Default
 #: ../webcleaner.templates:3
 msgid "8080"
 msgstr "8080"
@@ -42,25 +45,35 @@ msgstr "Dies ist die Portnummer, unter der dieser Proxy Anfragen akzeptiert."
 
 #  Type: password
 #  Description
+#. Type: password
+#. Description
 #: ../webcleaner.templates:9
 msgid "Administrator password"
 msgstr "Administrator Passwort"
 
 #  Type: password
 #  Description
+#. Type: password
+#. Description
 #: ../webcleaner.templates:9
-msgid "The administrator password protects the web configuration frontend of WebCleaner."
-msgstr "Das Administrator Passwort schützt die Webkonfiguration von WebCleaner."
+msgid ""
+"The administrator password protects the web configuration frontend of "
+"WebCleaner."
+msgstr ""
+"Das Administrator Passwort schützt die Webkonfiguration von WebCleaner."
 
 #  Type: password
 #  Description
+#. Type: password
+#. Description
 #: ../webcleaner.templates:9
 msgid "The default username is \"admin\" (without the quotes)."
 msgstr "Der Standardbenutzername ist \"admin\" (ohne die Anführungszeichen)."
 
 #  Type: password
 #  Description
+#. Type: password
+#. Description
 #: ../webcleaner.templates:9
 msgid "You have to enter a non-empty password."
 msgstr "Sie müssen ein nicht-leeres Passwort eingeben."
-
