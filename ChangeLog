@@ -1,3 +1,8 @@
+2.4
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031022
+    Changed: js/*
+  *
+
 2.3
   * oops, add some mising files to distribution
     Changed: setup.py, MANIFEST.in
