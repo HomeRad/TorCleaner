@@ -1,4 +1,4 @@
-2.20 "Zatoichi" (released xx.xx.xxxx)
+2.20 "The machinist" (released xx.xx.xxxx)
   * Fixed service install (SF bug #1001556)
     Type: bugfix
     Changed: Makefile.am
@@ -20,6 +20,13 @@
   * fix IP netmask/suffix calculation
     Type: bugfix
     Changed: wc/ip.py
+
+  * Use Zope TAL (ZPT) implementation instead of SimpleTAL. This has
+    the advantage of a fully supported "i18n:" namespace.
+    Type: feature
+    Added: wc/webgui/{TAL,ZTUtils,PageTemplates}
+    Removed: wc/webgui/simpletal
+    Changed: wc/webgui/*.py
 
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
