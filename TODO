@@ -1,6 +1,8 @@
 TODO
 
-- webgui filter configuration
+- webgui filter configuration (2.0)
+
+- automatic filter update (post-2.0)
 
 - HTTPS tunneling (RFC 2818)
 
