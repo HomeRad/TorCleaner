@@ -348,7 +348,7 @@ class Configuration (dict):
             # add content-rewriting mime types to special list
             if filtername in ['Rewriter', 'Replacer', 'GifImage',
                               'Compress', 'ImageReducer', 'ImageSize',
-                              'VirusFilter']:
+                              'VirusFilter', 'BinaryCharFilter']:
                 self['mime_content_rewriting'].update(clazz.mimelist)
             instance = clazz()
             for order in clazz.orders:
