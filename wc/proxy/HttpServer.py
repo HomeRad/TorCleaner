@@ -88,7 +88,7 @@ class HttpServer (Server):
         self.headers = WcMessage()
         self.decoders = [] # Handle each of these, left to right
         self.persistent = False # for persistent connections
-        self.attrs = {} # initial filter attributes are empty
+        self.attrs = {'mime': None} # initial filter attributes
         self.authtries = 0 # restrict number of authentication tries
         self.statuscode = None # numeric HTTP status code
         self.bytes_remaining = None # number of content bytes remaining

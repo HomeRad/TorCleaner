@@ -114,21 +114,17 @@ def applyfilter (i, data, fun, attrs):
     attrs['filterstage'] = i
     for f in wc.config['filterlist'][i]:
         ffun = getattr(f, fun)
-        if attrs.has_key('mime'):
-            if f.applies_to_mime(attrs['mime']):
-                data = ffun(data, **attrs)
-        else:
+        if f.applies_to_mime(attrs['mime']):
             data = ffun(data, **attrs)
     return data
 
 
-default_headers = WcMessage(StringIO('Content-Type: text/html\r\n\r\n'))
-def get_filterattrs (url, filters, headers=default_headers):
+def get_filterattrs (url, filters, headers=WcMessage()):
     """init external state objects"""
     attrs = {
         'url': url,
         'nofilter': wc.config.nofilter(url),
-        'mime' : headers.get('Content-Type', 'application/octet-stream'),
+        'mime' : headers.get('Content-Type'),
         'headers': headers,
     }
     for i in filters:

@@ -163,16 +163,18 @@ class Blocker (Filter):
                 doc = blocked
             elif is_image_mime(mime) or is_image_url(url):
                 doc = self.block_image
-                # XXX side effect
                 args['mime'] = 'image/png'
             elif is_flash_mime(mime) or is_flash_url(url):
                 doc = self.block_flash
+                args['mime'] = 'application/x-shockwave-flash'
             elif is_javascript_mime(mime) or is_javascript_url(url):
                 doc = self.block_js
+                args['mime'] = 'application/x-javascript'
             else:
                 if not is_html_mime(mime):
                     warn(PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
+                args['mime'] = 'text/html'
                 rule = [r for r in self.rules if r.sid==sid][0]
                 query = urllib.urlencode({"rule": rule.tiptext(),
                                           "selfolder": "%d"%rule.parent.oid,

@@ -4,7 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, cgi, urlparse, urllib, os
+import time, cgi, urlparse, os
 from cStringIO import StringIO
 from StatefulConnection import StatefulConnection
 from ClientServerMatchmaker import ClientServerMatchmaker
