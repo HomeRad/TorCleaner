@@ -75,7 +75,7 @@ class SslConnection (wc.proxy.Connection.Connection):
             return
         except SSL.Error, err:
             wc.log.exception(wc.LOG_PROXY, "write error %s", err)
-            self.handle_error('write error')
+            self.handle_error(str(err))
             return
         wc.log.debug(wc.LOG_CONNECTION, '%s => wrote %d', self, num_sent)
         wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)

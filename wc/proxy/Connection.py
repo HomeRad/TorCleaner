@@ -108,7 +108,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             if err==errno.EAGAIN:
                 # try again later
                 return
-            self.handle_error('write error')
+            self.handle_error(str(err))
             return
         wc.log.debug(wc.LOG_CONNECTION, '%s => wrote %d', self, num_sent)
         wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)
