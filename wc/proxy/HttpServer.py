@@ -5,7 +5,6 @@ from wc.proxy import make_timer
 from wc import debug
 from wc.debug_levels import *
 from ClientServerMatchmaker import serverpool
-from string import find,strip,split,join,lower
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
 from wc.filter import applyfilter, initStateObjects
@@ -109,16 +108,16 @@ class HttpServer(Server):
 
 
     def process_response(self):
-        i = find(self.recv_buffer, '\n')
+        i = self.recv_buffer.find('\n')
         if i < 0: return
         self.response = applyfilter(FILTER_RESPONSE, self.read(i+1),
 	                attrs=self.nofilter)
-        if find(self.response, 'HTTP') >= 0:
+        if self.response.find('HTTP') >= 0:
             # Okay, we got a valid response line
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, self.http_version())
-        elif not strip(self.response):
+        elif not self.response.strip():
             # It's a blank line, so assume HTTP/0.9
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
@@ -146,7 +145,7 @@ class HttpServer(Server):
             self.bytes_remaining = int(self.headers.getheader('content-length'))
         else:
             self.bytes_remaining = None
-        response = split(self.response)
+        response = self.response.split()
         if response and response[1] == '100':
             # It's a Continue request, so go back to waiting for
             # headers.
@@ -156,24 +155,25 @@ class HttpServer(Server):
         self.decoders = []
 
         if self.headers.has_key('transfer-encoding'):
-            #debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
+            debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
             # HACK - remove encoding header
             for h in self.headers.headers[:]:
-                if re.match('transfer-encoding:', lower(h)):
+                if re.match('transfer-encoding:', h.lower()):
                     self.headers.headers.remove(h)
-                elif re.match('content-length:', lower(h)):
+                elif re.match('content-length:', h.lower()):
                     assert 0, 'chunked encoding should not have content-length'
 
-#        if self.headers.has_key('content-encoding') and self.headers['content-encoding'] == 'gzip':
-#            debug(BRING_IT_ON, 'Content-encoding:', 'gzip')
-#            self.decoders.append(GunzipStream())
-#            # HACK - remove content length and encoding
-#            for h in self.headers.headers[:]:
-#                if re.match('content-length:', lower(h)):
-#                    self.headers.headers.remove(h)
-#                elif re.match('content-encoding:', lower(h)):
-#                    self.headers.headers.remove(h)
+        if self.headers.get('content-encoding')=='gzip':
+            debug(BRING_IT_ON, 'Content-encoding: gzip')
+            self.decoders.append(GunzipStream())
+            # HACK - remove content length and encoding
+            # because we unzipped the stream
+            for h in self.headers.headers[:]:
+                if re.match('content-length:', h.lower()):
+                    self.headers.headers.remove(h)
+                elif re.match('content-encoding:', h.lower()):
+                    self.headers.headers.remove(h)
 
         self.client.server_response(self.response, self.headers)
         mime = self.headers.get('content-type', 'application/octeet-stream')
@@ -275,7 +275,7 @@ class HttpServer(Server):
         else:
             can_reuse = 0
             if (self.headers and self.headers.has_key('connection') and
-                lower(self.headers['connection']) == 'keep-alive'):
+                self.headers['connection'].lower() == 'keep-alive'):
                 can_reuse = 1
 
         if not can_reuse:

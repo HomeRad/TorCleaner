@@ -3,8 +3,10 @@ webcleaner (0.14) unstable; urgency=low
   * sanitize default config
   * if you connect to your proxy directly (e.g. http://localhost:8080/),
     you see config and statistic data
+  * use new Python 2.0 string methods
+  * support gzip encoded HTML content
 
- -- Bastian Kleineidam <calvin@debian.org>  Thu,  2 Aug 2001 21:44:42 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed,  8 Aug 2001 10:33:27 +0200
 
 webcleaner (0.13) unstable; urgency=low
 

@@ -11,7 +11,6 @@
 #    http://tv.excite.com/grid
 
 import zlib
-from string import find
 
 class GunzipStream:
     # Flags in the gzip header
@@ -27,19 +26,19 @@ class GunzipStream:
         "Try to parse the header from buffer, and if we can, set flag"
         if len(self.buffer) < 10: # Incomplete fixed part of header
             return ''
-        
+
         magic = self.buffer[:2]
         if magic != '\037\213':
             raise zlib.error, 'not gzip format'
-            
+
         method = ord(self.buffer[2])
         if method != 8:
             raise zlib.error, 'unknown compression method'
-        
+
         flag = ord(self.buffer[3])
         # Skip until byte 10
         s = self.buffer[10:]
-        
+
         if flag & self.FEXTRA:
             # Read & discard the extra field, if present
             if len(s) < 2: return '' # Incomplete
@@ -47,16 +46,16 @@ class GunzipStream:
             xlen=xlen+256*ord(s[1])
             if len(s) < 2+xlen: return '' # Incomplete
             s = s[2+xlen:]
-            
+
         if flag & self.FNAME:
             # Read and discard a null-terminated string containing the filename
-            i = find(s, '\000')
+            i = s.find('\000')
             if i < 0: return '' # Incomplete
             s = s[i+1:]
             
         if flag & self.FCOMMENT:
             # Read and discard a null-terminated string containing a comment
-            i = find(s, '\000')
+            i = s.find('\000')
             if i < 0: return '' # Incomplete
             s = s[i+1:]
             
@@ -83,7 +82,7 @@ class GunzipStream:
             else:
                 # We haven't finished parsing the header
                 return ''
-            
+
         # We have seen the header, so we can move on to zlib
         return self.decompressor.decompress(s)
 
@@ -93,4 +92,4 @@ class GunzipStream:
             return ''
         else:
             return self.decompressor.flush()
-    
+

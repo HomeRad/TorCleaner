@@ -5,7 +5,6 @@ import sys,os,time,socket,re
 from Connection import Connection
 from dns import dnslib,dnsclass,dnsopcode,dnstype
 from wc.proxy import make_timer
-from string import lower,find,strip,split
 from wc import debug
 from wc.debug_levels import *
 from pprint import pformat
@@ -13,7 +12,7 @@ from pprint import pformat
 def background_lookup(hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    DnsExpandHostname(lower(hostname), callback)
+    DnsExpandHostname(hostname.lower(), callback)
     
 class DnsResponse:
     # A DNS answer can be:
@@ -53,7 +52,7 @@ class DnsExpandHostname:
         if not dnscache.well_known_hosts.has_key(hostname):
             for domain in DnsConfig.search_domains:
                 self.queries.append(hostname + domain)
-            if find(hostname, '.') < 0:
+            if hostname.find('.') < 0:
                 # If there's no dot, we should try expanding patterns
                 for pattern in DnsConfig.search_patterns:
                     self.queries.append(pattern % hostname)
@@ -147,16 +146,17 @@ class DnsCache:
         if not os.path.exists(filename):
             return
         for line in open(filename, 'r').readlines():
-            line = strip(line)
+            line = line.strip()
             if (not line) or line[0]=='#':
 	        continue
-            if find(line, '#') >= 0:
-	        line = line[:find(line, '#')] # Comments
-            fields = split(line)
+            i = line.find('#')
+            if i >= 0:
+	        line = line[:i] # Comments
+            fields = line.split()
             # The first one is the IP address, and then the rest are names
             # These hosts don't expire from our cache
             for name in fields[1:]:
-                name = lower(name)
+                name = name.lower()
                 self.well_known_hosts[name] = 1
                 self.cache[name] = DnsResponse('found', [fields[0]])
                 self.expires[name] = sys.maxint
@@ -478,13 +478,13 @@ def init_dns_resolver():
 def init_dns_resolver_posix():
     "Set up the DnsLookupConnection class with /etc/resolv.conf information"
     for line in open('/etc/resolv.conf', 'r').readlines():
-        line = strip(line)
+        line = line.strip()
         if (not line) or line[0]==';' or line[0]=='#':
             continue
         m = re.match(r'^search\s+\.?(.*)$', line)
         if m:
-            for domain in split(m.group(1)):
-                DnsConfig.search_domains.append('.'+lower(domain))
+            for domain in m.group(1).split():
+                DnsConfig.search_domains.append('.'+domain.lower())
         m = re.match(r'^nameserver\s+(\S+)\s*$', line)
         if m: DnsConfig.nameservers.append(m.group(1))
     if not DnsConfig.search_domains:

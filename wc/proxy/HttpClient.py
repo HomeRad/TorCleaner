@@ -2,7 +2,6 @@ import rfc822,time,sys
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
-from string import split,find,join
 from wc import debug
 from wc.proxy import log,match_host
 from wc.debug_levels import *
@@ -31,7 +30,7 @@ class HttpClient(Connection):
 
     def __repr__(self):
         if self.state != 'request':
-            try: extra = split(self.request)[1][7:] # Remove http://
+            try: extra = self.request.split()[1][7:] # Remove http://
             except: extra = '???' + self.request
             if len(extra) > 46:
                 extra = extra[:43] + '...'
@@ -41,7 +40,7 @@ class HttpClient(Connection):
 
     def process_read(self):
         if self.state == 'request':
-            i = find(self.recv_buffer, '\r\n')
+            i = self.recv_buffer.find('\r\n')
             if i >= 0: # One newline ends request
                 # self.read(i) is not including the newline
                 self.request = self.read(i)
@@ -53,7 +52,7 @@ class HttpClient(Connection):
                 self.state = 'headers'
 
         if self.state == 'headers':
-            i = find(self.recv_buffer, '\r\n\r\n')
+            i = self.recv_buffer.find('\r\n\r\n')
             if i >= 0: # Two newlines ends headers
                 i += 4 # Skip over newline terminator
                 assert self.read(2) == '\r\n'
@@ -106,7 +105,7 @@ class HttpClient(Connection):
         assert self.server.connected
         #debug(NIGHTMARE, 'S/response', self)
         self.write(response)
-        self.write(join(headers.headers, ''))
+        self.write(''.join(headers.headers))
         self.write('\r\n')
 
     def server_no_response(self):

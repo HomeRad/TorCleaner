@@ -84,7 +84,7 @@ class Packer:
 				list.append(label)
 		keys = []
 		for i in range(len(list)):
-			key = string.upper(string.joinfields(list[i:], '.'))
+			key = string.joinfields(list[i:], '.').upper()
 			keys.append(key)
 			if self.index.has_key(key):
 				pointer = self.index[key]
@@ -525,7 +525,7 @@ def test():
 		if o == '-r': rd = 1
 	if args[0:]:
 		try:
-			qtype = eval(string.upper(args[0]), dnstype.__dict__)
+			qtype = eval(args[0].upper(), dnstype.__dict__)
 		except (NameError, SyntaxError):
 			print 'bad query type:', `args[0]`
 			sys.exit(2)

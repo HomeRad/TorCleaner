@@ -1,5 +1,4 @@
 # A Python expression interpreter for the proxy
-from string import find,strip
 from Connection import Connection
 
 class Interpreter(Connection):
@@ -13,10 +12,10 @@ class Interpreter(Connection):
 
     def process_read(self):
         while 1:
-            i = find(self.recv_buffer, '\n')
+            i = self.recv_buffer.find('\n')
             if i < 0: break
 
-            line = strip(self.read(i+1))
+            line = self.read(i+1).strip()
             if line == '\004': # Ctrl-D (Unix EOF)
                 self.handle_close()
                 break

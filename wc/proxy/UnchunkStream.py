@@ -5,7 +5,7 @@
 # TEST CASE:
 #    http://www.apache.org/
 
-from string import strip,find,atoi
+from string import atoi
 
 class UnchunkStream:
     # States:
@@ -27,10 +27,10 @@ class UnchunkStream:
             
             if self.bytes_remaining is None:
                 # We want to find a chunk length
-                i = find(self.buffer, '\n')
+                i = self.buffer.find('\n')
                 if i >= 0:
                     # We have a line; let's hope it's a chunk length
-                    line = strip(self.buffer[:i])
+                    line = self.buffer[:i].strip()
                     # Remove this line from the buffer
                     self.buffer = self.buffer[i+1:]
                     if line:
