@@ -26,7 +26,10 @@ from wc.filter import FilterException, compileMime, compileRegex
 from wc.filter.Filter import Filter
 # JS imports
 from wc.js.JSListener import JSListener
-from wc.js import jslib
+try:
+   from wc.js import jslib
+except ImportError:
+    jslib = None
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy import make_timer
@@ -130,7 +133,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.waitbuf = []
         self.buf = []
         self.url = url or "unknown"
-        self.js_filter = opts['javascript']
+        self.js_filter = opts['javascript'] and jslib
         self.js_html = None
         self.js_src = 0
         self.js_script = ''
