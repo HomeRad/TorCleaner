@@ -41,9 +41,7 @@ except:
 	import DummyLogger as logging
 	
 import sgmllib, xml.sax, cgi, StringIO, codecs, re, htmlentitydefs
-import simpletal, copy
-
-__version__ = simpletal.__version__
+import copy
 
 try:
     # check to see if pyxml is installed
