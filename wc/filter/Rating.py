@@ -48,17 +48,21 @@ service = dict(
        violence = dict(
              name = _('violence'),
              rvalues = ["0", "1", "2"],
+             rrange = None,
            ),
        sex = dict(
              name = _('sex'),
              rvalues = ["0", "1", "2"],
+             rrange = None,
            ),
        language = dict(
              name = _('language'),
              rvalues = ["0", "1", "2"],
+             rrange = None,
            ),
        agerange = dict(
              name = _('age range'),
+             rvalues = None,
              rrange = [0, None],
            ),
    ),
@@ -245,9 +249,9 @@ def rating_allow (url, rule):
 def rating_is_valid_value (data, value):
     """return True if given value is valid according to rating data"""
     res = False
-    if data.has_key("rvalues"):
+    if data["rvalues"]:
         res = value in data["rvalues"]
-    elif data.has_key("rrange"):
+    elif data["rrange"]:
         value = rating_range(value)
         if value is None:
             res = False
