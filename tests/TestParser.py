@@ -73,7 +73,8 @@ class TestParser (unittest.TestCase):
         # href with $
         ("""<a href="123$456">""", """<a href="123$456">"""),
         # quoting
-        #XXX("""<a href=/>""", """<a href=""></a>"""),
+        #("""<a href=/>""", """<a href=""></a>"""),
+        ("""<a href=>""", """<a href="">"""),
         ("""<a href="'">""", """<a href="'">"""),
         ("""<a href='"'>""", """<a href="&quot;">"""),
         ("""<a href="bla" %]">""", """<a href="bla">"""),
