@@ -3,6 +3,8 @@
     to configure webcleaner is over the web interface.
     Removed: wc/gui/*, webcleanerconf*, wcheaders*
     Changed: setup.py, MANIFEST.in, debian/control, debian/rules
+  * fixed and updated status command
+    Changed: wc/daemon/__init__.py
 
 2.7 (released 04.12.2003)
   * updated filters:
