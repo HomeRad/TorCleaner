@@ -3,7 +3,7 @@ from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
-from wc import i18n, config, ip
+from wc import i18n, config, ip, remove_headers
 from wc.proxy import log, match_host
 from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.debug import *
@@ -26,6 +26,7 @@ class HttpClient (Connection):
         self.state = 'request'
         self.server = None
         self.request = ''
+        self.decoders = [] # Handle each of these, left to right
         self.headers = None
         self.bytes_remaining = None # for content only
         self.content = ''
@@ -107,26 +108,47 @@ class HttpClient (Connection):
                 # we understand gzip, deflate and identity
                 self.headers['Accept-Encoding'] = \
                         'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
+                # add decoders
+                self.decoders = []
+                # Chunked encoded
+                if self.headers.get('Transfer-Encoding') is not None:
+                    #debug(BRING_IT_ON, 'S/Transfer-encoding:', `self.headers['transfer-encoding']`)
+                    self.decoders.append(UnchunkStream())
+                    # remove encoding header
+                    to_remove = ["Transfer-Encoding"]
+                    if self.headers.get("Content-Length") is not None:
+                        print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
+                        to_remove.append("Content-Length")
+                        self.bytes_remaining = None
+                    remove_headers(self.headers, to_remove)
+                    # add warning
+                    self.headers['Warning'] = "214 WebCleaner Transformation applied"
                 #debug(HURT_ME_PLENTY, "C/Headers filtered", `self.headers.headers`)
                 self.bytes_remaining = int(self.headers.get('Content-Length', 0))
                 self.state = 'content'
 
         if self.state == 'content':
-	    if self.bytes_remaining > 0:
+            data = self.read(self.bytes_remaining)
+	    if self.bytes_remaining is not None:
                 # Just pass everything through to the server
                 # NOTE: It's possible to have 'chunked' encoding here,
                 # and then the current system of counting bytes remaining
                 # won't work; we have to deal with chunks
-                data = self.read()
                 self.bytes_remaining -= len(data)
-                data = applyfilter(FILTER_REQUEST_DECODE, data,
-		                   attrs=self.nofilter)
-                data = applyfilter(FILTER_REQUEST_MODIFY, data,
-		                   attrs=self.nofilter)
-                data = applyfilter(FILTER_REQUEST_ENCODE, data,
-		                   attrs=self.nofilter)
-                self.content += data
-            if self.bytes_remaining <= 0:
+            is_closed = 0
+            for decoder in self.decoders:
+                data = decoder.decode(data)
+                is_closed = decoder.closed or is_closed
+            data = applyfilter(FILTER_REQUEST_DECODE, data,
+                               attrs=self.nofilter)
+            data = applyfilter(FILTER_REQUEST_MODIFY, data,
+                               attrs=self.nofilter)
+            data = applyfilter(FILTER_REQUEST_ENCODE, data,
+                               attrs=self.nofilter)
+            self.content += data
+            if (is_closed or
+                (self.bytes_remaining is not None and
+                 self.bytes_remaining <= 0)):
                 if self.bytes_remaining < 0:
                     print >>sys.stderr, "Warning: client received %d bytes more than content-length" % (-self.bytes_remaining)
                 data = applyfilter(FILTER_REQUEST_DECODE, "",
