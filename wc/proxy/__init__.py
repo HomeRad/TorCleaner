@@ -131,7 +131,7 @@ def mainloop():
     Listener(_PORT, lambda *args: apply(HttpClient.HttpClient, args))
     #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))
     # make_timer(5, transport.http_server.speedcheck_print_status)
-    make_timer(60, periodic_print_socketlist)
+    #make_timer(60, periodic_print_socketlist)
     while 1:
         # Installing a timeout means we're in a handler, and after
         # dealing with handlers, we come to the main loop, so we don't

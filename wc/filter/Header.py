@@ -39,5 +39,6 @@ class Header(Filter):
             for expr in self.delete:
                 if expr.search(name):
                     del data[name]
-        data.update(self.add)
+        for key,val in self.add.items():
+            data[key] = val
         return data

@@ -43,7 +43,7 @@ class HttpClient(Connection):
         if self.state == 'request':
             i = find(self.recv_buffer, '\r\n')
             if i >= 0: # One newline ends request
-                 # self.read(i) is not including the newline
+                # self.read(i) is not including the newline
                 self.request = applyfilter(FILTER_REQUEST, self.read(i), fun="finish")
                 log('%s - %s - %s\n' % (self.addr,
 		    time.ctime(time.time()), self.request))

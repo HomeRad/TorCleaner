@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re,sys,base64,wc
-from wc.filter import FILTER_RESPONSE_MODIFY
+from wc.filter import FILTER_RESPONSE_MODIFY, FilterException
 from wc.filter.Filter import Filter
 from wc import debug
 
@@ -122,7 +122,7 @@ class GifParser:
             debug(NIGHTMARE, 'rewinding\n')
             self.data = self.consumed + self.data
             self.consumed = ''
-            raise IOError, "GifImage data delay => rewinding"
+            raise FilterException, "GifImage data delay => rewinding"
         self.consumed = self.consumed + self.data[:i]
         self.data = self.data[i:]
         return self.consumed[-i:]
@@ -197,7 +197,7 @@ class GifParser:
                 elif s == ',':
                     self.state = GifParser.IMAGE
                     continue
-                raise Exception
+                raise Exception, "unknown frame %s"%`s`
             elif self.state == GifParser.IMAGE:
                 #extent
                 self.x0 = i16(self.read(2))
@@ -239,7 +239,6 @@ class GifParser:
                 self.data = ''
                 break
             else:
-                debug(NIGHTMARE, 'invalid GifParser state')
                 raise Exception, "invalid GifParser state"
         # while 1
     # parse
