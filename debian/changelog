@@ -4,8 +4,9 @@ webcleaner (0.51) unstable; urgency=low
   * wc/proxy/HttpClient.py: fixed request parsing with no headers sent
   * remove old unused buffersize option, the buffer size is now 4k (see
     wc/proxy/Connection)
+  * print a warning when more bytes are received than content-length
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 31 Jul 2002 09:07:08 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  2 Aug 2002 00:12:27 +0200
 
 webcleaner (0.50) unstable; urgency=low
 

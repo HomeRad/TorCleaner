@@ -15,3 +15,7 @@ A: First, try to disable the WebCleaner proxy and look at the page again.
    If it renders ok, you most likely have encountered a bug in WebCleaner.
    Please write a bug report to calvin@users.sourceforge.net and
    include the URL you have problems with.
+
+Q: I am seeing the error "client sent data in state receive".
+A: Your client was sending data when it shouldn't have. This is mostly
+   a broken HTTP proxy (eg. when WebCleaner is parent proxy of Oops).
