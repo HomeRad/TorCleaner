@@ -88,7 +88,7 @@ def get_log_file (fname):
     """get full path name to writeable logfile"""
     if os.name =='nt':
         return os.path.join(os.environ.get("TEMP"), fname)
-    logfile = os.path.join('/var/log', fname)
+    logfile = os.path.join('/var/log/webcleaner', fname)
     if not iswriteable(logfile):
         logfile = os.path.join(os.getcwd(), fname)
     if not iswriteable(logfile):
