@@ -12,6 +12,7 @@ from FXBlockurlsRuleFrame import FXBlockurlsRuleFrame
 from FXBlockdomainsRuleFrame import FXBlockdomainsRuleFrame
 from FXAllowurlsRuleFrame import FXAllowurlsRuleFrame
 from FXAllowdomainsRuleFrame import FXAllowdomainsRuleFrame
+from FXPicsRuleFrame import FXPicsRuleFrame
 
 
 class FXRuleFrameFactory:

@@ -2,39 +2,18 @@ from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
 from wc.debug import *
+from wc.filter.PICS import services
 
 class FXPicsRuleFrame (FXRuleFrame):
     """display all variables found in a PicsRule"""
-    (ID_NAME,
-     ID_VALUE,
-    ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+2)
+    (ID_SERVICE,
+    ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+1)
 
     def __init__ (self, parent, rule, index):
         FXRuleFrame.__init__(self, parent, rule, index)
-        FXMAPFUNC(self,SEL_COMMAND,FXHeaderRuleFrame.ID_NAME,FXHeaderRuleFrame.onCmdName)
-        FXMAPFUNC(self,SEL_COMMAND,FXHeaderRuleFrame.ID_VALUE,FXHeaderRuleFrame.onCmdValue)
-        matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, i18n._("Header name:\tRegular expression to match the header name"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(matrix, 15, self, FXHeaderRuleFrame.ID_NAME)
-        tf.setText(self.rule.name)
-        FXLabel(matrix, i18n._("Header value:\tIf empty, delete the header. Else add or, if already there modify the header."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(matrix, 15, self, FXHeaderRuleFrame.ID_VALUE)
-        tf.setText(self.rule.value)
-
-    def onCmdName (self, sender, sel, ptr):
-        name = sender.getText().strip()
-        if name:
-            self.rule.name = name
-            self.getApp().dirty = 1
-        else:
-            sender.setText(self.rule.name)
-            self.getApp().error(i18n._("Header rule"), i18n._("Header name must not be empty"))
-        debug(BRING_IT_ON, "Changed rule header name")
-        return 1
-
-    def onCmdValue (self, sender, sel, ptr):
-        self.rule.value = sender.getText().strip()
-        self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule header value")
-        return 1
+        #FXMAPFUNC(self,SEL_COMMAND,FXHeaderRuleFrame.ID_VALUE,FXHeaderRuleFrame.onCmdValue)
+	g = FXGroupBox(self, i18n._("PICS services"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        fv = FXVerticalFrame(g, LAYOUT_FILL_X|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
+        for service, sdata in services.items():
+            FXCheckButton(fv, i18n._("%s\tDisable this rating service.")%sdata['name'], self, FXRuleFrame.ID_DISABLE_RULE,ICON_AFTER_TEXT|LAYOUT_RIGHT|LAYOUT_CENTER_Y|LAYOUT_FILL_X).setCheck(self.rule.ratings.has_key(service))
 
