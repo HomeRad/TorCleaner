@@ -28,8 +28,8 @@ from wc.filter.rules.Rule import compileRegex as _compileRegex
 from wc.filter.rules.RewriteRule import partvalnames, partnames
 from wc.filter.rules.RewriteRule import part_num as _part_num
 from wc.filter.rules.FolderRule import FolderRule as _FolderRule
+from wc.filter.rules.FolderRule import recalc_up_down as _recalc_up_down
 from wc.filter.rules import register_rule as _register_rule
-from wc.filter.rules import recalc_up_down as _recalc_up_down
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.Rating import service, rangenames
