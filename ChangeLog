@@ -17,7 +17,7 @@
     Type: bugfix
     Changed: wc/url.py
 
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20040329
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040330
     Type: feature
     Changed: libjs/*
 
