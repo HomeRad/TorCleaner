@@ -5,7 +5,7 @@ used by Bastian Kleineidam for WebCleaner
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import sys, time, select, asyncore
+import sys, time, select, asyncore, re
 # fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 def fileno(self):
@@ -39,6 +39,27 @@ def stripsite (url):
     import urlparse
     url = urlparse.urlparse(url)
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
+
+
+is_http = re.compile(r"^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
+
+def fix_http_version (protocol):
+    """sanitize http protocol version string"""
+    return "HTTP/%.1f"%get_http_version(protocol)
+
+
+def get_http_version (protocol):
+    """return http version number as a float"""
+    mo = is_http(protocol)
+    if mo:
+        major, minor = int(mo.group("major")), int(mo.group("minor"))
+        f = float("%d.%d"%(minor, major))
+        if f > 1.1:
+            print >>sys.stderr, "Error: invalid HTTP version", f
+            f = 1.1
+        return f
+    print >>sys.stderr, "Error: invalid HTTP version", `protocol`
+    return 1.0
 
 
 def make_timer (delay, callback):

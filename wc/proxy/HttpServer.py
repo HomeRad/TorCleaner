@@ -4,7 +4,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 from cStringIO import StringIO
 from Server import Server
-from wc.proxy import make_timer
+from wc.proxy import make_timer, get_http_version
 from wc import i18n, config, remove_headers, has_header_value
 from wc.debug import *
 from ClientServerMatchmaker import serverpool
@@ -29,11 +29,7 @@ _RESPONSE_FILTERS = (
    FILTER_RESPONSE_MODIFY,
    FILTER_RESPONSE_ENCODE)
 
-# http request matcher
-_http_re = re.compile(r'(?i).*HTTP/(\d+\.?\d*)\s*$')
-
 _fix_content_types = ['text/html']
-
 _fix_content_encodings = [
 #    'x-bzip2',
 ]
@@ -169,11 +165,13 @@ class HttpServer (Server):
 	                attrs=self.nofilter)
         if self.response.lower().find('http') >= 0:
             # Okay, we got a valid response line
+            protocol, status, msg = self.response.split()
             self.state = 'headers'
             # Let the server pool know what version this is
-            serverpool.set_http_version(self.addr, self.http_version())
+            serverpool.set_http_version(self.addr, get_http_version(protocol))
         elif not self.response.strip():
             # It's a blank line, so assume HTTP/0.9
+            serverpool.set_http_version(self.addr, 0.9)
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
@@ -193,12 +191,11 @@ class HttpServer (Server):
             print >> sys.stderr, \
                   'Warning: invalid or missing response from %s:'%self.url, \
                   `self.response`
+            serverpool.set_http_version(self.addr, 1.0)
             # put the read bytes back to the buffer and fix the response
             self.recv_buffer = self.response + self.recv_buffer
             self.response = "HTTP/1.0 200 Ok"
             self.state = 'headers'
-            # Let the server pool know what version this is
-            serverpool.set_http_version(self.addr, self.http_version())
 
 
     def process_headers (self):
@@ -444,15 +441,6 @@ class HttpServer (Server):
             self.client.server_close()
         self.attrs = {}
         self.reuse()
-
-
-    def http_version (self):
-        if not self.response: return 0
-        version = _http_re.match(self.response)
-        if version:
-            return float(version.group(1))
-        else:
-            return 0.9
 
 
     def reuse (self):

@@ -107,6 +107,7 @@ class HttpClient (Connection):
             if not url:
                 config['requests']['error'] += 1
                 return self.error(400, i18n._("Empty URL"))
+            # note: we do not enforce a maximum url length
             self.state = 'headers'
 
 
@@ -149,7 +150,7 @@ class HttpClient (Connection):
                get_max_forwards(self.headers)==0:
                 # XXX display options ?
                 self.state = 'done'
-                return ServerHandleDirectly(self, 'HTTP/1.0 200 OK\r\n',
+                return ServerHandleDirectly(self, 'HTTP/1.1 200 OK\r\n',
                                    'Content-Type: text/plain\r\n\r\n', '')
             self.state = 'content'
 

@@ -1,6 +1,6 @@
 import dns_lookups, socket, mimetypes, re, base64, sha
 import wc.proxy
-from wc.proxy import spliturl
+from wc.proxy import spliturl, fix_http_version
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
@@ -9,13 +9,21 @@ from wc.webgui import WebConfig
 
 serverpool = ServerPool()
 
-_localhosts = (
-    'localhost',
-    '127.0.0.1',
-    '::1',
-    'ip6-localhost',
-    'ip6-loopback',
-)
+# XXX is this list of localhost stuff complete?
+addrinfo = socket.gethostbyaddr(socket.gethostname())
+_localhosts = {
+    'localhost' : None,
+    'loopback' : None,
+    '127.0.0.1' : None,
+    '::1' : None,
+    'ip6-localhost' : None,
+    'ip6-loopback' : None,
+}
+_localhosts[addrinfo[0]] = None
+for h in addrinfo[1]:
+    _localhosts[h] = None
+for h in addrinfo[2]:
+    _localhosts[h] = None
 
 from HttpServer import HttpServer
 
@@ -58,6 +66,8 @@ class ClientServerMatchmaker:
         self.mime = mime
         debug(BRING_IT_ON, "ClientServer:", `self.request`)
         self.method, self.url, protocol = self.request.split()
+        # strip leading zeros and other stuff
+        protocol = fix_http_version(protocol)
         scheme, hostname, port, document = spliturl(self.url)
         # some clients send partial URI's without scheme, hostname
         # and port to clients, so we have to handle this
@@ -90,7 +100,7 @@ class ClientServerMatchmaker:
             config['requests']['valid'] += 1
             config['requests']['blocked'] += 1
             ServerHandleDirectly(self.client,
-             'HTTP/1.0 200 OK\r\n',
+             'HTTP/1.1 200 OK\r\n',
              'Content-Type: %s\r\n\r\n'%(mtype or 'application/octet-stream'),
               open(document, 'rb').read())
             return
@@ -150,7 +160,7 @@ class ClientServerMatchmaker:
             config['requests']['valid'] += 1
             ServerHandleDirectly(
               self.client,
-              'HTTP/1.0 301 Use different host\r\n',
+              'HTTP/1.1 301 Use different host\r\n',
               'Content-type: text/html\r\n'
               'Location: http://%s\r\n'
               '\r\n' % new_url,
