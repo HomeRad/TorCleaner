@@ -423,9 +423,9 @@ class HeaderRule(Rule):
         return "header"
 
     def toxml(self):
-        s = Rule.toxml(self) + '\n name="%s"' % self.name
+        s = Rule.toxml(self) + '\n name="%s"' % quote(self.name)
         if self.value:
-            return s+">"+self.value+"</header>"
+            return s+">"+quote(self.value)+"</header>"
         return s+"/>"
 
 
@@ -456,7 +456,7 @@ class ImageRule(Rule):
         if self.type!='gif':
             s += '\n type="%s"\n' % self.type
         if self.url:
-            return s+">"+self.url+"</image>\n"
+            return s+">"+quote(self.url)+"</image>\n"
         return s+"/>"
 
 
@@ -497,9 +497,9 @@ class ReplacerRule(Rule):
     def toxml(self):
 	s = Rule.toxml(self);
         if self.search:
-            s += '\n search="%s"'%self.search
+            s += '\n search="%s"'%quote(self.search)
         if self.replace:
-            return s+">"+self.replace+"</replacer>"
+            return s+">"+quote(self.replace)+"</replacer>"
         return s+"/>"
 
 

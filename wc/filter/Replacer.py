@@ -29,14 +29,15 @@ orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['replacer']
 
 
-# XXX buffering
 # XXX group matches?
 class Replacer(Filter):
     """replace regular expressions in a data stream"""
     mimelist = ('text/html', 'text/javascript')
 
+
     def __init__(self):
         self.rules = []
+
 
     def addrule(self, rule):
         debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
@@ -45,16 +46,38 @@ class Replacer(Filter):
                 rule.search = re.compile(rule.search)
             self.rules.append((rule.search, rule.replace))
 
+
     def filter(self, data, **args):
-        return apply(self.doit, (data,), args)
+        return attrs['buf'].replace(data)
+
 
     def finish(self, data, **args):
-        return apply(self.doit, (data,), args)
+        buf = attrs['buf']
+        data = buf.replace(data)
+        return data+buf.flush()
 
-    def doit(self, data, **args):
+
+    def getAttrs(self, headers, url):
+        return {'buf': Buf(self.rules)}
+
+
+
+# buffer size in bytes
+BUF_SIZE=512
+
+class Buf:
+    def __init__(self, rules):
+        self.buf = ""
+        self.rules = rules
+
+
+    def replace(self, data):
+        data = self.buf + data
         for ro,repl in self.rules:
-            data = self.replace_one(ro, repl, data)
-        return data
+            data = buf.replace_one(ro, repl, data)
+        self.buf = data[:BUF_SIZE]
+        return data[BUF_SIZE:]
+
 
     def replace_one(self, ro, repl, data):
         offset = 0
@@ -63,4 +86,7 @@ class Replacer(Filter):
             data = data[:mo.start()] + repl + data[mo.end():]
             offset = mo.start()+len(repl)
             mo = ro.search(data, offset)
-        return data
+
+
+    def flush():
+        return self.buf

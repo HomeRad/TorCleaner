@@ -46,24 +46,21 @@ class GifImage(Filter):
 
 
     def filter(self, data, **attrs):
-        gifparser = attrs.get('gifparser')
-        if not gifparser:
-	    return data
+        gifparser = attrs['gifparser']
         if data:
             gifparser.addData(data)
             try:
                 gifparser.parse()
             except RewindException:
                 pass
-
         return gifparser.getOutput()
+
 
     def finish(self, data, **attrs):
         data = apply(GifImage.filter, (self, data), attrs)
-        gifparser = attrs.get('gifparser')
-        if not gifparser:
-	    return data
+        gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
+
 
     def getAttrs(self, headers, url):
         if url:
@@ -71,6 +68,7 @@ class GifImage(Filter):
         else:
             match = 1
         return {'gifparser': GifParser(match)}
+
 
 
 class GifParser:
@@ -144,6 +142,7 @@ class GifParser:
             self.output = ''
             return res
         return self.output
+
 
     def parse(self):
         """Big parse function. The trick is the usage of self.read(),
