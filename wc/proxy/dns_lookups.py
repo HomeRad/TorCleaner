@@ -80,7 +80,7 @@ class DnsExpandHostname (object):
             hostname = re.sub(r'\.\.+', '.', hostname)
         if wc.ip.is_valid_ip(hostname):
             # it is already an ip adress
-            callback(DnsResponse('found', [hostname]))
+            callback(hostname, DnsResponse('found', [hostname]))
             return
         self.erroranswer = None # set if one answer failed
         self.hostname = hostname
