@@ -47,6 +47,9 @@ msgstr "Kein Befehl angegeben."
 msgid "disable"
 msgstr "deaktivieren"
 
+msgid "Edit Header"
+msgstr "Header editieren"
+
 msgid "&Cancel"
 msgstr "&Abbrechen"
 
@@ -146,7 +149,7 @@ msgid "Name"
 msgstr "Neuer Name:"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Aktualisierung"
 
 msgid "New Folder"
 msgstr "Neuer Ordner"
@@ -219,6 +222,9 @@ msgstr "Update Fehler"
 
 msgid "Version"
 msgstr ""
+
+msgid "New header:"
+msgstr "Neuer Header:"
 
 msgid "Nightmare"
 msgstr "Alptraum"
@@ -374,6 +380,9 @@ msgstr ""
 msgid "Update Help"
 msgstr "Update Fehler"
 
+msgid "Duplicate header"
+msgstr "Doppelter Header"
+
 msgid "Timeout (sec.)"
 msgstr "Timeout (Sek.)"
 
@@ -397,16 +406,19 @@ msgid "Enclosed block:"
 msgstr "Enthaltener Text:"
 
 msgid "Connections"
-msgstr ""
+msgstr "Verbindungen"
 
 msgid "URL Scheme:\tRegular expression to match the URL scheme"
 msgstr "URL Schema:\tRegulärer Ausdruck welcher das URL Schema matcht"
 
 msgid " &Refresh "
-msgstr ""
+msgstr " &Aktualisieren "
 
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
+
+msgid "auto"
+msgstr "auto"
 
 msgid "Attribute value"
 msgstr "Attributwert"
@@ -421,7 +433,7 @@ msgid "Tag name"
 msgstr "Tag Name"
 
 msgid "Duplicate hostname"
-msgstr "Doppelter Attributname"
+msgstr "Doppelter Rechnername"
 
 msgid "New value:"
 msgstr "Neuer Wert:"
@@ -444,8 +456,8 @@ msgstr "URL Fragment:\tRegulärer Ausdruck welcher das Fragment matcht"
 msgid "Value"
 msgstr "Wert"
 
-msgid "auto"
-msgstr ""
+msgid "Empty header"
+msgstr "Leerer Header"
 
 msgid ""
 "USAGE\twebcleaner command\n"
@@ -545,6 +557,9 @@ msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
 msgid "Enclosed block"
 msgstr "Enthaltener Text"
 
+msgid "Header:"
+msgstr "Header"
+
 msgid "Add Hostname"
 msgstr "Rechner hinzufügen"
 
@@ -588,6 +603,9 @@ msgstr "Basiswerte"
 
 msgid "New name:"
 msgstr "Neuer Name:"
+
+msgid "Add Header"
+msgstr "Header hinzufügen"
 
 msgid "Tag name:"
 msgstr "Tag Name:"
