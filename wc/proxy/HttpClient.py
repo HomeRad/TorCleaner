@@ -56,6 +56,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """initialize connection data, test if client connection is allowed"""
         super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
+        wc.log.debug(wc.LOG_PROXY, "Connection to %s from %s",
+                     self.socket.getsockname(), self.addr)
         self.allow = wc.proxy.Allowed.AllowedHttpClient()
         self.reset()
         host = self.addr[0]
@@ -398,7 +400,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = \
-                    "http://localhost:%d/adminpass.html\r" % \
+                      "http://localhost:%d/adminpass.html\r" % \
                       wc.configuration.config['port']
                     self.error(302, _("Moved Temporarily"))
             elif is_local:
@@ -461,7 +463,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def server_content (self, data):
         """The server received some content. Write it to the client."""
-        assert self.server, "%s server_content had no server" % self
+        assert self.server, "%s server_content(%s) had no server" % \
+                            (self, data)
         if data:
             self.write(data)
 
