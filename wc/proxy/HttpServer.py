@@ -1,3 +1,4 @@
+"""connection handling proxy <--> http server"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -40,6 +41,11 @@ _fix_content_encodings = [
 ]
 
 class HttpServer (Server):
+    """HttpServer handles the connection between the proxy and a http server.
+     It writes the client request to the server and sends answer data back
+     to the client connection object, which is in most cases a HttpClient,
+     but could also be a HttpProxyClient (for Javascript sources)
+    """
     def __init__ (self, ipaddr, port, client):
         Server.__init__(self, client)
         self.addr = (ipaddr, port)
@@ -263,7 +269,7 @@ class HttpServer (Server):
         else:
             self.attrs = initStateObjects(self.headers, self.url)
         # XXX <doh>
-        #if self.headers.get('Content-Length') is None:
+        #if not self.headers.has_key('Content-Length'):
         #    self.headers['Connection'] = 'close\r'
         #remove_headers(self.headers, ['Keep-Alive'])
         # XXX </doh>
@@ -290,7 +296,7 @@ class HttpServer (Server):
         else:
             document = self.document
         gm = mimetypes.guess_type(document, None)
-        ct = self.headers.get('Content-Type')
+        ct = self.headers.get('Content-Type', None)
         if self.mime:
             if ct != self.mime:
                 warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
@@ -309,7 +315,7 @@ class HttpServer (Server):
                      `ct`, `gm[0]`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%gm[0]
         if gm[1] and gm[1] in _fix_content_encodings:
-            ce = self.headers.get('Content-Encoding')
+            ce = self.headers.get('Content-Encoding', None)
             # guessed an own encoding type
             if ce is None:
                 self.headers['Content-Encoding'] = "%s\r"%gm[1]
@@ -330,7 +336,7 @@ class HttpServer (Server):
         rewrite = self.is_rewrite()
         # add client accept-encoding value
         self.headers['Accept-Encoding'] = "%s\r"%self.client.compress
-        if self.headers.get('Content-Length') is not None:
+        if self.headers.has_key('Content-Length'):
             self.bytes_remaining = int(self.headers['Content-Length'])
             debug(PROXY, "Server: %d bytes remaining", self.bytes_remaining)
             if rewrite:

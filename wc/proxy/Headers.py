@@ -116,7 +116,7 @@ def client_set_encoding_headers (headers):
 def client_remove_encoding_headers (headers):
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
-    if headers.get("Content-Length") is not None:
+    if headers.has_key("Content-Length"):
         warn(PROXY, 'chunked encoding should not have Content-Length')
         to_remove.append("Content-Length")
     remove_headers(headers, to_remove)
