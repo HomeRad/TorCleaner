@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@debian.org>
 Standards-Version: 3.6.0
-Build-Depends: python2.3-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), dpatch
+Build-Depends: python2.3-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), dpatch, gettext
 
 Package: webcleaner
 Architecture: any
