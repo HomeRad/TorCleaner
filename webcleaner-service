@@ -80,8 +80,16 @@ def install_nt_service ():
     # open configuration
     config = wc.Configuration()
     config_url = "http://localhost:%d/" % config['port']
+    open_browser(config_url)
+
+def open_browser (url):
     print bk.i18n._("Opening proxy configuration interface...")
-    webbrowser.open(config_url)
+    # the windows webbrowser.open func raises an exception for http://
+    # urls, but works nevertheless. Just ignore the error.
+    try:
+        webbrowser.open(config_url)
+    except WindowsError:
+        pass
 
 
 def remove_nt_service ():
