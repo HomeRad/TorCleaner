@@ -19,8 +19,8 @@ logging. Look in logging.conf if you want to customize their behaviour
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 # public api
-__all__ = ["FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS", "RATING",
-           "AUTH", "CONNECTION", "debug", "info", "warn", "error", "critical",
+__all__ = ["FILTER", "PROXY", "GUI", "DNS", "ACCESS", "RATING", "AUTH",
+           "CONNECTION", "debug", "info", "warn", "error", "critical",
            "exception", "initlog", "set_format"]
 __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
@@ -33,7 +33,6 @@ from wc import Name, ConfigDir, iswriteable
 
 # logger areas
 FILTER = "wc.filter"
-PARSER = "wc.parser"
 CONNECTION = "wc.connection"
 PROXY = "wc.proxy"
 AUTH = "wc.proxy.auth"
@@ -122,11 +121,16 @@ def set_format (handler):
 #import gc
 #gc.set_debug(gc.DEBUG_LEAK)
 def debug (log, msg, *args):
+    logging.getLogger(log).debug(msg, *args)
+    #logging.getLogger(log).debug("collected %d"%gc.collect())
+    #logging.getLogger(log).debug("collected %d"%gc.collect())
     #logging.getLogger(log).debug("collected %d"%gc.collect())
     #logging.getLogger(log).debug("objects %d"%len(gc.get_objects()))
     #logging.getLogger(log).debug("garbage %d"%len(gc.garbage))
+    #if gc.garbage:
+    #    for o in gc.garbage:
+    #        logging.getLogger(log).debug("O %s"%repr(o))
     #logging.getLogger(log).debug("Mem: %s"%usedmemory())
-    logging.getLogger(log).debug(msg, *args)
 
 
 def usedmemory ():
