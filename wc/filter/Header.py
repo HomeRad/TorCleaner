@@ -46,5 +46,5 @@ class Header (Filter):
                 if re.match(name, h):
                     del data[h]
         for key,val in self.add.items():
-            data[key] = val
+            data[key] = val+"\r"
         return data

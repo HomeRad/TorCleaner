@@ -317,7 +317,7 @@ class HttpServer (Server):
                 self.headers.has_key('connection') and
                 self.headers['connection'] == 'close')
         else:
-            can_reuse = not (self.headers and
+            can_reuse = (self.headers and
                 self.headers.has_key('connection') and
                 self.headers['connection'].lower() == 'keep-alive')
 
