@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" tal:attributes="lang lang">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="copyright" content="(C) 2004 Bastian Kleineidam">
+<meta http-equiv="refresh" content="10; index.html"
+ tal:attributes="content string:10;; index.html.${lang}">
+<link href="wc.css" type="text/css" rel="Stylesheet">
+<link rel="SHORTCUT ICON" href="/favicon.png">
+<link rel="home" href="index.html" title="Home"
+ tal:attributes="href string:index.html.${lang}">
+<link rel="help" href="help.html" title="Help"
+ tal:attributes="href string:help.html.${lang}">
+<title i18n:translate=""><span tal:replace="AppName"
+i18n:name="appname">WebCleaner</span> restart</title>
+</head>
+<body>
+<div metal:use-macro="macros/nav">Navigation...</div>
+<div class="content" id="main">
+
+<h2 i18n:translate="">Restarting...</h2>
+<p i18n:translate="">This proxy is restarting. You will be redirected
+to the <a href="index.html"
+tal:attributes="href string:index.html.${lang}">main configuration page</a>
+automatically in 10 seconds.
+</p>
+
+</div>
+
+<div metal:use-macro="macros/footer">Footer...</div>
+</body>
+</html>
