@@ -78,7 +78,7 @@ class WebConfig (object):
                                  auth=wc.proxy.auth.get_challenges())
                     return
                 # get translator
-                translator = gettext.translation(wc.Name, wc.LocaleDir,
+                translator = gettext.translation(wc.Name, wc.get_locdir(),
                                                  [lang], fallback=True)
                 # expand template
                 data = expand_template(fp, context, translator=translator)
