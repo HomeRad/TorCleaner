@@ -10,3 +10,10 @@ Default: false
 _Description: Start WebCleaner with monitor daemon?
  You can start WebCleaner with an additional monitor daemon that restarts
  the proxy automatically if it crashes.
+
+Template: webcleaner/adminpass
+Type: password
+_Description: Administrator password
+ The administrator password protects the web configuration frontend of
+ WebCleaner. The default username is "admin" (without the quotes) if
+ you did not already specify one from a previous installation.
