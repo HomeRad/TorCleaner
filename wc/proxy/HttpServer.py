@@ -182,7 +182,7 @@ class HttpServer (Server):
                 self.attrs = self.nofilter
             else:
                 self.attrs = initStateObjects(self.headers, self.url)
-            wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
+            wc.proxy.HEADERS.append((self.url, "server", self.headers))
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
         else:
@@ -229,8 +229,8 @@ class HttpServer (Server):
             self.attrs = initStateObjects(self.headers, self.url)
         if self.headers.get('Content-Length') is None:
             self.headers['Connection'] = 'close\r'
-        debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", `self.headers.headers`)
-        wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
+        debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", self.headers)
+        wc.proxy.HEADERS.append((self.url, "server", self.headers))
         self.client.server_response(self.response, self.headers)
         if self.statuscode in ('204', '304') or self.method == 'HEAD':
             # These response codes indicate no content
@@ -370,7 +370,7 @@ class HttpServer (Server):
     def process_recycle (self):
         # We're done sending things to the client, and we can reuse
         # this connection
-        debug(NIGHTMARE, "Proxy: recycling", self)
+        debug(NIGHTMARE, "Proxy: S/recycling", self)
         client = self.client
         self.client = None
         self.flush(client, reuse="True")
@@ -378,7 +378,7 @@ class HttpServer (Server):
 
     def flush (self, client, reuse=None):
         """flush data of decoders (if any) and filters"""
-        debug(NIGHTMARE, "Proxy: flushing", self)
+        debug(NIGHTMARE, "Proxy: S/flushing", self)
         data = ""
         while self.decoders:
             data = self.decoders[0].flush()
@@ -398,7 +398,7 @@ class HttpServer (Server):
             debug(NIGHTMARE, "Proxy: FilterException", msg)
             # the filter still needs some data from a different client
             # connection, so try flushing again after a while
-            make_timer(0.1, lambda : HttpServer.flush(self, client))
+            make_timer(0.2, lambda : HttpServer.flush(self, client))
 
 
     def http_version (self):
