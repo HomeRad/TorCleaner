@@ -195,7 +195,7 @@ class HtmlFilter (HtmlParser):
         self.buffer_append_data([DATA, "<!DOCTYPE%s>"%data])
 
     def pi (self, data):
-        self.buffer_append_data([DATA; "<?%s?>"%data])
+        self.buffer_append_data([DATA, "<?%s?>"%data])
 
     def errorfun (self, line, col, msg, name):
         print >> sys.stderr, name, _("parsing %s:%d:%d: %s") % \
