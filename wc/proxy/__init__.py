@@ -33,25 +33,24 @@ def stripsite (url):
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
 
 
-is_http = re.compile(r"^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
+is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
 
 def fix_http_version (protocol):
     """sanitize http protocol version string"""
-    return "HTTP/%.1f"%get_http_version(protocol)
+    return "HTTP/%d.%d"%get_http_version(protocol)
 
 
 def get_http_version (protocol):
     """return http version number as a float"""
     mo = is_http(protocol)
     if mo:
-        major, minor = int(mo.group("major")), int(mo.group("minor"))
-        f = float("%d.%d"%(minor, major))
-        if f > 1.1:
-            error(PROXY, "invalid HTTP version %f", f)
-            f = 1.1
+        f = (int(mo.group("major")), int(mo.group("minor")))
+        if f > (1,1):
+            error(PROXY, "unsupported HTTP version %s", str(f))
+            f = (1,1)
         return f
     error(PROXY, "invalid HTTP version %s", `protocol`)
-    return 1.0
+    return (1,0)
 
 
 def make_timer (delay, callback):
