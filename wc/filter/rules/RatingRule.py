@@ -35,7 +35,6 @@ class RatingRule (UrlRule):
 
     def fill_attrs (self, attrs, name):
         if name=='category':
-            assert self._service
             self._category = unxmlify(attrs.get('name')).encode('iso8859-1')
         elif name=='url':
             pass
