@@ -189,7 +189,7 @@ setup (name = "webcleaner",
        long_description =
 """WebCleaner features:
 o HTTP/1.1 support
-o integrated HTML parser, removes unwanted HTML (adverts, javascript, ...)
+o integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
 o integrated JavaScript engine, allows popup filtering
 o compress documents on-the-fly (with gzip)
 o disable animated GIFs
