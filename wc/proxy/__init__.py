@@ -148,9 +148,9 @@ def mainloop (handle=None):
     from wc import config
     Listener(config['port'], HttpClient)
     if config['sslgateway']:
-        from ssl import serverctx
+        from ssl import get_serverctx
         from SslClient import SslClient
-        Listener(config['sslport'], SslClient, sslctx=serverctx)
+        Listener(config['sslport'], SslClient, sslctx=get_serverctx())
     # experimental interactive command line
     #from Interpreter import Interpreter
     #Listener(config['cmdport'], Interpreter)

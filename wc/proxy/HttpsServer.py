@@ -4,7 +4,7 @@
 import socket
 from wc import ConfigDir, config
 from wc.log import *
-from ssl import clientctx
+from ssl import get_clientctx
 from HttpServer import HttpServer
 from SslConnection import SslConnection
 
@@ -18,7 +18,7 @@ class HttpsServer (HttpServer, SslConnection):
         self.reset()
         assert config['sslgateway'], "%s unwanted ssl gateway usage"%str(self)
         # attempt connect
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=clientctx)
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
         try:
 	    self.connect(self.addr)
         except socket.error:
