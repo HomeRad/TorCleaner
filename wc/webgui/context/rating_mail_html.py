@@ -23,8 +23,8 @@ from wc.webgui.context import getval as _getval
 from wc.filter.Rating import rating_cache_get as _rating_cache_get
 from wc.filter.Rating import rating_export as _rating_export
 from wc.url import is_valid_url as _is_valid_url
-import socket as _socket
-import smtplib as _smtplib
+from wc.mail import valid_mail as _valid_mail
+from wc.mail import send_mail as _send_mail
 
 info = {}
 error = {}
@@ -84,21 +84,22 @@ def _form_send (form):
         return
     global smtphost
     smtphost = _getval(form, 'smtphost')
-    message = rating
     if form.has_key('fromaddr'):
-        fromaddr = _getval(form, 'fromaddr')
+        fromaddr = _valid_mail(_getval(form, 'fromaddr'))
     else:
         fromaddr = Email
     if not fromaddr:
         error['fromaddr'] = True
         return
     toaddrs = [Email]
-    try:
-        conn = _smtplib.SMTP(smtphost)
-        conn.sendmail(fromaddr, toaddrs, message)
-        conn.quit()
-        info["sent"] = True
-        return True
-    except (_socket.error, _smtplib.SMTPException), x:
+    headers = []
+    headers.append("From: %s"%fromaddr)
+    headers.append("To: %s"%", ".join(toaddrs))
+    headers.append("Subject: Webcleaner rating for %s"%url)
+    headers.append("X-WebCleaner: rating")
+    message = "%s\r\n%s" % ("\r\n".join(headers), rating)
+    if not _send_mail(smtphost, fromaddr, toaddrs, message):
         error['sent'] = True
-        exception('SMTP send failure: %s\n', x)
+        return
+    info["sent"] = True
+    return True
