@@ -227,6 +227,12 @@ def url_fix_mailto_urlsplit (urlparts):
 
 def url_parse_query (query):
     """Parse and re-join the given CGI query."""
+    # if ? is in the query, split it off, seen at msdn.microsoft.com
+    if '?' in query:
+        query, append = query.split('?', 1)
+        append = '?'+append
+    else:
+        append = ""
     l = []
     for k, v in parse_qsl(query, True):
         k = urllib.quote(k, '/-:,')
@@ -238,7 +244,7 @@ def url_parse_query (query):
         else:
             # some sites do not work when the equal sign is missing
             l.append("%s=" % k)
-    return '&'.join(l)
+    return '&'.join(l) + append
 
 
 def url_norm (url):
