@@ -1,4 +1,4 @@
-2.5 (released x.xx.xxxx)
+2.5 (released 15.11.2003)
   * updated blacklist filters
     Changed: config/blacklist*, config/bl2wc.py
   * make AllowRule a subclass of UrlRule
