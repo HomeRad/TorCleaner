@@ -272,7 +272,7 @@
 <attr name="src">http://campaigns\.f2\.com\.au</attr>
 </rewrite>
 
-<rewrite title="Google Pageads" oid="117"
+<rewrite title="Google Pageads" oid="45"
  desc="Google Javascript (textual) pageads."
  tag="script">
 <attr name="src">pagead\.googlesyndication\.com</attr>
