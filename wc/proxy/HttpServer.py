@@ -193,11 +193,12 @@ class HttpServer (Server):
     def process_response (self):
         i = self.recv_buffer.find('\n')
         if i < 0: return
-        self.response = applyfilter(FILTER_RESPONSE, self.read(i+1),
-	                attrs=self.nofilter).strip()
+        self.response = self.read(i+1).strip()
         if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
             protocol, self.statuscode, tail = get_response_data(self.response)
+            # reconstruct cleaned response
+            self.response = "%s %d %s" % (protocol, self.statuscode, tail)
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, get_http_version(protocol))
@@ -228,6 +229,9 @@ class HttpServer (Server):
             self.response = "HTTP/1.0 200 Ok"
             self.statuscode = 200
             self.state = 'headers'
+        if self.response:
+            self.response = applyfilter(FILTER_RESPONSE, self.response,
+                              attrs=self.nofilter).strip()
         debug(PROXY, "Server: Response %s", `self.response`)
 
 
@@ -279,7 +283,7 @@ class HttpServer (Server):
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.client.compress, self.bytes_remaining)
         # 304 Not Modified does not send any type info, because it was cached
-        if self.statuscode != 304:
+        if self.statuscode!=304:
             server_set_content_headers(self.headers, self.document, self.mime, self.url)
         self.attrs['nofilter'] = self.nofilter['nofilter']
         # initStateObject can modify headers (see Compress.py)!
@@ -423,6 +427,7 @@ class HttpServer (Server):
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
+            self.statuscode = None
             self.flushing = False
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
