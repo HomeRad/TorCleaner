@@ -26,4 +26,3 @@ _chars = _string.letters + _string.digits
 adminpass = u''.join([_choice(_chars) for i in range(8)])
 adminuser = config.get('adminuser', u'admin')
 adminpass_b64 = adminpass.encode("base64").strip()
-

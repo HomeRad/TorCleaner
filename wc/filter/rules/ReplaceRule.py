@@ -50,7 +50,7 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-	s = super(ReplaceRule, self).toxml()
+        s = super(ReplaceRule, self).toxml()
         if self.search:
             s += u'\n search="%s"'%wc.XmlUtils.xmlquoteattr(self.search)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")

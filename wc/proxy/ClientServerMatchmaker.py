@@ -96,13 +96,13 @@ class ClientServerMatchmaker (object):
             return
         if answer.isFound():
             self.ipaddr = answer.data[0]
-	    self.state = 'server'
+            self.state = 'server'
             self.find_server()
         elif answer.isRedirect():
             # Let's use a different hostname
             new_url = self.client.scheme+"://"+answer.data
             if self.port != 80:
-	        new_url += ':%d' % self.port
+                new_url += ':%d' % self.port
             # XXX does not work with parent proxy
             new_url += self.document
             wc.log.info(wc.LOG_PROXY, "%s redirecting %r", self, new_url)

@@ -320,7 +320,7 @@ class Configuration (dict):
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
-            print >>log, " ", wc.i18n._("inserting %s") % folder.tiptext()
+            print >> log, " ", wc.i18n._("inserting %s") % folder.tiptext()
             if not dryrun:
                 folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)
@@ -548,4 +548,3 @@ class WConfigParser (BaseParser):
         elif name == 'filter':
             wc.log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
-

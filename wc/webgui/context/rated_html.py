@@ -37,4 +37,3 @@ def _exec_form (form, lang):
         url = _getval(form, 'url')
     if form.has_key('reason'):
         reason = _getval(form, 'reason')
-

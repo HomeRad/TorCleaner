@@ -258,4 +258,3 @@ class Blocker (wc.filter.Filter.Filter):
             if mo:
                 return True, sid
         return False, None
-

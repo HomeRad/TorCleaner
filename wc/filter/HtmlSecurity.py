@@ -178,4 +178,3 @@ class HtmlSecurity (object):
                       "encoding overflow crash"
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
                 del attrs[name]
-

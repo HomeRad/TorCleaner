@@ -17,9 +17,9 @@ class SslConnection (wc.proxy.Connection.Connection):
            process_read"""
         assert self.connected
         wc.log.debug(wc.LOG_PROXY, '%s SslConnection.handle_read', self)
-	if len(self.recv_buffer) > wc.proxy.Connection.MAX_BUFSIZE:
+        if len(self.recv_buffer) > wc.proxy.Connection.MAX_BUFSIZE:
             wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
-	    return
+            return
         try:
             data = self.socket.read(wc.proxy.Connection.RECV_BUFSIZE)
         except SSL.WantReadError:
@@ -45,7 +45,7 @@ class SslConnection (wc.proxy.Connection.Connection):
             return
         wc.log.debug(wc.LOG_CONNECTION, '%s <= read %d', self, len(data))
         wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)
-	self.recv_buffer += data
+        self.recv_buffer += data
         self.process_read()
 
 
@@ -82,4 +82,3 @@ class SslConnection (wc.proxy.Connection.Connection):
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and self.close_ready():
             self.close()
-

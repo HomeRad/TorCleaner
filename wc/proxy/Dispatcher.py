@@ -306,4 +306,3 @@ class Dispatcher (object):
     def handle_close (self):
         wc.log.warn(wc.LOG_PROXY, '%s unhandled close event', self)
         self.close()
-

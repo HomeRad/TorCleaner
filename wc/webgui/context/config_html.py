@@ -348,4 +348,3 @@ def _form_delnofilter (form):
     if removed > 0:
         config.write_proxyconf()
         info['delnofilter'] = True
-

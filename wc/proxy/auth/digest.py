@@ -221,4 +221,3 @@ from wc.proxy import make_timer
 def init ():
     """check for timed out nonces every 5 minutes"""
     make_timer(300, check_nonces)
-

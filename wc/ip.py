@@ -235,4 +235,3 @@ def resolve_host (host):
         af, socktype, proto, canonname, sa = res
         ips.add(sa[0])
     return ips
-

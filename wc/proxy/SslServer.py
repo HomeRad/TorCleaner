@@ -30,7 +30,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
     def __repr__ (self):
         """object description"""
         if self.addr[1] != 80:
-	    portstr = ':%d' % self.addr[1]
+            portstr = ':%d' % self.addr[1]
         else:
             portstr = ''
         extra = '%s%s' % (self.addr[0], portstr)
@@ -67,4 +67,3 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
         # flush pending client data and try to reuse this connection
         self.delayed_close()
-

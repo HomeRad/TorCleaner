@@ -526,4 +526,3 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.debug(wc.LOG_PROXY, '%s close', self)
         self.state = 'closed'
         super(HttpClient, self).close_close()
-

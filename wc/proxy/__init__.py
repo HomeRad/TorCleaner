@@ -155,4 +155,3 @@ def mainloop (handle=None, abort=None):
             rc = win32event.WaitForSingleObject(handle, 0)
             if rc == win32event.WAIT_OBJECT_0:
                 break
-

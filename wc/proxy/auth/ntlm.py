@@ -9,7 +9,7 @@
 # This implementation was written by Yee Man Chan (ymc@yahoo.com).
 # Copyright (c) 2002 Yee Man Chan. All rights reserved. This program
 # is free software; you can redistribute it and/or modify it under
-# the same terms as Perl itself. 
+# the same terms as Perl itself.
 
 # This file is part of 'NTLM Authorization Proxy Server'
 # Copyright 2001 Dmitry A. Rozmanov <dima@xenon.spb.ru>
@@ -71,7 +71,7 @@ NTLMSSP_NEGOTIATE_OEM                      = 0x00000002
 # Server should return its authentication realm
 NTLMSSP_REQUEST_TARGET                     = 0x00000004
 # Request signature capability
-NTLMSSP_NEGOTIATE_SIGN                     = 0x00000010 
+NTLMSSP_NEGOTIATE_SIGN                     = 0x00000010
 # Request confidentiality
 NTLMSSP_NEGOTIATE_SEAL                     = 0x00000020
 # Use datagram style authentication
@@ -526,15 +526,15 @@ def set_odd_parity (byte):
     parity = 0
     ordbyte = ord(byte)
     for dummy in range(8):
-	if (ordbyte & 0x01)!=0:
+        if (ordbyte & 0x01)!=0:
             parity += 1
-	ordbyte >>= 1
+        ordbyte >>= 1
     ordbyte = ord(byte)
     if parity % 2 == 0:
-	if (ordbyte & 0x01)!=0:
-	    ordbyte &= 0xFE
-	else:
-	    ordbyte |= 0x01
+        if (ordbyte & 0x01)!=0:
+            ordbyte &= 0xFE
+        else:
+            ordbyte |= 0x01
     return chr(ordbyte)
 
 
@@ -580,4 +580,3 @@ from wc.proxy import make_timer
 def init ():
     """check for timed out nonces every 5 minutes"""
     make_timer(300, check_nonces)
-

@@ -133,4 +133,3 @@ def check_credentials (creds, **attrs):
         wc.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s", creds)
         res = False
     return res
-

@@ -44,4 +44,3 @@ def xmlunquote (s):
 def xmlunquoteattr (s):
     """unquote attributes from XML"""
     return xml.sax.saxutils.unescape(s, attr_entities)
-

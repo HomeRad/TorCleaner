@@ -101,7 +101,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-	s = u"%s>" % super(RatingRule, self).toxml()
+        s = u"%s>" % super(RatingRule, self).toxml()
         s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
@@ -114,4 +114,3 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                        wc.XmlUtils.xmlquote(value))
         s += u"\n</%s>" % self.get_name()
         return s
-

@@ -105,7 +105,7 @@ class HttpServer (wc.proxy.Server.Server):
         """object description"""
         extra = self.persistent and "persistent " or ""
         if self.addr[1] != 80:
-	    portstr = ':%d' % self.addr[1]
+            portstr = ':%d' % self.addr[1]
         else:
             portstr = ''
         extra += '%s%s%s' % (self.hostname or self.addr[0],
@@ -592,4 +592,3 @@ def speedcheck_print_status ():
     #        for server,status in set.items():
     #            print '  %15s:%-4d %10s %s' % (addr[0], addr[1],
     #                                          status[0], server.hostname)
-

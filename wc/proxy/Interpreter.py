@@ -28,7 +28,7 @@ class Interpreter (wc.proxy.Connection.Connection):
             if line == '\004': # Ctrl-D (Unix EOF)
                 self.handle_close()
                 break
-            
+
             self.write('%s => ' % line)
             try:
                 self.write('%s\n' % repr(eval(line)))

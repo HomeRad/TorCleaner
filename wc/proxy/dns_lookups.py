@@ -194,10 +194,10 @@ class DnsCache (object):
         for line in open(filename, 'r').readlines():
             line = line.strip()
             if (not line) or line[0]=='#':
-	        continue
+                continue
             i = line.find('#')
             if i >= 0:
-	        line = line[:i] # Comments
+                line = line[:i] # Comments
             fields = line.split()
             # The first one is the IP address, and then the rest are names
             # These hosts don't expire from our cache
@@ -254,7 +254,7 @@ class DnsCache (object):
 class DnsLookupHostname (object):
     "Perform DNS lookup on many nameservers"
     # Use a DnsLookupConnection per nameserver
-    
+
     # We start working with one nameserver per second, as long as we
     # haven't gotten any responses.  For each successive nameserver we
     # set the timeout higher, so that the first nameserver has to try

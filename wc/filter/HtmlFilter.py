@@ -211,8 +211,8 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
-	If it matches and the rule stack is now empty we can flush
-	the tag buffer (calling tagbuf2data)"""
+        If it matches and the rule stack is now empty we can flush
+        the tag buffer (calling tagbuf2data)"""
         wc.log.debug(wc.LOG_FILTER, "%s end_element %r", self, tag)
         if self._is_waiting([wc.filter.rules.RewriteRule.ENDTAG, tag]):
             return
@@ -249,4 +249,3 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                     rule.filter_complete(pos, self.htmlparser.tagbuf, tag)
                     return True
         return False
-

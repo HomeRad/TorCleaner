@@ -269,4 +269,3 @@ class ClamavConfig (dict):
             wsock.close()
             raise
         return wsock
-

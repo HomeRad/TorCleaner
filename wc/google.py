@@ -65,4 +65,3 @@ def get_google_context (url, response):
       'cache_path': get_google_cache_url("%s%s" % url_parts[1:3]),
     }
     return context
-

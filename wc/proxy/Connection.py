@@ -58,9 +58,9 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
            process_read"""
         assert self.connected
         wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_read', self)
-	if len(self.recv_buffer) > MAX_BUFSIZE:
+        if len(self.recv_buffer) > MAX_BUFSIZE:
             wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
-	    return
+            return
         try:
             data = self.recv(RECV_BUFSIZE)
         except socket.error, err:
@@ -75,7 +75,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             return
         wc.log.debug(wc.LOG_CONNECTION, '%s <= read %d', self, len(data))
         wc.log.debug(wc.LOG_CONNECTION, 'data %r', data)
-	self.recv_buffer += data
+        self.recv_buffer += data
         self.process_read()
 
 

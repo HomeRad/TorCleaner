@@ -32,4 +32,3 @@ def _exec_form (form, lang):
         selfolder = int(_getval(form, 'selfolder'))
     if form.has_key('selrule'):
         selrule = int(_getval(form, 'selrule'))
-

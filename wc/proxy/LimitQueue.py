@@ -23,4 +23,3 @@ class LimitQueue (object):
         """flush the queue, returning all currently stored entries"""
         q, self._queue = self._queue, []
         return q
-

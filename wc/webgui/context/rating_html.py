@@ -188,4 +188,3 @@ def _form_load ():
                 ratings[category] = value
                 if category not in [u"modified"]:
                     values[category] = {value: True}
-

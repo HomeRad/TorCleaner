@@ -202,7 +202,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
 
     def match_complete (self, pos, tagbuf):
         """We know that the tag (and tag attributes) match. Now match
-	   the enclosing block. Return True on a match."""
+           the enclosing block. Return True on a match."""
         if not self.enclosed:
             # no enclosed expression => match
             return True

@@ -67,4 +67,3 @@ def generate_sid (prefix):
     global _sidcounter
     _sidcounter += 1
     return "%s.%d" % (prefix, _sidcounter)
-

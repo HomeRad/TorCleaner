@@ -135,4 +135,3 @@ def local4 (number):
     if sys.byteorder == 'big':
         return big4(number)
     return little4(number)
-

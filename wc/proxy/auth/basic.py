@@ -47,4 +47,3 @@ def check_basic_credentials (cred, **attrs):
     password = base64.decodestring(attrs['password_b64'])
     username = attrs['username']
     return cred['username'] == username and cred['password'] == password
-

@@ -29,4 +29,4 @@ class JavascriptRule (wc.filter.rules.UrlRule.UrlRule):
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         s += u"\n</%s>" % self.get_name()
-	return s
+        return s

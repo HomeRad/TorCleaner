@@ -155,7 +155,7 @@ a=0;
     def testScriptSrc4 (self):
         self.filt(
 """<script src="http://imadoofus.org/notfound.js">
-/* this should not be here **/ 
+/* this should not be here **/
 </script>""",
 """<script type="text/javascript">
 <!--
@@ -286,4 +286,3 @@ def test_suite ():
 
 if __name__ == '__main__':
     unittest.main()
-

@@ -122,7 +122,7 @@ class ServerPool (object):
         """Notify whoever wants to know about a server becoming available"""
         if addr in self.callbacks:
             callbacks = self.callbacks[addr]
-            del self.callbacks[addr] 
+            del self.callbacks[addr]
             for callback in callbacks:
                 callback()
 

@@ -32,8 +32,8 @@ def gzip_header ():
     """return a GZIP header string"""
     return '%s%s%s%s' % (
               '\037\213\010', # header
-	      chr(0),         # flags
-	      struct.pack('<L', long(time.time())), # time
+              chr(0),         # flags
+              struct.pack('<L', long(time.time())), # time
               '\002\377',     # end header
               )
 

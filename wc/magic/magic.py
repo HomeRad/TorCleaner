@@ -402,7 +402,7 @@ class Magic (object):
     # classify subfuntions
 
     def _indirect_offset (self,f,type,offset):
-        # Raise file error if file too short    
+        # Raise file error if file too short
         f.seek(offset)
         if type == 'l':
             delta = wc.magic.convert.little4(self._read(f,4))
@@ -499,7 +499,7 @@ class Magic (object):
     def _read_string (self, fp):
         # This may retun IOError
         limit = 0
-        result = "" 
+        result = ""
         while limit < 100:
             char = self._read(fp, 1)
             # chr(0) == '\x00'
@@ -640,19 +640,19 @@ class Magic (object):
                 elif test == '&':
                     success = ((value & data[0]) == data[0])
                     replace = value
-                    
+
                 elif test == '^':
                     # XXX: To be tested with a known file
                     success = ((value ^ data[0]) == 0)
                     replace = value
-                    
+
                 elif test == '!':
                     # XXX: To be tested with a known file
                     # XXX: Wrong so must be a binary inversion test
                     # success = (value != data[0])
                     success = False
                     replace = value
-                    
+
                 elif test == 'x':
                     # XXX: copy from the code in test == '>', should create a function
                     if kind == 'string':

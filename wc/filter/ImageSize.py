@@ -146,4 +146,3 @@ class ImageSize (wc.filter.Filter.Filter):
         d['imgsize_buf'] = StringIO.StringIO()
         d['imgsize_blocked'] = False
         return d
-

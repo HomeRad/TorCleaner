@@ -169,9 +169,9 @@ class GifParser (object):
 
     def parse (self):
         """Big parse function. The trick is the usage of self.read(),
-	   which throws an Exception  when it can't give enough data.
-	   In this case we just bail out ('rewind'), and continue
-	   the next time in the saved state with hopefully more data
+           which throws an Exception  when it can't give enough data.
+           In this case we just bail out ('rewind'), and continue
+           the next time in the saved state with hopefully more data
            available :)"""
         while 1:
             wc.log.debug(wc.LOG_FILTER, 'GifImage state %s', self.strState())

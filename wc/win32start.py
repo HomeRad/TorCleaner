@@ -106,4 +106,3 @@ def status ():
     """return message with current status of WebCleaner service"""
     return _service_status(win32serviceutil.QueryServiceStatus(
                                                      wc.AppName))
-

@@ -168,4 +168,3 @@ def createCertificate (req, (issuerCert, issuerKey), serial,
     cert.set_pubkey(req.get_pubkey())
     cert.sign(issuerKey, digest)
     return cert
-

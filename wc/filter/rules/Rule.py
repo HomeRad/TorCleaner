@@ -244,4 +244,3 @@ class Rule (object):
     def tiptext (self):
         """return short info for gui display"""
         return u"%s #%s" % (self.get_name().capitalize(), self.sid)
-

@@ -34,5 +34,3 @@ class StatefulConnection (wc.proxy.Connection.Connection):
         state_after = self.state
         return self.state == 'closed' or \
            (bytes_before == bytes_after and state_before == state_after)
-
-

@@ -303,10 +303,10 @@ def check_spelling (tag, url):
         # ignore other namespaces
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
-         if wc.levenshtein.distance(tag, htmltag) == 1:
-             wc.log.warn(wc.LOG_FILTER,
-                       "HTML tag %r corrected to %r at %r", tag, htmltag, url)
-             return htmltag
+        if wc.levenshtein.distance(tag, htmltag) == 1:
+            wc.log.warn(wc.LOG_FILTER,
+                      "HTML tag %r corrected to %r at %r", tag, htmltag, url)
+            return htmltag
     wc.log.error(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
     # filter possibly trailing garbage the parser accepted
     mo = filter_tag_garbage(tag)

@@ -81,4 +81,3 @@ class Filter (object):
     def __cmp__ (self, other):
         """compare function considering filter priority"""
         return cmp(self.prio, other.prio)
-

@@ -25,4 +25,3 @@ class DeflateStream (object):
     def flush (self):
         """flush all buffered data and return it"""
         return self.decompressor.flush()
-

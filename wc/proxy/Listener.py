@@ -41,4 +41,3 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
         wc.log.debug(wc.LOG_PROXY, '%s accept', self)
         args = self.accept()
         self.handler(*args)
-
