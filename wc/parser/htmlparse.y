@@ -398,7 +398,7 @@ finish_characters:
 #undef realloc
 #undef free
 
-/* create parser */
+/* create parser object */
 static PyObject* htmlsax_parser_new (PyObject* self, PyObject* args) {
     PyObject* handler;
     parser_object* p;
@@ -434,6 +434,7 @@ static PyObject* htmlsax_parser_new (PyObject* self, PyObject* args) {
 }
 
 
+/* free all allocated resources of parser object */
 static void parser_dealloc (PyObject* self) {
     parser_object* p = (parser_object*)self;
     htmllexDestroy(p->scanner);
@@ -445,8 +446,8 @@ static void parser_dealloc (PyObject* self) {
 }
 
 
+/* flush all parser buffers */
 static PyObject* parser_flush (PyObject* self, PyObject* args) {
-    /* flush parser buffers */
     int res = 0;
     parser_object* p = (parser_object*)self;
     if (!PyArg_ParseTuple(args, "")) {

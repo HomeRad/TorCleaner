@@ -23,7 +23,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* token type */
 #define YYSTYPE PyObject*
+/* type of user-specified data */
 #define YY_EXTRA_TYPE UserData*
 
 /* resize buffer b, returning T_ERROR on error */
@@ -105,6 +107,7 @@ void yyfree (void* ptr, void* yyscanner) {
     PyMem_Free(ptr);
 }
 
+/* include bison-generated token definitions */
 #include "htmlparse.h"
 %}
 
@@ -116,15 +119,16 @@ void yyfree (void* ptr, void* yyscanner) {
 %option outfile="htmllex.c"
 /* optimize for speed */
 %option align full
-/* uncomment the next line for debugging */
+/* add debugging ability */
 %option debug
-/* dont use unneeded functions */
+/* don't use unneeded functions */
 %option nounput nomain noyywrap noyymore noreject
 /* make it reentrant and bison compatible */
 %option bison-bridge reentrant never-interactive
 /* print warnings on compiling */
 %option warn
 
+/* scanner states */
 %x S_PI
 %x S_COMMENT
 %x S_COMMENT2
@@ -151,16 +155,17 @@ void yyfree (void* ptr, void* yyscanner) {
 %x S_STRING
 %x S_STRING_ESC
 
+/* regular expression definitions used below */
 RX_WHITE_SPACE	[\n\r\ \t\b\012]
-RX_EQUAL	=
-RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
-RX_DATA [-a-zA-Z0-9_:]+
+RX_EQUAL =
+RX_NAME	 [a-zA-Z]([-a-zA-Z0-9_])*
+RX_DATA  [-a-zA-Z0-9_:]+
 
 %%
 
   /*********************** EOF ************************/
 <<EOF>> {
-    /* wait for more data */
+    /* hit end-of-file, wait for more data */
     return T_WAIT;
 }
 
@@ -313,7 +318,7 @@ RX_DATA [-a-zA-Z0-9_:]+
 
 <S_TAGSTART>[^ \t\r\n\b\012/<>]+ {
     /* actually accept a lot of tag chars, which may be illegal,
-     but we dont care, its the browsers job */
+     but we dont care, it's the browsers job */
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
@@ -940,12 +945,14 @@ RX_DATA [-a-zA-Z0-9_:]+
 
 %%
 
+/* initialize the scanner */
 int htmllexInit (void** scanner, UserData* data) {
     yylex_init(scanner);
     yyset_extra(data, *scanner);
     return 0;
 }
 
+/* set debug level; a level > 0 enables debugging */
 int htmllexDebug (void** scanner, int debug) {
     int old = yyget_debug(*scanner);
     yyset_debug(debug, *scanner);
@@ -998,6 +1005,7 @@ int htmllexStop (void* scanner, UserData* data) {
     return 0;
 }
 
+/* destroy scanner when not needed any more */
 int htmllexDestroy (void* scanner) {
     yylex_destroy(scanner);
     return 0;
