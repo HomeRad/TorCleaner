@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os,sys,UserDict,time
+import os,sys,UserDict,time,socket
 import _webcleaner2_configdata as configdata
 from string import ljust,rjust,replace,join,split
 from debug_levels import *
@@ -129,6 +129,7 @@ class Configuration(UserDict.UserDict):
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'invalid':0, 'failed':0}
         self['local_sockets_only'] = 1
+        self['localip'] = socket.gethostbyname(socket.gethostname())
 
     def read_proxyconf(self):
         p = WConfigParser()

@@ -4,8 +4,6 @@ from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import _,debug
 from wc.debug_levels import *
-from urllib import splittype, splithost, splitport
-from string import split
 
 serverpool = ServerPool()
 
@@ -59,18 +57,14 @@ class ClientServerMatchmaker:
         self.content = content
         self.nofilter = nofilter
         url = ""
-        try: self.method, url, protocol = split(request)
+        try: self.method, url, protocol = request.split()
         except: self.error(400, _("Can't parse request"))
         if not url:
             self.error(400, _("Empty URL"))
-        scheme, netloc = splittype(url)
-        netloc, document = splithost(netloc)
-        hostname, port = splitport(netloc)
-        if port is None:
-            port = 80
-        else:
-            port = int(port)
-        if (hostname=='localhost' or hostname==wc.config['host']) and \
+        scheme, hostname, port, document = wc.proxy.spliturl(url)
+
+        if (hostname.lower()=='localhost' or \
+	    socket.gethostbyname(hostname)==wc.config['localip']) and \
 	   port==wc.config['port']:
             # proxy info
             ServerHandleDirectly(self.client,

@@ -117,7 +117,7 @@ class Connection(asyncore.dispatcher):
 
     def handle_error(self, type, value, tb=None):
         print >> sys.stderr, 'error', self, type, value
-	#import traceback
-        #if tb: traceback.print_tb(tb)
+	import traceback
+        if tb: traceback.print_tb(tb)
         self.close()
         self.del_channel()

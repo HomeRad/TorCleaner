@@ -153,16 +153,30 @@ def match_host(request):
     except Exception, why:
         #debug(ALWAYS, "bad request?", why)
         return 0
-    scheme, netloc = splittype(url)
-    netloc, document = splithost(netloc)
-    hostname, port = splitport(netloc)
-    hostname = hostname.lower()
+    hostname = spliturl(url)[1]
     if not hostname:
         return 0
+    hostname = hostname.lower()
     for domain in config['noproxyfor'].keys():
         if hostname.find(domain) != -1:
             return 1
     return 0
+
+
+def spliturl (url):
+    scheme, netloc = splittype(url)
+    host, document = splithost(netloc)
+    if not host:
+        hostname = "localhost"
+        port = config['port']
+    else:
+        debug(BRING_IT_ON, "host", host)
+        hostname, port = splitport(host)
+        if port is None:
+            port = 80
+        else:
+            port = int(port)
+    return scheme, hostname, port, document
 
 
 def mainloop():
