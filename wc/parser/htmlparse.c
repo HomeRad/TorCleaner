@@ -104,6 +104,7 @@
 */
 /* SAX parser, optimized for WebCleaner */
 #include "htmlsax.h"
+#include "structmember.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -175,6 +176,7 @@ if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) { \
 /* parser type definition */
 typedef struct {
     PyObject_HEAD
+    PyObject* handler;
     UserData* userData;
     void* scanner;
 } parser_object;
@@ -214,7 +216,7 @@ typedef int YYSTYPE;
 
 
 /* Line 214 of yacc.c.  */
-#line 218 "htmlparse.c"
+#line 220 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -384,8 +386,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   127,   127,   128,   131,   132,   139,   173,   219,   249,
-     269,   289,   309,   329,   350,   371
+       0,   129,   129,   130,   133,   134,   141,   175,   221,   251,
+     271,   291,   311,   331,   352,   373
 };
 #endif
 
@@ -1090,22 +1092,22 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 127 "htmlparse.y"
+#line 129 "htmlparse.y"
     {;}
     break;
 
   case 3:
-#line 128 "htmlparse.y"
+#line 130 "htmlparse.y"
     {;}
     break;
 
   case 4:
-#line 131 "htmlparse.y"
+#line 133 "htmlparse.y"
     { YYACCEPT; /* wait for more lexer input */ ;}
     break;
 
   case 5:
-#line 133 "htmlparse.y"
+#line 135 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1115,7 +1117,7 @@ yyreduce:
     break;
 
   case 6:
-#line 140 "htmlparse.y"
+#line 142 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1152,7 +1154,7 @@ finish_start:
     break;
 
   case 7:
-#line 174 "htmlparse.y"
+#line 176 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1201,7 +1203,7 @@ finish_start_end:
     break;
 
   case 8:
-#line 220 "htmlparse.y"
+#line 222 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1234,7 +1236,7 @@ finish_end:
     break;
 
   case 9:
-#line 250 "htmlparse.y"
+#line 252 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1257,7 +1259,7 @@ finish_comment:
     break;
 
   case 10:
-#line 270 "htmlparse.y"
+#line 272 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1280,7 +1282,7 @@ finish_pi:
     break;
 
   case 11:
-#line 290 "htmlparse.y"
+#line 292 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1303,7 +1305,7 @@ finish_cdata:
     break;
 
   case 12:
-#line 310 "htmlparse.y"
+#line 312 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1326,7 +1328,7 @@ finish_doctype:
     break;
 
   case 13:
-#line 330 "htmlparse.y"
+#line 332 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1350,7 +1352,7 @@ finish_script:
     break;
 
   case 14:
-#line 351 "htmlparse.y"
+#line 353 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1374,7 +1376,7 @@ finish_style:
     break;
 
   case 15:
-#line 372 "htmlparse.y"
+#line 374 "htmlparse.y"
     {
     /* $1 is a PyString */
     /* Remember this is also called as a lexer error fallback */
@@ -1401,7 +1403,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1405 "htmlparse.c"
+#line 1407 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1595,7 +1597,7 @@ yyreturn:
 }
 
 
-#line 394 "htmlparse.y"
+#line 396 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1607,6 +1609,7 @@ yyreturn:
 static PyObject* parser_new (PyTypeObject *type, PyObject* args, PyObject* kwds) {
     parser_object* self = (parser_object *)type->tp_alloc(type, 0);
     if (self != NULL) {
+        self->handler = NULL;
         /* reset userData */
         self->userData = PyMem_New(UserData, sizeof(UserData));
         self->userData->handler = NULL;
@@ -1638,14 +1641,15 @@ static int parser_init (parser_object* self, PyObject* args, PyObject* kwds) {
 	return -1;
     }
     Py_INCREF(handler);
-    self->userData->handler = handler;
+    self->handler = handler;
+    self->userData->handler = self->handler;
     return 0;
 }
 
 
 /* traverse all used subobjects participating in reference cycles */
 static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
-    if (self->userData->handler && visit(self->userData->handler, arg) < 0) {
+    if (self->handler && visit(self->handler, arg) < 0) {
         return -1;
     }
     return 0;
@@ -1654,7 +1658,8 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
-    Py_XDECREF(self->userData->handler);
+    Py_XDECREF(self->handler);
+    self->handler = NULL;
     self->userData->handler = NULL;
     return 0;
 }
@@ -1695,8 +1700,8 @@ static PyObject* parser_flush (parser_object* self, PyObject* args) {
 	/* reset buffer */
 	CLEAR_BUF(self->userData->buf);
 	if (s==NULL) { error=1; goto finish_flush; }
-	if (PyObject_HasAttrString(self->userData->handler, "characters")==1) {
-	    callback = PyObject_GetAttrString(self->userData->handler, "characters");
+	if (PyObject_HasAttrString(self->handler, "characters")==1) {
+	    callback = PyObject_GetAttrString(self->handler, "characters");
 	    if (callback==NULL) { error=1; goto finish_flush; }
 	    result = PyObject_CallFunction(callback, "O", s);
 	    if (result==NULL) { error=1; goto finish_flush; }
@@ -1785,22 +1790,23 @@ static PyObject* parser_debug (parser_object* self, PyObject* args) {
 
 /* type interface */
 
-static PyMethodDef parser_methods[] = {
-    /* incremental parsing */
-    {"feed",  parser_feed, METH_VARARGS, "feed data to parse incremental"},
-    /* reset the parser (no flushing) */
-    {"reset", parser_reset, METH_VARARGS, "reset the parser (no flushing)"},
-    /* flush the parser buffers */
-    {"flush", parser_flush, METH_VARARGS, "flush parser buffers"},
-    /* set debugging on/off */
-    {"debug", parser_debug, METH_VARARGS, "set debug level"},
-    {NULL, NULL, 0, NULL}
+static PyMemberDef parser_members[] = {
+    {"handler", T_OBJECT_EX, offsetof(parser_object, handler), 0,
+     "handler class"},
+    {NULL}  /* Sentinel */
 };
 
-
-static PyObject* parser_getattr (PyObject* self, char* name) {
-    return Py_FindMethod(parser_methods, self, name);
-}
+static PyMethodDef parser_methods[] = {
+    /* incremental parsing */
+    {"feed",  (PyCFunction)parser_feed, METH_VARARGS, "feed data to parse incremental"},
+    /* reset the parser (no flushing) */
+    {"reset", (PyCFunction)parser_reset, METH_VARARGS, "reset the parser (no flushing)"},
+    /* flush the parser buffers */
+    {"flush", (PyCFunction)parser_flush, METH_VARARGS, "flush parser buffers"},
+    /* set debugging on/off */
+    {"debug", (PyCFunction)parser_debug, METH_VARARGS, "set debug level"},
+    {NULL} /* Sentinel */
+};
 
 
 static PyTypeObject parser_type = {
@@ -1810,9 +1816,9 @@ static PyTypeObject parser_type = {
     sizeof(parser_object), /* tp_size */
     0,              /* tp_itemsize */
     /* methods */
-    parser_dealloc, /* tp_dealloc */
+    (destructor)parser_dealloc, /* tp_dealloc */
     0,              /* tp_print */
-    parser_getattr, /* tp_getattr */
+    0,              /* tp_getattr */
     0,              /* tp_setattr */
     0,              /* tp_compare */
     0,              /* tp_repr */
@@ -1825,7 +1831,8 @@ static PyTypeObject parser_type = {
     0,              /* tp_getattro */
     0,              /* tp_setattro */
     0,              /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC, /* tp_flags */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | 
+      Py_TPFLAGS_HAVE_GC, /* tp_flags */
     "HTML parser object", /* tp_doc */
     (traverseproc)parser_traverse, /* tp_traverse */
     (inquiry)parser_clear, /* tp_clear */
@@ -1834,7 +1841,7 @@ static PyTypeObject parser_type = {
     0,              /* tp_iter */
     0,              /* tp_iternext */
     parser_methods, /* tp_methods */
-    0,              /* tp_members */
+    parser_members, /* tp_members */
     0,              /* tp_getset */
     0,              /* tp_base */
     0,              /* tp_dict */

@@ -17,6 +17,7 @@
 */
 /* SAX parser, optimized for WebCleaner */
 #include "htmlsax.h"
+#include "structmember.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -88,6 +89,7 @@ if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) { \
 /* parser type definition */
 typedef struct {
     PyObject_HEAD
+    PyObject* handler;
     UserData* userData;
     void* scanner;
 } parser_object;
@@ -402,6 +404,7 @@ finish_characters:
 static PyObject* parser_new (PyTypeObject *type, PyObject* args, PyObject* kwds) {
     parser_object* self = (parser_object *)type->tp_alloc(type, 0);
     if (self != NULL) {
+        self->handler = NULL;
         /* reset userData */
         self->userData = PyMem_New(UserData, sizeof(UserData));
         self->userData->handler = NULL;
@@ -433,14 +436,15 @@ static int parser_init (parser_object* self, PyObject* args, PyObject* kwds) {
 	return -1;
     }
     Py_INCREF(handler);
-    self->userData->handler = handler;
+    self->handler = handler;
+    self->userData->handler = self->handler;
     return 0;
 }
 
 
 /* traverse all used subobjects participating in reference cycles */
 static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
-    if (self->userData->handler && visit(self->userData->handler, arg) < 0) {
+    if (self->handler && visit(self->handler, arg) < 0) {
         return -1;
     }
     return 0;
@@ -449,7 +453,8 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
-    Py_XDECREF(self->userData->handler);
+    Py_XDECREF(self->handler);
+    self->handler = NULL;
     self->userData->handler = NULL;
     return 0;
 }
@@ -490,8 +495,8 @@ static PyObject* parser_flush (parser_object* self, PyObject* args) {
 	/* reset buffer */
 	CLEAR_BUF(self->userData->buf);
 	if (s==NULL) { error=1; goto finish_flush; }
-	if (PyObject_HasAttrString(self->userData->handler, "characters")==1) {
-	    callback = PyObject_GetAttrString(self->userData->handler, "characters");
+	if (PyObject_HasAttrString(self->handler, "characters")==1) {
+	    callback = PyObject_GetAttrString(self->handler, "characters");
 	    if (callback==NULL) { error=1; goto finish_flush; }
 	    result = PyObject_CallFunction(callback, "O", s);
 	    if (result==NULL) { error=1; goto finish_flush; }
@@ -580,22 +585,23 @@ static PyObject* parser_debug (parser_object* self, PyObject* args) {
 
 /* type interface */
 
-static PyMethodDef parser_methods[] = {
-    /* incremental parsing */
-    {"feed",  parser_feed, METH_VARARGS, "feed data to parse incremental"},
-    /* reset the parser (no flushing) */
-    {"reset", parser_reset, METH_VARARGS, "reset the parser (no flushing)"},
-    /* flush the parser buffers */
-    {"flush", parser_flush, METH_VARARGS, "flush parser buffers"},
-    /* set debugging on/off */
-    {"debug", parser_debug, METH_VARARGS, "set debug level"},
-    {NULL, NULL, 0, NULL}
+static PyMemberDef parser_members[] = {
+    {"handler", T_OBJECT_EX, offsetof(parser_object, handler), 0,
+     "handler class"},
+    {NULL}  /* Sentinel */
 };
 
-
-static PyObject* parser_getattr (PyObject* self, char* name) {
-    return Py_FindMethod(parser_methods, self, name);
-}
+static PyMethodDef parser_methods[] = {
+    /* incremental parsing */
+    {"feed",  (PyCFunction)parser_feed, METH_VARARGS, "feed data to parse incremental"},
+    /* reset the parser (no flushing) */
+    {"reset", (PyCFunction)parser_reset, METH_VARARGS, "reset the parser (no flushing)"},
+    /* flush the parser buffers */
+    {"flush", (PyCFunction)parser_flush, METH_VARARGS, "flush parser buffers"},
+    /* set debugging on/off */
+    {"debug", (PyCFunction)parser_debug, METH_VARARGS, "set debug level"},
+    {NULL} /* Sentinel */
+};
 
 
 static PyTypeObject parser_type = {
@@ -605,9 +611,9 @@ static PyTypeObject parser_type = {
     sizeof(parser_object), /* tp_size */
     0,              /* tp_itemsize */
     /* methods */
-    parser_dealloc, /* tp_dealloc */
+    (destructor)parser_dealloc, /* tp_dealloc */
     0,              /* tp_print */
-    parser_getattr, /* tp_getattr */
+    0,              /* tp_getattr */
     0,              /* tp_setattr */
     0,              /* tp_compare */
     0,              /* tp_repr */
@@ -620,7 +626,8 @@ static PyTypeObject parser_type = {
     0,              /* tp_getattro */
     0,              /* tp_setattro */
     0,              /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC, /* tp_flags */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | 
+      Py_TPFLAGS_HAVE_GC, /* tp_flags */
     "HTML parser object", /* tp_doc */
     (traverseproc)parser_traverse, /* tp_traverse */
     (inquiry)parser_clear, /* tp_clear */
@@ -629,7 +636,7 @@ static PyTypeObject parser_type = {
     0,              /* tp_iter */
     0,              /* tp_iternext */
     parser_methods, /* tp_methods */
-    0,              /* tp_members */
+    parser_members, /* tp_members */
     0,              /* tp_getset */
     0,              /* tp_base */
     0,              /* tp_dict */
