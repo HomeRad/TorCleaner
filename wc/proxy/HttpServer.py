@@ -470,7 +470,7 @@ class HttpServer (Server):
 
 
     def close_reuse (self):
-        debug(PROXY, "%s reuse", self)
+        debug(PROXY, "%s HttpServer.close_reuse", self)
         assert not self.client, "reuse with open client"
         super(HttpServer, self).close_reuse()
         self.state = 'client'
@@ -480,7 +480,7 @@ class HttpServer (Server):
 
 
     def close_ready (self):
-        debug(PROXY, "%s close ready", self)
+        debug(PROXY, "%s HttpServer.close_ready", self)
         if not (self.client and self.connected):
             # client has lost interest, or we closed already
             return True
@@ -495,7 +495,7 @@ class HttpServer (Server):
 
 
     def close_close (self):
-        debug(PROXY, "%s close", self)
+        debug(PROXY, "%s HttpServer.close_close", self)
         assert not self.client, "close with open client"
         unregister = (self.connected and self.state!='closed')
         if unregister:
@@ -503,10 +503,11 @@ class HttpServer (Server):
         super(HttpServer, self).close_close()
         if unregister:
             serverpool.unregister_server(self.addr, self)
+        assert not self.connected
 
 
     def handle_error (self, what):
-        debug(PROXY, "%s handle_error", self)
+        debug(PROXY, "%s HttpServer.handle_error", self)
         if self.client:
             client, self.client = self.client, None
             client.server_abort()
@@ -514,13 +515,13 @@ class HttpServer (Server):
 
 
     def handle_close (self):
-        debug(PROXY, "%s handle_close", self)
+        debug(PROXY, "%s HttpServer.handle_close", self)
         self.persistent = False
         super(HttpServer, self).handle_close()
 
 
     def reconnect (self):
-        debug(PROXY, "%s reconnect", self)
+        debug(PROXY, "%s HttpServer.reconnect", self)
         # we still must have the client connection
         if not self.client:
             error(PROXY, "%s lost client on reconnect", self)
