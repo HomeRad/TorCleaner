@@ -1,4 +1,5 @@
 import dns_lookups,socket
+import wc.proxy
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import _,debug
@@ -57,7 +58,7 @@ class ClientServerMatchmaker:
         self.request = request
         self.headers = headers
         self.content = content
-        try: method, url, protocol = split(request)
+        try: self.method, url, protocol = split(request)
         except: self.error(400, _("Can't parse request"))
         if not url:
             self.error(400, _("Empty URL"))
@@ -66,8 +67,13 @@ class ClientServerMatchmaker:
         hostname, port = splitport(netloc)
         if port is None:
             port = 80
-        self.hostname = hostname
-        self.port = port
+        if wc.proxy._PARENT_PROXY:
+            self.hostname = wc.proxy._PARENT_PROXY
+            self.port = wc.proxy._PARENT_PROXY_PORT
+            self.document = url
+        else:
+            self.hostname = hostname
+            self.port = port
         self.document = document
         # Temporary HACK
         if hostname == '_proxy':
@@ -144,7 +150,7 @@ class ClientServerMatchmaker:
         self.state = 'response'
         # At this point, we tell the server that we are the client.
         # Once we get a response, we transfer to the real client.
-        self.server.client_send_request(split(self.request)[0],
+        self.server.client_send_request(self.method,
                                         self.hostname, 
                                         self.document,
                                         self.headers,

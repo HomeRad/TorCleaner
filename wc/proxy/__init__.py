@@ -109,7 +109,7 @@ def proxy_poll(timeout=0.0):
 
 
 def configure(config):
-    global _PORT,_LOGFILE
+    global _PORT,_LOGFILE,_PARENT_PROXY,_PARENT_PROXY_PORT
     _PORT = config['port']
     _PARENT_PROXY_PORT = config['parentproxyport']
     _PARENT_PROXY = config['parentproxy']
