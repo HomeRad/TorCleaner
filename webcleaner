@@ -141,7 +141,7 @@ def main():
     if hasattr(daemon, command):
         msg = getattr(daemon, command)()
         if msg:
-	    print >> sys.stderr, msg
+	    print >>sys.stderr, msg
     else:
         _print_usage(_("Unknown command %s") % command)
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-
 # this file is _not_ the original Python2 regression test suite.
 
 """Bastis Regression test.

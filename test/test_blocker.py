@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """ test script to test filtering"""
 
 htmldata = """GET http://ads.realmedia.com/ HTTP/1.0"""

@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
-from wc.parser.htmllib import HTMLParser
+from wc.parser.htmllib import HtmlParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
 from wc.debug_levels import *
@@ -58,7 +58,9 @@ class Rewriter(Filter):
     def finish(self, data, **attrs):
         p = attrs['filter']
         p.feed(data)
-        return p.close()
+        p.flush()
+        p.buffer2data()
+        return p.flushbuf()
 
 
     def getAttrs(self, headers):
@@ -68,10 +70,10 @@ class Rewriter(Filter):
 
 
 
-class HtmlFilter(HTMLParser):
+class HtmlFilter(HtmlParser):
     """The parser has the rules, a data buffer and a rule stack."""
     def __init__(self, rules, comments):
-        HTMLParser.__init__(self)
+        HtmlParser.__init__(self)
         self.rules = rules
         self.comments = comments
         self.data = ""
@@ -88,13 +90,18 @@ class HtmlFilter(HTMLParser):
         that an ENCLOSED match really matches enclosed data.
         """
         if self.buffer and data[0]==DATA and self.buffer[-1][0]==DATA:
-            self.buffer[-1][1] = self.buffer[-1][1] + data[1]
+            self.buffer[-1][1] += data[1]
         else:
             self.buffer.append(data)
 
 
-    def handle_data(self, d):
+    def cdataBlock(self, d):
         """handler for data"""
+        self.buffer_append_data([DATA, d])
+
+
+    def ignorableWhitespace(self, d):
+        """handler for ignorable whitespace"""
         self.buffer_append_data([DATA, d])
 
 
@@ -115,8 +122,11 @@ class HtmlFilter(HTMLParser):
                 self.data += "<!--%s-->"%n[1]
             elif n[0]==STARTTAG:
                 s = "<"+n[1]
-                for name,val in n[2]:
-                    s += ' %s="%s"'%(name,val)
+                for name,val in n[2].items():
+                    if '"' in val:
+                        s += " %s='%s'"%(name,val)
+                    else:
+                        s += ' %s="%s"'%(name,val)
                 self.data += s+">"
             elif n[0]==ENDTAG:
                 self.data += "</%s>"%n[1]
@@ -125,24 +135,19 @@ class HtmlFilter(HTMLParser):
         self.buffer = []
 
 
-    def handle_comment(self, data):
+    def comment (self, data):
         """a comment. If we accept comments, filter them because JavaScript
 	is often in wrapped in comments"""
         if self.comments:
             self.buffer.append([COMMENT, data])
 
 
-    def handle_ref(self, name):
-        """dont translate, we leave that for the browser"""
-        if name:
-            name = "&%s;"%name
-        else:
-            # a single & leads to an empty name (XXX untested)
-            name = "&"
-        self.buffer_append_data([DATA, name])
+    def characters (self, s):
+        # XXX handle entities ???
+        self.buffer_append_data([DATA, s])
 
 
-    def handle_starttag(self, tag, attrs):
+    def startElement (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         rulelist = []
@@ -153,7 +158,7 @@ class HtmlFilter(HTMLParser):
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute
-                    if tobuffer[0]==STARTTAG and tobuffer[1].lower()==tag:
+                    if tobuffer[0]==STARTTAG and tobuffer[1]==tag:#.lower()==tag:
                         foo,tag,attrs = tobuffer
                         continue
                     else:
@@ -168,7 +173,7 @@ class HtmlFilter(HTMLParser):
             self.buffer2data()
 
 
-    def handle_endtag(self, tag):
+    def endElement(self, tag):
         """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
@@ -183,21 +188,4 @@ class HtmlFilter(HTMLParser):
                     break
         if not self.rulestack:
             self.buffer2data()
-
-
-    def handle_decl(self, tag, data):
-        # XXX
-        pass
-
-
-    def handle_xmldecl(self, data):
-        # XXX
-        pass
-
-
-    def close(self):
-        # XXX get rid of close, its ugly
-        self.flush()
-        self.buffer2data()
-        return self.flushbuf()
 

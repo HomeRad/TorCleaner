@@ -3,11 +3,11 @@ Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@debian.org>
 Standards-Version: 3.5.6
-Build-Depends: python2.1-dev, debhelper (>= 3.0.0), debconf
+Build-Depends: python2.1-dev, debhelper (>= 3.0.0), debconf, libxml2-dev
 
 Package: webcleaner
 Architecture: any
-Depends: python2.1-base, python2.1-xmlbase, debconf
+Depends: python2.1-base, python2.1-xmlbase, debconf, libxml2
 Suggests: webcleanerconf
 Description: a filtering HTTP proxy
  Features:

@@ -1,6 +1,6 @@
 # we use the scripts in Tools/i18n of the Python 2.0 distribution
 I18NTOOLS=.
-PYTHON=python2
+PYTHON=python2.1
 GETTEXT=$(PYTHON) $(I18NTOOLS)/pygettext.py
 MSGFMT=$(PYTHON) $(I18NTOOLS)/msgfmt.py
 MSGMERGE=msgmerge

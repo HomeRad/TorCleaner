@@ -20,8 +20,8 @@ clean:
 
 .PHONY: localbuild
 localbuild:
-	$(PYTHON) setup.py build
-	cp -f build/lib.linux-i686-2.1/wc/parser/htmlop.so wc/parser
+	$(PYTHON) setup.py build_ext --include-dirs=/usr/include/libxml2 build
+	cp -f build/lib.linux-i686-2.1/wc/parser/htmlsax.so wc/parser
 
 .PHONY: distclean
 distclean:	clean cleandeb
@@ -47,7 +47,7 @@ dist:	locale
 
 .PHONY: test
 test:
-	$(PYTHON)  test/regrtest.py
+	$(PYTHON) test/regrtest.py test_parser test_rewriter test_blocker
 
 .PHONY: onlinetest
 onlinetest:

@@ -209,13 +209,13 @@ class RewriteRule(Rule):
 
 
     def match_tag(self, tag):
-        return self.tag == tag.lower()
+        return self.tag == tag#.lower()
 
 
     def match_attrs(self, attrs):
         occurred = []
-        for attr,val in attrs:
-            attr = attr.lower()
+        for attr,val in attrs.items():
+            #attr = attr.lower()
             occurred.append(attr)
             ro = self.attrs.get(attr)
             if ro and not ro.search(val):
@@ -252,26 +252,26 @@ class RewriteRule(Rule):
             return (STARTTAG, tag, attrs)
         if part==COMPLETE:
             return [DATA, ""]
-        newattrs = []
+        newattrs = {}
         # look for matching tag attributes
-        for attr,val in attrs:
-            ro = self.attrs.get(attr.lower())
+        for attr,val in attrs.items():
+            ro = self.attrs.get(attr)#.lower())
             if ro:
                 mo = ro.search(val)
                 if mo:
                     if part==ATTR:
                         if self.replace[1]:
-                            newattrs.append(self.replace[1])
+                            newattrs[self.replace[1][0]] = self.replace[1][1]
                     else:
                         # part has to be ATTRVAL
                         # Python has named submatches
                         if mo.groupdict().has_key('replace'):
-                            newattrs.append((attr, mo.groupdict()['replace']))
+                            newattrs[attr] = mo.groupdict()['replace']
                         else:
-                            newattrs.append((attr, self.replace[1]))
+                            newattrs[attr] = self.replace[1]
                     continue
             # nothing matched, just append the attribute as is
-            newattrs.append((attr, val))
+            newattrs[attr] = val
         debug(NIGHTMARE, "filtered tag", tag, "attrs", newattrs)
         return (STARTTAG, tag, newattrs)
 
@@ -287,7 +287,7 @@ class RewriteRule(Rule):
             buf[i] = [DATA, self.replace[1]]
             buf[-1] = [DATA, self.replace[1]]
         elif part==TAGNAME:
-            buf[i] = (STARTTAG, self.replace[1], ())
+            buf[i] = (STARTTAG, self.replace[1], {})
             buf[-1] = (ENDTAG, self.replace[1])
         elif part==ENCLOSED:
             buf[i+1:-1] = [(DATA, self.replace[1])]

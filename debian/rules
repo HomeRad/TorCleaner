@@ -23,7 +23,7 @@ configure-stamp:
 build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
-	$(PYTHON) setup.py build
+	$(PYTHON) setup.py build_ext --include-dirs=/usr/include/libxml2 build
 	touch build-stamp
 
 clean:

@@ -117,7 +117,10 @@ setup (name = "webcleaner",
        licence = "GPLv2",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
-       ext_modules = [Extension('wc.parser.htmlop',['wc/parser/htmlop.c'])],
+       ext_modules = [Extension('wc.parser.htmlsax',
+                      ['wc/parser/htmlsax.c'],
+                      libraries = ["xml2"]
+                      )],
        scripts = scripts,
        long_description =
 """WebCleaner features:

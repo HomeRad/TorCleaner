@@ -1,12 +1,11 @@
 test_rewriter
-
 <html><head>
 <!-- closing > before end of tag -->
 <!-- <META NAME="Author" CONTENT="Andrew McDonald <andrew@mcdonald.org.uk>"> -->
      
      
 <!-- meta refresh tag -->
-<!-- <meta http-equiv="refresh"> -->
+<!-- <META http-equiv="refresh"> -->
      <meta http-equiv="refresh">
 
 <!-- meta ReFresh tag -->
@@ -19,9 +18,9 @@ test_rewriter
 
 <!-- IE shortcut icon and </link> end tag -->
 <!-- <link rel="shortcut icon"></link> -->
-     </link>
+     
 <!-- missing start tag -->
-</title>
+
 </head>
 
 <!-- javascript in body tag -->
@@ -51,18 +50,16 @@ test_rewriter
      <a href="http://www.counter-strike.de/downloads/ghl10full.exe">CS 1.0</a>
 
 <!-- unquoted ampersand -->
-<!-- Hallo Ernie & Bert, was geht? -->
+<!-- Hallo Ernie & Bert, was geht? --><p>
      Hallo Ernie & Bert, was geht?
 
 <!-- entityrefs, should be left as is -->
 <!-- Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;? -->
-     Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;?
+     Hallo Ernie & Bert, was geht <ab>Â·?
 
 <!-- 1x1 image -->
 <!-- <img src="blubb" width="1" height="1"> -->
      
-
-<!-- space in end of comment -->
 
 <!-- adlog.pl (freshmeat) -->
 <!-- <a href='http://fmads.osdn.com/cgi-bin/adlog.pl?index,tkgk0128en'></a> -->
@@ -73,11 +70,11 @@ test_rewriter
 <a href="http://www/">link</a>
 
 <!-- illegal binary chars (see source) -->
-These `Microsoft chars` are history.
-"Retter" Majak trifft in der Schlussminute.
+These Â`Microsoft charsÂ` are history.
+Â"RetterÂ" Majak trifft in der Schlussminute.
 <!-- bad quote in tag attributes -->
 <!-- <a href="bla" %]">seen at slashdot</a> -->
-<a href="bla" %]"="None">seen at slashdot</a>
+<a href="bla">seen at slashdot</a>
 
 <!-- no beginning quote -->
 <!-- <a href=bla">link</a> -->
@@ -87,5 +84,5 @@ These `Microsoft chars` are history.
 <!-- <a href="bla>link</a> -->
 <a href="bla">link</a>
 
-</body></html>
+</p></body></html>
 
