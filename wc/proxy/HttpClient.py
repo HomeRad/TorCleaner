@@ -191,10 +191,11 @@ class HttpClient (Connection):
                            attrs=self.nofilter)
         self.content += data
         underflow = self.bytes_remaining is not None and \
-                    self.bytes_remaining <= 0
+                    self.bytes_remaining < 0
         if underflow:
-            print >>sys.stderr, "Warning: client received %d bytes more than content-length" % (-self.bytes_remaining)
-        if is_closed or underflow:
+            print >>sys.stderr, "Warning: client received"+\
+               " %d bytes more than content-length" % (-self.bytes_remaining)
+        if is_closed or self.bytes_remaining==0:
             data = applyfilter(FILTER_REQUEST_DECODE, "",
     	                   fun="finish", attrs=self.nofilter)
             data = applyfilter(FILTER_REQUEST_DECODE, data,

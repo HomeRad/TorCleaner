@@ -354,12 +354,12 @@ class HttpServer (Server):
                 self.client.server_content(data)
         except FilterException, msg:
             debug(NIGHTMARE, "FilterException", msg)
-        if (is_closed or
-            (self.bytes_remaining is not None and
-             self.bytes_remaining <= 0)):
-            if self.bytes_remaining is not None and self.bytes_remaining < 0:
-                print >>sys.stderr, "Warning: server received %d bytes "+\
-                     "more than content-length" % (-self.bytes_remaining)
+        underflow = self.bytes_remaining is not None and \
+                   self.bytes_remaining < 0
+        if underflow:
+            print >>sys.stderr, "Warning: server received"+\
+                "%d bytes more than content-length" % (-self.bytes_remaining)
+        if is_closed or self.bytes_remaining==0:
             # Either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
 
