@@ -37,37 +37,33 @@
 </rewrite>
 
 <replacer title="The Dude" oid="6"
+ desc="Just a silly example."
  disable="1"
  search="Bastian">The Dude</replacer>
 
-<rewrite title="1x1 Tracker images" oid="7"
- desc="Several sites use 1x1 images to track users."
- tag="img">
-<attr name="width">^1$</attr>
-<attr name="height">^1$</attr>
-</rewrite>
-
-<replacer title="Replace blink CSS" oid="8"
+<replacer title="Replace blink CSS" oid="7"
  desc="Unfuckingbelievable they made a blink CSS entry."
  search="text-decoration:\s*blink">text-decoration: none</replacer>
 
-<block title="Statistic trackers" oid="9"
- desc="Some statistic tracker websites"
- scheme=""
- host=".nedstatbasic.net"
- port=""
- path=""
- parameters=""
- query=""
- fragment=""/>
-
-<rewrite title="Replace MARQUEE with SPAN" oid="10"
+<rewrite title="Replace MARQUEE with SPAN" oid="8"
  desc="Jeeesus, as if blinking isn&apos;t enough."
  tag="marquee">
 <replace part="tagname">span</replace>
 </rewrite>
 
-<replacer title="Love and Peace" oid="11"
+<replacer title="Love and Peace" oid="9"
  desc="Love &amp; Peace!"
  search="(US-Präsident|George( W.)?) Bush">Love and Peace</replacer>
+
+<replacer title="bllnk" oid="10"
+ desc="&lt;blink&gt;&lt;/bllnk&gt; still does blink, so replace it. We might want to think later about correcting such typos automatically. For now it happens only at the india page. "
+ matchurl="allindiaradio.org"
+ search="&lt;/bllnk&gt;">&lt;/blink&gt;</replacer>
+
+<rewrite title="Remove LOWSRC" oid="112"
+ desc="The lowsrc is waste of bandwidth."
+ tag="img">
+<attr name="lowsrc"/>
+<replace part="attr"/>
+</rewrite>
 </folder>

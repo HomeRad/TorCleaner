@@ -1,5 +1,5 @@
 """deanimate GIFs"""
-# Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ class GifImage (Filter):
         compileRegex(rule, "matchurl")
         compileRegex(rule, "dontmatchurl")
 
+
     def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
         gifparser = attrs['gifparser']
@@ -60,11 +61,13 @@ class GifImage (Filter):
                 pass
         return gifparser.getOutput()
 
+
     def finish (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
-        if data: data = apply(GifImage.filter, (self, data), attrs)
+        if data: data = self.filter(data, **attrs)
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
+
 
     def getAttrs (self, headers, url):
         # first: weed out the rules that dont apply to this url
@@ -73,6 +76,7 @@ class GifImage (Filter):
             return {}
         sizes = map(lambda r: (r.width, r.height), rules)
         return {'gifparser': GifParser(sizes)}
+
 
 
 class GifParser:
@@ -144,9 +148,10 @@ class GifParser:
 
     def parse (self):
         """Big parse function. The trick is the usage of self.read(),
-	   which throws an Exception  when it cant give enough data.
+	   which throws an Exception  when it can't give enough data.
 	   In this case we just bail out ('rewind'), and continue
-	   the next time in the saved state."""
+	   the next time in the saved state with hopefully more data
+           available :)"""
         while 1:
             #debug(NIGHTMARE, 'GifImage state', self.strState())
             self.flush()
@@ -241,6 +246,6 @@ class GifParser:
                 self.data = ''
                 break
             else:
-                raise Exception, "invalid GifParser state"
+                raise Exception("invalid GifParser state")
         # while 1
     # parse

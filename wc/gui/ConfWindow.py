@@ -45,6 +45,9 @@ extensions (for example GIF comments)."""),
 
 "Compress": i18n._("""Compression of documents with good compression ratio
 like HTML, WAV, etc."""),
+
+"ImageReduce": i18n._("""Convert images to low quality JPEG files to reduce
+bandwidth"""),
 }
 
 _proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
@@ -694,13 +697,14 @@ class ConfWindow (ToolWindow):
         if self.logfile:
             self.logfile = self.logfile.name
         self.modules = {
-	    "Header":0,
-	    "Blocker":0,
-	    "GifImage":0,
-	    "BinaryCharFilter":0,
-	    "Rewriter":0,
-            "Replacer":0,
-	    "Compress":0,
+	    "Header": 0,
+	    "Blocker": 0,
+	    "GifImage": 0,
+            "ImageReduce": 0,
+	    "BinaryCharFilter": 0,
+	    "Rewriter": 0,
+            "Replacer": 0,
+	    "Compress": 0,
 	}
         for f in self.config['filters']:
             self.modules[f] = 1

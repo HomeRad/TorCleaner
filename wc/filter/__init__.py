@@ -96,7 +96,7 @@ def applyfilter (i, arg, fun='filter', attrs={}):
 
 def initStateObjects (headers={'content-type': 'text/html'}, url=None):
     """init external state objects"""
-    attrs = {'mime': headers.get('content-type', 'application/octet-stream')}
+    attrs = {'mime': headers.get('Content-Type', 'application/octet-stream')}
     for i in range(10):
         for f in wc.config['filterlist'][i]:
             if f.applies_to_mime(attrs['mime']):

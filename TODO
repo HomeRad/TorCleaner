@@ -1,5 +1,13 @@
 TODO
 
+- Append "noproxy." before the ip or hostname, and the page does not get
+  filtered. Useful for temporary tests what is filtered or not.
+
+- ImageReducer: convert big .gif or .png images into lowquality JPEGs
+  This is especially hard, since the data streams in chunks into
+  the converter, and I want to begin output *before* all the original
+  image data is loaded.
+
 - timeouts do not cancel the request, they occur more than once. Why?
 
 - Python 2.3:
@@ -28,7 +36,10 @@ TODO
   I never tested this.
 
 - more error/warning recognition in parser
-  HTML bugs should issue a warning on stderr.
+  o parser should correct typos in start/end tags,
+    I noticed this with <blink></bllnk>: it doesnt get filtered, and blinks.
+    Annoying!
+  o HTML bugs should issue a warning on stderr.
 
 - strict whitelist operation (for parents)
   To use this as a real kids-enabled tool.

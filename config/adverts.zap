@@ -260,7 +260,7 @@
  query=""
  fragment=""/>
 
-<rewrite title="Atwola JS ad" oid="110"
+<rewrite title="Atwola JS ad" oid="43"
  desc="found at fortune.com"
  tag="script">
 <attr name="src">ar\.atwola\.com</attr>
