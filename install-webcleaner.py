@@ -22,13 +22,27 @@ import distutils
 import win32service
 import win32serviceutil
 import wc
+# initialize i18n
+wc.init_i18n()
 import wc.win32start
-import wc.i18n
+
+
+def execute (pythonw, script, args):
+    """execute given script"""
+    cargs = " ".join(args)
+    _in, _out = os.popen4("%s %s %s" % (pythonw, script, cargs))
+    line = _out.readline()
+    while line:
+        print line
+        line = _out.readline()
+    _in.close()
+    _out.close()
 
 
 def do_install ():
     """install shortcuts and NT service"""
     install_shortcuts()
+    install_certificates()
     install_service()
 
 
@@ -55,7 +69,6 @@ def install_shortcuts ():
             sys.exit()
     lib_dir = distutils.get_python_lib(plat_specific=1)
     dest_dir = os.path.join(prg, "WebCleaner")
-    pythonw = os.path.join(sys.prefix, "pythonw.exe")
     try:
         os.mkdir(dest_dir)
         directory_created(dest_dir)
@@ -68,6 +81,13 @@ def install_shortcuts ():
     file_created(path)
 
 
+def install_certificates ():
+    """generate SSL certificates for SSL gateway functionality"""
+    pythonw = os.path.join(sys.prefix, "pythonw.exe")
+    script = os.path.join(script_dir, "webcleaner-certificates")
+    execute(pythonw, script, ["install"])
+
+
 def state_nt_service (name):
     """return status of NT service"""
     return win32serviceutil.QueryServiceStatus(name)[1]
@@ -76,10 +96,10 @@ def state_nt_service (name):
 def install_service ():
     """install WebCleaner as NT service"""
     oldargs = sys.argv
-    print wc.i18n._("Installing %s service...")%wc.AppName
+    print _("Installing %s service...")%wc.AppName
     sys.argv = ['webcleaner', 'install']
     win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
-    print wc.i18n._("Restarting %s proxy...")%wc.AppName
+    print _("Restarting %s proxy...")%wc.AppName
     # stop proxy (if it is running)
     state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_START_PENDING:
@@ -109,23 +129,31 @@ def install_service ():
 
 
 def open_browser (url):
-    print wc.i18n._("Opening proxy configuration interface...")
+    print _("Opening proxy configuration interface...")
     # the windows webbrowser.open func raises an exception for http://
     # urls, but works nevertheless. Just ignore the error.
     try:
         webbrowser.open(config_url)
     except WindowsError, msg:
-        print wc.i18n._("Could not open webbrowser: %r") % str(msg)
+        print _("Could not open webbrowser: %r") % str(msg)
 
 
 def do_remove ():
     """stop and remove the installed NT service"""
     remove_service()
+    remove_certificates()
+
+
+def remove_certificates ():
+    """generate SSL certificates for SSL gateway functionality"""
+    pythonw = os.path.join(sys.prefix, "pythonw.exe")
+    script = os.path.join(script_dir, "webcleaner-certificates")
+    execute(pythonw, script, ["remove"])
 
 
 def remove_service ():
     oldargs = sys.argv
-    print wc.i18n._("Removing %s service...")%wc.AppName
+    print _("Removing %s service...")%wc.AppName
     sys.argv  = ['webcleaner', 'remove']
     win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     sys.argv = oldargs
