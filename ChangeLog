@@ -1,7 +1,13 @@
 1.9
   * use the original headers list in rfc822 Message objects to preserve
     header case sensitivity; some servers dont like lowercase headers
-
+    Changed files: wc/proxy/HttpServer.py
+  * javascript handling:
+    - unescape inlined javascripts before execution
+    - add error callback to javascript listeners
+    - dont execute setTimeout callback recursively (avoids endless loop)
+    Changed files: wc/js/{jslib.c,JSListener.py}, wc/filter/Rewriter.py
+  
 1.8
   * add document.layers property to jslib
   * escape inlined javascript
