@@ -364,7 +364,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buf2data)"""
         #self._debug(NIGHTMARE, "endElement", `tag`)
-        tag = check_spelling(tag)
+        tag = check_spelling(tag, self.url)
         item = [ENDTAG, tag]
         if self.state=='wait':
             return self.waitbuf.append(item)
