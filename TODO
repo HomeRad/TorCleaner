@@ -2,9 +2,9 @@ TODO
 
 version 2.11 and above
 
-- ssl certificate verification
+- http://www.securityfocus.com/archive/1/360128/2004-04-09/2004-04-15/0
 
-- use test/client.py, test/server.py for testing
+- ssl certificate verification
 
 - memory leaks while operating the proxy
 
