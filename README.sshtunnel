@@ -1,18 +1,20 @@
-Here are some scripts to let you use WebCleaner over ssh and dialup from
-your box at work (my.atworkbox.com) to your box at home (my.homedslbox.org).
+Here are some scripts (for Debian Linux systems) to let you use WebCleaner
+over ssh and dialup from your box at work (my.atworkbox.com) to your box
+at home (my.homedslbox.org).
 
 |=========================================================================|
-| Remember: do NOT open port 8080 in your firewall for this to work!      |
-| If you do not have a firewall or you dont know what I am talking about, |
-| leave these scripts alone!                                              |
+| Remember: do NOT open port 8080 in your home-firewall for this to work! |
+| If you do not have a firewall on your home dsl box or you dont know what|
+| I am talking about, leave these scripts alone!                          |
 |=========================================================================|
 
 0) Put this iptables line in your firewall at my.homedslbox.org:
 $IPTABLES -A INPUT -i ppp0 -p tcp -s my.atworkbox.com --dport ssh -m state --state NEW -j ACCEPT
-This presumes your ppp interface is ppp0.
+This presumes your ppp interface is ppp0. And you must have state
+matching enabled in your kernel.
 
-1) copy this script on home box my.homedslbox.org
--- start /etc/ppp/ip-up.d/30webcleaner --
+1) copy this script on my.homedslbox.org
+-- start file /etc/ppp/ip-up.d/30webcleaner --
 # add external IP to the allowed host list
 # tested under Debian Linux
 #!/bin/sh
@@ -25,13 +27,13 @@ rm -f $N
 sed  -e "$R" $O > $N
 mv -f $N $O
 /etc/init.d/webcleaner reload
--- end /etc/ppp/ip-up.d/30webcleaner --
+-- end file /etc/ppp/ip-up.d/30webcleaner --
 
 2) copy this script on your work box my.atworkbox.com
--- start ~/bin/f.sh --
+-- start file ~/bin/f.sh --
 #!/bin/sh
-ssh -X -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
--- end ~/bin/f.sh --
+ssh -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
+-- end file ~/bin/f.sh --
 
 3) Start your home box, start webcleaner, then start your network with "pon".
    The script under 1) gets executed.
