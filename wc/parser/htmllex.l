@@ -210,7 +210,12 @@ RX_DATA  [-a-zA-Z0-9_:]+
     APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>[ ]*-+[^-> ]+ {
+<S_COMMENT>-+[^ ->]+ {
+    UPDATE_LINE;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_COMMENT>-+[ ]+[^>] {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
 }
