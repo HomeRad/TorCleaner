@@ -16,20 +16,23 @@ class SslConnection (Connection):
 	    return
         try:
             data = self.socket.read(RECV_BUFSIZE)
-        except socket.error, err:
-            if err==errno.EAGAIN:
-                # try again later
-                return
-            self.handle_error('read error')
-            return
         except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
             exc = sys.exc_info()[0]
             debug(PROXY, "%s ssl read message %s", self, exc)
             return
         except SSL.ZeroReturnError, err:
+            debug(PROXY, "%s ssl finished successfully", self)
             self.delayed_close()
             return
         except SSL.Error, err:
+            exception(PROXY, "read error %s", err)
+            self.handle_error('read error')
+            return
+        except socket.error, err:
+            if err==errno.EAGAIN:
+                # try again later
+                return
+            exception(PROXY, "read error %s", err)
             self.handle_error('read error')
             return
         if not data: # It's been closed, and handle_close has been called
@@ -56,15 +59,18 @@ class SslConnection (Connection):
             debug(PROXY, "%s ssl write message %s", self, exc)
             return
         except SSL.ZeroReturnError, err:
+            debug(PROXY, "%s ssl finished successfully", self)
             self.delayed_close()
             return
         except SSL.Error, err:
+            exception(PROXY, "write error %s", err)
             self.handle_error('write error')
             return
         except socket.error, err:
             if err==errno.EAGAIN:
                 # try again later
                 return
+            exception(PROXY, "write error %s", err)
             self.handle_error('write error')
             return
         debug(CONNECTION, '%s => wrote %d', self, num_sent)
