@@ -2,11 +2,79 @@ TODO
 
 version 2.28 and above
 
-- http://arp.ch/
+- da hängts immer:
+  http://members.optusnet.com.au/ckolivas/kernel/
+
+- wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
+Traceback (most recent call last):
+  File "/home/calvin/projects/webcleaner/wc/proxy/Connection.py", line 126, in handle_write
+    num_sent = self.send(data)
+  File "/home/calvin/projects/webcleaner/wc/proxy/Dispatcher.py", line 350, in send
+    raise                    
+  File "/home/calvin/projects/webcleaner/wc/proxy/Dispatcher.py", line 342, in send
+    result = self.socket.send(data)
+error: (32, 'Broken pipe')   
+Traceback (most recent call last):
+  File "webcleaner", line 196, in ?
+    main(sys.argv[1:])       
+  File "webcleaner", line 192, in main
+    return main_posix(configdir, filelogs, args)
+  File "webcleaner", line 159, in main_posix
+    wc.start.wstartfunc(confdir=configdir, filelogs=filelogs)
+  File "/home/calvin/projects/webcleaner/wc/start.py", line 59, in wstartfunc
+    wc.proxy.mainloop(handle=handle, abort=abort)
+  File "/home/calvin/projects/webcleaner/wc/proxy/__init__.py", line 168, in mainloop
+    proxy_poll(timeout=max(0, run_timers()))
+  File "/home/calvin/projects/webcleaner/wc/proxy/__init__.py", line 122, in proxy_poll
+    x.handle_read_event()    
+  File "/home/calvin/projects/webcleaner/wc/proxy/Dispatcher.py", line 422, in handle_read_eve
+nt                           
+    self.handle_read()       
+  File "/home/calvin/projects/webcleaner/wc/proxy/Connection.py", line 95, in handle_read
+    self.process_read()      
+  File "/home/calvin/projects/webcleaner/wc/proxy/HttpServer.py", line 214, in process_read
+    if self.delegate_read(): 
+  File "/home/calvin/projects/webcleaner/wc/proxy/StatefulConnection.py", line 34, in delegate
+_read                        
+    getattr(self, 'process_'+self.state)()
+  File "/home/calvin/projects/webcleaner/wc/proxy/HttpServer.py", line 467, in process_content
+    self.client.server_content(data)
+  File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 516, in server_content
+    assert self.server, "%s server_content(%r) had no server" % \
+AssertionError: <client:closed   being read> server_content('\xfc\
+
+- block *.stats.esomniture.com
+
+- http://www.indianmasala.com/
+
+- wc.proxy.dns <dns-lookup      im.a.hacker.la> DNS timeout
+wc.proxy.dns <dns-lookup TCP  im.a.hacker.la retry #1> DNS timeout
+wc.proxy.dns id 45796
+opcode QUERY
+rcode NOERROR
+flags QR RD RA
+;QUESTION
+im.a.hacker.la. IN A
+;ANSWER
+im.a.hacker.la. 3600 IN A 66.252.11.28
+;AUTHORITY
+;ADDITIONAL was no response to id 63857
+opcode QUERY
+rcode NOERROR
+flags RD
+;QUESTION
+im.a.hacker.la. IN A
+;ANSWER
+;AUTHORITY
+;ADDITIONAL
+
+- geht net: http://arp.ch/
 
 - http://yro.slashdot.org/article.pl?sid=05/02/16/2341200&tid=158&tid=126
   oder
   http://www.msnbc.msn.com/id/6969798/
+
+- use http://www.geocities.com/pierceive/adblock/
 
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
