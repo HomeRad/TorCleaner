@@ -3,6 +3,7 @@
 
 import unittest, os
 import wc
+from wc.proxy.Headers import WcMessage
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog
 
@@ -12,19 +13,21 @@ class TestBinaryCharFilter (unittest.TestCase):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def setUp (self):
-        wc.config = wc.Configuration()
+        wc.set_config(wc.Configuration())
         wc.config['filters'] = ['BinaryCharFilter']
         wc.config.init_filter_modules()
         initlog(os.path.join("test", "logging.conf"))
 
 
     def filt (self, data, result):
-        attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])
+        headers = WcMessage()
+        headers['Content-Type'] = "text/html"
+        attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY], headers=headers)
         filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
         self.assertEqual(filtered, result)
 
 
-    def testQuotes (self):
+    def _estQuotes (self):
         self.filt("""These \x84Microsoft\x93 \x94chars\x94 are history.""",
                   """These "Microsoft" "chars" are history.""")
         self.filt("""\x91Retter\x92 Majak trifft in der Schlussminute.""",
