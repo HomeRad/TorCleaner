@@ -65,8 +65,12 @@ class HtmlParser (htmlsax.parser):
         self.waited = 0
 
 
-    def _debugbuf (self):
-        """print debugging information about data buffer status"""
+    def __str__ (self):
+        return "%s in state %s"%(self.__class__.__name__, str(self.state))
+
+
+    def debugbuf (self):
+        """print debugging information about buffered data"""
         debug(FILTER, "self.outbuf %r", self.outbuf.getvalue())
         debug(FILTER, "self.tagbuf %r", self.tagbuf)
         debug(FILTER, "self.waitbuf %r", self.waitbuf)
@@ -74,20 +78,24 @@ class HtmlParser (htmlsax.parser):
 
 
     def tagbuf2data (self):
-        """Append all tags of the tag buffer to the output buffer"""
+        """append serialized tag items of the tag buffer to the output buffer
+           and clear the tag buffer"""
+        debug(FILTER, "%s tagbuf2data", self)
         tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
 
     def feed (self, data):
         """feed some data to the parser"""
+        debug(FILTER, "%s feed %r", self, data)
         if self.state[0]=='parse':
             # look if we must replay something
             if self.waited > 0:
                 self.waited = 0
-                waitbuf, self.waitbuf = self.waitbuf, []
-                self.replay(waitbuf)
-                if self.state[0]!='parse':
+                if self.waitbuf:
+                    waitbuf, self.waitbuf = self.waitbuf, []
+                    self.replay(waitbuf)
+                if self.state[0]=='wait':
                     self.inbuf.write(data)
                     return
                 data = self.inbuf.getvalue() + data
@@ -95,22 +103,25 @@ class HtmlParser (htmlsax.parser):
                 self.inbuf = StringIO()
             if data:
                 # only feed non-empty data
-                debug(FILTER, "parser feed %r", data)
+                debug(FILTER, "%s parser feed %r", self, data)
                 super(HtmlParser, self).feed(data)
             else:
-                debug(FILTER, "empty parser feed")
+                debug(FILTER, "%s empty parser feed", self)
                 pass
-        else:
+        elif self.state[0]=='wait':
             # wait state ==> put in input buffer
-            debug(FILTER, "parser wait")
+            debug(FILTER, "%s waits", self)
             self.inbuf.write(data)
+        else:
+            assert False, "parser %s has unknown parser state"%str(self)
 
 
-    def flush (self, finish=False):
-        """flush pending data and return the flushed output buffer"""
-        debug(FILTER, "parser flush finish=%s", str(finish))
+    def flush (self):
+        """flush pending data"""
+        debug(FILTER, "%s flush", self)
         if self.waited > 100:
-            error(FILTER, "waited too long for %s"%self.state[1])
+            assert self.state[0]=='wait', 'parser %s has waited flag set in non-wait state' % str(self)
+            error(FILTER, "%s waited too long", self)
             # tell recursive background downloaders to stop
             if hasattr(self.handler, "finish"):
                 self.handler.finish()
@@ -121,11 +132,12 @@ class HtmlParser (htmlsax.parser):
         elif self.state[0]=='wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
-            raise FilterWait("HtmlParser[wait]: waited %d times for %s"%\
-                             (self.waited, self.state[1]))
-        if finish:
-            super(HtmlParser, self).flush()
-            self.tagbuf2data()
+            raise FilterWait("waited %d at parser %s"%(self.waited, str(self)))
+        super(HtmlParser, self).flush()
+
+
+    def getoutput (self):
+        """returns all data in output buffer and clears the output buffer"""
         data = self.outbuf.getvalue()
         self.outbuf.close()
         self.outbuf = StringIO()
@@ -134,9 +146,12 @@ class HtmlParser (htmlsax.parser):
 
     def replay (self, waitbuf):
         """call the handler functions again with buffer data"""
-        debug(FILTER, "parser replay %r", waitbuf)
+        debug(FILTER, "%s replays %r", self, waitbuf)
         for item in waitbuf:
-            if item[0]==DATA and hasattr(self.handler, "characters"):
+            if self.state[0]=='wait':
+                # the replaying itself can switch to wait state
+                self.waitbuf.append(item)
+            elif item[0]==DATA and hasattr(self.handler, "characters"):
                 self.handler.characters(item[1])
             elif item[0]==STARTTAG and hasattr(self.handler, "startElement"):
                 self.handler.startElement(item[1], item[2])
