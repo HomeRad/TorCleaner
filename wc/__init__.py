@@ -295,6 +295,7 @@ def host_set (strhosts):
     hosts = [s.strip() for s in strhosts.split(",")]
     ret = []
     ret.extend(ip.host_map(hosts))
+    ret.sort()
     dict = {}
     for h in hosts:
         dict[h] = None
