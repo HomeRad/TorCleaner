@@ -14,9 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
-from wc import config
+import time, asyncore
 import wc.proxy
+from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
+from wc import config, i18n
+from wc.XmlUtils import xmlify
 
 HTML_TEMPLATE = """<html><head>
 <title>%(title)s</title>
@@ -25,6 +27,21 @@ HTML_TEMPLATE = """<html><head>
 <center><h3>%(header)s</h3></center>
 %(content)s
 </body></html>"""
+
+
+STATUS_TEMPLATE = """
+WebCleaner Proxy Status Info
+============================
+
+Uptime: %(uptime)s
+
+Requests:
+  Valid:   %(valid)d
+  Error:   %(error)d
+  Blocked: %(blocked)d
+
+Active connections:
+["""
 
 
 def html_portal ():
@@ -54,6 +71,7 @@ def handle_document (document, client):
         text_connections())
     else:
         return 0
+    return "True"
 
 
 def text_status ():
@@ -66,7 +84,7 @@ def text_status ():
     connections = map(str, asyncore.socket_map.values())
     s = STATUS_TEMPLATE % data
     s += xmlify('\n     '.join(connections))
-    s += ']\n\ndnscache: %s'%dns_lookups.dnscache
+    s += ']\n\ndnscache: %s'%wc.proxy.dns_lookups.dnscache
     return s
 
 
@@ -90,5 +108,19 @@ def access_denied (addr):
 
 def text_config ():
     return str(config)
+
+
+def format_seconds (seconds):
+    minutes = 0
+    hours = 0
+    days = 0
+    if seconds > 60:
+        minutes, seconds = divmod(seconds, 60)
+        if minutes > 60:
+            hours, minutes = divmod(minutes, 60)
+            minutes = minutes % 60
+            if hours > 24:
+                days, hours = divmod(hours, 24)
+    return i18n._("%d days, %02d:%02d:%02d") % (days, hours, minutes, seconds)
 
 

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import os, re, sys, UserDict, time, socket, ip
+import os, re, sys, UserDict, time, socket, ip, i18n
 import _webcleaner2_configdata as configdata
 from debug import *
 sys.setcheckinterval(100)
@@ -167,7 +167,7 @@ class Configuration (UserDict.UserDict):
                 self['filterlist'][order].append(instance)
 
     def __repr__ (self):
-        return _("""
+        return i18n._("""
 WebCleaner Configuration
 ========================
 
@@ -239,7 +239,7 @@ class ZapperParser (BaseParser):
         elif name in _nestedtags:
             self.rule.fill_attrs(attrs, name)
         else:
-            raise ParseException, _("unknown tag name %s")%name
+            raise ParseException, i18n._("unknown tag name %s")%name
 
     def end_element (self, name):
         self.cmode = None

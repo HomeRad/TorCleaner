@@ -24,21 +24,6 @@ TIMERS = [] # list of (time, function)
 # (url, 0(incoming)/1(outgoing), headers)
 HEADERS = LimitQueue(config['headersave'])
 
-STATUS_TEMPLATE = """
-WebCleaner Proxy Status Info
-============================
-
-Uptime: %(uptime)s
-
-Requests:
-  Valid:   %(valid)d
-  Error:   %(error)d
-  Blocked: %(blocked)d
-
-Active connections:
-["""
-
-
 def log (msg):
     """If logfile is defined write the msg into it. The message msg
        should be in common log file format."""
@@ -75,20 +60,6 @@ def run_timers ():
 
     if TIMERS: return TIMERS[0][0] - time.time() 
     else:      return 60
-
-
-def format_seconds (seconds):
-    minutes = 0
-    hours = 0
-    days = 0
-    if seconds > 60:
-        minutes, seconds = divmod(seconds, 60)
-        if minutes > 60:
-            hours, minutes = divmod(minutes, 60)
-            minutes = minutes % 60
-            if hours > 24:
-                days, hours = divmod(hours, 24)
-    return _("%d days, %02d:%02d:%02d") % (days, hours, minutes, seconds)
 
 
 def periodic_print_status ():
