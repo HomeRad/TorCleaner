@@ -7,7 +7,7 @@ Build-Depends: python2.2-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), spiderm
 
 Package: webcleaner
 Architecture: any
-Depends: python2.2, python2.2-xmlbase, debconf (>= 1.2.9), python2.2-imaging, spidermonkey1 (>= 1.5rc5)
+Depends: python2.2, python2.2-xmlbase, debconf (>= 1.2.9), python2.2-imaging, python2.2-logging, spidermonkey1 (>= 1.5rc5)
 Recommends: webcleanertools
 Suggests: python2.2-tarfile (>= 0.6.3)
 Description: a filtering HTTP proxy
