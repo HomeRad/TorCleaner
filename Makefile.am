@@ -85,6 +85,7 @@ offlinetest: restart
 
 md5sums:
 	(cd config && md5sum *.zap | gzip --best > md5sums.gz)
+	(cd test/filter && md5sum *.zap | gzip --best > md5sums.gz)
 	for f in webcleaner-$(WCVERSION).tar.gz; do \
 	  if [ ! -f $$f ]; then break; fi; \
 	  md5sum $$f > $(MD5SUMS); \
@@ -99,8 +100,12 @@ VERSION:
 
 filterfiles:	md5sums
 	cp config/*.dtd config/webcleaner.conf config/md5sums.gz $(HTMLDIR)/zapper
+	cp test/filter/md5sums.gz $(HTMLDIR)/test
 	(cd config && for f in *.zap; do \
 	    cat $$f | gzip --best > $(HTMLDIR)/zapper/$${f}.gz; \
+	done)
+	(cd test/filter && for f in *.zap; do \
+	    cat $$f | gzip --best > $(HTMLDIR)/test/$${f}.gz; \
 	done)
 	cp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
