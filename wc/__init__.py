@@ -23,8 +23,6 @@ import os, sys, time, socket
 import _webcleaner2_configdata as configdata
 from glob import glob
 from sets import Set
-from wc.XmlUtils import xmlify
-from filter.rules.FolderRule import recalc_oids, recalc_up_down
 
 Version = configdata.version
 AppName = configdata.appname
@@ -45,7 +43,8 @@ under certain conditions. Look at the file `LICENSE' whithin this
 distribution."""
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
-LocaleDir = os.path.join(configdata.install_data, 'locale')
+LocaleDir = os.path.join(os.path.join(configdata.install_data, 'share'), 'locale')
+
 
 def iswriteable (fname):
     if os.path.isdir(fname) or os.path.islink(fname):
@@ -72,6 +71,8 @@ def sort_seq (seq):
     return l
 
 
+from wc.XmlUtils import xmlify
+from filter.rules.FolderRule import recalc_oids, recalc_up_down
 import ip, i18n
 from log import *
 

@@ -20,17 +20,15 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 # i18n suppport
-import os, locale
+import os, locale, gettext
 
 def init_gettext ():
-    from _webcleaner2_configdata import install_data
+    from wc import LocaleDir, Name
     global _
     try:
-        import gettext
-        domain = 'webcleaner'
-        localedir = os.path.join(install_data, 'share/locale')
-        _ = gettext.translation(domain, localedir).gettext
-    except (IOError, ImportError):
+        _ = gettext.translation(Name, LocaleDir).gettext
+    except IOError, msg:
+        print msg
         # default gettext function
         _ = lambda s: s
 
