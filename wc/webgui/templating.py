@@ -198,7 +198,7 @@ def lookupIds(db, prop, ids, num_re=re.compile('-?\d+')):
     return l
 
 
-class HTMLClass ():
+class HTMLClass:
     ''' Accesses through a class (either through *class* or *db.<classname>*)
     '''
     def __init__ (self, client, classname):
