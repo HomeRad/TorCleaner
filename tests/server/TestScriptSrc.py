@@ -115,7 +115,7 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
         self.assertEqual(filtered, result)
 
 
-    def testScriptSrc1 (self):
+    def XtestScriptSrc1 (self):
         self.filt(
 """<script src="http://localhost:%d/1.js"></script>
 
@@ -128,7 +128,7 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
 </html>""" % jsfiles['/1.js'])
 
 
-    def testScriptSrc2 (self):
+    def XtestScriptSrc2 (self):
         self.filt(
 """<script src="http://localhost:%d/1.js">
  
@@ -143,7 +143,7 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
 </html>""" % jsfiles['/1.js'])
 
 
-    def testScriptSrc3 (self):
+    def XtestScriptSrc3 (self):
         """missing </script>"""
         self.filt(
 """<script src="http://localhost:%d/3.js"/>

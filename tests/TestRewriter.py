@@ -4,7 +4,6 @@
 import unittest
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from wc.log import initlog
 from wc.proxy.Headers import WcMessage
 import StandardTest
 

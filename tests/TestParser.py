@@ -1,10 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 from wc.parser.htmllib import HtmlPrettyPrinter
-from wc.parser import htmlsax, resolve_entities
+import wc.parser
 import cStringIO as StringIO
-
 import unittest
-from wc import ip
 import StandardTest
 
 
@@ -98,8 +96,8 @@ class TestParser (StandardTest.StandardTest):
             ("<!a", "<!a"),
             ("<?a", "<?a"),
         )
-        self.htmlparser = htmlsax.parser()
-        self.htmlparser2 = htmlsax.parser()
+        self.htmlparser = wc.parser.htmlsax.parser()
+        self.htmlparser2 = wc.parser.htmlsax.parser()
 
     def testParse (self):
         for _in, _out in self.htmltests:
@@ -151,7 +149,7 @@ class TestParser (StandardTest.StandardTest):
 
     def testEntities (self):
         for c in "abcdefghijklmnopqrstuvwxyz":
-            self.assertEqual(resolve_entities("&#%d;"%ord(c)), c)
+            self.assertEqual(wc.parser.resolve_entities("&#%d;"%ord(c)), c)
 
 
 if __name__ == '__main__':
