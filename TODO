@@ -1,6 +1,6 @@
 TODO
 
-- script src url advert checking
+- fetch script src in background
 
 - Python 2.3:
   use Bool type
