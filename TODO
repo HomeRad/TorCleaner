@@ -2,8 +2,6 @@ TODO
 
 version 2.24 and above
 
-- Hmmmmmmm: http://cr.yp.to/docs/connect.html
-
 - Decoding error (make sure send_buffer is not unicode?)
 At http://seanmcgrath.blogspot.com/archives/2004_10_24_seanmcgrath_archive.html#109895596304446668
 File "/home/calvin/projects/webcleaner/wc/proxy/__init__.py", line 154, in mainloop
