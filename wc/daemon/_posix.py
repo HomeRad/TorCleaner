@@ -96,9 +96,10 @@ def startwatch (startfunc, pidfile, watchfile, parent_exit=True, sleepsecs=5):
             # linux specific?
             if not os.path.isdir("/proc/%d"%pid):
                 # XXX detect zombie state?
-                start(startfunc, pidfile, parent_exit=False)
+                msg, status = start(startfunc, pidfile, parent_exit=False)
         else:
-            start(startfunc, pidfile, parent_exit=False)
+            msg, status = start(startfunc, pidfile, parent_exit=False)
+        # XXX check status here?
         time.sleep(sleepsecs)
     return "", 0
 
