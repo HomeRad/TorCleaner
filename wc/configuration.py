@@ -36,11 +36,11 @@ pending_reload = False
 
 def init (confdir=wc.ConfigDir):
     global config
-    config = Configuration(confdir)
     from wc.filter.rating import register_service
     from wc.filter.rating.service import WebCleanerService
     register_service(WebCleanerService())
     #XXXwc.filter.rating.rating_cache_load()
+    config = Configuration(confdir)
     return config
 
 
