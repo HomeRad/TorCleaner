@@ -1,109 +1,33 @@
 .. meta::
   :navigation.name: Development
 
-Patch guidelines
-----------------
+===========
+Development
+===========
 
-1) Version
-Send only patches against the latest released version or even better
-against the CVS version.
+As with all OpenSource projects, it is easy for you to help or advance
+WebCleaner.
 
-2) Unified diffs
-Make sure you send unified diff files, for example with
-"diff -BurN webcleaner webcleaner_patched > mypatch.diff".
-You can use "cvs diff -u" if you work with the CVS version.
+The easiest thing is probably sending me URLs of web pages that do
+not work correctly through the WebCleaner proxy.
 
-3) Python programming styleguide
-Trying to follow my programming style will save me a lot of time applying
-your patch:
-- indent only with spaces, not with TABs
-- indentation level is always 4 spaces
-- no line should be longer than 80 characters
-- function and class definitions must have a space between name and
-argumentslist:
+If you want to implement a feature you need for yourself, here are
+some suggestions that might be helpful.
 
-def myfunction (arg1, arg2): pass
-class C (object): pass
-- applications must not have a space:
+- When generating patches, they should be against the latest released
+  version or the CVS tree. Instructions to pull the CVS version are
+  at the `WebCleaner CVS`_ repository page.
 
-res = myfunction(val1, val2)
-c = C()
-- every class must be inherited from "object". If a base class is still
-an old-style class, use multiple inheritance. For example the
-"asyncore.dispatcher" class is not inherited from "object". So the
-"Connection" class is defined with:
+- Unified diffs are much more readable, for example you can use
+  ``diff -BurN webcleaner webcleaner_patched > mypatch.diff``, or
+  ``cvs diff -u`` if you work with the CVS version of WebCleaner.
 
-  class Connection (asyncore.dispatcher, object):
-  #...
-  Make sure the old-style class is listed first, before the "object" class.
+- A consistent programming style helps others read and understand
+  the code. For that Python has released a
+  `Style Guide for Python Code`_
 
+.. _WebCleaner CVS:
+   http://sourceforge.net/cvs/?group_id=7692
 
-The HTML parser
-===============
-
-1. Reentrant
-   
-   As soon as any HTML string data is available, we try to feed it
-   to the HTML parser. This means that the parser has to scan possible
-   incomplete data, recognizing as much as it can. Incomplete trailing
-   data is saved for subsequent calls (or it is just flushed away with the
-   flush() function).
-   A reset() brings the parser back to its initial state, throwing away all
-   buffered data.
-
-2. Coping with HTML syntax errors
-   Lets first see what other error-recovering parsers do:
-   
-   a) Mozilla
-      The parser generates "sinks" for header, body and inside parts of
-      an HTML document. At any time a tag can fall into one of these sinks.
-   b) libxml's HTML parser
-      Random tags are inserted to be standard compliant (eg. if you have
-      <p> at the beginning, <html><body> is inserted before that).
-   c) Self-generated bison parsers
-      They allow to skip invalid tokens.
-   
-   All solutions are not acceptable for us: a) and b) change
-   information which may not be available any more (until we buffer all
-   HTML data until EOF); c) looses information. So the solution is
-
-   d) The parser recognizes as much as it can and passes the rest
-      of the data as TEXT tokens.
-
-3. Speed
-   Parsing has to be fast.
-
-
-Solutions:
-==========
-
-1) I use a beta FLEX snapshot from http://lex.sf.net/ to have
-a reentrant scanner. It works together with a pure (reentrant)
-bison parser.
-
-2) The scanner only passes complete recognized HTML syntax elements to
-the parser. Invalid syntax elements are passed as TEXT. This way we do
-not need the bison error recovery.
-Incomplete data is rescanned the next time the parser calls yylex() or
-when it is being flush()ed.
-
-The following syntax errors will be recognized correctly:
-a) missing quotes around attribute values
-b) "</...>" end tags in script modus
-c) missing ">" in tags
-d) invalid tag names
-e) invalid characters inside tags or tag attributes
-
-Additionally the parser has the following features:
-a) NULL bytes are changed into spaces
-b) <!-- ... --> inside a <script> or <style> are not treated as
-comments, so you can safely turn on the comment delete rule
-
-
-3) The FLEX code has options to generate a large but fast scanner.
-The parser ignores forbidden or unnecessary HTML end tags.
-The parser converts tag and attribute names to lower case for easier
-matching.
-The parser quotes all attribute values with minimal necessity (this is
-not standard compliant, but who cares when the browsers understand it).
-The Python memory management interface is being used.
+.. _Style Guide for Python Code:
+   http://www.python.org/peps/pep-0008.html

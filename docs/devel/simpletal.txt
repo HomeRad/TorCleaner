@@ -24,7 +24,7 @@ Supported features
   
   If this attribute is specified with an empty string as the value, the
   message ID is computed from the content of the element bearing this attribute.
-  Otherwise, the value has to be a <code>string:</code> TALES expression whose
+  Otherwise, the value has to be a ``string:`` TALES expression whose
   value forms the message ID.
 
 - ``i18n:attributes``
@@ -82,5 +82,6 @@ See the viewcvs links for `simpleTAL with i18n support`_ and
 `pygettext.py with i18n support`_.
 
 .. _simpleTAL with i18n support: http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/webcleaner/webcleaner2/wc/webgui/simpletal/
-.. _pygettext.py with i18n support: http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/webcleaner/webcleaner2/po/pygettext.py
+.. _pygettext.py with i18n support:
+   http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/webcleaner/webcleaner2/po/pygettext.py?view=markup
 

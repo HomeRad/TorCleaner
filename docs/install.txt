@@ -9,8 +9,10 @@ Requirements for Unix/Linux:
 ----------------------------
 
 1. You need a standard GNU development environment with
+   
    a) C compiler (for example the GNU C Compiler gcc)
    b) gettext
+   
 2. Python >= 2.3.1 from http://www.python.org/ with zlib support
 3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
 4. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
@@ -26,32 +28,32 @@ Direct download links are in brackets.
    Be sure to install in the given order:
    
    a) MingGW
-      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-3.1.0-1.exe ]
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-3.1.0-1.exe]
    b) MSYS
-      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe ]
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe]
    c) libiconv
-      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/libiconv-1.8.0-2003.02.01-1.exe ]
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/libiconv-1.8.0-2003.02.01-1.exe]
    d) gettext
-      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe ]
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe]
    
 2. Install Python >= 2.3.1 from http://www.python.org/
-   [ http://www.python.org/ftp/python/2.3.3/Python-2.3.3.exe ]
+   [http://www.python.org/ftp/python/2.3.3/Python-2.3.3.exe]
 3. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
-   [ http://starship.python.net/crew/mhammond/downloads/win32all-163.exe ]
+   [http://starship.python.net/crew/mhammond/downloads/win32all-163.exe]
 4. Install Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
-   [ http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe ]
+   [http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe]
 5. Download Python Crypto Module from
    http://www.amk.ca/python/code/crypto.html
-   [ http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz ]
+   [http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz]
    For Installation of PyCrypto see below.
 6. Install OpenSSL for Windows from
    http://www.slproweb.com/products/Win32OpenSSL.html
-   [ http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe ]
+   [http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe]
 7. Download PyOpenSSL from
    http://pyopenssl.sourceforge.net/
-   [ http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz ]
+   [http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz]
    For Installation of PyOpenSSL see below.
 
 Setup for Unix/Linux:
@@ -77,7 +79,7 @@ Setup for Unix/Linux:
       Now read the runsvdir(8) documentation on how to setup a local
       runit service.
    
-4. Enjoy
+4. Enjoy:
    WebCleaner is now installed as a runit service and will start
    automatically in 5 seconds.
    See the README on how to configure the proxy filters.

@@ -26,9 +26,24 @@ img {
 .last {
   margin-bottom: 0 }
 
+a {
+    color: #222222;
+}
+
+a:hover {
+    color: black;
+}
+
 a.toc-backref {
   text-decoration: none ;
-  color: black }
+  color: black;
+}
+
+div.document {
+    margin-left: 2em;
+    width:680px;
+    overflow: visible;
+}
 
 blockquote.epigraph {
   margin: 2em 5em ; }
@@ -37,7 +52,8 @@ dd {
   margin-bottom: 0.5em }
 
 div.abstract {
-  margin: 2em 5em }
+  margin: 2em 5em;
+}
 
 div.abstract p.topic-title {
   font-weight: bold ;
@@ -75,7 +91,15 @@ div.figure {
   margin-left: 2em }
 
 div.footer, div.header {
-  font-size: smaller }
+    font-size: smaller;
+    margin-left: 2em;
+    margin-bottom: 1em;
+}
+
+hr.footer {
+    width: 680px;
+    margin-left: 2em;
+}
 
 div.sidebar {
   margin-left: 1em ;

@@ -8,7 +8,7 @@ WebCleaner - a filtering HTTP proxy
 
 
 Features
---------
+========
 
 - HTTP/1.1 support
 - HTTPS proxy CONNECT and optional SSL gateway support
@@ -27,30 +27,27 @@ Features
 - configurable over a themable web interface
 
 
-Requirements and Installation
------------------------------
-
-Read the install_ documentation.
-
-.. _install: install.html
-
-
 Download
---------
+========
 
 Download the latest packages from `WebCleaner download section`_.
 There are also `Md5sum checksums`_ from above files.
-
-Read the ChangeLog
 
 .. _WebCleaner download section:
    http://sourceforge.net/project/showfiles.php?group_id=7692
 .. _Md5sum checksums:
    webcleaner-md5sums.txt
 
+Requirements and installation instructions are located at the
+install_ documentation. To see what has changed between releases
+look at the ChangeLog_.
+
+.. _install: install.html
+.. _ChangeLog: changes.txt
+
 
 Screenshots
------------
+===========
 
    +----------------------------+----------------------------+
    | .. image:: shot1_thumb.jpg | .. image:: shot2_thumb.jpg |
@@ -62,7 +59,7 @@ Screenshots
 
 
 Why should I use WebCleaner?
-----------------------------
+============================
 
 The first feature that sets WebCleaner apart from other proxies is
 exact HTML filtering, and this removes a lot of advertisings.
@@ -86,30 +83,27 @@ and fixed by the HtmlSecurity class.
 Furthermore, WebCleaner can filter SSL traffic used in ``https://`` URLs.
 See the `SSL gateway`_ documentation for more info.
 
-.. _SSL gateway: sslgateway.html
+.. _SSL gateway: devel/sslgateway.html
 
 
 Configuration
--------------
+=============
 
 Assuming your proxy runs on port *8080*, point your browser to
 http://localhost:8080/ to configure the proxy.
 The underlying configuration format is a custom XML format which is
 explained in config/filter.dtd and config/webcleaner.dtd.
-Of course the default configuration is tuned to websites I visit
-regularly. You can help me extend the current config data by sending
-me patches!
 
 
 Running
--------
+=======
 
 Please note that the web configuration interface needs write permissions
 in the configuration directory.
 
 
 Running under Unix/Linux
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 The proxy is supervised and automatically (re-)started from the runit
 package.
@@ -118,14 +112,14 @@ See the `runit homepage`_ for more information.
 .. _runit homepage: http://smarden.org/runit/
 
 Running under Windows
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 The proxy is a normal NT service and can be started/stopped from the
 "Administrative Tasks" entry in the system configuration.
 
 
 Notes
------
+=====
 
 WebCleaner is *not* a HTTP compliant proxy because it modifies requests,
 headers and data. Modifications aside, the proxy tries to fulfill
@@ -147,17 +141,4 @@ unknown content-encoding).
 Currently, this affects only the "compress" or "x-compress" encoding,
 because the LZW algorithm to uncompress such content is patented and
 therefore not included in WebCleaner. See www.burnallgifs.org.
-
-
-What you can do
----------------
-
-- Send me urls with adverts WebCleaner is not filtering.
-- Send me urls that do not display correctly in WebCleaner.
-- Implement something on the TODO list and send me a patch.
-
-:Author: Bastian Kleineidam
-:Contact: calvin@users.sourceforge.net
-:Revision: $Revision$
-:Date: $Date$
 

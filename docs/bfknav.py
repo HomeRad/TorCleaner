@@ -57,13 +57,24 @@ class Node (object):
             self.children[0].write_nav(fp, active)
 
     def write_inactive (self, fp, level):
-        fp.write('<a href="%s">%s</a>\n'%(self.get_url(level), self.name))
+        s = '<a href="%s">%s' % (self.get_url(level), self.name)
+        if self.children:
+            s += ' &gt;'
+        s += "</a>\n"
+        fp.write(s)
 
     def write_active (self, fp):
-        fp.write("<span>%s</span>\n"%self.name)
+        s = "<span>"
+        #if not self.children:
+        #    s += '&gt; '
+        s += self.name
+        if self.children:
+            s += ' &gt;'
+        s += "</span>\n"
+        fp.write(s)
 
     def write_nextlevel (self, fp):
-        fp.write('<br>\n')
+        fp.write('</div>\n<div class="navrow" style="padding: 0em 0em 0em %dem;">'% (self.level+2))
 
     def new_node (self):
         return Node(self.name, sys.maxint, self.filename)
@@ -149,7 +160,12 @@ def generate_nav (start, nodes):
             node.active = True
             fp = StringIO()
             start.write_nav(fp, node)
-            nav = '<div class="navigation">\n%s\n</div>\n' % fp.getvalue()
+            nav = """<div class="navigation">
+<div class="navrow" style="padding: 0em 0em 0em 1em;">
+%s
+</div>
+</div>
+""" % fp.getvalue()
             node.active = False
             write_nav(node.filename, nav)
 
