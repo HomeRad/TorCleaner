@@ -37,10 +37,13 @@ You can start the proxy by executing "webcleaner start".
 Notes
 -----
 WebCleaner is _not_ a HTTP compliant proxy because it modifies requests,
-headers and data!
+headers and data! Modifications aside, the proxy tries to fulfill
+the HTTP/1.1 specifications found in RFC 2616.
 
-Yes, surf performance will decrease, especially with the Rewriter and
-the Replacer module enabled.
+Surf performance will decrease, especially with the Rewriter and the
+Replacer module enabled. It will decrease further with JavaScript
+parsing enabled, since the proxy downloads and parses <script src="">
+tags in the background.
 WebCleaner is intended for a single user system; it does not scale well
 beyond 5-10 users.
 

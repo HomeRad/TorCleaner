@@ -1,20 +1,13 @@
 Q: The filter is not working - I still see some advertisings that are
    definitely filtered out.
-A: Look in the HTML source. Some adverts (eg. freshmeat.net) are
-   generated with JavaScript. You have these possible solutions:
-   * turn off JavaScript
-   * generate a JavaScript (Rewrite) filter and restrict it to the urls you
-     (dont) want to have JavaScript
-     This works only with JS in <script> tags.
-   * generate a Blocker filter which at least blocks the image download
-     (I usually prefer this solution).
+A: Send the URL to calvin@users.sf.net and I will add a filter rule for it.
 
 Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
    some tags or is completely crippled
 A: First, try to disable the WebCleaner proxy and look at the page again.
    Or try adding "noproxy." before the url hostname to turn off filtering.
    If it renders ok, you most likely have encountered a bug in WebCleaner.
-   Please write a bug report to calvin@users.sourceforge.net and
+   Please write a bug report to calvin@users.sf.net and
    include the URL you have problems with.
 
 Q: I am seeing the error "client sent data in state receive".
@@ -27,6 +20,8 @@ A: Yes.
       The default configuration is that only local users can
       access the proxy. Additionally, you should define a proxy password.
    2) Every user with granted access can read the configuration.
+   3) WebCleaner uses 3rd-party libraries and inherits their potential
+      security flaws.
 
 Q: I get "zlib error" entries in my error log.
 A: Some b0rked servers are sending Content-Type: gzip for pages
