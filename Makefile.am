@@ -1,4 +1,4 @@
-SUBDIRS 		= po libjs service
+SUBDIRS = po libjs service
 TESTS = unittests
 
 PYVER := 2.3
@@ -98,18 +98,6 @@ homepage-zapper: md5sums
 doc:
 	rm -f README
 	pydoc$(PYVER) ./webcleaner > README
-
-debug:
-	@for f in `find . -name \*.py`; do \
-	  cat $$f | sed 's/#self._debug(/self._debug(/' > $$f.bak; \
-	  mv -f $$f.bak $$f; \
-	done
-
-ndebug:
-	@for f in `find . -name \*.py`; do \
-	  cat $$f | sed 's/self._debug(/#self._debug(/' > $$f.bak; \
-	  mv -f $$f.bak $$f; \
-	done
 
 pycheck:
 	-env PYTHONVER=2.3 pychecker $(PYCHECKEROPTS) $(PYCHECKERFILES)
