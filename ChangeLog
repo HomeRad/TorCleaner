@@ -47,6 +47,10 @@
     Type: bugfix
     Changed: wc/filter/Header.py
 
+  * Do not add duplicate rules to filter modules.
+    Type: bugfix
+    Changed: wc/configuration.py
+
 2.23 "The fog of war" (released 27.10.2004)
 
   * Fixed MIME type changing.
