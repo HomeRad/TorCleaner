@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Tue Jan  6 17:59:45 2004\n"
+"POT-Creation-Date: Tue Jan  6 21:31:39 2004\n"
 "PO-Revision-Date: 2004-01-05 00:31+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -502,8 +502,14 @@ msgstr "%(AppName)s Filteraktualisierung"
 msgid "Filter configuration rules"
 msgstr "Filterkonfigurationsregeln"
 
-msgid "Limit"
+msgid ""
+"If you specified zero or more than one attributes\n"
+"to match, 'attr' and 'attrvalue' replace the first occuring or matching\n"
+"attribute or nothing."
 msgstr ""
+"Falls Sie keines oder mehr als ein Attribut angegeben haben,\n"
+"ersetzen die 'attr' und 'attrvalue' Teile entweder das zuerst vorkommende\n"
+"Attribut oder gar keines."
 
 msgid "Rule enclosed block successfully changed."
 msgstr "Rewrite-Regel eingeschlossener Block wurde erfolgreich geändert."
@@ -549,6 +555,10 @@ msgstr "Nicht betroffene URL"
 
 msgid "Parent proxy settings"
 msgstr "Übergeordnete Proxy-Einstellungen"
+
+#, fuzzy
+msgid "Allowed limit"
+msgstr "Erlaubte Rechner"
 
 msgid "Parent proxy port successfully changed."
 msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
@@ -745,15 +755,6 @@ msgstr "Filteraktualisierung Protokoll"
 
 msgid "Move rule down"
 msgstr "Regel nach unten schieben"
-
-msgid ""
-"If you specified zero or more than one attributes\n"
-"to match, 'attr' and 'attrvalue' replace the first occuring or matching\n"
-"attribute or nothing."
-msgstr ""
-"Falls Sie keines oder mehr als ein Attribut angegeben haben,\n"
-"ersetzen die 'attr' und 'attrvalue' Teile entweder das zuerst vorkommende\n"
-"Attribut oder gar keines."
 
 msgid "Proxy configuration"
 msgstr "Proxykonfiguration"

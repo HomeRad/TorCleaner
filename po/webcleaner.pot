@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Jan  6 17:59:45 2004\n"
+"POT-Creation-Date: Tue Jan  6 21:31:39 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -443,7 +443,10 @@ msgstr ""
 msgid "Filter configuration rules"
 msgstr ""
 
-msgid "Limit"
+msgid ""
+"If you specified zero or more than one attributes\n"
+"to match, 'attr' and 'attrvalue' replace the first occuring or matching\n"
+"attribute or nothing."
 msgstr ""
 
 msgid "Rule enclosed block successfully changed."
@@ -482,6 +485,9 @@ msgid "Don't match URL"
 msgstr ""
 
 msgid "Parent proxy settings"
+msgstr ""
+
+msgid "Allowed limit"
 msgstr ""
 
 msgid "Parent proxy port successfully changed."
@@ -655,12 +661,6 @@ msgid "Filter update log"
 msgstr ""
 
 msgid "Move rule down"
-msgstr ""
-
-msgid ""
-"If you specified zero or more than one attributes\n"
-"to match, 'attr' and 'attrvalue' replace the first occuring or matching\n"
-"attribute or nothing."
 msgstr ""
 
 msgid "Proxy configuration"
