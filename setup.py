@@ -199,8 +199,7 @@ setup (name = "webcleaner",
 * reduce images to low-bandwidth JPEGs
 * remove/add/modify arbitrary HTTP headers
 * usage of SquidGuard domain and url blacklists
-* user/password protection with proxy authentication
-  (requires HTTP/1.1 capable browser)
+* Basic and Digest proxy authentication for both clients and servers
 * per-host access control
 * customizable with a themable web interface
 """,
