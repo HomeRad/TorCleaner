@@ -60,10 +60,6 @@ install: build
 	rm -rf $(BASE)/usr/man
 	# delete INSTALL file
 	rm -f $(DOCDIR)/INSTALL
-	# move webcleaner binaries to /usr/sbin
-	mv $(BASE)/usr/bin/webcleaner $(BASE)/usr/sbin
-	mv $(BASE)/usr/bin/webcleaner-certificates $(BASE)/usr/sbin
-	rmdir $(BASE)/usr/bin
 	# move config files
 	mv $(SHAREDIR)/config/* $(ETCDIR)/
 	rmdir $(SHAREDIR)/config
