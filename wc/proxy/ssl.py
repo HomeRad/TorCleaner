@@ -18,7 +18,7 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
 
 
 serverctx = None
-def get_server_ctx ():
+def get_serverctx ():
     global serverctx
     if serverctx is None:
         # Initialize context
@@ -40,7 +40,7 @@ def verify_client_cb (conn, cert, errnum, depth, ok):
 
 
 clientctx = None
-def get_client_ctx ():
+def get_clientctx ():
     global clientctx
     if clientctx is None:
         # construct client context
