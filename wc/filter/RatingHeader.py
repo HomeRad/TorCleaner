@@ -46,13 +46,10 @@ class RatingHeader (Filter):
                 except RatingParseError, msg:
                     warn(FILTER, "rating parse error: %s", msg)
         rules = attrs['rating_rules']
-        if rules and not attrs['mime'].lower().startswith('text/html'):
-            # note: do not check HTML pages at this point, but give them
-            # a chance to override this with their own rating in meta info.
-            for rule in rules:
-                msg = rating_allow(url, rule)
-                if msg:
-                    raise FilterRating(msg)
+        for rule in rules:
+            msg = rating_allow(url, rule)
+            if msg:
+                raise FilterRating(msg)
         return data
 
 
