@@ -1,6 +1,5 @@
 #!/usr/bin/python2.2
-# this files has to be executed in the config parent dir
-# which is normally /usr/share/webcleaner on installed systems
+# this script has to be executed in the config parent dir
 """Generate blacklist_XXX folders with blocking and rewriting
 filters for the given blacklist files.
 The XXX folder name is the blacklist folder.
@@ -23,6 +22,9 @@ urls = {}
 expressions = {}
 # <category> --> <type> --> <file>
 categories = {}
+cat_map = {
+    "porn": "adult",
+}
 dmoz_cats = [
      'Top/Adult',
      'Top/Arts',
