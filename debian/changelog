@@ -1,3 +1,9 @@
+webcleaner (2.4-0.2) unstable; urgency=low
+
+  * Use dh_python, indent webcleaner description
+
+ -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Nov 2003 12:06:14 +0100
+
 webcleaner (2.4-0.1) unstable; urgency=low
 
   * New upstream release

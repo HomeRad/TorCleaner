@@ -13,7 +13,7 @@ test -x $DAEMON || exit 0
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	$DAEMON start${MONITOR}
+	$DAEMON start${MONITOR} 2>> /var/log/${NAME}/${NAME}.err
         R=$?
 	echo "$NAME."
         exit $R

@@ -8,25 +8,10 @@ set -e
 db_version 2.0
 
 package=webcleaner
-PYTHON=python
-PYVER=2.3
-PYTHONXY=${PYTHON}${PYVER}
-SITEPACKAGES=/usr/lib/$PYTHONXY/site-packages
-DIRLIST="wc"
-FILELIST="_webcleaner2_configdata.py"
-COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
 
 case "$1" in
     configure|reconfigure|abort-upgrade|abort-remove|abort-deconfigure)
-        for i in $DIRLIST; do
-            $PYTHONXY -O /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
-            $PYTHONXY /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
-        done
-	# use /bin/sh -c, otherwise I get a SyntaxError from Python
-        for i in $FILELIST; do
-            /bin/sh -c "$PYTHONXY -O -c $COMMAND $SITEPACKAGES/$i"
-            /bin/sh -c "$PYTHONXY -c $COMMAND $SITEPACKAGES/$i"
-        done
+        break
     ;;
     *)
         echo "postinst called with unknown argument \`$1'" >&2
@@ -50,6 +35,13 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
 fi
 db_stop
+
+if [ "$1" = "configure" ]; then
+    # old log file locations
+    rm -f /var/log/webcleaner.log
+    rm -f /var/log/webcleaner.err
+    rm -f /var/log/webcleaner-access.log
+fi
 
 #DEBHELPER#
 
