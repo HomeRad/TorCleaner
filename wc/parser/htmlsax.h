@@ -36,6 +36,8 @@ typedef struct {
     PyObject* exc_type;
     PyObject* exc_val;
     PyObject* exc_tb;
+    /* error string */
+    char* error;
 } UserData;
 extern char* stpcpy(char* src, const char* dest);
 

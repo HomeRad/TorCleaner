@@ -70,6 +70,9 @@
 #define UPDATE_BUFPOS yyextra->bufpos += yyleng
 #define RETURN(tok) yyextra->nextpos = yyextra->bufpos; return tok
 
+/* XXX todo */
+#define SET_ERROR(s)
+
 #include "htmlparse.h"
 
 /* Find out if and how we must quote the value as an HTML attribute.
@@ -620,6 +623,7 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     LOWER_TMP;
     SETLVAL;
+    SET_ERROR("Missing > in end tag.");
     yyextra->tmp_attrs = PyDict_New();
     if (!yyextra->tmp_attrs) return T_ERROR;
     BEGIN(S_TAGSTART);
