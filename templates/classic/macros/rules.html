@@ -38,19 +38,36 @@
 <table summary="">
 <div metal:define-macro="matchurl">
 <tr valign="top"><td>
-<label for="rule_matchurl" i18n:translate="">Match URL</label>:
+<label for="rule_matchurls" i18n:translator="">Match urls</label>:
 </td><td>
-<input type="text" class="text" name="rule_matchurl" id="rule_matchurl"
- value="Match url" tal:attributes="value currule/matchurl">
+<select name="rule_matchurls" id="rule_matchurls" multiple size="3"
+ i18n:attributes="title List of urls this rule should apply to">
+<option tal:repeat="url currule/matchurls" tal:attributes="value url"
+ tal:content="url">www\.imadoofus\.org</option>
+</select><br>
+<input type="submit" name="delmatchurls" value="Remove selected" class="submit"
+ i18n:attributes="value Remove selected"><br>
+<input class="text" type="text" name="newmatchurl" value=""><br>
+<input type="submit" name="addmatchurl" value="Add new" class="submit"
+ i18n:attributes="value Add new">
 </td></tr>
 <tr valign="top"><td>
-<label for="rule_dontmatchurl" i18n:translate="">Don't match URL</label>:
+<label for="rule_nomatchurls" i18n:translator="">Don't match urls</label>:
 </td><td>
-<input type="text" class="text" name="rule_dontmatchurl" id="rule_dontmatchurl"
- value="Don't match url" tal:attributes="value currule/dontmatchurl">
+<select name="rule_nomatchurls" id="rule_nomatchurls" multiple size="3"
+ i18n:attributes="title List of urls this rule must not apply to">
+<option tal:repeat="url currule/nomatchurls" tal:attributes="value url"
+ tal:content="url">www\.imadoofus\.org</option>
+</select><br>
+<input type="submit" name="delnomatchurls" value="Remove selected" class="submit"
+ i18n:attributes="value Remove selected"><br>
+<input class="text" type="text" name="newnomatchurl" value=""><br>
+<input type="submit" name="addnomatchurl" value="Add new" class="submit"
+ i18n:attributes="value Add new">
 </td></tr>
 </div>
 </table>
+
 <hr noshade size="1">
 
 <!-- url parts (used by AllowRule and BlockRule) -->
