@@ -172,7 +172,7 @@
 </rewrite>
 
 <block sid="wc.351"
- url="https?://.*/(advert|banners?|adid|profileid)/">
+ url="https?://.*/(advert|banners?|adid|profileid)/.*\?.*">
   <title lang="de">CGI Werbung mit 'banner' u.a.</title>
   <title lang="en">CGI adverts 3</title>
   <description lang="de">Suche nach advert,banner,adid,profileid in der URL.</description>
