@@ -2,9 +2,13 @@ TODO
 
 version 2.3
 
-- parse and import adzapper.sf.net filters
+- HTTP/1.1 persistent client connections
+
+- HTTP/1.1 pipelining
 
 - HTTPS tunneling (RFC 2817/2818)
+
+- parse and import adzapper.sf.net filters
 
 version 2.4
 
