@@ -13,19 +13,11 @@ case "$1" in
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
        # nothing to do
        ;;
-
     *)
         echo "postrm called with unknown argument \`$1'" >&2
         exit 0
 
 esac
-
-# delete all generated .pyc and .pyo files
-# _dont_ do this in prerm because we call "/etc/init.d/webcleaner stop"
-# afterwards which would regenerate some .pyc files
-dpkg --listfiles $PACKAGE |
-    awk '$0~/\.py$/ {print $0"c\n" $0"o"}' | 
-    xargs rm -f >&2
 
 #DEBHELPER#
 
