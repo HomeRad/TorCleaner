@@ -43,9 +43,9 @@ typedef struct {
      */
     char* buf;
     /* current position in the buffer counting from zero */
-    int bufpos;
+    unsigned int bufpos;
     /* current position of next syntax element */
-    int nextpos;
+    unsigned int nextpos;
     /* input buffer of lexer, must be deleted when the parsing stops */
     void* lexbuf;
     /* temporary character buffer */
