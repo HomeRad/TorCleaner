@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Jul 13 00:15:31 2003\n"
+"POT-Creation-Date: Wed Jul 16 09:06:45 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -697,7 +697,10 @@ msgstr ""
 msgid "Proxy filter modules"
 msgstr ""
 
-msgid "Allowed hosts XXX"
+msgid "List of hosts allowed to use this proxy."
+msgstr ""
+
+msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
 msgstr ""
 
 msgid "Remove selected"
@@ -709,7 +712,10 @@ msgstr ""
 msgid "Don't filter hosts"
 msgstr ""
 
-msgid "Don't filter hosts XXX"
+msgid "List of hostnames the proxy must not filter."
+msgstr ""
+
+msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
 msgstr ""
 
 msgid "Apply"
