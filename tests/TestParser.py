@@ -17,7 +17,7 @@ class TestParser (StandardTest.StandardTest):
         ("""<a  b="c" >""", """<a b="c">"""),
         ("""<a  b='c' >""", """<a b="c">"""),
         ("""<a  b=c" >""", """<a b="c">"""),
-        ("""<a  b=c' >""", """<a b="c">"""),
+        ("""<a  b=c' >""", """<a b="c'">"""),
         ("""<a  b="c >""", """<a  b="c >"""),
         ("""<a  b="" >""", """<a b="">"""),
         ("""<a  b='' >""", """<a b="">"""),
@@ -86,6 +86,10 @@ class TestParser (StandardTest.StandardTest):
         ("""<a  href='"' >""", """<a href="&quot;">"""),
         ("""<a  href="bla" %]" >""", """<a href="bla">"""),
         ("""<a  href=bla" >""", """<a href="bla">"""),
+        ("""<a onmouseover=MM_swapImage('nav1','','/images/dwnavpoint_over.gif',1);movein(this); b="c">""",
+         """<a onmouseover="MM_swapImage('nav1','','/images/dwnavpoint_over.gif',1);movein(this);" b="c">"""),
+        ("""<a onClick=location.href('/index.htm') b="c">""",
+         """<a onclick="location.href('/index.htm')" b="c">"""),
         # entities
         ("""<a  href="&#109;ailto:" >""", """<a href="mailto:">"""),
         # non-ascii characters

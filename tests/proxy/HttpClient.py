@@ -6,7 +6,9 @@ class LogHttpClient (object):
     def __init__ (self, log, proxyconfig):
         self.log = log
         self.proxyconfig = proxyconfig
-        self.addr = (socket.gethostbyname('localhost'), self.proxyconfig['port'])
+        port = self.proxyconfig['port']
+        host = socket.gethostbyname('localhost')
+        self.addr = (host, port)
         self.debug = 0
 
     def doRequest (self, request):

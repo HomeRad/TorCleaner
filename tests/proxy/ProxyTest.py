@@ -4,6 +4,7 @@
 import sys
 import threading
 import time
+import os
 import wc
 import tests.StandardTest
 import tests.proxy.HttpServer
@@ -60,7 +61,8 @@ class ProxyTest (tests.StandardTest.StandardTest):
         else:
             self.log = file("servertests.txt", 'a')
         self.proxytests = []
-        self.proxyconfig = wc.Configuration()
+        confdir = os.path.join('tests', 'proxy', 'config')
+        self.proxyconfig = wc.Configuration(confdir=confdir)
         self.startProxy()
 
     def shutdown (self):
@@ -73,7 +75,8 @@ class ProxyTest (tests.StandardTest.StandardTest):
         """start proxy"""
         port = self.proxyconfig['port']
         self.log.write("starting WebCleaner proxy on port %d\n"%port)
-        kwargs = {"abort": abort,}
+        confdir = self.proxyconfig.configdir
+        kwargs = {"abort": abort, 'filelogs': False, 'confdir': confdir}
         self.proxythread = threading.Thread(target=wc.wstartfunc, kwargs=kwargs)
         self.proxythread.start()
         # wait until proxy is started
