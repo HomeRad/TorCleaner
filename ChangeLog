@@ -10,7 +10,8 @@
   * cope with falsely advertised GIF images, the GIF parsers ignores
     them now
     Changed: wc/filter/GifImage.py
-  * fix setting of missing host header
+  * - fixed setting of missing host header
+    - fixed redirection response data
     Changed: wc/proxy/ClientServerMatchmaker.py
   * Javascript engine initialization improvements:
     - set navigator.plugins['Shockwave Flash'] object
