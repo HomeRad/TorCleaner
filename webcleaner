@@ -141,11 +141,11 @@ import sys, os
 if sys.version[:5] < "2.3":
     raise SystemExit, "This program requires Python 2.3 or later."
 # psyco library for speedup
-try:
-    import psyco
-    psyco.profile()
-except ImportError:
-    pass
+#try:
+#    import psyco
+#    psyco.profile()
+#except ImportError:
+#    pass
 from wc import i18n, wstartfunc
 
 _nt_usage = i18n._("""USAGE\twebcleaner command [options]
