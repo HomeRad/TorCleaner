@@ -1,10 +1,15 @@
 TODO
 
-version 2.10 and above
-
-- memory leaks while operating the proxy
+version 2.10
 
 - convert remaining tests to unit testing where appropriate
+
+version 2.11 and above
+
+- display a stripped version of server error messages inline in
+  the standard webcleaner error page
+
+- memory leaks while operating the proxy
 
 - use test/client.py, test/server.py for testing
 
@@ -25,9 +30,7 @@ version 2.10 and above
   sometimes you'll see '?' chars in the HTML output.
 
 - blocked HTTPS urls issue a warning because we switch to http://
-  instead the proxy should support https requests.
+  instead the proxy should use https requests?
 
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
-
-- http://whiskyworld.de/whiskysinglemalts_l.htm
