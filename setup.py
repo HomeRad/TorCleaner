@@ -183,14 +183,14 @@ setup (name = "webcleaner",
        maintainer_email = myemail,
        url = "http://webcleaner.sourceforge.net/",
        license = "GPLv2",
-       packages = ['', 'wc', 'wc/filter', 'wc/daemon', 'wc/js',
+       packages = ['', 'wc', 'wc/filter', 'wc/daemon', 'wc/js', 'wc/magic',
            'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns', 'wc/proxy/auth',
            'wc/filter/rules', 'wc/webgui', 'wc/webgui/simpletal',
            'wc/webgui/context',],
        ext_modules = extensions,
        scripts = scripts,
        long_description = """WebCleaner features:
-* HTTP/1.1 support
+* HTTP/1.1 and HTTPS support
 * integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
 * integrated JavaScript engine, allows popup filtering
 * compress documents on-the-fly (with gzip)

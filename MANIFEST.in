@@ -12,7 +12,8 @@ include debian/webcleanertools.postinst debian/webcleanertools.prerm
 include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
 include webcleaner.1 webcleanerconf.1 webcleaner.conf.5 wcheaders.1
-include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif config/*.py
+include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif 
+include config/*.py config/magic.mime
 recursive-include config/blacklists *.gz README
 include config/*.png config/*.html
 include templates/classic/*.html
