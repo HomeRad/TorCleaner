@@ -24,6 +24,8 @@ from wc.log import *
 
 _percent_encodings = re.compile('%+').findall
 def _has_lots_of_percents (url):
+    if not url:
+        return False
     for match in _percent_encodings(url):
         if len(match) > 10:
             return True
