@@ -210,6 +210,8 @@ def _form_filtermodules (form):
             config['filters'].sort()
             config['filterdict'][m] = False
             disabled.append(m)
+    if enabled or disabled:
+        config.write_proxyconf()
     global filterenabled, filterdisabled
     filterenabled = ", ".join(enabled)
     filterdisabled = ", ".join(disabled)
