@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Feb 24 19:45:11 2004\n"
+"POT-Creation-Date: Wed Feb 25 16:20:43 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -384,6 +384,9 @@ msgstr ""
 msgid "%(AppName)s configuration"
 msgstr ""
 
+msgid "Attributes"
+msgstr ""
+
 msgid "List of hostnames the proxy must not filter."
 msgstr ""
 
@@ -396,7 +399,7 @@ msgstr ""
 msgid "Header name"
 msgstr ""
 
-msgid "This page is also available in"
+msgid "Image height"
 msgstr ""
 
 msgid "Saved ratings"
@@ -442,6 +445,9 @@ msgid "Blocked image URL"
 msgstr ""
 
 msgid "Header value"
+msgstr ""
+
+msgid "Match urls"
 msgstr ""
 
 msgid "Page blocked by %(AppName)s"
@@ -509,9 +515,6 @@ msgid "Rule enclosed block successfully changed."
 msgstr ""
 
 msgid "Content rated by %(AppName)s"
-msgstr ""
-
-msgid "Attributes"
 msgstr ""
 
 msgid "Parse and evaluate content rating system header values."
@@ -675,10 +678,7 @@ msgstr ""
 msgid "Image width"
 msgstr ""
 
-msgid ""
-"I wrote this software to get rid of advertisings. If you still see advert images\n"
-"on pages you surf on, you are free to send me the url of those pages and I\n"
-"will include filters to remove the adverts.\n"
+msgid "This page is also available in"
 msgstr ""
 
 msgid "Empty header rule name."
@@ -873,7 +873,7 @@ msgstr ""
 msgid "Rating successfully deleted."
 msgstr ""
 
-msgid "Image height"
+msgid "Don't match urls"
 msgstr ""
 
 msgid "Rule replacement successfully changed."
@@ -1351,6 +1351,12 @@ msgid "Replacement URL"
 msgstr ""
 
 msgid "Invalid attribute name."
+msgstr ""
+
+msgid ""
+"I wrote this software to get rid of advertisings. If you still see advert images\n"
+"on pages you surf on, you are free to send me the url of those pages and I\n"
+"will include filters to remove the adverts.\n"
 msgstr ""
 
 msgid "Apply"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Feb 24 22:35:57 2004\n"
+"POT-Creation-Date: Wed Feb 25 16:47:06 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "Transe test successful"
 msgstr ""
 
-msgid "This will be translated"
+msgid "English image description"
 msgstr ""
 
 msgid "this is a %(parameter)s example"
@@ -27,9 +27,12 @@ msgstr ""
 msgid "Hello english speaking friend"
 msgstr ""
 
-msgid "error"
+msgid "This will be translated"
 msgstr ""
 
-msgid "English image description"
+msgid "text"
+msgstr ""
+
+msgid "rule_title"
 msgstr ""
 
