@@ -24,8 +24,10 @@ from ntlm import *
 def get_header_challenges (headers, key):
     auths = {}
     for auth in get_header_values(headers, key):
+        debug(AUTH, "%s header challenge:\n  %s", key, cred)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
+    debug(AUTH, "parsed challenges: %s", str(creds))
     return auths
 
 
@@ -101,7 +103,7 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    debug(AUTH, "credentials: %s", str(creds))
+    debug(AUTH, "get_credentials: %s", str(creds))
     return creds
 
 

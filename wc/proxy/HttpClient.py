@@ -145,7 +145,7 @@ class HttpClient (Connection):
             if config["proxyuser"]:
                 creds = get_header_credentials(self.headers, 'Proxy-Authorization')
                 if not creds:
-                    auth = ", ".join(get_challenges()))
+                    auth = ", ".join(get_challenges())
                     self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
                     return
                 # XXX the data=None argument should hold POST data
@@ -154,7 +154,7 @@ class HttpClient (Connection):
                                          uri=self.url, method=self.method,
                                          data=None):
                     warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
-                    auth = ", ".join(get_challenges()))
+                    auth = ", ".join(get_challenges())
                     self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
                     return
             if self.method in ['OPTIONS', 'TRACE'] and \
