@@ -43,13 +43,6 @@ class ImageReducer (wc.filter.Filter.Filter):
         self.quality = 20
 
 
-    def addrule (self, rule):
-        """add given rule to filter, filling config values"""
-        super(ImageReducer, self).addrule(rule)
-        self.minimal_size_bytes = rule.minimal_size_bytes
-        self.quality = rule.quality
-
-
     def filter (self, data, **attrs):
         """feed image data to buffer"""
         if not attrs.has_key('imgreducer_buf'):
@@ -77,15 +70,23 @@ class ImageReducer (wc.filter.Filter.Filter):
             return p.getvalue()
         return data.getvalue()
 
-
     def getAttrs (self, url, headers):
         """initialize image reducer buffer and flags"""
         # don't filter tiny images
         d = super(ImageReducer, self).getAttrs(url, headers)
-        length = headers['server'].get('Content-Length')
-        if length is None:
-            bk.log.warn(wc.LOG_FILTER, "unknown image size at %r", url)
-        elif length < self.minimal_size_bytes:
+        # weed out the rules that don't apply to this url
+        rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
+        if rules:
+            quality = rules[0].quality
+            minimal_size_bytes = rules[0].minimal_size_bytes
+        else:
+            quality = self.quality
+            minimal_size_bytes = self.minimal_size_bytes
+        try:
+            length = int(headers['server'].get('Content-Length', 0))
+        except ValueError:
+            bk.log.warn(wc.LOG_FILTER, "invalid content length at %r", url)
+        if length < minimal_size_bytes:
             return d
         ctype = headers['server']['Content-Type']
         headers['data']['Content-Type'] = 'image/jpeg'
