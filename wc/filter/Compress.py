@@ -103,17 +103,15 @@ class Compress (Filter):
         #debug(HURT_ME_PLENTY, "compress headers", `headers.headers`)
         compressobj = None
         accept = headers.get('Accept-Encoding', '')
-        #debug(HURT_ME_PLENTY, "accept", `accept`)
         encoding = headers.get('Content-Encoding', '').lower()
-        #debug(HURT_ME_PLENTY, "encoding", `encoding`)
         if accept!='gzip':
             pass
         elif encoding and encoding not in _compress_encs:
             compressobj = getCompressObject()
-            headers['Content-Encoding'] += ', gzip'
+            headers['Content-Encoding'] = encoding+', gzip\r'
         else:
             compressobj = getCompressObject()
-            headers['Content-Encoding'] = 'gzip'
+            headers['Content-Encoding'] = 'gzip\r'
         #debug(HURT_ME_PLENTY, "compress object", compressobj)
         d = Filter.getAttrs(self, headers, url)
         d['compressobj'] = compressobj

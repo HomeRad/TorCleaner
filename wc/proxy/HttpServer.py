@@ -205,7 +205,7 @@ class HttpServer (Server):
                 print >>sys.stderr, _("Warning: %s guessed Content-Type (%s)") % \
                                       (self.url, gm[0])
            # fix some content types
-            elif self.headers.get('Content-Type') != gm[0] and \
+            elif not self.headers['Content-Type'].startswith(gm[0]) and \
                  gm[0] in _fix_content_types:
                 print >>sys.stderr, _("Warning: %s guessed Content-Type (%s) != server Content-Type (%s)") % \
                           (self.url, gm[0], self.headers.get('Content-Type'))

@@ -1,4 +1,7 @@
 1.5
+  * - increase TCP dns query timeout from 10 to 20 seconds
+    - remember dns errors and return them
+    Changed files: wc/proxy/dns_lookups.py
   * recognize .ico and .jpeg as images
     Changed files: wc/filter/Blocker.py
   * Updated and reorganized filters

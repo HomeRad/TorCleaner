@@ -31,7 +31,7 @@ def init_dns_resolver ():
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
-    #debug(BRING_IT_ON, "DNS nameservers", DnsConfig.nameservers, "\nsearch", DnsConfig.search_domains)
+    #debug(BRING_IT_ON, "DNS nameservers:", DnsConfig.nameservers, "\nDNS search domains:", DnsConfig.search_domains)
     # re-read config every 10 minutes
     make_timer(600, init_dns_resolver)
 
@@ -40,7 +40,7 @@ def init_dns_resolver_posix ():
     "Set up the DnsLookupConnection class with /etc/resolv.conf information"
     if not os.path.exists('/etc/resolv.conf'):
         return
-    for line in open('/etc/resolv.conf', 'r').readlines():
+    for line in file('/etc/resolv.conf', 'r').readlines():
         line = line.strip()
         if (not line) or line[0]==';' or line[0]=='#':
             continue
@@ -132,6 +132,7 @@ class DnsExpandHostname:
     "Try looking up a hostname and its expansions"
     # This routine calls DnsCache to do the individual lookups
     def __init__ (self, hostname, callback):
+        self.erroranswer = None # set if one answer failed
         self.hostname = hostname
         self.callback = callback
         self.queries = [hostname] # all queries to be made
@@ -189,12 +190,18 @@ class DnsExpandHostname:
                 else:
                     callback(self.hostname, answer)
                 break
+            elif not self.erroranswer:
+                self.erroranswer = answer
 
         if self.callback and not self.queries:
             # Someone's still waiting for an answer, and we
             # are expecting no more answers
             callback, self.callback = self.callback, None
-            callback(self.hostname, DnsResponse('error', 'host not expanded'))
+            if self.erroranswer:
+                answer = self.erroranswer
+            else:
+                answer = DnsResponse('error', 'host not expanded')
+            callback(self.hostname, answer)
 
         # Since one DNS request is satisfied, issue another
         self.handle_issue_request()
@@ -454,7 +461,7 @@ class DnsLookupConnection (Connection):
             self.accepts_tcp.get(self.nameserver, 1) and
             self.retries == 1):
             # Switch to TCP
-            self.TIMEOUT = 10
+            self.TIMEOUT = 20
             self.close()
             self.conntype = 'tcp'
             self.establish_connection()
