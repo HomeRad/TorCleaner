@@ -19,7 +19,7 @@ allowed_schemes = [
 ]
 allowed_connect_ports = [
     443, # HTTP over SSL
-    563, # NNTP over SSL
+#    563, # NNTP over SSL # untested
 ]
 
 # connection pool for persistent server connections
