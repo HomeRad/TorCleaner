@@ -156,6 +156,7 @@ def filterconf_files ():
 # available filter modules
 filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                  "BinaryCharFilter", "Rewriter", "Replacer", "Compress", ]
+filtermodules.sort()
 
 class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
