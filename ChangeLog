@@ -1,11 +1,14 @@
 1.11
   * added "What you can do" entry
     Changed files: README
-  * - remove <body ondragstart, oncontextmenu, onselectstart>
+  * Filter rule updates:
+    - remove <body ondragstart, oncontextmenu, onselectstart>
     - prevent document.onmousedown rebinding
     - some ad filter updates
+    - updated blacklists and whitelists
     Changed files: config/{scripting,adverts,misc}.zap
-  * - fixed nasty bug in HTML filter buffer handling which resulted in
+  * Html filtering:
+    - fixed nasty bug in HTML filter buffer handling which resulted in
        lost HTML data
     - also apply filter rules to document.write content
     - support <base href> for JS src fetching
@@ -20,7 +23,7 @@
   * 100 continue: switch back to response state only after reading headers
     Changed files: wc/proxy/HttpServer.py
   * remove client Connection: and Proxy-Connection: headers
-    Changed files: wc/proxy/HttpClient.py
+    Changed files: wc/proxy/HttpClient.py, wc/__init__.py
   * handle partial proxy request uris
     Changed files: wc/proxy/{__init__,ClientServerMatchmaker}.py
 
