@@ -94,9 +94,10 @@ def url_norm (url):
         if not urlparts[2] or urlparts[2]=='/':
             urlparts[2] = comps
         else:
-            urlparts[2] = "%s%s" % (comps, urlparts[2])
+            urlparts[2] = "%s%s" % (comps, urllib.unquote(urlparts[2]))
         urlparts[1] = urlparts[1][:i]
-    urlparts[2] = urllib.unquote(urlparts[2]) # path
+    else:
+        urlparts[2] = urllib.unquote(urlparts[2]) # path
     urlparts[4] = urllib.unquote(urlparts[4]) # anchor
     path = urlparts[2].replace('\\', '/')
     if not path or path=='/':
@@ -104,7 +105,10 @@ def url_norm (url):
     else:
         # XXX this works only under windows and posix??
         # collapse redundant path segments
-        urlparts[2] = os.path.normpath(path).replace('\\', '/')
+        path = os.path.normpath(path)
+        path = path.replace('\\', '/')
+        path = path.replace('//', '/')
+        urlparts[2] = path
         if path.endswith('/'):
             urlparts[2] += '/'
     return urlparse.urlunsplit(urlparts)
