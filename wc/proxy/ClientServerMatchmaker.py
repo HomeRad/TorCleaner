@@ -68,6 +68,22 @@ class ClientServerMatchmaker:
         hostname, port = splitport(netloc)
         if port is None:
             port = 80
+        if hostname == '_proxy':
+            # proxy info
+            ServerHandleDirectly(self.client,
+                'HTTP/1.0 200 OK\r\n',
+                'Content-Type: text/plain\r\n'
+                '\r\n',
+                print_socketlist())
+            return
+        elif scheme == 'file':
+            # a blocked url is a local file:// link
+            import mimetypes
+            mtype = mimetypes.guess_type(url)[0]
+            ServerHandleDirectly(self.client,
+	        'HTTP/1.0 200 OK\r\n',
+                'Content-Type: %s\r\n\r\n' % (mtype or 'text/plain'),
+                open(document, 'rb').read())
         if wc.proxy._PARENT_PROXY:
             self.hostname = wc.proxy._PARENT_PROXY
             self.port = wc.proxy._PARENT_PROXY_PORT
@@ -76,14 +92,6 @@ class ClientServerMatchmaker:
             self.hostname = hostname
             self.port = port
             self.document = document
-        # Temporary HACK
-        if hostname == '_proxy':
-            ServerHandleDirectly(self.client,
-                'HTTP/1.0 200 OK\r\n',
-                'Content-type: text/plain\r\n'
-                '\r\n',
-                print_socketlist())
-            return
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 

@@ -153,11 +153,6 @@ class HttpServer(Server):
             self.state = 'response'
             return
 
-        if PRINT_SERVER_HEADERS:
-            debug(ALWAYS, 'Server headers for http://%s' % self.request())
-            debug(ALWAYS, self.response)
-            debug(ALWAYS, join(self.headers.headers, '| '))
-
         self.decoders = []
 
         if self.headers.has_key('transfer-encoding'):
