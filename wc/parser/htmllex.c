@@ -7177,11 +7177,20 @@ int htmllexInit (void** scanner, UserData* data) {
 
 /* prepare scanner for calls to yylex() */
 int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
-    /* append s to data buffer and scan those bytes */
+    /* append s to data buffer and scan those bytes.
+     As Flex does not distinguish between '\0' and EOF characters,
+     we must replace '\0' with ' '. */
     int len = strlen(data->buf);
+    int i;
     data->buf = PyMem_Resize(data->buf, char, len+slen+1);
     if (!data->buf) return -1;
-    strncat(data->buf, s, slen);
+    for (i=0; i<slen; i++) {
+	if (s[i]=='\0')
+	    data->buf[len+i] = ' ';
+	else
+            data->buf[len+i] = s[i];
+    }
+    data->buf[len+slen] = '\0';
     if (len > data->bufpos) {
         int rewind = len - data->bufpos;
 	slen += rewind;
