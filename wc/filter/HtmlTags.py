@@ -247,10 +247,11 @@ MathTags = {
     "xor" : None,
 }
 
-# invalid and old tags
+# old tags
 OldTags = {
     "blink" : None, # Netscape Navigator
     "embed" : None, # Netscape Navigator 4
+    "ilayer" : None, # Netscape Navigator 4
     "keygen" : None, # Netscape Navigator
     "layer" : None, # Netscape Navigator 4
     "listing" : None, # HTML 3.2
@@ -264,6 +265,14 @@ OldTags = {
     "xmp" : None, # HTML 3.2
 }
 
+# known invalid tags (to prevent correction)
+KnownInvalidTags = {
+    "contentbanner" : None, # www.heise.de
+    "heiseadvert" : None, # www.heise.de
+    "heisetext" : None, # www.heise.de
+    "skyscraper" : None, # www.heise.de
+}
+
 def check_spelling (tag, url):
     """check if tag (must be lowercase) is a valid HTML tag and if not,
     tries to correct it to the first tag with a levenshtein distance of 1
@@ -272,6 +281,9 @@ def check_spelling (tag, url):
         return tag
     if tag in OldTags:
         print >>sys.stderr, "Warning: non-HTML4 tag", `tag`, "at", `url`
+        return tag
+    if tag in KnownInvalidTags:
+        print >>sys.stderr, "Warning: known invalid tag", `tag`, "at", `url`
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
          if distance(tag, htmltag)==1:
