@@ -10,11 +10,12 @@ def _main():
     else:
         f = file(fname)
     import wc, time
+    from wc.log import initlog
+    initlog("test/logging.conf")
     wc.config = wc.Configuration()
     # set debug level
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
-    wc.set_debuglevel(wc.NIGHTMARE)
     from wc.proxy import proxy_poll, run_timers
     from wc.filter import FilterException
     attrs = wc.filter.initStateObjects(url=fname)

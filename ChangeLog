@@ -13,6 +13,7 @@
       lost HTML data
     - also apply filter rules to document.write content
     - support <base href> for JS src fetching
+    - wrap all javascript code in <!-- ... //--> comment
     Changed files: wc/filter/HtmlParser.py
   * HTML parser:
     - handle missing > in "</a <a b=c>"
