@@ -24,6 +24,7 @@ import sets
 import sys
 import os
 import time
+import encodings.idna
 
 import wc.dns.exception
 import wc.dns.message
@@ -306,7 +307,7 @@ class Resolver(object):
         """Process f as a file in the /etc/resolv.conf format.  If f is
         a string, it is used as the name of the file to open; otherwise it
         is treated as the file itself."""
-        if isinstance(f, str) or isinstance(f, unicode):
+        if isinstance(f, basestring):
             f = open(f, 'r')
             want_close = True
         else:
@@ -516,6 +517,10 @@ class Resolver(object):
         answer the question."""
 
         if isinstance(qname, str):
+            qname = wc.dns.name.from_text(qname, None)
+        elif isinstance(qname, unicode):
+            # Unicode domain names: http://www.faqs.org/rfcs/rfc3490.html
+            qname = encodings.idna.ToASCII(qname)
             qname = wc.dns.name.from_text(qname, None)
         if isinstance(rdtype, str):
             rdtype = wc.dns.rdatatype.from_text(rdtype)
