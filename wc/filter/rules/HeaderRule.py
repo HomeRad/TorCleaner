@@ -49,7 +49,7 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         """Rule data as XML for storing"""
         s = u'%s\n name="%s"' % (super(HeaderRule, self).toxml(),
                                 wc.XmlUtils.xmlquoteattr(self.name))
-        if self.filterstage!='request':
+        if self.filterstage != 'request':
             s += u'\n filterstage="%s"' % self.filterstage
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:

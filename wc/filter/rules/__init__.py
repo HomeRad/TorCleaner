@@ -32,7 +32,7 @@ def register_rule (rule):
 
 def register_sid (sid):
     """register given sequential id in id list"""
-    assert sid not in _sids, "%s is not a unique id"%sid
+    assert sid not in _sids, "%s is not a unique id" % sid
     _sids.add(sid)
     return sid
 

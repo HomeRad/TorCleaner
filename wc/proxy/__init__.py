@@ -20,7 +20,7 @@ is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
 
 def fix_http_version (protocol):
     """sanitize http protocol version string"""
-    return "HTTP/%d.%d"%get_http_version(protocol)
+    return "HTTP/%d.%d" % get_http_version(protocol)
 
 
 def get_http_version (protocol):

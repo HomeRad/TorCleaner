@@ -36,10 +36,10 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         else:
             extra += 'being read'
         if self.socket:
-            extra += " (%s)"%self.socket.state_string()
+            extra += " (%s)" % self.socket.state_string()
         if not self.connected:
             extra += " (unconnected)"
-        return '<%s:%-8s %s>'%('sslclient', self.state, extra)
+        return '<%s:%-8s %s>' % ('sslclient', self.state, extra)
 
 
     def fix_request (self):
@@ -49,7 +49,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
         if len(self.url) > 2048:
             wc.log.error(wc.LOG_PROXY, "%s request url length %d chars is too long", self, len(self.url))
             self.error(400, wc.i18n._("URL too long"),
-                       txt=wc.i18n._('URL length limit is %d bytes.')%2048)
+                       txt=wc.i18n._('URL length limit is %d bytes.') % 2048)
             return False
         if len(self.url) > 255:
             wc.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
@@ -72,7 +72,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
 
 
     def server_request (self):
-        assert self.state == 'receive', "%s server_request in non-receive state"%self
+        assert self.state == 'receive', "%s server_request in non-receive state" % self
         wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self, self.request, self.headers, self.content)

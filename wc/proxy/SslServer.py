@@ -35,7 +35,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
             portstr = ''
         extra = '%s%s' % (self.addr[0], portstr)
         if self.socket:
-            extra += " (%s)"%self.socket.state_string()
+            extra += " (%s)" % self.socket.state_string()
         if not self.connected:
             extra += " (unconnected)"
         #if len(extra) > 46: extra = extra[:43] + '...'

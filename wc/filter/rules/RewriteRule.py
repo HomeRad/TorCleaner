@@ -49,16 +49,16 @@ def tagbuf2data (tagbuf, out):
         elif item[0] == STARTTAG:
             out.write("<")
             out.write(item[1])
-            for name,val in item[2].items():
-                out.write(' %s'%name)
+            for name, val in item[2].items():
+                out.write(' %s' % name)
                 if val:
                     out.write("=\"%s\"" % \
                               wc.HtmlParser.htmllib.quote_attrval(val))
             out.write(">")
         elif item[0] == ENDTAG:
-            out.write("</%s>"%item[1])
+            out.write("</%s>" % item[1])
         elif item[0] == COMMENT:
-            out.write("<!--%s-->"%item[1])
+            out.write("<!--%s-->" % item[1])
         else:
             wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
     return out
@@ -184,7 +184,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
     def match_attrs (self, attrs):
         """return True iff this rule matches given attributes"""
         occurred = []
-        for attr,val in attrs.items():
+        for attr, val in attrs.items():
             # attr or val could be None
             if attr is None:
                 attr = ''
@@ -227,7 +227,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             return [STARTTAG, tag, attrs]
         newattrs = {}
         # look for matching tag attributes
-        for attr,val in attrs.items():
+        for attr, val in attrs.items():
             ro = self.attrs_ro.get(attr)
             if ro:
                 mo = ro.search(val)
@@ -240,7 +240,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
                         # XXX split does not honor quotes
                         for f in self.replacement.split():
                             if '=' in self.replacement:
-                                k,v = f.split('=')
+                                k, v = f.split('=')
                                 newattrs[k] = mo.expand(v)
                             else:
                                 newattrs[self.replacement] = None
@@ -312,7 +312,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """return rule data as string"""
         s = super(RewriteRule, self).__str__()
         s += "tag %s\n" % self.tag
-        for key,val in self.attrs.items():
+        for key, val in self.attrs.items():
             s += "attr: %s, %r\n"%(key, val)
         s += "enclosed %r\n" % self.enclosed
         s += "part %s\n" % num_part(self.part)

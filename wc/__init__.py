@@ -279,9 +279,9 @@ class Configuration (dict):
         f.write(' try_google="%d"\n' % self['try_google'])
         f.write(' clamavconf="%s"\n' % xmlquoteattr(self['clamavconf']))
         hosts = self['nofilterhosts']
-        f.write(' nofilterhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
+        f.write(' nofilterhosts="%s"\n' % xmlquoteattr(",".join(hosts)))
         hosts = self['allowedhosts']
-        f.write(' allowedhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
+        f.write(' allowedhosts="%s"\n' % xmlquoteattr(",".join(hosts)))
         f.write('>\n')
         for key in self['filters']:
             f.write('<filter name="%s"/>\n' % xmlquoteattr(key))
@@ -450,7 +450,7 @@ class BaseParser (object):
                 self.xmlparser.ParseFile(fp)
             except (xml.parsers.expat.ExpatError, ParseException):
                 wc.log.exception(LOG_PROXY, "Error parsing %s", self.filename)
-                raise SystemExit("parse error in %s"%self.filename)
+                raise SystemExit("parse error in %s" % self.filename)
         finally:
             self._postparse()
 

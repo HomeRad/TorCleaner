@@ -49,7 +49,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
     def __str__ (self):
         """return rule data as string"""
         return super(FolderRule, self).__str__()+ \
-            ("\nrules:   %d"%len(self.rules))
+            ("\nrules:   %d" % len(self.rules))
 
     def filename_get (self):
         """get filename where this folder is stored"""
@@ -81,7 +81,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
                 if oldrule.update(child, dryrun=dryrun, log=log):
                     chg = True
             else:
-                print >>log, wc.i18n._("inserting new rule %s") % \
+                print >> log, wc.i18n._("inserting new rule %s") % \
                              child.tiptext()
                 if not dryrun:
                     self.rules.append(child)
@@ -103,10 +103,11 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         """Rule data as XML for storing"""
         s = u"""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-%s oid="%d">"""%(wc.ConfigCharset, super(FolderRule, self).toxml(), self.oid)
+%s oid="%d">""" % \
+      (wc.ConfigCharset, super(FolderRule, self).toxml(), self.oid)
         s += u"\n"+self.title_desc_toxml()+u"\n"
         for r in self.rules:
-            s += u"\n%s\n"%r.toxml()
+            s += u"\n%s\n" % r.toxml()
         return s+u"</folder>\n"
 
 
@@ -124,5 +125,5 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         if l == 1:
             text = wc.i18n._("with 1 rule")
         else:
-            text = wc.i18n._("with %d rules")%l
+            text = wc.i18n._("with %d rules") % l
         return "%s %s" % (super(FolderRule, self).tiptext(), text)

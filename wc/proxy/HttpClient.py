@@ -102,7 +102,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 extra += '???'+self.request
         else:
             extra += 'being read'
-        return '<%s:%-8s %s>'%('client', self.state, extra)
+        return '<%s:%-8s %s>' % ('client', self.state, extra)
 
     def process_read (self):
         """delegate read according to current connection state"""
@@ -160,7 +160,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if len(self.url) > 2048:
             wc.log.error(wc.LOG_PROXY, "%s request url length %d chars is too long", self, len(self.url))
             self.error(400, wc.i18n._("URL too long"),
-                       txt=wc.i18n._('URL length limit is %d bytes.')%2048)
+                       txt=wc.i18n._('URL length limit is %d bytes.') % 2048)
             return False
         if len(self.url) > 255:
             wc.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
@@ -261,9 +261,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.headers.has_key('Host'):
             wc.log.warn(wc.LOG_PROXY, "%s request without Host header encountered", self)
             if self.port!=80:
-                self.headers['Host'] = "%s:%d\r"%(self.hostname, self.port)
+                self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
             else:
-                self.headers['Host'] = "%s\r"%self.hostname
+                self.headers['Host'] = "%s\r" % self.hostname
         if wc.config["proxyuser"]:
             creds = wc.proxy.auth.get_header_credentials(self.headers, 'Proxy-Authorization')
             if not creds:
@@ -299,7 +299,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             headers = wc.proxy.Headers.WcMessage()
             headers['Content-Type'] = 'text/plain\r'
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
-                 '%s 200 OK'%self.protocol, 200, headers, '')
+                 '%s 200 OK' % self.protocol, 200, headers, '')
             return
         if self.needs_redirect:
             self.state = 'done'
@@ -307,7 +307,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             headers['Content-Type'] = 'text/plain\r'
             headers['Location'] = '%s\r' % self.url
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
-                '%s 302 Found'%self.protocol, 302, headers, '')
+                '%s 302 Found' % self.protocol, 302, headers, '')
             return
         self.state = 'content'
 
@@ -357,7 +357,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             data = wc.filter.applyfilters(FilterLevels, "", "finish", self.attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
-                self.headers['Content-Length'] = "%d\r"%len(self.content)
+                self.headers['Content-Length'] = "%d\r" % len(self.content)
             # We're done reading content
             self.state = 'receive'
             is_local = self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
@@ -369,7 +369,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                     self.handle_local(is_public_doc=is_public_doc)
                 else:
                     # ignore request, must init admin password
-                    self.headers['Location'] = "http://localhost:%d/adminpass.html\r"%wc.config['port']
+                    self.headers['Location'] = "http://localhost:%d/adminpass.html\r" % wc.config['port']
                     self.error(302, wc.i18n._("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call
@@ -391,7 +391,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def server_request (self):
         """issue server request through ClientServerMatchmaker object"""
-        assert self.state == 'receive', "%s server_request in non-receive state"%self
+        assert self.state == 'receive', "%s server_request in non-receive state" % self
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
                              self.request, self.headers,
@@ -399,7 +399,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def server_response (self, server, response, status, headers):
         """read and filter server response data"""
-        assert server.connected, "%s server was not connected"%self
+        assert server.connected, "%s server was not connected" % self
         wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%d)', self, response, status)
         # try google options
         if status in wc.google.google_try_status and wc.config['try_google']:
@@ -407,7 +407,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.try_google(self.url, response)
         else:
             self.server = server
-            self.write("%s\r\n"%response)
+            self.write("%s\r\n" % response)
             if not headers.has_key('Content-Length'):
                 # without content length the client can not determine
                 # when all data is sent
@@ -426,13 +426,13 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def server_content (self, data):
         """The server received some content. Write it to the client."""
-        assert self.server, "%s server_content had no server"%self
+        assert self.server, "%s server_content had no server" % self
         if data:
             self.write(data)
 
     def server_close (self, server):
         """The server closed"""
-        assert self.server, "%s server_close had no server"%self
+        assert self.server, "%s server_close had no server" % self
         wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
         if self.connected:
             self.delayed_close()

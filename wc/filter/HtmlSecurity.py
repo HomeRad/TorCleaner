@@ -20,9 +20,10 @@ import os
 import urllib
 import sys
 import re
+
+import wc
 import wc.log
 import wc.url
-import wc
 
 
 _percent_encodings = re.compile('%+').findall
@@ -45,13 +46,13 @@ class HtmlSecurity (object):
 
     def scan_start_tag (self, tag, attrs, htmlfilter):
         """delegate to individuals start tag handlers"""
-        fun = "%s_start"%tag
+        fun = "%s_start" % tag
         if hasattr(self, fun):
             getattr(self, fun)(attrs, htmlfilter)
 
     def scan_end_tag (self, tag):
         """delegate to individuals end tag handlers"""
-        fun = "%s_end"%tag
+        fun = "%s_end" % tag
         if hasattr(self, fun):
             getattr(self, fun)()
 

@@ -26,7 +26,7 @@ class UnchunkStream (object):
 
     def __repr__ (self):
         """representation of stream filter state"""
-        return '<%s closed=%s buflen=%d bytes_remaining=%s>'%\
+        return '<%s closed=%s buflen=%d bytes_remaining=%s>' % \
       ('unchunk', self.closed, len(self.buf), self.bytes_remaining)
 
 

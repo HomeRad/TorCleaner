@@ -159,13 +159,13 @@ class HttpServer (wc.proxy.Server.Server):
         """modify request headers"""
         if wc.config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
-            self.clientheaders['Proxy-Authorization'] = "%s\r"%wc.config['parentproxycreds']
+            self.clientheaders['Proxy-Authorization'] = "%s\r" % wc.config['parentproxycreds']
 
     def send_request (self):
         """send the request to the server, is also used to send a request
            twice for NTLM authentication"""
         assert self.method!='CONNECT'
-        request = '%s %s HTTP/1.1\r\n'%(self.method, self.document)
+        request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         wc.log.debug(wc.LOG_PROXY, '%s write request\n%r', self, request)
         self.write(request)
         wc.log.debug(wc.LOG_PROXY, "%s write headers\n%s", self, self.clientheaders)
@@ -207,7 +207,7 @@ class HttpServer (wc.proxy.Server.Server):
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
             wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (0,9))
-            self.response = "%s 200 Ok"%self.protocol
+            self.response = "%s 200 Ok" % self.protocol
             self.statuscode = 200
             self.recv_buffer = '\r\n' + self.recv_buffer
         else:
@@ -224,7 +224,7 @@ class HttpServer (wc.proxy.Server.Server):
                 wc.log.warn(wc.LOG_PROXY, wc.i18n._("missing headers in response from %r"), self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
             # fix the response
-            self.response = "%s 200 Ok"%self.protocol
+            self.response = "%s 200 Ok" % self.protocol
             self.statuscode = 200
         self.state = 'headers'
         self.attrs = wc.filter.get_filterattrs(self.url,
@@ -339,7 +339,7 @@ class HttpServer (wc.proxy.Server.Server):
 
     def _show_mime_replacement (self, url):
         self.statuscode = 302
-        response = "%s 302 %s"%(self.protocol, wc.i18n._("Moved Temporarily"))
+        response = "%s 302 %s" % (self.protocol, wc.i18n._("Moved Temporarily"))
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = url
@@ -359,10 +359,10 @@ class HttpServer (wc.proxy.Server.Server):
         """requested page is rated"""
         query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
-        response = "%s 302 %s"%(self.protocol, wc.i18n._("Moved Temporarily"))
+        response = "%s 302 %s" % (self.protocol, wc.i18n._("Moved Temporarily"))
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-type'] = 'text/plain\r'
-        headers['Location'] = 'http://localhost:%d/rated.html?%s\r'%\
+        headers['Location'] = 'http://localhost:%d/rated.html?%s\r' % \
                               (wc.config['port'], query)
         headers['Content-Length'] = '%d\r'%len(msg)
         wc.log.debug(wc.LOG_PROXY, "%s headers\n%s", self, headers)

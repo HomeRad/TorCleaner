@@ -67,7 +67,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
 
 
     def __str__ (self):
-        return "%s in state %s"%(self.__class__.__name__, str(self.state))
+        return "%s in state %s" % (self.__class__.__name__, str(self.state))
 
 
     def debugbuf (self, cat=wc.LOG_FILTER):

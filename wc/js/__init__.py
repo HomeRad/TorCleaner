@@ -23,6 +23,7 @@ _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
 _end_js_comment = re.compile(r"\s*//[^\r\n]*-->[ \t]*$").search
 
 def remove_html_comments (script):
+    """remove leading and trailing HTML comments from the script text"""
     mo = _start_js_comment(script)
     if mo:
         script = script[mo.end():]
@@ -42,17 +43,17 @@ def escape_js (script):
     i = 0
     while i < len(script):
         c = script[i]
-        if c=='"' or c=="'":
+        if c == '"' or c == "'":
             if not escape:
-                if quote==c:
+                if quote == c:
                     quote = False
                 elif not quote:
                     quote = c
             escape = False
-        elif c=='\\':
+        elif c == '\\':
             escape = not escape
-        elif c=='<':
-            if script[i:i+9].lower()=='</script>' and quote:
+        elif c == '<':
+            if script[i:i+9].lower() == '</script>' and quote:
                 script = script[:i]+"</scr"+quote+"+"+quote+"ipt>"+\
                          script[(i+9):]
             escape = False
@@ -67,7 +68,7 @@ def get_js_data (attrs):
     """get js_ok flag and js_lang from given attrs"""
     js_lang = attrs.get('language', '').lower()
     js_type = attrs.get('type', '').lower()
-    js_ok = js_type=='text/javascript' or \
+    js_ok = js_type == 'text/javascript' or \
             js_type.startswith('javascript') or \
             js_lang.startswith('javascript') or \
             not (js_lang or js_type)

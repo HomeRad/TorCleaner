@@ -20,8 +20,9 @@ import re
 import os
 import urlparse
 import cPickle as pickle
-import wc.i18n
+
 import wc
+import wc.i18n
 import wc.log
 import wc.url
 
@@ -200,7 +201,7 @@ def rating_split_url (url):
         return []
     # fix scheme
     parts[0] += ":"
-    if parts[0]!='mailto':
+    if parts[0] != 'mailto':
         parts[0] += "//"
     # remove query and fragment
     del parts[3:5]
@@ -261,9 +262,11 @@ def rating_in_range (prange, value):
        prange - tuple (min, max)
        value - tuple (min, max)
        """
-    if prange[0] is not None and value[0] is not None and value[0]<prange[0]:
+    if prange[0] is not None and \
+       value[0] is not None and value[0] < prange[0]:
         return False
-    if prange[1] is not None and value[1] is not None and value[1]>prange[1]:
+    if prange[1] is not None and \
+       value[1] is not None and value[1] > prange[1]:
         return False
     return True
 
@@ -292,7 +295,7 @@ def rating_cache_merge (newrating_cache, dryrun=False, log=None):
     for url, rating in newrating_cache.iteritems():
         if url not in rating_cache:
             chg = True
-            print >>log, wc.i18n._("adding new rating for %r")%url
+            print >> log, wc.i18n._("adding new rating for %r") % url
             if not dryrun:
                 rating_cache[url] = rating
     if not dryrun and chg:

@@ -32,11 +32,11 @@ class ImageRule (wc.filter.rules.UrlRule.UrlRule):
                                 matchurls=matchurls, nomatchurls=nomatchurls)
         self.width = width
         self.height = height
-        self.intattrs.extend(('width','height'))
+        self.intattrs.extend(('width', 'height'))
         self.listattrs.append('formats')
         self.formats = formats
         self.url = url
-        self.attrnames.extend(('formats','url','width','height'))
+        self.attrnames.extend(('formats', 'url', 'width', 'height'))
 
     def toxml (self):
         """Rule data as XML for storing"""

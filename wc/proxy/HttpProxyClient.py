@@ -137,7 +137,7 @@ class HttpProxyClient (object):
         mime = self.server.mime
         content = ''
         # note: use HTTP/1.0 for JavaScript
-        request = "GET %s HTTP/1.0"%self.url
+        request = "GET %s HTTP/1.0" % self.url
         # close the server and try again
         self.server = None
         headers = wc.proxy.Headers.get_wc_client_headers(host)

@@ -24,7 +24,7 @@ import wc.filter.Filter
 
 def i16 (c):
     """merge two bytes to an integer"""
-    return ord(c[0]) | (ord(c[1])<<8)
+    return ord(c[0]) | (ord(c[1]) << 8)
 
 
 class RewindException (Exception):
@@ -140,7 +140,7 @@ class GifParser (object):
     def read (self, i):
         """Read i data from internal buffer. Raise RewindException if
            more data is needed"""
-        if i<=0:
+        if i <= 0:
             return
         if len(self.data)<i:
             # rewind and stop filtering; wait for next data chunk
@@ -208,7 +208,7 @@ class GifParser (object):
                     self.background = ord(misc[0])
                     wc.log.debug(wc.LOG_FILTER,
                                  'GIF background %s', self.background)
-                    size = 3<<bits
+                    size = 3 << bits
                     wc.log.debug(wc.LOG_FILTER,
                                  'GIF global palette size %d', size)
                     self.read(size)
@@ -244,7 +244,7 @@ class GifParser (object):
                 if (flags & 128) != 0:
                     # local color table
                     bits = (flags & 7) + 1
-                    size = 3<<bits
+                    size = 3 << bits
                     wc.log.debug(wc.LOG_FILTER,
                                  'GIF local palette size %d', size)
                     self.read(size)

@@ -103,9 +103,9 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", wc.i18n._("updating rule title for " \
-                                            "language %s:")%key
-                print >>log, " ", repr(oldvalue), "==>", repr(value)
+                print >> log, " ", wc.i18n._("updating rule title for " \
+                                            "language %s:") % key
+                print >> log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.titles[key] = value
         for key, value in rule.descriptions.items():
@@ -217,7 +217,7 @@ class Rule (object):
         s = u'<%s sid="%s"' % (self.get_name(),
                                wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
-            s+= u' disable="%d"' % self.disable
+            s += u' disable="%d"' % self.disable
         return s
 
     def title_desc_toxml (self, prefix=""):
@@ -226,7 +226,7 @@ class Rule (object):
              (prefix, wc.XmlUtils.xmlquoteattr(key),
               wc.XmlUtils.xmlquote(value)) \
              for key,value in self.titles.iteritems() if value]
-        d = [u'%s<description lang="%s">%s</description>'% \
+        d = [u'%s<description lang="%s">%s</description>' % \
              (prefix, wc.XmlUtils.xmlquoteattr(key),
               wc.XmlUtils.xmlquote(value)) \
              for key,value in self.descriptions.iteritems() if value]

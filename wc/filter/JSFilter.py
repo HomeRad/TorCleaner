@@ -230,7 +230,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             return
         # put correctly quoted script data into buffer
         self.htmlparser.tagbuf[-1][1] = \
-                         "\n<!--\n%s\n//-->\n"%wc.js.escape_js(script)
+                         "\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
         # execute script
         self.jsScript(script, ver, item)
 

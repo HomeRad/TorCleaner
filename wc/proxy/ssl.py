@@ -78,15 +78,15 @@ def create_certificates (configdir):
     f = file(os.path.join(configdir, 'CA.cert'), 'w')
     f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))
     f.close()
-    for (fname, cname) in [('client', '%s Client'%wc.AppName),
-                           ('server', '%s Server'%wc.AppName)]:
+    for (fname, cname) in [('client', '%s Client' % wc.AppName),
+                           ('server', '%s Server' % wc.AppName)]:
         pkey = createKeyPair(TYPE_RSA, 1024)
         req = createCertRequest(pkey, CN=cname)
         cert = createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5)) # five years
-        f = file(os.path.join(configdir, '%s.pkey'%fname), 'w')
+        f = file(os.path.join(configdir, '%s.pkey' % fname), 'w')
         f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))
         f.close()
-        f = file(os.path.join(configdir, '%s.cert'%fname), 'w')
+        f = file(os.path.join(configdir, '%s.cert' % fname), 'w')
         f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
         f.close()
 

@@ -182,7 +182,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                     filtered = True
                     if item[0] == wc.filter.rules.RewriteRule.STARTTAG and \
                        item[1] == tag:
-                        foo,tag,attrs = item
+                        foo, tag, attrs = item
                         # give'em a chance to replace more than one attribute
                         continue
                     else:

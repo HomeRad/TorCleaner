@@ -29,14 +29,14 @@ import wc.i18n
 
 def strsize (b):
     """return human representation of bytes b"""
-    if b<1024:
-        return "%d Byte"%b
+    if b < 1024:
+        return "%d Byte" % b
     b /= 1024.0
-    if b<1024:
-        return "%.2f kB"%b
+    if b < 1024:
+        return "%.2f kB" % b
     b /= 1024.0
-    if b<1024:
-        return "%.2f MB"%b
+    if b < 1024:
+        return "%.2f MB" % b
     b /= 1024.0
     return "%.2f GB"
 

@@ -77,7 +77,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
            return None if allowed, else a reason of why not"""
         for category, value in rating.items():
             if category not in self.ratings:
-                wc.log.warn(wc.LOG_FILTER, "Unknown rating category %r specified", category)
+                wc.log.warn(wc.LOG_FILTER,
+                            "Unknown rating category %r specified", category)
                 continue
             if not value:
                 # empty value implicates not rated
@@ -86,15 +87,18 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             if not limit:
                 # no limit is set for this category
                 continue
-            elif wc.filter.Rating.service['categories'][category].has_key('rrange'):
+            elif wc.filter.Rating.service['categories'][category].has_key(
+                                                                    'rrange'):
                 # check if value is in range
                 if (limit[0] is not None and value < limit[0]) or \
                    (limit[1] is not None and value > limit[1]):
-                    return wc.i18n._("Rating %r for category %r is not in range %s") %\
-                                  (value, category, limit)
+                    return wc.i18n._(
+                         "Rating %r for category %r is not in range %s") % \
+                         (value, category, limit)
             elif value > limit:
-                return wc.i18n._("Rating %r for category %r exceeds limit %r")%\
-                              (value, category, limit)
+                return wc.i18n._(
+                           "Rating %r for category %r exceeds limit %r") % \
+                           (value, category, limit)
         # not exceeded
         return None
 
@@ -109,7 +113,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
         for category, value in self.ratings.items():
             if value:
-                s += u"\n  <category name=\"%s\">%s</category>"% \
+                s += u"\n  <category name=\"%s\">%s</category>" % \
                       (wc.XmlUtils.xmlquoteattr(category),
                        wc.XmlUtils.xmlquote(value))
         s += u"\n</%s>" % self.get_name()

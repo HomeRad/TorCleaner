@@ -49,7 +49,7 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.replacement:
-            s += u"\n  <replacement>%s</replacement>"%\
+            s += u"\n  <replacement>%s</replacement>" % \
               wc.XmlUtils.xmlquote(self.replacement)
         s += u"\n</%s>" % self.get_name()
         return s

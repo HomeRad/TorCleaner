@@ -114,7 +114,7 @@ class ServerPool (object):
             wc.log.debug(wc.LOG_PROXY, "expire %s server %s", addr, server)
             server.close()
             if addr in self.smap:
-                assert not self.smap[addr].has_key(server), "Not expired: %s"%str(self.smap[addr])
+                assert not self.smap[addr].has_key(server), "Not expired: %s" % str(self.smap[addr])
         wc.proxy.make_timer(60, self.expire_servers)
 
 

@@ -353,10 +353,10 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     def __repr__ (self):
         where = ''
         if self.nameserver != resolver.nameservers[0]:
-            where = ' @ %s'%self.nameserver
+            where = ' @ %s' % self.nameserver
         retry = ''
         if self.retries != 0:
-            retry = ' retry #%s'%self.retries
+            retry = ' retry #%s' % self.retries
         if self.tcp:
             conntype = 'TCP'
         else:
