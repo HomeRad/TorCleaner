@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Tue Mar 16 23:54:44 2004\n"
+"POT-Creation-Date: Mon Mar 22 19:42:38 2004\n"
 "PO-Revision-Date: 2004-03-16 22:36+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -355,6 +355,39 @@ msgstr "Kein Befehl angegeben."
 
 msgid "Unknown command %r"
 msgstr "Unbekannter Befehl %r"
+
+msgid ""
+"Usage: webcleaner-certificates [ install | remove ]\n"
+"\n"
+"Commands:\n"
+"install - generate and install %s SSL certificates if not already done\n"
+"remove  - remove %s SSL certificates\n"
+msgstr ""
+
+msgid "%s SSL certificates already exist, doing nothing"
+msgstr ""
+
+#, fuzzy
+msgid "Invalid command %r."
+msgstr "Unbekannter Befehl %r"
+
+msgid ""
+"Usage: webcleaner-service [ install | remove ]\n"
+"\n"
+"Commands:\n"
+"install - install the %s service and restart the proxy\n"
+"remove  - remove the %s service (same as `webcleaner remove')\n"
+msgstr ""
+
+msgid "Installing %s service..."
+msgstr ""
+
+msgid "Restarting %s proxy..."
+msgstr ""
+
+#, fuzzy
+msgid "Opening proxy configuration interface..."
+msgstr "%(AppName)s Proxykonfiguration"
 
 msgid "Category"
 msgstr "Kategorie"

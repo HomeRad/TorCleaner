@@ -5,7 +5,7 @@ GETTEXT := $(PYTHON) pygettext.py -k i18n._
 MSGFMT := @MSGFMT@ -c
 MSGMERGE := @MSGMERGE@
 SOURCES = $(shell find ../wc -name \*.py) \
-../webcleaner \
+../webcleaner ../webcleaner-service ../webcleaner-certificates \
 $(shell find ../templates -name \*.html)
 
 LDIR = ../share/locale
