@@ -30,7 +30,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
             return data
         buf = attrs['mimerecognizer_buf']
         buf.write(data)
-        if buf.len >= self.minimal_size_bytes:
+        if buf.tell() >= self.minimal_size_bytes:
             return self.recognize(buf, attrs)
         return ''
 
