@@ -99,17 +99,17 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
         filtered = ""
         try:
             filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, 'filter', attrs)
-        except wc.filter.FilterException, msg:
+        except wc.filter.FilterException:
             pass
         i = 1
         while True:
             try:
                 filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, "", 'finish', attrs)
                 break
-            except wc.filter.FilterException, msg:
+            except wc.filter.FilterException:
                 wc.proxy.proxy_poll(timeout=max(0, wc.proxy.run_timers()))
             i += 1
-            if i==100:
+            if i==50:
                 # background downloading of javascript is too slow
                 raise wc.filter.FilterException("Slow")
         self.assertEqual(filtered, result)
