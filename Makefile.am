@@ -1,5 +1,11 @@
 SUBDIRS = po libjs service
 DIST_SUBDIRS = $(SUBDIRS) doc
+EXTRA_DIST = wc/tests \
+	wc/dns/tests \
+	wc/filter/tests \
+	wc/proxy/tests \
+	wc/proxy/auth/tests \
+	wc/magic/tests
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
