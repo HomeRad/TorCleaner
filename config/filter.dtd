@@ -309,3 +309,35 @@
  dontmatchurl CDATA ""
  search    CDATA #REQUIRED
 >
+
+<!--                        PICS filter
+
+   A rule enabling the PICS system in WebCleaner.
+-->
+<!ELEMENT pics (url?,service*)>
+<!ATTLIST pics
+ title    CDATA #REQUIRED
+ oid      CDATA #IMPLIED
+ desc     CDATA #IMPLIED
+ disable  CDATA "0"
+ matchurl CDATA ""
+ dontmatchurl CDATA ""
+ name     CDATA #REQUIRED
+>
+
+<!--                      PICS service
+
+   Each PICS service must specify a name by which it is identified.
+-->
+<!ELEMENT service (#PCDATA)>
+<!ATTLIST service
+ name CDATA #REQUIRED
+>
+
+<!--                      PICS service category
+
+   a category has an identification label matching the one defined
+   in PICS.py, and a rating value as content
+-->
+<!ELEMENT category (#PCDATA)>
+
