@@ -140,8 +140,22 @@ def get_filterattrs (url, filters, headers=wc.proxy.Headers.WcMessage()):
         'mime' : headers.get('Content-Type'),
         'headers': headers,
     }
+    if attrs['mime']:
+        charset = get_mime_charset(attrs['mime'])
+        if charset:
+            attrs['charset'] = charset
     for i in filters:
         for f in wc.config['filterlist'][i]:
             if f.applies_to_mime(attrs['mime']):
                 attrs.update(f.getAttrs(url, headers))
     return attrs
+
+
+def get_mime_charset (mime):
+    """extract charset information from mime string
+       eg. text/html; charset=iso8859-1
+    """
+    for param in mime.split(';'):
+        if param.lower().startswith('charset='):
+            return param[8:]
+    return None
