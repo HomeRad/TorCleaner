@@ -58,6 +58,11 @@ class TestRewriter (StandardTest.StandardTest):
         self.filt("""<body onload="hulla();" onunload="holla();">""",
                   """<body onload="hulla();">""")
 
+    def testBodyPopup (self):
+        for tag in wc.filter.JSFilter.js_event_attrs:
+            self.filt("""<body %s="window.open();">""" % tag,
+                  """<body>""")
+
     def testAdvertLinks1 (self):
         """Doubleclick advert"""
         self.filt("""<a href="http://www.doubleclick.net/">...</a>""", "")
