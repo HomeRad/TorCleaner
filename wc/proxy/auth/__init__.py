@@ -16,8 +16,8 @@ def get_proxy_auth_challenge ():
     return "%s" % (get_basic_challenge(),)
 
 
-def get_proxy_auth (_user, _password):
-    return get_basic_proxy_auth(_user, _password)
+def get_proxy_auth (proxyuser, proxypass):
+    return get_basic_proxy_auth(proxyuser, proxypass)
 
 
 def check_proxy_auth (auth):

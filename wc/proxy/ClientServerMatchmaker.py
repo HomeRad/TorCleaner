@@ -92,7 +92,7 @@ class ClientServerMatchmaker (object):
                 auth = get_proxy_auth(config['parentproxyuser'],
                                       config['parentproxypass'])
                 # XXX what if there is already a proxy-authorization header?
-                self.headers['Proxy-Authorization'] = auth
+                self.headers['Proxy-Authorization'] = "%s\r"%auth
         else:
             self.hostname = hostname
             self.port = port

@@ -14,7 +14,7 @@ def get_basic_challenge ():
 
 def get_basic_proxy_auth (proxyuser, proxypass_b64):
     proxypass = base64.decodestring(proxypass_b64)
-    auth = base64.encodestring("%s:%s"%(proxyuser, proxypass))
+    auth = base64.encodestring("%s:%s"%(proxyuser, proxypass)).strip()
     return "Basic %s"%auth
 
 
