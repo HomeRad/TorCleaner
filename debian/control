@@ -19,19 +19,19 @@ Description: a filtering HTTP proxy
  * filter images by size, removes certain banner adverts
  * reduce images to low-bandwidth JPEGs
  * remove/add/modify arbitrary HTTP headers
- * usage of SquidGuard domain and url blacklists
+ * usage of SquidGuard blacklists
  * Basic, Digest and NTLM proxy authentication for both clients and servers
  * per-host access control
- * completely customizable over web interface
+ * customizable over a web interface
 
 Package: webcleanertools
 Section: x11
+Priority: extra
 Architecture: all
 Depends: fxpy-python2.3 (>= 1.0.0), python2.3, webcleaner
-Description: configuration and visualization tools for webcleaner
- additional tools and helper applications for webcleaner:
- .
- webcleanerconf is a nice GUI configuration tool for the WebCleaner proxy.
+Description: miscellaneous helpers and tools for webcleaner
+ webcleanerconf is a GUI configuration tool for the WebCleaner proxy.
+ The standard configuration interface however is the web GUI.
  .
  wcheaders is a graphical interface to display the HTTP headers
  of all requests the local WebCleaner proxy handles.
