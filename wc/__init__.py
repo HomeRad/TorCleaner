@@ -77,7 +77,7 @@ def sort_seq (seq):
 
 config = None
 
-def startfunc (handle=None):
+def wstartfunc (handle=None):
     # init logging
     initlog(os.path.join(ConfigDir, "logging.conf"))
     # we run single-threaded, decrease check interval

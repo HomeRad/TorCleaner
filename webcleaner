@@ -145,7 +145,7 @@ try:
     psyco.profile()
 except:
     pass
-from wc import i18n, daemon, startfunc
+from wc import i18n, daemon, wstartfunc
 
 _usage = i18n._("""USAGE\twebcleaner command
 
@@ -208,7 +208,7 @@ def main ():
     except getopt.error:
         type, value = sys.exc_info()[:2]
         _print_usage(value)
-    pidfile = daemon.pidfile
+    pidfile = daemon.wpidfile
     for opt,arg in options:
         if opt=="-h" or opt=="--help":
             _print_help()
@@ -225,15 +225,15 @@ def main ():
             print i18n._("warning: only first command is valid")
     # start the command
     if command=='start':
-        msg, status = daemon.start(startfunc, pidfile)
+        msg, status = daemon.start(wstartfunc, pidfile)
     elif command=='startwatch':
-        msg, status = daemon.startwatch(startfunc, pidfile, watchfile)
+        msg, status = daemon.startwatch(wstartfunc, pidfile, watchfile)
     elif command=='stop':
         msg, status = daemon.stop(pidfile)
     elif command=='stopwatch':
         msg, status = daemon.stop(pidfile, watchfile)
     elif command=='restart':
-        msg, status = daemon.restart(startfunc, pidfile)
+        msg, status = daemon.restart(wstartfunc, pidfile)
     elif command=='status':
         msg, status = daemon.status(pidfile)
     elif command=='reload':
@@ -249,7 +249,7 @@ def main_nt ():
     import win32serviceutil
     import win32service
     import win32event
-    from wc import startfunc
+    from wc import wstartfunc
 
     class PythonService (win32serviceutil.ServiceFramework):
         _svc_name_ = configdata.name
@@ -273,7 +273,7 @@ def main_nt ():
                servicemanager.EVENTLOG_INFORMATION_TYPE,
                servicemanager.PYS_SERVICE_STARTED,
                (self._svc_name_,''))
-            startfunc(self.hWaitStop)
+            wstartfunc(self.hWaitStop)
             # Now log a "service stopped" message
             servicemanager.LogMsg(
                servicemanager.EVENTLOG_INFORMATION_TYPE,
