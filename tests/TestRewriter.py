@@ -29,7 +29,7 @@ class TestJavaScript (unittest.TestCase):
 
     def testMetaRefresh (self):
         self.filt("""<META http-equiv="refresh">""",
-                  """<META http-equiv="refresh">""")
+                  """<meta http-equiv="refresh">""")
 
 
     def testMetaReFresh (self):
@@ -43,13 +43,12 @@ class TestJavaScript (unittest.TestCase):
 
 
     def testShortcutIcon (self):
-        self.filt("""<link rel="shortcut icon"></link>""",
-                  """<link rel="shortcut icon"></link>""")
+        self.filt("""<link rel="shortcut icon"></link>""", "")
 
 
     def testJavascriptInBody (self):
         self.filt("""<body onload="hulla();" onunload="holla();">""",
-                  """<body>""")
+                  """<body onload="hulla();">""")
 
 
     def testAdvertLinks (self):
@@ -132,7 +131,7 @@ class TestJavaScript (unittest.TestCase):
     def testHrefPercent (self):
         """Opera crash"""
         self.filt("""<a href="file://server%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%text"></a>""",
-                  """<a href="file://server%text"></a>""")
+                  """<a></a>""")
 
 
 if __name__ == '__main__':
