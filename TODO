@@ -2,28 +2,16 @@ TODO
 
 version 2.20
 
-- use dnspython in async resolver
+- use ZPT tal implementation, having i18n support
 
-- use ZTP tal implementation, having i18n support
+- weisses Bild: http://web.vobis.de/is-bin/INTERSHOP.enfinity/eCS/Store/de/-/EUR/Katalog-Seite;sid=nyF9AlBsxMh9xBFkZ_ukWzYIWd8I_wlIaUI=;sid=BpfPg75hPsXOPP9p_ksW2tgFJK27A-dF8PQ=?PageableID=M13ZWWZlEpYAAAD%2eJTz6pgoK&MasterPageableID=uOLZWWZlRGcAAAD%2eNCn6pgsM&MasterPageableName=Monitore&PageableName=Products&PageNumber=1&modus=&xyz=n&search_query_keyword=
 
--  weisses Bild: http://web.vobis.de/is-bin/INTERSHOP.enfinity/eCS/Store/de/-/EUR/Katalog-Seite;sid=nyF9AlBsxMh9xBFkZ_ukWzYIWd8I_wlIaUI=;sid=BpfPg75hPsXOPP9p_ksW2tgFJK27A-dF8PQ=?PageableID=M13ZWWZlEpYAAAD%2eJTz6pgoK&MasterPageableID=uOLZWWZlRGcAAAD%2eNCn6pgsM&MasterPageableName=Monitore&PageableName=Products&PageNumber=1&modus=&xyz=n&search_query_keyword=
-- 404 error: http://zope.org/Wikis/DevSite/Projects/ZPT/TAL%20Specification%201.4
+- disable switch like privoxy
+  http://config.privoxy.org/toggle?set=disable
+  http://config.privoxy.org/toggle?set=enable
+  http://config.privoxy.org/toggle
 
-- Traceback (most recent call last):
-  File "/usr/bin/webcleaner", line 186, in ?
-    main(sys.argv[1:])
-  File "/usr/bin/webcleaner", line 182, in main
-    return main_posix(configdir, filelogs)
-  File "/usr/bin/webcleaner", line 156, in main_posix
-    wc.wstartfunc(confdir=configdir, filelogs=filelogs)
-  File "/usr/lib/python2.3/site-packages/wc/__init__.py", line 150, in wstartfunc
-    wc.proxy.mainloop(handle=handle, abort=abort)
-  ile "/usr/lib/python2.3/site-packages/wc/proxy/__init__.py", line 176, in mainloop
-    proxy_poll(timeout=max(0, run_timers()))
-  File "/usr/lib/python2.3/site-packages/wc/proxy/__init__.py", line 84, in run_timers
-    callback()
-  File "/usr/lib/python2.3/site-packages/wc/__init__.py", line 164, in reload_config
-    wc.proxy.dns_lookups.init_dns_resolver()
+- interface list, and replace `localhost` hostname with interface IP/host
 
 version 2.21 and above
 
