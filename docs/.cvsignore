@@ -1,4 +1,6 @@
 Makefile
 Makefile.in
 *.nav
+*.html
 *.pyc
+*.pyo

@@ -8,8 +8,7 @@ html_DATA = $(patsubst %.txt, %.html, $(RESTFILES) )
 	$(DOCDIR)/rest2htmlnav --stylesheet-path=../wc.css --time --source-link $< $@
 
 apidocs:
-	epydoc --html -o api --name WebCleaner --url ../../../index.html ../../wc/ ../../test ../../tests
+	epydoc --html -o api --name "WebCleaner Development" --url ../../devel.html ../../wc/ ../../test ../../tests
 
 clean-local:
 	rm -f *.html *.nav
-	rm -rf api
