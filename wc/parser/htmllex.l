@@ -7,8 +7,14 @@
 #include <stdlib.h>
 #include "Python.h"
 #define YYSTYPE PyObject*
-#define YY_NO_UNPUT 1
 #include "htmlparse.h"
+/*#define SETLVAL \
+    PyObject* s = PyString_FromStringAndSize(yytext, yyleng); \
+    yyset_lval(&s, yy_globals)
+*/
+#define SETLVAL \
+    printf("huii %s\n", yytext)
+
 %}
 
 %option 8bit
@@ -16,6 +22,9 @@
 %option align
 %option fast
 %option noyywrap
+%option noyymore
+%option nounput
+%option noreject
 %option outfile="htmllex.c"
 %option never-interactive
 
@@ -61,66 +70,68 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <INITIAL>"</" {
+    SETLVAL;
     BEGIN(S_INNER);
     return T_ANGLE_END_OPEN;
 }
 
 <INITIAL>"<!--" { 
+    SETLVAL;
     BEGIN(S_IGNORE_COMMENT);
     return T_COMMENT_START;
 }
 
 
 <INITIAL>"<!DOCTYPE" {  
+    SETLVAL;
     BEGIN(S_IGNORE_DOCTYPE);
     return T_DOCTYPE_START;
 }
 
 <INITIAL>"<![CDATA[" { 
+    SETLVAL;
     BEGIN(S_IGNORE_CDATA);
     return T_CDATA_START;
 }
 
 <INITIAL>"<?" { 
+    SETLVAL;
     BEGIN(S_IGNORE_PI);
     return T_PI_OPEN;
 }
 
 <INITIAL>"<" {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     BEGIN(S_INNER);
     return T_ANGLE_OPEN;
 }
 
 <INITIAL>[^<]+ {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_TEXT;
 }
 
 
 <S_INNER>"/>" {
+    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_END_CLOSE;
 }
 
 <S_INNER>">" {
+    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
 
 <S_INNER>{RX_EQUAL} {
+    SETLVAL;
     BEGIN(S_ATTRVAL);
     return T_EQUAL;
 }
 
 <S_INNER>{RX_NAME} {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_NAME;
 }
 
@@ -140,14 +151,13 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_ATTRVAL>[^ \t\r\n>\'\"]+ {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     BEGIN(S_INNER);
     return T_NAME;
 }
 
 <S_ATTRVAL>">" { 
+    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
@@ -157,102 +167,94 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_IGNORE_PI>{RX_NAME} {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     BEGIN(S_PI_COLLECT);
     return T_NAME;
 }
 
 <S_PI_COLLECT>"?>" { 
+    SETLVAL;
     BEGIN(INITIAL);
     return T_PI_CLOSE;
 }
 
 <S_PI_COLLECT>[^?]* { 
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_TEXT;
 }
 
 
 <S_IGNORE_COMMENT>"-->" {
+    SETLVAL;
     BEGIN(INITIAL);
     return T_COMMENT_END;
 }
 
 <S_IGNORE_COMMENT>"-" {
     /* handle any hanging minus signs E.g. i - 2; --a; etc. */
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
-    return T_TEXT;   /* this has to be handled correctly in parser */
+    SETLVAL;
+    return T_TEXT;
 }
 
 <S_IGNORE_COMMENT>[^\-]* {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_TEXT;
 }
 
 <S_IGNORE_CDATA>"]]>" {
+    SETLVAL;
     BEGIN(INITIAL);
     return T_CDATA_END;
 }
 
 <S_IGNORE_CDATA>"]" {
+    SETLVAL;
     return T_TEXT;
 }
 
 <S_IGNORE_CDATA>[^\]]* {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_TEXT;
 }
 
 <S_IGNORE_DOCTYPE>">" {
+    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
 
 <S_IGNORE_DOCTYPE>[^\>]* {
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_TEXT;
 }
 
 
 <S_APOSSTRING>\' {
+    SETLVAL;
     BEGIN(S_INNER);
     return T_STRING;
 }
 
 <S_APOSSTRING>[^']* { 
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_VALUE;
 }
 
 
 <S_STRING>\" {
+    SETLVAL;
     BEGIN(S_INNER);
     return T_STRING;
 }
 
 <S_STRING>[^"]* { 
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_VALUE;
 }
 
 
 <S_ERROR_RECOVER>">" {
+    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
@@ -260,10 +262,13 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 <S_ERROR_RECOVER>[^>]* {
     /* ignore all this till recover */
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng);
-    // XXX error
-    yyset_lval(&s, yy_globals);
+    SETLVAL;
     return T_TEXT;
 }
 
 %%
+
+void yyerror (char* msg) {
+    fprintf(stderr, "htmllex: error: %s\n", msg);
+}
+

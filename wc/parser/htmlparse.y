@@ -16,10 +16,11 @@
 
 #define YYSTYPE PyObject*
 #define YYPARSE_PARAM scanner
+#define YYLEX_PARAM scanner
 extern int yylex_init(void** scanner);
 extern int yy_scan_bytes(const char* s, int slen, void* scanner);
 extern int yylex_destroy(void* scanner);
-extern int yylex(void* scanner);
+extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void yyerror(char *msg);
 
 /* user_data type for SAX calls */
@@ -267,7 +268,7 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
     /* set up the parse string */
     int slen;
     char* s;
-    void* scanner;
+    void* scanner=0;
     if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
@@ -279,11 +280,16 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
     self->userData->exc_tb = NULL;
 
     /* feed data to lexer and parse */
+    printf("feed 1 %d\n", scanner);
     yylex_init(&scanner);
+    printf("feed 2 %d\n", scanner);
     yy_scan_bytes(s, slen, scanner);
-    yydebug = 1;
+    printf("feed 3 %d\n", scanner);
+    yydebug=1;
     yyparse(scanner);
+    printf("feed 4 %d\n", scanner);
     yylex_destroy(scanner);
+    printf("feed 5 %d\n", scanner);
 
     /* check error state */
     if (self->userData->error!=0) {
@@ -355,4 +361,14 @@ static PyMethodDef htmlsax_methods[] = {
 
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
+}
+
+int main (void) {
+    void* scanner;
+    yylex_init(&scanner);
+    yy_scan_bytes("<html>", 6, scanner);
+    yydebug=1;
+    yyparse(scanner);
+    yylex_destroy(scanner);
+    return 0;
 }
