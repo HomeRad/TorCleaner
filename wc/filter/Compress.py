@@ -34,6 +34,8 @@ mimelist = map(compileMime,  [r'text/[a-z.\-+]+',
             'x-world/x-vrml',
             ])
 
+_compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
+
 def gzip_header ():
     return '%s%s%s%s' % (
               '\037\213\010', # header
@@ -99,25 +101,20 @@ class Compress (Filter):
         return data
 
     def getAttrs (self, headers, url):
+        #debug(HURT_ME_PLENTY, "compress headers", `headers.headers`)
         compressobj = None
-        do_compress = False
-        for accept in headers.get('Accept-Encoding', '').split(','):
-            if ';' in accept:
-                accept, q = accept.split(';', 1)
-            if accept.strip() in ('gzip', 'x-gzip'):
-                do_compress = True
-                break
-        if do_compress:
-            if headers.has_key('Content-Encoding'):
-                encoding = headers['Content-Encoding'].lower()
-                if not encoding in ('gzip', 'x-gzip', 'compress',
-                                    'x-compress', 'deflate'):
-                    compressobj = getCompressObject()
-                    headers['Content-Encoding'] += ', gzip'
-            else:
-                compressobj = getCompressObject()
-                headers['Content-Encoding'] = 'gzip'
-        #debug(HURT_ME_PLENTY, "compress content encoding", headers.get('content-encoding'))
+        accept = headers.get('Accept-Encoding', '')
+        #debug(HURT_ME_PLENTY, "accept", `accept`)
+        encoding = headers.get('Content-Encoding', '').lower()
+        #debug(HURT_ME_PLENTY, "encoding", `encoding`)
+        if accept!='gzip':
+            pass
+        elif encoding and encoding not in _compress_encs:
+            compressobj = getCompressObject()
+            headers['Content-Encoding'] += ', gzip'
+        else:
+            compressobj = getCompressObject()
+            headers['Content-Encoding'] = 'gzip'
         #debug(HURT_ME_PLENTY, "compress object", compressobj)
         d = Filter.getAttrs(self, headers, url)
         d['compressobj'] = compressobj
