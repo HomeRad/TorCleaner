@@ -35,7 +35,7 @@
 
 <rewrite title="Ad servers 06" oid="6"
  desc="Kill ad servers.">
-<attr>http://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com)</attr>
+<attr>http://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com)</attr>
 </rewrite>
 
 <rewrite title="Ad servers 07" oid="7"
@@ -242,7 +242,7 @@
 <attr name="src">s0b\.bluestreak\.com</attr>
 </rewrite>
 
-<block title="Slashdot JS ad 1" oid="107"
+<block title="Slashdot JS ad 1" oid="41"
  scheme="http"
  host="images2.slashdot.org"
  port=""
@@ -251,7 +251,7 @@
  query=""
  fragment=""/>
 
-<block title="Slashdot JS ad 2" oid="108"
+<block title="Slashdot JS ad 2" oid="42"
  scheme="http"
  host="images.slashdot.org"
  port=""
