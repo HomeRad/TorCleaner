@@ -376,7 +376,7 @@ class HttpServer (wc.proxy.Server.Server):
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://%s:%d/rated.html?%s\r' % \
-               (self.client.socket.getsockname(),
+               (self.client.socket.getsockname()[0],
                 wc.configuration.config['port'], query)
         headers['Content-Length'] = '%d\r' % len(msg)
         wc.log.debug(wc.LOG_PROXY, "%s headers\n%s", self, headers)
