@@ -54,11 +54,11 @@ testgen:
 testrandom:
 	@echo "parse random data..."
 	rm -f randomparse.txt
-	head -c 20000 /dev/urandom | test/run.sh test/parsefile.py - > /dev/null 2> randomparse.txt
+	head -c 20000 /dev/urandom | test/run.sh test/parsefile.py - > /dev/null
 	@echo "done."
 	rm -f randomfilter.txt
 	@echo "filter random data..."
-	head -c 20000 /dev/urandom | test/run.sh test/filterfile.py - > /dev/null 2> randomfilter.txt
+	head -c 20000 /dev/urandom | test/run.sh test/filterfile.py - > /dev/null
 	@echo "done."
 
 testupdate:
