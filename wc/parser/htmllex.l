@@ -82,9 +82,15 @@
 #define SET_ERROR(s)
 
 /* use Pythons memory management */
-#define malloc PyMem_Malloc
-#define realloc PyMem_Realloc
-#define free PyMem_Free
+void* yyalloc (size_t bytes, void* yyscanner) {
+    return PyMem_Malloc(bytes);
+}
+void* yyrealloc (void* ptr, size_t bytes, void* yyscanner) {
+    return PyMem_Realloc(ptr, bytes);
+}
+void yyfree (void* ptr, void* yyscanner) {
+    PyMem_Free(ptr);
+}
 
 #include "htmlparse.h"
 
@@ -143,6 +149,7 @@ static PyObject* quote_string (PyObject* val) {
 }
 %}
 
+%option noyyalloc noyyrealloc noyyfree
 %option 8bit outfile="htmllex.c"
 %option align full
 /* uncomment the next line for debugging */
@@ -735,10 +742,6 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
 %%
-
-#undef malloc
-#undef realloc
-#undef free
 
 int htmllexInit (void** scanner, UserData* data) {
     yylex_init(scanner);
