@@ -4,7 +4,10 @@
  
  Changes:
 
- 20030307 Bastia Kleineidam
+ 20030705 Bastian Kleineidam
+ * renamed replacer to replace
+ * added pics
+ 20030307 Bastian Kleineidam
  * added javascript filter rule
  23.7.2002 Bastian Kleineidam
  * added allowurls and allowdomains filters
@@ -295,12 +298,12 @@
  dontmatchurl CDATA ""
 >
 
-<!--                      Replacer
+<!--                      Replace
 
    Replace regular expressions in a data stream
 -->
-<!ELEMENT replacer (#PCDATA)>
-<!ATTLIST replacer
+<!ELEMENT replace (#PCDATA)>
+<!ATTLIST replace
  title    CDATA #REQUIRED
  oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
