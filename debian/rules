@@ -36,7 +36,7 @@ binary-post-install/webcleaner-common::
 # move config files
 	mv $(SHAREDIR)/config/* $(ETCDIR)/
 	rmdir $(SHAREDIR)/config
-	ln -s $(ETCDIR) $(SHAREDIR)/config
+	ln -s /etc/webcleaner $(SHAREDIR)/config
 # replace logging.conf
 	rm $(ETCDIR)/logging.conf
 	install -m 0644 debian/logging.conf $(ETCDIR)/logging.conf
