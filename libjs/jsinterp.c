@@ -951,8 +951,25 @@ JSBool
 js_InternalGetOrSet(JSContext *cx, JSObject *obj, jsid id, jsval fval,
                     JSAccessMode mode, uintN argc, jsval *argv, jsval *rval)
 {
+    /*
+     * Check general (not object-ops/class-specific) access from the running
+     * script to obj.id only if id has a scripted getter or setter that we're
+     * about to invoke.  If we don't check this case, nothing else will -- no
+     * other native code has the chance to check.
+     *
+     * Contrast this non-native (scripted) case with native getter and setter
+     * accesses, where the native itself must do an acess check, if security
+     * policies requires it.  We make a checkAccess or checkObjectAccess call
+     * back to the embedding program only in those cases where we're not going
+     * to call an embedding-defined native function, getter, setter, or class
+     * hook anyway.  Where we do call such a native, there's no need for the
+     * engine to impose a separate access check callback on all embeddings --
+     * many embeddings have no security policy at all.
+     */
     JS_ASSERT(mode == JSACC_READ || mode == JSACC_WRITE);
     if (cx->runtime->checkObjectAccess &&
+        JSVAL_IS_FUNCTION(cx, fval) &&
+        ((JSFunction *) JS_GetPrivate(cx, JSVAL_TO_OBJECT(fval)))->script &&
         !cx->runtime->checkObjectAccess(cx, obj, ID_TO_VALUE(id), mode,
                                         &fval)) {
         return JS_FALSE;
@@ -2006,10 +2023,11 @@ js_Interpret(JSContext *cx, jsval *result)
           case JSOP_BINDNAME:
             atom = GET_ATOM(cx, script, pc);
             SAVE_SP(fp);
-            ok = js_FindVariable(cx, (jsid)atom, &obj, &obj2, &prop);
-            if (!ok)
+            obj = js_FindIdentifierBase(cx, (jsid)atom);
+            if (!obj) {
+                ok = JS_FALSE;
                 goto out;
-            OBJ_DROP_PROPERTY(cx, obj2, prop);
+            }
             PUSH_OPND(OBJECT_TO_JSVAL(obj));
             break;
 
