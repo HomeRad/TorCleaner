@@ -95,6 +95,11 @@ class TestRewriter (StandardTest.StandardTest):
         self.filt("""Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü?""",
                   """Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü?""")
 
+    def testCharset (self):
+        """non-ascii characters"""
+        self.filt("""<Üzgür> fahr </langsamer> ¹²³¼½¬{""",
+                  """<Üzgür> fahr </langsamer> ¹²³¼½¬{""")
+
     def testTrackerImage (self):
         """1x1 tracker image"""
         self.filt("""<img src="blubb" width="1" height="1">""", "")

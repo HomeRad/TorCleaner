@@ -23,6 +23,11 @@ class TestReplacer (StandardTest.StandardTest):
         data = "".join(data)
         applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
 
+    def testReplaceNonAscii (self):
+        attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])
+        data = "äöü asdfö"
+        applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='TestReplacer')

@@ -88,6 +88,9 @@ class TestParser (StandardTest.StandardTest):
         ("""<a  href=bla" >""", """<a href="bla">"""),
         # entities
         ("""<a  href="&#109;ailto:" >""", """<a href="mailto:">"""),
+        # non-ascii characters
+        ("""<Üzgür> fahr </langsamer> ¹²³¼½¬{""",
+         """<Üzgür> fahr </langsamer> ¹²³¼½¬{"""),
         )
         self.flushtests = (
             ("<", "<"),
