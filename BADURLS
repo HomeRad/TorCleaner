@@ -1,0 +1,8 @@
+Desc: JavaScript in clear text:
+Tags: browsable_without
+Url: http://www.msnbc.com/news/922215.asp?cp1=1
+
+Desc: No link is clickable (a function is not run becuase of document.write?)
+Tags: browsable_without
+Url: http://www.mvhs.de not working
+
