@@ -1,6 +1,6 @@
 include MANIFEST.in TODO proxy.pac cross-build.sh
 include README.squid README.sshtunnel README.parser README.patches BADURLS
-include webcleaner
+include webcleaner webcleaner-service
 include debian/changelog debian/config debian/control debian/compat
 include debian/patches/*.dpatch debian/patches/00list*
 include debian/webcleaner.dirs debian/webcleaner.docs
