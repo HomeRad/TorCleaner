@@ -37,6 +37,8 @@ class WebConfig (object):
                  status=200, msg=_('Ok'), localcontext=None, auth=''):
         """load a web configuration template and return response"""
         wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
+        if isinstance(msg, unicode):
+            msg = msg.encode("iso8859-1", "ignore")
         self.client = client
         # we pretend to be the server
         self.connected = True
@@ -78,6 +80,7 @@ class WebConfig (object):
                 template = wc.webgui.templatecache.templates[path]
                 # expand template
                 data = expand_template(template, context)
+                # note: data is already encoded
             else:
                 fp = file(path, 'rb')
                 data = fp.read()
