@@ -1,0 +1,14 @@
+# Logrotate file for WebCleaner
+
+/var/log/webcleaner/webcleaner-access.log /var/log/webcleaner/webcleaner.log /var/log/webcleaner.err {
+	compress
+	weekly
+	rotate 5
+	notifempty
+        prerotate
+          /usr/sbin/invoke-rc.d webcleaner stop
+        endscript
+        postrotate
+          /usr/sbin/invoke-rc.d webcleaner start
+        endscript
+}
