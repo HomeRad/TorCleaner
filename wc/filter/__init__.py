@@ -125,7 +125,9 @@ def applyfilter (i, data, fun, attrs):
     For different filter levels we have different data objects.
     Look at the filter examples.
     """
+    wc.log.debug(wc.LOG_FILTER, "Filter %d bytes with %s..", len(data), attrs)
     if attrs.get('nofilter') or (fun!='finish' and not data):
+        wc.log.debug(wc.LOG_FILTER, ".. don't filter")
         return data
     return _applyfilter(i, data, fun, attrs)
 
@@ -133,13 +135,13 @@ def applyfilter (i, data, fun, attrs):
 def _applyfilter (i, data, fun, attrs):
     attrs['filterstage'] = i
     filters = wc.configuration.config['filterlist'][i]
-    wc.log.debug(wc.LOG_FILTER, "Filters %s", filters)
     for f in filters:
         ffun = getattr(f, fun)
         if f.applies_to_mime(attrs['mime']):
-            wc.log.debug(wc.LOG_FILTER, "filter %d bytes with %s",
-                         len(data), f)
+            wc.log.debug(wc.LOG_FILTER, "..applying to filter %s", f)
             data = ffun(data, attrs)
+        else:
+            wc.log.debug(wc.LOG_FILTER, "..not applying to filter %s", f)
     return data
 
 
@@ -148,7 +150,9 @@ def applyfilters (levels, data, fun, attrs):
     For different filter levels we have different data objects.
     Look at the filter examples.
     """
+    wc.log.debug(wc.LOG_FILTER, "Filter %d bytes with %s..", len(data), attrs)
     if attrs.get('nofilter') or (fun!='finish' and not data):
+        wc.log.debug(wc.LOG_FILTER, ".. don't filter")
         return data
     for i in levels:
         data = _applyfilter(i, data, fun, attrs)

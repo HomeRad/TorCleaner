@@ -238,8 +238,22 @@ def rating_add (url, rating):
         # XXX norm url?
         rating_cache[url] = rating
         rating_cache_write()
+        return True
     else:
         wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
+        return False
+
+
+def rating_delete (url, rating):
+    """remove rating from cache and write changes to disk"""
+    if wc.url.is_safe_url(url):
+        # XXX norm url?
+        del rating_cache[url]
+        rating_cache_write()
+        return True
+    else:
+        wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
+        return False
 
 
 def rating_allow (url, rule):
