@@ -179,7 +179,7 @@ to prevent Denial of Service attacks (eg webservers sending always an
 unknown content-encoding).
 Currently, this affects only the "compress" or "x-compress" encoding,
 because the LZW algorithm to uncompress such content is patented and
-therefore not included in WebCleaner. See http://www.burnallgifs.org.
+therefore not included in WebCleaner. See http://burnallgifs.org/.
 
 .. image:: http://sourceforge.net/sflogo.php?group_id=7692&type=1
    :align: right
