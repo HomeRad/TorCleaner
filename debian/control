@@ -18,6 +18,7 @@ Description: a filtering HTTP proxy
   o remove unwanted HTML (adverts, javascript, ...)
   o customizable to suit your (filtering) needs
   o HTTP/1.1 support
+  o Per-host access control
 
 Package: webcleanertools
 Section: x11
