@@ -22,10 +22,10 @@
 import socket
 import sets
 import sys
+import os
 import time
 
 import wc.dns.exception
-import wc.dns.ifconfig
 import wc.dns.message
 import wc.dns.name
 import wc.dns.query
@@ -337,6 +337,10 @@ class Resolver(object):
 
     def read_local_ifaddrs (self):
         """all active interfaces' ip addresses"""
+        if os.name!='posix':
+            # only posix is supported
+            return []
+        import wc.dns.ifconfig
         ifc = wc.dns.ifconfig.IfConfig()
         return [ ifc.getAddr(iface) for iface in ifc.getInterfaceList()
                  if ifc.isUp(iface) ]
