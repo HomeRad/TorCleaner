@@ -110,6 +110,41 @@ def get_translator (lang, translatorklass=None):
          translatorklass=translatorklass)
 
 
+def iswritable (fname):
+     """return True if given file is writable"""
+     if os.path.isdir(fname) or os.path.islink(fname):
+         return False
+     try:
+         if os.path.exists(fname):
+             open(fname, 'a').close()
+             return True
+         else:
+             open(fname, 'w').close()
+             os.remove(fname)
+             return True
+     except IOError:
+         pass
+     return False
+
+
+def get_log_file (name, logname, trydirs=[]):
+     """get full path name to writeable logfile"""
+     dirs = []
+     if os.name =='nt':
+         dirs.append(os.environ.get("TEMP"))
+     else:
+         dirs.append(os.path.join('/', 'var', 'log', name))
+         dirs.append(os.path.join('/', 'var', 'tmp', name))
+         dirs.append(os.path.join('/', 'tmp', name))
+     dirs.append(os.getcwd())
+     trydirs = trydirs+dirs
+     for d in trydirs:
+         fullname = os.path.join(d, logname)
+         if iswritable(fullname):
+             return fullname
+     raise IOError("Could not find writable directory for %s in %s" % (logname, str(trydirs)))
+
+
 def initlog (filename, appname, filelogs=True):
     """initialize logfiles and configuration"""
     logging.config.fileConfig(filename)
@@ -118,14 +153,14 @@ def initlog (filename, appname, filelogs=True):
         if os.name == "nt":
             trydirs.append(ConfigDir)
         logname = "%s.log" % appname
-        logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
+        logfile = get_log_file(appname, logname, trydirs=trydirs)
         handler = get_wc_handler(logfile)
         logging.getLogger("wc").addHandler(handler)
         logging.getLogger("TAL").addHandler(handler)
         logging.getLogger("TALES").addHandler(handler)
         # access log is always a file
         logname = "%s-access.log" % appname
-        logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
+        logfile = get_log_file(appname, logname, trydirs=trydirs)
         handler = get_access_handler(logfile)
         logging.getLogger("wc.access").addHandler(handler)
 
