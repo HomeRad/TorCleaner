@@ -130,17 +130,11 @@ static PyObject* resolve_entities;
     strcmp(tag, "meta")==0 || \
     strcmp(tag, "param")==0)
 
-/* resize buf to an empty string */
-#define RESIZE_BUF(buf) \
-    buf = PyMem_Resize(buf, char, 1); \
-    if (buf==NULL) return NULL; \
-    buf[0] = '\0'
-
-/* set buf to an empty string */
-#define NEW_BUF(buf) \
-    buf = PyMem_New(char, 1); \
-    if (buf==NULL) return NULL; \
-    buf[0] = '\0'
+/* clear buffer b, returning NULL on error */
+#define CLEAR_BUF(b) \
+    b = PyMem_Resize(b, char, 1); \
+    if (b==NULL) return NULL; \
+    (b)[0] = '\0'
 
 #define CHECK_ERROR(ud, label) \
 if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) { \
@@ -204,7 +198,7 @@ typedef int YYSTYPE;
 
 
 /* Line 214 of yacc.c.  */
-#line 208 "htmlparse.c"
+#line 202 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -374,8 +368,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   118,   118,   119,   122,   123,   130,   163,   208,   237,
-     256,   275,   294,   313,   333,   353
+       0,   112,   112,   113,   116,   117,   124,   158,   204,   234,
+     254,   274,   294,   314,   335,   356
 };
 #endif
 
@@ -1080,22 +1074,22 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 118 "htmlparse.y"
+#line 112 "htmlparse.y"
     {;}
     break;
 
   case 3:
-#line 119 "htmlparse.y"
+#line 113 "htmlparse.y"
     {;}
     break;
 
   case 4:
-#line 122 "htmlparse.y"
+#line 116 "htmlparse.y"
     { YYACCEPT; /* wait for more lexer input */ ;}
     break;
 
   case 5:
-#line 124 "htmlparse.y"
+#line 118 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1105,9 +1099,10 @@ yyreduce:
     break;
 
   case 6:
-#line 131 "htmlparse.y"
+#line 125 "htmlparse.y"
     {
-    /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
+    /* $1 is a PyTuple (<tag>, <attrs>)
+       <tag> is a PyString, <attrs> is a PyDict */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1141,9 +1136,10 @@ finish_start:
     break;
 
   case 7:
-#line 164 "htmlparse.y"
+#line 159 "htmlparse.y"
     {
-    /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
+    /* $1 is a PyTuple (<tag>, <attrs>)
+       <tag> is a PyString, <attrs> is a PyDict */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1189,8 +1185,9 @@ finish_start_end:
     break;
 
   case 8:
-#line 209 "htmlparse.y"
+#line 205 "htmlparse.y"
     {
+    /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1221,8 +1218,9 @@ finish_end:
     break;
 
   case 9:
-#line 238 "htmlparse.y"
+#line 235 "htmlparse.y"
     {
+    /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1243,8 +1241,9 @@ finish_comment:
     break;
 
   case 10:
-#line 257 "htmlparse.y"
+#line 255 "htmlparse.y"
     {
+    /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1265,8 +1264,9 @@ finish_pi:
     break;
 
   case 11:
-#line 276 "htmlparse.y"
+#line 275 "htmlparse.y"
     {
+    /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1289,6 +1289,7 @@ finish_cdata:
   case 12:
 #line 295 "htmlparse.y"
     {
+    /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1309,8 +1310,9 @@ finish_doctype:
     break;
 
   case 13:
-#line 314 "htmlparse.y"
+#line 315 "htmlparse.y"
     {
+    /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1332,8 +1334,9 @@ finish_script:
     break;
 
   case 14:
-#line 334 "htmlparse.y"
+#line 336 "htmlparse.y"
     {
+    /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1355,8 +1358,9 @@ finish_style:
     break;
 
   case 15:
-#line 354 "htmlparse.y"
+#line 357 "htmlparse.y"
     {
+    /* $1 is a PyString */
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1381,7 +1385,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1385 "htmlparse.c"
+#line 1389 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1575,7 +1579,7 @@ yyreturn:
 }
 
 
-#line 375 "htmlparse.y"
+#line 379 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1599,10 +1603,12 @@ static PyObject* htmlsax_parser_new(PyObject* self, PyObject* args) {
     /* reset userData */
     p->userData = PyMem_New(UserData, sizeof(UserData));
     p->userData->handler = handler;
-    NEW_BUF(p->userData->buf);
+    p->userData->buf = NULL;
+    CLEAR_BUF(p->userData->buf);
     p->userData->nextpos = 0;
     p->userData->bufpos = 0;
-    NEW_BUF(p->userData->tmp_buf);
+    p->userData->tmp_buf = NULL;
+    CLEAR_BUF(p->userData->tmp_buf);
     p->userData->tmp_tag = p->userData->tmp_attrname =
 	p->userData->tmp_attrval = p->userData->tmp_attrs =
 	p->userData->lexbuf = NULL;
@@ -1637,7 +1643,7 @@ static PyObject* parser_flush(PyObject* self, PyObject* args) {
         return NULL;
     }
     /* reset parser variables */
-    RESIZE_BUF(p->userData->tmp_buf);
+    CLEAR_BUF(p->userData->tmp_buf);
     Py_XDECREF(p->userData->tmp_tag);
     Py_XDECREF(p->userData->tmp_attrs);
     Py_XDECREF(p->userData->tmp_attrval);
@@ -1651,7 +1657,7 @@ static PyObject* parser_flush(PyObject* self, PyObject* args) {
 	PyObject* callback = NULL;
 	PyObject* result = NULL;
 	/* reset buffer */
-	RESIZE_BUF(p->userData->buf);
+	CLEAR_BUF(p->userData->buf);
 	if (s==NULL) { error=1; goto finish_flush; }
 	if (PyObject_HasAttrString(p->userData->handler, "characters")==1) {
 	    callback = PyObject_GetAttrString(p->userData->handler, "characters");
@@ -1717,8 +1723,8 @@ static PyObject* parser_reset(PyObject* self, PyObject* args) {
         return NULL;
     }
     /* reset buffer */
-    RESIZE_BUF(p->userData->buf);
-    RESIZE_BUF(p->userData->tmp_buf);
+    CLEAR_BUF(p->userData->buf);
+    CLEAR_BUF(p->userData->tmp_buf);
     p->userData->bufpos =
         p->userData->nextpos = 0;
     p->userData->tmp_tag = p->userData->tmp_attrs =

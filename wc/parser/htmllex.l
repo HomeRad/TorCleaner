@@ -10,30 +10,30 @@
 #define YYSTYPE PyObject*
 #define YY_EXTRA_TYPE UserData*
 
-/* reset buffer a to empty string */
-#define CLEAR_BUF(a) \
-    (a) = PyMem_Resize((a), char, 1); \
-    if ((a)==NULL) return T_ERROR; \
-    (a)[0] = '\0'
+/* resize buffer b, returning T_ERROR on error */
+#define RESIZE_BUF(b, n) \
+    b = PyMem_Resize(b, char, n); \
+    if (b==NULL) return T_ERROR; \
+    (b)[(n)-1] = '\0'
 
 /* make python string from tmp_buf and assign it to a */
 #define PYSTRING_TMP(a) \
-    (a) = PyString_FromString(yyextra->tmp_buf); \
-    if ((a)==NULL) return T_ERROR
+    a = PyString_FromString(yyextra->tmp_buf); \
+    if (a==NULL) return T_ERROR
 
 /* set return value from tmp_buf */
 #define SETLVAL {\
     PyObject* s; \
     PYSTRING_TMP(s); \
-    CLEAR_BUF(yyextra->tmp_buf); \
+    RESIZE_BUF(yyextra->tmp_buf, 1); \
     *yylval = s; \
     }
 
 /* append yytext to tmp_buf */
 #define APPEND_TO_TMP(n) {\
     size_t len = strlen(yyextra->tmp_buf); \
-    yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, (size_t)(len+(n)+1)); \
-    strncat(yyextra->tmp_buf, yytext, (size_t)(n)); \
+    RESIZE_BUF(yyextra->tmp_buf, len+(n)+1); \
+    strncat(yyextra->tmp_buf, yytext, (size_t)n); \
     }
 
 /* lowercase the tmp_buf */
@@ -67,7 +67,7 @@
 #define FLUSH_ATTRS \
     if (strlen(yyextra->tmp_buf) > 0) { \
         PYSTRING_TMP(yyextra->tmp_attrname); \
-	CLEAR_BUF(yyextra->tmp_buf); \
+	RESIZE_BUF(yyextra->tmp_buf, 1); \
         if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) return T_ERROR; \
         Py_DECREF(yyextra->tmp_attrname); \
         yyextra->tmp_attrname = NULL; \
@@ -225,7 +225,7 @@ RX_DATA [-a-zA-Z0-9_]+
     return T_WAIT;
 }
 
-   /* Note: www.nba.com ad some <! Copyright !> comment */
+   /* Note: www.nba.com had some <! Copyright !> comment */
 <INITIAL><![ ]+ {
     UPDATE_BUFPOS;
     BEGIN(S_COMMENT2);
@@ -346,7 +346,7 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_tag);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     BEGIN(S_ATTR1);
 }
 
@@ -354,8 +354,7 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     BEGIN(INITIAL);
     if (!strlen(yyextra->tmp_buf)) {
-	yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, 4);
-	if (!yyextra->tmp_buf) {return T_ERROR; }
+	RESIZE_BUF(yyextra->tmp_buf, 4);
         strcpy(yyextra->tmp_buf, "</>");
         yyextra->tmp_attrs = NULL;
         SETLVAL;
@@ -363,7 +362,7 @@ RX_DATA [-a-zA-Z0-9_]+
     }
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_tag);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START_END);
 }
@@ -371,8 +370,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_TAGSTART>> {
     UPDATE_BUFPOS;
     if (!strlen(yyextra->tmp_buf)) {
-	yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, 3);
-	if (!yyextra->tmp_buf) {return T_ERROR; }
+	RESIZE_BUF(yyextra->tmp_buf, 3);
         strcpy(yyextra->tmp_buf, "<>");
         yyextra->tmp_attrs = NULL;
 	SETLVAL;
@@ -380,7 +378,7 @@ RX_DATA [-a-zA-Z0-9_]+
     }
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_tag);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     SCRIPT_CHECK;
     SET_ATTR_LVAL;
     RETURN(T_ELEMENT_START);
@@ -538,7 +536,7 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_attrname);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     BEGIN(S_ATTR4);
 }
 
@@ -546,7 +544,7 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     LOWER_TMP;
     PYSTRING_TMP(yyextra->tmp_attrname);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     if (yyextra->tmp_attrval!=NULL) return T_ERROR;
     Py_INCREF(Py_None);
     yyextra->tmp_attrval = Py_None;
@@ -588,7 +586,7 @@ RX_DATA [-a-zA-Z0-9_]+
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf,1);
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
@@ -603,7 +601,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_ATTR4>\/> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
@@ -631,7 +629,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_ATTR5>> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
@@ -650,7 +648,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_ATTR5>\/> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
@@ -669,7 +667,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_ATTR5>{RX_WHITE_SPACE}+ {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
@@ -686,7 +684,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_APOSSTRING>\' {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
@@ -709,7 +707,7 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_STRING>\" {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
-    CLEAR_BUF(yyextra->tmp_buf);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
@@ -849,8 +847,7 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
      we must replace '\0' with ' '. */
     int len = strlen(data->buf);
     int i;
-    data->buf = PyMem_Resize(data->buf, char, len+slen+1);
-    if (!data->buf) return -1;
+    RESIZE_BUF(data->buf, len+slen+1);
     for (i=0; i<slen; i++) {
 	if (s[i]=='\0')
 	    data->buf[len+i] = ' ';
@@ -883,10 +880,9 @@ int htmllexStop (void* scanner, UserData* data) {
             data->buf[j] = data->buf[i];
 	}
 	data->buf[j] = '\0';
-	data->buf = PyMem_Resize(data->buf, char, len-data->nextpos+1);
+	RESIZE_BUF(data->buf, len-data->nextpos+1);
         data->bufpos -= data->nextpos;
 	data->nextpos = 0;
-	if (!data->buf) return -1;
     }
     return 0;
 }
