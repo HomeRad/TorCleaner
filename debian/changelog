@@ -1,8 +1,10 @@
 webcleaner (0.27) unstable; urgency=low
 
   * wcheaders option window improvements
+  * on Debian use init.d script for proxy start/stop/restart in
+    webcleanerconf
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 21 Nov 2001 09:12:28 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 21 Nov 2001 11:00:53 +0100
 
 webcleaner (0.26) unstable; urgency=low
 

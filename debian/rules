@@ -39,7 +39,7 @@ install: build
 	dh_testdir
 	dh_clean -k
 	dh_installdirs
-	$(PYTHON) setup.py install --root=`pwd`/debian/$(PACKAGE) --no-compile
+	$(PYTHON) setup.py install --root=$(CURDIR)/debian/$(PACKAGE) --no-compile
 	# delete man pages, we install them with dh_installmanpages
 	rm -rf debian/$(PACKAGE)/usr/man
 	# delete INSTALL file
@@ -53,6 +53,8 @@ install: build
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
 	# install configuration
 	install -c -m 644 config/*.{html,zap,dtd,gif,png,conf} debian/$(PACKAGE)/etc/webcleaner
+	# patch ConfWindow
+	patch debian/$(PACKAGE)/usr/lib/$(PYTHON)/site-packages/wc/gui/ConfWindow.py debian/ConfWindow.patch
 
 
 # Build architecture-independent files here.
