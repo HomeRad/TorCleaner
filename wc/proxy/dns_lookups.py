@@ -351,6 +351,8 @@ class DnsLookupHostname (object):
         elif self.outstanding_requests == 0:
             self.issue_request()
 
+# Map {nameserver (string) -> whether it accepts TCP requests (bool)}
+dns_accepts_tcp = {}
 
 class DnsLookupConnection (wc.proxy.Connection.Connection):
     """
@@ -359,7 +361,6 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     # Switch from UDP to TCP after some time
     PORT = 53
     TIMEOUT = 2 # Resend the request every second
-    accepts_tcp = {} # Map nameserver to 0/1, whether it accepts TCP requests
 
     def __init__ (self, nameserver, hostname, callback):
         self.hostname = hostname
@@ -413,12 +414,12 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
 
     def handle_connect (self):
         # For TCP requests only
-        DnsLookupConnection.accepts_tcp[self.nameserver] = True
+        dns_accepts_tcp[self.nameserver] = True
 
     def handle_connect_timeout (self):
         # We're trying to perform a TCP connect
         if self.callback and not self.connected:
-            DnsLookupConnection.accepts_tcp[self.nameserver] = False
+            dns_accepts_tcp[self.nameserver] = False
             self.callback(self.hostname,
                   DnsResponse('error', 'timed out connecting .. %s' % self))
             self.callback = None
@@ -462,7 +463,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             return
         self.retries += 1
         if (not self.tcp and
-            self.accepts_tcp.get(self.nameserver, 1) and
+            dns_accepts_tcp.get(self.nameserver, True) and
             self.retries == 1):
             # Switch to TCP
             self.TIMEOUT = 20
