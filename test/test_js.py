@@ -2,13 +2,18 @@
 from wc.js import jslib, JSListener
 import sys
 sys.stderr = sys.stdout
+from wc.log import *
+initlog('test/logging.conf')
 
 class JSOutputter(JSListener.JSListener):
-    def processData (self, data):
+    def jsProcessData (self, data):
         print "data", data
 
-    def processPopup (self):
+    def jsProcessPopup (self):
         print "popup"
+
+    def jsProcessError (self, err):
+        print err
 
 out = JSOutputter()
 jsEnv = jslib.new_jsenv()
