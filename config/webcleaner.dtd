@@ -5,8 +5,6 @@
  parentproxy     CDATA #IMPLIED
  parentproxyport CDATA "8080"
  buffersize  CDATA "1024"
- debuglevel  (0|1|2|3)
- logfile     CDATA #IMPLIED
  timeout     CDATA "300"
  obfuscateip (0|1)
  showerrors  (0|1)
