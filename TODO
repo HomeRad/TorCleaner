@@ -2,8 +2,6 @@ TODO
 
 version 2.20
 
-- JS syntax errors
-
 - disable switch like privoxy
   http://config.privoxy.org/toggle?set=disable
   http://config.privoxy.org/toggle?set=enable
