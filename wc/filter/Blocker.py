@@ -170,7 +170,7 @@ class Blocker (wc.filter.Filter.Filter):
         try_append_lines(self.allowed_urls, rule)
 
 
-    def doit (self, data, **attrs):
+    def doit (self, data, attrs):
         """investigate request data for a block.
            data is the complete request (with quoted url),
            we get the unquoted url from args

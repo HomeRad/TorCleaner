@@ -57,7 +57,7 @@ class VirusFilter (wc.filter.Filter.Filter):
     MAX_FILE_BYTES = 1024L*1024L*5L
 
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         """write data to scanner and internal buffer"""
         if not attrs.has_key('scanner'):
             return data
@@ -79,7 +79,7 @@ class VirusFilter (wc.filter.Filter.Filter):
                 strsize(VirusFilter.MAX_FILE_BYTES))
 
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         """write data to scanner and internal buffer.
            If scanner is clean, return buffered data, else print error
            message and return an empty string."""

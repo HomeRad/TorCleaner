@@ -25,7 +25,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         # minimal number of bytes before we start mime recognition
         self.minimal_size_bytes = 1024
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         """feed data to recognizer"""
         if not attrs.has_key('mimerecognizer_buf'):
             return data
@@ -37,7 +37,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
             return self.recognize(buf, attrs)
         return ''
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         """feed data to recognizer"""
         if not attrs.has_key('mimerecognizer_buf'):
             return data
@@ -50,8 +50,11 @@ class MimeRecognizer (wc.filter.Filter.Filter):
     def recognize (self, buf, attrs):
         # note: recognizing a mime type fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024
+        wc.log.debug(wc.LOG_FILTER, "MIME recognize %d bytes of data",
+                     buf.tell())
         try:
             mime = wc.magic.classify(buf)
+            wc.log.debug(wc.LOG_FILTER, "MIME recognized %r", mime)
             if mime is not None and not attrs['mime'].startswith(mime):
                 wc.log.warn(wc.LOG_FILTER, "Adjusting MIME %r -> %r",
                             attrs['mime'], mime)

@@ -71,7 +71,7 @@ class Compress (wc.filter.Filter.Filter):
         super(Compress, self).__init__()
         self.init_compressor = True
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         """Compress the string s.
            Note that compression state is saved outside of this function
            in the compression object.
@@ -92,7 +92,7 @@ class Compress (wc.filter.Filter.Filter):
         data = "%s%s" % (header, compobj['compressor'].compress(data))
         return data
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         """final compression of data, flush gzip buffers"""
         if self.init_compressor:
             self.set_encoding_header(attrs)

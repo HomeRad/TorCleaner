@@ -36,7 +36,7 @@ class Replacer (wc.filter.Filter.Filter):
     mimelist = [wc.filter.compile_mime(x)
        for x in ['text/html', 'text/javascript', 'application/x-javascript']]
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         """feed data to replacer buffer"""
         if not attrs.has_key('replacer_buf') or not data:
             return data
@@ -44,7 +44,7 @@ class Replacer (wc.filter.Filter.Filter):
         charset = attrs.get('charset', DefaultCharset)
         return self.replace(data, charset, buf)
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         """feed data to replacer buffer, flush and return it"""
         if not attrs.has_key('replacer_buf'):
             return data

@@ -33,7 +33,7 @@ class RatingHeader (wc.filter.Filter.Filter):
     # applies to all mime types
     mimelist = []
 
-    def doit (self, data, **attrs):
+    def doit (self, data, attrs):
         url = attrs['url']
         headers = attrs['headers']['server']
         if headers.has_key('Content-Rating'):

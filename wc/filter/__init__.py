@@ -132,12 +132,14 @@ def applyfilter (i, data, fun, attrs):
 
 def _applyfilter (i, data, fun, attrs):
     attrs['filterstage'] = i
-    for f in wc.configuration.config['filterlist'][i]:
+    filters = wc.configuration.config['filterlist'][i]
+    wc.log.debug(wc.LOG_FILTER, "Filters %s", filters)
+    for f in filters:
         ffun = getattr(f, fun)
         if f.applies_to_mime(attrs['mime']):
             wc.log.debug(wc.LOG_FILTER, "filter %d bytes with %s",
                          len(data), f)
-            data = ffun(data, **attrs)
+            data = ffun(data, attrs)
     return data
 
 

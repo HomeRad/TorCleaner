@@ -43,14 +43,14 @@ class ImageReducer (wc.filter.Filter.Filter):
         # reduced JPEG quality (in percent)
         self.quality = 20
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         """feed image data to buffer"""
         if not attrs.has_key('imgreducer_buf'):
             return data
         attrs['imgreducer_buf'].write(data)
         return ''
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         """feed image data to buffer, then convert it and return result"""
         if not attrs.has_key('imgreducer_buf'):
             return data

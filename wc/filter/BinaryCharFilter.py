@@ -33,7 +33,7 @@ class BinaryCharFilter (wc.filter.Filter.Filter):
     # which mime types this filter applies to
     mimelist = [wc.filter.compile_mime(x) for x in ['text/html']]
 
-    def doit (self, data, **attrs):
+    def doit (self, data, attrs):
         """filter given data"""
         return data.translate(string.maketrans('\x00\x84\x91\x92\x93\x94',
                                                ' "`\'""'))

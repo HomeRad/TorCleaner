@@ -53,7 +53,7 @@ class ImageSize (wc.filter.Filter.Filter):
         self.blockdata = f.read()
         f.close()
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         if not data or not attrs.has_key('imgsize_buf'):
             # do not block this image
             return data
@@ -79,7 +79,7 @@ class ImageSize (wc.filter.Filter.Filter):
             return data
         return ''
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         # note: if attrs['blocked'] is True, then the blockdata is
         # already sent out
         if not attrs.has_key('imgsize_buf'):

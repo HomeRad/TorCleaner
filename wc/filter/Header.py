@@ -72,7 +72,7 @@ class Header (wc.filter.Filter.Filter):
             if rule.filterstage in ('both', 'response'):
                 self.add[wc.filter.FILTER_RESPONSE_HEADER].append((name, val))
 
-    def doit (self, data, **attrs):
+    def doit (self, data, attrs):
         """apply stored header rules to data, which is a WcMessage object"""
         delete = sets.Set()
         # stage is FILTER_REQUEST_HEADER or FILTER_RESPONSE_HEADER

@@ -43,7 +43,7 @@ class GifImage (wc.filter.Filter.Filter):
     # which mime types this filter applies to
     mimelist = [wc.filter.compile_mime(x) for x in ['image/gif']]
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         """feed data to GIF image parser, return processed data"""
         if not attrs.has_key('gifparser'):
             return data
@@ -56,13 +56,13 @@ class GifImage (wc.filter.Filter.Filter):
             pass
         return gifparser.get_output()
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         """feed data to GIF image parser, flush it and return processed
            data"""
         if not attrs.has_key('gifparser'):
             return data
         if data:
-            data = self.filter(data, **attrs)
+            data = self.filter(data, attrs)
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
 

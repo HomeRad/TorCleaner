@@ -35,7 +35,7 @@ class Rewriter (wc.filter.Filter.Filter):
     mimelist = [wc.filter.compile_mime(x) for x in ['text/html']]
 
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         if not attrs.has_key('rewriter_filter'):
             return data
         p = attrs['rewriter_filter']
@@ -45,7 +45,7 @@ class Rewriter (wc.filter.Filter.Filter):
             raise wc.filter.FilterWait("wait for rating decision")
         return p.getoutput()
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         if not attrs.has_key('rewriter_filter'):
             return data
         p = attrs['rewriter_filter']

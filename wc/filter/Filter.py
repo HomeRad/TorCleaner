@@ -35,23 +35,21 @@ class Filter (object):
         wc.log.debug(wc.LOG_FILTER, "enable %s ", rule)
         self.rules.append(rule)
 
-    def filter (self, data, **attrs):
+    def filter (self, data, attrs):
         """Filter given data.
 
            @param attrs filter-specific state data
         """
-        args = (data,)
-        return self.doit(*args, **attrs)
+        return self.doit(data, attrs)
 
-    def finish (self, data, **attrs):
+    def finish (self, data, attrs):
         """Filter given data and finish filtering (eg flushing buffers).
 
            @param attrs filter-specific state data
         """
-        args = (data,)
-        return self.doit(*args, **attrs)
+        return self.doit(data, attrs)
 
-    def doit (self, data, **attrs):
+    def doit (self, data, attrs):
         """Filter given data.
 
            @param attrs filter-specific state data
