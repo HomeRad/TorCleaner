@@ -71,11 +71,16 @@ def install_nt_service ():
     sys.argv = ['webcleaner', 'start']
     win32serviceutil.HandleCommandLine(win32start.ProxyService)
     sys.argv = oldargs
+    # sleep a while to let the proxy start...
+    state = state_nt_service(AppName)
+    while state==win32service.SERVICE_START_PENDING:
+        time.sleep(1)
+        state = state_nt_service(AppName)
+    time.sleep(3)
+    # open configuration
     config = Configuration()
     config_url = "http://localhost:%d/" % config['port']
-    # sleep a while to let the proxy start...
     print i18n._("Opening proxy configuration interface...")
-    time.sleep(5)
     webbrowser.open(config_url)
 
 
