@@ -51,7 +51,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         # CVE-2002-0025 and CVE-2002-0024
         try:
             mime = wc.magic.classify(buf)
-            if not attrs['mime'].startswith(mime):
+            if mime is not None and not attrs['mime'].startswith(mime):
                 wc.log.warn(wc.LOG_FILTER, "Adjusting MIME %r -> %r",
                             attrs['mime'], mime)
                 attrs['headers']['data']['Content-Type'] = "%s\r" % mime
