@@ -170,6 +170,7 @@ class Configuration (dict):
             # avoid conflicting servers if an official WebCleaner release
             # is installed
             self['port'] += 1
+            self['sslport'] += 1
             # test data directory url
             self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
 
@@ -228,8 +229,13 @@ class Configuration (dict):
 <webcleaner
 """ % ConfigCharset)
         f.write(' version="%s"\n' % xmlquoteattr(self['version']))
-        f.write(' port="%d"\n' % self['port'])
-        f.write(' sslport="%d"\n' % self['sslport'])
+        port = self['port']
+        sslport = self['sslport']
+        if self['development']:
+            port -= 1
+            sslport -= 1
+        f.write(' port="%d"\n' % port)
+        f.write(' sslport="%d"\n' % sslport)
         if self['sslgateway']:
             f.write(' sslgateway="%d"\n' % self['sslgateway'])
         f.write(' adminuser="%s"\n' % xmlquoteattr(self['adminuser']))
@@ -244,10 +250,8 @@ class Configuration (dict):
         f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' gui_theme="%s"\n' % xmlquoteattr(self['gui_theme']))
         f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
-        if self['development']:
-            f.write(' development="%d"\n' % self['development'])
         f.write(' try_google="%d"\n' % self['try_google'])
-        hosts = self['nofilterhosts']
+        hosts = ip.lookup_ips(self['nofilterhosts'])
         f.write(' nofilterhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
         hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
         f.write(' allowedhosts="%s"\n'%xmlquoteattr(",".join(hosts)))

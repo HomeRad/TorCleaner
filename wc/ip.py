@@ -187,9 +187,9 @@ def hosts2map (hosts):
             hostset.add(expand_ip(host))
         else:
             try:
-                for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
-                    af, socktype, proto, canonname, sa = res
-                    hostset.add(sa[0])
+                ips = resolve_host(host)
+                for i in ips:
+                    hostset.add(i)
             except socket.gaierror:
                 pass
     return (hostset, nets)
@@ -200,6 +200,26 @@ def map2hosts (hostmap):
     for net, mask in hostmap[1]:
         ret.add("%s/%d" % (num2dq(net), mask2suffix(mask)))
     return ret
+
+
+def lookup_ips (ips):
+    """return set of host names that resolve to given ips"""
+    hosts = Set()
+    for ip in ips:
+        try:
+            hosts.add(socket.gethostbyaddr(ip)[0])
+        except socket.error:
+            hosts.add(ip)
+    return hosts
+
+
+def resolve_host (host):
+    """return set of ip numbers for given host"""
+    ips = Set()
+    for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
+        af, socktype, proto, canonname, sa = res
+        ips.add(sa[0])
+    return ips
 
 
 def _test ():

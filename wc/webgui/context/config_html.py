@@ -24,6 +24,8 @@ from wc import AppName, filtermodules, ip, Version, config
 from wc import sort_seq as _sort_seq
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
+from wc.ip import lookup_ips as _lookup_ips
+from wc.ip import resolve_host as_resolve_host
 
 # config vars
 info = {}
@@ -34,7 +36,7 @@ for _i in filtermodules:
 for _i in config['filters']:
     config['filterdict'][_i] = True
 config['allowedhostlist'] = _sort_seq(ip.map2hosts(config['allowedhosts']))
-config['nofilterhostlist'] = _sort_seq(ip.map2hosts(config['nofilterhosts']))
+config['nofilterhostlist'] = _lookup_ips(config['nofilterhosts'])
 config['newport'] = config['port']
 config['newsslport'] = config['sslport']
 config['newsslgateway'] = config['sslgateway']
@@ -345,20 +347,22 @@ def _form_delallowed (form):
 
 
 def _form_addnofilter (host):
-    hosts = ip.map2hosts(config['nofilterhosts'])
-    if host not in hosts:
-        hosts.add(host)
-        config['nofilterhosts'] = ip.hosts2map(hosts)
-        config['nofilterhostlist'] = _sort_seq(hosts)
+    try:
+        hostip = _resolve_host(host)
+    if host not in config['nofilterhosts']:
+        config['nofilterhosts'].add(hostip)
+        config['nofilterhostlist'] = _lookup_ips(config['nofilterhosts'])
         config.write_proxyconf()
         info['addnofilter'] = True
 
 
 def _form_delnofilter (form):
-    removed, hosts = _form_removehosts(form, 'nofilterhosts')
+    removed = 0
+    for host in _getlist(form, 'nofilterhosts'):
+        if host in config['nofilterhosts']:
+            config['nofilterhosts'].remove(host)
+            removed += 1
     if removed > 0:
-        config['nofilterhosts'] = ip.hosts2map(hosts)
-        config['nofilterhostlist'] = _sort_seq(hosts)
         config.write_proxyconf()
         info['delnofilter'] = True
 
