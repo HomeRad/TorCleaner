@@ -27,9 +27,6 @@ orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['rewrite', 'nocomments', 'javascript', 'pics']
 mimelist = map(compileMime, ['text/html'])
 
-# whitespace matcher
-_has_ws = re.compile("\s").search
-
 class Rewriter (Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
 

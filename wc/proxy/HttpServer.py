@@ -269,35 +269,38 @@ class HttpServer (Server):
         else:
             document = self.document
         gm = mimetypes.guess_type(document, None)
+        ct = self.headers.get('Content-Type')
         if self.mime:
-            if self.headers.get('Content-Type', '') != self.mime:
-                print >>sys.stderr, "Warning: set Content-Type from to %s in %s" % \
-                        (`self.mime`, `self.url`)
+            if ct != self.mime:
+                print >>sys.stderr, "Warning: set Content-Type from %s to %s in %s" % \
+                        (`str(ct)`, `self.mime`, `self.url`)
                 self.headers['Content-Type'] = self.mime
         elif gm[0]:
             # guessed an own content type
-            if self.headers.get('Content-Type') is None:
+            if ct is None:
                 print >>sys.stderr, "Warning: add Content-Type %s to %s" % \
                                       (`gm[0]`, `self.url`)
                 self.headers['Content-Type'] = gm[0]
            # fix some content types
-            elif not self.headers['Content-Type'].startswith(gm[0]) and \
+            elif not ct.startswith(gm[0]) and \
                  gm[0] in _fix_content_types:
                 print >>sys.stderr, "Warning: change Content-Type from %s to %s in %s" % \
-                 (`self.headers['Content-Type']`, `gm[0]`, `self.url`)
+                 (`ct`, `gm[0]`, `self.url`)
                 self.headers['Content-Type'] = gm[0]
         if gm[1] and gm[1] in _fix_content_encodings:
+            ce = self.headers.get('Content-Encoding')
             # guessed an own encoding type
-            if self.headers.get('Content-Encoding') is None:
+            if ce is None:
                 self.headers['Content-Encoding'] = gm[1]
                 print >>sys.stderr, "Warning: add Content-Encoding %s to %s" % \
                                       (`gm[1]`, `self.url`)
-            elif self.headers.get('Content-Encoding') != gm[1]:
+            elif ce != gm[1]:
                 print >>sys.stderr, "Warning: change Content-Encoding from %s to %s in %s" % \
-                 (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
+                 (`ce`, `gm[1]`, `self.url`)
                 self.headers['Content-Encoding'] = gm[1]
         # hmm, fix application/x-httpd-php*
         if self.headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
+            print >>sys.stderr, "Warning: fix x-httpd-php Content-Type"
             self.headers['Content-Type'] = 'text/html'
         remove_headers(self.headers, ['Keep-Alive'])
 

@@ -33,6 +33,8 @@ from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy import make_timer
 
+# whitespace matcher
+_has_ws = re.compile("\s").search
 
 class JSHtmlListener (JSListener):
     """defines callback handlers for Javascript code"""
@@ -481,7 +483,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                                '', #content
                                {'nofilter': None}, # nofilter
                                'identity', # compress
-                               mime = "text/javascript",
+                               mime = "application/x-javascript",
                                )
 
 
