@@ -1,7 +1,6 @@
 TODO
 
 version 2.8 and above
-
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS
@@ -9,6 +8,10 @@ version 2.8 and above
   this should integrate with the webgui configuration somehow
 
 - re-enabling a rule does not reinit filters, but should
+
+- it should be possible to grow the matched tags in a rewrite rule
+  to outside tags, for example to the enclosing <table>; of course
+  only if buffered content is not already written out.
 
 - use test/client.py, test/server.py for testing
 
