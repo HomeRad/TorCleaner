@@ -7,15 +7,15 @@ test_rewriter
      
 
 
-     <meta http-equiv=refresh>
+     <meta http-equiv="refresh">
 
 
 
-     <meta http-equiv=ReFresh>
+     <meta http-equiv="ReFresh">
 
 
 
-     <meta http-equiv=Refrish>
+     <meta http-equiv="Refrish">
 
 
 
@@ -26,7 +26,7 @@ test_rewriter
 
 
 
-     <body onload=hulla();>
+     <body onload="hulla();">
 
 
 
@@ -48,7 +48,7 @@ test_rewriter
 
 
 
-     <a href=http://www.counter-strike.de/downloads/ghl10full.exe>CS 1.0</a>
+     <a href="http://www.counter-strike.de/downloads/ghl10full.exe">CS 1.0</a>
 
 
 
@@ -75,14 +75,14 @@ These `Microsoft chars` are history.
 "Retter" Majak trifft in der Schlussminute.
 
 
-<a href=bla>seen at slashdot</a>
+<a href="bla">seen at slashdot</a>
 
 
-<a href=123$456>abc</a>
+<a href="123$456">abc</a>
 
 
 
-<a href=bla&quot;>link</a>
+<a href="bla&quot;">link</a>
 
 
 
@@ -102,7 +102,7 @@ These `Microsoft chars` are history.
 <hr>
 
 
-<object type=/AAAAA>
+<object type="/AAAAA">
 
 </body></html>
 

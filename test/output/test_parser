@@ -5,15 +5,15 @@ startElement ('a', {'b': 'c'})
 HTML "<a b='c'>"
 startElement ('a', {'b': 'c'})
 HTML '<a b=c">'
-startElement ('a', {'b': 'c&quot;'})
+startElement ('a', {'b': 'c"'})
 HTML '<a b="c>'
 characters ('<a b="c>',)
 HTML '<a b="">'
-startElement ('a', {'b': '""'})
+startElement ('a', {'b': ''})
 HTML "<a b=''>"
-startElement ('a', {'b': '""'})
+startElement ('a', {'b': ''})
 HTML '<a b=>'
-startElement ('a', {'b': '""'})
+startElement ('a', {'b': ''})
 HTML '<a =c>'
 startElement ('a', {'c': None})
 HTML '<a =>'
@@ -44,12 +44,12 @@ startElement ('h1', {})
 characters ('bla',)
 endElement ('h1',)
 HTML '<a b=c"><a b="c">'
-startElement ('a', {'b': 'c&quot;'})
+startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
-startElement ('a', {'c': None, 'b': '"c><a b="'})
+startElement ('a', {'c': None, 'b': 'c><a b='})
 HTML '<a b=/c/></a><br>'
-startElement ('a', {'b': '"/c/"'})
+startElement ('a', {'b': '/c/'})
 endElement ('a',)
 startElement ('br', {})
 HTML '<br/>'
@@ -109,12 +109,12 @@ startElement ('img', {'bo': None, 'rder': '0'})
 HTML '<a href="123$456">'
 startElement ('a', {'href': '123$456'})
 HTML '<a href=/>'
-startElement ('a', {'href': '""'})
+startElement ('a', {'href': ''})
 endElement ('a',)
 HTML '<a href="\'">'
-startElement ('a', {'href': '"\'"'})
+startElement ('a', {'href': "'"})
 HTML '<a href=\'"\'>'
-startElement ('a', {'href': '&quot;'})
+startElement ('a', {'href': '"'})
 HTML '<a href="&#109;ailto:">'
 startElement ('a', {'href': 'mailto:'})
 ======== sequential feed tests =========
@@ -123,15 +123,15 @@ startElement ('a', {'b': 'c'})
 HTML "<a b='c'>"
 startElement ('a', {'b': 'c'})
 HTML '<a b=c">'
-startElement ('a', {'b': 'c&quot;'})
+startElement ('a', {'b': 'c"'})
 HTML '<a b="c>'
 characters ('<a b="c>',)
 HTML '<a b="">'
-startElement ('a', {'b': '""'})
+startElement ('a', {'b': ''})
 HTML "<a b=''>"
-startElement ('a', {'b': '""'})
+startElement ('a', {'b': ''})
 HTML '<a b=>'
-startElement ('a', {'b': '""'})
+startElement ('a', {'b': ''})
 HTML '<a =c>'
 startElement ('a', {'c': None})
 HTML '<a =>'
@@ -165,12 +165,12 @@ characters ('l',)
 characters ('a',)
 endElement ('h1',)
 HTML '<a b=c"><a b="c">'
-startElement ('a', {'b': 'c&quot;'})
+startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
-startElement ('a', {'c': None, 'b': '"c><a b="'})
+startElement ('a', {'c': None, 'b': 'c><a b='})
 HTML '<a b=/c/></a><br>'
-startElement ('a', {'b': '"/c/"'})
+startElement ('a', {'b': '/c/'})
 endElement ('a',)
 startElement ('br', {})
 HTML '<br/>'
@@ -230,11 +230,11 @@ startElement ('img', {'bo': None, 'rder': '0'})
 HTML '<a href="123$456">'
 startElement ('a', {'href': '123$456'})
 HTML '<a href=/>'
-startElement ('a', {'href': '"/"'})
+startElement ('a', {'href': '/'})
 HTML '<a href="\'">'
-startElement ('a', {'href': '"\'"'})
+startElement ('a', {'href': "'"})
 HTML '<a href=\'"\'>'
-startElement ('a', {'href': '&quot;'})
+startElement ('a', {'href': '"'})
 HTML '<a href="&#109;ailto:">'
 startElement ('a', {'href': 'mailto:'})
 ===== subsequent interwoven parsing ====
