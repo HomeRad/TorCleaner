@@ -23,7 +23,7 @@ class Filter:
         self.mimelist = mimelist
 
     def addrule (self, rule):
-        #debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
+        debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
         self.rules.append(rule)
 
     def filter (self, data, **args):
@@ -39,12 +39,12 @@ class Filter:
         return {'url': url, 'headers': headers}
 
     def applies_to_mime (self, mime):
-        #debug(HURT_ME_PLENTY, self.__class__.__name__, "applies_to_mime", mime, "...")
+        debug(HURT_ME_PLENTY, self.__class__.__name__, "applies_to_mime", mime, "...")
         if not self.mimelist:
-            #debug(HURT_ME_PLENTY, "...no mimelist")
+            debug(HURT_ME_PLENTY, "...no mimelist")
             return 1
         for ro in self.mimelist:
             if ro.match(mime):
-                #debug(HURT_ME_PLENTY, "...match")
+                debug(HURT_ME_PLENTY, "...match")
                 return 1
-        #debug(HURT_ME_PLENTY, "...no match")
+        debug(HURT_ME_PLENTY, "...no match")

@@ -1,16 +1,20 @@
-Changes since 0.56:
+0.58:
+  * Set the 'Via' HTTP header when forwarding requests/responses
+  * Add a 'Warning' HTTP header when content-encoding is changed
+
+0.57:
   * Oopsie, fix umask to 0177
 
-Changes since 0.55:
+0.56:
   * fix dropping of root privileges if run as root
   * set umask to 0277
   * dont compress if no appropriate Accept-Encoding header is found
 
-Changes since 0.54:
+0.55:
   * Also support Content-Encoding: deflate and identity
   * Updated german translations
 
-Changes since 0.53:
+0.54:
   * add <area> to tags-with-no-end-tag in Rewriter rule
   * added more advert filters
   * remove unused blacklist zappers from CVS
@@ -19,7 +23,7 @@ Changes since 0.53:
   * only rely on mime type guessing values if both encoding and
     mime type were found
 
-Changes since 0.52:
+0.53:
   * only filter some <meta name> tags, not all
   * README.squid, a sample squid configuration file to use with
     WebCleaner, was added

@@ -87,8 +87,20 @@ class ClientServerMatchmaker:
             config['requests']['error'] += 1
             self.error(400, _("Empty URL"))
             return
+        if self.method='OPTIONS':
+            mf = int(self.headers.get('Max-Forwards', -1))
+            if mf==0:
+                # XXX display options
+                ServerHandleDirectly(self.client,
+                    'HTTP/1.0 200 OK\r\n',
+                    'Content-Type: text/plain\r\n\r\n',
+                    'WebCleaner')
+                return
+            if mf>0:
+                self.headers['Max-Forwards'] -= 1
+
         scheme, hostname, port, document = wc.proxy.spliturl(self.url)
-        #debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
+        debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
             # this means we should _not_ use this proxy for local
@@ -102,7 +114,7 @@ class ClientServerMatchmaker:
                 open(document, 'rb').read())
             return
 
-        #debug(HURT_ME_PLENTY, "huiii", hostname, port)
+        debug(HURT_ME_PLENTY, "huiii", hostname, port)
         if hostname.lower() in ('localhost', '127.0.0.1', '::1') and \
            port==config['port']:
             return self.handle_local(document)
@@ -145,7 +157,7 @@ class ClientServerMatchmaker:
 
 
     def handle_local (self, document):
-        #debug(HURT_ME_PLENTY, "handle local request for", document)
+        debug(HURT_ME_PLENTY, "handle local request for", document)
         if self.client and self.client.addr[0] not in _localhosts:
             contenttype = "text/html"
             content = wc.proxy.access_denied(self.client.addr)
@@ -206,8 +218,14 @@ class ClientServerMatchmaker:
             return
         server = serverpool.reserve_server(addr)
         if server:
+            # if http version is <1.1 and expect header found: 417
+            if self.headers.get('Expect')=='100-continue' and \
+               serverpool.http_versions.get(addr, 1.1) < 1.1:
+                self.error(417, "Expectation failed",
+                           "Server does not understand HTTP/1.1")
+                return
             # Let's reuse it
-            #debug(BRING_IT_ON, 'resurrecting', server)
+            debug(BRING_IT_ON, 'resurrecting', server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -251,7 +269,7 @@ class ClientServerMatchmaker:
 
 
     def server_close (self):
-        #debug(BRING_IT_ON, 'resurrection failed', self.server.sequence_number, self.server)
+        debug(BRING_IT_ON, 'resurrection failed', self.server.sequence_number, self.server)
 
         # Look for a server again
         if self.server.sequence_number > 0:

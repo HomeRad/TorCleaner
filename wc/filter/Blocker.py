@@ -113,7 +113,7 @@ class Blocker (Filter):
             self.allowed_urls.append(line.split("/", 1))
 
     def get_file_data (self, file):
-        #debug(BRING_IT_ON, "reading", file)
+        debug(BRING_IT_ON, "reading", file)
         file = os.path.join(ConfigDir, file)
         if file.endswith(".gz"):
             file = gzip.GzipFile(file, 'rb')
@@ -122,7 +122,7 @@ class Blocker (Filter):
         return file.readlines()
 
     def doit (self, data, **args):
-        #debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
+        debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
         splitted = data.split()
         if len(splitted)==3:
             method,url,protocol = splitted
@@ -137,7 +137,7 @@ class Blocker (Filter):
                 return data
             blocked = self.strict_whitelist or self.blocked(urlTuple)
             if blocked is not None:
-                #debug(BRING_IT_ON, "blocked url %s" % url)
+                debug(BRING_IT_ON, "blocked url %s" % url)
                 # index 3, not 2!
                 if image_re.match(urlTuple[3][-4:]):
                     return '%s %s %s' % (method,
@@ -152,12 +152,12 @@ class Blocker (Filter):
     def blocked (self, urlTuple):
         # check blocked domains
         for _block in self.blocked_domains:
-            #debug(NIGHTMARE, "block domain", _block)
+            debug(NIGHTMARE, "block domain", _block)
             if urlTuple[1] == _block:
                 return 0
         # check blocked urls
         for _block in self.blocked_urls:
-            #debug(NIGHTMARE, "block url", _block)
+            debug(NIGHTMARE, "block url", _block)
             if urlTuple[1]==_block[0] and urlTuple[3].startswith(_block[1]):
                 return 0
         # check block patterns
@@ -165,34 +165,34 @@ class Blocker (Filter):
             match = 1
             for i in range(len(urlTuple)):
                 if _block[i]:
-                    #debug(NIGHTMARE, "block pattern", _block[i].pattern)
+                    debug(NIGHTMARE, "block pattern", _block[i].pattern)
                     if not _block[i].search(urlTuple[i]):
-                        #debug(NIGHTMARE, "no match")
+                        debug(NIGHTMARE, "no match")
                         match = 0
             if match:
-                #debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
+                debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
                 return _block[-1]
         return None
 
     def allowed (self, urlTuple):
         for _allow in self.allowed_domains:
-            #debug(NIGHTMARE, "allow domain", _allow)
+            debug(NIGHTMARE, "allow domain", _allow)
             if urlTuple[1] == _allow:
                 return 1
         for _allow in self.allowed_urls:
-            #debug(NIGHTMARE, "allow url", _allow)
-            #debug(ALWAYS, "urltuple", `urlTuple`)
+            debug(NIGHTMARE, "allow url", _allow)
+            debug(ALWAYS, "urltuple", `urlTuple`)
             if urlTuple[1]==_allow[0] and urlTuple[3].startswith(_allow[1]):
                 return 1
         for _allow in self.allow:
             match = 1
             for i in range(len(urlTuple)):
                 if _allow[i]:
-                    #debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
+                    debug(NIGHTMARE, "allow pattern "+_allow[i].pattern)
 		    if not _allow[i].search(urlTuple[i]):
-                        #debug(NIGHTMARE, "no match")
+                        debug(NIGHTMARE, "no match")
                         match = 0
             if match:
-                #debug(NIGHTMARE, "allowed")
+                debug(NIGHTMARE, "allowed")
 	        return 1
         return 0

@@ -98,7 +98,8 @@ class HttpServer (Server):
         self.write('%s %s HTTP/1.1\r\n' % (self.method, self.document))
         for header in self.client.headers.headers:
             self.write(header)
-        self.write('Connection: Keep-Alive\r\n') # XXX modify existing header
+        if not self.client.headers.has_key('Connection'):
+            self.write('Connection: Keep-Alive\r\n')
         self.write('\r\n')
         self.write(self.content)
         self.state = 'response'
@@ -181,12 +182,18 @@ class HttpServer (Server):
         response = self.response.split()
         if response and response[1] == '100':
             # it's a Continue request, so go back to waiting for headers
+            # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
         # filter headers
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
+        # set via header
+        via = self.headers.get('Via', "")
+        if via: via += " "
+        via += self.http_version()+" WebCleaner"
+        self.headers['Via'] = via
         # check for unusual compressed files
         if not self.headers.has_key('Content-Type') and \
            (self.document.endswith(".bz2") or \
@@ -202,7 +209,7 @@ class HttpServer (Server):
             if ro.match(self.headers.get('Content-Type', "")):
                 rewrite = True
                 break
-        #debug(HURT_ME_PLENTY, "S/Headers ", `self.headers.headers`)
+        debug(HURT_ME_PLENTY, "S/Headers ", `self.headers.headers`)
         if self.headers.has_key('Content-Length'):
             if rewrite:
                 remove_headers(self.headers, ['Content-Length'])
@@ -217,7 +224,7 @@ class HttpServer (Server):
 
         # Chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
-            #debug(BRING_IT_ON, 'S/Transfer-encoding:', `self.headers['transfer-encoding']`)
+            debug(BRING_IT_ON, 'S/Transfer-encoding:', `self.headers['transfer-encoding']`)
             self.decoders.append(UnchunkStream())
             # remove encoding header
             to_remove = ["Transfer-Encoding"]
@@ -235,6 +242,11 @@ class HttpServer (Server):
                 self.decoders.append(GunzipStream())
             # remove encoding because we unzip the stream
             remove_headers(self.headers, ['Content-Encoding'])
+            # remove no-transform cache control
+            if self.headers.get('Cache-Control') == 'no-transform':
+                remove_headers(self.headers, ['Cache-Control'])
+            # add warning
+            self.headers['Warning'] = "214 WebCleaner Transformation applied"
         elif encoding and encoding!='identity':
             print >>sys.stderr, "Warning: unsupported encoding", `encoding`
             # do not disable filtering for unknown content-encodings
@@ -242,6 +254,8 @@ class HttpServer (Server):
             # as content-encoding)
         # initStateObject can modify headers (see Compress.py)!
         self.attrs = initStateObjects(self.headers, self.url)
+        if not self.headers.has_key('Content-Length'):
+            self.headers['Connection'] = 'close'
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
         self.client.server_response(self.response, self.headers)
         self.attrs['nofilter'] = self.nofilter['nofilter']
@@ -255,7 +269,7 @@ class HttpServer (Server):
 
     def process_content (self):
         data = self.read(self.bytes_remaining)
-        #debug(NIGHTMARE, "S/content", `data`)
+        debug(NIGHTMARE, "S/content", `data`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
@@ -277,7 +291,7 @@ class HttpServer (Server):
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
             # Either we ran out of bytes, or the decoder says we're done
-            #debug(HURT_ME_PLENTY, "S/contentfinished")
+            debug(HURT_ME_PLENTY, "S/contentfinished")
             self.state = 'recycle'
 
 
@@ -328,7 +342,7 @@ class HttpServer (Server):
             # We can't reuse this connection
             self.close()
         else:
-            #debug(HURT_ME_PLENTY, 'S/recycling', self.sequence_number, self)
+            debug(HURT_ME_PLENTY, 'S/recycling', self.sequence_number, self)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
@@ -338,7 +352,7 @@ class HttpServer (Server):
 
 
     def close (self):
-        #debug(HURT_ME_PLENTY, "S/close", self)
+        debug(HURT_ME_PLENTY, "S/close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -353,7 +367,7 @@ class HttpServer (Server):
 
 
     def handle_close (self):
-        #debug(HURT_ME_PLENTY, "S/handle_close", self)
+        debug(HURT_ME_PLENTY, "S/handle_close", self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None
@@ -364,7 +378,7 @@ def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        #debug(BRING_IT_ON, 'speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
+        debug(BRING_IT_ON, 'speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0

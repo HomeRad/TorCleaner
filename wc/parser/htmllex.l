@@ -141,7 +141,7 @@ static PyObject* quote_string (PyObject* val) {
 /* uncomment the next line for debugging */
 /*%option debug*/
 %option nounput nomain noyywrap noyymore noreject
-%option bison-bridge never-interactive
+%option bison-bridge reentrant never-interactive
 %option warn
 
 %x S_PI
