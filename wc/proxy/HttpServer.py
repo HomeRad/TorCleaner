@@ -371,8 +371,7 @@ class HttpServer (Server):
         # We're done sending things to the client, and we can reuse
         # this connection
         debug(NIGHTMARE, "Proxy: S/recycling", self)
-        client = self.client
-        self.client = None
+        client, self.client = self.client, None
         self.flush(client, reuse="True")
 
 
@@ -388,17 +387,21 @@ class HttpServer (Server):
         try:
             for i in _RESPONSE_FILTERS:
                 data = applyfilter(i, data, fun="finish", attrs=self.attrs)
-            if data:
-	        client.server_content(data)
-            self.attrs = {}
-            client.server_close()
-            if reuse:
-                self.reuse()
         except FilterException, msg:
             debug(NIGHTMARE, "Proxy: FilterException", msg)
-            # the filter still needs some data from a different client
-            # connection, so try flushing again after a while
-            make_timer(0.2, lambda : HttpServer.flush(self, client))
+            # the filter still needs some data so try flushing again
+            # after a while
+            make_timer(0.2, lambda : HttpServer.flush(self, client, reuse))
+            return
+        # now, the client might already have closed this server
+        # so test if client is still interested
+        if client.server:
+            if data:
+                client.server_content(data)
+            client.server_close()
+        self.attrs = {}
+        if reuse:
+            self.reuse()
 
 
     def http_version (self):
