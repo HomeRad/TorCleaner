@@ -107,7 +107,7 @@ def dq2net (ip, mask):
 
 
 def dq_in_net (n, net, mask):
-    """return 1 iff numerical ip n is in given net with mask.
+    """return True iff numerical ip n is in given net with mask.
        (net,mask) must be returned previously by ip2net"""
     m = n - (n & mask)
     return m==net
