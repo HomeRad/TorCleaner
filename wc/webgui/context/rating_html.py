@@ -23,6 +23,7 @@ from wc.webgui.context import getval as _getval
 from wc.filter.Rating import service, rangenames, rating_cache
 from wc.filter.Rating import rating_cache_write as _rating_cache_write
 from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
+from wc.url import is_valid_url as _is_valid_url
 
 _entries_per_page = 50
 
@@ -67,12 +68,12 @@ def _exec_form (form):
     # reset info/error and form vals
     _form_reset()
     # calculate global vars
-    global url, generic
-    if form.has_key('url'):
-        url = _getval(form, 'url')
-    if form.has_key('generic'):
-        generic = True
-    _form_ratings(form)
+    if not _form_url(form):
+        return
+    if not _form_generic(form):
+        return
+    if not _form_ratings(form):
+        return
     # index stuff
     if form.has_key('selindex'):
         _form_selindex(_getval(form, 'selindex'))
@@ -102,6 +103,23 @@ def _form_reset ():
     curindex = 0
 
 
+def _form_url (form):
+    global url
+    if form.has_key('url'):
+        val = _getval(form, 'url')
+        if not _is_valid_url(val):
+            error['url'] = True
+            return False
+        url = val
+    return True
+
+
+def _form_generic (form):
+    if form.has_key('generic'):
+        generic = True
+    return True
+
+
 def _form_ratings (form):
     for category, catdata in service['categories'].items():
         key = 'category_%s'%category
@@ -109,9 +127,11 @@ def _form_ratings (form):
             value = _getval(form, key)
             if not _rating_is_valid_value(catdata, value):
                 error['categoryvalue'] = True
+                return False
             else:
                 ratings[category] = value
                 values[category] = {value: True}
+    return True
 
 
 def _form_selindex (index):
