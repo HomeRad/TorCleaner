@@ -46,7 +46,6 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         # for security flaw scanning
         self.security = wc.filter.HtmlSecurity.HtmlSecurity()
 
-
     def new_instance (self, **opts):
         """make a new instance of this filter, for recursive filtering"""
         return HtmlFilter(self.rules, self.ratings, self.url, **opts)
@@ -56,21 +55,17 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """signal a filter/parser error"""
         wc.log.error(wc.LOG_FILTER, msg)
 
-
     def warning (self, msg):
         """signal a filter/parser warning"""
         wc.log.warn(wc.LOG_FILTER, msg)
-
 
     def fatal_error (self, msg):
         """signal a fatal filter/parser error"""
         wc.log.critical(wc.LOG_FILTER, msg)
 
-
     def __repr__ (self):
         """representation with recursion level and state"""
         return "<HtmlFilter[%d] %s>" % (self.level, self.url)
-
 
     def _is_waiting (self, item):
         """if parser is in wait state put item on waitbuffer and return
@@ -80,6 +75,21 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             return True
         return False
 
+    def _check_encoding (self, tag, attrs):
+        if tag == 'meta':
+            if attrs.get('http-equiv', '').lower() == "content-type":
+                content = attrs.get('content', '')
+                i = content.lower().find("charset=")
+                if i != -1:
+                    encoding = content[i:]
+                    try:
+                        codecs.lookup(encoding)
+                        wc.log.debug(wc.LOG_FILTER,
+                                  "%s switch to encoding %r", self, encoding)
+                        self.htmlparser.encoding = encoding
+                    except LookupError:
+                        wc.log.warn(wc.LOG_FILTER,
+                                    "unkown encoding %r", encoding)
 
     def _data (self, d):
         """general handler for data"""
@@ -88,18 +98,15 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             return
         self.htmlparser.tagbuf.append(item)
 
-
     def cdata (self, data):
         """character data"""
         wc.log.debug(wc.LOG_FILTER, "%s cdata %r", self, data)
         return self._data(data)
 
-
     def characters (self, data):
         """characters"""
         wc.log.debug(wc.LOG_FILTER, "%s characters %r", self, data)
         return self._data(data)
-
 
     def comment (self, data):
         """a comment; accept only non-empty comments"""
@@ -111,22 +118,20 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             return
         self.htmlparser.tagbuf.append(item)
 
-
     def doctype (self, data):
         """HTML doctype"""
         wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
         return self._data("<!DOCTYPE%s>"%data)
-
 
     def pi (self, data):
         """HTML pi"""
         wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
         return self._data("<?%s?>"%data)
 
-
     def start_element (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
+        self._check_encoding(tag, attrs)
         # default data
         wc.log.debug(wc.LOG_FILTER, "%s start_element %r", self, tag)
         if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG,
@@ -170,7 +175,6 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         if not self.rulestack and not self.javascript:
             self.htmlparser.tagbuf2data()
 
-
     def filter_start_element (self, tag, attrs):
         """filter the start element according to filter rules"""
         rulelist = []
@@ -209,7 +213,6 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             # put original item on tag buffer
             self.htmlparser.tagbuf.append(item)
 
-
     def end_element (self, tag):
         """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
@@ -231,12 +234,11 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                 self.js_src = False
                 return
             self.htmlparser.tagbuf.append(item)
-        #XXX dont write any data to buf if there are still rating rules
+        #XXX don't write any data to buf if there are still rating rules
         #if self.ratings and not finish:
         #    return
         if not self.rulestack:
             self.htmlparser.tagbuf2data()
-
 
     def filter_end_element (self, tag):
         """filters an end tag, return True if tag was filtered, else False"""
