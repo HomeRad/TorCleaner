@@ -155,6 +155,26 @@ services = {
 }
 
 
+def pics_is_cached (url):
+    """return True iff PICS cache has entry for given url"""
+    # XXX
+    return False
+
+
+def pics_add (url, data):
+    """add new PICS data for given url in cache"""
+    # XXX
+    pass
+
+
+def pics_allow (url, rule):
+    """asks cache if the rule allows the PICS data for given url
+    Looks up cache to find PICS data, if not find will not allow the url
+    """
+    # XXX
+    pass
+
+
 def check_pics (rule, labellist):
     """parse and check PICS labels according to given PicsRule
        return None if no rating is exceeded

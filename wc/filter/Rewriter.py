@@ -37,11 +37,6 @@ class Rewriter (Filter):
     rulenames = ['rewrite', 'nocomments', 'javascript', 'pics']
     mimelist = [compileMime(x) for x in ['text/html']]
 
-    def __init__ (self):
-        super(Rewriter, self).__init__()
-        self.comments = 1
-
-
     def addrule (self, rule):
         super(Rewriter, self).addrule(rule)
         compileRegex(rule, "matchurl")
@@ -51,8 +46,6 @@ class Rewriter (Filter):
             rule.attrs_ro = {}
             for key, val in rule.attrs.items():
                 rule.attrs_ro[key] = re.compile(rule.attrs[key])
-        elif rule.get_name()=='nocomments':
-            self.comments = 0
 
 
     def filter (self, data, **attrs):
@@ -77,7 +70,6 @@ class Rewriter (Filter):
         rewrites = []
         pics = []
         # look if headers already have PICS label info
-        picsheader = headers.has_key('PICS-Label')
         opts = {'comments': True, 'javascript': False}
         for rule in self.rules:
             if not rule.appliesTo(url):
@@ -88,7 +80,7 @@ class Rewriter (Filter):
                 opts['comments'] = False
             elif rule.get_name()=='javascript':
                 opts['javascript'] = True
-            elif rule.get_name()=='pics' and not picsheader:
+            elif rule.get_name()=='pics':
                 pics.append(rule)
         # generate the HTML filter
         return {'filter': FilterHtmlParser(rewrites, pics, url, **opts)}

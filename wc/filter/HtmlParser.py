@@ -25,7 +25,7 @@ from wc.parser.htmllib import HtmlParser, quote_attrval
 from wc.parser import resolve_html_entities, strip_quotes
 from wc.filter import FilterWait, FilterPics
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
-from wc.filter.PICS import check_pics
+from wc.filter.PICS import pics_add, pics_allow
 from wc.log import *
 # JS imports
 from wc.js.JSListener import JSListener
@@ -333,20 +333,18 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             return
         rulelist = []
         filtered = False
-        if tag=="meta" and \
-           attrs.get('http-equiv', '').lower() =='pics-label':
-            labels = resolve_html_entities(attrs.get('content', ''))
-            # note: if there are no pics rules, this loop is empty
-            for rule in self.pics:
-                msg = check_pics(rule, labels)
-                if msg:
-                    raise FilterPics(msg)
-            # first labels match counts
-            self.pics = []
+        if tag=="meta":
+            if attrs.get('http-equiv', '').lower() =='pics-label':
+                labels = resolve_html_entities(attrs.get('content', ''))
+                if not pics_is_cached(self.url):
+                    pics_add(self.url, labels)
         elif tag=="body":
-            # headers finished
             if self.pics:
-                # no pics data found
+                # headers finished, check PICS data
+                for rule in self.pics:
+                    msg = pics_allow(self.url, rule)
+                    if msg:
+                        raise FilterPics(msg)
                 self.pics = []
         elif tag=="base" and attrs.has_key('href'):
             self.base_url = strip_quotes(attrs['href'])

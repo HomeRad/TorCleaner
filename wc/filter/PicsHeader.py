@@ -22,10 +22,11 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.filter.Filter import Filter
-from wc.filter.PICS import check_pics
-from wc.filter import FilterPics, FILTER_RESPONSE_HEADER
+from wc.filter.PICS import pics_add, pics_is_cached
+from wc.filter import FILTER_RESPONSE_HEADER
 
 class PicsHeader (Filter):
+    """Adds PICS data supplied in header values of 'PICS-Label'"""
     # which filter stages this filter applies to (see filter/__init__.py)
     orders = [FILTER_RESPONSE_HEADER,]
     # which rule types this filter applies to (see Rules.py)
@@ -34,13 +35,14 @@ class PicsHeader (Filter):
     mimelist = []
 
     def doit (self, data, **attrs):
+        url = attrs['url']
+        if pics_is_cached(url):
+            # we already have PICS data for this url, ignore any new ones
+            return data
         rules = attrs['rules']
         headers = attrs['headers']
         if headers.has_key('PICS-Label'):
-            for rule in rules:
-                msg = check_pics(rule, headers['PICS-Label'])
-                if msg:
-                    raise FilterPics(msg)
+            pics_add(url, headers['PICS-Label'])
         return data
 
 
@@ -48,4 +50,6 @@ class PicsHeader (Filter):
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         return {'rules': rules,
-                'headers': headers}
+                'headers': headers,
+                'url': url,
+               }
