@@ -3,7 +3,7 @@
 <folder sid="wc.429" oid="4">
 <title lang="de">Spezielle Werbung</title>
 <title lang="en">Specific adverts</title>
-<description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&quot;http://company.com&quot;&gt;&lt;img  src=&quot;http://adserver.de/banner.gif&quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
+<description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href="http://company.com"&gt;&lt;img  src="http://adserver.de/banner.gif"&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
 
 <rewrite sid="wc.398">
   <title lang="de">www.deja.com</title>
@@ -68,7 +68,7 @@
   <title lang="de">freshmeat.net</title>
   <title lang="en">Freshmeat OSDN navbar</title>
   <description lang="de">Ich mag die OSDN Leiste nicht.</description>
-  <description lang="en">I don&apos;t like the OSDN navigation bar.</description>
+  <description lang="en">I don't like the OSDN navigation bar.</description>
   <matchurl>^http://freshmeat\.net/</matchurl>
   <attr name="style">border-top: 1px #6f6f6f solid; border-bottom: 1px #6f6f6f solid;</attr>
 </rewrite>
@@ -78,7 +78,7 @@
   <title lang="de">slashdot.org</title>
   <title lang="en">Slashdot OSDN navbar</title>
   <description lang="de">Ich mag die OSDN Leiste nicht.</description>
-  <description lang="en">I don&apos;t like the OSDN navbar.</description>
+  <description lang="en">I don't like the OSDN navbar.</description>
   <matchurl>^http://slashdot\.org/</matchurl>
   <attr name="style">border-top: 1px #999999 solid; border-bottom: 5px #000000 solid</attr>
 </rewrite>

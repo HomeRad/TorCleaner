@@ -3,7 +3,7 @@
 <folder sid="wc.362" oid="11">
 <title lang="de">CSS Filter</title>
 <title lang="en">CSS filtering</title>
-<description lang="en">Some browsers do not support CSS, so turn it off with these rules. Or you can test your pages without  CSS styles!  Well, we remove only complete &lt;style&gt; tags, not style=&quot;&quot; attributes.</description>
+<description lang="en">Some browsers do not support CSS, so turn it off with these rules. Or you can test your pages without  CSS styles!  Well, we remove only complete &lt;style&gt; tags, not style="" attributes.</description>
 
 <rewrite sid="wc.361" disable="1"
  tag="style">

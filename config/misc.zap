@@ -62,7 +62,7 @@
   <title lang="de">Ersetze &lt;marquee&gt; mit &lt;span&gt;</title>
   <title lang="en">Replace &lt;marquee&gt; with &lt;span&gt;</title>
   <description lang="de">Als ob blink nicht schon genug wäre.</description>
-  <description lang="en">Jeeesus, as if blinking isn&apos;t enough.</description>
+  <description lang="en">Jeeesus, as if blinking isn't enough.</description>
   <replacement part="tagname">span</replacement>
 </rewrite>
 
@@ -87,7 +87,7 @@
 <rewrite sid="wc.377">
   <title lang="de">Entferne &lt;href&gt; targets</title>
   <title lang="en">Remove &lt;href&gt; targets</title>
-  <description lang="en">Can&apos;t believe I have to make this case-insensitive 8-)</description>
+  <description lang="en">Can't believe I have to make this case-insensitive 8-)</description>
   <attr name="target">(?i)_(blank|new|top)</attr>
   <replacement part="attr"/>
 </rewrite>
