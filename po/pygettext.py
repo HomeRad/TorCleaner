@@ -744,7 +744,6 @@ def main():
         eater.write(fp)
         msgs = [msg for msg in html_translations if not eater.has_entry(msg)]
         for msg in msgs:
-            print >> fp, '#: html translation'
             print >> fp, 'msgid', normalize(msg)
             print >> fp, 'msgstr ""\n'
     finally:
