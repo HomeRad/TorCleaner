@@ -28,13 +28,14 @@ def get_basic_credentials (challenge, **attrs):
 
 
 def parse_basic_credentials (credentials):
-    auth = base64.decodestring(credentials)
+    auth, credentials = parse_token(credentials)
+    auth = base64.decodestring(auth)
     if ':' not in auth:
         warn(PROXY, "invalid Basic credentials %s", auth)
         _user, _pw = auth, ''
     else:
         _user, _pw = auth.split(':', 1)
-    return {'username': _user, 'password': _pw}
+    return {'username': _user, 'password': _pw}, credentials.strip()
 
 
 def check_basic_credentials (cred, **attrs):

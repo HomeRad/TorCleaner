@@ -144,16 +144,16 @@ class HttpClient (Connection):
                 self.bytes_remaining = None
             debug(PROXY, "Client: Headers %s", `str(self.headers)`)
             if config["proxyuser"]:
-                creds = get_header_credentials(headers, 'Proxy-Authorization')
+                creds = get_header_credentials(self.headers, 'Proxy-Authorization')
                 if not creds:
                     self.error(407, i18n._("Proxy Authentication Required"),
-                               auth=get_challenges())
+                               auth=", ".join(get_challenges()))
                     return
                 if not check_credentials(creds, username=config['proxyuser'],
                                          password_b64=config['proxypass']):
                     warn(PROXY, "Bad proxy authentication from %s", self.addr[0])
                     self.error(407, i18n._("Proxy Authentication Required"),
-                               auth=get_challenges())
+                               auth=", ".join(get_challenges()))
                     return
             if self.method in ['OPTIONS', 'TRACE'] and \
                client_get_max_forwards(self.headers)==0:

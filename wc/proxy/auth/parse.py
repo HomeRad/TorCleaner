@@ -13,9 +13,10 @@ def parse_token (s, tok="", relax=False):
     else:
         for i, c in enumerate(s):
             if c not in token_chars:
+                i -= 1
                 break
             tok += c
-        s = s[i:]
+        s = s[i+1:]
     return tok, s.strip()
 
 
