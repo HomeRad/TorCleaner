@@ -37,8 +37,8 @@ class Server (Connection):
 
 
     def readable (self):
-        """a server is readable if we're connected and not in client or closed state"""
-        return self.connected and self.state not in ('client', 'closed')
+        """a server is readable if we're connected and in a readable state"""
+        return self.connected and self.state!='closed'
 
 
     def process_connect (self):

@@ -84,6 +84,7 @@ class HttpServer (Server):
 
     def reset (self):
         self.hostname = ''
+        self.method = None
         self.document = ''
         self.response = ''
         self.headers = WcMessage()
@@ -446,7 +447,7 @@ class HttpServer (Server):
 
 
     def set_unreadable (self, secs):
-        oldstate, self.state = self.state, 'client'
+        oldstate, self.state = self.state, 'unreadable'
         make_timer(secs, lambda: self.set_readable(oldstate))
 
 
