@@ -12,8 +12,8 @@ SOURCES = $(shell find ../wc -name \*.py) \
 $(shell find ../templates -name \*.html)
 
 LDIR=../share/locale
-LFILE=LC_MESSAGES/$(PACKAGE).mo
 PACKAGE=webcleaner
+LFILE=LC_MESSAGES/$(PACKAGE).mo
 # defined language (add new languages here)
 LANGUAGES=de
 MOS=$(patsubst %, %.mo, $(LANGUAGES) )
