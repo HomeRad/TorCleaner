@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Tue Oct 15 01:24:52 2002\n"
+"POT-Creation-Date: Wed Oct 16 01:04:04 2002\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,7 @@ msgstr ""
 "WebCleaner Proxy Fehler %d %s<br>\n"
 "%s<br></center></body></html>"
 
+#, fuzzy
 msgid ""
 "\n"
 "WebCleaner Configuration\n"
@@ -33,8 +34,6 @@ msgid ""
 "Port:          %(port)d\n"
 "Parent proxy:  %(parentproxy)s\n"
 "Logfile:       %(logfile)s\n"
-"TCP timeout:   %(timeout)d\n"
-"Obfuscate IP:  %(obfuscateip)d\n"
 "Debug level:   %(debuglevel)d\n"
 "Show errors:   %(showerrors)d\n"
 "Headers saved: %(headersave)d\n"
@@ -178,12 +177,6 @@ msgstr "Logdatei"
 
 msgid "Log HTML errors"
 msgstr "Zeige HTML Fehler an"
-
-msgid "Timeout (sec.)"
-msgstr "Timeout (Sek.)"
-
-msgid "Obfuscate IP"
-msgstr "Verschleiere IP"
 
 msgid "Strict whitelist"
 msgstr "Strikte Erlaubnisliste"
@@ -711,7 +704,11 @@ msgid "zlib error: not gzip format, disabling gunzip"
 msgstr "zlib Fehler: kein gzip-Format, gunzip wird nicht ausgeführt"
 
 msgid "zlib error: unknown compression method, disabling gunzip"
-msgstr "zlib Fehler: unbekannte Kompressionsmethode, gunzip wird nicht ausgeführt"
+msgstr ""
+"zlib Fehler: unbekannte Kompressionsmethode, gunzip wird nicht ausgeführt"
+
+msgid "%s access denied"
+msgstr "%s Zugriff verboten"
 
 msgid "Warning: client received %d bytes more than content-length"
 msgstr "Warnung: client empfing %d Bytes mehr als angegebene Inhaltslänge"

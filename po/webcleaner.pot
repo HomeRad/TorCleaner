@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Oct 15 01:24:52 2002\n"
+"POT-Creation-Date: Wed Oct 16 01:04:04 2002\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,8 +31,6 @@ msgid ""
 "Port:          %(port)d\n"
 "Parent proxy:  %(parentproxy)s\n"
 "Logfile:       %(logfile)s\n"
-"TCP timeout:   %(timeout)d\n"
-"Obfuscate IP:  %(obfuscateip)d\n"
 "Debug level:   %(debuglevel)d\n"
 "Show errors:   %(showerrors)d\n"
 "Headers saved: %(headersave)d\n"
@@ -147,12 +145,6 @@ msgid "Logfile"
 msgstr ""
 
 msgid "Log HTML errors"
-msgstr ""
-
-msgid "Timeout (sec.)"
-msgstr ""
-
-msgid "Obfuscate IP"
 msgstr ""
 
 msgid "Strict whitelist"
@@ -676,6 +668,9 @@ msgid "zlib error: not gzip format, disabling gunzip"
 msgstr ""
 
 msgid "zlib error: unknown compression method, disabling gunzip"
+msgstr ""
+
+msgid "%s access denied"
 msgstr ""
 
 msgid "Warning: client received %d bytes more than content-length"
