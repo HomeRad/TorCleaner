@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Whitelist kids_and_teens" oid="11"
+<folder title="Whitelist kids_and_teens" oid="12"
  desc="Automatically generated on 2002-10-19 13:11:15">
 
 <allowdomains title="kids_and_teens domain filter" oid="0"

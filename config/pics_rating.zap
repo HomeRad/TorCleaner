@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="PICS ratings" oid="10"
+<folder title="PICS ratings" oid="11"
  desc="Contains rules deploying the Platform for Internet Content Selection (PICS).">
 
 <pics title="PICS ratings" oid="0"
