@@ -125,7 +125,7 @@ def host_in_set (ip, hosts, nets):
 
 
 def strhosts2map (strhosts):
-    return hosts2map([s.strip() for s in strhosts.split(",")])
+    return hosts2map([s.strip() for s in strhosts.split(",") if s])
 
 
 def hosts2map (hosts):
