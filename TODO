@@ -1,6 +1,9 @@
 TODO
 
-version 2.21 and above
+version 2.22 and above
+
+- MIME problem: hit "Weiter" and have "application/url-www-form..." mime
+  http://www.cinema-muenchen.de/deutsch/default.htm
 
 - Incorrect MIME adjusting:
   Adjusting MIME 'application/x-javascript' -> 'text/html' at u'http://www-106.ibm.com/developerworks/js/spinbox.js'
