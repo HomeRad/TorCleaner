@@ -6,6 +6,7 @@ __date__    = "$Date$"[7:-2]
 
 import re, socket, struct
 from log import *
+from sets import Set
 
 # IP Adress regular expressions
 _ipv4_num = r"\d{1,3}"
@@ -108,11 +109,11 @@ def dq_in_net (n, net, mask):
 
 
 def host_map (hosts):
-    """return a dictionary with a list of hosts as keys, and a
-       list of given subnets (host/netmask adresses).
+    """return a set of named hosts, and a list of subnets (host/netmask
+       adresses).
        Only IPv4 host/netmasks are supported.
     """
-    dict = {}
+    hostset = Set()
     nets = []
     for host in hosts:
         if _host_bitmask_re.match(host):
@@ -135,26 +136,21 @@ def host_map (hosts):
                 continue
             nets.append(dq2net(host, dq2mask(mask)))
         else:
-            dict[host] = 1
-    return (dict, nets)
+            hostset.add(host)
+    return (hostset, nets)
 
 
 def host_in_set (ip, hosts, nets):
-    if hosts.has_key(ip): return 1
+    if ip in hosts:
+        return True
     if is_valid_dq(ip):
         n = dq2num(ip)
         for net, mask in nets:
-            if dq_in_net(n, net, mask): return 1
-    return 0
+            if dq_in_net(n, net, mask):
+                return True
+    return False
 
 
 def host_set (strhosts):
     hosts = [s.strip() for s in strhosts.split(",")]
-    ret = []
-    ret.extend(host_map(hosts))
-    ret.sort()
-    hostdict = {}
-    for h in hosts:
-        hostdict[h] = None
-    ret.append(hostdict)
-    return ret
+    return host_map(hosts)

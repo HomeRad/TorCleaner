@@ -151,7 +151,7 @@ def match_host (request):
         return None
     if hostname.startswith('noproxy.'):
         return "noproxy"
-    hosts, nets, foo = config['noproxyfor']
+    hosts, nets = config['noproxyfor']
     return ip.host_in_set(hostname, hosts, nets)
 
 

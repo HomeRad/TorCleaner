@@ -43,7 +43,7 @@ class HttpClient (Connection):
         self.protocol = 'HTTP/1.0'
         self.url = ''
         host = self.addr[0]
-        hosts, nets, nil = config['allowedhosts']
+        hosts, nets = config['allowedhosts']
         if not ip.host_in_set(host, hosts, nets):
             warn(PROXY, "host %s access denied", host)
             self.close()

@@ -22,6 +22,7 @@ __date__    = "$Date$"[7:-2]
 import os, sys, time, socket
 import _webcleaner2_configdata as configdata
 from glob import glob
+from sets import Set
 from wc.XmlUtils import xmlify
 
 Version = configdata.version
@@ -374,12 +375,12 @@ class WConfigParser (BaseParser):
                 strhosts = str(self.config['noproxyfor'])
                 self.config['noproxyfor'] = ip.host_set(strhosts)
             else:
-                self.config['noproxyfor'] = [{}, [], {}]
+                self.config['noproxyfor'] = [{}, [], Set()]
             if self.config['allowedhosts'] is not None:
                 strhosts = str(self.config['allowedhosts'])
                 self.config['allowedhosts'] = ip.host_set(strhosts)
             else:
-                self.config['allowedhosts'] = [{}, [], {}]
+                self.config['allowedhosts'] = [{}, [], Set()]
         elif name=='filter':
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
