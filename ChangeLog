@@ -17,7 +17,7 @@
     architectures
     Changed files: wc/parser/htmllex.l
   * Improve error message for failing htmlsax module import
-    Changed files: linkcheck/parser/htmllib.py
+    Changed files: wc/parser/htmllib.py
 
 1.5
   * - increase TCP dns query timeout from 10 to 20 seconds

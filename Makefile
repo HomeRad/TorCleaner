@@ -13,6 +13,7 @@ all:
 clean:
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
 	$(MAKE) -C po clean
+	rm -f linkcheck/parser/htmlsax.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 
