@@ -7,6 +7,7 @@ from wc.proxy.Headers import WcMessage
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse, urllib
+from cStringIO import StringIO
 
 class HttpProxyClient (object):
     """A class buffering all incoming data from a server for later use.
