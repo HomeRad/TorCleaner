@@ -27,7 +27,7 @@ class HttpClient (Connection):
         self.headers = None
         self.bytes_remaining = None # for content only
         self.content = ''
-        if self.addr[0] not in config['allowed_hosts']:
+        if not config['allowedhosts'].has_key(self.addr[0]):
             self.close()
 
 
