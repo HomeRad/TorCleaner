@@ -22,7 +22,7 @@ filters.
 
 You can add extern states for the filter by making a separate class
 and passing it with the "attrs" parameter. Look at the Rewriter filter
-to see how its done.
+to see how it is done.
 
 To communicate with the proxy, filters can throw FilterExceptions.
 Of course, these must be handled in the appropriate proxy functions
