@@ -59,7 +59,7 @@ class JSHtmlListener (JSListener):
 
     def jsProcessData (self, data):
         """process data produced by document.write() JavaScript"""
-        #self._debug("JS document.write %s", `data`)
+        self._debug("JS document.write %s", `data`)
         self.js_output += 1
         # parse recursively
         self.js_html.feed(data)
@@ -67,7 +67,7 @@ class JSHtmlListener (JSListener):
 
     def jsProcessPopup (self):
         """process javascript popup"""
-        #self._debug("JS: popup")
+        self._debug("JS: popup")
         self.js_popup += 1
 
 
@@ -97,7 +97,7 @@ class BufferHtmlParser (HtmlParser):
         DATA things in the tag buffer. Why? To be 100% sure that
         an ENCLOSED match really matches enclosed data.
         """
-        #self._debug("buf_append_data")
+        self._debug("buf_append_data")
         if data[0]==DATA and self.buf and self.buf[-1][0]==DATA:
             self.buf[-1][1] += data[1]
         else:
@@ -106,7 +106,7 @@ class BufferHtmlParser (HtmlParser):
 
     def flushbuf (self):
         """clear and return the output buffer"""
-        #self._debug("flushbuf")
+        self._debug("flushbuf")
         data = self.outbuf.getvalue()
         self.outbuf.close()
         self.outbuf = StringIO()
@@ -202,10 +202,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def _debugbuf (self):
         """print debugging information about data buffer status"""
-        #self._debug("self.outbuf %s", `self.outbuf.getvalue()`)
-        #self._debug("self.buf %s", `self.buf`)
-        #self._debug("self.waitbuf %s", `self.waitbuf`)
-        #self._debug("self.inbuf %s", `self.inbuf.getvalue()`)
+        self._debug("self.outbuf %s", `self.outbuf.getvalue()`)
+        self._debug("self.buf %s", `self.buf`)
+        self._debug("self.waitbuf %s", `self.waitbuf`)
+        self._debug("self.inbuf %s", `self.inbuf.getvalue()`)
 
 
     def feed (self, data):
@@ -224,19 +224,19 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.inbuf = StringIO()
             if data:
                 # only feed non-empty data
-                #self._debug("feed %s", `data`)
+                self._debug("feed %s", `data`)
                 self.parser.feed(data)
             else:
-                #self._debug("feed")
+                self._debug("feed")
                 pass
         else:
             # wait state ==> put in input buffer
-            #self._debug("wait")
+            self._debug("wait")
             self.inbuf.write(data)
 
 
     def flush (self):
-        #self._debug("flush")
+        self._debug("flush")
         # flushing in wait state raises a filter exception
         if self.state=='wait':
             raise FilterWait("HtmlParser[%d]: waiting for data"%self.level)
@@ -245,7 +245,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def replay (self, waitbuf):
         """call the handler functions again with buffer data"""
-        #self._debug("replay %s", `waitbuf`)
+        self._debug("replay %s", `waitbuf`)
         for item in waitbuf:
             if item[0]==DATA:
                 self._data(item[1])
@@ -274,19 +274,19 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def cdata (self, data):
         """character data"""
-        #self._debug("cdata %s", `data`)
+        self._debug("cdata %s", `data`)
         return self._data(data)
 
 
     def characters (self, data):
         """characters"""
-        #self._debug("characters %s", `data`)
+        self._debug("characters %s", `data`)
         return self._data(data)
 
 
     def comment (self, data):
         """a comment; accept only non-empty comments"""
-        #self._debug("comment %s", `data`)
+        self._debug("comment %s", `data`)
         item = [COMMENT, data]
         if self.state=='wait':
             return self.waitbuf.append(item)
@@ -295,12 +295,12 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
 
     def doctype (self, data):
-        #self._debug("doctype %s", `data`)
+        self._debug("doctype %s", `data`)
         return self._data("<!DOCTYPE%s>"%data)
 
 
     def pi (self, data):
-        #self._debug("pi %s", `data`)
+        self._debug("pi %s", `data`)
         return self._data("<?%s?>"%data)
 
 
@@ -308,7 +308,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         # default data
-        #self._debug("startElement %s", `tag`)
+        self._debug("startElement %s", `tag`)
         tag = check_spelling(tag, self.url)
         item = [STARTTAG, tag, attrs]
         if self.state=='wait':
@@ -336,7 +336,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                #self._debug("matched rule %s on tag %s", `rule.title`, `tag`)
+                self._debug("matched rule %s on tag %s", `rule.title`, `tag`)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = "True"
@@ -347,7 +347,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                     else:
                         break
                 else:
-                    #self._debug("put on buffer")
+                    self._debug("put on buffer")
                     rulelist.append(rule)
         if rulelist:
             # remember buffer position for end tag matching
@@ -371,7 +371,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buf2data)"""
-        #self._debug("endElement %s", `tag`)
+        self._debug("endElement %s", `tag`)
         tag = check_spelling(tag, self.url)
         item = [ENDTAG, tag]
         if self.state=='wait':
@@ -408,7 +408,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_popup = 0
         for name in ('onmouseover', 'onmouseout'):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
-                #self._debug("JS: del %s from %s", `name`, `tag`)
+                self._debug("JS: del %s from %s", `name`, `tag`)
                 del attrs[name]
                 changed = 1
         if tag=='form':
@@ -428,7 +428,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsPopup (self, attrs, name):
         """check if attrs[name] javascript opens a popup window"""
-        #self._debug("JS: jsPopup")
+        self._debug("JS: jsPopup")
         val = resolve_html_entities(attrs[name])
         if not val: return
         self.js_env.attachListener(self)
@@ -445,7 +445,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsForm (self, name, action, target):
         """when hitting a (named) form, notify the JS engine about that"""
         if not name: return
-        #self._debug("jsForm %s action %s %s", `name`, `action`, `target`)
+        self._debug("jsForm %s action %s %s", `name`, `action`, `target`)
         self.js_env.addForm(name, action, target)
 
 
@@ -466,10 +466,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.buf.append([ENDTAG, "script"])
                 self.js_script = ''
             self.state = 'parse'
-            #self._debug("switching back to parse with")
+            self._debug("switching back to parse with")
             self._debugbuf()
         else:
-            #self._debug("JS read %d <= %s", len(data), url)
+            self._debug("JS read %d <= %s", len(data), url)
             self.js_script += data
 
 
@@ -505,7 +505,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
-        #self._debug("JS: jsScript %s %s", ver, `script`)
+        self._debug("JS: jsScript %s %s", ver, `script`)
         assert self.state == 'parse'
         assert len(self.buf) >= 2
         self.js_output = 0
@@ -521,7 +521,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
 
     def jsEndScript (self, item):
-        #self._debug("JS: endScript")
+        self._debug("JS: endScript")
         assert len(self.buf) >= 2
         if self.js_output:
             try:
@@ -544,14 +544,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             del self.buf[-1]
         elif not self.filterEndElement(item[1]):
             self.buf.append(item)
-        #self._debug("JS: switching back to parse with")
+        self._debug("JS: switching back to parse with")
         self._debugbuf()
         self.state = 'parse'
 
 
     def jsEndElement (self, item):
         """parse generated html for scripts"""
-        #self._debug("jsEndElement buf %s", `self.buf`)
+        self._debug("jsEndElement buf %s", `self.buf`)
         if len(self.buf)<2:
             # syntax error, ignore
             return
@@ -582,5 +582,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             del self.buf[-1]
             del self.buf[-1]
             return
-        # XXX invariant ?
+        # put correctly quoted script data into buffer
+        self.buf[-1][1] = "\n<!--\n%s\n//-->\n"%escape_js(script)
+        # execute script
         self.jsScript(script, 0.0, item)
