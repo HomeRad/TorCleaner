@@ -113,3 +113,8 @@ def spliturl (url):
     return scheme, host, port, document
 
 
+# constants defining url part indexes
+SCHEME = 0
+HOSTNAME = DOMAIN = 1
+PORT = 2
+DOCUMENT = 3
