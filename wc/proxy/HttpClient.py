@@ -43,20 +43,20 @@ class HttpClient (Connection):
     def error (self, code, msg, txt=''):
         self.state = 'done'
         content = HTML_TEMPLATE % \
-            {'title': 'WebCleaner Proxy Error %d %s' % (code, msg),
+            {'title': 'Proxy Error %d %s' % (code, msg),
              'header': 'Bummer!',
-             'content': 'WebCleaner Proxy Error %d %s<br>%s<br>' % \
+             'content': 'Proxy Error %d %s<br>%s<br>' % \
                         (code, msg, txt),
             }
         if config['proxyuser']:
-            auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
+            auth = 'Proxy-Authenticate: Basic realm="unknown"\r\n'
             http_ver = '1.1'
         else:
             auth = ''
             http_ver = '1.0'
         ServerHandleDirectly(self,
             'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
-            'Server: WebCleaner Proxy\r\n' +\
+            'Server: Proxy\r\n' +\
             'Content-type: text/html\r\n' +\
             '%s'%auth +\
             '\r\n', content)
@@ -121,7 +121,7 @@ class HttpClient (Connection):
             # set via header
             via = self.headers.get('Via', "").strip()
             if via: via += " "
-            via += "1.1 WebCleaner\r"
+            via += "1.1 unknown\r"
             self.headers['Via'] = via
             self.headers = applyfilter(FILTER_REQUEST_HEADER,
                  self.headers, fun="finish", attrs=self.nofilter)
@@ -151,7 +151,7 @@ class HttpClient (Connection):
                     self.bytes_remaining = None
                 remove_headers(self.headers, to_remove)
                 # add warning
-                self.headers['Warning'] = "214 WebCleaner Transformation applied\r"
+                self.headers['Warning'] = "214 Transformation applied\r"
             debug(HURT_ME_PLENTY, "Proxy: C/Headers", `str(self.headers)`)
             self.bytes_remaining = int(self.headers.get('Content-Length', 0))
             if config["proxyuser"] and not self.check_proxy_auth():
