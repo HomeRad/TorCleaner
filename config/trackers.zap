@@ -6,15 +6,18 @@
  desc="Some tracker sites"
  url="https?://(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"/>
 
-<rewrite sid="wc.364" title="1x1 tracker images"
- desc="Several sites use 1x1 images to track users."
+<rewrite sid="wc.364" title="tracker images"
+ desc="Several sites use images to track users."
  tag="img">
-<attr name="width">^1$</attr>
-<attr name="height">^1$</attr>
+<attr name="width">^(0|1)$</attr>
+<attr name="height">^(0|1)$</attr>
 <replacement part="complete"/>
 </rewrite>
 
-<image sid="wc.365" title="1x1 tracker images 2"
+<image sid="wc.5" title="0x0 tracker images"
+ desc="In case the width and height attributes are missing"/>
+
+<image sid="wc.365" title="1x1 tracker images"
  desc="In case the width and height attributes are missing"
  width="1"
  height="1"/>
