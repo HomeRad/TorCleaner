@@ -17,7 +17,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """SSL certificates generation/installation/removal script"""
 
-__author__ = "Bastian Kleineidam"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -27,12 +26,13 @@ if not hasattr(sys, "version_info"):
 if sys.version_info < (2, 3, 1, 'final', 0):
     raise SystemExit, "This program requires Python 2.3.1 or later."
 
+import getopt
 import wc
-import wc.proxy
+import wc.proxy.ssl
 
-_usage = wc.i18n._("""Usage: webcleaner-certificates [options] <command>
+usage = wc.i18n._("""Usage: webcleaner-certificates [options] <command>
 Options:
--d <directory>
+-d <directory>, --configdir=<directory>
         Generate certificates in given directory instead of the
         default one for %(app)s.
         This should be the same directory as given in "%(name)s -d"
@@ -43,40 +43,68 @@ remove  - remove %(app)s SSL certificates
 """) % {'app': wc.AppName, 'name': wc.Name}
 
 
-def _print_usage (msg):
+def print_usage (msg):
     """print short usage info and exit"""
     print msg
-    print _usage
+    print usage
     sys.exit(1)
 
 
-def install_ssl_certs ():
+def install_ssl_certs (configdir):
     """create SSL certificates if not already done"""
-    if os.path.exists(ssl.absfile('client.cert')):
-        print i18n._("%s SSL certificates already exist, doing nothing")%AppName
+    if wc.proxy.ssl.exist_certificates(configdir):
+        print wc.i18n._("%s SSL certificates already exist, doing nothing")%\
+          wc.AppName
     else:
-        ssl.create_certificates()
+        wc.proxy.ssl.create_certificates(configdir)
 
 
-def remove_ssl_certs ():
+def remove_ssl_certs (configdir):
     for f in ['client', 'server', 'CA']:
         for ext in ['pkey', 'cert']:
-            fname = ssl.absfile("%s.%s" % (f, ext))
+            fname = os.path.join(configdir, "%s.%s" % (f, ext))
             if os.path.exists(fname):
-                os.remove(fname)
+                try:
+                    os.remove(fname)
+                except IOError, msg:
+                    print wc.i18n._("Could not remove %r: %s") % \
+                          (fname, str(msg))
 
 
-def main (args):
+def parse_options (sysargs):
+    """read command line arguments
+
+    @return: (configdir, args)
+    """
+    configdir = wc.ConfigDir
+    try:
+        # Note: cut out the name of the script in sys.argv
+        options, args = getopt.getopt(sysargs, "hd",
+                                      ["help", "configdir"])
+    except getopt.error:
+        print_usage(sys.exc_info()[1])
+    for opt,arg in options:
+        if opt=="-h" or opt=="--help":
+            print_usage("")
+        elif opt=="--configdir" or opt=="-d":
+            configdir = arg
+        else:
+            print_usage(wc.i18n._("Unknown option %(option)r")%{'option': opt})
+    return (configdir, args)
+
+
+def main (sysargs):
+    configdir, args = parse_options(sysargs)
     if len(args) < 1:
-        print_usage(i18n._("No command given."))
+        print_usage(wc.i18n._("No command given."))
     else:
         command = args[0]
     if command=='install':
-        install_ssl_certs()
+        install_ssl_certs(configdir)
     elif command=='remove':
-        remove_ssl_certs()
+        remove_ssl_certs(configdir)
     else:
-        print_usage(i18n._("Invalid command %r.")%command)
+        print_usage(wc.i18n._("Invalid command %r.")%command)
 
 
 if __name__=='__main__':

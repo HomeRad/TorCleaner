@@ -6,9 +6,13 @@ import wc
 from OpenSSL import SSL, crypto
 
 
-def absfile (fname):
-    """return absolute filename for certificate files"""
-    return os.path.join(wc.ConfigDir, fname)
+def exists_certificates (configdir):
+    """ensure that all certificates are present in given config directory"""
+    for fname in "CA", "server", "client":
+        if not (os.path.exists(os.path.join(configdir, '%s.cert'%fname)) and
+                os.path.exists(os.path.join(configdir, '%s.pkey'%fname))):
+            return False
+    return True
 
 
 def dumpCertificate (cert, filetype=crypto.FILETYPE_PEM):
@@ -65,14 +69,23 @@ def create_certificates ():
     cakey = createKeyPair(TYPE_RSA, 1024)
     careq = createCertRequest(cakey, CN='Certificate Authority')
     cacert = createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5)) # five years
-    file(absfile('CA.pkey'), 'w').write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))
-    file(absfile('CA.cert'), 'w').write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))
-    for (fname, cname) in [('client', '%s Client'%wc.AppName), ('server', '%s Server'%wc.AppName)]:
+    f = file(absfile('CA.pkey'), 'w')
+    f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))
+    f.close()
+    f = file(absfile('CA.cert'), 'w')
+    f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))
+    f.close()
+    for (fname, cname) in [('client', '%s Client'%wc.AppName),
+                           ('server', '%s Server'%wc.AppName)]:
         pkey = createKeyPair(TYPE_RSA, 1024)
         req = createCertRequest(pkey, CN=cname)
         cert = createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5)) # five years
-        file(absfile('%s.pkey'%fname), 'w').write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))
-        file(absfile('%s.cert'%fname), 'w').write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
+        f = file(absfile('%s.pkey'%fname), 'w')
+        f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))
+        f.close()
+        f = file(absfile('%s.cert'%fname), 'w')
+        f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
+        f.close()
 
 
 

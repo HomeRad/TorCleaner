@@ -117,7 +117,7 @@ def print_help ():
 def parse_options (sysargs):
     """read command line arguments
 
-    @return: (configfile, filterdir, args)
+    @return: (configdir, args)
     """
     import getopt
     configdir = None
