@@ -54,6 +54,7 @@ distribution.""" % {'appname': AppName}
 ConfigDir = abspath(configdata.config_dir)
 TemplateDir = abspath(configdata.template_dir)
 InstallData = abspath(configdata.install_data)
+ScriptDir = abspath(configdata.install_scripts)
 
 # optional features
 try:
