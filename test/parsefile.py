@@ -19,7 +19,7 @@ def _main (args):
         f = open(filename)
     from wc.HtmlParser import htmlsax
     p = htmlsax.parser(klass())
-    #p.debug(1)
+    p.debug(1)
     size = 1024
     #size = 1
     data = f.read(size)
