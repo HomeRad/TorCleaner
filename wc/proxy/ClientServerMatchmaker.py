@@ -3,7 +3,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from cStringIO import StringIO
-import dns_lookups
+import dns_lookups, socket
 from wc.proxy.Headers import WcMessage
 from ServerPool import serverpool
 from ServerHandleDirectly import ServerHandleDirectly
@@ -49,6 +49,7 @@ class ClientServerMatchmaker (object):
     """
 
     def __init__ (self, client, request, headers, content, mime=None):
+        warn(PROXY, "mime %s", mime)
         self.client = client
         self.request = request
         self.headers = headers

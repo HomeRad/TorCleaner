@@ -214,7 +214,7 @@ class HttpClient (StatefulConnection):
                    FILTER_REQUEST_MODIFY,
                    FILTER_REQUEST_ENCODE,
                   ]
-        self.attrs = get_filterattrs(self.url, filters, headers=msg)
+        self.attrs['headers'] = msg
         self.persistent = self.get_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
         self.compress = client_set_encoding_headers(msg)
