@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-09-24 12:01+0200\n"
+"POT-Creation-Date: 2004-10-01 02:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,40 +16,45 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../wc/proxy/GunzipStream.py:41
+#: ../wc/proxy/GunzipStream.py:43
 msgid "zlib error: not gzip format, disabling gunzip"
 msgstr ""
 
-#: ../wc/proxy/GunzipStream.py:48
+#: ../wc/proxy/GunzipStream.py:50
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:204
+#: ../wc/proxy/Headers.py:205
 #, python-format
-msgid "No content type in %r"
+msgid "Missing content type in %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:208
+#: ../wc/proxy/Headers.py:210
+#, python-format
+msgid "Change content type of %r from %r to %r"
+msgstr ""
+
+#: ../wc/proxy/Headers.py:213
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:258
+#: ../wc/proxy/Headers.py:263
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:48 ../wc/proxy/HttpClient.py:166
+#: ../wc/proxy/SslClient.py:48 ../wc/proxy/HttpClient.py:174
 msgid "URL too long"
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:49 ../wc/proxy/HttpClient.py:167
+#: ../wc/proxy/SslClient.py:49 ../wc/proxy/HttpClient.py:175
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:65 ../wc/proxy/HttpClient.py:196
-#: ../wc/proxy/HttpClient.py:204 ../wc/proxy/HttpClient.py:210
+#: ../wc/proxy/SslClient.py:65 ../wc/proxy/HttpClient.py:204
+#: ../wc/proxy/HttpClient.py:212 ../wc/proxy/HttpClient.py:218
 msgid "Forbidden"
 msgstr ""
 
@@ -63,44 +68,63 @@ msgstr ""
 msgid "invalid HTTP version %r"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:88
+#: ../wc/proxy/HttpClient.py:92
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:130
+#: ../wc/proxy/HttpClient.py:138
 msgid "Can't parse request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:133
+#: ../wc/proxy/HttpClient.py:141
 msgid "Method Not Allowed"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:138
+#: ../wc/proxy/HttpClient.py:146
 msgid "Empty URL"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:266
+#: ../wc/proxy/HttpClient.py:274
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:286 ../wc/proxy/HttpClient.py:299
-#: ../wc/proxy/HttpClient.py:311
+#: ../wc/proxy/HttpClient.py:294 ../wc/proxy/HttpClient.py:307
+#: ../wc/proxy/HttpClient.py:319
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:403 ../wc/proxy/HttpServer.py:372
-#: ../wc/proxy/HttpServer.py:392
+#: ../wc/proxy/HttpClient.py:411 ../wc/proxy/HttpServer.py:373
+#: ../wc/proxy/HttpServer.py:393
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:510
+#: ../wc/proxy/HttpClient.py:519
 msgid "Invalid Method"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:518 ../wc/proxy/HttpClient.py:524
-#: ../wc/proxy/HttpClient.py:535 ../wc/webgui/webconfig.py:77
+#: ../wc/proxy/HttpClient.py:527 ../wc/proxy/HttpClient.py:533
+#: ../wc/proxy/HttpClient.py:544 ../wc/webgui/webconfig.py:77
 msgid "Authentication Required"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:237
+#, python-format
+msgid "invalid or missing response from %r: %r"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:247
+#, python-format
+msgid "missing headers in response from %r"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:316
+msgid "redirection to localhost"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:447
+#, python-format
+msgid "server received %d bytes more than content-length"
 msgstr ""
 
 #: ../wc/proxy/ClientServerMatchmaker.py:117
@@ -117,57 +141,38 @@ msgstr ""
 msgid "Host %s not found .. %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:150
+#: ../wc/proxy/ClientServerMatchmaker.py:152
 msgid "Service unavailable"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:169
+#: ../wc/proxy/ClientServerMatchmaker.py:172
 msgid "Connection timeout"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:171
+#: ../wc/proxy/ClientServerMatchmaker.py:174
 msgid "Connect error"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:202
-#: ../wc/proxy/ClientServerMatchmaker.py:206
+#: ../wc/proxy/ClientServerMatchmaker.py:205
+#: ../wc/proxy/ClientServerMatchmaker.py:209
 msgid "Expectation failed"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:203
+#: ../wc/proxy/ClientServerMatchmaker.py:206
 msgid "Server does not understand HTTP/1.1"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:207
+#: ../wc/proxy/ClientServerMatchmaker.py:210
 #, python-format
 msgid "Unsupported expectation %r"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:219
+#: ../wc/proxy/ClientServerMatchmaker.py:222
 msgid "No response from server"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:238
+#: ../wc/proxy/ClientServerMatchmaker.py:241
 msgid "Server closed connection"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:236
-#, python-format
-msgid "invalid or missing response from %r: %r"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:246
-#, python-format
-msgid "missing headers in response from %r"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:315
-msgid "redirection to localhost"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:445
-#, python-format
-msgid "server received %d bytes more than content-length"
 msgstr ""
 
 #: ../wc/filter/Rating.py:29
@@ -251,27 +256,27 @@ msgstr ""
 msgid "updating rule %s:"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:76
+#: ../wc/filter/rules/RewriteRule.py:77
 msgid "Tag"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:77
+#: ../wc/filter/rules/RewriteRule.py:78
 msgid "Tag name"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:78
+#: ../wc/filter/rules/RewriteRule.py:79
 msgid "Attribute"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:79
+#: ../wc/filter/rules/RewriteRule.py:80
 msgid "Attribute value"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:80
+#: ../wc/filter/rules/RewriteRule.py:81
 msgid "Complete tag"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:81
+#: ../wc/filter/rules/RewriteRule.py:82
 msgid "Enclosed block"
 msgstr ""
 
@@ -285,7 +290,7 @@ msgstr ""
 msgid "Rating %r for category %r exceeds limit %r"
 msgstr ""
 
-#: ../wc/filter/JSFilter.py:307
+#: ../wc/filter/JSFilter.py:314
 #, python-format
 msgid "error fetching script from %r"
 msgstr ""
@@ -308,12 +313,12 @@ msgid ""
 "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:216
+#: ../wc/filter/VirusFilter.py:214
 msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:264
+#: ../wc/filter/VirusFilter.py:259
 msgid "Clamd is not ready for stream scanning"
 msgstr ""
 
@@ -352,66 +357,66 @@ msgstr ""
 msgid "Internal Error"
 msgstr ""
 
-#: ../wc/update.py:157
+#: ../wc/update.py:172
 msgid "updating filters"
 msgstr ""
 
-#: ../wc/update.py:164 ../wc/update.py:174
+#: ../wc/update.py:179 ../wc/update.py:189
 #, python-format
 msgid "error fetching %s"
 msgstr ""
 
-#: ../wc/update.py:165 ../wc/update.py:175 ../wc/update.py:210
-#: ../wc/update.py:218 ../wc/update.py:255 ../wc/update.py:269
-#: ../wc/update.py:273
+#: ../wc/update.py:180 ../wc/update.py:190 ../wc/update.py:225
+#: ../wc/update.py:233 ../wc/update.py:270 ../wc/update.py:284
+#: ../wc/update.py:288
 msgid "done"
 msgstr ""
 
-#: ../wc/update.py:191
+#: ../wc/update.py:206
 #, python-format
 msgid "filter %s not changed, ignoring"
 msgstr ""
 
-#: ../wc/update.py:193
+#: ../wc/update.py:208
 #, python-format
 msgid "updating filter %s"
 msgstr ""
 
-#: ../wc/update.py:195
+#: ../wc/update.py:210
 #, python-format
 msgid "adding new filter %s"
 msgstr ""
 
-#: ../wc/update.py:209 ../wc/update.py:216 ../wc/update.py:245
-#: ../wc/update.py:249 ../wc/update.py:268
+#: ../wc/update.py:224 ../wc/update.py:231 ../wc/update.py:260
+#: ../wc/update.py:264 ../wc/update.py:283
 #, python-format
 msgid "error fetching %s:"
 msgstr ""
 
-#: ../wc/update.py:217
+#: ../wc/update.py:232
 msgid "invalid content"
 msgstr ""
 
-#: ../wc/update.py:234
+#: ../wc/update.py:249
 #, python-format
 msgid "extern filter %s not changed, ignoring"
 msgstr ""
 
-#: ../wc/update.py:236
+#: ../wc/update.py:251
 #, python-format
 msgid "updating extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:238
+#: ../wc/update.py:253
 #, python-format
 msgid "adding new extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:250
+#: ../wc/update.py:265
 msgid "got no data"
 msgstr ""
 
-#: ../wc/update.py:261
+#: ../wc/update.py:276
 msgid "updating ratings..."
 msgstr ""
 
@@ -427,7 +432,7 @@ msgstr ""
 msgid "hours"
 msgstr ""
 
-#: ../wc/win32start.py:36 ../webcleaner:119
+#: ../wc/win32start.py:36 ../webcleaner:115
 #, python-format
 msgid "%s Proxy"
 msgstr ""
@@ -477,17 +482,17 @@ msgstr ""
 msgid "The %s service can be paused."
 msgstr ""
 
-#: ../wc/configuration.py:211
+#: ../wc/configuration.py:212
 #, python-format
 msgid "inserting %s"
 msgstr ""
 
-#: ../wc/configuration.py:392
+#: ../wc/configuration.py:393
 #, python-format
-msgid "unknown tag name %s"
+msgid "unknown tag name %r"
 msgstr ""
 
-#: ../webcleaner:35
+#: ../webcleaner:31
 #, python-format
 msgid ""
 "USAGE\twebcleaner [options] <command> [command options]\n"
@@ -533,7 +538,7 @@ msgid ""
 "        Allow the service to interact with the desktop.\n"
 msgstr ""
 
-#: ../webcleaner:79
+#: ../webcleaner:75
 #, python-format
 msgid ""
 "USAGE\twebcleaner [options]\n"
@@ -552,24 +557,24 @@ msgid ""
 "        Log to stdout instead of *.log files.\n"
 msgstr ""
 
-#: ../webcleaner:99
+#: ../webcleaner:95
 msgid "execute 'webcleaner -h' for help\n"
 msgstr ""
 
-#: ../webcleaner:112
+#: ../webcleaner:108
 msgid "press return to continue..."
 msgstr ""
 
-#: ../webcleaner:148 ../webcleaner-certificates:94
+#: ../webcleaner:144 ../webcleaner-certificates:94
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr ""
 
-#: ../webcleaner:161 ../webcleaner-certificates:101
+#: ../webcleaner:157 ../webcleaner-certificates:101
 msgid "No command given."
 msgstr ""
 
-#: ../webcleaner:174
+#: ../webcleaner:170
 #, python-format
 msgid "Unknown command %r"
 msgstr ""
@@ -603,6 +608,21 @@ msgstr ""
 #, python-format
 msgid "Invalid command %r."
 msgstr ""
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: Fri Oct  1 02:49:35 2004\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: talgettext.py 1.0\n"
 
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91
@@ -688,8 +708,8 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: ../templates/classic/config.html:323
-#: ../templates/classic/config.html:353
+#: ../templates/classic/config.html:325
+#: ../templates/classic/config.html:360
 #: ../templates/classic/macros/rules.html:64
 #: ../templates/classic/macros/rules.html:81
 msgid "Add new"
@@ -703,7 +723,7 @@ msgstr ""
 msgid "Add, modify and delete HTTP headers of request and response."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:552
+#: ../templates/classic/macros/rules.html:553
 msgid "Add/replace attribute"
 msgstr ""
 
@@ -711,7 +731,7 @@ msgstr ""
 msgid "Admin password"
 msgstr ""
 
-#: ../templates/classic/config.html:375
+#: ../templates/classic/config.html:382
 msgid "Admin password successfully changed."
 msgstr ""
 
@@ -719,7 +739,7 @@ msgstr ""
 msgid "Admin user"
 msgstr ""
 
-#: ../templates/classic/config.html:374
+#: ../templates/classic/config.html:381
 msgid "Admin user successfully changed."
 msgstr ""
 
@@ -749,11 +769,11 @@ msgstr ""
 msgid "All pages define the following access keys:"
 msgstr ""
 
-#: ../templates/classic/config.html:387
+#: ../templates/classic/config.html:394
 msgid "Allowed host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:388
+#: ../templates/classic/config.html:395
 msgid "Allowed host(s) successfully removed."
 msgstr ""
 
@@ -791,7 +811,7 @@ msgstr ""
 msgid "Applies to all pages starting with url?"
 msgstr ""
 
-#: ../templates/classic/config.html:363
+#: ../templates/classic/config.html:370
 #: ../templates/classic/macros/rules.html:144
 #: ../templates/classic/macros/rules.html:209
 #: ../templates/classic/macros/rules.html:260
@@ -800,14 +820,14 @@ msgstr ""
 #: ../templates/classic/macros/rules.html:348
 #: ../templates/classic/macros/rules.html:367
 #: ../templates/classic/macros/rules.html:386
-#: ../templates/classic/macros/rules.html:447
-#: ../templates/classic/macros/rules.html:481
-#: ../templates/classic/macros/rules.html:581
+#: ../templates/classic/macros/rules.html:448
+#: ../templates/classic/macros/rules.html:482
+#: ../templates/classic/macros/rules.html:582
 #: ../templates/classic/rating.html:68
 msgid "Apply"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:506
+#: ../templates/classic/macros/rules.html:507
 msgid "Attributes"
 msgstr ""
 
@@ -875,6 +895,10 @@ msgstr ""
 msgid "Convert images to low quality JPEG files to reduce bandwidth"
 msgstr ""
 
+#: ../templates/classic/google.html:117
+msgid "Coral Cache for"
+msgstr ""
+
 #: ../templates/classic/help.html:107
 msgid "Deanimates GIFs and removes all unwanted GIF image extensions (for example GIF comments)."
 msgstr ""
@@ -906,7 +930,7 @@ msgstr ""
 msgid "Disable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:386
+#: ../templates/classic/config.html:393
 msgid "Disabled filter module(s) ${disabled-filter}."
 msgstr ""
 
@@ -918,7 +942,7 @@ msgstr ""
 msgid "Disabled rule icon"
 msgstr ""
 
-#: ../templates/classic/config.html:332
+#: ../templates/classic/config.html:339
 msgid "Don't filter hosts"
 msgstr ""
 
@@ -976,7 +1000,7 @@ msgstr ""
 msgid "Enable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:384
+#: ../templates/classic/config.html:391
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr ""
 
@@ -1170,7 +1194,7 @@ msgstr ""
 msgid "Internet Explorer"
 msgstr ""
 
-#: ../templates/classic/config.html:395
+#: ../templates/classic/config.html:402
 msgid "Invalid SSL server port."
 msgstr ""
 
@@ -1178,7 +1202,7 @@ msgstr ""
 msgid "Invalid attribute name."
 msgstr ""
 
-#: ../templates/classic/rating.html:130
+#: ../templates/classic/rating.html:131
 #: ../templates/classic/filterconfig.html:243
 msgid "Invalid category value."
 msgstr ""
@@ -1193,6 +1217,10 @@ msgstr ""
 
 #: ../templates/classic/filterconfig.html:227
 msgid "Invalid folder move up id."
+msgstr ""
+
+#: ../templates/classic/config.html:405
+msgid "Invalid host name."
 msgstr ""
 
 #: ../templates/classic/filterconfig.html:234
@@ -1219,11 +1247,11 @@ msgstr ""
 msgid "Invalid or missing sender address."
 msgstr ""
 
-#: ../templates/classic/config.html:396
+#: ../templates/classic/config.html:403
 msgid "Invalid parent proxy port."
 msgstr ""
 
-#: ../templates/classic/config.html:394
+#: ../templates/classic/config.html:401
 msgid "Invalid proxy port."
 msgstr ""
 
@@ -1251,21 +1279,21 @@ msgstr ""
 msgid "Invalid rule type."
 msgstr ""
 
-#: ../templates/classic/rating.html:131
+#: ../templates/classic/rating.html:132
 #: ../templates/classic/filterconfig.html:242
 msgid "Invalid selection index."
 msgstr ""
 
-#: ../templates/classic/config.html:397
+#: ../templates/classic/config.html:404
 msgid "Invalid timeout value."
 msgstr ""
 
-#: ../templates/classic/rating.html:132
+#: ../templates/classic/rating.html:133
 #: ../templates/classic/rating_mail.html:51
 msgid "Invalid url."
 msgstr ""
 
-#: ../templates/classic/config.html:336
+#: ../templates/classic/config.html:343
 msgid "List of domain names the proxy must not filter."
 msgstr ""
 
@@ -1325,8 +1353,8 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:512
-#: ../templates/classic/macros/rules.html:537
+#: ../templates/classic/macros/rules.html:513
+#: ../templates/classic/macros/rules.html:538
 msgid "Name"
 msgstr ""
 
@@ -1358,11 +1386,11 @@ msgstr ""
 msgid "New rule successfully created."
 msgstr ""
 
-#: ../templates/classic/config.html:389
+#: ../templates/classic/config.html:396
 msgid "Nofilter host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:390
+#: ../templates/classic/config.html:397
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
@@ -1378,11 +1406,11 @@ msgstr ""
 msgid "Page blocked by ${appname}"
 msgstr ""
 
-#: ../templates/classic/config.html:381
+#: ../templates/classic/config.html:388
 msgid "Parent proxy password successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:379
+#: ../templates/classic/config.html:386
 msgid "Parent proxy port successfully changed."
 msgstr ""
 
@@ -1390,11 +1418,11 @@ msgstr ""
 msgid "Parent proxy settings"
 msgstr ""
 
-#: ../templates/classic/config.html:378
+#: ../templates/classic/config.html:385
 msgid "Parent proxy successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:380
+#: ../templates/classic/config.html:387
 msgid "Parent proxy user successfully changed."
 msgstr ""
 
@@ -1447,7 +1475,7 @@ msgstr ""
 msgid "Port number the proxy is listening on for requests"
 msgstr ""
 
-#: ../templates/classic/config.html:372
+#: ../templates/classic/config.html:379
 msgid "Port successfully changed."
 msgstr ""
 
@@ -1461,7 +1489,7 @@ msgstr ""
 msgid "Proxy filter modules"
 msgstr ""
 
-#: ../templates/classic/config.html:371
+#: ../templates/classic/config.html:378
 msgid "Proxy network address successfully changed."
 msgstr ""
 
@@ -1469,7 +1497,7 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-#: ../templates/classic/config.html:377
+#: ../templates/classic/config.html:384
 msgid "Proxy password successfully changed."
 msgstr ""
 
@@ -1481,7 +1509,7 @@ msgstr ""
 msgid "Proxy user"
 msgstr ""
 
-#: ../templates/classic/config.html:376
+#: ../templates/classic/config.html:383
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -1505,11 +1533,11 @@ msgstr ""
 msgid "Rating limits for"
 msgstr ""
 
-#: ../templates/classic/rating.html:126
+#: ../templates/classic/rating.html:127
 msgid "Rating successfully deleted."
 msgstr ""
 
-#: ../templates/classic/rating.html:125
+#: ../templates/classic/rating.html:126
 msgid "Rating successfully updated."
 msgstr ""
 
@@ -1534,13 +1562,13 @@ msgid "Remove rule"
 msgstr ""
 
 #: ../templates/classic/config.html:314
-#: ../templates/classic/config.html:344
+#: ../templates/classic/config.html:351
 #: ../templates/classic/macros/rules.html:61
 #: ../templates/classic/macros/rules.html:78
 msgid "Remove selected"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:532
+#: ../templates/classic/macros/rules.html:533
 msgid "Remove selected attributes"
 msgstr ""
 
@@ -1552,7 +1580,7 @@ msgstr ""
 msgid "Replace illegal binary characters in HTML code like the quote chars often found in Microsoft pages."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:563
+#: ../templates/classic/macros/rules.html:564
 msgid "Replace part"
 msgstr ""
 
@@ -1564,11 +1592,11 @@ msgstr ""
 msgid "Replace regular expressions in data streams."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:575
+#: ../templates/classic/macros/rules.html:576
 msgid "Replace value"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:474
+#: ../templates/classic/macros/rules.html:475
 msgid "Replacement"
 msgstr ""
 
@@ -1738,7 +1766,7 @@ msgstr ""
 msgid "SSL port number"
 msgstr ""
 
-#: ../templates/classic/config.html:373
+#: ../templates/classic/config.html:380
 msgid "SSL port successfully changed."
 msgstr ""
 
@@ -1746,15 +1774,15 @@ msgstr ""
 msgid "Saved ratings"
 msgstr ""
 
-#: ../templates/classic/google.html:144
+#: ../templates/classic/google.html:152
 msgid "Search Google"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:466
+#: ../templates/classic/macros/rules.html:467
 msgid "Search for"
 msgstr ""
 
-#: ../templates/classic/google.html:120
+#: ../templates/classic/google.html:128
 msgid "Search in ${site}"
 msgstr ""
 
@@ -1803,7 +1831,7 @@ msgstr ""
 msgid "The supplied value resembles a <a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
 msgstr ""
 
-#: ../templates/classic/rating.html:120
+#: ../templates/classic/rating.html:121
 msgid "There are no url ratings saved."
 msgstr ""
 
@@ -1820,7 +1848,7 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-#: ../templates/classic/config.html:382
+#: ../templates/classic/config.html:389
 msgid "Timeout sucessfully changed."
 msgstr ""
 
@@ -1872,8 +1900,8 @@ msgstr ""
 msgid "Username used for proxy authentication"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:513
-#: ../templates/classic/macros/rules.html:545
+#: ../templates/classic/macros/rules.html:514
+#: ../templates/classic/macros/rules.html:546
 msgid "Value"
 msgstr ""
 
@@ -1903,6 +1931,10 @@ msgstr ""
 
 #: ../templates/classic/rating_mail.html:20
 msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
+msgstr ""
+
+#: ../templates/classic/config.html:332
+msgid "You can specify network masks for whole subnets. For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host)."
 msgstr ""
 
 #: ../templates/classic/help.html:20
@@ -1954,6 +1986,10 @@ msgstr ""
 msgid "footnote 3"
 msgstr ""
 
+#: ../templates/classic/config.html:331
+msgid "footnote 4"
+msgstr ""
+
 #: ../templates/classic/help.html:192
 msgid "replace part"
 msgstr ""
@@ -1996,8 +2032,8 @@ msgstr ""
 #: ../templates/classic/macros/rules.html:51
 #: ../templates/classic/macros/rules.html:68
 #: ../templates/classic/macros/rules.html:94
-#: ../templates/classic/macros/rules.html:466
-#: ../templates/classic/macros/rules.html:545
+#: ../templates/classic/macros/rules.html:467
+#: ../templates/classic/macros/rules.html:546
 msgid "see footnote 1"
 msgstr ""
 
@@ -2008,6 +2044,10 @@ msgstr ""
 
 #: ../templates/classic/config.html:267
 msgid "see footnote 3"
+msgstr ""
+
+#: ../templates/classic/config.html:321
+msgid "see footnote 4"
 msgstr ""
 
 #: ../templates/classic/rated.html:21
