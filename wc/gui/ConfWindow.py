@@ -40,7 +40,6 @@ class ConfWindow(FXMainWindow):
      ID_ACCEPT,
      ID_CANCEL,
      ID_APPLY,
-     ID_BUFFERSIZE,
      ID_TIMEOUT,
      ID_OBFUSCATEIP,
      ID_LOGFILE,
@@ -58,7 +57,7 @@ class ConfWindow(FXMainWindow):
      ID_PROXYRELOAD,
      ID_PROXYSTATUS,
      ID_DISABLERULE,
-    ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+26)
+    ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+25)
 
 
     def __init__(self, app):
@@ -107,7 +106,6 @@ class ConfWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_APPLY,ConfWindow.onCmdApply)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_APPLY,ConfWindow.onUpdApply)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_BUFFERSIZE,ConfWindow.onCmdBuffersize)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_TIMEOUT,ConfWindow.onCmdTimeout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_OBFUSCATEIP,ConfWindow.onCmdObfuscateIp)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PORT,ConfWindow.onCmdPort)
@@ -146,10 +144,6 @@ class ConfWindow(FXMainWindow):
         FXLabel(matrix, _("Logfile"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         widget = FXTextField(matrix, 10, self, self.ID_LOGFILE)
         widget.setText(self.logfile)
-        FXLabel(matrix, _("Buffer size"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        widget = FXSpinner(matrix, 3, self, self.ID_BUFFERSIZE, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
-        widget.setRange(512,8192)
-        widget.setValue(self.buffersize)
         FXLabel(matrix, _("Timeout"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         widget = FXSpinner(matrix, 3, self, self.ID_TIMEOUT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(1,600)
@@ -168,9 +162,6 @@ class ConfWindow(FXMainWindow):
         # subtract 3 because acolumn is wider than text character
         d.setNumColumns(cols-3) 
         d.setCurrentItem(self.debuglevel)
-        FXLabel(matrix, _("Colorize output"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        widget = FXCheckButton(matrix, None, self, self.ID_COLORIZE, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
-        widget.setCheck(self.obfuscateip)
         frame = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
         filters = FXGroupBox(frame, _("Filter Modules"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         hframe = FXVerticalFrame(filters,LAYOUT_SIDE_TOP)
@@ -307,12 +298,6 @@ class ConfWindow(FXMainWindow):
         self.debuglevel = sender.getCurrentItem()
         self.getApp().dirty = 1
         debug("Debuglevel=%d"%self.debuglevel)
-        return 1
-
-    def onCmdBuffersize(self, sender, sel, ptr):
-        self.buffersize = sender.getValue()
-        self.getApp().dirty = 1
-        debug("Buffersize=%d" % self.buffersize)
         return 1
 
     def onCmdTimeout(self, sender, sel, ptr):
@@ -473,7 +458,7 @@ class ConfWindow(FXMainWindow):
         debug("reading config")
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
-         'buffersize','timeout','obfuscateip','debuglevel','logfile',
+         'timeout','obfuscateip','debuglevel','logfile',
 	 'configfile'):
             setattr(self, key, self.config[key])
         self.modules = {"Header":0, "Blocker":0, "GifImage":0, "BinaryCharFilter":0,"Rewriter":0, "Compress":0,}
@@ -518,7 +503,6 @@ class ConfWindow(FXMainWindow):
         if self.parentproxy:
             s += ' parentproxy="%s"\n' % self.parentproxy
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
-             ' buffersize="%d"\n' % self.buffersize +\
              ' timeout="%d"\n' % self.timeout +\
              ' obfuscateip="%d"\n' % self.obfuscateip +\
              ' debuglevel="%d"\n' % self.debuglevel

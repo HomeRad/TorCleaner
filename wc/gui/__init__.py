@@ -1,6 +1,5 @@
-import sys,os,string,time,webfilter
-
-_ = webfilter.config._
+import sys,os,string,time,wc
+from wc import _
 from FXPy import *
 
 HelpText = _("""
@@ -153,7 +152,7 @@ def error(msg):
 
 def loadIcon(app, filename):
     """load PNG icons from the ConfigDir directory"""
-    filename = os.path.join(webfilter.config.ConfigDir, filename)
+    filename = os.path.join(wc.ConfigDir, filename)
     if string.lower(filename[-3:])=='png':
         return FXPNGIcon(app, open(filename, 'rb').read())
     raise Exception, "only PNG graphics supported"
