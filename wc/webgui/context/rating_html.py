@@ -208,10 +208,12 @@ def _form_load ():
     global generic, url
     if url in rating_store:
         rating = rating_store[url]
-        for category, value in rating.items():
-            if category == u'generic':
-                generic = (value == u'true')
+        generic = rating.generic
+        for catname, value in rating.category_values.items():
+            category = _get_category(catname)
+            if category.iterable:
+                for x in category.values:
+                    values[catname][x] = False
+                values[catname][value] = True
             else:
-                ratings[category] = value
-                if category not in [u"modified"]:
-                    values[category] = {value: True}
+                values[catname] = value
