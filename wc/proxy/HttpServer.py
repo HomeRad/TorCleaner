@@ -166,8 +166,9 @@ class HttpServer (Server):
             self.client.server_response(self.response, self.headers)
         else:
             # We have no idea what it is!?
-            print >> sys.stderr, _('Warning: puzzling header received:'), \
-                  `self.response`
+            print >> sys.stderr, \
+                    _('Warning: puzzling header received from host %s:') % \
+                    self.hostname, `self.response`
 
 
 
