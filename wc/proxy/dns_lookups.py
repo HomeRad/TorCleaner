@@ -31,9 +31,11 @@ def init_dns_resolver ():
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
-    debug(BRING_IT_ON, "DNS nameservers:", DnsConfig.nameservers, "\nDNS search domains:", DnsConfig.search_domains)
+    debug(BRING_IT_ON, "DNS nameservers:", DnsConfig.nameservers)
+    debug(BRING_IT_ON, "DNS search domains:", DnsConfig.search_domains)
     # re-read config every 10 minutes
-    make_timer(600, init_dns_resolver)
+    # disabled, there is a reload option in webcleaner
+    #make_timer(600, init_dns_resolver)
 
 
 def init_dns_resolver_posix ():
@@ -541,7 +543,7 @@ class DnsLookupConnection (Connection):
                 ip_addrs.append(data)
             if type == DNS.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', `data`)
+                debug(HURT_ME_PLENTY, 'DNS cname record', self.hostname, '=', `data`)
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records

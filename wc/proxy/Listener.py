@@ -33,7 +33,7 @@ class Listener (asyncore.dispatcher):
 
     def handle_accept (self):
         """start the handler class with the new socket"""
-        debug(HURT_ME_PLENTY, 'accept', self)
+        debug(HURT_ME_PLENTY, 'Proxy accept', self)
         apply(self.handler, self.accept())
 
     def handle_error (self, what, type, value, tb=None):
