@@ -1,6 +1,9 @@
 # -*- coding: iso-8859-1 -*-
 """server connections"""
 
+import socket
+import errno
+
 import wc
 import wc.log
 import wc.proxy.StatefulConnection
@@ -20,6 +23,16 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.debug(wc.LOG_PROXY, "%s Server.client_abort", self)
         self.client = None
         self.close()
+
+    def try_connect (self):
+        """Attempt connect to server given by self.addr. Close on error."""
+        try:
+            err = self.connect(self.addr)
+        except (socket.timeout, socket.error):
+            # we never connected, but still the socket is in the socket map
+            # so remove it
+            self.del_channel()
+            raise
 
     def handle_connect (self):
         """make connection to remote server"""

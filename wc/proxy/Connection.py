@@ -88,7 +88,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
 
     def writable (self):
         """return True if connection is writable"""
-        return (not self.connected) or self.send_buffer
+        return self.connected and self.send_buffer
 
     def write (self, data):
         """write data to the internal buffer"""

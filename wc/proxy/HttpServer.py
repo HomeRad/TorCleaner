@@ -78,15 +78,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
         self.try_connect()
 
-    def try_connect (self):
-        """attempt connect, close on error and raise exception"""
-        try:
-            self.connect(self.addr)
-        except (socket.timeout, socket.error):
-            # we never connected, but still the socket is in the socket map
-            # so remove it
-            self.del_channel()
-            raise
 
     def reset (self):
         """reset connection values"""
@@ -136,17 +127,7 @@ class HttpServer (wc.proxy.Server.Server):
         assert self.state == 'connect'
         self.state = 'client'
         if self.client:
-            # We have to delay this because we haven't gone through the
-            # handle_connect completely, and the client expects us to
-            # be fully connected when it is notified.  After the
-            # delay, the client might be gone.  Example: the connection
-            # times out, and it calls handle_connect, then handle_write.
-            # The handle_write notices the error, so it disconnects us
-            # from the client.  THEN the timer runs and we can't say
-            # we've connected, because we really haven't.  XXX: we
-            # really should hide these sorts of cases inside Connection.
-            wc.proxy.make_timer(0,
-                     lambda s=self: s.client and s.client.server_connected(s))
+            self.client.server_connected(self)
         else:
             # Hm, the client no longer cares about us, so close
             self.close()

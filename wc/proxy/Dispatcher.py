@@ -194,18 +194,38 @@ class Dispatcher (object):
         self.addr = addr
         return self.socket.bind(addr)
 
-    def connect (self, address):
+    def connect (self, addr):
+        wc.log.debug(wc.LOG_PROXY, '%s connecting', self)
         self.connected = False
-        err = self.socket.connect_ex(address)
+        err = self.socket.connect_ex(addr)
+        if err != 0:
+            strerr = errno.errorcode[err]
+            wc.log.debug(wc.LOG_PROXY, '%s connection error %s', self, strerr)
         # XXX Should interpret Winsock return values
         if err in (errno.EINPROGRESS, errno.EALREADY, errno.EWOULDBLOCK):
-            return
-        if err in (0, errno.EISCONN):
-            self.addr = address
+            wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
+        elif err in (0, errno.EISCONN):
+            self.addr = addr
             self.connected = True
+            wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
         else:
             raise socket.error, (err, errno.errorcode[err])
+        return err
+
+    def check_connect (self, addr):
+        """Check if the connection is etablished.
+           See also http://cr.yp.to/docs/connect.html
+        """
+        wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
+        try:
+            self.socket.getpeername()
+            self.addr = addr
+            self.connected = True
+            wc.log.debug(wc.LOG_PROXY, '%s connected', self)
+            self.handle_connect()
+        except socket.error:
+            wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
 
     def accept (self):
         # XXX can return either an address pair or None
@@ -274,7 +294,6 @@ class Dispatcher (object):
             self.handle_accept()
         elif not self.connected:
             self.handle_connect()
-            self.connected = True
             self.handle_read()
         else:
             self.handle_read()
@@ -283,7 +302,6 @@ class Dispatcher (object):
         # getting a write implies that we are connected
         if not self.connected:
             self.handle_connect()
-            self.connected = True
         else:
             self.handle_write()
 
