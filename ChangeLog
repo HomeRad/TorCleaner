@@ -40,6 +40,9 @@
   * added a rating update service to the filter update page
     Changed: wc/filter/Rating.py, wc/update.py,
       templates/classic/update.html
+  * service supervision is done by the runit tools instead of the
+    daemontools.
+    Changed: service/*, debian/{control,webcleaner.init}
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way

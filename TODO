@@ -2,11 +2,6 @@ TODO
 
 version 2.9 and above
 
-- content rating:
-  o feature: content rating cache update rating_cache_merge_with(ratings)
-  o command line script to put squidguard blacklists into content rating
-    cache
-
 - memory leaks while operating the proxy
 
 - convert remaining tests to unit testing where appropriate
