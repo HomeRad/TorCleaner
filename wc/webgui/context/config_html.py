@@ -32,25 +32,39 @@ def _exec_form (form):
     # proxy user
     if form.has_key('proxyuser'):
         _form_proxyuser(_getval(form, 'proxyuser').strip())
+    else:
+        config['proxyuser'] = ''
     # proxy pass
     if form.has_key('proxypass'):
         _form_proxypass(base64.encodestring(_getval(form, 'proxypass').strip()))
+    else:
+        config['proxypass'] = ''
     # parent proxy host
     if form.has_key('parentproxy'):
         _form_parentproxy(_getval(form, 'parentproxy').strip())
+    else:
+        config['parentproxy'] = ''
     # parent proxy port
     if form.has_key('parentproxyport'):
         _form_parentproxyport(_getval(form, 'parentproxyport'))
+    else:
+        config['parentproxyport'] = 3128
     # parent proxy user
     if form.has_key('parentproxyuser'):
         _form_parentproxyuser(_getval(form, 'parentproxyuser').strip())
+    else:
+        config['parentproxyuser'] = ''
     # parent proxy pass
     if form.has_key('parentproxypass'):
         _form_parentproxypass(
                        base64.encodestring(_getval(form, 'parentproxypass')))
+    else:
+        config['parentproxypass'] = ''
     # timeout
     if form.has_key('timeout'):
         _form_timeout(_getval(form, 'timeout'))
+    else:
+        config['timeout'] = 0
     # filter modules
     _form_filtermodules(form)
     # allowed hosts

@@ -45,7 +45,7 @@
  for="proxyuser" i18n:translate="">Username</label>
 </td>
 <td>
-<input class="text" type="text" name="proxyuser" id="proxyuser"
+<input class="text" type="text" name="proxyuser" id="proxyuser" value=""
  tal:attributes="value config/proxyuser">
 </td>
 </tr>
@@ -55,7 +55,8 @@
  for="proxypass" i18n:translate="">Password</label>
 </td>
 <td>
-<input class="text" type="password" name="proxypass" id="proxypass" value="">
+<input class="text" type="password" name="proxypass" id="proxypass" value=""
+ tal:attributes="value config/proxypass">
 </td>
 </tr>
 </table>
@@ -95,7 +96,7 @@
 </td>
 <td>
 <input class="text" type="text" name="parentproxyuser" id="parentproxyuser"
- tal:attributes="value config/parentproxyuser">
+ value="" tal:attributes="value config/parentproxyuser">
 </td>
 </tr>
 <tr>
@@ -105,7 +106,7 @@
 </td>
 <td>
 <input class="text" type="password" name="parentproxypass"
- id="parentproxypass" value="">
+ id="parentproxypass" value="" tal:attributes="value config/parentproxypass">
 </td>
 </tr>
 </table>

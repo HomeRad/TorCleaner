@@ -157,6 +157,7 @@ def get_context (dirs, form, localcontext, lang):
     exec "from %s import %s as template_context" % (modulepath, template)
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
+        debug(GUI, "got form %s", str(form))
         template_context._exec_form(form)
     # make TAL context
     context = simpleTALES.Context()
