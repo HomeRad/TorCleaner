@@ -134,7 +134,7 @@ class MyDistribution (distklass, object):
         super(MyDistribution, self).run_commands()
 
     def get_conf_filename (self, directory):
-        return os.path.join(directory, "_%s_configdata.py"%self.get_name())
+        return os.path.join(directory, "_%s2_configdata.py"%self.get_name())
 
     def create_conf_file (self, data, directory=None):
         """create local config file from given data (list of lines) in
