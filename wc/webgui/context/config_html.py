@@ -371,9 +371,11 @@ def _form_filtermodules (form):
 def _form_addallowed (host):
     if host not in config['allowedhosts']:
         try:
-            hostset = _hosts2map(config['allowedhosts'])
-            config['allowedhosts'].append(host)
+            hosts = config['allowedhosts'][:]
+            hosts.append(host)
+            hostset = _hosts2map(hosts)
             config['allowedhostset'] = hostset
+            config['allowedhosts'] = hosts
             info['addallowed'] = True
             config.write_proxyconf()
         except socket.error:
