@@ -5,7 +5,6 @@ VERSION=$(shell $(PYTHON) setup.py --version)
 PACKAGE=webcleaner
 GROUPDIR=shell1.sourceforge.net:/home/groups
 HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
-FTPDIR=$(GROUPDIR)/ftp/pub/$(PACKAGE)/
 
 .PHONY: all
 all:
@@ -97,7 +96,6 @@ upload: distclean dist VERSION
 	scp debian/changelog $(HTMLDIR)/changes.txt
 	scp VERSION $(HTMLDIR)/raw/
 	scp dist/* $(HTMLDIR)
-	scp dist/* $(FTPDIR)
 	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
 
 .PHONY: locale
