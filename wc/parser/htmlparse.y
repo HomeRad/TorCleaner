@@ -1,10 +1,11 @@
-/* bla */
+/* the beginning */
 %{
 /* SAX parser, optimized for WebCleaner */
 #include <string.h>
 #include <stdio.h>
 #include "htmlsax.h"
 
+/* bison type definitions */
 #define YYSTYPE PyObject*
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM scanner
@@ -16,7 +17,10 @@ extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
 #define YYERROR_VERBOSE 1
 int yyerror(char* msg);
-/* test whether tag does not need a HTML end tag */
+
+/* macros for easier scanner state manipulation */
+
+/* test whether tag does not need an HTML end tag */
 #define NO_HTML_END_TAG(tag) !(strcmp(tag, "area")==0 || \
     strcmp(tag, "base")==0 || \
     strcmp(tag, "basefont")==0 || \
@@ -79,6 +83,7 @@ staticforward PyTypeObject parser_type;
 %token T_CDATA
 %token T_DOCTYPE
 
+/* the finish_ labels are for error recovery */
 %%
 
 elements: element {}
@@ -88,14 +93,14 @@ elements: element {}
 element: T_WAIT { YYACCEPT; /* wait for more lexer input */ }
 | T_ERROR
 {
-    /* a python error occured in the scanner */
+    /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
     PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
     YYABORT;
 }
 | T_ELEMENT_START
 {
-    /* $1 is a tuple (<tag>, <attrs>) */
+    /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -132,7 +137,7 @@ finish_start:
 }
 | T_ELEMENT_START_END
 {
-    /* $1 is a tuple (<tag>, <attrs>) */
+    /* $1 is a tuple (<tag>, <attrs>); <attrs> is a dictionary */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -452,6 +457,7 @@ finish_characters:
 
 %%
 
+/* disable python memory interface */
 #undef malloc
 #undef realloc
 #undef free
@@ -519,7 +525,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	Py_DECREF(callback);
 	Py_DECREF(result);
 	Py_DECREF(s);
-	// reset buffer
+	/* reset buffer */
 	RESIZE_BUF(self->userData->buf);
         self->userData->bufpos = 0;
     }
@@ -572,7 +578,7 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
         PyErr_SetString(PyExc_MemoryError, "could not destroy scanner data");
         return NULL;
     }
-    // reset buffer
+    /* reset buffer */
     RESIZE_BUF(self->userData->buf);
     RESIZE_BUF(self->userData->tmp_buf);
     self->userData->bufpos = 0;
@@ -632,9 +638,9 @@ void inithtmlsax(void) {
     /*yydebug = 1;*/
 }
 
+
 /* standard error reporting, indicating an internal error */
 int yyerror (char* msg) {
     fprintf(stderr, "htmlsax: internal parse error: %s\n", msg);
     return 0;
 }
-

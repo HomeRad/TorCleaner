@@ -55,6 +55,10 @@ class Blocker (Filter):
         self.blocked_domains = []
         # blocked urls (exact host match, prefix url match)
         self.blocked_urls = []
+        # allowed domains (exact host match)
+        self.allowed_domains = []
+        # allowed urls (exact host match, prefix url match)
+        self.allowed_urls = []
         # urls for blocked types
         self.block_url = _file_url("blocked.html")
         self.block_image = _file_url("blocked.gif")
@@ -85,12 +89,26 @@ class Blocker (Filter):
             if not line or line[0]=='#': continue
             self.blocked_domains.append(line)
 
+    def add_allowdomains (self, rule):
+        lines = self.get_file_data(rule.file)
+        for line in lines:
+            line = line.strip()
+            if not line or line[0]=='#': continue
+            self.allowed_domains.append(line)
+
     def add_blockurls (self, rule):
         lines = self.get_file_data(rule.file)
         for line in lines:
             line = line.strip()
             if not line or line[0]=='#': continue
             self.blocked_urls.append(line.split("/", 1))
+
+    def add_allowurls (self, rule):
+        lines = self.get_file_data(rule.file)
+        for line in lines:
+            line = line.strip()
+            if not line or line[0]=='#': continue
+            self.allowed_urls.append(line.split("/", 1))
 
     def get_file_data (self, file):
         #debug(BRING_IT_ON, "reading", file)
@@ -113,6 +131,8 @@ class Blocker (Filter):
                 urlTuple[1:2] = s
             else:
                 urlTuple[1:2] = [netloc,80]
+            if self.allowed(urlTuple):
+                return data
             blocked = self.blocked(urlTuple)
             if blocked is not None:
                 #debug(BRING_IT_ON, "blocked url %s" % url)
@@ -148,12 +168,21 @@ class Blocker (Filter):
                     if not _block[i].search(urlTuple[i]):
                         #debug(NIGHTMARE, "no match")
                         match = 0
-            if match and not self.allowed(urlTuple):
+            if match:
                 #debug(HURT_ME_PLENTY, "blocked", urlTuple, "with", _block[-1])
                 return _block[-1]
         return None
 
     def allowed (self, urlTuple):
+        for _allow in self.allowed_domains:
+            #debug(NIGHTMARE, "allow domain", _allow)
+            if urlTuple[1] == _allow:
+                return 1
+        for _allow in self.allowed_urls:
+            #debug(NIGHTMARE, "allow url", _allow)
+            #debug(ALWAYS, "urltuple", `urlTuple`)
+            if urlTuple[1]==_allow[0] and urlTuple[3].startswith(_allow[1]):
+                return 1
         for _allow in self.allow:
             match = 1
             for i in range(len(urlTuple)):

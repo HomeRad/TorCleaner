@@ -29,12 +29,12 @@ case "$1" in
 	$DAEMON stop${MONITOR} >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
 	;;
-  reload)
+  reload|force-reload)
         echo -n "Reloading $DESC: "
 	$DAEMON reload >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
 	;;
-  restart|force-reload)
+  restart)
 	echo -n "Restarting $DESC: "
 	$DAEMON restart >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
@@ -45,7 +45,7 @@ case "$1" in
   *)
 	N="/etc/init.d/$NAME"
 	echo "Usage: $N {start|stop|restart|reload|force-reload|status}" >&2
-	exit 1
+	exit 3
 	;;
 esac
 

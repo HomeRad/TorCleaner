@@ -4,6 +4,7 @@ TODO
 - test parent proxy authentication
 - more error/warning recognition in parser
 - error recovery in parser (damn it!)
+- adclick.php\?
 
 WONTDO
 

@@ -50,7 +50,7 @@
  desc="Unfuckingbelievable they made a blink CSS entry."
  search="text-decoration:\s*blink">text-decoration: none</replacer>
 
-<block title="Statistic trackers" oid="98"
+<block title="Statistic trackers" oid="9"
  desc="Some statistic tracker websites"
  scheme=""
  host=".nedstatbasic.net"
