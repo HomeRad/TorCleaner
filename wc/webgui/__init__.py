@@ -35,21 +35,21 @@ class WebConfig (object):
         self.connected = True
         headers = {'Server': 'Proxy'}
         if auth:
-            headers['Proxy-Authenticate'] = auth
+            headers['Proxy-Authenticate'] = "%s\r"%auth
         headers = {}
         gm = mimetypes.guess_type(url, None)
         if gm[0] is not None:
-            headers['Content-Type'] = gm[0]
+            headers['Content-Type'] = "%s\r"%gm[0]
         else:
             # note: index.html is appended to directories
-            headers['Content-Type'] = 'text/html'
+            headers['Content-Type'] = 'text/html\r'
         try:
             lang = i18n.get_headers_lang(clientheaders)
             # get the template filename
             path, dirs, lang = get_template_url(url, lang)
             # do not rely on content-type header value
             if path.endswith('.html'):
-                headers['Content-Type'] = 'text/html'
+                headers['Content-Type'] = 'text/html\r'
                 f = file(path)
                 # get TAL context
                 context = get_context(dirs, form, context, lang)

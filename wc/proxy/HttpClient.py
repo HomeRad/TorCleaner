@@ -211,7 +211,7 @@ class HttpClient (Connection):
         self.server = server
         assert self.server.connected
         debug(PROXY, 'Client: server_response %s %s', str(self), `response`)
-        self.write(response)
+        self.write("%s\r\n"%response)
         if hasattr(headers, "headers"):
             # write original Message object headers to preserve
             # case sensitivity (!)

@@ -188,14 +188,14 @@ class HttpServer (Server):
         i = self.recv_buffer.find('\n')
         if i < 0: return
         self.response = applyfilter(FILTER_RESPONSE, self.read(i+1),
-	                attrs=self.nofilter)
+	                attrs=self.nofilter).strip()
         if self.response.lower().startswith('http'):
             # Okay, we got a valid response line
             protocol, self.statuscode, tail = get_response_data(self.response)
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, get_http_version(protocol))
-        elif not self.response.strip():
+        elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             serverpool.set_http_version(self.addr, (0,9))
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
