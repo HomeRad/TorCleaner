@@ -1,6 +1,6 @@
 2.1
   * lots of minor bugs fixed running pychecker
-    Changed: wc/*.py
+    Changed: a lot of .py files
   * make mimelist of filter modules to class variables
     Changed: wc/filter/*.py
   * you can now have a priority in a filter
@@ -11,11 +11,18 @@
     Changed: templates/classic/config.html
   * remove i18n from web context files, use i18n:translate in templates
     Changed: wc/webgui/context/*.py, templates/classic/*.html
-  * wait until enough image data is available to get size info
+  * wait until enough image data is available to get size info, this
+    fixes the "could not get image size" errors
     Changed: wc/filter/ImageSize.py
-  * fixed parent proxy authentication
-    Changed: wc/proxy/ClientServerMatchmaker.py, wc/proxy/auth/__init__.py,
-      wc/proxy/auth/basic.py
+  * added from glib project the detection of va_copy macro to configure.in
+    and use that for compiling the JS library
+    Changed: configure.in, libjs/jsprf.c, libjs/jsprf.h, libjs/Makefile.am
+    Closes: SF bug #788040
+  * fixed parent proxy authentication, added Digest authentication
+    (both client and server authentication)
+    Added: wc/proxy/auth/parse.py
+    Changed: wc/proxy/auth/{digest,basic,__init__}.py,
+      wc/proxy/ClientServerMatchmaker.py
 
 2.0
   * require and use python 2.3

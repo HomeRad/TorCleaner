@@ -2,8 +2,6 @@ TODO
 
 version 2.1
 
-- parse authentication challenge into tokens according to rfc2617
-
 - support Digest authentication (rfc 2069)
   see urllib2.py for basic implementation
 
@@ -15,6 +13,8 @@ version 2.2 and above
   (Mozilla Windows >= 1.4b can test NTLM auth)
 
 - HTTPS tunneling (RFC 2818)
+
+- HTTPS gateway functionality
 
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
