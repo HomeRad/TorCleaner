@@ -2,11 +2,15 @@ TODO
 
 version 2.2
 
+- JS background fetching is broken!
+
 - support NTLM authentication, add README.squid example config
   (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
    client auth)
 
 version 2.3 and above
+
+- parse and import adzapper.sf.net filters
 
 - HTTPS tunneling (RFC 2818)
 
