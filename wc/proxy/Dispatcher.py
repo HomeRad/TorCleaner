@@ -57,13 +57,28 @@ def create_socket (family, socktype, sslctx=None):
         sock = OpenSSL.SSL.Connection(sslctx, socket.socket(family, socktype))
     else:
         sock = socket.socket(family, socktype)
-        if family==socket.AF_INET and socktype==socket.SOCK_STREAM:
+        if family in (socket.AF_INET, socket.AF_INET6) and \
+           socktype==socket.SOCK_STREAM:
             # disable NAGLE algorithm, which means sending pending data
             # immediately, possibly wasting bandwidth but improving
             # responsiveness for fast networks
             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     return sock
 
+
+# test for IPv6, both in Python build and in kernel build
+has_ipv6 = False
+if socket.has_ipv6:
+    # python has ipv6 compiled in, but the operating system also
+    # has to support it.
+    try:
+        socket.socket(socket.AF_INET6, socket.SOCK_STREAM).close()
+        has_ipv6 = True
+    except socket.error, msg:
+        # only catch this one:
+        # socket.error: (97, 'Address family not supported by protocol')
+        if msg[0] != 97:
+            raise
 
 class Dispatcher (object):
     """dispatch socket events to handler functions"""
@@ -72,6 +87,7 @@ class Dispatcher (object):
     accepting = False
     closing = False
     addr = None
+
 
     def __init__ (self, sock=None):
         if sock:
@@ -113,10 +129,20 @@ class Dispatcher (object):
         if socket_map.has_key(fd):
             del socket_map[fd]
 
+    def get_family (self, ip):
+        if ":" in ip and has_ipv6:
+            return socket.AF_INET6
+        return socket.AF_INET
+
     def create_socket (self, family, socktype, sslctx=None):
         self.family_and_type = family, socktype
         self.socket = create_socket(family, socktype, sslctx=sslctx)
         self.socket.setblocking(0)
+        if socktype==socket.SOCK_STREAM:
+            # disable NAGLE algorithm, which means sending pending data
+            # immediately, possibly wasting bandwidth but improving
+            # responsiveness for fast networks
+            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.add_channel()
 
     def set_socket (self, sock):
@@ -207,7 +233,12 @@ class Dispatcher (object):
 
     def recv (self, buffer_size):
         try:
-            data = self.socket.recv(buffer_size)
+            if self.family_and_type[1]==socket.SOCK_DGRAM:
+                data, addr = self.socket.recvfrom(buffer_size)
+                if addr != self.addr:
+                    raise socket.error, (errno.EREMCHG, str(addr))
+            else:
+                data = self.socket.recv(buffer_size)
             if not data:
                 # a closed connection is indicated by signaling
                 # a read condition, and having recv() return 0.
