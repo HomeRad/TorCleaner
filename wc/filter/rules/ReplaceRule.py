@@ -32,7 +32,7 @@ class ReplaceRule (UrlRule):
 
 
     def fill_data (self, data, name):
-        if name=='replacer':
+        if name=='replace':
             self.replace += data
 
 
@@ -55,5 +55,5 @@ class ReplaceRule (UrlRule):
         if self.search:
             s += '\n search="%s"'%xmlify(self.search)
         if self.replace:
-            return s+">"+xmlify(self.replace)+"</replacer>"
+            return s+">"+xmlify(self.replace)+"</replace>"
         return s+"/>"
