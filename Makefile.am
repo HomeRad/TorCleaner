@@ -57,7 +57,7 @@ crossbuild: all
 	  CXX=/usr/bin/i586-mingw32msvc-g++ \
 	  LDSHARED="/usr/bin/i586-mingw32msvc-gcc --entry _DllMain@12" \
 	  PY_HOST_PLATFORM=nt \
-	  $(PYTHON) setup.py build -c mingw32 bdist_wininst \
+	  $(PYTHON) setup.py build -c mingw32 bdist_wininst -b hase.bmp \
 	  2>&1 | tee --append crossbuild.log
 
 distclean-local:
