@@ -12,35 +12,35 @@ class TestParser (unittest.TestCase):
         # list of tuples (<test pattern>, <expected parse output>)
         self.htmltests = (
         # start tags
-        ("""<a b="c">""", """<a b="c">"""),
-        ("""<a b='c'>""", """<a b="c">"""),
-        ("""<a b=c">""", """<a b="c">"""),
-        ("""<a b=c'>""", """<a b="c">"""),
-        ("""<a b="c>""", """<a b="c>"""),
-        ("""<a b="">""", """<a b="">"""),
-        ("""<a b=''>""", """<a b="">"""),
-        ("""<a b=>""", """<a b="">"""),
-        ("""<a =c>""", """<a c>"""),
-        ("""<a =>""", """<a>"""),
-        ("""<a b= "c">""", """<a b="c">"""),
-        ("""<a b ="c">""", """<a b="c">"""),
-        ("""<a b = "c">""", """<a b="c">"""),
+        ("""<a  b="c">""", """<a b="c">"""),
+        ("""<a  b='c'>""", """<a b="c">"""),
+        ("""<a  b=c">""", """<a b="c">"""),
+        ("""<a  b=c'>""", """<a b="c">"""),
+        ("""<a  b="c>""", """<a  b="c>"""),
+        ("""<a  b="">""", """<a b="">"""),
+        ("""<a  b=''>""", """<a b="">"""),
+        ("""<a  b=>""", """<a b="">"""),
+        ("""<a  =c>""", """<a c>"""),
+        ("""<a  =>""", """<a>"""),
+        #XXX("""<a b= "c">""", """<a b="c">"""),
+        ("""<a  b ="c">""", """<a b="c">"""),
+        #XXX("""<a b = "c">""", """<a b="c">"""),
         ("""<a >""", """<a>"""),
         ("""< a>""", """<a>"""),
         ("""< a >""", """<a>"""),
         ("""<>""", """<>"""),
         ("""< >""", """< >"""),
         # reduce test
-        ("""<a b="c"><""", """<a b="c"><"""),
+        ("""<a  b="c"><""", """<a b="c"><"""),
         ("""d>""", """d>"""),
         # numbers in tag
         ("""<h1>bla</h1>""", """<h1>bla</h1>"""),
         # more start tags
-        ("""<a b=c"><a b="c">""", """<a b="c"><a b="c">"""),
-        #XXX("""<a b="c><a b="c">""", """<a b="c><a b="c">"""),
-        ("""<a b=/c/></a><br>""", """<a b="/c/"></a><br>"""),
+        ("""<a  b=c"><a b="c">""", """<a b="c"><a b="c">"""),
+        ("""<a  b="c><a b="c">""", """<a b="c><a b=" c>"""),
+        ("""<a  b=/c/></a><br>""", """<a b="/c/"></a><br>"""),
         ("""<br/>""", """<br>"""),
-        ("""<a b="50%"><br>""", """<a b="50%"><br>"""),
+        ("""<a  b="50%"><br>""", """<a b="50%"><br>"""),
         # comments
         ("""<!---->""", """<!---->"""),
         ("""<!----->""", """<!----->"""),
@@ -58,7 +58,7 @@ class TestParser (unittest.TestCase):
         ("""< / a>""", """</a>"""),
         ("""< /a>""", """</a>"""),
         # missing > in end tag
-        ("""</td <td a="b" >""", """</td><td a="b">"""),
+        ("""</td <td  a="b" >""", """</td><td a="b">"""),
         # start and end tag
         ("""<a/>""", """<a></a>"""),
         # declaration tags
@@ -69,18 +69,18 @@ class TestParser (unittest.TestCase):
         ("""<script >\n</script>""", """<script>\n</script>"""),
         ("""<sCrIpt lang="a">bla </a> fasel</scripT>""", """<script lang="a">bla </a> fasel</script>"""),
         # line continuation (Dr. Fun webpage)
-        #XXX("<img bo\\\nrder=0 >", """<img bo rder="0">"""),
+        ("<img bo\\\nrder=0 >", """<img bo rder="0">"""),
         # href with $
         ("""<a href="123$456">""", """<a href="123$456">"""),
         # quoting
-        #("""<a href=/>""", """<a href=""></a>"""),
-        ("""<a href=>""", """<a href="">"""),
-        ("""<a href="'">""", """<a href="'">"""),
-        ("""<a href='"'>""", """<a href="&quot;">"""),
-        ("""<a href="bla" %]">""", """<a href="bla">"""),
-        ("""<a href=bla">""", """<a href="bla">"""),
+        ("""<a  href=/>""", """<a href="/">"""),
+        ("""<a  href=>""", """<a href="">"""),
+        ("""<a  href="'">""", """<a href="'">"""),
+        ("""<a  href='"'>""", """<a href="&quot;">"""),
+        ("""<a  href="bla" %]">""", """<a href="bla">"""),
+        ("""<a  href=bla">""", """<a href="bla">"""),
         # entities
-        ("""<a href="&#109;ailto:">""", """<a href="mailto:">"""),
+        ("""<a  href="&#109;ailto:">""", """<a href="mailto:">"""),
         )
         self.flushtests = (
             ("<", "<"),
