@@ -57,7 +57,7 @@ class ClientServerMatchmaker:
         self.method, self.url, protocol = self.request.split()
         scheme, hostname, port, document = spliturl(self.url)
         if not document: document = '/'
-        debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
+        debug(HURT_ME_PLENTY, "Proxy: splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
             # this means we should _not_ use this proxy for local
@@ -98,7 +98,7 @@ class ClientServerMatchmaker:
 
 
     def handle_local (self, document):
-        debug(HURT_ME_PLENTY, "handle local request for", document)
+        debug(HURT_ME_PLENTY, "Proxy: handle local request for", document)
         if self.client and self.client.addr[0] not in _localhosts:
             self.client.error(403, i18n._("Forbidden"),
                               wc.proxy.access_denied(self.client.addr))
@@ -155,7 +155,7 @@ class ClientServerMatchmaker:
                            i18n._("Server does not understand HTTP/1.1"))
                 return
             # Let's reuse it
-            debug(BRING_IT_ON, 'resurrecting', server)
+            debug(BRING_IT_ON, 'Proxy: resurrecting', server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -199,7 +199,7 @@ class ClientServerMatchmaker:
 
 
     def server_close (self):
-        debug(BRING_IT_ON, 'resurrection failed', self.server.sequence_number, self.server)
+        debug(BRING_IT_ON, 'Proxy: resurrection failed', self.server.sequence_number, self.server)
 
         # Look for a server again
         if self.server.sequence_number > 0:

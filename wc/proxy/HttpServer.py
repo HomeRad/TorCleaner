@@ -177,7 +177,7 @@ class HttpServer (Server):
                 self.attrs = self.nofilter
             else:
                 self.attrs = initStateObjects(self.headers, self.url)
-            debug(HURT_ME_PLENTY, "Proxy S/Headers filtered", `self.headers.headers`)
+            debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", `self.headers.headers`)
             wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
@@ -213,7 +213,7 @@ class HttpServer (Server):
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
-        debug(HURT_ME_PLENTY, "Proxy S/Headers", `self.headers.headers`)
+        debug(HURT_ME_PLENTY, "Proxy: S/Headers", `self.headers.headers`)
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()
@@ -225,7 +225,7 @@ class HttpServer (Server):
             self.attrs = initStateObjects(self.headers, self.url)
         if self.headers.get('Content-Length') is None:
             self.headers['Connection'] = 'close'
-        debug(HURT_ME_PLENTY, "Proxy S/Headers filtered", `self.headers.headers`)
+        debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", `self.headers.headers`)
         wc.proxy.HEADERS.append((self.url, "server", self.headers.headers))
         self.client.server_response(self.response, self.headers)
         if self.statuscode in ('204', '304') or self.method == 'HEAD':
@@ -283,7 +283,7 @@ class HttpServer (Server):
         self.headers['Accept-Encoding'] = self.client.compress
         if self.headers.get('Content-Length') is not None:
             self.bytes_remaining = int(self.headers['Content-Length'])
-            debug(HURT_ME_PLENTY, "Proxy %d bytes remaining"%self.bytes_remaining)
+            debug(HURT_ME_PLENTY, "Proxy: %d bytes remaining"%self.bytes_remaining)
             if rewrite:
                 remove_headers(self.headers, ['Content-Length'])
         else:
@@ -292,7 +292,7 @@ class HttpServer (Server):
         self.decoders = []
         # Chunked encoded
         if self.headers.get('Transfer-Encoding') is not None:
-            debug(BRING_IT_ON, 'Proxy S/Transfer-encoding:', `self.headers['transfer-encoding']`)
+            debug(BRING_IT_ON, 'Proxy: S/Transfer-encoding:', `self.headers['transfer-encoding']`)
             self.decoders.append(UnchunkStream())
             # remove encoding header
             to_remove = ["Transfer-Encoding"]
@@ -335,12 +335,12 @@ class HttpServer (Server):
 
     def process_content (self):
         data = self.read(self.bytes_remaining)
-        debug(NIGHTMARE, "Proxy S/content", `data`)
+        debug(NIGHTMARE, "Proxy: S/content", `data`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
-            debug(HURT_ME_PLENTY, "Proxy %d bytes remaining"%self.bytes_remaining)
+            debug(HURT_ME_PLENTY, "Proxy: %d bytes remaining"%self.bytes_remaining)
         is_closed = 0
         for decoder in self.decoders:
             data = decoder.decode(data)
@@ -356,7 +356,7 @@ class HttpServer (Server):
                 print >>sys.stderr, "Warning: server received %d bytes "+\
                      "more than content-length" % (-self.bytes_remaining)
             # Either we ran out of bytes, or the decoder says we're done
-            debug(HURT_ME_PLENTY, "Proxy S/contentfinished")
+            debug(HURT_ME_PLENTY, "Proxy: S/contentfinished")
             self.state = 'recycle'
 
 
@@ -404,7 +404,7 @@ class HttpServer (Server):
             # We can't reuse this connection
             self.close()
         else:
-            debug(HURT_ME_PLENTY, 'Proxy S/recycling', self.sequence_number, self)
+            debug(HURT_ME_PLENTY, 'Proxy: S/recycling', self.sequence_number, self)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
@@ -414,7 +414,7 @@ class HttpServer (Server):
 
 
     def close (self):
-        debug(HURT_ME_PLENTY, "Proxy S/close", self)
+        debug(HURT_ME_PLENTY, "Proxy: S/close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -429,7 +429,7 @@ class HttpServer (Server):
 
 
     def handle_close (self):
-        debug(HURT_ME_PLENTY, "Proxy S/handle_close", self)
+        debug(HURT_ME_PLENTY, "Proxy: S/handle_close", self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None
@@ -440,7 +440,7 @@ def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        debug(BRING_IT_ON, 'Proxy speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
+        debug(BRING_IT_ON, 'Proxy: speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0

@@ -94,7 +94,7 @@ class HttpClient (Connection):
             # self.read(i) is not including the newline
             self.request = self.read(i)
             self.nofilter = {'nofilter': match_host(self.request)}
-            debug(BRING_IT_ON, "Proxy request", self.request)
+            debug(BRING_IT_ON, "Proxy: request", self.request)
             self.request = applyfilter(FILTER_REQUEST, self.request,
                            fun="finish", attrs=self.nofilter)
             log('%s - %s - %s\n' % (self.addr[0],
@@ -116,7 +116,7 @@ class HttpClient (Connection):
             # the first 2 chars are the newline of request
             data = self.read(i)[2:]
             self.headers = rfc822.Message(StringIO(data))
-            debug(HURT_ME_PLENTY, "Proxy C/Headers", `self.headers.headers`)
+            debug(HURT_ME_PLENTY, "Proxy: C/Headers", `self.headers.headers`)
             # set via header
             via = self.headers.get('Via', "").strip()
             if via: via += " "
@@ -140,7 +140,7 @@ class HttpClient (Connection):
             self.decoders = []
             # Chunked encoded
             if self.headers.get('Transfer-Encoding') is not None:
-                debug(BRING_IT_ON, 'Proxy S/Transfer-encoding:', `self.headers['transfer-encoding']`)
+                debug(BRING_IT_ON, 'Proxy: S/Transfer-encoding:', `self.headers['transfer-encoding']`)
                 self.decoders.append(UnchunkStream())
                 # remove encoding header
                 to_remove = ["Transfer-Encoding"]
@@ -151,7 +151,7 @@ class HttpClient (Connection):
                 remove_headers(self.headers, to_remove)
                 # add warning
                 self.headers['Warning'] = "214 WebCleaner Transformation applied"
-            debug(HURT_ME_PLENTY, "Proxy C/Headers filtered", `self.headers.headers`)
+            debug(HURT_ME_PLENTY, "Proxy: C/Headers filtered", `self.headers.headers`)
             self.bytes_remaining = int(self.headers.get('Content-Length', 0))
             if config["proxyuser"] and not self.check_proxy_auth():
                 return self.error(407, i18n._("Proxy Authentication Required"))
@@ -230,8 +230,8 @@ class HttpClient (Connection):
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'Proxy S/response', response)
-        debug(NIGHTMARE, 'Proxy S/headers', headers)
+        debug(NIGHTMARE, 'Proxy: S/response', response)
+        debug(NIGHTMARE, 'Proxy: S/headers', headers)
         self.write(response)
         self.write(''.join(headers.headers))
         self.write('\r\n')
@@ -239,20 +239,20 @@ class HttpClient (Connection):
 
     def server_content (self, data):
         assert self.server
-        debug(NIGHTMARE, 'Proxy S/content', self)
+        debug(NIGHTMARE, 'Proxy: S/content', self)
         self.write(data)
 
 
     def server_close (self):
         assert self.server
-        debug(NIGHTMARE, 'Proxy S/close', self)
+        debug(NIGHTMARE, 'Proxy: S/close', self)
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
 
     def server_abort (self):
-        debug(NIGHTMARE, 'Proxy S/abort', self)
+        debug(NIGHTMARE, 'Proxy: S/abort', self)
         self.close()
         self.server = None
 
@@ -268,7 +268,7 @@ class HttpClient (Connection):
     def handle_close (self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
-        debug(HURT_ME_PLENTY, 'Proxy C/handle_close', self)
+        debug(HURT_ME_PLENTY, 'Proxy: C/handle_close', self)
         Connection.handle_close(self)
         if self.server:
             server, self.server = self.server, None
@@ -279,6 +279,6 @@ class HttpClient (Connection):
 
 
     def close (self):
-        debug(HURT_ME_PLENTY, 'Proxy C/close', self)
+        debug(HURT_ME_PLENTY, 'Proxy: C/close', self)
         self.state = 'closed'
         Connection.close(self)

@@ -27,8 +27,8 @@ class HttpProxyClient:
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'S/response', response)
-        debug(NIGHTMARE, 'S/headers', headers)
+        debug(NIGHTMARE, 'Proxy: S/response', response)
+        debug(NIGHTMARE, 'Proxy: S/headers', headers)
         try:
             http_ver, status, msg = response.split()
             if status!="200":
@@ -40,16 +40,16 @@ class HttpProxyClient:
 
     def server_content (self, data):
         assert self.server
-        debug(NIGHTMARE, 'S/content', self)
+        debug(NIGHTMARE, 'Proxy: S/content', self)
         self.write(data)
 
 
     def server_close (self):
         assert self.server
-        debug(NIGHTMARE, 'S/close', self)
+        debug(NIGHTMARE, 'Proxy: S/close', self)
         self.finish()
 
 
     def server_abort (self):
-        debug(NIGHTMARE, 'S/abort', self)
+        debug(NIGHTMARE, 'Proxy: S/abort', self)
         self.finish()
