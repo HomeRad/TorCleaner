@@ -44,7 +44,12 @@ static int yyerror (char* msg) {
 
 /* parser.resolve_entities */
 static PyObject* resolve_entities;
+/* ListDict class, sorted dictionary */
 static PyObject* list_dict;
+/* set_encoding helper function */
+static PyObject* set_encoding;
+/* set_doctype helper function */
+static PyObject* set_doctype;
 
 /* macros for easier scanner state manipulation */
 
@@ -102,24 +107,24 @@ staticforward PyTypeObject parser_type;
 #define YYFREE PyMem_Free
 
 /* test whether tag does not need an HTML end tag */
-int html_end_tag (PyObject* ptag, PyObject* pdoctype) {
+static int html_end_tag (PyObject* ptag, PyObject* pdoctype) {
     char* doctype;
     doctype = PyString_AsString(pdoctype);
     if (strcmp(doctype, "HTML")==0) {
         char* tag = PyString_AsString(ptag);
-        return strcmp(tag, "area")==0 ||
-            strcmp(tag, "base")==0 ||
-            strcmp(tag, "basefont")==0 ||
-            strcmp(tag, "br")==0 ||
-            strcmp(tag, "col")==0 ||
-            strcmp(tag, "frame")==0 ||
-            strcmp(tag, "hr")==0 ||
-            strcmp(tag, "img")==0 ||
-            strcmp(tag, "input")==0 ||
-            strcmp(tag, "isindex")==0 ||
-            strcmp(tag, "link")==0 ||
-            strcmp(tag, "meta")==0 ||
-            strcmp(tag, "param")==0;
+        return strcmp(tag, "area")!=0 &&
+            strcmp(tag, "base")!=0 &&
+            strcmp(tag, "basefont")!=0 &&
+            strcmp(tag, "br")!=0 &&
+            strcmp(tag, "col")!=0 &&
+            strcmp(tag, "frame")!=0 &&
+            strcmp(tag, "hr")!=0 &&
+            strcmp(tag, "img")!=0 &&
+            strcmp(tag, "input")!=0 &&
+            strcmp(tag, "isindex")!=0 &&
+            strcmp(tag, "link")!=0 &&
+            strcmp(tag, "meta")!=0 &&
+            strcmp(tag, "param")!=0;
     }
     /* it is not HTML (presumably XHTML) */
     return 1;
@@ -173,7 +178,10 @@ element: T_WAIT { YYACCEPT; /* wait for more lexer input */ }
     PyObject* tag = PyTuple_GET_ITEM($1, 0);
     PyObject* attrs = PyTuple_GET_ITEM($1, 1);
     int error = 0;
-    if (!tag || !attrs) { error = 1; goto finish_start; }
+    PyObject* tagname = PyUnicode_AsEncodedString(tag, "ascii", "ignore");
+    if (tagname==NULL) { error=1; goto finish_start; }
+    /* XXX */
+    if (tag==NULL || attrs==NULL) { error = 1; goto finish_start; }
     if (PyObject_HasAttrString(ud->handler, "start_element")==1) {
 	callback = PyObject_GetAttrString(ud->handler, "start_element");
 	if (!callback) { error=1; goto finish_start; }
@@ -208,26 +216,16 @@ finish_start:
     PyObject* tag = PyTuple_GET_ITEM($1, 0);
     PyObject* attrs = PyTuple_GET_ITEM($1, 1);
     int error = 0;
-    PyObject* tagname = NULL;
-    if (!tag || !attrs) { error = 1; goto finish_start_end; }
-    if (PyObject_HasAttrString(ud->handler, "start_element")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "start_element");
+    char* fname = "start_element";
+    PyObject* tagname = PyUnicode_AsEncodedString(tag, "ascii", "ignore");
+    if (tagname==NULL) { error=1; goto finish_start_end; }
+    if (tag==NULL || attrs==NULL) { error = 1; goto finish_start_end; }
+    if (html_end_tag(tagname, ud->doctype)) fname = "start_end_element";
+    if (PyObject_HasAttrString(ud->handler, fname)==1) {
+	callback = PyObject_GetAttrString(ud->handler, fname);
 	if (!callback) { error=1; goto finish_start_end; }
 	result = PyObject_CallFunction(callback, "OO", tag, attrs);
 	if (!result) { error=1; goto finish_start_end; }
-	Py_DECREF(callback);
-        Py_DECREF(result);
-        callback = result = NULL;
-    }
-    /* encode tagname in ASCII, ignoring any unknown chars */
-    tagname = PyUnicode_AsEncodedString(tag, "ascii", "ignore");
-    if (tagname==NULL) { error=1; goto finish_start_end; }
-    if (PyObject_HasAttrString(ud->handler, "end_element")==1 &&
-	html_end_tag(tagname, ud->doctype)) {
-	callback = PyObject_GetAttrString(ud->handler, "end_element");
-	if (callback==NULL) { error=1; goto finish_start_end; }
-	result = PyObject_CallFunction(callback, "O", tag);
-	if (result==NULL) { error=1; goto finish_start_end; }
 	Py_DECREF(callback);
         Py_DECREF(result);
         callback = result = NULL;
@@ -239,7 +237,6 @@ finish_start_end:
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_XDECREF(tag);
-    Py_XDECREF(tagname);
     Py_XDECREF(attrs);
     Py_DECREF($1);
     if (error) {
@@ -929,6 +926,17 @@ PyMODINIT_FUNC inithtmlsax (void) {
         return;
     }
     if ((resolve_entities = PyObject_GetAttrString(m, "resolve_entities"))==NULL) {
+        Py_DECREF(m);
+        return;
+    }
+    if ((set_encoding = PyObject_GetAttrString(m, "set_encoding"))==NULL) {
+        Py_DECREF(resolve_entities);
+        Py_DECREF(m);
+        return;
+    }
+    if ((set_doctype = PyObject_GetAttrString(m, "set_doctype"))==NULL) {
+        Py_DECREF(resolve_entities);
+        Py_DECREF(set_encoding);
         Py_DECREF(m);
         return;
     }
