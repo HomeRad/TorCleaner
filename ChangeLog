@@ -18,8 +18,20 @@
     Changed: README
   * line and column counting has been added to the HTML parser
     Changed: wc/parser/{htmlparse.y,htmllex.l,htmlsax.h}
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20040128
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040216
     Changed: libjs/*
+  * simplyfied Connection close handling, and ship our own Dispatcher
+    class
+    Added: wc/proxy/Dispatcher.py
+    Changed: wc/proxy/{Connection,HttpClient,Server,HttpServer,
+      ClientServerMatchmaker,HttpProxyClient}.py
+  * a block/allow domain rule is only matched against the url domain, not
+    against the complete url anymore
+    Changed: wc/filter/Blocker.py
+  * The Standard block page displays a link to edit the rule responsible
+    for the blocked page.
+    Changed: templates/classic/blocked.html, wc/filter/Blocker.py,
+      wc/webgui/context/blocked_html.py
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way
