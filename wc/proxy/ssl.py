@@ -29,6 +29,7 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
     wc.log.debug(wc.LOG_PROXY,
                  '%s (%s) got client certificate %s (depth %s, errnum %s)',
                  conn, ok, cert.get_subject(), repr(depth), repr(errnum))
+    wc.log.warn(wc.LOG_PROXY, "XXX server %s", dir(cert))
     return 1
 
 
@@ -55,6 +56,7 @@ def verify_client_cb (conn, cert, errnum, depth, ok):
     wc.log.info(wc.LOG_PROXY,
                 '%s (%s) got server certificate %s (depth %s, errnum %s)',
                 conn, ok, cert.get_subject(), repr(depth), repr(errnum))
+    wc.log.warn(wc.LOG_PROXY, "XXX client %s", dir(cert))
     return 1
 
 
