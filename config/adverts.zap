@@ -1,89 +1,107 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.360" oid="3">
+<folder sid="wc.360" oid="5">
 <title lang="de">Allgemeine Werbung</title>
 <title lang="en">General adverts</title>
 <description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&amp;quot;http://company.com&amp;quot;&gt;&lt;img  src=&amp;quot;http://adserver.de/banner.gif&amp;quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
 
 <rewrite sid="wc.334">
+  <title lang="de">Verknüpfungen mit &apos;ad&apos;</title>
   <title lang="en">Ad servers 01</title>
-  <description lang="de">Entferne Verknuepfungen mit dem Wort &apos;ad&apos; im Rechnernamen.</description>
+  <description lang="de">Entferne Verknüpfungen mit dem Wort &apos;ad&apos; im Rechnernamen.</description>
   <description lang="en">Kill links with &apos;ad&apos; in the host name.</description>
   <attr>https?://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
 </rewrite>
 
+<rewrite sid="wc.344">
+  <title lang="de">Verknüpfungen mit &apos;ad&apos; 2</title>
+  <title lang="en">Adverts in the path name 01</title>
+  <description lang="en">Kill links with ad words in the path name.</description>
+  <attr>/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
+</rewrite>
+
+<rewrite sid="wc.336">
+  <title lang="de">Verknüpfungen mit &apos;ads&apos;</title>
+  <title lang="en">Ad servers 03</title>
+  <description lang="de">Entferne Verknüpfungen mit dem Wort &apos;ads&apos; im Rechnernamen.</description>
+  <attr>https?://ad(s|server)?\.</attr>
+</rewrite>
+
 <rewrite sid="wc.335">
+  <title lang="de">Verknüpfungen mit &apos;trade&apos; u.a.</title>
   <title lang="en">Ad servers 02</title>
+  <description lang="de">Entferne Verknüpfungen mit den Worten &apos;tradedoubler&apos; &apos;emerchandise&apos; &apos;ecommercetimes&apos;</description>
   <description lang="en">Kill links with ad words in the host name.</description>
   <attr>https?://[^/]*(tradedoubler|emerchandise|ecommercetimes)\.</attr>
 </rewrite>
 
-<rewrite sid="wc.336">
-  <title lang="en">Ad servers 03</title>
-  <attr>https?://ad(s|server)?\.</attr>
-</rewrite>
-
 <rewrite sid="wc.337">
+  <title lang="de">Verknüpfungen mit &apos;linkexchange&apos; u.a.</title>
   <title lang="en">Ad servers 05</title>
+  <description lang="de">Entferne Verknüpfungen mit dem Wort &apos;linkexchange&apos; u.a. im Rechnernamen.</description>
   <description lang="en">Kill links with ad words in the host name.</description>
   <attr>https?://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
 </rewrite>
 
 <rewrite sid="wc.338">
+  <title lang="de">Verschiedene Werberechner 1</title>
   <title lang="en">Ad servers 06</title>
+  <description lang="de">Entferne Verknüpfungen zu verschiedenen Werberechnern.</description>
   <description lang="en">Kill ad servers.</description>
   <attr>https?://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
 </rewrite>
 
+<rewrite sid="wc.342">
+  <title lang="de">Verschiedene Werberechner 2</title>
+  <title lang="en">Ad servers 11</title>
+  <description lang="en">Tribal fusion</description>
+  <attr>(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
+</rewrite>
+
 <rewrite sid="wc.339">
+  <title lang="de">Verknüpfungen mit &apos;banner&apos;</title>
   <title lang="en">Ad servers 07</title>
+  <description lang="de">Entferne Verknüpfungen mit dem Wort &apos;banner&apos; im Rechnernamen.</description>
   <description lang="en">Kill links with &apos;banner&apos; in the host name.</description>
   <attr>banner.*\.</attr>
 </rewrite>
 
 <block sid="wc.340"
  url="https?://ad(s|server)?\.">
+  <title lang="de">Rechner mit &apos;ads&apos;</title>
   <title lang="en">Ad servers 08</title>
+  <description lang="de">Blockiert Rechner mit &apos;ads&apos; im Namen.</description>
   <description lang="en">matches url hosts beginning with &amp;quot;ad.&amp;quot;, &amp;quot;ads.&amp;quot; or &amp;quot;adserver.&amp;quot;</description>
 </block>
 
 <rewrite sid="wc.341">
+  <title lang="de">Rechner mit &apos;click&apos;</title>
   <title lang="en">Ad servers 10</title>
+  <description lang="de">Blockiert Rechner mit &apos;click&apos; im Namen.</description>
   <description lang="en">Kill links with &apos;click&apos; words in the host name.</description>
   <attr>https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
 </rewrite>
 
-<rewrite sid="wc.342">
-  <title lang="en">Ad servers 11</title>
-  <description lang="en">Tribal fusion</description>
-  <attr>(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
-</rewrite>
-
 <rewrite sid="wc.343">
+  <title lang="de">Verknüpfungen mit &apos;adclick&apos;</title>
   <title lang="en">Ad servers 12</title>
+  <description lang="de">Entfernt Verknüpfungen mit dem Wort &apos;adclick&apos; in der URL.</description>
   <description lang="en">adclick stuff</description>
   <attr>/adclick\.(exe|php)</attr>
 </rewrite>
 
-<block sid="wc.2"
- url="https?://ad(s|server)?\.">
-  <title lang="en">Ad servers 13</title>
-</block>
-
-<rewrite sid="wc.344">
-  <title lang="en">Adverts in the path name 01</title>
-  <description lang="en">Kill links with ad words in the path name.</description>
-  <attr>/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
-</rewrite>
-
 <rewrite sid="wc.345">
+  <title lang="de">Verknüpfungen mit &apos;banner&apos; 2</title>
   <title lang="en">Adverts in the path name 02</title>
+  <description lang="de">Entferne Verknüpfungen mit &apos;banner&apos; u.a. im Pfadnamen.</description>
   <description lang="en">Kill links with ad words in the path name.</description>
   <attr>/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick)/</attr>
 </rewrite>
 
 <rewrite sid="wc.346">
+  <title lang="de">Verknüpfungen mit &apos;event.ng&apos;</title>
   <title lang="en">Adverts in the path name 03</title>
+  <description lang="de">Entferne Verknüpfungen mit dem Wort &apos;event.ng&apos; im Pfad.</description>
   <description lang="en">Kill links with ad words in the path name.</description>
   <attr>/event\.ng(\?|/)Type=click</attr>
 </rewrite>

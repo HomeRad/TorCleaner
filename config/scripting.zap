@@ -6,7 +6,8 @@
 <description lang="en">Scripting related.</description>
 
 <javascript sid="wc.304">
-  <title lang="en">Enable JavaScript engine</title>
+  <title lang="de">Aktiviere JavaScript Filter</title>
+  <title lang="en">Activate JavaScript Filter</title>
   <description lang="en">The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()</description>
   <nomatchurl>msdn\.microsoft\.com</nomatchurl>
   <nomatchurl>www\.mvhs\.de</nomatchurl>
@@ -14,18 +15,21 @@
 </javascript>
 
 <rewrite sid="wc.290">
+  <title lang="de">Entferne &lt;a&gt; onfocus</title>
   <title lang="en">&lt;a&gt; onfocus</title>
   <attr name="onfocus"/>
   <replacement part="attr"/>
 </rewrite>
 
 <rewrite sid="wc.291">
+  <title lang="de">Entferne &lt;a&gt; onmouseout</title>
   <title lang="en">&lt;a&gt; onmouseout</title>
   <attr name="onmouseout"/>
   <replacement part="attr"/>
 </rewrite>
 
 <rewrite sid="wc.292">
+  <title lang="de">Entferne &lt;a&gt; onmouseover</title>
   <title lang="en">&lt;a&gt; onmouseover</title>
   <attr name="onmouseover"/>
   <replacement part="attr"/>
@@ -33,6 +37,7 @@
 
 <rewrite sid="wc.293"
  tag="area">
+  <title lang="de">Entferne &lt;area&gt; onfocus</title>
   <title lang="en">&lt;area&gt; onfocus</title>
   <attr name="onfocus"/>
   <replacement part="attr"/>
@@ -40,6 +45,7 @@
 
 <rewrite sid="wc.294"
  tag="area">
+  <title lang="de">Entferne &lt;area&gt; onmouseout</title>
   <title lang="en">&lt;area&gt; onmouseout</title>
   <attr name="onmouseover"/>
   <attr name="onmouseout"/>
@@ -48,6 +54,7 @@
 
 <rewrite sid="wc.295"
  tag="area">
+  <title lang="de">Entferne &lt;area&gt; onmouseover</title>
   <title lang="en">&lt;area&gt; onmouseover</title>
   <attr name="onmouseover"/>
   <replacement part="attr"/>
@@ -55,6 +62,7 @@
 
 <rewrite sid="wc.296" disable="1"
  tag="body">
+  <title lang="de">Entferne &lt;body&gt; onload</title>
   <title lang="en">&lt;body&gt; onload</title>
   <description lang="en">Remove onload javascript attribute</description>
   <attr name="onload"/>
@@ -63,6 +71,7 @@
 
 <rewrite sid="wc.297"
  tag="body">
+  <title lang="de">Entferne &lt;body&gt; onresize</title>
   <title lang="en">&lt;body&gt; onresize</title>
   <description lang="en">filter the onresize tag</description>
   <attr name="onresize"/>
@@ -71,6 +80,7 @@
 
 <rewrite sid="wc.298"
  tag="body">
+  <title lang="de">Entferne &lt;body&gt; onunload</title>
   <title lang="en">&lt;body&gt; onunload</title>
   <description lang="en">onunload is used for advert popups</description>
   <attr name="onunload"/>
