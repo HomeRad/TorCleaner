@@ -284,6 +284,7 @@ KnownInvalidTags = {
     "skyscraper" : None, # www.heise.de
     "u2uforen" : None, # www.heise.de
     "update" : None, # slashdot.org
+    "htmlpromo" : None, # www.pcworld.com
 }
 
 
