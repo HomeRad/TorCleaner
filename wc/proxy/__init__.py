@@ -141,7 +141,7 @@ def _slow_check (x, t, stype):
         warn(PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
 
 
-def mainloop (handle=None):
+def mainloop (handle=None, stoppable=False):
     """proxy main loop, handles requests forever"""
     from HttpClient import HttpClient
     from Listener import Listener
@@ -163,10 +163,14 @@ def mainloop (handle=None):
         # have to worry about being in asyncore.poll when a timer goes
         # off.
         proxy_poll(timeout=max(0, run_timers()))
+        if stoppable:
+            if config.get_abort():
+                break
         if handle is not None:
             # win32 handle signaling stop
             import win32event
             rc = win32event.WaitForSingleObject(handle, 0)
             if rc==win32event.WAIT_OBJECT_0:
                 break
+
 

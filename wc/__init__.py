@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os, sys, time, socket
+import os, sys, time, socket, threading
 import xml.parsers.expat
 import _webcleaner2_configdata as configdata
 from glob import glob
@@ -47,6 +47,27 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
+
+_lock = None
+
+def _acquireLock ():
+    """
+    Acquire the module-level lock for serializing access to shared data.
+
+    This should be released with _releaseLock().
+    """
+    global _lock
+    if not _lock:
+        _lock = threading.RLock()
+    if _lock:
+        _lock.acquire()
+
+
+def _releaseLock ():
+    """Release the module-level lock acquired by calling _acquireLock()."""
+    if _lock:
+        _lock.release()
+
 
 def iswriteable (fname):
     """return True if given file is writable"""
@@ -77,20 +98,22 @@ from wc.filter.VirusFilter import init_clamav_conf
 
 config = {}
 
-def wstartfunc (handle=None):
+def wstartfunc (handle=None, stoppable=False):
     """Initalize configuration, start psyco compiling and the proxy loop.
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
     initlog(os.path.join(ConfigDir, "logging.conf"))
+    # read configuration
+    config = Configuration()
+    if stoppable:
+        config.set_abort(False)
     # support reload on posix systems
-    if os.name=='posix':
+    elif os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, sighup_reload_config)
         # change dir to avoid open files on umount
         os.chdir("/")
-    # read configuration
-    config = Configuration()
     config.init_filter_modules()
     init_clamav_conf()
     # psyco library for speedup
@@ -102,8 +125,10 @@ def wstartfunc (handle=None):
     # start the proxy
     info(PROXY, "Starting proxy on port %d", config['port'])
     from wc.proxy import mainloop
-    mainloop(handle=handle)
+    mainloop(handle=handle, stoppable=stoppable)
 
+
+from wc.proxy import make_timer
 
 def sighup_reload_config (signum, frame):
     """store timer for reloading configuration data"""
@@ -228,6 +253,19 @@ class Configuration (dict):
     def read_proxyconf (self):
         """read proxy configuration"""
         WConfigParser(self['configfile'], self).parse()
+
+
+    def set_abort (self, val):
+        _acquireLock()
+        self.abort = val
+        _releaseLock()
+
+
+    def get_abort (self):
+        _acquireLock()
+        val = self.abort
+        _releaseLock()
+        return val
 
 
     def write_proxyconf (self):
