@@ -49,6 +49,11 @@ def create_socket (family, socktype, ssl=False):
         sock = SSL.Connection(ctx, socket.socket(family, socktype))
     else:
         sock = socket.socket(family, socktype)
+        if family==socket.AF_INET and socktype==socket.SOCK_STREAM:
+            # disable NAGLE algorithm, which means sending pending data
+            # immediately, possibly wasting bandwidth but improving
+            # responsiveness for fast networks
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     return sock
 
 
