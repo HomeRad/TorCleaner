@@ -27,13 +27,13 @@ from wc.XmlUtils import xmlify
 from filter.rules.FolderRule import recalc_oids, recalc_up_down
 
 Version = configdata.version
-AppName = configdata.name
+AppName = configdata.appname
 App = AppName+" "+Version
 UserAgent = AppName+"/"+Version
 Author =  configdata.author
 HtmlAuthor = Author.replace(' ', '&nbsp;')
-Copyright = "Copyright © 2000-2002 by "+Author
-HtmlCopyright = "Copyright &copy; 2000-2002 by "+HtmlAuthor
+Copyright = "Copyright © 2000-2002 "+Author
+HtmlCopyright = "Copyright &copy; 2000-2003 "+HtmlAuthor
 AppInfo = App+"              "+Copyright
 HtmlAppInfo = App+", "+HtmlCopyright
 Url = configdata.url
