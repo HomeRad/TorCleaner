@@ -35,7 +35,6 @@ for _i in filtermodules:
     config['filterdict'][_i] = False
 for _i in config['filters']:
     config['filterdict'][_i] = True
-config['allowedhostlist'] = _sort_seq(ip.map2hosts(config['allowedhosts']))
 config['newport'] = config['port']
 config['newsslport'] = config['sslport']
 config['newsslgateway'] = config['sslgateway']
@@ -315,32 +314,21 @@ def _form_filtermodules (form):
 
 
 def _form_addallowed (host):
-    hosts = ip.map2hosts(config['allowedhosts'])
-    host = list(ip.map2hosts(ip.hosts2map([host])))[0]
-    if host not in hosts:
-        hosts.add(host)
-        config['allowedhosts'] = ip.hosts2map(hosts)
-        config['allowedhostlist'] = _sort_seq(hosts)
+    if host not in config['allowedhosts']:
+        config['allowedhosts'].append(host)
+        config['allowedhostset'] = ip.hosts2map(config['allowedhosts'])
         info['addallowed'] = True
         config.write_proxyconf()
 
 
-def _form_removehosts (form, key):
-    toremove = _getlist(form, key)
-    hosts = ip.map2hosts(config[key])
-    removed = 0
-    for host in toremove:
-        if host in hosts:
-            hosts.remove(host)
-            removed += 1
-    return removed, hosts
-
-
 def _form_delallowed (form):
-    removed, hosts = _form_removehosts(form, 'allowedhosts')
+    removed = 0
+    for host in _getlist(form, 'allowedhosts'):
+        if host in config['allowedhosts']:
+            config['allowedhosts'].remove(host)
+            removed += 1
     if removed > 0:
-        config['allowedhosts'] = ip.hosts2map(hosts)
-        config['allowedhostlist'] = _sort_seq(hosts)
+        config['allowedhostset'] = ip.hosts2map(config['allowedhosts'])
         config.write_proxyconf()
         info['delallowed'] = True
 

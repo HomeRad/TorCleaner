@@ -246,7 +246,7 @@
 <td>
 <select name="allowedhosts" id="allowedhosts" multiple size="5"
  i18n:attributes="title string:List of hosts allowed to use this proxy.">
-<option tal:repeat="host config/allowedhostlist" tal:attributes="value host"
+<option tal:repeat="host config/allowedhosts" tal:attributes="value host"
  tal:content="host">localhost</option>
 </select>
 </td>

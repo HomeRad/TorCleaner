@@ -253,7 +253,7 @@ class Configuration (dict):
         f.write(' try_google="%d"\n' % self['try_google'])
         hosts = self['nofilterhosts']
         f.write(' nofilterhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
-        hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
+        hosts = self['allowedhosts']
         f.write(' allowedhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
         f.write('>\n')
         for key in self['filters']:
@@ -345,7 +345,7 @@ class Configuration (dict):
 
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
-        hostset = self['allowedhosts']
+        hostset = self['allowedhostset']
         return ip.host_in_set(host, hostset[0], hostset[1])
 
 
@@ -509,10 +509,12 @@ class WConfigParser (BaseParser):
             else:
                 self.config['nofilterhosts'] = []
             if self.config['allowedhosts'] is not None:
-                strhosts = self.config['allowedhosts']
-                self.config['allowedhosts'] = ip.strhosts2map(strhosts)
+                hosts = self.config['allowedhosts'].split(',')
+                self.config['allowedhosts'] = hosts
+                self.config['allowedhostset'] = ip.hosts2map(hosts)
             else:
-                self.config['allowedhosts'] = [Set(), []]
+                self.config['allowedhosts'] = []
+                self.config['allowedhostset'] = [Set(), []]
         elif name=='filter':
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
