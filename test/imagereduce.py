@@ -1,10 +1,15 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
 
-def main ():
+import sys
+import os
+import stat
+import mimetypes
+import cStringIO as StringIO
+
+def _main ():
     """USAGE: test/run.sh test/imagereduce.py image.{gif,png,..} > reduced.jpg
     """
-    import sys, os, stat, mimetypes
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)
@@ -27,4 +32,4 @@ def main ():
 
 
 if __name__=='__main__':
-    main()
+    _main()

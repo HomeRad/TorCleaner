@@ -19,6 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import sys
 import wc
 import wc.js
 import wc.js.jslib
@@ -53,7 +54,6 @@ class JSFilter (wc.js.JSListener.JSListener):
 
 def _main ():
     """USAGE: test/run.sh test/filterjs.py <.js file>"""
-    import sys
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)
@@ -64,7 +64,6 @@ def _main ():
         f = file(fname)
     from test import initlog, disable_rating_rules
     initlog("test/logging.conf")
-    import wc
     wc.config = wc.Configuration()
     disable_rating_rules(wc.config)
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
