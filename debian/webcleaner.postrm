@@ -20,5 +20,13 @@ case "$1" in
 
 esac
 
+# delete all generated .pyc and .pyo files
+# _dont_ do this in prerm because we call "/etc/init.d/webcleaner stop"
+# afterwards which would regenerate some .pyc files
+dpkg --listfiles $PACKAGE |
+    awk '$0~/\.py$/ {print $0"c\n" $0"o"}' | 
+    xargs rm -f >&2
+
 #DEBHELPER#
 
+exit 0
