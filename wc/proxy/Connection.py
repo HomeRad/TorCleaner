@@ -52,6 +52,7 @@ class Connection (Dispatcher):
         """read data from connection, put it into recv_buffer and call
            process_read"""
         assert self.connected
+        debug(PROXY, '%s handle_read', self)
 	if len(self.recv_buffer) > MAX_BUFSIZE:
             warn(PROXY, '%s read buffer full', self)
 	    return
@@ -90,6 +91,7 @@ class Connection (Dispatcher):
            Execute a possible pending close."""
         assert self.connected
         assert self.send_buffer
+        debug(PROXY, '%s handle_write', self)
         num_sent = 0
         data = self.send_buffer[:SEND_BUFSIZE]
         try:
@@ -112,6 +114,7 @@ class Connection (Dispatcher):
 
 
     def close (self):
+        debug(PROXY, '%s close', self)
         self.close_pending = False
         if self.persistent:
             self.close_reuse()
@@ -139,6 +142,7 @@ class Connection (Dispatcher):
     def delayed_close (self):
         """Close whenever the data has been sent"""
         assert self.connected
+        debug(PROXY, '%s delayed_close', self)
         if not self.close_ready():
             # We can't close yet because there's still data to send
             debug(PROXY, '%s close ready channel', self)
