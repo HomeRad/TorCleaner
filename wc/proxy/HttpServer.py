@@ -59,17 +59,18 @@ class HttpServer(Server):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         try: self.connect(self.addr)
         except socket.error, err:
-            debug(ALWAYS, 'connect error', err)
+            #debug(ALWAYS, 'connect error', err)
             self.handle_error(socket.error, err)
             return
         except Exception, msg:
-            debug(ALWAYS, 'connect error', self.addr, msg)
+            #debug(ALWAYS, 'connect error', self.addr, msg)
+            pass
 
     def handle_connect(self):
         if not self.connected:
             return
         assert self.state == 'connect'
-        debug(HURT_ME_PLENTY, 'handle_connect', self)
+        #debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
         Server.handle_connect(self)
 
@@ -130,8 +131,7 @@ class HttpServer(Server):
             self.client.server_response(self.response, self.headers)
         else:
             # We have no idea what it is!?
-            debug(ALWAYS, 'Warning', 'puzzling header received ',
-	           `self.response`)
+            #debug(ALWAYS, 'Warning', 'puzzling header received ', `self.response`)
 
     def process_headers(self):
         # Headers are terminated by a blank line .. now in the regexp,
@@ -159,8 +159,7 @@ class HttpServer(Server):
         self.decoders = []
 
         if self.headers.has_key('transfer-encoding'):
-            debug(BRING_IT_ON, 'Transfer-encoding:',
-	          self.headers['transfer-encoding'])
+            #debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
             # HACK - remove encoding header
             for h in self.headers.headers[:]:
@@ -191,7 +190,7 @@ class HttpServer(Server):
             self.state = 'content'
 
     def process_content(self):
-        debug(NIGHTMARE, "processing server content")
+        #debug(NIGHTMARE, "processing server content")
         data = self.read(self.bytes_remaining)
 
         if self.bytes_remaining is not None:
@@ -286,7 +285,7 @@ class HttpServer(Server):
             # We can't reuse this connection
             self.close()
         else:
-            debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
+            #debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
             self.sequence_number = self.sequence_number + 1
             self.state = 'client'
             self.document = ''
@@ -308,7 +307,7 @@ class HttpServer(Server):
             client.server_abort()
 
     def handle_close(self):
-        debug(HURT_ME_PLENTY, 'server close; '+self.state, self)
+        #debug(HURT_ME_PLENTY, 'server close; '+self.state, self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None
@@ -317,8 +316,8 @@ class HttpServer(Server):
 def speedcheck_print_status():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
-    if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        debug(BRING_IT_ON, 'speed:', '%4d' % (SPEEDCHECK_BYTES/elapsed), 'b/s')
+#    if elapsed > 0 and SPEEDCHECK_BYTES > 0:
+#        debug(BRING_IT_ON, 'speed:', '%4d' % (SPEEDCHECK_BYTES/elapsed), 'b/s')
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
     make_timer(5, speedcheck_print_status)

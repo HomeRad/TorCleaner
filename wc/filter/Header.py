@@ -44,5 +44,5 @@ class Header(Filter):
                     del data[header]
         for key,val in self.add.items():
             data[key] = val
-        debug(HURT_ME_PLENTY, "Headers\n", data)
+        #debug(HURT_ME_PLENTY, "Headers\n", data)
         return data

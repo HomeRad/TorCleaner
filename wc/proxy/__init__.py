@@ -103,7 +103,7 @@ def proxy_poll(timeout=0.0):
         try:
 	    (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
-            debug(BRING_IT_ON, why)
+            #debug(BRING_IT_ON, why)
             if why.args == (4, 'Interrupted system call'):
                 # this occurs on UNIX systems with a sighup signal
                 return
@@ -126,8 +126,8 @@ def proxy_poll(timeout=0.0):
                 if x not in e:
                     x.handle_write_event()
                     handlerCount = handlerCount + 1
-                    if time.time() - t > 0.1:
-                        debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
+#                    if time.time() - t > 0.1:
+#                        debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
         for x in r:
@@ -136,8 +136,8 @@ def proxy_poll(timeout=0.0):
                 if x not in e and x not in w:
                     x.handle_read_event()
                     handlerCount = handlerCount + 1
-                    if time.time() - t > 0.1:
-                        debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
+#                    if time.time() - t > 0.1:
+#                        debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
         return handlerCount
@@ -151,7 +151,7 @@ def match_host(request):
     try:
         foo, url, bar = request.split()
     except Exception, why:
-        debug(ALWAYS, "bad request?", why)
+        #debug(ALWAYS, "bad request?", why)
         return 0
     scheme, netloc = splittype(url)
     netloc, document = splithost(netloc)

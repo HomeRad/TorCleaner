@@ -443,8 +443,8 @@ class DnsLookupConnection(Connection):
                 ip_addrs.append(data)
             if type == dnstype.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
-
+                #debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
+                pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records
         if self.callback:

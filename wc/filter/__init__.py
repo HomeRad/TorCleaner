@@ -72,7 +72,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     if attrs.get('nofilter'):
         return arg
     try:
-        debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
+        #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
         for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
             if hasattr(f, 'mimelist'):

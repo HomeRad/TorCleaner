@@ -38,7 +38,7 @@ class Connection(asyncore.dispatcher):
 
     def close(self):
         if self.connected:
-            debug(HURT_ME_PLENTY, 'close', self)
+            #debug(HURT_ME_PLENTY, 'close', self)
             self.connected = 0
             asyncore.dispatcher.close(self)
 
@@ -55,8 +55,7 @@ class Connection(asyncore.dispatcher):
 
     def write(self, data):
         """write data to the internal buffer"""
-        if self.debug:
-            self.log_info('sending %s' % repr(data))
+        #debug(NIGHTMARE, 'sending', repr(data))
         self.send_buffer += data
 
     def delayed_close(self):
@@ -64,7 +63,7 @@ class Connection(asyncore.dispatcher):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            debug(HURT_ME_PLENTY, 'close ready', self)
+            #debug(HURT_ME_PLENTY, 'close ready', self)
             self.close_pending = 1
         else:
             self.close()
@@ -78,7 +77,7 @@ class Connection(asyncore.dispatcher):
         try:
             num_sent = self.send(self.send_buffer[:SEND_BUFSIZE])
         except socket.error, err:
-            debug(ALWAYS, 'write error', self, err)
+            #debug(ALWAYS, 'write error', self, err)
             self.handle_error(socket.error, err)
             return
         self.send_buffer = self.send_buffer[num_sent:]
@@ -89,21 +88,22 @@ class Connection(asyncore.dispatcher):
 
 
     def handle_connect(self):
-        debug(BRING_IT_ON, 'connect', self)
+        #debug(BRING_IT_ON, 'connect', self)
+        pass
 
 
     def handle_read(self):
         if not self.connected:
             # It's been closed (presumably recently)
-            debug(BRING_IT_ON, 'read from connected')
+            #debug(BRING_IT_ON, 'read from connected')
             return
         try:
             data = self.recv(RECV_BUFSIZE)
             if not data: # It's been closed, and handle_close has been called
                 return
-            debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
+            #debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
         except socket.error, err:
-            debug(ALWAYS, 'read error', self, err)
+            #debug(ALWAYS, 'read error', self, err)
             self.handle_error(socket.error, err)
             return
 	self.recv_buffer += data
@@ -116,8 +116,8 @@ class Connection(asyncore.dispatcher):
 
 
     def handle_error(self, type, value, tb=None):
-        debug(ALWAYS, 'error', self, type, value)
-	import traceback
-        if tb: traceback.print_tb(tb)
+        #debug(ALWAYS, 'error', self, type, value)
+	#import traceback
+        #if tb: traceback.print_tb(tb)
         self.close()
         self.del_channel()

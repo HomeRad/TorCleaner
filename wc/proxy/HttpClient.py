@@ -104,13 +104,13 @@ class HttpClient(Connection):
     def server_response(self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'S/response', self)
+        #debug(NIGHTMARE, 'S/response', self)
         self.write(response)
         self.write(join(headers.headers, ''))
         self.write('\r\n')
 
     def server_no_response(self):
-        debug(NIGHTMARE, 'S/failed', self)
+        #debug(NIGHTMARE, 'S/failed', self)
         self.write('**Aborted**')
         self.delayed_close()
 
@@ -120,19 +120,19 @@ class HttpClient(Connection):
 
     def server_close(self):
         assert self.server
-        debug(NIGHTMARE, 'S/close', self)
+        #debug(NIGHTMARE, 'S/close', self)
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
     def server_abort(self):
-        debug(NIGHTMARE, 'S/abort', self)
+        #debug(NIGHTMARE, 'S/abort', self)
         self.close()
         self.server = None
         
     def handle_error(self, type, value, traceback=None):
         # We should also close the server connection
-        debug(ALWAYS, 'client error', self, type, value)
+        #debug(ALWAYS, 'client error', self, type, value)
         Connection.handle_error(self, type, value, traceback)
         if self.server:
             server, self.server = self.server, None
@@ -141,7 +141,7 @@ class HttpClient(Connection):
     def handle_close(self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
-        debug(HURT_ME_PLENTY, 'client close', self)
+        #debug(HURT_ME_PLENTY, 'client close', self)
         Connection.handle_close(self)
         if self.server:
             server, self.server = self.server, None
