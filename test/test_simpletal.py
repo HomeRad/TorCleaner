@@ -1,13 +1,14 @@
 from StringIO import StringIO
 import sys, os, gettext
 from wc.webgui.simpletal import simpleTAL, simpleTALES
-from wc import LocaleDir, Name
+from wc import Name
 
 def expand_template (f, context):
     """expand the given template file in context
        return expanded data"""
     template = simpleTAL.compileHTMLTemplate(f)
     out = StringIO()
+    LocaleDir = os.path.join(os.getcwd(), "test", "share", "locale")
     translator = gettext.translation(Name, LocaleDir, ["de"])
     template.expand(context, out, translator=translator)
     data = out.getvalue()
@@ -16,13 +17,11 @@ def expand_template (f, context):
 
 
 def get_context ():
-    # make TAL context
+    # init and return TALES context
     context = simpleTALES.Context()
-    context.addGlobal("option", "hullabulla")
+    context.addGlobal("parameter", "hullabulla")
     return context
 
 
-path = "test/html/taltest.html"
-f = file(path)
-context = get_context()
-print expand_template(f, context)
+f = file(os.path.join(os.getcwd(), "test", "html", "taltest.html"))
+print expand_template(f, get_context())
