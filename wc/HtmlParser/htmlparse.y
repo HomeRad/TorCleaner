@@ -759,15 +759,15 @@ static PyGetSetDef parser_getset[] = {
 };
 
 static PyMethodDef parser_methods[] = {
-    {"feed",  (PyCFunction)parser_feed, METH_VARARGS, "feed data to parse incremental"},
+    {"feed", (PyCFunction)parser_feed, METH_VARARGS, "feed data to parse incremental"},
     {"reset", (PyCFunction)parser_reset, METH_VARARGS, "reset the parser (no flushing)"},
     {"flush", (PyCFunction)parser_flush, METH_VARARGS, "flush parser buffers"},
     {"debug", (PyCFunction)parser_debug, METH_VARARGS, "set debug level"},
-    {"lineno",      (PyCFunction)parser_lineno,      METH_VARARGS, "get the current line number"},
+    {"lineno", (PyCFunction)parser_lineno, METH_VARARGS, "get the current line number"},
     {"last_lineno", (PyCFunction)parser_last_lineno, METH_VARARGS, "get the last line number"},
-    {"column",      (PyCFunction)parser_column,      METH_VARARGS, "get the current column"},
+    {"column", (PyCFunction)parser_column, METH_VARARGS, "get the current column"},
     {"last_column", (PyCFunction)parser_last_column, METH_VARARGS, "get the last column"},
-    {"pos",         (PyCFunction)parser_pos,         METH_VARARGS, "get the current scanner position"},
+    {"pos", (PyCFunction)parser_pos, METH_VARARGS, "get the current scanner position"},
     {NULL} /* Sentinel */
 };
 
