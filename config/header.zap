@@ -31,8 +31,17 @@
  name="Via"/>
 
 <header title="No X-Forwarded-For" oid="6"
+ desc="This header is used by many proxy servers (e.g., Squid) to note whom a request has been forwarded for"
  name="X-Forwarded-For"/>
 
 <header title="No From" oid="7"
  name="From$"/>
+
+<header title="No Client-ip" oid="135"
+ desc="The Client-ip header is an extension header used by some older clients and some proxies to transmit the IP address of the machine on which the client is running."
+ name="Client-ip"/>
+
+<header title="No UA-*" oid="136"
+ desc="These User-Agent headers are nonstandard and no longer common. They provide information about the client machine that could allow for better content selection by a server. For instance, if a server knew that a user&apos;s machine had only an 8-bit color display, the server could select images that were optimized for that type of display."
+ name="UA-.*"/>
 </folder>

@@ -5,6 +5,7 @@
     - remove <body ondragstart, oncontextmenu, onselectstart>
     - prevent document.onmousedown rebinding
     - some ad filter updates
+    - remove more headers with client infos
     - updated blacklists and whitelists
     Changed files: config/{scripting,adverts,misc}.zap
   * Html filtering:
@@ -17,13 +18,14 @@
     Changed files: wc/daemon/_posix.py
   * use builtin dict type for configuration
     Changed files: wc/__init__.py
-  * convert paths to platform specific representation to prevent
-    compile errors
+  * convert paths to platform specific representation
     Changed files: setup.py
   * 100 continue: switch back to response state only after reading headers
     Changed files: wc/proxy/HttpServer.py
-  * remove client Connection: and Proxy-Connection: headers
-    Changed files: wc/proxy/HttpClient.py, wc/__init__.py
+  * be more HTTP conform by adding required and removing hop-by-hop headers
+    also, some header values are parsed with better error recovery
+    Changed files: wc/proxy/{__init__, HttpClient, HttpServer}.py,
+       wc/__init__.py
   * handle partial proxy request uris
     Changed files: wc/proxy/{__init__,ClientServerMatchmaker}.py
   * embedded the spidermonkey javascript engine to reduce dependencies
