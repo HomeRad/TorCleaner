@@ -2,7 +2,7 @@ from FXPy.fox import *
 from wc import _,debug,error
 from wc.debug_levels import *
 
-class FXRuleFrame(FXVerticalFrame):
+class FXRuleFrame (FXVerticalFrame):
     """display all variables found in a basic Rule.
     This means basically we have a FOX widget for each variable
     found in the rule (e.g. for rule.title we have an FXTextField).
@@ -15,7 +15,7 @@ class FXRuleFrame(FXVerticalFrame):
      ID_LAST,
     ) = range(FXVerticalFrame.ID_LAST, FXVerticalFrame.ID_LAST+6)
 
-    def __init__(self, parent, rule, index):
+    def __init__ (self, parent, rule, index):
         FXVerticalFrame.__init__(self, parent, LAYOUT_FILL_X|LAYOUT_FILL_Y)
         # event map
         FXMAPFUNC(self,SEL_COMMAND, FXRuleFrame.ID_TITLE, FXRuleFrame.onCmdTitle)
@@ -44,14 +44,14 @@ class FXRuleFrame(FXVerticalFrame):
         t.setText(self.rule.desc)
         t.setEditable()
 
-    def get_name(self):
+    def get_name (self):
         """display this name at the top of the window"""
         s = self.rule.get_name().capitalize()+_(" rule")
         if hasattr(self.rule, "ruleid"):
             s += " (ID %d)" % self.rule.ruleid
         return s
 
-    def onCmdTitle(self, sender, sel, ptr):
+    def onCmdTitle (self, sender, sel, ptr):
         title = sender.getText().strip()
         if not title:
             error(_("empty title"))
@@ -66,14 +66,14 @@ class FXRuleFrame(FXVerticalFrame):
         win.handle(sender, MKUINT(win.ID_TITLE, SEL_COMMAND), ptr)
         return 1
 
-    def onCmdDesc(self, sender, sel, ptr):
+    def onCmdDesc (self, sender, sel, ptr):
         if self.rule.desc != sender.getText():
             self.rule.desc = sender.getText()
             self.getApp().dirty = 1
             #debug(BRING_IT_ON, "Rule description changed")
         return 1
 
-    def onCmdDisableRule(self, sender, sel, ptr):
+    def onCmdDisableRule (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Rule %d %s"%(self.rule.index, (self.rule.disable and "disabled" or "enabled")))
         self.rule.disable = sender.getCheck()
         self.getApp().dirty = 1
@@ -95,3 +95,4 @@ class FXRuleFrame(FXVerticalFrame):
             self.getApp().dirty = 1
             #debug(BRING_IT_ON, "Rule dontmatchurl changed")
         return 1
+

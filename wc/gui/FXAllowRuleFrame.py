@@ -3,7 +3,7 @@ from FXPy.fox import *
 from wc import _,debug
 from wc.debug_levels import *
 
-class FXAllowRuleFrame(FXRuleFrame):
+class FXAllowRuleFrame (FXRuleFrame):
     """display all variables found in an AllowRule"""
     (ID_SCHEME,
      ID_HOST,
@@ -15,7 +15,7 @@ class FXAllowRuleFrame(FXRuleFrame):
      ID_LAST,
     ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+8)
 
-    def __init__(self, parent, rule, index):
+    def __init__ (self, parent, rule, index):
         FXRuleFrame.__init__(self, parent, rule, index)
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_SCHEME,FXAllowRuleFrame.onCmdScheme)
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_HOST,FXAllowRuleFrame.onCmdHost)
@@ -47,43 +47,43 @@ class FXAllowRuleFrame(FXRuleFrame):
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_FRAGMENT)
         tf.setText(self.rule.fragment)
 
-    def onCmdScheme(self, sender, sel, ptr):
+    def onCmdScheme (self, sender, sel, ptr):
         self.rule.scheme = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule scheme")
         return 1
 
-    def onCmdHost(self, sender, sel, ptr):
+    def onCmdHost (self, sender, sel, ptr):
         self.rule.host = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule host")
         return 1
 
-    def onCmdPort(self, sender, sel, ptr):
+    def onCmdPort (self, sender, sel, ptr):
         self.rule.host = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule port")
         return 1
 
-    def onCmdPath(self, sender, sel, ptr):
+    def onCmdPath (self, sender, sel, ptr):
         self.rule.path = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule path")
         return 1
 
-    def onCmdParameters(self, sender, sel, ptr):
+    def onCmdParameters (self, sender, sel, ptr):
         self.rule.parameters = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule parameters")
         return 1
 
-    def onCmdQuery(self, sender, sel, ptr):
+    def onCmdQuery (self, sender, sel, ptr):
         self.rule.query = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule query")
         return 1
 
-    def onCmdFragment(self, sender, sel, ptr):
+    def onCmdFragment (self, sender, sel, ptr):
         self.rule.fragment = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule fragment")

@@ -3,13 +3,13 @@ from FXPy.fox import *
 from wc import _,debug
 from wc.debug_levels import *
 
-class FXHeaderRuleFrame(FXRuleFrame):
+class FXHeaderRuleFrame (FXRuleFrame):
     """display all variables found in a HeaderRule"""
     (ID_NAME,
      ID_VALUE,
     ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+2)
 
-    def __init__(self, parent, rule, index):
+    def __init__ (self, parent, rule, index):
         FXRuleFrame.__init__(self, parent, rule, index)
         FXMAPFUNC(self,SEL_COMMAND,FXHeaderRuleFrame.ID_NAME,FXHeaderRuleFrame.onCmdName)
         FXMAPFUNC(self,SEL_COMMAND,FXHeaderRuleFrame.ID_VALUE,FXHeaderRuleFrame.onCmdValue)
@@ -21,7 +21,7 @@ class FXHeaderRuleFrame(FXRuleFrame):
         tf = FXTextField(matrix, 15, self, FXHeaderRuleFrame.ID_VALUE)
         tf.setText(self.rule.value)
 
-    def onCmdName(self, sender, sel, ptr):
+    def onCmdName (self, sender, sel, ptr):
         name = sender.getText().strip()
         if name:
             self.rule.name = name
@@ -32,11 +32,9 @@ class FXHeaderRuleFrame(FXRuleFrame):
         #debug(BRING_IT_ON, "Changed rule header name")
         return 1
 
-    def onCmdValue(self, sender, sel, ptr):
+    def onCmdValue (self, sender, sel, ptr):
         self.rule.value = sender.getText().strip()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule header value")
         return 1
-
-
 

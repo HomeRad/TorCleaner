@@ -5,8 +5,8 @@ from FXRuleFrameFactory import FXRuleFrameFactory
 from wc.debug_levels import *
 
 
-class FXRuleTreeList(FXTreeList):
-    def __init__(self, frame, parent, msgid, folders, factory):
+class FXRuleTreeList (FXTreeList):
+    def __init__ (self, frame, parent, msgid, folders, factory):
         FXTreeList.__init__(self, frame, 0, parent, msgid, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.setListStyle(TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|TREELIST_SINGLESELECT)
         self.icon_open = loadIcon(self.getApp(), 'minifolderopen.png')
@@ -23,7 +23,7 @@ class FXRuleTreeList(FXTreeList):
         for f in self.folders:
             self.addFolder(f)
 
-    def addFolder(self, f, create=0):
+    def addFolder (self, f, create=0):
         item = self.createRuleItem(f)
         frame = f.fromFactory(self.factory)
         item.setData(frame.rule.index)
@@ -35,7 +35,7 @@ class FXRuleTreeList(FXTreeList):
             self.addRule(branch, r, create)
         return item
 
-    def addRule(self, branch, rule, create=0):
+    def addRule (self, branch, rule, create=0):
         item = self.createRuleItem(rule)
         frame = rule.fromFactory(self.factory)
         item.setData(frame.rule.index)
@@ -44,7 +44,7 @@ class FXRuleTreeList(FXTreeList):
             frame.create()
         return item
 
-    def newRule(self, rule):
+    def newRule (self, rule):
         item = self.getCurrentItem()
         # we must have selected a rule folder:
         #debug(BRING_IT_ON, "item index %d"%item.getData())
@@ -60,12 +60,12 @@ class FXRuleTreeList(FXTreeList):
         item = self.addRule(item, rule, 1)
         #debug(BRING_IT_ON, "item index %d"%item.getData())
 
-    def searchFolder(self, index):
+    def searchFolder (self, index):
         for f in self.folders:
             if f.index == index:
                 return f
 
-    def searchRule(self, index):
+    def searchRule (self, index):
         for f in self.folders:
             if f.index == index:
                 return f
@@ -73,12 +73,12 @@ class FXRuleTreeList(FXTreeList):
                 if r.index == index:
                     return r
 
-    def createRuleItem(self, rule):
+    def createRuleItem (self, rule):
         item = FXTreeItem(rule.title)
         self.setItemIcons(item, rule)
         return item
 
-    def setItemIcons(self, item, rule):
+    def setItemIcons (self, item, rule):
         if rule.disable:
             # disabled
             self.setItemOpenIcon(item, self.icon_disabled)

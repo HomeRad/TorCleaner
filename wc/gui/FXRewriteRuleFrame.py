@@ -4,7 +4,7 @@ from FXPy.fox import *
 from wc import _,debug,error
 from wc.debug_levels import *
 
-class FXRewriteRuleFrame(FXRuleFrame):
+class FXRewriteRuleFrame (FXRuleFrame):
     """display all variables found in a RewriteRule"""
     (ID_TAG,
      ID_ENCLOSED_BLOCK,
@@ -16,7 +16,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
     ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+7)
 
 
-    def __init__(self, parent, rule, index):
+    def __init__ (self, parent, rule, index):
         FXRuleFrame.__init__(self, parent, rule, index)
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_TAG,FXRewriteRuleFrame.onCmdTag)
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_ENCLOSED_BLOCK,FXRewriteRuleFrame.onCmdEnclosed)
@@ -62,7 +62,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         t.setText(self.rule.replace[1])
 
 
-    def onCmdTag(self, sender, sel, ptr):
+    def onCmdTag (self, sender, sel, ptr):
         tag = sender.getText().strip()
         if not tag:
             error("empty tag name")
@@ -74,7 +74,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         return 1
 
 
-    def onCmdEnclosed(self, sender, sel, ptr):
+    def onCmdEnclosed (self, sender, sel, ptr):
         enclosed = sender.getText().strip()
         if enclosed:
             self.rule.enclosed = enclosed
@@ -85,14 +85,14 @@ class FXRewriteRuleFrame(FXRuleFrame):
         return 1
 
 
-    def onCmdReplacePart(self, sender, sel, ptr):
+    def onCmdReplacePart (self, sender, sel, ptr):
         self.rule.replace[0] = sender.getCurrentItem()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule replace part")
         return 1
 
 
-    def onCmdAttributeAdd(self, sender, sel, ptr):
+    def onCmdAttributeAdd (self, sender, sel, ptr):
         dialog = FXDialogBox(self,_("Add Attribute"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
@@ -123,7 +123,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         return 1
 
 
-    def onCmdAttributeEdit(self, sender, sel, ptr):
+    def onCmdAttributeEdit (self, sender, sel, ptr):
         index = self.iconlist.getCurrentItem()
         item = self.iconlist.retrieveItem(index)
         name,value = item.getText().split('\t')
@@ -154,7 +154,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         return 1
 
 
-    def onCmdAttributeRemove(self, sender, sel, ptr):
+    def onCmdAttributeRemove (self, sender, sel, ptr):
         index = self.iconlist.getCurrentItem()
         item = self.iconlist.retrieveItem(index)
         name,value = item.getText().split('\t')
@@ -165,7 +165,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         return 1
 
 
-    def onUpdAttributes(self, sender, sel, ptr):
+    def onUpdAttributes (self, sender, sel, ptr):
         i = self.iconlist.getCurrentItem()
         if i<0:
             sender.disable()
@@ -176,8 +176,9 @@ class FXRewriteRuleFrame(FXRuleFrame):
         return 1
 
 
-    def onCmdReplaceValue(self, sender, sel, ptr):
+    def onCmdReplaceValue (self, sender, sel, ptr):
         self.rule.replace[1] = sender.getText()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Changed rule replace value")
         return 1
+
