@@ -19,20 +19,23 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import sets
 import wc.winreg
 
 
 def get_localaddrs ():
     """all active interfaces' ip addresses"""
-    addrs = []
+    addrs = sets.Set()
     try: # search interfaces
         key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
            r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
         for subkey in key.subkeys():
-            if subkey.get('EnableDHCP'):
-                # XXX use DhcpIPAddress
+            if subkey.get('EnableDHCP')==1:
+                ip = subkey.get('DhcpIPAddress')
             else:
-                # XXX use IPAddress
+                ip = subkey.get('IPAddress')
+            if ip:
+                addrs.add(ip)
     except EnvironmentError:
         pass
     return addrs
@@ -40,7 +43,6 @@ def get_localaddrs ():
 
 def resolver_config (config):
     """get DNS config from Windows registry settings"""
-    key = None
     try:
         key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
                r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
@@ -49,43 +51,40 @@ def resolver_config (config):
             key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
                     r"SYSTEM\CurrentControlSet\Services\VxD\MSTCP")
         except EnvironmentError:
-            pass
+            key = None
     if key:
-        for server in wc.winreg.stringdisplay(key.get("NameServer", "")):
-            if server:
-                config.nameservers.append(str(server))
-        for item in wc.winreg.stringdisplay(key.get("SearchList", "")):
-            if item:
-                config.search_domains.append(str(item))
-        if not config.nameservers:
-            # XXX the proper way to test this is to search for
-            # the "EnableDhcp" key in the interface adapters...
-            for server in wc.winreg.stringdisplay(key.get("DhcpNameServer", "")):
-                if server:
-                    config.nameservers.append(str(server))
-            for item in wc.winreg.stringdisplay(key.get("DhcpDomain", "")):
-                if item:
-                    config.search_domains.append(str(item))
-
+        if key.get('EnableDHCP')==1:
+            servers = wc.winreg.stringdisplay(key.get("DhcpNameServer", ""))
+            domains = wc.winreg.stringdisplay(key.get("DhcpDomain", ""))
+        else:
+            servers = wc.winreg.stringdisplay(key.get("NameServer", ""))
+            domains = wc.winreg.stringdisplay(key.get("SearchList", ""))
+        print "XXX1a", servers
+        print "XXX1b", domains
+        config.nameservers.extend([ str(s) for s in servers if s ])
+        config.domains.extend([ str(d) for d in domains if d ])
     try: # search adapters
         key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
   r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\DNSRegisteredAdapters")
-        for subkey in key.subkeys():
-            values = subkey.get('DNSServerAddresses', "")
-            for server in wc.winreg.binipdisplay(values):
-                if server:
-                    config.nameservers.append(server)
     except EnvironmentError:
-        pass
-
+        key = None
+    if key:
+        for subkey in key.subkeys():
+            values = subkey.get("DNSServerAddresses", "")
+            servers = wc.winreg.binipdisplay(values)
+            print "XXX2", servers
+            config.nameservers.extend([ str(s) for s in servers if s ])
     try: # search interfaces
         key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
            r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
-        for subkey in key.subkeys():
-            for server in wc.winreg.stringdisplay(subkey.get('NameServer', '')):
-                if server:
-                    config.nameservers.append(server)
     except EnvironmentError:
-        pass
-
+        key = None
+    if key:
+        for subkey in key.subkeys():
+            if subkey.get('EnableDHCP')==1:
+                servers = wc.winreg.stringdisplay(subkey.get('DhcpNameServer', ''))
+            else:
+                servers = wc.winreg.stringdisplay(subkey.get('NameServer', ''))
+            print "XXX3", servers
+            config.nameservers.extend([ str(s) for s in servers if s ])
 
