@@ -51,4 +51,9 @@
 <attr>http://www\.dockapps\.org/click\.php\?send=(.+)</attr>
 <replacement part="attrval">\1</replacement>
 </rewrite>
+
+<rewrite sid="wc.13" title="Knoppix redirection">
+<attr>download\.php3\?link=([^=&amp;quot;&amp;]+)</attr>
+<replacement part="attrval">\1</replacement>
+<matchurl>knopper\.net</matchurl></rewrite>
 </folder>
