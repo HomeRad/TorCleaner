@@ -2,6 +2,6 @@
 from wc import i18n, AppName
 
 title = AppName
-t_webcleaner = "WebCleaner"
+t_webcleaner = AppName
 t_proxyconf = i18n._("Proxy configuration")
 t_filterconf = i18n._("Filter configuration")
