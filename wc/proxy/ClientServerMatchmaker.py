@@ -113,6 +113,7 @@ class ClientServerMatchmaker:
             self.document = document
         # append information for wcheaders tool
         wc.proxy.HEADERS.append((self.url, 0, self.headers.headers))
+        # start DNS lookup
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
