@@ -506,7 +506,7 @@ class HttpServer (wc.proxy.Server.Server):
         # the client might already have closed
         if self.client:
             self.state = state
-            self.close()
+            self.handle_close()
         else:
             debug(PROXY, "%s client is gone", self)
 
