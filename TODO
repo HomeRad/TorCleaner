@@ -2,13 +2,26 @@ TODO
 
 version 2.4
 
-- web gui: add prev/next button
-
 - test proxy.pac stuff
   http://wp.netscape.com/eng/mozilla/2.0/relnotes/demo/proxy-live.html
 
 
 version 2.5 and above
+
+- test the rule merging stuff
+
+- documentation for the webgui interface
+
+- use test/client.py, test/server.py for testing
+
+- support NTLM authentication, add README.squid example config
+  (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
+   client auth)
+
+- NTLM: restore old method type when method was not GET
+
+- NTLM: reconnect to parent proxy after first 407 error (squid closes
+  the connection)
 
 - Desc: empty page (JS flush error...)
   Url: http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/embed.asp
@@ -61,22 +74,11 @@ for your application make sure to deny these requests: add
     HeadDeny X-SSL-notAfter ".*"
     HeadDeny X-SSL-serial ".*"
 
-- support NTLM authentication, add README.squid example config
-  (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
-   client auth)
-
-- NTLM: restore old method type when method was not GET
-
-- NTLM: reconnect to parent proxy after first 407 error (squid closes
-  the connection)
-
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS
   database (after password authentication)
   this should integrate with the webgui configuration somehow
-
-- documentation for the webgui interface
 
 - dockapp to visualize config and status
   I made machine-parseable config and status output, so write a tool
