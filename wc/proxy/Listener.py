@@ -1,4 +1,4 @@
-import asyncore,socket
+import asyncore, socket, sys
 from wc import debug,config
 from wc.debug_levels import *
 
