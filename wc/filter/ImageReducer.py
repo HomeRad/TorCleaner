@@ -21,8 +21,8 @@ __date__    = "$Date$"[7:-2]
 import Image, cStringIO
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter
-from wc.debug import *
-from wc import remove_headers
+from wc.log import *
+from wc.proxy.Headers import remove_headers
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]

@@ -519,6 +519,13 @@ class Context:
 		index = 1
 		for path in pathList[1:]:
 			self.log.debug ("Looking for path element %s" % path)
+                        if path.startswith('?'):
+                            path = path[1:]
+                            if self.locals.has_key(path):
+                                path = self.locals[path].value()
+                            elif self.globals.has_key(path):
+                                path = self.globals[path].value()
+                            self.log.debug ("Dereferenced to %s" % path)
 			if (canCall):
 				try:
 					temp = val.value((index,pathList))
@@ -537,13 +544,13 @@ class Context:
 					if (not isinstance (val, ContextVariable)):
 						val = ContextVariable (val)
 				else:
-					#self.log.debug ("Not found.")
+					self.log.debug ("Not found.")
 					return None		
 			else:
-				#self.log.debug ("Not found.")
+				self.log.debug ("Not found.")
 				return None
 			index = index + 1
-		#self.log.debug ("Found value %s" % `val.value()`)
+		self.log.debug ("Found value %s" % `val.value()`)
 		if (not canCall):
 			return NoCallVariable (val)
 		return val

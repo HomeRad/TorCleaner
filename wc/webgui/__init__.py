@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 from simpletal import simpleTAL, simpleTALES
 from cStringIO import StringIO
-from wc import i18n, config, TemplateDir
+from wc import i18n, config, TemplateDir, filtermodules
 from wc.log import *
 import os, urllib, urlparse
 
@@ -104,19 +104,15 @@ def get_context (dirs, form, localcontext):
     modulepath = ".".join(['context'] + dirs[:-1])
     template = dirs[-1].replace(".", "_")
     exec "from %s import %s as template_context" % (modulepath, template)
-    if hasattr(template_context, "exec_form"):
+    if hasattr(template_context, "exec_form") and form:
         # handle form action
         template_context.exec_form(form)
-    attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     # make TAL context
     context = simpleTALES.Context()
     # add default context values
     context.addGlobal("form", form)
-    strconfig = {}
-    for k in ['port']:
-        strconfig[k] = str(config[k])
-    context.addGlobal("config", strconfig)
     # augment the context
+    attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     for attr in attrs:
         context.addGlobal(attr, getattr(template_context, attr))
     # add local context
