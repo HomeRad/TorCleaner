@@ -16,6 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import re
+
 class Category (object):
     """A rating category has a name and an object describing what
        values it can hold.
@@ -76,8 +78,8 @@ def value_in_range (num, prange):
        prange - tuple (min, max)
        value - a number
     """
-    assert value is None or isinstance(value, int) or \
-           isinstance(value, float), "Invalid value %r" % repr(value)
+    isnum = isinstance(num, int) or isinstance(num, float)
+    assert num is None or (isnum and num >= 0), "Invalid value %r" % repr(num)
     if prange[0] is not None and num is not None and num < prange[0]:
         return False
     if prange[1] is not None and num is not None and num > prange[1]:
@@ -97,6 +99,9 @@ def range_in_range (vrange, prange):
 _range_re = re.compile(r'^(\d*)-(\d*)$')
 def intrange_from_string (value):
     """parse value as range; return tuple (rmin, rmax) or None on error"""
+    if not value:
+        # empty range
+        return (None, None)
     mo = _range_re.match(value)
     if not mo:
         return None
@@ -104,9 +109,21 @@ def intrange_from_string (value):
     if vmin == "":
         vmin = None
     else:
-        vmin = int(vmin)
+        vmin = max(int(vmin), 0)
     if vmax == "":
         vmax = None
     else:
-        vmax = int(vmax)
+        vmax = max(int(vmax), vmin)
     return (vmin, vmax)
+
+
+def string_from_intrange (vrange):
+    """represent vrange as string"""
+    s = ""
+    if vrange[0]:
+        s += "%d-" % vrange[0]
+    if vrange[1]:
+        if not s:
+            s += "-"
+        s += "%d" % vrange[1]
+    return s
