@@ -23,6 +23,10 @@
     Added: wc/proxy/auth/parse.py
     Changed: wc/proxy/auth/{digest,basic,__init__}.py,
       wc/proxy/ClientServerMatchmaker.py
+  * fix parsing of JavaScript multi-line comments
+    Changed: wc/parser/htmllex.l
+  * handle JS background fetching more gracefully and consistent
+    Changed: wc/proxy/HttpProxyClient.py, wc/filter/HtmlParser.py
 
 2.0
   * require and use python 2.3

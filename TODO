@@ -1,12 +1,5 @@
 TODO
 
-version 2.1
-
-- support Digest authentication (rfc 2617)
-  see urllib2.py for basic implementation
-
-- fix BADURLS entry for JS src fetching with content
-
 version 2.2 and above
 
 - support NTLM authentication, add README.squid example config
