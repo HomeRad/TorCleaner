@@ -51,7 +51,7 @@
 
 /* append yytext to tmp_buf */
 #define APPEND_TO_TMP(n) {\
-    size_t len = strlen(yyextra->tmp_buf)+(n)+1; \
+    size_t len = strlen(yyextra->tmp_buf) + (n) + 1; \
     RESIZE_BUF(yyextra->tmp_buf, len); \
     strlcat(yyextra->tmp_buf, yytext, len); \
     }
@@ -262,6 +262,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     return T_WAIT;
 }
 
+
   /*********************** DOCTYPE ************************/
 <INITIAL><![Dd][Oo][Cc][Tt][Yy][Pp][Ee] {
     UPDATE_COLUMN;
@@ -340,6 +341,73 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_PI>. {
+    return T_WAIT;
+}
+
+
+  /*********************** TAGSTART ************************/
+<INITIAL><{RX_WHITE_SPACE}*/[A-Za-z0-9] {
+    UPDATE_LINE;
+    yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
+    if (yyextra->tmp_attrs==NULL) {
+        return T_ERROR;
+    }
+    BEGIN(S_TAGSTART);
+}
+
+<S_TAGSTART>[^ \t\r\n\b\012/<>]+ {
+    /* actually accept a lot of tag chars, which may be illegal,
+     but we dont care, it's the browsers job */
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_TAGSTART>{RX_WHITE_SPACE}+ {
+    UPDATE_LINE;
+    LOWER_TMP;
+    PYSTRING_TMP(yyextra->tmp_tag);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
+    BEGIN(S_ATTR1);
+}
+
+<S_TAGSTART>\/> {
+    UPDATE_COLUMN;
+    BEGIN(INITIAL);
+    if (!strlen(yyextra->tmp_buf)) {
+        /* the tag name was empty, assume a stray "</>" */
+	RESIZE_BUF(yyextra->tmp_buf, 4);
+        strcpy(yyextra->tmp_buf, "</>");
+        yyextra->tmp_attrs = NULL;
+        SETLVAL;
+        RETURN(T_TEXT);
+    }
+    LOWER_TMP;
+    PYSTRING_TMP(yyextra->tmp_tag);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START_END);
+}
+
+<S_TAGSTART>> {
+    UPDATE_COLUMN;
+    BEGIN(INITIAL);
+    if (!strlen(yyextra->tmp_buf)) {
+        /* the tag name was empty, assume a stray "<>" */
+	RESIZE_BUF(yyextra->tmp_buf, 3);
+        strcpy(yyextra->tmp_buf, "<>");
+        yyextra->tmp_attrs = NULL;
+	SETLVAL;
+        RETURN(T_TEXT);
+    }
+    LOWER_TMP;
+    PYSTRING_TMP(yyextra->tmp_tag);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
+    SCRIPT_CHECK;
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START);
+}
+
+<S_TAGSTART>. {
     return T_WAIT;
 }
 
@@ -563,72 +631,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_STYLE>. {
-    return T_WAIT;
-}
-
-  /*********************** TAGSTART ************************/
-<INITIAL><{RX_WHITE_SPACE}*/[A-Za-z0-9] {
-    UPDATE_LINE;
-    yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
-    if (yyextra->tmp_attrs==NULL) {
-        return T_ERROR;
-    }
-    BEGIN(S_TAGSTART);
-}
-
-<S_TAGSTART>[^ \t\r\n\b\012/<>]+ {
-    /* actually accept a lot of tag chars, which may be illegal,
-     but we dont care, it's the browsers job */
-    UPDATE_COLUMN;
-    APPEND_TO_TMP(yyleng);
-}
-
-<S_TAGSTART>{RX_WHITE_SPACE}+ {
-    UPDATE_LINE;
-    LOWER_TMP;
-    PYSTRING_TMP(yyextra->tmp_tag);
-    RESIZE_BUF(yyextra->tmp_buf, 1);
-    BEGIN(S_ATTR1);
-}
-
-<S_TAGSTART>\/> {
-    UPDATE_COLUMN;
-    BEGIN(INITIAL);
-    if (!strlen(yyextra->tmp_buf)) {
-        /* the tag name was empty, assume a stray "</>" */
-	RESIZE_BUF(yyextra->tmp_buf, 4);
-        strcpy(yyextra->tmp_buf, "</>");
-        yyextra->tmp_attrs = NULL;
-        SETLVAL;
-        RETURN(T_TEXT);
-    }
-    LOWER_TMP;
-    PYSTRING_TMP(yyextra->tmp_tag);
-    RESIZE_BUF(yyextra->tmp_buf, 1);
-    SET_ATTR_LVAL;
-    RETURN(T_ELEMENT_START_END);
-}
-
-<S_TAGSTART>> {
-    UPDATE_COLUMN;
-    BEGIN(INITIAL);
-    if (!strlen(yyextra->tmp_buf)) {
-        /* the tag name was empty, assume a stray "<>" */
-	RESIZE_BUF(yyextra->tmp_buf, 3);
-        strcpy(yyextra->tmp_buf, "<>");
-        yyextra->tmp_attrs = NULL;
-	SETLVAL;
-        RETURN(T_TEXT);
-    }
-    LOWER_TMP;
-    PYSTRING_TMP(yyextra->tmp_tag);
-    RESIZE_BUF(yyextra->tmp_buf, 1);
-    SCRIPT_CHECK;
-    SET_ATTR_LVAL;
-    RETURN(T_ELEMENT_START);
-}
-
-<S_TAGSTART>. {
     return T_WAIT;
 }
 
@@ -994,7 +996,7 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
      we must replace NUL with ' '. */
     int len = strlen(data->buf);
     int i;
-    RESIZE_BUF(data->buf, len+slen+1);
+    RESIZE_BUF(data->buf, len+slen + 1);
     for (i=0; i<slen; i++) {
         data->buf[len+i] = (s[i]==0 ? ' ' : s[i]);
     }
