@@ -587,14 +587,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self._debug("jsEndElement buf %s", `self.buf`)
         if len(self.buf)<2:
             # syntax error, ignore
-            print "XXX oops", `self.buf`
+            warn(PARSER, "JS syntax error, self.buf %s", `self.buf`)
             return
         if self.js_src:
-            debug(FILTER, "JS src with buf %s", `self.buf`)
+            debug(FILTER, "JS src, self.buf %s", `self.buf`)
             del self.buf[-1]
             if len(self.buf)<2:
                 # syntax error, ignore
-                warn(PARSER, "JS end self.buf %s", str(self.buf))
+                warn(PARSER, "JS end, self.buf %s", str(self.buf))
                 return
             if len(self.buf) > 2 and \
                self.buf[-3][0]==STARTTAG and self.buf[-3][1]=='script':
