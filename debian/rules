@@ -62,6 +62,7 @@ install: build
 	rm -f $(DOCDIR)/INSTALL
 	# move webcleaner binaries to /usr/sbin
 	mv $(BASE)/usr/bin/webcleaner $(BASE)/usr/sbin
+	mv $(BASE)/usr/bin/webcleaner-service $(BASE)/usr/sbin
 	rmdir $(BASE)/usr/bin
 	# move config files
 	mv $(SHAREDIR)/config/* $(ETCDIR)/
@@ -92,7 +93,7 @@ binary-arch: build install
 #	dh_installlogrotate
 	dh_installinit --no-start
 #	dh_installcron
-	dh_installman webcleaner.1 webcleaner.conf.5
+	dh_installman webcleaner.1 webcleaner-service.1 webcleaner.conf.5
 #	dh_installinfo
 	dh_installchangelogs
 	dh_python -V 2.3
