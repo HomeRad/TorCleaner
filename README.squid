@@ -1,3 +1,7 @@
+# Hint: if you get the error "unable to forward request",
+# restart the webcleaner proxy and reload the squid configuration
+
+
 # This is an example Squid 2.x configuration for WebCleaner.
 # Copy it into /etc/squid.conf and you have the following
 # constellation:
