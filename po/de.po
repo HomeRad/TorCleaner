@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sun Oct 19 14:01:56 2003\n"
-"PO-Revision-Date: 2003-10-05 20:30+0100\n"
+"POT-Creation-Date: Sun Oct 19 19:01:14 2003\n"
+"PO-Revision-Date: 2003-10-19 19:01+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -953,7 +953,7 @@ msgid "URL scheme"
 msgstr "URL Schema"
 
 msgid "Search in %(site)s"
-msgstr ""
+msgstr "Suche in %(site)s"
 
 msgid "Changes to this option require a proxy restart to take effect."
 msgstr ""
@@ -1124,7 +1124,7 @@ msgid "Rule rewrite tag successfully changed."
 msgstr "Rewrite-Regel Tagname wurde erfolgreich geändert."
 
 msgid "Your request"
-msgstr ""
+msgstr "Ihre Anfrage"
 
 msgid "Image height"
 msgstr "Bildhöhe"
@@ -1206,6 +1206,8 @@ msgid ""
 "resulted in the following error:<br>\n"
 "Server response <b>%(response)s</b>"
 msgstr ""
+"ergab den folgenden Fehler:<br>\n"
+"Server Antwort <b>%(response)s</b>"
 
 msgid "Folder already disabled."
 msgstr "Ordner ist bereits deaktiviert."
@@ -1217,7 +1219,7 @@ msgid "Folder moved down."
 msgstr "Ordner wurde nach unten geschoben."
 
 msgid "Try Google"
-msgstr ""
+msgstr "Google fragen"
 
 msgid "Folders"
 msgstr "Ordner"
@@ -1264,9 +1266,8 @@ msgstr "Ordner aktivieren"
 msgid "Access key 0"
 msgstr "Tastaturkommando 0"
 
-#, fuzzy
 msgid "%(AppName)s Google Selection"
-msgstr "%(AppName)s Filterregeln Konfiguration"
+msgstr "%(AppName)s Google Auswahl"
 
 msgid "Remove rule"
 msgstr "Regel löschen"
@@ -1301,9 +1302,8 @@ msgstr "URL Fragment"
 msgid "Proxy settings"
 msgstr "Proxy-Einstellungen"
 
-#, fuzzy
 msgid "Display Google search options for invalid pages"
-msgstr "Den Google Cache Inhalt für ungültige Seiten benutzen"
+msgstr "Google Cache Optionen für ungültige Seiten anzeigen"
 
 msgid "Disabled rule icon"
 msgstr "Bild von inaktiver Regel"
@@ -1406,7 +1406,7 @@ msgid "footnote 1"
 msgstr "Fußnote 1"
 
 msgid "Search Google"
-msgstr ""
+msgstr "Suche mit Google"
 
 msgid "Rule url path successfully changed."
 msgstr "Regel URL Pfad wurde erfolgreich geändert."
@@ -1420,9 +1420,8 @@ msgstr "Fußnote 5"
 msgid "Enabled filter module(s) %(filterenabled)s."
 msgstr "Filter Modul(e) %(filterenabled)s wurde(n) aktiviert."
 
-#, fuzzy
 msgid "Google Cache for"
-msgstr "Google Cache benutzen"
+msgstr "Google Cache für"
 
 msgid "Invalid rewrite part name."
 msgstr "Ungültiger Rewrite-Regel Teilwert."
