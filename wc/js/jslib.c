@@ -130,13 +130,15 @@ static void errorReporter (JSContext *cx, const char *msg, JSErrorReport *report
     if (!(stderr = PyObject_GetAttrString(sys, "stderr"))) return;
     PyFile_WriteString(msg, stderr);
     PyFile_WriteString("\n", stderr);
-    PyFile_WriteString(report->linebuf, stderr);
-    PyFile_WriteString("\n", stderr);
-    skip_chars = report->tokenptr - report->linebuf;
-    for (int i=0; i<skip_chars; i++) {
-        PyFile_WriteString(" ", stderr);
+    if (report->linebuf) {
+        PyFile_WriteString(report->linebuf, stderr);
+        PyFile_WriteString("\n", stderr);
+        skip_chars = report->tokenptr - report->linebuf;
+        for (int i=0; i<skip_chars; i++) {
+            PyFile_WriteString(" ", stderr);
+        }
+        PyFile_WriteString("^\n", stderr);
     }
-    PyFile_WriteString("^\n", stderr);
 }
 
 
