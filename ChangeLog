@@ -11,6 +11,11 @@
   * Ignore unknown or unsupported tags in XML configuration files.
     Changed: wc/configuration.py
 
+  * Updated spidermonkey JavaScript library from upstream CVS as of
+    20041221
+    Type: feature
+    Changed: libjs/*
+
 2.24 "Tootsie" (released 10.12.2004)
 
   * Really ignore encoding errors of HTML content.
