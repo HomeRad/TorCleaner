@@ -55,7 +55,8 @@ several given categories.</p>
  type="radio"><input
  tal:attributes="name string:category_${category};value value"
  tal:condition="not:values/?category/?value"
- type="radio">&nbsp;<span i18n:translate="" tal:replace="rangenames/?value">Mild</span>
+ type="radio">&nbsp;<span i18n:translate="" 
+ tal:content="rangenames/?value">Mild</span>
 </td>
 </tr>
 </tbody>
@@ -90,11 +91,14 @@ several given categories.</p>
  tal:attributes="href string:${filename}.${lang}?url=${url}"><img
  src="edit.png"></a></td>
 <td><a href="#"
- i18n:attributes="title string:Delete this rating; onclick string:return window.confirm('Really delete this rating?')"
+ title="Delete this rating"
+ onclick="return window.confirm('Really delete this rating?')"
+ i18n:attributes="title onclick"
  tal:attributes="href string:${filename}.${lang}?url=${url}&delete=1"><img
  src="delete.png"></a></td>
 <td><a href="#"
- i18n:attributes="title string:Email this rating to the author"
+ title="Email this rating to the author"
+ i18n:attributes="title"
  tal:attributes="href string:rating_mail.html.${lang}?url=${url}"><img
  src="mail.png"></a></td>
 </tr></table></td>
@@ -102,7 +106,7 @@ several given categories.</p>
  tal:content="url">http://imadoofus.com</a></td>
 <td><span tal:repeat="category rating_cache/?url/keys">
 <span tal:condition="values/?category">
-<span i18n:translate="" tal:replace="category">violence</span>=<span 
+<span i18n:translate="" tal:content="category">violence</span>=<span 
  tal:replace="rating_cache/?url/?category">0</span>
 </span></span></td>
 <td><span tal:replace="structure rating_modified/?url">1. Jan 2004</span></td>

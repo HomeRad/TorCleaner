@@ -38,13 +38,17 @@ filter rule configuration</title>
  tal:condition="not:folder/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="folder/up"
  tal:attributes="name string:folder_up_${folder/oid}"
- i18n:attributes="title string:Move folder up; alt string:Up"
-><img tal:condition="not:folder/down" src="blocked.png" width="10" alt=""><input
+ title="Move folder up" alt="Up"
+ i18n:attributes="title alt"
+><img tal:condition="not:folder/down" src="blocked.png" width="10" alt=""
+><input
  type="image" src="down.png" border="0" tal:condition="folder/down"
  tal:attributes="name string:folder_down_${folder/oid}"
- i18n:attributes="title string:Move folder down; alt string:Down"
+ title="Move folder down" alt="Down"
+ i18n:attributes="title alt"
 ><img tal:condition="folder/disable" src="disabled.png"
- i18n:attributes="alt string:Disabled folder icon" alt="Disabled folder icon"><span
+ i18n:attributes="alt string:Disabled folder icon" alt="Disabled folder icon"
+><span
  tal:condition="not:folder/disable"
 ><img tal:condition="not:folder/selected" src="minifolder.png"
  i18n:attributes="alt string:Folder icon" alt="Folder icon"
@@ -76,13 +80,15 @@ filter rule configuration</title>
 <td style="white-space:nowrap;"><img
  tal:condition="not:rule/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="rule/up"
+ title="Move rule up" alt="Up"
  tal:attributes="name string:rule_up_${rule/oid}"
- i18n:attributes="title string:Move rule up; alt string:Up"
+ i18n:attributes="title alt"
 ><img tal:condition="not:rule/down" src="blocked.png" width="10" alt=""><input
  type="image" src="down.png" border="0"
  tal:condition="rule/down"
  tal:attributes="name string:rule_down_${rule/oid}"
- i18n:attributes="title string:Move rule down; alt string:Down"
+ title="Move rule down" alt="Down"
+ i18n:attributes="title alt"
 ><img tal:condition="rule/disable" src="disabled.png" alt="Disabled rule icon"
  i18n:attributes="alt string:Disabled rule icon"><img 
  tal:condition="not:rule/disable" src="minidoc.png" alt="Rule icon"
@@ -117,13 +123,15 @@ filter rule configuration</title>
  tal:attributes="value rule">Rewrite</option>
 </select>
 <input type="submit" class="submit" name="newrule" value="New rule"
- i18n:attributes="value string:New rule; title string:Add new rule to current folder.">
+ title="Add new rule to current folder."
+ i18n:attributes="value title">
 </div>
 
 <div style="margin-top:5px;margin-bottom:5px;">
 <input type="submit" class="submit" value="Remove folder"
  tal:attributes="name string:removefolder${curfolder/oid}"
- i18n:attributes="value string:Remove folder; onclick string:return window.confirm('Really remove this folder?')">
+ onclick="return window.confirm('Really remove this folder?')"
+ i18n:attributes="value onclick">
 <input tal:condition="curfolder/disable"
  type="submit" class="submit" value="Enable folder"
  tal:attributes="name string:enablefolder${curfolder/oid}"
@@ -131,7 +139,7 @@ filter rule configuration</title>
 ><input tal:condition="not:curfolder/disable"
  type="submit" class="submit" value="Disable folder"
  tal:attributes="name string:disablefolder${curfolder/oid}"
- i18n:attributes="value string:Disable folder">
+ i18n:attributes="value">
 </div>
 </div>
 </td>
@@ -153,15 +161,16 @@ Here is the rule configuration...
 <hr noshade size="1">
 <input type="submit" class="submit" value="Remove rule"
  tal:attributes="name string:removerule${currule/oid}"
- i18n:attributes="value string:Remove rule; onclick string:return window.confirm('Really remove this rule?')">
+ onclick="return window.confirm('Really remove this rule?')"
+ i18n:attributes="value onclick">
 <input tal:condition="currule/disable"
  type="submit" class="submit" value="Enable rule"
  tal:attributes="name string:enablerule${currule/oid}"
- i18n:attributes="value string:Enable rule"
+ i18n:attributes="value"
 ><input tal:condition="not:currule/disable"
  type="submit" class="submit" value="Disable rule"
  tal:attributes="name string:disablerule${currule/oid}"
- i18n:attributes="value string:Disable rule">
+ i18n:attributes="value">
 </div>
 </td>
 </tr>

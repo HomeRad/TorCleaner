@@ -432,7 +432,7 @@ Rule (don't) match url
  tal:attributes="name string:category_${category};value value"
  tal:condition="not:currule/values/?category/?value"
  type="radio">&nbsp;<span i18n:translate=""
- tal:replace="rangenames/?value">Mild</span>
+ tal:content="rangenames/?value">Mild</span>
  </td>
 </tr>
 </tbody>
