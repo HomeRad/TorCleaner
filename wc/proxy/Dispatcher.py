@@ -308,7 +308,8 @@ class Dispatcher (object):
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
         else:
             strerr = errno.errorcode[err]
-            wc.log.info(wc.LOG_PROXY, '%s connect error %s', self, strerr)
+            wc.log.info(wc.LOG_PROXY, '%s connect(%s) error %s',
+                        self, addr, strerr)
             self.handle_close()
 
     def accept (self):
