@@ -35,6 +35,11 @@ class SortedDict (dict):
         super(SortedDict, self).__setitem__(key, value)
 
 
+    def __delitem__ (self, key):
+        self._keys.remove(key)
+        super(SortedDict, self).__delitem__(key)
+
+
     def values (self):
         return [self[k] for k in self._keys]
 
