@@ -48,7 +48,6 @@ class ClientServerMatchmaker (object):
     """
     def __init__ (self, client, request, headers, content, mime=None):
         self.client = client
-        self.server = None
         self.request = request
         self.headers = headers
         self.content = content
@@ -142,7 +141,6 @@ class ClientServerMatchmaker (object):
             # connection to the pool
             server.reuse()
             return
-        self.server = server
         if self.method=='CONNECT':
             self.state = 'response'
             headers = WcMessage(StringIO(''))
@@ -166,15 +164,15 @@ class ClientServerMatchmaker (object):
         self.state = 'response'
         # At this point, we tell the server that we are the client.
         # Once we get a response, we transfer to the real client.
-        self.server.client_send_request(self.method,
-                                        self.hostname,
-                                        self.port,
-                                        self.document,
-                                        self.headers,
-                                        self.content,
-                                        self,
-                                        self.url,
-                                        self.mime)
+        server.client_send_request(self.method,
+                                   self.hostname,
+                                   self.port,
+                                   self.document,
+                                   self.headers,
+                                   self.content,
+                                   self,
+                                   self.url,
+                                   self.mime)
 
 
     def server_abort (self):
@@ -184,11 +182,11 @@ class ClientServerMatchmaker (object):
             self.client.error(503, i18n._("No response from server"))
 
 
-    def server_close (self):
+    def server_close (self, server):
         """the server has closed"""
-        debug(PROXY, '%s resurrection failed %d %s', self, self.server.sequence_number, self.server)
+        debug(PROXY, '%s resurrection failed %d %s', self, server.sequence_number, server)
         # Look for a server again
-        if self.server.sequence_number > 0:
+        if server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
             # to kill the connection. Let's find another server object.
             self.state = 'server'

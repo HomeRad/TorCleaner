@@ -72,25 +72,29 @@ class HttpServer (Server):
         super(HttpServer, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
-        self.hostname = ''
-        self.document = ''
-        self.response = ''
-        self.headers = WcMessage(StringIO(''))
-        self.data_written = False # delay data writing flag
-        self.decoders = [] # Handle each of these, left to right
         self.sequence_number = 0 # for persistent connections
-        self.persistent = False # also for persistent connections
-        self.attrs = {} # initial filter attributes are empty
-        self.flushing = False # remember that flush is in progress
-        self.authtries = 0 # restrict number of authentication tries
-        self.statuscode = None # numeric HTTP status code
-        self.bytes_remaining = None # number of content bytes remaining
+        self.reset()
         # attempt connect
         create_inet_socket(self, socket.SOCK_STREAM)
         try:
 	    self.connect(self.addr)
         except socket.error:
             self.handle_error('connect error')
+
+
+    def reset (self):
+        self.hostname = ''
+        self.document = ''
+        self.response = ''
+        self.headers = WcMessage(StringIO(''))
+        self.data_written = False # delay data writing flag
+        self.decoders = [] # Handle each of these, left to right
+        self.persistent = False # for persistent connections
+        self.attrs = {} # initial filter attributes are empty
+        self.flushing = False # remember that flush is in progress
+        self.authtries = 0 # restrict number of authentication tries
+        self.statuscode = None # numeric HTTP status code
+        self.bytes_remaining = None # number of content bytes remaining
 
 
     def __repr__ (self):
@@ -226,8 +230,6 @@ class HttpServer (Server):
 	                   WcMessage(StringIO('')), "finish", self.attrs)
             self.decoders = []
             self.state = 'content'
-            self.client.server_response(self, self.response, self.statuscode,
-                                        self.headers)
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
@@ -308,6 +310,7 @@ class HttpServer (Server):
             # These response codes indicate no content
             self.client.server_response(self, self.response, self.statuscode,
                                         self.headers)
+            self.data_written = True
             self.state = 'recycle'
         else:
             self.state = 'content'
@@ -335,8 +338,9 @@ class HttpServer (Server):
         headers = WcMessage(StringIO(s))
         debug(PROXY, "%s headers\n%s", self, headers)
         self.client.server_response(self, response, self.statuscode, headers)
+        self.data_written = True
         self.client.server_content(msg)
-        self.client.server_close()
+        self.client.server_close(self)
         self.state = 'recycle'
         self.reuse()
 
@@ -369,8 +373,8 @@ class HttpServer (Server):
                     if not self.data_written:
                         self.client.server_response(self, self.response,
                                               self.statuscode, self.headers)
+                        self.data_written = True
                     self.client.server_content(data)
-                self.data_written = True
         except FilterWait, msg:
             debug(PROXY, "%s FilterWait %s", self, msg)
         except FilterPics, msg:
@@ -390,6 +394,7 @@ class HttpServer (Server):
             if not self.data_written:
                 self.client.server_response(self, self.response,
                                             self.statuscode, self.headers)
+                self.data_written = True
             self.state = 'recycle'
 
 
@@ -458,8 +463,14 @@ class HttpServer (Server):
         # the client might already have closed
         if self.client and self.statuscode!=407:
             if data:
+                if not self.data_written:
+                    self.client.server_response(self, self.response,
+                                                self.statuscode, self.headers)
+                    self.data_written = True
+                elif not hasattr(self.client, "server_content"):
+                    error(PROXY, "%s wrong client %s", self, self.client)
                 self.client.server_content(data)
-            self.client.server_close()
+            self.client.server_close(self)
         self.attrs = {}
         if self.statuscode!=407:
             self.reuse()
@@ -472,9 +483,7 @@ class HttpServer (Server):
             debug(PROXY, '%s reusing %d', self, self.sequence_number)
             self.sequence_number += 1
             self.state = 'client'
-            self.document = ''
-            self.statuscode = None
-            self.flushing = False
+            self.reset()
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
         else:

@@ -375,7 +375,7 @@ class HttpClient (Connection):
         self.write(data)
 
 
-    def server_close (self):
+    def server_close (self, server):
         assert self.server, "%s server_close had no server"%self
         debug(PROXY, '%s server_close', self)
         if self.connected and not self.close_pending:

@@ -97,7 +97,7 @@ class HttpProxyClient (object):
         self.write(data)
 
 
-    def server_close (self):
+    def server_close (self, server):
         assert self.server
         debug(PROXY, '%s server_close', self)
         self.finish()
