@@ -10,12 +10,13 @@ import sha
 import random
 import base64
 import time
+
 from parse import *
 
+import wc
+import wc.log
 # the default realm
 from wc.proxy.auth import wc_realm
-import wc.log
-import wc
 
 
 random.seed()
@@ -68,7 +69,8 @@ def check_digest_credentials (credentials, **attrs):
     # note: opaque value _should_ be there, but is not in apache mod_digest
     opaque = credentials.get("opaque")
     if opaque != wc_opaque:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong opaque %s!=%s", opaque, wc_opaque)
+        wc.log.warn(wc.LOG_AUTH, "digest wrong opaque %s!=%s",
+                    opaque, wc_opaque)
         return False
     realm = credentials["realm"]
     if realm != wc_realm:
@@ -86,7 +88,8 @@ def check_digest_credentials (credentials, **attrs):
     response = credentials.get('response')
     our_response = get_response_digest(credentials, **attrs)[2]
     if response != our_response:
-        wc.log.debug(wc.LOG_AUTH, "digest wrong response %s!=%s", response, our_response)
+        wc.log.debug(wc.LOG_AUTH, "digest wrong response %s!=%s",
+                     response, our_response)
         return False
     return True
 
@@ -96,14 +99,17 @@ def check_digest_values (auth):
        challenge or credential"""
     # check data
     if auth.get('algorithm') not in ("MD5", "MD5-sess", "SHA", None):
-        wc.log.error(wc.LOG_AUTH, "unsupported digest algorithm value %r", auth['algorithm'])
+        wc.log.error(wc.LOG_AUTH, "unsupported digest algorithm value %r",
+                     auth['algorithm'])
         return False
     if auth.get('qop') not in ("auth", "auth-int", None):
-        wc.log.error(wc.LOG_AUTH, "unsupported digest qop value %r", auth['qop'])
+        wc.log.error(wc.LOG_AUTH, "unsupported digest qop value %r",
+                     auth['qop'])
         return False
     for key in ('realm', 'nonce'):
         if key not in auth:
-            wc.log.error(wc.LOG_AUTH, "missing digest challenge value for %r", key)
+            wc.log.error(wc.LOG_AUTH, "missing digest challenge value for %r",
+                         key)
             return False
     return True
 

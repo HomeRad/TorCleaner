@@ -44,8 +44,9 @@ import struct
 import time
 from Crypto.Hash import MD4
 from Crypto.Cipher import DES
-import wc.log
+
 import wc
+import wc.log
 
 random.seed()
 
@@ -259,7 +260,8 @@ def check_ntlm_credentials (credentials, **attrs):
         wc.log.warn(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
         return False
     if credentials.has_key('domain') and credentials['domain'] != 'WORKGROUP':
-        wc.log.warn(wc.LOG_AUTH, "NTLM wrong domain %r", credentials['domain'])
+        wc.log.warn(wc.LOG_AUTH, "NTLM wrong domain %r",
+                    credentials['domain'])
         return False
     if credentials['username'] != attrs['username']:
         wc.log.warn(wc.LOG_AUTH, "NTLM wrong username")
@@ -312,7 +314,8 @@ def parse_message1 (msg):
     """parse and return NTLM message type 1 (NTLMSSP_NEGOTIATE)"""
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
-    wc.log.debug(wc.LOG_AUTH, "msg1 flags %s", "\n".join(str_flags(res['flags'])))
+    wc.log.debug(wc.LOG_AUTH, "msg1 flags %s",
+                 "\n".join(str_flags(res['flags'])))
     if res['flags'] & NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED:
         domain_offset = getint32(msg[20:24])
         res['domain'] = msg[domain_offset:]
@@ -370,7 +373,8 @@ def parse_message2 (msg):
         return res
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])
-    wc.log.debug(wc.LOG_AUTH, "msg2 flags %s", "\n".join(str_flags(res['flags'])))
+    wc.log.debug(wc.LOG_AUTH, "msg2 flags %s",
+                 "\n".join(str_flags(res['flags'])))
     res['nonce'] = msg[24:32]
     if res['flags'] & NTLMSSP_TARGET_TYPE_DOMAIN:
         offset = getint32(msg[16:20])
@@ -395,12 +399,15 @@ def create_message3 (nonce, domain, username, host,
     else:
         nt_resp = ''
     session_key = get_session_key()
-    msg = '%s\x00'% NTLMSSP_SIGNATURE # name
-    msg += struct.pack("<l", NTLMSSP_AUTH) # message type
+    # name
+    msg = '%s\x00'% NTLMSSP_SIGNATURE
+    # message type
+    msg += struct.pack("<l", NTLMSSP_AUTH)
     offset = len(msg) + 8*6 + 4
     msg += struct.pack("<h", len(lm_resp))
     msg += struct.pack("<h", len(lm_resp))
-    lm_offset = offset + 2*len(domain) + 2*len(username) + 2*len(host) + len(session_key)
+    lm_offset = offset + 2*len(domain) + 2*len(username) + 2*len(host) + \
+                len(session_key)
     msg += struct.pack("<l", lm_offset)
     msg += struct.pack("<h", len(nt_resp))
     msg += struct.pack("<h", len(nt_resp))
@@ -408,17 +415,23 @@ def create_message3 (nonce, domain, username, host,
     msg += struct.pack("<l", nt_offset)
     msg += struct.pack("<h", 2*len(domain))
     msg += struct.pack("<h", 2*len(domain))
-    msg += struct.pack("<l", offset) # domain offset
+    # domain offset
+    msg += struct.pack("<l", offset)
     msg += struct.pack("<h", 2*len(username))
     msg += struct.pack("<h", 2*len(username))
-    msg += struct.pack("<l", offset + 2*len(domain)) # username offset
+    # username offset
+    msg += struct.pack("<l", offset + 2*len(domain))
     msg += struct.pack("<h", 2*len(host))
     msg += struct.pack("<h", 2*len(host))
-    msg += struct.pack("<l", offset + 2*len(domain) + 2*len(username)) # host offset
+    # host offset
+    msg += struct.pack("<l", offset + 2*len(domain) + 2*len(username))
     msg += struct.pack("<h", len(session_key))
     msg += struct.pack("<h", len(session_key))
-    msg += struct.pack("<l", offset + 2*len(domain) + 2*len(username) + 2*len(host)+ 48) # session offset
-    msg += struct.pack("<l", flags) # flags
+    # session offset
+    msg += struct.pack("<l", offset + 2*len(domain) + 2*len(username) +
+                       2*len(host)+ 48)
+    # flags
+    msg += struct.pack("<l", flags)
     msg += str2unicode(domain)
     msg += str2unicode(username)
     msg += str2unicode(host)
@@ -437,7 +450,8 @@ def parse_message3 (msg):
     host_offset = getint32(msg[48:52])
     session_offset = getint32(msg[56:60])
     res['flags'] = getint16(msg[60:62])
-    wc.log.debug(wc.LOG_AUTH, "msg3 flags %s", "\n".join(str_flags(res['flags'])))
+    wc.log.debug(wc.LOG_AUTH, "msg3 flags %s",
+                 "\n".join(str_flags(res['flags'])))
     res['domain'] = unicode2str(msg[domain_offset:username_offset])
     res['username'] = unicode2str(msg[username_offset:host_offset])
     res['host'] = unicode2str(msg[host_offset:lm_offset])

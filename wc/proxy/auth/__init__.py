@@ -4,18 +4,18 @@
 # default realm for authentication
 wc_realm = "unknown"
 
+import wc
 import wc.log
 import wc.url
-import wc
+
 from basic import parse_basic_challenge, get_basic_challenge
 from basic import parse_basic_credentials, get_basic_credentials
+from basic import check_basic_credentials
 from digest import parse_digest_challenge, get_digest_challenge
 from digest import parse_digest_credentials, get_digest_credentials
+from digest import check_digest_credentials
 from ntlm import parse_ntlm_challenge, get_ntlm_challenge
 from ntlm import parse_ntlm_credentials, get_ntlm_credentials
-
-from basic import check_basic_credentials
-from digest import check_digest_credentials
 from ntlm import check_ntlm_credentials
 
 
@@ -117,7 +117,8 @@ def get_credentials (challenges, **attrs):
 
 def check_credentials (creds, **attrs):
     """check credentials agains given attributes"""
-    wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s", creds, attrs)
+    wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s",
+                 creds, attrs)
     if not creds:
         res = False
     elif wc.config['auth_ntlm'] and 'NTLM' not in creds:
@@ -130,6 +131,7 @@ def check_credentials (creds, **attrs):
     elif 'Basic' in creds:
         res = check_basic_credentials(creds['Basic'][0], **attrs)
     else:
-        wc.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s", creds)
+        wc.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s",
+                     creds)
         res = False
     return res

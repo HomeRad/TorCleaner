@@ -3,10 +3,10 @@
 
 import re
 import rfc822
-
 import cStringIO as StringIO
-import wc.log
+
 import wc
+import wc.log
 import wc.magic
 import wc.proxy.UnchunkStream
 import wc.proxy.GunzipStream
@@ -68,7 +68,8 @@ def get_content_length (headers, default=None):
     try:
         return int(headers['Content-Length'])
     except ValueError:
-        wc.log.warn(wc.LOG_PROXY, "invalid Content-Length value %r", headers['Content-Length'])
+        wc.log.warn(wc.LOG_PROXY, "invalid Content-Length value %r",
+                    headers['Content-Length'])
     return None
 
 
@@ -154,7 +155,8 @@ def client_remove_encoding_headers (headers):
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
     if headers.has_key("Content-Length"):
-        wc.log.warn(wc.LOG_PROXY, 'chunked encoding should not have Content-Length')
+        wc.log.warn(wc.LOG_PROXY,
+                    'chunked encoding should not have Content-Length')
         to_remove.append("Content-Length")
     remove_headers(headers, to_remove)
     # add warning
@@ -166,7 +168,8 @@ def client_get_max_forwards (headers):
     try:
         mf = int(headers.get('Max-Forwards', -1))
     except ValueError:
-        wc.log.error(wc.LOG_PROXY, "invalid Max-Forwards header value %s", headers.get('Max-Forwards', ''))
+        wc.log.error(wc.LOG_PROXY, "invalid Max-Forwards header value %s",
+                     headers.get('Max-Forwards', ''))
         mf = -1
     if mf > 0:
         headers['Max-Forwards'] = "%d\r" % (mf-1)
@@ -218,12 +221,14 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # chunked encoded
         tenc = headers['Transfer-Encoding']
         if tenc != 'chunked':
-            wc.log.error(wc.LOG_PROXY, "unknown transfer encoding %r, assuming chunked encoding", tenc)
+            wc.log.error(wc.LOG_PROXY,
+              "unknown transfer encoding %r, assuming chunked encoding", tenc)
         decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
         # remove encoding header
         to_remove = ["Transfer-Encoding"]
         if headers.has_key("Content-Length"):
-            wc.log.warn(wc.LOG_PROXY, _('chunked encoding should not have Content-Length'))
+            wc.log.warn(wc.LOG_PROXY,
+                        'chunked encoding should not have Content-Length')
             to_remove.append("Content-Length")
             bytes_remaining = None
         remove_headers(headers, to_remove)

@@ -18,8 +18,8 @@
 
 import re
 import urlparse
-import wc.HtmlParser
 import wc
+import wc.HtmlParser
 import wc.log
 import wc.filter
 import wc.filter.HtmlParser

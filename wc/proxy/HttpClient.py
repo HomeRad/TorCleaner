@@ -382,8 +382,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 self.headers['Content-Length'] = "%d\r" % len(self.content)
             # We're done reading content
             self.state = 'receive'
-            is_local = self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
-               self.port in (wc.config['port'], wc.config['sslport'])
+            is_local = self.hostname in \
+                       wc.proxy.dns_lookups.resolver.localhosts and \
+                       self.port in (wc.config['port'], wc.config['sslport'])
             if is_local:
                 is_public_doc = self.allow.public_document(self.document)
             if wc.config['adminuser'] and not wc.config['adminpass']:
@@ -391,7 +392,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                     self.handle_local(is_public_doc=is_public_doc)
                 else:
                     # ignore request, must init admin password
-                    self.headers['Location'] = "http://localhost:%d/adminpass.html\r" % wc.config['port']
+                    self.headers['Location'] = \
+                    "http://localhost:%d/adminpass.html\r" % wc.config['port']
                     self.error(302, _("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call
@@ -406,14 +408,16 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # server is not yet there, delay
             return
         if self.method == "CONNECT":
-            wc.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to server %s", self, self.server)
+            wc.log.debug(wc.LOG_PROXY,
+                 "%s write SSL tunneled data to server %s", self, self.server)
             self.server.write(self.read())
         else:
             wc.log.error(wc.LOG_PROXY, "%s invalid data", self)
 
     def server_request (self):
         """issue server request through ClientServerMatchmaker object"""
-        assert self.state == 'receive', "%s server_request in non-receive state" % self
+        assert self.state == 'receive', \
+                             "%s server_request in non-receive state" % self
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
                              self.request, self.headers,
@@ -422,7 +426,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def server_response (self, server, response, status, headers):
         """read and filter server response data"""
         assert server.connected, "%s server was not connected" % self
-        wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%d)', self, response, status)
+        wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%d)',
+                     self, response, status)
         # try google options
         if status in wc.google.google_try_status and wc.config['try_google']:
             server.client_abort()
@@ -443,8 +448,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """display page with google cache links for requests page"""
         wc.log.debug(wc.LOG_PROXY, '%s try_google %r', self, response)
         form = None
-        wc.webgui.WebConfig(self, '/google.html', form, self.protocol, self.headers,
-                  localcontext=wc.google.get_google_context(url, response))
+        wc.webgui.WebConfig(self, '/google.html', form, self.protocol,
+                     self.headers,
+                     localcontext=wc.google.get_google_context(url, response))
 
     def server_content (self, data):
         """The server received some content. Write it to the client."""
@@ -498,22 +504,26 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             return
         # check admin pass
         if not is_public_doc and wc.config["adminuser"]:
-            creds = wc.proxy.auth.get_header_credentials(self.headers, 'Authorization')
+            creds = wc.proxy.auth.get_header_credentials(self.headers,
+                                                         'Authorization')
             if not creds:
                 auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(401, _("Authentication Required"), auth=auth)
                 return
             if 'NTLM' in creds:
-                if creds['NTLM'][0]['type'] == wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
+                if creds['NTLM'][0]['type'] == \
+                   wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     auth = ",".join(creds['NTLM'][0])
                     self.error(401, _("Authentication Required"), auth=auth)
                     return
             # XXX the data=None argument should hold POST data
-            if not wc.proxy.auth.check_credentials(creds, username=wc.config['adminuser'],
+            if not wc.proxy.auth.check_credentials(creds,
+                                     username=wc.config['adminuser'],
                                      password_b64=wc.config['adminpass'],
                                      uri=wc.proxy.auth.get_auth_uri(self.url),
                                      method=self.method, data=None):
-                wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s", self.addr[0])
+                wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s",
+                            self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(401, _("Authentication Required"), auth=auth)
                 return
