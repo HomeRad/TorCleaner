@@ -1501,15 +1501,16 @@ js_LookupCompileTimeConstant(JSContext *cx, JSCodeGenerator *cg, JSAtom *atom,
 /*
  * Allocate an index invariant for all activations of the code being compiled
  * in cg, that can be used to store and fetch a reference to a cloned RegExp
- * object prototyped by the object literal in pn->pn_atom.  We need clones to
- * hold lastIndex and other direct properties that should not be shared among
- * threads sharing a precompiled function or script.
+ * object that shares the same JSRegExp private data created for the object
+ * literal in pn->pn_atom.  We need clones to hold lastIndex and other direct
+ * properties that should not be shared among threads sharing a precompiled
+ * function or script.
  *
  * If the code being compiled is function code, allocate a reserved slot in
- * the cloned function object that shares the precompiled script with other
+ * the cloned function object that shares its precompiled script with other
  * cloned function objects and with the compiler-created clone-parent.  There
  * are fun->nregexps such reserved slots in each function object cloned from
- * fun->object.  NB: during compilation, funobj slots must not be allocated,
+ * fun->object.  NB: during compilation, funobj slots must never be allocated,
  * because js_AllocSlot could hand out one of the slots that should be given
  * to a regexp clone.
  *
@@ -1517,15 +1518,19 @@ js_LookupCompileTimeConstant(JSContext *cx, JSCodeGenerator *cg, JSAtom *atom,
  * ALE_INDEX(ale), by ensuring that cg->treeContext.numGlobalVars is at least
  * one more than this index.  For global code, fp->vars is parallel to the
  * global script->atomMap.vector array, but possibly shorter for the common
- * case.  Global variable name literals in script->atomMap have fast-global
- * slot numbers (stored as int-tagged jsvals) in the former.  The atomIndex
- * for a regexp object literal thus addresses an fp->vars element not used by
- * fast-global variables, so we use that GC-scanned entry to keep the regexp
- * object clone.
+ * case (where var declarations and regexp literals cluster toward the front
+ * of the script or function body).
  *
- * In no case can cx->fp->varobj be a Call object, because that implies we
- * are compiling eval code, in which case (cx->fp->flags & JSFRAME_EVAL) is
- * true and js_GetToken will have already selected JSOP_OBJECT instead of
+ * Global variable name literals in script->atomMap have fast-global slot
+ * numbers (stored as int-tagged jsvals) in the corresponding fp->vars array
+ * element.  The atomIndex for a regexp object literal thus also addresses an
+ * fp->vars element that is not used by any optimized global variable, so we
+ * use that GC-scanned element to keep the regexp object clone alive, as well
+ * as to lazily create and find it at run-time for the JSOP_REGEXP bytecode.
+ *
+ * In no case can cx->fp->varobj be a Call object here, because that implies
+ * we are compiling eval code, in which case (cx->fp->flags & JSFRAME_EVAL)
+ * is true, and js_GetToken will have already selected JSOP_OBJECT instead of
  * JSOP_REGEXP, to avoid all this RegExp object cloning business.
  *
  * Why clone regexp objects?  ECMA specifies that when a regular expression
@@ -1538,9 +1543,7 @@ js_LookupCompileTimeConstant(JSContext *cx, JSCodeGenerator *cg, JSAtom *atom,
  * objects, which makes for collisions on the lastIndex property (especially
  * for global regexps) and on any ad-hoc properties.  Also, __proto__ and
  * __parent__ refer to the pre-compilation prototype and global objects, a
- * pigeon-hole problem for instanceof tests (although the instanceof operator
- * implementation for native function objects was hacked a while ago to work
- * around this problem cleanly).
+ * pigeon-hole problem for instanceof tests.
  */
 static JSBool
 IndexRegExpClone(JSContext *cx, JSParseNode *pn, JSAtomListElement *ale,
@@ -2978,15 +2981,29 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
             stmtInfo.type = STMT_FOR_IN_LOOP;
             noteIndex = -1;
 
-            /* If the left part is var x = i, bind x, evaluate i, and pop. */
+            /*
+             * If the left part is 'var x', emit code to define x if necessary
+             * using a prolog opcode, but do not emit a pop.  If the left part
+             * is 'var x = i', emit prolog code to define x if necessary; then
+             * emit code to evaluate i, assign the result to x, and pop the
+             * result off the stack.
+             *
+             * All the logic to do this is implemented in the outer switch's
+             * TOK_VAR case, conditioned on pn_extra flags set by the parser.
+             *
+             * In the 'for (var x = i in o) ...' case, the js_EmitTree(...pn3)
+             * called here will generate the SRC_VAR note for the assignment
+             * op that sets x = i, hoisting the initialized var declaration
+             * out of the loop: 'var x = i; for (x in o) ...'.
+             *
+             * In the 'for (var x in o) ...' case, nothing but the prolog op
+             * (if needed) should be generated here, we must emit the SRC_VAR
+             * just before the JSOP_FOR* opcode in the switch on pn3->pn_type
+             * a bit below, so nothing is hoisted: 'for (var x in o) ...'.
+             */
             pn3 = pn2->pn_left;
-            if (pn3->pn_type == TOK_VAR && pn3->pn_head->pn_expr) {
-                if (!js_EmitTree(cx, cg, pn3))
-                    return JS_FALSE;
-                /* Set pn3 to the variable name, to avoid another var note. */
-                pn3 = pn3->pn_head;
-                JS_ASSERT(pn3->pn_type == TOK_NAME);
-            }
+            if (pn3->pn_type == TOK_VAR && !js_EmitTree(cx, cg, pn3))
+                return JS_FALSE;
 
             /* Emit a push to allocate the iterator. */
             if (js_Emit1(cx, cg, JSOP_PUSH) < 0)
@@ -3005,14 +3022,28 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
             switch (pn3->pn_type) {
               case TOK_VAR:
                 pn3 = pn3->pn_head;
-                if (js_NewSrcNote(cx, cg, SRC_VAR) < 0)
+                JS_ASSERT(pn3->pn_type == TOK_NAME);
+                if (!pn3->pn_expr && js_NewSrcNote(cx, cg, SRC_VAR) < 0)
                     return JS_FALSE;
                 /* FALL THROUGH */
               case TOK_NAME:
-                pn3->pn_op = JSOP_FORNAME;
-                if (!LookupArgOrVar(cx, &cg->treeContext, pn3))
-                    return JS_FALSE;
-                op = pn3->pn_op;
+                if (pn3->pn_slot >= 0) {
+                    op = pn3->pn_op;
+                    switch (op) {
+                      case JSOP_GETARG:  /* FALL THROUGH */
+                      case JSOP_SETARG:  op = JSOP_FORARG; break;
+                      case JSOP_GETVAR:  /* FALL THROUGH */
+                      case JSOP_SETVAR:  op = JSOP_FORVAR; break;
+                      case JSOP_GETGVAR:
+                      case JSOP_SETGVAR: op = JSOP_FORNAME; break;
+                      default:           JS_ASSERT(0);
+                    }
+                } else {
+                    pn3->pn_op = JSOP_FORNAME;
+                    if (!LookupArgOrVar(cx, &cg->treeContext, pn3))
+                        return JS_FALSE;
+                    op = pn3->pn_op;
+                }
                 if (pn3->pn_slot >= 0) {
                     if (pn3->pn_attrs & JSPROP_READONLY)
                         op = JSOP_GETVAR;
@@ -3589,6 +3620,23 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                         return JS_FALSE;
                 }
             }
+
+            /*
+             * 'for (var x in o) ...' and 'for (var x = i in o) ...' call the
+             * TOK_VAR case, but only the initialized case (a strange one that
+             * falls out of ECMA-262's grammar) wants to run past this point.
+             * Both cases must conditionally emit a JSOP_DEFVAR, above.  Note
+             * that the parser error-checks to ensure that pn->pn_count is 1.
+             *
+             * XXX Narcissus keeps track of variable declarations in the node
+             * for the script being compiled, so there's no need to share any
+             * conditional prolog code generation there.  We could do likewise,
+             * but it's a big change, requiring extra allocation, so probably
+             * not worth the trouble for SpiderMonkey.
+             */
+            if ((pn->pn_extra & PNX_FORINVAR) && !pn2->pn_expr)
+                break;
+
             if (pn2 == pn->pn_head &&
                 js_NewSrcNote(cx, cg,
                               (pn->pn_op == JSOP_DEFCONST)
@@ -3616,7 +3664,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                 return JS_FALSE;
             }
         }
-        if (pn->pn_extra) {
+        if (pn->pn_extra & PNX_POPVAR) {
             if (js_Emit1(cx, cg, JSOP_POP) < 0)
                 return JS_FALSE;
         }
@@ -4200,7 +4248,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
             atomIndex++;
         }
 
-        if (pn->pn_extra) {
+        if (pn->pn_extra & PNX_ENDCOMMA) {
             /* Emit a source note so we know to decompile an extra comma. */
             if (js_NewSrcNote(cx, cg, SRC_CONTINUE) < 0)
                 return JS_FALSE;

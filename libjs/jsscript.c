@@ -201,8 +201,14 @@ script_compile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
         principals = NULL;
     }
 
-    /* Compile the new script using the caller's scope chain, a la eval(). */
-    fp->flags |= JSFRAME_EVAL;
+    /*
+     * Compile the new script using the caller's scope chain, a la eval().
+     * Unlike jsobj.c:obj_eval, however, we do not set JSFRAME_EVAL in fp's
+     * flags, because compilation is here separated from execution, and the
+     * run-time scope chain may not match the compile-time.  JSFRAME_EVAL is
+     * tested in jsemit.c and jsscan.c to optimize based on identity of run-
+     * and compile-time scope.
+     */
     script = JS_CompileUCScriptForPrincipals(cx, scopeobj, principals,
                                              JSSTRING_CHARS(str),
                                              JSSTRING_LENGTH(str),
@@ -573,6 +579,7 @@ js_XDRScript(JSXDRState *xdr, JSScript **scriptp, JSBool *hasMagic)
                 script->trynotes = (JSTryNote *)
                                    ((jsword)(SCRIPT_NOTES(script) + nsrcnotes) &
                                     ~(jsword)JSTRYNOTE_ALIGNMASK);
+                memset(script->trynotes, 0, ntrynotes * sizeof(JSTryNote));
             }
         }
     }
@@ -1064,6 +1071,7 @@ js_NewScript(JSContext *cx, uint32 length, uint32 nsrcnotes, uint32 ntrynotes)
         script->trynotes = (JSTryNote *)
                            ((jsword)(SCRIPT_NOTES(script) + nsrcnotes) &
                             ~(jsword)JSTRYNOTE_ALIGNMASK);
+        memset(script->trynotes, 0, ntrynotes * sizeof(JSTryNote));
     }
     return script;
 }
