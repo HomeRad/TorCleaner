@@ -1,3 +1,10 @@
+2.28 "" (released xx.xx.xxxx)
+
+  * Initialize the ImageReducer attributes properly. Only change
+    headers when filtering data, not earlier.
+    Type: bugfix
+    Changed: wc/filter/ImageReducer.py
+
 2.27 "Aliens" (released 11.2.2005)
 
   * Add <nbr> to the list of known deprecated tags so it does not get
