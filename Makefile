@@ -127,13 +127,13 @@ tar:	distclean
 
 debug:
 	@for f in `find . -name \*.py`; do \
-	  cat $$f | sed 's/#debug(/debug(/' > $$f.bak; \
+	  cat $$f | sed 's/#self._debug(/self._debug(/' > $$f.bak; \
 	  mv -f $$f.bak $$f; \
 	done
 
 ndebug:
 	@for f in `find . -name \*.py`; do \
-	  cat $$f | sed 's/debug(/#debug(/' > $$f.bak; \
+	  cat $$f | sed 's/self._debug(/#self._debug(/' > $$f.bak; \
 	  mv -f $$f.bak $$f; \
 	done
 
