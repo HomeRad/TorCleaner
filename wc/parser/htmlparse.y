@@ -1,3 +1,4 @@
+/* bla */
 %{
 /* SAX parser, optimized for WebCleaner */
 #include <malloc.h>
