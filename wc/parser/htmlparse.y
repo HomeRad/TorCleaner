@@ -431,7 +431,8 @@ static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds)
     {
         return NULL;
     }
-    self->handler = NULL;
+    Py_INCREF(Py_None);
+    self->handler = Py_None;
     /* reset userData */
     self->userData = PyMem_New(UserData, sizeof(UserData));
     if (self->userData == NULL)
@@ -439,7 +440,7 @@ static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds)
         Py_DECREF(self);
         return NULL;
     }
-    self->userData->handler = NULL;
+    self->userData->handler = self->handler;
     self->userData->buf = NULL;
     CLEAR_BUF_DECREF(self, self->userData->buf);
     self->userData->nextpos = 0;
@@ -471,9 +472,13 @@ static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds)
 
 /* initialize parser object */
 static int parser_init (parser_object* self, PyObject* args, PyObject* kwds) {
-    PyObject* handler;
-    if (!PyArg_ParseTuple(args, "O", &handler)) {
-	return -1;
+    PyObject* handler = NULL;
+    static char *kwlist[] = {"handler", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|O", kwlist, &handler)) {
+        return -1;
+    }
+    if (handler==NULL) {
+        return 0;
     }
     Py_INCREF(handler);
     self->handler = handler;
@@ -484,7 +489,7 @@ static int parser_init (parser_object* self, PyObject* args, PyObject* kwds) {
 
 /* traverse all used subobjects participating in reference cycles */
 static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
-    if (self->handler && visit(self->handler, arg) < 0) {
+    if (visit(self->handler, arg) < 0) {
         return -1;
     }
     return 0;
@@ -493,9 +498,9 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
-    Py_XDECREF(self->handler);
     self->handler = NULL;
     self->userData->handler = NULL;
+    Py_XDECREF(self->handler);
     return 0;
 }
 
@@ -560,7 +565,7 @@ static PyObject* parser_flush (parser_object* self, PyObject* args) {
 	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
     self->userData->bufpos = 0;
     if (strlen(self->userData->buf)) {
-        // XXX set line, col
+        /* XXX set line, col */
         int error = 0;
 	PyObject* s = PyString_FromString(self->userData->buf);
 	PyObject* callback = NULL;
@@ -756,7 +761,7 @@ static PyTypeObject parser_type = {
 
 
 /* python module interface 
-     "Create a new HTML parser object with given handler.\n"
+     "Create a new HTML parser object with handler (which may be None).\n"
      "\n"
      "Used callbacks (they don't have to be defined) of a handler are:\n"
      "comment(data): <!--data-->\n"
