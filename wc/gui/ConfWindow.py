@@ -1,4 +1,4 @@
-import wc,os
+import wc, os, sha
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
@@ -364,6 +364,11 @@ class ConfWindow(ToolWindow):
 
 
     def onCmdProxyUser (self, sender, sel, ptr):
+        if ":" in sender.getText():
+            self.error(_("Invalid Proxy User"),
+                       _("You must not use a colon in the proxy user name."))
+            sender.setText(self.proxyuser)
+            return 1
         self.proxyuser = sender.getText()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Proxy user=%s"%self.proxyuser)
@@ -371,7 +376,7 @@ class ConfWindow(ToolWindow):
 
 
     def onCmdProxyPass (self, sender, sel, ptr):
-        self.proxypass = sender.getText()
+        self.proxypass = sha.new(sender.getText()).hexdigest()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Proxy password was changed")
         return 1

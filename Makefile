@@ -54,10 +54,15 @@ test:
 gentest:
 	$(PYTHON) test/regrtest.py -g
 
-onlinetest:
+restart:
 	$(PYTHON) webcleaner restart
 	rm -f index.html* test.gif
 	sleep 4
+
+authtest: restart
+	env http_proxy="http://localhost:9090" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://www.heise.de/
+
+onlinetest: restart
 	# get a standard page with included adverts
 	env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/
 	# get a blocked page
@@ -65,12 +70,9 @@ onlinetest:
 	# get a blocked image
 	env http_proxy="http://localhost:9090" wget -S -t1 http://www.heise.de/advert/test.gif
 
-offlinetest:
-	$(PYTHON) webcleaner restart
-	rm -f index.html
-	sleep 4
+offlinetest: restart
 	# get own config
-	env http_proxy="http://localhost:9090" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://localhost:9090/
+	env http_proxy="http://localhost:9090" wget -S -t1 http://localhost:9090/
 	cat index.html
 	rm -f index.html
 
