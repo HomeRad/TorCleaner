@@ -1,9 +1,9 @@
 # -*- coding: iso-8859-1 -*-
 """routines for updating filter and rating configuration"""
 
-import os, md5, wc
+import os, md5
+from wc import Name, Version, ConfigDir, i18n, filterconf_files, ZapperParser
 from wc.log import *
-from wc import i18n
 from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
@@ -33,7 +33,7 @@ from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 # modified by Bastian Kleineidam <calvin@users.sf.net> for WebCleaner
 
 import httplib, urllib, urllib2, re, socket
-UA_STR = '%s/%s' % (wc.Name, wc.Version)
+UA_STR = '%s/%s' % (Name, Version)
 
 def decode (page):
     "gunzip or deflate a compressed page"
@@ -137,7 +137,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         return chg
     # remember all local config files
     filemap = {}
-    for filename in wc.filterconf_files():
+    for filename in filterconf_files():
         filemap[os.path.basename(filename)] = filename
     # read md5sums
     for line in page.read().splitlines():
@@ -148,7 +148,7 @@ def update_filter (wconfig, dryrun=False, log=None):
             continue
         md5sum, filename = line.split()
         assert filename.endswith('.zap')
-        fullname = os.path.join(wc.ConfigDir, filename)
+        fullname = os.path.join(ConfigDir, filename)
         # compare checksums
         if filemap.has_key(filename):
             f = file(fullname)
@@ -165,7 +165,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         # parse new filter
         url = baseurl+filename
         page = open_url(url)
-        p = wc.ZapperParser(fullname, wconfig, compile_data=False)
+        p = ZapperParser(fullname, wconfig, compile_data=False)
         p.parse(fp=page)
         page.close()
         chg = wconfig.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
@@ -186,7 +186,7 @@ def update_filter (wconfig, dryrun=False, log=None):
             continue
         md5sum, filename = line.split()
         # XXX UNIX-generated md5sum filenames with subdirs are not portable
-        fullname = os.path.join(wc.ConfigDir, filename)
+        fullname = os.path.join(ConfigDir, filename)
         # compare checksums
         if os.path.exists(fullname):
             f = file(fullname)

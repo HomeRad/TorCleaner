@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, urlparse, wc
+import re, urlparse
 from wc import i18n
 from wc.parser import resolve_html_entities
 from wc.filter import FilterWait

@@ -21,7 +21,7 @@
 
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
 
-import os, re, string, cPickle, pickle, convert
+import os, re, cPickle, pickle, convert
 
 # Need to have a checksum on the cache and source file to update at object creation
 # Could use circle safe_pickle (see speed performance impact)

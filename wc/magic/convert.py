@@ -20,7 +20,7 @@
 
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
 
-import sys, re, struct
+import sys, re
 
 _oct='01234567'
 _dec='0123456789'
