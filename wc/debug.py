@@ -19,15 +19,15 @@ def debug (level, *args):
 
 def info (*args):
     args = list(args)
-    args.append("info:")
+    args.insert(0, "info:")
     _text(color="default", *args)
 
 def warn (*args):
     args = list(args)
-    args.append("warning:")
+    args.insert(0, "warning:")
     _text(color="bold;yellow", *args)
 
 def error (*args):
     args = list(args)
-    args.append("error:")
+    args.insert(0, "error:")
     _text(color="bold;red", *args)
