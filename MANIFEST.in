@@ -73,3 +73,4 @@ include wc/dns/ChangeLog
 include wc/HtmlParser/*.h
 include wc/HtmlParser/htmllex.l
 include wc/HtmlParser/htmlparse.y
+include hase.bmp
