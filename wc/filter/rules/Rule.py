@@ -49,6 +49,7 @@ class LangDict (dict):
 
 class Rule (object):
     """Basic rule class for filtering.
+
        After loading from XML (and having called compile_data), a rule has:
        titles - mapping of {lang -> translated titles}
        descriptions - mapping of {lang -> translated description}
@@ -85,7 +86,7 @@ class Rule (object):
         assert self.sid == rule.sid, "updating %s with invalid rule %s" % \
                                      (self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
-        l = [a for a in self.attrnames if a not in ['sid', 'disable'] ]
+        l = [a for a in self.attrnames if a not in ['sid', 'disable']]
         chg = self.update_attrs(l, rule, dryrun, log)
         chg = self.update_titledesc(rule, dryrun, log) or chg
         return chg
@@ -232,7 +233,7 @@ class Rule (object):
         return u"\n".join(t+d)
 
     def __str__ (self):
-        """return basic rule data as string"""
+        """return basic rule data as ISO-8859-1 encoded string"""
         s = self.get_name()+"\n"
         if self.sid is not None:
             s += "sid     %s\n" % self.sid.encode("iso-8859-1")
