@@ -17,6 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import urllib
+import codecs
 import wc.HtmlParser
 import wc.url
 import wc.log
