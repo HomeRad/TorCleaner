@@ -21,7 +21,8 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.filter.Filter import Filter
-from wc.filter import FILTER_RESPONSE_HEADER
+from wc.filter import FILTER_RESPONSE_HEADER, FilterRating
+from wc.filter.Rating import rating_is_cached, rating_add, rating_allow, rating_parse, RatingParseError
 
 class RatingHeader (Filter):
     """Adds rating data supplied in 'Content-Rating' headers"""
@@ -37,7 +38,12 @@ class RatingHeader (Filter):
         headers = attrs['headers']
         if headers.has_key('Content-Rating'):
             if not rating_is_cached(url):
-                rating_add(url, headers['Content-Rating'])
+                rating = headers['Content-Rating']
+                try:
+                    rating = rating_parse(rating)
+                    rating_add(url, rating)
+                except RatingParseError, msg:
+                    warn(FILTER, "rating parse error: %s", msg)
         rules = attrs['rating_rules']
         if rules and not attrs['mime'].lower().startswith('text/html'):
             # note: do not check HTML pages at this point, but give them

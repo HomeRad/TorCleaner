@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" tal:attributes="lang lang">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="copyright" content="(C) 2004 Bastian Kleineidam">
+<link href="wc.css" type="text/css" rel="Stylesheet">
+<title i18n:translate="">Content rated by %(AppName)s</title>
+</head>
+<body>
+<div class="content" id="main">
+<h2 i18n:translate="">Content rated by %(AppName)s</h2>
+<span i18n:translate="">The content of the requested page <b>%(url)s</b>
+was rated for the following reason:</span>
+<b tal:content="reason">Unknown</b>.
+<br><br>
+<span i18n:translate="">Please point your browser somewhere else or</span>
+<a href="#" tal:attributes="href string:rating.html?url=${url}" i18n:translate="">supply
+a different rating for this page</a>
+</div>
+
+<div metal:use-macro="macros/macros/footerplain">Footer...</div>
+</body>
+</html>

@@ -4,10 +4,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="copyright" content="(C) 2004 Bastian Kleineidam">
 <link href="wc.css" type="text/css" rel="Stylesheet">
-<link rel="home" href="index.html" title="Home"
- tal:attributes="href string:index.html.${lang}">
-<link rel="help" href="help.html" title="Help"
- tal:attributes="href string:help.html.${lang}">
 <title i18n:translate="">Administrator password for %(AppName)s</title>
 </head>
 <body>
@@ -27,7 +23,8 @@ Your new credentials for the configuration interface are:<br>
 username <b>%(adminuser)s</b><br>
 password <b>%(adminpass)s</b><br>
 </p>
-<a href="/" i18n:translate="">%(AppName)s configuration</a>
+<a href="#" tal:attributes="href string:index.html.${lang}"
+ i18n:translate="">%(AppName)s configuration</a>
 </div>
 
 <div metal:use-macro="macros/macros/footerplain">Footer...</div>

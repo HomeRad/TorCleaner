@@ -285,11 +285,7 @@ class HttpServer (Server):
                                        "finish", self.attrs)
         except FilterRating, msg:
             debug(PROXY, "%s FilterRating from header: %s", self, msg)
-            msg = str(msg)
-            if msg==MISSING:
-                self.show_rating_config(msg)
-            else:
-                self.show_rating_deny(msg)
+            self._show_rating_deny(str(msg))
             return
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
@@ -328,16 +324,17 @@ class HttpServer (Server):
         return False
 
 
-    def show_rating_config (self, msg):
-        """called for missing rating data, displays configuration"""
+    def _show_rating_deny (self, msg):
+        """requested page is rated"""
+        query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
         # XXX get version
-        response = "HTTP/1.1 302 Moved Temporarly"
-        s = 'Content-type: text/plain\r\n'
-        s += 'Location: http://localhost:%d/rating.html?url=%s\r\n'%\
-               (config['port'], urllib.quote_plus(self.url))
-        s += 'Content-Length: %d\r\n'%len(msg)
-        headers = WcMessage(StringIO(s))
+        response = "HTTP/1.1 302 %s"%i18n._("Moved Temporarily")
+        headers = WcMessage(StringIO(""))
+        headers['Content-type'] = 'text/plain\r'
+        headers['Location'] = 'http://localhost:%d/rated.html?%s\r'%\
+                              (config['port'], query)
+        headers['Content-Length'] = '%d\r'%len(msg)
         debug(PROXY, "%s headers\n%s", self, headers)
         self.client.server_response(self, response, self.statuscode, headers)
         self.data_written = True
@@ -345,12 +342,6 @@ class HttpServer (Server):
         self.client.server_close(self)
         self.state = 'recycle'
         self.reuse()
-
-
-    def show_rating_deny (self, msg):
-        """called for unallowed pages according to rating"""
-        # XXX
-        pass
 
 
     def process_content (self):
@@ -383,10 +374,7 @@ class HttpServer (Server):
             debug(PROXY, "%s FilterWait %s", self, msg)
         except FilterRating, msg:
             debug(PROXY, "%s FilterRating from content %s", self, msg)
-            if msg.isMissing():
-                self.show_rating_config(str(msg))
-            else:
-                self.show_rating_deny(str(msg))
+            self._show_rating_deny(str(msg))
             return
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0

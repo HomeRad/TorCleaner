@@ -69,7 +69,7 @@ rangenames = {
     "2": i18n._("Heavy"),
 }
 
-def parse (data, debug=0):
+def rating_parse (data, debug=0):
     """parse given rating data, throws ParseError on error"""
     categories = {}
     for line in data.splitlines():
@@ -78,12 +78,12 @@ def parse (data, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError, msg:
-            raise ParseError(i18n._("Malformed rating line %r")%line)
+            raise RatingParseError(i18n._(",alformed rating line %r")%line)
         categories[category] = value
     return categories
 
 
-class ParseError (Exception):
+class RatingParseError (Exception):
     """Raised on parsing errors."""
     pass
 
@@ -122,7 +122,8 @@ rating_cache_load()
 def rating_is_cached (url):
     """return True if cache has entry for given url, else False"""
     # XXX norm url?
-    return url in rating_cache
+    # XXX check generic
+    return rating_cache.get(url)
 
 
 def rating_add (url, rating):
@@ -139,9 +140,10 @@ def rating_allow (url, rule):
     """asks cache if the rule allows the rating data for given url
     Looks up cache to find rating data, if not returns a MISSING message.
     """
-    if not rating_is_cached(url):
-        return MISSING
-    return rule.check_against(rating)
+    rating = rating_is_cached(url)
+    if rating:
+        return rule.check_against(rating)
+    return MISSING
 
 
 def rating_is_valid_value (data, value):

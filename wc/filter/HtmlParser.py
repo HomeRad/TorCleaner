@@ -23,8 +23,9 @@ import sys, re, urlparse, wc
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser, quote_attrval
 from wc.parser import resolve_html_entities, strip_quotes
-from wc.filter import FilterWait
+from wc.filter import FilterWait, FilterRating
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT, buf2data
+from wc.filter.Rating import rating_parse, rating_add, rating_allow
 from wc.log import *
 # JS imports
 from wc.js.JSListener import JSListener

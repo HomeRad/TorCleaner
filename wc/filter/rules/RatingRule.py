@@ -85,6 +85,13 @@ class RatingRule (UrlRule):
         return factory.fromRatingRule(self)
 
 
+    def check_against (self, rating):
+        """rating is a mapping category -> value
+           return None if allowed, else a reason of why not"""
+        # XXX
+        return None
+
+
     def toxml (self):
 	s = "%s>\n" % super(RatingRule, self).toxml()
         if self.url:

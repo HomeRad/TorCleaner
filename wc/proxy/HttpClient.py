@@ -4,7 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, cgi, urlparse, os
+import time, cgi, urlparse, urllib, os
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
@@ -25,13 +25,19 @@ from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
 from wc.filter import FILTER_REQUEST_MODIFY
 from wc.filter import FILTER_REQUEST_ENCODE
-from wc.filter import applyfilter, get_filterattrs, FilterException
+from wc.filter import applyfilter, get_filterattrs, FilterRating
 
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
 allowed_schemes = ['http', 'https'] # 'nntps' is untested
 allowed_connect_ports = [443] # 563 (NNTP over SSL) is untested
 allowed_local_docs = ['/blocked.png', '/error.html', '/wc.css', '/robots.txt',
-                      '/adminpass.html']
+                      '/adminpass.html', '/rated.html']
+
+def is_allowed_document (doc):
+    for f in allowed_local_docs:
+        if doc.startswith(f):
+            return True
+    return False
 
 class HttpClient (Connection):
     """States:
@@ -314,7 +320,7 @@ class HttpClient (Connection):
             self.state = 'receive'
             is_local = self.hostname in config['localhosts'] and self.port==config['port']
             if config['adminuser'] and not config['adminpass']:
-                if is_local and self.document in allowed_local_docs:
+                if is_local and is_allowed_document(self.document):
                     self.handle_local()
                 else:
                     # ignore request, must init admin password
