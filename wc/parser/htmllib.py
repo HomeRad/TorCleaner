@@ -89,6 +89,11 @@ class HtmlPrinter (HtmlParser):
         return self._print
 
 
+def quote_attrval (val):
+    """quote a HTML attribute to be able to wrap it in double quotes"""
+    return val.replace('"', '&quot;')
+
+
 def _test():
     p = HtmlPrinter()
     p.feed("<hTml>")
