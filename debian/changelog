@@ -7,8 +7,11 @@ webcleaner (0.53-1) unstable; urgency=low
   * made this a non-native debian package
   * remove all configuration dirs on postrm, purge does not remove them
     automatically due to mis-sorting of dirs
+  * README.squid, a sample squid configuration file to use with
+    WebCleaner, was added
+  * added some more advertising urls to filter
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 13 Aug 2002 23:15:40 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 21 Aug 2002 09:43:32 +0200
 
 webcleaner (0.52) unstable; urgency=low
 
