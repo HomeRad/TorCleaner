@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sun Jan  4 11:20:24 2004\n"
-"PO-Revision-Date: 2004-01-04 11:25+0100\n"
+"POT-Creation-Date: Mon Jan  5 00:29:40 2004\n"
+"PO-Revision-Date: 2004-01-05 00:31+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,21 @@ msgstr "Unbekannte Seite"
 
 msgid "PICS %s match"
 msgstr "PICS %s Treffer"
+
+msgid "violence"
+msgstr "Gewalt"
+
+msgid "sex"
+msgstr "Sex"
+
+msgid "language"
+msgstr "Sprache"
+
+msgid "other"
+msgstr "andere"
+
+msgid "age range"
+msgstr "Altersangabe"
 
 msgid "inserting new rule %s"
 msgstr "füge neue Regel %s ein"
@@ -54,8 +69,8 @@ msgstr "Ganzes Tag"
 msgid "Enclosed block"
 msgstr "Enthaltener Text"
 
-msgid "updating rule %s"
-msgstr "aktualisiere Regel %s"
+msgid "updating rule %s:"
+msgstr "aktualisiere Regel %s:"
 
 msgid "Host %s is an abbreviation for %s"
 msgstr "Rechner %s ist eine Abkürzung für %s"
@@ -429,6 +444,9 @@ msgstr ""
 "einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden\n"
 "(z.B. \\1, \\2, ...)."
 
+msgid "Rating"
+msgstr "Bewertung"
+
 msgid "URL"
 msgstr "URL"
 
@@ -598,8 +616,11 @@ msgstr "Ungültige Regel-nach-oben-Verschieben Nummer."
 msgid "Folder successfully enabled."
 msgstr "Ordner erfolgreich aktiviert."
 
-msgid "New rule successfully created."
-msgstr "Neue Regel wurde erfolgreich erstellt."
+msgid "Remove images with certain width and/or height."
+msgstr "Entferne Bilder bestimmter Breite und/oder Höhe."
+
+msgid "Invalid PICS category value."
+msgstr "Ungültiger PICS Kategorie Wert."
 
 msgid ""
 "The administrator password was not yet initialized.\n"
@@ -658,6 +679,9 @@ msgstr ""
 
 msgid "Empty header rule name."
 msgstr "Leerer Header-Regel Name."
+
+msgid "Mild"
+msgstr "Etwas"
 
 msgid "%(AppName)s filter rule configuration"
 msgstr "%(AppName)s Filterregeln Konfiguration"
@@ -766,8 +790,15 @@ msgstr ""
 msgid "Rule successfully enabled."
 msgstr "Regel wurde erfolgreich aktiviert."
 
-msgid "Nofilter host successfully added."
-msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
+msgid ""
+"You can rate and review web pages according to\n"
+"several given categories."
+msgstr ""
+"Sie können Webseiten nachschlagen und anhand einiger\n"
+"Kategorien bewerten."
+
+msgid "New rule successfully created."
+msgstr "Neue Regel wurde erfolgreich erstellt."
 
 msgid "Matching"
 msgstr "Zuordnung"
@@ -825,6 +856,9 @@ msgstr "Lösche Auswahl"
 
 msgid "Access keys"
 msgstr "Tastaturkommandos"
+
+msgid "Applies to all pages starting with url"
+msgstr "Gilt für alle Seiten die mit dieser URL beginnen"
 
 msgid "Invalid folder move up id."
 msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
@@ -1011,6 +1045,9 @@ msgstr "Aktion"
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
 msgstr "Nur numerische IPs/Netzwerke sind hier nützlich weil DNS Auflösung nicht stattfindet."
 
+msgid "Saved ratings"
+msgstr "Gespeicherte Bewertungen"
+
 msgid "New folder"
 msgstr "Neuer Ordner"
 
@@ -1019,6 +1056,9 @@ msgstr "Zugänglichkeitseigenschaften dieser Seiten"
 
 msgid "Replacement"
 msgstr "Ersetzter Teil"
+
+msgid "Heavy"
+msgstr "Viel"
 
 msgid "Invalid folder index."
 msgstr "Ungültiger Ordnerindex."
@@ -1053,14 +1093,17 @@ msgstr "%(AppName)s Google Auswahl"
 msgid "Proxy password"
 msgstr "Proxy Passwort"
 
-msgid "Remove images with certain width and/or height."
-msgstr "Entferne Bilder bestimmter Breite und/oder Höhe."
+msgid "Generic\n"
+msgstr "Generisch\n"
 
 msgid "Down"
 msgstr "Nach unten"
 
 msgid "%(AppName)s help"
 msgstr "%(AppName)s Hilfe"
+
+msgid "URL to rate"
+msgstr "Zu bewertende URL"
 
 msgid ""
 "Response content data of mime types\n"
@@ -1121,6 +1164,9 @@ msgstr "Feedback für %(AppName)s"
 msgid "Add, modify and delete HTTP headers of request and response."
 msgstr "Hinzufügen, Ändern und Löschen von HTTP Headern bei Anfrage und Antwort."
 
+msgid "PICS category successfully disabled."
+msgstr "PICS Kategorie wurde erfolgreich deaktiviert."
+
 msgid "Rule don't-match-url successfully changed."
 msgstr "Regel Nichttreffer-URL wurde erfolgreich geändert."
 
@@ -1142,6 +1188,9 @@ msgstr "Bild von inaktiver Regel"
 
 msgid "Rule header value successfully changed."
 msgstr "Regel Header-Wert wurde erfolgreich geändert."
+
+msgid "Nofilter host successfully added."
+msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
 
 msgid "Invalid folder move down id."
 msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
@@ -1302,6 +1351,9 @@ msgstr "PICS Dienstleister wurde erfolgreich deaktiviert."
 
 msgid "Enable rule"
 msgstr "Aktiviere Regel"
+
+msgid "URL rating"
+msgstr "URLBewertungen"
 
 msgid "Google Cache for"
 msgstr "Google Cache für"

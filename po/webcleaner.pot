@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Jan  4 11:20:24 2004\n"
+"POT-Creation-Date: Mon Jan  5 00:29:40 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,21 @@ msgid "Unknown page"
 msgstr ""
 
 msgid "PICS %s match"
+msgstr ""
+
+msgid "violence"
+msgstr ""
+
+msgid "sex"
+msgstr ""
+
+msgid "language"
+msgstr ""
+
+msgid "other"
+msgstr ""
+
+msgid "age range"
 msgstr ""
 
 msgid "inserting new rule %s"
@@ -57,7 +72,7 @@ msgstr ""
 msgid "Enclosed block"
 msgstr ""
 
-msgid "updating rule %s"
+msgid "updating rule %s:"
 msgstr ""
 
 msgid "Host %s is an abbreviation for %s"
@@ -390,6 +405,9 @@ msgid ""
 "url with a backslash and the subgroup number (ie. \\1, \\2, ...)."
 msgstr ""
 
+msgid "Rating"
+msgstr ""
+
 msgid "URL"
 msgstr ""
 
@@ -538,7 +556,10 @@ msgstr ""
 msgid "Folder successfully enabled."
 msgstr ""
 
-msgid "New rule successfully created."
+msgid "Remove images with certain width and/or height."
+msgstr ""
+
+msgid "Invalid PICS category value."
 msgstr ""
 
 msgid ""
@@ -587,6 +608,9 @@ msgid ""
 msgstr ""
 
 msgid "Empty header rule name."
+msgstr ""
+
+msgid "Mild"
 msgstr ""
 
 msgid "%(AppName)s filter rule configuration"
@@ -686,7 +710,12 @@ msgstr ""
 msgid "Rule successfully enabled."
 msgstr ""
 
-msgid "Nofilter host successfully added."
+msgid ""
+"You can rate and review web pages according to\n"
+"several given categories."
+msgstr ""
+
+msgid "New rule successfully created."
 msgstr ""
 
 msgid "Matching"
@@ -738,6 +767,9 @@ msgid "Remove selected"
 msgstr ""
 
 msgid "Access keys"
+msgstr ""
+
+msgid "Applies to all pages starting with url"
 msgstr ""
 
 msgid "Invalid folder move up id."
@@ -904,6 +936,9 @@ msgstr ""
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
 msgstr ""
 
+msgid "Saved ratings"
+msgstr ""
+
 msgid "New folder"
 msgstr ""
 
@@ -911,6 +946,9 @@ msgid "accessibility features of these pages"
 msgstr ""
 
 msgid "Replacement"
+msgstr ""
+
+msgid "Heavy"
 msgstr ""
 
 msgid "Invalid folder index."
@@ -946,13 +984,17 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-msgid "Remove images with certain width and/or height."
+msgid ""
+"Generic\n"
 msgstr ""
 
 msgid "Down"
 msgstr ""
 
 msgid "%(AppName)s help"
+msgstr ""
+
+msgid "URL to rate"
 msgstr ""
 
 msgid ""
@@ -1006,6 +1048,9 @@ msgstr ""
 msgid "Add, modify and delete HTTP headers of request and response."
 msgstr ""
 
+msgid "PICS category successfully disabled."
+msgstr ""
+
 msgid "Rule don't-match-url successfully changed."
 msgstr ""
 
@@ -1022,6 +1067,9 @@ msgid "Disabled rule icon"
 msgstr ""
 
 msgid "Rule header value successfully changed."
+msgstr ""
+
+msgid "Nofilter host successfully added."
 msgstr ""
 
 msgid "Invalid folder move down id."
@@ -1163,6 +1211,9 @@ msgid "PICS service successfully disabled."
 msgstr ""
 
 msgid "Enable rule"
+msgstr ""
+
+msgid "URL rating"
 msgstr ""
 
 msgid "Google Cache for"
