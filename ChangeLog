@@ -79,6 +79,16 @@
     Type: documentation
     Changed: docs/faq.txt, docs/index.txt
 
+  * Removed the keyword args "**" prefix to have a modifiable filter
+    attribute dictionary.
+    Type: bug fix
+    Changed: wc/filter/*.py
+
+  * Fixed the value conversion function for the magic(5) database
+    reader.
+    Type: bug fix
+    Changed: wc/magic/__init__.py
+
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.
