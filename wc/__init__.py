@@ -65,7 +65,7 @@ def iswriteable (fname):
             f.close()
             os.remove(fname)
             return True
-    except IOError, msg:
+    except IOError:
         pass
     return False
 
@@ -115,8 +115,10 @@ def startfunc (handle=None):
     wc.proxy.mainloop(handle=handle)
 
 
-# reload configuration
-def reload_config (signum, frame):
+def reload_config (*dummy):
+    """reload configuration function with dummy params for (signum, frame)
+    from the signal handler prototype
+    """
     global config
     config.reset()
     config.read_proxyconf()
@@ -431,8 +433,8 @@ class ZapperParser (BaseParser):
 
 
 class WConfigParser (BaseParser):
-    def parse (self, fp, config):
-        self.config = config
+    def parse (self, fp, _config):
+        self.config = _config
         super(WConfigParser, self).parse(fp)
         self.config['configfile'] = self.filename
         self.config['filters'].sort()
