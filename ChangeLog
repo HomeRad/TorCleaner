@@ -1,4 +1,4 @@
-2.5
+2.5 (released x.xx.xxxx)
   * updated blacklist filters
     Changed: config/blacklist*, config/bl2wc.py
   * make AllowRule a subclass of UrlRule
@@ -7,6 +7,8 @@
   * remove unnecessary bits from the dns library
     Removed: wc/proxy/dns/{lazy,Base,win32dns}.py
     Changed: wc/proxy/dns/*.py
+  * corrected the reversed google cache urls
+    Changed: templates/classic/google.html
 
 2.4 (released 1.11.2003)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031101
