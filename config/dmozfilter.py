@@ -1,7 +1,9 @@
 #!/usr/bin/python2.3
 # filter the big dmoz file
-# usage:
+# Usage:
 # zcat content.rdf.u8.gz | dmozfilter.py | gzip --best > dmoz.rdf.stripped.gz
+# Note: the dmoz content license is not GPL compatible, so you may not
+# distribute it with WebCleaner!
 import sys
 line = sys.stdin.readline()
 topic = None

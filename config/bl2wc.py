@@ -263,7 +263,9 @@ def download_and_merge ():
     #geturl("http://squidguard.mesd.k12.or.us/", "squidguard.tar.gz", blacklist)
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
-    # dmoz category dumps (license not GPL-compatible !!!)
+    # dmoz category dumps
+    # Note: the dmoz content license is not GPL compatible, so you may not
+    # distribute it with WebCleaner!
     #geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
 
 def write_lists ():
