@@ -61,10 +61,11 @@ in the configuration directory.
 
 Running under Unix/Linux
 ------------------------
-The proxy is automatically started from the daemontools package.
-See http://cr.yp.to/daemontools.html for more information.
+The proxy is supervised and automatically (re-)started from the runit
+package.
+See http://smarden.org/runit/ for more information.
 
-Runing under Windows
+Running under Windows
 --------------------
 The proxy is a normal NT service and can be started/stopped from the
 "Administrative Tasks" entry in the system configuration.
@@ -80,12 +81,10 @@ Surf performance will decrease, especially with the Rewriter and the
 Replacer module enabled. It will decrease further with JavaScript
 parsing enabled, since the proxy downloads and parses <script src="">
 tags in the background.
-WebCleaner is intended for a single user system; it does not scale well
-beyond 5-10 users.
 
 The Rewriter module parses the HTML. It optimizes HTML by making
-tags and attribute names lowercase, quoting attribute values only
-when necessary and removing some (but not all) ignorable whitespace.
+tags and attribute names lowercase and removing some (but not all)
+ignorable whitespace.
 
 The warning "unsupported content encoding" could lead to corrupted
 HTML pages. WebCleaner tries to filter even unknown-encoded content
