@@ -374,7 +374,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             if is_local:
                 is_public_doc = self.allow.public_document(self.document)
             if wc.config['adminuser'] and not wc.config['adminpass']:
-                if is_local:
+                if is_local and is_public_doc:
                     self.handle_local(is_public_doc=is_public_doc)
                 else:
                     # ignore request, must init admin password
