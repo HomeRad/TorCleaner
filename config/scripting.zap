@@ -86,7 +86,7 @@
  desc="Some sites disable surrounding frames and install themselves as the top frame."
  search="top\.location\.href\s*=\s*self\.location\.href"/>
 
-<javascript title="Enable JavaScript" oid="14"
+<javascript title="Enable JavaScript engine" oid="14"
  desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"/>
 
 <rewrite title="&lt;frameset&gt; onunload" oid="15"
@@ -127,7 +127,7 @@
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;body&gt; onkeydown" oid="137"
+<rewrite title="&lt;body&gt; onkeydown" oid="21"
  tag="body">
 <attr name="onkeydown"/>
 <replace part="attr"/>
