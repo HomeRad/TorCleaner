@@ -12,7 +12,13 @@
   * Only enable support for network interface configuration on
     Linux and Windows platforms. All other are currently not supported.
     Type: bugfix
+    Closes: SF bug #1053838
     Changed: wc/dns/ifconfig.py
+
+  * The windows installation has been fixed.
+    Type: bugfix
+    Closes: SF bug #1053899
+    Changed: setup.py, wc/proxy/Dispatcher.py
 
 2.22 "Monster" (released 20.10.2004)
 
