@@ -26,7 +26,7 @@ class UnchunkStream (object):
 
 
     def decode (self, s):
-        #debug(PROXY, "Proxy: chunked data %s", `s`)
+        #debug(PROXY, "chunked data %s", `s`)
         self.buf += s
         s = ''
 
@@ -67,7 +67,7 @@ class UnchunkStream (object):
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
-        #debug(PROXY, "Proxy: decoded chunk %s", `s`)
+        #debug(PROXY, "decoded chunk %s", `s`)
         return s
 
 

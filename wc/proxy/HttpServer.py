@@ -232,7 +232,7 @@ class HttpServer (Server):
         if self.response:
             self.response = applyfilter(FILTER_RESPONSE, self.response,
                               attrs=self.nofilter).strip()
-        debug(PROXY, "Server: Response %s", `self.response`)
+        debug(PROXY, "%s response %s", str(self), `self.response`)
 
 
     def process_headers (self):
@@ -249,7 +249,7 @@ class HttpServer (Server):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
-        debug(PROXY, "Server: Headers\n%s", str(msg))
+        debug(PROXY, "%s headers\n%s", str(self), str(msg))
         if self.statuscode==100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
@@ -267,7 +267,7 @@ class HttpServer (Server):
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
                                        msg, attrs=self.nofilter)
         except FilterPics, msg:
-            debug(PROXY, "Server: FilterPics %s", msg)
+            debug(PROXY, "%s FilterPics %s", str(self), `msg`)
             # XXX get version
             response = "HTTP/1.1 200 OK"
             headers = {
@@ -296,7 +296,7 @@ class HttpServer (Server):
         #    self.headers['Connection'] = 'close\r'
         #remove_headers(self.headers, ['Keep-Alive'])
         # XXX </doh>
-        debug(PROXY, "Server: Headers filtered %s", `str(self.headers)`)
+        debug(PROXY, "%s filtered headers\n%s", str(self), str(self.headers))
         wc.proxy.HEADERS.append((self.url, "server", self.headers))
         if self.statuscode!=407:
             self.client.server_response(self.response, self.headers)
@@ -320,7 +320,7 @@ class HttpServer (Server):
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
-            debug(PROXY, "Server: %d bytes remaining", self.bytes_remaining)
+            debug(PROXY, "%s %d bytes remaining", str(self), self.bytes_remaining)
         is_closed = False
         for decoder in self.decoders:
             data = decoder.decode(data)
@@ -333,9 +333,9 @@ class HttpServer (Server):
                     self.client.server_content(data)
                 self.data_written = True
         except FilterWait, msg:
-            debug(PROXY, "Server: FilterWait %s", msg)
+            debug(PROXY, "%s FilterWait %s", str(self), `msg`)
         except FilterPics, msg:
-            debug(PROXY, "Server: FilterPics %s", msg)
+            debug(PROXY, "%s FilterPics %s", str(self), `msg`)
             assert not self.data_written
             # XXX interactive options here
             self.client.server_content(str(msg))
@@ -354,7 +354,7 @@ class HttpServer (Server):
 
 
     def process_recycle (self):
-        debug(PROXY, "Server: recycling %s", str(self))
+        debug(PROXY, "%s recycling", str(self))
         # flush pending client data and try to reuse this connection
         self.flushing = True
         self.flush()
@@ -391,7 +391,7 @@ class HttpServer (Server):
 
     def flush (self):
         """flush data of decoders (if any) and filters"""
-        debug(PROXY, "Server: flushing %s", str(self))
+        debug(PROXY, "%s flushing", str(self))
         data = ""
         while self.decoders:
             data = self.decoders[0].flush()
@@ -402,7 +402,7 @@ class HttpServer (Server):
             for i in _RESPONSE_FILTERS:
                 data = applyfilter(i, data, fun="finish", attrs=self.attrs)
         except FilterWait, msg:
-            debug(PROXY, "Server: FilterWait %s", msg)
+            debug(PROXY, "%s FilterWait %s", str(self), `msg`)
             # the filter still needs some data so try flushing again
             # after a while
             make_timer(0.2, lambda : self.flush())
@@ -418,10 +418,10 @@ class HttpServer (Server):
 
 
     def reuse (self):
-        debug(PROXY, "Server: reuse %s", str(self))
+        debug(PROXY, "%s reuse", str(self))
         self.client = None
         if self.connected and self.can_reuse:
-            debug(PROXY, 'Server: reusing %d %s', self.sequence_number, str(self))
+            debug(PROXY, '%s reusing %d', str(self), self.sequence_number)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
@@ -435,7 +435,7 @@ class HttpServer (Server):
 
 
     def close (self):
-        debug(PROXY, "Server: close %s", str(self))
+        debug(PROXY, "%s close", str(self))
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -450,7 +450,7 @@ class HttpServer (Server):
 
 
     def handle_close (self):
-        debug(PROXY, "Server: handle_close %s", str(self))
+        debug(PROXY, "%s handle_close", str(self))
         self.can_reuse = False
         super(HttpServer, self).handle_close()
         # flush unhandled data
@@ -462,7 +462,7 @@ def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        debug(PROXY, 'Server: speed: %4d b/s', (SPEEDCHECK_BYTES/elapsed))
+        debug(PROXY, '%s speed: %4d b/s', str(self), (SPEEDCHECK_BYTES/elapsed))
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0

@@ -103,7 +103,7 @@ class HttpClient (Connection):
                 self.error(400, i18n._("Can't parse request"))
                 return
             self.nofilter = {'nofilter': config.nofilter(self.url)}
-            debug(PROXY, "Client: request %s", self.request)
+            debug(PROXY, "%s request %s", str(self), `self.request`)
             self.url = applyfilter(FILTER_REQUEST, self.url,
                                    fun="finish", attrs=self.nofilter)
             self.protocol = fix_http_version(protocol)
@@ -140,11 +140,11 @@ class HttpClient (Connection):
             # chunked encoded
             if self.headers.has_key('Transfer-Encoding'):
                 # XXX don't look at value, assume chunked encoding for now
-                debug(PROXY, 'Client: Transfer-encoding: %s', `self.headers['transfer-encoding']`)
+                debug(PROXY, '%s Transfer-encoding %s', str(self), `self.headers['Transfer-encoding']`)
                 self.decoders.append(UnchunkStream())
                 client_remove_encoding_headers(self.headers)
                 self.bytes_remaining = None
-            debug(PROXY, "Client: Headers\n%s", str(self.headers))
+            debug(PROXY, "%s headers\n%s", str(self), str(self.headers))
             if config["proxyuser"]:
                 creds = get_header_credentials(self.headers, 'Proxy-Authorization')
                 if not creds:
@@ -220,7 +220,7 @@ class HttpClient (Connection):
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(PROXY, 'Client: server_response %s %s', str(self), `response`)
+        debug(PROXY, '%s server_response %s', str(self), `response`)
         self.write("%s\r\n"%response)
         if hasattr(headers, "headers"):
             # write original Message object headers to preserve
@@ -240,14 +240,14 @@ class HttpClient (Connection):
 
     def server_close (self):
         assert self.server
-        debug(PROXY, 'Client: server_close %s', str(self))
+        debug(PROXY, '%s server_close', str(self))
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
 
     def server_abort (self):
-        debug(PROXY, 'Client: server_abort %s', str(self))
+        debug(PROXY, '%s server_abort', str(self))
         self.close()
         self.server = None
 
@@ -263,7 +263,7 @@ class HttpClient (Connection):
     def handle_close (self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
-        debug(PROXY, 'Client: handle_close %s', str(self))
+        debug(PROXY, '%s handle_close', str(self))
         super(HttpClient, self).handle_close()
         if self.server:
             server, self.server = self.server, None
@@ -297,7 +297,7 @@ class HttpClient (Connection):
 
 
     def close (self):
-        debug(PROXY, 'Client: close %s', str(self))
+        debug(PROXY, '%s close', str(self))
         self.state = 'closed'
         super(HttpClient, self).close()
 

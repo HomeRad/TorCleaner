@@ -19,7 +19,7 @@ class HttpProxyClient (object):
         self.args = args
         self.connected = True
         self.addr = ('localhost', 80)
-        debug(PROXY, 'ProxyClient: init %s', str(self))
+        debug(PROXY, '%s init', str(self))
 
 
     def __repr__ (self):
@@ -33,7 +33,7 @@ class HttpProxyClient (object):
 
 
     def finish (self):
-        debug(PROXY, 'ProxyClient: finish %s', str(self))
+        debug(PROXY, '%s finish', str(self))
         if self.handler:
             self.handler(None, *self.args)
             self.handler = None
@@ -51,7 +51,7 @@ class HttpProxyClient (object):
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(PROXY, 'ProxyClient: server_response %s %s', str(self), `response`)
+        debug(PROXY, '%s server_response %s', str(self), `response`)
         protocol, status, msg = get_response_data(response)
         if status in (302, 301):
             # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
@@ -78,21 +78,21 @@ class HttpProxyClient (object):
 
     def server_content (self, data):
         assert self.server
-        debug(PROXY, 'ProxyClient: server_content %s', str(self))
+        debug(PROXY, '%s server_content', str(self))
         self.write(data)
 
 
     def server_close (self):
         assert self.server
-        debug(PROXY, 'ProxyClient: server_close %s', str(self))
+        debug(PROXY, '%s server_close', str(self))
         self.finish()
 
 
     def server_abort (self):
-        debug(PROXY, 'ProxyClient: server_abort %s', str(self))
+        debug(PROXY, '%s server_abort', str(self))
         self.finish()
 
 
     def handle_local (self):
-        error(PROXY, "ProxyClient handle_local %s", str(self.args))
+        error(PROXY, "%s handle_local %s", str(self), str(self.args))
         self.finish()

@@ -15,14 +15,14 @@ class Server (Connection):
 
 
     def client_abort (self):
-        debug(PROXY, "class Server: client_abort")
+        debug(PROXY, "%s client_abort", str(self))
         self.client = None
         if self.connected:
             self.close()
 
 
     def handle_connect (self):
-        debug(PROXY, "class Server: handle_connect")
+        debug(PROXY, "%s handle_connect", str(self))
         if self.state != 'connect':
             # the client has closed, and thus this server has too
             self.connected = False

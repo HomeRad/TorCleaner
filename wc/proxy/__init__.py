@@ -114,7 +114,7 @@ def proxy_poll (timeout=0.0):
                     x.handle_write_event()
                     handlerCount += 1
                     #if time.time() - t > 0.1:
-                    #    debug(PROXY, 'Proxy: wslow %4.1f %s %s', (time.time()-t), 's', str(x))
+                    #    debug(PROXY, 'wslow %4.1f %s %s', (time.time()-t), 's', str(x))
                     #    pass
             except:
                 x.handle_error("poll error")
@@ -125,7 +125,7 @@ def proxy_poll (timeout=0.0):
                     x.handle_read_event()
                     handlerCount += 1
                     #if time.time() - t > 0.1:
-                    #    debug(PROXY, 'Proxy: rslow %4.1f %s %s', (time.time()-t), 's', str(x))
+                    #    debug(PROXY, 'rslow %4.1f %s %s', (time.time()-t), 's', str(x))
                     #    pass
             except:
                 x.handle_error("poll error")

@@ -207,7 +207,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, compress, bytes_rem
     headers['Accept-Encoding'] = "%s\r"%compress
     if headers.has_key('Content-Length'):
         bytes_remaining = int(headers['Content-Length'])
-        debug(PROXY, "Server: %d bytes remaining", bytes_remaining)
+        debug(PROXY, "%d bytes remaining", bytes_remaining)
         if rewrite:
             remove_headers(headers, ['Content-Length'])
     else:
@@ -217,7 +217,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, compress, bytes_rem
         # chunked encoded
         tenc = headers['Transfer-Encoding']
         if tenc != 'chunked':
-            error(PROXY, "Server: unknown transfer encoding %s, assuming chunked encoding", `tenc`)
+            error(PROXY, "unknown transfer encoding %s, assuming chunked encoding", `tenc`)
         decoders.append(UnchunkStream())
         # remove encoding header
         to_remove = ["Transfer-Encoding"]

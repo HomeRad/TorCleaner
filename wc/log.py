@@ -100,7 +100,7 @@ def get_log_file (fname):
 
 def set_format (handler):
     """set standard format for handler"""
-    handler.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
+    handler.setFormatter(logging.Formatter("%(levelname)s %(name)s %(message)s"))
     return handler
 
 

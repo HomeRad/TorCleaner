@@ -52,7 +52,7 @@ class ClientServerMatchmaker (object):
         self.content = content
         self.nofilter = nofilter
         self.mime = mime
-        debug(PROXY, "ClientServer: %s", `self.request`)
+        self.state = 'dns'
         self.method, self.url, protocol = self.request.split()
         # strip leading zeros and other stuff
         self.protocol = fix_http_version(protocol)
@@ -63,7 +63,7 @@ class ClientServerMatchmaker (object):
             # default scheme is http
             self.scheme = "http"
         elif self.scheme != 'http':
-            warn(PROXY, "Forbidden scheme encountered at %s", self.url)
+            warn(PROXY, "Forbidden scheme encountered at %s", str(self))
             client.error(403, i18n._("Forbidden"))
             return
         if not hostname and self.headers.has_key('Host'):
@@ -97,7 +97,6 @@ class ClientServerMatchmaker (object):
         # append information for wcheaders tool
         wc.proxy.HEADERS.append((self.url, 'client', self.headers.items()))
         # start DNS lookup
-        self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
 
@@ -116,7 +115,7 @@ class ClientServerMatchmaker (object):
             if self.port != 80:
 	        new_url += ':%d' % self.port
             new_url += self.document
-            info(PROXY, "Redirecting %s to %s", `self.url`, `new_url`)
+            info(PROXY, "Redirecting %s to %s", str(self), `new_url`)
             self.state = 'done'
             config['requests']['valid'] += 1
             # XXX find http version!
@@ -143,7 +142,7 @@ class ClientServerMatchmaker (object):
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            debug(PROXY, 'ClientServer: resurrecting %s', str(server))
+            debug(PROXY, '%s resurrecting %s', str(self), str(server))
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -202,7 +201,7 @@ class ClientServerMatchmaker (object):
 
 
     def server_close (self):
-        debug(PROXY, 'ClientServer: resurrection failed %d %s', self.server.sequence_number, str(self.server))
+        debug(PROXY, '%s resurrection failed %d %s', str(self), self.server.sequence_number, str(self.server))
         # Look for a server again
         if self.server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
@@ -224,3 +223,6 @@ class ClientServerMatchmaker (object):
         else:
             self.server.client_abort()
 
+
+    def __repr__ (self):
+        return '<%s:%-8s %s>' % ('clientserver', self.state, self.url)
