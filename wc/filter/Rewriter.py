@@ -81,7 +81,6 @@ class HtmlFilter(HtmlParser):
         self.rulestack = []
         self.buffer = []
         self.document = "unknown"
-        self.printerrors = printerrors
 
 
     def __repr__(self):
