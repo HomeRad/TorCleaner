@@ -37,7 +37,7 @@ class ProxyService (service_klass):
 
     _svc_name_ = wc.AppName
     _svc_display_name_ = wc.i18n._("%s Proxy") % wc.AppName
-    configdir = None
+    configdir = wc.ConfigDir
 
     def __init__ (self, args):
         """initialize service framework and set stop handler"""
