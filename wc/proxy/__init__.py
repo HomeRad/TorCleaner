@@ -117,7 +117,7 @@ def proxy_poll(timeout=0.0):
 
 
 def configure(config):
-    global _PORT,_LOGFILE,_PARENT_PROXY,_PARENT_PROXY_PORT
+    global _PORT,_LOGFILE,_PARENT_PROXY,_PARENT_PROXY_PORT,_NO_PROXY_FOR
     _PORT = config['port']
     _PARENT_PROXY_PORT = config['parentproxyport']
     _PARENT_PROXY = config['parentproxy']
@@ -125,13 +125,19 @@ def configure(config):
     _TIMEOUT = config['timeout']
     _OBFUSCATE_IP = config['obfuscateip']
     wc.filter._FILTER_LIST = config['filterlist']
-    _ERROR_LEN = config["errorlen"]
-    _ERROR_TEXT = config["errortext"]
+    _NO_PROXY_FOR = config['noproxyfor'].keys()
     if _LOGFILE == 'stdout':
         _LOGFILE = sys.stdout
     elif _LOGFILE:
         _LOGFILE = open(_LOGFILE, 'a')
     config.init_filtermodules()
+
+
+def proxy_filters(host):
+    for domain in _NO_PROXY_FOR:
+        if domain in host:
+            return 0
+    return 1
 
 
 def mainloop():

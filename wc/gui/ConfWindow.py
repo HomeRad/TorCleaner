@@ -1,14 +1,15 @@
-import wc,os,string
+import wc,os
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
-from wc import debug,_
+from wc import debug,_,error
 from wc.gui import HelpText,loadIcon
 from FXPy.fox import *
 from types import IntType
 from wc.filter.Rules import FolderRule
 from wc.filter import GetRuleFromName
 from wc.debug_levels import *
+from string import join
 
 UpdateHelp = \
 _("Updating procedure:\n\n"
@@ -58,7 +59,10 @@ class ConfWindow(FXMainWindow):
      ID_PROXYRELOAD,
      ID_PROXYSTATUS,
      ID_DISABLERULE,
-    ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+25)
+     ID_NOPROXYFOR_ADD,
+     ID_NOPROXYFOR_EDIT,
+     ID_NOPROXYFOR_REMOVE,
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+28)
 
 
     def __init__(self, app):
@@ -128,13 +132,18 @@ class ConfWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYSTATUS,ConfWindow.onCmdProxyStatus)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_CONFUPDATE,ConfWindow.onCmdConfUpdate)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DISABLERULE,ConfWindow.onCmdDisableRule)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_ADD,ConfWindow.onCmdNoProxyForAdd)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_EDIT,ConfWindow.onCmdNoProxyForEdit)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onCmdNoProxyForRemove)
 
 
     def proxySettings(self, tabbook):
         """generate the proxy setting tab"""
         FXTabItem(tabbook, _("P&roxy Settings"), None)
         proxy = FXVerticalFrame(tabbook, FRAME_THICK|FRAME_RAISED)
-        basics = FXGroupBox(proxy, _("Basic Values"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        proxy_top = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
+
+	basics = FXGroupBox(proxy_top, _("Basic Values"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         matrix = FXMatrix(basics, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, _("Version"))
         version = FXLabel(matrix, wc.Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
@@ -155,7 +164,8 @@ class ConfWindow(FXMainWindow):
         FXLabel(matrix, _("Debug level"))
         cols=0
         d = FXComboBox(matrix,0,4,self, self.ID_DEBUGLEVEL,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        for text in ["No debugging","Bring it on","Hurt me plenty","Nightmare"]:
+        for text in ("No debugging", "Bring it on",
+	             "Hurt me plenty", "Nightmare"):
             text = _(text)
             cols = max(len(text), cols)
             d.appendItem(text)
@@ -163,9 +173,20 @@ class ConfWindow(FXMainWindow):
         # subtract 3 because acolumn is wider than text character
         d.setNumColumns(cols-3) 
         d.setCurrentItem(self.debuglevel)
+
+        f = FXGroupBox(proxy_top, _("No proxy for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        self.noproxylist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
+        for host in self.noproxyfor.keys():
+            self.noproxylist.appendItem(host)
+        f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
+        FXButton(f, _("Add"), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
+        FXButton(f, _("Edit"), None, self, ConfWindow.ID_NOPROXYFOR_EDIT)
+        FXButton(f, _("Remove"), None, self, ConfWindow.ID_NOPROXYFOR_REMOVE)
+
         frame = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
         filters = FXGroupBox(frame, _("Filter Modules"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
-        hframe = FXVerticalFrame(filters,LAYOUT_SIDE_TOP)
+        hframe = FXVerticalFrame(filters, LAYOUT_SIDE_TOP)
         for m in self.modules.keys():
             cb = FXCheckButton(hframe, m, self, self.ID_FILTERMODULE,opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
             if self.modules[m]:
@@ -350,6 +371,65 @@ class ConfWindow(FXMainWindow):
         return 1
 
 
+    def onCmdNoProxyForAdd(self, sender, sel, ptr):
+        dialog = FXDialogBox(self,_("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
+        frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        FXLabel(matrix, _("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        host = FXTextField(matrix, 20)
+        f = FXHorizontalFrame(frame)
+        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        if dialog.execute():
+            host = host.getText().strip().lower()
+            if not host:
+                error(_("Empty hostname"))
+	        return 1
+            if self.noproxyfor.has_key(host):
+                error(_("Duplicate hostname"))
+	        return 1
+            self.noproxyfor[host] = 1
+            self.noproxylist.appendItem(host)
+            self.getApp().dirty = 1
+            debug(BRING_IT_ON, "Added no-proxy host")
+        return 1
+
+    def onCmdNoProxyForEdit(self, sender, sel, ptr):
+        index = self.noproxylist.getCurrentItem()
+        if index < 0: return 1
+        item = self.noproxylist.retrieveItem(index)
+        if not item.isSelected(): return 1
+        host = item.getText()
+        dialog = FXDialogBox(self, _("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
+        frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        FXLabel(matrix, _("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        nametf = FXTextField(matrix, 20)
+        nametf.setText(host)
+        f = FXHorizontalFrame(frame)
+        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        if dialog.execute():
+            newhost = nametf.getText().strip().lower()
+            del self.noproxyfor[host]
+            self.noproxyfor[newhost] = 1
+            self.noproxylist.replaceItem(index, newhost)
+            self.getApp().dirty = 1
+            debug(BRING_IT_ON, "Changed no-proxy host")
+        return 1
+
+    def onCmdNoProxyForRemove(self, sender, sel, ptr):
+        index = self.noproxylist.getCurrentItem()
+        if index < 0: return 1
+        item = self.noproxylist.retrieveItem(index)
+        if not item.isSelected(): return 1
+        host = item.getText()
+        del self.noproxyfor[host]
+        self.noproxylist.removeItem(index)
+        self.getApp().dirty = 1
+        debug(BRING_IT_ON, "Removed no-proxy host")
+        return 1
+
     def onCmdProxyStart(self, sender, sel, ptr):
         from wc import daemon
         daemon.start(parent_exit=0)
@@ -413,7 +493,7 @@ class ConfWindow(FXMainWindow):
                     data = open(file).read()
                     digest = list(md5.new(data).digest())
                     digest = map(lambda c: "%0.2x" % ord(c), digest)
-                    digest = string.join(digest, "")
+                    digest = join(digest, "")
                     if digest==md5sum:
                         debug(BRING_IT_ON, "%s is uptodate" % filename)
 		        continue
@@ -453,9 +533,17 @@ class ConfWindow(FXMainWindow):
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
          'timeout','obfuscateip','debuglevel','logfile',
-	 'configfile'):
+	 'configfile', 'noproxyfor'):
             setattr(self, key, self.config[key])
-        self.modules = {"Header":0, "Blocker":0, "GifImage":0, "BinaryCharFilter":0,"Rewriter":0, "Compress":0,}
+        self.modules = {
+	    "Header":0,
+	    "Blocker":0,
+	    "GifImage":0,
+	    "BinaryCharFilter":0,
+	    "Rewriter":0,
+            "Replacer":0,
+	    "Compress":0,
+	}
         for f in self.config['filters']:
             self.modules[f] = 1
         # sort the filter list by title
@@ -502,6 +590,8 @@ class ConfWindow(FXMainWindow):
              ' debuglevel="%d"\n' % self.debuglevel
         if self.logfile:
             s += ' logfile="%s"\n' % self.logfile
+        if self.noproxyfor:
+            s += ' noproxyfor="%s"\n' % join(self.noproxyfor.keys(), ",")
         s += '>\n'
         for key,val in self.modules.items():
             if val:

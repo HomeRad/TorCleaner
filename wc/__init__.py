@@ -17,7 +17,7 @@
 
 import os,sys,UserDict
 import _webcleaner2_configdata as configdata
-from string import ljust,rjust,replace,join
+from string import ljust,rjust,replace,join,split
 from debug_levels import *
 
 Version = configdata.version
@@ -129,6 +129,7 @@ class Configuration(UserDict.UserDict):
         self['errorlen'] = ErrorLen
         self['errortext'] = ErrorText
         self['colorize'] = 0
+        self['noproxyfor'] = {}
 
     def read(self):
         # proxy configuration
@@ -239,6 +240,11 @@ class WConfigParser(BaseParser):
             for key in ('version','parentproxy','logfile'):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
+            if self.config['noproxyfor']:
+                d = {}
+                for host in split(self.config['noproxyfor'], ','):
+                    d[str(host)] = 1
+                self.config['noproxyfor'] = d
         elif name=='filter':
             debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])

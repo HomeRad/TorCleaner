@@ -48,11 +48,11 @@ class Replacer(Filter):
 
     def filter(self, data, **args):
         # add to buffer
-        apply(self.doit, (data,), args)
+        apply(self.doit, (data, host), args)
 
     def finish(self, data, **args):
         # add to buffer
-        apply(self.doit, (data,), args)
+        apply(self.doit, (data, host), args)
         # flush buffer
 
     def doit(self, data, **args):

@@ -18,7 +18,7 @@ from wc import debug, error
 from wc.debug_levels import *
 from types import StringType, IntType
 import re
-from string import joinfields, lower
+from string import joinfields, lower, join
 
 # tag ids
 STARTTAG = 0
