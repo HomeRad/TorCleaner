@@ -134,6 +134,8 @@ def _applyfilter (i, data, fun, attrs):
     for f in wc.configuration.config['filterlist'][i]:
         ffun = getattr(f, fun)
         if f.applies_to_mime(attrs['mime']):
+            wc.log.debug(wc.LOG_FILTER, "filter %d bytes with %s",
+                         len(data), f)
             data = ffun(data, **attrs)
     return data
 

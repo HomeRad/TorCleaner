@@ -36,7 +36,6 @@ class Replacer (wc.filter.Filter.Filter):
     mimelist = [wc.filter.compile_mime(x)
        for x in ['text/html', 'text/javascript', 'application/x-javascript']]
 
-
     def filter (self, data, **attrs):
         """feed data to replacer buffer"""
         if not attrs.has_key('replacer_buf') or not data:
@@ -44,7 +43,6 @@ class Replacer (wc.filter.Filter.Filter):
         buf = attrs['replacer_buf']
         charset = attrs.get('charset', DefaultCharset)
         return self.replace(data, charset, buf)
-
 
     def finish (self, data, **attrs):
         """feed data to replacer buffer, flush and return it"""
@@ -56,12 +54,10 @@ class Replacer (wc.filter.Filter.Filter):
             data = self.replace(data, charset, buf)
         return data+buf.flush().encode(charset, 'ignore')
 
-
     def replace (self, data, charset, buf):
         udata = data.decode(charset, 'ignore')
         udata = buf.replace(udata)
         return udata.encode(charset, 'ignore')
-
 
     def get_attrs (self, url, headers):
         """initialize replacer buffer object"""
@@ -83,7 +79,6 @@ class Buf (object):
         self.rules = rules
         self.buf = u""
 
-
     def replace (self, data):
         """fill up buffer with given data, and scan for replacements"""
         self.buf += data
@@ -95,13 +90,11 @@ class Buf (object):
                 return data[:-256]
         return u""
 
-
     def _replace (self):
         """scan for replacements"""
         for rule in self.rules:
             if rule.search:
                 self.buf = rule.search_ro.sub(rule.replacement, self.buf)
-
 
     def flush (self):
         """flush buffered data and return it"""

@@ -84,7 +84,6 @@ class Compress (wc.filter.Filter.Filter):
             data = "%s%s" % (header, compobj['compressor'].compress(data))
         return data
 
-
     def finish (self, data, **attrs):
         """final compression of data, flush gzip buffers"""
         if not attrs.has_key('compressobj'):
@@ -107,7 +106,6 @@ class Compress (wc.filter.Filter.Filter):
                                 struct.pack('<l', compobj['size']))
         return data
 
-
     def get_attrs (self, url, headers):
         """fix headers for compression, and add a compression object
            to the filter attrs
@@ -125,6 +123,5 @@ class Compress (wc.filter.Filter.Filter):
         else:
             compressobj = get_compress_object()
             headers['data']['Content-Encoding'] = 'gzip\r'
-        wc.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
         d['compressobj'] = compressobj
         return d

@@ -56,7 +56,6 @@ class GifImage (wc.filter.Filter.Filter):
             pass
         return gifparser.get_output()
 
-
     def finish (self, data, **attrs):
         """feed data to GIF image parser, flush it and return processed
            data"""
@@ -66,7 +65,6 @@ class GifImage (wc.filter.Filter.Filter):
             data = self.filter(data, **attrs)
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
-
 
     def get_attrs (self, url, headers):
         """add GIF parser to attributes"""
@@ -111,7 +109,6 @@ class GifParser (object):
         else:
             self.sizes = sizes
 
-
     def str_state (self):
         """return string representation of parser state"""
         if self.state == GifParser.SKIP:
@@ -128,18 +125,15 @@ class GifParser (object):
             return 'NOFILTER'
         return 'UNKNOWN'
 
-
     def add_data (self, data):
         """add image data to internal parse buffer"""
         self.data += data
-
 
     def flush (self):
         """flush already parsed image data to output buffer"""
         if self.consumed:
             self.output += self.consumed
             self.consumed = ''
-
 
     def read (self, i):
         """Read i data from internal buffer. Raise RewindException if
@@ -156,11 +150,9 @@ class GifParser (object):
         self.data = self.data[i:]
         return self.consumed[-i:]
 
-
     def remove (self, i):
         """remove i bytes from already parsed image data"""
         self.consumed = self.consumed[:-i]
-
 
     def get_output (self):
         """get output buffer data and flush it"""
@@ -169,7 +161,6 @@ class GifParser (object):
             self.output = ''
             return res
         return self.output
-
 
     def parse (self):
         """Big parse function. The trick is the usage of self.read(),

@@ -186,7 +186,6 @@ class ClamavConfig (dict):
             raise Exception(_("Clamd is not configured properly: " \
                                "both TCPSocket and LocalSocket are enabled."))
 
-
     def parseconf (self, filename):
         """parse clamav configuration from given file"""
         f = file(filename)
@@ -202,7 +201,6 @@ class ClamavConfig (dict):
             else:
                 self[split[0]] = split[1]
 
-
     def new_connection (self):
         """connect to clamd for stream scanning;
            return connected socket and host"""
@@ -217,7 +215,6 @@ class ClamavConfig (dict):
                                 "or LocalSocket in your Clamd configuration"))
         return sock, host
 
-
     def create_local_socket (self):
         """create local socket, connect to it and return socket object"""
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -228,7 +225,6 @@ class ClamavConfig (dict):
             sock.close()
             raise
         return sock
-
 
     def create_tcp_socket (self):
         """create tcp socket, connect to it and return socket object"""
@@ -242,7 +238,6 @@ class ClamavConfig (dict):
             sock.close()
             raise
         return sock
-
 
     def new_scansock (self, sock, host):
         """return a connected socket for sending scan data to it"""

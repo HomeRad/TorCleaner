@@ -38,7 +38,6 @@ class ImageSize (wc.filter.Filter.Filter):
     mimelist = [wc.filter.compile_mime(x) for x in \
            ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
-
     def __init__ (self):
         super(ImageSize, self).__init__()
         # minimal amount of image data for PIL to read header info:
@@ -51,7 +50,6 @@ class ImageSize (wc.filter.Filter.Filter):
         f = file(fname)
         self.blockdata = f.read()
         f.close()
-
 
     def filter (self, data, **attrs):
         if not data or not attrs.has_key('imgsize_buf'):
@@ -79,7 +77,6 @@ class ImageSize (wc.filter.Filter.Filter):
             return data
         return ''
 
-
     def finish (self, data, **attrs):
         # note: if attrs['blocked'] is True, then the blockdata is
         # already sent out
@@ -106,7 +103,6 @@ class ImageSize (wc.filter.Filter.Filter):
         if attrs['imgsize_blocked']:
             return self.blockdata
         return data
-
 
     def check_sizes (self, buf, sizes, url, finish=False):
         pos = buf.tell()
@@ -137,7 +133,6 @@ class ImageSize (wc.filter.Filter.Filter):
                 self.min_bufsize = pos+4096
                 assert buf.tell() < self.min_bufsize
         return True
-
 
     def get_attrs (self, url, headers):
         d = super(ImageSize, self).get_attrs(url, headers)

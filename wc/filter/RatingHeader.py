@@ -52,7 +52,6 @@ class RatingHeader (wc.filter.Filter.Filter):
                 raise wc.filter.FilterRating(msg)
         return data
 
-
     def get_attrs (self, url, headers):
         d = super(RatingHeader, self).get_attrs(url, headers)
         # weed out the rules that don't apply to this url
