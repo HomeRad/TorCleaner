@@ -170,7 +170,7 @@ def str_flags (flags):
 
 def check_nonces ():
     # deprecate old nonces
-    for key, value in nonces.items():
+    for nonce, value in nonces.items():
         noncetime = time.time() - value
         if noncetime > max_noncesecs:
             del nonces[nonce]
@@ -197,7 +197,7 @@ def parse_ntlm_challenge (challenge):
     else:
         chal, remainder = challenge, ""
     chal = chal.strip()
-    reaminder = remainder.strip()
+    remainder = remainder.strip()
     if not chal:
         # empty challenge (type0) encountered
         res = {'type': NTLMSSP_INIT}
