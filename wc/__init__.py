@@ -46,7 +46,7 @@ def remove_headers (headers, to_remove):
             del headers[h]
 
 def has_header_value (headers, key, value):
-    if has_attr(headers, "getallmatchingheaders"):
+    if hasattr(headers, "getallmatchingheaders"):
         # rfc822.Message() object
         for h in headers.getallmatchingheaders(key):
             if h.strip().lower() == value.lower():
