@@ -16,7 +16,11 @@ class DeflateStream (object):
 
     def __repr__ (self):
         """object representation"""
-        return '<%s closed=%s>' % ('deflate', self.closed)
+        if self.closed
+            s = "closed"
+        else:
+            s = "open"
+        return '<deflate %s>' % s
 
     def decode (self, s):
         """unzip given data s and return decompressed data"""

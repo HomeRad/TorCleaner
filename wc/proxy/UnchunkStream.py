@@ -26,8 +26,12 @@ class UnchunkStream (object):
 
     def __repr__ (self):
         """representation of stream filter state"""
-        return '<%s closed=%s buflen=%d bytes_remaining=%s>' % \
-      ('unchunk', self.closed, len(self.buf), self.bytes_remaining)
+        if self.closed
+            s = "closed"
+        else:
+            s = "open"
+        return '<unchunk %s buflen=%d bytes_remaining=%s>' % \
+                  (s, len(self.buf), self.bytes_remaining)
 
     def decode (self, s):
         """unchunk given data s"""
