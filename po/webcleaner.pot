@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-12-27 23:36+0100\n"
+"POT-Creation-Date: 2005-03-15 01:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,466 +16,466 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../wc/proxy/Headers.py:205
+#: ../wc/proxy/Headers.py:247
 #, python-format
 msgid "Missing content type in %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:216
+#: ../wc/proxy/Headers.py:258
 #, python-format
 msgid "Change content type of %r from %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:219
+#: ../wc/proxy/Headers.py:261
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:269
+#: ../wc/proxy/Headers.py:313
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:53 ../wc/proxy/HttpClient.py:175
+#: ../wc/proxy/SslClient.py:56 ../wc/proxy/HttpClient.py:196
 msgid "URL too long"
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:54 ../wc/proxy/HttpClient.py:176
+#: ../wc/proxy/SslClient.py:57 ../wc/proxy/HttpClient.py:197
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr ""
 
-#: ../wc/proxy/SslClient.py:74 ../wc/proxy/HttpClient.py:205
-#: ../wc/proxy/HttpClient.py:213 ../wc/proxy/HttpClient.py:219
+#: ../wc/proxy/SslClient.py:77 ../wc/proxy/HttpClient.py:226
+#: ../wc/proxy/HttpClient.py:234 ../wc/proxy/HttpClient.py:240
 msgid "Forbidden"
 msgstr ""
 
-#: ../wc/proxy/__init__.py:33
+#: ../wc/proxy/__init__.py:38
 #, python-format
 msgid "unsupported HTTP version %s"
 msgstr ""
 
-#: ../wc/proxy/__init__.py:36
+#: ../wc/proxy/__init__.py:41
 #, python-format
 msgid "invalid HTTP version %r"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:93
+#: ../wc/proxy/HttpClient.py:105
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:139
+#: ../wc/proxy/HttpClient.py:157
 msgid "Can't parse request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:142
+#: ../wc/proxy/HttpClient.py:160
 msgid "Method Not Allowed"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:147
+#: ../wc/proxy/HttpClient.py:165
 msgid "Empty URL"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:275
+#: ../wc/proxy/HttpClient.py:299
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:295 ../wc/proxy/HttpClient.py:308
-#: ../wc/proxy/HttpClient.py:320
+#: ../wc/proxy/HttpClient.py:319 ../wc/proxy/HttpClient.py:332
+#: ../wc/proxy/HttpClient.py:344
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:414 ../wc/proxy/HttpServer.py:362
+#: ../wc/proxy/HttpClient.py:444 ../wc/proxy/HttpServer.py:403
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:524
+#: ../wc/proxy/HttpClient.py:572
 msgid "Invalid Method"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:532 ../wc/proxy/HttpClient.py:538
-#: ../wc/proxy/HttpClient.py:549 ../wc/webgui/webconfig.py:58
+#: ../wc/proxy/HttpClient.py:580 ../wc/proxy/HttpClient.py:586
+#: ../wc/proxy/HttpClient.py:597 ../wc/webgui/webconfig.py:64
 msgid "Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:222
+#: ../wc/proxy/HttpServer.py:250
 #, python-format
 msgid "invalid or missing response from %r: %r"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:232
+#: ../wc/proxy/HttpServer.py:260
 #, python-format
 msgid "missing headers in response from %r"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:295
+#: ../wc/proxy/HttpServer.py:327
 msgid "redirection to localhost"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:416
+#: ../wc/proxy/HttpServer.py:459
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:122
+#: ../wc/proxy/ClientServerMatchmaker.py:128
 #, python-format
 msgid "Host %s is an abbreviation for %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:127
+#: ../wc/proxy/ClientServerMatchmaker.py:133
 msgid "Host not found"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:128
+#: ../wc/proxy/ClientServerMatchmaker.py:134
 #, python-format
 msgid "Host %s not found .. %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:157
+#: ../wc/proxy/ClientServerMatchmaker.py:165
 msgid "Service unavailable"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:177
+#: ../wc/proxy/ClientServerMatchmaker.py:185
 msgid "Connection timeout"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:179
+#: ../wc/proxy/ClientServerMatchmaker.py:187
 msgid "Connect error"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:210
-#: ../wc/proxy/ClientServerMatchmaker.py:214
+#: ../wc/proxy/ClientServerMatchmaker.py:220
+#: ../wc/proxy/ClientServerMatchmaker.py:224
 msgid "Expectation failed"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:211
+#: ../wc/proxy/ClientServerMatchmaker.py:221
 msgid "Server does not understand HTTP/1.1"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:215
+#: ../wc/proxy/ClientServerMatchmaker.py:225
 #, python-format
 msgid "Unsupported expectation %r"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:227
+#: ../wc/proxy/ClientServerMatchmaker.py:237
 msgid "No response from server"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:246
+#: ../wc/proxy/ClientServerMatchmaker.py:260
 msgid "Server closed connection"
 msgstr ""
 
-#: ../wc/proxy/decoder/GunzipStream.py:47
+#: ../wc/proxy/decoder/GunzipStream.py:56
 msgid "zlib error: not gzip format, disabling gunzip"
 msgstr ""
 
-#: ../wc/proxy/decoder/GunzipStream.py:54
+#: ../wc/proxy/decoder/GunzipStream.py:63
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:82
+#: ../wc/filter/rules/FolderRule.py:99
 #, python-format
 msgid "inserting new rule %s"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:121
+#: ../wc/filter/rules/FolderRule.py:146
 msgid "with 1 rule"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:123
+#: ../wc/filter/rules/FolderRule.py:148
 #, python-format
 msgid "with %d rules"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:107
+#: ../wc/filter/rules/Rule.py:124
 #, python-format
 msgid "updating rule title for language %s:"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:121
+#: ../wc/filter/rules/Rule.py:138
 #, python-format
 msgid "updating rule description for language %s:"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:137
+#: ../wc/filter/rules/Rule.py:155
 #, python-format
 msgid "updating rule %s:"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:83
+#: ../wc/filter/rules/RewriteRule.py:89
 msgid "Tag"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:84
+#: ../wc/filter/rules/RewriteRule.py:90
 msgid "Tag name"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:85
+#: ../wc/filter/rules/RewriteRule.py:91
 msgid "Attribute"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:86
+#: ../wc/filter/rules/RewriteRule.py:92
 msgid "Attribute value"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:87
+#: ../wc/filter/rules/RewriteRule.py:93
 msgid "Complete tag"
 msgstr ""
 
-#: ../wc/filter/rules/RewriteRule.py:88
+#: ../wc/filter/rules/RewriteRule.py:94
 msgid "Enclosed block"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:92
-#, python-format
-msgid "Rating %r for category %r is not in range %s"
+#: ../wc/filter/rules/RatingRule.py:30
+msgid "Unknown page"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:96
-#, python-format
-msgid "Rating %r for category %r exceeds limit %r"
-msgstr ""
-
-#: ../wc/filter/JSFilter.py:314
+#: ../wc/filter/JSFilter.py:356
 #, python-format
 msgid "error fetching script from %r"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:77
+#: ../wc/filter/VirusFilter.py:86
 msgid "Not acceptable"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:78
+#: ../wc/filter/VirusFilter.py:87
 #, python-format
 msgid "Maximum data size (%s) exceeded"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:186
+#: ../wc/filter/VirusFilter.py:213
 msgid "You have to disable ScannerDaemonOutputFormat"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:188
+#: ../wc/filter/VirusFilter.py:215
 msgid ""
 "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:216
+#: ../wc/filter/VirusFilter.py:248
 msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:261
+#: ../wc/filter/VirusFilter.py:298
 msgid "Clamd is not ready for stream scanning"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:68
-msgid "Unknown page"
-msgstr ""
-
-#: ../wc/filter/rating/__init__.py:135
+#: ../wc/filter/rating/__init__.py:144
 #, python-format
 msgid "adding new rating for %r"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:37
+#: ../wc/filter/rating/category.py:64
 msgid "none"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:37
+#: ../wc/filter/rating/category.py:64
 msgid "mild"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:37
+#: ../wc/filter/rating/category.py:64
 msgid "heavy"
 msgstr ""
 
-#: ../wc/filter/rating/storage/filesystem.py:43
+#: ../wc/filter/rating/category.py:79
+#, python-format
+msgid "Rating %r for category %r exceeds limit %r"
+msgstr ""
+
+#: ../wc/filter/rating/category.py:117
+#, python-format
+msgid "Rating %r for category %r is not in range %s"
+msgstr ""
+
+#: ../wc/filter/rating/storage/filesystem.py:57
 #, python-format
 msgid "malformed rating line %r"
 msgstr ""
 
-#: ../wc/filter/rating/storage/filesystem.py:46
+#: ../wc/filter/rating/storage/filesystem.py:59
 #, python-format
 msgid "malformed modified time %r"
 msgstr ""
 
-#: ../wc/filter/rating/storage/filesystem.py:50
+#: ../wc/filter/rating/storage/filesystem.py:63
 #, python-format
 msgid "generic url %r doesn't match %r"
 msgstr ""
 
-#: ../wc/webgui/context/error_html.py:21
+#: ../wc/webgui/context/error_html.py:23
 #, python-format
 msgid "%s error"
 msgstr ""
 
-#: ../wc/webgui/context/update_doit_html.py:35
+#: ../wc/webgui/context/update_doit_html.py:37
 msgid "Error: nothing to update."
 msgstr ""
 
-#: ../wc/webgui/context/update_doit_html.py:47
-#: ../wc/webgui/context/update_doit_html.py:62
+#: ../wc/webgui/context/update_doit_html.py:49
+#: ../wc/webgui/context/update_doit_html.py:64
 #, python-format
 msgid "Error: %s"
 msgstr ""
 
-#: ../wc/webgui/context/filterconfig_html.py:370
+#: ../wc/webgui/context/filterconfig_html.py:373
 msgid "No title"
 msgstr ""
 
-#: ../wc/webgui/context/rated_html.py:29
+#: ../wc/webgui/context/rated_html.py:31
 msgid "Unknown reason"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:37
+#: ../wc/webgui/webconfig.py:41
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:74
+#: ../wc/webgui/webconfig.py:80
 msgid "Not Found"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:79
+#: ../wc/webgui/webconfig.py:85
 msgid "Internal Error"
 msgstr ""
 
-#: ../wc/update.py:174
+#: ../wc/update.py:219
 msgid "updating filters"
 msgstr ""
 
-#: ../wc/update.py:181 ../wc/update.py:191
+#: ../wc/update.py:226 ../wc/update.py:236
 #, python-format
 msgid "error fetching %s"
 msgstr ""
 
-#: ../wc/update.py:182 ../wc/update.py:192 ../wc/update.py:228
-#: ../wc/update.py:236 ../wc/update.py:273 ../wc/update.py:287
-#: ../wc/update.py:291
+#: ../wc/update.py:227 ../wc/update.py:237 ../wc/update.py:272
+#: ../wc/update.py:280 ../wc/update.py:317 ../wc/update.py:333
+#: ../wc/update.py:337
 msgid "done"
 msgstr ""
 
-#: ../wc/update.py:208
+#: ../wc/update.py:253
 #, python-format
 msgid "filter %s not changed, ignoring"
 msgstr ""
 
-#: ../wc/update.py:210
+#: ../wc/update.py:255
 #, python-format
 msgid "updating filter %s"
 msgstr ""
 
-#: ../wc/update.py:212
+#: ../wc/update.py:257
 #, python-format
 msgid "adding new filter %s"
 msgstr ""
 
-#: ../wc/update.py:227 ../wc/update.py:234 ../wc/update.py:263
-#: ../wc/update.py:267 ../wc/update.py:286
+#: ../wc/update.py:271 ../wc/update.py:278 ../wc/update.py:307
+#: ../wc/update.py:311 ../wc/update.py:332
 #, python-format
 msgid "error fetching %s:"
 msgstr ""
 
-#: ../wc/update.py:235
+#: ../wc/update.py:279
 msgid "invalid content"
 msgstr ""
 
-#: ../wc/update.py:252
+#: ../wc/update.py:296
 #, python-format
 msgid "extern filter %s not changed, ignoring"
 msgstr ""
 
-#: ../wc/update.py:254
+#: ../wc/update.py:298
 #, python-format
 msgid "updating extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:256
+#: ../wc/update.py:300
 #, python-format
 msgid "adding new extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:268
+#: ../wc/update.py:312
 msgid "got no data"
 msgstr ""
 
-#: ../wc/update.py:279
+#: ../wc/update.py:325
 msgid "updating ratings..."
 msgstr ""
 
-#: ../wc/strformat.py:135
+#: ../wc/strformat.py:188
 msgid "seconds"
 msgstr ""
 
-#: ../wc/strformat.py:138
+#: ../wc/strformat.py:191
 msgid "minutes"
 msgstr ""
 
-#: ../wc/strformat.py:141
+#: ../wc/strformat.py:194
 msgid "hours"
 msgstr ""
 
-#: ../wc/win32start.py:37
+#: ../wc/win32start.py:40
 #, python-format
 msgid "%s Proxy"
 msgstr ""
 
-#: ../wc/win32start.py:80
+#: ../wc/win32start.py:91
 #, python-format
 msgid "The %s service runs in its own process."
 msgstr ""
 
-#: ../wc/win32start.py:83
+#: ../wc/win32start.py:94
 #, python-format
 msgid "The %s service shares a process with other services."
 msgstr ""
 
-#: ../wc/win32start.py:86
+#: ../wc/win32start.py:97
 #, python-format
 msgid "The %s service can interact with the desktop."
 msgstr ""
 
-#: ../wc/win32start.py:89
+#: ../wc/win32start.py:100
 #, python-format
 msgid "The %s service is stopped."
 msgstr ""
 
-#: ../wc/win32start.py:91
+#: ../wc/win32start.py:102
 #, python-format
 msgid "The %s service is starting."
 msgstr ""
 
-#: ../wc/win32start.py:93
+#: ../wc/win32start.py:104
 #, python-format
 msgid "The %s service is stopping."
 msgstr ""
 
-#: ../wc/win32start.py:95
+#: ../wc/win32start.py:106
 #, python-format
 msgid "The %s service is running."
 msgstr ""
 
-#: ../wc/win32start.py:98
+#: ../wc/win32start.py:109
 #, python-format
 msgid "The %s service can be stopped."
 msgstr ""
 
-#: ../wc/win32start.py:100
+#: ../wc/win32start.py:111
 #, python-format
 msgid "The %s service can be paused."
 msgstr ""
 
-#: ../wc/configuration.py:237
+#: ../wc/configuration.py:264
 #, python-format
 msgid "inserting %s"
 msgstr ""
 
-#: ../wc/configuration.py:427 ../wc/configuration.py:493
+#: ../wc/configuration.py:486 ../wc/configuration.py:566
 #, python-format
 msgid "unknown tag name %r"
 msgstr ""
 
-#: ../webcleaner:31
+#: ../webcleaner:27
 #, python-format
 msgid ""
 "USAGE\twebcleaner [options] <command> [command options]\n"
@@ -521,7 +521,7 @@ msgid ""
 "        Allow the service to interact with the desktop.\n"
 msgstr ""
 
-#: ../webcleaner:75
+#: ../webcleaner:71
 #, python-format
 msgid ""
 "USAGE\twebcleaner [options] [command]\n"
@@ -546,30 +546,30 @@ msgid ""
 "        Restart %(appname)s.\n"
 msgstr ""
 
-#: ../webcleaner:101
+#: ../webcleaner:97
 msgid "execute 'webcleaner -h' for help\n"
 msgstr ""
 
-#: ../webcleaner:114
+#: ../webcleaner:110
 msgid "press return to continue..."
 msgstr ""
 
-#: ../webcleaner:122
+#: ../webcleaner:118
 #, python-format
 msgid "%(appname)s Proxy"
 msgstr ""
 
-#: ../webcleaner:151 ../webcleaner-certificates:94
+#: ../webcleaner:147 ../webcleaner-certificates:94
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr ""
 
-#: ../webcleaner:167 ../webcleaner:186
+#: ../webcleaner:163 ../webcleaner:182
 #, python-format
 msgid "Unknown command %r"
 msgstr ""
 
-#: ../webcleaner:173 ../webcleaner-certificates:101
+#: ../webcleaner:169 ../webcleaner-certificates:101
 msgid "No command given."
 msgstr ""
 
@@ -602,6 +602,15 @@ msgstr ""
 #, python-format
 msgid "Invalid command %r."
 msgstr ""
+#: ../templates/classic/macros/rules.html:427
+#: ../templates/classic/macros/rules.html:441
+#: ../templates/classic/rating.html:46
+#: ../templates/classic/rating.html:63
+#: ../templates/classic/rating.html:113
+#: ../templates/classic/rating.html:116
+msgid ""
+msgstr ""
+
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91
 msgid "${appname} Google Selection"
@@ -680,7 +689,7 @@ msgstr ""
 msgid "Accessibility pages"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:85
+#: ../templates/classic/macros/standard.html:83
 #: ../templates/classic/accessibility.html:12
 #: ../templates/classic/accessibility.html:50
 msgid "Accessibility statement"
@@ -709,7 +718,7 @@ msgstr ""
 msgid "Add, modify and delete HTTP headers of request and response."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:553
+#: ../templates/classic/macros/rules.html:554
 msgid "Add/replace attribute"
 msgstr ""
 
@@ -767,7 +776,7 @@ msgstr ""
 msgid "Allowed hosts"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:421
+#: ../templates/classic/macros/rules.html:422
 msgid "Allowed limit"
 msgstr ""
 
@@ -806,14 +815,14 @@ msgstr ""
 #: ../templates/classic/macros/rules.html:348
 #: ../templates/classic/macros/rules.html:367
 #: ../templates/classic/macros/rules.html:386
-#: ../templates/classic/macros/rules.html:448
-#: ../templates/classic/macros/rules.html:482
-#: ../templates/classic/macros/rules.html:582
+#: ../templates/classic/macros/rules.html:449
+#: ../templates/classic/macros/rules.html:483
+#: ../templates/classic/macros/rules.html:583
 #: ../templates/classic/rating.html:69
 msgid "Apply"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:507
+#: ../templates/classic/macros/rules.html:508
 msgid "Attributes"
 msgstr ""
 
@@ -841,7 +850,7 @@ msgstr ""
 msgid "Browser configuration"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:420
+#: ../templates/classic/macros/rules.html:421
 #: ../templates/classic/rating.html:39
 msgid "Category"
 msgstr ""
@@ -867,6 +876,11 @@ msgstr ""
 msgid "Content rated by ${appname}"
 msgstr ""
 
+#: ../templates/classic/macros/standard.html:51
+#: ../templates/classic/macros/standard.html:55
+msgid "Content rating"
+msgstr ""
+
 #: ../templates/classic/rating.html:13
 #: ../templates/classic/rating_mail.html:13
 msgid "Content rating for ${appname}"
@@ -884,7 +898,11 @@ msgstr ""
 msgid "Deanimates GIFs and removes all unwanted GIF image extensions (for example GIF comments)."
 msgstr ""
 
-#: ../templates/classic/rating.html:98
+#: ../templates/classic/rating.html:103
+msgid "Delete"
+msgstr ""
+
+#: ../templates/classic/rating.html:99
 msgid "Delete this rating"
 msgstr ""
 
@@ -936,7 +954,11 @@ msgstr ""
 msgid "Down"
 msgstr ""
 
-#: ../templates/classic/rating.html:94
+#: ../templates/classic/rating.html:97
+msgid "Edit"
+msgstr ""
+
+#: ../templates/classic/rating.html:95
 msgid "Edit this rating"
 msgstr ""
 
@@ -944,7 +966,7 @@ msgstr ""
 msgid "Email URL rating to ${email}"
 msgstr ""
 
-#: ../templates/classic/rating.html:104
+#: ../templates/classic/rating.html:105
 msgid "Email this rating to the author"
 msgstr ""
 
@@ -997,7 +1019,7 @@ msgstr ""
 msgid "Fallback URL"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:91
+#: ../templates/classic/macros/standard.html:89
 #: ../templates/classic/accessibility.html:48
 msgid "Feedback"
 msgstr ""
@@ -1088,9 +1110,13 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:83
-#: ../templates/classic/macros/standard.html:114
+#: ../templates/classic/macros/standard.html:81
+#: ../templates/classic/macros/standard.html:112
 msgid "Generated by ${appname} ${version}"
+msgstr ""
+
+#: ../templates/classic/rating.html:86
+msgid "Generic"
 msgstr ""
 
 #: ../templates/classic/rating.html:75
@@ -1122,8 +1148,8 @@ msgstr ""
 msgid "Header value"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:61
-#: ../templates/classic/macros/standard.html:65
+#: ../templates/classic/macros/standard.html:59
+#: ../templates/classic/macros/standard.html:63
 msgid "Help"
 msgstr ""
 
@@ -1183,7 +1209,7 @@ msgstr ""
 msgid "Invalid attribute name."
 msgstr ""
 
-#: ../templates/classic/rating.html:132
+#: ../templates/classic/rating.html:134
 #: ../templates/classic/filterconfig.html:243
 msgid "Invalid category value."
 msgstr ""
@@ -1260,7 +1286,7 @@ msgstr ""
 msgid "Invalid rule type."
 msgstr ""
 
-#: ../templates/classic/rating.html:133
+#: ../templates/classic/rating.html:135
 #: ../templates/classic/filterconfig.html:242
 msgid "Invalid selection index."
 msgstr ""
@@ -1273,7 +1299,7 @@ msgstr ""
 msgid "Invalid url."
 msgstr ""
 
-#: ../templates/classic/rating.html:134
+#: ../templates/classic/rating.html:136
 msgid "Invalid url. The url has to start with <code>http://</code>, <code>https://</code> or <code>ftp://</code>."
 msgstr ""
 
@@ -1297,6 +1323,10 @@ msgstr ""
 msgid "Location of the Clamav Antivirus software configuration file"
 msgstr ""
 
+#: ../templates/classic/rating.html:108
+msgid "Mail"
+msgstr ""
+
 #: ../templates/classic/macros/rules.html:51
 msgid "Match urls"
 msgstr ""
@@ -1309,7 +1339,7 @@ msgstr ""
 msgid "Minimum image size"
 msgstr ""
 
-#: ../templates/classic/rating.html:87
+#: ../templates/classic/rating.html:88
 msgid "Modified"
 msgstr ""
 
@@ -1337,8 +1367,8 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:513
-#: ../templates/classic/macros/rules.html:538
+#: ../templates/classic/macros/rules.html:514
+#: ../templates/classic/macros/rules.html:539
 msgid "Name"
 msgstr ""
 
@@ -1504,7 +1534,7 @@ msgstr ""
 msgid "Proxy user successfully changed."
 msgstr ""
 
-#: ../templates/classic/rating.html:86
+#: ../templates/classic/rating.html:87
 msgid "Rated"
 msgstr ""
 
@@ -1521,14 +1551,14 @@ msgid "Rating data mailed successfully."
 msgstr ""
 
 #: ../templates/classic/macros/rules.html:411
-msgid "Rating limits for"
+msgid "Rating limits for ${service}:"
 msgstr ""
 
-#: ../templates/classic/rating.html:128
+#: ../templates/classic/rating.html:130
 msgid "Rating successfully deleted."
 msgstr ""
 
-#: ../templates/classic/rating.html:127
+#: ../templates/classic/rating.html:129
 msgid "Rating successfully updated."
 msgstr ""
 
@@ -1559,7 +1589,7 @@ msgstr ""
 msgid "Remove selected"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:533
+#: ../templates/classic/macros/rules.html:534
 msgid "Remove selected attributes"
 msgstr ""
 
@@ -1571,7 +1601,7 @@ msgstr ""
 msgid "Replace illegal binary characters in HTML code like the quote chars often found in Microsoft pages."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:564
+#: ../templates/classic/macros/rules.html:565
 msgid "Replace part"
 msgstr ""
 
@@ -1583,11 +1613,11 @@ msgstr ""
 msgid "Replace regular expressions in data streams."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:576
+#: ../templates/classic/macros/rules.html:577
 msgid "Replace value"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:475
+#: ../templates/classic/macros/rules.html:476
 msgid "Replacement"
 msgstr ""
 
@@ -1777,7 +1807,7 @@ msgstr ""
 msgid "Search Google"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:467
+#: ../templates/classic/macros/rules.html:468
 msgid "Search for"
 msgstr ""
 
@@ -1826,12 +1856,12 @@ msgstr ""
 msgid "The supplied value resembles a <a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
 msgstr ""
 
-#: ../templates/classic/rating.html:122
+#: ../templates/classic/rating.html:124
 msgid "There are no url ratings saved."
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:75
-#: ../templates/classic/macros/standard.html:106
+#: ../templates/classic/macros/standard.html:73
+#: ../templates/classic/macros/standard.html:104
 msgid "This page is also available in"
 msgstr ""
 
@@ -1895,12 +1925,12 @@ msgstr ""
 msgid "Username used for proxy authentication"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:514
-#: ../templates/classic/macros/rules.html:546
+#: ../templates/classic/macros/rules.html:515
+#: ../templates/classic/macros/rules.html:547
 msgid "Value"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:91
+#: ../templates/classic/macros/standard.html:89
 msgid "WebCleaner feedback information"
 msgstr ""
 
@@ -1944,7 +1974,7 @@ msgstr ""
 msgid "Your request"
 msgstr ""
 
-#: ../templates/classic/macros/standard.html:85
+#: ../templates/classic/macros/standard.html:83
 msgid "accessibility features of these pages"
 msgstr ""
 
@@ -2008,7 +2038,7 @@ msgstr ""
 msgid "resulted in the following error:<br> Server response ${response}"
 msgstr ""
 
-#: ../templates/classic/rating.html:98
+#: ../templates/classic/rating.html:99
 msgid "return window.confirm('Really delete this rating?')"
 msgstr ""
 
@@ -2027,8 +2057,8 @@ msgstr ""
 #: ../templates/classic/macros/rules.html:51
 #: ../templates/classic/macros/rules.html:68
 #: ../templates/classic/macros/rules.html:94
-#: ../templates/classic/macros/rules.html:467
-#: ../templates/classic/macros/rules.html:546
+#: ../templates/classic/macros/rules.html:468
+#: ../templates/classic/macros/rules.html:547
 msgid "see footnote 1"
 msgstr ""
 
