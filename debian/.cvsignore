@@ -1,7 +1,7 @@
 tmp
 patched
 webcleaner
-webcleanertools
+webcleaner-common
 files
 *substvars
 *.debhelper
