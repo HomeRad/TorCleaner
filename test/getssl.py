@@ -100,10 +100,11 @@ def rawrequest3 (url, port):
     print " ok."
     while True:
         try:
-            print "XXX read"
             print repr(sock.read(80))
         except socket.sslerror, msg:
-            print "Oops"
+            # msg should be (6, 'TLS/SSL connection has been closed')
+            if msg[0] != 6:
+                print "Oops", msg
             break
     _sock.close()
 
