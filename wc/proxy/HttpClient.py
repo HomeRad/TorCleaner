@@ -39,9 +39,9 @@ def is_http_method (s):
     return False
 
 FilterLevels = [
-    wc.filter.FILTER_REQUEST_DECODE,
-    wc.filter.FILTER_REQUEST_MODIFY,
-    wc.filter.FILTER_REQUEST_ENCODE,
+    wc.filter.STAGE_REQUEST_DECODE,
+    wc.filter.STAGE_REQUEST_MODIFY,
+    wc.filter.STAGE_REQUEST_ENCODE,
 ]
 
 class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
@@ -146,16 +146,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.url:
             self.error(400, _("Empty URL"))
             return
-        self.attrs = wc.filter.get_filterattrs(self.url,
-                                               [wc.filter.FILTER_REQUEST])
         self.protocol = wc.proxy.fix_http_version(protocol)
         self.http_ver = wc.proxy.get_http_version(self.protocol)
         # build request
         self.request = "%s %s %s" % (self.method, self.url, self.protocol)
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
         # filter request
-        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST,
-                                      self.request, "finish", self.attrs)
+        attrs = wc.filter.get_filterattrs(self.url, wc.filter.STAGE_REQUEST)
+        self.request = wc.filter.applyfilter(wc.filter.STAGE_REQUEST,
+                                             self.request, "finish", attrs)
         # final request checking
         if not self.fix_request():
             return
@@ -238,16 +237,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
         self.fix_request_headers(msg)
         clientheaders = msg.copy()
-        self.attrs = wc.filter.get_filterattrs(self.url,
-                       [wc.filter.FILTER_REQUEST_HEADER],
-                       clientheaders=clientheaders,
-                       headers=msg)
         self.set_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
         self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
         # filter headers
-        self.headers = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_HEADER,
-                                   msg, "finish", self.attrs)
+        attrs = wc.filter.get_filterattrs(self.url,
+                       wc.filter.STAGE_REQUEST_HEADER,
+                       clientheaders=clientheaders, headers=msg)
+        self.headers = wc.filter.applyfilter(wc.filter.STAGE_REQUEST_HEADER,
+                                             msg, "finish", attrs)
         # add decoders
         self.decoders = []
         # if content-length header is missing, assume zero length
@@ -377,8 +375,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             data = decoder.decode(data)
             if not is_closed:
                 is_closed = decoder.closed
-        data = wc.filter.applyfilters(FilterLevels, data,
-                                      "filter", self.attrs)
+        for stage in FilterLevels:
+            attrs = wc.filter.get_filterattrs(self.url, stage,
+                       clientheaders=self.clientheaders, headers=self.headers)
+            data = wc.filter.applyfilters(stage, data, "filter", attrs)
         self.content += data
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
@@ -387,8 +387,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                         "client received %d bytes more than content-length",
                         -self.bytes_remaining)
         if is_closed or self.bytes_remaining <= 0:
-            data = wc.filter.applyfilters(FilterLevels, "",
-                                          "finish", self.attrs)
+            for stage in FilterLevels:
+                attrs = wc.filter.get_filterattrs(self.url, stage,
+                       clientheaders=self.clientheaders, headers=self.headers)
+                data = wc.filter.applyfilters(stage, "", "finish", attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r" % len(self.content)

@@ -28,9 +28,9 @@ SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
 
 FilterLevels = [
-    wc.filter.FILTER_RESPONSE_DECODE,
-    wc.filter.FILTER_RESPONSE_MODIFY,
-    wc.filter.FILTER_RESPONSE_ENCODE,
+    wc.filter.STAGE_RESPONSE_DECODE,
+    wc.filter.STAGE_RESPONSE_MODIFY,
+    wc.filter.STAGE_RESPONSE_ENCODE,
 ]
 
 is_http_status = re.compile(r'^\d\d\d$').search
@@ -235,10 +235,9 @@ class HttpServer (wc.proxy.Server.Server):
             self.response = "%s 200 Ok" % self.protocol
             self.statuscode = 200
         self.state = 'headers'
-        self.attrs = wc.filter.get_filterattrs(self.url,
-                               [wc.filter.FILTER_RESPONSE])
-        self.response = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE,
-                              self.response, "finish", self.attrs).strip()
+        attrs = wc.filter.get_filterattrs(self.url, wc.filter.STAGE_RESPONSE)
+        self.response = wc.filter.applyfilter(wc.filter.STAGE_RESPONSE,
+                                    self.response, "finish", attrs).strip()
         if self.statuscode >= 400:
             self.mime_types = None
         wc.log.debug(wc.LOG_PROXY, "%s response %r", self, self.response)
@@ -271,14 +270,14 @@ class HttpServer (wc.proxy.Server.Server):
             return
         self.set_persistent(msg,
                      wc.proxy.ServerPool.serverpool.http_versions[self.addr])
-        self.attrs = wc.filter.get_filterattrs(self.url,
-                        [wc.filter.FILTER_RESPONSE_HEADER],
+        attrs = wc.filter.get_filterattrs(self.url,
+                        wc.filter.STAGE_RESPONSE_HEADER,
                         clientheaders=self.client.headers,
                         serverheaders=serverheaders)
         try:
             self.headers = \
-               wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_HEADER, msg,
-                                     "finish", self.attrs)
+               wc.filter.applyfilter(wc.filter.STAGE_RESPONSE_HEADER, msg,
+                                     "finish", attrs)
         except wc.filter.FilterRating, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s",
                          self, msg)
@@ -397,8 +396,9 @@ class HttpServer (wc.proxy.Server.Server):
             if not is_closed and decoder.closed:
                 is_closed = True
         try:
-            data = wc.filter.applyfilters(FilterLevels, data, "filter",
-                                          self.attrs)
+            for stage in FilterLevels:
+                # XXX attrs
+                data = wc.filter.applyfilters(stage, data, "filter", attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
         except wc.filter.FilterRating, msg:
@@ -495,8 +495,9 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
         data = flush_decoders(self.decoders)
         try:
-            data = wc.filter.applyfilters(FilterLevels, data, "finish",
-                                          self.attrs)
+            for stage in FilterLevels:
+                # XXX attrs
+                data = wc.filter.applyfilters(stage, data, "finish", attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data

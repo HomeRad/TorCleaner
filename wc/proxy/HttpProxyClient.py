@@ -32,14 +32,14 @@ class HttpProxyClient (object):
         self.addr = ('localhost', 80)
         self.isredirect = False
         attrs = wc.filter.get_filterattrs(self.url,
-                                          [wc.filter.FILTER_REQUEST])
+                                          [wc.filter.STAGE_REQUEST])
         # note: use HTTP/1.0 for JavaScript
         request = "GET %s HTTP/1.0" % self.url
-        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE,
+        request = wc.filter.applyfilter(wc.filter.STAGE_REQUEST_DECODE,
                                         request, "filter", attrs)
-        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY,
+        request = wc.filter.applyfilter(wc.filter.STAGE_REQUEST_MODIFY,
                                         request, "filter", attrs)
-        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE,
+        self.request = wc.filter.applyfilter(wc.filter.STAGE_REQUEST_ENCODE,
                                              request, "filter", attrs)
         wc.log.debug(wc.LOG_PROXY, '%s init', self)
 

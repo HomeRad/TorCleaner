@@ -232,7 +232,10 @@ class Configuration (dict):
         """go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects"""
-        self['filterlist'] = [[], [], [], [], [], [], [], [], [], []]
+        # intialize filter list
+        self['filterlist'] = {}
+        for stage in wc.filter.FilterStages:
+            self['filterlist'][stage] = []
         self['mime_content_rewriting'] = sets.Set()
         for filtername in self['filters']:
             # import filter module
@@ -245,7 +248,7 @@ class Configuration (dict):
                               'VirusFilter', 'BinaryCharFilter']:
                 self['mime_content_rewriting'].update(clazz.mimelist)
             instance = clazz()
-            for order in clazz.orders:
+            for stage in clazz.stages:
                 for folder in self['folderrules']:
                     if folder.disable:
                         continue
@@ -254,8 +257,8 @@ class Configuration (dict):
                             continue
                         if rule.get_name() in clazz.rulenames:
                             instance.addrule(rule)
-                self['filterlist'][order].append(instance)
-        for filters in self['filterlist']:
+                self['filterlist'][stage].append(instance)
+        for filters in self['filterlist'].values():
             # see Filter.__cmp__ on how sorting is done
             filters.sort()
 
