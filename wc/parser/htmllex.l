@@ -114,7 +114,7 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align fast
-%option debug
+/*%option debug*/
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
@@ -315,7 +315,7 @@ RX_DATA [-a-zA-Z0-9_]+
     APPEND_TO_TMP;
 }
 
-<S_SCRIPT><[^\/][^Ss] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[^Ss] {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
 }
