@@ -151,7 +151,8 @@ def parse_options (sysargs):
 
 def main_posix (configdir, filelogs):
     """start the proxy"""
-    wc.wstartfunc(confdir=configdir, filelogs=filelogs)
+    import wc.start
+    wc.start.wstartfunc(confdir=configdir, filelogs=filelogs)
 
 
 def main_nt (configdir, filelogs, args):
