@@ -253,10 +253,10 @@ def parse_ntlm_credentials (credentials):
 
 
 def check_ntlm_credentials (credentials, **attrs):
-    if credentials['host']!="UNKNOWN":
+    if credentials.has_key('host') and credentials['host']!="UNKNOWN":
         warn(AUTH, "NTLM wrong host %s", `credentials['host']`)
         return False
-    if credentials['domain']!='WORKGROUP':
+    if credentials.has_key('domain') and credentials['domain']!='WORKGROUP':
         warn(AUTH, "NTLM wrong domain %s", `credentials['domain']`)
         return False
     if credentials['username']!=attrs['username']:
@@ -310,10 +310,12 @@ def parse_message1 (msg):
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
     debug(AUTH, "msg1 flags %s", "\n".join(str_flags(res['flags'])))
-    domain_offset = getint32(msg[20:24])
-    host_offset = getint32(msg[28:32])
-    res['host'] = msg[host_offset:domain_offset]
-    res['domain'] = msg[domain_offset:]
+    if res['flags'] & NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED:
+        domain_offset = getint32(msg[20:24])
+        res['domain'] = msg[domain_offset:]
+        if res['flags'] & NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED:
+            host_offset = getint32(msg[28:32])
+            res['host'] = msg[host_offset:domain_offset]
     return res
 
 

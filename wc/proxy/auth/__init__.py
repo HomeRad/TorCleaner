@@ -16,6 +16,7 @@ except ImportError:
 wc_realm = "unknown"
 
 from wc.log import *
+from wc import config
 from basic import *
 from digest import *
 from ntlm import *
@@ -58,10 +59,12 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    chals = [#get_digest_challenge(),
-             #get_basic_challenge(),
-             get_ntlm_challenge(**args),
-            ]
+    if config['auth_ntlm']:
+        chals = [get_ntlm_challenge(**args)]
+    else:
+        chals = [get_digest_challenge(),
+                 get_basic_challenge(),
+                ]
     debug(AUTH, "challenges %s", str(chals))
     return chals
 
@@ -177,7 +180,7 @@ def _test_digest ():
     print "chals:", chals
     attrs = {"username": "calvin", "password_b64": "Y2Fsdmlu",
              "uri":"/logo.gif", "method":"GET"}
-    # mozilla test credentials
+    # test credentials recorded from mozilla session
     mozcreds = {"username":"calvin",  "realm":"This is my digest auth",
             "nonce":"i5tbP9h2RAiGbccW", "uri":"/logo.gif",
             "response":"73b8f33cd4ef569ec05dca533209a647",

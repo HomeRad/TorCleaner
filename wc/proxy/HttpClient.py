@@ -14,6 +14,7 @@ from wc.proxy import fix_http_version, norm_url
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers
 from wc.proxy.auth import *
+from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE
 from wc.log import *
 from wc.webgui import WebConfig
 from wc.filter import FILTER_REQUEST
@@ -153,6 +154,11 @@ class HttpClient (Connection):
                     auth = ", ".join(get_challenges())
                     self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
                     return
+                if 'NTLM' in creds:
+                    if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
+                        auth = ",".join(creds['NTLM'][0])
+                        self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
+                        return
                 # XXX the data=None argument should hold POST data
                 if not check_credentials(creds, username=config['proxyuser'],
                                          password_b64=config['proxypass'],
