@@ -63,7 +63,7 @@ def compileRegex (obj, attr):
 
 # compile mimelist entry
 def compileMime (mime):
-    return re.compile("^%s$"%mime, re.I)
+    return re.compile("^(?i)%s(;.+)?$"%mime)
 
 
 def GetRuleFromName (name):

@@ -158,7 +158,6 @@ class Blocker (Filter):
         # check blocked urls
         for _block in self.blocked_urls:
             #debug(NIGHTMARE, "block url", _block)
-            #debug(ALWAYS, "urltuple", `urlTuple`)
             if urlTuple[1]==_block[0] and urlTuple[3].startswith(_block[1]):
                 return 0
         # check block patterns

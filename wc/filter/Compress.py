@@ -27,17 +27,10 @@ orders = [FILTER_RESPONSE_ENCODE]
 # all rules of these types get added with Filter.addrule()
 rulenames = []
 # which mime types this filter applies to
-mimelist = map(compileMime,  ['text/.+',
-            'application/postscript',
-            'application/pdf',
-            'application/x-dvi',
-            'audio/basic',
-            'audio/midi',
-            'audio/x-wav',
-            'image/x-portable-anymap',
-            'image/x-portable-bitmap',
-            'image/x-portable-graymap',
-            'image/x-portable-pixmap',
+mimelist = map(compileMime,  [r'text/[a-z.\-+]+',
+            'application/(postscript|pdf|x-dvi)',
+            'audio/(basic|midi|x-wav)',
+            'image/x-portable-(any|bit|gray|pix)map',
             'x-world/x-vrml',
             ])
 
