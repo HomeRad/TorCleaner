@@ -54,6 +54,14 @@ def _exec_form (form):
         info['proxypass'] = True
         if config['proxyuser']:
             res[0] = 407
+    # ntlm authentication
+    if form.has_key('auth_ntlm'):
+        if not config['auth_ntlm']:
+            config['auth_ntlm'] = 1
+            info['auth_ntlm'] = True
+    elif config['auth_ntlm']:
+        config['auth_ntlm'] = 0
+        info['auth_ntlm'] = True
     # parent proxy host
     if form.has_key('parentproxy'):
         _form_parentproxy(_getval(form, 'parentproxy').strip())
