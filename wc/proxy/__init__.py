@@ -64,10 +64,10 @@ def create_inet_socket (dispatch, socktype):
 
 
 def make_timer (delay, callback):
-    "After DELAY seconds, run the CALLBACK function"
+    """after DELAY seconds, run the CALLBACK function"""
+    debug(PROXY, "Adding %s to %d timers", callback, len(TIMERS))
     TIMERS.append( (time.time()+delay, callback) )
     TIMERS.sort()
-    debug(PROXY, "%d timers", len(TIMERS))
 
 
 def run_timers ():
