@@ -63,7 +63,7 @@ class Replacer (wc.filter.Filter.Filter):
         """initialize replacer buffer object"""
         d = super(Replacer, self).get_attrs(url, headers)
         # weed out the rules that don't apply to this url
-        rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
+        rules = [ rule for rule in self.rules if rule.applies_to(url) ]
         if not rules:
             return d
         d['replacer_buf'] = Buf(rules)

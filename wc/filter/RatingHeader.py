@@ -56,5 +56,5 @@ class RatingHeader (wc.filter.Filter.Filter):
         d = super(RatingHeader, self).get_attrs(url, headers)
         # weed out the rules that don't apply to this url
         d['rating_rules'] = [rule for rule in self.rules if \
-                             rule.appliesTo(url)]
+                             rule.applies_to(url)]
         return d

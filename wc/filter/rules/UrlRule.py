@@ -39,7 +39,7 @@ class UrlRule (wc.filter.rules.Rule.Rule):
             self.nomatchurls = nomatchurls
 
 
-    def appliesTo (self, url):
+    def applies_to (self, url):
         """return True iff this rule can be applied to given url"""
         for mo in self.matchurls_ro:
             if mo.search(url):

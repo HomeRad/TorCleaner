@@ -142,7 +142,7 @@ class ImageSize (wc.filter.Filter.Filter):
         if not wc.HasPil:
             return d
         # weed out the rules that don't apply to this url
-        rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
+        rules = [ rule for rule in self.rules if rule.applies_to(url) ]
         if not rules:
             return d
         d['imgsize_sizes'] = [((r.width, r.height), r.formats) for r in rules]

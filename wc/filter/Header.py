@@ -51,7 +51,7 @@ class Header (wc.filter.Filter.Filter):
         }
         for rule in self.rules:
             # filter out unwanted rules
-            if not rule.appliesTo(url) or not rule.name:
+            if not rule.applies_to(url) or not rule.name:
                 continue
             # name is a regular expression match object
             if not rule.value:
