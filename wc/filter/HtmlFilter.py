@@ -241,7 +241,7 @@ class HtmlFilter (JSFilter):
             pos, rulelist = self.rulestack.pop()
             for rule in rulelist:
                 if rule.match_complete(pos, self.htmlparser.tagbuf):
-                    rule.filter_complete(pos, self.htmlparser.tagbuf)
+                    rule.filter_complete(pos, self.htmlparser.tagbuf, tag)
                     return True
         return False
 

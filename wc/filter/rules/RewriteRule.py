@@ -219,9 +219,9 @@ class RewriteRule (UrlRule):
 
     def filter_tag (self, tag, attrs):
         """return filtered tag data for given tag and attributes"""
-        debug(FILTER, "rule %s filter_tag", self.titles['en'])
-        debug(FILTER, "original tag %r attrs %s", tag, attrs)
-        debug(FILTER, "replace %s with %r", num_part(self.part), self.replacement)
+        #debug(FILTER, "rule %s filter_tag", self.titles['en'])
+        #debug(FILTER, "original tag %r attrs %s", tag, attrs)
+        #debug(FILTER, "replace %s with %r", num_part(self.part), self.replacement)
         if self.part==COMPLETE:
             return [DATA, ""]
         if self.part==TAGNAME:
@@ -257,26 +257,27 @@ class RewriteRule (UrlRule):
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
+        #debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
         return [STARTTAG, tag, newattrs]
 
 
-    def filter_complete (self, i, buf):
+    def filter_complete (self, i, buf, tag):
         """replace complete tag data in buf with replacement"""
-        debug(FILTER, "rule %s filter_complete", self.titles['en'])
-        debug(FILTER, "original buffer %r", buf)
-        debug(FILTER, "part %s", num_part(self.part))
+        #debug(FILTER, "rule %s filter_complete", self.titles['en'])
+        #debug(FILTER, "original buffer %s", buf)
+        #debug(FILTER, "part %s", num_part(self.part))
         if self.part==COMPLETE:
             buf[i:] = [[DATA, self.replacement]]
         elif self.part==TAG:
             buf[i] = [DATA, self.replacement]
-            buf[-1] = [DATA, self.replacement]
+            buf.append([DATA, self.replacement])
         elif self.part==TAGNAME:
             buf[i] = [STARTTAG, self.replacement, {}]
-            buf[-1] = [ENDTAG, self.replacement]
+            buf.append([ENDTAG, self.replacement])
         elif self.part==ENCLOSED:
-            buf[i+1:-1] = [[DATA, self.replacement]]
-        #debug(FILTER, "filtered buffer %r", buf)
+            buf[i+1:] = [[DATA, self.replacement]]
+            buf.append([ENDTAG, tag])
+        #debug(FILTER, "filtered buffer %s", buf)
 
 
     def toxml (self):
