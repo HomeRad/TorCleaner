@@ -151,11 +151,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 is fetching additionally data in the background.
                 Flushing data in wait state raises a FilterWait
                 When finished for <script src="">, the buffers look like
+                this:
                 fed data chunks (example):
-                        [---------|--------][-------][----------][--...
-                                  ^-script src tag
-                waitbuf:          [--------]
+                        [------------------][-------][----------][--...
+                outbuf: [--]
+                buf:        [-----]
+                waitbuf:           [-------]
                 inbuf:                      [-------------- ...
+                                   ^-- <script src> tag
 
                 When finished with script data, the buffers look like
                 XXX (to be done)
@@ -192,10 +195,10 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def _debugbuf (self):
         """print debugging information about data buffer status"""
+        #self._debug(NIGHTMARE, "self.outbuf", `self.outbuf.getvalue()`)
         #self._debug(NIGHTMARE, "self.buf", `self.buf`)
         #self._debug(NIGHTMARE, "self.waitbuf", `self.waitbuf`)
         #self._debug(NIGHTMARE, "self.inbuf", `self.inbuf.getvalue()`)
-        #self._debug(NIGHTMARE, "self.outbuf", `self.outbuf.getvalue()`)
 
 
     def feed (self, data):
@@ -209,7 +212,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 if self.state!='parse':
                     self._debug(ALWAYS, "self.inbuf", `self.inbuf.getvalue()`)
                     return
-                data = self.inbuf.getvalue()
+                data = self.inbuf.getvalue() + data
                 self.inbuf.close()
                 self.inbuf = StringIO()
             if data:
@@ -490,7 +493,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_output = 0
         self.js_env.attachListener(self)
         # start recursive html filter (used by jsProcessData)
-        self.js_html = FilterHtmlParser(self.rules, self.url,
+        self.js_html = FilterHtmlParser(self.rules, self.pics, self.url,
        comments=self.comments, javascript=self.js_filter, level=self.level+1)
         # execute
         self.js_env.executeScript(unescape_js(script), ver)
