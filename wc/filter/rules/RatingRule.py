@@ -22,6 +22,8 @@ __date__    = "$Date$"[7:-2]
 from UrlRule import UrlRule
 from wc import i18n
 from wc.XmlUtils import xmlify, unxmlify
+from wc.filter.Rating import service, rating_in_range
+
 
 class RatingRule (UrlRule):
     """holds configured rating data"""
@@ -64,10 +66,9 @@ class RatingRule (UrlRule):
         for category, val in self.ratings.items():
             val = unxmlify(val).encode('iso8859-1')
             self.ratings[category] = val
-        from wc.filter.Rating import service
         for category, catdata in service['categories'].items():
             if category not in self.ratings:
-                if catdata.get('rvalues'):
+                if catdata.has_key('rvalues'):
                     self.ratings[category] = catdata['rvalues'][0]
                 else:
                     self.ratings[category] = ""
@@ -88,7 +89,27 @@ class RatingRule (UrlRule):
     def check_against (self, rating):
         """rating is a mapping category -> value
            return None if allowed, else a reason of why not"""
-        # XXX
+        for category, value in rating.items():
+            if category not in self.ratings:
+                warn(FILTER, "Unknown rating category %r specified", category)
+                continue
+            if not value:
+                # empty value implicates not rated
+                continue
+            limit = self.ratings[category]
+            if not limit:
+                # no limit is set for this category
+                continue
+            elif service['categories'][category].has_key('rrange'):
+                # check if value is in range
+                if (limit[0] is not None and value < limit[0]) or \
+                   (limit[1] is not None and value > limit[1]):
+                    return i18n._("Rating %r for category %r is not in range %s") %\
+                                  (value, category, limit)
+            elif value > limit:
+                return i18n._("Rating %r for category %r exceeds limit %r")%\
+                              (value, category, limit)
+        # not exceeded
         return None
 
 

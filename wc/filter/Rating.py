@@ -23,7 +23,6 @@ import re, os, sys
 import cPickle as pickle
 from wc.log import *
 from wc import i18n, ConfigDir, AppName
-from wc.filter import FilterException
 from wc.url import is_valid_url
 
 MISSING = i18n._("Unknown page")
