@@ -146,7 +146,7 @@ static PyObject* quote_string (PyObject* val) {
 %option 8bit outfile="htmllex.c"
 %option align full
 /* uncomment the next line for debugging */
-/*%option debug*/
+/*%option debug */
 %option nounput nomain noyywrap noyymore noreject
 %option bison-bridge reentrant never-interactive
 %option warn
@@ -498,11 +498,6 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_ATTR4);
 }
 
-<S_ATTR1,S_ATTR2>.|\n {
-    /* this also skips whitespace! */
-    UPDATE_BUFPOS;
-}
-
 <S_ATTR3>{RX_NAME} {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -517,6 +512,11 @@ RX_DATA [-a-zA-Z0-9_]+
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     APPEND_TO_TMP(yyleng);
     BEGIN(S_ATTR2);
+}
+
+<S_ATTR1,S_ATTR2,S_ATTR3>.|\n {
+    /* this also skips whitespace! */
+    UPDATE_BUFPOS;
 }
 
 <S_ATTR4>\" {
@@ -729,6 +729,8 @@ RX_DATA [-a-zA-Z0-9_]+
 
 int htmllexInit (void** scanner, UserData* data) {
     yylex_init(scanner);
+    /* uncomment the next line for debugging */
+    /*yyset_debug(1, *scanner);*/
     yyset_extra(data, *scanner);
     return 0;
 }
