@@ -46,7 +46,7 @@ Requirements for Unix/Linux or Max OS X
 8. *Optional (speedup for i386 compatible PCs)*
    Psyco from
    http://psyco.sourceforge.net/
-   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-linux.i386-2.4.tar.gz]
+   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.4-src.tar.gz]
 
 Requirements for Windows:
 -------------------------
@@ -99,7 +99,7 @@ Direct download links are in brackets.
 8. *Optional (speedup for i386 compatible PCs)*
    Psyco from
    http://psyco.sourceforge.net/
-   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-win-2.4.zip]
+   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.4.win32-py2.4.exe]
 
 Setup for Unix/Linux:
 ---------------------
@@ -149,7 +149,7 @@ Setup for Unix/Linux:
       .. _runsvdir(8):
          http://smarden.org/runit/runsvdir.8.html
    
-   If you installed Psyco please read the `psyco installation docs`_.
+   If you downloaded Psyco please read the `psyco installation docs`_.
    
    .. _psyco installation docs:
       http://psyco.sourceforge.net/psycoguide/node2.html
@@ -234,7 +234,7 @@ Setup for Windows - compiling from source:
 
 7. Enjoy
    
-   WebCleaner is now installed and started as a regular Windows service.
+   WebCleaner is now downloaded and started as a regular Windows service.
    See the `main page`_ on how to configure the proxy filters.
    
    .. _main page:
