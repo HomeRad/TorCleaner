@@ -26,6 +26,11 @@ if __name__=='__main__':
 from wc.levenshtein import distance
 from wc.log import *
 
+# checker for namespaces
+is_other_namespace = re.compile(r"^(?i)[-a-z_.]+:").search
+# tag garbage filter
+filter_tag_garbage = re.compile(r"(?P<tag>^[a-z][-a-z0-9.:_]*)").search
+
 # HTML 4.01 tags
 HtmlTags = {
     "a" : None,
@@ -284,6 +289,7 @@ KnownInvalidTags = {
     "update" : None, # slashdot.org
 }
 
+
 def check_spelling (tag, url):
     """check if tag (must be lowercase) is a valid HTML tag and if not,
     tries to correct it to the first tag with a levenshtein distance of 1
@@ -295,6 +301,9 @@ def check_spelling (tag, url):
         return tag
     if tag in KnownInvalidTags:
         #warn(PARSER, "known invalid tag %s at %s", `tag`, `url`)
+        return tag
+    if is_other_namespace(tag):
+        # ignore other namespaces
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
          if distance(tag, htmltag)==1:
@@ -308,8 +317,8 @@ def check_spelling (tag, url):
         return mo.group("tag")
     return tag
 
-filter_tag_garbage = re.compile(r"(?P<tag>^[a-z][a-z0-9]*)").search
+
 
 if __name__=='__main__':
-    for tag in ["blink", "bllnk", "htmm", "hu", ]:
-        print tag, check_spelling(tag)
+    for tag in ["blink", "bllnk", "htmm", "hu", "xmlns:a", "heisead"]:
+        print tag, check_spelling(tag, "dummy")
