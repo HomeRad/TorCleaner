@@ -54,7 +54,7 @@ class ClientServerMatchmaker (object):
         self.content = content
         self.mime = mime
         self.state = 'dns'
-        self.method, self.url, protocol = self.request.split()
+        self.method, self.url, self.protocol = self.request.split()
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']
