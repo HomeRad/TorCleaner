@@ -176,10 +176,11 @@ def server_set_date_header (headers):
 
 def server_set_content_headers (headers, content, document, mime, url):
     """add missing content-type headers"""
-    # check content-type against our own guess
+    # document can have query parameters at the end, remove them
     i = document.find('?')
     if i>0:
         document = document[:i]
+    # check content-type against our own guess
     if not mime and not headers.has_key('Transfer-Encoding') and content:
         # note: recognizing a mime type here fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024

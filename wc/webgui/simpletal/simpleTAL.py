@@ -873,7 +873,7 @@ class TemplateCompiler:
 			popCommandList = tagProperties.get ('popFunctionList', [])
 			singletonTag = tagProperties.get ('singletonTag', 0)
 			for func in popCommandList:
-				apply (func, ())
+				func()
 			self.log.debug ("Popped tag %r off stack" % oldTag[0])
 			if (oldTag[0] == tag[0]):
 				# We've found the right tag, now check to see if we have any TAL commands on it

@@ -71,6 +71,17 @@ def url_quote (url):
     urlparts[4] = urllib.quote(urlparts[4])
     return urlparse.urlunsplit(urlparts)
 
+
+def document_quote (document):
+    """quote given document"""
+    doc, query = urllib.splitquery(document)
+    doc = urllib.quote(doc, '/')
+    if query:
+        query = urllib.quote_plus(query, '=&')
+        return "%s?%s" % (doc, query)
+    return doc
+
+
 is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
 
 def fix_http_version (protocol):
@@ -214,7 +225,7 @@ def mainloop (handle=None):
     from wc import config
     Listener(config['port'], HttpClient)
     # experimental interactive command line
-    #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))
+    #Listener(8081, lambda *args: Interpreter.Interpreter(*args))
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)

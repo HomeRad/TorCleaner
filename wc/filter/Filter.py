@@ -34,15 +34,17 @@ class Filter (object):
         self.rules.append(rule)
 
 
-    def filter (self, data, **args):
-        return apply(self.doit, (data,), args)
+    def filter (self, data, **kwargs):
+        args = (data,)
+        return self.doit(*args, **kwargs)
 
 
-    def finish (self, data, **args):
-        return apply(self.doit, (data,), args)
+    def finish (self, data, **kwargs):
+        args = (data,)
+        return self.doit(*args, **kwargs)
 
 
-    def doit (self, data, **args):
+    def doit (self, data, **kwargs):
         return data
 
 

@@ -9,6 +9,7 @@ from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
 from wc.log import *
+from wc.proxy import document_quote
 
 # connection pool for persistent server connections
 serverpool = ServerPool()
@@ -65,7 +66,7 @@ class ClientServerMatchmaker (object):
         else:
             self.hostname = client.hostname
             self.port = client.port
-            self.document = client.document
+            self.document = document_quote(client.document)
         # start DNS lookup
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 

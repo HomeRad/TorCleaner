@@ -159,10 +159,11 @@ class HttpServer (Server):
 
 
     def send_request (self):
-        """actually send the request to the server, is also used to
-        send a request twice for NTLM authentication"""
+        """send the request to the server, is also used to send a request
+           twice for NTLM authentication"""
         if self.method=='CONNECT':
             return
+            # XXX enable this when https is natively supported
             #request = 'CONNECT %s:%d HTTP/1.1\r\n'%(self.hostname, self.port)
         else:
             request = '%s %s HTTP/1.1\r\n'%(self.method, self.document)

@@ -79,7 +79,7 @@ class ContextVariable:
 
 	def value (self, currentPath=None):
 		if (callable (self.ourValue)):
-			return apply (self.ourValue, ())
+			return self.ourValue()
 		return self.ourValue
 
 	def rawValue (self):
@@ -231,7 +231,8 @@ class PathFunctionVariable (ContextVariable):
 	def value (self, currentPath=None):
 		if (currentPath is not None):
 			index, paths = currentPath
-			result = ContextVariable (apply (self.func, ('/'.join (paths[index:]),)))
+                        args = ('/'.join (paths[index:]),)
+			result = ContextVariable(self.func(*args))
 			# Fast track the result
 			raise result
 		
