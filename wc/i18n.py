@@ -68,6 +68,8 @@ def get_headers_lang (headers):
 
 def get_locale ():
     loc = locale.getdefaultlocale()[0]
+    if loc is None:
+        loc = 'C'
     loc = locale.normalize(loc)
     # split up the locale into its base components
     pos = loc.find('@')
