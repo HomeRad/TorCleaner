@@ -11,7 +11,7 @@
 __version__ = '2.3.0'
 
 import Type,Opcode,Status,Class
-from Base import DnsRequest, DNSError
+from Base import DnsRequest, DNSError, DiscoverNameServers
 from Lib import DnsResult
 Error=DNSError
 from lazy import *
@@ -20,6 +20,9 @@ Result = DnsResult
 
 #
 # $Log$
+# Revision 1.5  2003/01/05 17:55:19  calvin
+# fix
+#
 # Revision 1.4  2003/01/05 17:42:49  calvin
 # pychecker fixes
 #
