@@ -279,16 +279,20 @@ class TestUrl (unittest.TestCase):
 
     def test_valid (self):
         """test url validity functions"""
-        self.assert_(wc.url.is_safe_url("http://www.imadoofus.com"))
-        self.assert_(wc.url.is_safe_url("http://www.imadoofus.com/"))
-        self.assert_(wc.url.is_safe_url(
-                                         "http://www.imadoofus.com/~calvin"))
-        self.assert_(wc.url.is_safe_url(
-                                             "http://www.imadoofus.com/a,b"))
-        self.assert_(wc.url.is_safe_url(
-                                        "http://www.imadoofus.com#anchor55"))
-        self.assert_(wc.url.is_safe_js_url(
-                                       "http://www.imadoofus.com/?hulla=do"))
+        u = "http://www.imadoofus.com"
+        self.assert_(wc.url.is_safe_url(u), u)
+        u = "http://www.imadoofus.com/"
+        self.assert_(wc.url.is_safe_url(u), u)
+        u = "http://www.imadoofus.com/~calvin"
+        self.assert_(wc.url.is_safe_url(u), u)
+        u = "http://www.imadoofus.com/a,b"
+        self.assert_(wc.url.is_safe_url(u), u)
+        u = "http://www.imadoofus.com#anchor55"
+        self.assert_(wc.url.is_safe_url(u), u)
+        u = "http://www.imadoofus.com/?hulla=do"
+        self.assert_(wc.url.is_safe_js_url(u), u)
+        u = "http://www.imadoofus.com/foo.bar/woot/bla;a=120x600;b=615660"
+        self.assert_(wc.url.is_safe_js_url(u), u)
 
     def test_needs_quoting (self):
         """test url quoting necessity"""
