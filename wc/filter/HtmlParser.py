@@ -20,12 +20,12 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import cStringIO as StringIO
-import wc.parser.htmlsax
+import bk.HtmlParser.htmlsax
 import wc.filter
 import wc.filter.rules.RewriteRule
 
 
-class HtmlParser (wc.parser.htmlsax.parser):
+class HtmlParser (bk.HtmlParser.htmlsax.parser):
     """HTML parser with ability to buffer incoming and outgoing data.
 
        States:

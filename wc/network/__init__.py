@@ -24,7 +24,7 @@ import os
 import sets
 import socket
 import wc.log
-import wc.containers
+import bk.containers
 if os.name=='posix':
     from wc.network import posix as platform_net
 elif os.name=='nt':
@@ -70,8 +70,8 @@ def add_addrinfo (hosts, host):
 class DnsConfig (object):
     """DNS configuration storage"""
     def __init__ (self):
-        self.nameservers = wc.containers.SetList()
-        self.search_domains = wc.containers.SetList()
+        self.nameservers = bk.containers.SetList()
+        self.search_domains = bk.containers.SetList()
         self.search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
 
     def __str__ (self):

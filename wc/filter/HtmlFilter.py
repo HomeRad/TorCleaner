@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import urllib
-import wc.parser
+import bk.HtmlParser
 import wc.filter
 import wc.filter.JSFilter
 import wc.filter.rules.RewriteRule
@@ -135,7 +135,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                 self.stackcount[-1][1] += 1
         if tag=="meta":
             if attrs.get('http-equiv', '').lower() == 'content-rating':
-                rating = wc.parser.resolve_html_entities(attrs.get('content', ''))
+                rating = bk.HtmlParser.resolve_html_entities(attrs.get('content', ''))
                 url, rating = wc.filter.Rating.rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more

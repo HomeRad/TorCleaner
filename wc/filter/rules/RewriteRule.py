@@ -25,7 +25,7 @@ import wc
 import wc.XmlUtils
 import wc.filter.rules.UrlRule
 import wc.filter.rules.Rule
-import wc.parser.htmllib
+import bk.HtmlParser.htmllib
 
 
 # tag ids
@@ -53,7 +53,7 @@ def tagbuf2data (tagbuf, out):
             for name,val in item[2].items():
                 out.write(' %s'%name)
                 if val:
-                    out.write("=\"%s\""%wc.parser.htmllib.quote_attrval(val))
+                    out.write("=\"%s\""%bk.HtmlParser.htmllib.quote_attrval(val))
             out.write(">")
         elif item[0]==ENDTAG:
             out.write("</%s>"%item[1])

@@ -22,7 +22,7 @@ __date__    = "$Date$"[7:-2]
 import re
 import urlparse
 import wc
-import wc.parser
+import bk.HtmlParser
 import wc.filter
 import wc.filter.HtmlParser
 import wc.url
@@ -94,7 +94,7 @@ class JSFilter (wc.js.JSListener.JSListener):
     def jsPopup (self, attrs, name):
         """check if attrs[name] javascript opens a popup window"""
         wc.log.debug(wc.LOG_FILTER, "%s jsPopup %r", self, attrs[name])
-        val = wc.parser.resolve_html_entities(attrs[name])
+        val = bk.HtmlParser.resolve_html_entities(attrs[name])
         if not val:
             return
         self.js_env.listeners.append(self)
@@ -242,7 +242,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             url = attrs.get('src', '')
             # sanitize script src url
             url = _replace_ws("", url)
-            url = wc.parser.resolve_html_entities(url)
+            url = bk.HtmlParser.resolve_html_entities(url)
             if js_ok and url:
                 self.jsScriptSrc(url, js_lang)
                 return
