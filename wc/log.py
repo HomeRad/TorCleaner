@@ -19,8 +19,9 @@
 __all__ = ["WC", "FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS",
            "debug", "info", "warn", "error", "critical", "exception"]
 
-import logging
-logging.basicConfig()
+from wc import ConfigDir
+import os, logging, logging.config
+logging.config.fileConfig(os.path.join(ConfigDir, "logging.conf"))
 
 # logger areas
 WC = "wc"

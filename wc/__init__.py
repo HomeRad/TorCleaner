@@ -14,9 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import os, re, sys, UserDict, time, socket, ip, i18n
+import os, re, sys, UserDict, time, socket
 import _webcleaner2_configdata as configdata
-from log import *
 
 Version = configdata.version
 AppName = configdata.name
@@ -37,6 +36,9 @@ distribution."""
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'locale')
+
+import ip, i18n
+from log import *
 
 def remove_headers (headers, to_remove):
     """remove entries from RFC822 headers"""
