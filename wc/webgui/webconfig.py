@@ -44,6 +44,7 @@ class WebConfig (object):
         self.connected = True
         headers = get_headers(url, status, auth, clientheaders)
         path = ""
+        newstatus = None
         try:
             lang = wc.i18n.get_headers_lang(clientheaders)
             # get the template filename
