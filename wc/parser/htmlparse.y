@@ -3,45 +3,24 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
-#include "Python.h"
-
-/* require Python >= 2.0 */
-#ifndef PY_VERSION_HEX
-#error please install Python >= 2.0
-#endif
-
-#if PY_VERSION_HEX < 0x02000000
-#error please install Python >= 2.0
-#endif
+#include "htmlsax.h"
 
 #define YYSTYPE PyObject*
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM scanner
-extern int yylex_init(void** scanner);
-extern int yy_scan_bytes(const char* s, int slen, void* scanner);
-extern int yylex_destroy(void* scanner);
+extern int htmllexStart(void** scanner, const char* s, int slen, void* data);
+extern int htmllexStop(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
-extern void yyerror(char *msg);
-
-/* user_data type for SAX calls */
-typedef struct {
-    /* the Python SAX class instance */
-    PyObject* handler;
-    /* error flag */
-    int error;
-    /* stored Python exception (if error occurred) */
-    PyObject* exc_type;
-    PyObject* exc_val;
-    PyObject* exc_tb;
-} UserData;
-
+extern void* yyget_extra(void*);
+#define YYERROR_VERBOSE 1
+extern char* stpcpy(char* src, const char* dest);
+int yyerror(char* msg);
 
 /* parser type definition */
 typedef struct {
     PyObject_HEAD
     UserData* userData;
 } parser_object;
-
 
 staticforward PyTypeObject parser_type;
 
@@ -91,7 +70,16 @@ element: element_start {}
 
 
 comment: T_COMMENT_START comment_text T_COMMENT_END
-    { printf("XXX comment\n"); }
+    {
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = PyObject_GetAttrString(ud->handler, "comment");
+        PyObject* arglist = Py_BuildValue("(O)", $2);
+        if (PyEval_CallObject(callback, arglist)==NULL) {
+	    ud->error = 1;
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+        }
+        Py_DECREF(arglist);
+    }
     ;
 
 
@@ -268,28 +256,16 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
     /* set up the parse string */
     int slen;
     char* s;
-    void* scanner=0;
+    void* scanner;
     if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
     }
-    
-    /* reset error state */
-    self->userData->exc_type = NULL;
-    self->userData->exc_val = NULL;
-    self->userData->exc_tb = NULL;
 
     /* feed data to lexer and parse */
-    printf("feed 1 %d\n", scanner);
-    yylex_init(&scanner);
-    printf("feed 2 %d\n", scanner);
-    yy_scan_bytes(s, slen, scanner);
-    printf("feed 3 %d\n", scanner);
-    yydebug=1;
+    htmllexStart(&scanner, s, slen, (UserData*)self->userData);
     yyparse(scanner);
-    printf("feed 4 %d\n", scanner);
-    yylex_destroy(scanner);
-    printf("feed 5 %d\n", scanner);
+    htmllexStop(scanner);
 
     /* check error state */
     if (self->userData->error!=0) {
@@ -363,12 +339,21 @@ void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
 }
 
+int yyerror (char* msg) {
+    fprintf(stderr, "htmllex: error: %s\n", msg);
+    return 0;
+}
+
 int main (void) {
     void* scanner;
-    yylex_init(&scanner);
-    yy_scan_bytes("<html>", 6, scanner);
+    UserData userData;
+    userData.handler = NULL;
+    userData.error = 0;
+    userData.exc_type = NULL;
+    userData.exc_val = NULL;
+    userData.exc_tb = NULL;
     yydebug=1;
+    htmllexStart(&scanner, "<html>", 6, &userData);
     yyparse(scanner);
-    yylex_destroy(scanner);
-    return 0;
+    return htmllexStop(scanner);
 }

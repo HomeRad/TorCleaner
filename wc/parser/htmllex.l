@@ -5,27 +5,26 @@
 %{
 #include <string.h>
 #include <stdlib.h>
-#include "Python.h"
-#define YYSTYPE PyObject*
-#include "htmlparse.h"
-/*#define SETLVAL \
-    PyObject* s = PyString_FromStringAndSize(yytext, yyleng); \
-    yyset_lval(&s, yy_globals)
-*/
-#define SETLVAL \
-    printf("huii %s\n", yytext)
+#include "htmlsax.h"
 
+#define YYSTYPE PyObject*
+#define YY_EXTRA_TYPE UserData*
+#define SETLVAL \
+    PyObject* s = PyString_FromStringAndSize(yytext, yyleng); \
+    if (s==NULL) { \
+    } \
+    else yyset_lval(&s, yy_globals)
+
+#include "htmlparse.h"
 %}
 
-%option 8bit
+%option 8bit outfile="htmllex.c"
 %option debug
 %option align
 %option fast
-%option noyywrap
-%option noyymore
-%option nounput
-%option noreject
-%option outfile="htmllex.c"
+%option nounput nomain noyywrap noyymore noreject
+%option reentrant-bison
+%option warn
 %option never-interactive
 
 /* The INNER state represents all possibilities between any two angle
@@ -37,15 +36,12 @@
  */
 %x S_ATTRVAL
 /* PIs do recognize a name, then possibly some text */
-%x S_IGNORE_PI
+%x S_PI
 /* collect the rest of the PI if there is any */
 %x S_PI_COLLECT
-/* Here we ignore content (esp. markup) between some kinds of brackets and
- * just report it as TEXT
- */
-%x S_IGNORE_COMMENT
-%x S_IGNORE_DOCTYPE
-%x S_IGNORE_CDATA
+%x S_COMMENT
+%x S_DOCTYPE
+%x S_CDATA
 /* capture a string bounded by apostrophes "'" Aka single quotes
  * Ignore things like double quotes
  */
@@ -77,26 +73,26 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 <INITIAL>"<!--" { 
     SETLVAL;
-    BEGIN(S_IGNORE_COMMENT);
+    BEGIN(S_COMMENT);
     return T_COMMENT_START;
 }
 
 
 <INITIAL>"<!DOCTYPE" {  
     SETLVAL;
-    BEGIN(S_IGNORE_DOCTYPE);
+    BEGIN(S_DOCTYPE);
     return T_DOCTYPE_START;
 }
 
 <INITIAL>"<![CDATA[" { 
     SETLVAL;
-    BEGIN(S_IGNORE_CDATA);
+    BEGIN(S_CDATA);
     return T_CDATA_START;
 }
 
 <INITIAL>"<?" { 
     SETLVAL;
-    BEGIN(S_IGNORE_PI);
+    BEGIN(S_PI);
     return T_PI_OPEN;
 }
 
@@ -136,16 +132,19 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_INNER>{RX_WHITE_SPACE}* {
+    SETLVAL;
     /* ignore whitespace */
 }
 
 
 <S_ATTRVAL>\" {
+    SETLVAL;
     BEGIN(S_STRING);
 }
 
 
 <S_ATTRVAL>\' {
+    SETLVAL;
     BEGIN(S_APOSSTRING);
 }
 
@@ -162,11 +161,13 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
     return T_ANGLE_CLOSE;
 }
 
-<S_ATTRVAL>[ \t\r\n]* {}
+<S_ATTRVAL>[ \t\r\n]* {
+    SETLVAL;
+}
 
 
 
-<S_IGNORE_PI>{RX_NAME} {
+<S_PI>{RX_NAME} {
     SETLVAL;
     BEGIN(S_PI_COLLECT);
     return T_NAME;
@@ -184,46 +185,46 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 
-<S_IGNORE_COMMENT>"-->" {
+<S_COMMENT>"-->" {
     SETLVAL;
     BEGIN(INITIAL);
     return T_COMMENT_END;
 }
 
-<S_IGNORE_COMMENT>"-" {
+<S_COMMENT>"-" {
     /* handle any hanging minus signs E.g. i - 2; --a; etc. */
     SETLVAL;
     return T_TEXT;
 }
 
-<S_IGNORE_COMMENT>[^\-]* {
+<S_COMMENT>[^\-]* {
     SETLVAL;
     return T_TEXT;
 }
 
-<S_IGNORE_CDATA>"]]>" {
+<S_CDATA>"]]>" {
     SETLVAL;
     BEGIN(INITIAL);
     return T_CDATA_END;
 }
 
-<S_IGNORE_CDATA>"]" {
+<S_CDATA>"]" {
     SETLVAL;
     return T_TEXT;
 }
 
-<S_IGNORE_CDATA>[^\]]* {
+<S_CDATA>[^\]]* {
     SETLVAL;
     return T_TEXT;
 }
 
-<S_IGNORE_DOCTYPE>">" {
+<S_DOCTYPE>">" {
     SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
 
-<S_IGNORE_DOCTYPE>[^\>]* {
+<S_DOCTYPE>[^\>]* {
     SETLVAL;
     return T_TEXT;
 }
@@ -268,7 +269,19 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 %%
 
-void yyerror (char* msg) {
-    fprintf(stderr, "htmllex: error: %s\n", msg);
+int htmllexStart (void** scanner, const char* s, int slen, UserData* data) {
+    /* reset error state */
+    data->exc_type = NULL;
+    data->exc_val = NULL;
+    data->exc_tb = NULL;
+    yylex_init(scanner);
+    yyset_extra(data, *scanner);
+    yy_scan_bytes(s, slen, *scanner);
+    return 0;
+}
+
+int htmllexStop (void* scanner) {
+    yylex_destroy(scanner);
+    return 0;
 }
 
