@@ -71,9 +71,8 @@ class HttpServer (wc.proxy.Server.Server):
         # default values
         self.addr = (ipaddr, port)
         self.reset()
-        wc.proxy.create_inet_socket(self, socket.SOCK_STREAM)
+        self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
         self.try_connect()
-
 
     def try_connect (self):
         """attempt connect, close on error and raise exception"""
@@ -84,7 +83,6 @@ class HttpServer (wc.proxy.Server.Server):
             # we never connected, but still the socket is in the socket map so remove it
             self.del_channel()
             raise
-
 
     def reset (self):
         """reset connection values"""
@@ -102,7 +100,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.defer_data = False # for content rating
         bk.log.debug(wc.LOG_PROXY, "%s resetted", self)
 
-
     def __repr__ (self):
         """object description"""
         extra = self.persistent and "persistent " or ""
@@ -116,7 +113,6 @@ class HttpServer (wc.proxy.Server.Server):
             extra += " client"
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)
-
 
     def process_connect (self):
         """notify client that this server has connected"""
@@ -136,7 +132,6 @@ class HttpServer (wc.proxy.Server.Server):
         else:
             # Hm, the client no longer cares about us, so close
             self.close()
-
 
     def client_send_request (self, method, protocol, hostname, port,
                              document, headers, content, client, url, mime):
@@ -159,13 +154,11 @@ class HttpServer (wc.proxy.Server.Server):
             self.mangle_request_headers()
             self.send_request()
 
-
     def mangle_request_headers (self):
         """modify request headers"""
         if wc.config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
             self.clientheaders['Proxy-Authorization'] = "%s\r"%wc.config['parentproxycreds']
-
 
     def send_request (self):
         """send the request to the server, is also used to send a request
@@ -179,7 +172,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.write('\r\n')
         self.write(self.content)
         self.state = 'response'
-
 
     def process_read (self):
         """process read event by delegating it to process_* functions"""
@@ -196,7 +188,6 @@ class HttpServer (wc.proxy.Server.Server):
                 return
             if self.delegate_read():
                 break
-
 
     def process_response (self):
         """look for response line and process it if found"""
@@ -242,7 +233,6 @@ class HttpServer (wc.proxy.Server.Server):
         if self.statuscode >= 400:
             self.mime = None
         bk.log.debug(wc.LOG_PROXY, "%s response %r", self, self.response)
-
 
     def process_headers (self):
         """look for headers and process them if found"""
@@ -330,7 +320,6 @@ class HttpServer (wc.proxy.Server.Server):
             wc.proxy.Headers.server_set_content_headers(self.headers, data,
                                         self.document, self.mime, self.url)
 
-
     def set_persistent (self, headers, http_ver):
         """return True iff this server connection is persistent"""
         if http_ver >= (1,1):
@@ -340,14 +329,12 @@ class HttpServer (wc.proxy.Server.Server):
         else:
             self.persistent = False
 
-
     def is_rewrite (self):
         """return True iff this server will modify content"""
         for ro in wc.config['mime_content_rewriting']:
             if ro.match(self.headers.get('Content-Type', '')):
                 return True
         return False
-
 
     def _show_mime_replacement (self, url):
         self.statuscode = 302
@@ -388,7 +375,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.defer_data = False
         self.persistent = False
         self.close()
-
 
     def process_content (self):
         """process server data: filter it and write it to client"""
@@ -434,7 +420,6 @@ class HttpServer (wc.proxy.Server.Server):
             # either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
 
-
     def process_client (self):
         """gets called on SSL tunneled connections, delegates server data
            directly to the client without filtering"""
@@ -443,7 +428,6 @@ class HttpServer (wc.proxy.Server.Server):
             return
         bk.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to client %s", self, self.client)
         self.client.write(self.read())
-
 
     def process_recycle (self):
         """recycle the server connection and put it in the server pool"""
@@ -483,7 +467,6 @@ class HttpServer (wc.proxy.Server.Server):
             # flush pending client data and try to reuse this connection
             self.delayed_close()
 
-
     def flush (self):
         """flush data of decoders (if any) and filters and write it to
            the client. return True if flush was successful"""
@@ -504,13 +487,11 @@ class HttpServer (wc.proxy.Server.Server):
             self.client.server_content(data)
         return True
 
-
     def set_unreadable (self, secs):
         """make this connection unreadable for (secs) seconds"""
         bk.log.debug(wc.LOG_PROXY, "%s HttpServer.set_unreadable", self)
         oldstate, self.state = self.state, 'unreadable'
         wc.proxy.make_timer(secs, lambda: self.set_readable(oldstate))
-
 
     def set_readable (self, state):
         """make the connection readable again and close"""
@@ -522,7 +503,6 @@ class HttpServer (wc.proxy.Server.Server):
         else:
             bk.log.debug(wc.LOG_PROXY, "%s client is gone", self)
 
-
     def close_reuse (self):
         """reset connection data, but to not close() the socket. Put this
            connection in server pool"""
@@ -533,7 +513,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.reset()
         # be sure to unreserve _after_ reset because of callbacks
         wc.proxy.ServerPool.serverpool.unreserve_server(self.addr, self)
-
 
     def close_ready (self):
         """return True if connection has all data sent and is ready for
@@ -551,7 +530,6 @@ class HttpServer (wc.proxy.Server.Server):
             return True
         return False
 
-
     def close_close (self):
         """close the connection socket and remove this connection from
            the connection pool"""
@@ -565,7 +543,6 @@ class HttpServer (wc.proxy.Server.Server):
             wc.proxy.ServerPool.serverpool.unregister_server(self.addr, self)
         assert not self.connected
 
-
     def handle_error (self, what):
         """tell the client that connection had an error, and close the
            connection"""
@@ -575,13 +552,11 @@ class HttpServer (wc.proxy.Server.Server):
             client.server_abort(what)
         super(HttpServer, self).handle_error(what)
 
-
     def handle_close (self):
         """close the connection"""
         bk.log.debug(wc.LOG_PROXY, "%s HttpServer.handle_close", self)
         self.persistent = False
         super(HttpServer, self).handle_close()
-
 
     def reconnect (self):
         """reconnect to server"""
