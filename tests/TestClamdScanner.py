@@ -13,19 +13,39 @@ class TestClamdScanner (unittest.TestCase):
     def setUp (self):
         wc.config = wc.Configuration()
         initlog(os.path.join("test", "logging.conf"))
-        clamav_conf = ClamavConfig(wc.config['clamavconf'])
-        self.scanner = ClamdScanner(clamav_conf)
+        self.clamav_conf = ClamavConfig(wc.config['clamavconf'])
 
 
-    def test1 (self):
-        data = file(os.path.join("tests", "virus", "test1")).read()
-        self.scanner.scan(data)
-        self.scanner.scan(data)
-        self.scanner.scan(data)
-        self.scanner.close()
-        self.assert_(self.scanner.infected)
-        self.assert_("ClamAV-Test-Signature FOUND" in self.scanner.infected[0])
-        self.assert_(not self.scanner.errors)
+    def testPlain (self):
+        self.scan("test1")
+
+
+    def testBz2 (self):
+        self.scan("test1.bz2")
+
+
+    def testBadext (self):
+        self.scan("test2.badext")
+
+
+    def testZip (self):
+        self.scan("test2.zip")
+
+
+    def _testRar (self):
+        self.scan("test3.rar")
+
+
+    def scan (self, filename):
+        filename =  os.path.join("tests", "virus", filename)
+        scanner = ClamdScanner(self.clamav_conf)
+        scanner.scan(file(filename).read())
+        scanner.close()
+        for msg in scanner.errors:
+            print "Scan error", msg,
+        self.assert_(scanner.infected)
+        self.assert_("ClamAV-Test-Signature FOUND" in scanner.infected[0])
+        self.assert_(not scanner.errors)
 
 
 if __name__ == '__main__':
