@@ -9,9 +9,9 @@
   <title lang="en">Content Rating</title>
   <description lang="de">Aktivieren Sie die Inhaltsbewertung um ihre Kinder vor ungeeigneten Inhalten zu schützen.</description>
   <description lang="en">Enable the content rating system to protect your children or yourself from inappropriate pages.</description>
-  <category name="agerange">14-</category>
-  <category name="violence">0</category>
-  <category name="language">1</category>
-  <category name="sex">1</category>
+  <category name="age">14-</category>
+  <category name="violence">none</category>
+  <category name="language">mild</category>
+  <category name="sex">mild</category>
 </rating>
 </folder>
