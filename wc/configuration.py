@@ -103,8 +103,8 @@ class Configuration (dict):
         self['filters'] = []
         self['filterlist'] = [[], [], [], [], [], [], [], [], [], []]
         self['colorize'] = 0
-        self['nofilterhosts'] = None
         # DNS resolved nofilterhosts
+        self['nofilterhosts'] = None
         self['allowedhosts'] = None
         self['starttime'] = time.time()
         # if set to one the bound socket does not accept connections from
