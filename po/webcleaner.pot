@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Aug  1 18:30:04 2003\n"
+"POT-Creation-Date: Fri Aug  1 20:47:32 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1151,7 +1151,7 @@ msgid "Unknown command %s"
 msgstr ""
 
 #, html translation
-msgid "Blank page due to block by %(AppName)"
+msgid "Feedback for %(AppName)s"
 msgstr ""
 
 #, html translation
@@ -1162,17 +1162,17 @@ msgid ""
 msgstr ""
 
 #, html translation
-msgid "%(AppName) error"
-msgstr ""
-
-#, html translation
-msgid "Feedback for %(AppName)"
+msgid "%(AppName)s error"
 msgstr ""
 
 #, html translation
 msgid ""
 "Welcome to the wonderful\n"
-"world of WebCleaner, the land of lounge lizards."
+"world of %(AppName)s, the land of lounge lizards."
+msgstr ""
+
+#, html translation
+msgid "Blank page due to block by %(AppName)s"
 msgstr ""
 
 #, html translation
