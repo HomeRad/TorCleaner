@@ -17,9 +17,12 @@ class HttpProxyClient:
 
 
     def __repr__ (self):
-        handler = self.handler.func_name
-        if hasattr(self.handler, 'im_class'):
-            handler = self.handler.im_class.__name__+"."+handler
+        if self.handler is None:
+            handler = "None"
+        else:
+            handler = self.handler.func_name
+            if hasattr(self.handler, 'im_class'):
+                handler = self.handler.im_class.__name__+"."+handler
         return '<%s: %s>' % ('proxyclient', handler)
 
 
