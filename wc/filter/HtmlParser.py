@@ -355,6 +355,15 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             if len(attrs['align']) > 50:
                 warn(PROXY, "Detected and prevented IE <hr align> crash bug")
                 del attrs['align']
+        elif tag=="object" and attrs.has_key('type'):
+            # fix CAN-2003-0344, only one / (slash) allowed
+            t = attrs['type']
+            c = t.count("/")
+            if c > 1:
+                warn(PROXY, "Detected and prevented IE <object type> bug")
+                t = t.replace("/", "", c-1)
+                attrs['type'] = t
+
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
