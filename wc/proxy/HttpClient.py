@@ -62,7 +62,7 @@ class HttpClient (Connection):
         }
         if auth:
             headers['Proxy-Authenticate'] = auth
-        form = {}
+        form = None
         WebConfig(self, '/error.html', form, self.protocol,
                   context=context,
                   headers=headers,
@@ -179,7 +179,7 @@ class HttpClient (Connection):
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
-        debug(PROXY, 'Proxy: client data %s', blocktext(data, 72))
+        debug(PROXY, "Proxy: client data `%s'", blocktext(data, 72))
         data = applyfilter(FILTER_REQUEST_DECODE, data,
                            attrs=self.nofilter)
         data = applyfilter(FILTER_REQUEST_MODIFY, data,
@@ -277,24 +277,24 @@ class HttpClient (Connection):
         if self.method not in ['GET', 'POST', 'HEAD']:
             return self.error(403, i18n._("Invalid Method"))
         # get cgi form data
+        form = None
         if self.method=='GET':
             # split off query string and parse it
             qs = urlparse.urlsplit(self.url)[3]
-            form = cgi.parse_qs(qs)
+            if qs:
+                form = cgi.parse_qs(qs)
         elif self.method=='POST':
             # XXX this uses FieldStorage internals?
             form = cgi.FieldStorage(fp=StringIO(self.content),
                                     headers=self.headers,
-                                    environ={'REQUEST_METHOD': self.method})
-        else:
-            form = {}
-        # this object will call server_connected at some point
+                                    environ={'REQUEST_METHOD': 'POST'})
         gm = mimetypes.guess_type(self.url, None)
         if gm[0] is not None:
             headers = {'Content-Type': gm[0]}
         else:
             # note: index.html is appended to directories
             headers = {'Content-Type': 'text/html'}
+        # this object will call server_connected at some point
         WebConfig(self, self.url, form, self.protocol, headers=headers)
 
 
