@@ -31,7 +31,8 @@ class SortedDict (dict):
 
 
     def __setitem__ (self, key, value):
-        self._keys.append(key)
+        if not self.has_key(key):
+            self._keys.append(key)
         super(SortedDict, self).__setitem__(key, value)
 
 
