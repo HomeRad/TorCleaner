@@ -34,7 +34,8 @@
  tal:attributes="alt t_foldericon">
 <b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/title"
- tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
+ tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}; title folder/tiptext"
+ >Scripting</a>
 </b>
 </div>
 <br>
@@ -55,12 +56,12 @@
  tal:attributes="alt t_ruleicon">
 <input type="image" src="up.png" border="0"
  tal:condition="rule/up"
- tal:attributes="name string:rule_up_${rule/oid}; title t_rulemoveup; alt t_up">
-<input type="image" src="down.png" border="0"
+ tal:attributes="name string:rule_up_${rule/oid}; title t_rulemoveup; alt t_up"
+ ><input type="image" src="down.png" border="0"
  tal:condition="rule/down"
  tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down">
 <b tal:omit-tag="not:rule/selected">
-<a href="#" tal:content="string:[${rule/get_name}] ${rule/title}"
+<a href="#" tal:content="string:[${rule/get_name}] ${rule/title}; title rule/tiptext"
  tal:condition="not:curfolder/disable"
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}"
  >[rewrite] On focus</a>
