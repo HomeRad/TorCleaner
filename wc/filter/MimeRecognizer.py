@@ -27,7 +27,8 @@ class MimeRecognizer (wc.filter.Filter.Filter):
 
     def filter (self, data, attrs):
         """feed data to recognizer"""
-        if not attrs.has_key('mimerecognizer_buf'):
+        if not attrs.has_key('mimerecognizer_buf') or \
+           attrs.get('mimerecognizer_ignore'):
             return data
         buf = attrs['mimerecognizer_buf']
         if buf.closed:
@@ -39,7 +40,8 @@ class MimeRecognizer (wc.filter.Filter.Filter):
 
     def finish (self, data, attrs):
         """feed data to recognizer"""
-        if not attrs.has_key('mimerecognizer_buf'):
+        if not attrs.has_key('mimerecognizer_buf') or \
+           attrs.get('mimerecognizer_ignore'):
             return data
         buf = attrs['mimerecognizer_buf']
         if buf.closed:
@@ -70,4 +72,5 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         """initialize buffer"""
         d = super(MimeRecognizer, self).get_attrs(url, headers)
         d['mimerecognizer_buf'] = StringIO.StringIO()
+        d['mimerecognizer_ignore'] = False
         return d

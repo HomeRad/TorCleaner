@@ -297,11 +297,10 @@ class JSFilter (wc.js.JSListener.JSListener):
         # so only accept non-encoded content here
         headers['Accept-Encoding'] = 'identity\r'
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self.js_client,
-                               self.js_client.request,
-                               headers,
-                               '', # content
-                               mime="application/x-javascript",
-                              )
+            self.js_client.request, headers,
+            '', # content
+            mime_types=["application/x-javascript", "text/javascript"],
+            )
 
     def jsScriptData (self, data, url, ver):
         """Callback for loading <script src=""> data in the background

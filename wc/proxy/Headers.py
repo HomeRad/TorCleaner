@@ -198,20 +198,24 @@ def server_set_date_header (headers):
         headers['Date'] = "%s\r" % Utils.formatdate()
 
 
-def server_set_content_headers (headers, mime, url):
+def server_set_content_headers (headers, mime_types, url):
     """add missing content-type headers"""
     origmime = headers.get('Content-Type', None)
     if not origmime:
         wc.log.warn(wc.LOG_PROXY, _("Missing content type in %r"), url)
-    if mime and mime != origmime:
-        # we have a mime type override
-        if origmime:
-            wc.log.warn(wc.LOG_PROXY,
+    if not mime_types:
+        return
+    matching_mimes = [m for m in mime_types if origmime.startswith(m)]
+    if len(matching_mimes) > 0:
+        return
+    # we have a mime type override
+    if origmime:
+        wc.log.warn(wc.LOG_PROXY,
             _("Change content type of %r from %r to %r"), url, origmime, mime)
-        else:
-            wc.log.warn(wc.LOG_PROXY,
-                        _("Set content type of %r to %r"), url, mime)
-        headers['Content-Type'] = "%s\r" % mime
+    else:
+        wc.log.warn(wc.LOG_PROXY,
+                    _("Set content type of %r to %r"), url, mime)
+    headers['Content-Type'] = "%s\r" % mime
 
 
 def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,

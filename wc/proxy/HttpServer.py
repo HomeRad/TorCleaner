@@ -151,8 +151,8 @@ class HttpServer (wc.proxy.Server.Server):
             # Hm, the client no longer cares about us, so close
             self.close()
 
-    def client_send_request (self, method, protocol, hostname, port,
-                             document, headers, content, client, url, mime):
+    def client_send_request (self, method, protocol, hostname, port, document,
+                             headers, content, client, url, mime_types):
         """the client (matchmaker) sends the request to the server"""
         assert self.state == 'client', \
                                    "%s invalid state %r" % (self, self.state)
@@ -166,7 +166,7 @@ class HttpServer (wc.proxy.Server.Server):
         self.content = content
         self.url = url
         # fix mime content-type for eg JavaScript
-        self.mime = mime
+        self.mime_types = mime_types
         # remember client header for authorization resend
         self.clientheaders = headers
         if self.method != 'CONNECT':
@@ -258,7 +258,7 @@ class HttpServer (wc.proxy.Server.Server):
         self.response = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE,
                               self.response, "finish", self.attrs).strip()
         if self.statuscode >= 400:
-            self.mime = None
+            self.mime_types = None
         wc.log.debug(wc.LOG_PROXY, "%s response %r", self, self.response)
 
     def process_headers (self):
@@ -323,6 +323,8 @@ class HttpServer (wc.proxy.Server.Server):
                                      clientheaders=self.client.headers,
                                      serverheaders=serverheaders,
                                      headers=self.headers)
+        if self.mime_types:
+            self.attrs['mimerecognizer_ignore'] = True
         wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s",
                      self, self.headers)
         if self.defer_data:
@@ -348,7 +350,7 @@ class HttpServer (wc.proxy.Server.Server):
                 data = decoder.decode(data)
             data += flush_decoders(decoders)
             wc.proxy.Headers.server_set_content_headers(
-                                     self.headers, self.mime, self.url)
+                                     self.headers, self.mime_types, self.url)
 
     def set_persistent (self, headers, http_ver):
         """return True iff this server connection is persistent"""
@@ -614,7 +616,7 @@ class HttpServer (wc.proxy.Server.Server):
         self.client = None
         ClientServerMatchmaker(client, client.request,
                                self.clientheaders, # with new auth
-                               client.content, mime=self.mime)
+                               client.content, mime_types=self.mime_types)
 
 
 def speedcheck_print_status ():

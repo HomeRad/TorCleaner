@@ -51,7 +51,8 @@ class ClientServerMatchmaker (object):
         We are done matching up the client and server
     """
 
-    def __init__ (self, client, request, headers, content, mime=None):
+    def __init__ (self, client, request, headers, content,
+                  mime_types=None):
         """if mime is not None, the response will have the specified
            mime type, regardless of the Content-Type header value.
            This is useful for JavaScript fetching and blocked pages.
@@ -60,7 +61,10 @@ class ClientServerMatchmaker (object):
         self.request = request
         self.headers = headers
         self.content = content
-        self.mime = mime
+        if mime_types is None:
+            self.mime_types = []
+        else:
+            self.mime_types = mime_types
         self.state = 'dns'
         self.server_busy = 0
         self.method, self.url, self.protocol = self.request.split()
@@ -192,7 +196,7 @@ class ClientServerMatchmaker (object):
                                    self.hostname, self.port,
                                    self.document, self.headers,
                                    self.content, self,
-                                   self.url, self.mime)
+                                   self.url, self.mime_types)
                 server.client = self.client
             return
         # check expectations
@@ -217,7 +221,7 @@ class ClientServerMatchmaker (object):
                                    self.hostname, self.port,
                                    self.document, self.headers,
                                    self.content, self,
-                                   self.url, self.mime)
+                                   self.url, self.mime_types)
 
     def server_abort (self, reason=_("No response from server")):
         """The server had an error, so we need to tell the client

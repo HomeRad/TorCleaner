@@ -173,6 +173,7 @@ def get_filterattrs (url, filterstages, browser='Calzilla/6.0',
         'url': url,
         'nofilter': wc.configuration.config.nofilter(url),
         'mime' : headers.get('Content-Type'),
+        'mime_types': None,
         'headers': attrheaders,
         'browser': browser,
     }

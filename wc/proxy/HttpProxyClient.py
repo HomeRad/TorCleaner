@@ -33,7 +33,6 @@ class HttpProxyClient (object):
         self.isredirect = False
         attrs = wc.filter.get_filterattrs(self.url,
                                           [wc.filter.FILTER_REQUEST])
-        attrs['mime'] = 'application/x-javascript'
         # note: use HTTP/1.0 for JavaScript
         request = "GET %s HTTP/1.0" % self.url
         request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE,
@@ -135,7 +134,7 @@ class HttpProxyClient (object):
         if not self.document:
             self.document = '/'
         host = wc.url.stripsite(self.url)[0]
-        mime = self.server.mime
+        mime_types = self.server.mime_types
         content = ''
         # note: use HTTP/1.0 for JavaScript
         request = "GET %s HTTP/1.0" % self.url
@@ -144,5 +143,5 @@ class HttpProxyClient (object):
         headers = wc.proxy.Headers.get_wc_client_headers(host)
         headers['Accept-Encoding'] = 'identity\r'
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(
-                                  self, request, headers, content, mime=mime)
+                    self, request, headers, content, mime_types=mime_types)
 
