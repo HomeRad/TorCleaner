@@ -2,13 +2,6 @@ TODO
 
 version 2.5 and above
 
-- check stuff like http://server/..%5c..%5c..%5c..%5c..%5c..%5c..%5..%5c..%5ccskin.zip
-
-- http://xhaus.com/alan/python/proxies.html
-
-- wrong content type at http://flug.de/img/lastminute/
-  Solution: try to peek at content
-
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS

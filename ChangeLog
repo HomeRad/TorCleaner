@@ -16,6 +16,14 @@
     This also prevents exploits like those found in CVE-2002-0025 and
     CVE-2002-0024.
     Changed: wc/proxy/{Headers,HttpServer}.py
+  * improved url norming, the url is no always unquoted before matching
+    Changed: wc/proxy/__init__.py
+  * new utility test/magic.py for commandline magic testing
+    Added: test/magic.py
+  * new utility test/get.py for download test
+    Added: test/get.py
+  * new test test_url for url norming tests
+    Added: test/test_url.py, test/output/test_url
 
 2.6 (released 25.11.2003)
   * fixed background downloading with 30x redirects
