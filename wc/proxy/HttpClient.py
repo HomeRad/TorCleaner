@@ -152,6 +152,15 @@ class HttpClient (Connection):
                 remove_headers(self.headers, to_remove)
                 # add warning
                 self.headers['Warning'] = "214 Transformation applied\r"
+            # XXX handle Connection values
+            if self.headers.has_key('Connection'):
+                to_remove = ['Connection']
+                print >>sys.stderr, "XXX connection", self.headers['Connection']
+                remove_headers(self.headers, to_remove)
+            elif self.headers.has_key('Proxy-Connection'):
+                val = self.headers['Proxy-Connection'].strip()
+                self.headers['Connection'] = val+"\r"
+                remove_headers(self.headers, ['Proxy-Connection'])
             debug(HURT_ME_PLENTY, "Proxy: C/Headers", self.headers.items())
             if config["proxyuser"]:
                 if not self.headers.has_key('Proxy-Authentication'):
@@ -173,13 +182,7 @@ class HttpClient (Connection):
                        '')
                     return
                 if mf>0:
-                    self.headers['Max-Forwards'] = mf-1
-            # XXX handle Connection values
-            if self.headers.has_key('Connection'):
-                remove_headers(self.headers, ['Connection'])
-            elif self.headers.has_key('Proxy-Connection'):
-                self.headers['Connection'] = self.headers['Proxy-Connection']
-                remove_headers(self.headers, ['Proxy-Connection'])
+                    self.headers['Max-Forwards'] = "%d\r" % (mf-1)
             self.state = 'content'
 
 
