@@ -58,7 +58,6 @@ class key_handle (object):
         keys = []
         while 1:
             try:
-                #print repr(EnumKey(self._key, i))
                 keys.append(key_handle(self._key, EnumKey(self._key, i)))
             except EnvironmentError:
                 break
