@@ -113,7 +113,22 @@ def dq_in_net (n, net, mask):
     return m==net
 
 
-def host_map (hosts):
+def host_in_set (ip, hosts, nets):
+    if ip in hosts:
+        return True
+    if is_valid_dq(ip):
+        n = dq2num(ip)
+        for net, mask in nets:
+            if dq_in_net(n, net, mask):
+                return True
+    return False
+
+
+def strhosts2map (strhosts):
+    return hosts2map([s.strip() for s in strhosts.split(",")])
+
+
+def hosts2map (hosts):
     """return a set of named hosts, and a list of subnets (host/netmask
        adresses).
        Only IPv4 host/netmasks are supported.
@@ -145,23 +160,7 @@ def host_map (hosts):
     return (hostset, nets)
 
 
-def host_in_set (ip, hosts, nets):
-    if ip in hosts:
-        return True
-    if is_valid_dq(ip):
-        n = dq2num(ip)
-        for net, mask in nets:
-            if dq_in_net(n, net, mask):
-                return True
-    return False
-
-
-def host_set (strhosts):
-    hosts = [s.strip() for s in strhosts.split(",")]
-    return host_map(hosts)
-
-
-def strhost_set (hostmap):
+def map2hosts (hostmap):
     ret = hostmap[0].copy()
     for net, mask in hostmap[1]:
         ret.add("%s/%d" % (net, mask2suffix(mask)))
@@ -169,8 +168,7 @@ def strhost_set (hostmap):
 
 
 def _test ():
-    net = ["192.168.1.1/16"]
-    hosts, nets = host_map(net)
+    hosts, nets = hosts2map(["192.168.1.1/16"])
     for net, mask in nets:
         print num2dq(net), mask2suffix(mask)
 

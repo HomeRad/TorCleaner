@@ -373,12 +373,12 @@ class WConfigParser (BaseParser):
                     self.config[key] = str(self.config[key])
             if self.config['noproxyfor'] is not None:
                 strhosts = str(self.config['noproxyfor'])
-                self.config['noproxyfor'] = ip.host_set(strhosts)
+                self.config['noproxyfor'] = ip.strhosts2map(strhosts)
             else:
                 self.config['noproxyfor'] = [{}, [], Set()]
             if self.config['allowedhosts'] is not None:
                 strhosts = str(self.config['allowedhosts'])
-                self.config['allowedhosts'] = ip.host_set(strhosts)
+                self.config['allowedhosts'] = ip.strhosts2map(strhosts)
             else:
                 self.config['allowedhosts'] = [{}, [], Set()]
         elif name=='filter':

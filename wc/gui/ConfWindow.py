@@ -740,8 +740,8 @@ class ConfWindow (ToolWindow):
          'parentproxyuser', 'parentproxypass', 'allowedhosts',
          'webgui_theme', 'timeout',]:
             setattr(self, key, self.config[key])
-        self.noproxyfor = ip.strhost_set(self.noproxyfor)
-        self.allowedhosts = ip.strhost_set(self.allowedhosts)
+        self.noproxyfor = ip.strhosts2map(self.noproxyfor)
+        self.allowedhosts = ip.strhosts2map(self.allowedhosts)
         self.modules = {
 	    "Header": 0,
 	    "Blocker": 0,
