@@ -168,6 +168,20 @@ startwatch
 stopwatch
         Stop the monitor program and the proxy.""")
 
+_nt_usage = i18n._("""USAGE\twebcleaner command
+
+COMMANDS
+start
+        Start the proxy. If it is already started, do nothing.
+stop
+        Stop the proxy. If it is already stopped, do nothing.
+status
+        Print info if the proxy is running or not.
+install
+        Install WebCleaner Windows service.
+remove
+        Remove WebCleaner Windows service.""")
+
 
 def _print_usage (msg):
     """print short usage info and exit"""
@@ -190,17 +204,17 @@ def _paginate (text, lines=22):
             sys.stdin.read(1)
 
 
-def _print_help ():
+def _print_help (usage):
     """print long usage info"""
     if os.name!='posix':
-        _paginate(_usage)
+        _paginate(usage)
     else:
-        print _usage
+        print usage
     sys.exit(0)
 
 
 def main ():
-    # Read command line arguments
+    # read command line arguments
     import getopt
     try:
         # Note: cut out the name of the script
@@ -211,7 +225,7 @@ def main ():
     pidfile = daemon.wpidfile
     for opt,arg in options:
         if opt=="-h" or opt=="--help":
-            _print_help()
+            _print_help(_usage)
         elif opt=='--pidfile':
             pidfile = arg
         else:
@@ -235,7 +249,7 @@ def main ():
     elif command=='restart':
         msg, status = daemon.restart(wstartfunc, pidfile)
     elif command=='status':
-        msg, status = daemon.status(pidfile)
+        msg, status = daemon.status(pidfile, watchfile)
     elif command=='reload':
         msg, status = daemon.reload(pidfile)
     else:
@@ -246,6 +260,19 @@ def main ():
 
 
 def main_nt ():
+    # read command line arguments
+    import getopt
+    try:
+        # Note: cut out the name of the script
+        options, args = getopt.getopt(sys.argv[1:], "h", ["help"])
+    except getopt.error:
+        type, value = sys.exc_info()[:2]
+        _print_usage(value)
+    for opt,arg in options:
+        if opt=="-h" or opt=="--help":
+            _print_help(_nt_usage)
+        else:
+            _print_usage(i18n._("Unknown option %(option)s") % {'option':`opt`})
     import win32serviceutil
     import win32service
     import win32event
