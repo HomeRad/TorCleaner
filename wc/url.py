@@ -24,22 +24,53 @@ from urllib import splittype, splithost, splitnport, splitquery, quote, unquote
 from wc import ip
 
 # adapted from David Wheelers "Secure Programming for Linux and Unix HOWTO"
-_az09 = r"a-z0-9"
-_path = r"\-\_\.\!\~\*\'\(\)"
-_hex_safe = r"2-9a-f"
-_hex_full = r"0-9a-f"
+_basic = {
+    "_az09": r"a-z0-9",
+    "_path": r"\-\_\.\!\~\*\'\(\)",
+    "_hex_safe": r"2-9a-f",
+    "_hex_full": r"0-9a-f",
+}
+_safe_char = r"([%(_az09)s%(_path)s\+]|(%%[%(_hex_safe)s][%(_hex_full)s]))"%_basic
 _safe_scheme_pattern = r"(https?|ftp)"
-_safe_host_pattern = r"([%(_az09)s][%(_az09)s\-]*(\.[%(_az09)s][%(_az09)s\-]*)*\.?)"%locals()
-_safe_path_pattern = r"((/([%(_az09)s%(_path)s]|(%%[%(_hex_safe)s][%(_hex_full)s]))+)*/?)"%locals()
-_safe_fragment_pattern = r"(\#([%(_az09)s%(_path)s\+]|(%%[%(_hex_safe)s][%(_hex_full)s]))+)?"%locals()
-safe_url_pattern = "(?i)"+_safe_scheme_pattern+"://"+_safe_host_pattern+\
-                    _safe_path_pattern+_safe_fragment_pattern
+_safe_host_pattern = r"([%(_az09)s][%(_az09)s\-]*(\.[%(_az09)s][%(_az09)s\-]*)*\.?)"%_basic
+_safe_path_pattern = r"((/([%(_az09)s%(_path)s]|(%%[%(_hex_safe)s][%(_hex_full)s]))+)*/?)"%_basic
+_safe_fragment_pattern = r"%s*"%_safe_char
+_safe_cgi = r"%s+(=%s+)?" % (_safe_char, _safe_char)
+_safe_query_pattern = r"(%s(&%s)*)?"%(_safe_cgi, _safe_cgi)
+safe_url_pattern = r"%s://%s%s(#%s)?" % \
+    (_safe_scheme_pattern, _safe_host_pattern,
+     _safe_path_pattern, _safe_fragment_pattern)
 
-is_valid_url = re.compile("^%s$"%safe_url_pattern).match
+is_valid_url = re.compile("(?i)^%s$"%safe_url_pattern).match
+is_valid_host = re.compile("(?i)^%s$"%_safe_host_pattern).match
+is_valid_path = re.compile("(?i)^%s$"%_safe_path_pattern).match
+is_valid_query = re.compile("(?i)^%s$"%_safe_query_pattern).match
+is_valid_fragment = re.compile("(?i)^%s$"%_safe_fragment_pattern).match
+
+def is_valid_js_url (urlstr):
+    """test javascript urls"""
+    url = urlparse.urlsplit(urlstr)
+    if url[0].lower()!='http':
+        print 1
+        return False
+    if not is_valid_host(url[1]):
+        print 2
+        return False
+    if not is_valid_path(url[2]):
+        print 3
+        return False
+    if not is_valid_query(url[3]):
+        print 4
+        return False
+    if not is_valid_fragment(url[4]):
+        print 5
+        return False
+    return True
+
 
 def safe_host_pattern (host):
-    return _safe_scheme_pattern+"://"+host+ \
-           _safe_path_pattern+_safe_fragment_pattern
+    return "(?i)%s://%s%s(#%s)?" % \
+     (_safe_scheme_pattern, host, _safe_path_pattern, _safe_fragment_pattern)
 
 
 # XXX better name/implementation for this function
