@@ -51,6 +51,18 @@
     Changed: wc/parser/{htmllex.l,htmlparse.y,htmlsax.h},
       wc/network/__init__.py
 
+  * fix configfile writing
+    Type: bugfix
+    Changed: wc/__init__.py
+
+  * set default config dir in win32start handler
+    Type: bugfix
+    Changed: wc/win32start.py
+
+  * only apply non-empty config dir to win32start handler
+    Type: bugfix
+    Changed: webcleaner
+
 2.15 (released 22.5.2004)
   * set default config dir in webcleaner script
     Type: bugfix
