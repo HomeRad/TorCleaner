@@ -4,8 +4,8 @@ version 2.0
 
 - automatic filter update
 
-version 2.1
 
+version 2.1
 
 - for webgui, set i18n._ domain to the get_lang domain to match it with
   the TAL translator
@@ -25,7 +25,7 @@ version 2.1
 - test parent proxy authentication
   I never tested this.
 
-- documentation for the web interface
+- documentation for the webgui interface
 
 - dockapp to visualize config and status
   I made machine-parseable config and status output, so write a tool
