@@ -114,11 +114,15 @@ class Connection (Dispatcher):
     def close (self):
         self.close_pending = False
         if self.persistent:
-            self.reuse()
+            self.close_reuse()
         else:
-            if self.connected:
-                self.connected = False
-            super(Connection, self).close()
+            self.close_close()
+
+
+    def close_close (self):
+        if self.connected:
+            self.connected = False
+        super(Connection, self).close()
 
 
     def handle_close (self):
@@ -143,7 +147,7 @@ class Connection (Dispatcher):
             self.close()
 
 
-    def reuse (self):
+    def close_reuse (self):
         assert self.persistent
         assert self.connected
         debug(PROXY, '%s reusing %d', self, self.sequence_number)

@@ -5,14 +5,11 @@ __date__    = "$Date$"[7:-2]
 from cStringIO import StringIO
 import dns_lookups
 from wc.proxy.Headers import WcMessage
-from ServerPool import ServerPool
+from ServerPool import serverpool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
 from wc.log import *
 from wc.url import document_quote
-
-# connection pool for persistent server connections
-serverpool = ServerPool()
 
 from HttpServer import HttpServer
 
@@ -110,8 +107,8 @@ class ClientServerMatchmaker (object):
     def find_server (self):
         """search for a connected server or make a new one"""
         assert self.state == 'server'
-        debug(PROXY, "%s find server", self)
         addr = (self.ipaddr, self.port)
+        debug(PROXY, "%s find server %s", self, addr)
         if not self.client.connected:
             debug(PROXY, "%s client not connected", self)
             # The browser has already closed this connection, so abort
@@ -123,6 +120,7 @@ class ClientServerMatchmaker (object):
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
+            debug(PROXY, '%s server %s busy', self, server)
             # There are too many connections right now, so register us
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
@@ -143,7 +141,7 @@ class ClientServerMatchmaker (object):
         if not self.client.connected:
             # The client has aborted, so let's return this server
             # connection to the pool
-            server.reuse()
+            server.close()
             return
         if self.method=='CONNECT':
             self.state = 'response'

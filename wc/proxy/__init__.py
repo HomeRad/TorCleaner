@@ -7,8 +7,7 @@ used by Bastian Kleineidam for WebCleaner
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import socket, select, re
-from time import time
+import socket, select, re, time
 from wc import i18n, ip
 from wc.log import *
 from LimitQueue import LimitQueue
@@ -66,7 +65,7 @@ def create_inet_socket (dispatch, socktype):
 
 def make_timer (delay, callback):
     "After DELAY seconds, run the CALLBACK function"
-    TIMERS.append( (time()+delay, callback) )
+    TIMERS.append( (time.time()+delay, callback) )
     TIMERS.sort()
     debug(PROXY, "%d timers", len(TIMERS))
 
@@ -77,12 +76,12 @@ def run_timers ():
     # 10 ms.  This is because the select() statement doesn't have
     # infinite precision and may end up returning slightly earlier.
     # We're willing to run the event a few millisecond earlier.
-    while TIMERS and TIMERS[0][0] <= time() + 0.01:
+    while TIMERS and TIMERS[0][0] <= time.time() + 0.01:
         # This timeout handler should be called
         callback = TIMERS[0][1]
         del TIMERS[0]
         callback()
-    if TIMERS: return TIMERS[0][0] - time()
+    if TIMERS: return TIMERS[0][0] - time.time()
     else:      return 60
 
 
@@ -93,11 +92,15 @@ def periodic_print_status ():
 
 from Dispatcher import socket_map
 def proxy_poll (timeout=0.0):
+    handlerCount = 0
     if socket_map:
-        r = [ x for x in socket_map.values() if x.readable() ]
-        w = [ x for x in socket_map.values() if x.writable() ]
+        r = [ x for x in socket_map.itervalues() if x.readable() ]
+        w = [ x for x in socket_map.itervalues() if x.writable() ]
         e = socket_map.values()
-        debug(PROXY, "poll socket_map %s", (r,w,e))
+        debug(PROXY, "select with %f timeout:", timeout)
+        for x in e:
+            debug(PROXY, "  %s", x)
+        t = time.time()
         try:
             (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
@@ -106,22 +109,37 @@ def proxy_poll (timeout=0.0):
                 return
             else:
                 raise
+        _slow_check("select", t, 'pslow')
+        debug(PROXY, "poll result %s", (r,w,e))
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
         for x in e:
             debug(PROXY, "%s handle exception event", x)
             x.handle_expt_event()
-        for x in w:
-            t = time()
-            if x not in e and x.writable():
-                debug(PROXY, "%s handle write", x)
-                x.handle_write_event()
-        for x in r:
-            t = time()
-            if x not in e and x not in w and x.readable():
-                debug(PROXY, "%s handle read", x)
-                x.handle_read_event()
+            handlerCount += 1
+        for x in [ x for x in w if x not in e ]:
+            t = time.time()
+            debug(PROXY, "%s handle write", x)
+            assert x.writable(), "non-writable connection"
+            x.handle_write_event()
+            handlerCount += 1
+            _slow_check(x, t, 'wslow')
+        for x in [ x for x in r if (x not in e and x not in w) ]:
+            t = time.time()
+            debug(PROXY, "%s handle read", x)
+            assert x.readable(), "non-readable connection"
+            x.handle_read_event()
+            handlerCount += 1
+            _slow_check(x, t, 'rslow')
+    return handlerCount
+
+
+def _slow_check (x, t, stype):
+    """check if processing of connection x took too much time
+       and print a warning"""
+    if time.time()-t > 2:
+        warn(PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
 
 
 def mainloop (handle=None):
@@ -148,6 +166,3 @@ def mainloop (handle=None):
             if rc==win32event.WAIT_OBJECT_0:
                 break
 
-
-if __name__=='__main__':
-    mainloop()

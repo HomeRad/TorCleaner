@@ -66,6 +66,7 @@ class HttpClient (Connection):
         self.headers = {} # remembers server headers
         self.bytes_remaining = None # for content only
         self.content = ''
+        self.compress = "identity" # acceptable compression for client
         self.protocol = 'HTTP/1.0'
         self.url = ''
 
@@ -87,14 +88,15 @@ class HttpClient (Connection):
 
 
     def __repr__ (self):
+        extra = self.persistent and "persistent " or ""
         if self.request:
             try:
-                extra = self.request.split()[1]
+                extra += self.request.split()[1]
             except IndexError:
-                extra = '???' + self.request
+                extra += '???'+self.request
         else:
-            extra = 'being read'
-        return '<%s:%-8s persistent=%s %s>'%('client', self.state, self.persistent, extra)
+            extra += 'being read'
+        return '<%s:%-8s %s>'%('client', self.state, extra)
 
 
     def process_read (self):
@@ -225,13 +227,11 @@ class HttpClient (Connection):
         if self.http_ver >= (1,1):
             self.persistent = not has_header_value(msg, 'Proxy-Connection', 'Close') and \
                               not has_header_value(msg, 'Connection', 'Close')
-        elif self.http_ver >= (1,0):
-            self.persistent = has_header_value(msg, 'Proxy-Connection', 'Keep-Alive') or \
-                              has_header_value(msg, 'Connection', 'Keep-Alive')
         else:
+            # note: never do persistent connections for HTTP/1.0 clients
             self.persistent = False
         # work on these headers
-        client_set_headers(msg)
+        self.compress = client_set_headers(msg)
         # filter headers
         self.headers = applyfilter(FILTER_REQUEST_HEADER,
                                    msg, "finish", self.attrs)
@@ -245,6 +245,8 @@ class HttpClient (Connection):
             self.decoders.append(UnchunkStream())
             client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
+        if self.bytes_remaining is None:
+            self.persistent = False
         if self.method=='CONNECT':
             if not self.headers.has_key('Host'):
                 warn(PROXY, "%s CONNECT method without Host header encountered", self)
@@ -263,6 +265,7 @@ class HttpClient (Connection):
             return
         # add missing host headers for HTTP/1.1
         if not self.headers.has_key('Host'):
+            warn(PROXY, "%s request without Host header encountered", self)
             if port!=80:
                 self.headers['Host'] = "%s:%d\r"%(self.hostname, self.port)
             else:
@@ -271,12 +274,14 @@ class HttpClient (Connection):
             creds = get_header_credentials(self.headers, 'Proxy-Authorization')
             if not creds:
                 auth = ", ".join(get_challenges())
-                self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
+                self.error(407, i18n._("Proxy Authentication Required"),
+                           auth=auth)
                 return
             if 'NTLM' in creds:
                 if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
                     auth = ",".join(creds['NTLM'][0])
-                    self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
+                    self.error(407, i18n._("Proxy Authentication Required"),
+                               auth=auth)
                     return
             # XXX the data=None argument should hold POST data
             if not check_credentials(creds, username=config['proxyuser'],
@@ -285,14 +290,15 @@ class HttpClient (Connection):
                                      method=self.method, data=None):
                 warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
                 auth = ", ".join(get_challenges())
-                self.error(407, i18n._("Proxy Authentication Required"), auth=auth)
+                self.error(407, i18n._("Proxy Authentication Required"),
+                           auth=auth)
                 return
         if self.method in ['OPTIONS', 'TRACE'] and \
            client_get_max_forwards(self.headers)==0:
             # XXX display options ?
             self.state = 'done'
             ServerHandleDirectly(self, '%s 200 OK'%self.protocol, 200,
-                      WcMessage(StringIO('Content-Type: text/plain\r\n\r\n')), '')
+                 WcMessage(StringIO('Content-Type: text/plain\r\n\r\n')), '')
             return
         self.state = 'content'
 
@@ -318,7 +324,7 @@ class HttpClient (Connection):
         if underflow:
             warn(PROXY, "client received %d bytes more than content-length",
                  (-self.bytes_remaining))
-        if is_closed or self.bytes_remaining==0:
+        if is_closed or self.bytes_remaining <= 0:
             data = applyfilter(FILTER_REQUEST_DECODE, "", "finish", self.attrs)
             data = applyfilter(FILTER_REQUEST_MODIFY, data, "finish", self.attrs)
             data = applyfilter(FILTER_REQUEST_ENCODE, data, "finish", self.attrs)
@@ -471,30 +477,31 @@ class HttpClient (Connection):
                 form = cgi.parse_qs(qs)
         elif self.method=='POST':
             # XXX this uses FieldStorage internals
-            fp = StringIO(self.content)
-            form = cgi.FieldStorage(fp=fp, headers=self.headers,
+            form = cgi.FieldStorage(fp=StringIO(self.content),
+                                    headers=self.headers,
                                     environ={'REQUEST_METHOD': 'POST'})
-            fp.close()
         return form
 
 
-    def reuse (self):
+    def close_reuse (self):
         debug(PROXY, '%s reuse', self)
-        super(HttpClient, self).reuse()
+        super(HttpClient, self).close_reuse()
         self.reset()
 
 
-    def close (self):
+    def close_close (self):
         debug(PROXY, '%s close', self)
-        super(HttpClient, self).close()
         self.state = 'closed'
+        super(HttpClient, self).close_close()
 
 
 def get_content_length (headers):
-    """get content length as int or 0 on error"""
+    """get content length as int or None on error"""
+    if not headers.has_key("Content-Length"):
+        return None
     try:
-        return int(headers.get('Content-Length', 0))
+        return int(headers['Content-Length'])
     except ValueError:
-        warn(PROXY, "invalid Content-Length value %s", headers.get('Content-Length', ''))
-    return 0
+        warn(PROXY, "invalid Content-Length value %r", headers['Content-Length'])
+    return None
 

@@ -15,7 +15,7 @@ from Headers import server_set_headers, server_set_content_headers, server_set_e
 from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
-from ClientServerMatchmaker import serverpool
+from ServerPool import serverpool
 from wc.filter import applyfilter, get_filterattrs, FilterWait, FilterRating
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
@@ -46,7 +46,7 @@ def get_response_data (response, url):
         error(PROXY, "Invalid response %r from %r", response, url)
         parts = ['HTTP/1.0', 200, 'Ok']
     if not is_http_status(parts[1]):
-        error(PROXY, "Invalid http statuscode %s from %r", parts[1], url)
+        error(PROXY, "Invalid http statuscode %r from %r", parts[1], url)
         parts[1] = 200
     parts[1] = int(parts[1])
     return parts
@@ -98,14 +98,17 @@ class HttpServer (Server):
 
     def __repr__ (self):
         """object description"""
+        extra = self.persistent and "persistent " or ""
         if self.addr[1] != 80:
 	    portstr = ':%d' % self.addr[1]
         else:
             portstr = ''
-        extra = '%s%s%s' % (self.hostname or self.addr[0],
-                            portstr, self.document)
+        extra += '%s%s%s' % (self.hostname or self.addr[0],
+                             portstr, self.document)
         if self.client:
             extra += " client"
+        if self.data_written:
+            extra += " data_written"
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)
 
@@ -137,9 +140,10 @@ class HttpServer (Server):
 
 
     def client_send_request (self, method, hostname, port, document, headers,
-                            content, client, url, mime):
+                             content, client, url, mime):
         """the client (matchmaker) sends the request to the server"""
         assert self.state == 'client'
+        assert not self.data_written, "oops %s" % self
         self.method = method
         self.client = client
         self.hostname = hostname
@@ -178,7 +182,7 @@ class HttpServer (Server):
     def process_read (self):
         """process read event by delegating it to process_* functions"""
         if self.state in ('connect', 'client') and \
-             (self.client and self.client.method!='CONNECT'):
+           (self.client and self.client.method!='CONNECT'):
             # with http pipelining the client could send more data after
             # the initial request
             error(PROXY, 'server received data in %s state', self.state)
@@ -292,7 +296,7 @@ class HttpServer (Server):
         # 304 Not Modified does not send any type info, because it was cached
         if self.statuscode!=304:
             # copy decoders
-            decoders = [ d.__class__() for d in self.decoders]
+            decoders = [d.__class__() for d in self.decoders]
             data = self.recv_buffer
             for decoder in decoders:
                 data = decoder.decode(data)
@@ -348,6 +352,7 @@ class HttpServer (Server):
     def process_content (self):
         """process server data: filter it and write it to client"""
         data = self.read(self.bytes_remaining)
+        debug(PROXY, "%s process %d bytes", self, len(data))
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
@@ -465,14 +470,16 @@ class HttpServer (Server):
         return True
 
 
-    def reuse (self):
+    def close_reuse (self):
         debug(PROXY, "%s reuse", self)
-        super(HttpServer, self).reuse()
+        assert not self.client, "reuse with open client"
+        super(HttpServer, self).close_reuse()
         self.state = 'client'
         self.reset()
+        # be sure to unreserve after reset because of callbacks
+        serverpool.unreserve_server(self.addr, self)
 
 
-    # XXX implement close_ready with flush?
     def close_ready (self):
         debug(PROXY, "%s close ready", self)
         if not self.flush():
@@ -485,14 +492,13 @@ class HttpServer (Server):
         return False
 
 
-    def close (self):
-        assert not self.client, "close with open client"
+    def close_close (self):
         debug(PROXY, "%s close", self)
+        assert not self.client, "close with open client"
         if self.connected and self.state!='closed':
             self.state = 'closed'
-        if not self.persistent:
-            serverpool.unregister_server(self.addr, self)
-        super(HttpServer, self).close()
+        super(HttpServer, self).close_close()
+        serverpool.unregister_server(self.addr, self)
 
 
     def handle_error (self, what):
