@@ -8734,10 +8734,10 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     }
     /* reset userdata */
     data->bufpos = len;
-    data->nextpos = 0;
     data->exc_type = NULL;
     data->exc_val = NULL;
     data->exc_tb = NULL;
+    //fprintf(stderr, "SCANNING %s\n", data->buf+len);
     data->lexbuf = yy_scan_bytes(data->buf+len, slen, scanner);
     return 0;
 }
@@ -8753,6 +8753,8 @@ int htmllexStop (void* scanner, UserData* data) {
 	}
 	data->buf[j] = '\0';
 	data->buf = PyMem_Resize(data->buf, char, len-data->nextpos+1);
+	data->nextpos = 0;
+        data->bufpos = 0;
 	if (!data->buf) return -1;
     }
     return 0;

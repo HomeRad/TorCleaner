@@ -78,7 +78,7 @@ def applyfilter (i, arg, fun='filter', attrs={}):
     For different filter levels we have different arg objects.
     Look at the filter examples.
     """
-    if attrs.get('nofilter'):
+    if attrs.get('nofilter') or (fun!='finish' and not arg):
         return arg
     try:
         #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)

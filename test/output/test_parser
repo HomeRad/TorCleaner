@@ -34,11 +34,25 @@ HTML '<>'
 characters ('<>',)
 HTML '< >'
 characters ('< >',)
+HTML '<a b="c"><'
+startElement ('a', {'b': 'c'})
+characters ('<',)
+HTML 'd>'
+characters ('d>',)
 HTML '<a b=c"><a b="c">'
 startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
 startElement ('a', {'b': '"c><a b="', 'c': None})
+HTML '<a b=/c/></a><br>'
+startElement ('a', {'b': '/c/'})
+endElement ('a',)
+startElement ('br', {})
+HTML '<br/>'
+startElement ('br', {})
+HTML '<a b="50%"><br>'
+startElement ('a', {'b': '50%'})
+startElement ('br', {})
 HTML '<!---->'
 comment ('',)
 HTML '<!----->'
@@ -119,11 +133,26 @@ HTML '<>'
 characters ('<>',)
 HTML '< >'
 characters ('< >',)
+HTML '<a b="c"><'
+startElement ('a', {'b': 'c'})
+characters ('<',)
+HTML 'd>'
+characters ('d',)
+characters ('>',)
 HTML '<a b=c"><a b="c">'
 startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
 startElement ('a', {'b': '"c><a b="', 'c': None})
+HTML '<a b=/c/></a><br>'
+startElement ('a', {'b': '/c/'})
+endElement ('a',)
+startElement ('br', {})
+HTML '<br/>'
+startElement ('br', {})
+HTML '<a b="50%"><br>'
+startElement ('a', {'b': '50%'})
+startElement ('br', {})
 HTML '<!---->'
 comment ('',)
 HTML '<!----->'

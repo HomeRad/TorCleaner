@@ -1468,6 +1468,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     p->userData = PyMem_New(UserData, sizeof(UserData));
     p->userData->handler = handler;
     NEW_BUF(p->userData->buf);
+    p->userData->nextpos = 0;
     NEW_BUF(p->userData->tmp_buf);
     p->userData->tmp_tag = p->userData->tmp_attrname =
 	p->userData->tmp_attrval = p->userData->tmp_attrs =
@@ -1512,7 +1513,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	Py_DECREF(s);
 	// reset buffer
 	RESIZE_BUF(self->userData->buf);
-        self->userData->bufpos = self->userData->nextpos = 0;
+        self->userData->bufpos = 0;
     }
     RESIZE_BUF(self->userData->tmp_buf);
     self->userData->tmp_tag = self->userData->tmp_attrs =
@@ -1570,7 +1571,7 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
     // reset buffer
     RESIZE_BUF(self->userData->buf);
     RESIZE_BUF(self->userData->tmp_buf);
-    self->userData->nextpos = self->userData->bufpos = 0;
+    self->userData->bufpos = 0;
     self->userData->tmp_tag = self->userData->tmp_attrs =
         self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
     self->scanner = NULL;

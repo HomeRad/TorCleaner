@@ -17,6 +17,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+# try this sometimes:
+#win32process.SetThreadPriority(win32api.GetCurrentThread(),
+#                               win32process.THREAD_PRIORITY_BELOW_NORMAL)
+
 import os, sys
 from wc.daemon import startfunc,pidfile
 from wc.debug_levels import *

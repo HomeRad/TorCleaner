@@ -4,6 +4,42 @@ TODO
 - webcleanerconf: sortable filters (with up/down)
 - parent proxy authentication
 
+--accepting rule at line 646 ("<")
+Next token is 257 (T_WAIT)
+Shifting token 257 (T_WAIT), Entering state 1
+Reducing via rule 3 (line 81), T_WAIT  -> element
+Starting parse
+Entering state 0
+Reading a token: --(end of buffer or a NUL)
+--EOF (start condition 0)
+Next token is 257 (T_WAIT)
+Shifting token 257 (T_WAIT), Entering state 1
+Reducing via rule 3 (line 81), T_WAIT  -> element
+Starting parse
+Entering state 0
+Reading a token: --accepting rule at line 625 ("table border="1" cellpadding="4" cellspacing="1" bgcolor="red" width="97%">
+															")
+Next token is 259 (T_TEXT)
+
+poll error <server:closed   www.dougintosh.com/images/Top-Tabs_posters.gif> zlib.error Error -2 while flushing
+  File "/usr/lib/python2.1/site-packages/wc/proxy/__init__.py", line 198, in proxy_poll
+    x.handle_read_event()
+  File "/usr/lib/python2.1/asyncore.py", line 386, in handle_read_event
+    self.handle_read()
+  File "/usr/lib/python2.1/site-packages/wc/proxy/Connection.py", line 45, in handle_read
+    data = self.recv(RECV_BUFSIZE)
+  File "/usr/lib/python2.1/asyncore.py", line 342, in recv
+    self.handle_close()
+  File "/usr/lib/python2.1/site-packages/wc/proxy/HttpServer.py", line 355, in handle_close
+    self.flush(client)
+  File "/usr/lib/python2.1/site-packages/wc/proxy/HttpServer.py", line 297, in flush
+    data = applyfilter(i, data, fun="finish", attrs=self.attrs)
+  File "/usr/lib/python2.1/site-packages/wc/filter/__init__.py", line 89, in applyfilter
+    arg = apply(ffun, (arg,), attrs)
+  File "/usr/lib/python2.1/site-packages/wc/filter/Compress.py", line 97, in finish
+    data += compobj['compressor'].flush() + \
+======================================================================
+
 WONTDO
 
 - javascript popup filtering. There is already a nice option for this
