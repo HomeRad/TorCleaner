@@ -68,8 +68,9 @@
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="Remove _blank and _new targets" oid="12">
-<attr name="target">_(blank|new)</attr>
+<rewrite title="Remove _blank and _new targets" oid="12"
+ desc="Can&apos;t believe I have to make this case-insensitive 8-)">
+<attr name="target">(?i)_(blank|new)</attr>
 <replace part="attr"/>
 </rewrite>
 </folder>

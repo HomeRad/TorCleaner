@@ -110,7 +110,7 @@
 </rewrite>
 
 <rewrite title="Prevent right-click disablement" oid="17"
- desc="You only think you are!"
+ desc="Good! Adaptation, improvisation, but your weakness is not your technique."
  tag="script">
 <enclosed>document\.onmousedown</enclosed>
 </rewrite>

@@ -140,6 +140,7 @@
 
 <rewrite title="Remove &lt;layer&gt; tag" oid="23"
  desc="Dont know some example sites, but I dont want layers."
+ dontmatchurl="www\.on2\.com"
  tag="layer">
 </rewrite>
 
