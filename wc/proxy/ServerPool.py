@@ -27,8 +27,9 @@ class ServerPool (object):
 
 
     def count_servers (self, addr):
-        "How many server objects connect to this address?"
-        return len(self.smap.get(addr, {}))
+        """How many busy server objects connect to this address?"""
+        states = self.smap.get(addr, {}).values()
+        return len([x for x in states if x[0]=='busy'])
 
 
     def reserve_server (self, addr):
@@ -53,13 +54,13 @@ class ServerPool (object):
 
 
     def register_server (self, addr, server):
-        "Register the server as being used"
+        """Register the server as being used"""
         debug(PROXY, "pool register %s %s", addr, server)
         self.smap.setdefault(addr, {})[server] = ('busy',)
 
 
     def unregister_server (self, addr, server):
-        "Unregister the server"
+        """Unregister the server"""
         debug(PROXY, "pool unregister %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
@@ -78,12 +79,14 @@ class ServerPool (object):
 
 
     def connection_limit (self, addr):
+        """keep these limits reasonably high (at least twenty or more)
+           since having background downloads with no available servers
+           can lead to aborted downloads"""
         if self.http_versions.get(addr, (1,1)) <= (1,0):
             # For older versions of HTTP, we open lots of connections
-            return 6
+            return 60
         else:
-            return 2
-
+            return 40
 
     def set_http_version (self, addr, http_version):
         self.http_versions[addr] = http_version
