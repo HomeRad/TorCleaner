@@ -26,6 +26,15 @@ case "$1" in
 	$DAEMON stop >> $ACCESSLOG 2>>$ERRORLOG
 	echo "$NAME."
 	;;
+  startwatch)
+  	echo -n "Starting $DESC monitor: "
+        $DAEMON startwatch >> $ACCESSLOG 2>>$ERRORLOG
+        echo "$NAME."
+  stopwatch)
+	echo -n "Stopping $DESC monitor: "
+	$DAEMON stopwatch >> $ACCESSLOG 2>>$ERRORLOG
+	echo "$NAME."
+	;;
   reload)
         echo -n "Reloading $DESC: "
 	$DAEMON reload >> $ACCESSLOG 2>>$ERRORLOG

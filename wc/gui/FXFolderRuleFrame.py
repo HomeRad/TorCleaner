@@ -44,7 +44,7 @@ class FXFolderRuleFrame (FXRuleFrame):
         if filename:
             self.rule.filename = filename
             self.getApp().dirty = 1
-            #debug(BRING_IT_ON, "Changed rule filename")
+            debug(BRING_IT_ON, "Changed rule filename")
         else:
             error(_("empty filename"))
         return 1
@@ -52,6 +52,6 @@ class FXFolderRuleFrame (FXRuleFrame):
     def onCmdLang (self, sender, sel, ptr):
         self.rule.lang = _num_lang(sender.getCurrentItem())
         self.getApp().dirty = 1
-        #debug(BRING_IT_ON, "Changed rule language")
+        debug(BRING_IT_ON, "Changed rule language")
         return 1
 

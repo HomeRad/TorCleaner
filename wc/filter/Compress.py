@@ -74,11 +74,11 @@ class Compress (Filter):
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                #debug(NIGHTMARE, 'writing gzip header\n')
+                debug(NIGHTMARE, 'writing gzip header\n')
             if data:
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                #debug(NIGHTMARE, 'compressing %s\n' % `data`)
+                debug(NIGHTMARE, 'compressing %s\n' % `data`)
                 data = "%s%s"%(header, compobj['compressor'].compress(data))
             else:
                 data = header
@@ -94,11 +94,11 @@ class Compress (Filter):
             if data:
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                #debug(NIGHTMARE, 'final compressing %s\n' % `data`)
+                debug(NIGHTMARE, 'final compressing %s\n' % `data`)
                 data = "%s%s"%(header, compobj['compressor'].compress(data))
             else:
                 data = header
-            #debug(NIGHTMARE, 'finishing compressor\n')
+            debug(NIGHTMARE, 'finishing compressor\n')
             data += compobj['compressor'].flush(zlib.Z_FINISH) + \
 	            struct.pack('<l', compobj['crc']) + \
 		    struct.pack('<l', compobj['size'])
@@ -114,7 +114,7 @@ class Compress (Filter):
         else:
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip'
-        #debug(HURT_ME_PLENTY, "compress filter getAttrs", headers)
+        debug(HURT_ME_PLENTY, "compress filter getAttrs", headers)
         d = Filter.getAttrs(self, headers, url)
         d['compressobj'] = compressobj
         return d

@@ -81,7 +81,12 @@ reload
         If it is not running, do nothing. (only supported under
         POSIX systems)
 status
-        Print info if the proxy is running or not.""")
+        Print info if the proxy is running or not.
+startwatch
+        Start a monitor program. If the proxy is not running, it
+        starts the proxy again.
+stopwatch
+        Stop the monitor program and the proxy.""")
 
 
 def _print_usage(msg):

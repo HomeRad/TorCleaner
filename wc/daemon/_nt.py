@@ -26,7 +26,7 @@ from wc.daemon import startfunc,pidfile
 from wc.debug_levels import *
 from wc import _, debug, configdata
 
-def start(parent_exit=1):
+def start (parent_exit=1):
     # already running?
     if os.path.exists(pidfile):
         return _("""WebCleaner already started (lock file found).
@@ -59,7 +59,7 @@ Do 'webcleaner stop' first.""")
               _("command '%s' killed by signal %d") % (command, -ret)
 
 
-def start_nt(parent_exit=1):
+def start_nt (parent_exit=1):
     # no need to spawn in this thing
     # write pid in pidfile
     f = open(pidfile, 'w')
@@ -74,7 +74,7 @@ def start_nt(parent_exit=1):
         raise
 
 
-def stop():
+def stop ():
     if not os.path.exists(pidfile):
         return _("WebCleaner was not running (no lock file found)")
     pid = int(open(pidfile).read())
@@ -89,5 +89,12 @@ def stop():
     return msg
 
 
-def reload():
+def startwatch (parent_exit=1, sleepsecs=5):
+    start()
+
+
+def stopwatch ():
+    pass
+
+def reload ():
     return _("reload not supported for this platform")

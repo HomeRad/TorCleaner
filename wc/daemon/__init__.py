@@ -22,7 +22,7 @@ with no fork().
 import os
 from wc import _, startfunc, Version
 
-def iswriteable(file):
+def iswriteable (file):
     if os.path.isdir(file) or os.path.islink(file):
         return 0
     try:
@@ -53,9 +53,9 @@ else:
 # last fallback: the current directory
 if not iswriteable(pidfile):
     pidfile = fname
+watchfile = pidfile+".watch"
 
-
-def restart(parent_exit=1):
+def restart (parent_exit=1):
     msg1 = stop()
     # sleep 2 seconds, should be enough to clean up
     import time
@@ -64,7 +64,7 @@ def restart(parent_exit=1):
     return (msg1 or "") + (msg2 or "")
 
 
-def status():
+def status ():
     if os.path.exists(pidfile):
         pid = open(pidfile).read()
         return _("WebCleaner is running (PID %s)") % pid

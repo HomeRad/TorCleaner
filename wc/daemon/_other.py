@@ -16,11 +16,17 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 from wc import _
 
-def start(parent_exit=1):
+def start (parent_exit=1):
     startfunc()
 
-def stop():
+def stop ():
     pass
 
-def reload():
+def reload ():
     return _("reload not supported for this platform")
+
+def startwatch (parent_exit=1, sleepsecs=5):
+    start()
+
+def stopwatch ():
+    pass
