@@ -291,7 +291,7 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
-        self.attrs = wc.filter.get_filterattrs(self.url, _response_filters, headers=msg)
+        self.attrs = wc.filter.get_filterattrs(self.url, FilterLevels, headers=msg)
         wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s", self, self.headers)
         if not self.defer_data:
             self.client.server_response(self, self.response, self.statuscode,
@@ -392,7 +392,7 @@ class HttpServer (wc.proxy.Server.Server):
             if not is_closed and decoder.closed:
                 is_closed = True
         try:
-            data = wc.filter.applyfilter(FilterLevels, data, "filter", self.attrs)
+            data = wc.filter.applyfilters(FilterLevels, data, "filter", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
         except wc.filter.FilterRating, msg:
@@ -478,7 +478,7 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
         data = flush_decoders(self.decoders)
         try:
-            data = wc.filter.applyfilter(FilterLevels, data, "finish", self.attrs)
+            data = wc.filter.applyfilters(FilterLevels, data, "finish", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data

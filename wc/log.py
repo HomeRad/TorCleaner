@@ -55,8 +55,7 @@ def get_log_file (name, logname, trydirs=[]):
         dirs.append(os.path.join('/', 'var', 'tmp', name))
         dirs.append(os.path.join('/', 'tmp', name))
     dirs.append(os.getcwd())
-    dirs.extend(trydirs)
-    for d in dirs:
+    for d in trydirs+dirs:
         fullname = os.path.join(d, logname)
         if iswritable(fullname):
             return fullname
