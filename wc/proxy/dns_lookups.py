@@ -512,10 +512,18 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                      DnsResponse('error', 'not found .. %s' % self))
             self.close()
             return
-        # construct answer
-        name = wc.dns.name.from_text(self.hostname)
-        answer = wc.dns.resolver.Answer(
+        try:
+            # construct answer
+            name = wc.dns.name.from_text(self.hostname)
+            answer = wc.dns.resolver.Answer(
                                    name, self.rdtype, self.rdclass, response)
+        except wc.dns.resolver.NoAnswer:
+            wc.log.warn(wc.LOG_DNS, "No answer: %s", response)
+            callback, self.callback = self.callback, None
+            callback(self.hostname,
+                     DnsResponse('error', 'not found .. %s' % self))
+            self.close()
+            return
         ip_addrs = [rdata.address for rdata in answer]
         callback, self.callback = self.callback, None
         if ip_addrs:
