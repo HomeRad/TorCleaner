@@ -15,6 +15,7 @@ def _main ():
     path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
     h = httplib.HTTPConnection(host)
     h.connect()
+    # skip_accept_encoding=1
     h.putrequest("HEAD", path, skip_host=1)
     h.putheader("Host", host)
     h.endheaders()
