@@ -19,6 +19,8 @@ class AllowedHttpClient (object):
           '/blocked.swf',
           '/blocked.js',
           '/error.html',
+          '/favicon.ico',
+          '/favicon.png',
           '/wc.css',
           '/adminpass.html',
           '/rated.html',
