@@ -17,9 +17,11 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import urlparse
+import sets
 
 import wc
 import wc.configuration
+import wc.containers
 import wc.log
 import wc.url
 
@@ -60,6 +62,19 @@ def split_path (path):
     for p in parts:
         ret.extend(['/', p])
     return ret
+
+
+services = wc.containers.SetList()
+def register_service (service):
+    services.append(service)
+    for category in service.categories:
+        register_category(category)
+
+
+categories = wc.containers.SetList()
+def register_category (category):
+    categories.append(category)
+
 
 
 
