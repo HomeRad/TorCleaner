@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Apr 19 18:33:25 2004\n"
+"POT-Creation-Date: Sat Apr 24 10:11:21 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -400,6 +400,9 @@ msgstr ""
 msgid "Proxy user successfully changed."
 msgstr ""
 
+msgid "Empty folder name."
+msgstr ""
+
 msgid "Allowed host(s) successfully removed."
 msgstr ""
 
@@ -412,7 +415,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-msgid "Allowed hosts"
+msgid "Update content ratings"
 msgstr ""
 
 msgid ""
@@ -449,18 +452,10 @@ msgstr ""
 msgid "Rated"
 msgstr ""
 
-msgid ""
-"Compression of documents with good compression ratio\n"
-"like HTML, WAV, etc."
-msgstr ""
-
 msgid "Invalid rating."
 msgstr ""
 
 msgid "%(AppName)s configuration"
-msgstr ""
-
-msgid "Attributes"
 msgstr ""
 
 msgid "Rewrite attribute added."
@@ -469,13 +464,10 @@ msgstr ""
 msgid "Port number the proxy is listening on for requests"
 msgstr ""
 
-msgid "Header name"
-msgstr ""
-
 msgid "This page is also available in"
 msgstr ""
 
-msgid "Parse and evaluate content rating system header values."
+msgid "Saved ratings"
 msgstr ""
 
 msgid "before"
@@ -485,27 +477,26 @@ msgid "Invalid or missing SMTP host."
 msgstr ""
 
 msgid ""
-"Most browsers support jumping to specific links by typing keys defined on\n"
-"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
-"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
-"access key."
-msgstr ""
-
-msgid ""
 "The supplied value resembles a\n"
 "<a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
 msgstr ""
 
-msgid "Response content data of mime types image/gif"
+msgid "Invalid rule move down id."
 msgstr ""
 
-msgid "Empty folder name."
+msgid "Empty rewrite tag name."
+msgstr ""
+
+msgid ""
+"Execute and filter JavaScript (JS) in HTML pages using\n"
+"the integrated Spidermonkey JS engine. The filter deletes popups and places\n"
+"dynamic content emitted with document.write() into the HTML file."
 msgstr ""
 
 msgid "Proxy user"
 msgstr ""
 
-msgid "return window.confirm('Really remove this folder?')"
+msgid "Your request"
 msgstr ""
 
 msgid "supply a different rating for this page"
@@ -523,25 +514,19 @@ msgstr ""
 msgid "Matching"
 msgstr ""
 
-msgid "Header value"
-msgstr ""
-
 msgid "Match urls"
 msgstr ""
 
 msgid "Page blocked by %(AppName)s"
 msgstr ""
 
-msgid "Saved ratings"
-msgstr ""
-
 msgid "Back to update overview"
 msgstr ""
 
-msgid "Rule icon"
+msgid "Header filters"
 msgstr ""
 
-msgid "Invalid category value."
+msgid "Fallback URL"
 msgstr ""
 
 msgid ""
@@ -551,13 +536,6 @@ msgid ""
 "is given a default block message is shown.<br>\n"
 "Back references to matched subgroups can be specified in the replacement\n"
 "url with a backslash and the subgroup number (ie. \\1, \\2, ...)."
-msgstr ""
-
-msgid ""
-"The <b>Update content ratings</b> button\n"
-"downloads new content ratings from <a href=\"%(updateratingurl)s\">%(updateratingurl)s</a>\n"
-"and adds new ratings into the current configuration.<br>\n"
-"Existing content ratings are not changed."
 msgstr ""
 
 msgid "URL"
@@ -573,13 +551,15 @@ msgstr ""
 msgid "Administrator password for %(AppName)s Proxy"
 msgstr ""
 
-msgid "Access key 9"
+msgid ""
+"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
+"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
 msgstr ""
 
 msgid "Value"
 msgstr ""
 
-msgid "Edit this rating"
+msgid "Location of the Clamav Antivirus software configuration file"
 msgstr ""
 
 msgid "Folder successfully disabled."
@@ -597,13 +577,19 @@ msgid ""
 "attribute or nothing."
 msgstr ""
 
-msgid "Rule enclosed block successfully changed."
+msgid "Email URL rating to %(Email)s"
+msgstr ""
+
+msgid "Remove rule"
 msgstr ""
 
 msgid "Filter https traffic through a local SSL server"
 msgstr ""
 
-msgid "All pages define the following access keys:"
+msgid "Attributes"
+msgstr ""
+
+msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
 msgid "Header rules apply either to client request, server request or both"
@@ -614,10 +600,14 @@ msgid ""
 "them with a transparent 1x1 image."
 msgstr ""
 
-msgid "Rating category limit successfully changed."
+msgid "Rating"
 msgstr ""
 
-msgid "Rule already disabled."
+msgid ""
+"Response content data of mime types\n"
+"text/*, application/postscript, application/pdf, application/x-dvi,\n"
+"audio/basic, audio/midi, audio/x-wav,\n"
+"image/x-portable-*map, x-world/x-vrml."
 msgstr ""
 
 msgid "Timeout sucessfully changed."
@@ -629,7 +619,16 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-msgid "Rating limits for"
+msgid ""
+"Block or allow specific sites by URL name.\n"
+"Before matching a URL the hostname and path is unquoted to avoid\n"
+"spoofing attacks."
+msgstr ""
+
+msgid "Rule successfully disabled."
+msgstr ""
+
+msgid "Rule match-url successfully changed."
 msgstr ""
 
 msgid "Parent proxy settings"
@@ -644,10 +643,10 @@ msgstr ""
 msgid "Allowed limit"
 msgstr ""
 
-msgid "New rule successfully created."
+msgid "Parent proxy port successfully changed."
 msgstr ""
 
-msgid "Fallback URL"
+msgid "Replace value"
 msgstr ""
 
 msgid "Admin password successfully changed."
@@ -667,6 +666,9 @@ msgstr ""
 msgid "Folder successfully removed."
 msgstr ""
 
+msgid "Move folder up"
+msgstr ""
+
 msgid "Update filter configuration"
 msgstr ""
 
@@ -681,21 +683,19 @@ msgid ""
 "password <b>%(adminpass)s</b><br>\n"
 msgstr ""
 
-msgid ""
-"Remove comments from HTML source. Comments inside\n"
-"&lt;script&gt; or &lt;style&gt; tags are not removed."
+msgid "response"
 msgstr ""
 
 msgid "Response data of html and javascript"
 msgstr ""
 
-msgid "Access key 1"
+msgid "Invalid or missing sender address."
 msgstr ""
 
-msgid "Rule successfully removed."
+msgid "Allowed host successfully added."
 msgstr ""
 
-msgid "Invalid rule type."
+msgid "Rule url replacement successfully changed."
 msgstr ""
 
 msgid "Response data of html pages"
@@ -704,13 +704,16 @@ msgstr ""
 msgid "Port number the local SSL server is listening on for requests"
 msgstr ""
 
-msgid "Folder successfully renamed."
+msgid "Changes to this option require a proxy restart to take effect."
 msgstr ""
 
-msgid "Move rule up"
+msgid ""
+"One activated Rating rule enables the content rating\n"
+"system in %(AppName)s. Several distinct content rating services including\n"
+"the one defined by %(AppName)s itself can be configured."
 msgstr ""
 
-msgid "Invalid rule move up id."
+msgid "Filter update"
 msgstr ""
 
 msgid "Request url of all mime types."
@@ -722,10 +725,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-msgid "Parent proxy port successfully changed."
-msgstr ""
-
-msgid "Replace value"
+msgid "New rule successfully created."
 msgstr ""
 
 msgid ""
@@ -749,15 +749,10 @@ msgstr ""
 msgid "List of urls this rule should apply to"
 msgstr ""
 
-msgid "Rule image width successfully changed."
+msgid "Username"
 msgstr ""
 
 msgid "replace part"
-msgstr ""
-
-msgid ""
-"The configuration also allows you to change the\n"
-"password.\n"
 msgstr ""
 
 msgid "Invalid image width value."
@@ -766,7 +761,10 @@ msgstr ""
 msgid "Image width"
 msgstr ""
 
-msgid "Search for"
+msgid ""
+"I wrote this software to get rid of advertisings. If you still see advert images\n"
+"on pages you surf on, you are free to send me the url of those pages and I\n"
+"will include filters to remove the adverts.\n"
 msgstr ""
 
 msgid "Empty header rule name."
@@ -781,13 +779,15 @@ msgstr ""
 msgid "Skip to main content"
 msgstr ""
 
-msgid "Rule rewrite part successfully changed."
+msgid ""
+"Compression of documents with good compression ratio\n"
+"like HTML, WAV, etc."
 msgstr ""
 
 msgid "Rating successfully deleted."
 msgstr ""
 
-msgid "Move folder down"
+msgid "Email this rating to the author"
 msgstr ""
 
 msgid "Rule already enabled."
@@ -805,10 +805,13 @@ msgid ""
 "at %(Email)s:"
 msgstr ""
 
+msgid "Rule enclosed block successfully changed."
+msgstr ""
+
 msgid "Rule rewrite replacement successfully changed."
 msgstr ""
 
-msgid "Rule url replacement successfully changed."
+msgid "Header value"
 msgstr ""
 
 msgid ""
@@ -825,15 +828,24 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
+msgid "Rule replace search successfully changed."
+msgstr ""
+
+msgid "Disable rule"
+msgstr ""
+
 msgid ""
 "Replace illegal binary characters in HTML code like\n"
 "the quote chars often found in Microsoft pages."
 msgstr ""
 
-msgid "Up"
+msgid "Rule header name successfully changed."
 msgstr ""
 
 msgid "Modified"
+msgstr ""
+
+msgid "Up"
 msgstr ""
 
 msgid "Move rule down"
@@ -844,13 +856,18 @@ msgid ""
 "unsure, leave it at <code>localhost</code>.\n"
 msgstr ""
 
-msgid "Invalid SSL server port."
+msgid "Proxy configuration"
 msgstr ""
 
-msgid "Rule description successfully changed."
+msgid "Don't filter hosts"
 msgstr ""
 
-msgid "Admin user successfully changed."
+msgid ""
+"The <b>Update filter configuration</b> button\n"
+"downloads new filter files from <a href=\"%(updatezapperurl)s\">%(updatezapperurl)s</a>\n"
+"and merges their changes into the current configuration.<br>\n"
+"If something has changed, the new filter configuration files\n"
+"are saved and reloaded into the proxy."
 msgstr ""
 
 msgid "Password used for parent proxy authentication"
@@ -859,7 +876,12 @@ msgstr ""
 msgid "Rule header filter request value successfully changed."
 msgstr ""
 
-msgid "Rule title successfully changed."
+msgid ""
+"Remove comments from HTML source. Comments inside\n"
+"&lt;script&gt; or &lt;style&gt; tags are not removed."
+msgstr ""
+
+msgid "Rating successfully updated."
 msgstr ""
 
 msgid ""
@@ -867,10 +889,7 @@ msgid ""
 "extensions (for example GIF comments)."
 msgstr ""
 
-msgid ""
-"Execute and filter JavaScript (JS) in HTML pages using\n"
-"the integrated Spidermonkey JS engine. The filter deletes popups and places\n"
-"dynamic content emitted with document.write() into the HTML file."
+msgid "Error sending mail."
 msgstr ""
 
 msgid "Request and response headers of all mime types."
@@ -879,25 +898,10 @@ msgstr ""
 msgid "Content rating"
 msgstr ""
 
-msgid "Rating successfully updated."
-msgstr ""
-
-msgid ""
-"If there is no replacement given the specified tag\n"
-"part will be removed, else it will be replaced.<br>\n"
-"Back references to matched subgroups can be specified in the replacement\n"
-"string with a backslash and the subgroup number (ie. \\1, \\2, ...)."
-msgstr ""
-
-msgid "Email URL rating to %(Email)s"
-msgstr ""
-
 msgid "Rule successfully enabled."
 msgstr ""
 
-msgid ""
-"You can rate and review web pages according to\n"
-"several given categories."
+msgid "Move rule up"
 msgstr ""
 
 msgid "Nofilter host successfully added."
@@ -911,16 +915,19 @@ msgid ""
 "pages."
 msgstr ""
 
-msgid "Rule replace search successfully changed."
+msgid "Rating category limit successfully changed."
 msgstr ""
 
-msgid "Remove folder"
+msgid "Delete this rating"
+msgstr ""
+
+msgid "Add/replace attribute"
 msgstr ""
 
 msgid "List of hosts allowed to use this proxy."
 msgstr ""
 
-msgid "Allowed host successfully added."
+msgid "Rule successfully removed."
 msgstr ""
 
 msgid "Content rated by %(AppName)s"
@@ -932,7 +939,7 @@ msgstr ""
 msgid "Rule moved up."
 msgstr ""
 
-msgid "Proxy configuration"
+msgid "Invalid SSL server port."
 msgstr ""
 
 msgid "The content of this page is blocked by rule %(rule)s"
@@ -944,6 +951,9 @@ msgid ""
 "rating database.\n"
 msgstr ""
 
+msgid "Invalid folder index."
+msgstr ""
+
 msgid "Replace part"
 msgstr ""
 
@@ -951,6 +961,9 @@ msgid "Remove selected"
 msgstr ""
 
 msgid "Access keys"
+msgstr ""
+
+msgid "Invalid rule type."
 msgstr ""
 
 msgid "Invalid folder move up id."
@@ -971,10 +984,25 @@ msgstr ""
 msgid "Folder moved up."
 msgstr ""
 
-msgid "Configure rule %(rule)s."
+msgid "Rating limits for"
 msgstr ""
 
 msgid "Accessibility statement for %(AppName)s"
+msgstr ""
+
+msgid "Rule rewrite tag successfully changed."
+msgstr ""
+
+msgid "Invalid selection index."
+msgstr ""
+
+msgid "return window.confirm('Really remove this folder?')"
+msgstr ""
+
+msgid "Admin user successfully changed."
+msgstr ""
+
+msgid "Don't match urls"
 msgstr ""
 
 msgid ""
@@ -985,36 +1013,20 @@ msgid ""
 "be further customized by separate rules in the filter configuration.\n"
 msgstr ""
 
-msgid "Rule rewrite tag successfully changed."
-msgstr ""
-
-msgid "Your request"
-msgstr ""
-
 msgid ""
-"The <b>Update filter configuration</b> button\n"
-"downloads new filter files from <a href=\"%(updatezapperurl)s\">%(updatezapperurl)s</a>\n"
-"and merges their changes into the current configuration.<br>\n"
-"If something has changed, the new filter configuration files\n"
-"are saved and reloaded into the proxy."
+"If there is no replacement given the specified tag\n"
+"part will be removed, else it will be replaced.<br>\n"
+"Back references to matched subgroups can be specified in the replacement\n"
+"string with a backslash and the subgroup number (ie. \\1, \\2, ...)."
 msgstr ""
 
-msgid "Don't match urls"
-msgstr ""
-
-msgid "Rule replacement successfully changed."
-msgstr ""
-
-msgid "New rule"
-msgstr ""
-
-msgid "Changes to this option require a proxy restart to take effect."
+msgid "Folder successfully renamed."
 msgstr ""
 
 msgid "Filter configuration"
 msgstr ""
 
-msgid "footnote 1"
+msgid "Search for"
 msgstr ""
 
 msgid "Parent proxy user successfully changed."
@@ -1035,7 +1047,9 @@ msgstr ""
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
-msgid "Move folder up"
+msgid ""
+"You can rate and review web pages according to\n"
+"several given categories."
 msgstr ""
 
 msgid "Update log"
@@ -1047,13 +1061,10 @@ msgstr ""
 msgid "%(AppName)s web interface main page"
 msgstr ""
 
-msgid "Don't filter hosts"
-msgstr ""
-
 msgid "SSL gateway"
 msgstr ""
 
-msgid "Filter update"
+msgid "Invalid rule move up id."
 msgstr ""
 
 msgid "What it does when replacement is <i>foo</i>"
@@ -1076,7 +1087,7 @@ msgid ""
 "%(AppName)s as a proxy."
 msgstr ""
 
-msgid "Update content ratings"
+msgid "Rule title successfully changed."
 msgstr ""
 
 msgid "Disable folder"
@@ -1086,6 +1097,9 @@ msgid "Rename folder"
 msgstr ""
 
 msgid "Feedback for %(AppName)s"
+msgstr ""
+
+msgid "Rule rewrite part successfully changed."
 msgstr ""
 
 msgid ""
@@ -1105,13 +1119,10 @@ msgstr ""
 msgid "Search in %(site)s"
 msgstr ""
 
-msgid "Folder moved down."
+msgid "Edit this rating"
 msgstr ""
 
-msgid "Error sending mail."
-msgstr ""
-
-msgid "Rule match-url successfully changed."
+msgid "Try Google"
 msgstr ""
 
 msgid "Add, modify and delete HTTP headers of request and response."
@@ -1138,13 +1149,10 @@ msgstr ""
 msgid "New folder"
 msgstr ""
 
-msgid "accessibility features of these pages"
-msgstr ""
-
 msgid "Replacement"
 msgstr ""
 
-msgid "Invalid folder index."
+msgid "Access key 9"
 msgstr ""
 
 msgid "Administrator username"
@@ -1156,10 +1164,12 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-msgid "Invalid rule index."
+msgid ""
+"The configuration also allows you to change the\n"
+"password.\n"
 msgstr ""
 
-msgid "Proxy settings"
+msgid "Rule don't-match-url successfully changed."
 msgstr ""
 
 msgid "Username used for proxy authentication"
@@ -1168,7 +1178,7 @@ msgstr ""
 msgid "Access key 2"
 msgstr ""
 
-msgid "Enable folder"
+msgid "Access key 1"
 msgstr ""
 
 msgid "Access key 0"
@@ -1180,19 +1190,7 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-msgid ""
-"Select <b>Tools -&gt; Internet Options -&gt;\n"
-"Connections</b>.<br>\n"
-"Click on <b>LAN Settings</b>. If you have a dialup connection to the\n"
-"internet, select your dialup connection and click on <b>Settings</b>.<br>\n"
-"Activate <b>Use a proxy server</b>.<br>\n"
-"If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br>\n"
-"Click on <b>Advanced</b>.<br>\n"
-"Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Click <b>Ok</b> to use your new settings."
+msgid "Folder moved down."
 msgstr ""
 
 msgid "Remove images with certain width and/or height."
@@ -1210,23 +1208,28 @@ msgstr ""
 msgid "Disabled filter module(s) %(filterdisabled)s."
 msgstr ""
 
-msgid ""
-"Response content data of mime types\n"
-"text/*, application/postscript, application/pdf, application/x-dvi,\n"
-"audio/basic, audio/midi, audio/x-wav,\n"
-"image/x-portable-*map, x-world/x-vrml."
-msgstr ""
-
-msgid "Email this rating to the author"
-msgstr ""
-
-msgid "Remove rule"
+msgid "Invalid rewrite part name."
 msgstr ""
 
 msgid "SMTP host"
 msgstr ""
 
-msgid "Browser configuration"
+msgid ""
+"Select <b>Tools -&gt; Internet Options -&gt;\n"
+"Connections</b>.<br>\n"
+"Click on <b>LAN Settings</b>. If you have a dialup connection to the\n"
+"internet, select your dialup connection and click on <b>Settings</b>.<br>\n"
+"Activate <b>Use a proxy server</b>.<br>\n"
+"If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br>\n"
+"Click on <b>Advanced</b>.<br>\n"
+"Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is\n"
+"<i>%(port)d</i>.<br>\n"
+"Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is\n"
+"<i>%(port)d</i>.<br>\n"
+"Click <b>Ok</b> to use your new settings."
+msgstr ""
+
+msgid "Allowed hosts"
 msgstr ""
 
 msgid "Administrator password"
@@ -1236,9 +1239,6 @@ msgid "Folder rules"
 msgstr ""
 
 msgid "see footnote 1"
-msgstr ""
-
-msgid "%(AppName)s"
 msgstr ""
 
 msgid "see footnote 3"
@@ -1253,13 +1253,15 @@ msgstr ""
 msgid "Admin password"
 msgstr ""
 
-msgid "Invalid selection index."
+msgid ""
+"Response content data of all image types supported by the\n"
+"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
 msgstr ""
 
 msgid "SSL port successfully changed."
 msgstr ""
 
-msgid "Rule don't-match-url successfully changed."
+msgid "Proxy settings"
 msgstr ""
 
 msgid "List of domain names the proxy must not filter."
@@ -1268,34 +1270,34 @@ msgstr ""
 msgid "Display Google search options for invalid pages"
 msgstr ""
 
+msgid "Move folder down"
+msgstr ""
+
 msgid "Disabled rule icon"
 msgstr ""
 
-msgid "Rating"
+msgid "Rule description successfully changed."
 msgstr ""
 
-msgid "Header filters"
+msgid "Rule icon"
 msgstr ""
 
 msgid "Rule header value successfully changed."
 msgstr ""
 
-msgid "Invalid url."
+msgid "Go to rating:"
 msgstr ""
 
-msgid "Invalid folder move down id."
+msgid "Response content data of mime types image/gif"
 msgstr ""
 
-msgid "Invalid or missing sender address."
+msgid "Invalid category value."
 msgstr ""
 
-msgid "Rule header name successfully changed."
+msgid "Port successfully changed."
 msgstr ""
 
-msgid "Rule successfully disabled."
-msgstr ""
-
-msgid "Disable rule"
+msgid "%(AppName)s"
 msgstr ""
 
 msgid ""
@@ -1306,34 +1308,31 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-msgid "Port successfully changed."
+msgid "Clamav Config"
 msgstr ""
 
 msgid "Accessibility statement"
 msgstr ""
 
-msgid "Rule moved down."
+msgid "New rule"
+msgstr ""
+
+msgid "Browser configuration"
 msgstr ""
 
 msgid "Admin user"
 msgstr ""
 
-msgid ""
-"One activated Rating rule enables the content rating\n"
-"system in %(AppName)s. Several distinct content rating services including\n"
-"the one defined by %(AppName)s itself can be configured."
-msgstr ""
-
-msgid "Empty rewrite tag name."
+msgid "Header name"
 msgstr ""
 
 msgid "Remove selected attributes"
 msgstr ""
 
-msgid "Invalid rule move down id."
+msgid "accessibility features of these pages"
 msgstr ""
 
-msgid "Go to rating:"
+msgid "Rule replacement successfully changed."
 msgstr ""
 
 msgid "Invalid parent proxy port."
@@ -1353,7 +1352,13 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
+msgid "Rule already disabled."
+msgstr ""
+
 msgid "request and response"
+msgstr ""
+
+msgid "Rule image width successfully changed."
 msgstr ""
 
 msgid "Port number"
@@ -1362,7 +1367,10 @@ msgstr ""
 msgid "Add new rule to current folder."
 msgstr ""
 
-msgid "Username"
+msgid "Invalid url."
+msgstr ""
+
+msgid "Invalid folder move down id."
 msgstr ""
 
 msgid "Name"
@@ -1385,21 +1393,20 @@ msgstr ""
 msgid "SSL port number"
 msgstr ""
 
-msgid ""
-"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
-"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
-msgstr ""
-
 msgid "Empty rule title."
 msgstr ""
 
-msgid "Delete this rating"
+msgid "Invalid image height value."
 msgstr ""
 
 msgid "Disabled folder icon"
 msgstr ""
 
-msgid "Try Google"
+msgid ""
+"Most browsers support jumping to specific links by typing keys defined on\n"
+"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
+"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
+"access key."
 msgstr ""
 
 msgid ""
@@ -1407,7 +1414,7 @@ msgid ""
 "was rated for the following reason:"
 msgstr ""
 
-msgid "Add/replace attribute"
+msgid "Remove folder"
 msgstr ""
 
 msgid "footnote 2"
@@ -1416,13 +1423,16 @@ msgstr ""
 msgid "footnote 3"
 msgstr ""
 
-msgid "Empty attribute name."
+msgid "footnote 1"
 msgstr ""
 
 msgid "Search Google"
 msgstr ""
 
-msgid "response"
+msgid "All pages define the following access keys:"
+msgstr ""
+
+msgid "Empty attribute name."
 msgstr ""
 
 msgid "Rewrite attribute(s) removed."
@@ -1437,10 +1447,17 @@ msgstr ""
 msgid "URL rating"
 msgstr ""
 
+msgid "Invalid rule index."
+msgstr ""
+
 msgid "Google Cache for"
 msgstr ""
 
-msgid "Invalid rewrite part name."
+msgid ""
+"The <b>Update content ratings</b> button\n"
+"downloads new content ratings from <a href=\"%(updateratingurl)s\">%(updateratingurl)s</a>\n"
+"and adds new ratings into the current configuration.<br>\n"
+"Existing content ratings are not changed."
 msgstr ""
 
 msgid "New folder successfully created."
@@ -1452,10 +1469,7 @@ msgstr ""
 msgid "request"
 msgstr ""
 
-msgid ""
-"Block or allow specific sites by URL name.\n"
-"Before matching a URL the hostname and path is unquoted to avoid\n"
-"spoofing attacks."
+msgid "Enable folder"
 msgstr ""
 
 msgid ""
@@ -1476,10 +1490,7 @@ msgstr ""
 msgid "Invalid attribute name."
 msgstr ""
 
-msgid ""
-"I wrote this software to get rid of advertisings. If you still see advert images\n"
-"on pages you surf on, you are free to send me the url of those pages and I\n"
-"will include filters to remove the adverts.\n"
+msgid "Rule moved down."
 msgstr ""
 
 msgid "Apply"
@@ -1494,11 +1505,6 @@ msgstr ""
 msgid "Port number of the parent proxy"
 msgstr ""
 
-msgid ""
-"Response content data of all image types supported by the\n"
-"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
-msgstr ""
-
-msgid "Invalid image height value."
+msgid "Configure rule %(rule)s."
 msgstr ""
 
