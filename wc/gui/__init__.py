@@ -61,7 +61,7 @@ almost all advertising and other crap.
 
 Replacer
 --------
-Replace regular expressions in data streams.
+Replace regular expressions in (HTML) data streams.
 
 BinaryCharFilter
 ----------------
@@ -74,7 +74,7 @@ Add, modify and delete HTTP headers of request and response.
 
 Blocker
 -------
-Block specific sites by URL name.
+Block or allow specific sites by URL name.
 
 GifImage
 --------
