@@ -6,8 +6,6 @@ version 2.9 and above
 
 - .deb update does not work
 
-- .deb empty password should not be accepted
-
 - content rating:
   o feature: content rating cache update rating_cache_merge_with(ratings)
   o feature: mail ratings to author

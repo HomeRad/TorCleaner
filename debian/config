@@ -17,7 +17,7 @@ while [ "$STATE" != 0 -a "$STATE" != 3 ]; do
         ;;
     esac
     if db_go; then
-        if [ "$STATE"!="2" -o -n "$RES" ]; then
+        if [ "$STATE" != 2 -o -n "$RES" ]; then
             STATE=$(($STATE + 1))
         fi
     else
