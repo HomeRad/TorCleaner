@@ -1,4 +1,4 @@
-2.26 "Tokyo Raiders" (released xx.12.2004)
+2.26 "Tokyo Raiders" (released 2.1.2005)
 
   * Do not include test packages in installed binaries. This prevents
     finding the Virus test pattern in them.
