@@ -1,8 +1,9 @@
 webcleaner (0.53) unstable; urgency=low
 
   * only filter some <meta name> tags, not all
+  * updated ConfWindow patch
 
- -- Bastian Kleineidam <calvin@debian.org>  Thu,  8 Aug 2002 18:14:02 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 13 Aug 2002 23:12:22 +0200
 
 webcleaner (0.52) unstable; urgency=low
 
