@@ -41,7 +41,6 @@ def gzip_header ():
 	      struct.pack('<L', long(time.time())), # time
               '\002\377',     # end header
               )
-COMPRESS_RE = re.compile(r'(?i)(compress|gzip|bzip2)')
 
 
 def getCompressObject ():
@@ -110,7 +109,9 @@ class Compress (Filter):
                 break
         if do_compress:
             if headers.has_key('Content-Encoding'):
-                if not COMPRESS_RE.search(headers['Content-Encoding']):
+                encoding = headers['Content-Encoding'].lower()
+                if not encoding in ('gzip', 'x-gzip', 'compress',
+                                    'x-compress', 'deflate'):
                     compressobj = getCompressObject()
                     headers['Content-Encoding'] += ', gzip'
             else:
