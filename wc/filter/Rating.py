@@ -22,14 +22,12 @@ import urlparse
 import cPickle as pickle
 
 import wc
+import wc.configuration
 import wc.log
 import wc.url
 
 
 MISSING = _("Unknown page")
-
-# rating cache filename
-rating_cachefile = os.path.join(wc.ConfigDir, "rating.dat")
 
 # rating cache
 rating_cache = {}
@@ -77,6 +75,13 @@ rangenames = {
 
 is_time = re.compile(r"^\d+$").search
 
+
+def get_rating_cachefile ():
+    """rating cache filename"""
+    config = wc.configuration.config
+    return os.path.join(config.configdir, "rating.dat")
+
+
 def rating_import (url, ratingdata, debug=0):
     """parse given rating data, throws ParseError on error"""
     categories = {}
@@ -115,7 +120,8 @@ def rating_exportall ():
     """export all ratings in a text file called `rating.txt', located
        in the same directory as the file `rating.dat'
     """
-    fp = file(os.path.join(wc.ConfigDir, "rating.txt"), 'w')
+    config = wc.configuration.config
+    fp = file(os.path.join(config.configdir, "rating.txt"), 'w')
     for url, rating in rating_cache.iteritems():
         if not wc.url.is_safe_url(url):
             wc.log.error(wc.LOG_RATING, "invalid url %r", url)
@@ -133,7 +139,7 @@ class RatingParseError (Exception):
 
 def rating_cache_write ():
     """write cached rating data to disk"""
-    fp = file(rating_cachefile, 'wb')
+    fp = file(get_rating_cachefile(), 'wb')
     pickle.dump(rating_cache, fp, 1)
     fp.close()
 
@@ -142,8 +148,8 @@ def rating_cache_load ():
     """load cached rating data from disk and fill the rating_cache.
        If no rating data file is found, do nothing."""
     global rating_cache
-    if os.path.isfile(rating_cachefile):
-        fp = file(rating_cachefile)
+    if os.path.isfile(get_rating_cachefile()):
+        fp = file(get_rating_cachefile())
         rating_cache = pickle.load(fp)
         fp.close()
         # remove invalid entries
@@ -305,6 +311,3 @@ def rating_cache_merge (newrating_cache, dryrun=False, log=None):
         rating_cache_write()
     return chg
 
-
-# initialize rating cache
-rating_cache_load()
