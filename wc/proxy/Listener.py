@@ -7,6 +7,7 @@ class Listener (asyncore.dispatcher):
         asyncore.dispatcher.__init__(self)
         self.addr = (('', 'localhost')[config['local_sockets_only']], port)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.set_reuse_addr()
         self.bind(self.addr)
         self.listen(5)

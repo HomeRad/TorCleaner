@@ -391,6 +391,7 @@ class DnsLookupConnection (Connection):
     def establish_connection (self):
         if self.conntype == 'tcp':
             self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
             self.connect((self.nameserver, self.PORT))
             make_timer(30, self.handle_connect_timeout)
             # XXX: we have to fill the buffer because otherwise we

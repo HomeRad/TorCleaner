@@ -78,6 +78,7 @@ class HttpServer (Server):
     def attempt_connect (self):
         self.state = 'connect'
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         try:
 	    self.connect(self.addr)
         except socket.error, err:

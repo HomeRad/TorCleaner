@@ -18,6 +18,13 @@
     Changed files: wc/parser/htmllex.l
   * Improve error message for failing htmlsax module import
     Changed files: wc/parser/htmllib.py
+  * rebuild parser with bison 1.875
+    Changed files: wc/parser/htmlparser.c
+  * turn on TCP_NODELAY to disable the Nagle Algorithm; no bad experiences
+    so far (but lagging a real profiling). I leave TCP_NODELAY turned
+    on for the moment, you can report success or failure with this option
+    to me.
+    Changed files: wc/proxy/{dns_lookups,HttpServer}.py
 
 1.5
   * - increase TCP dns query timeout from 10 to 20 seconds
