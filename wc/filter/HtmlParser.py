@@ -18,7 +18,7 @@ import re, sys, urlparse, time, rfc822, wc
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser
 from wc.parser import resolve_html_entities
-from wc.filter import FilterWait
+from wc.filter import FilterWait, FilterPics
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.filter.PICS import check_pics
 from wc.debug import *

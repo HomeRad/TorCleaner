@@ -11,7 +11,7 @@ from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
 from DeflateStream import DeflateStream
-from wc.filter import applyfilter, initStateObjects, FilterWait
+from wc.filter import applyfilter, initStateObjects, FilterWait, FilterPics
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
@@ -46,6 +46,7 @@ class HttpServer (Server):
         self.document = ''
         self.response = ''
         self.headers = None
+        self.data_written = None
         self.decoders = [] # Handle each of these, left to right
         self.sequence_number = 0 # For persistent connections
         self.attrs = {} # initial filter attributes are empty
@@ -218,6 +219,7 @@ class HttpServer (Server):
                    rfc822.Message(StringIO(self.read(m.end()))),
                    attrs=self.nofilter)
         except FilterPics, msg:
+            debug(NIGHTMARE, "Proxy: FilterPics", msg)
             response = "HTTP/1.1 200 OK"
             headers = {
                 "Content-Type": "text/plain",
@@ -225,6 +227,8 @@ class HttpServer (Server):
             }
             self.client.server_response(response, headers)
             self.client.server_content(msg)
+            self.client.server_close()
+            # XXX state?
             self.state = 'recycle'
             self.reuse()
             return
@@ -371,8 +375,18 @@ class HttpServer (Server):
                 data = applyfilter(i, data, attrs=self.attrs)
             if data:
                 self.client.server_content(data)
+                self.data_written = "True"
         except FilterWait, msg:
-            debug(NIGHTMARE, "FilterWait", msg)
+            debug(NIGHTMARE, "Proxy: FilterWait", msg)
+        except FilterPics, msg:
+            debug(NIGHTMARE, "Proxy: FilterPics", msg)
+            assert not self.data_written
+            self.client.server_content(str(msg))
+            self.client.server_close()
+            # XXX state?
+            self.state = 'recycle'
+            self.reuse()
+            return
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
         if underflow:
