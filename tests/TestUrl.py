@@ -15,7 +15,11 @@ class TestUrl (StandardTest):
         self.assertEqual(url, nurl)
 
     def testValid (self):
+        self.assert_(is_valid_url("http://www.imadoofus.com"))
         self.assert_(is_valid_url("http://www.imadoofus.com/"))
+        self.assert_(is_valid_url("http://www.imadoofus.com/~calvin"))
+        self.assert_(is_valid_url("http://www.imadoofus.com/a,b"))
+        self.assert_(is_valid_url("http://www.imadoofus.com#anchor55"))
         self.assert_(is_valid_js_url("http://www.imadoofus.com/?hulla=do"))
 
 

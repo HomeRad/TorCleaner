@@ -23,8 +23,10 @@ class ProxyTest (StandardTest):
 
     def init (self):
         """Starts proxy server."""
-        self.log = file("servertests.txt", 'a')
-        #self.log = sys.stdout
+        if self.showAll:
+            self.log = sys.stdout
+        else:
+            self.log = file("servertests.txt", 'a')
         self.proxytests = []
         self.proxyconfig = wc.Configuration()
         self.startProxy()
@@ -32,9 +34,11 @@ class ProxyTest (StandardTest):
     def shutdown (self):
         """Stop proxy, close log"""
         self.stopProxy()
-        self.log.close()
+        if not self.showAll:
+            self.log.close()
 
     def startProxy (self):
+        """start proxy"""
         port = self.proxyconfig['port']
         self.log.write("starting WebCleaner proxy on port %d\n"%port)
         kwargs = {'stoppable': True}
@@ -47,8 +51,10 @@ class ProxyTest (StandardTest):
             if not running:
                 self.log.write("wait until proxy is started\n")
                 time.sleep(1)
+        time.sleep(2)
 
     def stopProxy (self):
+        self.log.write("stopping WebCleaner proxy\n")
         wc.config.set_abort(True)
         time.sleep(1)
 

@@ -14,10 +14,10 @@ class TestRewriter (StandardTest):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def init (self):
+        super(TestRewriter, self).init()
         wc.config = wc.Configuration()
         wc.config['filters'] = ['Rewriter']
         wc.config.init_filter_modules()
-        initlog(os.path.join("test", "logging.conf"))
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
 

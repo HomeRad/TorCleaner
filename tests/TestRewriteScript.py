@@ -8,7 +8,6 @@ from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from wc.log import initlog
 from tests import StandardTest
 
 
@@ -17,11 +16,11 @@ class TestRewriteScript (StandardTest):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def init (self):
+        super(TestRewriteScript, self).init()
         wc.config = wc.Configuration()
         disable_rating_rules(wc.config)
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
-        initlog(os.path.join("test", "logging.conf"))
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
 

@@ -5,7 +5,6 @@ import unittest, os
 import wc
 from wc.proxy.Headers import WcMessage
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-from wc.log import initlog
 from tests import StandardTest
 
 
@@ -14,10 +13,10 @@ class TestBinaryCharFilter (StandardTest):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def init (self):
+        super(TestBinaryCharFilter, self).init()
         wc.config = wc.Configuration()
         wc.config['filters'] = ['BinaryCharFilter']
         wc.config.init_filter_modules()
-        initlog(os.path.join("test", "logging.conf"))
 
     def filt (self, data, result):
         headers = WcMessage()

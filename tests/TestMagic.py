@@ -3,13 +3,12 @@
 
 import unittest, os
 from wc.magic import convert, classify
-from test import initlog
 from tests import StandardTest
 
 class TestMagic (StandardTest):
 
     def init (self):
-        initlog("test/logging.conf")
+        super(TestMagic, self).init()
         self.basedir = os.path.join(os.getcwd(), "tests", "magic")
 
     def testHtml (self):

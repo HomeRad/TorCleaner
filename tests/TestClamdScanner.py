@@ -4,7 +4,6 @@
 import unittest, os
 import wc
 from wc.filter.VirusFilter import ClamavConfig, ClamdScanner
-from wc.log import initlog
 from tests import StandardTest
 
 
@@ -12,8 +11,8 @@ class TestClamdScanner (StandardTest):
     """Test the clamav daemon stream scanner"""
 
     def init (self):
+        super(TestClamdScanner, self).init()
         wc.config = wc.Configuration()
-        initlog(os.path.join("test", "logging.conf"))
         self.clamav_conf = ClamavConfig(wc.config['clamavconf'])
 
     def testPlain (self):

@@ -3,14 +3,10 @@
 
 import unittest, os
 from wc.filter.Rating import *
-from wc.log import initlog
 from tests import StandardTest
 
 
 class TestRating (StandardTest):
-
-    def init (self):
-        initlog(os.path.join("test", "logging.conf"))
 
     def testRating_split_url (self):
         urls = (

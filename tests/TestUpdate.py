@@ -14,8 +14,8 @@ class NoLog (object):
 class TestUpdate (StandardTest):
 
     def init (self):
+        super(TestUpdate, self).init()
         self.nolog = NoLog()
-        initlog("test/logging.conf")
         self.config = wc.Configuration()
 
     def testUpdateFilter (self):

@@ -6,7 +6,6 @@ import wc
 from wc.proxy.Headers import WcMessage
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.filter import FilterProxyError, VirusFilter
-from wc.log import initlog
 from cStringIO import StringIO
 from tests import StandardTest
 
@@ -16,10 +15,10 @@ class TestVirusFilter (StandardTest):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def init (self):
+        super(TestVirusFilter, self).init()
         wc.config = wc.Configuration()
         wc.config['filters'] = ['VirusFilter']
         wc.config.init_filter_modules()
-        initlog(os.path.join("test", "logging.conf"))
         VirusFilter.init_clamav_conf()
 
     def setUp (self):

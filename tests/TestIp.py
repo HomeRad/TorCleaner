@@ -2,14 +2,10 @@
 
 import unittest, os
 from wc import ip
-from wc.log import initlog
 from tests import StandardTest
 
 
 class TestIp (StandardTest):
-
-    def init (self):
-        initlog(os.path.join("test", "logging.conf"))
 
     def testNames (self):
         hosts, nets = ip.hosts2map(["www.kampfesser.net",

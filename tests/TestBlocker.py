@@ -5,17 +5,16 @@
 import unittest, os
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
-from wc.log import initlog
 from tests import StandardTest
 
 class TestBlocker (StandardTest):
 
     def init (self):
+        super(TestBlocker, self).init()
         self.url = "http://ads.realmedia.com/"
         wc.config = wc.Configuration()
         wc.config['filters'] = ['Blocker',]
         wc.config.init_filter_modules()
-        initlog(os.path.join("test", "logging.conf"))
 
     def testBlocker (self):
         data = "GET %s HTTP/1.0" % self.url
