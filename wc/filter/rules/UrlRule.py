@@ -59,8 +59,10 @@ class UrlRule (Rule):
     def end_data (self, name):
         if name=='matchurl':
             self.matchurls.append(unxmlify(self._curdata).encode('iso8859-1'))
+            self._curdata = ""
         elif name=='nomatchurl':
             self.nomatchurls.append(unxmlify(self._curdata).encode('iso8859-1'))
+            self._curdata = ""
 
 
     def compile_data (self):
