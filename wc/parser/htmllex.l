@@ -363,19 +363,27 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR5>">" {
     UPDATE_BUFPOS;
-    // XXX
+    PYSTRING_TMP(yyextra->tmp_attrval);
+    CLEAR_BUF(yyextra->tmp_buf);
+    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
     BEGIN(INITIAL);
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START);
 }
 
 <S_ATTR5>"/>" {
     UPDATE_BUFPOS;
-    // XXX
+    PYSTRING_TMP(yyextra->tmp_attrval);
+    CLEAR_BUF(yyextra->tmp_buf);
+    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
     BEGIN(INITIAL);
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START_END);
 }
 
 <S_ATTR5>{RX_WHITE_SPACE}+ {
     UPDATE_BUFPOS;
-    // XXX
+    if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) { return T_ERROR; }
     BEGIN(S_ATTR1);
 }
 
