@@ -1,91 +1,91 @@
 test_rewriter
 
 <html><head>
-<!-- closing > before end of tag -->
-<!-- <META NAME="Author" CONTENT="Andrew McDonald <andrew@mcdonald.org.uk>"> -->
+
+
      
      
-<!-- meta refresh tag -->
-<!-- <META http-equiv="refresh"> -->
+
+
      <meta http-equiv=refresh>
 
-<!-- meta ReFresh tag -->
-<!-- <meta http-equiv="ReFresh"> -->
+
+
      <meta http-equiv=ReFresh>
 
-<!-- meta refrish tag -->
-<!-- <meta http-equiv="Refrish"> -->
+
+
      <meta http-equiv=Refrish>
 
-<!-- IE shortcut icon and </link> end tag -->
-<!-- <link rel="shortcut icon"></link> -->
+
+
      
-<!-- missing start tag -->
+
 </title>
 </head>
 
-<!-- javascript in body tag -->
-<!-- <body onload="hulla();" onunload="holla();"> -->
+
+
      <body onload=hulla();>
 
-<!-- advert links -->
-<!-- <a href="http://www.doubleclick.net/">image data and such...</a> -->
-     
-<!-- <a href="http://ads.freshmeat.net/">...</a> -->
+
+
      
 
-<!-- replace blink with bold -->
-<!-- <blink>blinking text</blink> -->
+     
+
+
+
      <b>blinking text</b>
 
-<!-- remove noscript tag -->
-<!-- <noscript>Kein Javascript</noscript> -->
+
+
      
 
-<!-- transform erotic link :) -->
-<!-- <a href="http://playboy.com/issue/">blubba</a> -->
+
+
      <a href=http://playboy.com/issue/>blubba</a>
 
-<!-- redirect -->
-<!-- <a href="http://www.fileleech.com/dl/?filepath=http://www.counter-strike.de/downloads/ghl10full.exe&download=1">CS 1.0</a> -->
+
+
      <a href=h>CS 1.0</a>
 
-<!-- unquoted ampersand -->
-<!-- Hallo Ernie & Bert, was geht? -->
+
+
      Hallo Ernie & Bert, was geht?
 
-<!-- entityrefs, should be left as is -->
-<!-- Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü? -->
+
+
      Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü?
 
-<!-- 1x1 image -->
-<!-- <img src="blubb" width="1" height="1"> -->
+
+
      
 
-<!-- adlog.pl (freshmeat) -->
-<!-- <a href='http://fmads.osdn.com/cgi-bin/adlog.pl?index,tkgk0128en'></a> -->
+
+
 <a href=http://fmads.osdn.com/cgi-bin/adlog.pl?index,tkgk0128en></a>
 
-<!-- unquoted attribute ending with slash -->
-<!-- <a href=http://www/>link</a> -->
+
+
 <a href=http://www/>link</a>
 
-<!-- illegal binary chars (see source) -->
+
 These ‘Microsoft chars‘ are history.
 „Retter„ Majak trifft in der Schlussminute.
-<!-- bad quote in tag attributes -->
-<!-- <a href="bla" %]">seen at slashdot</a> -->
+
+
 <a href=bla>seen at slashdot</a>
 
-<!-- uncommon href chars -->
+
 <a href=123$456>abc</a>
 
-<!-- no beginning quote -->
-<!-- <a href=bla">link</a> -->
+
+
 <a href=bla">link</a>
 
-<!-- no ending quote -->
-<!-- <a href="bla>link</a> -->
+
+
 <a href=bla">link</a>
 
 <script defer type=text/javascript>
