@@ -164,7 +164,7 @@ class HttpClient (Connection):
                     ServerHandleDirectly(self,
                        'HTTP/1.0 200 OK\r\n',
                        'Content-Type: text/plain\r\n\r\n',
-                       'WebCleaner')
+                       '')
                     return
                 if mf>0:
                     self.headers['Max-Forwards'] = mf-1
