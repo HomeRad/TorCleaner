@@ -77,7 +77,7 @@ def restart (startfunc, pidfile, parent_exit=True):
 
 def status (pidfile):
     if os.path.exists(pidfile):
-        pid = ing(file(pidfile).read())
+        pid = int(file(pidfile).read())
         return i18n._("WebCleaner is running (PID %d)")%pid, 0
     else:
         return i18n._("WebCleaner is not running (no lock file found)"), 3
