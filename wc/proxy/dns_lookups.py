@@ -497,7 +497,7 @@ def init_dns_resolver_nt():
     import winreg
     try:
         key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
-                 "SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
+                 r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
     except WindowsError:
         debug(BRING_IT_ON, "no windows tcpip config found")
         return

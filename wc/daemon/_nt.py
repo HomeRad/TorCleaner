@@ -26,10 +26,15 @@ def start():
         raise Exception("webcleaner already started (lock file found). "
 	                "Do 'webcleaner stop' first.")
     command = (sys.executable, 'webcleaner', 'start_nt')
-    if sys.platform=="win98se":
-        mode = os.P_DETACH
-    else:
+    from wc.proxy import winreg
+    mode = os.P_DETACH
+    try:
+        # under Windows NT/2000 we can use NOWAIT
+        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+                 r"Software\Microsoft\Windows NT")
         mode = os.P_NOWAIT
+    except WindowsError:
+        pass
     try:
         ret = os.spawnv(mode, command[0], command)
     except OSError, exc:
