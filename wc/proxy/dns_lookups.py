@@ -27,7 +27,6 @@ def init_dns_resolver ():
     DnsConfig.nameservers = []
     DnsConfig.search_domains = []
     DnsConfig.search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
-    import os
     if os.name=='posix':
         init_dns_resolver_posix()
     elif os.name=='nt':
