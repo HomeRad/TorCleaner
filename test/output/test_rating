@@ -1,0 +1,28 @@
+test_rating
+[]
+[]
+[]
+['http://', 'imadoofus.com', '/']
+['http://', 'imadoofus.com', '/']
+['http://', 'imadoofus.com', '/']
+['http://', 'imadoofus.com', '/']
+['http://', 'imadoofus.com', '/', 'a', '/', 'b', '/', 'c']
+['http://', 'imadoofus.com', '/', 'forum']
+['http://', 'imadoofus.com', '/', 'forum']
+('http://www.heise.de/', {'language': '1', 'generic': 'true', 'violence': '0', 'modified': '1073757650', 'sex': '0', 'agerange': '10-'})
+true True
+true True
+true True
+true True
+false False
+false False
+false False
+false False
+true True
+valid (None, None)
+valid (1, None)
+valid (None, 1)
+valid (1, 1)
+invalid None
+invalid None
+invalid None
