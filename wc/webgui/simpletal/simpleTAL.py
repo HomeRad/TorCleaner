@@ -1148,9 +1148,11 @@ class TemplateCompiler (object):
         self.addCommand((TAL_OUTPUT, data))
 
 
-    def get_command_args (self, argument):
+    def get_command_args (self, argument, emptyAllowed=False):
         # Break up the list of attribute settings
         commandArgs = []
+        if not argument and emptyAllowed:
+            return commandArgs
         # We only want to match semi-colons that are not escaped
         argumentSplitter =  re.compile('(?<!;);(?!;)')
         for attributeStmt in argumentSplitter.split(argument):
@@ -1394,7 +1396,7 @@ def compileI18nTranslate (self, argument):
 def compileI18nAttributes (self, argument):
     # Compile i18n:attributes into attribute command
     # Argument: [(attributeName, expression)]
-    return (I18N_ATTRIBUTES, self.get_command_args(argument))
+    return (I18N_ATTRIBUTES, self.get_command_args(argument, emptyAllowed=True))
 
 
 CompCommandHandler = {
