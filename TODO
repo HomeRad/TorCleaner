@@ -2,9 +2,11 @@ TODO
 
 version 2.9 and above
 
-- convert test stuff to unit / webunit
+- empty hostname with
+  <script src="file:///C:/NetObjectsFusionMX/NetObjectsSystem/rollover.js">
+  results in assertion error
 
-- memory leaks while operating the proxy
+- double close (EBADF bad file descriptor in fileno())
 
 - content rating:
   o feature: content rating cache update rating_cache_merge_with(ratings)
@@ -13,6 +15,10 @@ version 2.9 and above
     cache
 
 - bfilter has Flash parse and generation library, I want that too .)
+
+- memory leaks while operating the proxy
+
+- convert remaining tests to unit testing where appropriate
 
 - use test/client.py, test/server.py for testing
 
@@ -27,10 +33,6 @@ version 2.9 and above
 - unicode parsing for flex
   the HTML parser (written with flex) does not support unicode, so
   sometimes you'll see '?' chars in the HTML output.
-
-- HTTP/1.1 pipelining
-  if used, an assertion is triggered like this:
-  AssertionError: client in state receive sent data 'GET http://XXX HTTP/1.1
 
 - blocked HTTPS urls are broken because we switch to http://
   instead the proxy should support https requests.
