@@ -195,7 +195,7 @@ class HttpServer(Server):
 
         if self.bytes_remaining is not None:
             for ro in config['mime_content_rewriting']:
-                if ro.match(self.headers.get('content-type')):
+                if ro.match(self.headers.getheader('content-type')):
                     # remove content length
                     for h in self.headers.headers[:]:
                         if re.match('(?i)content-length:', h):
@@ -223,7 +223,7 @@ class HttpServer(Server):
             self.headers['content-encoding'] = gm[1]
             self.headers['content-type'] = gm[0]
         # uncompress server-compressed content
-        if self.headers.get('content-encoding')=='gzip':
+        if self.headers.getheader('content-encoding')=='gzip':
             for ro in config['mime_content_rewriting']:
                 if ro.match(self.headers.get('content-type')):
                     #debug(BRING_IT_ON, 'S/Content-encoding: gzip')

@@ -1,3 +1,9 @@
+webcleaner (0.36) unstable; urgency=low
+
+  * use getheader(), not get() on HTTP header object
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 10 Apr 2002 01:11:51 +0200
+
 webcleaner (0.35) unstable; urgency=low
 
   * fix BinaryCharFilter: use string.maketrans

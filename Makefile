@@ -91,7 +91,7 @@ filterfiles:	md5sums
 upload: distclean dist VERSION
 	scp debian/changelog $(HTMLDIR)/changes.txt
 	scp VERSION $(HTMLDIR)/raw/
-	scp dist/* $(HTMLDIR)
+	#scp dist/* $(HTMLDIR)
 	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
 
 locale:
