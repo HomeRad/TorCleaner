@@ -38,6 +38,7 @@ The following changes were made:
 
 import os
 import socket
+import select
 import errno
 
 import wc
@@ -191,12 +192,13 @@ class Dispatcher (object):
     def connect (self, addr):
         wc.log.debug(wc.LOG_PROXY, '%s connecting', self)
         self.connected = False
+        self.connect_checks = 0
         err = self.socket.connect_ex(addr)
         if err != 0:
             strerr = errno.errorcode[err]
             wc.log.debug(wc.LOG_PROXY, '%s connection error %s', self, strerr)
         # XXX Should interpret Winsock return values
-        if err in (errno.EINPROGRESS, errno.EALREADY, errno.EWOULDBLOCK):
+        if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
         elif err in (0, errno.EISCONN):
             self.addr = addr
@@ -210,18 +212,33 @@ class Dispatcher (object):
     def check_connect (self, addr):
         """
         Check if the connection is etablished.
-        See also http://cr.yp.to/docs/connect.html
+        See also http://cr.yp.to/docs/connect.html and connect(2) manpage.
         """
         wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
+        self.connect_checks += 1
+        if self.connect_checks >= 50:
+            wc.log.info(wc.LOG_PROXY, '%s connect timed out', self)
+            self.handle_close()
+            return
+        try:
+            (r, w, e) = select.select([], [self.fileno()], [], 0.2)
+        except select.error, why:
+            # not yet ready
+            return
+        if self.fileno() not in w:
+            # not yet ready
+            return
         err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
         if err == 0:
             self.addr = addr
             self.connected = True
             wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
-        elif err in (errno.EINPROGRESS, errno.EALREADY, errno.EWOULDBLOCK):
+        elif err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
         else:
+            strerr = errno.errorcode[err]
+            wc.log.info(wc.LOG_PROXY, '%s connect error %s', self, strerr)
             self.handle_close()
 
     def accept (self):
