@@ -7,10 +7,12 @@ from FXHeaderRuleFrame import FXHeaderRuleFrame
 from FXImageRuleFrame import FXImageRuleFrame
 from FXNocommentsRuleFrame import FXNocommentsRuleFrame
 from FXFolderRuleFrame import FXFolderRuleFrame
+from FXBlockurlsRuleFrame import FXBlockurlsRuleFrame
+from FXBlockdomainsRuleFrame import FXBlockdomainsRuleFrame
 
 
 class FXRuleFrameFactory:
-    """Every Rule (see webfilter/Rules.py) has a "fromFactory" function.
+    """Every Rule (see wc/filter/rules/) has a "fromFactory" function.
        A factory has a function fromXYZRule for every different Rule
        class.
        This particular factory generates windows which display all the
@@ -62,3 +64,10 @@ class FXRuleFrameFactory:
         self.inc_index()
         return FXFolderRuleFrame(self.treeframe, rule, self.index)
 
+    def fromBlockdomainsRule (self, rule):
+        self.inc_index()
+        return FXBlockdomainsRuleFrame(self.treeframe, rule, self.index)
+
+    def fromBlockurlsRule (self, rule):
+        self.inc_index()
+        return FXBlockurlsRuleFrame(self.treeframe, rule, self.index)

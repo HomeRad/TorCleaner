@@ -7,7 +7,7 @@ You can add extern states for the filter by making a separate class
 and passing it with the "attrs" parameter. Look at the Rewriter filter
 to see how its done.
 """
-# Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000-2002  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@ to see how its done.
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import sys, re, wc
-from wc import debug, _
 from wc.debug_levels import *
-
+debug = wc.debug
+_ = wc._
 # filter order
 FILTER_REQUEST         = 0 # Filter complete request (blocking)
 FILTER_REQUEST_HEADER  = 1 # Outgoing header manglers
@@ -65,12 +65,12 @@ def compileRegex (obj, attr):
 def compileMime (mime):
     return re.compile("^%s$"%mime, re.I)
 
+
 def GetRuleFromName (name):
     name = name.capitalize()+'Rule'
-    if hasattr(Rules, name):
-        klass = getattr(Rules, name)
-        return klass()
-    raise ValueError, _("unknown rule name %s")+name
+    exec "from wc.filter.rules.%s import %s"%(name,name)
+    klass = locals()[name]
+    return klass()
 
 
 def applyfilter (i, arg, fun='filter', attrs={}):
@@ -81,7 +81,7 @@ def applyfilter (i, arg, fun='filter', attrs={}):
     if attrs.get('nofilter') or (fun!='finish' and not arg):
         return arg
     try:
-        #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
+        debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
         for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
             if attrs.has_key('mime'):
@@ -90,7 +90,7 @@ def applyfilter (i, arg, fun='filter', attrs={}):
             else:
                 arg = apply(ffun, (arg,), attrs)
     except FilterException, msg:
-        #debug(NIGHTMARE, msg)
+        debug(NIGHTMARE, msg)
         pass
     return arg
 
@@ -105,35 +105,3 @@ def initStateObjects (headers={'content-type': 'text/html'}, url=None):
     return attrs
 
 
-# The base filter class
-class Filter:
-    def __init__ (self, mimelist):
-        self.rules = []
-        self.mimelist = mimelist
-
-    def addrule (self, rule):
-        #debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
-        self.rules.append(rule)
-
-    def filter (self, data, **args):
-        return apply(self.doit, (data,), args)
-
-    def finish (self, data, **args):
-        return apply(self.doit, (data,), args)
-
-    def doit (self, data, **args):
-        return data
-
-    def getAttrs (self, headers, url):
-        return {'url': url, 'headers': headers}
-
-    def applies_to_mime (self, mime):
-        #debug(HURT_ME_PLENTY, self.__class__.__name__, "applies_to_mime", mime, "...")
-        if not self.mimelist:
-            #debug(HURT_ME_PLENTY, "...no mimelist")
-            return 1
-        for ro in self.mimelist:
-            if ro.match(mime):
-                #debug(HURT_ME_PLENTY, "...match")
-                return 1
-        #debug(HURT_ME_PLENTY, "...no match")

@@ -33,5 +33,5 @@ class ExternfileRule (Rule):
 
     def toxml (self):
         s = Rule.toxml(self)
-        s += ' file="%s"' % xmlify(self.file)
+        s += ' file="%s"/>' % xmlify(self.file)
 

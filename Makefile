@@ -123,6 +123,22 @@ ndebug:
 	  mv -f $$f.bak $$f; \
 	done
 
+update-blacklists:
+	# remove old file
+	rm -f blacklists.tar.gz
+	# get new file
+	wget http://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/blacklists.tar.gz
+	# unpack the files we are interested in
+	cd config && tar xzvf ../blacklists.tar.gz '*domains' '*urls' '*expressions'
+	# (re)generate webcleaner rules for these files
+	$(PYTHON) bl2wc.py `find config/blacklists -type f`
+	# delete unused files
+	find config/blacklists -name expressions -exec rm -f {} \;
+	# compress (some files are very big)
+	for f in `find config/blacklists -type f`; do gzip --best $$f; done
+	# extract README
+	cd config && tar xzvf ../blacklists.tar.gz README
+
 .PHONY: all clean localbuild distclean cleandeb deb_local deb_signed 
 .PHONY: deb_unsigned dist test gentest onlinetest offlinetest md5sums package
 .PHONY: filterfiles upload doc tar debug ndebug

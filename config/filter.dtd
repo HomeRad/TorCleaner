@@ -4,12 +4,14 @@
  
  Changes:
 
- 10.8.2001 Bastian Kleineidam
- * added Replacer
- 23.2.2002 Bastian Kleineidam
- * added matchurl and dontmatchurl attributes
+ 29.6.2002 Bastian Kleineidam
+ * added blockurls and blockdomains filters
  7.6.2002 Bastian Kleineidam
  * added oid
+ 23.2.2002 Bastian Kleineidam
+ * added matchurl and dontmatchurl attributes
+ 10.8.2001 Bastian Kleineidam
+ * added Replacer
  
  WWW filters are configuration files for blocking URLs and rewriting
  HTML and image data and HTTP headers.
@@ -42,7 +44,7 @@
    languages. This is because some programs might do language specific
    things with regular expressions.
 -->
-<!ELEMENT folder ((rewrite|replacer|block|allow|header|image|nocomments)*)>
+<!ELEMENT folder ((rewrite|replacer|block|blockurls|blockdomains|allow|header|image|nocomments)*)>
 <!ATTLIST folder
  title    CDATA #REQUIRED
  oid      CDATA #IMPLIED
@@ -131,7 +133,7 @@
 <!ELEMENT block (#PCDATA)>
 <!ATTLIST block
  title      CDATA #REQUIRED
- oid      CDATA #IMPLIED
+ oid        CDATA #IMPLIED
  desc       CDATA #IMPLIED
  scheme     CDATA #IMPLIED
  host       CDATA #IMPLIED
@@ -143,6 +145,40 @@
  disable    CDATA "0"
 >
 
+
+<!--                       Block Domains
+
+    The traditional way of a lot of filter proxies is to block a list
+    of domains. This filter specifies a filename with one domain per
+    line.
+    There is a bl2wc.py script to convert SquidGuard blacklists to
+    WebCleaner .zap rules.
+    The file can be gzip-compressed.
+-->
+<!ELEMENT blockdomains (#PCDATA)>
+<!ATTLIST blockdomains
+ title   CDATA #REQUIRED
+ oid     CDATA #IMPLIED
+ desc    CDATA #IMPLIED
+ file    CDATA #IMPLIED
+>
+
+
+<!--                       Block Urls
+
+    SquidGuard as 'urls' files as blacklists specifying both host and
+    path information.
+    There is a bl2wc.py script to convert SquidGuard blacklists to
+    WebCleaner .zap rules.
+    The file can be gzip-compressed.
+-->
+<!ELEMENT blockurls (#PCDATA)>
+<!ATTLIST blockurls
+ title   CDATA #REQUIRED
+ oid     CDATA #IMPLIED
+ desc    CDATA #IMPLIED
+ file    CDATA #IMPLIED
+>
 
 
 <!--                       Allow
@@ -173,11 +209,11 @@
 -->
 <!ELEMENT header (#PCDATA)>
 <!ATTLIST header
- title   CDATA #REQUIRED
+ title    CDATA #REQUIRED
  oid      CDATA #IMPLIED
- desc    CDATA #IMPLIED
- name    CDATA #REQUIRED
- disable CDATA "0"
+ desc     CDATA #IMPLIED
+ name     CDATA #REQUIRED
+ disable  CDATA "0"
  matchurl CDATA ""
  dontmatchurl CDATA ""
 >

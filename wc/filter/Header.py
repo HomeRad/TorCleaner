@@ -15,7 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
-from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, Filter, compileRegex
+from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, compileRegex
+from wc.filter.Filter import Filter
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]

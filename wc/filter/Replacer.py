@@ -19,8 +19,9 @@ you can use this for
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
-from Rules import STARTTAG, ENDTAG, DATA, COMMENT
-from wc.filter import FILTER_RESPONSE_MODIFY, Filter, compileRegex, compileMime
+from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
+from wc.filter import FILTER_RESPONSE_MODIFY, compileRegex, compileMime
+from wc.filter.Filter import Filter
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]

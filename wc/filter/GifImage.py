@@ -15,8 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re, sys, base64, wc
-from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, Filter, \
+from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, \
                       compileMime, compileRegex
+from wc.filter.Filter import Filter
 from wc import debug
 from wc.debug_levels import *
 
@@ -124,7 +125,7 @@ class GifParser:
         if i<=0: return
         if len(self.data)<i:
             # rewind and stop filtering; wait for next data chunk
-            #debug(NIGHTMARE, 'rewinding')
+            debug(NIGHTMARE, 'rewinding')
             self.data = self.consumed + self.data
             self.consumed = ''
             raise RewindException, "GifImage data delay => rewinding"
@@ -148,7 +149,7 @@ class GifParser:
 	   In this case we just bail out ('rewind'), and continue
 	   the next time in the saved state."""
         while 1:
-            #debug(NIGHTMARE, 'GifImage state', self.strState())
+            debug(NIGHTMARE, 'GifImage state', self.strState())
             self.flush()
             if self.state == GifParser.NOFILTER:
                 self.output += self.consumed + self.data
@@ -161,11 +162,11 @@ class GifParser:
                 # and it seems that Netscape animates them
                 # so we ignore the version and filter nonetheless
                 #if self.header != 'GIF89a':
-                #    #debug(NIGHTMARE, 'Non-animated GIF')
+                #    debug(NIGHTMARE, 'Non-animated GIF')
                 #    self.state == GifParser.NOFILTER
                 #    continue
                 self.size = (i16(self.read(2)), i16(self.read(2)))
-                #debug(NIGHTMARE, 'GIF width=%d, height=%d' % self.size)
+                debug(NIGHTMARE, 'GIF width=%d, height=%d' % self.size)
                 if self.size in self.sizes:
                     self.output = base64.decodestring(_TINY_GIF)
                     self.data = self.consumed = ''
@@ -177,9 +178,9 @@ class GifParser:
                 if flags & 128:
                     # global palette
                     self.background = ord(misc[0])
-                    #debug(NIGHTMARE, 'GIF background', self.background)
+                    debug(NIGHTMARE, 'GIF background', self.background)
                     size = 3<<bits
-                    #debug(NIGHTMARE, 'GIF global palette size', size)
+                    debug(NIGHTMARE, 'GIF global palette size', size)
                     self.read(size)
                 self.state = GifParser.FRAME
             elif self.state == GifParser.FRAME:
@@ -190,7 +191,7 @@ class GifParser:
                 elif s == '!':
                     # extensions
                     s = self.read(1)
-                    #debug(NIGHTMARE, 'GIF extension', ord(s))
+                    debug(NIGHTMARE, 'GIF extension', ord(s))
                     # remove all extensions except graphic controls (249)
                     self.removing = (ord(s) != 249)
                     if self.removing:
@@ -207,13 +208,13 @@ class GifParser:
                 self.y0 = i16(self.read(2))
                 self.x1 = i16(self.read(2)) + self.x0
                 self.y1 = i16(self.read(2)) + self.y0
-                #debug(NIGHTMARE, 'GIF x0=%d, y0=%d, x1=%d, y1=%d' % (self.x0, self.y0, self.x1, self.y1))
+                debug(NIGHTMARE, 'GIF x0=%d, y0=%d, x1=%d, y1=%d' % (self.x0, self.y0, self.x1, self.y1))
                 flags = ord(self.read(1))
                 if flags & 128:
                     # local color table
                     bits = (flags & 7) + 1
                     size = 3<<bits
-                    #debug(NIGHTMARE, 'GIF local palette size', size)
+                    debug(NIGHTMARE, 'GIF local palette size', size)
                     self.read(size)
                 # image data
                 misc = ord(self.read(1))
@@ -221,7 +222,7 @@ class GifParser:
                 self.finish = 1 # not more than one image frame :)
             elif self.state == GifParser.DATA:
                 size = ord(self.read(1))
-                #debug(NIGHTMARE, 'GIF data size', size)
+                debug(NIGHTMARE, 'GIF data size', size)
                 if size:
                     self.read(size)
                     if self.removing:
