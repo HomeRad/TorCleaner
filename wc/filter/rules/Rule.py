@@ -1,0 +1,86 @@
+# Copyright (C) 2000-2002  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+import wc, wc.filter.rules
+from types import IntType
+
+class Rule:
+    """Basic rule class for filtering.
+    A basic rule has:
+       title - the title
+       oid - identification number, also used for sorting
+       desc - the description
+       disable - flag to disable this rule
+       urlre - regular expression that matches urls applicable for this rule.
+               leave empty to apply to all urls.
+       parent - the parent folder (if any); look at FolderRule class
+    """
+    def __init__ (self, title="No title", desc="", disable=0, parent=None, oid=0):
+        self.title = title
+        if not oid:
+            self.oid = wc.filter.rules.rulecounter
+            wc.filter.rules.rulecounter += 1
+        else:
+            self.oid = oid
+	    if oid >= wc.filter.rules.rulecounter:
+	        wc.filter.rules.rulecounter = oid+1
+        self.desc = desc
+        self.disable = disable
+        self.parent = parent
+        self.attrnames = ['title', 'desc', 'disable', 'oid']
+        self.intattrs = ['disable', 'oid']
+
+    def __cmp__ (self, other):
+        return cmp(self.oid, other.oid)
+
+    def fill_attrs (self, attrs, name):
+        for attr in self.attrnames:
+            if attrs.has_key(attr):
+                val = wc.unxmlify(attrs[attr]).encode('iso8859-1')
+                setattr(self, attr, val)
+        for attr in self.intattrs:
+            val = getattr(self, attr)
+            if val and type(val) != IntType:
+                setattr(self, attr, int(getattr(self, attr)))
+
+    def fill_data (self, data, name):
+        pass
+
+    def fromFactory (self, factory):
+        return factory.fromRule(self)
+
+    def get_name (self):
+        """class name without "Rule" suffix, in lowercase"""
+        return self.__class__.__name__[:-4].lower()
+
+    def toxml (self):
+        s = "<"+self.get_name()
+        s += ' title="%s"' % wc.xmlify(self.title)
+	s += ' oid="%d"' % self.oid
+        if self.desc:
+            s += '\n desc="%s"' % wc.xmlify(self.desc)
+        if self.disable:
+            s += '\n disable="1"'
+        return s
+
+    def __str__ (self):
+        s = self.get_name()+"\n"
+        s += "title   %s\n" % self.title
+	s += "oid     %d\n" % self.oid
+        s += "desc    %s\n" % self.desc
+        s += "disable %d\n" % self.disable
+        return s
+
