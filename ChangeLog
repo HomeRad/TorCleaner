@@ -1,4 +1,4 @@
-2.20 "The machinist" (released xx.xx.xxxx)
+2.20 "The machinist" (released 16.10.2004)
   * Fixed service install (SF bug #1001556)
     Type: bugfix
     Changed: Makefile.am
