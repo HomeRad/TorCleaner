@@ -92,7 +92,7 @@ def text_status ():
     'blocked': config['requests']['blocked'],
     }
     s = STATUS_TEMPLATE % data
-    s += '\n              '.join(asyncore.socket_map.values())
+    s += '\n              '.join(map(str, asyncore.socket_map.values()))
     s += ']\n\ndnscache: %s'%dns_lookups.dnscache
     return s
 
