@@ -10,7 +10,7 @@
 
 <rewrite title="Ad servers 01" oid="1"
  desc="Kill links with &apos;ad&apos; in the host name.">
-<attr>http://([^/])*ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
+<attr>http://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
 </rewrite>
 
 <rewrite title="Ad servers 10" oid="2"
