@@ -38,12 +38,15 @@ def stripsite (url):
 def norm_url (url):
     """replace empty paths with / and normalize them"""
     urlparts = list(urlparse.urlparse(url))
-    if not urlparts[2]:
+    path = urlparts[2]
+    if not path:
         urlparts[2] = '/'
     else:
-        # collapse redundant path segments
         # XXX only windows and posix??
-        urlparts[2] = os.path.normpath(urlparts[2]).replace('\\', '/')
+        # collapse redundant path segments
+        urlparts[2] = os.path.normpath(path).replace('\\', '/')
+        if path.endswith('/'):
+            urlparts[2] += '/'
     return urlparse.urlunparse(urlparts)
 
 

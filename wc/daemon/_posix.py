@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os
+import os, sys
 from wc import i18n
 from wc.daemon import pidfile, watchfile, startfunc
 
@@ -44,10 +44,10 @@ Do 'webcleaner stop' first."""), 1
         os._exit(0)
     # set umask
     os.umask(0177)
-    # XXX close if we have a logfile?
-    #os.close(sys.__stdin__.fileno())
-    #os.close(sys.__stdout__.fileno())
-    #os.close(sys.__stderr__.fileno())
+    # we are logging into files, so close these files:
+    os.close(sys.__stdin__.fileno())
+    os.close(sys.__stdout__.fileno())
+    os.close(sys.__stderr__.fileno())
     # write pid in pidfile
     f = file(pidfile, 'w')
     f.write("%d" % os.getpid())
