@@ -5,12 +5,17 @@
     Changed: wc/filter/*.py
   * you can now have a priority in a filter
     Changed: wc/__init__.py, wc/filter/Filter.py
-  * fix proxy passwort web configuration
+  * fix some bugs with not detecting changed config values
     Changed: wc/webgui/context/config.py
+  * improved footnote text in proxy configuration
+    Changed: templates/classic/config.html
   * remove i18n from web context files, use i18n:translate in templates
     Changed: wc/webgui/context/*.py, templates/classic/*.html
   * wait until enough image data is available to get size info
     Changed: wc/filter/ImageSize.py
+  * fixed parent proxy authentication
+    Changed: wc/proxy/ClientServerMatchmaker.py, wc/proxy/auth/__init__.py,
+      wc/proxy/auth/basic.py
 
 2.0
   * require and use python 2.3
