@@ -302,8 +302,11 @@ def check_spelling (tag, url):
     if is_other_namespace(tag):
         # ignore other namespaces
         return tag
+    # encode for levenshtein method
+    # since tag names should be ascii anyway, ignore encoding errors
+    enctag = tag.encode("ascii", "ignore")
     for htmltag in HtmlTags.keys()+MathTags.keys():
-        if wc.levenshtein.distance(tag, htmltag) == 1:
+        if wc.levenshtein.distance(enctag, htmltag) == 1:
             wc.log.warn(wc.LOG_FILTER,
                       "HTML tag %r corrected to %r at %r", tag, htmltag, url)
             return htmltag
