@@ -9,6 +9,8 @@ TEMPLATES = $(shell find ../templates -name \*.html)
 LDIR = ../share/locale
 PACKAGE = webcleaner
 TEMPLATE = $(PACKAGE).pot
+MYMAIL := calvin@users.sourceforge.net
+MYNAME := "Bastian Kleineidam <$(MYMAIL)>"
 LFILE = LC_MESSAGES/$(PACKAGE).mo
 # defined language (add new languages here)
 LANGUAGES = de
@@ -29,9 +31,8 @@ mofiles:
 template: $(TEMPLATE)
 $(TEMPLATE): $(POSOURCES) $(TEMPLATES)
 	$(XGETTEXT) -w 80 --default-domain=$(PACKAGE) --language=Python \
-     --copyright-holder="Bastian Kleineidam <calvin@users.sourceforge.net>" \
-     --msgid-bugs-address=calvin@users.sourceforge.net -o $(TEMPLATE) \
-     --keyword=_n:1,2 $(POSOURCES)
+          --copyright-holder=$(MYNAME) --msgid-bugs-address=$(MYMAIL) \
+          --keyword=_n:1,2 -o $(TEMPLATE) $(POSOURCES)
 	$(TALGETTEXT) -u $(TEMPLATE) $(TEMPLATES)
 
 %.mo:	%.po
