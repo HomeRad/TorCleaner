@@ -19,7 +19,8 @@ class UnchunkStream:
         self.buffer = ''
         self.bytes_remaining = None
         self.closed = 0
-        
+
+
     def decode (self, s):
         debug(NIGHTMARE, "Proxy: chunked data", `s`)
         self.buffer += s
@@ -36,7 +37,7 @@ class UnchunkStream:
                     # Remove this line from the buffer
                     self.buffer = self.buffer[i+1:]
                     if line:
-                        # NOTE: chunklen can be followed by r";.*"
+                        # NOTE: chunklen can be followed by ";.*"
                         mo = match_bytes(line)
                         if mo:
                             # chunklen is hex
