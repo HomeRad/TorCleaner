@@ -1,20 +1,19 @@
 #!/bin/sh -e
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/sbin/webcleaner
 NAME=webcleaner
+DAEMON=/usr/sbin/${NAME}
 DESC=WebCleaner
 
 # uncomment the following line to enable the watch monitor (see webcleaner(1))
 #MONITOR=watch
 
 # dont change these filenames, the logrotate script
-# in /etc/logrotate.d relies on it!
+# in /etc/logrotate.d relies on it
 # be aware that if you purge the webcleaner package,
-# all files in LOGDIR are removed!
-LOGDIR=/var/log/webcleaner
-ACCESSLOG=$LOGDIR/access.log
-ERRORLOG=$LOGDIR/error.log
+# all files in LOGDIR are removed
+LOGDIR=/var/log/${NAME}
+ERRORLOG=$LOGDIR/${NAME}.critical
 
 test -x $DAEMON || exit 0
 
@@ -28,21 +27,21 @@ case "$1" in
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	$DAEMON stop${MONITOR} >> $ACCESSLOG 2>>$ERRORLOG
+	$DAEMON stop${MONITOR} 2>>$ERRORLOG
         R=$?
 	echo "$NAME."
         exit $R
 	;;
   reload|force-reload)
         echo -n "Reloading $DESC: "
-	$DAEMON reload >> $ACCESSLOG 2>>$ERRORLOG
+	$DAEMON reload 2>>$ERRORLOG
         R=$?
 	echo "$NAME."
         exit $R
 	;;
   restart)
 	echo -n "Restarting $DESC: "
-	$DAEMON restart >> $ACCESSLOG 2>>$ERRORLOG
+	$DAEMON restart 2>>$ERRORLOG
         R=$?
 	echo "$NAME."
         exit $R
