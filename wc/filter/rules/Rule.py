@@ -83,7 +83,41 @@ class Rule (object):
         assert self.sid==rule.sid, "updating %s with invalid rule %s"%(self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
         l = [a for a in self.attrnames if a not in ['sid', 'disable'] ]
-        return self.update_attrs(l, rule, dryrun, log)
+        chg = self.update_attrs(l, rule, dryrun, log)
+        chg = self.update_titledesc(rule, dryrun, log) or chg
+        return chg
+
+
+    def update_titledesc (self, rule, dryrun, log):
+        """update rule title and description with given rule data"""
+        chg = False
+        for key, value in rule.titles.items():
+            if not self.titles.has_key(key):
+                oldvalue = ""
+            elif self.titles[key]!=value:
+                oldvalue = self.titles[key]
+            else:
+                oldvalue = None
+            if oldvalue is not None:
+                chg = True
+                print >>log, " ", i18n._("updating rule title for language %s:")%key
+                print >>log, " ", repr(oldvalue), "==>", repr(value)
+                if not dryrun:
+                    self.titles[key] = value
+        for key, value in rule.descriptions.items():
+            if not self.descriptions.has_key(key):
+                oldvalue = ""
+            elif self.descriptions[key]!=value:
+                oldvalue = self.descriptions[key]
+            else:
+                oldvalue = None
+            if oldvalue is not None:
+                chg = True
+                print >>log, " ", i18n._("updating rule description for language %s:")%key
+                print >>log, " ", repr(oldvalue), "==>", repr(value)
+                if not dryrun:
+                    self.descriptions[key] = value
+        return chg
 
 
     def update_attrs (self, attrs, rule, dryrun, log):
