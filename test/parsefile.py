@@ -11,9 +11,9 @@ def _main ():
         f = sys.stdin
     else:
         f = file(sys.argv[1])
-    from wc.parser.htmllib import HtmlPrinter
+    from wc.parser.htmllib import HtmlPrettyPrinter
     from wc.parser import htmlsax
-    p = htmlsax.parser(HtmlPrinter())
+    p = htmlsax.parser(HtmlPrettyPrinter())
     #p.debug(1)
     data = f.read(1024)
     while data:
