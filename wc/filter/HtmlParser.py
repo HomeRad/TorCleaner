@@ -254,6 +254,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.buf_append_data(item)
 
 
+    def buf2data (self):
+        """dont write any data to buf if there are still pics rules"""
+        if self.pics:
+            return
+        BufferHtmlParser.buf2data(self)
+
+
     def cdata (self, data):
         """character data"""
         #self._debug(NIGHTMARE, "cdata", `data`)
@@ -296,7 +303,18 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             return self.waitbuf.append(item)
         rulelist = []
         filtered = 0
-        # XXX search for PICS tag
+        if tag=="meta" and attrs.get('http-equiv') =='PICS-Label':
+            labels = attrs.get('content', '')
+            # note: if there are no pics rules, this loop is empty
+            for rule in self.pics:
+                msg = check_pics(rule, labels)
+                if msg:
+                    raise FilterPics(msg)
+            # first labels match
+            self.pics = []
+        elif tag=="body":
+            # headers finished
+            self.pics = []
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):

@@ -24,7 +24,7 @@ from wc.filter.HtmlParser import FilterHtmlParser
 orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
-rulenames = ['rewrite','nocomments','javascript','pics']
+rulenames = ['rewrite', 'nocomments', 'javascript', 'pics']
 mimelist = map(compileMime, ['text/html'])
 
 # whitespace matcher
