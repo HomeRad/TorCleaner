@@ -1,19 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter modules
-
-Welcome to the wonderful world of software OSI layer 5 filtering.
-If you want to write your own filter module look at the existing
-filters.
-
-You can add extern states for the filter by making a separate class
-and passing it with the "attrs" parameter. Look at the Rewriter filter
-to see how its done.
-
-To communicate with the proxy, filters can throw FilterExceptions.
-Of course, these must be handled in the appropriate proxy functions
-to work properly.
-
-"""
 # Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,7 +14,21 @@ to work properly.
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""filter modules
 
+Welcome to the wonderful world of software OSI layer 5 filtering.
+If you want to write your own filter module look at the existing
+filters.
+
+You can add extern states for the filter by making a separate class
+and passing it with the "attrs" parameter. Look at the Rewriter filter
+to see how its done.
+
+To communicate with the proxy, filters can throw FilterExceptions.
+Of course, these must be handled in the appropriate proxy functions
+to work properly.
+
+"""
 import re
 
 import wc
@@ -147,13 +146,16 @@ def applyfilters (levels, data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, filters,
-                     clientheaders=wc.proxy.Headers.WcMessage(),
-                     serverheaders=wc.proxy.Headers.WcMessage(),
-                     headers=wc.proxy.Headers.WcMessage(),
-                     browser='Calzilla/6.0'):
+def get_filterattrs (url, filters, clientheaders=None, serverheaders=None,
+                     headers=None, browser='Calzilla/6.0'):
     """init external state objects"""
-    headers = {
+    if clientheaders is None:
+        clientheaders = wc.proxy.Headers.WcMessage()
+    if serverheaders is None:
+        serverheaders = wc.proxy.Headers.WcMessage()
+    if headers is None:
+        headers = wc.proxy.Headers.WcMessage()
+    attrheaders = {
         'client': clientheaders,
         'server': serverheaders,
         'data': headers,
@@ -162,7 +164,7 @@ def get_filterattrs (url, filters,
         'url': url,
         'nofilter': wc.configuration.config.nofilter(url),
         'mime' : serverheaders.get('Content-Type'),
-        'headers': headers,
+        'headers': attrheaders,
         'browser': browser,
     }
     if attrs['mime']:
