@@ -159,9 +159,19 @@ JS_ArenaAllocate(JSArenaPool *pool, size_t nb)
     jsuword extra, hdrsz, gross, sz;
     void *p;
 
-    /* Search pool from current forward till we find or make enough space. */
+    /*
+     * Search pool from current forward till we find or make enough space.
+     *
+     * NB: subtract nb from a->limit in the loop condition, instead of adding
+     * nb to a->avail, to avoid overflowing a 32-bit address space (possible
+     * when running a 32-bit program on a 64-bit system where the kernel maps
+     * the heap up against the top of the 32-bit address space).
+     *
+     * Thanks to Juergen Kreileder <jk@blackdown.de>, who brought this up in
+     * https://bugzilla.mozilla.org/show_bug.cgi?id=279273.
+     */
     JS_ASSERT((nb & pool->mask) == 0);
-    for (a = pool->current; a->avail + nb > a->limit; pool->current = a) {
+    for (a = pool->current; a->avail > a->limit - nb; pool->current = a) {
         ap = &a->next;
         if (!*ap) {
             /* Not enough space in pool -- try to reclaim a free arena. */
@@ -172,14 +182,11 @@ JS_ArenaAllocate(JSArenaPool *pool, size_t nb)
             JS_ACQUIRE_LOCK(arena_freelist_lock);
             while ((b = *bp) != NULL) {
                 /*
-                 * Insist on exact arenasize match if nb is not greater than
-                 * arenasize.  Otherwise take any arena big enough, but not by
-                 * more than gross + arenasize.
+                 * Insist on exact arenasize match to avoid leaving alloc'able
+                 * space after an oversized allocation as it grows.
                  */
                 sz = JS_UPTRDIFF(b->limit, b);
-                if (extra
-                    ? sz >= gross && sz <= gross + pool->arenasize
-                    : sz == gross) {
+                if (sz == gross) {
                     *bp = b->next;
                     JS_RELEASE_LOCK(arena_freelist_lock);
                     b->next = NULL;
