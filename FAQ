@@ -1,0 +1,17 @@
+Q: The filter is not working - I still see some advertisings that are
+   definitely filtered out.
+A: Look in the HTML source. Some adverts (eg. freshmeat.net) are
+   generated with JavaScript. You have these possible solutions:
+   * turn off JavaScript
+   * generate a JavaScript (Rewrite) filter and restrict it to the urls you
+     (dont) want to have JavaScript
+     This works only with JS in <script> tags.
+   * generate a Blocker filter which at least blocks the image download
+     (I normally prefer this solution).
+
+Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
+   some tags or is completely crippled
+A: First, try to disable the WebCleaner proxy and look at the page again.
+   If it renders ok, you most likely have encountered a bug in WebCleaner.
+   Please write a bug report to calvin@users.sourceforge.net and
+   include the URL you have problems with.
