@@ -89,7 +89,7 @@ class MyInstall (install, object):
         # <install_data> directory (and other stuff like author, url, ...)
         data = []
         for d in ['purelib', 'platlib', 'lib', 'headers', 'scripts', 'data']:
-            attr = 'install_%s'%d
+            attr = 'install_%s' % d
             if self.root:
                 # cut off root path prefix
                 cutoff = len(self.root)
@@ -105,14 +105,13 @@ class MyInstall (install, object):
                 oldpath = "%s%s" % (os.sep, oldpath)
                 if oldpath in val:
                     val = val.replace(oldpath, newpath)
-            if attr=="install_data":
+            if attr == "install_data":
                 base = os.path.join(val, 'share', 'webcleaner')
                 data.append('config_dir = %r' % \
                             cnormpath(os.path.join(base, 'config')))
                 data.append('template_dir = %r' % \
                             cnormpath(os.path.join(base, 'templates')))
-            val = cnormpath(val)
-            data.append("%s = %r" % (attr, val))
+            data.append("%s = %r" % (attr, cnormpath(val)))
         self.distribution.create_conf_file(data, directory=self.install_lib)
 
     def get_outputs (self):
