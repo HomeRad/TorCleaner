@@ -180,7 +180,7 @@ class Blocker (wc.filter.Filter.Filter):
         mime = attrs['mime']
         if mime is None:
             mime = "text/html"
-        parts = wc.url.spliturl(url)
+        parts = wc.url.url_split(url)
         wc.log.debug(wc.LOG_FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
         if allowed:
