@@ -28,6 +28,9 @@ and is licensed under a BSD license.
 The included dns package is part of the pydns project and covered by
 the Standard Python license.
 
+The wc/update.py file includes the urlutils.py from reportbug and
+is licensed under the GPL.
+
 The included simpleTAL package is written by Colin Stewart and distributed
 under the following license:
 	Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
