@@ -63,9 +63,9 @@
  tal:condition="rule/down"
  tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down">
 <b tal:omit-tag="not:rule/selected">
-<a href="#" tal:content="string:[${rule/get_name}] ${rule/title}; title rule/tiptext"
+<a href="#" tal:content="string:[${rule/get_name}] ${rule/title}"
  tal:condition="not:curfolder/disable"
- tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}"
+ tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}; title rule/tiptext"
  >[rewrite] On focus</a>
 <span tal:condition="curfolder/disable"
  tal:replace="string:[${rule/get_name}] ${rule/title}">[rewrite] On focus</span>
