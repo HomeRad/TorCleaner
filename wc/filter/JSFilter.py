@@ -37,7 +37,13 @@ import wc.filter.rules.RewriteRule
 
 
 _replace_ws = re.compile(r"\s+").sub
-
+js_event_attrs = (
+    'onmouseover',
+    'onmouseout',
+    'onload',
+    'onunload',
+    'onselectstart',
+)
 
 class JSFilter (wc.js.JSListener.JSListener):
     """defines callback handlers for filtering Javascript code"""
@@ -221,7 +227,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_src = False
         self.js_output = 0
         self.js_popup = 0
-        for name in ('onmouseover', 'onmouseout'):
+        for name in js_event_attrs:
             if attrs.has_key(name) and self.jsPopup(attrs, name):
                 wc.log.debug(wc.LOG_FILTER, "JS: del %r from %r", name, tag)
                 del attrs[name]
