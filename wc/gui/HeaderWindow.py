@@ -278,9 +278,9 @@ class HeaderWindow(FXMainWindow):
                     if url:
                         url = ""
             last = self.headers.getNumItems()-1
-            if self.config['scrolling']==SCROLLING_ALWAYS or \
+            if last > 0 and (self.config['scrolling']==SCROLLING_ALWAYS or \
                (self.config['scrolling']==SCROLLING_AUTO and \
-                self.headers.isItemVisible(last)):
+                self.headers.isItemVisible(last))):
                 self.headers.makeItemVisible(last)
             self.status = "Getting connections..."
             connections = parse_connections()

@@ -13,12 +13,430 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.1\n"
 
+msgid "URL Parameters:\tRegular expression to match the parameters"
+msgstr "URL Parameter:\tRegulärer Ausdruck welcher die URL Parameter matcht"
+
+msgid "Parent Proxy"
+msgstr "Übergeordneter Proxy"
+
+msgid "Suppress headers"
+msgstr ""
+
+msgid "Hostname:"
+msgstr ""
+
+msgid "No debugging"
+msgstr ""
+
 #, fuzzy
-msgid "execute 'webcleaner -h' for help\n"
-msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
+msgid "warning: only first command is valid"
+msgstr "WebCleaner: Warnung, nur der erste Befehl ist gültig"
+
+msgid ""
+"You cannot remove folders. If you really want to get rid\n"
+"of this folder, delete the appropriate configuration file.\n"
+"It is always safer to disable a folder or filter instead of\n"
+"deleting it!"
+msgstr ""
+"Sie können Ordner nicht löschen. Wenn Sie diesen Ordner\n"
+"wirklich loswerden wollen, löschen Sie die entsprechende\n"
+"Konfigurationsdatei.\n"
+"Es ist immer sicherer, einen Ordner oder Filter zu deaktivieren\n"
+"anstatt ihn zu löschen!"
 
 msgid "No command given."
 msgstr "Kein Befehl angegeben."
+
+msgid "disable"
+msgstr "deaktivieren"
+
+msgid "&Cancel"
+msgstr "&Abbrechen"
+
+msgid "no filter item selected"
+msgstr "Kein Filter ausgewählt"
+
+msgid "Attribute"
+msgstr "Attribut"
+
+msgid "Debug level"
+msgstr "Debugstufe"
+
+msgid ""
+"\n"
+"WebCleaner Configuration\n"
+"========================\n"
+"\n"
+"Port:          %(port)d\n"
+"Parent proxy:  %(parentproxy)s\n"
+"Buffer size:   %(buffersize)d\n"
+"Logfile:       %(logfile)s\n"
+"TCP timeout:   %(timeout)d\n"
+"Obfuscate IP:  %(obfuscateip)d\n"
+"Debug level:   %(debuglevel)d\n"
+"Show errors:   %(showerrors)d\n"
+"Headers saved: %(headersave)d\n"
+"\n"
+msgstr ""
+
+msgid "P&roxy Settings"
+msgstr "P&roxy Einstellungen"
+
+msgid "Replace value:"
+msgstr "Ersetzter Text"
+
+msgid "Replace part:"
+msgstr "Ersetzter Teil:"
+
+msgid ""
+"Updating procedure:\n"
+"\n"
+"We download the new configuration files from\n"
+"'%s'.\n"
+"Changed config files are renamed to .old files, new\n"
+"files are copied into the config directory.\n"
+"\n"
+"If something has changed, we restart the proxy."
+msgstr ""
+
+#, fuzzy
+msgid "cannot write to file %s"
+msgstr "kann nicht in Datei %s schreiben"
+
+#, fuzzy
+msgid "Empty hostname"
+msgstr "Leerer Attributname"
+
+msgid "URL Query:\tRegular expression to match the query"
+msgstr "URL Query:\tRegulärer Ausdruck welcher den Query matcht"
+
+msgid " &Ok "
+msgstr " &Ok "
+
+msgid "Hurt me plenty"
+msgstr ""
+
+msgid "Remove"
+msgstr "Löschen"
+
+msgid "No proxy for"
+msgstr ""
+
+msgid "Can't parse request"
+msgstr ""
+
+#, fuzzy
+msgid "Name"
+msgstr "Neuer Name:"
+
+msgid "Refresh"
+msgstr ""
+
+#, fuzzy
+msgid "New Folder"
+msgstr "Neuer Filter"
+
+msgid "Port"
+msgstr ""
+
+msgid "Bring it on"
+msgstr ""
+
+msgid "Duplicate attribute name"
+msgstr "Doppelter Attributname"
+
+msgid "Unknown option %s"
+msgstr "Unbekannte Option %s"
+
+#, fuzzy
+msgid "Proxy Status"
+msgstr "P&roxy Einstellungen"
+
+msgid "Empty attribute name"
+msgstr "Leerer Attributname"
+
+msgid "All filters"
+msgstr "Alle Filter"
+
+msgid "Invalid regex %s: %s"
+msgstr "Ungültiger regulärer Ausdruck %s: %s"
+
+msgid "URL Path:\tRegular expression to match the path"
+msgstr "URL Pfad:\tRegulärer Ausdruck welcher den Pfad matcht"
+
+msgid "Image height:"
+msgstr "Bildhöhe:"
+
+msgid "Add Attribute"
+msgstr "Attribut hinzufügen"
+
+msgid "empty title"
+msgstr "leerer Titel"
+
+#, fuzzy
+msgid "Name:"
+msgstr "Neuer Name:"
+
+#, fuzzy
+msgid "Description"
+msgstr "Beschreibung:"
+
+msgid "&Filter Settings"
+msgstr "&Filter Einstellungen"
+
+msgid "Header name:\tRegular expression to match the header name"
+msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
+
+msgid "Image width:"
+msgstr "Bildbreite:"
+
+msgid "Value:"
+msgstr "Text:"
+
+#, fuzzy
+msgid "Update Error: %s"
+msgstr "Fehler: %s\n"
+
+msgid "Remove Folder"
+msgstr "Lösche Ordner"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Update Error"
+msgstr "Update Fehler"
+
+msgid "Version"
+msgstr ""
+
+msgid "Nightmare"
+msgstr ""
+
+msgid "Attributes:"
+msgstr "Attribute:"
+
+msgid "Empty URL"
+msgstr ""
+
+msgid "Edit Hostname"
+msgstr ""
+
+msgid "Blocked URL\tThe URL we want to show instead"
+msgstr ""
+"Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
+
+msgid ""
+"\n"
+"\n"
+"Proxy settings\n"
+"==============\n"
+"\n"
+"Port\n"
+"----\n"
+"Set the port adress the WebCleaner proxy is listening on.\n"
+"Default value is 8080.\n"
+"\n"
+"Logfile\n"
+"-------\n"
+"The name for the logfile can be empty (no logging), 'stdout'\n"
+"(standard out) or a filename (relative or absolute).\n"
+"\n"
+"Buffer size\n"
+"-----------\n"
+"The buffer size tells the proxy to read data in chunks with the\n"
+"given size.\n"
+"\n"
+"Timeout\n"
+"-------\n"
+"Network timeout after which the connection is disabled. Currently\n"
+"this is used only with HTTPS connections, the other connections\n"
+"have the system defined socket timeout.\n"
+"\n"
+"Obfuscate IP\n"
+"------------\n"
+"When this checkbox is active (configuration file value = 1) the\n"
+"proxy translates the numerical IP name into an integer number.\n"
+"For example '5.7.9.11' gets mapped to\n"
+"5*2^24 + 7*2^16 + 9*2^8 + 11*2^0 = 84347147\n"
+"\n"
+"Debug level\n"
+"-----------\n"
+"Set the debugging level. Debug output is on stderr.\n"
+"Debug levels:\n"
+"0 - disabled (default)\n"
+"1 - normal debug messages\n"
+"2 - print requests and filtering\n"
+"3 - detailed filter messages\n"
+"\n"
+"Parent Proxy\n"
+"------------\n"
+"The parent proxy WebCleaner should use.\n"
+"\n"
+"Parent Proxy Port\n"
+"-----------------\n"
+"The parent proxy port WebCleaner should use.\n"
+"\n"
+"Rewriter\n"
+"--------\n"
+"Rewrite HTML code. This is very powerful and can filter\n"
+"almost all advertising and other crap.\n"
+"\n"
+"Replacer\n"
+"--------\n"
+"Replace regular expressions in data streams.\n"
+"\n"
+"BinaryCharFilter\n"
+"----------------\n"
+"Replace illegal binary characters in HTML code like the quote\n"
+"chars often found in Microsoft pages.\n"
+"\n"
+"Header\n"
+"------\n"
+"Add, modify and delete HTTP headers of request and response.\n"
+"\n"
+"Blocker\n"
+"-------\n"
+"Block specific sites by URL name.\n"
+"\n"
+"GifImage\n"
+"--------\n"
+"Deanimates GIFs and removes all unwanted GIF image\n"
+"extensions (for example GIF comments).\n"
+"\n"
+"Compress\n"
+"--------\n"
+"Compression of documents with good compression ratio\n"
+"like HTML, WAV, etc.\n"
+"\n"
+"\n"
+"Rule settings\n"
+"===================\n"
+"\n"
+"Title\n"
+"-----\n"
+"The title of the filter\n"
+"\n"
+"Description\n"
+"-----------\n"
+"A description what this filter does.\n"
+"\n"
+"Language\n"
+"--------\n"
+"If you specify incompatible regular expressions\n"
+"choose the appropriate language here.\n"
+"\n"
+"Filename\n"
+"--------\n"
+"The name of the configuration file where these\n"
+"filters are stored.\n"
+"\n"
+"disable\n"
+"-------\n"
+"You can disable a whole folder (if its a FolderRule)\n"
+"or single filter rules.\n"
+"\n"
+"\n"
+"ImageRule settings\n"
+"==================\n"
+"\n"
+"\n"
+"FolderRule settings\n"
+"===================\n"
+"\n"
+"\n"
+"HeaderRule settings\n"
+"===================\n"
+"\n"
+"\n"
+"RewriteRule settings\n"
+"====================\n"
+"\n"
+"\n"
+"BlockRule settings\n"
+"==================\n"
+"\n"
+"\n"
+"AllowRule settings\n"
+"==================\n"
+msgstr ""
+
+#, fuzzy
+msgid "Update Help"
+msgstr "Update Fehler"
+
+msgid "Timeout (sec.)"
+msgstr ""
+
+msgid ""
+"Only first\tDisplay only the first hit in a series of headers for the same "
+"host"
+msgstr ""
+
+msgid "URL Host:\tRegular expression to match the host"
+msgstr "URL Host:\tRegulärer Ausdruck welcher den Host matcht"
+
+msgid "Tag"
+msgstr ""
+
+#, fuzzy
+msgid "Replacement:\tReplacement value (empty means delete)"
+msgstr "Header Wert:\tHeader Wert (leer heißt löschen)"
+
+msgid "Enclosed block:"
+msgstr "Enthaltener Text:"
+
+msgid "Connections"
+msgstr ""
+
+msgid "URL Scheme:\tRegular expression to match the URL scheme"
+msgstr "URL Schema:\tRegulärer Ausdruck welcher das URL Schema matcht"
+
+msgid " &Refresh "
+msgstr ""
+
+msgid "Unknown command %s"
+msgstr "Unbekannter Befehl %s"
+
+msgid "Attribute value"
+msgstr "Attributwert"
+
+msgid "none"
+msgstr ""
+
+msgid "URL Port:\tRegular expression to match the port"
+msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
+
+msgid "Tag name"
+msgstr "Tag Name"
+
+#, fuzzy
+msgid "Duplicate hostname"
+msgstr "Doppelter Attributname"
+
+msgid "New value:"
+msgstr "Neuer Wert:"
+
+msgid "Obfuscate IP"
+msgstr ""
+
+msgid "&Help"
+msgstr "&Hilfe"
+
+msgid "Headers"
+msgstr ""
+
+#, fuzzy
+msgid "Filter"
+msgstr "Neuer Filter"
+
+msgid "URL Fragment:\tRegular expression to match the fragment"
+msgstr "URL Fragment:\tRegulärer Ausdruck welcher das Fragment matcht"
+
+msgid "Value"
+msgstr "Wert"
+
+msgid "auto"
+msgstr ""
 
 #, fuzzy
 msgid ""
@@ -56,57 +474,131 @@ msgstr ""
 msgid "press return to continue..."
 msgstr "drücken Sie Return um fortzufahren..."
 
-msgid "Unknown option %s"
-msgstr "Unbekannte Option %s"
-
-msgid "Unknown command %s"
-msgstr "Unbekannter Befehl %s"
+#, fuzzy
+msgid "Replace regex:\tRegular expression to match the data stream"
+msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
 
 #, fuzzy
-msgid "warning: only first command is valid"
-msgstr "WebCleaner: Warnung, nur der erste Befehl ist gültig"
+msgid "Language"
+msgstr "Sprache:\t"
+
+msgid "always"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Filter Modules"
+msgstr "Filter Module"
+
+msgid "A&pply"
+msgstr "Ü&bernehmen"
+
+msgid "Scrolling"
+msgstr ""
+
+msgid "Logfile"
+msgstr "Logdatei"
+
+msgid "Log HTML errors"
+msgstr ""
+
+msgid "A&bout"
+msgstr "Ü&ber"
+
+msgid "empty filename"
+msgstr "leerer Dateiname"
+
+msgid "Host"
+msgstr ""
+
+#, fuzzy
+msgid "About webcleaner"
+msgstr "Über WebCleaner"
+
+msgid "%d days, %02d:%02d:%02d"
+msgstr ""
+
+msgid "No. of saved Headers"
+msgstr ""
+
+#, fuzzy
+msgid "unknown tag name %s"
+msgstr "Unbekannte Option %s"
+
+msgid " rule"
+msgstr " Regel"
+
+#, fuzzy
+msgid "&Ok"
+msgstr " &Ok "
+
+#, fuzzy
+msgid "webcleanerconf Help"
+msgstr "WebCleanerConf Hilfe"
+
+#, fuzzy
+msgid "execute 'webcleaner -h' for help\n"
+msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
+
+msgid "Enclosed block"
+msgstr "Enthaltener Text"
+
+msgid "Add Hostname"
+msgstr ""
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+msgid "Header value:\tHeader value (empty means delete)"
+msgstr "Header Wert:\tHeader Wert (leer heißt löschen)"
+
+#, fuzzy
+msgid "Filename"
+msgstr "Dateiname:"
+
+msgid " &Quit "
+msgstr ""
+
+msgid "Complete tag"
+msgstr "Ganzes Tag"
+
+msgid "Edit Attribute"
+msgstr "Bearbeite Attribut"
+
+msgid ""
+"<html><head>\n"
+"<title>WebCleaner Proxy Error %d %s</title>\n"
+"</head><body bgcolor=\"#fff7e5\"><br><center><b>Bummer!</b><br>\n"
+"WebCleaner Proxy Error %d %s<br>\n"
+"%s<br></center></body></html>"
+msgstr ""
+
+#, fuzzy
+msgid "New hostname:"
+msgstr "Neuer Name:"
+
+#, fuzzy
+msgid "Title"
+msgstr "Titel:"
+
+msgid " &Options "
+msgstr ""
+
+msgid "Basic Values"
+msgstr "Basiswerte"
+
+msgid "New name:"
+msgstr "Neuer Name:"
+
+msgid "Tag name:"
+msgstr "Tag Name:"
 
 #~ msgid "Error: %s\n"
 #~ msgstr "Fehler: %s\n"
 
-#~ msgid "Parent Proxy"
-#~ msgstr "Übergeordneter Proxy"
-
 #~ msgid "The parent proxy port WebCleaner should use."
 #~ msgstr "Der übergeordnete Proxy den WebCleaner benutzen soll."
-
-#~ msgid "New Filter"
-#~ msgstr "Neuer Filter"
-
-#~ msgid "can not write to file %s"
-#~ msgstr "kann nicht in Datei %s schreiben"
-
-#~ msgid "Add Attribute"
-#~ msgstr "Attribut hinzufügen"
-
-#~ msgid ""
-#~ "You cannot remove folders. If you really want to get rid\n"
-#~ "of this folder, delete the appropriate configuration file.\n"
-#~ "It is always safer to disable a folder or filter instead of\n"
-#~ "deleting it!"
-#~ msgstr ""
-#~ "Sie können Ordner nicht löschen. Wenn Sie diesen Ordner\n"
-#~ "wirklich loswerden wollen, löschen Sie die entsprechende\n"
-#~ "Konfigurationsdatei.\n"
-#~ "Es ist immer sicherer, einen Ordner oder Filter zu deaktivieren\n"
-#~ "anstatt ihn zu löschen!"
-
-#~ msgid "&Cancel"
-#~ msgstr "&Abbrechen"
-
-#~ msgid "no filter item selected"
-#~ msgstr "Kein Filter ausgewählt"
-
-#~ msgid "Attribute"
-#~ msgstr "Attribut"
-
-#~ msgid "Debug level"
-#~ msgstr "Debugstufe"
 
 #~ msgid ""
 #~ "Deanimates GIFs and removes all unwanted GIF image\n"
@@ -115,9 +607,6 @@ msgstr "WebCleaner: Warnung, nur der erste Befehl ist gültig"
 #~ "Deanimiert GIF Bilder und löscht alle ungewollten GIF\n"
 #~ "Erweiterungen (zum Beispiel Kommentare)."
 
-#~ msgid "P&roxy Settings"
-#~ msgstr "P&roxy Einstellungen"
-
 #~ msgid ""
 #~ "If you specify incompatible regular expressions\n"
 #~ "choose the appropriate language here."
@@ -125,196 +614,22 @@ msgstr "WebCleaner: Warnung, nur der erste Befehl ist gültig"
 #~ "Wenn sie inkompatible reguläre Ausdrücke spezifiziern\n"
 #~ "dann wählen sie die entsprechende Sprache hier."
 
-#~ msgid "Replace part:"
-#~ msgstr "Ersetzter Teil:"
-
-#~ msgid "disable"
-#~ msgstr "deaktivieren"
-
-#~ msgid " &Ok "
-#~ msgstr " &Ok "
-
-#~ msgid "Remove"
-#~ msgstr "Löschen"
-
-#~ msgid "Enclosed block"
-#~ msgstr "Enthaltener Text"
-
 #~ msgid "Block specific sites by URL name."
 #~ msgstr "Blockiere bestimmte Seiten nach dem URL Namen."
 
 #~ msgid "Some good description what this filter does."
 #~ msgstr "Eine gute Beschreibung was dieser Filter macht."
 
-#~ msgid "Duplicate attribute name"
-#~ msgstr "Doppelter Attributname"
-
-#~ msgid "Replace value:"
-#~ msgstr "Ersetzter Text"
-
-#~ msgid "Empty attribute name"
-#~ msgstr "Leerer Attributname"
-
-#~ msgid "All filters"
-#~ msgstr "Alle Filter"
-
-#~ msgid "Invalid regex %s: %s"
-#~ msgstr "Ungültiger regulärer Ausdruck %s: %s"
-
-#~ msgid "URL Path:\tRegular expression to match the path"
-#~ msgstr "URL Pfad:\tRegulärer Ausdruck welcher den Pfad matcht"
-
-#~ msgid "Image height:"
-#~ msgstr "Bildhöhe:"
-
-#~ msgid "Enclosed block:"
-#~ msgstr "Enthaltener Text:"
-
-#~ msgid "empty title"
-#~ msgstr "leerer Titel"
-
-#, fuzzy
-#~ msgid "Description"
-#~ msgstr "Beschreibung:"
-
-#~ msgid "&Filter Settings"
-#~ msgstr "&Filter Einstellungen"
-
-#~ msgid "Header name:\tRegular expression to match the header name"
-#~ msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
-
-#~ msgid "Image width:"
-#~ msgstr "Bildbreite:"
-
 #~ msgid "Buffer size"
 #~ msgstr "Puffer Größe"
-
-#~ msgid "URL Fragment:\tRegular expression to match the fragment"
-#~ msgstr "URL Fragment:\tRegulärer Ausdruck welcher das Fragment matcht"
-
-#~ msgid "Remove Folder"
-#~ msgstr "Lösche Ordner"
-
-#~ msgid "Edit"
-#~ msgstr "Bearbeiten"
-
-#~ msgid "Update Error"
-#~ msgstr "Update Fehler"
 
 #~ msgid "You can disable a whole folder or single filter rules"
 #~ msgstr ""
 #~ "Sie können einen ganzen Ordner oder eine einzelne Filter Regel\n"
 #~ "deaktivieren"
 
-#~ msgid "URL Query:\tRegular expression to match the query"
-#~ msgstr "URL Query:\tRegulärer Ausdruck welcher den Query matcht"
-
-#~ msgid "Attributes:"
-#~ msgstr "Attribute:"
-
-#~ msgid "Blocked URL\tThe URL we want to show instead"
-#~ msgstr ""
-#~ "Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
-
-#, fuzzy
-#~ msgid "Update Help"
-#~ msgstr "Update Fehler"
-
-#~ msgid "URL Host:\tRegular expression to match the host"
-#~ msgstr "URL Host:\tRegulärer Ausdruck welcher den Host matcht"
-
-#~ msgid "Value:"
-#~ msgstr "Text:"
-
-#~ msgid "URL Scheme:\tRegular expression to match the URL scheme"
-#~ msgstr "URL Schema:\tRegulärer Ausdruck welcher das URL Schema matcht"
-
-#~ msgid "Attribute value"
-#~ msgstr "Attributwert"
-
-#~ msgid "Tag name"
-#~ msgstr "Tag Name"
-
-#, fuzzy
-#~ msgid "Update Error: %s"
-#~ msgstr "Fehler: %s\n"
-
-#~ msgid "New value:"
-#~ msgstr "Neuer Wert:"
-
-#~ msgid "&Help"
-#~ msgstr "&Hilfe"
-
-#~ msgid "Value"
-#~ msgstr "Wert"
-
-#, fuzzy
-#~ msgid "Language"
-#~ msgstr "Sprache:\t"
-
-#~ msgid "Filter Modules"
-#~ msgstr "Filter Module"
-
-#~ msgid "A&pply"
-#~ msgstr "Ü&bernehmen"
-
-#~ msgid "URL Parameters:\tRegular expression to match the parameters"
-#~ msgstr "URL Parameter:\tRegulärer Ausdruck welcher die URL Parameter matcht"
-
-#~ msgid "A&bout"
-#~ msgstr "Ü&ber"
-
-#~ msgid "empty filename"
-#~ msgstr "leerer Dateiname"
-
-#, fuzzy
-#~ msgid "About webcleaner"
-#~ msgstr "Über WebCleaner"
-
-#~ msgid " rule"
-#~ msgstr " Regel"
-
-#~ msgid "URL Port:\tRegular expression to match the port"
-#~ msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
-
-#, fuzzy
-#~ msgid "webcleanerconf Help"
-#~ msgstr "WebCleanerConf Hilfe"
-
-#~ msgid "Add"
-#~ msgstr "Hinzufügen"
-
-#~ msgid "Header value:\tHeader value (empty means delete)"
-#~ msgstr "Header Wert:\tHeader Wert (leer heißt löschen)"
-
-#, fuzzy
-#~ msgid "Filename"
-#~ msgstr "Dateiname:"
-
-#~ msgid "Complete tag"
-#~ msgstr "Ganzes Tag"
-
-#~ msgid "Edit Attribute"
-#~ msgstr "Bearbeite Attribut"
-
-#, fuzzy
-#~ msgid "Title"
-#~ msgstr "Titel:"
-
-#~ msgid "Basic Values"
-#~ msgstr "Basiswerte"
-
-#~ msgid "Logfile"
-#~ msgstr "Logdatei"
-
-#~ msgid "New name:"
-#~ msgstr "Neuer Name:"
-
 #~ msgid "New Folder\t\tCreate a new folder."
 #~ msgstr "Neuer Ordner\t\tErstelle einen neuen Ordner."
-
-#~ msgid "Tag name:"
-#~ msgstr "Tag Name:"
 
 #~ msgid "can not read file %s"
 #~ msgstr "kann Datei %s nicht lesen"

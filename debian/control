@@ -7,7 +7,8 @@ Build-Depends: python2.1-dev, debhelper (>= 3.0.0), debconf, libxml2-dev
 
 Package: webcleaner
 Architecture: any
-Depends: python2.1, python2.1-xmlbase, debconf, libxml2
+Depends: python (>= 2.1), python2.1-xmlbase, debconf, libxml2
+Conflicts: python (>= 2.2)
 Suggests: webcleanerconf
 Description: a filtering HTTP proxy
  Features:
@@ -21,7 +22,8 @@ Description: a filtering HTTP proxy
 Package: webcleanertools
 Section: x11
 Architecture: all
-Depends: fxpy0.99-python2.1 (>= 0.99.172), webcleaner
+Depends: fxpy0.99-python2.1 (>= 0.99.172), webcleaner, python (>= 2.1)
+Conflicts: python (>= 2.2)
 Description: configuration and visualization tools for webcleaner
  webcleanerconf is a nice GUI configuration tool for the WebCleaner proxy.
  wcheaders is a graphical interface to display the HTTP headers

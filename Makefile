@@ -54,7 +54,7 @@ gentest:
 
 .PHONY: onlinetest
 onlinetest:
-	$(PYTHON) -O webcleaner restart
+	$(PYTHON) webcleaner restart
 	rm -f index.html* test.gif
 	sleep 4
 	# get a standard page with included adverts
@@ -66,7 +66,7 @@ onlinetest:
 
 .PHONY: offlinetest
 offlinetest:
-	$(PYTHON) -O webcleaner restart
+	$(PYTHON) webcleaner restart
 	rm -f index.html
 	sleep 4
 	# get own config
