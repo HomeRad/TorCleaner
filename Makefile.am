@@ -3,6 +3,7 @@ TESTS = unittests
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
+VERSION := $($(PYTHON) setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/parser -Ilibjs -I/usr/include/$(PYTHON) \
@@ -40,7 +41,7 @@ localbuild: all
 
 distclean-local:
 	rm -rf dist build # just to be sure: clean build dir too
-	rm -f VERSION MANIFEST _*_configdata.*
+	rm -f MANIFEST _*_configdata.*
 
 # ready for upload, signed with my GPG key
 deb_signed: clean
@@ -57,17 +58,8 @@ dist-hook:
 	rm -f webcleaner-md5sums.txt
 
 unittests: localbuild
-# regression tests
-	test/run.sh test/regrtest.py
-# python unit framework tests
-	@for f in tests/Test*.py; do echo $$f; test/run.sh $$f; done
-# filter and parse random data
-	@echo "parse random data..."
-	head -c 20000 /dev/urandom | test/run.sh test/parsefile.py - > /dev/null
-	@echo "done."
-	@echo "filter random data..."
-	head -c 20000 /dev/urandom | test/run.sh test/filterfile.py - > /dev/null
-	@echo "done."
+	test/run.sh tests/runall.py
+	test/run.sh tests/runsimpletaltests.py
 
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
@@ -78,9 +70,6 @@ md5sums:
 	  gpg --detach-sign --armor $$f; \
 	done
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
-
-VERSION:
-	echo $(VERSION) > VERSION
 
 upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
@@ -114,7 +103,7 @@ installservice:
 
 # (re)generate webcleaner rules
 update-blacklists:
-	$(PYTHON) config/bl2wc.py
+	test/run.sh config/bl2wc.py
 
 
 .PHONY: localbuild distclean deb_signed update-blacklists
