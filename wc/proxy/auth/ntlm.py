@@ -8,39 +8,38 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
 
 import des, md4, utils, base64
 
+# nonce dictionary
+# XXX regularly delete nonces
+nonces = {}
+
 def get_ntlm_challenge (**attrs):
     """return initial challenge token for ntlm authentication"""
-    ctype = attrs.get('type', 1)
+    ctype = attrs.get('type', 0)
     if ctype==0:
         # initial challenge
         return "NTLM"
     if ctype==2:
         # after getting first credentials
-        return get_ntlm_type2_message(**attrs)
+        return "NTLM %s" % create_message2()
     raise IOError("Invalid NTLM challenge type")
 
 
 
 def parse_ntlm_challenge (challenge):
-    # XXX
-    pass
+    res = {}
+    if not challenge.startswith('NTLMSSP\x00'):
+        return res, challenge
+    res['nonce'] = challenge[24:32]
+    return res, challenge[40:]
 
 
 def get_ntlm_credentials (challenge, **attrs):
     ctype = attrs.get('type', 1)
     if ctype==1:
-        return get_ntlm_type1_message(**attrs)
+        return "NTLM %s" % create_message1()
     elif ctype==3:
         return get_ntlm_type3_message(**attrs)
     raise IOError("Invalid NTLM credentials type")
-
-
-def get_ntlm_type1_message (**attrs):
-    return "NTLM %s" % create_message1()
-
-
-def get_ntlm_type2_message (**attrs):
-    return "NTLM %s" % create_message2()
 
 
 def get_ntlm_type3_message (**attrs):
@@ -186,6 +185,22 @@ def create_message1 (flags=0xb203):
     msg1 = msg1.replace('\012', '')
 
     return msg1
+
+
+def create_message2 (flags=0x8201):
+    ""
+    protocol = 'NTLMSSP\x00'    #name
+    type = '\x02'
+    msglen = '\x28'
+    flags = utils.hex2str(flags)
+    nonce = "%08f" % (random.random()*10)
+    assert nonce not in nonces
+    nonces[nonce] = None
+    zero2 = '\x00' * 2
+    zero7 = '\x00' * 7
+    zero8 = '\x00' * 8
+    return "%(protocol)s%(type)s%(zero7)s%(msglen)s%(zero2)s%(nonce)s%(zero8)s" % locals()
+
 
 
 def create_message3 (nonce, domain, username, host, flags=0x8201,

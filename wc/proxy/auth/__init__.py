@@ -52,9 +52,10 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    return [get_basic_challenge(args),
-            get_digest_challenge(args),
-            get_ntlm_challenge(args)]
+    return [#get_basic_challenge(),
+            #get_digest_challenge(),
+            get_ntlm_challenge(**args),
+           ]
 
 
 def get_header_credentials (headers, key):
@@ -110,17 +111,17 @@ def check_credentials (creds, **attrs):
 
 
 def _test ():
-    print parse_credentials("Basic dGVzdDp0ZXN0")
-    #attrs = {"username":"wummel", "password_b64":"", "uri":"/", "method":"GET"}
-    #challenges = get_challenges()
-    #print "challenges", challenges
-    #challenges = parse_challenges(", ".join(challenges))
-    #print "parsed challenges", challenges
-    #creds = get_credentials(challenges, **attrs)
-    #print "credentials", creds
-    #creds = parse_credentials(creds)
-    #print "parsed credentials", creds
-    #print check_credentials(creds, **attrs)
+    #print parse_credentials("Basic dGVzdDp0ZXN0")
+    attrs = {"username":"wummel", "password_b64":"", "uri":"/", "method":"GET"}
+    challenges = get_challenges()
+    print "challenges", challenges
+    challenges = parse_challenges(", ".join(challenges))
+    print "parsed challenges", challenges
+    creds = get_credentials(challenges, **attrs)
+    print "credentials", creds
+    creds = parse_credentials(creds)
+    print "parsed credentials", creds
+    print check_credentials(creds, **attrs)
 
 
 if __name__=='__main__':

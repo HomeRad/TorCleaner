@@ -40,7 +40,7 @@ def parse_quotedstring (s):
 
 
 def parse_auth (auth, data):
-    """generic authentiction tokenizer
+    """generic authentication tokenizer
        auth - default dictionary
        data - string data to parse
 
