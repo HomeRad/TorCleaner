@@ -15,7 +15,7 @@
       wc/filter/rules/HeaderRule.py
   * webgui config for new header attribute
     Changed: wc/webgui/context/filterconfig_html.py,
-      templates/classic/macors/rule.html
+      templates/classic/macros/rule.html
   * new url validity check function allowing queries, used to check
     JavaScript source links
     Type: feature
