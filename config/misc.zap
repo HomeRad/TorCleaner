@@ -72,7 +72,7 @@
 <rewrite sid="wc.3" title="Mark href targets"
  desc="Display a little marker when links point to unknown targets.">
 <attr name="target">(?i)^(?!_parent)(.+)$</attr>
-<replacement part="attr">target=\1 style=border-bottom-width:1px;border-bottom-style:dashed;border-right-width:1px;border-right-style:dashed;</replacement>
+<replacement part="attr">target=\1 style=cursor:ne-resize</replacement>
 </rewrite>
 
 <rewrite sid="wc.379" title="Eselfilme layer"
