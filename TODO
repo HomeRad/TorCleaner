@@ -2,6 +2,10 @@ TODO
 
 version 2.4
 
+- regenerate missing rule.sid (backward compatibility)
+
+- profiling of zapper parsing (slow for lots of Block/Allow rule)
+
 - test proxy.pac stuff
   http://wp.netscape.com/eng/mozilla/2.0/relnotes/demo/proxy-live.html
 
