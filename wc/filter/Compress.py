@@ -125,7 +125,8 @@ class Compress (wc.filter.Filter.Filter):
         """
         headers = attrs['headers']
         accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])
-        encoding = headers['server'].get('Content-Encoding', '').lower()
+        encoding = headers['server'].get('Content-Encoding', '')
+        encoding = encoding.strip().lower()
         if 'gzip' not in accepts:
             # browser does not accept gzip encoding
             pass
