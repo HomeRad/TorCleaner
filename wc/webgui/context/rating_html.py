@@ -196,9 +196,11 @@ def _form_apply ():
 
 def _form_delete ():
     global url
-    if _rating_delete(url):
+    try:
+        del rating_store[url]
+        rating_store.write()
         info['ratingdeleted'] = True
-    else:
+    except:
         error['ratingdeleted'] = True
 
 
