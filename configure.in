@@ -5,24 +5,33 @@ AM_CONFIG_HEADER(config.h:config.h.in)
 AM_INIT_AUTOMAKE(webcleaner, 2.7)
 
 AC_PROG_CC
-AC_PROG_CXX
 AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 
 if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
   CFLAGS="$CFLAGS -Wall -pedantic"
-  CXXFLAGS="$CXXFLAGS -Wall -pedantic"
 fi
 
-case "$build" in
-  *-*-mingw32*)
-    AM_CONDITIONAL(WIN32, true)
-    AC_DEFINE(NOMINMAX,, [Prevent windows.h from declaring the min()/max() macros.])
-  ;;
-  *)
-    AM_CONDITIONAL(WIN32, false)
-  ;;
+dnl conditional to force jscpucfg executable to be built for Linux
+case "$host" in
+*-*-mingw32*)
+    case "$build" in
+    *-*-linux*)
+        AM_CONDITIONAL(CROSS_COMPILE_LINUX, true)
+        JSDEFS="-DEXPORT_JS_API -DCROSS_COMPILE"
+        ;;
+    *)
+        AM_CONDITIONAL(CROSS_COMPILE_LINUX, false)
+        JSDEFS="-DEXPORT_JS_API -DXP_WIN"
+        ;;
+    esac
+    ;;
+*)
+    AM_CONDITIONAL(CROSS_COMPILE_LINUX, false)
+    JSDEFS="-DEXPORT_JS_API -DXP_UNIX"
+    ;;
 esac
+AC_SUBST([JSDEFS])
 
 dnl **********************
 dnl *** va_copy checks ***

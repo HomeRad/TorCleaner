@@ -5,12 +5,7 @@ EXTRA_DIST		= js.msg jsopcode.tbl
 
 BUILT_SOURCES		= jsautocfg.h
 
-if WIN32
-NEW_DEFS		= @DEFS@ -DEXPORT_JS_API -DXP_WIN
-else
-NEW_DEFS		= @DEFS@ -DEXPORT_JS_API -DXP_UNIX
-endif
-DEFS			= $(NEW_DEFS)
+AM_CFLAGS = @JSDEFS@
 
 noinst_LTLIBRARIES	= libjs.la
 libjs_la_SOURCES	= jsapi.c jsapi.h \
@@ -61,10 +56,16 @@ libjs_la_SOURCES	= jsapi.c jsapi.h \
 
 libjs_la_LIBADD		= ./fdlibm/libfdm.la
 
-noinst_PROGRAMS		= jscpucfg
-jscpucfg_SOURCES	= jscpucfg.c jscpucfg.h
+if CROSS_COMPILE_LINUX
+CLEANFILES = jscpucfg jsautocfg.h
+jscpucfg: jscpucfg.c jscpucfg.h prtypes.h prcpucfg.h
+	gcc $(DEFAULT_INCLUDES) @JSDEFS@ $(CFLAGS) -o jscpucfg jscpucfg.c
+else
+CLEANFILES = jscpucfg@EXEEXT@ jsautocfg.h
+noinst_PROGRAMS = jscpucfg
+jscpucfg_SOURCES = jscpucfg.c jscpucfg.h
+endif
 
-CLEANFILES		= jscpucfg jsautocfg.h
-
-jsautocfg.h: jscpucfg@EXEEXT@
+jsautocfg.h: jscpucfg
 	./jscpucfg > jsautocfg.h
+
