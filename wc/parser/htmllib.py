@@ -99,8 +99,7 @@ def _test():
 
 def _broken ():
     p = HtmlPrinter()
-    for c in '<sCrIpt lang="a">bla </a> fasel</scripT>':
-        p.feed(c)
+    p.feed('</head>\n <a>')
     p.flush()
 
 if __name__ == '__main__':
