@@ -57,9 +57,10 @@ class TestRating (unittest.TestCase):
         self.assert_(not in_range(3, (1, 2)))
         self.assert_(not in_range(1, (4, 7)))
 
-    def XXXtestRating_range (self):
+    def test_rating_range (self):
         """test range parsing"""
         # rating_range (range)
+        rating_range = wc.filter.rating.category.intrange_from_string
         self.assertEqual(rating_range("-"), (None, None))
         self.assertEqual(rating_range("1-"), (1, None))
         self.assertEqual(rating_range("-1"), (None, 1))
