@@ -14,3 +14,6 @@ extracted
 webcleaner-md5sums.txt
 filter.prof
 error.log
+Makefile.in
+Makefile
+stamp-h1
