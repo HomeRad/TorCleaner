@@ -108,4 +108,28 @@
 <attr name="onunload"/>
 <replace part="attr"/>
 </rewrite>
+
+<rewrite title="Prevent right-click disablement" oid="17"
+ desc="You only think you are!"
+ tag="script">
+<enclosed>document\.onmousedown</enclosed>
+</rewrite>
+
+<rewrite title="&lt;body&gt; ondragstart" oid="18"
+ tag="body">
+<attr name="ondragstart"/>
+<replace part="attr"/>
+</rewrite>
+
+<rewrite title="&lt;body&gt; oncontextmenu" oid="19"
+ tag="body">
+<attr name="oncontextmenu"/>
+<replace part="attr"/>
+</rewrite>
+
+<rewrite title="&lt;body&gt; onselectstart" oid="20"
+ tag="body">
+<attr name="onselectstart"/>
+<replace part="attr"/>
+</rewrite>
 </folder>
