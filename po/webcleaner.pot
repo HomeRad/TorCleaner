@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Nov  5 19:44:14 2003\n"
+"POT-Creation-Date: Wed Nov  5 20:01:53 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1126,9 +1126,6 @@ msgstr ""
 msgid "Feedback for %(AppName)s"
 msgstr ""
 
-msgid "Add attribute"
-msgstr ""
-
 msgid "Proxy settings"
 msgstr ""
 
@@ -1215,6 +1212,9 @@ msgid "Disabled folder icon"
 msgstr ""
 
 msgid "Rule"
+msgstr ""
+
+msgid "Add/replace attribute"
 msgstr ""
 
 msgid "footnote 2"
