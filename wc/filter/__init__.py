@@ -111,6 +111,7 @@ def applyfilter (i, data, fun, attrs):
     """
     if attrs.get('nofilter') or (fun!='finish' and not data):
         return data
+    attrs['filterstage'] = i
     for f in wc.config['filterlist'][i]:
         ffun = getattr(f, fun)
         if attrs.has_key('mime'):

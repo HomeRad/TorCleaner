@@ -4,6 +4,8 @@
  
  Changes:
 
+ 20040308 Bastian Kleineidam
+ * added the "filterstage" attribute to header rules
  20040225 Bastian Kleineidam
  * multi-language rule title and description
  20040219 Bastian Kleineidam
@@ -108,8 +110,6 @@
  tag      CDATA "a"
 >
 
-
-
 <!--                      Attribute
 
    We can specify attributes the tag must have.
@@ -121,16 +121,12 @@
  name CDATA "href"
 >
 
-
-
 <!--                       Enclosed
 
    Specify a regular expression which matches the enclosed block of a 
    tag.
 -->
 <!ELEMENT enclosed (#PCDATA)>
-
-
 
 <!--                    Replace
 
@@ -152,7 +148,6 @@
  part     (tag|tagname|attr|attrval|enclosed|complete) "complete"
 >
 
-
 <!--                       Blocker
 
     Here we can specify regular expressions for urls to block.
@@ -166,7 +161,6 @@
  url        CDATA #IMPLIED
  disable    CDATA "0"
 >
-
 
 <!--                       Block Domains
 
@@ -183,7 +177,6 @@
  filename CDATA #IMPLIED
 >
 
-
 <!--                       Allow Domains
 
     Same as block for allowing entire domains.
@@ -193,7 +186,6 @@
  sid      CDATA #REQUIRED
  filename CDATA #IMPLIED
 >
-
 
 <!--                       Block Urls
 
@@ -208,7 +200,6 @@
  sid      CDATA #REQUIRED
  filename CDATA #IMPLIED
 >
-
 
 <!--                       Allow Urls
 
@@ -233,8 +224,6 @@
  disable    CDATA "0"
 >
 
-
-
 <!--                       Header
      Modify HTTP headers. If the replacement value is missing, the header
      gets deleted. Otherwise the specified header is added or replaced.
@@ -244,9 +233,8 @@
  sid      CDATA #REQUIRED
  name     CDATA #REQUIRED
  disable  CDATA "0"
+ filterstage (request|response|both) "request"
 >
-
-
 
 <!--                       Image
 

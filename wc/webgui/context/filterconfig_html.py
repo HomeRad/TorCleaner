@@ -46,6 +46,8 @@ currule = None
 curindex = 0
 # current parts
 curparts = None
+# current filterstage value
+curfilterstage = None
 # only some rules allowed for new
 newrulenames = list(rulenames[:])
 newrulenames.remove('allowdomains')
@@ -147,10 +149,11 @@ def _exec_form (form, lang):
 def _form_reset ():
     info.clear()
     error.clear()
-    global curfolder, currule, curparts, curindex
+    global curfolder, currule, curparts, curindex, curfilterstage
     curfolder = None
     currule = None
     curparts = None
+    curfilterstage = None
     curindex = 0
 
 
@@ -183,13 +186,20 @@ def _form_selrule (index):
         # fill ruletype flags
         for rt in rulenames:
             ruletype[rt] = (currule.get_name()==rt)
+        # XXX this side effect is bad :(
         # fill part flags
-        # XXX this side effect on rule parts is bad :(
         if currule.get_name()=="rewrite":
             global curparts
             curparts = {}
             for i, part in enumerate(partvalnames):
                 curparts[part] = (currule.part==i)
+        elif currule.get_name()=="header":
+            global curfilterstage
+            curfilterstage = {
+                'both': currule.filterstage=='both',
+                'request': currule.filterstage=='request',
+                'response': currule.filterstage=='response',
+            }
     except (ValueError, IndexError):
         error['ruleindex'] = True
 
@@ -521,6 +531,12 @@ def _form_apply_header (form):
     if value!=currule.value:
         currule.value = value
         info['ruleheadervalue'] = True
+    filterstage = _getval(form, 'rule_headerfilter')
+    if filterstage!=currule.filterstage:
+        currule.filterstage = filterstage
+        info['ruleheaderfilter'] = True
+        # select again because of side effect (XXX see above)
+        _form_selrule(currule.oid)
 
 
 def _form_apply_image (form):

@@ -26,13 +26,14 @@ class HeaderRule (UrlRule):
     """rule for filtering HTTP headers"""
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, name="noname", value=""):
+                  disable=0, name="noname", value="", filterstage="request"):
         """init rule name and value"""
         super(HeaderRule, self).__init__(sid=sid, titles=titles,
                                    descriptions=descriptions, disable=disable)
         self.name = name
         self.value = value
-        self.attrnames.append('name')
+        self.filterstage = filterstage
+        self.attrnames.extend(('name', 'filterstage'))
 
 
     def end_data (self, name):
@@ -54,9 +55,11 @@ class HeaderRule (UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing"""
-        s = '%s\n name="%s">' % \
+        s = '%s\n name="%s"' % \
             (super(HeaderRule, self).toxml(), xmlquoteattr(self.name))
-        s += "\n"+self.title_desc_toxml(prefix="  ")
+        if self.filterstage!='request':
+            s += '\n filterstage="%s"' % self.filterstage
+        s += ">\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.value:

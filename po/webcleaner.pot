@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Mar  9 00:49:48 2004\n"
+"POT-Creation-Date: Tue Mar  9 01:24:33 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -399,6 +399,9 @@ msgstr ""
 msgid "%(AppName)s configuration"
 msgstr ""
 
+msgid "Attributes"
+msgstr ""
+
 msgid "List of hostnames the proxy must not filter."
 msgstr ""
 
@@ -433,9 +436,6 @@ msgstr ""
 msgid ""
 "The supplied value resembles a\n"
 "<a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
-msgstr ""
-
-msgid "Client and server request"
 msgstr ""
 
 msgid "Response content data of mime types image/gif"
@@ -540,9 +540,6 @@ msgid "Rule enclosed block successfully changed."
 msgstr ""
 
 msgid "Content rated by %(AppName)s"
-msgstr ""
-
-msgid "Attributes"
 msgstr ""
 
 msgid "Parse and evaluate content rating system header values."
@@ -922,6 +919,14 @@ msgstr ""
 msgid "Accessibility statement for %(AppName)s"
 msgstr ""
 
+msgid ""
+"%(AppName)s uses a modular filter design allowing\n"
+"a lot of flexibility for different uses.<br>\n"
+"Each module has a list if mime types and a list of which\n"
+"parts of request/response challenge it applies to. And each module can\n"
+"be further customized by separate rules in the filter configuration.\n"
+msgstr ""
+
 msgid "see footnote 2"
 msgstr ""
 
@@ -975,9 +980,6 @@ msgstr ""
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
-msgid "Search Google"
-msgstr ""
-
 msgid "Move folder up"
 msgstr ""
 
@@ -993,12 +995,7 @@ msgstr ""
 msgid "Don't filter hosts"
 msgstr ""
 
-msgid ""
-"%(AppName)s uses a modular filter design allowing\n"
-"a lot of flexibility for different uses.<br>\n"
-"Each module has a list if mime types and a list of which\n"
-"parts of request/response challenge it applies to. And each module can\n"
-"be further customized by separate rules in the filter configuration.\n"
+msgid "All pages define the following access keys:"
 msgstr ""
 
 msgid "Filter update"
@@ -1127,6 +1124,21 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
+msgid ""
+"Select <b>Tools -&gt; Internet Options -&gt;\n"
+"Connections</b>.<br>\n"
+"Click on <b>LAN Settings</b>. If you have a dialup connection to the\n"
+"internet, select your dialup connection and click on <b>Settings</b>.<br>\n"
+"Activate <b>Use a proxy server</b>.<br>\n"
+"If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br>\n"
+"Click on <b>Advanced</b>.<br>\n"
+"Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is\n"
+"<i>%(port)d</i>.<br>\n"
+"Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is\n"
+"<i>%(port)d</i>.<br>\n"
+"Click <b>Ok</b> to use your new settings."
+msgstr ""
+
 msgid "Remove images with certain width and/or height."
 msgstr ""
 
@@ -1218,9 +1230,6 @@ msgstr ""
 msgid "Invalid url."
 msgstr ""
 
-msgid "Server request"
-msgstr ""
-
 msgid "Invalid folder move down id."
 msgstr ""
 
@@ -1283,19 +1292,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-msgid ""
-"Select <b>Tools -&gt; Internet Options -&gt;\n"
-"Connections</b>.<br>\n"
-"Click on <b>LAN Settings</b>. If you have a dialup connection to the\n"
-"internet, select your dialup connection and click on <b>Settings</b>.<br>\n"
-"Activate <b>Use a proxy server</b>.<br>\n"
-"If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br>\n"
-"Click on <b>Advanced</b>.<br>\n"
-"Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Click <b>Ok</b> to use your new settings."
+msgid "request and response"
 msgstr ""
 
 msgid "Port number"
@@ -1361,10 +1358,10 @@ msgstr ""
 msgid "Empty attribute name."
 msgstr ""
 
-msgid "Client request"
+msgid "Search Google"
 msgstr ""
 
-msgid "All pages define the following access keys:"
+msgid "response"
 msgstr ""
 
 msgid "footnote 4"
@@ -1392,6 +1389,9 @@ msgid "New folder successfully created."
 msgstr ""
 
 msgid "Configure rule %(rule)s."
+msgstr ""
+
+msgid "request"
 msgstr ""
 
 msgid ""

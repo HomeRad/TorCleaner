@@ -30,7 +30,8 @@
 </header>
 
 <header sid="wc.315"
- name="X-Meta">
+ name="X-Meta"
+ filterstage="both">
   <title lang="de">Entferne 'x-meta'</title>
   <title lang="en">Remove 'x-meta'</title>
   <description lang="de">Was zur Hölle sind x-meta Daten? Jedenfalls etwas das ich nicht brauche.</description>
@@ -38,7 +39,8 @@
 </header>
 
 <header sid="wc.316"
- name="Via">
+ name="Via"
+ filterstage="both">
   <title lang="de">Entferne 'Via'</title>
   <title lang="en">Remove 'Via'</title>
   <description lang="de">Proxies (inklusive WebCleaner) fügen das 'Via' Kopfdatum zu einer ausgehenden Anfrage hinzu. Diese Regel verhindert dies.</description>
@@ -87,7 +89,8 @@ Diese Daten können private Informationen enthalten (z.B.wenn Sie bestimmte Sprac
 </header>
 
 <header sid="wc.322" disable="1"
- name="Set-Cookie">
+ name="Set-Cookie"
+ filterstage="both">
   <title lang="de">Entferne Cookies</title>
   <title lang="en">Remove cookies</title>
   <description lang="de">Entferne Alle 'Set-Cookie' Kopfdaten. Einige Seiten funktionieren ohne Cookies nicht. Diese Regel ist standardmäßig deaktiviert.</description>

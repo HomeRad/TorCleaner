@@ -35,8 +35,14 @@ class Header (Filter):
 
     def __init__ (self):
         super(Header, self).__init__()
-        self.delete = []
-        self.add = {}
+        self.delete = {
+            FILTER_REQUEST_HEADER: [],
+            FILTER_RESPONSE_HEADER: [],
+        }
+        self.add = {
+            FILTER_REQUEST_HEADER: {},
+            FILTER_RESPONSE_HEADER: {},
+        }
 
 
     def addrule (self, rule):
@@ -45,18 +51,26 @@ class Header (Filter):
         if not rule.name:
             return
         if not rule.value:
-            self.delete.append(rule.name.lower())
+            if rule.filterstage in ('both', 'request'):
+                self.delete[FILTER_REQUEST_HEADER].append(rule.name.lower())
+            if rule.filterstage in ('both', 'response'):
+                self.delete[FILTER_RESPONSE_HEADER].append(rule.name.lower())
         else:
-            self.add[rule.name] = rule.value
+            if rule.filterstage in ('both', 'request'):
+                self.add[FILTER_REQUEST_HEADER][rule.name] = rule.value
+            if rule.filterstage in ('both', 'response'):
+                self.add[FILTER_RESPONSE_HEADER][rule.name] = rule.value
 
 
     def doit (self, data, **args):
         delete = {}
+        # stage is FILTER_REQUEST_HEADER or FILTER_RESPONSE_HEADER
+        stage = args['filterstage']
         for h in data.keys():
-            for name in self.delete:
+            for name in self.delete[stage]:
                 if re.match(name, h):
                     delete[h.lower()] = h
         remove_headers(data, delete.values())
-        for key,val in self.add.items():
+        for key,val in self.add[stage].items():
             data[key] = val+"\r"
         return data

@@ -228,6 +228,25 @@ Rule (don't) match url
 <input type="text" class="text" name="rule_headervalue" id="rule_headervalue"
  value="" tal:attributes="value currule/value">
 </td></tr>
+<tr valign="top"><td>
+<label for="rule_headerfilter" i18n:translate="">Header filters</label>:
+</td><td>
+<select name="rule_headerfilter" id="rule_headerfilter"
+ i18n:attributes="title string:Header rules apply either to client request, server request or both">
+<option tal:condition="not:curfilterstage/both"
+ value="both" i18n:translate="">request and response</option>
+<option tal:condition="curfilterstage/both" selected
+ value="both" i18n:translate="">request and response</option>
+<option tal:condition="not:curfilterstage/request"
+ value="request" i18n:translate="">request</option>
+<option tal:condition="curfilterstage/request" selected
+ value="request" i18n:translate="">request</option>
+<option tal:condition="not:curfilterstage/response"
+ value="response" i18n:translate="">response</option>
+<option tal:condition="curfilterstage/response" selected
+ value="response" i18n:translate="">response</option>
+</select>
+</td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value string:Apply">
