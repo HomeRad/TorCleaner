@@ -63,9 +63,7 @@ class ClientServerMatchmaker:
             self.error(400, _("Empty URL"))
         scheme, hostname, port, document = wc.proxy.spliturl(url)
 
-        if (hostname.lower()=='localhost' or \
-	    socket.gethostbyname(hostname)==wc.config['localip']) and \
-	   port==wc.config['port']:
+        if hostname.lower()=='localhost' and port==wc.config['port']:
             # proxy info
             ServerHandleDirectly(self.client,
                 'HTTP/1.0 200 OK\r\n',
@@ -73,7 +71,7 @@ class ClientServerMatchmaker:
                 '\r\n',
                 wc.proxy.status_info())
             return
-        elif scheme == 'file':
+        if scheme == 'file':
             # a blocked url is a local file:// link
             import mimetypes
             mtype = mimetypes.guess_type(url)[0]
@@ -102,7 +100,16 @@ class ClientServerMatchmaker:
 
         if answer.isFound():
             self.ipaddr = answer.data[0]
-            self.state = 'server'
+	    if self.ipaddr==wc.config['localip'] and \
+	       self.port==wc.config['port']:
+                # proxy config
+                ServerHandleDirectly(self.client,
+                    'HTTP/1.0 200 OK\r\n',
+                    'Content-Type: text/plain\r\n'
+                    '\r\n',
+                wc.proxy.status_info())
+                return
+	    self.state = 'server'
             self.find_server()
         elif answer.isRedirect():
             # Let's use a different hostname

@@ -6,10 +6,9 @@ Features
 --------
 o disable animated GIFs
 o compress documents on-the-fly (with gzip)
-o enhance your privacy (remove/add HTTP headers and obfuscate IP address)
+o remove/add HTTP headers
 o remove unwanted HTML (adverts, javascript, ...)
-o completely customizable to suit your (filtering) needs
-o single process proxy with select() I/O
+o customizable to suit your (filtering) needs
 o HTTP/1.1 support
 
 

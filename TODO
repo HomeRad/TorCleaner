@@ -1,5 +1,7 @@
 TODO
 
+- better DNS lib (hangs sometimes ?)
+
 - new filtering:
   Stop/limit Javascript Pop-ups/alert/confirms
     javascript:
