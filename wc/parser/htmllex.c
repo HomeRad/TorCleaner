@@ -9042,9 +9042,9 @@ static yyconst flex_int32_t yy_rule_linenum[114] =
 
 /* append yytext to tmp_buf */
 #define APPEND_TO_TMP(n) {\
-    size_t len = strlen(yyextra->tmp_buf); \
-    RESIZE_BUF(yyextra->tmp_buf, len+(n)+1); \
-    strlcat(yyextra->tmp_buf, yytext, sizeof(yyextra->tmp_buf)); \
+    size_t len = strlen(yyextra->tmp_buf)+(n)+1; \
+    RESIZE_BUF(yyextra->tmp_buf, len); \
+    strlcat(yyextra->tmp_buf, yytext, len); \
     }
 
 /* lowercase the tmp_buf */

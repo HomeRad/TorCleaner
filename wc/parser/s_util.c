@@ -17,12 +17,12 @@
  * of course, the buffer size is zero). It does not pad
  * out the result like strncpy() does.
  */
-size_t strlcpy (char *dst, const char *src, size_t size)
+size_t strlcpy (char *dst, const char *src, size_t count)
 {
     size_t ret = strlen(src);
 
-    if (size) {
-        size_t len = (ret >= size) ? size-1 : ret;
+    if (count) {
+        size_t len = (ret >= count) ? count-1 : ret;
         memcpy(dst, src, len);
         dst[len] = '\0';
     }
@@ -38,17 +38,17 @@ size_t strlcpy (char *dst, const char *src, size_t size)
  * @src: The string to append to it
  * @size: The size of the destination buffer.
  */
-size_t strlcat (char *dst, const char *src, size_t size)
+size_t strlcat (char *dest, const char *src, size_t count)
 {
-    size_t dst_len = strlen(dst);
-    size_t src_len = strlen(src);
-
-    if (size) {
-        size_t len = (src_len >= size-dst_len) ? (size-dst_len-1) : src_len;
-        memcpy(&dst[dst_len], src, len);
-        dst[dst_len + len] = '\0';
-    }
-
-    return dst_len + src_len;
+    size_t dsize = strlen(dest);
+    size_t len = strlen(src);
+    size_t res = dsize + len;
+    dest += dsize;
+    count -= dsize;
+    if (len >= count)
+        len = count-1;
+    memcpy(dest, src, len);
+    dest[len] = 0;
+    return res;
 }
 #endif /* !HAVE_STRLCAT */
