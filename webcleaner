@@ -26,7 +26,7 @@ import os
 
 import wc
 # initialize i18n
-wc.init_i18n()
+#wc.init_i18n()
 
 nt_usage = _("""USAGE\twebcleaner [options] <command> [command options]
 

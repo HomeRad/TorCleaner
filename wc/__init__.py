@@ -70,13 +70,6 @@ LOG_TAL = "TAL"
 LOG_TALES = "TALES"
 
 
-def init_i18n ():
-    """Deploy i18n gettext method into the default namespace.
-       The LOCPATH environment variable is supported.
-    """
-    wc.i18n.init(configdata.name, get_locdir())
-
-
 def get_locdir ():
     """return locale directory"""
     locdir = os.environ.get('LOCPATH')
@@ -84,6 +77,15 @@ def get_locdir ():
         locdir = os.path.join(configdata.install_data, 'share', 'locale')
     return locdir
 
+
+def init_i18n ():
+    """Deploy i18n gettext method into the default namespace.
+       The LOCPATH environment variable is supported.
+    """
+    wc.i18n.init(configdata.name, get_locdir())
+
+# init i18n on import
+wc.init_i18n()
 
 def get_translator (lang, translatorklass=None):
     """return TAL translator class"""
