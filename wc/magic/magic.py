@@ -365,10 +365,8 @@ class Magic (object):
 
 
     def write_cache (self,name):
-        f = open (name,'wb')
-
+        f = file(name,'wb')
         import cPickle
-        
         cPickle.dump(self._leveldict,f,1)
         cPickle.dump(self._direct,f,1)
         cPickle.dump(self._offset_relatif,f,1)
@@ -382,7 +380,6 @@ class Magic (object):
         cPickle.dump(self._datadict,f,1)
         cPickle.dump(self._lengthdict,f,1)
         cPickle.dump(self._mimedict,f,1)
-
         f.close()
 
 
