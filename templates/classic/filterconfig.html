@@ -32,7 +32,8 @@
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
 </div>
 <br>
-<input type="text" name="newfoldername" value="Folder name"
+<hr noshade size="1">
+<input type="text" name="newfoldername" size="10"
  tal:attributes="value t_foldername"
  size="10">
 <input type="submit" name="newfolder" value="New folder"
@@ -52,7 +53,8 @@
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}">On focus</a>
 <span tal:condition="curfolder/disable" tal:replace="rule/title">On focus</span>
 </div>
-<input type="text" name="foldername"
+<hr noshade size="1">
+<input type="text" name="foldername" size="10"
  tal:attributes="value curfolder/title">
 <input type="submit" name="renamefolder"
  tal:attributes="value t_renamefolder">
@@ -66,7 +68,8 @@
  tal:attributes="name string:disablefolder${curfolder/oid}; value t_disablefolder">
 <br>
 <select name="newruletype">
-<option tal:repeat="rule rulenames" tal:content="rule">Rewrite</option>
+<option tal:repeat="rule newrulenames" tal:content="rule/capitalize"
+ tal:attributes="value rule">Rewrite</option>
 </select>
 <input type="submit" name="newrule" value="New rule"
  tal:attributes="value t_newrule; title tt_newrule">
@@ -82,8 +85,7 @@
 Here is the rule configuration...
 </div></span>
 </span>
-<input type="submit" name="apply" value="Apply" 
- tal:attributes="value t_apply">
+<hr noshade size="1">
 <input type="submit"
  tal:attributes="name string:removerule${currule/oid}; value t_removerule">
 <br>

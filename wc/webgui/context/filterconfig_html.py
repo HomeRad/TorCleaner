@@ -24,7 +24,7 @@ t_ruleicon = i18n._("Rule icon")
 t_newfolder = i18n._("New folder")
 t_newrule = i18n._("New rule")
 t_folders = i18n._("Folders")
-t_rules = i18n._("Rules")
+t_rules = i18n._("Folder Rules")
 t_rule = i18n._("Rule")
 t_ruletitle = i18n._("Title")
 t_ruledescription = i18n._("Description")
@@ -66,6 +66,13 @@ folders = [ r for r in config['rules'] if r.get_name()=='folder' ]
 curfolder = None
 # current selected rule
 currule = None
+# only some rules allowed for new
+newrulenames = list(rulenames[:])
+newrulenames.remove('allowdomains')
+newrulenames.remove('allowurls')
+newrulenames.remove('blockdomains')
+newrulenames.remove('blockurls')
+newrulenames.sort()
 # ruletype flag for tal condition
 ruletype = {}
 

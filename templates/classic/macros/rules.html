@@ -60,6 +60,12 @@
 
 <!-- externfile (Allowdomains, Allowurls, Blockdomains, Blockurls) -->
 <p metal:define-macro="externfile">
+<span tal:replace="t_ruletitle">Title</span>:
+<span tal:replace="currule/title">rule title</span>
+<br>
+<span tal:replace="t_ruledescription">Description</span>:
+<span tal:replace="currule/desc">rule description</span>
+<br>
 <span tal:replace="t_rulefile">File</span>:
 <span tal:replace="currule/file">/path/to/file</span>
 </p>
@@ -73,13 +79,12 @@ Rule title and description
 <div metal:use-macro="rulemacros/macros/urlparts">
 Rule url parts
 </div>
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- Allowdomains -->
 <p metal:define-macro="allowdomains">
-<div metal:use-macro="rulemacros/macros/titledesc">
-Rule title and description
-</div>
 <div metal:use-macro="rulemacros/macros/externfile">
 Extern file name
 </div>
@@ -87,9 +92,6 @@ Extern file name
 
 <!-- Allowurls -->
 <p metal:define-macro="allowurls">
-<div metal:use-macro="rulemacros/macros/titledesc">
-Rule title and description
-</div>
 <div metal:use-macro="rulemacros/macros/externfile">
 Extern file name
 </div>
@@ -97,9 +99,6 @@ Extern file name
 
 <!-- Blockdomains -->
 <p metal:define-macro="blockdomains">
-<div metal:use-macro="rulemacros/macros/titledesc">
-Rule title and description
-</div>
 <div metal:use-macro="rulemacros/macros/externfile">
 Extern file name
 </div>
@@ -107,9 +106,6 @@ Extern file name
 
 <!-- Blockurls -->
 <p metal:define-macro="blockurls">
-<div metal:use-macro="rulemacros/macros/titledesc">
-Rule title and description
-</div>
 <div metal:use-macro="rulemacros/macros/externfile">
 Extern file name
 </div>
@@ -126,6 +122,8 @@ Rule url parts
 <span tal:replace="t_ruleblockedurl">Blocked URL</span>:
 <input type="text" name="rule_blockedurl" value="http://www.calvinandhobbes.com/"
  tal:attributes="value currule/url">
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- HeaderRule -->
@@ -143,6 +141,8 @@ Rule (don't) match url
 <span tal:replace="t_ruleheadervalue">Header value</span>:
 <input type="text" name="rule_headervalue" value=""
  tal:attributes="value currule/value">
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- ImageRule -->
@@ -167,6 +167,8 @@ Rule (don't) match url
 <span tal:replace="t_ruleimgurl">Blocked image URL</span>:
 <input type="text" name="rule_imgurl" value="myblocked.gif"
  tal:attributes="value currule/url">
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- JavascriptRule -->
@@ -177,6 +179,8 @@ Rule title and description
 <div metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </div>
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- NocommentsRule -->
@@ -187,6 +191,8 @@ Rule title and description
 <div metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </div>
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- PicsRule -->
@@ -202,6 +208,8 @@ Rule (don't) match url
  tal:attributes="value currule/url">
 <br>
 <!-- XXX more config -->
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- ReplaceRule -->
@@ -219,6 +227,8 @@ Rule (don't) match url
 <span tal:replace="t_rulereplace">Replacement</span>:
 <input type="text" name="rule_replace" value="Something good"
  tal:attributes="value currule/replace">
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 <!-- RewriteRule -->
@@ -278,6 +288,8 @@ Rule (don't) match url
 <span tal:replace="t_replacevalue">Replace value</span>:
 <input type="text" name="replacevalue" value=""
  tal:attributes="value currule/replacement">
+<input type="submit" name="apply" value="Apply" 
+ tal:attributes="value t_apply">
 </p>
 
 </body>
