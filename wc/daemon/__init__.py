@@ -75,12 +75,20 @@ def restart (startfunc, pidfile, parent_exit=True):
     return (msg1 or "") + (msg2 or ""), status
 
 
-def status (pidfile):
+def status (pidfile, watchfile):
+    if os.path.exists(watchfile):
+        watchpid = int(file(watchfile).read())
+    else:
+        watchpid = None
     if os.path.exists(pidfile):
         pid = int(file(pidfile).read())
-        return i18n._("WebCleaner is running (PID %d)")%pid, 0
+        if watchpid is None:
+            return i18n._("WebCleaner (PID %d) is running")%pid, 0
+        return i18n._("WebCleaner (PID %d) and watch daemon (PID %d) are running")%(pid, watchpid), 0
     else:
-        return i18n._("WebCleaner is not running (no lock file found)"), 3
+        if watchpid is None:
+            return i18n._("WebCleaner and watch daemon are not running (no lock files found)"), 3
+        return i18n._("WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)")%watchpid, 3
 
 
 # import platform specific functions
