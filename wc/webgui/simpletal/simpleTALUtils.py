@@ -45,18 +45,21 @@ __version__ = simpletal.__version__
 ESCAPED_TEXT_REGEX= re.compile(r"\&\S+?;")
 
 class HTMLStructureCleaner (sgmllib.SGMLParser, object):
-    """ A helper class that takes HTML content and parses it, so converting
-            any stray '&', '<', or '>' symbols into their respective entity references.
+    """A helper class that takes HTML content and parses it, so converting
+       any stray '&', '<', or '>' symbols into their respective entity
+       references.
     """
-    def clean (self, content, encoding=None):
-        """ Takes the HTML content given, parses it, and converts stray markup.
-                The content can be either:
-                     - A unicode string, in which case the encoding parameter is not required
-                     - An ordinary string, in which case the encoding will be used
-                     - A file-like object, in which case the encoding will be used if present
 
-                The method returns a unicode string which is suitable for addition to a
-                simpleTALES.Context object.
+    def clean (self, content, encoding=None):
+        """Takes the HTML content given, parses it, and converts stray markup.
+           The content can be either:
+            - A unicode string, in which case the encoding parameter is not
+              required
+            - An ordinary string, in which case the encoding will be used
+            - A file-like object, in which case the encoding will be used if
+              present
+           The method returns a unicode string which is suitable for addition
+           to a simpleTALES.Context object.
         """
         if type(content) == type(""):
             # Not unicode, convert
@@ -77,32 +80,39 @@ class HTMLStructureCleaner (sgmllib.SGMLParser, object):
         self.close()
         return self.outputFile.getvalue()
 
+
     def unknown_starttag (self, tag, attributes):
         self.outputFile.write(tagAsText(tag, attributes))
+
 
     def unknown_endtag (self, tag):
         self.outputFile.write('</' + tag + '>')
 
+
     def handle_data (self, data):
         self.outputFile.write(cgi.escape(data))
 
+
     def handle_charref (self, ref):
         self.outputFile.write(u'&#%s;' % ref)
+
 
     def handle_entityref (self, ref):
         self.outputFile.write(u'&%s;' % ref)
 
 
 class TemplateCache (object):
-    """ A TemplateCache is a multi-thread safe object that caches compiled templates.
-            This cache only works with file based templates, the ctime of the file is
-            checked on each hit, if the file has changed the template is re-compiled.
+    """A TemplateCache is a multi-thread safe object that caches compiled
+       templates. This cache only works with file based templates, the ctime
+       of the file is checked on each hit, if the file has changed the
+       template is re-compiled.
     """
     def __init__ (self):
         self.templateCache = {}
         self.cacheLock = threading.Lock()
         self.hits = 0
         self.misses = 0
+
 
     def getTemplate (self, name, inputEncoding='ISO-8859-1'):
         """ Name should be the path of a template file.  If the path ends in 'xml' it is treated
@@ -121,6 +131,7 @@ class TemplateCache (object):
                 return template
         # Cache miss, let's cache this template
         return self._cacheTemplate_(name, inputEncoding)
+
 
     def _cacheTemplate_ (self, name, inputEncoding):
         self.cacheLock.acquire()
@@ -142,7 +153,9 @@ class TemplateCache (object):
         self.cacheLock.release()
         return template
 
-def tagAsText (tag,atts):
+
+def tagAsText (tag, atts):
+    """return tag and attrs as propert HTML string"""
     result = "<" + tag
     for name,value in atts:
         if ESCAPED_TEXT_REGEX.search(value) is not None:
@@ -153,7 +166,10 @@ def tagAsText (tag,atts):
     result += ">"
     return result
 
+
 class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
+    """Interpreter only expanding macros, doing nothing else"""
+
     def __init__ (self):
         super(MacroExpansionInterpreter, self).__init__()
         # Override the standard interpreter way of doing things.
@@ -177,13 +193,16 @@ class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
     # Original cmdOutput
     # Original cmdEndTagEndScope
 
+
     def popProgram (self):
         self.inMacro = self.macroStateStack.pop()
         simpleTAL.TemplateInterpreter.popProgram(self)
 
+
     def pushProgram (self):
         self.macroStateStack.append(self.inMacro)
         simpleTAL.TemplateInterpreter.pushProgram(self)
+
 
     def cmdOutputStartTag (self, command, args):
         newAtts = []
@@ -198,12 +217,14 @@ class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
         self.currentAttributes = newAtts
         simpleTAL.TemplateInterpreter.cmdOutputStartTag(self, command, args)
 
+
     def cmdUseMacro (self, command, args):
         simpleTAL.TemplateInterpreter.cmdUseMacro(self, command, args)
         if self.tagContent is not None:
             # We have a macro, add the args to the in-macro list
             self.inMacro = 1
             self.macroArg = args[0]
+
 
     def cmdEndTagEndScope (self, command, args):
         # Args: tagName, omitFlag
@@ -245,7 +266,10 @@ class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
         self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined = self.scopeStack.pop()
         self.programCounter += 1
 
+
 def ExpandMacros (context, template, outputEncoding="ISO-8859-1"):
+    """expand macros of template within context, return result with
+       given output encoding"""
     out = StringIO()
     interp = MacroExpansionInterpreter()
     interp.initialise(context, out)

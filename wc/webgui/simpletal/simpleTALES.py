@@ -41,14 +41,19 @@ __version__ = simpletal.__version__
 
 
 class ContextVariable (object):
+    """store one variable value"""
+
     def __init__ (self, value = None):
         self.ourValue = value
+
 
     def isDefault (self):
         return False
 
+
     def isNothing (self):
         return self.value() is None
+
 
     def isSequence (self):
         # Return the length of the sequence - if it's zero length then it's handled
@@ -60,8 +65,10 @@ class ContextVariable (object):
         except:
             return False
 
+
     def isCallable (self):
         return callable(self.ourValue)
+
 
     def isTrue (self):
         if self.isNothing():
@@ -72,70 +79,89 @@ class ContextVariable (object):
             return len(self.value())>0
         return self.value()
 
+
     def value (self, currentPath=None):
         if callable(self.ourValue):
             return self.ourValue()
         return self.ourValue
 
+
     def rawValue (self):
         return self.ourValue
+
 
     def __str__ (self):
         return str(self.ourValue)
 
+
 class DefaultVariable (ContextVariable):
+    """default variable value"""
+
     def __init__ (self):
         super(DefaultVariable, self).__init__(1)
+
 
     def isNothing (self):
         return False
 
+
     def isDefault (self):
         return True
+
 
     def value (self, currentPath=None):
         # We return our self so that define works properly.
         return self
+
 
     def __str__ (self):
         return "Default"
 
 
 class NothingVariable (ContextVariable):
+    """variable value representing a no-value"""
     def __init__ (self):
         super(NothingVariable, self).__init__(None)
+
 
     def isNothing (self):
         return True
 
 
 class NoCallVariable (ContextVariable):
+    """variable value without call semantic"""
     def __init__ (self, variable):
         super(NoCallVariable, self).__init__(variable.ourValue)
         self.variable = variable
+
 
     def value (self, currentPath=None):
         return self.ourValue
 
 
 class RepeatVariable (ContextVariable):
-    """ To be written"""
+    """variable representing a list of values"""
+
     def __init__ (self, sequence):
         super(RepeatVariable, self).__init__(1)
         self.sequence = sequence
         self.position = 0
         self.vmap = None
 
+
     def value (self, currentPath=None):
         if self.vmap is None:
             self.createMap()
         return self.vmap
 
+
     def rawValue (self):
         return self.value()
 
+
     def increment (self):
         self.position += 1
+
 
     def createMap (self):
         self.vmap = {}
@@ -152,32 +178,39 @@ class RepeatVariable (ContextVariable):
         self.vmap['roman'] = self.getLowerRoman
         self.vmap['Roman'] = self.getUpperRoman
 
+
     # Repeat implementation goes here
     def getIndex (self):
         return self.position
 
+
     def getNumber (self):
         return self.position + 1
+
 
     def getEven (self):
         if (self.position % 2) != 0:
             return 0
         return 1
 
+
     def getOdd (self):
         if (self.position % 2) == 0:
             return 0
         return 1
+
 
     def getStart (self):
         if self.position == 0:
             return 1
         return 0
 
+
     def getEnd (self):
         if self.position == len(self.sequence) - 1:
             return 1
         return 0
+
 
     def getLowerLetter (self):
         result = ""
@@ -189,8 +222,10 @@ class RepeatVariable (ContextVariable):
             result = chr(ord('a') + thisCol) + result
         return result
 
+
     def getUpperLetter (self):
         return self.getLowerLetter().upper()
+
 
     def getLowerRoman (self):
         romanNumeralList = (('m', 1000)
@@ -218,14 +253,17 @@ class RepeatVariable (ContextVariable):
                 num -= integer
         return result
 
+
     def getUpperRoman (self):
         return self.getLowerRoman().upper()
 
 
 class PathFunctionVariable (ContextVariable):
+    """variable getting its value from a context path it traverses"""
     def __init__ (self, func):
         super(PathFunctionVariable, self).__init__(value=func)
         self.func = func
+
 
     def value (self, currentPath=None):
         if currentPath is not None:
@@ -235,9 +273,13 @@ class PathFunctionVariable (ContextVariable):
             # Fast track the result
             raise result
 
+
 class PythonPathFunctions (object):
+    """variable getting its value from a python module path it traverses"""
+
     def __init__ (self, context):
         self.context = context
+
 
     def path (self, expr):
         result = self.context.evaluatePath(expr)
@@ -246,12 +288,14 @@ class PythonPathFunctions (object):
         else:
             return result
 
+
     def string (self, expr):
         result = self.context.evaluateString(expr)
         if isinstance(result, ContextVariable):
             return result.value()
         else:
             return result
+
 
     def exists (self, expr):
         result = self.context.evaluateExists(expr)
@@ -260,12 +304,14 @@ class PythonPathFunctions (object):
         else:
             return result
 
+
     def nocall (self, expr):
         result = self.context.evaluateNoCall(expr)
         if isinstance(result, ContextVariable):
             return result.value()
         else:
             return result
+
 
     def test (self, *arguments):
         if len(arguments) % 2:
@@ -290,6 +336,9 @@ class PythonPathFunctions (object):
 
 
 class Context (object):
+    """context storing variable values"""
+
+
     def __init__ (self, options=None, allowPythonPath=0):
         self.allowPythonPath = allowPythonPath
         self.cglobals = {}
@@ -302,6 +351,7 @@ class Context (object):
         self.false = ContextVariable(0)
         self.pythonPathFuncs = PythonPathFunctions(self)
 
+
     def addRepeat (self, name, var):
         # Pop the current repeat map onto the stack
         self.repeatStack.append(self.repeatMap)
@@ -310,17 +360,20 @@ class Context (object):
         # Map this repeatMap into the global space
         self.addGlobal('repeat', self.repeatMap)
 
+
     def removeRepeat (self, name):
         # Bring the old repeat map back
         self.repeatMap = self.repeatStack.pop()
         # Map this repeatMap into the global space
         self.addGlobal('repeat', self.repeatMap)
 
+
     def addGlobal (self, name, value):
         if isinstance(value, ContextVariable):
             self.cglobals[name] = value
         else:
             self.cglobals[name] = ContextVariable(value)
+
 
     def addLocals (self, localVarList):
         # Pop the current locals onto the stack
@@ -332,12 +385,14 @@ class Context (object):
             else:
                 self.clocals[name] = ContextVariable(value)
 
+
     def setLocal (self, name, value):
         # Override the current local if present with the new one
         if isinstance(value, ContextVariable):
             self.clocals[name] = value
         else:
             self.clocals[name] = ContextVariable(value)
+
 
     def getVariableMap (self):
         """return a mapping of all context variables"""
@@ -348,8 +403,10 @@ class Context (object):
             d[key] = var.value()
         return d
 
+
     def popLocals (self):
         self.clocals = self.localStack.pop()
+
 
     def evaluate (self, expr, originalAtts = None):
         # Returns a ContextVariable
@@ -407,6 +464,7 @@ class Context (object):
             return ContextVariable("Exception: %s" % str(e))
         return ContextVariable(result)
 
+
     def evaluatePath (self, expr):
         self.log.debug("Evaluating path expression %s" % expr)
         allPaths = expr.split('|')
@@ -420,6 +478,7 @@ class Context (object):
         else:
             # A single path - so let's evaluate it
             return self.traversePath(allPaths[0])
+
 
     def evaluateExists (self, expr):
         self.log.debug("Evaluating %s to see if it exists" % expr)
@@ -444,6 +503,7 @@ class Context (object):
                 return None
             return self.true
 
+
     def evaluateNoCall (self, expr):
         self.log.debug("Evaluating %s using nocall" % expr)
         allPaths = expr.split('|')
@@ -463,6 +523,7 @@ class Context (object):
             # A single path - so let's evaluate it
             return self.traversePath(allPaths[0], canCall=0)
 
+
     def evaluateNot (self, expr):
         self.log.debug("Evaluating NOT value of %s" % expr)
 
@@ -474,6 +535,7 @@ class Context (object):
         if pathResult.isTrue():
             return self.false
         return self.true
+
 
     def evaluateString (self, expr):
         self.log.debug("Evaluating String %s" % expr)

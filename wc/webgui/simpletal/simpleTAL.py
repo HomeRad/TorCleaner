@@ -107,6 +107,8 @@ ESCAPED_ENTITIES_REGEX = re.compile('(?:.*?)(&.*?;)')
 
 
 class TemplateInterpreter (object):
+    """Execute a compiled template"""
+
     def __init__ (self, translator=None):
         self.programStack = []
         self.commandList = None
@@ -362,8 +364,8 @@ def cmdAttributes (self, command, args, translateAttributes=False):
 
 
 def cmdOmitTag (self, command, args):
-    """ args: expression
-            Conditionally turn off tag output
+    """args: expression
+       Conditionally turn off tag output
     """
     result = self.context.evaluate(args, self.originalAttributes)
     if result is not None and result.isTrue():
@@ -373,8 +375,7 @@ def cmdOmitTag (self, command, args):
 
 
 def cmdOutputStartTag (self, command, args):
-    """ args: tagName
-    """
+    """args: tagName"""
     tagName, singletonTag = args
     if self.outputTag:
         singleton = self.tagContent is None and singletonTag
@@ -442,6 +443,7 @@ def cmdEndTagEndScope (self, command, args):
 
 
 def cmdOutput (self, command, args):
+    """args: data"""
     if self.translateContent:
         self.file.write(self.translate(args))
     else:
@@ -481,6 +483,7 @@ def cmdStartScope (self, command, args):
 
 
 def cmdNoOp (self, command, args):
+    """no-op command"""
     self.programCounter += 1
 
 
@@ -586,6 +589,8 @@ InterpCommandHandler = {
 }
 
 class Template (object):
+    """basic template class"""
+
     def __init__ (self, tcommands, macros, symbols, doctype=None):
         self.commandList = tcommands
         self.macros = macros
@@ -748,6 +753,7 @@ class XMLTemplate (Template):
 
 
 class TemplateCompiler (object):
+    """base class for compiling templates"""
 
     def __init__ (self, attributesEscaped=0):
         """Initialise a template compiler. If attribute values are still
@@ -774,6 +780,7 @@ class TemplateCompiler (object):
 
 
     def setTALPrefix (self, prefix):
+        """configure TAL attribute map"""
         self.tal_namespace_prefix = prefix
         self.tal_attribute_map = {}
         self.tal_attribute_map['%s:attributes'%prefix] = TAL_ATTRIBUTES
@@ -784,7 +791,9 @@ class TemplateCompiler (object):
         self.tal_attribute_map['%s:condition'%prefix] = TAL_CONDITION
         self.tal_attribute_map['%s:repeat'%prefix] = TAL_REPEAT
 
+
     def setMETALPrefix (self, prefix):
+        """configure METAL attribute map"""
         self.metal_namespace_prefix = prefix
         self.metal_attribute_map = {}
         self.metal_attribute_map['%s:define-macro'%prefix] = \
@@ -793,7 +802,9 @@ class TemplateCompiler (object):
         self.metal_attribute_map['%s:define-slot'%prefix] = METAL_DEFINE_SLOT
         self.metal_attribute_map['%s:fill-slot'%prefix] = METAL_FILL_SLOT
 
+
     def setI18NPrefix (self, prefix):
+        """configure I18N attribute map"""
         self.i18n_namespace_prefix = prefix
         self.i18n_attribute_map = {}
         self.i18n_attribute_map['%s:translate'%prefix] = I18N_TRANSLATE
@@ -802,23 +813,25 @@ class TemplateCompiler (object):
 
 
     def popTALNamespace (self):
+        """pop TAL namespace from stack"""
         newPrefix = self.tal_namespace_prefix_stack.pop()
         self.setTALPrefix(newPrefix)
 
 
     def popMETALNamespace (self):
+        """pop METAL namespace from stack"""
         newPrefix = self.metal_namespace_prefix_stack.pop()
         self.setMETALPrefix(newPrefix)
 
 
     def popI18NNamespace (self):
+        """pop I18N namespace from stack"""
         newPrefix = self.i18n_namespace_prefix_stack.pop()
         self.setI18NPrefix(newPrefix)
 
 
     def tagAsText (self, (tag,atts), singletonFlag=0):
-        """ This returns a tag as text.
-        """
+        """This returns a tag as text."""
         result = ["<"]
         result.append(tag)
         for att in atts:
@@ -877,6 +890,7 @@ class TemplateCompiler (object):
 
 
     def getTemplate (self):
+        """return template object"""
         return Template(self.commandList, self.macroMap,
                         self.symbolLocationTable)
 
@@ -1159,6 +1173,7 @@ class TemplateCompiler (object):
 
 
 def compileCmdDefine (self, argument):
+    """Compile tal:define into command"""
     # Compile a define command, resulting argument is:
     # [(isLocalFlag (Y/n), variableName, variablePath),...]
     # Break up the list of defines first
@@ -1198,8 +1213,9 @@ def compileCmdDefine (self, argument):
 
 
 def compileCmdCondition (self, argument):
-    # Compile a condition command, resulting argument is:
-    # path, endTagSymbol
+    """Compile a condition command, resulting argument is:
+       path, endTagSymbol
+    """
     # Sanity check
     if len(argument) == 0:
         # No argument passed
@@ -1211,6 +1227,7 @@ def compileCmdCondition (self, argument):
 
 
 def compileCmdRepeat (self, argument):
+    """Compile tal:repeat into command"""
     # Compile a repeat command, resulting argument is:
     # (varname, expression, endTagSymbol)
     attProps = argument.split(' ')
@@ -1226,6 +1243,7 @@ def compileCmdRepeat (self, argument):
 
 
 def compileCmdContent (self, argument, replaceFlag=0):
+    """Compile tal:content into command"""
     # Compile a content command, resulting argument is
     # (replaceFlag, structureFlag, expression, endTagSymbol)
 
@@ -1254,16 +1272,18 @@ def compileCmdContent (self, argument, replaceFlag=0):
 
 
 def compileCmdReplace (self, argument):
+    """Compile tal:replace into command"""
     return compileCmdContent(self, argument, replaceFlag=1)
 
 
 def compileCmdAttributes (self, argument):
-    # Compile tal:attributes into attribute command
+    """Compile tal:attributes into attribute command"""
     # Argument: [(attributeName, expression)]
     return (TAL_ATTRIBUTES, self.get_command_args(argument))
 
 
 def compileCmdOmitTag (self, argument):
+    """Compile metal:omit-tag into command"""
     # Compile a condition command, resulting argument is:
     # path
     # If no argument is given then set the path to default
@@ -1276,6 +1296,7 @@ def compileCmdOmitTag (self, argument):
 
 # METAL compilation commands go here
 def compileMetalUseMacro (self, argument):
+    """Compile metal:use-macro into command"""
     # Sanity check
     if len(argument) == 0:
         # No argument passed
@@ -1288,6 +1309,7 @@ def compileMetalUseMacro (self, argument):
 
 
 def compileMetalDefineMacro (self, argument):
+    """Compile metal:define-macro into command"""
     if len(argument) == 0:
         # No argument passed
         msg = "No argument passed!  define-macro commands must be of the form: 'define-macro: name'"
@@ -1311,6 +1333,7 @@ def compileMetalDefineMacro (self, argument):
 
 
 def compileMetalFillSlot (self, argument):
+    """Compile metal:fill-slot into command"""
     if len(argument) == 0:
         # No argument passed
         msg = "No argument passed!  fill-slot commands must be of the form: 'fill-slot: name'"
@@ -1363,6 +1386,7 @@ def compileMetalFillSlot (self, argument):
 
 
 def compileMetalDefineSlot (self, argument):
+    """Compile metal:define-slot into command"""
     if len(argument) == 0:
         # No argument passed
         msg = "No argument passed!  define-slot commands must be of the form: 'name'"
@@ -1377,11 +1401,12 @@ def compileMetalDefineSlot (self, argument):
 
 
 def compileI18nTranslate (self, argument):
+    """Compile i18n:translate into command"""
     return (I18N_TRANSLATE, (argument, self.endTagSymbol))
 
 
 def compileI18nAttributes (self, argument):
-    # Compile i18n:attributes into attribute command
+    """Compile i18n:attributes into attribute command"""
     # Argument: [(attributeName, expression)]
     return (I18N_ATTRIBUTES, self.get_command_args(argument, emptyAllowed=True))
 
@@ -1407,11 +1432,15 @@ CompCommandHandler = {
 
 
 class TemplateParseException (Exception):
+    """Raised on template parse errors"""
+
     def __init__ (self, location, errorDescription):
+        """init with location and error description"""
         self.location = location
         self.errorDescription = errorDescription
 
     def __str__ (self):
+        """string representation"""
         return "[" + self.location + "] " + self.errorDescription
 
 
@@ -1424,6 +1453,8 @@ HTML_FORBIDDEN_ENDTAG = {
 }
 
 class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
+    """parse and compile HTML template"""
+
     def __init__ (self):
         TemplateCompiler.__init__(self, attributesEscaped=1)
         sgmllib.SGMLParser.__init__(self)
@@ -1498,11 +1529,15 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 
 
     def getTemplate (self):
+        """return HTML template"""
         return HTMLTemplate(self.commandList, self.macroMap, self.symbolLocationTable)
 
 
 class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml.sax.handler.DTDHandler, LexicalHandler):
+    """parse and compile XML template"""
+
     def __init__ (self):
+        """initialize parser and flags"""
         TemplateCompiler.__init__(self)
         xml.sax.handler.ContentHandler.__init__(self)
         self.doctype = None
@@ -1528,6 +1563,7 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml
 
 
     def parseTemplate (self, file):
+        """parse given file"""
         self.ourParser = xml.sax.make_parser()
         self.log.debug("Setting features of parser")
         self.ourParser.setFeature(xml.sax.handler.feature_external_ges, 0)
@@ -1541,6 +1577,7 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml
 
 
     def startDTD (self, name, public_id, system_id):
+        """handle DTD"""
         self.log.debug("Recieved DOCTYPE: " + name + " public_id: " + public_id + " system_id: " + system_id)
         if public_id:
             self.doctype = '<!DOCTYPE %s PUBLIC "%s" "%s">' % (name, public_id, system_id,)
@@ -1549,6 +1586,7 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml
 
 
     def startElement (self, tag, attributes):
+        """handle start element"""
         self.log.debug("Recieved Real Start Tag: " + tag + " Attributes: " + str(attributes))
         try:
             xmlText = self.ourParser.getProperty(xml.sax.handler.property_xml_string)
@@ -1567,23 +1605,27 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml
 
 
     def endElement (self, tag):
+        """handle end element"""
         self.log.debug("Recieved Real End Tag: " + tag)
         self.parseEndTag(tag)
         self.singletonElement = 0
 
 
     def characters (self, data):
+        """handle characters"""
         #self.log.debug("Recieved Real Data: " + data)
         # Escape any data we recieve - we don't want any: <&> in there.
         self.parseData(cgi.escape(data))
 
 
     def processingInstruction (self, target, data):
+        """handle processing instruction"""
         self.log.debug("Recieved processing instruction.")
         self.parseData('<?%s %s?>' % (target, data))
 
 
     def getTemplate (self):
+        """return XML template object"""
         return XMLTemplate(self.commandList, self.macroMap, self.symbolLocationTable, self.doctype)
 
 
