@@ -262,7 +262,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
     return T_WAIT;
 }
 
-
   /*********************** DOCTYPE ************************/
 <INITIAL><![Dd][Oo][Cc][Tt][Yy][Pp][Ee] {
     UPDATE_COLUMN;
@@ -341,73 +340,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_PI>. {
-    return T_WAIT;
-}
-
-
-  /*********************** TAGSTART ************************/
-<INITIAL><{RX_WHITE_SPACE}*/[A-Za-z0-9] {
-    UPDATE_LINE;
-    yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
-    if (yyextra->tmp_attrs==NULL) {
-        return T_ERROR;
-    }
-    BEGIN(S_TAGSTART);
-}
-
-<S_TAGSTART>[^ \t\r\n\b\012/<>]+ {
-    /* actually accept a lot of tag chars, which may be illegal,
-     but we dont care, it's the browsers job */
-    UPDATE_COLUMN;
-    APPEND_TO_TMP(yyleng);
-}
-
-<S_TAGSTART>{RX_WHITE_SPACE}+ {
-    UPDATE_LINE;
-    LOWER_TMP;
-    PYSTRING_TMP(yyextra->tmp_tag);
-    RESIZE_BUF(yyextra->tmp_buf, 1);
-    BEGIN(S_ATTR1);
-}
-
-<S_TAGSTART>\/> {
-    UPDATE_COLUMN;
-    BEGIN(INITIAL);
-    if (!strlen(yyextra->tmp_buf)) {
-        /* the tag name was empty, assume a stray "</>" */
-	RESIZE_BUF(yyextra->tmp_buf, 4);
-        strcpy(yyextra->tmp_buf, "</>");
-        yyextra->tmp_attrs = NULL;
-        SETLVAL;
-        RETURN(T_TEXT);
-    }
-    LOWER_TMP;
-    PYSTRING_TMP(yyextra->tmp_tag);
-    RESIZE_BUF(yyextra->tmp_buf, 1);
-    SET_ATTR_LVAL;
-    RETURN(T_ELEMENT_START_END);
-}
-
-<S_TAGSTART>> {
-    UPDATE_COLUMN;
-    BEGIN(INITIAL);
-    if (!strlen(yyextra->tmp_buf)) {
-        /* the tag name was empty, assume a stray "<>" */
-	RESIZE_BUF(yyextra->tmp_buf, 3);
-        strcpy(yyextra->tmp_buf, "<>");
-        yyextra->tmp_attrs = NULL;
-	SETLVAL;
-        RETURN(T_TEXT);
-    }
-    LOWER_TMP;
-    PYSTRING_TMP(yyextra->tmp_tag);
-    RESIZE_BUF(yyextra->tmp_buf, 1);
-    SCRIPT_CHECK;
-    SET_ATTR_LVAL;
-    RETURN(T_ELEMENT_START);
-}
-
-<S_TAGSTART>. {
     return T_WAIT;
 }
 
@@ -631,6 +563,72 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_STYLE>. {
+    return T_WAIT;
+}
+
+  /*********************** TAGSTART ************************/
+<INITIAL><{RX_WHITE_SPACE}*/[A-Za-z0-9] {
+    UPDATE_LINE;
+    yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
+    if (yyextra->tmp_attrs==NULL) {
+        return T_ERROR;
+    }
+    BEGIN(S_TAGSTART);
+}
+
+<S_TAGSTART>[^ \t\r\n\b\012/<>]+ {
+    /* actually accept a lot of tag chars, which may be illegal,
+     but we dont care, it's the browsers job */
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_TAGSTART>{RX_WHITE_SPACE}+ {
+    UPDATE_LINE;
+    LOWER_TMP;
+    PYSTRING_TMP(yyextra->tmp_tag);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
+    BEGIN(S_ATTR1);
+}
+
+<S_TAGSTART>\/> {
+    UPDATE_COLUMN;
+    BEGIN(INITIAL);
+    if (!strlen(yyextra->tmp_buf)) {
+        /* the tag name was empty, assume a stray "</>" */
+	RESIZE_BUF(yyextra->tmp_buf, 4);
+        strcpy(yyextra->tmp_buf, "</>");
+        yyextra->tmp_attrs = NULL;
+        SETLVAL;
+        RETURN(T_TEXT);
+    }
+    LOWER_TMP;
+    PYSTRING_TMP(yyextra->tmp_tag);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START_END);
+}
+
+<S_TAGSTART>> {
+    UPDATE_COLUMN;
+    BEGIN(INITIAL);
+    if (!strlen(yyextra->tmp_buf)) {
+        /* the tag name was empty, assume a stray "<>" */
+	RESIZE_BUF(yyextra->tmp_buf, 3);
+        strcpy(yyextra->tmp_buf, "<>");
+        yyextra->tmp_attrs = NULL;
+	SETLVAL;
+        RETURN(T_TEXT);
+    }
+    LOWER_TMP;
+    PYSTRING_TMP(yyextra->tmp_tag);
+    RESIZE_BUF(yyextra->tmp_buf, 1);
+    SCRIPT_CHECK;
+    SET_ATTR_LVAL;
+    RETURN(T_ELEMENT_START);
+}
+
+<S_TAGSTART>. {
     return T_WAIT;
 }
 
