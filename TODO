@@ -2,9 +2,7 @@ TODO
 
 version 2.14 and above
 
-- application/www-form.... content type fuckup
-
-- binary data (!) http://www.nxn-software.com/comp_care_jobs.php
+- get hostname from request for self links
 
 - debug messages for DNS timeouts
 
