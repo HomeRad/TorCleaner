@@ -5,6 +5,10 @@
     Type: feature
     Changed: wc/filter/HtmlTags.py
 
+  * Mime type classification returns now a properly stripped mime type.
+    Type: bugfix
+    Changed: wc/magic/__init__.py
+
 2.26 "Tokyo Raiders" (released 2.1.2005)
 
   * Do not include test packages in installed binaries. This prevents
