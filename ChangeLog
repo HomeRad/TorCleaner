@@ -3,3 +3,7 @@ Changes since 0.52:
   * README.squid, a sample squid configuration file to use with
     WebCleaner, was added
   * added some more advertising urls to filter
+  * minor code cleanups
+  * guess mime types non-strict (see Python docs)
+  * use True/False boolean constants, which makes us...
+  * ...Require Python >= 2.2
