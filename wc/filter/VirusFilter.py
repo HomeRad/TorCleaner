@@ -113,9 +113,11 @@ class VirusFilter (Filter):
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
             return d
-        d['scanner'] = ClamdScanner(get_clamav_conf())
-        d['virus_buf'] = StringIO()
-        d['virus_buf_size'] = [0]
+        conf = get_clamav_conf()
+        if conf is not None:
+            d['scanner'] = ClamdScanner(conf)
+            d['virus_buf'] = StringIO()
+            d['virus_buf_size'] = [0]
         return d
 
 
@@ -152,6 +154,14 @@ class ClamdScanner (object):
 _clamav_conf = None
 def init_clamav_conf ():
     """initialize clamav configuration"""
+    if os.name=='posix':
+        init_clamav_conf_posix()
+    else:
+        # other platforms not supported
+        pass
+
+
+def init_clamav_conf_posix ():
     global _clamav_conf
     from wc import config
     _clamav_conf = ClamavConfig(config['clamavconf'])
