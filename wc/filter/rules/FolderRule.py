@@ -89,7 +89,6 @@ class FolderRule (wc.filter.rules.Rule.Rule):
             recalc_up_down(self.rules)
         return chg
 
-
     def get_rule (self, sid):
         """return rule with given sid or None if not found"""
         for rule in self.rules:
