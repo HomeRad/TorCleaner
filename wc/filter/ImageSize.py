@@ -111,7 +111,9 @@ class ImageSize (Filter):
                         debug(FILTER, "Blocking image size %s", str(size))
                         return False
         except IOError:
-            exception(FILTER, "Could not get image size from %s", url)
+            buf.seek(0)
+            data = buf.getvalue()
+            exception(FILTER, "Could not get image size from %s, data %s", `url`, `data`)
         return True
 
 
