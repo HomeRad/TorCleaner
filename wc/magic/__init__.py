@@ -1,5 +1,5 @@
-"""magic(5) module"""
 # -*- coding: iso-8859-1 -*-
+"""magic(5) module"""
 
 _magic = None
 

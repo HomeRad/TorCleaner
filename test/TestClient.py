@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 from wc.proxy import Connection
 class TestClient (Connection.Connection):
     """States:

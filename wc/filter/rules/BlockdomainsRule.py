@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2000-2003  Bastian Kleineidam
+"""hold a list of domains to block in external file, like those
+found in SquidGuard"""
+# Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

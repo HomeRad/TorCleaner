@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """filter modules
 
 Welcome to the wonderful world of software OSI layer 5 filtering.
@@ -13,8 +14,7 @@ Of course, these must be handled in the appropriate proxy functions
 to work properly.
 
 """
-# -*- coding: iso-8859-1 -*-
-# Copyright (C) 2000-2003  Bastian Kleineidam
+# Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

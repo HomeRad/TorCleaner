@@ -1,10 +1,10 @@
+# -*- coding: iso-8859-1 -*-
 """replace expressions in a data stream
 you can use this for
 - highlighting
 - removing/replacing certain strings
 """
-# -*- coding: iso-8859-1 -*-
-# Copyright (C) 2000-2003  Bastian Kleineidam
+# Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

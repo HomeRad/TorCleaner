@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 from StringIO import StringIO
 import os, gettext
 from wc.webgui.simpletal import simpleTAL, simpleTALES

@@ -1,5 +1,5 @@
-"""magic module"""
 # -*- coding: iso-8859-1 -*-
+"""magic module"""
 #    Magic - Python module to classify like the 'file' command using a 'magic' file
 #    See: 'man 4 magic' and 'man file'
 #

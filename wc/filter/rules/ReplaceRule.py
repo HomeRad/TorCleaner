@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2000-2003  Bastian Kleineidam
+"""rule replacing parts of text"""
+# Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +23,8 @@ from UrlRule import UrlRule
 from wc.XmlUtils import xmlify, unxmlify
 
 class ReplaceRule (UrlRule):
+    """This rule can Replace parts of text data according to regular
+    expressions"""
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, search="", replace=""):
         super(ReplaceRule, self).__init__(sid=sid, title=title,

@@ -1,8 +1,8 @@
+# -*- coding: iso-8859-1 -*-
 """logging and debug functions. Note: we always generate handlers for
 logging. Look in logging.conf if you want to customize their behaviour
 (eg. setting access loglevel to ERROR to turn off access logging"""
-# -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003  Bastian Kleineidam
+# Copyright (C) 2003-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

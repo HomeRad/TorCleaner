@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """Parse and filter PICS data.
 See http://www.w3.org/PICS/labels.html for more info.
 
@@ -32,9 +33,13 @@ Servicematch: microsys
 Name: Vancouver Web Pages
 Url: http://vancouver-webpages.com/VWP1.0/
 Servicematch: vancouver
+
+Name: WebCleaner PICS Service
+Url: http://webcleaner.sourceforge.net/pics/
+Url: http://www.kampfwurst.net/pics/
+Servicematch: webcleaner
 """
-# -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003  Bastian Kleineidam
+# Copyright (C) 2003-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -73,6 +78,12 @@ ratings = re.compile(r'r(atings)?\s*\((?P<rating>[^)]*)\)').finditer
 
 # PICS rating associations and their categories
 services = {
+  "webcleaner": {'name': 'WebCleaner',
+                 'categories': {'violence': 'v',
+                                'sex':      's',
+                                'language': 'l',
+                               },
+                },
   "safesurf": {'name': 'Safesurf',
                'categories': {'agerange':                '000',
                               'profanity':               '001',

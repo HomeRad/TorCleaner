@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
 """download one image and try to guess its size"""
 import Image, sys
 from StringIO import StringIO

@@ -1,5 +1,5 @@
-"""convert"""
 # -*- coding: iso-8859-1 -*-
+"""convert"""
 #    Convert - Python module to convert number and data type
 #
 #    Copyright (C) 2002 Thomas Mangin
