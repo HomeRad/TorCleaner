@@ -16,13 +16,13 @@
 <h2>Title and description</h2>
 <table>
 <div metal:define-macro="titledesc">
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_title" i18n:translate="">Title</label>:
 </td><td>
 <input type="text" class="text" name="rule_title" id="rule_title"
  value="Rule title" tal:attributes="value currule/title">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_description" i18n:translate="">Description</label>:
 </td><td>
 <textarea name="rule_description" id="rule_description" cols="50" rows="5"
@@ -36,13 +36,13 @@
 <h2>Match url</h2>
 <table>
 <div metal:define-macro="matchurl">
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_matchurl" i18n:translate="">Match URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_matchurl" id="rule_matchurl"
  value="Match url" tal:attributes="value currule/matchurl">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_dontmatchurl" i18n:translate="">Don't match URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_dontmatchurl" id="rule_dontmatchurl"
@@ -56,43 +56,43 @@
 <h2>Url parts</h2>
 <table>
 <div metal:define-macro="urlparts">
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_urlscheme" i18n:translate="">URL scheme</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlscheme" value="http"
  tal:attributes="value currule/scheme">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_urlhost" i18n:translate="">URL host</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlhost" value="www.imadoofus.com"
  tal:attributes="value currule/host">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_urlport" i18n:translate="">URL port</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlport" value="80"
  tal:attributes="value currule/port">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_urlpath" i18n:translate="">URL path</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlpath" value="/hulla/bulla"
  tal:attributes="value currule/path">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_urlparameters" i18n:translate="">URL parameters</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlparameters" value=""
  tal:attributes="value currule/parameters">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_urlquery" i18n:translate="">URL query</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlquery" value=""
  tal:attributes="value currule/query">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_urlfragment" i18n:translate="">URL fragment</label>:
 </td><td>
 <input type="text" class="text" name="rule_urlfragment" value=""
@@ -106,20 +106,20 @@
 <h2>Extern file</h2>
 <table>
 <div metal:define-macro="externfile">
-<tr><td>
+<tr valign="top"><td>
 <span i18n:translate="">Title</span>:
 </td><td>
 <span tal:replace="currule/title">rule title</span>
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <span i18n:translate="">Description</span>:
 </td><td>
 <span tal:replace="currule/desc">rule description</span>
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <span i18n:translate="">Filename</span>:
 </td><td>
-<span tal:replace="currule/file">/path/to/file</span>
+<span tal:replace="currule/filename">/path/to/file</span>
 </td></tr>
 </div>
 </table>
@@ -189,7 +189,7 @@ Rule title and description
 <tr metal:use-macro="rulemacros/macros/urlparts">
 Rule url parts
 </tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_blockedurl" i18n:translate="">Blocked URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_blockedurl" id="rule_blockedurl"
@@ -211,13 +211,13 @@ Rule title and description
 <tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_headername" i18n:translate="">Header name</label>:
 </td><td>
 <input type="text" class="text" name="rule_headername" id="rule_headername"
  value="x-meta" tal:attributes="value currule/name">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_headervalue" i18n:translate="">Header value</label>:
 </td><td>
 <input type="text" class="text" name="rule_headervalue" id="rule_headervalue"
@@ -239,20 +239,20 @@ Rule title and description
 <tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_imgwidth" i18n:translate="">Image width</label>:
 </td><td>
 <input type="text" class="number" name="rule_imgwidth" id="rule_imgwidth"
  value="1" tal:attributes="value string:${currule/width}">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_imgheight" i18n:translate="">Image height</label>:
 </td><td>
 <input type="text" class="number" name="rule_imgheight" id="rule_imgheight"
  value="1" tal:attributes="value string:${currule/height}">
 </td></tr>
 <!-- XXX todo: image type select -->
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_imgurl" i18n:translate="">Blocked image URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_imgurl" id="rule_imgurl"
@@ -306,13 +306,13 @@ Rule title and description
 <tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_fallback" i18n:translate="">Fallback URL</label>:
 </td><td>
 <input type="text" class="text" name="rule_fallback" id="rule_fallback"
  value="http://www..." tal:attributes="value currule/url">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <span i18n:translate="">PICS ratings</span>:
 </td><td>
 <div tal:repeat="service pics_services">
@@ -338,12 +338,10 @@ Rule (don't) match url
 </div>
 </td>
 </tr>
-<tr>
-<td colspan="2">
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value Apply">
-</td>
-</tr>
+</td></tr>
 </table>
 <hr noshade size="1">
 
@@ -356,13 +354,13 @@ Rule title and description
 <tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
 </tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_search" i18n:translate="">Replace regex</label>:
 </td><td>
 <input type="text" class="text" name="rule_search" id="rule_search"
  value="A nasty word" tal:attributes="value currule/search">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_replace" i18n:translate="">Replacement</label>:
 </td><td>
 <input type="text" class="text" name="rule_replace" id="rule_replace"
@@ -385,13 +383,13 @@ Rule (don't) match url
 <tr metal:use-macro="rulemacros/macros/matchurl">
 <td>Rule (don't) match url</td>
 </tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_tag" i18n:translate="">Tag name</label>:
 </td><td>
 <input type="text" class="text" name="rule_tag" id="rule_tag" value="img"
  tal:attributes="value currule/tag">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <span i18n:translate="">Attributes</span>:
 </td><td>
 <table rules="cols" cellpadding="2">
@@ -422,27 +420,27 @@ Rule (don't) match url
  i18n:attributes="value Remove selected attributes">
 </span>
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="attrname" i18n:translate="">Name</label>:
 </td><td>
 <input type="text" class="text" name="attrname" id="attrname" value="href">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="attrval" i18n:translate="">Value</label>:
 </td><td>
 <input type="text" class="text" name="attrval" id="attrval" value="">
 </td></tr>
-<tr><td>&nbsp;</td>
+<tr valign="top"><td>&nbsp;</td>
 <td><input type="submit" class="submit" name="addattr" value="Add attribute"
  i18n:attributes="value Add attribute">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_enclosedblock" i18n:translate="">Enclosed block</label>:
 </td><td>
 <input type="text" class="text" name="rule_enclosedblock"
  id="rule_enclosedblock" value="" tal:attributes="value currule/enclosed">
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_rewritepart" i18n:translate="">Replace part</label>:
 </td><td>
 <select name="rule_rewritepart">
@@ -454,7 +452,7 @@ Rule (don't) match url
 </span>
 </select>
 </td></tr>
-<tr><td>
+<tr valign="top"><td>
 <label for="rule_rewritereplacement" i18n:translate="">Replace value</label>:
 </td><td>
 <input type="text" class="text" name="rule_rewritereplacement" value=""
