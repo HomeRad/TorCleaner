@@ -1,6 +1,6 @@
 TODO
 
-version 2.9 and above
+version 2.10 and above
 
 - memory leaks while operating the proxy
 
@@ -22,7 +22,7 @@ version 2.9 and above
   the HTML parser (written with flex) does not support unicode, so
   sometimes you'll see '?' chars in the HTML output.
 
-- blocked HTTPS urls are broken because we switch to http://
+- blocked HTTPS urls issue a warning because we switch to http://
   instead the proxy should support https requests.
 
 - HTTPS gateway functionality
