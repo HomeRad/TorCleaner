@@ -119,17 +119,15 @@ upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz webcleaner-$(VERSION).win32-py2.4.exe
 
 homepage: homepage-zapper
-	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
 	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
 	$(MAKE) -C doc/en homepage
 	$(MAKE) -C $(HTMLDIR) chmod
 
 homepage-zapper: md5sums
-	cp config/*.dtd config/webcleaner.conf config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/filter
-	cp config/*.zap $(HTMLDIR)/htdocs/filter/
-	cp -r config/blacklists/ $(HTMLDIR)/htdocs/filter
-	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
-	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
+	cp config/*.zap config/*.dtd config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/filter/
+	@for d in ads aggressive violence; do \
+	  cp config/blacklists/$$d/*.gz $(HTMLDIR)/htdocs/filter/blacklists/$$d/; \
+	done
 
 pycheck: localbuild
 	$(PYCHECKER) $(PYCHECKEROPTS) $(PYFILES) $(TESTFILES)
