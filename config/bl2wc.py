@@ -68,25 +68,24 @@ def read_data (file, name, data):
 
 ##################### write blacklist data ########################
 
-def write_filters (basedir):
+def write_filters ():
     for cat, data in categories.items():
         if cat=='kids_and_teens':
             d = 'whitelist'
         else:
             d = 'blacklist'
-        filename = os.path.join(basedir, "%s_%s.zap"%(d, cat))
+        filename = "config/%s_%s.zap"%(d, cat)
         print "writing", filename
         if os.path.exists(filename):
             os.remove(filename)
 	file = open(filename, 'wb')
-	write_folder(cat, data, file)
+	write_folder(cat, d, data, file)
         file.close()
 
-def write_folder (cat, data, file):
+def write_folder (cat, type, data, file):
     print "write", cat, "folder"
-    d = {"title": xmlify("Blacklist "+cat),
-         "desc": xmlify("Automatically generated from "
-                        "several blacklists on %s" % date),
+    d = {"title": xmlify("%s %s" % (type.capitalize(), cat)),
+         "desc": xmlify("Automatically generated on %s" % date),
     }
     file.write("""<?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
@@ -94,42 +93,51 @@ def write_folder (cat, data, file):
  desc="%(desc)s"
  disable="0">
 """ % d)
-    for type in data.keys():
-        globals()["write_%s"%type](cat, file)
+    for t in data.keys():
+        if cat=='kids_and_teens':
+            b = "whitelists"
+            type = "allow"
+        else:
+            b = "blacklists"
+            type = "block"
+        globals()["write_%s"%t](cat, b, type, file)
     file.write("</folder>")
 
-def write_domains (cat, file):
+def write_domains (cat, b, type, file):
     print "write", cat, "domains"
     d = {'title': cat+" domain filter",
          'desc': "You should not edit this filter, only disable or delete it.",
-         'file': "blacklists/"+cat+"/domains.gz",
+         'file': "%s/%s/domains.gz" % (b, cat),
+         'type': type,
         }
-    file.write("""<blockdomains
+    file.write("""<%(type)sdomains
  title="%(title)s"
  desc="%(desc)s"
  file="%(file)s"/>
 """ % d)
 
-def write_urls (cat, file):
+def write_urls (cat, b, type, file):
     print "write", cat, "urls"
     d = {'title': cat+" url filter",
          'desc': "You should not edit this filter, only disable or delete it.",
-         'file': "blacklists/"+cat+"/urls.gz",
+         'file': "%s/%s/urls.gz" % (b, cat),
+         'type': type,
         }
-    file.write("""<blockurls
+    file.write("""<%(type)surls
  title="%(title)s"
  desc="%(desc)s"
  file="%(file)s"/>
 """ % d)
 
-def write_expressions (cat, file):
+def write_expressions (cat, b, type, file):
     d = {'title': cat+" expression filter",
          'desc': "Automatically generated, you should not edit this filter.",
+         'type': type
         }
     print "write", cat, "expressions"
     for expr in expressions[cat]:
         d['path'] = xmlify(expr)
-        file.write("""<block
+        file.write("""<%(type)s
  title="%(title)s"
  desc="%(desc)s"
  scheme=""
@@ -151,9 +159,9 @@ def blacklist (file):
         d = "extracted/"+file[:-7]
         f = tarfile.gzopen(source)
         for m in f:
-            d, b = os.path.split(m.name)
-            d = os.path.basename(d)
-            if b in myfiles and d in mycats:
+            a, b = os.path.split(m.name)
+            a = os.path.basename(a)
+            if b in myfiles and a in mycats:
                 print m.name
                 f.extract(m, d)
         f.close()
@@ -243,8 +251,8 @@ def download_and_merge ():
     # dmoz category dumps (this big fucker is 195MB !!!)
     geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists, saveas="content.rdf.stripped.gz")
 
-def write_blacklists (directory):
-    open_files(directory)
+def write_lists ():
+    open_files("config")
     for data, name in ((domains,"domains"),(urls,"urls")):
         print "writing", name
         for key,val in data.items():
@@ -292,10 +300,6 @@ def remove_gunziped_files (file):
 
 if __name__=='__main__':
     remove_old_data()
-    #print "read data..."
-    #read_blacklists("config/blacklists")
     download_and_merge()
-    write_blacklists("config")
-    write_filters("config")
-    #print "remove gunziped files"
-    #remove_gunziped_files("config/blacklists")
+    write_lists()
+    write_filters()

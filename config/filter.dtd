@@ -4,6 +4,8 @@
  
  Changes:
 
+ 23.7.2002 Bastian Kleineidam
+ * added allowurls and allowdomains filters
  29.6.2002 Bastian Kleineidam
  * added blockurls and blockdomains filters
  7.6.2002 Bastian Kleineidam
@@ -164,6 +166,19 @@
 >
 
 
+<!--                       Allow Domains
+
+    Same as block for allowing entire domains.
+-->
+<!ELEMENT allowdomains (#PCDATA)>
+<!ATTLIST allowdomains
+ title   CDATA #REQUIRED
+ oid     CDATA #IMPLIED
+ desc    CDATA #IMPLIED
+ file    CDATA #IMPLIED
+>
+
+
 <!--                       Block Urls
 
     SquidGuard as 'urls' files as blacklists specifying both host and
@@ -174,6 +189,19 @@
 -->
 <!ELEMENT blockurls (#PCDATA)>
 <!ATTLIST blockurls
+ title   CDATA #REQUIRED
+ oid     CDATA #IMPLIED
+ desc    CDATA #IMPLIED
+ file    CDATA #IMPLIED
+>
+
+
+<!--                       Allow Urls
+
+    Same as block urls for allowing.
+-->
+<!ELEMENT allowurls (#PCDATA)>
+<!ATTLIST allowurls
  title   CDATA #REQUIRED
  oid     CDATA #IMPLIED
  desc    CDATA #IMPLIED

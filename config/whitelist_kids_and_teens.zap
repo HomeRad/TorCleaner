@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Blacklist ads"
+<folder title="Whitelist kids_and_teens"
  desc="Automatically generated on 2002-07-23 00:40:34"
  disable="0">
-<blockdomains
- title="ads domain filter"
+<allowdomains
+ title="kids_and_teens domain filter"
  desc="You should not edit this filter, only disable or delete it."
- file="blacklists/ads/domains.gz"/>
-<blockurls
- title="ads url filter"
+ file="whitelists/kids_and_teens/domains.gz"/>
+<allowurls
+ title="kids_and_teens url filter"
  desc="You should not edit this filter, only disable or delete it."
- file="blacklists/ads/urls.gz"/>
+ file="whitelists/kids_and_teens/urls.gz"/>
 </folder>

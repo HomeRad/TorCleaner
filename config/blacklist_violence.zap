@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Blacklist violence"
- desc="Automatically generated from several blacklists on 2002-07-22 23:30:35"
+ desc="Automatically generated on 2002-07-23 00:40:34"
  disable="0">
 <blockdomains
  title="violence domain filter"
