@@ -1,9 +1,17 @@
-2.26 "" (released xx.xx.xxxx)
+2.26 "" (released xx.xx.2004)
 
   * Do not include test packages in installed binaries.
     Changed: setup.py
 
-2.25 "Elf" (released xx.12.2004)
+  * Fix rule XML export.
+    Type: bugfix
+    Changed: wc/filter/rules/Rule.py
+
+  * Updated blacklists and advert filters.
+    Type: feature
+    Changed: config/*.zap
+
+2.25 "Elf" (released 23.12.2004)
 
   * Filter rating is disabled for now until it works again.
     Changed: wc/configuration.py, templates/classic/macros/standard.html,
