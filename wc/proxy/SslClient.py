@@ -1,14 +1,11 @@
-import os, socket, errno
-from wc import ConfigDir
 from wc.log import *
 from HttpClient import HttpClient
-from Connection import MAX_BUFSIZE, RECV_BUFSIZE
-from OpenSSL import SSL
 from wc.webgui import WebConfig
 from ClientServerMatchmaker import ClientServerMatchmaker
+from SslConnection import SslConnection
 
 
-class SslClient (HttpClient):
+class SslClient (HttpClient, SslConnection):
     """Handle SSL server requests, no proxy functionality is here.
        Response data will be encrypted with the WebCleaner SSL server
        certificate. The browser will complain about differing certificate
@@ -49,33 +46,3 @@ class SslClient (HttpClient):
         self.headers['Host'] = 'localhost\r'
         WebConfig(self, self.url, form, self.protocol, self.headers)
 
-
-    def handle_read (self):
-        """read data from SSL connection, put it into recv_buffer and call
-           process_read"""
-        assert self.connected
-        debug(PROXY, '%s Connection.handle_read', self)
-	if len(self.recv_buffer) > MAX_BUFSIZE:
-            warn(PROXY, '%s read buffer full', self)
-	    return
-        try:
-            data = self.recv(RECV_BUFSIZE)
-        except socket.error, err:
-            if err==errno.EAGAIN:
-                # try again later
-                return
-            self.handle_error('read error')
-            return
-        except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
-            exception(PROXY, "%s ssl read message", self)
-            return
-        except (SSL.Error, SSL.ZeroReturnError), err:
-            self.handle_error('read error')
-            return
-        if not data: # It's been closed, and handle_close has been called
-            debug(PROXY, "%s closed, got empty data", self)
-            return
-        debug(PROXY, '%s <= read %d', self, len(data))
-        debug(CONNECTION, 'data %r', data)
-	self.recv_buffer += data
-        self.process_read()

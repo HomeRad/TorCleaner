@@ -6,8 +6,8 @@ from wc.log import *
 
 def verify_server_cb (conn, cert, errnum, depth, ok):
     # This obviously has to be updated
-    debug(PROXY, 'Got client certificate: %s', cert.get_subject())
-    return ok
+    debug(PROXY, '%s (%s) got client certificate %s', conn, ok, cert.get_subject())
+    return 1
 
 # Initialize context
 serverctx = SSL.Context(SSL.SSLv23_METHOD)
@@ -22,8 +22,8 @@ serverctx.load_verify_locations(os.path.join(ConfigDir, 'CA.cert'))
 
 def verify_client_cb (conn, cert, errnum, depth, ok):
     # XXX this obviously has to be updated
-    debug(PROXY, 'Got server certificate: %s' % cert.get_subject())
-    return ok
+    debug(PROXY, '%s (%s) got server certificate %s', conn, ok, cert.get_subject())
+    return 1
 
 # construct client context
 clientctx = SSL.Context(SSL.SSLv23_METHOD)
