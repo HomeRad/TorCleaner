@@ -220,13 +220,15 @@ class HttpServer (Server):
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
-        # filter headers
         key = 'Connection'
         http_ver = serverpool.http_versions[self.addr]
         if http_ver >= 1.1:
             self.can_reuse = not has_header_value(msg, key, 'Close')
         elif http_ver >= 1.0:
             self.can_reuse = has_header_value(msg, key, 'Keep-Alive')
+        else:
+            self.can_reuse = None
+        # filter headers
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
                                        msg, attrs=self.nofilter)
