@@ -21,13 +21,10 @@ class WcMessage (Message, object):
        handling multiple headers with the same name"""
 
 
-    def __init__ (self, fp=None, seekable=1):
-        generate = fp is None
-        if generate:
+    def __init__ (self, fp=None, seekable=True):
+        if fp is None:
             fp = StringIO()
         super(WcMessage, self).__init__(fp, seekable=seekable)
-        if generate:
-            fp.close()
 
 
     def getallmatchingheadervalues (self, name):
@@ -64,10 +61,6 @@ class WcMessage (Message, object):
 
     def __str__ (self):
         return "\n".join([ repr(s) for s in self.headers ])
-
-
-    def close (self):
-        self.fp.close()
 
 
 def get_wc_client_headers (host):
