@@ -95,13 +95,7 @@ homepage: VERSION homepage-zapper
 
 homepage-zapper: md5sums
 	cp config/*.dtd config/webcleaner.conf config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/zapper
-	cp test/filter/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/test
-	(cd config && for f in *.zap; do \
-	    cat $$f | gzip --best > $(HTMLDIR)/htdocs/zapper/$${f}.gz; \
-	done)
-	(cd test/filter && for f in *.zap; do \
-	    cat $$f | gzip --best > $(HTMLDIR)/htdocs/test/$${f}.gz; \
-	done)
+	cp config/*.zap $(HTMLDIR)/htdocs/filter/
 	cp -r config/blacklists/ $(HTMLDIR)/htdocs/zapper
 	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
