@@ -21,12 +21,13 @@ __date__    = "$Date$"[7:-2]
 
 # be sure not to import something in the context namespace we do not want
 import base64
-from wc import AppName, filtermodules, ip, Version, config
+from wc import AppName, filtermodules, Version, config
 from wc import sort_seq as _sort_seq
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.network.ip import lookup_ips as _lookup_ips
 from wc.network.ip import resolve_host as _resolve_host
+from wc.network.ip import hosts2map as _hosts2map
 
 # config vars
 info = {}
@@ -317,7 +318,7 @@ def _form_filtermodules (form):
 def _form_addallowed (host):
     if host not in config['allowedhosts']:
         config['allowedhosts'].append(host)
-        config['allowedhostset'] = ip.hosts2map(config['allowedhosts'])
+        config['allowedhostset'] = _hosts2map(config['allowedhosts'])
         info['addallowed'] = True
         config.write_proxyconf()
 
@@ -329,7 +330,7 @@ def _form_delallowed (form):
             config['allowedhosts'].remove(host)
             removed += 1
     if removed > 0:
-        config['allowedhostset'] = ip.hosts2map(config['allowedhosts'])
+        config['allowedhostset'] = _hosts2map(config['allowedhosts'])
         config.write_proxyconf()
         info['delallowed'] = True
 
