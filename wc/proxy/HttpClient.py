@@ -150,11 +150,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.protocol = wc.proxy.fix_http_version(protocol)
         self.http_ver = wc.proxy.get_http_version(self.protocol)
         # build request
-        self.request = "%s %s %s" % (self.method, self.url, self.protocol)
-        wc.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
+        request = "%s %s %s" % (self.method, self.url, self.protocol)
+        wc.log.debug(wc.LOG_PROXY, "%s request %r", self, request)
         # filter request
         attrs = wc.filter.get_filterattrs(self.url, wc.filter.STAGE_REQUEST)
-        self.request = wc.filter.applyfilter(self.request, "finish", attrs)
+        self.request = wc.filter.applyfilter(request, "finish", attrs)
         # final request checking
         if not self.fix_request():
             return
@@ -387,11 +387,12 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                         "client received %d bytes more than content-length",
                         -self.bytes_remaining)
         if is_closed or self.bytes_remaining <= 0:
+            data = ""
             for stage in FilterStages:
                 attrs = wc.filter.get_filterattrs(self.url, stage,
                                clientheaders=self.clientheaders,
                                headers=self.headers)
-                data = wc.filter.applyfilter("", "finish", attrs)
+                data = wc.filter.applyfilter(data, "finish", attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r" % len(self.content)
