@@ -50,12 +50,12 @@
 
 <rewrite title="Adverts in the path name 2"
  desc="Kill links with ad words in the path name.">
-<attr>/(banner(s|_redirect|/)|clickit|werbung)</attr>
+<attr>/(banner(s|_redirect)|clickit|werbung)/</attr>
 </rewrite>
 
 <rewrite title="Adverts in the path name 3"
  desc="Kill links with ad words in the path name.">
-<attr>/event\.ng/Type=click</attr>
+<attr>/event\.ng\?Type=click</attr>
 </rewrite>
 
 <rewrite title="Adverts in the path name 4"

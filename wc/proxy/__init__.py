@@ -104,7 +104,7 @@ def proxy_poll(timeout=0.0):
 	    (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
             debug(BRING_IT_ON, why)
-            if why==(4,'Interrupted system call'):
+            if why.args == (4, 'Interrupted system call'):
                 # this occurs on UNIX systems with a sighup signal
                 return
             else:
