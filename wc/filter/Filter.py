@@ -54,10 +54,10 @@ class Filter (object):
 
 
     def applies_to_mime (self, mime):
-        if mime is None:
-            return False
         if not self.mimelist:
             return True
+        if mime is None:
+            return False
         for ro in self.mimelist:
             if ro.match(mime):
                 return True
