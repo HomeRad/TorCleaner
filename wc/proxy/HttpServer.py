@@ -458,9 +458,9 @@ class HttpServer (Server):
 
     def reuse (self):
         debug(PROXY, "Server: reuse %s", str(self))
+        self.client = None
         if self.connected and self.can_reuse:
             debug(PROXY, 'Server: reusing %d %s', self.sequence_number, str(self))
-            self.client = None
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
@@ -470,8 +470,6 @@ class HttpServer (Server):
         else:
             # We can't reuse this connection
             self.close()
-            client, self.client = self.client, None
-            client.server_close()
 
 
     def close (self):
