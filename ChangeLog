@@ -1,3 +1,5 @@
+2.13 (released x.x.xxxx)
+
 2.12 (released 8.5.2004)
   * do not assume zero content size if Content-Length header is
     missing in a server reply
