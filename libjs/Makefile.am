@@ -71,10 +71,10 @@ jsautocfg.h: jscpucfg
 
 ORIGSRCDIR := /home/calvin/src/mozilla/js/src
 origdiff:
-	(for f in *.c *.h; do diff -u $$f $(ORIGSRCDIR)/$$f 2>/dev/null; done) | less
+	(for f in *.c *.h *.tbl *.msg; do diff -u $$f $(ORIGSRCDIR)/$$f 2>/dev/null; done) | less
 
 origupdate:
-	for f in *.c *.h; do \
+	for f in *.c *.h *.tbl *.msg; do \
 	  if ! diff $$f $(ORIGSRCDIR)/$$f > /dev/null 2>&1; then \
 	      if [ -e $(ORIGSRCDIR)/$$f ]; then \
 	          /bin/cp -vf $(ORIGSRCDIR)/$$f $$f; \
