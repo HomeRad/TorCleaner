@@ -149,9 +149,10 @@ def match_host (request):
     hostname = spliturl(url)[1]
     if not hostname:
         return None
+    # XXX test this...
     if hostname.startswith('noproxy.'):
         return "noproxy"
-    hosts, nets = config['noproxyfor']
+    hosts, nets = config['nofilterhosts']
     return ip.host_in_set(hostname, hosts, nets)
 
 
