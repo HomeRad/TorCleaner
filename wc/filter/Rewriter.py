@@ -54,6 +54,8 @@ class Rewriter (Filter):
         p.feed(data)
         # flushing can raise FilterWait exception
         p.flush()
+        # break cyclic references
+        p.handler = None
         p.tagbuf2data()
         return p.getoutput()
 
@@ -78,9 +80,9 @@ class Rewriter (Filter):
                 ratings.append(rule)
         # generate the HTML filter
         handler = HtmlFilter(rewrites, ratings, url, **opts)
-        htmlparser = HtmlParser(handler)
+        p = HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
-        handler.htmlparser = htmlparser
-        d['rewriter_filter'] = htmlparser
+        handler.htmlparser = p
+        d['rewriter_filter'] = p
         return d
