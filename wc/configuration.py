@@ -37,6 +37,9 @@ config = None
 pending_reload = False
 
 def init (confdir=wc.ConfigDir):
+    """
+    Initialize rating system and load the configuration.
+    """
     global config
     from wc.filter.rating import register_service
     from wc.filter.rating.service import WebCleanerService

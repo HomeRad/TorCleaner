@@ -55,6 +55,12 @@ def get_compress_object ():
            }
 
 def compress (data, compobj):
+    """
+    Compress data and adjust CRC of the compressor.
+
+    @return: compressed data
+    @rtype: string
+    """
     if data:
         wc.log.debug(wc.LOG_FILTER, "compressing %d bytes", len(data))
         compobj['size'] += len(data)

@@ -41,6 +41,9 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
         self.replacement = replacement
 
     def end_data (self, name):
+        """
+        Store replacement data.
+        """
         super(BlockRule, self).end_data(name)
         if name == 'replacement':
             self.replacement = self._data

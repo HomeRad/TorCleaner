@@ -80,6 +80,9 @@ class VirusFilter (wc.filter.Filter.Filter):
         return ""
 
     def size_error (self):
+        """
+        Raise an exceptionto cause a 406 HTTP return code.
+        """
         raise wc.filter.FilterProxyError, (406, _("Not acceptable"),
                 _("Maximum data size (%s) exceeded") % \
                 strsize(VirusFilter.MAX_FILE_BYTES))

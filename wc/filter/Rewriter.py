@@ -42,6 +42,9 @@ class Rewriter (wc.filter.Filter.Filter):
                                        mimes=mimes)
 
     def filter (self, data, attrs):
+        """
+        Feed data to HTML parser.
+        """
         if not attrs.has_key('rewriter_filter'):
             return data
         p = attrs['rewriter_filter']
@@ -52,6 +55,9 @@ class Rewriter (wc.filter.Filter.Filter):
         return p.getoutput()
 
     def finish (self, data, attrs):
+        """
+        Feed data to HTML parser and flush buffers.
+        """
         if not attrs.has_key('rewriter_filter'):
             return data
         p = attrs['rewriter_filter']

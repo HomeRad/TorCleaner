@@ -121,16 +121,27 @@ if hasattr(httplib, 'HTTPS'):
 
 
 class PasswordManager (object):
+    """
+    Simple user/password store.
+    """
 
     def __init__ (self, user, password):
+        """
+        Store given credentials.
+        """
         self.user = user
         self.password = password
 
     def add_password (self, realm, uri, user, passwd):
-        # we have already our password
+        """
+        Already have the password, ignore parameters.
+        """
         pass
 
     def find_user_password (self, realm, authuri):
+        """
+        Return stored credentials.
+        """
         return self.user, self.password
 
 

@@ -72,6 +72,9 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         return self.recognize(buf, attrs)
 
     def recognize (self, buf, attrs):
+        """
+        Try to recognize MIME type and write Content-Type header.
+        """
         # note: recognizing a mime type fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024
         wc.log.debug(wc.LOG_FILTER, "MIME recognize %d bytes of data",

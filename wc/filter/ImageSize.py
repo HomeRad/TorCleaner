@@ -36,6 +36,9 @@ class ImageSize (wc.filter.Filter.Filter):
     """
 
     def __init__ (self):
+        """
+        Initialize list of allowed sizes.
+        """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['image']
         mimes = ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|'+
@@ -54,6 +57,13 @@ class ImageSize (wc.filter.Filter.Filter):
         f.close()
 
     def filter (self, data, attrs):
+        """
+        See if image will be blocked.
+
+        @return: block image data if image size is not allowed,
+            or original image data
+        @rtype: string
+        """
         if not data or not attrs.has_key('imgsize_buf'):
             # do not block this image
             return data
@@ -80,6 +90,13 @@ class ImageSize (wc.filter.Filter.Filter):
         return ''
 
     def finish (self, data, attrs):
+        """
+        See if image will be blocked.
+
+        @return: block image data if image size is not allowed,
+            or original image data
+        @rtype: string
+        """
         # note: if attrs['blocked'] is True, then the blockdata is
         # already sent out
         if not attrs.has_key('imgsize_buf'):
@@ -107,6 +124,12 @@ class ImageSize (wc.filter.Filter.Filter):
         return data
 
     def check_sizes (self, buf, sizes, url, finish=False):
+        """
+        Try to parse image size from buf and check against size list.
+
+        @return: False if image size is blocked, else True
+        @rtype: bool
+        """
         pos = buf.tell()
         assert pos > 0
         try:
@@ -137,6 +160,9 @@ class ImageSize (wc.filter.Filter.Filter):
         return True
 
     def get_attrs (self, url, localhost, stages, headers):
+        """
+        Initialize image buffer.
+        """
         if not self.applies_to_stages(stages):
             return {}
         d = super(ImageSize, self).get_attrs(url, localhost, stages, headers)

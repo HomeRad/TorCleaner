@@ -64,6 +64,9 @@ class Replacer (wc.filter.Filter.Filter):
         return data+buf.flush().encode(charset, 'ignore')
 
     def replace (self, data, charset, buf):
+        """
+        Decode data, replace contents of buffer and encode again.
+        """
         udata = data.decode(charset, 'ignore')
         udata = buf.replace(udata)
         return udata.encode(charset, 'ignore')

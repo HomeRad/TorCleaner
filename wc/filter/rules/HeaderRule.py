@@ -42,6 +42,9 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         self.attrnames.extend(('name', 'filterstage'))
 
     def end_data (self, name):
+        """
+        Store replacement data.
+        """
         super(HeaderRule, self).end_data(name)
         if name == 'replacement':
             self.value = self._data

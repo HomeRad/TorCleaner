@@ -60,7 +60,10 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
 
 
 def restart ():
-    # XXX this does not work on custom installations
+    """
+    Restart the runit service. Assumes a standard installation, ie.
+    it will not work if installed in custom directory.
+    """
     service = "/var/service/webcleaner"
     stop_cmd = "svwaitdown -k -t 5 %s" % service
     start_cmd = "runsvctrl up %s" % service

@@ -52,6 +52,9 @@ class JSFilter (wc.js.JSListener.JSListener):
     """
 
     def __init__ (self, url, localhost, opts):
+        """
+        Initialize javascript engine and variables.
+        """
         # True if javascript has to be filtered
         self.javascript = opts['javascript']
         self.level = opts.get('level', 0)
@@ -74,6 +77,9 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.js_popup = 0
 
     def _str__ (self):
+        """
+        Info string with class name and recursion level.
+        """
         return "%s[%d]" % (self.__class__.__name__, self.level)
 
     def js_process_data (self, data):

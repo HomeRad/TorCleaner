@@ -142,9 +142,15 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         return self._data(u"<?%s?>" % data)
 
     def start_element (self, tag, attrs):
+        """
+        HTML start element.
+        """
         self._start_element(tag, attrs, False)
 
     def start_end_element (self, tag, attrs):
+        """
+        HTML start-end element (<a/>).
+        """
         self._start_element(tag, attrs, True)
 
     def _start_element (self, tag, attrs, startend):
