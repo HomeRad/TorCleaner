@@ -159,11 +159,11 @@ class RewriteRule (UrlRule):
         if part==COMPLETE:
             return [DATA, ""]
         if part==TAGNAME:
-            return (STARTTAG, self.replace[1], attrs)
+            return [STARTTAG, self.replace[1], attrs]
         if part==TAG:
-            return (DATA, self.replace[1])
+            return [DATA, self.replace[1]]
         if part==ENCLOSED:
-            return (STARTTAG, tag, attrs)
+            return [STARTTAG, tag, attrs]
         newattrs = {}
         # look for matching tag attributes
         for attr,val in attrs.items():
@@ -208,10 +208,10 @@ class RewriteRule (UrlRule):
             buf[i] = [DATA, self.replace[1]]
             buf[-1] = [DATA, self.replace[1]]
         elif part==TAGNAME:
-            buf[i] = (STARTTAG, self.replace[1], {})
-            buf[-1] = (ENDTAG, self.replace[1])
+            buf[i] = [STARTTAG, self.replace[1], {}]
+            buf[-1] = [ENDTAG, self.replace[1]]
         elif part==ENCLOSED:
-            buf[i+1:-1] = [(DATA, self.replace[1])]
+            buf[i+1:-1] = [[DATA, self.replace[1]]]
         debug(NIGHTMARE, "Filter: filtered buffer", `buf`)
 
     def toxml (self):
