@@ -66,38 +66,32 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <INITIAL>"</" {
-    SETLVAL;
     BEGIN(S_INNER);
     return T_ANGLE_END_OPEN;
 }
 
 <INITIAL>"<!--" { 
-    SETLVAL;
     BEGIN(S_COMMENT);
     return T_COMMENT_START;
 }
 
 
 <INITIAL>"<!DOCTYPE" {  
-    SETLVAL;
     BEGIN(S_DOCTYPE);
     return T_DOCTYPE_START;
 }
 
 <INITIAL>"<![CDATA[" { 
-    SETLVAL;
     BEGIN(S_CDATA);
     return T_CDATA_START;
 }
 
 <INITIAL>"<?" { 
-    SETLVAL;
     BEGIN(S_PI);
     return T_PI_OPEN;
 }
 
 <INITIAL>"<" {
-    SETLVAL;
     BEGIN(S_INNER);
     return T_ANGLE_OPEN;
 }
@@ -109,19 +103,16 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_INNER>"/>" {
-    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_END_CLOSE;
 }
 
 <S_INNER>">" {
-    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
 
 <S_INNER>{RX_EQUAL} {
-    SETLVAL;
     BEGIN(S_ATTRVAL);
     return T_EQUAL;
 }
@@ -132,19 +123,16 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_INNER>{RX_WHITE_SPACE}* {
-    SETLVAL;
     /* ignore whitespace */
 }
 
 
 <S_ATTRVAL>\" {
-    SETLVAL;
     BEGIN(S_STRING);
 }
 
 
 <S_ATTRVAL>\' {
-    SETLVAL;
     BEGIN(S_APOSSTRING);
 }
 
@@ -156,7 +144,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_ATTRVAL>">" { 
-    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
@@ -174,7 +161,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_PI_COLLECT>"?>" { 
-    SETLVAL;
     BEGIN(INITIAL);
     return T_PI_CLOSE;
 }
@@ -186,7 +172,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_COMMENT>"-->" {
-    SETLVAL;
     BEGIN(INITIAL);
     return T_COMMENT_END;
 }
@@ -203,7 +188,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_CDATA>"]]>" {
-    SETLVAL;
     BEGIN(INITIAL);
     return T_CDATA_END;
 }
@@ -219,7 +203,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 }
 
 <S_DOCTYPE>">" {
-    SETLVAL;
     BEGIN(INITIAL);
     return T_ANGLE_CLOSE;
 }
@@ -231,7 +214,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_APOSSTRING>\' {
-    SETLVAL;
     BEGIN(S_INNER);
     return T_STRING;
 }
@@ -243,7 +225,6 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 
 <S_STRING>\" {
-    SETLVAL;
     BEGIN(S_INNER);
     return T_STRING;
 }

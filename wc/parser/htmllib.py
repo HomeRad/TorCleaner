@@ -35,8 +35,9 @@ class HtmlParser:
     comment(data): <!-- data -->
     startElement(tag, attrs): <tag {attr1:value1,attr2:value2,..}>
     endElement(tag): </tag>
-    doctype(data): <?DOCTYPE data?>
-    pi(data): <?data?>
+    doctype(data): <!DOCTYPE data?>
+    pi(name, data=None): <?name data?>
+    cdata(data): <![CDATA[data]]>
     characters(data): data
 
     additionally, there are error and warning callbacks:

@@ -64,7 +64,27 @@ element: element_start {}
    | pi            {}
    | cdata         {}
    | doctype       {}
-   | T_TEXT { printf("XXX element text\n"); }
+   | T_TEXT
+   {
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        if (PyObject_HasAttrString(ud->handler, "characters")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "characters");
+            if (callback==NULL) { error=1; goto finish_characters; }
+            result = PyObject_CallFunction(callback, "O", $1);
+            if (result==NULL) { error=1; goto finish_characters; }
+        }
+    finish_characters:
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($1);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
+   }
    | T_EOF {}
    ;
 
@@ -72,13 +92,23 @@ element: element_start {}
 comment: T_COMMENT_START comment_text T_COMMENT_END
     {
         UserData* ud = (UserData*)yyget_extra(scanner);
-        PyObject* callback = PyObject_GetAttrString(ud->handler, "comment");
-        PyObject* arglist = Py_BuildValue("(O)", $2);
-        if (PyEval_CallObject(callback, arglist)==NULL) {
-	    ud->error = 1;
-            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        if (PyObject_HasAttrString(ud->handler, "comment")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "comment");
+            if (callback==NULL) { error=1; goto finish_comment; }
+            result = PyObject_CallFunction(callback, "O", $2);
+            if (result==NULL) { error=1; goto finish_comment; }
         }
-        Py_DECREF(arglist);
+    finish_comment:
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     ;
 
@@ -92,34 +122,119 @@ comment_text: T_TEXT { $$ = $1; }
     ;
 
 
-element_start: T_ANGLE_OPEN T_NAME attributes angle_end
-    { printf("XXX element_start\n"); }
-    ;
-
-
-/* handle both normal and empty tags */
-angle_end: T_ANGLE_CLOSE {}
-    | T_ANGLE_END_CLOSE {}
+element_start: T_ANGLE_OPEN T_NAME attributes T_ANGLE_CLOSE
+    {
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        PyObject* ltag = PyObject_CallMethod($2, "lower", NULL);
+        if (ltag==NULL) { error=1; goto finish_start1; }
+        if (PyObject_HasAttrString(ud->handler, "startElement")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "startElement");
+            if (callback==NULL) { error=1; goto finish_start1; }
+            result = PyObject_CallFunction(callback, "OO", ltag, $3);
+            if (result==NULL) { error=1; goto finish_start1; }
+        }
+    finish_start1:
+        Py_XDECREF(ltag);
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        Py_DECREF($3);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
+    }
+    | T_ANGLE_OPEN T_NAME attributes T_ANGLE_END_CLOSE
+    {
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        PyObject* ltag = PyObject_CallMethod($2, "lower", NULL);
+        if (ltag==NULL) { error=1; goto finish_start2; }
+        if (PyObject_HasAttrString(ud->handler, "startElement")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "startElement");
+            if (callback==NULL) { error=1; goto finish_start2; }
+            result = PyObject_CallFunction(callback, "OO", ltag, $3);
+            if (result==NULL) { error=1; goto finish_start2; }
+        }
+        if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "endElement");
+            if (callback==NULL) { error=1; goto finish_start2; }
+            result = PyObject_CallFunction(callback, "O", ltag);
+            if (result==NULL) { error=1; goto finish_start2; }
+        }
+    finish_start2:
+        Py_XDECREF(ltag);
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        Py_DECREF($3);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
+    }
     ;
 
 
 element_end: T_ANGLE_END_OPEN T_NAME T_ANGLE_CLOSE
-    { printf("XXX element_end\n"); }
+    {
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        PyObject* ltag = PyObject_CallMethod($2, "lower", NULL);
+        if (ltag==NULL) { error=1; goto finish_end; }
+        if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "endElement");
+            if (callback==NULL) { error=1; goto finish_end; }
+            result = PyObject_CallFunction(callback, "O", ltag);
+            if (result==NULL) { error=1; goto finish_end; }
+        }
+    finish_end:
+        Py_XDECREF(ltag);
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
+    }
     ;
 
 
 /* return type: a Python dictionary with HTML attributes*/
 attributes: /* empty */ {
+        UserData* ud = (UserData*)yyget_extra(scanner);
         PyObject* dict = PyDict_New();
-        // XXX error check
+        if (dict==NULL) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
         $$ = dict;
     }
     | attribute attributes
     {
-        PyObject* name = PyTuple_GET_ITEM($1, 0);
-        PyObject* val = PyTuple_GET_ITEM($1, 1);
-        PyDict_SetItem($2, name, val);
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* name;
+        PyObject* val;
+        int error = 0;
+        name = PyTuple_GET_ITEM($1, 0);
+        if (name==NULL) { error = 1; goto finish_attributes; }
+        val = PyTuple_GET_ITEM($1, 1);
+        if (val==NULL) { error = 1; goto finish_attributes; }
+        if (PyDict_SetItem($2, name, val)==-1) { error = 1; goto finish_attributes; }
         $$ = $2;
+    finish_attributes:
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     ;
 
@@ -130,42 +245,117 @@ attributes: /* empty */ {
  */
 attribute: T_NAME T_EQUAL T_VALUE T_STRING
     {
-        PyObject* lname = PyObject_CallMethod($1, "lower", NULL);
-        PyObject* tup = Py_BuildValue("(ss)", lname, $3);
-        // XXX error
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* lname;
+        PyObject* tup;
+        int error = 0;
+        lname = PyObject_CallMethod($1, "lower", NULL);
+        if (lname==NULL) { error = 1; goto finish_attr1; }
+        tup = Py_BuildValue("(ss)", lname, $3);
+        if (tup==NULL) { error = 1; goto finish_attr1; }
         $$ = tup;
+    finish_attr1:
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     | T_NAME T_EQUAL T_STRING
     {
-        PyObject* lname = PyObject_CallMethod($1, "lower", NULL);
-        PyObject* tup = Py_BuildValue("(ss)", lname, $3);
-        // XXX error
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* lname;
+        PyObject* tup;
+        int error = 0;
+        lname = PyObject_CallMethod($1, "lower", NULL);
+        if (lname==NULL) { error = 1; goto finish_attr2; }
+        tup = Py_BuildValue("(ss)", lname, $3);
+        if (tup==NULL) { error = 1; goto finish_attr2; }
         $$ = tup;
+    finish_attr2:
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     | T_NAME T_EQUAL T_NAME
     {
-        PyObject* lname = PyObject_CallMethod($1, "lower", NULL);
-        PyObject* tup = Py_BuildValue("(ss)", lname, $3);
-        // XXX error
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* lname;
+        PyObject* tup;
+        int error = 0;
+        lname = PyObject_CallMethod($1, "lower", NULL);
+        if (lname==NULL) { error = 1; goto finish_attr3; }
+        tup = Py_BuildValue("(ss)", lname, $3);
+        if (tup==NULL) { error = 1; goto finish_attr3; }
         $$ = tup;
+    finish_attr3:
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     | T_NAME
     {
-        PyObject* lname = PyObject_CallMethod($1, "lower", NULL);
-        PyObject* tup = Py_BuildValue("(sO)", lname, Py_None);
-        // XXX error
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* lname;
+        PyObject* tup;
+        int error = 0;
+        lname = PyObject_CallMethod($1, "lower", NULL);
+        if (lname==NULL) { error = 1; goto finish_attr4; }
+        tup = Py_BuildValue("(sO)", lname, Py_None);
+        if (tup==NULL) { error = 1; goto finish_attr4; }
         $$ = tup;
+    finish_attr4:
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     ;
 
 
 pi: T_PI_OPEN T_NAME T_TEXT T_PI_CLOSE
     {
-        printf("XXX pi 1\n");
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        if (PyObject_HasAttrString(ud->handler, "pi")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "pi");
+            if (callback==NULL) { error=1; goto finish_pi1; }
+            result = PyObject_CallFunction(callback, "OO", $2, $3);
+            if (result==NULL) { error=1; goto finish_pi1; }
+        }
+    finish_pi1:
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        Py_DECREF($3);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     | T_PI_OPEN T_NAME T_PI_CLOSE
     {
-        printf("XXX pi 2\n");
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        if (PyObject_HasAttrString(ud->handler, "pi")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "pi");
+            if (callback==NULL) { error=1; goto finish_pi2; }
+            result = PyObject_CallFunction(callback, "O", $2);
+            if (result==NULL) { error=1; goto finish_pi2; }
+        }
+    finish_pi2:
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     ;
 
@@ -174,15 +364,45 @@ pi: T_PI_OPEN T_NAME T_TEXT T_PI_CLOSE
 
 
 cdata: T_CDATA_START text T_CDATA_END {
-        printf("XXX cdata\n");
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        if (PyObject_HasAttrString(ud->handler, "cdata")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "cdata");
+            if (callback==NULL) { error=1; goto finish_cdata; }
+            result = PyObject_CallFunction(callback, "O", $2);
+            if (result==NULL) { error=1; goto finish_cdata; }
+        }
+    finish_cdata:
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     ;
 
 
-text: /* empty */ { $$ = PyString_FromString(""); }
+text: /* empty */ {
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* result = PyString_FromString("");
+        if (result==NULL) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
+        $$ = result;
+    }
     | text T_TEXT
     {
+        UserData* ud = (UserData*)yyget_extra(scanner);
         PyString_ConcatAndDel(&$1, $2);
+        if ($1==NULL) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
         $$ = $1;
     }
     ;
@@ -191,7 +411,24 @@ text: /* empty */ { $$ = PyString_FromString(""); }
 /* TODO: This needs to resolve startEntity, DeclHandlers etc. For now just report TEXT */
 doctype: T_DOCTYPE_START T_TEXT T_ANGLE_CLOSE
     {
-        printf("XXX doctype\n");
+        UserData* ud = (UserData*)yyget_extra(scanner);
+        PyObject* callback = NULL;
+        PyObject* result = NULL;
+        int error = 0;
+        if (PyObject_HasAttrString(ud->handler, "doctype")==1) {
+            callback = PyObject_GetAttrString(ud->handler, "doctype");
+            if (callback==NULL) { error=1; goto finish_doctype; }
+            result = PyObject_CallFunction(callback, "O", $2);
+            if (result==NULL) { error=1; goto finish_doctype; }
+        }
+    finish_doctype:
+        Py_XDECREF(callback);
+        Py_XDECREF(result);
+        Py_DECREF($2);
+        if (error) {
+            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+            YYABORT;
+        }
     }
     ;
 
@@ -211,7 +448,6 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     }
     p->userData = PyMem_New(UserData, sizeof(UserData));
     p->userData->handler = handler;
-    p->userData->error = 0;
     p->userData->exc_type = NULL;
     p->userData->exc_val = NULL;
     p->userData->exc_tb = NULL;
@@ -228,7 +464,7 @@ static void parser_dealloc(parser_object* self)
 
 static PyObject* parser_flush(parser_object* self, PyObject* args) {
     /* flush parser buffers */
-    int res=0;
+    int res=0, error;
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
@@ -237,8 +473,9 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
     self->userData->exc_val = NULL;
     self->userData->exc_tb = NULL;
 
-    if (self->userData->error!=0) {
-        self->userData->error = 0;
+    // XXX
+    error = 0;
+    if (error!=0) {
         if (self->userData->exc_type!=NULL) {
             /* note: we give away these objects, so dont decref */
             PyErr_Restore(self->userData->exc_type,
@@ -254,7 +491,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 /* feed a chunk of data to the parser */
 static PyObject* parser_feed(parser_object* self, PyObject* args) {
     /* set up the parse string */
-    int slen;
+    int slen, error;
     char* s;
     void* scanner;
     if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
@@ -264,12 +501,11 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
 
     /* feed data to lexer and parse */
     htmllexStart(&scanner, s, slen, (UserData*)self->userData);
-    yyparse(scanner);
+    error = yyparse(scanner);
     htmllexStop(scanner);
 
     /* check error state */
-    if (self->userData->error!=0) {
-        self->userData->error = 0;
+    if (error!=0) {
         if (self->userData->exc_type!=NULL) {
 	    /* note: we give away these objects, so dont decref */
             PyErr_Restore(self->userData->exc_type,
@@ -344,16 +580,17 @@ int yyerror (char* msg) {
     return 0;
 }
 
+/*
 int main (void) {
     void* scanner;
     UserData userData;
     userData.handler = NULL;
-    userData.error = 0;
     userData.exc_type = NULL;
     userData.exc_val = NULL;
     userData.exc_tb = NULL;
     yydebug=1;
-    htmllexStart(&scanner, "<html>", 6, &userData);
+    htmllexStart(&scanner, "<!--html-->", 11, &userData);
     yyparse(scanner);
     return htmllexStop(scanner);
 }
+*/
