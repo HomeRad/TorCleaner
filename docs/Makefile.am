@@ -27,7 +27,7 @@ apidocs:
 #	epydoc --html -o devel/api --name "WebCleaner Development" --url ../../devel.html ../wc/
 
 homepage: nav apidocs
-	cp *.html *.css *.jpg *.png $(HTMLDIR)/htdocs
+	cp *.html *.css *.jpg *.png *.ico $(HTMLDIR)/htdocs
 	cp devel/*.html $(HTMLDIR)/htdocs/devel
 	cp misc/*.html $(HTMLDIR)/htdocs/misc
 	cp -r devel/api $(HTMLDIR)/htdocs/devel
