@@ -712,5 +712,6 @@ class Magic (object):
 
         # The magic file use "backspace" to concatenate what is normally
         # separated with a space"
-        return result.rstrip().lstrip('\x08').replace(' \x08', '')
+        result = result.lstrip('\x08').strip().replace(' \x08', '')
+        return result
 
