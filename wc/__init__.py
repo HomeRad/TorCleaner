@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import os, re, sys, UserDict, time, socket
+import os, re, sys, UserDict, time, socket, ip
 import _webcleaner2_configdata as configdata
 from debug_levels import *
 #sys.setcheckinterval(1000)
@@ -365,4 +365,4 @@ class WConfigParser (BaseParser):
 
 def host_set (strhosts):
     hosts = [s.strip() for s in strhosts.split(",")]
-    return ip.host_man(hosts)
+    return ip.host_map(hosts)

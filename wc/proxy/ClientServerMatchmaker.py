@@ -4,6 +4,7 @@ from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import _,debug,config
 from wc.debug_levels import *
+from wc.webgui import WebConfig
 
 serverpool = ServerPool()
 
@@ -142,22 +143,7 @@ class ClientServerMatchmaker:
         if self.client and self.client.addr[0] not in _localhosts:
             self.client.error(403, _("Forbidden"),
                               wc.proxy.access_denied(self.client.addr))
-        elif document=="/":
-            ServerHandleDirectly(self.client,
-            'HTTP/1.0 200 OK\r\n',
-            'Content-Type: text/html\r\n\r\n',
-            wc.proxy.html_portal())
-        elif document=="/headers/":
-            ServerHandleDirectly(self.client,
-            'HTTP/1.0 200 OK\r\n',
-            'Content-Type: text/plain\r\n\r\n',
-            wc.proxy.text_headers())
-        elif document=="/connections/":
-            ServerHandleDirectly(self.client,
-            'HTTP/1.0 200 OK\r\n',
-            'Content-Type: text/plain\r\n\r\n',
-            wc.proxy.text_connections())
-        else:
+        elif not WebConfig.handle_document(document, self.client):
             self.client.error(404, _("Not found"),
               _("Invalid path %s") % `document`)
 

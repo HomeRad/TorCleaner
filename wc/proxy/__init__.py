@@ -23,14 +23,6 @@ TIMERS = [] # list of (time, function)
 # (url, 0(incoming)/1(outgoing), headers)
 HEADERS = LimitQueue(config['headersave'])
 
-HTML_TEMPLATE = """<html><head>
-<title>%(title)s</title>
-</head>
-<body bgcolor="#fff7e5">
-<center><h3>%(header)s</h3></center>
-%(content)s
-</body></html>"""
-
 STATUS_TEMPLATE = """
 WebCleaner Proxy Status Info
 ============================
@@ -96,15 +88,6 @@ def text_status ():
     s += xmlify('\n     '.join(connections))
     s += ']\n\ndnscache: %s'%dns_lookups.dnscache
     return s
-
-
-def html_portal ():
-    data = {
-    'title': 'WebCleaner Proxy',
-    'header': 'WebCleaner Proxy',
-    'content': "<pre>%s\n%s</pre>" % (text_config(), text_status()),
-    }
-    return HTML_TEMPLATE % data
 
 
 def text_headers ():
