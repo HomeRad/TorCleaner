@@ -32,9 +32,11 @@ def start():
         # under Windows NT/2000 we can use NOWAIT
         key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
                  r"Software\Microsoft\Windows NT")
+        # XXX
+        val = key["ProgramVersion"]
         mode = os.P_NOWAIT
-    except WindowsError:
-        pass
+    except WindowsError: pass
+    except IndexError: pass
     try:
         ret = os.spawnv(mode, command[0], command)
     except OSError, exc:
@@ -65,13 +67,16 @@ def start_nt():
 
 def stop():
     if not os.path.exists(pidfile):
-        print "webcleaner was not running"
-        return
+        return "WebCleaner was not running (no lock file found)"
+    pid = int(open(pidfile).read())
     import win32api
-    handle = win32api.OpenProcess(1, 0, int(open(pidfile).read()))
-    rc = win32api.TerminateProcess(handle, 0)
+    try:
+        handle = win32api.OpenProcess(1, 0, pid)
+        rc = win32api.TerminateProcess(handle, 0)
+    except win32api.error:
+        print "warning: could not terminate process PID %d"%pid
     os.remove(pidfile)
 
 
 def reload():
-    raise Exception, "Reload not supported for this platform"
+    return "reload not supported for this platform"

@@ -21,4 +21,4 @@ def stop():
     pass
 
 def reload():
-    raise Exception, "Reload not supported for this platform"
+    return "reload not supported for this platform"

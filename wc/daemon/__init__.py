@@ -1,8 +1,8 @@
 """helper functions to start, stop, restart and reload daemons.
 
-Of course this is OS dependent and currently we support only Unix
-and Windows natively, the other OSes use a generic interface with no
-fork().
+Of course this is OS dependent and currently we support only Posix
+and Windows systems natively, the other OSes use a generic interface
+with no fork().
 """
 # Copyright (C) 2001  Bastian Kleineidam
 #
@@ -63,7 +63,7 @@ def status():
         pid = open(pidfile).read()
         return "WebCleaner is running (PID %s)" % pid
     else:
-        return "WebCleaner is not running"
+        return "WebCleaner is not running (no lock file found)"
 
 # import platform specific functions
 if os.name=='posix':
