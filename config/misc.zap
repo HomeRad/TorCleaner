@@ -13,7 +13,7 @@
 <rewrite title="Remove IE shortcut icon"
  desc="Some HTML pages supply a link to a favicon.gif icon image and it gets loaded automatically from Internet Explorer. Some people dont like this."
  tag="link">
-<attr name="rel">shortcut icon</attr>
+<attr name="rel">(?i)shortcut icon</attr>
 <replace part="tag"/>
 </rewrite>
 

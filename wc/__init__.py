@@ -177,6 +177,7 @@ Logfile:       %(logfile)s
 TCP timeout:   %(timeout)d
 Obfuscate IP:  %(obfuscateip)d
 Debug level:   %(debuglevel)d
+Show errors:   %(showerrors)d
 
 """) % self
 
@@ -282,6 +283,4 @@ class WConfigParser(BaseParser):
             debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 
-
 config = Configuration()
-

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, sys
+import re, sys, wc
 from wc.parser.htmllib import HtmlParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
@@ -81,6 +81,10 @@ class HtmlFilter(HtmlParser):
         self.rulestack = []
         self.buffer = []
         self.document = url or "unknown"
+        if wc.config['showerrors']:
+            self.error = self._error
+            self.warning = self._warning
+            self.fatalError = self._fatalError
 
 
     def __repr__(self):
@@ -207,17 +211,18 @@ class HtmlFilter(HtmlParser):
         self.buffer_append_data([DATA, s])
 
 
-    def error(self, line, col, msg):
-        print >> sys.stderr, "error parsing", \
-                 "%s:%d:%d: %s" % (self.document, line, col, msg.strip())
+    def errorfun(self, line, col, msg, name):
+        print >> sys.stderr, name, "parsing %s:%d:%d: %s" % \
+            (self.document, line, col, msg.strip())
 
 
-    def warning(self, line, col, msg):
-        print >> sys.stderr, "warning parsing", \
-                 "%s:%d:%d: %s" % (self.document, line, col, msg.strip())
+    def _error(self, line, col, msg):
+        self.errorfun(line, col, msg, "error")
 
 
-    def fatalError(self, line, col, msg):
-        print >> sys.stderr, "fatal error parsing", \
-                 "%s:%d:%d: %s" % (self.document, line, col, msg.strip())
+    def _warning(self, line, col, msg):
+        self.errorfun(line, col, msg, "warning")
 
+
+    def _fatalError(self, line, col, msg):
+        self.errorfun(line, col, msg, "fatalError")
