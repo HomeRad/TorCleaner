@@ -1,6 +1,6 @@
 MANIFEST
 VERSION
-dist
+webcleaner-*.tar.gz
 build
 locale
 share
