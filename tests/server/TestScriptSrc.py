@@ -113,7 +113,7 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
             except wc.filter.FilterException:
                 wc.proxy.proxy_poll(timeout=max(0, wc.proxy.run_timers()))
             i += 1
-            if i==50:
+            if i==50 and not wc.proxy.TIMERS:
                 # background downloading of javascript is too slow
                 raise wc.filter.FilterException("Slow")
         self.assertEqual(filtered, result)
