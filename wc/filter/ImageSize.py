@@ -59,24 +59,21 @@ class ImageSize (Filter):
 
 
     def filter (self, data, **attrs):
-        if not attrs.has_key('buffer'):
+        if not data or not attrs.has_key('buffer'):
             # do not block this image
             return data
         if attrs['blocked']:
             # block this image
             return ''
-        if attrs['buffer'].closed:
+        buf = attrs['buffer']
+        if buf.closed:
             # do not block this image
             return data
-        if not data:
-           return ''
-        buf = attrs['buffer']
         buf.write(data)
         if buf.tell() > self.min_bufsize:
             # test if image is blocked
-            url = attrs['url']
-            sizes = attrs['sizes']
-            attrs['blocked'] = not self.check_sizes(buf, sizes, url)
+            attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'],
+                                                    attrs['url'])
             if buf.tell() < self.min_bufsize:
                 # wait for more data
                 return ''
@@ -97,13 +94,17 @@ class ImageSize (Filter):
         if attrs['blocked']:
             # block this image
             return ''
-        if attrs['buffer'].closed:
-            return data
         buf = attrs['buffer']
+        if buf.closed:
+            return data
         buf.write(data)
         url = attrs['url']
-        sizes = attrs['sizes']
-        attrs['blocked'] = not self.check_sizes(buf, sizes, url, finish=True)
+        pos = buf.tell()
+        if pos <= 0:
+            error(FILTER, "Empty image data found at %s", `url`)
+        else:
+            attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'], url,
+                                                    finish=True)
         data = buf.getvalue()
         buf.close()
         if attrs['blocked']:
@@ -113,9 +114,7 @@ class ImageSize (Filter):
 
     def check_sizes (self, buf, sizes, url, finish=False):
         pos = buf.tell()
-        if pos==0:
-            error(FILTER, "Empty image data found at %s", `url`)
-            return True
+        assert pos > 0
         try:
             buf.seek(0)
             img = Image.open(buf, 'r')
