@@ -1,5 +1,5 @@
 class JSListener:
-    def processData (self, data):
+    def jsProcessData (self, data):
         raise NotImplementedError("abstract method")
-    def processPopup (self):
+    def jsProcessPopup (self):
         raise NotImplementedError("abstract method")

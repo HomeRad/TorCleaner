@@ -86,7 +86,7 @@ static int dispatchOutput (JSEnvObject* env, PyObject* output) {
     size = PySequence_Size(keys);
     for (int i=0; i<size; i++) {
         if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto disp_error; }
-        if (!(callback = PyObject_GetAttrString(listener, "processData"))) { error=-1; goto disp_error; }
+        if (!(callback = PyObject_GetAttrString(listener, "jsProcessData"))) { error=-1; goto disp_error; }
         if (!(result = PyObject_CallFunction(callback, "O", output))) { error=-1; goto disp_error; }
     }
 disp_error:
@@ -109,7 +109,7 @@ static int dispatchPopupNotification (JSEnvObject* env) {
     size = PySequence_Size(keys);
     for (int i=0; i<PySequence_Size(keys); i++) {
         if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto dispp_error; }
-        if (!(callback = PyObject_GetAttrString(listener, "processPopup"))) { error=-1; goto dispp_error; }
+        if (!(callback = PyObject_GetAttrString(listener, "jsProcessPopup"))) { error=-1; goto dispp_error; }
         if (!(result = PyObject_CallFunction(callback, ""))) { error=-1; goto dispp_error; }
     }
 dispp_error:
