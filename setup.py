@@ -44,7 +44,11 @@ class MyInstall (install, object):
             attr = 'install_%s'%d
             if self.root:
                 # cut off root path prefix
-                val = getattr(self, attr)[len(self.root):]
+                cutoff = len(self.root)
+                # don't strip the path separator
+                if self.root.endswith(os.sep):
+                    cutoff -= 1
+                val = getattr(self, attr)[cutoff:]
             else:
                 val = getattr(self, attr)
             if attr=="install_data":
