@@ -917,7 +917,7 @@ FunctionDef(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
      */
     pn->pn_funAtom = js_AtomizeObject(cx, fun->object, 0);
     if (!pn->pn_funAtom)
-        return JS_FALSE;
+        return NULL;
 
     pn->pn_op = op;
     pn->pn_body = body;
@@ -2813,8 +2813,9 @@ PrimaryExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                     /* So CURRENT_TOKEN gets TOK_COMMA and not TOK_LB. */
                     js_MatchToken(cx, ts, TOK_COMMA);
                     pn2 = NewParseNode(cx, &CURRENT_TOKEN(ts), PN_NULLARY, tc);
-                } else
+                } else {
                     pn2 = AssignExpr(cx, ts, tc);
+                }
                 if (!pn2)
                     return NULL;
                 PN_APPEND(pn, pn2);
