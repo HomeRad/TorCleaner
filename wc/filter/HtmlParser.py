@@ -138,9 +138,11 @@ class BufferHtmlParser (HtmlParser):
         """signal a filter/parser error"""
         error(PARSER, msg)
 
+
     def warning (self, msg):
         """signal a filter/parser warning"""
         warn(PARSER, msg)
+
 
     def fatalError (self, msg):
         """signal a fatal filter/parser error"""
@@ -281,9 +283,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.buf_append_data(item)
 
 
-    def buf2data (self):
+    def buf2data (self, finish=False):
         """dont write any data to buf if there are still pics rules"""
-        if self.pics:
+        if self.pics and not finish:
             return
         BufferHtmlParser.buf2data(self)
 
