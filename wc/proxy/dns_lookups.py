@@ -146,7 +146,7 @@ class DnsCache:
             return
         if not os.path.exists(filename):
             return
-        for line in open('/etc/hosts', 'r').readlines():
+        for line in open(filename, 'r').readlines():
             line = strip(line)
             if (not line) or line[0]=='#':
 	        continue

@@ -24,16 +24,17 @@ def start():
         raise Exception("webcleaner already started (lock file found). "
 	                "Do 'webcleaner stop' first.")
     try:
-        ret = os.spawnv(os.P_NOWAIT, os.path.normpath(sys.executable), ('webcleaner', 'start_nt'))
+        command = (sys.executable, 'webcleaner', 'start_nt')
+        ret = os.spawnv(os.P_NOWAIT, command[0], command)
     except OSError, exc:
         # this seems to happen when the command isn't found
         print exc
         raise Exception, \
-              "command '%s' failed: %s" % (cmd[0], exc[-1])
+              "command '%s' failed: %s" % (command, exc[-1])
     if ret != 0:
         # and this reflects the command running but failing
         raise Exception, \
-              "command '%s' failed with exit status %d" % (cmd[0], ret)
+              "command '%s' failed with exit status %d" % (command, ret)
 
 
 def start_nt():

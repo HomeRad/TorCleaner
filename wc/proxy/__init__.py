@@ -166,11 +166,10 @@ def match_host(request):
 
 
 def mainloop():
-    import HttpClient,Interpreter
+    from HttpClient import HttpClient
+    #from Interpreter import Interpreter
     from Listener import Listener
-    # I wrap these in a lambda/apply so that if the module is
-    # reloaded, I can use the NEW classes
-    Listener(config['port'], lambda *args: apply(HttpClient.HttpClient, args))
+    Listener(config['port'], HttpClient)
     #Listener(8081, lambda *args: apply(Interpreter.Interpreter, args))
     # make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
