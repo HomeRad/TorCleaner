@@ -122,7 +122,7 @@ def proxy_poll (timeout=0.0):
             x.handle_write_event()
             handlerCount += 1
             _slow_check(x, t, 'wslow')
-        for x in [ x for x in r if (x not in e and x not in w) and x.readable ]:
+        for x in [ x for x in r if (x not in e and x not in w) and x.readable() ]:
             t = time.time()
             debug(PROXY, "%s poll handle read", x)
             x.handle_read_event()
