@@ -39,7 +39,7 @@ Do 'webcleaner stop' first.""")
         os._exit(0)
     # drop privileges
     os.chdir("/")
-    os.umask(0277)
+    os.umask(0177)
     # XXX close if we have a logfile?
     #os.close(sys.__stdin__.fileno())
     #os.close(sys.__stdout__.fileno())
