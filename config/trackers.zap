@@ -18,4 +18,7 @@
  desc="In case the width and height attributes are missing"
  width="1"
  height="1"/>
+
+<block sid="lc.2" title="Siemens StatServ"
+ url="siemens\.com/tracking_engine/StatServ"/>
 </folder>
