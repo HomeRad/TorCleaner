@@ -691,6 +691,7 @@ class ConfWindow (ToolWindow):
         if self.getApp().doShow(dialog) != MBOX_CLICKED_OK:
             return 1
         try:
+            # XXX log into window
             wc.update.update(wc.config, BaseUrl)
             wc.config.write_filterconf()
         except IOError, msg:
