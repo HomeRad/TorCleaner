@@ -1,15 +1,5 @@
 TODO
 
-version 2.24 and above
-
-- document filter stages (and call it "stage" everywhere)
-
-- only filter single stage
-
-- Geht net:
-  http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winsock/winsock/socket_2.asp
-User_agent header remove works
-
 version 2.25 and above
 
 - fix rating config and storage
