@@ -11,6 +11,8 @@ except ImportError:
 def _main():
     f = sys.argv[1]
     data = file(f).read()
+    from wc.log import initlog
+    initlog("test/logging.conf")
     wc.config = wc.Configuration()
     wc.config['filters'] = ['ImageReducer']
     wc.config.init_filter_modules()

@@ -23,6 +23,8 @@ document.write("</OBJECT>");
 
 import wc, time
 reload(wc)
+from wc.log import initlog
+initlog("test/logging.conf")
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer']
 wc.config.init_filter_modules()

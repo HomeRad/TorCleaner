@@ -10,7 +10,8 @@ except ImportError:
 
 f = sys.argv[1]
 data = file(f).read()
-wc.DebugLevel = 3
+from wc.log import initlog
+initlog("test/logging.conf")
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()
