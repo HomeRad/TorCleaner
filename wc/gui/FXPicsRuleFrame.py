@@ -38,19 +38,18 @@ class FXPicsRuleFrame (FXRuleFrame):
             for category in sdata['categories'].keys():
                 fh = FXHorizontalFrame(fv, LAYOUT_FILL_X|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
                 c = FXCheckButton(fh, i18n._("%s\tEnable/disable this category.")%category, self, FXPicsRuleFrame.ID_CATEGORY,ICON_BEFORE_TEXT|LAYOUT_LEFT|LAYOUT_TOP)
-                c.setHelpText(category)
+                c.setHelpText("%s %s" % (service, category))
                 c.setPadLeft(20)
-                v = FXSpinner(fh, 3, self, FXPicsRuleFrame.ID_CATEGORY_VALUE, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN)
-                v.setRange(0,100)
-                v.setValue(0)
-                self.widgets[service][category] = (c,v)
+                #v = FXSpinner(fh, 3, self, FXPicsRuleFrame.ID_CATEGORY_VALUE, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN)
+                #v.setRange(0,100)
+                #v.setValue(0)
+                self.widgets[service][category] = c #(c,v)
                 if not self.rule.ratings.has_key(service):
                     c.disable()
-                else:
-                    if self.rule.ratings[service].has_key(category):
-                        c.setCheck(1)
-                        val =  self.rule.ratings[service][category]
-                        v.setValue(int(val))
+                elif self.rule.ratings[service].has_key(category):
+                    c.setCheck(1)
+                    #val =  self.rule.ratings[service][category]
+                    #v.setValue(int(val))
 
 
     def onCmdUrl (self, sender, sel, ptr):
@@ -69,23 +68,22 @@ class FXPicsRuleFrame (FXRuleFrame):
         # enable this service
         if sender.getCheck():
             self.rule.ratings[service] = {}
-            for c,v in widgets:
+            for c in widgets:
                 # gui update
                 c.enable()
-                v.enable()
                 # rule update
                 cat = c.getHelpText()
-                self.rule.ratings[service][cat] = v.getValue()
+                self.rule.ratings[service][cat] = 1 #v.getValue()
         # disable this service
         else:
             # rule update
             del self.rule.ratings[service]
             # gui update
-            for c,v in widgets:
+            for c in widgets:
                 c.setCheck(0)
-                v.setValue(0)
+                #v.setValue(0)
                 c.disable()
-                v.disable()
+                #v.disable()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Changed rule pics service data")
         return 1
@@ -93,8 +91,11 @@ class FXPicsRuleFrame (FXRuleFrame):
 
     def onCmdCategory (self, sender, sel, ptr):
         """enable/disable a PICS service rating"""
-        print "XXX", sender.getCheck()
-        print "XXX", sender.getHelpText()
+        service, cat = sender.getHelpText().split()
+        if sender.getCheck():
+            self.rule.ratings[service][cat] = 1
+        else:
+            del self.rule.ratings[service][cat]
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Changed rule pics category data")
         return 1
