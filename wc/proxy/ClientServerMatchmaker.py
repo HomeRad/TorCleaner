@@ -79,9 +79,10 @@ class ClientServerMatchmaker (object):
         if not document: document = '/'
         # add missing host headers for HTTP/1.1
         if protocol=='HTTP/1.1' and not self.headers.has_key('Host'):
-            self.headers['Host'] = hostname
             if port!=80:
-                self.headers['Host'] += ":%d"%port
+                self.headers['Host'] += "%s:%d\r"%(hostname, port)
+            else:
+                self.headers['Host'] = "%s\r"%hostname
         debug(PROXY, "ClientServer: splitted url %s %s %d %s", scheme, hostname, port, document)
         # prepare DNS lookup
         if config['parentproxy']:
@@ -119,6 +120,7 @@ class ClientServerMatchmaker (object):
             if self.port != 80:
 	        new_url += ':%d' % self.port
             new_url += self.document
+            info(PROXY, "Redirecting %s to %s", `self.url`, `new_url`)
             self.state = 'done'
             config['requests']['valid'] += 1
             # XXX find http version!
