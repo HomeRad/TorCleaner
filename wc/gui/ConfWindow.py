@@ -685,15 +685,16 @@ class ConfWindow (ToolWindow):
     def onCmdConfUpdate (self, sender, sel, ptr):
         """download files from http://webcleaner.sourceforge.net/zapper/
            and copy them over the existing config"""
-        # base url for all files
-        from wc import BaseUrl
+        doreload = False
+        from wc import update, BaseUrl, Configuration
         dialog = FXMessageBox(self,i18n._("Update Help"),UpdateHelp % BaseUrl,None,MBOX_OK_CANCEL)
         if self.getApp().doShow(dialog) != MBOX_CLICKED_OK:
             return 1
         try:
+            config = Configuration()
             # XXX log into window
-            wc.update.update(wc.config, BaseUrl)
-            wc.config.write_filterconf()
+            doreload = update.update(config, BaseUrl, dryrun=True)
+            config.write_filterconf()
         except IOError, msg:
             self.getApp().error(i18n._("Update Error"), "%s: %s" % (i18n._("Update Error"), msg))
         else:
