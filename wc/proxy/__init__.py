@@ -54,8 +54,9 @@ def norm_url (url):
         urlparts[2] = os.path.normpath(path).replace('\\', '/')
         if path.endswith('/'):
             urlparts[2] += '/'
-    urlparts = [ urllib.quote(p) for p in urlparts ]
-    return urlparse.urlunparse(urlparts)
+    urlparts = [ urllib.quote(p, '/=&') for p in urlparts ]
+    url = urlparse.urlunparse(urlparts)
+    return url
 
 
 is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
