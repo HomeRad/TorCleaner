@@ -1,3 +1,9 @@
+2.22 "Monster" (released xx.xx.xxxx)
+
+  * added favicon.ico to distributed files
+    Type: bugfix
+    Changed: setup.py
+
 2.21 "Bugsy" (released 18.10.2004)
   * make string of domain before concatenating
     Type: bugfix
