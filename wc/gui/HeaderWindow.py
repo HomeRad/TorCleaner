@@ -89,7 +89,7 @@ class HeaderWindow(ToolWindow):
 
 
     def __init__(self, app):
-	ToolWindow.__init__(self, app)
+	ToolWindow.__init__(self, app, "wcheaders")
         self.getApp().dirty = 0
         self.timer = None
         self.status = "Ready."

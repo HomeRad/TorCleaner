@@ -36,9 +36,13 @@ tempfile.tempdir = wc.ConfigDir
 class ConfWindow(ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_PORT,
+     ID_PROXYUSER,
+     ID_PROXYPASS,
      ID_DEBUGLEVEL,
      ID_FILTERMODULE,
      ID_PARENTPROXY,
+     ID_PARENTPROXYUSER,
+     ID_PARENTPROXYPASS,
      ID_PARENTPROXYPORT,
      ID_ACCEPT,
      ID_CANCEL,
@@ -66,11 +70,11 @@ class ConfWindow(ToolWindow):
      ID_NOPROXYFOR_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+31)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+35)
 
 
     def __init__(self, app):
-	ToolWindow.__init__(self, app)
+	ToolWindow.__init__(self, app, "webcleanerconf")
         self.readconfig()
         self.eventMap()
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
@@ -155,24 +159,25 @@ class ConfWindow(ToolWindow):
 	basics = FXGroupBox(proxy_top, _("Basic Values"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         matrix = FXMatrix(basics, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, _("Version"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        version = FXLabel(matrix, wc.Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, wc.Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, _("User"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXTextField(matrix, 10, self, self.ID_PROXYUSER).setText(self.proxyuser)
+        FXLabel(matrix, _("Password"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXTextField(matrix, 10, self, self.ID_PROXYPASS, opts=TEXTFIELD_PASSWD|TEXTFIELD_NORMAL).setText(self.proxypass)
         FXLabel(matrix, _("Port"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         widget = FXSpinner(matrix, 4, self, self.ID_PORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.port)
         FXLabel(matrix, _("Logfile"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXTextField(matrix, 10, self, self.ID_LOGFILE)
-        widget.setText(self.logfile)
+        FXTextField(matrix, 10, self, self.ID_LOGFILE).setText(self.logfile)
         FXLabel(matrix, _("Log HTML errors"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXCheckButton(matrix, None, self, self.ID_SHOWERRORS, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
-        widget.setCheck(self.showerrors)
+        FXCheckButton(matrix, None, self, self.ID_SHOWERRORS, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.showerrors)
         FXLabel(matrix, _("Timeout (sec.)"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         widget = FXSpinner(matrix, 3, self, self.ID_TIMEOUT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(1,600)
         widget.setValue(self.timeout)
         FXLabel(matrix, _("Obfuscate IP"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        widget = FXCheckButton(matrix, None, self, self.ID_OBFUSCATEIP, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
-        widget.setCheck(self.obfuscateip)
+        FXCheckButton(matrix, None, self, self.ID_OBFUSCATEIP, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP).setCheck(self.obfuscateip)
         FXLabel(matrix, _("Debug level"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         cols=0
         d = FXComboBox(matrix,0,4,self, self.ID_DEBUGLEVEL,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
@@ -603,7 +608,7 @@ class ConfWindow(ToolWindow):
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
          'timeout','obfuscateip','debuglevel','logfile',
-	 'configfile', 'noproxyfor', 'showerrors'):
+	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass'):
             setattr(self, key, self.config[key])
         self.modules = {
 	    "Header":0,

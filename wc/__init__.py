@@ -103,8 +103,12 @@ class Configuration(UserDict.UserDict):
     def reset(self):
         """Reset to default values"""
         self['port'] = 8080
+        self['proxyuser'] = None
+        self['proxypass'] = None
         self['parentproxy'] = None
         self['parentproxyport'] = 8080
+        self['parentproxyuser'] = None
+        self['parentproxypass'] = None
         self['buffersize'] = 1024
         self['logfile'] = None
         self['timeout'] = 30
@@ -263,7 +267,9 @@ class WConfigParser(BaseParser):
             for key in ('port','parentproxyport','buffersize','timeout',
 	                'obfuscateip','debuglevel','colorize','showerrors'):
                 self.config[key] = int(self.config[key])
-            for key in ('version','parentproxy','logfile'):
+            for key in ('version', 'parentproxy', 'logfile', 'proxyuser',
+                        'proxypass', 'parentproxyuser', 'parentproxypass',
+                        ):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
             if self.config['noproxyfor']:
