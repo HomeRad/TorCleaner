@@ -1,6 +1,8 @@
 webcleaner (1.11-0.1) unstable; urgency=low
 
   * New upstream version
+  * Standards version 3.5.10.0 (no changes)
+  * remove spidermonkey dependencies
 
  -- Bastian Kleineidam <calvin@debian.org>  Sun, 11 May 2003 23:16:40 +0200
 
