@@ -1,4 +1,4 @@
-2.11 (released xx.xx.xxxx)
+2.11 (released 25.4.2004)
   * - preserve the order in which HTML attributes have been parsed
     - cope with trailing space in HTML comments
     Type: feature
@@ -23,7 +23,7 @@
     Type: feature
     Changed: wc/url.py
 
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20040419
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040425
     Type: feature
     Changed: libjs/*
 
