@@ -1,3 +1,0 @@
-# override file for the Debian package tool dpkg-scanpackages
-webcleaner optional web
-webcleanerconf optional web
