@@ -36,14 +36,21 @@
     Changed: wc/webgui/context/config_html.py, templates/classic/config.html
   * the "no filter hosts" list is now a list of domains, equivalent to
     Mozillas "no proxy for" domain list
+    Type: feature
     Changed: wc/{url,ip,__init__}.py, wc/webgui/context/config_html.py
   * the "allowed hosts" list is now DNS resolved
+    Type: feature
     Changed: wc/ip.py
   * the "edit rule" in blocked HTML pages has now a "_top" target,
     removing any parent frames.
+    Type: feature
     Changed: templates/classic/blocked.html
   * proper wait for NT service to start up, then open web config
+    Type: bugfix
     Changed: webcleaner-service
+  * handle and correct missing start quotes in HTML attributes
+    Type: feature
+    Changed: wc/parser/htmllex.l
 
 2.9 (released 1.3.2004)
   * do not ship _webcleaner2_configdata.py, and adjust file permissions

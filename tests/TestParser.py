@@ -14,7 +14,8 @@ class TestParser (unittest.TestCase):
         # start tags
         ("""<a b="c">""", """<a b="c">"""),
         ("""<a b='c'>""", """<a b="c">"""),
-        ("""<a b=c">""", """<a b="c&quot;">"""),
+        ("""<a b=c">""", """<a b="c">"""),
+        ("""<a b=c'>""", """<a b="c">"""),
         ("""<a b="c>""", """<a b="c>"""),
         ("""<a b="">""", """<a b="">"""),
         ("""<a b=''>""", """<a b="">"""),
@@ -35,7 +36,7 @@ class TestParser (unittest.TestCase):
         # numbers in tag
         ("""<h1>bla</h1>""", """<h1>bla</h1>"""),
         # more start tags
-        #XXX("""<a b=c"><a b="c">""", """<a b="c&quot;"><a b="c">"""),
+        ("""<a b=c"><a b="c">""", """<a b="c"><a b="c">"""),
         #XXX("""<a b="c><a b="c">""", """<a b="c><a b="c">"""),
         ("""<a b=/c/></a><br>""", """<a b="/c/"></a><br>"""),
         ("""<br/>""", """<br>"""),
