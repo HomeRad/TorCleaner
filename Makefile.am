@@ -50,6 +50,7 @@ dist-hook:
 	rm -rf debian/webcleaner debian/webcleanertools
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(VERSION).tar.gz
+	rm -f $(distdir)/_webcleaner2_configdata.py
 	rm -f webcleaner-md5sums.txt
 
 unittests: localbuild
