@@ -5,6 +5,10 @@
     Type: bugfix
     Changed: wc/filter/ImageReducer.py
 
+  * Split off any superfluous MIME info when detecting MIME types.
+    Type: bugfix
+    Changed: wc/magic/__init__.py
+
 2.27 "Aliens" (released 11.2.2005)
 
   * Add <nbr> to the list of known deprecated tags so it does not get
