@@ -275,61 +275,31 @@ class MyBdistWininst (bdist_wininst, object):
             return open(filename, "rb").read()
         return super(MyBdistWininst, self).get_exe_bytes()
 
+
+def cc_supports_option (cc, option):
+    prog = "int main(){}\n"
+    cc_cmd = "%s -E %s -" % (cc[0], option)
+    _in, _out = os.popen4(cc_cmd)
+    _in.write(prog)
+    _in.close()
+    while _out.read(): pass
+    return _out.close() is None
+
+
 class MyBuildExt (build_ext, object):
 
     def build_extensions (self):
+        # For gcc 3.x we can add -std=gnu99 to get rid of warnings.
+        extra = []
+        if self.compiler.compiler_type == 'unix':
+            option = "-std=gnu99"
+            if cc_supports_option(self.compiler.compiler, option):
+                extra.append(option)
         # First, sanity-check the 'extensions' list
         self.check_extensions_list(self.extensions)
         for ext in self.extensions:
-            if hasattr(ext, "try_compile_args") and ext.try_compile_args:
-                old_extra = ext.extra_compile_args
-                extra_args = ext.extra_compile_args or []
-                ext.extra_compile_args = extra_args + ext.try_compile_args
-                try:
-                    self.build_extension(ext)
-                except CompileError:
-                    ext.extra_compile_args = old_extra
-                    self.build_extension(ext)
-            else:
-                self.build_extension(ext)
-
-class MyExtension (Extension, object):
-    def __init__ (self, name, sources,
-                  include_dirs=None,
-                  define_macros=None,
-                  undef_macros=None,
-                  library_dirs=None,
-                  libraries=None,
-                  runtime_library_dirs=None,
-                  extra_objects=None,
-                  extra_compile_args=None,
-                  try_compile_args=None,
-                  extra_link_args=None,
-                  export_symbols=None,
-                  depends=None,
-                  language=None,
-                  **kw                      # To catch unknown keywords
-                 ):
-        assert type(name) is StringType, "'name' must be a string"
-        assert (type(sources) is ListType and
-                map(type, sources) == [StringType]*len(sources)), \
-                "'sources' must be a list of strings"
-
-        self.name = name
-        self.sources = sources
-        self.include_dirs = include_dirs or []
-        self.define_macros = define_macros or []
-        self.undef_macros = undef_macros or []
-        self.library_dirs = library_dirs or []
-        self.libraries = libraries or []
-        self.runtime_library_dirs = runtime_library_dirs or []
-        self.extra_objects = extra_objects or []
-        self.extra_compile_args = extra_compile_args or []
-        self.try_compile_args = try_compile_args or []
-        self.extra_link_args = extra_link_args or []
-        self.export_symbols = export_symbols or []
-        self.depends = depends or []
-        self.language = language
+            ext.extra_compile_args.extend(extra)
+            self.build_extension(ext)
 
 
 # global include dirs
@@ -338,8 +308,6 @@ include_dirs = []
 define_macros = []
 # compiler args
 extra_compile_args = []
-# for gcc 3.x we try to add -std=gnu99 to get rid of warnings
-try_compile_args = ["-std=c99"]
 # library directories
 library_dirs = []
 # libraries
@@ -365,7 +333,7 @@ else:
 extensions = []
 
 # HTML parser
-extensions.append(MyExtension('wc.HtmlParser.htmlsax',
+extensions.append(Extension('wc.HtmlParser.htmlsax',
               sources = [normpath('wc/HtmlParser/htmllex.c'),
                          normpath('wc/HtmlParser/htmlparse.c'),
                          normpath('wc/HtmlParser/s_util.c'),
@@ -375,18 +343,16 @@ extensions.append(MyExtension('wc.HtmlParser.htmlsax',
               include_dirs = include_dirs + [normpath("wc/HtmlParser")],
               define_macros = define_macros,
               extra_compile_args = extra_compile_args,
-              try_compile_args = try_compile_args,
               library_dirs = library_dirs,
               libraries = libraries,
              ))
 
 # levenshtein distance method
-extensions.append(MyExtension('wc.levenshtein',
+extensions.append(Extension('wc.levenshtein',
               sources = [normpath('wc/levenshtein.c'),],
               include_dirs = include_dirs,
               define_macros = define_macros,
               extra_compile_args = extra_compile_args,
-              try_compile_args = try_compile_args,
               library_dirs = library_dirs,
               libraries = libraries,
              ))
@@ -399,12 +365,11 @@ if win_compiling:
                     ]
 else:
     define_macros = []
-extensions.append(MyExtension('wc.js.jslib',
+extensions.append(Extension('wc.js.jslib',
                   sources=['wc/js/jslib.c'],
                   include_dirs = include_dirs + ['libjs'],
                   define_macros = define_macros,
                   extra_compile_args = extra_compile_args,
-                  try_compile_args = try_compile_args,
                   extra_objects = ['libjs/.libs/libjs.a'],
                   library_dirs = library_dirs,
                   libraries = libraries,
