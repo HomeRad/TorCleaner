@@ -118,17 +118,15 @@ def proxy_poll (timeout=0.0):
             debug(PROXY, "%s handle exception event", x)
             x.handle_expt_event()
             handlerCount += 1
-        for x in [ x for x in w if x not in e ]:
+        for x in [ x for x in w if x not in e and x.writable() ]:
             t = time.time()
             debug(PROXY, "%s handle write", x)
-            assert x.writable(), "non-writable connection"
             x.handle_write_event()
             handlerCount += 1
             _slow_check(x, t, 'wslow')
-        for x in [ x for x in r if (x not in e and x not in w) ]:
+        for x in [ x for x in r if (x not in e and x not in w) and x.readable ]:
             t = time.time()
             debug(PROXY, "%s handle read", x)
-            assert x.readable(), "non-readable connection"
             x.handle_read_event()
             handlerCount += 1
             _slow_check(x, t, 'rslow')
