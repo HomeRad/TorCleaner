@@ -162,8 +162,10 @@ def init_clamav_conf ():
 
 
 def init_clamav_conf_posix ():
-    global _clamav_conf
     from wc import config
+    if not os.path.exists(config['clamavconf']):
+        return
+    global _clamav_conf
     _clamav_conf = ClamavConfig(config['clamavconf'])
 
 
