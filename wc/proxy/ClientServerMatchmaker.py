@@ -106,8 +106,10 @@ class ClientServerMatchmaker (object):
         elif not hostname and self.headers.has_key('Host'):
             host = self.headers['Host']
             hostname, port = splitnport(host, 80)
-        if not hostname or \
-           (hostname in config['localhosts'] and port==config['port']):
+        if not hostname:
+            error(PROXY, "%s missing hostname in request", str(self))
+            client.error(400, i18n._("Bad Request"))
+        if hostname in config['localhosts'] and port==config['port']:
             # this is a direct proxy call, delegate it to local handler
             client.handle_local()
             return
