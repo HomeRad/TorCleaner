@@ -115,6 +115,7 @@ def _form_url (form):
 
 
 def _form_generic (form):
+    global generic
     if form.has_key('generic'):
         generic = True
     return True
