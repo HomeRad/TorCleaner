@@ -31,14 +31,19 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
     def __init__ (self, sock=None):
         """initialize buffers"""
         super(Connection, self).__init__(sock=sock)
+        self.reset()
+        # reuse counter for persistent connections
+        self.sequence_number = 0
+
+    def reset (self):
+        """reset send and receive buffers"""
+        wc.log.debug(wc.LOG_PROXY, '%s buffer reset', self)
         self.recv_buffer = ''
         self.send_buffer = ''
         # True if data has still to be written before closing
         self.close_pending = False
         # True if connection should not be closed
         self.persistent = False
-        # reuse counter for persistent connections
-        self.sequence_number = 0
 
     def readable (self):
         """return True if connection is readable"""
