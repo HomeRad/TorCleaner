@@ -116,6 +116,8 @@ class HttpClient (StatefulConnection):
     def process_read (self):
         assert self.state!='closed'
         while True:
+            if self.state=='done':
+                break
             if self.delegate_read():
                 break
 
