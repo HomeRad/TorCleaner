@@ -12,6 +12,8 @@ Default cascading style sheet for the HTML output of Docutils.
 body {
     font-family: Verdana, Helvetica, Arial, sans-serif;
     background: #fff7ee;/*#f7ebd3;*//*fdf9f4*/
+    margin: 0;
+    padding: 0;
 }
 
 img {

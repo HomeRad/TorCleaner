@@ -60,7 +60,7 @@ class Node (object):
         fp.write('<a href="%s">%s</a>\n'%(self.get_url(level), self.name))
 
     def write_active (self, fp):
-        fp.write("%s\n"%self.name)
+        fp.write("<span>%s</span>\n"%self.name)
 
     def write_nextlevel (self, fp):
         fp.write('<br>\n')

@@ -1,2 +1,40 @@
 .navigation {
+    /* Navigational Plone Tabs(tm), implemented by customizing the a tag - they are surprisingly elegant. The power of CSS runs strong in these :) */
+    background: transparent;
+    border-collapse: collapse;
+    border-bottom-width: 2px;
+    border-bottom-style: dotted;
+    border-bottom-color: #f86821;
+    padding: 0em 0em 0em 2em;
+    white-space: nowrap;
+}
+
+.navigation a {
+    /* The normal, unselected tabs. They are all links */
+    color: #222222;
+    background: transparent;
+    border-left-width: 10px;
+    border-left-style: solid;
+    border-left-color: #f86821;
+    font-weight: normal;
+    /*height: 1.2em;*/
+    margin-right: 1em;
+    padding: 0em 0.5em;
+    text-decoration: none;
+}
+
+.navigation a:hover {
+    color: black;
+    background: #f8c218;
+    border-color: #f85b0d;
+}
+
+.navigation span {
+    /* The selected tab. There's only one of this */
+    color: #222222;
+    background: #f8c218;
+    border-left-width: 10px;
+    border-left-style: solid;
+    border-left-color: #f85b0d;
+    font-weight: normal;
 }

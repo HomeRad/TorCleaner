@@ -54,7 +54,7 @@ Screenshots
 
    +----------------------------+----------------------------+
    | .. image:: shot1_thumb.jpg | .. image:: shot2_thumb.jpg |
-   |      :align: center        |      :align: center        |
+   |      :align: middle        |      :align: middle        |
    |      :target: shot1.png    |      :target: shot2.png    |
    +----------------------------+----------------------------+
    | Proxy configuration        | Filter configuration       |

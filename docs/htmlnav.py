@@ -99,7 +99,7 @@ class HTMLFileNavTranslator (HTMLNavTranslator):
         self.body_prefix = [
             self.get_nav_css(),
             self.get_topframe_bashing(),
-             "</head>\n<body>\n",
+            '</head>\n<body>\n',
             self.get_nav_placeholder(),
         ]
         self.body_suffix = [
