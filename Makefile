@@ -15,11 +15,11 @@ clean:
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 
-# to build in the current directory (assumes python 2.2)
+# to build in the current directory (assumes python 2.1)
 localbuild:
 	$(MAKE) -C wc/parser
 	$(PYTHON) setup.py build
-	cp -f build/lib.linux-i686-2.2/wc/parser/htmlsax.so wc/parser
+	cp -f build/lib.linux-i686-2.1/wc/parser/htmlsax.so wc/parser
 
 localtest:
 	cd wc/parser && python htmllib.py
