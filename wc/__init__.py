@@ -66,11 +66,14 @@ def init_i18n ():
     """Deploy i18n gettext method into the default namespace.
        The LOCPATH environment variable is supported.
     """
+    wc.i18n.init(configdata.name, get_locdir())
+
+def get_locdir ():
+    """return locale directory"""
     locdir = os.environ.get('LOCPATH')
     if locdir is None:
         locdir = os.path.join(configdata.install_data, 'share', 'locale')
-    wc.i18n.init(configdata.name, locdir)
-
+    return locdir
 
 def initlog (filename, appname, filelogs=True):
     """initialize logfiles and configuration"""
