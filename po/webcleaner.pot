@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Feb 27 17:16:36 2004\n"
+"POT-Creation-Date: Fri Feb 27 17:24:52 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -436,6 +436,9 @@ msgstr ""
 msgid "Blocked image URL"
 msgstr ""
 
+msgid "Matching"
+msgstr ""
+
 msgid "Header value"
 msgstr ""
 
@@ -798,7 +801,9 @@ msgstr ""
 msgid "Nofilter host successfully added."
 msgstr ""
 
-msgid "Matching"
+msgid ""
+"Replace regular expressions in HTML or JavaScript\n"
+"pages."
 msgstr ""
 
 msgid "Rule replace search successfully changed."
@@ -1158,11 +1163,6 @@ msgid "Invalid url."
 msgstr ""
 
 msgid "Invalid folder move down id."
-msgstr ""
-
-msgid ""
-"Replace regular expressions in a HTML or JavaScript\n"
-"pages."
 msgstr ""
 
 msgid "Rule header name successfully changed."

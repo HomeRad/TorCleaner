@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Fri Feb 27 17:16:36 2004\n"
+"POT-Creation-Date: Fri Feb 27 17:24:52 2004\n"
 "PO-Revision-Date: 2004-02-27 17:13+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -480,6 +480,9 @@ msgstr "Inhaltsbewertung für %(AppName)s"
 msgid "Blocked image URL"
 msgstr "Blockierte Bild URL"
 
+msgid "Matching"
+msgstr "Zuordnung"
+
 msgid "Header value"
 msgstr "Header Wert"
 
@@ -904,8 +907,12 @@ msgstr ""
 msgid "Nofilter host successfully added."
 msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
 
-msgid "Matching"
-msgstr "Zuordnung"
+msgid ""
+"Replace regular expressions in HTML or JavaScript\n"
+"pages."
+msgstr ""
+"Ersetze reguläre Ausdrücke in HTML oder JavaScript\n"
+"Seiten."
 
 msgid "Rule replace search successfully changed."
 msgstr "Replace-Regel Suchwert wurde erfolgreich geändert."
@@ -1315,13 +1322,6 @@ msgstr "Ungültige URL."
 
 msgid "Invalid folder move down id."
 msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
-
-msgid ""
-"Replace regular expressions in a HTML or JavaScript\n"
-"pages."
-msgstr ""
-"Ersetze reguläre Ausdrücke in HTML oder JavaScript\n"
-"Seiten."
 
 msgid "Rule header name successfully changed."
 msgstr "Regel Header-Name wurde erfolgreich geändert."
