@@ -137,7 +137,7 @@ update-blacklists:
 	# compress (some files are very big)
 	for f in `find config/blacklists -type f`; do gzip --best $$f; done
 	# extract README
-	cd config && tar xzvf ../blacklists.tar.gz README
+	cd config && tar xzvf ../blacklists.tar.gz '*README'
 
 .PHONY: all clean localbuild distclean cleandeb deb_local deb_signed 
 .PHONY: deb_unsigned dist test gentest onlinetest offlinetest md5sums package

@@ -30,8 +30,6 @@ class ExternfileRule (Rule):
         s += "file %s\n" % `self.file`
         return s
 
-
     def toxml (self):
-        s = Rule.toxml(self)
-        s += ' file="%s"/>' % xmlify(self.file)
+        return Rule.toxml(self) + ' file="%s"/>' % xmlify(self.file)
 
