@@ -6,8 +6,10 @@ module"""
 import sys
 import os
 import wc
+import wc.configuration
 import wc.filter
 import wc.proxy
+import wc.proxy.dns_lookups
 import wc.proxy.Headers
 
 def _main ():
@@ -22,9 +24,11 @@ def _main ():
     else:
         f = file(fname)
     logfile = os.path.join(confdir, "logging.conf")
+    wc.init_i18n()
     wc.initlog(logfile, wc.Name, filelogs=False)
-    wc.config = wc.Configuration(confdir=confdir)
-    wc.config.init_filter_modules()
+    wc.configuration.config = wc.configuration.Configuration(confdir=confdir)
+    wc.configuration.config.init_filter_modules()
+    wc.proxy.dns_lookups.init_resolver()
     headers = wc.proxy.Headers.WcMessage()
     headers['Content-Type'] = "text/html"
     attrs = wc.filter.get_filterattrs(fname, [wc.filter.FILTER_RESPONSE_MODIFY],
