@@ -116,7 +116,7 @@ class Configuration (dict):
         self['parentproxycreds'] = None
         self['folderrules'] = []
         self['filters'] = []
-        self['filterlist'] = [[], [], [], [], [], [], [], [], [], []]
+        self['filterlist'] = {}
         self['colorize'] = 0
         # DNS resolved nofilterhosts
         self['nofilterhosts'] = None
