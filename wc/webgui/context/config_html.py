@@ -33,8 +33,7 @@ def _exec_form (form):
     if form.has_key('port'):
         _form_proxyport(_getval(form, 'port'))
     elif config['port']!=8080:
-        config['port'] = 8080
-        info['port'] = True
+        _form_proxyport(8080)
     # proxy user
     if form.has_key('proxyuser'):
         _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
@@ -113,10 +112,6 @@ def _exec_form (form):
         _form_addnofilter(_getval(form, 'newnofilter').strip())
     elif form.has_key('delnofilter') and form.has_key('nofilterhosts'):
         _form_delnofilter(form)
-    if info:
-        # write changed config
-        config.write_proxyconf()
-        _daemon.reload()
     return res[0]
 
 
@@ -125,7 +120,11 @@ def _form_proxyport (port):
     try:
         port = int(port)
         if port != config['port']:
+            # note: port change takes effect after restart
+            oldport = config['port']
             config['port'] = port
+            config.write_proxyconf()
+            config['port'] = oldport
             info['port'] = True
     except ValueError:
         error['port'] = True
@@ -134,6 +133,7 @@ def _form_proxyport (port):
 def _form_proxyuser (proxyuser, res):
     if proxyuser != config['proxyuser']:
         config['proxyuser'] = proxyuser
+        config.write_proxyconf()
         info['proxyuser'] = True
         res[0] = 407
 
@@ -141,6 +141,7 @@ def _form_proxyuser (proxyuser, res):
 def _form_proxypass (proxypass, res):
     if proxypass != config['proxypass']:
         config['proxypass'] = proxypass
+        config.write_proxyconf()
         info['proxypass'] = True
         if config['proxyuser']:
             res[0] = 407
@@ -149,6 +150,7 @@ def _form_proxypass (proxypass, res):
 def _form_parentproxy (parentproxy):
     if parentproxy != config['parentproxy']:
         config['parentproxy'] = parentproxy
+        config.write_proxyconf()
         info['parentproxy'] = True
 
 
@@ -157,6 +159,7 @@ def _form_parentproxyport (parentproxyport):
         parentproxyport = int(parentproxyport)
         if parentproxyport != config['parentproxyport']:
             config['parentproxyport'] = parentproxyport
+            config.write_proxyconf()
             info['parentproxyport'] = True
     except ValueError:
         error['parentproxyport'] = True
@@ -165,12 +168,14 @@ def _form_parentproxyport (parentproxyport):
 def _form_parentproxyuser (parentproxyuser):
     if parentproxyuser != config['parentproxyuser']:
         config['parentproxyuser'] = parentproxyuser
+        config.write_proxyconf()
         info['parentproxyuser'] = True
 
 
 def _form_parentproxypass (parentproxypass):
     if parentproxypass != config['parentproxypass']:
         config['parentproxypass'] = parentproxypass
+        config.write_proxyconf()
         info['parentproxypass'] = True
 
 
@@ -179,6 +184,7 @@ def _form_timeout (timeout):
         timeout = int(timeout)
         if timeout != config['timeout']:
             config['timeout'] = timeout
+            config.write_proxyconf()
             info['timeout'] = True
     except ValueError:
         error['timeout'] = True
@@ -214,6 +220,7 @@ def _form_addallowed (host):
         config['allowedhosts'] = ip.hosts2map(hosts)
         config['allowedhostlist'] = _sort_seq(hosts)
         info['addallowed'] = True
+        config.write_proxyconf()
 
 
 def _form_removehosts (form, key):
@@ -232,6 +239,7 @@ def _form_delallowed (form):
     if removed > 0:
         config['allowedhosts'] = ip.hosts2map(hosts)
         config['allowedhostlist'] = _sort_seq(hosts)
+        config.write_proxyconf()
         info['delallowed'] = True
 
 
@@ -241,6 +249,7 @@ def _form_addnofilter (host):
         hosts.add(host)
         config['nofilterhosts'] = ip.hosts2map(hosts)
         config['nofilterhostlist'] = _sort_seq(hosts)
+        config.write_proxyconf()
         info['addnofilter'] = True
 
 
@@ -249,5 +258,6 @@ def _form_delnofilter (form):
     if removed > 0:
         config['nofilterhosts'] = ip.hosts2map(hosts)
         config['nofilterhostlist'] = _sort_seq(hosts)
+        config.write_proxyconf()
         info['delnofilter'] = True
 
