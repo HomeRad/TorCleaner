@@ -31,7 +31,7 @@ _entries_per_page = 50
 def _reset_ratings ():
     ratings.clear()
     for category, catdata in service['categories'].items():
-        if catdata.get('rvalues'):
+        if catdata['rvalues']:
             ratings[category] = catdata['rvalues'][0]
         else:
             ratings[category] = ""
