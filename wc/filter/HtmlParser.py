@@ -139,15 +139,18 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """call the handler functions again with buffer data"""
         wc.log.debug(wc.LOG_FILTER, "%s replays %r", self, waitbuf)
         for item in waitbuf:
-            if self.state[0]=='wait':
+            if self.state[0] == 'wait':
                 # the replaying itself can switch to wait state
                 self.waitbuf.append(item)
-            elif item[0]==wc.filter.rules.RewriteRule.DATA and hasattr(self.handler, "characters"):
+            elif item[0] == wc.filter.rules.RewriteRule.DATA and \
+                 hasattr(self.handler, "characters"):
                 self.handler.characters(item[1])
-            elif item[0]==wc.filter.rules.RewriteRule.STARTTAG and hasattr(self.handler, "startElement"):
-                self.handler.startElement(item[1], item[2])
-            elif item[0]==wc.filter.rules.RewriteRule.ENDTAG and hasattr(self.handler, "endElement"):
-                self.handler.endElement(item[1])
-            elif item[0]==wc.filter.rules.RewriteRule.COMMENT and hasattr(self.handler, "comment"):
+            elif item[0] == wc.filter.rules.RewriteRule.STARTTAG and \
+                 hasattr(self.handler, "start_element"):
+                self.handler.start_element(item[1], item[2])
+            elif item[0] == wc.filter.rules.RewriteRule.ENDTAG and \
+                 hasattr(self.handler, "end_element"):
+                self.handler.end_element(item[1])
+            elif item[0] == wc.filter.rules.RewriteRule.COMMENT and \
+                 hasattr(self.handler, "comment"):
                 self.handler.comment(item[1])
-

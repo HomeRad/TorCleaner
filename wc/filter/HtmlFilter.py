@@ -125,7 +125,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         # default data
-        wc.log.debug(wc.LOG_FILTER, "%s startElement %r", self, tag)
+        wc.log.debug(wc.LOG_FILTER, "%s start_element %r", self, tag)
         if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
@@ -207,7 +207,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the tag buffer (calling tagbuf2data)"""
-        wc.log.debug(wc.LOG_FILTER, "%s endElement %r", self, tag)
+        wc.log.debug(wc.LOG_FILTER, "%s end_element %r", self, tag)
         if self._is_waiting([wc.filter.rules.RewriteRule.ENDTAG, tag]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
