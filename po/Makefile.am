@@ -30,7 +30,7 @@ webcleaner.pot: $(SOURCES)
 	if [ ! -d $(LDIR)/$*/LC_MESSAGES ]; then \
 	  mkdir -p $(LDIR)/$*/LC_MESSAGES; \
 	fi
-	$(MSGFMT) -o$(LDIR)/$*/$(LFILE) $<
+	$(MSGFMT) -o $(LDIR)/$*/$(LFILE) $<
 
 clean-local:
 	for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
