@@ -46,6 +46,7 @@ class GifImage(Filter):
 
 
     def filter(self, data, **attrs):
+        if not attrs.has_key('gifparser'): return data
         gifparser = attrs['gifparser']
         if data:
             gifparser.addData(data)
@@ -57,6 +58,7 @@ class GifImage(Filter):
 
 
     def finish(self, data, **attrs):
+        if not attrs.has_key('gifparser'): return data
         data = apply(GifImage.filter, (self, data), attrs)
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')

@@ -47,12 +47,14 @@ class Replacer(Filter):
             self.rules.append((rule.search, rule.replace))
 
 
-    def filter(self, data, **args):
-        return args['buf'].replace(data)
+    def filter(self, data, **attrs):
+        if not attrs.has_key('buf'): return data
+        return attrs['buf'].replace(data)
 
 
-    def finish(self, data, **args):
-        buf = args['buf']
+    def finish(self, data, **attrs):
+        if not attrs.has_key('buf'): return data
+        buf = attrs['buf']
         data = buf.replace(data)
         return data+buf.flush()
 

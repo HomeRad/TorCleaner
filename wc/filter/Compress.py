@@ -71,6 +71,7 @@ class Compress(Filter):
         Note that compression state is saved outside of this function
         in the compression object.
         """
+        if not attrs.has_key('compressobj'): return data
         compobj = attrs['compressobj']
         if compobj:
             header = compobj['header']
@@ -87,6 +88,7 @@ class Compress(Filter):
         return data
 
     def finish(self, data, **attrs):
+        if not attrs.has_key('compressobj'): return data
         compobj = attrs['compressobj']
         if compobj:
             if data:

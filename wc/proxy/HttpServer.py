@@ -39,6 +39,7 @@ class HttpServer(Server):
         self.headers = None
         self.decoders = [] # Handle each of these, left to right
         self.sequence_number = 0 # For persistent connections
+        self.attrs = {} # initial filter attributes are empty
         self.attempt_connect()
 
 
