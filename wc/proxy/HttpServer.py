@@ -243,7 +243,7 @@ class HttpServer (Server):
                 remove_headers(self.headers, ['Cache-Control'])
             # add warning
             self.headers['Warning'] = "214 WebCleaner Transformation applied"
-        elif encoding and encoding!='identity' and not rewrite:
+        elif encoding and encoding!='identity' and rewrite:
             print >>sys.stderr, _("Warning: unsupported encoding:"),`encoding`
             # do not disable filtering for unknown content-encodings
             # this could result in a DoS attack (server sending garbage
