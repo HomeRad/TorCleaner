@@ -150,7 +150,7 @@ def match_host(request):
     try:
         foo, url, bar = request.split()
     except Exception, why:
-        print >> sys.stderr "bad request", why
+        print >> sys.stderr, "bad request", why
         return 0
     hostname = spliturl(url)[1]
     if not hostname:

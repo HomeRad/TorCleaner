@@ -25,10 +25,9 @@ _RESPONSE_FILTERS = (
    FILTER_RESPONSE_ENCODE)
 
 
-class HttpServer(Connection):
+class HttpServer(Server):
     def __init__(self, ipaddr, port, client):
-        Connection.__init__(self)
-        self.client = client
+        Server.__init__(self, client)
         self.addr = (ipaddr, port)
         self.hostname = ''
         self.document = ''

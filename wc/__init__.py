@@ -148,7 +148,7 @@ class Configuration(UserDict.UserDict):
             exec "from filter import %s" % f
             _module = getattr(sys.modules['wc.filter'], f)
             for order in getattr(_module, 'orders'):
-                if f in ('Rewriter', 'Replacer'):
+                if f in ('Rewriter', 'Replacer', 'GifImage'):
                     for mime in getattr(_module, f).mimelist:
                         if mime not in self['mime_no_length']:
                             self['mime_no_length'].append(mime)
