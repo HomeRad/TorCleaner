@@ -9,8 +9,8 @@ TODO
   the GUI.
 
 - Use FOX 1.2 Python bindings (fxpy 1.2)
-  When FOX 1.2 is released, help to updated fxpy to this release using
-  the much faster new SWIG 1.3 code. Then the gui tools will be 
+  When FOX 1.2 is released, help to update fxpy to this release using
+  the much faster new SWIG 1.3 code. Then the gui tools will be
   considerably faster.
 
 - dockapp to visualize config and status
@@ -24,7 +24,7 @@ TODO
   HTML bugs should issue a warning on stderr.
 
 - strict whitelist operation (for parents)
-  To use this as a real kids-enabled tool, make 
+  To use this as a real kids-enabled tool.
 
 WONTDO
 
