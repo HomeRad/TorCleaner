@@ -37,6 +37,7 @@ def parse_digest_credentials (credentials):
 
 
 def check_digest_credentials (credentials, **attrs):
+    # XXX not working???
     opaque = credentials.get("opaque", "")
     if opaque!=wc_opaque:
         return False
