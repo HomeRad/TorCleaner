@@ -10,8 +10,8 @@ import re
 import time
 
 import wc
-import wc.configuration
 import wc.log
+import wc.configuration
 
 
 TIMERS = [] # list of (time, function)

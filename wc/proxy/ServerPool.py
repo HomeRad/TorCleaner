@@ -2,7 +2,9 @@
 """pool for server connections"""
 
 import time
+
 import wc
+import wc.log
 import wc.proxy
 
 

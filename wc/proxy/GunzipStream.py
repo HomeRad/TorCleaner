@@ -8,7 +8,9 @@ but exports a proxy4 encoding interface:
   - decode(string) => return as much of the string as can be decoded
   - flush()        => return everything else
 """
+
 import wc
+import wc.log
 import wc.proxy.DeflateStream
 
 

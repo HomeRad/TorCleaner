@@ -3,6 +3,7 @@ import mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
+import wc.log
 import wc.filter
 import wc.filter.Filter
 import wc.magic

@@ -8,7 +8,9 @@
 
 import socket
 import errno
+
 import wc
+import wc.log
 import wc.proxy.Dispatcher
 
 

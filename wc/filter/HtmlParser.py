@@ -16,11 +16,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+from cStringIO import StringIO
+
+import wc.log
 import wc.filter
 import wc.filter.rules.RewriteRule
 import wc.HtmlParser.htmlsax
 from wc.webgui import ZTUtils
-from cStringIO import StringIO
 
 
 class HtmlParser (wc.HtmlParser.htmlsax.parser):

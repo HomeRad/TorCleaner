@@ -2,6 +2,7 @@
 """server connections"""
 
 import wc
+import wc.log
 import wc.proxy.StatefulConnection
 
 

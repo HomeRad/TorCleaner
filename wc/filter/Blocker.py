@@ -22,6 +22,7 @@ import gzip
 import urllib
 
 import wc
+import wc.log
 import wc.configuration
 import wc.url
 import wc.filter

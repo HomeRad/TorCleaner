@@ -24,6 +24,7 @@ import glob
 import xml.parsers.expat
 
 import wc
+import wc.log
 import wc.ip
 
 ConfigCharset = "iso-8859-1"

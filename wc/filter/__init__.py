@@ -32,6 +32,7 @@ to work properly.
 import re
 
 import wc
+import wc.log
 import wc.configuration
 import wc.filter.rules
 import wc.proxy.Headers
