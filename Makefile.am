@@ -3,11 +3,7 @@ SUBDIRS 		= po libjs
 PYVER := 2.3
 PYTHON := python$(PYVER)
 WCVERSION := $(shell $(PYTHON) setup.py --version)
-WCPACKAGE := webcleaner
-#GROUPDIR := shell1.sourceforge.net:/home/groups
-#HTMLDIR := $(GROUPDIR)/w/we/$(WCPACKAGE)/htdocs
-HTMLDIR := /home/calvin/public_html/webcleaner.sf.net/htdocs
-MD5SUMS := $(WCPACKAGE)-md5sums.txt
+HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/parser -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
@@ -45,7 +41,7 @@ dist-hook:
 	rm -rf debian/webcleaner debian/webcleanertools
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
-	rm -f $(MD5SUMS)
+	rm -f webcleaner-md5sums.txt
 
 mytest:
 	env http_proxy="" ftp_proxy="" LANG=C $(PYTHON) test/regrtest.py
@@ -101,26 +97,26 @@ package:
 VERSION:
 	echo $(WCVERSION) > VERSION
 
-filterfiles:	md5sums
-	cp config/*.dtd config/webcleaner.conf config/md5sums.gz $(HTMLDIR)/zapper
-	cp test/filter/md5sums.gz $(HTMLDIR)/test
-	(cd config && for f in *.zap; do \
-	    cat $$f | gzip --best > $(HTMLDIR)/zapper/$${f}.gz; \
-	done)
-	(cd test/filter && for f in *.zap; do \
-	    cat $$f | gzip --best > $(HTMLDIR)/test/$${f}.gz; \
-	done)
-	cp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
-	cp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
-
 upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(WCVERSION).tar.gz
 
-homepage: VERSION
-	cp ChangeLog $(HTMLDIR)/changes.txt
-	cp README $(HTMLDIR)/readme.txt
-	cp VERSION $(HTMLDIR)/raw/
-	cp $(MD5SUMS) $(HTMLDIR)/
+homepage: VERSION md5sums
+	cp config/*.dtd config/webcleaner.conf config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/zapper
+	cp test/filter/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/test
+	(cd config && for f in *.zap; do \
+	    cat $$f | gzip --best > $(HTMLDIR)/htdocs/zapper/$${f}.gz; \
+	done)
+	(cd test/filter && for f in *.zap; do \
+	    cat $$f | gzip --best > $(HTMLDIR)/htdocs/test/$${f}.gz; \
+	done)
+	cp -r config/{blacklists,whitelists}/ $(HTMLDIR)/htdocs/zapper
+	cp config/filter.dtd $(HTMLDIR)/htdocs/filter.dtd.txt
+	cp config/adverts.zap $(HTMLDIR)/htdocs/adverts.zap.txt
+	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
+	cp README $(HTMLDIR)/htdocs/readme.txt
+	cp VERSION $(HTMLDIR)/htdocs/raw/
+	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
+	$(MAKE) -C $(HTMLDIR) chmod
 
 doc:
 	rm -f README
@@ -148,5 +144,4 @@ update-blacklists:
 
 .PHONY: localbuild distclean deb_signed update-blacklists
 .PHONY: gentest onlinetest offlinetest md5sums package splint
-.PHONY: filterfiles upload doc tar debug ndebug
-
+.PHONY: homepage upload doc tar debug ndebug
