@@ -58,6 +58,7 @@ def _exec_form (form):
         _form_adminuser(_getval(form, 'adminuser').strip(), res)
     elif config['adminuser']:
         config['adminuser'] = ''
+        config.write_proxyconf()
         info['adminuser'] = True
     # admin pass
     if form.has_key('adminpass'):
@@ -67,6 +68,7 @@ def _exec_form (form):
             _form_adminpass(base64.encodestring(val).strip(), res)
     elif config['adminpass']:
         config['adminpass'] = ''
+        config.write_proxyconf()
         info['adminpass'] = True
         if config['adminuser']:
             res[0] = 401
@@ -75,6 +77,7 @@ def _exec_form (form):
         _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
     elif config['proxyuser']:
         config['proxyuser'] = ''
+        config.write_proxyconf()
         info['proxyuser'] = True
     # proxy pass
     if form.has_key('proxypass'):
@@ -84,40 +87,48 @@ def _exec_form (form):
             _form_proxypass(base64.encodestring(val).strip(), res)
     elif config['proxypass']:
         config['proxypass'] = ''
+        config.write_proxyconf()
         info['proxypass'] = True
     # ntlm authentication
     if form.has_key('auth_ntlm'):
         if not config['auth_ntlm']:
             config['auth_ntlm'] = 1
+            config.write_proxyconf()
             info['auth_ntlm'] = True
     elif config['auth_ntlm']:
         config['auth_ntlm'] = 0
+        config.write_proxyconf()
         info['auth_ntlm'] = True
     # use google cache
     if form.has_key('try_google'):
         if not config['try_google']:
             config['try_google'] = 1
+            config.write_proxyconf()
             info['try_google'] = True
     elif config['try_google']:
         config['try_google'] = 0
+        config.write_proxyconf()
         info['try_google'] = True
     # parent proxy host
     if form.has_key('parentproxy'):
         _form_parentproxy(_getval(form, 'parentproxy').strip())
     elif config['parentproxy']:
         config['parentproxy'] = ''
+        config.write_proxyconf()
         info['parentproxy'] = True
     # parent proxy port
     if form.has_key('parentproxyport'):
         _form_parentproxyport(_getval(form, 'parentproxyport'))
     elif config['parentproxyport'] != 3128:
         config['parentproxyport'] = 3128
+        config.write_proxyconf()
         info['parentproxyport'] = True
     # parent proxy user
     if form.has_key('parentproxyuser'):
         _form_parentproxyuser(_getval(form, 'parentproxyuser').strip())
     elif config['parentproxyuser']:
         config['parentproxyuser'] = ''
+        config.write_proxyconf()
         info['parentproxyuser'] = True
     # parent proxy pass
     if form.has_key('parentproxypass'):
@@ -127,12 +138,14 @@ def _exec_form (form):
             _form_parentproxypass(base64.encodestring(val).strip())
     elif config['parentproxypass']:
         config['parentproxypass'] = ''
+        config.write_proxyconf()
         info['parentproxypass'] = True
     # timeout
     if form.has_key('timeout'):
         _form_timeout(_getval(form, 'timeout'))
     elif config['timeout']!=30:
         config['timeout'] = 30
+        config.write_proxyconf()
         info['timeout'] = True
     # filter modules
     _form_filtermodules(form)
@@ -147,7 +160,6 @@ def _exec_form (form):
     elif form.has_key('delnofilter') and form.has_key('nofilterhosts'):
         _form_delnofilter(form)
     return res[0]
-
 
 
 def _form_proxyport (port):
