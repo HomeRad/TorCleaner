@@ -19,6 +19,7 @@ you can use this for
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
+from cStringIO import StringIO
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.filter import FILTER_RESPONSE_MODIFY, compileRegex, compileMime
 from wc.filter.Filter import Filter
@@ -59,20 +60,26 @@ class Replacer (Filter):
         return {'buf': Buf(rules)}
 
 
-# buffer size in bytes
-BUF_SIZE=512
-
 class Buf:
     def __init__ (self, rules):
-        self.buf = ""
         self.rules = rules
+        self.buf = ""
 
     def replace (self, data):
-        data = self.buf + data
+        self.buf += data
+        if len(self.buf) > 512:
+            self._replace()
+            if len(self.buf) > 256:
+                data = self.buf
+                self.buf = self.buf[-256:]
+                return data[:-256]
+        return ""
+
+    def _replace (self):
         for rule in self.rules:
-            data = rule.search.sub(rule.replace, data)
-        self.buf = data[-BUF_SIZE:]
-        return data[:-BUF_SIZE]
+            self.buf = rule.search.sub(rule.replace, self.buf)
 
     def flush (self):
-        return self.buf
+        self._replace()
+        self.buf, data = "", self.buf
+        return data
