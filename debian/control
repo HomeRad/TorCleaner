@@ -8,7 +8,7 @@ Bugs: calvin@users.sourceforge.net
 
 Package: webcleaner
 Architecture: any
-Depends: python2.2, python2.2-xmlbase, debconf (>= 1.2.9)
+Depends: python2.2, python2.2-xmlbase, debconf (>= 1.2.9), python2.2-imaging
 Recommends: webcleanertools
 Suggests: python2.2-tarfile (>= 0.6.3)
 Description: a filtering HTTP proxy
