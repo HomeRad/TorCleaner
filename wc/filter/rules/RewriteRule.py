@@ -178,9 +178,9 @@ class RewriteRule (UrlRule):
 
 
     def filter_tag (self, tag, attrs):
-        debug(FILTER, "rule %s filter_tag", self.title)
-        debug(FILTER, "original tag %s attrs %s", `tag`, attrs)
-        debug(FILTER, "replace %s with %s", num_part(self.part), `self.replacement`)
+        #debug(FILTER, "rule %s filter_tag", self.title)
+        #debug(FILTER, "original tag %s attrs %s", `tag`, attrs)
+        #debug(FILTER, "replace %s with %s", num_part(self.part), `self.replacement`)
         if self.part==COMPLETE:
             return [DATA, ""]
         if self.part==TAGNAME:
@@ -194,7 +194,6 @@ class RewriteRule (UrlRule):
         for attr,val in attrs.items():
             ro = self.attrs.get(attr)
             if ro:
-                debug(FILTER, "ro=%s", ro.pattern)
                 mo = ro.search(val)
                 if mo:
                     if self.part==ATTR:
@@ -210,14 +209,13 @@ class RewriteRule (UrlRule):
                                 newattrs[self.replacement] = None
                     elif self.part==ATTRVAL:
                         # backreferences are replaced
-                        debug(FILTER, "mo=%s", str(mo.groups()))
                         newattrs[attr] = mo.expand(self.replacement)
                     else:
                         error(FILTER, "Invalid part value %s" % str(self.part))
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
+        #debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
         return [STARTTAG, tag, newattrs]
 
 
