@@ -12,6 +12,10 @@
     Type: bugfix
     Changed: wc/proxy/HttpClient.py
 
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040516
+    Type: feature
+    Changed: libjs/*
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix
