@@ -23,7 +23,7 @@ class SslServer (HttpServer, SslConnection):
         # attempt connect
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
         self.socket.settimeout(config['timeout'])
-        self.connect(self.addr)
+        self.try_connect()
         self.socket.set_connect_state()
 
 
