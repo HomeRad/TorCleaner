@@ -408,9 +408,10 @@ Rule (don't) match url
  value="http://www..." tal:attributes="value currule/url">
 </td></tr>
 <tr valign="top"><td colspan="2">
-<span i18n:translate="">Rating limits for</span>
-<a href="rating.html" tal:attributes="href string:rating.html.${lang}"
- tal:content="service/name">WebCleaner</a>:
+<span i18n:translate="">Rating limits for <a
+ href="rating.html" tal:attributes="href string:rating.html.${lang}"
+ i18n:name="service"
+ tal:content="AppName">WebCleaner</a>:</span>
 </td>
 </tr>
 <tr valign="top"><td colspan="2">
@@ -422,22 +423,21 @@ Rule (don't) match url
 </tr>
 </thead>
 <tbody>
-<tr tal:repeat="category service/categories/keys">
-<!-- XXX translation -->
-<td
- tal:content="service/categories/?category/name">violence</td>
-<td tal:condition="service/categories/?category/rrange" colspan="3">
+<tr tal:repeat="category categories">
+<td tal:define="global catname category/name"
+ tal:content="catname" i18n:translate="">violence</td>
+<td tal:condition="not:category/iterable" colspan="3">
 <input type="text" size="4"
- tal:attributes="name string:category_${category};value currule/ratings/?category"
+ tal:attributes="name string:category_${catname};value currule/ratings/?catname"
 ></td>
-<td tal:repeat="value service/categories/?category/rvalues"><input
- tal:attributes="name string:category_${category};value value"
- tal:condition="currule/values/?category/?value" checked
+<td tal:condition="category/iterable"
+ tal:repeat="value category/values"><input
+ tal:attributes="name string:category_${catname};value value"
+ tal:condition="currule/ratings/?catname" checked
  type="radio"><input
- tal:attributes="name string:category_${category};value value"
- tal:condition="not:currule/values/?category/?value"
- type="radio">&nbsp;<!-- XXX translation --><span 
- tal:content="rangenames/?value">Mild</span>
+ tal:attributes="name string:category_${catname};value value"
+ tal:condition="not:currule/ratings/?catname"
+ type="radio">&nbsp;<span tal:content="value" i18n:translate="">Mild</span>
  </td>
 </tr>
 </tbody>
