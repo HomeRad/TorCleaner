@@ -55,6 +55,7 @@ typedef struct {
     JSContext* ctx;
     JSClass global_class;
     JSClass document_class;
+    JSClass body_class;
     JSClass navigator_class;
     JSClass location_class;
     JSClass screen_class;
@@ -585,6 +586,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     JSObject* flash_mimetype_obj;
     JSObject* flash_plugin_obj;
     JSObject* screen_obj;
+    JSObject* body_obj;
     JSObject* frames_obj;
     JSObject* history_array;
     JSObject* images_array;
@@ -609,6 +611,8 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     env->global_class.flags = JSCLASS_HAS_PRIVATE;
     env->document_class = generic_class;
     env->document_class.name = "HTMLDocument";
+    env->body_class = generic_class;
+    env->body_class.name = "Body";
     env->navigator_class = generic_class;
     env->navigator_class.name = "Navigator";
     env->location_class = generic_class;
@@ -1021,6 +1025,25 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     if (!JS_DefineFunction(env->ctx, env->doc_obj, "close", &doNothing, 0,
                            JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set document.close function");
+    }
+
+    // init body object
+    if (!(body_obj=JS_DefineObject(env->ctx, env->doc_obj, "body",
+                                   &env->body_class, 0,
+                                   JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
+        return shutdown(env, "Could not create document.body object");
+    }
+    if (JS_DefineProperty(env->ctx, body_obj, "clientHeight",
+                          INT_TO_JSVAL(768), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
+        ==JS_FALSE) {
+        return shutdown(env, "Could not set body.clientHeight property");
+    }
+    if (JS_DefineProperty(env->ctx, body_obj, "clientWidth",
+                          INT_TO_JSVAL(1024), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
+        ==JS_FALSE) {
+        return shutdown(env, "Could not set body.clientWidth property");
     }
 
     // init form array
