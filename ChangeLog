@@ -1,7 +1,7 @@
 2.2
   * removed unused imports
     Changed: wc/*.py
-  * updated filters
+  * updated filters, whitelists removed due to conflict with GPL
     Changed: config/*.zap
   * fixed parsing of end tags with trailing garbage
     Changed: wc/parser/htmllex.l
@@ -13,6 +13,7 @@
   * Javascript engine initialization improvements:
     - set navigator.plugins['Shockwave Flash'] object
     - set location.hostname and document.location.hostname properties
+    - add alert() function (doing nothing)
 
 2.1
   * lots of minor bugs fixed running pychecker
