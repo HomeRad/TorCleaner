@@ -44,8 +44,8 @@ from HtmlSecurity import HtmlSecurity
 # whitespace matcher
 _has_ws = re.compile("\s").search
 
-_start_js_comment = re.compile(r"^<!--\s*(.*[\r\n]+)?").search
-_end_js_comment = re.compile(r"\s*//.*-->$").search
+_start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
+_end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
 
 class JSHtmlListener (JSListener):
     """defines callback handlers for Javascript code"""
@@ -604,6 +604,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         mo = _end_js_comment(script)
         if mo:
             script = script[:mo.start()]
+        script = script.strip()
         if not script:
             # again, ignore an empty script
             del self.buf[-1]
