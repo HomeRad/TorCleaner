@@ -153,7 +153,8 @@ class JSFilter (wc.js.JSListener.JSListener):
             assert not self.js_htmlparser.waitbuf
             assert len(self.htmlparser.tagbuf) >= 2, \
                    "too small buffer %s" % self.htmlparser.tagbuf
-            data = unicode(self.js_htmlparser.getoutput())
+            data = unicode(self.js_htmlparser.getoutput(),
+                           self.js_htmlparser.encoding)
             self.htmlparser.tagbuf[-2:-2] = \
         [[wc.filter.rules.RewriteRule.DATA, data]]+self.js_htmlparser.tagbuf
             self.htmlparser.debugbuf(wc.LOG_JS)
