@@ -1,4 +1,3 @@
-#!/usr/bin/python2.3
 import os, md5
 from wc import ConfigDir, ZapperParser, Configuration, filterconf_files
 from wc import Name, Version
