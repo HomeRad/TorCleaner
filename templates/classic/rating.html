@@ -89,7 +89,7 @@ several given categories.</p>
 </thead>
 <tbody>
 <tr tal:repeat="url ratings_display">
-<td>
+<td tal:define="global rating rating_store/?url">
 <table border="0" cellpadding="0" cellspacing="0" summary="">
 <tr><td><a href="#" i18n:attributes="title"
  title="Edit this rating"
@@ -109,12 +109,13 @@ several given categories.</p>
 </tr></table></td>
 <td><a href="#" tal:attributes="href url"
  tal:content="url">http://imadoofus.com</a></td>
-<td><span tal:repeat="category rating_cache/?url/keys">
-<span tal:condition="values/?category">
-<span tal:content="category" i18n:translate="category">violence</span>=<span
- tal:replace="rating_cache/?url/?category">0</span>
-</span></span></td>
-<td><span tal:replace="structure rating_modified/?url">1. Jan 2004</span></td>
+<td><span
+ tal:repeat="category rating/category_values/keys">
+<span tal:content="category" i18n:translate="">violence</span>=<span
+ tal:replace="rating/category_values/?category">0</span>
+</span>
+</td>
+<td><span tal:replace="structure rating/modified_string">1. Jan 2004</span></td>
 </tr>
 <tr tal:condition="not:ratings_display">
 <td>&nbsp;</td>
