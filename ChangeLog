@@ -2,7 +2,8 @@
   * Print access denied messages on stderr
     Changed files: wc/proxy/HttpClient.py
   * Remove unsupported timeout and obfuscateip config options
-    Changed files: wc/gui/ConfWindow.py, wc/__init__.py, README
+    Changed files: wc/gui/ConfWindow.py, wc/__init__.py, README,
+      config/webcleaner.conf
   * Updated ssh tunnel scripts
     Changed files: README.sshtunnel
 
