@@ -7,7 +7,7 @@ The XXX folder name is the blacklist folder.
 Required are the "tarfile" module and Python 2.2
 """
 
-import sys, time, os, re, urllib2, tarfile, gzip, urlparse
+import sys, time, os, re, urllib2, tarfile, gzip
 sys.path.insert(0, os.getcwd())
 from wc import xmlify
 
@@ -22,31 +22,11 @@ urls = {}
 expressions = {}
 # <category> --> <type> --> <file>
 categories = {}
-dmoz_cats = [
-     'adult',
-     'arts',
-     'business',
-     'computers',
-     'games',
-     'health',
-     'home',
-     'news',
-     'recreation',
-     'reference',
-     'regional',
-     'science',
-     'shopping',
-     'society',
-     'sports',
-     'world',
-     'kids_and_teens',
-   ]
-dmoz_ages = [
-     'kids',
-     'teen',
-     'mteen',
-   ]
 
+# only accept these categories
+mycats = ['ads', 'violence', 'aggressive']
+# only extract these files
+myfiles = ['domains', 'expressions', 'urls']
 ###################### read blacklist data #########################
 
 def read_blacklists (file):
@@ -71,6 +51,7 @@ def read_blacklists (file):
 
 def read_data (file, name, data):
     cat = os.path.basename(os.path.dirname(file))
+    if cat not in mycats: return
     f = open(file)
     line = f.readline()
     while line:
@@ -89,7 +70,11 @@ def read_data (file, name, data):
 
 def write_filters (basedir):
     for cat, data in categories.items():
-        filename = os.path.join(basedir, "blacklist_"+cat+".zap")
+        if cat=='kids_and_teens':
+            d = 'whitelist'
+        else:
+            d = 'blacklist'
+        filename = os.path.join(basedir, "%s_%s.zap"%(d, cat))
         print "writing", filename
         if os.path.exists(filename):
             os.remove(filename)
@@ -107,7 +92,7 @@ def write_folder (cat, data, file):
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="%(title)s"
  desc="%(desc)s"
- disable="1">
+ disable="0">
 """ % d)
     for type in data.keys():
         globals()["write_%s"%type](cat, file)
@@ -166,7 +151,11 @@ def blacklist (file):
         d = "extracted/"+file[:-7]
         f = tarfile.gzopen(source)
         for m in f:
-            f.extract(m, d)
+            d, b = os.path.split(m.name)
+            d = os.path.basename(d)
+            if b in myfiles and d in mycats:
+                print m.name
+                f.extract(m, d)
         f.close()
         read_blacklists(d)
     elif file.endswith(".gz"):
@@ -180,26 +169,7 @@ def blacklist (file):
         f.close()
         read_data(file, "domains", domains)
 
-dmoz_topic_re = re.compile(r'^<Topic r:id="(?P<topic>[^"]+)">$')
-dmoz_url_re = re.compile(r'^<link r:resource="(?P<url>[^"]+)"/>$')
-
-def dmoz_get_topic (line):
-    match = dmoz_topic_re.match(line)
-    if match:
-        topic = match.group("topic").split("/", 2)
-        if len(topic)<2: return None
-        if topic[0]!="Top": return None
-        topic = topic[1].lower()
-        if topic in dmoz_cats: return topic
-        else: return None
-    print "dmoz warning: no topic match for", line
-
-def dmoz_get_url (line):
-    match = dmoz_url_re.match(line)
-    if match:
-        return match.group("url")
-    print "dmoz warning: no url match for", line
-
+# for now, only adult (later: kids_and_teens?)
 def dmozlists (file):
     print "dmozlist %s..." % file
     f = gzip.GzipFile("downloads/"+file)
@@ -208,17 +178,20 @@ def dmozlists (file):
     while line:
         line = line.strip()
         if line.startswith("<Topic r:id="):
-            topic = dmoz_get_topic(line)
-        elif topic is not None and line.startswith("<link r:resource="):
+            topic = line[13:line.rindex('"')].split("/", 2)[1].lower()
+        elif topic=='kids_and_teens' and line.startswith("<link r:resource="):
             #split url, and add to domains or urls
-            url = dmoz_get_url(line)
-            if url is not None:
-                tup = urlparse.urlparse(url)
-                if tup[2]:
-                    entry = "%s/%s" % tup[1:3]
+            url = line[18:line.rindex('"')]
+            if url.startswith("http://"):
+                url = url[7:]
+                tup = url.split("/", 1)
+                if len(tup)>1 and tup[1]:
+                    categories.setdefault(topic, {})["urls"] = None
+                    entry = "%s/%s" % (tup[0].lower(), tup[1])
                     urls.setdefault(entry, {})[topic] = None
                 else:
-                    domains.setdefault(tup[1], {})[topic] = None
+                    categories.setdefault(topic, {})["domains"] = None
+                    domains.setdefault(tup[0].lower(), {})[topic] = None
         line = f.readline()
     f.close()
 
@@ -268,7 +241,7 @@ def download_and_merge ():
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
     # dmoz category dumps (this big fucker is 195MB !!!)
-    geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
+    geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists, saveas="content.rdf.stripped.gz")
 
 def write_blacklists (directory):
     open_files(directory)
@@ -281,9 +254,13 @@ def write_blacklists (directory):
 
 def open_files (directory):
     for cat in categories.keys():
-        basedir = "%s/%s" % (directory, cat)
+        if cat=='kids_and_teens':
+            d='whitelists'
+        else:
+            d='blacklists'
+        basedir = "%s/%s/%s" % (directory, d, cat)
         if not os.path.isdir(basedir):
-            os.mkdir(basedir)
+            os.makedirs(basedir)
         for type in categories[cat].keys():
             if type=="expressions": continue
             file = "%s/%s.gz" % (basedir, type)
@@ -318,7 +295,7 @@ if __name__=='__main__':
     #print "read data..."
     #read_blacklists("config/blacklists")
     download_and_merge()
-    write_blacklists("config/blacklists")
+    write_blacklists("config")
     write_filters("config")
     #print "remove gunziped files"
     #remove_gunziped_files("config/blacklists")
