@@ -208,7 +208,8 @@ def server_set_content_headers (headers, mime_types, url):
     matching_mimes = [m for m in mime_types if origmime.startswith(m)]
     if len(matching_mimes) > 0:
         return
-    # we have a mime type override
+    # we have a mime type override, pick the first one out of the list
+    mime = mime_types[0]
     if origmime:
         wc.log.warn(wc.LOG_PROXY,
             _("Change content type of %r from %r to %r"), url, origmime, mime)
