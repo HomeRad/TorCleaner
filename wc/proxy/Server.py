@@ -4,7 +4,6 @@ Server connections.
 """
 
 import socket
-import errno
 
 import wc
 import wc.log
