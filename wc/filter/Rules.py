@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-from wc import _, debug, error
+from wc import _, debug, error, xmlify
 from wc.debug_levels import *
 from types import StringType, IntType
 import re
@@ -37,24 +37,6 @@ ENCLOSED = 5
 NO_CLOSE_TAGS = ('img', 'meta', 'br', 'link')
 # all parts of a URL
 Netlocparts = ['scheme','host','port','path','parameters','query','fragment']
-
-# standard xml entities
-EntityTable = {
-    '<': '&lt;',
-    '>': '&gt;',
-    '&': '&amp;',
-    '"': '&quot;',
-    '\'': '&apos;',
-}
-
-
-def quote (s):
-    """quote characters for XML"""
-    res = list(s)
-    for i in range(len(res)):
-        c = res[i]
-        res[i] = EntityTable.get(c, c)
-    return ''.join(res)
 
 def part_num (s):
     """translation: tag name ==> tag number"""
@@ -127,9 +109,9 @@ class Rule:
 
     def toxml (self):
         s = "<"+self.get_name()
-        s += ' title="%s"' % quote(self.title)
+        s += ' title="%s"' % xmlify(self.title)
         if self.desc:
-            s += '\n desc="%s"' % quote(self.desc)
+            s += '\n desc="%s"' % xmlify(self.desc)
         if self.disable:
             s += '\n disable="1"'
         return s
@@ -161,9 +143,9 @@ class UrlRule(Rule):
     def toxml (self):
         s = Rule.toxml(self)
         if self.matchurl:
-            s += '\n matchurl="%s"' % quote(self.matchurl)
+            s += '\n matchurl="%s"' % xmlify(self.matchurl)
         if self.dontmatchurl:
-            s += '\n dontmatchurl="%s"' % quote(self.dontmatchurl)
+            s += '\n dontmatchurl="%s"' % xmlify(self.dontmatchurl)
         return s
 
     def __str__ (self):
@@ -319,11 +301,11 @@ class RewriteRule (UrlRule):
             if key!='href':
                 s += ' name="%s"' % key
             if val:
-                s += ">"+quote(val)+"</attr>\n"
+                s += ">"+xmlify(val)+"</attr>\n"
             else:
                 s += "/>\n"
         if self.enclosed:
-            s += "<enclosed>"+quote(self.enclosed)+"</enclosed>\n"
+            s += "<enclosed>"+xmlify(self.enclosed)+"</enclosed>\n"
         if not self.replace[0]==COMPLETE or self.replace[1]:
             s += "<replace"
             if self.replace[0]!=COMPLETE:
@@ -333,7 +315,7 @@ class RewriteRule (UrlRule):
                     val = self.replace[0][0]+'="'+self.replace[0][1]+'"'
                 else:
                     val = self.replace[1]
-                s += '>'+quote(val)+"</replace>\n"
+                s += '>'+xmlify(val)+"</replace>\n"
             else:
                 s += "/>\n"
         return s + "</rewrite>"
@@ -376,7 +358,7 @@ class AllowRule (Rule):
         for attr in Netlocparts:
             a = getattr(self, attr)
             if a is not None:
-                s += '\n %s="%s"' % (attr, quote(a))
+                s += '\n %s="%s"' % (attr, xmlify(a))
         return s
 
 
@@ -398,7 +380,7 @@ class BlockRule (AllowRule):
     def toxml (self):
         s = Rule.toxml(self)+self.netlocxml()
         if self.url:
-            return s+">"+quote(self.url)+"</block>"
+            return s+">"+xmlify(self.url)+"</block>"
         return s+"/>"
 
 
@@ -418,9 +400,9 @@ class HeaderRule (UrlRule):
         return factory.fromHeaderRule(self)
 
     def toxml (self):
-        s = '%s\n name="%s"'%(UrlRule.toxml(self), quote(self.name))
+        s = '%s\n name="%s"'%(UrlRule.toxml(self), xmlify(self.name))
         if self.value:
-            return s+">"+quote(self.value)+"</header>"
+            return s+">"+xmlify(self.value)+"</header>"
         return s+"/>"
 
 
@@ -447,7 +429,7 @@ class ImageRule (UrlRule):
         if self.type!='gif':
             s += '\n type="%s"\n' % self.type
         if self.url:
-            return s+">"+quote(self.url)+"</image>\n"
+            return s+">"+xmlify(self.url)+"</image>\n"
         return s+"/>"
 
 
@@ -480,9 +462,9 @@ class ReplacerRule (UrlRule):
     def toxml (self):
 	s = UrlRule.toxml(self);
         if self.search:
-            s += '\n search="%s"'%quote(self.search)
+            s += '\n search="%s"'%xmlify(self.search)
         if self.replace:
-            return s+">"+quote(self.replace)+"</replacer>"
+            return s+">"+xmlify(self.replace)+"</replacer>"
         return s+"/>"
 
 

@@ -2,7 +2,7 @@ import wc, os, sha, re
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
-from wc import debug,_
+from wc import debug, _, xmlify
 from wc.gui import HelpText
 from FXPy.fox import *
 from types import IntType
@@ -700,23 +700,23 @@ class ConfWindow(ToolWindow):
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner
 """
-        s += ' version="%s"\n' % self.version +\
+        s += ' version="%s"\n' % xmlify(self.version) +\
              ' port="%d"\n' % self.port +\
-             ' proxyuser="%s"\n' % self.proxyuser +\
-             ' proxypass="%s"\n' % self.proxypass
+             ' proxyuser="%s"\n' % xmlify(self.proxyuser) +\
+             ' proxypass="%s"\n' % xmlify(self.proxypass)
         if self.parentproxy:
-            s += ' parentproxy="%s"\n' % self.parentproxy
-        s += ' parentproxyuser="%s"\n' % self.parentproxyuser
-        s += ' parentproxypass="%s"\n' % self.parentproxypass
+            s += ' parentproxy="%s"\n' % xmlify(self.parentproxy)
+        s += ' parentproxyuser="%s"\n' % xmlify(self.parentproxyuser)
+        s += ' parentproxypass="%s"\n' % xmlify(self.parentproxypass)
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
              ' timeout="%d"\n' % self.timeout +\
              ' obfuscateip="%d"\n' % self.obfuscateip +\
              ' debuglevel="%d"\n' % self.debuglevel +\
              ' showerrors="%d"\n' % self.showerrors
         if self.logfile:
-            s += ' logfile="%s"\n' % self.logfile
+            s += ' logfile="%s"\n' % xmlify(self.logfile)
         if self.noproxyfor:
-            s += ' noproxyfor="%s"\n' % ",".join(self.noproxyfor.keys())
+            s += ' noproxyfor="%s"\n' % xmlify(",".join(self.noproxyfor.keys()))
         s += '>\n'
         for key,val in self.modules.items():
             if val:

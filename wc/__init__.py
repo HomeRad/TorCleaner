@@ -194,6 +194,36 @@ _rulenames = (
   'replacer')
 _nestedtags = ('attr','enclosed','replace')
 
+# standard xml entities
+entities = {
+    'lt': '<',
+    'gt': '>',
+    'amp': '&',
+    'quot': '"',
+    'apos': "'",
+}
+XmlTable = map(lambda x: (x[1], "&"+x[0]+";"), entities.items())
+UnXmlTable = map(lambda x: ("&"+x[0]+";", x[1]), entities.items())
+# order matters!
+XmlTable.sort()
+UnXmlTable.sort()   
+UnXmlTable.reverse()
+
+def applyTable (table, s):
+    "apply a table of replacement pairs to str"
+    for mapping in table:
+        s = s.replace(mapping[0], mapping[1])
+    return s
+
+def xmlify (s):
+    """quote characters for XML"""
+    return applyTable(XmlTable, s)
+
+def unxmlify (s):
+    """unquote character from XML"""
+    return applyTable(UnXmlTable, s)
+
+
 class ParseException(Exception): pass
 
 class BaseParser:
@@ -263,7 +293,7 @@ class WConfigParser(BaseParser):
     def start_element(self, name, attrs):
         if name=='webcleaner':
             for key,val in attrs.items():
-                self.config[str(key)] = val
+                self.config[str(key)] = unxmlify(val)
             for key in ('port','parentproxyport','buffersize','timeout',
 	                'obfuscateip','debuglevel','colorize','showerrors'):
                 self.config[key] = int(self.config[key])
@@ -286,3 +316,4 @@ class WConfigParser(BaseParser):
             self.config['filters'].append(attrs['name'])
 
 config = Configuration()
+
