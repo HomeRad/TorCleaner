@@ -131,14 +131,10 @@ class HttpServer (Server):
     def send_request (self):
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         self.write(request)
-        if hasattr(self.clientheaders, "headers"):
-            # write original Message object headers to preserve
-            # case sensitivity (!)
-            self.write("".join(self.clientheaders.headers))
-        else:
-            for key,val in self.clientheaders.items():
-                header = "%s: %s\r\n" % (key, val.rstrip())
-                self.write(header)
+        # write original Message object headers to preserve
+        # case sensitivity (!)
+        debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
+        self.write("".join(self.clientheaders.headers))
         self.write('\r\n')
         self.write(self.content)
         self.state = 'response'
@@ -361,8 +357,8 @@ class HttpServer (Server):
         if self.statuscode==407 and config['parentproxy']:
             if self.authtries:
                 # we failed twice, abort
-                self.handle_error('authentication error')
                 self.authtries = 0
+                self.handle_error('authentication error')
                 config['parentproxycreds'] = None
                 return
             self.authtries += 1
@@ -388,8 +384,6 @@ class HttpServer (Server):
             config['parentproxycreds'] = creds
             self.clientheaders['Proxy-Authorization'] = "%s\r" % creds
             self.send_request()
-            return
-            # XXX
 
 
     def flush (self):
@@ -459,6 +453,23 @@ class HttpServer (Server):
         # flush unhandled data
         if not self.flushing:
             self.flush()
+        if self.authtries>0:
+            self.reconnect()
+
+
+    def reconnect (self):
+        debug(PROXY, "%s reconnect", str(self))
+        # we still must have the client connection
+        if not self.client:
+            error(PROXY, "%s lost client on reconnect", str(self))
+            return
+        from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
+        # note: self.client still the matchmaker object
+        client = self.client.client
+        ClientServerMatchmaker(client, client.request,
+                               self.clientheaders, # with new auth
+                               client.content, client.nofilter,
+                               client.compress)
 
 
 def speedcheck_print_status ():
