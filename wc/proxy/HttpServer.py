@@ -79,7 +79,7 @@ class HttpServer (wc.proxy.Server.Server):
 
     def try_connect (self):
         """attempt connect, close on error and raise exception"""
-        self.socket.settimeout(wc.config['timeout'])
+        self.socket.settimeout(wc.configuration.config['timeout'])
         try:
             self.connect(self.addr)
         except (socket.timeout, socket.error):
@@ -162,10 +162,10 @@ class HttpServer (wc.proxy.Server.Server):
 
     def mangle_request_headers (self):
         """modify request headers"""
-        if wc.config['parentproxycreds']:
+        if wc.configuration.config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
             self.clientheaders['Proxy-Authorization'] = \
-                                     "%s\r" % wc.config['parentproxycreds']
+                          "%s\r" % wc.configuration.config['parentproxycreds']
 
     def send_request (self):
         """send the request to the server, is also used to send a request
@@ -353,7 +353,7 @@ class HttpServer (wc.proxy.Server.Server):
 
     def is_rewrite (self):
         """return True iff this server will modify content"""
-        for ro in wc.config['mime_content_rewriting']:
+        for ro in wc.configuration.config['mime_content_rewriting']:
             if ro.match(self.headers.get('Content-Type', '')):
                 return True
         return False
@@ -384,7 +384,7 @@ class HttpServer (wc.proxy.Server.Server):
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://localhost:%d/rated.html?%s\r' % \
-                              (wc.config['port'], query)
+                              (wc.configuration.config['port'], query)
         headers['Content-Length'] = '%d\r' % len(msg)
         wc.log.debug(wc.LOG_PROXY, "%s headers\n%s", self, headers)
         self.client.server_response(self, response, self.statuscode, headers)
@@ -460,22 +460,24 @@ class HttpServer (wc.proxy.Server.Server):
     def process_recycle (self):
         """recycle the server connection and put it in the server pool"""
         wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
-        if self.statuscode == 407 and wc.config['parentproxy']:
+        if self.statuscode == 407 and wc.configuration.config['parentproxy']:
             wc.log.debug(wc.LOG_PROXY, "%s need parent proxy authentication",
                          self)
             if self.authtries:
                 # we failed twice, abort
                 self.authtries = 0
                 self.handle_error('authentication error')
-                wc.config['parentproxycreds'] = None
+                wc.configuration.config['parentproxycreds'] = None
                 return
             self.authtries += 1
             challenges = wc.proxy.auth.get_header_challenges(self.headers,
                               'Proxy-Authenticate')
             wc.proxy.Headers.remove_headers(self.headers,
                                                   ['Proxy-Authentication'])
-            attrs = {'password_b64': wc.config['parentproxypass'],
-                     'username': wc.config['parentproxyuser']}
+            attrs = {
+                'password_b64': wc.configuration.config['parentproxypass'],
+                'username': wc.configuration.config['parentproxyuser'],
+            }
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
                 # must use GET for ntlm handshake
@@ -492,7 +494,7 @@ class HttpServer (wc.proxy.Server.Server):
             creds = wc.proxy.auth.get_credentials(challenges, **attrs)
             # resubmit the request with proxy credentials
             self.state = 'client'
-            wc.config['parentproxycreds'] = creds
+            wc.configuration.config['parentproxycreds'] = creds
             self.clientheaders['Proxy-Authorization'] = "%s\r" % creds
             self.send_request()
         else:

@@ -43,7 +43,8 @@ class ImageSize (wc.filter.Filter.Filter):
         # 4096 bytes is enough for most images; the value is increased
         # when it is not big enough
         self.min_bufsize = 4096
-        fname = os.path.join(wc.TemplateDir, wc.config['gui_theme'])
+        fname = os.path.join(wc.TemplateDir,
+                             wc.configuration.config['gui_theme'])
         fname = os.path.join(fname, "blocked.png")
         f = file(fname)
         self.blockdata = f.read()

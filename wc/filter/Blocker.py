@@ -208,7 +208,7 @@ class Blocker (wc.filter.Filter.Filter):
                                           "selfolder": "%d"%rule.parent.oid,
                                           "selrule": "%d"%rule.oid})
                 doc += "?%s" % query
-            port = wc.config['port']
+            port = wc.configuration.config['port']
             # XXX activate when https can be served locally
             #if url.startswith("https://"):
             #    scheme = "https"

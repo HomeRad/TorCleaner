@@ -64,18 +64,19 @@ class ClientServerMatchmaker (object):
         self.server_busy = 0
         self.method, self.url, self.protocol = self.request.split()
         # prepare DNS lookup
-        if wc.config['parentproxy']:
-            self.hostname = wc.config['parentproxy']
-            self.port = wc.config['parentproxyport']
+        if wc.configuration.config['parentproxy']:
+            self.hostname = wc.configuration.config['parentproxy']
+            self.port = wc.configuration.config['parentproxyport']
             self.document = self.url
-            if wc.config['parentproxycreds']:
-                auth = wc.config['parentproxycreds']
+            if wc.configuration.config['parentproxycreds']:
+                auth = wc.configuration.config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r" % auth
         else:
-            if self.method == 'CONNECT' and wc.config['sslgateway']:
+            if self.method == 'CONNECT' and \
+               wc.configuration.config['sslgateway']:
                 # delegate to SSL gateway
                 self.hostname = 'localhost'
-                self.port = wc.config['sslport']
+                self.port = wc.configuration.config['sslport']
             else:
                 self.hostname = client.hostname
                 self.port = client.port
@@ -157,7 +158,7 @@ class ClientServerMatchmaker (object):
             # note: all Server objects eventually call server_connected
             try:
                 if self.url.startswith("https://") and \
-                   wc.config['sslgateway']:
+                   wc.configuration.config['sslgateway']:
                     klass = wc.proxy.SslServer.SslServer
                 else:
                     klass = wc.proxy.HttpServer.HttpServer
@@ -182,7 +183,7 @@ class ClientServerMatchmaker (object):
             self.state = 'response'
             headers = wc.proxy.Headers.WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
-            if wc.config['sslgateway']:
+            if wc.configuration.config['sslgateway']:
                 server.client_send_request(self.method, self.protocol,
                                    self.hostname, self.port,
                                    self.document, self.headers,

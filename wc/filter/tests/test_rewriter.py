@@ -12,9 +12,9 @@ class TestRewriter (unittest.TestCase):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def setUp (self):
-        wc.config = wc.Configuration()
-        wc.config['filters'] = ['Rewriter']
-        wc.config.init_filter_modules()
+        wc.configuration.config = wc.Configuration()
+        wc.configuration.config['filters'] = ['Rewriter']
+        wc.configuration.config.init_filter_modules()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
         self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY],

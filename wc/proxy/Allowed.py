@@ -45,7 +45,7 @@ class AllowedHttpClient (object):
 
     def host (self, host):
         """return True iff host is allowed"""
-        return wc.config.allowed(host)
+        return wc.configuration.config.allowed(host)
 
 
     def connect_port (self, port):

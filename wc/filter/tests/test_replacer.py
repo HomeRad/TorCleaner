@@ -10,9 +10,9 @@ class TestReplacer (unittest.TestCase):
 
     def init (self):
         super(TestReplacer, self).init()
-        wc.config = wc.Configuration()
-        wc.config['filters'] = ['Replacer']
-        wc.config.init_filter_modules()
+        wc.configuration.config = wc.Configuration()
+        wc.configuration.config['filters'] = ['Replacer']
+        wc.configuration.config.init_filter_modules()
 
     def testReplaceRandom (self):
         attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])

@@ -75,28 +75,28 @@ def _service_status (status):
     svcType, svcState, svcControls, err, svcErr, svcCP, svcWH = status
     msg = ""
     if svcType & win32service.SERVICE_WIN32_OWN_PROCESS:
-        msg += "\n"+\
-            _("The %s service runs in its own process.")%wc.AppName
+        msg += "\n" + \
+            _("The %s service runs in its own process.") % wc.AppName
     if svcType & win32service.SERVICE_WIN32_SHARE_PROCESS:
-        msg += "\n"+\
- _("The %s service shares a process with other services.")%wc.AppName
+        msg += "\n" + \
+ _("The %s service shares a process with other services.") % wc.AppName
     if svcType & win32service.SERVICE_INTERACTIVE_PROCESS:
-        msg += "\n"+\
-        _("The %s service can interact with the desktop.")%wc.AppName
+        msg += "\n" + \
+        _("The %s service can interact with the desktop.") % wc.AppName
     # Other svcType flags not shown.
-    if svcState==win32service.SERVICE_STOPPED:
-        msg += "\n"+_("The %s service is stopped.")%wc.AppName
-    elif svcState==win32service.SERVICE_START_PENDING:
-        msg += "\n"+_("The %s service is starting.")%wc.AppName
-    elif svcState==win32service.SERVICE_STOP_PENDING:
-        msg += "\n"+_("The %s service is stopping.")%wc.AppName
-    elif svcState==win32service.SERVICE_RUNNING:
-        msg += "\n"+_("The %s service is running.")%wc.AppName
+    if svcState == win32service.SERVICE_STOPPED:
+        msg += "\n" + _("The %s service is stopped.") % wc.AppName
+    elif svcState == win32service.SERVICE_START_PENDING:
+        msg += "\n" + _("The %s service is starting.") % wc.AppName
+    elif svcState == win32service.SERVICE_STOP_PENDING:
+        msg += "\n" + _("The %s service is stopping.") % wc.AppName
+    elif svcState == win32service.SERVICE_RUNNING:
+        msg += "\n" + _("The %s service is running.") % wc.AppName
     # Other svcState flags not shown.
     if svcControls & win32service.SERVICE_ACCEPT_STOP:
-        msg += "\n"+_("The %s service can be stopped.")%wc.AppName
+        msg += "\n" + _("The %s service can be stopped.") % wc.AppName
     if svcControls & win32service.SERVICE_ACCEPT_PAUSE_CONTINUE:
-        msg += "\n"+_("The %s service can be paused.")%wc.AppName
+        msg += "\n" + _("The %s service can be paused.") % wc.AppName
     # Other svcControls flags not shown
     return msg.strip()
 

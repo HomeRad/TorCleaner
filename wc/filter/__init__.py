@@ -126,7 +126,7 @@ def applyfilter (i, data, fun, attrs):
 
 def _applyfilter (i, data, fun, attrs):
     attrs['filterstage'] = i
-    for f in wc.config['filterlist'][i]:
+    for f in wc.configuration.config['filterlist'][i]:
         ffun = getattr(f, fun)
         if f.applies_to_mime(attrs['mime']):
             data = ffun(data, **attrs)
@@ -158,7 +158,7 @@ def get_filterattrs (url, filters,
     }
     attrs = {
         'url': url,
-        'nofilter': wc.config.nofilter(url),
+        'nofilter': wc.configuration.config.nofilter(url),
         'mime' : serverheaders.get('Content-Type'),
         'headers': headers,
         'browser': browser,
@@ -168,7 +168,7 @@ def get_filterattrs (url, filters,
         if charset:
             attrs['charset'] = charset
     for i in filters:
-        for f in wc.config['filterlist'][i]:
+        for f in wc.configuration.config['filterlist'][i]:
             if f.applies_to_mime(attrs['mime']):
                 attrs.update(f.get_attrs(url, headers))
     return attrs

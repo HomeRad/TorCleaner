@@ -154,7 +154,7 @@ def get_template_url (url, lang):
 
 def _get_template_path (path):
     """return tuple (path, dirs)"""
-    base = os.path.join(wc.TemplateDir, wc.config['gui_theme'])
+    base = os.path.join(wc.TemplateDir, wc.configuration.config['gui_theme'])
     base = norm(base)
     dirs = get_relative_path(path)
     if not dirs:
@@ -234,7 +234,7 @@ def add_default_context (context, filename, lang):
     context_add(context, "filename", filename)
     # base url
     context_add(context, "baseurl",
-                "http://localhost:%d/" % wc.config['port'])
+                "http://localhost:%d/" % wc.configuration.config['port'])
     # language
     context_add(context, "lang", lang)
     # other available languges

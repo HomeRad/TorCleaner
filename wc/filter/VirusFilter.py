@@ -153,10 +153,10 @@ class ClamdScanner (object):
 _clamav_conf = None
 def init_clamav_conf ():
     """initialize clamav configuration"""
-    if not os.path.exists(wc.config['clamavconf']):
+    if not os.path.exists(wc.configuration.config['clamavconf']):
         return
     global _clamav_conf
-    _clamav_conf = ClamavConfig(wc.config['clamavconf'])
+    _clamav_conf = ClamavConfig(wc.configuration.config['clamavconf'])
 
 
 def get_clamav_conf ():

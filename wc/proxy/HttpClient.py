@@ -79,7 +79,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """display error page"""
         self.state = 'done'
         wc.log.debug(wc.LOG_PROXY, '%s error %r (%d)', self, msg, status)
-        if status in wc.google.google_try_status and wc.config['try_google']:
+        if status in wc.google.google_try_status and \
+           wc.configuration.config['try_google']:
             self.try_google(self.url, msg)
         else:
             err = _('Proxy Error %d %s') % (status, msg)
@@ -263,7 +264,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.error(400, _("Bad Request"))
         # local request?
         if self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
-           self.port == wc.config['port']:
+           self.port == wc.configuration.config['port']:
             # this is a direct proxy call, jump directly to content
             self.state = 'content'
             return
@@ -275,7 +276,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
             else:
                 self.headers['Host'] = "%s\r" % self.hostname
-        if wc.config["proxyuser"]:
+        if wc.configuration.config["proxyuser"]:
             creds = wc.proxy.auth.get_header_credentials(self.headers,
                        'Proxy-Authorization')
             if not creds:
@@ -298,10 +299,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                     return
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds,
-                                     username=wc.config['proxyuser'],
-                                     password_b64=wc.config['proxypass'],
-                                     uri=wc.proxy.auth.get_auth_uri(self.url),
-                                     method=self.method, data=None):
+                           username=wc.configuration.config['proxyuser'],
+                           password_b64=wc.configuration.config['proxypass'],
+                           uri=wc.proxy.auth.get_auth_uri(self.url),
+                           method=self.method, data=None):
                 wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s",
                             self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
@@ -384,16 +385,19 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.state = 'receive'
             is_local = self.hostname in \
                        wc.proxy.dns_lookups.resolver.localhosts and \
-                       self.port in (wc.config['port'], wc.config['sslport'])
+                       self.port in (wc.configuration.config['port'],
+                                     wc.configuration.config['sslport'])
             if is_local:
                 is_public_doc = self.allow.public_document(self.document)
-            if wc.config['adminuser'] and not wc.config['adminpass']:
+            if wc.configuration.config['adminuser'] and \
+               not wc.configuration.config['adminpass']:
                 if is_local and is_public_doc:
                     self.handle_local(is_public_doc=is_public_doc)
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = \
-                    "http://localhost:%d/adminpass.html\r" % wc.config['port']
+                    "http://localhost:%d/adminpass.html\r" % \
+                      wc.configuration.config['port']
                     self.error(302, _("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call
@@ -429,7 +433,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%d)',
                      self, response, status)
         # try google options
-        if status in wc.google.google_try_status and wc.config['try_google']:
+        if status in wc.google.google_try_status and \
+           wc.configuration.config['try_google']:
             server.client_abort()
             self.try_google(self.url, response)
         else:
@@ -503,7 +508,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.error(403, _("Invalid Method"))
             return
         # check admin pass
-        if not is_public_doc and wc.config["adminuser"]:
+        if not is_public_doc and wc.configuration.config["adminuser"]:
             creds = wc.proxy.auth.get_header_credentials(self.headers,
                                                          'Authorization')
             if not creds:
@@ -518,10 +523,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                     return
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds,
-                                     username=wc.config['adminuser'],
-                                     password_b64=wc.config['adminpass'],
-                                     uri=wc.proxy.auth.get_auth_uri(self.url),
-                                     method=self.method, data=None):
+                            username=wc.configuration.config['adminuser'],
+                            password_b64=wc.configuration.config['adminpass'],
+                            uri=wc.proxy.auth.get_auth_uri(self.url),
+                            method=self.method, data=None):
                 wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s",
                             self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())

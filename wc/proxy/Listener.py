@@ -14,7 +14,8 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
     def __init__ (self, port, handler, sslctx=None):
         """create a socket on specified port and start listening to it"""
         super(Listener, self).__init__()
-        self.addr = (('', 'localhost')[wc.config['local_sockets_only']], port)
+        self.addr = (('', 'localhost')[
+                   wc.configuration.config['local_sockets_only']], port)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=sslctx)
         if sslctx is not None:
             self.socket.set_accept_state()
