@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sat Mar 27 14:30:35 2004\n"
+"POT-Creation-Date: Mon Mar 29 23:27:07 2004\n"
 "PO-Revision-Date: 2004-03-22 19:50+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -17,6 +17,10 @@ msgstr "füge %s ein"
 
 msgid "unknown tag name %s"
 msgstr "Unbekannter Tagname %s"
+
+#, fuzzy
+msgid "error fetching script from %r"
+msgstr "Fehler beim Laden von %s:"
 
 msgid "Unknown page"
 msgstr "Unbekannte Seite"
@@ -107,6 +111,13 @@ msgstr "Rechner %s nicht gefunden .. %s"
 
 msgid "Service unavailable"
 msgstr "Dienst nicht verfügbar"
+
+#, fuzzy
+msgid "Connection timeout"
+msgstr "Verbindungszeitüberschreitung in Sekunden"
+
+msgid "Connect error"
+msgstr ""
 
 msgid "Expectation failed"
 msgstr "Erwartung fehlgeschlagen"

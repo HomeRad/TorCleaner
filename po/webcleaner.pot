@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat Mar 27 14:30:35 2004\n"
+"POT-Creation-Date: Mon Mar 29 23:27:07 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,9 @@ msgid "inserting %s"
 msgstr ""
 
 msgid "unknown tag name %s"
+msgstr ""
+
+msgid "error fetching script from %r"
 msgstr ""
 
 msgid "Unknown page"
@@ -109,6 +112,12 @@ msgid "Host %s not found .. %s"
 msgstr ""
 
 msgid "Service unavailable"
+msgstr ""
+
+msgid "Connection timeout"
+msgstr ""
+
+msgid "Connect error"
 msgstr ""
 
 msgid "Expectation failed"
