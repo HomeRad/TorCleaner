@@ -59,7 +59,7 @@
 <replacement part="complete"/>
 </rewrite>
 
-<block sid="lc.1" title="Ad servers 13"
+<block sid="wc.2" title="Ad servers 13"
  url="https?://ad(s|server)?\."/>
 
 <rewrite sid="wc.344" title="Adverts in the path name 01"
