@@ -10,22 +10,26 @@ version 2.10 and above
 	|
   WEBCLEANER PROXY
 	|
-     HttpClient         init server, pass	pass data back to
-	|		request data		browser
+     HttpClient         init server, fiter	pass data back to
+	|		request data and pass	browser
+        |		it to Https server
 	|
      ClientServerMatchmaker
 	|
+     HttpsServer	make connection to	receive filtered data,
+     	|		localhost on ssl port	encrypt it with WebCleaner
+	|		and pass request data	certificate and pass it on
+	|					to HttpClient
   WEBCLEANER SSL SERVER
 	|
-     HttpsServer	pass request data	receive filtered data,
-     	|					encrypt it with WebCleaner
-	|					certificate and pass it on
-	|					to HttpClient
+     SslClient		init server, filter	pass data back to
+    	|		request data and pass	HttpsServer
+        |		it to ssl server
+        |
+     ClientServerMatchmaker
 	|
-     HttpsClient	connect to SSL server,	decrypt and filter the
-    	|		send request data	received data, pass it on
-        |					to HttpsServer
-	|
+     SslServer		connect to ssl server,	filter data, pass it to
+	|		make request		SslClient
   REMOTE SSL SERVER
 
 - DNS resolve for allowed/nofilter hosts
