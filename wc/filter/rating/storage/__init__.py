@@ -21,16 +21,31 @@ import wc.url
 class Storage (object):
     """Storage for ratings."""
 
-    def add (self, url, rating):
-        pass
+    def __setitem__ (self, url, rating):
+        """Add rating for given url."""
+        raise NotImplementedError, "must be implemented in subclass"
 
-    def remove (self, url):
-        pass
+    def __delitem__ (self, url):
+        """Remove rating for given url."""
+        raise NotImplementedError, "must be implemented in subclass"
 
-    def get (self, url):
-        pass
+    def __getitem__ (self, url):
+        """Get rating for given url."""
+        raise NotImplementedError, "must be implemented in subclass"
 
-    def get_urls (self):
+    def __iter__ (self):
+        """Get list of stored urls."""
+        raise NotImplementedError, "must be implemented in subclass"
+
+    def keys (self):
+        return [x for x in self]
+
+    def __len__ (self):
+        """Number of stored ratings."""
+        raise NotImplementedError, "must be implemented in subclass"
+
+    def __contains__ (self, url):
+        """True if rating for given url is stored."""
         raise NotImplementedError, "must be implemented in subclass"
 
     def check_url (self, url):
@@ -42,3 +57,12 @@ class Storage (object):
 
     def write (self):
         pass
+
+
+# mapping {class name -> storage class instance}
+_stored = {}
+def get_rating_store (klass):
+    name = klass.__name__
+    if name not in _stored:
+        _stored[name] = klass()
+    return _stored[name]

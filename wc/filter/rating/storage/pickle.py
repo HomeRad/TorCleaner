@@ -23,22 +23,23 @@ import wc
 import wc.log
 import wc.url
 import wc.filter.rating
+import wc.filter.rating.storage
 
 
-class PickleStorage (Storage):
+class PickleStorage (wc.filter.rating.storage.Storage):
     """Store ratings in pickled dictionary."""
 
     def __init__ (self):
+        super(PickleStorage, self).__init__()
         config = wc.configuration.config
         self.filename = os.path.join(config.configdir, "rating.dat")
         self.cache = {}
 
-    def add (self, rating):
+    def __setitem__ (self, url, rating):
         self.check_url(url)
-        self.cache[rating.url] = rating
+        self.cache[url] = rating
 
-    def get (self, url):
-        """return rating if cache has entry for given url, else None"""
+    def __getitem__ (self, url):
         self.check_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
@@ -48,12 +49,15 @@ class PickleStorage (Storage):
             url = "".join(parts[:i])
             if url in self.cache:
                 return self.cache[url]
-        return None
+        raise KeyError(url)
 
-    def get_urls (self):
-        return self.cache.keys()
+    def __iter__ (self):
+        return iter(self.cache)
 
-    def remove (self, url):
+    def __len__ (self):
+        return len(self.cache)
+
+    def __delitem__ (self, url):
         self.check_url(url)
         del self.cache[url]
 

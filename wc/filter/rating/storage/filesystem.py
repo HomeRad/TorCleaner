@@ -18,14 +18,17 @@
 
 import re
 import os
+import wc.filter.rating.storage
+
 
 is_time = re.compile(r"^\d+$").search
 
 
-class DirectoryStorage (Storage):
+class DirectoryStorage (wc.filter.rating.storage.Storage):
     """Store ratings in as plain file data in dictionaries."""
 
     def __init__ (self):
+        super(DirectoryStorage, self).__init__()
         pass # XXX
 
 
