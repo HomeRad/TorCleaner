@@ -113,7 +113,7 @@ def compileMime (mime):
 def GetRuleFromName (name):
     """return new rule instance for given rule name"""
     name = '%sRule' % name.capitalize()
-    mod = __import__("wc.filter.rules.%s"%name, locals(), globals(), [name])
+    mod = __import__("wc.filter.rules.%s"%name, {}, {}, [name])
     return getattr(mod, name)()
 
 
