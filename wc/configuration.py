@@ -137,7 +137,7 @@ class Configuration (dict):
         else:
             self['clamavconf'] = os.path.join(os.getcwd(), "clamav.conf")
         # in development mode some values have different defaults
-        self['development'] = os.environ.get("WC_DEVELOPMENT", 0)
+        self['development'] = int(os.environ.get("WC_DEVELOPMENT", "0"))
         self['baseurl'] = wc.Url
         self['try_google'] = 0
         # delete all registered sids
