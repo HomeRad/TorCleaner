@@ -178,7 +178,7 @@ class HtmlFilter (HtmlParser,JSListener):
             if data:
                 # only feed non-empty data
                 #self._debug(NIGHTMARE, "feed", `data`)
-                HtmlParser.feed(self, data)
+                self.parser.feed(data)
             else:
                 #self._debug(NIGHTMARE, "feed")
                 pass
@@ -193,7 +193,7 @@ class HtmlFilter (HtmlParser,JSListener):
         # flushing in wait state raises a filter exception
         if self.state=='wait':
             raise FilterException("HtmlFilter[%d]: still waiting for data"%self.level)
-        HtmlParser.flush(self)
+        self.parser.flush()
 
 
     def replay (self, waitbuf):
