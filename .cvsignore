@@ -3,6 +3,7 @@ VERSION
 dist
 build
 locale
+share
 *-stamp
 *.pyc
 *.pyo
