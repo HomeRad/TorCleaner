@@ -31,3 +31,13 @@ def unescape_js (script):
     script = script.replace('-&#45;', '--')
     script = script.replace('&#60;/script>', '</script>')
     return script
+
+
+has_js_ver = re.compile(r'(?i)javascript(?P<num>\d\.\d)').search
+def get_js_ver (language):
+    ver = 0.0
+    if language:
+        mo = has_js_ver(language)
+        if mo:
+            ver = float(mo.group('num'))
+    return ver
