@@ -17,7 +17,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import urllib
-import codecs
 import re
 
 import wc.HtmlParser
@@ -109,8 +108,6 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
     def doctype (self, data):
         """HTML doctype"""
         wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
-        if "XHTML" in data:
-            self.htmlparser.doctype = "XHTML"
         return self._data(u"<!DOCTYPE%s>" % data)
 
     def pi (self, data):
@@ -118,34 +115,22 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
         return self._data(u"<?%s?>" % data)
 
-    def _set_encoding (self, attrs):
-        if attrs.get('http-equiv', '').lower() == "content-type":
-            content = attrs.get('content', '')
-            mo = _encoding_ro.search(content)
-            if mo:
-                encoding = mo.group("encoding").encode("ascii")
-                try:
-                    encoding = encoding.encode("ascii")
-                    codecs.lookup(encoding)
-                    wc.log.debug(wc.LOG_FILTER,
-                                 "%s switch to encoding %r", self, encoding)
-                    self.htmlparser.encoding = encoding
-                except LookupError:
-                    wc.log.warn(wc.LOG_FILTER,
-                                "%s unknown encoding %r", self, encoding)
-
     def start_element (self, tag, attrs):
+        self._start_element(tag, attrs, False)
+
+    def start_end_element (self, tag, attrs):
+        self._start_element(tag, attrs, True)
+
+    def _start_element (self, tag, attrs, startend):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
-        if tag == 'meta':
-            self._set_encoding(attrs)
         # default data
         wc.log.debug(wc.LOG_FILTER, "%s start_element %r %s", self, tag, attrs)
         if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG,
                              tag, attrs]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
-        if self.stackcount:
+        if self.stackcount and not startend:
             if self.stackcount[-1][0] == tag:
                 self.stackcount[-1][1] += 1
         if tag == "meta":
@@ -177,25 +162,28 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply
-        self.filter_start_element(tag, attrs)
+        self.filter_start_element(tag, attrs, startend)
         # if rule stack is empty, write out the buffered data
         if not self.rulestack and not self.javascript:
             self.htmlparser.tagbuf2data()
 
-    def filter_start_element (self, tag, attrs):
+    def filter_start_element (self, tag, attrs, startend):
         """filter the start element according to filter rules"""
         rulelist = []
         filtered = False
-        item = [wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]
+        if startend:
+            starttype = wc.filter.rules.RewriteRule.STARTENDTAG
+        else:
+            starttype = wc.filter.rules.RewriteRule.STARTTAG
+        item = [starttype, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
                 wc.log.debug(wc.LOG_FILTER, "%s matched rule %r on tag %r",
                              self, rule.titles['en'], tag)
                 if rule.start_sufficient:
-                    item = rule.filter_tag(tag, attrs)
+                    item = rule.filter_tag(tag, attrs, starttype)
                     filtered = True
-                    if item[0] == wc.filter.rules.RewriteRule.STARTTAG and \
-                       item[1] == tag:
+                    if item[0] == starttype and item[1] == tag:
                         foo, tag, attrs = item
                         # give'em a chance to replace more than one attribute
                         continue
