@@ -36,9 +36,9 @@ class ImageReducer (wc.filter.Filter.Filter):
     # which mime types this filter applies to
     mimelist = [wc.filter.compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
-    def __init__ (self, apply_to_mimelist):
+    def __init__ (self):
         """initialize image reducer flags"""
-        super(ImageReducer, self).__init__(apply_to_mimelist)
+        super(ImageReducer, self).__init__()
         # minimal number of bytes before we start reducing
         self.minimal_size_bytes = 5120
 
