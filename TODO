@@ -2,9 +2,9 @@ TODO
 
 version 2.11 and above
 
-- Documentation structure/navigation
-
 - ssl certificate verification
+
+- use test/client.py, test/server.py for testing
 
 - at http://pymonitor.sf.net/ ?
   Traceback (most recent call last):
@@ -35,8 +35,6 @@ version 2.11 and above
 AssertionError: {} missing ('192.25.206.16', 80)
 
 - memory leaks while operating the proxy
-
-- use test/client.py, test/server.py for testing
 
 - allow filtering/blocking by MIME type?
 
