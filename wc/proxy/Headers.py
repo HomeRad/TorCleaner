@@ -67,7 +67,10 @@ class WcMessage (Message, object):
 def get_content_length (headers):
     """get content length as int or None on error"""
     if not headers.has_key("Content-Length"):
-        return None
+        if has_header_value(headers, "Transfer-Encoding", "chunked"):
+            return None
+        # assume content has zero length
+        return 0
     try:
         return int(headers['Content-Length'])
     except ValueError:
@@ -288,5 +291,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # do not disable filtering for unknown content-encodings
         # this could result in a DoS attack (server sending garbage
         # as content-encoding)
+    if not headers.has_key('Content-Length'):
+        headers['Connection'] = 'close\r'
     return bytes_remaining
 
