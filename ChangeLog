@@ -1,4 +1,4 @@
-2.24 "" (released xx.xx.xxxx)
+2.24 "Tootsie" (released xx.xx.xxxx)
 
   * Really ignore encoding errors of HTML content.
     Type: bugfix
@@ -12,6 +12,12 @@
     for translation.
     Type: feature
     Changed: wc/i18n.py
+
+  * Encode msg variable of web configuration response. Fixes crash
+    when LANG=de_DE@euro was set and the configuration interface was
+    requested.
+    Type: bugfix
+    Changed: wc/webgui/webconfig.py
 
 2.23 "The fog of war" (released 27.10.2004)
 
