@@ -204,4 +204,10 @@
 <rewrite title="Adverts in the path name 7" oid="34">
 <attr>/l.click\?clickId=</attr>
 </rewrite>
+
+<rewrite title="Onmouseover ads" oid="35"
+ desc="This gets rid of the latest generation of JavaScript annoyances. ">
+<attr name="onmouseover">parent\.location\s*=</attr>
+<replace part="attr"/>
+</rewrite>
 </folder>
