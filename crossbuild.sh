@@ -10,5 +10,6 @@ CC=i586-mingw32msvc-gcc \
   CXX=i586-mingw32msvc-g++ \
   AR=i586-mingw32msvc-ar \
   RANLIB=i586-mingw32msvc-ranlib \
- ./configure --target=$TARGET --host=$HOST --build=$BUILD
-make crossbuild
+ ./configure --target=$TARGET --host=$HOST --build=$BUILD \
+ 2>&1 | tee crossbuild.log
+make crossbuild 2>&1 | tee --append crossbuild.log
