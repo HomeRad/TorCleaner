@@ -2,8 +2,6 @@ TODO
 
 version 2.5 and above
 
-- test the rule merging stuff
-
 - use test/client.py, test/server.py for testing
 
 - test NTLM authentication
