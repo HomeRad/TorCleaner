@@ -32,7 +32,7 @@ class Rewriter (wc.filter.Filter.Filter):
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['rewrite', 'nocomments', 'javascript', 'rating']
-    mimelist = [wc.filter.compileMime(x) for x in ['text/html']]
+    mimelist = [wc.filter.compile_mime(x) for x in ['text/html']]
 
 
     def filter (self, data, **attrs):
@@ -61,9 +61,9 @@ class Rewriter (wc.filter.Filter.Filter):
         return p.getoutput()
 
 
-    def getAttrs (self, url, headers):
+    def get_attrs (self, url, headers):
         """We need a separate filter instance for stateful filtering"""
-        d = super(Rewriter, self).getAttrs(url, headers)
+        d = super(Rewriter, self).get_attrs(url, headers)
         rewrites = []
         ratings = []
         # look if headers already have rating info

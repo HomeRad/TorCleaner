@@ -33,7 +33,7 @@ class Replacer (wc.filter.Filter.Filter):
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['replace']
-    mimelist = [ wc.filter.compileMime(x)
+    mimelist = [ wc.filter.compile_mime(x)
        for x in ['text/html', 'text/javascript', 'application/x-javascript'] ]
 
 
@@ -63,9 +63,9 @@ class Replacer (wc.filter.Filter.Filter):
         return udata.encode(charset, 'ignore')
 
 
-    def getAttrs (self, url, headers):
+    def get_attrs (self, url, headers):
         """initialize replacer buffer object"""
-        d = super(Replacer, self).getAttrs(url, headers)
+        d = super(Replacer, self).get_attrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:

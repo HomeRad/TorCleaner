@@ -33,7 +33,7 @@ class ImageSize (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = ['image']
     # which mime types this filter applies to
-    mimelist = [wc.filter.compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
+    mimelist = [wc.filter.compile_mime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
 
     def __init__ (self):
@@ -134,8 +134,8 @@ class ImageSize (wc.filter.Filter.Filter):
         return True
 
 
-    def getAttrs (self, url, headers):
-        d = super(ImageSize, self).getAttrs(url, headers)
+    def get_attrs (self, url, headers):
+        d = super(ImageSize, self).get_attrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:

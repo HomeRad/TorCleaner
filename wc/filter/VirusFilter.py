@@ -105,9 +105,9 @@ class VirusFilter (wc.filter.Filter.Filter):
         return data
 
 
-    def getAttrs (self, url, headers):
+    def get_attrs (self, url, headers):
         """return virus scanner and internal data buffer"""
-        d = super(VirusFilter, self).getAttrs(url, headers)
+        d = super(VirusFilter, self).get_attrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:

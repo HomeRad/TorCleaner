@@ -28,7 +28,7 @@ def valid_mail (address):
     cleaned = email.Utils.parseaddr(address)
     if not cleaned[0]:
         return cleaned[1]
-    return '%s <%s>'%cleaned
+    return '%s <%s>' % cleaned
 
 
 def send_mail (smtphost, fromaddr, toaddrs, message):

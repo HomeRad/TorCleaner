@@ -58,7 +58,8 @@ def expand_ipv6 (ip, num):
     if suffix:
         count += 1
         suffix = ":"+suffix
-    if count>=num: raise ValueError("invalid ipv6 number: %s"%ip)
+    if count >= num:
+        raise ValueError("invalid ipv6 number: %s" % ip)
     fill = (num-count-1)*"0:" + "0"
     return prefix+fill+suffix
 
@@ -90,8 +91,8 @@ def is_valid_ipv4 (ip):
     """Return True if given ip is a valid IPv4 address"""
     if not _ipv4_re.match(ip):
         return False
-    a,b,c,d = [int(i) for i in ip.split(".")]
-    return a<=255 and b<=255 and c<=255 and d<=255
+    a, b, c, d = [int(i) for i in ip.split(".")]
+    return a <= 255 and b <= 255 and c <= 255 and d <= 255
 
 
 def is_valid_ipv6 (ip):
@@ -105,7 +106,7 @@ def is_valid_ipv6 (ip):
 
 def is_valid_bitmask (mask):
     """Return True if given mask is a valid network bitmask"""
-    return 1<=mask<=32
+    return 1 <= mask <= 32
 
 
 def dq2num (ip):
@@ -145,7 +146,7 @@ def dq_in_net (n, net, mask):
     """return True iff numerical ip n is in given net with mask.
        (net,mask) must be returned previously by ip2net"""
     m = n - (n & mask)
-    return m==net
+    return m == net
 
 
 def host_in_set (ip, hosts, nets):

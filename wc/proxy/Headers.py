@@ -3,9 +3,6 @@
 
 import re
 import rfc822
-import mimetypes
-# add bzip encoding
-mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 import cStringIO as StringIO
 import wc.log
@@ -199,43 +196,15 @@ def server_set_date_header (headers):
         headers['Date'] = "%s\r"%Utils.formatdate()
 
 
-def server_set_content_headers (headers, content, document, mime, url):
+def server_set_content_headers (headers, mime, url):
     """add missing content-type headers"""
-    # document can have query parameters at the end, remove them
-    i = document.find('?')
-    if i>0:
-        document = document[:i]
-    # check content-type against our own guess
-    if not mime and not headers.has_key('Transfer-Encoding') and content:
-        # note: recognizing a mime type here fixes exploits like
-        # CVE-2002-0025 and CVE-2002-0024
-        try:
-            mime = wc.magic.classify(StringIO.StringIO(content))
-        except StandardError, msg:
-            wc.log.warn(wc.LOG_PROXY, "Could not classify data %r at %r: %s",
-                        content, url, msg)
-    ct = headers.get('Content-Type', None)
-    if mime:
-        if ct is None:
-            wc.log.warn(wc.LOG_PROXY, wc.i18n._("add Content-Type %r in %r"), mime, url)
+    if not headers.get('Content-Type', None):
+        wc.log.warn(wc.LOG_PROXY, wc.i18n._("No content type in %r"), url)
+        if mime:
+            # we have a hint what mime type we can apply
+            wc.log.warn(wc.LOG_PROXY,
+                        wc.i18n._("Set content type of %r to %r"), url, mime)
             headers['Content-Type'] = "%s\r"%mime
-        elif not ct.startswith(mime) and mime.startswith('text/html'):
-            i = ct.find(';')
-            if i != -1 and mime.startswith('text'):
-                # add charset information
-                val = mime + ct[i:]
-            else:
-                val = mime
-            wc.log.warn(wc.LOG_PROXY, wc.i18n._("set Content-Type from %r to %r in %r"),
-                 str(ct), val, url)
-            headers['Content-Type'] = "%s\r"%val
-    else:
-        gm = mimetypes.guess_type(document, None)
-        if gm[0]:
-            # guessed an own content type
-            if ct is None:
-                wc.log.warn(wc.LOG_PROXY, wc.i18n._("add Content-Type %r to %r"), gm[0], url)
-                headers['Content-Type'] = "%s\r"%gm[0]
 
 
 def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,

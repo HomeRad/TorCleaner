@@ -32,7 +32,7 @@ class ImageReducer (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = ["imagereduce"]
     # which mime types this filter applies to
-    mimelist = [wc.filter.compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
+    mimelist = [wc.filter.compile_mime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
     def __init__ (self):
         """initialize image reducer flags"""
@@ -56,7 +56,8 @@ class ImageReducer (wc.filter.Filter.Filter):
         if not attrs.has_key('imgreducer_buf'):
             return data
         p = attrs['imgreducer_buf']
-        if data: p.write(data)
+        if data:
+            p.write(data)
         p.seek(0)
         try:
             img = Image.open(p)
@@ -70,10 +71,10 @@ class ImageReducer (wc.filter.Filter.Filter):
             return p.getvalue()
         return data.getvalue()
 
-    def getAttrs (self, url, headers):
+    def get_attrs (self, url, headers):
         """initialize image reducer buffer and flags"""
         # don't filter tiny images
-        d = super(ImageReducer, self).getAttrs(url, headers)
+        d = super(ImageReducer, self).get_attrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if rules:

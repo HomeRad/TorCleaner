@@ -318,8 +318,8 @@ class HttpServer (wc.proxy.Server.Server):
             for decoder in decoders:
                 data = decoder.decode(data)
             data += flush_decoders(decoders)
-            wc.proxy.Headers.server_set_content_headers(self.headers, data,
-                                        self.document, self.mime, self.url)
+            wc.proxy.Headers.server_set_content_headers(
+                                     self.headers, self.mime, self.url)
 
     def set_persistent (self, headers, http_ver):
         """return True iff this server connection is persistent"""

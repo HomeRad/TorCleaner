@@ -58,7 +58,7 @@ class Compress (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [wc.filter.compileMime(x) for x in \
+    mimelist = [wc.filter.compile_mime(x) for x in \
                 [r'text/[a-z.\-+]+',
                  r'application/(postscript|pdf|x-dvi)',
                  r'audio/(basic|midi|x-wav)',
@@ -81,7 +81,7 @@ class Compress (wc.filter.Filter.Filter):
                 wc.log.debug(wc.LOG_FILTER, 'writing gzip header')
             compobj['size'] += len(data)
             compobj['crc'] = zlib.crc32(data, compobj['crc'])
-            data = "%s%s"%(header, compobj['compressor'].compress(data))
+            data = "%s%s" % (header, compobj['compressor'].compress(data))
         return data
 
 
@@ -97,7 +97,7 @@ class Compress (wc.filter.Filter.Filter):
             if data:
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
-                data = "%s%s"%(header, compobj['compressor'].compress(data))
+                data = "%s%s" % (header, compobj['compressor'].compress(data))
             else:
                 data = header
             wc.log.debug(wc.LOG_FILTER, 'finishing compressor')
@@ -107,14 +107,15 @@ class Compress (wc.filter.Filter.Filter):
         return data
 
 
-    def getAttrs (self, url, headers):
-        d = super(Compress, self).getAttrs(url, headers)
+    def get_attrs (self, url, headers):
+        d = super(Compress, self).get_attrs(url, headers)
         compressobj = None
         accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])
         encoding = headers['server'].get('Content-Encoding', '').lower()
         if 'gzip' not in accepts:
             # browser does not accept gzip encoding
-            wc.log.warn(wc.LOG_FILTER, "browser does not support gzip compression (%s)", accepts)
+            wc.log.warn(wc.LOG_FILTER,
+                    "browser does not support gzip compression (%s)", accepts)
         elif encoding and encoding not in _compress_encs:
             compressobj = getCompressObject()
             headers['data']['Content-Encoding'] = encoding+', gzip\r'

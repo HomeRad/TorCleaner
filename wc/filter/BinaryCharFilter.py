@@ -31,7 +31,7 @@ class BinaryCharFilter (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [wc.filter.compileMime(x) for x in ['text/html']]
+    mimelist = [wc.filter.compile_mime(x) for x in ['text/html']]
 
     def doit (self, data, **attrs):
         """filter given data"""

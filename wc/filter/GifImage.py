@@ -41,7 +41,7 @@ class GifImage (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [wc.filter.compileMime(x) for x in ['image/gif']]
+    mimelist = [wc.filter.compile_mime(x) for x in ['image/gif']]
 
     def filter (self, data, **attrs):
         """feed data to GIF image parser, return processed data"""
@@ -67,9 +67,9 @@ class GifImage (wc.filter.Filter.Filter):
         return data + (gifparser.finish and ';' or '')
 
 
-    def getAttrs (self, url, headers):
+    def get_attrs (self, url, headers):
         """add GIF parser to attributes"""
-        d = super(GifImage, self).getAttrs(url, headers)
+        d = super(GifImage, self).get_attrs(url, headers)
         d['gifparser'] = GifParser()
         return d
 

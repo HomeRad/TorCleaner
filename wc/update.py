@@ -50,7 +50,8 @@ def decode (page):
     encoding = page.info().get("Content-Encoding")
     # note: some servers send content encoding gzip if file ends with ".gz"
     # but we don't want to decompress such files
-    if encoding in ('gzip', 'x-gzip', 'deflate') and not page.geturl().endswith(".gz"):
+    if encoding in ('gzip', 'x-gzip', 'deflate') and \
+       not page.geturl().endswith(".gz"):
         # cannot seek in socket descriptors, so must get content now
         content = page.read()
         if encoding == 'deflate':
@@ -88,15 +89,21 @@ def urlopen (url, proxies=None, data=None):
     global _opener
     if proxies is None:
         proxies = urllib.getproxies()
-    headers = {'User-Agent': UA_STR,
-               'Accept-Encoding' : 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5'}
+    headers = {
+       'User-Agent': UA_STR,
+       'Accept-Encoding' : 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5',
+    }
     request = urllib2.Request(url, data, headers)
     proxy_support = urllib2.ProxyHandler(proxies)
     if _opener is None:
         handlers = [proxy_support,
             urllib2.UnknownHandler, HttpWithGzipHandler,
-            urllib2.ProxyBasicAuthHandler, urllib2.ProxyDigestAuthHandler,
-            urllib2.HTTPDefaultErrorHandler, urllib2.HTTPRedirectHandler,
+            urllib2.HTTPBasicAuthHandler,
+            urllib2.ProxyBasicAuthHandler,
+            urllib2.HTTPDigestAuthHandler,
+            urllib2.ProxyDigestAuthHandler,
+            urllib2.HTTPDefaultErrorHandler,
+            urllib2.HTTPRedirectHandler,
         ]
         if hasattr(httplib, 'HTTPS'):
             handlers.append(HttpsWithGzipHandler)
@@ -136,15 +143,15 @@ def update_filter (wconfig, dryrun=False, log=None):
     If dryrun is True, only print out the changes but do nothing
     throws IOError on error
     """
-    print >>log, wc.i18n._("updating filters"), "..."
+    print >> log, wc.i18n._("updating filters"), "..."
     chg = False
     baseurl = wconfig['baseurl']+"filter/"
     url = baseurl+"filter-md5sums.txt"
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, wc.i18n._("error fetching %s")%url, msg
-        print >>log, "...", wc.i18n._("done")
+        print >> log, wc.i18n._("error fetching %s") % url, msg
+        print >> log, "...", wc.i18n._("done")
         return chg
     # remember all local config files
     filemap = {}
@@ -153,8 +160,8 @@ def update_filter (wconfig, dryrun=False, log=None):
     # read md5sums
     for line in page.read().splitlines():
         if "<" in line:
-            print >>log, wc.i18n._("error fetching %s")%url
-            print >>log, "...", wc.i18n._("done")
+            print >> log, wc.i18n._("error fetching %s") % url
+            print >> log, "...", wc.i18n._("done")
             return chg
         if not line:
             continue
@@ -168,12 +175,13 @@ def update_filter (wconfig, dryrun=False, log=None):
             digest = list(md5.new(data).digest())
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
-            if digest==md5sum:
-                print >>log, wc.i18n._("filter %s not changed, ignoring")%filename
+            if digest == md5sum:
+                print >> log, \
+                      wc.i18n._("filter %s not changed, ignoring") % filename
                 continue
-            print >>log, wc.i18n._("updating filter %s")%filename
+            print >> log, wc.i18n._("updating filter %s") % filename
         else:
-            print >>log, wc.i18n._("adding new filter %s")%filename
+            print >> log, wc.i18n._("adding new filter %s") % filename
         # parse new filter
         url = baseurl+filename
         page = open_url(url)
@@ -187,15 +195,16 @@ def update_filter (wconfig, dryrun=False, log=None):
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, wc.i18n._("error fetching %s:")%url, msg
-        print >>log, "...", wc.i18n._("done")
+        print >> log, wc.i18n._("error fetching %s:") % url, msg
+        print >> log, "...", wc.i18n._("done")
         return chg
     lines = page.read().splitlines()
     page.close()
     for line in lines:
         if "<" in line:
-            print >>log, wc.i18n._("error fetching %s:")%url, wc.i18n._("invalid content")
-            print >>log, "...", wc.i18n._("done")
+            print >> log, wc.i18n._("error fetching %s:") % url, \
+                          wc.i18n._("invalid content")
+            print >> log, "...", wc.i18n._("done")
             return chg
         if not line:
             continue
@@ -209,45 +218,46 @@ def update_filter (wconfig, dryrun=False, log=None):
             digest = list(md5.new(data).digest())
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
-            if digest==md5sum:
-                print >>log, wc.i18n._("extern filter %s not changed, ignoring")%filename
+            if digest == md5sum:
+                print >> log, \
+                  wc.i18n._("extern filter %s not changed, ignoring")%filename
                 continue
-            print >>log, wc.i18n._("updating extern filter %s")%filename
+            print >> log, wc.i18n._("updating extern filter %s") % filename
         else:
-            print >>log, wc.i18n._("adding new extern filter %s")%filename
+            print >> log, wc.i18n._("adding new extern filter %s") % filename
         chg = True
         if not dryrun:
             url = baseurl+filename
             try:
                 page = open_url(url)
             except IOError, msg:
-                print >>log, wc.i18n._("error fetching %s:")%url, msg
+                print >> log, wc.i18n._("error fetching %s:") % url, msg
                 continue
             data = page.read()
             if not data:
-                print >>log, wc.i18n._("error fetching %s:")%url, \
+                print >> log, wc.i18n._("error fetching %s:") % url, \
                              wc.i18n._("got no data")
                 continue
             f = file(fullname, 'wb')
             f.write(data)
             f.close()
-    print >>log, "...", wc.i18n._("done")
+    print >> log, "...", wc.i18n._("done")
     return chg
 
 
 def update_ratings (wconfig, dryrun=False, log=None):
     """update rating database from configured online rating service"""
-    print >>log, wc.i18n._("updating ratings...")
+    print >> log, wc.i18n._("updating ratings...")
     chg = False
     baseurl = wconfig['baseurl']+"rating/"
     url = baseurl+"rating.txt"
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, wc.i18n._("error fetching %s:")%url, msg
-        print >>log, "...", wc.i18n._("done")
+        print >> log, wc.i18n._("error fetching %s:") % url, msg
+        print >> log, "...", wc.i18n._("done")
         return chg
     # build local rating cache, and merge
     chg = rating_cache_merge(rating_cache_parse(page), dryrun=dryrun, log=log)
-    print >>log, "...", wc.i18n._("done")
+    print >> log, "...", wc.i18n._("done")
     return chg

@@ -48,7 +48,8 @@ def is_html_mime (mime):
 
 
 # regular expression for image urls
-is_image_url = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
+is_image_url = \
+     re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
 is_flash_url = re.compile(r'(?i)\.(swf|flash)$').search
 is_javascript_url = re.compile(r'(?i)\.js$').search
 
@@ -63,7 +64,7 @@ def append_lines (lines, lst, sid):
     """append lines to given list, augmented with sid"""
     for line in lines:
         line = line.strip()
-        if not line or line[0]=='#':
+        if not line or line[0] == '#':
             continue
         lst.append((line, sid))
 
@@ -142,7 +143,8 @@ class Blocker (wc.filter.Filter.Filter):
     def add_block (self, rule):
         """add BlockRule data"""
         if rule.url:
-            self.block.append((re.compile(rule.url), rule.replacement, rule.sid))
+            self.block.append((re.compile(rule.url), rule.replacement,
+                               rule.sid))
 
 
     def add_blockdomains (self, rule):
@@ -197,10 +199,11 @@ class Blocker (wc.filter.Filter.Filter):
                 attrs['mime'] = 'application/x-javascript'
             else:
                 if not is_html_mime(mime):
-                    wc.log.warn(wc.LOG_PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
+                    wc.log.warn(wc.LOG_PROXY,
+                      "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
                 attrs['mime'] = 'text/html'
-                rule = [r for r in self.rules if r.sid==sid][0]
+                rule = [r for r in self.rules if r.sid == sid][0]
                 query = urllib.urlencode({"ruletitle": rule.titles['en'],
                                           "selfolder": "%d"%rule.parent.oid,
                                           "selrule": "%d"%rule.oid})
@@ -217,22 +220,25 @@ class Blocker (wc.filter.Filter.Filter):
 
 
     def blocked (self, url, parts):
-        """return True if url is blocked. Parts are the splitted url parts."""
+        """True if url is blocked. Parts are the splitted url parts."""
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
             if blockdomain == parts[wc.url.DOMAIN]:
-                wc.log.debug(wc.LOG_FILTER, "blocked by blockdomain %s", blockdomain)
+                wc.log.debug(wc.LOG_FILTER,
+                             "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
         for blockurl, sid in self.blocked_urls:
             if blockurl in url:
-                wc.log.debug(wc.LOG_FILTER, "blocked by blockurl %s", blockurl)
+                wc.log.debug(wc.LOG_FILTER,
+                             "blocked by blockurl %r", blockurl)
                 return True, sid
         # check block patterns
         for ro, replacement, sid in self.block:
             mo = ro.search(url)
             if mo:
-                wc.log.debug(wc.LOG_FILTER, "blocked by pattern %s", ro.pattern)
+                wc.log.debug(wc.LOG_FILTER,
+                             "blocked by pattern %s", ro.pattern)
                 if replacement:
                     return mo.expand(replacement), sid
                 return True, sid
@@ -240,7 +246,7 @@ class Blocker (wc.filter.Filter.Filter):
 
 
     def allowed (self, url, parts):
-        """return True if url is allowed. Parts are the splitted url parts."""
+        """True if url is allowed. Parts are the splitted url parts."""
         for allowdomain, sid in self.allowed_domains:
             if allowdomain == parts[wc.url.DOMAIN]:
                 return True, sid

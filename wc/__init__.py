@@ -68,16 +68,16 @@ def initlog (filename, appname, filelogs=True):
     logging.config.fileConfig(filename)
     if filelogs:
         trydirs = []
-        if os.name=="nt":
+        if os.name == "nt":
             trydirs.append(ConfigDir)
-        logname = "%s.log"%appname
+        logname = "%s.log" % appname
         logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_wc_handler(logfile)
         logging.getLogger("wc").addHandler(handler)
         logging.getLogger("simpleTAL").addHandler(handler)
         logging.getLogger("simpleTALES").addHandler(handler)
         # access log is always a file
-        logname = "%s-access.log"%appname
+        logname = "%s-access.log" % appname
         logfile = wc.log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_access_handler(logfile)
         logging.getLogger("wc.access").addHandler(handler)
@@ -88,7 +88,8 @@ def get_wc_handler (logfile):
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
-    handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = logging.handlers.RotatingFileHandler(
+                                     logfile, mode, maxBytes, backupCount)
     return wc.log.set_format(handler)
 
 
@@ -97,7 +98,8 @@ def get_access_handler (logfile):
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
-    handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = logging.handlers.RotatingFileHandler(
+                                     logfile, mode, maxBytes, backupCount)
     # log only the message
     handler.setFormatter(logging.Formatter("%(message)s"))
     return handler
@@ -133,7 +135,7 @@ def wstartfunc (handle=None, abort=None, confdir=ConfigDir, filelogs=True):
     if abort is not None:
         abort(False)
     # support reload on posix systems
-    elif os.name=='posix':
+    elif os.name == 'posix':
         import signal
         signal.signal(signal.SIGHUP, sighup_reload_config)
     config.init_filter_modules()
@@ -161,7 +163,7 @@ def reload_config ():
     config.read_proxyconf()
     config.read_filterconf()
     config.init_filter_modules()
-    wc.proxy.dns_lookups.init_dns_resolver()
+    wc.proxy.dns_lookups.init_resolver()
     wc.filter.VirusFilter.init_clamav_conf()
 
 
@@ -198,7 +200,6 @@ class Configuration (dict):
         self.read_proxyconf()
         self.read_filterconf()
 
-
     def reset (self):
         """Reset to default values"""
         self['port'] = 8080
@@ -216,7 +217,7 @@ class Configuration (dict):
         self['parentproxycreds'] = None
         self['folderrules'] = []
         self['filters'] = []
-        self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
+        self['filterlist'] = [[], [], [], [], [], [], [], [], [], []]
         self['colorize'] = 0
         self['nofilterhosts'] = None
         # DNS resolved nofilterhosts
@@ -229,9 +230,9 @@ class Configuration (dict):
         self['gui_theme'] = "classic"
         self['timeout'] = 10
         self['auth_ntlm'] = 0
-        if os.name=='posix':
+        if os.name == 'posix':
             self['clamavconf'] = "/etc/clamav/clamav.conf"
-        elif os.name=='nt':
+        elif os.name == 'nt':
             self['clamavconf'] = r"c:\clamav-devel\etc\clamav.conf"
         else:
             self['clamavconf'] = os.path.join(os.getcwd(), "clamav.conf")
@@ -243,11 +244,9 @@ class Configuration (dict):
         from wc.filter.rules import delete_registered_sids
         delete_registered_sids()
 
-
     def read_proxyconf (self):
         """read proxy configuration"""
         WConfigParser(self.configfile, self).parse()
-
 
     def write_proxyconf (self):
         """write proxy configuration"""
@@ -269,8 +268,10 @@ class Configuration (dict):
         f.write(' proxypass="%s"\n' % xmlquoteattr(self['proxypass']))
         if self['parentproxy']:
             f.write(' parentproxy="%s"\n' % xmlquoteattr(self['parentproxy']))
-        f.write(' parentproxyuser="%s"\n' % xmlquoteattr(self['parentproxyuser']))
-        f.write(' parentproxypass="%s"\n' % xmlquoteattr(self['parentproxypass']))
+        f.write(' parentproxyuser="%s"\n' %
+                xmlquoteattr(self['parentproxyuser']))
+        f.write(' parentproxypass="%s"\n' %
+                xmlquoteattr(self['parentproxypass']))
         f.write(' parentproxyport="%d"\n' % self['parentproxyport'])
         f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' gui_theme="%s"\n' % xmlquoteattr(self['gui_theme']))
@@ -287,13 +288,12 @@ class Configuration (dict):
         f.write('</webcleaner>\n')
         f.close()
 
-
     def read_filterconf (self):
         """read filter rules"""
         from wc.filter.rules import generate_sids
         from wc.filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
-            if os.stat(filename)[stat.ST_SIZE]==0:
+            if os.stat(filename)[stat.ST_SIZE] == 0:
                 wc.log.warn(LOG_PROXY, "Skipping empty file %r", filename)
                 continue
             p = ZapperParser(filename, self)
@@ -301,13 +301,12 @@ class Configuration (dict):
             self['folderrules'].append(p.folder)
         # sort folders according to oid
         self['folderrules'].sort()
-        for i,folder in enumerate(self['folderrules']):
+        for i, folder in enumerate(self['folderrules']):
             folder.oid = i
             recalc_up_down(folder.rules)
         recalc_up_down(self['folderrules'])
         prefix = self['development'] and "wc" or "lc"
         generate_sids(prefix)
-
 
     def merge_folder (self, folder, dryrun=False, log=None):
         """merge given folder data into config
@@ -315,30 +314,28 @@ class Configuration (dict):
         """
         # test for correct category
         assert folder.sid and folder.sid.startswith("wc")
-        f = [ rule for rule in self['folderrules'] if rule.sid==folder.sid ]
+        f = [ rule for rule in self['folderrules'] if rule.sid == folder.sid ]
         assert len(f) <= 1
         if f:
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
-            print >>log, " ", wc.i18n._("inserting %s")%folder.tiptext()
+            print >>log, " ", wc.i18n._("inserting %s") % folder.tiptext()
             if not dryrun:
                 folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)
         return chg
-
 
     def write_filterconf (self):
         """write filter rules"""
         for folder in self['folderrules']:
             folder.write()
 
-
     def init_filter_modules (self):
         """go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects"""
-        self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
+        self['filterlist'] = [[], [], [], [], [], [], [], [], [], []]
         self['mime_content_rewriting'] = sets.Set()
         for filtername in self['filters']:
             # import filter module
@@ -353,9 +350,11 @@ class Configuration (dict):
             instance = clazz()
             for order in clazz.orders:
                 for folder in self['folderrules']:
-                    if folder.disable: continue
+                    if folder.disable:
+                        continue
                     for rule in folder.rules:
-                        if rule.disable: continue
+                        if rule.disable:
+                            continue
                         if rule.get_name() in clazz.rulenames:
                             instance.addrule(rule)
                 self['filterlist'][order].append(instance)
@@ -363,13 +362,11 @@ class Configuration (dict):
             # see Filter.__cmp__ on how sorting is done
             filters.sort()
 
-
     def nofilter (self, url):
         """Decide whether to filter this url or not.
            returns True if the request must not be filtered, else False
         """
         return wc.url.match_url(url, self['nofilterhosts'])
-
 
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
@@ -423,6 +420,7 @@ class BaseParser (object):
 
     def __init__ (self, filename, _config):
         """initialize filename and configuration for this parser"""
+        super(BaseParser, self).__init__()
         self.filename = filename
         self.config = _config
 
@@ -442,6 +440,7 @@ class BaseParser (object):
         self.xmlparser = None
 
     def parse (self, fp=None):
+        """parse the stored filename, or another source given by fp"""
         wc.log.debug(LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
@@ -456,12 +455,15 @@ class BaseParser (object):
             self._postparse()
 
     def start_element (self, name, attrs):
+        """basic start element method doing nothing"""
         pass
 
     def end_element (self, name):
+        """basic end element method doing nothing"""
         pass
 
     def character_data (self, data):
+        """basic character data method doing nothing"""
         pass
 
 
@@ -469,6 +471,7 @@ class ZapperParser (BaseParser):
     """parser class for *.zap filter configuration files"""
 
     def __init__ (self, filename, _config, compile_data=True):
+        """initialize filename, configuration and compile flag"""
         super(ZapperParser, self).__init__(filename, _config)
         from wc.filter.rules.FolderRule import FolderRule
         self.folder = FolderRule(filename=filename)
@@ -476,8 +479,8 @@ class ZapperParser (BaseParser):
         self.rule = None
         self.compile_data = compile_data
 
-
     def start_element (self, name, attrs):
+        """handle start tag of folder, rule or nested element"""
         super(ZapperParser, self).start_element(name, attrs)
         self.cmode = name
         if name in rulenames:
@@ -490,13 +493,13 @@ class ZapperParser (BaseParser):
                 self.folder.fill_attrs(attrs, name)
             else:
                 self.rule.fill_attrs(attrs, name)
-        elif name=='folder':
+        elif name == 'folder':
             self.folder.fill_attrs(attrs, name)
         else:
             raise ParseException, wc.i18n._("unknown tag name %s")%name
 
-
     def end_element (self, name):
+        """handle end tag of folder, rule or nested element"""
         self.cmode = None
         if self.rule is None:
             self.folder.end_data(name)
@@ -505,12 +508,13 @@ class ZapperParser (BaseParser):
         if name in rulenames:
             if self.compile_data:
                 self.rule.compile_data()
-        elif name=='folder':
+        elif name == 'folder':
             if self.compile_data:
                 self.folder.compile_data()
 
 
     def character_data (self, data):
+        """handle rule of folder character data"""
         if self.cmode:
             if self.rule is None:
                 self.folder.fill_data(data, self.cmode)
@@ -522,8 +526,8 @@ class WConfigParser (BaseParser):
     """parser class for webcleaner.conf configuration files"""
 
     def start_element (self, name, attrs):
-        if name=='webcleaner':
-            for key,val in attrs.items():
+        if name == 'webcleaner':
+            for key, val in attrs.items():
                 self.config[key] = val
             for key in ('port', 'sslport', 'parentproxyport', 'timeout',
                         'auth_ntlm', 'colorize', 'development', 'try_google',
@@ -541,8 +545,7 @@ class WConfigParser (BaseParser):
             else:
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]
-        elif name=='filter':
+        elif name == 'filter':
             wc.log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
-
 

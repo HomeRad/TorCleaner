@@ -102,7 +102,7 @@ def printFilterOrder (i):
     return s
 
 
-def compileMime (mime):
+def compile_mime (mime):
     """compile mimelist entry to regex object and return it"""
     return re.compile("^(?i)%s(;.+)?$"%mime)
 
@@ -170,7 +170,7 @@ def get_filterattrs (url, filters,
     for i in filters:
         for f in wc.config['filterlist'][i]:
             if f.applies_to_mime(attrs['mime']):
-                attrs.update(f.getAttrs(url, headers))
+                attrs.update(f.get_attrs(url, headers))
     return attrs
 
 
