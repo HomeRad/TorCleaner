@@ -1,3 +1,14 @@
+2.12 (released xx.xx.xxxx)
+  * do not assume zero content size if Content-Length header is
+    missing in a server reply
+    Type: bugfix
+    Changed: wc/proxy/{HttpServer,Header}.py
+
+  * handle HTTP servers were both response line and headers are
+    missing
+    Type: feature
+    Changed: wc/proxy/HttpServer.py
+
 2.11 (released 25.4.2004)
   * - preserve the order in which HTML attributes have been parsed
     - cope with trailing space in HTML comments
