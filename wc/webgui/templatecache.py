@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""A template cache."""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+A template cache.
+"""
 
 import os
 import stat
@@ -24,18 +26,19 @@ import wc.webgui.template
 
 
 class TemplateCache (dict):
-    """Handle requests for templates. Compiled templates are cached
-       for performance reasons and only reloaded if the template file
-       changes.
+    """
+    Handle requests for templates. Compiled templates are cached for
+    performance reasons and only reloaded if the template file changes.
     """
 
     def __getitem__ (self, key):
-        """The key must be a path suitable for an open() and os.stat()
-           call, except when the path is already cached and the file
-           has been deleted. In this case, the already cached template
-           is returned, ignoring the file deletion.
+        """
+        The key must be a path suitable for an open() and os.stat()
+        call, except when the path is already cached and the file
+        has been deleted. In this case, the already cached template
+        is returned, ignoring the file deletion.
 
-           @return compiled TAL template from given path
+        @return: compiled TAL template from given path
         """
         if key in self:
             template = super(TemplateCache, self).__getitem__(key)

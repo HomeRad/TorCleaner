@@ -10,7 +10,8 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""Path Iterator
+"""
+Path Iterator
 
 A TALES Iterator with the ability to use first() and last() on
 subpaths of elements.

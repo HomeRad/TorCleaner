@@ -11,7 +11,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Fast append-only String I/O"""
+"""
+Fast append-only String I/O.
+"""
 
 from StringIO import StringIO
 import traceback
@@ -20,7 +22,8 @@ import wc
 import wc.log
 
 class FasterStringIO (StringIO):
-    """Append-only version of StringIO.
+    """
+    Append-only version of StringIO.
 
     This let's us have a much faster write() method.
     """

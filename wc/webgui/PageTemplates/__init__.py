@@ -10,11 +10,12 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-__doc__='''Package wrapper for Page Templates
+"""
+Package wrapper for Page Templates
 
 This wrapper allows the Page Template modules to be segregated in a
 separate package.
-'''
+"""
 
 # Placeholder for Zope Product data
 misc_ = {}

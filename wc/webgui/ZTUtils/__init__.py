@@ -10,7 +10,9 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-__doc__='''Package of template utility classes and functions.'''
+"""
+Package of template utility classes and functions.
+"""
 
 from Batch import Batch
 from Iterator import Iterator

@@ -1,6 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""for each template/<theme>/<file>.html there is a context/<file>_html.py
-module delivering the page content values"""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -16,13 +14,19 @@ module delivering the page content values"""
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+For each template/<theme>/<file>.html there is a context/<file>_html.py
+module delivering the page content values.
+"""
 
 import re
 
 charset = 'iso-8859-1'
 
 def get_item_value (item):
-    """return a plain value of the given form field item"""
+    """
+    Return a plain value of the given form field item.
+    """
     if isinstance(item, list):
         value = item[0]
     elif hasattr(item, "value"):
@@ -33,7 +37,9 @@ def get_item_value (item):
 
 
 def get_item_list (item):
-    """return a plain value of the given form field item"""
+    """
+    Return a plain value of the given form field item.
+    """
     if isinstance(item, list):
         value = [get_item_value(x) for x in item]
     elif hasattr(item, "value"):
@@ -44,22 +50,28 @@ def get_item_list (item):
 
 
 def getval (form, key):
-    """return a formfield value"""
+    """
+    Return a formfield value.
+    """
     if not form.has_key(key):
         return u''
     return get_item_value(form[key])
 
 
 def getlist (form, key):
-    """return a list of formfield values"""
+    """
+    Return a list of formfield values.
+    """
     if not form.has_key(key):
         return []
     return get_item_list(form[key])
 
 
 def get_prefix_vals (form, prefix):
-    """return a list of (key, value) pairs where ``prefix+key'' is a valid
-       form field"""
+    """
+    Return a list of (key, value) pairs where ``prefix+key'' is a valid
+    form field.
+    """
     res = []
     for key in form:
         if key.startswith(prefix):
@@ -69,5 +81,7 @@ def get_prefix_vals (form, prefix):
 
 is_safe = re.compile(r"^[a-zA-Z0-9 ]$").match
 def filter_safe (text):
-    """safe whitelist quoting for html content"""
+    """
+    Safe whitelist quoting for html content.
+    """
     return u"".join([c for c in text if is_safe(c)])

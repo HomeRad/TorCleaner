@@ -10,19 +10,20 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-__doc__='''Iterator class
+"""
+Iterator class
 
 Unlike the builtin iterators of Python 2.2+, these classes are
 designed to maintain information about the state of an iteration.
 The Iterator() function accepts either a sequence or a Python
 iterator.  The next() method fetches the next item, and returns
 true if it succeeds.
-'''
+"""
 
 import string
 
 class Iterator (object):
-    '''Simple Iterator class'''
+    """Simple Iterator class"""
 
     __allow_access_to_unprotected_subobjects__ = 1
 
@@ -113,7 +114,7 @@ class Iterator (object):
         return IterIter(self)
 
 class InnerBase (object):
-    '''Base Inner class for Iterators'''
+    """Base Inner class for Iterators"""
     # Prep sets up ._next and .end
 
     def prep_next (self, it):
@@ -139,7 +140,7 @@ class InnerBase (object):
 
 
 class SeqInner (InnerBase):
-    '''Inner class for sequence Iterators'''
+    """Inner class for sequence Iterators"""
 
     def _supports (self, ob):
         try: ob[0]
@@ -168,7 +169,7 @@ except NameError:
     StopIteration="StopIteration"
 
 class IterInner (InnerBase):
-    '''Iterator inner class for Python iterators'''
+    """Iterator inner class for Python iterators"""
 
     def _supports (self, ob):
         try:

@@ -10,7 +10,8 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""TALES
+"""
+TALES
 
 An implementation of a generic TALES engine
 """
@@ -33,29 +34,40 @@ _parse_expr = re.compile(r"(%s):" % NAME_RE).match
 _valid_name = re.compile('%s$' % NAME_RE).match
 
 class TALESError (Exception):
-    """Error during TALES expression evaluation"""
+    """
+    Error during TALES expression evaluation.
+    """
 
 class Undefined (TALESError):
-    '''Exception raised on traversal of an undefined path'''
+    """
+    Exception raised on traversal of an undefined path
+    """
 
 class RegistrationError (Exception):
-    '''TALES Type Registration Error'''
+    """
+    TALES Type Registration Error
+    """
 
 class CompilerError (Exception):
-    '''TALES Compiler Error'''
+    """
+    TALES Compiler Error
+    """
 
 class Default (object):
-    '''Retain Default'''
+    """
+    Retain Default.
+    """
 Default = Default()
 
 class SafeMapping (MultiMapping):
-    '''Mapping with security declarations and limited method exposure.
+    """
+    Mapping with security declarations and limited method exposure.
 
     Since it subclasses MultiMapping, this class can be used to wrap
     one or more mapping objects.  Restricted Python code will not be
     able to mutate the SafeMapping or the wrapped mappings, but will be
     able to read any value.
-    '''
+    """
     __allow_access_to_unprotected_subobjects__ = 1
     push = pop = None
 
@@ -80,7 +92,9 @@ class Iterator (ZTUtils.Iterator):
 
 
 class ErrorInfo (object):
-    """Information about an exception passed to an on-error handler."""
+    """
+    Information about an exception passed to an on-error handler.
+    """
     __allow_access_to_unprotected_subobjects__ = 1
 
     def __init__ (self, err, position=(None, None)):
@@ -95,13 +109,14 @@ class ErrorInfo (object):
 
 
 class Engine (object):
-    '''Expression Engine
+    """
+    Expression Engine
 
     An instance of this class keeps a mutable collection of expression
     type handlers.  It can compile expression strings by delegating to
     these handlers.  It can provide an expression Context, which is
     capable of holding state and evaluating compiled expressions.
-    '''
+    """
     Iterator = Iterator
 
     def __init__ (self, Iterator=None):
@@ -150,11 +165,12 @@ class Engine (object):
 
 
 class Context (object):
-    '''Expression Context
+    """
+    Expression Context
 
     An instance of this class holds context information that it can
     use to evaluate compiled expressions.
-    '''
+    """
 
     _context_class = SafeMapping
     position = (None, None)
@@ -270,7 +286,9 @@ class Context (object):
 
 
 class TALESTracebackSupplement (object):
-    """Implementation of ITracebackSupplement"""
+    """
+    Implementation of ITracebackSupplement.
+    """
 
     def __init__ (self, context, expression):
         self.context = context
@@ -291,7 +309,9 @@ class TALESTracebackSupplement (object):
 
 
 class SimpleExpr (object):
-    '''Simple example of an expression type handler'''
+    """
+    Simple example of an expression type handler.
+    """
 
     def __init__ (self, name, expr, engine):
         self._name = name

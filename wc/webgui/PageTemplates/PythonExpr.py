@@ -10,14 +10,15 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""Generic Python Expression Handler
+"""
+Generic Python Expression Handler
 """
 
 import sys
 from TALES import CompilerError
 
 class getSecurityManager (object):
-    '''Null security manager'''
+    """Null security manager"""
     def validate(self, *args, **kwargs):
         return 1
     addContext = removeContext = validateValue = validate
@@ -70,7 +71,7 @@ class PythonExpr (object):
 
 
 class ExprTypeProxy (object):
-    '''Class that proxies access to an expression type handler'''
+    """Class that proxies access to an expression type handler"""
 
     def __init__ (self, name, handler, econtext):
         self._name = name

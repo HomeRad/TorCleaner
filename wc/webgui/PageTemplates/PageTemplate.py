@@ -10,7 +10,8 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""Page Template module
+"""
+Page Template module
 
 HTML- and XML-based template objects using TAL, TALES, and METAL.
 """
@@ -197,7 +198,9 @@ class _ModuleImporter (object):
 ModuleImporter = _ModuleImporter()
 
 class PTRuntimeError (RuntimeError):
-    '''The Page Template has template errors that prevent it from rendering.'''
+    """
+    The Page Template has template errors that prevent it from rendering.
+    """
     pass
 
 

@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""HTML configuration interface functions"""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+HTML configuration interface functions.
+"""
 
 import gettext
 import mimetypes
@@ -31,11 +33,15 @@ import wc.webgui.TAL
 
 
 class WebConfig (object):
-    """class for web configuration templates"""
+    """
+    Class for web configuration templates.
+    """
 
     def __init__ (self, client, url, form, protocol, clientheaders,
                  status=200, msg=_('Ok'), localcontext=None, auth=''):
-        """load a web configuration template and return response"""
+        """
+        Load a web configuration template and return response.
+        """
         wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
         if isinstance(msg, unicode):
             msg = msg.encode("iso8859-1", "ignore")
@@ -89,26 +95,34 @@ class WebConfig (object):
 
 
     def put_response (self, data, protocol, status, msg, headers):
-        """write response to client"""
+        """
+        Write response to client.
+        """
         response = "%s %d %s" % (protocol, status, msg)
         self.client.server_response(self, response, status, headers)
         self.client.server_content(data)
         self.client.server_close(self)
 
     def client_abort (self):
-        """client has aborted the connection"""
+        """
+        Client has aborted the connection.
+        """
         self.client = None
 
 
 def expand_template (template, context):
-    """expand the given template file fp in context
-       return expanded data
+    """
+    Expand the given template file fp in context
+
+    @return: expanded data
     """
     return template.render(context)
 
 
 def get_headers (url, status, auth, clientheaders):
-    """get proxy headers to send"""
+    """
+    Get proxy headers to send.
+    """
     headers = wc.proxy.Headers.WcMessage()
     headers['Server'] = 'Proxy\r'
     if auth:
@@ -134,11 +148,13 @@ def get_headers (url, status, auth, clientheaders):
 
 
 def get_context (dirs, form, localcontext, hostname, lang):
-    """Get template context, raise ImportError if not found.
-       The context includes the given local context, plus all variables
-       defined by the imported context module
-       Evaluation of the context can set a different HTTP status.
-       Returns tuple `(context, status)`"""
+    """
+    Get template context, raise ImportError if not found.
+    The context includes the given local context, plus all variables
+    defined by the imported context module
+    Evaluation of the context can set a different HTTP status.
+    Returns tuple `(context, status)`
+    """
     # get template-specific context dict
     status = None
     modulepath = ".".join(['context'] + dirs[:-1])
@@ -169,7 +185,9 @@ def get_context (dirs, form, localcontext, hostname, lang):
 
 
 def add_default_context (context, filename, hostname, lang):
-    """Add context variables used by all templates."""
+    """
+    Add context variables used by all templates.
+    """
     # rule macros
     path, dirs = wc.webgui.get_safe_template_path("macros/rules.html")
     rulemacros = wc.webgui.templatecache.templates[path]
@@ -199,7 +217,9 @@ nav_filenames = [
     "help_html",
 ]
 def add_nav_context (context, filename):
-    """Add 'nav' variable to context."""
+    """
+    Add 'nav' variable to context.
+    """
     filename = filename.replace('.', '_')
     nav = {}
     for fname in nav_filenames:
@@ -208,7 +228,9 @@ def add_nav_context (context, filename):
 
 
 def add_i18n_context (context, lang):
-    """Add i18n variables 'lang', 'i18n' and 'otherlanguages' to context."""
+    """
+    Add i18n variables 'lang', 'i18n' and 'otherlanguages' to context.
+    """
     # language and i18n
     context_add(context, "lang", lang)
     translator = wc.get_translator(lang, translatorklass=Translator,
@@ -227,33 +249,47 @@ def add_i18n_context (context, lang):
 
 
 def context_add (context, key, val):
-    """Add key/val pair to context."""
+    """
+    Add key/val pair to context.
+    """
     context[key] = val
 
 
 class Translator (gettext.GNUTranslations):
-    """Translator which interpolates TAL expressions."""
+    """
+    Translator which interpolates TAL expressions.
+    """
 
     def translate (self, domain, msgid, mapping=None,
                    context=None, target_language=None, default=None):
-        """Interpolates and translate TAL expression."""
+        """
+        Interpolates and translate TAL expression.
+        """
         _msg = self.gettext(msgid)
         wc.log.debug(wc.LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
         return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
 
     def gettext (self, msgid):
-        """Return unicode with ugettext()."""
+        """
+        Return unicode with ugettext().
+        """
         return self.ugettext(msgid)
 
     def ngettext (self, singular, plural, number):
-        """Return unicode with ungettext()."""
+        """
+        Return unicode with ungettext().
+        """
         return self.ungettext(singular, plural, number)
 
 
 class NullTranslator (gettext.NullTranslations):
-    """Fallback translator which interpolates TAL expressions."""
+    """
+    Fallback translator which interpolates TAL expressions.
+    """
 
     def translate (self, domain, msgid, mapping=None,
                    context=None, target_language=None, default=None):
-        """Interpolates TAL expression."""
+        """
+        Interpolates TAL expression.
+        """
         return wc.webgui.TAL.TALInterpreter.interpolate(msgid, mapping)

@@ -11,7 +11,8 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Global Translation Service for providing I18n to Page Templates.
+"""
+Global Translation Service for providing I18n to Page Templates.
 """
 
 import re
@@ -21,7 +22,9 @@ from wc.webgui.TAL.TALDefs import NAME_RE
 ustr = unicode
 
 class DummyTranslationService (object):
-    """Translation service that doesn't know anything about translation."""
+    """
+    Translation service that doesn't know anything about translation.
+    """
 
     def translate (self, domain, msgid, mapping=None,
                    context=None, target_language=None, default=None):
@@ -35,7 +38,9 @@ translationService = DummyTranslationService()
 
 
 def setGlobalTranslationService (service):
-    """Sets the global translation service, and returns the previous one."""
+    """
+    Sets the global translation service, and returns the previous one.
+    """
     global translationService
     old_service = translationService
     translationService = service
@@ -43,5 +48,7 @@ def setGlobalTranslationService (service):
 
 
 def getGlobalTranslationService ():
-    """Returns the global translation service."""
+    """
+    Returns the global translation service.
+    """
     return translationService

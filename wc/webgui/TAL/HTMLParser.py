@@ -1,4 +1,6 @@
-"""A parser for HTML and XHTML."""
+"""
+A parser for HTML and XHTML.
+"""
 
 # This file is based on sgmllib.py, but the API is slightly different.
 

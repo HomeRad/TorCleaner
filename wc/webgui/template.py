@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""TAL template class for WebCleaner"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+TAL template class for WebCleaner.
+"""
 
 import wc.webgui.PageTemplates.PageTemplate
 import wc.webgui.PageTemplates.Expressions
@@ -23,10 +25,12 @@ import wc.webgui.ZTUtils
 
 
 class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
-    """asf asdf """
+    """A page template class."""
 
     def __init__ (self, path, mtime):
-        """Store modification time and compile template from given path."""
+        """
+        Store modification time and compile template from given path.
+        """
         super(WebCleanerTemplate, self).__init__()
         self.mtime = mtime
         self.pt_edit(open(path), 'text/html')
@@ -35,13 +39,17 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
                                     'Page Template %s has errors.' % self.id)
 
     def html (self):
-        """Only HTML is supported at the moment.
-           @return True
+        """
+        Only HTML is supported at the moment.
+
+        @return: True
         """
         return True
 
     def render (self, context):
-        """Render this Page Template"""
+        """
+        Render this Page Template.
+        """
         out = wc.webgui.ZTUtils.FasterStringIO()
         __traceback_supplement__ = \
   (wc.webgui.PageTemplates.PageTemplate.PageTemplateTracebackSupplement, self)

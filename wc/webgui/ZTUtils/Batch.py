@@ -10,8 +10,9 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-__doc__='''Batch class, for iterating over a sequence in batches
-'''
+"""
+Batch class, for iterating over a sequence in batches
+"""
 
 class LazyPrevBatch (object):
 
@@ -48,7 +49,8 @@ class Batch (object):
 
     def __init__ (self, sequence, size, start=0, end=0,
                  orphan=0, overlap=0):
-        '''Encapsulate "sequence" in batches of "size".
+        """
+        Encapsulate "sequence" in batches of "size".
 
         Arguments: "start" and "end" are 0-based indexes into the
         sequence.  If the next batch would contain no more than
@@ -63,7 +65,7 @@ class Batch (object):
         the batch.
 
         "sequence_length" is the length of the original, unbatched, sequence
-        '''
+        """
 
         start = start + 1
 

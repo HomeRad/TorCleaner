@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""parameters for config.html page"""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Parameters for config.html page.
+"""
 
 # be sure not to import something in the context namespace we do not want
 import base64

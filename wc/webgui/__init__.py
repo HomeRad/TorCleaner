@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""HTML configuration interface functions"""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+HTML configuration interface functions.
+"""
 
 import os
 import re
@@ -28,18 +30,24 @@ import wc.log
 
 
 def norm (path):
-    """normalize a path name"""
+    """
+    Normalize a path name.
+    """
     return os.path.realpath(os.path.normpath(os.path.normcase(path)))
 
 
 safe_path = re.compile(r"[-a-zA-Z0-9_.]+").match
 def is_safe_path (path):
-    """return True iff path is safe for opening"""
+    """
+    Return True iff path is safe for opening.
+    """
     return safe_path(path) and ".." not in path
 
 
 def get_relative_path (path):
-    """return splitted and security filtered path"""
+    """
+    Return splitted and security filtered path.
+    """
     # get non-empty url path components, remove path fragments
     dirs = [ urlparse.urldefrag(d)[0] for d in path.split("/") if d ]
     # remove ".." and other invalid paths (security!)
@@ -47,13 +55,17 @@ def get_relative_path (path):
 
 
 def get_template_url (url, lang):
-    """return tuple (path, dirs, lang)"""
+    """
+    Return tuple (path, dirs, lang).
+    """
     parts = urlparse.urlsplit(url)
     return get_template_path(urllib.unquote(parts[2]), lang)
 
 
 def get_safe_template_path (path):
-    """return tuple (path, dirs)"""
+    """
+    Return tuple (path, dirs).
+    """
     base = os.path.join(wc.TemplateDir, wc.configuration.config['gui_theme'])
     base = norm(base)
     dirs = get_relative_path(path)
@@ -70,7 +82,9 @@ def get_safe_template_path (path):
 
 
 def get_template_path (path, defaultlang):
-    """return tuple (path, dirs, lang)"""
+    """
+    Return tuple (path, dirs, lang).
+    """
     path, dirs = get_safe_template_path(path)
     lang = defaultlang
     for la in wc.i18n.supported_languages:

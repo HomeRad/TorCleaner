@@ -45,7 +45,7 @@ from wc.webgui.TAL.TALDefs import TALESError
 
 __version__ = "1.0"
 
-pot_header = '''\
+pot_header = """\
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR ORGANIZATION
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -61,7 +61,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\\n"
 "Content-Transfer-Encoding: ENCODING\\n"
 "Generated-By: talgettext.py %(version)s\\n"
-'''
+"""
 
 NLSTR = '"\n"'
 

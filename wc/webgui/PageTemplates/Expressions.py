@@ -10,7 +10,8 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""Page Template Expression Engine
+"""
+Page Template Expression Engine
 
 Page Template-specific implementation of TALES, with handlers
 for Python expressions, string literals, and paths.
