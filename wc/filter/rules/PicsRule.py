@@ -38,6 +38,9 @@ class PicsRule (UrlRule):
         if name=='service':
             self._service = unxmlify(attrs.get('name')).encode('iso8859-1')
             self.ratings[self._service] = {}
+            from wc.filter.PICS import services as pics_data
+            for category in pics_data[self._service]['categories'].keys():
+                self.ratings[self._service][category] = "0"
         elif name=='category':
             assert self._service
             self._category = unxmlify(attrs.get('name')).encode('iso8859-1')
@@ -97,3 +100,4 @@ class PicsRule (UrlRule):
                       (xmlify(category), value)
             s += "</service>\n"
         return s+"</pics>"
+
