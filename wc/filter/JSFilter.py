@@ -31,7 +31,7 @@ from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
 from wc.proxy.Headers import get_wc_client_headers
 from wc.proxy import make_timer
-from wc.url import url_norm, url_quote, stripsite
+from wc.url import url_norm, url_quote, stripsite, is_valid_url
 
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
 _end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
@@ -261,7 +261,7 @@ class JSFilter (JSListener):
             url = urlparse.urljoin(self.base_url, url)
         else:
             url = urlparse.urljoin(self.url, url)
-        if not url:
+        if not is_valid_url(url):
             error(FILTER, "invalid script src url %r at %s (base %r)", url, self.url, self.base_url)
             return
         self.htmlparser.state = ('wait', url)

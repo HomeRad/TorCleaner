@@ -2,10 +2,6 @@ TODO
 
 version 2.9 and above
 
-- empty hostname with
-  <script src="file:///C:/NetObjectsFusionMX/NetObjectsSystem/rollover.js">
-  results in assertion error
-
 - double close (EBADF bad file descriptor in fileno())
 
 - content rating:
