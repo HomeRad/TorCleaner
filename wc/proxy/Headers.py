@@ -90,7 +90,7 @@ def client_remove_hop_by_hop_headers (headers):
 def client_set_connection_headers (headers):
     """Set our own connection headers"""
     headers['Connection'] = 'Keep-Alive\r'
-    headers['Keep-Alive'] = 'timeout=200\r'
+    headers['Keep-Alive'] = 'timeout=300\r'
 
 
 def client_set_encoding_headers (headers):
