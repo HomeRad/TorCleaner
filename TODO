@@ -2,6 +2,51 @@ TODO
 
 version 2.10 and above
 
+File "/usr/lib/python2.3/site-packages/wc/proxy/__init__.py", line 157, in mainloop
+  proxy_poll(timeout=max(0, run_timers()))
+File "/usr/lib/python2.3/site-packages/wc/proxy/__init__.py", line 128, in proxy_poll
+  x.handle_read_event()
+File "/usr/lib/python2.3/site-packages/wc/proxy/Dispatcher.py", line 234, in handle_read_event
+  self.handle_read()
+File "/usr/lib/python2.3/site-packages/wc/proxy/Connection.py", line 73, in handle_read
+  self.process_read()
+File "/usr/lib/python2.3/site-packages/wc/proxy/HttpClient.py", line 117, in process_read
+  handler()
+File "/usr/lib/python2.3/site-packages/wc/proxy/HttpClient.py", line 347, in process_content
+  self.handle_local()
+File "/usr/lib/python2.3/site-packages/wc/proxy/HttpClient.py", line 452, in handle_local
+  auth = ", ".join(get_challenges())
+File "/usr/lib/python2.3/site-packages/wc/proxy/auth/__init__.py", line 59, in get_challenges
+  chals = [get_digest_challenge(),
+File "/usr/lib/python2.3/site-packages/wc/proxy/auth/digest.py", line 42, in get_digest_challenge
+  auth = 'realm="%(realm)s", nonce="%(nonce)s", opaque="%(opaque)s", stale=%(stale)s' % \
+
+- HTTPS Gateway data flux:
+
+                        DOWN			UP
+    BROWSER
+	|
+	|
+    PROXY
+	|
+     HttpClient         init server, pass	pass data back to
+	|		request data		browser
+	|
+	|
+     HttpServer		pass request data	pass data back to
+	|					HttpClient
+	|
+     HttpsServer	pass request data	receive filtered data,
+     	|					encrypt it with WebCleaner
+	|					certificate and pass it on
+	|					to HttpServer
+	|
+     HttpsClient	connect to SSL server,	decrypt and filter the
+    	|		send request data	received data, pass it on
+        |					to HttpsServer
+	|
+  SSL SERVER
+
 - memory leaks while operating the proxy
 
 - convert remaining tests to unit testing where appropriate
@@ -25,50 +70,6 @@ version 2.10 and above
 - blocked HTTPS urls issue a warning because we switch to http://
   instead the proxy should support https requests.
 
-- HTTPS gateway functionality
-
-make sure that the certificate file includes:
-
-    * (optional) a chain of certificates from a known certificate authority to your server certificate
-    * the server certificate
-    * the private key; the key may not be password-protected
-
-The file should be in PEM format. The OpenSSL command to generate a self-signed certificate in the correct format would be something like:
-
-
-    openssl req -x509 -newkey rs:1024 -keyout test.pem -out test.pem -days 365 -nodes
-
-Note the '-nodes' flag - it's important!
-http://www.post1.com/home/ngps/m2/howto.ca.html
-
-
-HTTPS CERTIFICATES
-
-If a client browser connects via HTTPS and if it presents a
-certificate and if HTTPSHeaders is set, Pound will obtain the
-certificate data and add the following HTTP headers to the
-request it makes to the server:
-
-- X-SSL-Subject: information about the certificate owner
-- X-SSL-Issuer: information about the certificate issuer (CA)
-- X-SSL-notBefore: begin validity date for the certificate
-- X-SSL-notAfter: end validity date for the certificate
-- X-SSL-serial: certificate serial number (in decimal)
-
-It is the application's responsibility to actually use these
-headers - Pound just passes this information without checking
-it in any way (except for signature and encryption correctness).
-
-Please note that this mechanism allows forgeries: a client may
-(maliciously) send these headers to Pound in order to masquerade
-as an SSL client with a specific certificate. If this is a problem
-for your application make sure to deny these requests: add
-
-    HeadDeny X-SSL-Subject ".*"
-    HeadDeny X-SSL-Issuer ".*"
-    HeadDeny X-SSL-notBefore ".*"
-    HeadDeny X-SSL-notAfter ".*"
-    HeadDeny X-SSL-serial ".*"
-
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
+
