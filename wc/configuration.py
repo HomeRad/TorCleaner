@@ -87,6 +87,11 @@ class Configuration (dict):
 
     def reset (self):
         """Reset to default values"""
+        # The bind address specifies on which address the socket should
+        # listen.
+        # The default empty string represents INADDR_ANY which means to
+        # accept incoming connections from all hosts.
+        self['bindaddress'] = ''
         self['port'] = 8080
         self['sslport'] = 8443
         self['sslgateway'] = 0
@@ -108,9 +113,6 @@ class Configuration (dict):
         self['nofilterhosts'] = None
         self['allowedhosts'] = None
         self['starttime'] = time.time()
-        # if set to one the bound socket does not accept connections from
-        # hosts except localhost; normally not needed
-        self['local_sockets_only'] = 0
         self['mime_content_rewriting'] = sets.Set()
         self['gui_theme'] = "classic"
         self['timeout'] = 10
@@ -140,10 +142,9 @@ class Configuration (dict):
         lines.append('<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">')
         lines.append('<webcleaner')
         lines.append(' version="%s"' % xmlquoteattr(self['version']))
-        port = self['port']
-        sslport = self['sslport']
-        lines.append(' port="%d"' % port)
-        lines.append(' sslport="%d"' % sslport)
+        lines.append(' bindaddress="%s"' % xmlquoteattr(self['bindaddress'))
+        lines.append(' port="%d"' % self['port'])
+        lines.append(' sslport="%d"' % self['sslport'])
         if self['sslgateway']:
             lines.append(' sslgateway="%d"' % self['sslgateway'])
         lines.append(' adminuser="%s"' % xmlquoteattr(self['adminuser']))
