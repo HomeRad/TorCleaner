@@ -135,7 +135,7 @@ def main():
         elif opt=='--pidfile':
             daemon.pidfile = arg
         else:
-            _print_usage(i18n._("Unknown option %s") % opt)
+            _print_usage(i18n._("Unknown option %s") % `opt`)
     if len(args) < 1:
         _print_usage(i18n._("No command given."))
     else:
@@ -148,7 +148,7 @@ def main():
         if msg:
 	    print >>sys.stderr, msg
     else:
-        _print_usage(i18n._("Unknown command %s") % command)
+        _print_usage(i18n._("Unknown command %s") % `command`)
 
 if __name__ == "__main__":
     main()

@@ -128,8 +128,7 @@ class Configuration (UserDict.UserDict):
         """read proxy configuration"""
         p = WConfigParser()
         p.parse(os.path.join(ConfigDir, "webcleaner.conf"), self)
-        global DebugLevel
-        DebugLevel = self['debuglevel']
+        set_debuglevel(self['debuglevel'])
 
     def read_filterconf (self):
         """read filter rules"""

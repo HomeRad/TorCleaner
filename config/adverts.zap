@@ -259,4 +259,10 @@
  parameters=""
  query=""
  fragment=""/>
+
+<rewrite title="Atwola JS ad" oid="110"
+ desc="found at fortune.com"
+ tag="script">
+<attr name="src">ar\.atwola\.com</attr>
+</rewrite>
 </folder>

@@ -13,6 +13,9 @@
   * working TAL template example, lets see how this integrates into
     WebCleaner local file handling. Anyway, most of the custom
     handlers except error handling is now in the webgui package.
+  * use yy_size_t for parser alloc definitions, fixes build errors on 64bit
+    architectures
+    Changed files: wc/parser/htmllex.l
 
 1.5
   * - increase TCP dns query timeout from 10 to 20 seconds

@@ -22,9 +22,9 @@
 #                               win32process.THREAD_PRIORITY_BELOW_NORMAL)
 
 import os, sys
-from wc.daemon import startfunc,pidfile
+from wc.daemon import pidfile
 from wc.debug import *
-from wc import i18n, configdata
+from wc import i18n, configdata, startfunc
 
 def start (parent_exit=1):
     # already running?
@@ -90,6 +90,7 @@ def startwatch (parent_exit=1, sleepsecs=5):
 
 def stopwatch ():
     pass
+
 
 def reload ():
     return _("reload not supported for this platform")
