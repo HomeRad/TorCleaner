@@ -462,6 +462,7 @@ class HttpServer (Server):
         from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
         # note: self.client still the matchmaker object
         client = self.client.client
+        client.state = 'request'
         self.client = None
         ClientServerMatchmaker(client, client.request,
                                self.clientheaders, # with new auth
