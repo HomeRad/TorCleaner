@@ -247,11 +247,12 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         if self.waited > 100:
             # waited too long; stop js background downloader and
             # switch back to parse
-            error(FILTER, "Waited too long for %s"%self.state[1])
+            error(FILTER, "waited too long for %s"%self.state[1])
             if self.js_env.hasListener(self):
                 self.js_env.detachListener(self)
             self.js_html = None
             self.state = ('parse',)
+            self.feed("") # will replay() buffered data
         elif self.state[0]=='wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
