@@ -36,7 +36,7 @@ wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()
 from wc.proxy import proxy_poll, run_timers
 from wc.filter import FilterException
-for i in range(6):
+for i in range(7):
     fname = "test/html/script%d.html"%i
     filterfile(fname)
 

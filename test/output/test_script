@@ -44,6 +44,7 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
+//
 //-->
 </script>
 
@@ -76,6 +77,7 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
+//
 //-->
 </script>
 
@@ -109,13 +111,24 @@ function checkSyntax (url) {
     return syntax.test(url);
 }
 
+//
 //-->
 </script>
 <script type=JavaScript>
 <!--
 a = 1
-// -->
+//
+//-->
 </script>
 
 </html>
+
+filter test/html/script6.html
+
+<script language=JavaScript>
+<!--
+function a () {
+}
+//-->
+</script>
 
