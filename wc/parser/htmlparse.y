@@ -611,7 +611,9 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 DL_EXPORT(void) inithtmlsax(void) {
     PyObject* m;
-    Py_InitModule("htmlsax", htmlsax_methods);
+    if (!Py_InitModule("htmlsax", htmlsax_methods)) {
+        return;
+    }
     if (!(m = PyImport_ImportModule("wc.parser")))
         return;
     if (!(resolve_entities = PyObject_GetAttrString(m, "resolve_entities")))
