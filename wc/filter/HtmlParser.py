@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import sys, re, urlparse, wc
 from cStringIO import StringIO
-from wc.parser.htmllib import HtmlParser
+from wc.parser.htmllib import HtmlParser, quote_attrval
 from wc.parser import resolve_html_entities, strip_quotes
 from wc.filter import FilterWait, FilterPics
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
@@ -123,7 +123,7 @@ class BufferHtmlParser (HtmlParser):
                 for name,val in item[2].items():
                     s += ' %s'%name
                     if val:
-                        s += "=%s"%val
+                        s += "=\"%s\""%quote_attrval(val)
                 self.outbuf.write(s+">")
             elif item[0]==ENDTAG:
                 self.outbuf.write("</%s>"%item[1])
