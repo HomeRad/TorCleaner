@@ -109,7 +109,10 @@ def get_context (dirs, form, localcontext):
     context = simpleTALES.Context()
     # add default context values
     context.addGlobal("form", form)
-    context.addGlobal("config", config)
+    strconfig = {}
+    for k in ['port']:
+        strconfig[k] = str(config[k])
+    context.addGlobal("config", strconfig)
     # augment the context
     for attr in attrs:
         context.addGlobal(attr, getattr(template_context, attr))
