@@ -1,11 +1,11 @@
-import HttpServer
+import tests.proxy.HttpServer
 
 class HttpRequest (object):
     SUCCESS = 0
     VIOLATION = 1
     FAILURE = 2
 
-    def __init__ (self, serverconfig=HttpServer.defaultconfig):
+    def __init__ (self, serverconfig=tests.proxy.HttpServer.defaultconfig):
         self.serverconfig = serverconfig
         self.url = None
 
@@ -24,7 +24,7 @@ class HttpRequest (object):
         """return request line, usually of the form
            *<scheme> <path> <httpver>*
         """
-        rand = HttpServer.random_chars(10)
+        rand = tests.proxy.HttpServer.random_chars(10)
         host = self.serverconfig['host']
         port = self.serverconfig['port']
         self.url = "http://%s:%d/%s" % (host, port, rand)

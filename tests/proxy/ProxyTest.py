@@ -6,8 +6,8 @@ import threading
 import time
 import wc
 import tests.StandardTest
-import HttpServer
-import HttpClient
+import tests.proxy.HttpServer
+import tests.proxy.HttpClient
 
 
 _lock = None
@@ -47,9 +47,9 @@ class ProxyTest (tests.StandardTest.StandardTest):
        request data and check the result validity"""
 
     def addTest (self, request,
-                 client_class=HttpClient.LogHttpClient,
-                 server_class=HttpServer.LogHttpServer,
-                 handler_class=HttpServer.LogRequestHandler):
+                 client_class=tests.proxy.HttpClient.LogHttpClient,
+                 server_class=tests.proxy.HttpServer.LogHttpServer,
+                 handler_class=tests.proxy.HttpServer.LogRequestHandler):
         self.proxytests.append((request, client_class,
                                 server_class, handler_class))
 
@@ -93,7 +93,8 @@ class ProxyTest (tests.StandardTest.StandardTest):
             handler_class = proxytest[3]
             self.log.write("running test %r\n"%request.name())
             try:
-                HttpServer.startServer(self.log, server_class=server_class,
+                tests.proxy.HttpServer.startServer(self.log,
+                                       server_class=server_class,
                                        handler_class=handler_class)
                 client = client_class(self.log, self.proxyconfig)
                 # send request
@@ -106,5 +107,5 @@ class ProxyTest (tests.StandardTest.StandardTest):
                     raise self.failureException, msg
             finally:
                 # stop server
-                HttpServer.stopServer(self.log)
+                tests.proxy.HttpServer.stopServer(self.log)
 
