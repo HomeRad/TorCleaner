@@ -202,6 +202,7 @@ class ConfWindow(FXMainWindow):
         FXMenuCommand(filtermenu, "Image", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Nocomments", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Rewrite", None, self, self.ID_NEWRULE)
+        FXMenuCommand(filtermenu, "Replace", None, self, self.ID_NEWRULE)
         FXMenuCascade(addmenu, _("Filter"), None, filtermenu)
         FXMenuButton(f, _("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(f, _("Remove"), None, self, self.ID_REMOVE)

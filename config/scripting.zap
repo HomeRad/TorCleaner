@@ -78,17 +78,14 @@
  tag="noscript">
 </rewrite>
 
-<rewrite title="remove popups"
- desc="delete window.open in Javascripts"
- disable="1"
- tag="script">
-<enclosed>(?P&lt;remove&gt;window\.open\(.*?\))</enclosed>
-<replace part="enclosed"/>
-</rewrite>
-
 <rewrite title="use contents of noscript tag"
  disable="1"
  tag="noscript">
 <replace part="tag"/>
 </rewrite>
+
+<replace title="remove javascript popups"
+ disable="1"
+ desc="remove window.open"
+ search="window.open\(.*?\)"/>
 </folder>

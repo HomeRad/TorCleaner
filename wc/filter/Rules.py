@@ -483,6 +483,30 @@ class NocommentsRule(Rule):
 
 
 
+class ReplaceRule(Rule):
+    def __init__(self, title="No title", desc="", disable=0,
+                 search="", replace=""):
+        Rule.__init__(self, title, desc, disable)
+        self.search = search
+        self.replace = replace
+
+    def fromFactory(self, factory):
+        return factory.fromReplaceRule(self)
+
+    def get_name(self):
+        return "replace"
+
+    def toxml(self):
+	s = Rule.toxml(self);
+        if self.search:
+            s += '\n search="%s"'%self.search
+        if self.replace:
+            s += '\n replace="%s"'%self.replace
+        s += "/>\n"
+        return s
+
+
+
 def rule_cmp(rule1, rule2):
     return cmp(rule1.title, rule2.title)
 

@@ -1,5 +1,6 @@
 from FXRuleFrame import FXRuleFrame
 from FXRewriteRuleFrame import FXRewriteRuleFrame
+from FXReplaceRuleFrame import FXReplaceRuleFrame
 from FXAllowRuleFrame import FXAllowRuleFrame
 from FXBlockRuleFrame import FXBlockRuleFrame
 from FXHeaderRuleFrame import FXHeaderRuleFrame
@@ -32,6 +33,10 @@ class FXRuleFrameFactory:
     def fromRewriteRule(self, rule):
         self.inc_index()
         return FXRewriteRuleFrame(self.treeframe, rule, self.index)
+
+    def fromReplaceRule(self, rule):
+        self.inc_index()
+        return FXReplaceRuleFrame(self.treeframe, rule, self.index)
 
     def fromAllowRule(self, rule):
         self.inc_index()
