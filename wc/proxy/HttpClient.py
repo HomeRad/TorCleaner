@@ -45,7 +45,6 @@ class HttpClient (Connection):
         self.bytes_remaining = None # for content only
         self.content = ''
         self.protocol = 'HTTP/1.0'
-        self.persistent = False
         self.url = ''
         host = self.addr[0]
         if not config.allowed(host):
@@ -139,17 +138,21 @@ class HttpClient (Connection):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
+        debug(PROXY, "%s client headers \n%s", str(self), str(msg))
         # look if client wants persistent connections
         if self.http_ver >= (1,1):
-            self.persistent = not has_header_value(msg, 'Connection', 'Close')
+            self.persistent = not has_header_value(msg, 'Proxy-Connection', 'Close') and \
+                              not has_header_value(msg, 'Connection', 'Close')
+        elif self.http_ver >= (1,0):
+            self.persistent = has_header_value(msg, 'Proxy-Connection', 'Keep-Alive') or \
+                              has_header_value(msg, 'Connection', 'Keep-Alive')
+        else:
+            self.persistent = False
         # work on these headers
         self.compress = client_set_headers(msg)
         # filter headers
         self.headers = applyfilter(FILTER_REQUEST_HEADER,
                                    msg, fun="finish", attrs=self.nofilter)
-        if config['parentproxy']:
-            self.headers['Proxy-Connection'] = 'Keep-Alive\r'
-            self.headers['Keep-Alive'] = 'timeout=300\r'
         # add decoders
         self.decoders = []
         self.bytes_remaining = get_content_length(self.headers)
@@ -160,7 +163,6 @@ class HttpClient (Connection):
             self.decoders.append(UnchunkStream())
             client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
-        debug(PROXY, "%s client headers (filtered)\n%s", str(self), str(self.headers))
         if config["proxyuser"]:
             creds = get_header_credentials(self.headers, 'Proxy-Authorization')
             if not creds:
@@ -248,6 +250,10 @@ class HttpClient (Connection):
         else:
             self.server = server
             self.write("%s\r\n"%response)
+            if not headers.has_key('Content-Length'):
+                # without content length the client can not determine
+                # when all data is sent
+                self.persistent = False
             # note: headers is a WcMessage object, not a dict
             self.write("".join(headers.headers))
             self.write('\r\n')
@@ -289,8 +295,8 @@ class HttpClient (Connection):
 
     def handle_close (self):
         # The client closed the connection, so cancel the server connection
-        self.send_buffer = ''
         debug(PROXY, '%s handle_close', str(self))
+        self.send_buffer = ''
         super(HttpClient, self).handle_close()
         if self.server:
             server, self.server = self.server, None
@@ -328,13 +334,15 @@ class HttpClient (Connection):
 
 
     def close (self):
-        if self.persistent:
-            debug(PROXY, '%s persistent', str(self))
-            self.state = 'receive'
-        else:
-            debug(PROXY, '%s close', str(self))
-            self.state = 'closed'
-            super(HttpClient, self).close()
+        debug(PROXY, '%s close', str(self))
+        self.state = 'closed'
+        super(HttpClient, self).close()
+
+
+    def reuse (self):
+        debug(PROXY, '%s reuse', str(self))
+        self.state = 'request'
+        self.persistent = False
 
 
 def get_content_length (headers):

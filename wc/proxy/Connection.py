@@ -26,6 +26,7 @@ class Connection (asyncore.dispatcher, object):
         self.recv_buffer = ''
         self.send_buffer = ''
         self.close_pending = False
+        self.persistent = False
 
 
     def readable (self):
@@ -97,7 +98,10 @@ class Connection (asyncore.dispatcher, object):
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = False
-            self.close()
+            if self.persistent:
+                self.reuse()
+            else:
+                self.close()
 
 
     def handle_connect (self):
@@ -122,6 +126,8 @@ class Connection (asyncore.dispatcher, object):
             # We can't close yet because there's still data to send
             debug(PROXY, '%s close ready channel', str(self))
             self.close_pending = True
+        elif self.persistent:
+            self.reuse()
         else:
             self.close()
 

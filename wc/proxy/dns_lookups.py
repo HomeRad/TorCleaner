@@ -11,6 +11,7 @@ from Connection import Connection
 from wc import ip
 from wc.log import *
 from wc.proxy import dns as dnslib
+from wc.proxy import create_inet_socket
 
 ###################### configuration ########################
 

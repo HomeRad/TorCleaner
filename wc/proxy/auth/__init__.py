@@ -69,7 +69,6 @@ def get_challenges (**args):
     return chals
 
 
-
 def get_header_credentials (headers, key):
     creds = {}
     for cred in headers.getallmatchingheadervalues(key):
@@ -117,6 +116,9 @@ def get_credentials (challenges, **attrs):
 def check_credentials (creds, **attrs):
     debug(AUTH, "check credentials %s with attrs %s", str(creds), str(attrs))
     if not creds:
+        res = False
+    elif config['auth_ntlm'] and 'NTLM' not in creds:
+        # forced NTLM auth
         res = False
     elif 'NTLM' in creds:
         res = check_ntlm_credentials(creds['NTLM'][0], **attrs)

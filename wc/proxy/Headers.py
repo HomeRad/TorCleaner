@@ -99,7 +99,6 @@ def client_set_headers (headers):
     client_remove_hop_by_hop_headers(headers)
     remove_warning_headers(headers)
     set_via_header(headers)
-    client_set_connection_headers(headers)
     return client_set_encoding_headers(headers)
 
 
@@ -113,12 +112,6 @@ def client_remove_hop_by_hop_headers (headers):
             if v not in to_remove:
                 to_remove.append(v)
     remove_headers(headers, to_remove)
-
-
-def client_set_connection_headers (headers):
-    """Set our own connection headers"""
-    headers['Connection'] = 'Keep-Alive\r'
-    headers['Keep-Alive'] = 'timeout=300\r'
 
 
 def client_set_encoding_headers (headers):

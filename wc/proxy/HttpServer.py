@@ -147,6 +147,7 @@ class HttpServer (Server):
         """actually send the request to the server, is also used to
         send a request twice for NTLM authentication"""
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
+        debug(PROXY, '%s write request\n%s', str(self), `request`)
         self.write(request)
         debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
         self.write("".join(self.clientheaders.headers))

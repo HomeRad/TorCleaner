@@ -205,7 +205,7 @@ def mainloop (handle=None):
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
-    while 1:
+    while True:
         # Installing a timeout means we're in a handler, and after
         # dealing with handlers, we come to the main loop, so we don't
         # have to worry about being in asyncore.poll when a timer goes
@@ -217,7 +217,6 @@ def mainloop (handle=None):
             rc = win32event.WaitForSingleObject(handle, 0)
             if rc==win32event.WAIT_OBJECT_0:
                 break
-
 
 
 if __name__=='__main__':
