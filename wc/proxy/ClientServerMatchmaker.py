@@ -218,7 +218,7 @@ class ClientServerMatchmaker:
         # Look for a server again
         if self.server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
-            # to kill the connection.  Let's find another server object.
+            # to kill the connection. Let's find another server object.
             self.state = 'server'
             self.find_server()
         elif self.client.connected:
