@@ -11,17 +11,11 @@ import wc.magic
 
 class MimeRecognizer (wc.filter.Filter.Filter):
     """Recognizes missing content type header of URLs request data"""
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_DECODE]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = []
-    # which mime types this filter applies to
-    mimelist = []
 
     def __init__ (self):
         """initialize image reducer flags"""
-        super(MimeRecognizer, self).__init__()
+        stages = [wc.filter.STAGE_RESPONSE_DECODE]
+        super(MimeRecognizer, self).__init__(stages=stages)
         # minimal number of bytes before we start mime recognition
         self.minimal_size_bytes = 1024
 

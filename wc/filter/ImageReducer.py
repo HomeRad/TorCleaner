@@ -26,18 +26,15 @@ import wc.log
 
 class ImageReducer (wc.filter.Filter.Filter):
     """Reduce the image size by making low quality JPEGs"""
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = ["imagereduce"]
-    # which mime types this filter applies to
-    mimelist = [wc.filter.compile_mime(x) for x in \
-           ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
     def __init__ (self):
         """initialize image reducer flags"""
-        super(ImageReducer, self).__init__()
+        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        rulenames = ["imagereduce"]
+        mimes = ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|'+
+                 'x-xbitmap|x-xpixmap)']
+        super(ImageReducer, self).__init__(stages=stages, mimes=mimes,
+                                           rulenames=rulenames)
         # minimal number of bytes before we start reducing
         self.minimal_size_bytes = 5120
         # reduced JPEG quality (in percent)

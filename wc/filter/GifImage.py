@@ -35,13 +35,12 @@ class RewindException (Exception):
 class GifImage (wc.filter.Filter.Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = []
-    # which mime types this filter applies to
-    mimelist = [wc.filter.compile_mime(x) for x in ['image/gif']]
+
+    def __init__ (self):
+        """Init stages and mimes."""
+        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        mimes = ['image/gif']
+        super(GifImage, self).__init__(stages=stages, mimes=mimes)
 
     def filter (self, data, attrs):
         """feed data to GIF image parser, return processed data"""

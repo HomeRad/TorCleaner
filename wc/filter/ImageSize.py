@@ -31,17 +31,13 @@ class ImageSize (wc.filter.Filter.Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
 
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = ['image']
-    # which mime types this filter applies to
-    mimelist = [wc.filter.compile_mime(x) for x in \
-           ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
-
     def __init__ (self):
-        super(ImageSize, self).__init__()
+        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        rulenames = ['image']
+        mimes = ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|'+
+                 'x-xbitmap|x-xpixmap)']
+        super(ImageSize, self).__init__(stages=stages, mimes=mimes,
+                                        rulenames=rulenames)
         # minimal amount of image data for PIL to read header info:
         # 4096 bytes is enough for most images; the value is increased
         # when it is not big enough

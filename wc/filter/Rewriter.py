@@ -27,13 +27,13 @@ DefaultCharset = 'iso-8859-1'
 class Rewriter (wc.filter.Filter.Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
 
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = ['rewrite', 'nocomments', 'javascript', 'rating']
-    mimelist = [wc.filter.compile_mime(x) for x in ['text/html']]
-
+    def __init__ (self):
+        """Init stages and mimes."""
+        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        rulenames = ['rewrite', 'nocomments', 'javascript', 'rating']
+        mimes = ['text/html']
+        super(Rewriter, self).__init__(stages=stages, rulenames=rulenames,
+                                       mimes=mimes)
 
     def filter (self, data, attrs):
         if not attrs.has_key('rewriter_filter'):

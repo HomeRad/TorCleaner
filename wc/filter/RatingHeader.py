@@ -25,13 +25,12 @@ import wc.log
 
 class RatingHeader (wc.filter.Filter.Filter):
     """Adds rating data supplied in 'Content-Rating' headers"""
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_HEADER]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = ['rating']
-    # applies to all mime types
-    mimelist = []
+
+    def __init__ (self):
+        """initialize image reducer flags"""
+        stages = [wc.filter.STAGE_RESPONSE_HEADER]
+        rulenames = ['rating']
+        super(RatingHeader, self).__init__(stages=stages, rulenames=rulenames)
 
     def doit (self, data, attrs):
         url = attrs['url']

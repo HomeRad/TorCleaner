@@ -29,7 +29,6 @@ Of course, these must be handled in the appropriate proxy functions
 to work properly.
 
 """
-import re
 
 import wc
 import wc.log
@@ -100,11 +99,6 @@ class FilterProxyError (FilterException):
         self.status = status
         self.msg = msg
         self.text = text
-
-
-def compile_mime (mime):
-    """compile mimelist entry to regex object and return it"""
-    return re.compile("^(?i)%s(;.+)?$"%mime)
 
 
 def GetRuleFromName (name):

@@ -97,23 +97,19 @@ def try_append_lines (lst, rule):
 
 class Blocker (wc.filter.Filter.Filter):
     """block urls and show replacement data instead"""
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_REQUEST]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = [
-        'block',
-        'blockdomains',
-        'blockurls',
-        'allow',
-        'allowdomains',
-        'allowurls',
-    ]
-    mimelist = []
 
     def __init__ (self):
-        """load blocked/allowed urls/regex."""
-        super(Blocker, self).__init__()
+        """Load blocked/allowed urls/regex."""
+        rulenames = [
+            'block',
+            'blockdomains',
+            'blockurls',
+            'allow',
+            'allowdomains',
+            'allowurls',
+        ]
+        stages = [wc.filter.STAGE_REQUEST]
+        super(Blocker, self).__init__(rulenames=rulenames, stages=stages)
         # block and allow regular expressions
         self.block = []
         self.allow = []

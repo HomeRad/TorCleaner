@@ -45,17 +45,15 @@ def strsize (b):
 class VirusFilter (wc.filter.Filter.Filter):
     """scan for virus signatures in a data stream"""
 
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = ['antivirus']
-    # applies to all mime types
-    mimelist = []
 
     # 5 MB maximum file size, everything bigger will generate a proxy error
     MAX_FILE_BYTES = 1024L*1024L*5L
 
+    def __init__ (self):
+        """Init stages and mimes."""
+        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        rulenames = ['antivirus']
+        super(VirusFilter, self).__init__(stages=stages, rulenames=rulenames)
 
     def filter (self, data, attrs):
         """write data to scanner and internal buffer"""

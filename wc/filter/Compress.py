@@ -52,23 +52,16 @@ def get_compress_object ():
 class Compress (wc.filter.Filter.Filter):
     """filter class compressing its input with zlib"""
 
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_ENCODE]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = []
-    # which mime types this filter applies to
-    mimelist = [wc.filter.compile_mime(x) for x in \
-                [r'text/[a-z.\-+]+',
+    def __init__ (self):
+        """Set init compressor flag to True."""
+        stages = [wc.filter.STAGE_RESPONSE_ENCODE]
+        mimes = [r'text/[a-z.\-+]+',
                  r'application/(postscript|pdf|x-dvi)',
                  r'audio/(basic|midi|x-wav)',
                  r'image/x-portable-(any|bit|gray|pix)map',
                  r'x-world/x-vrml',
-               ]]
-
-    def __init__ (self):
-        """Set init compressor flag to True."""
-        super(Compress, self).__init__()
+                ]
+        super(Compress, self).__init__(stages=stages, mimes=mimes)
         self.init_compressor = True
 
     def filter (self, data, attrs):

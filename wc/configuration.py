@@ -260,11 +260,11 @@ class Configuration (dict):
             # filter class has same name as module
             clazz = getattr(getattr(wc.filter, filtername), filtername)
             # add content-rewriting mime types to special list
+            instance = clazz()
             if filtername in ['Rewriter', 'Replacer', 'GifImage',
                               'Compress', 'ImageReducer', 'ImageSize',
                               'VirusFilter', 'BinaryCharFilter']:
-                self['mime_content_rewriting'].update(clazz.mimelist)
-            instance = clazz()
+                self['mime_content_rewriting'].update(instance.mimes)
             self['filtermodules'].append(instance)
             for folder in self['folderrules']:
                 if folder.disable:
@@ -272,9 +272,9 @@ class Configuration (dict):
                 for rule in folder.rules:
                     if rule.disable:
                         continue
-                    if rule.get_name() in clazz.rulenames:
+                    if rule.get_name() in instance.rulenames:
                         instance.addrule(rule)
-            for stage in clazz.stages:
+            for stage in instance.stages:
                 self['filterlist'][stage].append(instance)
         for filters in self['filterlist'].values():
             # see Filter.__cmp__ on how sorting is done

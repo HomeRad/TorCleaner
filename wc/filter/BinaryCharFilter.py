@@ -28,13 +28,12 @@ class BinaryCharFilter (wc.filter.Filter.Filter):
     """Replace binary characters, often found in Microsoft HTML documents,
        with their correct HTML equivalent.
     """
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = []
-    # which mime types this filter applies to
-    mimelist = [wc.filter.compile_mime(x) for x in ['text/html']]
+
+    def __init__ (self):
+        """initialize stages and mime list"""
+        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        mimes = ['text/html']
+        super(BinaryCharFilter, self).__init__(stages=stages, mimes=mimes)
 
     def doit (self, data, attrs):
         """filter given data"""

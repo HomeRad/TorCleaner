@@ -29,14 +29,12 @@ import wc.filter.Filter
 class Header (wc.filter.Filter.Filter):
     """filter for adding, modifying and deleting headers"""
 
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_REQUEST_HEADER,
-              wc.filter.STAGE_RESPONSE_HEADER]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = ['header']
-    # which mime types this filter applies to
-    mimelist = []
+    def __init__ (self):
+        """Init stages and rulenames."""
+        stages = [wc.filter.STAGE_REQUEST_HEADER,
+                  wc.filter.STAGE_RESPONSE_HEADER]
+        rulenames = ['header']
+        super(Header, self).__init__(stages=stages, rulenames=rulenames)
 
     def get_attrs (self, url, localhost, stages, headers):
         """configure header rules to add/delete"""

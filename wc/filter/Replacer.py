@@ -28,13 +28,13 @@ DefaultCharset = 'iso-8859-1'
 class Replacer (wc.filter.Filter.Filter):
     """replace regular expressions in a data stream"""
 
-    # which filter stages this filter applies to (see filter/__init__.py)
-    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
-    # which rule types this filter applies to (see Rules.py)
-    # all rules of these types get added with Filter.addrule()
-    rulenames = ['replace']
-    mimelist = [wc.filter.compile_mime(x)
-       for x in ['text/html', 'text/javascript', 'application/x-javascript']]
+    def __init__ (self):
+        """initialize image reducer flags"""
+        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        rulenames = ['replace']
+        mimes = ['text/html', 'text/javascript', 'application/x-javascript']
+        super(Replacer, self).__init__(stages=stages, mimes=mimes,
+                                       rulenames=rulenames)
 
     def filter (self, data, attrs):
         """feed data to replacer buffer"""

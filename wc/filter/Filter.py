@@ -16,6 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import re
 import wc
 import wc.log
 
@@ -23,12 +24,28 @@ import wc.log
 class Filter (object):
     """the base filter class"""
 
-    mimelist = []
-
-    def __init__ (self):
-        """initialize rule list and priority"""
-        self.rules = []
+    def __init__ (self, stages=None, rulenames=None, mimes=None):
+        """initialize rule list, mime list, stages, rulenames and priority"""
+        # Which filter stages this filter applies to.
+        # See wc/filter/__init__.py for the list of valid filter stages
+        self.stages = []
+        if stages is not None:
+            self.stages.extend(stages)
+        # priority to have over other filters in the same filter stage
         self.prio = -1
+        # Which rule types this filter applies to (see Rules.py).
+        # All rules of these types get added with Filter.addrule().
+        self.rulenames = []
+        if rulenames is not None:
+            self.rulenames.extend(rulenames)
+        # Which mime types this filter applies to.
+        if mimes is not None:
+            # compile mime list entries to regex objects
+            self.mimes = [re.compile(r"^(?i)%s(;.+)?$" % x) for x in mimes]
+        else:
+            self.mimes = []
+        # list of rules this filter is interested in
+        self.rules = []
 
     def addrule (self, rule):
         """append given rule to rule list"""
@@ -74,11 +91,11 @@ class Filter (object):
 
     def applies_to_mime (self, mime):
         """ask if this filter applies to a mime type"""
-        if not self.mimelist:
+        if not self.mimes:
             return True
         if mime is None:
             return False
-        for ro in self.mimelist:
+        for ro in self.mimes:
             if ro.match(mime):
                 return True
         return False
