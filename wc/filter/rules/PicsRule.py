@@ -23,7 +23,7 @@ class PicsRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, oid=0):
         UrlRule.__init__(self, title=title, desc=desc,disable=disable,oid=oid)
         self.ratings = {}
-        self.url = ""
+        self.url = "" # XXX default URL!!!
 
 
     def fill_attrs (self, attrs, name):

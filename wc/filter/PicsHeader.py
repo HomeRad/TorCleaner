@@ -28,6 +28,8 @@ mimelist = []
 
 from wc.filter.Filter import Filter
 from wc.filter.PICS import check_pics
+from wc.filter import FilterRedirect
+
 
 class PicsHeader (Filter):
     def doit (self, data, **attrs):
@@ -37,8 +39,7 @@ class PicsHeader (Filter):
             for rule in self.rules:
                 msg = check_pics(rule, headers['PICS-Label'])
                 if msg:
-                    headers[wc.config.wcheader] = msg
-                    return
+                    raise FilterRedirect(rule.url)
 
 
     def getAttrs (self, headers, url):

@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re, sys, urlparse, time, rfc822, wc
-from wc.filter import FilterException
+from wc.filter import FilterWait
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser
 from wc.parser import resolve_html_entities
@@ -38,7 +38,7 @@ class JSHtmlListener (JSListener):
     def __init__ (self, opts):
         self.js_filter = opts['javascript'] and jslib
         self.js_html = None
-        self.js_src = 0
+        self.js_src = None
         self.js_script = ''
         if self.js_filter:
             self.js_env = jslib.new_jsenv()
@@ -148,7 +148,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
        parse => default parsing state, no background fetching
        wait  => this filter (or a recursive HtmlParser used by javascript)
                 is fetching additionally data in the background.
-                Flushing data in wait state raises a FilterException.
+                Flushing data in wait state raises a FilterWait
                 When finished for <script src="">, the buffers look like
                 fed data chunks (example):
                         [---------|--------][-------][----------][--...
@@ -205,7 +205,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 self.waited = 0
                 waitbuf, self.waitbuf = self.waitbuf, []
                 self.replay(waitbuf)
-                if self.state!='parse': return
+                if self.state!='parse':
+                    self._debug(ALWAYS, "self.inbuf", `self.inbuf.getvalue()`)
+                    return
                 data = self.inbuf.getvalue()
                 self.inbuf.close()
                 self.inbuf = StringIO()
@@ -226,7 +228,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         #self._debug(HURT_ME_PLENTY, "flush")
         # flushing in wait state raises a filter exception
         if self.state=='wait':
-            raise FilterException("HtmlParser[%d]: still waiting for data"%self.level)
+            raise FilterWait("HtmlParser[%d]: waiting for data"%self.level)
         self.parser.flush()
 
 
@@ -294,6 +296,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             return self.waitbuf.append(item)
         rulelist = []
         filtered = 0
+        # XXX search for PICS tag
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
@@ -360,7 +363,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
            Inline extern javascript sources"""
         #self._debug(NIGHTMARE, "JS: jsStartElement")
         changed = 0
-        self.js_src = 0
+        self.js_src = None
         self.js_output = 0
         self.js_popup = 0
         for name in ('onmouseover', 'onmouseout'):
@@ -420,8 +423,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 # Note: <script src=""> could be missing an end tag,
                 # but now we need one. Look later for a duplicate </script>.
                 self.buf.append([ENDTAG, "script"])
+                self.js_script = ''
             self.state = 'parse'
-            self.js_script = ''
             #self._debug(NIGHTMARE, "switching back to parse with")
             self._debugbuf()
         else:
@@ -444,6 +447,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                      `url`, "at", `self.url`
             return
         self.state = 'wait'
+        self.waited = 'True'
         self.js_src = 'True'
         client = HttpProxyClient(self.jsScriptData, (url, ver))
         ClientServerMatchmaker(client,
@@ -453,7 +457,6 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                                {'nofilter': None},
                                'identity', # compress
                                )
-        self.waited = "True"
 
 
     def jsScript (self, script, ver, item):
@@ -480,9 +483,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             try:
                 self.js_html.feed('')
                 self.js_html.flush()
-            except FilterException:
+            except FilterWait:
                 self.state = 'wait'
-                self.waited = "True"
+                self.waited = 'True'
                 make_timer(0.1, lambda : self.jsEndScript(item))
                 return
             self.js_html._debugbuf()
