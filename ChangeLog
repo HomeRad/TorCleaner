@@ -1,6 +1,14 @@
 2.0
   * remove -std=gnu99 option from compiler call, fixes gcc 2.95.x compile.
-    Changed files: setup.py
+    Changed: setup.py
+  * do not setuid/setgid any more to enable web config
+    Changed: wc/__init__.py
+  * fix config import
+    Changed: wc/webgui/context/config_html.py
+  * add index.html template
+    Added: templates/classic/index.html
+  * updated simpleTAL to 3.3
+    Changed: wc/webgui/simpletal/*.py
 
 1.13
   * - when the HTTP server closes, flush any existing data
