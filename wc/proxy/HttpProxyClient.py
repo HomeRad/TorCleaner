@@ -65,7 +65,7 @@ class HttpProxyClient (object):
             # try again
             ClientServerMatchmaker(self,
                            "GET %s HTTP/1.1" % url, #request
-                           {}, #headers
+                           WcMessage(StringIO('')), #headers
                            '', #content
                            {'nofilter': None}, # nofilter
                            'identity', # compress
