@@ -1,8 +1,9 @@
 1.7
   * parser changes:
-    o rebuild with flex 2.5.27 and bison 1.875a
-    o remove stpcpy declaration, fixes compile error on RedHat 7.x
-    Changed files: wc/parser/{htmllex.c,htmlparse.[ch],htmlsax.h}
+    - rebuild with flex 2.5.27 and bison 1.875a
+    - remove stpcpy declaration, fixes compile error on RedHat 7.x
+    - use python2.2 headers for parser compile, not 2.1.
+    Changed files: wc/parser/*
   * fix replacing of attributes with non-empty values
     Changed files: wc/filter/rules/RewriteRule.py
   * updated filters:
@@ -12,8 +13,10 @@
   * #define YY_NO_UNISTD_H on Windows systems, fixes build error with
     Visual Studio compiler
     Changed files: setup.py
-  * use python2.2 headers for parser compile, not 2.1.
-    Changed files: wc/parser/Makefile
+  * handle missing HTTP response header line
+    Changed files: wc/proxy/HttpServer.py
+  * handle chunked encoding for client requests
+    Changed files: wc/proxy/HttpClient.py
 
 1.6
   * updated filters:
