@@ -19,14 +19,14 @@
 import wc.filter.rules.UrlRule
 
 
-class ImageReduceRule (wc.filter.rules.UrlRule.UrlRule):
+class ImagereduceRule (wc.filter.rules.UrlRule.UrlRule):
     """configures the image reducer filter (if enabled)"""
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, quality=20, minimal_size_bytes=5120,
                   matchurls=[], nomatchurls=[]):
         """initalize rule data"""
-        super(ImageReduceRule, self).__init__(sid=sid, titles=titles,
+        super(ImagereduceRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
         self.quality = quality
@@ -34,14 +34,9 @@ class ImageReduceRule (wc.filter.rules.UrlRule.UrlRule):
         self.attrnames.extend(('quality', 'minimal_size_bytes'))
 
 
-    def fromFactory (self, factory):
-        """rule factory"""
-        return factory.fromImageReduceRule(self)
-
-
     def toxml (self):
         """Rule data as XML for storing"""
-        s = super(ImageReduceRule, self).toxml()
+        s = super(ImagereduceRule, self).toxml()
         if self.width:
             s += u'\n quality="%d"' % self.quality
         if self.height:
