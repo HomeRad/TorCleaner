@@ -37,10 +37,8 @@ class ImagereduceRule (wc.filter.rules.UrlRule.UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(ImagereduceRule, self).toxml()
-        if self.width:
-            s += u'\n quality="%d"' % self.quality
-        if self.height:
-            s += u'\n minimal_size_bytes="%d"' % self.minimal_size_bytes
+        s += u'\n quality="%d"' % self.quality
+        s += u'\n minimal_size_bytes="%d"' % self.minimal_size_bytes
         s += u">"
         s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:

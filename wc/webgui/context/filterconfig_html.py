@@ -560,6 +560,27 @@ def _form_apply_image (form):
     # XXX todo: image types
 
 
+def _form_apply_imagereduce (form):
+    quality = _getval(form, 'rule_imgquality').strip()
+    try:
+        quality = int(quality)
+    except ValueError:
+        error['ruleimgquality'] = True
+        return
+    if quality!=currule.quality:
+        currule.quality = quality
+        info['ruleimgquality'] = True
+    minsize = _getval(form, 'rule_imgminsize').strip()
+    try:
+        minsize = int(minsize)
+    except ValueError:
+        error['ruleimgminsize'] = True
+        return
+    if minsize!=currule.minimal_size_bytes:
+        currule.minimal_size_bytes = minsize
+        info['ruleimgminsize'] = True
+
+
 def _form_apply_javascript (form):
     pass
 

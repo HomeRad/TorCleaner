@@ -85,14 +85,14 @@ class WebConfig (object):
                 data = fp.read()
             fp.close()
         except IOError:
-            bk.log.exception(wc.LOG_GUI, "Wrong path %r", url)
+            bk.log.exception(wc.LOG_GUI, "Wrong path %r:", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
             client.error(404, bk.i18n._("Not Found"))
             return
         except StandardError:
             # catch standard exceptions and report internal error
-            bk.log.exception(wc.LOG_GUI, "Template error")
+            bk.log.exception(wc.LOG_GUI, "Template error:")
             client.error(500, bk.i18n._("Internal Error"))
             return
         # not catched builtin exceptions are:

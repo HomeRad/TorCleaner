@@ -300,6 +300,37 @@ Regex footnote
 </table>
 <hr noshade size="1">
 
+<!-- ImageReduceRule -->
+<h2>ImageReduceRule</h2>
+<table metal:define-macro="imagereduce" summary="">
+<tr metal:use-macro="rulemacros/titledesc">
+Rule title and description
+</tr>
+<tr metal:use-macro="rulemacros/matchurl">
+Rule (don't) match url
+</tr>
+<tr valign="top"><td>
+<label for="rule_imgquality" i18n:translate="">Image JPEG quality</label>:
+</td><td>
+<input type="text" class="number" name="rule_imgquality" id="rule_imgquality"
+ value="20" tal:attributes="value string:${currule/quality}">
+</td></tr>
+<tr valign="top"><td>
+<label for="rule_imgminsize" i18n:translate="">Minimum image size</label>:
+</td><td>
+<input type="text" class="number" name="rule_imgminsize" id="rule_imgminsize"
+ value="5120" tal:attributes="value string:${currule/minimal_size_bytes}">
+</td></tr>
+<tr><td colspan="2">
+<input type="submit" class="submit" name="apply" value="Apply"
+ i18n:attributes="value string:Apply">
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
+</div>
+</td></tr>
+</table>
+<hr noshade size="1">
+
 <!-- JavascriptRule -->
 <h2>JavascriptRule</h2>
 <table metal:define-macro="javascript" summary="">
