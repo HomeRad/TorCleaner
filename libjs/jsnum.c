@@ -19,6 +19,7 @@
  * Rights Reserved.
  *
  * Contributor(s):
+ *   IBM Corp.
  *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU Public License (the "GPL"), in which case the
@@ -30,17 +31,6 @@
  * and other provisions required by the GPL.  If you do not delete
  * the provisions above, a recipient may use your version of this
  * file under either the NPL or the GPL.
- *
- * This Original Code has been modified by IBM Corporation.
- * Modifications made by IBM described herein are
- * Copyright (c) International Business Machines
- * Corporation, 2000
- *
- * Modifications to Mozilla code or documentation
- * identified per MPL Section 3.3
- *
- * Date         Modified by     Description of modification
- * 05/15/2000  IBM Corp.       Modified OS/2 floating point init.
  */
 
 /*
@@ -67,17 +57,6 @@
 #include "jsopcode.h"
 #include "jsprf.h"
 #include "jsstr.h"
-
-union dpun {
-    struct {
-#ifdef IS_LITTLE_ENDIAN
-	uint32 lo, hi;
-#else
-	uint32 hi, lo;
-#endif
-    } s;
-    jsdouble d;
-};
 
 static JSBool
 num_isNaN(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -425,7 +404,7 @@ enum nc_slot {
 /*
  * Some to most C compilers forbid spelling these at compile time, or barf
  * if you try, so all but MAX_VALUE are set up by js_InitRuntimeNumberState
- * using union dpun.
+ * using union jsdpun.
  */
 static JSConstDoubleSpec number_constants[] = {
     {0,                         js_NaN_str,          0,{0,0,0}},
@@ -439,10 +418,10 @@ static JSConstDoubleSpec number_constants[] = {
 static jsdouble NaN;
 
 
-#if (defined XP_WIN || defined XP_OS2) &&                                     \
+#if defined XP_WIN &&                                     \
     !defined __MWERKS__ &&                                                    \
     (defined _M_IX86 ||                                                       \
-    (defined __GNUC__ && !defined __MINGW32__ && !defined __EMX__))
+     (defined __GNUC__ && !defined __MINGW32__))
 
 /*
  * Set the exception mask to mask all exceptions and set the FPU precision
@@ -461,7 +440,7 @@ JSBool
 js_InitRuntimeNumberState(JSContext *cx)
 {
     JSRuntime *rt;
-    union dpun u;
+    jsdpun u;
 
     rt = cx->runtime;
     JS_ASSERT(!rt->jsNaN);
@@ -958,7 +937,7 @@ js_strtointeger(JSContext *cx, const jschar *s, const jschar **ep, jsint base, j
      */
     start = s1; /* Mark - if string is empty, we return NaN. */
     value = 0.0;
-    while (1) {
+    for (;;) {
         uintN digit;
         jschar c = *s1;
         if ('0' <= c && c <= '9')

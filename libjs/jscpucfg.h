@@ -188,4 +188,8 @@
 
 #endif
 
+#ifndef JS_STACK_GROWTH_DIRECTION
+#define JS_STACK_GROWTH_DIRECTION (-1)
+#endif
+
 #endif /* js_cpucfg___ */

@@ -684,6 +684,14 @@ JS_NewExternalString(JSContext *cx, jschar *chars, size_t length, intN type);
 extern JS_PUBLIC_API(intN)
 JS_GetExternalStringGCType(JSRuntime *rt, JSString *str);
 
+/*
+ * Sets maximum (if stack grows upward) or minimum (downward) legal stack byte
+ * address in limitAddr for the thread or process stack used by cx.  To disable
+ * stack size checking, pass 0 for limitAddr.
+ */
+extern JS_PUBLIC_API(void)
+JS_SetThreadStackLimit(JSContext *cx, jsuword limitAddr);
+
 /************************************************************************/
 
 /*

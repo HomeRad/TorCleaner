@@ -930,6 +930,8 @@ fun_getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
         break;
 
       case FUN_CALLER:
+        while (fp && (fp->flags & JSFRAME_SKIP_CALLER) && fp->down)
+            fp = fp->down;
         if (fp && fp->down && fp->down->fun && fp->down->argv)
             *vp = fp->down->argv[-2];
         else
@@ -1081,7 +1083,7 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
     JSString *atomstr;
     char *propname;
     JSScopeProperty *sprop;
-    jsid userid;
+    uint32 userid;              /* NB: holds a signed int-tagged jsval */
     JSAtom *atom;
     uintN i, n, dupflag;
     uint32 type;
@@ -1155,9 +1157,11 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
                        ? JSXDR_FUNCONST
                        : JSXDR_FUNVAR;
                 userid = INT_TO_JSVAL(sprop->shortid);
-                propname = ATOM_BYTES((JSAtom *)sprop->id);
-                if (!JS_XDRUint32(xdr, &type) ||
-                    !JS_XDRUint32(xdr, (uint32 *)&userid) ||
+                /* XXX lossy conversion, need new XDR version for ECMAv3 */
+                propname = JS_GetStringBytes(ATOM_TO_STRING((JSAtom *)sprop->id));
+                if (!propname ||
+                    !JS_XDRUint32(xdr, &type) ||
+                    !JS_XDRUint32(xdr, &userid) ||
                     !JS_XDRCString(xdr, &propname)) {
                     if (mark)
                         JS_ARENA_RELEASE(&cx->tempPool, mark);
@@ -1173,7 +1177,7 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
                 uintN attrs = JSPROP_ENUMERATE | JSPROP_PERMANENT;
 
                 if (!JS_XDRUint32(xdr, &type) ||
-                    !JS_XDRUint32(xdr, (uint32 *)&userid) ||
+                    !JS_XDRUint32(xdr, &userid) ||
                     !JS_XDRCString(xdr, &propname)) {
                     return JS_FALSE;
                 }
@@ -1475,7 +1479,7 @@ fun_call(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     fp = cx->fp;
     oldsp = fp->sp;
     fp->sp = sp;
-    ok = js_Invoke(cx, argc, JSINVOKE_INTERNAL);
+    ok = js_Invoke(cx, argc, JSINVOKE_INTERNAL | JSINVOKE_SKIP_CALLER);
 
     /* Store rval and pop stack back to our frame's sp. */
     *rval = fp->sp[-1];
@@ -1543,7 +1547,7 @@ fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_FALSE;
 
     /* Allocate stack space for fval, obj, and the args. */
-    argc = (uintN)length;
+    argc = (uintN)JS_MIN(length, ARGC_LIMIT - 1);
     sp = js_AllocStack(cx, 2 + argc, &mark);
     if (!sp)
         return JS_FALSE;
@@ -1562,7 +1566,7 @@ fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     fp = cx->fp;
     oldsp = fp->sp;
     fp->sp = sp;
-    ok = js_Invoke(cx, argc, JSINVOKE_INTERNAL);
+    ok = js_Invoke(cx, argc, JSINVOKE_INTERNAL | JSINVOKE_SKIP_CALLER);
 
     /* Store rval and pop stack back to our frame's sp. */
     *rval = fp->sp[-1];
@@ -1594,14 +1598,11 @@ js_IsIdentifier(JSString *str)
     jschar *s, c;
 
     n = JSSTRING_LENGTH(str);
+    if (n == 0)
+        return JS_FALSE;
     s = JSSTRING_CHARS(str);
     c = *s;
-    /*
-     * We don't handle unicode escape sequences here
-     * because they won't be in the input string.
-     * (Right?)
-     */
-    if (n == 0 || !JS_ISIDENT_START(c))
+    if (!JS_ISIDENT_START(c))
         return JS_FALSE;
     for (n--; n != 0; n--) {
         c = *++s;
@@ -1690,7 +1691,7 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
              */
             principals = fp->script->principals;
             filename = fp->script->filename;
-            lineno = js_PCToLineNumber(fp->script, fp->pc);
+            lineno = js_PCToLineNumber(cx, fp->script, fp->pc);
             break;
         }
     }
@@ -1758,7 +1759,7 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         /* The argument string may be empty or contain no tokens. */
         tt = js_GetToken(cx, ts);
         if (tt != TOK_EOF) {
-            while (1) {
+            for (;;) {
                 /*
                  * Check that it's a name.  This also implicitly guards against
                  * TOK_ERROR, which was already reported.
@@ -1779,6 +1780,8 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
                 if (sprop) {
                     ok = JS_TRUE;
                     if (obj2 == obj) {
+                        const char *name = js_AtomToPrintableString(cx, atom);
+
                         /*
                          * A duplicate parameter name. We force a duplicate
                          * node on the SCOPE_LAST_PROP(scope) list with the
@@ -1786,11 +1789,12 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
                          * flag, and not mapped by an entry in scope.
                          */
                         JS_ASSERT(sprop->getter == js_GetArgument);
-                        ok = js_ReportCompileErrorNumber(cx, ts, NULL,
+                        ok = name &&
+                             js_ReportCompileErrorNumber(cx, ts, NULL,
                                                          JSREPORT_WARNING |
                                                          JSREPORT_STRICT,
                                                          JSMSG_DUPLICATE_FORMAL,
-                                                         ATOM_BYTES(atom));
+                                                         name);
 
                         dupflag = SPROP_IS_DUPLICATE;
                     }
@@ -1890,7 +1894,7 @@ js_InitFunctionClass(JSContext *cx, JSObject *obj)
     fun = js_NewFunction(cx, proto, NULL, 0, 0, obj, NULL);
     if (!fun)
         goto bad;
-    fun->script = js_NewScript(cx, 0);
+    fun->script = js_NewScript(cx, 0, 0, 0);
     if (!fun->script)
         goto bad;
     return proto;
