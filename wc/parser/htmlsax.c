@@ -1,4 +1,5 @@
 #include <libxml/HTMLparser.h>
+#include <libxml/parserInternals.h>
 #include <Python.h>
 
 /* require Python >= 2.0 */
@@ -13,6 +14,7 @@
 /* user_data type for SAX calls */
 typedef struct {
     PyObject* handler;
+    htmlParserCtxtPtr context;
 } UserData;
 
 
@@ -21,7 +23,6 @@ typedef struct {
     PyObject_HEAD
 
     htmlSAXHandlerPtr sax;
-    htmlParserCtxtPtr context;
     UserData* userData;
 
 } parser_object;
@@ -41,6 +42,16 @@ static void internalSubset (void* user_data, const xmlChar* name,
     //PyObject* callback = PyObject_GetAttrString(ud->handler,
     //    					"internalSubset");
 }
+
+//static xmlEntity entity;
+//static char* entityname;
+
+
+//static xmlEntityPtr getEntity(void *user_data, const xmlChar *name) {
+//    entityname = PyMem_Resize(entityname, char, strlen(name));
+//    entity.name = entityname;
+//    return &entity;
+//}
 
 
 static void entityDecl (void* user_data, const xmlChar* name, int type,
@@ -171,18 +182,18 @@ static void startElement (void* user_data, const xmlChar* name,
 		/* strip leading and ending quotes, which occurs
 		 * with invalid HTML
 		 */
-                char* p = attrs[i];
-		int len = strlen(p);
+                int p = 0;
+		int len = strlen(attrs[i]);
 		if (len > 1) {
-		    if (p[len-1]=='"' || p[len-1]=='\'') {
+		    if (attrs[i][len-1]=='"' || attrs[i][len-1]=='\'') {
 			len--;
 		    }
-		    if (p[0]=='"' || p[0]=='\'') {
+		    if (attrs[i][0]=='"' || attrs[i][0]=='\'') {
 			p++;
                         len--;
 		    }
 		}
-		value = PyString_FromStringAndSize(p, len);
+		value = PyString_FromStringAndSize(attrs[i]+p, len);
 	    }
 	    else {
 		Py_INCREF(Py_None);
@@ -232,15 +243,21 @@ static void reference (void* user_data, const xmlChar* name) {
 }
 
 
+#define ENTITY_BUF_LEN 1024
+static unsigned char entitybuf[ENTITY_BUF_LEN];
+
 static void characters (void* user_data, const xmlChar* ch, int len) {
-    /* XXX entities */
     UserData* ud = (UserData*) user_data;
     PyObject* callback = PyObject_GetAttrString(ud->handler,
 						"characters");
-    PyObject* arglist = Py_BuildValue("(s#)", ch, len);
+    PyObject* arglist;
+    int outlen = ENTITY_BUF_LEN;
+    htmlEncodeEntities(entitybuf, &outlen, ch, &len, 0);
+    arglist = Py_BuildValue("(s#)", entitybuf, outlen);
     PyEval_CallObject(callback, arglist);
     Py_DECREF(arglist);
 }
+#undef ENTITY_BUF_LEN
 
 
 static void ignorableWhitespace (void* user_data, const xmlChar* ch, int len) {
@@ -392,22 +409,23 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     p->sax->cdataBlock         = PyObject_HasAttrString(handler, "cdataBlock") ? cdataBlock : NULL;
     p->sax->externalSubset     = PyObject_HasAttrString(handler, "externalSubset") ? externalSubset : NULL;
 
-    p->context = htmlCreatePushParserCtxt(p->sax, /* the SAX handler */
-       		       p->userData, /* our user_data */
-       		       NULL, /* chunk ?? */
-       		       0, /* size of entity refs */
-		       NULL, /* filename (optional) */
-       		       XML_CHAR_ENCODING_8859_1 /* encoding */
-       		      );
+    p->userData->context =
+	htmlCreatePushParserCtxt(p->sax, /* the SAX handler */
+				 p->userData, /* our user_data */
+				 NULL, /* chunk ?? */
+				 0, /* size of entity refs */
+				 NULL, /* filename (optional) */
+				 XML_CHAR_ENCODING_8859_1 /* encoding */
+				);
     return (PyObject*) p;
 }
 
 
 static void parser_dealloc(parser_object* self)
 {
+    htmlFreeParserCtxt(self->userData->context);
     PyMem_Del(self->userData);
     PyMem_Del(self->sax);
-    htmlFreeParserCtxt(self->context);
     PyMem_DEL(self);
 }
 
@@ -419,7 +437,7 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
     }
-    res = htmlParseChunk(self->context, "", 0, 1);
+    res = htmlParseChunk(self->userData->context, "", 0, 1);
     return Py_BuildValue("i", res);
 }
 
@@ -432,7 +450,7 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
     }
-    res = htmlParseChunk(self->context, s, slen, 0);
+    res = htmlParseChunk(self->userData->context, s, slen, 0);
     return Py_BuildValue("i", res);
 }
 
@@ -442,13 +460,14 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
 	return NULL;
     }
-    htmlFreeParserCtxt(self->context);
-    self->context = htmlCreatePushParserCtxt(self->sax,
-					     self->userData,
-					     NULL,
-					     0,
-					     NULL,
-					     XML_CHAR_ENCODING_8859_1);
+    htmlFreeParserCtxt(self->userData->context);
+    self->userData->context =
+	htmlCreatePushParserCtxt(self->sax,
+				 self->userData,
+				 NULL,
+				 0,
+				 NULL,
+				 XML_CHAR_ENCODING_8859_1);
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -497,5 +516,7 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 
 void inithtmlsax(void) {
+    //memset(&entity, 0, sizeof(xmlEntity));
+    //entityname = NULL;
     Py_InitModule("htmlsax", htmlsax_methods);
 }

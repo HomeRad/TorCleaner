@@ -49,6 +49,10 @@ dist:	locale
 test:
 	$(PYTHON) test/regrtest.py test_parser test_rewriter test_blocker
 
+.PHONY: gentest
+gentest:
+	$(PYTHON) test/regrtest.py -g test_parser test_rewriter test_blocker
+
 .PHONY: onlinetest
 onlinetest:
 	rm -f index.html* test.gif

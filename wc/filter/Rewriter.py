@@ -100,9 +100,9 @@ class HtmlFilter(HtmlParser):
         self.buffer_append_data([DATA, d])
 
 
-    def ignorableWhitespace(self, d):
-        """handler for ignorable whitespace"""
-        self.buffer_append_data([DATA, d])
+    #def ignorableWhitespace(self, d):
+    #    """handler for ignorable whitespace"""
+    #    self.buffer_append_data([DATA, d])
 
 
     def flushbuf(self):
@@ -123,10 +123,12 @@ class HtmlFilter(HtmlParser):
             elif n[0]==STARTTAG:
                 s = "<"+n[1]
                 for name,val in n[2].items():
-                    if '"' in val:
-                        s += " %s='%s'"%(name,val)
-                    else:
-                        s += ' %s="%s"'%(name,val)
+                    s += ' %s'%name
+                    if val:
+                        if val.find('"')!=-1:
+                            s += "='%s'"%val
+                        else:
+                            s += '="%s"'%val
                 self.data += s+">"
             elif n[0]==ENDTAG:
                 self.data += "</%s>"%n[1]
