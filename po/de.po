@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sat Dec 13 10:45:50 2003\n"
-"PO-Revision-Date: 2003-12-13 10:46+0100\n"
+"POT-Creation-Date: Mon Dec 15 18:33:41 2003\n"
+"PO-Revision-Date: 2003-12-15 18:39+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,11 +15,17 @@ msgstr ""
 msgid "unknown tag name %s"
 msgstr "Unbekannter Tagname %s"
 
-msgid "WebCleaner is running (PID %d)"
-msgstr "WebCleaner läuft (PID %d)"
+msgid "WebCleaner (PID %d) is running"
+msgstr "WebCleaner (PID %d) läuft"
 
-msgid "WebCleaner is not running (no lock file found)"
-msgstr "WebCleaner läuft nicht (keine Lockdatei gefunden)"
+msgid "WebCleaner (PID %d) and watch daemon (PID %d) are running"
+msgstr "WebCleaner (PID %d) und Startdämon (PID %d) laufen"
+
+msgid "WebCleaner and watch daemon are not running (no lock files found)"
+msgstr "WebCleaner und Startdämon laufen nicht (keine Lockdateien gefunden)"
+
+msgid "WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)"
+msgstr "WebCleaner läuft nicht (keine Lockdatei gefunden) aber der Startdämon läuft (PID %d)"
 
 msgid ""
 "WebCleaner already started (lock file found).\n"
@@ -52,6 +58,9 @@ msgstr "WebCleaner lief nicht (keine Lockdatei gefunden)"
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
 msgstr "WebCleaner läuft nicht. Führen Sie zuerst 'webcleaner start' aus."
 
+msgid "Unknown url"
+msgstr "Unbekannte url"
+
 msgid "PICS %s match"
 msgstr "PICS %s Treffer"
 
@@ -81,12 +90,6 @@ msgstr "Ganzes Tag"
 
 msgid "Enclosed block"
 msgstr "Enthaltener Text"
-
-msgid "Forbidden"
-msgstr "Verboten"
-
-msgid "Bad Request"
-msgstr "Schlechte Anfrage"
 
 msgid "Host %s is an abbreviation for %s"
 msgstr "Rechner %s ist eine Abkürzung für %s"
@@ -151,11 +154,23 @@ msgstr "Leere URL"
 msgid "URL too long"
 msgstr "URL zu lang"
 
+msgid "Forbidden"
+msgstr "Verboten"
+
+msgid "Bad Request"
+msgstr "Schlechte Anfrage"
+
 msgid "Proxy Authentication Required"
 msgstr "Proxy Authorisierung benötigt"
 
+msgid "Moved Temporarily"
+msgstr "Vorübergehend verschoben"
+
 msgid "Invalid Method"
 msgstr "Ungültige Anfrage"
+
+msgid "Authentication Required"
+msgstr "Authorisierung benötigt"
 
 msgid "invalid or missing response from %s: %r"
 msgstr "ungültige oder fehlende Antwort von %s: %r"
@@ -401,11 +416,17 @@ msgstr "Ordner erfolgreich gelöscht."
 msgid "Update filter configuration"
 msgstr "Aktualisierung der Filterkonfiguration"
 
+msgid "PICS data for %(AppName)s"
+msgstr "PICS Daten für %(AppName)s"
+
 msgid "Access key 1"
 msgstr "Tastaturkommando 1"
 
 msgid "Rule successfully removed."
 msgstr "Regel wurde erfolgreich gelöscht."
+
+msgid "Administrator password for %(AppName)s"
+msgstr "Administrator Passwort für %(AppName)s"
 
 msgid "Invalid rule type."
 msgstr "Ungültiger Regeltyp."
@@ -427,6 +448,15 @@ msgstr "Ordner erfolgreich aktiviert."
 
 msgid "New rule successfully created."
 msgstr "Neue Regel wurde erfolgreich erstellt."
+
+msgid ""
+"The administrator password was not yet initialized.\n"
+"This password protects the web configuration interface. Without an\n"
+"administrator password, every proxy user can change the proxy configuration.\n"
+msgstr ""
+"Das Administratorpasswort wurde noch nicht initialisiert.\n"
+"Dieses Passwort schützt die Konfiguration über die Webschnittstelle.\n"
+"Ohne ein Administratorpasswort kann jeder Proxybenutzer die Konfiguration ändern.\n"
 
 msgid "PICS ratings"
 msgstr "PICS Bewertungen"
@@ -676,6 +706,9 @@ msgstr "Ordner wurde nach unten geschoben."
 msgid "Rule match-url successfully changed."
 msgstr "Regel Treffer-URL wurde erfolgreich geändert."
 
+msgid "PICS data"
+msgstr "PICS Daten"
+
 msgid "Folders"
 msgstr "Ordner"
 
@@ -842,11 +875,27 @@ msgstr "Neue Regel zu aktuellem Ordner hinzufügen"
 msgid "Username"
 msgstr "Benutzername"
 
+msgid ""
+"After that, restart %(AppName)s and specify\n"
+"<b>%(adminuser)s</b> as username and <b>%(adminpass)s</b> as password at\n"
+"the configuration interface.\n"
+msgstr ""
+"Danach starten Sie %(AppName)s neu und geben\n"
+"<b>%(adminuser)s</b> als Benutzername und <b>%(adminpass)s</b> als Passwort\n"
+"bei Aufruf der Webkonfiguration an.\n"
+
 msgid "Name"
 msgstr "Name"
 
 msgid "Rule image height successfully changed."
 msgstr "Regel Bildhöhe wurde erfolgreich geändert."
+
+msgid ""
+"Please open the file <code>%(ConfigFile)s</code> and\n"
+"replace the line <code>adminpass=\"\"</code> with:\n"
+msgstr ""
+"Bitte bearbeiten Sie die Datei <code>%(ConfigFile)s</code> und\n"
+"ersetzen die Zeile <code>adminpass=\"\"</code> mit:\n"
 
 msgid "NTLM authentication"
 msgstr "NTLM Authentifizierung"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat Dec 13 10:45:50 2003\n"
+"POT-Creation-Date: Mon Dec 15 18:33:41 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,16 @@ msgstr ""
 msgid "unknown tag name %s"
 msgstr ""
 
-msgid "WebCleaner is running (PID %d)"
+msgid "WebCleaner (PID %d) is running"
 msgstr ""
 
-msgid "WebCleaner is not running (no lock file found)"
+msgid "WebCleaner (PID %d) and watch daemon (PID %d) are running"
+msgstr ""
+
+msgid "WebCleaner and watch daemon are not running (no lock files found)"
+msgstr ""
+
+msgid "WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)"
 msgstr ""
 
 msgid ""
@@ -53,6 +59,9 @@ msgstr ""
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
 msgstr ""
 
+msgid "Unknown url"
+msgstr ""
+
 msgid "PICS %s match"
 msgstr ""
 
@@ -81,12 +90,6 @@ msgid "Complete tag"
 msgstr ""
 
 msgid "Enclosed block"
-msgstr ""
-
-msgid "Forbidden"
-msgstr ""
-
-msgid "Bad Request"
 msgstr ""
 
 msgid "Host %s is an abbreviation for %s"
@@ -152,10 +155,22 @@ msgstr ""
 msgid "URL too long"
 msgstr ""
 
+msgid "Forbidden"
+msgstr ""
+
+msgid "Bad Request"
+msgstr ""
+
 msgid "Proxy Authentication Required"
 msgstr ""
 
+msgid "Moved Temporarily"
+msgstr ""
+
 msgid "Invalid Method"
+msgstr ""
+
+msgid "Authentication Required"
 msgstr ""
 
 msgid "invalid or missing response from %s: %r"
@@ -382,10 +397,16 @@ msgstr ""
 msgid "Update filter configuration"
 msgstr ""
 
+msgid "PICS data for %(AppName)s"
+msgstr ""
+
 msgid "Access key 1"
 msgstr ""
 
 msgid "Rule successfully removed."
+msgstr ""
+
+msgid "Administrator password for %(AppName)s"
 msgstr ""
 
 msgid "Invalid rule type."
@@ -407,6 +428,12 @@ msgid "Folder successfully enabled."
 msgstr ""
 
 msgid "New rule successfully created."
+msgstr ""
+
+msgid ""
+"The administrator password was not yet initialized.\n"
+"This password protects the web configuration interface. Without an\n"
+"administrator password, every proxy user can change the proxy configuration.\n"
 msgstr ""
 
 msgid "PICS ratings"
@@ -651,6 +678,9 @@ msgstr ""
 msgid "Rule match-url successfully changed."
 msgstr ""
 
+msgid "PICS data"
+msgstr ""
+
 msgid "Folders"
 msgstr ""
 
@@ -811,10 +841,21 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
+msgid ""
+"After that, restart %(AppName)s and specify\n"
+"<b>%(adminuser)s</b> as username and <b>%(adminpass)s</b> as password at\n"
+"the configuration interface.\n"
+msgstr ""
+
 msgid "Name"
 msgstr ""
 
 msgid "Rule image height successfully changed."
+msgstr ""
+
+msgid ""
+"Please open the file <code>%(ConfigFile)s</code> and\n"
+"replace the line <code>adminpass=\"\"</code> with:\n"
 msgstr ""
 
 msgid "NTLM authentication"
