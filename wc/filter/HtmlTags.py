@@ -264,6 +264,7 @@ OldTags = {
     "marquee" : None, # IE 4.x
     "multicol" : None, # Netscape Navigator 3
     "nobr" : None, # Netscape Navigator 1.1
+    "nbr" : None, # deprecated, unknown origin
     "noembed" : None, # Netscape Navigator 4
     "nolayer" : None, # Netscape Navigator 4
     "plaintext" : None, # HTML 3.2
