@@ -11,10 +11,10 @@ but exports a proxy4 encoding interface:
 
 import wc
 import wc.log
-import wc.proxy.DeflateStream
+import wc.proxy.decoder.DeflateStream
 
 
-class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
+class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
     """stream filter ungzipp'ing data"""
 
     # Flags in the gzip header
