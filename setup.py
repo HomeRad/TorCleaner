@@ -96,7 +96,7 @@ data_files = [('share/webcleaner/config',
        'config/disabledrule.png',
        'config/minifolderopen.png']),
      ('man/man1',
-      ['webcleaner.1', 'webcleanerconf.1']),
+      ['webcleaner.1', 'webcleanerconf.1', 'webcleaner.conf.5']),
     ]
 scripts = ['webcleaner', 'webcleanerconf']
 
@@ -107,7 +107,7 @@ else:
     data_files.append(('share/webcleaner/examples', ['webcleaner.bat','webcleanerconf.bat']))
 
 setup (name = "webcleaner",
-       version = "0.20",
+       version = "0.21",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,

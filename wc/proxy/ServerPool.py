@@ -25,6 +25,7 @@ class ServerPool:
         "How many server objects connect to this address?"
         return len(self.map.get(addr, {}))
 
+
     def reserve_server(self, addr):
         for server,status in self.map.get(addr, {}).items():
             if status[0] == 'available':
@@ -34,6 +35,7 @@ class ServerPool:
                 return server
         return None
 
+
     def unreserve_server(self, addr, server):
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
         assert self.map[addr].has_key(server), '%s missing %s' % (self.map[addr], server)
@@ -41,11 +43,13 @@ class ServerPool:
         self.map[addr][server] = ('available', time.time())
         self.invoke_callbacks(addr)
 
+
     def register_server(self, addr, server):
         "Register the server as being used"
         if not self.map.has_key(addr):
             self.map[addr] = {}
         self.map[addr][server] = ('busy',)
+
 
     def unregister_server(self, addr, server):
         "Unregister the server"
@@ -55,6 +59,7 @@ class ServerPool:
         if not self.map[addr]: del self.map[addr]
         self.invoke_callbacks(addr)
 
+
     def register_callback(self, addr, callback):
         # Callbacks are called whenever a server may be available
         # for (addr).  It's the callback's responsibility to re-register
@@ -63,6 +68,7 @@ class ServerPool:
             self.callbacks[addr] = []
         self.callbacks[addr].append(callback)
 
+
     def connection_limit(self, addr):
         if self.http_versions.get(addr, 1.1) <= 1.0:
             # For older versions of HTTP, we open lots of connections
@@ -70,9 +76,11 @@ class ServerPool:
         else:
             return 2
 
+
     def set_http_version(self, addr, http_version):
         self.http_versions[addr] = http_version
         self.invoke_callbacks(addr)
+
 
     def expire_servers(self):
         expire_time = time.time() - 300 # Unused for five minutes
@@ -85,6 +93,7 @@ class ServerPool:
         for server in to_expire:
             server.close()
         make_timer(60, self.expire_servers)
+
 
     def invoke_callbacks(self, addr):
         # Notify whoever wants to know about a server becoming available

@@ -6,6 +6,11 @@ used by Bastian Kleineidam for WebCleaner
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
 import sys, time, select, asyncore
+# fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
+del asyncore.dispatcher.__getattr__
+def fileno(self):
+    return self.socket.fileno()
+asyncore.dispatcher.fileno = fileno
 from wc import debug,_,config
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
@@ -152,25 +157,27 @@ def proxy_poll(timeout=0.0):
         for x in e:
             try:
                 x.handle_expt_event()
-                handlerCount = handlerCount + 1
+                handlerCount += 1
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
+        debug(NIGHTMARE, "write poll")
         for x in w:
             try:
                 t = time.time()
                 if x not in e:
                     x.handle_write_event()
-                    handlerCount = handlerCount + 1
+                    handlerCount += 1
                     if time.time() - t > 0.1:
                         debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
+        debug(NIGHTMARE, "read poll")
         for x in r:
             try:
                 t = time.time()
                 if x not in e and x not in w:
                     x.handle_read_event()
-                    handlerCount = handlerCount + 1
+                    handlerCount += 1
                     if time.time() - t > 0.1:
                         debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
             except:

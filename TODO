@@ -1,7 +1,5 @@
 TODO
 
-- some code path in the proxy handling has an assertion error :(
-
 - some .tgz files have content-type text/plain. Adjust guess_mimetypes
   for that
 

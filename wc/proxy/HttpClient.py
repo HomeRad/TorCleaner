@@ -33,8 +33,7 @@ class HttpClient(Connection):
         if self.state != 'request':
             try: extra = self.request.split()[1][7:] # Remove http://
             except: extra = '???' + self.request
-            if len(extra) > 46:
-                extra = extra[:43] + '...'
+            #if len(extra) > 46: extra = extra[:43] + '...'
         else:
             extra = 'being read'
         return '<%s:%-8s %s>' % ('client', self.state, extra)
@@ -46,6 +45,7 @@ class HttpClient(Connection):
             if i >= 0: # One newline ends request
                 # self.read(i) is not including the newline
                 self.request = self.read(i)
+                assert self.read(2) == '\r\n'
                 self.nofilter = {'nofilter': match_host(self.request)}
                 self.request = applyfilter(FILTER_REQUEST, self.request,
                                fun="finish", attrs=self.nofilter)
@@ -58,8 +58,6 @@ class HttpClient(Connection):
             i = self.recv_buffer.find('\r\n\r\n')
             if i >= 0: # Two newlines ends headers
                 i += 4 # Skip over newline terminator
-                assert self.read(2) == '\r\n'
-                i -= 2 # Skip over newline before headers
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
 		               rfc822.Message(StringIO(self.read(i))),
 			       fun="finish", attrs=self.nofilter)

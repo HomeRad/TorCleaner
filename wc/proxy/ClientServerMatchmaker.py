@@ -74,7 +74,7 @@ class ClientServerMatchmaker:
             config['requests']['valid'] += 1
             ServerHandleDirectly(self.client,
 	        'HTTP/1.0 200 OK\r\n',
-                'Content-Type: %s\r\n\r\n' % (mtype or 'text/plain'),
+                'Content-Type: %s\r\n\r\n' % (mtype or 'application/octet-stream'),
                 open(document, 'rb').read())
             return
 
@@ -121,18 +121,8 @@ class ClientServerMatchmaker:
         if not self.client.connected:
             # The browser has already closed this connection, so abort
             return
-
         if answer.isFound():
             self.ipaddr = answer.data[0]
-	    #if self.ipaddr==config['localip'] and \
-	    #   self.port==config['port']:
-            #    # proxy config
-            #    ServerHandleDirectly(self.client,
-            #        'HTTP/1.0 200 OK\r\n',
-            #        'Content-Type: text/plain\r\n'
-            #        '\r\n',
-            #    wc.proxy.status_info())
-            #    return
 	    self.state = 'server'
             self.find_server()
         elif answer.isRedirect():
@@ -141,7 +131,6 @@ class ClientServerMatchmaker:
             if self.port != 80:
 	        new_url += ':%s' % self.port
             new_url += self.document
-
             self.state = 'done'
             ServerHandleDirectly(
                 self.client,
@@ -157,6 +146,7 @@ class ClientServerMatchmaker:
             config['requests']['failed'] += 1
             self.error(504, "Host not found",
                 'Host %s not found .. %s\r\n' % (hostname, answer.data))
+
 
     def find_server(self):
         assert self.state == 'server'
@@ -180,6 +170,7 @@ class ClientServerMatchmaker:
             server = HttpServer(self.ipaddr, self.port, self)
             serverpool.register_server(addr, server)
 
+
     def server_connected(self, server):
         assert self.state == 'connect'
         if not self.client.connected:
@@ -200,11 +191,13 @@ class ClientServerMatchmaker:
                                         self,
 					self.nofilter)
 
+
     def server_abort(self):
         # The server had an error, so we need to tell the client
         # that we couldn't connect
         if self.client.connected:
             self.client.server_no_response()
+
 
     def server_close(self):
         debug(BRING_IT_ON, 'resurrection failed',
@@ -221,6 +214,7 @@ class ClientServerMatchmaker:
             # tell the client, sorry.
             if self.client.connected:
                 self.client.server_no_response()
+
 
     def server_response(self, response, headers):
         # Okay, transfer control over to the real client

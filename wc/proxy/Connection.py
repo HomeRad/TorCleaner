@@ -28,16 +28,6 @@ class Connection(asyncore.dispatcher):
         self.close_pending = 0
 
 
-    def log(self, msg):
-        pass
-
-
-    def close(self):
-        if self.connected:
-            self.connected = 0
-            asyncore.dispatcher.close(self)
-
-
     def read(self, bytes=RECV_BUFSIZE):
         """read up to LEN bytes from the internal buffer"""
         if bytes is None:
@@ -69,7 +59,7 @@ class Connection(asyncore.dispatcher):
 
     def write(self, data):
         """write data to the internal buffer"""
-        debug(NIGHTMARE, 'sending', repr(data))
+        debug(NIGHTMARE, 'sending %d bytes'% len(data))
         self.send_buffer += data
 
 
@@ -90,6 +80,12 @@ class Connection(asyncore.dispatcher):
 
     def handle_connect(self):
         pass
+
+
+    def close(self):
+        if self.connected:
+            self.connected = 0
+            asyncore.dispatcher.close(self)
 
 
     def handle_close(self):
@@ -113,5 +109,6 @@ class Connection(asyncore.dispatcher):
         if tb:
             import traceback
             traceback.print_tb(tb)
+            print >> sys.stderr, "="*70
         self.close()
         self.del_channel()

@@ -10,7 +10,7 @@ include debian/webcleanerconf.postinst debian/webcleanerconf.prerm
 include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
 include filtertest filtertest.html
-include webcleaner.1 webcleanerconf.1
+include webcleaner.1 webcleanerconf.1 webcleaner.conf.5
 include rpm_build_script
 include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
 include config/*.png config/*.html

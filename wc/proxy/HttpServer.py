@@ -17,6 +17,7 @@ from wc.filter import FILTER_RESPONSE_DECODE
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter import FILTER_RESPONSE_ENCODE
 
+
 # DEBUGGING
 PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
@@ -43,7 +44,7 @@ class HttpServer(Server):
 
     def __repr__(self):
         extra = self.request()
-        if len(extra) > 46: extra = extra[:43] + '...'
+        #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)
 
 
@@ -72,17 +73,9 @@ class HttpServer(Server):
             return
 
 
-    def handle_connect(self):
-        if self.state != 'connect':
-            # oops, the client has closed, and thus the server
-            # has too. XXX move this inside Connection :(
-            self.close()
-            return
+    def process_connect(self):
         assert self.state == 'connect'
-        debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
-        Server.handle_connect(self)
-
         if self.client:
             # We have to delay this because we haven't gone through the
             # handle_connect completely, and the client expects us to
@@ -94,6 +87,7 @@ class HttpServer(Server):
             # we've connected, because we really haven't.  XXX: we
             # really should hide these sorts of cases inside Connection.
             make_timer(0, lambda s=self: s.client and s.client.server_connected(s))
+            #self.client.server_connected(self)
         else:
             # Hm, the client no longer cares about us, so close
             self.reuse()
@@ -191,14 +185,14 @@ class HttpServer(Server):
                     self.headers.headers.remove(h)
                     #self.bytes_remainig = None
 
-        # check for .bz2 files
-        if self.document.endswith(".bz2"):
+        # check for unusual compressed files
+        if self.document[-4:] in (".bz2", ".tgz"):
             gm = mimetypes.guess_type(self.document)
             self.headers['content-encoding'] = gm[1]
             self.headers['content-type'] = gm[0]
 
         if self.headers.get('content-encoding')=='gzip' and \
-           self.headers.get('content-type') in config['mime_gunzip_ok']:
+             self.headers.get('content-type') in config['mime_gunzip_ok']:
             debug(BRING_IT_ON, 'Content-encoding: gzip')
             self.decoders.append(GunzipStream())
             # remove content length and encoding
@@ -220,8 +214,8 @@ class HttpServer(Server):
         else:
             self.state = 'content'
 
+
     def process_content(self):
-        debug(HURT_ME_PLENTY, "processing server content")
         data = self.read(self.bytes_remaining)
 
         if self.bytes_remaining is not None:
@@ -245,6 +239,7 @@ class HttpServer(Server):
             # Either we ran out of bytes, or the filter says we're done
             self.state = 'recycle'
 
+
     def process_recycle(self):
         # We're done sending things to the client, and we can reuse
         # this connection
@@ -264,9 +259,8 @@ class HttpServer(Server):
 	    client.server_content(data)
         client.server_close()
 
-    def process_read(self):
-        global SPEEDCHECK_BYTES
 
+    def process_read(self):
         if self.state in ('connect', 'client'):
             assert 0, ('server should not receive data in %s state' %
                        self.state)
@@ -292,6 +286,7 @@ class HttpServer(Server):
                 (bytes_before == bytes_after and state_before == self.state)):
                 break
 
+
     def http_version(self):
         if not self.response: return 0
         version = re.match(r'.*HTTP/(\d+\.?\d*)\s*$', self.response)
@@ -300,24 +295,23 @@ class HttpServer(Server):
         else:
             return 0.9
 
+
     def reuse(self):
         if self.http_version() >= 1.1:
-            can_reuse = 1
-            if (self.headers and self.headers.has_key('connection') and
-                self.headers['connection'] == 'close'):
-                can_reuse = 0
+            can_reuse = not (self.headers and
+                self.headers.has_key('connection') and
+                self.headers['connection'] == 'close')
         else:
-            can_reuse = 0
-            if (self.headers and self.headers.has_key('connection') and
-                self.headers['connection'].lower() == 'keep-alive'):
-                can_reuse = 1
+            can_reuse = not (self.headers and
+                self.headers.has_key('connection') and
+                self.headers['connection'].lower() == 'keep-alive')
 
         if not can_reuse:
             # We can't reuse this connection
             self.close()
         else:
             debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
-            self.sequence_number = self.sequence_number + 1
+            self.sequence_number += 1
             self.state = 'client'
             self.document = ''
             self.client = None
@@ -325,11 +319,13 @@ class HttpServer(Server):
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
 
+
     def close(self):
-        if self.connected:
+        if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
-        self.state = 'closed'
+            self.state = 'closed'
         Server.close(self)
+
 
     def handle_error(self, what, type, value, tb=None):
         Server.handle_error(self, what, type, value, tb)
@@ -337,12 +333,13 @@ class HttpServer(Server):
             client, self.client = self.client, None
             client.server_abort()
 
+
     def handle_close(self):
-        debug(HURT_ME_PLENTY, 'server close;', self.state, self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None
             client.server_close()
+
 
 def speedcheck_print_status():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START

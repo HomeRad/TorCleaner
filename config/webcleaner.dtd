@@ -1,41 +1,4 @@
 <!ELEMENT webcleaner (filter+,Blocker?,GifImage?,Rewriter?)>
-<!-- 
- OPTIONS
- version
-    the configuration format version
- port
-    the port number the WebCleaner Proxy is running on
- parentproxy
-    the hostname of the HTTP parent proxy; leave empty to
-    not use a parent proxy
- parentproxyport
-    the port number the parent proxy is running on
- buffersize
-    number of bytes the read() request reads from the URL connection
- debuglevel
-    0 - no debugging
-    1 - basic debug info
-    2 - more debug info
-    3 - nightmare debug info
- logfile
-    name of the file to log to; use stdout for standard out; leave
-    empty to disable logging
- timeout
-    TCP timeout for connections
- obfuscateip
-    encode the IP number in one big integer, e.g.
-    127.0.0.1 ==> (127 << 24) + (0 << 16) + (0 << 8) + (1 << 0)
-    This works with most servers, and can sometimes get through
-    firewalls. It is known _not_ to work with Squid parent proxies.
-    
- EXAMPLE
- Mainly use the defaults:
- <webcleaner 
-  version="0.8"
-  port="8000">
-  ...
-  </webcleaner>
--->
 <!ATTLIST webcleaner
  version     CDATA #REQUIRED
  port        CDATA "8080"
@@ -48,36 +11,6 @@
  obfuscateip CDATA "0"
 >
 
-<!--
- OPTIONS
- the name indicates which filter to activate
- 
- Rewriter
-   the most important filter for ads; the Rewriter parses
-   the HTML stream and can replace arbitrary tag constructs
- Blocker
-   block specific urls; this replaces advert images and frames
- BinaryCharFilter
-   replaces some binary chars (espacially those illegal Microsoft
-   quote chars)
- Header
-   replace, modify and add arbitrary HTTP headers
- Replacer
-   replace text pieces in text data files (HTML, plain text, ...)
- GifImage
-   deanimate GIFs and remove the comment section
- Compress
-   compress documents with good compression ratio (HTML, WAV, ...)
-
- EXAMPLE
- easy: just write down the filters you want to activate
- <filter name="Rewriter"/>
- <filter name="Blocker"/>
- <filter name="BinaryCharFilter"/>
- <filter name="Header"/>
- <filter name="Replacer"/>
- <filter name="GifImage"/>
--->
 <!ELEMENT filter EMPTY>
 <!ATTLIST filter
  name (Header|Blocker|GifImage|BinaryCharFilter|Rewriter|Replacer|Compress) #REQUIRED

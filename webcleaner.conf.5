@@ -1,0 +1,90 @@
+.TH WEBCLEANER.CONF 5 "3 November 2001"
+.SH NAME
+webcleaner.conf \- configuration file for webcleaner
+.SH DESCRIPTION
+.LP
+\fIwebcleaner.conf\fP is the main configuration file for the
+webcleaner proxy. The file has a custom XML format following
+the Document Type Definition in the file webcleaner.dtd.
+
+The following options are available:
+.TP
+\fBversion\fP
+the configuration format version
+.TP
+\fBport\fP
+the port number the WebCleaner Proxy is running on
+.TP
+\fBparentproxy\fP
+the hostname of the HTTP parent proxy; leave empty to
+not use a parent proxy
+.TP
+\fBparentproxyport\fP
+the port number the parent proxy is running on
+.TP
+\fBbuffersize\fP
+number of bytes the read() request reads from the URL connection
+.TP
+\fBdebuglevel\fP
+  0 - no debugging
+  1 - basic debug info
+  2 - more debug info
+  3 - nightmare debug info
+.TP
+\fBlogfile\fP
+name of the file to log to; use stdout for standard out; leave
+empty to disable logging
+.TP
+\fBtimeout\fP
+TCP timeout for connections
+.TP
+\fBobfuscateip\fP
+encode the IP number in one big integer, e.g.
+127.0.0.1 ==> (127 << 24) + (0 << 16) + (0 << 8) + (1 << 0)
+This works with most servers, and can sometimes get through
+firewalls. It is known _not_ to work with Squid parent proxies.
+.LP
+The following filters are available:
+.TP
+\fBRewriter\fP
+the most important filter for ads; the Rewriter parses
+the HTML stream and can replace arbitrary tag constructs
+.TP
+\fBBlocker\fP
+block specific urls; this replaces advert images and frames
+.TP
+\fBBinaryCharFilter\fP
+replaces some binary chars (espacially those illegal Microsoft
+quote chars). You dont need this if you enabled the Rewriter filter!
+.TP
+\fBHeader\fP
+replace, modify and add arbitrary HTTP headers
+.TP
+\fBReplacer\fP
+replace text pieces in text data files (HTML, plain text, ...)
+.TP
+\fBGifImage\fP
+deanimate GIFs and remove the comment section
+.TP
+\fBCompress\fP
+compress documents with good compression ratio (HTML, WAV, ...)
+.SH EXAMPLE
+ <?xml version="1.0"?>
+ <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
+ <webcleaner 
+  version="0.8"
+  port="8000"
+  parentproxy="squid.company.com"
+  parentproxyport="3128"
+  debuglevel="0"
+  >
+   <filter name="Rewriter"/>
+   <filter name="Blocker"/>
+   <filter name="Header"/>
+   <filter name="Replacer"/>
+   <filter name="GifImage"/>
+  </webcleaner>
+.SH "SEE ALSO"
+webcleaner(1), webcleanerconf(1)
+.SH AUTHOR
+Bastian Kleineidam <calvin@users.sourceforge.net>
