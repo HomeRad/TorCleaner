@@ -44,20 +44,20 @@ class ImageReducer (Filter):
 
 
     def filter (self, data, **attrs):
-        if not attrs.has_key('buffer'): return data
-        attrs['buffer'].write(data)
+        if not attrs.has_key('imgreducer_buf'): return data
+        attrs['imgreducer_buf'].write(data)
         return ''
 
 
     def finish (self, data, **attrs):
-        if not attrs.has_key('buffer'): return data
-        p = attrs['buffer']
+        if not attrs.has_key('imgreducer_buf'): return data
+        p = attrs['imgreducer_buf']
         if data: p.write(data)
         p.seek(0)
         try:
             img = Image.open(p)
             data = StringIO()
-            if attrs.get('convert'):
+            if attrs.get('imgreducer_convert'):
                 img = img.convert()
             img.save(data, "JPEG", quality=10, optimize=1)
         except IOError:
@@ -75,9 +75,9 @@ class ImageReducer (Filter):
         ctype = headers['Content-Type']
         headers['Content-Type'] = 'image/jpeg'
         remove_headers(headers, ['Content-Length'])
-        d['buffer'] = StringIO()
+        d['imgreducer_buf'] = StringIO()
         # some images have to be convert()ed before saving
-        d['convert'] = convert(ctype)
+        d['imgreducer_convert'] = convert(ctype)
         return d
 
 

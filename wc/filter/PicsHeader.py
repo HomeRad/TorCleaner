@@ -41,7 +41,7 @@ class PicsHeader (Filter):
             # note: do not yet check at this point, but give the HTML
             # page a chance to override this with a its own PICS label.
             return data
-        rules = attrs['rules']
+        rules = attrs['pics_rules']
         headers = attrs['headers']
         if headers.has_key('PICS-Label'):
             pics_add(url, headers['PICS-Label'])
@@ -51,5 +51,5 @@ class PicsHeader (Filter):
     def getAttrs (self, url, headers):
         d = super(PicsHeader, self).getAttrs(url, headers)
         # weed out the rules that don't apply to this url
-        d['rules'] = [ rule for rule in self.rules if rule.appliesTo(url) ]
+        d['pics_rules'] = [ rule for rule in self.rules if rule.appliesTo(url) ]
         return d

@@ -49,19 +49,19 @@ class Rewriter (Filter):
 
 
     def filter (self, data, **attrs):
-        if not attrs.has_key('filter'): return data
-        p = attrs['filter']
+        if not attrs.has_key('rewriter_filter'): return data
+        p = attrs['rewriter_filter']
         p.feed(data)
         return p.flushbuf()
 
 
     def finish (self, data, **attrs):
-        if not attrs.has_key('filter'): return data
-        p = attrs['filter']
+        if not attrs.has_key('rewriter_filter'): return data
+        p = attrs['rewriter_filter']
         # feed even if data is empty
         p.feed(data)
         p.flush()
-        p.buf2data()
+        p.buf2data(finish=True)
         return p.flushbuf()
 
 
@@ -84,5 +84,5 @@ class Rewriter (Filter):
             elif rule.get_name()=='pics':
                 pics.append(rule)
         # generate the HTML filter
-        d['filter'] = FilterHtmlParser(rewrites, pics, url, **opts)
+        d['rewriter_filter'] = FilterHtmlParser(rewrites, pics, url, **opts)
         return d

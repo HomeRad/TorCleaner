@@ -47,13 +47,13 @@ class Replacer (Filter):
 
 
     def filter (self, data, **attrs):
-        if not attrs.has_key('buf'): return data
-        return attrs['buf'].replace(data)
+        if not attrs.has_key('replacer_buf'): return data
+        return attrs['replacer_buf'].replace(data)
 
 
     def finish (self, data, **attrs):
-        if not attrs.has_key('buf'): return data
-        buf = attrs['buf']
+        if not attrs.has_key('replacer_buf'): return data
+        buf = attrs['replacer_buf']
         if data: data = buf.replace(data)
         return data+buf.flush()
 
@@ -64,8 +64,7 @@ class Replacer (Filter):
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
             return d
-        d['rules'] = rules
-        d['buf'] = Buf(rules)
+        d['replacer_buf'] = Buf(rules)
         return d
 
 

@@ -59,27 +59,27 @@ class ImageSize (Filter):
 
 
     def filter (self, data, **attrs):
-        if not data or not attrs.has_key('buffer'):
+        if not data or not attrs.has_key('imgsize_buf'):
             # do not block this image
             return data
-        if attrs['blocked']:
+        if attrs['imgsize_blocked']:
             # block this image
             return ''
-        buf = attrs['buffer']
+        buf = attrs['imgsize_buf']
         if buf.closed:
             # do not block this image
             return data
         buf.write(data)
         if buf.tell() > self.min_bufsize:
             # test if image is blocked
-            attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'],
+            attrs['imgsize_blocked'] = not self.check_sizes(buf, attrs['imgsize_sizes'],
                                                     attrs['url'])
             if buf.tell() < self.min_bufsize:
                 # wait for more data
                 return ''
             data = buf.getvalue()
             buf.close()
-            if attrs['blocked']:
+            if attrs['imgsize_blocked']:
                 return self.blockdata
             return data
         return ''
@@ -88,13 +88,13 @@ class ImageSize (Filter):
     def finish (self, data, **attrs):
         # note: if attrs['blocked'] is True, then the blockdata is
         # already sent out
-        if not attrs.has_key('buffer'):
+        if not attrs.has_key('imgsize_buf'):
             # do not block this image
             return data
-        if attrs['blocked']:
+        if attrs['imgsize_blocked']:
             # block this image
             return ''
-        buf = attrs['buffer']
+        buf = attrs['imgsize_buf']
         if buf.closed:
             return data
         buf.write(data)
@@ -103,11 +103,11 @@ class ImageSize (Filter):
         if pos <= 0:
             error(FILTER, "Empty image data found at %s", `url`)
         else:
-            attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'], url,
+            attrs['imgsize_blocked'] = not self.check_sizes(buf, attrs['imgsize_sizes'], url,
                                                     finish=True)
         data = buf.getvalue()
         buf.close()
-        if attrs['blocked']:
+        if attrs['imgsize_blocked']:
             return self.blockdata
         return data
 
@@ -146,9 +146,8 @@ class ImageSize (Filter):
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
             return d
-        d['rules'] = rules
-        d['sizes'] = [((r.width, r.height), r.formats) for r in rules]
-        d['buffer'] = StringIO()
-        d['blocked'] = False
+        d['imgsize_sizes'] = [((r.width, r.height), r.formats) for r in rules]
+        d['imgsize_buf'] = StringIO()
+        d['imgsize_blocked'] = False
         return d
 
