@@ -29,7 +29,7 @@ import time, webbrowser
 import win32service, win32serviceutil
 from wc import i18n, win32start, AppName, Configuration
 
-_usage = i18n._("""Usage: webcleaner-service [ install | remove ]
+_usage = i18n._("""Usage: webcleaner-service <command>
 
 Commands:
 install - install the %s service and restart the proxy
@@ -49,6 +49,7 @@ def state_nt_service (name):
 
 
 def install_nt_service ():
+    """install WebCleaner as NT service"""
     oldargs = sys.argv
     print i18n._("Installing %s service...")%AppName
     sys.argv = ['webcleaner', 'install']

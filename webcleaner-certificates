@@ -1,0 +1,77 @@
+#!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
+# Copyright (C) 2000-2004  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""SSL certificates generation/installation/removal script"""
+
+__author__ = "Bastian Kleineidam"
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
+import sys, os
+if sys.version[:5] < "2.3":
+    raise SystemExit, "This program requires Python 2.3 or later."
+
+from wc import i18n, AppName
+from wc.proxy import ssl
+
+_usage = i18n._("""Usage: webcleaner-certificates <command>
+
+Commands:
+install - generate and install %s SSL certificates if not already there
+remove  - remove %s SSL certificates
+""") % (AppName, AppName)
+
+
+def _print_usage (msg):
+    """print short usage info and exit"""
+    print msg
+    print _usage
+    sys.exit(1)
+
+
+def install_ssl_certs ():
+    """create SSL certificates if not already done"""
+    if os.path.exists(ssl.absfile('client.cert')):
+        print i18n._("%s SSL certificates already exist, doing nothing")
+    else:
+        ssl.create_certificates()
+
+
+def remove_ssl_certs ():
+    for f in ['client', 'server', 'CA']:
+        for ext in ['pkey', 'cert']:
+            fname = ssl.absfile("%s.%s" % (f, ext))
+            if os.path.exists(fname):
+                os.remove(fname)
+
+
+def main ():
+    args = sys.argv[1:]
+    if len(args) < 1:
+        print_usage(i18n._("No command given."))
+    else:
+        command = args[0]
+    if command=='install':
+        install_ssl_certs()
+    elif command=='remove':
+        remove_ssl_certs()
+    else:
+        print_usage(i18n._("Invalid command %r.")%command)
+
+
+if __name__=='__main__':
+    main()
