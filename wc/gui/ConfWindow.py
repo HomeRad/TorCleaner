@@ -683,8 +683,8 @@ class ConfWindow (ToolWindow):
                 md5sum,filename = line.split()
                 # compare checksums
                 if filemap.has_key(filename):
-                    file = filemap[filename]
-                    data = open(file).read()
+                    fname = filemap[filename]
+                    data = file(fname).read()
                     digest = list(md5.new(data).digest())
                     digest = map(lambda c: "%0.2x" % ord(c), digest)
                     digest = "".join(digest)
@@ -692,14 +692,14 @@ class ConfWindow (ToolWindow):
                         debug(GUI, "%s is uptodate", filename)
 		        continue
                     # move away old file
-                    os.rename(file, file+".old")
+                    os.rename(fname, fname+".old")
                     # copy new file
-                    f = open(file, 'w')
+                    f = file(fname, 'w')
                     f.write(urllib.urlopen(url+filename).read())
                     f.close()
                     doreload = 1
                 else: # new file, just download it
-                    f = open(file, 'w')
+                    f = file(fname, 'w')
                     f.write(urllib.urlopen(url+filename).read())
                     f.close()
                     doreload = 1
@@ -753,17 +753,17 @@ class ConfWindow (ToolWindow):
         dirty = 0
         errors = []
         try:
-            file = open(self.configfile, 'w')
-            file.write(self.toxml())
-            file.close()
+            f = file(self.configfile, 'w')
+            f.write(self.toxml())
+            f.close()
         except IOError:
             errors.append(i18n._("cannot write to file %s") % self.configfile)
             dirty = 1
-        for f in self.folders:
+        for folder in self.folders:
             try:
-                file = open(f.filename, 'w')
-                file.write(f.toxml())
-                file.close()
+                f = file(folder.filename, 'w')
+                f.write(folder.toxml())
+                f.close()
             except IOError:
                 dirty = 1
                 errors.append(i18n._("cannot write to file %s") % f.filename)
