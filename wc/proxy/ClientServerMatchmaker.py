@@ -104,12 +104,9 @@ class ClientServerMatchmaker:
              'Content-Type: %s\r\n\r\n'%(mtype or 'application/octet-stream'),
               open(document, 'rb').read())
             return
-
         if hostname in _localhosts and port==config['port']:
-            return self.handle_local(document)
-        if hostname.startswith('noproxy.'):
-            hostname = hostname[8:]
-            self.url = "%s://%s:%d%s" % (scheme, hostname, port, document)
+            self.client.error(400, i18n._("Invalid Proxy Request"))
+            return
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']
