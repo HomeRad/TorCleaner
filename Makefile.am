@@ -120,5 +120,4 @@ update-blacklists:
 
 
 .PHONY: localbuild distclean deb_signed update-blacklists
-.PHONY: gentest onlinetest offlinetest md5sums syntaxcheck
-.PHONY: homepage upload doc tar debug ndebug
+.PHONY: md5sums pycheck ccheck installservice homepage upload doc
