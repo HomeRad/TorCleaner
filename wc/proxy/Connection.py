@@ -72,8 +72,9 @@ class Connection (asyncore.dispatcher):
     def handle_write (self):
         assert self.connected
         num_sent = 0
+        data = self.send_buffer[:SEND_BUFSIZE]
         try:
-            num_sent = self.send(self.send_buffer[:SEND_BUFSIZE])
+            num_sent = self.send(data)
         except socket.error, err:
             self.handle_error('write error', socket.error, err)
             return
