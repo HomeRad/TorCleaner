@@ -123,7 +123,7 @@ def install_service ():
         state = state_nt_service(wc.AppName)
     time.sleep(3)
     # open configuration
-    config = wc.Configuration()
+    config = wc.configuration.Configuration()
     config_url = "http://localhost:%d/" % config['port']
     open_browser(config_url)
 

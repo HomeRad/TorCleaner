@@ -119,7 +119,7 @@ def _main ():
         print _main.__doc__
         sys.exit(1)
     import wc
-    config = wc.Configuration()
+    wc.configuration.config = wc.configuration.Configuration()
     port = config['port']
     sslport = config['sslport']
     request(sys.argv[1], sslport)

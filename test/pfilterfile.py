@@ -13,9 +13,9 @@ f = sys.argv[1]
 data = file(f).read()
 from test import initlog
 initlog("test/logging.conf")
-wc.config = wc.Configuration()
-wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
-wc.config.init_filter_modules()
+wc.configuration.config = wc.configuration.Configuration()
+wc.configuration.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
+wc.configuration.config.init_filter_modules()
 attrs = wc.filter.get_filterattrs(f, [wc.filter.FILTER_RESPONSE_MODIFY])
 
 def _main ():
