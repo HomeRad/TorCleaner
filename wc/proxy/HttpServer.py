@@ -50,6 +50,17 @@ def get_response_data (response, url):
     return parts
 
 
+def flush_decoders (decoders):
+    data = ""
+    while decoders:
+        debug(PROXY, "flush decoder %s", str(decoders[0]))
+        data = decoders[0].flush()
+        del decoders[0]
+        for decoder in decoders:
+            data = decoder.decode(data)
+    return data
+
+
 class HttpServer (Server):
     """HttpServer handles the connection between the proxy and a http server.
      It writes the client request to the server and sends answer data back
@@ -276,10 +287,17 @@ class HttpServer (Server):
             self.reuse()
             return
         server_set_headers(self.headers)
-        self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.client.compress, self.bytes_remaining)
+        self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         # 304 Not Modified does not send any type info, because it was cached
         if self.statuscode!=304:
-            server_set_content_headers(self.headers, self.document, self.mime, self.url)
+            # copy decoders
+            decoders = [ d.__class__() for d in self.decoders]
+            data = self.recv_buffer
+            for decoder in decoders:
+                data = decoder.decode(data)
+            data += flush_decoders(decoders)
+            server_set_content_headers(self.headers, data, self.document,
+                                       self.mime, self.url)
         # XXX <doh>
         #if not self.headers.has_key('Content-Length'):
         #    self.headers['Connection'] = 'close\r'
@@ -394,13 +412,7 @@ class HttpServer (Server):
         """flush data of decoders (if any) and filters"""
         debug(PROXY, "%s flushing", str(self))
         self.flushing = True
-        data = ""
-        while self.decoders:
-            debug(PROXY, "%s flush decoder %s", str(self), str(self.decoders[0]))
-            data = self.decoders[0].flush()
-            del self.decoders[0]
-            for decoder in self.decoders:
-                data = decoder.decode(data)
+        data = flush_decoders(self.decoders)
         try:
             for i in _response_filters:
                 data = applyfilter(i, data, "finish", self.attrs)
@@ -476,7 +488,7 @@ class HttpServer (Server):
         self.client = None
         ClientServerMatchmaker(client, client.request,
                                self.clientheaders, # with new auth
-                               client.content, client.compress)
+                               client.content, mime=self.mime)
 
 
 def speedcheck_print_status ():

@@ -4,7 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc import i18n
+from wc import i18n, magic
 from wc.log import *
 from rfc822 import Message
 from UnchunkStream import UnchunkStream
@@ -174,13 +174,14 @@ def server_set_date_header (headers):
         headers['Date'] = "%s\r"%Utils.formatdate()
 
 
-def server_set_content_headers (headers, document, mime, url):
+def server_set_content_headers (headers, content, document, mime, url):
     """add missing content-type headers"""
     # check content-type against our own guess
     i = document.find('?')
     if i>0:
         document = document[:i]
-    gm = mimetypes.guess_type(document, None)
+    if not mime and not headers.has_key('Transfer-Encoding'):
+        mime = magic.classify(StringIO(content))
     ct = headers.get('Content-Type', None)
     if mime:
         if ct is None:
@@ -188,28 +189,30 @@ def server_set_content_headers (headers, document, mime, url):
             headers['Content-Type'] = "%s\r"%mime
         elif not ct.startswith(mime):
             i = ct.find(';')
-            if i == -1:
-                val = mime
-            else:
+            if i != -1 and mime.startswith('text'):
+                # add charset information
                 val = mime + ct[i:]
+            else:
+                val = mime
             warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
                  `str(ct)`, `val`, `url`)
             headers['Content-Type'] = "%s\r"%val
-    elif gm[0]:
-        # guessed an own content type
-        if ct is None:
-            warn(PROXY, i18n._("add Content-Type %s to %s"), `gm[0]`, `url`)
-            headers['Content-Type'] = "%s\r"%gm[0]
+    else:
+        gm = mimetypes.guess_type(document, None)
+        if gm[0]:
+            # guessed an own content type
+            if ct is None:
+                warn(PROXY, i18n._("add Content-Type %s to %s"), `gm[0]`, `url`)
+                headers['Content-Type'] = "%s\r"%gm[0]
     # hmm, fix application/x-httpd-php*
     if headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
         warn(PROXY, i18n._("fix x-httpd-php Content-Type"))
         headers['Content-Type'] = 'text/html\r'
 
 
-def server_set_encoding_headers (headers, rewrite, decoders, compress, bytes_remaining):
+def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining):
     """set encoding headers"""
     # add client accept-encoding value
-    headers['Accept-Encoding'] = "%s\r"%compress
     if headers.has_key('Content-Length'):
         bytes_remaining = int(headers['Content-Length'])
         debug(PROXY, "%d bytes content length", bytes_remaining)
