@@ -312,10 +312,12 @@ class FastSGMLParser:
 
 
 # pick a suitable parser
-if sgmlop:
-    SGMLParser = FastSGMLParser
-else:
-    SGMLParser = SlowSGMLParser
+#if sgmlop:
+#    SGMLParser = FastSGMLParser
+#else:
+#    SGMLParser = SlowSGMLParser
+
+SGMLParser = FastSGMLParser
 
 if __name__ == '__main__':
     print "Ok"

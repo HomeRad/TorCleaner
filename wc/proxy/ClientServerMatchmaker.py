@@ -69,6 +69,9 @@ class ClientServerMatchmaker:
 
     def handle_dns(self, hostname, answer):
         assert self.state == 'dns'
+        if answer.isError():
+            self.error(400, _(answer.data))
+            return
         self.state = 'server'
         self.ipaddr = socket.gethostbyname(self.hostname)
 	self.find_server()

@@ -62,6 +62,8 @@ class HttpServer(Server):
             debug(ALWAYS, 'connect error', err)
             self.handle_error(socket.error, err)
             return
+        except Exception, msg:
+            debug(ALWAYS, 'connect error', self.addr, msg)
 
     def handle_connect(self):
         assert self.state == 'connect'
@@ -186,7 +188,7 @@ class HttpServer(Server):
             self.state = 'recycle'
         else:
             mime = self.headers.get('content-type', 'application/octeet-stream')
-            debug(ALWAYS, "init state objects")
+            debug(HURT_ME_PLENTY, "init state objects")
             self.attrs = initStateObjects(mime, self.headers)
             self.state = 'content'
 

@@ -240,6 +240,6 @@ class WConfigParser(BaseParser):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
         elif name=='filter':
-            debug(ALWAYS, "enable filter module %s" % attrs['name'])
+            debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 

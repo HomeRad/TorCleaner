@@ -22,8 +22,10 @@ class DnsResponse:
     def __init__(self, kind, data):
         self.kind = kind
         self.data = data
-        debug(BRING_IT_ON, 'DnsResponse(%s, %s)' % (`kind`, `data`))
-        
+
+    def __str__(self):
+        return "DnsResponse(%s, %s)" % (self.kind, self.data)
+
     def isError(self):
         return self.kind == 'error'
 

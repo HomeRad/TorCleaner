@@ -18,6 +18,7 @@ import re,sys,base64,wc
 from wc.filter import FILTER_RESPONSE_MODIFY, FilterException
 from wc.filter.Filter import Filter
 from wc import debug
+from wc.debug_levels import *
 
 orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['image']

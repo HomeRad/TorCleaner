@@ -6,7 +6,6 @@ if __name__=='__main__':
     if len(sys.argv)<3:
         raise SystemExit, "usage: filtertest command filename_or_url"
     import wc, time
-    from wc.proxy import proxy
     command = sys.argv[1]
     if command=='filter':
         data = open(sys.argv[2]).read()
@@ -18,9 +17,9 @@ if __name__=='__main__':
         raise SystemExit, "unknown command"
     wc.configure(None, None)
     start = time.clock()
-    attrs = proxy.initStateObjects()
-    filtered = proxy.applyfilter(i, data, 'filter', attrs)
-    filtered = filtered + proxy.applyfilter(i, '', 'finish', attrs)
+    wc.DebugLevel = 3
+    attrs = wc.filter.initStateObjects()
+    filtered = wc.filter.applyfilter(i, data, 'finish', attrs)
     stop = time.clock()
     print filtered
     print "time: %.3f seconds" % (stop-start)
