@@ -14,7 +14,7 @@ def _main ():
     from wc.parser.htmllib import HtmlPrinter
     from wc.parser import htmlsax
     p = htmlsax.parser(HtmlPrinter())
-    p.debug(1)
+    #p.debug(1)
     size = 1024
     #size = 1
     data = f.read(size)
