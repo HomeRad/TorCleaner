@@ -6,7 +6,7 @@ import wc
 from OpenSSL import SSL, crypto
 
 
-def exists_certificates (configdir):
+def exist_certificates (configdir):
     """ensure that all certificates are present in given config directory"""
     for fname in "CA", "server", "client":
         if not (os.path.exists(os.path.join(configdir, '%s.cert'%fname)) and
