@@ -12,6 +12,8 @@
 # directory (including globbing chars, important for Win32).
 # Made docstring fit in 80 chars wide displays using pydoc.
 #
+# 20030701 calvin@users.sf.net
+# added html parser
 
 # for selftesting
 try:
@@ -536,10 +538,6 @@ class HtmlGettext (HtmlParser):
         self._errorfun(msg, "fatal error:")
 
 
-    def comment (self, data):
-        pass
-
-
     def startElement (self, tag, attrs):
         msgid = attrs.get('i18n:translate', None)
         self.tag = None
@@ -554,18 +552,6 @@ class HtmlGettext (HtmlParser):
         if tag==self.tag:
             self.translations.add(self.data)
             self.data = ""
-
-
-    def doctype (self, data):
-        pass
-
-
-    def pi (self, name, data=None):
-        pass
-
-
-    def cdata (self, data):
-        pass
 
 
     def characters (self, data):
@@ -735,6 +721,8 @@ def main():
         eater.write(fp)
         for trans in html_translations:
             print >> fp, '#, html translation'
+            # XXX html ignores whitespace, so we could strip multiple
+            # whitespace and make blocktext
             print >> fp, 'msgid', normalize(trans)
             print >> fp, 'msgstr ""\n'
     finally:
