@@ -41,6 +41,9 @@ tests = (
     """<a b=>""",
     """<a =c>""",
     """<a =>""",
+    """<a b= "c">""",
+    """<a b ="c">""",
+    """<a b = "c">""",
     """<a >""",
     """< a>""",
     """< a >""",
@@ -74,6 +77,8 @@ tests = (
     # javascript
     """<script >\n</script>""",
     """<sCrIpt lang="a">bla < fasel</scripT>""",
+    # line continuation (Dr. Fun webpage)
+    "<img bo\\\nrder=0 >",
 )
 
 flushtests = (

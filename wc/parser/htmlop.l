@@ -248,7 +248,7 @@ staticforward PyTypeObject parser_type;
     BEGIN(PARAM);
 }
 
-<PARAM>[^ \r\n\t=>]+    {
+<PARAM>([^ \r\n\t=>]|\\\r?\n)+    {
     _debug;
     self->paramname = PyMem_Resize(self->paramname, char, strlen(yytext)+1);
     strncpy(self->paramname, yytext, strlen(yytext));
@@ -281,7 +281,7 @@ staticforward PyTypeObject parser_type;
     PFREE(self->params);
 }
 
-<PARAM>[ \r\n\t]*=      {
+<PARAM>[ \r\n\t]*=[ \r\n\t]*  {
     _debug;
     if (!self->paramname) {
         /* the empty param name as default, for things like <a =1 =2> */
@@ -454,7 +454,7 @@ staticforward PyTypeObject parser_type;
     BEGIN(INITIAL);
 }
 
-<XPARAM>[ \r\n\t]*=      {
+<XPARAM>[ \r\n\t]*=[ \r\n\t]* {
     _debug;
     if (!self->paramname) {
         /* the empty param name as default, for things like <a =1 =2> */

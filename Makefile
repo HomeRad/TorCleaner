@@ -1,6 +1,7 @@
 # This Makefile is only used by developers! No need for users to
 # call make.
-VERSION=$(shell ./setup.py --version)
+PYTHON=python2.1
+VERSION=$(shell $(PYTHON) setup.py --version)
 PACKAGE=webcleaner
 GROUPDIR=shell1.sourceforge.net:/home/groups
 HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
@@ -12,14 +13,14 @@ all:
 
 .PHONY: clean
 clean:
-	-./setup.py clean --all #  ignore errors for this command
+	-$(PYTHON) setup.py clean --all #  ignore errors for this command
 	$(MAKE) -C po clean
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 
 .PHONY: localbuild
 localbuild:
-	./setup.py build
+	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-2.1/wc/parser/htmlop.so wc/parser
 
 .PHONY: distclean
@@ -42,11 +43,11 @@ deb:	locale
 
 .PHONY: dist
 dist:	locale
-	./setup.py sdist --formats=gztar,zip
+	$(PYTHON) setup.py sdist --formats=gztar,zip
 
 .PHONY: test
 test:
-	python2 test/regrtest.py
+	$(PYTHON)  test/regrtest.py
 
 .PHONY: onlinetest
 onlinetest:
