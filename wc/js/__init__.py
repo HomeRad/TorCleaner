@@ -24,14 +24,14 @@ import re
 
 def escape_js (script):
     """escape HTML stuff in JS script"""
-    script = script.replace('--', '-&#45;')
+    script = script.replace('-->', '--&#62;')
     script = re.sub(r'(?i)</script>', '&#60;/script>', script)
     return script
 
 
 def unescape_js (script):
     """unescape HTML stuff in JS script"""
-    script = script.replace('-&#45;', '--')
+    script = script.replace('--&#62;', '-->')
     script = script.replace('&#60;/script>', '</script>')
     return script
 
