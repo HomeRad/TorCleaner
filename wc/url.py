@@ -118,16 +118,20 @@ def document_quote (document):
     return doc
 
 
-def match_url (url, hostset):
+def match_url (url, domainlist):
     if not url:
         return False
-    return match_host(spliturl(url)[1], hostset)
+    return match_host(spliturl(url)[1], domainlist)
 
 
-def match_host (host, hostset):
+def match_host (host, domainlist):
     if not host:
         return False
-    return ip.host_in_set(host, hostset[0], hostset[1])
+    for domain in domainlist:
+        if host.endswith(domain):
+            return True
+    return False
+
 
 default_ports = {
     'http' : 80,
