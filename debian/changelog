@@ -2,8 +2,9 @@ webcleaner (0.31) unstable; urgency=low
 
   * debian/webcleaner.docs, MANIFEST.in: remove draft-lutuonen...txt
   * HTML-encode attribute values
+  * debian/rules: remove patch backup file from build dir
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat,  1 Dec 2001 14:04:11 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Sat,  1 Dec 2001 14:05:19 +0100
 
 webcleaner (0.30) unstable; urgency=low
 
