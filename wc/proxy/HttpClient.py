@@ -17,7 +17,7 @@ from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers, has_header_value
 from Headers import get_content_length, client_set_encoding_headers
 from wc.proxy.auth import *
-from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE
+from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE, NTLMSSP_CHALLENGE
 from wc.log import *
 from wc.google import google_try_status, get_google_context
 from wc.webgui import WebConfig
@@ -274,7 +274,12 @@ class HttpClient (StatefulConnection):
                 return
             if 'NTLM' in creds:
                 if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
-                    auth = ",".join(creds['NTLM'][0])
+                    attrs = {
+                        'host': creds['NTLM'][0]['host'],
+                        'domain': creds['NTLM'][0]['domain'],
+                        'type': NTLMSSP_CHALLENGE,
+                    }
+                    auth = ",".join(get_challenges(**attrs))
                     self.error(407, i18n._("Proxy Authentication Required"),
                                auth=auth)
                     return
