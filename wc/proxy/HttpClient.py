@@ -37,6 +37,11 @@ def is_http_method (s):
             return True
     return False
 
+FilterLevels = [
+    wc.filter.FILTER_REQUEST_DECODE,
+    wc.filter.FILTER_REQUEST_MODIFY,
+    wc.filter.FILTER_REQUEST_ENCODE,
+]
 
 class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     """States:
@@ -329,9 +334,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             data = decoder.decode(data)
             if not is_closed:
                 is_closed = decoder.closed
-        data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, data, "filter", self.attrs)
-        data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, data, "filter", self.attrs)
-        data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, data, "filter", self.attrs)
+        data = wc.filter.applyfilters(FilterLevels, data, "filter", self.attrs)
         self.content += data
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
@@ -339,9 +342,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             wc.log.warn(wc.LOG_PROXY, "client received %d bytes more than content-length",
                  (-self.bytes_remaining))
         if is_closed or self.bytes_remaining <= 0:
-            data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, "", "finish", self.attrs)
-            data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, data, "finish", self.attrs)
-            data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, data, "finish", self.attrs)
+            data = wc.filter.applyfilters(FilterLevels, "", "finish", self.attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)

@@ -124,11 +124,27 @@ def applyfilter (i, data, fun, attrs):
     """
     if attrs.get('nofilter') or (fun!='finish' and not data):
         return data
+    return _applyfilter(i, data, fun, attrs)
+
+
+def _applyfilter (i, data, fun, attrs):
     attrs['filterstage'] = i
     for f in wc.config['filterlist'][i]:
         ffun = getattr(f, fun)
         if f.applies_to_mime(attrs['mime']):
             data = ffun(data, **attrs)
+    return data
+
+
+def applyfilters (levels, data, fun, attrs):
+    """Apply all filters which are registered in filter levels.
+    For different filter levels we have different data objects.
+    Look at the filter examples.
+    """
+    if attrs.get('nofilter') or (fun!='finish' and not data):
+        return data
+    for i in levels:
+        data = _applyfilter(i, data, fun, attrs)
     return data
 
 

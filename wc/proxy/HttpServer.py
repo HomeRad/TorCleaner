@@ -25,7 +25,7 @@ PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
 
-_response_filters = [
+FilterLevels = [
     wc.filter.FILTER_RESPONSE_DECODE,
     wc.filter.FILTER_RESPONSE_MODIFY,
     wc.filter.FILTER_RESPONSE_ENCODE,
@@ -392,8 +392,7 @@ class HttpServer (wc.proxy.Server.Server):
             if not is_closed and decoder.closed:
                 is_closed = True
         try:
-            for i in _response_filters:
-                data = wc.filter.applyfilter(i, data, "filter", self.attrs)
+            data = wc.filter.applyfilter(FilterLevels, data, "filter", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
         except wc.filter.FilterRating, msg:
@@ -479,8 +478,7 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
         data = flush_decoders(self.decoders)
         try:
-            for i in _response_filters:
-                data = wc.filter.applyfilter(i, data, "finish", self.attrs)
+            data = wc.filter.applyfilter(FilterLevels, data, "finish", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data
