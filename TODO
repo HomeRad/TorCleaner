@@ -1,11 +1,5 @@
 TODO
 
-version 2.4
-
-- test proxy.pac stuff
-  http://wp.netscape.com/eng/mozilla/2.0/relnotes/demo/proxy-live.html
-
-
 version 2.5 and above
 
 - test the rule merging stuff
