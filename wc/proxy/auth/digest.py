@@ -56,6 +56,7 @@ def check_digest_credentials (credentials, **attrs):
     H, KD = get_algorithm_impls(algorithm)
     if H is None:
         return False
+    # XXX MD5-sess
     A1 = "%s:%s:%s" % (username, realm, password)
     A2 = "%s:%s" % (method, uri)
     respdig = KD(H(A1), "%s:%s" % (nonce, H(A2)))
@@ -89,6 +90,7 @@ def get_digest_credentials (challenge, **attrs):
     else:
         entdig = None
 
+    # XXX MD5-sess
     A1 = "%s:%s:%s" % (username, realm, password)
     A2 = "%s:%s" % (method, uri)
     respdig = KD(H(A1), "%s:%s" % (nonce, H(A2)))
@@ -107,11 +109,10 @@ def get_digest_credentials (challenge, **attrs):
 
 def get_algorithm_impls (algorithm):
     # lambdas assume digest modules are imported at the top level
-    if algorithm == 'MD5':
+    if algorithm in ('MD5', 'MD5-sess'):
         H = lambda x, e=encode_digest:e(md5.new(x).digest())
     elif algorithm == 'SHA':
         H = lambda x, e=encode_digest:e(sha.new(x).digest())
-    # XXX MD5-sess
     KD = lambda s, d, H=H: H("%s:%s" % (s, d))
     return H, KD
 
