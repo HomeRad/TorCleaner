@@ -32,12 +32,25 @@ from logging.handlers import RotatingFileHandler, NTEventLogHandler
 def initlog (filename):
     """initialize logfiles and configuration"""
     logging.config.fileConfig(filename)
+    logging.getLogger("root").addHandler(get_root_handler())
     logging.getLogger("wc").addHandler(get_wc_handler())
     logging.getLogger("wc.access").addHandler(get_access_handler())
 
 
-def get_wc_handler ():
+def get_root_handler ():
     """return a handler for basic logging"""
+    if os.name=="nt":
+        return set_format(NTEventLogHandler(AppName))
+    logfile = get_log_file("%s.err"%AppName)
+    mode = 'a'
+    maxBytes = 1024*1024*2 # 2 MB
+    backupCount = 5 # number of files to generate
+    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    return set_format(handler)
+
+
+def get_wc_handler ():
+    """return a handler for webcleaner logging"""
     if os.name=="nt":
         return set_format(NTEventLogHandler(AppName))
     logfile = get_log_file("%s.log"%AppName)

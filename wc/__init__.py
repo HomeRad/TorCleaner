@@ -41,20 +41,20 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'locale')
 
-def iswriteable (file):
-    if os.path.isdir(file) or os.path.islink(file):
+def iswriteable (fname):
+    if os.path.isdir(fname) or os.path.islink(fname):
         return 0
     try:
-        if os.path.exists(file):
-            f = open(file, 'a')
+        if os.path.exists(fname):
+            f = file(fname, 'a')
             f.close()
             return 1
         else:
-            f = open(file, 'w')
+            f = file(fname, 'w')
             f.close()
-            os.remove(file)
+            os.remove(fname)
             return 1
-    except IOError:
+    except IOError, msg:
         pass
     return 0
 
@@ -73,7 +73,8 @@ def startfunc (handle=None):
     if os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, reload_config)
-        # drop root privileges
+        # drop privileges
+        os.chdir("/")
         if os.geteuid()==0:
             import pwd, grp
             try:

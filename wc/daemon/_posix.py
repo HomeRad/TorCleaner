@@ -41,8 +41,7 @@ Do 'webcleaner stop' first."""), 1
     pid = os.fork()
     if pid != 0:
         os._exit(0)
-    # drop privileges
-    os.chdir("/")
+    # set umask
     os.umask(0177)
     # XXX close if we have a logfile?
     #os.close(sys.__stdin__.fileno())
@@ -52,7 +51,7 @@ Do 'webcleaner stop' first."""), 1
     f = open(pidfile, 'w')
     f.write("%d" % os.getpid())
     f.close()
-    # starting
+    # start function (drops privileges)
     startfunc()
 
 
