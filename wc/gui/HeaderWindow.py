@@ -231,7 +231,9 @@ class HeaderWindow(FXMainWindow):
 
     def onUpdHeader(self, sender, sel, ptr):
         i = self.options.headers.getCurrentItem()
-        if self.options.headers.isItemSelected(i):
+        if i<0:
+            sender.disable()
+        elif self.options.headers.isItemSelected(i):
             sender.enable()
         else:
             sender.disable()

@@ -135,7 +135,9 @@ class ConfWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DISABLERULE,ConfWindow.onCmdDisableRule)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_ADD,ConfWindow.onCmdNoProxyForAdd)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_EDIT,ConfWindow.onCmdNoProxyForEdit)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_EDIT,ConfWindow.onUpdNoProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onCmdNoProxyForRemove)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onUpdNoProxy)
 
 
     def proxySettings(self, tabbook):
@@ -234,6 +236,17 @@ class ConfWindow(FXMainWindow):
         FXMenuCascade(addmenu, _("Filter"), None, filtermenu)
         FXMenuButton(f, _("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(f, _("Remove"), None, self, self.ID_REMOVE)
+
+
+    def onUpdNoProxy (self, sender, sel, ptr):
+        i = self.noproxylist.getCurrentItem()
+        if i<0:
+            sender.disable()
+        elif self.noproxylist.isItemSelected(i):
+            sender.enable()
+        else:
+            sender.disable()
+        return 1
 
 
     def onCmdNewFolder(self, sender, sel, ptr):
@@ -408,9 +421,7 @@ class ConfWindow(FXMainWindow):
 
     def onCmdNoProxyForEdit(self, sender, sel, ptr):
         index = self.noproxylist.getCurrentItem()
-        if index < 0: return 1
         item = self.noproxylist.retrieveItem(index)
-        if not item.isSelected(): return 1
         host = item.getText()
         dialog = FXDialogBox(self, _("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
@@ -432,9 +443,7 @@ class ConfWindow(FXMainWindow):
 
     def onCmdNoProxyForRemove(self, sender, sel, ptr):
         index = self.noproxylist.getCurrentItem()
-        if index < 0: return 1
         item = self.noproxylist.retrieveItem(index)
-        if not item.isSelected(): return 1
         host = item.getText()
         del self.noproxyfor[host]
         self.noproxylist.removeItem(index)

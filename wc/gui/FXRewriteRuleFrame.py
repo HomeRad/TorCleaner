@@ -15,6 +15,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
      ID_REPLACE_VALUE,
     ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+7)
 
+
     def __init__(self, parent, rule, index):
         FXRuleFrame.__init__(self, parent, rule, index)
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_TAG,FXRewriteRuleFrame.onCmdTag)
@@ -23,7 +24,9 @@ class FXRewriteRuleFrame(FXRuleFrame):
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_REPLACE_VALUE,FXRewriteRuleFrame.onCmdReplaceValue)
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_ATTRIBUTE_ADD,FXRewriteRuleFrame.onCmdAttributeAdd)
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_ATTRIBUTE_EDIT,FXRewriteRuleFrame.onCmdAttributeEdit)
+        FXMAPFUNC(self,SEL_UPDATE,FXRewriteRuleFrame.ID_ATTRIBUTE_EDIT,FXRewriteRuleFrame.onUpdAttributes)
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE,FXRewriteRuleFrame.onCmdAttributeRemove)
+        FXMAPFUNC(self,SEL_UPDATE,FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE,FXRewriteRuleFrame.onUpdAttributes)
         matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, _("Tag name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXTextField(matrix, 10, self, FXRewriteRuleFrame.ID_TAG)
@@ -88,6 +91,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         debug(BRING_IT_ON, "Changed rule replace part")
         return 1
 
+
     def onCmdAttributeAdd(self, sender, sel, ptr):
         dialog = FXDialogBox(self,_("Add Attribute"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
@@ -118,11 +122,10 @@ class FXRewriteRuleFrame(FXRuleFrame):
             debug(BRING_IT_ON, "Added rule attribute")
         return 1
 
+
     def onCmdAttributeEdit(self, sender, sel, ptr):
         index = self.iconlist.getCurrentItem()
-        if index < 0: return 1
         item = self.iconlist.retrieveItem(index)
-        if not item.isSelected(): return 1
         name,value = item.getText().split('\t')
         dialog = FXDialogBox(self, _("Edit Attribute"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
@@ -150,11 +153,10 @@ class FXRewriteRuleFrame(FXRuleFrame):
             debug(BRING_IT_ON, "Changed rule attribute")
         return 1
 
+
     def onCmdAttributeRemove(self, sender, sel, ptr):
         index = self.iconlist.getCurrentItem()
-        if index < 0: return 1
         item = self.iconlist.retrieveItem(index)
-        if not item.isSelected(): return 1
         name,value = item.getText().split('\t')
         del self.rule.attrs[name]
         self.getApp().dirty = 1
@@ -162,11 +164,20 @@ class FXRewriteRuleFrame(FXRuleFrame):
         debug(BRING_IT_ON, "Removed rule attribute")
         return 1
 
+
+    def onUpdAttributes(self, sender, sel, ptr):
+        i = self.iconlist.getCurrentItem()
+        if i<0:
+            sender.disable()
+        elif self.iconlist.isItemSelected(i):
+            sender.enable()
+        else:
+            sender.disable()
+        return 1
+
+
     def onCmdReplaceValue(self, sender, sel, ptr):
         self.rule.replace[1] = sender.getText()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Changed rule replace value")
         return 1
-
-
-
