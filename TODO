@@ -2,6 +2,8 @@ TODO
 
 version 2.16 and above
 
+- windows network config
+
 ======================================================================
 FAIL: testRecursionSrc (tests.server.TestScriptSrc.TestScriptSrc)
 ----------------------------------------------------------------------
