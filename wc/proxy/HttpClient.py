@@ -21,6 +21,7 @@ import wc.proxy.auth
 import wc.proxy.auth.ntlm
 import wc.filter
 import wc.webgui
+import wc.webgui.webconfig
 import wc.google
 
 
@@ -89,7 +90,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 err = "%s (%s)" % (err, txt)
             form = None
             # this object will call server_connected at some point
-            wc.webgui.WebConfig(self, '/error.html', form, self.protocol,
+            wc.webgui.webconfig.WebConfig(self, '/error.html', form, self.protocol,
                       self.headers, localcontext={'error': err,},
                       status=status, msg=msg, auth=auth)
 
@@ -454,7 +455,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """display page with google cache links for requests page"""
         wc.log.debug(wc.LOG_PROXY, '%s try_google %r', self, response)
         form = None
-        wc.webgui.WebConfig(self, '/google.html', form, self.protocol,
+        wc.webgui.webconfig.WebConfig(self, '/google.html', form, self.protocol,
                      self.headers,
                      localcontext=wc.google.get_google_context(url, response))
 
@@ -536,7 +537,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # get cgi form data
         form = self.get_form_data()
         # this object will call server_connected at some point
-        wc.webgui.WebConfig(self, self.url, form, self.protocol, self.headers)
+        wc.webgui.webconfig.WebConfig(self, self.url, form, self.protocol, self.headers)
 
     def get_form_data (self):
         """return CGI form data from stored request"""
