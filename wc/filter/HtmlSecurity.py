@@ -36,7 +36,7 @@ class HtmlSecurity (object):
               (os.name=='posix' and sys.platform.startswith('darwin'))
 
 
-    def scan_start_tag (tag, attrs, htmlfilter):
+    def scan_start_tag (self, tag, attrs, htmlfilter):
         if tag=="input" and attrs.has_key('type'):
             # prevent IE crash bug on empty type attribute
             if not attrs['type']:
@@ -98,6 +98,6 @@ class HtmlSecurity (object):
                 del attrs['size']
 
 
-    def scan_end_tag (tag):
+    def scan_end_tag (self, tag):
         if self.in_winhelp and tag=='object':
             self.in_winhelp = False

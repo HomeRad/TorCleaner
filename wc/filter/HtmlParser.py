@@ -348,7 +348,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.base_url = strip_quotes(attrs['href'])
             self._debug("using base url %s", `self.base_url`)
         # search for and prevent known security flaws in HTML
-        self.security.scan(tag, attrs, self)
+        self.security.scan_start_tag(tag, attrs, self)
 
         # look for filter rules which apply
         for rule in self.rules:
