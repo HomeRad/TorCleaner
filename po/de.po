@@ -665,7 +665,7 @@ msgstr ""
 "eine Menge flexibler Anwendungsmöglichkeiten erlaubt.<br>\n"
 "Jedes Modul besitzt eine Liste von Mime-Typen und eine Liste\n"
 "von Anfrage/Antwort Teilen die es filtert. Weiterhin kann jedes\n"
-"Modul mit separaten Filterregeln konfiguriert werden.\n"
+"Modul mit separaten Filterregeln konfiguriert werden."
 
 #: ../templates/classic/index.html:10
 msgid "${appname} web interface main page"
@@ -788,7 +788,7 @@ msgstr ""
 "Verknüpfung zur Konfiguration.\n"
 "Ihre neuen Authentifizierungsdaten für das Konfigurationsmenü lauten:<br>\n"
 "Benutzername <b>${adminuser}</b><br>\n"
-"Passwort <b>${adminpass}</b><br>\n"
+"Passwort <b>${adminpass}</b><br>"
 
 #: ../templates/classic/accessibility.html:38
 msgid "All pages define the following access keys:"
@@ -1234,7 +1234,7 @@ msgstr "Falls sie Fragen oder Vorschläge zu den Zugänglichkeitseigenschaften die
 
 #: ../templates/classic/feedback.html:27
 msgid "If you have any suggestions or comments about ${appname}, feel free to email me at <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>."
-msgstr "Falls sie Vorschläge oder Kommentare zu ${appname} haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen.\n"
+msgstr "Falls sie Vorschläge oder Kommentare zu ${appname} haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
 
 #: ../templates/classic/help.html:236
 #, fuzzy

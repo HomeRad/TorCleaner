@@ -1,30 +1,173 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Copyright (C) 2004 Bastian Kleineidam <calvin@users.sf.net>
+# This file is distributed under the same license as the LinkChecker package.
+# Bastian Kleineidam <calvin@users.sf.net>, 2004
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-09-15 08:29+CEST\n"
+"Report-Msgid-Bugs-To: calvin@users.sf.net\n"
+"POT-Creation-Date: 2004-09-20 13:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
-"Generated-By: pygettext.py 1.5\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-
-#: ../wc/configuration.py:210
-msgid "inserting %s"
+#: ../wc/proxy/GunzipStream.py:41
+msgid "zlib error: not gzip format, disabling gunzip"
 msgstr ""
 
-#: ../wc/configuration.py:391
-msgid "unknown tag name %s"
+#: ../wc/proxy/GunzipStream.py:48
+msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr ""
 
-#: ../wc/filter/JSFilter.py:307
-msgid "error fetching script from %r"
+#: ../wc/proxy/Headers.py:204
+#, python-format
+msgid "No content type in %r"
+msgstr ""
+
+#: ../wc/proxy/Headers.py:208
+#, python-format
+msgid "Set content type of %r to %r"
+msgstr ""
+
+#: ../wc/proxy/Headers.py:258
+#, python-format
+msgid "unsupported encoding: %r"
+msgstr ""
+
+#: ../wc/proxy/SslClient.py:48 ../wc/proxy/HttpClient.py:166
+msgid "URL too long"
+msgstr ""
+
+#: ../wc/proxy/SslClient.py:49 ../wc/proxy/HttpClient.py:167
+#, python-format
+msgid "URL length limit is %d bytes."
+msgstr ""
+
+#: ../wc/proxy/SslClient.py:65 ../wc/proxy/HttpClient.py:196
+#: ../wc/proxy/HttpClient.py:204 ../wc/proxy/HttpClient.py:210
+msgid "Forbidden"
+msgstr ""
+
+#: ../wc/proxy/__init__.py:33
+#, python-format
+msgid "unsupported HTTP version %s"
+msgstr ""
+
+#: ../wc/proxy/__init__.py:36
+#, python-format
+msgid "invalid HTTP version %r"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:88
+#, python-format
+msgid "Proxy Error %d %s"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:130
+msgid "Can't parse request"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:133
+msgid "Method Not Allowed"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:138
+msgid "Empty URL"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:266
+msgid "Bad Request"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:286 ../wc/proxy/HttpClient.py:299
+#: ../wc/proxy/HttpClient.py:311
+msgid "Proxy Authentication Required"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:403 ../wc/proxy/HttpServer.py:372
+#: ../wc/proxy/HttpServer.py:392
+msgid "Moved Temporarily"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:510
+msgid "Invalid Method"
+msgstr ""
+
+#: ../wc/proxy/HttpClient.py:518 ../wc/proxy/HttpClient.py:524
+#: ../wc/proxy/HttpClient.py:535 ../wc/webgui/webconfig.py:77
+msgid "Authentication Required"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:117
+#, python-format
+msgid "Host %s is an abbreviation for %s"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:122
+msgid "Host not found"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:123
+#, python-format
+msgid "Host %s not found .. %s"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:150
+msgid "Service unavailable"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:169
+msgid "Connection timeout"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:171
+msgid "Connect error"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:202
+#: ../wc/proxy/ClientServerMatchmaker.py:206
+msgid "Expectation failed"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:203
+msgid "Server does not understand HTTP/1.1"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:207
+#, python-format
+msgid "Unsupported expectation %r"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:219
+msgid "No response from server"
+msgstr ""
+
+#: ../wc/proxy/ClientServerMatchmaker.py:238
+msgid "Server closed connection"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:236
+#, python-format
+msgid "invalid or missing response from %r: %r"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:246
+#, python-format
+msgid "missing headers in response from %r"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:315
+msgid "redirection to localhost"
+msgstr ""
+
+#: ../wc/proxy/HttpServer.py:445
+#, python-format
+msgid "server received %d bytes more than content-length"
 msgstr ""
 
 #: ../wc/filter/Rating.py:29
@@ -59,47 +202,28 @@ msgstr ""
 msgid "Heavy"
 msgstr ""
 
-#: ../wc/filter/Rating.py:96
+#: ../wc/filter/Rating.py:97
+#, python-format
 msgid "malformed rating line %r"
 msgstr ""
 
-#: ../wc/filter/Rating.py:99
+#: ../wc/filter/Rating.py:100
+#, python-format
 msgid "malfored modified time %r"
 msgstr ""
 
-#: ../wc/filter/Rating.py:103
+#: ../wc/filter/Rating.py:104
+#, python-format
 msgid "generic url %r doesn't match %r"
 msgstr ""
 
 #: ../wc/filter/Rating.py:301
+#, python-format
 msgid "adding new rating for %r"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:77
-msgid "Not acceptable"
-msgstr ""
-
-#: ../wc/filter/VirusFilter.py:78
-msgid "Maximum data size (%s) exceeded"
-msgstr ""
-
-#: ../wc/filter/VirusFilter.py:183
-msgid "You have to disable ScannerDaemonOutputFormat"
-msgstr ""
-
-#: ../wc/filter/VirusFilter.py:186
-msgid "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
-msgstr ""
-
-#: ../wc/filter/VirusFilter.py:216
-msgid "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
-msgstr ""
-
-#: ../wc/filter/VirusFilter.py:264
-msgid "Clamd is not ready for stream scanning"
-msgstr ""
-
 #: ../wc/filter/rules/FolderRule.py:83
+#, python-format
 msgid "inserting new rule %s"
 msgstr ""
 
@@ -108,15 +232,23 @@ msgid "with 1 rule"
 msgstr ""
 
 #: ../wc/filter/rules/FolderRule.py:127
+#, python-format
 msgid "with %d rules"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:94
-msgid "Rating %r for category %r is not in range %s"
+#: ../wc/filter/rules/Rule.py:105
+#, python-format
+msgid "updating rule title for language %s:"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:98
-msgid "Rating %r for category %r exceeds limit %r"
+#: ../wc/filter/rules/Rule.py:119
+#, python-format
+msgid "updating rule description for language %s:"
+msgstr ""
+
+#: ../wc/filter/rules/Rule.py:134
+#, python-format
+msgid "updating rule %s:"
 msgstr ""
 
 #: ../wc/filter/rules/RewriteRule.py:76
@@ -143,236 +275,51 @@ msgstr ""
 msgid "Enclosed block"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:105
-msgid "updating rule title for language %s:"
+#: ../wc/filter/rules/RatingRule.py:95
+#, python-format
+msgid "Rating %r for category %r is not in range %s"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:119
-msgid "updating rule description for language %s:"
+#: ../wc/filter/rules/RatingRule.py:99
+#, python-format
+msgid "Rating %r for category %r exceeds limit %r"
 msgstr ""
 
-#: ../wc/filter/rules/Rule.py:134
-msgid "updating rule %s:"
+#: ../wc/filter/JSFilter.py:307
+#, python-format
+msgid "error fetching script from %r"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:117
-msgid "Host %s is an abbreviation for %s"
+#: ../wc/filter/VirusFilter.py:77
+msgid "Not acceptable"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:122
-msgid "Host not found"
+#: ../wc/filter/VirusFilter.py:78
+#, python-format
+msgid "Maximum data size (%s) exceeded"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:123
-msgid "Host %s not found .. %s"
+#: ../wc/filter/VirusFilter.py:184
+msgid "You have to disable ScannerDaemonOutputFormat"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:150
-msgid "Service unavailable"
+#: ../wc/filter/VirusFilter.py:186
+msgid ""
+"Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:169
-msgid "Connection timeout"
+#: ../wc/filter/VirusFilter.py:216
+msgid ""
+"You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:171
-msgid "Connect error"
-msgstr ""
-
-#: ../wc/proxy/ClientServerMatchmaker.py:202
-#: ../wc/proxy/ClientServerMatchmaker.py:206
-msgid "Expectation failed"
-msgstr ""
-
-#: ../wc/proxy/ClientServerMatchmaker.py:203
-msgid "Server does not understand HTTP/1.1"
-msgstr ""
-
-#: ../wc/proxy/ClientServerMatchmaker.py:207
-msgid "Unsupported expectation %r"
-msgstr ""
-
-#: ../wc/proxy/ClientServerMatchmaker.py:219
-msgid "No response from server"
-msgstr ""
-
-#: ../wc/proxy/ClientServerMatchmaker.py:238
-msgid "Server closed connection"
-msgstr ""
-
-#: ../wc/proxy/GunzipStream.py:41
-msgid "zlib error: not gzip format, disabling gunzip"
-msgstr ""
-
-#: ../wc/proxy/GunzipStream.py:48
-msgid "zlib error: unknown compression method, disabling gunzip"
-msgstr ""
-
-#: ../wc/proxy/Headers.py:204
-msgid "No content type in %r"
-msgstr ""
-
-#: ../wc/proxy/Headers.py:208
-msgid "Set content type of %r to %r"
-msgstr ""
-
-#: ../wc/proxy/Headers.py:258
-msgid "unsupported encoding: %r"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:88
-msgid "Proxy Error %d %s"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:130
-msgid "Can't parse request"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:133
-msgid "Method Not Allowed"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:138
-msgid "Empty URL"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:166 ../wc/proxy/SslClient.py:48
-msgid "URL too long"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:167 ../wc/proxy/SslClient.py:49
-msgid "URL length limit is %d bytes."
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:196 ../wc/proxy/HttpClient.py:204
-#: ../wc/proxy/HttpClient.py:210 ../wc/proxy/SslClient.py:65
-msgid "Forbidden"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:266
-msgid "Bad Request"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:286 ../wc/proxy/HttpClient.py:299
-#: ../wc/proxy/HttpClient.py:311
-msgid "Proxy Authentication Required"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:403 ../wc/proxy/HttpServer.py:372
-#: ../wc/proxy/HttpServer.py:392
-msgid "Moved Temporarily"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:510
-msgid "Invalid Method"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:518 ../wc/proxy/HttpClient.py:524
-#: ../wc/proxy/HttpClient.py:535 ../wc/webgui/webconfig.py:77
-msgid "Authentication Required"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:236
-msgid "invalid or missing response from %r: %r"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:246
-msgid "missing headers in response from %r"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:315
-msgid "redirection to localhost"
-msgstr ""
-
-#: ../wc/proxy/HttpServer.py:445
-msgid "server received %d bytes more than content-length"
-msgstr ""
-
-#: ../wc/proxy/__init__.py:33
-msgid "unsupported HTTP version %s"
-msgstr ""
-
-#: ../wc/proxy/__init__.py:36
-msgid "invalid HTTP version %r"
-msgstr ""
-
-#: ../wc/strformat.py:133
-msgid "seconds"
-msgstr ""
-
-#: ../wc/strformat.py:136
-msgid "minutes"
-msgstr ""
-
-#: ../wc/strformat.py:139
-msgid "hours"
-msgstr ""
-
-#: ../wc/update.py:148
-msgid "updating filters"
-msgstr ""
-
-#: ../wc/update.py:155 ../wc/update.py:165
-msgid "error fetching %s"
-msgstr ""
-
-#: ../wc/update.py:156 ../wc/update.py:166 ../wc/update.py:201
-#: ../wc/update.py:209 ../wc/update.py:246 ../wc/update.py:260
-#: ../wc/update.py:264
-msgid "done"
-msgstr ""
-
-#: ../wc/update.py:182
-msgid "filter %s not changed, ignoring"
-msgstr ""
-
-#: ../wc/update.py:184
-msgid "updating filter %s"
-msgstr ""
-
-#: ../wc/update.py:186
-msgid "adding new filter %s"
-msgstr ""
-
-#: ../wc/update.py:200 ../wc/update.py:207 ../wc/update.py:236
-#: ../wc/update.py:240 ../wc/update.py:259
-msgid "error fetching %s:"
-msgstr ""
-
-#: ../wc/update.py:208
-msgid "invalid content"
-msgstr ""
-
-#: ../wc/update.py:225
-msgid "extern filter %s not changed, ignoring"
-msgstr ""
-
-#: ../wc/update.py:227
-msgid "updating extern filter %s"
-msgstr ""
-
-#: ../wc/update.py:229
-msgid "adding new extern filter %s"
-msgstr ""
-
-#: ../wc/update.py:241
-msgid "got no data"
-msgstr ""
-
-#: ../wc/update.py:252
-msgid "updating ratings..."
+#: ../wc/filter/VirusFilter.py:264
+msgid "Clamd is not ready for stream scanning"
 msgstr ""
 
 #: ../wc/webgui/context/error_html.py:21
+#, python-format
 msgid "%s error"
-msgstr ""
-
-#: ../wc/webgui/context/filterconfig_html.py:364
-msgid "No title"
-msgstr ""
-
-#: ../wc/webgui/context/rated_html.py:29
-msgid "Unknown reason"
 msgstr ""
 
 #: ../wc/webgui/context/update_doit_html.py:35
@@ -381,7 +328,16 @@ msgstr ""
 
 #: ../wc/webgui/context/update_doit_html.py:47
 #: ../wc/webgui/context/update_doit_html.py:62
+#, python-format
 msgid "Error: %s"
+msgstr ""
+
+#: ../wc/webgui/context/filterconfig_html.py:364
+msgid "No title"
+msgstr ""
+
+#: ../wc/webgui/context/rated_html.py:29
+msgid "Unknown reason"
 msgstr ""
 
 #: ../wc/webgui/webconfig.py:41
@@ -396,47 +352,143 @@ msgstr ""
 msgid "Internal Error"
 msgstr ""
 
+#: ../wc/update.py:157
+msgid "updating filters"
+msgstr ""
+
+#: ../wc/update.py:164 ../wc/update.py:174
+#, python-format
+msgid "error fetching %s"
+msgstr ""
+
+#: ../wc/update.py:165 ../wc/update.py:175 ../wc/update.py:210
+#: ../wc/update.py:218 ../wc/update.py:255 ../wc/update.py:269
+#: ../wc/update.py:273
+msgid "done"
+msgstr ""
+
+#: ../wc/update.py:191
+#, python-format
+msgid "filter %s not changed, ignoring"
+msgstr ""
+
+#: ../wc/update.py:193
+#, python-format
+msgid "updating filter %s"
+msgstr ""
+
+#: ../wc/update.py:195
+#, python-format
+msgid "adding new filter %s"
+msgstr ""
+
+#: ../wc/update.py:209 ../wc/update.py:216 ../wc/update.py:245
+#: ../wc/update.py:249 ../wc/update.py:268
+#, python-format
+msgid "error fetching %s:"
+msgstr ""
+
+#: ../wc/update.py:217
+msgid "invalid content"
+msgstr ""
+
+#: ../wc/update.py:234
+#, python-format
+msgid "extern filter %s not changed, ignoring"
+msgstr ""
+
+#: ../wc/update.py:236
+#, python-format
+msgid "updating extern filter %s"
+msgstr ""
+
+#: ../wc/update.py:238
+#, python-format
+msgid "adding new extern filter %s"
+msgstr ""
+
+#: ../wc/update.py:250
+msgid "got no data"
+msgstr ""
+
+#: ../wc/update.py:261
+msgid "updating ratings..."
+msgstr ""
+
+#: ../wc/strformat.py:133
+msgid "seconds"
+msgstr ""
+
+#: ../wc/strformat.py:136
+msgid "minutes"
+msgstr ""
+
+#: ../wc/strformat.py:139
+msgid "hours"
+msgstr ""
+
 #: ../wc/win32start.py:36 ../webcleaner:119
+#, python-format
 msgid "%s Proxy"
 msgstr ""
 
 #: ../wc/win32start.py:79
+#, python-format
 msgid "The %s service runs in its own process."
 msgstr ""
 
 #: ../wc/win32start.py:82
+#, python-format
 msgid "The %s service shares a process with other services."
 msgstr ""
 
 #: ../wc/win32start.py:85
+#, python-format
 msgid "The %s service can interact with the desktop."
 msgstr ""
 
 #: ../wc/win32start.py:88
+#, python-format
 msgid "The %s service is stopped."
 msgstr ""
 
 #: ../wc/win32start.py:90
+#, python-format
 msgid "The %s service is starting."
 msgstr ""
 
 #: ../wc/win32start.py:92
+#, python-format
 msgid "The %s service is stopping."
 msgstr ""
 
 #: ../wc/win32start.py:94
+#, python-format
 msgid "The %s service is running."
 msgstr ""
 
 #: ../wc/win32start.py:97
+#, python-format
 msgid "The %s service can be stopped."
 msgstr ""
 
 #: ../wc/win32start.py:99
+#, python-format
 msgid "The %s service can be paused."
 msgstr ""
 
+#: ../wc/configuration.py:210
+#, python-format
+msgid "inserting %s"
+msgstr ""
+
+#: ../wc/configuration.py:391
+#, python-format
+msgid "unknown tag name %s"
+msgstr ""
+
 #: ../webcleaner:35
+#, python-format
 msgid ""
 "USAGE\twebcleaner [options] <command> [command options]\n"
 "\n"
@@ -482,6 +534,7 @@ msgid ""
 msgstr ""
 
 #: ../webcleaner:79
+#, python-format
 msgid ""
 "USAGE\twebcleaner [options]\n"
 "\n"
@@ -500,8 +553,7 @@ msgid ""
 msgstr ""
 
 #: ../webcleaner:99
-msgid ""
-"execute 'webcleaner -h' for help\n"
+msgid "execute 'webcleaner -h' for help\n"
 msgstr ""
 
 #: ../webcleaner:112
@@ -509,6 +561,7 @@ msgid "press return to continue..."
 msgstr ""
 
 #: ../webcleaner:148 ../webcleaner-certificates:94
+#, python-format
 msgid "Unknown option %(option)r"
 msgstr ""
 
@@ -517,10 +570,12 @@ msgid "No command given."
 msgstr ""
 
 #: ../webcleaner:174
+#, python-format
 msgid "Unknown command %r"
 msgstr ""
 
 #: ../webcleaner-certificates:35
+#, python-format
 msgid ""
 "Usage: webcleaner-certificates [options] <command>\n"
 "Options:\n"
@@ -535,15 +590,25 @@ msgid ""
 msgstr ""
 
 #: ../webcleaner-certificates:58
+#, python-format
 msgid "%s SSL certificates already exist, doing nothing"
 msgstr ""
 
 #: ../webcleaner-certificates:72
+#, python-format
 msgid "Could not remove %r: %s"
 msgstr ""
 
 #: ../webcleaner-certificates:109
+#, python-format
 msgid "Invalid command %r."
+msgstr ""
+#: ../templates/classic/macros/rules.html:426
+#: ../templates/classic/macros/rules.html:438
+#: ../templates/classic/rating.html:46
+#: ../templates/classic/rating.html:61
+#: ../templates/classic/rating.html:113
+msgid ""
 msgstr ""
 
 #: ../templates/classic/google.html:5
