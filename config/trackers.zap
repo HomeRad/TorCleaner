@@ -6,7 +6,7 @@
 <block title="Statistic sites" oid="0"
  desc="Some tracker sites"
  scheme=""
- host="(nedstatbasic\.net|nedstat\.nl)"
+ host="(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"
  port=""
  path=""
  parameters=""

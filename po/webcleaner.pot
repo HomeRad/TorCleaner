@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun May 11 12:49:00 2003\n"
+"POT-Creation-Date: Sun May 25 01:39:53 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,8 +22,6 @@ msgid ""
 "\n"
 "Port:          %(port)d\n"
 "Parent proxy:  %(parentproxy)s\n"
-"Logfile:       %(logfile)s\n"
-"Debug level:   %(debuglevel)d\n"
 "Show errors:   %(showerrors)d\n"
 "Headers saved: %(headersave)d\n"
 "\n"
@@ -168,26 +166,6 @@ msgid "Password\tRequire proxy authentication with the given password which is s
 msgstr ""
 
 msgid "Port\tThe port adress the WebCleaner proxy is listening on."
-msgstr ""
-
-msgid ""
-"Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n"
-"(standard out) or a filename (relative or absolute)."
-msgstr ""
-
-msgid "Debug level"
-msgstr ""
-
-msgid "No debugging"
-msgstr ""
-
-msgid "Bring it on"
-msgstr ""
-
-msgid "Hurt me plenty"
-msgstr ""
-
-msgid "Nightmare"
 msgstr ""
 
 msgid "No filtering for"
@@ -538,6 +516,9 @@ msgid "&Close"
 msgstr ""
 
 msgid "About WebCleaner"
+msgstr ""
+
+msgid "Incomplete Proxy Request"
 msgstr ""
 
 msgid "Forbidden"

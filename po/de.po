@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Sun May 11 12:49:00 2003\n"
+"POT-Creation-Date: Sun May 25 01:39:53 2003\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -12,6 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: latin1\n"
 "Generated-By: pygettext.py 1.5\n"
 
+#, fuzzy
 msgid ""
 "\n"
 "WebCleaner Configuration\n"
@@ -19,8 +20,6 @@ msgid ""
 "\n"
 "Port:          %(port)d\n"
 "Parent proxy:  %(parentproxy)s\n"
-"Logfile:       %(logfile)s\n"
-"Debug level:   %(debuglevel)d\n"
 "Show errors:   %(showerrors)d\n"
 "Headers saved: %(headersave)d\n"
 "\n"
@@ -207,28 +206,6 @@ msgstr ""
 
 msgid "Port\tThe port adress the WebCleaner proxy is listening on."
 msgstr "Portnummer\tPortnummer an der der WebCleaner Proxy horchen soll."
-
-msgid ""
-"Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n"
-"(standard out) or a filename (relative or absolute)."
-msgstr ""
-"Logdatei\tDer Name der Logdatei kann leer sein (kein Logging), '<stdout>'\n"
-" (Standardausgabe) oder ein Dateiname (relativ oder absolut)."
-
-msgid "Debug level"
-msgstr "Debugstufe"
-
-msgid "No debugging"
-msgstr "Kein debugging"
-
-msgid "Bring it on"
-msgstr "Los gehts"
-
-msgid "Hurt me plenty"
-msgstr "Gibs mir"
-
-msgid "Nightmare"
-msgstr "Alptraum"
 
 msgid "No filtering for"
 msgstr "Kein Filtern für"
@@ -612,6 +589,9 @@ msgstr "Schliessen"
 msgid "About WebCleaner"
 msgstr "Über WebCleaner"
 
+msgid "Incomplete Proxy Request"
+msgstr ""
+
 msgid "Forbidden"
 msgstr "Verboten"
 
@@ -716,3 +696,26 @@ msgstr "Warnung: nur der erste Befehl ist gültig"
 
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
+
+#~ msgid ""
+#~ "Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n"
+#~ "(standard out) or a filename (relative or absolute)."
+#~ msgstr ""
+#~ "Logdatei\tDer Name der Logdatei kann leer sein (kein Logging), "
+#~ "'<stdout>'\n"
+#~ " (Standardausgabe) oder ein Dateiname (relativ oder absolut)."
+
+#~ msgid "Debug level"
+#~ msgstr "Debugstufe"
+
+#~ msgid "No debugging"
+#~ msgstr "Kein debugging"
+
+#~ msgid "Bring it on"
+#~ msgstr "Los gehts"
+
+#~ msgid "Hurt me plenty"
+#~ msgstr "Gibs mir"
+
+#~ msgid "Nightmare"
+#~ msgstr "Alptraum"

@@ -27,7 +27,7 @@ SOURCES=\
 ../wc/gui/ToolApp.py \
 ../wc/gui/ToolWindow.py \
 ../wc/gui/__init__.py \
-../wc/debug.py \
+../wc/log.py \
 ../wc/i18n.py \
 ../wc/AnsiColor.py \
 ../wc/XmlUtils.py \
@@ -35,6 +35,7 @@ SOURCES=\
 ../wc/proxy/Connection.py \
 ../wc/proxy/DeflateStream.py \
 ../wc/proxy/GunzipStream.py \
+../wc/proxy/Headers.py \
 ../wc/proxy/HttpClient.py \
 ../wc/proxy/HttpServer.py \
 ../wc/proxy/Interpreter.py \

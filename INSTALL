@@ -5,6 +5,9 @@ Requirements
 ------------
 Python >= 2.2 from http://www.python.org/
 
+For Python << 2.3 you'll need the python-logging module from
+http://www.red-dove.com/python_logging.html
+
 For the GUI config tool webcleanerconf you need
 FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
 FXPy >= 1.0.0 from http://fxpy.sourceforge.net/

@@ -31,6 +31,10 @@
   * embedded the spidermonkey javascript engine to reduce dependencies
     Added files: libjs/*, configure.in, autogen.sh, Makefile.am
     Removed files: Makefile
+  * use python logging module framework
+    Added files: wc/log.py, config/logging.conf
+    Changed files: a lot
+    Removed files: wc/debug.py
 
 1.10
   * fix rule title updating (again)

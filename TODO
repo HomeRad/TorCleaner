@@ -15,7 +15,6 @@ TODO
 - Python 2.3: (note: wait for Python 2.3.1 :)
   o use Bool type
   o use builtin timeout in socket module
-  o use logging package (get rid of debug, warn, info, error functions)
   o The socket module now provides the functions inet_pton and inet_ntop for
     converting between string and packed representation of IP addresses.
     There is also a new module variable, has_ipv6, which is True iff the
