@@ -181,7 +181,7 @@ def add_default_context (context, form, filename, lang):
     f.close()
     context.addGlobal("macros", macros)
     # used by navigation macro
-    context.addGlobal("nav", {filename: True})
+    context.addGlobal("nav", {filename.replace('.', '_'): True})
     # page template name
     context.addGlobal("filename", filename)
     # language
