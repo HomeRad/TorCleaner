@@ -1,7 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""convert"""
-# Convert - Python module to convert number and data type
-#
 # Copyright (C) 2002 Thomas Mangin
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,8 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+#
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
+"""
+Convert number and data type.
+"""
 
 import sys
 import re
@@ -34,7 +34,9 @@ _is_number_start = re.compile(r"^([0\\]([1-7]|[xX][1-9a-fA-F])|[1-9])").match
 
 
 def which_base (text):
-    """return the base of string number in (8,10,16) or 0 if not a number"""
+    """
+    Return the base of string number in (8,10,16) or 0 if not a number.
+    """
     if _is_hex_start(text):
         return 16
     if _is_dec_start(text):

@@ -1,6 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""JavaScript engine listener"""
-
 #  BFilter - a smart ad-filtering web proxy
 #  Copyright (C) 2002-2003  Joseph Artsimovich <joseph_a@mail.ru>
 #
@@ -17,21 +15,30 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-# Ported from C++ to Python by Bastian Kleineidam <calvin@users.sf.net>
+"""
+JavaScript engine listener.
+"""
 
 
 class JSListener (object):
-    """Define handler functions for javascript events"""
+    """
+    Define handler functions for javascript events.
+    """
 
     def js_process_data (self, data):
-        """handler for document.write content"""
+        """
+        Handler for document.write content.
+        """
         raise NotImplementedError("abstract method js_process_data")
 
     def js_process_popup (self):
-        """handler for popup windows"""
+        """
+        Handler for popup windows.
+        """
         raise NotImplementedError("abstract method js_process_popup")
 
     def js_process_error (self, msg):
-        """handler for syntax errors"""
+        """
+        Handler for syntax errors.
+        """
         raise NotImplementedError("abstract method js_process_error")

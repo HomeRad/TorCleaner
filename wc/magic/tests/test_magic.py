@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-1 -*-
-"""magic(5) tester"""
+"""
+A magic(5) tester.
+"""
 
 import unittest
 import os

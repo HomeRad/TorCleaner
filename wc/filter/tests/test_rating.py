@@ -1,5 +1,22 @@
 # -*- coding: iso-8859-1 -*-
-"""test rating routines"""
+# Copyright (C) 2004-2005  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Test rating routines.
+"""
 
 import unittest
 
@@ -10,7 +27,9 @@ import wc.filter.rating.category
 class TestRating (unittest.TestCase):
 
     def test_split_url (self):
-        """test url splitting"""
+        """
+        Test url splitting.
+        """
         urls = (
             ('', []),
             ('a', []),
@@ -27,7 +46,9 @@ class TestRating (unittest.TestCase):
             self.assertEqual(wc.filter.rating.split_url(url), res)
 
     def test_range_range (self):
-        """test range in range"""
+        """
+        Test range in range.
+        """
         in_range = wc.filter.rating.category.range_in_range
         # in_range(vrange, prange)
         self.assert_(in_range((1, 1), (None, None)))
@@ -42,7 +63,9 @@ class TestRating (unittest.TestCase):
         self.assert_(not in_range((1, 3), (4, 7)))
 
     def test_range_value (self):
-        """test value in range"""
+        """
+        Test value in range.
+        """
         in_range = wc.filter.rating.category.value_in_range
         # in_range(value, prange)
         self.assert_(in_range(1, (None, None)))
@@ -58,7 +81,9 @@ class TestRating (unittest.TestCase):
         self.assert_(not in_range(1, (4, 7)))
 
     def test_rating_range (self):
-        """test range parsing"""
+        """
+        Test range parsing.
+        """
         # rating_range (range)
         rating_range = wc.filter.rating.category.intrange_from_string
         self.assertEqual(rating_range(""), (None, None))

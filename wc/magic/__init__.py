@@ -1,7 +1,3 @@
-"""Magic - Python module to classify like the 'file' command using a
-   'magic' file
-   See: 'man 4 magic' and 'man file'
-"""
 # Copyright (C) 2002 Thomas Mangin
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,9 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+#
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
-
+"""
+Magic - Python module to classify like the 'file' command using a
+'magic' file
+See: 'man 4 magic' and 'man file'
+"""
 
 import os
 import re
@@ -35,7 +35,9 @@ unsupported_types = ['text/css']
 _magic = None
 
 def classify (fp):
-    """classify given file"""
+    """
+    Classify a file.
+    """
     global _magic
     if _magic is None:
         config = wc.configuration.config
@@ -56,18 +58,24 @@ def classify (fp):
 # Implement the missing part of the magic file definition
 
 def dump (o, f):
-    """pickle object o to file f"""
+    """
+    Pickle object o to file f.
+    """
     cPickle.dump(o, f, pickle.HIGHEST_PROTOCOL)
 
 
 class Failed (Exception):
-    """raised for Failed rules"""
+    """
+    Raised for Failed rules.
+    """
     pass
 
 
 class Magic (object):
-    """store/load/cache files in magic(5) format, and apply detection
-       rules to existing files"""
+    """
+    Store/load/cache files in magic(5) format, and apply detection
+    rules to existing files.
+    """
 
     data_size = {'byte':1, 'short':2, 'long':4, 'string':1, 'stringnocase':1,
                  'pstring':1, 'date': 4, 'ldate': 4}

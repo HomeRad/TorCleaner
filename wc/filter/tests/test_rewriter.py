@@ -1,5 +1,22 @@
 # -*- coding: iso-8859-1 -*-
-""" test script to test filtering"""
+# Copyright (C) 2004-2005  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Test script to test filtering.
+"""
 
 import unittest
 import wc
@@ -9,8 +26,10 @@ from wc.proxy.Headers import WcMessage
 
 
 class TestRewriter (unittest.TestCase):
-    """All these tests work with a _default_ filter configuration.
-       If you change any of the *.zap filter configs, tests can fail..."""
+    """
+    All these tests work with a _default_ filter configuration.
+    If you change any of the *.zap filter configs, tests can fail...
+    """
 
     def setUp (self):
         wc.configuration.init()
@@ -23,37 +42,50 @@ class TestRewriter (unittest.TestCase):
                                      headers=self.headers)
 
     def filt (self, data, result):
-        """filter specified data, expect result. Call this only once per
-           test!"""
+        """
+        Filter specified data, expect result. Call this only once per test!
+        """
         filtered = applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', self.attrs)
         self.assertEqual(filtered, result)
 
     def testClosingTag (self):
-        """close tag in attribute value"""
+        """
+        Close tag in attribute value.
+        """
         self.filt("""<a CONTENT="Andrew McDonald <andrew@mcdonald.org.uk>">""",
                   """<a content="Andrew McDonald <andrew@mcdonald.org.uk>">""")
 
     def testMetaRefresh (self):
-        """meta refresh"""
+        """
+        Meta refresh.
+        """
         self.filt("""<META http-equiv="refresh">""",
                   """<meta http-equiv="refresh">""")
 
     def testMetaRefresh2 (self):
-        """meta reFresh"""
+        """
+        Meta reFresh.
+        """
         self.filt("""<meta http-equiv="ReFresh">""",
                   """<meta http-equiv="ReFresh">""")
 
     def testMetaRefrish (self):
-        """meta refrish"""
+        """
+        Meta refrish.
+        """
         self.filt("""<meta http-equiv="Refrish">""",
                   """<meta http-equiv="Refrish">""")
 
     def testShortcutIcon (self):
-        """shortcut icon"""
+        """
+        Shortcut icon.
+        """
         self.filt("""<link rel="shortcut icon"></link>""", "")
 
     def testJavascriptInBody (self):
-        """onunload in body"""
+        """
+        Onunload in body.
+        """
         self.filt("""<body onload="hulla();" onunload="holla();">""",
                   """<body onload="hulla();">""")
 
@@ -67,20 +99,28 @@ class TestRewriter (unittest.TestCase):
                   """<body onload="uru,guru">""")
 
     def testAdvertLinks1 (self):
-        """Doubleclick advert"""
+        """
+        Doubleclick advert.
+        """
         self.filt("""<a href="http://www.doubleclick.net/">...</a>""", "")
 
     def testAdvertLinks2 (self):
-        """freshmeat ad"""
+        """
+        Freshmeat ad.
+        """
         self.filt("""<a href="http://ads.freshmeat.net/">...</a>""", "")
 
     def testBlink (self):
-        """blinking text"""
+        """
+        Blinking text.
+        """
         self.filt("""<blink>blinking text</blink>""",
                   """<b>blinking text</b>""")
 
     def testNoscript (self):
-        """remove noscript"""
+        """
+        Remove noscript.
+        """
         self.filt("""<noscript>Kein Javascript</noscript>""", "")
 
     def XXXtestErotic (self):
@@ -88,71 +128,99 @@ class TestRewriter (unittest.TestCase):
                   """<a href="http://www.calvinandhobbes.com/">blubba</a>""")
 
     def testRedirect (self):
-        """fileleech redirection"""
+        """
+        Fileleech redirection.
+        """
         self.filt("""<a href="http://www.fileleech.com/dl/?filepath=http://www.counter-strike.de/downloads/ghl10full.exe&download=1">CS 1.0</a>""",
                   """<a href="http://www.counter-strike.de/downloads/ghl10full.exe">CS 1.0</a>""")
 
     def testEntity (self):
-        """lone entity quoting"""
+        """
+        Lone entity quoting.
+        """
         self.filt("""Hallo Ernie & Bert, was geht?""",
                   """Hallo Ernie & Bert, was geht?""")
 
     def testEntities (self):
-        """entity quoting"""
+        """
+        Entity quoting.
+        """
         self.filt("""Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü?""",
                   """Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü?""")
 
     def testCharset (self):
-        """non-ascii characters"""
+        """
+        Non-ascii characters.
+        """
         self.filt("""<Üzgür> fahr </langsamer> ¹²³¼½¬{""",
                   """<Üzgür> fahr </langsamer> ¹²³¼½¬{""")
 
     def testTrackerImage (self):
-        """1x1 tracker image"""
+        """
+        1x1 tracker image.
+        """
         self.filt("""<img src="blubb" width="1" height="1">""", "")
 
     def testAdlog (self):
-        """adlog.pl advert"""
+        """
+        Adlog.pl advert.
+        """
         self.filt("""<a href='http://fmads.osdn.com/cgi-bin/adlog.pl?index,tkgk0128en'></a>""",
                   "")
 
     def testStartTag (self):
-        """unquoted attribute ending with slash"""
+        """
+        Unquoted attribute ending with slash.
+        """
         self.filt("""<a href=http://www/>link</a>""",
                   """<a href="http://www/">link</a>""")
 
     def testUncommonAttrChars (self):
-        """uncommon attribute characters"""
+        """
+        Uncommon attribute characters.
+        """
         self.filt("""<a href="123$456">abc</a>""",
                   """<a href="123$456">abc</a>""")
 
     def testInputType (self):
-        """IE input type crash"""
+        """
+        IE input type crash.
+        """
         self.filt("""<input type >""",
                   """<input>""")
 
     def testFielsetStyle (self):
-        """Mozilla fieldset crash"""
+        """
+        Mozilla fieldset crash.
+        """
         self.filt("""<fieldset style="position:absolute;">""",
                   """<fieldset>""")
 
     def testHrAlign (self):
-        """IE crash"""
+        """
+        IE crash.
+        """
         self.filt("""<hr align="123456789 123456789 123456789 123456789 123456789 123456789">""",
                   """<hr>""")
 
     def testObjectType (self):
-        """IE object type crash"""
+        """
+        IE object type crash.
+        """
         self.filt("""<object type="////////////////////////////////////////////////////////////AAAAA">""",
                   """<object type="/AAAAA">""")
 
     def testHrefPercent (self):
-        """Opera file crash"""
+        """
+        Opera file crash.
+        """
         self.filt("""<a href="file://server%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%text"></a>""",
                   """<a></a>""")
 
     def testITSVuln (self):
-        """Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability"""
+        """
+        Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability.
+        """
         # To avoid virus alarms we obfuscate the exploit URL. This
         # code is harmless.
         data_url = "&#109;s-its:mhtml:file://"+ \
