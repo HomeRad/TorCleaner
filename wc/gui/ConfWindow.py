@@ -418,7 +418,10 @@ class ConfWindow (ToolWindow):
 
 
     def onUpdStrictWhitelist (self, sender, sel, ptr):
-        # XXX look for blocker module
+        if self.modules['Blocker']:
+            sender.enable()
+        else:
+            sender.disable()
         return 1
 
 
@@ -734,6 +737,7 @@ class ConfWindow (ToolWindow):
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
              ' timeout="%d"\n' % self.timeout +\
              ' obfuscateip="%d"\n' % self.obfuscateip +\
+             ' strict_whitelist="%d"\n' % self.strict_whitelist +\
              ' debuglevel="%d"\n' % self.debuglevel +\
              ' showerrors="%d"\n' % self.showerrors
         if self.logfile:
