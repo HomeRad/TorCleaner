@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.381" oid="9">
+<folder sid="wc.381" oid="6">
 <title lang="de">Verschiedenes</title>
 <title lang="en">Miscellaneous</title>
 <description lang="en">Misc things we dont like in our HTML source :)</description>
