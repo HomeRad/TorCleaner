@@ -18,12 +18,11 @@ A4: Your client was sending data when it shouldn't have. This is mostly
 
 Q5: Are there security concerns running this proxy?
 A5: Yes.
-    1) Be sure no one but you or your users can access the proxy.
-       The default configuration is that only local users can
-       access the proxy. Additionally, you should define a proxy password.
-    2) Every user with granted access can read the configuration.
-    3) WebCleaner uses 3rd-party libraries and inherits their potential
-       security flaws.
+    - Be sure no one but you or your users can access the proxy.
+      The default configuration is that only local users can
+      access the proxy. Additionally, you should define a proxy password.
+    - WebCleaner uses 3rd-party libraries and inherits their potential
+      security flaws.
 
 Q6: I get "zlib error" entries in my error log.
 A6: Some b0rked servers are sending Content-Type: gzip for pages

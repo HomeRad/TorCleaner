@@ -2,8 +2,6 @@ TODO
 
 version 2.8 and above
 
-- HTTPS is not working anymore?
-
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS

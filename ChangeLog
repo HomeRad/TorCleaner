@@ -14,6 +14,10 @@
     Changed: wc/proxy/HttpClient.py
     Added: templates/classic/adminpass.html,
       wc/webgui/context/adminpass_html.py
+  * added PICS data config interface
+    Added: templates/classic/pics.html, wc/webgui/context/pics_html.py
+  * updated magic database to newest upstream
+    Changed: config/magic.mime
 
 2.7 (released 04.12.2003)
   * updated filters:
