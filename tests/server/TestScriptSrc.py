@@ -27,6 +27,10 @@ function isValid (thisForm) {
         thisForm.url.focus();
         return false;
     }
+    s = "";
+    for (int i=1; i>0; i--) {
+        s += ".";
+    }
     return true;
 }
 

@@ -242,6 +242,32 @@ a = 0
 //-->
 </script>""")
 
+    def testCommentQuoting3 (self):
+        self.filt(
+"""<script>
+<!-- hui
+a = 0; b = a--;
+// bui -->
+</script>""",
+"""<script>
+<!--
+a = 0; b = a--;
+//-->
+</script>""")
+
+    def testCommentQuoting4 (self):
+        self.filt(
+"""<script>
+<!-- hui
+a = "-->";
+// bui -->
+</script>""",
+"""<script>
+<!--
+a = "--&#62;";
+//-->
+</script>""")
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='TestRewriteScript')
