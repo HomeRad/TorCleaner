@@ -26,9 +26,6 @@ localbuild: all
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/ || true
 
-localtest:
-	cd wc/parser && python htmllib.py
-
 distclean-local:
 	rm -rf dist build # just to be sure: clean build dir too
 	rm -f VERSION MANIFEST _*_configdata.*
