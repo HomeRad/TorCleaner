@@ -21,7 +21,7 @@ logging. Look in logging.conf if you want to customize their behaviour
 # public api
 __all__ = ["FILTER", "PROXY", "GUI", "DNS", "ACCESS", "RATING", "AUTH",
            "CONNECTION", "debug", "info", "warn", "error", "critical",
-           "exception", "initlog", "set_format"]
+           "exception", "initlog", "set_format", "usedmemory"]
 __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -130,16 +130,17 @@ def debug (log, msg, *args):
     #if gc.garbage:
     #    for o in gc.garbage:
     #        logging.getLogger(log).debug("O %s"%repr(o))
-    #logging.getLogger(log).debug("Mem: %s"%usedmemory())
+    #logging.getLogger(log).debug("Mem: %d kB"%usedmemory())
 
 
 def usedmemory ():
     pid = os.getpid()
     fp = file('/proc/%d/status'%pid)
+    val = 0
     try:
         for line in fp.readlines():
             if line.startswith('VmRSS:'):
-                return line[6:].strip()
+                val = int(line[6:].strip().split()[0])
     finally:
         fp.close()
     return val
