@@ -36,8 +36,6 @@ import wc.js.JSListener
 import wc.filter.rules.RewriteRule
 
 
-_start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
-_end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
 _replace_ws = re.compile(r"\s+").sub
 
 
@@ -102,6 +100,7 @@ class JSFilter (wc.js.JSListener.JSListener):
 
 
     def new_instance (self, **opts):
+        """generate new JSFilter instance"""
         return JSFilter(self.url, opts)
 
 
@@ -125,6 +124,7 @@ class JSFilter (wc.js.JSListener.JSListener):
 
 
     def jsEndScript (self, item):
+        """</script> was encountered"""
         wc.log.debug(wc.LOG_FILTER, "%s jsEndScript %s", self, item)
         self.htmlparser.debugbuf()
         if len(self.htmlparser.tagbuf) < 2:
@@ -137,7 +137,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                 wc.log.debug(wc.LOG_FILTER, "%s JS subprocessor is waiting", self)
                 self.htmlparser.state = ('wait', 'recursive script')
                 self.htmlparser.waited = 1
-                wc.proxy.make_timer(2, lambda: self.jsEndScript(item))
+                wc.proxy.make_timer(1, lambda: self.jsEndScript(item))
                 return
             self.js_htmlparser.debugbuf()
             assert not self.js_htmlparser.inbuf.getvalue()
@@ -159,9 +159,9 @@ class JSFilter (wc.js.JSListener.JSListener):
             del self.htmlparser.tagbuf[-1]
         elif not self.filterEndElement(item[1]):
             self.htmlparser.tagbuf.append(item)
+        self.htmlparser.state = ('parse',)
         wc.log.debug(wc.LOG_FILTER, "%s switching back to parse with", self)
         self.htmlparser.debugbuf()
-        self.htmlparser.state = ('parse',)
 
 
     def filterEndElement (self, tag):
@@ -202,13 +202,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         # get script data
         script = self.htmlparser.tagbuf[-1][1].strip()
         # remove html comments
-        mo = _start_js_comment(script)
-        if mo:
-            script = script[mo.end():]
-        mo = _end_js_comment(script)
-        if mo:
-            script = script[:mo.start()]
-        script = script.strip()
+        script = wc.js.remove_html_comments(script)
         if not script:
             # again, ignore an empty script
             del self.htmlparser.tagbuf[-1]
@@ -296,7 +290,9 @@ class JSFilter (wc.js.JSListener.JSListener):
                 self.js_script = "// "+\
                       wc.i18n._("error fetching script from %r")%url
             self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.STARTTAG, "script", {'type': 'text/javascript'}])
-            script = "\n<!--\n%s\n//-->\n"%wc.js.escape_js(self.js_script)
+            # norm html comments
+            script = wc.js.remove_html_comments(self.js_script)
+            script = "\n<!--\n%s\n//-->\n"%wc.js.escape_js(script)
             self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.DATA, script])
             # Note: <script src=""> could be missing an end tag,
             # but now we need one. Look later for a duplicate </script>.
