@@ -88,10 +88,6 @@ class BufferHtmlParser (HtmlParser):
     """
     def __init__ (self):
         super(BufferHtmlParser, self).__init__()
-        if wc.config['showerrors']:
-            self.error = self._error
-            self.warning = self._warning
-            self.fatalError = self._fatalError
         self.outbuf = StringIO()
         self.buf = []
 
@@ -138,15 +134,15 @@ class BufferHtmlParser (HtmlParser):
         self.buf = []
 
 
-    def _error (self, msg):
+    def error (self, msg):
         """signal a filter/parser error"""
         error(PARSER, msg)
 
-    def _warning (self, msg):
+    def warning (self, msg):
         """signal a filter/parser warning"""
         warn(PARSER, msg)
 
-    def _fatalError (self, msg):
+    def fatalError (self, msg):
         """signal a fatal filter/parser error"""
         critical(PARSER, msg)
 

@@ -210,7 +210,6 @@ class Configuration (dict):
         self['local_sockets_only'] = 0
         self['localhosts'] = get_localhosts()
         self['mime_content_rewriting'] = Set()
-        self['showerrors'] = 0
         self['gui_theme'] = "classic"
         self['timeout'] = 30
         self['auth_ntlm'] = 0
@@ -242,8 +241,6 @@ class Configuration (dict):
         f.write(' parentproxyuser="%s"\n' % xmlify(self['parentproxyuser']))
         f.write(' parentproxypass="%s"\n' % xmlify(self['parentproxypass']))
         f.write(' parentproxyport="%d"\n' % self['parentproxyport'])
-        if self['showerrors']:
-            f.write(' showerrors="1"\n')
         f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' gui_theme="%s"\n' % xmlify(self['gui_theme']))
         f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
@@ -448,7 +445,7 @@ class WConfigParser (BaseParser):
             for key,val in attrs.items():
                 self.config[key] = unxmlify(val)
             for key in ('port', 'parentproxyport', 'timeout', 'auth_ntlm',
-	                'colorize', 'showerrors', 'strict_whitelist',
+	                'colorize', 'strict_whitelist',
                         'try_google'):
                 self.config[key] = int(self.config[key])
             if self.config['nofilterhosts'] is not None:

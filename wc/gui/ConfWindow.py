@@ -723,7 +723,7 @@ class ConfWindow (ToolWindow):
         debug(GUI, "reading config")
         self.config = Configuration()
         for key in ['version','port','parentproxy','parentproxyport',
-	 'configfile', 'nofilterhosts', 'showerrors', 'proxyuser', 'proxypass',
+	 'configfile', 'nofilterhosts', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass', 'allowedhosts',
          'gui_theme', 'timeout',]:
             setattr(self, key, self.config[key])
@@ -778,7 +778,6 @@ class ConfWindow (ToolWindow):
         s += ' parentproxyuser="%s"\n' % xmlify(self.parentproxyuser)
         s += ' parentproxypass="%s"\n' % xmlify(self.parentproxypass)
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
-             ' showerrors="%d"\n' % self.showerrors +\
              ' timeout="%d"\n' % self.timeout
         s += ' gui_theme="%s"\n' % xmlify(self.gui_theme)
         hosts = sort_seq(self.nofilterhosts)
