@@ -88,8 +88,6 @@ def do_install ():
     import wc
     # initialize i18n
     wc.init_i18n()
-    import wc.configuration
-    import wc.win32start
     install_shortcuts()
     install_certificates()
     install_service()
@@ -135,6 +133,7 @@ def install_shortcuts ():
 def install_certificates ():
     """generate SSL certificates for SSL gateway functionality"""
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
+    import wc
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
     execute(pythonw, script, ["install"])
 
@@ -150,6 +149,8 @@ def state_nt_service (name):
 
 def install_service ():
     """install WebCleaner as NT service"""
+    import wc
+    import wc.win32start
     oldargs = sys.argv
     print _("Installing %s service...") % wc.AppName
     sys.argv = ['webcleaner', 'install']
@@ -158,6 +159,8 @@ def install_service ():
 
 
 def remove_service ():
+    import wc
+    import wc.win32start
     oldargs = sys.argv
     print _("Removing %s service...") % wc.AppName
     sys.argv  = ['webcleaner', 'remove']
@@ -173,6 +176,8 @@ def restart_service ():
 
 def stop_service ():
     """stop WebCleaner NT service (if it is running)"""
+    import wc
+    import wc.win32start
     print _("Stopping %s proxy...") % wc.AppName
     oldargs = sys.argv
     state = state_nt_service(wc.AppName)
@@ -191,6 +196,8 @@ def stop_service ():
 
 def start_service ():
     """start WebCleaner NT service"""
+    import wc
+    import wc.win32start
     print _("Starting %s proxy...") % wc.AppName
     oldargs = sys.argv
     sys.argv = ['webcleaner', 'start']
@@ -200,6 +207,8 @@ def start_service ():
 
 def open_browser_config ():
     # sleep a while to let the proxy start...
+    import wc
+    import wc.configuration
     state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_START_PENDING:
         time.sleep(1)
@@ -229,8 +238,6 @@ def do_remove ():
     import wc
     # initialize i18n
     wc.init_i18n()
-    import wc.configuration
-    import wc.win32start
     stop_service()
     remove_service()
     remove_certificates()
@@ -239,6 +246,7 @@ def do_remove ():
 
 def remove_certificates ():
     """generate SSL certificates for SSL gateway functionality"""
+    import wc
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
     execute(pythonw, script, ["remove"])
@@ -246,6 +254,7 @@ def remove_certificates ():
 
 def remove_tempfiles ():
     """remove log files and magic(1) cache file"""
+    import wc
     remove_file(os.path.join(wc.ConfigDir, "magic.mime.mgc"))
     remove_file(os.path.join(wc.ConfigDir, "webcleaner.log"))
     remove_file(os.path.join(wc.ConfigDir, "webcleaner-access.log"))
