@@ -2,6 +2,8 @@ TODO
 
 version 2.1
 
+- why are some image buffers in ImageSize empty?
+
 - when setting a proxy password, the authorization must be enforced
   immediately.
 
