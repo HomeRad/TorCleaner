@@ -51,6 +51,18 @@ class PickleStorage (wc.filter.rating.storage.Storage):
                 return self.cache[url]
         raise KeyError(url)
 
+    def __contains__ (self, url):
+        self.check_url(url)
+        # use a specialized form of longest prefix matching:
+        # split the url in parts and the longest matching part wins
+        parts = wc.filter.rating.split_url(url)
+        # the range selects from all parts (full url) down to the first two parts
+        for i in range(len(parts), 1, -1):
+            url = "".join(parts[:i])
+            if url in self.cache:
+                return True
+        return False
+
     def __iter__ (self):
         return iter(self.cache)
 
