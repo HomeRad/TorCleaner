@@ -13,14 +13,6 @@ TODO
 - Digest and NTLM authentication schemes
   (Mozilla Windows >= 1.4b can test NTLM auth)
 
-- Python 2.3: (note: wait for Python 2.3.1 :)
-  o use Bool type
-  o use builtin timeout in socket module
-  o The socket module now provides the functions inet_pton and inet_ntop for
-    converting between string and packed representation of IP addresses.
-    There is also a new module variable, has_ipv6, which is True iff the
-    current Python has IPv6 support. See SF patch #658327.
-
 - testing of persistent connections
 
 - unicode parsing for flex
