@@ -1,4 +1,10 @@
 2.17 "Ong-bak" (released xx.xx.xxxx)
+  * Added release names. Due to the somewhat shaky past releases,
+    those names should render each release a pearl of uniqueness.
+    Now all one has to do is look at the name - which will always be
+    a name of a really good movie - and watch this movie. After that,
+    any error in the release will be a little less bad :)
+
   * doh, add docs to DIST_SUBDIRS
     Type: bugfix
     Changed: Makefile.am
@@ -8,19 +14,18 @@
     Changed: wc/network/*.py, tests/TestDns.py
 
   * really remove old wcheaders stuff
-    Type: bugfix
+    Type: code cleanup
     Removed: config/wcheaders.{conf,dtd}
     Changed: setup.py
-
-  * Added release names. Due to the somewhat shaky past releases,
-    those names should render each release a pearl of uniqueness.
-    Now all one has to do is look at the name - which will always be
-    a name of a really good movie - and watch this movie. After that,
-    any error in the release will be a little less bad :)
 
   * add bgsound to old html tags
     Type: feature
     Changed: wc/filter/HtmlTags.py
+
+  * show adminpass.html page when a non-public local page has been
+    requested without having set an admin password
+    Type: feature
+    Changed: wc/proxy/HttpClient.py
 
 2.16 (released 26.5.2004)
   * parse and quote query parts of urls
