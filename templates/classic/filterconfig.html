@@ -24,13 +24,7 @@
 <!-- folders -->
 <td>
 <div tal:repeat="folder folders">
-<input type="checkbox" checked title="Enable/disable folder"
- tal:condition="not:folder/disable"
- tal:attributes="name string:enablefolder${folder/oid}; title tt_enablefolder">
-<input type="checkbox" title="Enable/disable folder"
- tal:condition="folder/disable"
- tal:attributes="name string:enablefolder${folder/oid}; title tt_enablefolder">
-<a href="#">r</a>
+<!-- XXX disable icon -->
 <a href="#" tal:content="folder/title"
  tal:attributes="href string:filterconfig.html?selfolder=${folder/oid}">Scripting</a>
 </div>
@@ -43,35 +37,44 @@
 </td>
 <!-- rules -->
 <td>
-<div tal:condition="curfolder" tal:repeat="rule curfolder/rules">
-<input type="checkbox" checked title="Enable/disable rule"
- tal:condition="not:rule/disable"
- tal:attributes="name string:enablerule${rule/oid} title tt_enablerule">
-<input type="checkbox" title="Enable/disable rule"
- tal:condition="rule/disable"
- tal:attributes="name string:enablerule${rule/oid} title tt_enablerule">
-<a href="#">r</a>
+<div tal:condition="curfolder">
+<div tal:repeat="rule curfolder/rules">
+<!-- XXX disable icon -->
 <a href="#" tal:content="rule/title"
+ tal:condition="not:curfolder/disable"
  tal:attributes="href string:filterconfig.html?selfolder=${curfolder/oid}&amp;;selrule=${rule/oid}">On focus</a>
+<span tal:condition="curfolder/disable" tal:replace="rule/title">On focus</span>
 </div>
+<input type="submit"
+ tal:attributes="name string:removefolder${curfolder/oid}; title tt_removefolder">
 <br>
-<select name="newruletype" tal:condition="curfolder">
+<input tal:condition="curfolder/disable" type="submit"
+ tal:attributes="name string:enablefolder${curfolder/oid}; title tt_enablefolder">
+<input tal:condition="not:curfolder/disable" type="submit"
+ tal:attributes="name string:disablefolder${curfolder/oid}; title tt_disablefolder">
+<br>
+<select name="newruletype">
 <option tal:repeat="rule ruletypes" tal:content="rule">Rewrite</option>
 </select>
 <input type="submit" name="newrule" value="New rule"
- tal:condition="curfolder" tal:attributes="value t_newrule; title tt_newrule">
+ tal:attributes="value t_newrule; title tt_newrule">
+</div>
 </td>
 <!-- rule -->
 <td>
-
 <div tal:condition="currule">
-<!-- rewrite -->
 <span tal:repeat="rule ruletypes"><span tal:condition="ruletype/?rule">
 <div metal:use-macro="rulemacros/macros/?rule">
 Here is the rule configuration...
 </div></span>
 </span>
-
+<input type="submit"
+ tal:attributes="name string:removerule${currule/oid}; title tt_removerule">
+<br>
+<input tal:condition="currule/disable" type="submit"
+ tal:attributes="name string:enablerule${currule/oid}; title tt_enablerule">
+<input tal:condition="not:currule/disable" type="submit"
+ tal:attributes="name string:disablerule${currule/oid}; title tt_disablerule">
 </div>
 </td>
 </tr>
