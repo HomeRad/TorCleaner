@@ -82,6 +82,10 @@ class FolderRule (Rule):
 
     def tiptext (self):
         """return short info for gui display"""
-        return super(FolderRule, self).tiptext()+", "+\
-               (i18n._("%d rules")%len(self.rules))
+        l = len(self.rules)
+        if l==1:
+            text = i18n._("%d rule")%l
+        else:
+            text = i18n._("%d rules")%l
+        return "%s, %s" % (super(FolderRule, self).tiptext(), text)
 
