@@ -14,6 +14,10 @@ class HttpProxyClient:
         debug(NIGHTMARE, 'Proxy: CP/init', self)
 
 
+    def __repr__ (self):
+        return '<%s: %s>' % ('proxyclient', self.handler)
+
+
     def finish (self):
         debug(NIGHTMARE, 'Proxy: CP/finish', self)
         if self.handler:
