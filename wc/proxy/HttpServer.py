@@ -457,6 +457,7 @@ class HttpServer (Server):
     def close_ready (self):
         debug(PROXY, "%s close ready", self)
         if not self.flush():
+            make_timer(0.1, lambda: self.close_ready())
             return False
         if super(HttpServer, self).close_ready():
             if self.client:
