@@ -2,6 +2,8 @@ TODO
 
 version 2.2
 
+- Zap ads at http://www.osnews.com/story.php?news_id=4521
+
 - support NTLM authentication, add README.squid example config
   (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
    client auth)
