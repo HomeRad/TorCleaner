@@ -16,6 +16,8 @@
   * added note that the web configuration needs write permissions in
     the configuration directory
     Changed: README
+  * line and column counting has been added to the HTML parser
+    Changed: wc/parser/{htmlparse.y,htmllex.l,htmlsax.h}
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way
