@@ -47,8 +47,10 @@ Servicematch: vancouver
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-import wc
+if __name__=='__main__':
+    import sys, os
+    sys.path.insert(0, os.getcwd())
+import re, wc
 from wc.debug import *
 from wc import i18n
 
@@ -139,7 +141,7 @@ services = {
                               'educationalcontent':     'Edu',
                               'environmentalawareness': 'Env',
                               'tolerance':              'Tol',
-                             'violence':               'V',
+                              'violence':               'V',
                               'sex':                    'S',
                               'profanity':              'P',
                               'safety':                 'SF',
@@ -166,9 +168,9 @@ def check_pics (rule, labellist):
         debug(NIGHTMARE, "PICS blurb", blurb)
         last = mo.end()
         for service, sdata in services.items():
-            if service in blurb:
+            if blurb.find(service) != -1:
                 msg = check_service(rating, sdata['categories'],
-                               sdata['name'], rule.options[service])
+                               sdata['name'], rule.ratings[service])
                 if msg: return msg
     return None
 
@@ -179,7 +181,7 @@ def check_service (rating, categories, name, options):
        If one of the ratings exceed its option value, return a non-empty
        message, else return None.
     """
-    for category, value in options:
+    for category, value in options.items():
         category_label = categories[category]
         msg = check_pics_option(rating, category_label, value,
                                 "%s %s" % (name, category));
@@ -187,7 +189,7 @@ def check_service (rating, categories, name, options):
     return None
 
 
-def check_pics_option (rating, category_label, option, category) {
+def check_pics_option (rating, category_label, option, category):
     """find the given label in rating and compare the value with
        option. If the rating exceeds the option, a non-empty message
        is returned, else None"""
