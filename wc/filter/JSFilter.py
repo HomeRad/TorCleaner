@@ -107,7 +107,7 @@ class JSFilter (wc.js.JSListener.JSListener):
 
     def new_instance (self, **opts):
         """generate new JSFilter instance"""
-        return JSFilter(self.url, opts)
+        return JSFilter(self.url, self.localhost, opts)
 
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
