@@ -206,7 +206,6 @@ def server_set_encoding_headers (headers, rewrite, decoders, compress, bytes_rem
     """set encoding headers"""
     # add client accept-encoding value
     headers['Accept-Encoding'] = "%s\r"%compress
-    debug(PROXY, "XXX hui")
     if headers.has_key('Content-Length'):
         bytes_remaining = int(headers['Content-Length'])
         debug(PROXY, "%d bytes content length", bytes_remaining)
