@@ -71,6 +71,7 @@ def sort_seq (seq):
     return l
 
 import ip, i18n
+from wc.proxy.dns_lookups import init_dns_resolver
 
 config = None
 
@@ -110,6 +111,7 @@ def reload_config ():
     config.read_proxyconf()
     config.read_filterconf()
     config.init_filter_modules()
+    init_dns_resolver()
 
 
 def get_localhosts ():
