@@ -39,22 +39,7 @@ Do 'webcleaner stop' first.""")
         os._exit(0)
     # drop privileges
     os.chdir("/")
-    os.umask(0)
-    if os.geteuid()==0:
-        # drop root privileges
-        import pwd, grp
-        try:
-            pentry = pwd.getpwnam("nobody")
-            pw_uid = 2
-            nobody = pentry[pw_uid]
-            gentry = grp.getgrnam("nogroup")
-            gr_gid = 2
-            nogroup = gentry[gr_gid]
-            os.setuid(nobody)
-            os.setgid(nogroup)
-        except KeyError:
-            print >>sys.stderr, "warning: could not drop root privileges, user nobody and/or group nogroup not found"
-            pass
+    os.umask(0277)
     # XXX close if we have a logfile?
     #os.close(sys.__stdin__.fileno())
     #os.close(sys.__stdout__.fileno())

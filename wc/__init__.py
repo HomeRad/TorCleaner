@@ -95,6 +95,21 @@ def startfunc ():
     global config
     config = Configuration()
     config.init_filter_modules()
+    if os.geteuid()==0:
+        # drop root privileges
+        import pwd, grp
+        try:
+            pentry = pwd.getpwnam("nobody")
+            pw_uid = 2
+            nobody = pentry[pw_uid]
+            gentry = grp.getgrnam("nogroup")
+            gr_gid = 2
+            nogroup = gentry[gr_gid]
+            os.setgid(nogroup)
+            os.setuid(nobody)
+        except KeyError:
+            print >>sys.stderr, "warning: could not drop root privileges, user nobody and/or group nogroup not found"
+            pass
     import wc.proxy
     wc.proxy.mainloop()
 
