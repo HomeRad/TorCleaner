@@ -12,8 +12,11 @@ def _main ():
     url = sys.argv[1]
     parts = urlparse.urlsplit(url)
     host = parts[1]
+    port = 8443
+    if os.environ.get("WC_DEVELOPMENT", 0):
+        port += 1
     path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
-    h = httplib.HTTPSConnection("localhost:8443")
+    h = httplib.HTTPSConnection("localhost:%s"%port)
     h.connect()
     h.putrequest("GET", url, skip_host=1)
     h.putheader("Host", host)
