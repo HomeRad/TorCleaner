@@ -297,4 +297,14 @@
  desc="Found at MSN">
 <attr>g\.msn(bc)?\.com</attr>
 </rewrite>
+
+<rewrite title="IMDB Advert 7" oid="49"
+ tag="embed">
+<attr name="src">i.imdb.com</attr>
+</rewrite>
+
+<rewrite title="Ad servers 11" oid="50"
+ desc="Tribal fusion">
+<attr>a\.tribalfusion\.com</attr>
+</rewrite>
 </folder>
