@@ -151,7 +151,7 @@ class HttpClient (Connection):
                 self.decoders.append(UnchunkStream())
                 client_remove_encoding_headers(self.headers)
                 self.bytes_remaining = None
-            debug(PROXY, "%s headers\n%s", str(self), str(self.headers))
+            debug(PROXY, "%s client headers (filtered)\n%s", str(self), str(self.headers))
             if config["proxyuser"]:
                 creds = get_header_credentials(self.headers, 'Proxy-Authorization')
                 if not creds:

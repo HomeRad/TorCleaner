@@ -150,7 +150,7 @@ class HttpServer (Server):
         send a request twice for NTLM authentication"""
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         self.write(request)
-        debug(PROXY, "%s write headers\n%s", str(self), str(self.clientheaders))
+        debug(PROXY, "%s write headers", str(self))
         self.write("".join(self.clientheaders.headers))
         self.write('\r\n')
         self.write(self.content)
@@ -242,7 +242,7 @@ class HttpServer (Server):
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
-        debug(PROXY, "%s headers\n%s", str(self), str(msg))
+        debug(PROXY, "%s server headers\n%s", str(self), str(msg))
         if self.statuscode==100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
@@ -288,7 +288,6 @@ class HttpServer (Server):
         #    self.headers['Connection'] = 'close\r'
         #remove_headers(self.headers, ['Keep-Alive'])
         # XXX </doh>
-        debug(PROXY, "%s filtered headers\n%s", str(self), str(self.headers))
         wc.proxy.HEADERS.append((self.url, "server", self.headers))
         if self.statuscode!=407:
             self.client.server_response(self.response, self.statuscode, self.headers)
@@ -347,10 +346,8 @@ class HttpServer (Server):
 
     def process_recycle (self):
         debug(PROXY, "%s recycling", str(self))
-        # flush pending client data and try to reuse this connection
-        self.flushing = True
-        self.flush()
         if self.statuscode==407 and config['parentproxy']:
+            debug(PROXY, "%s send parent proxy authentication", str(self))
             if self.authtries:
                 # we failed twice, abort
                 self.authtries = 0
@@ -380,11 +377,15 @@ class HttpServer (Server):
             config['parentproxycreds'] = creds
             self.clientheaders['Proxy-Authorization'] = "%s\r" % creds
             self.send_request()
+        else:
+            # flush pending client data and try to reuse this connection
+            self.flush()
 
 
     def flush (self):
         """flush data of decoders (if any) and filters"""
         debug(PROXY, "%s flushing", str(self))
+        self.flushing = True
         data = ""
         while self.decoders:
             data = self.decoders[0].flush()
