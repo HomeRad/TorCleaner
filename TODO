@@ -1,10 +1,10 @@
 TODO
 
-version 2.3
+version 2.4
 
 - parse and import adzapper.sf.net filters
 
-version 2.4
+version 2.5 and above
 
 - Desc: empty page (JS flush error...)
   Url: http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/embed.asp
