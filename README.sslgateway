@@ -1,0 +1,55 @@
+SSL Gateway
+===========
+
+Introduction
+------------
+
+An SSL gateway enables filtering of https traffic by spawning an SSL
+server on the local host (port 8443 per default) through which all
+secure traffic is routed.
+
+
+Security
+--------
+
+An SSL gateway has the disadvantage of having to fake the SSL certificate
+from the original server and replace it with our own certificate, which
+is widely known as a "man in the middle" attack. So in order to
+not weaken your secure web surfing experience, make sure
+you have set up the WebCleaner SSL gateway yourself and configure it
+to not allow administration of another person except yourself.
+
+
+Data flux
+---------
+
+                        DOWN			UP
+ ________________________________________________________________________
+
+  WWW BROWSER
+	|
+	|
+  WEBCLEANER PROXY
+	|
+     HttpClient         init server, fiter	pass data back to
+	|		request data and pass	browser
+        |		it to Https server
+	|
+     ClientServerMatchmaker
+	|
+     HttpsServer	make connection to	receive filtered data,
+     	|		localhost on ssl port	encrypt it with WebCleaner
+	|		and pass request data	certificate and pass it on
+	|					to HttpClient
+  WEBCLEANER SSL SERVER
+	|
+     SslClient		init server, filter	pass data back to
+    	|		request data and pass	HttpsServer
+        |		it to ssl server
+        |
+     ClientServerMatchmaker
+	|
+     SslServer		connect to ssl server,	filter data, pass it to
+	|		make request		SslClient
+  REMOTE SSL SERVER
+
