@@ -5,6 +5,9 @@
     Changed: config/*.zap
   * fixed parsing of end tags with trailing garbage
     Changed: wc/parser/htmllex.l
+  * cope with falsely advertised GIF images, the GIF parsers ignores
+    them now
+    Changed: wc/filter/GifImage.py
 
 2.1
   * lots of minor bugs fixed running pychecker

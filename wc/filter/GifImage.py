@@ -161,11 +161,12 @@ class GifParser (object):
                 # it seems that some animated gifs have a wrong
                 # version (i.e. GIF87a, not GIF89a)
                 # and it seems that Netscape animates them
-                # so we ignore the version and filter nonetheless
-                #if self.header != 'GIF89a':
-                #    debug(FILTER, 'Non-animated GIF')
-                #    self.state == GifParser.NOFILTER
-                #    continue
+                # so ignore the version number here and check only for
+                # the GIF prefix
+                if not self.header.startswith('GIF'):
+                    debug(FILTER, "No GIF file, switch to nofilter mode")
+                    self.state == GifParser.NOFILTER
+                    continue
                 self.size = (i16(self.read(2)), i16(self.read(2)))
                 debug(FILTER, 'GIF width=%d, height=%d', self.size[0], self.size[1])
                 if self.size in self.sizes:
