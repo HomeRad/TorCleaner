@@ -48,6 +48,14 @@ distribution.""" % {'appname': AppName}
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 
+# optional features
+# import OpenSSL supported
+HasSsl = configdata.has_ssl
+# import Crypto supported
+HasCrypto = configdata.has_crypto
+# import PI supportedL
+HasPil = configdata.has_pil
+
 # logger areas
 LOG_FILTER = "wc.filter"
 LOG_JS = "wc.filter.js"
