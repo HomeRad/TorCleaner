@@ -3,6 +3,10 @@
     Type: bugfix
     Changed: wc/proxy/Headers.py
 
+  * install blocked.js and blocked.swf
+    Type: bugfix
+    Changed: setup.py
+
 2.17 "Ong-bak" (released 29.5.2004)
   * Added release names. Due to the somewhat shaky past releases,
     those names should render each release a pearl of uniqueness.
