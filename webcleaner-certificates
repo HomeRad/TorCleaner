@@ -46,7 +46,7 @@ def _print_usage (msg):
 def install_ssl_certs ():
     """create SSL certificates if not already done"""
     if os.path.exists(ssl.absfile('client.cert')):
-        print i18n._("%s SSL certificates already exist, doing nothing")
+        print i18n._("%s SSL certificates already exist, doing nothing")%AppName
     else:
         ssl.create_certificates()
 

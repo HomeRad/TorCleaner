@@ -86,7 +86,7 @@ def install_nt_service ():
 
 def remove_nt_service ():
     oldargs = sys.argv
-    print i18n._("Installing %s service...")%AppName
+    print i18n._("Removing %s service...")%AppName
     sys.argv  = ['webcleaner', 'remove']
     win32serviceutil.HandleCommandLine(win32start.ProxyService)
     sys.argv = oldargs
