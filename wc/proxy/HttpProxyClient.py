@@ -87,7 +87,7 @@ class HttpProxyClient (object):
                            mime=self.server.mime,
                            )
             return
-        elif status!=200:
+        elif not (200 <= status < 300):
             error(PROXY, "%s got %s status %d %r", self, protocol, status, msg)
             self.finish()
 
