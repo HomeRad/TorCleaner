@@ -2,13 +2,9 @@ TODO
 
 version 2.0
 
-- the html layout sucks
-
-- tests for crash bugs
-
 - test and fix all BADURLS
 
-- nofilterhosts and allowedhosts dns name resolution
+- nofilterhosts dns name resolution
 
 - test nofilter mode
 
@@ -30,6 +26,8 @@ version 2.1
 
 - test parent proxy authentication
   I never tested this.
+
+- documentation for the web interface
 
 - dockapp to visualize config and status
   I made machine-parseable config and status output, so write a tool
