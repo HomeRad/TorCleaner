@@ -1,12 +1,15 @@
 # -*- coding: iso-8859-1 -*-
-"""a modified dispatcher class, taken from python2.3/asyncore.py
-# - use new-style object inheritance
-# - get rid of __getattr__ cludge
-# - add fileno function
-# - use True/False
-# - use webcleaner logging functions
-# - handle_write_event only calls handle_write if there is pending data
-# - use a single global socket map
+"""A modified dispatcher class, taken from python2.3/asyncore.py.
+The following changes were made:
+
+- use new-style object inheritance
+- get rid of __getattr__ cludge
+- add fileno function
+- use True/False
+- use webcleaner logging functions
+- handle_write_event only calls handle_write if there is pending data
+- use a single global socket map
+
 """
 # -*- Mode: Python -*-
 #   Id: asyncore.py,v 2.51 2000/09/07 22:29:26 rushing Exp
