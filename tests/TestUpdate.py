@@ -18,5 +18,7 @@ class TestUpdate (unittest.TestCase):
         update_ratings(self.config, dryrun=True)
 
 
+suite = unittest.makeSuite(TestUpdate,'test')
+
 if __name__ == '__main__':
     unittest.main()

@@ -48,5 +48,7 @@ class TestClamdScanner (unittest.TestCase):
         self.assert_(not scanner.errors)
 
 
+suite = unittest.makeSuite(TestClamdScanner,'test')
+
 if __name__ == '__main__':
     unittest.main()

@@ -24,5 +24,7 @@ class TestReplacer (unittest.TestCase):
         applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
 
 
+suite = unittest.makeSuite(TestReplacer,'test')
+
 if __name__ == '__main__':
     unittest.main()

@@ -40,5 +40,7 @@ class TestSortedDict (unittest.TestCase):
             self.assertEqual(d[k], toinsert[i])
 
 
+suite = unittest.makeSuite(TestSortedDict,'test')
+
 if __name__ == '__main__':
     unittest.main()

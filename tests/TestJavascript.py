@@ -26,7 +26,7 @@ class JSTester (JSListener.JSListener):
         self.err = err
 
 
-class TestJavaScript (unittest.TestCase):
+class TestJavascript (unittest.TestCase):
     def setUp (self):
         self.out = JSTester()
         self.jsEnv = jslib.JSEnv()
@@ -66,6 +66,8 @@ document.write('<'+a+b+'>')""", 1.1)
         self.jsEnv.listeners.remove(self.out)
         self.jsEnv = None
 
+
+suite = unittest.makeSuite(TestJavascript,'test')
 
 if __name__ == '__main__':
     unittest.main()

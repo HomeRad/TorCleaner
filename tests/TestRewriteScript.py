@@ -10,7 +10,7 @@ from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog
 
 
-class TestJavaScript (unittest.TestCase):
+class TestRewriteScript (unittest.TestCase):
     """All these tests work with a _default_ filter configuration.
        If you change any of the *.zap filter configs, tests can fail..."""
 
@@ -301,6 +301,8 @@ a = 0
 //-->
 </script>""")
 
+
+suite = unittest.makeSuite(TestRewriteScript,'test')
 
 if __name__ == '__main__':
     unittest.main()
