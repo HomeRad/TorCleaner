@@ -72,7 +72,7 @@ class BufferHtmlParser (HtmlParser):
        2) self.outbuf - StringIO with already filtered HTML data
     """
     def __init__ (self):
-        Htmlparser.__init__(self)
+        HtmlParser.__init__(self)
         if wc.config['showerrors']:
             self.error = self._error
             self.warning = self._warning
