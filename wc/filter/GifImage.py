@@ -85,7 +85,7 @@ class GifImage (wc.filter.Filter.Filter):
         if not self.applies_to_stages(stages):
             return {}
         d = super(GifImage, self).get_attrs(url, localhost, stages, headers)
-        d['gifparser'] = GifParser()
+        d['gifparser'] = GifParser(url)
         return d
 
 
@@ -115,10 +115,11 @@ class GifParser (object):
     DATA = 4
     NOFILTER = 5
 
-    def __init__ (self, sizes=None):
+    def __init__ (self, url, sizes=None):
         """
         Initialize GIF parser buffers and flags.
         """
+        self.url = url
         self.state = GifParser.INIT
         self.data = self.consumed = self.output = ''
         self.finish = False
@@ -259,7 +260,8 @@ class GifParser (object):
                 elif s == ',':
                     self.state = GifParser.IMAGE
                     continue
-                wc.log.error(wc.LOG_FILTER, "unknown GIF frame %r", s)
+                wc.log.warn(wc.LOG_FILTER,
+                            "unknown GIF frame %r at %r", s, self.url)
             elif self.state == GifParser.IMAGE:
                 #extent
                 self.x0 = i16(self.read(2))
