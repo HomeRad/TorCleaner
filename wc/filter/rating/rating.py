@@ -17,15 +17,22 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 class Rating (object):
-    """A single rating applies to a given URL and specifies the
-       category and its value. Generic ratings apply to all
-       URLs starting with the given URL.
+    """A single rating applies to a given URL and specifies a list
+       of categories with their associated value.
+       Generic ratings apply to all URLs starting with the given URL.
     """
 
-    def __init__ (self, url, category, value, generic):
-        """Initialize url, category, value and generic flag."""
+    def __init__ (self, url, generic):
+        """Initialize url and generic flag. Set category values to
+           an empty map."""
         self.url = url
-        self.category = category
-        self.value = value
+        self.category_values = {}
         self.generic = generic
+
+    def add_category_value (self, category, value):
+        self.category_values[category] = value
+
+    def delete_category (self, category):
+        if category in self.category_values:
+            del self.category_values[category]
 
