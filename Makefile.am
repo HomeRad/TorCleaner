@@ -9,13 +9,12 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Ibk/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
-PYCHECKEROPTS := -F pycheckrc
+PYCHECKEROPTS := -F test/pycheckrc
 PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
 	bk/*.py bk/HtmlParser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
-	wc/proxy/dns/*.py wc/network/*.py \
+	wc/net/dns/*.py wc/net/*.py \
 	wc/webgui/*.py wc/webgui/context/*.py \
 	wc/webgui/simpletal/*.py wc/magic/*.py
-#	test/*.py tests/*.py tests/server/*.py
 
 SERVICEDIR := /etc/webcleaner/service
 
