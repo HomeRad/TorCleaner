@@ -29,7 +29,7 @@ def p (path):
     return os.path.normpath(path)
 
 
-class MyInstall (install):
+class MyInstall (install, object):
     def run (self):
         super(MyInstall, self).run()
         # we have to write a configuration file because we need the
@@ -52,45 +52,6 @@ class MyInstall (install):
         from pprint import pformat
         data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
-        # install proxy service
-        if os.name=="nt":
-            self.install_nt_service()
-
-
-    def state_nt_service (self, name):
-        import win32serviceutil
-        return win32serviceutil.QueryServiceStatus(name)[1]
-
-
-    def install_nt_service (self):
-        from wc import win32start, AppName, Configuration
-        import win32serviceutil
-        oldargs = sys.argv
-        # install service
-        sys.argv = ['webcleaner', 'install']
-        win32serviceutil.HandleCommandLine(win32start.ProxyService)
-        # stop proxy (if it is running)
-        state = self.state_nt_service(AppName)
-        while state==win32service.SERVICE_START_PENDING:
-            time.sleep(1)
-            state = self.state_nt_service(AppName)
-        if state==win32service.SERVICE_RUNNING:
-            sys.argv = ['webcleaner', 'stop']
-            win32serviceutil.HandleCommandLine(win32start.ProxyService)
-        state = self.state_nt_service(AppName)
-        while state==win32service.SERVICE_STOP_PENDING:
-            time.sleep(1)
-            state = self.state_nt_service(AppName)
-        # start proxy
-        sys.argv = ['webcleaner', 'start']
-        win32serviceutil.HandleCommandLine(win32start.ProxyService)
-        sys.argv = oldargs
-        config = Configuration()
-        config_url = "http://localhost:%d/" % config['port']
-        # sleep a while to let the proxy start...
-        import time, webbrowser
-        time.sleep(5)
-        webbrowser.open(config_url)
 
 
     # sent a patch for this, but here it is for compatibility
@@ -181,6 +142,8 @@ extensions = [
              ),
 ]
 
+scripts = ['webcleaner']
+
 # javascript extension
 if os.name=='nt':
     extensions.append(Extension('wc.js.jslib',
@@ -192,6 +155,7 @@ if os.name=='nt':
                     extra_compile_args = cargs,
                     extra_objects = ['libjs/.libs/libjs.a'],
                   ))
+    scripts.append('webcleaner-service')
 else:
     extensions.append(Extension('wc.js.jslib',
                     sources=['wc/js/jslib.c'],
@@ -219,7 +183,7 @@ setup (name = "webcleaner",
            'wc/filter/rules', 'wc/webgui', 'wc/webgui/simpletal',
            'wc/webgui/context',],
        ext_modules = extensions,
-       scripts = ['webcleaner'],
+       scripts = scripts,
        long_description = """WebCleaner features:
 * HTTP/1.1 and HTTPS support
 * integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
