@@ -19,16 +19,7 @@ window.onload = function() {
 </head>
 <body>
 <!-- bfknav -->
-<div class="navigation">
-<div class="navrow" style="padding: 0em 0em 0em 1em;">
-<a href="./index.html">WebCleaner</a>
-<a href="./faq.html">FAQ</a>
-<span>Installation</span>
-<a href="./devel/devel.html">Development &gt;</a>
-<a href="./misc/squid.html">Examples &gt;</a>
-
-</div>
-</div>
+Imagine a navigation
 <!-- /bfknav -->
 <h1 class="title">Installation</h1>
 <div class="document" id="installation">
@@ -135,14 +126,15 @@ See the README on how to configure the proxy filters.</p>
 </li>
 <li><p class="first">Preparing Python for the MinGW compiler</p>
 <p>Search the file python23.dll in your windows folder.
-After you found it, launch MSYS and execute
+After you found it, launch MSYS. Change into the windows folder,
+for example <tt class="literal"><span class="pre">%</span> <span class="pre">cd</span> <span class="pre">c:\\winnt\\system32</span></tt>. Then execute
 <tt class="literal"><span class="pre">%</span> <span class="pre">pexports</span> <span class="pre">python23.dll</span> <span class="pre">&gt;</span> <span class="pre">python23.def</span></tt>.
 Then use the dlltool with
 <tt class="literal"><span class="pre">%</span> <span class="pre">dlltool</span> <span class="pre">--dllname</span> <span class="pre">python23.dll</span> <span class="pre">--def</span> <span class="pre">python23.def</span> <span class="pre">--output-lib</span>
 <span class="pre">libpython23.a</span></tt>.
 The resulting library has to be placed in the same directory as
 python23.lib. (Should be the libs directory under your Python installation
-directory, for example c:\Python23\Libs\.)</p>
+directory, for example <tt class="literal"><span class="pre">c:\\Python23\\Libs\\</span></tt>.)</p>
 </li>
 <li><p class="first">Compile the JavaScript library</p>
 <p>Copy the webcleaner-X.X.tar.gz into your MSYS home directory,
@@ -212,7 +204,7 @@ and look at the &quot;Application Log&quot; events.</p>
 </div>
 <hr class="footer" />
 <div class="footer">
-Generated on: 2004-05-31 09:34 UTC.
+Generated on: 2004-06-01 11:00 UTC.
 </div>
 </body>
 </html>
