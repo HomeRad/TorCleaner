@@ -61,11 +61,11 @@ class TestRating (unittest.TestCase):
         """test range parsing"""
         # rating_range (range)
         rating_range = wc.filter.rating.category.intrange_from_string
+        self.assertEqual(rating_range(""), (None, None))
         self.assertEqual(rating_range("-"), (None, None))
         self.assertEqual(rating_range("1-"), (1, None))
         self.assertEqual(rating_range("-1"), (None, 1))
         self.assertEqual(rating_range("1-1"), (1, 1))
-        self.assertEqual(rating_range(""), None)
         self.assertEqual(rating_range("1"), None)
         self.assertEqual(rating_range("-1-"), None)
 

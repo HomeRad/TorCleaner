@@ -18,7 +18,7 @@ class TestRewriter (unittest.TestCase):
         wc.configuration.config.init_filter_modules()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
-        self.attrs = get_filterattrs("", [STAGE_RESPONSE_MODIFY],
+        self.attrs = get_filterattrs("", "localhost", [STAGE_RESPONSE_MODIFY],
                                      serverheaders=self.headers,
                                      headers=self.headers)
 

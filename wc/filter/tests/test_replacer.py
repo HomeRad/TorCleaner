@@ -17,7 +17,7 @@ class TestReplacer (unittest.TestCase):
         wc.configuration.config.init_filter_modules()
 
     def testReplaceRandom (self):
-        attrs = get_filterattrs("", [STAGE_RESPONSE_MODIFY])
+        attrs = get_filterattrs("", "localhost", [STAGE_RESPONSE_MODIFY])
         # filter random data, should not raise any exception
         data = []
         for dummy in range(1024):
@@ -26,7 +26,7 @@ class TestReplacer (unittest.TestCase):
         applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', attrs)
 
     def testReplaceNonAscii (self):
-        attrs = get_filterattrs("", [STAGE_RESPONSE_MODIFY])
+        attrs = get_filterattrs("", "localhost", [STAGE_RESPONSE_MODIFY])
         data = "äöü asdfö"
         applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', attrs)
 
