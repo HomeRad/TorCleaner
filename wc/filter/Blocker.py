@@ -32,7 +32,7 @@ orders = [FILTER_REQUEST]
 rulenames = ['block','blockdomains','blockurls','allow']
 mimelist = []
 # regular expression for image filenames
-image_re=re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)')
+is_image = re.compile(r'^(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
 
 def strblock (block):
     s="("
@@ -59,7 +59,7 @@ class Blocker (Filter):
         self.allowed_urls = []
         # urls for blocked types
         self.block_url = "/blocked.html"
-        self.block_image = "/blocked.gif"
+        self.block_image = "/blocked.png"
 	# strict whitelist mode (for parents)
 	self.strict_whitelist = config['strict_whitelist']
 
@@ -151,7 +151,7 @@ class Blocker (Filter):
             # index 3, not 2!
             if blocked:
                 doc = blocked
-            elif image_re.match(urlTuple[3][-4:]):
+            elif is_image(urlTuple[3][-4:]):
                 doc = self.block_image
             else:
                 # XXX hmmm, what about CGI images?
