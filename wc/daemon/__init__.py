@@ -24,18 +24,25 @@ with no fork().
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os, sys
+import os, sys, re
 from wc import i18n, startfunc, Version, iswriteable, AppName
 
+is_safe_username = re.compile(r"^(?i)[a-z][-a-z_]*$").match
+
 def get_user ():
-    """return current logged in user, or an empty string if there is no
-    username available"""
-    if hasattr(os, "getlogin"):
-        try:
-            return os.getlogin()
-        except OSError, msg:
-            print >>sys.stderr, "Error in os.getlogin():", msg
-    return ""
+    """return current logged in user, or "unknown" if there is no
+       valid username available"""
+    if os.environ.has_key("LOGNAME"):
+        name = str(os.environ["LOGNAME"])
+    elif os.name=="posix":
+        import pwd
+        name = pwd.getpwuid(os.getuid())[0]
+    else:
+        name = "unknown"
+    if not is_safe_username(name) or len(name) > 100:
+        print >>sys.stderr, "invalid username", name
+        name = "unknown"
+    return name
 
 
 # determine pid lockfile name

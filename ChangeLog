@@ -9,10 +9,20 @@
     Changed: wc/proxy/dns/*.py
   * corrected the reversed google cache urls
     Changed: templates/classic/google.html
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031107
+    Changed: libjs/*
+  * FILTER_REQUEST must have the complete request for filtering, not
+    only the URL
+    Changed: wc/proxy/HttpClient.py, wc/filter/Blocker.py
+  * improved get_user():
+    - does not use getlogin() anymore
+    - checks the sanity of the username before returning it, since it
+      is used as a filename part
+    Changed: wc/daemon/__init__.py
 
 2.4 (released 1.11.2003)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031101
-    Changed: js/*
+    Changed: libjs/*
   * enabled persistent client connections
     Changed: wc/proxy/{HttpClient,Connection}.py
   * new connection logger for printing all sent/received connection
