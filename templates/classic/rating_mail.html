@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" tal:attributes="lang lang">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="copyright" content="(C) 2004 Bastian Kleineidam">
+<link href="wc.css" type="text/css" rel="Stylesheet">
+<link rel="home" href="index.html" title="Home"
+ tal:attributes="href string:index.html.${lang}">
+<link rel="help" href="help.html" title="Help"
+ tal:attributes="href string:help.html.${lang}">
+<title i18n:translate="">Content rating for %(AppName)s</title>
+</head>
+<body>
+<div metal:use-macro="macros/macros/nav">Navigation...</div>
+<div class="content" id="main">
+<h2 i18n:translate="">Email URL rating to %(Email)s</h2>
+<p i18n:translate="">You can send me changed or new page ratings per
+email so I can review them and include the chages into the shipped
+rating database.
+</p>
+<p i18n:translate="">When you klick on the accept button below,
+the following information will be mailed to the author of %(AppName)s
+at %(Email)s:</p>
+<p tal:content="rating">rating info...</p>
+
+<form action="#" method="POST" name="ratingform"
+ tal:attributes="action string:${filename}.${lang}">
+<input type="hidden" name="url" tal:attributes="value url">
+<input type="hidden" name="rating" tal:attributes="value rating">
+<input type="submit" name="send" value="Send" class="submit"
+ i18n:attributes="value Send">
+</form>
+
+</div>
+
+<div class="info">
+<div tal:condition="info/sent" i18n:translate="">Rating data mailed successfully.</div>
+</div>
+
+<div class="error">
+<div tal:condition="error/url" i18n:translate="">Invalid url.</div>
+<div tal:condition="error/rating" i18n:translate="">Invalid rating.</div>
+<div tal:condition="error/send" i18n:translate="">Error sending mail.</div>
+</div>
+
+<div metal:use-macro="macros/macros/footer">Footer...</div>
+</body>
+</html>

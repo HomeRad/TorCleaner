@@ -19,33 +19,18 @@ several given categories.</p>
 <h2 i18n:translate="">URL rating</h2>
 <form action="#" method="POST" name="ratingform"
  tal:attributes="action string:${filename}.${lang}">
-<table border="0" cellpadding="5" cellspacing="0" summary="">
-<tr>
-<td>
 <label for="url" i18n:translate=""
  i18n:attributes="title URL to rate"
  >URL</label>
-</td>
-<td>
-<input class="text" type="text" name="url" id="url"
+<input class="text" style="width: 280px;" type="text" name="url" id="url"
  value="http://imadoofus.com/" tal:attributes="value url">
-</td>
-</tr>
-<tr>
-<td>
-<label for="generic" i18n:translate=""
- i18n:attributes="title Applies to all pages starting with url">Generic
-</label>
-</td>
-<td>
+<br><br>
+<label for="generic" i18n:translate="">Applies to all pages starting with url?</label>
 <input type="checkbox" name="generic" value="generic"
  tal:condition="generic" checked>
 <input type="checkbox" name="generic" value="generic"
  tal:condition="not:generic">
-</td>
-</tr>
-<tr>
-<td colspan="2">
+<br><br>
 <table rules="cols" border="0" cellpadding="5" cellspacing="0" summary="">
 <thead>
 <tr style="border-bottom:1px solid black;">
@@ -73,15 +58,9 @@ several given categories.</p>
 </tr>
 </tbody>
 </table>
-</td>
-</tr>
-<tr>
-<td colspan="2">
+<br>
 <input type="submit" name="apply" value="Apply" class="submit"
  i18n:attributes="value Apply">
-</td>
-</tr>
-</table>
 </form>
 
 <h2 i18n:translate="">Saved ratings</h2>
