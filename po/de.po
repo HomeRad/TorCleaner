@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sun Feb 29 12:35:43 2004\n"
+"POT-Creation-Date: Sun Feb 29 12:39:26 2004\n"
 "PO-Revision-Date: 2004-02-28 17:35+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -867,6 +867,9 @@ msgstr "Antwort Header von allem Mime-Typen."
 msgid "return window.confirm('Really delete this rating?')"
 msgstr "return window.confirm('Diese Bewertung wirklich löschen?')"
 
+msgid "Rule"
+msgstr "Regel"
+
 msgid ""
 "Replace illegal binary characters in HTML code like\n"
 "the quote chars often found in Microsoft pages."
@@ -1146,6 +1149,9 @@ msgstr "Filteraktualisierung"
 msgid "What it does when replacement is <i>foo</i>"
 msgstr "Ausgeführte Aktion falls der Ersatzwert <i>foo</i> ist"
 
+msgid "Use NTLM authentication (Windows domain controller)"
+msgstr "NTLM Authentifizierung (Windows Domänen Controller) benutzen"
+
 msgid "Folder icon"
 msgstr "Ordnericon"
 
@@ -1196,8 +1202,8 @@ msgstr "Suche in %(site)s"
 msgid "Folder moved down."
 msgstr "Ordner wurde nach unten geschoben."
 
-msgid "Rule"
-msgstr "Regel"
+msgid "Rule match-url successfully changed."
+msgstr "Regel Treffer-URL wurde erfolgreich geändert."
 
 msgid ""
 "An allow rule specifies regular expressions for urls\n"
@@ -1355,6 +1361,9 @@ msgstr ""
 "Popups und schreibt dynamischen Inhalt generiert durch document.write()\n"
 "in die HTML Seite."
 
+msgid "Display Google search options for invalid pages"
+msgstr "Google Cache Optionen für ungültige Seiten anzeigen"
+
 msgid "Disabled rule icon"
 msgstr "Bild von inaktiver Regel"
 
@@ -1487,6 +1496,9 @@ msgstr ""
 "Bitte bearbeiten Sie die Datei <code>%(ConfigFile)s</code> und\n"
 "ersetzen Sie die Zeile <code>adminpass=\"\"</code> mit:\n"
 
+msgid "NTLM authentication"
+msgstr "NTLM Authentifizierung"
+
 msgid "after"
 msgstr "danach"
 
@@ -1511,8 +1523,8 @@ msgstr "Lösche diese Bewertung"
 msgid "Disabled folder icon"
 msgstr "Bild für inaktiven Ordner"
 
-msgid "Rule match-url successfully changed."
-msgstr "Regel Treffer-URL wurde erfolgreich geändert."
+msgid "Try Google"
+msgstr "Google fragen"
 
 msgid ""
 "The content of the requested page <b>%(url)s</b>\n"
@@ -1628,15 +1640,3 @@ msgstr ""
 
 msgid "Invalid image height value."
 msgstr "Ungültige Bildhöhe."
-
-#~ msgid "Display Google search options for invalid pages"
-#~ msgstr "Google Cache Optionen für ungültige Seiten anzeigen"
-
-#~ msgid "Try Google"
-#~ msgstr "Google fragen"
-
-#~ msgid "Use NTLM authentication (Windows domain controller)"
-#~ msgstr "NTLM Authentifizierung (Windows Domänen Controller) benutzen"
-
-#~ msgid "NTLM authentication"
-#~ msgstr "NTLM Authentifizierung"
