@@ -18,6 +18,11 @@ case "$1" in
 	svwaitdown $SERVICE
 	echo "$NAME."
 	;;
+  exit)
+        echo -n "Exiting $DESC: "
+        svwaitdown -x $SERVICE
+	echo "$NAME."
+	;;
   reload|force-reload)
         echo -n "Reloading $DESC: "
         runsvctrl hup $SERVICE

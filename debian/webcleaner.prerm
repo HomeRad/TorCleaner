@@ -4,12 +4,14 @@
 # see: dh_installdeb(1)
 
 if [ "$1" = "remove" -o "$1" = "purge" ]; then
-    # stop service
-    webcleaner-ctl stop
-    # remove service link
+    # stop and exit service(s)
+    webcleaner-ctl exit
+    # remove service data
     if [ -h /var/service/webcleaner ]; then
         rm -f /var/service/webcleaner
     fi
+    rm -f /var/run/webcleaner/*
+    rm -f /var/run/webcleaner.log/*
     # remove SSL certificates
     webcleaner-certificates remove
 fi
