@@ -52,9 +52,9 @@ crossbuild: all
 # compile .mo files
 	$(MAKE) -C po mofiles
 # build the .exe
-	CC=i586-mingw32msvc-gcc \
-	  CXX=i586-mingw32msvc-g++ \
-	  LDSHARED="i586-mingw32msvc-gcc -shared" \
+	CC=/usr/bin/i586-mingw32msvc-gcc \
+	  CXX=/usr/bin/i586-mingw32msvc-g++ \
+	  LDSHARED="/usr/bin/i586-mingw32msvc-gcc -shared" \
 	  $(PYTHON) setup.py build bdist_wininst
 
 distclean-local:
