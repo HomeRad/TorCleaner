@@ -4,7 +4,8 @@
 import unittest, os, sys
 from test import disable_rating_rules
 import wc
-from tests import HttpServer, StandardTest
+from tests import HttpServer
+from tests.StandardTest import StandardTest
 from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
