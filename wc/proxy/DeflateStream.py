@@ -1,4 +1,5 @@
 # Implements the minimal amount of work needed to inflate an input stream
+# example url is http://groups.yahoo.com/
 
 import zlib
 
