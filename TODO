@@ -1,7 +1,5 @@
 TODO
 
-- bugfixes in background js script fetching
-
 - Python 2.3:
   use Bool type
   use builtin timeout in socket module
@@ -34,8 +32,3 @@ TODO
 
 - strict whitelist operation (for parents)
   To use this as a real kids-enabled tool.
-
-WONTDO
-
-- javascript popup filtering. There is already a nice option for this
-  on Mozilla (>= 0.9.4) under Edit->Preferences->Advanced->Scripts
