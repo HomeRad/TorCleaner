@@ -184,12 +184,10 @@ def hosts2map (hosts):
                 continue
             nets.append(dq2net(host, dq2mask(mask)))
         elif is_valid_ip(host):
-            hostset.add(expand_ip(host))
+            hostset.add(expand_ip(host)[0])
         else:
             try:
-                ips = resolve_host(host)
-                for i in ips:
-                    hostset.add(i)
+                hostset |= resolve_host(host)
             except socket.gaierror:
                 pass
     return (hostset, nets)
