@@ -218,7 +218,7 @@ class HtmlFilter (HtmlParser,JSListener):
                 changed = 1
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
-            self.jsForm(name, attrs.get('action'), attrs.get('target'))
+            self.jsForm(name, attrs.get('action', ''), attrs.get('target', ''))
         elif tag=='script':
             lang = attrs.get('language', '').lower()
             scrtype = attrs.get('type', '').lower()
@@ -262,14 +262,20 @@ class HtmlFilter (HtmlParser,JSListener):
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
             if mo:
                 ver = float(mo.group('num'))
+        self.jsScript(script, ver)
+
+
+    def jsScript (self, script, ver):
+        """execute given script with javascript version ver"""
         self.jsEnv.attachListener(self)
         self.jsfilter = HtmlFilter(self.rules, self.document,
                  comments=self.comments, javascript=self.javascript)
         self.jsEnv.executeScript(script, ver)
         self.jsEnv.detachListener(self)
         self.jsfilter.flush()
-        self.buffer.append([DATA, self.jsfilter.flushbuf()])
+        self.data.append(self.jsfilter.flushbuf())
         self.buffer += self.jsfilter.buffer
+        self.rulelist += self.jsfilter.rulelist
         self.jsfilter = None
 
 
@@ -322,18 +328,10 @@ class HtmlFilter (HtmlParser,JSListener):
             # there was a <script src="..."> already
             return
         del self.buffer[-1]
-        if not script: return
         if script.startswith("<!--"):
             script = script[4:].strip()
-        self.jsEnv.attachListener(self)
-        self.jsfilter = HtmlFilter(self.rules, self.document,
-                 comments=self.comments, javascript=self.javascript)
-        self.jsEnv.executeScript(script, 0.0)
-        self.jsEnv.detachListener(self)
-        self.jsfilter.flush()
-        self.buffer.append([DATA, self.jsfilter.flushbuf()])
-        self.buffer += self.jsfilter.buffer
-        self.jsfilter = None
+        if not script: return
+        self.jsScript(script, 0.0)
 
 
     def doctype (self, data):
