@@ -403,12 +403,13 @@ class BaseParser (object):
 
 
 class ZapperParser (BaseParser):
-    def __init__ (self, filename):
+    def __init__ (self, filename, compile_data=True):
         super(ZapperParser, self).__init__(filename)
         from wc.filter.rules import FolderRule
         self.folder = FolderRule(filename=filename)
         self.cmode = None
         self.rule = None
+        self.compile_data = compile_data
 
 
     def start_element (self, name, attrs):
@@ -430,9 +431,11 @@ class ZapperParser (BaseParser):
     def end_element (self, name):
         self.cmode = None
         if name in rulenames:
-            self.rule.compile_data()
+            if self.compile_data:
+                self.rule.compile_data()
         elif name=='folder':
-            self.folder.compile_data()
+            if self.compile_data:
+                self.folder.compile_data()
 
 
     def character_data (self, data):
