@@ -108,12 +108,14 @@ class Blocker (wc.filter.Filter.Filter):
 
     def add_allow (self, rule):
         """add AllowRule data"""
-        self.allow.append((re.compile(rule.url), rule.sid))
+        if rule.url:
+            self.allow.append((re.compile(rule.url), rule.sid))
 
 
     def add_block (self, rule):
         """add BlockRule data"""
-        self.block.append((re.compile(rule.url), rule.replacement, rule.sid))
+        if rule.url:
+            self.block.append((re.compile(rule.url), rule.replacement, rule.sid))
 
 
     def add_blockdomains (self, rule):
