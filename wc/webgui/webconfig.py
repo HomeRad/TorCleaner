@@ -30,6 +30,9 @@ import wc.i18n
 import wc.log
 import wc.proxy.auth
 import wc.proxy.Headers
+import wc.webgui
+import wc.webgui.templatecache
+
 
 class WebConfig (object):
     """class for web configuration templates"""
@@ -65,7 +68,7 @@ class WebConfig (object):
         try:
             lang = wc.i18n.get_headers_lang(clientheaders)
             # get the template filename
-            path, dirs, lang = get_template_url(url, lang)
+            path, dirs, lang = wc.webgui.get_template_url(url, lang)
             if path.endswith('.html'):
                 # get TAL context
                 context, newstatus = \
@@ -75,7 +78,7 @@ class WebConfig (object):
                                  auth=wc.proxy.auth.get_challenges())
                     return
                 # get (compiled) template
-                template = wc.webgui.TemplateCache.templates[path]
+                template = wc.webgui.templatecache.templates[path]
                 # expand template
                 data = expand_template(template, context)
             else:
@@ -155,12 +158,12 @@ def get_context (dirs, form, localcontext, lang):
 def add_default_context (context, filename, lang):
     """add context variables used by all templates"""
     # rule macros
-    path, dirs = _get_template_path("macros/rules.html")
-    rulemacros = wc.webgui.TemplateCache.templates[path]
+    path, dirs = wc.webgui.get_safe_template_path("macros/rules.html")
+    rulemacros = wc.webgui.templatecache.templates[path]
     context_add(context, "rulemacros", rulemacros.macros)
     # standard macros
-    path, dirs = _get_template_path("macros/standard.html")
-    macros = wc.webgui.TemplateCache.templates[path]
+    path, dirs = wc.webgui.get_safe_template_path("macros/standard.html")
+    macros = wc.webgui.templatecache.templates[path]
     context_add(context, "macros", macros.macros)
     # used by navigation macro
     context_add(context, "nav", {filename.replace('.', '_'): True})
@@ -184,4 +187,4 @@ def add_default_context (context, filename, lang):
 
 
 def context_add (context, key, val):
-    context[unicode(key)] = unicode(val)
+    context[key] = val

@@ -28,7 +28,7 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
         """Store modification time and compile template from given path."""
         super(WebCleanerTemplate, self).__init__()
         self.mtime = mtime
-        self.pt_edit(open(path))
+        self.pt_edit(open(path), 'text/html')
         if self._v_errors:
             raise wc.webgui.PageTemplates.PageTemplate.PTRuntimeError(
                                     'Page Template %s has errors.' % self.id)

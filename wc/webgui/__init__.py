@@ -52,7 +52,7 @@ def get_template_url (url, lang):
     return get_template_path(urllib.unquote(parts[2]), lang)
 
 
-def _get_template_path (path):
+def get_safe_template_path (path):
     """return tuple (path, dirs)"""
     base = os.path.join(wc.TemplateDir, wc.configuration.config['gui_theme'])
     base = norm(base)
@@ -71,7 +71,7 @@ def _get_template_path (path):
 
 def get_template_path (path, defaultlang):
     """return tuple (path, dirs, lang)"""
-    path, dirs = _get_template_path(path)
+    path, dirs = get_safe_template_path(path)
     lang = defaultlang
     for la in wc.i18n.supported_languages:
         assert len(la) == 2
