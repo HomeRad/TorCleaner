@@ -73,7 +73,11 @@ SOURCES=\
 ../wc/filter/__init__.py \
 ../wc/parser/__init__.py \
 ../wc/parser/htmllib.py \
-../wc/__init__.py
+../wc/__init__.py \
+../wc/ip.py \
+../wc/webgui/__init__.py \
+../wc/webgui/WebConfig.py
+
 LDIR=../locale
 LFILE=LC_MESSAGES/$(PACKAGE).mo
 MOS=$(LDIR)/de/$(LFILE)

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Nov 24 14:15:29 2002\n"
+"POT-Creation-Date: Sat Dec 14 20:08:53 2002\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -701,6 +701,18 @@ msgid "Warning: client received %d bytes more than content-length"
 msgstr ""
 
 msgid "Warning: puzzling header received:"
+msgstr ""
+
+msgid "Warning: %s guessed Content-Type (%s)"
+msgstr ""
+
+msgid "Warning: %s guessed Content-Type (%s) != server Content-Type (%s)"
+msgstr ""
+
+msgid "Warning: %s guessed Content-Encoding (%s)"
+msgstr ""
+
+msgid "Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)"
 msgstr ""
 
 msgid "Warning: chunked encoding should not have Content-Length"
