@@ -18,7 +18,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os, re, sys, string
+import os
+import stat
+import re
+import sys
+import string
 from types import StringType, TupleType
 from distutils.core import setup, Extension, DEBUG
 try:
@@ -89,6 +93,29 @@ class MyInstall (install, object):
                     opt_name = string.translate(opt_name, longopt_xlate)
                     val = getattr(self, opt_name)
                 print "  %s: %s" % (opt_name, val)
+
+
+class MyInstallData (install_data):
+    """My own data installer to handle permissions and .man pages"""
+
+    def run (self):
+        super(MyInstallData, self).run()
+        if os.name == 'posix' and not self.dry_run:
+            # Make the data files we just installed world-readable,
+            # and the directories world-executable as well.
+            for path in self.get_outputs():
+                mode = os.stat(path)[stat.ST_MODE]
+                if stat.S_ISDIR(mode):
+                    mode |= 011
+                mode |= 044
+                os.chmod(path, mode)
+
+    def copy_file (self, filename, dirname):
+        (out, _) = install_data.copy_file(self, filename, dirname)
+        # match for man pages
+        if re.search(r'/man/man\d/.+\.\d$', out):
+            return (out+".gz", _)
+        return (out, _)
 
 
 class MyDistribution (distklass, object):
@@ -169,7 +196,6 @@ extensions = [
              ),
 ]
 
-scripts = ['webcleaner', 'webcleaner-certificates']
 
 # javascript extension
 if os.name=='nt':
@@ -182,7 +208,6 @@ if os.name=='nt':
                     extra_compile_args = cargs,
                     extra_objects = ['libjs/.libs/libjs.a'],
                   ))
-    scripts.append('webcleaner-service')
 else:
     extensions.append(Extension('wc.js.jslib',
                     sources=['wc/js/jslib.c'],
@@ -211,7 +236,7 @@ setup (name = "webcleaner",
            'wc.webgui.context',
            'wc.dns.tests', 'wc.tests', ],
        ext_modules = extensions,
-       scripts = scripts,
+       scripts = ['webcleaner', 'webcleaner-certificates'],
        long_description = """WebCleaner features:
 * HTTP/1.1 and HTTPS support
 * integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
@@ -235,6 +260,7 @@ setup (name = "webcleaner",
        ],
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
+                   'install_data': MyInstallData,
                   },
        data_files = [('share/webcleaner/config',
       ['config/webcleaner.conf',
