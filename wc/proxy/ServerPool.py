@@ -15,18 +15,18 @@ class ServerPool:
 
        register_callback to express an interest in a server
     """
-    def __init__(self):
+    def __init__ (self):
         self.map = {} # {(ipaddr, port) -> {server -> ('available'|'busy')}}
         self.http_versions = {} # {(ipaddr, port) -> http_version}
         self.callbacks = {} # {(ipaddr, port) -> [functions to call]}
         make_timer(60, self.expire_servers)
 
-    def count_servers(self, addr):
+    def count_servers (self, addr):
         "How many server objects connect to this address?"
         return len(self.map.get(addr, {}))
 
 
-    def reserve_server(self, addr):
+    def reserve_server (self, addr):
         for server,status in self.map.get(addr, {}).items():
             if status[0] == 'available':
                 # Let's reuse this one
@@ -36,7 +36,7 @@ class ServerPool:
         return None
 
 
-    def unreserve_server(self, addr, server):
+    def unreserve_server (self, addr, server):
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
         assert self.map[addr].has_key(server), '%s missing %s' % (self.map[addr], server)
         assert self.map[addr][server][0] == 'busy'
@@ -44,14 +44,14 @@ class ServerPool:
         self.invoke_callbacks(addr)
 
 
-    def register_server(self, addr, server):
+    def register_server (self, addr, server):
         "Register the server as being used"
         if not self.map.has_key(addr):
             self.map[addr] = {}
         self.map[addr][server] = ('busy',)
 
 
-    def unregister_server(self, addr, server):
+    def unregister_server (self, addr, server):
         "Unregister the server"
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
         assert self.map[addr].has_key(server), '%s missing %s' % (self.map[addr], server)
@@ -60,7 +60,7 @@ class ServerPool:
         self.invoke_callbacks(addr)
 
 
-    def register_callback(self, addr, callback):
+    def register_callback (self, addr, callback):
         # Callbacks are called whenever a server may be available
         # for (addr).  It's the callback's responsibility to re-register
         # if someone else has stolen the server already.
@@ -69,7 +69,7 @@ class ServerPool:
         self.callbacks[addr].append(callback)
 
 
-    def connection_limit(self, addr):
+    def connection_limit (self, addr):
         if self.http_versions.get(addr, 1.1) <= 1.0:
             # For older versions of HTTP, we open lots of connections
             return 6
@@ -77,12 +77,12 @@ class ServerPool:
             return 2
 
 
-    def set_http_version(self, addr, http_version):
+    def set_http_version (self, addr, http_version):
         self.http_versions[addr] = http_version
         self.invoke_callbacks(addr)
 
 
-    def expire_servers(self):
+    def expire_servers (self):
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
         for addr,set in self.map.items():
@@ -95,7 +95,7 @@ class ServerPool:
         make_timer(60, self.expire_servers)
 
 
-    def invoke_callbacks(self, addr):
+    def invoke_callbacks (self, addr):
         # Notify whoever wants to know about a server becoming available
         if self.callbacks.has_key(addr):
             callbacks = self.callbacks[addr]

@@ -19,7 +19,7 @@ RECV_BUFSIZE = 16384
 SEND_BUFSIZE = 8192
 
 # XXX implement maximum sizes for buffers to prevent DoS attacks
-class Connection(asyncore.dispatcher):
+class Connection (asyncore.dispatcher):
     """add buffered input and output capabilities"""
     def __init__(self, sock=None):
         asyncore.dispatcher.__init__(self, sock)
@@ -28,7 +28,7 @@ class Connection(asyncore.dispatcher):
         self.close_pending = 0
 
 
-    def read(self, bytes=RECV_BUFSIZE):
+    def read (self, bytes=RECV_BUFSIZE):
         """read up to LEN bytes from the internal buffer"""
         if bytes is None:
             bytes = RECV_BUFSIZE
@@ -37,7 +37,7 @@ class Connection(asyncore.dispatcher):
         return data
 
 
-    def handle_read(self):
+    def handle_read (self):
         if not self.connected:
             # It's been closed (presumably recently)
             return
@@ -53,16 +53,16 @@ class Connection(asyncore.dispatcher):
         self.process_read()
 
 
-    def writable(self):
+    def writable (self):
         return len(self.send_buffer)
 
 
-    def write(self, data):
+    def write (self, data):
         """write data to the internal buffer"""
         self.send_buffer += data
 
 
-    def handle_write(self):
+    def handle_write (self):
         assert self.connected
         num_sent = 0
         try:
@@ -77,22 +77,22 @@ class Connection(asyncore.dispatcher):
         return num_sent
 
 
-    def handle_connect(self):
+    def handle_connect (self):
         pass
 
 
-    def close(self):
+    def close (self):
         if self.connected:
             self.connected = 0
             asyncore.dispatcher.close(self)
 
 
-    def handle_close(self):
+    def handle_close (self):
         if self.connected:
             self.delayed_close()
 
 
-    def delayed_close(self):
+    def delayed_close (self):
         "Close whenever the data has been sent"
         assert self.connected
         if self.send_buffer:
@@ -103,7 +103,7 @@ class Connection(asyncore.dispatcher):
             self.close()
 
 
-    def handle_error(self, what, type, value, tb=None):
+    def handle_error (self, what, type, value, tb=None):
         print >> sys.stderr, what, self, type, value
         if tb:
             import traceback

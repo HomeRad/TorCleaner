@@ -46,7 +46,7 @@ Active connections:
 ["""
 
 
-def log(msg):
+def log (msg):
     """If the logfile is defined write the msg into it. The message msg
        should be in common log file format."""
     #debug(HURT_ME_PLENTY, "logging", `msg`)
@@ -56,19 +56,19 @@ def log(msg):
 
 
 # XXX better name/implementation for this function
-def stripsite(url):
+def stripsite (url):
     import urlparse
     url = urlparse.urlparse(url)
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
 
 
-def make_timer(delay, callback):
+def make_timer (delay, callback):
     "After DELAY seconds, run the CALLBACK function"
     TIMERS.append( (time.time() + delay, callback) )
     TIMERS.sort()
 
 
-def run_timers():
+def run_timers ():
     "Run all timers ready to be run, and return seconds to the next timer"
     # Note that we will run timers that are scheduled to be run within
     # 10 ms.  This is because the select() statement doesn't have
@@ -84,7 +84,7 @@ def run_timers():
     else:      return 60
 
 
-def text_status():
+def text_status ():
     data = {
     'uptime': format_seconds(time.time() - config['starttime']),
     'valid':  config['requests']['valid'],
@@ -103,7 +103,7 @@ def text_status():
     return s
 
 
-def html_portal():
+def html_portal ():
     data = {
     'title': 'WebCleaner Proxy',
     'header': 'WebCleaner Proxy',
@@ -112,16 +112,16 @@ def html_portal():
     return HTML_TEMPLATE % data
 
 
-def text_headers():
+def text_headers ():
     return "\n".join(HEADERS.getall()) or "-"
 
 
-def text_connections():
+def text_connections ():
     return "valid:%(valid)d\nerror:%(error)d\nblocked:%(blocked)d"%\
            config['requests']
 
 
-def access_denied(addr):
+def access_denied (addr):
     data = {
       'title': "WebCleaner Proxy",
       'header': "WebCleaner Proxy",
@@ -130,11 +130,11 @@ def access_denied(addr):
     return HTML_TEMPLATE % data
 
 
-def text_config():
+def text_config ():
     return str(config)
 
 
-def format_seconds(seconds):
+def format_seconds (seconds):
     minutes = 0
     hours = 0
     days = 0
@@ -148,12 +148,12 @@ def format_seconds(seconds):
     return _("%d days, %02d:%02d:%02d") % (days, hours, minutes, seconds)
 
 
-def periodic_print_status():
+def periodic_print_status ():
     print status_info()
     make_timer(60, periodic_print_status)
 
 
-def proxy_poll(timeout=0.0):
+def proxy_poll (timeout=0.0):
     smap = asyncore.socket_map
     if smap:
         r = filter(lambda x: x.readable(), smap.values())
@@ -207,7 +207,7 @@ def proxy_poll(timeout=0.0):
     #_OBFUSCATE_IP = config['obfuscateip']
 
 
-def match_host(request):
+def match_host (request):
     if not request:
         return 0
     try:
@@ -240,7 +240,7 @@ def spliturl (url):
     return scheme, hostname, port, document
 
 
-def mainloop():
+def mainloop ():
     from HttpClient import HttpClient
     #from Interpreter import Interpreter
     from Listener import Listener

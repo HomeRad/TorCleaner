@@ -39,6 +39,10 @@ startElement ('a', {'b': 'c'})
 characters ('<',)
 HTML 'd>'
 characters ('d>',)
+HTML '<h1>bla</h1>'
+startElement ('h1', {})
+characters ('bla',)
+endElement ('h1',)
 HTML '<a b=c"><a b="c">'
 startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})
@@ -139,6 +143,12 @@ characters ('<',)
 HTML 'd>'
 characters ('d',)
 characters ('>',)
+HTML '<h1>bla</h1>'
+startElement ('h1', {})
+characters ('b',)
+characters ('l',)
+characters ('a',)
+endElement ('h1',)
 HTML '<a b=c"><a b="c">'
 startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})

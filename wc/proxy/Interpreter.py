@@ -1,16 +1,16 @@
 # A Python expression interpreter for the proxy
 from Connection import Connection
 
-class Interpreter(Connection):
-    def __init__(self, socket, addr):
+class Interpreter (Connection):
+    def __init__ (self, socket, addr):
         self.addr = addr
         Connection.__init__(self, socket)
         self.write('>> ')
 
-    def __repr__(self):
+    def __repr__ (self):
         return '<interpreter>'
 
-    def process_read(self):
+    def process_read (self):
         while 1:
             i = self.recv_buffer.find('\n')
             if i < 0: break

@@ -11,12 +11,12 @@ class UnchunkStream:
     #      we're in the "need chunk size" state
     #   else:
     #      we're reading up to bytes_remaining elements of data
-    def __init__(self):
+    def __init__ (self):
         self.buffer = ''
         self.bytes_remaining = None
         self.closed = 0
         
-    def decode(self, s):
+    def decode (self, s):
         self.buffer += s
         s = ''
 
@@ -53,7 +53,7 @@ class UnchunkStream:
                     self.bytes_remaining = None
         return s
 
-    def flush(self):
+    def flush (self):
         s = self.buffer
         self.buffer = ''
         return s

@@ -22,10 +22,10 @@ from types import StringType
 
 class key_handle:
     """represent an opened key with dictionary-like access"""
-    def __init__(self, key, sub_key):
+    def __init__ (self, key, sub_key):
         self._key = OpenKey(key, sub_key)
 
-    def __getitem__(self, key):
+    def __getitem__ (self, key):
         if type(key) != StringType:
             raise TypeError, "key type must be string"
         try:
@@ -34,13 +34,13 @@ class key_handle:
             raise IndexError, "subkey %s not found"%key
         return val[0]
 
-    def get(self, key, default=None):
+    def get (self, key, default=None):
         try:
             return self[key]
         except IndexError:
             return default
 
-    def subkeys(self):
+    def subkeys (self):
         """get the list of subkeys as key_handle objects"""
         i = 0
         keys = []
@@ -54,11 +54,11 @@ class key_handle:
         return keys
 
 
-    def __len__(self):
+    def __len__ (self):
         return QueryInfoKey(self._key)[0]
 
 
-    def __setitem__(self, key, value):
+    def __setitem__ (self, key, value):
         """Set a registry key value. key is the key name,
            value is a tuple (type, val). For available types
            see the _winreg module documentation."""
@@ -66,7 +66,7 @@ class key_handle:
         SetValueEx(self._key, key, value[0], value[1])
 
 
-    def __delitem__(self, key):
+    def __delitem__ (self, key):
         """XXX to be implemented"""
         pass
 
@@ -76,7 +76,7 @@ class key_handle:
 # (c) 2001 Copyright by Wolfgang Strobl ws@mystrobl.de,
 #          License analog to the current Python license
 
-def binipdisplay(s):
+def binipdisplay (s):
     "convert a binary array of ip adresses to a python list"
     if len(s)%4!= 0:
         raise EnvironmentError # well ...
@@ -90,13 +90,13 @@ def binipdisplay(s):
         ol.append('.'.join(ip))
     return ol
 
-def stringdisplay(s):
+def stringdisplay (s):
     'convert "d.d.d.d,d.d.d.d" to ["d.d.d.d","d.d.d.d"]'
     return s.split(",")
 
 #################################################################
 
-def test():
+def test ():
     pass
 
 if __name__=="__main__":

@@ -29,8 +29,8 @@ _RESPONSE_FILTERS = (
    FILTER_RESPONSE_ENCODE)
 
 
-class HttpServer(Server):
-    def __init__(self, ipaddr, port, client):
+class HttpServer (Server):
+    def __init__ (self, ipaddr, port, client):
         Server.__init__(self, client)
         self.addr = (ipaddr, port)
         self.hostname = ''
@@ -43,19 +43,19 @@ class HttpServer(Server):
         self.attempt_connect()
 
 
-    def __repr__(self):
+    def __repr__ (self):
         extra = self.request()
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)
 
 
-    def writable(self):
+    def writable (self):
         # It's writable if we're connecting .. TODO: move this
         # logic into the Connection class
         return self.state == 'connect' or self.send_buffer != ''
 
 
-    def request(self):
+    def request (self):
         if self.addr[1] != 80:
 	    portstr = ':%s' % self.addr[1]
         else:
@@ -64,7 +64,7 @@ class HttpServer(Server):
                            portstr, self.document)
 
 
-    def attempt_connect(self):
+    def attempt_connect (self):
         self.state = 'connect'
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
@@ -74,7 +74,7 @@ class HttpServer(Server):
             return
 
 
-    def process_connect(self):
+    def process_connect (self):
         assert self.state == 'connect'
         self.state = 'client'
         if self.client:
@@ -94,7 +94,7 @@ class HttpServer(Server):
             self.reuse()
 
 
-    def send_request(self):
+    def send_request (self):
         self.write('%s %s HTTP/1.1\r\n' % (self.method, self.document))
         for header in self.client.headers.headers:
             self.write(header)
@@ -104,7 +104,7 @@ class HttpServer(Server):
         self.state = 'response'
 
 
-    def client_send_request(self, method, hostname, document, headers,
+    def client_send_request (self, method, hostname, document, headers,
                             content, client, nofilter, url):
         assert self.state == 'client'
         self.client = client
@@ -117,7 +117,7 @@ class HttpServer(Server):
         self.send_request()
 
 
-    def process_read(self):
+    def process_read (self):
         if self.state in ('connect', 'client'):
             assert 0, ('server should not receive data in %s state' %
                        self.state)
@@ -144,7 +144,7 @@ class HttpServer(Server):
                 break
 
 
-    def process_response(self):
+    def process_response (self):
         i = self.recv_buffer.find('\n')
         if i < 0: return
         self.response = applyfilter(FILTER_RESPONSE, self.read(i+1),
@@ -170,7 +170,7 @@ class HttpServer(Server):
 
 
 
-    def process_headers(self):
+    def process_headers (self):
         # Headers are terminated by a blank line .. now in the regexp,
         # we want to say it's either a newline at the beginning of
         # the document, or it's a lot of headers followed by two newlines.
@@ -251,7 +251,7 @@ class HttpServer(Server):
             self.state = 'content'
 
 
-    def process_content(self):
+    def process_content (self):
         data = self.read(self.bytes_remaining)
         #debug(NIGHTMARE, "S/content", "\n"+`"..."+data[-70:]`)
         if self.bytes_remaining is not None:
@@ -277,7 +277,7 @@ class HttpServer(Server):
             self.state = 'recycle'
 
 
-    def process_recycle(self):
+    def process_recycle (self):
         # We're done sending things to the client, and we can reuse
         # this connection
         client = self.client
@@ -285,7 +285,7 @@ class HttpServer(Server):
         self.flush(client)
 
 
-    def flush(self, client):
+    def flush (self, client):
         """flush data of decoders (if any) and filters"""
         data = ""
         while self.decoders:
@@ -300,7 +300,7 @@ class HttpServer(Server):
         client.server_close()
 
 
-    def http_version(self):
+    def http_version (self):
         if not self.response: return 0
         version = re.match(r'.*HTTP/(\d+\.?\d*)\s*$', self.response)
         if version:
@@ -309,7 +309,7 @@ class HttpServer(Server):
             return 0.9
 
 
-    def reuse(self):
+    def reuse (self):
         if self.http_version() >= 1.1:
             can_reuse = not (self.headers and
                 self.headers.has_key('connection') and
@@ -332,7 +332,7 @@ class HttpServer(Server):
             serverpool.unreserve_server(self.addr, self)
 
 
-    def close(self):
+    def close (self):
         #debug(HURT_ME_PLENTY, "S/close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
@@ -340,14 +340,14 @@ class HttpServer(Server):
         Server.close(self)
 
 
-    def handle_error(self, what, type, value, tb=None):
+    def handle_error (self, what, type, value, tb=None):
         Server.handle_error(self, what, type, value, tb)
         if self.client:
             client, self.client = self.client, None
             client.server_abort()
 
 
-    def handle_close(self):
+    def handle_close (self):
         #debug(HURT_ME_PLENTY, "S/handle_close", self)
         Server.handle_close(self)
         if self.client:
@@ -355,7 +355,7 @@ class HttpServer(Server):
             self.flush(client)
 
 
-def speedcheck_print_status():
+def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:

@@ -17,7 +17,7 @@ class DnsConfig:
     search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
 
 
-def init_dns_resolver():
+def init_dns_resolver ():
     import os
     if os.name=='posix':
         init_dns_resolver_posix()
@@ -33,7 +33,7 @@ def init_dns_resolver():
     #debug(BRING_IT_ON, "DNS nameservers", DnsConfig.nameservers, "\nsearch", DnsConfig.search_domains)
 
 
-def init_dns_resolver_posix():
+def init_dns_resolver_posix ():
     "Set up the DnsLookupConnection class with /etc/resolv.conf information"
     if not os.path.exists('/etc/resolv.conf'):
         return
@@ -49,7 +49,7 @@ def init_dns_resolver_posix():
         if m: DnsConfig.nameservers.append(m.group(1))
 
 
-def init_dns_resolver_nt():
+def init_dns_resolver_nt ():
     import winreg
     key = None
     try:
@@ -97,7 +97,7 @@ init_dns_resolver()
 
 ######################################################################
 
-def background_lookup(hostname, callback):
+def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
     DnsExpandHostname(hostname.lower(), callback)
@@ -107,27 +107,27 @@ class DnsResponse:
     #    ('found', [ipaddrs])
     #    ('error', why-str)
     #    ('redirect', new-hostname)
-    def __init__(self, kind, data):
+    def __init__ (self, kind, data):
         self.kind = kind
         self.data = data
 
-    def __repr__(self):
+    def __repr__ (self):
         return "DnsResponse(%s, %s)" % (self.kind, self.data)
 
-    def isError(self):
+    def isError (self):
         return self.kind == 'error'
 
-    def isFound(self):
+    def isFound (self):
         return self.kind == 'found'
 
-    def isRedirect(self):
+    def isRedirect (self):
         return self.kind == 'redirect'
 
 
 class DnsExpandHostname:
     "Try looking up a hostname and its expansions"
     # This routine calls DnsCache to do the individual lookups
-    def __init__(self, hostname, callback):
+    def __init__ (self, hostname, callback):
         self.hostname = hostname
         self.callback = callback
         self.queries = [hostname] # all queries to be made
@@ -158,7 +158,7 @@ class DnsExpandHostname:
         if self.delay < 1: # (it's likely to be needed)
             make_timer(self.delay, self.handle_issue_request)
 
-    def handle_issue_request(self):
+    def handle_issue_request (self):
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             request = self.requests[0]
@@ -171,7 +171,7 @@ class DnsExpandHostname:
             # if there's already a timer for this object ..
             if self.requests: make_timer(self.delay, self.handle_issue_request)
         
-    def handle_dns(self, hostname, answer):
+    def handle_dns (self, hostname, answer):
         if not self.callback: return # Already handled this query
 
         self.answers[hostname] = answer
@@ -204,18 +204,18 @@ class DnsCache:
     ValidCacheEntryExpires = 1800
     InvalidCacheEntryExpires = 0 # dont cache errors
 
-    def __init__(self):
+    def __init__ (self):
         self.cache = {} # hostname to DNS answer
         self.expires = {} # hostname to cache expiry time
         self.pending = {} # hostname to [callbacks]
         self.well_known_hosts = {} # hostname to 1, if it's from /etc/hosts
         self.read_localhosts()
 
-    def __repr__(self):
+    def __repr__ (self):
         return pformat(self.cache)
 
 
-    def read_localhosts(self):
+    def read_localhosts (self):
         "Fill DnsCache with /etc/hosts information"
         if os.name=='posix':
             filename = '/etc/hosts'
@@ -245,7 +245,7 @@ class DnsCache:
                 self.cache[name] = DnsResponse('found', [fields[0]])
                 self.expires[name] = sys.maxint
 
-    def lookup(self, hostname, callback):
+    def lookup (self, hostname, callback):
         if re.match(r'^[.\d]+$', hostname):
             # It's an IP address, so let's just return the same thing
             # XXX: this will have to be changed for IPv6
@@ -282,7 +282,7 @@ class DnsCache:
             self.pending[hostname] = [callback]
             DnsLookupHostname(hostname, self.handle_dns)
 
-    def handle_dns(self, hostname, answer):
+    def handle_dns (self, hostname, answer):
         assert self.pending.has_key(hostname)
         callbacks = self.pending[hostname]
         del self.pending[hostname]
@@ -307,7 +307,7 @@ class DnsLookupHostname:
     # haven't gotten any responses.  For each successive nameserver we
     # set the timeout higher, so that the first nameserver has to try
     # harder.
-    def __init__(self, hostname, callback):
+    def __init__ (self, hostname, callback):
         self.hostname = hostname
         self.callback = callback
         self.nameservers = DnsConfig.nameservers[:]
@@ -316,7 +316,7 @@ class DnsLookupHostname:
         
         self.issue_request()
 
-    def cancel(self):
+    def cancel (self):
         if self.callback:
             self.callback = None
             # Now let's go through and tell all the lookup operations
@@ -328,7 +328,7 @@ class DnsLookupHostname:
                 assert r.callback is None
             assert self.outstanding_requests == 0
 
-    def issue_request(self):
+    def issue_request (self):
         if not self.callback: return
 
         if not self.nameservers and not self.outstanding_requests:
@@ -349,7 +349,7 @@ class DnsLookupHostname:
                 # Let's create another one soon
                 make_timer(1, self.issue_request)
 
-    def handle_dns(self, hostname, answer):
+    def handle_dns (self, hostname, answer):
         self.outstanding_requests = self.outstanding_requests - 1
 
         if not self.callback: return
@@ -361,14 +361,14 @@ class DnsLookupHostname:
             self.issue_request()
 
 
-class DnsLookupConnection(Connection):
+class DnsLookupConnection (Connection):
     "Look up a name by contacting a single nameserver"
     # Switch from UDP to TCP after some time
     PORT = 53
     TIMEOUT = 2 # Resend the request every second
     accepts_tcp = {} # Map nameserver to 0/1, whether it accepts TCP requests
     
-    def __init__(self, nameserver, hostname, callback):
+    def __init__ (self, nameserver, hostname, callback):
         self.hostname = hostname
         self.callback = callback
         self.nameserver = nameserver
@@ -382,7 +382,7 @@ class DnsLookupConnection(Connection):
             callback(hostname, DnsResponse('error', 'could not connect to DNS server'))
             self.callback = None
 
-    def establish_connection(self):
+    def establish_connection (self):
         if self.conntype == 'tcp':
             self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
             self.connect((self.nameserver, self.PORT))
@@ -396,7 +396,7 @@ class DnsLookupConnection(Connection):
             self.connect((self.nameserver, self.PORT))
             self.send_dns_request()
 
-    def __repr__(self):
+    def __repr__ (self):
         where = ''
         if self.nameserver != DnsConfig.nameservers[0]:
             where = ' @ %s' % self.nameserver
@@ -408,16 +408,16 @@ class DnsLookupConnection(Connection):
             conntype = 'TCP'
         return '<%s %3s  %s%s%s>' % ('dns-lookup', conntype, self.hostname, retry, where)
 
-    def cancel(self):
+    def cancel (self):
         if self.callback:
             if self.connected: self.close()
             self.callback = None
 
-    def handle_connect(self):
+    def handle_connect (self):
         # For TCP requests only
         DnsLookupConnection.accepts_tcp[self.nameserver] = 1
 
-    def handle_connect_timeout(self):
+    def handle_connect_timeout (self):
         # We're trying to perform a TCP connect
         if self.callback and not self.connected:
             DnsLookupConnection.accepts_tcp[self.nameserver] = 0
@@ -426,7 +426,7 @@ class DnsLookupConnection(Connection):
             self.callback = None
             return
 
-    def send_dns_request(self):
+    def send_dns_request (self):
         # Issue the request and set a timeout
         if not self.callback: return # Only issue if we have someone waiting
 
@@ -441,7 +441,7 @@ class DnsLookupConnection(Connection):
             self.send_buffer = msg
         make_timer(self.TIMEOUT + 0.2*self.retries, self.handle_timeout)
 
-    def handle_timeout(self):
+    def handle_timeout (self):
         # The DNS server hasn't responded to us, or we've lost the
         # packet somewhere, so let's try it again, unless the retry
         # count is too large.  Each time we retry, we increase the
@@ -471,7 +471,7 @@ class DnsLookupConnection(Connection):
                 self.callback = None
             if self.connected: self.close()
 
-    def process_read(self):
+    def process_read (self):
         # Assume that the entire answer comes in one packet
         if self.conntype == 'tcp':
             if len(self.recv_buffer) < 2: return
@@ -537,13 +537,13 @@ class DnsLookupConnection(Connection):
             else:        callback(self.hostname, DnsResponse('error', 'not found'))
         self.close()
 
-    def handle_error(self, what, type, value, tb=None):
+    def handle_error (self, what, type, value, tb=None):
         Connection.handle_error(self, what, type, value, tb=tb)
         if self.callback:
             callback, self.callback = self.callback, None
             callback(self.hostname, DnsResponse('error', 'failed lookup .. %s' % self))
 
-    def handle_close(self):
+    def handle_close (self):
         # If we ever get here, we want to make sure we notify the
         # callbacks so that they don't get stuck
         Connection.handle_close(self)

@@ -46,7 +46,7 @@ class ClientServerMatchmaker:
 
      done:     We are done matching up the client and server
     """
-    def error(self, code, msg, txt=''):
+    def error (self, code, msg, txt=''):
         content = wc.proxy.HTML_TEMPLATE % \
             {'title': 'WebCleaner Proxy Error %d %s' % (code, msg),
              'header': 'Bummer!',
@@ -67,7 +67,7 @@ class ClientServerMatchmaker:
             '\r\n', content)
 
 
-    def __init__(self, client, request, headers, content, nofilter):
+    def __init__ (self, client, request, headers, content, nofilter):
         self.client = client
         self.request = request
         self.headers = headers
@@ -137,7 +137,7 @@ class ClientServerMatchmaker:
         return 1
 
 
-    def handle_local(self, document):
+    def handle_local (self, document):
         if self.client and self.client.addr[0] not in _localhosts:
             contenttype = "text/html"
             content = wc.proxy.access_denied(self.client.addr)
@@ -156,7 +156,7 @@ class ClientServerMatchmaker:
             content)
 
 
-    def handle_dns(self, hostname, answer):
+    def handle_dns (self, hostname, answer):
         assert self.state == 'dns'
 
         if not self.client.connected:
@@ -190,7 +190,7 @@ class ClientServerMatchmaker:
                 'Host %s not found .. %s\r\n' % (hostname, answer.data))
             return
 
-    def find_server(self):
+    def find_server (self):
         assert self.state == 'server'
         addr = (self.ipaddr, self.port)
         if not self.client.connected:
@@ -213,7 +213,7 @@ class ClientServerMatchmaker:
             serverpool.register_server(addr, server)
 
 
-    def server_connected(self, server):
+    def server_connected (self, server):
         assert self.state == 'connect'
         if not self.client.connected:
             # The client has aborted, so let's return this server
@@ -235,14 +235,14 @@ class ClientServerMatchmaker:
                                         self.url)
 
 
-    def server_abort(self):
+    def server_abort (self):
         # The server had an error, so we need to tell the client
         # that we couldn't connect
         if self.client.connected:
             self.client.server_no_response()
 
 
-    def server_close(self):
+    def server_close (self):
         #debug(BRING_IT_ON, 'resurrection failed', self.server.sequence_number, self.server)
 
         # Look for a server again
@@ -258,7 +258,7 @@ class ClientServerMatchmaker:
                 self.client.server_no_response()
 
 
-    def server_response(self, response, headers):
+    def server_response (self, response, headers):
         # Okay, transfer control over to the real client
         if self.client.connected:
             config['requests']['valid'] += 1

@@ -22,6 +22,8 @@ tests = (
     # reduce test
     """<a b="c"><""",
     """d>""",
+    # numbers in tag
+    """<h1>bla</h1>""",
     # more start tags
     """<a b=c"><a b="c">""",
     """<a b="c><a b="c">""",

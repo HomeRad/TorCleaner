@@ -12,13 +12,13 @@ from wc.filter import FILTER_REQUEST_MODIFY
 from wc.filter import FILTER_REQUEST_ENCODE
 from wc.filter import applyfilter
 
-class HttpClient(Connection):
+class HttpClient (Connection):
     # States:
     # request (read first line)
     # headers (read HTTP headers)
     # data (read any additional data and forward it to the server)
     
-    def __init__(self, socket, addr):
+    def __init__ (self, socket, addr):
         Connection.__init__(self, socket)
         self.addr = addr
         self.state = 'request'
@@ -29,7 +29,7 @@ class HttpClient(Connection):
         self.content = ''
 
 
-    def __repr__(self):
+    def __repr__ (self):
         if self.state != 'request':
             try: extra = self.request.split()[1][7:] # Remove http://
             except: extra = '???' + self.request
@@ -39,7 +39,7 @@ class HttpClient(Connection):
         return '<%s:%-8s %s>' % ('client', self.state, extra)
 
 
-    def process_read(self):
+    def process_read (self):
         if self.state == 'request':
             i = self.recv_buffer.find('\r\n')
             if i >= 0: # One newline ends request
@@ -101,7 +101,7 @@ class HttpClient(Connection):
 	              (self.state, `self.recv_buffer`)
 
 
-    def server_response(self, server, response, headers):
+    def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
         #debug(NIGHTMARE, 'S/response', self)
@@ -110,19 +110,19 @@ class HttpClient(Connection):
         self.write('\r\n')
 
 
-    def server_no_response(self):
+    def server_no_response (self):
         #debug(NIGHTMARE, 'S/failed', self)
         self.write('**No response from server. Aborted**')
         self.delayed_close()
 
 
-    def server_content(self, data):
+    def server_content (self, data):
         assert self.server
         #debug(NIGHTMARE, 'S/content', self)
         self.write(data)
 
 
-    def server_close(self):
+    def server_close (self):
         assert self.server
         #debug(NIGHTMARE, 'S/close', self)
         if self.connected and not self.close_pending:
@@ -130,21 +130,21 @@ class HttpClient(Connection):
         self.server = None
 
 
-    def server_abort(self):
+    def server_abort (self):
         #debug(NIGHTMARE, 'S/abort', self)
         self.close()
         self.server = None
 
 
-    def handle_error(self, what, type, value, tb=None):
-        Connection.handle_error(self, what, type, value, tb)
+    def handle_error (self, what, type, value, tb=None):
+        Connection.handle_error(self, what, type, value, tb=tb)
         # We should close the server connection
         if self.server:
             server, self.server = self.server, None
             server.client_abort()
 
 
-    def handle_close(self):
+    def handle_close (self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
         #debug(HURT_ME_PLENTY, 'C/handle_close', self)
@@ -157,7 +157,7 @@ class HttpClient(Connection):
             # check to see if the client is still connected.
 
 
-    def close(self):
+    def close (self):
         #debug(HURT_ME_PLENTY, 'C/close', self)
         self.state = 'closed'
         Connection.close(self)

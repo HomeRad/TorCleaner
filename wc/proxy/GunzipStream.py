@@ -16,13 +16,13 @@ class GunzipStream:
     # Flags in the gzip header
     FTEXT, FHCRC, FEXTRA, FNAME, FCOMMENT = 1, 2, 4, 8, 16
     
-    def __init__(self):
+    def __init__ (self):
         self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
         self.buf = ''
         self.header_seen = 0
         self.closed = 0
 
-    def attempt_header_read(self):
+    def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
         if len(self.buf) < 10: # Incomplete fixed part of header
             return ''
@@ -68,7 +68,7 @@ class GunzipStream:
         self.buf = s
         self.header_seen = 1
 
-    def decode(self, s):
+    def decode (self, s):
         if not self.header_seen:
             # Try to parse the header
             self.buf += s
@@ -86,7 +86,7 @@ class GunzipStream:
         # We have seen the header, so we can move on to zlib
         return self.decompressor.decompress(s)
 
-    def flush(self):
+    def flush (self):
         if not self.header_seen:
             # We still haven't finished parsing the header .. oh well
             return ''
