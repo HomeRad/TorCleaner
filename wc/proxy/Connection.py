@@ -146,6 +146,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
     def handle_close (self):
         """if we are still connected, wait until all data is sent, then close
            otherwise just close"""
+        debug(PROXY, "%s Connection.handle_close", self)
         if self.connected:
             self.delayed_close()
         else:
@@ -181,6 +182,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
 
     def handle_error (self, what):
         """print error and close the connection"""
+        debug(PROXY, "%s error %s", self, what)
         super(Connection, self).handle_error(what)
         self.close()
 

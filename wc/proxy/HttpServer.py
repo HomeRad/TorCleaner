@@ -475,7 +475,7 @@ class HttpServer (wc.proxy.Server.Server):
     def flush (self):
         """flush data of decoders (if any) and filters and write it to
            the client. return True if flush was successful"""
-        debug(PROXY, "%s flushing", self)
+        debug(PROXY, "%s HttpServer.flush", self)
         if not self.statuscode:
             warn(PROXY, "%s flush without status", self)
         data = flush_decoders(self.decoders)
@@ -496,13 +496,14 @@ class HttpServer (wc.proxy.Server.Server):
 
     def set_unreadable (self, secs):
         """make this connection unreadable for (secs) seconds"""
+        debug(PROXY, "%s HttpServer.set_unreadable", self)
         oldstate, self.state = self.state, 'unreadable'
         wc.proxy.make_timer(secs, lambda: self.set_readable(oldstate))
 
 
     def set_readable (self, state):
         """make the connection readable again and close"""
-        debug(PROXY, "%s set readable", self)
+        debug(PROXY, "%s HttpServer.set_readable", self)
         # the client might already have closed
         if self.client:
             self.state = state
