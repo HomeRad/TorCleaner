@@ -72,6 +72,8 @@ like HTML, WAV, etc."""),
 bandwidth"""),
 
 "ImageSize": i18n._("""Remove images with certain sizes"""),
+
+"PicsHeader": i18n._("""Parse PICS rating system header values"""),
 }
 
 _proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
