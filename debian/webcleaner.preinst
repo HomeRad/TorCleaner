@@ -64,7 +64,9 @@ case "$1" in
 esac
 
 # stop running webcleaner instance
-webcleaner-ctl stop || true
+if [ -x /usr/bin/webcleaner-ctl ]; then
+    /usr/bin/webcleaner-ctl stop || true
+fi
 
 #DEBHELPER#
 
