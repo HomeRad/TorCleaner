@@ -29,10 +29,10 @@ __date__    = "$Date$"[7:-2]
 import sys, os, re, logging, logging.config, textwrap
 from logging.handlers import RotatingFileHandler
 try:
-    from wc import ConfigDir, AppName, iswriteable
+    from wc import ConfigDir, Name, iswriteable
 except ImportError:
     sys.path.append(os.getcwd())
-    from wc import ConfigDir, AppName, iswriteable
+    from wc import ConfigDir, Name, iswriteable
 
 
 def initlog (filename):
@@ -50,8 +50,8 @@ def get_root_handler ():
     """return a handler for basic logging"""
     if os.name=="nt":
         from logging.handlers import NTEventLogHandler
-        return set_format(NTEventLogHandler(AppName))
-    logfile = get_log_file("%s.err"%AppName)
+        return set_format(NTEventLogHandler(Name))
+    logfile = get_log_file("%s.err"%Name)
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
@@ -63,8 +63,8 @@ def get_wc_handler ():
     """return a handler for webcleaner logging"""
     if os.name=="nt":
         from logging.handlers import NTEventLogHandler
-        return set_format(NTEventLogHandler(AppName))
-    logfile = get_log_file("%s.log"%AppName)
+        return set_format(NTEventLogHandler(Name))
+    logfile = get_log_file("%s.log"%Name)
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
@@ -74,7 +74,7 @@ def get_wc_handler ():
 
 def get_access_handler ():
     """return a handler for access logging"""
-    logfile = get_log_file("%s-access.log"%AppName)
+    logfile = get_log_file("%s-access.log"%Name)
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate

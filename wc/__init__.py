@@ -28,6 +28,7 @@ from filter.rules.FolderRule import recalc_oids, recalc_up_down
 
 Version = configdata.version
 AppName = configdata.appname
+Name = configdata.name
 App = AppName+" "+Version
 UserAgent = AppName+"/"+Version
 Author =  configdata.author
