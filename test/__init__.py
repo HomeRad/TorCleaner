@@ -25,13 +25,6 @@ import logging, logging.config
 def initlog (filename):
     """initialize logfiles and configuration for console"""
     logging.config.fileConfig(filename)
-    # logging to stderr
-    from wc.log import set_format
-    handler = set_format(logging.StreamHandler())
-    logging.getLogger("root").addHandler(handler)
-    logging.getLogger("wc").addHandler(handler)
-    logging.getLogger("simpleTAL").addHandler(handler)
-    logging.getLogger("simpleTALES").addHandler(handler)
 
 
 def disable_rating_rules (config):
