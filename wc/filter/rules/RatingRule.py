@@ -34,7 +34,10 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         # map {category name -> limit}
         self.ratings = {}
         for category in wc.filter.rating.categories:
-            self.ratings[category.name] = None
+            if category.iterable:
+                self.ratings[category.name] = 'none'
+            else:
+                self.ratings[category.name] = ""
         self.url = ""
 
     def fill_attrs (self, attrs, name):
@@ -46,11 +49,25 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     def end_data (self, name):
         super(RatingRule, self).end_data(name)
         if name == 'category':
-            assert self._category
+            assert self.ratings.has_key(self._category)
             self.ratings[self._category] = self._data
-            pass
         elif name == 'url':
             self.url = self._data
+
+    def compile_data (self):
+        super(RatingRule, self).compile_data()
+        self.compile_values()
+
+    def compile_values (self):
+        self.values = {}
+        for name, value in self.ratings.items():
+            category = wc.filter.rating.get_category(name)
+            if category.iterable:
+                self.values[name] = {}
+                for v in category.values:
+                    self.values[name][v] = v==value
+            else:
+                self.values[name] = value
 
     def toxml (self):
         """Rule data as XML for storing"""
