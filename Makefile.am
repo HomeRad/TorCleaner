@@ -85,11 +85,10 @@ VERSION:
 upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
 
-homepage: VERSION homepage-zapper
+homepage: homepage-zapper
 	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
-	cp README $(HTMLDIR)/htdocs/readme.txt
-	cp VERSION $(HTMLDIR)/htdocs/raw/
 	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
+	$(MAKE) -C docs homepage
 	$(MAKE) -C $(HTMLDIR) chmod
 
 homepage-zapper: md5sums
