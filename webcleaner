@@ -231,7 +231,7 @@ def main ():
     elif command=='stop':
         msg, status = daemon.stop(pidfile)
     elif command=='stopwatch':
-        msg, status = daemon.stop(pidfile, watchfile)
+        msg, status = daemon.stopwatch(pidfile, watchfile)
     elif command=='restart':
         msg, status = daemon.restart(wstartfunc, pidfile)
     elif command=='status':
