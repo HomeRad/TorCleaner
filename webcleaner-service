@@ -26,6 +26,7 @@ import webbrowser
 import win32service
 import win32serviceutil
 import wc
+import wc.win32start
 import bk.i18n
 
 _usage = bk.i18n._("""Usage: webcleaner-service <command>
