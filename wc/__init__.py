@@ -383,9 +383,8 @@ class BaseParser (object):
         debug(PROXY, "Parsing %s", self.filename)
         try:
             self.p.ParseFile(fp)
-        except xml.parsers.expat.ExpatError:
+        except (xml.parsers.expat.ExpatError, ParseException):
             error(PROXY, "Error parsing %s", self.filename)
-            raise
 
 
     def start_element (self, name, attrs):
