@@ -1,6 +1,8 @@
-#!/usr/bin/python2.3 -O
+#!/usr/bin/python -O
 """setup file for the distuils module"""
-# Copyright (C) 2000-2003  Bastian Kleineidam
+# -*- coding: iso-8859-1 -*-
+
+# Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,12 +31,14 @@ from distutils.command.install import install
 from distutils.file_util import write_file
 from distutils import util
 
+
 def p (path):
     """norm a path name to platform specific notation"""
     return os.path.normpath(path)
 
 
 class MyInstall (install, object):
+
     def run (self):
         super(MyInstall, self).run()
         # we have to write a configuration file because we need the
@@ -60,7 +64,6 @@ class MyInstall (install, object):
             data.append("%s = %r" % (attr, val))
         self.distribution.create_conf_file(self.install_lib, data)
 
-
     # sent a patch for this, but here it is for compatibility
     def dump_dirs (self, msg):
         if DEBUG:
@@ -81,10 +84,10 @@ class MyInstall (install, object):
 
 
 class MyDistribution (distklass, object):
+
     def __init__ (self, attrs=None):
         super(MyDistribution, self).__init__(attrs=attrs)
         self.config_file = "_%s2_configdata.py"%self.get_name()
-
 
     def run_commands (self):
         cwd = os.getcwd()
@@ -95,9 +98,9 @@ class MyDistribution (distklass, object):
         self.create_conf_file("", data)
         super(MyDistribution, self).run_commands()
 
-
     def create_conf_file (self, directory, data=[]):
         data.insert(0, "# this file is automatically created by setup.py")
+        data.insert(0, "# -*- coding: iso-8859-1 -*-")
         if not directory:
             directory = os.getcwd()
         filename = os.path.join(directory, self.config_file)
@@ -115,12 +118,12 @@ class MyDistribution (distklass, object):
         util.execute(write_file, (filename, data),
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
-
     def create_batch_file (self, directory, data, filename):
         filename = os.path.join(directory, filename)
         # write the batch file
         util.execute(write_file, (filename, data),
                  "creating %s" % filename, self.verbose>=1, self.dry_run)
+
 
 if os.name=='nt':
     # windows does not have unistd.h
@@ -188,7 +191,7 @@ setup (name = "webcleaner",
        url = "http://webcleaner.sourceforge.net/",
        download_url = "http://sourceforge.net/project/showfiles.php?group_id=7692",
        license = "GPL",
-       packages = ['', 'wc', 'wc.filter', 'wc.js', 'wc.magic', 'bk', 'bk.net',
+       packages = ['wc', 'wc.filter', 'wc.js', 'wc.magic', 'bk', 'bk.net',
            'bk.net.dns', 'bk.HtmlParser', 'wc.proxy', 'wc.proxy.auth',
            'wc.filter.rules', 'wc.webgui', 'wc.webgui.simpletal',
            'wc.webgui.context',],
