@@ -58,10 +58,7 @@ deb_unsigned: distclean locale
 dist-hook:	locale
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
-
-#	rm -f $(MD5SUMS)
-#	md5sum dist/* > $(MD5SUMS)
-#	for f in dist/*; do gpg --detach-sign --armor $$f; done
+	rm -f $(MD5SUMS)
 
 test:
 	env http_proxy="" ftp_proxy="" LANG=C $(PYTHON) test/regrtest.py
@@ -101,6 +98,10 @@ offlinetest: restart
 
 md5sums:
 	cd config && md5sum *.zap > md5sums
+	md5sum webcleaner-$(WCVERSION).tar.gz > $(MD5SUMS)
+	for f in webcleaner-$(WCVERSION).tar.gz; \
+	  do gpg --detach-sign --armor $$f; \
+	done
 
 package:
 	cd dist && dpkg-scanpackages . ../override.txt | gzip --best > Packages.gz
@@ -113,8 +114,8 @@ filterfiles:	md5sums
 	cp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
 
-upload: distclean dist homepage
-	ncftpput upload.sourceforge.net /incoming dist/*
+upload: dist homepage
+	ncftpput upload.sourceforge.net /incoming webcleaner-$(WCVERSION).tar.gz
 
 homepage: VERSION
 	cp ChangeLog $(HTMLDIR)/changes.txt
