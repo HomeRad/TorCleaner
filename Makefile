@@ -38,18 +38,17 @@ cleandeb:
 
 # produce the .deb Debian package
 deb_local: distclean locale
-	# standard for local use
 	fakeroot debian/rules binary
 
 deb_localsigned: distclean locale
 	debuild -sgpg -pgpg -k32EC6F3E -rfakeroot
 
+# ready for upload, signed with my GPG key
 deb_signed: distclean locale
-	# ready for upload, signed with my GPG key
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -rfakeroot
 
+# same thing, but unsigned (for local archives)
 deb_unsigned: distclean locale
-	# same thing, but unsigned (for local archives)
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/usr/local/src/debian -Mwebcleaner2 -us -uc -rfakeroot
 
 dist:	locale
@@ -72,17 +71,13 @@ restart:
 authtest: restart
 	env http_proxy="http://localhost:8080" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://www.heise.de/
 
+#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/
+#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/test.gif
 onlinetest: restart
-	# get a standard page with included adverts
 	env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/
-	# get a blocked page
-	#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/
-	# get a blocked image
-	#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/test.gif
 	less index.html
 
 offlinetest: restart
-	# get own config
 	env http_proxy="http://localhost:9090" wget -S -t1 http://localhost:9090/
 	cat index.html
 	rm -f index.html
@@ -105,7 +100,6 @@ upload: distclean dist VERSION
 	scp ChangeLog $(HTMLDIR)/changes.txt
 	scp VERSION $(HTMLDIR)/raw/
 	scp $(MD5SUMS) $(HTMLDIR)/
-	#scp dist/* $(HTMLDIR)
 	ncftpput upload.sourceforge.net /incoming dist/* && read -p "Make new SF file releases and then press Enter:"
 	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
 
@@ -131,9 +125,10 @@ ndebug:
 	  mv -f $$f.bak $$f; \
 	done
 
+# (re)generate webcleaner rules
 update-blacklists:
-	# (re)generate webcleaner rules
 	$(PYTHON) config/bl2wc.py
+
 
 .PHONY: all clean localbuild distclean cleandeb deb_local deb_signed 
 .PHONY: deb_unsigned dist test gentest onlinetest offlinetest md5sums package
