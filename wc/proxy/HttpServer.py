@@ -239,8 +239,9 @@ class HttpServer (Server):
 
 
     def check_headers (self):
-        """add missing content-type and/or encoding headers if
-           needed"""
+        """- add missing content-type and/or encoding headers
+           - remove Keep-Alive
+        """
         # 304 Not Modified does not send any type or encoding info,
         # because this info was cached
         if self.statuscode == '304':
@@ -277,6 +278,7 @@ class HttpServer (Server):
         # hmm, fix application/x-httpd-php*
         if self.headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
             self.headers['Content-Type'] = 'text/html'
+        remove_headers(self.headers, ['Keep-Alive'])
 
 
     def add_encoding_headers (self):
@@ -305,7 +307,7 @@ class HttpServer (Server):
                 self.bytes_remaining = None
             remove_headers(self.headers, to_remove)
             # add warning
-            self.headers['Warning'] = "214 WebCleaner Transformation applied"
+            self.headers['Warning'] = "214 Transformation applied"
         # only decompress on rewrite
         if not rewrite: return
         # Compressed content (uncompress only for rewriting modules)
@@ -322,7 +324,7 @@ class HttpServer (Server):
                 to_remove.append('Cache-Control')
             remove_headers(self.headers, to_remove)
             # add warning
-            self.headers['Warning'] = "214 WebCleaner Transformation applied"
+            self.headers['Warning'] = "214 Transformation applied"
         elif encoding and encoding!='identity':
             print >>sys.stderr, "Warning: unsupported encoding:",`encoding`
             # do not disable filtering for unknown content-encodings
