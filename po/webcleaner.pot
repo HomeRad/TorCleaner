@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Jul  2 16:42:52 2003\n"
+"POT-Creation-Date: Wed Jul  2 16:50:52 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,6 +54,9 @@ msgid "WebCleaner is not running. Do 'webcleaner start' first."
 msgstr ""
 
 msgid "PICS %s match"
+msgstr ""
+
+msgid "Invalid pics rule tag name `%s', check your configuration"
 msgstr ""
 
 msgid ""
