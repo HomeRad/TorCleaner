@@ -9,7 +9,6 @@ from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
 from wc.log import *
-from wc.proxy.auth import get_proxy_auth
 
 serverpool = ServerPool()
 
@@ -89,10 +88,8 @@ class ClientServerMatchmaker (object):
             self.hostname = config['parentproxy']
             self.port = config['parentproxyport']
             self.document = self.url
-            if config['parentproxyuser']:
-                auth = get_proxy_auth(config['parentproxyuser'],
-                                      config['parentproxypass'])
-                # XXX what if there is already a proxy-authorization header?
+            if config['parentproxycreds']:
+                auth = config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r"%auth
         else:
             self.hostname = hostname

@@ -72,6 +72,8 @@ class HttpServer (Server):
         self.attempt_connect()
         self.can_reuse = False
         self.flushing = False
+        # proxy challenge for authentication
+        self.challenge = None
 
 
     def __repr__ (self):
@@ -287,12 +289,17 @@ class HttpServer (Server):
         # XXX </doh>
         debug(PROXY, "Server: Headers filtered %s", `str(self.headers)`)
         wc.proxy.HEADERS.append((self.url, "server", self.headers))
+        if config['parentproxy'] and self.statuscode==407:
+            self.challenges = get_header_challenges(headers, 'Proxy-Authenticate')
+            # resubmit the request with proxy credentials
+            # XXX
         self.client.server_response(self.response, self.headers)
         if self.statuscode in ('204', '304') or self.method == 'HEAD':
             # These response codes indicate no content
             self.state = 'recycle'
         else:
             self.state = 'content'
+
 
 
     def check_headers (self):

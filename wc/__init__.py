@@ -198,6 +198,8 @@ class Configuration (dict):
         self['parentproxyport'] = 3128
         self['parentproxyuser'] = ""
         self['parentproxypass'] = ""
+        # dynamically stored parent proxy authorization credentials
+        self['parentproxycreds'] = None
         self['strict_whitelist'] = 0
         self['folderrules'] = []
         self['filters'] = []

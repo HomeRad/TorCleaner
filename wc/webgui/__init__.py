@@ -26,7 +26,7 @@ from cStringIO import StringIO
 from wc import i18n, config, TemplateDir, App, filtermodules, Name, LocaleDir
 from wc.log import *
 import os, re, urllib, urlparse, gettext, mimetypes
-from wc.proxy.auth import get_proxy_auth_challenge
+from wc.proxy.auth import get_challenges
 
 class WebConfig (object):
     def __init__ (self, client, url, form, protocol, clientheaders,
@@ -53,7 +53,7 @@ class WebConfig (object):
                 context, newstatus = get_context(dirs, form, context, lang)
                 if newstatus==407 and status!=newstatus:
                     client.error(407, i18n._("Proxy Authentication Required"),
-                                 auth=get_proxy_auth_challenge())
+                                 auth=get_challenges())
                     return
                 # get translator
                 translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
