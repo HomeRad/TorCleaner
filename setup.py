@@ -286,5 +286,8 @@ setup (name = "webcleaner",
        'config/bl2wc.py',
        'config/dmozfilter.py',
       ]),
+     ('share/locale/de/LC_MESSAGES',
+      ['locale/de/LC_MESSAGES/webcleaner.mo',
+      ]),
      ]
 )
