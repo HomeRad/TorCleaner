@@ -92,7 +92,7 @@ release: releasecheck dist upload homepage
 	@echo "Make SF release and press return..."
 	@read
 	@echo "Uploading new WebCleaner Homepage..."
-	make -C ~/public_html/webcleaner.sf.net upload
+	$(MAKE) -C ~/public_html/webcleaner.sf.net upload
 
 upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
@@ -128,7 +128,7 @@ installservice:
 	fi
 
 unittest:
-	test/run.sh test.py --resource=network --search-in=wc -fupv
+	test/run.sh test.py --resource=network --search-in=wc -upv
 
 # (re)generate webcleaner rules
 update-blacklists:
