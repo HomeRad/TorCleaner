@@ -54,6 +54,7 @@ class ClientServerMatchmaker:
         self.compress = compress
         self.content = content
         self.nofilter = nofilter
+        debug(ALWAYS, "Proxy:", `self.request`)
         self.method, self.url, protocol = self.request.split()
         scheme, hostname, port, document = spliturl(self.url)
         # fix missing trailing /
@@ -155,10 +156,16 @@ class ClientServerMatchmaker:
         server = serverpool.reserve_server(addr)
         if server:
             # if http version is <1.1 and expect header found: 417
-            if self.headers.get('Expect')=='100-continue' and \
-               serverpool.http_versions.get(addr, 1.1) < 1.1:
+            expect = self.headers.get('Expect', '').lower().strip()
+            docontinue = expect.startswith('100-continue') or \
+                         expect.startswith('0100-continue')
+            if docontinue and serverpool.http_versions.get(addr, 1.1) < 1.1:
                 self.client.error(417, i18n._("Expectation failed"),
                            i18n._("Server does not understand HTTP/1.1"))
+                return
+            if expect:
+                self.client.error(417, i18n._("Expectation failed"),
+                           i18n._("Unsupported expectation `%s'")%expect)
                 return
             # Let's reuse it
             debug(BRING_IT_ON, 'Proxy: resurrecting', server)
