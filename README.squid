@@ -1,0 +1,75 @@
+# This is an example Squid 2.x configuration for WebCleaner.
+# Copy it into /etc/squid.conf and you can have the following
+# constellation:
+# HTTP request --> Squid Proxy --> WebCleaner Proxy --> Internet
+# FTP  request --> Squid Proxy --> Internet
+# This way, you are caching only filtered, "clean" HTML files :)
+#
+# Remember to configure WebCleaner to run on port 8080 and to
+# turn off IP obfuscation.
+# Squid port is 3128
+#
+# You must configure your Browser to use the Squid Proxy (running
+# at localhost, port 3128)
+# Remember, only localhost can connect to this squid proxy :)
+
+
+# disable icp
+icp_port 0
+
+# the webcleaner parent proxy
+cache_peer 127.0.0.1 parent 8080 0 no-query
+
+# some acls
+acl QUERY urlpath_regex cgi-bin \?
+no_cache deny QUERY
+
+# hihihi
+ftp_user postmaster@aol.com
+
+# Recommended minimum configuration:
+acl all src 0.0.0.0/0.0.0.0
+acl manager proto cache_object
+acl localhost src 127.0.0.1/255.255.255.255
+acl SSL_ports port 443 563
+acl Safe_ports port 80		# http
+acl Safe_ports port 21		# ftp
+acl Safe_ports port 443 563	# https, snews
+acl Safe_ports port 70		# gopher
+acl Safe_ports port 210		# wais
+acl Safe_ports port 1025-65535	# unregistered ports
+acl Safe_ports port 280		# http-mgmt
+acl Safe_ports port 488		# gss-http
+acl Safe_ports port 591		# filemaker
+acl Safe_ports port 631		# cups
+acl Safe_ports port 777		# multiling http
+acl Safe_ports port 901		# SWAT
+acl purge method PURGE
+acl CONNECT method CONNECT
+acl FTP proto FTP
+
+# Only allow cachemgr access from localhost
+http_access allow manager localhost
+http_access deny manager
+# Only allow purge requests from localhost
+http_access allow purge localhost
+http_access deny purge
+# Deny requests to unknown ports
+http_access deny !Safe_ports
+# Deny CONNECT to other than SSL ports
+http_access deny CONNECT !SSL_ports
+
+# my own rules
+http_access allow localhost
+# And finally deny all other access to this proxy
+http_access deny all
+
+# no X-Forwarded-For header
+forwarded_for off
+
+# allow direct ftp, all other redirect to parent
+always_direct allow FTP
+always_direct deny all
+
+# allow redirect to parent
+never_direct allow all
