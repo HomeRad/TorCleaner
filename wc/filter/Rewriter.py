@@ -212,12 +212,14 @@ class HtmlFilter (HtmlParser,JSListener):
         self.buf = []
 
 
-    def cdata (self, d):
+    def _data (self, d):
         """handler for data"""
         item = [DATA, d]
         if self.state=='wait':
             return self.waitbuf.append(item)
         self.buf_append_data(item)
+    cdata = _data
+    characters = _data
 
 
     def comment (self, data):
@@ -227,14 +229,6 @@ class HtmlFilter (HtmlParser,JSListener):
             return self.waitbuf.append(item)
         if self.comments and data:
             self.buf.append(item)
-
-
-    def characters (self, s):
-        """handler for characters"""
-        item = [DATA, s]
-        if self.state=='wait':
-            return self.waitbuf.append(item)
-        self.buf_append_data(item)
 
 
     def doctype (self, data):
