@@ -1,4 +1,4 @@
-.TH WEBCLEANER.CONF 5 "3 November 2001"
+.TH WEBCLEANER.CONF 5 "3 January 2003"
 .SH NAME
 webcleaner.conf \- configuration file for webcleaner
 .SH DESCRIPTION
@@ -15,6 +15,12 @@ the configuration format version
 \fBport\fP
 the port number the WebCleaner Proxy is running on
 .TP
+\fBproxyuser\fP
+the user name for proxy authentication
+.TP
+\fBproxypass\fP
+the base64 encoded password for proxy authentication
+.TP
 \fBparentproxy\fP
 the hostname of the HTTP parent proxy; leave empty to
 not use a parent proxy
@@ -22,8 +28,11 @@ not use a parent proxy
 \fBparentproxyport\fP
 the port number the parent proxy is running on
 .TP
-\fBbuffersize\fP
-number of bytes the read() request reads from the URL connection
+\fBparentproxyuser\fP
+the user name for parent proxy authentication
+.TP
+\fBparentproxypass\fP
+the base64 encoded password for parent proxy authentication
 .TP
 \fBdebuglevel\fP
   0 - no debugging
@@ -32,17 +41,17 @@ number of bytes the read() request reads from the URL connection
   3 - nightmare debug info
 .TP
 \fBlogfile\fP
-name of the file to log to; use stdout for standard out; leave
+name of the file to log to; use \fI<stdout>\fP for standard out; leave
 empty to disable logging
 .TP
-\fBtimeout\fP
-TCP timeout for connections
+\fBshowerrors\fP
+print detected html parse errors to stderr
 .TP
-\fBobfuscateip\fP
-encode the IP number in one big integer, e.g.
-127.0.0.1 ==> (127 << 24) + (0 << 16) + (0 << 8) + (1 << 0)
-This works with most servers, and can sometimes get through
-firewalls. It is known _not_ to work with Squid parent proxies.
+\fBnoproxyfor\fP
+comma separated list of hosts for which filtering is disabled
+.TP
+\fBallowedhosts\fP
+comma separated list of hosts which are allowed to use this proxy
 .LP
 The following filters are available:
 .TP

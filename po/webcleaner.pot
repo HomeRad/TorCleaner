@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Thu Dec 19 00:52:17 2002\n"
+"POT-Creation-Date: Sat Jan  4 01:53:45 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -553,16 +553,16 @@ msgstr ""
 msgid "Warning: puzzling header received from host %s:"
 msgstr ""
 
-msgid "Warning: %s guessed Content-Type (%s)"
+msgid "Warning: add Content-Type %s to %s"
 msgstr ""
 
-msgid "Warning: %s guessed Content-Type (%s) != server Content-Type (%s)"
+msgid "Warning: change Content-Type from %s to %s in %s"
 msgstr ""
 
-msgid "Warning: %s guessed Content-Encoding (%s)"
+msgid "Warning: add Content-Encoding %s to %s"
 msgstr ""
 
-msgid "Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)"
+msgid "Warning: change Content-Encoding from %s to %s in %s"
 msgstr ""
 
 msgid "Warning: chunked encoding should not have Content-Length"

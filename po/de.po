@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Thu Dec 19 00:52:17 2002\n"
+"POT-Creation-Date: Sat Jan  4 01:53:45 2003\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -595,18 +595,21 @@ msgstr "Warnung: client empfing %d Bytes mehr als angegebene Inhaltslänge"
 msgid "Warning: puzzling header received from host %s:"
 msgstr "Warnung: rätselhaften Header von Rechner %s empfangen"
 
-msgid "Warning: %s guessed Content-Type (%s)"
+#, fuzzy
+msgid "Warning: add Content-Type %s to %s"
 msgstr "Warnung: %s erratener Inhaltstyp (%s)"
 
-msgid "Warning: %s guessed Content-Type (%s) != server Content-Type (%s)"
-msgstr "Warnung: %s erratener Inhaltstyp (%s) != Server Inhaltstyp (%s)"
+#, fuzzy
+msgid "Warning: change Content-Type from %s to %s in %s"
+msgstr "Warnung: %s erratener Inhaltstyp (%s)"
 
-msgid "Warning: %s guessed Content-Encoding (%s)"
+#, fuzzy
+msgid "Warning: add Content-Encoding %s to %s"
 msgstr "Warnung: %s erratene Kodierung (%s)"
 
-msgid ""
-"Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)"
-msgstr "Warnung: %s erratene Kodierung (%s) != Server Kodierung (%s)"
+#, fuzzy
+msgid "Warning: change Content-Encoding from %s to %s in %s"
+msgstr "Warnung: %s erratene Kodierung (%s)"
 
 msgid "Warning: chunked encoding should not have Content-Length"
 msgstr "Warnung: chunked Kodierung darf keine Inhaltslänge besitzen"
@@ -679,6 +682,13 @@ msgstr "Warnung: nur der erste Befehl ist gültig"
 
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
+
+#~ msgid "Warning: %s guessed Content-Type (%s) != server Content-Type (%s)"
+#~ msgstr "Warnung: %s erratener Inhaltstyp (%s) != Server Inhaltstyp (%s)"
+
+#~ msgid ""
+#~ "Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)"
+#~ msgstr "Warnung: %s erratene Kodierung (%s) != Server Kodierung (%s)"
 
 #~ msgid "webcleanerconf Help"
 #~ msgstr "WebCleanerConf Hilfe"
