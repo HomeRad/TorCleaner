@@ -108,7 +108,7 @@ class HtmlParser (htmlsax.parser):
 
     def flush (self, finish=False):
         """flush pending data and return the flushed output buffer"""
-        debug(FILTER, "parser flush")
+        debug(FILTER, "parser flush finish=%s", str(finish))
         if self.waited > 100:
             error(FILTER, "waited too long for %s"%self.state[1])
             # tell recursive background downloaders to stop
@@ -123,8 +123,8 @@ class HtmlParser (htmlsax.parser):
             self.waited += 1
             raise FilterWait("HtmlParser[wait]: waited %d times for %s"%\
                              (self.waited, self.state[1]))
-        super(HtmlParser, self).flush()
         if finish:
+            super(HtmlParser, self).flush()
             self.tagbuf2data()
         data = self.outbuf.getvalue()
         self.outbuf.close()
