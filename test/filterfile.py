@@ -1,7 +1,8 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
-"""filter given .html file with Replacer, Rewriter and BinaryCharFilter
-module"""
+"""
+Filter given .html file with Replacer, Rewriter and BinaryCharFilter module.
+"""
 
 import sys
 import os

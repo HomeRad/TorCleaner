@@ -555,8 +555,7 @@ class Resolver(object):
             nameservers = self.nameservers[:]
             while response is None:
                 if len(nameservers) == 0:
-                    raise NoNameservers, \
-                          "No DNS servers could answer the query"
+                    raise NoNameservers, "No DNS servers could answer the query"
                 for nameserver in nameservers:
                     now = time.time()
                     if now < start:
