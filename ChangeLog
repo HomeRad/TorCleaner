@@ -1,7 +1,7 @@
 1.7
   * parser changes:
     o rebuild with flex 2.5.27 and bison 1.875a
-    Changed files: wc/parser/{htmllex.c,htmlparse.c}
+    Changed files: wc/parser/{htmllex.c,htmlparse.[ch]}
   * fix replacing of attributes with non-empty values
     Changed files: wc/filter/rules/RewriteRule.py
   * updated filters:
