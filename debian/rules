@@ -72,8 +72,8 @@ install: build
 	# remove example files, we install them ourselves
 	rm -rf $(SHAREDIR)/examples
 	# install into /var/service directory
-	install -m 0755 service/run2 $(SERVICEDIR)/run
-	install -m 0755 service/log/run $(SERVICEDIR)/log/
+	install -m 0755 service/webcleaner/run2 $(SERVICEDIR)/run
+	install -m 0755 service/webcleaner/log/run $(SERVICEDIR)/log/
 	# move files to packages
 	dh_movefiles --sourcedir=$(BASE)
 
