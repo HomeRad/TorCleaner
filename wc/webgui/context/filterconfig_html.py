@@ -123,23 +123,26 @@ newrulenames.sort()
 ruletype = {}
 
 
+def set_indexstr (folder):
+    if not folder:
+        return
+    l = len(folder.rules)
+    if l > _rules_per_page:
+        _calc_selindex(folder, curindex)
+    else:
+        folder.selindex = []
+    folder.indexstr = u"(%d-%d/%d)" % \
+            (curindex + 1, min(curindex + _rules_per_page, l), l)
+
+
 def _exec_form (form, lang):
     """form execution"""
-    # reset info/error and form vals
-    _form_reset()
     # select a folder
     if form.has_key('selfolder'):
         _form_selfolder(_getval(form, 'selfolder'))
     if form.has_key('selindex') and curfolder:
         _form_selindex(_getval(form, 'selindex'))
-    if curfolder:
-        l = len(curfolder.rules)
-        if l > _rules_per_page:
-            _calc_selindex(curfolder, curindex)
-        else:
-            curfolder.selindex = []
-        curfolder.indexstr = u"(%d-%d/%d)" % (curindex+1,
-                                         min(curindex+_rules_per_page, l), l)
+    set_indexstr(curfolder)
     # select a rule
     if form.has_key('selrule') and curfolder:
         _form_selrule(_getval(form, 'selrule'))
@@ -309,6 +312,7 @@ def _form_newfolder (foldername, lang):
     else:
         curfolder.oid = config['folderrules'][-1].oid+1
     curfolder.write()
+    set_indexstr(curfolder)
     config['folderrules'].append(curfolder)
     _recalc_up_down(config['folderrules'])
     info['newfolder'] = True
