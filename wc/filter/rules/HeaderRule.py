@@ -18,8 +18,11 @@ from UrlRule import UrlRule
 from wc.XmlUtils import xmlify, unxmlify
 
 class HeaderRule (UrlRule):
+    """rule for filtering HTTP headers"""
+
     def __init__ (self, title="No title", desc="", disable=0, name="",
                   value="", oid=0):
+        """init rule name and value"""
         UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.name = name
         self.value = value
