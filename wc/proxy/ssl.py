@@ -25,7 +25,8 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
     """the browser (or commandline client) has sent a SSL certificate to
     the webcleaner server"""
     # XXX this obviously has to be updated
-    wc.log.debug(wc.LOG_PROXY, '%s (%s) got client certificate %s (depth %s, errnum %s)',
+    wc.log.debug(wc.LOG_PROXY,
+                 '%s (%s) got client certificate %s (depth %s, errnum %s)',
                  conn, ok, cert.get_subject(), repr(depth), repr(errnum))
     return 1
 
@@ -49,7 +50,8 @@ def get_serverctx (configdir):
 def verify_client_cb (conn, cert, errnum, depth, ok):
     #return dumpCertificate(cert) == file(absfile("server.cert")).read()
     # XXX this obviously has to be updated
-    wc.log.info(wc.LOG_PROXY, '%s (%s) got server certificate %s (depth %s, errnum %s)',
+    wc.log.info(wc.LOG_PROXY,
+                '%s (%s) got server certificate %s (depth %s, errnum %s)',
                 conn, ok, cert.get_subject(), repr(depth), repr(errnum))
     return 1
 
@@ -71,7 +73,8 @@ def create_certificates (configdir):
     """Create certificates and private keys for webcleaner"""
     cakey = createKeyPair(TYPE_RSA, 1024)
     careq = createCertRequest(cakey, CN='Certificate Authority')
-    cacert = createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5)) # five years
+    # five years
+    cacert = createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5))
     f = file(os.path.join(configdir, 'CA.pkey'), 'w')
     f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))
     f.close()
@@ -82,7 +85,8 @@ def create_certificates (configdir):
                            ('server', '%s Server' % wc.AppName)]:
         pkey = createKeyPair(TYPE_RSA, 1024)
         req = createCertRequest(pkey, CN=cname)
-        cert = createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5)) # five years
+        # five years
+        cert = createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5))
         f = file(os.path.join(configdir, '%s.pkey' % fname), 'w')
         f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))
         f.close()

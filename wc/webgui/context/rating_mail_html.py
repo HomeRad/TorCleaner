@@ -73,7 +73,7 @@ def _get_rating ():
         error["rating"] = True
         return False
     global rating
-    rating = "url %r\n%s\n"%(url, _rating_export(val[1]))
+    rating = "url %r\n%s\n" % (url, _rating_export(val[1]))
     return True
 
 
@@ -86,17 +86,17 @@ def _form_send (form):
     if form.has_key('fromaddr'):
         fromaddr = _getval(form, 'fromaddr')
     else:
-        fromaddr = "Wummel <%s>"%Email
+        fromaddr = "Wummel <%s>" % Email
     fromaddr = _valid_mail(fromaddr)
     if not fromaddr:
         error['fromaddr'] = True
         return
     toaddrs = [Email]
     headers = []
-    headers.append("From: %s"%fromaddr)
-    headers.append("To: %s"%", ".join(toaddrs))
+    headers.append("From: %s" % fromaddr)
+    headers.append("To: %s" % ", ".join(toaddrs))
     headers.append("Date: %s" % _mail_date())
-    headers.append("Subject: Webcleaner rating for %s"%url)
+    headers.append("Subject: Webcleaner rating for %s" % url)
     headers.append("X-WebCleaner: rating")
     message = "%s\r\n%s" % ("\r\n".join(headers), rating)
     if not _send_mail(smtphost, fromaddr, toaddrs, message):

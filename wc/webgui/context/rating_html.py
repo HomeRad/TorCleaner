@@ -130,7 +130,7 @@ def _form_generic (form):
 
 def _form_ratings (form):
     for category, catdata in service['categories'].items():
-        key = 'category_%s'%category
+        key = 'category_%s' % category
         if form.has_key(key):
             value = _getval(form, key)
             if not _rating_is_valid_value(catdata, value):
@@ -164,7 +164,7 @@ def _form_apply ():
     rating.update(ratings)
     if generic:
         rating['generic'] = u"true"
-    rating['modified'] = u"%d"%int(_time.time())
+    rating['modified'] = u"%d" % int(_time.time())
     rating_cache[url] = rating
     _rating_cache_write()
     info['ratingupdated'] = True

@@ -17,5 +17,5 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 from wc import AppName, Version, config
-updatezapperurl = config.get('baseurl', '')+u"zapper/"
-updateratingurl = config.get('baseurl', '')+u"rating/"
+updatezapperurl = config.get('baseurl', '') + u"zapper/"
+updateratingurl = config.get('baseurl', '') + u"rating/"

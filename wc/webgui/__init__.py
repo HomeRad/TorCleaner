@@ -51,7 +51,8 @@ class WebConfig (object):
             elif status == 401:
                 headers['WWW-Authenticate'] = "%s\r" % auth
             else:
-                wc.log.error(wc.LOG_GUI, "Authentication with wrong status %d", status)
+                wc.log.error(wc.LOG_GUI,
+                             "Authentication with wrong status %d", status)
         if status in [301, 302]:
             headers['Location'] = clientheaders['Location']
         gm = mimetypes.guess_type(url, None)
@@ -79,7 +80,6 @@ class WebConfig (object):
                 # get translator
                 translator = gettext.translation(wc.Name, wc.LocaleDir,
                                                  [lang], fallback=True)
-                #wc.log.debug(wc.LOG_GUI, "Using translator %s", translator.info())
                 # expand template
                 data = expand_template(fp, context, translator=translator)
             else:
@@ -233,7 +233,8 @@ def add_default_context (context, filename, lang):
     # page template name
     context_add(context, "filename", filename)
     # base url
-    context_add(context, "baseurl", "http://localhost:%d/" % wc.config['port'])
+    context_add(context, "baseurl",
+                "http://localhost:%d/" % wc.config['port'])
     # language
     context_add(context, "lang", lang)
     # other available languges
