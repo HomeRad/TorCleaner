@@ -16,7 +16,8 @@
 <!-- regular expression footnote -->
 <div metal:define-macro="regexfoot">
 <div class="footnote">
-<sup id="footnote1" title="footnote 1" i18n:attributes="title string:footnote 1">1)</sup>
+<sup id="footnote1" title="footnote 1"
+ i18n:attributes="title">1)</sup>
 <span i18n:translate="">The supplied value resembles a
 <a href="http://www.amk.ca/python/howto/regex/">regular expression</a>.</span>
 </div>
@@ -49,34 +50,36 @@
 <tr valign="top"><td>
 <label for="rule_matchurls" i18n:translate="">Match urls</label><sup><a
  href="#footnote1" class="footnote" title="see footnote 1"
- i18n:attributes="title string:see footnote 1">1)</a></sup>:
+ i18n:attributes="title">1)</a></sup>:
 </td><td>
 <select name="rule_matchurls" id="rule_matchurls" multiple size="3"
- i18n:attributes="title string:List of urls this rule should apply to">
+ i18n:attributes="title"
+ title="List of urls this rule should apply to">
 <option tal:repeat="url currule/matchurls" tal:attributes="value url"
  tal:content="url">www\.imadoofus\.org</option>
 </select><br>
 <input type="submit" name="delmatchurls" value="Remove selected" class="submit"
- i18n:attributes="value string:Remove selected"><br>
+ i18n:attributes="value"><br>
 <input class="text" type="text" name="newmatchurl" value=""><br>
 <input type="submit" name="addmatchurl" value="Add new" class="submit"
- i18n:attributes="value string:Add new">
+ i18n:attributes="value">
 </td></tr>
 <tr valign="top"><td>
 <label for="rule_nomatchurls" i18n:translate="">Don't match urls</label><sup><a
  href="#footnote1" class="footnote" title="see footnote 1"
- i18n:attributes="title string:see footnote 1">1)</a></sup>:
+ i18n:attributes="title">1)</a></sup>:
 </td><td>
 <select name="rule_nomatchurls" id="rule_nomatchurls" multiple size="3"
- i18n:attributes="title string:List of urls this rule must not apply to">
+ i18n:attributes="title"
+ title="List of urls this rule must not apply to">
 <option tal:repeat="url currule/nomatchurls" tal:attributes="value url"
  tal:content="url">www\.imadoofus\.org</option>
 </select><br>
-<input type="submit" name="delnomatchurls" value="Remove selected" class="submit"
- i18n:attributes="value string:Remove selected"><br>
+<input type="submit" name="delnomatchurls" value="Remove selected"
+ class="submit" i18n:attributes="value"><br>
 <input class="text" type="text" name="newnomatchurl" value=""><br>
 <input type="submit" name="addnomatchurl" value="Add new" class="submit"
- i18n:attributes="value string:Add new">
+ i18n:attributes="value">
 </td></tr>
 </div>
 </table>
@@ -90,7 +93,7 @@
 <tr valign="top"><td>
 <label for="rule_url" i18n:translate="">URL</label><sup><a
  href="#footnote1" class="footnote" title="see footnote 1"
- i18n:attributes="title string:see footnote 1">1)</a></sup>:
+ i18n:attributes="title">1)</a></sup>:
 </td><td>
 <input type="text" class="text" name="rule_url" value=""
  tal:attributes="value currule/url">
@@ -139,7 +142,7 @@ Rule url parts
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -204,7 +207,7 @@ Rule url parts
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -237,7 +240,8 @@ Rule (don't) match url
 <label for="rule_headerfilter" i18n:translate="">Header filters</label>:
 </td><td>
 <select name="rule_headerfilter" id="rule_headerfilter"
- i18n:attributes="title string:Header rules apply either to client request, server request or both">
+ i18n:attributes="title"
+ title="Header rules apply either to client request, server request or both">
 <option tal:condition="not:curfilterstage/both"
  value="both" i18n:translate="">request and response</option>
 <option tal:condition="curfilterstage/both" selected
@@ -254,7 +258,7 @@ Rule (don't) match url
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -292,7 +296,7 @@ Rule (don't) match url
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -323,7 +327,7 @@ Rule (don't) match url
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -342,7 +346,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -361,7 +365,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -380,7 +384,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -441,7 +445,7 @@ Rule (don't) match url
 </tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -461,7 +465,7 @@ Rule (don't) match url
 <tr valign="top"><td>
 <label for="rule_search" i18n:translate="">Search for</label><sup><a
  href="#footnote1" class="footnote" title="see footnote 1"
- i18n:attributes="title string:see footnote 1">1)</a></sup>:
+ i18n:attributes="title">1)</a></sup>:
 </td><td>
 <input type="text" class="text" name="rule_search" id="rule_search"
  value="A nasty word" tal:attributes="value currule/search">
@@ -475,7 +479,7 @@ Rule (don't) match url
 <tr>
 <td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>
@@ -525,8 +529,8 @@ Regex footnote
 </tbody>
 </table>
 <span tal:condition="currule/attrs">
-<input type="submit" class="submit" name="removeattrs" value="Remove selected"
- i18n:attributes="value string:Remove selected attributes">
+<input type="submit" class="submit" name="removeattrs"
+ value="Remove selected attributes" i18n:attributes="value">
 </span>
 </td></tr>
 <tr valign="top"><td>
@@ -540,14 +544,14 @@ Regex footnote
 <tr valign="top"><td>
 <label for="attrval" i18n:translate="">Value</label><sup><a
  href="#footnote1" class="footnote" title="see footnote 1"
- i18n:attributes="title string:see footnote 1">1)</a></sup>:
+ i18n:attributes="title">1)</a></sup>:
 </td><td>
 <input type="text" class="text" name="attrval" id="attrval" value="">
 </td></tr>
 <tr valign="top"><td>&nbsp;</td>
 <td><input type="submit" class="submit" name="addattr"
  value="Add/replace attribute"
- i18n:attributes="value string:Add/replace attribute">
+ i18n:attributes="value">
 </td></tr>
 <tr valign="top"><td>
 <label for="rule_enclosedblock" i18n:translate="">Enclosed block</label>:
@@ -575,7 +579,7 @@ Regex footnote
 </td></tr>
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
- i18n:attributes="value string:Apply">
+ i18n:attributes="value">
 <div metal:use-macro="rulemacros/regexfoot">
 Regex footnote
 </div>

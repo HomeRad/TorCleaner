@@ -47,13 +47,13 @@ filter rule configuration</title>
  title="Move folder down" alt="Down"
  i18n:attributes="title alt"
 ><img tal:condition="folder/disable" src="disabled.png"
- i18n:attributes="alt string:Disabled folder icon" alt="Disabled folder icon"
+ i18n:attributes="alt" alt="Disabled folder icon"
 ><span
  tal:condition="not:folder/disable"
 ><img tal:condition="not:folder/selected" src="minifolder.png"
- i18n:attributes="alt string:Folder icon" alt="Folder icon"
+ i18n:attributes="alt" alt="Folder icon"
 ><img tal:condition="folder/selected" src="minifolderopen.png"
- i18n:attributes="alt string:Folder icon" alt="Folder icon"></span></td>
+ i18n:attributes="alt" alt="Folder icon"></span></td>
 <td><b tal:omit-tag="not:folder/selected">
 <a href="#" tal:content="folder/titles/?lang"
  tal:attributes="href string:${filename}.${lang}?selfolder=${folder/oid}; title folder/tiptext"
@@ -64,10 +64,10 @@ filter rule configuration</title>
 <hr noshade size="1">
 <div style="margin:5px;">
 <input type="text" class="text" name="newfoldername" value="Folder name"
- i18n:attributes="value string:Folder name">
+ i18n:attributes="value">
  <br>
 <input type="submit" class="submit" name="newfolder" value="New folder"
- i18n:attributes="value string:New folder">
+ i18n:attributes="value">
 </div>
 </td>
 <!-- rules -->
@@ -90,9 +90,9 @@ filter rule configuration</title>
  title="Move rule down" alt="Down"
  i18n:attributes="title alt"
 ><img tal:condition="rule/disable" src="disabled.png" alt="Disabled rule icon"
- i18n:attributes="alt string:Disabled rule icon"><img 
+ i18n:attributes="alt"><img 
  tal:condition="not:rule/disable" src="minidoc.png" alt="Rule icon"
- i18n:attributes="alt string:Rule icon"></td>
+ i18n:attributes="alt"></td>
 <td><b tal:omit-tag="not:rule/selected">
 <a href="#" tal:condition="not:curfolder/disable" tal:content="rule/titles/?lang"
  tal:attributes="href string:${filename}.${lang}?selfolder=${curfolder/oid}&amp;selrule=${rule/oid}; title rule/tiptext"
@@ -114,7 +114,7 @@ filter rule configuration</title>
  tal:attributes="value curfolder/titles/?lang">
 <br>
 <input type="submit" class="submit" name="renamefolder" value="Rename folder"
- i18n:attributes="value string:Rename folder">
+ i18n:attributes="value">
 </div>
 
 <div style="margin-top:10px;margin-bottom:10px;">
@@ -135,7 +135,7 @@ filter rule configuration</title>
 <input tal:condition="curfolder/disable"
  type="submit" class="submit" value="Enable folder"
  tal:attributes="name string:enablefolder${curfolder/oid}"
- i18n:attributes="value string:Enable folder"
+ i18n:attributes="value"
 ><input tal:condition="not:curfolder/disable"
  type="submit" class="submit" value="Disable folder"
  tal:attributes="name string:disablefolder${curfolder/oid}"
