@@ -324,7 +324,7 @@
 <attr>/jump\.hbs</attr>
 </rewrite>
 
-<rewrite title="MSN ads 2" oid="140"
+<rewrite title="MSN ads 2" oid="54"
  desc="Same as MSN ads, only in area"
  tag="area">
 <attr>g\.msn(bc)?\.com</attr>

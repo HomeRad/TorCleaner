@@ -1,3 +1,7 @@
+1.13
+  * when the HTTP server closes, flush any existing data
+    Changed files: wc/proxy/HttpServer.py
+
 1.12
   * distribution fixes:
     - install template files
