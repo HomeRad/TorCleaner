@@ -17,6 +17,7 @@ for _i in config['filters']:
     config['filterdict'][_i] = True
 config['allowedhostlist'] = _sort_seq(ip.map2hosts(config['allowedhosts']))
 config['nofilterhostlist'] = _sort_seq(ip.map2hosts(config['nofilterhosts']))
+config['newport'] = config['port']
 filterenabled = ""
 filterdisabled = ""
 
@@ -119,8 +120,9 @@ def _exec_form (form):
 def _form_proxyport (port):
     try:
         port = int(port)
-        if port != config['port']:
+        if port != config['newport']:
             # note: port change takes effect after restart
+            config['newport'] = port
             oldport = config['port']
             config['port'] = port
             config.write_proxyconf()
