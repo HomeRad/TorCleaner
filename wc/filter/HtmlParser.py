@@ -214,6 +214,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                 waitbuf, self.waitbuf = self.waitbuf, []
                 self.replay(waitbuf)
                 if self.state!='parse':
+                    self.inbuf.write(data)
                     return
                 data = self.inbuf.getvalue() + data
                 self.inbuf.close()
