@@ -498,87 +498,74 @@ class TokenEater:
                 print >> fp, 'msgstr ""\n'
 
 
-try:
-    from wc.parser.htmllib import HtmlParser
-except ImportError, msg:
-    sys.path.insert(0, os.path.dirname(os.getcwd()))
-    from wc.parser.htmllib import HtmlParser
 from sets import Set
+import sgmllib
 
-class HtmlGettext (HtmlParser):
+class HtmlGettext (sgmllib.SGMLParser, object):
     """handles all functions by printing the function name and
        attributes"""
     def __init__ (self, debug=0):
-        super(HtmlGettext, self).__init__(debug=debug)
+        super(HtmlGettext, self).__init__()
         self.tag = None
         self.translations = Set()
         self.data = ""
 
 
-    def _errorfun (self, msg, name):
-        """print msg to stderr with name prefix"""
-        print >> sys.stderr, name, msg
-
-
-    def error (self, msg):
-        """signal a filter/parser error"""
-        self._errorfun(msg, "error:")
-
-
-    def warning (self, msg):
-        """signal a filter/parser warning"""
-        self._errorfun(msg, "warning:")
-
-
-    def fatalError (self, msg):
-        """signal a fatal filter/parser error"""
-        self._errorfun(msg, "fatal error:")
-
-
-    def startElement (self, tag, attrs):
+    def unknown_starttag (self, tag, attributes):
+        attrs = {}
+        for key,val in attributes:
+            attrs[key] = val
         msgid = attrs.get('i18n:translate', None)
         self.tag = None
-        if msgid == '""':
+        if msgid == '':
             self.tag = tag
             self.data = ""
         elif msgid is not None:
             if msgid.startswith("string:"):
                 self.translations.add(msgid[7:]).replace(';;', ';')
             else:
-                self.warning("tag %s has unsupported dynamic msgid"%tag)
+                print >>sys.stderr, "tag <%s> has unsupported dynamic msgid %s" % (tag, `msgid`)
         argument = attrs.get('i18n:attributes', None)
         if argument is not None:
-            for name, msgid in self.get_attribute_list(argument):
+            for name, msgid in get_attribute_list(argument):
                 self.translations.add(msgid)
 
 
-    def get_attribute_list (self, argument):
-        # Break up the list of attribute settings
-        commandArgs = []
-        # We only want to match semi-colons that are not escaped
-        argumentSplitter =  re.compile('(?<!;);(?!;)')
-        for attributeStmt in argumentSplitter.split(argument):
-            #  remove any leading space and un-escape any semi-colons
-            attributeStmt = attributeStmt.lstrip().replace(';;', ';')
-            # Break each attributeStmt into name and expression
-            stmtBits = attributeStmt.split(' ')
-            if len(stmtBits) < 2:
-                # Error, badly formed attributes command
-                self.warning("Badly formed attributes command '%s'.  Attributes commands must be of the form: 'name expression[;name expression]'" % argument)
-            attName = stmtBits[0]
-            attExpr = " ".join(stmtBits[1:])
-            commandArgs.append((attName, attExpr))
-        return commandArgs
-
-
-    def endElement (self, tag):
+    def unknown_endtag (self, tag):
         if tag==self.tag:
             self.translations.add(self.data)
             self.data = ""
 
 
-    def characters (self, data):
+    def handle_data (self, data):
         self.data += data
+
+
+    def handle_charref (self, ref):
+        self.data += '&#%s;' % ref
+
+
+    def handle_entityref (self, ref):
+        self.data += '&%s;' % ref
+
+
+def get_attribute_list (argument):
+    # Break up the list of attribute settings
+    commandArgs = []
+    # We only want to match semi-colons that are not escaped
+    argumentSplitter =  re.compile('(?<!;);(?!;)')
+    for attributeStmt in argumentSplitter.split(argument):
+        #  remove any leading space and un-escape any semi-colons
+        attributeStmt = attributeStmt.lstrip().replace(';;', ';')
+        # Break each attributeStmt into name and expression
+        stmtBits = attributeStmt.split(' ')
+        if len(stmtBits) < 2:
+            # Error, badly formed attributes command
+            print >>sys.stderr, "Badly formed attributes command '%s'.  Attributes commands must be of the form: 'name expression[;name expression]'" % argument
+        attName = stmtBits[0]
+        attExpr = " ".join(stmtBits[1:])
+        commandArgs.append((attName, attExpr))
+    return commandArgs
 
 
 
@@ -718,7 +705,7 @@ def main():
             if filename.endswith('.html'):
                 p = HtmlGettext()
                 p.feed(fp.read())
-                p.flush()
+                p.close()
                 html_translations.update(p.translations)
             else:
                 eater.set_filename(filename)
@@ -750,6 +737,7 @@ def main():
     finally:
         if closep:
             fp.close()
+
 
 
 if __name__ == '__main__':
