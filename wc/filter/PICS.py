@@ -163,10 +163,10 @@ def check_pics (rule, labellist):
     last = 0
     for mo in ratings(labellist):
         rating = mo.group('rating')
-        debug(NIGHTMARE, "PICS rating", rating)
+        debug(NIGHTMARE, "PICS: rating", rating)
         # the blurb contains the service name and options
         blurb = labellist[last:mo.start()].lower()
-        debug(NIGHTMARE, "PICS blurb", blurb)
+        debug(NIGHTMARE, "PICS: blurb", blurb)
         last = mo.end()
         # check all in the rule configured PICS services
         for service, options in rule.ratings.items():
