@@ -125,8 +125,13 @@ class MyDistribution(Distribution):
 
 if os.name=='nt':
     macros = [('YY_NO_UNISTD_H', None)]
+    cargs = []
 else:
     macros = []
+    # use -std=gnu99 because
+    # - Python 2.2 defines long long int, which is C99
+    # - and flex uses fileno(3), which is a gnu extension
+    cargs = ['-pedantic', '-std=gnu99']
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
@@ -147,6 +152,7 @@ setup (name = "webcleaner",
                   ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
                   include_dirs = ["wc/parser"],
                   define_macros = macros,
+                  extra_compile_args = cargs,
                   )],
        scripts = ['webcleaner', 'webcleanerconf', 'wcheaders'],
        long_description =
