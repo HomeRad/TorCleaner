@@ -104,17 +104,22 @@ class ClientServerMatchmaker:
 
         if hostname.lower()=='localhost' and port==config['port']:
             return self.handle_local(document)
-        # append information for wcheaders tool
-        wc.proxy.HEADERS.append((self.url, 0, self.headers.headers))
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']
             self.port = config['parentproxyport']
             self.document = self.url
+            if config['parentproxyuser']:
+                p = base64.decodestring(config['parentproxypass'])
+                auth = "%s:%s" % (config['parentproxyuser'], p)
+                auth = "Basic "+base64.encodestring(auth).strip()
+                self.headers['Proxy-Authorization'] = auth
         else:
             self.hostname = hostname
             self.port = port
             self.document = document
+        # append information for wcheaders tool
+        wc.proxy.HEADERS.append((self.url, 0, self.headers.headers))
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
