@@ -13,6 +13,9 @@
   * HTML parser and JS environment objects are now subclassable and
     collectable by the cyclic garbage collector
     Changed: wc/parser/htmlparse.y, wc/js/jslib.c
+  * added note that the web configuration needs write permissions in
+    the configuration directory
+    Changed: README
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way
