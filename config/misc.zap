@@ -59,13 +59,13 @@
 
 <rewrite sid="wc.377" title="Remove dumb href targets"
  desc="Can&apos;t believe I have to make this case-insensitive 8-)">
-<attr name="target">(?i)_(blank|new|top|self)</attr>
+<attr name="target">(?i)_(blank|new|top)</attr>
 <replacement part="attr"/>
 </rewrite>
 
 <rewrite sid="wc.378" title="Remove dumb area targets"
  tag="area">
-<attr name="target">(?i)_(blank|new|top|self)</attr>
+<attr name="target">(?i)_(blank|new)</attr>
 <replacement part="attr"/>
 </rewrite>
 

@@ -88,7 +88,7 @@
 </rewrite>
 
 <rewrite sid="wc.411" title="IMDB Advert 5"
- desc="Remove ad pics"
+ desc="Remove ad pictures"
  matchurl="imdb"
  tag="img">
 <attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
