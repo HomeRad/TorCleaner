@@ -49,7 +49,10 @@ class ClientServerMatchmaker (object):
     """
 
     def __init__ (self, client, request, headers, content, mime=None):
-        warn(PROXY, "mime %s", mime)
+        """if mime is not None, the response will have the specified
+           mime type, regardless of the Content-Type header value.
+           This is useful for JavaScript fetching and blocked pages.
+        """
         self.client = client
         self.request = request
         self.headers = headers
