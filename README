@@ -43,7 +43,7 @@ the Replacer module enabled.
 WebCleaner is intended for a single user system; it does not scale well
 beyond 5-10 users.
 
-Note that the Rewriter module parses the HTML. It optimizes HTML by making
+The Rewriter module parses the HTML. It optimizes HTML by making
 tags and attribute names lowercase, quoting attribute values only
 when necessary and removing some (but not all) ignorable whitespace.
 

@@ -177,7 +177,7 @@ def blacklist (file):
         f.close()
         read_data(file, "domains", domains)
 
-# for now, only adult (later: kids_and_teens?)
+# for now, only kids_and_teens
 def dmozlists (file):
     print "dmozlist %s..." % file
     f = gzip.GzipFile("downloads/"+file)
@@ -215,10 +215,14 @@ def geturl (basedir, file, fun, saveas=None):
         d = os.path.dirname("downloads/"+target)
         if not os.path.isdir(d):
             os.makedirs(d)
-        urldata = urllib2.urlopen(basedir+file)
-        f = open("downloads/"+target, 'w')
-        f.write(urldata.read())
-        f.close()
+        try:
+            urldata = urllib2.urlopen(basedir+file)
+            f = open("downloads/"+target, 'w')
+            f.write(urldata.read())
+            f.close()
+        except urllib2.HTTPError, msg:
+            print msg
+            return
     fun(target)
 
 def rm_rf (directory):

@@ -20,4 +20,3 @@ mv -f $N $O
 #!/bin/sh
 ssh -X -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
 -- end ~/bin/f.sh --
-

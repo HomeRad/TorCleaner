@@ -4,15 +4,12 @@
 # HTTP request --> Squid Proxy --> WebCleaner Proxy --> Internet
 # FTP  request --> Squid Proxy --> Internet
 # This way, you are caching only filtered, "clean" HTML files :)
-#
-# Remember to configure WebCleaner to run on port 8080 and to
-# turn off IP obfuscation.
-# Squid port is 3128
-#
-# You must configure your Browser to use the Squid Proxy (running
-# at localhost, port 3128)
+
+# You must configure your browser to use the Squid Proxy (running
+# at localhost, port 3128) for HTTP and FTP queries.
 # Remember, only localhost can connect to this squid proxy
 
+# Squid port is 3128
 # change it if you like
 # http_port 3128
 
@@ -20,6 +17,8 @@
 icp_port 0
 
 # the webcleaner parent proxy
+# Remember to configure WebCleaner to run on port 8080 or change the
+# port number below
 cache_peer 127.0.0.1 parent 8080 0 no-query no-digest
 # if you enabled a WebCleaner user and password:
 # cache_peer 127.0.0.1 parent 8080 0 no-query no-digest login=myuser:mypassword
