@@ -15,7 +15,7 @@ class SslConnection (Connection):
             warn(PROXY, '%s read buffer full', self)
 	    return
         try:
-            data = self.recv(RECV_BUFSIZE)
+            data = self.socket.read(RECV_BUFSIZE)
         except socket.error, err:
             if err==errno.EAGAIN:
                 # try again later
@@ -46,7 +46,7 @@ class SslConnection (Connection):
         num_sent = 0
         data = self.send_buffer[:SEND_BUFSIZE]
         try:
-            num_sent = self.send(data)
+            num_sent = self.socket.write(data)
         except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError), err:
             exception(PROXY, "%s ssl write message %s", self, err)
             return

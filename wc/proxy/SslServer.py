@@ -14,6 +14,8 @@ class SslServer (HttpsServer):
         else:
             portstr = ''
         extra = '%s%s' % (self.addr[0], portstr)
+        if self.socket:
+            extra += " (%s)"%self.socket.state_string()
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('sslserver', self.state, extra)
 

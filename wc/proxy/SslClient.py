@@ -30,6 +30,8 @@ class SslClient (HttpClient, SslConnection):
                 extra += '???'+self.request
         else:
             extra += 'being read'
+        if self.socket:
+            extra += " (%s)"%self.socket.state_string()
         return '<%s:%-8s %s>'%('sslclient', self.state, extra)
 
 
