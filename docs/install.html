@@ -46,6 +46,7 @@ window.onload = function() {
 <li>runit from <a class="reference" href="http://smarden.org/runit/">http://smarden.org/runit/</a></li>
 <li>openssl from <a class="reference" href="http://www.openssl.org/">http://www.openssl.org/</a></li>
 <li>PyOpenSSL from <a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a></li>
+<li><em>Optional</em> ClamAv from <a class="reference" href="http://www.clamav.net/">http://www.clamav.net/</a></li>
 </ol>
 </div>
 <div class="section" id="requirements-for-windows">
@@ -83,6 +84,9 @@ For Installation of PyCrypto see below.</li>
 <a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a>
 [<a class="reference" href="http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz">http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz</a>]
 For Installation of PyOpenSSL see below.</li>
+<li><em>Optional</em> ClamAv from
+<a class="reference" href="http://www.sosdg.org/clamav-win32/index.php">http://www.sosdg.org/clamav-win32/index.php</a>
+[<a class="reference" href="http://www.sosdg.org/clamav-win32/clamav-devel.exe">http://www.sosdg.org/clamav-win32/clamav-devel.exe</a>]</li>
 </ol>
 </div>
 <div class="section" id="setup-for-unix-linux">
@@ -108,7 +112,7 @@ certificates.
 Run <tt class="literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'make</span> <span class="pre">installservice'</span></tt> to install the runit service.</p>
 </li>
 <li><p class="first">Installation as a normal user</p>
-<p>Run <tt class="literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--home</span> <span class="pre">$HOME</span></tt>
+<p>Run <tt class="literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--home</span> <span class="pre">$HOME</span></tt>.
 Run <tt class="literal"><span class="pre">webcleaner-certificates</span> <span class="pre">install</span></tt> to install the certificates.
 Now read the runsvdir(8) documentation on how to setup a local
 runit service.</p>
@@ -208,7 +212,7 @@ and look at the &quot;Application Log&quot; events.</p>
 </div>
 <hr class="footer" />
 <div class="footer">
-Generated on: 2004-04-25 08:57 UTC.
+Generated on: 2004-04-29 20:51 UTC.
 </div>
 </body>
 </html>

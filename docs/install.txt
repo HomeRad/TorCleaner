@@ -25,6 +25,8 @@ Requirements for Unix/Linux:
 
 7. PyOpenSSL from http://pyopenssl.sourceforge.net/
 
+8. *Optional* ClamAv from http://www.clamav.net/
+
 Requirements for Windows:
 -------------------------
 Direct download links are in brackets.
@@ -66,6 +68,10 @@ Direct download links are in brackets.
    [http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz]
    For Installation of PyOpenSSL see below.
 
+8. *Optional* ClamAv from
+   http://www.sosdg.org/clamav-win32/index.php
+   [http://www.sosdg.org/clamav-win32/clamav-devel.exe]
+
 Setup for Unix/Linux:
 ---------------------
 
@@ -92,7 +98,7 @@ Setup for Unix/Linux:
    
    b) Installation as a normal user
       
-      Run ``python setup.py install --home $HOME``
+      Run ``python setup.py install --home $HOME``.
       Run ``webcleaner-certificates install`` to install the certificates.
       Now read the runsvdir(8) documentation on how to setup a local
       runit service.
