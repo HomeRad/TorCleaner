@@ -1,4 +1,4 @@
-2.14 (released xx.xx.xxxx)
+2.14 (released 22.5.2004)
   * honor unreadable state in StatefulConnection.readable()
     Type: bugfix
     Changed: wc/proxy/StatefulConnection.py
