@@ -8,6 +8,7 @@ import sys
 import os
 import time
 import socket
+import struct
 import re
 import pprint
 import wc.proxy
