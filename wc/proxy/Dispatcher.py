@@ -42,6 +42,16 @@ from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
 # map of sockets
 socket_map = {}
 
+def create_socket (family, socktype, ssl=False):
+    if ssl:
+        from ssl import ctx
+        from OpenSSL import SSL
+        sock = SSL.Connection(ctx, socket.socket(family, socktype))
+    else:
+        sock = socket.socket(family, socktype)
+    return sock
+
+
 class Dispatcher (object):
 
     connected = False
@@ -93,9 +103,9 @@ class Dispatcher (object):
             del socket_map[fd]
 
 
-    def create_socket (self, family, type):
-        self.family_and_type = family, type
-        self.socket = socket.socket(family, type)
+    def create_socket (self, family, socktype, ssl=False):
+        self.family_and_type = family, socktype
+        self.socket = create_socket(family, socktype, ssl=ssl)
         self.socket.setblocking(0)
         self.add_channel()
 
