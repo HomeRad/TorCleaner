@@ -18,6 +18,7 @@
 
 # be sure not to import something in the context namespace we do not want
 import base64
+import socket
 from wc import AppName, Version
 from wc.configuration import config, filtermodules
 from wc import sort_seq as _sort_seq
@@ -55,6 +56,7 @@ error = {
     'sslport': False,
     'parentproxyport': False,
     'timeout': False,
+    'addallowed': False,
 }
 config['filterdict'] = {}
 for _i in filtermodules:
@@ -368,10 +370,14 @@ def _form_filtermodules (form):
 
 def _form_addallowed (host):
     if host not in config['allowedhosts']:
-        config['allowedhosts'].append(host)
-        config['allowedhostset'] = _hosts2map(config['allowedhosts'])
-        info['addallowed'] = True
-        config.write_proxyconf()
+        try:
+            hostset = _hosts2map(config['allowedhosts'])
+            config['allowedhosts'].append(host)
+            config['allowedhostset'] = hostset
+            info['addallowed'] = True
+            config.write_proxyconf()
+        except socket.error:
+            error['addallowed'] = True
 
 
 def _form_delallowed (form):
