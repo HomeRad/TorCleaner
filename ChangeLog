@@ -7,6 +7,14 @@
     Type: bugfix
     Changed: setup.py
 
+  * fix --configdir option handling in webcleaner script
+    Type: bugfix
+    Changed: webcleaner
+
+  * add --no-file-logs option to webcleaner script
+    Type: feature
+    Changed: webcleaner, webcleaner.1, wc/__init__.py, wc/win32start.py
+
 2.17 "Ong-bak" (released 29.5.2004)
   * Added release names. Due to the somewhat shaky past releases,
     those names should render each release a pearl of uniqueness.
