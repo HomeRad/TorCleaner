@@ -106,7 +106,7 @@ def write_folder (cat, ftype, data, f):
             b = "blacklists"
             _type = "block"
         globals()["write_%s"%t](cat, b, _type, f)
-    f.write("</folder>")
+    f.write("</folder>\n")
 
 def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
@@ -317,4 +317,4 @@ if __name__=='__main__':
     remove_old_data()
     download_and_merge()
     write_lists()
-    write_filters()
+    #write_filters()
