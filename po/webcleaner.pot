@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Oct 28 09:25:50 2003\n"
+"POT-Creation-Date: Sat Nov  1 18:17:10 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,25 +309,7 @@ msgstr ""
 msgid "Write config"
 msgstr ""
 
-msgid "URL Scheme:\tRegular expression to match the URL scheme"
-msgstr ""
-
-msgid "URL Host:\tRegular expression to match the host"
-msgstr ""
-
-msgid "URL Port:\tRegular expression to match the port"
-msgstr ""
-
-msgid "URL Path:\tRegular expression to match the path"
-msgstr ""
-
-msgid "URL Parameters:\tRegular expression to match the parameters"
-msgstr ""
-
-msgid "URL Query:\tRegular expression to match the query"
-msgstr ""
-
-msgid "URL Fragment:\tRegular expression to match the fragment"
+msgid "URL:\tRegular expression to match the URL"
 msgstr ""
 
 msgid "Domainfile\tExternal file with domains; one per line"
@@ -336,7 +318,7 @@ msgstr ""
 msgid "Urlsfile\tExternal file with urls; one per line"
 msgstr ""
 
-msgid "Blocked URL\tThe URL we want to show instead"
+msgid "URL replacement\tThe URL we want to show instead"
 msgstr ""
 
 msgid "Filename:\tThe name of the configuration file where these filters are stored (cannot be changed)."
@@ -589,6 +571,9 @@ msgstr ""
 msgid "Can't parse request"
 msgstr ""
 
+msgid "Method Not Allowed"
+msgstr ""
+
 msgid "Empty URL"
 msgstr ""
 
@@ -673,9 +658,6 @@ msgstr ""
 msgid "Proxy user successfully changed."
 msgstr ""
 
-msgid "Rule url fragment successfully changed."
-msgstr ""
-
 msgid "Allowed host(s) successfully removed."
 msgstr ""
 
@@ -686,9 +668,6 @@ msgid "return window.confirm('Really remove this rule?')"
 msgstr ""
 
 msgid "Title"
-msgstr ""
-
-msgid "Blocked URL"
 msgstr ""
 
 msgid ""
@@ -730,20 +709,10 @@ msgstr ""
 msgid "This page is also available in"
 msgstr ""
 
-msgid "Rule description successfully changed."
-msgstr ""
-
-msgid ""
-"Most browsers support jumping to specific links by typing keys defined on\n"
-"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
-"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
-"access key."
-msgstr ""
-
 msgid "Service"
 msgstr ""
 
-msgid "Empty folder name."
+msgid "Go to rule:"
 msgstr ""
 
 msgid "return window.confirm('Really remove this folder?')"
@@ -752,7 +721,15 @@ msgstr ""
 msgid "Folder name"
 msgstr ""
 
-msgid "Rule blocked url successfully changed."
+msgid "Blocked image URL"
+msgstr ""
+
+msgid ""
+"The following button downloads new\n"
+"filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a> and merges their\n"
+"changes into the current configuration.<br>\n"
+"If something has changed, the new filter configuration files\n"
+"are saved and reloaded into the proxy."
 msgstr ""
 
 msgid "Header value"
@@ -770,7 +747,7 @@ msgstr ""
 msgid "Fallback URL"
 msgstr ""
 
-msgid "accessibility features of these pages"
+msgid "URL"
 msgstr ""
 
 msgid "Access key 9"
@@ -782,18 +759,10 @@ msgstr ""
 msgid "%(AppName)s filter update"
 msgstr ""
 
-msgid "Rule enclosed block successfully changed."
+msgid "Invalid image height value."
 msgstr ""
 
-msgid "URL host"
-msgstr ""
-
-msgid ""
-"The following button downloads new\n"
-"filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a> and merges their\n"
-"changes into the current configuration.<br>\n"
-"If something has changed, the new filter configuration files\n"
-"are saved and reloaded into the proxy."
+msgid "Remove rule"
 msgstr ""
 
 msgid "Replace regex"
@@ -809,6 +778,9 @@ msgid "%(AppName)s feedback information"
 msgstr ""
 
 msgid "Don't match URL"
+msgstr ""
+
+msgid "Rule successfully disabled."
 msgstr ""
 
 msgid "Parent proxy settings"
@@ -831,9 +803,6 @@ msgstr ""
 msgid "Folder successfully removed."
 msgstr ""
 
-msgid "URL path"
-msgstr ""
-
 msgid "Update filter configuration"
 msgstr ""
 
@@ -844,9 +813,6 @@ msgid "Allowed host successfully added."
 msgstr ""
 
 msgid "Invalid rule type."
-msgstr ""
-
-msgid "URL scheme"
 msgstr ""
 
 msgid "Search in %(site)s"
@@ -915,19 +881,15 @@ msgstr ""
 msgid "%(AppName)s error"
 msgstr ""
 
-msgid "Rule url query successfully changed."
-msgstr ""
-
 msgid "Rule rewrite replacement successfully changed."
 msgstr ""
 
-msgid "Match URL"
+msgid "Rule url replacement successfully changed."
 msgstr ""
 
-msgid "Rule url host successfully changed."
-msgstr ""
-
-msgid "Rule url parameters successfully changed."
+msgid ""
+"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
+"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr ""
 
 msgid "PICS service successfully enabled."
@@ -957,12 +919,6 @@ msgstr ""
 msgid "Nofilter host successfully added."
 msgstr ""
 
-msgid "URL query"
-msgstr ""
-
-msgid "Disabled folder icon"
-msgstr ""
-
 msgid "Rule replace search successfully changed."
 msgstr ""
 
@@ -975,18 +931,20 @@ msgstr ""
 msgid "Rule successfully removed."
 msgstr ""
 
+msgid "Empty folder name."
+msgstr ""
+
 msgid "Rule moved up."
 msgstr ""
 
 msgid ""
-"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
-"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
+"Most browsers support jumping to specific links by typing keys defined on\n"
+"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
+"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
+"access key."
 msgstr ""
 
 msgid "Category"
-msgstr ""
-
-msgid "Rule url scheme successfully changed."
 msgstr ""
 
 msgid "Remove selected"
@@ -996,9 +954,6 @@ msgid "Access keys"
 msgstr ""
 
 msgid "Invalid folder move up id."
-msgstr ""
-
-msgid "URL port"
 msgstr ""
 
 msgid "Folder moved up."
@@ -1046,16 +1001,13 @@ msgstr ""
 msgid "Move folder up"
 msgstr ""
 
+msgid "Rule url successfully changed."
+msgstr ""
+
 msgid "%(AppName)s web interface main page"
 msgstr ""
 
-msgid "All pages define the following access keys:"
-msgstr ""
-
 msgid "Filter update"
-msgstr ""
-
-msgid "Rule url port successfully changed."
 msgstr ""
 
 msgid "Use NTLM authentication (Windows domain controller)"
@@ -1108,13 +1060,16 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-msgid "Blocked image URL"
-msgstr ""
-
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
 msgstr ""
 
+msgid "Rule enclosed block successfully changed."
+msgstr ""
+
 msgid "New folder"
+msgstr ""
+
+msgid "accessibility features of these pages"
 msgstr ""
 
 msgid "Replacement"
@@ -1147,7 +1102,7 @@ msgstr ""
 msgid "%(AppName)s Google Selection"
 msgstr ""
 
-msgid "Remove rule"
+msgid "Rule description successfully changed."
 msgstr ""
 
 msgid "Folder rules"
@@ -1172,9 +1127,6 @@ msgid "Feedback for %(AppName)s"
 msgstr ""
 
 msgid "Add attribute"
-msgstr ""
-
-msgid "URL fragment"
 msgstr ""
 
 msgid "Proxy settings"
@@ -1259,13 +1211,10 @@ msgstr ""
 msgid "Empty rule title."
 msgstr ""
 
-msgid "Rule successfully disabled."
+msgid "Disabled folder icon"
 msgstr ""
 
 msgid "Rule"
-msgstr ""
-
-msgid "URL parameters"
 msgstr ""
 
 msgid "footnote 2"
@@ -1280,7 +1229,7 @@ msgstr ""
 msgid "Search Google"
 msgstr ""
 
-msgid "Rule url path successfully changed."
+msgid "All pages define the following access keys:"
 msgstr ""
 
 msgid "footnote 4"
@@ -1301,7 +1250,13 @@ msgstr ""
 msgid "New folder successfully created."
 msgstr ""
 
+msgid "Match URL"
+msgstr ""
+
 msgid "Invalid proxy port."
+msgstr ""
+
+msgid "Replacement URL"
 msgstr ""
 
 msgid "Invalid attribute name."
@@ -1317,8 +1272,5 @@ msgid "Connection timeout in seconds"
 msgstr ""
 
 msgid "Port number of the parent proxy"
-msgstr ""
-
-msgid "Invalid image height value."
 msgstr ""
 
