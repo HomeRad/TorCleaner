@@ -27,6 +27,8 @@ version 2.20
 
 version 2.21 and above
 
+- use ssl-cert-check bash script
+
 - Python 2.4 made socket.sslerror a subclass of socket.error; can we
   use that?
 

@@ -4,22 +4,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Tue Jul 27 20:59:24 2004\n"
+"POT-Creation-Date: Sun Aug 29 15:24:35 2004\n"
 "PO-Revision-Date: 2004-07-24 14:08+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "seconds"
-msgstr "Sekunden"
-
-msgid "minutes"
-msgstr "Minuten"
-
-msgid "hours"
-msgstr "Stunden"
 
 msgid "inserting %s"
 msgstr "füge %s ein"
@@ -240,6 +231,15 @@ msgstr "nicht unterstützte HTTP Version %s"
 
 msgid "invalid HTTP version %r"
 msgstr "ungültige HTTP Version %r"
+
+msgid "seconds"
+msgstr "Sekunden"
+
+msgid "minutes"
+msgstr "Minuten"
+
+msgid "hours"
+msgstr "Stunden"
 
 msgid "updating filters"
 msgstr "aktualisiere Filter"

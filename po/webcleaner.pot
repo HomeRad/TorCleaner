@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Jul 27 20:59:24 2004\n"
+"POT-Creation-Date: Sun Aug 29 15:24:35 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,15 +14,6 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
-
-msgid "seconds"
-msgstr ""
-
-msgid "minutes"
-msgstr ""
-
-msgid "hours"
-msgstr ""
 
 msgid "inserting %s"
 msgstr ""
@@ -235,6 +226,15 @@ msgid "unsupported HTTP version %s"
 msgstr ""
 
 msgid "invalid HTTP version %r"
+msgstr ""
+
+msgid "seconds"
+msgstr ""
+
+msgid "minutes"
+msgstr ""
+
+msgid "hours"
 msgstr ""
 
 msgid "updating filters"
