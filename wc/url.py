@@ -27,6 +27,7 @@ import cgi
 
 
 # adapted from David Wheelers "Secure Programming for Linux and Unix HOWTO"
+# http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/filter-html.html#VALIDATING-URIS
 _basic = {
     "_az09": r"a-z0-9",
     "_path": r"\-\_\.\!\~\*\'\(\),",
