@@ -136,8 +136,10 @@ else:
 extensions = [
     Extension('wc.parser.htmlsax',
               sources = [p('wc/parser/htmllex.c'),
-                         p('wc/parser/htmlparse.c')],
-              depends = [p("wc/parser/htmlsax.h")],
+                         p('wc/parser/htmlparse.c'),
+                         p('wc/parser/s_util.c'),
+                        ],
+              depends = [p("wc/parser/htmlsax.h"), p('wc/parser/s_util.h')],
               include_dirs = [p("wc/parser")],
               define_macros = macros,
               extra_compile_args = cargs,

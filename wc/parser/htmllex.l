@@ -20,8 +20,10 @@
 
 %{
 #include "htmlsax.h"
+#include "s_util.h"
 #include <string.h>
 #include <stdlib.h>
+
 
 /* token type */
 #define YYSTYPE PyObject*
@@ -51,7 +53,7 @@
 #define APPEND_TO_TMP(n) {\
     size_t len = strlen(yyextra->tmp_buf); \
     RESIZE_BUF(yyextra->tmp_buf, len+(n)+1); \
-    strncat(yyextra->tmp_buf, yytext, (size_t)n); \
+    strlcat(yyextra->tmp_buf, yytext, sizeof(yyextra->tmp_buf)); \
     }
 
 /* lowercase the tmp_buf */
