@@ -109,7 +109,7 @@ def get_translator (lang, translatorklass=None, fallbackklass=None):
     """return translator class"""
     return wc.i18n.get_translator(configdata.name, get_locdir(), lang,
          translatorklass=translatorklass,
-         fallbackklass=fallbackklass)
+         fallback=True, fallbackklass=fallbackklass)
 
 
 def iswritable (fname):
