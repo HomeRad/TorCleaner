@@ -15,8 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 from wc import debug, error
+from wc.debug_levels import *
 from types import StringType, IntType
-import string,re
+import re
+from string import joinfields, lower
 
 # tag ids
 STARTTAG = 0
@@ -53,7 +55,7 @@ def quote(s):
     for i in range(len(res)):
         c = res[i]
         res[i] = EntityTable.get(c, c)
-    return string.joinfields(res, '')
+    return joinfields(res, '')
 
 
 def part_num(s):
@@ -208,13 +210,13 @@ class RewriteRule(Rule):
 
 
     def match_tag(self, tag):
-        return self.tag == string.lower(tag)
+        return self.tag == lower(tag)
 
 
     def match_attrs(self, attrs):
         occurred = []
         for attr,val in attrs:
-            attr = string.lower(attr)
+            attr = lower(attr)
             occurred.append(attr)
             ro = self.attrs.get(attr)
             if ro and not ro.search(val):
@@ -253,7 +255,7 @@ class RewriteRule(Rule):
         newattrs = []
         # look for matching tag attributes
         for attr,val in attrs:
-            ro = self.attrs.get(string.lower(attr))
+            ro = self.attrs.get(lower(attr))
             if ro:
                 mo = ro.search(val)
                 if mo:

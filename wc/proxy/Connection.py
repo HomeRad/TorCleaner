@@ -21,7 +21,7 @@ def new_compact_traceback(a,b,c):
 asyncore.compact_traceback = new_compact_traceback
 #del asyncore.dispatcher.__getattr__
 
-RECV_BUFSIZE = 65536
+RECV_BUFSIZE = 16384
 SEND_BUFSIZE = 8192
 
 # XXX implement maximum sizes for buffers to prevent DoS attacks

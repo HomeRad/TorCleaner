@@ -3,7 +3,8 @@ from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from string import split,find,join
-from wc import debug,log
+from wc import debug
+from wc.proxy import log
 from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER

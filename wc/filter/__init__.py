@@ -23,7 +23,7 @@ to see how its done.
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import string
+import string,sys
 from wc import debug
 from wc.debug_levels import *
 

@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re,string
+import re
+from string import lower
 from wc.parser.sgmllib import SGMLParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
 from wc import debug,error
@@ -159,9 +160,8 @@ class HtmlFilter(SGMLParser):
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute
-                    if tobuffer[0]==STARTTAG and \
-		        string.lower(tobuffer[1])==tag:
-                        _,tag,attrs = tobuffer
+                    if tobuffer[0]==STARTTAG and lower(tobuffer[1])==tag:
+                        foo,tag,attrs = tobuffer
                         continue
                     else:
                         break

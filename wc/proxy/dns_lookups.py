@@ -22,7 +22,7 @@ class DnsResponse:
     def __init__(self, kind, data):
         self.kind = kind
         self.data = data
-        print 'DnsResponse(%s, %s)' % (`kind`, `data`)
+        debug(BRING_IT_ON, 'DnsResponse(%s, %s)' % (`kind`, `data`))
         
     def isError(self):
         return self.kind == 'error'
@@ -462,7 +462,7 @@ def init_dns_resolver():
     if not DnsConfig.search_domains:
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
-        print 'Warning: no nameservers found'
+        debug(ALWAYS, 'Warning: no nameservers found')
         DnsConfig.nameservers.append('127.0.0.1')
 
 init_dns_resolver()
