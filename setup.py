@@ -51,10 +51,34 @@ win_cross_compiling = cc is not None and "mingw32" in cc
 win_python_dir = "/home/calvin/src/python23-maint-cvs/dist/src/"
 
 
-def p (path):
+def normpath (path):
     """norm a path name to platform specific notation"""
     return os.path.normpath(path)
 
+
+def cnormpath (path):
+    """norm a path name to platform specific notation, but honoring
+       the win_cross_compiling flag"""
+    path = normpath(path)
+    if win_cross_compiling:
+        # replace slashes with backslashes
+        path = path.replace("/", "\\")
+    return path
+
+
+# windows install scheme for python >= 2.3
+# snatched from PC/bdist_wininst/install.c
+# this is used to fix install_* paths when cross compiling for windows
+win_path_scheme = {
+    "purelib": ("PURELIB", "Lib\\site-packages\\"),
+    "platlib": ("PLATLIB", "Lib\\site-packages\\"),
+    # note: same as platlib because of C extensions, else it would be purelib
+    "lib": ("PLATLIB", "Lib\\site-packages\\"),
+    # 'Include/dist_name' part already in archive
+    "headers": ("HEADERS", ""),
+    "scripts": ("SCRIPTS", "Scripts\\"),
+    "data": ("DATA", ""),
+}
 
 class MyInstall (install, object):
 
@@ -74,12 +98,19 @@ class MyInstall (install, object):
                 val = getattr(self, attr)[cutoff:]
             else:
                 val = getattr(self, attr)
+            if win_cross_compiling and d in win_path_scheme:
+                # look for placeholders to replace
+                oldpath, newpath = win_path_scheme[d]
+                oldpath = "/%s" % oldpath
+                if oldpath in val:
+                    val = val.replace(oldpath, newpath)
             if attr=="install_data":
                 base = os.path.join(val, 'share', 'webcleaner')
                 data.append('config_dir = %r' % \
-                            os.path.normcase(os.path.join(base, 'config')))
+                            cnormpath(os.path.join(base, 'config')))
                 data.append('template_dir = %r' % \
-                            os.path.normcase(os.path.join(base, 'templates')))
+                            cnormpath(os.path.join(base, 'templates')))
+            val = cnormpath(val)
             data.append("%s = %r" % (attr, val))
         self.distribution.create_conf_file(data, directory=self.install_lib)
 
@@ -247,12 +278,10 @@ class MyBdistWininst (bdist_wininst, object):
 
     def get_exe_bytes (self):
         if win_cross_compiling:
-            bv = "7.1"
-            # wininst-x.y.exe is in the same directory as bdist_wininst
+            # wininst.exe is in the same directory as bdist_wininst
+            # XXX for python2.4, use wininst-X.Y.exe
             directory = os.path.dirname(distutils.command.__file__)
-            # we must use a wininst-x.y.exe built with the same C compiler
-            # used for python.
-            filename = os.path.join(directory, "wininst-%s.exe" % bv)
+            filename = os.path.join(directory, "wininst.exe")
             return open(filename, "rb").read()
         return super(MyBdistWininst, self).get_exe_bytes()
 
@@ -291,13 +320,13 @@ extensions = []
 
 # HTML parser
 extensions.append(Extension('wc.HtmlParser.htmlsax',
-              sources = [p('wc/HtmlParser/htmllex.c'),
-                         p('wc/HtmlParser/htmlparse.c'),
-                         p('wc/HtmlParser/s_util.c'),
+              sources = [normpath('wc/HtmlParser/htmllex.c'),
+                         normpath('wc/HtmlParser/htmlparse.c'),
+                         normpath('wc/HtmlParser/s_util.c'),
                         ],
-              depends = [p("wc/HtmlParser/htmlsax.h"),
-                         p('wc/HtmlParser/s_util.h')],
-              include_dirs = include_dirs + [p("wc/HtmlParser")],
+              depends = [normpath("wc/HtmlParser/htmlsax.h"),
+                         normpath('wc/HtmlParser/s_util.h')],
+              include_dirs = include_dirs + [normpath("wc/HtmlParser")],
               define_macros = define_macros,
               extra_compile_args = extra_compile_args,
               library_dirs = library_dirs,
@@ -306,7 +335,7 @@ extensions.append(Extension('wc.HtmlParser.htmlsax',
 
 # levenshtein distance method
 extensions.append(Extension('wc.levenshtein',
-              sources = [p('wc/levenshtein.c'),],
+              sources = [normpath('wc/levenshtein.c'),],
               include_dirs = include_dirs,
               define_macros = define_macros,
               extra_compile_args = extra_compile_args,
