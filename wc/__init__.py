@@ -59,6 +59,9 @@ LOG_DNS = "wc.proxy.dns"
 LOG_GUI = "wc.gui"
 LOG_ACCESS = "wc.access"
 LOG_RATING = "wc.rating"
+LOG_TAL = "TAL"
+LOG_TALES = "TALES"
+
 
 def init_i18n ():
     """Deploy i18n gettext method into the default namespace.
