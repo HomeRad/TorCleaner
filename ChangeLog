@@ -18,6 +18,12 @@
     Added: templates/classic/pics.html, wc/webgui/context/pics_html.py
   * updated magic database to newest upstream
     Changed: config/magic.mime
+  * added dhcp nameserver config support on windows dns resolver
+    Changed: wc/proxy/dns_lookups.py
+  * import everything from _winreg in windows registry wrapper
+    Changed: wc/proxy/winreg.py
+  * fixed and documented the windows installation procedure
+    Changed: INSTALL, setup.py
 
 2.7 (released 04.12.2003)
   * updated filters:
