@@ -36,6 +36,23 @@ from distutils.command.install_data import install_data
 from distutils.file_util import write_file
 from distutils import util
 
+# optional features
+try:
+    import OpenSSL
+    has_ssl = True
+except ImportError:
+    has_ssl = False
+try:
+    import Crypto
+    has_crypto = True
+except ImportError:
+    has_crypto = False
+try:
+    import PIL
+    has_pil = True
+except ImportError:
+    has_pil = False
+
 
 def p (path):
     """norm a path name to platform specific notation"""
@@ -151,15 +168,11 @@ class MyDistribution (distklass, object):
               cmd = "%s = %r" % (name, getattr(self.metadata, method)())
               data.append(cmd)
         data.append('appname = "WebCleaner"')
+        data.append("has_crypto = %s" % str(has_crypto))
+        data.append("has_pil = %s" % str(has_pil))
+        data.append("has_ssl = %s" % str(has_ssl))
         util.execute(write_file, (filename, data),
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
-
-    def create_batch_file (self, directory, data, filename):
-        filename = os.path.join(directory, filename)
-        # write the batch file
-        util.execute(write_file, (filename, data),
-                 "creating %s" % filename, self.verbose>=1, self.dry_run)
-
 
 if os.name=='nt':
     # windows does not have unistd.h
