@@ -67,10 +67,10 @@ class HtmlParser (htmlsax.parser):
 
     def _debugbuf (self):
         """print debugging information about data buffer status"""
-        self._debug("self.outbuf %r", self.outbuf.getvalue())
-        self._debug("self.tagbuf %r", self.tagbuf)
-        self._debug("self.waitbuf %r", self.waitbuf)
-        self._debug("self.inbuf %r", self.inbuf.getvalue())
+        debug(FILTER, "self.outbuf %r", self.outbuf.getvalue())
+        debug(FILTER, "self.tagbuf %r", self.tagbuf)
+        debug(FILTER, "self.waitbuf %r", self.waitbuf)
+        debug(FILTER, "self.inbuf %r", self.inbuf.getvalue())
 
 
     def tagbuf2data (self):
