@@ -63,6 +63,17 @@ class WcMessage (Message, object):
         return "\n".join([ repr(s) for s in self.headers ])
 
 
+def get_content_length (headers):
+    """get content length as int or None on error"""
+    if not headers.has_key("Content-Length"):
+        return None
+    try:
+        return int(headers['Content-Length'])
+    except ValueError:
+        warn(PROXY, "invalid Content-Length value %r", headers['Content-Length'])
+    return None
+
+
 def get_wc_client_headers (host):
     headers = WcMessage()
     headers['host'] = '%s\r' % host
@@ -224,16 +235,13 @@ def server_set_content_headers (headers, content, document, mime, url):
         headers['Content-Type'] = 'text/html\r'
 
 
-def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining):
+def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
+                                 filename=None):
     """set encoding headers"""
-    # add client accept-encoding value
-    if headers.has_key('Content-Length'):
-        bytes_remaining = int(headers['Content-Length'])
-        debug(PROXY, "%d bytes content length", bytes_remaining)
-        if rewrite:
-            remove_headers(headers, ['Content-Length'])
-    else:
-        bytes_remaining = None
+    bytes_remaining = get_content_length(headers)
+    # remove content length
+    if rewrite:
+        remove_headers(headers, ['Content-Length'])
     # add decoders
     if headers.has_key('Transfer-Encoding'):
         # chunked encoded
@@ -255,8 +263,9 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining):
         return bytes_remaining
     # Compressed content (uncompress only for rewriting modules)
     encoding = headers.get('Content-Encoding', '').lower()
-    # XXX test for .gz files ???
-    if encoding in ('gzip', 'x-gzip', 'deflate'):
+    # note: do not gunzip .gz files
+    if encoding in ('gzip', 'x-gzip', 'deflate') and \
+       (filename is None or not filename.endswith(".gz")):
         if encoding=='deflate':
             decoders.append(DeflateStream())
         else:

@@ -12,7 +12,7 @@ from Server import Server
 from wc.proxy import make_timer, get_http_version, create_inet_socket
 from wc.proxy.auth import *
 from Headers import server_set_headers, server_set_content_headers, server_set_encoding_headers, remove_headers
-from Headers import has_header_value, WcMessage
+from Headers import has_header_value, WcMessage, get_content_length
 from wc import i18n, config
 from wc.log import *
 from ServerPool import serverpool
@@ -272,8 +272,7 @@ class HttpServer (Server):
             return
         http_ver = serverpool.http_versions[self.addr]
         if http_ver >= (1,1):
-            self.persistent = not has_header_value(msg, 'Connection', 'Close') \
-                              and msg.has_key("Content-Length")
+            self.persistent = not has_header_value(msg, 'Connection', 'Close')
         elif http_ver >= (1,0):
             self.persistent = has_header_value(msg, 'Connection', 'Keep-Alive')
         else:
@@ -288,6 +287,8 @@ class HttpServer (Server):
             return
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
+        if self.bytes_remaining is None:
+            self.persistent = False
         # 304 Not Modified does not send any type info, because it was cached
         if self.statuscode!=304:
             # copy decoders
@@ -475,10 +476,10 @@ class HttpServer (Server):
 
 
     def handle_error (self, what):
-        super(HttpServer, self).handle_error(what)
         if self.client:
             client, self.client = self.client, None
             client.server_abort()
+        super(HttpServer, self).handle_error(what)
 
 
     def handle_close (self):

@@ -15,6 +15,7 @@ from wc.proxy import get_http_version, fix_http_version
 from wc.url import spliturl, splitnport, url_norm, url_quote
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers, has_header_value
+from Headers import get_content_length
 from wc.proxy.auth import *
 from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE
 from wc.log import *
@@ -493,15 +494,4 @@ class HttpClient (Connection):
         debug(PROXY, '%s close', self)
         self.state = 'closed'
         super(HttpClient, self).close_close()
-
-
-def get_content_length (headers):
-    """get content length as int or None on error"""
-    if not headers.has_key("Content-Length"):
-        return None
-    try:
-        return int(headers['Content-Length'])
-    except ValueError:
-        warn(PROXY, "invalid Content-Length value %r", headers['Content-Length'])
-    return None
 
