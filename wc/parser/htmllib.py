@@ -28,35 +28,9 @@ except ImportError, msg:
     print >>sys.stderr, "Please check your installation of WebCleaner."
     sys.exit(1)
 
-class HtmlParser (object):
-    """Use an internal C SAX parser. We do not define any callbacks
-    here for compatibility. Currently recognized callbacks are:
-    comment(data): <!--data-->
-    startElement(tag, attrs): <tag {attr1:value1,attr2:value2,..}>
-    endElement(tag): </tag>
-    doctype(data): <!DOCTYPE data?>
-    pi(name, data=None): <?name data?>
-    cdata(data): <![CDATA[data]]>
-    characters(data): data
 
-    additionally, there are error and warning callbacks:
-    error(msg)
-    warning(msg)
-    fatalError(msg)
-    """
-    def __init__ (self, debug=0):
-        """initialize the internal parser"""
-        self.parser = htmlsax.new_parser(self)
-        self.parser.debug(debug)
-
-    def __getattr__ (self, name):
-        """delegate attrs to self.parser"""
-        return getattr(self.parser, name)
-
-
-class HtmlPrinter (HtmlParser):
-    """handles all functions by printing the function name and
-       attributes"""
+class HtmlPrinter (object):
+    """handles all functions by printing the function name and attributes"""
     def _print (self, *attrs):
         print self.mem, attrs
 
@@ -82,9 +56,7 @@ class HtmlPrinter (HtmlParser):
 
 
     def __getattr__ (self, name):
-        """delegate attrs to the parser and remember the func name"""
-        if hasattr(self.parser, name):
-            return getattr(self.parser, name)
+        """remember the func name"""
         self.mem = name
         return self._print
 
@@ -95,7 +67,7 @@ def quote_attrval (val):
 
 
 def _test():
-    p = HtmlPrinter()
+    p = htmlsax.new_parser(HtmlPrinter())
     p.feed("<hTml>")
     p.feed("<a href>")
     p.feed("<a href=''>")
@@ -119,7 +91,7 @@ def _test():
     p.flush()
 
 def _broken ():
-    p = HtmlPrinter()
+    p = htmlsax.new_parser(HtmlPrinter())
     # turn on debugging
     p.debug(1)
     p.feed("""<base href="http://www.msnbc.com/news/">""")

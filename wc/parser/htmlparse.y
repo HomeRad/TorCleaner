@@ -583,40 +583,67 @@ static PyObject* parser_getattr (PyObject* self, char* name) {
 
 static PyTypeObject parser_type = {
     PyObject_HEAD_INIT(NULL)
-    0, /* ob_size */
-    "parser", /* tp_name */
+    0,              /* ob_size */
+    "htmlsax.parser",      /* tp_name */
     sizeof(parser_object), /* tp_size */
-    0, /* tp_itemsize */
+    0,              /* tp_itemsize */
     /* methods */
     parser_dealloc, /* tp_dealloc */
-    0, /* tp_print */
+    0,              /* tp_print */
     parser_getattr, /* tp_getattr */
-    0,          /* tp_setattr */
-    0,          /*tp_compare*/
-    0,          /*tp_repr*/
-    0,          /*tp_as_number*/
-    0,          /*tp_as_sequence*/
-    0,          /*tp_as_mapping*/
-    0,          /*tp_hash */
+    0,              /* tp_setattr */
+    0,              /* tp_compare */
+    0,              /* tp_repr */
+    0,              /* tp_as_number */
+    0,              /* tp_as_sequence */
+    0,              /* tp_as_mapping */
+    0,              /* tp_hash */
+    0,              /* tp_call */
+    0,              /* tp_str */
+    0,              /* tp_getattro */
+    0,              /* tp_setattro */
+    0,              /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,   /* tp_flags */
+    "HTML parser object", /* tp_doc */
 };
 
 
 /* python module interface */
 static PyMethodDef htmlsax_methods[] = {
     {"new_parser", htmlsax_parser_new, METH_VARARGS,
-     "Create a new HTML parser object."},
+     "Create a new HTML parser object with given handler.\n"
+     "\n"
+     "Used callbacks (they don't have to be defined) of a handler are:\n"
+     "comment(data): <!--data-->\n"
+     "startElement(tag, attrs): <tag {attr1:value1,attr2:value2,..}>\n"
+     "endElement(tag): </tag>\n"
+     "doctype(data): <!DOCTYPE data?>\n"
+     "pi(name, data=None): <?name data?>\n"
+     "cdata(data): <![CDATA[data]]>\n"
+     "characters(data): data\n"
+     "\n"
+     "Additionally, there are error and warning callbacks:\n"
+     "error(msg)\n"
+     "warning(msg)\n"
+     "fatalError(msg)\n"},
     {NULL, NULL, 0, NULL}
 };
 
 
+#ifndef PyMODINIT_FUNC	/* declarations for DLL import/export */
+#define PyMODINIT_FUNC void
+#endif
 /* initialization of the htmlsax module */
-DL_EXPORT(void) inithtmlsax (void) {
+PyMODINIT_FUNC inithtmlsax (void) {
     PyObject* m;
-    if (!Py_InitModule("htmlsax", htmlsax_methods)) {
+    if (PyType_Ready(&parser_type) < 0) {
         return;
     }
-    if (!(m = PyImport_ImportModule("wc.parser")))
+    if (Py_InitModule3("htmlsax", htmlsax_methods, "SAX HTML parser routines")==NULL) {
         return;
-    if (!(resolve_entities = PyObject_GetAttrString(m, "resolve_entities")))
+    }
+    if ((m = PyImport_ImportModule("wc.parser"))==NULL)
+        return;
+    if ((resolve_entities = PyObject_GetAttrString(m, "resolve_entities"))==NULL)
         return;
 }
