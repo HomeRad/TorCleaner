@@ -5,6 +5,7 @@ import unittest, os
 from test import disable_rating_rules
 import wc
 from wc.proxy import proxy_poll, run_timers
+from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog
@@ -20,10 +21,12 @@ class TestRewriteScript (unittest.TestCase):
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
         initlog(os.path.join("test", "logging.conf"))
+        self.headers = WcMessage()
+        self.headers['Content-Type'] = "text/html"
 
 
     def filt (self, data, result, name=""):
-        attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY])
+        attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY], headers=self.headers)
         filtered = ""
         try:
             filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', attrs)

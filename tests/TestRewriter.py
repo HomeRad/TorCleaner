@@ -5,6 +5,7 @@ import unittest, os
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog
+from wc.proxy.Headers import WcMessage
 
 
 class TestRewriter (unittest.TestCase):
@@ -16,10 +17,12 @@ class TestRewriter (unittest.TestCase):
         wc.config['filters'] = ['Rewriter']
         wc.config.init_filter_modules()
         initlog(os.path.join("test", "logging.conf"))
+        self.headers = WcMessage()
+        self.headers['Content-Type'] = "text/html"
 
 
     def filt (self, data, result, name=""):
-        attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY])
+        attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY], headers=self.headers)
         filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
         self.assertEqual(filtered, result)
 
