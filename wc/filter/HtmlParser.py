@@ -25,7 +25,6 @@ from wc.parser.htmllib import HtmlParser, quote_attrval
 from wc.parser import resolve_html_entities, strip_quotes
 from wc.filter import FilterWait
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
-from wc.filter.PICS import pics_add, pics_is_cached, pics_allow, FilterPics
 from wc.log import *
 # JS imports
 from wc.js.JSListener import JSListener
@@ -175,13 +174,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
        data.
     """
 
-    def __init__ (self, rules, pics, url, **opts):
+    def __init__ (self, rules, ratings, url, **opts):
         "init rules and buffers"
         # XXX use super()?
         BufferHtmlParser.__init__(self)
         JSHtmlListener.__init__(self, opts)
         self.rules = rules
-        self.pics = pics
+        self.ratings = ratings
         self.comments = opts['comments']
         self.level = opts.get('level', 0)
         self.state = ('parse',)
@@ -284,8 +283,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
 
     def buf2data (self, finish=False):
-        """dont write any data to buf if there are still pics rules"""
-        if self.pics and not finish:
+        """dont write any data to buf if there are still rating rules"""
+        if self.ratings and not finish:
             return
         BufferHtmlParser.buf2data(self)
 
@@ -336,20 +335,20 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         rulelist = []
         filtered = False
         if tag=="meta":
-            if attrs.get('http-equiv', '').lower() =='pics-label':
-                labels = resolve_html_entities(attrs.get('content', ''))
+            if attrs.get('http-equiv', '').lower() =='content-rating':
+                rating = resolve_html_entities(attrs.get('content', ''))
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
                 # often
-                pics_add(self.url, labels)
+                rating_add(self.url, rating_parse(rating))
         elif tag=="body":
-            if self.pics:
-                # headers finished, check PICS data
-                for rule in self.pics:
-                    msg = pics_allow(self.url, rule)
+            if self.ratings:
+                # headers finished, check rating data
+                for rule in self.ratings:
+                    msg = rating_allow(self.url, rule)
                     if msg:
-                        raise FilterPics(msg)
-                self.pics = []
+                        raise FilterRating(msg)
+                self.ratings = []
         elif tag=="base" and attrs.has_key('href'):
             self.base_url = strip_quotes(attrs['href'])
             self._debug("using base url %r", self.base_url)
@@ -528,7 +527,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_output = 0
         self.js_env.attachListener(self)
         # start recursive html filter (used by jsProcessData)
-        self.js_html = FilterHtmlParser(self.rules, self.pics, self.url,
+        self.js_html = FilterHtmlParser(self.rules, self.ratings, self.url,
                          comments=self.comments, javascript=self.javascript,
                          level=self.level+1)
         # execute

@@ -61,6 +61,13 @@ class FilterWait (FilterException):
     pass
 
 
+class FilterRating (FilterException):
+    """Raised when filter detected rated content.
+       Proxy must not have sent any content.
+    """
+    pass
+
+
 def printFilterOrder (i):
     if i==FILTER_REQUEST:
         s = "Request"

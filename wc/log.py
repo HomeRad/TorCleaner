@@ -19,7 +19,7 @@ logging. Look in logging.conf if you want to customize their behaviour
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 # public api
-__all__ = ["FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS", "PICS",
+__all__ = ["FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS", "RATING",
            "AUTH", "CONNECTION", "debug", "info", "warn", "error", "critical",
            "exception", "initlog", "set_format"]
 __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
@@ -40,7 +40,7 @@ AUTH = "wc.proxy.auth"
 DNS = "wc.proxy.dns"
 GUI = "wc.gui"
 ACCESS = "wc.access"
-PICS = "wc.pics"
+RATING = "wc.rating"
 
 
 def initlog (filename):

@@ -269,9 +269,9 @@ Rule (don't) match url
 </table>
 <hr noshade size="1">
 
-<!-- PicsRule -->
-<h2>PicsRule</h2>
-<table metal:define-macro="pics" summary="">
+<!-- RatingRule -->
+<h2>RatingRule</h2>
+<table metal:define-macro="rating" summary="">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
 </tr>
@@ -285,25 +285,14 @@ Rule (don't) match url
  value="http://www..." tal:attributes="value currule/url">
 </td></tr>
 <tr valign="top"><td>
-<span i18n:translate="">PICS ratings</span>:
+<span i18n:translate="">Ratings</span>:
 </td><td>
-<div tal:repeat="service pics_data/keys">
-<input tal:condition="currule/ratings/?service"
- type="checkbox" tal:attributes="name string:service_${service}" checked ><input 
- tal:condition="not:currule/ratings/?service"
- type="checkbox" tal:attributes="name string:service_${service}">&nbsp;<span
- i18n:translate="">Service</span>&nbsp;<a href="http://imadoofus.com"
- tal:attributes="href pics_data/?service/home"
- tal:content="pics_data/?service/name">WebCleaner</a>
-<br>
-<div tal:condition="currule/ratings/?service"
- tal:repeat="category pics_data/?service/categories/keys"
+<div tal:repeat="category webcleaner_rating/categories/keys"
  style="margin-left:30px;">
 <input type="text" size="4"
- tal:attributes="name string:category_${service}_${category};value currule/ratings/?service/?category"
+ tal:attributes="name string:category_${category};value currule/ratings/?category"
 >&nbsp;<span
- i18n:translate="">Category</span>&nbsp;<span tal:content="pics_data/?service/categories/?category/name">adult</span>
-</div>
+ i18n:translate="">Category</span>&nbsp;<span tal:content="webcleaner_rating/categories/?category/name">adult</span>
 </div>
 </td>
 </tr>

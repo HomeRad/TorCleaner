@@ -77,7 +77,7 @@ from HeaderRule import *
 from ImageRule import *
 from JavascriptRule import *
 from NocommentsRule import *
-from PicsRule import *
+from RatingRule import *
 from ReplaceRule import *
 from RewriteRule import *
 from UrlRule import *

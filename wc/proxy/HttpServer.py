@@ -15,8 +15,7 @@ from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
-from wc.filter.PICS import FilterPics
-from wc.filter import applyfilter, get_filterattrs, FilterWait
+from wc.filter import applyfilter, get_filterattrs, FilterWait, rating
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
@@ -284,12 +283,13 @@ class HttpServer (Server):
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER, msg,
                                        "finish", self.attrs)
-        except FilterPics, msg:
-            debug(PROXY, "%s FilterPics from header: %s", self, msg)
-            if msg.isPicsMissing():
-                self.show_pics_config(str(msg))
+        except FilterRating, msg:
+            debug(PROXY, "%s FilterRating from header: %s", self, msg)
+            msg = str(msg)
+            if msg==rating.MISSING:
+                self.show_rating_config(msg)
             else:
-                self.show_pics_deny(str(msg))
+                self.show_rating_deny(msg)
             return
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
@@ -328,13 +328,13 @@ class HttpServer (Server):
         return False
 
 
-    def show_pics_config (self, msg):
-        """called for missing PICS data, displays PICS configuration"""
+    def show_rating_config (self, msg):
+        """called for missing rating data, displays configuration"""
         self.statuscode = 302
         # XXX get version
         response = "HTTP/1.1 302 Moved Temporarly"
         s = 'Content-type: text/plain\r\n'
-        s += 'Location: http://localhost:%d/pics.html?url=%s\r\n'%\
+        s += 'Location: http://localhost:%d/rating.html?url=%s\r\n'%\
                (config['port'], urllib.quote_plus(self.url))
         s += 'Content-Length: %d\r\n'%len(msg)
         headers = WcMessage(StringIO(s))
@@ -347,8 +347,8 @@ class HttpServer (Server):
         self.reuse()
 
 
-    def show_pics_deny (self, msg):
-        """called for unallowed pages according to PICS label"""
+    def show_rating_deny (self, msg):
+        """called for unallowed pages according to rating"""
         # XXX
         pass
 
@@ -381,12 +381,12 @@ class HttpServer (Server):
                     self.client.server_content(data)
         except FilterWait, msg:
             debug(PROXY, "%s FilterWait %s", self, msg)
-        except FilterPics, msg:
-            debug(PROXY, "%s FilterPics from content %s", self, msg)
-            if msg.isPicsMissing():
-                self.show_pics_config(str(msg))
+        except FilterRating, msg:
+            debug(PROXY, "%s FilterRating from content %s", self, msg)
+            if msg.isMissing():
+                self.show_rating_config(str(msg))
             else:
-                self.show_pics_deny(str(msg))
+                self.show_rating_deny(str(msg))
             return
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0

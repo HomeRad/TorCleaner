@@ -30,8 +30,6 @@ from wc.filter.rules import register_rule as _register_rule
 from wc.filter.rules import recalc_up_down as _recalc_up_down
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
-from wc.filter.PICS import services as pics_data
-from wc.filter.PICS import pics_is_valid_value as _pics_is_valid_value
 
 # config vars
 info = {}
@@ -499,46 +497,34 @@ def _form_apply_nocomments (form):
     _form_rule_matchurl(form)
 
 
-def _form_apply_pics (form):
+def _form_apply_rating (form):
     _form_rule_matchurl(form)
-    # PICS services
-    for service in pics_data.keys():
-        if form.has_key("service_%s"%service):
-            if not currule.ratings.has_key(service):
-                # service enable
-                currule.ratings[service] = {}
-                info['ruleserviceenable'] = True
-        elif currule.ratings.has_key(service):
-            # service disable
-            del currule.ratings[service]
-            info['ruleservicedisable'] = True
-        # service categories
-        if currule.ratings.has_key(service):
-            for cat, catdata in pics_data[service]['categories'].items():
-                key = "category_%s_%s"%(service, cat)
-                if form.has_key(key):
-                    value = _getval(form, key)
-                    if not _pics_is_valid_value(catdata, value):
-                        error['picscategoryvalue'] = True
-                        return
-                    if cat not in currule.ratings[service]:
-                        currule.ratings[service][cat] = value
-                        if value:
-                            info['rulecategoryenable'] = True
-                        else:
-                            info['rulecategorydisable'] = True
-                    elif currule.ratings[service][cat]!=value:
-                        currule.ratings[service][cat] = value
-                        if value:
-                            info['rulecategoryenable'] = True
-                        else:
-                            info['rulecategorydisable'] = True
+    # rating categories
+    for category, catdata in webcleaner_rating['categories'].items():
+        key = "category_%s"%category
+        if form.has_key(key):
+            value = _getval(form, key)
+            if not _is_valid_rating_value(catdata, value):
+                error['categoryvalue'] = True
+                return
+            if category not in currule.ratings:
+                currule.ratings[category] = value
+                if value:
+                    info['rulecategoryenable'] = True
                 else:
-                    # note: if fresh enabled, the categories are not yet
-                    # initialized with empty strings
-                    if currule.ratings[service].get(cat):
-                        info['rulecategorydisable'] = True
-                    currule.ratings[service][cat] = ""
+                    info['rulecategorydisable'] = True
+            elif currule.ratings[category]!=value:
+                currule.ratings[category] = value
+                if value:
+                    info['rulecategoryenable'] = True
+                else:
+                    info['rulecategorydisable'] = True
+        else:
+            # note: if fresh enabled, the categories are not yet
+            # initialized with empty strings
+            if currule.ratings.get(category):
+                info['rulecategorydisable'] = True
+            currule.ratings[category] = ""
 
 
 def _form_apply_replace (form):

@@ -153,7 +153,7 @@ def encode_values (d):
 # available filter modules
 filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                  "BinaryCharFilter", "Rewriter", "Replacer", "Compress",
-                 "PicsHeader",
+                 "RatingHeader",
                 ]
 filtermodules.sort()
 
@@ -353,13 +353,13 @@ rulenames = (
   'nocomments',
   'javascript',
   'replace',
-  'pics'
+  'rating'
 )
 _nestedtags = (
   # rewriter rule nested tag names
   'attr','enclosed','replacement',
-  # PICS rule nested tag names
-  'url', 'service','category',
+  # rating rule nested tag names
+  'url', 'category',
 )
 
 import wc.filter

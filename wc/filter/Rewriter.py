@@ -34,7 +34,7 @@ class Rewriter (Filter):
     orders = [FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
-    rulenames = ['rewrite', 'nocomments', 'javascript', 'pics']
+    rulenames = ['rewrite', 'nocomments', 'javascript', 'rating']
     mimelist = [compileMime(x) for x in ['text/html']]
 
     def addrule (self, rule):
@@ -69,8 +69,8 @@ class Rewriter (Filter):
         """We need a separate filter instance for stateful filtering"""
         d = super(Rewriter, self).getAttrs(url, headers)
         rewrites = []
-        pics = []
-        # look if headers already have PICS label info
+        ratings = []
+        # look if headers already have rating info
         opts = {'comments': True, 'javascript': False}
         for rule in self.rules:
             if not rule.appliesTo(url):
@@ -81,8 +81,8 @@ class Rewriter (Filter):
                 opts['comments'] = False
             elif rule.get_name()=='javascript':
                 opts['javascript'] = True
-            elif rule.get_name()=='pics':
-                pics.append(rule)
+            elif rule.get_name()=='rating':
+                ratings.append(rule)
         # generate the HTML filter
-        d['rewriter_filter'] = FilterHtmlParser(rewrites, pics, url, **opts)
+        d['rewriter_filter'] = FilterHtmlParser(rewrites, ratings, url, **opts)
         return d
