@@ -71,19 +71,19 @@ def init_dns_resolver_nt ():
         except EnvironmentError:
             pass
     if key:
-        for server in winreg.stringdisplay(key["NameServer"]):
+        for server in winreg.stringdisplay(key.get("NameServer", "")):
             if server:
                 DnsConfig.nameservers.append(str(server))
-        for item in winreg.stringdisplay(key["SearchList"]):
+        for item in winreg.stringdisplay(key.get("SearchList", "")):
             if item:
                 DnsConfig.search_domains.append(str(item))
         if not DnsConfig.nameservers:
             # XXX the proper way to test this is to search for
             # the "EnableDhcp" key in the interface adapters...
-            for server in winreg.stringdisplay(key["DhcpNameServer"]):
+            for server in winreg.stringdisplay(key.get("DhcpNameServer", "")):
                 if server:
                     DnsConfig.nameservers.append(str(server))
-            for item in winreg.stringdisplay(key["DhcpDomain"]):
+            for item in winreg.stringdisplay(key.get("DhcpDomain", "")):
                 if item:
                     DnsConfig.search_domains.append(str(item))
 
