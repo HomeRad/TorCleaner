@@ -60,6 +60,7 @@ tempfile.tempdir = ConfigDir
 class ConfWindow (ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_PORT,
+     ID_DEBUGLEVEL,
      ID_PROXYUSER,
      ID_PROXYPASS,
      ID_FILTERMODULE,
@@ -92,7 +93,7 @@ class ConfWindow (ToolWindow):
      ID_ALLOWEDHOSTS_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+33)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+34)
 
 
     def __init__ (self, app):
@@ -131,6 +132,7 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_APPLY,ConfWindow.onUpdApply)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PORT,ConfWindow.onCmdPort)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DEBUGLEVEL,ConfWindow.onCmdDebuglevel)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXY,ConfWindow.onCmdParentProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYPORT,ConfWindow.onCmdParentProxyPort)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_LOGFILE,ConfWindow.onCmdLogfile)
@@ -187,6 +189,21 @@ class ConfWindow (ToolWindow):
         widget.setValue(self.port)
         FXLabel(matrix, i18n._("Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n(standard out) or a filename (relative or absolute)."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_LOGFILE).setText(self.logfile)
+        FXLabel(matrix, i18n._("Debug level"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        cols=0
+        d = FXComboBox(matrix,0,4,self, self.ID_DEBUGLEVEL,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
+        levels = [
+            i18n._("No debugging"),
+            i18n._("Bring it on"),
+            i18n._("Hurt me plenty"),
+            i18n._("Nightmare"),
+        ]
+        for text in levels:
+            cols = max(len(text), cols)
+            d.appendItem(text)
+        d.setEditable(0)
+        d.setNumColumns(cols)
+        d.setCurrentItem(self.debuglevel)
 
         f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -384,6 +401,14 @@ class ConfWindow (ToolWindow):
         self.proxypass = base64.encodestring(sender.getText()).strip()
         self.getApp().dirty = 1
         debug(BRING_IT_ON, "Proxy password was changed")
+        return 1
+
+
+    def onCmdDebuglevel (self, sender, sel, ptr):
+        if self.debuglevel != sender.getCurrentItem():
+            self.debuglevel = sender.getCurrentItem()
+            self.getApp().dirty = 1
+            debug(BRING_IT_ON, "Debuglevel=%d"%self.debuglevel)
         return 1
 
 
