@@ -53,6 +53,8 @@
     Added: wc/google.py, templates/classic/google.html,
       wc/webgui/context/google_html.py
     Changed: wc/proxy/HttpClient.py
+  * merge upstream changes of simpleTAL 3.5 and 3.6
+    Changed: wc/webgui/simpletal/*.py, templates/classic/filterconfig.html
 
 2.1
   * lots of minor bugs fixed running pychecker
