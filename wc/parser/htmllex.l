@@ -517,7 +517,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     APPEND_TO_TMP(yyleng);
     BEGIN(S_SCRIPT);
 }
-                         
+
 <S_SCRIPT_COMMENT>-([^-\r\n]+|-[^>\r\n]+) {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
