@@ -7,7 +7,7 @@ used by Bastian Kleineidam for WebCleaner
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, socket, select, asyncore, re, urlparse, urllib, os
+import time, socket, select, asyncore, re, urlparse, urllib, os, cgi
 # remove asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 # add the fileno function
@@ -47,7 +47,6 @@ def url_norm (url):
     urlparts[0] = urllib.unquote(urlparts[0])
     urlparts[1] = urllib.unquote(urlparts[1])
     urlparts[2] = urllib.unquote(urlparts[2])
-    urlparts[3] = urllib.unquote_plus(urlparts[3])
     urlparts[4] = urllib.unquote(urlparts[4])
     path = urlparts[2].replace('\\', '/')
     if not path or path=='/':
@@ -67,7 +66,6 @@ def url_quote (url):
     urlparts[0] = urllib.quote(urlparts[0])
     urlparts[1] = urllib.quote(urlparts[1], ':')
     urlparts[2] = urllib.quote(urlparts[2], '/')
-    urlparts[3] = urllib.quote_plus(urlparts[3], '=&/')
     urlparts[4] = urllib.quote(urlparts[4])
     return urlparse.urlunsplit(urlparts)
 
@@ -77,7 +75,6 @@ def document_quote (document):
     doc, query = urllib.splitquery(document)
     doc = urllib.quote(doc, '/')
     if query:
-        query = urllib.quote_plus(query, '=&')
         return "%s?%s" % (doc, query)
     return doc
 
