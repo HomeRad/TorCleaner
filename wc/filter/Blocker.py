@@ -166,6 +166,8 @@ class Blocker (Filter):
         """
         url = attrs['url']
         mime = attrs['mime']
+        if mime is None:
+            mime = "text/html"
         parts = spliturl(url)
         debug(FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
