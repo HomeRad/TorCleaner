@@ -9,7 +9,6 @@ from wc.filter import GetRuleFromName
 from wc.filter.PICS import services as pics_data
 
 # t_* variables are translated texts
-title = i18n._("%s filter rule configuration") % AppName
 t_accessibility = i18n._("Accessibility statement")
 tt_accessibility = i18n._("accessibility features of these pages")
 t_feedback = i18n._("Feedback")

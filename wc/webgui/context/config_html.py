@@ -6,7 +6,6 @@ from wc import Configuration as _Configuration
 from wc.webgui.context import getval, getlist
 
 # translations
-title = i18n._("%s proxy configuration") % AppName
 t_accessibility = i18n._("Accessibility statement")
 tt_accessibility = i18n._("accessibility features of these pages")
 t_feedback = i18n._("Feedback")
