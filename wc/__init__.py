@@ -47,7 +47,8 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
-BaseUrl = "http://webcleaner.sourceforge.net/zapper/"
+#BaseUrl = "http://webcleaner.sourceforge.net/zapper/"
+BaseUrl = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
 
 from XmlUtils import xmlify, unxmlify
 
@@ -271,18 +272,20 @@ class Configuration (dict):
 
 
     def merge_folder (self, folder, dryrun=False, log=None):
+        """merge given folder data into config
+        return True if something has changed
+        """
         # test for correct category
         assert folder.sid.startswith("wc")
-        found = False
-        for rule in self['folderrules']:
-            if rule.sid==folder.sid:
-                rule.update(folder, dryrun=dryrun, log=log)
-                found = True
-                break
-        if not found:
+        f = [ rule for rule in self['folderrules'] if rule.sid==folder.sid ]
+        if f:
+            chg = f[0].update(folder, dryrun=dryrun, log=log)
+        else:
+            chg = True
             print >>log, "inserting", folder.tiptext()
             if not dryrun:
                 self['folderrules'].append(folder)
+        return chg
 
 
     def write_filterconf (self):

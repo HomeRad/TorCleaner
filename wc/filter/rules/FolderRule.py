@@ -76,14 +76,14 @@ class FolderRule (Rule):
 
     def update (self, folder, dryrun=False, log=None):
         """update this folder with given folder data"""
-        super(FolderRule, self).update(folder, dryrun=dryrun, log=log)
+        chg = super(FolderRule, self).update(folder, dryrun=dryrun, log=log)
         for rule in folder.rules:
             if not rule.sid.startswith("wc"):
                 # ignore local rules
                 continue
             oldrule = self.get_rule(rule.sid)
             if oldrule is not None:
-                oldrule.update(rule, dryrun=dryrun, log=log)
+                chg = oldrule.update(rule, dryrun=dryrun, log=log) or chg
             else:
                 print >>log, "inserting new rule", rule.tiptext()
                 # XXX new rules get appended at the end. this may be
@@ -92,6 +92,8 @@ class FolderRule (Rule):
                     self.rules.append(rule)
                     recalc_oids(self.rules)
                     recalc_up_down(self.rules)
+                    chg = True
+        return chg
 
 
     def get_rule (self, sid):

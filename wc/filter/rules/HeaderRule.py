@@ -44,8 +44,8 @@ class HeaderRule (UrlRule):
 
 
     def update (self, rule, dryrun=False, log=None):
-        super(HeaderRule, self).update(rule, dryrun=dryrun, log=log)
-        self.update_attrs(['value'], rule, dryrun, log)
+        chg = super(HeaderRule, self).update(rule, dryrun=dryrun, log=log)
+        return self.update_attrs(['value'], rule, dryrun, log) or chg
 
 
     def toxml (self):

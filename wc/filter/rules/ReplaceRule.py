@@ -41,8 +41,8 @@ class ReplaceRule (UrlRule):
 
 
     def update (self, rule, dryrun=False, log=None):
-        super(ReplaceRule, self).update(rule, dryrun=dryrun, log=log)
-        self.update_attrs(['replace'], rule, dryrun, log)
+        chg = super(ReplaceRule, self).update(rule, dryrun=dryrun, log=log)
+        return self.update_attrs(['replace'], rule, dryrun, log) or chg
 
 
     def toxml (self):

@@ -122,9 +122,9 @@ class RewriteRule (UrlRule):
 
 
     def update (self, rule, dryrun=False, log=None):
-        super(RewriteRule, self).update(rule, dryrun=dryrun, log=log)
+        chg = super(RewriteRule, self).update(rule, dryrun=dryrun, log=log)
         attrs = ['attrs', 'part', 'replacement', 'enclosed']
-        self.update_attrs(attrs, rule, dryrun, log)
+        return self.update_attrs(attrs, rule, dryrun, log) or chg
 
 
     def _compute_start_sufficient (self):

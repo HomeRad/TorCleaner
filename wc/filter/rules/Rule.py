@@ -61,17 +61,20 @@ class Rule (object):
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
         print >>log, "updating rule", self.tiptext()
         l = [a for a in self.attrnames if a not in ['sid', 'oid', 'disable'] ]
-        self.update_attrs(l, rule, dryrun, log)
+        return self.update_attrs(l, rule, dryrun, log)
 
 
     def update_attrs (self, attrs, rule, dryrun, log):
+        chg = False
         for attr in attrs:
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
                 print >>log, attr, `oldval`, "==>", `newval`
+                chg = True
                 if not dryrun:
                     setattr(self, attr, newval)
+        return chg
 
 
     def __lt__ (self, other):
