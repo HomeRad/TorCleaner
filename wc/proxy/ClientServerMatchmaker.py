@@ -15,7 +15,6 @@ _localhosts = (
     'ip6-localhost',
     'ip6-loopback',
 )
-_intre = re.compile('^\d+$')
 
 from HttpServer import HttpServer
 
