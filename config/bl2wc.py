@@ -179,6 +179,12 @@ def blacklist (file):
 
 # for now, only kids_and_teens
 def dmozlists (file):
+    print "filtering %s..." % file
+    smallfile = "small_%s"%file
+    if not os.path.exists(small_file):
+        os.system(("zcat downloads/%s | config/dmozfilter.py | "+ \
+                  "gzip --best > downloads/%s") % (file, smallfile))
+    file = smallfile
     print "dmozlist %s..." % file
     f = gzip.GzipFile("downloads/"+file)
     line = f.readline()
@@ -249,11 +255,11 @@ def download_and_merge ():
     # from Craig Baird
     geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist, saveas="porn/domains.gz")
     # from ?????
-    geturl("http://squidguard.mesd.k12.or.us/", "squidguard.tar.gz", blacklist)
+    #geturl("http://squidguard.mesd.k12.or.us/", "squidguard.tar.gz", blacklist)
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
     # dmoz category dumps (this big fucker is 195MB !!!)
-    geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists, saveas="content.rdf.stripped.gz")
+    geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
 
 def write_lists ():
     open_files("config")
