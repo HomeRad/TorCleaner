@@ -28,10 +28,11 @@ class AllowRule (UrlRule):
        See also the Blocker filter module.
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, scheme="", url=""):
+                  disable=0, url="", matchurls=[], nomatchurls=[]):
         """initialize rule data"""
         super(AllowRule, self).__init__(sid=sid, titles=titles,
-                                  descriptions=descriptions, disable=disable)
+                                descriptions=descriptions, disable=disable,
+                                matchurls=matchurls, nomatchurls=nomatchurls)
         self.url = url
         self.attrnames.append('url')
 

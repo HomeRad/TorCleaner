@@ -28,9 +28,11 @@ from wc.log import *
 
 class RatingRule (UrlRule):
     """holds configured rating data"""
-    def __init__ (self, sid=None, titles=None, descriptions=None, disable=0):
+    def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
+                  matchurls=[], nomatchurls=[]):
         super(RatingRule, self).__init__(sid=sid, titles=titles,
-                                   descriptions=descriptions, disable=disable)
+                                descriptions=descriptions, disable=disable,
+                                matchurls=matchurls, nomatchurls=nomatchurls)
         # category -> rating value
         self.ratings = {}
         self.url = ""

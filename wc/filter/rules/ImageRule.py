@@ -26,10 +26,12 @@ class ImageRule (UrlRule):
     """if enabled, tells the Image filter to block certain images"""
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, width=0, height=0, formats=[], url=""):
+                  disable=0, width=0, height=0, formats=[], url="",
+                  matchurls=[], nomatchurls=[]):
         """initalize rule data"""
         super(ImageRule, self).__init__(sid=sid, titles=titles,
-                                  descriptions=descriptions, disable=disable)
+                                descriptions=descriptions, disable=disable,
+                                matchurls=matchurls, nomatchurls=nomatchurls)
         self.width = width
         self.height = height
         self.intattrs.extend(('width','height'))

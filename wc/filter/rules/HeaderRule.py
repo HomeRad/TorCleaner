@@ -26,10 +26,12 @@ class HeaderRule (UrlRule):
     """rule for filtering HTTP headers"""
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, name="noname", value="", filterstage="request"):
+                  disable=0, name="noname", value="", filterstage="request",
+                  matchurls=[], nomatchurls=[]):
         """init rule name and value"""
         super(HeaderRule, self).__init__(sid=sid, titles=titles,
-                                   descriptions=descriptions, disable=disable)
+                                 descriptions=descriptions, disable=disable,
+                                 matchurls=matchurls, nomatchurls=nomatchurls)
         self.name = name
         self.value = value
         self.filterstage = filterstage

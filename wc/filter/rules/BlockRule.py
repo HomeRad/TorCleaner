@@ -28,10 +28,11 @@ class BlockRule (AllowRule):
        See also the Blocker filter module.
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, url="", replacement=""):
+                  disable=0, url="", replacement="", matchurls=[], nomatchurls=[]):
         """initialize rule data"""
         super(BlockRule, self).__init__(sid=sid, titles=titles,
-                          descriptions=descriptions, disable=disable, url=url)
+                          descriptions=descriptions, disable=disable, url=url,
+                          matchurls=matchurls, nomatchurls=nomatchurls)
         self.replacement = replacement
 
 
