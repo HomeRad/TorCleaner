@@ -1,12 +1,7 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
 import sys, os, stat, mimetypes
-try:
-    import wc
-except ImportError:
-    print "using local development version"
-    sys.path.insert(0, os.getcwd())
-    import wc
+import wc
 
 def _main():
     f = sys.argv[1]

@@ -4,13 +4,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-try:
-    from wc.proxy import stripsite
-except ImportError:
-    print "using local development version"
-    import sys, os
-    sys.path.insert(0, os.getcwd())
-    from wc.proxy import stripsite
+from wc.proxy import stripsite
 
 # default realm for authentication
 wc_realm = "unknown"

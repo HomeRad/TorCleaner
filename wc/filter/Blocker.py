@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, urlparse, os, gzip
+import re, os, gzip
 from wc.filter import FILTER_REQUEST, FilterException
 from wc.filter.Filter import Filter
 from wc import ConfigDir, config

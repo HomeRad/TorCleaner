@@ -1,13 +1,7 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
 import sys
-try:
-    import wc
-except ImportError:
-    print "using local development version"
-    import os
-    sys.path.insert(0, os.getcwd())
-    import wc
+import wc
 
 
 def _main():

@@ -3,13 +3,7 @@
 """proxy client tester"""
 
 import httplib, urlparse, sys
-try:
-    import wc
-except ImportError:
-    print "using local development version"
-    import os
-    sys.path.insert(0, os.getcwd())
-    import wc
+import wc
 
 def main (tests):
     if not tests:

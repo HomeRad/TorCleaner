@@ -162,7 +162,8 @@ class HttpServer (Server):
 
 
     def process_read (self):
-        assert self.state not in ('connect', 'client') or self.client.method=='CONNECT', \
+        assert self.state not in ('connect', 'client') or \
+            (self.client and self.client.method=='CONNECT'), \
             'server should not receive data in %s state'%self.state
 
         while True:

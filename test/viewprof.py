@@ -17,9 +17,9 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-import pstats,glob
+import pstats, glob
 
-for file in glob.glob('*.prof'):
-    stats = pstats.Stats(file)
+for filename in glob.glob('*.prof'):
+    stats = pstats.Stats(filename)
     stats.strip_dirs().sort_stats("cumulative").print_stats(50)
     #stats.print_callees()

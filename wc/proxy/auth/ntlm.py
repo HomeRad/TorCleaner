@@ -44,13 +44,8 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
 import base64, random, struct, time
 from Crypto.Hash import MD4
 from Crypto.Cipher import DES
-try:
-    from wc.log import *
-except ImportError:
-    print "using local development version"
-    import sys, os
-    sys.path.insert(0, os.getcwd())
-    from wc.log import *
+from wc.log import *
+
 random.seed()
 
 nonces = {} # nonce to timestamp

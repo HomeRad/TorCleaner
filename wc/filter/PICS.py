@@ -52,9 +52,6 @@ Servicematch: vancouver
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-if __name__=='__main__':
-    import sys, os
-    sys.path.insert(0, os.getcwd())
 import re
 from wc.log import *
 from wc import i18n

@@ -19,10 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import sys, re
-if __name__=='__main__':
-    import os
-    sys.path.insert(0, os.getcwd())
+import re
 from wc.levenshtein import distance
 from wc.log import *
 

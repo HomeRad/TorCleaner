@@ -20,9 +20,6 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import sys
-if __name__=='__main__':
-    import os
-    sys.path.insert(0, os.getcwd())
 try:
     import htmlsax
 except ImportError, msg:

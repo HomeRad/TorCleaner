@@ -2,6 +2,7 @@ SUBDIRS 		= po libjs
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
+ENV = env http_proxy="" ftp_proxy="" LANG=C PYTHONPATH=$(CURDIR)
 WCVERSION := $(shell $(PYTHON) setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
@@ -45,42 +46,22 @@ dist-hook:
 	rm -f webcleaner-md5sums.txt
 
 mytest:
-	env http_proxy="" ftp_proxy="" LANG=C $(PYTHON) test/regrtest.py
+	$(ENV) $(PYTHON) test/regrtest.py
 
 gentest:
-	$(PYTHON) test/regrtest.py -g
-
-restart:
-	$(PYTHON) webcleaner restart
-	rm -f index.html* test.gif
-	sleep 4
-
-authtest: restart
-	env http_proxy="http://localhost:8080" wget -S --proxy-user=wummel --proxy-pass=wummel -t1 http://www.heise.de/
-
+	$(ENV) $(PYTHON) test/regrtest.py -g
 
 # filter and parse random data
 randomtest:
 	@echo "parse random data..."
 	rm -f randomparse.txt
-	head -c 20000 /dev/urandom | $(PYTHON) test/parsefile.py - > /dev/null 2> randomparse.txt
+	head -c 20000 /dev/urandom | $(ENV) $(PYTHON) test/parsefile.py - > /dev/null 2> randomparse.txt
 	@echo "done."
 	rm -f randomfilter.txt
 	@echo "filter random data..."
-	head -c 20000 /dev/urandom | $(PYTHON) test/filterfile.py - > /dev/null 2> randomfilter.txt
+	head -c 20000 /dev/urandom | $(ENV) $(PYTHON) test/filterfile.py - > /dev/null 2> randomfilter.txt
 	@echo "done."
 
-
-#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/
-#env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/advert/test.gif
-onlinetest: restart
-	env http_proxy="http://localhost:8080" wget -S -t1 http://www.heise.de/
-	less index.html
-
-offlinetest: restart
-	env http_proxy="http://localhost:8080" wget -S -t1 http://localhost:8080/
-	cat index.html
-	rm -f index.html
 
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
@@ -118,7 +99,7 @@ homepage: VERSION md5sums
 
 doc:
 	rm -f README
-	pydoc2 ./webcleaner > README
+	pydoc$(PYVER) ./webcleaner > README
 
 debug:
 	@for f in `find . -name \*.py`; do \

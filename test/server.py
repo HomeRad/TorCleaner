@@ -3,13 +3,7 @@
 """proxy server simulator"""
 
 import sys
-try:
-    import wc
-except ImportError:
-    print "using local development version"
-    import os
-    sys.path.insert(0, os.getcwd())
-    import wc
+import wc
 from wc.proxy import Listener, HttpClient, proxy_poll, run_timers
 
 

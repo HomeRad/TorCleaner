@@ -2,13 +2,7 @@
 """download one image and try to guess its size"""
 import Image, sys
 from StringIO import StringIO
-try:
-    from wc.update import open_url
-except ImportError:
-    print "using local development version"
-    import os
-    sys.path.insert(0, os.getcwd())
-    from wc.update import open_url
+from wc.update import open_url
 
 def usage ():
     print "usage: imagesize.py <url> [bufsize]"
