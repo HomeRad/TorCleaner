@@ -19,11 +19,12 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import Image
+import Image, os
 from StringIO import StringIO
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
 from wc.filter.Filter import Filter
 from wc.log import *
+from wc import TemplateDir, config
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
@@ -43,6 +44,11 @@ class ImageSize (Filter):
         # minimal amount of image data for PIL to read header info
         # 6000 bytes should be enough, even for JPEG images
         self.min_bufsize = 6000
+        fname = os.path.join(TemplateDir, config['gui_theme'])
+        fname = os.path.join(fname, "blocked.png")
+        f = file(fname)
+        self.blockdata = f.read()
+        f.close()
 
 
     def addrule (self, rule):
@@ -52,36 +58,46 @@ class ImageSize (Filter):
 
 
     def filter (self, data, **attrs):
-        if not attrs.has_key('buffer') or attrs['buffer'].closed:
-            # we do not block this image
-            # or we do not have enough buffer data yet
+        if not attrs.has_key('buffer'):
+            # do not block this image
+            return data
+        if attrs['blocked']:
+            # block this image
+            return ''
+        if attrs['buffer'].closed:
             return data
         buf = attrs['buffer']
         buf.write(data)
         if buf.tell() > self.min_bufsize:
-            if self.check_sizes(buf, attrs['sizes']):
-                # size is ok
-                data = buf.getvalue()
-                buf.close()
-                return data
+            attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'], attrs['url'])
+            data = buf.getvalue()
+            buf.close()
+            if attrs['blocked']:
+                return self.blockdata
+            return data
         return ''
 
 
     def finish (self, data, **attrs):
-        if not attrs.has_key('buffer') or attrs['buffer'].closed:
-            # we do not block this image
+        if not attrs.has_key('buffer'):
+            # do not block this image
+            return data
+        if attrs['blocked']:
+            # block this image
+            return ''
+        if attrs['buffer'].closed:
             return data
         buf = attrs['buffer']
         buf.write(data)
-        if self.check_sizes(buf, attrs['sizes']):
-            # size is ok
-            data = buf.getvalue()
-            buf.close()
-            return data
-        return ''
+        attrs['blocked'] = not self.check_sizes(buf, attrs['sizes'], attrs['url'])
+        data = buf.getvalue()
+        buf.close()
+        if attrs['blocked']:
+            return self.blockdata
+        return data
 
 
-    def check_sizes (self, buf, sizes):
+    def check_sizes (self, buf, sizes, url):
         try:
             buf.seek(0)
             img = Image.open(buf, 'r')
@@ -89,11 +105,13 @@ class ImageSize (Filter):
                 if size==img.size:
                     # size matches, look for format restriction
                     if not formats:
+                        debug(FILTER, "Blocking image size %s", str(size))
                         return False
                     elif img.format.lower() in formats:
+                        debug(FILTER, "Blocking image size %s", str(size))
                         return False
         except IOError:
-            exception(FILTER, "Could not get image size")
+            exception(FILTER, "Could not get image size from %s", url)
         return True
 
 
@@ -104,5 +122,7 @@ class ImageSize (Filter):
             return {}
         sizes = [((rule.width, rule.height), rule.formats) for rule in rules]
         return {'buffer': StringIO(),
-                'sizes': sizes}
+                'sizes': sizes,
+                'url': url,
+                'blocked': False}
 
