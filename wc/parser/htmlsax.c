@@ -12,6 +12,12 @@
 #error please install Python >= 2.0
 #endif
 
+#if 0
+#define debug(a) printf(a)
+#else
+#define debug(a)
+#endif
+
 /* user_data type for SAX calls */
 typedef struct {
     /* the Python SAX class instance */
@@ -47,8 +53,14 @@ staticforward PyTypeObject parser_type;
  * in the handler object).
  */
 
+// XXX hack: limiting buffer oversize to 1024 is not pretty
 static int encodedStrlen(const xmlChar* value, int len) {
-    return ((len - xmlUTF8Strlen(value))*10)+len+1024;
+    int extra = (len - xmlUTF8Strlen(value)) * 10;
+    debug("encodedStrlen\n");
+    if (extra<len) {
+	extra = len;
+    }
+    return extra+1024;
 }
 
 
@@ -58,6 +70,7 @@ static void _internalSubset (void* user_data, const xmlChar* name,
     PyObject* callback = PyObject_GetAttrString(ud->handler,
         					"internalSubset");
     PyObject* arglist = Py_BuildValue("(sss)", name, externId, systemId);
+    debug("internalSubset\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -74,6 +87,7 @@ static void _entityDecl (void* user_data, const xmlChar* name, int type,
 						"entityDecl");
     PyObject* arglist = Py_BuildValue("(sisss)", name, type, publicId,
 				      systemId, content);
+    debug("entityDecl\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -88,6 +102,7 @@ static void _notationDecl (void* user_data, const xmlChar* name,
     PyObject* callback = PyObject_GetAttrString(ud->handler,
 						"notationDecl");
     PyObject* arglist = Py_BuildValue("(sss)", name, publicId, systemId);
+    debug("notationDecl\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -107,6 +122,7 @@ static void _attributeDecl (void* user_data, const xmlChar* elem,
     PyObject* newName;
     xmlEnumerationPtr node;
     int count = 0;
+    debug("attributeDecl\n");
 
     for (node = tree; node!=NULL; node = node->next) {
         count++;
@@ -135,6 +151,7 @@ static void _elementDecl (void* user_data, const xmlChar* name, int type,
 						"elementDecl");
     // XXX content object wrapper
     PyObject* arglist = Py_BuildValue("(si)", name, type);
+    debug("elementDecl\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -152,6 +169,7 @@ static void _unparsedEntityDecl (void* user_data, const xmlChar* name,
 						"unparsedEntityDecl");
     PyObject* arglist = Py_BuildValue("(ssss)", name, publicId, systemId,
 				      notationName);
+    debug("unparsedEntityDecl\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -166,6 +184,7 @@ static void _setDocumentLocator (void* user_data, xmlSAXLocatorPtr loc) {
 						"setDocumentLocator");
     // XXX locator object wrapper
     PyObject* arglist = Py_BuildValue("(s)", "documentlocator");
+    debug("setDocumentLocator\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -178,6 +197,7 @@ static void _startDocument (void* user_data) {
     UserData* ud = (UserData*) user_data;
     PyObject* callback = PyObject_GetAttrString(ud->handler, "startDocument");
     PyObject* arglist = Py_BuildValue("()");
+    debug("startDocument\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -190,6 +210,7 @@ static void _endDocument (void* user_data) {
     UserData* ud = (UserData*) user_data;
     PyObject* callback = PyObject_GetAttrString(ud->handler, "endDocument");
     PyObject* arglist = Py_BuildValue("()");
+    debug("endDocument\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -207,6 +228,7 @@ static void _startElement (void* user_data, const xmlChar* name,
     PyObject* key;
     PyObject* value;
     int i;
+    debug("startElement\n");
     if (attrs) {
 	for (i=0; attrs[i] != NULL; i++) {
 	    key = PyString_FromString(attrs[i]);
@@ -244,6 +266,7 @@ static void _startElement (void* user_data, const xmlChar* name,
 
 
 static void _endElement (void* user_data, const xmlChar* name) {
+    debug("endElement\n");
     /* ignore invalid HTML endtags */
     if (xmlStrEqual(name,"area") ||
 	xmlStrEqual(name,"base") ||
@@ -278,6 +301,7 @@ static void _reference (void* user_data, const xmlChar* name) {
     UserData* ud = (UserData*) user_data;
     PyObject* callback = PyObject_GetAttrString(ud->handler, "reference");
     PyObject* arglist = Py_BuildValue("(s)", name);
+    debug("reference\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -293,6 +317,7 @@ static void _characters (void* user_data, const xmlChar* ch, int len) {
     int i;
     // calculate space needed for encoding
     int outlen = encodedStrlen(ch, len);
+    debug("characters\n");
     if (outlen > ud->buflen) {
         ud->buf = PyMem_Resize(ud->buf, unsigned char, outlen);
         ud->buflen = outlen;
@@ -323,6 +348,7 @@ static void _ignorableWhitespace (void* user_data, const xmlChar* ch, int len) {
     PyObject* callback = PyObject_GetAttrString(ud->handler,
 						"ignorableWhitespace");
     PyObject* arglist = Py_BuildValue("(s#)", ch, len);
+    debug("ignorableWhitespace\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -337,6 +363,7 @@ static void _processingInstruction (void* user_data, const xmlChar* target,
     PyObject* callback = PyObject_GetAttrString(ud->handler,
 						"processingInstruction");
     PyObject* arglist = Py_BuildValue("(ss)", target, data);
+    debug("processingInstruction\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -352,6 +379,7 @@ static void _comment (void* user_data, const xmlChar* value) {
     int len = strlen(value), i;
     // calculate space needed for encoding
     int outlen = encodedStrlen(value, len);
+    debug("comment\n");
     if (outlen > ud->buflen) {
         ud->buf = PyMem_Resize(ud->buf, unsigned char, outlen);
         ud->buflen = outlen;
@@ -378,23 +406,25 @@ static void _comment (void* user_data, const xmlChar* value) {
 
 static void _warning (void* user_data, const char* msg, ...) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"warning");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "warning");
     PyObject* arglist;
     va_list args;
     int line = getLineNumber(ud->context);
     int col = getColumnNumber(ud->context);
-    char* buf = PyMem_New(char, 1024);
+    debug("warning\n");
+    if (ud->buflen < 1024) {
+	ud->buf = PyMem_Resize(ud->buf, unsigned char, 1024);
+        ud->buflen = 1024;
+    }
     va_start(args, msg);
-    vsnprintf(buf, 1024, msg, args);
+    vsnprintf(ud->buf, 1024, msg, args);
     va_end(args);
-    arglist = Py_BuildValue("(iis)", line, col, buf);
+    arglist = Py_BuildValue("(iis)", line, col, ud->buf);
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
     }
     Py_DECREF(arglist);
-    PyMem_Del(buf);
 }
 
 
@@ -405,17 +435,20 @@ static void _error (void* user_data, const char* msg, ...) {
     va_list args;
     int line = getLineNumber(ud->context);
     int col = getColumnNumber(ud->context);
-    char* buf = PyMem_New(char, 1024);
+    debug("error\n");
+    if (ud->buflen < 1024) {
+	ud->buf = PyMem_Resize(ud->buf, unsigned char, 1024);
+        ud->buflen = 1024;
+    }
     va_start(args, msg);
-    vsnprintf(buf, 1024, msg, args);
+    vsnprintf(ud->buf, 1024, msg, args);
     va_end(args);
-    arglist = Py_BuildValue("(iis)", line, col, buf);
+    arglist = Py_BuildValue("(iis)", line, col, ud->buf);
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
     }
     Py_DECREF(arglist);
-    PyMem_Del(buf);
 }
 
 
@@ -426,17 +459,20 @@ static void _fatalError (void* user_data, const char* msg, ...) {
     va_list args;
     int line = getLineNumber(ud->context);
     int col = getColumnNumber(ud->context);
-    char* buf = PyMem_New(char, 1024);
+    debug("fatalError\n");
+    if (ud->buflen < 1024) {
+	ud->buf = PyMem_Resize(ud->buf, unsigned char, 1024);
+        ud->buflen = 1024;
+    }
     va_start(args, msg);
-    vsnprintf(buf, 1024, msg, args);
+    vsnprintf(ud->buf, 1024, msg, args);
     va_end(args);
-    arglist = Py_BuildValue("(iis)", line, col, buf);
+    arglist = Py_BuildValue("(iis)", line, col, ud->buf);
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
     }
     Py_DECREF(arglist);
-    PyMem_Del(buf);
 }
 
 
@@ -447,6 +483,7 @@ static void _cdataBlock (void* user_data, const xmlChar* ch, int len) {
     int i;
     // calculate space needed for encoding
     int outlen = encodedStrlen(ch, len);
+    debug("cdataBlock\n");
     if (outlen > ud->buflen) {
         ud->buf = PyMem_Resize(ud->buf, unsigned char, outlen);
         ud->buflen = outlen;
@@ -478,6 +515,7 @@ static void _externalSubset (void* user_data, const xmlChar* name,
     PyObject* callback = PyObject_GetAttrString(ud->handler,
 						"externalSubset");
     PyObject* arglist = Py_BuildValue("(sss)", name, externalID, systemID);
+    debug("externalSubset\n");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -556,6 +594,7 @@ static void parser_dealloc(parser_object* self)
 static PyObject* parser_flush(parser_object* self, PyObject* args) {
     /* flush parser buffers */
     int res=0;
+    debug("flush\n");
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
@@ -583,6 +622,7 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
     /* feed a chunk of data to the parser */
     int res=0, slen;
     const char* s;
+    debug("feed\n");
     if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
