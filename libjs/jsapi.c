@@ -242,10 +242,18 @@ JS_ConvertArgumentsVA(JSContext *cx, uintN argc, jsval *argv,
             *va_arg(ap, JSObject **) = obj;
             break;
           case 'f':
-            fun = js_ValueToFunction(cx, sp, 0);
-            if (!fun)
-                return JS_FALSE;
-            *sp = OBJECT_TO_JSVAL(fun->object);
+            /*
+             * Don't convert a cloned function object to its shared private
+             * data, then follow fun->object back to the clone-parent.
+             */
+            if (JSVAL_IS_FUNCTION(cx, *sp)) {
+                fun = (JSFunction *) JS_GetPrivate(cx, JSVAL_TO_OBJECT(*sp));
+            } else {
+                fun = js_ValueToFunction(cx, sp, 0);
+                if (!fun)
+                    return JS_FALSE;
+                *sp = OBJECT_TO_JSVAL(fun->object);
+            }
             *va_arg(ap, JSFunction **) = fun;
             break;
           case 'v':
@@ -464,10 +472,19 @@ JS_ConvertValue(JSContext *cx, jsval v, JSType type, jsval *vp)
             *vp = OBJECT_TO_JSVAL(obj);
         break;
       case JSTYPE_FUNCTION:
-        fun = js_ValueToFunction(cx, &v, JSV2F_SEARCH_STACK);
-        ok = (fun != NULL);
-        if (ok)
-            *vp = OBJECT_TO_JSVAL(fun->object);
+        /*
+         * Don't convert a cloned function object to its shared private data,
+         * then follow fun->object back to the clone-parent.
+         */
+        if (JSVAL_IS_FUNCTION(cx, v)) {
+            ok = JS_TRUE;
+            *vp = v;
+        } else {
+            fun = js_ValueToFunction(cx, &v, JSV2F_SEARCH_STACK);
+            ok = (fun != NULL);
+            if (ok)
+                *vp = OBJECT_TO_JSVAL(fun->object);
+        }
         break;
       case JSTYPE_STRING:
         str = js_ValueToString(cx, v);
@@ -2067,7 +2084,8 @@ JS_GetConstructor(JSContext *cx, JSObject *proto)
 JS_PUBLIC_API(JSBool)
 JS_GetObjectId(JSContext *cx, JSObject *obj, jsid *idp)
 {
-    *idp = (jsid) obj;
+    JS_ASSERT(((jsid)obj & JSVAL_TAGMASK) == 0);
+    *idp = (jsid) obj | JSVAL_INT;
     return JS_TRUE;
 }
 
@@ -2819,19 +2837,32 @@ JS_SetCheckObjectAccessCallback(JSRuntime *rt, JSCheckAccessOp acb)
     return oldacb;
 }
 
-JS_PUBLIC_API(JSBool)
-JS_GetReservedSlot(JSContext *cx, JSObject *obj, uint32 index, jsval *vp)
+static JSBool
+ReservedSlotIndexOK(JSContext *cx, JSObject *obj, JSClass *clasp,
+                    uint32 index, uint32 limit)
 {
-    JSClass *clasp;
-    uint32 slot;
-
-    CHECK_REQUEST(cx);
-    clasp = OBJ_GET_CLASS(cx, obj);
-    if (index >= JSCLASS_RESERVED_SLOTS(clasp)) {
+    /* Check the computed, possibly per-instance, upper bound. */
+    if (clasp->reserveSlots)
+        JS_LOCK_OBJ_VOID(cx, obj, limit += clasp->reserveSlots(cx, obj));
+    if (index >= limit) {
         JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                              JSMSG_RESERVED_SLOT_RANGE);
         return JS_FALSE;
     }
+    return JS_TRUE;
+}
+
+JS_PUBLIC_API(JSBool)
+JS_GetReservedSlot(JSContext *cx, JSObject *obj, uint32 index, jsval *vp)
+{
+    JSClass *clasp;
+    uint32 limit, slot;
+
+    CHECK_REQUEST(cx);
+    clasp = OBJ_GET_CLASS(cx, obj);
+    limit = JSCLASS_RESERVED_SLOTS(clasp);
+    if (index >= limit && !ReservedSlotIndexOK(cx, obj, clasp, index, limit))
+        return JS_FALSE;
     slot = JSSLOT_START(clasp) + index;
     *vp = OBJ_GET_REQUIRED_SLOT(cx, obj, slot);
     return JS_TRUE;
@@ -2841,15 +2872,13 @@ JS_PUBLIC_API(JSBool)
 JS_SetReservedSlot(JSContext *cx, JSObject *obj, uint32 index, jsval v)
 {
     JSClass *clasp;
-    uint32 slot;
+    uint32 limit, slot;
 
     CHECK_REQUEST(cx);
     clasp = OBJ_GET_CLASS(cx, obj);
-    if (index >= JSCLASS_RESERVED_SLOTS(clasp)) {
-        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                             JSMSG_RESERVED_SLOT_RANGE);
+    limit = JSCLASS_RESERVED_SLOTS(clasp);
+    if (index >= limit && !ReservedSlotIndexOK(cx, obj, clasp, index, limit))
         return JS_FALSE;
-    }
     slot = JSSLOT_START(clasp) + index;
     OBJ_SET_REQUIRED_SLOT(cx, obj, slot, v);
     return JS_TRUE;
