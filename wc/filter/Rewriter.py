@@ -69,7 +69,8 @@ class Rewriter (Filter):
     def finish (self, data, **attrs):
         if not attrs.has_key('filter'): return data
         p = attrs['filter']
-        if data: p.feed(data)
+        if data:
+            p.feed(data)
         p.flush()
         p.buf2data()
         return p.flushbuf()
@@ -111,7 +112,17 @@ def _buf2data (buf, outbuf):
 
 
 class HtmlFilter (HtmlParser,JSListener):
-    """The parser has the rules, a data buffer and a rule stack."""
+    """The parser has the rules, a data buffer and a rule stack.
+       States:
+       parse => default parsing state, no background fetching
+       wait  => Fetching additionally data in the background.
+                Feeding new data in wait state raises a FilterException.
+                When finished, the buffers look like
+                data    [---------|--------][-------][----------]
+                                  ^-script src tag
+                waitbuf           [--------]
+                inbuf                       [-------------- ...
+    """
     def __init__ (self, rules, url, **opts):
         if wc.config['showerrors']:
             self.error = self._error
@@ -142,20 +153,25 @@ class HtmlFilter (HtmlParser,JSListener):
     def feed (self, data):
         if self.state=='parse':
             if self.waited:
-                data = "%s%s%s" % (self.waitbuf.getvalue(),
-                                   self.inbuf.getvalue(),
-                                   data)
+                data = "%s%s" % (self.waitbuf.getvalue(),
+                                 self.inbuf.getvalue(),
+                                )
                 self.inbuf.close()
                 self.waitbuf.close()
                 self.inbuf = StringIO()
                 self.waitbuf = StringIO()
                 self.waited = 0
+            debug(NIGHTMARE, "HtmlFilter: feed", `data`)
             HtmlParser.feed(self, data)
+            debug(NIGHTMARE, "HtmlFilter: feed finished")
         else:
             self.inbuf.write(data)
 
+
     def flush (self):
         if self.state=='wait':
+            self.inbuf.close()
+            self.inbuf = StringIO()
             raise FilterException("HtmlFilter: still waiting for data")
         HtmlParser.flush(self)
 
@@ -235,7 +251,7 @@ class HtmlFilter (HtmlParser,JSListener):
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                debug(NIGHTMARE, "Filter: matched rule %s on tag %s" % (`rule.title`, `tag`))
+                debug(NIGHTMARE, "HtmlFilter: matched rule %s on tag %s" % (`rule.title`, `tag`))
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = "True"
@@ -246,22 +262,21 @@ class HtmlFilter (HtmlParser,JSListener):
                     else:
                         break
                 else:
-                    debug(NIGHTMARE, "Filter: put on buffer")
+                    debug(NIGHTMARE, "HtmlFilter: put on buffer")
                     rulelist.append(rule)
         if rulelist:
             # remember buffer position for end tag matching
             pos = len(self.buf)
             self.rulestack.append((pos, rulelist))
-        # if its not yet filtered, try filter javascript
         if filtered:
             self.buf_append_data(item)
         elif self.javascript:
+            # if its not yet filtered, try filter javascript
             self.jsStartElement(tag, attrs)
         else:
             self.buf.append(item)
         # if rule stack is empty, write out the buffered data
-        if not self.rulestack and \
-           (not self.javascript or tag!='script'):
+        if not self.rulestack and not self.javascript:
             self.buf2data()
 
 
@@ -271,6 +286,9 @@ class HtmlFilter (HtmlParser,JSListener):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buf2data)"""
+        item = [ENDTAG, tag]
+        if self.state=='wait':
+            return _buf2data([item], self.waitbuf)
         filtered = 0
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
@@ -280,14 +298,14 @@ class HtmlFilter (HtmlParser,JSListener):
             for rule in rulelist:
                 if rule.match_complete(pos, self.buf):
                     rule.filter_complete(pos, self.buf)
-                    filtered = 1
+                    filtered = "True"
                     break
         if not filtered and self.javascript and tag=='script' and \
             self.jsEndElement(tag):
             del self.buf[-1]
             del self.buf[-1]
         else:
-            self.buf.append((ENDTAG, tag))
+            self.buf.append(item)
         if not self.rulestack:
             self.buf2data()
 
@@ -312,8 +330,8 @@ class HtmlFilter (HtmlParser,JSListener):
                     lang.startswith('javascript') or \
                     not (lang or scrtype)
             if is_js and url:
-                self.jsScriptSrc(url, lang)
-        self.buf.append((STARTTAG, tag, attrs))
+                return self.jsScriptSrc(url, lang)
+        self.buf.append([STARTTAG, tag, attrs])
 
 
     def jsPopup (self, attrs, name):
@@ -350,6 +368,11 @@ class HtmlFilter (HtmlParser,JSListener):
                 self.buf.append([DATA, "<!--\n%s\n//-->"%self.script])
                 self.buf.append([ENDTAG, "script"])
             self.state = 'parse'
+            #debug(NIGHTMARE, "XXX switching back to parse with")
+            #debug(NIGHTMARE, "self.buf", `self.buf`)
+            #debug(NIGHTMARE, "self.outbuf", `self.outbuf.getvalue()`)
+            #debug(NIGHTMARE, "self.inbuf", `self.inbuf.getvalue()`)
+            #debug(NIGHTMARE, "self.waitbuf", `self.waitbuf.getvalue()`)
         else:
             debug(HURT_ME_PLENTY, "JS: data", data)
             self.script += data
@@ -367,13 +390,14 @@ class HtmlFilter (HtmlParser,JSListener):
         self.script = ''
         self.state = 'wait'
         client = HttpProxyClient(self.jsScriptData, (url, ver))
-        ClientServerMatchmaker(clien t,
+        ClientServerMatchmaker(client,
                                "GET %s HTTP/1.1" % url, #request
                                {}, #headers
                                '', #content
                                {'nofilter': None},
                                'identity', # compress
                                )
+        self.waited = 1
 
 
     def jsScript (self, script, ver):
