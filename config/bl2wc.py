@@ -1,9 +1,9 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
 # this script has to be executed in the config parent dir
-"""Generate blacklist_XXX folders with blocking and rewriting
+"""Generate blacklist_XYZ folders with blocking and rewriting
 filters for the given blacklist files.
-The XXX folder name is the blacklist folder.
+The XYZ folder name is the blacklist folder.
 
 Required are the "tarfile" module and Python 2.2
 """
@@ -87,24 +87,41 @@ def read_data (fname, name, data):
     f.close()
 
 
+def read_ids (filename, ids):
+    p = wc.configuration.ZapperParser(filename)
+    p.parse()
+    ids['folder']['sid'] = str(p.folder.sid)
+    ids['folder']['oid'] = p.folder.oid
+    for rule in p.folder.rules:
+        for ftype in ('domains', 'urls'):
+            if rule.get_name().endswith(ftype):
+                ids[ftype]['sid'] = str(rule.sid)
+
+
 ##################### write blacklist data ########################
 
 def write_filters ():
     for cat, data in categories.items():
-        if cat=='kids_and_teens':
-            d = 'whitelist'
+        if cat == 'kids_and_teens':
+            ftype = 'whitelist'
         else:
-            d = 'blacklist'
-        filename = "config/%s_%s.zap"%(d, cat)
+            ftype = 'blacklist'
+        filename = "config/%s_%s.zap" % (ftype, cat)
         print "writing", filename
+        ids = {
+            'folder': {'sid': None, 'oid': None},
+            'domains': {'sid': None},
+            'urls': {'sid': None},
+        }
         if os.path.exists(filename):
+            read_ids(filename, ids)
             os.remove(filename)
 	f = file(filename, 'wb')
-	write_folder(cat, d, data, f)
+	write_folder(cat, ftype, data, ids, f)
         f.close()
 
 
-def write_folder (cat, ftype, data, f):
+def write_folder (cat, ftype, data, ids, f):
     print "write", cat, "folder"
     d = {
         "charset": wc.configuration.ConfigCharset,
@@ -116,27 +133,29 @@ def write_folder (cat, ftype, data, f):
         "desc_en": wc.XmlUtils.xmlquote(
                                      "Automatically generated on %s" % date),
         "desc_de": wc.XmlUtils.xmlquote("Automatisch generiert am %s" % date),
+        "sid": ids['folder']['sid'],
+        "oid": ids['folder']['oid'],
     }
     f.write("""<?xml version="1.0" encoding="%(charset)s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder disable="0">
+<folder sid="%(sid)s" oid="%(oid)d" disable="0">
 <title lang="en">%(title_en)s</title>
 <title lang="de">%(title_de)s</title>
 <description lang="en">%(desc_en)s</description>
 <description lang="de">%(desc_de)s</description>
 """ % d)
     for t in data.keys():
-        if cat=='kids_and_teens':
+        if cat == 'kids_and_teens':
             b = "whitelists"
-            _type = "allow"
+            ftype = "allow"
         else:
             b = "blacklists"
-            _type = "block"
-        globals()["write_%s"%t](cat, b, _type, f)
+            ftype = "block"
+        globals()["write_%s" % t](cat, b, ftype, ids, f)
     f.write("</folder>\n")
 
 
-def write_domains (cat, b, ftype, f):
+def write_domains (cat, b, ftype, ids, f):
     print "write", cat, "domains"
     d = {
         'title_en': "%s domain filter"%cat.capitalize(),
@@ -147,8 +166,9 @@ To update the filter data, run config/bl2wc.py from a WebCleaner source tree."""
 Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCleaner Quellverzeichnis.""",
         'filename': "%s/%s/domains.gz" % (b, cat),
         'type': ftype,
+        "sid": ids['domains']['sid'],
     }
-    f.write("""<%(type)sdomains
+    f.write("""<%(type)sdomains sid="%(sid)s"
  filename="%(filename)s">
   <title lang="en">%(title_en)s</title>
   <title lang="de">%(title_de)s</title>
@@ -157,7 +177,7 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
 """ % d)
     f.write("</%(type)sdomains>" % d)
 
-def write_urls (cat, b, ftype, f):
+def write_urls (cat, b, ftype, ids, f):
     print "write", cat, "urls"
     d = {
         'title_en': "%s url filter"%cat.capitalize(),
@@ -168,8 +188,9 @@ To update the filter data, run config/bl2wc.py from a WebCleaner source tree."""
 Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCleaner Quellverzeichnis.""",
         'filename': "%s/%s/urls.gz" % (b, cat),
         'type': ftype,
+        "sid": ids['urls']['sid'],
     }
-    f.write("""<%(type)surls
+    f.write("""<%(type)surls sid="%(sid)s"
  filename="%(filename)s">
   <title lang="en">%(title_en)s</title>
   <title lang="de">%(title_de)s</title>
@@ -293,7 +314,7 @@ def geturl (basedir, fname, fun, saveas=None):
 
 def rm_rf (directory):
     for f in os.listdir(directory):
-        f = directory+"/"+f
+        f = os.path.join(directory, f)
         if os.path.isdir(f):
             rm_rf(f)
             if os.path.islink(f):
