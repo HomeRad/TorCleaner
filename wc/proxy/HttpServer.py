@@ -535,7 +535,6 @@ class HttpServer (wc.proxy.Server.Server):
                 if not self.client:
                     return
             self.client.server_content(data)
-            self.client.server_content(data)
         return True
 
     def set_unreadable (self, secs):
