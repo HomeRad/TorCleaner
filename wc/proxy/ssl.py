@@ -51,13 +51,12 @@ def get_serverctx (configdir):
 
 
 def verify_client_cb (conn, cert, errnum, depth, ok):
-    #return dumpCertificate(cert) == file(absfile("server.cert")).read()
-    # XXX this obviously has to be updated
-    wc.log.info(wc.LOG_PROXY,
-                '%s (%s) got server certificate %s (depth %s, errnum %s)',
-                conn, ok, cert.get_subject(), repr(depth), repr(errnum))
-    wc.log.warn(wc.LOG_PROXY, "XXX client %s", dir(cert))
-    return 1
+    """Verify expiration of the given certificate."""
+    expired = cert.has_expired()
+    if expired:
+        wc.log.error(wc.LOG_PROXY, "%s expired certificate %s", conn,
+                     cert.get_subject())
+    return not expired
 
 
 clientctx = None
