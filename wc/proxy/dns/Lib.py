@@ -532,7 +532,7 @@ class Hpacker (Packer):
 class Hunpacker (Unpacker):
 
     def getHeader (self):
-        id = self.get16bit()
+        rid = self.get16bit()
         flags = self.get16bit()
         qr, opcode, aa, tc, rd, ra, z, rcode = (
                   (flags>>15)&1,
@@ -547,8 +547,8 @@ class Hunpacker (Unpacker):
         ancount = self.get16bit()
         nscount = self.get16bit()
         arcount = self.get16bit()
-        return (id, qr, opcode, aa, tc, rd, ra, z, rcode,
-                  qdcount, ancount, nscount, arcount)
+        return (rid, qr, opcode, aa, tc, rd, ra, z, rcode,
+                qdcount, ancount, nscount, arcount)
 
 
 # Pack/unpack Question (section 4.1.2)

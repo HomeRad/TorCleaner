@@ -193,8 +193,8 @@ class Configuration (dict):
     def __init__ (self, confdir=ConfigDir):
         """Initialize the options"""
         dict.__init__(self)
-        self.configfile = proxyconf_file(confdir)
-        self.filterdir = confdir
+        self.filterdir = self.configdir = confdir
+        self.configfile = proxyconf_file(self.configdir)
         # reset to default values
         self.reset()
         # read configuration

@@ -90,15 +90,16 @@ def run_timers ():
         return MAX_TIMEOUT
 
 
-from Dispatcher import socket_map
+import wc.proxy.Dispatcher
+
 def proxy_poll (timeout=0.0):
     """look for sockets with pending data and call the appropriate
        connection handlers"""
     handlerCount = 0
-    if socket_map:
-        r = [ x for x in socket_map.itervalues() if x.readable() ]
-        w = [ x for x in socket_map.itervalues() if x.writable() ]
-        e = socket_map.values()
+    if wc.proxy.Dispatcher.socket_map:
+        r = [ x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.readable() ]
+        w = [ x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.writable() ]
+        e = wc.proxy.Dispatcher.socket_map.values()
         wc.log.debug(wc.LOG_PROXY, "select with %f timeout:", timeout)
         for x in e:
             wc.log.debug(wc.LOG_PROXY, "  %s", x)
@@ -146,19 +147,22 @@ def _slow_check (x, t, stype):
         wc.log.warn(wc.LOG_PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
 
 
+
 def mainloop (handle=None, abort=None):
     """proxy main loop, handles requests forever"""
-    from HttpClient import HttpClient
-    from Listener import Listener
-    from wc import config
-    Listener(config['port'], HttpClient)
-    if config['sslgateway']:
-        from ssl import get_serverctx
-        from SslClient import SslClient
-        Listener(config['sslport'], SslClient, sslctx=get_serverctx())
+    import wc.proxy.HttpClient
+    import wc.proxy.Listener
+    import wc.proxy.SslClient
+    import wc.proxy.ssl
+    wc.proxy.Listener.Listener(wc.config['port'],
+                               wc.proxy.HttpClient.HttpClient)
+    if wc.config['sslgateway']:
+        wc.proxy.Listener.Listener(wc.config['sslport'],
+                 wc.proxy.SslClient.SslClient,
+                 sslctx=wc.proxy.ssl.get_serverctx(wc.config.configdir))
     # experimental interactive command line
     #from Interpreter import Interpreter
-    #Listener(config['cmdport'], Interpreter)
+    #Listener(wc.config['cmdport'], Interpreter)
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
@@ -180,5 +184,4 @@ def mainloop (handle=None, abort=None):
             rc = win32event.WaitForSingleObject(handle, 0)
             if rc==win32event.WAIT_OBJECT_0:
                 break
-
 
