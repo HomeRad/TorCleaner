@@ -1,13 +1,17 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
-import sys
-from wc.parser.htmllib import HtmlPrinter
 
-def _main():
-    if len(sys.argv)==0 or sys.argv[1]=='-':
+def _main ():
+    """USAGE: test/run.sh test/parsefile.py test.html"""
+    import sys
+    if len(sys.argv)!=2:
+        print _main.__doc__
+        sys.exit(1)
+    if sys.argv[1]=='-':
         f = sys.stdin
     else:
         f = file(sys.argv[1])
+    from wc.parser.htmllib import HtmlPrinter
     p = HtmlPrinter()
     #p.debug(1)
     data = f.read(1024)

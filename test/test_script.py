@@ -29,9 +29,9 @@ def filterfile (fname):
             break
     print filtered
 
-import wc, time
-from wc.log import initlog
+from test import initlog
 initlog("test/logging.conf")
+import wc
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()

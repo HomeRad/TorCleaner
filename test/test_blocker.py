@@ -1,11 +1,11 @@
 # -*- coding: iso-8859-1 -*-
 """ test script to test filtering"""
 
-import wc, time
+import wc
 from test_support import TestFailed
 url = "http://ads.realmedia.com/"
 data = "GET %s HTTP/1.0" % url
-from wc.log import initlog
+from test import initlog
 initlog("test/logging.conf")
 wc.config = wc.Configuration()
 wc.config.init_filter_modules()

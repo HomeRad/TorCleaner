@@ -4,13 +4,11 @@ import Image, sys
 from StringIO import StringIO
 from wc.update import open_url
 
-def usage ():
-    print "usage: imagesize.py <url> [bufsize]"
-    sys.exit(1)
-
-def test ():
-    if len(sys.argv) < 2:
-        usage()
+def _main ():
+    "USAGE: imagesize.py <url> [bufsize]"
+    if len(sys.argv)!=2:
+        print _main.__doc__
+        sys.exit(1)
     bufsize = 6000
     url = sys.argv[1]
     if len(sys.argv) > 2:
@@ -37,4 +35,4 @@ def test ():
 
 
 if __name__=='__main__':
-    test()
+    _main()

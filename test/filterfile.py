@@ -1,17 +1,20 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
-import sys
-import wc
 
-
-def _main():
+def _main ():
+    """USAGE: test/run.sh test/filterfile.py <.html file>"""
+    import sys
+    if len(sys.argv)!=2:
+        print _main.__doc__
+        sys.exit(1)
     fname = sys.argv[1]
     if fname=="-":
         f = sys.stdin
     else:
         f = file(fname)
-    from wc.log import initlog
+    from test import initlog
     initlog("test/logging.conf")
+    import wc
     wc.config = wc.Configuration()
     # set debug level
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']

@@ -22,7 +22,7 @@ document.write("</OBJECT>");
 """
 
 import wc, time
-from wc.log import initlog
+from test import initlog
 initlog("test/logging.conf")
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer']

@@ -2,9 +2,14 @@
 # -*- coding: iso-8859-1 -*-
 """print headers of an url"""
 
-import httplib, urlparse, sys
 
-def main (url):
+def _main ():
+    """USAGE: test/head.py <url>"""
+    import httplib, urlparse, sys
+    if len(sys.argv)!=2:
+        print _main.__doc__
+        sys.exit(1)
+    url = sys.argv[1]
     parts = urlparse.urlsplit(url)
     host = parts[1]
     path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
@@ -18,4 +23,4 @@ def main (url):
 
 
 if __name__=='__main__':
-    main(sys.argv[1])
+    _main()

@@ -2,47 +2,41 @@
 # -*- coding: iso-8859-1 -*-
 """server simulator"""
 
-import sys, os
-import wc
-# init configuration before anything else
-wc.config = wc.Configuration()
-# disable all filters
-wc.config['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
-wc.config['port'] += 1
-from wc.log import *
-from wc.proxy import HttpClient
-
-
-class TestClient (HttpClient.HttpClient):
-    """client reading requests and echoing back a predefined answer"""
-    def server_request (self):
-        assert self.state == 'receive'
-        # XXX execute test
-        print "huiiiii"
+import sys, os, logging
 
 
 def get_data (config, test):
-    im = "from test.tests.%s import server_send, server_recv" % test
-    exec im
+    exec "from test.tests.%s import server_send, server_recv"%test
     return [ s%config for s in [server_send, server_recv] ]
 
 
 def startfunc ():
-    initlog(logfile)
     from wc.proxy import Listener, proxy_poll, run_timers
+    from test import TestClient
     Listener.Listener(wc.config['port'], TestClient)
     while True:
         proxy_poll(timeout=max(0, run_timers()))
 
 
-def main ():
-    global test
-    command = sys.argv[1]
+def start (test):
+    # init log
+    logfile = os.path.join(os.getcwd(), "test", "logging.conf")
+    initconsolelog(logfile)
+    # init configuration
+    import wc
+    wc.config = wc.Configuration()
+    # disable all filters
+    wc.config['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
+    # start one port above the proxy
+    wc.config['port'] += 1
     pidfile = os.path.join(os.getcwd(), "test", "server.pid")
+    msg, status = wc.daemon.start(startfunc, pidfile, parent_exit=False)
+
+
+def _main ():
+    command = sys.argv[1]
     if command=='start':
-        from wc.daemon import start
-        test = sys.argv[2]
-        msg, status = start(startfunc, pidfile, parent_exit=False)
+        start(sys.argv[2])
     elif command=='stop':
         from wc.daemon import stop
         msg, status = stop(pidfile)
@@ -53,7 +47,5 @@ def main ():
     sys.exit(status)
 
 if __name__=='__main__':
-    global logfile
-    logfile = os.path.join(os.getcwd(), "test", "logging.conf")
-    #main() # start the server process
+    #_main() # start the server process
     startfunc() # use this for testing

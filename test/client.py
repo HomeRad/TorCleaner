@@ -2,7 +2,7 @@
 # -*- coding: iso-8859-1 -*-
 """client simulator"""
 
-import sys, asyncore, socket
+import asyncore, socket
 import wc
 from wc.log import *
 from wc.proxy import create_inet_socket
@@ -51,11 +51,16 @@ def get_data (config, test):
     return [ s%config for s in [client_send, client_recv] ]
 
 
-def main (params):
+def _main (params):
+    """USAGE: XXX"""
+    import sys
+    if len(sys.argv)!=2:
+        print _main.__doc__
+        sys.exit(1)
     initlog("test/logging.conf")
     client = ClientConnection(wc.Configuration(), sys.argv[1])
     asyncore.loop()
 
 
 if __name__=='__main__':
-    main(sys.argv[1:])
+    _main()
