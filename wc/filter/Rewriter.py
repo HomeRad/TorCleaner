@@ -22,7 +22,7 @@ __date__    = "$Date$"[7:-2]
 import re
 from wc.log import *
 
-from wc.filter import FILTER_RESPONSE_MODIFY
+from wc.filter import FILTER_RESPONSE_MODIFY, FilterWait, FilterRating
 from wc.filter import compileMime
 from wc.filter.Filter import Filter
 from wc.filter.HtmlParser import HtmlParser

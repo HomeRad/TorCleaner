@@ -163,7 +163,7 @@ class JSFilter (JSListener):
 
     def filterEndElement (self, tag):
         """filters an end tag, return True if tag was filtered, else False"""
-        raise NotImplementError("Must be overridden in subclass")
+        raise NotImplementedError("Must be overridden in subclass")
 
 
     def jsEndElement (self, item):

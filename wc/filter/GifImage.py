@@ -177,7 +177,7 @@ class GifParser (object):
                 flags = ord(self.read(1))
                 misc = self.read(2)
                 bits = (flags & 7) + 1
-                if flags & 128:
+                if (flags & 128)!=0:
                     # global palette
                     self.background = ord(misc[0])
                     debug(FILTER, 'GIF background %s', self.background)
@@ -212,7 +212,7 @@ class GifParser (object):
                 self.y1 = i16(self.read(2)) + self.y0
                 debug(FILTER, 'GIF x0=%d, y0=%d, x1=%d, y1=%d', self.x0, self.y0, self.x1, self.y1)
                 flags = ord(self.read(1))
-                if flags & 128:
+                if (flags & 128) != 0:
                     # local color table
                     bits = (flags & 7) + 1
                     size = 3<<bits

@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, os, sys, urlparse
+import re, os, urlparse
 import cPickle as pickle
 from wc.log import *
 from wc import i18n, ConfigDir, AppName, Url

@@ -47,6 +47,3 @@ class Listener (Dispatcher):
         args = self.accept()
         self.handler(*args)
 
-
-    def handle_error (self, what):
-        exception(PROXY, what)

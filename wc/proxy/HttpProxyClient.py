@@ -8,7 +8,7 @@ from Headers import get_wc_client_headers
 from wc.url import stripsite, spliturl, url_norm, url_quote
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
-import urlparse, urllib
+import urlparse
 
 
 class HttpProxyClient (object):

@@ -270,16 +270,8 @@ class Dispatcher (object):
         self.handle_expt()
 
 
-    def handle_error (self):
-        nil, t, v, tbinfo = compact_traceback()
-        # sometimes a user repr method will crash.
-        try:
-            self_repr = repr(self)
-        except:
-            self_repr = '<__repr__(self) failed for object at %0x>' % id(self)
-        error(PROXY, '%s uncaptured python exception, closing (%s:%s %s)',
-                     t, v, tbinfo)
-        self.close()
+    def handle_error (self, what):
+        exception(PROXY, "%s %s", self, what)
 
 
     def handle_expt (self):

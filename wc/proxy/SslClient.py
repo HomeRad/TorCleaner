@@ -73,7 +73,7 @@ class SslClient (HttpClient, SslConnection):
         ClientServerMatchmaker(self, self.request, self.headers, self.content)
 
 
-    def handle_local (self):
+    def handle_local (self, is_public_doc=False):
         assert self.state=='receive'
         debug(PROXY, '%s handle_local', self)
         form = None

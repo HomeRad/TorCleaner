@@ -20,6 +20,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+from wc.log import *
 from wc.filter.Filter import Filter
 from wc.filter import FILTER_RESPONSE_HEADER, FilterRating
 from wc.filter.Rating import rating_cache_get, rating_add, rating_allow, rating_import, RatingParseError

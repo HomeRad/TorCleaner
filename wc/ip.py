@@ -262,8 +262,8 @@ def _test ():
     for net, mask in nets:
         print "net:  %s %s => %s/%s" % (net, mask, num2dq(net), mask2suffix(mask))
     maps = map2hosts([hosts, nets])
-    for map in maps:
-        print "map:  %s" % (map)
+    for _map in maps:
+        print "map:  %s" % (_map)
 
 
 if __name__=='__main__':

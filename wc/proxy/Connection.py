@@ -160,7 +160,7 @@ class Connection (Dispatcher):
 
 
     def handle_error (self, what):
-        exception(PROXY, "%s error %s, closing", self, what)
+        super(Connection, self).handle_error(what)
         self.close()
 
 

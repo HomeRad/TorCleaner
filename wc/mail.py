@@ -19,6 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+from wc.log import *
 import socket, smtplib
 from email.Utils import formatdate, parseaddr
 
@@ -38,7 +39,7 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
         conn.quit()
         return True
     except (socket.error, smtplib.SMTPException), x:
-        exception('SMTP send failure: %s\n', x)
+        exception(GUI, 'SMTP send failure: %s', x)
     return False
 
 

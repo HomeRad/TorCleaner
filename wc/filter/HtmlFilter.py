@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, urllib, wc
+import urllib
 from wc.parser import resolve_html_entities
 from wc.filter import FilterRating
 from wc.filter.JSFilter import JSFilter
@@ -135,9 +135,9 @@ class HtmlFilter (JSFilter):
             if self.stackcount[-1][0]==tag:
                 self.stackcount[-1][1] += 1
         if tag=="meta":
-            if attrs.get('http-equiv', '').lower() =='content-rating':
+            if attrs.get('http-equiv', '').lower() == 'content-rating':
                 rating = resolve_html_entities(attrs.get('content', ''))
-                url, rating = rating_import(url, rating)
+                url, rating = rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
                 # often

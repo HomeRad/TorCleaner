@@ -215,7 +215,5 @@ def init ():
     pass
 
 from wc.proxy import make_timer
-if __name__=='__main__':
-    _test()
-else:
+if __name__!='__main__':
     init()

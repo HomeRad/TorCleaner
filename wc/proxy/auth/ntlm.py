@@ -512,12 +512,12 @@ def set_odd_parity (byte):
     parity = 0
     ordbyte = ord(byte)
     for dummy in range(8):
-	if ordbyte & 0x01:
+	if (ordbyte & 0x01)!=0:
             parity += 1
 	ordbyte >>= 1
     ordbyte = ord(byte)
     if parity % 2 == 0:
-	if ordbyte & 0x01:
+	if (ordbyte & 0x01)!=0:
 	    ordbyte &= 0xFE
 	else:
 	    ordbyte |= 0x01
