@@ -5,8 +5,6 @@ build
 locale
 share
 *-stamp
-*.pyc
-*.pyo
 _webcleaner2_configdata.py
 blacklists.tar.gz
 downloads
