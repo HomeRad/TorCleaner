@@ -12,6 +12,7 @@ include debian/copyright
 include debian/logging.conf
 include debian/po/*.po
 include debian/po/*.pot
+include debian/po/*.in
 include debian/rules
 include debian/webcleaner-ctl
 include debian/webcleaner-ctl.1
@@ -27,6 +28,7 @@ include debian/webcleaner.lintian
 include debian/webcleaner.manpages
 include debian/webcleaner.postinst
 include debian/webcleaner.postrm
+include debian/webcleaner.preinst
 include debian/webcleaner.prerm
 include debian/webcleaner.templates
 include webcleaner.1
@@ -53,12 +55,21 @@ include test/*.sh
 include test/*.pot
 include test/*.po
 include test/Makefile
+include test/pycheckrc
 include test/rating/rating.txt
 include bk/HtmlParser/htmllex.l
 include bk/HtmlParser/htmlparse.y
 include bk/HtmlParser/*.h
 include bk/HtmlParser/s_util.c
 include bk/HtmlParser/Makefile
+include bk/tests/*.py
+include bk/net/tests/*.py
+include wc/magic/tests/*.py
+include wc/magic/tests/*.html
+include wc/filter/tests/*.py
+include wc/proxy/tests/*.py
+include wc/proxy/auth/tests/*.py
+recursive-include wc/webgui/simpletal/tests *.py
 include po/*.po
 include po/*.pot
 include po/*.py

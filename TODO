@@ -2,9 +2,6 @@ TODO
 
 version 2.19 and above
 
-- no connection close? Wullert immer und ewig
-  http://der-pro-clan.goracer.de/gexx/page/main.php?site=members/index&action=member&mid=12
-
 - Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/webcleaner", line 170, in ?
     main(sys.argv[1:])

@@ -58,12 +58,12 @@ libjs_la_LIBADD		= ./fdlibm/libfdm.la
 
 if CROSS_COMPILE_LINUX
 CLEANFILES = jscpucfg jsautocfg.h
-jscpucfg: jscpucfg.c jscpucfg.h prtypes.h prcpucfg.h
+jscpucfg: jscpucfg.c jscpucfg.h prtypes.h protypes.h prcpucfg.h
 	gcc $(DEFAULT_INCLUDES) @JSDEFS@ $(CFLAGS) jscpucfg.c -o jscpucfg
 else
 CLEANFILES = jscpucfg@EXEEXT@ jsautocfg.h
 noinst_PROGRAMS = jscpucfg
-jscpucfg_SOURCES = jscpucfg.c jscpucfg.h
+jscpucfg_SOURCES = jscpucfg.c jscpucfg.h prtypes.h protypes.h prcpucfg.h
 endif
 
 jsautocfg.h: jscpucfg
