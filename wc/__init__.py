@@ -441,14 +441,12 @@ class BaseParser (object):
         self.filename = filename
         self.config = _config
 
-
     def _preparse (self):
         """set handler functions before parsing"""
         self.xmlparser = make_xmlparser()
         self.xmlparser.StartElementHandler = self.start_element
         self.xmlparser.EndElementHandler = self.end_element
         self.xmlparser.CharacterDataHandler = self.character_data
-
 
     def _postparse (self):
         """remove handler functions after parsing; avoids cyclic references"""
@@ -457,7 +455,6 @@ class BaseParser (object):
         self.xmlparser.CharacterDataHandler = None
         # note: expat parsers cannot be reused
         self.xmlparser = None
-
 
     def parse (self, fp=None):
         log.debug(LOG_PROXY, "Parsing %s", self.filename)
@@ -473,14 +470,11 @@ class BaseParser (object):
         finally:
             self._postparse()
 
-
     def start_element (self, name, attrs):
         pass
 
-
     def end_element (self, name):
         pass
-
 
     def character_data (self, data):
         pass
