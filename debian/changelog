@@ -1,3 +1,9 @@
+webcleaner (0.39) unstable; urgency=low
+
+  * various fixes for HTML comment and tag parsing
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 29 May 2002 20:07:31 +0200
+
 webcleaner (0.38) unstable; urgency=low
 
   * rewrite of the HTML parser module; libxml is not needed anymore.

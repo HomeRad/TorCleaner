@@ -1,9 +1,9 @@
---- ConfWindow.py.orig	Wed Feb 27 11:06:08 2002
-+++ ConfWindow.py	Wed Feb 27 11:07:17 2002
-@@ -471,29 +471,25 @@
+--- ConfWindow.py.orig	Wed May 29 23:04:27 2002
++++ ConfWindow.py	Wed May 29 23:05:07 2002
+@@ -526,29 +526,25 @@
  
  
-     def onCmdProxyStart(self, sender, sel, ptr):
+     def onCmdProxyStart (self, sender, sel, ptr):
 -        from wc import daemon
 -        daemon.start(parent_exit=0)
 +        os.system("/etc/init.d/webcleaner start")
@@ -11,7 +11,7 @@
          return 1
  
  
-     def onCmdProxyStop(self, sender, sel, ptr):
+     def onCmdProxyStop (self, sender, sel, ptr):
 -        from wc import daemon
 -        daemon.stop()
 +        os.system("/etc/init.d/webcleaner stop")
@@ -19,7 +19,7 @@
          return 1
  
  
-     def onCmdProxyRestart(self, sender, sel, ptr):
+     def onCmdProxyRestart (self, sender, sel, ptr):
 -        from wc import daemon
 -        daemon.restart(parent_exit=0)
 +        os.system("/etc/init.d/webcleaner restart")
@@ -27,7 +27,7 @@
          return 1
  
  
-     def onCmdProxyReload(self, sender, sel, ptr):
+     def onCmdProxyReload (self, sender, sel, ptr):
 -        from wc import daemon
 -        daemon.reload()
 +        os.system("/etc/init.d/webcleaner reload")
