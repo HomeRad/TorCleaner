@@ -11,7 +11,9 @@
     - burn gif and switch to blocked.png
     Added: templates/classic/blocked.png
     Changed: wc/filter/Blocker.py, wc/webgui/__init__.py
-  * fix IE and Mozilla crash bugs with filters in the HTML parser
+  * - detect and prevent IE <input type> crash
+    - detect and prevent Mozilla <fieldset style> crash
+    - detect and prevent IE <hr align> crash (CAN-2003-0469)
     Changed: wc/filter/HtmlParser.py
   * add index.html template
     Added: templates/classic/index.html
@@ -24,7 +26,8 @@
     Changed: wc/webgui/__init__.py
   * new filter module ImageSize that filters images by size
     Added: wc/filter/ImageSize
-  * parse JS strings and comments
+  * - parse JS strings and comments
+    - accept "<!- " as comment begin
     Changed: wc/parser/htmlex.l
 
 1.13
