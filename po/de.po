@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Sun Apr 11 11:59:36 2004\n"
+"POT-Creation-Date: Mon Apr 19 18:33:25 2004\n"
 "PO-Revision-Date: 2004-03-22 19:50+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -432,6 +432,10 @@ msgstr "Neustart von %s Proxy..."
 
 msgid "Opening proxy configuration interface..."
 msgstr "Öffe Oberfläche für Proxykonfiguration..."
+
+#, fuzzy
+msgid "Removing %s service..."
+msgstr "Installiere %s Dienst..."
 
 msgid "Category"
 msgstr "Kategorie"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Apr 11 11:59:36 2004\n"
+"POT-Creation-Date: Mon Apr 19 18:33:25 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -389,6 +389,9 @@ msgid "Restarting %s proxy..."
 msgstr ""
 
 msgid "Opening proxy configuration interface..."
+msgstr ""
+
+msgid "Removing %s service..."
 msgstr ""
 
 msgid "Category"
