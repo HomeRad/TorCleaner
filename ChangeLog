@@ -1,5 +1,5 @@
 2.10 (released xx.xx.xxxx)
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20040316
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040323
     Changed: libjs/*
   * move psyco initialization to after startup, just before the proxy
     mainloop starts. this speeds up the startup a bit when psyco is
