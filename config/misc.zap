@@ -74,9 +74,15 @@
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="Layer" oid="130"
+<rewrite title="Layer" oid="13"
  matchurl="eselfilme.de"
  tag="div">
 <attr name="id">Layer1</attr>
+</rewrite>
+
+<rewrite title="Remove _blank and _new area targets" oid="14"
+ tag="area">
+<attr name="target">(?i)_(blank|new)</attr>
+<replace part="attr"/>
 </rewrite>
 </folder>
