@@ -290,4 +290,9 @@
  tag="img">
 <attr name="src">fmads.osdn.com</attr>
 </rewrite>
+
+<rewrite title="MSN ads" oid="125"
+ desc="Found at MSN">
+<attr>g\.msn(bc)?\.com</attr>
+</rewrite>
 </folder>
