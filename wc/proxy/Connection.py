@@ -51,7 +51,7 @@ class Connection (asyncore.dispatcher, object):
             # It's been closed (presumably recently)
             return
 	if len(self.recv_buffer) > MAX_BUFSIZE:
-            warn(PROXY, 'read buffer full')
+            warn(PROXY, '%s read buffer full', str(self))
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
@@ -72,7 +72,7 @@ class Connection (asyncore.dispatcher, object):
 
 
     def writable (self):
-        return len(self.send_buffer)
+        return self.send_buffer
 
 
     def write (self, data):
@@ -84,6 +84,9 @@ class Connection (asyncore.dispatcher, object):
         assert self.connected
         num_sent = 0
         data = self.send_buffer[:SEND_BUFSIZE]
+        if not data:
+            warn(PROXY, '%s empty write', str(self))
+            return num_sent
         try:
             num_sent = self.send(data)
         except socket.error:
@@ -127,3 +130,7 @@ class Connection (asyncore.dispatcher, object):
         exception(PROXY, "%s error %s, closing", str(self), what)
         self.close()
         self.del_channel()
+
+
+    def handle_expt (self):
+        exception(PROXY, "%s exception", str(self))
