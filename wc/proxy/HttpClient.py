@@ -60,7 +60,7 @@ class HttpClient (Connection):
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
                                rfc822.Message(StringIO(self.read(i))),
 			       fun="finish", attrs=self.nofilter)
-                #debug(HURT_ME_PLENTY, "C/Headers", self.headers)
+                #debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
                 if self.headers.has_key('content-length'):
                     self.bytes_remaining = int(self.headers['content-length'])
                 else:

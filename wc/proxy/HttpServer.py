@@ -182,7 +182,7 @@ class HttpServer (Server):
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
-        #debug(HURT_ME_PLENTY, "Headers\n", self.headers)
+        #debug(HURT_ME_PLENTY, "S/Headers ", `self.headers.headers`)
         if self.headers.has_key('content-length'):
             self.bytes_remaining = int(self.headers.getheader('content-length'))
         else:
@@ -195,7 +195,7 @@ class HttpServer (Server):
 
         if self.bytes_remaining is not None:
             for ro in config['mime_content_rewriting']:
-                #debug(BRING_IT_ON, "content type", `self.headers.getheader('content-type')`)
+                #debug(BRING_IT_ON, "S/Content-Type:", `self.headers.getheader('content-type')`)
                 # XXX there are corner cases where getheader() returns None
                 if ro.match(self.headers.getheader('content-type') or ""):
                     # remove content length
@@ -207,7 +207,7 @@ class HttpServer (Server):
                     break
         self.decoders = []
         if self.headers.has_key('transfer-encoding'):
-            #debug(BRING_IT_ON, 'S/Transfer-encoding:', self.headers['transfer-encoding'])
+            #debug(BRING_IT_ON, 'S/Transfer-encoding:', `self.headers['transfer-encoding']`)
             self.decoders.append(UnchunkStream())
             # remove encoding header
             for h in self.headers.headers[:]:
@@ -254,7 +254,7 @@ class HttpServer (Server):
 
     def process_content (self):
         data = self.read(self.bytes_remaining)
-        #debug(NIGHTMARE, "S/content", "\n"+`"..."+data[-70:]`)
+        #debug(NIGHTMARE, "S/content", `data`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
@@ -298,6 +298,7 @@ class HttpServer (Server):
             data = applyfilter(i, data, fun="finish", attrs=self.attrs)
         if data:
 	    client.server_content(data)
+        self.attrs = {}
         client.server_close()
 
 

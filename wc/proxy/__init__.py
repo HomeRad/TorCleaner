@@ -178,7 +178,6 @@ def proxy_poll (timeout=0.0):
                 handlerCount += 1
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
-        #debug(NIGHTMARE, "write poll")
         for x in w:
             try:
                 t = time.time()
@@ -190,7 +189,6 @@ def proxy_poll (timeout=0.0):
                         pass
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
-        #debug(NIGHTMARE, "read poll")
         for x in r:
             try:
                 t = time.time()
