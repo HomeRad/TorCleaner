@@ -20,7 +20,9 @@ include debian/webcleaner.config
 include debian/webcleaner.dirs
 include debian/webcleaner.docs
 include debian/webcleaner.init
+include debian/webcleaner.linda
 include debian/webcleaner.links
+include debian/webcleaner.lintian
 include debian/webcleaner.postinst
 include debian/webcleaner.postrm
 include debian/webcleaner.prerm
