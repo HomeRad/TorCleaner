@@ -38,6 +38,8 @@ class PicsHeader (Filter):
         url = attrs['url']
         if pics_is_cached(url):
             # we already have PICS data for this url, ignore any new ones
+            # note: do not yet check at this point, but give the HTML
+            # page a chance to override this with a its own PICS label.
             return data
         rules = attrs['rules']
         headers = attrs['headers']
