@@ -105,7 +105,7 @@ class DnsExpandHostname (object):
         self.delay = 3
         if not dnscache.well_known_hosts.has_key(hostname):
             for domain in resolver.search:
-                self.queries.append(hostname + domain)
+                self.queries.append(hostname + domain.to_text(True))
             if hostname.find('.') < 0:
                 # If there's no dot, we should try expanding patterns
                 #XXX unsupported for pattern in resolver.search_patterns:
