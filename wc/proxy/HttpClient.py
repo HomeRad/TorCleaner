@@ -113,12 +113,6 @@ class HttpClient (Connection):
         self.write('\r\n')
 
 
-    def server_no_response (self):
-        #debug(NIGHTMARE, 'S/failed', self)
-        self.write('**No response from server. Aborted**')
-        self.delayed_close()
-
-
     def server_content (self, data):
         assert self.server
         #debug(NIGHTMARE, 'S/content', self)

@@ -247,7 +247,7 @@ class ClientServerMatchmaker:
         # The server had an error, so we need to tell the client
         # that we couldn't connect
         if self.client.connected:
-            self.client.server_no_response()
+            self.error(503, _("No response from server"))
 
 
     def server_close (self):
@@ -263,7 +263,7 @@ class ClientServerMatchmaker:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
             if self.client.connected:
-                self.client.server_no_response()
+                self.error(503, _("Server closed connection"))
 
 
     def server_response (self, response, headers):
