@@ -27,12 +27,13 @@ from cStringIO import StringIO as _StringIO
 updatelog = u""
 
 def _exec_form (form, lang):
+    global updatelog
+    updatelog = u""
     if form.has_key('updatezapper'):
         _updatezapper()
     elif form.has_key('updaterating'):
         _updaterating()
     else:
-        global updatelog
         updatelog = i18n._("Error: nothing to update.")
 
 
@@ -56,7 +57,8 @@ def _updaterating ():
     global updatelog
     log = _StringIO()
     try:
+        doreload = _update_ratings(config, log=log, dryrun=False)
+        updatelog = log.getvalue()
         # XXX
-        _update_ratings(config, log=log, dryrun=False)
     except IOError, msg:
         updatelog = i18n._("Error: %s") % msg
