@@ -16,15 +16,8 @@ include /usr/share/dpatch/dpatch.make
 
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
-DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-
-ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
-        CFLAGS += -g
-endif
-ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-        INSTALL_PROGRAM += -s
-endif
+DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
 CONFIG_OPTS :=
 CONFIG_PATHS := --prefix=/usr \
@@ -72,8 +65,9 @@ install: build
 	rmdir debian/$(PACKAGE)/usr/bin
 	# move config files
 	mv debian/$(PACKAGE)/usr/share/webcleaner/config/* debian/$(PACKAGE)/etc/webcleaner/
+	rmdir debian/$(PACKAGE)/usr/share/webcleaner/config
 	# remove example files, we install them ourselves
-	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
+	rm -rf debian/$(PACKAGE)/usr/share/webcleaner/examples
 
 
 # Build architecture-independent files here.

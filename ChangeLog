@@ -1,3 +1,9 @@
+1.12
+  * distribution fixes:
+    - install template files
+    - generate md5sums and gpg signatures for dist file
+    Changed files: Makefile.am, setup.py
+
 1.11
   * added "What you can do" entry
     Changed files: README

@@ -16,7 +16,8 @@ filter.prof
 error.log
 stamp-h1
 webcleaner.log*
-webcleaner-access.log
+webcleaner.err*
+webcleaner-access.log*
 acconfig.h.tmp
 aclocal.m4
 autom4te.cache
