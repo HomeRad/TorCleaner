@@ -22,7 +22,11 @@ if test "x$XGETTEXT" = "x"; then
 fi
 
 if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
-    CFLAGS="$CFLAGS -Wall -pedantic"
+    SAVE_CFLAGS="$CFLAGS"
+    TRYOPT="-std=c99"
+    CFLAGS="$CFLAGS $TRYOPT"
+    AC_TRY_COMPILE([], [], [], TRYOPT="")
+    CFLAGS="$SAVE_CFLAGS -Wall -pedantic $TRYOPT"
 fi
 
 dnl build and compilation flags
