@@ -8,7 +8,7 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
-PYCHECKER := env PYTHONVER=2.3 pychecker
+PYCHECKER := env PYTHONVER=$(PYVER) pychecker
 PYCHECKEROPTS := -F test/pycheckrc
 PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint
 PYLINTOPTS :=
