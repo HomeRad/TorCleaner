@@ -3,6 +3,7 @@
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
 
 PACKAGE := webcleaner
 BASE := debian/$(PACKAGE)
@@ -11,24 +12,28 @@ SHAREDIR := $(BASE)/usr/share/$(PACKAGE)
 ETCDIR := $(BASE)/etc/$(PACKAGE)
 SERVICEDIR := $(ETCDIR)/service
 
+# exclude files with special permissions
 DEB_FIXPERMS_EXCLUDE += /etc/webcleaner/webcleaner.conf /var/log/webcleaner
+# do not install with "make", but with "python setup.py install"
+DEB_MAKE_INSTALL_TARGET =
+# webcleaner gets the python files
+DEB_DESTDIR = $(BASE)
 
 # available custom targets are for example
-binary-post-install/my_binary_package::
+binary-post-install/webcleaner::
 	chown root:adm $(BASE)/var/log/webcleaner
 	chmod 0750 $(BASE)/var/log/webcleaner
-	python setup.py install --root=$(CURDIR)/$(BASE) --no-compile
 # delete INSTALL file
 	rm -f $(DOCDIR)/INSTALL
 # move config files
 	mv $(SHAREDIR)/config/* $(ETCDIR)/
 	rmdir $(SHAREDIR)/config
+	ln -s $(ETCDIR) $(SHAREDIR)/config
+# replace logging.conf
 	rm $(ETCDIR)/logging.conf
 	install -m 0644 debian/logging.conf $(ETCDIR)/logging.conf
 # fix config permission
 	chmod go-rwx $(ETCDIR)/webcleaner.conf
-# remove example files, we install them ourselves
-	rm -rf $(SHAREDIR)/examples
 # install service files
 	install -m 0755 service/webcleaner/run2 $(SERVICEDIR)/run
 	install -m 0755 service/webcleaner/log/run $(SERVICEDIR)/log/

@@ -1,4 +1,3 @@
-/etc/webcleaner /usr/share/webcleaner/config
 /var/run/webcleaner /etc/webcleaner/service/supervise
 /var/run/webcleaner.log /etc/webcleaner/service/log/supervise
 /var/log/webcleaner /etc/webcleaner/service/log/main
