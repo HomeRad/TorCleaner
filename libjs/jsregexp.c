@@ -422,7 +422,6 @@ static JSBool parseQuantifier(CompilerState *state);
 static JSBool 
 parseRegExp(CompilerState *state)
 {
-    const jschar *errPos;
     uint16 parenIndex;
     RENode *operand;
     REOpData *operatorStack;
@@ -437,7 +436,7 @@ parseRegExp(CompilerState *state)
     /* Watch out for empty regexp */
     if (state->cp == state->cpend) {
         state->result = NewRENode(state, REOP_EMPTY);
-        return JS_TRUE;
+        return (state->result != NULL);
     }
 
     operatorStack = (REOpData *)JS_malloc(state->context, 
@@ -452,11 +451,21 @@ parseRegExp(CompilerState *state)
 
 
     while (JS_TRUE) {
-        if (state->cp != state->cpend) {
+        if (state->cp == state->cpend) {
+            /*
+             * If we are at the end of the regexp and we're short an operand,
+             * the regexp must have the form /x|/ or some such.
+             */
+            if (operatorSP == operandSP) {
+                operand = NewRENode(state, REOP_EMPTY);
+                if (!operand)
+                    goto out;
+                goto pushOperand;
+            }
+        } else {
             switch (*state->cp) {
                 /* balance '(' */
             case '(':           /* balance ')' */
-                errPos = state->cp;
                 ++state->cp;
                 if ((state->cp < state->cpend) && (*state->cp == '?')
                         && ( (state->cp[1] == '=')
@@ -467,8 +476,7 @@ parseRegExp(CompilerState *state)
                         js_ReportCompileErrorNumber(state->context, 
                                                     state->tokenStream,
                                                     NULL, JSREPORT_ERROR,
-                                                    JSMSG_MISSING_PAREN,
-                                                    errPos);
+                                                    JSMSG_MISSING_PAREN);
                         goto out;
                     }
                     switch (*state->cp++) {
@@ -493,18 +501,34 @@ parseRegExp(CompilerState *state)
                     /* LPAREN, <index>, ... RPAREN, <index> */
                     state->progLength += 6;
                     parenIndex = state->parenCount++;
-                    if (state->parenCount == 0) {
+                    if (state->parenCount == 65535) {
                         js_ReportCompileErrorNumber(state->context, 
                                                     state->tokenStream,
                                                     NULL, JSREPORT_ERROR,
-                                                    JSMSG_TOO_MANY_PARENS,
-                                                    errPos);
+                                                    JSMSG_TOO_MANY_PARENS);
                         goto out;
                     }
                 }
                 goto pushOperator;
-            case '|':
             case ')':
+                /* If there's not a stacked open parenthesis, throw
+                 * a syntax error.
+                 */
+                for (i = operatorSP - 1; i >= 0; i--)
+                    if ((operatorStack[i].op == REOP_ASSERT)
+                            || (operatorStack[i].op == REOP_ASSERT_NOT)
+                            || (operatorStack[i].op == REOP_LPARENNON)
+                            || (operatorStack[i].op == REOP_LPAREN))
+                        break;
+                if (i == -1) {
+                    js_ReportCompileErrorNumber(state->context, 
+                                                state->tokenStream,
+                                                NULL, JSREPORT_ERROR,
+                                                JSMSG_UNMATCHED_RIGHT_PAREN);
+                    goto out;
+                }
+                /* fall thru... */
+            case '|':
                 /* Expected an operand before these, so make an empty one */
                 operand = NewRENode(state, REOP_EMPTY);
                 if (!operand)
@@ -558,7 +582,7 @@ restartOperator:
             goto pushOperator;
 
         case ')':
-            /* If there's not a stacked open parentheses,we
+            /* If there's not a stacked open parenthesis,we
              * accept the close as a flat.
              */
             for (i = operatorSP - 1; i >= 0; i--)
@@ -568,10 +592,11 @@ restartOperator:
                         || (operatorStack[i].op == REOP_LPAREN))
                     break;
             if (i == -1) {
-                if (!parseTerm(state))
-                    goto out;
-                operand = state->result;
-                goto pushOperand;
+                js_ReportCompileErrorNumber(state->context, 
+                                            state->tokenStream,
+                                            NULL, JSREPORT_ERROR,
+                                            JSMSG_UNMATCHED_RIGHT_PAREN);
+                goto out;
             }
             ++state->cp;
             /* process everything on the stack until the open */
@@ -620,7 +645,7 @@ pushOperator:
                     goto out;
             }
             operatorStack[operatorSP].op = op;
-            operatorStack[operatorSP].errPos = errPos;
+            operatorStack[operatorSP].errPos = state->cp;
             operatorStack[operatorSP++].parenIndex = parenIndex;
             break;
         }
@@ -2759,7 +2784,7 @@ minimalquantcommon:
 
             default:
                 JS_ASSERT(JS_FALSE);
-
+                result = NULL;
             }
         }
         /*
