@@ -28,7 +28,7 @@ orders = [FILTER_REQUEST]
 rulenames = ['block','blockdomains','blockurls','allow']
 mimelist = []
 # regular expression for image filenames
-image_re=re.compile(r'\.(?i)(gif|jpg|png|bmp|pcx|tga|tiff?)')
+image_re=re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)')
 
 def strblock (block):
     s="("
