@@ -1,7 +1,5 @@
 TODO
 
-- using linkchecker on a wc proxy still gives "puzzling header received"
-  --> some objects share variables which are overwritten?
 - webcleanerconf: sortable filters (with up/down)
 - test parent proxy authentication
 - more error/warning recognition in parser

@@ -26,9 +26,7 @@
  desc="What the hell are x-meta tags? Definitely not something I need."
  name="x-meta"/>
 
-<header title="No via" oid="101"
- desc="Proxies (including WebCleaner) add a &apos;Via&apos;
-header in the outgoing request.
-This rule prevents this."
+<header title="No via" oid="5"
+ desc="Proxies (including WebCleaner) add a &apos;Via&apos; header in the outgoing request. This rule prevents this."
  name="via"/>
 </folder>

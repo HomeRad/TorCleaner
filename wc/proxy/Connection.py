@@ -13,7 +13,7 @@
 
 from wc import debug
 from wc.debug_levels import *
-import asyncore,socket,sys
+import asyncore, socket, sys
 
 RECV_BUFSIZE = 8192
 SEND_BUFSIZE = 8192
@@ -44,14 +44,17 @@ class Connection (asyncore.dispatcher):
             # It's been closed (presumably recently)
             return
 	if len(self.recv_buffer) > MAX_BUFSIZE:
-            self.handle_error('read buffer full', '', '')
+            print >>sys.stderr, 'warning: read buffer full'
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
             if not data: # It's been closed, and handle_close has been called
                 return
             #debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
+            #debug(NIGHTMARE, 'data', `data`)
         except socket.error, err:
+            if err==errno.EAGAIN:
+                return
             self.handle_error('read error', socket.error, err)
             return
 	self.recv_buffer += data
@@ -75,6 +78,8 @@ class Connection (asyncore.dispatcher):
         except socket.error, err:
             self.handle_error('write error', socket.error, err)
             return
+        #debug(HURT_ME_PLENTY, 'wrote', num_sent, '=>', self)
+        #debug(NIGHTMARE, 'data', `self.send_buffer[:num_sent]`)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = 0

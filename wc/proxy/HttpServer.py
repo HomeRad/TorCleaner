@@ -149,13 +149,14 @@ class HttpServer (Server):
         if i < 0: return
         self.response = applyfilter(FILTER_RESPONSE, self.read(i+1),
 	                attrs=self.nofilter)
-        if self.response.find('HTTP') >= 0:
+        if self.response.lower().find('http') >= 0:
             # Okay, we got a valid response line
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, self.http_version())
         elif not self.response.strip():
             # It's a blank line, so assume HTTP/0.9
+            print >> sys.stderr, 'Warning: HTTP/0.9 response:', `self.response`
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	                   rfc822.Message(StringIO('')), attrs=self.nofilter)
             self.bytes_remaining = None
@@ -165,8 +166,9 @@ class HttpServer (Server):
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
         else:
-            # We have no idea what it is!?
-            print >> sys.stderr, 'Warning: puzzling header received:', `self.response`
+            # We have no idea what it is? Assume headers started
+            print >> sys.stderr, 'Warning: puzzling response received:', `self.response`
+            self.state = 'headers'
 
 
 

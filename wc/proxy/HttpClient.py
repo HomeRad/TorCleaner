@@ -60,21 +60,18 @@ class HttpClient (Connection):
                 data = self.read(i)[2:]
                 self.headers = rfc822.Message(StringIO(data))
                 # set via header
-                via = self.headers.get('Via', "")
+                via = self.headers.get('Via', "").strip()
                 if via: via += " "
-                via += "1.1 WebCleaner"
+                via += "1.1 WebCleaner\r"
                 self.headers['Via'] = via
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
                      self.headers, fun="finish", attrs=self.nofilter)
                 # add supported encodings
                 if not self.headers.has_key('Accept-Encoding'):
                     self.headers['Accept-Encoding'] = \
-                                 "gzip;q=1.0, deflate;q=0.9, identity;q=0.5"
+                                 "gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r"
                 #debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
-                if self.headers.has_key('Content-Length'):
-                    self.bytes_remaining = int(self.headers['Content-Length'])
-                else:
-                    self.bytes_remaining = 0
+                self.bytes_remaining = int(self.headers.get('Content-Length', 0))
                 self.state = 'content'
 
         if self.state == 'content':
@@ -116,7 +113,8 @@ class HttpClient (Connection):
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        #debug(NIGHTMARE, 'S/response', self)
+        #debug(NIGHTMARE, 'S/response', response)
+        #debug(NIGHTMARE, 'S/headers', headers)
         self.write(response)
         self.write(''.join(headers.headers))
         self.write('\r\n')

@@ -46,27 +46,6 @@ class ClientServerMatchmaker:
 
      done:     We are done matching up the client and server
     """
-    def error (self, code, msg, txt=''):
-        content = wc.proxy.HTML_TEMPLATE % \
-            {'title': 'WebCleaner Proxy Error %d %s' % (code, msg),
-             'header': 'Bummer!',
-             'content': 'WebCleaner Proxy Error %d %s<br>%s<br>' % \
-                        (code, msg, txt),
-            }
-        if config['proxyuser']:
-            auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
-            http_ver = '1.1'
-        else:
-            auth = ''
-            http_ver = '1.0'
-        ServerHandleDirectly(self.client,
-            'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
-            'Server: WebCleaner Proxy\r\n' +\
-            'Content-type: text/html\r\n' +\
-            '%s'%auth +\
-            '\r\n', content)
-
-
     def __init__ (self, client, request, headers, content, nofilter):
         self.client = client
         self.request = request
@@ -100,6 +79,7 @@ class ClientServerMatchmaker:
                 self.headers['Max-Forwards'] = mf-1
 
         scheme, hostname, port, document = wc.proxy.spliturl(self.url)
+        if not document: document = '/'
         #debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
@@ -114,7 +94,6 @@ class ClientServerMatchmaker:
                 open(document, 'rb').read())
             return
 
-        #debug(HURT_ME_PLENTY, "huiii", hostname, port)
         if hostname.lower() in ('localhost', '127.0.0.1', '::1') and \
            port==config['port']:
             return self.handle_local(document)
@@ -136,6 +115,27 @@ class ClientServerMatchmaker:
         wc.proxy.HEADERS.append((self.url, 0, self.headers.headers))
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
+
+
+    def error (self, code, msg, txt=''):
+        content = wc.proxy.HTML_TEMPLATE % \
+            {'title': 'WebCleaner Proxy Error %d %s' % (code, msg),
+             'header': 'Bummer!',
+             'content': 'WebCleaner Proxy Error %d %s<br>%s<br>' % \
+                        (code, msg, txt),
+            }
+        if config['proxyuser']:
+            auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
+            http_ver = '1.1'
+        else:
+            auth = ''
+            http_ver = '1.0'
+        ServerHandleDirectly(self.client,
+            'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
+            'Server: WebCleaner Proxy\r\n' +\
+            'Content-type: text/html\r\n' +\
+            '%s'%auth +\
+            '\r\n', content)
 
 
     def check_proxy_auth (self):
