@@ -11,6 +11,8 @@
   * #define YY_NO_UNISTD_H on Windows systems, fixes build error with
     Visual Studio compiler
     Changed files: setup.py
+  * use python2.2 headers for parser compile, not 2.1.
+    Changed files: wc/parser/Makefile
 
 1.6
   * updated filters:
