@@ -51,8 +51,9 @@ class WebConfig (object):
             path, dirs, lang = wc.webgui.get_template_url(url, lang)
             if path.endswith('.html'):
                 # get TAL context
+                hostname = client.socket.getsockname()[0]
                 context, newstatus = \
-                     get_context(dirs, form, localcontext, lang)
+                     get_context(dirs, form, localcontext, hostname, lang)
                 if newstatus == 401 and status != newstatus:
                     client.error(401, _("Authentication Required"),
                                  auth=wc.proxy.auth.get_challenges())
@@ -132,7 +133,7 @@ def get_headers (url, status, auth, clientheaders):
     return headers
 
 
-def get_context (dirs, form, localcontext, lang):
+def get_context (dirs, form, localcontext, hostname, lang):
     """Get template context, raise ImportError if not found.
        The context includes the given local context, plus all variables
        defined by the imported context module
@@ -155,7 +156,7 @@ def get_context (dirs, form, localcontext, lang):
         # add form vars to context
         context_add(context, "form", form)
     # add default context values
-    add_default_context(context, dirs[-1], lang)
+    add_default_context(context, dirs[-1], hostname, lang)
     # augment the context
     attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     for attr in attrs:
@@ -167,7 +168,7 @@ def get_context (dirs, form, localcontext, lang):
     return context, status
 
 
-def add_default_context (context, filename, lang):
+def add_default_context (context, filename, hostname, lang):
     """add context variables used by all templates"""
     # rule macros
     path, dirs = wc.webgui.get_safe_template_path("macros/rules.html")
@@ -182,8 +183,10 @@ def add_default_context (context, filename, lang):
     # page template name
     context_add(context, "filename", filename)
     # base url
-    context_add(context, "baseurl",
-                "http://localhost:%d/" % wc.configuration.config['port'])
+    port = wc.configuration.config['port']
+    context_add(context, "baseurl", "http://%s:%d/" % (hostname, port))
+    newport = wc.configuration.config.get('newport', port)
+    context_add(context, "newbaseurl", "http://%s:%d/" % (hostname, newport))
     add_i18n_context(context, lang)
 
 
