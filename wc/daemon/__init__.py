@@ -24,14 +24,17 @@ with no fork().
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os
+import os, sys
 from wc import i18n, startfunc, Version, iswriteable, AppName
 
 def get_user ():
     """return current logged in user, or an empty string if there is no
     username available"""
     if hasattr(os, "getlogin"):
-        return os.getlogin()
+        try:
+            return os.getlogin()
+        except OSError, msg:
+            print >>sys.stderr, "Error in os.getlogin():", msg
     return ""
 
 

@@ -52,7 +52,7 @@ Do 'webcleaner stop' first."""), 1
     f = file(pidfile, 'w')
     f.write("%d" % os.getpid())
     f.close()
-    # start function (drops privileges)
+    # start function
     startfunc()
 
 
@@ -63,7 +63,7 @@ def stop ():
 
 
 def _stop (pidfile):
-    pid=int(file(pidfile).read())
+    pid = int(file(pidfile).read())
     import signal
     msg = None
     try:
