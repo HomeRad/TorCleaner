@@ -47,6 +47,7 @@ install: build
 	# move webcleaner binaries to /usr/sbin
 	mv -f debian/$(PACKAGE)/usr/bin/webcleaner debian/$(PACKAGE)/usr/sbin
 	mv -f debian/$(PACKAGE)/usr/bin/webcleanerconf debian/$(PACKAGE)/usr/sbin
+	mv -f debian/$(PACKAGE)/usr/bin/wcheaders debian/$(PACKAGE)/usr/sbin
 	rmdir debian/$(PACKAGE)/usr/bin
 	# remove example and config files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
@@ -62,8 +63,8 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_movefiles --sourcedir=debian/$(PACKAGE) -pwebcleanerconf \
-            usr/sbin/webcleanerconf usr/lib/$(PYTHON)/site-packages/wc/gui/
+	dh_movefiles --sourcedir=debian/$(PACKAGE) -pwebcleanertools \
+            usr/sbin/webcleanerconf usr/sbin/wcheaders usr/lib/$(PYTHON)/site-packages/wc/gui/
 	dh_installdebconf
 	dh_installdocs
 #	dh_installexamples filtertest filtertest.html
@@ -72,7 +73,7 @@ binary-arch: build install
 	dh_installinit
 #	dh_installcron
 	dh_installman webcleaner.1 webcleaner.conf.5
-	dh_installman -pwebcleanerconf webcleanerconf.1
+	dh_installman -pwebcleanertools webcleanerconf.1 wcheaders.1
 #	dh_installinfo
 	dh_installchangelogs 
 	dh_link
