@@ -14,11 +14,6 @@
     Type: feature
     Changed: wc/proxy/HttpServer.py
 
-  * don't quote colons or commas in url cgi data, else some servers
-    cannot unquote properly
-    Type: feature
-    Changed: wc/url.py
-
   * improve parsing of Accept-Encoding values in Compress module
     Type: feature
     Changed: wc/filter/Compress.py
@@ -37,10 +32,18 @@
     Type: code cleanup
     Changed: a lot :)
 
-  * Splittet filter header arguments in client, server and data headers.
+  * Split filter header arguments in client, server and data headers.
     Client and server headers are read-only, data headers are mutable.
     Type: bugfix
     Changed: wc/filter/*.py, wc/proxy/Http{Server,Client}.py
+
+  * the block message html is now more concise and informative
+    Type: feature
+    Changed: templates/classic/blocked.html, wc/filter/Blocker.py
+
+  * fixed the url_norm function to not unquote the url anymore
+    Type: bugfix
+    Changed: bk/url.py
 
 2.18 "Bubba Ho-tep" (released 1.6.2004)
   * rename local var 'data' to correct name 'content'
