@@ -31,8 +31,8 @@ def p (path):
 # set to 1 to use JavaScript
 USE_JS = 1
 
-class MyInstall(install):
-    def run(self):
+class MyInstall (install):
+    def run (self):
         install.run(self)
         # we have to write a configuration file because we need the
         # <install_data> directory (and other stuff like author, url, ...)
@@ -44,7 +44,7 @@ class MyInstall(install):
             else:
                 val = getattr(self, attr)
             if attr=="install_data":
-                base = os.path.join(val, 'share/webcleaner')
+                base = os.path.join(val, 'share', 'webcleaner')
                 data.append('config_dir = %s' % \
                             `os.path.normcase(os.path.join(base, 'config'))`)
                 data.append('template_dir = %s' % \
@@ -53,20 +53,14 @@ class MyInstall(install):
         from pprint import pformat
         data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
-        # copy batch file to desktop
+        # install proxy service
         if os.name=="nt":
-            path = self.install_scripts
-            if os.environ.has_key("ALLUSERSPROFILE"):
-                path = os.path.join(os.environ["ALLUSERSPROFILE"], "Desktop")
-            elif os.environ.has_key("USERPROFILE"):
-                path = os.path.join(os.environ["USERPROFILE"], "Desktop")
-            #for fname in ('wcheaders.bat',):
-            #    data = open(fname).readlines()
-            #    data = map(string.strip, data)
-            #    data = map(lambda s: s.replace("$python", sys.executable), data)
-            #    data = map(lambda s, self=self: s.replace("$install_scripts",
-            #      self.install_scripts), data)
-            #    self.distribution.create_batch_file(path, data, fname)
+            from wc import daemon
+            import win32serviceutil
+            oldargs = sys.argv
+            sys.argv = ['webcleaner', 'install']
+            win32serviceutil.HandleCommandLine(daemon.ProxyService)
+            sys.argv = oldargs
 
 
     # sent a patch for this, but here it is for compatibility
@@ -88,13 +82,13 @@ class MyInstall(install):
                 print "  %s: %s" % (opt_name, val)
 
 
-class MyDistribution(Distribution):
-    def __init__(self, attrs=None):
+class MyDistribution (Distribution):
+    def __init__ (self, attrs=None):
         Distribution.__init__(self, attrs=attrs)
         self.config_file = "_%s2_configdata.py"%self.get_name()
 
 
-    def run_commands(self):
+    def run_commands (self):
         cwd = os.getcwd()
         data = []
 	data.append('config_dir = %s' % `os.path.join(cwd, "config")`)
@@ -104,7 +98,7 @@ class MyDistribution(Distribution):
         Distribution.run_commands(self)
 
 
-    def create_conf_file(self, directory, data=[]):
+    def create_conf_file (self, directory, data=[]):
         data.insert(0, "# this file is automatically created by setup.py")
         if not directory:
             directory = os.getcwd()
@@ -124,7 +118,7 @@ class MyDistribution(Distribution):
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
 
-    def create_batch_file(self, directory, data, filename):
+    def create_batch_file (self, directory, data, filename):
         filename = os.path.join(directory, filename)
         # write the batch file
         util.execute(write_file, (filename, data),
