@@ -30,16 +30,21 @@ from wc.log import *
 orders = [FILTER_REQUEST]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
-rulenames = ['block','blockdomains','blockurls','allow']
+rulenames = [
+    'block',
+    'blockdomains',
+    'blockurls',
+    'allow',
+    'allowdomains',
+    'allowurls',
+]
 mimelist = []
 # regular expression for image filenames
 is_image = re.compile(r'^(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
 
 def strblock (block):
-    s="("
-    for b in block:
-        s += ","+(b and b.pattern or "")
-    return s+")"
+    patterns = [ repr(b and b.pattern or "") for b in block ]
+    return "[%s]" % ", ".join(patterns)
 
 
 class Blocker (Filter):
@@ -175,11 +180,12 @@ class Blocker (Filter):
         for _block in self.block:
             match = True
             for i in range(len(urlTuple)):
-                if _block[i]:
-                    if not _block[i].search(urlTuple[i]):
-                        match = False
+                if _block[i] and not _block[i].search(urlTuple[i]):
+                    match = False
+                    break
             if match:
-                debug(FILTER, "blocked %s with %s", urlTuple, _block[-1])
+                debug(FILTER, "blocked %s\n         with %s", urlTuple,
+                      strblock(_block))
                 return _block[-1]
         return False
 
