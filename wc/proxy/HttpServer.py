@@ -27,7 +27,7 @@ PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
 
-FilterLevels = [
+FilterStages = [
     wc.filter.STAGE_RESPONSE_DECODE,
     wc.filter.STAGE_RESPONSE_MODIFY,
     wc.filter.STAGE_RESPONSE_ENCODE,
@@ -235,8 +235,10 @@ class HttpServer (wc.proxy.Server.Server):
             self.response = "%s 200 Ok" % self.protocol
             self.statuscode = 200
         self.state = 'headers'
-        attrs = wc.filter.get_filterattrs(self.url, wc.filter.STAGE_RESPONSE)
-        self.response = wc.filter.applyfilter(self.response, "finish", attrs).strip()
+        stage = wc.filter.STAGE_RESPONSE
+        self.attrs = wc.filter.get_filterattrs(self.url, [])
+        self.response = wc.filter.applyfilter(stage, self.response,
+                              "finish", self.attrs).strip()
         if self.statuscode >= 400:
             self.mime_types = None
         wc.log.debug(wc.LOG_PROXY, "%s response %r", self, self.response)
@@ -259,9 +261,9 @@ class HttpServer (wc.proxy.Server.Server):
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
         # make a copy for later
-        self.serverheaders = msg.copy()
+        serverheaders = msg.copy()
         wc.log.debug(wc.LOG_PROXY, "%s server headers\n%s",
-                     self, self.serverheaders)
+                     self, serverheaders)
         if self.statuscode == 100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
@@ -269,12 +271,13 @@ class HttpServer (wc.proxy.Server.Server):
             return
         self.set_persistent(msg,
                      wc.proxy.ServerPool.serverpool.http_versions[self.addr])
-        attrs = wc.filter.get_filterattrs(self.url,
-                        wc.filter.STAGE_RESPONSE_HEADER,
+        stage = wc.filter.STAGE_RESPONSE_HEADER
+        self.attrs = wc.filter.get_filterattrs(self.url, [stage],
                         clientheaders=self.client.headers,
-                        serverheaders=self.serverheaders)
+                        serverheaders=serverheaders)
         try:
-            self.headers = wc.filter.applyfilter(msg, "finish", attrs)
+            self.headers = \
+                wc.filter.applyfilter(stage, msg, "finish", self.attrs)
         except wc.filter.FilterRating, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s",
                          self, msg)
@@ -297,11 +300,16 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
+        self.attrs = wc.filter.get_filterattrs(self.url, FilterStages,
+                                     clientheaders=self.client.headers,
+                                     serverheaders=serverheaders,
+                                     headers=self.headers)
         # tell the MIME recognizer to ignore the type if
-        # a) a MIME type is enforced or
+        # a) a MIME type is enforced
         # b) the MIME type is not supported
-        self.mime_ignore = self.mime_types or \
-          self.serverheaders.get('Content-Type') in wc.magic.unsupported_types
+        mime = serverheaders.get('Content-Type')
+        if self.mime_types or mime in wc.magic.unsupported_types:
+            self.attrs['mimerecognizer_ignore'] = True
         wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s",
                      self, self.headers)
         if self.defer_data:
@@ -388,13 +396,8 @@ class HttpServer (wc.proxy.Server.Server):
             if not is_closed and decoder.closed:
                 is_closed = True
         try:
-            for stage in FilterLevels:
-                attrs = wc.filter.get_filterattrs(self.url, stage,
-                                clientheaders=self.client.headers,
-                                serverheaders=self.serverheaders,
-                                headers=self.headers)
-                attrs['mimerecognizer_ignore'] = self.mime_ignore
-                data = wc.filter.applyfilter(data, "filter", attrs)
+            for stage in FilterStages:
+               data = wc.filter.applyfilter(stage, data, "filter", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
         except wc.filter.FilterRating, msg:
@@ -491,13 +494,8 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
         data = flush_decoders(self.decoders)
         try:
-            for stage in FilterLevels:
-                attrs = wc.filter.get_filterattrs(self.url, stage,
-                                clientheaders=self.client.headers,
-                                serverheaders=self.serverheaders,
-                                headers=self.headers)
-                attrs['mimerecognizer_ignore'] = self.mime_ignore
-                data = wc.filter.applyfilter(data, "finish", attrs)
+            for stage in FilterStages:
+               data = wc.filter.applyfilter(stage, data, "finish", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data

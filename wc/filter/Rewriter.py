@@ -59,9 +59,11 @@ class Rewriter (wc.filter.Filter.Filter):
         p.tagbuf2data()
         return p.getoutput()
 
-    def get_attrs (self, url, stage, headers):
+    def get_attrs (self, url, stages, headers):
         """We need a separate filter instance for stateful filtering"""
-        d = super(Rewriter, self).get_attrs(url, stage, headers)
+        if not self.applies_to_stages(stages):
+            return {}
+        d = super(Rewriter, self).get_attrs(url, stages, headers)
         rewrites = []
         ratings = []
         # look if headers already have rating info

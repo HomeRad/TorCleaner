@@ -114,12 +114,12 @@ def GetRuleFromName (name):
     return getattr(mod, name)()
 
 
-def applyfilter (data, fun, attrs):
+def applyfilter (filterstage, data, fun, attrs):
     """Apply all filters which are registered in the given filter stage.
        For different filter stages we have different data objects.
        Look at the filter examples.
     """
-    filterstage = attrs['filterstage']
+    attrs['filterstage'] = filterstage
     wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
                  fun, len(data), filterstage)
     if attrs.get('nofilter') or (fun!='finish' and not data):
@@ -138,7 +138,7 @@ def applyfilter (data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, filterstage, browser='Calzilla/6.0',
+def get_filterattrs (url, filterstages, browser='Calzilla/6.0',
                      clientheaders=None, serverheaders=None, headers=None):
     """init external state objects"""
     if clientheaders is None:
@@ -159,16 +159,15 @@ def get_filterattrs (url, filterstage, browser='Calzilla/6.0',
         'mime_types': None,
         'headers': attrheaders,
         'browser': browser,
-        'filterstage': filterstage,
     }
     if attrs['mime']:
         charset = get_mime_charset(attrs['mime'])
         if charset:
             attrs['charset'] = charset
-    for f in wc.configuration.config['filterlist'][filterstage]:
+    for f in wc.configuration.config['filtermodules']:
         # note: get attributes of _all_ filters since the
         # mime type can change dynamically
-        attrs.update(f.get_attrs(url, filterstage, attrheaders))
+        attrs.update(f.get_attrs(url, filterstages, attrheaders))
     return attrs
 
 

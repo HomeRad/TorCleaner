@@ -38,11 +38,19 @@ class Header (wc.filter.Filter.Filter):
     # which mime types this filter applies to
     mimelist = []
 
-    def get_attrs (self, url, stage, headers):
+    def get_attrs (self, url, stages, headers):
         """configure header rules to add/delete"""
-        d = super(Header, self).get_attrs(url, stage, headers)
-        delete = []
-        add = []
+        if not self.applies_to_stages(stages):
+            return {}
+        d = super(Header, self).get_attrs(url, stages, headers)
+        delete = {
+            wc.filter.STAGE_REQUEST_HEADER: [],
+            wc.filter.STAGE_RESPONSE_HEADER: [],
+        }
+        add = {
+            wc.filter.STAGE_REQUEST_HEADER: [],
+            wc.filter.STAGE_RESPONSE_HEADER: [],
+        }
         for rule in self.rules:
             # filter out unwanted rules
             if not rule.applies_to(url) or not rule.name:
@@ -52,14 +60,18 @@ class Header (wc.filter.Filter.Filter):
                 # no value --> header name should be deleted
                 # deletion can apply to many headers
                 matcher = re.compile(rule.name, re.I).match
-                if rule.filterstage in ('both', stage):
-                    delete.append(matcher)
+                if rule.filterstage in ('both', 'request'):
+                    delete[wc.filter.STAGE_REQUEST_HEADER].append(matcher)
+                if rule.filterstage in ('both', 'response'):
+                    delete[wc.filter.STAGE_RESPONSE_HEADER].append(matcher)
             else:
                 # name, value must be ASCII strings
                 name = str(rule.name)
                 val = str(rule.value)
-                if rule.filterstage in ('both', stage):
-                    add.append((name, val))
+                if rule.filterstage in ('both', 'request'):
+                    add[wc.filter.STAGE_REQUEST_HEADER].append((name, val))
+                if rule.filterstage in ('both', 'response'):
+                    add[wc.filter.STAGE_RESPONSE_HEADER].append((name, val))
         d['header_add'] = add
         d['header_delete'] = delete
         return d
@@ -68,8 +80,9 @@ class Header (wc.filter.Filter.Filter):
         """apply stored header rules to data, which is a WcMessage object"""
         delete = sets.Set()
         # stage is STAGE_REQUEST_HEADER or STAGE_RESPONSE_HEADER
+        stage = attrs['filterstage']
         for h in data.keys():
-            for name_match in attrs['header_delete']:
+            for name_match in attrs['header_delete'][stage]:
                 if name_match(h):
                     wc.log.debug(wc.LOG_FILTER,
                                  "%s removing header %r", self, h)
@@ -77,7 +90,7 @@ class Header (wc.filter.Filter.Filter):
                     # go to next header name
                     break
         wc.proxy.Headers.remove_headers(data, delete)
-        for name, val in attrs['header_add']:
+        for name, val in attrs['header_add'][stage]:
             wc.log.debug(wc.LOG_FILTER,
                          "%s adding header %r: %r", self, name, val)
             data[name] = val+"\r"

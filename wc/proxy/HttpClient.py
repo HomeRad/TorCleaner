@@ -75,7 +75,6 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.request = ''
         self.decoders = [] # Handle each of these, left to right
         self.headers = {} # remembers server headers
-        self.clientheaders = {} # remembers client headers
         self.bytes_remaining = None # for content only
         self.content = ''
         self.compress = "identity" # acceptable compression for client
@@ -153,8 +152,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         request = "%s %s %s" % (self.method, self.url, self.protocol)
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, request)
         # filter request
-        attrs = wc.filter.get_filterattrs(self.url, wc.filter.STAGE_REQUEST)
-        self.request = wc.filter.applyfilter(request, "finish", attrs)
+        stage = wc.filter.STAGE_REQUEST
+        self.attrs = wc.filter.get_filterattrs(self.url, [stage])
+        request = wc.filter.applyfilter(stage, request, "finish", self.attrs)
+        self.request = request
         # final request checking
         if not self.fix_request():
             return
@@ -236,15 +237,16 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         fp.close()
         wc.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
         self.fix_request_headers(msg)
-        self.clientheaders = msg.copy()
-        attrs = wc.filter.get_filterattrs(self.url,
-                       wc.filter.STAGE_REQUEST_HEADER,
-                       clientheaders=self.clientheaders, headers=msg)
+        clientheaders = msg.copy()
+        stage = wc.filter.STAGE_REQUEST_HEADER
+        self.attrs = wc.filter.get_filterattrs(self.url, [stage],
+                       clientheaders=clientheaders,
+                       headers=msg)
         self.set_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
         self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
         # filter headers
-        self.headers = wc.filter.applyfilter(msg, "finish", attrs)
+        self.headers = wc.filter.applyfilter(stage, msg, "finish", self.attrs)
         # add decoders
         self.decoders = []
         # if content-length header is missing, assume zero length
@@ -375,10 +377,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             if not is_closed:
                 is_closed = decoder.closed
         for stage in FilterStages:
-            attrs = wc.filter.get_filterattrs(self.url, stage,
-                            clientheaders=self.clientheaders,
-                            headers=self.headers)
-            data = wc.filter.applyfilter(data, "filter", attrs)
+            data = wc.filter.applyfilter(stage, data, "filter", self.attrs)
         self.content += data
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
@@ -389,10 +388,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if is_closed or self.bytes_remaining <= 0:
             data = ""
             for stage in FilterStages:
-                attrs = wc.filter.get_filterattrs(self.url, stage,
-                               clientheaders=self.clientheaders,
-                               headers=self.headers)
-                data = wc.filter.applyfilter(data, "finish", attrs)
+                data = wc.filter.applyfilter(stage, data, "finish",
+                                             self.attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r" % len(self.content)

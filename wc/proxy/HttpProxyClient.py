@@ -4,16 +4,11 @@
 import urlparse
 import wc.proxy.Headers
 import wc.proxy.HttpServer
+import wc.proxy.HttpClient
 import wc.proxy.ClientServerMatchmaker
 import wc.filter
 import wc.log
 import wc.url
-
-FilterStages = [
-    wc.filter.STAGE_REQUEST_DECODE,
-    wc.filter.STAGE_REQUEST_MODIFY,
-    wc.filter.STAGE_REQUEST_ENCODE,
-]
 
 
 class HttpProxyClient (object):
@@ -37,11 +32,12 @@ class HttpProxyClient (object):
         self.connected = True
         self.addr = ('localhost', 80)
         self.isredirect = False
+        attrs = wc.filter.get_filterattrs(self.url,
+                                          [wc.filter.STAGE_REQUEST])
         # note: use HTTP/1.0 for JavaScript
         request = "GET %s HTTP/1.0" % self.url
-        for stage in FilterStages:
-            attrs = wc.filter.get_filterattrs(self.url, stage)
-            request = wc.filter.applyfilter(request, "filter", attrs)
+        for stage in wc.proxy.HttpClient.FilterStages:
+            request = wc.filter.applyfilter(stage, request, "filter", attrs)
         self.request = request
         wc.log.debug(wc.LOG_PROXY, '%s init', self)
 

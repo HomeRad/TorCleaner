@@ -58,16 +58,19 @@ class Filter (object):
         """
         return data
 
-    def get_attrs (self, url, stage, headers):
-        """get filter-specific state data
+    def get_attrs (self, url, stages, headers):
+        """Get filter-specific state data for all given filter stages.
 
            @param url the complete request url
-           @param STAGE_* filter stage, must be one of the configured
-            stages this filter applies to
+           @param stages filter stages (STAGE_*)
            @param headers dictionary with WcMessage objects under the keys
                   ``client``, ``server`` and ``data``
         """
         return {}
+
+    def applies_to_stages (self, stages):
+        """ask if this filter applies to one of the given filter stages"""
+        return [s for s in self.stages if s in stages]
 
     def applies_to_mime (self, mime):
         """ask if this filter applies to a mime type"""

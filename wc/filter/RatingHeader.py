@@ -52,8 +52,10 @@ class RatingHeader (wc.filter.Filter.Filter):
                 raise wc.filter.FilterRating(msg)
         return data
 
-    def get_attrs (self, url, stage, headers):
-        d = super(RatingHeader, self).get_attrs(url, stage, headers)
+    def get_attrs (self, url, stages, headers):
+        if not self.applies_to_stages(stages):
+            return {}
+        d = super(RatingHeader, self).get_attrs(url, stages, headers)
         # weed out the rules that don't apply to this url
         d['rating_rules'] = [rule for rule in self.rules if \
                              rule.applies_to(url)]
