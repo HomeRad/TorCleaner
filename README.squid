@@ -11,7 +11,7 @@
 #
 # You must configure your Browser to use the Squid Proxy (running
 # at localhost, port 3128)
-# Remember, only localhost can connect to this squid proxy :)
+# Remember, only localhost can connect to this squid proxy
 
 
 # disable icp

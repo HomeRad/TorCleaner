@@ -14,7 +14,7 @@
 </rewrite>
 
 <rewrite title="Ad servers 10" oid="2">
-<attr>(ad\.krutilka\.ru|(fast|double)click\.net|click\.atdmt\.com|ar\.atwola\.com)</attr>
+<attr>(ad\.krutilka\.ru|(fast|double)click\.net|click\.atdmt\.com|ar\.atwola\.com|partners\.webmasterplan\.com)</attr>
 </rewrite>
 
 <rewrite title="Ad servers 2" oid="3"
