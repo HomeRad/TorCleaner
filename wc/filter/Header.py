@@ -43,6 +43,9 @@ class Header (Filter):
         super(Header, self).addrule(rule)
         compileRegex(rule, "matchurl")
         compileRegex(rule, "dontmatchurl")
+        # ignore empty rules
+        if not rule.name:
+            return
         if not rule.value:
             self.delete.append(rule.name.lower())
         else:

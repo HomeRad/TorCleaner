@@ -236,12 +236,11 @@ class HttpServer (Server):
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
             return
-        key = 'Connection'
         http_ver = serverpool.http_versions[self.addr]
         if http_ver >= (1,1):
-            self.can_reuse = not has_header_value(msg, key, 'Close')
+            self.can_reuse = not has_header_value(msg, 'Connection', 'Close')
         elif http_ver >= (1,0):
-            self.can_reuse = has_header_value(msg, key, 'Keep-Alive')
+            self.can_reuse = has_header_value(msg, 'Connection', 'Keep-Alive')
         else:
             self.can_reuse = False
         # filter headers
@@ -337,6 +336,7 @@ class HttpServer (Server):
 
 
     def add_encoding_headers (self):
+        debug(PROXY, "Server: encoding headers %s", blocktext(`str(self.headers)`, 72))
         # will content be rewritten?
         rewrite = self.is_rewrite()
         # add client accept-encoding value
@@ -403,11 +403,12 @@ class HttpServer (Server):
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
             debug(PROXY, "Server: %d bytes remaining", self.bytes_remaining)
-        is_closed = 0
+        is_closed = False
+        debug(PROXY, 'Proxy: server data %s', blocktext(`data`, 72))
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
-        debug(PROXY, 'Proxy: server data %s', blocktext(`data`, 72))
+        debug(PROXY, 'Proxy: server data decoded %s', blocktext(`data`, 72))
         try:
             for i in _RESPONSE_FILTERS:
                 data = applyfilter(i, data, attrs=self.attrs)

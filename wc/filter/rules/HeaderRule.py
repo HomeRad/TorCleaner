@@ -24,7 +24,7 @@ from wc.XmlUtils import xmlify, unxmlify
 class HeaderRule (UrlRule):
     """rule for filtering HTTP headers"""
 
-    def __init__ (self, title="No title", desc="", disable=0, name="",
+    def __init__ (self, title="No title", desc="", disable=0, name="noname",
                   value="", oid=0):
         """init rule name and value"""
         super(HeaderRule, self).__init__(title=title, desc=desc, disable=disable, oid=oid)

@@ -175,11 +175,13 @@ class HttpClient (Connection):
             # and then the current system of counting bytes remaining
             # won't work; we have to deal with chunks
             self.bytes_remaining -= len(data)
-        is_closed = 0
+        is_closed = False
+        debug(PROXY, "Proxy: client data %s", blocktext(`data`, 72))
+        debug(PROXY, "decoders", self.decoders)
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
-        debug(PROXY, "Proxy: client data `%s'", blocktext(data, 72))
+        debug(PROXY, "Proxy: client data decoded %s", blocktext(`data`, 72))
         data = applyfilter(FILTER_REQUEST_DECODE, data,
                            attrs=self.nofilter)
         data = applyfilter(FILTER_REQUEST_MODIFY, data,

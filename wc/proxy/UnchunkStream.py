@@ -20,26 +20,26 @@ class UnchunkStream (object):
     #   else:
     #      we're reading up to bytes_remaining elements of data
     def __init__ (self):
-        self.buffer = ''
+        self.buf = ''
         self.bytes_remaining = None
         self.closed = False
 
 
     def decode (self, s):
         debug(PROXY, "Proxy: chunked data %s", `s`)
-        self.buffer += s
+        self.buf += s
         s = ''
 
-        while self.buffer and not self.closed:
+        while self.buf and not self.closed:
             # Keep looking for alternating chunk lengths and chunk content
             if self.bytes_remaining is None:
                 # We want to find a chunk length
-                i = self.buffer.find('\n')
+                i = self.buf.find('\n')
                 if i >= 0:
                     # We have a line; let's hope it's a chunk length
-                    line = self.buffer[:i].strip()
+                    line = self.buf[:i].strip()
                     # Remove this line from the buffer
-                    self.buffer = self.buffer[i+1:]
+                    self.buf = self.buf[i+1:]
                     if line:
                         # NOTE: chunklen can be followed by ";.*"
                         mo = match_bytes(line)
@@ -59,9 +59,9 @@ class UnchunkStream (object):
                     break
             if self.bytes_remaining is not None:
                 # We know how many bytes we need
-                data = self.buffer[:self.bytes_remaining]
+                data = self.buf[:self.bytes_remaining]
                 s += data
-                self.buffer = self.buffer[self.bytes_remaining:]
+                self.buf = self.buf[self.bytes_remaining:]
                 self.bytes_remaining -= len(data)
                 assert self.bytes_remaining >= 0
                 if self.bytes_remaining == 0:
@@ -72,6 +72,6 @@ class UnchunkStream (object):
 
 
     def flush (self):
-        s = self.buffer.strip()
-        self.buffer = ''
+        s = self.buf.strip()
+        self.buf = ''
         return s
