@@ -204,11 +204,12 @@ class RewriteRule (UrlRule):
                         # replace complete attr, and make it possible
                         # for replacement to generate multiple attributes,
                         # eg "a=b c=d"
+                        # XXX this is limited, but works so far
                         # XXX split does not honor quotes
                         for f in self.replacement.split():
                             if '=' in self.replacement:
                                 k,v = f.split('=')
-                                newattrs[k] = v
+                                newattrs[k] = mo.expand(v)
                             else:
                                 newattrs[self.replacement] = None
                     elif self.part==ATTRVAL:
