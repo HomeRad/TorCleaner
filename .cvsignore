@@ -41,3 +41,6 @@ mkinstalldirs
 depcomp
 servertests.txt
 crossbuild.log
+localbuild.log
+localconfig
+dist
