@@ -480,6 +480,7 @@ static int parser_init (parser_object* self, PyObject* args, PyObject* kwds) {
     if (handler==NULL) {
         return 0;
     }
+    Py_DECREF(self->handler);
     Py_INCREF(handler);
     self->handler = handler;
     self->userData->handler = self->handler;
@@ -498,9 +499,9 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
+    Py_DECREF(self->handler);
     self->handler = NULL;
     self->userData->handler = NULL;
-    Py_XDECREF(self->handler);
     return 0;
 }
 
@@ -693,11 +694,32 @@ static PyObject* parser_debug (parser_object* self, PyObject* args) {
 }
 
 
+static PyObject* parser_gethandler (parser_object* self, void* closure) {
+    Py_INCREF(self->handler);
+    return self->handler;
+}
+
+static int parser_sethandler (parser_object* self, PyObject* value, void* closure) {
+    if (value == NULL) {
+       PyErr_SetString(PyExc_TypeError, "Cannot delete parser handler");
+       return -1;
+    }
+    Py_DECREF(self->handler);
+    Py_INCREF(value);
+    self->handler = value;
+    self->userData->handler = self->handler;
+    return 0;
+}
+
 /* type interface */
 
 static PyMemberDef parser_members[] = {
-    {"handler", T_OBJECT_EX, offsetof(parser_object, handler), 0,
-     "handler class"},
+    {NULL}  /* Sentinel */
+};
+
+static PyGetSetDef parser_getset[] = {
+    {"handler", (getter)parser_gethandler, (setter)parser_sethandler,
+     "handler object", NULL},
     {NULL}  /* Sentinel */
 };
 
@@ -748,7 +770,7 @@ static PyTypeObject parser_type = {
     0,              /* tp_iternext */
     parser_methods, /* tp_methods */
     parser_members, /* tp_members */
-    0,              /* tp_getset */
+    parser_getset,  /* tp_getset */
     0,              /* tp_base */
     0,              /* tp_dict */
     0,              /* tp_descr_get */

@@ -71,11 +71,11 @@ class HtmlPrettyPrinter (object):
 
 
     def comment (self, data):
-        self.fd.write(data)
+        self.fd.write("<!--%s-->" % data)
 
 
     def startElement (self, tag, attrs):
-        self.fd.write("<%s"%tag)
+        self.fd.write("<%s"%tag.replace("/", ""))
         for key, val in attrs.iteritems():
             if val is None:
                 self.fd.write(" %s"%key)
@@ -89,11 +89,11 @@ class HtmlPrettyPrinter (object):
 
 
     def doctype (self, data):
-        self.fd.write("<!DOCTYPE %s!>" % data)
+        self.fd.write("<!DOCTYPE%s>" % data)
 
 
-    def pi (self, name, data):
-        self.fd.write("<?%s %s?>" % (name, data))
+    def pi (self, data):
+        self.fd.write("<?%s?>" % data)
 
 
     def cdata (self, data):
