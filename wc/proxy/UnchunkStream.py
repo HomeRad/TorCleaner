@@ -5,6 +5,9 @@
 # TEST CASE:
 #    http://www.apache.org/
 
+import re
+match_bytes = re.compile(r"^(?P<bytes>\d+)(;.+)?$").search
+
 class UnchunkStream:
     # States:
     #   if bytes_remaining is None:
@@ -32,12 +35,18 @@ class UnchunkStream:
                     self.buffer = self.buffer[i+1:]
                     if line:
                         # NOTE: chunklen can be followed by r";.*"
-                        self.bytes_remaining = int(line, 16) # chunklen is hex
+                        mo = match_bytes(line)
+                        if mo:
+                            # chunklen is hex
+                            self.bytes_remaining = int(mo.group('bytes'), 16)
+                        else:
+                            print >> sys.stderr, "Invalid chunk size", `line`
+                            self.bytes_remaining = 0
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:
                             # End of stream
                             self.closed = 1
-                            # NOTE: at this point, we should read 
+                            # XXX: at this point, we should read
                             # footers until we get to a blank line
                 else:
                     break
