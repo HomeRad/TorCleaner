@@ -4,8 +4,6 @@ version 2.5 and above
 
 - test the rule merging stuff
 
-- documentation for the webgui interface
-
 - use test/client.py, test/server.py for testing
 
 - test NTLM authentication
@@ -89,6 +87,9 @@ for your application make sure to deny these requests: add
 - Use FOX 1.2 Python bindings (fxpy 1.2)
   When FOX 1.2 is released, help to update fxpy to this release using
   the new SWIG 1.3 code.
+
+- when changing the proxy port, render a <meta refresh> html page with
+  url pointing to new port, then restart the proxy
 
 - HTTP/1.1 pipelining
 
