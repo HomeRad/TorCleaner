@@ -13,6 +13,7 @@
     o prevent javascript top frame bashing
     o use Calzilla/6.0 as user agent
     o more ad filters
+    o remove From: header
     Changed files: config/*.zap
   * Removed unneeded guruguru.bmp
   * #define YY_NO_UNISTD_H on Windows systems, fixes build error with
@@ -20,8 +21,11 @@
     Changed files: setup.py
   * handle missing HTTP response header line
     Changed files: wc/proxy/HttpServer.py
-  * handle chunked encoding for client requests
-    Changed files: wc/proxy/HttpClient.py
+  * chunked encoding:
+    - handle client requests
+    - ignore chunk extensions
+    - fixed chunk size matching
+    Changed files: wc/proxy/{HttpClient.py,HttpServer.py,UnchunkStream.py}
   * fix some typos and grammar
     Changed files: FAQ, README*
   * add javascript interpreter wrapper library. This filters popups

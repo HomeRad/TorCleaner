@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Tue Apr  1 17:57:44 2003\n"
+"POT-Creation-Date: Sun Apr  6 00:25:40 2003\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -214,6 +214,21 @@ msgid ""
 msgstr ""
 "Logdatei\tDer Name der Logdatei kann leer sein (kein Logging), '<stdout>'\n"
 " (Standardausgabe) oder ein Dateiname (relativ oder absolut)."
+
+msgid "Debug level"
+msgstr "Debugstufe"
+
+msgid "No debugging"
+msgstr "Kein debugging"
+
+msgid "Bring it on"
+msgstr "Los gehts"
+
+msgid "Hurt me plenty"
+msgstr "Gibs mir"
+
+msgid "Nightmare"
+msgstr "Alptraum"
 
 msgid "No filtering for"
 msgstr "Kein Filtern für"
@@ -621,6 +636,9 @@ msgstr "Erwartung fehlgeschlagen"
 msgid "Server does not understand HTTP/1.1"
 msgstr "Server versteht nicht HTTP/1.1"
 
+msgid "Unsupported expectation `%s'"
+msgstr ""
+
 msgid "No response from server"
 msgstr "Keine Antwort vom Server"
 
@@ -795,21 +813,6 @@ msgstr "Unbekannter Befehl %s"
 
 #~ msgid "Strict whitelist"
 #~ msgstr "Strikte Erlaubnisliste"
-
-#~ msgid "Debug level"
-#~ msgstr "Debugstufe"
-
-#~ msgid "No debugging"
-#~ msgstr "Kein debugging"
-
-#~ msgid "Bring it on"
-#~ msgstr "Los gehts"
-
-#~ msgid "Hurt me plenty"
-#~ msgstr "Gibs mir"
-
-#~ msgid "Nightmare"
-#~ msgstr "Alptraum"
 
 #~ msgid "Host"
 #~ msgstr "Rechner"

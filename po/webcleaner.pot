@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Apr  1 17:57:44 2003\n"
+"POT-Creation-Date: Sun Apr  6 00:25:40 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -173,6 +173,21 @@ msgstr ""
 msgid ""
 "Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n"
 "(standard out) or a filename (relative or absolute)."
+msgstr ""
+
+msgid "Debug level"
+msgstr ""
+
+msgid "No debugging"
+msgstr ""
+
+msgid "Bring it on"
+msgstr ""
+
+msgid "Hurt me plenty"
+msgstr ""
+
+msgid "Nightmare"
 msgstr ""
 
 msgid "No filtering for"
@@ -547,6 +562,9 @@ msgid "Expectation failed"
 msgstr ""
 
 msgid "Server does not understand HTTP/1.1"
+msgstr ""
+
+msgid "Unsupported expectation `%s'"
 msgstr ""
 
 msgid "No response from server"
