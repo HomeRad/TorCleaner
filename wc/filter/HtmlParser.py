@@ -313,12 +313,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # default data
         self._debug("startElement %r", tag)
         tag = check_spelling(tag, self.url)
-        item = [STARTTAG, tag, attrs]
         if self.state[0]=='wait':
-            self.waitbuf.append(item)
+            self.waitbuf.append([STARTTAG, tag, attrs])
             return
-        rulelist = []
-        filtered = False
         if tag=="meta":
             if attrs.get('http-equiv', '').lower() =='content-rating':
                 rating = resolve_html_entities(attrs.get('content', ''))
@@ -339,8 +336,17 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self._debug("using base url %r", self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
-
         # look for filter rules which apply
+        self.filterStartElement(tag, attrs)
+        # if rule stack is empty, write out the buffered data
+        if not self.rulestack and not self.javascript:
+            self.buf2data()
+
+
+    def filterStartElement (self, tag, attrs):
+        rulelist = []
+        filtered = False
+        item = [STARTTAG, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
                 self._debug("matched rule %r on tag %r", rule.title, tag)
@@ -367,9 +373,6 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.jsStartElement(tag, attrs)
         else:
             self.buf.append(item)
-        # if rule stack is empty, write out the buffered data
-        if not self.rulestack and not self.javascript:
-            self.buf2data()
 
 
     def endElement (self, tag):
