@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="PICS ratings" oid="13"
- desc="Contains a pics rule deploying the Parental Internet Control System.">
+ desc="Contains rules deploying the Platform for Internet Content Selection (PICS).">
 
 <pics title="PICS ratings" oid="0"
  desc="Enabling this rule turns WebCleaner into a whitelist-based kids-safe proxy.
