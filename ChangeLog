@@ -70,6 +70,10 @@
     Type: feature
     Changed: setup.py, wc/*/*.py
 
+  * The error page has now a link to the coral cache of the page.
+    Type: feature
+    Changed: template/classic/google.html, wc/google.py
+
 2.19 "A Knight's Tale" (released 27.7.2004)
   * Fix _webcleaner2_config.py file writing when --root directory has a
     trailing slash, and don't write the unneeded output file list.

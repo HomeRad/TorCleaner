@@ -63,5 +63,6 @@ def get_google_context (url, response):
       'path': url_parts[2],
       'cache_site': get_google_cache_url("%s/" % url_parts[1]),
       'cache_path': get_google_cache_url("%s%s" % url_parts[1:3]),
+      'coral_path': ("%s.nyud.net:8090%s" % url_parts[1:3]),
     }
     return context
