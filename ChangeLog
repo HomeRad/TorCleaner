@@ -38,6 +38,10 @@
     Added files: wc/log.py, config/logging.conf
     Changed files: a lot
     Removed files: wc/debug.py
+  * local html pages use TAL templates and simpleTAL
+    Added files: wc/webgui/{simpletal, context}
+    Changed files: wc/proxy/HttpClient.py
+    Removed files: old Zope TAL packages in wc/webgui
 
 1.10
   * fix rule title updating (again)
