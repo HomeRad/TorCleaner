@@ -1,6 +1,6 @@
 2.3
-  * oops, add google.html to distribution files
-    Changed: setup.py
+  * oops, add some mising files to distribution
+    Changed: setup.py, MANIFEST.in
 
 2.2 (released 19.10.2003)
   * removed unused imports, better debugging
