@@ -1,5 +1,9 @@
 TODO
 
+- www.mvhs.de not working
+
+- when running tests, log everything to stdout/stderr
+
 - webgui configuration
 
 - HTTPS tunneling (RFC 2818)
