@@ -3,6 +3,7 @@
 module delivering the page content values"""
 import re
 
+
 def getval (form, key):
     """return a formfield value"""
     if not form.has_key(key):

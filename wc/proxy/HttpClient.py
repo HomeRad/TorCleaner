@@ -345,7 +345,7 @@ class HttpClient (Connection):
             if qs:
                 form = cgi.parse_qs(qs)
         elif self.method=='POST':
-            # XXX this uses FieldStorage internals?
+            # XXX this uses FieldStorage internals
             form = cgi.FieldStorage(fp=StringIO(self.content),
                                     headers=self.headers,
                                     environ={'REQUEST_METHOD': 'POST'})

@@ -1,7 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 import tempfile, os
 from wc import AppName, ConfigDir, rulenames, Version, config
-from wc import daemon as _daemon
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
@@ -9,17 +8,23 @@ from wc.filter.rules.RewriteRule import partvalnames, partnames
 from wc.filter.rules.RewriteRule import part_num as _part_num
 from wc.filter.rules.FolderRule import FolderRule as _FolderRule
 from wc.filter.rules import register_rule as _register_rule
+from wc.filter.rules import recalc_up_down as _recalc_up_down
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.PICS import services as pics_data
+from wc.log import debug as _debug
+from wc.log import GUI as _GUI
 
 # config vars
 info = {}
 error = {}
+_rules_per_page = 25
 # current selected folder
 curfolder = None
 # current selected rule
 currule = None
+# current index of first rule in folder to display
+curindex = 0
 # current parts
 curparts = None
 # only some rules allowed for new
@@ -50,6 +55,8 @@ def _exec_form (form):
     # select a rule
     if form.has_key('selrule') and curfolder:
         _form_selrule(_getval(form, 'selrule'))
+    if form.has_key('selindex') and curfolder:
+        _form_selindex(_getval(form, 'selindex'))
     # make a new folder
     if form.has_key('newfolder'):
         _form_newfolder(_getval(form, 'newfoldername'))
@@ -98,18 +105,14 @@ def _exec_form (form):
                  form.has_key('rule_down_%d.x' % rule.oid):
                 _form_rule_down(rule.oid)
     # look for folder up/down moves
-    else:
-        for folder in config['folderrules']:
-            if form.has_key('folder_up_%d' % folder.oid) or \
-               form.has_key('folder_up_%d.x' % folder.oid):
-                _form_folder_up(folder.oid)
-            elif form.has_key('folder_down_%d' % folder.oid) or \
-                 form.has_key('folder_down_%d.x' % folder.oid):
-                _form_folder_down(folder.oid)
+    for folder in config['folderrules']:
+        if form.has_key('folder_up_%d' % folder.oid) or \
+           form.has_key('folder_up_%d.x' % folder.oid):
+            _form_folder_up(folder.oid)
+        elif form.has_key('folder_down_%d' % folder.oid) or \
+             form.has_key('folder_down_%d.x' % folder.oid):
+            _form_folder_down(folder.oid)
 
-    if info:
-        config.write_filterconf()
-        _daemon.reload()
     _form_set_tags()
 
 
@@ -129,6 +132,7 @@ def _form_set_tags ():
             rule.selected = False
     if curfolder:
         curfolder.selected = True
+        curfolder.rules_display = curfolder.rules[curindex:curindex+_rules_per_page]
     if currule:
         currule.selected = True
 
@@ -161,6 +165,15 @@ def _form_selrule (index):
         error['ruleindex'] = True
 
 
+def _form_selindex (index):
+    """display rules in curfolder from given index"""
+    global curindex
+    try:
+        curindex = int(index)
+    except ValueError:
+        error['selindex'] = True
+
+
 def _form_newfolder (foldername):
     if not foldername:
         error['newfolder'] = True
@@ -171,7 +184,10 @@ def _form_newfolder (foldername):
     curfolder = _FolderRule(title=foldername, desc="", disable=0, filename=filename)
     _register_rule(curfolder)
     _generate_sids(prefix="lc")
+    curfolder.oid = len(config['folderrules'])
+    curfolder.write()
     config['folderrules'].append(curfolder)
+    _recalc_up_down(config['folderrules'])
     info['newfolder'] = True
 
 
@@ -180,6 +196,7 @@ def _form_renamefolder (foldername):
         error['renamefolder'] = True
         return
     curfolder.title = foldername
+    curfolder.write()
     info['renamefolder'] = True
 
 
@@ -188,6 +205,7 @@ def _form_disablefolder (folder):
         error['disablefolder'] = True
         return
     folder.disable = 1
+    folder.write()
     info['disablefolder'] = True
 
 
@@ -196,6 +214,7 @@ def _form_enablefolder (folder):
         error['enablefolder'] = True
         return
     folder.disable = 0
+    folder.write()
     info['enablefolder'] = True
 
 
@@ -219,6 +238,8 @@ def _form_newrule (rtype):
     _register_rule(rule)
     _generate_sids(prefix="lc")
     curfolder.append_rule(rule)
+    _recalc_up_down(curfolder.rules)
+    curfolder.write()
     # select new rule
     _form_selrule(rule.oid)
     info['newrule'] = True
@@ -229,6 +250,7 @@ def _form_disablerule (rule):
         error['disablerule'] = True
         return
     rule.disable = 1
+    curfolder.write()
     info['disablerule'] = True
 
 
@@ -237,6 +259,7 @@ def _form_enablerule (rule):
         error['enablerule'] = True
         return
     rule.disable = 0
+    curfolder.write()
     info['enablerule'] = True
 
 
@@ -245,6 +268,7 @@ def _form_removerule (rule):
     curfolder.rules.remove(rule)
     global currule
     currule = None
+    curfolder.write()
     info['removerule'] = True
 
 
@@ -255,6 +279,7 @@ def _form_rewrite_addattr (form):
         return
     value = _getval(form, "attrval")
     currule.attrs[name] = value
+    curfolder.write()
     info['rewrite_addattr'] = True
 
 
@@ -267,7 +292,14 @@ def _form_rewrite_removeattrs (form):
                 return
         for attr in toremove:
             del currule.attrs[attr]
+        curfolder.write()
         info['rewrite_delattr'] = True
+
+
+def _swap_rules (rules, idx):
+    # swap rules
+    rules[idx].oid, rules[idx+1].oid = rules[idx+1].oid, rules[idx].oid
+    rules[idx], rules[idx+1] = rules[idx+1], rules[idx]
 
 
 def _form_folder_down (oid):
@@ -277,9 +309,10 @@ def _form_folder_down (oid):
         error['folderdown'] = True
         return
     # swap folders
-    folders[oid], folders[oid+1] = folders[oid+1], folders[oid]
-    folders[oid].oid = oid
-    folders[oid+1].oid = oid+1
+    _swap_rules(folders, oid)
+    folders[oid].write()
+    folders[oid+1].write()
+    _recalc_up_down(folders)
     # deselet rule and folder
     global currule, curfolder
     currule = None
@@ -294,9 +327,10 @@ def _form_folder_up (oid):
         error['folderup'] = True
         return
     # swap folders
-    folders[oid-1], folders[oid] = folders[oid], folders[oid-1]
-    folders[oid-1].oid = oid-1
-    folders[oid].oid = oid
+    _swap_rules(folders, oid-1)
+    folders[oid-1].write()
+    folders[oid].write()
+    _recalc_up_down(folders)
     # deselet rule and folder
     global currule, curfolder
     currule = None
@@ -311,9 +345,9 @@ def _form_rule_down (oid):
         error['ruledown'] = True
         return
     # swap rules
-    rules[oid], rules[oid+1] = rules[oid+1], rules[oid]
-    rules[oid].oid = oid
-    rules[oid+1].oid = oid+1
+    _swap_rules(rules, oid)
+    curfolder.write()
+    _recalc_up_down(rules)
     # deselect rule
     global currule
     currule = None
@@ -327,9 +361,9 @@ def _form_rule_up (oid):
         error['ruleup'] = True
         return
     # swap rules
-    rules[oid-1], rules[oid] = rules[oid], rules[oid-1]
-    rules[oid-1].oid = oid-1
-    rules[oid].oid = oid
+    _swap_rules(rules, oid-1)
+    curfolder.write()
+    _recalc_up_down(rules)
     # deselect rule
     global currule
     currule = None
@@ -343,6 +377,7 @@ def _form_apply (form):
     # delegate
     attr = "_form_apply_%s" % currule.get_name()
     globals()[attr](form)
+    curfolder.write()
 
 
 def _form_rule_titledesc (form):

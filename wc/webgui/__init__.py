@@ -28,6 +28,7 @@ import os, re, urllib, urlparse, gettext, mimetypes
 from wc.proxy.auth import get_challenges
 from wc.proxy.Headers import WcMessage
 
+
 class WebConfig (object):
     def __init__ (self, client, url, form, protocol, clientheaders,
                   status=200, msg=i18n._('Ok'), context={}, auth=''):
@@ -57,7 +58,7 @@ class WebConfig (object):
                     return
                 # get translator
                 translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
-                debug(GUI, "Using translator %s", str(translator.info()))
+                #debug(GUI, "Using translator %s", str(translator.info()))
                 # expand template
                 data = expand_template(f, context, translator=translator)
             else:

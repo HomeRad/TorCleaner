@@ -105,6 +105,12 @@ class FolderRule (Rule):
         return s+"</folder>\n"
 
 
+    def write (self):
+        f = file(self.filename, 'w')
+        f.write(self.toxml())
+        f.close()
+
+
     def tiptext (self):
         """return short info for gui display"""
         l = len(self.rules)
@@ -113,4 +119,3 @@ class FolderRule (Rule):
         else:
             text = i18n._("with %d rules")%l
         return "%s %s" % (super(FolderRule, self).tiptext(), text)
-

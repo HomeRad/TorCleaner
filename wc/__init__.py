@@ -298,9 +298,7 @@ class Configuration (dict):
     def write_filterconf (self):
         """write filter rules"""
         for folder in self['folderrules']:
-            f = file(folder.filename, 'w')
-            f.write(folder.toxml())
-            f.close()
+            folder.write()
 
 
     def init_filter_modules (self):
@@ -418,11 +416,11 @@ class ZapperParser (BaseParser):
             self.rule = wc.filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.folder.append_rule(self.rule)
-        elif name=='folder':
-            self.folder.fill_attrs(attrs, name)
         # tag has character data
         elif name in _nestedtags:
             self.rule.fill_attrs(attrs, name)
+        elif name=='folder':
+            self.folder.fill_attrs(attrs, name)
         else:
             raise ParseException, i18n._("unknown tag name %s")%name
 
