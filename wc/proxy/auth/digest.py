@@ -51,21 +51,24 @@ def parse_digest_credentials (credentials):
 def check_digest_credentials (credentials, **attrs):
     """check digest credentials"""
     if not check_digest_values(credentials):
-        debug(AUTH, "digest wrong values")
+        warn(AUTH, "digest wrong values")
         return False
     # note: opaque value _should_ be there, but is not in apache mod_digest
-    if credentials.get("opaque") != wc_opaque:
-        debug(AUTH, "digest wrong opaque")
+    opaque = credentials.get("opaque")
+    if opaque != wc_opaque:
+        warn(AUTH, "digest wrong opaque %s!=%s", str(opaque), wc_opaque)
         return False
-    if credentials["realm"] != wc_realm:
-        debug(AUTH, "digest wrong realm")
+    realm = credentials["realm"]
+    if realm != wc_realm:
+        warn(AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
         return False
     nonce = credentials["nonce"]
     if nonce not in nonces:
-        debug(AUTH, "digest wrong nonce")
+        warn(AUTH, "digest wrong nonce %s", nonce)
         return False
-    if credentials['uri'] != attrs['uri']:
-        debug(AUTH, "digest wrong uri")
+    uri = credentials['uri']
+    if uri != attrs['uri']:
+        warn(AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
         return False
     # compare responses
     response = credentials.get('response')

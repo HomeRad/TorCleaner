@@ -11,6 +11,7 @@ except ImportError:
     import sys, os
     sys.path.insert(0, os.getcwd())
     from wc.proxy.Headers import get_header_values
+from wc.proxy import stripsite
 
 # default realm for authentication
 wc_realm = "unknown"
@@ -19,6 +20,10 @@ from wc.log import *
 from basic import *
 from digest import *
 from ntlm import *
+
+
+def get_auth_uri (url):
+    return stripsite(url)[1]
 
 
 def get_header_challenges (headers, key):

@@ -373,7 +373,7 @@ class HttpServer (Server):
                 attrs['type'] = challenges['NTLM'][0]['type']+1
             if 'Digest' in challenges:
                 # note: assume self.document is already url-encoded
-                attrs['uri'] = urlparse.urlparse(self.document)[2]
+                attrs['uri'] = get_auth_uri(self.document)
                 # with https, this is CONNECT
                 attrs['method'] = self.method
                 attrs['requireExtraQuotes'] = self.headers.get('Server', '').lower().startswith('microsoft-iis')

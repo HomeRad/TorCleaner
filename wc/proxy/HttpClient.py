@@ -154,7 +154,7 @@ class HttpClient (Connection):
                 # XXX the data=None argument should hold POST data
                 if not check_credentials(creds, username=config['proxyuser'],
                                          password_b64=config['proxypass'],
-                                         uri=urlparse.urlparse(self.url)[2],
+                                         uri=get_auth_uri(self.url),
                                          method=self.method, data=None):
                     warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
                     auth = ", ".join(get_challenges())
