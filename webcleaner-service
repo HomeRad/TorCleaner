@@ -17,24 +17,23 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """Windows NT service install/removal script"""
 
-__author__ = "Bastian Kleineidam"
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
-import sys, os
+import sys
 if sys.version[:5] < "2.3":
     raise SystemExit, "This program requires Python 2.3 or later."
 
-import time, webbrowser
-import win32service, win32serviceutil
-from wc import i18n, win32start, AppName, Configuration
+import time
+import webbrowser
+import win32service
+import win32serviceutil
+import wc
+import bk.i18n
 
-_usage = i18n._("""Usage: webcleaner-service <command>
+_usage = bk.i18n._("""Usage: webcleaner-service <command>
 
 Commands:
 install - install the %s service and restart the proxy
 remove  - remove the %s service (same as `webcleaner remove')
-""") % (AppName, AppName)
+""") % (wc.AppName, wc.AppName)
 
 
 def _print_usage (msg):
@@ -51,60 +50,59 @@ def state_nt_service (name):
 def install_nt_service ():
     """install WebCleaner as NT service"""
     oldargs = sys.argv
-    print i18n._("Installing %s service...")%AppName
+    print bk.i18n._("Installing %s service...")%wc.AppName
     sys.argv = ['webcleaner', 'install']
-    win32serviceutil.HandleCommandLine(win32start.ProxyService)
-    print i18n._("Restarting %s proxy...")%AppName
+    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
+    print bk.i18n._("Restarting %s proxy...")%wc.AppName
     # stop proxy (if it is running)
-    state = state_nt_service(AppName)
+    state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_START_PENDING:
         time.sleep(1)
-        state = state_nt_service(AppName)
+        state = state_nt_service(wc.AppName)
     if state==win32service.SERVICE_RUNNING:
         sys.argv = ['webcleaner', 'stop']
-        win32serviceutil.HandleCommandLine(win32start.ProxyService)
-    state = state_nt_service(AppName)
+        win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
+    state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_STOP_PENDING:
         time.sleep(1)
-        state = state_nt_service(AppName)
+        state = state_nt_service(wc.AppName)
     # start proxy
     sys.argv = ['webcleaner', 'start']
-    win32serviceutil.HandleCommandLine(win32start.ProxyService)
+    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     sys.argv = oldargs
     # sleep a while to let the proxy start...
-    state = state_nt_service(AppName)
+    state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_START_PENDING:
         time.sleep(1)
-        state = state_nt_service(AppName)
+        state = state_nt_service(wc.AppName)
     time.sleep(3)
     # open configuration
-    config = Configuration()
+    config = wc.Configuration()
     config_url = "http://localhost:%d/" % config['port']
-    print i18n._("Opening proxy configuration interface...")
+    print bk.i18n._("Opening proxy configuration interface...")
     webbrowser.open(config_url)
 
 
 def remove_nt_service ():
     oldargs = sys.argv
-    print i18n._("Removing %s service...")%AppName
+    print bk.i18n._("Removing %s service...")%wc.AppName
     sys.argv  = ['webcleaner', 'remove']
-    win32serviceutil.HandleCommandLine(win32start.ProxyService)
+    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     sys.argv = oldargs
 
 
-def main ():
-    args = sys.argv[1:]
-    if len(args) < 1:
-        print_usage(i18n._("No command given."))
+def main (sysargs):
+    if len(sysargs) < 1:
+        print_usage(bk.i18n._("No command given."))
     else:
-        command = args[0]
+        command = sysargs[0]
     if command=='install':
         install_nt_service()
     elif command=='remove':
         remove_nt_service()
     else:
-        print_usage(i18n._("Invalid command %r.")%command)
+        print_usage(bk.i18n._("Invalid command %r.")%command)
 
 
 if __name__=='__main__':
-    main()
+    main(sys.argv[1:])

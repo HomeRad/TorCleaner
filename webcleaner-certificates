@@ -17,20 +17,20 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """SSL certificates generation/installation/removal script"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
+import sys
 
-import sys, os
 if not hasattr(sys, "version_info"):
     raise SystemExit, "This program requires Python 2.3.1 or later."
 if sys.version_info < (2, 3, 1, 'final', 0):
     raise SystemExit, "This program requires Python 2.3.1 or later."
 
+import os
 import getopt
+import bk
 import wc
 import wc.proxy.ssl
 
-usage = wc.i18n._("""Usage: webcleaner-certificates [options] <command>
+usage = bk.i18n._("""Usage: webcleaner-certificates [options] <command>
 Options:
 -d <directory>, --configdir=<directory>
         Generate certificates in given directory instead of the
@@ -53,7 +53,7 @@ def print_usage (msg):
 def install_ssl_certs (configdir):
     """create SSL certificates if not already done"""
     if wc.proxy.ssl.exist_certificates(configdir):
-        print wc.i18n._("%s SSL certificates already exist, doing nothing")%\
+        print bk.i18n._("%s SSL certificates already exist, doing nothing")%\
           wc.AppName
     else:
         wc.proxy.ssl.create_certificates(configdir)
@@ -67,7 +67,7 @@ def remove_ssl_certs (configdir):
                 try:
                     os.remove(fname)
                 except IOError, msg:
-                    print wc.i18n._("Could not remove %r: %s") % \
+                    print bk.i18n._("Could not remove %r: %s") % \
                           (fname, str(msg))
 
 
@@ -83,20 +83,20 @@ def parse_options (sysargs):
                                       ["help", "configdir"])
     except getopt.error:
         print_usage(sys.exc_info()[1])
-    for opt,arg in options:
+    for opt, arg in options:
         if opt=="-h" or opt=="--help":
             print_usage("")
         elif opt=="--configdir" or opt=="-d":
             configdir = arg
         else:
-            print_usage(wc.i18n._("Unknown option %(option)r")%{'option': opt})
+            print_usage(bk.i18n._("Unknown option %(option)r")%{'option': opt})
     return (configdir, args)
 
 
 def main (sysargs):
     configdir, args = parse_options(sysargs)
     if len(args) < 1:
-        print_usage(wc.i18n._("No command given."))
+        print_usage(bk.i18n._("No command given."))
     else:
         command = args[0]
     if command=='install':
@@ -104,7 +104,7 @@ def main (sysargs):
     elif command=='remove':
         remove_ssl_certs(configdir)
     else:
-        print_usage(wc.i18n._("Invalid command %r.")%command)
+        print_usage(bk.i18n._("Invalid command %r.")%command)
 
 
 if __name__=='__main__':
