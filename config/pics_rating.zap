@@ -23,6 +23,7 @@
 <service name="icra">
 <category name="intolerance">1</category>
 <category name="violencetohumans">1</category>
+<category name="violencekillinganimals">1</category>
 <category name="nuditysexualtouching">1</category>
 <category name="violencejuryanimals">1</category>
 <category name="nuditysexualacts">1</category>
@@ -31,9 +32,8 @@
 <category name="weaponuse">1</category>
 <category name="drugsuse">1</category>
 <category name="moderatedchat">1</category>
-<category name="nudityobscuredsexualacts">1</category>
+<category name="pgmaterial">1</category>
 <category name="violenceartistic">1</category>
-<category name="violencekillinganimals">1</category>
 <category name="violencekillinghumans">1</category>
 <category name="chat">1</category>
 <category name="violencekillingfantasy">1</category>
@@ -41,7 +41,7 @@
 <category name="violencejuryhumans">1</category>
 <category name="violencetoanimals">1</category>
 <category name="badexample">1</category>
-<category name="pgmaterial">1</category>
+<category name="nudityobscuredsexualacts">1</category>
 </service>
 <service name="microsys">
 <category name="sexrating">1</category>

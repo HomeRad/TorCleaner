@@ -4,12 +4,14 @@ TODO
   verrry baaaad, must have invariants for buffering data when the call
   gets interrupted and the same data is parsed/fed again...
 
+- different authentication schemes
+
 - PICS rule parsing (implements whitelist operation)
 
 - if we know the mime type (eg <script src="">) then add it if its missing
   (feature: mime hints)
 
-- Python 2.3: (note: wait for Pthon 2.3.1 :)
+- Python 2.3: (note: wait for Python 2.3.1 :)
   o use Bool type
   o use builtin timeout in socket module
   o use logging package (get rid of debug, warn, info, error functions)
