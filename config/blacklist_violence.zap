@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.394" oid="9">
+<folder disable="0">
 <title lang="en">Blacklist violence</title>
-<description lang="en">Automatically generated</description>
-
-<blockdomains sid="wc.393" filename="blacklists/violence/domains.gz">
+<title lang="de">Blacklist violence</title>
+<description lang="en">Automatically generated on 2004-02-26 01:44:28</description>
+<description lang="de">Automatisch generiert am 2004-02-26 01:44:28</description>
+<blockdomains
+ filename="blacklists/violence/domains.gz">
   <title lang="en">violence domain filter</title>
-  <description lang="en">You should not edit this filter, only disable or delete it.</description>
-</blockdomains>
-</folder>
+  <title lang="de">violence Rechnername Filter</title>
+  <description lang="en">You should not edit this filter, only disable or delete it.
+To update the filter data, run config/bl2wc.py from a WebCleaner source tree.</description>
+  <description lang="de">Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
+Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCleaner Quellverzeichnis.</description>
+</blockdomains></folder>
