@@ -89,7 +89,8 @@ class FolderRule (wc.filter.rules.Rule.Rule):
                 continue
             oldrule = self.get_rule(child.sid)
             if oldrule is not None:
-                chg = oldrule.update(child, dryrun=dryrun, log=log) or chg
+                if oldrule.update(child, dryrun=dryrun, log=log):
+                    chg = True
             else:
                 print >>log, wc.i18n._("inserting new rule %s") % \
                              child.tiptext()

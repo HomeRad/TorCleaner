@@ -260,8 +260,10 @@ class Magic (object):
             replace = ""
             for i in data:
                 # except: Too lazy to handle the '\r' and co otherwise
-                try: replace += chr(i)
-                except: replace+='*'
+                try:
+                    replace += chr(i)
+                except:
+                    replace += '*'
             # This is for "\0"
             replace = replace.replace('*\0','*')
             # This is for two "\"

@@ -101,7 +101,7 @@ def binipdisplay (s):
     if len(s)%4 != 0:
         raise EnvironmentError # well ...
     ol = []
-    for i in range(len(s)/4):
+    for _ in range(len(s)/4):
         s1 = s[:4]
         s = s[4:]
         ip = []

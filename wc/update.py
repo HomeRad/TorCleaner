@@ -169,7 +169,8 @@ def update_filter (wconfig, dryrun=False, log=None):
         p = wc.ZapperParser(fullname, wconfig, compile_data=False)
         p.parse(fp=page)
         page.close()
-        chg = wconfig.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
+        if wconfig.merge_folder(p.folder, dryrun=dryrun, log=log):
+            chg = True
 
     url = baseurl+"extern-md5sums.txt"
     try:

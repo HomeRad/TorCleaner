@@ -10,7 +10,7 @@ import wc
 import wc.url
 import wc.proxy.dns_lookups
 import wc.proxy.Headers
-import wc.proxy.ServerPool
+from wc.proxy.ServerPool import serverpool
 import wc.proxy.ServerHandleDirectly
 import wc.proxy.HttpServer
 import wc.proxy.SslServer
@@ -133,14 +133,14 @@ class ClientServerMatchmaker (object):
             debug(PROXY, "%s client not connected", self)
             # The browser has already closed this connection, so abort
             return
-        server = wc.proxy.ServerPool.serverpool.reserve_server(addr)
+        server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
             debug(PROXY, '%s resurrecting %s', self, server)
             self.state = 'connect'
             self.server_connected(server)
-        elif wc.proxy.ServerPool.serverpool.count_servers(addr) >= \
-             wc.proxy.ServerPool.serverpool.connection_limit(addr):
+        elif serverpool.count_servers(addr) >= \
+             serverpool.connection_limit(addr):
             debug(PROXY, '%s server %s busy', self, addr)
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
@@ -152,7 +152,7 @@ class ClientServerMatchmaker (object):
                 return
             # There are too many connections right now, so register us
             # as an interested party for getting a connection later
-            wc.proxy.ServerPool.serverpool.register_callback(addr, self.find_server)
+            serverpool.register_callback(addr, self.find_server)
         else:
             debug(PROXY, "%s new connect to server", self)
             # Let's make a new one
@@ -164,7 +164,7 @@ class ClientServerMatchmaker (object):
                 else:
                     klass = wc.proxy.HttpServer.HttpServer
                 server = klass(self.ipaddr, self.port, self)
-                wc.proxy.ServerPool.serverpool.register_server(addr, server)
+                serverpool.register_server(addr, server)
             except socket.timeout:
                 self.client.error(504, wc.i18n._('Connection timeout'))
             except socket.error:
@@ -199,7 +199,7 @@ class ClientServerMatchmaker (object):
         docontinue = expect.startswith('100-continue') or \
                      expect.startswith('0100-continue')
         if docontinue:
-            if wc.proxy.ServerPool.serverpool.http_versions.get(addr, 1.1) < 1.1:
+            if serverpool.http_versions.get(addr, 1.1) < 1.1:
                 self.client.error(417, wc.i18n._("Expectation failed"),
                              wc.i18n._("Server does not understand HTTP/1.1"))
                 return
