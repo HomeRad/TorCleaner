@@ -9,9 +9,14 @@
 
 # TEST CASE:
 #    http://tv.excite.com/grid
-from DeflateStream import DeflateStream
 
-import zlib
+# Changes: fall back to non-gzip on error to defeat b0rked servers
+
+from DeflateStream import DeflateStream
+from wc import debug, _
+from wc.debug_levels import *
+
+import zlib, sys
 
 class GunzipStream (DeflateStream):
     # Flags in the gzip header
@@ -20,7 +25,8 @@ class GunzipStream (DeflateStream):
     def __init__ (self):
         DeflateStream.__init__(self)
         self.buf = ''
-        self.header_seen = 0
+        self.header_seen = False
+        self.error = False
 
     def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
@@ -29,11 +35,15 @@ class GunzipStream (DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            raise zlib.error, 'not gzip format'
+            print >>sys.stderr, _("zlib error: not gzip format, disabling gunzip")
+            self.error = True
+            return
 
         method = ord(self.buf[2])
         if method != 8:
-            raise zlib.error, 'unknown compression method'
+            print >>sys.stderr, _("zlib error: unknown compression method, disabling gunzip")
+            self.error = True
+            return
 
         flag = ord(self.buf[3])
         # Skip until byte 10
@@ -66,9 +76,10 @@ class GunzipStream (DeflateStream):
 
         # We actually got through the header
         self.buf = s
-        self.header_seen = 1
+        self.header_seen = True
 
     def decode (self, s):
+        if self.error: return s
         if not self.header_seen:
             # Try to parse the header
             self.buf += s
@@ -87,9 +98,10 @@ class GunzipStream (DeflateStream):
         return DeflateStream.decode(self, s)
 
     def flush (self):
+        if self.error: return self.buf
         if not self.header_seen:
             # We still haven't finished parsing the header .. oh well
-            return ''
+            return self.buf
         else:
             return DeflateStream.flush(self)
 
