@@ -1,8 +1,10 @@
 webcleaner (2.11-0.1) unstable; urgency=low
 
   * New upstream release.
+  * prevent infinite loops in passwd question by unregistering empty
+    passwords from the database
 
- -- Bastian Kleineidam <calvin@debian.org>  Sat, 27 Mar 2004 18:16:08 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 21 Apr 2004 19:52:29 +0200
 
 webcleaner (2.10-0.1) unstable; urgency=low
 
