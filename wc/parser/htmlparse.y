@@ -64,6 +64,18 @@ if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) { \
 	if (!result) { error=1; goto label; } \
     }
 
+/* generic callback macro */
+#define CALLBACK(ud, attr, format, arg, label) \
+    if (PyObject_HasAttrString(ud->handler, attr)==1) { \
+	callback = PyObject_GetAttrString(ud->handler, attr); \
+	if (callback==NULL) { error=1; goto label; } \
+	result = PyObject_CallFunction(callback, format, arg); \
+	if (result==NULL) { error=1; goto label; } \
+	Py_DECREF(callback); \
+	Py_DECREF(result); \
+        callback=result=NULL; \
+    }
+
 /* parser type definition */
 typedef struct {
     PyObject_HEAD
@@ -228,15 +240,7 @@ finish_end:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "comment")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "comment");
-	if (callback==NULL) { error=1; goto finish_comment; }
-	result = PyObject_CallFunction(callback, "O", $1);
-	if (result==NULL) { error=1; goto finish_comment; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
+    CALLBACK(ud, "comment", "O", $1, finish_comment);
     CHECK_ERROR(ud, finish_comment);
 finish_comment:
     Py_XDECREF(ud->error);
@@ -255,15 +259,7 @@ finish_comment:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "pi")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "pi");
-	if (callback==NULL) { error=1; goto finish_pi; }
-	result = PyObject_CallFunction(callback, "O", $1);
-	if (result==NULL) { error=1; goto finish_pi; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
+    CALLBACK(ud, "pi", "O", $1, finish_pi);
     CHECK_ERROR(ud, finish_pi);
 finish_pi:
     Py_XDECREF(ud->error);
@@ -282,15 +278,7 @@ finish_pi:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "cdata")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "cdata");
-	if (callback==NULL) { error=1; goto finish_cdata; }
-	result = PyObject_CallFunction(callback, "O", $1);
-	if (result==NULL) { error=1; goto finish_cdata; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
+    CALLBACK(ud, "cdata", "O", $1, finish_cdata);
     CHECK_ERROR(ud, finish_cdata);
 finish_cdata:
     Py_XDECREF(ud->error);
@@ -309,15 +297,7 @@ finish_cdata:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "doctype")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "doctype");
-	if (callback==NULL) { error=1; goto finish_doctype; }
-	result = PyObject_CallFunction(callback, "O", $1);
-	if (result==NULL) { error=1; goto finish_doctype; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
+    CALLBACK(ud, "doctype", "O", $1, finish_doctype);
     CHECK_ERROR(ud, finish_doctype);
 finish_doctype:
     Py_XDECREF(ud->error);
@@ -336,24 +316,8 @@ finish_doctype:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "characters")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "characters");
-	if (callback==NULL) { error=1; goto finish_script; }
-	result = PyObject_CallFunction(callback, "O", $1);
-	if (result==NULL) { error=1; goto finish_script; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
-    if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "endElement");
-	if (callback==NULL) { error=1; goto finish_script; }
-	result = PyObject_CallFunction(callback, "s", "script");
-	if (result==NULL) { error=1; goto finish_script; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
+    CALLBACK(ud, "characters", "O", $1, finish_script);
+    CALLBACK(ud, "endElement", "s", "script", finish_script);
     CHECK_ERROR(ud, finish_script);
 finish_script:
     Py_XDECREF(ud->error);
@@ -372,24 +336,8 @@ finish_script:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "characters")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "characters");
-	if (callback==NULL) { error=1; goto finish_style; }
-	result = PyObject_CallFunction(callback, "O", $1);
-	if (result==NULL) { error=1; goto finish_style; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
-    if (PyObject_HasAttrString(ud->handler, "endElement")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "endElement");
-	if (callback==NULL) { error=1; goto finish_style; }
-	result = PyObject_CallFunction(callback, "s", "style");
-	if (result==NULL) { error=1; goto finish_style; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
+    CALLBACK(ud, "characters", "O", $1, finish_style);
+    CALLBACK(ud, "endElement", "s", "style", finish_style);
     CHECK_ERROR(ud, finish_style);
 finish_style:
     Py_XDECREF(ud->error);
@@ -409,15 +357,7 @@ finish_style:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    if (PyObject_HasAttrString(ud->handler, "characters")==1) {
-	callback = PyObject_GetAttrString(ud->handler, "characters");
-	if (callback==NULL) { error=1; goto finish_characters; }
-	result = PyObject_CallFunction(callback, "O", $1);
-	if (result==NULL) { error=1; goto finish_characters; }
-	Py_DECREF(callback);
-	Py_DECREF(result);
-        callback=result=NULL;
-    }
+    CALLBACK(ud, "characters", "O", $1, finish_characters);
     CHECK_ERROR(ud, finish_characters);
 finish_characters:
     Py_XDECREF(ud->error);
