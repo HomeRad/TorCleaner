@@ -111,7 +111,7 @@ class PicsRule (UrlRule):
             UrlRule.fill_attrs(self, attrs, name)
         elif name=='service':
             self.service = unxmlify(attrs.get('name')).encode('iso8859-1')
-            self.ratings[service] = {}
+            self.ratings[self.service] = {}
         elif name=='category':
             assert self.service
             self.category = unxmlify(attrs.get('name')).encode('iso8859-1')
