@@ -1,11 +1,6 @@
 from StringIO import StringIO
 import sys, os, gettext
-try:
-    from wc.webgui.simpletal import simpleTAL, simpleTALES
-    raise SystemExit("Global WebCleaner installation found")
-except ImportError:
-    sys.path.insert(0, os.getcwd())
-    from wc.webgui.simpletal import simpleTAL, simpleTALES
+from wc.webgui.simpletal import simpleTAL, simpleTALES
 from wc import LocaleDir, Name
 
 def expand_template (f, context):
