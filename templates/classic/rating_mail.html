@@ -18,10 +18,10 @@
 email so I can review them and include the changes into an updated
 rating database.
 </p>
-<p i18n:translate="">When you klick on the accept button below,
+<p i18n:translate="">When you klick on the send button below,
 the following information will be mailed to the author of %(AppName)s
 at %(Email)s:</p>
-<p tal:content="rating">rating info...</p>
+<pre tal:content="rating">rating info...</pre>
 
 <form action="#" method="POST" name="ratingform"
  tal:attributes="action string:${filename}.${lang}">
