@@ -358,6 +358,8 @@ rulenames = (
   'rating'
 )
 _nestedtags = (
+  # urlrule nested tag names
+  'matchurl', 'nomatchurl',
   # rewriter rule nested tag names
   'attr','enclosed','replacement',
   # rating rule nested tag names
@@ -452,6 +454,8 @@ class ZapperParser (BaseParser):
 
     def end_element (self, name):
         self.cmode = None
+        if self.rule:
+            self.rule.end_data(name)
         if name in rulenames:
             if self.compile_data:
                 self.rule.compile_data()
