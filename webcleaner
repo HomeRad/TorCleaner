@@ -54,6 +54,11 @@ __date__    = "$Date$"[7:-2]
 import sys, os
 if sys.version[:5] < "2.3":
     raise SystemExit, "This program requires Python 2.3 or later."
+try:
+    import psyco
+    psyco.profile()
+except:
+    pass
 # for pydoc testing, and local running. XXX should be a config entry
 try:
     from wc import i18n, daemon
