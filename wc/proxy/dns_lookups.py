@@ -6,7 +6,8 @@ from Connection import Connection
 from dns import dnslib,dnsclass,dnsopcode,dnstype
 from wc.proxy import make_timer
 from string import lower,find,strip,split
-from wc import debug,color
+from wc import debug
+from wc.debug_levels import *
 
 def background_lookup(hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
@@ -301,7 +302,7 @@ class DnsLookupConnection(Connection):
         conntype = ''
         if self.conntype == 'tcp':
             conntype = 'TCP'
-        return '<%s %3s  %s%s%s>' % (color(2, 'dns-lookup'), conntype, self.hostname, retry, where)
+        return '<%s %3s  %s%s%s>' % ('dns-lookup', conntype, self.hostname, retry, where)
 
     def cancel(self):
         if self.callback:

@@ -2,7 +2,8 @@ import time,socket,rfc822,re
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import debug,color
+from wc import debug
+from wc.debug_levels import *
 from ClientServerMatchmaker import serverpool
 from string import find,strip,split,join,lower
 from UnchunkStream import UnchunkStream
@@ -40,7 +41,7 @@ class HttpServer(Server):
     def __repr__(self):
         extra = self.request()
         if len(extra) > 46: extra = extra[:43] + '...'
-        return '<%s:%-8s %s>' % (color(4, 'server'), self.state, extra)
+        return '<%s:%-8s %s>' % ('server', self.state, extra)
 
     def writable(self):
         # It's writable if we're connecting .. TODO: move this
@@ -151,16 +152,15 @@ class HttpServer(Server):
             return
 
         if PRINT_SERVER_HEADERS:
-            print color(4, ' ______')+color(7, ' Server headers ', 4)+color(4, '_'*(79-25))
-            print color(4, '|'), 'http://'+self.request()
-            print color(4, '|'), self.response,
-            print color(4, '|'), join(self.headers.headers, color(4, '| ')), color(4, '|' + '_'*(79-1))
+            debug(ALWAYS, 'Server headers for http://%s' % self.request())
+            debug(ALWAYS, self.response)
+            debug(ALWAYS, join(self.headers.headers, '| '))
 
         self.decoders = []
 
         if self.headers.has_key('transfer-encoding'):
-            print 'Transfer-encoding:', \
-                  color(2, self.headers['transfer-encoding'])
+            debug(BRING_IT_ON, 'Transfer-encoding:',
+	          self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
             # HACK - remove encoding header
             for h in self.headers.headers[:]:
@@ -170,7 +170,7 @@ class HttpServer(Server):
                     assert 0, 'chunked encoding should not have content-length'
 
         if self.headers.has_key('content-encoding') and self.headers['content-encoding'] == 'gzip':
-            print 'Content-encoding:', color(2, 'gzip')
+            debug(BRING_IT_ON, 'Content-encoding:', 'gzip')
             self.decoders.append(GunzipStream())
             # HACK - remove content length and encoding
             for h in self.headers.headers[:]:
@@ -316,7 +316,7 @@ def speedcheck_print_status():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        print 'speed:', color(6, '%4d' % (SPEEDCHECK_BYTES/elapsed)), 'b/s'
+        debug(BRING_IT_ON, 'speed:', '%4d' % (SPEEDCHECK_BYTES/elapsed), 'b/s')
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
     make_timer(5, speedcheck_print_status)

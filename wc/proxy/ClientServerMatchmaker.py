@@ -1,7 +1,7 @@
 import dns_lookups,socket
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
-from wc import _
+from wc import _,debug
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
 from string import split

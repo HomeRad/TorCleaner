@@ -8,6 +8,7 @@ used by Bastian Kleineidam for WebCleaner
 
 import sys, os, urlparse, time, select, asyncore, wc
 from wc import debug
+from wc.debug_levels import *
 
 TIMERS = [] # list of (time, function)
 

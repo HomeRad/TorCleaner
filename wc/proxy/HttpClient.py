@@ -3,7 +3,8 @@ from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from string import split,find,join
-from wc import debug,color
+from wc import debug
+from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
@@ -35,7 +36,7 @@ class HttpClient(Connection):
                 extra = extra[:43] + '...'
         else:
             extra = 'being read'
-        return '<%s:%-8s %s>' % (color(1, 'client'), self.state, extra)
+        return '<%s:%-8s %s>' % ('client', self.state, extra)
 
     def process_read(self):
         if self.state == 'request':
@@ -101,7 +102,7 @@ class HttpClient(Connection):
 
     def server_close(self):
         assert self.server
-        debug(NIGHMARE, 'S/close', self)
+        debug(NIGHTMARE, 'S/close', self)
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None

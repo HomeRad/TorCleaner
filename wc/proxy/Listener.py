@@ -1,5 +1,6 @@
 import asyncore,socket
 from wc import debug
+from wc.debug_levels import *
 
 local_sockets_only = 1
 

@@ -12,11 +12,12 @@
 # own poll loop to avoid this problem. :P
 
 from wc import debug
+from wc.debug_levels import *
 import asyncore,socket
 old_compact_traceback = asyncore.compact_traceback
 def new_compact_traceback(a,b,c):
     x,y = old_compact_traceback(a,b,c)
-    return x, color(3, str(y))
+    return x, str(y)
 asyncore.compact_traceback = new_compact_traceback
 #del asyncore.dispatcher.__getattr__
 
