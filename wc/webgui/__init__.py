@@ -214,6 +214,8 @@ def add_default_context (context, filename, lang):
     context.addGlobal("nav", {filename.replace('.', '_'): True})
     # page template name
     context.addGlobal("filename", filename)
+    # base url
+    context.addGlobal("baseurl", "http://localhost:%d/" % config['port'])
     # language
     context.addGlobal("lang", lang)
     # other available languges

@@ -18,5 +18,20 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-# nothing here, go away
 from wc import AppName, Version
+from wc.webgui.context import getval as _getval
+
+rule = None
+selfolder = 0
+selrule = 0
+
+# form execution
+def _exec_form (form):
+    global rule, selfolder, selrule
+    if form.has_key('rule'):
+        rule = _getval(form, 'rule')
+    if form.has_key('selfolder'):
+        selfolder = int(_getval(form, 'selfolder'))
+    if form.has_key('selrule'):
+        selrule = int(_getval(form, 'selrule'))
+

@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, os, gzip
+import re, os, gzip, urllib
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
 from wc import ConfigDir, config
@@ -34,6 +34,7 @@ def strblock (block):
 
 
 class Blocker (Filter):
+    """block urls and show replacement data instead"""
     # which filter stages this filter applies to (see filter/__init__.py)
     orders = [FILTER_REQUEST]
     # which rule types this filter applies to (see Rules.py)
@@ -65,8 +66,6 @@ class Blocker (Filter):
         # urls for blocked types
         self.block_url = "/blocked.html"
         self.block_image = "/blocked.png"
-	# strict whitelist mode (for parents)
-	self.strict_whitelist = config['strict_whitelist']
 
 
     def addrule (self, rule):
@@ -75,43 +74,43 @@ class Blocker (Filter):
 
 
     def add_allow (self, rule):
-        self.allow.append(re.compile(rule.url))
+        self.allow.append((re.compile(rule.url), rule.sid))
 
 
     def add_block (self, rule):
-        self.block.append((re.compile(rule.url), rule.replacement))
+        self.block.append((re.compile(rule.url), rule.replacement, rule.sid))
 
 
     def add_blockdomains (self, rule):
-        lines = self.get_file_data(rule.filename)
-        for line in lines:
+        for line in self.get_file_data(rule.filename):
             line = line.strip()
-            if not line or line[0]=='#': continue
-            self.blocked_domains.append(line)
+            if not line or line[0]=='#':
+                continue
+            self.blocked_domains.append((line, rule.sid))
 
 
     def add_allowdomains (self, rule):
-        lines = self.get_file_data(rule.filename)
-        for line in lines:
+        for line in self.get_file_data(rule.filename):
             line = line.strip()
-            if not line or line[0]=='#': continue
-            self.allowed_domains.append(line)
+            if not line or line[0]=='#':
+                continue
+            self.allowed_domains.append((line, rule.sid))
 
 
     def add_blockurls (self, rule):
-        lines = self.get_file_data(rule.filename)
-        for line in lines:
+        for line in self.get_file_data(rule.filename):
             line = line.strip()
-            if not line or line[0]=='#': continue
-            self.blocked_urls.append(line)
+            if not line or line[0]=='#':
+                continue
+            self.blocked_urls.append((line, rule.sid))
 
 
     def add_allowurls (self, rule):
-        lines = self.get_file_data(rule.filename)
-        for line in lines:
+        for line in self.get_file_data(rule.filename):
             line = line.strip()
-            if not line or line[0]=='#': continue
-            self.allowed_urls.append(line)
+            if not line or line[0]=='#':
+                continue
+            self.allowed_urls.append((line, rule.sid))
 
 
     def get_file_data (self, filename):
@@ -121,64 +120,72 @@ class Blocker (Filter):
             f = gzip.GzipFile(filename, 'rb')
         else:
             f = file(filename)
-        return f.readlines()
+        return f
 
 
     def doit (self, data, **args):
-        # note: data is the complete request (with quoted url)
-        # note: we get the unquoted url from args
+        """investigate request data for a block.
+           data is the complete request (with quoted url),
+           we get the unquoted url from args
+        """
         url = args['url']
         debug(FILTER, "block filter working on url %r", url)
-        if self.allowed(url):
+        allowed, sid = self.allowed(url)
+        if allowed:
+            debug(FILTER, "allowed url %s by rule %s", url, sid)
             return data
-        blocked = self.strict_whitelist or self.blocked(url)
+        blocked, sid = self.blocked(url)
         if blocked:
-            debug(FILTER, "blocked url %s: %s", url, blocked)
+            debug(FILTER, "blocked url %s by rule %s", url, sid)
             if isinstance(blocked, basestring):
                 doc = blocked
             elif is_image(url):
                 doc = self.block_image
             else:
-                # XXX hmmm, what about CGI images?
-                # make HTTP HEAD request?
+                # XXX hmmm, what about CGI images, make HTTP HEAD request?
                 doc = self.block_url
+                rule = [r for r in self.rules if r.sid==sid][0]
+                query = urllib.urlencode({"rule": rule.tiptext(),
+                                          "selfolder": "%d"%rule.parent.oid,
+                                          "selrule": "%d"%rule.oid})
+                doc += "?%s" % query
             port = config['port']
             # XXX handle https requests here?
-            return 'GET http://localhost:%d%s HTTP/1.1'%(port, doc)
+            return 'GET http://localhost:%d%s HTTP/1.1' % (port, doc)
         return data
 
 
     def blocked (self, url):
         # check blocked domains
-        for blockdomain in self.blocked_domains:
+        for blockdomain, sid in self.blocked_domains:
             if blockdomain in url:
                 debug(FILTER, "blocked by blockdomain %s", blockdomain)
-                return True
+                return True, sid
         # check blocked urls
-        for blockurl in self.blocked_urls:
+        for blockurl, sid in self.blocked_urls:
             if blockurl in url:
                 debug(FILTER, "blocked by blockurl %s", blockurl)
-                return True
+                return True, sid
         # check block patterns
-        for ro, replacement in self.block:
+        for ro, replacement, sid in self.block:
             mo = ro.search(url)
             if mo:
                 debug(FILTER, "blocked by pattern %s", ro.pattern)
                 if replacement:
-                    return mo.expand(replacement)
-                return True
-        return False
+                    return mo.expand(replacement), sid
+                return True, sid
+        return False, None
 
 
     def allowed (self, url):
-        for allowdomain in self.allowed_domains:
+        for allowdomain, sid in self.allowed_domains:
             if allowdomain in url:
-                return True
-        for allowurl in self.allowed_urls:
+                return True, sid
+        for allowurl, sid in self.allowed_urls:
             if allowurl in url:
-                return True
-        for ro in self.allow:
+                return True, sid
+        for ro, sid in self.allow:
             mo = ro.search(url)
             if mo:
-                return True
-        return False
+                return True, sid
+        return False, None
