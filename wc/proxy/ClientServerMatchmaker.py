@@ -100,7 +100,7 @@ class ClientServerMatchmaker (object):
                 client.error(403, i18n._("Forbidden"))
                 return
             if port != 443:
-                warn(PROXY, "CONNECT method with invalid port %d encountered at %s", port, str(self))
+                warn(PROXY, "CONNECT method with invalid port %s encountered at %s", `str(port)`, str(self))
                 client.error(403, i18n._("Forbidden"))
                 return
         elif not hostname and self.headers.has_key('Host'):
