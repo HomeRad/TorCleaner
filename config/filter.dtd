@@ -4,9 +4,13 @@
  
  Changes:
 
+ 20030730 Bastian Kleineidam
+ * renamed file attribute to filename
+ * changed oid attribute from #IMPLIED to #REQUIRED
+ + added sid attribute
  20030705 Bastian Kleineidam
  * renamed replacer to replace
- * added pics
+ * added pics element
  20030307 Bastian Kleineidam
  * added javascript filter rule
  23.7.2002 Bastian Kleineidam
@@ -53,8 +57,9 @@
 -->
 <!ELEMENT folder ((rewrite|replacer|block|blockurls|blockdomains|allow|header|image|nocomments)*)>
 <!ATTLIST folder
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  lang     (Perl|Python) #IMPLIED
  disable  CDATA "0"
@@ -72,8 +77,9 @@
 -->
 <!ELEMENT rewrite (attr*,enclosed?,replace?)>
 <!ATTLIST rewrite
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""
@@ -139,8 +145,9 @@
 -->
 <!ELEMENT block (#PCDATA)>
 <!ATTLIST block
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title      CDATA #REQUIRED
- oid        CDATA #IMPLIED
  desc       CDATA #IMPLIED
  scheme     CDATA #IMPLIED
  host       CDATA #IMPLIED
@@ -164,10 +171,11 @@
 -->
 <!ELEMENT blockdomains (#PCDATA)>
 <!ATTLIST blockdomains
- title   CDATA #REQUIRED
- oid     CDATA #IMPLIED
- desc    CDATA #IMPLIED
- file    CDATA #IMPLIED
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ filename CDATA #IMPLIED
 >
 
 
@@ -177,10 +185,11 @@
 -->
 <!ELEMENT allowdomains (#PCDATA)>
 <!ATTLIST allowdomains
- title   CDATA #REQUIRED
- oid     CDATA #IMPLIED
- desc    CDATA #IMPLIED
- file    CDATA #IMPLIED
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ filename CDATA #IMPLIED
 >
 
 
@@ -194,10 +203,11 @@
 -->
 <!ELEMENT blockurls (#PCDATA)>
 <!ATTLIST blockurls
- title   CDATA #REQUIRED
- oid     CDATA #IMPLIED
- desc    CDATA #IMPLIED
- file    CDATA #IMPLIED
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ filename CDATA #IMPLIED
 >
 
 
@@ -207,10 +217,11 @@
 -->
 <!ELEMENT allowurls (#PCDATA)>
 <!ATTLIST allowurls
- title   CDATA #REQUIRED
- oid     CDATA #IMPLIED
- desc    CDATA #IMPLIED
- file    CDATA #IMPLIED
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ filename CDATA #IMPLIED
 >
 
 
@@ -221,8 +232,9 @@
 -->
 <!ELEMENT allow EMPTY>
 <!ATTLIST allow
+ sid        CDATA #REQUIRED
+ oid        CDATA #REQUIRED
  title      CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc       CDATA #IMPLIED
  scheme     CDATA #IMPLIED
  host       CDATA #IMPLIED
@@ -242,8 +254,9 @@
 -->
 <!ELEMENT header (#PCDATA)>
 <!ATTLIST header
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  name     CDATA #REQUIRED
  disable  CDATA "0"
@@ -259,15 +272,16 @@
 -->
 <!ELEMENT image (#PCDATA)>
 <!ATTLIST image
- title   CDATA #REQUIRED
- oid      CDATA #IMPLIED
- desc    CDATA #IMPLIED
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
  matchurl CDATA ""
  dontmatchurl CDATA ""
- width   CDATA #REQUIRED
- height  CDATA #REQUIRED
- type    (gif|jpg|png) "gif"
- disable CDATA "0"
+ width    CDATA #REQUIRED
+ height   CDATA #REQUIRED
+ type     (gif|jpg|png) "gif"
+ disable  CDATA "0"
 >
 
 <!--                      No comments
@@ -276,8 +290,9 @@
 -->
 <!ELEMENT nocomments EMPTY>
 <!ATTLIST nocomments
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""
@@ -290,8 +305,9 @@
 -->
 <!ELEMENT javascript EMPTY>
 <!ATTLIST javascript
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""
@@ -304,8 +320,9 @@
 -->
 <!ELEMENT replace (#PCDATA)>
 <!ATTLIST replace
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""
@@ -319,8 +336,9 @@
 -->
 <!ELEMENT pics (url?,service*)>
 <!ATTLIST pics
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
  title    CDATA #REQUIRED
- oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""

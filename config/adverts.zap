@@ -39,7 +39,7 @@
 </rewrite>
 
 <block title="Ad servers 08" oid="6"
- desc="matches ad. ads. adserver."
+ desc="matches url hosts beginning with &amp;quot;ad.&amp;quot;, &amp;quot;ads.&amp;quot; or &amp;quot;adserver.&amp;quot;"
  scheme=""
  host="^ad(s|server)?\."
  port=""
