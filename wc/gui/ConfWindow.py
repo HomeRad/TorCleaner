@@ -76,7 +76,6 @@ tempfile.tempdir = ConfigDir
 class ConfWindow (ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_PORT,
-     ID_DEBUGLEVEL,
      ID_PROXYUSER,
      ID_PROXYPASS,
      ID_FILTERMODULE,
@@ -87,7 +86,6 @@ class ConfWindow (ToolWindow):
      ID_ACCEPT,
      ID_CANCEL,
      ID_APPLY,
-     ID_LOGFILE,
      ID_ABOUT,
      ID_TITLE,
      ID_FILTER,
@@ -109,7 +107,7 @@ class ConfWindow (ToolWindow):
      ID_ALLOWEDHOSTS_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+34)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+32)
 
 
     def __init__ (self, app):
@@ -148,10 +146,8 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_APPLY,ConfWindow.onUpdApply)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ABOUT,ConfWindow.onCmdAbout)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PORT,ConfWindow.onCmdPort)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DEBUGLEVEL,ConfWindow.onCmdDebuglevel)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXY,ConfWindow.onCmdParentProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYPORT,ConfWindow.onCmdParentProxyPort)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_LOGFILE,ConfWindow.onCmdLogfile)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_FILTERMODULE,ConfWindow.onCmdFilterModule)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_FILTER,ConfWindow.onCmdFilter)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NEWFOLDER,ConfWindow.onCmdNewFolder)
@@ -203,23 +199,6 @@ class ConfWindow (ToolWindow):
         widget = FXSpinner(matrix, 4, self, self.ID_PORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.port)
-        FXLabel(matrix, i18n._("Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n(standard out) or a filename (relative or absolute)."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        FXTextField(matrix, 10, self, self.ID_LOGFILE).setText(self.logfile)
-        FXLabel(matrix, i18n._("Debug level"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
-        cols=0
-        d = FXComboBox(matrix,0,4,self, self.ID_DEBUGLEVEL,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        levels = [
-            i18n._("No debugging"),
-            i18n._("Bring it on"),
-            i18n._("Hurt me plenty"),
-            i18n._("Nightmare"),
-        ]
-        for text in levels:
-            cols = max(len(text), cols)
-            d.appendItem(text)
-        d.setEditable(0)
-        d.setNumColumns(cols)
-        d.setCurrentItem(self.debuglevel)
 
         f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -445,13 +424,6 @@ class ConfWindow (ToolWindow):
         self.parentproxypass = base64.encodestring(sender.getText()).strip()
         self.getApp().dirty = 1
         debug(GUI, "Parentproxypass was changed")
-        return 1
-
-
-    def onCmdLogfile (self, sender, sel, ptr):
-        self.logfile = sender.getText()
-        self.getApp().dirty = 1
-        debug(GUI, "Logfile=%s", self.logfile)
         return 1
 
 
@@ -721,14 +693,11 @@ class ConfWindow (ToolWindow):
         debug(GUI, "reading config")
         self.config = Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
-         'debuglevel','logfile',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass', 'allowedhosts'):
             setattr(self, key, self.config[key])
         self.noproxyfor = self.noproxyfor[2]
         self.allowedhosts = self.allowedhosts[2]
-        if self.logfile:
-            self.logfile = self.logfile.name
         self.modules = {
 	    "Header": 0,
 	    "Blocker": 0,
@@ -784,10 +753,7 @@ class ConfWindow (ToolWindow):
         s += ' parentproxyuser="%s"\n' % xmlify(self.parentproxyuser)
         s += ' parentproxypass="%s"\n' % xmlify(self.parentproxypass)
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
-             ' debuglevel="%d"\n' % self.debuglevel +\
              ' showerrors="%d"\n' % self.showerrors
-        if self.logfile:
-            s += ' logfile="%s"\n' % xmlify(self.logfile)
         if self.noproxyfor:
             keys = self.noproxyfor.keys()
             keys.sort()
