@@ -2,6 +2,24 @@ TODO
 
 version 2.20 and above
 
+- 404 error: http://zope.org/Wikis/DevSite/Projects/ZPT/TAL%20Specification%201.4
+
+- Traceback (most recent call last):
+  File "/usr/bin/webcleaner", line 186, in ?
+    main(sys.argv[1:])
+  File "/usr/bin/webcleaner", line 182, in main
+    return main_posix(configdir, filelogs)
+  File "/usr/bin/webcleaner", line 156, in main_posix
+    wc.wstartfunc(confdir=configdir, filelogs=filelogs)
+  File "/usr/lib/python2.3/site-packages/wc/__init__.py", line 150, in wstartfunc
+    wc.proxy.mainloop(handle=handle, abort=abort)
+  ile "/usr/lib/python2.3/site-packages/wc/proxy/__init__.py", line 176, in mainloop
+    proxy_poll(timeout=max(0, run_timers()))
+  File "/usr/lib/python2.3/site-packages/wc/proxy/__init__.py", line 84, in run_timers
+    callback()
+  File "/usr/lib/python2.3/site-packages/wc/__init__.py", line 164, in reload_config
+    wc.proxy.dns_lookups.init_dns_resolver()
+
 - add functional tests
 
 - Traceback (most recent call last):
@@ -34,6 +52,8 @@ AssertionError: <client:request  being read> server_content had no server
 invalid js url:
 http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
 http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
+
+- squid uses an external auth configuration, we could use that too
 
 - http://www.sane.com/demo/NetTracker/intranet/index.html
   JS navi not there
