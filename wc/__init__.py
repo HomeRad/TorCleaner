@@ -46,7 +46,7 @@ def remove_headers (headers, to_remove):
 
 config = None
 
-def startfunc ():
+def startfunc (handle=None):
     # we run single-threaded, decrease check interval
     sys.setcheckinterval(500)
     # support reload on posix systems
@@ -76,7 +76,7 @@ def startfunc ():
     config.init_filter_modules()
     # start the proxy
     import wc.proxy
-    wc.proxy.mainloop()
+    wc.proxy.mainloop(handle=handle)
 
 
 # reload configuration

@@ -151,5 +151,48 @@ def main():
     else:
         _print_usage(i18n._("Unknown command %s") % `command`)
 
-if __name__ == "__main__":
-    main()
+def main_nt ():
+    import win32serviceutil
+    import win32service
+    import win32event
+    from wc import startfunc
+
+    class PythonService (win32serviceutil.ServiceFramework):
+        _svc_name_ = configdata.name
+        _svc_display_name_ = configdata.description
+        def __init__(self, args):
+            win32serviceutil.ServiceFramework.__init__(self, args)
+            # Create an event which we will use to wait on.
+            # The "service stop" request will set this event.
+            self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
+
+        def SvcStop(self):
+            # Before we do anything, tell the SCM we are starting the stop process.
+            self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+            # And set my event.
+            win32event.SetEvent(self.hWaitStop)
+
+        def SvcDoRun(self):
+            import servicemanager
+            # Log a "started" message to the event log.
+            servicemanager.LogMsg(
+               servicemanager.EVENTLOG_INFORMATION_TYPE,
+               servicemanager.PYS_SERVICE_STARTED,
+               (self._svc_name_,''))
+            startfunc(self.hWaitStop)
+            # Now log a "service stopped" message
+            servicemanager.LogMsg(
+               servicemanager.EVENTLOG_INFORMATION_TYPE,
+               servicemanager.PYS_SERVICE_STOPPED,
+               (self._svc_name_,''))
+
+    # end class PythonService
+
+    win32serviceutil.HandleCommandLine(PythonService)
+
+
+if __name__ == '__main__':
+    if os.name=='nt':
+        main_nt()
+    else:
+        main()

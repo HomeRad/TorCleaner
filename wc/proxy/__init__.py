@@ -158,7 +158,7 @@ def spliturl (url):
     return scheme, hostname.lower(), port, document
 
 
-def mainloop ():
+def mainloop (handle=None):
     from HttpClient import HttpClient
     #from Interpreter import Interpreter
     from Listener import Listener
@@ -172,6 +172,13 @@ def mainloop ():
         # have to worry about being in asyncore.poll when a timer goes
         # off.
         proxy_poll(timeout=max(0, run_timers()))
+        if handle is not None:
+            # win32 handle signaling stop
+            import win32event
+            rc = win32event.WaitForSingleObject(handle, 0)
+            if rc==win32event.WAIT_OBJECT_0:
+                break
+
 
 
 if __name__=='__main__':
