@@ -66,6 +66,12 @@ static PyObject* resolve_entities;
     if (b==NULL) return NULL; \
     (b)[0] = '\0'
 
+/* clear buffer b, returning NULL and decref self on error */
+#define CLEAR_BUF_DECREF(self, b) \
+    b = PyMem_Resize(b, char, 1); \
+    if (b==NULL) { Py_DECREF(self); return NULL; } \
+    (b)[0] = '\0'
+
 #define CHECK_ERROR(ud, label) \
 if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) { \
 	callback = PyObject_GetAttrString(ud->handler, "error"); \
@@ -401,29 +407,40 @@ finish_characters:
 #undef free
 
 /* create parser object */
-static PyObject* parser_new (PyTypeObject *type, PyObject* args, PyObject* kwds) {
-    parser_object* self = (parser_object *)type->tp_alloc(type, 0);
-    if (self != NULL) {
-        self->handler = NULL;
-        /* reset userData */
-        self->userData = PyMem_New(UserData, sizeof(UserData));
-        self->userData->handler = NULL;
-        self->userData->buf = NULL;
-        CLEAR_BUF(self->userData->buf);
-        self->userData->nextpos = 0;
-        self->userData->bufpos = 0;
-        self->userData->tmp_buf = NULL;
-        CLEAR_BUF(self->userData->tmp_buf);
-        self->userData->tmp_tag = self->userData->tmp_attrname =
-            self->userData->tmp_attrval = self->userData->tmp_attrs =
-            self->userData->lexbuf = NULL;
-        self->userData->resolve_entities = resolve_entities;
-        self->userData->exc_type = NULL;
-        self->userData->exc_val = NULL;
-        self->userData->exc_tb = NULL;
-        self->userData->error = NULL;
-        self->scanner = NULL;
-        htmllexInit(&(self->scanner), self->userData);
+static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds) {
+    parser_object* self;
+    if ((self = (parser_object*) type->tp_alloc(type, 0)) == NULL)
+    {
+        return NULL;
+    }
+    self->handler = NULL;
+    /* reset userData */
+    self->userData = PyMem_New(UserData, sizeof(UserData));
+    if (self->userData == NULL)
+    {
+        Py_DECREF(self);
+        return NULL;
+    }
+    self->userData->handler = NULL;
+    self->userData->buf = NULL;
+    CLEAR_BUF_DECREF(self, self->userData->buf);
+    self->userData->nextpos = 0;
+    self->userData->bufpos = 0;
+    self->userData->tmp_buf = NULL;
+    CLEAR_BUF_DECREF(self, self->userData->tmp_buf);
+    self->userData->tmp_tag = self->userData->tmp_attrname =
+        self->userData->tmp_attrval = self->userData->tmp_attrs =
+        self->userData->lexbuf = NULL;
+    self->userData->resolve_entities = resolve_entities;
+    self->userData->exc_type = NULL;
+    self->userData->exc_val = NULL;
+    self->userData->exc_tb = NULL;
+    self->userData->error = NULL;
+    self->scanner = NULL;
+    if (htmllexInit(&(self->scanner), self->userData)!=0)
+    {
+        Py_DECREF(self);
+        return NULL;
     }
     return (PyObject*) self;
 }
@@ -686,7 +703,10 @@ PyMODINIT_FUNC inithtmlsax (void) {
         return;
     }
     Py_INCREF(&parser_type);
-    PyModule_AddObject(m, "parser", (PyObject *)&parser_type);
+    if (PyModule_AddObject(m, "parser", (PyObject *)&parser_type)==-1) {
+        /* init error */
+        PyErr_Print();
+    }
     if ((m = PyImport_ImportModule("wc.parser"))==NULL) {
         return;
     }
