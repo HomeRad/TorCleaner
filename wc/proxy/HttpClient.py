@@ -126,14 +126,10 @@ class HttpClient (Connection):
         self.http_ver = get_http_version(self.protocol)
         self.request = "%s %s %s" % (self.method, self.url, self.protocol)
         debug(PROXY, "%s request %s", str(self), `self.request`)
-        try:
-            self.request = applyfilter(FILTER_REQUEST, self.request,
-                                       fun="finish", attrs=self.nofilter)
-        except FilterException, msg:
-            # request is blocked and cannot be fullfilled
-            ServerHandleDirectly(self, 'HTTP/1.1 301 Found', 301,
-                    WcMessage(StringIO('Location: %s\r\n\r\n' % msg)), '')
-            return
+        self.request = applyfilter(FILTER_REQUEST, self.request,
+                                   fun="finish", attrs=self.nofilter)
+        # refresh with filtered request data
+        self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > 1024:
             error(PROXY, "%s request url length %d chars is too long", str(self), len(self.url))
@@ -341,6 +337,7 @@ class HttpClient (Connection):
             return
         # get cgi form data
         form = self.get_form_data()
+        debug(PROXY, '%s handle_local', str(self))
         # this object will call server_connected at some point
         WebConfig(self, self.url, form, self.protocol, self.headers)
 
