@@ -151,7 +151,7 @@ def get_response_digest (challenge, **attrs):
     algorithm = challenge.get('algorithm', 'MD5')
     if algorithm.startswith('MD5'):
         H = lambda x: md5.new(x).digest()
-    elif algorithm=='SHA':
+    elif algorithm == 'SHA':
         H = lambda x: sha.new(x).digest()
     data = attrs.get('data')
     if data:
@@ -165,7 +165,7 @@ def get_response_digest (challenge, **attrs):
     password = base64.decodestring(attrs['password_b64'])
     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
     HA1 = encode_digest(H(A1))
-    if algorithm=='MD5-sess':
+    if algorithm == 'MD5-sess':
         cnonce = get_cnonce()
         A1 = "%s:%s:%s" % (HA1, challenge['nonce'], cnonce)
         HA1 = encode_digest(H(A1))

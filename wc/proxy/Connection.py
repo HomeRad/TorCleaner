@@ -64,7 +64,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         try:
             data = self.recv(RECV_BUFSIZE)
         except socket.error, err:
-            if err==errno.EAGAIN:
+            if err == errno.EAGAIN:
                 # try again later
                 return
             self.handle_error('read error')
@@ -105,7 +105,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         try:
             num_sent = self.send(data)
         except socket.error, err:
-            if err==errno.EAGAIN:
+            if err == errno.EAGAIN:
                 # try again later
                 return
             self.handle_error(str(err))

@@ -46,5 +46,5 @@ def check_basic_credentials (cred, **attrs):
     """return True if authentication succeded, else False"""
     password = base64.decodestring(attrs['password_b64'])
     username = attrs['username']
-    return cred['username']==username and cred['password']==password
+    return cred['username'] == username and cred['password'] == password
 

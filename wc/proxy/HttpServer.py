@@ -34,7 +34,7 @@ is_http_status = re.compile(r'^\d\d\d$').search
 def get_response_data (response, url):
     """parse a response status line into tokens (protocol, status, msg)"""
     parts = response.split(None, 2)
-    if len(parts)==2:
+    if len(parts) == 2:
         wc.log.warn(wc.LOG_PROXY, "Empty response message from %r", url)
         parts += ['Bummer']
     elif len(parts)!=3:
@@ -137,7 +137,7 @@ class HttpServer (wc.proxy.Server.Server):
     def client_send_request (self, method, protocol, hostname, port,
                              document, headers, content, client, url, mime):
         """the client (matchmaker) sends the request to the server"""
-        assert self.state == 'client', "%s invalid state %r"%(self, self.state)
+        assert self.state == 'client', "%s invalid state %r" %( self, self.state)
         self.method = method
         # the client protocol
         self.protocol = protocol
@@ -185,7 +185,7 @@ class HttpServer (wc.proxy.Server.Server):
                 # didn't exist back when the client aborted.
                 self.client_abort()
                 return
-            if self.state=='unreadable':
+            if self.state == 'unreadable':
                 return
             if self.delegate_read():
                 break
@@ -255,7 +255,7 @@ class HttpServer (wc.proxy.Server.Server):
         # make a copy for later
         serverheaders = msg.copy()
         wc.log.debug(wc.LOG_PROXY, "%s server headers\n%s", self, serverheaders)
-        if self.statuscode==100:
+        if self.statuscode == 100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
@@ -271,7 +271,7 @@ class HttpServer (wc.proxy.Server.Server):
                                      "finish", self.attrs)
         except wc.filter.FilterRating, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s", self, msg)
-            if msg==wc.filter.Rating.MISSING:
+            if msg == wc.filter.Rating.MISSING:
                 # still have to look at content
                 self.defer_data = True
             else:
@@ -417,7 +417,7 @@ class HttpServer (wc.proxy.Server.Server):
                 if not self.client:
                     return
             self.client.server_content(data)
-        if is_closed or self.bytes_remaining==0:
+        if is_closed or self.bytes_remaining == 0:
             # either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
 
@@ -433,7 +433,7 @@ class HttpServer (wc.proxy.Server.Server):
     def process_recycle (self):
         """recycle the server connection and put it in the server pool"""
         wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
-        if self.statuscode==407 and wc.config['parentproxy']:
+        if self.statuscode == 407 and wc.config['parentproxy']:
             wc.log.debug(wc.LOG_PROXY, "%s need parent proxy authentication", self)
             if self.authtries:
                 # we failed twice, abort

@@ -30,7 +30,7 @@ class ServerPool (object):
     def count_servers (self, addr):
         """How many busy server objects connect to this address?"""
         states = self.smap.get(addr, {}).values()
-        return len([x for x in states if x[0]=='busy'])
+        return len([x for x in states if x[0] == 'busy'])
 
 
     def reserve_server (self, addr):

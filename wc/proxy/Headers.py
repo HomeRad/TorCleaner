@@ -238,14 +238,14 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
     # note: do not gunzip .gz files
     if encoding in ('gzip', 'x-gzip', 'deflate') and \
        (filename is None or not filename.endswith(".gz")):
-        if encoding=='deflate':
+        if encoding == 'deflate':
             decoders.append(wc.proxy.DeflateStream.DeflateStream())
         else:
             decoders.append(wc.proxy.GunzipStream.GunzipStream())
         # remove encoding because we unzip the stream
         to_remove = ['Content-Encoding']
         # remove no-transform cache control
-        if headers.get('Cache-Control', '').lower()=='no-transform':
+        if headers.get('Cache-Control', '').lower() == 'no-transform':
             to_remove.append('Cache-Control')
         remove_headers(headers, to_remove)
         # add warning

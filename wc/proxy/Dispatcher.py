@@ -58,7 +58,7 @@ def create_socket (family, socktype, sslctx=None):
     else:
         sock = socket.socket(family, socktype)
         if family in (socket.AF_INET, socket.AF_INET6) and \
-           socktype==socket.SOCK_STREAM:
+           socktype == socket.SOCK_STREAM:
             # disable NAGLE algorithm, which means sending pending data
             # immediately, possibly wasting bandwidth but improving
             # responsiveness for fast networks
@@ -135,7 +135,7 @@ class Dispatcher (object):
         self.family_and_type = family, socktype
         self.socket = create_socket(family, socktype, sslctx=sslctx)
         self.socket.setblocking(0)
-        if socktype==socket.SOCK_STREAM:
+        if socktype == socket.SOCK_STREAM:
             # disable NAGLE algorithm, which means sending pending data
             # immediately, possibly wasting bandwidth but improving
             # responsiveness for fast networks
@@ -227,7 +227,7 @@ class Dispatcher (object):
 
     def recv (self, buffer_size):
         try:
-            if self.family_and_type[1]==socket.SOCK_DGRAM:
+            if self.family_and_type[1] == socket.SOCK_DGRAM:
                 data, addr = self.socket.recvfrom(buffer_size)
                 if addr != self.addr:
                     raise socket.error, (errno.EREMCHG, str(addr))

@@ -72,7 +72,7 @@ class ClientServerMatchmaker (object):
                 auth = wc.config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r"%auth
         else:
-            if self.method=='CONNECT' and wc.config['sslgateway']:
+            if self.method == 'CONNECT' and wc.config['sslgateway']:
                 # delegate to SSL gateway
                 self.hostname = 'localhost'
                 self.port = wc.config['sslport']
@@ -171,14 +171,14 @@ class ClientServerMatchmaker (object):
     def server_connected (self, server):
         """the server has connected"""
         wc.log.debug(wc.LOG_PROXY, "%s server_connected", self)
-        assert self.state=='connect'
+        assert self.state == 'connect'
         assert server.connected
         if not self.client.connected:
             # The client has aborted, so let's return this server
             # connection to the pool
             server.client_abort()
             return
-        if self.method=='CONNECT':
+        if self.method == 'CONNECT':
             self.state = 'response'
             headers = wc.proxy.Headers.WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)

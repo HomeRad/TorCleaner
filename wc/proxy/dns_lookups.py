@@ -178,9 +178,9 @@ class DnsCache (object):
 
     def read_localhosts (self):
         "Fill DnsCache with /etc/hosts information"
-        if os.name=='posix':
+        if os.name == 'posix':
             filename = '/etc/hosts'
-        elif os.name=='nt':
+        elif os.name == 'nt':
             # XXX find correct %WINDIR% and place for hosts.sam
             # Win98SE: c:\windows\hosts.sam
             # Win2000: c:\winnt\system32\drivers\etc\hosts

@@ -15,7 +15,7 @@ class LimitQueue (object):
 
     def append (self, obj):
         """enqueue given obj"""
-        if len(self._queue)==self._capacity:
+        if len(self._queue) == self._capacity:
             del self._queue[0]
         self._queue.append(obj)
 

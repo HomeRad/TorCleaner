@@ -20,7 +20,7 @@ class StatefulConnection (wc.proxy.Connection.Connection):
 
     def writable (self):
         """a connection is writable if we're connecting or if data is available"""
-        return self.send_buffer or self.state=='connect'
+        return self.send_buffer or self.state == 'connect'
 
 
     def delegate_read (self):
@@ -32,7 +32,7 @@ class StatefulConnection (wc.proxy.Connection.Connection):
         getattr(self, 'process_'+self.state)()
         bytes_after = len(self.recv_buffer)
         state_after = self.state
-        return self.state=='closed' or \
-           (bytes_before==bytes_after and state_before==state_after)
+        return self.state == 'closed' or \
+           (bytes_before == bytes_after and state_before == state_after)
 
 

@@ -50,10 +50,10 @@ def parse_quotedstring (s):
     for i, c in enumerate(s):
         if esc:
             esc = False
-        elif c=="\\":
+        elif c == "\\":
             esc = True
             continue
-        elif c=='"':
+        elif c == '"':
             break
         elif 31 < ord(c) < 127:
             quoted += c

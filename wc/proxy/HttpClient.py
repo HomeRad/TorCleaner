@@ -108,7 +108,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """delegate read according to current connection state"""
         assert self.state!='closed'
         while True:
-            if self.state=='done':
+            if self.state == 'done':
                 break
             if self.delegate_read():
                 break
@@ -168,7 +168,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.needs_redirect = "\\" in self.url
         self.url = wc.url.url_norm(self.url)
         # fix CONNECT urls
-        if self.method=='CONNECT':
+        if self.method == 'CONNECT':
             # XXX scheme could also be nntps
             self.scheme = 'https'
             self.hostname, self.port = urllib.splitnport(self.url, 443)
@@ -242,7 +242,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if self.bytes_remaining is None:
             self.persistent = False
         if not self.hostname and self.headers.has_key('Host'):
-            if self.method=='CONNECT':
+            if self.method == 'CONNECT':
                 defaultport = 443
             else:
                 defaultport = 80
@@ -253,7 +253,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.error(400, wc.i18n._("Bad Request"))
         # local request?
         if self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
-           self.port==wc.config['port']:
+           self.port == wc.config['port']:
             # this is a direct proxy call, jump directly to content
             self.state = 'content'
             return
@@ -272,7 +272,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                            auth=auth)
                 return
             if 'NTLM' in creds:
-                if creds['NTLM'][0]['type']==wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
+                if creds['NTLM'][0]['type'] == wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     attrs = {
                         'host': creds['NTLM'][0]['host'],
                         'domain': creds['NTLM'][0]['domain'],
@@ -293,7 +293,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                            auth=auth)
                 return
         if self.method in ['OPTIONS', 'TRACE'] and \
-           wc.proxy.Headers.client_get_max_forwards(self.headers)==0:
+           wc.proxy.Headers.client_get_max_forwards(self.headers) == 0:
             # XXX display options ?
             self.state = 'done'
             headers = wc.proxy.Headers.WcMessage()
@@ -383,7 +383,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.server:
             # server is not yet there, delay
             return
-        if self.method=="CONNECT":
+        if self.method == "CONNECT":
             wc.log.debug(wc.LOG_PROXY, "%s write SSL tunneled data to server %s", self, self.server)
             self.server.write(self.read())
         else:
@@ -391,7 +391,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def server_request (self):
         """issue server request through ClientServerMatchmaker object"""
-        assert self.state=='receive', "%s server_request in non-receive state"%self
+        assert self.state == 'receive', "%s server_request in non-receive state"%self
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
                              self.request, self.headers,
@@ -468,7 +468,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def handle_local (self, is_public_doc=False):
         """handle local request by delegating it to the web configuration"""
-        assert self.state=='receive'
+        assert self.state == 'receive'
         wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
@@ -482,7 +482,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                 return
             if 'NTLM' in creds:
-                if creds['NTLM'][0]['type']==wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
+                if creds['NTLM'][0]['type'] == wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     auth = ",".join(creds['NTLM'][0])
                     self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                     return
@@ -503,12 +503,12 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     def get_form_data (self):
         """return CGI form data from stored request"""
         form = None
-        if self.method=='GET':
+        if self.method == 'GET':
             # split off query string and parse it
             qs = urlparse.urlsplit(self.url)[3]
             if qs:
                 form = cgi.parse_qs(qs)
-        elif self.method=='POST':
+        elif self.method == 'POST':
             # XXX this uses FieldStorage internals
             form = cgi.FieldStorage(fp=StringIO.StringIO(self.content),
                                     headers=self.headers,

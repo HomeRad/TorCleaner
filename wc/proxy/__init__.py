@@ -153,6 +153,6 @@ def mainloop (handle=None, abort=None):
             # win32 handle signaling stop
             import win32event
             rc = win32event.WaitForSingleObject(handle, 0)
-            if rc==win32event.WAIT_OBJECT_0:
+            if rc == win32event.WAIT_OBJECT_0:
                 break
 

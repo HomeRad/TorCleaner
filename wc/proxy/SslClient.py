@@ -72,14 +72,14 @@ class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConne
 
 
     def server_request (self):
-        assert self.state=='receive', "%s server_request in non-receive state"%self
+        assert self.state == 'receive', "%s server_request in non-receive state"%self
         wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self, self.request, self.headers, self.content)
 
 
     def handle_local (self, is_public_doc=False):
-        assert self.state=='receive'
+        assert self.state == 'receive'
         wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
         form = None
         self.url = "/blocked.html"

@@ -179,10 +179,10 @@ def check_nonces ():
 def get_ntlm_challenge (**attrs):
     """return initial challenge token for ntlm authentication"""
     ctype = attrs.get('type', NTLMSSP_INIT)
-    if ctype==NTLMSSP_INIT:
+    if ctype == NTLMSSP_INIT:
         # initial challenge (message type 0)
         return "NTLM"
-    elif ctype==NTLMSSP_CHALLENGE:
+    elif ctype == NTLMSSP_CHALLENGE:
         # after getting first credentials (message type 2)
         msg = create_message2(attrs['domain'])
         return "NTLM %s" % base64.encodestring(msg).strip()
@@ -212,9 +212,9 @@ def parse_ntlm_challenge (challenge):
 def get_ntlm_credentials (challenge, **attrs):
     """return NTLM credentials for given challenge"""
     ctype = attrs.get('type', NTLMSSP_NEGOTIATE)
-    if ctype==NTLMSSP_NEGOTIATE:
+    if ctype == NTLMSSP_NEGOTIATE:
         msg = create_message1()
-    elif ctype==NTLMSSP_AUTH:
+    elif ctype == NTLMSSP_AUTH:
         nonce = challenge['nonce']
         domain = attrs['domain']
         username = attrs['username']
@@ -241,9 +241,9 @@ def parse_ntlm_credentials (credentials):
         res = {}
     else:
         msgtype = getint32(creds[8:12])
-        if msgtype==NTLMSSP_NEGOTIATE:
+        if msgtype == NTLMSSP_NEGOTIATE:
             res = parse_message1(creds)
-        elif msgtype==NTLMSSP_AUTH:
+        elif msgtype == NTLMSSP_AUTH:
             res = parse_message3(creds)
         else:
             # invalid type, skip
@@ -468,8 +468,8 @@ def calc_resp (key, nonce):
        key - hashed password
        nonce - nonce from server
     """
-    assert len(key)==21, "key must be 21 bytes long"
-    assert len(nonce)==8, "nonce must be 8 bytes long"
+    assert len(key) == 21, "key must be 21 bytes long"
+    assert len(nonce) == 8, "nonce must be 8 bytes long"
     res1 = DES.new(convert_key(key[0:7])).encrypt(nonce)
     res2 = DES.new(convert_key(key[7:14])).encrypt(nonce)
     res3 = DES.new(convert_key(key[14:21])).encrypt(nonce)
@@ -478,13 +478,13 @@ def calc_resp (key, nonce):
 
 def getint32 (s):
     """called internally to get a 32-bit integer in an NTLM message"""
-    assert len(s)==4
+    assert len(s) == 4
     return struct.unpack("<l", s)[0]
 
 
 def getint16 (s):
     """called internally to get a 16-bit integer in an NTLM message"""
-    assert len(s)==2
+    assert len(s) == 2
     return struct.unpack("<h", s)[0]
 
 
@@ -505,7 +505,7 @@ def lst2str (lst):
 
 def convert_key (key):
     """converts a 7-bytes key to an 8-bytes key based on an algorithm"""
-    assert len(key)==7, "NTLM convert_key needs 7-byte key"
+    assert len(key) == 7, "NTLM convert_key needs 7-byte key"
     bytes = [key[0],
              chr(((ord(key[0]) << 7) & 0xFF) | (ord(key[1]) >> 1)),
              chr(((ord(key[1]) << 6) & 0xFF) | (ord(key[2]) >> 2)),
@@ -522,7 +522,7 @@ def set_odd_parity (byte):
     """turns one-byte into odd parity. Odd parity means that a number in
         binary has odd number of 1's.
     """
-    assert len(byte)==1
+    assert len(byte) == 1
     parity = 0
     ordbyte = ord(byte)
     for dummy in range(8):
@@ -559,7 +559,7 @@ def create_lm_password (passwd):
         lm_pw = passwd + ('\x00'*(14-len(passwd)))
     else:
         lm_pw = passwd[0:14]
-    assert len(lm_pw)==14, "NTLM invalid password length %d"%len(lm_pw)
+    assert len(lm_pw) == 14, "NTLM invalid password length %d"%len(lm_pw)
     return lm_pw
 
 
