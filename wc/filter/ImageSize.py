@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import Image, os
 from cStringIO import StringIO
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
+from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter
 from wc.log import *
 from wc import TemplateDir, config
@@ -50,12 +50,6 @@ class ImageSize (Filter):
         f = file(fname)
         self.blockdata = f.read()
         f.close()
-
-
-    def addrule (self, rule):
-        super(ImageSize, self).addrule(rule)
-        compileRegex(rule, "matchurl")
-        compileRegex(rule, "dontmatchurl")
 
 
     def filter (self, data, **attrs):

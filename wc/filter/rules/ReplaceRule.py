@@ -19,6 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+from Rule import compileRegex
 from UrlRule import UrlRule
 from wc.XmlUtils import xmlify, unxmlify
 
@@ -42,6 +43,7 @@ class ReplaceRule (UrlRule):
     def compile_data (self):
         super(ReplaceRule, self).compile_data()
         self.replace = unxmlify(self.replace).encode('iso8859-1')
+        compileRegex(self, "search")
 
 
     def fromFactory (self, factory):

@@ -23,7 +23,7 @@ you can use this for
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc.filter import FILTER_RESPONSE_MODIFY, compileRegex, compileMime
+from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter
 
 
@@ -35,16 +35,9 @@ class Replacer (Filter):
     orders = [FILTER_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
-    rulenames = ['replacer']
+    rulenames = ['replace']
     mimelist = [compileMime(x) for x in ['text/html', 'text/javascript',
                                          'application/x-javascript']]
-
-
-    def addrule (self, rule):
-        super(Replacer, self).addrule(rule)
-        compileRegex(rule, "matchurl")
-        compileRegex(rule, "dontmatchurl")
-        compileRegex(rule, "search")
 
 
     def filter (self, data, **attrs):

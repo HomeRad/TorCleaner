@@ -23,7 +23,7 @@ import re
 from wc.log import *
 
 from wc.filter import FILTER_RESPONSE_MODIFY
-from wc.filter import compileMime, compileRegex
+from wc.filter import compileMime
 from wc.filter.Filter import Filter
 from wc.filter.HtmlParser import FilterHtmlParser
 
@@ -37,16 +37,6 @@ class Rewriter (Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = ['rewrite', 'nocomments', 'javascript', 'rating']
     mimelist = [compileMime(x) for x in ['text/html']]
-
-    def addrule (self, rule):
-        super(Rewriter, self).addrule(rule)
-        compileRegex(rule, "matchurl")
-        compileRegex(rule, "dontmatchurl")
-        if rule.get_name()=='rewrite':
-            compileRegex(rule, "enclosed")
-            rule.attrs_ro = {}
-            for key, val in rule.attrs.items():
-                rule.attrs_ro[key] = re.compile(rule.attrs[key])
 
 
     def filter (self, data, **attrs):

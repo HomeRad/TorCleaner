@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import re
 from wc.proxy.Headers import remove_headers
-from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, compileRegex
+from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER
 from wc.filter.Filter import Filter
 
 
@@ -41,8 +41,6 @@ class Header (Filter):
 
     def addrule (self, rule):
         super(Header, self).addrule(rule)
-        compileRegex(rule, "matchurl")
-        compileRegex(rule, "dontmatchurl")
         # ignore empty rules
         if not rule.name:
             return

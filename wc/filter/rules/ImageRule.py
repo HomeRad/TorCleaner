@@ -43,11 +43,11 @@ class ImageRule (UrlRule):
     def toxml (self):
         s = super(ImageRule, self).toxml()
         if self.width:
-            s += '\n width="%d"' % self.width
+            s += '\n width="%d"'%self.width
         if self.height:
-            s += '\n height="%d"' % self.height
+            s += '\n height="%d"'%self.height
         if self.formats:
-            s += '\n formats="%s"\n' % ",".join(self.formats)
+            s += '\n formats="%s"\n'%",".join(self.formats)
         if self.url:
             return s+">"+xmlify(self.url)+"</image>\n"
         return s+"/>"

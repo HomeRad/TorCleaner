@@ -19,9 +19,16 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import re
 from wc import i18n
 from wc.XmlUtils import xmlify, unxmlify
 from wc.filter.rules import register_rule
+
+
+# compile object attribute
+def compileRegex (obj, attr):
+    if hasattr(obj, attr) and getattr(obj, attr):
+        setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
 
 
 class Rule (object):

@@ -94,12 +94,6 @@ def printFilterOrder (i):
     return s
 
 
-# compile object attribute
-def compileRegex (obj, attr):
-    if hasattr(obj, attr) and getattr(obj, attr):
-        setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
-
-
 # compile mimelist entry
 def compileMime (mime):
     return re.compile("^(?i)%s(;.+)?$"%mime)

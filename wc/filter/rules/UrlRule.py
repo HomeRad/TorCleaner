@@ -19,9 +19,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from Rule import Rule
+from Rule import Rule, compileRegex
 from wc.XmlUtils import xmlify
 from wc.log import *
+
 
 class UrlRule (Rule):
     """rule which applies only to urls which match a regular expression"""
@@ -40,6 +41,12 @@ class UrlRule (Rule):
         if self.dontmatchurl:
             return not self.dontmatchurl_ro.search(url)
         return True
+
+
+    def compile_data (self):
+        super(UrlRule, self).compile_data()
+        compileRegex(self, "matchurl")
+        compileRegex(self, "dontmatchurl")
 
 
     def toxml (self):

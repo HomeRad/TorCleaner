@@ -19,7 +19,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import re
 from UrlRule import UrlRule
+from Rule import compileRegex
 from wc.XmlUtils import xmlify, unxmlify
 from wc.log import *
 from wc import i18n
@@ -146,9 +148,13 @@ class RewriteRule (UrlRule):
     def compile_data (self):
         super(RewriteRule, self).compile_data()
         self.enclosed = unxmlify(self.enclosed).encode('iso8859-1')
+        compileRegex(self, "enclosed")
         self.replacement = unxmlify(self.replacement).encode('iso8859-1')
+        self.attrs_ro = {}
         for attr, val in self.attrs.items():
-            self.attrs[attr] = unxmlify(val).encode('iso8859-1')
+            val = unxmlify(val).encode('iso8859-1')
+            self.attrs[attr] = val
+            self.attrs_ro[attr] = re.compile(val)
         self.set_start_sufficient()
 
 

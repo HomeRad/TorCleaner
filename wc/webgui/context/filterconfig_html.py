@@ -18,11 +18,12 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import tempfile, os
+import tempfile, os, re
 from wc import AppName, ConfigDir, rulenames, Version, config
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
+from wc.filter.rules.Rule import compileRegex as _compileRegex
 from wc.filter.rules.RewriteRule import partvalnames, partnames
 from wc.filter.rules.RewriteRule import part_num as _part_num
 from wc.filter.rules.FolderRule import FolderRule as _FolderRule
@@ -199,6 +200,10 @@ def _calc_selindex (folder, index):
     folder.selindex = [ x for x in res if 0 <= x < len(folder.rules) and x!=index ]
 
 
+def _reinit_filters ():
+    config.init_filter_modules()
+
+
 def _form_newfolder (foldername):
     if not foldername:
         error['newfolder'] = True
@@ -235,6 +240,7 @@ def _form_disablefolder (folder):
         return
     folder.disable = 1
     folder.write()
+    _reinit_filters()
     info['disablefolder'] = True
 
 
@@ -244,6 +250,7 @@ def _form_enablefolder (folder):
         return
     folder.disable = 0
     folder.write()
+    _reinit_filters()
     info['enablefolder'] = True
 
 
@@ -254,6 +261,7 @@ def _form_removefolder (folder):
     curfolder = None
     currule = None
     os.remove(folder.filename)
+    _reinit_filters()
     info['removefolder'] = True
 
 
@@ -264,12 +272,14 @@ def _form_newrule (rtype):
     # add new rule
     rule = _GetRuleFromName(rtype)
     rule.parent = curfolder
-    _register_rule(rule)
+    # compile data and register
+    rule.compile_data()
     prefix = config['development'] and "wc" or "lc"
     _generate_sids(prefix)
     curfolder.append_rule(rule)
     _recalc_up_down(curfolder.rules)
     curfolder.write()
+    _reinit_filters()
     # select new rule
     _form_selrule(rule.oid)
     info['newrule'] = True
@@ -281,6 +291,7 @@ def _form_disablerule (rule):
         return
     rule.disable = 1
     curfolder.write()
+    _reinit_filters()
     info['disablerule'] = True
 
 
@@ -290,6 +301,7 @@ def _form_enablerule (rule):
         return
     rule.disable = 0
     curfolder.write()
+    _reinit_filters()
     info['enablerule'] = True
 
 
@@ -300,6 +312,7 @@ def _form_removerule (rule):
     for i in range(rule.oid, len(rules)):
         rules[i].oid = i
     curfolder.write()
+    _reinit_filters()
     # deselect current rule
     global currule
     currule = None
@@ -313,6 +326,7 @@ def _form_rewrite_addattr (form):
         return
     value = _getval(form, "attrval")
     currule.attrs[name] = value
+    currule.attrs_ro[name] = re.compile(name)
     curfolder.write()
     info['rewrite_addattr'] = True
 
@@ -326,6 +340,7 @@ def _form_rewrite_removeattrs (form):
                 return
         for attr in toremove:
             del currule.attrs[attr]
+            del currule.attrs_ro[attr]
         curfolder.write()
         info['rewrite_delattr'] = True
 
@@ -411,7 +426,8 @@ def _form_apply (form):
     # delegate
     attr = "_form_apply_%s" % currule.get_name()
     globals()[attr](form)
-    curfolder.write()
+    if info:
+        curfolder.write()
 
 
 def _form_rule_titledesc (form):
@@ -432,10 +448,12 @@ def _form_rule_matchurl (form):
     matchurl = _getval(form, 'rule_matchurl').strip()
     if matchurl!=currule.matchurl:
         currule.matchurl = matchurl
+        _compileRegex(currule, "matchurl")
         info['rulematchurl'] = True
     dontmatchurl = _getval(form, 'rule_dontmatchurl').strip()
     if dontmatchurl!=currule.dontmatchurl:
         currule.dontmatchurl = dontmatchurl
+        _compileRegex(currule, "dontmatchurl")
         info['ruledontmatchurl'] = True
 
 
@@ -531,6 +549,7 @@ def _form_apply_replace (form):
         return
     if search!=currule.search:
         currule.search = search
+        _compileRegex(currule, "search")
         info['rulesearch'] = True
     replace = _getval(form, 'rule_replace')
     if replace!=currule.replace:
@@ -550,6 +569,7 @@ def _form_apply_rewrite (form):
     enclosed = _getval(form, 'rule_enclosedblock').strip()
     if enclosed!=currule.enclosed:
         currule.enclosed = enclosed
+        _compileRegex(currule, "enclosed")
         info['ruleenclosedblock'] = True
     part = _getval(form, 'rule_rewritepart')
     partnum = _part_num(part)

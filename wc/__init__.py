@@ -304,6 +304,8 @@ class Configuration (dict):
         objects. This will also compile regular expression strings
         to regular expression objects"""
         import wc.filter
+        self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
+        self['mime_content_rewriting'] = Set()
         for filtername in self['filters']:
             exec "from filter import %s" % filtername
             # filter class has same name as module
