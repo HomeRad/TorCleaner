@@ -601,6 +601,9 @@ class HttpServer (wc.proxy.Server.Server):
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.close_ready", self)
         if not (self.client and self.connected):
             # client has lost interest, or we closed already
+            if self.client:
+                self.client.server_close(self)
+                self.client = None
             return True
         if not self.flush():
             return False
