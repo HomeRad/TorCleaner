@@ -1,4 +1,4 @@
-import dns_lookups, socket, mimetypes, re
+import dns_lookups, socket, mimetypes, re, base64, sha
 import wc.proxy
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
@@ -14,7 +14,7 @@ _localhosts = (
     'ip6-localhost',
     'ip6-loopback',
 )
-_intre = re.compile("^\d+$")
+_intre = re.compile('^\d+$')
 
 from HttpServer import HttpServer
 
@@ -46,19 +46,21 @@ class ClientServerMatchmaker:
 
      done:     We are done matching up the client and server
     """
-    def error(self, code, msg, txt=""):
+    def error(self, code, msg, txt=''):
         content = wc.proxy.HTML_TEMPLATE % \
-            {'title': "WebCleaner Proxy Error %d %s" % (code, msg),
-             'header': "Bummer!",
-             'content': "WebCleaner Proxy Error %d %s<br>%s<br>" % \
+            {'title': 'WebCleaner Proxy Error %d %s' % (code, msg),
+             'header': 'Bummer!',
+             'content': 'WebCleaner Proxy Error %d %s<br>%s<br>' % \
                         (code, msg, txt),
             }
         if config['proxyuser']:
             auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
+            http_ver = '1.0'
         else:
-            auth = ""
+            auth = ''
+            http_ver = '1.1'
         ServerHandleDirectly(self.client,
-            'HTTP/1.0 %d %s\r\n',
+            'HTTP/%s %d %s\r\n' % (http_ver, code, msg),
             'Server: WebCleaner Proxy\r\n' +\
             'Content-type: text/html\r\n' +\
             '%s'%auth +\
@@ -70,11 +72,9 @@ class ClientServerMatchmaker:
         self.request = request
         self.headers = headers
         if config["proxyuser"]:
-            if not self.headers.has_key("Proxy-Authorization"):
+            if not self.check_proxy_auth():
                 self.error(407, _("Proxy Authentication Required"))
                 return
-            auth = self.headers['Proxy-Authorization']
-            # XXX more
         self.content = content
         self.nofilter = nofilter
         self.url = ""
@@ -117,6 +117,24 @@ class ClientServerMatchmaker:
             self.document = document
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
+
+
+    def check_proxy_auth (self):
+        if not self.headers.has_key("Proxy-Authorization"):
+            return
+        auth = self.headers['Proxy-Authorization']
+        if not auth.startswith("Basic "):
+            return
+        auth = base64.decodestring(auth[6:])
+        if ':' not in auth:
+            return
+        _user,_pass = auth.split(":",1)
+        if _user!=config['proxyuser']:
+            return
+        if config['proxypass'] and \
+           sha.new(_pass).hexdigest()!=config['proxypass']:
+            return
+        return 1
 
 
     def handle_local(self, document):
