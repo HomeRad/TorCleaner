@@ -1,7 +1,5 @@
 Changes since 0.52:
   * only filter some <meta name> tags, not all
-  * updated ConfWindow patch
-  * webcleanertools: add dependency on python
   * README.squid, a sample squid configuration file to use with
     WebCleaner, was added
   * added some more advertising urls to filter

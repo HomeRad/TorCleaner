@@ -1,17 +1,14 @@
 webcleaner (0.53-1) unstable; urgency=low
 
-  * only filter some <meta name> tags, not all
   * updated ConfWindow patch
   * webcleanertools: add dependency on python
   * bump up standards version to 3.5.7.0
   * made this a non-native debian package
   * remove all configuration dirs on postrm, purge does not remove them
     automatically due to mis-sorting of dirs
-  * README.squid, a sample squid configuration file to use with
-    WebCleaner, was added
-  * added some more advertising urls to filter
+  * deleted configuration note, its useless
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 21 Aug 2002 09:43:32 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Tue,  3 Sep 2002 21:07:58 +0200
 
 webcleaner (0.52) unstable; urgency=low
 

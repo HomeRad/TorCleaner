@@ -6,14 +6,6 @@ Description: Default proxy port
 Description-de: Standard Proxy port
  Dies ist die Port Nummer, unter der der Proxy Anfragen akzeptiert.
 
-Template: webcleaner/note
-Type: note
-Description: Configuration of WebCleaner.
- The "webcleanertools" package has a nice GUI configuration tool.
-Description-de: Konfiguration von WebCleaner
- Das "webcleanertools" Paket besitzt ein nettes grafisches
- Konfigurationsprogramm.
-
 Template: webcleaner/monitor
 Type: boolean
 Default: false
