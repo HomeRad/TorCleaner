@@ -44,6 +44,11 @@ include templates/classic/blocked.*
 include templates/classic/macros/*.html
 include test/*.py
 include test/*.sh
+include test/*.pot
+include test/*.po
+include test/Makefile
+include test/logging.conf
+include test/rating/rating.txt
 recursive-include tests *.py test*
 include wc/parser/htmllex.l
 include wc/parser/htmlparse.y
