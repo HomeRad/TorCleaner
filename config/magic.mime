@@ -299,21 +299,14 @@
 #
 # from Daniel Quinlan <quinlan@yggdrasil.com>
 #
-0	string		\<HEAD	text/html
-0	string		\<head	text/html
-0	string		\<TITLE	text/html
-0	string		\<title	text/html
-0       string          \<html	text/html
-0       string          \<HTML	text/html
+0	string/cB	\<!DOCTYPE\ html	text/html
+0	string/cb	\<head	text/html
+0	string/cb	\<title	text/html
+0       string/bc	\<html	text/html
 0	string		\<!--	text/html
-0	string		\<h1	text/html
-0	string		\<H1	text/html
-0	string		\<!doctype\ HTML	text/html
-0	string		\<!DOCTYPE\ HTML	text/html
-0	string		\<!doctype\ html	text/html
-0	string		\<!doctype\ HTML	text/html
+0	string/c	\<h1	text/html
 
-0	string/b	\<?xml			text/xml
+0	string		\<?xml			text/xml
 
 #------------------------------------------------------------------------------
 # images:  file(1) magic for image formats (see also "c-lang" for XPM bitmaps)
