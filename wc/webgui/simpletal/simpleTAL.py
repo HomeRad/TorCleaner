@@ -630,7 +630,7 @@ class XMLTemplate (Template):
 			encodingFile.write ('\n')
 		self.expandInline (context, encodingFile, interpreter,
                                    translator=translator)
-		
+
 def tagAsText ((tag,atts), singletonFlag=0):
 	result = ["<"]
 	result.append (tag)
@@ -645,7 +645,7 @@ def tagAsText ((tag,atts), singletonFlag=0):
 	else:
 		result.append (">")
 	return "".join (result)
-	
+
 class TemplateCompiler:
 	def __init__ (self):
 		self.commandList = []
@@ -1229,7 +1229,7 @@ class HTMLTemplateCompiler (TemplateCompiler, sgmllib.SGMLParser):
 		self.close()
 		
 	def unknown_starttag (self, tag, attributes):
-		self.log.debug ("Received Start Tag: " + tag + " Attributes: " + str (attributes))
+		self.log.debug("Received Start Tag: "+`tag`+" Attributes: "+str(attributes))
 		atts = []
 		for att in attributes:
 			if (att[0] == att[1]):
@@ -1333,8 +1333,9 @@ def compileHTMLTemplate (template, inputEncoding="ISO8859-1"):
 	To use the resulting template object call:
 		template.expand (context, outputFile)
 	"""
-	if (isinstance (template, type ("")) or isinstance (template, type (u""))):
-		# It's a string!
+	if isinstance(template, type("")):
+		templateFile = StringIO.StringIO (template)
+        elif isinstance(template, type(u"")):
 		templateFile = StringIO.StringIO (template)
 	else:
 		templateFile = template

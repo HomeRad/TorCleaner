@@ -477,9 +477,9 @@ class Context:
 									if (type (resultVal) == type (u"")):
 										result += resultVal
 									elif (type (resultVal) == type ("")):
-										result += unicode (resultVal, 'ascii')
+										result += resultVal
 									else:
-										result += unicode (str (resultVal), 'ascii')
+										result += str(resultVal)
 								skipCount = endPos - position 
 						else:
 							# It's a variable
@@ -492,11 +492,11 @@ class Context:
 							if (pathResult is not None and not pathResult.isNothing()):
 								resultVal = pathResult.value()
 								if (type (resultVal) == type (u"")):
-										result += resultVal
+									result += resultVal
 								elif (type (resultVal) == type ("")):
-									result += unicode (resultVal, 'ascii')
+									result += resultVal
 								else:
-									result += unicode (str (resultVal), 'ascii')
+									result += str(resultVal)
 							skipCount = endPos - position - 1
 					except Exception, e:
 						# Trailing $ sign - just suppress it
