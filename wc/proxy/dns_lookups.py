@@ -15,6 +15,7 @@ import wc.proxy.Connection
 import bk.i18n
 import bk.net
 import bk.net.dns
+import bk.net.dns.Lib
 import bk.net.ip
 
 

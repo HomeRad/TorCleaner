@@ -132,10 +132,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         except ValueError:
             self.error(400, bk.i18n._("Can't parse request"))
             return
-        if  not self.allow.method(self.method):
+        if not self.allow.method(self.method):
             self.error(405, bk.i18n._("Method Not Allowed"))
             return
-        # fix broken url paths, and unquote
+        # fix broken url paths
         self.url = bk.url.url_norm(self.url)
         if not self.url:
             self.error(400, bk.i18n._("Empty URL"))
@@ -145,10 +145,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.protocol = wc.proxy.fix_http_version(protocol)
         self.http_ver = wc.proxy.get_http_version(self.protocol)
         # build request
-        # be sure to quote url only where absolutely needed, as lots
-        # of servers (eg. apple.com) cannot unquote properly
-        qurl = bk.url.url_quote(self.url)
-        self.request = "%s %s %s" % (self.method, qurl, self.protocol)
+        self.request = "%s %s %s" % (self.method, self.url, self.protocol)
         bk.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
         # filter request
         self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, self.request,
