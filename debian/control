@@ -7,14 +7,16 @@ Build-Depends: python (>= 2.3.1), python2.3-dev (>= 2.3.1), debhelper (>= 4.1.16
 
 Package: webcleaner
 Architecture: any
-Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto, runit, webcleaner-common (>= ${Source-Version})
+Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto, runit, webcleaner-common (>= ${Source-Version}), python2.3-pyopenssl
 Conflicts: python2.3-psyco (<< 1.1.1)
 Suggests: python2.3-psyco
 Description: a filtering HTTP proxy
  Features:
   * HTTP/1.1 support
+  * HTTPS proxy CONNECT and optional SSL gateway support
   * integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
   * integrated JavaScript engine, allows popup filtering
+  * detection and correction of known HTML security flaws
   * compress documents on-the-fly (with gzip)
   * disable animated GIFs
   * filter images by size, removes banner adverts

@@ -10,6 +10,8 @@ Requirements for Unix/Linux:
 3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
 4. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
 5. runit from http://smarden.org/runit/
+6. openssl from http://www.openssl.org/
+7. PyOpenSSL from http://pyopenssl.sourceforge.net/
 
 Requirements for Windows:
 -------------------------
@@ -91,11 +93,11 @@ Setup for Windows:
    % cd webcleaner-X.X
    Configure and compile the JavaScript library:
    % ./configure; make
-4a.Compile and install PyCrypto
+4. Compile and install PyCrypto
    Close the MSYS application and open a DOS command prompt.
    Change to the pycrypto-1.9a6 directory and do:
    c:> python setup.py build -c mingw32 install
-4b.Install OpenSSL and compile PyOpenSSL
+5. Install OpenSSL and compile PyOpenSSL
    Change to the directory where you installed OpenSSL (for example
    c:\OpenSSL).
    Fix the library names for the mingw compiler:
@@ -107,24 +109,24 @@ Setup for Windows:
    Then run:
    c:> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
        -L c:\OpenSSL\lib\MinGW build install
-5. Compile and install the Python modules
+6. Compile and install the Python modules
    Change to the webcleaner-X.X directory and do:
    c:> python setup.py build -c mingw32 install
-6. Generate and install WebCleaner certificates
+7. Generate and install WebCleaner certificates
    Change to the directory where you installed Python into
    (for example c:\Python23\).
    Run the webcleaner-certificates script to install the certificates:
    c:> python scripts\webcleaner-certificates install
    To remove the certificates later, you can run:
    c:> python scripts\webcleaner-certificates remove
-7. Install and start the WebCleaner NT service
+8. Install and start the WebCleaner NT service
    Change to the directory where you installed Python into
    (for example c:\Python23\).
    Run the webcleaner-service script to install the service:
    c:> python scripts\webcleaner-service install
    To remove the service later, you can run:
    c:> python scripts\webcleaner-service remove
-8. Enjoy
+9. Enjoy
    WebCleaner is now installed and started as a regular Windows service.
    See the README on how to configure the proxy filters.
 

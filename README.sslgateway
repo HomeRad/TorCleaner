@@ -1,6 +1,11 @@
 SSL Gateway
 ===========
 
+Warning
+-------
+The SSL gateway is still considered in development, so use with care.
+
+
 Introduction
 ------------
 
@@ -14,8 +19,10 @@ Security
 
 An SSL gateway has the disadvantage of having to fake the SSL certificate
 from the original server and replace it with our own certificate, which
-is widely known as a "man in the middle" attack. So in order to
-not weaken your secure web surfing experience, make sure
+uses the owner name "WebCleaner Server".
+Your browser will issue a warning that this certificate is not the
+original one your requested.
+So in order to not weaken your secure web surfing experience, make sure
 you have set up the WebCleaner SSL gateway yourself and configure it
 to not allow administration of another person except yourself.
 
@@ -29,7 +36,7 @@ Data flux
   WWW BROWSER
 	|
 	|
-  WEBCLEANER PROXY
+  WEBCLEANER PROXY (localhost:8080)
 	|
      HttpClient         init server, filter	pass data back to
 	|		request data and pass	browser
@@ -41,15 +48,15 @@ Data flux
      	|		localhost on ssl port	pass it on to HttpClient
 	|		and pass request data
 	|
-  WEBCLEANER SSL SERVER
+  WEBCLEANER SSL SERVER (localhost:8443)
 	|
      SslClient		init server, filter	pass data back to
     	|		request data and pass	HttpsServer
-        |		it to ssl server
+        |		it to SslServer
         |
      ClientServerMatchmaker
 	|
-     SslServer		connect to ssl server,	filter data, pass it to
-	|		make request		SslClient
+     SslServer		connect to remove ssl	filter data, pass it to
+	|		server, make request	SslClient
   REMOTE SSL SERVER
 

@@ -4,9 +4,11 @@
 
 Features
 --------
-* HTTP/1.1 and HTTPS support
+* HTTP/1.1 support
+* HTTPS proxy CONNECT and optional SSL gateway support
 * integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
 * integrated JavaScript engine, allows popup filtering
+* detection and correction of known HTML security flaws
 * compress documents on-the-fly (with gzip)
 * disable animated GIFs
 * filter images by size, removes banner adverts
@@ -20,7 +22,7 @@ Features
 
 Installing
 ----------
-Read the file INSTALL
+Read the file INSTALL.
 
 
 Why should I use WebCleaner?
@@ -30,17 +32,24 @@ exact HTML filtering, and this removes a lot of advertisings.
 The filter does not just replace some strings, the proxy parses all HTML
 data into tags. The parser is fast (written in C) and can cope with every
 broken HTML page out there; if the parser does not recognize HTML
-structures, it just passes the data over to the browser until it recognizes
-a tag again. No data is ever discarded or dropped by the parser.
-The parser can also correct invalid HTML and even prevents some common
-security risks like HTML buffer overflows (see wc/filter/HtmlSecurity.py
-for details).
+structures, it just passes the data over to the proxy until it recognizes
+a tag again. No valid (or possible valid) HTML data is ever discarded or
+dropped by the parser.
 
-Another feature is the JavaScript (JS) filtering: JavaScript data is
-executed in the integrated Spidermonkey JS engine which is also used by
-the Mozilla browser suite.
+Another feature is the JavaScript filtering: JavaScript data is
+executed in the integrated Spidermonkey JavaScript engine which is also
+used by the Mozilla browser suite.
 This eliminates all JavaScript obfuscation, popups, and document.write()
-stuff, but the other JS functions still work as usual.
+stuff, but the other JavaScript functions still work as usual.
+
+Exact HTML filtering has another good side-effect: it is possible to
+detect and prevent known security flaws in HTML processors. Several
+known buffer overflow exploits or Denial of Service attacks are detected
+and fixed by the HtmlSecurity class.
+
+Furthermore, WebCleaner can filter SSL traffic used in "https://" URLs.
+If you enable this feature (by activating the "SSL gateway" option in
+the configuration), you should also read README.sslgateway.
 
 
 Configuration
