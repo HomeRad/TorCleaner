@@ -125,12 +125,15 @@ class HttpServer (wc.proxy.Server.Server):
         extra = ""
         if hasattr(self, "persistent") and self.persistent:
             extra += "persistent "
-        if hasattr(self, "addr") and self.addr and self.addr[1] != 80:
-            portstr = ':%d' % self.addr[1]
-        else:
-            portstr = ""
-        extra += '%s%s%s' % (self.hostname or self.addr[0],
-                             portstr, self.document)
+        hasaddr = hasattr(self, "addr") and self.addr
+        if hasattr(self, "hostname"):
+            extra += self.hostname
+        elif hasaddr:
+            extra += self.addr[0]
+        if hasaddr and self.addr[1] != 80:
+            extra += ':%d' % self.addr[1]
+        if hasattr(self, "document"):
+            extra += self.document
         if hasattr(self, "client") and self.client:
             extra += " client"
         #if len(extra) > 46: extra = extra[:43] + '...'
