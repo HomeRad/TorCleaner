@@ -21,14 +21,18 @@ class Category (object):
        values it can hold.
     """
 
-    def __init__ (self, name, values):
+    def __init__ (self, name, values, iterable=False):
         """Initialize name and values."""
         self.name = name
         self.values = values
+        self.iterable = iterable
 
     def valid_value (self, value):
         """True if value is valid according to this category."""
         raise NotImplementedError, "unimplemented"
+
+    def __cmp__ (self, other):
+        return cmp(self.name, other.name)
 
 
 class ValueCategory (Category):
@@ -40,7 +44,7 @@ class ValueCategory (Category):
         _ = lambda x: x
         values = [_("none"), _("mild"), _("heavy")]
         del _
-        super(ValueCategory, self).__init__(name, values)
+        super(ValueCategory, self).__init__(name, values, iterable=True)
 
     def valid_value (self, value):
         """True if value is in values list."""
@@ -55,6 +59,7 @@ class RangeCategory (Category):
     def __init__ (self, name, minval=None, maxval=None):
         """Initialize name and values."""
         super(RangeCategory, self).__init__(name, [minval, maxval])
+        self.is_range = True
 
     def valid_value (self, value):
         """Check range value."""
