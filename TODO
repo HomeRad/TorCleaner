@@ -3,9 +3,12 @@ TODO
 version 2.24 and above
 
 - Geht net:
-  http://msdn.microsoft.com/library/shared/deeptree/bot/bot.asp?dtcnfg=/library/deeptreeconfig.xml
+  http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winsock/winsock/socket_2.asp
+User_agent header remove works
 
 version 2.25 and above
+
+- fix rating config and storage
 
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
