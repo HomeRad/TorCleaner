@@ -192,16 +192,26 @@ Setup for Windows:
 7. Enjoy
    
    WebCleaner is now installed and started as a regular Windows service.
-   See the README on how to configure the proxy filters.
+   See the `main page`_ on how to configure the proxy filters.
+   
+   .. _main page:
+      index.html
 
+
+Troubleshooting
+===============
+
+For help you can always join the mailing list at
+webcleaner-users@lists.sourceforge.net
 
 Troubleshooting for Linux
 -------------------------
-Proxy startup errors are logged in the runit log file located at
+Errors are logged in the runit log file located at
 /var/service/webcleaner/log/main/current
 
 Troubleshooting for Windows
 ---------------------------
-Proxy startup errors are logged in the system event logger. Execute
+Errors are logged in the system event logger. Execute
 Settings -> Control Panel -> Administrative Tools -> Event Viewer
 and look at the "Application Log" events.
+

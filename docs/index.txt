@@ -125,6 +125,25 @@ Running under Windows
 The proxy is a normal NT service and can be started/stopped from the
 "Administrative Tasks" entry in the system configuration.
 
+Setting access permissions
+--------------------------
+
+To allow using your proxy from other hosts than the one it is running
+on, you have to edit the allowed host list in the configuration
+interface.
+
+For example to allow access from your local LAN network at
+``192.168.1.*`` you would add ``192.168.1.1/8`` to the allowed host
+list.
+
+
+Bug reports and mailing list
+============================
+
+For help and bug reports you can join the
+webcleaner-users@lists.sourceforge.net
+mailing list.
+
 
 Notes
 =====

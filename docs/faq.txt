@@ -25,16 +25,20 @@ look in the application log in the NT event log viewer.
 **Q: The filter is not working - I still see some advertisings that are
 definitely filtered out.**
 
-A: Send the URL to calvin@users.sf.net and I will add a filter rule for it.
+A: Write a `bug report`_ and I will add a filter rule for it.
 
+.. _bug report: index.html
 
 **Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
 some tags or is completely crippled.**
 
-A: First, try to disable the WebCleaner proxy and look at the page again.
+A: First, try to disable the WebCleaner proxy by using the configuration
+shortcut ``http://localhost:8080/config.html?disablefilter=1``.
+Then look at the page again.
 If it renders ok, you most likely have encountered a bug in WebCleaner.
-Please write a bug report to calvin@users.sf.net and
-include the URL you have problems with.
+Please write a `bug report`_ and include the URL you have problems with.
+
+.. _bug report: index.html
 
 **Q: I am seeing the error "client sent data in state receive".**
 
