@@ -303,21 +303,21 @@ class JSFilter (wc.js.JSListener.JSListener):
         if data is None:
             if not self.js_script:
                 wc.log.warn(wc.LOG_JS, "empty JavaScript src %s", url)
-                self.js_script = "// "+\
-                      _("error fetching script from %r")%url
+                self.js_script = u"// "+\
+                      _("error fetching script from %r") % url
             self.htmlparser.tagbuf.append(
                  [wc.filter.rules.RewriteRule.STARTTAG, "script",
                   {'type': 'text/javascript'}])
             # norm html comments
             script = wc.js.remove_html_comments(self.js_script)
-            script = "\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
+            script = u"\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
             self.htmlparser.tagbuf.append(
                                    [wc.filter.rules.RewriteRule.DATA, script])
             # Note: <script src=""> could be missing an end tag,
             # but now we need one. Look later for a duplicate </script>.
             self.htmlparser.tagbuf.append(
                                [wc.filter.rules.RewriteRule.ENDTAG, "script"])
-            self.js_script = ''
+            self.js_script = u''
             self.htmlparser.state = ('parse',)
             wc.log.debug(wc.LOG_JS, "%s switching back to parse with", self)
             self.htmlparser.debugbuf(wc.LOG_JS)
