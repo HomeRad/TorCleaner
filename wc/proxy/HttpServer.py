@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+# -*- coding: iso-8859-1 -*-
 """connection handling proxy <--> http server"""
 
 __version__ = "$Revision$"[11:-2]
@@ -72,7 +73,6 @@ class HttpServer (Server):
         super(HttpServer, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
-        self.sequence_number = 0 # for persistent connections
         self.reset()
         # attempt connect
         create_inet_socket(self, socket.SOCK_STREAM)
@@ -91,7 +91,6 @@ class HttpServer (Server):
         self.decoders = [] # Handle each of these, left to right
         self.persistent = False # for persistent connections
         self.attrs = {} # initial filter attributes are empty
-        self.flushing = False # remember that flush is in progress
         self.authtries = 0 # restrict number of authentication tries
         self.statuscode = None # numeric HTTP status code
         self.bytes_remaining = None # number of content bytes remaining
@@ -134,7 +133,7 @@ class HttpServer (Server):
             make_timer(0, lambda s=self: s.client and s.client.server_connected(s))
         else:
             # Hm, the client no longer cares about us, so close
-            self.reuse()
+            self.close()
 
 
     def client_send_request (self, method, hostname, port, document, headers,
@@ -342,7 +341,8 @@ class HttpServer (Server):
         self.client.server_content(msg)
         self.client.server_close(self)
         self.state = 'recycle'
-        self.reuse()
+        # XXX delayed close?
+        self.close()
 
 
     def process_content (self):
@@ -435,7 +435,7 @@ class HttpServer (Server):
             self.send_request()
         else:
             # flush pending client data and try to reuse this connection
-            self.flush()
+            self.delayed_close()
 
 
     def flush (self):
@@ -444,7 +444,6 @@ class HttpServer (Server):
         debug(PROXY, "%s flushing", self)
         if not self.statuscode:
             warn(PROXY, "%s flush without status", self)
-        self.flushing = True
         data = flush_decoders(self.decoders)
         try:
             for i in _response_filters:
@@ -453,8 +452,7 @@ class HttpServer (Server):
             debug(PROXY, "%s FilterWait %r", self, msg)
             # the filter still needs some data so try flushing again
             # after a while
-            make_timer(0.2, lambda : self.flush())
-            return
+            return False
         # the client might already have closed
         if self.client and self.statuscode!=407:
             if not self.data_written and self.statuscode:
@@ -464,33 +462,36 @@ class HttpServer (Server):
             if data:
                 assert hasattr(self.client, "server_content"), "%s wrong client %s"%(self, self.client)
                 self.client.server_content(data)
-            self.client.server_close(self)
-        self.attrs = {}
-        if self.statuscode!=407:
-            self.reuse()
+        return True
 
 
     def reuse (self):
         debug(PROXY, "%s reuse", self)
-        self.client = None
-        if self.connected and self.persistent:
-            debug(PROXY, '%s reusing %d', self, self.sequence_number)
-            self.sequence_number += 1
-            self.state = 'client'
-            self.reset()
-            # Put this server back into the list of available servers
-            serverpool.unreserve_server(self.addr, self)
-        else:
-            # We can't reuse this connection
-            self.close()
+        super(HttpServer, self).reuse()
+        self.state = 'client'
+        self.reset()
+
+
+    # XXX implement close_ready with flush?
+    def close_ready (self):
+        debug(PROXY, "%s close ready", self)
+        if not self.flush():
+            return False
+        if super(HttpServer, self).close_ready():
+            if self.client:
+                self.client.server_close(self)
+                self.client = None
+            return True
+        return False
 
 
     def close (self):
         assert not self.client, "close with open client"
         debug(PROXY, "%s close", self)
         if self.connected and self.state!='closed':
-            serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
+        if not self.persistent:
+            serverpool.unregister_server(self.addr, self)
         super(HttpServer, self).close()
 
 
@@ -504,12 +505,9 @@ class HttpServer (Server):
     def handle_close (self):
         debug(PROXY, "%s handle_close", self)
         self.persistent = False
-        # flush unhandled data
-        if not self.flushing:
-            self.flush()
         super(HttpServer, self).handle_close()
-        if self.authtries>0:
-            self.reconnect()
+        #if self.authtries>0:
+        #    self.reconnect()
 
 
     def reconnect (self):

@@ -51,20 +51,23 @@ class HttpClient (Connection):
     def __init__ (self, sock, addr):
         super(HttpClient, self).__init__(sock=sock)
         self.addr = addr
-        self.state = 'request'
-        self.server = None
-        self.sequence_number = 1
-        self.request = ''
-        self.decoders = [] # Handle each of these, left to right
-        self.headers = {}
-        self.bytes_remaining = None # for content only
-        self.content = ''
-        self.protocol = 'HTTP/1.0'
-        self.url = ''
+        self.reset()
         host = self.addr[0]
         if not config.allowed(host):
             warn(PROXY, "host %s access denied", host)
             self.close()
+
+
+    def reset (self):
+        self.state = 'request'
+        self.server = None
+        self.request = ''
+        self.decoders = [] # Handle each of these, left to right
+        self.headers = {} # remembers server headers
+        self.bytes_remaining = None # for content only
+        self.content = ''
+        self.protocol = 'HTTP/1.0'
+        self.url = ''
 
 
     def error (self, status, msg, txt='', auth=''):
@@ -95,9 +98,11 @@ class HttpClient (Connection):
 
 
     def process_read (self):
-        # hmm, this occurs with WebCleaner as a parent of Oops Http Proxy
+        # make sure no data is received after client state
+        # this happens for example with HTTP/1.1 pipelining which
+        # is not yet supported
         assert not (self.state in ('receive','closed') and self.recv_buffer and self.method!='CONNECT'),\
-         'client in state %s sent data %r'%(self.state, self.recv_buffer)
+         'client in state %s sent data %r (you should disable HTTP pipelining)'%(self.state, self.recv_buffer)
 
         while True:
             bytes_before = len(self.recv_buffer)
@@ -116,7 +121,8 @@ class HttpClient (Connection):
     def process_request (self):
         # One newline ends request
         i = self.recv_buffer.find('\r\n')
-        if i < 0: return
+        if i < 0:
+            return
         # self.read(i) is not including the newline
         self.request = self.read(i)
         # basic request checking (more will be done below)
@@ -198,7 +204,8 @@ class HttpClient (Connection):
     def process_headers (self):
         # Two newlines ends headers
         i = self.recv_buffer.find('\r\n\r\n')
-        if i < 0: return
+        if i < 0:
+            return
         i += 4 # Skip over newline terminator
         # the first 2 chars are the newline of request
         fp = StringIO(self.read(i)[2:])
@@ -251,7 +258,7 @@ class HttpClient (Connection):
             self.error(400, i18n._("Bad Request"))
         # local request?
         if self.hostname in config['localhosts'] and self.port==config['port']:
-            # this is a direct proxy call, jump right to content
+            # this is a direct proxy call, jump directly to content
             self.state = 'content'
             return
         # add missing host headers for HTTP/1.1
@@ -387,8 +394,10 @@ class HttpClient (Connection):
     def server_close (self, server):
         assert self.server, "%s server_close had no server"%self
         debug(PROXY, '%s server_close', self)
-        if self.connected and not self.close_pending:
+        if self.connected:
             self.delayed_close()
+        else:
+            self.close()
         self.server = None
 
 
@@ -469,16 +478,16 @@ class HttpClient (Connection):
         return form
 
 
-    def close (self):
-        debug(PROXY, '%s close', self)
-        self.state = 'closed'
-        super(HttpClient, self).close()
-
-
     def reuse (self):
         debug(PROXY, '%s reuse', self)
-        self.state = 'request'
-        self.persistent = False
+        super(HttpClient, self).reuse()
+        self.reset()
+
+
+    def close (self):
+        debug(PROXY, '%s close', self)
+        super(HttpClient, self).close()
+        self.state = 'closed'
 
 
 def get_content_length (headers):

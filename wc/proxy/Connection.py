@@ -6,6 +6,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+
 import socket, errno
 from wc.log import *
 from Dispatcher import Dispatcher
@@ -19,15 +20,19 @@ SEND_BUFSIZE = 4096
 # to prevent DoS attacks, specify a maximum buffer size
 MAX_BUFSIZE = 1024*1024
 
-# XXX drop the ", object" when dispatcher is a new-style class
+
 class Connection (Dispatcher):
     """add buffered input and output capabilities"""
     def __init__(self, sock=None):
         super(Connection, self).__init__(sock)
         self.recv_buffer = ''
         self.send_buffer = ''
+        # True if data has still to be written before closing
         self.close_pending = False
+        # True if connection should not be closed
         self.persistent = False
+        # reuse counter for persistent connections
+        self.sequence_number = 0
 
 
     def readable (self):
@@ -44,6 +49,8 @@ class Connection (Dispatcher):
 
 
     def handle_read (self):
+        """read data from connection, put it into recv_buffer and call
+           process_read"""
         assert self.connected
 	if len(self.recv_buffer) > MAX_BUFSIZE:
             warn(PROXY, '%s read buffer full', self)
@@ -52,6 +59,7 @@ class Connection (Dispatcher):
             data = self.recv(RECV_BUFSIZE)
         except socket.error, err:
             if err==errno.EAGAIN:
+                # try again later
                 return
             self.handle_error('read error')
             return
@@ -77,24 +85,26 @@ class Connection (Dispatcher):
 
 
     def handle_write (self):
+        """Write data from send_buffer to connection socket.
+           When send_buffer is empty execute a possible pending
+           close."""
         assert self.connected
         assert self.send_buffer
         num_sent = 0
         data = self.send_buffer[:SEND_BUFSIZE]
         try:
             num_sent = self.send(data)
-        except socket.error:
+        except socket.error, err:
+            if err==errno.EAGAIN:
+                # try again later
+                return
             self.handle_error('write error')
             return
         debug(PROXY, '%s => wrote %d', self, num_sent)
         debug(CONNECTION, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
-        if self.close_pending and not self.send_buffer:
-            self.close_pending = False
-            if self.persistent:
-                self.reuse()
-            else:
-                self.close()
+        if self.close_pending and self.close_ready():
+            self.close()
 
 
     def handle_connect (self):
@@ -102,33 +112,47 @@ class Connection (Dispatcher):
 
 
     def close (self):
-        if self.connected:
-            self.connected = False
+        self.close_pending = False
+        if self.persistent:
+            self.reuse()
+        else:
+            if self.connected:
+                self.connected = False
             super(Connection, self).close()
 
 
     def handle_close (self):
         if self.connected:
             self.delayed_close()
+        else:
+            self.close()
+
+
+    def close_ready (self):
+        return not self.send_buffer
 
 
     def delayed_close (self):
-        "Close whenever the data has been sent"
+        """Close whenever the data has been sent"""
         assert self.connected
-        if self.send_buffer:
+        if not self.close_ready():
             # We can't close yet because there's still data to send
             debug(PROXY, '%s close ready channel', self)
             self.close_pending = True
-        elif self.persistent:
-            self.reuse()
         else:
             self.close()
+
+
+    def reuse (self):
+        assert self.persistent
+        assert self.connected
+        debug(PROXY, '%s reusing %d', self, self.sequence_number)
+        self.sequence_number += 1
 
 
     def handle_error (self, what):
         exception(PROXY, "%s error %s, closing", self, what)
         self.close()
-        self.del_channel()
 
 
     def handle_expt (self):

@@ -18,8 +18,7 @@ class Server (Connection):
     def client_abort (self):
         debug(PROXY, "%s client_abort", self)
         self.client = None
-        if self.connected:
-            self.close()
+        self.close()
 
 
     def handle_connect (self):
