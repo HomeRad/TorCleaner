@@ -70,24 +70,26 @@ element: element_start {}
    | doctype       {}
    | T_TEXT
    {
-        UserData* ud = (UserData*)yyget_extra(scanner);
-        PyObject* callback = NULL;
-        PyObject* result = NULL;
-        int error = 0;
-        if (PyObject_HasAttrString(ud->handler, "characters")==1) {
-            callback = PyObject_GetAttrString(ud->handler, "characters");
-            if (callback==NULL) { error=1; goto finish_characters; }
-            result = PyObject_CallFunction(callback, "O", $1);
-            if (result==NULL) { error=1; goto finish_characters; }
-        }
-    finish_characters:
-        Py_XDECREF(callback);
-        Py_XDECREF(result);
-        Py_DECREF($1);
-        if (error) {
-            PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
-            YYABORT;
-        }
+       UserData* ud = yyget_extra(scanner);
+       PyObject* callback = NULL;
+       PyObject* result = NULL;
+       int error = 0;
+       fprintf(stderr, "element: Scanner=%p\n", scanner);
+       fprintf(stderr, "element: Userdata=%p\n", ud);
+       if (PyObject_HasAttrString(ud->handler, "characters")==1) {
+	   callback = PyObject_GetAttrString(ud->handler, "characters");
+	   if (callback==NULL) { error=1; goto finish_characters; }
+	   result = PyObject_CallFunction(callback, "O", $1);
+	   if (result==NULL) { error=1; goto finish_characters; }
+       }
+   finish_characters:
+       Py_XDECREF(callback);
+       Py_XDECREF(result);
+       Py_DECREF($1);
+       if (error) {
+	   PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
+	   YYABORT;
+       }
    }
    | T_EOF {}
    ;
@@ -95,7 +97,7 @@ element: element_start {}
 
 comment: T_COMMENT_START comment_text T_COMMENT_END
     {
-        UserData* ud = (UserData*)yyget_extra(scanner);
+	UserData* ud = (UserData*)yyget_extra(scanner);
         PyObject* callback = NULL;
         PyObject* result = NULL;
         int error = 0;

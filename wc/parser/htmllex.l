@@ -11,7 +11,6 @@
 #define YY_EXTRA_TYPE UserData*
 #define SETLVAL \
     PyObject* s = PyString_FromStringAndSize(yytext, yyleng); \
-    fprintf(stderr, "Hui: %p\n", s); \
     if (s==NULL) { \
         return EOF; \
     } \
@@ -254,7 +253,7 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 %%
 
-int htmllexInit (void** scanner, const char* s, int slen, UserData* data) {
+int htmllexInit (void** scanner, UserData* data) {
     yylex_init(scanner);
     yyset_extra(data, *scanner);
     return 0;
