@@ -49,12 +49,21 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 
 # optional features
-# import OpenSSL supported
-HasSsl = configdata.has_ssl
-# import Crypto supported
-HasCrypto = configdata.has_crypto
-# import PI supportedL
-HasPil = configdata.has_pil
+try:
+    import OpenSSL
+    HasSsl = True
+except ImportError:
+    HasSsl = False
+try:
+    import Crypto
+    HasCrypto = True
+except ImportError:
+    HasCrypto = False
+try:
+    import PIL
+    HasPil = True
+except ImportError:
+    HasPil = False
 
 # logger areas
 LOG_FILTER = "wc.filter"
