@@ -32,10 +32,14 @@ _safe_scheme_pattern = r"(https?|ftp)"
 _safe_host_pattern = r"([%(_az09)s][%(_az09)s\-]*(\.[%(_az09)s][%(_az09)s\-]*)*\.?)"%locals()
 _safe_path_pattern = r"((/([%(_az09)s%(_path)s]|(%%[%(_hex_safe)s][%(_hex_full)s]))+)*/?)"%locals()
 _safe_fragment_pattern = r"(\#([%(_az09)s%(_path)s\+]|(%%[%(_hex_safe)s][%(_hex_full)s]))+)?"%locals()
-_safe_url_pattern = "(?i)"+_safe_scheme_pattern+"://"+_safe_host_pattern+\
+safe_url_pattern = "(?i)"+_safe_scheme_pattern+"://"+_safe_host_pattern+\
                     _safe_path_pattern+_safe_fragment_pattern
 
-is_valid_url = re.compile("^%s$"%_safe_url_pattern).match
+is_valid_url = re.compile("^%s$"%safe_url_pattern).match
+
+def safe_host_pattern (host):
+    return _safe_scheme_pattern+"://"+host+ \
+           _safe_path_pattern+_safe_fragment_pattern
 
 
 # XXX better name/implementation for this function
