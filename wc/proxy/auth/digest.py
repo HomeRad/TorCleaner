@@ -106,7 +106,7 @@ def get_digest_credentials (challenge, **attrs):
     """return digest credentials for given challenge"""
     if not check_digest_values(challenge):
         return None
-    # calculate reponse digest
+    # calculate response digest
     password = base64.decodestring(attrs['password_b64'])
     nc, cnonce, response_digest = get_response_digest(challenge, **attrs)
     # construct credentials
