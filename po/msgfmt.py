@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 # Written by Martin v. Löwis <loewis@informatik.hu-berlin.de>
 
@@ -11,6 +11,11 @@ GNU msgfmt program, however, it is a simpler implementation.
 Usage: msgfmt.py [OPTIONS] filename.po
 
 Options:
+    -o file
+    --output-file=file
+        Specify the output file to write to.  If omitted, output will go to a
+        file named filename.mo (based off the input file name).
+
     -h
     --help
         Print this message and exit.
@@ -18,32 +23,36 @@ Options:
     -V
     --version
         Display version information and exit.
-
 """
 
-import sys, getopt, struct, array
+import sys
+import os
+import getopt
+import struct
+import array
 
-__version__ = "1.0"
+__version__ = "1.1"
+
 MESSAGES = {}
 
 
-
+
 def usage(code, msg=''):
-    sys.stderr.write(__doc__)
+    print >> sys.stderr, __doc__
     if msg:
-        sys.stderr.write(msg)
+        print >> sys.stderr, msg
     sys.exit(code)
 
 
-
-def add(_id, _str, fuzzy):
+
+def add(id, str, fuzzy):
     "Add a non-fuzzy translation to the dictionary."
     global MESSAGES
-    if not fuzzy and _str:
-        MESSAGES[_id] = _str
+    if not fuzzy and str:
+        MESSAGES[id] = str
 
 
-
+
 def generate():
     "Return the generated output."
     global MESSAGES
@@ -52,12 +61,12 @@ def generate():
     keys.sort()
     offsets = []
     ids = strs = ''
-    for key in keys:
+    for id in keys:
         # For each string, we need size and file offset.  Each string is NUL
         # terminated; the NUL does not count into the size.
-        offsets.append((len(ids), len(key), len(strs), len(MESSAGES[key])))
-        ids += key + '\0'
-        strs += MESSAGES[key] + '\0'
+        offsets.append((len(ids), len(id), len(strs), len(MESSAGES[id])))
+        ids += id + '\0'
+        strs += MESSAGES[id] + '\0'
     output = ''
     # The header is 7 32-bit unsigned integers.  We don't use hash tables, so
     # the keys start right after the index tables.
@@ -86,22 +95,23 @@ def generate():
     return output
 
 
+
+def make(filename, outfile):
+    ID = 1
+    STR = 2
 
-def make(filename):
-    _ID = 1
-    _STR = 2
-
-    # Compute .mo name from .po name
-    if filename[-3:] == '.po':
+    # Compute .mo name from .po name and arguments
+    if filename.endswith('.po'):
         infile = filename
-        outfile = filename[:-2] + 'mo'
     else:
         infile = filename + '.po'
-        outfile = filename + '.mo'
+    if outfile is None:
+        outfile = os.path.splitext(infile)[0] + '.mo'
+
     try:
         lines = open(infile).readlines()
     except IOError, msg:
-        sys.stderr.write(msg)
+        print >> sys.stderr, msg
         sys.exit(1)
     
     section = None
@@ -112,26 +122,26 @@ def make(filename):
     for l in lines:
         lno += 1
         # If we get a comment line after a msgstr, this is a new entry
-        if l[0] == '#' and section == _STR:
+        if l[0] == '#' and section == STR:
             add(msgid, msgstr, fuzzy)
             section = None
             fuzzy = 0
         # Record a fuzzy mark
-        if l[:2] == '#,' and l.find('fuzzy') != -1:
+        if l[:2] == '#,' and l.find('fuzzy'):
             fuzzy = 1
         # Skip comments
         if l[0] == '#':
             continue
         # Now we are in a msgid section, output previous section
-        if l[:5] == 'msgid':
-            if section == _STR:
+        if l.startswith('msgid'):
+            if section == STR:
                 add(msgid, msgstr, fuzzy)
-            section = _ID
+            section = ID
             l = l[5:]
             msgid = msgstr = ''
         # Now we are in a msgstr section
-        elif l[:6] == 'msgstr':
-            section = _STR
+        elif l.startswith('msgstr'):
+            section = STR
             l = l[6:]
         # Skip empty lines
         l = l.strip()
@@ -139,50 +149,54 @@ def make(filename):
             continue
         # XXX: Does this always follow Python escape semantics?
         l = eval(l)
-        if section == _ID:
+        if section == ID:
             msgid += l
-        elif section == _STR:
+        elif section == STR:
             msgstr += l
         else:
-            sys.stderr.write('Syntax error on %s:%d\n'
-	                     'before: %s\n' % (infile, lno, l))
+            print >> sys.stderr, 'Syntax error on %s:%d' % (infile, lno), \
+                  'before:'
+            print >> sys.stderr, l
             sys.exit(1)
     # Add last entry
-    if section == _STR:
+    if section == STR:
         add(msgid, msgstr, fuzzy)
 
     # Compute output
     output = generate()
 
-    # Save output
     try:
         open(outfile,"wb").write(output)
     except IOError,msg:
-        sys.stderr.write(msg)
+        print >> sys.stderr, msg
                       
 
-
+
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hV', ['help','version'])
+        opts, args = getopt.getopt(sys.argv[1:], 'hVo:',
+                                   ['help', 'version', 'output-file='])
     except getopt.error, msg:
         usage(1, msg)
 
+    outfile = None
     # parse options
     for opt, arg in opts:
         if opt in ('-h', '--help'):
             usage(0)
         elif opt in ('-V', '--version'):
-            sys.stderr.write("msgfmt.py %s" % __version__)
+            print >> sys.stderr, "msgfmt.py", __version__
             sys.exit(0)
+        elif opt in ('-o', '--output-file'):
+            outfile = arg
     # do it
     if not args:
-        sys.stderr.write('No input file given\n')
-        sys.stderr.write("Try `msgfmt --help' for more information.\n")
+        print >> sys.stderr, 'No input file given'
+        print >> sys.stderr, "Try `msgfmt --help' for more information."
         return
 
     for filename in args:
-        make(filename)
+        make(filename, outfile)
 
 
 if __name__ == '__main__':

@@ -51,7 +51,7 @@ class Rewriter(Filter):
 
     def filter(self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Rewriter filter", `"..."+data[-30:]`)
+        debug(NIGHTMARE, "Rewriter filter", "\n"+`"..."+data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         return p.flushbuf()
@@ -59,7 +59,7 @@ class Rewriter(Filter):
 
     def finish(self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Rewriter finish", `"..."+data[-30:]`)
+        debug(NIGHTMARE, "Rewriter finish", "\n"+`"..."+data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         p.flush()

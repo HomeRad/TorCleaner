@@ -8,8 +8,12 @@ webcleaner (0.29) unstable; urgency=low
   * setup.py
     - adjust .bat files on Windows to be executable out-of-the-box
     - use "libxml2" as libxml library name on Windows
+    - use os.getcwd(), not "."
+  * compile fix for Windows in htmlsax.c
+  * minor debug output improvements
+  * use Pythons internal gettext module, get rid of fintl.py
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon, 26 Nov 2001 21:11:19 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Thu, 29 Nov 2001 11:29:31 +0100
 
 webcleaner (0.28) unstable; urgency=low
 

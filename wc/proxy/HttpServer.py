@@ -98,7 +98,7 @@ class HttpServer(Server):
         self.write('%s %s HTTP/1.1\r\n' % (self.method, self.document))
         for header in self.client.headers.headers:
             self.write(header)
-        self.write('Connection: Keep-Alive\r\n') # TODO: modify existing header
+        self.write('Connection: Keep-Alive\r\n') # XXX modify existing header
         self.write('\r\n')
         self.write(self.content)
         self.state = 'response'
@@ -139,7 +139,7 @@ class HttpServer(Server):
             handler()
 
             bytes_after = len(self.recv_buffer)
-            if (self.client is None or #bytes_after==0 or
+            if (self.client is None or
                 (bytes_before==bytes_after and state_before==self.state)):
                 break
 
@@ -182,6 +182,7 @@ class HttpServer(Server):
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
+        debug(HURT_ME_PLENTY, "Headers\n", self.headers)
         if self.headers.has_key('content-length'):
             self.bytes_remaining = int(self.headers.getheader('content-length'))
         else:
@@ -245,7 +246,7 @@ class HttpServer(Server):
 
     def process_content(self):
         data = self.read(self.bytes_remaining)
-        debug(NIGHTMARE, "S/content", `".."+data[-30:]`)
+        debug(NIGHTMARE, "S/content", "\n"+`"..."+data[-70:]`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done

@@ -11,7 +11,7 @@ from FXFolderRuleFrame import FXFolderRuleFrame
 
 class FXRuleFrameFactory:
     """Every Rule (see webfilter/Rules.py) has a "fromFactory" function.
-       A factory has a function fromXXXRule for every different Rule
+       A factory has a function fromXYZRule for every different Rule
        class.
        This particular factory generates windows which display all the
        variables found in a rule.

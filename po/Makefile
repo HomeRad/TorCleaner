@@ -40,7 +40,6 @@ SOURCES=\
 ../wc/proxy/Connection.py \
 ../wc/proxy/Server.py \
 ../wc/proxy/__init__.py \
-../wc/fintl.py \
 ../wc/daemon/_nt.py \
 ../wc/daemon/_other.py \
 ../wc/daemon/_posix.py \

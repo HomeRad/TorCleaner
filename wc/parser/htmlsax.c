@@ -12,6 +12,22 @@
 #error please install Python >= 2.0
 #endif
 
+/* windoze thingies  for vsnprintf */
+#ifdef WIN32
+#ifdef _MSC_VER    /* Microsoft Visual C++ */
+#define vsnprintf _vsnprintf
+#endif
+#ifdef __BORLANDC__ /* Borland C++ Builder */
+#if __BORLANDC__ <= 0x0530 /* C++ Builder 3.0 */
+#define vsnprintf(a, b, c, d) vsprintf(a, c, d)
+#endif
+#endif
+#ifdef __MINGW32__      /* GCC MingW32 */
+#define vsnprintf _vsnprintf
+#endif
+#endif
+
+/* debugging */
 #if 0
 #define debug(a) printf(a)
 #else

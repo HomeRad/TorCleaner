@@ -59,8 +59,11 @@ class key_handle:
 
 
     def __setitem__(self, key, value):
-        """XXX to be implemented"""
-        pass
+        """Set a registry key value. key is the key name,
+           value is a tuple (type, val). For available types
+           see the _winreg module documentation."""
+        key = self.__getitem__(key)
+        SetValueEx(self._key, key, value[0], value[1])
 
 
     def __delitem__(self, key):

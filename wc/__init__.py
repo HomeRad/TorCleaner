@@ -58,18 +58,13 @@ def debug(level, *args):
     if level <= DebugLevel:
         print >>sys.stderr, " ".join(map(str, args))
 
+import gettext
 try:
-    import fintl
-    gettext = fintl.gettext
-    domain = 'webcleaner'
-    fintl.bindtextdomain(domain, LocaleDir)
-    fintl.textdomain(domain)
-except ImportError, msg:
-    print msg
-    def gettext(msg):
-        return msg
-# set _ as an alias for gettext
-_ = gettext
+    t = gettext.translation('webcleaner', LocaleDir)
+    _ = t.gettext
+except IOError:
+    _ = lambda s: s
+
 
 def error(s):
     print >>sys.stderr, "error:", s

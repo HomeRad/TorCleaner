@@ -90,12 +90,14 @@ class MyDistribution(Distribution):
         data = []
 	data.append('config_dir = %s' % `os.path.join(cwd, "config")`)
         data.append("install_data = %s" % `cwd`)
-        self.create_conf_file(".", data)
+        self.create_conf_file("", data)
         Distribution.run_commands(self)
 
 
     def create_conf_file(self, directory, data=[]):
         data.insert(0, "# this file is automatically created by setup.py")
+        if not directory:
+            directory = os.getcwd()
         filename = os.path.join(directory, self.config_file)
         # add metadata
         metanames = dir(self.metadata) + \

@@ -57,9 +57,10 @@ class HttpClient(Connection):
             i = self.recv_buffer.find('\r\n\r\n')
             if i >= 0: # Two newlines ends headers
                 i += 4 # Skip over newline terminator
-                headers = rfc822.Message(StringIO(self.read(i)))
-                self.headers = applyfilter(FILTER_REQUEST_HEADER, headers,
+                self.headers = applyfilter(FILTER_REQUEST_HEADER,
+                               rfc822.Message(StringIO(self.read(i))),
 			       fun="finish", attrs=self.nofilter)
+                debug(HURT_ME_PLENTY, "C/Headers", self.headers)
                 if self.headers.has_key('content-length'):
                     self.bytes_remaining = int(self.headers['content-length'])
                 else:
