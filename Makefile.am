@@ -85,7 +85,7 @@ releasecheck:
 	fi
 
 release: releasecheck dist upload homepage
-	mozilla -remote "openUrl(http://sourceforge.net/projects/webcleaner, new-tab)"
+	mozilla -remote "openUrl(https://sourceforge.net/projects/webcleaner, new-tab)"
 	@echo "Make SF release and press return..."
 	@read
 	@echo "Uploading new WebCleaner Homepage..."
