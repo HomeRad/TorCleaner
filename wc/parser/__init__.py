@@ -27,19 +27,20 @@ def _resolve_entity (mo):
     else:
         radix = 10
     num = int(num, radix)
-    # check ASCII char range
-    if 0<=num<=255:
+    # check 7-bit ASCII char range
+    if 0<=num<=127:
         return chr(num)
     # not in range
     return ent
 
 
 def resolve_entities (s):
-    """resolve &#XXX; entities in ASCII range to eliminate obfuscation"""
+    """resolve entities in 7-bit ASCII range to eliminate obfuscation"""
     return re.sub(r'(?i)&#x?(?P<num>\d+);', _resolve_entity, s)
 
-UnHtmlTable = map(lambda x: ("&"+x[0]+";", x[1]),
-                  htmlentitydefs.entitydefs.items())
+entities = htmlentitydefs.entitydefs.items()
+
+UnHtmlTable = map(lambda x: ("&"+x[0]+";", x[1]), entities)
 # order matters!
 UnHtmlTable.sort()
 UnHtmlTable.reverse()
