@@ -2,6 +2,7 @@ import sys, os, httplib
 from ToolWindow import ToolWindow
 
 import wc
+wc.config = wc.Configuration()
 from wc import debug, _, BaseParser, ConfigDir
 from wc.debug_levels import *
 from FXPy.fox import *
@@ -24,6 +25,7 @@ def parse_headers ():
     headers = []
     try:
         s = get_data("/headers/")
+        #debug(BRING_IT_ON, "headers data", s)
     except (IOError, ValueError):
         print >> sys.stderr, _("WebCleaner is not running")
         return headers
@@ -49,7 +51,9 @@ def parse_headers ():
 def get_data (selector):
     h = httplib.HTTP()
     host = "localhost:%d"%wc.config['port']
+    #debug(BRING_IT_ON, "connect to", host)
     h.connect(host)
+    #debug(BRING_IT_ON, "GET", selector)
     h.putrequest("GET", selector)
     if wc.config["proxyuser"]:
         import base64
@@ -57,6 +61,7 @@ def get_data (selector):
         auth = "%s:%s" % (wc.config['proxyuser'], p)
         auth = "Basic "+base64.encodestring(auth).strip()
         h.putheader("Proxy-Authorization", auth)
+    #debug(BRING_IT_ON, "endheaders")
     h.endheaders()
     status, message, headers = h.getreply()
     if status == 200:

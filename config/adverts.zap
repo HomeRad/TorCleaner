@@ -56,42 +56,33 @@
  query=""
  fragment=""/>
 
-<block title="Ad servers 9" oid="10"
- scheme=""
- host="216.200.201.212"
- port=""
- path=""
- parameters=""
- query=""
- fragment=""/>
-
-<rewrite title="Adverts in the path name 1" oid="11"
+<rewrite title="Adverts in the path name 1" oid="10"
  desc="Kill links with ad words in the path name.">
 <attr>/(web)?ad(vert(s)?|click|s)/</attr>
 </rewrite>
 
-<rewrite title="Adverts in the path name 2" oid="12"
+<rewrite title="Adverts in the path name 2" oid="11"
  desc="Kill links with ad words in the path name.">
 <attr>/(banner(s|_redirect)|clickit|werbung)/</attr>
 </rewrite>
 
-<rewrite title="Adverts in the path name 3" oid="13"
+<rewrite title="Adverts in the path name 3" oid="12"
  desc="Kill links with ad words in the path name.">
 <attr>/event\.ng\?Type=click</attr>
 </rewrite>
 
-<rewrite title="Adverts in the path name 4" oid="14"
+<rewrite title="Adverts in the path name 4" oid="13"
  desc="Kill links with ad words in the path name.">
 <attr>\.eu-adcenter\.net</attr>
 </rewrite>
 
-<rewrite title="Adverts in the path name 5" oid="15"
+<rewrite title="Adverts in the path name 5" oid="14"
  desc="Found at debianhelp.org"
  tag="img">
 <attr name="src">/images/vbanners</attr>
 </rewrite>
 
-<block title="Adverts in the path name 6" oid="16"
+<block title="Adverts in the path name 6" oid="15"
  desc="the infamous realmedia ads"
  scheme=""
  host=""
@@ -101,13 +92,13 @@
  query=""
  fragment=""/>
 
-<image title="Banner at rootprompt.org" oid="17"
+<image title="Banner at rootprompt.org" oid="16"
  desc="The website rootprompt.org has a banner image."
  matchurl="rootprompt\.org"
  width="465"
  height="58"/>
 
-<block title="CGI adverts 1" oid="18"
+<block title="CGI adverts 1" oid="17"
  desc="Search for the words &amp;quot;ad&amp;quot; and &amp;quot;click&amp;quot;  in the path and a non-empty query."
  scheme=""
  host=""
@@ -117,12 +108,12 @@
  query=".+"
  fragment=""/>
 
-<rewrite title="CGI adverts 2" oid="19"
+<rewrite title="CGI adverts 2" oid="18"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
-<attr>/cgi-bin/ads?(log)?\?</attr>
+<attr>/cgi-bin/ads?(log|click)?\?</attr>
 </rewrite>
 
-<block title="CGI adverts 3" oid="20"
+<block title="CGI adverts 3" oid="19"
  desc="Search for advert,banner,adid,profileid in the path."
  scheme=""
  host=""
@@ -132,37 +123,37 @@
  query=""
  fragment=""/>
 
-<rewrite title="CGI adverts 4" oid="21"
+<rewrite title="CGI adverts 4" oid="20"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
 <attr>/cgi-acc/clickthru.acc\?</attr>
 </rewrite>
 
-<rewrite title="CGI adverts 5" oid="22"
+<rewrite title="CGI adverts 5" oid="21"
  desc="Kill links with ad words in the path name.">
 <attr>/cgi-bin/bannerclick</attr>
 </rewrite>
 
-<rewrite title="Deja.com adverts" oid="23"
+<rewrite title="Deja.com adverts" oid="22"
  desc="Kill links with ad words in the host name.">
 <attr>www\.deja\.com/jump/</attr>
 </rewrite>
 
-<rewrite title="German ad servers" oid="24"
+<rewrite title="German ad servers" oid="23"
  desc="Kill links with ad words in the host name.">
 <attr>(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>
 </rewrite>
 
-<rewrite title="Heise advert tag" oid="25"
+<rewrite title="Heise advert tag" oid="24"
  desc="www.heise.de has an advert tag. Nice :)"
  tag="heiseadvert">
 </rewrite>
 
-<rewrite title="Heise advert tag 2" oid="26"
+<rewrite title="Heise advert tag 2" oid="25"
  desc="heise.de"
  tag="contentbanner">
 </rewrite>
 
-<block title="Hosts without DNS name" oid="27"
+<block title="Hosts without DNS name" oid="26"
  desc="If a host has no DNS name it consists only of numbers, for  example &amp;quot;http://34.55.124.2&amp;quot;. A lot of adverts are loaded from such servers. We restrict it further more for CGI queries which fetch GIF images."
  scheme=""
  host="^[\d.]+$"
@@ -172,50 +163,50 @@
  query="\.gif$"
  fragment=""/>
 
-<rewrite title="Remove &lt;ilayer&gt; tag" oid="28"
+<rewrite title="Remove &lt;ilayer&gt; tag" oid="27"
  desc="Lots of ads come nowadays in ilayer tags."
  tag="ilayer">
 </rewrite>
 
-<rewrite title="Remove &lt;layer&gt; tag" oid="29"
+<rewrite title="Remove &lt;layer&gt; tag" oid="28"
  desc="Dont know some example sites, but I dont want layers."
  tag="layer">
 </rewrite>
 
-<rewrite title="Use the &lt;nolayer&gt; tag" oid="30"
+<rewrite title="Use the &lt;nolayer&gt; tag" oid="29"
  desc="If we remove the &lt;ilayer&gt; and &lt;layer&gt;, use the &lt;nolayer&gt; content."
  tag="nolayer">
 <replace part="tag"/>
 </rewrite>
 
-<rewrite title="Userfriendly outbound links" oid="31"
+<rewrite title="Userfriendly outbound links" oid="30"
  desc="Links on userfriendly.org which point outbound. This is a redirector host.">
 <attr>http://links\.userfriendly\.org</attr>
 </rewrite>
 
-<rewrite title="adbouncer" oid="32"
+<rewrite title="adbouncer" oid="31"
  desc="Kill links with ad words in the path name.">
 <attr>/adbouncer\.phtml</attr>
 </rewrite>
 
-<rewrite title="easy-cash" oid="33"
+<rewrite title="easy-cash" oid="32"
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
 </rewrite>
 
-<rewrite title="Salon.com" oid="34"
+<rewrite title="Salon.com" oid="33"
  desc="Jump ads at Salon"
  matchurl="salon.com">
 <attr>jump.salon.com</attr>
 </rewrite>
 
-<rewrite title="IMDB Advert" oid="35"
+<rewrite title="IMDB Advert" oid="34"
  desc="redirect CGI at the Internet Movie database Unfortunately they forgot one &lt;/a&gt; tag, so I have to filter everything manually :/ "
  matchurl="\.imdb\.">
 <attr>/tiger_redirect\?((TITLE|FIND)_TOP|(COVER|CREDITS|COMMENTS)_RHS|QUOTES|(P|E)?GALLERY|(PLOT|NAME|BIO|SB|(T|N)URLS)_TOP|SOUNDTRACKS|(INT|EGAL_)LHS|PRO_FINDBOX)</attr>
 </rewrite>
 
-<rewrite title="OSDN navbar" oid="36"
+<rewrite title="OSDN navbar" oid="35"
  desc="Navigation bar form"
  tag="form">
 <attr name="action">http://www\.osdn\.com/osdnsearch\.pl</attr>

@@ -5,6 +5,8 @@ TODO
 - more error/warning recognition in parser
 - error recovery in parser (damn it!)
 - adclick.php\?
+- fix wcheaders
+- statistics
 
 WONTDO
 

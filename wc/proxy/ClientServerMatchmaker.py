@@ -102,7 +102,9 @@ class ClientServerMatchmaker:
                 open(document, 'rb').read())
             return
 
-        if hostname.lower()=='localhost' and port==config['port']:
+        #debug(HURT_ME_PLENTY, "huiii", hostname, port)
+        if hostname.lower() in ('localhost', '127.0.0.1', '::1') and \
+           port==config['port']:
             return self.handle_local(document)
         # prepare DNS lookup
         if config['parentproxy']:
@@ -143,6 +145,7 @@ class ClientServerMatchmaker:
 
 
     def handle_local (self, document):
+        #debug(HURT_ME_PLENTY, "handle local request for", document)
         if self.client and self.client.addr[0] not in _localhosts:
             contenttype = "text/html"
             content = wc.proxy.access_denied(self.client.addr)

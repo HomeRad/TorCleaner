@@ -45,7 +45,6 @@ class HttpClient (Connection):
             if i >= 0: # One newline ends request
                 # self.read(i) is not including the newline
                 self.request = self.read(i)
-                self.read(2)
                 self.nofilter = {'nofilter': match_host(self.request)}
                 self.request = applyfilter(FILTER_REQUEST, self.request,
                                fun="finish", attrs=self.nofilter)
@@ -57,8 +56,10 @@ class HttpClient (Connection):
             i = self.recv_buffer.find('\r\n\r\n')
             if i >= 0: # Two newlines ends headers
                 i += 4 # Skip over newline terminator
+                # the first 2 chars are the newline of request
+                data = self.read(i)[2:]
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
-                               rfc822.Message(StringIO(self.read(i))),
+                               rfc822.Message(StringIO(data)),
 			       fun="finish", attrs=self.nofilter)
                 #debug(HURT_ME_PLENTY, "C/Headers", `self.headers.headers`)
                 if self.headers.has_key('content-length'):
