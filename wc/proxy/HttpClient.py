@@ -59,6 +59,7 @@ class HttpClient (StatefulConnection):
         content (read HTTP POST content data)
         receive (read any additional data and forward it to the server)
         done    (done reading data, response already sent)
+        closed  (this connection is closed)
     """
 
     def __init__ (self, sock, addr):
@@ -113,23 +114,9 @@ class HttpClient (StatefulConnection):
 
 
     def process_read (self):
-        # make sure no data is received after client state
-        # this happens for example with HTTP/1.1 pipelining which
-        # is not yet supported
-        assert not (self.state in ('receive','closed') and self.recv_buffer and self.method!='CONNECT'),\
-         'client in state %s sent data %r (you should disable HTTP pipelining)'%(self.state, self.recv_buffer)
-
+        assert self.state!='closed'
         while True:
-            bytes_before = len(self.recv_buffer)
-            state_before = self.state
-            try:
-                handler = getattr(self, 'process_'+self.state)
-            except AttributeError:
-                handler = lambda: None # NO-OP
-            handler()
-            bytes_after = len(self.recv_buffer)
-            if (self.state=='done' or
-                (bytes_before==bytes_after and state_before==self.state)):
+            if self.delegate_read():
                 break
 
 
@@ -346,7 +333,8 @@ class HttpClient (StatefulConnection):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
-            is_local = self.hostname in config['localhosts'] and self.port==config['port']
+            is_local = self.hostname in config['localhosts'] and \
+               self.port in (config['port'], config['sslport'])
             if config['adminuser'] and not config['adminpass']:
                 if is_local and is_allowed_document(self.document):
                     self.handle_local()
