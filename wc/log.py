@@ -196,7 +196,7 @@ class WcRotatingFileHandler (RotatingFileHandler):
             self.flush()
         except:
             print >>sys.stderr, "Could not format record", record
-            self.handleError()
+            self.handleError(record)
 
 
 if __name__=='__main__':
