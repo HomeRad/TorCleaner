@@ -42,7 +42,7 @@ class WcMessage (Message):
     def addheader (self, name, value):
         """add given header name and value to the end of the header list.
         Multiple headers with the same name are supported"""
-        self.headers.append("%s: %s\r" % (name, value))
+        self.headers.append("%s: %s\r\n" % (name, value))
 
 
     def __contains__(self, name):
