@@ -70,7 +70,8 @@ class TestAuth (unittest.TestCase):
         self.assertEqual(correct_lm_resp, lm_resp)
         self.assertEqual(correct_nt_resp, nt_resp)
 
-suite = unittest.makeSuite(TestAuth,'test')
 
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestAuth, 'test')

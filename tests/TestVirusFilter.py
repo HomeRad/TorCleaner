@@ -59,7 +59,7 @@ class TestVirusFilter (unittest.TestCase):
         self.assertRaises(FilterProxyError, self.filtSize, size)
 
 
-suite = unittest.makeSuite(TestVirusFilter,'test')
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestVirusFilter, 'test')

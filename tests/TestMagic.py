@@ -67,7 +67,7 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(2147483649, convert.big4(chr(128)+chr(0)+chr(0)+chr(1)))
 
 
-suite = unittest.makeSuite(TestMagic,'test')
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestMagic, 'test')

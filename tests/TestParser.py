@@ -153,7 +153,7 @@ class TestParser (unittest.TestCase):
             self.assertEqual(resolve_entities("&#%d;"%ord(c)), c)
 
 
-suite = unittest.makeSuite(TestParser,'test')
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestParser, 'test')

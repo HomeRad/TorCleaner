@@ -53,7 +53,7 @@ class TestRating (unittest.TestCase):
         self.assertEqual(rating_range("-1-"), None)
 
 
-suite = unittest.makeSuite(TestRating,'test')
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestRating, 'test')

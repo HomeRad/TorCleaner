@@ -25,7 +25,8 @@ class TestBlocker (unittest.TestCase):
         self.assert_(filtered.find("blocked.html")!=-1)
 
 
-suite = unittest.makeSuite(TestBlocker,'test')
 
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestBlocker, 'test')

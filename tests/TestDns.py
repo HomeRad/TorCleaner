@@ -30,8 +30,7 @@ class TestDns (unittest.TestCase):
         self.assertEqual(u.getname(), '')
 
 
-suite = unittest.makeSuite(TestDns,'test')
-
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestDns, 'test')

@@ -67,7 +67,7 @@ document.write('<'+a+b+'>')""", 1.1)
         self.jsEnv = None
 
 
-suite = unittest.makeSuite(TestJavascript,'test')
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestJavascript, 'test')

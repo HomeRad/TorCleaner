@@ -99,7 +99,7 @@ class TestIp (unittest.TestCase):
             hosts, nets = ip.hosts2map(["144.145.146.1/%d"%i])
 
 
-suite = unittest.makeSuite(TestIp,'test')
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestIp, 'test')

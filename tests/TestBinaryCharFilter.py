@@ -38,7 +38,9 @@ class TestBinaryCharFilter (unittest.TestCase):
         self.filt("\x00", " ")
 
 
-suite = unittest.makeSuite(TestBinaryCharFilter,'test')
+
 
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestBinaryCharFilter, 'test')

@@ -15,7 +15,8 @@ class TestUrl (unittest.TestCase):
         self.assert_(is_valid_url("http://www.imadoofus.com/"))
         self.assert_(is_valid_js_url("http://www.imadoofus.com/?hulla=do"))
 
-suite = unittest.makeSuite(TestUrl,'test')
 
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestUrl, 'test')

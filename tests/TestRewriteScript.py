@@ -305,7 +305,7 @@ a = 0
 </script>""")
 
 
-suite = unittest.makeSuite(TestRewriteScript,'test')
-
 if __name__ == '__main__':
     unittest.main()
+else:
+    suite = unittest.makeSuite(TestRewriteScript, 'test')
