@@ -90,6 +90,8 @@ METAL_DEFINE_MACRO=17
 # I18N Starts here
 # Argument: translation string, endTagSymbol
 I18N_TRANSLATE = 18
+# Argument: [(attributeName, expression)]
+I18N_ATTRIBUTES = 19
 
 METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
 #SINGLETON_XML_REGEX = re.compile ('^<[^\s>]+?([\s]*?[^\s]+?=".+?")*?[\s]*?/>')
@@ -116,6 +118,7 @@ class TemplateInterpreter:
 		self.commandHandler [METAL_DEFINE_SLOT] = self.cmdDefineSlot
 		self.commandHandler [TAL_NOOP] = self.cmdNoOp
                 self.commandHandler [I18N_TRANSLATE] = self.cmdI18nTranslate
+                self.commandHandler [I18N_ATTRIBUTES] = self.cmdI18nAttributes
                 self.translator = translator
 	
 	def initialise (self, context, outputFile):
@@ -469,6 +472,9 @@ class TemplateInterpreter:
         			self.movePCForward = self.symbolTable[args[1]]
                 self.programCounter += 1
 
+        def cmdI18nAttributes (self, command, args):
+                pass # XXX
+
 class Template:
 	def __init__ (self, commands, macros, symbols):
 		self.commandList = commands
@@ -645,6 +651,7 @@ class TemplateCompiler:
 
                 # i18n commands
                 self.commandHandler [I18N_TRANSLATE] = self.compileI18nTranslate
+                self.commandHandler [I18N_ATTRIBUTES] = self.compileI18nAttributes
 
 		# Default namespaces
 		self.tal_namespace_prefix_stack = []
@@ -682,7 +689,8 @@ class TemplateCompiler:
                 self.i18n_namespace_prefix = prefix
                 self.i18n_attribute_map = {}
                 self.i18n_attribute_map['%s:translate'%prefix] = I18N_TRANSLATE
-                # XXX for now, only support i18n:translate
+                self.i18n_attribute_map['%s:attributes'%prefix] = I18N_ATTRIBUTES
+                # XXX support more i18n:XYZ commands ?
 
 	def popTALNamespace (self):
 		newPrefix = self.tal_namespace_prefix_stack.pop()
@@ -1161,6 +1169,9 @@ class TemplateCompiler:
 
         def compileI18nTranslate (self, argument):
 		return (I18N_TRANSLATE, (argument, self.endTagSymbol))
+
+        def compileI18nAttributes (self, argument):
+                pass # XXX
 
 
 class TemplateParseException (Exception):
