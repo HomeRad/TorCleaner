@@ -20,6 +20,7 @@ import wc.filter
 import wc.filter.rules.RewriteRule
 import wc.HtmlParser.htmlsax
 from wc.webgui import ZTUtils
+from cStringIO import StringIO
 
 
 class HtmlParser (wc.HtmlParser.htmlsax.parser):
@@ -59,7 +60,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         # already filtered HTML data
         self.outbuf = ZTUtils.FasterStringIO()
         # incoming data in wait state
-        self.inbuf = ZTUtils.FasterStringIO()
+        self.inbuf = StringIO()
         # buffer of parsed HTML tags
         self.tagbuf = []
         # buffer for wait state of parsed HTML tags
@@ -98,9 +99,9 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                 if self.state[0] == 'wait':
                     self.inbuf.write(data)
                     return
-                data = self.inbuf.getvalue().encode(self.encoding) + data
+                data = self.inbuf.getvalue() + data
                 self.inbuf.close()
-                self.inbuf = ZTUtils.FasterStringIO()
+                self.inbuf = StringIO()
             if data:
                 # only feed non-empty data
                 wc.log.debug(wc.LOG_FILTER, "%s parser feed %r", self, data)
