@@ -141,6 +141,7 @@ AC_CONFIG_FILES([
 Makefile
 docs/Makefile
 docs/devel/Makefile
+docs/devel/api/Makefile
 docs/misc/Makefile
 po/Makefile
 libjs/Makefile
