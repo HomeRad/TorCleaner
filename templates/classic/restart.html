@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="copyright" content="(C) 2004 Bastian Kleineidam">
 <meta http-equiv="refresh" content="10; index.html"
- tal:attributes="content string:10;; index.html.${lang}">
+ tal:attributes="content string:10;; ${newbaseurl}">
 <link href="wc.css" type="text/css" rel="Stylesheet">
 <link rel="SHORTCUT ICON" href="/favicon.png">
 <link rel="home" href="index.html" title="Home"
@@ -20,8 +20,8 @@ i18n:name="appname">WebCleaner</span> restart</title>
 
 <h2 i18n:translate="">Restarting...</h2>
 <p i18n:translate="">This proxy is restarting. You will be redirected
-to the <a href="index.html"
-tal:attributes="href string:index.html.${lang}">main configuration page</a>
+to the new <a href="index.html"
+tal:attributes="href newbaseurl">main configuration page</a>
 automatically in 10 seconds.
 </p>
 
