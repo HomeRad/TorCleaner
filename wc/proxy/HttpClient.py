@@ -14,7 +14,7 @@ import wc.url
 import wc.proxy.StatefulConnection
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.ServerHandleDirectly
-import wc.proxy.UnchunkStream
+import wc.proxy.decoders.UnchunkStream
 import wc.proxy.Allowed
 import wc.proxy
 import wc.proxy.Headers
@@ -257,7 +257,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # XXX don't look at value, assume chunked encoding for now
             wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
                          self, self.headers['Transfer-encoding'])
-            self.decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
+            self.decoders.append(
+                  wc.proxy.decoders.UnchunkStream.UnchunkStream())
             wc.proxy.Headers.client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
         if self.bytes_remaining is None:
