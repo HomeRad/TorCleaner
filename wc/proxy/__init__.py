@@ -14,7 +14,7 @@ asyncore.dispatcher.fileno = fileno
 from wc import i18n, config, ip
 from wc.XmlUtils import xmlify
 from wc.debug import *
-from urllib import splittype, splithost, splitport
+from urllib import splittype, splithost, splitnport
 from LimitQueue import LimitQueue
 
 TIMERS = [] # list of (time, function)
@@ -146,16 +146,11 @@ def spliturl (url):
     # XXX this relies on scheme==http!
     scheme, netloc = splittype(url)
     host, document = splithost(netloc)
-    if not host:
-        hostname = "localhost"
-        port = config['port']
-    else:
-        hostname, port = splitport(host)
-        if port is None:
-            port = 80
-        else:
-            port = int(port)
-    return scheme, hostname.lower(), port, document
+    port = 80
+    if host:
+        host = host.lower()
+        host, port = splitnport(host, 80)
+    return scheme, host, port, document
 
 
 def mainloop (handle=None):
