@@ -2,7 +2,7 @@
 """setup file for the distuils module"""
 # -*- coding: iso-8859-1 -*-
 
-# Copyright (C) 2000-2004  Bastian Kleineidam
+# Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -73,20 +73,6 @@ def cnormpath (path):
     return path
 
 
-# windows install scheme for python >= 2.3
-# snatched from PC/bdist_wininst/install.c
-# this is used to fix install_* paths when cross compiling for windows
-win_path_scheme = {
-    "purelib": ("PURELIB", "Lib\\site-packages\\"),
-    "platlib": ("PLATLIB", "Lib\\site-packages\\"),
-    # note: same as platlib because of C extensions, else it would be purelib
-    "lib": ("PLATLIB", "Lib\\site-packages\\"),
-    # 'Include/dist_name' part already in archive
-    "headers": ("HEADERS", ""),
-    "scripts": ("SCRIPTS", "Scripts\\"),
-    "data": ("DATA", ""),
-}
-
 class MyInstall (install, object):
 
     def run (self):
@@ -105,12 +91,6 @@ class MyInstall (install, object):
                 val = getattr(self, attr)[cutoff:]
             else:
                 val = getattr(self, attr)
-            if win_compiling and d in win_path_scheme:
-                # look for placeholders to replace
-                oldpath, newpath = win_path_scheme[d]
-                oldpath = "%s%s" % (os.sep, oldpath)
-                if oldpath in val:
-                    val = val.replace(oldpath, newpath)
             if attr == "install_data":
                 base = os.path.join(val, 'share', 'webcleaner')
                 data.append('config_dir = %r' % \
@@ -538,7 +518,7 @@ if os.name == 'posix':
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
-       version = "2.26",
+       version = "2.27",
        description = "a filtering HTTP proxy",
        keywords = "proxy,server,http,filters,daemon",
        author = myname,
