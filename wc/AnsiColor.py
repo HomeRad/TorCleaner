@@ -22,10 +22,12 @@ AnsiEsc="\x1b[%sm"
 
 # type numbers
 AnsiType = {
-    'bold':   '1',
-    'light':  '2',
-    'blink':  '5',
-    'invert': '7',
+    'bold':      '1',
+    'light':     '2',
+    'underline': '4',
+    'blink':     '5',
+    'invert':    '7',
+    'concealed': '8',
 }
 
 # color numbers
@@ -47,8 +49,11 @@ AnsiColor = {
     'Purple':  '45',
     'Cyan':    '46',
     'White':   '47',
+
 }
 
+
+Beep = "\007"
 
 def esc_ansicolor (color):
     """convert a named color definition to an escaped ANSI color"""
