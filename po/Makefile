@@ -57,12 +57,14 @@ SOURCES=\
 ../wc/parser/__init__.py \
 ../wc/parser/htmllib.py \
 ../wc/__init__.py
-
-TARGETS=de.mo
+LDIR=../locale
+LFILE=LC_MESSAGES/$(PACKAGE).mo
+MOS=$(LDIR)/de/$(LFILE)
 PACKAGE=webcleaner
 
+.PHONY: all
 all:
-	$(MAKE) $(TARGETS)
+	$(MAKE) de.mo
 
 %.po:	.time.pot
 	$(MSGMERGE) $@ $(PACKAGE).pot -o $@
@@ -73,8 +75,7 @@ all:
 	touch .time.pot
 
 %.mo:	%.po
-	$(MSGFMT) $< && mkdir -p ../locale/$*/LC_MESSAGES && mv $@ ../locale/$*/LC_MESSAGES/$(PACKAGE).mo
+	$(MSGFMT) -o$(LDIR)/$*/$(LFILE) $<
 
 clean:
-	rm -f .time.pot
-	rm -rf ../locale
+	rm -f .time.pot $(MOS)
