@@ -3,8 +3,12 @@ webcleaner (0.22) unstable; urgency=low
   * implemented header logging
   * print HTML parser errors to stderr
   * fixed broken header parsing
+  * propagate Python exceptions in the HTML parser
+  * encode UTF-8 chars to HTML in the HTML parser
+  * misc cleanups and corrections for the release
+  * add stubs for the wcheaders tool
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon,  5 Nov 2001 22:49:52 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Tue,  6 Nov 2001 11:55:25 +0100
 
 webcleaner (0.21) unstable; urgency=low
 
