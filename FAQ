@@ -1,50 +1,53 @@
-Q: The filter is not working - I still see some advertisings that are
-   definitely filtered out.
-A: Send the URL to calvin@users.sf.net and I will add a filter rule for it.
+Q1: The filter is not working - I still see some advertisings that are
+    definitely filtered out.
+A1: Send the URL to calvin@users.sf.net and I will add a filter rule for it.
 
-Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
-   some tags or is completely crippled
-A: First, try to disable the WebCleaner proxy and look at the page again.
-   If it renders ok, you most likely have encountered a bug in WebCleaner.
-   Please write a bug report to calvin@users.sf.net and
-   include the URL you have problems with.
+Q2: The URL I am surfing at is not rendered correctly, it is blank, it misses
+    some tags or is completely crippled
+A2: First, try to disable the WebCleaner proxy and look at the page again.
+    If it renders ok, you most likely have encountered a bug in WebCleaner.
+    Please write a bug report to calvin@users.sf.net and
+    include the URL you have problems with.
 
-Q: I am seeing the error "client sent data in state receive".
-A: Your client was sending data when it shouldn't have. This is mostly
-   a broken HTTP proxy (eg. when WebCleaner is parent proxy of Oops).
+Q3: How can I enable access logging for this proxy?
+A3: Have a look into config/logging.conf
 
-Q: Are there security concerns running this proxy?
-A: Yes.
-   1) Be sure no one but you or your users can access the proxy.
-      The default configuration is that only local users can
-      access the proxy. Additionally, you should define a proxy password.
-   2) Every user with granted access can read the configuration.
-   3) WebCleaner uses 3rd-party libraries and inherits their potential
-      security flaws.
+Q4: I am seeing the error "client sent data in state receive".
+A4: Your client was sending data when it shouldn't have. This is mostly
+    a broken HTTP proxy (eg. when WebCleaner is parent proxy of Oops).
 
-Q: I get "zlib error" entries in my error log.
-A: Some b0rked servers are sending Content-Type: gzip for pages
-   that are not compressed. In this case WebCleaner switches to
-   non-compressing filtering and prints the above error.
+Q5: Are there security concerns running this proxy?
+A5: Yes.
+    1) Be sure no one but you or your users can access the proxy.
+       The default configuration is that only local users can
+       access the proxy. Additionally, you should define a proxy password.
+    2) Every user with granted access can read the configuration.
+    3) WebCleaner uses 3rd-party libraries and inherits their potential
+       security flaws.
 
-Q: I am paranoid. What should I do besides running WebCleaner?
-A: The default config of WebCleaner is strict when it comes
-   to passing private information, so there is not more that can
-   be done (except adding new filters yourself).
-   Here are some more tips for browser settings:
-   - Use Mozillas JavaScript Popup filtering. See
-     Mozilla -> Edit -> Preferences -> Advanced -> Scripts & Plugins
-   - Disable Java. See
-     Mozilla -> Edit -> Preferences -> Advanced
-   - Don't send your real email address to FTP servers. See
-     Mozilla -> Edit -> Preferences -> Advanced
-   - Don't accept cookies, or at least set the browser to warn you
-     of every attempt to store cookies. See
-     Mozilla -> Edit -> Preferences -> Privacy & Security -> Cookies
-   - Disable image animation. See
-     Mozilla -> Edit -> Preferences -> Privacy & Security -> Images
-   - Don't save form data. See
-     Mozilla -> Edit -> Preferences -> Privacy & Security -> Forms
-   - Don't save passwords. See
-     Mozilla -> Edit -> Preferences -> Privacy & Security -> Passwords
-   - Don't install the Flash Plugin. It has security problems.
+Q6: I get "zlib error" entries in my error log.
+A6: Some b0rked servers are sending Content-Type: gzip for pages
+    that are not compressed. In this case WebCleaner switches to
+    non-compressing filtering and prints the above error.
+
+Q7: I am paranoid. What should I do besides running WebCleaner?
+A7: The default config of WebCleaner is strict when it comes
+    to passing private information, so there is not more that can
+    be done (except adding new filters yourself).
+    Here are some more tips for browser settings:
+    - Use Mozillas JavaScript Popup filtering. See
+      Mozilla -> Edit -> Preferences -> Advanced -> Scripts & Plugins
+    - Disable Java. See
+      Mozilla -> Edit -> Preferences -> Advanced
+    - Don't send your real email address to FTP servers. See
+      Mozilla -> Edit -> Preferences -> Advanced
+    - Don't accept cookies, or at least set the browser to warn you
+      of every attempt to store cookies. See
+      Mozilla -> Edit -> Preferences -> Privacy & Security -> Cookies
+    - Disable image animation. See
+      Mozilla -> Edit -> Preferences -> Privacy & Security -> Images
+    - Don't save form data. See
+      Mozilla -> Edit -> Preferences -> Privacy & Security -> Forms
+    - Don't save passwords. See
+      Mozilla -> Edit -> Preferences -> Privacy & Security -> Passwords
+    - Don't install the Flash Plugin. It has security problems.
