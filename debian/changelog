@@ -1,3 +1,9 @@
+webcleaner (0.42) unstable; urgency=low
+
+  * wc/parer/htmllex.l: match doctype case insensitive
+
+ -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Jun 2002 16:00:41 +0200
+
 webcleaner (0.41) unstable; urgency=low
 
   * wc/parser/htmllex.l:
