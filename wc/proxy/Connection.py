@@ -13,7 +13,7 @@
 
 from wc import debug
 from wc.debug_levels import *
-import asyncore, socket, sys
+import asyncore, socket, sys, errno
 
 RECV_BUFSIZE = 8192
 SEND_BUFSIZE = 8192
