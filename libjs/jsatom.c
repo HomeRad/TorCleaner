@@ -50,6 +50,7 @@
 #include "jsapi.h"
 #include "jsatom.h"
 #include "jscntxt.h"
+#include "jsconfig.h"
 #include "jsgc.h"
 #include "jslock.h"
 #include "jsnum.h"
@@ -59,16 +60,7 @@
 JS_FRIEND_API(const char *)
 js_AtomToPrintableString(JSContext *cx, JSAtom *atom)
 {
-    JSString *str;
-    const char *bytes;
-
-    str = js_QuoteString(cx, ATOM_TO_STRING(atom), 0);
-    if (!str)
-        return NULL;
-    bytes = js_GetStringBytes(str);
-    if (!bytes)
-        JS_ReportOutOfMemory(cx);
-    return bytes;
+    return js_ValueToPrintableString(cx, ATOM_KEY(atom));
 }
 
 extern const char js_Error_str[];       /* trivial, from jsexn.h */
@@ -84,6 +76,8 @@ const char *js_type_str[] = {
     "string",
     "number",
     "boolean",
+    "null",
+    "xml",
 };
 
 const char *js_boolean_str[] = {
@@ -127,6 +121,19 @@ const char js_toSource_str[]        = "toSource";
 const char js_toString_str[]        = "toString";
 const char js_toLocaleString_str[]  = "toLocaleString";
 const char js_valueOf_str[]         = "valueOf";
+
+#if JS_HAS_XML_SUPPORT
+const char js_etago_str[]           = "</";
+const char js_namespace_str[]       = "namespace";
+const char js_ptagc_str[]           = "/>";
+const char js_qualifier_str[]       = "::";
+const char js_space_str[]           = " ";
+const char js_stago_str[]           = "<";
+const char js_star_str[]            = "*";
+const char js_starQualifier_str[]   = "*::";
+const char js_tagc_str[]            = ">";
+const char js_xml_str[]             = "xml";
+#endif
 
 #ifdef NARCISSUS
 const char js_call_str[]             = "__call__";
@@ -323,6 +330,19 @@ js_InitPinnedAtoms(JSContext *cx, JSAtomState *state)
     FROB(toStringAtom,            js_toString_str);
     FROB(toLocaleStringAtom,      js_toLocaleString_str);
     FROB(valueOfAtom,             js_valueOf_str);
+
+#if JS_HAS_XML_SUPPORT
+    FROB(etagoAtom,               js_etago_str);
+    FROB(namespaceAtom,           js_namespace_str);
+    FROB(ptagcAtom,               js_ptagc_str);
+    FROB(qualifierAtom,           js_qualifier_str);
+    FROB(spaceAtom,               js_space_str);
+    FROB(stagoAtom,               js_stago_str);
+    FROB(starAtom,                js_star_str);
+    FROB(starQualifierAtom,       js_starQualifier_str);
+    FROB(tagcAtom,                js_tagc_str);
+    FROB(xmlAtom,                 js_xml_str);
+#endif
 
 #ifdef NARCISSUS
     FROB(callAtom,                js_call_str);
