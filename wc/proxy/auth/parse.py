@@ -61,4 +61,3 @@ def parse_auth (auth, data):
             dummy, data = parse_token(data, tok=",")
     return auth, data.strip()
 
-

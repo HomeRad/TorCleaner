@@ -90,15 +90,12 @@ len2 = %s
         for i in str: buf.append(ord(i))
         ilen = U32(len(buf))
         #print (ilen)
-
         if (long(self.len1 + (ilen << 3)) < long(self.len1)):
             self.len2 = self.len2 + U32(1)
-
         self.len1 = self.len1 + (ilen << 3)
         self.len2 = self.len2 + (ilen >> 29)
         # print int(self.len1), int(self.len2)
         #print (self.len1), (self.len2)
-
         L = U32(0)
         bufpos = 0
         while (long(ilen) > 0):
@@ -111,7 +108,6 @@ len2 = %s
             self.count += L
             ilen -= L
             bufpos += int(L)
-
             #print self.count, L, ilen
             if (long(self.count) == 64L):
                 self.count = U32(0L)
@@ -121,12 +117,10 @@ len2 = %s
                     X.append(U32(self.buf[i]) + (U32(self.buf[i+1]) << 8)  + \
                     (U32(self.buf[i+2]) << 16) + (U32(self.buf[i+3]) << 24))
                     i += 4
-
                 A = self.A
                 B = self.B
                 C = self.C
                 D = self.D
-
                 A = f1(A,B,C,D, 0, 3, X)
                 D = f1(D,A,B,C, 1, 7, X)
                 C = f1(C,D,A,B, 2,11, X)
@@ -191,9 +185,7 @@ len2 = %s
         padding = [0x00] * 64
         padding[0] = 0x80
         padlen, oldlen1, oldlen2 = U32(0), U32(0), U32(0)
-
         temp = self.make_copy()
-
         oldlen1 = temp.len1
         oldlen2 = temp.len2
         if (56 <= long(self.count)):
@@ -203,7 +195,6 @@ len2 = %s
         #print int(padlen)
         temp.update(int_array2str(padding[:int(padlen)]))
         #print temp
-
         s[0]= (oldlen1)        & U32(0xFF)
         s[1]=((oldlen1) >>  8) & U32(0xFF)
         s[2]=((oldlen1) >> 16) & U32(0xFF)
@@ -213,9 +204,7 @@ len2 = %s
         s[6]=((oldlen2) >> 16) & U32(0xFF)
         s[7]=((oldlen2) >> 24) & U32(0xFF)
         temp.update(int_array2str(s))
-
         #print temp
-
         res[ 0]= temp.A        & U32(0xFF)
         res[ 1]=(temp.A >>  8) & U32(0xFF)
         res[ 2]=(temp.A >> 16) & U32(0xFF)
@@ -232,7 +221,6 @@ len2 = %s
         res[13]=(temp.D >>  8) & U32(0xFF)
         res[14]=(temp.D >> 16) & U32(0xFF)
         res[15]=(temp.D >> 24) & U32(0xFF)
-
         return int_array2str(res)
 
 

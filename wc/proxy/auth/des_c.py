@@ -30,35 +30,35 @@ def c2l (c):
     l = l | (U32(c[3]) << 24)
     return l
 
+
 def c2ln (c,l1,l2,n):
     "char[n] to two unsigned long???"
-    c = c + n
+    c += n
     l1, l2 = U32(0), U32(0)
-
     f = 0
     if n == 8:
-        l2 = l2 | (U32(c[7]) << 24)
+        l2 |= (U32(c[7]) << 24)
         f = 1
     if f or (n == 7):
-        l2 = l2 | (U32(c[6]) << 16)
+        l2 |= (U32(c[6]) << 16)
         f = 1
     if f or (n == 6):
-        l2 = l2 | (U32(c[5]) << 8)
+        l2 |= (U32(c[5]) << 8)
         f = 1
     if f or (n == 5):
-        l2 = l2 | U32(c[4])
+        l2 |= U32(c[4])
         f = 1
     if f or (n == 4):
-        l1 = l1 | (U32(c[3]) << 24)
+        l1 |= (U32(c[3]) << 24)
         f = 1
     if f or (n == 3):
-        l1 = l1 | (U32(c[2]) << 16)
+        l1 |= (U32(c[2]) << 16)
         f = 1
     if f or (n == 2):
-        l1 = l1 | (U32(c[1]) << 8)
+        l1 |= (U32(c[1]) << 8)
         f = 1
     if f or (n == 1):
-        l1 = l1 | U32(c[0])
+        l1 |= U32(c[0])
     return (l1, l2)
 
 def l2c (l):
@@ -73,9 +73,9 @@ def l2c (l):
 def n2l (c, l):
     "network to host long"
     l = U32(c[0] << 24)
-    l = l | (U32(c[1]) << 16)
-    l = l | (U32(c[2]) << 8)
-    l = l | (U32(c[3]))
+    l |= (U32(c[1]) << 16)
+    l |= (U32(c[2]) << 8)
+    l |= (U32(c[3]))
     return l
 
 def l2n (l, c):
@@ -144,8 +144,8 @@ def PERM_OP (tup, n, m):
     "tup - (a, b, t)"
     a, b, t = tup
     t = ((a >> n) ^ b) & m
-    b = b ^ t
-    a = a ^ (t << n)
+    b ^= t
+    a ^= (t << n)
     return (a, b, t)
 
 def HPERM_OP (tup, n, m):
@@ -175,7 +175,8 @@ class DES (object):
         #print block
         block = des_ecb_encrypt(block, self.KeySched, 0)
         res = ''
-        for i in block: res = res + (chr(i))
+        for i in block:
+            res += (chr(i))
         return res
 
     def encrypt (self, str):
@@ -184,7 +185,8 @@ class DES (object):
         for i in str: block.append(ord(i))
         block = des_ecb_encrypt(block, self.KeySched, 1)
         res = ''
-        for i in block: res = res + (chr(i))
+        for i in block:
+            res += (chr(i))
         return res
 
 
@@ -306,12 +308,12 @@ def des_set_key (key):
         c = c & U32(0x0fffffffL)
         d = d & U32(0x0fffffffL)
 
-        s=  des_skb[0][int((c    ) & U32(0x3f))]|\
+        s = des_skb[0][int((c    ) & U32(0x3f))]|\
             des_skb[1][int(((c>> 6) & U32(0x03))|((c>> 7) & U32(0x3c)))]|\
             des_skb[2][int(((c>>13) & U32(0x0f))|((c>>14) & U32(0x30)))]|\
             des_skb[3][int(((c>>20) & U32(0x01))|((c>>21) & U32(0x06)) | ((c>>22) & U32(0x38)))]
 
-        t=  des_skb[4][int((d    ) & U32(0x3f)                )]|\
+        t = des_skb[4][int((d    ) & U32(0x3f)                )]|\
             des_skb[5][int(((d>> 7) & U32(0x03))|((d>> 8) & U32(0x3c)))]|\
             des_skb[6][int((d>>15) & U32(0x3f)                )]|\
             des_skb[7][int(((d>>21) & U32(0x0f))|((d>>22) & U32(0x30)))]
