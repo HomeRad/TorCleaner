@@ -23,6 +23,7 @@ import bk.i18n
 import wc
 import wc.filter
 import wc.filter.Filter
+import wc.proxy.Headers
 
 
 _compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
@@ -57,19 +58,21 @@ class Compress (wc.filter.Filter.Filter):
     # all rules of these types get added with Filter.addrule()
     rulenames = []
     # which mime types this filter applies to
-    mimelist = [wc.filter.compileMime(x) for x in [r'text/[a-z.\-+]+',
-            'application/(postscript|pdf|x-dvi)',
-            'audio/(basic|midi|x-wav)',
-            'image/x-portable-(any|bit|gray|pix)map',
-            'x-world/x-vrml',
-            ]]
+    mimelist = [wc.filter.compileMime(x) for x in \
+                [r'text/[a-z.\-+]+',
+                 r'application/(postscript|pdf|x-dvi)',
+                 r'audio/(basic|midi|x-wav)',
+                 r'image/x-portable-(any|bit|gray|pix)map',
+                 r'x-world/x-vrml',
+               ]]
 
     def filter (self, data, **attrs):
         """compress the string s.
         Note that compression state is saved outside of this function
         in the compression object.
         """
-        if not attrs.has_key('compressobj'): return data
+        if not attrs.has_key('compressobj'):
+            return data
         compobj = attrs['compressobj']
         if compobj:
             header = compobj['header']
@@ -83,7 +86,8 @@ class Compress (wc.filter.Filter.Filter):
 
 
     def finish (self, data, **attrs):
-        if not attrs.has_key('compressobj'): return data
+        if not attrs.has_key('compressobj'):
+            return data
         compobj = attrs['compressobj']
         if compobj:
             header = compobj['header']
@@ -106,9 +110,10 @@ class Compress (wc.filter.Filter.Filter):
     def getAttrs (self, url, headers):
         d = super(Compress, self).getAttrs(url, headers)
         compressobj = None
-        accept = headers.get('Accept-Encoding', '')
+        accepts = wc.proxy.Headers.get_encoding_dict(headers)
         encoding = headers.get('Content-Encoding', '').lower()
-        if accept!='gzip':
+        if 'gzip' not in accepts:
+            # browser does not accept gzip encoding
             pass
         elif encoding and encoding not in _compress_encs:
             compressobj = getCompressObject()
