@@ -55,6 +55,10 @@ class FXRuleFrameFactory:
         self.inc_index()
         return FXHeaderRuleFrame(self.treeframe, rule, self.index)
 
+    def fromPicsRule (self, rule):
+        self.inc_index()
+        return FXPicsRuleFrame(self.treeframe, rule, self.index)
+
     def fromImageRule (self, rule):
         self.inc_index()
         return FXImageRuleFrame(self.treeframe, rule, self.index)
