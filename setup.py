@@ -119,6 +119,7 @@ class MyDistribution(Distribution):
               method = "get_" + name
               cmd = "%s = %s" % (name, `getattr(self.metadata, method)()`)
               data.append(cmd)
+        data.append('appname = "WebCleaner"')
         util.execute(write_file, (filename, data),
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
@@ -203,7 +204,7 @@ o per-host access control
 o completely customizable over web interface
 """,
        classifiers = ['Development Status :: 4 - Beta',
-           'Environment :: No Input/Output (Daemon)'.
+           'Environment :: No Input/Output (Daemon)',
            'Programming Language :: Python',
            'Topic :: Internet :: Proxy Servers',
        ],
