@@ -2,9 +2,6 @@ TODO
 
 version 2.9 and above
 
-- match/dont match url config should be a list, not a single regex since
-  this tends to get too big for lots of urls
-
 - convert test stuff to unit / webunit
 
 - memory leaks while operating the proxy
