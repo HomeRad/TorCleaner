@@ -16,10 +16,12 @@
   * working TAL template example, lets see how this integrates into
     WebCleaner local file handling. Anyway, most of the custom
     handlers except error handling is now in the webgui package.
-  * o use yy_size_t for parser alloc definitions, fixes build errors on 64bit
+  * parser changes:
+    o use yy_size_t for parser alloc definitions, fixes build errors on 64bit
       architectures
     o recognise "<! --" HTML comments (seen at Eonline)
-    Changed files: wc/parser/htmllex.l
+    o rebuild with flex 2.5.26
+    Changed files: wc/parser/htmllex.[lc]
   * Improve error message for failing htmlsax module import
     Changed files: wc/parser/htmllib.py
   * rebuild parser with bison 1.875
