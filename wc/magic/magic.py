@@ -21,13 +21,17 @@
 
 # modified by Bastian Kleineidam <calvin@users.sourceforge.net>
 
-import os, re, string, convert
+import os, re, string, cPickle, pickle, convert
 
 # Need to have a checksum on the cache and source file to update at object creation
 # Could use circle safe_pickle (see speed performance impact)
 # This program take some input file, we should check the permission on those files ..
 # Some code cleanup and better error catching are needed
 # Implement the missing part of the magic file definition
+
+def dump (o, f):
+    """pickle object o to file f"""
+    cPickle.dump(o, f, pickle.HIGHEST_PROTOCOL)
 
 
 class Failed (Exception):
@@ -142,7 +146,7 @@ class Magic (object):
                     offset_type = match_add.group(2)[1]
 
                 if match_add.group(3) == '-':
-                    offset_delta = 0L - match_add.group(4)
+                    offset_delta = 0L - convert.convert(match_add.group(4))
                 else:
                     offset_delta = convert.convert(match_add.group(4))
 
@@ -238,8 +242,9 @@ class Magic (object):
                     size_base = convert.size_base(base)
                     size_number = convert.size_number(result[pos:])
                     start = pos + size_base
-                    end = pos + size_number
-                    nb = convert.base10(result[start:end],base)
+                    end = pos + size_base + size_number
+                    assert start < end
+                    nb = int(result[start:end], base)
                     pos += size_number
                     data.append(nb*1L)
         return data
@@ -352,26 +357,24 @@ class Magic (object):
 
     def write_cache (self,name):
         f = file(name,'wb')
-        import cPickle
-        cPickle.dump(self._leveldict,f,1)
-        cPickle.dump(self._direct,f,1)
-        cPickle.dump(self._offset_relatif,f,1)
-        cPickle.dump(self._offset_type,f,1)
-        cPickle.dump(self._offset_delta,f,1)
-        cPickle.dump(self._endiandict,f,1)
-        cPickle.dump(self._kinddict,f,1)
-        cPickle.dump(self._oper,f,1)
-        cPickle.dump(self._mask,f,1)
-        cPickle.dump(self._test,f,1)
-        cPickle.dump(self._datadict,f,1)
-        cPickle.dump(self._lengthdict,f,1)
-        cPickle.dump(self._mimedict,f,1)
+        dump(self._leveldict, f)
+        dump(self._direct, f)
+        dump(self._offset_relatif, f)
+        dump(self._offset_type, f)
+        dump(self._offset_delta, f)
+        dump(self._endiandict, f)
+        dump(self._kinddict, f)
+        dump(self._oper, f)
+        dump(self._mask, f)
+        dump(self._test, f)
+        dump(self._datadict, f)
+        dump(self._lengthdict, f)
+        dump(self._mimedict, f)
         f.close()
 
 
     def read_cache (self,name):
         f = file(name,'rb')
-        import cPickle
         self._leveldict = cPickle.load(f)
         self._direct = cPickle.load(f)
         self._offset_relatif = cPickle.load(f)
@@ -572,6 +575,8 @@ class Magic (object):
 
                 # If it is out of the file then the test fails.
                 if file_length < offset:
+                    print "X", repr(file_length)
+                    print "X", repr(offset)
                     raise Failed("Data length %d too small, needed %d"%(file_length, offset))
 
                 # Make sure we can read the data at the offset position

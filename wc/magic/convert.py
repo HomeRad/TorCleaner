@@ -27,7 +27,7 @@ _dec='0123456789'
 _hex='0123456789abcdefABCDEF'
 
 _is_oct_start = re.compile(r"^[0\\][1-7]").match
-_is_dec_start = re.compile(r"^[1-9]").match
+_is_dec_start = re.compile(r"^([1-9]|0$)").match
 _is_hex_start = re.compile(r"^[0\\][xX][1-9a-fA-F]").match
 _is_number_start = re.compile(r"^([0\\]([1-7]|[xX][1-9a-fA-F])|[1-9])").match
 
@@ -70,6 +70,8 @@ def index_number (text):
 
 def convert (text):
     base = which_base(text)
+    if base==0:
+        return text
     start = size_base(base)
     end = start+size_number(text)
     return int(text[start:end], base)
