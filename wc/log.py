@@ -26,9 +26,13 @@ __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc import ConfigDir, AppName, iswriteable
 import sys, os, re, logging, logging.config
 from logging.handlers import RotatingFileHandler
+try:
+    from wc import ConfigDir, AppName, iswriteable
+except ImportError:
+    sys.path.append(os.getcwd())
+    from wc import ConfigDir, AppName, iswriteable
 
 
 def initlog (filename):

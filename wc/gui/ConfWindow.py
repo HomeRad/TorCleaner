@@ -24,7 +24,7 @@ from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from wc import i18n, ConfigDir, TemplateDir, Configuration, Version, \
-     filterconf_files
+     filterconf_files, ip
 from wc.XmlUtils import xmlify
 from FXPy.fox import *
 from wc.filter.rules.FolderRule import FolderRule
@@ -230,7 +230,7 @@ class ConfWindow (ToolWindow):
         f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.noproxylist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
-        for host in self.noproxyfor.keys():
+        for host in self.noproxyfor:
             self.noproxylist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
         FXButton(f, i18n._("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
@@ -240,7 +240,7 @@ class ConfWindow (ToolWindow):
         f = FXGroupBox(proxy_top, i18n._("Allowed hosts"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.allowedlist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
-        for host in self.allowedhosts.keys():
+        for host in self.allowedhosts:
             self.allowedlist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
         FXButton(f, i18n._("Add\tAdd hostname and networks that are allowed to use this proxy.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_ALLOWEDHOSTS_ADD)
@@ -504,10 +504,10 @@ class ConfWindow (ToolWindow):
             if not host:
                 self.getApp().error(i18n._("Add proxy"), i18n._("Empty hostname"))
 	        return 1
-            if self.noproxyfor.has_key(host):
+            if host in self.noproxyfor:
                 self.getApp().error(i18n._("Add proxy"), i18n._("Duplicate hostname"))
 	        return 1
-            self.noproxyfor[host] = 1
+            self.noproxyfor.add(host)
             self.noproxylist.appendItem(host)
             self.getApp().dirty = 1
             debug(GUI, "Added no-proxy host")
@@ -529,8 +529,8 @@ class ConfWindow (ToolWindow):
         FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newhost = nametf.getText().strip().lower()
-            del self.noproxyfor[host]
-            self.noproxyfor[newhost] = 1
+            self.noproxyfor.remove(host)
+            self.noproxyfor.add(newhost)
             self.noproxylist.replaceItem(index, newhost)
             self.getApp().dirty = 1
             debug(GUI, "Changed no-proxy host")
@@ -541,7 +541,7 @@ class ConfWindow (ToolWindow):
         index = self.noproxylist.getCurrentItem()
         item = self.noproxylist.retrieveItem(index)
         host = item.getText()
-        del self.noproxyfor[host]
+        self.noproxyfor.remove(host)
         self.noproxylist.removeItem(index)
         self.getApp().dirty = 1
         debug(GUI, "Removed no-proxy host")
@@ -562,10 +562,10 @@ class ConfWindow (ToolWindow):
             if not host:
                 self.getApp().error(i18n._("Add proxy"), i18n._("Empty hostname"))
 	        return 1
-            if self.allowedhosts.has_key(host):
+            if host in self.allowedhosts:
                 self.getApp().error(i18n._("Add proxy"), i18n._("Duplicate hostname"))
 	        return 1
-            self.allowedhosts[host] = 1
+            self.allowedhosts.add(host)
             self.allowedlist.appendItem(host)
             self.getApp().dirty = 1
             debug(GUI, "Added allowed host")
@@ -587,8 +587,8 @@ class ConfWindow (ToolWindow):
         FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newhost = nametf.getText().strip().lower()
-            del self.allowedhosts[host]
-            self.allowedhosts[newhost] = 1
+            self.allowedhosts.remove(host)
+            self.allowedhosts.add(newhost)
             self.allowedlist.replaceItem(index, newhost)
             self.getApp().dirty = 1
             debug(GUI, "Changed allowed host")
@@ -599,7 +599,7 @@ class ConfWindow (ToolWindow):
         index = self.allowedlist.getCurrentItem()
         item = self.allowedlist.retrieveItem(index)
         host = item.getText()
-        del self.allowedhosts[host]
+        self.allowedhosts.remove(host)
         self.allowedlist.removeItem(index)
         self.getApp().dirty = 1
         debug(GUI, "Removed allowed host")
@@ -740,8 +740,8 @@ class ConfWindow (ToolWindow):
          'parentproxyuser', 'parentproxypass', 'allowedhosts',
          'webgui_theme', 'timeout',]:
             setattr(self, key, self.config[key])
-        self.noproxyfor = self.noproxyfor[2]
-        self.allowedhosts = self.allowedhosts[2]
+        self.noproxyfor = ip.strhost_set(self.noproxyfor)
+        self.allowedhosts = ip.strhost_set(self.allowedhosts)
         self.modules = {
 	    "Header": 0,
 	    "Blocker": 0,
@@ -802,13 +802,9 @@ class ConfWindow (ToolWindow):
              ' timeout="%d"\n' % self.timeout
         s += ' webgui_theme="%s"\n' % xmlify(self.webgui_theme)
         if self.noproxyfor:
-            keys = self.noproxyfor.keys()
-            keys.sort()
-            s += ' noproxyfor="%s"\n'%xmlify(",".join(keys))
+            s += ' noproxyfor="%s"\n'%xmlify(",".join(self.noproxyfor))
         if self.allowedhosts:
-            keys = self.allowedhosts.keys()
-            keys.sort()
-            s += ' allowedhosts="%s"\n'%xmlify(",".join(keys))
+            s += ' allowedhosts="%s"\n'%xmlify(",".join(self.allowedhosts))
         s += '>\n'
         for key,val in self.modules.items():
             if val:

@@ -4,9 +4,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, socket, struct
-from log import *
+import re, socket, struct, math
 from sets import Set
+from log import *
 
 # IP Adress regular expressions
 _ipv4_num = r"\d{1,3}"
@@ -89,6 +89,11 @@ def suffix2mask (n):
     return (2L<<n-1)-1
 
 
+def mask2suffix (mask):
+    """return suff for given bit mask"""
+    return int(math.log(mask+1, 2))
+
+
 def dq2mask (ip):
     "return a mask of bits as a long integer"
     n = dq2num(ip)
@@ -154,3 +159,20 @@ def host_in_set (ip, hosts, nets):
 def host_set (strhosts):
     hosts = [s.strip() for s in strhosts.split(",")]
     return host_map(hosts)
+
+
+def strhost_set (hostmap):
+    ret = hostmap[0].copy()
+    for net, mask in hostmap[1]:
+        ret.add("%s/%d" % (net, mask2suffix(mask)))
+    return ret
+
+
+def _test ():
+    net = ["192.168.1.1/16"]
+    hosts, nets = host_map(net)
+    for net, mask in nets:
+        print num2dq(net), mask2suffix(mask)
+
+if __name__=='__main__':
+    _test()
