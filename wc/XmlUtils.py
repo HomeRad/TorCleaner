@@ -19,33 +19,32 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-# standard xml entities
-xmlentities = {
-    'lt': '<',
-    'gt': '>',
-    'amp': '&',
-    'quot': '"',
-    'apos': "'",
+from xml.sax.saxutils import escape, unescape
+
+attr_entities = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
 }
 
-_xml_table = [(x[1], "&"+x[0]+";") for x in xmlentities.items()]
-_unxml_table = [("&"+x[0]+";", x[1]) for x in xmlentities.items()]
-# order matters!
-_xml_table.sort()
-_unxml_table.sort()
-_unxml_table.reverse()
 
-def _apply_table (table, s):
-    "apply a table of replacement pairs to str"
-    for mapping in table:
-        s = s.replace(mapping[0], mapping[1])
-    return s
-
-def xmlify (s):
+def xmlquote (s):
     """quote characters for XML"""
-    return _apply_table(_xml_table, s)
+    return escape(s)
 
-def unxmlify (s):
-    """unquote characterx from XML"""
-    return _apply_table(_unxml_table, s)
+
+def xmlquoteattr (s):
+    """quote XML attribute, ready for inclusion with double quotes"""
+    return escape(s, attr_entities)
+
+
+def xmlunquote (s):
+    """unquote characters from XML"""
+    return unescape(s)
+
+
+def xmlunquoteattr (s):
+    """unquote attributes from XML"""
+    return unescape(s, attr_entities)
 

@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import re
 from Rule import Rule, compileRegex
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquote
 from wc.log import *
 
 
@@ -77,9 +77,9 @@ class UrlRule (Rule):
     def matchestoxml (self, prefix=""):
         """match url rule data as XML for storing"""
         m = ["%s<matchurl>%s</matchurl>" % \
-             (prefix, xmlify(r)) for r in self.matchurls]
+             (prefix, xmlquote(r)) for r in self.matchurls]
         n = ["%s<nomatchurl>%s</nomatchurl>" % \
-             (prefix, xmlify(r)) for r in self.nomatchurls]
+             (prefix, xmlquote(r)) for r in self.nomatchurls]
         return "\n".join(m+n)
 
 

@@ -22,7 +22,7 @@ __date__    = "$Date$"[7:-2]
 import re
 from UrlRule import UrlRule
 from Rule import compileRegex
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquote, xmlquoteattr
 from wc.log import *
 from wc import i18n
 from cStringIO import StringIO
@@ -283,7 +283,7 @@ class RewriteRule (UrlRule):
         """Rule data as XML for storing"""
         s = super(RewriteRule, self).toxml()
         if self.tag!='a':
-            s += '\n tag="%s"' % xmlify(self.tag)
+            s += '\n tag="%s"' % xmlquoteattr(self.tag)
         s += ">"
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
@@ -293,15 +293,15 @@ class RewriteRule (UrlRule):
             if key!='href':
                 s += ' name="%s"' % key
             if val:
-                s += ">"+xmlify(val)+"</attr>"
+                s += ">%s</attr>" % xmlquote(val)
             else:
                 s += "/>"
         if self.enclosed:
-            s += "\n  <enclosed>"+xmlify(self.enclosed)+"</enclosed>"
+            s += "\n  <enclosed>%s</enclosed>" % xmlquote(self.enclosed)
         if self.part!=COMPLETE or self.replacement:
             s += '\n  <replacement part="%s"' % num_part(self.part)
             if self.replacement:
-                s += '>'+xmlify(self.replacement)+"</replacement>"
+                s += ">%s</replacement>" % xmlquote(self.replacement)
             else:
                 s += "/>"
         s += "\n</%s>" % self.get_name()

@@ -20,8 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from UrlRule import UrlRule
-from wc.XmlUtils import xmlify
-
+from wc.XmlUtils import xmlquoteattr
 
 class AllowRule (UrlRule):
     """Define a regular expression for urls to be allowed, even if they
@@ -45,7 +44,7 @@ class AllowRule (UrlRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(AllowRule, self).toxml() + \
-             '\n url="%s">' % xmlify(self.url)
+             '\n url="%s">' % xmlquoteattr(self.url)
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")

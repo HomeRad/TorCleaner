@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from AllowRule import AllowRule
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquote, xmlquoteattr
 
 class BlockRule (AllowRule):
     """Define a regular expression for urls to be blocked, and a
@@ -49,11 +49,11 @@ class BlockRule (AllowRule):
     def toxml (self):
         """Rule data as XML for storing"""
         s =  super(AllowRule, self).toxml() + \
-             '\n url="%s">' % xmlify(self.url)
+             '\n url="%s">' % xmlquoteattr(self.url)
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.replacement:
-            s += "\n  <replacement>%s</replacement>"%xmlify(self.replacement)
+            s += "\n  <replacement>%s</replacement>"%xmlquote(self.replacement)
         s += "\n</%s>" % self.get_name()
         return s

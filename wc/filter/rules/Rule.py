@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import re
 from wc import i18n, ConfigCharset
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquote, xmlquoteattr, xmlunquote
 from wc.filter.rules import register_rule
 
 
@@ -203,7 +203,7 @@ class Rule (object):
         if name == self.get_name():
             self._data = ""
         else:
-            self._data = self._data.encode(ConfigCharset)
+            self._data = xmlunquote(self._data).encode(ConfigCharset)
         if name=='title':
             self.titles[self._lang] = self._data
         elif name=='description':
@@ -227,7 +227,7 @@ class Rule (object):
 
     def toxml (self):
         """Rule data as XML for storing, must be overridden in subclass"""
-        s = '<%s sid="%s"' % (self.get_name(), xmlify(self.sid))
+        s = '<%s sid="%s"' % (self.get_name(), xmlquoteattr(self.sid))
         if self.disable:
             s+= ' disable="%d"' % self.disable
         return s
@@ -235,12 +235,13 @@ class Rule (object):
 
     def title_desc_toxml (self, prefix=""):
         t = ['%s<title lang="%s">%s</title>' % \
-             (prefix, xmlify(key), xmlify(value)) \
+             (prefix, xmlquoteattr(key), xmlquote(value)) \
              for key,value in self.titles.iteritems() if value]
         d = ['%s<description lang="%s">%s</description>'% \
-             (prefix, xmlify(key), xmlify(value)) \
+             (prefix, xmlquoteattr(key), xmlquote(value)) \
              for key,value in self.descriptions.iteritems() if value]
-        return "\n".join(t+d)
+        s = "\n".join(t+d)
+        return s
 
 
     def __str__ (self):

@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 from UrlRule import UrlRule
 from wc import i18n
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquote, xmlquoteattr
 from wc.filter.Rating import service, rating_in_range
 from wc.log import *
 
@@ -111,11 +111,11 @@ class RatingRule (UrlRule):
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.url:
-            s += "\n  <url>%s</url>" % xmlify(self.url)
+            s += "\n  <url>%s</url>" % xmlquote(self.url)
         for category, value in self.ratings.items():
             if value:
                 s += "\n  <category name=\"%s\">%s</category>"% \
-                      (xmlify(category), xmlify(value))
+                      (xmlquoteattr(category), xmlquote(value))
         s += "\n</%s>" % self.get_name()
         return s
 

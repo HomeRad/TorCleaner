@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 from Rule import compileRegex
 from UrlRule import UrlRule
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquote, xmlquoteattr
 
 class ReplaceRule (UrlRule):
     """This rule can Replace parts of text data according to regular
@@ -63,12 +63,12 @@ class ReplaceRule (UrlRule):
         """Rule data as XML for storing"""
 	s = super(ReplaceRule, self).toxml()
         if self.search:
-            s += '\n search="%s"'%xmlify(self.search)
+            s += '\n search="%s"'%xmlquoteattr(self.search)
         s += ">"
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:
             s += "\n"+self.matchestoxml(prefix="  ")
         if self.replacement:
-            s += '\n  <replacement>%s</replacement>'%xmlify(self.replacement)
+            s += '\n  <replacement>%s</replacement>'%xmlquote(self.replacement)
         s += "\n</%s>" % self.get_name()
         return s

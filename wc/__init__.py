@@ -48,8 +48,6 @@ TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
 
-from XmlUtils import xmlify, unxmlify
-
 def iswriteable (fname):
     if os.path.isdir(fname) or os.path.islink(fname):
         return False
@@ -145,6 +143,8 @@ filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                 ]
 filtermodules.sort()
 
+from wc.XmlUtils import xmlquote, xmlquoteattr
+
 class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
 
@@ -196,7 +196,7 @@ class Configuration (dict):
         self['auth_ntlm'] = 0
         # in development mode, new filter rules get the official
         # WebCleaner prefix and the base url is different
-        self['development'] = 0
+        self['development'] = os.environ.get("WC_DEVELOPMENT", 0)
         self['baseurl'] = Url
         self['try_google'] = 0
         # delete all registered sids
@@ -216,30 +216,30 @@ class Configuration (dict):
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner
 """ % ConfigCharset)
-        f.write(' version="%s"\n' % xmlify(self['version']))
+        f.write(' version="%s"\n' % xmlquoteattr(self['version']))
         f.write(' port="%d"\n' % self['port'])
-        f.write(' adminuser="%s"\n' % xmlify(self['adminuser']))
-        f.write(' adminpass="%s"\n' % xmlify(self['adminpass']))
-        f.write(' proxyuser="%s"\n' % xmlify(self['proxyuser']))
-        f.write(' proxypass="%s"\n' % xmlify(self['proxypass']))
+        f.write(' adminuser="%s"\n' % xmlquoteattr(self['adminuser']))
+        f.write(' adminpass="%s"\n' % xmlquoteattr(self['adminpass']))
+        f.write(' proxyuser="%s"\n' % xmlquoteattr(self['proxyuser']))
+        f.write(' proxypass="%s"\n' % xmlquoteattr(self['proxypass']))
         if self['parentproxy']:
-            f.write(' parentproxy="%s"\n' % xmlify(self['parentproxy']))
-        f.write(' parentproxyuser="%s"\n' % xmlify(self['parentproxyuser']))
-        f.write(' parentproxypass="%s"\n' % xmlify(self['parentproxypass']))
+            f.write(' parentproxy="%s"\n' % xmlquoteattr(self['parentproxy']))
+        f.write(' parentproxyuser="%s"\n' % xmlquoteattr(self['parentproxyuser']))
+        f.write(' parentproxypass="%s"\n' % xmlquoteattr(self['parentproxypass']))
         f.write(' parentproxyport="%d"\n' % self['parentproxyport'])
         f.write(' timeout="%d"\n' % self['timeout'])
-        f.write(' gui_theme="%s"\n' % xmlify(self['gui_theme']))
+        f.write(' gui_theme="%s"\n' % xmlquoteattr(self['gui_theme']))
         f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
         if self['development']:
             f.write(' development="%d"\n' % self['development'])
         f.write(' try_google="%d"\n' % self['try_google'])
         hosts = sort_seq(ip.map2hosts(self['nofilterhosts']))
-        f.write(' nofilterhosts="%s"\n'%xmlify(",".join(hosts)))
+        f.write(' nofilterhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
         hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
-        f.write(' allowedhosts="%s"\n'%xmlify(",".join(hosts)))
+        f.write(' allowedhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
         f.write('>\n')
         for key in self['filters']:
-            f.write('<filter name="%s"/>\n' % key)
+            f.write('<filter name="%s"/>\n' % xmlquoteattr(key))
         f.write('</webcleaner>\n')
         f.close()
 

@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from UrlRule import UrlRule
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquote, xmlquoteattr
 
 class ImageRule (UrlRule):
     def __init__ (self, sid=None, titles=None, descriptions=None,
@@ -50,9 +50,9 @@ class ImageRule (UrlRule):
         if self.height:
             s += '\n height="%d"' % self.height
         if self.formats:
-            s += '\n formats="%s"' % xmlify(",".join(self.formats))
+            s += '\n formats="%s"' % xmlquoteattr(",".join(self.formats))
         if self.url:
-            s += '\n url="%s"' % xmlify(self.url)
+            s += '\n url="%s"' % xmlquoteattr(self.url)
         s += ">"
         s += "\n"+self.title_desc_toxml(prefix="  ")
         if self.matchurls or self.nomatchurls:

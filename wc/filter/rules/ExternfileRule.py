@@ -21,7 +21,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from Rule import Rule
-from wc.XmlUtils import xmlify
+from wc.XmlUtils import xmlquoteattr
 
 class ExternfileRule (Rule):
     """rule with data stored in a (compressed) external file, used for
@@ -45,7 +45,7 @@ class ExternfileRule (Rule):
     def toxml (self):
         """Rule data as XML for storing"""
         s = super(ExternfileRule, self).toxml()
-        s += ' filename="%s">' % xmlify(self.filename)
+        s += ' filename="%s">' % xmlquoteattr(self.filename)
         s += "\n"+self.title_desc_toxml(prefix="  ")
         s += "\n</%s>"%self.get_name()
         return s
