@@ -662,12 +662,10 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
                            JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global Image function");
     }
-#ifdef DEBUG
     if (!JS_DefineFunction(env->ctx, env->global_obj, "wcDebugLog",
                            &wcDebugLog, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global wcDebugLog function");
     }
-#endif
 
     if (!(location_obj=JS_DefineObject(env->ctx, env->global_obj, "location",
                                        &env->location_class, 0,

@@ -144,6 +144,7 @@ ext_parser = Extension('wc.parser.htmlsax',
 ext_js = Extension('wc.js.jslib',
                     ['wc/js/jslib.c'],
                     include_dirs = ["/usr/include/smjs"],
+                    libraries = ['smjs'],
                     extra_compile_args = cargs,
                   )
 
