@@ -88,7 +88,7 @@ binary-arch: build install
 	dh_testroot
 	dh_installdebconf
 	dh_installdocs
-	dh_installexamples config/bl2wc.py config/dmozfilter.py
+	dh_installexamples
 	dh_installmenu
 #	dh_installlogrotate
 	dh_installinit --no-start
