@@ -380,7 +380,10 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
     RESIZE_BUF(self->userData->tmp_buf);
     self->userData->tmp_tag = self->userData->tmp_attrs =
 	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
-    htmllexInit(&(self->scanner), self->userData);
+    if (htmllexInit(&(self->scanner), self->userData)!=0) {
+        PyErr_SetString(PyExc_MemoryError, "could not initialize scanner data");
+        return NULL;
+    }
     return Py_BuildValue("i", res);
 }
 
@@ -395,7 +398,10 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
 	return NULL;
     }
     /* parse */
-    htmllexStart(self->scanner, self->userData, s, slen);
+    if (htmllexStart(self->scanner, self->userData, s, slen)!=0) {
+	PyErr_SetString(PyExc_MemoryError, "could not start scanner");
+ 	return NULL;
+    }
     if (yyparse(self->scanner)!=0) {
         if (self->userData->exc_type!=NULL) {
             /* note: we give away these objects, so dont decref */
@@ -405,7 +411,10 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
         }
         return NULL;
     }
-    htmllexStop(self->scanner, self->userData);
+    if (htmllexStop(self->scanner, self->userData)!=0) {
+	PyErr_SetString(PyExc_MemoryError, "could not stop scanner");
+	return NULL;
+    }
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -417,7 +426,10 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
 	return NULL;
     }
-    htmllexDestroy(self->scanner);
+    if (htmllexDestroy(self->scanner)!=0) {
+        PyErr_SetString(PyExc_MemoryError, "could not destroy scanner data");
+        return NULL;
+    }
     // reset buffer
     RESIZE_BUF(self->userData->buf);
     RESIZE_BUF(self->userData->tmp_buf);
@@ -425,7 +437,10 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
     self->userData->tmp_tag = self->userData->tmp_attrs =
         self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
     self->scanner = NULL;
-    htmllexInit(&(self->scanner), self->userData);
+    if (htmllexInit(&(self->scanner), self->userData)!=0) {
+        PyErr_SetString(PyExc_MemoryError, "could not initialize scanner data");
+        return NULL;
+    }
     Py_INCREF(Py_None);
     return Py_None;
 }

@@ -618,4 +618,3 @@ int htmllexDestroy (void* scanner) {
     yylex_destroy(scanner);
     return 0;
 }
-

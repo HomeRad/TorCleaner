@@ -156,7 +156,7 @@ class HtmlFilter (HtmlParser):
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute
-                    if tobuffer[0]==STARTTAG and tobuffer[1]==tag:#.lower()==tag:
+                    if tobuffer[0]==STARTTAG and tobuffer[1]==tag:
                         foo,tag,attrs = tobuffer
                         continue
                     else:

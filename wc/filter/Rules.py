@@ -209,12 +209,11 @@ class RewriteRule (UrlRule):
         self.start_sufficient = self._compute_start_sufficient()
 
     def match_tag (self, tag):
-        return self.tag == tag#.lower()
+        return self.tag == tag
 
     def match_attrs (self, attrs):
         occurred = []
         for attr,val in attrs.items():
-            #attr = attr.lower()
             occurred.append(attr)
             ro = self.attrs.get(attr)
             if ro and not ro.search(val):
@@ -252,7 +251,7 @@ class RewriteRule (UrlRule):
         newattrs = {}
         # look for matching tag attributes
         for attr,val in attrs.items():
-            ro = self.attrs.get(attr)#.lower())
+            ro = self.attrs.get(attr)
             if ro:
                 mo = ro.search(val)
                 if mo:
