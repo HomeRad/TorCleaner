@@ -198,7 +198,7 @@ o enhance your privacy (remove user-agent: header and obfuscate IP address)
 o remove unwanted HTML (adverts, javascript, ...)
 o completely customizable to suit your (filtering) needs
 o single process proxy with select() I/O
-o HTTP/0.9 - 1.1
+o HTTP/1.1 support
 """,
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,

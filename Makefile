@@ -3,7 +3,7 @@
 VERSION=$(shell ./setup.py --version)
 PACKAGE=webcleaner
 DEBS=$(PACKAGE)_$(VERSION)_i386.deb $(PACKAGE)conf_$(VERSION)_all.deb
-HTMLDIR=shell1.sourceforge.net:/home/groups/$(PACKAGE)/htdocs
+HTMLDIR=shell1.sourceforge.net:/home/groups/w/we/$(PACKAGE)/htdocs
 FTPDIR=shell1.sourceforge.net:/home/groups/ftp/pub/$(PACKAGE)/
 .PHONY: all
 all:
