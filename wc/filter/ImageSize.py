@@ -95,7 +95,8 @@ class ImageSize (wc.filter.Filter.Filter):
         url = attrs['url']
         pos = buf.tell()
         if pos <= 0:
-            wc.log.error(wc.LOG_FILTER, "Empty image data found at %r", url)
+            wc.log.error(wc.LOG_FILTER, "Empty image data found at %r (%r)",
+                         url, buf.getvalue())
         else:
             attrs['imgsize_blocked'] = \
           not self.check_sizes(buf, attrs['imgsize_sizes'], url, finish=True)
@@ -117,10 +118,12 @@ class ImageSize (wc.filter.Filter.Filter):
                 if size==img.size:
                     # size matches, look for format restriction
                     if not formats:
-                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s", size)
+                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s",
+                                     size)
                         return False
                     elif img.format.lower() in formats:
-                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s", size)
+                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s",
+                                     size)
                         return False
         except IOError:
             if finish:
