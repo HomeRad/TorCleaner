@@ -2,9 +2,6 @@ TODO
 
 version 2.29 and above
 
-- da hängts immer:
-  http://members.optusnet.com.au/ckolivas/kernel/
-
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/wc/proxy/Connection.py", line 126, in handle_write
