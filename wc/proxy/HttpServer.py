@@ -333,9 +333,11 @@ class HttpServer (Server):
         debug(PROXY, "%s headers\n%s", self, headers)
         if with_response:
             self.client.server_response(self, response, self.statuscode, headers)
-            if not self.client: return
+            if not self.client:
+                return
         self.client.server_content(msg)
         self.client.server_close(self)
+        self.client = None
         self.state = 'recycle'
         self.persistent = False
         self.close()
