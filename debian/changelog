@@ -1,9 +1,10 @@
 webcleaner (0.50) unstable; urgency=low
 
   * change imdb advert filter
-  * fix: /etc/webcleaner/config/* => /etc/webcleaner/*
+  * debian/rules: s#/etc/webcleaner/config/*#/etc/webcleaner/*#
+  * config/webcleaner.conf: change default port to 8080
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 10 Jul 2002 00:10:32 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 10 Jul 2002 00:46:14 +0200
 
 webcleaner (0.49) unstable; urgency=low
 
