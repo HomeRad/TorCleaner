@@ -27,7 +27,8 @@
  tag="noframes">
 </rewrite>
 
-<nocomments title="Remove all HTML comments" oid="4"/>
+<nocomments title="Remove all HTML comments" oid="4"
+ dontmatchurl="oreillynet.com"/>
 
 <rewrite title="Replace BLINK with B" oid="5"
  desc="Dont we all hate the &lt;blink&gt; tag?"

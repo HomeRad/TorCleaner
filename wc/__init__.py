@@ -17,6 +17,7 @@
 import os, re, sys, UserDict, time, socket
 import _webcleaner2_configdata as configdata
 from debug_levels import *
+#sys.setcheckinterval(1000)
 
 Version = configdata.version
 AppName = configdata.name

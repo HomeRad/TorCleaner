@@ -8,7 +8,7 @@ def _main():
     import wc, time
     wc.DebugLevel = 3
     wc.config = wc.Configuration()
-    wc.config['filters'] = ['Rewriter']
+    wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
     attrs = wc.filter.initStateObjects(url=file)
     filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
