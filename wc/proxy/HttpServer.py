@@ -527,13 +527,15 @@ class HttpServer (wc.proxy.Server.Server):
             self.set_unreadable(0.5)
             return False
         # the client might already have closed
-        if self.client and data and self.statuscode != 407:
-            if self.defer_data:
-                self.defer_data = False
-                self.client.server_response(self, self.response,
-                                            self.statuscode, self.headers)
-                if not self.client:
-                    return
+        if not self.client:
+            return
+        if self.defer_data:
+            self.defer_data = False
+            self.client.server_response(self, self.response,
+                                        self.statuscode, self.headers)
+            if not self.client:
+                return
+        if data and self.statuscode != 407:
             self.client.server_content(data)
         return True
 
