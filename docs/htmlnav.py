@@ -42,7 +42,8 @@ class HTMLNavTranslator (html4css1.HTMLTranslator):
 
     def __init__ (self, document):
         html4css1.HTMLTranslator.__init__(self, document)
-        name = os.path.splitext(os.path.basename(self.settings._destination))[0]
+        name = os.path.basename(self.settings._destination)
+        name = os.path.splitext(name)[0].capitalize()
         self.nav_info = NavInfo(name, 0)
         self.parse_meta_nav(document)
         self.process_meta_nav()
