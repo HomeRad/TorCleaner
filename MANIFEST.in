@@ -68,6 +68,7 @@ include po/*.po
 include po/*.pot
 include po/*.py
 include wc/dns/tests/example*
+include wc/dns/ChangeLog
 include wc/HtmlParser/*.h
 include wc/HtmlParser/htmllex.l
 include wc/HtmlParser/htmlparse.y
