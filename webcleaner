@@ -60,11 +60,11 @@ the Webwasher.
 Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
 HTTP/1.1 Proxy written in Java."""
 
-import sys
+import sys, os
 if sys.version[:5] < "2.2":
     raise SystemExit, "This program requires Python 2.2 or later."
-# for pydoc testing
-sys.path.insert(0, ".")
+# for pydoc testing, and local running. XXX should be a config entry
+sys.path.insert(0, os.getcwd())
 from wc import _,daemon
 
 _usage = _("""USAGE\twebcleaner command
