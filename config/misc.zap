@@ -73,4 +73,10 @@
 <attr name="target">(?i)_(blank|new)</attr>
 <replace part="attr"/>
 </rewrite>
+
+<rewrite title="Layer" oid="130"
+ matchurl="eselfilme.de"
+ tag="div">
+<attr name="id">Layer1</attr>
+</rewrite>
 </folder>
