@@ -26,8 +26,8 @@ if !( autoconf --version ) </dev/null > /dev/null 2>&1; then
 fi
 echo "Building macros" && aclocal && \
 echo "Building config header template" && autoheader && \
-echo "Building ltmain" && libtoolize --copy --force && \
-echo "Building Makefiles" && automake -a --copy && \
+echo "Building ltmain" && libtoolize --copy --force --automake && \
+echo "Building Makefiles" && automake --add-missing --gnu --copy && \
 echo "Building configure" && autoconf
 RES=$?
 if [ $RES != 0 ]; then
