@@ -4,6 +4,7 @@
 
 # TEST CASE:
 #    http://www.apache.org/
+from wc.debug import *
 
 import re
 match_bytes = re.compile(r"^(?P<bytes>\d+)(;.+)?$").search
@@ -20,6 +21,7 @@ class UnchunkStream:
         self.closed = 0
         
     def decode (self, s):
+        debug(NIGHTMARE, "Proxy: chunked data", `s`)
         self.buffer += s
         s = ''
 
@@ -60,6 +62,7 @@ class UnchunkStream:
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
+        debug(NIGHTMARE, "Proxy: decoded chunk", `s`)
         return s
 
     def flush (self):
