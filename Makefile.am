@@ -57,7 +57,7 @@ unittests: localbuild
 # regression tests
 	test/run.sh test/regrtest.py
 # python unit framework tests
-	@for f in tests/Test*.py; do test/run.sh $$f; done
+	@for f in tests/Test*.py; do echo $$f; test/run.sh $$f; done
 # filter and parse random data
 	@echo "parse random data..."
 	head -c 20000 /dev/urandom | test/run.sh test/parsefile.py - > /dev/null

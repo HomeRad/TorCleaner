@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """ test script to test filtering"""
-import unittest, random
+import unittest, random, os
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog

@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 """test javascript filtering"""
 
-import unittest
+import unittest, os
 from test import disable_rating_rules
 import wc
 from wc.proxy import proxy_poll, run_timers
