@@ -8,7 +8,27 @@ import sys
 import socket
 from OpenSSL import SSL
 
-def request (url, port):
+def request1 (url):
+    """httplib request"""
+    parts = urlparse.urlsplit(url)
+    host = parts[1]
+    #path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
+    h = httplib.HTTPSConnection(host)
+    h.connect()
+    h.putrequest("GET", url, skip_host=0)
+    h.endheaders()
+    req = h.getresponse()
+    if req.status==302:
+        url = req.msg.get('Location')
+        print "redirected to", url
+        request1(url, port)
+    else:
+        print "HTTP version", req.version, req.status, req.reason
+        print req.msg
+        req.read()
+
+
+def proxyrequest1 (url, port):
     """httplib request"""
     parts = urlparse.urlsplit(url)
     host = parts[1]
@@ -22,14 +42,14 @@ def request (url, port):
     if req.status==302:
         url = req.msg.get('Location')
         print "redirected to", url
-        request(url, port)
+        proxyrequest1(url, port)
     else:
         print "HTTP version", req.version, req.status, req.reason
         print req.msg
         print req.read()
 
 
-def rawrequest (url, port):
+def proxyrequest2 (url, port):
     """raw request with PyOpenSSL"""
     from wc.proxy.Dispatcher import create_socket
     from wc.proxy.ssl import get_clientctx
@@ -54,7 +74,7 @@ def rawrequest (url, port):
     sock.close()
 
 
-def rawrequest2 (url, port):
+def proxyrequest3 (url, port):
     """raw request with socket.ssl"""
     from wc.proxy.Dispatcher import create_socket
     parts = urlparse.urlsplit(url)
@@ -76,7 +96,7 @@ def rawrequest2 (url, port):
     _sock.close()
 
 
-def rawrequest3 (url, port):
+def proxyrequest4 (url, port):
     """raw request with proxy CONNECT protocol"""
     from wc.proxy.Dispatcher import create_socket
     from urllib import splitnport
@@ -118,14 +138,15 @@ def _main ():
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)
+    #request1(sys.argv[1])
     import wc.configuration
     wc.configuration.config = wc.configuration.init()
     port = wc.configuration.config['port']
     sslport = wc.configuration.config['sslport']
-    request(sys.argv[1], sslport)
-    #rawrequest(sys.argv[1], sslport)
-    #rawrequest2(sys.argv[1], sslport)
-    rawrequest3(sys.argv[1], port)
+    proxyrequest1(sys.argv[1], sslport)
+    #proxyrequest2(sys.argv[1], sslport)
+    #proxyrequest3(sys.argv[1], sslport)
+    #proxyrequest4(sys.argv[1], port)
 
 
 if __name__=='__main__':
