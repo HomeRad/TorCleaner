@@ -73,10 +73,21 @@ def filterconf_files (dirname):
 
 
 # available filter modules
-filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
-                 "BinaryCharFilter", "Rewriter", "Replacer", "Compress",
-                 "RatingHeader", "VirusFilter", "MimeRecognizer",
-                ]
+filtermodules = [
+    "Header",
+    "Blocker",
+    "GifImage",
+    "ImageSize",
+    "ImageReducer",
+    "BinaryCharFilter",
+    "Rewriter",
+    "Replacer",
+    "Compress",
+# XXX disabled
+#    "RatingHeader",
+    "VirusFilter",
+    "MimeRecognizer",
+]
 filtermodules.sort()
 
 
@@ -297,7 +308,8 @@ rulenames = (
   u'nocomments',
   u'javascript',
   u'replace',
-  u'rating',
+# XXX disabled
+#  u'rating',
   u'antivirus',
 )
 _nestedtags = (
