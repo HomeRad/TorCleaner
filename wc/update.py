@@ -1,5 +1,22 @@
 # -*- coding: iso-8859-1 -*-
-"""routines for updating filter and rating configuration"""
+# Copyright (C) 2004-2005  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Routines for updating filter and rating configuration.
+"""
 
 import os
 import md5
@@ -47,7 +64,9 @@ import cStringIO as StringIO
 UA_STR = '%s/%s' % (wc.Name, wc.Version)
 
 def decode (page):
-    "gunzip or deflate a compressed page"
+    """
+    Gunzip or deflate a compressed page.
+    """
     encoding = page.info().get("Content-Encoding")
     # note: some servers send content encoding gzip if file ends with ".gz"
     # but we don't want to decompress such files
@@ -77,19 +96,27 @@ def decode (page):
 
 
 class HttpWithGzipHandler (urllib2.HTTPHandler):
-    "support gzip encoding"
+    """
+    Support gzip encoding.
+    """
 
     def http_open (self, req):
-        """open and gunzip request data"""
+        """
+        Open and gunzip request data.
+        """
         return decode(urllib2.HTTPHandler.http_open(self, req))
 
 
 if hasattr(httplib, 'HTTPS'):
     class HttpsWithGzipHandler (urllib2.HTTPSHandler):
-        "support gzip encoding"
+        """
+        Support gzip encoding.
+        """
 
         def http_open (self, req):
-            """open and gunzip request data"""
+            """
+            Open and gunzip request data.
+            """
             return decode(urllib2.HTTPSHandler.http_open(self, req))
 
 
@@ -109,8 +136,10 @@ class PasswordManager (object):
 
 _opener = None
 def urlopen (url, proxies=None, data=None):
-    """Return connected request object for given url.
-       All errors raise exceptions."""
+    """
+    Return connected request object for given url.
+    All errors raise exceptions.
+    """
     global _opener
     if proxies is None:
         proxies = urllib.getproxies()
@@ -143,8 +172,11 @@ def urlopen (url, proxies=None, data=None):
 
 # Global useful URL opener; throws IOError on error
 def open_url (url, proxies=None):
-    """return connected request object for given url.
-       Raises IOError on error"""
+    """
+    Return connected request object for given url.
+
+    @raise: IOError on error
+    """
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
@@ -167,9 +199,11 @@ def open_url (url, proxies=None):
 # ====================== end of urlutils.py =================================
 
 def update_filter (wconfig, dryrun=False, log=None):
-    """Update the given configuration object with .zap files found at baseurl.
-    If dryrun is True, only print out the changes but do nothing
-    throws IOError on error
+    """
+    Update the given configuration object with .zap files found at baseurl.
+    If dryrun is True, only print out the changes but do nothing.
+
+    @raise: IOError on error
     """
     print >> log, _("updating filters"), "..."
     chg = False
@@ -274,7 +308,9 @@ def update_filter (wconfig, dryrun=False, log=None):
 
 
 def update_ratings (wconfig, dryrun=False, log=None):
-    """update rating database from configured online rating service"""
+    """
+    Update rating database from configured online rating service.
+    """
     print >> log, _("updating ratings...")
     chg = False
     baseurl = wconfig['baseurl']+"rating/"

@@ -1,7 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Windows specific helper functions.
-   Needs Python with win32 extensions or Active Python installed.
-"""
 # Copyright (C) 2001-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,6 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Windows specific helper functions.
+Needs Python with win32 extensions or Active Python installed.
+"""
 
 try:
     import win32service
@@ -31,7 +32,9 @@ import wc.start
 
 
 class ProxyService (service_klass):
-    """NT service class for the WebCleaner proxy"""
+    """
+    NT service class for the WebCleaner proxy.
+    """
 
     _svc_name_ = wc.AppName
     _svc_display_name_ = _("%s Proxy") % wc.AppName
@@ -39,14 +42,18 @@ class ProxyService (service_klass):
     filelogs = True
 
     def __init__ (self, args):
-        """initialize service framework and set stop handler"""
+        """
+        Initialize service framework and set stop handler.
+        """
         win32serviceutil.ServiceFramework.__init__(self, args)
         # Create an event which we will use to wait on.
         # The "service stop" request will set this event.
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
 
     def SvcStop (self):
-        """stop this service"""
+        """
+        Stop this service.
+        """
         # Before we do anything, tell the SCM we are starting the
         # stop process.
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
@@ -54,7 +61,9 @@ class ProxyService (service_klass):
         win32event.SetEvent(self.hWaitStop)
 
     def SvcDoRun (self):
-        """start this service"""
+        """
+        Start this service.
+        """
         import servicemanager
         # Log a "started" message to the event log.
         servicemanager.LogMsg(
@@ -71,16 +80,18 @@ class ProxyService (service_klass):
 
 
 def _service_status (status):
-    """convert status tuple information obtained from
-       QueryServiceStatus into readable message and return it"""
+    """
+    Convert status tuple information obtained from
+    QueryServiceStatus into readable message and return it.
+    """
     svcType, svcState, svcControls, err, svcErr, svcCP, svcWH = status
     msg = ""
     if svcType & win32service.SERVICE_WIN32_OWN_PROCESS:
         msg += "\n" + \
-            _("The %s service runs in its own process.") % wc.AppName
+        _("The %s service runs in its own process.") % wc.AppName
     if svcType & win32service.SERVICE_WIN32_SHARE_PROCESS:
         msg += "\n" + \
- _("The %s service shares a process with other services.") % wc.AppName
+        _("The %s service shares a process with other services.") % wc.AppName
     if svcType & win32service.SERVICE_INTERACTIVE_PROCESS:
         msg += "\n" + \
         _("The %s service can interact with the desktop.") % wc.AppName
@@ -103,6 +114,8 @@ def _service_status (status):
 
 
 def status ():
-    """return message with current status of WebCleaner service"""
+    """
+    Return message with current status of WebCleaner service.
+    """
     return _service_status(win32serviceutil.QueryServiceStatus(
                                                      wc.AppName))

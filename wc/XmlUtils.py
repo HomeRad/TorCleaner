@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""XML utility functions"""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+XML utility functions.
+"""
 
 import xml.sax.saxutils
 
@@ -27,20 +29,28 @@ attr_entities = {
 
 
 def xmlquote (s):
-    """quote characters for XML"""
+    """
+    Quote characters for XML.
+    """
     return xml.sax.saxutils.escape(s)
 
 
 def xmlquoteattr (s):
-    """quote XML attribute, ready for inclusion with double quotes"""
+    """
+    Quote XML attribute, ready for inclusion with double quotes.
+    """
     return xml.sax.saxutils.escape(s, attr_entities)
 
 
 def xmlunquote (s):
-    """unquote characters from XML"""
+    """
+    Unquote characters from XML.
+    """
     return xml.sax.saxutils.unescape(s)
 
 
 def xmlunquoteattr (s):
-    """unquote attributes from XML"""
+    """
+    Unquote attributes from XML.
+    """
     return xml.sax.saxutils.unescape(s, attr_entities)

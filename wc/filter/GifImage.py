@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""deanimate GIFs"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Deanimate GIF images.
+"""
 
 import base64
 import wc.log
@@ -23,27 +25,37 @@ import wc.filter.Filter
 
 
 def i16 (c):
-    """merge two bytes to an integer"""
+    """
+    Merge two bytes to an integer.
+    """
     return ord(c[0]) | (ord(c[1]) << 8)
 
 
 class RewindException (Exception):
-    """Exception saying that more image data is needed for parsing"""
+    """
+    Exception saying that more image data is needed for parsing.
+    """
     pass
 
 
 class GifImage (wc.filter.Filter.Filter):
-    """Base filter class which is using the GifParser to deanimate the
-       incoming GIF stream"""
+    """
+    Base filter class which is using the GifParser to deanimate the
+    incoming GIF stream.
+    """
 
     def __init__ (self):
-        """Init stages and mimes."""
+        """
+        Init stages and mimes.
+        """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         mimes = ['image/gif']
         super(GifImage, self).__init__(stages=stages, mimes=mimes)
 
     def filter (self, data, attrs):
-        """feed data to GIF image parser, return processed data"""
+        """
+        Feed data to GIF image parser, return processed data.
+        """
         if not attrs.has_key('gifparser'):
             return data
         gifparser = attrs['gifparser']
@@ -56,8 +68,9 @@ class GifImage (wc.filter.Filter.Filter):
         return gifparser.get_output()
 
     def finish (self, data, attrs):
-        """feed data to GIF image parser, flush it and return processed
-           data"""
+        """
+        Feed data to GIF image parser, flush it and return processed data.
+        """
         if not attrs.has_key('gifparser'):
             return data
         if data:
@@ -66,7 +79,9 @@ class GifImage (wc.filter.Filter.Filter):
         return data + (gifparser.finish and ';' or '')
 
     def get_attrs (self, url, localhost, stages, headers):
-        """add GIF parser to attributes"""
+        """
+        Add GIF parser to attributes.
+        """
         if not self.applies_to_stages(stages):
             return {}
         d = super(GifImage, self).get_attrs(url, localhost, stages, headers)
@@ -79,7 +94,8 @@ _TINY_GIF = """R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="""
 
 
 class GifParser (object):
-    """Here we have a parser (and filter) for GIF images.
+    """
+    Here we have a parser (and filter) for GIF images.
     This parser filters all GIF image extensions (eg. comment and
     application extensions) except graphic control extensions.
     Furthermore we only allow the first frame of animated GIFs.
@@ -100,7 +116,9 @@ class GifParser (object):
     NOFILTER = 5
 
     def __init__ (self, sizes=None):
-        """initialize GIF parser buffers and flags"""
+        """
+        Initialize GIF parser buffers and flags.
+        """
         self.state = GifParser.INIT
         self.data = self.consumed = self.output = ''
         self.finish = False
@@ -111,7 +129,9 @@ class GifParser (object):
             self.sizes = sizes
 
     def str_state (self):
-        """return string representation of parser state"""
+        """
+        Return string representation of parser state.
+        """
         if self.state == GifParser.SKIP:
             return 'SKIP'
         if self.state == GifParser.INIT:
@@ -127,18 +147,24 @@ class GifParser (object):
         return 'UNKNOWN'
 
     def add_data (self, data):
-        """add image data to internal parse buffer"""
+        """
+        Add image data to internal parse buffer.
+        """
         self.data += data
 
     def flush (self):
-        """flush already parsed image data to output buffer"""
+        """
+        Flush already parsed image data to output buffer.
+        """
         if self.consumed:
             self.output += self.consumed
             self.consumed = ''
 
     def read (self, i):
-        """Read i data from internal buffer. Raise RewindException if
-           more data is needed"""
+        """
+        Read i data from internal buffer. Raise RewindException if
+        more data is needed.
+        """
         if i <= 0:
             return
         if len(self.data)<i:
@@ -152,11 +178,15 @@ class GifParser (object):
         return self.consumed[-i:]
 
     def remove (self, i):
-        """remove i bytes from already parsed image data"""
+        """
+        Remove i bytes from already parsed image data.
+        """
         self.consumed = self.consumed[:-i]
 
     def get_output (self):
-        """get output buffer data and flush it"""
+        """
+        Get output buffer data and flush it.
+        """
         if self.output:
             res = self.output
             self.output = ''
@@ -164,11 +194,13 @@ class GifParser (object):
         return self.output
 
     def parse (self):
-        """Big parse function. The trick is the usage of self.read(),
-           which throws an Exception  when it can't give enough data.
-           In this case we just bail out ('rewind'), and continue
-           the next time in the saved state with hopefully more data
-           available :)"""
+        """
+        Big parse function. The trick is the usage of self.read(),
+        which throws an Exception  when it can't give enough data.
+        In this case we just bail out ('rewind'), and continue
+        the next time in the saved state with hopefully more data
+        available :).
+        """
         while 1:
             wc.log.debug(wc.LOG_FILTER, 'GifImage state %s', self.str_state())
             self.flush()

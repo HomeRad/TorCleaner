@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter images by size"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter images by size.
+"""
 
 import os
 import cStringIO as StringIO
@@ -28,8 +30,10 @@ if wc.HasPil:
 
 
 class ImageSize (wc.filter.Filter.Filter):
-    """Base filter class which is using the GifParser to deanimate the
-       incoming GIF stream"""
+    """
+    Base filter class which is using the GifParser to deanimate the
+    incoming GIF stream.
+    """
 
     def __init__ (self):
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]

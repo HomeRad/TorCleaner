@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""search data stream for virus signatures"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Search data stream for virus signatures.
+"""
 
 import socket
 import os
@@ -29,7 +31,9 @@ import wc.proxy.Connection
 
 
 def strsize (b):
-    """return human representation of bytes b"""
+    """
+    Return human representation of bytes.
+    """
     if b < 1024:
         return "%d Byte" % b
     b /= 1024.0
@@ -43,20 +47,25 @@ def strsize (b):
 
 
 class VirusFilter (wc.filter.Filter.Filter):
-    """scan for virus signatures in a data stream"""
-
+    """
+    Scan for virus signatures in a data stream.
+    """
 
     # 5 MB maximum file size, everything bigger will generate a proxy error
     MAX_FILE_BYTES = 1024L*1024L*5L
 
     def __init__ (self):
-        """Init stages and mimes."""
+        """
+        Init stages and mimes.
+        """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['antivirus']
         super(VirusFilter, self).__init__(stages=stages, rulenames=rulenames)
 
     def filter (self, data, attrs):
-        """write data to scanner and internal buffer"""
+        """
+        Write data to scanner and internal buffer.
+        """
         if not attrs.has_key('scanner'):
             return data
         scanner = attrs['scanner']
@@ -70,17 +79,17 @@ class VirusFilter (wc.filter.Filter.Filter):
             buf.write(data)
         return ""
 
-
     def size_error (self):
         raise wc.filter.FilterProxyError(406, _("Not acceptable"),
                 _("Maximum data size (%s) exceeded") % \
                 strsize(VirusFilter.MAX_FILE_BYTES))
 
-
     def finish (self, data, attrs):
-        """write data to scanner and internal buffer.
-           If scanner is clean, return buffered data, else print error
-           message and return an empty string."""
+        """
+        Write data to scanner and internal buffer.
+        If scanner is clean, return buffered data, else print error
+        message and return an empty string.
+        """
         if not attrs.has_key('scanner'):
             return data
         scanner = attrs['scanner']
@@ -104,9 +113,10 @@ class VirusFilter (wc.filter.Filter.Filter):
         buf.close()
         return data
 
-
     def get_attrs (self, url, localhost, stages, headers):
-        """return virus scanner and internal data buffer"""
+        """
+        Return virus scanner and internal data buffer.
+        """
         if not self.applies_to_stages(stages):
             return {}
         d = super(VirusFilter, self).get_attrs(url, localhost, stages, headers)
@@ -123,24 +133,30 @@ class VirusFilter (wc.filter.Filter.Filter):
 
 
 class ClamdScanner (object):
-    """virus scanner using a clamd daemon process"""
+    """
+    Virus scanner using a clamd daemon process.
+    """
 
     def __init__ (self, clamav_conf):
-        """initialize clamd daemon process sockets"""
+        """
+        Initialize clamd daemon process sockets.
+        """
         self.infected = []
         self.errors = []
         self.clamav_conf = clamav_conf
         self.sock, host = self.clamav_conf.new_connection()
         self.wsock = self.clamav_conf.new_scansock(self.sock, host)
 
-
     def scan (self, data):
-        """scan given data for viruses"""
+        """
+        Scan given data for viruses.
+        """
         self.wsock.sendall(data)
 
-
     def close (self):
-        """get results and close clamd daemon sockets"""
+        """
+        Get results and close clamd daemon sockets.
+        """
         self.wsock.close()
         data = self.sock.recv(wc.proxy.Connection.RECV_BUFSIZE)
         while data:
@@ -154,7 +170,9 @@ class ClamdScanner (object):
 
 _clamav_conf = None
 def init_clamav_conf ():
-    """initialize clamav configuration"""
+    """
+    Initialize clamav configuration.
+    """
     if not os.path.exists(wc.configuration.config['clamavconf']):
         return
     global _clamav_conf
@@ -162,21 +180,29 @@ def init_clamav_conf ():
 
 
 def get_clamav_conf ():
-    """get the ClamavConfig instance"""
+    """
+    Get the ClamavConfig instance.
+    """
     return _clamav_conf
 
 
 def get_sockinfo (host, port=None):
-    """return socket.getaddrinfo for given host and port"""
+    """
+    Return socket.getaddrinfo for given host and port.
+    """
     family, socktype = socket.AF_INET, socket.SOCK_STREAM
     return socket.getaddrinfo(host, port, family, socktype)
 
 
 class ClamavConfig (dict):
-    """clamav configuration wrapper, with clamd connection method"""
+    """
+    Clamav configuration wrapper, with clamd connection method.
+    """
 
     def __init__ (self, filename):
-        """parse clamav configuration file"""
+        """
+        Parse clamav configuration file.
+        """
         super(ClamavConfig, self).__init__()
         self.parseconf(filename)
         if self.get('ScannerDaemonOutputFormat'):
@@ -187,7 +213,9 @@ class ClamavConfig (dict):
                                "both TCPSocket and LocalSocket are enabled."))
 
     def parseconf (self, filename):
-        """parse clamav configuration from given file"""
+        """
+        Parse clamav configuration from given file.
+        """
         f = file(filename)
         # yet another config format, sigh
         for line in f:
@@ -202,8 +230,11 @@ class ClamavConfig (dict):
                 self[split[0]] = split[1]
 
     def new_connection (self):
-        """connect to clamd for stream scanning;
-           return connected socket and host"""
+        """
+        Connect to clamd for stream scanning.
+
+        @return: tuple (connected socket, host)
+        """
         if self.get('LocalSocket'):
             sock = self.create_local_socket()
             host = 'localhost'
@@ -216,7 +247,9 @@ class ClamavConfig (dict):
         return sock, host
 
     def create_local_socket (self):
-        """create local socket, connect to it and return socket object"""
+        """
+        Create local socket, connect to it and return socket object.
+        """
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         addr = self['LocalSocket']
         try:
@@ -227,7 +260,9 @@ class ClamavConfig (dict):
         return sock
 
     def create_tcp_socket (self):
-        """create tcp socket, connect to it and return socket object"""
+        """
+        Create tcp socket, connect to it and return socket object.
+        """
         host = self.get('TCPAddr', 'localhost')
         port = int(self['TCPSocket'])
         sockinfo = get_sockinfo(host, port=port)
@@ -240,7 +275,9 @@ class ClamavConfig (dict):
         return sock
 
     def new_scansock (self, sock, host):
-        """return a connected socket for sending scan data to it"""
+        """
+        Return a connected socket for sending scan data to it.
+        """
         port = None
         try:
             sock.sendall("STREAM")

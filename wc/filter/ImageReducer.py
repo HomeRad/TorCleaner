@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Reduce big images to JPGs to save bandwidth"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Reduce big images to JPGs to save bandwidth.
+"""
 
 import Image
 import cStringIO as StringIO
@@ -25,10 +27,14 @@ import wc.log
 
 
 class ImageReducer (wc.filter.Filter.Filter):
-    """Reduce the image size by making low quality JPEGs"""
+    """
+    Reduce the image size by making low quality JPEGs.
+    """
 
     def __init__ (self):
-        """initialize image reducer flags"""
+        """
+        Initialize image reducer flags.
+        """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ["imagereduce"]
         mimes = ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|'+
@@ -41,14 +47,18 @@ class ImageReducer (wc.filter.Filter.Filter):
         self.quality = 20
 
     def filter (self, data, attrs):
-        """feed image data to buffer"""
+        """
+        Feed image data to buffer.
+        """
         if not attrs.has_key('imgreducer_buf'):
             return data
         attrs['imgreducer_buf'].write(data)
         return ''
 
     def finish (self, data, attrs):
-        """feed image data to buffer, then convert it and return result"""
+        """
+        Feed image data to buffer, then convert it and return result.
+        """
         if not attrs.has_key('imgreducer_buf'):
             return data
         p = attrs['imgreducer_buf']
@@ -68,7 +78,9 @@ class ImageReducer (wc.filter.Filter.Filter):
         return data.getvalue()
 
     def get_attrs (self, url, localhost, stages, headers):
-        """initialize image reducer buffer and flags"""
+        """
+        Initialize image reducer buffer and flags.
+        """
         if not self.applies_to_stages(stages):
             return {}
         # don't filter tiny images
@@ -107,5 +119,7 @@ class ImageReducer (wc.filter.Filter.Filter):
 
 
 def convert (ctype):
-    """return True if an image has to be convert()ed before saving"""
+    """
+    Return True if an image has to be convert()ed before saving.
+    """
     return ctype in ('image/gif',)

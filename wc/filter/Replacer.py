@@ -1,7 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""replace expressions in a data stream
-   you can use this for highlighting and removing/replacing certain strings
-"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,6 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Replace expressions in a data stream. Use this for highlighting and
+removing/replacing certain strings.
+"""
 
 import wc.filter
 import wc.filter.Filter
@@ -26,10 +27,14 @@ DefaultCharset = 'iso-8859-1'
 
 # XXX group matches?
 class Replacer (wc.filter.Filter.Filter):
-    """replace regular expressions in a data stream"""
+    """
+    Replace regular expressions in a data stream.
+    """
 
     def __init__ (self):
-        """initialize image reducer flags"""
+        """
+        Initialize replacer flags.
+        """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['replace']
         mimes = ['text/html', 'text/javascript', 'application/x-javascript']
@@ -37,7 +42,9 @@ class Replacer (wc.filter.Filter.Filter):
                                        rulenames=rulenames)
 
     def filter (self, data, attrs):
-        """feed data to replacer buffer"""
+        """
+        Feed data to replacer buffer.
+        """
         if not attrs.has_key('replacer_buf') or not data:
             return data
         buf = attrs['replacer_buf']
@@ -45,7 +52,9 @@ class Replacer (wc.filter.Filter.Filter):
         return self.replace(data, charset, buf)
 
     def finish (self, data, attrs):
-        """feed data to replacer buffer, flush and return it"""
+        """
+        Feed data to replacer buffer, flush and return it.
+        """
         if not attrs.has_key('replacer_buf'):
             return data
         buf = attrs['replacer_buf']
@@ -60,7 +69,9 @@ class Replacer (wc.filter.Filter.Filter):
         return udata.encode(charset, 'ignore')
 
     def get_attrs (self, url, localhost, stages, headers):
-        """initialize replacer buffer object"""
+        """
+        Initialize replacer buffer object.
+        """
         if not self.applies_to_stages(stages):
             return {}
         d = super(Replacer, self).get_attrs(url, localhost, stages, headers)
@@ -73,16 +84,22 @@ class Replacer (wc.filter.Filter.Filter):
 
 
 class Buf (object):
-    """Holds buffer data ready for replacing, with overlapping scans.
-       Strings must be unicode."""
+    """
+    Holds buffer data ready for replacing, with overlapping scans.
+    Strings must be unicode.
+    """
 
     def __init__ (self, rules):
-        """store rules and initialize buffer"""
+        """
+        Store rules and initialize buffer.
+        """
         self.rules = rules
         self.buf = u""
 
     def replace (self, data):
-        """fill up buffer with given data, and scan for replacements"""
+        """
+        Fill up buffer with given data, and scan for replacements.
+        """
         self.buf += data
         if len(self.buf) > 512:
             self._replace()
@@ -93,13 +110,17 @@ class Buf (object):
         return u""
 
     def _replace (self):
-        """scan for replacements"""
+        """
+        Scan for replacements.
+        """
         for rule in self.rules:
             if rule.search:
                 self.buf = rule.search_ro.sub(rule.replacement, self.buf)
 
     def flush (self):
-        """flush buffered data and return it"""
+        """
+        Flush buffered data and return it.
+        """
         self._replace()
         self.buf, data = u"", self.buf
         return data

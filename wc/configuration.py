@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""configuration data"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Store configuration data.
+"""
 
 import time
 import os
@@ -45,7 +47,9 @@ def init (confdir=wc.ConfigDir):
 
 
 def sighup_reload_config (signum, frame):
-    """store timer for reloading configuration data"""
+    """
+    Store timer for reloading configuration data.
+    """
     global pending_reload
     if not pending_reload:
         pending_reload = True
@@ -53,7 +57,9 @@ def sighup_reload_config (signum, frame):
 
 
 def reload_config ():
-    """reload configuration"""
+    """
+    Reload configuration.
+    """
     global pending_reload
     config.reset()
     config.read_proxyconf()
@@ -65,12 +71,16 @@ def reload_config ():
 
 
 def proxyconf_file (confdir):
-    """return proxy configuration filename"""
+    """
+    Return proxy configuration filename.
+    """
     return os.path.join(confdir, "webcleaner.conf")
 
 
 def filterconf_files (dirname):
-    """return list of filter configuration filenames"""
+    """
+    Return list of filter configuration filenames.
+    """
     return glob.glob(os.path.join(dirname, "*.zap"))
 
 
@@ -93,10 +103,14 @@ filtermodules.sort()
 
 
 class Configuration (dict):
-    """hold all configuration data, inclusive filter rules"""
+    """
+    Hold all configuration data, inclusive filter rules.
+    """
 
     def __init__ (self, confdir):
-        """Initialize the options"""
+        """
+        Initialize the options.
+        """
         dict.__init__(self)
         self.filterdir = self.configdir = confdir
         self.configfile = proxyconf_file(self.configdir)
@@ -107,7 +121,9 @@ class Configuration (dict):
         self.read_filterconf()
 
     def reset (self):
-        """Reset to default values"""
+        """
+        Reset to default values.
+        """
         # The bind address specifies on which address the socket should
         # listen.
         # The default empty string represents INADDR_ANY which means to
@@ -157,11 +173,15 @@ class Configuration (dict):
         delete_registered_sids()
 
     def read_proxyconf (self):
-        """read proxy configuration"""
+        """
+        Read proxy configuration.
+        """
         WConfigParser(self.configfile, self).parse()
 
     def write_proxyconf (self):
-        """write proxy configuration"""
+        """
+        Write proxy configuration.
+        """
         lines = []
         lines.append('<?xml version="1.0" encoding="%s"?>' % ConfigCharset)
         lines.append('<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">')
@@ -202,7 +222,9 @@ class Configuration (dict):
         f.close()
 
     def read_filterconf (self):
-        """read filter rules"""
+        """
+        Read filter rules.
+        """
         from wc.filter.rules import generate_sids
         from wc.filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
@@ -222,8 +244,10 @@ class Configuration (dict):
         generate_sids(prefix)
 
     def merge_folder (self, folder, dryrun=False, log=None):
-        """merge given folder data into config
-        return True if something has changed
+        """
+        Merge given folder data into config
+
+        @return: True if something has changed
         """
         # test for correct category
         assert folder.sid and folder.sid.startswith("wc"), \
@@ -241,14 +265,18 @@ class Configuration (dict):
         return chg
 
     def write_filterconf (self):
-        """write filter rules"""
+        """
+        Write filter rules.
+        """
         for folder in self['folderrules']:
             folder.write()
 
     def init_filter_modules (self):
-        """go through list of rules and store them in the filter
+        """
+        Go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
-        to regular expression objects"""
+        to regular expression objects.
+        """
         # reset filter lists
         for stage in wc.filter.FilterStages:
             self['filterlist'][stage] = []
@@ -281,13 +309,17 @@ class Configuration (dict):
             filters.sort()
 
     def nofilter (self, url):
-        """Decide whether to filter this url or not.
-           returns True if the request must not be filtered, else False
+        """
+        Decide whether to filter this url or not.
+
+        @return: True if the request must not be filtered, else False
         """
         return wc.url.match_url(url, self['nofilterhosts'])
 
     def allowed (self, host):
-        """return True if the host is allowed for proxying, else False"""
+        """
+        Return True if the host is allowed for proxying, else False.
+        """
         hostset = self['allowedhostset']
         return wc.ip.host_in_set(host, hostset[0], hostset[1])
 
@@ -325,21 +357,29 @@ _nestedtags = (
 
 
 def make_xmlparser ():
-    """return a new xml parser object"""
+    """
+    Return a new xml parser object.
+    """
     # note: this parser returns unicode strings
     return xml.parsers.expat.ParserCreate()
 
 
 class ParseException (Exception):
-    """exception thrown at parse errors"""
+    """
+    Exception thrown at parse errors.
+    """
     pass
 
 
 class BaseParser (object):
-    """base class for parsing xml config files"""
+    """
+    Base class for parsing xml config files.
+    """
 
     def __init__ (self, filename):
-        """initialize filename and configuration for this parser"""
+        """
+        Initialize filename and configuration for this parser.
+        """
         super(BaseParser, self).__init__()
         self.filename = filename
         # error condition
@@ -348,14 +388,18 @@ class BaseParser (object):
         self.xmlparser = None
 
     def _preparse (self):
-        """set handler functions before parsing"""
+        """
+        Set handler functions before parsing.
+        """
         self.xmlparser = make_xmlparser()
         self.xmlparser.StartElementHandler = self.start_element
         self.xmlparser.EndElementHandler = self.end_element
         self.xmlparser.CharacterDataHandler = self.character_data
 
     def _postparse (self):
-        """remove handler functions after parsing; avoids cyclic references"""
+        """
+        Remove handler functions after parsing; avoids cyclic references.
+        """
         self.xmlparser.StartElementHandler = None
         self.xmlparser.EndElementHandler = None
         self.xmlparser.CharacterDataHandler = None
@@ -363,7 +407,9 @@ class BaseParser (object):
         self.xmlparser = None
 
     def parse (self, fp=None):
-        """parse the stored filename, or another source given by fp"""
+        """
+        Parse the stored filename, or another source given by fp.
+        """
         wc.log.debug(wc.LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
@@ -379,23 +425,33 @@ class BaseParser (object):
             self._postparse()
 
     def start_element (self, name, attrs):
-        """basic start element method doing nothing"""
+        """
+        Basic start element method doing nothing.
+        """
         pass
 
     def end_element (self, name):
-        """basic end element method doing nothing"""
+        """
+        Basic end element method doing nothing.
+        """
         pass
 
     def character_data (self, data):
-        """basic character data method doing nothing"""
+        """
+        Basic character data method doing nothing.
+        """
         pass
 
 
 class ZapperParser (BaseParser):
-    """parser class for *.zap filter configuration files"""
+    """
+    Parser class for *.zap filter configuration files.
+    """
 
     def __init__ (self, filename, compile_data=True):
-        """initialize filename, configuration and compile flag"""
+        """
+        Initialize filename, configuration and compile flag.
+        """
         super(ZapperParser, self).__init__(filename)
         from wc.filter.rules.FolderRule import FolderRule
         self.folder = FolderRule(filename=filename)
@@ -404,7 +460,9 @@ class ZapperParser (BaseParser):
         self.compile_data = compile_data
 
     def start_element (self, name, attrs):
-        """handle start tag of folder, rule or nested element"""
+        """
+        Handle start tag of folder, rule or nested element.
+        """
         super(ZapperParser, self).start_element(name, attrs)
         if self.error:
             return
@@ -427,7 +485,9 @@ class ZapperParser (BaseParser):
             self.cmode = None
 
     def end_element (self, name):
-        """handle end tag of folder, rule or nested element"""
+        """
+        Handle end tag of folder, rule or nested element.
+        """
         if self.error:
             if name == self.error:
                 self.error = None
@@ -445,7 +505,9 @@ class ZapperParser (BaseParser):
                     self.folder.compile_data()
 
     def character_data (self, data):
-        """handle rule of folder character data"""
+        """
+        Handle rule of folder character data.
+        """
         if self.error:
             pass
         elif self.cmode:
@@ -456,16 +518,21 @@ class ZapperParser (BaseParser):
 
 
 class WConfigParser (BaseParser):
-    """parser class for webcleaner.conf configuration files"""
+    """
+    Parser class for webcleaner.conf configuration files.
+    """
 
     def __init__ (self, filename, _config):
-        """initialize filename, configuration and compile flag"""
+        """
+        Initialize filename, configuration and compile flag.
+        """
         super(WConfigParser, self).__init__(filename)
         self.config = _config
 
     def start_element (self, name, attrs):
-        """handle xml configuration for webcleaner attributes and filter
-           modules
+        """
+        Handle xml configuration for webcleaner attributes and filter
+        modules.
         """
         if self.error:
             return
@@ -497,7 +564,9 @@ class WConfigParser (BaseParser):
             self.error = name
 
     def end_element (self, name):
-        """handle error case"""
+        """
+        Handle error case.
+        """
         if self.error:
             if name == self.error:
                 self.error = None

@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter security flaws out of HTML tags."""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter security flaws out of HTML tags.
+"""
 
 import os
 import urllib
@@ -26,14 +28,18 @@ import wc.url
 
 
 def _has_lots_of_percents (url):
-    """return True iff url has more than 10 percent chars in a row"""
+    """
+    Return True iff url has more than 10 percent chars in a row.
+    """
     if not url:
         return False
     return '%'*11 in url
 
 
 class HtmlSecurity (object):
-    """Scan and repair known security exploits in HTML start/end tags."""
+    """
+    Scan and repair known security exploits in HTML start/end tags.
+    """
 
     def __init__ (self):
         self.in_winhelp = False # inside object tag calling WinHelp
@@ -42,19 +48,25 @@ class HtmlSecurity (object):
               (os.name == 'posix' and sys.platform.startswith('darwin'))
 
     def scan_start_tag (self, tag, attrs, htmlfilter):
-        """delegate to individuals start tag handlers"""
+        """
+        Delegate to individual start tag handlers.
+        """
         fun = "%s_start" % tag
         if hasattr(self, fun):
             getattr(self, fun)(attrs, htmlfilter)
 
     def scan_end_tag (self, tag):
-        """delegate to individuals end tag handlers"""
+        """
+        Delegate to individual end tag handlers.
+        """
         fun = "%s_end" % tag
         if hasattr(self, fun):
             getattr(self, fun)()
 
     def input_start (self, attrs, htmlfilter):
-        """<input> start tag check"""
+        """
+        Check <input> start tag.
+        """
         if attrs.has_key('type'):
             # prevent IE crash bug on empty type attribute
             if not attrs['type']:
@@ -63,7 +75,9 @@ class HtmlSecurity (object):
                 del attrs['type']
 
     def fieldset_start (self, attrs, htmlfilter):
-        """<fieldset> start tag check"""
+        """
+        Check <fieldset> start tag.
+        """
         if attrs.has_key('style'):
             # prevent Mozilla crash bug on fieldsets
             if "position" in attrs['style']:
@@ -73,7 +87,9 @@ class HtmlSecurity (object):
                 del attrs['style']
 
     def hr_start (self, attrs, htmlfilter):
-        """<hr> start tag check"""
+        """
+        Check <hr> start tag.
+        """
         if attrs.has_key('align'):
             # prevent CAN-2003-0469, length 50 should be safe
             if len(attrs['align']) > 50:
@@ -82,7 +98,9 @@ class HtmlSecurity (object):
                 del attrs['align']
 
     def object_start (self, attrs, htmlfilter):
-        """<object> start tag check"""
+        """
+        Check <object> start tag.
+        """
         if attrs.has_key('type'):
             # prevent CAN-2003-0344, only one / (slash) allowed
             t = attrs['type']
@@ -112,7 +130,9 @@ class HtmlSecurity (object):
                     attrs['data'] = url[:i]
 
     def table_start (self, attrs, htmlfilter):
-        """<table> start tag check"""
+        """
+        Check <table> start tag.
+        """
         if attrs.has_key('width'):
             # prevent CAN-2003-0238, table width=-1 crashes ICQ client
             if attrs['width'] == '-1':
@@ -121,12 +141,16 @@ class HtmlSecurity (object):
                 del attrs['width']
 
     def object_end (self):
-        """<object> start tag check"""
+        """
+        Check <object> start tag.
+        """
         if self.in_winhelp:
             self.in_winhelp = False
 
     def param_start (self, attrs, htmlfilter):
-        """<param> start tag check"""
+        """
+        Check <param> start tag.
+        """
         if attrs.has_key('value') and self.in_winhelp:
             # prevent CVE-2002-0823
             if len(attrs['value']) > 50:
@@ -135,7 +159,9 @@ class HtmlSecurity (object):
                 del attrs['value']
 
     def meta_start (self, attrs, htmlfilter):
-        """<meta> start tag check"""
+        """
+        Check <meta> start tag.
+        """
         if attrs.has_key('content') and self.macintosh:
             # prevent CVE-2002-0153
             if attrs.get('http-equiv', '').lower() == 'refresh':
@@ -152,7 +178,9 @@ class HtmlSecurity (object):
                     del attrs['content']
 
     def embed_start (self, attrs, htmlfilter):
-        """<embed> start tag check"""
+        """
+        Check <embed> start tag.
+        """
         if attrs.has_key('src'):
             src = attrs['src']
             if '?' in src:
@@ -168,7 +196,9 @@ class HtmlSecurity (object):
                     del attrs['src']
 
     def font_start (self, attrs, htmlfilter):
-        """<font> start tag check"""
+        """
+        Check <font> start tag.
+        """
         if attrs.has_key('size'):
             if len(attrs['size']) > 10:
                 # prevent CVE-2001-0130
@@ -178,11 +208,15 @@ class HtmlSecurity (object):
                 del attrs['size']
 
     def a_start (self, attrs, htmlfilter):
-        """<a> start tag check"""
+        """
+        Check <a> start tag.
+        """
         self.check_percent_url(attrs, 'href', htmlfilter)
 
     def check_percent_url (self, attrs, name, htmlfilter):
-        """check if url has too much percent chars"""
+        """
+        Check if url has too much percent chars.
+        """
         if attrs.has_key(name):
             url = attrs[name]
             if _has_lots_of_percents(url):

@@ -1,6 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Parse and filter ratings.
-"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -16,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Parse and filter ratings.
+"""
 
 import wc.filter
 import wc.filter.Filter
@@ -24,10 +25,14 @@ import wc.log
 
 
 class RatingHeader (wc.filter.Filter.Filter):
-    """Adds rating data supplied in 'Content-Rating' headers"""
+    """
+    Adds rating data supplied in 'Content-Rating' headers.
+    """
 
     def __init__ (self):
-        """initialize image reducer flags"""
+        """
+        Initialize image reducer flags.
+        """
         stages = [wc.filter.STAGE_RESPONSE_HEADER]
         rulenames = ['rating']
         super(RatingHeader, self).__init__(stages=stages, rulenames=rulenames)

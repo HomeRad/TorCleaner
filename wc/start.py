@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""start function"""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Proxy start function.
+"""
 
 import os
 
@@ -29,8 +31,10 @@ import wc.filter.VirusFilter
 
 
 def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
-    """Initalize configuration, start psyco compiling and the proxy loop.
-       This function does not return until Ctrl-C is pressed."""
+    """
+    Initalize configuration, start psyco compiling and the proxy loop.
+    This function does not return until Ctrl-C is pressed.
+    """
     # init logging
     wc.initlog(os.path.join(confdir, "logging.conf"),
                wc.Name, filelogs=filelogs)

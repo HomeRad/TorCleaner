@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter JavaScript."""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter JavaScript.
+"""
 
 import re
 import urlparse
@@ -45,7 +47,9 @@ js_event_attrs = (
 )
 
 class JSFilter (wc.js.JSListener.JSListener):
-    """defines callback handlers for filtering Javascript code"""
+    """
+    Defines callback handlers for filtering Javascript code.
+    """
 
     def __init__ (self, url, localhost, opts):
         # True if javascript has to be filtered
@@ -73,24 +77,32 @@ class JSFilter (wc.js.JSListener.JSListener):
         return "%s[%d]" % (self.__class__.__name__, self.level)
 
     def js_process_data (self, data):
-        """process data produced by document.write() JavaScript"""
+        """
+        Process data produced by document.write() JavaScript.
+        """
         wc.log.debug(wc.LOG_JS, "%s js_process_data %r", self, data)
         self.js_output += 1
         # parse recursively
         self.js_htmlparser.feed(data)
 
     def js_process_popup (self):
-        """process javascript popup"""
+        """
+        Process javascript popup.
+        """
         wc.log.debug(wc.LOG_JS, "%s js_process_popup", self)
         self.js_popup += 1
 
     def js_process_error (self, msg):
-        """process javascript syntax error"""
+        """
+        Process javascript syntax error.
+        """
         wc.log.error(wc.LOG_JS, "JS error at %s", self.url)
         wc.log.error(wc.LOG_JS, msg)
 
     def jsPopup (self, attrs, name):
-        """check if attrs[name] javascript opens a popup window"""
+        """
+        Check if attrs[name] javascript opens a popup window.
+        """
         wc.log.debug(wc.LOG_JS, "%s jsPopup %r", self, attrs[name])
         val = wc.HtmlParser.resolve_html_entities(attrs[name])
         if not val:
@@ -106,11 +118,20 @@ class JSFilter (wc.js.JSListener.JSListener):
         return res
 
     def new_instance (self, **opts):
-        """generate new JSFilter instance"""
+        """
+        Generate new JSFilter instance.
+        """
         return JSFilter(self.url, self.localhost, opts)
 
     def jsScript (self, script, ver, item):
-        """execute given script with javascript version ver"""
+        """
+        Execute script with javascript a specific version.
+
+        @param script: the javascript script
+        @type script: string
+        @param ver: javascript version
+        @type ver: float
+        """
         wc.log.debug(wc.LOG_JS, "%s jsScript %s %r", self, ver, script)
         assert self.htmlparser.state[0] == 'parse', \
                "parser %s not in parse state" % self.htmlparser
@@ -133,7 +154,9 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_end_script(item)
 
     def js_end_script (self, item):
-        """</script> was encountered"""
+        """
+        A </script> was encountered.
+        """
         wc.log.debug(wc.LOG_JS, "%s js_end_script %s", self, item)
         self.htmlparser.debugbuf(wc.LOG_JS)
         if len(self.htmlparser.tagbuf) < 2:
@@ -177,11 +200,15 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.htmlparser.debugbuf(wc.LOG_JS)
 
     def filter_end_element (self, tag):
-        """filters an end tag, return True if tag was filtered, else False"""
+        """
+        Filters an end tag, return True if tag was filtered, else False.
+        """
         raise NotImplementedError("Must be overridden in subclass")
 
     def js_end_element (self, item):
-        """parse generated html for scripts"""
+        """
+        Parse generated html for scripts.
+        """
         wc.log.debug(wc.LOG_JS,
                      "%s js_end_element buf %r", self, self.htmlparser.tagbuf)
         if len(self.htmlparser.tagbuf)<2:
@@ -233,8 +260,10 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.jsScript(script, ver, item)
 
     def js_start_element (self, tag, attrs):
-        """Check popups for onmouseout and onmouseover.
-           Inline extern javascript sources"""
+        """
+        Check popups for onmouseout and onmouseover.
+        Inline extern javascript sources.
+        """
         wc.log.debug(wc.LOG_JS, "%s js_start_element", self)
         self.js_src = False
         self.js_output = 0
@@ -260,7 +289,9 @@ class JSFilter (wc.js.JSListener.JSListener):
                                        tag, attrs])
 
     def jsForm (self, name, action, target):
-        """when hitting a named form, add it to the JS environment"""
+        """
+        When hitting a named form, add it to the JS environment.
+        """
         if not name:
             return
         wc.log.debug(wc.LOG_JS, "%s jsForm %r action %r %r",
@@ -271,8 +302,10 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_env.addForm(name, action, target)
 
     def jsScriptSrc (self, url, language):
-        """Start a background download for <script src=""> tags
-           After that, self.js_client points to the proxy client object"""
+        """
+        Start a background download for <script src=""> tags
+        After that, self.js_client points to the proxy client object.
+        """
         wc.log.debug(wc.LOG_JS, "%s jsScriptSrc %r", self, url)
         assert self.htmlparser.state[0] == 'parse', \
                "non-parse state %s" % self.htmlparser.state
@@ -304,8 +337,10 @@ class JSFilter (wc.js.JSListener.JSListener):
             )
 
     def jsScriptData (self, data, url, ver):
-        """Callback for loading <script src=""> data in the background
-           If downloading is finished, data is None"""
+        """
+        Callback for loading <script src=""> data in the background
+        If downloading is finished, data is None.
+        """
         assert self.htmlparser.state[0] == 'wait', "non-wait state"
         wc.log.debug(wc.LOG_JS, "%s jsScriptData %r", self, data)
         if data is None:
@@ -334,7 +369,9 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.js_script += data.decode(self.htmlparser.encoding, "ignore")
 
     def finish (self):
-        """stop all background downloads immediately"""
+        """
+        Stop all background downloads immediately.
+        """
         wc.log.debug(wc.LOG_JS, "%s finish", self)
         self.js_client.finish()
         self.js_client = None

@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""basic start and init methods"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Basic start and init methods.
+"""
 
 import sys
 if not hasattr(sys, "version_info"):
@@ -93,7 +95,9 @@ LOG_TALES = "TALES"
 
 
 def get_locdir ():
-    """return locale directory"""
+    """
+    Return locale directory.
+    """
     locdir = os.environ.get('LOCPATH')
     if locdir is None:
         locdir = os.path.join(InstallData, 'share', 'locale')
@@ -101,8 +105,9 @@ def get_locdir ():
 
 
 def init_i18n ():
-    """Deploy i18n gettext method into the default namespace.
-       The LOCPATH environment variable is supported.
+    """
+    Deploy i18n gettext method into the default namespace.
+    The LOCPATH environment variable is supported.
     """
     wc.i18n.init(configdata.name, get_locdir())
 
@@ -110,14 +115,18 @@ def init_i18n ():
 wc.init_i18n()
 
 def get_translator (lang, translatorklass=None, fallbackklass=None):
-    """return translator class"""
+    """
+    Return translator class.
+    """
     return wc.i18n.get_translator(configdata.name, get_locdir(), lang,
          translatorklass=translatorklass,
          fallback=True, fallbackklass=fallbackklass)
 
 
 def iswritable (fname):
-    """return True if given file is writable"""
+    """
+    Return True if given file is writable.
+    """
     if os.path.isdir(fname) or os.path.islink(fname):
         return False
     try:
@@ -134,7 +143,9 @@ def iswritable (fname):
 
 
 def get_log_file (name, logname, trydirs=None):
-    """get full path name to writeable logfile"""
+    """
+    Get full path name to writeable logfile.
+    """
     dirs = []
     if os.name == "nt":
         dirs.append(os.environ.get("TEMP"))
@@ -156,7 +167,9 @@ def get_log_file (name, logname, trydirs=None):
 
 
 def initlog (filename, appname, filelogs=True):
-    """initialize logfiles and configuration"""
+    """
+    Initialize logfiles and configuration.
+    """
     logging.config.fileConfig(filename)
     if filelogs:
         trydirs = []
@@ -176,13 +189,17 @@ def initlog (filename, appname, filelogs=True):
 
 
 def set_format (handler):
-    """set standard format for handler"""
+    """
+    Set standard format for handler.
+    """
     handler.setFormatter(logging.root.handlers[0].formatter)
     return handler
 
 
 def get_wc_handler (logfile):
-    """return a handler for webcleaner logging"""
+    """
+    Return a handler for webcleaner logging.
+    """
     mode = 'a'
     max_bytes = 1024*1024*2 # 2 MB
     backup_count = 5 # number of files to generate
@@ -192,7 +209,9 @@ def get_wc_handler (logfile):
 
 
 def get_access_handler (logfile):
-    """return a handler for access logging"""
+    """
+    Return a handler for access logging.
+    """
     mode = 'a'
     max_bytes = 1024*1024*2 # 2 MB
     backup_count = 5 # number of files to generate
@@ -204,14 +223,18 @@ def get_access_handler (logfile):
 
 
 def sort_seq (seq):
-    """return sorted list of given sequence"""
+    """
+    Return sorted list of given sequence.
+    """
     l = list(seq)
     l.sort()
     return l
 
 
 def restart ():
-    """restart the webcleaner proxy"""
+    """
+    Restart the webcleaner proxy.
+    """
     if os.name == 'nt':
         py_exe = os.path.join(sys.prefix, "pythonw.exe")
     else:

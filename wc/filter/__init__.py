@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""filter modules
+"""
+Filter modules.
 
 Welcome to the wonderful world of software OSI layer 5 filtering.
 If you want to write your own filter module look at the existing
@@ -27,7 +28,6 @@ to see how it is done.
 To communicate with the proxy, filters can throw FilterExceptions.
 Of course, these must be handled in the appropriate proxy functions
 to work properly.
-
 """
 
 import wc
@@ -73,28 +73,34 @@ FilterStages = [
 ]
 
 class FilterException (Exception):
-    """Generic filter exception"""
+    """
+    Generic filter exception.
+    """
     pass
 
 
 class FilterWait (FilterException):
-    """Raised when a filter waits for more data. The filter should
-       buffer the already passed data until the next call (and until
-       it has enough data to proceed).
+    """
+    Raised when a filter waits for more data. The filter should
+    buffer the already passed data until the next call (and until
+    it has enough data to proceed).
     """
     pass
 
 
 class FilterRating (FilterException):
-    """Raised when a filter detected rated content.
-       The proxy must not have sent any content.
+    """
+    Raised when a filter detected rated content.
+    The proxy must not have sent any content.
     """
     pass
 
 
 class FilterProxyError (FilterException):
-    """Raised to signal a proxy error which should be delegated to
-       the HTTP client."""
+    """
+    Raised to signal a proxy error which should be delegated to
+    the HTTP client.
+    """
     def __init__ (self, status, msg, text):
         self.status = status
         self.msg = msg
@@ -102,16 +108,19 @@ class FilterProxyError (FilterException):
 
 
 def GetRuleFromName (name):
-    """return new rule instance for given rule name"""
+    """
+    Return new rule instance for given rule name.
+    """
     name = '%sRule' % name.capitalize()
     mod = __import__("wc.filter.rules.%s"%name, {}, {}, [name])
     return getattr(mod, name)()
 
 
 def applyfilter (filterstage, data, fun, attrs):
-    """Apply all filters which are registered in the given filter stage.
-       For different filter stages we have different data objects.
-       Look at the filter examples.
+    """
+    Apply all filters which are registered in the given filter stage.
+    For different filter stages we have different data objects.
+    Look at the filter examples.
     """
     attrs['filterstage'] = filterstage
     wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
@@ -134,7 +143,9 @@ def applyfilter (filterstage, data, fun, attrs):
 
 def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
                      clientheaders=None, serverheaders=None, headers=None):
-    """init external state objects"""
+    """
+    Init external state objects.
+    """
     if clientheaders is None:
         clientheaders = wc.proxy.Headers.WcMessage()
     if serverheaders is None:
@@ -166,8 +177,9 @@ def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
 
 
 def get_mime_charset (mime):
-    """extract charset information from mime string
-       eg. text/html; charset=iso8859-1
+    """
+    Extract charset information from mime string, eg.
+    "text/html; charset=iso8859-1".
     """
     for param in mime.split(';'):
         if param.lower().startswith('charset='):

@@ -1,6 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-"""mail utils"""
-# Copyright (C) 2004  Bastian Kleineidam
+# Copyright (C) 2004-2005 Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Mail utils.
+"""
 
 import socket
 import smtplib
@@ -24,7 +26,9 @@ import wc.log
 
 
 def valid_mail (address):
-    """return cleaned up mail, or an empty string on errors"""
+    """
+    Return cleaned up mail, or an empty string on errors.
+    """
     cleaned = email.Utils.parseaddr(address)
     if not cleaned[0]:
         return cleaned[1]
@@ -32,7 +36,9 @@ def valid_mail (address):
 
 
 def send_mail (smtphost, fromaddr, toaddrs, message):
-    """send mail, return False on error, else True"""
+    """
+    Send mail, return False on error, else True.
+    """
     try:
         conn = smtplib.SMTP(smtphost)
         conn.sendmail(fromaddr, toaddrs, message)
@@ -44,5 +50,7 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
 
 
 def mail_date ():
-    """return date string formatted for a mail header"""
+    """
+    Return date string formatted for a mail header.
+    """
     return email.Utils.formatdate()

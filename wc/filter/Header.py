@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""add or delete HTTP headers"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Add or delete HTTP headers.
+"""
 
 import re
 import sets
@@ -27,17 +29,23 @@ import wc.filter.Filter
 
 
 class Header (wc.filter.Filter.Filter):
-    """filter for adding, modifying and deleting headers"""
+    """
+    Filter for adding, modifying and deleting headers.
+    """
 
     def __init__ (self):
-        """Init stages and rulenames."""
+        """
+        Init stages and rulenames.
+        """
         stages = [wc.filter.STAGE_REQUEST_HEADER,
                   wc.filter.STAGE_RESPONSE_HEADER]
         rulenames = ['header']
         super(Header, self).__init__(stages=stages, rulenames=rulenames)
 
     def get_attrs (self, url, localhost, stages, headers):
-        """configure header rules to add/delete"""
+        """
+        Configure header rules to add/delete.
+        """
         if not self.applies_to_stages(stages):
             return {}
         d = super(Header, self).get_attrs(url, localhost, stages, headers)
@@ -75,7 +83,9 @@ class Header (wc.filter.Filter.Filter):
         return d
 
     def doit (self, data, attrs):
-        """apply stored header rules to data, which is a WcMessage object"""
+        """
+        Apply stored header rules to data, which is a WcMessage object.
+        """
         delete = sets.Set()
         # stage is STAGE_REQUEST_HEADER or STAGE_RESPONSE_HEADER
         stage = attrs['filterstage']

@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter invalid binary chars from HTML"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter invalid binary chars from HTML.
+"""
 
 import string
 import re
@@ -25,18 +27,23 @@ import wc.filter.Filter
 is_utf = re.compile(r"text/html;\s*charset=utf-8", re.I).search
 
 class BinaryCharFilter (wc.filter.Filter.Filter):
-    """Replace binary characters, often found in Microsoft HTML documents,
-       with their correct HTML equivalent.
+    """
+    Replace binary characters, often found in Microsoft HTML documents,
+    with their correct HTML equivalent.
     """
 
     def __init__ (self):
-        """initialize stages and mime list"""
+        """
+        Initialize stages and mime list.
+        """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         mimes = ['text/html']
         super(BinaryCharFilter, self).__init__(stages=stages, mimes=mimes)
 
     def doit (self, data, attrs):
-        """filter given data"""
+        """
+        Filter given data.
+        """
         # the HTML parser does not yet understand Unicode, so this hack
         # disabled the binary char filter in this case
         if not attrs.get('binarychar_is_utf'):

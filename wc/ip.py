@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-""" ip related utility functions """
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Ip number related utility functions.
+"""
 
 import re
 import socket
@@ -45,8 +47,10 @@ _host_cidrmask_re = re.compile(r"^%s/\d{1,2}$" % _ipv4_num_4)
 
 
 def expand_ipv6 (ip, num):
-    """expand an IPv6 address with included :: to num octets
-       raise ValueError on invalid IP addresses
+    """
+    Expand an IPv6 address with included :: to num octets.
+
+    @raise: ValueError on invalid IP addresses
     """
     i = ip.find("::")
     prefix = ip[:i]
@@ -65,10 +69,11 @@ def expand_ipv6 (ip, num):
 
 
 def expand_ip (ip):
-    """ipv6 addresses are expanded to full 8 octets, all other
-       addresses are left untouched
-       return a tuple (ip, num) where num==1 if ip is a numeric ip, 0
-       otherwise.
+    """
+    ipv6 addresses are expanded to full 8 octets, all other
+    addresses are left untouched
+    return a tuple (ip, num) where num==1 if ip is a numeric ip, 0
+    otherwise.
     """
     if _ipv4_re.match(ip) or \
        _ipv6_re.match(ip) or \
@@ -83,12 +88,16 @@ def expand_ip (ip):
 
 
 def is_valid_ip (ip):
-    """Return True if given ip is a valid IPv4 or IPv6 address"""
+    """
+    Return True if given ip is a valid IPv4 or IPv6 address.
+    """
     return is_valid_ipv4(ip) or is_valid_ipv6(ip)
 
 
 def is_valid_ipv4 (ip):
-    """Return True if given ip is a valid IPv4 address"""
+    """
+    Return True if given ip is a valid IPv4 address.
+    """
     if not _ipv4_re.match(ip):
         return False
     a, b, c, d = [int(i) for i in ip.split(".")]
@@ -96,7 +105,9 @@ def is_valid_ipv4 (ip):
 
 
 def is_valid_ipv6 (ip):
-    """Return True if given ip is a valid IPv6 address"""
+    """
+    Return True if given ip is a valid IPv6 address.
+    """
     # XXX this is not complete: check ipv6 and ipv4 semantics too here
     if not (_ipv6_re.match(ip) or _ipv6_ipv4_re.match(ip) or
             _ipv6_abbr_re.match(ip) or _ipv6_ipv4_abbr_re.match(ip)):
@@ -105,45 +116,63 @@ def is_valid_ipv6 (ip):
 
 
 def is_valid_cidrmask (mask):
-    """check if given mask is a valid network bitmask in CIDR notation"""
+    """
+    Check if given mask is a valid network bitmask in CIDR notation.
+    """
     return 0 <= mask <= 32
 
 
 def dq2num (ip):
-    "convert decimal dotted quad string to long integer"
+    """
+    Convert decimal dotted quad string to long integer.
+    """
     return struct.unpack('!L', socket.inet_aton(ip))[0]
 
 
 def num2dq (n):
-    "convert long int to dotted quad string"
+    """
+    Convert long int to dotted quad string.
+    """
     return socket.inet_ntoa(struct.pack('!L', n))
 
 
 def cidr2mask (n):
-    "return a mask where the n left-most of 32 bits are set"
+    """
+    Return a mask where the n left-most of 32 bits are set.
+    """
     return ((1L << n) - 1) << (32-n)
 
 
 def netmask2mask (ip):
-    "return a mask of bits as a long integer"
+    """
+    Return a mask of bits as a long integer.
+    """
     return dq2num(ip)
 
 def mask2netmask (mask):
-    """return dotted quad string as netmask"""
+    """
+    Return dotted quad string as netmask.
+    """
     return num2dq(mask)
 
 def dq2net (ip, mask):
-    "return a tuple (network ip, network mask) for given ip and mask"
+    """
+    Return a tuple (network ip, network mask) for given ip and mask.
+    """
     return dq2num(ip) & mask
 
 
 def dq_in_net (n, mask):
-    """return True iff numerical ip n is in given network"""
+    """
+    Return True iff numerical ip n is in given network.
+    """
     return (n & mask) == mask
 
 
 def host_in_set (ip, hosts, nets):
-    """return True if given ip is in host or network list"""
+    """
+    Return True if given ip is in host or network list.
+    """
     if ip in hosts:
         return True
     if is_valid_ipv4(ip):
@@ -155,15 +184,18 @@ def host_in_set (ip, hosts, nets):
 
 
 def strhosts2map (strhosts):
-    """convert a string representation of hosts and networks to
-       a tuple (hosts, networks)"""
+    """
+    Convert a string representation of hosts and networks to
+    a tuple (hosts, networks).
+    """
     return hosts2map([s.strip() for s in strhosts.split(",") if s])
 
 
 def hosts2map (hosts):
-    """return a set of named hosts, and a list of subnets (host/netmask
-       adresses).
-       Only IPv4 host/netmasks are supported.
+    """
+    Return a set of named hosts, and a list of subnets (host/netmask
+    adresses).
+    Only IPv4 host/netmasks are supported.
     """
     hostset = sets.Set()
     nets = []
@@ -199,8 +231,10 @@ def hosts2map (hosts):
 
 
 def map2hosts (hostmap):
-    """convert a tuple (hosts, networks) into a host/network list
-       suitable for storing in a config file"""
+    """
+    Convert a tuple (hosts, networks) into a host/network list
+    suitable for storing in a config file.
+    """
     ret = hostmap[0].copy()
     for net, mask in hostmap[1]:
         ret.add("%s/%d" % (num2dq(net), mask2netmask(mask)))
@@ -208,7 +242,9 @@ def map2hosts (hostmap):
 
 
 def lookup_ips (ips):
-    """return set of host names that resolve to given ips"""
+    """
+    Return set of host names that resolve to given ips.
+    """
     hosts = sets.Set()
     for ip in ips:
         try:
@@ -219,7 +255,9 @@ def lookup_ips (ips):
 
 
 def resolve_host (host):
-    """return set of ip numbers for given host"""
+    """
+    Return set of ip numbers for given host.
+    """
     ips = sets.Set()
     try:
         for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):

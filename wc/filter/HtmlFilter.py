@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter a HTML stream."""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter a HTML stream.
+"""
 
 import urllib
 
@@ -30,14 +32,17 @@ import wc.filter.rating
 
 
 class HtmlFilter (wc.filter.JSFilter.JSFilter):
-    """Filtering HTML parser handler. Has filter rules and a rule stack.
-       The callbacks modify parser state and buffers.
+    """
+    Filtering HTML parser handler. Has filter rules and a rule stack.
+    The callbacks modify parser state and buffers.
 
-       XXX fixme: should make internal functions start with _
+    XXX fixme: should make internal functions start with _
     """
 
     def __init__ (self, rules, ratings, url, localhost, **opts):
-        "init rules and buffers"
+        """
+        Init rules and buffers.
+        """
         super(HtmlFilter, self).__init__(url, localhost, opts)
         self.rules = rules
         self.ratings = ratings
@@ -48,53 +53,72 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         self.security = wc.filter.HtmlSecurity.HtmlSecurity()
 
     def new_instance (self, **opts):
-        """make a new instance of this filter, for recursive filtering"""
+        """
+        Make a new instance of this filter, for recursive filtering.
+        """
         return HtmlFilter(self.rules, self.ratings, self.url,
                           self.localhost, **opts)
 
     def error (self, msg):
-        """signal a filter/parser error"""
+        """
+        Report a filter/parser error.
+        """
         wc.log.error(wc.LOG_FILTER, msg)
 
     def warning (self, msg):
-        """signal a filter/parser warning"""
+        """
+        Report a filter/parser warning.
+        """
         wc.log.warn(wc.LOG_FILTER, msg)
 
     def fatal_error (self, msg):
-        """signal a fatal filter/parser error"""
+        """
+        Report a fatal filter/parser error.
+        """
         wc.log.critical(wc.LOG_FILTER, msg)
 
     def __repr__ (self):
-        """representation with recursion level and state"""
+        """
+        Representation with recursion level and state.
+        """
         return "<HtmlFilter[%d] %s>" % (self.level, self.url)
 
     def _is_waiting (self, item):
-        """if parser is in wait state put item on waitbuffer and return
-           True"""
+        """
+        If parser is in wait state put item on waitbuffer and return True.
+        """
         if self.htmlparser.state[0] == 'wait':
             self.htmlparser.waitbuf.append(item)
             return True
         return False
 
     def _data (self, data):
-        """general handler for data"""
+        """
+        General handler for data.
+        """
         item = [wc.filter.rules.RewriteRule.DATA, data]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
 
     def cdata (self, data):
-        """character data"""
+        """
+        Character data.
+        """
         wc.log.debug(wc.LOG_FILTER, "%s cdata %r", self, data)
         return self._data(data)
 
     def characters (self, data):
-        """characters"""
+        """
+        Characters.
+        """
         wc.log.debug(wc.LOG_FILTER, "%s characters %r", self, data)
         return self._data(data)
 
     def comment (self, data):
-        """a comment; accept only non-empty comments"""
+        """
+        A comment; accept only non-empty comments.
+        """
         if not (self.comments and data):
             return
         wc.log.debug(wc.LOG_FILTER, "%s comment %r", self, data)
@@ -104,12 +128,16 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         self.htmlparser.tagbuf.append(item)
 
     def doctype (self, data):
-        """HTML doctype"""
+        """
+        HTML doctype.
+        """
         wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
         return self._data(u"<!DOCTYPE%s>" % data)
 
     def pi (self, data):
-        """HTML pi"""
+        """
+        HTML pi.
+        """
         wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
         return self._data(u"<?%s?>" % data)
 
@@ -120,8 +148,10 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         self._start_element(tag, attrs, True)
 
     def _start_element (self, tag, attrs, startend):
-        """We get a new start tag. New rules could be appended to the
-        pending rules. No rules can be removed from the list."""
+        """
+        We get a new start tag. New rules could be appended to the
+        pending rules. No rules can be removed from the list.
+        """
         # default data
         wc.log.debug(wc.LOG_FILTER, "%s start_element %r %s", self, tag, attrs)
         if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG,
@@ -166,7 +196,9 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             self.htmlparser.tagbuf2data()
 
     def filter_start_element (self, tag, attrs, startend):
-        """filter the start element according to filter rules"""
+        """
+        Filter the start element according to filter rules.
+        """
         rulelist = []
         filtered = False
         if startend:
@@ -207,11 +239,13 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             self.htmlparser.tagbuf.append(item)
 
     def end_element (self, tag):
-        """We know the following: if a rule matches, it must be
+        """
+        We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
         If it matches and the rule stack is now empty we can flush
-        the tag buffer (calling tagbuf2data)"""
+        the tag buffer (calling tagbuf2data).
+        """
         wc.log.debug(wc.LOG_FILTER, "%s end_element %r", self, tag)
         if self._is_waiting([wc.filter.rules.RewriteRule.ENDTAG, tag]):
             return
@@ -234,7 +268,9 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             self.htmlparser.tagbuf2data()
 
     def filter_end_element (self, tag):
-        """filters an end tag, return True if tag was filtered, else False"""
+        """
+        Filters an end tag, return True if tag was filtered, else False.
+        """
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
         # matches, all other match too

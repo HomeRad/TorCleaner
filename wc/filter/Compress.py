@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""compress documents on-the-fly with zlib"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Compress documents on-the-fly with zlib.
+"""
 
 import struct
 import time
@@ -29,7 +31,9 @@ import wc.proxy.Headers
 _compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
 
 def gzip_header ():
-    """return a GZIP header string"""
+    """
+    Return a GZIP header string.
+    """
     return '%s%s%s%s' % (
               '\037\213\010', # header
               chr(0),         # flags
@@ -39,7 +43,9 @@ def gzip_header ():
 
 
 def get_compress_object ():
-    """return attributes for Compress filter"""
+    """
+    Return attributes for Compress filter.
+    """
     return {'compressor': zlib.compressobj(6, zlib.DEFLATED,
                                              -zlib.MAX_WBITS,
                                               zlib.DEF_MEM_LEVEL, 0),
@@ -50,10 +56,14 @@ def get_compress_object ():
 
 
 class Compress (wc.filter.Filter.Filter):
-    """filter class compressing its input with zlib"""
+    """
+    Filter class compressing its input with zlib.
+    """
 
     def __init__ (self):
-        """Set init compressor flag to True."""
+        """
+        Set init compressor flag to True.
+        """
         stages = [wc.filter.STAGE_RESPONSE_ENCODE]
         mimes = [r'text/[a-z.\-+]+',
                  r'application/(postscript|pdf|x-dvi)',
@@ -65,9 +75,10 @@ class Compress (wc.filter.Filter.Filter):
         self.init_compressor = True
 
     def filter (self, data, attrs):
-        """Compress the string s.
-           Note that compression state is saved outside of this function
-           in the compression object.
+        """
+        Compress the string s.
+        Note that compression state is saved outside of this function
+        in the compression object.
         """
         if self.init_compressor:
             self.set_encoding_header(attrs)
@@ -86,7 +97,9 @@ class Compress (wc.filter.Filter.Filter):
         return "%s%s" % (header, compobj['compressor'].compress(data))
 
     def finish (self, data, attrs):
-        """final compression of data, flush gzip buffers"""
+        """
+        Final compression of data, flush gzip buffers.
+        """
         if self.init_compressor:
             self.set_encoding_header(attrs)
             self.init_compressor = False
@@ -112,10 +125,11 @@ class Compress (wc.filter.Filter.Filter):
         return data
 
     def set_encoding_header (self, attrs):
-        """fix headers for compression, and add a compression object
-           to the filter attrs. Since the headers are modified this cannot
-           be done in get_attrs() but only when it is clear that the content
-           is going to be compressed.
+        """
+        Fix headers for compression, and add a compression object
+        to the filter attrs. Since the headers are modified this cannot
+        be done in get_attrs() but only when it is clear that the content
+        is going to be compressed.
         """
         headers = attrs['headers']
         accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])

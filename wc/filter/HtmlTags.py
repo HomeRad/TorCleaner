@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""check for typos in HTML tags."""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Check for typos in HTML tags.
+"""
 
 import re
 import wc.levenshtein
@@ -289,8 +291,9 @@ KnownInvalidTags = {
 
 
 def check_spelling (tag, url):
-    """check if tag (must be lowercase) is a valid HTML tag and if not,
-    tries to correct it to the first tag with a levenshtein distance of 1
+    """
+    Check if tag (must be lowercase) is a valid HTML tag and if not,
+    tries to correct it to the first tag with a levenshtein distance of 1.
     """
     if tag in HtmlTags or tag in MathTags:
         return tag

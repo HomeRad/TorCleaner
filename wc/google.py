@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Google utility functions"""
 # Copyright (C) 2003-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Google utility functions.
+"""
 
 import urllib, urlparse
 
@@ -25,24 +27,29 @@ google_domain = "http://www.google.com"
 google_try_status = (410, 503, 504, )
 
 def get_google_cache_url (url):
-    """return google cache url for given url"""
+    """
+    Return google cache url for given url.
+    """
     return "%s/search?q=cache:%s" % (google_domain, urllib.quote_plus(url))
 
 
 def get_google_search_url (query):
-    """return google search url for given url"""
+    """
+    Return google search url for given url.
+    """
     return "%s/search?q=%s" % (google_domain, query)
 
 
 def get_google_clean_url (url):
-    """Google ignores scheme, query and anchor parts when caching urls.
-       Additionally it ignores unusual filenames from urls
-       (example: http://slashdot.org/index.pl is not found in cache,
-       but http.//slashdot.org/ is found)
-       So this function does the following:
-        - remove scheme, query and anchor from url
-        - if path does not end with ".html" or "/", replace the path with
-          the root path "/"
+    """
+    Google ignores scheme, query and anchor parts when caching urls.
+    Additionally it ignores unusual filenames from urls
+    (example: http://slashdot.org/index.pl is not found in cache,
+    but http.//slashdot.org/ is found)
+    So this function does the following:
+     - remove scheme, query and anchor from url
+     - if path does not end with ".html" or "/", replace the path with
+       the root path "/"
     """
     parts = urlparse.urlsplit(url)
     if not parts[2].endswith(".html") and not parts[2].endswith("/"):
@@ -54,7 +61,9 @@ def get_google_clean_url (url):
 
 
 def get_google_context (url, response):
-    """return google template context for given url and response data"""
+    """
+    Return google template context for given url and response data.
+    """
     url_parts = urlparse.urlsplit(url)
     context = {
       'url': url,

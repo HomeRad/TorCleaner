@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""basic filter class and routines"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Basic filter class and routines.
+"""
 
 import re
 import wc
@@ -22,10 +24,14 @@ import wc.log
 
 
 class Filter (object):
-    """the base filter class"""
+    """
+    The base filter class.
+    """
 
     def __init__ (self, stages=None, rulenames=None, mimes=None):
-        """initialize rule list, mime list, stages, rulenames and priority"""
+        """
+        Initialize rule list, mime list, stages, rulenames and priority.
+        """
         # Which filter stages this filter applies to.
         # See wc/filter/__init__.py for the list of valid filter stages
         self.stages = []
@@ -48,49 +54,59 @@ class Filter (object):
         self.rules = []
 
     def addrule (self, rule):
-        """append given rule to rule list"""
+        """
+        Append given rule to rule list.
+        """
         wc.log.debug(wc.LOG_FILTER, "enable %s ", rule)
         for r in self.rules:
             assert r.sid != rule.sid
         self.rules.append(rule)
 
     def filter (self, data, attrs):
-        """Filter given data.
+        """
+        Filter given data.
 
-           @param attrs filter-specific state data
+        @param attrs: filter-specific state data
         """
         return self.doit(data, attrs)
 
     def finish (self, data, attrs):
-        """Filter given data and finish filtering (eg flushing buffers).
+        """
+        Filter given data and finish filtering (eg flushing buffers).
 
-           @param attrs filter-specific state data
+        @param attrs: filter-specific state data
         """
         return self.doit(data, attrs)
 
     def doit (self, data, attrs):
-        """Filter given data.
+        """
+        Filter given data.
 
-           @param attrs filter-specific state data
+        @param attrs: filter-specific state data
         """
         return data
 
     def get_attrs (self, url, localhost, stages, headers):
-        """Get filter-specific state data for all given filter stages.
+        """
+        Get filter-specific state data for all given filter stages.
 
-           @param url the complete request url
-           @param stages filter stages (STAGE_*)
-           @param headers dictionary with WcMessage objects under the keys
-                  ``client``, ``server`` and ``data``
+        @param url: the complete request url
+        @param stages: filter stages (STAGE_*)
+        @param headers: dictionary with WcMessage objects under the keys
+            ``client``, ``server`` and ``data``
         """
         return {}
 
     def applies_to_stages (self, stages):
-        """ask if this filter applies to one of the given filter stages"""
+        """
+        Ask if this filter applies to one of the given filter stages.
+        """
         return [s for s in self.stages if s in stages]
 
     def applies_to_mime (self, mime):
-        """ask if this filter applies to a mime type"""
+        """
+        Ask if this filter applies to a mime type.
+        """
         if not self.mimes:
             return True
         if mime is None:
@@ -101,7 +117,9 @@ class Filter (object):
         return False
 
     def __cmp__ (self, other):
-        """compare function considering filter priority"""
+        """
+        Compare function considering filter priority.
+        """
         return cmp(self.prio, other.prio)
 
     def __str__ (self):

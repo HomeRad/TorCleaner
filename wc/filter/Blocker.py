@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""block specific requested URLs"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Block specific requested URLs.
+"""
 
 import re
 import os
@@ -30,23 +32,31 @@ import wc.filter.Filter
 
 
 def is_flash_mime (mime):
-    """return True if mime is Shockwave Flash"""
+    """
+    Return True if mime is Shockwave Flash.
+    """
     return mime.startswith('application/x-shockwave-flash')
 
 
 def is_image_mime (mime):
-    """return True if mime is an image"""
+    """
+    Return True if mime is an image.
+    """
     return mime.startswith('image/')
 
 
 def is_javascript_mime (mime):
-    """return True if mime is JavaScript"""
+    """
+    Return True if mime is JavaScript.
+    """
     return mime.startswith('application/x-javascript') or \
            mime.startswith('text/javascript')
 
 
 def is_html_mime (mime):
-    """return True if mime is HTML"""
+    """
+    Return True if mime is HTML.
+    """
     return mime.startswith('text/html')
 
 
@@ -58,13 +68,17 @@ is_javascript_url = re.compile(r'(?i)\.js$').search
 
 
 def strblock (block):
-    """return string representation of block pattern(s)"""
+    """
+    Return string representation of block pattern(s).
+    """
     patterns = [ repr(b and b.pattern or "") for b in block ]
     return "[%s]" % ", ".join(patterns)
 
 
 def append_lines (lines, lst, sid):
-    """append lines to given list, augmented with sid"""
+    """
+    Append lines to given list, augmented with sid.
+    """
     for line in lines:
         line = line.strip()
         if not line or line[0] == '#':
@@ -73,7 +87,9 @@ def append_lines (lines, lst, sid):
 
 
 def get_file_data (filename):
-    """return plain file object, possible gunzipping the file"""
+    """
+    Return plain file object, possible gunzipping the file.
+    """
     wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
     config = wc.configuration.config
     filename = os.path.join(config.configdir, filename)
@@ -85,21 +101,26 @@ def get_file_data (filename):
 
 
 def try_append_lines (lst, rule):
-    """read rule file, print log note on error"""
+    """
+    Read rule file, print log note on error.
+    """
     try:
         lines = get_file_data(rule.filename)
         append_lines(lines, lst, rule.sid)
     except IOError, msg:
         wc.log.error(wc.LOG_FILTER, "could not read file %r: %s",
                      rule.filename, str(msg))
-        return
 
 
 class Blocker (wc.filter.Filter.Filter):
-    """block urls and show replacement data instead"""
+    """
+    Block urls and show replacement data instead.
+    """
 
     def __init__ (self):
-        """Load blocked/allowed urls/regex."""
+        """
+        Load blocked/allowed urls/regex.
+        """
         rulenames = [
             'block',
             'blockdomains',
@@ -127,50 +148,58 @@ class Blocker (wc.filter.Filter.Filter):
         self.block_flash = "/blocked.swf"
         self.block_js = "/blocked.js"
 
-
     def addrule (self, rule):
-        """add rule data to blocker, delegated to add_* methods"""
+        """
+        Add rule data to blocker, delegated to add_* methods.
+        """
         super(Blocker, self).addrule(rule)
         getattr(self, "add_"+rule.get_name())(rule)
 
-
     def add_allow (self, rule):
-        """add AllowRule data"""
+        """
+        Add AllowRule data.
+        """
         if rule.url:
             self.allow.append((re.compile(rule.url), rule.sid))
 
-
     def add_block (self, rule):
-        """add BlockRule data"""
+        """
+        Add BlockRule data.
+        """
         if rule.url:
             self.block.append((re.compile(rule.url), rule.replacement,
                                rule.sid))
 
-
     def add_blockdomains (self, rule):
-        """add BlockdomainsRule data"""
+        """
+        Add BlockdomainsRule data.
+        """
         try_append_lines(self.blocked_domains, rule)
 
-
     def add_allowdomains (self, rule):
-        """add AllowdomainsRule data"""
+        """
+        Add AllowdomainsRule data.
+        """
         try_append_lines(self.allowed_domains, rule)
 
-
     def add_blockurls (self, rule):
-        """add BlockurlsRule data"""
+        """
+        Add BlockurlsRule data.
+        """
         try_append_lines(self.blocked_urls, rule)
 
-
     def add_allowurls (self, rule):
-        """add AllowurlsRule data"""
+        """
+        Add AllowurlsRule data.
+        """
         try_append_lines(self.allowed_urls, rule)
 
-
     def doit (self, data, attrs):
-        """investigate request data for a block.
-           data is the complete request (with quoted url),
-           we get the unquoted url from args
+        """
+        Investigate request data for a block.
+
+        @param data: the complete request (with quoted url),
+           we get the unquoted url from args.
         """
         url = attrs['url']
         mime = attrs['mime']
@@ -218,9 +247,10 @@ class Blocker (wc.filter.Filter.Filter):
             return 'GET %s://localhost:%d%s HTTP/1.1' % (scheme, port, doc)
         return data
 
-
     def blocked (self, url, parts):
-        """True if url is blocked. Parts are the splitted url parts."""
+        """
+        True if url is blocked. Parts are the splitted url parts.
+        """
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
             if blockdomain == parts[wc.url.DOMAIN]:
@@ -244,9 +274,10 @@ class Blocker (wc.filter.Filter.Filter):
                 return True, sid
         return False, None
 
-
     def allowed (self, url, parts):
-        """True if url is allowed. Parts are the splitted url parts."""
+        """
+        True if url is allowed. Parts are the splitted url parts.
+        """
         for allowdomain, sid in self.allowed_domains:
             if allowdomain == parts[wc.url.DOMAIN]:
                 return True, sid

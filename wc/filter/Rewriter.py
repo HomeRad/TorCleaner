@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""filter a HTML stream."""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter a HTML stream.
+"""
 
 import wc.filter
 import wc.filter.Filter
@@ -25,10 +27,14 @@ import wc.filter.HtmlFilter
 DefaultCharset = 'iso-8859-1'
 
 class Rewriter (wc.filter.Filter.Filter):
-    """This filter can rewrite HTML tags. It uses a parser class."""
+    """
+    This filter can rewrite HTML tags. It uses a parser class.
+    """
 
     def __init__ (self):
-        """Init stages and mimes."""
+        """
+        Init stages and mimes.
+        """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['rewrite', 'nocomments', 'javascript', 'rating']
         mimes = ['text/html']
@@ -60,7 +66,9 @@ class Rewriter (wc.filter.Filter.Filter):
         return p.getoutput()
 
     def get_attrs (self, url, localhost, stages, headers):
-        """We need a separate filter instance for stateful filtering"""
+        """
+        We need a separate filter instance for stateful filtering.
+        """
         if not self.applies_to_stages(stages):
             return {}
         d = super(Rewriter, self).get_attrs(url, localhost, stages, headers)
