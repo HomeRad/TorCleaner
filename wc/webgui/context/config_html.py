@@ -80,7 +80,7 @@ def _exec_form (form, lang):
         if val!=u'__dummy__':
             _form_adminpass(base64.encodestring(val).strip(), res)
     elif config['adminpass']:
-        config['adminpass'] =u ''
+        config['adminpass'] = u''
         config.write_proxyconf()
         info['adminpass'] = True
         if config['adminuser']:
@@ -89,7 +89,7 @@ def _exec_form (form, lang):
     if form.has_key('proxyuser'):
         _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
     elif config['proxyuser']:
-        config['proxyuser'] = ''
+        config['proxyuser'] = u''
         config.write_proxyconf()
         info['proxyuser'] = True
     # proxy pass
@@ -99,7 +99,7 @@ def _exec_form (form, lang):
         if val!=u'__dummy__':
             _form_proxypass(base64.encodestring(val).strip(), res)
     elif config['proxypass']:
-        config['proxypass'] = ''
+        config['proxypass'] = u''
         config.write_proxyconf()
         info['proxypass'] = True
     # ntlm authentication
@@ -126,7 +126,7 @@ def _exec_form (form, lang):
     if form.has_key('parentproxy'):
         _form_parentproxy(_getval(form, 'parentproxy').strip())
     elif config['parentproxy']:
-        config['parentproxy'] = ''
+        config['parentproxy'] = u''
         config.write_proxyconf()
         info['parentproxy'] = True
     # parent proxy port
@@ -140,7 +140,7 @@ def _exec_form (form, lang):
     if form.has_key('parentproxyuser'):
         _form_parentproxyuser(_getval(form, 'parentproxyuser').strip())
     elif config['parentproxyuser']:
-        config['parentproxyuser'] = ''
+        config['parentproxyuser'] = u''
         config.write_proxyconf()
         info['parentproxyuser'] = True
     # parent proxy pass
@@ -150,7 +150,7 @@ def _exec_form (form, lang):
         if val!=u'__dummy__':
             _form_parentproxypass(base64.encodestring(val).strip())
     elif config['parentproxypass']:
-        config['parentproxypass'] = ''
+        config['parentproxypass'] = u''
         config.write_proxyconf()
         info['parentproxypass'] = True
     # timeout
