@@ -9,9 +9,17 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
 import des, md4, utils, base64, random
 random.seed()
 
-# nonce dictionary
-# XXX regularly delete nonces
-nonces = {}
+nonces = {} # nonce to timestamp
+max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
+
+
+def check_nonces ():
+    # deprecate old nonce
+    for key, value in nonces.items():
+        noncetime = time.time() - value
+        if noncetime > max_noncesecs:
+            del nonces[nonce]
+
 
 def get_ntlm_challenge (**attrs):
     """return initial challenge token for ntlm authentication"""
@@ -222,7 +230,7 @@ def create_message2 ():
     # zero2 again
     nonce = "%08d" % (random.random()*100000000) # eight random bytes
     assert nonce not in nonces
-    nonces[nonce] = None
+    nonces[nonce] = time.time()
     zero8 = '\x00'*8
     return "%(protocol)s%(type)s%(zero7)s%(msglen)s%(zero2)s%(flags)s%(zero2)s%(nonce)s%(zero8)s" % locals()
 
@@ -309,3 +317,7 @@ def unknown_part (bin_str):
     res += 'Decimal: %s\n' % utils.str2dec(bin_str, ' ')
     return res
 
+
+from wc.proxy import make_timer
+# check for timed out nonces every 5 minutes
+make_timer(300, check_nonces)

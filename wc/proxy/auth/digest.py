@@ -13,9 +13,17 @@ random.seed()
 from wc.proxy.auth import wc_realm
 # the default opaque value
 wc_opaque = base64.encodestring("unknown").strip()
-# nonce dictionary
 # XXX regularly delete all old nonces
-nonces = {}
+nonces = {} # nonce to timestamp
+max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
+
+
+def check_nonces ():
+    # deprecate old nonce
+    for key, value in nonces.items():
+        noncetime = time.time() - value
+        if noncetime > max_noncesecs:
+            del nonces[nonce]
 
 
 def get_digest_challenge (stale="false"):
@@ -23,7 +31,7 @@ def get_digest_challenge (stale="false"):
     realm = wc_realm
     nonce = encode_digest("%f:%f" % (time.time(), random.random()))
     assert nonce not in nonces
-    nonces[nonce] = None
+    nonces[nonce] = time.time()
     opaque = wc_opaque
     auth = 'realm="%(realm)s", nonce="%(nonce)s", opaque="%(opaque)s", stale=%(stale)s' % \
            locals()
@@ -52,11 +60,10 @@ def check_digest_credentials (credentials, **attrs):
     if credentials["realm"] != wc_realm:
         debug(AUTH, "digest wrong realm")
         return False
-    if credentials["nonce"] not in nonces:
+    nonce = credentials["nonce"]
+    if nonce not in nonces:
         debug(AUTH, "digest wrong nonce")
         return False
-    # deprecate old nonce
-    del nonces[credentials["nonce"]]
     if credentials['uri'] != attrs['uri']:
         debug(AUTH, "digest wrong uri")
         return False
@@ -191,3 +198,7 @@ def encode_digest (digest):
         hexrep.append(hex(n)[-1])
     return ''.join(hexrep)
 
+
+from wc.proxy import make_timer
+# check for timed out nonces every 5 minutes
+make_timer(300, check_nonces)
