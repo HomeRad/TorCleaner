@@ -12,7 +12,7 @@ class ClientConnection (asyncore.dispatcher, object):
     def __init__(self, config, test):
         super(ClientConnection, self).__init__()
         create_inet_socket(self, socket.SOCK_STREAM)
-        self.connect(('localhost', config['port']))
+        self.connect(('localhost', config['port']+1))
         self.outbuf, self.inbuf = get_data(config, test)
 
 
@@ -22,6 +22,7 @@ class ClientConnection (asyncore.dispatcher, object):
 
     def handle_read (self):
         data = self.recv(8192)
+        print "client got", `data`
         # XXX test data
 
 
