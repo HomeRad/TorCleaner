@@ -58,7 +58,6 @@ class Connection (asyncore.dispatcher):
         if not data: # It's been closed, and handle_close has been called
             return
         debug(PROXY, 'Proxy: read %d <= %s', len(data), str(self))
-        debug(PROXY, 'Proxy: data %s', `data`)
 	self.recv_buffer += data
         self.process_read()
 
@@ -82,7 +81,6 @@ class Connection (asyncore.dispatcher):
             self.handle_error('write error')
             return
         debug(PROXY, 'Proxy: wrote %d => %s', num_sent, str(self))
-        debug(PROXY, 'Proxy: data %s', `data[:num_sent]`)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = 0

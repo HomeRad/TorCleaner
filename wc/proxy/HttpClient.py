@@ -177,6 +177,7 @@ class HttpClient (Connection):
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
+        debug(PROXY, 'Proxy: client data %s', blocktext(data, 72))
         data = applyfilter(FILTER_REQUEST_DECODE, data,
                            attrs=self.nofilter)
         data = applyfilter(FILTER_REQUEST_MODIFY, data,
