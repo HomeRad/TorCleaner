@@ -54,6 +54,7 @@ dist:	locale
 	$(PYTHON) setup.py sdist --formats=gztar,zip
 	rm -f $(MD5SUMS)
 	md5sum dist/* > $(MD5SUMS)
+	for f in dist/*; do gpg --detach-sign --armor $$f; done
 
 test:
 	env http_proxy="" ftp_proxy="" LANG=C $(PYTHON) test/regrtest.py
