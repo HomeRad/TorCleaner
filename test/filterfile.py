@@ -4,26 +4,29 @@ sys.path.insert(0, os.getcwd())
 
 
 def _main():
-    f = sys.argv[1]
-    data = file(f).read()
+    fname = sys.argv[1]
+    if fname=="-":
+        f = sys.stdin
+    else:
+        f = file(fname)
     import wc, time
-    # set debug level
-    wc.set_debuglevel(wc.NIGHTMARE)
     wc.config = wc.Configuration()
-    # debug level could be reset, so set it again
-    wc.set_debuglevel(wc.NIGHTMARE)
+    # set debug level
+    wc.set_debuglevel(wc.HURT_ME_PLENTY)
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
     from wc.proxy import proxy_poll, run_timers
     from wc.filter import FilterException
-    attrs = wc.filter.initStateObjects(url=f)
+    attrs = wc.filter.initStateObjects(url=fname)
     filtered = ""
-    for c in data:
+    data = f.read(1024)
+    while data:
         try:
             filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
-                                             c, 'filter', attrs)
+                                             data, 'filter', attrs)
         except FilterException, msg:
             pass
+        data = f.read(1024)
     i = 1
     while 1:
         try:
