@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Feb 27 17:24:52 2004\n"
+"POT-Creation-Date: Sat Feb 28 17:28:13 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,6 +85,12 @@ msgid "Complete tag"
 msgstr ""
 
 msgid "Enclosed block"
+msgstr ""
+
+msgid "updating rule title for language %s:"
+msgstr ""
+
+msgid "updating rule description for language %s:"
 msgstr ""
 
 msgid "updating rule %s:"
@@ -234,6 +240,9 @@ msgstr ""
 msgid "%s error"
 msgstr ""
 
+msgid "No title"
+msgstr ""
+
 msgid "Unknown reason"
 msgstr ""
 
@@ -333,6 +342,9 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+msgid "Update content ratings"
+msgstr ""
+
 msgid "Allowed hosts"
 msgstr ""
 
@@ -405,11 +417,19 @@ msgstr ""
 msgid "before"
 msgstr ""
 
+msgid "Invalid or missing SMTP host."
+msgstr ""
+
 msgid ""
 "Most browsers support jumping to specific links by typing keys defined on\n"
 "the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
 "access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
 "access key."
+msgstr ""
+
+msgid ""
+"The supplied value resembles a\n"
+"<a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
 msgstr ""
 
 msgid "Response content data of mime types image/gif"
@@ -466,7 +486,11 @@ msgid ""
 "url with a backslash and the subgroup number (ie. \\1, \\2, ...)."
 msgstr ""
 
-msgid "Rating"
+msgid ""
+"The <b>Update content ratings</b> button\n"
+"downloads new content ratings from <a href=\"%(updateratingurl)s\">%(updateratingurl)s</a>\n"
+"and adds new ratings into the current configuration.<br>\n"
+"Existing content ratings are not changed."
 msgstr ""
 
 msgid "URL"
@@ -666,13 +690,16 @@ msgid ""
 "password.\n"
 msgstr ""
 
+msgid "This page is also available in"
+msgstr ""
+
 msgid "Invalid image width value."
 msgstr ""
 
 msgid "Image width"
 msgstr ""
 
-msgid "This page is also available in"
+msgid "Search for"
 msgstr ""
 
 msgid "Empty header rule name."
@@ -688,6 +715,9 @@ msgid "Skip to main content"
 msgstr ""
 
 msgid "Rule rewrite part successfully changed."
+msgstr ""
+
+msgid "Rating successfully deleted."
 msgstr ""
 
 msgid "Move folder down"
@@ -745,10 +775,12 @@ msgstr ""
 msgid "Move rule down"
 msgstr ""
 
-msgid "Proxy configuration"
+msgid ""
+"Please specify an SMTP host to send the mail to. If\n"
+"unsure, leave it at <code>localhost</code>.\n"
 msgstr ""
 
-msgid "Replace regex"
+msgid "Proxy configuration"
 msgstr ""
 
 msgid "Rule description successfully changed."
@@ -878,7 +910,12 @@ msgstr ""
 msgid "Your request"
 msgstr ""
 
-msgid "Rating successfully deleted."
+msgid ""
+"The <b>Update filter configuration</b> button\n"
+"downloads new filter files from <a href=\"%(updatezapperurl)s\">%(updatezapperurl)s</a>\n"
+"and merges their changes into the current configuration.<br>\n"
+"If something has changed, the new filter configuration files\n"
+"are saved and reloaded into the proxy."
 msgstr ""
 
 msgid "Don't match urls"
@@ -1094,18 +1131,13 @@ msgid ""
 "image/x-portable-*map, x-world/x-vrml."
 msgstr ""
 
-msgid ""
-"The <b>Update filter configuration</b> button\n"
-"downloads new filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a>\n"
-"and merges their changes into the current configuration.<br>\n"
-"If something has changed, the new filter configuration files\n"
-"are saved and reloaded into the proxy."
-msgstr ""
-
 msgid "Email this rating to the author"
 msgstr ""
 
 msgid "Remove rule"
+msgstr ""
+
+msgid "SMTP host"
 msgstr ""
 
 msgid "Browser configuration"
@@ -1156,6 +1188,9 @@ msgstr ""
 msgid "Disabled rule icon"
 msgstr ""
 
+msgid "Rating"
+msgstr ""
+
 msgid "Rule header value successfully changed."
 msgstr ""
 
@@ -1163,6 +1198,9 @@ msgid "Invalid url."
 msgstr ""
 
 msgid "Invalid folder move down id."
+msgstr ""
+
+msgid "Invalid or missing sender address."
 msgstr ""
 
 msgid "Rule header name successfully changed."
