@@ -81,8 +81,7 @@ class HttpServer (Server):
         self.attempt_connect()
         self.can_reuse = False
         self.flushing = False
-        # for authentication, hold back the unauthorized data
-        self.holdback = False
+        self.authtries = 0
 
 
     def __repr__ (self):
@@ -168,6 +167,9 @@ class HttpServer (Server):
         self.mime = mime
         # remember client header for authorization resend
         self.clientheaders = headers
+        if config['parentproxycreds']:
+            # stored previous proxy authentication (for Basic and Digest auth)
+            self.clientheaders['Proxy-Authorization'] = "%s\r"%config['parentproxycreds']
         self.send_request()
 
 
@@ -477,16 +479,29 @@ class HttpServer (Server):
         self.flush()
         if self.statuscode==407:
             assert config['parentproxy']
+            if self.authtries:
+                # we failed twice, abort
+                self.handle_error('authentication error')
+                self.authtries = 0
+                config['parentproxycreds'] = None
+                return
+            self.authtries += 1
             challenges = get_header_challenges(self.headers, 'Proxy-Authenticate')
             remove_headers(self.headers, ['Proxy-Authentication'])
             debug(PROXY, "Server: 407 challenges %s", str(challenges))
-            attrs = {}
+            attrs = {'password_b64': config['parentproxypass'],
+                     'username': config['parentproxyuser']}
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
+            if 'Basic' in challenges:
+                attrs['realm'] = challenges['Basic'][0]['realm']
+            if 'Digest' in challenges:
+                pass # XXX
             creds = get_credentials(challenges, **attrs)
             debug(PROXY, "Server: credentials %s", str(creds))
             # resubmit the request with proxy credentials
             self.state = 'client'
+            config['parentproxycreds'] = creds
             self.clientheaders['Proxy-Authorization'] = "%s\r" % creds
             self.send_request()
             return

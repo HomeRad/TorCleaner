@@ -52,9 +52,9 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    return [#get_basic_challenge(),
+    return [get_basic_challenge(),
             #get_digest_challenge(),
-            get_ntlm_challenge(**args),
+            #get_ntlm_challenge(**args),
            ]
 
 
@@ -100,12 +100,12 @@ def get_credentials (challenges, **attrs):
 def check_credentials (creds, **attrs):
     if not creds:
         return False
+    if 'NTLM' in creds:
+        return check_ntlm_credentials(creds['NTLM'][0], **attrs)
     if 'Digest' in creds:
         return check_digest_credentials(creds['Digest'][0], **attrs)
     if 'Basic' in creds:
         return check_basic_credentials(creds['Basic'][0], **attrs)
-    if 'NTLM' in creds:
-        return check_ntlm_credentials(creds['NTLM'][0], **attrs)
     warn(PROXY, "Unknown authentication credentials %s", str(creds))
     return False
 

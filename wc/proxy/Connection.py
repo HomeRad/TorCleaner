@@ -87,6 +87,7 @@ class Connection (asyncore.dispatcher, object):
             self.handle_error('write error')
             return
         debug(PROXY, 'Proxy: wrote %d => %s', num_sent, str(self))
+        debug(PROXY, 'data %s', `data`)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = False
