@@ -32,6 +32,7 @@ class RatingHeader (Filter):
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['rating']
+    # applies to all mime types
     mimelist = []
 
     def doit (self, data, **attrs):

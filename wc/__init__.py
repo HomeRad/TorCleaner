@@ -206,6 +206,10 @@ class Configuration (dict):
         self['gui_theme'] = "classic"
         self['timeout'] = 10
         self['auth_ntlm'] = 0
+        if os.name=='posix':
+            self['clamavconf'] = "/etc/clamav/clamav.conf"
+        else:
+            self['clamavconf'] = os.path.join(os.getcwd(), "clamav.conf")
         # in development mode some values have different defaults
         self['development'] = os.environ.get("WC_DEVELOPMENT", 0)
         self['baseurl'] = Url
@@ -250,6 +254,7 @@ class Configuration (dict):
         f.write(' gui_theme="%s"\n' % xmlquoteattr(self['gui_theme']))
         f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
         f.write(' try_google="%d"\n' % self['try_google'])
+        f.write(' clamavconf="%s"\n' % xmlquoteattr(self['clamavconf']))
         hosts = self['nofilterhosts']
         f.write(' nofilterhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
         hosts = self['allowedhosts']

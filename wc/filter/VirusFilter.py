@@ -1,0 +1,209 @@
+# -*- coding: iso-8859-1 -*-
+"""search data stream for virus signatures"""
+# Copyright (C) 2004  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
+import socket
+from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
+from wc.filter.Filter import Filter
+from wc.proxy.Connection import RECV_BUFSIZE
+
+
+# XXX group matches?
+class VirusFilter (Filter):
+    """scan for virus signatures in a data stream"""
+
+    # which filter stages this filter applies to (see filter/__init__.py)
+    orders = [FILTER_RESPONSE_MODIFY]
+    # which rule types this filter applies to (see Rules.py)
+    # all rules of these types get added with Filter.addrule()
+    rulenames = ['antivirus']
+    # applies to all mime types
+    mimelist = []
+
+
+    def filter (self, data, **attrs):
+        if not attrs.has_key('scanner'): return data
+        scanner = attrs['scanner']
+        if not scanner.infected and data:
+            scanner.scan(data)
+        if not scanner.infected:
+            return data
+        for msg in scanner.infected:
+            warn(FILTER, "Found virus %r in %r", msg, attrs['url'])
+        return ""
+
+
+    def finish (self, data, **attrs):
+        if not attrs.has_key('scanner'): return data
+        scanner = attrs['scanner']
+        if not scanner.infected and data:
+            scanner.scan(data)
+        scanner.close()
+        for msg in scanner.errors:
+            warn(FILTER, "Virus scanner error %r", msg)
+        if not scanner.infected:
+            return data
+        for msg in scanner.infected:
+            warn(FILTER, "Found virus %r in %r", msg, attrs['url'])
+        return ""
+
+
+    def getAttrs (self, url, headers):
+        d = super(VirusFilter, self).getAttrs(url, headers)
+        # weed out the rules that don't apply to this url
+        rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
+        if not rules:
+            return d
+        d['scanner'] = ClamdScanner()
+        return d
+
+
+class ClamdScanner (object):
+    """virus scanner using a clamd daemon process"""
+    def __init__ (self):
+        """initialize clamd daemon process connection"""
+        self.infected = []
+        self.errors = []
+        self.sock, host = clamav_conf.new_connection()
+        self.wsock = clamav_conf.new_scansock(self.sock, host)
+
+
+    def scan (self, data):
+        """scan given data for viruses, add results to infected and errors
+           attributes"""
+        self.wsock.sendall(data)
+        data = self.sock.recv(RECV_BUFSIZE)
+        while data:
+            if "FOUND\n" in data:
+                self.infected.append(data)
+            if "ERROR\n" in data:
+                self.errors.append(data)
+            data = self.sock.recv(RECV_BUFSIZE)
+
+
+    def close (self):
+        """close clamd daemon connection"""
+        self.sock.close()
+
+
+clamav_conf = None
+def init_clamav_conf ():
+    global clamav_conf
+    clamav_conf = ClamavConfig(config['clamavconf'])
+
+
+def get_sockinfo (host, port=None):
+    family, socktype = socket.AF_INET, socket.SOCK_STREAM
+    return socket.getaddrinfo(host, port, family, socktype)
+
+
+class ClamavConfig (dict):
+    """clamav configuration wrapper, with clamd connection method"""
+    def __init__ (self, filename):
+        super(ClamavConfig, self).__init__()
+        self.parseconf(filename)
+        if self.get('ScannerDaemonOutputFormat'):
+            raise Exception(i18n._("You have to disable ScannerDaemonOutputFormat"))
+        if self.get('TCPSocket') and self.get('LocalSocket'):
+            raise Exception(i18n._("Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."))
+
+
+    def parseconf (self, filename):
+        """parse clamav configuration from given file"""
+        f = file(filename)
+        # yet another config format, sigh
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                # ignore empty lines and comments
+                continue
+            split = line.split(None, 1)
+            if len(split)==1:
+                self[split[0]] = True
+            else:
+                self[split[0]] = split[1]
+
+
+    def new_connection (self):
+        """connect to clamd for stream scanning;
+           return connected socket and host"""
+        if self.get('LocalSocket'):
+            sock = self.create_local_socket()
+            host = 'localhost'
+        elif self.get('TCPSocket'):
+            sock = self.create_tcp_socket()
+            host = self.get('TCPAddr', 'localhost')
+        else:
+            raise Exception(i18n._("You have to enable either TCPSocket or LocalSocket in your Clamd configuration"))
+        return sock, host
+
+
+    def create_local_socket (self):
+        """create local socket, connect to it and return socket object"""
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        addr = self['LocalSocket']
+        try:
+            sock.connect(addr)
+        except socket.error:
+            sock.close()
+            raise
+        return sock
+
+
+    def create_tcp_socket (self, sockinfo):
+        """create tcp socket, connect to it and return socket object"""
+        host = self.get('TCPAddr', 'localhost')
+        port = int(self['TCPSocket'])
+        sockinfo = get_sockinfo(host, port=port)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.connect(sockinfo[0][4])
+        except socket.error:
+            sock.close()
+            raise
+        return sock
+
+
+    def new_scansock (self, sock, host):
+        """return a connected socket for sending scan data to it"""
+        port = None
+        try:
+            sock.sendall("STREAM")
+            port = None
+            for i in range(60):
+                data = sock.recv(RECV_BUFSIZE)
+                i = data.find("PORT")
+                if i != -1:
+                    port = int(data[i+5:])
+                    break
+        except socket.error:
+            sock.close()
+            raise
+        if port is None:
+            raise Exception(i18n._("Clamd is not ready for stream scanning"))
+        sockinfo = get_sockinfo(host, port=port)
+        wsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            wsock.connect(sockinfo[0][4])
+        except socket.error:
+            wsock.close()
+            raise
+        return wsock
+
