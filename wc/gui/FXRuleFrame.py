@@ -1,4 +1,3 @@
-import string
 from FXPy.fox import *
 from wc import _,debug,error
 from wc.debug_levels import *
@@ -38,7 +37,7 @@ class FXRuleFrame(FXVerticalFrame):
 
     def get_name(self):
         """display this name at the top of the window"""
-        s = string.capitalize(self.rule.get_name())+_(" rule")
+        s = self.rule.get_name().capitalize()+_(" rule")
         if hasattr(self.rule, "ruleid"):
             s += " (ID %d)" % self.rule.ruleid
         return s

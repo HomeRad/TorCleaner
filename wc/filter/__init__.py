@@ -23,7 +23,7 @@ to see how its done.
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import string,sys,wc
+import sys, wc
 from wc import debug
 from wc.debug_levels import *
 
@@ -57,7 +57,7 @@ def printFilterOrder(i):
 
 
 def GetRuleFromName(name):
-    name = string.capitalize(name)+'Rule'
+    name = name.capitalize()+'Rule'
     if hasattr(Rules, name):
         klass = getattr(Rules, name)
         return klass()

@@ -17,7 +17,7 @@
 from wc import debug, error
 from wc.debug_levels import *
 from types import StringType, IntType
-import re,string
+import re
 
 # tag ids
 STARTTAG = 0
@@ -54,7 +54,7 @@ def quote(s):
     for i in range(len(res)):
         c = res[i]
         res[i] = EntityTable.get(c, c)
-    return string.joinfields(res, '')
+    return ''.join(res)
 
 
 def part_num(s):
