@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-09-24 11:25+0200\n"
+"POT-Creation-Date: 2004-09-24 12:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -603,13 +603,6 @@ msgstr ""
 #, python-format
 msgid "Invalid command %r."
 msgstr ""
-#: ../templates/classic/macros/rules.html:426
-#: ../templates/classic/macros/rules.html:438
-#: ../templates/classic/rating.html:46
-#: ../templates/classic/rating.html:61
-#: ../templates/classic/rating.html:113
-msgid ""
-msgstr ""
 
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91
@@ -651,10 +644,6 @@ msgstr ""
 
 #: ../templates/classic/index.html:10
 msgid "${appname} web interface main page"
-msgstr ""
-
-#: ../templates/classic/accessibility.html:21
-msgid "<a href=\"http://diveintoaccessibility.org/\">${accessibility-link}"
 msgstr ""
 
 #: ../templates/classic/help.html:245
@@ -722,7 +711,7 @@ msgstr ""
 msgid "Admin password"
 msgstr ""
 
-#: ../templates/classic/config.html:374
+#: ../templates/classic/config.html:375
 msgid "Admin password successfully changed."
 msgstr ""
 
@@ -730,7 +719,7 @@ msgstr ""
 msgid "Admin user"
 msgstr ""
 
-#: ../templates/classic/config.html:373
+#: ../templates/classic/config.html:374
 msgid "Admin user successfully changed."
 msgstr ""
 
@@ -760,11 +749,11 @@ msgstr ""
 msgid "All pages define the following access keys:"
 msgstr ""
 
-#: ../templates/classic/config.html:386
+#: ../templates/classic/config.html:387
 msgid "Allowed host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:387
+#: ../templates/classic/config.html:388
 msgid "Allowed host(s) successfully removed."
 msgstr ""
 
@@ -824,10 +813,6 @@ msgstr ""
 
 #: ../templates/classic/update_doit.html:21
 msgid "Back to update overview"
-msgstr ""
-
-#: ../templates/classic/config.html:29
-msgid "Bind address"
 msgstr ""
 
 #: ../templates/classic/help.html:262
@@ -921,7 +906,7 @@ msgstr ""
 msgid "Disable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:385
+#: ../templates/classic/config.html:386
 msgid "Disabled filter module(s) ${disabled-filter}."
 msgstr ""
 
@@ -991,7 +976,7 @@ msgstr ""
 msgid "Enable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:383
+#: ../templates/classic/config.html:384
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr ""
 
@@ -1158,7 +1143,7 @@ msgid "If there is no replacement given the specified tag part will be removed, 
 msgstr ""
 
 #: ../templates/classic/accessibility.html:26
-msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at ${email-link}."
+msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at x."
 msgstr ""
 
 #: ../templates/classic/feedback.html:27
@@ -1185,7 +1170,7 @@ msgstr ""
 msgid "Internet Explorer"
 msgstr ""
 
-#: ../templates/classic/config.html:394
+#: ../templates/classic/config.html:395
 msgid "Invalid SSL server port."
 msgstr ""
 
@@ -1234,11 +1219,11 @@ msgstr ""
 msgid "Invalid or missing sender address."
 msgstr ""
 
-#: ../templates/classic/config.html:395
+#: ../templates/classic/config.html:396
 msgid "Invalid parent proxy port."
 msgstr ""
 
-#: ../templates/classic/config.html:393
+#: ../templates/classic/config.html:394
 msgid "Invalid proxy port."
 msgstr ""
 
@@ -1271,7 +1256,7 @@ msgstr ""
 msgid "Invalid selection index."
 msgstr ""
 
-#: ../templates/classic/config.html:396
+#: ../templates/classic/config.html:397
 msgid "Invalid timeout value."
 msgstr ""
 
@@ -1286,10 +1271,6 @@ msgstr ""
 
 #: ../templates/classic/config.html:306
 msgid "List of hosts allowed to use this proxy."
-msgstr ""
-
-#: ../templates/classic/config.html:29
-msgid "List of network hosts the proxy can listen on. Default is all hosts."
 msgstr ""
 
 #: ../templates/classic/macros/rules.html:72
@@ -1353,6 +1334,14 @@ msgstr ""
 msgid "Netscape/Mozilla"
 msgstr ""
 
+#: ../templates/classic/config.html:29
+msgid "Network address"
+msgstr ""
+
+#: ../templates/classic/config.html:29
+msgid "Network address the proxy should listen on."
+msgstr ""
+
 #: ../templates/classic/filterconfig.html:69
 msgid "New folder"
 msgstr ""
@@ -1369,11 +1358,11 @@ msgstr ""
 msgid "New rule successfully created."
 msgstr ""
 
-#: ../templates/classic/config.html:388
+#: ../templates/classic/config.html:389
 msgid "Nofilter host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:389
+#: ../templates/classic/config.html:390
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
@@ -1389,11 +1378,11 @@ msgstr ""
 msgid "Page blocked by ${appname}"
 msgstr ""
 
-#: ../templates/classic/config.html:380
+#: ../templates/classic/config.html:381
 msgid "Parent proxy password successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:378
+#: ../templates/classic/config.html:379
 msgid "Parent proxy port successfully changed."
 msgstr ""
 
@@ -1401,11 +1390,11 @@ msgstr ""
 msgid "Parent proxy settings"
 msgstr ""
 
-#: ../templates/classic/config.html:377
+#: ../templates/classic/config.html:378
 msgid "Parent proxy successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:379
+#: ../templates/classic/config.html:380
 msgid "Parent proxy user successfully changed."
 msgstr ""
 
@@ -1458,7 +1447,7 @@ msgstr ""
 msgid "Port number the proxy is listening on for requests"
 msgstr ""
 
-#: ../templates/classic/config.html:371
+#: ../templates/classic/config.html:372
 msgid "Port successfully changed."
 msgstr ""
 
@@ -1472,11 +1461,15 @@ msgstr ""
 msgid "Proxy filter modules"
 msgstr ""
 
+#: ../templates/classic/config.html:371
+msgid "Proxy network address successfully changed."
+msgstr ""
+
 #: ../templates/classic/config.html:156
 msgid "Proxy password"
 msgstr ""
 
-#: ../templates/classic/config.html:376
+#: ../templates/classic/config.html:377
 msgid "Proxy password successfully changed."
 msgstr ""
 
@@ -1488,7 +1481,7 @@ msgstr ""
 msgid "Proxy user"
 msgstr ""
 
-#: ../templates/classic/config.html:375
+#: ../templates/classic/config.html:376
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -1745,7 +1738,7 @@ msgstr ""
 msgid "SSL port number"
 msgstr ""
 
-#: ../templates/classic/config.html:372
+#: ../templates/classic/config.html:373
 msgid "SSL port successfully changed."
 msgstr ""
 
@@ -1827,7 +1820,7 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-#: ../templates/classic/config.html:381
+#: ../templates/classic/config.html:382
 msgid "Timeout sucessfully changed."
 msgstr ""
 
@@ -1924,6 +1917,10 @@ msgstr ""
 msgid "accessibility features of these pages"
 msgstr ""
 
+#: ../templates/classic/accessibility.html:21
+msgid "accessibility-link"
+msgstr ""
+
 #: ../templates/classic/help.html:194
 msgid "after"
 msgstr ""
@@ -1938,6 +1935,10 @@ msgstr ""
 
 #: ../templates/classic/accessibility.html:35
 msgid "control-key"
+msgstr ""
+
+#: ../templates/classic/accessibility.html:26
+msgid "email-link"
 msgstr ""
 
 #: ../templates/classic/config.html:218
