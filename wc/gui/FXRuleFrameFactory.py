@@ -62,6 +62,10 @@ class FXRuleFrameFactory:
         self.inc_index()
         return FXNocommentsRuleFrame(self.treeframe, rule, self.index)
 
+    def fromJavascriptRule (self, rule):
+        self.inc_index()
+        return FXJavascriptRuleFrame(self.treeframe, rule, self.index)
+
     def fromFolderRule (self, rule):
         self.inc_index()
         return FXFolderRuleFrame(self.treeframe, rule, self.index)
