@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 from wc import AppName, Version, ConfigDir, config
 from os.path import join as _join
-from whrandom import choice as _choice
+from random import choice as _choice
 import string as _string
 
 ConfigFile = _join(ConfigDir, "webcleaner.conf")
