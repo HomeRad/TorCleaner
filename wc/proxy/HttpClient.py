@@ -259,7 +259,7 @@ class HttpClient (Connection):
         assert self.state=='receive', "%s server_request in state receive" % str(self)
         # This object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
-                               self.content, self.attrs, self.compress)
+                               self.content, self.compress)
 
 
     def server_response (self, server, response, status, headers):
