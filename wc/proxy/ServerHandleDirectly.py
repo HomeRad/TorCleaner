@@ -8,7 +8,6 @@ from Server import Server
 class ServerHandleDirectly (Server):
     def __init__ (self, client, response, status, headers, content):
         super(ServerHandleDirectly, self).__init__(client, 'default')
-        headers.close()
         if content:
             headers["Content-Length"] = "%d\r" % len(content)
         self.connected = True
