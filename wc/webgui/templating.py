@@ -1,6 +1,11 @@
 import sys, cgi, urllib, os, re, os.path, time, errno
 
-from wc import _
+# if you test this, call 'python wc/webgui/templating.py'
+if __name__=='__main__':
+    sys.path.insert(0, os.getcwd())
+
+# _ for i18n, TemplateDir is the directory with all TAL templates
+from wc import _, TemplateDir
 
 try:
     import cPickle as pickle
@@ -134,9 +139,8 @@ class WcPageTemplate (PageTemplate.PageTemplate):
              'nothing': None,
              'request': request,
              'config': client.instance.config,
-             'tracker': client.instance,
              'utils': utils(client),
-             'templates': Templates(client.instance.config.TEMPLATES),
+             'templates': Templates(TemplateDir),
              'context': HTMLClass(client, classname),
         }
 
@@ -392,7 +396,7 @@ class HTMLClass:
         req.update(kwargs)
 
         # new template, using the specified classname and request
-        pt = Templates(self._db.config.TEMPLATES).get(self.classname, name)
+        pt = Templates(TemplateDir).get(self.classname, name)
 
         # use our fabricated request
         return pt.render(self._client, self.classname, req)
@@ -1269,3 +1273,17 @@ class TemplatingUtils:
         return Batch(self.client, sequence, size, start, end, orphan,
             overlap)
 
+
+def test ():
+    filename = os.path.join(TemplateDir, "blocked.html")
+    s = file(filename).read()
+    pt = WcPageTemplate()
+    pt.write(s)
+    pt.id = filename
+    pt.mtime = time.time()
+    print pt
+    #print pt.render()
+
+
+if __name__=='__main__':
+    test()

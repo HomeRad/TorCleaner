@@ -189,9 +189,9 @@
 </rewrite>
 
 <rewrite title="IMDB Advert" oid="32"
- desc="adverts are redirections or this new /r/ link"
+ desc="adverts are redirections"
  matchurl="imdb">
-<attr>(/tiger_redirect\?|/r/)</attr>
+<attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT)</attr>
 </rewrite>
 
 <rewrite title="IMDB Advert 3" oid="33"
@@ -209,5 +209,25 @@
  desc="This gets rid of the latest generation of JavaScript annoyances. ">
 <attr name="onmouseover">parent\.location\s*=</attr>
 <replace part="attr"/>
+</rewrite>
+
+<rewrite title="IMDB Advert 4" oid="36"
+ desc="/r/ stuff and imdb pro"
+ matchurl="imdb">
+<attr>(/r/|/register/subscribe)</attr>
+</rewrite>
+
+<rewrite title="IMDB Advert 5" oid="37"
+ desc="Remove ad pics"
+ matchurl="imdb"
+ tag="img">
+<attr name="src">/Icons/apix/</attr>
+</rewrite>
+
+<rewrite title="IMDB Advert 6" oid="38"
+ desc="image tag"
+ matchurl="imdb"
+ tag="image">
+<attr name="src">/Icons/apix/</attr>
 </rewrite>
 </folder>

@@ -88,6 +88,7 @@ class MyDistribution(Distribution):
         cwd = os.getcwd()
         data = []
 	data.append('config_dir = %s' % `os.path.join(cwd, "config")`)
+        data.append('template_dir = %s' % `os.path.join(cwd, "templates")`)
         data.append("install_data = %s" % `cwd`)
         self.create_conf_file("", data)
         Distribution.run_commands(self)

@@ -36,6 +36,7 @@ This is free software, and you are welcome to redistribute it
 under certain conditions. Look at the file `LICENSE' whithin this
 distribution."""
 ConfigDir = configdata.config_dir
+TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'locale')
 DebugLevel = 0
 Colorize = 0
