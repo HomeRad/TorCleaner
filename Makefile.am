@@ -1,5 +1,5 @@
 SUBDIRS = po libjs service
-DIST_SUBDIRS = $(SUBDIRS) docs
+DIST_SUBDIRS = $(SUBDIRS) doc
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
@@ -115,7 +115,7 @@ upload:
 homepage: homepage-zapper
 	cp ChangeLog $(HTMLDIR)/htdocs/changes.txt
 	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
-	$(MAKE) -C docs homepage
+	$(MAKE) -C doc/en homepage
 	$(MAKE) -C $(HTMLDIR) chmod
 
 homepage-zapper: md5sums

@@ -1,4 +1,4 @@
-docs/misc/squid.txt
-docs/misc/sshtunnel.txt
+doc/en/misc/squid.txt
+doc/en/misc/sshtunnel.txt
 config/bl2wc.py
 config/dmozfilter.py
