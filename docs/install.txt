@@ -1,0 +1,154 @@
+.. meta::
+  :navigation.order: 2
+  :navigation.name: Installation
+
+Installation
+============
+
+Requirements for Unix/Linux:
+----------------------------
+
+1. You need a standard GNU development environment with
+   a) C compiler (for example the GNU C Compiler gcc)
+   b) gettext
+2. Python >= 2.3.1 from http://www.python.org/ with zlib support
+3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
+4. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
+5. runit from http://smarden.org/runit/
+6. openssl from http://www.openssl.org/
+7. PyOpenSSL from http://pyopenssl.sourceforge.net/
+
+Requirements for Windows:
+-------------------------
+Direct download links are in brackets.
+
+1. Install the MinGW suite from http://mingw.sourceforge.net.
+   Be sure to install in the given order:
+   
+   a) MingGW
+      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-3.1.0-1.exe ]
+   b) MSYS
+      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe ]
+   c) libiconv
+      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/libiconv-1.8.0-2003.02.01-1.exe ]
+   d) gettext
+      [ http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe ]
+   
+2. Install Python >= 2.3.1 from http://www.python.org/
+   [ http://www.python.org/ftp/python/2.3.3/Python-2.3.3.exe ]
+3. Install Python for Windows Extensions from
+   http://starship.python.net/crew/mhammond/
+   [ http://starship.python.net/crew/mhammond/downloads/win32all-163.exe ]
+4. Install Python Imaging Library (PIL) from
+   http://www.pythonware.com/products/pil/
+   [ http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe ]
+5. Download Python Crypto Module from
+   http://www.amk.ca/python/code/crypto.html
+   [ http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz ]
+   For Installation of PyCrypto see below.
+6. Install OpenSSL for Windows from
+   http://www.slproweb.com/products/Win32OpenSSL.html
+   [ http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe ]
+7. Download PyOpenSSL from
+   http://pyopenssl.sourceforge.net/
+   [ http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz ]
+   For Installation of PyOpenSSL see below.
+
+Setup for Unix/Linux:
+---------------------
+
+1. Install check
+   Be sure to have installed all required Unix/Linux software listed above.
+2. Compilation
+   Run "./configure; make" to compile the included C libraries.
+   Run "python setup.py build" to compile the Python files.
+   The CC environment variable is checked before compilation, so you can
+   change the default C compiler with "export CC=myccompiler".
+   If you work from CVS, you must run "./autogen.sh" first to generate the
+   configure and Makefile files.
+3.
+   a) Installation as root
+      Run "su -c 'python setup.py install'" to install the proxy.
+      Run "su -c 'webcleaner-certificates install'" to install the certificates.
+      Run "su -c 'make installservice'" to install the runit service.
+   b) Installation as a normal user
+      Run "python setup.py install --home $HOME"
+      Run "webcleaner-certificates install" to install the certificates.
+      Now read the runsvdir(8) documentation on how to setup a local
+      runit service.
+   
+4. Enjoy
+   WebCleaner is now installed as a runit service and will start
+   automatically in 5 seconds.
+   See the README on how to configure the proxy filters.
+
+Setup for Windows:
+------------------
+
+1. Install check
+   Be sure to have installed all required windows software listed above.
+2. Preparing Python for the MinGW compiler
+   Search the file python23.dll in your windows folder.
+   After you found it, launch MSYS and do:
+   % pexports python23.dll > python23.def
+   Then use the dlltool
+   % dlltool --dllname python23.dll --def python23.def --output-lib libpython23.a
+   The resulting library has to be placed in the same directory as
+   python23.lib. (Should be the libs directory under your Python installation
+   directory, for example c:\Python23\Libs\.)
+3. Compile the JavaScript library
+   Copy the webcleaner-X.X.tar.gz into your MSYS home directory,
+   which is usually under c:\msys\1.0\home\user\.
+   Launch MSYS and extract the tarball:
+   % tar xzvf webcleaner-X.X.tar.gz
+   Change into the generated directory:
+   % cd webcleaner-X.X
+   Configure and compile the JavaScript library:
+   % ./configure; make
+4. Compile and install PyCrypto
+   Close the MSYS application and open a DOS command prompt.
+   Change to the pycrypto-1.9a6 directory and do:
+   c:> python setup.py build -c mingw32 install
+5. Install OpenSSL and compile PyOpenSSL
+   Change to the directory where you installed OpenSSL (for example
+   c:\OpenSSL).
+   Fix the library names for the mingw compiler:
+   c:> move lib\MinGW\ssleay.a lib\MinGW\libssleay.a
+   c:> move lib\MinGW\ssleay.def lib\MinGW\libssleay.def
+   Change to the directory where you extracted PyOpenSSL (for
+   example c:\pyOpenSSL-0.5.1)
+   Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
+   Then run:
+   c:> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
+   -L c:\OpenSSL\lib\MinGW build install
+6. Compile and install the Python modules
+   Change to the webcleaner-X.X directory and do:
+   c:> python setup.py build -c mingw32 install
+7. Generate and install WebCleaner certificates
+   Change to the directory where you installed Python into
+   (for example c:\Python23\).
+   Run the webcleaner-certificates script to install the certificates:
+   c:> python scripts\webcleaner-certificates install
+   To remove the certificates later, you can run:
+   c:> python scripts\webcleaner-certificates remove
+8. Install and start the WebCleaner NT service
+   Change to the directory where you installed Python into
+   (for example c:\Python23\).
+   Run the webcleaner-service script to install the service:
+   c:> python scripts\webcleaner-service install
+   To remove the service later, you can run:
+   c:> python scripts\webcleaner-service remove
+9. Enjoy
+   WebCleaner is now installed and started as a regular Windows service.
+   See the README on how to configure the proxy filters.
+
+Troubleshooting for Linux
+-------------------------
+Proxy startup errors are logged in the runit log file located at
+/var/service/webcleaner/log/main/current
+
+Troubleshooting for Windows
+---------------------------
+Proxy startup errors are logged in the system event logger. Execute
+Settings -> Control Panel -> Administrative Tools -> Event Viewer
+and look at the "Application Log" events.

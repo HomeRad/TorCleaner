@@ -1,0 +1,86 @@
+.. meta::
+  :navigation.name: simpleTAL
+
+======================
+simpleTAL i18n support
+======================
+
+
+Did I already say that I liked simpleTAL_?
+Yes, and that's why I have hacked in some i18n support into it.
+It is a little hack of the still `unofficial i18n standard`_ and
+is very limited.
+Implementing any other i18n features lies not on my path, but I do accept
+patches :)
+
+.. _simpleTAL: http://www.owlfish.com/software/simpleTAL/
+.. _unofficial i18n standard:
+   http://dev.zope.org/Wikis/DevSite/Projects/ComponentArchitecture/ZPTInternationalizationSupport
+
+Supported features
+------------------
+
+- ``i18n:translate``
+  
+  If this attribute is specified with an empty string as the value, the
+  message ID is computed from the content of the element bearing this attribute.
+  Otherwise, the value has to be a <code>string:</code> TALES expression whose
+  value forms the message ID.
+
+- ``i18n:attributes``
+  
+  Specifies a list of attributes to be translated with message IDs for each.
+
+Furthermore, I made an improved pygettext.py (see below) that parses .html
+files and puts the ``i18n:`` tags into the gettext .po file.
+
+Examples
+--------
+
+Html template::
+
+  <title i18n:translate="">Hello english speaking friend</title>
+  <img i18n:attributes="alt English image description">
+  <div i18n:translate="string:This will be translated">This will
+  be replaced by the translation</div>
+  <div i18n:translate="">this is a %(parameter)s example</div>
+  <div i18n:translate="">Also with <b>tags</b> included</div>
+
+Example program::
+
+  from StringIO import StringIO
+  import sys, os, gettext
+  from wc.webgui.simpletal import simpleTAL, simpleTALES
+  
+  def expand_template (f, context):
+      """expand the given template file in context return expanded data"""
+      template = simpleTAL.compileHTMLTemplate(f)
+      out = StringIO()
+      LocaleDir = os.path.join(os.getcwd(), "share", "locale")
+      Name = "webcleaner"
+      translator = gettext.translation(Name, LocaleDir, ["de"])
+      template.expand(context, out, translator=translator)
+      data = out.getvalue()
+      out.close()
+      return data
+  
+  
+  def get_context ():
+      # init and return TALES context
+      context = simpleTALES.Context()
+      context.addGlobal("parameter", "hullabulla")
+      return context
+  
+  
+  f = file("taltest.html")
+  print expand_template(f, get_context())
+
+
+CVS files
+---------
+See the viewcvs links for `simpleTAL with i18n support`_ and
+`pygettext.py with i18n support`_.
+
+.. _simpleTAL with i18n support: http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/webcleaner/webcleaner2/wc/webgui/simpletal/
+.. _pygettext.py with i18n support: http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/webcleaner/webcleaner2/po/pygettext.py
+

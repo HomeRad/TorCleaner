@@ -1,0 +1,163 @@
+.. meta::
+  :navigation.order: 0
+  :navigation.name: WebCleaner
+
+===================================
+WebCleaner - a filtering HTTP proxy
+===================================
+
+
+Features
+--------
+
+- HTTP/1.1 support
+- HTTPS proxy CONNECT and optional SSL gateway support
+- integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
+- integrated JavaScript engine, allows popup filtering
+- detection and correction of known HTML security flaws
+- compress documents on-the-fly (with gzip)
+- disable animated GIFs
+- filter images by size, removes banner adverts
+- reduce images to low-bandwidth JPEGs
+- remove/add/modify arbitrary HTTP headers
+- usage of SquidGuard blacklists
+- antivirus filter module
+- Basic, Digest and (untested) NTLM proxy authentication support
+- per-host access control
+- configurable over a themable web interface
+
+
+Requirements and Installation
+-----------------------------
+
+Read the install_ documentation.
+
+.. _install: install.html
+
+
+Download
+--------
+
+Download the latest packages from `WebCleaner download section`_.
+There are also `Md5sum checksums`_ from above files.
+
+Read the ChangeLog
+
+.. _WebCleaner download section:
+   http://sourceforge.net/project/showfiles.php?group_id=7692
+.. _Md5sum checksums:
+   webcleaner-md5sums.txt
+
+
+Screenshots
+-----------
+
+   +----------------------------+----------------------------+
+   | .. image:: shot1_thumb.jpg | .. image:: shot2_thumb.jpg |
+   |      :align: center        |      :align: center        |
+   |      :target: shot1.png    |      :target: shot2.png    |
+   +----------------------------+----------------------------+
+   | Proxy configuration        | Filter configuration       |
+   +----------------------------+----------------------------+
+
+
+Why should I use WebCleaner?
+----------------------------
+
+The first feature that sets WebCleaner apart from other proxies is
+exact HTML filtering, and this removes a lot of advertisings.
+The filter does not just replace some strings, the proxy parses all HTML
+data. The parser is fast (written in C) and can cope with every
+broken HTML page out there; if the parser does not recognize HTML
+structures, it just passes the data over to the proxy until it recognizes
+a tag again. No valid HTML data is ever discarded or dropped.
+
+Another feature is the JavaScript filtering: JavaScript data is
+executed in the integrated Spidermonkey JavaScript engine which is also
+used by the Mozilla browser suite.
+This eliminates all JavaScript obfuscation, popups, and document.write()
+stuff, but the other JavaScript functions still work as usual.
+
+Exact HTML filtering has another good side-effect: it is possible to
+detect and prevent known security flaws in HTML processors. Several
+known buffer overflow exploits or Denial of Service attacks are detected
+and fixed by the HtmlSecurity class.
+
+Furthermore, WebCleaner can filter SSL traffic used in ``https://`` URLs.
+See the `SSL gateway`_ documentation for more info.
+
+.. _SSL gateway: sslgateway.html
+
+
+Configuration
+-------------
+
+Assuming your proxy runs on port *8080*, point your browser to
+http://localhost:8080/ to configure the proxy.
+The underlying configuration format is a custom XML format which is
+explained in config/filter.dtd and config/webcleaner.dtd.
+Of course the default configuration is tuned to websites I visit
+regularly. You can help me extend the current config data by sending
+me patches!
+
+
+Running
+-------
+
+Please note that the web configuration interface needs write permissions
+in the configuration directory.
+
+
+Running under Unix/Linux
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The proxy is supervised and automatically (re-)started from the runit
+package.
+See the `runit homepage`_ for more information.
+
+.. _runit homepage: http://smarden.org/runit/
+
+Running under Windows
+~~~~~~~~~~~~~~~~~~~~~
+
+The proxy is a normal NT service and can be started/stopped from the
+"Administrative Tasks" entry in the system configuration.
+
+
+Notes
+-----
+
+WebCleaner is *not* a HTTP compliant proxy because it modifies requests,
+headers and data. Modifications aside, the proxy tries to fulfill
+the HTTP/1.1 specifications found in RFC 2616.
+
+Surf performance will decrease, especially with the Rewriter and the
+Replacer module enabled. It will decrease further with JavaScript
+parsing enabled, since the proxy downloads and parses <script src="">
+tags in the background.
+
+The Rewriter module parses the HTML. It optimizes HTML by making
+tags and attribute names lowercase and removing some (but not all)
+ignorable whitespace.
+
+The warning "unsupported content encoding" could lead to corrupted
+HTML pages. WebCleaner tries to filter even unknown-encoded content
+to prevent Denial of Service attacks (eg webservers sending always an
+unknown content-encoding).
+Currently, this affects only the "compress" or "x-compress" encoding,
+because the LZW algorithm to uncompress such content is patented and
+therefore not included in WebCleaner. See www.burnallgifs.org.
+
+
+What you can do
+---------------
+
+- Send me urls with adverts WebCleaner is not filtering.
+- Send me urls that do not display correctly in WebCleaner.
+- Implement something on the TODO list and send me a patch.
+
+:Author: Bastian Kleineidam
+:Contact: calvin@users.sourceforge.net
+:Revision: $Revision$
+:Date: $Date$
+

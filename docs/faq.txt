@@ -1,0 +1,66 @@
+.. meta::
+  :navigation.order: 1
+  :navigation.name: FAQ
+
+Frequently asked questions
+--------------------------
+
+1. Q: The filter is not working - I still see some advertisings that are
+   definitely filtered out.
+   
+   A: Send the URL to calvin@users.sf.net and I will add a filter rule for it.
+
+
+2. Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
+   some tags or is completely crippled
+   
+   A: First, try to disable the WebCleaner proxy and look at the page again.
+   If it renders ok, you most likely have encountered a bug in WebCleaner.
+   Please write a bug report to calvin@users.sf.net and
+   include the URL you have problems with.
+
+3. Q: I am seeing the error "client sent data in state receive".
+   
+   A: Your client was sending data when it shouldn't have. This is mostly
+   a broken HTTP proxy (eg. when WebCleaner is parent proxy of Oops).
+
+4. Q: Are there security concerns running this proxy?
+   
+   A: Yes.
+   
+   - Be sure no one but you or your users can access the proxy.
+     The default configuration is that only local users can
+     access the proxy. Additionally, you should define a proxy password.
+   - WebCleaner uses 3rd-party libraries and inherits their potential
+     security flaws.
+
+5. Q: I get "zlib error" entries in my error log.
+   
+   A: Some b0rked servers are sending Content-Type: gzip for pages
+   that are not compressed. In this case WebCleaner switches to
+   non-compressing filtering and prints the above error.
+
+6. Q: I am paranoid. What should I do besides running WebCleaner?
+   A: The default config of WebCleaner is strict when it comes
+   to passing private information, so there is not more that can
+   be done (except adding new filters yourself).
+   Here are some more tips for browser settings:
+   
+   - Use Mozillas JavaScript Popup filtering. See
+     *Mozilla -> Edit -> Preferences -> Advanced -> Scripts & Plugins*
+   - Disable Java. See
+     *Mozilla -> Edit -> Preferences -> Advanced*
+   - Don't send your real email address to FTP servers. See
+     *Mozilla -> Edit -> Preferences -> Advanced*
+   - Don't accept cookies, or at least set the browser to warn you
+     of every attempt to store cookies. See
+     *Mozilla -> Edit -> Preferences -> Privacy & Security -> Cookies*
+   - Disable image animation. See
+     *Mozilla -> Edit -> Preferences -> Privacy & Security -> Images*
+   - Don't save form data. See
+     *Mozilla -> Edit -> Preferences -> Privacy & Security -> Forms*
+   - Don't save passwords. See
+     *Mozilla -> Edit -> Preferences -> Privacy & Security ->
+     Passwords*
+   - Don't install the Flash Plugin. It has security problems.
+
