@@ -43,9 +43,7 @@ import codecs
 import re
 import htmlentitydefs
 import StringIO
-import wc.webgui.simpleTal
 
-__version__ = wc.webgui.simpletal.__version__
 
 try:
     # check to see if pyxml is installed

@@ -27,7 +27,8 @@ import gettext
 import mimetypes
 import cStringIO as StringIO
 import wc
-import wc.webgui.simpletal
+import wc.webgui.simpletal.simpleTAL
+import wc.webgui.simpletal.simpleTALES
 import wc.proxy.auth
 import wc.proxy.Headers
 from wc.log import *

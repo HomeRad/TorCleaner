@@ -43,9 +43,6 @@ import sgmllib
 import cgi
 import re
 import StringIO
-import wc.webgui.simpleTal
-
-__version__ = wc.webgui.simpletal.__version__
 
 
 # This is used to check for already escaped attributes.
