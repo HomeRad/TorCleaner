@@ -2,6 +2,8 @@ TODO
 
 version 2.8 and above
 
+- HTTPS is not working anymore?
+
 - PICS features:
   for non-PICS-enabled sites, try to fetch info from rating services
   when no PICS info is available, display dialog to build own PICS
@@ -13,8 +15,7 @@ version 2.8 and above
 - use test/client.py, test/server.py for testing
 
 - test NTLM authentication
-  (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
-   client auth)
+  Mozilla >= 1.6b can test NTLM server auth, squid can test client auth
 
 - NTLM: restore old method type when method was not GET
 
