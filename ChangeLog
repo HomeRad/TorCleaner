@@ -7,10 +7,10 @@
   * - Updated and reorganized filters
     - remove onmouseover redirects
     Changed files: config/*.zap, config/bl2wc.py
-  * - when Content-Type header is not what we guessed, fix only some
+  * - when type/encoding header is not what we guessed, fix only some
       contents, not all
-    - dont guess content-type on 304 Not Modified answers, the type
-      info is already cached
+    - dont guess type/encoding on 304 Not Modified answers, this info
+      is already cached
     Changed files: wc/proxy/HttpServer.py
   * - use flex memory management interface
     - use only double quotes for attribute quoting
