@@ -2,6 +2,8 @@ TODO
 
 version 2.27 and above
 
+- DNS seems to not find pagead2.googlesyndication.com
+
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
 
