@@ -2,7 +2,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, cgi
+import time, cgi, mimetypes
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
@@ -284,7 +284,10 @@ class HttpClient (Connection):
         else:
             form = {}
         # this object will call server_connected at some point
-        WebConfig(self, self.url, form, self.protocol)
+        gm = mimetypes.guess_type(self.url, None)
+        headers = {'Content-Type': gm[0]}
+        WebConfig(self, self.url, form, self.protocol, headers=headers)
+
 
 
     def close (self):

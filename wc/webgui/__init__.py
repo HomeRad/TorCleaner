@@ -34,11 +34,16 @@ class WebConfig:
         self.connected = "True"
         try:
             # get the template filename
-            f, dirs = get_template(url)
-            # get TAL context
-            context = get_context(dirs, form, context)
-            # expand template
-            data = expand_template(f, context)
+            path, dirs = get_template(url)
+            if headers['Content-Type'] == 'text/html':
+                f = file(path)
+                # get TAL context
+                context = get_context(dirs, form, context)
+                # expand template
+                data = expand_template(f, context)
+            else:
+                f = file(path, 'rb')
+                data = f.read()
         except IOError, e:
             exception(GUI, "Wrong path `%s'", url)
             # XXX this can actually lead to a maximum recursion
@@ -96,7 +101,7 @@ def get_template (url):
         raise IOError("Invalid path %s" % `path`)
     if not os.path.isfile(path):
         raise IOError("Non-file path %s" % `path`)
-    return file(path), dirs
+    return path, dirs
 
 
 def get_context (dirs, form, localcontext):
