@@ -118,8 +118,27 @@ def set_format (handler):
     return handler
 
 
+# memory leak debugging
+#import gc
+#gc.set_debug(gc.DEBUG_LEAK)
 def debug (log, msg, *args):
+    #logging.getLogger(log).debug("collected %d"%gc.collect())
+    #logging.getLogger(log).debug("objects %d"%len(gc.get_objects()))
+    #logging.getLogger(log).debug("garbage %d"%len(gc.garbage))
+    #logging.getLogger(log).debug("Mem: %s"%usedmemory())
     logging.getLogger(log).debug(msg, *args)
+
+
+def usedmemory ():
+    pid = os.getpid()
+    fp = file('/proc/%d/status'%pid)
+    try:
+        for line in fp.readlines():
+            if line.startswith('VmRSS:'):
+                return line[6:].strip()
+    finally:
+        fp.close()
+    return val
 
 
 def info (log, msg, *args):
