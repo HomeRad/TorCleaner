@@ -1,6 +1,6 @@
 import sys,os,string,time,wc
 from wc import _
-from FXPy import *
+from FXPy.fox import *
 
 HelpText = _("""
 

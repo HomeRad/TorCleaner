@@ -28,7 +28,8 @@
 </rewrite>
 
 <nocomments title="Remove all HTML comments"
- desc="I am not interested in HTML comments."/>
+ desc="I am not interested in HTML comments."
+ disable="1"/>
 
 <rewrite title="Replace BLINK with B"
  desc="Dont we all hate the &lt;blink&gt; tag?"

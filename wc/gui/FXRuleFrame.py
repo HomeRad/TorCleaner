@@ -1,5 +1,5 @@
 import string
-from FXPy import *
+from FXPy.fox import *
 from wc import _,debug
 from wc.debug_levels import *
 

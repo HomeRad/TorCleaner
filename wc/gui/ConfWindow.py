@@ -4,7 +4,7 @@ from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
 from wc import debug,_
 from wc.gui import HelpText,loadIcon
-from FXPy import *
+from FXPy.fox import *
 from types import IntType
 from wc.filter.Rules import FolderRule
 from wc.filter import GetRuleFromName

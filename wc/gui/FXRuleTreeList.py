@@ -1,4 +1,4 @@
-from FXPy import *
+from FXPy.fox import *
 from wc import _,debug
 from wc.gui import loadIcon
 from FXRuleFrameFactory import FXRuleFrameFactory

@@ -19,6 +19,6 @@ Description: a filtering HTTP proxy
 
 Package: webcleanerconf
 Architecture: all
-Depends: python2-base, libfox0.99 (>= 0.99.147), python-fox0.99 (>= 0.99.147), webcleaner
+Depends: python2-base, libfox0.99 (>= 0.99.167), python2-fox0.99 (>= 0.99.167), webcleaner
 Description: configuration tool for webcleaner
  This is a nice GUI configuration tool for the WebCleaner proxy.

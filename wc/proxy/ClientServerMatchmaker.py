@@ -58,6 +58,7 @@ class ClientServerMatchmaker:
         self.request = request
         self.headers = headers
         self.content = content
+        url = ""
         try: self.method, url, protocol = split(request)
         except: self.error(400, _("Can't parse request"))
         if not url:

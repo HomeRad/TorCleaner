@@ -155,6 +155,11 @@
 <replace part="tag"/>
 </rewrite>
 
+<rewrite title="Userfriendly outbound links"
+ desc="Links on userfriendly.org which point outbound. This is a redirector host.">
+<attr>http://links\.userfriendly\.org</attr>
+</rewrite>
+
 <rewrite title="adbouncer"
  desc="Kill links with ad words in the path name.">
 <attr>/adbouncer\.phtml</attr>

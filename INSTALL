@@ -6,8 +6,8 @@ Requirements
 Python >= 2.0 from http://www.python.org/
 
 For the GUI config tool webcleanerconf you need
-FOX Toolkit >= 0.99.147 from http://www.cfdrc.com/FOX/fox.html and
-FXPy >= 0.99.147 from http://fxpy.sourceforge.net/
+FOX Toolkit >= 0.99.167 from http://www.cfdrc.com/FOX/fox.html and
+FXPy >= 0.99.167 from http://fxpy.sourceforge.net/
 (FXPy version must be the same as FOX version)
 
 Setup

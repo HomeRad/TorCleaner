@@ -1,6 +1,6 @@
 import string,sys
 from FXRuleFrame import FXRuleFrame
-from FXPy import *
+from FXPy.fox import *
 from wc import _,debug
 from wc.debug_levels import *
 

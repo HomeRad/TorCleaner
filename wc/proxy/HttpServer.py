@@ -67,7 +67,7 @@ class HttpServer(Server):
 
     def handle_connect(self):
         assert self.state == 'connect'
-        debug(HURT_ME_PLENTY, 'handle_conn', self)
+        debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
         Server.handle_connect(self)
 
