@@ -13,6 +13,8 @@ from wc.url import document_quote
 
 from HttpServer import HttpServer
 
+BUSY_LIMIT = 10
+
 class ClientServerMatchmaker (object):
     """ The Matchmaker waits until the server connection is established
     and a response was received from it. Then it matches the client
@@ -44,6 +46,7 @@ class ClientServerMatchmaker (object):
 
      done:     We are done matching up the client and server
     """
+
     def __init__ (self, client, request, headers, content, mime=None):
         self.client = client
         self.request = request
@@ -51,6 +54,7 @@ class ClientServerMatchmaker (object):
         self.content = content
         self.mime = mime
         self.state = 'dns'
+        self.server_busy = 0
         self.method, self.url, self.protocol = self.request.split()
         # prepare DNS lookup
         if config['parentproxy']:
@@ -119,7 +123,15 @@ class ClientServerMatchmaker (object):
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
-            debug(PROXY, '%s server %s busy', self, server)
+            debug(PROXY, '%s server %s busy', self, addr)
+            self.server_busy += 1
+            # if we waited too long for a server to be available, abort
+            if self.server_busy > BUSY_LIMIT:
+                warn(PROXY, "Waited too long for available connection at %s"+\
+                    ", consider increasing the server pool connection limit"+\
+                     " (currently at %d)", addr, BUSY_LIMIT)
+                self.client.error(503, i18n._("Service unavailable"))
+                return
             # There are too many connections right now, so register us
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
