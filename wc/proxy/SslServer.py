@@ -20,11 +20,8 @@ class SslServer (HttpServer, SslConnection):
         # attempt connect
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
         self.socket.settimeout(config['timeout'])
-        try:
-	    self.connect(self.addr)
-            self.socket.set_connect_state()
-        except socket.error:
-            self.handle_error('connect error')
+        self.connect(self.addr)
+        self.socket.set_connect_state()
 
 
     def __repr__ (self):

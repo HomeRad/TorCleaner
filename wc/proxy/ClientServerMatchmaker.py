@@ -146,12 +146,17 @@ class ClientServerMatchmaker (object):
             debug(PROXY, "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
-            # All Server objects eventually call server_connected
-            if self.url.startswith("https://") and config['sslgateway']:
-                server = SslServer(self.ipaddr, self.port, self)
-            else:
-                server = HttpServer(self.ipaddr, self.port, self)
-            serverpool.register_server(addr, server)
+            # note: all Server objects eventually call server_connected
+            try:
+                if self.url.startswith("https://") and config['sslgateway']:
+                    server = SslServer(self.ipaddr, self.port, self)
+                else:
+                    server = HttpServer(self.ipaddr, self.port, self)
+                serverpool.register_server(addr, server)
+            except socket.timeout:
+                self.client.error(504, i18n._('Connection timeout'))
+            except socket.error:
+                self.client.error(503, i18n._('Connect error'))
 
 
     def server_connected (self, server):
