@@ -54,10 +54,11 @@
  tal:attributes="alt t_disabledruleicon">
 <img tal:condition="not:rule/disable" src="minidoc.png"
  tal:attributes="alt t_ruleicon">
-<input type="image" src="up.png" border="0"
- tal:condition="rule/up"
+<img tal:condition="not:rule/up" src="blocked.png" width="12" alt=""><input
+ type="image" src="up.png" border="0" tal:condition="rule/up"
  tal:attributes="name string:rule_up_${rule/oid}; title t_rulemoveup; alt t_up"
- ><input type="image" src="down.png" border="0"
+ ><img tal:condition="not:rule/down" src="blocked.png" width="12" alt=""><input 
+ type="image" src="down.png" border="0"
  tal:condition="rule/down"
  tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down">
 <b tal:omit-tag="not:rule/selected">
