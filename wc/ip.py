@@ -1,5 +1,8 @@
 """ ip related utility functions """
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 import re, socket, struct
 from log import *
 

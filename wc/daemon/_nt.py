@@ -21,6 +21,9 @@
 #win32process.SetThreadPriority(win32api.GetCurrentThread(),
 #                               win32process.THREAD_PRIORITY_BELOW_NORMAL)
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 import os, sys
 from wc.daemon import pidfile
 from wc.debug import *
