@@ -756,9 +756,13 @@ class ConfWindow (ToolWindow):
         if self.logfile:
             s += ' logfile="%s"\n' % xmlify(self.logfile)
         if self.noproxyfor:
-            s += ' noproxyfor="%s"\n'%xmlify(",".join(self.noproxyfor.keys()))
+            keys = self.noproxyfor.keys()
+            keys.sort()
+            s += ' noproxyfor="%s"\n'%xmlify(",".join(keys))
         if self.allowedhosts:
-            s += ' allowedhosts="%s"\n'%xmlify(",".join(self.allowedhosts.keys()))
+            keys = self.allowedhosts.keys()
+            keys.sort()
+            s += ' allowedhosts="%s"\n'%xmlify(",".join(keys))
         s += '>\n'
         for key,val in self.modules.items():
             if val:
