@@ -5,9 +5,9 @@ PYTHON := python$(PYVER)
 WCVERSION := $(shell $(PYTHON) setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
-              -Iwc/parser -I/usr/include/$(PYTHON) \
+              -Iwc/parser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
-PYCHECKEROPTS := --varlist=__all__,__date__,__version__,__copyright__
+PYCHECKEROPTS := -F pycheckrc
 PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
                   wc/parser/*.py wc/proxy/*.py wc/proxy/auth/*.py \
 		  wc/webgui/*.py wc/webgui/context/*.py \
@@ -131,9 +131,11 @@ ndebug:
 	  mv -f $$f.bak $$f; \
 	done
 
-syntaxcheck:
+pycheck:
 	-env PYTHONVER=2.3 pychecker $(PYCHECKEROPTS) $(PYCHECKERFILES)
-#	-splint $(SPLINTOPTS) wc/parser/htmllex.c
+
+ccheck:
+	-splint $(SPLINTOPTS) wc/js/jslib.c
 
 # (re)generate webcleaner rules
 update-blacklists:
