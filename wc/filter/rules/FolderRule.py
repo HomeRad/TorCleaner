@@ -92,8 +92,8 @@ class FolderRule (Rule):
         """return short info for gui display"""
         l = len(self.rules)
         if l==1:
-            text = i18n._("%d rule")%l
+            text = i18n._("with 1 rule")
         else:
-            text = i18n._("%d rules")%l
-        return "%s, %s" % (super(FolderRule, self).tiptext(), text)
+            text = i18n._("with %d rules")%l
+        return "%s %s" % (super(FolderRule, self).tiptext(), text)
 
