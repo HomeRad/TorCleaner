@@ -36,6 +36,8 @@ for _i in config['filters']:
 config['allowedhostlist'] = _sort_seq(ip.map2hosts(config['allowedhosts']))
 config['nofilterhostlist'] = _sort_seq(ip.map2hosts(config['nofilterhosts']))
 config['newport'] = config['port']
+config['newsslport'] = config['sslport']
+config['newsslgateway'] = config['sslgateway']
 filterenabled = ""
 filterdisabled = ""
 
@@ -53,6 +55,16 @@ def _exec_form (form, lang):
         _form_proxyport(_getval(form, 'port'))
     elif config['port']!=8080:
         _form_proxyport(8080)
+    # ssl server port
+    if form.has_key('sslport'):
+        _form_sslport(_getval(form, 'sslport'))
+    elif config['sslport']!=8443:
+        _form_sslport(8443)
+    # ssl gateway
+    if form.has_key('sslgateway'):
+        _form_sslgateway(1)
+    else:
+        _form_sslgateway(0)
     # admin user
     if form.has_key('adminuser'):
         _form_adminuser(_getval(form, 'adminuser').strip(), res)
@@ -175,6 +187,31 @@ def _form_proxyport (port):
             info['port'] = True
     except ValueError:
         error['port'] = True
+
+
+def _form_sslport (port):
+    try:
+        port = int(port)
+        if port != config['newsslport']:
+            # note: port change takes effect after restart
+            config['newsslport'] = port
+            oldport = config['sslport']
+            config['sslport'] = port
+            config.write_proxyconf()
+            config['sslport'] = oldport
+            info['sslport'] = True
+    except ValueError:
+        error['sslport'] = True
+
+
+def _form_sslgateway (enable):
+    if enable != config['newsslgateway']:
+        config['newsslgateway'] = enable
+        oldval = config['sslgateway']
+        config['sslgateway'] = enable
+        config.write_proxyconf()
+        config['sslgateway'] = oldval
+        info['sslgateway'] = True
 
 
 def _form_adminuser (adminuser, res):
