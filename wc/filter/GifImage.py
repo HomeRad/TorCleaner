@@ -15,8 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re, sys, base64
-from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, \
-                      compileMime, compileRegex
+from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
 from wc.filter.Filter import Filter
 from wc.debug import *
 
@@ -204,7 +203,7 @@ class GifParser:
                 elif s == ',':
                     self.state = GifParser.IMAGE
                     continue
-                raise FilterException, "unknown frame %s"%`s`
+                print >>sys.stderr, "Filter: unknown GIF frame", `s`
             elif self.state == GifParser.IMAGE:
                 #extent
                 self.x0 = i16(self.read(2))

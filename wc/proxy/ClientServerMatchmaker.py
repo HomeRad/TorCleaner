@@ -56,7 +56,13 @@ class ClientServerMatchmaker:
         self.nofilter = nofilter
         self.method, self.url, protocol = self.request.split()
         scheme, hostname, port, document = spliturl(self.url)
+        # fix missing trailing /
         if not document: document = '/'
+        # fix missing host headers for HTTP/1.1
+        if protocol=='HTTP/1.1' and not self.headers.has_key('host'):
+            self.headers['Host'] = hostname
+            if port!=80:
+                self.headers['Host'] += ":"+port
         debug(HURT_ME_PLENTY, "Proxy: splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
@@ -91,7 +97,7 @@ class ClientServerMatchmaker:
             self.port = port
             self.document = document
         # append information for wcheaders tool
-        wc.proxy.HEADERS.append((self.url, 'client', self.headers.headers))
+        wc.proxy.HEADERS.append((self.url, 'client', self.headers.items()))
         # start DNS lookup
         self.state = 'dns'
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
@@ -109,7 +115,6 @@ class ClientServerMatchmaker:
 
     def handle_dns (self, hostname, answer):
         assert self.state == 'dns'
-
         if not self.client.connected:
             # The browser has already closed this connection, so abort
             return

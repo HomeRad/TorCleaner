@@ -109,8 +109,12 @@ class HttpServer (Server):
 
 
     def send_request (self):
-        self.write('%s %s HTTP/1.1\r\n' % (self.method, self.document))
-        for header in self.client.headers.headers:
+        request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
+        #print >> sys.stderr, 'XXX request', `request`
+        self.write(request)
+        for key,val in self.client.headers.items():
+            header = "%s: %s\r\n" % (key, val.rstrip())
+            #print >> sys.stderr, 'XXX header', `header`
             self.write(header)
         if self.client.headers.get('Connection') is None:
             self.write('Connection: Keep-Alive\r\n')
@@ -347,7 +351,7 @@ class HttpServer (Server):
         for i in _RESPONSE_FILTERS:
             data = applyfilter(i, data, attrs=self.attrs)
         if data:
-	    self.client.server_content(data)
+            self.client.server_content(data)
         if (is_closed or
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
@@ -375,12 +379,17 @@ class HttpServer (Server):
             del self.decoders[0]
             for decoder in self.decoders:
                 data = decoder.decode(data)
-        for i in _RESPONSE_FILTERS:
-            data = applyfilter(i, data, fun="finish", attrs=self.attrs)
-        if data:
-	    client.server_content(data)
-        self.attrs = {}
-        client.server_close()
+        try:
+            for i in _RESPONSE_FILTERS:
+                data = applyfilter(i, data, fun="finish", attrs=self.attrs)
+            if data:
+	        client.server_content(data)
+            self.attrs = {}
+            client.server_close()
+        except FilterException, msg:
+            # the filter still needs some data from a different client
+            # connection, so try flushing again after a while
+            make_timer(0.5, lambda : HttpServer.flush(self, client))
 
 
     def http_version (self):

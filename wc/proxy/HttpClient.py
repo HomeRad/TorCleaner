@@ -230,7 +230,7 @@ class HttpClient (Connection):
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'Proxy: C/server_response', response)
+        debug(NIGHTMARE, 'Proxy: C/Server response', self, `response`)
         self.write(response)
         self.write(''.join(headers.headers))
         self.write('\r\n')
@@ -243,14 +243,14 @@ class HttpClient (Connection):
 
     def server_close (self):
         assert self.server
-        debug(NIGHTMARE, 'Proxy: C/server_close', self)
+        debug(NIGHTMARE, 'Proxy: C/Server close', self)
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
 
     def server_abort (self):
-        debug(NIGHTMARE, 'Proxy: C/server_abort', self)
+        debug(NIGHTMARE, 'Proxy: C/Server abort', self)
         self.close()
         self.server = None
 

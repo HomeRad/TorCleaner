@@ -21,7 +21,8 @@ from wc.parser.htmllib import HtmlParser
 from wc.parser import resolve_html_entities
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.debug import *
-from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
+from wc.filter import FILTER_RESPONSE_MODIFY
+from wc.filter import FilterException, compileMime, compileRegex
 from wc.filter.Filter import Filter
 # JS imports
 from wc.js.JSListener import JSListener
@@ -152,6 +153,11 @@ class HtmlFilter (HtmlParser,JSListener):
             HtmlParser.feed(self, data)
         else:
             self.inbuf.write(data)
+
+    def flush (self):
+        if self.state=='wait':
+            raise FilterException("HtmlFilter: still waiting for data")
+        HtmlParser.flush(self)
 
 
     def buf_append_data (self, data):
@@ -361,9 +367,9 @@ class HtmlFilter (HtmlParser,JSListener):
         self.script = ''
         self.state = 'wait'
         client = HttpProxyClient(self.jsScriptData, (url, ver))
-        ClientServerMatchmaker(client,
+        ClientServerMatchmaker(clien t,
                                "GET %s HTTP/1.1" % url, #request
-                               rfc822.Message(StringIO('')), #headers
+                               {}, #headers
                                '', #content
                                {'nofilter': None},
                                'identity', # compress

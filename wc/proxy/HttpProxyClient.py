@@ -11,9 +11,11 @@ class HttpProxyClient:
         self.handler = handler
         self.args = args
         self.connected = "True"
+        debug(NIGHTMARE, 'Proxy: CP/init', self)
 
 
     def finish (self):
+        debug(NIGHTMARE, 'Proxy: CP/finish', self)
         if self.handler:
             self.handler(None, *self.args)
             self.handler = None
@@ -21,13 +23,13 @@ class HttpProxyClient:
 
     def write (self, data):
         if self.handler:
-            self.hander(data, *self.args)
+            self.handler(data, *self.args)
 
 
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'Proxy: CP/server_response', response)
+        debug(NIGHTMARE, 'Proxy: CP/Server response', self, `response`)
         try:
             http_ver, status, msg = response.split()
             if status!="200":
@@ -39,13 +41,13 @@ class HttpProxyClient:
 
     def server_content (self, data):
         assert self.server
-        debug(NIGHTMARE, 'Proxy: CP/server_content', self)
+        debug(NIGHTMARE, 'Proxy: CP/Server content', self)
         self.write(data)
 
 
     def server_close (self):
         assert self.server
-        debug(NIGHTMARE, 'Proxy: CP/server_close', self)
+        debug(NIGHTMARE, 'Proxy: CP/Server close', self)
         self.finish()
 
 

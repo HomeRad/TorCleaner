@@ -31,8 +31,8 @@ def init_dns_resolver ():
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
-    debug(BRING_IT_ON, "DNS nameservers:", DnsConfig.nameservers)
-    debug(BRING_IT_ON, "DNS search domains:", DnsConfig.search_domains)
+    debug(BRING_IT_ON, "DNS: nameservers", DnsConfig.nameservers)
+    debug(BRING_IT_ON, "DNS: search domains", DnsConfig.search_domains)
     # re-read config every 10 minutes
     # disabled, there is a reload option in webcleaner
     #make_timer(600, init_dns_resolver)
@@ -105,6 +105,7 @@ init_dns_resolver()
 def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
+    debug(HURT_ME_PLENTY, 'DNS: background_lookup', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
@@ -165,6 +166,7 @@ class DnsExpandHostname:
             make_timer(self.delay, self.handle_issue_request)
 
     def handle_issue_request (self):
+        debug(HURT_ME_PLENTY, 'DNS: issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             request = self.requests[0]
@@ -178,7 +180,10 @@ class DnsExpandHostname:
             if self.requests: make_timer(self.delay, self.handle_issue_request)
 
     def handle_dns (self, hostname, answer):
-        if not self.callback: return # Already handled this query
+        debug(HURT_ME_PLENTY, 'DNS: handle_dns', hostname, answer)
+        if not self.callback:
+            # Already handled this query
+            return
 
         self.answers[hostname] = answer
         while self.queries and self.answers.has_key(self.queries[0]):
@@ -259,7 +264,7 @@ class DnsCache:
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
-        debug(HURT_ME_PLENTY, 'DNS lookup', hostname)
+        debug(HURT_ME_PLENTY, 'DNS: dnscache lookup', hostname)
         # see if hostname is already a resolved IP address
         hostname, numeric = ip.expand_ip(hostname)
         if numeric:
@@ -277,6 +282,7 @@ class DnsCache:
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
+                debug(HURT_ME_PLENTY, 'DNS: cached!', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -545,7 +551,7 @@ class DnsLookupConnection (Connection):
                 ip_addrs.append(data)
             if type == DNS.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                debug(HURT_ME_PLENTY, 'DNS cname record', self.hostname, '=', `data`)
+                debug(HURT_ME_PLENTY, 'DNS: cname record', self.hostname, '=', `data`)
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records

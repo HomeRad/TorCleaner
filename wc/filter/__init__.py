@@ -79,17 +79,13 @@ def applyfilter (i, data, fun='filter', attrs={}):
     """
     if attrs.get('nofilter') or (fun!='finish' and not data):
         return data
-    try:
-        for f in wc.config['filterlist'][i]:
-            ffun = getattr(f, fun)
-            if attrs.has_key('mime'):
-                if f.applies_to_mime(attrs['mime']):
-                    data = apply(ffun, (data,), attrs)
-            else:
+    for f in wc.config['filterlist'][i]:
+        ffun = getattr(f, fun)
+        if attrs.has_key('mime'):
+            if f.applies_to_mime(attrs['mime']):
                 data = apply(ffun, (data,), attrs)
-    except FilterException, msg:
-        # filter exceptions mean the filter waits for more data
-        pass
+        else:
+            data = apply(ffun, (data,), attrs)
     return data
 
 
