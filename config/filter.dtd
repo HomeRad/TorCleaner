@@ -4,6 +4,9 @@
  
  Changes:
 
+ 20040219 Bastian Kleineidam
+ * added matchurl and nomatchurl as elements, and restructured the other
+   elements according to this
  20040106 Bastian Kleineidam
  * removed pics, added rating stuff
  20031031 Bastian Kleineidam
@@ -69,6 +72,15 @@
 
 
 
+<!--                      URL matching
+
+    Rules can apply only to a selected list of urls. Matchurl and nomatchurl
+    specify regular expressions that have to match resp. not match an url
+    for rule application.
+-->
+<!ELEMENT matchurl (#PCDATA)>
+<!ELEMENT nomatchurl (#PCDATA)>
+
 <!--                        Rewriter
 
    The rewrite tag applies to HTML tags and can replace (or delete if
@@ -77,14 +89,12 @@
 
    If there is no <replace> tag the complete tag will be removed.
 -->
-<!ELEMENT rewrite (attr*,enclosed?,replace?)>
+<!ELEMENT rewrite (matchurl*,nomatchurl*,attr*,enclosed?,replace?)>
 <!ATTLIST rewrite
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
- matchurl CDATA ""
- dontmatchurl CDATA ""
  tag      CDATA "a"
 >
 
@@ -229,33 +239,29 @@
 
 
 <!--                       Header
-     Modify HTTP headers. If the element value is empty, the header gets
-     deleted. If its not empty, the specified header is removed/deleted.
+     Modify HTTP headers. If the replacement value is missing, the header
+     gets deleted. Otherwise the specified header is added or replaced.
 -->
-<!ELEMENT header (#PCDATA)>
+<!ELEMENT header (matchurl*,nomatchurl*,replacement?)>
 <!ATTLIST header
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  name     CDATA #REQUIRED
  disable  CDATA "0"
- matchurl CDATA ""
- dontmatchurl CDATA ""
 >
 
 
 
 <!--                       Image
 
-    Block images with a certain size.
+    Block images with a certain size. A replacement url can be specified.
 -->
-<!ELEMENT image (#PCDATA)>
+<!ELEMENT image (matchurl*,nomatchurl*,replacement?)>
 <!ATTLIST image
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
- matchurl CDATA ""
- dontmatchurl CDATA ""
  width    CDATA #REQUIRED
  height   CDATA #REQUIRED
  type     (gif|jpg|png) "gif"
@@ -266,57 +272,49 @@
 
     Remove comments from HTML source
 -->
-<!ELEMENT nocomments EMPTY>
+<!ELEMENT nocomments (matchurl*,nomatchurl*)>
 <!ATTLIST nocomments
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
- matchurl CDATA ""
- dontmatchurl CDATA ""
 >
 
 <!--                      JavaScript
 
     Execute and filter JavaScript in HTML source
 -->
-<!ELEMENT javascript EMPTY>
+<!ELEMENT javascript (matchurl*,nomatchurl*)>
 <!ATTLIST javascript
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
- matchurl CDATA ""
- dontmatchurl CDATA ""
 >
 
 <!--                      Replace
 
    Replace regular expressions in a data stream
 -->
-<!ELEMENT replace (#PCDATA)>
+<!ELEMENT replace (matchurl*,nomatchurl*,replacement?)>
 <!ATTLIST replace
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
- matchurl CDATA ""
- dontmatchurl CDATA ""
- search    CDATA #REQUIRED
+ search   CDATA #REQUIRED
 >
 
 <!--                        Rating
 
    A rule enabling the rating system in WebCleaner.
 -->
-<!ELEMENT rating (url?,category*)>
+<!ELEMENT rating (matchurl*,nomatchurl*,url?,category*)>
 <!ATTLIST rating
  sid      CDATA #REQUIRED
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
- matchurl CDATA ""
- dontmatchurl CDATA ""
  name     CDATA #REQUIRED
 >
 
