@@ -32,6 +32,9 @@ clean-local: clean-log
 # delete possible aborted dist build
 	rm -rf webcleaner-$(VERSION)
 
+cvsclean:
+	find . -name \.\#\* -exec rm -f {} \;
+
 clean-log:
 	rm -f webcleaner*.log* webcleaner.err*
 
