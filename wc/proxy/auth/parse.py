@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import wc
 
 separators = ("()<>@,;:\\\"/[]?={} \t")
@@ -30,7 +27,7 @@ def parse_token (s, tok="", relax=False, more_chars=""):
        If tok is empty, parse a default token"""
     if tok:
         if not s.startswith(tok):
-            wc.log.warn(wc.LOG_AUTH, "expected %r start with %r", s, tok)
+            bk.log.warn(wc.LOG_AUTH, "expected %r start with %r", s, tok)
         if not relax:
             s = s[len(tok):]
     else:
@@ -70,7 +67,7 @@ def parse_auth (auth, data):
      - data - string data to parse
     returns augmented auth dict and unparsed data
     """
-    wc.log.debug(wc.LOG_AUTH, "parse authentication %r", data)
+    bk.log.debug(wc.LOG_AUTH, "parse authentication %r", data)
     while data:
         key, data = parse_token(data)
         if not data.startswith("="):

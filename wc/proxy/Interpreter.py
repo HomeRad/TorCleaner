@@ -1,10 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """experimental Python expression interpreter for the proxy"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
-
 import wc.proxy.Connection
 
 class Interpreter (wc.proxy.Connection.Connection):

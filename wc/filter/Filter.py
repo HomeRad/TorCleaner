@@ -16,10 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import wc
+import bk.i18n
 
 
 class Filter (object):
@@ -34,7 +32,7 @@ class Filter (object):
 
     def addrule (self, rule):
         """append given rule to rule list"""
-        wc.log.debug(wc.LOG_FILTER, "enable %s ", rule)
+        bk.log.debug(wc.LOG_FILTER, "enable %s ", rule)
         self.rules.append(rule)
 
     def filter (self, data, **attrs):

@@ -1,9 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """direct request handling returning static data"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import wc.proxy.Server
 
 

@@ -1,9 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """HTTP digest authentication routines"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 __all__ = ["get_digest_challenge", "parse_digest_challenge",
            "get_digest_credentials", "parse_digest_credentials",
            "check_digest_credentials"]
@@ -65,30 +62,30 @@ def parse_digest_credentials (credentials):
 def check_digest_credentials (credentials, **attrs):
     """check digest credentials"""
     if not check_digest_values(credentials):
-        wc.log.warn(wc.LOG_AUTH, "digest wrong values")
+        bk.log.warn(wc.LOG_AUTH, "digest wrong values")
         return False
     # note: opaque value _should_ be there, but is not in apache mod_digest
     opaque = credentials.get("opaque")
     if opaque != wc_opaque:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong opaque %s!=%s", opaque, wc_opaque)
+        bk.log.warn(wc.LOG_AUTH, "digest wrong opaque %s!=%s", opaque, wc_opaque)
         return False
     realm = credentials["realm"]
     if realm != wc_realm:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
+        bk.log.warn(wc.LOG_AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
         return False
     nonce = credentials["nonce"]
     if nonce not in nonces:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong nonce %s", nonce)
+        bk.log.warn(wc.LOG_AUTH, "digest wrong nonce %s", nonce)
         return False
     uri = credentials['uri']
     if uri != attrs['uri']:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
+        bk.log.warn(wc.LOG_AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
         return False
     # compare responses
     response = credentials.get('response')
     our_response = get_response_digest(credentials, **attrs)[2]
     if response != our_response:
-        wc.log.debug(wc.LOG_AUTH, "digest wrong response %s!=%s", response, our_response)
+        bk.log.debug(wc.LOG_AUTH, "digest wrong response %s!=%s", response, our_response)
         return False
     return True
 
@@ -98,14 +95,14 @@ def check_digest_values (auth):
        challenge or credential"""
     # check data
     if auth.get('algorithm') not in ("MD5", "MD5-sess", "SHA", None):
-        wc.log.error(wc.LOG_AUTH, "unsupported digest algorithm value %r", auth['algorithm'])
+        bk.log.error(wc.LOG_AUTH, "unsupported digest algorithm value %r", auth['algorithm'])
         return False
     if auth.get('qop') not in ("auth", "auth-int", None):
-        wc.log.error(wc.LOG_AUTH, "unsupported digest qop value %r", auth['qop'])
+        bk.log.error(wc.LOG_AUTH, "unsupported digest qop value %r", auth['qop'])
         return False
     for key in ('realm', 'nonce'):
         if key not in auth:
-            wc.log.error(wc.LOG_AUTH, "missing digest challenge value for %r", key)
+            bk.log.error(wc.LOG_AUTH, "missing digest challenge value for %r", key)
             return False
     return True
 

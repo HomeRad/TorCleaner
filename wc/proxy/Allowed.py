@@ -1,9 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """Allowance classes to filter out infalid proxy requests"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import wc
 
 

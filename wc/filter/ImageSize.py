@@ -16,12 +16,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import Image
 import os
 import cStringIO as StringIO
+import bk.i18n
 import wc
 import wc.filter
 
@@ -95,7 +93,7 @@ class ImageSize (wc.filter.Filter.Filter):
         url = attrs['url']
         pos = buf.tell()
         if pos <= 0:
-            wc.log.error(wc.LOG_FILTER, "Empty image data found at %r (%r)",
+            bk.log.error(wc.LOG_FILTER, "Empty image data found at %r (%r)",
                          url, buf.getvalue())
         else:
             attrs['imgsize_blocked'] = \
@@ -118,16 +116,16 @@ class ImageSize (wc.filter.Filter.Filter):
                 if size==img.size:
                     # size matches, look for format restriction
                     if not formats:
-                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s",
+                        bk.log.debug(wc.LOG_FILTER, "Blocking image size %s",
                                      size)
                         return False
                     elif img.format.lower() in formats:
-                        wc.log.debug(wc.LOG_FILTER, "Blocking image size %s",
+                        bk.log.debug(wc.LOG_FILTER, "Blocking image size %s",
                                      size)
                         return False
         except IOError:
             if finish:
-                wc.log.exception(wc.LOG_FILTER, "Could not get image size from %r", url)
+                bk.log.exception(wc.LOG_FILTER, "Could not get image size from %r", url)
             else:
                 assert pos > self.min_bufsize
                 # wait for more data

@@ -1,15 +1,13 @@
 # -*- coding: iso-8859-1 -*-
 """internal http client"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import urlparse
-import wc.url
+import wc.net.url
 import wc.proxy.Headers
 import wc.proxy.HttpServer
 import wc.proxy.ClientServerMatchmaker
 import wc.filter
+import bk.log
 
 
 class HttpProxyClient (object):
@@ -25,8 +23,8 @@ class HttpProxyClient (object):
         self.handler = handler
         self.args = args
         self.method = "GET"
-        self.url = wc.url.url_norm(self.args[0])
-        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
+        self.url = wc.net.url.url_norm(self.args[0])
+        self.scheme, self.hostname, self.port, self.document = wc.net.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
@@ -35,11 +33,11 @@ class HttpProxyClient (object):
         self.isredirect = False
         attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_REQUEST])
         attrs['mime'] = 'application/x-javascript'
-        request = "GET %s HTTP/1.0" % wc.url.url_quote(self.url)
+        request = "GET %s HTTP/1.0" % wc.net.url.url_quote(self.url)
         request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, request, "filter", attrs)
         request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, request, "filter", attrs)
         self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, request, "filter", attrs)
-        wc.log.debug(wc.LOG_PROXY, '%s init', self)
+        bk.log.debug(wc.LOG_PROXY, '%s init', self)
 
 
     def __repr__ (self):
@@ -55,7 +53,7 @@ class HttpProxyClient (object):
 
     def finish (self):
         """tell handler all data is written and remove handler"""
-        wc.log.debug(wc.LOG_PROXY, '%s finish', self)
+        bk.log.debug(wc.LOG_PROXY, '%s finish', self)
         if self.handler:
             self.handler(None, *self.args)
             self.handler = None
@@ -63,7 +61,7 @@ class HttpProxyClient (object):
 
     def error (self, status, msg, txt=''):
         """on error the client finishes"""
-        wc.log.error(wc.LOG_PROXY, '%s error %s %s %s', self, status, msg, txt)
+        bk.log.error(wc.LOG_PROXY, '%s error %s %s %s', self, status, msg, txt)
         self.finish()
 
 
@@ -78,13 +76,13 @@ class HttpProxyClient (object):
            continue."""
         self.server = server
         assert self.server.connected
-        wc.log.debug(wc.LOG_PROXY, '%s server_response %r', self, response)
+        bk.log.debug(wc.LOG_PROXY, '%s server_response %r', self, response)
         protocol, status, msg = wc.proxy.HttpServer.get_response_data(response, self.args[0])
-        wc.log.debug(wc.LOG_PROXY, '%s response %s %d %s', self, protocol, status, msg)
+        bk.log.debug(wc.LOG_PROXY, '%s response %s %d %s', self, protocol, status, msg)
         if status in (302, 301):
             self.isredirect = True
         elif not (200 <= status < 300):
-            wc.log.error(wc.LOG_PROXY, "%s got %s status %d %r", self, protocol, status, msg)
+            bk.log.error(wc.LOG_PROXY, "%s got %s status %d %r", self, protocol, status, msg)
             self.finish()
 
 
@@ -92,7 +90,7 @@ class HttpProxyClient (object):
         """delegate server content to handler if it is not from a redirect
            response"""
         assert self.server
-        wc.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes', self, len(data))
+        bk.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes', self, len(data))
         if data and not self.isredirect:
             self.write(data)
 
@@ -100,7 +98,7 @@ class HttpProxyClient (object):
     def server_close (self, server):
         """The server has closed. Either redirect to new url, or finish"""
         assert self.server
-        wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
+        bk.log.debug(wc.LOG_PROXY, '%s server_close', self)
         if self.isredirect:
             self.redirect()
         else:
@@ -109,13 +107,13 @@ class HttpProxyClient (object):
 
     def server_abort (self):
         """The server aborted, so finish"""
-        wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
+        bk.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.finish()
 
 
     def handle_local (self):
         """Local data is not allowed here, finish."""
-        wc.log.error(wc.LOG_PROXY, "%s handle_local %s", self, self.args)
+        bk.log.error(wc.LOG_PROXY, "%s handle_local %s", self, self.args)
         self.finish()
 
 
@@ -127,19 +125,19 @@ class HttpProxyClient (object):
         url = self.server.headers.getheader("Location",
                      self.server.headers.getheader("Uri", ""))
         url = urlparse.urljoin(self.server.url, url)
-        self.url = wc.url.url_norm(url)
+        self.url = wc.net.url.url_norm(url)
         self.args = (self.url, self.args[1])
         self.isredirect = False
-        wc.log.debug(wc.LOG_PROXY, "%s redirected", self)
-        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
+        bk.log.debug(wc.LOG_PROXY, "%s redirected", self)
+        self.scheme, self.hostname, self.port, self.document = wc.net.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
-        host = wc.url.stripsite(self.url)[0]
+        host = wc.net.url.stripsite(self.url)[0]
         mime = self.server.mime
         content = ''
         # note: use HTTP/1.0 for JavaScript
-        request = "GET %s HTTP/1.0"%wc.url.url_quote(self.url)
+        request = "GET %s HTTP/1.0"%wc.net.url.url_quote(self.url)
         # close the server and try again
         self.server = None
         headers = wc.proxy.Headers.get_wc_client_headers(host)

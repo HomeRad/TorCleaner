@@ -16,13 +16,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import os
 import sys
 import re
-import wc.url
+import wc.net.url
 
 
 _percent_encodings = re.compile('%+').findall
@@ -62,7 +59,7 @@ class HtmlSecurity (object):
         if attrs.has_key('type'):
             # prevent IE crash bug on empty type attribute
             if not attrs['type']:
-                wc.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented IE <input type> crash bug", htmlfilter)
+                bk.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented IE <input type> crash bug", htmlfilter)
                 del attrs['type']
 
 
@@ -70,7 +67,7 @@ class HtmlSecurity (object):
         if attrs.has_key('style'):
             # prevent Mozilla crash bug on fieldsets
             if "position" in attrs['style']:
-                wc.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented Mozilla <fieldset style> crash bug", htmlfilter)
+                bk.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented Mozilla <fieldset style> crash bug", htmlfilter)
                 del attrs['style']
 
 
@@ -78,7 +75,7 @@ class HtmlSecurity (object):
         if attrs.has_key('align'):
             # prevent CAN-2003-0469, length 50 should be safe
             if len(attrs['align']) > 50:
-                wc.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented IE <hr align> crash bug", htmlfilter)
+                bk.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented IE <hr align> crash bug", htmlfilter)
                 del attrs['align']
 
 
@@ -88,14 +85,14 @@ class HtmlSecurity (object):
             t = attrs['type']
             c = t.count("/")
             if c > 1:
-                wc.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented IE <object type> bug", htmlfilter)
+                bk.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented IE <object type> bug", htmlfilter)
                 t = t.replace("/", "", c-1)
                 attrs['type'] = t
         if attrs.has_key('codebase'):
             self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
         if attrs.has_key('data'):
-            url = wc.url.url_norm(attrs['data'])
+            url = wc.net.url.url_norm(attrs['data'])
             if url.startswith('its:') or \
                url.startswith('mk:') or \
                url.startswith('ms-its:') or \
@@ -104,7 +101,7 @@ class HtmlSecurity (object):
                 i = url.find('!')
                 if i != -1:
                     # url specifies alternate location
-                    wc.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability", htmlfilter)
+                    bk.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability", htmlfilter)
                     attrs['data'] = url[:i]
 
 
@@ -112,7 +109,7 @@ class HtmlSecurity (object):
         if attrs.has_key('width'):
             # prevent CAN-2003-0238, table width=-1 crashes ICQ client
             if attrs['width']=='-1':
-                wc.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented ICQ table width crash bug", htmlfilter)
+                bk.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented ICQ table width crash bug", htmlfilter)
                 del attrs['width']
 
 
@@ -125,7 +122,7 @@ class HtmlSecurity (object):
         if attrs.has_key('value') and self.in_winhelp:
             # prevent CVE-2002-0823
             if len(attrs['value']) > 50:
-                wc.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented WinHlp overflow bug", htmlfilter)
+                bk.log.warn(wc.LOG_FILTER, "%s\n Detected and prevented WinHlp overflow bug", htmlfilter)
                 del attrs['value']
 
 
@@ -139,7 +136,7 @@ class HtmlSecurity (object):
                 if url.startswith('url='):
                     url = url[4:]
                 if url.startswith('file:/'):
-                    wc.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented local file redirection", htmlfilter, attrs['content'])
+                    bk.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented local file redirection", htmlfilter, attrs['content'])
                     del attrs['content']
 
 
@@ -150,7 +147,7 @@ class HtmlSecurity (object):
                 # prevent CVE-2002-0022
                 i = src.rfind('.')
                 if len(src[i:]) > 10:
-                    wc.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented IE filename overflow crash", htmlfilter, src)
+                    bk.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented IE filename overflow crash", htmlfilter, src)
                     del attrs['src']
 
 
@@ -158,7 +155,7 @@ class HtmlSecurity (object):
         if attrs.has_key('size'):
             if len(attrs['size']) > 10:
                 # prevent CVE-2001-0130
-                wc.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented Lotus Domino font size overflow crash", htmlfilter, attrs['size'])
+                bk.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented Lotus Domino font size overflow crash", htmlfilter, attrs['size'])
                 del attrs['size']
 
 
@@ -171,6 +168,6 @@ class HtmlSecurity (object):
             url = attrs[name]
             if _has_lots_of_percents(url):
                 # prevent CAN-2003-0870
-                wc.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented Opera percent encoding overflow crash", htmlfilter, url)
+                bk.log.warn(wc.LOG_FILTER, "%s %r\n Detected and prevented Opera percent encoding overflow crash", htmlfilter, url)
                 del attrs[name]
 

@@ -1,9 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 """server connections"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
+import bk.i18n
 import wc
 import wc.proxy.StatefulConnection
 
@@ -20,16 +18,16 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
 
     def client_abort (self):
         """the client has aborted the connection"""
-        wc.log.debug(wc.LOG_PROXY, "%s Server.client_abort", self)
+        bk.log.debug(wc.LOG_PROXY, "%s Server.client_abort", self)
         self.client = None
         self.close()
 
 
     def handle_connect (self):
         """make connection to remote server"""
-        wc.log.debug(wc.LOG_PROXY, "%s Server.handle_connect", self)
+        bk.log.debug(wc.LOG_PROXY, "%s Server.handle_connect", self)
         if self.state != 'connect':
-            wc.log.debug(wc.LOG_PROXY, "%s client has closed", self)
+            bk.log.debug(wc.LOG_PROXY, "%s client has closed", self)
             # the client has closed, and thus this server has too
             self.connected = False
             return

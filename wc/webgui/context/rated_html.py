@@ -16,10 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
-from wc import AppName, Version, i18n, config
+import bk.i18n
+from wc import AppName, Version, config
 from wc.webgui.context import getval as _getval
 
 url = None
@@ -28,7 +26,7 @@ reason = None
 def _form_reset ():
     global url, reason
     url = u""
-    reason = i18n._("Unknown reason")
+    reason = bk.i18n._("Unknown reason")
 
 
 # form execution

@@ -16,11 +16,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import tempfile, os, re
-from wc import AppName, ConfigDir, rulenames, Version, config, i18n
+import bk.i18n
+from wc import AppName, ConfigDir, rulenames, Version, config
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
@@ -291,7 +289,7 @@ def _form_newrule (rtype, lang):
     # add new rule
     rule = _GetRuleFromName(rtype)
     rule.parent = curfolder
-    rule.titles[lang] = i18n._("No title")
+    rule.titles[lang] = bk.i18n._("No title")
     # compile data and register
     rule.compile_data()
     prefix = config['development'] and u"wc" or u"lc"

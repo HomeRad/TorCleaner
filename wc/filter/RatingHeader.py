@@ -17,9 +17,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import wc.filter
 import wc.filter.Filter
 import wc.filter.Rating
@@ -46,7 +43,7 @@ class RatingHeader (wc.filter.Filter.Filter):
                     url, rating = wc.filter.Rating.rating_import(url, rating)
                     wc.filter.Rating.rating_add(url, rating)
                 except wc.filter.Rating.RatingParseError, msg:
-                    wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
+                    bk.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
         rules = attrs['rating_rules']
         for rule in rules:
             msg = wc.filter.Rating.rating_allow(url, rule)

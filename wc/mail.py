@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import socket
 import smtplib
 import email.Utils
@@ -41,7 +38,7 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
         conn.quit()
         return True
     except (socket.error, smtplib.SMTPException), x:
-        wc.log.exception(wc.LOG_GUI, 'SMTP send failure: %s', x)
+        bk.log.exception(wc.LOG_GUI, 'SMTP send failure: %s', x)
     return False
 
 

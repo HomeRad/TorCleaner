@@ -1,10 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 """support for different HTTP proxy authentication schemes"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
-from wc.url import stripsite
+import wc.net.url
 
 # default realm for authentication
 wc_realm = "unknown"
@@ -24,17 +21,17 @@ from ntlm import check_ntlm_credentials
 
 def get_auth_uri (url):
     """return uri ready for authentication purposes"""
-    return stripsite(url)[1]
+    return wc.net.url.stripsite(url)[1]
 
 
 def get_header_challenges (headers, key):
     """get parsed challenge(s) out of headers[key]"""
     auths = {}
     for auth in headers.getallmatchingheadervalues(key):
-        wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
+        bk.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
-    wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
+    bk.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
     return auths
 
 
@@ -68,7 +65,7 @@ def get_challenges (**args):
         chals = [get_digest_challenge(),
                  get_basic_challenge(),
                 ]
-    wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
+    bk.log.debug(wc.LOG_AUTH, "challenges %s", chals)
     return chals
 
 
@@ -76,10 +73,10 @@ def get_header_credentials (headers, key):
     """Return parsed credentials out of headers[key]"""
     creds = {}
     for cred in headers.getallmatchingheadervalues(key):
-        wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
+        bk.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)
-    wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
+    bk.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
     return creds
 
 
@@ -114,13 +111,13 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
+    bk.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
     return creds
 
 
 def check_credentials (creds, **attrs):
     """check credentials agains given attributes"""
-    wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s", creds, attrs)
+    bk.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s", creds, attrs)
     if not creds:
         res = False
     elif wc.config['auth_ntlm'] and 'NTLM' not in creds:
@@ -133,7 +130,7 @@ def check_credentials (creds, **attrs):
     elif 'Basic' in creds:
         res = check_basic_credentials(creds['Basic'][0], **attrs)
     else:
-        wc.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s", creds)
+        bk.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s", creds)
         res = False
     return res
 

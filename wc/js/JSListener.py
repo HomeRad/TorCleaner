@@ -20,9 +20,6 @@
 
 # Ported from C++ to Python by Bastian Kleineidam <calvin@users.sf.net>
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 
 class JSListener (object):
     """Define handler functions for javascript events"""

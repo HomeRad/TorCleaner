@@ -4,27 +4,25 @@ For a high level overview of DNS, see
 http://www.rad.com/networks/1998/dns/main.html
 """
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import sys
 import os
 import time
 import socket
 import re
 import pprint
+import bk.i18n
 import wc.proxy
-import wc.proxy.dns
+import wc.net.dns
 import wc.proxy.Connection
-import wc.network
-import wc.network.ip
+import wc.net
+import wc.net.ip
 
 
 dns_config = None
 
 def init_config ():
     global dns_config
-    dns_config = wc.network.resolver_config()
+    dns_config = wc.net.resolver_config()
     # re-read dns config every minute
     wc.proxy.make_timer(60, init_config)
 
@@ -34,7 +32,7 @@ init_config()
 def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    wc.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
+    bk.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
@@ -113,7 +111,7 @@ class DnsExpandHostname (object):
 
 
     def handle_issue_request (self):
-        wc.log.debug(wc.LOG_DNS, 'issue_request')
+        bk.log.debug(wc.LOG_DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             request = self.requests[0]
@@ -129,7 +127,7 @@ class DnsExpandHostname (object):
 
 
     def handle_dns (self, hostname, answer):
-        wc.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
+        bk.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
         if not self.callback:
             # Already handled this query
             return
@@ -218,9 +216,9 @@ class DnsCache (object):
 
 
     def lookup (self, hostname, callback):
-        wc.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
+        bk.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
         # see if hostname is already a resolved IP address
-        hostname, numeric = wc.network.ip.expand_ip(hostname)
+        hostname, numeric = wc.net.ip.expand_ip(hostname)
         if numeric:
             callback(hostname, DnsResponse('found', [hostname]))
             return
@@ -239,7 +237,7 @@ class DnsCache (object):
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
-                wc.log.debug(wc.LOG_DNS, 'cached! %r', hostname)
+                bk.log.debug(wc.LOG_DNS, 'cached! %r', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -406,17 +404,17 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     def send_dns_request (self):
         # Issue the request and set a timeout
         if not self.callback: return # Only issue if we have someone waiting
-        msg = wc.proxy.dns.Lib.Mpacker()
-        msg.addHeader(0, 0, wc.proxy.dns.Opcode.QUERY,
+        msg = wc.net.dns.Lib.Mpacker()
+        msg.addHeader(0, 0, wc.net.dns.Opcode.QUERY,
                       0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
         # XXX could send Type.AAAA for IPv6 nameservers, but who decides when
         # to do that? This is the dilemma with IPv6 not having an update
         # solution...
-        msg.addQuestion(self.hostname, wc.proxy.dns.Type.A,
-                        wc.proxy.dns.Class.IN)
+        msg.addQuestion(self.hostname, wc.net.dns.Type.A,
+                        wc.net.dns.Class.IN)
         msg = msg.getbuf()
         if self.conntype == 'tcp':
-            self.send_buffer = wc.proxy.dns.Lib.pack16bit(len(msg))+msg
+            self.send_buffer = wc.net.dns.Lib.pack16bit(len(msg))+msg
         else:
             self.send_buffer = msg
         wc.proxy.make_timer(self.TIMEOUT + 0.2*self.retries,
@@ -429,7 +427,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         # timeout (see send_dns_request).
         if not self.callback:
             return # It's already handled, so ignore this
-        wc.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
+        bk.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
         if not self.connected:
             self.callback(self.hostname,
                           DnsResponse('error', 'timed out connecting'))
@@ -461,7 +459,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if self.conntype == 'tcp':
             if len(self.recv_buffer) < 2: return
             header = self.recv_buffer[:2]
-            count = wc.proxy.dns.Lib.unpack16bit(header)
+            count = wc.net.dns.Lib.unpack16bit(header)
             if len(self.recv_buffer) < 2+count: return
             self.read(2) # header
             data = self.read(count)
@@ -472,7 +470,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         else:
             data = self.read(1024)
 
-        msg = wc.proxy.dns.Lib.Munpacker(data)
+        msg = wc.net.dns.Lib.Munpacker(data)
         (rid, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
@@ -480,12 +478,12 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # See http://cr.yp.to/djbdns/notes.html
             if self.conntype == 'tcp':
                 # socket.error((84, ''))
-                wc.log.error(wc.LOG_DNS,
+                bk.log.error(wc.LOG_DNS,
                              'Truncated TCP DNS packet: %s from %s for %r',
                              tc, self.nameserver, self.hostname)
                 self.handle_error("dns error")
             else:
-                wc.log.warn(wc.LOG_DNS,
+                bk.log.warn(wc.LOG_DNS,
                             'truncated UDP DNS packet: %s from %s for %r',
                             tc, self.nameserver, self.hostname)
             # we ignore this read, and let the timeout take its course
@@ -520,16 +518,16 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         ip_addrs = []
         for dummy in range(ancount):
             name, rtype, klass, ttl, rdlength = msg.getRRheader()
-            mname = 'get%sdata' % wc.proxy.dns.Type.typestr(rtype)
+            mname = 'get%sdata' % wc.net.dns.Type.typestr(rtype)
             if hasattr(msg, mname): data = getattr(msg, mname)()
             else: data = msg.getbytes(rdlength)
-            if rtype == wc.proxy.dns.Type.A:
+            if rtype == wc.net.dns.Type.A:
                 ip_addrs.append(data)
-            elif rtype == wc.proxy.dns.Type.AAAA:
+            elif rtype == wc.net.dns.Type.AAAA:
                 ip_addrs.append(data)
-            elif rtype == wc.proxy.dns.Type.CNAME:
+            elif rtype == wc.net.dns.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                wc.log.debug(wc.LOG_DNS, 'cname record %s=%r',
+                bk.log.debug(wc.LOG_DNS, 'cname record %s=%r',
                              self.hostname, data)
                 pass
         # Ignore (nscount) authority records

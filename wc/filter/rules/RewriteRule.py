@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import re
 import cStringIO as StringIO
 import wc
@@ -26,6 +23,7 @@ import wc.XmlUtils
 import wc.filter.rules.UrlRule
 import wc.filter.rules.Rule
 import bk.HtmlParser.htmllib
+import bk.i18n
 
 
 # tag ids
@@ -60,7 +58,7 @@ def tagbuf2data (tagbuf, out):
         elif item[0]==COMMENT:
             out.write("<!--%s-->"%item[1])
         else:
-            wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
+            bk.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
     return out
 
 
@@ -74,12 +72,12 @@ partvalnames = [
     'enclosed',
 ]
 partnames = {
-    'tag': wc.i18n._("Tag"),
-    'tagname': wc.i18n._("Tag name"),
-    'attr': wc.i18n._("Attribute"),
-    'attrval': wc.i18n._("Attribute value"),
-    'complete': wc.i18n._("Complete tag"),
-    'enclosed': wc.i18n._("Enclosed block"),
+    'tag': bk.i18n._("Tag"),
+    'tagname': bk.i18n._("Tag name"),
+    'attr': bk.i18n._("Attribute"),
+    'attrval': bk.i18n._("Attribute value"),
+    'complete': bk.i18n._("Complete tag"),
+    'enclosed': bk.i18n._("Enclosed block"),
 }
 
 
@@ -221,9 +219,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
 
     def filter_tag (self, tag, attrs):
         """return filtered tag data for given tag and attributes"""
-        #wc.log.debug(wc.LOG_FILTER, "rule %s filter_tag", self.titles['en'])
-        #wc.log.debug(wc.LOG_FILTER, "original tag %r attrs %s", tag, attrs)
-        #wc.log.debug(wc.LOG_FILTER, "replace %s with %r", num_part(self.part), self.replacement)
+        #bk.log.debug(wc.LOG_FILTER, "rule %s filter_tag", self.titles['en'])
+        #bk.log.debug(wc.LOG_FILTER, "original tag %r attrs %s", tag, attrs)
+        #bk.log.debug(wc.LOG_FILTER, "replace %s with %r", num_part(self.part), self.replacement)
         if self.part==COMPLETE:
             return [DATA, ""]
         if self.part==TAGNAME:
@@ -255,19 +253,19 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
                         # backreferences are replaced
                         newattrs[attr] = mo.expand(self.replacement)
                     else:
-                        wc.log.error(wc.LOG_FILTER, "Invalid part value %s", self.part)
+                        bk.log.error(wc.LOG_FILTER, "Invalid part value %s", self.part)
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        #wc.log.debug(wc.LOG_FILTER, "filtered tag %s attrs %s", tag, newattrs)
+        #bk.log.debug(wc.LOG_FILTER, "filtered tag %s attrs %s", tag, newattrs)
         return [STARTTAG, tag, newattrs]
 
 
     def filter_complete (self, i, buf, tag):
         """replace complete tag data in buf with replacement"""
-        #wc.log.debug(wc.LOG_FILTER, "rule %s filter_complete", self.titles['en'])
-        #wc.log.debug(wc.LOG_FILTER, "original buffer %s", buf)
-        #wc.log.debug(wc.LOG_FILTER, "part %s", num_part(self.part))
+        #bk.log.debug(wc.LOG_FILTER, "rule %s filter_complete", self.titles['en'])
+        #bk.log.debug(wc.LOG_FILTER, "original buffer %s", buf)
+        #bk.log.debug(wc.LOG_FILTER, "part %s", num_part(self.part))
         if self.part==COMPLETE:
             buf[i:] = [[DATA, self.replacement]]
         elif self.part==TAG:
@@ -279,7 +277,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         elif self.part==ENCLOSED:
             buf[i+1:] = [[DATA, self.replacement]]
             buf.append([ENDTAG, tag])
-        #wc.log.debug(wc.LOG_FILTER, "filtered buffer %s", buf)
+        #bk.log.debug(wc.LOG_FILTER, "filtered buffer %s", buf)
 
 
     def toxml (self):

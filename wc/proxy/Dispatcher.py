@@ -260,24 +260,24 @@ class Dispatcher (object):
         self.handle_expt()
 
     def handle_error (self, what):
-        wc.log.exception(wc.LOG_PROXY, "%s %s", self, what)
+        bk.log.exception(wc.LOG_PROXY, "%s %s", self, what)
 
     def handle_expt (self):
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled exception', self)
+        bk.log.warn(wc.LOG_PROXY, '%s unhandled exception', self)
 
     def handle_read (self):
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled read event', self)
+        bk.log.warn(wc.LOG_PROXY, '%s unhandled read event', self)
 
     def handle_write (self):
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled write event', self)
+        bk.log.warn(wc.LOG_PROXY, '%s unhandled write event', self)
 
     def handle_connect (self):
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled connect event', self)
+        bk.log.warn(wc.LOG_PROXY, '%s unhandled connect event', self)
 
     def handle_accept (self):
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled accept event', self)
+        bk.log.warn(wc.LOG_PROXY, '%s unhandled accept event', self)
 
     def handle_close (self):
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled close event', self)
+        bk.log.warn(wc.LOG_PROXY, '%s unhandled close event', self)
         self.close()
 

@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import cStringIO as StringIO
 import bk.HtmlParser.htmlsax
 import wc.filter
@@ -75,23 +72,23 @@ class HtmlParser (bk.HtmlParser.htmlsax.parser):
 
     def debugbuf (self):
         """print debugging information about buffered data"""
-        wc.log.debug(wc.LOG_FILTER, "self.outbuf %r", self.outbuf.getvalue())
-        wc.log.debug(wc.LOG_FILTER, "self.tagbuf %r", self.tagbuf)
-        wc.log.debug(wc.LOG_FILTER, "self.waitbuf %r", self.waitbuf)
-        wc.log.debug(wc.LOG_FILTER, "self.inbuf %r", self.inbuf.getvalue())
+        bk.log.debug(wc.LOG_FILTER, "self.outbuf %r", self.outbuf.getvalue())
+        bk.log.debug(wc.LOG_FILTER, "self.tagbuf %r", self.tagbuf)
+        bk.log.debug(wc.LOG_FILTER, "self.waitbuf %r", self.waitbuf)
+        bk.log.debug(wc.LOG_FILTER, "self.inbuf %r", self.inbuf.getvalue())
 
 
     def tagbuf2data (self):
         """append serialized tag items of the tag buffer to the output buffer
            and clear the tag buffer"""
-        wc.log.debug(wc.LOG_FILTER, "%s tagbuf2data", self)
+        bk.log.debug(wc.LOG_FILTER, "%s tagbuf2data", self)
         wc.filter.rules.RewriteRule.tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
 
     def feed (self, data):
         """feed some data to the parser"""
-        wc.log.debug(wc.LOG_FILTER, "%s feed %r", self, data)
+        bk.log.debug(wc.LOG_FILTER, "%s feed %r", self, data)
         if self.state[0]=='parse':
             # look if we must replay something
             if self.waited > 0:
@@ -107,14 +104,14 @@ class HtmlParser (bk.HtmlParser.htmlsax.parser):
                 self.inbuf = StringIO.StringIO()
             if data:
                 # only feed non-empty data
-                wc.log.debug(wc.LOG_FILTER, "%s parser feed %r", self, data)
+                bk.log.debug(wc.LOG_FILTER, "%s parser feed %r", self, data)
                 super(HtmlParser, self).feed(data)
             else:
-                wc.log.debug(wc.LOG_FILTER, "%s empty parser feed", self)
+                bk.log.debug(wc.LOG_FILTER, "%s empty parser feed", self)
                 pass
         elif self.state[0]=='wait':
             # wait state ==> put in input buffer
-            wc.log.debug(wc.LOG_FILTER, "%s waits", self)
+            bk.log.debug(wc.LOG_FILTER, "%s waits", self)
             self.inbuf.write(data)
         else:
             assert False, "parser %s has unknown parser state"%str(self)
@@ -122,7 +119,7 @@ class HtmlParser (bk.HtmlParser.htmlsax.parser):
 
     def flush (self):
         """flush pending data"""
-        wc.log.debug(wc.LOG_FILTER, "%s flush", self)
+        bk.log.debug(wc.LOG_FILTER, "%s flush", self)
         if self.state[0]=='wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
@@ -140,7 +137,7 @@ class HtmlParser (bk.HtmlParser.htmlsax.parser):
 
     def replay (self, waitbuf):
         """call the handler functions again with buffer data"""
-        wc.log.debug(wc.LOG_FILTER, "%s replays %r", self, waitbuf)
+        bk.log.debug(wc.LOG_FILTER, "%s replays %r", self, waitbuf)
         for item in waitbuf:
             if self.state[0]=='wait':
                 # the replaying itself can switch to wait state

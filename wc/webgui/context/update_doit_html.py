@@ -16,10 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
-from wc import AppName, Version, config, i18n
+import bk.i18n
+from wc import AppName, Version, config
 from wc.update import update_filter as _update_filter
 from wc.update import update_ratings as _update_ratings
 from cStringIO import StringIO as _StringIO
@@ -34,7 +32,7 @@ def _exec_form (form, lang):
     elif form.has_key('updaterating'):
         _updaterating()
     else:
-        updatelog = i18n._("Error: nothing to update.")
+        updatelog = bk.i18n._("Error: nothing to update.")
 
 
 def _updatezapper ():
@@ -46,7 +44,7 @@ def _updatezapper ():
         updatelog = log.getvalue()
         config.write_filterconf()
     except IOError, msg:
-        updatelog = i18n._("Error: %s") % msg
+        updatelog = bk.i18n._("Error: %s") % msg
     else:
         if doreload:
             # pass
@@ -61,4 +59,4 @@ def _updaterating ():
         updatelog = log.getvalue()
         # XXX
     except IOError, msg:
-        updatelog = i18n._("Error: %s") % msg
+        updatelog = bk.i18n._("Error: %s") % msg

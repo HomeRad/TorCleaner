@@ -16,9 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
+import bk.i18n
 import wc
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
@@ -83,7 +81,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
            return None if allowed, else a reason of why not"""
         for category, value in rating.items():
             if category not in self.ratings:
-                wc.log.warn(wc.LOG_FILTER, "Unknown rating category %r specified", category)
+                bk.log.warn(wc.LOG_FILTER, "Unknown rating category %r specified", category)
                 continue
             if not value:
                 # empty value implicates not rated
@@ -96,10 +94,10 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                 # check if value is in range
                 if (limit[0] is not None and value < limit[0]) or \
                    (limit[1] is not None and value > limit[1]):
-                    return wc.i18n._("Rating %r for category %r is not in range %s") %\
+                    return bk.i18n._("Rating %r for category %r is not in range %s") %\
                                   (value, category, limit)
             elif value > limit:
-                return wc.i18n._("Rating %r for category %r exceeds limit %r")%\
+                return bk.i18n._("Rating %r for category %r exceeds limit %r")%\
                               (value, category, limit)
         # not exceeded
         return None

@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import os
 import re
 import urllib
@@ -27,7 +24,7 @@ import gettext
 import mimetypes
 import cStringIO as StringIO
 import wc
-import wc.log
+import bk.log
 from wc.webgui.simpletal import simpleTAL
 from wc.webgui.simpletal import simpleTALES
 import wc.proxy.auth
@@ -38,9 +35,9 @@ class WebConfig (object):
     """class for web configuration templates"""
 
     def __init__ (self, client, url, form, protocol, clientheaders,
-                 status=200, msg=wc.i18n._('Ok'), localcontext=None, auth=''):
+                 status=200, msg=bk.i18n._('Ok'), localcontext=None, auth=''):
         """load a web configuration template and return response"""
-        wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
+        bk.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
         self.client = client
         # we pretend to be the server
         self.connected = True
@@ -52,7 +49,7 @@ class WebConfig (object):
             elif status==401:
                 headers['WWW-Authenticate'] = "%s\r"%auth
             else:
-                wc.log.error(wc.LOG_GUI, "Authentication with wrong status %d", status)
+                bk.log.error(wc.LOG_GUI, "Authentication with wrong status %d", status)
         if status in [301,302]:
             headers['Location'] = clientheaders['Location']
         gm = mimetypes.guess_type(url, None)
@@ -65,7 +62,7 @@ class WebConfig (object):
             ctype += "; charset=iso-8859-1"
         headers['Content-Type'] = "%s\r"%ctype
         try:
-            lang = wc.i18n.get_headers_lang(clientheaders)
+            lang = bk.i18n.get_headers_lang(clientheaders)
             # get the template filename
             path, dirs, lang = get_template_url(url, lang)
             if path.endswith('.html'):
@@ -74,13 +71,13 @@ class WebConfig (object):
                 context, newstatus = \
                      get_context(dirs, form, localcontext, lang)
                 if newstatus==401 and status!=newstatus:
-                    client.error(401, wc.i18n._("Authentication Required"),
+                    client.error(401, bk.i18n._("Authentication Required"),
                                  auth=wc.proxy.auth.get_challenges())
                     return
                 # get translator
                 translator = gettext.translation(wc.Name, wc.LocaleDir,
                                                  [lang], fallback=True)
-                #wc.log.debug(wc.LOG_GUI, "Using translator %s", translator.info())
+                #bk.log.debug(wc.LOG_GUI, "Using translator %s", translator.info())
                 # expand template
                 data = expand_template(fp, context, translator=translator)
             else:
@@ -88,15 +85,15 @@ class WebConfig (object):
                 data = fp.read()
             fp.close()
         except IOError:
-            wc.log.exception(wc.LOG_GUI, "Wrong path %r", url)
+            bk.log.exception(wc.LOG_GUI, "Wrong path %r", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
-            client.error(404, wc.i18n._("Not Found"))
+            client.error(404, bk.i18n._("Not Found"))
             return
         except StandardError:
             # catch standard exceptions and report internal error
-            wc.log.exception(wc.LOG_GUI, "Template error")
-            client.error(500, wc.i18n._("Internal Error"))
+            bk.log.exception(wc.LOG_GUI, "Template error")
+            client.error(500, bk.i18n._("Internal Error"))
             return
         # not catched builtin exceptions are:
         # SystemExit, StopIteration and all warnings
@@ -174,7 +171,7 @@ def get_template_path (path, defaultlang):
     """return tuple (path, dirs, lang)"""
     path, dirs = _get_template_path(path)
     lang = defaultlang
-    for la in wc.i18n.supported_languages:
+    for la in bk.i18n.supported_languages:
         assert len(la)==2
         if path.endswith(".html.%s"%la):
             path = path[:-3]
@@ -202,7 +199,7 @@ def get_context (dirs, form, localcontext, lang):
     context = simpleTALES.Context()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
-        wc.log.debug(wc.LOG_GUI, "got form %s", form)
+        bk.log.debug(wc.LOG_GUI, "got form %s", form)
         status = template_context._exec_form(form, lang)
         context_add(context, "form", form)
     # add default context values
@@ -238,11 +235,11 @@ def add_default_context (context, filename, lang):
     context_add(context, "lang", lang)
     # other available languges
     otherlanguages = []
-    for la in wc.i18n.supported_languages:
+    for la in bk.i18n.supported_languages:
         if lang==la: continue
         otherlanguages.append({'code': la,
-                               'name': wc.i18n.lang_name(la),
-                               'trans': wc.i18n.lang_trans(la, lang),
+                               'name': bk.i18n.lang_name(la),
+                               'trans': bk.i18n.lang_trans(la, lang),
                               })
     context_add(context, "otherlanguages", otherlanguages)
 

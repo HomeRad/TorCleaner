@@ -1,13 +1,11 @@
 # -*- coding: iso-8859-1 -*-
 """Mediator between client and server connection objects"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import socket
 import cStringIO as StringIO
+import bk.i18n
 import wc
-import wc.url
+import wc.net.url
 import wc.proxy.dns_lookups
 import wc.proxy.Headers
 from wc.proxy.ServerPool import serverpool
@@ -81,19 +79,19 @@ class ClientServerMatchmaker (object):
             else:
                 self.hostname = client.hostname
                 self.port = client.port
-            self.document = wc.url.document_quote(client.document)
+            self.document = wc.net.url.document_quote(client.document)
         assert self.hostname
         # start DNS lookup
-        wc.log.debug(wc.LOG_PROXY, "background dns lookup %r", self.hostname)
+        bk.log.debug(wc.LOG_PROXY, "background dns lookup %r", self.hostname)
         wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
 
     def handle_dns (self, hostname, answer):
         """got dns answer, look for server"""
         assert self.state == 'dns'
-        wc.log.debug(wc.LOG_PROXY, "%s handle dns %r", self, hostname)
+        bk.log.debug(wc.LOG_PROXY, "%s handle dns %r", self, hostname)
         if not self.client.connected:
-            wc.log.warn(wc.LOG_PROXY, "%s client closed after DNS", self)
+            bk.log.warn(wc.LOG_PROXY, "%s client closed after DNS", self)
             # The browser has already closed this connection, so abort
             return
         if answer.isFound():
@@ -107,53 +105,53 @@ class ClientServerMatchmaker (object):
 	        new_url += ':%d' % self.port
             # XXX does not work with parent proxy
             new_url += self.document
-            wc.log.info(wc.LOG_PROXY, "%s redirecting %r", self, new_url)
+            bk.log.info(wc.LOG_PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol, 301,
               wc.proxy.Headers.WcMessage(StringIO.StringIO('Content-type: text/plain\r\n'
               'Location: %s\r\n\r\n' % new_url)),
-              wc.i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
+              bk.i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host,
             # close this connection
             self.state = 'done'
-            self.client.error(504, wc.i18n._("Host not found"),
-                wc.i18n._('Host %s not found .. %s')%(hostname, answer.data))
+            self.client.error(504, bk.i18n._("Host not found"),
+                bk.i18n._('Host %s not found .. %s')%(hostname, answer.data))
 
 
     def find_server (self):
         """search for a connected server or make a new one"""
         assert self.state == 'server'
         addr = (self.ipaddr, self.port)
-        wc.log.debug(wc.LOG_PROXY, "%s find server %s", self, addr)
+        bk.log.debug(wc.LOG_PROXY, "%s find server %s", self, addr)
         if not self.client.connected:
-            wc.log.debug(wc.LOG_PROXY, "%s client not connected", self)
+            bk.log.debug(wc.LOG_PROXY, "%s client not connected", self)
             # The browser has already closed this connection, so abort
             return
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            wc.log.debug(wc.LOG_PROXY, '%s resurrecting %s', self, server)
+            bk.log.debug(wc.LOG_PROXY, '%s resurrecting %s', self, server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr) >= \
              serverpool.connection_limit(addr):
-            wc.log.debug(wc.LOG_PROXY, '%s server %s busy', self, addr)
+            bk.log.debug(wc.LOG_PROXY, '%s server %s busy', self, addr)
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
             if self.server_busy > BUSY_LIMIT:
-                wc.log.warn(wc.LOG_PROXY, "Waited too long for available connection at %s"+\
+                bk.log.warn(wc.LOG_PROXY, "Waited too long for available connection at %s"+\
                     ", consider increasing the server pool connection limit"+\
                      " (currently at %d)", addr, BUSY_LIMIT)
-                self.client.error(503, wc.i18n._("Service unavailable"))
+                self.client.error(503, bk.i18n._("Service unavailable"))
                 return
             # There are too many connections right now, so register us
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
         else:
-            wc.log.debug(wc.LOG_PROXY, "%s new connect to server", self)
+            bk.log.debug(wc.LOG_PROXY, "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
@@ -165,14 +163,14 @@ class ClientServerMatchmaker (object):
                 server = klass(self.ipaddr, self.port, self)
                 serverpool.register_server(addr, server)
             except socket.timeout:
-                self.client.error(504, wc.i18n._('Connection timeout'))
+                self.client.error(504, bk.i18n._('Connection timeout'))
             except socket.error:
-                self.client.error(503, wc.i18n._('Connect error'))
+                self.client.error(503, bk.i18n._('Connect error'))
 
 
     def server_connected (self, server):
         """the server has connected"""
-        wc.log.debug(wc.LOG_PROXY, "%s server_connected", self)
+        bk.log.debug(wc.LOG_PROXY, "%s server_connected", self)
         assert self.state=='connect'
         assert server.connected
         if not self.client.connected:
@@ -199,12 +197,12 @@ class ClientServerMatchmaker (object):
                      expect.startswith('0100-continue')
         if docontinue:
             if serverpool.http_versions.get(addr, 1.1) < 1.1:
-                self.client.error(417, wc.i18n._("Expectation failed"),
-                             wc.i18n._("Server does not understand HTTP/1.1"))
+                self.client.error(417, bk.i18n._("Expectation failed"),
+                             bk.i18n._("Server does not understand HTTP/1.1"))
                 return
         elif expect:
-            self.client.error(417, wc.i18n._("Expectation failed"),
-                       wc.i18n._("Unsupported expectation %r")%expect)
+            self.client.error(417, bk.i18n._("Expectation failed"),
+                       bk.i18n._("Unsupported expectation %r")%expect)
             return
         # switch to response status
         self.state = 'response'
@@ -217,7 +215,7 @@ class ClientServerMatchmaker (object):
                                    self.url, self.mime)
 
 
-    def server_abort (self, reason=wc.i18n._("No response from server")):
+    def server_abort (self, reason=bk.i18n._("No response from server")):
         """The server had an error, so we need to tell the client
            that we couldn't connect"""
         if self.client.connected:
@@ -226,7 +224,7 @@ class ClientServerMatchmaker (object):
 
     def server_close (self, server):
         """the server has closed"""
-        wc.log.debug(wc.LOG_PROXY, '%s resurrection failed %d %s', self, server.sequence_number, server)
+        bk.log.debug(wc.LOG_PROXY, '%s resurrection failed %d %s', self, server.sequence_number, server)
         # Look for a server again
         if server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
@@ -236,12 +234,12 @@ class ClientServerMatchmaker (object):
         elif self.client.connected:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
-            self.client.error(503, wc.i18n._("Server closed connection"))
+            self.client.error(503, bk.i18n._("Server closed connection"))
 
 
     def server_response (self, server, response, status, headers):
         """the server got a response"""
-        wc.log.debug(wc.LOG_PROXY, "%s server_response, match client/server", self)
+        bk.log.debug(wc.LOG_PROXY, "%s server_response, match client/server", self)
         # Okay, transfer control over to the real client
         if self.client.connected:
             server.client = self.client

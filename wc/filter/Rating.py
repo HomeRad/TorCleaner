@@ -16,18 +16,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import re
 import os
 import urlparse
 import cPickle as pickle
+import bk.i18n
 import wc
-import wc.url
+import wc.net.url
 
 
-MISSING = wc.i18n._("Unknown page")
+MISSING = bk.i18n._("Unknown page")
 
 # rating cache filename
 rating_cachefile = os.path.join(wc.ConfigDir, "rating.dat")
@@ -47,28 +45,28 @@ service = dict(
    # rating categories
    categories = dict(
        violence = dict(
-             name = wc.i18n._('violence'),
+             name = bk.i18n._('violence'),
              rvalues = ["0", "1", "2"],
            ),
        sex = dict(
-             name = wc.i18n._('sex'),
+             name = bk.i18n._('sex'),
              rvalues = ["0", "1", "2"],
            ),
        language = dict(
-             name = wc.i18n._('language'),
+             name = bk.i18n._('language'),
              rvalues = ["0", "1", "2"],
            ),
        agerange = dict(
-             name = wc.i18n._('age range'),
+             name = bk.i18n._('age range'),
              rrange = [0, None],
            ),
    ),
 )
 
 rangenames = {
-    "0": wc.i18n._("None"),
-    "1": wc.i18n._("Mild"),
-    "2": wc.i18n._("Heavy"),
+    "0": bk.i18n._("None"),
+    "1": bk.i18n._("Mild"),
+    "2": bk.i18n._("Heavy"),
 }
 
 
@@ -79,7 +77,7 @@ def rating_import (url, ratingdata, debug=0):
     categories = {}
     for line in ratingdata.splitlines():
         if debug:
-            wc.log.debug(wc.LOG_RATING, "Read line %r", line)
+            bk.log.debug(wc.LOG_RATING, "Read line %r", line)
         line = line.strip()
         if not line:
             # ignore empty lines
@@ -90,12 +88,12 @@ def rating_import (url, ratingdata, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError:
-            raise RatingParseError(wc.i18n._("malformed rating line %r")%line)
+            raise RatingParseError(bk.i18n._("malformed rating line %r")%line)
         if category=="modified" and not is_time(value):
-            raise RatingParseError(wc.i18n._("malfored modified time %r")%value)
+            raise RatingParseError(bk.i18n._("malfored modified time %r")%value)
         if category=="generic" and value not in ["true", "false"] and \
            not url.startswith(value):
-            raise RatingParseError(wc.i18n._("generic url %r doesn't match %r")%\
+            raise RatingParseError(bk.i18n._("generic url %r doesn't match %r")%\
                                    (value, url))
         categories[category] = value
     return categories
@@ -112,8 +110,8 @@ def rating_exportall ():
     """
     fp = file(os.path.join(wc.ConfigDir, "rating.txt"), 'w')
     for url, rating in rating_cache.iteritems():
-        if not wc.url.is_valid_url(url):
-            wc.log.error(wc.LOG_RATING, "invalid url %r", url)
+        if not wc.net.url.is_valid_url(url):
+            bk.log.error(wc.LOG_RATING, "invalid url %r", url)
             continue
         fp.write("url %s\n"%url)
         fp.write(rating_export(rating))
@@ -144,8 +142,8 @@ def rating_cache_load ():
         # remove invalid entries
         toremove = []
         for url in rating_cache:
-            if not wc.url.is_valid_url(url):
-                wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
+            if not wc.net.url.is_valid_url(url):
+                bk.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
                 toremove.append(url)
         if toremove:
             for url in toremove:
@@ -195,7 +193,7 @@ def rating_split_url (url):
     # split into [scheme, host, path, query, fragment]
     parts = list(urlparse.urlsplit(url))
     if not (parts[0] and parts[1]):
-        wc.log.warn(wc.LOG_FILTER, "invalid url for rating split: %r", url)
+        bk.log.warn(wc.LOG_FILTER, "invalid url for rating split: %r", url)
         return []
     # fix scheme
     parts[0] += ":"
@@ -223,12 +221,12 @@ def rating_split_path (path):
 
 def rating_add (url, rating):
     """add new or update rating in cache and write changes to disk"""
-    if wc.url.is_valid_url(url):
+    if wc.net.url.is_valid_url(url):
         # XXX norm url?
         rating_cache[url] = rating
         rating_cache_write()
     else:
-        wc.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
+        bk.log.error(wc.LOG_RATING, "Invalid rating url %r", url)
 
 
 def rating_allow (url, rule):
@@ -291,7 +289,7 @@ def rating_cache_merge (newrating_cache, dryrun=False, log=None):
     for url, rating in newrating_cache.iteritems():
         if url not in rating_cache:
             chg = True
-            print >>log, wc.i18n._("adding new rating for %r")%url
+            print >>log, bk.i18n._("adding new rating for %r")%url
             if not dryrun:
                 rating_cache[url] = rating
     if not dryrun and chg:

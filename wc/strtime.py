@@ -16,11 +16,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import time
 import wc
+import bk.i18n
 
 
 def strtime (t):
@@ -31,13 +29,13 @@ def strtime (t):
 
 def strduration (duration):
     """return string formatted time duration"""
-    name = wc.i18n._("seconds")
+    name = bk.i18n._("seconds")
     if duration > 60:
         duration = duration / 60
-        name = wc.i18n._("minutes")
+        name = bk.i18n._("minutes")
     if duration > 60:
         duration = duration / 60
-        name = wc.i18n._("hours")
+        name = bk.i18n._("hours")
     return " %.3f %s"%(duration, name)
 
 

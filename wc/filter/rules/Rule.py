@@ -16,10 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import re
+import bk.i18n
 import wc
 import wc.XmlUtils
 import wc.filter.rules
@@ -106,7 +104,7 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", wc.i18n._("updating rule title for language %s:")%key
+                print >>log, " ", bk.i18n._("updating rule title for language %s:")%key
                 print >>log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.titles[key] = value
@@ -119,7 +117,7 @@ class Rule (object):
                 oldvalue = None
             if oldvalue is not None:
                 chg = True
-                print >>log, " ", wc.i18n._("updating rule description for language %s:")%key
+                print >>log, " ", bk.i18n._("updating rule description for language %s:")%key
                 print >>log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.descriptions[key] = value
@@ -133,7 +131,7 @@ class Rule (object):
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
-                print >>log, " ", wc.i18n._("updating rule %s:")%self.tiptext()
+                print >>log, " ", bk.i18n._("updating rule %s:")%self.tiptext()
                 print >>log, " ", attr, repr(oldval), "==>", repr(newval)
                 chg = True
                 if not dryrun:

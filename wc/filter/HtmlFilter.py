@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import urllib
 import bk.HtmlParser
 import wc.filter
@@ -54,17 +51,17 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
 
     def error (self, msg):
         """signal a filter/parser error"""
-        wc.log.error(wc.LOG_FILTER, msg)
+        bk.log.error(wc.LOG_FILTER, msg)
 
 
     def warning (self, msg):
         """signal a filter/parser warning"""
-        wc.log.warn(wc.LOG_FILTER, msg)
+        bk.log.warn(wc.LOG_FILTER, msg)
 
 
     def fatalError (self, msg):
         """signal a fatal filter/parser error"""
-        wc.log.critical(wc.LOG_FILTER, msg)
+        bk.log.critical(wc.LOG_FILTER, msg)
 
 
     def __repr__ (self):
@@ -91,13 +88,13 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
 
     def cdata (self, data):
         """character data"""
-        wc.log.debug(wc.LOG_FILTER, "%s cdata %r", self, data)
+        bk.log.debug(wc.LOG_FILTER, "%s cdata %r", self, data)
         return self._data(data)
 
 
     def characters (self, data):
         """characters"""
-        wc.log.debug(wc.LOG_FILTER, "%s characters %r", self, data)
+        bk.log.debug(wc.LOG_FILTER, "%s characters %r", self, data)
         return self._data(data)
 
 
@@ -105,7 +102,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """a comment; accept only non-empty comments"""
         if not (self.comments and data):
             return
-        wc.log.debug(wc.LOG_FILTER, "%s comment %r", self, data)
+        bk.log.debug(wc.LOG_FILTER, "%s comment %r", self, data)
         item = [wc.filter.rules.RewriteRule.COMMENT, data]
         if self._is_waiting(item):
             return
@@ -113,12 +110,12 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
 
 
     def doctype (self, data):
-        wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
+        bk.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
         return self._data("<!DOCTYPE%s>"%data)
 
 
     def pi (self, data):
-        wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
+        bk.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
         return self._data("<?%s?>"%data)
 
 
@@ -126,7 +123,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         # default data
-        wc.log.debug(wc.LOG_FILTER, "%s startElement %r", self, tag)
+        bk.log.debug(wc.LOG_FILTER, "%s startElement %r", self, tag)
         if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
@@ -155,8 +152,8 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             if not urllib.splittype(self.base_url)[0]:
                 self.base_url = "%s://%s" % \
                                 (urllib.splittype(self.url)[0], self.base_url)
-            self.base_url = wc.url.url_norm(self.base_url)
-            wc.log.debug(wc.LOG_FILTER, "%s using base url %r", self, self.base_url)
+            self.base_url = wc.net.url.url_norm(self.base_url)
+            bk.log.debug(wc.LOG_FILTER, "%s using base url %r", self, self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply
@@ -173,7 +170,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         item = [wc.filter.rules.RewriteRule.STARTTAG, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                wc.log.debug(wc.LOG_FILTER, "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
+                bk.log.debug(wc.LOG_FILTER, "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = True
@@ -184,7 +181,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
                     else:
                         break
                 else:
-                    wc.log.debug(wc.LOG_FILTER, "%s put rule %r on buffer", self, rule.titles['en'])
+                    bk.log.debug(wc.LOG_FILTER, "%s put rule %r on buffer", self, rule.titles['en'])
                     rulelist.append(rule)
         if rulelist:
             # remember buffer position for end tag matching
@@ -208,7 +205,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the tag buffer (calling tagbuf2data)"""
-        wc.log.debug(wc.LOG_FILTER, "%s endElement %r", self, tag)
+        bk.log.debug(wc.LOG_FILTER, "%s endElement %r", self, tag)
         if self._is_waiting([wc.filter.rules.RewriteRule.ENDTAG, tag]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)

@@ -30,9 +30,6 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 #
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "get_ntlm_credentials", "parse_ntlm_credentials",
            "check_ntlm_credentials",
@@ -207,7 +204,7 @@ def parse_ntlm_challenge (challenge):
         msg = base64.decodestring(chal)
         res = parse_message2(msg)
         if not res:
-            wc.log.warn(wc.LOG_AUTH, "invalid NTLM challenge %r", msg)
+            bk.log.warn(wc.LOG_AUTH, "invalid NTLM challenge %r", msg)
     return res, remainder
 
 
@@ -251,20 +248,20 @@ def parse_ntlm_credentials (credentials):
             # invalid type, skip
             res = {}
     if not res:
-        wc.log.warn(wc.LOG_AUTH, "invalid NTLM credential %r", creds)
+        bk.log.warn(wc.LOG_AUTH, "invalid NTLM credential %r", creds)
     return res, remainder
 
 
 def check_ntlm_credentials (credentials, **attrs):
     """return True if given credentials validate with given attrs"""
     if credentials.has_key('host') and credentials['host']!="UNKNOWN":
-        wc.log.warn(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
+        bk.log.warn(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
         return False
     if credentials.has_key('domain') and credentials['domain']!='WORKGROUP':
-        wc.log.warn(wc.LOG_AUTH, "NTLM wrong domain %r", credentials['domain'])
+        bk.log.warn(wc.LOG_AUTH, "NTLM wrong domain %r", credentials['domain'])
         return False
     if credentials['username']!=attrs['username']:
-        wc.log.warn(wc.LOG_AUTH, "NTLM wrong username")
+        bk.log.warn(wc.LOG_AUTH, "NTLM wrong username")
         return False
     nonce = attrs['nonce']
     password = base64.decodestring(attrs['password_b64'])
@@ -314,7 +311,7 @@ def parse_message1 (msg):
     """parse and return NTLM message type 1 (NTLMSSP_NEGOTIATE)"""
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
-    wc.log.debug(wc.LOG_AUTH, "msg1 flags %s", "\n".join(str_flags(res['flags'])))
+    bk.log.debug(wc.LOG_AUTH, "msg1 flags %s", "\n".join(str_flags(res['flags'])))
     if res['flags'] & NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED:
         domain_offset = getint32(msg[20:24])
         res['domain'] = msg[domain_offset:]
@@ -365,14 +362,14 @@ def parse_message2 (msg):
     """parse and return NTLM message type 2 (NTLMSSP_SIGNATURE)"""
     res = {}
     if not msg.startswith('%s\x00'%NTLMSSP_SIGNATURE):
-        wc.log.warn(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
+        bk.log.warn(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
         return res
     if getint32(msg[8:12])!=NTLMSSP_CHALLENGE:
-        wc.log.warn(wc.LOG_AUTH, "NTLM challenge type not found %r", msg)
+        bk.log.warn(wc.LOG_AUTH, "NTLM challenge type not found %r", msg)
         return res
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])
-    wc.log.debug(wc.LOG_AUTH, "msg2 flags %s", "\n".join(str_flags(res['flags'])))
+    bk.log.debug(wc.LOG_AUTH, "msg2 flags %s", "\n".join(str_flags(res['flags'])))
     res['nonce'] = msg[24:32]
     if res['flags'] & NTLMSSP_TARGET_TYPE_DOMAIN:
         offset = getint32(msg[16:20])
@@ -439,7 +436,7 @@ def parse_message3 (msg):
     host_offset = getint32(msg[48:52])
     session_offset = getint32(msg[56:60])
     res['flags'] = getint16(msg[60:62])
-    wc.log.debug(wc.LOG_AUTH, "msg3 flags %s", "\n".join(str_flags(res['flags'])))
+    bk.log.debug(wc.LOG_AUTH, "msg3 flags %s", "\n".join(str_flags(res['flags'])))
     res['domain'] = unicode2str(msg[domain_offset:username_offset])
     res['username'] = unicode2str(msg[username_offset:host_offset])
     res['host'] = unicode2str(msg[host_offset:lm_offset])

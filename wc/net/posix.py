@@ -1,9 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """network utilities"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import socket
 import array
 import fcntl
@@ -11,7 +8,7 @@ import os
 import struct
 import re
 import wc
-import wc.log
+import bk.log
 
 
 class IfConfig (object):
@@ -53,7 +50,7 @@ class IfConfig (object):
         try:
             result = self._fcntl(func, ifreq)
         except IOError, msg:
-            wc.log.warn(wc.LOG_PROXY,
+            bk.log.warn(wc.LOG_PROXY,
                   "error getting addr for interface %r: %s", ifname, msg)
             return None
         return socket.inet_ntoa(result[20:24])
@@ -82,7 +79,7 @@ class IfConfig (object):
         try:
             result = self._fcntl(self.SIOCGIFFLAGS, ifreq)
         except IOError, msg:
-            wc.log.warn(wc.LOG_PROXY,
+            bk.log.warn(wc.LOG_PROXY,
                  "error getting flags for interface %r: %s", ifname, msg)
             return 0
         # extract the interface's flags from the return value

@@ -4,14 +4,12 @@
 used by Bastian Kleineidam for WebCleaner
 """
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import socket
 import select
 import re
 import time
 import wc
+import bk.log
 
 
 # test for IPv6, both in Python build and in kernel build
@@ -42,10 +40,10 @@ def get_http_version (protocol):
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
         if f > (1,1):
-            wc.log.error(wc.LOG_PROXY, wc.i18n._("unsupported HTTP version %s"), f)
+            bk.log.error(wc.LOG_PROXY, bk.i18n._("unsupported HTTP version %s"), f)
             f = (1,1)
         return f
-    wc.log.error(wc.LOG_PROXY, wc.i18n._("invalid HTTP version %r"), protocol)
+    bk.log.error(wc.LOG_PROXY, bk.i18n._("invalid HTTP version %r"), protocol)
     return (1,0)
 
 
@@ -67,7 +65,7 @@ def create_inet_socket (dispatch, socktype):
 
 def make_timer (delay, callback):
     """after DELAY seconds, run the CALLBACK function"""
-    wc.log.debug(wc.LOG_PROXY, "Adding %s to %d timers", callback, len(TIMERS))
+    bk.log.debug(wc.LOG_PROXY, "Adding %s to %d timers", callback, len(TIMERS))
     TIMERS.append( (time.time()+delay, callback) )
     TIMERS.sort()
 
@@ -100,9 +98,9 @@ def proxy_poll (timeout=0.0):
         r = [ x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.readable() ]
         w = [ x for x in wc.proxy.Dispatcher.socket_map.itervalues() if x.writable() ]
         e = wc.proxy.Dispatcher.socket_map.values()
-        wc.log.debug(wc.LOG_PROXY, "select with %f timeout:", timeout)
+        bk.log.debug(wc.LOG_PROXY, "select with %f timeout:", timeout)
         for x in e:
-            wc.log.debug(wc.LOG_PROXY, "  %s", x)
+            bk.log.debug(wc.LOG_PROXY, "  %s", x)
         try:
             (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
@@ -111,12 +109,12 @@ def proxy_poll (timeout=0.0):
                 return
             else:
                 raise
-        wc.log.debug(wc.LOG_PROXY, "poll result %s", (r,w,e))
+        bk.log.debug(wc.LOG_PROXY, "poll result %s", (r,w,e))
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
         for x in e:
-            wc.log.debug(wc.LOG_PROXY, "%s poll handle exception", x)
+            bk.log.debug(wc.LOG_PROXY, "%s poll handle exception", x)
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
@@ -124,7 +122,7 @@ def proxy_poll (timeout=0.0):
             if not x.writable():
                 continue
             t = time.time()
-            wc.log.debug(wc.LOG_PROXY, "%s poll handle write", x)
+            bk.log.debug(wc.LOG_PROXY, "%s poll handle write", x)
             x.handle_write_event()
             handlerCount += 1
             _slow_check(x, t, 'wslow')
@@ -133,7 +131,7 @@ def proxy_poll (timeout=0.0):
             if not x.readable():
                 continue
             t = time.time()
-            wc.log.debug(wc.LOG_PROXY, "%s poll handle read", x)
+            bk.log.debug(wc.LOG_PROXY, "%s poll handle read", x)
             x.handle_read_event()
             handlerCount += 1
             _slow_check(x, t, 'rslow')
@@ -144,7 +142,7 @@ def _slow_check (x, t, stype):
     """check if processing of connection x took too much time
        and print a warning"""
     if time.time()-t > 2:
-        wc.log.warn(wc.LOG_PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
+        bk.log.warn(wc.LOG_PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
 
 
 

@@ -16,19 +16,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 
 import os
 import sets
 import socket
-import wc.log
+import wc
+import bk.log
 import bk.containers
 if os.name=='posix':
-    from wc.network import posix as platform_net
+    import posix as platform_net
 elif os.name=='nt':
-    from wc.network import nt as platform_net
+    import nt as platform_net
 else:
     platform_net = None
 
@@ -50,7 +48,7 @@ def get_localhosts ():
         for addr in platform_net.get_localaddrs():
             add_addrinfo(localhosts, addr)
     else:
-        wc.log.warn(wc.LOG_PROXY, "platorm %r network not supported", os.name)
+        bk.log.warn(wc.LOG_PROXY, "platorm %r network not supported", os.name)
     return localhosts
 
 
@@ -86,13 +84,13 @@ def resolver_config ():
     if platform_net is not None:
         platform_net.resolver_config(config)
     else:
-        wc.log.warn(wc.LOG_PROXY, "platorm %r network not supported", os.name)
+        bk.log.warn(wc.LOG_PROXY, "platorm %r network not supported", os.name)
     if not config.search_domains:
         config.search_domains.append('')
     if not config.nameservers:
         config.nameservers.append('127.0.0.1')
-    wc.log.debug(wc.LOG_DNS, "nameservers %s", config.nameservers)
-    wc.log.debug(wc.LOG_DNS, "search domains %s", config.search_domains)
+    bk.log.debug(wc.LOG_DNS, "nameservers %s", config.nameservers)
+    bk.log.debug(wc.LOG_DNS, "search domains %s", config.search_domains)
     return config
 
 

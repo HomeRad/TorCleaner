@@ -11,6 +11,4 @@
 
 # __init__.py for DNS class.
 
-__version__ = '2.3.0'
-
 import Lib

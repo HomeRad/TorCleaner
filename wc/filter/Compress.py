@@ -16,12 +16,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import struct
 import time
 import zlib
+import bk.i18n
 import wc
 import wc.filter
 import wc.filter.Filter
@@ -77,7 +75,7 @@ class Compress (wc.filter.Filter.Filter):
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                wc.log.debug(wc.LOG_FILTER, 'writing gzip header')
+                bk.log.debug(wc.LOG_FILTER, 'writing gzip header')
             compobj['size'] += len(data)
             compobj['crc'] = zlib.crc32(data, compobj['crc'])
             data = "%s%s"%(header, compobj['compressor'].compress(data))
@@ -90,7 +88,7 @@ class Compress (wc.filter.Filter.Filter):
         if compobj:
             header = compobj['header']
             if header:
-                wc.log.debug(wc.LOG_FILTER, 'final writing gzip header')
+                bk.log.debug(wc.LOG_FILTER, 'final writing gzip header')
                 pass
             if data:
                 compobj['size'] += len(data)
@@ -98,7 +96,7 @@ class Compress (wc.filter.Filter.Filter):
                 data = "%s%s"%(header, compobj['compressor'].compress(data))
             else:
                 data = header
-            wc.log.debug(wc.LOG_FILTER, 'finishing compressor')
+            bk.log.debug(wc.LOG_FILTER, 'finishing compressor')
             data += "%s%s%s" % (compobj['compressor'].flush(zlib.Z_FINISH),
                                 struct.pack('<l', compobj['crc']),
                                 struct.pack('<l', compobj['size']))
@@ -118,6 +116,6 @@ class Compress (wc.filter.Filter.Filter):
         else:
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
-        wc.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
+        bk.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
         d['compressobj'] = compressobj
         return d

@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import os
 import time
 import socket
@@ -29,7 +26,7 @@ import xml.parsers.expat
 import logging.config
 import logging.handlers
 import _webcleaner2_configdata as configdata
-import log
+import bk.log
 
 Version = configdata.version
 AppName = configdata.appname
@@ -73,14 +70,14 @@ def initlog (filename, appname, filelogs=True):
         if os.name=="nt":
             trydirs.append(ConfigDir)
         logname = "%s.log"%appname
-        logfile = log.get_log_file(appname, logname, trydirs=trydirs)
+        logfile = bk.log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_wc_handler(logfile)
         logging.getLogger("wc").addHandler(handler)
         logging.getLogger("simpleTAL").addHandler(handler)
         logging.getLogger("simpleTALES").addHandler(handler)
         # access log is always a file
         logname = "%s-access.log"%appname
-        logfile = log.get_log_file(appname, logname, trydirs=trydirs)
+        logfile = bk.log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_access_handler(logfile)
         logging.getLogger("wc.access").addHandler(handler)
 
@@ -91,7 +88,7 @@ def get_wc_handler (logfile):
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
     handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
-    return log.set_format(handler)
+    return bk.log.set_format(handler)
 
 
 def get_access_handler (logfile):
@@ -112,10 +109,10 @@ def sort_seq (seq):
     l.sort()
     return l
 
-import wc.network.ip
-import wc.i18n
-import wc.url
-import wc.network
+import bk.i18n
+import wc.net.url
+import wc.net
+import wc.net.ip
 import wc.proxy
 import wc.proxy.dns_lookups
 import wc.filter
@@ -150,7 +147,7 @@ def wstartfunc (handle=None, abort=None, confdir=ConfigDir, filelogs=True):
     except ImportError:
         pass
     # start the proxy
-    log.info(LOG_PROXY, "Starting proxy on port %d", config['port'])
+    bk.log.info(LOG_PROXY, "Starting proxy on port %d", config['port'])
     wc.proxy.mainloop(handle=handle, abort=abort)
 
 
@@ -229,7 +226,7 @@ class Configuration (dict):
         # if set to one the bound socket does not accept connections from
         # hosts except localhost; normally not needed
         self['local_sockets_only'] = 0
-        self['localhosts'] = wc.network.get_localhosts()
+        self['localhosts'] = wc.net.get_localhosts()
         self['mime_content_rewriting'] = sets.Set()
         self['gui_theme'] = "classic"
         self['timeout'] = 10
@@ -299,7 +296,7 @@ class Configuration (dict):
         from wc.filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
             if os.stat(filename)[stat.ST_SIZE]==0:
-                log.warn(LOG_PROXY, "Skipping empty file %r", filename)
+                bk.log.warn(LOG_PROXY, "Skipping empty file %r", filename)
                 continue
             p = ZapperParser(filename, self)
             p.parse()
@@ -326,7 +323,7 @@ class Configuration (dict):
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
-            print >>log, " ", wc.i18n._("inserting %s")%folder.tiptext()
+            print >>log, " ", bk.i18n._("inserting %s")%folder.tiptext()
             if not dryrun:
                 folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)
@@ -373,13 +370,13 @@ class Configuration (dict):
         """Decide whether to filter this url or not.
            returns True if the request must not be filtered, else False
         """
-        return wc.url.match_url(url, self['nofilterhosts'])
+        return wc.net.url.match_url(url, self['nofilterhosts'])
 
 
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
         hostset = self['allowedhostset']
-        return wc.network.ip.host_in_set(host, hostset[0], hostset[1])
+        return wc.net.ip.host_in_set(host, hostset[0], hostset[1])
 
 
 ##### xml parsers #########
@@ -446,7 +443,7 @@ class BaseParser (object):
         self.xmlparser = None
 
     def parse (self, fp=None):
-        log.debug(LOG_PROXY, "Parsing %s", self.filename)
+        bk.log.debug(LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
         self._preparse()
@@ -454,7 +451,7 @@ class BaseParser (object):
             try:
                 self.xmlparser.ParseFile(fp)
             except (xml.parsers.expat.ExpatError, ParseException):
-                log.exception(LOG_PROXY, "Error parsing %s", self.filename)
+                bk.log.exception(LOG_PROXY, "Error parsing %s", self.filename)
                 raise SystemExit("parse error in %s"%self.filename)
         finally:
             self._postparse()
@@ -497,7 +494,7 @@ class ZapperParser (BaseParser):
         elif name=='folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            raise ParseException, wc.i18n._("unknown tag name %s")%name
+            raise ParseException, bk.i18n._("unknown tag name %s")%name
 
 
     def end_element (self, name):
@@ -541,12 +538,12 @@ class WConfigParser (BaseParser):
             if self.config['allowedhosts'] is not None:
                 hosts = self.config['allowedhosts'].split(',')
                 self.config['allowedhosts'] = hosts
-                self.config['allowedhostset'] = wc.network.ip.hosts2map(hosts)
+                self.config['allowedhostset'] = wc.net.ip.hosts2map(hosts)
             else:
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]
         elif name=='filter':
-            log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
+            bk.log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
 
 

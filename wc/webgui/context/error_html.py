@@ -16,9 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
+import bk.i18n
+from wc import AppName, Version
 
-from wc import AppName, Version, i18n
-
-error = i18n._("%s error") % AppName
+error = bk.i18n._("%s error") % AppName

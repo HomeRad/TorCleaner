@@ -1,9 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """HTTP basic authentication routines"""
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 __all__ = ["get_basic_challenge", "parse_basic_challenge",
            "get_basic_credentials", "parse_basic_credentials",
            "check_basic_credentials"]
@@ -36,7 +33,7 @@ def parse_basic_credentials (credentials):
     auth, credentials = parse_token(credentials, more_chars="=")
     auth = base64.decodestring(auth)
     if ':' not in auth:
-        wc.log.warn(wc.LOG_AUTH, "invalid Basic credentials %s", auth)
+        bk.log.warn(wc.LOG_AUTH, "invalid Basic credentials %s", auth)
         _user, _pw = auth, ''
     else:
         _user, _pw = auth.split(':', 1)

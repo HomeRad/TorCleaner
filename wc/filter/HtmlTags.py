@@ -16,9 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import re
 import wc.levenshtein
 
@@ -308,7 +305,7 @@ def check_spelling (tag, url):
          if wc.levenshtein.distance(tag, htmltag)==1:
              wc.log.warn(wc.LOG_FILTER, "HTML tag %r corrected to %r at %r", tag, htmltag, url)
              return htmltag
-    wc.log.error(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
+    bk.log.error(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
     # filter possibly trailing garbage the parser accepted
     mo = filter_tag_garbage(tag)
     if mo:
