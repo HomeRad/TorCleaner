@@ -1,6 +1,8 @@
 webcleaner (1.7-0.1) unstable; urgency=low
 
   * New upstream version.
+  * Depend on glibc >= 2.3; this prevents the (binary) package from
+    trickling into distributions which only have 2.2 installed.
 
  -- Bastian Kleineidam <calvin@debian.org>  Fri, 24 Jan 2003 22:30:42 +0100
 
