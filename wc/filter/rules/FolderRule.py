@@ -80,7 +80,7 @@ class FolderRule (Rule):
             if oldrule is not None:
                 chg = oldrule.update(rule, dryrun=dryrun, log=log) or chg
             else:
-                print >>log, "inserting new rule", rule.tiptext()
+                print >>log, i18n._("inserting new rule %s")%rule.tiptext()
                 if not dryrun:
                     self.rules.append(rule)
                     chg = True

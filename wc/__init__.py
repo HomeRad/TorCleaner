@@ -285,7 +285,7 @@ class Configuration (dict):
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
-            print >>log, "inserting", folder.tiptext()
+            print >>log, " ", i18n._("inserting %s")%folder.tiptext()
             if not dryrun:
                 folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)

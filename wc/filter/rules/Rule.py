@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import wc
+from wc import i18n
 from wc.XmlUtils import xmlify, unxmlify
 from wc.filter.rules import register_rule
 
@@ -52,7 +52,7 @@ class Rule (object):
         """update title and description with given rule data"""
         assert self.sid==rule.sid, "updating %s with invalid rule %s"%(self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
-        print >>log, "updating rule", self.tiptext()
+        print >>log, " ", i18n._("updating rule %s")%self.tiptext()
         l = [a for a in self.attrnames if a not in ['sid', 'disable'] ]
         return self.update_attrs(l, rule, dryrun, log)
 
@@ -63,7 +63,7 @@ class Rule (object):
             oldval = getattr(self, attr)
             newval = getattr(rule, attr)
             if oldval != newval:
-                print >>log, attr, repr(oldval), "==>", repr(newval)
+                print >>log, " ", attr, repr(oldval), "==>", repr(newval)
                 chg = True
                 if not dryrun:
                     setattr(self, attr, newval)

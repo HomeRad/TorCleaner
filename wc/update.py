@@ -1,6 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 import os, md5, wc
 from wc.log import *
+from wc import i18n
 
 #
 # urlutils.py - Simplified urllib handling
@@ -145,11 +146,11 @@ def update (wconfig, baseurl, dryrun=False, log=None):
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
-                print >>log, "filter", filename, "not changed, ignoring"
+                print >>log, i18n._("filter %s not changed, ignoring")%filename
                 continue
-            print >>log, "updating filter", filename
+            print >>log, i18n._("updating filter %s")%filename
         else:
-            print >>log, "adding new filter", filename
+            print >>log, i18n._("adding new filter %s"), filename
         # parse new filter
         url = baseurl+filename+".gz"
         page = open_url(url)
@@ -161,11 +162,11 @@ def update (wconfig, baseurl, dryrun=False, log=None):
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, "error fetching %s:"%url, msg
+        print >>log, i18n._("error fetching %s:")%url, msg
         return chg
     for line in page.read().splitlines():
         if "<" in line:
-            print >>log, "error fetching", url
+            print >>log, i18n._("error fetching %s:")%url, i18n._("invalid content")
             return chg
         if not line:
             continue
@@ -180,22 +181,22 @@ def update (wconfig, baseurl, dryrun=False, log=None):
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
-                print >>log, "extern filter", filename, "not changed, ignoring"
+                print >>log, i18n._("extern filter %s not changed, ignoring")%filename
                 continue
-            print >>log, "updating extern filter", filename
+            print >>log, i18n._("updating extern filter %s")%filename
         else:
-            print >>log, "adding new extern filter", filename
+            print >>log, i18n._("adding new extern filter %s")%filename
         chg = True
         if not dryrun:
             url = baseurl+filename
             try:
                 page = open_url(url)
             except IOError, msg:
-                print >>log, "error fetching", url
+                print >>log, i18n._("error fetching %s:")%url, msg
                 continue
             data = page.read()
             if not data:
-                print >>log, "got no data from", url
+                print >>log, i18n._("error fetching %s:")%url, i18n._("got no data")
                 continue
             f = file(fullname, 'wb')
             f.write(data)
