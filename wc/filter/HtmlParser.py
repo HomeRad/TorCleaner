@@ -133,7 +133,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         data = self.outbuf.getvalue()
         self.outbuf.close()
         self.outbuf = ZTUtils.FasterStringIO()
-        return data.encode(self.encoding, "strict")
+        return data.encode(self.encoding, "ignore")
 
     def replay (self, waitbuf):
         """call the handler functions again with buffer data"""
