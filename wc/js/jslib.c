@@ -1053,14 +1053,14 @@ static void JSEnv_dealloc (JSEnvObject* self) {
 
 static PyObject* JSEnv_executeScript (JSEnvObject* self, PyObject* args) {
     PyObject* script;
-    PyObject* version;
+    double version;
     jsval rval;
     JSBool res;
-    if (!PyArg_ParseTuple(args, "OO", &script, &version)) {
+    if (!PyArg_ParseTuple(args, "Sd", &script, &version)) {
 	PyErr_SetString(PyExc_TypeError, "script and version arg required");
         return NULL;
     }
-    setJSVersion(self->ctx, PyFloat_AsDouble(version));
+    setJSVersion(self->ctx, version);
     res = JS_EvaluateScript(self->ctx, self->global_obj,
                             PyString_AsString(script),
                             PyString_Size(script),
