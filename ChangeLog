@@ -1,7 +1,19 @@
 0.59
-  * add missing import of _, correct warning of unknown encoding
+  * - add missing import of _
+    - correct warning of unknown encoding
+    - use precompiled _http_re to match request lines
+    - use content-length also if rewriting
+    - syntax cleanups
     Changed files: wc/proxy/HttpServer.py
-  
+  * remove unsupported "compress" encoding from Accept-Encodings header
+    Changed files: wc/proxy/HttpClient.py
+  * import errno
+    Changed files: wc/proxy/Connection.py
+  * use tuple of allowed Content-Encodings instead of regex
+    Changed files: wc/filter/Compress.py
+  * updated squid example config with no-digest option
+    Changed files: README.squid
+
 0.58:
   * Set the 'Via' HTTP header when forwarding requests/responses
   * Remove the Via header in the default filter configuration,
