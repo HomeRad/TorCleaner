@@ -19,7 +19,7 @@ from Headers import get_content_length, client_set_encoding_headers
 from wc.proxy.auth import *
 from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE
 from wc.log import *
-from wc.google import *
+from wc.google import google_try_status, get_google_context
 from wc.webgui import WebConfig
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
