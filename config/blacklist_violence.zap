@@ -2,13 +2,13 @@
 <!DOCTYPE folder SYSTEM "filter.dtd">
 <folder disable="0">
 <title lang="en">Blacklist violence</title>
-<title lang="de">Blacklist violence</title>
-<description lang="en">Automatically generated on 2004-02-26 01:44:28</description>
-<description lang="de">Automatisch generiert am 2004-02-26 01:44:28</description>
+<title lang="de">Filter für Gewalt</title>
+<description lang="en">Automatically generated on 2004-02-28 19:54:39</description>
+<description lang="de">Automatisch generiert am 2004-02-28 19:54:39</description>
 <blockdomains
  filename="blacklists/violence/domains.gz">
-  <title lang="en">violence domain filter</title>
-  <title lang="de">violence Rechnername Filter</title>
+  <title lang="en">Violence domain filter</title>
+  <title lang="de">Gewalt Rechnername Filter</title>
   <description lang="en">You should not edit this filter, only disable or delete it.
 To update the filter data, run config/bl2wc.py from a WebCleaner source tree.</description>
   <description lang="de">Sie sollten diesen Filter nicht editieren, nur deaktivieren oder löschen.
