@@ -1,4 +1,11 @@
 2.11 (released xx.xx.xxxx)
+  * preserve the order in which HTML attributes have been parsed
+    Type: feature
+    Changed: wc/parser/{__init__.py,htmllex.l}
+  * fix rewrite rule filtering when only the tag name should be
+    replaced
+    Type: bugfix
+    Changed: wc/filter/rule/RewriteRule.py, wc/filter/HTMLFilter.py
 
 
 2.10 (released 27.3.2004)
