@@ -27,7 +27,7 @@ supported_languages = []
 default_language = None
 
 def init_gettext ():
-    global _
+    global _, default_language
     try:
         _ = gettext.translation(Name, LocaleDir).gettext
     except IOError, msg:
@@ -40,6 +40,11 @@ def init_gettext ():
             continue
         if os.path.exists(os.path.join(path, 'LC_MESSAGES', '%s.mo'%Name)):
             supported_languages.append(d)
+    loc = get_locale()
+    if loc in supported_languages:
+        default_language = loc
+    else:
+        default_language = "en"
 
 
 def get_lang (lang):
