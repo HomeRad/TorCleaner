@@ -48,6 +48,11 @@
   * for non-existing .com and .net hosts, the DNS server returns valid
     "host not found" messages, fixing the verisign wildcard DNS change
     Changed: wc/proxy/dns_lookups.py
+  * new option "try_google": for invalid pages display an option page
+    with google links
+    Added: wc/google.py, templates/classic/google.html,
+      wc/webgui/context/google_html.py
+    Changed: wc/proxy/HttpClient.py
 
 2.1
   * lots of minor bugs fixed running pychecker
