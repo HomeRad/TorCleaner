@@ -23,6 +23,7 @@ from UrlRule import UrlRule
 from wc import i18n
 from wc.XmlUtils import xmlify, unxmlify
 from wc.filter.Rating import service, rating_in_range
+from wc.log import *
 
 
 class RatingRule (UrlRule):

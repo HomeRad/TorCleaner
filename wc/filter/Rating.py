@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, os, sys
+import re, os, sys, urlparse
 import cPickle as pickle
 from wc.log import *
 from wc import i18n, ConfigDir, AppName
@@ -120,9 +120,48 @@ rating_cache_load()
 
 def rating_is_cached (url):
     """return True if cache has entry for given url, else False"""
-    # XXX norm url?
-    # XXX check generic
-    return rating_cache.get(url)
+    # use a specialized form of longest prefix matching:
+    # split the url in parts and the longest matching part wins
+    parts = rating_split_url(url)
+    # the range selects from all parts (full url) down to the first two parts
+    for i in range(len(parts), 1, -1):
+        url = "".join(parts[:i])
+        if url in rating_cache:
+            return rating_cache[url]
+    return None
+
+
+def rating_split_url (url):
+    """split an url into parts suitable for longest prefix match
+       return parts so that "".join(parts) == url
+    """
+    # split into [scheme, host, path, query, fragment]
+    parts = list(urlparse.urlsplit(url))
+    if not (parts[0] and parts[1]):
+        warn(FILTER, "invalid url for rating split: %r", url)
+        return []
+    # fix scheme
+    parts[0] += ":"
+    if parts[0]!='mailto':
+        parts[0] += "//"
+    # remove query and fragment
+    del parts[3:5]
+    # further split path in components
+    parts[2:] = rating_split_path(parts[2])
+    return parts
+
+
+def rating_split_path (path):
+    """split a path into parts suitable for longest prefix match
+       return parts so that "".join(parts) == path
+    """
+    parts = [ p for p in path.split("/") if p ]
+    if not parts:
+        return ['/']
+    ret = []
+    for p in parts:
+        ret.extend(['/', p])
+    return ret
 
 
 def rating_add (url, rating):
@@ -177,3 +216,17 @@ def rating_range (value):
     if not mo:
         return None
     return (mo.group(1), mo.group(2))
+
+
+if __name__=='__main__':
+    for url in ['', 'a', 'a/b',
+                'http://imadoofus.com',
+                'http://imadoofus.com//',
+                'http://imadoofus.com/?q=a',
+                'http://imadoofus.com/?q=a#a',
+                'http://imadoofus.com/a/b//c',
+                'http://imadoofus.com/forum',
+                'http://imadoofus.com/forum/',
+               ]:
+        print rating_split_url(url)
+    print rating_is_cached('http://www.heise.de/foren/')
