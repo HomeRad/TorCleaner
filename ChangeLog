@@ -1,4 +1,4 @@
-2.18 "Bubba Ho-tep" (released xx.xx.xxxx)
+2.18 "Bubba Ho-tep" (released 1.6.2004)
   * rename local var 'data' to correct name 'content'
     Type: bugfix
     Changed: wc/proxy/Headers.py
