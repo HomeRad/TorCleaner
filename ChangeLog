@@ -22,7 +22,8 @@
     Changed files: config/header.zap
   * add allowed host acls for client connects
     Changed files: wc/proxy/HttpClient.py, wc/gui/ConfWindow.py,
-      config/webcleaner.conf, wc/__init__.py
+      config/webcleaner.conf, wc/__init__.py, README, setup.py,
+      debian/control
 
 0.58:
   * Set the 'Via' HTTP header when forwarding requests/responses
