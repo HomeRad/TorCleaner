@@ -79,7 +79,7 @@ parsetests = [
     ("""< /a>""", """</a>"""),
     # missing > in end tag
     ("""</td <td  a="b" >""", """</td><td a="b">"""),
-    # start and end tag
+    # start and end tag (HTML doctype assumed)
     ("""<a/>""", """<a/>"""),
     ("""<meta/>""", """<meta>"""),
     ("""<MetA/>""", """<meta>"""),
@@ -120,7 +120,7 @@ parsetests = [
     ("""<a  href=mailto:calvin@LocalHost?subject=Hallo&to=michi>1</a>""",
     """<a href="mailto:calvin@LocalHost?subject=Hallo&amp;to=michi">1</a>"""),
     # doctype XHTML
-    ("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><MeTa a="b"/>""",
+    ("""<!DOCTYPe html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><MeTa a="b"/>""",
      """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><meta a="b"/>"""),
 ]
 
