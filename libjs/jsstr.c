@@ -756,10 +756,11 @@ str_toLocaleLowerCase(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
                 jsval *rval)
 {
     JSString *str;
-/*
- *  Forcibly ignore the first (or any) argument and return toLowerCase(),
- *  ECMA has reserved that argument, presumbaly for defining the locale.
- */
+
+    /*
+     * Forcefully ignore the first (or any) argument and return toLowerCase(),
+     * ECMA has reserved that argument, presumably for defining the locale.
+     */
     if (cx->localeCallbacks && cx->localeCallbacks->localeToLowerCase) {
         str = js_ValueToString(cx, OBJECT_TO_JSVAL(obj));
         if (!str)
@@ -802,10 +803,11 @@ str_toLocaleUpperCase(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
                 jsval *rval)
 {
     JSString *str;
-/*
- *  Forcibly ignore the first (or any) argument and return toLowerCase(),
- *  ECMA has reserved that argument, presumbaly for defining the locale.
- */
+
+    /*
+     * Forcefully ignore the first (or any) argument and return toUpperCase(),
+     * ECMA has reserved that argument, presumbaly for defining the locale.
+     */
     if (cx->localeCallbacks && cx->localeCallbacks->localeToUpperCase) {
         str = js_ValueToString(cx, OBJECT_TO_JSVAL(obj));
         if (!str)
@@ -816,7 +818,8 @@ str_toLocaleUpperCase(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 }
 
 static JSBool
-str_localeCompare(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+str_localeCompare(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+                  jsval *rval)
 {
     JSString *str, *thatStr;
 
@@ -1373,6 +1376,7 @@ find_replen(JSContext *cx, ReplaceData *rdata, size_t *sizep)
         void *mark;
         JSStackFrame *fp;
         JSBool ok;
+
         /*
          * Save the rightContext from the current regexp, since it
          * gets stuck at the end of the replacement string and may
@@ -2869,6 +2873,10 @@ js_GetStringBytes(JSString *str)
         he = *hep;
         if (he) {
             bytes = (char *) he->value;
+
+            /* Try to catch failure to JS_ShutDown between runtime epochs. */
+            JS_ASSERT((*bytes == '\0' && JSSTRING_LENGTH(str) == 0) ||
+                      *bytes == (char) JSSTRING_CHARS(str)[0]);
         } else {
             bytes = js_DeflateString(NULL, JSSTRING_CHARS(str),
                                      JSSTRING_LENGTH(str));
