@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re
+import re, sys
+from wc import remove_headers
 from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, compileRegex
 from wc.filter.Filter import Filter
 
@@ -42,10 +43,12 @@ class Header (Filter):
             self.add[rule.name] = rule.value
 
     def doit (self, data, **args):
-        for h in data.keys()[:]:
+        delete = {}
+        for h in data.keys():
             for name in self.delete:
                 if re.match(name, h):
-                    del data[h]
+                    delete[h.lower()] = h
+        remove_headers(data, delete.values())
         for key,val in self.add.items():
             data[key] = val+"\r"
         return data
