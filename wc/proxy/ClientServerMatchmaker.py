@@ -4,22 +4,11 @@ __date__    = "$Date$"[7:-2]
 
 from cStringIO import StringIO
 import dns_lookups
-from wc.proxy import spliturl, splitnport, fix_http_version
 from wc.proxy.Headers import WcMessage
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
 from wc.log import *
-
-allowed_schemes = [
-    'http',
-    'https',
-#    'nntps', # untested
-]
-allowed_connect_ports = [
-    443, # HTTP over SSL
-#    563, # NNTP over SSL # untested
-]
 
 # connection pool for persistent server connections
 serverpool = ServerPool()
@@ -66,58 +55,6 @@ class ClientServerMatchmaker (object):
         self.mime = mime
         self.state = 'dns'
         self.method, self.url, protocol = self.request.split()
-        # strip leading zeros and other stuff
-        self.protocol = fix_http_version(protocol)
-        # fix CONNECT urls
-        if self.method=='CONNECT':
-            # XXX scheme could also be nntps
-            self.scheme = 'https'
-            hostname, port = splitnport(self.url, 443)
-            document = ''
-        else:
-            self.scheme, hostname, port, document = spliturl(self.url)
-        # some clients send partial URI's without scheme, hostname
-        # and port to clients, so we have to handle this
-        if not self.scheme:
-            # default scheme is http
-            self.scheme = 'http'
-        elif self.scheme not in allowed_schemes:
-            warn(PROXY, "Forbidden scheme %r encountered at %s", self.scheme, self)
-            client.error(403, i18n._("Forbidden"))
-            return
-        # check CONNECT values sanity
-        if self.method == 'CONNECT':
-            if self.scheme != 'https':
-                warn(PROXY, "CONNECT method with forbidden scheme %r encountered at %s", self.scheme, self)
-                client.error(403, i18n._("Forbidden"))
-                return
-            if not self.headers.has_key('Host'):
-                warn(PROXY, "CONNECT method without Host header encountered at %s", self)
-                client.error(403, i18n._("Forbidden"))
-                return
-            if port != 443:
-                warn(PROXY, "CONNECT method with invalid port %r encountered at %s", str(port), self)
-                client.error(403, i18n._("Forbidden"))
-                return
-        elif not hostname and self.headers.has_key('Host'):
-            host = self.headers['Host']
-            hostname, port = splitnport(host, 80)
-        if not hostname:
-            error(PROXY, "%s missing hostname in request", self)
-            client.error(400, i18n._("Bad Request"))
-        if hostname in config['localhosts'] and port==config['port']:
-            # this is a direct proxy call, delegate it to local handler
-            client.handle_local()
-            return
-        # fix missing trailing /
-        if not document:
-            document = '/'
-        # add missing host headers for HTTP/1.1
-        if not self.headers.has_key('Host'):
-            if port!=80:
-                self.headers['Host'] = "%s:%d\r"%(hostname, port)
-            else:
-                self.headers['Host'] = "%s\r"%hostname
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']
@@ -127,9 +64,9 @@ class ClientServerMatchmaker (object):
                 auth = config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r"%auth
         else:
-            self.hostname = hostname
-            self.port = port
-            self.document = document
+            self.hostname = client.hostname
+            self.port = client.port
+            self.document = client.document
         # start DNS lookup
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 

@@ -11,6 +11,7 @@ from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config
 from wc.proxy import get_http_version, fix_http_version, url_norm, url_quote
+from wc.proxy import spliturl, splitnport
 from Headers import client_set_headers, client_get_max_forwards, WcMessage
 from Headers import client_remove_encoding_headers, has_header_value
 from wc.proxy.auth import *
@@ -26,6 +27,9 @@ from wc.filter import FILTER_REQUEST_ENCODE
 from wc.filter import applyfilter, get_filterattrs, FilterException
 
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
+allowed_schemes = ['http', 'https'] # 'nntps' is untested
+allowed_connect_ports = [443] # 563 (NNTP over SSL) is untested
+
 
 class HttpClient (Connection):
     """States:
@@ -106,8 +110,7 @@ class HttpClient (Connection):
         if i < 0: return
         # self.read(i) is not including the newline
         self.request = self.read(i)
-        info(ACCESS, '%s - %s - %s', self.addr[0],
-             time.ctime(time.time()), self.request)
+        # basic request checking (more will be done below)
         try:
             self.method, self.url, protocol = self.request.split()
         except ValueError:
@@ -126,20 +129,61 @@ class HttpClient (Connection):
         self.http_ver = get_http_version(self.protocol)
         self.request = "%s %s %s" % (self.method, url_quote(self.url), self.protocol)
         debug(PROXY, "%s request %r", self, self.request)
+        # filter request
         self.request = applyfilter(FILTER_REQUEST, self.request,
                                    "finish", self.attrs)
+        # final request checking
+        if not self.fix_request():
+            return
+        info(ACCESS, '%s - %s - %s', self.addr[0],
+             time.ctime(time.time()), self.request)
+        self.state = 'headers'
+
+
+    def fix_request (self):
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > 1024:
             error(PROXY, "%s request url length %d chars is too long", self, len(self.url))
             self.error(400, i18n._("URL too long"))
-            return
+            return False
         if len(self.url) > 255:
             warn(PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # and unquote again
         self.url = url_norm(self.url)
-        self.state = 'headers'
+        # fix CONNECT urls
+        if self.method=='CONNECT':
+            # XXX scheme could also be nntps
+            self.scheme = 'https'
+            self.hostname, self.port = splitnport(self.url, 443)
+            self.document = '/'
+        else:
+            self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+            # fix missing trailing /
+            if not self.document:
+                self.document = '/'
+        # some clients send partial URI's without scheme, hostname
+        # and port to clients, so we have to handle this
+        if not self.scheme:
+            # default scheme is http
+            self.scheme = 'http'
+        elif self.scheme not in allowed_schemes:
+            warn(PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
+            self.error(403, i18n._("Forbidden"))
+            return False
+        # check CONNECT values sanity
+        if self.method == 'CONNECT':
+            if self.scheme != 'https':
+                warn(PROXY, "%s CONNECT method with forbidden scheme %r encountered", self, self.scheme)
+                self.error(403, i18n._("Forbidden"))
+                return False
+            if self.port != 443:
+                warn(PROXY, "%s CONNECT method with invalid port %r encountered", self, str(port))
+                self.error(403, i18n._("Forbidden"))
+                return False
+        # request is ok
+        return True
 
 
     def process_headers (self):
@@ -184,6 +228,28 @@ class HttpClient (Connection):
             self.decoders.append(UnchunkStream())
             client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
+        if self.method=='CONNECT':
+            if not self.headers.has_key('Host'):
+                warn(PROXY, "%s CONNECT method without Host header encountered", self)
+                self.error(403, i18n._("Forbidden"))
+                return
+        elif not self.hostname and self.headers.has_key('Host'):
+            host = self.headers['Host']
+            self.hostname, self.port = splitnport(host, 80)
+        if not self.hostname:
+            error(PROXY, "%s missing hostname in request", self)
+            self.error(400, i18n._("Bad Request"))
+        # local request?
+        if self.hostname in config['localhosts'] and self.port==config['port']:
+            # this is a direct proxy call, jump right to content
+            self.state = 'content'
+            return
+        # add missing host headers for HTTP/1.1
+        if not self.headers.has_key('Host'):
+            if port!=80:
+                self.headers['Host'] = "%s:%d\r"%(self.hostname, self.port)
+            else:
+                self.headers['Host'] = "%s\r"%self.hostname
         if config["proxyuser"]:
             creds = get_header_credentials(self.headers, 'Proxy-Authorization')
             if not creds:
@@ -244,7 +310,11 @@ class HttpClient (Connection):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
-            self.server_request()
+            if self.hostname in config['localhosts'] and self.port==config['port']:
+                # this is a direct proxy call
+                self.handle_local()
+            else:
+                self.server_request()
 
 
     def process_receive (self):
@@ -258,7 +328,7 @@ class HttpClient (Connection):
 
 
     def server_request (self):
-        assert self.state=='receive', "%s server_request in state receive"%self
+        assert self.state=='receive', "%s server_request not in receive state"%self
         # This object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
                                self.content)
@@ -332,10 +402,32 @@ class HttpClient (Connection):
 
     def handle_local (self):
         assert self.state=='receive'
+        debug(PROXY, '%s handle_local', self)
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
             self.error(403, i18n._("Invalid Method"))
             return
+        # check admin pass
+        if config["adminuser"]:
+            creds = get_header_credentials(self.headers, 'Authorization')
+            if not creds:
+                auth = ", ".join(get_challenges())
+                self.error(401, i18n._("Authentication Required"), auth=auth)
+                return
+            if 'NTLM' in creds:
+                if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
+                    auth = ",".join(creds['NTLM'][0])
+                    self.error(401, i18n._("Authentication Required"), auth=auth)
+                    return
+            # XXX the data=None argument should hold POST data
+            if not check_credentials(creds, username=config['adminuser'],
+                                     password_b64=config['adminpass'],
+                                     uri=get_auth_uri(self.url),
+                                     method=self.method, data=None):
+                warn(AUTH, "Bad authentication from %s", self.addr[0])
+                auth = ", ".join(get_challenges())
+                self.error(401, i18n._("Authentication Required"), auth=auth)
+                return
         # get cgi form data
         form = self.get_form_data()
         debug(PROXY, '%s handle_local', self)

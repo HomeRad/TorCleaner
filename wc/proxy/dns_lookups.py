@@ -567,7 +567,9 @@ class DnsLookupConnection (Connection):
             else: data = msg.getbytes(rdlength)
             if type == dnslib.Type.A:
                 ip_addrs.append(data)
-            if type == dnslib.Type.CNAME:
+            elif type == dnslib.Type.AAAA:
+                ip_addrs.append(data)
+            elif type == dnslib.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
                 debug(DNS, 'cname record %s=%r', self.hostname, data)
                 pass

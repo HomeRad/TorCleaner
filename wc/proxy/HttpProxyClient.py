@@ -4,7 +4,7 @@ __date__    = "$Date$"[7:-2]
 
 from wc.log import *
 from wc.proxy.Headers import get_wc_client_headers
-from wc.proxy import stripsite, url_norm, url_quote
+from wc.proxy import stripsite, spliturl, url_norm, url_quote
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse, urllib
@@ -16,9 +16,15 @@ class HttpProxyClient (object):
        Buffered data is None on error, else the content string.
     """
     def __init__ (self, handler, args):
+        """args is a tuple (url, JS version)"""
         assert callable(handler)
         self.handler = handler
         self.args = args
+        self.url = url_norm(self.args[0])
+        self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+        # fix missing trailing /
+        if not self.document:
+            self.document = '/'
         self.connected = True
         self.addr = ('localhost', 80)
         debug(PROXY, '%s init', self)
@@ -62,15 +68,19 @@ class HttpProxyClient (object):
             url = self.server.headers.getheader("Location",
                          self.server.headers.getheader("Uri", ""))
             url = urlparse.urljoin(self.server.url, url)
-            url = url_norm(url)
-            host = stripsite(url)[0]
-            self.args = (url, self.args[1])
+            self.url = url_norm(url)
+            self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+            # fix missing trailing /
+            if not self.document:
+                self.document = '/'
+            host = stripsite(self.url)[0]
+            self.args = (self.url, self.args[1])
             # close the server and try again
             self.server.client_abort()
             headers = get_wc_client_headers(host)
             headers['Accept-Encoding'] = 'identity\r'
             ClientServerMatchmaker(self,
-                           "GET %s HTTP/1.0" % url_quote(url), #request
+                           "GET %s HTTP/1.0" % url_quote(self.url), #request
                            headers,
                            '', #content
                            mime=self.server.mime,

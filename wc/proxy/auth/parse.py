@@ -8,7 +8,7 @@ token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
 def parse_token (s, tok="", relax=False, more_chars=""):
     if tok:
         if not s.startswith(tok):
-            warn(PROXY, "expected %r start with %r", s, tok)
+            warn(AUTH, "expected %r start with %r", s, tok)
         if not relax:
             s = s[len(tok):]
     else:
@@ -47,6 +47,7 @@ def parse_auth (auth, data):
 
     returns augmented auth dict and unparsed data
     """
+    debug(AUTH, "parse authentication %r", data)
     while data:
         key, data = parse_token(data)
         if not data.startswith("="):

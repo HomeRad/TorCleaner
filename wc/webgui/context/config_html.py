@@ -35,6 +35,12 @@ def _exec_form (form):
         _form_proxyport(_getval(form, 'port'))
     elif config['port']!=8080:
         _form_proxyport(8080)
+    # admin user
+    if form.has_key('adminuser'):
+        _form_adminuser(_getval(form, 'adminuser').strip(), res)
+    elif config['adminuser']:
+        config['adminuser'] = ''
+        info['adminuser'] = True
     # admin pass
     if form.has_key('adminpass'):
         val = _getval(form, 'adminpass')
@@ -44,7 +50,8 @@ def _exec_form (form):
     elif config['adminpass']:
         config['adminpass'] = ''
         info['adminpass'] = True
-        res[0] = 407
+        if config['adminuser']:
+            res[0] = 401
     # proxy user
     if form.has_key('proxyuser'):
         _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
@@ -60,8 +67,6 @@ def _exec_form (form):
     elif config['proxypass']:
         config['proxypass'] = ''
         info['proxypass'] = True
-        if config['proxyuser']:
-            res[0] = 407
     # ntlm authentication
     if form.has_key('auth_ntlm'):
         if not config['auth_ntlm']:
@@ -142,12 +147,21 @@ def _form_proxyport (port):
         error['port'] = True
 
 
+def _form_adminuser (adminuser, res):
+    if adminuser != config['adminuser']:
+        config['adminuser'] = adminuser
+        config.write_proxyconf()
+        info['adminuser'] = True
+        res[0] = 401
+
+
 def _form_adminpass (adminpass, res):
     if adminpass != config['adminpass']:
         config['adminpass'] = adminpass
         config.write_proxyconf()
         info['adminpass'] = True
-        res[0] = 407
+        if config['adminuser']:
+            res[0] = 401
 
 
 def _form_proxyuser (proxyuser, res):
@@ -155,7 +169,6 @@ def _form_proxyuser (proxyuser, res):
         config['proxyuser'] = proxyuser
         config.write_proxyconf()
         info['proxyuser'] = True
-        res[0] = 407
 
 
 def _form_proxypass (proxypass, res):
@@ -163,8 +176,6 @@ def _form_proxypass (proxypass, res):
         config['proxypass'] = proxypass
         config.write_proxyconf()
         info['proxypass'] = True
-        if config['proxyuser']:
-            res[0] = 407
 
 
 def _form_parentproxy (parentproxy):

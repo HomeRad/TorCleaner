@@ -43,8 +43,20 @@
 </tr>
 <tr>
 <td>
+<label i18n:attributes="title Administrator username"
+ for="adminuser" i18n:translate="">Admin user</label>
+</td>
+<td>
+<input class="text" type="text" name="adminuser" id="adminuser" value=""
+ tal:attributes="value config/adminuser">
+</td>
+</tr>
+<tr>
+<td>
 <label i18n:attributes="title Administrator password"
  for="adminpass" i18n:translate="">Admin password</label>
+ <sup><a href="#footnote2" class="footnote" title="see footnote 2"
+ i18n:attributes="title see footnote 2">2)</a></sup>
 </td>
 <td>
 <input class="text" type="password" name="adminpass" id="adminpass"
@@ -56,7 +68,7 @@
 <tr>
 <td>
 <label i18n:attributes="title Username used for proxy authentication"
- for="proxyuser" i18n:translate="">Username</label>
+ for="proxyuser" i18n:translate="">Proxy user</label>
 </td>
 <td>
 <input class="text" type="text" name="proxyuser" id="proxyuser" value=""
@@ -66,7 +78,7 @@
 <tr>
 <td>
 <label i18n:attributes="title Password used for proxy authentitaction"
- for="proxypass" i18n:translate="">Password</label>
+ for="proxypass" i18n:translate="">Proxy password</label>
  <sup><a href="#footnote2" class="footnote" title="see footnote 2"
  i18n:attributes="title see footnote 2">2)</a></sup>
 </td>
@@ -259,6 +271,7 @@
 
 <div class="info">
 <div tal:condition="info/port" i18n:translate="">Port successfully changed.</div>
+<div tal:condition="info/adminuser" i18n:translate="">Admin user successfully changed.</div>
 <div tal:condition="info/adminpass" i18n:translate="">Admin password successfully changed.</div>
 <div tal:condition="info/proxyuser" i18n:translate="">Proxy user successfully changed.</div>
 <div tal:condition="info/proxypass" i18n:translate="">Proxy password successfully changed.</div>

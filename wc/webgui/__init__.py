@@ -37,7 +37,12 @@ class WebConfig (object):
         self.connected = True
         headers = WcMessage(StringIO('Server: Proxy\r\n'))
         if auth:
-            headers['Proxy-Authenticate'] = "%s\r"%auth
+            if status==407:
+                headers['Proxy-Authenticate'] = "%s\r"%auth
+            elif status==401:
+                headers['WWW-Authenticate'] = "%s\r"%auth
+            else:
+                error(GUI, "Authentication with wrong status %d", status)
         gm = mimetypes.guess_type(url, None)
         if gm[0] is not None:
             headers['Content-Type'] = "%s\r"%gm[0]
@@ -52,8 +57,8 @@ class WebConfig (object):
                 f = file(path)
                 # get TAL context
                 context, newstatus = get_context(dirs, form, context, lang)
-                if newstatus==407 and status!=newstatus:
-                    client.error(407, i18n._("Proxy Authentication Required"),
+                if newstatus==401 and status!=newstatus:
+                    client.error(401, i18n._("Authentication Required"),
                                  auth=get_challenges())
                     return
                 # get translator

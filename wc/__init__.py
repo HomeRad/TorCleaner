@@ -191,6 +191,7 @@ class Configuration (dict):
     def reset (self):
         """Reset to default values"""
         self['port'] = 8080
+        self['adminuser'] = ""
         self['adminpass'] = ""
         self['proxyuser'] = ""
         self['proxypass'] = ""
@@ -209,6 +210,8 @@ class Configuration (dict):
         # DNS resolved nofilterhosts
         self['allowedhosts'] = None
         self['starttime'] = time.time()
+	# if set to one the bound socket does not accept connections from
+	# hosts except localhost; normally not needed
         self['local_sockets_only'] = 0
         self['localhosts'] = get_localhosts()
         self['mime_content_rewriting'] = Set()
@@ -239,6 +242,7 @@ class Configuration (dict):
 """ % ConfigCharset)
         f.write(' version="%s"\n' % xmlify(self['version']))
         f.write(' port="%d"\n' % self['port'])
+        f.write(' adminuser="%s"\n' % xmlify(self['adminuser']))
         f.write(' adminpass="%s"\n' % xmlify(self['adminpass']))
         f.write(' proxyuser="%s"\n' % xmlify(self['proxyuser']))
         f.write(' proxypass="%s"\n' % xmlify(self['proxypass']))

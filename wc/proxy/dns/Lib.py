@@ -38,27 +38,35 @@ class PackError (DNSError): pass
 from struct import pack as struct_pack
 from struct import unpack as struct_unpack
 
-def pack16bit(n):
+def pack16bit (n):
     return struct_pack('!H', n)
 
-def pack32bit(n):
+def pack32bit (n):
     return struct_pack('!L', n)
 
-def unpack16bit(s):
+def pack128bit (n):
+    return struct_pack('!LLLL', n)
+
+def unpack16bit (s):
     return struct_unpack('!H', s)[0]
 
-def unpack32bit(s):
+def unpack32bit (s):
     return struct_unpack('!L', s)[0]
 
-def addr2bin(addr):
-    if type(addr) == type(0): return addr
+def unpack128bit (s):
+    return struct_unpack('!LLLL', s)[0]
+
+def addr2bin (addr):
+    if type(addr) == type(0):
+        return addr
     bytes = addr.split('.')
     if len(bytes) != 4: raise ValueError, 'bad IP address'
     n = 0
-    for byte in bytes: n = n<<8 | int(byte)
+    for byte in bytes:
+        n = n<<8 | int(byte)
     return n
 
-def bin2addr(n):
+def bin2addr (n):
     return '%d.%d.%d.%d' % ((n>>24)&0xFF, (n>>16)&0xFF,
                   (n>>8)&0xFF, n&0xFF)
 
@@ -67,30 +75,42 @@ def bin2addr(n):
 
 class Packer (object):
     " packer base class. supports basic byte/16bit/32bit/addr/string/name "
-    def __init__(self):
+    def __init__ (self):
         self.buf = ''
         self.index = {}
-    def getbuf(self):
+
+    def getbuf (self):
         return self.buf
-    def addbyte(self, c):
+
+    def addbyte (self, c):
         if len(c) != 1: raise TypeError, 'one character expected'
-        self.buf = self.buf + c
-    def addbytes(self, bytes):
-        self.buf = self.buf + bytes
-    def add16bit(self, n):
-        self.buf = self.buf + pack16bit(n)
-    def add32bit(self, n):
-        self.buf = self.buf + pack32bit(n)
-    def addaddr(self, addr):
+        self.buf += c
+
+    def addbytes (self, bytes):
+        self.buf += bytes
+
+    def add16bit (self, n):
+        self.buf += pack16bit(n)
+
+    def add32bit (self, n):
+        self.buf += pack32bit(n)
+
+    def addaddr (self, addr):
         n = addr2bin(addr)
-        self.buf = self.buf + pack32bit(n)
-    def addstring(self, s):
+        self.buf += pack32bit(n)
+
+    def addaddr6 (self, addr):
+        n = addr2bin(addr)
+        self.buf += pack128bit(n)
+
+    def addstring (self, s):
         if len(s) > 255:
             raise ValueError, "Can't encode string of length "+ \
                             "%s (> 255)"%(len(s))
         self.addbyte(chr(len(s)))
         self.addbytes(s)
-    def addname(self, name):
+
+    def addname (self, name):
         # Domain name packing (section 4.1.4)
         # Add a domain name to the buffer, possibly using pointers.
         # The case of the first occurrence of a name is preserved.
@@ -124,15 +144,16 @@ class Packer (object):
             else:
                 print 'DNS.Lib.Packer.addname:',
                 print 'warning: pointer too big'
-            buf = buf + (chr(n) + label)
+            buf += (chr(n) + label)
         if pointer:
-            buf = buf + pack16bit(pointer | 0xC000)
+            buf += pack16bit(pointer | 0xC000)
         else:
-            buf = buf + '\0'
-        self.buf = self.buf + buf
+            buf += '\0'
+        self.buf += buf
         for key, value in index:
             self.index[key] = value
-    def dump(self):
+
+    def dump (self):
         keys = self.index.keys()
         keys.sort()
         print '-'*40
@@ -160,29 +181,42 @@ class Packer (object):
 
 
 class Unpacker (object):
-    def __init__(self, buf):
+    def __init__ (self, buf):
         self.buf = buf
         self.offset = 0
-    def getbyte(self):
+
+    def getbyte (self):
         if self.offset > len(self.buf):
             raise UnpackError, "Ran off end of data"
         c = self.buf[self.offset]
-        self.offset = self.offset + 1
+        self.offset += 1
         return c
-    def getbytes(self, n):
+
+    def getbytes (self, n):
         s = self.buf[self.offset : self.offset + n]
         if len(s) != n: raise UnpackError, 'not enough data left'
-        self.offset = self.offset + n
+        self.offset +=n
         return s
-    def get16bit(self):
+
+    def get16bit (self):
         return unpack16bit(self.getbytes(2))
-    def get32bit(self):
+
+    def get32bit (self):
         return unpack32bit(self.getbytes(4))
-    def getaddr(self):
+
+    def get128bit (self):
+        return unpack128bit(self.getbytes(16))
+
+    def getaddr (self):
         return bin2addr(self.get32bit())
-    def getstring(self):
+
+    def getaddr6 (self):
+        return bin2addr(self.get128bit())
+
+    def getstring (self):
         return self.getbytes(ord(self.getbyte()))
-    def getname(self):
+
+    def getname (self):
         # Domain name unpacking (section 4.1.4)
         c = self.getbyte()
         i = ord(c)
@@ -209,7 +243,7 @@ class Unpacker (object):
 
 # Test program for packin/unpacking (section 4.1.4)
 
-def testpacker():
+def testpacker ():
     N = 2500
     R = range(N)
     import timing
@@ -262,10 +296,11 @@ def testpacker():
 # Pack/unpack RR toplevel format (section 3.2.1)
 
 class RRpacker (Packer):
-    def __init__(self):
+    def __init__ (self):
         Packer.__init__(self)
         self.rdstart = None
-    def addRRheader(self, name, type, klass, ttl, *rest):
+
+    def addRRheader (self, name, type, klass, ttl, *rest):
         self.addname(name)
         self.add16bit(type)
         self.add16bit(klass)
@@ -277,7 +312,8 @@ class RRpacker (Packer):
             rdlength = 0
         self.add16bit(rdlength)
         self.rdstart = len(self.buf)
-    def patchrdlength(self):
+
+    def patchrdlength (self):
         rdlength = unpack16bit(self.buf[self.rdstart-2:self.rdstart])
         if rdlength == len(self.buf) - self.rdstart:
             return
@@ -291,38 +327,46 @@ class RRpacker (Packer):
             ok = 1
         finally:
             if not ok: self.buf = save_buf
-    def endRR(self):
+
+    def endRR (self):
         if self.rdstart is not None:
             self.patchrdlength()
         self.rdstart = None
-    def getbuf(self):
+
+    def getbuf (self):
         if self.rdstart is not None: self.patchrdlength()
         return Packer.getbuf(self)
     # Standard RRs (section 3.3)
-    def addCNAME(self, name, klass, ttl, cname):
+
+    def addCNAME (self, name, klass, ttl, cname):
         self.addRRheader(name, Type.CNAME, klass, ttl)
         self.addname(cname)
         self.endRR()
-    def addHINFO(self, name, klass, ttl, cpu, os):
+
+    def addHINFO (self, name, klass, ttl, cpu, os):
         self.addRRheader(name, Type.HINFO, klass, ttl)
         self.addstring(cpu)
         self.addstring(os)
         self.endRR()
-    def addMX(self, name, klass, ttl, preference, exchange):
+
+    def addMX (self, name, klass, ttl, preference, exchange):
         self.addRRheader(name, Type.MX, klass, ttl)
         self.add16bit(preference)
         self.addname(exchange)
         self.endRR()
-    def addNS(self, name, klass, ttl, nsdname):
+
+    def addNS (self, name, klass, ttl, nsdname):
         self.addRRheader(name, Type.NS, klass, ttl)
         self.addname(nsdname)
         self.endRR()
-    def addPTR(self, name, klass, ttl, ptrdname):
+
+    def addPTR (self, name, klass, ttl, ptrdname):
         self.addRRheader(name, Type.PTR, klass, ttl)
         self.addname(ptrdname)
         self.endRR()
-    def addSOA(self, name, klass, ttl,
-              mname, rname, serial, refresh, retry, expire, minimum):
+
+    def addSOA (self, name, klass, ttl,
+                mname, rname, serial, refresh, retry, expire, minimum):
         self.addRRheader(name, Type.SOA, klass, ttl)
         self.addname(mname)
         self.addname(rname)
@@ -332,7 +376,8 @@ class RRpacker (Packer):
         self.add32bit(expire)
         self.add32bit(minimum)
         self.endRR()
-    def addTXT(self, name, klass, ttl, list):
+
+    def addTXT (self, name, klass, ttl, list):
         self.addRRheader(name, Type.TXT, klass, ttl)
         if type(list) is types.StringType:
             list = [list]
@@ -340,20 +385,29 @@ class RRpacker (Packer):
             self.addstring(txtdata)
         self.endRR()
     # Internet specific RRs (section 3.4) -- class = IN
-    def addA(self, name, klass, ttl, address):
+
+    def addA (self, name, klass, ttl, address):
         self.addRRheader(name, Type.A, klass, ttl)
         self.addaddr(address)
         self.endRR()
-    def addWKS(self, name, ttl, address, protocol, bitmap):
+
+    def addAAAA (self, name, klass, ttl, address):
+        self.addRRheader(name, Type.A, klass, ttl)
+        self.addaddr6(address)
+        self.endRR()
+
+    def addWKS (self, name, ttl, address, protocol, bitmap):
         self.addRRheader(name, Type.WKS, Class.IN, ttl)
         self.addaddr(address)
         self.addbyte(chr(protocol))
         self.addbytes(bitmap)
         self.endRR()
-    def addSRV(self):
+
+    def addSRV (self):
         raise NotImplementedError
 
-def prettyTime(seconds):
+
+def prettyTime (seconds):
     if seconds<60:
         return seconds,"%d seconds"%(seconds)
     if seconds<3600:
@@ -367,10 +421,11 @@ def prettyTime(seconds):
 
 
 class RRunpacker (Unpacker):
-    def __init__(self, buf):
+    def __init__ (self, buf):
         Unpacker.__init__(self, buf)
         self.rdend = None
-    def getRRheader(self):
+
+    def getRRheader (self):
         name = self.getname()
         rrtype = self.get16bit()
         klass = self.get16bit()
@@ -378,20 +433,26 @@ class RRunpacker (Unpacker):
         rdlength = self.get16bit()
         self.rdend = self.offset + rdlength
         return (name, rrtype, klass, ttl, rdlength)
-    def endRR(self):
+
+    def endRR (self):
         if self.offset != self.rdend:
             raise UnpackError, 'end of RR not reached'
-    def getCNAMEdata(self):
+
+    def getCNAMEdata (self):
         return self.getname()
-    def getHINFOdata(self):
+
+    def getHINFOdata (self):
         return self.getstring(), self.getstring()
-    def getMXdata(self):
+    def getMXdata (self):
         return self.get16bit(), self.getname()
-    def getNSdata(self):
+
+    def getNSdata (self):
         return self.getname()
-    def getPTRdata(self):
+
+    def getPTRdata (self):
         return self.getname()
-    def getSOAdata(self):
+
+    def getSOAdata (self):
         return self.getname(), \
                self.getname(), \
                ('serial',)+(self.get32bit(),), \
@@ -399,19 +460,26 @@ class RRunpacker (Unpacker):
                ('retry',)+prettyTime(self.get32bit()), \
                ('expire',)+prettyTime(self.get32bit()), \
                ('minimum',)+prettyTime(self.get32bit())
-    def getTXTdata(self):
+
+    def getTXTdata (self):
         list = []
         while self.offset != self.rdend:
             list.append(self.getstring())
         return list
-    def getAdata(self):
+
+    def getAdata (self):
         return self.getaddr()
-    def getWKSdata(self):
+
+    def getAAAAdata (self):
+        return self.getaddr6()
+
+    def getWKSdata (self):
         address = self.getaddr()
         protocol = ord(self.getbyte())
         bitmap = self.getbytes(self.rdend - self.offset)
         return address, protocol, bitmap
-    def getSRVdata(self):
+
+    def getSRVdata (self):
         """
         _Service._Proto.Name TTL Class SRV Priority Weight Port Target
         """
@@ -426,7 +494,7 @@ class RRunpacker (Unpacker):
 # Pack/unpack Message Header (section 4.1)
 
 class Hpacker (Packer):
-    def addHeader(self, id, qr, opcode, aa, tc, rd, ra, z, rcode,
+    def addHeader (self, id, qr, opcode, aa, tc, rd, ra, z, rcode,
               qdcount, ancount, nscount, arcount):
         self.add16bit(id)
         self.add16bit((qr&1)<<15 | (opcode&0xF)<<11 | (aa&1)<<10
@@ -438,7 +506,7 @@ class Hpacker (Packer):
         self.add16bit(arcount)
 
 class Hunpacker (Unpacker):
-    def getHeader(self):
+    def getHeader (self):
         id = self.get16bit()
         flags = self.get16bit()
         qr, opcode, aa, tc, rd, ra, z, rcode = (
@@ -461,13 +529,13 @@ class Hunpacker (Unpacker):
 # Pack/unpack Question (section 4.1.2)
 
 class Qpacker (Packer):
-    def addQuestion(self, qname, qtype, qclass):
+    def addQuestion (self, qname, qtype, qclass):
         self.addname(qname)
         self.add16bit(qtype)
         self.add16bit(qclass)
 
 class Qunpacker (Unpacker):
-    def getQuestion(self):
+    def getQuestion (self):
         return self.getname(), self.get16bit(), self.get16bit()
 
 
