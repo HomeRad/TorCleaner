@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en" tal:attributes="lang lang">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href="wc.css" type="text/css" rel="Stylesheet">
+<link href="index.html" rel="home" title="Home"
+ tal:attributes="href string:index.html.${lang}">
+<title i18n:translate="">Administrator password for %(AppName)s</title>
+</head>
+<body>
+<div class="content" id="main">
+<h2 i18n:translate="">Administrator password for %(AppName)s</h2>
+<p i18n:translate="">The administrator password was not yet initialized.
+This password protects the web configuration interface. Without an
+administrator password, every proxy user can change the proxy configuration.
+</p>
+<p i18n:translate="">Please open the file <code>%(ConfigFile)s</code> and
+replace the line <code>adminpass=""</code> with:
+</p>
+<pre>adminpass="<span tal:replace="adminpass_b64">dummy</span>"</pre>
+<p i18n:translate="">After that, restart %(AppName)s and specify
+<b>%(adminuser)s</b> as username and <b>%(adminpass)s</b> as password at
+the configuration interface.
+</p>
+</div>
+
+<div metal:use-macro="macros/macros/footer">Footer...</div>
+</body>
+</html>

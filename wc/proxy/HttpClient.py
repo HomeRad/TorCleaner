@@ -29,7 +29,8 @@ from wc.filter import applyfilter, get_filterattrs, FilterException
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
 allowed_schemes = ['http', 'https'] # 'nntps' is untested
 allowed_connect_ports = [443] # 563 (NNTP over SSL) is untested
-allowed_local_docs = ['/blocked.png', '/error.html', '/wc.css', '/robots.txt']
+allowed_local_docs = ['/blocked.png', '/error.html', '/wc.css', '/robots.txt',
+                      '/adminpass.html']
 
 class HttpClient (Connection):
     """States:
@@ -310,7 +311,15 @@ class HttpClient (Connection):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
-            if self.hostname in config['localhosts'] and self.port==config['port']:
+            is_local = self.hostname in config['localhosts'] and self.port==config['port']
+            if config['adminuser'] and not config['adminpass']:
+                if is_local and self.document in allowed_local_docs:
+                    self.handle_local()
+                else:
+                    # ignore request, must init admin password
+                    self.headers['Location'] = "http://localhost:%d/adminpass.html\r"%config['port']
+                    self.error(302, i18n._("Moved Temporarily"))
+            elif is_local:
                 # this is a direct proxy call
                 self.handle_local()
             else:

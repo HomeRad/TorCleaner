@@ -43,6 +43,8 @@ class WebConfig (object):
                 headers['WWW-Authenticate'] = "%s\r"%auth
             else:
                 error(GUI, "Authentication with wrong status %d", status)
+        if status in [301,302]:
+            headers['Location'] = clientheaders['Location']
         gm = mimetypes.guess_type(url, None)
         if gm[0] is not None:
             headers['Content-Type'] = "%s\r"%gm[0]
