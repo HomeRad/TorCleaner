@@ -14,6 +14,19 @@ the configuration format version
 \fBport\fP
 the port number the WebCleaner Proxy is running on
 .TP
+\fBsslport\fP
+the port number for the WebCleaner SSL server.
+.TP
+\fBsslgateway\fP
+if set to one, WebCleaner will start an SSL server on the above port
+for delegating and filtering HTTPS traffic.
+.TP
+\fBadminuser\fP
+the user name for the proxy configuration interface
+.TP
+\fBadminpass\fP
+the base64 encoded password for the proxy configuration interface
+.TP
 \fBproxyuser\fP
 the user name for proxy authentication
 .TP
@@ -33,9 +46,6 @@ the user name for parent proxy authentication
 \fBparentproxypass\fP
 the base64 encoded password for parent proxy authentication
 .TP
-\fBshowerrors\fP
-print detected html parse errors to stderr
-.TP
 \fBtimeout\fP
 connection timeout in seconds
 .TP
@@ -47,6 +57,13 @@ comma separated list of hosts for which filtering is disabled
 .TP
 \fBallowedhosts\fP
 comma separated list of hosts which are allowed to use this proxy
+.TP
+\fBauth_ntlm\fP
+if set to one, will authenticate with NTLM algorithm
+.TP
+\fBtry_google\fP
+if set to one, will display on timeouts or other fatal server errors
+a page with links to google cache for the requested page
 .LP
 The following filters are available:
 .TP
@@ -82,6 +99,9 @@ with very low bandwidth.
 .TP
 \fBImageSize\fP
 Filter images by size.
+.TP
+\fBVirusFilter\fP
+Turns on clamav virus filtering (if clamav is installed).
 .SH EXAMPLE
  <?xml version="1.0"?>
  <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
