@@ -223,17 +223,17 @@ class HttpServer(Server):
         client = self.client
         self.reuse()
 
-        # Allow each decoder to flush its data, passing it through
-        # other decoders
+        # flush data of decoders (if any) and filters
+        data = ""
         while self.decoders:
             data = self.decoders[0].flush()
             del self.decoders[0]
             for decoder in self.decoders:
                 data = decoder.decode(data)
-            for i in _RESPONSE_FILTERS:
-                data = applyfilter(i, data, fun="finish", attrs=self.attrs)
-            if data: client.server_content(data)
-
+        for i in _RESPONSE_FILTERS:
+            data = applyfilter(i, data, fun="finish", attrs=self.attrs)
+        if data:
+	    client.server_content(data)
         client.server_close()
 
     def process_read(self):

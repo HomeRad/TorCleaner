@@ -70,17 +70,17 @@ class HttpClient(Connection):
                 # NOTE: It's possible to have 'chunked' encoding here,
                 # and then the current system of counting bytes remaining
                 # won't work; we have to deal with chunks
-                data = applyfilter(FILTER_REQUEST_DECODE, self.read())
+                data = self.read()
+                self.bytes_remaining -= len(data)
+                data = applyfilter(FILTER_REQUEST_DECODE, data)
                 data = applyfilter(FILTER_REQUEST_MODIFY, data)
                 data = applyfilter(FILTER_REQUEST_ENCODE, data)
-                self.bytes_remaining -= len(data)
                 self.content += data
             else:
                 data = applyfilter(FILTER_REQUEST_DECODE, "", fun="finish")
                 data = applyfilter(FILTER_REQUEST_DECODE, data, fun="finish")
                 data = applyfilter(FILTER_REQUEST_DECODE, data, fun="finish")
                 self.content += data
-
                 # We're done reading content
                 self.state = 'receive'
                 # This object will call server_connected at some point
