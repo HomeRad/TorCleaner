@@ -1604,7 +1604,7 @@ yyreturn:
 #undef free
 
 /* create parser */
-static PyObject* htmlsax_parser_new(PyObject* self, PyObject* args) {
+static PyObject* htmlsax_parser_new (PyObject* self, PyObject* args) {
     PyObject* handler;
     parser_object* p;
     if (!PyArg_ParseTuple(args, "O", &handler)) {
@@ -1639,7 +1639,7 @@ static PyObject* htmlsax_parser_new(PyObject* self, PyObject* args) {
 }
 
 
-static void parser_dealloc(PyObject* self) {
+static void parser_dealloc (PyObject* self) {
     parser_object* p = (parser_object*)self;
     htmllexDestroy(p->scanner);
     Py_DECREF(p->userData->handler);
@@ -1650,7 +1650,7 @@ static void parser_dealloc(PyObject* self) {
 }
 
 
-static PyObject* parser_flush(PyObject* self, PyObject* args) {
+static PyObject* parser_flush (PyObject* self, PyObject* args) {
     /* flush parser buffers */
     int res = 0;
     parser_object* p = (parser_object*)self;
@@ -1694,7 +1694,7 @@ static PyObject* parser_flush(PyObject* self, PyObject* args) {
 
 
 /* feed a chunk of data to the parser */
-static PyObject* parser_feed(PyObject* self, PyObject* args) {
+static PyObject* parser_feed (PyObject* self, PyObject* args) {
     /* set up the parse string */
     int slen = 0;
     char* s = NULL;
@@ -1727,7 +1727,7 @@ static PyObject* parser_feed(PyObject* self, PyObject* args) {
 
 
 /* reset the parser. This will erase all buffered data! */
-static PyObject* parser_reset(PyObject* self, PyObject* args) {
+static PyObject* parser_reset (PyObject* self, PyObject* args) {
     parser_object* p = (parser_object*)self;
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
@@ -1754,7 +1754,7 @@ static PyObject* parser_reset(PyObject* self, PyObject* args) {
 
 
 /* set the debug level, if its >0, debugging is on, =0 means off */
-static PyObject* parser_debug(PyObject* self, PyObject* args) {
+static PyObject* parser_debug (PyObject* self, PyObject* args) {
     int debug;
     parser_object* p = (parser_object*)self;
     if (!PyArg_ParseTuple(args, "i", &debug)) {
@@ -1780,7 +1780,7 @@ static PyMethodDef parser_methods[] = {
 };
 
 
-static PyObject* parser_getattr(PyObject* self, char* name) {
+static PyObject* parser_getattr (PyObject* self, char* name) {
     return Py_FindMethod(parser_methods, self, name);
 }
 
@@ -1814,7 +1814,7 @@ static PyMethodDef htmlsax_methods[] = {
 
 
 /* initialization of the htmlsax module */
-DL_EXPORT(void) inithtmlsax(void) {
+DL_EXPORT(void) inithtmlsax (void) {
     PyObject* m;
     if (!Py_InitModule("htmlsax", htmlsax_methods)) {
         return;
