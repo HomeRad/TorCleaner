@@ -23,6 +23,8 @@
   * Regenerate the HTML parser with new Bison version 1.875d.
     Also use the now supported Bison memory macros YYMALLOC and
     YYFREE.
+    The parser now honors the document type and generates XML-style
+    end tags for XHTML documents.
     Type: feature
     Changed: wc/HtmlParser/htmlparse.y
 
