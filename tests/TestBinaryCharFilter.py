@@ -27,7 +27,7 @@ class TestBinaryCharFilter (unittest.TestCase):
         self.assertEqual(filtered, result)
 
 
-    def _estQuotes (self):
+    def testQuotes (self):
         self.filt("""These \x84Microsoft\x93 \x94chars\x94 are history.""",
                   """These "Microsoft" "chars" are history.""")
         self.filt("""\x91Retter\x92 Majak trifft in der Schlussminute.""",
