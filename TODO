@@ -4,6 +4,8 @@ version 2.0
 
 - the html layout sucks
 
+- tests for crash bugs
+
 - test and fix all BADURLS
 
 - nofilterhosts and allowedhosts dns name resolution
