@@ -9,6 +9,10 @@
     Added: templates/classic/index.html
   * updated simpleTAL to 3.3
     Changed: wc/webgui/simpletal/*.py
+  * - fix blocking filter
+    - burn gif and switch to blocked.png
+    Added: templates/classic/blocked.png
+    Changed: wc/filter/Blocker.py, wc/webgui/__init__.py
 
 1.13
   * - when the HTTP server closes, flush any existing data
