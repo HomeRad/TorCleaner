@@ -109,13 +109,12 @@ filterfiles:	md5sums
 	cp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
 	cp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
 
-upload: distclean dist VERSION homepage
+upload: distclean dist homepage
 	ncftpput upload.sourceforge.net /incoming dist/*
 
-homepage:
+homepage: VERSION
 	cp ChangeLog $(HTMLDIR)/changes.txt
 	cp README $(HTMLDIR)/readme.txt
-	cp linkchecker-out.*.gz $(HTMLDIR)
 	cp VERSION $(HTMLDIR)/raw/
 	cp $(MD5SUMS) $(HTMLDIR)/
 
