@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os, sys
+import os, sys, re
 from wc.log import *
 
 _percent_encodings = re.compile('%+').findall
