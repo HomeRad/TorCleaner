@@ -1,10 +1,9 @@
 TODO
 
-version 2.10
-
-- test ip
-
 version 2.11 and above
+
+- enhance the HTML parser attribute dict by making items(), keys()
+  and values() return the attributes in original parsed order
 
 - DNS automatic spell fix: replace ".." with "."
 
