@@ -62,7 +62,8 @@ class Magic (object):
         if not os.path.isfile(cachename):
             self.read_magic(filename)
             self.write_cache(cachename)
-        self.read_cache(cachename)
+        else:
+            self.read_cache(cachename)
 
 
     # read_magic subfunction
@@ -196,7 +197,7 @@ class Magic (object):
             test = test_result[0]
             result = test_result[1:]
             return (test,result)
-        elif test_result == 'x':
+        elif test_result in 'x?':
             test = 'x'
             result = 'x'
             return (test,result)
