@@ -74,7 +74,7 @@ class ClientServerMatchmaker:
         else:
             self.hostname = hostname
             self.port = port
-        self.document = document
+            self.document = document
         # Temporary HACK
         if hostname == '_proxy':
             ServerHandleDirectly(self.client,
