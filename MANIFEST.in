@@ -14,6 +14,7 @@ include debian/po/*.po
 include debian/po/*.pot
 include debian/po/*.in
 include debian/rules
+include debian/watch
 include debian/webcleaner-ctl
 include debian/webcleaner-ctl.1
 include debian/webcleaner-common.dirs
