@@ -127,7 +127,7 @@ class TemplateInterpreter:
 		self.file = outputFile
 
         def translate (self, msg):
-                if self.translator is None or not self.translateContent:
+                if self.translator is None:
                         return msg
                 val = self.translator.gettext(msg) % \
                       self.context.getVariableMap()
@@ -376,7 +376,10 @@ class TemplateInterpreter:
 		self.programCounter += 1
 
 	def cmdOutput (self, command, args):
-                self.file.write(self.translate(args))
+                if self.translateContent:
+                    self.file.write(self.translate(args))
+                else:
+                    self.file.write(args)
 		self.programCounter += 1
 
 	def cmdStartScope (self, command, args):
