@@ -1,15 +1,16 @@
-2.17 "Ong-bak" (release xx.xx.xxxx)
+2.17 "Ong-bak" (released xx.xx.xxxx)
   * doh, add docs to DIST_SUBDIRS
     Type: bugfix
     Changed: Makefile.am
 
   * make all hosts lowercase in dns config
     Type: bugfix
-    Changed: wc/network/*.py
+    Changed: wc/network/*.py, tests/TestDns.py
 
   * really remove old wcheaders stuff
     Type: bugfix
     Removed: config/wcheaders.{conf,dtd}
+    Changed: setup.py
 
 2.16 (released 26.5.2004)
   * parse and quote query parts of urls
