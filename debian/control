@@ -27,9 +27,9 @@ Architecture: all
 Depends: fxpy-python2.2 (>= 1.0.0), python2.2, webcleaner
 Description: configuration and visualization tools for webcleaner
  additional tools and helper applications for webcleaner:
-
+ .
  webcleanerconf is a nice GUI configuration tool for the WebCleaner proxy.
-
+ .
  wcheaders is a graphical interface to display the HTTP headers
  of all requests the local WebCleaner proxy handles.
 
