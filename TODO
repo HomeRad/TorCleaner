@@ -2,8 +2,6 @@ TODO
 
 version 2.0
 
-- Order of rules/folders cannot be changed
-
 - the html layout sucks
 
 version 2.1
@@ -28,6 +26,13 @@ version 2.1
   the HTML parser (written with flex) does not support unicode, so
   sometimes you'll see '?' chars in the HTML output.
 
+- dockapp to visualize config and status
+  I made machine-parseable config and status output, so write a tool
+  that uses it :)
+
+- test parent proxy authentication
+  I never tested this.
+
 - webcleanerconf: sortable filters (with up/down)
   The order in which filters are applied should be customizable through
   the GUI.
@@ -35,10 +40,3 @@ version 2.1
 - Use FOX 1.2 Python bindings (fxpy 1.2)
   When FOX 1.2 is released, help to update fxpy to this release using
   the new SWIG 1.3 code.
-
-- dockapp to visualize config and status
-  I made machine-parseable config and status output, so write a tool
-  that uses it :)
-
-- test parent proxy authentication
-  I never tested this.
