@@ -124,7 +124,7 @@ myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
 setup (name = "webcleaner",
-       version = "0.54",
+       version = "0.55",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,

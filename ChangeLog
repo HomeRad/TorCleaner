@@ -1,3 +1,6 @@
+Changes since 0.54:
+  * Support Content-Encoding: deflate
+
 Changes since 0.53:
   * add <area> to tags-with-no-end-tag in Rewriter rule
   * added more advert filters

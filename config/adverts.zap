@@ -213,11 +213,22 @@
 </rewrite>
 
 <rewrite title="IMDB Advert 2" oid="36"
+ desc="image map adverts"
+ matchurl="imdb"
  tag="area">
 <attr>/tiger_redirect\?</attr>
 </rewrite>
 
-<rewrite title="IMDB Advert" oid="37">
+<rewrite title="IMDB Advert" oid="37"
+ desc="adverts are redirections"
+ matchurl="imdb">
 <attr>/tiger_redirect\?</attr>
+</rewrite>
+
+<rewrite title="IMDB Advert 3" oid="100"
+ desc="The ultimate solution"
+ matchurl="imdb"
+ tag="img">
+<attr name="usemap">^#m_pro-</attr>
 </rewrite>
 </folder>

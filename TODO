@@ -1,5 +1,7 @@
 TODO
 
+- using linkchecker on a wc proxy still gives "puzzling header received"
+  --> something is not thread-safe!
 - webcleanerconf: sortable filters (with up/down)
 - test parent proxy authentication
 - more error/warning recognition in parser

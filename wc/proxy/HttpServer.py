@@ -227,9 +227,12 @@ class HttpServer (Server):
                 self.bytes_remaining = None
             remove_headers(self.headers, to_remove)
         # Compressed content (uncompress only for rewriting modules)
-        if self.headers.get('Content-Encoding')=='gzip' and rewrite:
-            #debug(BRING_IT_ON, 'S/Content-encoding: gzip')
-            self.decoders.append(GunzipStream())
+        encoding = self.headers.get('Content-Encoding')
+        if encoding in ('gzip', 'x-gzip', 'deflate') and rewrite:
+            if encoding=='deflate':
+                self.decoders.append(DeflateStream())
+            else:
+                self.decoders.append(GunzipStream())
             # remove encoding because we unzip the stream
             remove_headers(self.headers, ['Content-Encoding'])
 

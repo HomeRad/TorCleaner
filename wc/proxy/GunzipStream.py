@@ -12,15 +12,14 @@
 
 import zlib
 
-class GunzipStream:
+class GunzipStream (DeflateStream):
     # Flags in the gzip header
     FTEXT, FHCRC, FEXTRA, FNAME, FCOMMENT = 1, 2, 4, 8, 16
     
     def __init__ (self):
-        self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
+        DeflateStream.__init__(self)
         self.buf = ''
         self.header_seen = 0
-        self.closed = 0
 
     def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
@@ -84,12 +83,12 @@ class GunzipStream:
                 return ''
 
         # We have seen the header, so we can move on to zlib
-        return self.decompressor.decompress(s)
+        return DeflateStream.decode(self, s)
 
     def flush (self):
         if not self.header_seen:
             # We still haven't finished parsing the header .. oh well
             return ''
         else:
-            return self.decompressor.flush()
+            return DeflateStream.flush(self)
 
