@@ -15,7 +15,7 @@ webcleaner-md5sums.txt
 filter.prof
 error.log
 stamp-h1
-webcleaner.log
+webcleaner.log*
 webcleaner-access.log
 acconfig.h.tmp
 aclocal.m4
