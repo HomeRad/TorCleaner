@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="en" tal:attributes="lang lang">
 <head>
 <link href="wc.css" type="text/css" rel="Stylesheet">
 <title tal:content="title">WebCleaner Proxy Configuration</title>
@@ -8,14 +8,6 @@
 <div metal:use-macro="macros/macros/nav">Navigation...</div>
 
 <div class="content">
-<div tal:repeat="item info">
-<span tal:replace="item">Info</span>
-</div>
-
-<div tal:repeat="item error">
-<span tal:replace="item">Error</span>
-</div>
-
 <form action="config.html" method="POST">
 <table>
 <tr>
@@ -130,6 +122,15 @@
 </tr>
 </table>
 </form>
+
+<div tal:repeat="item info">
+<span tal:replace="item">Info</span>
+</div>
+
+<div tal:repeat="item error">
+<span tal:replace="item">Error</span>
+</div>
+
 <a name="restart">*</a>
 The marked options require a proxy restart to take effect.
 </div>
