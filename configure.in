@@ -13,6 +13,7 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
     CFLAGS="$CFLAGS -Wall -pedantic"
 fi
 
+dnl build and compilation flags
 case "$host" in
 *-*-mingw32*)
     case "$build" in
@@ -32,6 +33,15 @@ case "$host" in
     ;;
 esac
 AC_SUBST([JSDEFS])
+
+case "$build" in
+*-*-mingw32*)
+    AM_CONDITIONAL(BUILD_WINDOWS, true)
+    ;;
+*)
+    AM_CONDITIONAL(BUILD_WINDOWS, false)
+    ;;
+esac
 
 dnl **********************
 dnl *** va_copy checks ***
