@@ -1,0 +1,69 @@
+test_parser
+HTML '<a b="c">'
+p starttag 'a' [('b', '"c"')]
+HTML "<a b='c'>"
+p starttag 'a' [('b', "'c'")]
+HTML '<a b=c">'
+p starttag 'a' [('b', 'c"')]
+HTML '<a b="c>'
+p starttag 'a' [('b', '"c')]
+HTML '<a b=>'
+p starttag 'a' [('b', '')]
+HTML '<a =c>'
+p starttag 'a' [('', 'c')]
+HTML '<a =>'
+p starttag 'a' [('', '')]
+HTML '<a >'
+p starttag 'a' []
+HTML '< a>'
+p starttag 'a' []
+HTML '< a >'
+p starttag 'a' []
+HTML '<>'
+p starttag '' []
+HTML '< >'
+p starttag '' []
+HTML '<!---->'
+p comment ''
+HTML '<!----->'
+p comment '-'
+HTML '<!------>'
+p comment '--'
+HTML '<!------->'
+p comment '---'
+HTML '<!---- >'
+p comment ''
+HTML '<!-- -->'
+p comment ' '
+HTML '<!-- -- >'
+p comment ' '
+HTML '<!---- />-->'
+p comment '-- />'
+HTML '</br>'
+p endtag 'br'
+HTML '</ br>'
+p endtag 'br'
+HTML '</ br >'
+p endtag 'br'
+HTML '</br >'
+p endtag 'br'
+HTML '< / br>'
+p starttag '/' []
+p endtag '/'
+HTML '< /br>'
+p starttag '/br' []
+HTML '<br/>'
+p starttag 'br/' []
+p endtag 'br/'
+HTML '<!DOCTYPE adrbook SYSTEM "adrbook.dtd">'
+p decl 'DOCTYPE' [('adrbook', None), ('SYSTEM', None), ('"adrbook.dtd"', None)]
+HTML '<?xml version="1.0" encoding="latin1"?>'
+p starttag '?xml' [('version', '1.0'), ('encoding', '"latin1"?')]
+subsequent interwoven parsing
+p starttag 'html' []
+p1 starttag 'html' []
+reset test
+p data '>'
+flush tests
+p starttag '' []
+p starttag 'a' []

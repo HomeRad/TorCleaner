@@ -1,0 +1,2 @@
+test_blocker
+GET file:///home/calvin/projects/webcleaner2/config/blocked.html text/html
