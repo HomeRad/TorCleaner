@@ -57,12 +57,10 @@ def iswriteable (fname):
         return False
     try:
         if os.path.exists(fname):
-            f = file(fname, 'a')
-            f.close()
+            file(fname, 'a').close()
             return True
         else:
-            f = file(fname, 'w')
-            f.close()
+            file(fname, 'w').close()
             os.remove(fname)
             return True
     except IOError:
@@ -176,6 +174,7 @@ class Configuration (dict):
 
     def reset (self):
         """Reset to default values"""
+        self['configfile'] = proxyconf_file()
         self['port'] = 8080
         self['adminuser'] = ""
         self['adminpass'] = ""
@@ -215,13 +214,12 @@ class Configuration (dict):
 
     def read_proxyconf (self):
         """read proxy configuration"""
-        filename = proxyconf_file()
-        WConfigParser(filename).parse(file(filename), self)
+        WConfigParser(self['configfile'], self).parse()
 
 
     def write_proxyconf (self):
         """write proxy configuration"""
-        f = file(proxyconf_file(), 'w')
+        f = file(self['configfile'], 'w')
         f.write("""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner
@@ -261,8 +259,8 @@ class Configuration (dict):
             if os.stat(filename)[ST_SIZE]==0:
                 warn(PROXY, "Skipping empty file %r", filename)
                 continue
-            p = ZapperParser(filename)
-            p.parse(file(filename), self)
+            p = ZapperParser(filename, self)
+            p.parse()
             self['folderrules'].append(p.folder)
         # sort folders according to oid
         self['folderrules'].sort()
@@ -366,25 +364,50 @@ _nestedtags = (
 
 import wc.filter
 
+
+def make_xmlparser ():
+    """return a new xml parser object"""
+    p = xml.parsers.expat.ParserCreate()
+    p.returns_unicode = 0
+    return p
+
+
 class ParseException (Exception): pass
 
+
 class BaseParser (object):
-    def __init__ (self, filename):
-        self.p = xml.parsers.expat.ParserCreate()
-        self.p.returns_unicode = 0
-        self.p.StartElementHandler = self.start_element
-        self.p.EndElementHandler = self.end_element
-        self.p.CharacterDataHandler = self.character_data
+    def __init__ (self, filename, _config):
         self.filename = filename
-
-
-    def parse (self, fp, _config):
         self.config = _config
+
+
+    def _preparse (self):
+        """set handler functions before parsing"""
+        self.xmlparser = make_xmlparser()
+        self.xmlparser.StartElementHandler = self.start_element
+        self.xmlparser.EndElementHandler = self.end_element
+        self.xmlparser.CharacterDataHandler = self.character_data
+
+
+    def _postparse (self):
+        """remove handler functions after parsing; avoids cyclic references"""
+        self.xmlparser.StartElementHandler = None
+        self.xmlparser.EndElementHandler = None
+        self.xmlparser.CharacterDataHandler = None
+        # note: expat parsers cannot be reused
+        self.xmlparser = None
+
+
+    def parse (self):
         debug(PROXY, "Parsing %s", self.filename)
+        self._preparse()
         try:
-            self.p.ParseFile(fp)
-        except (xml.parsers.expat.ExpatError, ParseException):
-            error(PROXY, "Error parsing %s", self.filename)
+            try:
+                self.xmlparser.ParseFile(file(self.filename))
+            except (xml.parsers.expat.ExpatError, ParseException):
+                error(PROXY, "Error parsing %s", self.filename)
+        finally:
+            self._postparse()
 
 
     def start_element (self, name, attrs):
@@ -400,8 +423,8 @@ class BaseParser (object):
 
 
 class ZapperParser (BaseParser):
-    def __init__ (self, filename, compile_data=True):
-        super(ZapperParser, self).__init__(filename)
+    def __init__ (self, filename, _config, compile_data=True):
+        super(ZapperParser, self).__init__(filename, _config)
         from wc.filter.rules import FolderRule
         self.folder = FolderRule(filename=filename)
         self.cmode = None
@@ -441,11 +464,6 @@ class ZapperParser (BaseParser):
 
 
 class WConfigParser (BaseParser):
-    def parse (self, fp, _config):
-        super(WConfigParser, self).parse(fp, _config)
-        self.config['configfile'] = self.filename
-
-
     def start_element (self, name, attrs):
         if name=='webcleaner':
             for key,val in attrs.items():
@@ -467,6 +485,7 @@ class WConfigParser (BaseParser):
         elif name=='filter':
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
+
 
 from log import *
 from url import match_url, match_host
