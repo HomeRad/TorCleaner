@@ -75,8 +75,8 @@ def _exec_form (form, lang):
             _calc_selindex(curfolder, curindex)
         else:
             curfolder.selindex = []
-        curfolder.indexstr = "(%d-%d/%d)"%(curindex+1,
-                                       min(curindex+_rules_per_page, l), l)
+        curfolder.indexstr = u"(%d-%d/%d)"%(curindex+1,
+                                         min(curindex+_rules_per_page, l), l)
     # select a rule
     if form.has_key('selrule') and curfolder:
         _form_selrule(_getval(form, 'selrule'))

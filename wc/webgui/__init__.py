@@ -199,17 +199,17 @@ def get_context (dirs, form, localcontext, lang):
         # handle form action
         debug(GUI, "got form %s", form)
         status = template_context._exec_form(form, lang)
-        context.addGlobal("form", form)
+        context_add(context, "form", form)
     # add default context values
     add_default_context(context, dirs[-1], lang)
     # augment the context
     attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     for attr in attrs:
-        context.addGlobal(attr, getattr(template_context, attr))
+        context_add(context, attr, getattr(template_context, attr))
     # add local context
     if localcontext is not None:
         for key, value in localcontext.items():
-            context.addGlobal(key, value)
+            context_add(context, key, value)
     return context, status
 
 
@@ -218,19 +218,19 @@ def add_default_context (context, filename, lang):
     # rule macros
     path, dirs = _get_template_path("macros/rules.html")
     rulemacros = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(file(path, 'r'))
-    context.addGlobal("rulemacros", rulemacros.macros)
+    context_add(context, "rulemacros", rulemacros.macros)
     # standard macros
     path, dirs = _get_template_path("macros/standard.html")
     macros = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(file(path, 'r'))
-    context.addGlobal("macros", macros.macros)
+    context_add(context, "macros", macros.macros)
     # used by navigation macro
-    context.addGlobal("nav", {filename.replace('.', '_'): True})
+    context_add(context, "nav", {filename.replace('.', '_'): True})
     # page template name
-    context.addGlobal("filename", filename)
+    context_add(context, "filename", filename)
     # base url
-    context.addGlobal("baseurl", "http://localhost:%d/" % wc.config['port'])
+    context_add(context, "baseurl", "http://localhost:%d/" % wc.config['port'])
     # language
-    context.addGlobal("lang", lang)
+    context_add(context, "lang", lang)
     # other available languges
     otherlanguages = []
     for la in wc.i18n.supported_languages:
@@ -239,4 +239,11 @@ def add_default_context (context, filename, lang):
                                'name': wc.i18n.lang_name(la),
                                'trans': wc.i18n.lang_trans(la, lang),
                               })
-    context.addGlobal("otherlanguages", otherlanguages)
+    context_add(context, "otherlanguages", otherlanguages)
+
+
+def context_add (context, key, val):
+    if type(val)==type(""):
+        context.addGlobal(unicode(key), unicode(val))
+    else:
+        context.addGlobal(unicode(key), val)

@@ -209,7 +209,7 @@ class Rule (object):
         if name == self.get_name():
             self._data = ""
         else:
-            self._data = wc.XmlUtils.xmlunquote(self._data).encode(wc.ConfigCharset)
+            self._data = wc.XmlUtils.xmlunquote(self._data)
         if name=='title':
             self.titles[self._lang] = self._data
         elif name=='description':
