@@ -1,4 +1,5 @@
-from wc import i18n, AppName, config
+from wc import i18n, AppName
+from wc import config as _config
 
 title = i18n._("%s configuration") % AppName
 port = i18n._("Port number")

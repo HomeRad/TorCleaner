@@ -59,9 +59,7 @@ class ContextVariable:
 		# Return the length of the sequence - if it's zero length then it's handled
 		# as though it wasn't a sequence at all.
 		try:
-			seqLength = len (self.value())
-			temp = self.value()[1:1]
-			return seqLength
+			return len (self.value())
 		except:
 			return 0
 		
@@ -78,7 +76,7 @@ class ContextVariable:
 		return self.value()
 		
 	def value (self, currentPath=None):
-		if (callable (self.ourValue)):
+		if self.isCallable():
 			return apply (self.ourValue, ())
 		return self.ourValue
 		
@@ -537,13 +535,13 @@ class Context:
 					if (not isinstance (val, ContextVariable)):
 						val = ContextVariable (val)
 				else:
-					self.log.debug ("Not found.")
+					#self.log.debug ("Not found.")
 					return None		
 			else:
-				self.log.debug ("Not found.")
+				#self.log.debug ("Not found.")
 				return None
 			index = index + 1
-		self.log.debug ("Found value %s" % str (val))
+		#self.log.debug ("Found value %s" % `val.value()`)
 		if (not canCall):
 			return NoCallVariable (val)
 		return val
