@@ -72,8 +72,6 @@ def initlog (filename, appname, file_logs=True):
         trydirs = []
         if os.name=="nt":
             trydirs.append(ConfigDir)
-        if os.environ.get("WC_DEVELOPMENT"):
-            trydirs.append(os.getcwd())
         logname = "%s.log"%appname
         logfile = log.get_log_file(appname, logname, trydirs=trydirs)
         handler = get_wc_handler(logfile)
@@ -203,14 +201,6 @@ class Configuration (dict):
         # read configuration
         self.read_proxyconf()
         self.read_filterconf()
-        if self['development']:
-            # avoid conflicting servers if an official WebCleaner release
-            # is installed by incrementing port numbers
-            self['port'] += 1
-            self['sslport'] += 1
-            # test data directory url
-            self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
-            self['adminuser'] = ""
 
 
     def reset (self):
@@ -274,9 +264,6 @@ class Configuration (dict):
         f.write(' version="%s"\n' % xmlquoteattr(self['version']))
         port = self['port']
         sslport = self['sslport']
-        if self['development']:
-            port -= 1
-            sslport -= 1
         f.write(' port="%d"\n' % port)
         f.write(' sslport="%d"\n' % sslport)
         if self['sslgateway']:
