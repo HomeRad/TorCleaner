@@ -140,7 +140,7 @@ class ClientServerMatchmaker (object):
         if not self.client.connected:
             # The client has aborted, so let's return this server
             # connection to the pool
-            server.close()
+            server.client_abort()
             return
         if self.method=='CONNECT':
             self.state = 'response'
