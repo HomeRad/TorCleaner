@@ -107,12 +107,11 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align fast
-/*%option debug*/
+%option debug
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
 
-%x S_ERROR
 %x S_PI
 %x S_COMMENT
 %x S_DOCTYPE
@@ -296,9 +295,7 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
 <S_TAGSTART>. {
-    UPDATE_BUFPOS;
-    APPEND_TO_TMP;
-    BEGIN(S_ERROR);
+    return T_WAIT;
 }
 
   /*********************** SCRIPT ************************/
@@ -501,19 +498,6 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_TAGEND>. {
     UPDATE_BUFPOS;
-}
-
-  /*********************** ERROR ************************/
-<S_ERROR>[^>]* {
-    UPDATE_BUFPOS;
-    APPEND_TO_TMP;
-}
-
-<S_ERROR>">" {
-    UPDATE_BUFPOS;
-    SETLVAL;
-    BEGIN(INITIAL);
-    RETURN(T_TEXT);
 }
 
   /*********************** TEXT ************************/
