@@ -33,7 +33,7 @@ clean:
 	dh_testdir
 	rm -f build-stamp configure-stamp
 	$(PYTHON) setup.py clean --all
-	$(MAKE) clean
+	-$(MAKE) clean
 	$(MAKE) -C po clean
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
