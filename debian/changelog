@@ -1,8 +1,10 @@
 webcleaner (2.19-0.1) unstable; urgency=low
 
   * New upstream release.
+  * added preinst script that converts and moves deprecated files from
+    old installations
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 15 Jun 2004 15:07:19 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sun, 25 Jul 2004 13:20:58 +0200
 
 webcleaner (2.18-0.1) unstable; urgency=low
 
