@@ -146,3 +146,4 @@ def get_context (dirs, form, localcontext):
     for key, value in localcontext.items():
         context.addGlobal(key, value)
     return context
+

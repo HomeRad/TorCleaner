@@ -94,8 +94,8 @@ for service in pics_services:
     pics_categories[service].sort()
 
 
-# form execution
 def exec_form (form):
+    """form execution"""
     # reset info/error and form vals
     _form_reset()
     # select a folder
@@ -141,6 +141,16 @@ def exec_form (form):
     # generic apply rule values
     elif currule and form.has_key('apply'):
         _form_apply(form)
+    # last catch-all (somewhat): look for up/down moves
+    elif curfolder:
+        for rule in curfolder.rules:
+            # note: image submits can append ".x" and ".y" to key
+            if form.has_key('rule_up_%d' % rule.oid) or \
+               form.has_key('rule_up_%d.x' % rule.oid):
+                _form_rule_up(rule.oid)
+            elif form.has_key('rule_down_%d' % rule.oid) or \
+                 form.has_key('rule_down_%d.x' % rule.oid):
+                _form_rule_down(rule.oid)
     if info:
         config.write_filterconf()
     _form_set_tags()
@@ -156,12 +166,12 @@ def _form_reset ():
 
 
 def _form_set_tags ():
-    for f in config['folderrules']:
-        f.selected = False
-        for i, r in enumerate(f.rules):
-            r.selected = False
-            r.up = (i>0)
-            r.down = (i<(len(f.rules)-1))
+    for folder in config['folderrules']:
+        folder.selected = False
+        for i, rule in enumerate(folder.rules):
+            rule.selected = False
+            rule.up = (i>0)
+            rule.down = (i<(len(folder.rules)-1))
     if curfolder:
         curfolder.selected = True
     if currule:
@@ -293,6 +303,38 @@ def _form_rewrite_removeattrs (form):
         for attr in toremove:
             del currule.attrs[attr]
         info.append(i18n._("Rewrite attributes removed"))
+
+
+def _form_rule_up (oid):
+    """move rule with given oid one up"""
+    for i, rule in enumerate(curfolder.rules):
+        if rule.oid==oid and i>0:
+            # swap rules
+            curfolder.rules[(i-1):(i+1)] = [curfolder.rules[i],
+                                            curfolder.rules[i-1]]
+            # sort folder
+            curfolder.sort()
+            global currule
+            currule = None
+            info.append(i18n._("Rule moved up"))
+            return
+    error.append(i18n._("Invalid rule move up id"))
+
+
+def _form_rule_down (oid):
+    """move rule with given oid one down"""
+    for i, rule in enumerate(curfolder.rules):
+        if rule.oid==oid and i<(len(curfolder.rules)-1):
+            # swap rules
+            curfolder.rules[i:(i+2)] = [curfolder.rules[i+1],
+                                        curfolder.rules[i]]
+            # sort folder
+            curfolder.sort()
+            global currule
+            currule = None
+            info.append(i18n._("Rule moved down"))
+            return
+    error.append(i18n._("Invalid rule move down id"))
 
 
 def _form_apply (form):
