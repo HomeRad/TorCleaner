@@ -144,7 +144,7 @@ class UpdatePOEngine (POEngine):
 
     def __add (self, id, s, fuzzy):
         "Add a non-fuzzy translation to the dictionary."
-        if not fuzzy and str:
+        if not fuzzy and s:
             # check for multi-line values and munge them appropriately
             if '\n' in s:
                 lines = s.rstrip().split('\n')
@@ -171,7 +171,7 @@ class UpdatePOEngine (POEngine):
         # Parse the catalog
         lno = 0
         for l in lines:
-            lno += True
+            lno += 1
             # If we get a comment line after a msgstr, this is a new entry
             if l[0] == '#' and section == STR:
                 self.__add(msgid, msgstr, fuzzy)
@@ -295,8 +295,9 @@ def main ():
     except AttributeError:
         pass
     if '' not in messages:
-        print >> outfile, pot_header % {'time': time.ctime(),
-                                        'version': __version__}
+        pass # XXX header bug
+        #print >> outfile, pot_header % {'time': time.ctime(),
+        #                                'version': __version__}
 
     msgids = catalog.keys()
     # XXX: You should not sort by msgid, but by filename and position. (SR)
