@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Miscellaneous" oid="6"
  desc="Misc things we dont like in our HTML source :)">

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="CSS filtering" oid="14"
  desc="Some browsers do not support CSS, so turn it off with these rules. Or you can test your pages without  CSS styles!  Well, we remove only complete &lt;style&gt; tags, not style=&amp;quot;&amp;quot; attributes. "

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Scripting" oid="4"
  desc="Scripting related.">

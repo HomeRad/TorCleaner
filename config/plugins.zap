@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Plugins" oid="3"
  desc="The filter rules found here remove plugin (eg flash) contents, but only for selected sites.">

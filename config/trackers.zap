@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Trackers and counters" oid="5"
  desc="Statistic links and tracker images deserve now a separate category as they became a lot more in the last couple of months.">

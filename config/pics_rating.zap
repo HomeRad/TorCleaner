@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="PICS ratings" oid="11"
  desc="Contains rules deploying the Platform for Internet Content Selection (PICS).">
