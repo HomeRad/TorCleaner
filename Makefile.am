@@ -19,6 +19,7 @@ clean-local:
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 	rm -f webcleaner.log* webcleaner.err*
+	rm -f config/magic.mime.mgc
 
 # to build in the current directory
 localbuild: all
