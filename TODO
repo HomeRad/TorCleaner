@@ -2,8 +2,6 @@ TODO
 
 version 2.3
 
-- HTTP/1.1 persistent client connections
-
 - HTTPS tunneling (RFC 2817/2818)
 
 - parse and import adzapper.sf.net filters
