@@ -4,6 +4,8 @@
  
  Changes:
 
+ 20041227 Bastian Kleineidam
+ * added "antivirus" element
  20040308 Bastian Kleineidam
  * added the "filterstage" attribute to header rules
  20040225 Bastian Kleineidam
@@ -64,7 +66,7 @@
    This way configuration tools can display the description of all
    filters and rules and can enable/disable each of them separately.
 -->
-<!ELEMENT folder (title+,description*,(rewrite|replace|javascript|block|blockurls|blockdomains|allow|header|image|nocomments|rating)*)>
+<!ELEMENT folder (title+,description*,(rewrite|replace|javascript|block|blockurls|blockdomains|allow|header|image|nocomments|rating|antivirus)*)>
 <!ATTLIST folder
  sid      CDATA #REQUIRED
  oid      CDATA #REQUIRED
@@ -298,3 +300,14 @@
 <!ATTLIST category
  name     CDATA #REQUIRED
 >
+
+<!--                        Antivirus
+
+   A rule enabling virus scanning in WebCleaner.
+-->
+<!ELEMENT antivirus (title+,description*,matchurl*,nomatchurl*)>
+<!ATTLIST antivirus
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+>
+
