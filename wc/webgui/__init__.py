@@ -59,10 +59,10 @@ class WebConfig (object):
         self.put_response(data, protocol, status, msg, headers)
 
 
-    def put_response (self, out, protocol, status, msg, headers):
+    def put_response (self, data, protocol, status, msg, headers):
         response = "%s %d %s"%(protocol, status, msg)
         self.client.server_response(self, response, headers)
-        self.client.server_content(out)
+        self.client.server_content(data)
         self.client.server_close()
 
 
@@ -77,6 +77,7 @@ def norm (path):
 def expand_template (f, context):
     """expand the given template file in context
        return expanded data"""
+    # note: standard input encoding is iso-8859-1 for html templates
     template = simpleTAL.compileHTMLTemplate(f)
     out = StringIO()
     template.expand(context, out)
