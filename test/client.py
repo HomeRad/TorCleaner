@@ -1,28 +1,56 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
-"""proxy client tester"""
+"""client simulator"""
 
-import httplib, urlparse, sys
+import sys, asyncore, socket
 import wc
+from wc.log import *
+from wc.proxy import create_inet_socket
 
-def main (tests):
-    if not tests:
-        tests.append('')
-    for test in tests:
-        _exec_test(test)
+class ClientConnection (asyncore.dispatcher, object):
+
+    def __init__(self, config, data):
+        super(ClientConnection, self).__init__()
+        create_inet_socket(self, socket.SOCK_STREAM)
+        self.connect(('localhost', config['port']))
+        self.buf = data
 
 
-def exec_test (test):
+    def handle_connect (self):
+        pass
+
+
+    def handle_read (self):
+        data = self.recv(8192)
+        # XXX test data
+
+
+    def handle_error (self):
+        exception(PROXY, "%s error, closing", str(self))
+        self.close()
+        self.del_channel()
+
+
+    def writable(self):
+        return len(self.buf) > 0
+
+
+    def handle_write (self):
+        sent = self.send(self.buf)
+        self.buf = self.buf[sent:]
+
+
+    def handle_expt (self):
+        exception(PROXY, "%s exception", str(self))
+
+
+def main (params):
+    initlog("test/logging.conf")
     config = wc.Configuration()
-    url = 'http://localhost:%d/%s' % (config['port']+1, test)
-    h = httplib.HTTPConnection('localhost', config['port'])
-    h.debug_level = 1
-    h.connect()
-    h.putrequest("GET", url, skip_host=1)
-    h.putheader("Host", 'localhost')
-    h.endheaders()
-    req = h.getresponse()
-    print req.msg
+    # XXX read data from file?
+    data = "GET http://localhost:%(port)d/ HTTP/1.0\r\n\r\n" % config
+    client = ClientConnection(config, data)
+    asyncore.loop()
 
 
 if __name__=='__main__':
