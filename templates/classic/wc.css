@@ -179,6 +179,13 @@ div.footer {
     /* the footer container */
     padding: 1em 2em 1em 2em;
     color: #555555;
-    text-align: right;
     font-size: 70%;
+}
+
+td.footer_left {
+    text-align: left;
+}
+
+td.footer_right {
+    text-align: right;
 }
