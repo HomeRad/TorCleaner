@@ -70,6 +70,7 @@ class ClientServerMatchmaker (object):
         self.state = 'dns'
         self.server_busy = 0
         self.method, self.url, self.protocol = self.request.split()
+        do_ssl = wc.configuration.config['sslgateway']
         # prepare DNS lookup
         if wc.configuration.config['parentproxy']:
             self.hostname = wc.configuration.config['parentproxy']
@@ -79,8 +80,7 @@ class ClientServerMatchmaker (object):
                 auth = wc.configuration.config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r" % auth
         else:
-            if self.method == 'CONNECT' and \
-               wc.configuration.config['sslgateway']:
+            if do_ssl and self.method == 'CONNECT':
                 # delegate to SSL gateway
                 self.hostname = 'localhost'
                 self.port = wc.configuration.config['sslport']
@@ -166,8 +166,8 @@ class ClientServerMatchmaker (object):
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
             try:
-                if self.sslserver and \
-                   wc.configuration.config['sslgateway']:
+                do_ssl = wc.configuration.config['sslgateway']
+                if self.sslserver and do_ssl:
                     import wc.proxy.SslServer
                     klass = wc.proxy.SslServer.SslServer
                 else:
