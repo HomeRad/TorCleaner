@@ -2,6 +2,7 @@
 """connection handling WebCleaner SSL server <--> Remote SSL server"""
 
 import socket
+from wc import config
 from wc.log import *
 from HttpServer import HttpServer, flush_decoders
 from SslConnection import SslConnection
