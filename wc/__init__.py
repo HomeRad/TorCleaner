@@ -277,7 +277,7 @@ class WConfigParser(BaseParser):
                 for host in self.config['noproxyfor'].split(','):
                     d[str(host)] = 1
                 self.config['noproxyfor'] = d
-            if self.config['logfile'] == 'stdout':
+            if self.config['logfile'] == '<stdout>':
                 self.config['logfile'] = sys.stdout
             elif self.config['logfile']:
                 self.config['logfile'] = open(self.config['logfile'], 'a')

@@ -652,6 +652,8 @@ class ConfWindow(ToolWindow):
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass'):
             setattr(self, key, self.config[key])
+        if self.logfile:
+            self.logfile = self.logfile.name
         self.modules = {
 	    "Header":0,
 	    "Blocker":0,
