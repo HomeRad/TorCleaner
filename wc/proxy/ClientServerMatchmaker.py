@@ -79,7 +79,7 @@ class ClientServerMatchmaker (object):
             else:
                 self.hostname = client.hostname
                 self.port = client.port
-            self.document = wc.url.document_quote(client.document)
+            self.document = client.document
         assert self.hostname
         # start DNS lookup
         wc.log.debug(wc.LOG_PROXY, "background dns lookup %r", self.hostname)
