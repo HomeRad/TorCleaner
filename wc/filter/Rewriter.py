@@ -25,7 +25,7 @@ from wc.filter.Filter import Filter
 orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
-rulenames = ['rewrite','nocomments']
+rulenames = ['rewrite','nocomments','javascript']
 mimelist = map(compileMime, ['text/html'])
 
 # regular expression which matches tag attributes that dont
@@ -71,23 +71,31 @@ class Rewriter (Filter):
         """We need a separate filter instance for stateful filtering"""
         # first: weed out the rules that dont apply to this url
         rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
-        # second: weed out the comments rules, but remember length
-        before = len(rules)
-        rules = filter(lambda r: r.get_name()=='rewrite', rules)
+        rewrites = []
+        opts = {'comments': 1, 'javascript': 0}
+        for rule in self.rules:
+            if not rule.appliesTo(url): continue
+            if rule.get_name()=='rewrite':
+                rewrites.append(rule)
+            elif rule.get_name()=='nocomments':
+                opts['comments'] = 0
+            elif rule.get_name()=='javascript':
+                opts['javascript'] = 1
         # generate the HTML filter
-        return {'filter': HtmlFilter(rules, (len(rules)==before), url)}
+        return {'filter': HtmlFilter(rewrites, url, **opts)}
 
 
 class HtmlFilter (HtmlParser):
     """The parser has the rules, a data buffer and a rule stack."""
-    def __init__ (self, rules, comments, url):
+    def __init__ (self, rules, url, **opts):
         if wc.config['showerrors']:
             self.error = self._error
             self.warning = self._warning
             self.fatalError = self._fatalError
         HtmlParser.__init__(self)
         self.rules = rules
-        self.comments = comments
+        self.comments = opts['comments']
+        self.javascript = opts['javascript']
         self.data = []
         self.rulestack = []
         self.buffer = []
@@ -149,6 +157,7 @@ class HtmlFilter (HtmlParser):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         rulelist = []
+        filtered = 0
         # default data
         tobuffer = (STARTTAG, tag, attrs)
         # look for filter rules which apply
@@ -157,6 +166,7 @@ class HtmlFilter (HtmlParser):
                 #debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
+                    filtered = "True"
                     # give'em a chance to replace more than one attribute
                     if tobuffer[0]==STARTTAG and tobuffer[1]==tag:
                         foo,tag,attrs = tobuffer
@@ -167,11 +177,26 @@ class HtmlFilter (HtmlParser):
                     #debug(NIGHTMARE, "put on buffer")
                     rulelist.append(rule)
         if rulelist:
-            self.rulestack.append((len(self.buffer), rulelist))
-        self.buffer_append_data(tobuffer)
+            # remember buffer position for end tag matching
+            pos = len(self.buffer)
+            self.rulestack.append((pos, rulelist))
+        # if its not yet filtered, try filter javascript
+        if filtered:
+            self.buffer_append_data(tobuffer)
+        elif self.javascript:
+            self.jsStartElement(tag, attrs)
+        else:
+            self.buffer.append(tobuffer)
         # if rule stack is empty, write out the buffered data
         if not self.rulestack:
             self.buffer2data()
+
+    def jsStartElement (self, tag, attrs):
+        """Check popups for onmouseout and onmouseover.
+           Inline extern javascript sources (only in the
+           same domain)"""
+        # XXX
+        self.buffer.append((STARTTAG, tag, attrs))
 
     def endElement (self, tag):
         """We know the following: if a rule matches, it must be
@@ -179,15 +204,27 @@ class HtmlFilter (HtmlParser):
         rule.
 	If it matches and the rule stack is now empty we can flush
 	the buffer (by calling buffer2data)"""
+        filtered = 0
         self.buffer.append((ENDTAG, tag))
+        # remember: self.rulestack[-1][1] is the rulelist that
+        # matched for a start tag. and if the first one ([0])
+        # matches, all other match too
         if self.rulestack and self.rulestack[-1][1][0].match_tag(tag):
-            i, rulelist = self.rulestack.pop()
+            pos, rulelist = self.rulestack.pop()
             for rule in rulelist:
-                if rule.match_complete(i, self.buffer):
-                    rule.filter_complete(i, self.buffer)
+                if rule.match_complete(pos, self.buffer):
+                    rule.filter_complete(pos, self.buffer)
+                    filtered = 1
                     break
+        if not filtered and self.javascript:
+            self.jsEndElement(tag)
         if not self.rulestack:
             self.buffer2data()
+
+    def jsEndElement (self, tag):
+        """parse generated html for scripts"""
+        if tag!='script': return
+        # XXX
 
     def doctype (self, data):
         self.buffer_append_data([DATA, "<!DOCTYPE%s>"%data])

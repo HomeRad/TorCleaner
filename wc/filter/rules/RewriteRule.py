@@ -138,14 +138,15 @@ class RewriteRule (UrlRule):
                 return 0
         return 1
 
-    def match_complete (self, i, buf):
+    def match_complete (self, pos, buf):
         """We know that the tag (and tag attributes) match. Now match
 	   the enclosing block."""
         if not self.enclosed:
             # no enclosed expression => match
             return 1
-        # check every data for a match (data is _not_ chunked)
-        for n in buf[i:]:
+        # check every data for a match
+        # remember that data is _not_ splitted across multiple items
+        for n in buf[pos:]:
             if n[0]==DATA and self.enclosed.search(n[1]):
                 return 1
         return 0

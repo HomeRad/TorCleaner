@@ -193,6 +193,7 @@ _rulenames = (
   'header',
   'image',
   'nocomments',
+  'javascript',
   'replacer')
 _nestedtags = ('attr','enclosed','replace')
 
