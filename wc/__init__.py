@@ -90,14 +90,12 @@ ErrorLen = len(ErrorText)
 config = None
 
 def startfunc ():
+    # support reload on posix systems
     if os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, reload_config)
-    global config
-    config = Configuration()
-    config.init_filter_modules()
+    # drop root privileges
     if os.geteuid()==0:
-        # drop root privileges
         import pwd, grp
         try:
             pentry = pwd.getpwnam("nobody")
@@ -111,6 +109,11 @@ def startfunc ():
         except KeyError:
             print >>sys.stderr, "warning: could not drop root privileges, user nobody and/or group nogroup not found"
             pass
+    # read configuration
+    global config
+    config = Configuration()
+    config.init_filter_modules()
+    # start the proxy
     import wc.proxy
     wc.proxy.mainloop()
 
@@ -146,19 +149,19 @@ class Configuration (UserDict.UserDict):
         self['parentproxyuser'] = ""
         self['parentproxypass'] = ""
         self['logfile'] = ""
-        self['strict_whitelist'] = None
+        self['strict_whitelist'] = 0
         self['debuglevel'] = 0
         self['rules'] = []
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['errorlen'] = ErrorLen
         self['errortext'] = ErrorText
-        self['colorize'] = None
+        self['colorize'] = 0
         self['noproxyfor'] = {}
         self['allowedhosts'] = {}
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
-        self['local_sockets_only'] = None
+        self['local_sockets_only'] = 0
         self['localip'] = socket.gethostbyname(socket.gethostname())
         self['mime_content_rewriting'] = []
         self['headersave'] = 100

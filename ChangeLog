@@ -6,7 +6,7 @@
       config/webcleaner.conf
   * Updated ssh tunnel scripts
     Changed files: README.sshtunnel
-  * fixed reloading on SIGHUP
+  * fixed the reloading on SIGHUP
     Changed files: wc/__init__.py
   * Updated README and FAQ
   * Updated filter block lists with config/bl2wc.py script.
