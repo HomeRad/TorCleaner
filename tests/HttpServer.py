@@ -28,6 +28,7 @@ class LogHttpServer (BaseHTTPServer.HTTPServer):
         BaseHTTPServer.HTTPServer.__init__(self, address, handler)
         self.abort = False
         self.log = log
+        self.socket.setblocking(0)
         if not address[0]:
             host = 'localhost'
         else:
@@ -40,7 +41,10 @@ class LogHttpServer (BaseHTTPServer.HTTPServer):
         """Handle one request at a time until doomsday."""
         abort = False
         while not abort:
-            self.handle_request()
+            try:
+                self.handle_request()
+            except socket.error:
+                time.sleep(1)
             _acquireLock()
             abort = self.abort
             _releaseLock()

@@ -39,8 +39,8 @@ class ProxyTest (unittest.TestCase):
         port = self.proxyconfig['port']
         self.log.write("starting WebCleaner proxy on port %d\n"%port)
         kwargs = {'stoppable': True}
-        t = threading.Thread(target=wc.wstartfunc, kwargs=kwargs)
-        t.start()
+        self.proxythread = threading.Thread(target=wc.wstartfunc, kwargs=kwargs)
+        self.proxythread.start()
         # wait until proxy is started
         running = False
         while not running:
@@ -52,6 +52,7 @@ class ProxyTest (unittest.TestCase):
     def stopProxy (self):
         self.log.write("stopping proxy")
         wc.config.set_abort(True)
+        time.sleep(1)
         self.log.write(".\n")
 
     def testProxy (self):
@@ -62,9 +63,11 @@ class ProxyTest (unittest.TestCase):
             server_class = proxytest[2]
             handler_class = proxytest[3]
             self.log.write("running test %r\n"%request.name())
+            serverthread = None
             try:
-                HttpServer.startServer(self.log, server_class=server_class,
-                                       handler_class=handler_class)
+                serverthread = HttpServer.startServer(self.log,
+                                           server_class=server_class,
+                                           handler_class=handler_class)
                 client = client_class(self.log, self.proxyconfig)
                 # send request
                 client.doRequest(request)

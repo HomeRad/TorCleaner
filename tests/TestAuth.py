@@ -7,7 +7,7 @@ class TestAuth (unittest.TestCase):
     """Test authentication routines"""
 
 
-    def _testDigest (self):
+    def testDigest (self):
         chal = 'Digest realm="This is my digest auth", nonce="i5tbP9h2RAiGbccW", qop="auth", stale=false'
         chals = auth.parse_challenges(chal)
         attrs = {"username": "calvin", "password_b64": "Y2Fsdmlu",
