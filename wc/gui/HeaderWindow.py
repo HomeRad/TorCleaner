@@ -15,7 +15,6 @@ def parse_headers():
     url = "http://localhost:%d/headers/"%wc.config['port']
     from urllib2 import urlopen
     s = urlopen(url).read()
-    print `s`
     if s=="-": return headers
     lines = s.split("\n")
     for l in lines:
@@ -42,7 +41,6 @@ def parse_connections():
     url = "http://localhost:%d/connections/"%wc.config['port']
     from urllib2 import urlopen
     s = urlopen(url).read()
-    print `s`
     lines = s.split("\n")
     for l in lines:
         name, num = l.split(":")
@@ -55,7 +53,7 @@ class HeaderWindow(FXMainWindow):
     (ID_ABOUT,
      ID_QUIT,
      ID_REFRESH,
-     ID_STATUSLINE,
+     ID_OPTIONS,
      ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+4)
 
 
@@ -69,6 +67,7 @@ class HeaderWindow(FXMainWindow):
         FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
         # dialogs
         self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
+        self.options = OptionsWindow(self)
         # main frames
         frame = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.connectionFrame(frame)
@@ -77,6 +76,7 @@ class HeaderWindow(FXMainWindow):
         frame = FXHorizontalFrame(frame, LAYOUT_FILL_X)
         FXButton(frame, _(" &Quit "), None, self, self.ID_QUIT)
         FXButton(frame, _(" &Refresh "), None, self, self.ID_REFRESH)
+        FXButton(frame, _(" &Options "), None, self, self.ID_OPTIONS)
         FXButton(frame, _("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
         # start refresh timer
         self.timer = app.addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
@@ -98,15 +98,22 @@ class HeaderWindow(FXMainWindow):
 
     def eventMap(self):
         """attach all events to (member) functions"""
-        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_ABOUT,HeaderWindow.onCmdAbout)
-        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_QUIT,HeaderWindow.onCmdQuit)
-        FXMAPFUNC(self,SEL_COMMAND,HeaderWindow.ID_REFRESH,HeaderWindow.onCmdRefresh)
-        FXMAPFUNC(self,SEL_TIMEOUT,HeaderWindow.ID_REFRESH,HeaderWindow.onTimerRefresh)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_ABOUT, HeaderWindow.onCmdAbout)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_QUIT, HeaderWindow.onCmdQuit)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_REFRESH, HeaderWindow.onCmdRefresh)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_OPTIONS, HeaderWindow.onCmdOptions)
+        FXMAPFUNC(self,SEL_TIMEOUT, HeaderWindow.ID_REFRESH, HeaderWindow.onTimerRefresh)
 
 
     def onCmdAbout(self, sender, sel, ptr):
         debug(BRING_IT_ON, "About")
         self.doShow(self.about)
+        return 1
+
+
+    def onCmdOptions(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "About")
+        self.doShow(self.options)
         return 1
 
 
@@ -139,6 +146,7 @@ class HeaderWindow(FXMainWindow):
     def onTimerRefresh(self, sender, sel, ptr):
         self.refresh()
         self.timer = self.getApp().addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
+
 
 
     def refresh(self):
@@ -181,6 +189,14 @@ class WHeadersParser(BaseParser):
         if self.cmode:
             self.config['nodisplay'].append(data.lower())
 
+
+
+class OptionsWindow(FXDialogBox):
+
+    def __init__(self, owner):
+        FXDialogBox.__init__(self, owner, "Options",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE,0,0,0,0, 4,4,4,4, 4,4)
+        close = FXHorizontalFrame(self,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
+        FXButton(close,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5);
 
 
 if __name__=='__main__':
