@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Thu Aug  7 08:32:15 2003\n"
-"PO-Revision-Date: 2003-08-07 08:39+0100\n"
+"POT-Creation-Date: Thu Aug  7 23:08:47 2003\n"
+"PO-Revision-Date: 2003-08-07 23:11+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1260,6 +1260,15 @@ msgstr "Benutzername zur Proxy Authentifizierung"
 
 #: html
 #: translation
+msgid ""
+"You can of course always add your own filter rules, they will not be\n"
+"touched on a filter update."
+msgstr ""
+"Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden\n"
+"bei einem Filter update nicht gelöscht."
+
+#: html
+#: translation
 msgid "Move folder down"
 msgstr "Ordner nach unten schieben"
 
@@ -1424,18 +1433,6 @@ msgstr "Passwort"
 
 #: html
 #: translation
-msgid ""
-"I wrote this software to get rid of advertisings. Adverts are nowadays so\n"
-"blatantly user-unfriendly I was fed up with them and now I can browse\n"
-"almost every site again without this annoying stuff."
-msgstr ""
-"Ich habe dieses Programm geschrieben, um Werbeeinblendungen loszuwerden.\n"
-"Werbungen sind heutzutage dermassen benutzerunfreundlich, dass ich sie\n"
-"einfach satt hatte und jetzt kann ich wieder auf fast allen Seiten surfen\n"
-"ohne dieses störende Zeug."
-
-#: html
-#: translation
 msgid "Port number"
 msgstr "Portnummer"
 
@@ -1524,6 +1521,18 @@ msgstr "URL Anfrage"
 #: translation
 msgid "Move rule down"
 msgstr "Regel nach unten schieben"
+
+#: html
+#: translation
+msgid ""
+"I wrote this software to get rid of advertisings. If you still see advert images\n"
+"on pages you surf on, you are free to send me the url of those pages and I\n"
+"will include filters to remove the adverts.\n"
+msgstr ""
+"Ich habe dieses Progamm geschrieben, um mich Werbung zu entledigen.\n"
+"Falls sie immer noch Werbebanner auf Seiten sehen, können sie mir eine\n"
+"url dieser Seiten zumailen und ich werde Filter einfügen, um diese Werbun\n"
+"zu entfernen."
 
 #: html
 #: translation

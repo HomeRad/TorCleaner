@@ -35,6 +35,7 @@
     Closes: SF bug #760434
   * added a new filter update mechanism that actually works
     Closes: SF bug #776076
+    Added: wc/update.py
 
 1.13
   * - when the HTTP server closes, flush any existing data

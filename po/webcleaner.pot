@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Thu Aug  7 08:32:15 2003\n"
+"POT-Creation-Date: Thu Aug  7 23:08:47 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1154,6 +1154,12 @@ msgid "Username used for proxy authentication"
 msgstr ""
 
 #: html translation
+msgid ""
+"You can of course always add your own filter rules, they will not be\n"
+"touched on a filter update."
+msgstr ""
+
+#: html translation
 msgid "Move folder down"
 msgstr ""
 
@@ -1284,13 +1290,6 @@ msgid "Password"
 msgstr ""
 
 #: html translation
-msgid ""
-"I wrote this software to get rid of advertisings. Adverts are nowadays so\n"
-"blatantly user-unfriendly I was fed up with them and now I can browse\n"
-"almost every site again without this annoying stuff."
-msgstr ""
-
-#: html translation
 msgid "Port number"
 msgstr ""
 
@@ -1359,6 +1358,13 @@ msgstr ""
 
 #: html translation
 msgid "Move rule down"
+msgstr ""
+
+#: html translation
+msgid ""
+"I wrote this software to get rid of advertisings. If you still see advert images\n"
+"on pages you surf on, you are free to send me the url of those pages and I\n"
+"will include filters to remove the adverts.\n"
 msgstr ""
 
 #: html translation
