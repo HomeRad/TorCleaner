@@ -183,11 +183,12 @@ class ClientServerMatchmaker:
         expect = self.headers.get('Expect', '').lower().strip()
         docontinue = expect.startswith('100-continue') or \
                      expect.startswith('0100-continue')
-        if docontinue and serverpool.http_versions.get(addr, 1.1) < 1.1:
-            self.client.error(417, i18n._("Expectation failed"),
-                       i18n._("Server does not understand HTTP/1.1"))
-            return
-        if expect:
+        if docontinue:
+            if serverpool.http_versions.get(addr, 1.1) < 1.1:
+                self.client.error(417, i18n._("Expectation failed"),
+                             i18n._("Server does not understand HTTP/1.1"))
+                return
+        elif expect:
             self.client.error(417, i18n._("Expectation failed"),
                        i18n._("Unsupported expectation `%s'")%expect)
             return
