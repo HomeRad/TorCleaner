@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE filter SYSTEM "filter.dtd">
-<folder sid="wc.289" title="Plugins"
- desc="The filter rules found here remove plugin (eg flash) contents, but only for selected sites." oid="3">
-<rewrite sid="wc.287" title="Remove EMBEDded content"
- desc="Kill &lt;embed&gt; things."
- tag="embed">
+<!DOCTYPE folder SYSTEM "filter.dtd">
+<folder sid="wc.289" oid="3">
+<title lang="en">Plugins</title>
+<description lang="en">The filter rules found here remove plugin (eg flash) contents, but only for selected sites.</description>
+<rewrite sid="wc.287" tag="embed">
+<title lang="en">Remove EMBEDded content</title>
+<description lang="en">Kill &lt;embed&gt; things.</description>
 <matchurl>www\.heise\.de</matchurl>
 </rewrite>
 
-
-<rewrite sid="wc.288" title="Remove OBJECTs"
- desc="Kill &lt;object&gt; things."
- tag="object">
+<rewrite sid="wc.288" tag="object">
+<title lang="en">Remove OBJECTs</title>
+<description lang="en">Kill &lt;object&gt; things.</description>
 <matchurl>www\.heise\.de</matchurl>
 </rewrite>
 
