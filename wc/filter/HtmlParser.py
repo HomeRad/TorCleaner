@@ -490,7 +490,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         # so only accept non-encoded content here
         headers['Accept-Encoding'] = 'identity\r'
         ClientServerMatchmaker(self.js_client,
-                               "GET %s HTTP/1.1" % url_quote(url), # request
+                               "GET %s HTTP/1.0" % url_quote(url), # request
                                headers,
                                '', # content
                                mime="application/x-javascript",

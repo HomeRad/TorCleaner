@@ -70,7 +70,7 @@ class HttpProxyClient (object):
             headers = get_wc_client_headers(host)
             headers['Accept-Encoding'] = 'identity\r'
             ClientServerMatchmaker(self,
-                           "GET %s HTTP/1.1" % url_quote(url), #request
+                           "GET %s HTTP/1.0" % url_quote(url), #request
                            headers,
                            '', #content
                            mime=self.server.mime,
