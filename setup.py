@@ -370,58 +370,7 @@ scripts = [
 if win_compiling:
     scripts.append('install-webcleaner.py')
 
-# now to the main stuff
-myname = "Bastian Kleineidam"
-myemail = "calvin@users.sourceforge.net"
-setup (name = "webcleaner",
-       version = "2.23",
-       description = "a filtering HTTP proxy",
-       keywords = "proxy,server,http,filters,daemon",
-       author = myname,
-       author_email = myemail,
-       maintainer = myname,
-       maintainer_email = myemail,
-       url = "http://webcleaner.sourceforge.net/",
-       download_url = "http://sourceforge.net/project/showfiles.php?group_id=7692",
-       license = "GPL",
-       packages = ['wc', 'wc.filter', 'wc.js', 'wc.magic',
-           'wc.dns', 'wc.dns.rdtypes', 'wc.dns.rdtypes.IN',
-           'wc.dns.rdtypes.ANY', 'wc.HtmlParser', 'wc.proxy', 'wc.proxy.auth',
-           'wc.filter.rules', 'wc.webgui', 'wc.webgui.PageTemplates',
-           'wc.webgui.TAL', 'wc.webgui.ZTUtils', 'wc.webgui.context',
-           'wc.dns.tests', 'wc.tests', ],
-       ext_modules = extensions,
-       scripts = scripts,
-       long_description = """WebCleaner features:
-* remove unwanted HTML (adverts, flash, etc.)
-* popup blocker
-* disable animated GIFs
-* filter images by size, remove banner adverts
-* compress documents on-the-fly (with gzip)
-* reduce images to low-bandwidth JPEGs
-* remove/add/modify arbitrary HTTP headers
-* configurable over a web interface
-* usage of SquidGuard domain and url blacklists
-* antivirus filter module
-* detection and correction of known HTML security flaws
-* Basic, Digest and (untested) NTLM proxy authentication support
-* per-host access control
-* HTTP/1.1 support (persistent connections, pipelining)
-* HTTPS proxy CONNECT and optional SSL gateway support
-""",
-       classifiers = ['Development Status :: 5 - Production/Stable',
-           'Environment :: No Input/Output (Daemon)',
-           'Programming Language :: Python',
-           'Programming Language :: C',
-           'Topic :: Internet :: Proxy Servers',
-           'License :: OSI Approved :: GNU General Public License (GPL)',
-       ],
-       distclass = MyDistribution,
-       cmdclass = {'install': MyInstall,
-                   'install_data': MyInstallData,
-                   'bdist_wininst': MyBdistWininst,
-                  },
-       data_files = [('share/webcleaner/config',
+data_files = [('share/webcleaner/config',
       ['config/webcleaner.conf',
        'config/webcleaner.dtd',
        'config/filter.dtd',
@@ -453,10 +402,6 @@ setup (name = "webcleaner",
        'config/blacklists/aggressive/domains.gz']),
      ('share/webcleaner/config/blacklists/violence',
       ['config/blacklists/violence/domains.gz']),
-     ('man/man1',
-      ['webcleaner.1',
-       'webcleaner.conf.5',
-      ]),
      ('share/webcleaner/templates/classic',
       ['templates/classic/accessibility.html',
        'templates/classic/adminpass.html',
@@ -504,4 +449,68 @@ setup (name = "webcleaner",
       ['share/locale/de/LC_MESSAGES/webcleaner.mo',
       ]),
      ]
+if os.name == 'posix':
+    data_files.append(('share/man/man1', [
+        'docs/en/webcleaner.1',
+        'docs/en/webcleaner-certificates.1',
+        'docs/en/webcleaner.conf.5',
+        ]))
+    data_files.append(('share/man/de/man1', [
+        'docs/de/webcleaner.de.1',
+        'docs/de/webcleaner-certificates.de.1',
+        'docs/de/webcleaner.conf.de.5',
+        ]))
+
+# now to the main stuff
+myname = "Bastian Kleineidam"
+myemail = "calvin@users.sourceforge.net"
+setup (name = "webcleaner",
+       version = "2.23",
+       description = "a filtering HTTP proxy",
+       keywords = "proxy,server,http,filters,daemon",
+       author = myname,
+       author_email = myemail,
+       maintainer = myname,
+       maintainer_email = myemail,
+       url = "http://webcleaner.sourceforge.net/",
+       download_url = "http://sourceforge.net/project/showfiles.php?group_id=7692",
+       license = "GPL",
+       packages = ['wc', 'wc.filter', 'wc.js', 'wc.magic',
+           'wc.dns', 'wc.dns.rdtypes', 'wc.dns.rdtypes.IN',
+           'wc.dns.rdtypes.ANY', 'wc.HtmlParser', 'wc.proxy', 'wc.proxy.auth',
+           'wc.filter.rules', 'wc.webgui', 'wc.webgui.PageTemplates',
+           'wc.webgui.TAL', 'wc.webgui.ZTUtils', 'wc.webgui.context',
+           'wc.dns.tests', 'wc.tests', ],
+       ext_modules = extensions,
+       scripts = scripts,
+       long_description = """WebCleaner features:
+* remove unwanted HTML (adverts, flash, etc.)
+* popup blocker
+* disable animated GIF images
+* filter images by size, remove banner adverts
+* compress documents on-the-fly (with gzip)
+* reduce images to low-bandwidth JPEG images
+* remove/add/modify arbitrary HTTP headers
+* configurable over a web interface
+* usage of SquidGuard domain and url blacklists
+* antivirus filter module
+* detection and correction of known HTML security flaws
+* Basic, Digest and (untested) NTLM proxy authentication support
+* per-host access control
+* HTTP/1.1 support (persistent connections, pipelining)
+* HTTPS proxy CONNECT and optional SSL gateway support
+""",
+       classifiers = ['Development Status :: 5 - Production/Stable',
+           'Environment :: No Input/Output (Daemon)',
+           'Programming Language :: Python',
+           'Programming Language :: C',
+           'Topic :: Internet :: Proxy Servers',
+           'License :: OSI Approved :: GNU General Public License (GPL)',
+       ],
+       distclass = MyDistribution,
+       cmdclass = {'install': MyInstall,
+                   'install_data': MyInstallData,
+                   'bdist_wininst': MyBdistWininst,
+                  },
+       data_files = data_files,
 )
