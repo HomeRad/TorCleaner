@@ -138,6 +138,7 @@ class ClientServerMatchmaker (object):
         """the server has connected"""
         debug(PROXY, "%s server_connected", self)
         assert self.state=='connect'
+        assert server.connected
         if not self.client.connected:
             # The client has aborted, so let's return this server
             # connection to the pool

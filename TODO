@@ -2,21 +2,6 @@ TODO
 
 version 2.8 and above
 
-- (redirects with) parent proxy
-  AssertionError: <client:receive  persistent=True http://pics.ebaystatic.com/aw/pics/de/navbar/redesign_p1/ebayLogo.gif> server was not connected
-  File "/home/calvin/projects/webcleaner-2/wc/proxy/Connection.py", line 51, in handle_read
-    data = self.recv(RECV_BUFSIZE)
-  File "/usr/lib/python2.3/asyncore.py", line 346, in recv
-    self.handle_close()
-  File "/home/calvin/projects/webcleaner-2/wc/proxy/HttpServer.py", line 507, in handle_close
-    self.flush()
-  File "/home/calvin/projects/webcleaner-2/wc/proxy/HttpServer.py", line 460, in flush
-    self.statuscode, self.headers)
-  File "/home/calvin/projects/webcleaner-2/wc/proxy/ClientServerMatchmaker.py", line 208, in server_response
-    self.client.server_response(server, response, status, headers)
-  File "/home/calvin/projects/webcleaner-2/wc/proxy/HttpClient.py", line 355, in server_response 
-    assert server.connected, "%s server was not connected"%self
-
 - content rating:
   o command line script to put squidguard blacklists into content rating
     cache?

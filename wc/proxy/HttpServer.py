@@ -501,10 +501,10 @@ class HttpServer (Server):
     def handle_close (self):
         debug(PROXY, "%s handle_close", self)
         self.persistent = False
-        super(HttpServer, self).handle_close()
         # flush unhandled data
         if not self.flushing:
             self.flush()
+        super(HttpServer, self).handle_close()
         if self.authtries>0:
             self.reconnect()
 
