@@ -330,7 +330,9 @@ def _form_apply_block (form):
 def _form_apply_header (form):
     _form_rule_matchurl(form)
     name = getval(form, 'rule_headername').strip()
-    if name!=currule.name:
+    if not name:
+        error.append("Empty header rule name")
+    elif name!=currule.name:
         currule.name = name
         info.append("Rule header name changed")
     value = getval(form, 'rule_headervalue').strip()
