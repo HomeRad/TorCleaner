@@ -36,14 +36,15 @@ def parse_headers():
         # strip off paranthesis
         l = l[1:-1]
         # split into three parts
-        url, io, hlist = l.split(",", 2)
+        url, io, hlist = l.split(", ", 2)
         # split headers
-        hlist = hlist.strip()[1:-1].split("', '")
+        hlist = (hlist.strip())[2:-2].split("', '")
         # strip headers
         hlist = map(lambda x: x.replace("\\r", ""), hlist)
         hlist = map(lambda x: x.replace("\\n", ""), hlist)
+        hlist = map(lambda x: x.split(":", 1), hlist)
         # append
-        headers.append((url[1:-1], int(io), hlist))
+        headers.append([url[1:-1], int(io), hlist])
     return headers
 
 
@@ -72,8 +73,9 @@ class HeaderWindow(FXMainWindow):
      ID_SETREFRESH,
      ID_SETONLYFIRST,
      ID_SETSCROLLING,
-     ID_STATUS
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+8)
+     ID_STATUS,
+     ID_SAVEOPTIONS,
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+9)
 
 
     def __init__(self, app):
@@ -134,6 +136,7 @@ class HeaderWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETREFRESH, HeaderWindow.onSetRefresh)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETONLYFIRST, HeaderWindow.onSetOnlyfirst)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETSCROLLING, HeaderWindow.onSetScrolling)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SAVEOPTIONS, HeaderWindow.onCmdSaveOptions)
         FXMAPFUNC(self,SEL_UPDATE, HeaderWindow.ID_STATUS, HeaderWindow.onUpdStatus)
 
 
@@ -166,6 +169,31 @@ class HeaderWindow(FXMainWindow):
         p = WHeadersParser()
         p.parse(os.path.join(ConfigDir, "wcheaders.conf"), self.config)
         debug(BRING_IT_ON, "config", self.config)
+
+
+    def onCmdSaveOptions(self, sender, sel, ptr):
+        self.getApp().beginWaitCursor()
+        file = self.config['configfile']
+        try:
+            file = open(file, 'w')
+            file.write(self.toxml())
+            file.close()
+        except IOError:
+            error(_("cannot write to file %s") % file)
+        self.getApp().endWaitCursor()
+
+
+    def toxml(self):
+        s = """<?xml version="1.0"?>
+<!DOCTYPE wcheaders SYSTEM "wcheaders.dtd">
+<wcheaders
+"""
+        s += ' version="%s"\n' % self.config['version'] +\
+             ' refresh="%d"\n' % self.config['refresh']
+        s += '>\n'
+        for header in self.config['nodisplay']:
+            s += '<nodisplay>%s</nodisplay>\n' % header
+        return s + '</wcheaders>\n'
 
 
     def onCmdRefresh(self, sender, sel, ptr):
@@ -203,17 +231,34 @@ class HeaderWindow(FXMainWindow):
 
 
     def refresh(self):
+        self.getApp().beginWaitCursor()
         try:
             self.status = "Getting headers..."
-            headers = parse_headers()
+            for header in parse_headers():
+                if header[1]:
+                    header[0] = "<- "+header[0][7:]
+                else:
+                    header[0] = "-> "+header[0][7:]
+                first = 1
+                for name, value in header[2]:
+                    if name.lower() in self.config['nodisplay']:
+                        continue
+                    if first:
+                        url = header[0]
+                        first = 0
+                    else:
+                        url = ""
+                    self.headers.appendItem("%s\t%s\t%s"%(url, name, value))
             self.status = "Getting connections..."
             connections = parse_connections()
             self.status = "Ready."
             # XXX
         except Exception, msg:
             self.status = "Error %s"%msg
+            raise
         if self.config['refresh']:
             self.getApp().addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
+        self.getApp().endWaitCursor()
         return 1
 
 
@@ -287,9 +332,9 @@ class OptionsWindow(FXDialogBox):
 
         # close button
         close = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
+        FXButton(close,"&Save",None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5);
         FXButton(close,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5);
 
 
 if __name__=='__main__':
-    for h in parse_headers():
-        print h
+    parse_headers()

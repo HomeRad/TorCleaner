@@ -1,10 +1,13 @@
 TODO
 
-- FXPy program to watch headers and connections
-
-- Rule matching in C for speed
+- FXPy program to watch headers and connections:
+  * dirty options (update save button)
+  * widget for nodisplay
+  * onlyfirst functionality
 
 - Windows installation routine
+
+- Rule matching in C for speed
 
 - HTTPS support (only proxy, no filtering)
   It's sort of an extension to HTTP - you just send the proxy the request
