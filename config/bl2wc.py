@@ -138,7 +138,7 @@ def write_folder (cat, ftype, data, ids, f):
     }
     f.write("""<?xml version="1.0" encoding="%(charset)s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="%(sid)s" oid="%(oid)d" disable="0">
+<folder sid="%(sid)s" oid="%(oid)d">
 <title lang="en">%(title_en)s</title>
 <title lang="de">%(title_de)s</title>
 <description lang="en">%(desc_en)s</description>
