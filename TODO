@@ -3,15 +3,11 @@ TODO
 
 version 2.8 and above
 
+- RatingRule.check_against
+
 - (redirects with) parent proxy
 
 - content rating:
-  o while browsing
-    for non-rated sites, try to fetch info from rating service
-    when no rating is available, display rating dialog (with password)
-    when rating is available, check rating rule and display site or block
-  o rate sites
-    web interface to rate sites (with password protection)
   o command line script to put squidguard blacklists into content rating
     cache?
   o cgi script for site rating submissions
