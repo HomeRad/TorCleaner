@@ -68,7 +68,7 @@ Direct download links are in brackets.
 
 7. Download PyOpenSSL from
    http://pyopenssl.sourceforge.net/
-   [http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz]
+   [http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.6.tar.gz]
    For Installation of PyOpenSSL see below.
 
 8. *Optional* ClamAv from
