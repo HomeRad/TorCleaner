@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, sys, wc
+import re, sys, urlparse, wc
 from wc import urlutils
 from wc.parser.htmllib import HtmlParser
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
@@ -103,7 +103,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.data = []
         self.rulestack = []
         self.buffer = []
-        self.document = url or "unknown"
+        self.url = url or "unknown"
         if self.javascript:
             self.jsEnv = jslib.new_jsenv()
             self.popup_counter = 0
@@ -225,8 +225,8 @@ class HtmlFilter (HtmlParser,JSListener):
             if scrtype=='text/javascript' or \
                lang.startswith('javascript') or \
                not (lang or scrtype):
-                self.jsScriptSrc(attrs.get('src'), lang)
-                return
+                if self.jsScriptSrc(attrs.get('src', ''), lang):
+                    return
         self.buffer.append((STARTTAG, tag, attrs))
 
 
@@ -250,9 +250,10 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def jsScriptSrc (self, url, language):
         if not url: return
+        url = urlparse.urljoin(self.url, url)
         #debug(HURT_ME_PLENTY, "jsScriptSrc", url, language)
         try:
-            script = urlutils.open_url(url)
+            script = urlutils.open_url(url).read()
         except:
             print >>sys.stderr, "exception fetching script url", `url`
             return
@@ -263,19 +264,21 @@ class HtmlFilter (HtmlParser,JSListener):
             if mo:
                 ver = float(mo.group('num'))
         self.jsScript(script, ver)
+        return 1
 
 
     def jsScript (self, script, ver):
         """execute given script with javascript version ver"""
+        #debug(HURT_ME_PLENTY, "jsScript", script, ver)
         self.jsEnv.attachListener(self)
-        self.jsfilter = HtmlFilter(self.rules, self.document,
+        self.jsfilter = HtmlFilter(self.rules, self.url,
                  comments=self.comments, javascript=self.javascript)
         self.jsEnv.executeScript(script, ver)
         self.jsEnv.detachListener(self)
         self.jsfilter.flush()
         self.data.append(self.jsfilter.flushbuf())
         self.buffer += self.jsfilter.buffer
-        self.rulelist += self.jsfilter.rulelist
+        self.rulestack += self.jsfilter.rulestack
         self.jsfilter = None
 
 
@@ -324,7 +327,7 @@ class HtmlFilter (HtmlParser,JSListener):
         script = self.buffer[-1][1].strip()
         del self.buffer[-1]
         if not (self.buffer and self.buffer[-1][0]==STARTTAG and \
-                self.buffer[1][1]=='script'):
+                self.buffer[-1][1]=='script'):
             # there was a <script src="..."> already
             return
         del self.buffer[-1]
@@ -341,7 +344,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.buffer_append_data([DATA, "<?%s?>"%data])
 
     def errorfun (self, msg, name):
-        print >> sys.stderr, name, "parsing %s: %s" % (self.document, msg)
+        print >> sys.stderr, name, "parsing %s: %s" % (self.url, msg)
 
     def _error (self, msg):
         self.errorfun(msg, "error")
