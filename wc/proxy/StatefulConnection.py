@@ -18,7 +18,7 @@ class StatefulConnection (wc.proxy.Connection.Connection):
 
     def readable (self):
         """a connection is readable if we're connected and not in a close state"""
-        return self.connected and self.state!='closed'
+        return self.connected and self.state not in ('closed', 'unreadable')
 
 
     def writable (self):
