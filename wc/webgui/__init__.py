@@ -29,62 +29,17 @@ class WebConfig:
         self.connected = "True"
         try:
             # get the template filename
-            f, dirs = self.get_template(url)
+            f, dirs = get_template(url)
             # get TAL context
-            context = self.get_context(dirs, form)
+            context = get_context(dirs, form)
         except IOError, msg:
             exception(GUI, "Wrong path")
             return client.error(404, i18n._("Not Found"))
         # expand template
-        data = self.expand_template(f, context)
+        data = expand_template(f, context)
         f.close()
         # write response
         self.put_response(data, protocol)
-
-
-    def expand_template (f, context):
-        """expand the given template file in context
-           return expanded data"""
-        template = simpleTAL.compileHTMLTemplate(f)
-        out = StringIO()
-        template.expand(context, out)
-        data = out.getvalue()
-        out.close()
-        return data
-
-
-    def get_template (self, url):
-        base = os.path.join(TemplateDir, config['webgui_theme'])
-        base = norm(base)
-        parts = urlparse.urlsplit(url)
-        dirs = get_relative_path(parts[2])
-        path = os.path.splitdrive(os.path.join(*tuple(dirs)))[1]
-        path = norm(os.path.join(base, path))
-        if not os.path.isabs(path):
-            raise IOError("Relative path %s" % `path`)
-        if not path.startswith(base):
-            raise IOError("Invalid path %s" % `path`)
-        if not os.path.isfile(path):
-            raise IOError("Non-file path %s" % `path`)
-        return file(path), dirs
-
-
-    def get_context (self, dirs, form):
-        # get template-specific context dict
-        cdict = TemplateContext
-        for d in dirs:
-            cdict = cdit.get(d, {})
-            if not cdict:
-                break
-        # make TAL context
-        context = simpleTALES.Context()
-        # add default context values
-        context.addGlobal("form", form)
-        context.addGlobal("config", config)
-        # augment the context
-        for key, value in cmap.items():
-            context.addGlobal(key, value)
-        return context
 
 
     def put_response (self, out, protocol):
@@ -99,6 +54,17 @@ def norm (path):
     return os.path.realpath(os.path.normpath(os.path.normcase(path)))
 
 
+def expand_template (f, context):
+    """expand the given template file in context
+       return expanded data"""
+    template = simpleTAL.compileHTMLTemplate(f)
+    out = StringIO()
+    template.expand(context, out)
+    data = out.getvalue()
+    out.close()
+    return data
+
+
 def get_relative_path (path):
     # get non-empty url path components, remove path fragments
     dirs = [ urlparse.urldefrag(d)[0] \
@@ -106,6 +72,40 @@ def get_relative_path (path):
     # remove ".." paths
     dirs = [ d for d in dirs if d!=".." ]
     return dirs
+
+
+def get_template (url):
+    base = os.path.join(TemplateDir, config['webgui_theme'])
+    base = norm(base)
+    parts = urlparse.urlsplit(url)
+    dirs = get_relative_path(parts[2])
+    path = os.path.splitdrive(os.path.join(*tuple(dirs)))[1]
+    path = norm(os.path.join(base, path))
+    if not os.path.isabs(path):
+        raise IOError("Relative path %s" % `path`)
+    if not path.startswith(base):
+        raise IOError("Invalid path %s" % `path`)
+    if not os.path.isfile(path):
+        raise IOError("Non-file path %s" % `path`)
+    return file(path), dirs
+
+
+def get_context (dirs, form):
+    # get template-specific context dict
+    cdict = TemplateContext
+    for d in dirs:
+        cdict = cdict.get(d, {})
+        if not cdict:
+            break
+    # make TAL context
+    context = simpleTALES.Context()
+    # add default context values
+    context.addGlobal("form", form)
+    context.addGlobal("config", config)
+    # augment the context
+    for key, value in cdict.items():
+        context.addGlobal(key, value)
+    return context
 
 
 TemplateContext = {
