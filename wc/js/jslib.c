@@ -1,22 +1,22 @@
 /* Spidermonkey JavaScript wrapper class, ported from BFilter.
    Copyright for BFilter follows:
 
-    BFilter - a smart ad-filtering web proxy
-    Copyright (C) 2002-2003  Joseph Artsimovich <joseph_a@mail.ru>
+   BFilter - a smart ad-filtering web proxy
+   Copyright (C) 2002-2003  Joseph Artsimovich <joseph_a@mail.ru>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include <Python.h>
@@ -49,7 +49,7 @@ static const int BRANCH_LIMIT = 1000;
 typedef struct {
     PyObject_HEAD
     PyObject* listeners;
-    PyObject* document_cookie; // cookie string
+    PyObject* document_cookie; /* cookie string */
     PyObject* scheduled_actions;
     JSRuntime* runtime;
     JSContext* ctx;
@@ -121,23 +121,54 @@ dispp_error:
 }
 
 
-static void errorReporter (JSContext *cx, const char *msg, JSErrorReport *report) {
-    PyObject* sys;
-    PyObject* stderr;
+static int dispatchError (JSEnvObject* env, PyObject* err) {
+    PyObject* keys;
+    int size;
+    PyObject* listener = NULL;
+    PyObject* callback = NULL;
+    PyObject* result = NULL;
+    int error = 0;
+    if (!(keys = PyMapping_Keys(env->listeners))) return -1;
+    size = PySequence_Size(keys);
+    for (int i=0; i<PySequence_Size(keys); i++) {
+        if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto dispe_error; }
+        if (!(callback = PyObject_GetAttrString(listener, "jsProcessError"))) { error=-1; goto dispe_error; }
+        if (!(result = PyObject_CallFunction(callback, ""))) { error=-1; goto dispe_error; }
+    }
+dispe_error:
+    Py_XDECREF(keys);
+    Py_XDECREF(listener);
+    Py_XDECREF(callback);
+    Py_XDECREF(result);
+    return error;
+}
+
+
+static void errorReporter (JSContext* cx, const char* msg,
+                           JSErrorReport* report) {
+    PyObject* cStringIO = NULL;
+    PyObject* io = NULL;
+    PyObject* err = NULL;
     int skip_chars;
-    if (!(sys = PyImport_ImportModule("sys"))) return;
-    if (!(stderr = PyObject_GetAttrString(sys, "stderr"))) return;
-    PyFile_WriteString(msg, stderr);
-    PyFile_WriteString("\n", stderr);
+    if (!(cStringIO = PyImport_ImportModule("cStringIO"))) goto rep_error;
+    if (!(io = PyObject_CallMethod(cStringIO, "StringIO", NULL))) goto rep_error;
+    PyFile_WriteString(msg, io);
+    PyFile_WriteString("\n", io);
     if (report->linebuf) {
-        PyFile_WriteString(report->linebuf, stderr);
-        PyFile_WriteString("\n", stderr);
+        PyFile_WriteString(report->linebuf, io);
+        PyFile_WriteString("\n", io);
         skip_chars = report->tokenptr - report->linebuf;
         for (int i=0; i<skip_chars; i++) {
-            PyFile_WriteString(" ", stderr);
+            PyFile_WriteString(" ", io);
         }
-        PyFile_WriteString("^\n", stderr);
+        PyFile_WriteString("^\n", io);
     }
+    if (!(err = PyObject_CallMethod(io, "getvalue", NULL))) goto rep_error;
+    dispatchError(getEnvironment(cx), err);
+rep_error:
+    Py_XDECREF(err);
+    Py_XDECREF(io);
+    Py_XDECREF(cStringIO);
 }
 
 
@@ -146,9 +177,9 @@ static JSBool branchCallback (JSContext *cx, JSScript *script) {
     if (++(env->branch_cnt) < BRANCH_LIMIT) {
         return JS_TRUE;
     }
-    // infinite loop?
+    /* infinite loop? */
     env->branch_cnt = 0;
-    return JS_FALSE; // terminate the script
+    return JS_FALSE; /* terminate the script */
 }
 
 
@@ -175,8 +206,8 @@ static JSBool cookieSetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
     }
     else {
         Py_DECREF(env->document_cookie);
-        // ok, I know this is a wrong behavior, but it's enough to convince
-        // some scripts that getting/setting a cookie works
+        /* ok, I know this is a wrong behavior, but it's enough to convince
+         * some scripts that getting/setting a cookie works */
         env->document_cookie = PyString_FromFormat("%s %s", ";", cookie);
     }
     return JS_TRUE;
@@ -196,7 +227,7 @@ static JSBool onloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
         return JS_FALSE;
     }
     if (PyTuple_SetItem(functup, 0, delay)!=0) {
-	// remember: SetItem has ownership of delay now
+	/* remember: SetItem has ownership of delay now */
 	Py_DECREF(functup);
 	return JS_FALSE;
     }
@@ -205,7 +236,7 @@ static JSBool onloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
 	return JS_FALSE;
     }
     if (PyTuple_SetItem(functup, 1, funcname)!=0) {
-	// remember: SetItem has ownership of delay and funcname now
+	/* remember: SetItem has ownership of delay and funcname now */
 	Py_DECREF(functup);
 	return JS_FALSE;
     }
@@ -230,7 +261,7 @@ static JSBool onunloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp)
         return JS_FALSE;
     }
     if (PyTuple_SetItem(functup, 0, delay)!=0) {
-	// remember: SetItem has ownership of delay now
+	/* remember: SetItem has ownership of delay now */
 	Py_DECREF(functup);
 	return JS_FALSE;
     }
@@ -239,7 +270,7 @@ static JSBool onunloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp)
         return JS_FALSE;
     }
     if (PyTuple_SetItem(functup, 1, funcname)!=0) {
-	// remember: SetItem has ownership of delay and funcname now
+	/* remember: SetItem has ownership of delay and funcname now */
 	Py_DECREF(functup);
         return JS_FALSE;
     }
@@ -390,7 +421,7 @@ static PyObject* JSEnv_detachListener (JSEnvObject* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "listener arg required");
         return NULL;
     }
-    // XXX error code? decref?
+    /* XXX error code? decref? */
     if (PyDict_DelItem(self->listeners, item)!=0) return NULL;
     Py_INCREF(Py_None);
     return Py_None;
@@ -419,18 +450,19 @@ static void setJSVersion (JSContext* ctx, double vers) {
 
 
 static void executeScheduledActions (JSEnvObject* self) {
-    // XXX error checking!
+    /* XXX error checking! */
     jsval rval;
-    for (int i=0; i<PyList_Size(self->scheduled_actions); i++) {
+    int len = PyList_Size(self->scheduled_actions);
+    for (int i=0; i<len; i++) {
         PyObject* func;
         PyObject* tup = PyList_GetItem(self->scheduled_actions, i);
         if (!tup) {
-            // XXX error
+            /* XXX error */
             continue;
         }
         Py_INCREF(tup);
         if (!(func = PyTuple_GetItem(tup, 1))) {
-            // XXX error
+            /* XXX error */
             Py_DECREF(tup);
             continue;
         }
@@ -440,6 +472,10 @@ static void executeScheduledActions (JSEnvObject* self) {
                           PyString_Size(func), "[unknown]", 1, &rval);
         Py_DECREF(func);
         Py_DECREF(tup);
+    }
+    if (len < PyList_Size(self->scheduled_actions)) {
+        /* XXX warning: the scheduled actions have registered other
+         * actions recursively. These are ignored. */
     }
     Py_DECREF(self->scheduled_actions);
     self->scheduled_actions = PyList_New(0);
@@ -580,7 +616,7 @@ static PyObject* shutdown (JSEnvObject* env, char* msg) {
 /* create */
 static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     JSEnvObject* env;
-    // local objects
+    /* local objects */
     JSObject* location_obj;
     JSObject* nav_obj;
     JSObject* flash_mimetype_obj;
@@ -596,7 +632,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     jsval flash_mimetype_jsval;
     jsval flash_plugin_jsval;
 
-    // init structure
+    /* init structure */
     if (!PyArg_ParseTuple(args,":new_jsenv"))
         return NULL;
     if (!(env=PyObject_New(JSEnvObject, &JSEnvType))) {
@@ -629,14 +665,14 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     env->plugin_class = generic_class;
     env->plugin_class.name = "Plugin";
     env->branch_cnt = 0;
-    // init python objects
+    /* init python objects */
     if (!(env->listeners=PyDict_New())) {
         return NULL;
     }
     if (!(env->scheduled_actions=PyList_New(0))) {
         return NULL;
     }
-    // init JS engine
+    /* init JS engine */
     if (!(env->runtime=JS_NewRuntime(500L*1024L))) {
         return shutdown(env, "Could not initialize JS runtime");
     }
@@ -644,11 +680,11 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return shutdown(env, "Could not initialize JS context");
     }
 
-    // configure JS engine
+    /* configure JS engine */
     JS_SetErrorReporter(env->ctx, &errorReporter);
     JS_SetBranchCallback(env->ctx, &branchCallback);
 
-    // init global object
+    /* init global object */
     if (!(env->global_obj=JS_NewObject(env->ctx, &env->global_class, NULL, NULL))) {
         return shutdown(env, "Could not initialize global object");
     }
@@ -748,7 +784,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
                            &wcDebugLog, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global wcDebugLog function");
     }
-    // init location object
+    /* init location object */
     if (!(location_obj=JS_DefineObject(env->ctx, env->global_obj, "location",
                                        &env->location_class, 0,
                                        JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
@@ -796,7 +832,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         ==JS_FALSE) {
         return shutdown(env, "Could not set location.search property");
     }
-    // init navigator object
+    /* init navigator object */
     if (!(nav_obj=JS_DefineObject(env->ctx, env->global_obj, "navigator",
                                   &env->navigator_class, 0,
                                   JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
@@ -838,7 +874,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return shutdown(env, "Could not set navigator.userAgent property");
     }
 
-    // init flash objects
+    /* init flash objects */
     if (!(mimetypes_array=JS_NewArrayObject(env->ctx, 0, 0))) {
         return shutdown(env, "Could not create mimetypes array object");
     }
@@ -918,7 +954,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return shutdown(env, "Could not set enabledPlugin.refresh function");
     }
 
-    // init screen object
+    /* init screen object */
     if (!(screen_obj=JS_DefineObject(env->ctx, env->global_obj, "screen",
                                      &env->screen_class, 0,
                                      JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
@@ -961,7 +997,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return shutdown(env, "Could not set screen.pixelDepth property");
     }
 
-    // init frames object
+    /* init frames object */
     if (!(frames_obj=JS_NewArrayObject(env->ctx, 0, 0))) {
         return shutdown(env, "Could not create frames object");
     }
@@ -972,7 +1008,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return shutdown(env, "Could not set global frames property");
     }
 
-    // init document object
+    /* init document object */
     if (!(env->doc_obj=JS_DefineObject(env->ctx, env->global_obj, "document",
                                        &env->document_class, 0,
                                        JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
@@ -1037,7 +1073,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return shutdown(env, "Could not set document.close function");
     }
 
-    // init body object
+    /* init body object */
     if (!(body_obj=JS_DefineObject(env->ctx, env->doc_obj, "body",
                                    &env->body_class, 0,
                                    JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
@@ -1056,7 +1092,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         return shutdown(env, "Could not set body.clientWidth property");
     }
 
-    // init form array
+    /* init form array */
     if (!(env->form_array=JS_NewArrayObject(env->ctx, 0, 0))) {
         return shutdown(env, "Could not create form array");
     }
