@@ -12,22 +12,10 @@ import wc
 import bk.log
 
 
-# test for IPv6, both in Python build and in kernel build
-has_ipv6 = False
-if socket.has_ipv6:
-    try:
-        socket.socket(socket.AF_INET6, socket.SOCK_STREAM).close()
-        has_ipv6 = True
-    except socket.error, msg:
-        # only catch this one:
-        # socket.error: (97, 'Address family not supported by protocol')
-        if msg[0]!=97:
-            raise
-
-
 TIMERS = [] # list of (time, function)
 
 is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
+
 
 def fix_http_version (protocol):
     """sanitize http protocol version string"""
@@ -45,22 +33,6 @@ def get_http_version (protocol):
         return f
     bk.log.error(wc.LOG_PROXY, bk.i18n._("invalid HTTP version %r"), protocol)
     return (1,0)
-
-
-def create_inet_socket (dispatch, socktype):
-    """create an AF_INET(6) socket object for given dispatcher, testing
-    for IPv6 capability and disabling the NAGLE algorithm for TCP sockets
-    """
-    if False: #has_ipv6:
-        family = socket.AF_INET6
-    else:
-        family = socket.AF_INET
-    dispatch.create_socket(family, socktype)
-    if socktype==socket.SOCK_STREAM:
-        # disable NAGLE algorithm, which means sending pending data
-        # immediately, possibly wasting bandwidth but improving
-        # responsiveness for fast networks
-        dispatch.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
 
 def make_timer (delay, callback):
