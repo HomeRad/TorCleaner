@@ -2,46 +2,35 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 NAME=webcleaner
-DAEMON=/usr/sbin/${NAME}
 DESC=WebCleaner
+SERVICE=/service/$NAME
 
-# uncomment the following line to enable the watch monitor (see webcleaner(1))
-#MONITOR=watch
-
-test -x $DAEMON || exit 0
+test -l $SERVER || exit 0
 
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	$DAEMON start${MONITOR} 2>> /var/log/${NAME}/${NAME}.err
-        R=$?
+        svc -u $SERVICE
+        svc -u $SERVICE/log
 	echo "$NAME."
-        exit $R
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	$DAEMON stop${MONITOR}
-        R=$?
+	svc -d $SERVICE
+        svc -d $SERVICE/log
 	echo "$NAME."
-        exit $R
 	;;
   reload|force-reload)
         echo -n "Reloading $DESC: "
-	$DAEMON reload
-        R=$?
+        svc -h $SERVICE
 	echo "$NAME."
-        exit $R
 	;;
   restart)
-	echo -n "Restarting $DESC: "
-	$DAEMON restart
-        R=$?
-	echo "$NAME."
-        exit $R
+        $0 stop
+        $0 start
 	;;
   status)
-  	$DAEMON status
-        exit $?
+        svstat $SERVICE
 	;;
   *)
 	N=/etc/init.d/$NAME

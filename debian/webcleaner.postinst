@@ -1,8 +1,7 @@
-#!/bin/sh
+#!/bin/sh -e
 # postinst script for webcleaner
 #
 # see: dh_installdeb(1)
-set -e
 
 . /usr/share/debconf/confmodule
 db_version 2.0
@@ -24,29 +23,26 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     test -n "$RET" || RET="8080"
     sed -e "s/ port=.*/ port=\"$RET\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
-    db_get $package/monitor
-    if [ "$RET" = "true" ]; then
-        S="s/#MONITOR/MONITOR/"
-    else
-        S="s/MONITOR/#MONITOR/"
-    fi
-    sed -e "$S" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
-    mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
     RET=""
-    while [ -z "$RET" ]; do
-       db_get $package/adminpass
-    done
+    db_get $package/adminpass
     sed -e "s/ adminpass=.*/ adminpass=\"$RET\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
     db_unregister $package/adminpass
 fi
 db_stop
 
+
 if [ "$1" = "configure" ]; then
     # old log file locations
     rm -f /var/log/webcleaner.log
     rm -f /var/log/webcleaner.err
     rm -f /var/log/webcleaner-access.log
+    # install service link
+    if [ ! -h /etc/$package ]; then
+        ln -s /etc/$package /service/$package
+        echo "waiting 5 seconds until supervise process is started..."
+        sleep 5
+    fi
 fi
 
 #DEBHELPER#

@@ -6,7 +6,21 @@ db_capb backup
 
 package=webcleaner
 
-db_input medium $package/port || true
-db_input low $package/note || true
-db_input high $package/password || true
-db_go || true
+STATE=1 
+while [ "$STATE" != 0 -a "$STATE" != 3 ]; do
+    case "$STATE" in
+    1)
+        db_input medium $package/port || true
+        ;;
+    2)
+        db_input high $package/password || true
+        ;;
+    esac
+    if db_go; then
+        if [ "$STATE"!="2" -o -n "$RES" ]; then
+            STATE=$(($STATE + 1))
+        fi
+    else
+        STATE=$(($STATE - 1))
+    fi
+done

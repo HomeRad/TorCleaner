@@ -4,6 +4,7 @@
 PYTHON=python2.3
 PACKAGE=webcleaner
 DOCDIR=debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)
+ETCDIR=debian/$(PACKAGE)/etc/$(PACKAGE)
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
@@ -64,7 +65,9 @@ install: build
 	# remove example files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner/examples
 	# install into /service directory
-	cp -r service debian/$(PACKAGE)/
+	install -m 0755 service/run $(ETCDIR)
+	install -m 0755 service/run2 $(ETCDIR)
+	install -m 0755 service/log/run $(ETCDIR)/log
 
 
 # Build architecture-independent files here.
