@@ -1,3 +1,6 @@
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 import time, socket, re, mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'

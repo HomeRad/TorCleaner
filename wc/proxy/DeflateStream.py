@@ -1,6 +1,9 @@
 # Implements the minimal amount of work needed to inflate an input stream
 # example url is http://groups.yahoo.com/
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 import zlib
 
 class DeflateStream:

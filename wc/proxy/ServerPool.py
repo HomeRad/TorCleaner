@@ -1,3 +1,6 @@
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 import time
 from wc.proxy import make_timer
 from wc.log import *

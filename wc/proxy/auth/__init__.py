@@ -1,4 +1,8 @@
 """support for different HTTP proxy authentication schemes"""
+
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 from wc import config
 from basic import get_basic_challenge, check_basic_auth
 

@@ -1,3 +1,6 @@
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 from cStringIO import StringIO
 from Server import Server
 from Headers import WcMessage

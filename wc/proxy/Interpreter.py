@@ -1,3 +1,6 @@
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 # A Python expression interpreter for the proxy
 from Connection import Connection
 

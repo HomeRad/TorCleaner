@@ -1,3 +1,6 @@
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 def get_ntlm_challenge ():
     """return initial challenge token for ntlm authentication"""
     pass # XXX

@@ -1,3 +1,6 @@
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 from HttpClient import HttpClient
 from wc.webgui import WebConfig
 import cgi

@@ -7,6 +7,9 @@
 #      decode(string) => return as much of the string as can be decoded
 #      flush()        => return everything else
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 # TEST CASE:
 #    http://tv.excite.com/grid
 

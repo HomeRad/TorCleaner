@@ -3,6 +3,9 @@
 used by Bastian Kleineidam for WebCleaner
 """
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
 import time, select, asyncore, re

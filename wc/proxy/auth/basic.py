@@ -1,4 +1,8 @@
 """support for Basic HTTP proxy authentication"""
+
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 from base64 import decodestring as base64decode
 
 def get_basic_challenge ():

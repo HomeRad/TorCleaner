@@ -2,6 +2,9 @@
 #
 # Deal with Transfer-encoding: chunked [HTTP/1.1]
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 # TEST CASE:
 #    http://www.apache.org/
 from wc.log import *

@@ -11,6 +11,9 @@
 # while trying to write .. argh.  NOTE: I just started using my
 # own poll loop to avoid this problem. :P
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 import asyncore, socket, errno
 from wc.log import *
 

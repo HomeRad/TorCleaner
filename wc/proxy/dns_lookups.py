@@ -1,6 +1,9 @@
 # For a high level overview of DNS, see
 # http://www.rad.com/networks/1998/dns/main.html
 
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 import sys, os, time, socket, re
 from Connection import Connection
 from wc.proxy import make_timer

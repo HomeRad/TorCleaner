@@ -1,4 +1,8 @@
 """Header mangling"""
+
+__version__ = "$Revision$"[11:-2]
+__date__    = "$Date$"[7:-2]
+
 from wc.log import *
 from rfc822 import Message
 
