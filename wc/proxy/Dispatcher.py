@@ -38,7 +38,7 @@ from wc.log import *
 from OpenSSL import SSL
 import sys, os, socket
 from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
-     ENOTCONN, ESHUTDOWN, EINTR, EISCONN
+     ENOTCONN, ESHUTDOWN, EINTR, EISCONN, errorcode
 
 # map of sockets
 socket_map = {}
@@ -182,7 +182,7 @@ class Dispatcher (object):
             self.connected = True
             self.handle_connect()
         else:
-            raise socket.error, err
+            raise socket.error, (err, errorcode[err])
 
 
     def accept (self):
@@ -204,9 +204,10 @@ class Dispatcher (object):
         except socket.error, why:
             if why[0] == EWOULDBLOCK:
                 return 0
-            else:
-                raise socket.error, why
-            return 0
+            if why[0] in (ECONNRESET, ENOTCONN, ESHUTDOWN):
+                self.handle_close()
+                return 0
+            raise
 
 
     def recv (self, buffer_size):
@@ -221,7 +222,7 @@ class Dispatcher (object):
                 return data
         except socket.error, why:
             # winsock sometimes throws ENOTCONN
-            if why[0] in [ECONNRESET, ENOTCONN, ESHUTDOWN]:
+            if why[0] in (ECONNRESET, ENOTCONN, ESHUTDOWN):
                 self.handle_close()
                 return ''
             else:
