@@ -24,7 +24,6 @@ import wc.log
 import wc.filter
 import wc.filter.Filter
 import wc.proxy.Connection
-import wc.i18n
 
 
 def strsize (b):
@@ -73,8 +72,8 @@ class VirusFilter (wc.filter.Filter.Filter):
 
 
     def size_error (self):
-        raise wc.filter.FilterProxyError(406, wc.i18n._("Not acceptable"),
-                wc.i18n._("Maximum data size (%s) exceeded") % \
+        raise wc.filter.FilterProxyError(406, _("Not acceptable"),
+                _("Maximum data size (%s) exceeded") % \
                 strsize(VirusFilter.MAX_FILE_BYTES))
 
 
@@ -179,10 +178,10 @@ class ClamavConfig (dict):
         super(ClamavConfig, self).__init__()
         self.parseconf(filename)
         if self.get('ScannerDaemonOutputFormat'):
-            raise Exception(wc.i18n._(
+            raise Exception(_(
                              "You have to disable ScannerDaemonOutputFormat"))
         if self.get('TCPSocket') and self.get('LocalSocket'):
-            raise Exception(wc.i18n._("Clamd is not configured properly: " \
+            raise Exception(_("Clamd is not configured properly: " \
                                "both TCPSocket and LocalSocket are enabled."))
 
 
@@ -212,7 +211,7 @@ class ClamavConfig (dict):
             sock = self.create_tcp_socket()
             host = self.get('TCPAddr', 'localhost')
         else:
-            raise Exception(wc.i18n._("You have to enable either TCPSocket " \
+            raise Exception(_("You have to enable either TCPSocket " \
                                 "or LocalSocket in your Clamd configuration"))
         return sock, host
 
@@ -260,7 +259,7 @@ class ClamavConfig (dict):
             raise
         if port is None:
             raise Exception(
-                        wc.i18n._("Clamd is not ready for stream scanning"))
+                        _("Clamd is not ready for stream scanning"))
         sockinfo = get_sockinfo(host, port=port)
         wsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:

@@ -8,7 +8,6 @@ import urllib
 import cStringIO as StringIO
 
 import wc
-import wc.i18n
 import wc.url
 import wc.proxy.StatefulConnection
 import wc.proxy.ClientServerMatchmaker
@@ -83,7 +82,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if status in wc.google.google_try_status and wc.config['try_google']:
             self.try_google(self.url, msg)
         else:
-            err = wc.i18n._('Proxy Error %d %s') % (status, msg)
+            err = _('Proxy Error %d %s') % (status, msg)
             if txt:
                 err = "%s (%s)" % (err, txt)
             form = None
@@ -125,15 +124,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         try:
             self.method, self.url, protocol = self.request.split()
         except ValueError:
-            self.error(400, wc.i18n._("Can't parse request"))
+            self.error(400, _("Can't parse request"))
             return
         if not self.allow.method(self.method):
-            self.error(405, wc.i18n._("Method Not Allowed"))
+            self.error(405, _("Method Not Allowed"))
             return
         # fix broken url paths
         self.url = wc.url.url_norm(self.url)
         if not self.url:
-            self.error(400, wc.i18n._("Empty URL"))
+            self.error(400, _("Empty URL"))
             return
         self.attrs = wc.filter.get_filterattrs(self.url,
                                                [wc.filter.FILTER_REQUEST])
@@ -161,8 +160,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             wc.log.error(wc.LOG_PROXY,
                          "%s request url length %d chars is too long",
                          self, len(self.url))
-            self.error(400, wc.i18n._("URL too long"),
-                       txt=wc.i18n._('URL length limit is %d bytes.') % 2048)
+            self.error(400, _("URL too long"),
+                       txt=_('URL length limit is %d bytes.') % 2048)
             return False
         if len(self.url) > 255:
             wc.log.warn(wc.LOG_PROXY,
@@ -191,7 +190,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.allow.scheme(self.scheme):
             wc.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered",
                         self, self.scheme)
-            self.error(403, wc.i18n._("Forbidden"))
+            self.error(403, _("Forbidden"))
             return False
         # check CONNECT values sanity
         if self.method == 'CONNECT':
@@ -199,13 +198,13 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 wc.log.warn(wc.LOG_PROXY,
                      "%s CONNECT method with forbidden scheme %r encountered",
                      self, self.scheme)
-                self.error(403, wc.i18n._("Forbidden"))
+                self.error(403, _("Forbidden"))
                 return False
             if not self.allow.connect_port(self.port):
                 wc.log.warn(wc.LOG_PROXY,
                          "%s CONNECT method with invalid port %r encountered",
                          self, str(self.port))
-                self.error(403, wc.i18n._("Forbidden"))
+                self.error(403, _("Forbidden"))
                 return False
         # request is ok
         return True
@@ -261,7 +260,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.hostname, self.port = urllib.splitnport(host, defaultport)
         if not self.hostname:
             wc.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
-            self.error(400, wc.i18n._("Bad Request"))
+            self.error(400, _("Bad Request"))
         # local request?
         if self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
            self.port == wc.config['port']:
@@ -281,7 +280,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                        'Proxy-Authorization')
             if not creds:
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(407, wc.i18n._("Proxy Authentication Required"),
+                self.error(407, _("Proxy Authentication Required"),
                            auth=auth)
                 return
             if 'NTLM' in creds:
@@ -294,7 +293,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                     }
                     auth = ",".join(wc.proxy.auth.get_challenges(**attrs))
                     self.error(407,
-                               wc.i18n._("Proxy Authentication Required"),
+                               _("Proxy Authentication Required"),
                                auth=auth)
                     return
             # XXX the data=None argument should hold POST data
@@ -306,7 +305,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s",
                             self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(407, wc.i18n._("Proxy Authentication Required"),
+                self.error(407, _("Proxy Authentication Required"),
                            auth=auth)
                 return
         if self.method in ['OPTIONS', 'TRACE'] and \
@@ -393,7 +392,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = "http://localhost:%d/adminpass.html\r" % wc.config['port']
-                    self.error(302, wc.i18n._("Moved Temporarily"))
+                    self.error(302, _("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call
                 self.handle_local(is_public_doc=is_public_doc)
@@ -495,19 +494,19 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
-            self.error(403, wc.i18n._("Invalid Method"))
+            self.error(403, _("Invalid Method"))
             return
         # check admin pass
         if not is_public_doc and wc.config["adminuser"]:
             creds = wc.proxy.auth.get_header_credentials(self.headers, 'Authorization')
             if not creds:
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(401, wc.i18n._("Authentication Required"), auth=auth)
+                self.error(401, _("Authentication Required"), auth=auth)
                 return
             if 'NTLM' in creds:
                 if creds['NTLM'][0]['type'] == wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     auth = ",".join(creds['NTLM'][0])
-                    self.error(401, wc.i18n._("Authentication Required"), auth=auth)
+                    self.error(401, _("Authentication Required"), auth=auth)
                     return
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds, username=wc.config['adminuser'],
@@ -516,7 +515,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                                      method=self.method, data=None):
                 wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s", self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(401, wc.i18n._("Authentication Required"), auth=auth)
+                self.error(401, _("Authentication Required"), auth=auth)
                 return
         # get cgi form data
         form = self.get_form_data()

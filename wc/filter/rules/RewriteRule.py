@@ -24,7 +24,6 @@ import wc.XmlUtils
 import wc.filter.rules.UrlRule
 import wc.filter.rules.Rule
 import wc.HtmlParser.htmllib
-import wc.i18n
 
 
 # tag ids
@@ -74,12 +73,12 @@ partvalnames = [
     'enclosed',
 ]
 partnames = {
-    'tag': wc.i18n._("Tag"),
-    'tagname': wc.i18n._("Tag name"),
-    'attr': wc.i18n._("Attribute"),
-    'attrval': wc.i18n._("Attribute value"),
-    'complete': wc.i18n._("Complete tag"),
-    'enclosed': wc.i18n._("Enclosed block"),
+    'tag': _("Tag"),
+    'tagname': _("Tag name"),
+    'attr': _("Attribute"),
+    'attrval': _("Attribute value"),
+    'complete': _("Complete tag"),
+    'enclosed': _("Enclosed block"),
 }
 
 

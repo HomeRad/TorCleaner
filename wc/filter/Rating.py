@@ -22,12 +22,11 @@ import urlparse
 import cPickle as pickle
 
 import wc
-import wc.i18n
 import wc.log
 import wc.url
 
 
-MISSING = wc.i18n._("Unknown page")
+MISSING = _("Unknown page")
 
 # rating cache filename
 rating_cachefile = os.path.join(wc.ConfigDir, "rating.dat")
@@ -47,28 +46,28 @@ service = dict(
    # rating categories
    categories = dict(
        violence = dict(
-             name = wc.i18n._('violence'),
+             name = _('violence'),
              rvalues = ["0", "1", "2"],
            ),
        sex = dict(
-             name = wc.i18n._('sex'),
+             name = _('sex'),
              rvalues = ["0", "1", "2"],
            ),
        language = dict(
-             name = wc.i18n._('language'),
+             name = _('language'),
              rvalues = ["0", "1", "2"],
            ),
        agerange = dict(
-             name = wc.i18n._('age range'),
+             name = _('age range'),
              rrange = [0, None],
            ),
    ),
 )
 
 rangenames = {
-    "0": wc.i18n._("None"),
-    "1": wc.i18n._("Mild"),
-    "2": wc.i18n._("Heavy"),
+    "0": _("None"),
+    "1": _("Mild"),
+    "2": _("Heavy"),
 }
 
 
@@ -90,14 +89,14 @@ def rating_import (url, ratingdata, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError:
-            raise RatingParseError(wc.i18n._(
+            raise RatingParseError(_(
                                         "malformed rating line %r") % line)
         if category == "modified" and not is_time(value):
-            raise RatingParseError(wc.i18n._(
+            raise RatingParseError(_(
                                          "malfored modified time %r") % value)
         if category == "generic" and value not in ["true", "false"] and \
            not url.startswith(value):
-            raise RatingParseError(wc.i18n._(
+            raise RatingParseError(_(
                             "generic url %r doesn't match %r") % (value, url))
         categories[category] = value
     return categories
@@ -295,7 +294,7 @@ def rating_cache_merge (newrating_cache, dryrun=False, log=None):
     for url, rating in newrating_cache.iteritems():
         if url not in rating_cache:
             chg = True
-            print >> log, wc.i18n._("adding new rating for %r") % url
+            print >> log, _("adding new rating for %r") % url
             if not dryrun:
                 rating_cache[url] = rating
     if not dryrun and chg:

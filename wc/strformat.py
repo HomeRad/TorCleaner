@@ -23,8 +23,6 @@ import sys
 import os
 import time
 
-from wc.i18n import _
-
 
 def unquote (s):
     """if string s is not empty, strip quotes from s"""

@@ -3,7 +3,6 @@
 
 import socket
 import cStringIO as StringIO
-import wc.i18n
 import wc.url
 import wc
 import wc.proxy.dns_lookups
@@ -112,13 +111,13 @@ class ClientServerMatchmaker (object):
               '%s 301 Moved Permanently' % self.protocol, 301,
               wc.proxy.Headers.WcMessage(StringIO.StringIO('Content-type: text/plain\r\n'
               'Location: %s\r\n\r\n' % new_url)),
-              wc.i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
+              _('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host,
             # close this connection
             self.state = 'done'
-            self.client.error(504, wc.i18n._("Host not found"),
-                wc.i18n._('Host %s not found .. %s')%(hostname, answer.data))
+            self.client.error(504, _("Host not found"),
+                _('Host %s not found .. %s')%(hostname, answer.data))
 
 
     def find_server (self):
@@ -145,7 +144,7 @@ class ClientServerMatchmaker (object):
                 wc.log.warn(wc.LOG_PROXY, "Waited too long for available connection at %s"+\
                     ", consider increasing the server pool connection limit"+\
                      " (currently at %d)", addr, BUSY_LIMIT)
-                self.client.error(503, wc.i18n._("Service unavailable"))
+                self.client.error(503, _("Service unavailable"))
                 return
             # There are too many connections right now, so register us
             # as an interested party for getting a connection later
@@ -163,9 +162,9 @@ class ClientServerMatchmaker (object):
                 server = klass(self.ipaddr, self.port, self)
                 serverpool.register_server(addr, server)
             except socket.timeout:
-                self.client.error(504, wc.i18n._('Connection timeout'))
+                self.client.error(504, _('Connection timeout'))
             except socket.error:
-                self.client.error(503, wc.i18n._('Connect error'))
+                self.client.error(503, _('Connect error'))
 
 
     def server_connected (self, server):
@@ -197,12 +196,12 @@ class ClientServerMatchmaker (object):
                      expect.startswith('0100-continue')
         if docontinue:
             if serverpool.http_versions.get(addr, 1.1) < 1.1:
-                self.client.error(417, wc.i18n._("Expectation failed"),
-                             wc.i18n._("Server does not understand HTTP/1.1"))
+                self.client.error(417, _("Expectation failed"),
+                             _("Server does not understand HTTP/1.1"))
                 return
         elif expect:
-            self.client.error(417, wc.i18n._("Expectation failed"),
-                       wc.i18n._("Unsupported expectation %r")%expect)
+            self.client.error(417, _("Expectation failed"),
+                       _("Unsupported expectation %r")%expect)
             return
         # switch to response status
         self.state = 'response'
@@ -215,7 +214,7 @@ class ClientServerMatchmaker (object):
                                    self.url, self.mime)
 
 
-    def server_abort (self, reason=wc.i18n._("No response from server")):
+    def server_abort (self, reason=_("No response from server")):
         """The server had an error, so we need to tell the client
            that we couldn't connect"""
         if self.client.connected:
@@ -234,7 +233,7 @@ class ClientServerMatchmaker (object):
         elif self.client.connected:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
-            self.client.error(503, wc.i18n._("Server closed connection"))
+            self.client.error(503, _("Server closed connection"))
 
 
     def server_response (self, server, response, status, headers):

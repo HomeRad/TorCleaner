@@ -25,7 +25,6 @@ import mimetypes
 import cStringIO as StringIO
 import wc
 import wc.log
-import wc.i18n
 from wc.webgui.simpletal import simpleTAL
 from wc.webgui.simpletal import simpleTALES
 import wc.proxy.auth
@@ -36,7 +35,7 @@ class WebConfig (object):
     """class for web configuration templates"""
 
     def __init__ (self, client, url, form, protocol, clientheaders,
-                 status=200, msg=wc.i18n._('Ok'), localcontext=None, auth=''):
+                 status=200, msg=_('Ok'), localcontext=None, auth=''):
         """load a web configuration template and return response"""
         wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
         self.client = client
@@ -72,7 +71,7 @@ class WebConfig (object):
                 context, newstatus = \
                      get_context(dirs, form, localcontext, lang)
                 if newstatus == 401 and status != newstatus:
-                    client.error(401, wc.i18n._("Authentication Required"),
+                    client.error(401, _("Authentication Required"),
                                  auth=wc.proxy.auth.get_challenges())
                     return
                 # get translator
@@ -89,12 +88,12 @@ class WebConfig (object):
             wc.log.exception(wc.LOG_GUI, "Wrong path %r:", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
-            client.error(404, wc.i18n._("Not Found"))
+            client.error(404, _("Not Found"))
             return
         except StandardError:
             # catch standard exceptions and report internal error
             wc.log.exception(wc.LOG_GUI, "Template error:")
-            client.error(500, wc.i18n._("Internal Error"))
+            client.error(500, _("Internal Error"))
             return
         # not catched builtin exceptions are:
         # SystemExit, StopIteration and all warnings

@@ -10,7 +10,6 @@ import re
 import time
 import wc
 import wc.log
-import wc.i18n
 
 
 TIMERS = [] # list of (time, function)
@@ -29,10 +28,10 @@ def get_http_version (protocol):
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
         if f > (1, 1):
-            wc.log.error(wc.LOG_PROXY, wc.i18n._("unsupported HTTP version %s"), f)
+            wc.log.error(wc.LOG_PROXY, _("unsupported HTTP version %s"), f)
             f = (1, 1)
         return f
-    wc.log.error(wc.LOG_PROXY, wc.i18n._("invalid HTTP version %r"), protocol)
+    wc.log.error(wc.LOG_PROXY, _("invalid HTTP version %r"), protocol)
     return (1, 0)
 
 

@@ -112,7 +112,6 @@ def sort_seq (seq):
     l.sort()
     return l
 
-import wc.i18n
 import wc.url
 import wc.ip
 import wc.proxy
@@ -320,7 +319,7 @@ class Configuration (dict):
             chg = f[0].update(folder, dryrun=dryrun, log=log)
         else:
             chg = True
-            print >> log, " ", wc.i18n._("inserting %s") % folder.tiptext()
+            print >> log, " ", _("inserting %s") % folder.tiptext()
             if not dryrun:
                 folder.oid = len(self['folderrules'])
                 self['folderrules'].append(folder)
@@ -498,7 +497,7 @@ class ZapperParser (BaseParser):
         elif name == 'folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            raise ParseException, wc.i18n._("unknown tag name %s")%name
+            raise ParseException, _("unknown tag name %s")%name
 
     def end_element (self, name):
         """handle end tag of folder, rule or nested element"""

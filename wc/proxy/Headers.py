@@ -6,7 +6,6 @@ import rfc822
 
 import cStringIO as StringIO
 import wc.log
-import wc.i18n
 import wc
 import wc.magic
 import wc.proxy.UnchunkStream
@@ -199,11 +198,11 @@ def server_set_date_header (headers):
 def server_set_content_headers (headers, mime, url):
     """add missing content-type headers"""
     if not headers.get('Content-Type', None):
-        wc.log.warn(wc.LOG_PROXY, wc.i18n._("No content type in %r"), url)
+        wc.log.warn(wc.LOG_PROXY, _("No content type in %r"), url)
         if mime:
             # we have a hint what mime type we can apply
             wc.log.warn(wc.LOG_PROXY,
-                        wc.i18n._("Set content type of %r to %r"), url, mime)
+                        _("Set content type of %r to %r"), url, mime)
             headers['Content-Type'] = "%s\r" % mime
 
 
@@ -224,7 +223,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # remove encoding header
         to_remove = ["Transfer-Encoding"]
         if headers.has_key("Content-Length"):
-            wc.log.warn(wc.LOG_PROXY, wc.i18n._('chunked encoding should not have Content-Length'))
+            wc.log.warn(wc.LOG_PROXY, _('chunked encoding should not have Content-Length'))
             to_remove.append("Content-Length")
             bytes_remaining = None
         remove_headers(headers, to_remove)
@@ -251,7 +250,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # add warning
         headers['Warning'] = "214 Transformation applied\r"
     elif encoding and encoding!='identity':
-        wc.log.warn(wc.LOG_PROXY, wc.i18n._("unsupported encoding: %r"), encoding)
+        wc.log.warn(wc.LOG_PROXY, _("unsupported encoding: %r"), encoding)
         # do not disable filtering for unknown content-encodings
         # this could result in a DoS attack (server sending garbage
         # as content-encoding)

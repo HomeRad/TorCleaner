@@ -16,7 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import wc.i18n
 import wc
 import wc.log
 import wc.filter.rules.UrlRule
@@ -92,11 +91,11 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                 # check if value is in range
                 if (limit[0] is not None and value < limit[0]) or \
                    (limit[1] is not None and value > limit[1]):
-                    return wc.i18n._(
+                    return _(
                          "Rating %r for category %r is not in range %s") % \
                          (value, category, limit)
             elif value > limit:
-                return wc.i18n._(
+                return _(
                            "Rating %r for category %r exceeds limit %r") % \
                            (value, category, limit)
         # not exceeded

@@ -21,7 +21,7 @@ def get_context ():
     # init and return TALES context
     context = wc.webgui.simpletal.simpleTALES.Context()
     context.addGlobal("parameter", "hullabulla")
-    context.addGlobal("transe", wc.i18n._("Transe test successful"))
+    context.addGlobal("transe", _("Transe test successful"))
     return context
 
 

@@ -16,7 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import wc.i18n
 import wc
 import wc.filter.rules.Rule
 
@@ -81,7 +80,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
                 if oldrule.update(child, dryrun=dryrun, log=log):
                     chg = True
             else:
-                print >> log, wc.i18n._("inserting new rule %s") % \
+                print >> log, _("inserting new rule %s") % \
                              child.tiptext()
                 if not dryrun:
                     self.rules.append(child)
@@ -123,7 +122,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         """return short info for gui display"""
         l = len(self.rules)
         if l == 1:
-            text = wc.i18n._("with 1 rule")
+            text = _("with 1 rule")
         else:
-            text = wc.i18n._("with %d rules") % l
+            text = _("with %d rules") % l
         return "%s %s" % (super(FolderRule, self).tiptext(), text)

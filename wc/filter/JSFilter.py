@@ -19,7 +19,6 @@
 import re
 import urlparse
 import wc.HtmlParser
-import wc.i18n
 import wc
 import wc.log
 import wc.filter
@@ -316,7 +315,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             if not self.js_script:
                 wc.log.warn(wc.LOG_JS, "empty JavaScript src %s", url)
                 self.js_script = "// "+\
-                      wc.i18n._("error fetching script from %r")%url
+                      _("error fetching script from %r")%url
             self.htmlparser.tagbuf.append(
                  [wc.filter.rules.RewriteRule.STARTTAG, "script",
                   {'type': 'text/javascript'}])

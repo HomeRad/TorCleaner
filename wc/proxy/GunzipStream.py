@@ -8,7 +8,6 @@ but exports a proxy4 encoding interface:
   - decode(string) => return as much of the string as can be decoded
   - flush()        => return everything else
 """
-import wc.i18n
 import wc
 import wc.proxy.DeflateStream
 
@@ -38,13 +37,13 @@ class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            wc.log.warn(wc.LOG_PROXY, wc.i18n._("zlib error: not gzip format, disabling gunzip"))
+            wc.log.warn(wc.LOG_PROXY, _("zlib error: not gzip format, disabling gunzip"))
             self.error = True
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            wc.log.warn(wc.LOG_PROXY, wc.i18n._("zlib error: unknown compression method, disabling gunzip"))
+            wc.log.warn(wc.LOG_PROXY, _("zlib error: unknown compression method, disabling gunzip"))
             self.error = True
             return
 

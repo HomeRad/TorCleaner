@@ -7,7 +7,6 @@ import socket
 import re
 import urllib
 import cStringIO as StringIO
-import wc.i18n
 import wc
 import wc.url
 import wc.filter
@@ -213,7 +212,7 @@ class HttpServer (wc.proxy.Server.Server):
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
-            wc.log.warn(wc.LOG_PROXY, wc.i18n._('invalid or missing response from %r: %r'),
+            wc.log.warn(wc.LOG_PROXY, _('invalid or missing response from %r: %r'),
                  self.url, self.response)
             wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (1, 0))
             # put the read bytes back to the buffer
@@ -221,7 +220,7 @@ class HttpServer (wc.proxy.Server.Server):
             # look if the response line was a header
             # Example: http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
             if not wc.proxy.Headers.is_header(self.response):
-                wc.log.warn(wc.LOG_PROXY, wc.i18n._("missing headers in response from %r"), self.url)
+                wc.log.warn(wc.LOG_PROXY, _("missing headers in response from %r"), self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
             # fix the response
             self.response = "%s 200 Ok" % self.protocol
@@ -286,7 +285,7 @@ class HttpServer (wc.proxy.Server.Server):
             if location:
                 host = wc.url.spliturl(location)[1]
                 if host in wc.proxy.dns_lookups.resolver.localhosts:
-                    self.handle_error(wc.i18n._('redirection to localhost'))
+                    self.handle_error(_('redirection to localhost'))
                     return
         self.mangle_response_headers()
         if self.statuscode in (204, 304) or self.method == 'HEAD':
@@ -339,7 +338,7 @@ class HttpServer (wc.proxy.Server.Server):
 
     def _show_mime_replacement (self, url):
         self.statuscode = 302
-        response = "%s 302 %s" % (self.protocol, wc.i18n._("Moved Temporarily"))
+        response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = url
@@ -359,7 +358,7 @@ class HttpServer (wc.proxy.Server.Server):
         """requested page is rated"""
         query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
-        response = "%s 302 %s" % (self.protocol, wc.i18n._("Moved Temporarily"))
+        response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://localhost:%d/rated.html?%s\r' % \
@@ -407,7 +406,7 @@ class HttpServer (wc.proxy.Server.Server):
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
         if underflow:
-            wc.log.warn(wc.LOG_PROXY, wc.i18n._("server received %d bytes more than content-length"),
+            wc.log.warn(wc.LOG_PROXY, _("server received %d bytes more than content-length"),
                  (-self.bytes_remaining))
         if data and self.statuscode != 407:
             if self.defer_data:
