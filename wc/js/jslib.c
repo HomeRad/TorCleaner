@@ -590,6 +590,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     JSObject* frames_obj;
     JSObject* history_array;
     JSObject* images_array;
+    JSObject* layers_array;
     JSObject* mimetypes_array;
     JSObject* plugins_array;
     jsval flash_mimetype_jsval;
@@ -1009,6 +1010,15 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
                           JSPROP_ENUMERATE|JSPROP_PERMANENT|JSPROP_READONLY)
         ==JS_FALSE) {
         return shutdown(env, "Could not set document.images property");
+    }
+    if (!(layers_array=JS_NewArrayObject(env->ctx, 0, 0))) {
+        return shutdown(env, "Could not create layers array");
+    }
+    if (JS_DefineProperty(env->ctx, env->doc_obj, "layers",
+                          OBJECT_TO_JSVAL(layers_array), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_PERMANENT|JSPROP_READONLY)
+        ==JS_FALSE) {
+        return shutdown(env, "Could not set document.layers property");
     }
     if (!JS_DefineFunction(env->ctx, env->doc_obj, "write", &documentWrite, 1,
                            JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
