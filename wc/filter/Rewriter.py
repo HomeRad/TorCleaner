@@ -48,7 +48,7 @@ class Rewriter (wc.filter.Filter.Filter):
         p.feed(data)
         if p.handler.ratings:
             # XXX correct raise
-            raise wc.filter.FilterWait("wait for rating decision")
+            raise wc.filter.FilterWait, "wait for rating decision"
         return p.getoutput()
 
     def finish (self, data, attrs):
@@ -61,7 +61,7 @@ class Rewriter (wc.filter.Filter.Filter):
         p.flush()
         if p.handler.ratings:
             # XXX correct raise
-            raise wc.filter.FilterRating("missing rating")
+            raise wc.filter.FilterRating, "missing rating"
         p.tagbuf2data()
         return p.getoutput()
 

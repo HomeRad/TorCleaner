@@ -119,7 +119,7 @@ class HTMLParser (markupbase.ParserBase):
         self.goahead(1)
 
     def error (self, message):
-        raise HTMLParseError(message, self.getpos())
+        raise HTMLParseError, (message, self.getpos())
 
     __starttag_text = None
 
@@ -326,7 +326,7 @@ class HTMLParser (markupbase.ParserBase):
                 return -1
             self.updatepos(i, j)
             self.error("malformed start tag")
-        raise AssertionError("we should not get here!")
+        raise AssertionError, "we should not get here!"
 
     # Internal -- parse endtag, return end or -1 if incomplete
     def parse_endtag (self, i):

@@ -63,7 +63,7 @@ class PickleStorage (wc.filter.rating.storage.Storage):
             url = "".join(parts[:i])
             if url in self.cache:
                 return self.cache[url]
-        raise KeyError(url)
+        raise KeyError, url
 
     def __contains__ (self, url):
         """

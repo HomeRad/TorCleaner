@@ -73,8 +73,8 @@ class Storage (object):
         If url is not safe raise a RatingParseError.
         """
         if not wc.url.is_safe_url(url):
-            raise wc.filter.rating.RatingParseError(
-                                  "Invalid rating url %s." % repr(url))
+            raise wc.filter.rating.RatingParseError, \
+                                  "Invalid rating url %s." % repr(url)
 
     def load (self):
         """

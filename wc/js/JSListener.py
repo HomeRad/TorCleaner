@@ -29,16 +29,16 @@ class JSListener (object):
         """
         Handler for document.write content.
         """
-        raise NotImplementedError("abstract method js_process_data")
+        raise NotImplementedError, "abstract method js_process_data"
 
     def js_process_popup (self):
         """
         Handler for popup windows.
         """
-        raise NotImplementedError("abstract method js_process_popup")
+        raise NotImplementedError, "abstract method js_process_popup"
 
     def js_process_error (self, msg):
         """
         Handler for syntax errors.
         """
-        raise NotImplementedError("abstract method js_process_error")
+        raise NotImplementedError, "abstract method js_process_error"

@@ -177,8 +177,8 @@ class TALInterpreter (object):
 
     def pushMacro (self, macroName, slots, entering=1):
         if len(self.macroStack) >= self.stackLimit:
-            raise METALError("macro nesting limit (%d) exceeded "
-                             "by %s" % (self.stackLimit, `macroName`))
+            raise METALError, ("macro nesting limit (%d) exceeded "
+                               "by %r" % (self.stackLimit, macroName))
         self.macroStack.append([macroName, slots, entering, self.i18nContext])
 
     def popMacro (self):
@@ -652,13 +652,13 @@ class TALInterpreter (object):
             macro = block
         else:
             if not isCurrentVersion(macro):
-                raise METALError("macro %s has incompatible version %s" %
-                                 (`macroName`, `getProgramVersion(macro)`),
+                raise METALError, ("macro %r has incompatible version %r" %
+                                 (macroName, getProgramVersion(macro)),
                                  self.position)
             mode = getProgramMode(macro)
             if mode != (self.html and "html" or "xml"):
-                raise METALError("macro %s has incompatible mode %s" %
-                                 (`macroName`, `mode`), self.position)
+                raise METALError, ("macro %r has incompatible mode %r" %
+                                 (macroName, mode), self.position)
         self.pushMacro(macroName, compiledSlots)
         prev_source = self.sourceFile
         self.interpret(macro)

@@ -118,7 +118,7 @@ class DummyEngine (object):
             try:
                 return eval(expr, self.globals, self.locals)
             except:
-                raise TALESError("evaluation error in %s" % `expr`)
+                raise TALESError, "evaluation error in %r" % expr
         if type == "position":
             # Insert the current source file name, line number,
             # and column offset.
@@ -127,7 +127,7 @@ class DummyEngine (object):
             else:
                 lineno, offset = None, None
             return '%s (%s,%s)' % (self.source_file, lineno, offset)
-        raise TALESError("unrecognized expression: " + `expression`)
+        raise TALESError, "unrecognized expression: " + repr(expression)
 
     def evaluatePathOrVar (self, expr):
         expr = expr.strip()
@@ -136,7 +136,7 @@ class DummyEngine (object):
         elif self.globals.has_key(expr):
             return self.globals[expr]
         else:
-            raise TALESError("unknown variable: %s" % `expr`)
+            raise TALESError, "unknown variable: %r" % expr
 
     def evaluateValue (self, expr):
         return self.evaluate(expr)
@@ -172,8 +172,8 @@ class DummyEngine (object):
             program, macros = driver.compilefile(file)
             macro = macros.get(localName)
             if not macro:
-                raise TALESError("macro %s not found in file %s" %
-                                 (localName, file))
+                raise TALESError, "macro %s not found in file %s" % \
+                                  (localName, file)
         return macro
 
     def findMacroDocument (self, macroName):
@@ -186,7 +186,7 @@ class DummyEngine (object):
 
     def findMacroFile (self, macroName):
         if not macroName:
-            raise TALESError("empty macro name")
+            raise TALESError, "empty macro name"
         i = macroName.rfind('/')
         if i < 0:
             # No slash -- must be a locally defined macro

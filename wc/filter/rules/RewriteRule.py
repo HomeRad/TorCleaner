@@ -141,9 +141,9 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         self.replacement = replacement
         self.enclosed = enclosed
         if self.enclosed and self.tag in NO_CLOSE_TAGS:
-            raise ValueError("reading rule %r: tag %r has no end tag, " \
-                             "so specifying an enclose value is invalid." % \
-                             (self.titles['en'], tag))
+            raise ValueError, "reading rule %r: tag %r has no end tag, " \
+                              "so specifying an enclose value is invalid." % \
+                              (self.titles['en'], tag)
         self.attrnames.append('tag')
         # we'll do this again in after parsing, in compile_data()
         self.set_start_sufficient()

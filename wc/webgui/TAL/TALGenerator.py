@@ -207,8 +207,8 @@ class TALGenerator (object):
         try:
             return self.expressionCompiler.compile(expr)
         except self.CompilerError, err:
-            raise TALError('%s in expression %s' % (err.args[0], `expr`),
-                           self.position)
+            raise TALError, ('%s in expression %r' % (err.args[0], expr),
+                             self.position)
 
     def pushProgram (self):
         self.stack.append(self.program)
@@ -268,8 +268,8 @@ class TALGenerator (object):
             m = re.match(
                 r"(?s)\s*(?:(global|local)\s+)?(%s)\s+(.*)\Z" % NAME_RE, part)
             if not m:
-                raise TALError("invalid define syntax: " + `part`,
-                               self.position)
+                raise TALError, ("invalid define syntax: " + repr(part),
+                                 self.position)
             scope, name, expr = m.group(1, 2, 3)
             scope = scope or "local"
             cexpr = self.compileExpression(expr)
@@ -302,8 +302,8 @@ class TALGenerator (object):
     def emitRepeat (self, arg):
         m = re.match("(?s)\s*(%s)\s+(.*)\Z" % NAME_RE, arg)
         if not m:
-            raise TALError("invalid repeat syntax: " + `arg`,
-                           self.position)
+            raise TALError, ("invalid repeat syntax: " + repr(arg),
+                             self.position)
         name, expr = m.group(1, 2)
         cexpr = self.compileExpression(expr)
         program = self.popProgram()
@@ -335,7 +335,7 @@ class TALGenerator (object):
         varname, action, expression = stuff
         m = _name_rx.match(varname)
         if m is None or m.group() != varname:
-            raise TALError("illegal i18n:name: %r" % varname, self.position)
+            raise TALError, ("illegal i18n:name: %r" % varname, self.position)
         key = cexpr = None
         program = self.popProgram()
         if action == I18N_REPLACE:
@@ -370,11 +370,11 @@ class TALGenerator (object):
         program = self.popProgram()
         macroName = macroName.strip()
         if self.macros.has_key(macroName):
-            raise METALError("duplicate macro definition: %s" % `macroName`,
-                             self.position)
+            raise METALError, ("duplicate macro definition: %r" % macroName,
+                               self.position)
         if not re.match('%s$' % NAME_RE, macroName):
-            raise METALError("invalid macro name: %s" % `macroName`,
-                             self.position)
+            raise METALError, ("invalid macro name: %r" % macroName,
+                               self.position)
         self.macros[macroName] = program
         self.inMacroDef = self.inMacroDef - 1
         self.emit("defineMacro", macroName, program)
@@ -389,19 +389,19 @@ class TALGenerator (object):
         program = self.popProgram()
         slotName = slotName.strip()
         if not re.match('%s$' % NAME_RE, slotName):
-            raise METALError("invalid slot name: %s" % `slotName`,
-                             self.position)
+            raise METALError, ("invalid slot name: %r" % slotName,
+                               self.position)
         self.emit("defineSlot", slotName, program)
 
     def emitFillSlot (self, slotName):
         program = self.popProgram()
         slotName = slotName.strip()
         if self.slots.has_key(slotName):
-            raise METALError("duplicate fill-slot name: %s" % `slotName`,
-                             self.position)
+            raise METALError, ("duplicate fill-slot name: %r" % slotName,
+                               self.position)
         if not re.match('%s$' % NAME_RE, slotName):
-            raise METALError("invalid slot name: %s" % `slotName`,
-                             self.position)
+            raise METALError, ("invalid slot name: %r" % slotName,
+                               self.position)
         self.slots[slotName] = program
         self.inMacroUse = 1
         self.emit("fillSlot", slotName, program)
@@ -487,23 +487,23 @@ class TALGenerator (object):
         self.position = position
         for key, value in taldict.items():
             if key not in TALDefs.KNOWN_TAL_ATTRIBUTES:
-                raise TALError("bad TAL attribute: " + `key`, position)
+                raise TALError, ("bad TAL attribute: " + repr(key), position)
             if not (value or key == 'omit-tag'):
-                raise TALError("missing value for TAL attribute: " +
-                               `key`, position)
+                raise TALError, ("missing value for TAL attribute: " +
+                                 repr(key), position)
         for key, value in metaldict.items():
             if key not in TALDefs.KNOWN_METAL_ATTRIBUTES:
-                raise METALError("bad METAL attribute: " + `key`,
-                                 position)
+                raise METALError, ("bad METAL attribute: " + repr(key),
+                                   position)
             if not value:
-                raise TALError("missing value for METAL attribute: " +
-                               `key`, position)
+                raise TALError, ("missing value for METAL attribute: " +
+                                 repr(key), position)
         for key, value in i18ndict.items():
             if key not in TALDefs.KNOWN_I18N_ATTRIBUTES:
-                raise I18NError("bad i18n attribute: " + `key`, position)
+                raise I18NError, ("bad i18n attribute: "+repr(key), position)
             if not value and key in ("attributes", "data", "id"):
-                raise I18NError("missing value for i18n attribute: " +
-                                `key`, position)
+                raise I18NError, ("missing value for i18n attribute: " +
+                                  repr(key), position)
         todo = {}
         defineMacro = metaldict.get("define-macro")
         useMacro = metaldict.get("use-macro")
@@ -527,25 +527,25 @@ class TALGenerator (object):
         i18ndata = i18ndict.get('data')
 
         if varname and not self.i18nLevel:
-            raise I18NError(
+            raise I18NError, (
                 "i18n:name can only occur inside a translation unit",
                 position)
 
         if i18ndata and not msgid:
-            raise I18NError("i18n:data must be accompanied by i18n:translate",
-                            position)
+            raise I18NError, (
+            "i18n:data must be accompanied by i18n:translate", position)
 
         if len(metaldict) > 1 and (defineMacro or useMacro):
-            raise METALError("define-macro and use-macro cannot be used "
-                             "together or with define-slot or fill-slot",
-                             position)
+            raise METALError, ("define-macro and use-macro cannot be used "
+                               "together or with define-slot or fill-slot",
+                               position)
         if replace:
             if content:
-                raise TALError(
+                raise TALError, (
                     "tal:content and tal:replace are mutually exclusive",
                     position)
             if msgid is not None:
-                raise I18NError(
+                raise I18NError, (
                     "i18n:translate and tal:replace are mutually exclusive",
                     position)
 
@@ -565,8 +565,8 @@ class TALGenerator (object):
                 self.inMacroUse = 0
         else:
             if fillSlot:
-                raise METALError("fill-slot must be within a use-macro",
-                                 position)
+                raise METALError, ("fill-slot must be within a use-macro",
+                                   position)
         if not self.inMacroUse:
             if defineMacro:
                 self.pushProgram()
@@ -583,7 +583,7 @@ class TALGenerator (object):
                 self.inMacroUse = 1
             if defineSlot:
                 if not self.inMacroDef:
-                    raise METALError(
+                    raise METALError, (
                         "define-slot must be within a define-macro",
                         position)
                 self.pushProgram()
@@ -678,7 +678,7 @@ class TALGenerator (object):
             # name-->(compiled_expr, translate) mapping
             for key, value in repldict.items():
                 if i18nattrs.get(key, None):
-                    raise I18NError(
+                    raise I18NError, (
                       ("attribute [%s] cannot both be part of tal:attributes" +
                       " and have a msgid in i18n:attributes") % key,
                     position)
@@ -741,8 +741,8 @@ class TALGenerator (object):
             else:
                 exc = TALError
                 what = "TAL"
-            raise exc("%s attributes on <%s> require explicit </%s>" %
-                      (what, name, name), position)
+            raise exc, ("%s attributes on <%s> require explicit </%s>" %
+                        (what, name, name), position)
 
         # If there's no tal:content or tal:replace in the tag with the
         # i18n:name, tal:replace is the default.
@@ -825,10 +825,9 @@ def _parseI18nAttributes (i18nattrs, attrlist, repldict, position,
         if not xml:
             attr = attr.lower()
         if attr in dic:
-            raise TALError(
+            raise TALError, (
                 "attribute may only be specified once in i18n:attributes: "
-                + attr,
-                position)
+                + attr, position)
         dic[attr] = msgid
 
     d = {}
@@ -838,7 +837,7 @@ def _parseI18nAttributes (i18nattrs, attrlist, repldict, position,
                         for attr in i18nattrlist if attr.strip()]
         for parts in i18nattrlist:
             if len(parts) > 2:
-                raise TALError("illegal i18n:attributes specification: %r"
+                raise TALError, ("illegal i18n:attributes specification: %r"
                                 % parts, position)
             if len(parts) == 2:
                 attr, msgid = parts

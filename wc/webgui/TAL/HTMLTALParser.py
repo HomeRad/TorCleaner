@@ -146,8 +146,8 @@ class HTMLTALParser (HTMLParser):
         tag, attrlist, taldict, metaldict, i18ndict \
              = self.process_ns(tag, attrs)
         if tag in EMPTY_HTML_TAGS and taldict.get("content"):
-            raise TALError(
-                "empty HTML tags cannot use tal:content: %s" % `tag`,
+            raise TALError, (
+                "empty HTML tags cannot use tal:content: %r" % tag,
                 self.getpos())
         self.tagstack.append(tag)
         self.gen.emitStartElement(tag, attrlist, taldict, metaldict, i18ndict,
@@ -162,8 +162,8 @@ class HTMLTALParser (HTMLParser):
              = self.process_ns(tag, attrs)
         if taldict.get("content"):
             if tag in EMPTY_HTML_TAGS:
-                raise TALError(
-                    "empty HTML tags cannot use tal:content: %s" % `tag`,
+                raise TALError, (
+                    "empty HTML tags cannot use tal:content: %r" % tag,
                     self.getpos())
             self.gen.emitStartElement(tag, attrlist, taldict, metaldict,
                                       i18ndict, self.getpos())
@@ -176,7 +176,7 @@ class HTMLTALParser (HTMLParser):
     def handle_endtag (self, tag):
         if tag in EMPTY_HTML_TAGS:
             # </img> etc. in the source is an error
-            raise EmptyTagError(tag, self.getpos())
+            raise EmptyTagError, (tag, self.getpos())
         self.close_enclosed_tags(tag)
         self.gen.emitEndElement(tag)
         self.pop_xmlns()
@@ -203,7 +203,7 @@ class HTMLTALParser (HTMLParser):
                     break
                 if closetag in PARA_LEVEL_HTML_TAGS:
                     if closetag != "p":
-                        raise OpenTagError(self.tagstack, tag, self.getpos())
+                        raise OpenTagError, (self.tagstack, tag, self.getpos())
                     close_to = i
                 i = i - 1
         if close_to >= 0:
@@ -212,7 +212,7 @@ class HTMLTALParser (HTMLParser):
 
     def close_enclosed_tags (self, tag):
         if tag not in self.tagstack:
-            raise NestingError(self.tagstack, tag, self.getpos())
+            raise NestingError, (self.tagstack, tag, self.getpos())
         while tag != self.tagstack[-1]:
             self.implied_endtag(self.tagstack[-1], 1)
         assert self.tagstack[-1] == tag
@@ -299,18 +299,18 @@ class HTMLTALParser (HTMLParser):
                 item = (key, value, ns)
             if ns == 'tal':
                 if taldict.has_key(keybase):
-                    raise TALError("duplicate TAL attribute " +
-                                   `keybase`, self.getpos())
+                    raise TALError, ("duplicate TAL attribute " +
+                                     repr(keybase), self.getpos())
                 taldict[keybase] = value
             elif ns == 'metal':
                 if metaldict.has_key(keybase):
-                    raise METALError("duplicate METAL attribute " +
-                                     `keybase`, self.getpos())
+                    raise METALError, ("duplicate METAL attribute " +
+                                       repr(keybase), self.getpos())
                 metaldict[keybase] = value
             elif ns == 'i18n':
                 if i18ndict.has_key(keybase):
-                    raise I18NError("duplicate i18n attribute " +
-                                    `keybase`, self.getpos())
+                    raise I18NError, ("duplicate i18n attribute " +
+                                      repr(keybase), self.getpos())
                 i18ndict[keybase] = value
             attrlist.append(item)
         if namens in ('metal', 'tal'):

@@ -98,7 +98,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         Handle read event.
         """
-        raise NotImplementedError("must be implemented in a subclass")
+        raise NotImplementedError, "must be implemented in a subclass"
 
     def writable (self):
         """

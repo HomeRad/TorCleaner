@@ -53,7 +53,7 @@ class RatingHeader (wc.filter.Filter.Filter):
         for rule in rules:
             msg = rule.rating_allow(url)
             if msg:
-                raise wc.filter.FilterRating(msg)
+                raise wc.filter.FilterRating, msg
         return data
 
     def get_attrs (self, url, localhost, stages, headers):

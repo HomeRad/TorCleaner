@@ -58,5 +58,5 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
         """
         Connect to remote server, must be implemented in subclass.
         """
-        raise NotImplementedError("must be implemented in a subclass")
+        raise NotImplementedError, "must be implemented in a subclass"
 

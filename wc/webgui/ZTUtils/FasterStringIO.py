@@ -33,7 +33,7 @@ class FasterStringIO (StringIO):
             StringIO.close(self)
 
     def seek (self, pos, mode=0):
-        raise RuntimeError("FasterStringIO.seek() not allowed")
+        raise RuntimeError, "FasterStringIO.seek() not allowed"
 
     def write (self, s):
         #assert self.pos == self.len

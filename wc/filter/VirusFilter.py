@@ -80,7 +80,7 @@ class VirusFilter (wc.filter.Filter.Filter):
         return ""
 
     def size_error (self):
-        raise wc.filter.FilterProxyError(406, _("Not acceptable"),
+        raise wc.filter.FilterProxyError, (406, _("Not acceptable"),
                 _("Maximum data size (%s) exceeded") % \
                 strsize(VirusFilter.MAX_FILE_BYTES))
 
@@ -206,11 +206,11 @@ class ClamavConfig (dict):
         super(ClamavConfig, self).__init__()
         self.parseconf(filename)
         if self.get('ScannerDaemonOutputFormat'):
-            raise Exception(_(
-                             "You have to disable ScannerDaemonOutputFormat"))
+            raise Exception, _(
+                             "You have to disable ScannerDaemonOutputFormat")
         if self.get('TCPSocket') and self.get('LocalSocket'):
-            raise Exception(_("Clamd is not configured properly: " \
-                               "both TCPSocket and LocalSocket are enabled."))
+            raise Exception, _("Clamd is not configured properly: " \
+                               "both TCPSocket and LocalSocket are enabled.")
 
     def parseconf (self, filename):
         """
@@ -242,8 +242,8 @@ class ClamavConfig (dict):
             sock = self.create_tcp_socket()
             host = self.get('TCPAddr', 'localhost')
         else:
-            raise Exception(_("You have to enable either TCPSocket " \
-                                "or LocalSocket in your Clamd configuration"))
+            raise Exception, _("You have to enable either TCPSocket " \
+                               "or LocalSocket in your Clamd configuration")
         return sock, host
 
     def create_local_socket (self):
@@ -292,8 +292,7 @@ class ClamavConfig (dict):
             sock.close()
             raise
         if port is None:
-            raise Exception(
-                        _("Clamd is not ready for stream scanning"))
+            raise Exception, _("Clamd is not ready for stream scanning")
         sockinfo = get_sockinfo(host, port=port)
         wsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:

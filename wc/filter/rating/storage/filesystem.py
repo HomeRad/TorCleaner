@@ -54,15 +54,13 @@ def rating_import (url, ratingdata, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError:
-            raise RatingParseError(_(
-                                     "malformed rating line %r") % line)
+            raise RatingParseError, _("malformed rating line %r") % line
         if category == "modified" and not is_time(value):
-            raise RatingParseError(_(
-                                     "malformed modified time %r") % value)
+            raise RatingParseError, _("malformed modified time %r") % value
         if category == "generic" and value not in ["true", "false"] and \
            not url.startswith(value):
-            raise RatingParseError(_(
-                            "generic url %r doesn't match %r") % (value, url))
+            raise RatingParseError, _(
+                            "generic url %r doesn't match %r") % (value, url)
         categories[category] = value
     return categories
 

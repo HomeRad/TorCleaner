@@ -203,7 +203,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         """
         Filters an end tag, return True if tag was filtered, else False.
         """
-        raise NotImplementedError("Must be overridden in subclass")
+        raise NotImplementedError, "Must be overridden in subclass"
 
     def js_end_element (self, item):
         """

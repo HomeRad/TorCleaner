@@ -304,6 +304,6 @@ class GifParser (object):
                 self.data = ''
                 break
             else:
-                raise Exception("invalid GifParser state")
+                raise Exception, "invalid GifParser state"
         # while 1
     # parse

@@ -60,7 +60,7 @@ class TestRewriteScript (unittest.TestCase):
             i+=1
             if i==100:
                 # background downloading of javascript is too slow
-                raise FilterException("Slow")
+                raise FilterException, "Slow"
         self.assertEqual(filtered, result)
 
     def testEmpty (self):
