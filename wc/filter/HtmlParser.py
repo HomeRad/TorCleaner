@@ -114,7 +114,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
             wc.log.debug(wc.LOG_FILTER, "%s waits", self)
             self.inbuf.write(data)
         else:
-            assert False, "parser %s has unknown parser state"%str(self)
+            assert False, "parser %s has unknown parser state" % str(self)
 
 
     def flush (self):

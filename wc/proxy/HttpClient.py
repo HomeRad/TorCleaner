@@ -6,9 +6,10 @@ import cgi
 import urlparse
 import urllib
 import cStringIO as StringIO
+
+import wc
 import wc.i18n
 import wc.url
-import wc
 import wc.proxy.StatefulConnection
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.ServerHandleDirectly
@@ -87,9 +88,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 err = "%s (%s)" % (err, txt)
             form = None
             # this object will call server_connected at some point
-            wc.webgui.WebConfig(self, '/error.html', form, self.protocol, self.headers,
-                      localcontext={'error': err,}, status=status, msg=msg,
-                      auth=auth)
+            wc.webgui.WebConfig(self, '/error.html', form, self.protocol,
+                      self.headers, localcontext={'error': err,},
+                      status=status, msg=msg, auth=auth)
 
     def __repr__ (self):
         """object representation"""
@@ -142,8 +143,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.request = "%s %s %s" % (self.method, self.url, self.protocol)
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
         # filter request
-        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, self.request,
-                                   "finish", self.attrs)
+        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST,
+                                      self.request, "finish", self.attrs)
         # final request checking
         if not self.fix_request():
             return
@@ -157,12 +158,16 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > 2048:
-            wc.log.error(wc.LOG_PROXY, "%s request url length %d chars is too long", self, len(self.url))
+            wc.log.error(wc.LOG_PROXY,
+                         "%s request url length %d chars is too long",
+                         self, len(self.url))
             self.error(400, wc.i18n._("URL too long"),
                        txt=wc.i18n._('URL length limit is %d bytes.') % 2048)
             return False
         if len(self.url) > 255:
-            wc.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
+            wc.log.warn(wc.LOG_PROXY,
+                        "%s request url length %d chars is very long",
+                        self, len(self.url))
         # unquote and norm url
         self.needs_redirect = "\\" in self.url
         self.url = wc.url.url_norm(self.url)
@@ -173,7 +178,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.hostname, self.port = urllib.splitnport(self.url, 443)
             self.document = '/'
         else:
-            self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
+            self.scheme, self.hostname, self.port, self.document = \
+                                                     wc.url.spliturl(self.url)
             # fix missing trailing /
             if not self.document:
                 self.document = '/'
@@ -183,17 +189,22 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # default scheme is http
             self.scheme = 'http'
         if not self.allow.scheme(self.scheme):
-            wc.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
+            wc.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered",
+                        self, self.scheme)
             self.error(403, wc.i18n._("Forbidden"))
             return False
         # check CONNECT values sanity
         if self.method == 'CONNECT':
             if self.scheme != 'https':
-                wc.log.warn(wc.LOG_PROXY, "%s CONNECT method with forbidden scheme %r encountered", self, self.scheme)
+                wc.log.warn(wc.LOG_PROXY,
+                     "%s CONNECT method with forbidden scheme %r encountered",
+                     self, self.scheme)
                 self.error(403, wc.i18n._("Forbidden"))
                 return False
             if not self.allow.connect_port(self.port):
-                wc.log.warn(wc.LOG_PROXY, "%s CONNECT method with invalid port %r encountered", self, str(self.port))
+                wc.log.warn(wc.LOG_PROXY,
+                         "%s CONNECT method with invalid port %r encountered",
+                         self, str(self.port))
                 self.error(403, wc.i18n._("Forbidden"))
                 return False
         # request is ok
@@ -234,7 +245,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
-            wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r', self, self.headers['Transfer-encoding'])
+            wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
+                         self, self.headers['Transfer-encoding'])
             self.decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
             wc.proxy.Headers.client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
@@ -258,35 +270,41 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             return
         # add missing host headers for HTTP/1.1
         if not self.headers.has_key('Host'):
-            wc.log.warn(wc.LOG_PROXY, "%s request without Host header encountered", self)
+            wc.log.warn(wc.LOG_PROXY,
+                        "%s request without Host header encountered", self)
             if self.port != 80:
                 self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
             else:
                 self.headers['Host'] = "%s\r" % self.hostname
         if wc.config["proxyuser"]:
-            creds = wc.proxy.auth.get_header_credentials(self.headers, 'Proxy-Authorization')
+            creds = wc.proxy.auth.get_header_credentials(self.headers,
+                       'Proxy-Authorization')
             if not creds:
                 auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(407, wc.i18n._("Proxy Authentication Required"),
                            auth=auth)
                 return
             if 'NTLM' in creds:
-                if creds['NTLM'][0]['type'] == wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
+                if creds['NTLM'][0]['type'] == \
+                                       wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     attrs = {
                         'host': creds['NTLM'][0]['host'],
                         'domain': creds['NTLM'][0]['domain'],
                         'type': wc.proxy.auth.ntlm.NTLMSSP_CHALLENGE,
                     }
                     auth = ",".join(wc.proxy.auth.get_challenges(**attrs))
-                    self.error(407, wc.i18n._("Proxy Authentication Required"),
+                    self.error(407,
+                               wc.i18n._("Proxy Authentication Required"),
                                auth=auth)
                     return
             # XXX the data=None argument should hold POST data
-            if not wc.proxy.auth.check_credentials(creds, username=wc.config['proxyuser'],
+            if not wc.proxy.auth.check_credentials(creds,
+                                     username=wc.config['proxyuser'],
                                      password_b64=wc.config['proxypass'],
                                      uri=wc.proxy.auth.get_auth_uri(self.url),
                                      method=self.method, data=None):
-                wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s", self.addr[0])
+                wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s",
+                            self.addr[0])
                 auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(407, wc.i18n._("Proxy Authentication Required"),
                            auth=auth)
@@ -315,10 +333,13 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # look if client wants persistent connections
         if http_ver >= (1, 1):
             self.persistent = \
-              not (wc.proxy.Headers.has_header_value(headers, 'Proxy-Connection', 'Close') or
-                   wc.proxy.Headers.has_header_value(headers, 'Connection', 'Close'))
+              not (wc.proxy.Headers.has_header_value(headers,
+                     'Proxy-Connection', 'Close') or
+                   wc.proxy.Headers.has_header_value(headers,
+                     'Connection', 'Close'))
         else:
-            self.persistent = wc.proxy.Headers.has_header_value(headers, "Proxy-Connection", "Keep-Alive")
+            self.persistent = wc.proxy.Headers.has_header_value(headers,
+                                           "Proxy-Connection", "Keep-Alive")
 
     def fix_request_headers (self, headers):
         if headers.has_key('Host'):
@@ -345,15 +366,18 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             data = decoder.decode(data)
             if not is_closed:
                 is_closed = decoder.closed
-        data = wc.filter.applyfilters(FilterLevels, data, "filter", self.attrs)
+        data = wc.filter.applyfilters(FilterLevels, data,
+                                      "filter", self.attrs)
         self.content += data
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
         if underflow:
-            wc.log.warn(wc.LOG_PROXY, "client received %d bytes more than content-length",
-                 (-self.bytes_remaining))
+            wc.log.warn(wc.LOG_PROXY,
+                        "client received %d bytes more than content-length",
+                        -self.bytes_remaining)
         if is_closed or self.bytes_remaining <= 0:
-            data = wc.filter.applyfilters(FilterLevels, "", "finish", self.attrs)
+            data = wc.filter.applyfilters(FilterLevels, "",
+                                          "finish", self.attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r" % len(self.content)

@@ -38,7 +38,7 @@ def gzip_header ():
               )
 
 
-def getCompressObject ():
+def get_compress_object ():
     """return attributes for Compress filter"""
     return {'compressor': zlib.compressobj(6, zlib.DEFLATED,
                                              -zlib.MAX_WBITS,
@@ -86,6 +86,7 @@ class Compress (wc.filter.Filter.Filter):
 
 
     def finish (self, data, **attrs):
+        """final compression of data, flush gzip buffers"""
         if not attrs.has_key('compressobj'):
             return data
         compobj = attrs['compressobj']
@@ -108,6 +109,9 @@ class Compress (wc.filter.Filter.Filter):
 
 
     def get_attrs (self, url, headers):
+        """fix headers for compression, and add a compression object
+           to the filter attrs
+        """
         d = super(Compress, self).get_attrs(url, headers)
         compressobj = None
         accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])
@@ -117,10 +121,10 @@ class Compress (wc.filter.Filter.Filter):
             wc.log.warn(wc.LOG_FILTER,
                     "browser does not support gzip compression (%s)", accepts)
         elif encoding and encoding not in _compress_encs:
-            compressobj = getCompressObject()
+            compressobj = get_compress_object()
             headers['data']['Content-Encoding'] = encoding+', gzip\r'
         else:
-            compressobj = getCompressObject()
+            compressobj = get_compress_object()
             headers['data']['Content-Encoding'] = 'gzip\r'
         wc.log.debug(wc.LOG_FILTER, "compress object %s", compressobj)
         d['compressobj'] = compressobj

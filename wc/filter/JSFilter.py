@@ -322,7 +322,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                   {'type': 'text/javascript'}])
             # norm html comments
             script = wc.js.remove_html_comments(self.js_script)
-            script = "\n<!--\n%s\n//-->\n"%wc.js.escape_js(script)
+            script = "\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
             self.htmlparser.tagbuf.append(
                                    [wc.filter.rules.RewriteRule.DATA, script])
             # Note: <script src=""> could be missing an end tag,

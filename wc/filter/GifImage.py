@@ -48,12 +48,13 @@ class GifImage (wc.filter.Filter.Filter):
         if not attrs.has_key('gifparser'):
             return data
         gifparser = attrs['gifparser']
-        gifparser.addData(data)
+        gifparser.add_data(data)
         try:
             gifparser.parse()
         except RewindException:
+            # wait for more data
             pass
-        return gifparser.getOutput()
+        return gifparser.get_output()
 
 
     def finish (self, data, **attrs):
@@ -108,7 +109,7 @@ class GifParser (object):
         self.sizes = sizes
 
 
-    def strState (self):
+    def str_state (self):
         """return string representation of parser state"""
         if self.state == GifParser.SKIP:
             return 'SKIP'
@@ -125,7 +126,7 @@ class GifParser (object):
         return 'UNKNOWN'
 
 
-    def addData (self, data):
+    def add_data (self, data):
         """add image data to internal parse buffer"""
         self.data += data
 
@@ -158,7 +159,7 @@ class GifParser (object):
         self.consumed = self.consumed[:-i]
 
 
-    def getOutput (self):
+    def get_output (self):
         """get output buffer data and flush it"""
         if self.output:
             res = self.output
@@ -174,7 +175,7 @@ class GifParser (object):
            the next time in the saved state with hopefully more data
            available :)"""
         while 1:
-            wc.log.debug(wc.LOG_FILTER, 'GifImage state %s', self.strState())
+            wc.log.debug(wc.LOG_FILTER, 'GifImage state %s', self.str_state())
             self.flush()
             if self.state == GifParser.NOFILTER:
                 self.output += self.consumed + self.data
