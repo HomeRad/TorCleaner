@@ -84,9 +84,14 @@ self.document.write("<b></b>");
 </script>
 
 <!-- illegal starttag chars -->
+<!-- <a:b:c_d-e> -->
 <a:b:c_d-e>
 <!-- illegal endtag chars -->
+<!-- </h%uäö> -->
 </h%uäö>
+<!-- trailing garbage in end tag -->
+<!-- </a target="_blank"> -->
+</a target="_blank">
 
 <!-- bad quote in tag attributes -->
 <!-- <a href="bla" %]">seen at slashdot</a> -->
