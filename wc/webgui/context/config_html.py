@@ -4,6 +4,7 @@ import base64
 from wc import i18n, AppName, filtermodules, ip, Version
 from wc import sort_seq as _sort_seq
 from wc import Configuration as _Configuration
+from wc import daemon as _daemon
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 
@@ -65,6 +66,8 @@ def _exec_form (form):
     if info:
         # write changed config
         config.write_proxyconf()
+        _daemon.reload()
+
 
 
 def _form_proxyport (port):

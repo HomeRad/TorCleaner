@@ -2,6 +2,7 @@
 import tempfile, os
 from wc import i18n, AppName, ConfigDir, rulenames, Version
 from wc import Configuration as _Configuration
+from wc import daemon as _daemon
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
@@ -108,6 +109,7 @@ def _exec_form (form):
 
     if info:
         config.write_filterconf()
+        _daemon.reload()
     _form_set_tags()
 
 
