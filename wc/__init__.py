@@ -247,7 +247,7 @@ class Configuration (dict):
         if self['development']:
             f.write(' development="%d"\n' % self['development'])
         f.write(' try_google="%d"\n' % self['try_google'])
-        hosts = sort_seq(ip.map2hosts(self['nofilterhosts']))
+        hosts = self['nofilterhosts']
         f.write(' nofilterhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
         hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
         f.write(' allowedhosts="%s"\n'%xmlquoteattr(",".join(hosts)))
