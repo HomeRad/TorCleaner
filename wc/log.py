@@ -55,7 +55,7 @@ def get_root_handler ():
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
-    handler = WcRotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
     return set_format(handler)
 
 
@@ -68,7 +68,7 @@ def get_wc_handler ():
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
-    handler = WcRotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
     return set_format(handler)
 
 
@@ -78,7 +78,7 @@ def get_access_handler ():
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
-    handler = WcRotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
     # log only the message
     handler.setFormatter(logging.Formatter("%(message)s"))
     return handler
@@ -187,20 +187,6 @@ def get_last_word_boundary (s, width):
     if match:
         return match.end()
     return width-1
-
-
-class WcRotatingFileHandler (RotatingFileHandler):
-    def emit (self, record):
-        """
-        A little more verbose emit function.
-        """
-        try:
-            msg = self.format(record)
-            self.stream.write("%s\n" % msg)
-            self.flush()
-        except:
-            print >>sys.stderr, "Could not format record", record
-            self.handleError(record)
 
 
 if __name__=='__main__':
