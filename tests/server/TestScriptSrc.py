@@ -61,6 +61,7 @@ class JSRequestHandler (tests.proxy.HttpServer.LogRequestHandler):
         data += "Date: %s\r\n" % self.date_time_string()
         data += "Connection: close\r\n"
         data += "Content-Length: %d\r\n" % len(body)
+        data += "Content-Type: application/x-javascript\r\n"
         data += "\r\n"
         data += body
         self.server.log.write("server will send %d bytes\n" % len(data))
@@ -101,13 +102,13 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
         except wc.filter.FilterException, msg:
             pass
         i = 1
-        while 1:
+        while True:
             try:
                 filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, "", 'finish', attrs)
                 break
             except wc.filter.FilterException, msg:
                 wc.proxy.proxy_poll(timeout=max(0, wc.proxy.run_timers()))
-            i+=1
+            i += 1
             if i==100:
                 # background downloading of javascript is too slow
                 raise wc.filter.FilterException("Slow")
