@@ -100,22 +100,21 @@ class Compress (Filter):
         return data
 
     def getAttrs (self, headers, url):
-        if headers.has_key('content-encoding'):
-            if COMPRESS_RE.search(headers['content-encoding']):
-                compressobj = None
+        do_compress = False
+        for accept in headers.get('Accept-Encoding', '').split(','):
+            if ';' in accept:
+                accept, q = accept.split(';', 1)
+            if accept.strip() in ('gzip', 'x-gzip'):
+                do_compress = True
+                break
+        if do_compres:
+            if headers.has_key('Content-Encoding'):
+                if not COMPRESS_RE.search(headers['Content-Encoding']):
+                    compressobj = getCompressObject()
+                    headers['Content-Encoding'] += ', gzip'
             else:
                 compressobj = getCompressObject()
-                headers['Content-Encoding'] += ', gzip'
-        else:
-            compressobj = getCompressObject()
-            headers['Content-Encoding'] = 'gzip\r'
-        # fix for wget not supporting content-encoding gzip
-        # this works only if the User-Agent value is left intact,
-        # else you will have to deal with wget writing gzip-compressed
-        # files without .gz extension
-        is_wget = headers.get('user-agent', "").startswith('Wget/')
-        if is_wget and compressobj:
-            compressobj = None
+                headers['Content-Encoding'] = 'gzip'
         #debug(HURT_ME_PLENTY, "compress content encoding", headers['content-encoding'])
         #debug(HURT_ME_PLENTY, "compress object", compressobj)
         d = Filter.getAttrs(self, headers, url)
