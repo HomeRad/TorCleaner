@@ -255,6 +255,7 @@ OldTags = {
     "keygen" : None, # Netscape Navigator
     "layer" : None, # Netscape Navigator 4
     "listing" : None, # HTML 3.2
+    "marquee" : None, # IE 4.x
     "multicol" : None, # Netscape Navigator 3
     "nobr" : None, # Netscape Navigator 1.1
     "noembed" : None, # Netscape Navigator 4
@@ -272,6 +273,7 @@ KnownInvalidTags = {
     "forum" : None, # www.heise.de
     "heiseadvert" : None, # www.heise.de
     "heisetext" : None, # www.heise.de
+    "image": None, # imdb.com
     "skyscraper" : None, # www.heise.de
     "u2uforen" : None, # www.heise.de
 }
