@@ -191,6 +191,7 @@ static PyObject* list_dict;
 typedef struct {
     PyObject_HEAD
     PyObject* handler;
+    PyObject* encoding;
     UserData* userData;
     void* scanner;
 } parser_object;
@@ -230,7 +231,7 @@ typedef int YYSTYPE;
 
 
 /* Line 214 of yacc.c.  */
-#line 234 "htmlparse.c"
+#line 235 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -400,8 +401,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   144,   144,   145,   148,   149,   156,   191,   238,   269,
-     290,   311,   332,   353,   375,   397
+       0,   145,   145,   146,   149,   150,   157,   192,   239,   270,
+     291,   312,   333,   354,   376,   398
 };
 #endif
 
@@ -1106,22 +1107,22 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 144 "htmlparse.y"
-    {;}
-    break;
-
-  case 3:
 #line 145 "htmlparse.y"
     {;}
     break;
 
+  case 3:
+#line 146 "htmlparse.y"
+    {;}
+    break;
+
   case 4:
-#line 148 "htmlparse.y"
+#line 149 "htmlparse.y"
     { YYACCEPT; /* wait for more lexer input */ ;}
     break;
 
   case 5:
-#line 150 "htmlparse.y"
+#line 151 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1131,7 +1132,7 @@ yyreduce:
     break;
 
   case 6:
-#line 157 "htmlparse.y"
+#line 158 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1169,7 +1170,7 @@ finish_start:
     break;
 
   case 7:
-#line 192 "htmlparse.y"
+#line 193 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1219,7 +1220,7 @@ finish_start_end:
     break;
 
   case 8:
-#line 239 "htmlparse.y"
+#line 240 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1253,7 +1254,7 @@ finish_end:
     break;
 
   case 9:
-#line 270 "htmlparse.y"
+#line 271 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1277,7 +1278,7 @@ finish_comment:
     break;
 
   case 10:
-#line 291 "htmlparse.y"
+#line 292 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1301,7 +1302,7 @@ finish_pi:
     break;
 
   case 11:
-#line 312 "htmlparse.y"
+#line 313 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1325,7 +1326,7 @@ finish_cdata:
     break;
 
   case 12:
-#line 333 "htmlparse.y"
+#line 334 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1349,7 +1350,7 @@ finish_doctype:
     break;
 
   case 13:
-#line 354 "htmlparse.y"
+#line 355 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1374,7 +1375,7 @@ finish_script:
     break;
 
   case 14:
-#line 376 "htmlparse.y"
+#line 377 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1399,7 +1400,7 @@ finish_style:
     break;
 
   case 15:
-#line 398 "htmlparse.y"
+#line 399 "htmlparse.y"
     {
     /* $1 is a PyString */
     /* Remember this is also called as a lexer error fallback */
@@ -1427,7 +1428,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1431 "htmlparse.c"
+#line 1432 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1621,7 +1622,7 @@ yyreturn:
 }
 
 
-#line 421 "htmlparse.y"
+#line 422 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1632,16 +1633,15 @@ yyreturn:
 /* create parser object */
 static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds) {
     parser_object* self;
-    if ((self = (parser_object*) type->tp_alloc(type, 0)) == NULL)
-    {
+    if ((self = (parser_object*) type->tp_alloc(type, 0)) == NULL) {
         return NULL;
     }
     Py_INCREF(Py_None);
     self->handler = Py_None;
     /* reset userData */
     self->userData = PyMem_New(UserData, sizeof(UserData));
-    if (self->userData == NULL)
-    {
+    if (self->userData == NULL) {
+        Py_DECREF(self->handler);
         Py_DECREF(self);
         return NULL;
     }
@@ -1667,11 +1667,18 @@ static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds)
     self->userData->exc_tb = NULL;
     self->userData->error = NULL;
     self->scanner = NULL;
-    if (htmllexInit(&(self->scanner), self->userData)!=0)
-    {
+    if (htmllexInit(&(self->scanner), self->userData)!=0) {
+        Py_DECREF(self->handler);
         Py_DECREF(self);
         return NULL;
     }
+    self->encoding = PyString_FromString("iso8859-1");
+    if (self->encoding == NULL) {
+        Py_DECREF(self->handler);
+        Py_DECREF(self);
+        return NULL;
+    }
+    self->userData->encoding = self->encoding;
     return (PyObject*) self;
 }
 
@@ -1705,9 +1712,9 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
-    Py_XDECREF(self->handler);
-    self->handler = NULL;
     self->userData->handler = NULL;
+    Py_DECREF(self->handler);
+    self->handler = NULL;
     return 0;
 }
 
@@ -1716,6 +1723,9 @@ static int parser_clear (parser_object* self) {
 static void parser_dealloc (parser_object* self) {
     htmllexDestroy(self->scanner);
     parser_clear(self);
+    self->userData->encoding = NULL;
+    Py_DECREF(self->encoding);
+    self->encoding = NULL;
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
     PyMem_Del(self->userData);
@@ -1913,7 +1923,28 @@ static int parser_sethandler (parser_object* self, PyObject* value, void* closur
     Py_DECREF(self->handler);
     Py_INCREF(value);
     self->handler = value;
-    self->userData->handler = self->handler;
+    self->userData->handler = value;
+    return 0;
+}
+
+static PyObject* parser_getencoding (parser_object* self, void* closure) {
+    Py_INCREF(self->encoding);
+    return self->encoding;
+}
+
+static int parser_setencoding (parser_object* self, PyObject* value, void* closure) {
+    if (value == NULL) {
+        PyErr_SetString(PyExc_TypeError, "Cannot delete encoding");
+        return -1;
+    }
+    if (!PyString_Check(value)) {
+        PyErr_SetString(PyExc_TypeError, "encoding must be string");
+        return -1;
+    }
+    Py_DECREF(self->encoding);
+    Py_INCREF(value);
+    self->encoding = value;
+    self->userData->encoding = value;
     return 0;
 }
 
@@ -1926,6 +1957,8 @@ static PyMemberDef parser_members[] = {
 static PyGetSetDef parser_getset[] = {
     {"handler", (getter)parser_gethandler, (setter)parser_sethandler,
      "handler object", NULL},
+    {"encoding", (getter)parser_getencoding, (setter)parser_setencoding,
+     "encoding", NULL},
     {NULL}  /* Sentinel */
 };
 

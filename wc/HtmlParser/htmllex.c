@@ -9066,7 +9066,7 @@ static yyconst flex_int32_t yy_rule_linenum[116] =
     if ((a)==NULL) return T_ERROR
 
 /* set return value from tmp_buf */
-#define SETLVAL {\
+#define SETLVAL { \
     PyObject* s; \
     PYSTRING_TMP(s); \
     RESIZE_BUF(yyextra->tmp_buf, 1); \
@@ -9074,14 +9074,14 @@ static yyconst flex_int32_t yy_rule_linenum[116] =
     }
 
 /* append yytext to tmp_buf */
-#define APPEND_TO_TMP(n) {\
+#define APPEND_TO_TMP(n) { \
     size_t len = strlen(yyextra->tmp_buf) + (n) + 1; \
     RESIZE_BUF(yyextra->tmp_buf, len); \
     strlcat(yyextra->tmp_buf, yytext, len); \
     }
 
 /* lowercase the tmp_buf */
-#define LOWER_TMP {\
+#define LOWER_TMP { \
     char* p = yyextra->tmp_buf; \
     while (*p) { *p = tolower(*p); p++; } \
     }

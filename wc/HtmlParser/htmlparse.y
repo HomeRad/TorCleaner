@@ -104,6 +104,7 @@ static PyObject* list_dict;
 typedef struct {
     PyObject_HEAD
     PyObject* handler;
+    PyObject* encoding;
     UserData* userData;
     void* scanner;
 } parser_object;
@@ -428,16 +429,15 @@ finish_characters:
 /* create parser object */
 static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds) {
     parser_object* self;
-    if ((self = (parser_object*) type->tp_alloc(type, 0)) == NULL)
-    {
+    if ((self = (parser_object*) type->tp_alloc(type, 0)) == NULL) {
         return NULL;
     }
     Py_INCREF(Py_None);
     self->handler = Py_None;
     /* reset userData */
     self->userData = PyMem_New(UserData, sizeof(UserData));
-    if (self->userData == NULL)
-    {
+    if (self->userData == NULL) {
+        Py_DECREF(self->handler);
         Py_DECREF(self);
         return NULL;
     }
@@ -463,11 +463,18 @@ static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds)
     self->userData->exc_tb = NULL;
     self->userData->error = NULL;
     self->scanner = NULL;
-    if (htmllexInit(&(self->scanner), self->userData)!=0)
-    {
+    if (htmllexInit(&(self->scanner), self->userData)!=0) {
+        Py_DECREF(self->handler);
         Py_DECREF(self);
         return NULL;
     }
+    self->encoding = PyString_FromString("iso8859-1");
+    if (self->encoding == NULL) {
+        Py_DECREF(self->handler);
+        Py_DECREF(self);
+        return NULL;
+    }
+    self->userData->encoding = self->encoding;
     return (PyObject*) self;
 }
 
@@ -501,9 +508,9 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
-    Py_XDECREF(self->handler);
-    self->handler = NULL;
     self->userData->handler = NULL;
+    Py_DECREF(self->handler);
+    self->handler = NULL;
     return 0;
 }
 
@@ -512,6 +519,9 @@ static int parser_clear (parser_object* self) {
 static void parser_dealloc (parser_object* self) {
     htmllexDestroy(self->scanner);
     parser_clear(self);
+    self->userData->encoding = NULL;
+    Py_DECREF(self->encoding);
+    self->encoding = NULL;
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
     PyMem_Del(self->userData);
@@ -709,7 +719,28 @@ static int parser_sethandler (parser_object* self, PyObject* value, void* closur
     Py_DECREF(self->handler);
     Py_INCREF(value);
     self->handler = value;
-    self->userData->handler = self->handler;
+    self->userData->handler = value;
+    return 0;
+}
+
+static PyObject* parser_getencoding (parser_object* self, void* closure) {
+    Py_INCREF(self->encoding);
+    return self->encoding;
+}
+
+static int parser_setencoding (parser_object* self, PyObject* value, void* closure) {
+    if (value == NULL) {
+        PyErr_SetString(PyExc_TypeError, "Cannot delete encoding");
+        return -1;
+    }
+    if (!PyString_Check(value)) {
+        PyErr_SetString(PyExc_TypeError, "encoding must be string");
+        return -1;
+    }
+    Py_DECREF(self->encoding);
+    Py_INCREF(value);
+    self->encoding = value;
+    self->userData->encoding = value;
     return 0;
 }
 
@@ -722,6 +753,8 @@ static PyMemberDef parser_members[] = {
 static PyGetSetDef parser_getset[] = {
     {"handler", (getter)parser_gethandler, (setter)parser_sethandler,
      "handler object", NULL},
+    {"encoding", (getter)parser_getencoding, (setter)parser_setencoding,
+     "encoding", NULL},
     {NULL}  /* Sentinel */
 };
 
