@@ -60,9 +60,15 @@ class PicsRule (UrlRule):
 	s = UrlRule.toxml(self)+">\n"
         if self.url:
             s += "<url>%s</url>\n" % xmlify(self.url)
-        for service, data in self.ratings.items():
+        services = self.ratings.keys()
+        services.sort()
+        for service in services:
+            data = self.ratings[service]
             s += "<service name=\"%s\">\n"%xmlify(service)
-            for category, value in data.items():
+            categories = data.keys()
+            categories.sort()
+            for category in categories:
+                value = data[category]
                 s += "<category name=\"%s\">%d</category>\n"% \
                       (xmlify(category), value)
             s += "</service>\n"
