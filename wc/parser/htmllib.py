@@ -16,11 +16,14 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import sys
+if __name__=='__main__':
+    import os
+    sys.path.insert(0, os.getcwd())
 try:
     import htmlsax
 except ImportError, msg:
     exctype, value = sys.exc_info()[:2]
-    print >>sys.stderr, "Could not import the parser module `linkcheck.parser.htmlsax':", value
+    print >>sys.stderr, "Could not import the parser module `htmlsax':", value
     print >>sys.stderr, "Please check your installation of WebCleaner."
     sys.exit(1)
 
@@ -45,7 +48,7 @@ class HtmlParser:
         self.parser = htmlsax.new_parser(self)
 
     def __getattr__ (self, name):
-        """delegate unknown attrs to self.parser"""
+        """delegate attrs to self.parser"""
         return getattr(self.parser, name)
 
 
@@ -77,6 +80,8 @@ class HtmlPrinter (HtmlParser):
 
 
     def __getattr__ (self, name):
+        if hasattr(self.parser, name):
+            return getattr(self.parser, name)
         self.mem = name
         return self._print
 
