@@ -25,8 +25,8 @@ from wc import AppName, filtermodules, ip, Version, config
 from wc import sort_seq as _sort_seq
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
-from wc.ip import lookup_ips as _lookup_ips
-from wc.ip import resolve_host as _resolve_host
+from wc.network.ip import lookup_ips as _lookup_ips
+from wc.network.ip import resolve_host as _resolve_host
 
 # config vars
 info = {}

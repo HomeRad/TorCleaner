@@ -16,8 +16,8 @@ import pprint
 import wc.proxy
 import wc.proxy.dns
 import wc.proxy.Connection
-import wc.ip
 import wc.network
+import wc.network.ip
 
 
 dns_config = None
@@ -218,7 +218,7 @@ class DnsCache (object):
     def lookup (self, hostname, callback):
         wc.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
         # see if hostname is already a resolved IP address
-        hostname, numeric = wc.ip.expand_ip(hostname)
+        hostname, numeric = wc.network.ip.expand_ip(hostname)
         if numeric:
             callback(hostname, DnsResponse('found', [hostname]))
             return
