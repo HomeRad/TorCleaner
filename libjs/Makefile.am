@@ -40,6 +40,7 @@ libjs_la_SOURCES	= jsapi.c jsapi.h \
 			jsstr.c jsstr.h \
 			jsutil.c jsutil.h \
 			jsxdrapi.c jsxdrapi.h \
+			jsxml.c jsxml.h \
 			prmjtime.c prmjtime.h \
 			jsbit.h \
 			jsclist.h \
