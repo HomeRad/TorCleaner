@@ -85,6 +85,9 @@ HTML '< / a>'
 endElement ('a',)
 HTML '< /a>'
 endElement ('a',)
+HTML '</td <td a="b" >'
+endElement ('td',)
+startElement ('td', {'a': 'b'})
 HTML '<a/>'
 startElement ('a', {})
 endElement ('a',)
@@ -191,6 +194,9 @@ HTML '< / a>'
 endElement ('a',)
 HTML '< /a>'
 endElement ('a',)
+HTML '</td <td a="b" >'
+endElement ('td',)
+startElement ('td', {'a': 'b'})
 HTML '<a/>'
 startElement ('a', {})
 endElement ('a',)

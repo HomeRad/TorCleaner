@@ -46,6 +46,7 @@ tests = (
     """</a >""",
     """< / a>""", # invalid (is start tag)
     """< /a>""", # invalid (is start tag)
+    """</td <td a="b" >""",
     # start and end tag
     """<a/>""",
     # declaration tags
