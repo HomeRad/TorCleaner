@@ -1,4 +1,4 @@
-2.26 "" (released xx.xx.2004)
+2.26 "Tokyo Raiders" (released xx.12.2004)
 
   * Do not include test packages in installed binaries.
     Changed: setup.py
