@@ -3,16 +3,17 @@
 
 import unittest, random
 from wc.parser import SortedDict
+from tests import StandardTest
 
 
-class TestSortedDict (unittest.TestCase):
+class TestSortedDict (StandardTest):
+
     def testInsert (self):
         d = SortedDict()
         d[2] = 1
         d[1] = 2
         self.assert_(2 in d)
         self.assert_(1 in d)
-
 
     def testDelete (self):
         d = SortedDict()
@@ -22,14 +23,12 @@ class TestSortedDict (unittest.TestCase):
         self.assert_(2 in d)
         self.assert_(1 not in d)
 
-
     def testUpdate (self):
         d = SortedDict()
         d[2] = 1
         d[1] = 2
         d[1] = 1
         self.assertEqual(d[1], 1)
-
 
     def testSorting (self):
         d = SortedDict()
@@ -41,6 +40,6 @@ class TestSortedDict (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestSortedDict')
 else:
     suite = unittest.makeSuite(TestSortedDict, 'test')

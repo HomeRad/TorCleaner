@@ -29,13 +29,8 @@ class LogHttpServer (BaseHTTPServer.HTTPServer):
         self.abort = False
         self.log = log
         self.socket.setblocking(0)
-        if not address[0]:
-            host = 'localhost'
-        else:
-            host = address[0]
-        port = address[1]
-        self.log.write("server %s accepting HTTP queries at %s:%d with %s\n" % \
-         (self.__class__.__name__, host, port, handler.__name__))
+        self.log.write("server %s accepting HTTP queries at %s with %s\n" % \
+        (self.__class__.__name__, str(self.server_address), handler.__name__))
 
     def serve_until_stopped (self):
         """Handle one request at a time until doomsday."""
@@ -48,6 +43,9 @@ class LogHttpServer (BaseHTTPServer.HTTPServer):
             _acquireLock()
             abort = self.abort
             _releaseLock()
+        self.server_close()
+        self.log.write("server %s closed\n" % str(self.server_address))
+
 
 
 def random_chars (size):
@@ -127,14 +125,15 @@ def startServer (log, server_class=LogHttpServer,
         _acquireLock()
         running = _server is not None
         _releaseLock()
+    time.sleep(2)
     return t
 
 
 def stopServer (log):
-    log.write("stopping test server")
     global _server
     _acquireLock()
     _server.abort = True
     _releaseLock()
-    log.write(".\n")
+    stopped = False
+    time.sleep(3)
 

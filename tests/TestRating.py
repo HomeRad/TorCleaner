@@ -4,13 +4,13 @@
 import unittest, os
 from wc.filter.Rating import *
 from wc.log import initlog
+from tests import StandardTest
 
 
-class TestRating (unittest.TestCase):
+class TestRating (StandardTest):
 
-    def setUp (self):
+    def init (self):
         initlog(os.path.join("test", "logging.conf"))
-
 
     def testRating_split_url (self):
         urls = (
@@ -28,7 +28,6 @@ class TestRating (unittest.TestCase):
         for url, res in urls:
             self.assertEqual(rating_split_url(url), res)
 
-
     def testRating_in_range (self):
         # rating_in_range (prange, value)
         self.assert_(rating_in_range((None, None), (1, 1)))
@@ -40,7 +39,6 @@ class TestRating (unittest.TestCase):
         self.assert_(not rating_in_range((1, 2), (1, 3)))
         self.assert_(not rating_in_range((1, 2), (0, None)))
         self.assert_(not rating_in_range((1, 2), (None, 3)))
-
 
     def testRating_range (self):
         # rating_range (range)
@@ -54,6 +52,6 @@ class TestRating (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestRating')
 else:
     suite = unittest.makeSuite(TestRating, 'test')

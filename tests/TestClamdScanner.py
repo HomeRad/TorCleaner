@@ -5,36 +5,31 @@ import unittest, os
 import wc
 from wc.filter.VirusFilter import ClamavConfig, ClamdScanner
 from wc.log import initlog
+from tests import StandardTest
 
 
-class TestClamdScanner (unittest.TestCase):
+class TestClamdScanner (StandardTest):
     """Test the clamav daemon stream scanner"""
 
-    def setUp (self):
+    def init (self):
         wc.config = wc.Configuration()
         initlog(os.path.join("test", "logging.conf"))
         self.clamav_conf = ClamavConfig(wc.config['clamavconf'])
 
-
     def testPlain (self):
         self.scan("test1")
-
 
     def testBz2 (self):
         self.scan("test1.bz2")
 
-
     def testBadext (self):
         self.scan("test2.badext")
-
 
     def testZip (self):
         self.scan("test2.zip")
 
-
     def _testRar (self):
         self.scan("test3.rar")
-
 
     def scan (self, filename):
         filename =  os.path.join("tests", "virus", filename)
@@ -49,7 +44,7 @@ class TestClamdScanner (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestClamdScanner')
 else:
     suite = unittest.makeSuite(TestClamdScanner, 'test')
 

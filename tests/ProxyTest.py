@@ -6,18 +6,13 @@ import wc
 import HttpServer, HttpClient
 from wc.log import *
 from wc.update import update_filter, update_ratings
+from tests import StandardTest
 
-class ProxyTest (unittest.TestCase):
+
+class ProxyTest (StandardTest):
     """Base class for all tests involving a started WebCleaner Proxy.
        After the proxy is started, http clients submit configurable
        request data and check the result validity"""
-
-    def __init__ (self, methodName='runTest'):
-        unittest.TestCase.__init__(self, methodName=methodName)
-        #self.log = file("proxytest.txt", 'w')
-        self.log = sys.stdout
-        self.proxytests = []
-        self.proxyconfig = wc.Configuration()
 
     def addTest (self, request,
                  client_class=HttpClient.LogHttpClient,
@@ -28,12 +23,16 @@ class ProxyTest (unittest.TestCase):
 
     def setUp (self):
         """Starts proxy server."""
+        self.log = file("servertests.txt", 'a')
+        #self.log = sys.stdout
+        self.proxytests = []
+        self.proxyconfig = wc.Configuration()
         self.startProxy()
 
     def tearDown (self):
         """Stop proxy, close log"""
         self.stopProxy()
-        #self.log.close()
+        self.log.close()
 
     def startProxy (self):
         port = self.proxyconfig['port']
@@ -50,13 +49,11 @@ class ProxyTest (unittest.TestCase):
                 time.sleep(1)
 
     def stopProxy (self):
-        self.log.write("stopping proxy")
         wc.config.set_abort(True)
         time.sleep(1)
-        self.log.write(".\n")
 
     def testProxy (self):
-        """send request through proxy to server"""
+        """proxy test with client/server request"""
         for proxytest in self.proxytests:
             request = proxytest[0]
             client_class = proxytest[1]

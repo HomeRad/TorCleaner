@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 """test javascript filtering"""
 
-import unittest, os
+import unittest, os, sys
 from test import disable_rating_rules
 import wc
 from wc.proxy import proxy_poll, run_timers
@@ -9,13 +9,14 @@ from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog
+from tests import StandardTest
 
 
-class TestRewriteScript (unittest.TestCase):
+class TestRewriteScript (StandardTest):
     """All these tests work with a _default_ filter configuration.
        If you change any of the *.zap filter configs, tests can fail..."""
 
-    def setUp (self):
+    def init (self):
         wc.config = wc.Configuration()
         disable_rating_rules(wc.config)
         wc.config['filters'] = ['Rewriter',]
@@ -24,18 +25,19 @@ class TestRewriteScript (unittest.TestCase):
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
 
+    def setUp (self):
+        self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY], headers=self.headers)
 
-    def filt (self, data, result, name=""):
-        attrs = get_filterattrs(name, [FILTER_RESPONSE_MODIFY], headers=self.headers)
+    def filt (self, data, result):
         filtered = ""
         try:
-            filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', attrs)
+            filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', self.attrs)
         except FilterException, msg:
             pass
         i = 1
         while 1:
             try:
-                filtered += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish', attrs)
+                filtered += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish', self.attrs)
                 break
             except FilterException, msg:
                 proxy_poll(timeout=max(0, run_timers()))
@@ -45,13 +47,11 @@ class TestRewriteScript (unittest.TestCase):
                 raise FilterException("Slow")
         self.assertEqual(filtered, result)
 
-
     def testEmpty (self):
         self.filt(
 """<script language="JavaScript">
 
 </script>""", "")
-
 
     def testStandard (self):
         self.filt(
@@ -120,7 +120,6 @@ function display() {
 //-->
 </script>""")
 
-
     def testRecursion1 (self):
         self.filt(
 """<script language="JavaScript">
@@ -135,25 +134,6 @@ document.write('foo');
       </td>
    </tr>
 </table>""")
-
-
-    def XXXtestRecursion2 (self):
-        self.filt(
-"""<script language="JavaScript">
-<!--
-document.write('<SCR'+'IPT LANGUAGE="JavaScript1.1" ' );
-document.write('SRC="http://localhost/~calvin/test/2.js">');
-document.write('</SCR'+'IPT>');
-//-->
-</script>
-      </td>
-   </tr>
-</table>""",
-"""
-      </td>
-   </tr>
-</table>""")
-
 
     def testRecursion3 (self):
         self.filt(
@@ -176,52 +156,16 @@ a=0;
    </tr>
 </table>""")
 
-
-    def XXXtestScriptSrc1 (self):
-        self.filt(
-"""<script src="http://localhost/~calvin/test/1.js"></script>
-
-</html>""",
-"""
-</html>""")
-
-
-    def XXXtestScriptSrc2 (self):
-        self.filt(
-"""<script src="http://localhost/~calvin/test/1.js">
- 
-</script>
-
-</html>""",
-"""
-</html>""")
-
-
-    def XXXtestScriptSrc3 (self):
-        """missing </script>"""
-        self.filt(
-"""<script src="http://localhost/~calvin/test/3.js"/>
-<script type="JavaScript">
-<!--
-a = 1
-// -->
-</script>
-
-</html>""",
-"""XXX""")
-
-
     def testScriptSrc4 (self):
         self.filt(
-"""<script src="http://localhost/notfound.js">
+"""<script src="http://imadoofus.org/notfound.js">
 /* this should not be here **/ 
 </script>""",
 """<script type="text/javascript">
 <!--
-// error fetching script from 'http://localhost/notfound.js'
+// error fetching script from 'http://imadoofus.org/notfound.js'
 //-->
 </script>""")
-
 
     def testScriptSrc5 (self):
         self.filt(
@@ -231,7 +175,6 @@ a = 1
 """
 
 </html>""")
-
 
     def testCommentQuoting (self):
         self.filt(
@@ -246,7 +189,6 @@ function a () {
 //-->
 </script>""")
 
-
     def testFlash (self):
         self.filt(
 """<script language="JavaScript1.1">
@@ -259,7 +201,6 @@ var words = navigator.plugins["Shockwave Flash"].description.split(" ");
 var words = navigator.plugins["Shockwave Flash"].description.split(" ");
 //-->
 </script>""")
-
 
     def testHostname (self):
         self.filt(
@@ -276,7 +217,6 @@ var v2 = location.hostname;
 //-->
 </script>""")
 
-
     def testNonScript (self):
         self.filt(
 """<script language="VBScript">
@@ -289,7 +229,6 @@ tooooooot.
 tooooooot.
 //-->
 </script>""")
-
 
     def testCommentQuoting2 (self):
         self.filt(
@@ -306,6 +245,6 @@ a = 0
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestRewriteScript')
 else:
     suite = unittest.makeSuite(TestRewriteScript, 'test')

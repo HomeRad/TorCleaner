@@ -2,10 +2,6 @@
 # -*- coding: iso-8859-1 -*-
 import unittest, os, getopt, sys
 
-def get_test_files ():
-    return [p for p in os.listdir('tests')
-            if p.startswith('Test') and p.endswith('.py')]
-
 
 def usageExit (msg=None):
     if msg:
@@ -39,15 +35,29 @@ def parse_args (argv):
 
 def runall (verbosity):
     mysuite = unittest.TestSuite()
-    for fname in get_test_files():
-        klass = os.path.splitext(fname)[0]
-        try:
-            exec 'from tests.%s import suite' % klass
-            mysuite.addTest(suite)
-        except ImportError:
-            pass
+    gettests('tests', mysuite)
     runner = unittest.TextTestRunner(verbosity=verbosity)
     runner.run(mysuite)
+
+
+def gettests (dirname, suite):
+    for fname in os.listdir(dirname):
+        fullname = os.path.join(dirname, fname)
+        if os.path.isfile(fullname) and \
+           fname.startswith('Test') and fname.endswith('.py'):
+            addtest(dirname, fname, suite)
+        elif os.path.isdir(fullname):
+            gettests(fullname, suite)
+
+
+def addtest (dirname, fname, mysuite):
+    pkg = dirname.replace(os.path.sep, ".")
+    klass = os.path.splitext(fname)[0]
+    try:
+        exec 'from %s.%s import suite' % (pkg, klass)
+        mysuite.addTest(suite)
+    except ImportError:
+        pass
 
 
 if __name__=='__main__':

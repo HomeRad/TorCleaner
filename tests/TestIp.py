@@ -3,13 +3,13 @@
 import unittest, os
 from wc import ip
 from wc.log import initlog
+from tests import StandardTest
 
 
-class TestIp (unittest.TestCase):
+class TestIp (StandardTest):
 
-    def setUp (self):
+    def init (self):
         initlog(os.path.join("test", "logging.conf"))
-
 
     def testNames (self):
         hosts, nets = ip.hosts2map(["www.kampfesser.net",
@@ -26,24 +26,20 @@ class TestIp (unittest.TestCase):
         self.assert_(not ip.host_in_set("4", hosts, nets))
         self.assert_(not ip.host_in_set("", hosts, nets))
 
-
     def testIPv4_1 (self):
         hosts, nets = ip.hosts2map(["1.2.3.4"])
         self.assert_(ip.host_in_set("1.2.3.4", hosts, nets))
-
 
     def testNetwork1 (self):
         hosts, nets = ip.hosts2map(["192.168.1.1/8"])
         for i in range(255):
             self.assert_(ip.host_in_set("192.168.1.%d"%i, hosts, nets))
 
-
     def testNetwork2 (self):
         hosts, nets = ip.hosts2map(["192.168.1.1/16"])
         for i in range(255):
             for j in range(255):
                 self.assert_(ip.host_in_set("192.168.%d.%d"%(i,j), hosts, nets))
-
 
     #def testNetwork3 (self):
     #    hosts, nets = ip.hosts2map(["192.168.1.1/24"])
@@ -52,19 +48,16 @@ class TestIp (unittest.TestCase):
     #            for k in range(255):
     #                self.assert_(ip.host_in_set("192.%d.%d.%d"%(i,j,k), hosts, nets))
 
-
     def testNetwork4 (self):
         hosts, nets = ip.hosts2map(["192.168.1.1/255.255.255.0"])
         for i in range(255):
             self.assert_(ip.host_in_set("192.168.1.%d"%i, hosts, nets))
-
 
     def testNetwork5 (self):
         hosts, nets = ip.hosts2map(["192.168.1.1/255.255.0.0"])
         for i in range(255):
             for j in range(255):
                 self.assert_(ip.host_in_set("192.168.%d.%d"%(i,j), hosts, nets))
-
 
     #def testNetwork6 (self):
     #    hosts, nets = ip.hosts2map(["192.168.1.1/255.0.0.0"])
@@ -73,26 +66,21 @@ class TestIp (unittest.TestCase):
     #            for k in range(255):
     #                self.assert_(ip.host_in_set("192.%d.%d.%d"%(i,j,k), hosts, nets))
 
-
     def testIPv6_1 (self):
         hosts, nets = ip.hosts2map(["::0"])
         # XXX
-
 
     def testIPv6_2 (self):
         hosts, nets = ip.hosts2map(["1::"])
         # XXX
 
-
     def testIPv6_3 (self):
         hosts, nets = ip.hosts2map(["1::1"])
         # XXX
 
-
     def testIPv6_4 (self):
         hosts, nets = ip.hosts2map(["fe00::0"])
         # XXX
-
 
     def testNetmask (self):
         for i in range(32):
@@ -100,6 +88,6 @@ class TestIp (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestIp')
 else:
     suite = unittest.makeSuite(TestIp, 'test')

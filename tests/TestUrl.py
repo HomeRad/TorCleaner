@@ -1,8 +1,11 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
 from wc.url import url_norm, url_quote, is_valid_url, is_valid_js_url
+from tests import StandardTest
 
-class TestUrl (unittest.TestCase):
+
+class TestUrl (StandardTest):
+
     def testUrl (self):
         url = "http://server/..%5c..%5c..%5c..%5c..%5c..%5..%5c..%5ccskin.zip"
         nurl = url_quote(url_norm(url))
@@ -17,6 +20,6 @@ class TestUrl (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestUrl')
 else:
     suite = unittest.makeSuite(TestUrl, 'test')

@@ -5,10 +5,12 @@ from cStringIO import StringIO
 
 import unittest
 from wc import ip
+from tests import StandardTest
 
 
-class TestParser (unittest.TestCase):
-    def setUp (self):
+class TestParser (StandardTest):
+
+    def init (self):
         # list of tuples (<test pattern>, <expected parse output>)
         self.htmltests = (
         # start tags
@@ -95,7 +97,6 @@ class TestParser (unittest.TestCase):
         self.htmlparser = htmlsax.parser()
         self.htmlparser2 = htmlsax.parser()
 
-
     def testParse (self):
         for _in, _out in self.htmltests:
             out = StringIO()
@@ -105,7 +106,6 @@ class TestParser (unittest.TestCase):
             res = out.getvalue()
             self.assertEqual(res, _out)
             self.htmlparser.reset()
-
 
     def testFeed (self):
         for _in, _out in self.htmltests:
@@ -117,7 +117,6 @@ class TestParser (unittest.TestCase):
             res = out.getvalue()
             self.assertEqual(res, _out)
             self.htmlparser.reset()
-
 
     def testInterwoven (self):
         for _in, _out in self.htmltests:
@@ -136,7 +135,6 @@ class TestParser (unittest.TestCase):
             self.assertEqual(res2, _out)
             self.htmlparser.reset()
 
-
     def testFlush (self):
         for _in, _out in self.flushtests:
             out = StringIO()
@@ -147,13 +145,12 @@ class TestParser (unittest.TestCase):
             self.assertEqual(res, _out)
             self.htmlparser.reset()
 
-
     def testEntities (self):
         for c in "abcdefghijklmnopqrstuvwxyz":
             self.assertEqual(resolve_entities("&#%d;"%ord(c)), c)
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestParser')
 else:
     suite = unittest.makeSuite(TestParser, 'test')

@@ -1,9 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 import unittest
 from wc.proxy.dns.Lib import Packer, Unpacker
+from tests import StandardTest
 
 
-class TestDns (unittest.TestCase):
+class TestDns (StandardTest):
     """Test DNS routines"""
 
     def testPacker (self):
@@ -31,6 +32,6 @@ class TestDns (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestDns')
 else:
     suite = unittest.makeSuite(TestDns, 'test')

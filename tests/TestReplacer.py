@@ -4,15 +4,15 @@ import unittest, random, os
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
 from wc.log import initlog
+from tests import StandardTest
 
+class TestReplacer (StandardTest):
 
-class TestReplacer (unittest.TestCase):
-    def setUp (self):
+    def init (self):
         wc.config = wc.Configuration()
         wc.config['filters'] = ['Replacer']
         wc.config.init_filter_modules()
         initlog(os.path.join("test", "logging.conf"))
-
 
     def testReplaceRandom (self):
         attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY])
@@ -25,6 +25,6 @@ class TestReplacer (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestReplacer')
 else:
     suite = unittest.makeSuite(TestReplacer, 'test')

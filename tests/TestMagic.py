@@ -4,22 +4,20 @@
 import unittest, os
 from wc.magic import convert, classify
 from test import initlog
+from tests import StandardTest
 
-class TestMagic (unittest.TestCase):
+class TestMagic (StandardTest):
 
-    def setUp (self):
+    def init (self):
         initlog("test/logging.conf")
         self.basedir = os.path.join(os.getcwd(), "tests", "magic")
-
 
     def testHtml (self):
         self.doMagic("test.html", "text/html")
 
-
     def doMagic (self, filename, expected):
         fp = file(os.path.join(self.basedir, filename), 'rb')
         self.assertEqual(classify(fp), expected)
-
 
     def testConvert (self):
         # XXX make asserts
@@ -31,14 +29,12 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(127, convert.convert(r"\177E"))
         self.assertEqual(2, convert.convert(r"02f7"))
 
-
     def testSizeNumber (self):
         self.assertEqual(3, convert.size_number(r"100qwerty"))
         self.assertEqual(3, convert.size_number(r"100FFF"))
         self.assertEqual(2, convert.size_number(r"\77FF"))
         self.assertEqual(2, convert.size_number(r"\XFFG"))
         self.assertEqual(1, convert.size_number(r"02f7"))
-
 
     def testIndexNumber (self):
         self.assertEqual(0, convert.index_number(r"0XF"))
@@ -47,7 +43,6 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(2, convert.index_number(r"FF\7"))
         self.assertEqual(3, convert.index_number(r"FFF\XFFGG"))
         self.assertEqual(2, convert.index_number(r"FF\XFFGG"))
-
 
     def testConvertEndian (self):
         # 0000 0001 -->     1
@@ -68,6 +63,6 @@ class TestMagic (unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestMagic')
 else:
     suite = unittest.makeSuite(TestMagic, 'test')

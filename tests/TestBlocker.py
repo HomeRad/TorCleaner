@@ -6,17 +6,16 @@ import unittest, os
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
 from wc.log import initlog
+from tests import StandardTest
 
+class TestBlocker (StandardTest):
 
-class TestBlocker (unittest.TestCase):
-
-    def setUp (self):
+    def init (self):
         self.url = "http://ads.realmedia.com/"
         wc.config = wc.Configuration()
         wc.config['filters'] = ['Blocker',]
         wc.config.init_filter_modules()
         initlog(os.path.join("test", "logging.conf"))
-
 
     def testBlocker (self):
         data = "GET %s HTTP/1.0" % self.url
@@ -25,8 +24,7 @@ class TestBlocker (unittest.TestCase):
         self.assert_(filtered.find("blocked.html")!=-1)
 
 
-
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(defaultTest='TestBlocker')
 else:
     suite = unittest.makeSuite(TestBlocker, 'test')
