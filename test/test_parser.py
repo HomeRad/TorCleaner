@@ -49,9 +49,9 @@ tests = (
     # start and end tag
     """<a/>""",
     # declaration tags
-    """<!DOCTYPE adrbook SYSTEM "adrbook.dtd">""",
+    """<!DOCtype adrbook SYSTEM "adrbook.dtd">""",
     # misc
-    """<?xml version="1.0" encoding="latin1"?>""",
+    """<?xmL version="1.0" encoding="latin1"?>""",
     # javascript
     """<script >\n</script>""",
     """<sCrIpt lang="a">bla </a> fasel</scripT>""",

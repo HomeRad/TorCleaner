@@ -88,10 +88,10 @@ endElement ('a',)
 HTML '<a/>'
 startElement ('a', {})
 endElement ('a',)
-HTML '<!DOCTYPE adrbook SYSTEM "adrbook.dtd">'
+HTML '<!DOCtype adrbook SYSTEM "adrbook.dtd">'
 doctype (' adrbook SYSTEM "adrbook.dtd"',)
-HTML '<?xml version="1.0" encoding="latin1"?>'
-pi ('xml version="1.0" encoding="latin1"',)
+HTML '<?xmL version="1.0" encoding="latin1"?>'
+pi ('xmL version="1.0" encoding="latin1"',)
 HTML '<script >\n</script>'
 startElement ('script', {})
 characters ('\n',)
@@ -194,10 +194,10 @@ endElement ('a',)
 HTML '<a/>'
 startElement ('a', {})
 endElement ('a',)
-HTML '<!DOCTYPE adrbook SYSTEM "adrbook.dtd">'
+HTML '<!DOCtype adrbook SYSTEM "adrbook.dtd">'
 doctype (' adrbook SYSTEM "adrbook.dtd"',)
-HTML '<?xml version="1.0" encoding="latin1"?>'
-pi ('xml version="1.0" encoding="latin1"',)
+HTML '<?xmL version="1.0" encoding="latin1"?>'
+pi ('xmL version="1.0" encoding="latin1"',)
 HTML '<script >\n</script>'
 startElement ('script', {})
 characters ('\n',)
