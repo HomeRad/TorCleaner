@@ -17,6 +17,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import wc.url
+import wc.filter.rating
 
 class Storage (object):
     """Storage for ratings."""
@@ -50,7 +51,8 @@ class Storage (object):
 
     def check_url (self, url):
         if not wc.url.is_safe_url(url):
-            raise RatingParseError("Invalid rating url %s." % repr(url))
+            raise wc.filter.rating.RatingParseError(
+                                  "Invalid rating url %s." % repr(url))
 
     def load (self):
         pass
