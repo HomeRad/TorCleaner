@@ -81,7 +81,7 @@ class BufferHtmlParser (HtmlParser):
         self.buf = []
 
 
-    def _buf_append_data (self, data):
+    def buf_append_data (self, data):
         """we have to make sure that we have no two following
         DATA things in the tag buffer. Why? To be 100% sure that
         an ENCLOSED match really matches enclosed data.
