@@ -699,8 +699,6 @@ class Magic (object):
                     raise Failed("No success")
             except (Failed, IOError):
                 allow_next = level
-        f.close()
-
         if not found_rule:
             # XXX: API Change this was previously returning "unknown"
             return None
