@@ -35,6 +35,16 @@ def _exec_form (form):
         _form_proxyport(_getval(form, 'port'))
     elif config['port']!=8080:
         _form_proxyport(8080)
+    # admin pass
+    if form.has_key('adminpass'):
+        val = _getval(form, 'adminpass')
+        # ignore dummy values
+        if val!='__dummy__':
+            _form_adminpass(base64.encodestring(val).strip(), res)
+    elif config['adminpass']:
+        config['adminpass'] = ''
+        info['adminpass'] = True
+        res[0] = 407
     # proxy user
     if form.has_key('proxyuser'):
         _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
@@ -130,6 +140,14 @@ def _form_proxyport (port):
             info['port'] = True
     except ValueError:
         error['port'] = True
+
+
+def _form_adminpass (adminpass, res):
+    if adminpass != config['adminpass']:
+        config['adminpass'] = adminpass
+        config.write_proxyconf()
+        info['adminpass'] = True
+        res[0] = 407
 
 
 def _form_proxyuser (proxyuser, res):
