@@ -116,13 +116,17 @@ def proxy_poll (timeout=0.0):
             debug(PROXY, "%s poll handle exception", x)
             x.handle_expt_event()
             handlerCount += 1
-        for x in [ x for x in w if x not in e and x.writable() ]:
+        for x in w:
+            if x in e or not x.writable():
+                continue
             t = time.time()
             debug(PROXY, "%s poll handle write", x)
             x.handle_write_event()
             handlerCount += 1
             _slow_check(x, t, 'wslow')
-        for x in [ x for x in r if (x not in e and x not in w) and x.readable() ]:
+        for x in r:
+            if x in e or x in w or not x.readable():
+                continue
             t = time.time()
             debug(PROXY, "%s poll handle read", x)
             x.handle_read_event()
@@ -140,9 +144,11 @@ def _slow_check (x, t, stype):
 
 def mainloop (handle=None):
     from HttpClient import HttpClient
+    #from HttpsClient import HttpsClient
     from Listener import Listener
     from wc import config
     Listener(config['port'], HttpClient)
+    #Listener(config['sslport'], HttpsClient, ssl=True)
     # experimental interactive command line
     #from Interpreter import Interpreter
     #Listener(config['port']+1, Interpreter)
