@@ -9,7 +9,7 @@ from ProxyTest import ProxyTest
 
 class ChunkRequestHandler (LogRequestHandler):
 
-    body_length = 30
+    body_length = 0x30
 
     def do_GET (self):
         """send chunk data"""
@@ -19,7 +19,7 @@ class ChunkRequestHandler (LogRequestHandler):
         data += "Transfer-Encoding: chunked\r\n"
         data += "Connection: close\r\n"
         data += "\r\n"
-        data += "0000000000%d\r\n" % len(body)
+        data += "0000000000%s\r\n" % hex(self.body_length)[2:]
         data += "%s\r\n" % body
         data += "0\r\n\r\n"
         self.server.log.write("server will send %d bytes\n" % len(data))
