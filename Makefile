@@ -133,7 +133,7 @@ update-blacklists:
 	# unpack the files we are interested in
 	cd config && tar xzvf ../blacklists.tar.gz '*domains' '*urls' '*expressions'
 	# (re)generate webcleaner rules for these files
-	$(PYTHON) config/bl2wc.py `find config/blacklists -type f | grep -v CVS`
+	$(PYTHON) config/bl2wc.py `find config/blacklists/ -type f | grep -v CVS`
 	# delete unused files
 	find config/blacklists -name expressions -exec rm -f {} \;
 	# compress (some files are very big)
