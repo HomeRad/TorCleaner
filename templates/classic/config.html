@@ -77,6 +77,18 @@
  type="checkbox" name="auth_ntlm" id="auth_ntlm" value="1">
 </td>
 </tr>
+<tr tal:condition="config/enable_google_cache">
+<td>
+<label i18n:attributes="title Use Google cache contents for invalid pages"
+ for="use_google_cache" i18n:translate="">Use Google cache</label>
+</td>
+<td>
+<input tal:condition="config/use_google_cache"
+ type="checkbox" checked name="use_google_cache" id="use_google_cache" value="1">
+<input tal:condition="not:config/use_google_cache"
+ type="checkbox" name="use_google_cache" id="use_google_cache" value="1">
+</td>
+</tr>
 </table>
 <div class="footnote">
 <sup id="footnote1" title="footnote 1" i18n:attributes="title footnote 1">1)</sup>
