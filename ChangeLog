@@ -1,3 +1,16 @@
+2.21 "Bugsy" (released 18.10.2004)
+  * make string of domain before concatenating
+    Type: bugfix
+    Changed: wc/proxy/dns_lookup.py
+
+  * generate .mo file per default
+    Type: bugfix
+    Changed: po/Makefile.am
+
+  * added missing set_format log function
+    Type: bugfix
+    Changed: wc/__init__.py
+
 2.20 "The machinist" (released 16.10.2004)
   * Fixed service install (SF bug #1001556)
     Type: bugfix
