@@ -89,7 +89,6 @@ class ClientServerMatchmaker (object):
             new_url += self.document
             info(PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
-            # XXX find http version!
             ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol, 301,
@@ -166,15 +165,11 @@ class ClientServerMatchmaker (object):
         self.state = 'response'
         # At this point, we tell the server that we are the client.
         # Once we get a response, we transfer to the real client.
-        server.client_send_request(self.method,
-                                   self.hostname,
-                                   self.port,
-                                   self.document,
-                                   self.headers,
-                                   self.content,
-                                   self,
-                                   self.url,
-                                   self.mime)
+        server.client_send_request(self.method, self.protocol,
+                                   self.hostname, self.port,
+                                   self.document, self.headers,
+                                   self.content, self,
+                                   self.url, self.mime)
 
 
     def server_abort (self):

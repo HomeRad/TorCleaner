@@ -31,5 +31,10 @@ class Server (Connection):
         self.process_connect()
 
 
+    def writable (self):
+        """a server is writable if we're connecting"""
+        return self.state == 'connect' or self.send_buffer != ''
+
+
     def process_connect (self):
         raise NotImplementedError("must be implemented in a subclass")

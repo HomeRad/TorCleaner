@@ -66,6 +66,7 @@ class Connection (Dispatcher):
         debug(PROXY, '%s <= read %d', self, len(data))
         debug(CONNECTION, 'data %r', data)
         if not data: # It's been closed, and handle_close has been called
+            debug(PROXY, "%s closed, got empty data")
             return
 	self.recv_buffer += data
         self.process_read()
@@ -86,8 +87,7 @@ class Connection (Dispatcher):
 
     def handle_write (self):
         """Write data from send_buffer to connection socket.
-           When send_buffer is empty execute a possible pending
-           close."""
+           Execute a possible pending close."""
         assert self.connected
         assert self.send_buffer
         num_sent = 0

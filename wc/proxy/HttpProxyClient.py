@@ -4,11 +4,13 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.log import *
+from wc.proxy import make_timer
 from wc.proxy.Headers import get_wc_client_headers
 from wc.url import stripsite, spliturl, url_norm, url_quote
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse, urllib
+
 
 class HttpProxyClient (object):
     """A class buffering all incoming data from a server for later use.
@@ -28,6 +30,7 @@ class HttpProxyClient (object):
             self.document = '/'
         self.connected = True
         self.addr = ('localhost', 80)
+        self.isredirect = False
         debug(PROXY, '%s init', self)
 
 
@@ -63,29 +66,9 @@ class HttpProxyClient (object):
         assert self.server.connected
         debug(PROXY, '%s server_response %r', self, response)
         protocol, status, msg = get_response_data(response, self.args[0])
+        debug(PROXY, '%s response %s %d %s', self, protocol, status, msg)
         if status in (302, 301):
-            # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
-            # make a new ClientServerMatchmaker
-            url = self.server.headers.getheader("Location",
-                         self.server.headers.getheader("Uri", ""))
-            url = urlparse.urljoin(self.server.url, url)
-            self.url = url_norm(url)
-            self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
-            # fix missing trailing /
-            if not self.document:
-                self.document = '/'
-            host = stripsite(self.url)[0]
-            self.args = (self.url, self.args[1])
-            mime = self.server.mime
-            content = ''
-            request = "GET %s HTTP/1.0"%url_quote(self.url)
-            # close the server and try again
-            self.server.client_abort()
-            self.server = None
-            headers = get_wc_client_headers(host)
-            headers['Accept-Encoding'] = 'identity\r'
-            ClientServerMatchmaker(self, request, headers, content, mime=mime)
-            return
+            self.isredirect = True
         elif not (200 <= status < 300):
             error(PROXY, "%s got %s status %d %r", self, protocol, status, msg)
             self.finish()
@@ -94,13 +77,17 @@ class HttpProxyClient (object):
     def server_content (self, data):
         assert self.server
         debug(PROXY, '%s server_content with %d bytes', self, len(data))
-        self.write(data)
+        if data and not self.isredirect:
+            self.write(data)
 
 
     def server_close (self, server):
         assert self.server
         debug(PROXY, '%s server_close', self)
-        self.finish()
+        if self.isredirect:
+            self.redirect()
+        else:
+            self.finish()
 
 
     def server_abort (self):
@@ -111,3 +98,30 @@ class HttpProxyClient (object):
     def handle_local (self):
         error(PROXY, "%s handle_local %s", self, self.args)
         self.finish()
+
+
+    def redirect (self):
+        assert self.server
+        # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
+        # make a new ClientServerMatchmaker
+        url = self.server.headers.getheader("Location",
+                     self.server.headers.getheader("Uri", ""))
+        url = urlparse.urljoin(self.server.url, url)
+        self.url = url_norm(url)
+        self.args = (self.url, self.args[1])
+        self.isredirect = False
+        debug(PROXY, "%s redirected", self)
+        self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+        # fix missing trailing /
+        if not self.document:
+            self.document = '/'
+        host = stripsite(self.url)[0]
+        mime = self.server.mime
+        content = ''
+        # note: use HTTP/1.0 for JavaScript
+        request = "GET %s HTTP/1.0"%url_quote(self.url)
+        # close the server and try again
+        self.server = None
+        headers = get_wc_client_headers(host)
+        headers['Accept-Encoding'] = 'identity\r'
+        ClientServerMatchmaker(self, request, headers, content, mime=mime)

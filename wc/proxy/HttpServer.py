@@ -87,13 +87,13 @@ class HttpServer (Server):
         self.document = ''
         self.response = ''
         self.headers = WcMessage()
-        self.data_written = False # delay data writing flag
         self.decoders = [] # Handle each of these, left to right
         self.persistent = False # for persistent connections
         self.attrs = {} # initial filter attributes are empty
         self.authtries = 0 # restrict number of authentication tries
         self.statuscode = None # numeric HTTP status code
         self.bytes_remaining = None # number of content bytes remaining
+        debug(PROXY, "%s resetted", self)
 
 
     def __repr__ (self):
@@ -107,16 +107,8 @@ class HttpServer (Server):
                              portstr, self.document)
         if self.client:
             extra += " client"
-        if self.data_written:
-            extra += " data_written"
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('server', self.state, extra)
-
-
-    def writable (self):
-        """a server is writable if we're connecting"""
-        # XXX: move this logic into the Connection (or Server) class
-        return self.state == 'connect' or self.send_buffer != ''
 
 
     def process_connect (self):
@@ -139,12 +131,13 @@ class HttpServer (Server):
             self.close()
 
 
-    def client_send_request (self, method, hostname, port, document, headers,
-                             content, client, url, mime):
+    def client_send_request (self, method, protocol, hostname, port,
+                             document, headers, content, client, url, mime):
         """the client (matchmaker) sends the request to the server"""
         assert self.state == 'client'
-        assert not self.data_written, "oops %s" % self
         self.method = method
+        # the client protocol
+        self.protocol = protocol
         self.client = client
         self.hostname = hostname
         self.port = port
@@ -220,7 +213,7 @@ class HttpServer (Server):
             # Okay, we got a valid response line
             protocol, self.statuscode, tail = get_response_data(self.response, self.url)
             # reconstruct cleaned response
-            self.response = "%s %d %s" % (protocol, self.statuscode, tail)
+            self.response = "%s %d %s" % (self.protocol, self.statuscode, tail)
             self.state = 'headers'
             # Let the server pool know what version this is
             serverpool.set_http_version(self.addr, get_http_version(protocol))
@@ -228,6 +221,7 @@ class HttpServer (Server):
             # It's a blank line, so assume HTTP/0.9
             warn(PROXY, "%s got HTTP/0.9 response", self)
             serverpool.set_http_version(self.addr, (0,9))
+            self.response = "%s 200 Ok"%self.protocol
             self.statuscode = 200
             self.attrs = get_filterattrs(self.url, [FILTER_RESPONSE_HEADER])
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
@@ -242,7 +236,7 @@ class HttpServer (Server):
             serverpool.set_http_version(self.addr, (1,0))
             # put the read bytes back to the buffer and fix the response
             self.recv_buffer = self.response + self.recv_buffer
-            self.response = "HTTP/1.0 200 Ok"
+            self.response = "%s 200 Ok"%self.protocol
             self.statuscode = 200
             self.state = 'headers'
         if self.response:
@@ -278,7 +272,8 @@ class HttpServer (Server):
             return
         http_ver = serverpool.http_versions[self.addr]
         if http_ver >= (1,1):
-            self.persistent = not has_header_value(msg, 'Connection', 'Close')
+            self.persistent = not has_header_value(msg, 'Connection', 'Close') \
+                              and msg.has_key("Content-Length")
         elif http_ver >= (1,0):
             self.persistent = has_header_value(msg, 'Connection', 'Keep-Alive')
         else:
@@ -289,7 +284,7 @@ class HttpServer (Server):
                                        "finish", self.attrs)
         except FilterRating, msg:
             debug(PROXY, "%s FilterRating from header: %s", self, msg)
-            self._show_rating_deny(str(msg))
+            self._show_rating_deny(str(msg), with_response=True)
             return
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
@@ -303,21 +298,16 @@ class HttpServer (Server):
             data += flush_decoders(decoders)
             server_set_content_headers(self.headers, data, self.document,
                                        self.mime, self.url)
-        # XXX <doh>
-        #if not self.headers.has_key('Content-Length'):
-        #    self.headers['Connection'] = 'close\r'
-        #remove_headers(self.headers, ['Keep-Alive'])
-        # XXX </doh>
         if self.statuscode in (204, 304) or self.method == 'HEAD':
-            # These response codes indicate no content
-            self.client.server_response(self, self.response, self.statuscode,
-                                        self.headers)
-            self.data_written = True
+            # these response codes indicate no content
             self.state = 'recycle'
         else:
             self.state = 'content'
         self.attrs = get_filterattrs(self.url, _response_filters, headers=msg)
         debug(PROXY, "%s filtered headers %s", self, self.headers)
+        self.client.server_response(self, self.response, self.statuscode,
+                                    self.headers)
+        # note: self.client could be None here
 
 
     def is_rewrite (self):
@@ -328,24 +318,24 @@ class HttpServer (Server):
         return False
 
 
-    def _show_rating_deny (self, msg):
+    def _show_rating_deny (self, msg, with_response=False):
         """requested page is rated"""
         query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
-        # XXX get version
-        response = "HTTP/1.1 302 %s"%i18n._("Moved Temporarily")
+        response = "%s 302 %s"%(self.protocol, i18n._("Moved Temporarily"))
         headers = WcMessage()
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://localhost:%d/rated.html?%s\r'%\
                               (config['port'], query)
         headers['Content-Length'] = '%d\r'%len(msg)
         debug(PROXY, "%s headers\n%s", self, headers)
-        self.client.server_response(self, response, self.statuscode, headers)
-        self.data_written = True
+        if with_response:
+            self.client.server_response(self, response, self.statuscode, headers)
+            if not self.client: return
         self.client.server_content(msg)
         self.client.server_close(self)
         self.state = 'recycle'
-        # XXX delayed close?
+        self.persistent = False
         self.close()
 
 
@@ -367,15 +357,6 @@ class HttpServer (Server):
         try:
             for i in _response_filters:
                 data = applyfilter(i, data, "filter", self.attrs)
-            if data:
-                if self.statuscode!=407:
-                    if not self.data_written:
-                        self.client.server_response(self, self.response,
-                                              self.statuscode, self.headers)
-                        self.data_written = True
-                    if not self.client:
-                        return
-                    self.client.server_content(data)
         except FilterWait, msg:
             debug(PROXY, "%s FilterWait %s", self, msg)
         except FilterRating, msg:
@@ -387,12 +368,10 @@ class HttpServer (Server):
         if underflow:
             warn(PROXY, i18n._("server received %d bytes more than content-length"),
                  (-self.bytes_remaining))
+        if self.statuscode!=407:
+            self.client.server_content(data)
         if is_closed or self.bytes_remaining==0:
-            # Either we ran out of bytes, or the decoder says we're done
-            if not self.data_written:
-                self.client.server_response(self, self.response,
-                                            self.statuscode, self.headers)
-                self.data_written = True
+            # either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
 
 
@@ -445,7 +424,7 @@ class HttpServer (Server):
 
     def flush (self):
         """flush data of decoders (if any) and filters and write it to
-           the client"""
+           the client. return True if flush was successful"""
         debug(PROXY, "%s flushing", self)
         if not self.statuscode:
             warn(PROXY, "%s flush without status", self)
@@ -460,13 +439,7 @@ class HttpServer (Server):
             return False
         # the client might already have closed
         if self.client and self.statuscode!=407:
-            if not self.data_written and self.statuscode:
-                self.client.server_response(self, self.response,
-                                            self.statuscode, self.headers)
-                self.data_written = True
-            if data:
-                assert hasattr(self.client, "server_content"), "%s wrong client %s"%(self, self.client)
-                self.client.server_content(data)
+            self.client.server_content(data)
         return True
 
 
@@ -512,8 +485,6 @@ class HttpServer (Server):
         debug(PROXY, "%s handle_close", self)
         self.persistent = False
         super(HttpServer, self).handle_close()
-        #if self.authtries>0:
-        #    self.reconnect()
 
 
     def reconnect (self):
