@@ -43,6 +43,8 @@ from wc.webgui.TAL.DummyEngine import DummyEngine
 #from ITALES import ITALESEngine
 from wc.webgui.TAL.TALDefs import TALESError
 
+__version__ = "1.0"
+
 pot_header = '''\
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR ORGANIZATION
