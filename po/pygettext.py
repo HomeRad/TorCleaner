@@ -548,7 +548,10 @@ class HtmlGettext (HtmlParser):
             self.tag = tag
             self.data = ""
         elif msgid is not None:
-            self.translations.add(msgid)
+            if msgid.startswith("string:"):
+                self.translations.add(msgid[7:])
+            else:
+                self.warning("tag %s has unsupported dynamic msgid"%tag)
 
 
     def endElement (self, tag):

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Aug  1 14:36:31 2003\n"
+"POT-Creation-Date: Fri Aug  1 18:30:04 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -646,9 +646,6 @@ msgstr ""
 msgid "Filter configuration"
 msgstr ""
 
-msgid "%s proxy configuration"
-msgstr ""
-
 msgid "Accessibility statement"
 msgstr ""
 
@@ -784,13 +781,7 @@ msgstr ""
 msgid "%d nofilter hosts successfully removed."
 msgstr ""
 
-msgid "%s error page"
-msgstr ""
-
 msgid "%s error"
-msgstr ""
-
-msgid "%s filter rule configuration"
 msgstr ""
 
 msgid "Remove folder"
@@ -1117,9 +1108,6 @@ msgstr ""
 msgid "Rule rewrite replacement changed."
 msgstr ""
 
-msgid "%s web interface main page"
-msgstr ""
-
 msgid ""
 "USAGE\twebcleaner command\n"
 "\n"
@@ -1150,7 +1138,7 @@ msgstr ""
 msgid "press return to continue..."
 msgstr ""
 
-msgid "Unknown option %s"
+msgid "Unknown option %(option)s"
 msgstr ""
 
 msgid "No command given."
@@ -1163,12 +1151,39 @@ msgid "Unknown command %s"
 msgstr ""
 
 #, html translation
+msgid "Blank page due to block by %(AppName)"
+msgstr ""
+
+#, html translation
+msgid ""
+"I wrote this software to get rid of advertisings. Adverts are nowadays so\n"
+"blatantly user-unfriendly I was fed up with them and now I can browse\n"
+"almost every site again without this annoying stuff."
+msgstr ""
+
+#, html translation
+msgid "%(AppName) error"
+msgstr ""
+
+#, html translation
+msgid "Feedback for %(AppName)"
+msgstr ""
+
+#, html translation
 msgid ""
 "Welcome to the wonderful\n"
 "world of WebCleaner, the land of lounge lizards."
 msgstr ""
 
 #, html translation
-msgid "Blank page due to block by WebCleaner"
+msgid "%(AppName)s proxy configuration"
+msgstr ""
+
+#, html translation
+msgid "%(AppName)s web interface main page"
+msgstr ""
+
+#, html translation
+msgid "%(AppName)s filter rule configuration"
 msgstr ""
 

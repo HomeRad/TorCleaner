@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Fri Aug  1 14:36:31 2003\n"
+"POT-Creation-Date: Fri Aug  1 18:30:04 2003\n"
 "PO-Revision-Date: 2003-07-30 02:36+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -714,9 +714,6 @@ msgstr "Proxykonfiguration"
 msgid "Filter configuration"
 msgstr "Filterkonfiguration"
 
-msgid "%s proxy configuration"
-msgstr "%s Proxykonfiguration"
-
 msgid "Accessibility statement"
 msgstr "Zugänglichkeitserklärung"
 
@@ -859,14 +856,8 @@ msgstr "Nicht zu filternder Rechner wurde erfolgreich entfernt."
 msgid "%d nofilter hosts successfully removed."
 msgstr "%d nicht zu filternde Rechner wurde erfolgreich entfernt."
 
-msgid "%s error page"
-msgstr "%s Fehlerseite"
-
 msgid "%s error"
 msgstr "%s Fehler"
-
-msgid "%s filter rule configuration"
-msgstr "%s Filterregeln Konfiguration"
 
 msgid "Remove folder"
 msgstr "Ordner löschen"
@@ -1192,9 +1183,6 @@ msgstr "Rewrite-Regel Teilwert geändert."
 msgid "Rule rewrite replacement changed."
 msgstr "Rewrite-Regel Ersatztext wurde geändert."
 
-msgid "%s web interface main page"
-msgstr "%s Weboberfläche Hauptseite"
-
 msgid ""
 "USAGE\twebcleaner command\n"
 "\n"
@@ -1243,8 +1231,8 @@ msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
 msgid "press return to continue..."
 msgstr "drücken Sie Return, um fortzufahren..."
 
-msgid "Unknown option %s"
-msgstr "Unbekannte Option %s"
+msgid "Unknown option %(option)s"
+msgstr "Unbekannte Option %(option)s"
 
 msgid "No command given."
 msgstr "Kein Befehl angegeben."
@@ -1255,16 +1243,44 @@ msgstr "Warnung: nur der erste Befehl ist gültig"
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
 
+#, fuzzy
+msgid "Blank page due to block by %(AppName)"
+msgstr "Leere Seite aufgrund einer Blockierung durch %s"
+
+msgid ""
+"I wrote this software to get rid of advertisings. Adverts are nowadays so\n"
+"blatantly user-unfriendly I was fed up with them and now I can browse\n"
+"almost every site again without this annoying stuff."
+msgstr ""
+
+msgid "%(AppName) error"
+msgstr ""
+
+msgid "Feedback for %(AppName)"
+msgstr ""
+
 msgid ""
 "Welcome to the wonderful\n"
 "world of WebCleaner, the land of lounge lizards."
 msgstr ""
 
 #, fuzzy
-msgid "Blank page due to block by WebCleaner"
-msgstr "Leere Seite aufgrund einer Blockierung durch %s"
+msgid "%(AppName)s proxy configuration"
+msgstr "%s Proxykonfiguration"
 
-#~ msgid "Blank page due to block by %s"
+#, fuzzy
+msgid "%(AppName)s web interface main page"
+msgstr "%s Weboberfläche Hauptseite"
+
+#, fuzzy
+msgid "%(AppName)s filter rule configuration"
+msgstr "%s Filterregeln Konfiguration"
+
+#~ msgid "%s error page"
+#~ msgstr "%s Fehlerseite"
+
+#, fuzzy
+#~ msgid "Blank page due to block by WebCleaner"
 #~ msgstr "Leere Seite aufgrund einer Blockierung durch %s"
 
 #~ msgid "%d rule"
