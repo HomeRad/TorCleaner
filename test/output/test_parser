@@ -9,11 +9,11 @@ startElement ('a', {'b': 'c&quot;'})
 HTML '<a b="c>'
 characters ('<a b="c>',)
 HTML '<a b="">'
-startElement ('a', {'b': ''})
+startElement ('a', {'b': '""'})
 HTML "<a b=''>"
-startElement ('a', {'b': ''})
+startElement ('a', {'b': '""'})
 HTML '<a b=>'
-startElement ('a', {'b': ''})
+startElement ('a', {'b': '""'})
 HTML '<a =c>'
 startElement ('a', {'c': None})
 HTML '<a =>'
@@ -108,7 +108,7 @@ startElement ('img', {'bo': None, 'rder': '0'})
 HTML '<a href="123$456">'
 startElement ('a', {'href': '123$456'})
 HTML '<a href=/>'
-startElement ('a', {'href': ''})
+startElement ('a', {'href': '""'})
 endElement ('a',)
 HTML '<a href="\'">'
 startElement ('a', {'href': '"\'"'})
@@ -126,11 +126,11 @@ startElement ('a', {'b': 'c&quot;'})
 HTML '<a b="c>'
 characters ('<a b="c>',)
 HTML '<a b="">'
-startElement ('a', {'b': ''})
+startElement ('a', {'b': '""'})
 HTML "<a b=''>"
-startElement ('a', {'b': ''})
+startElement ('a', {'b': '""'})
 HTML '<a b=>'
-startElement ('a', {'b': ''})
+startElement ('a', {'b': '""'})
 HTML '<a =c>'
 startElement ('a', {'c': None})
 HTML '<a =>'
