@@ -50,11 +50,11 @@ _end_js_comment = re.compile(r"\s*//[^\r\n]*-->$").search
 class JSHtmlListener (JSListener):
     """defines callback handlers for Javascript code"""
     def __init__ (self, opts):
-        self.js_filter = opts['javascript'] and jslib
+        self.javascript = opts['javascript'] and jslib
         self.js_html = None
         self.js_src = False
         self.js_script = ''
-        if self.js_filter:
+        if self.javascript:
             self.js_env = jslib.new_jsenv()
             self.js_output = 0
             self.js_popup = 0
@@ -245,14 +245,14 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def flush (self):
         self._debug("flush")
         if self.waited > 100:
-            # waited too long; stop js background downloader and
-            # switch back to parse
             error(FILTER, "waited too long for %s"%self.state[1])
-            if self.js_env.hasListener(self):
-                self.js_env.detachListener(self)
+            # tell the background downloader to stop
+            self.js_client.finish()
             self.js_html = None
+            # switch back to parse
             self.state = ('parse',)
-            self.feed("") # will replay() buffered data
+            # feeding an empty string will replay() buffered data
+            self.feed("")
         elif self.state[0]=='wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
@@ -379,13 +379,13 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.rulestack.append((pos, rulelist))
         if filtered:
             self.buf_append_data(item)
-        elif self.js_filter:
+        elif self.javascript:
             # if its not yet filtered, try filter javascript
             self.jsStartElement(tag, attrs)
         else:
             self.buf.append(item)
         # if rule stack is empty, write out the buffered data
-        if not self.rulestack and not self.js_filter:
+        if not self.rulestack and not self.javascript:
             self.buf2data()
 
 
@@ -404,7 +404,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.waitbuf.append(item)
             return
         if not self.filterEndElement(tag):
-            if self.js_filter and tag=='script':
+            if self.javascript and tag=='script':
                 self.jsEndElement(item)
                 self.js_src = False
                 return
@@ -487,11 +487,11 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.state = ('wait', url)
         self.waited = 1
         self.js_src = True
-        client = HttpProxyClient(self.jsScriptData, (url, ver))
-        ClientServerMatchmaker(client,
-                               "GET %s HTTP/1.1" % url, #request
-                               WcMessage(StringIO('')), #headers
-                               '', #content
+        self.js_client = HttpProxyClient(self.jsScriptData, (url, ver))
+        ClientServerMatchmaker(self.js_client,
+                               "GET %s HTTP/1.1" % url, # request
+                               WcMessage(StringIO('')), # headers
+                               '', # content
                                {'nofilter': None}, # nofilter
                                'identity', # compress
                                mime = "application/x-javascript",
@@ -530,7 +530,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_env.attachListener(self)
         # start recursive html filter (used by jsProcessData)
         self.js_html = FilterHtmlParser(self.rules, self.pics, self.url,
-       comments=self.comments, javascript=self.js_filter, level=self.level+1)
+                         comments=self.comments, javascript=self.javascript,
+                         level=self.level+1)
         # execute
         self.js_env.executeScript(unescape_js(script), ver)
         self.js_env.detachListener(self)
