@@ -5,31 +5,30 @@ version 2.10 and above
 - HTTPS Gateway data flux:
 
                         DOWN			UP
-    BROWSER
+  WWW BROWSER
 	|
 	|
-    PROXY
+  WEBCLEANER PROXY
 	|
      HttpClient         init server, pass	pass data back to
 	|		request data		browser
 	|
+     ClientServerMatchmaker
 	|
-     HttpServer		pass request data	pass data back to
-	|					HttpClient
+  WEBCLEANER SSL SERVER
 	|
      HttpsServer	pass request data	receive filtered data,
      	|					encrypt it with WebCleaner
 	|					certificate and pass it on
-	|					to HttpServer
+	|					to HttpClient
 	|
      HttpsClient	connect to SSL server,	decrypt and filter the
     	|		send request data	received data, pass it on
         |					to HttpsServer
 	|
-  SSL SERVER
+  REMOTE SSL SERVER
 
-
-- windows .exe  with py2exe
+- DNS resolve for allowed/nofilter hosts
 
 - memory leaks while operating the proxy
 
