@@ -24,6 +24,8 @@ from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.url import is_safe_url as _is_safe_url
 from wc.strformat import strtime as _strtime
 from wc.filter.rating import services, categories
+from wc.filter.rating.storage import get_rating_store as _get_rating_store
+from wc.filter.rating.storage.pickle import PickleStorage as _PickleStorage
 
 _entries_per_page = 50
 
@@ -53,15 +55,16 @@ def _reset_values ():
 
 def _calc_ratings_display ():
     global ratings_display
-    urls = []#XXXrating_cache.keys()
+    urls = rating_store.keys()
     urls.sort()
     ratings_display = urls[curindex:curindex+_entries_per_page]
     for _url in ratings_display:
-        t = _strtime(float(rating_cache[_url]['modified']))
+        t = _strtime(rating_store[_url].modified)
         rating_modified[_url] = t.replace(u" ", u"&nbsp;")
 
 
 _reset_values()
+rating_store = _get_rating_store(_PickleStorage)
 url = u""
 generic = False
 # current index of entry to display
@@ -86,7 +89,7 @@ def _exec_form (form, lang):
     # index stuff
     if form.has_key('selindex'):
         _form_selindex(_getval(form, 'selindex'))
-    l = len(rating_cache)
+    l = len(rating_store)
     if l > _entries_per_page:
         _calc_selindex(curindex)
     else:
@@ -133,7 +136,7 @@ def _form_generic (form):
 
 
 def _form_ratings (form):
-    for key, value in _get_prefix_vals('category_'):
+    for key, value in _get_prefix_vals(form, 'category_'):
         category = _get_category(key)
         if not category.is_valid_value(value):
             error['categoryvalue'] = True
@@ -158,7 +161,7 @@ def _calc_selindex (index):
     global selindex
     res = [index-1000, index-250, index-50, index, index+50,
            index+250, index+1000]
-    selindex = [ x for x in res if 0 <= x < len(rating_cache) and x!=index ]
+    selindex = [ x for x in res if 0 <= x < len(rating_store) and x!=index ]
 
 
 def _form_apply ():
@@ -184,8 +187,8 @@ def _form_delete ():
 
 def _form_load ():
     global generic, url
-    if url in rating_cache:
-        rating = rating_cache[url]
+    if url in rating_store:
+        rating = rating_store[url]
         for category, value in rating.items():
             if category == u'generic':
                 generic = (value == u'true')
