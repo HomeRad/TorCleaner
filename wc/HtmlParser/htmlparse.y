@@ -212,6 +212,7 @@ finish_start:
     }
     /* encode tagname in ASCII, ignoring any unknown chars */
     tagname = PyUnicode_AsEncodedString(tag, "ascii", "ignore");
+    if (tagname==NULL) { error=1; goto finish_start_end; }
     if (PyObject_HasAttrString(ud->handler, "end_element")==1 &&
 	NO_HTML_END_TAG(PyString_AsString(tagname))) {
 	callback = PyObject_GetAttrString(ud->handler, "end_element");
@@ -229,6 +230,7 @@ finish_start_end:
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_XDECREF(tag);
+    Py_XDECREF(tagname);
     Py_XDECREF(attrs);
     Py_DECREF($1);
     if (error) {
@@ -244,9 +246,11 @@ finish_start_end:
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
-    char* tagname = PyString_AS_STRING($1);
+    /* encode tagname in ASCII, ignoring any unknown chars */
+    PyObject* tagname = PyUnicode_AsEncodedString($1, "ascii", "ignore");
+    if (tagname==NULL) { error=1; goto finish_end; }
     if (PyObject_HasAttrString(ud->handler, "end_element")==1 &&
-	NO_HTML_END_TAG(tagname)) {
+	NO_HTML_END_TAG(PyString_AsString(tagname))) {
 	callback = PyObject_GetAttrString(ud->handler, "end_element");
 	if (callback==NULL) { error=1; goto finish_end; }
 	result = PyObject_CallFunction(callback, "O", $1);
@@ -259,6 +263,7 @@ finish_start_end:
 finish_end:
     Py_XDECREF(ud->error);
     ud->error = NULL;
+    Py_XDECREF(tagname);
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
