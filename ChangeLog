@@ -2,16 +2,18 @@
   * - remove <body ondragstart, oncontextmenu, onselectstart>
     - prevent document.onmousedown rebinding
     - some ad filter updates
-    Changed files: config/{scripting,adverts}.zap
+    Changed files: config/{scripting,adverts,misc}.zap
   * also apply filter rules to document.write content
     Changed files: wc/filter/HtmlParser.py
   * fix return types in the daemon package
     Changed files: wc/daemon/_posix.py
-  * use builtin dict for configuration
+  * use builtin dict type for configuration
     Changed files: wc/__init__.py
   * convert paths to platform specific representation to prevent
     compile errors
     Changed files: setup.py
+  * 100 continue: switch back to response state only after reading headers
+    Changed files: wc/proxy/HttpServer.py
 
 1.10
   * fix rule title updating (again)
