@@ -1,8 +1,9 @@
-# we use the scripts in Tools/i18n of the Python 2.0 distribution
+# we use the scripts in Tools/i18n of the Python 2.3 distribution
 PYTHON=python2.2
 I18NTOOLS=.
-GETTEXT=$(PYTHON) $(I18NTOOLS)/pygettext.py
+GETTEXT=$(PYTHON) $(I18NTOOLS)/pygettext.py -k i18n._
 MSGFMT=$(PYTHON) $(I18NTOOLS)/msgfmt.py
+#MSGFMT=msgfmt
 MSGMERGE=msgmerge
 SOURCES=\
 ../webcleaner \
@@ -78,14 +79,14 @@ SOURCES=\
 ../wc/webgui/__init__.py \
 ../wc/webgui/WebConfig.py
 
-LDIR=../locale
+LDIR=../share/locale
 LFILE=LC_MESSAGES/$(PACKAGE).mo
-MOS=$(LDIR)/de/$(LFILE)
 PACKAGE=webcleaner
+# defined language (add new languages here)
+LANGUAGES=de
+MOS=$(patsubst %, %.mo, $(LANGUAGES) )
 
-.PHONY: all
-all:
-	$(MAKE) de.mo
+all:	$(MOS)
 
 %.po:	pot-stamp
 	$(MSGMERGE) $@ $(PACKAGE).pot -o $@
@@ -96,7 +97,15 @@ pot-stamp: $(SOURCES)
 	touch pot-stamp
 
 %.mo:	%.po
+	if [ ! -d $(LDIR)/$*/LC_MESSAGES ]; then \
+	  mkdir -p $(LDIR)/$*/LC_MESSAGES; \
+	fi
 	$(MSGFMT) -o$(LDIR)/$*/$(LFILE) $<
 
 clean:
-	rm -f pot-stamp $(MOS)
+	for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
+
+distclean:	clean
+	rm -f pot-stamp
+
+.PHONY: all clean distclean

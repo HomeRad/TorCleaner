@@ -15,8 +15,8 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 from UrlRule import UrlRule
-from wc import _, debug, xmlify, unxmlify
-from wc.debug_levels import *
+from wc.XmlUtils import xmlify, unxmlify
+from wc.debug import *
 
 # tag ids
 STARTTAG = 0
@@ -84,7 +84,7 @@ class RewriteRule (UrlRule):
         self.replace = list(replace)
         self.enclosed = enclosed
         if self.enclosed and self.tag in NO_CLOSE_TAGS:
-            raise ValueError, _("Dont specify <enclose> with tag name %s")%tag
+            raise ValueError("reading rule %s: tag %s has no end tag, so specifying an enclose value is invalid." % (`rule.title`, `tag`))
         self.attrnames.append('tag')
 
     def fill_attrs (self, attrs, name):

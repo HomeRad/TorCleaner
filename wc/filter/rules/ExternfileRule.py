@@ -15,7 +15,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 from Rule import Rule
-from wc import xmlify
+from wc.XmlUtils import xmlify
 
 class ExternfileRule (Rule):
     """rule with data stored in an external file"""

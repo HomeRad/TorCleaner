@@ -1,10 +1,8 @@
 import sys, os, httplib
 from ToolWindow import ToolWindow
 
-import wc
-wc.config = wc.Configuration()
-from wc import debug, _, BaseParser, ConfigDir
-from wc.debug_levels import *
+from wc import i18n, BaseParser, ConfigDir
+from wc.debug import *
 from FXPy.fox import *
 
 SCROLLING_NONE = 0
@@ -27,7 +25,7 @@ def parse_headers ():
         s = get_data("/headers/")
         #debug(BRING_IT_ON, "headers data", s)
     except (IOError, ValueError):
-        print >> sys.stderr, _("WebCleaner is not running")
+        print >> sys.stderr, i18n._("WebCleaner is not running")
         return headers
     if s=="-": return headers
     lines = s.split("\n")
@@ -79,7 +77,7 @@ def parse_connections ():
     try:
         s = get_data("/connections/")
     except (IOError, ValueError):
-        print >> sys.stderr, _("WebCleaner is not running")
+        print >> sys.stderr, i18n._("WebCleaner is not running")
         return connections
     lines = s.split("\n")
     for l in lines:
@@ -122,10 +120,10 @@ class HeaderWindow (ToolWindow):
         self.connectionFrame(frame)
         # Buttons
         frame = FXHorizontalFrame(frame, LAYOUT_FILL_X)
-        FXButton(frame, _(" &Quit "), None, self, self.ID_QUIT)
-        FXButton(frame, _(" &Refresh "), None, self, self.ID_REFRESH)
-        FXButton(frame, _(" &Options "), None, self, self.ID_OPTIONS)
-        FXButton(frame, _("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
+        FXButton(frame, i18n._(" &Quit "), None, self, self.ID_QUIT)
+        FXButton(frame, i18n._(" &Refresh "), None, self, self.ID_REFRESH)
+        FXButton(frame, i18n._(" &Options "), None, self, self.ID_OPTIONS)
+        FXButton(frame, i18n._("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
 
         self.statusbar.getStatusline().setTarget(self)
         self.statusbar.getStatusline().setSelector(self.ID_STATUS)
@@ -138,14 +136,14 @@ class HeaderWindow (ToolWindow):
 
 
     def connectionFrame (self, frame):
-	basics = FXGroupBox(frame, _("Connections"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+	basics = FXGroupBox(frame, i18n._("Connections"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
 
 
     def headerFrame (self, frame):
-        headers = FXGroupBox(frame, _("Headers"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        headers = FXGroupBox(frame, i18n._("Headers"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         self.headers = FXIconList(headers, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|ICONLIST_SINGLESELECT|ICONLIST_AUTOSIZE)
-        self.headers.appendHeader(_("Name"),NULL,100)
-        self.headers.appendHeader(_("Value"),NULL,500)
+        self.headers.appendHeader(i18n._("Name"),NULL,100)
+        self.headers.appendHeader(i18n._("Value"),NULL,500)
 
 
     def eventMap (self):
@@ -182,21 +180,21 @@ class HeaderWindow (ToolWindow):
 
     def onCmdAddHeader (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Add header")
-        dialog = FXDialogBox(self,_("Add Header"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self,i18n._("Add Header"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Header:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Header:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         header = FXTextField(matrix, 20)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             header = header.getText().strip().lower()
             if not header:
-                self.getApp().error(_("Add header"), _("Empty header"))
+                self.getApp().error(i18n._("Add header"), i18n._("Empty header"))
 	        return 1
             if header in self.config['nodisplay']:
-                self.getApp().error(_("Add header"), _("Duplicate header"))
+                self.getApp().error(i18n._("Add header"), i18n._("Duplicate header"))
 	        return 1
             self.config['nodisplay'].append(header)
             self.options.headers.appendItem(header)
@@ -222,15 +220,15 @@ class HeaderWindow (ToolWindow):
         index = headers.getCurrentItem()
         item = headers.retrieveItem(index)
         header = item.getText()
-        dialog = FXDialogBox(self, _("Edit Header"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self, i18n._("Edit Header"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("New header:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("New header:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         nametf = FXTextField(matrix, 20)
         nametf.setText(header)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newheader = nametf.getText().strip().lower()
             self.config['nodisplay'].remove(header)
@@ -279,7 +277,7 @@ class HeaderWindow (ToolWindow):
             file.close()
             self.getApp().dirty = 0
         except IOError:
-            self.getApp().error(_("Save options"), _("cannot write to file %s") % file)
+            self.getApp().error(i18n._("Save options"), i18n._("cannot write to file %s") % file)
         self.getApp().endWaitCursor()
 
 
@@ -365,9 +363,9 @@ class HeaderWindow (ToolWindow):
                 oldio = io
                 self.headers.appendItem("\t")
                 if io:
-                    self.headers.appendItem("%s\t %s"%(_('<- RESPONSE'), url))
+                    self.headers.appendItem("%s\t %s"%(i18n._('<- RESPONSE'), url))
                 else:
-                    self.headers.appendItem("%s\t %s"%(_('-> REQUEST'), url))
+                    self.headers.appendItem("%s\t %s"%(i18n._('-> REQUEST'), url))
                 for name, value in header[2]:
                     if name.lower() in self.config['nodisplay']:
                         continue
@@ -431,22 +429,22 @@ class OptionsWindow (FXDialogBox):
         # options
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         # refresh
-        FXLabel(matrix, _("Refresh"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Refresh"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         w = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETREFRESH, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN)
         w.setRange(0,65535)
         w.setValue(owner.config['refresh'])
         # only first
-        FXLabel(matrix, _("Only first\tDisplay only the first hit in a series of headers for the same host"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Only first\tDisplay only the first hit in a series of headers for the same host"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         w = FXCheckButton(matrix, None, owner, HeaderWindow.ID_SETONLYFIRST, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP|LAYOUT_FILL_COLUMN)
         w.setCheck(owner.config['onlyfirst'])
         # scrolling
-        FXLabel(matrix, _("Scrolling"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Scrolling"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         cols=0
         w = FXComboBox(matrix,0,3,owner, HeaderWindow.ID_SETSCROLLING,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP|LAYOUT_FILL_COLUMN)
         levels = [
-            _("none"),
-            _("auto"),
-            _("always"),
+            i18n._("none"),
+            i18n._("auto"),
+            i18n._("always"),
         ]
         for text in levels:
             cols = max(len(text), cols)
@@ -455,24 +453,24 @@ class OptionsWindow (FXDialogBox):
         w.setNumColumns(cols)
         w.setCurrentItem(owner.config['scrolling'])
         # number of cached headers
-        FXLabel(matrix, _("No. of saved Headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("No. of saved Headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         w = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETSAVEDHEADERS, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN)
         w.setRange(1, 65535)
         w.setValue(owner.config['headersave'])
         # display headers
-        FXLabel(matrix, _("Suppress headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Suppress headers"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         self.headers = FXList(matrix, 4, None, 0, opts=LIST_SINGLESELECT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.update_headers(owner)
         # header buttons
         w = FXHorizontalFrame(frame, LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
-        FXButton(w, "&Add",None,owner,HeaderWindow.ID_ADDHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
-        FXButton(w, "&Edit",None,owner,HeaderWindow.ID_EDITHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
-        FXButton(w, "&Remove",None,owner,HeaderWindow.ID_REMOVEHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, i18n.("&Add"),None,owner,HeaderWindow.ID_ADDHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, i18n.("&Edit"),None,owner,HeaderWindow.ID_EDITHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
+        FXButton(w, i18n.("&Remove"),None,owner,HeaderWindow.ID_REMOVEHEADER,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK)
 
         # close button
         w = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
-        FXButton(w,"&Save",None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
-        FXButton(w,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
+        FXButton(w,i18n.("&Save"),None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
+        FXButton(w,i18n.("&Close"),None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
 
 
     def update_headers (self, owner):

@@ -15,14 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import os
-from wc import _
+from wc import i18n
 from wc.daemon import pidfile, watchfile, startfunc
 
 def start (parent_exit=1):
     """start a daemon using the appropriate pidfile"""
     # already running?
     if os.path.exists(pidfile):
-        return _("""WebCleaner already started (lock file found).
+        return i18n._("""WebCleaner already started (lock file found).
 Do 'webcleaner stop' first.""")
     # forking (only under POSIX systems)
     
@@ -54,7 +54,7 @@ Do 'webcleaner stop' first.""")
 
 def stop ():
     if not os.path.exists(pidfile):
-        return _("WebCleaner was not running (no lock file found)")
+        return i18n._("WebCleaner was not running (no lock file found)")
     return _stop(pidfile)
 
 
@@ -65,7 +65,7 @@ def _stop (file):
     try:
         os.kill(pid, signal.SIGTERM)
     except OSError:
-        msg = _("warning: could not terminate process PID %d")%pid
+        msg = i18n._("warning: could not terminate process PID %d")%pid
     os.remove(file)
     return msg
 
@@ -74,7 +74,7 @@ def startwatch (parent_exit=1, sleepsecs=5):
     """start a monitoring daemon for webcleaner"""
     import time
     if os.path.exists(watchfile):
-        return _("""Watch program already started (lock file found).""")
+        return i18n._("""Watch program already started (lock file found).""")
     pid = os.fork()
     if pid!=0:
         if parent_exit:
@@ -100,13 +100,13 @@ def stopwatch ():
     msg = stop() or ""
     if not os.path.exists(watchfile):
         if msg: msg += "\n"
-        return msg+_("Watcher was not running (no lock file found)")
+        return msg+i18n._("Watcher was not running (no lock file found)")
     _stop(watchfile)
 
 
 def reload ():
     if not os.path.exists(pidfile):
-        return _("WebCleaner is not running. Do 'webcleaner start' first.")
+        return i18n._("WebCleaner is not running. Do 'webcleaner start' first.")
     pid = int(open(pidfile).read())
     import signal
     os.kill(pid, signal.SIGHUP)

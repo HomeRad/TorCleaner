@@ -1,5 +1,5 @@
 """configuration data"""
-# Copyright (C) 2000-2002  Bastian Kleineidam
+# Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import os, re, sys, UserDict, time, socket, ip
 import _webcleaner2_configdata as configdata
-from debug_levels import *
-#sys.setcheckinterval(1000)
+from debug import *
+sys.setcheckinterval(100)
 
 Version = configdata.version
 AppName = configdata.name
@@ -38,35 +38,6 @@ distribution."""
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'locale')
-DebugLevel = 0
-Colorize = 0
-
-if Colorize:
-    def color (text, col=None, bgcol=None):
-        if (col is not None) and os.environ.get('TERM'):
-            if bgcol is not None:
-                col = '%s;4%s' % (col, bgcol)
-            return '\033[3%sm%s\033[0m' % (col, text)
-        else:
-            return text
-else:
-    def color (text, col=None, bgcol=None):
-        return text
-
-
-# debug function, using the debug level
-# XXX colorize?
-def debug (level, *args):
-    if level <= DebugLevel:
-        print >>sys.stderr, " ".join(map(str, args))
-
-import gettext
-try:
-    t = gettext.translation('webcleaner', LocaleDir)
-    _ = t.gettext
-except IOError:
-    _ = lambda s: s
-
 
 def remove_headers (headers, to_remove):
     """utility function to remove entries from RFC822 headers"""
@@ -74,19 +45,6 @@ def remove_headers (headers, to_remove):
         if headers.has_key(h):
             #debug(BRING_IT_ON, "remove header", `h`)
             del headers[h]
-
-def error (s):
-    print >>sys.stderr, "error:", s
-
-def warning (s):
-    print >>sys.stderr, "warning:", s
-
-ErrorText = _("""<html><head>
-<title>WebCleaner Proxy Error %d %s</title>
-</head><body bgcolor="#fff7e5"><br><center><b>Bummer!</b><br>
-WebCleaner Proxy Error %d %s<br>
-%s<br></center></body></html>""")
-ErrorLen = len(ErrorText)
 
 config = None
 
@@ -155,8 +113,6 @@ class Configuration (UserDict.UserDict):
         self['rules'] = []
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
-        self['errorlen'] = ErrorLen
-        self['errortext'] = ErrorText
         self['colorize'] = 0
         self['noproxyfor'] = {}
         self['allowedhosts'] = {}
@@ -226,6 +182,7 @@ Headers saved: %(headersave)d
 
 ##### xml parsers #########
 import xml.parsers.expat
+from XmlUtils import unxmlify
 
 _rulenames = (
   'rewrite',
@@ -241,41 +198,11 @@ _rulenames = (
   'replacer')
 _nestedtags = ('attr','enclosed','replace')
 
-# standard xml entities
-entities = {
-    'lt': '<',
-    'gt': '>',
-    'amp': '&',
-    'quot': '"',
-    'apos': "'",
-}
-XmlTable = map(lambda x: (x[1], "&"+x[0]+";"), entities.items())
-UnXmlTable = map(lambda x: ("&"+x[0]+";", x[1]), entities.items())
-# order matters!
-XmlTable.sort()
-UnXmlTable.sort()   
-UnXmlTable.reverse()
-
-def applyTable (table, s):
-    "apply a table of replacement pairs to str"
-    for mapping in table:
-        s = s.replace(mapping[0], mapping[1])
-    return s
-
-def xmlify (s):
-    """quote characters for XML"""
-    return applyTable(XmlTable, s)
-
-def unxmlify (s):
-    """unquote character from XML"""
-    return applyTable(UnXmlTable, s)
-
-
 class ParseException (Exception): pass
 
 class BaseParser:
     def parse (self, filename, config):
-        #debug("Parsing "+filename)
+        #debug(HURT_ME_PLENTY, "Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate()
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element

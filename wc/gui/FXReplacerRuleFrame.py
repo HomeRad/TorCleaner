@@ -1,7 +1,7 @@
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
-from wc import _,debug
-from wc.debug_levels import *
+from wc import i18n
+from wc.debug import *
 
 class FXReplacerRuleFrame (FXRuleFrame):
     """display all variables found in a ReplacerRule"""
@@ -14,10 +14,10 @@ class FXReplacerRuleFrame (FXRuleFrame):
         FXMAPFUNC(self, SEL_COMMAND, FXReplacerRuleFrame.ID_SEARCH, FXReplacerRuleFrame.onCmdSearch)
         FXMAPFUNC(self, SEL_COMMAND, FXReplacerRuleFrame.ID_REPLACE, FXReplacerRuleFrame.onCmdReplace)
         matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Replace regex:\tRegular expression to match the data stream"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Replace regex:\tRegular expression to match the data stream"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(matrix, 15, self, FXReplacerRuleFrame.ID_SEARCH)
         tf.setText(self.rule.search)
-        FXLabel(matrix, _("Replacement:\tReplacement value (empty means delete)"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Replacement:\tReplacement value (empty means delete)"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(matrix, 15, self, FXReplacerRuleFrame.ID_REPLACE)
         tf.setText(self.rule.replace)
 

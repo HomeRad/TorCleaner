@@ -13,8 +13,8 @@
 # Changes: fall back to non-gzip on error to defeat b0rked servers
 
 from DeflateStream import DeflateStream
-from wc import debug, _
-from wc.debug_levels import *
+from wc import i18n
+from wc.debug import *
 
 import zlib, sys
 
@@ -35,13 +35,13 @@ class GunzipStream (DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            print >>sys.stderr, _("zlib error: not gzip format, disabling gunzip")
+            print >>sys.stderr, "zlib error: not gzip format, disabling gunzip"
             self.error = "True"
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            print >>sys.stderr, _("zlib error: unknown compression method, disabling gunzip")
+            print >>sys.stderr, "zlib error: unknown compression method, disabling gunzip"
             self.error = "True"
             return
 

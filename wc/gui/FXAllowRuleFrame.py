@@ -1,7 +1,7 @@
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
-from wc import _,debug
-from wc.debug_levels import *
+from wc import i18n
+from wc.debug import *
 
 class FXAllowRuleFrame (FXRuleFrame):
     """display all variables found in an AllowRule"""
@@ -25,25 +25,25 @@ class FXAllowRuleFrame (FXRuleFrame):
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_QUERY,FXAllowRuleFrame.onCmdQuery)
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_FRAGMENT,FXAllowRuleFrame.onCmdFragment)
         self.matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
-        FXLabel(self.matrix, _("URL Scheme:\tRegular expression to match the URL scheme"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(self.matrix, i18n._("URL Scheme:\tRegular expression to match the URL scheme"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_SCHEME)
         tf.setText(self.rule.scheme)
-        FXLabel(self.matrix, _("URL Host:\tRegular expression to match the host"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(self.matrix, i18n._("URL Host:\tRegular expression to match the host"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_HOST)
         tf.setText(self.rule.host)
-        FXLabel(self.matrix, _("URL Port:\tRegular expression to match the port"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(self.matrix, i18n._("URL Port:\tRegular expression to match the port"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_PORT)
         tf.setText(self.rule.port)
-        FXLabel(self.matrix, _("URL Path:\tRegular expression to match the path"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(self.matrix, i18n._("URL Path:\tRegular expression to match the path"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_PATH)
         tf.setText(self.rule.path)
-        FXLabel(self.matrix, _("URL Parameters:\tRegular expression to match the parameters"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(self.matrix, i18n._("URL Parameters:\tRegular expression to match the parameters"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_PARAMETERS)
         tf.setText(self.rule.parameters)
-        FXLabel(self.matrix, _("URL Query:\tRegular expression to match the query"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(self.matrix, i18n._("URL Query:\tRegular expression to match the query"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_QUERY)
         tf.setText(self.rule.query)
-        FXLabel(self.matrix, _("URL Fragment:\tRegular expression to match the fragment"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(self.matrix, i18n._("URL Fragment:\tRegular expression to match the fragment"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_FRAGMENT)
         tf.setText(self.rule.fragment)
 

@@ -24,9 +24,8 @@ to see how its done.
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import sys, re, wc
-from wc.debug_levels import *
-debug = wc.debug
-_ = wc._
+from wc.debug import *
+
 # filter order
 FILTER_REQUEST         = 0 # Filter complete request (blocking)
 FILTER_REQUEST_HEADER  = 1 # Outgoing header manglers

@@ -14,10 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-# all parts of a URL
-
 from Rule import Rule
-from wc import xmlify, unxmlify
+from wc.XmlUtils import xmlify
+
+# all parts of a URL
 Netlocparts = [
         'scheme',
         'host',

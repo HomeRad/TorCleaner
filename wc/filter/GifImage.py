@@ -14,12 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, sys, base64, wc
+import re, sys, base64
 from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, \
                       compileMime, compileRegex
 from wc.filter.Filter import Filter
-from wc import debug
-from wc.debug_levels import *
+from wc.debug import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]

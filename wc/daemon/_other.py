@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-from wc import _
+from wc import i18n
 
 def start (parent_exit=1):
     startfunc()
@@ -23,7 +23,7 @@ def stop ():
     pass
 
 def reload ():
-    return _("reload not supported for this platform")
+    return i18n._("reload not supported for this platform")
 
 def startwatch (parent_exit=1, sleepsecs=5):
     start()

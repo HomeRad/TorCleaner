@@ -1,8 +1,8 @@
 import sys
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
-from wc import _,debug,error
-from wc.debug_levels import *
+from wc import i18n
+from wc.debug import *
 
 class FXRewriteRuleFrame (FXRuleFrame):
     """display all variables found in a RewriteRule"""
@@ -28,36 +28,36 @@ class FXRewriteRuleFrame (FXRuleFrame):
         FXMAPFUNC(self,SEL_COMMAND,FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE,FXRewriteRuleFrame.onCmdAttributeRemove)
         FXMAPFUNC(self,SEL_UPDATE,FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE,FXRewriteRuleFrame.onUpdAttributes)
         matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Tag name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Tag name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXTextField(matrix, 25, self, FXRewriteRuleFrame.ID_TAG)
         t.setText(self.rule.tag)
-        FXLabel(matrix, _("Attributes:"))
+        FXLabel(matrix, i18n._("Attributes:"))
         f = FXHorizontalFrame(matrix, LAYOUT_FILL_X|LAYOUT_FIX_HEIGHT|FRAME_SUNKEN|FRAME_THICK, 0,0,0,60, 0,0,0,0, 0,0)
         self.iconlist = FXIconList(f, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|ICONLIST_SINGLESELECT|ICONLIST_AUTOSIZE)
-        self.iconlist.appendHeader(_("Name"),NULL,50)
-        self.iconlist.appendHeader(_("Value"),NULL,175)
+        self.iconlist.appendHeader(i18n._("Name"),NULL,50)
+        self.iconlist.appendHeader(i18n._("Value"),NULL,175)
         for name,value in self.rule.attrs.items():
             self.iconlist.appendItem(name+"\t"+value)
         FXLabel(matrix, "")
         f = FXHorizontalFrame(matrix)
-        FXButton(f, _("Add"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_ADD)
-        FXButton(f, _("Edit"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_EDIT)
-        FXButton(f, _("Remove"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE)
-        FXLabel(matrix, _("Enclosed block:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXButton(f, i18n._("Add"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_ADD)
+        FXButton(f, i18n._("Edit"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_EDIT)
+        FXButton(f, i18n._("Remove"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE)
+        FXLabel(matrix, i18n._("Enclosed block:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXTextField(matrix, 25, self, FXRewriteRuleFrame.ID_ENCLOSED_BLOCK)
         if self.rule.enclosed:
             t.setText(self.rule.enclosed)
-        FXLabel(matrix, _("Replace part:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Replace part:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXComboBox(matrix,23,6,self, self.ID_REPLACE_PART,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        t.appendItem(_("Tag"))
-        t.appendItem(_("Tag name"))
-        t.appendItem(_("Attribute"))
-        t.appendItem(_("Attribute value"))
-        t.appendItem(_("Complete tag"))
-        t.appendItem(_("Enclosed block"))
+        t.appendItem(i18n._("Tag"))
+        t.appendItem(i18n._("Tag name"))
+        t.appendItem(i18n._("Attribute"))
+        t.appendItem(i18n._("Attribute value"))
+        t.appendItem(i18n._("Complete tag"))
+        t.appendItem(i18n._("Enclosed block"))
         t.setEditable(0)
         t.setCurrentItem(self.rule.replace[0])
-        FXLabel(matrix, _("Replace value:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Replace value:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXTextField(matrix, 25, self, FXRewriteRuleFrame.ID_REPLACE_VALUE)
         t.setText(self.rule.replace[1])
 
@@ -93,28 +93,28 @@ class FXRewriteRuleFrame (FXRuleFrame):
 
 
     def onCmdAttributeAdd (self, sender, sel, ptr):
-        dialog = FXDialogBox(self,_("Add Attribute"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self,i18n._("Add Attribute"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         nametf = FXTextField(matrix, 20)
-        FXLabel(matrix, _("Value:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Value:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         valuetf = FXTextField(matrix, 20)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             name = nametf.getText().strip().lower()
             if not name:
-                error(_("Empty attribute name"))
+                error(i18n._("Empty attribute name"))
 	        return 1
             if self.rule.attrs.has_key(name):
-                error(_("Duplicate attribute name"))
+                error(i18n._("Duplicate attribute name"))
                 return 1
             try:
                 value = valuetf.getText().strip()
             except:
-                error(_("Invalid regex %s: %s") % (value,sys.exc_info()[1]))
+                error(i18n._("Invalid regex %s: %s") % (value,sys.exc_info()[1]))
                 return 1
             self.rule.attrs[name] = value
             self.getApp().dirty = 1
@@ -127,24 +127,24 @@ class FXRewriteRuleFrame (FXRuleFrame):
         index = self.iconlist.getCurrentItem()
         item = self.iconlist.retrieveItem(index)
         name,value = item.getText().split('\t')
-        dialog = FXDialogBox(self, _("Edit Attribute"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self, i18n._("Edit Attribute"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("New name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("New name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         nametf = FXTextField(matrix, 20)
         nametf.setText(name)
-        FXLabel(matrix, _("New value:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("New value:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         valuetf = FXTextField(matrix, 20)
         valuetf.setText(value)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newname = nametf.getText().strip().lower()
             try:
                 value = valuetf.getText().strip()
             except:
-                error(_("Invalid regex %s: %s")%(value,sys.exc_info()[1]))
+                error(i18n._("Invalid regex %s: %s")%(value,sys.exc_info()[1]))
                 return 1
             del self.rule.attrs[name]
             self.rule.attrs[newname] = value

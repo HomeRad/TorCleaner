@@ -15,7 +15,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 from UrlRule import UrlRule
-from wc import xmlify
+from wc.XmlUtils import xmlify
 
 class ImageRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, width=0,

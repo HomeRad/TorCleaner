@@ -1,7 +1,7 @@
 import time
 from wc.proxy import make_timer
-from wc import debug
-from wc.debug_levels import *
+from wc import i18n
+from wc.debug import *
 
 class ServerPool:
     """server connection pool for reusing server connections

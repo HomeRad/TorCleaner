@@ -11,8 +11,9 @@ del asyncore.dispatcher.__getattr__
 def fileno(self):
     return self.socket.fileno()
 asyncore.dispatcher.fileno = fileno
-from wc import debug,_,config,xmlify,ip
-from wc.debug_levels import *
+from wc import i18n, config, ip
+from wc.XmlUtils import xmlify
+from wc.debug import *
 from urllib import splittype, splithost, splitport
 from LimitQueue import LimitQueue
 

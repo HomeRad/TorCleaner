@@ -5,8 +5,8 @@ mimetypes.encodings_map['.bz2'] = 'bzip'
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import debug, config, remove_headers, _
-from wc.debug_levels import *
+from wc import i18n, config, remove_headers
+from wc.debug import *
 from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
@@ -175,7 +175,7 @@ class HttpServer (Server):
         else:
             # We have no idea what it is!?
             print >> sys.stderr, \
-                    _('Warning: puzzling header received from host %s:') % \
+                    'Warning: puzzling header received from host %s:' % \
                     self.hostname, `self.response`
 
 
@@ -237,23 +237,23 @@ class HttpServer (Server):
         if gm[0]:
             # guessed an own content type
             if self.headers.get('Content-Type') is None:
-                print >>sys.stderr, _("Warning: add Content-Type %s to %s") % \
+                print >>sys.stderr, "Warning: add Content-Type %s to %s" % \
                                       (`gm[0]`, `self.url`)
                 self.headers['Content-Type'] = gm[0]
            # fix some content types
             elif not self.headers['Content-Type'].startswith(gm[0]) and \
                  gm[0] in _fix_content_types:
-                print >>sys.stderr, _("Warning: change Content-Type from %s to %s in %s") % \
+                print >>sys.stderr, "Warning: change Content-Type from %s to %s in %s" % \
                  (`self.headers['Content-Type']`, `gm[0]`, `self.url`)
                 self.headers['Content-Type'] = gm[0]
         if gm[1] and gm[1] in _fix_content_encodings:
             # guessed an own encoding type
             if self.headers.get('Content-Encoding') is None:
                 self.headers['Content-Encoding'] = gm[1]
-                print >>sys.stderr, _("Warning: add Content-Encoding %s to %s") % \
+                print >>sys.stderr, "Warning: add Content-Encoding %s to %s" % \
                                       (`gm[1]`, `self.url`)
             elif self.headers.get('Content-Encoding') != gm[1]:
-                print >>sys.stderr, _("Warning: change Content-Encoding from %s to %s in %s") % \
+                print >>sys.stderr, "Warning: change Content-Encoding from %s to %s in %s" % \
                  (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
                 self.headers['Content-Encoding'] = gm[1]
 
@@ -279,7 +279,7 @@ class HttpServer (Server):
             # remove encoding header
             to_remove = ["Transfer-Encoding"]
             if self.headers.get("Content-Length") is not None:
-                print >>sys.stderr, _('Warning: chunked encoding should not have Content-Length')
+                print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
                 to_remove.append("Content-Length")
                 self.bytes_remaining = None
             remove_headers(self.headers, to_remove)
@@ -303,7 +303,7 @@ class HttpServer (Server):
             # add warning
             self.headers['Warning'] = "214 WebCleaner Transformation applied"
         elif encoding and encoding!='identity':
-            print >>sys.stderr, _("Warning: unsupported encoding:"),`encoding`
+            print >>sys.stderr, "Warning: unsupported encoding:",`encoding`
             # do not disable filtering for unknown content-encodings
             # this could result in a DoS attack (server sending garbage
             # as content-encoding)
@@ -324,7 +324,7 @@ class HttpServer (Server):
             self.bytes_remaining -= len(data)
             #debug(HURT_ME_PLENTY, "%d bytes remaining"%self.bytes_remaining)
             if self.bytes_remaining < 0:
-                print >>sys.stderr, _("Warning: server received %d bytes more than content-length") % (-self.bytes_remaining)
+                print >>sys.stderr, "Warning: server received %d bytes more than content-length" % (-self.bytes_remaining)
         filtered_data = data
         is_closed = 0
         for decoder in self.decoders:

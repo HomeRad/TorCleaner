@@ -1,5 +1,12 @@
 TODO
 
+- timeouts do not cancel the request, they occur more than once. Why?
+
+- Python 2.3:
+  use Bool type
+  use builtin timeout in socket module
+  use logging package (get rid of debug, warn, info, error functions)
+
 - unicode parsing for flex
   the HTML parser (written with flex) does not support unicode, so
   sometimes you'll see '?' chars in the HTML output.

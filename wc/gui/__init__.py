@@ -1,5 +1,4 @@
-import sys,os,time,wc
-from wc import _
+import sys, os, time, wc
 from FXPy.fox import *
 
 
@@ -19,5 +18,5 @@ def loadIcon (app, filename):
     filename = os.path.join(wc.ConfigDir, filename)
     if filename[-3:].lower()=='png':
         return FXPNGIcon(app, open(filename, 'rb').read())
-    raise Exception, "only PNG graphics supported"
+    raise Exception("only PNG graphics supported")
 

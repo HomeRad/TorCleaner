@@ -65,9 +65,9 @@ if sys.version[:5] < "2.2":
     raise SystemExit, "This program requires Python 2.2 or later."
 # for pydoc testing, and local running. XXX should be a config entry
 sys.path.insert(0, os.getcwd())
-from wc import _,daemon
+from wc import i18n, daemon
 
-_usage = _("""USAGE\twebcleaner command
+_usage = i18n._("""USAGE\twebcleaner command
 
 COMMANDS
 start
@@ -92,7 +92,7 @@ stopwatch
 def _print_usage(msg):
     """print short usage info and exit"""
     print msg
-    print _("execute 'webcleaner -h' for help\n")
+    print i18n._("execute 'webcleaner -h' for help\n")
     sys.exit(1)
 
 
@@ -106,7 +106,7 @@ def _paginate(text, lines=22):
         curline = curline + 1
         if curline >= lines and sys.stdin.isatty():
             curline = 1
-            print _("press return to continue...")
+            print i18n._("press return to continue...")
             sys.stdin.read(1)
 
 
@@ -135,20 +135,20 @@ def main():
         elif opt=='--pidfile':
             daemon.pidfile = arg
         else:
-            _print_usage(_("Unknown option %s") % opt)
+            _print_usage(i18n._("Unknown option %s") % opt)
     if len(args) < 1:
-        _print_usage(_("No command given."))
+        _print_usage(i18n._("No command given."))
     else:
         command=args[0]
         if len(args) > 1:
-            print _("warning: only first command is valid")
+            print i18n._("warning: only first command is valid")
     # start the command
     if hasattr(daemon, command):
         msg = getattr(daemon, command)()
         if msg:
 	    print >>sys.stderr, msg
     else:
-        _print_usage(_("Unknown command %s") % command)
+        _print_usage(i18n._("Unknown command %s") % command)
 
 if __name__ == "__main__":
     main()

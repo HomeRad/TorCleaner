@@ -1,6 +1,7 @@
 webcleaner (1.6-0.1) unstable; urgency=low
 
   * New upstream release.
+  * drop python-dns dependency
 
  -- Bastian Kleineidam <calvin@debian.org>  Mon,  6 Jan 2003 01:28:24 +0100
 

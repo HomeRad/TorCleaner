@@ -23,8 +23,8 @@
 
 import os, sys
 from wc.daemon import startfunc,pidfile
-from wc.debug_levels import *
-from wc import _, debug, configdata
+from wc.debug import *
+from wc import i18n, configdata
 
 def start (parent_exit=1):
     # already running?

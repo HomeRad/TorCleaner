@@ -1,6 +1,6 @@
 from FXPy.fox import *
-from wc import _,debug,error
-from wc.debug_levels import *
+from wc import i18n
+from wc.debug import *
 
 class FXRuleFrame (FXVerticalFrame):
     """display all variables found in a basic Rule.
@@ -29,19 +29,19 @@ class FXRuleFrame (FXVerticalFrame):
         self.rule.index = index
         f = FXHorizontalFrame(self, LAYOUT_FILL_X|LAYOUT_LEFT|LAYOUT_TOP, 0,0,0,0, 0,0,0,0, 0,0)
         FXLabel(f, self.get_name(), opts=LAYOUT_CENTER_X|LAYOUT_TOP|LAYOUT_FILL_X)
-        FXCheckButton(f, _("disable\tYou can disable a single rule or all rules in a folder."), self, FXRuleFrame.ID_DISABLE_RULE,ICON_AFTER_TEXT|LAYOUT_RIGHT|LAYOUT_CENTER_Y|LAYOUT_FILL_X).setCheck(self.rule.disable)
+        FXCheckButton(f, i18n._("disable\tYou can disable a single rule or all rules in a folder."), self, FXRuleFrame.ID_DISABLE_RULE,ICON_AFTER_TEXT|LAYOUT_RIGHT|LAYOUT_CENTER_Y|LAYOUT_FILL_X).setCheck(self.rule.disable)
         f = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
-        FXLabel(f, _("Title:\tThe title of the filter rule"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(f, i18n._("Title:\tThe title of the filter rule"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(f, 25, self, FXRuleFrame.ID_TITLE).setText(self.rule.title)
         if hasattr(self.rule, "matchurl"):
             # some rules can have url matchers
-            FXLabel(f, _("Match url:\tApplies this rule only to urls matching the regular expression"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+            FXLabel(f, i18n._("Match url:\tApplies this rule only to urls matching the regular expression"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
             FXTextField(f, 25, self, FXRuleFrame.ID_MATCHURL).setText(self.rule.matchurl)
             FXMAPFUNC(self,SEL_COMMAND, FXRuleFrame.ID_MATCHURL, FXRuleFrame.onCmdMatchUrl)
-            FXLabel(f, _("Dont match url:\tApplies this rule only to urls not matching the regular expression.\nMatch url entries are tested first."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+            FXLabel(f, i18n._("Dont match url:\tApplies this rule only to urls not matching the regular expression.\nMatch url entries are tested first."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
             FXTextField(f, 25, self, FXRuleFrame.ID_DONTMATCHURL).setText(self.rule.dontmatchurl)
             FXMAPFUNC(self,SEL_COMMAND, FXRuleFrame.ID_DONTMATCHURL, FXRuleFrame.onCmdDontMatchUrl)
-        FXLabel(self, _("Description:\tA description what this filter rule does."))
+        FXLabel(self, i18n._("Description:\tA description what this filter rule does."))
         f = FXVerticalFrame(self, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0, 0,0)
         t = FXText(f, self, FXRuleFrame.ID_DESC, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|TEXT_WORDWRAP)
         t.setText(self.rule.desc)
@@ -49,14 +49,14 @@ class FXRuleFrame (FXVerticalFrame):
 
     def get_name (self):
         """display this name at the top of the window"""
-        s = self.rule.get_name().capitalize()+_(" rule")
+        s = self.rule.get_name().capitalize()+i18n._(" rule")
         s += " (ID %d)" % self.rule.oid
         return s
 
     def onCmdTitle (self, sender, sel, ptr):
         title = sender.getText().strip()
         if not title:
-            error(_("empty title"))
+            error(i18n._("empty title"))
             sender.setText(self.rule.title)
             return 1
         sender.setText(title)

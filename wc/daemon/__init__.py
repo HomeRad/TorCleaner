@@ -20,7 +20,7 @@ with no fork().
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import os
-from wc import _, startfunc, Version
+from wc import i18n, startfunc, Version
 
 def iswriteable (file):
     if os.path.isdir(file) or os.path.islink(file):
@@ -67,9 +67,9 @@ def restart (parent_exit=1):
 def status ():
     if os.path.exists(pidfile):
         pid = open(pidfile).read()
-        return _("WebCleaner is running (PID %s)") % pid
+        return i18n._("WebCleaner is running (PID %s)") % pid
     else:
-        return _("WebCleaner is not running (no lock file found)")
+        return i18n._("WebCleaner is not running (no lock file found)")
 
 # import platform specific functions
 # POSIX

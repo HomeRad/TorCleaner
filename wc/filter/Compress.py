@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re,struct,time,zlib,wc
+import re, struct, time, zlib
 
 from wc.filter import FILTER_RESPONSE_ENCODE, compileMime
 from wc.filter.Filter import Filter
-from wc import debug, remove_headers
-from wc.debug_levels import *
+from wc import remove_headers
+from wc.debug import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_ENCODE]

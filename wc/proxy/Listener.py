@@ -1,6 +1,6 @@
 import asyncore, socket, sys
-from wc import debug,config
-from wc.debug_levels import *
+from wc import i18n, config
+from wc.debug import *
 
 class Listener (asyncore.dispatcher):
     def __init__ (self, port, handler):

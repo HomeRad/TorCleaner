@@ -16,7 +16,7 @@
 
 from AllowRule import AllowRule
 from Rule import Rule
-from wc import xmlify, unxmlify
+from wc.XmlUtils import xmlify
 
 class BlockRule (AllowRule):
     def __init__ (self, title="No title", desc="", disable=0, scheme="",

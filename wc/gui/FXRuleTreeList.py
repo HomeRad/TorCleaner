@@ -1,8 +1,8 @@
 from FXPy.fox import *
-from wc import _,debug
+from wc import i18n
 from wc.gui import loadIcon
 from FXRuleFrameFactory import FXRuleFrameFactory
-from wc.debug_levels import *
+from wc.debug import *
 
 
 class FXRuleTreeList (FXTreeList):

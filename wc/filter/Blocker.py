@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, urlparse, os, gzip, wc
+import re, urlparse, os, gzip
 from wc.filter.rules.AllowRule import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
-from wc import debug, ConfigDir, config
-from wc.debug_levels import *
+from wc import ConfigDir, config
+from wc.debug import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_REQUEST]
@@ -37,7 +37,7 @@ def strblock (block):
     return s+")"
 
 def _file_url (fname):
-    u = os.path.join(wc.ConfigDir, fname)
+    u = os.path.join(ConfigDir, fname)
     u = os.path.normcase(u).replace("\\", "/")
     return "file://"+u
 

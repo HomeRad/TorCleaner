@@ -17,8 +17,7 @@
 import re, sys, wc
 from wc.parser.htmllib import HtmlParser
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
-from wc import _,debug,error
-from wc.debug_levels import *
+from wc.debug import *
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, compileRegex
 from wc.filter.Filter import Filter
 
@@ -135,7 +134,7 @@ class HtmlFilter (HtmlParser):
             elif n[0]==ENDTAG:
                 self.data.append("</%s>"%n[1])
             else:
-                error(_("unknown buffer element %s") % n[0])
+                error("unknown buffer element %s" % n[0])
         self.buffer = []
 
     def comment (self, data):
@@ -197,8 +196,7 @@ class HtmlFilter (HtmlParser):
         self.buffer_append_data([DATA, "<?%s?>"%data])
 
     def errorfun (self, msg, name):
-        print >> sys.stderr, name, _("parsing %s: %s") % \
-            (self.document, msg)
+        print >> sys.stderr, name, "parsing %s: %s" % (self.document, msg)
 
     def _error (self, msg):
         self.errorfun(msg, "error")

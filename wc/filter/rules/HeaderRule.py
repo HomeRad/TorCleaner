@@ -15,7 +15,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 from UrlRule import UrlRule
-from wc import xmlify, unxmlify
+from wc.XmlUtils import xmlify, unxmlify
 
 class HeaderRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, name="",

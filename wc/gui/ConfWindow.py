@@ -1,17 +1,18 @@
-import wc, os, re, base64
+import os, re, base64
+from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
-from wc import debug, _, xmlify
+from wc import i18n
+from wc.XmlUtils import xmlify
 from FXPy.fox import *
-from types import IntType
 from wc.filter.rules.FolderRule import FolderRule
 from wc.filter import GetRuleFromName
-from wc.debug_levels import *
+from wc.debug import *
 from ToolWindow import ToolWindow
 
 UpdateHelp = \
-_("Updating procedure:\n\n"
+i18n._("Updating procedure:\n\n"
 "We download the new configuration files from\n"
 "'%s'.\n"
 "Changed config files are renamed to .old files, new\n"
@@ -21,28 +22,28 @@ _("Updating procedure:\n\n"
 
 
 RemoveText = \
-_("You cannot remove folders. If you really want to get rid\n"
+i18n._("You cannot remove folders. If you really want to get rid\n"
 "of this folder, delete the appropriate configuration file.\n"
 "It is always safer to disable a folder or filter instead of\n"
 "deleting it!")
 
 ModuleHelp = {
-"Rewriter" : """Rewrite HTML code. This is very powerful and can filter
-almost all advertising and other crap.""",
+"Rewriter" : i18n."""Rewrite HTML code. This is very powerful and can filter
+almost all advertising and other crap."""),
 
-"Replacer": _("""Replace regular expressions in (HTML) data streams."""),
+"Replacer": i18n._("""Replace regular expressions in (HTML) data streams."""),
 
-"BinaryCharFilter": _("""Replace illegal binary characters in HTML code like the quote
+"BinaryCharFilter": i18n._("""Replace illegal binary characters in HTML code like the quote
 chars often found in Microsoft pages."""),
 
-"Header": _("""Add, modify and delete HTTP headers of request and response."""),
+"Header": i18n._("""Add, modify and delete HTTP headers of request and response."""),
 
-"Blocker": _("""Block or allow specific sites by URL name."""),
+"Blocker": i18n._("""Block or allow specific sites by URL name."""),
 
-"GifImage": _("""Deanimates GIFs and removes all unwanted GIF image
+"GifImage": i18n._("""Deanimates GIFs and removes all unwanted GIF image
 extensions (for example GIF comments)."""),
 
-"Compress": _("""Compression of documents with good compression ratio
+"Compress": i18n._("""Compression of documents with good compression ratio
 like HTML, WAV, etc."""),
 }
 
@@ -96,7 +97,7 @@ class ConfWindow (ToolWindow):
         self.readconfig()
         FXTooltip(app, TOOLTIP_VARIABLE, 0, 0)
         FXStatusbar(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
-        self.removeDialog = FXMessageBox(self, _("Remove Folder"), RemoveText, None, MBOX_OK)
+        self.removeDialog = FXMessageBox(self, i18n._("Remove Folder"), RemoveText, None, MBOX_OK)
         # main frame
         mainframe = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
         tabbook = FXTabBook(mainframe, None, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -104,18 +105,18 @@ class ConfWindow (ToolWindow):
         self.filterSettings(tabbook)
         # Buttons
         frame = FXHorizontalFrame(mainframe, LAYOUT_FILL_X)
-        FXButton(frame, _(" &Ok "), None, self, self.ID_ACCEPT)
-        FXButton(frame, _("&Cancel"), None, self, self.ID_CANCEL)
-        FXButton(frame, _("A&pply"), None, self, self.ID_APPLY)
-        FXButton(frame, _("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
+        FXButton(frame, i18n._(" &Ok "), None, self, self.ID_ACCEPT)
+        FXButton(frame, i18n._("&Cancel"), None, self, self.ID_CANCEL)
+        FXButton(frame, i18n._("A&pply"), None, self, self.ID_APPLY)
+        FXButton(frame, i18n._("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
         daemonmenu = FXMenuPane(self)
-        FXMenuCommand(daemonmenu, "Start", None, self, self.ID_PROXYSTART)
-        FXMenuCommand(daemonmenu, "Stop", None, self, self.ID_PROXYSTOP)
-        FXMenuCommand(daemonmenu, "Restart", None, self, self.ID_PROXYRESTART)
-        FXMenuCommand(daemonmenu, "Reload", None, self, self.ID_PROXYRELOAD)
-        FXMenuCommand(daemonmenu, "Status", None, self, self.ID_PROXYSTATUS)
-        FXMenuButton(frame, "Proxy", None, daemonmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
-        FXButton(frame, "Update...", None, self, self.ID_CONFUPDATE)
+        FXMenuCommand(daemonmenu, i18n.("Start"), None, self, self.ID_PROXYSTART)
+        FXMenuCommand(daemonmenu, i18n.("Stop"), None, self, self.ID_PROXYSTOP)
+        FXMenuCommand(daemonmenu, i18n.("Restart"), None, self, self.ID_PROXYRESTART)
+        FXMenuCommand(daemonmenu, i18n.("Reload"), None, self, self.ID_PROXYRELOAD)
+        FXMenuCommand(daemonmenu, i18n.("Status"), None, self, self.ID_PROXYSTATUS)
+        FXMenuButton(frame, i18n.("Proxy"), None, daemonmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
+        FXButton(frame, i18n.("Update..."), None, self, self.ID_CONFUPDATE)
         self.eventMap()
 
 
@@ -165,79 +166,79 @@ class ConfWindow (ToolWindow):
 
     def proxySettings (self, tabbook):
         """generate the proxy setting tab"""
-        FXTabItem(tabbook, _("P&roxy Settings"), None)
+        FXTabItem(tabbook, i18n._("P&roxy Settings"), None)
         proxy = FXVerticalFrame(tabbook, FRAME_THICK|FRAME_RAISED)
         proxy_top = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
 
-	f = FXGroupBox(proxy_top, _("Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+	f = FXGroupBox(proxy_top, i18n._("Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         matrix = FXMatrix(f, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Version"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Version"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXLabel(matrix, wc.Version, opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        FXLabel(matrix, _("User\tRequire proxy authentication with the given user."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("User\tRequire proxy authentication with the given user."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_PROXYUSER).setText(self.proxyuser)
-        FXLabel(matrix, _("Password\tRequire proxy authentication with the given password which is stored base64 encoded."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Password\tRequire proxy authentication with the given password which is stored base64 encoded."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_PROXYPASS, opts=TEXTFIELD_PASSWD|TEXTFIELD_NORMAL).setText(self.proxypass)
-        FXLabel(matrix, _("Port\tThe port adress the WebCleaner proxy is listening on."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Port\tThe port adress the WebCleaner proxy is listening on."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         widget = FXSpinner(matrix, 4, self, self.ID_PORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.port)
-        FXLabel(matrix, _("Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n(standard out) or a filename (relative or absolute)."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        FXLabel(matrix, i18n._("Logfile\tThe name for the logfile can be empty (no logging), '<stdout>'\n(standard out) or a filename (relative or absolute)."), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         FXTextField(matrix, 10, self, self.ID_LOGFILE).setText(self.logfile)
 
-        f = FXGroupBox(proxy_top, _("No proxy for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.noproxylist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
         for host in self.noproxyfor.keys():
             self.noproxylist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
-        FXButton(f, _("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
-        FXButton(f, _("Edit"), None, self, ConfWindow.ID_NOPROXYFOR_EDIT)
-        FXButton(f, _("Remove"), None, self, ConfWindow.ID_NOPROXYFOR_REMOVE)
+        FXButton(f, i18n._("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
+        FXButton(f, i18n._("Edit"), None, self, ConfWindow.ID_NOPROXYFOR_EDIT)
+        FXButton(f, i18n._("Remove"), None, self, ConfWindow.ID_NOPROXYFOR_REMOVE)
 
-        f = FXGroupBox(proxy_top, _("Allowed hosts"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        f = FXGroupBox(proxy_top, i18n._("Allowed hosts"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.allowedlist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
         for host in self.allowedhosts.keys():
             self.allowedlist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
-        FXButton(f, _("Add\tAdd hostname and networks that are allowed to use this proxy.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_ALLOWEDHOSTS_ADD)
-        FXButton(f, _("Edit"), None, self, ConfWindow.ID_ALLOWEDHOSTS_EDIT)
-        FXButton(f, _("Remove"), None, self, ConfWindow.ID_ALLOWEDHOSTS_REMOVE)
+        FXButton(f, i18n._("Add\tAdd hostname and networks that are allowed to use this proxy.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_ALLOWEDHOSTS_ADD)
+        FXButton(f, i18n._("Edit"), None, self, ConfWindow.ID_ALLOWEDHOSTS_EDIT)
+        FXButton(f, i18n._("Remove"), None, self, ConfWindow.ID_ALLOWEDHOSTS_REMOVE)
 
         frame = FXHorizontalFrame(proxy, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_SIDE_TOP)
-        filters = FXGroupBox(frame, _("Filter Modules"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        filters = FXGroupBox(frame, i18n._("Filter Modules"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         hframe = FXVerticalFrame(filters, LAYOUT_SIDE_TOP)
         for m in self.modules.keys():
             cb = FXCheckButton(hframe, m+"\t"+ModuleHelp[m], self, self.ID_FILTERMODULE,opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
             if self.modules[m]:
 	        cb.setCheck()
-        groupbox = FXGroupBox(frame, _("Parent Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
+        groupbox = FXGroupBox(frame, i18n._("Parent Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         matrix = FXMatrix(groupbox, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Host\tThe hostname of the parent proxy WebCleaner should use."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Host\tThe hostname of the parent proxy WebCleaner should use."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXTextField(matrix, 16, self, self.ID_PARENTPROXY).setText(self.parentproxy)
-        FXLabel(matrix, _("Port\tThe port number of the parent proxy WebCleaner should use."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Port\tThe port number of the parent proxy WebCleaner should use."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         widget = FXSpinner(matrix, 4, self, self.ID_PARENTPROXYPORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.parentproxyport)
-        FXLabel(matrix, _("User\tAuthentication user for the parent proxy."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("User\tAuthentication user for the parent proxy."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXTextField(matrix, 16, self, self.ID_PARENTPROXYUSER).setText(self.parentproxyuser)
-        FXLabel(matrix, _("Password\tAuthentication password for the parent proxy.\nThe password is saved base64 encoded."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Password\tAuthentication password for the parent proxy.\nThe password is saved base64 encoded."), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         FXTextField(matrix, 16, self, self.ID_PARENTPROXYPASS, opts=TEXTFIELD_NORMAL|TEXTFIELD_PASSWD).setText(self.parentproxypass)
         # proxySettings
 
 
     def filterSettings (self, tabbook):
-        FXTabItem(tabbook, _("&Filter Settings"), None)
+        FXTabItem(tabbook, i18n._("&Filter Settings"), None)
         frame = FXHorizontalFrame(tabbook, FRAME_THICK|FRAME_RAISED|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         splitter = FXSplitter(frame, FRAME_THICK|FRAME_RAISED|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         treeframe = FXVerticalFrame(splitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,250,0, 0,0,0,0, 0,0)
         self.filterswitcher = FXSwitcher(splitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         f = FXHorizontalFrame(self.filterswitcher)
-        FXLabel(f, _("All filters"))
+        FXLabel(f, i18n._("All filters"))
         self.tree = FXRuleTreeList(treeframe, self, self.ID_FILTER, self.folders, FXRuleFrameFactory(self.filterswitcher))
         f = FXHorizontalFrame(treeframe, LAYOUT_FILL_X)
         addmenu = FXMenuPane(self)
-        FXMenuCommand(addmenu, _("New Folder"), None, self, self.ID_NEWFOLDER)
+        FXMenuCommand(addmenu, i18n._("New Folder"), None, self, self.ID_NEWFOLDER)
         # Make new filter popup menu
         filtermenu = FXMenuPane(self)
         FXMenuCommand(filtermenu, "Allow", None, self, self.ID_NEWRULE)
@@ -247,11 +248,11 @@ class ConfWindow (ToolWindow):
         FXMenuCommand(filtermenu, "Nocomments", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Rewrite", None, self, self.ID_NEWRULE)
         FXMenuCommand(filtermenu, "Replacer", None, self, self.ID_NEWRULE)
-        FXMenuCascade(addmenu, _("Filter"), None, filtermenu)
-        FXMenuButton(f, _("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
-        FXButton(f, _("Remove"), None, self, self.ID_REMOVE)
-        FXButton(f, _("Up"), None, self, self.ID_UP)
-        FXButton(f, _("Dwn"), None, self, self.ID_DOWN)
+        FXMenuCascade(addmenu, i18n._("Filter"), None, filtermenu)
+        FXMenuButton(f, i18n._("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
+        FXButton(f, i18n._("Remove"), None, self, self.ID_REMOVE)
+        FXButton(f, i18n._("Up"), None, self, self.ID_UP)
+        FXButton(f, i18n._("Dwn"), None, self, self.ID_DOWN)
         # filterSettings
 
 
@@ -319,7 +320,7 @@ class ConfWindow (ToolWindow):
             else:
                 self.removeDialog.execute()
         else:
-            self.getApp().error(_("filter selection"), _("no filter item selected"))
+            self.getApp().error(i18n._("filter selection"), i18n._("no filter item selected"))
         return 1
 
 
@@ -366,8 +367,8 @@ class ConfWindow (ToolWindow):
 
     def onCmdProxyUser (self, sender, sel, ptr):
         if not _proxy_user_ro.match(sender.getText()):
-            self.getApp().error(_("Invalid Proxy User"),
-                       _("You have to use -A-Za-z0-9._ for the proxy user name."))
+            self.getApp().error(i18n._("Invalid Proxy User"),
+                       i18n._("You have to use -A-Za-z0-9._ for the proxy user name."))
             sender.setText(self.proxyuser)
             return 1
         self.proxyuser = sender.getText()
@@ -438,21 +439,21 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdNoProxyForAdd (self, sender, sel, ptr):
-        dialog = FXDialogBox(self,_("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self,i18n._("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         host = FXTextField(matrix, 20)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             host = host.getText().strip().lower()
             if not host:
-                self.getApp().error(_("Add proxy"), _("Empty hostname"))
+                self.getApp().error(i18n._("Add proxy"), i18n._("Empty hostname"))
 	        return 1
             if self.noproxyfor.has_key(host):
-                self.getApp().error(_("Add proxy"), _("Duplicate hostname"))
+                self.getApp().error(i18n._("Add proxy"), i18n._("Duplicate hostname"))
 	        return 1
             self.noproxyfor[host] = 1
             self.noproxylist.appendItem(host)
@@ -465,15 +466,15 @@ class ConfWindow (ToolWindow):
         index = self.noproxylist.getCurrentItem()
         item = self.noproxylist.retrieveItem(index)
         host = item.getText()
-        dialog = FXDialogBox(self, _("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self, i18n._("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         nametf = FXTextField(matrix, 20)
         nametf.setText(host)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newhost = nametf.getText().strip().lower()
             del self.noproxyfor[host]
@@ -496,21 +497,21 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdAllowedHostsAdd (self, sender, sel, ptr):
-        dialog = FXDialogBox(self,_("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self,i18n._("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("Hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         host = FXTextField(matrix, 20)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             host = host.getText().strip().lower()
             if not host:
-                self.getApp().error(_("Add proxy"), _("Empty hostname"))
+                self.getApp().error(i18n._("Add proxy"), i18n._("Empty hostname"))
 	        return 1
             if self.allowedhosts.has_key(host):
-                self.getApp().error(_("Add proxy"), _("Duplicate hostname"))
+                self.getApp().error(i18n._("Add proxy"), i18n._("Duplicate hostname"))
 	        return 1
             self.allowedhosts[host] = 1
             self.allowedlist.appendItem(host)
@@ -523,15 +524,15 @@ class ConfWindow (ToolWindow):
         index = self.allowedlist.getCurrentItem()
         item = self.allowedlist.retrieveItem(index)
         host = item.getText()
-        dialog = FXDialogBox(self, _("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
+        dialog = FXDialogBox(self, i18n._("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
-        FXLabel(matrix, _("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXLabel(matrix, i18n._("New hostname:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         nametf = FXTextField(matrix, 20)
         nametf.setText(host)
         f = FXHorizontalFrame(frame)
-        FXButton(f, _("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
-        FXButton(f, _("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Ok"), None, dialog, FXDialogBox.ID_ACCEPT,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
+        FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newhost = nametf.getText().strip().lower()
             del self.allowedhosts[host]
@@ -583,7 +584,7 @@ class ConfWindow (ToolWindow):
 
     def onCmdProxyStatus (self, sender, sel, ptr):
         from wc import daemon
-        dialog = FXMessageBox(self,_("Proxy Status"),daemon.status(),None,MBOX_OK)
+        dialog = FXMessageBox(self,i18n._("Proxy Status"),daemon.status(),None,MBOX_OK)
         self.getApp().doShow(dialog)
         #debug(BRING_IT_ON, "webcleaner status")
         return 1
@@ -624,7 +625,7 @@ class ConfWindow (ToolWindow):
            and copy them over the existing config"""
         # base url for all files
         url = "http://webcleaner.sourceforge.net/zapper/"
-        dialog = FXMessageBox(self,_("Update Help"),UpdateHelp % url,None,MBOX_OK_CANCEL)
+        dialog = FXMessageBox(self,i18n._("Update Help"),UpdateHelp % url,None,MBOX_OK_CANCEL)
         if self.getApp().doShow(dialog) != MBOX_CLICKED_OK:
             return 1
         try:
@@ -663,7 +664,7 @@ class ConfWindow (ToolWindow):
                     f.close()
                     doreload = 1
         except IOError, msg:
-            self.getApp().error(_("Update Error"), "%s: %s" % (_("Update Error"), msg))
+            self.getApp().error(i18n._("Update Error"), "%s: %s" % (i18n._("Update Error"), msg))
         else:
             if doreload:
                 self.handle(self, MKUINT(ConfWindow.ID_PROXYRESTART,SEL_COMMAND), None)
@@ -716,7 +717,7 @@ class ConfWindow (ToolWindow):
             file.write(self.toxml())
             file.close()
         except IOError:
-            errors.append(_("cannot write to file %s") % self.configfile)
+            errors.append(i18n._("cannot write to file %s") % self.configfile)
             dirty = 1
         for f in self.folders:
             try:
@@ -725,11 +726,11 @@ class ConfWindow (ToolWindow):
                 file.close()
             except IOError:
                 dirty = 1
-                errors.append(_("cannot write to file %s") % f.filename)
+                errors.append(i18n._("cannot write to file %s") % f.filename)
         self.getApp().dirty = dirty
         self.getApp().endWaitCursor()
         if errors:
-            self.getApp().error(_("Write config"), "\n".join(errors))
+            self.getApp().error(i18n._("Write config"), "\n".join(errors))
 
 
     def toxml (self):

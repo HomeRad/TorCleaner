@@ -3,10 +3,10 @@ from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
-from wc import debug, config, _, ip
+from wc import i18n, config, ip
 from wc.proxy import log, match_host
 from wc.webgui.WebConfig import HTML_TEMPLATE
-from wc.debug_levels import *
+from wc.debug import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
@@ -32,7 +32,7 @@ class HttpClient (Connection):
         host = self.addr[0]
         hosts, nets, foo = config['allowedhosts']
         if not ip.host_in_set(host, hosts, nets):
-            print >>sys.stderr, _("%s access denied")%host
+            print >>sys.stderr, host, "access denied"
             self.close()
 
 
@@ -128,7 +128,7 @@ class HttpClient (Connection):
                 self.content += data
             if self.bytes_remaining <= 0:
                 if self.bytes_remaining < 0:
-                    print >>sys.stderr, _("Warning: client received %d bytes more than content-length") % (-self.bytes_remaining)
+                    print >>sys.stderr, "Warning: client received %d bytes more than content-length" % (-self.bytes_remaining)
                 data = applyfilter(FILTER_REQUEST_DECODE, "",
 		                   fun="finish", attrs=self.nofilter)
                 data = applyfilter(FILTER_REQUEST_DECODE, data,

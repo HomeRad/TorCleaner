@@ -2,8 +2,8 @@ import dns_lookups, socket, mimetypes, re, base64, sha
 import wc.proxy
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
-from wc import _,debug,config
-from wc.debug_levels import *
+from wc import i18n, config
+from wc.debug import *
 from wc.webgui import WebConfig
 
 serverpool = ServerPool()
@@ -55,7 +55,7 @@ class ClientServerMatchmaker:
         self.compress = compress
         if config["proxyuser"]:
             if not self.check_proxy_auth():
-                self.client.error(407, _("Proxy Authentication Required"))
+                self.client.error(407, i18n._("Proxy Authentication Required"))
                 return
         self.content = content
         self.nofilter = nofilter
@@ -63,11 +63,11 @@ class ClientServerMatchmaker:
         try: self.method, self.url, protocol = request.split()
         except:
             config['requests']['error'] += 1
-            self.client.error(400, _("Can't parse request"))
+            self.client.error(400, i18n._("Can't parse request"))
             return
         if not self.url:
             config['requests']['error'] += 1
-            self.client.error(400, _("Empty URL"))
+            self.client.error(400, i18n._("Empty URL"))
             return
         if self.method=='OPTIONS':
             mf = int(self.headers.get('Max-Forwards', -1))
@@ -141,11 +141,11 @@ class ClientServerMatchmaker:
     def handle_local (self, document):
         #debug(HURT_ME_PLENTY, "handle local request for", document)
         if self.client and self.client.addr[0] not in _localhosts:
-            self.client.error(403, _("Forbidden"),
+            self.client.error(403, i18n._("Forbidden"),
                               wc.proxy.access_denied(self.client.addr))
         elif not WebConfig.handle_document(document, self.client):
-            self.client.error(404, _("Not found"),
-              _("Invalid path %s") % `document`)
+            self.client.error(404, i18n._("Not found"),
+              i18n._("Invalid path %s") % `document`)
 
 
     def handle_dns (self, hostname, answer):
@@ -172,13 +172,13 @@ class ClientServerMatchmaker:
               'Content-type: text/html\r\n'
               'Location: http://%s\r\n'
               '\r\n' % new_url,
-              _('Host %s is an abbreviation for %s')%(hostname, answer.data))
+              i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host, so close this connection
             self.state = 'done'
             config['requests']['error'] += 1
-            self.client.error(504, _("Host not found"),
-                _('Host %s not found .. %s')%(hostname, answer.data))
+            self.client.error(504, i18n._("Host not found"),
+                i18n._('Host %s not found .. %s')%(hostname, answer.data))
             return
 
     def find_server (self):
@@ -192,8 +192,8 @@ class ClientServerMatchmaker:
             # if http version is <1.1 and expect header found: 417
             if self.headers.get('Expect')=='100-continue' and \
                serverpool.http_versions.get(addr, 1.1) < 1.1:
-                self.client.error(417, _("Expectation failed"),
-                           _("Server does not understand HTTP/1.1"))
+                self.client.error(417, i18n._("Expectation failed"),
+                           i18n._("Server does not understand HTTP/1.1"))
                 return
             # Let's reuse it
             #debug(BRING_IT_ON, 'resurrecting', server)
@@ -236,7 +236,7 @@ class ClientServerMatchmaker:
         # The server had an error, so we need to tell the client
         # that we couldn't connect
         if self.client.connected:
-            self.client.error(503, _("No response from server"))
+            self.client.error(503, i18n._("No response from server"))
 
 
     def server_close (self):
@@ -252,7 +252,7 @@ class ClientServerMatchmaker:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
             if self.client.connected:
-                self.client.error(503, _("Server closed connection"))
+                self.client.error(503, i18n._("Server closed connection"))
 
 
     def server_response (self, response, headers):
