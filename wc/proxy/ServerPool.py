@@ -31,12 +31,13 @@ class ServerPool:
             if status[0] == 'available':
                 # Let's reuse this one
                 self.map[addr][server] = ('busy', )
-                debug(PROXY, 'Proxy: reserve_server %s %s', str(addr), str(server))
+                debug(PROXY, 'pool reserve %s %s', str(addr), str(server))
                 return server
         return None
 
 
     def unreserve_server (self, addr, server):
+        debug(PROXY, "pool unreserve %s %s", str(addr), str(server))
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
         assert self.map[addr].has_key(server), \
                '%s missing %s' % (self.map[addr], server)
@@ -48,6 +49,7 @@ class ServerPool:
 
     def register_server (self, addr, server):
         "Register the server as being used"
+        debug(PROXY, "pool register %s %s", str(addr), str(server))
         if not self.map.has_key(addr):
             self.map[addr] = {}
         self.map[addr][server] = ('busy',)
@@ -55,6 +57,7 @@ class ServerPool:
 
     def unregister_server (self, addr, server):
         "Unregister the server"
+        debug(PROXY, "pool unregister %s %s", str(addr), str(server))
         assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
         assert self.map[addr].has_key(server), \
                '%s missing %s' % (self.map[addr], server)
