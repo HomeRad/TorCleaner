@@ -77,7 +77,10 @@ class HtmlPrettyPrinter (object):
     def startElement (self, tag, attrs):
         self.fd.write("<%s"%tag)
         for key, val in attrs.iteritems():
-            self.fd.write(" %s=\"%s\"" % (key, quote_attrval(val)))
+            if val is None:
+                self.fd.write(" %s"%key)
+            else:
+                self.fd.write(" %s=\"%s\"" % (key, quote_attrval(val)))
         self.fd.write(">")
 
 
