@@ -52,9 +52,10 @@ Servicematch: vancouver
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re
+import re, os
+import cPickle as pickle
 from wc.log import *
-from wc import i18n
+from wc import i18n, ConfigDir
 
 # rating phrase searcher
 ratings = re.compile(r'r(atings)?\s*\((?P<rating>[^)]*)\)').finditer
@@ -155,24 +156,45 @@ services = {
 }
 
 
+pics_cachefile = os.path.join(ConfigDir, "pics.dat")
+
+
+def pics_cache_write ():
+    fp = file(pics_cachefile, 'wb')
+    pickle.dump(pics_cache, fp, 1)
+    fp.close()
+
+
+def pics_cache_load ():
+    if os.path.isfile(pics_cachefile):
+        fp = file(pics_cachefile)
+        data = pickle.load(fp)
+        fp.close()
+        return data
+    return {}
+
+
+pics_cache = pics_cache_load()
+
+
 def pics_is_cached (url):
     """return True iff PICS cache has entry for given url"""
-    # XXX
-    return False
+    return url in pics_cache
 
 
 def pics_add (url, data):
     """add new PICS data for given url in cache"""
-    # XXX
-    pass
+    pics_cache[url] = data
+    pics_cache_write()
 
 
 def pics_allow (url, rule):
     """asks cache if the rule allows the PICS data for given url
     Looks up cache to find PICS data, if not find will not allow the url
     """
-    # XXX
-    pass
+    if not pics_is_cached(url):
+        return
+    return check_pics(rule, pics_cache[url])
 
 
 def check_pics (rule, labellist):
