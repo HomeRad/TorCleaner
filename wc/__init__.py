@@ -63,6 +63,13 @@ def iswriteable (fname):
     return False
 
 
+def sort_seq (seq):
+    """return sorted list of given sequence"""
+    l = list(seq)
+    l.sort()
+    return l
+
+
 import ip, i18n
 from log import *
 
@@ -219,13 +226,11 @@ class Configuration (dict):
             f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' webgui_theme="%s"\n' % xmlify(self['webgui_theme']))
         if self['noproxyfor']:
-            keys = self['noproxyfor'][2].keys()
-            keys.sort()
-            f.write(' noproxyfor="%s"\n'%xmlify(",".join(keys)))
+            hosts = sort_seq(ip.map2hosts(self['noproxyfor']))
+            f.write(' noproxyfor="%s"\n'%xmlify(",".join(hosts)))
         if self['allowedhosts']:
-            keys = self['allowedhosts'][2].keys()
-            keys.sort()
-            f.write(' allowedhosts="%s"\n'%xmlify(",".join(keys)))
+            hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
+            f.write(' allowedhosts="%s"\n'%xmlify(",".join(hosts)))
         f.write('>\n')
         for key in self['filters']:
             f.write('<filter name="%s"/>\n' % key)
@@ -242,6 +247,7 @@ class Configuration (dict):
             f.sort()
         self['rules'].sort()
         filter.rules.FolderRule.recalc_oids(self['rules'])
+
 
     def init_filter_modules (self):
         """go through list of rules and store them in the filter

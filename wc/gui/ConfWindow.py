@@ -230,7 +230,7 @@ class ConfWindow (ToolWindow):
         f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.noproxylist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
-        for host in self.noproxyfor:
+        for host in sort_seq(self.noproxyfor):
             self.noproxylist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
         FXButton(f, i18n._("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
@@ -240,7 +240,7 @@ class ConfWindow (ToolWindow):
         f = FXGroupBox(proxy_top, i18n._("Allowed hosts"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.allowedlist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
-        for host in self.allowedhosts:
+        for host in sort_seq(self.allowedhosts):
             self.allowedlist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
         FXButton(f, i18n._("Add\tAdd hostname and networks that are allowed to use this proxy.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_ALLOWEDHOSTS_ADD)
@@ -802,9 +802,11 @@ class ConfWindow (ToolWindow):
              ' timeout="%d"\n' % self.timeout
         s += ' webgui_theme="%s"\n' % xmlify(self.webgui_theme)
         if self.noproxyfor:
-            s += ' noproxyfor="%s"\n'%xmlify(",".join(self.noproxyfor))
+            hosts = sort_seq(self.noproxyfor)
+            s += ' noproxyfor="%s"\n'%xmlify(",".join(hosts))
         if self.allowedhosts:
-            s += ' allowedhosts="%s"\n'%xmlify(",".join(self.allowedhosts))
+            hosts = sort_seq(self.allowedhosts)
+            s += ' allowedhosts="%s"\n'%xmlify(",".join(hosts))
         s += '>\n'
         for key,val in self.modules.items():
             if val:

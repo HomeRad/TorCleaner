@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 # be sure not to import something in the context namespace we do not want
 import base64
-from wc import i18n, AppName, filtermodules
+from wc import i18n, AppName, filtermodules, ip
 from wc import Configuration as _Configuration
 
 # translations
@@ -16,8 +16,8 @@ parentproxypass = i18n._("Parent proxy pass")
 timeout = i18n._("Timeout (seconds)")
 proxyfiltermodules = i18n._("Proxy filter modules")
 allowedhosts = i18n._("Allowed hosts")
-remove = i18n._("Remove")
-add = i18n._("Add")
+remove = i18n._("Remove selected")
+add = i18n._("Add new")
 nofilterhosts = i18n._("No filter hosts")
 configapply = i18n._("Apply")
 cancel = i18n._("Cancel")
@@ -70,7 +70,7 @@ def exec_form (form):
     # allowed hosts
     if form.has_key('addallowed') and form.has_key('newallowed'):
         _form_addallowed(form['newallowed'].value.strip())
-    elif form.has_key('delallowed'):
+    elif form.has_key('delallowed') and form.has_key('allowedhosts'):
         _form_delallowed(form['allowedhosts'])
     # XXX
     # no filter hosts
@@ -158,7 +158,7 @@ def _form_filtermodules (form):
 def _form_addallowed (host):
     config['allowedhostset'].add(host)
     config['allowedhosts'] = ip.hosts2map(config['allowedhostset'])
-    config['allowedhostset'] = ip.map2hosts(config['allowedhostset'])
+    config['allowedhostset'] = ip.map2hosts(config['allowedhosts'])
     info.append(i18n._("Allowed host successfully added"))
 
 
