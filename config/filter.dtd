@@ -38,10 +38,10 @@
  10.8.2001 Bastian Kleineidam
  * added Replacer
  
- WWW filters are configuration files for blocking URLs and rewriting
- HTML and image data and HTTP headers.
- Each file must have exactly one filter element (the "root" element).
- Each filter can have any number of rules (including zero).
+ WWW filters are configuration files for eg. blocking URLs or rewriting
+ HTML, image data or HTTP headers.
+ Each file must have exactly one folder element.
+ Each folder can have any number of rules (including zero).
  Filter files should have a .zap extension.
  In DATA sections, the following characters must be XML-encoded:
  Character	Code
@@ -54,14 +54,13 @@
 -->
 
 
-<!--                      Filter
+<!--                      Folder
 
-   The filter and each rule element has a "disable" attribute. By default
-   it is "0" which means the filter resp. the rule is enabled.
-   This way configuration tools can display the description "desc" of all
+   A folder holds a list of filter rules.
+   The folder and each rule has a "disable" attribute to disable it.
+   By default the folder or rule is enabled.
+   This way configuration tools can display the description of all
    filters and rules and can enable/disable each of them separately.
-
-   The filter is identified by filename.
 -->
 <!ELEMENT folder (title+,description*,(rewrite|replace|javascript|block|blockurls|blockdomains|allow|header|image|nocomments|rating)*)>
 <!ATTLIST folder
