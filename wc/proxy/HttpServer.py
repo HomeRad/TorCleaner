@@ -452,7 +452,7 @@ class HttpServer (Server):
 
     def reuse (self):
         self.client = None
-        if self.can_reuse:
+        if self.connected and self.can_reuse:
             debug(PROXY, 'Server: reusing %d %s', self.sequence_number, str(self))
             self.sequence_number += 1
             self.state = 'client'
