@@ -3,9 +3,15 @@
 Welcome to the wonderful world of software OSI layer 5 filtering.
 If you want to write your own filter module look at the existing
 filters.
+
 You can add extern states for the filter by making a separate class
 and passing it with the "attrs" parameter. Look at the Rewriter filter
 to see how its done.
+
+To communicate with the proxy, filters can throw FilterExceptions.
+Of course, these must be handled in the appropriate proxy functions
+to work properly.
+
 """
 # Copyright (C) 2000-2002  Bastian Kleineidam
 #
@@ -38,7 +44,21 @@ FILTER_RESPONSE_DECODE = 7 # May decode incoming content
 FILTER_RESPONSE_MODIFY = 8 # May modify incoming content
 FILTER_RESPONSE_ENCODE = 9 # May encode incoming content
 
-class FilterException (Exception): pass
+class FilterException (Exception):
+    """Generic filter exception"""
+    pass
+
+class FilterWait (FilterException):
+    """Raised when filter wait for more data to filter. The filter
+       has to buffer already passed data until the next call.
+    """
+    pass
+
+class FilterRedirect (FilterException):
+    """Raised when filter wants to redirect to another url.
+       Proxy must not have sent headers or data(!).
+    """
+    pass
 
 
 def printFilterOrder (i):
