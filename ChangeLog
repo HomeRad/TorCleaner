@@ -1,4 +1,4 @@
-2.12 (released xx.xx.xxxx)
+2.12 (released 8.5.2004)
   * do not assume zero content size if Content-Length header is
     missing in a server reply
     Type: bugfix
