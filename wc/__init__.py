@@ -232,8 +232,8 @@ class Configuration (dict):
         # DNS resolved nofilterhosts
         self['allowedhosts'] = None
         self['starttime'] = time.time()
-	# if set to one the bound socket does not accept connections from
-	# hosts except localhost; normally not needed
+        # if set to one the bound socket does not accept connections from
+        # hosts except localhost; normally not needed
         self['local_sockets_only'] = 0
         self['localhosts'] = wc.network.get_localhosts()
         self['mime_content_rewriting'] = sets.Set()
@@ -262,7 +262,7 @@ class Configuration (dict):
 
     def write_proxyconf (self):
         """write proxy configuration"""
-        f = file(self['configfile'], 'w')
+        f = file(self.configfile, 'w')
         f.write("""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner
