@@ -1,3 +1,4 @@
+from wc import i18n
 from wc.log import *
 from HttpClient import HttpClient
 from wc.webgui import WebConfig
