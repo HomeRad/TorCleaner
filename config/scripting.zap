@@ -90,4 +90,8 @@
 <replacer title="top frame bashing" oid="13"
  desc="Some sites disable surrounding frames and install themselves as the top frame."
  search="top\.location\.href\s*=\s*self\.location\.href"/>
+ 
+<javascript title="Enable JavaScript" oid="14"
+ desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"
+/>
 </folder>

@@ -4,6 +4,8 @@
  
  Changes:
 
+ 20030307 Bastia Kleineidam
+ * added javascript filter rule
  23.7.2002 Bastian Kleineidam
  * added allowurls and allowdomains filters
  29.6.2002 Bastian Kleineidam
@@ -271,6 +273,20 @@
 -->
 <!ELEMENT nocomments EMPTY>
 <!ATTLIST nocomments
+ title    CDATA #REQUIRED
+ oid      CDATA #IMPLIED
+ desc     CDATA #IMPLIED
+ disable  CDATA "0"
+ matchurl CDATA ""
+ dontmatchurl CDATA ""
+>
+
+<!--                      JavaScript
+
+    Execute and filter JavaScript in HTML source
+-->
+<!ELEMENT javascript EMPTY>
+<!ATTLIST javascript
  title    CDATA #REQUIRED
  oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED

@@ -1,19 +1,9 @@
                     Configuration Help
                    ====================
 
-For the configuration file syntax see webcleaner.dtd and filter.dtd.
+Under normal circumstances, you should use the webcleanerconf(1)
+program (or the web config, when its finished) to configure WebCleaner.
+But of course you can edit the *.zap and webcleaner.conf files
+manually with your favourite text editor.
 
-Filter GUI settings (configfile settings):
-Title (title):
-        The title of the filter.
-
-Description (desc):
-        Some good description what this filter does.
-	
-Language (language):
-        If you specify incompatible regular expressions choose the 
-	appropriate language here.
-
-Filename ():
-        The name of the configuration file where these filters are
-	stored.
+For the configuration files syntax see webcleaner.dtd and filter.dtd.
