@@ -167,10 +167,11 @@ def check_pics (rule, labellist):
         blurb = labellist[last:mo.start()].lower()
         debug(NIGHTMARE, "PICS blurb", blurb)
         last = mo.end()
-        for service, sdata in services.items():
+        for service, options in rule.ratings.items():
+            sdata = services[service]
             if blurb.find(service) != -1:
                 msg = check_service(rating, sdata['categories'],
-                               sdata['name'], rule.ratings[service])
+                                    sdata['name'], options)
                 if msg: return msg
     return None
 
@@ -207,13 +208,14 @@ def check_pics_option (rating, category_label, option, category):
 def _test ():
     from wc.filter.rules.PicsRule import PicsRule
     labellist = """(pics-1.1
-"http://www.icra.org/ratingsv02.html"
- l gen true for "http://www.jesusfilm.org"
- r (cz 1 lz 1 nz 1 oh 1 vz 1)
 "http://www.rsac.org/ratingsv01.html"
  l gen true for "http://www.jesusfilm.org"
  r (n  0 s
-    0 v 0 l 0))"""
+    0 v 0 l 0))
+"http://www.icra.org/ratingsv02.html"
+ l gen true for "http://www.jesusfilm.org"
+ r (cz 1 lz 1 nz 1 oh 1 vz 1)
+ """
     rule = PicsRule()
     print check_pics(rule, labellist)
 
