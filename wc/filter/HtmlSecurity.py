@@ -87,7 +87,7 @@ class HtmlSecurity (object):
             src = attrs['src']
             if "." in src:
                 # prevent CVE-2002-0022
-                i = src.find('.')
+                i = src.rfind('.')
                 if len(src[i:]) > 10:
                     warn(FILTER, "%s %s\n Detected and prevented IE filename overflow crash", str(htmlfilter), `src`)
                     del attrs['src']
