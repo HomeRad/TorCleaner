@@ -9,6 +9,10 @@
   * correct ".." typos in domain names on DNS resolving
     Type: feature
     Changed: wc/proxy/dns_lookups.py
+  * do not quote commas in url paths, solves "Access forbidden"
+    problems on some servers
+    Type: bugfix
+    Changed: wc/url.py
 
 
 2.10 (released 27.3.2004)
