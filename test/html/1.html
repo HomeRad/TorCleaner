@@ -83,6 +83,11 @@ self.document.write("<b></b>");
 // end of script. -->
 </script>
 
+<!-- illegal starttag chars -->
+<a:b:c_d-e>
+<!-- illegal endtag chars -->
+</h%uäö>
+
 <!-- bad quote in tag attributes -->
 <!-- <a href="bla" %]">seen at slashdot</a> -->
 <a href="bla" %]">seen at slashdot</a>

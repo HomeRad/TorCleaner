@@ -284,7 +284,9 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_TAGSTART);
 }
 
-<S_TAGSTART>[A-Za-z0-9]+ {
+<S_TAGSTART>[^ \t\r\n\b\012/<>]+ {
+    /* actually accept a lot of tag chars, which may be illegal,
+     but we dont care, its the browsers job */
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
@@ -657,7 +659,7 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_TAGEND);
 }
 
-<S_TAGEND>[A-Za-z0-9]+ {
+<S_TAGEND>[^<>\r\n \t\b\012]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
@@ -681,7 +683,8 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_END);
 }
 
-<S_TAGEND>.|{RX_WHITE_SPACE}+ {
+<S_TAGEND>{RX_WHITE_SPACE}+ {
+    /* delete whitespace in or around tag names */
     UPDATE_BUFPOS;
 }
 
