@@ -1,30 +1,30 @@
 # -*- coding: iso-8859-1 -*-
 """convert"""
-#    Convert - Python module to convert number and data type
+# Convert - Python module to convert number and data type
 #
-#    Copyright (C) 2002 Thomas Mangin
+# Copyright (C) 2002 Thomas Mangin
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import sys, re
+# modified by Bastian Kleineidam <calvin@users.sourceforge.net>
+
+import sys, re, struct
 
 _oct='01234567'
 _dec='0123456789'
 _hex='0123456789abcdefABCDEF'
-
-_size = { 10:0, 8:1, 16:2 }
 
 _is_oct_start = re.compile(r"^[0\\][1-7]").match
 _is_dec_start = re.compile(r"^[1-9]").match
@@ -32,32 +32,18 @@ _is_hex_start = re.compile(r"^[0\\][xX][1-9a-fA-F]").match
 _is_number_start = re.compile(r"^([0\\]([1-7]|[xX][1-9a-fA-F])|[1-9])").match
 
 
-def base10 (text, base):
-    number = str(text).lower()
-    result = 0L
-    for digit in number:
-        result *= base
-        pos = _hex.index(digit)
-        result += pos
-    return result
-
-
 def which_base (text):
-    # return the base in (8,10,16) or 0 if not a number
-    length = len(text)
+    """return the base of string number in (8,10,16) or 0 if not a number"""
     if _is_hex_start(text):
         return 16
-    if _is_oct_start(text):
-        return 8
     if _is_dec_start(text):
         return 10
+    if _is_oct_start(text):
+        return 8
     return 0
 
 
-def start_base (text):
-    return which_base(text) != 0
-
-
+_size = { 10:0, 8:1, 16:2 }
 def size_base (base):
     return _size[base]
 
@@ -86,7 +72,7 @@ def convert (text):
     base = which_base(text)
     start = size_base(base)
     end = start+size_number(text)
-    return base10(text[start:end], base)
+    return int(text[start:end], base)
 
 
 # Special function to extract numbers from strings
@@ -105,7 +91,7 @@ def is_c_escape (text):
     elif text[0] != '\\':
         return False
     # I am probably missing some but do not have C book nearby
-    if text[1] in "nrb0":
+    if text[1] in "ftvnrb0":
         return True
     return False
 

@@ -19,7 +19,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# modified by Bastian Kleineidam
+# modified by Bastian Kleineidam <calvin@users.sourceforge.net>
 
 import os, re, string, convert
 
@@ -31,10 +31,13 @@ import os, re, string, convert
 
 
 class Failed (Exception):
+    """raised for Failed rules"""
     pass
 
 
 class Magic (object):
+    """store/load/cache files in magic(5) format, and apply detection
+       rules to existing files"""
 
     data_size = {'byte':1, 'short':2, 'long':4, 'string':1, 'stringnocase':1,
                  'pstring':1, 'date': 4, 'ldate': 4}
@@ -207,21 +210,6 @@ class Magic (object):
             test = '='
             result = test_result
             return (test,result)
-
-
-    def _string (self,list):
-        r = []
-        for s in list:
-            if type(s) is str:
-                if s == "\\0":
-                    r.append(chr(0))
-                else:
-                    r.append(s)
-            elif s <10:
-                r.append(ord(str(s)))
-            else:
-                r.append(s)
-        return r
 
 
     def _data (self,kind,result):

@@ -6,7 +6,7 @@ import os
 _magic = None
 
 def classify (fp):
-    """classify file fp"""
+    """classify given file"""
     global _magic
     if not _magic:
         # initialize mime data
