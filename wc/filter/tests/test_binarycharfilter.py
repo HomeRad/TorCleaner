@@ -14,7 +14,7 @@ class TestBinaryCharFilter (unittest.TestCase):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def setUp (self):
-        wc.configuration.config = wc.configuration.Configuration()
+        wc.configuration.init()
         wc.configuration.config['filters'] = ['BinaryCharFilter']
         wc.configuration.config.init_filter_modules()
 

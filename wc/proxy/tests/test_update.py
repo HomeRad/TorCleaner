@@ -14,7 +14,7 @@ class TestUpdate (unittest.TestCase):
 
     def setUp (self):
         self.nolog = NoLog()
-        self.config = wc.configuration.Configuration()
+        self.config = wc.configuration.init()
 
     def testUpdateFilter (self):
         wc.update.update_filter(self.config, dryrun=True, log=self.nolog)

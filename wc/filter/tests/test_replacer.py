@@ -12,7 +12,7 @@ class TestReplacer (unittest.TestCase):
 
     def init (self):
         super(TestReplacer, self).init()
-        wc.configuration.config = wc.configuration.Configuration()
+        wc.configuration.init()
         wc.configuration.config['filters'] = ['Replacer']
         wc.configuration.config.init_filter_modules()
 

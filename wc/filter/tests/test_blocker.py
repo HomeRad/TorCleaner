@@ -12,7 +12,7 @@ class TestBlocker (unittest.TestCase):
 
     def setUp (self):
         self.url = "http://ads.realmedia.com/"
-        wc.configuration.config = wc.configuration.Configuration()
+        wc.configuration.init()
         wc.configuration.config['filters'] = ['Blocker',]
         wc.configuration.config.init_filter_modules()
 
