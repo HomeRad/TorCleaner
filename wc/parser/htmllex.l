@@ -747,6 +747,15 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_END);
 }
 
+<S_TAGEND><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}*/[A-Za-z] {
+    UPDATE_BUFPOS;
+    LOWER_TMP;
+    yyextra->error = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf);
+    SETLVAL;
+    BEGIN(S_TAGEND);
+    RETURN(T_ELEMENT_END);
+}
+
 <S_TAGEND><{RX_WHITE_SPACE}*/[A-Za-z] {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -768,6 +777,15 @@ RX_DATA [-a-zA-Z0-9_]+
     LOWER_TMP;
     SETLVAL;
     BEGIN(INITIAL);
+    RETURN(T_ELEMENT_END);
+}
+
+<S_TAGEND2><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}*/[A-Za-z] {
+    UPDATE_BUFPOS;
+    LOWER_TMP;
+    yyextra->error = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf);
+    SETLVAL;
+    BEGIN(S_TAGEND);
     RETURN(T_ELEMENT_END);
 }
 

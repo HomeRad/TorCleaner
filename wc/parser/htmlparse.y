@@ -81,8 +81,8 @@ staticforward PyTypeObject parser_type;
 %}
 
 /* parser options */
-/*%verbose*/
-/*%debug*/
+%verbose
+%debug
 %defines
 %output="htmlparse.c"
 %pure_parser
@@ -137,6 +137,7 @@ element: T_WAIT { YYACCEPT; /* wait for more lexer input */ }
     CHECK_ERROR(ud, finish_start);
 finish_start:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_XDECREF(tag);
@@ -181,6 +182,7 @@ finish_start:
     CHECK_ERROR(ud, finish_start_end);
 finish_start_end:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_XDECREF(tag);
@@ -211,6 +213,7 @@ finish_start_end:
     CHECK_ERROR(ud, finish_end);
 finish_end:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -237,6 +240,7 @@ finish_end:
     CHECK_ERROR(ud, finish_comment);
 finish_comment:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -263,6 +267,7 @@ finish_comment:
     CHECK_ERROR(ud, finish_pi);
 finish_pi:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -289,6 +294,7 @@ finish_pi:
     CHECK_ERROR(ud, finish_cdata);
 finish_cdata:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -315,6 +321,7 @@ finish_cdata:
     CHECK_ERROR(ud, finish_doctype);
 finish_doctype:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -350,6 +357,7 @@ finish_doctype:
     CHECK_ERROR(ud, finish_script);
 finish_script:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -385,6 +393,7 @@ finish_script:
     CHECK_ERROR(ud, finish_style);
 finish_style:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -412,6 +421,7 @@ finish_style:
     CHECK_ERROR(ud, finish_characters);
 finish_characters:
     Py_XDECREF(ud->error);
+    ud->error = NULL;
     Py_XDECREF(callback);
     Py_XDECREF(result);
     Py_DECREF($1);
@@ -584,6 +594,7 @@ static PyObject* parser_debug(PyObject* self, PyObject* args) {
     if (!PyArg_ParseTuple(args, "i", &debug)) {
         return NULL;
     }
+    yydebug = debug;
     parser_object* p = (parser_object*)self;
     debug = htmllexDebug(&(p->scanner), debug);
     return PyInt_FromLong((long)debug);
@@ -641,5 +652,4 @@ DL_EXPORT(void) inithtmlsax(void) {
         return;
     if (!(resolve_entities = PyObject_GetAttrString(m, "resolve_entities")))
         return;
-    /*yydebug = 1;*/
 }
