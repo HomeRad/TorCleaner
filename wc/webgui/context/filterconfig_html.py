@@ -8,6 +8,8 @@ from wc.webgui.context import filter_safe as _filter_safe
 from wc.filter.rules.RewriteRule import partvalnames, partnames
 from wc.filter.rules.RewriteRule import part_num as _part_num
 from wc.filter.rules.FolderRule import FolderRule as _FolderRule
+from wc.filter.rules import register_rule as _register_rule
+from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.PICS import services as pics_data
 
@@ -165,6 +167,8 @@ def _form_newfolder (foldername):
     # select the new folder
     global curfolder
     curfolder = _FolderRule(title=foldername, desc="", disable=0, filename=filename)
+    _register_rule(curfolder)
+    _generate_sids(prefix="lc")
     config['folderrules'].append(curfolder)
     info.append(i18n._("New folder %s created.")%`os.path.basename(filename)`)
 
@@ -209,6 +213,8 @@ def _form_newrule (ruletype):
     # add new rule
     rule = _GetRuleFromName(ruletype)
     rule.parent = curfolder
+    _register_rule(rule)
+    _generate_sids(prefix="lc")
     curfolder.append_rule(rule)
     # select new rule
     _form_selrule(rule.oid)

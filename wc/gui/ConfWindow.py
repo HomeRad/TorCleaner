@@ -28,6 +28,7 @@ from wc import i18n, ConfigDir, TemplateDir, Configuration, Version, \
 from wc.XmlUtils import xmlify
 from FXPy.fox import *
 from wc.filter.rules.FolderRule import FolderRule
+from wc.filter.rules import register_rule, generate_sids
 from wc.filter import GetRuleFromName
 from wc.log import *
 from ToolWindow import ToolWindow
@@ -329,6 +330,8 @@ class ConfWindow (ToolWindow):
         # use the special case of filename with the mkstemp tuple
         fd, filename = tempfile.mkstemp(".zap","local_", ConfigDir, text=True)
         f = FolderRule(title="No title", desc="", disable=0,filename=filename)
+        register_rule(f)
+        generate_sids(prefix="lc")
         self.tree.addFolder(f, create=1)
         self.getApp().dirty = 1
         return 1
@@ -336,7 +339,10 @@ class ConfWindow (ToolWindow):
 
     def onCmdNewRule (self, sender, sel, ptr):
         debug(GUI, "new filter rule")
-        self.tree.newRule(GetRuleFromName(sender.getText()))
+        rule = GetRuleFromName(sender.getText())
+        register_rule(rule)
+        generate_sids(prefix="lc")
+        self.tree.newRule(rule)
         self.getApp().dirty = 1
         return 1
 
