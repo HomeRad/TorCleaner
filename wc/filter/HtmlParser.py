@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, urlparse, wc
+import sys, re, urlparse, wc
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser
 from wc.parser import resolve_html_entities, strip_quotes
@@ -32,7 +32,8 @@ from wc.js.JSListener import JSListener
 from wc.js import escape_js, unescape_js, get_js_ver, get_js_data
 try:
    from wc.js import jslib
-except ImportError:
+except ImportError, msg:
+    print >>sys.stderr, "could not load JavaScript library:", msg
     jslib = None
 from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
 from wc.proxy.HttpProxyClient import HttpProxyClient
