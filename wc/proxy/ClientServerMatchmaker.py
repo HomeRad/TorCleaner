@@ -68,6 +68,8 @@ class ClientServerMatchmaker:
         hostname, port = splitport(netloc)
         if port is None:
             port = 80
+        else:
+            port = int(port)
         if hostname == '_proxy':
             # proxy info
             ServerHandleDirectly(self.client,
