@@ -23,7 +23,9 @@ import urlparse
 import gettext
 import mimetypes
 import cStringIO as StringIO
+
 import wc
+import wc.i18n
 import wc.log
 from wc.webgui.simpletal import simpleTAL
 from wc.webgui.simpletal import simpleTALES
