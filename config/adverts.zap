@@ -10,7 +10,7 @@
 
 <rewrite title="Ad servers 1"
  desc="Kill links with ad words in the host name.">
-<attr>http://adse?rv.*\.(com|net)</attr>
+<attr>http://adse?rv.*\.(com|net|de)</attr>
 </rewrite>
 
 <rewrite title="Ad servers 2"
