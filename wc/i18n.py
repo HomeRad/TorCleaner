@@ -23,17 +23,16 @@ __date__    = "$Date$"[7:-2]
 import os, locale, gettext
 from wc import LocaleDir, Name
 
-_gettext = None
 supported_languages = []
 default_language = None
 
 def init_gettext ():
-    global _gettext
+    global _
     try:
-        _gettext = gettext.translation(Name, LocaleDir).gettext
+        _ = gettext.translation(Name, LocaleDir).gettext
     except IOError, msg:
         # default gettext function
-        _gettext = lambda s: s
+        _ = lambda s: s
     # get supported languages
     for d in os.listdir(LocaleDir):
         path = os.path.join(LocaleDir, d)
@@ -41,12 +40,6 @@ def init_gettext ():
             continue
         if os.path.exists(os.path.join(path, 'LC_MESSAGES', '%s.mo'%Name)):
             supported_languages.append(d)
-
-
-def _ (msg, lang=None):
-    if lang is not None:
-        return gettext.translation(Name, LocaleDir, lang).gettext(msg)
-    return _gettext(msg)
 
 
 def get_lang (lang):
