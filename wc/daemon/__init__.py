@@ -51,11 +51,12 @@ if not iswriteable(pidfile):
 
 
 def restart(parent_exit=1):
-    stop()
+    msg1 = stop()
     # sleep 2 seconds, should be enough to clean up
     import time
     time.sleep(2)
-    start(parent_exit=parent_exit)
+    msg2 = start(parent_exit=parent_exit)
+    return (msg1 or "") + (msg2 or "")
 
 
 def status():

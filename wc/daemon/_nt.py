@@ -23,8 +23,8 @@ from wc.daemon import startfunc,pidfile
 def start():
     # already running?
     if os.path.exists(pidfile):
-        raise Exception("webcleaner already started (lock file found). "
-	                "Do 'webcleaner stop' first.")
+        return """webcleaner already started (lock file found).
+Do 'webcleaner stop' first."""
     command = (sys.executable, 'webcleaner', 'start_nt')
     from wc.proxy import winreg
     mode = os.P_DETACH
@@ -41,7 +41,6 @@ def start():
         ret = os.spawnv(mode, command[0], command)
     except OSError, exc:
         # this seems to happen when the command isn't found
-        print exc
         raise Exception, \
               "command '%s' failed: %s" % (command, exc[-1])
     if ret < 0:
@@ -69,13 +68,15 @@ def stop():
     if not os.path.exists(pidfile):
         return "WebCleaner was not running (no lock file found)"
     pid = int(open(pidfile).read())
+    msg = None
     import win32api
     try:
         handle = win32api.OpenProcess(1, 0, pid)
         rc = win32api.TerminateProcess(handle, 0)
     except win32api.error:
-        print "warning: could not terminate process PID %d"%pid
+        msg = "warning: could not terminate process PID %d"%pid
     os.remove(pidfile)
+    return msg
 
 
 def reload():

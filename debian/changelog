@@ -5,8 +5,9 @@ webcleaner (0.13) unstable; urgency=low
   * add missing second argument to handle_proc function, this prevented
     xml files to be parsed correctly
   * fixed the parser so that <tag/> tags are handled correctly
+  * implemented Windows-specific daemon handler functions
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon, 21 May 2001 21:26:58 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  1 Jun 2001 21:47:37 +0200
 
 webcleaner (0.12) unstable; urgency=low
 

@@ -21,8 +21,8 @@ def start(parent_exit=1):
     """start a daemon using the appropriate pidfile"""
     # already running?
     if os.path.exists(pidfile):
-        raise Exception("webcleaner already started (lock file found). "
-	                "Do 'webcleaner stop' first.")
+        return """webcleaner already started (lock file found).
+Do 'webcleaner stop' first."""
     # forking (only under POSIX systems)
     pid = os.fork()
     # the parent exits
@@ -46,21 +46,22 @@ def start(parent_exit=1):
 
 def stop():
     if not os.path.exists(pidfile):
-        print "webcleaner was not running"
-        return
+        return "webcleaner was not running (no lock file found)"
     import signal
+    msg = None
+    pid = int(open(pidfile).read())
     try:
-        os.kill(int(open(pidfile).read()), signal.SIGTERM)
+        os.kill(pid, signal.SIGTERM)
     except OSError:
-        pass
+        msg = "warning: could not terminate process PID %d"%pid
     os.remove(pidfile)
+    return msg
 
 
 
 def reload():
     if not os.path.exists(pidfile):
-        print "webcleaner is not running. Do 'webcleaner start' first."
-        return
+        return "webcleaner is not running. Do 'webcleaner start' first."
     pid = int(open(pidfile).read())
     import signal
     os.kill(int(open(pidfile).read()), signal.SIGHUP)
