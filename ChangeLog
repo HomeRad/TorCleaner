@@ -1,3 +1,13 @@
+2.24 "" (released xx.xx.xxxx)
+
+  * Really ignore encoding errors of HTML content.
+    Type: bugfix
+    Changed: wc/filter/HtmlParser.py
+
+  * Another fix for MIME type changing.
+    Type: bugfix
+    Changed: wc/proxy/Headers.py
+
 2.23 "The fog of war" (released 27.10.2004)
 
   * Fixed MIME type changing.
