@@ -3,6 +3,9 @@ Changes since 0.53:
   * added more advert filters
   * remove unused blacklist zappers from CVS
   * fix string joining in wc.__init__.text_status()
+  * really remove Content-Length header for rewritten content
+  * only rely on mime type guessing values if both encoding and
+    mime type were found
 
 Changes since 0.52:
   * only filter some <meta name> tags, not all
