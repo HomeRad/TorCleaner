@@ -54,6 +54,14 @@
     Type: bugfix
     Changed: bk/HtmlParser/htmllex.l
 
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040725
+    Type: feature
+    Changed: libjs/*
+
+  * updated squidguard blacklists as of 20040725
+    Type: feature
+    Changed: config/blacklist/*, config/blacklist_*.zap
+
 2.18 "Bubba Ho-tep" (released 1.6.2004)
   * rename local var 'data' to correct name 'content'
     Type: bugfix
