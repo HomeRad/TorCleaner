@@ -134,6 +134,8 @@ release: releasecheck dist upload homepage
 	@read
 	@echo "Uploading new WebCleaner Homepage..."
 	$(MAKE) -C ~/public_html/webcleaner.sf.net upload
+	@echo "Register at Python Package Index..."
+	$(PYTHON) setup.py register
 
 upload:
 	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
