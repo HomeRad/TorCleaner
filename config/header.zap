@@ -12,6 +12,11 @@
  disable="1"
  name="Set-Cookie"/>
 
+<header title="No accepts"
+ desc="This is really paranoid. Most browsers send Accept, Accept-Language, Accept-Encoding and Accept-Charset headers. These headers can reveal private information (eg. if you accept certain languages your ethnic group can be guessed). "
+ disable="1"
+ name="Accept.*"/>
+
 <header title="No referer"
  desc="Remove the Referer header. Some sites may not work with this option, because they check the referer."
  disable="1"
@@ -20,10 +25,4 @@
 <header title="No x-meta tags"
  desc="What the hell are x-meta tags? Definitely not something I need."
  name="x-meta"/>
-
-<header title="No accepts"
- desc="This is really paranoid. Most browsers send Accept, Accept-Language, Accept-Encoding and Accept-Charset headers. These headers can reveal private information (eg. if you accept certain languages your ethnic group can be guessed).
-"
- disable="1"
- name="Accept.*"/>
 </folder>

@@ -1,15 +1,12 @@
 TODO
 
-- Rule matching in C for speed
+- documentation of the GUI tools
 
-- HTTPS support (only proxy, no filtering)
-  It's sort of an extension to HTTP - you just send the proxy the request
-  CONNECT home.netscape.com:443 HTTP/1.0\r\n\r\n
-  and after reading all the response headers and a blank line you
-  have a transparent connection
+- in the far future: embed webcleaner into Mozilla
+  this way we can filter https :)
 
-- new filtering:
-  Stop/limit Javascript Pop-ups/alert/confirms
-    javascript:
-     window.onload=window.onunload=window.onbeforeunload=null;window.close();
-  Highlight keywords
+WONTDO
+
+- javascript popup filtering. There is already a nice option for this
+  on Mozilla (>= 0.9.4) by putting this in your user.js:
+  user_pref("dom.disable_open_during_load", true);

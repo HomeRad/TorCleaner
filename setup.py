@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python -O
 """setup file for the distuils module"""
 # Copyright (C) 2000,2001  Bastian Kleineidam
 #
@@ -18,7 +18,7 @@
 
 import os, re, sys, string
 from types import StringType, TupleType
-from distutils.core import setup, Extension, DEBUG
+from distutils.core import setup, Extension
 from distutils.dist import Distribution
 from distutils.command.install import install
 from distutils.file_util import write_file
@@ -43,6 +43,21 @@ class MyInstall(install):
         from pprint import pformat
         data.append('outputs = %s' % pformat(self.get_outputs()))
         self.distribution.create_conf_file(self.install_lib, data)
+        # copy batch file to desktop
+        if os.name=="nt":
+            path = self.install_scripts
+            if os.environ.has_key("ALLUSERSPROFILE"):
+                path = os.path.join(os.environ["ALLUSERSPROFILE"], "Desktop")
+            elif os.environ.has_key("USERPROFILE"):
+                path = os.path.join(os.environ["USERPROFILE"], "Desktop")
+            for fname in ('webcleaner.bat', 'wcheaders.bat',
+                 'webcleanerconf.bat'):
+                data = open(fname).readlines()
+                data = map(string.strip, data)
+                data = map(lambda s: s.replace("$python", sys.executable), data)
+                data = map(lambda s, self=self: s.replace("$install_scripts",
+                  self.install_scripts), data)
+                self.distribution.create_batch_file(path, data, fname)
 
 
     # sent a patch for this, but here it is for compatibility
@@ -93,10 +108,56 @@ class MyDistribution(Distribution):
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
 
+    def create_batch_file(self, directory, data, filename):
+        filename = os.path.join(directory, filename)
+        # write the batch file
+        util.execute(write_file, (filename, data),
+                 "creating %s" % filename, self.verbose>=1, self.dry_run)
+
+
+
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
-data_files = [('share/webcleaner/config',
+if os.name=="nt":
+    ext_modules = [Extension('wc.parser.htmlsax',
+                      ['wc/parser/htmlsax.c'],
+                      libraries = ["libxml2"],
+                      )]
+else:
+    ext_modules = [Extension('wc.parser.htmlsax',
+                      ['wc/parser/htmlsax.c'],
+                      libraries = ["xml2"],
+                      include_dirs = ["/usr/include/libxml2"],
+                      )]
+
+setup (name = "webcleaner",
+       version = "0.29",
+       description = "a filtering HTTP proxy",
+       author = myname,
+       author_email = myemail,
+       maintainer = myname,
+       maintainer_email = myemail,
+       url = "http://webcleaner.sourceforge.net/",
+       licence = "GPLv2",
+       packages = ['', 'wc', 'wc/filter', 'wc/daemon',
+                   'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
+       ext_modules = ext_modules,
+       scripts = ['webcleaner', 'webcleanerconf', 'wcheaders']
+       long_description =
+"""WebCleaner features:
+o disable animated GIFs
+o compress documents on-the-fly (with gzip)
+o enhance your privacy (remove user-agent: header and obfuscate IP address)
+o remove unwanted HTML (adverts, javascript, ...)
+o completely customizable to suit your (filtering) needs
+o single process proxy with select() I/O
+o HTTP/1.1 support
+""",
+       distclass = MyDistribution,
+       cmdclass = {'install': MyInstall,
+                  },
+       data_files = [('share/webcleaner/config',
       ['config/blocked.html',
        'config/blocked.gif',
        'config/webcleaner.conf',
@@ -115,49 +176,14 @@ data_files = [('share/webcleaner/config',
        'config/disabledrule.png',
        'config/minifolderopen.png']),
      ('man/man1',
-      ['webcleaner.1', 'webcleanerconf.1', 'wcheaders.1', 'webcleaner.conf.5']),
-    ]
-scripts = ['webcleaner', 'webcleanerconf', 'wcheaders']
-
-if os.name=="nt":
-    scripts.append("webcleaner.bat")
-    scripts.append("webcleanerconf.bat")
-    scripts.append("wcheaders.bat")
-else:
-    data_files.append(('share/webcleaner/examples',
-                       ['webcleaner.bat',
-                        'webcleanerconf.bat',
-                        'wcheaders.bat']))
-
-setup (name = "webcleaner",
-       version = "0.29",
-       description = "a filtering HTTP proxy",
-       author = myname,
-       author_email = myemail,
-       maintainer = myname,
-       maintainer_email = myemail,
-       url = "http://webcleaner.sourceforge.net/",
-       licence = "GPLv2",
-       packages = ['', 'wc', 'wc/filter', 'wc/daemon',
-                   'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns'],
-       ext_modules = [Extension('wc.parser.htmlsax',
-                      ['wc/parser/htmlsax.c'],
-                      libraries = ["xml2"],
-                      include_dirs = ["/usr/include/libxml2"],
-                      )],
-       scripts = scripts,
-       long_description =
-"""WebCleaner features:
-o disable animated GIFs
-o compress documents on-the-fly (with gzip)
-o enhance your privacy (remove user-agent: header and obfuscate IP address)
-o remove unwanted HTML (adverts, javascript, ...)
-o completely customizable to suit your (filtering) needs
-o single process proxy with select() I/O
-o HTTP/1.1 support
-""",
-       distclass = MyDistribution,
-       cmdclass = {'install': MyInstall,
-                  },
-       data_files = data_files,
+      ['webcleaner.1',
+       'webcleanerconf.1',
+       'wcheaders.1',
+       'webcleaner.conf.5',
+      ]),
+     ('share/webcleaner/examples',
+      ['webcleaner.bat',
+       'webcleanerconf.bat',
+       'wcheaders.bat']),
+     ]
 )

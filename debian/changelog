@@ -5,8 +5,11 @@ webcleaner (0.29) unstable; urgency=low
       option
     - catch URLErrors (they are thrown when the proxy is not running)
   * new header filter for Accept* headers (default disabled)
+  * setup.py
+    - adjust .bat files on Windows to be executable out-of-the-box
+    - use "libxml2" as libxml library name on Windows
 
- -- Bastian Kleineidam <calvin@debian.org>  Fri, 23 Nov 2001 13:19:44 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Mon, 26 Nov 2001 21:11:19 +0100
 
 webcleaner (0.28) unstable; urgency=low
 
