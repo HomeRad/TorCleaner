@@ -26,7 +26,7 @@ orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['rewrite','nocomments']
 
 # modern browsers can cope with a lot of non-quoted content
-_noquoteval = re.compile("^[-a-zA-Z0-9_/.#%:?,]+$")
+_noquoteval = re.compile("^[-+~a-zA-Z0-9_/.#%:?,]+$")
 
 class Rewriter(Filter):
     """This class can rewrite HTML tags. It uses a parser class."""
