@@ -8,7 +8,7 @@ MSGMERGE := msgmerge
 SOURCES = $(shell find ../wc -name \*.py) \
 ../wcheaders \
 ../webcleaner \
-../webcleanerconf \
+../webcleanerconf
 
 LDIR=../share/locale
 LFILE=LC_MESSAGES/$(PACKAGE).mo

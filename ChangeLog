@@ -1,4 +1,6 @@
 2.0
+  * require and use python 2.3
+    Changed: a lot config and build files
   * remove -std=gnu99 option from compiler call, fixes gcc 2.95.x compile.
     Changed: setup.py
   * do not setuid/setgid any more to enable web config
