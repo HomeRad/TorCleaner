@@ -59,4 +59,20 @@
  url="siemens\.com/tracking_engine/StatServ">
   <title lang="en">Siemens StatServ</title>
 </block>
+
+<rewrite sid="wc.21">
+  <title lang="de">Verschiedene Zählskripte</title>
+  <description lang="de">CGI Skripte zur Zählung</description>
+  <attr>/.*(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
+</rewrite>
+
+<rewrite sid="wc.406"
+ tag="img">
+  <title lang="de">akamai.net Statistik</title>
+  <title lang="en">SF tracker image</title>
+  <description lang="de">Zu finden auf Sourceforge.</description>
+  <description lang="en">akamai tracker image at sourceforge</description>
+  <attr name="src">e\.akamai\.net</attr>
+</rewrite>
+
 </folder>

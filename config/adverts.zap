@@ -20,6 +20,29 @@
   <attr>/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
 </rewrite>
 
+<rewrite sid="wc.402">
+  <title lang="de">Verknüpfungen mit &apos;adbouncer&apos;</title>
+  <title lang="en">adbouncer</title>
+  <description lang="en">Kill links with ad words in the path name.</description>
+  <attr>/adbouncer\.phtml</attr>
+</rewrite>
+
+<rewrite sid="wc.403">
+  <title lang="de">Verknüpfungen mit &apos;easy-cash&apos;</title>
+  <title lang="en">easy-cash</title>
+  <description lang="en">Kill links with ad words in the host name.</description>
+  <attr>easy-cash</attr>
+</rewrite>
+
+<rewrite sid="wc.414">
+  <title lang="de">Onmouseover Werbung</title>
+  <title lang="en">Onmouseover ads</title>
+  <description lang="de">Dies entfernt die neueste Kreation der Werbepfuscher.</description>
+  <description lang="en">This gets rid of the latest generation of JavaScript annoyances.</description>
+  <attr name="onmouseover">parent\.location\s*=</attr>
+  <replacement part="attr"/>
+</rewrite>
+
 <rewrite sid="wc.336">
   <title lang="de">Verknüpfungen mit &apos;ads&apos;</title>
   <title lang="en">Ad servers 03</title>
@@ -107,23 +130,28 @@
 </rewrite>
 
 <rewrite sid="wc.347">
+  <title lang="de">Verknüpfungen mit &apos;eu-adcenter&apos;</title>
   <title lang="en">Adverts in the path name 04</title>
+  <description lang="de">Lösche Verknüpfungen mit &apos;eu-adcenter&apos; im Namen.</description>
   <description lang="en">Kill links with ad words in the path name.</description>
   <attr>\.eu-adcenter\.net</attr>
 </rewrite>
 
 <rewrite sid="wc.348">
+  <title lang="de">Verknüpfungen mit &apos;click&apos; u.a.</title>
   <title lang="en">Adverts in the path name 7</title>
   <attr>(l.click\?clickId=|smartserve/click)</attr>
 </rewrite>
 
 <block sid="wc.349"
  url="https?://.*(ad.*click|click.*thr|click.*ad).*\?.+">
+  <title lang="de">CGI Werbung mit &apos;click&apos;</title>
   <title lang="en">CGI adverts 1</title>
   <description lang="en">Search for the words &amp;quot;ad&amp;quot; and &amp;quot;click&amp;quot;  in the path and a non-empty query.</description>
 </block>
 
 <rewrite sid="wc.350">
+  <title lang="de">CGI Werbung mit &apos;ads&apos;</title>
   <title lang="en">CGI adverts 2</title>
   <description lang="en">Matches imagess served by CGI and with advert words in the path.</description>
   <attr>/cgi-bin/ads?(log(\.pl)?|click)?\?</attr>
@@ -131,11 +159,14 @@
 
 <block sid="wc.351"
  url="https?://.*/(advert|banners?|adid|profileid)/">
+  <title lang="de">CGI Werbung mit &apos;banner&apos; u.a.</title>
   <title lang="en">CGI adverts 3</title>
+  <description lang="de">Suche nach advert,banner,adid,profileid in der URL.</description>
   <description lang="en">Search for advert,banner,adid,profileid in the path.</description>
 </block>
 
 <rewrite sid="wc.352">
+  <title lang="de">CGI Werbung mit &apos;clickthru&apos;</title>
   <title lang="en">CGI adverts 4</title>
   <description lang="en">Matches imagess served by CGI and with advert words in the path.</description>
   <attr>clickthru.(acc|aspx)\?</attr>
@@ -143,17 +174,14 @@
 
 <block sid="wc.353"
  url="https?://[\d.]+/.*\?.*\.gif">
+  <title lang="de">Bilder mit numerischer IP</title>
   <title lang="en">Hosts without DNS name</title>
+  <description lang="de">Viele Werbebilder kommen von Rechnern ohne DNS Eintrag.</description>
   <description lang="en">If a host has no DNS name it consists only of numbers, for  example &amp;quot;http://34.55.124.2&amp;quot;. A lot of adverts are loaded from such servers. We restrict it further more for CGI queries which fetch GIF images.</description>
 </block>
 
-<rewrite sid="wc.354">
-  <title lang="en">Counter and tracker</title>
-  <description lang="en">Kill tracker and counter cgi scripts.</description>
-  <attr>/.*(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
-</rewrite>
-
 <rewrite sid="wc.355">
+  <title lang="de">Verknüpfungen mit &apos;werbung&apos; u.a.</title>
   <title lang="en">German adverts</title>
   <description lang="en">Kill links with german ad words in the path.</description>
   <attr>/(publicite|werbung|rekla(ma|me|am)|annonse|maino(kset|nta|s)?)/</attr>
@@ -161,24 +189,33 @@
 
 <rewrite sid="wc.356"
  tag="ilayer">
+  <title lang="de">Entferne &lt;ilayer&gt;</title>
   <title lang="en">Remove &lt;ilayer&gt; tag</title>
+  <description lang="de">Viele Werbungen sind in &lt;ilayer&gt;.</description>
   <description lang="en">Lots of ads come nowadays in ilayer tags.</description>
 </rewrite>
 
 <rewrite sid="wc.357"
  tag="layer">
+  <title lang="de">Entferne &lt;layer&gt;</title>
   <title lang="en">Remove &lt;layer&gt; tag</title>
+  <description lang="de">Layers enthalten meist Werbung.</description>
   <description lang="en">Don&apos;t know some example sites, but I don&apos;t want layers.</description>
+  <nomatchurl>imdb\.com</nomatchurl>
 </rewrite>
 
 <rewrite sid="wc.358"
  tag="nolayer">
+  <title lang="de">Benutze &lt;nolayer&gt;</title>
   <title lang="en">Use the &lt;nolayer&gt; tag</title>
+  <description lang="de">Bei Entfernung von &lt;ilayer&gt; und &lt;layer&gt;, benutze den &lt;nolayer&gt; Inhalt.</description>
   <description lang="en">If we remove the &lt;ilayer&gt; and &lt;layer&gt;, use the &lt;nolayer&gt; content.</description>
+  <nomatchurl>imdb\.com</nomatchurl>
   <replacement part="tag"/>
 </rewrite>
 
 <rewrite sid="wc.359">
+  <title lang="de">Verschiedene Werberechner 3</title>
   <title lang="en">German ad servers</title>
   <description lang="en">Kill links with ad words in the host name.</description>
   <attr>(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>

@@ -2,7 +2,7 @@
 <!DOCTYPE folder SYSTEM "filter.dtd">
 <folder sid="wc.389" oid="10">
 <title lang="de">Weiterleitungen</title>
-<title lang="en">Redirection and meta</title>
+<title lang="en">Redirections</title>
 <description lang="en">These are Python specific rules to rewrite some nasty URLs, notably redirections, and get rid of the rest of the meta tags.</description>
 
 <rewrite sid="wc.383">
