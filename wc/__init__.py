@@ -201,7 +201,7 @@ _nestedtags = (
   # rewriter rule nested tag names
   'attr','enclosed','replace',
   # PICS rule nested tag names
-  'service','category',
+  'url', 'service','category',
 )
 
 class ParseException (Exception): pass

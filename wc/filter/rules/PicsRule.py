@@ -23,7 +23,7 @@ class PicsRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, oid=0):
         UrlRule.__init__(self, title=title, desc=desc,disable=disable,oid=oid)
         self.ratings = {}
-        self.url = None
+        self.url = ""
 
 
     def fill_attrs (self, attrs, name):
@@ -33,7 +33,7 @@ class PicsRule (UrlRule):
         elif name=='category':
             assert self._service
             self._category = unxmlify(attrs.get('name')).encode('iso8859-1')
-        elif name='url':
+        elif name=='url':
             pass
         elif name=='pics':
             UrlRule.fill_attrs(self, attrs, name)
