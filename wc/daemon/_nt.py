@@ -60,7 +60,7 @@ Do 'webcleaner stop' first."""), 0
         # and this reflects the command running but failing
         raise Exception, \
               i18n._("command '%s' killed by signal %d") % (command, -ret)
-    return None, 0
+    return "", 0
 
 
 def start_nt (startfunc, pidfile, parent_exit=True):

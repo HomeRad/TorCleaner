@@ -35,7 +35,7 @@ Do 'webcleaner stop' first."""), 1
         if parent_exit:
             os._exit(0)
         else:
-            return 0, None
+            return "", 0
     # create new session and fork once more
     os.setsid()
     if os.fork() != 0:
@@ -51,13 +51,12 @@ Do 'webcleaner stop' first."""), 1
     f.write("%d" % os.getpid())
     f.close()
     # start function
-    #do_profile = True
     if do_profile:
         import profile
         profile.run("startfunc", "webcleaner.prof")
     else:
         startfunc()
-    return 0, None
+    return "", 0
 
 
 def stop (pidfile):
@@ -87,7 +86,7 @@ def startwatch (startfunc, pidfile, watchfile, parent_exit=True, sleepsecs=5):
         if parent_exit:
             raise SystemExit
         else:
-            return
+            return "", 0
     f = file(watchfile, 'w')
     f.write("%d" % os.getpid())
     f.close()
