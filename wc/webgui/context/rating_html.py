@@ -173,16 +173,18 @@ def _form_apply ():
     if generic:
         rating['generic'] = u"true"
     rating['modified'] = u"%d" % int(_time.time())
-    rating_cache[url] = rating
-    _rating_cache_write()
-    info['ratingupdated'] = True
+    if _rating_add(url, rating):
+        info['ratingupdated'] = True
+    else:
+        error['ratingupdated'] = True
 
 
 def _form_delete ():
     global url
-    del rating_cache[url]
-    _rating_cache_write()
-    info['ratingdeleted'] = True
+    if _rating_delete(url):
+        info['ratingdeleted'] = True
+    else:
+        error['ratingdeleted'] = True
 
 
 def _form_load ():
