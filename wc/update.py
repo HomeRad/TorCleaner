@@ -195,7 +195,7 @@ def update_filter (wconfig, dryrun=False, log=None):
             continue
         md5sum, filename = line.split()
         assert filename.endswith('.zap')
-        fullname = os.path.join(wc.ConfigDir, filename)
+        fullname = os.path.join(wconfig.configdir, filename)
         # compare checksums
         if filemap.has_key(filename):
             f = file(fullname)
@@ -239,7 +239,7 @@ def update_filter (wconfig, dryrun=False, log=None):
             continue
         md5sum, filename = line.split()
         # XXX UNIX-generated md5sum filenames with subdirs are not portable
-        fullname = os.path.join(wc.ConfigDir, filename)
+        fullname = os.path.join(wconfig.configdir, filename)
         # compare checksums
         if os.path.exists(fullname):
             f = file(fullname)

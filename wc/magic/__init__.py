@@ -27,6 +27,7 @@ import cPickle
 import pickle
 
 import wc
+import wc.configuration
 import wc.magic.convert
 
 _magic = None
@@ -35,8 +36,9 @@ def classify (fp):
     """classify given file"""
     global _magic
     if _magic is None:
+        config = wc.configuration.config
         # initialize mime data
-        magicfile = os.path.join(wc.ConfigDir, "magic.mime")
+        magicfile = os.path.join(config.configdir, "magic.mime")
         assert os.path.exists(magicfile)
         magiccache = magicfile+".mgc"
         _magic = Magic(magicfile, magiccache)

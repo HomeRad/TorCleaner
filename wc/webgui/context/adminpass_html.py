@@ -16,13 +16,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from wc import AppName, Version, ConfigDir
+from wc import AppName, Version
 from wc.configuration import config
 from os.path import join as _join
 from random import choice as _choice
 import string as _string
 
-ConfigFile = _join(ConfigDir, "webcleaner.conf")
+ConfigFile = _join(config.configdir, "webcleaner.conf")
 _chars = _string.letters + _string.digits
 adminpass = u''.join([_choice(_chars) for i in range(8)])
 adminuser = config.get('adminuser', u'admin')

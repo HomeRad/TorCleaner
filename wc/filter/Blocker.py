@@ -75,7 +75,8 @@ def append_lines (lines, lst, sid):
 def get_file_data (filename):
     """return plain file object, possible gunzipping the file"""
     wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
-    filename = os.path.join(wc.ConfigDir, filename)
+    config = wc.configuration.config
+    filename = os.path.join(config.configdir, filename)
     if filename.endswith(".gz"):
         f = gzip.GzipFile(filename, 'rb')
     else:

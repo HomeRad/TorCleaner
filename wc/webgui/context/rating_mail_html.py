@@ -16,7 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from wc import AppName, Email, Version, ConfigDir
+from wc import AppName, Email, Version
 from wc.configuration import config
 from wc.webgui.context import getval as _getval
 from wc.filter.Rating import rating_cache_get as _rating_cache_get

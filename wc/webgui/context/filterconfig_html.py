@@ -19,7 +19,7 @@
 import tempfile
 import os
 import re
-from wc import AppName, ConfigDir, Version
+from wc import AppName, Version
 from wc.configuration import config, rulenames
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
@@ -300,7 +300,8 @@ def _form_newfolder (foldername, lang):
     if not foldername:
         error['newfolder'] = True
         return
-    fd, filename = tempfile.mkstemp(u".zap", u"local_", ConfigDir, text=True)
+    fd, filename = tempfile.mkstemp(u".zap", u"local_", config.configdir,
+                                    text=True)
     # create and select the new folder
     global curfolder
     curfolder = _FolderRule(titles={lang:foldername}, filename=filename)
