@@ -18,5 +18,5 @@
 
 from wc import AppName, Version
 from wc.configuration import config
-updatezapperurl = config.get('baseurl', '') + u"zapper/"
+updatezapperurl = config.get('baseurl', '') + u"filter/"
 updateratingurl = config.get('baseurl', '') + u"rating/"
