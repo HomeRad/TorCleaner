@@ -115,7 +115,11 @@ class Configuration (dict):
         # dynamically stored parent proxy authorization credentials
         self['parentproxycreds'] = None
         self['folderrules'] = []
+        # filter module name list
         self['filters'] = []
+        # filter module instance list
+        self['filtermodules'] = []
+        # filter module instances sorted by filter stage
         self['filterlist'] = {}
         self['colorize'] = 0
         # DNS resolved nofilterhosts
@@ -232,9 +236,10 @@ class Configuration (dict):
         """go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects"""
-        # reset filter list
+        # reset filter lists
         for stage in wc.filter.FilterStages:
             self['filterlist'][stage] = []
+        self['filtermodules'] = []
         self['mime_content_rewriting'] = sets.Set()
         for filtername in self['filters']:
             # import filter module
@@ -247,6 +252,7 @@ class Configuration (dict):
                               'VirusFilter', 'BinaryCharFilter']:
                 self['mime_content_rewriting'].update(clazz.mimelist)
             instance = clazz()
+            self['filtermodules'].append(instance)
             for folder in self['folderrules']:
                 if folder.disable:
                     continue
