@@ -1,3 +1,9 @@
+webcleaner (0.38) unstable; urgency=low
+
+  * rewrite of the HTML parser module
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 28 May 2002 16:37:56 +0200
+
 webcleaner (0.37) unstable; urgency=low
 
   * wc/filter/Rewriter.py: use correct rules variable in get_attrs. This
