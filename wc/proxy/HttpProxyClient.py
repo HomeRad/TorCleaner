@@ -9,6 +9,11 @@ from wc.url import stripsite, spliturl, url_norm, url_quote
 from HttpServer import get_response_data
 from ClientServerMatchmaker import ClientServerMatchmaker
 import urlparse
+from wc.filter import FILTER_REQUEST
+from wc.filter import FILTER_REQUEST_DECODE
+from wc.filter import FILTER_REQUEST_MODIFY
+from wc.filter import FILTER_REQUEST_ENCODE
+from wc.filter import applyfilter, get_filterattrs, FilterRating
 
 
 class HttpProxyClient (object):
@@ -31,6 +36,12 @@ class HttpProxyClient (object):
         self.connected = True
         self.addr = ('localhost', 80)
         self.isredirect = False
+        attrs = get_filterattrs(self.url, [FILTER_REQUEST])
+        attrs['mime'] = 'application/x-javascript'
+        request = "GET %s HTTP/1.0" % url_quote(self.url)
+        request = applyfilter(FILTER_REQUEST_DECODE, request, "filter", attrs)
+        request = applyfilter(FILTER_REQUEST_MODIFY, request, "filter", attrs)
+        self.request = applyfilter(FILTER_REQUEST_ENCODE, request, "filter", attrs)
         debug(PROXY, '%s init', self)
 
 
