@@ -438,14 +438,31 @@ static int parser_init (parser_object* self, PyObject* args, PyObject* kwds) {
 }
 
 
+/* traverse all used subobjects participating in reference cycles */
+static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
+    if (self->userData->handler && visit(self->userData->handler, arg) < 0) {
+        return -1;
+    }
+    return 0;
+}
+
+
+/* clear all used subobjects participating in reference cycles */
+static int parser_clear (parser_object* self) {
+    Py_XDECREF(self->userData->handler);
+    self->userData->handler = NULL;
+    return 0;
+}
+
+
 /* free all allocated resources of parser object */
 static void parser_dealloc (parser_object* self) {
     htmllexDestroy(self->scanner);
-    Py_DECREF(self->userData->handler);
+    parser_clear(self);
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
     PyMem_Del(self->userData);
-    PyObject_Del(self);
+    self->ob_type->tp_free((PyObject*)self);
 }
 
 
@@ -603,10 +620,10 @@ static PyTypeObject parser_type = {
     0,              /* tp_getattro */
     0,              /* tp_setattro */
     0,              /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,   /* tp_flags */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC, /* tp_flags */
     "HTML parser object", /* tp_doc */
-    0,              /* tp_traverse */
-    0,              /* tp_clear */
+    (traverseproc)parser_traverse, /* tp_traverse */
+    (inquiry)parser_clear, /* tp_clear */
     0,              /* tp_richcompare */
     0,              /* tp_weaklistoffset */
     0,              /* tp_iter */
