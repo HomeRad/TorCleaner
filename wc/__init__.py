@@ -213,6 +213,9 @@ class Configuration (dict):
         self['gui_theme'] = "classic"
         self['timeout'] = 30
         self['auth_ntlm'] = 0
+        # in development mode, new filter rules get the official
+        # WebCleaner prefix
+        self['development'] = 0
         self['try_google'] = 0
         # delete all registered sids
         from wc.filter.rules import delete_registered_sids
@@ -244,6 +247,8 @@ class Configuration (dict):
         f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' gui_theme="%s"\n' % xmlify(self['gui_theme']))
         f.write(' auth_ntlm="%d"\n' % self['auth_ntlm'])
+        if self['development']:
+            f.write(' development="%d"\n' % self['development'])
         f.write(' try_google="%d"\n' % self['try_google'])
         hosts = sort_seq(ip.map2hosts(self['nofilterhosts']))
         f.write(' nofilterhosts="%s"\n'%xmlify(",".join(hosts)))
@@ -269,7 +274,8 @@ class Configuration (dict):
             folder.oid = i
             recalc_up_down(folder.rules)
         recalc_up_down(self['folderrules'])
-        generate_sids()
+        prefix = self['development'] and "wc" or "lc"
+        generate_sids(prefix)
 
 
     def merge_folder (self, folder, dryrun=False, log=None):
@@ -445,7 +451,7 @@ class WConfigParser (BaseParser):
             for key,val in attrs.items():
                 self.config[key] = unxmlify(val)
             for key in ('port', 'parentproxyport', 'timeout', 'auth_ntlm',
-	                'colorize', 'strict_whitelist',
+	                'colorize', 'strict_whitelist', 'development',
                         'try_google'):
                 self.config[key] = int(self.config[key])
             if self.config['nofilterhosts'] is not None:

@@ -25,7 +25,6 @@ _rules_without_sid = []
 _sids = Set()
 _sidcounter = 0
 
-
 def register_rule (rule):
     if rule.sid is None:
         _rules_without_sid.append(rule)
@@ -47,7 +46,7 @@ def has_sid (sid):
     return sid in _sids
 
 
-def generate_sids (prefix="wc"):
+def generate_sids (prefix):
     for rule in _rules_without_sid:
         rule.sid = generate_unique_sid(prefix)
     del _rules_without_sid[:]

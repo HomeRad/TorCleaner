@@ -195,7 +195,8 @@ def _form_newfolder (foldername):
     global curfolder
     curfolder = _FolderRule(title=foldername, desc="", disable=0, filename=filename)
     _register_rule(curfolder)
-    _generate_sids(prefix="lc")
+    prefix = config['development'] and "wc" or "lc"
+    _generate_sids(prefix)
     if not config['folderrules']:
         curfolder.oid = 0
     else:
@@ -251,7 +252,8 @@ def _form_newrule (rtype):
     rule = _GetRuleFromName(rtype)
     rule.parent = curfolder
     _register_rule(rule)
-    _generate_sids(prefix="lc")
+    prefix = config['development'] and "wc" or "lc"
+    _generate_sids(prefix)
     curfolder.append_rule(rule)
     _recalc_up_down(curfolder.rules)
     curfolder.write()

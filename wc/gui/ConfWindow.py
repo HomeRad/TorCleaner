@@ -331,7 +331,8 @@ class ConfWindow (ToolWindow):
         fd, filename = tempfile.mkstemp(".zap","local_", ConfigDir, text=True)
         f = FolderRule(title="No title", desc="", disable=0,filename=filename)
         register_rule(f)
-        generate_sids(prefix="lc")
+        prefix = self.config['development'] and "wc" or "lc"
+        generate_sids(prefix)
         self.tree.addFolder(f, create=1)
         self.getApp().dirty = 1
         return 1
