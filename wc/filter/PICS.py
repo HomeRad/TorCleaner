@@ -1,7 +1,8 @@
 """Parse and filter PICS data.
 See http://www.w3.org/PICS/labels.html for more info.
 
-the following rating standard associations are supported:
+The following rating standard associations are supported
+(Servicematch is used to identify a service in a PICS label):
 
 Name: Internet Content Rating Association (ICRA)
 Url: http://www.icra.org/ratingsv02.html
