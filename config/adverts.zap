@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.360" oid="1">
+<folder sid="wc.360" oid="4">
 <title lang="de">Allgemeine Werbung</title>
 <title lang="en">General adverts</title>
 <description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href="http://company.com"&gt;&lt;img  src="http://adserver.de/banner.gif"&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
@@ -109,7 +109,7 @@
 <rewrite sid="wc.348">
   <title lang="de">Verknüpfungen mit 'click' u.a.</title>
   <title lang="en">Adverts in the path name 7</title>
-  <attr>(l.click\?clickId=|smartserve/click)</attr>
+  <attr>([\.\?]click\?|clickId=|smartserve/click)</attr>
 </rewrite>
 
 <rewrite sid="wc.355">
