@@ -18,7 +18,7 @@ if sys.version[:5] < "2.3":
 import os
 import time
 import webbrowser
-import distutils
+import distutils.sysconfig
 import win32service
 import win32serviceutil
 import wc
@@ -67,7 +67,7 @@ def install_shortcuts ():
             # give up - cannot install shortcuts
             print "cannot install shortcuts: %s" % reason
             sys.exit()
-    lib_dir = distutils.get_python_lib(plat_specific=1)
+    lib_dir = distutils.sysconfig.get_python_lib(plat_specific=1)
     dest_dir = os.path.join(prg, "WebCleaner")
     try:
         os.mkdir(dest_dir)
@@ -84,7 +84,7 @@ def install_shortcuts ():
 def install_certificates ():
     """generate SSL certificates for SSL gateway functionality"""
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
-    script = os.path.join(script_dir, "webcleaner-certificates")
+    script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
     execute(pythonw, script, ["install"])
 
 
@@ -147,7 +147,7 @@ def do_remove ():
 def remove_certificates ():
     """generate SSL certificates for SSL gateway functionality"""
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
-    script = os.path.join(script_dir, "webcleaner-certificates")
+    script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
     execute(pythonw, script, ["remove"])
 
 
