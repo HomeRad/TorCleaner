@@ -7,14 +7,8 @@ used by Bastian Kleineidam for WebCleaner
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import socket, select, asyncore, re
+import socket, select, re
 from time import time
-# remove asyncore getattr, as this is swallowing AttributeErrors
-del asyncore.dispatcher.__getattr__
-# add the fileno function
-def fileno (self):
-    return self.socket.fileno()
-asyncore.dispatcher.fileno = fileno
 from wc import i18n, ip
 from wc.log import *
 from LimitQueue import LimitQueue
@@ -97,13 +91,13 @@ def periodic_print_status ():
     make_timer(60, periodic_print_status)
 
 
+from Dispatcher import socket_map
 def proxy_poll (timeout=0.0):
-    smap = asyncore.socket_map
-    if smap:
-        r = [ x for x in smap.values() if x.readable() ]
-        w = [ x for x in smap.values() if x.writable() ]
-        e = smap.values()
-        debug(PROXY, "poll smap %s", (r,w,e))
+    if socket_map:
+        r = [ x for x in socket_map.values() if x.readable() ]
+        w = [ x for x in socket_map.values() if x.writable() ]
+        e = socket_map.values()
+        debug(PROXY, "poll socket_map %s", (r,w,e))
         try:
             (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:

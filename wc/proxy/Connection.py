@@ -6,8 +6,9 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import asyncore, socket, errno
+import socket, errno
 from wc.log import *
+from Dispatcher import Dispatcher
 
 # this is a critical value: setting it too low produces a lot of
 # applyfilter() calls with very few data
@@ -19,7 +20,7 @@ SEND_BUFSIZE = 4096
 MAX_BUFSIZE = 1024*1024
 
 # XXX drop the ", object" when dispatcher is a new-style class
-class Connection (asyncore.dispatcher, object):
+class Connection (Dispatcher):
     """add buffered input and output capabilities"""
     def __init__(self, sock=None):
         super(Connection, self).__init__(sock)
@@ -73,16 +74,6 @@ class Connection (asyncore.dispatcher, object):
     def write (self, data):
         """write data to the internal buffer"""
         self.send_buffer += data
-
-
-    def handle_write_event (self):
-        """overrides asyncore.dispatcher.handle_write_event:
-        only calls handle_write if there is pending data"""
-        if not self.connected:
-            self.handle_connect()
-            self.connected = True
-        else:
-            self.handle_write()
 
 
     def handle_write (self):

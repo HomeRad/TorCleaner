@@ -486,6 +486,7 @@ class HttpServer (Server):
 
 
     def close (self):
+        assert not self.client, "close with open client"
         debug(PROXY, "%s close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)

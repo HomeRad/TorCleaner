@@ -3,13 +3,14 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import asyncore, socket
+import socket
 from wc import config
 from wc.log import *
 from wc.proxy import create_inet_socket
+from Dispatcher import Dispatcher
 
 # XXX drop the ", object" when dispatcher is a new-style class
-class Listener (asyncore.dispatcher, object):
+class Listener (Dispatcher):
     """A listener accepts connections on a specified port. Each
        accepted incoming connection gets delegated to an instance of the
        handler class"""
