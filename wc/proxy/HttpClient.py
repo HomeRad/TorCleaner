@@ -77,6 +77,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.compress = "identity" # acceptable compression for client
         self.protocol = 'HTTP/1.0'
         self.url = ''
+        self.needs_redirect = False
 
 
     def error (self, status, msg, txt='', auth=''):
@@ -145,6 +146,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                                                [wc.filter.FILTER_REQUEST])
         self.protocol = wc.proxy.fix_http_version(protocol)
         self.http_ver = wc.proxy.get_http_version(self.protocol)
+        # build request, quote url again
         self.request = "%s %s %s" % (self.method, wc.url.url_quote(self.url), self.protocol)
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
         # filter request
@@ -170,7 +172,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             return False
         if len(self.url) > 255:
             wc.log.warn(wc.LOG_PROXY, "%s request url length %d chars is very long", self, len(self.url))
-        # and unquote again
+        # unquote and norm url
+        self.needs_redirect = "\\" in self.url
         self.url = wc.url.url_norm(self.url)
         # fix CONNECT urls
         if self.method=='CONNECT':
@@ -221,6 +224,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
         wc.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
+        self.fix_request_headers(msg)
         self.attrs = wc.filter.get_filterattrs(self.url,
                                [wc.filter.FILTER_REQUEST_HEADER], headers=msg)
         self.set_persistent(msg, self.http_ver)
@@ -297,9 +301,18 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
            wc.proxy.Headers.client_get_max_forwards(self.headers)==0:
             # XXX display options ?
             self.state = 'done'
+            headers = wc.proxy.Headers.WcMessage()
+            headers['Content-Type'] = 'text/plain\r'
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
-                 '%s 200 OK'%self.protocol, 200,
-        wc.proxy.Headers.WcMessage(StringIO.StringIO('Content-Type: text/plain\r\n\r\n')), '')
+                 '%s 200 OK'%self.protocol, 200, headers, '')
+            return
+        if self.needs_redirect:
+            self.state = 'done'
+            headers = wc.proxy.Headers.WcMessage()
+            headers['Content-Type'] = 'text/plain\r'
+            headers['Location'] = '%s\r' % self.url
+            wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
+                '%s 302 Found'%self.protocol, 302, headers, '')
             return
         self.state = 'content'
 
@@ -313,6 +326,14 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                    wc.proxy.Headers.has_header_value(headers, 'Connection', 'Close'))
         else:
             self.persistent = wc.proxy.Headers.has_header_value(headers, "Proxy-Connection", "Keep-Alive")
+
+
+    def fix_request_headers (self, headers):
+        if headers.has_key('Host'):
+            i = headers['Host'].find("\\")
+            if i != -1:
+                self.needs_redirect = True
+                headers['Host'] = "%s\r" % headers['Host'][:i]
 
 
     def mangle_request_headers (self, headers):
