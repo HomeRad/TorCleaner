@@ -27,10 +27,10 @@ def filterfile (fname):
             break
     print s
 
-from test import disable_pics_rules
+from test import disable_rating_rules
 import wc
 wc.config = wc.Configuration()
-disable_pics_rules(wc.config)
+disable_rating_rules(wc.config)
 wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()
 from wc.proxy import proxy_poll, run_timers
