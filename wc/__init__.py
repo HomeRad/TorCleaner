@@ -47,7 +47,6 @@ under certain conditions. Look at the file `LICENSE' whithin this
 distribution.""" % {'appname': AppName}
 ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
-ConfigCharset = "iso-8859-1"
 
 # logger areas
 LOG_FILTER = "wc.filter"
