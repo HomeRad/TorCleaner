@@ -31,7 +31,8 @@
   * use WcMessage always for headers which copes with header entries
     that have identical names
     Changed: wc/proxy/Headers.py
-  * - prevent CAN-2003-0238, table width=-1 crashes ICQ client
+  * Security additions:
+    - prevent CAN-2003-0238, table width=-1 crashes ICQ client
     - prevent CVE-2002-0823, WinHlp overflow bug
     - prevent CVE-2002-0153, local file redirection bug
     - prevent CVE-2002-0022, IE filename overflow crash
