@@ -6,6 +6,7 @@ from FXBlockRuleFrame import FXBlockRuleFrame
 from FXHeaderRuleFrame import FXHeaderRuleFrame
 from FXImageRuleFrame import FXImageRuleFrame
 from FXNocommentsRuleFrame import FXNocommentsRuleFrame
+from FXJavascriptRuleFrame import FXJavascriptRuleFrame
 from FXFolderRuleFrame import FXFolderRuleFrame
 from FXBlockurlsRuleFrame import FXBlockurlsRuleFrame
 from FXBlockdomainsRuleFrame import FXBlockdomainsRuleFrame
