@@ -101,14 +101,16 @@ def check_credentials (creds, **attrs):
 
 
 def _test ():
+    attrs = {"username":"wummel", "password_b64":"", "uri":"/", "method":"GET"}
     challenges = get_challenges()
     print "challenges", challenges
     challenges = parse_challenges(", ".join(challenges))
     print "parsed challenges", challenges
-    creds = get_credentials(challenges, username="wummel", password_b64="", uri="/", method="GET")
+    creds = get_credentials(challenges, **attrs)
     print "credentials", creds
     creds = parse_credentials(creds)
     print "parsed credentials", creds
+    print check_credentials(creds, **attrs)
 
 
 if __name__=='__main__':

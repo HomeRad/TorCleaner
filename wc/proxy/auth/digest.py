@@ -46,9 +46,20 @@ def check_digest_credentials (credentials, **attrs):
     nonce = credentials.get("nonce", "")
     if nonce not in nonces:
         return False
-
-    # XXX
-    return True
+    username = attrs['username']
+    password = base64.decodestring(attrs['password_b64'])
+    uri = attrs['uri']
+    method = attrs['method']
+    data = attrs.get('data')
+    response = credentials.get('response', '')
+    algorithm = credentials.get('algorithm', 'MD5')
+    H, KD = get_algorithm_impls(algorithm)
+    if H is None:
+        return False
+    A1 = "%s:%s:%s" % (username, realm, password)
+    A2 = "%s:%s" % (method, uri)
+    respdig = KD(H(A1), "%s:%s" % (nonce, H(A2)))
+    return response==respdig
 
 
 def get_digest_credentials (challenge, **attrs):
