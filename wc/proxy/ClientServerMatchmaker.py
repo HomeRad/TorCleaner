@@ -4,7 +4,6 @@ __date__    = "$Date$"[7:-2]
 
 from cStringIO import StringIO
 import dns_lookups
-import wc.proxy
 from wc.proxy import spliturl, splitnport, fix_http_version
 from wc.proxy.Headers import WcMessage
 from ServerPool import ServerPool
