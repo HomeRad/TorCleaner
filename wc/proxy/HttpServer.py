@@ -172,7 +172,8 @@ class HttpServer (Server):
 
 
     def process_read (self):
-        if self.state in ('connect', 'client') and (method!='CONNECT'):
+        if self.state in ('connect', 'client') and \
+             (self.client and self.client.method!='CONNECT'):
             # with http pipelining the client could send more data after
             # the initial request
             error(PROXY, 'server received data in %s state', self.state)
