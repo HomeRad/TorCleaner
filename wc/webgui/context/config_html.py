@@ -1,9 +1,11 @@
 # -*- coding: iso-8859-1 -*-
 # be sure not to import something in the context namespace we do not want
 import base64
-from wc import i18n, AppName, filtermodules, ip, sort_seq
+from wc import i18n, AppName, filtermodules, ip
+from wc import sort_seq as _sort_seq
 from wc import Configuration as _Configuration
-from wc.webgui.context import getval, getlist
+from wc.webgui.context import getval as _getval
+from wc.webgui.context import getlist as _getlist
 
 # translations
 t_accessibility = i18n._("Accessibility statement")
@@ -54,50 +56,50 @@ for _i in filtermodules:
     config['filterdict'][_i] = False
 for _i in config['filters']:
     config['filterdict'][_i] = True
-config['allowedhostlist'] = sort_seq(ip.map2hosts(config['allowedhosts']))
-config['nofilterhostlist'] = sort_seq(ip.map2hosts(config['nofilterhosts']))
+config['allowedhostlist'] = _sort_seq(ip.map2hosts(config['allowedhosts']))
+config['nofilterhostlist'] = _sort_seq(ip.map2hosts(config['nofilterhosts']))
 
 
 # form execution
-def exec_form (form):
+def _exec_form (form):
     # reset info/error
     del info[:]
     del error[:]
     # proxy port
     if form.has_key('port'):
-        _form_proxyport(getval(form, 'port'))
+        _form_proxyport(_getval(form, 'port'))
     # proxy user
     if form.has_key('proxyuser'):
-        _form_proxyuser(getval(form, 'proxyuser').strip())
+        _form_proxyuser(_getval(form, 'proxyuser').strip())
     # proxy pass
     if form.has_key('proxypass'):
-        _form_proxypass(base64.encodestring(getval(form, 'proxypass').strip()))
+        _form_proxypass(base64.encodestring(_getval(form, 'proxypass').strip()))
     # parent proxy host
     if form.has_key('parentproxy'):
-        _form_parentproxy(getval(form, 'parentproxy').strip())
+        _form_parentproxy(_getval(form, 'parentproxy').strip())
     # parent proxy port
     if form.has_key('parentproxyport'):
-        _form_parentproxyport(getval(form, 'parentproxyport'))
+        _form_parentproxyport(_getval(form, 'parentproxyport'))
     # parent proxy user
     if form.has_key('parentproxyuser'):
-        _form_parentproxyuser(getval(form, 'parentproxyuser').strip())
+        _form_parentproxyuser(_getval(form, 'parentproxyuser').strip())
     # parent proxy pass
     if form.has_key('parentproxypass'):
         _form_parentproxypass(
-                       base64.encodestring(getval(form, 'parentproxypass')))
+                       base64.encodestring(_getval(form, 'parentproxypass')))
     # timeout
     if form.has_key('timeout'):
-        _form_timeout(getval(form, 'timeout'))
+        _form_timeout(_getval(form, 'timeout'))
     # filter modules
     _form_filtermodules(form)
     # allowed hosts
     if form.has_key('addallowed') and form.has_key('newallowed'):
-        _form_addallowed(getval(form, 'newallowed').strip())
+        _form_addallowed(_getval(form, 'newallowed').strip())
     elif form.has_key('delallowed') and form.has_key('allowedhosts'):
         _form_delallowed(form)
     # no filter hosts
     if form.has_key('addnofilter') and form.has_key('newnofilter'):
-        _form_addnofilter(getval(form, 'newnofilter').strip())
+        _form_addnofilter(_getval(form, 'newnofilter').strip())
     elif form.has_key('delnofilter') and form.has_key('nofilterhosts'):
         _form_delnofilter(form)
     if info:
@@ -188,12 +190,12 @@ def _form_addallowed (host):
     if host not in hosts:
         hosts.add(host)
         config['allowedhosts'] = ip.hosts2map(hosts)
-        config['allowedhostlist'] = sort_seq(hosts)
+        config['allowedhostlist'] = _sort_seq(hosts)
         info.append(i18n._("Allowed host successfully added."))
 
 
 def _form_removehosts (form, key):
-    toremove = getlist(form, key)
+    toremove = _getlist(form, key)
     hosts = ip.map2hosts(config[key])
     removed = 0
     for host in toremove:
@@ -207,7 +209,7 @@ def _form_delallowed (form):
     removed, hosts = _form_removehosts(form, 'allowedhosts')
     if removed > 0:
         config['allowedhosts'] = ip.hosts2map(hosts)
-        config['allowedhostlist'] = sort_seq(hosts)
+        config['allowedhostlist'] = _sort_seq(hosts)
         if removed == 1:
             info.append(i18n._("Allowed host successfully removed."))
         else:
@@ -220,7 +222,7 @@ def _form_addnofilter (host):
     if host not in hosts:
         hosts.add(host)
         config['nofilterhosts'] = ip.hosts2map(hosts)
-        config['nofilterhostlist'] = sort_seq(hosts)
+        config['nofilterhostlist'] = _sort_seq(hosts)
         info.append(i18n._("Nofilter host successfully added."))
 
 
@@ -228,7 +230,7 @@ def _form_delnofilter (form):
     removed, hosts = _form_removehosts(form, 'nofilterhosts')
     if removed > 0:
         config['nofilterhosts'] = ip.hosts2map(hosts)
-        config['nofilterhostlist'] = sort_seq(hosts)
+        config['nofilterhostlist'] = _sort_seq(hosts)
         if removed == 1:
             info.append(i18n._("Nofilter host successfully removed."))
         else:
