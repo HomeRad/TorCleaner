@@ -3,6 +3,7 @@
     - rebuild with flex 2.5.27 and bison 1.875a
     - remove stpcpy declaration, fixes compile error on RedHat 7.x
     - use python2.2 headers for parser compile, not 2.1.
+    - resolve &#XY; numeric entities in attribute values
     Changed files: wc/parser/*
   * fix replacing of attributes with non-empty values
     Changed files: wc/filter/rules/RewriteRule.py
@@ -22,6 +23,12 @@
     Changed files: wc/proxy/HttpClient.py
   * fix some typos and grammar
     Changed files: FAQ, README*
+  * add javascript interpreter wrapper library. This filters popups
+    and executes internal scripts
+    Added files: wc/js/*, test/test_js.py, wc/filter/rule/JavascriptRule.py,
+      wc/gui/FXJavascriptRuleFrame.py
+    Changed files: wc/filter/Rewriter.py, conf/{filter.dtd,scripting.zap},
+      wc/gui/FXRuleFrameFactory.py
 
 1.6
   * updated filters:

@@ -3,6 +3,7 @@ webcleaner (1.7-0.1) unstable; urgency=low
   * New upstream version.
   * use debian/compat instead of DH_COMPAT
   * use po-debconf
+  * add spidermonkey library to depends
 
  -- Bastian Kleineidam <calvin@debian.org>  Fri, 24 Jan 2003 22:30:42 +0100
 

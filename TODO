@@ -1,5 +1,7 @@
 TODO
 
+- execute <script src="">
+
 - Python 2.3:
   use Bool type
   use builtin timeout in socket module
