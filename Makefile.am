@@ -45,7 +45,7 @@ distclean-local:
 
 # ready for upload, signed with my GPG key
 deb_signed: clean
-	env CVSROOT=:ext:calvin@cvs.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -rfakeroot
+	env CVSROOT=:ext:calvin@cvs.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -r"fakeroot --" -I.cvsignore
 
 # add setup.py generated files to $(distdir)
 # note: debian/rules install generates broken links, so delete debian
