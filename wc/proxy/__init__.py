@@ -193,7 +193,7 @@ def match_host (request):
     if not hostname:
         return None
     hostname = hostname.lower()
-    hosts, nets = config['noproxyfor']
+    hosts, nets, foo = config['noproxyfor']
     return ip.host_in_set(hostname, hosts, nets)
 
 

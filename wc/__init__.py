@@ -365,4 +365,10 @@ class WConfigParser (BaseParser):
 
 def host_set (strhosts):
     hosts = [s.strip() for s in strhosts.split(",")]
-    return ip.host_map(hosts)
+    ret = []
+    ret.extend(ip.host_map(hosts))
+    dict = {}
+    for h in hosts:
+        dict[h] = None
+    ret.append(dict)
+    return ret

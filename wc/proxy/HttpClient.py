@@ -30,7 +30,7 @@ class HttpClient (Connection):
         self.bytes_remaining = None # for content only
         self.content = ''
         host = self.addr[0]
-        hosts, nets = config['allowedhosts']
+        hosts, nets, foo = config['allowedhosts']
         if not ip.host_in_set(host, hosts, nets):
             print >>sys.stderr, _("%s access denied")%host
             self.close()
