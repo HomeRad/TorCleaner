@@ -2,17 +2,24 @@
   * preserve the order in which HTML attributes have been parsed
     Type: feature
     Changed: wc/parser/{__init__.py,htmllex.l}
+
   * fix rewrite rule filtering when only the tag name should be
     replaced
     Type: bugfix
     Changed: wc/filter/rule/RewriteRule.py, wc/filter/HTMLFilter.py
+
   * correct ".." typos in domain names on DNS resolving
     Type: feature
     Changed: wc/proxy/dns_lookups.py
+
   * do not quote commas in url paths, solves "Access forbidden"
     problems on some servers
     Type: bugfix
     Changed: wc/url.py
+
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040329
+    Type: feature
+    Changed: libjs/*
 
 
 2.10 (released 27.3.2004)
