@@ -10,19 +10,17 @@ test -l $SERVER || exit 0
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-        svc -u $SERVICE
-        svc -u $SERVICE/log
+        runsvctrl up $SERVICE
 	echo "$NAME."
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	svc -d $SERVICE
-        svc -d $SERVICE/log
+	svwaitdown $SERVICE
 	echo "$NAME."
 	;;
   reload|force-reload)
         echo -n "Reloading $DESC: "
-        svc -h $SERVICE
+        runsvctrl hup $SERVICE
 	echo "$NAME."
 	;;
   restart)
@@ -30,7 +28,7 @@ case "$1" in
         $0 start
 	;;
   status)
-        svstat $SERVICE
+        runsvstat -l $SERVICE
 	;;
   *)
 	N=/etc/init.d/$NAME
