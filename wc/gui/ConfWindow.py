@@ -34,7 +34,7 @@ import tempfile
 tempfile.tempdir = wc.ConfigDir
 
 
-class ConfWindow(ToolWindow):
+class ConfWindow (ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_PORT,
      ID_PROXYUSER,
@@ -74,7 +74,7 @@ class ConfWindow(ToolWindow):
      ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+35)
 
 
-    def __init__(self, app):
+    def __init__ (self, app):
 	ToolWindow.__init__(self, app, "webcleanerconf")
         self.readconfig()
         self.eventMap()
@@ -111,7 +111,7 @@ class ConfWindow(ToolWindow):
         FXButton(frame, "Update...", None, self, self.ID_CONFUPDATE)
 
 
-    def eventMap(self):
+    def eventMap (self):
         """attach all events to (member) functions"""
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ACCEPT,ConfWindow.onCmdAccept)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_CANCEL,ConfWindow.onCmdCancel)
@@ -155,7 +155,7 @@ class ConfWindow(ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYPASS,ConfWindow.onCmdParentProxyPass)
 
 
-    def proxySettings(self, tabbook):
+    def proxySettings (self, tabbook):
         """generate the proxy setting tab"""
         FXTabItem(tabbook, _("P&roxy Settings"), None)
         proxy = FXVerticalFrame(tabbook, FRAME_THICK|FRAME_RAISED)
@@ -231,7 +231,7 @@ class ConfWindow(ToolWindow):
         # proxySettings
 
 
-    def filterSettings(self, tabbook):
+    def filterSettings (self, tabbook):
         FXTabItem(tabbook, _("&Filter Settings"), None)
         frame = FXHorizontalFrame(tabbook, FRAME_THICK|FRAME_RAISED|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         splitter = FXSplitter(frame, FRAME_THICK|FRAME_RAISED|LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -270,7 +270,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdNewFolder(self, sender, sel, ptr):
+    def onCmdNewFolder (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "new folder")
         f = FolderRule("No title","",0,0,tempfile.mktemp()+".zap")
         self.tree.addFolder(f, create=1)
@@ -279,14 +279,14 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdNewRule(self, sender, sel, ptr):
+    def onCmdNewRule (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "new filter rule")
         self.tree.newRule(GetRuleFromName(sender.getText()))
         self.getApp().dirty = 1
         return 1
 
 
-    def onCmdTitle(self, sender, sel, ptr):
+    def onCmdTitle (self, sender, sel, ptr):
         item = self.tree.getCurrentItem()
         if item.isSelected():
             self.tree.setItemText(item, sender.getText())
@@ -294,7 +294,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdDisableRule(self, sender, sel, ptr):
+    def onCmdDisableRule (self, sender, sel, ptr):
         item = self.tree.getCurrentItem()
         #debug(BRING_IT_ON, "%d" % item.getData())
         if item.isSelected():
@@ -302,7 +302,7 @@ class ConfWindow(ToolWindow):
             self.tree.setItemIcons(item, rule)
 
 
-    def onCmdRemove(self, sender, sel, ptr):
+    def onCmdRemove (self, sender, sel, ptr):
         item = self.tree.getCurrentItem()
         if item.isSelected():
             if self.removeRule(item.getData()):
@@ -317,7 +317,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdAccept(self, sender, sel, ptr):
+    def onCmdAccept (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Accept")
         if self.getApp().dirty:
             self.writeconfig()
@@ -325,13 +325,13 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdCancel(self, sender, sel, ptr):
+    def onCmdCancel (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Cancel")
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
 
 
-    def onUpdApply(self, sender, sel, ptr):
+    def onUpdApply (self, sender, sel, ptr):
         if self.getApp().dirty:
             sender.enable()
         else:
@@ -339,25 +339,25 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdApply(self, sender, sel, ptr):
+    def onCmdApply (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Apply")
         self.writeconfig()
         return 1
 
 
-    def onCmdAbout(self, sender, sel, ptr):
+    def onCmdAbout (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "About")
         self.doShow(self.about)
         return 1
 
 
-    def onCmdHelp(self, sender, sel, ptr):
+    def onCmdHelp (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Help")
         self.doShow(self.help)
         return 1
 
 
-    def onCmdPort(self, sender, sel, ptr):
+    def onCmdPort (self, sender, sel, ptr):
         self.port = sender.getValue()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Port=%d"%self.port)
@@ -383,7 +383,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdDebuglevel(self, sender, sel, ptr):
+    def onCmdDebuglevel (self, sender, sel, ptr):
         if self.debuglevel != sender.getCurrentItem():
             self.debuglevel = sender.getCurrentItem()
             self.getApp().dirty = 1
@@ -391,7 +391,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdTimeout(self, sender, sel, ptr):
+    def onCmdTimeout (self, sender, sel, ptr):
         if self.timeout != sender.getValue():
             self.timeout = sender.getValue()
             self.getApp().dirty = 1
@@ -399,28 +399,28 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdObfuscateIp(self, sender, sel, ptr):
+    def onCmdObfuscateIp (self, sender, sel, ptr):
         self.obfuscateip = sender.getCheck()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Obfuscateip=%d" % self.obfuscateip)
         return 1
 
 
-    def onCmdShowErrors(self, sender, sel, ptr):
+    def onCmdShowErrors (self, sender, sel, ptr):
         self.showerrors = sender.getCheck()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Showerrors=%d" % self.showerrors)
         return 1
 
 
-    def onCmdParentProxy(self, sender, sel, ptr):
+    def onCmdParentProxy (self, sender, sel, ptr):
         self.parentproxy = sender.getText()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Parentproxy=%s"%self.parentproxy)
         return 1
 
 
-    def onCmdParentProxyPort(self, sender, sel, ptr):
+    def onCmdParentProxyPort (self, sender, sel, ptr):
         self.parentproxyport = sender.getValue()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Parentproxyport=%d"%self.parentproxyport)
@@ -441,14 +441,14 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdLogfile(self, sender, sel, ptr):
+    def onCmdLogfile (self, sender, sel, ptr):
         self.logfile = sender.getText()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Logfile=%s"%self.logfile)
         return 1
 
 
-    def onCmdFilterModule(self, sender, sel, ptr):
+    def onCmdFilterModule (self, sender, sel, ptr):
         state = sender.getCheck()
         module = sender.getText()
         self.modules[module] = state
@@ -457,7 +457,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdFilter(self, sender, sel, ptr):
+    def onCmdFilter (self, sender, sel, ptr):
         if hasattr(ptr, "isSelected"):
             if not ptr.isSelected(): return 1
         index = ptr.getData()
@@ -467,7 +467,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdNoProxyForAdd(self, sender, sel, ptr):
+    def onCmdNoProxyForAdd (self, sender, sel, ptr):
         dialog = FXDialogBox(self,_("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
@@ -491,7 +491,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdNoProxyForEdit(self, sender, sel, ptr):
+    def onCmdNoProxyForEdit (self, sender, sel, ptr):
         index = self.noproxylist.getCurrentItem()
         item = self.noproxylist.retrieveItem(index)
         host = item.getText()
@@ -514,7 +514,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdNoProxyForRemove(self, sender, sel, ptr):
+    def onCmdNoProxyForRemove (self, sender, sel, ptr):
         index = self.noproxylist.getCurrentItem()
         item = self.noproxylist.retrieveItem(index)
         host = item.getText()
@@ -525,35 +525,35 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdProxyStart(self, sender, sel, ptr):
+    def onCmdProxyStart (self, sender, sel, ptr):
         from wc import daemon
         daemon.start(parent_exit=0)
         #debug(BRING_IT_ON, "webcleaner start")
         return 1
 
 
-    def onCmdProxyStop(self, sender, sel, ptr):
+    def onCmdProxyStop (self, sender, sel, ptr):
         from wc import daemon
         daemon.stop()
         #debug(BRING_IT_ON, "webcleaner stop")
         return 1
 
 
-    def onCmdProxyRestart(self, sender, sel, ptr):
+    def onCmdProxyRestart (self, sender, sel, ptr):
         from wc import daemon
         daemon.restart(parent_exit=0)
         #debug(BRING_IT_ON, "webcleaner restart")
         return 1
 
 
-    def onCmdProxyReload(self, sender, sel, ptr):
+    def onCmdProxyReload (self, sender, sel, ptr):
         from wc import daemon
         daemon.reload()
         #debug(BRING_IT_ON, "webcleaner reload")
         return 1
 
 
-    def onCmdProxyStatus(self, sender, sel, ptr):
+    def onCmdProxyStatus (self, sender, sel, ptr):
         from wc import daemon
         dialog = FXMessageBox(self,_("Proxy Status"),daemon.status(),None,MBOX_OK)
         self.doShow(dialog)
@@ -583,7 +583,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def onCmdConfUpdate(self, sender, sel, ptr):
+    def onCmdConfUpdate (self, sender, sel, ptr):
         """download files from http://webcleaner.sourceforge.net/zapper/
            and copy them over the existing config"""
         # base url for all files
@@ -634,7 +634,7 @@ class ConfWindow(ToolWindow):
         return 1
 
 
-    def removeRule(self, index):
+    def removeRule (self, index):
         for f in self.folders:
             for i in range(len(f.rules)):
                 if f.rules[i].index == index:
@@ -643,7 +643,7 @@ class ConfWindow(ToolWindow):
         return 0
 
 
-    def readconfig(self):
+    def readconfig (self):
         """read the configuration from disc"""
         #debug(BRING_IT_ON, "reading config")
         self.config = wc.Configuration()
@@ -669,7 +669,7 @@ class ConfWindow(ToolWindow):
         self.folders = self.config['rules']
 
 
-    def writeconfig(self):
+    def writeconfig (self):
         """write the current configuration to disc"""
         self.getApp().beginWaitCursor()
         dirty = 0
@@ -695,7 +695,7 @@ class ConfWindow(ToolWindow):
             self.error(_("Write config"), "\n".join(errors))
 
 
-    def toxml(self):
+    def toxml (self):
         s = """<?xml version="1.0"?>
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner

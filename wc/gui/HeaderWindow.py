@@ -15,7 +15,7 @@ SCROLLING_NONE = 0
 SCROLLING_AUTO = 1
 SCROLLING_ALWAYS = 2
 
-def scrollnum(s):
+def scrollnum (s):
     if s=='auto':
         return SCROLLING_AUTO
     elif s=='none':
@@ -25,7 +25,7 @@ def scrollnum(s):
     return -1
 
 
-def parse_headers():
+def parse_headers ():
     headers = []
     url = "http://localhost:%(port)d/headers/"%wc.config
     try:
@@ -51,7 +51,7 @@ def parse_headers():
     return headers
 
 
-def parse_connections():
+def parse_connections ():
     connections = {
         'valid': 0,
         'error': 0,
@@ -70,7 +70,7 @@ def parse_connections():
     return connections
 
 
-class HeaderWindow(ToolWindow):
+class HeaderWindow (ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_ABOUT,
      ID_QUIT,
@@ -88,7 +88,7 @@ class HeaderWindow(ToolWindow):
      ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+13)
 
 
-    def __init__(self, app):
+    def __init__ (self, app):
 	ToolWindow.__init__(self, app, "wcheaders")
         self.getApp().dirty = 0
         self.timer = None
@@ -116,11 +116,11 @@ class HeaderWindow(ToolWindow):
             self.timer = app.addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
 
 
-    def connectionFrame(self, frame):
+    def connectionFrame (self, frame):
 	basics = FXGroupBox(frame, _("Connections"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
 
 
-    def headerFrame(self, frame):
+    def headerFrame (self, frame):
         headers = FXGroupBox(frame, _("Headers"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         self.headers = FXIconList(headers, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|ICONLIST_SINGLESELECT|ICONLIST_AUTOSIZE)
         self.headers.appendHeader(_("URL"),NULL,150)
@@ -128,7 +128,7 @@ class HeaderWindow(ToolWindow):
         self.headers.appendHeader(_("Value"),NULL,200)
 
 
-    def eventMap(self):
+    def eventMap (self):
         """attach all events to (member) functions"""
         FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_ABOUT, HeaderWindow.onCmdAbout)
         FXMAPFUNC(self, SEL_COMMAND, HeaderWindow.ID_QUIT, HeaderWindow.onCmdQuit)
@@ -149,18 +149,18 @@ class HeaderWindow(ToolWindow):
         FXMAPFUNC(self, SEL_UPDATE, HeaderWindow.ID_REMOVEHEADER, HeaderWindow.onUpdHeader)
 
 
-    def onCmdAbout(self, sender, sel, ptr):
+    def onCmdAbout (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "About")
         self.doShow(self.about)
         return 1
 
 
-    def onCmdOptions(self, sender, sel, ptr):
+    def onCmdOptions (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "About")
         self.doShow(self.options)
         return 1
 
-    def onCmdAddHeader(self, sender, sel, ptr):
+    def onCmdAddHeader (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Add header")
         dialog = FXDialogBox(self,_("Add Header"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
@@ -184,7 +184,7 @@ class HeaderWindow(ToolWindow):
             #debug(BRING_IT_ON, "Added nodisplay header")
         return 1
 
-    def onCmdRemoveHeader(self, sender, sel, ptr):
+    def onCmdRemoveHeader (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Remove header")
         headers = self.options.headers
         index = headers.getCurrentItem()
@@ -196,7 +196,7 @@ class HeaderWindow(ToolWindow):
         #debug(BRING_IT_ON, "Removed nodisplay header")
         return 1
 
-    def onCmdEditHeader(self, sender, sel, ptr):
+    def onCmdEditHeader (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Edit header")
         headers = self.options.headers
         index = headers.getCurrentItem()
@@ -220,7 +220,7 @@ class HeaderWindow(ToolWindow):
             #debug(BRING_IT_ON, "Changed nodisplay header")
         return 1
 
-    def onUpdHeader(self, sender, sel, ptr):
+    def onUpdHeader (self, sender, sel, ptr):
         i = self.options.headers.getCurrentItem()
         if i<0:
             sender.disable()
@@ -230,13 +230,13 @@ class HeaderWindow(ToolWindow):
             sender.disable()
         return 1
 
-    def onCmdQuit(self, sender, sel, ptr):
+    def onCmdQuit (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Quit")
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
 
 
-    def read_config(self):
+    def read_config (self):
         self.config = {
             'version': '0.1',
             'onlyfirst': 1,
@@ -250,7 +250,7 @@ class HeaderWindow(ToolWindow):
         #debug(BRING_IT_ON, "config", self.config)
 
 
-    def onCmdSaveOptions(self, sender, sel, ptr):
+    def onCmdSaveOptions (self, sender, sel, ptr):
         self.getApp().beginWaitCursor()
         file = self.config['configfile']
         try:
@@ -263,7 +263,7 @@ class HeaderWindow(ToolWindow):
         self.getApp().endWaitCursor()
 
 
-    def onUpdSaveOptions(self, sender, sel, ptr):
+    def onUpdSaveOptions (self, sender, sel, ptr):
         if self.getApp().dirty:
             sender.enable()
         else:
@@ -285,51 +285,51 @@ class HeaderWindow(ToolWindow):
         return s + '</wcheaders>\n'
 
 
-    def onCmdRefresh(self, sender, sel, ptr):
+    def onCmdRefresh (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "Refresh")
         if self.timer:
             self.getApp().removeTimeout(self.timer)
         return self.refresh()
 
 
-    def onSetRefresh(self, sender, sel, ptr):
+    def onSetRefresh (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "SetRefresh", sender.getValue())
         self.config['refresh'] = sender.getValue()
         self.getApp().dirty = 1
         return 1
 
 
-    def onSetOnlyfirst(self, sender, sel, ptr):
+    def onSetOnlyfirst (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "SetOnlyFirst", sender.getCheck())
         self.config['onlyfirst'] = sender.getCheck()
         self.getApp().dirty = 1
         return 1
 
 
-    def onSetScrolling(self, sender, sel, ptr):
+    def onSetScrolling (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "SetScrolling", sender.getCurrentItem())
         self.config['scrolling'] = sender.getCurrentItem()
         self.getApp().dirty = 1
         return 1
 
 
-    def onSetSavedHeaders(self, sender, sel, ptr):
+    def onSetSavedHeaders (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "SetSavedHeaders", sender.getValue())
         self.config['headersave'] = sender.getValue()
         self.getApp().dirty = 1
         return 1
 
 
-    def onUpdStatus(self, sender, sel, ptr):
+    def onUpdStatus (self, sender, sel, ptr):
         sender.setText(self.status)
 
 
-    def onTimerRefresh(self, sender, sel, ptr):
+    def onTimerRefresh (self, sender, sel, ptr):
         #debug(BRING_IT_ON, "TimerRefresh")
         return self.refresh()
 
 
-    def refresh(self):
+    def refresh (self):
         self.getApp().beginWaitCursor()
         try:
             self.status = "Getting headers..."
@@ -374,13 +374,13 @@ class HeaderWindow(ToolWindow):
 
 
 
-class WHeadersParser(BaseParser):
-    def parse(self, filename, config):
+class WHeadersParser (BaseParser):
+    def parse (self, filename, config):
         BaseParser.parse(self, filename, config)
         self.config['configfile'] = filename
 
 
-    def start_element(self, name, attrs):
+    def start_element (self, name, attrs):
         self.cmode = name
         if name=='wcheaders':
             for key,val in attrs.items():
@@ -394,19 +394,19 @@ class WHeadersParser(BaseParser):
                 self.config['scrolling'] = scrollnum(self.config['scrolling'])
 
 
-    def end_element(self, name):
+    def end_element (self, name):
         self.cmode = None
 
 
-    def character_data(self, data):
+    def character_data (self, data):
         if self.cmode=='nodisplay':
             self.config['nodisplay'].append(data.lower())
 
 
 
-class OptionsWindow(FXDialogBox):
+class OptionsWindow (FXDialogBox):
 
-    def __init__(self, owner):
+    def __init__ (self, owner):
         FXDialogBox.__init__(self, owner, "Options",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE,0,0,0,0, 4,4,4,4, 4,4)
         frame = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
         # options
@@ -455,7 +455,7 @@ class OptionsWindow(FXDialogBox):
         FXButton(w,"&Save",None,owner,HeaderWindow.ID_SAVEOPTIONS,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
         FXButton(w,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5)
 
-    def update_headers(self, owner):
+    def update_headers (self, owner):
         self.headers.clearItems()
         for h in owner.config['nodisplay']:
             self.headers.appendItem(str(h))
