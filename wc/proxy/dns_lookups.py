@@ -519,6 +519,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             name = wc.dns.name.from_text(self.hostname)
             answer = wc.dns.resolver.Answer(
                                    name, self.rdtype, self.rdclass, response)
+            wc.log.debug(wc.LOG_DNS, "DNS answer %s", answer)
         except wc.dns.resolver.NoAnswer:
             wc.log.warn(wc.LOG_DNS, "No answer: %s", response)
             callback, self.callback = self.callback, None
