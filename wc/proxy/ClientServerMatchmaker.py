@@ -41,10 +41,15 @@ class ClientServerMatchmaker:
     def error(self, code, msg):
         ServerHandleDirectly(
             self.client,
-            'HTTP/1.0 %d Use different host\r\n',
+            'HTTP/1.0 %d %s\r\n',
+            'Server: WebCleaner Proxy\r\n'
             'Content-type: text/html\r\n'
-            'Location: http://%s\r\n'
-            '\r\n' % (code, new_url),
+            '\r\n'
+            '<html><head>'
+            '<title>WebCleaner Proxy Error %d %s</title>'
+            '</head><body bgcolor="#fff7e5"><br><center><b>Bummer!</b><br>'
+            'WebCleaner Proxy Error %d %s<br>'
+            '%s<br></center></body></html>' % (code, msg, code, msg),
             msg)
 
     def __init__(self, client, request, headers, content):
@@ -68,15 +73,6 @@ class ClientServerMatchmaker:
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
     def handle_dns(self, hostname, answer):
-        assert self.state == 'dns'
-        if answer.isError():
-            self.error(400, _(answer.data))
-            return
-        self.state = 'server'
-        self.ipaddr = socket.gethostbyname(self.hostname)
-	self.find_server()
-
-    def _handle_dns(self, hostname, answer):
         assert self.state == 'dns'
 
         if not self.client.connected:
