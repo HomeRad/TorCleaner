@@ -126,6 +126,8 @@ class ClientServerMatchmaker (object):
         """search for a connected server or make a new one"""
         assert self.state == 'server'
         addr = (self.ipaddr, self.port)
+        # XXX why do I have to import wc again - python bug?
+        import wc
         wc.log.debug(wc.LOG_PROXY, "%s find server %s", self, addr)
         if not self.client.connected:
             wc.log.debug(wc.LOG_PROXY, "%s client not connected", self)
