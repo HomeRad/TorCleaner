@@ -153,9 +153,10 @@ class HttpClient (StatefulConnection):
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
-        if len(self.url) > 1024:
+        if len(self.url) > 2048:
             error(PROXY, "%s request url length %d chars is too long", self, len(self.url))
-            self.error(400, i18n._("URL too long"))
+            self.error(400, i18n._("URL too long"),
+                       txt=i18n._('URL length limit is %d bytes.')%2048)
             return False
         if len(self.url) > 255:
             warn(PROXY, "%s request url length %d chars is very long", self, len(self.url))

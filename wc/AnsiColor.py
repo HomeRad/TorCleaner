@@ -81,6 +81,7 @@ def esc_ansicolor (color):
 
 AnsiReset = esc_ansicolor("default")
 
+
 def colorize (text, color=None):
     "return text colorized if TERM is set"
     if (color is not None) and os.environ.get('TERM'):
