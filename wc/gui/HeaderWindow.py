@@ -1,8 +1,5 @@
 import sys
-
-# make sure that local Python modules get loaded first
-if __name__=='__main__':
-    sys.path.insert(0, ".")
+from urllib2 import urlopen, URLError
 
 # disable proxy for urllib
 import os
@@ -31,8 +28,10 @@ def scrollnum(s):
 def parse_headers():
     headers = []
     url = "http://localhost:%(port)d/headers/"%wc.config
-    from urllib2 import urlopen
-    s = urlopen(url).read()
+    try:
+        s = urlopen(url).read()
+    except urllib2.URLError:
+        return headers
     if s=="-": return headers
     lines = s.split("\n")
     for l in lines:
@@ -338,13 +337,16 @@ class HeaderWindow(FXMainWindow):
         try:
             self.status = "Getting headers..."
             oldhost = None
+            oldio = None
             for header in parse_headers():
                 url = header[0][7:]
                 host = url.split("/", 1)[0]
-                if host==oldhost and self.config['onlyfirst']:
+                io = header[1]
+                if host==oldhost and io==oldio and self.config['onlyfirst']:
                     continue
                 oldhost = host
-                if header[1]:
+                oldio = io
+                if io:
                     url = "<- "+url
                 else:
                     url = "-> "+url

@@ -130,7 +130,7 @@ else:
                         'wcheaders.bat']))
 
 setup (name = "webcleaner",
-       version = "0.28",
+       version = "0.29",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,

@@ -78,6 +78,16 @@
 <attr name="src">/images/vbanners</attr>
 </rewrite>
 
+<block title="Adverts in the path name 6"
+ desc="the infamous realmedia ads"
+ scheme=""
+ host=""
+ port=""
+ path="/RealMedia/"
+ parameters=""
+ query=""
+ fragment=""/>
+
 <image title="Banner at rootprompt.org"
  desc="The website rootprompt.org has a banner image."
  width="465"
@@ -178,14 +188,4 @@
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
 </rewrite>
-
-<block title="Adverts in the path name 6"
- desc="the infamous realmedia ads"
- scheme=""
- host=""
- port=""
- path="/RealMedia/"
- parameters=""
- query=""
- fragment=""/>
 </folder>

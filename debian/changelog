@@ -1,3 +1,13 @@
+webcleaner (0.29) unstable; urgency=low
+
+  * wcheaders:
+    - distinguish between incoming and outgoing headers for the onlyfirst
+      option
+    - catch URLErrors (they are thrown when the proxy is not running)
+  * new header filter for Accept* headers (default disabled)
+
+ -- Bastian Kleineidam <calvin@debian.org>  Fri, 23 Nov 2001 13:19:44 +0100
+
 webcleaner (0.28) unstable; urgency=low
 
   * fix another flush error when self.attrs is not set
