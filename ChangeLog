@@ -19,7 +19,7 @@
     Type: documentation
     Changed: *.py
 
-  * SSL certificates are now check for expiration. Expired certificates
+  * SSL certificates are now checked for expiration. Expired certificates
     are no longer accepted.
     Type: feature
     Changed: wc/proxy/ssl.py
