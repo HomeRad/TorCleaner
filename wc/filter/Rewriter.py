@@ -453,7 +453,7 @@ class HtmlFilter (HtmlParser,JSListener):
             return
         # remove html comments
         if script.startswith("<!--"):
-            i = script.index('\n')
+            i = script.find('\n')
             if i==-1:
                 script = script[4:]
             else:
