@@ -6,19 +6,18 @@ __date__    = "$Date$"[7:-2]
 import socket
 from wc import config
 from wc.log import *
-from wc.proxy import create_inet_socket
 from Dispatcher import Dispatcher
 
-# XXX drop the ", object" when dispatcher is a new-style class
+
 class Listener (Dispatcher):
     """A listener accepts connections on a specified port. Each
        accepted incoming connection gets delegated to an instance of the
        handler class"""
-    def __init__ (self, port, handler):
+    def __init__ (self, port, handler, ssl=False):
         """create a socket on specified port and start listening to it"""
         super(Listener, self).__init__()
         self.addr = (('', 'localhost')[config['local_sockets_only']], port)
-        create_inet_socket(self, socket.SOCK_STREAM)
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM, ssl=ssl)
         self.set_reuse_addr()
         self.bind(self.addr)
         # maximum number of queued connections
