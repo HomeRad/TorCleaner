@@ -24,6 +24,13 @@
     Changed: wc/proxy/winreg.py
   * fixed and documented the windows installation procedure
     Changed: INSTALL, setup.py
+  * added help for the web gui
+    Added: templates/classic/help.html, wc/webgui/context/help_html.py
+    Changed: templates/classic/macros/standard.html, po/*.po
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031222
+    Changed: libjs/*
+  * disabled psyco for now, it is unstable
+    Changed: webcleaner
 
 2.7 (released 04.12.2003)
   * updated filters:
