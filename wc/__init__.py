@@ -42,7 +42,6 @@ def remove_headers (headers, to_remove):
     """utility function to remove entries from RFC822 headers"""
     for h in to_remove:
         if headers.has_key(h):
-            debug(BRING_IT_ON, "removing header", `h`)
             del headers[h]
 
 config = None
