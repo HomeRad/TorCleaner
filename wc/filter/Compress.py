@@ -116,7 +116,7 @@ class Compress (Filter):
             else:
                 compressobj = getCompressObject()
                 headers['Content-Encoding'] = 'gzip'
-        debug(HURT_ME_PLENTY, "compress content encoding", headers['content-encoding'])
+        debug(HURT_ME_PLENTY, "compress content encoding", headers.get('content-encoding'))
         debug(HURT_ME_PLENTY, "compress object", compressobj)
         d = Filter.getAttrs(self, headers, url)
         d['compressobj'] = compressobj
