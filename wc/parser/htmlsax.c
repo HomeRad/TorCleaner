@@ -13,7 +13,7 @@
 #endif
 
 /* windoze thingies  for vsnprintf */
-#ifdef WIN32
+#ifdef _WIN32
 #ifdef _MSC_VER    /* Microsoft Visual C++ */
 #define vsnprintf _vsnprintf
 #endif
