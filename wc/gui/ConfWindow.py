@@ -111,9 +111,9 @@ class ConfWindow (ToolWindow):
      ID_PROXYRELOAD,
      ID_PROXYSTATUS,
      ID_DISABLERULE,
-     ID_NOPROXYFOR_ADD,
-     ID_NOPROXYFOR_EDIT,
-     ID_NOPROXYFOR_REMOVE,
+     ID_NOFILTERHOSTS_ADD,
+     ID_NOFILTERHOSTS_EDIT,
+     ID_NOFILTERHOSTS_REMOVE,
      ID_ALLOWEDHOSTS_ADD,
      ID_ALLOWEDHOSTS_EDIT,
      ID_ALLOWEDHOSTS_REMOVE,
@@ -175,11 +175,11 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYSTATUS,ConfWindow.onCmdProxyStatus)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_CONFUPDATE,ConfWindow.onCmdConfUpdate)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DISABLERULE,ConfWindow.onCmdDisableRule)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_ADD,ConfWindow.onCmdNoProxyForAdd)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_EDIT,ConfWindow.onCmdNoProxyForEdit)
-        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_EDIT,ConfWindow.onUpdNoProxy)
-        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onCmdNoProxyForRemove)
-        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onUpdNoProxy)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOFILTERHOSTS_ADD,ConfWindow.onCmdNoFilterHostsAdd)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOFILTERHOSTS_EDIT,ConfWindow.onCmdNoFilterHostsEdit)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOFILTERHOSTS_EDIT,ConfWindow.onUpdNoFilterHosts)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOFILTERHOSTS_REMOVE,ConfWindow.onCmdNoFilterHostsRemove)
+        FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOFILTERHOSTS_REMOVE,ConfWindow.onUpdNoFilterHosts)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ALLOWEDHOSTS_ADD,ConfWindow.onCmdAllowedHostsAdd)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_ALLOWEDHOSTS_EDIT,ConfWindow.onCmdAllowedHostsEdit)
         FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_ALLOWEDHOSTS_EDIT,ConfWindow.onUpdAllowedHosts)
@@ -229,9 +229,9 @@ class ConfWindow (ToolWindow):
         d.setNumColumns(cols)
         f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
-        self.noproxylist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
-        for host in sort_seq(self.noproxyfor):
-            self.noproxylist.appendItem(host)
+        self.nofilterlist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
+        for host in sort_seq(self.nofilterhosts):
+            self.nofilterlist.appendItem(host)
         f = FXHorizontalFrame(f, LAYOUT_SIDE_TOP)
         FXButton(f, i18n._("Add\tAdd hostname and networks that are not filtered.\nNetworks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."), None, self, ConfWindow.ID_NOPROXYFOR_ADD)
         FXButton(f, i18n._("Edit"), None, self, ConfWindow.ID_NOPROXYFOR_EDIT)
@@ -298,11 +298,11 @@ class ConfWindow (ToolWindow):
         # filterSettings
 
 
-    def onUpdNoProxy (self, sender, sel, ptr):
-        i = self.noproxylist.getCurrentItem()
+    def onUpdFilterHosts (self, sender, sel, ptr):
+        i = self.nofilterlist.getCurrentItem()
         if i<0:
             sender.disable()
-        elif self.noproxylist.isItemSelected(i):
+        elif self.nofilterlist.isItemSelected(i):
             sender.enable()
         else:
             sender.disable()
@@ -490,7 +490,7 @@ class ConfWindow (ToolWindow):
         return 1
 
 
-    def onCmdNoProxyForAdd (self, sender, sel, ptr):
+    def onCmdNoFilterHostsAdd (self, sender, sel, ptr):
         dialog = FXDialogBox(self,i18n._("Add Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
@@ -504,19 +504,19 @@ class ConfWindow (ToolWindow):
             if not host:
                 self.getApp().error(i18n._("Add proxy"), i18n._("Empty hostname"))
 	        return 1
-            if host in self.noproxyfor:
+            if host in self.nofilterhosts:
                 self.getApp().error(i18n._("Add proxy"), i18n._("Duplicate hostname"))
 	        return 1
-            self.noproxyfor.add(host)
-            self.noproxylist.appendItem(host)
+            self.nofilterhosts.add(host)
+            self.nofilterlist.appendItem(host)
             self.getApp().dirty = 1
             debug(GUI, "Added no-proxy host")
         return 1
 
 
-    def onCmdNoProxyForEdit (self, sender, sel, ptr):
-        index = self.noproxylist.getCurrentItem()
-        item = self.noproxylist.retrieveItem(index)
+    def onCmdNoFilterHostsEdit (self, sender, sel, ptr):
+        index = self.nofilterlist.getCurrentItem()
+        item = self.nofilterlist.retrieveItem(index)
         host = item.getText()
         dialog = FXDialogBox(self, i18n._("Edit Hostname"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
@@ -529,20 +529,20 @@ class ConfWindow (ToolWindow):
         FXButton(f, i18n._("&Cancel"), None, dialog, FXDialogBox.ID_CANCEL,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y)
         if dialog.execute():
             newhost = nametf.getText().strip().lower()
-            self.noproxyfor.remove(host)
-            self.noproxyfor.add(newhost)
-            self.noproxylist.replaceItem(index, newhost)
+            self.nofilterhosts.remove(host)
+            self.nofilterhosts.add(newhost)
+            self.nofilterlist.replaceItem(index, newhost)
             self.getApp().dirty = 1
             debug(GUI, "Changed no-proxy host")
         return 1
 
 
-    def onCmdNoProxyForRemove (self, sender, sel, ptr):
-        index = self.noproxylist.getCurrentItem()
-        item = self.noproxylist.retrieveItem(index)
+    def onCmdNoFilterHostsRemove (self, sender, sel, ptr):
+        index = self.nofilterlist.getCurrentItem()
+        item = self.nofilterlist.retrieveItem(index)
         host = item.getText()
-        self.noproxyfor.remove(host)
-        self.noproxylist.removeItem(index)
+        self.nofilterhosts.remove(host)
+        self.nofilterlist.removeItem(index)
         self.getApp().dirty = 1
         debug(GUI, "Removed no-proxy host")
         return 1
@@ -736,11 +736,11 @@ class ConfWindow (ToolWindow):
         debug(GUI, "reading config")
         self.config = Configuration()
         for key in ['version','port','parentproxy','parentproxyport',
-	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
+	 'configfile', 'nofilterhosts', 'showerrors', 'proxyuser', 'proxypass',
          'parentproxyuser', 'parentproxypass', 'allowedhosts',
          'webgui_theme', 'timeout',]:
             setattr(self, key, self.config[key])
-        self.noproxyfor = ip.strhosts2map(self.noproxyfor)
+        self.nofilterhosts = ip.strhosts2map(self.nofilterhosts)
         self.allowedhosts = ip.strhosts2map(self.allowedhosts)
         self.modules = {
 	    "Header": 0,
@@ -801,12 +801,10 @@ class ConfWindow (ToolWindow):
              ' showerrors="%d"\n' % self.showerrors +\
              ' timeout="%d"\n' % self.timeout
         s += ' webgui_theme="%s"\n' % xmlify(self.webgui_theme)
-        if self.noproxyfor:
-            hosts = sort_seq(self.noproxyfor)
-            s += ' noproxyfor="%s"\n'%xmlify(",".join(hosts))
-        if self.allowedhosts:
-            hosts = sort_seq(self.allowedhosts)
-            s += ' allowedhosts="%s"\n'%xmlify(",".join(hosts))
+        hosts = sort_seq(ip.map2hosts(self.nofilterhosts))
+        s += ' nofilterhosts="%s"\n'%xmlify(",".join(hosts))
+        hosts = sort_seq(ip.map2hosts(self.allowedhosts))
+        s += ' allowedhosts="%s"\n'%xmlify(",".join(hosts))
         s += '>\n'
         for key,val in self.modules.items():
             if val:

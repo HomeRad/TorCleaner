@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title tal:content="title">WebCleaner Configuration</title>
+<title tal:content="title">WebCleaner Proxy Configuration</title>
 </head>
 <body bgcolor="#ffffff">
 
@@ -17,14 +17,14 @@
 <table>
 <tr>
 <td colspan="2">
-<caption><big><span tal:replace="title">WebCleaner Configuration</span>
+<caption><big><span tal:replace="title">WebCleaner Proxy Configuration</span>
 </big><caption>
 </td>
 </tr>
 <tr valign="top">
 <td><table>
 <tr valign="top">
-<td><span tal:replace="port">Port number</span></td>
+<td><span tal:replace="port">Port number</span><a href="#restart">*</a></td>
 <td>
   <input type="text" name="port" size="5" maxlength="5"
    tal:attributes="value config/strport">
@@ -102,6 +102,24 @@
 <input type="submit" name="addallowed" value="Add new"
  tal:attributes="value add">
 <input type="text" name="newallowed" value="" size="20">
+
+<br><br>
+
+<div tal:replace="nofilterhosts">Don't filter hosts</div>
+<br>
+<select name="nofilterhosts" size="5" multiple style="width:200px;">
+<option tal:repeat="host config/nofilterhostlist" tal:attributes="value host">
+<span tal:replace="host">127.0.0.1</span>
+</option>
+</select>
+<br>
+<input type="submit" name="delnofilter" value="Remove selected"
+ tal:attributes="value remove">
+<br>
+<input type="submit" name="addnofilter" value="Add new"
+ tal:attributes="value add">
+<input type="text" name="newnofilter" value="" size="20">
+
 </td>
 </tr>
 <tr>
@@ -112,5 +130,7 @@
 </tr>
 </table>
 </form>
+<a name="restart">*</a>
+The marked options require a proxy restart to take effect.
 </body>
 </html>

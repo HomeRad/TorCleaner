@@ -185,7 +185,7 @@ class Configuration (dict):
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['colorize'] = 0
-        self['noproxyfor'] = None
+        self['nofilterhosts'] = None
         self['allowedhosts'] = None
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
@@ -222,15 +222,12 @@ class Configuration (dict):
         f.write(' parentproxyport="%d"\n' % self['parentproxyport'])
         if self['showerrors']:
             f.write(' showerrors="1"\n')
-        if self['timeout']:
-            f.write(' timeout="%d"\n' % self['timeout'])
+        f.write(' timeout="%d"\n' % self['timeout'])
         f.write(' webgui_theme="%s"\n' % xmlify(self['webgui_theme']))
-        if self['noproxyfor']:
-            hosts = sort_seq(ip.map2hosts(self['noproxyfor']))
-            f.write(' noproxyfor="%s"\n'%xmlify(",".join(hosts)))
-        if self['allowedhosts']:
-            hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
-            f.write(' allowedhosts="%s"\n'%xmlify(",".join(hosts)))
+        hosts = sort_seq(ip.map2hosts(self['nofilterhosts']))
+        f.write(' nofilterhosts="%s"\n'%xmlify(",".join(hosts)))
+        hosts = sort_seq(ip.map2hosts(self['allowedhosts']))
+        f.write(' allowedhosts="%s"\n'%xmlify(",".join(hosts)))
         f.write('>\n')
         for key in self['filters']:
             f.write('<filter name="%s"/>\n' % key)
@@ -377,16 +374,16 @@ class WConfigParser (BaseParser):
                         ):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
-            if self.config['noproxyfor'] is not None:
-                strhosts = str(self.config['noproxyfor'])
-                self.config['noproxyfor'] = ip.strhosts2map(strhosts)
+            if self.config['nofilterhosts'] is not None:
+                strhosts = str(self.config['nofilterhosts'])
+                self.config['nofilterhosts'] = ip.strhosts2map(strhosts)
             else:
-                self.config['noproxyfor'] = [{}, [], Set()]
+                self.config['nofilterhosts'] = [Set(), []]
             if self.config['allowedhosts'] is not None:
                 strhosts = str(self.config['allowedhosts'])
                 self.config['allowedhosts'] = ip.strhosts2map(strhosts)
             else:
-                self.config['allowedhosts'] = [{}, [], Set()]
+                self.config['allowedhosts'] = [Set(), []]
         elif name=='filter':
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])

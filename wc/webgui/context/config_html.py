@@ -5,7 +5,7 @@ from wc import i18n, AppName, filtermodules, ip, sort_seq
 from wc import Configuration as _Configuration
 
 # translations
-title = i18n._("%s configuration") % AppName
+title = i18n._("%s proxy configuration") % AppName
 port = i18n._("Port number")
 proxyuser = i18n._("Proxy user")
 proxypass = i18n._("Proxy password")
@@ -18,7 +18,7 @@ proxyfiltermodules = i18n._("Proxy filter modules")
 allowedhosts = i18n._("Allowed hosts")
 remove = i18n._("Remove selected")
 add = i18n._("Add new")
-nofilterhosts = i18n._("No filter hosts")
+nofilterhosts = i18n._("Don't filter hosts")
 configapply = i18n._("Apply")
 back = i18n._("Back")
 
@@ -34,6 +34,7 @@ for _i in filtermodules:
 for _i in config['filters']:
     config['filterdict'][_i] = True
 config['allowedhostlist'] = sort_seq(ip.map2hosts(config['allowedhosts']))
+config['nofilterhostlist'] = sort_seq(ip.map2hosts(config['nofilterhosts']))
 
 # form execution
 def exec_form (form):
@@ -73,7 +74,10 @@ def exec_form (form):
     elif form.has_key('delallowed') and form.has_key('allowedhosts'):
         _form_delallowed(form['allowedhosts'])
     # no filter hosts
-    # XXX
+    if form.has_key('addnofilter') and form.has_key('newnofilter'):
+        _form_addnofilter(form['newnofilter'].value.strip())
+    elif form.has_key('delnofilter') and form.has_key('nofilterhosts'):
+        _form_delnofilter(form['nofilterhosts'])
     if info:
         # write changed config
         config.write_proxyconf()
@@ -164,5 +168,37 @@ def _form_addallowed (host):
 
 
 def _form_delallowed (hosts):
+    if hasattr(hosts, "value"):
+        # single host
+        delhosts = [hosts.value.strip()]
+    else:
+        # multiple
+        delhosts = [ host.value.strip() for host in hosts ]
+    hosts = ip.map2hosts(config['allowedhosts'])
+    removed = 0
+    for host in delhosts:
+        if host in hosts:
+            hosts.remove(host)
+            removed += 1
+    if removed > 0:
+        config['allowedhosts'] = ip.hosts2map(hosts)
+        config['allowedhostlist'] = sort_seq(hosts)
+        if removed == 1:
+            info.append(i18n._("Allowed host successfully removed"))
+        else:
+            info.append(i18n._("%d allowed hosts successfully removed") % \
+                        removed)
+
+
+def _form_addnofilter (host):
+    hosts = ip.map2hosts(config['nofilterhosts'])
+    if host not in hosts:
+        hosts.add(host)
+        config['nofilterhosts'] = ip.hosts2map(hosts)
+        config['nofilterhostlist'] = sort_seq(hosts)
+        info.append(i18n._("Nofilter host successfully added"))
+
+
+def _form_delnofilter (hosts):
     print "del hosts", hosts.value
     # XXX
