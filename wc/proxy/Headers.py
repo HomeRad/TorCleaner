@@ -8,9 +8,9 @@ import cStringIO as StringIO
 import wc
 import wc.log
 import wc.magic
-import wc.proxy.UnchunkStream
-import wc.proxy.GunzipStream
-import wc.proxy.DeflateStream
+import wc.proxy.decoder.UnchunkStream
+import wc.proxy.decoder.GunzipStream
+import wc.proxy.decoder.DeflateStream
 
 
 class WcMessage (rfc822.Message, object):
@@ -234,7 +234,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         if tenc != 'chunked':
             wc.log.error(wc.LOG_PROXY,
               "unknown transfer encoding %r, assuming chunked encoding", tenc)
-        decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
+        decoders.append(wc.proxy.decoder.UnchunkStream.UnchunkStream())
         # remove encoding header
         to_remove = ["Transfer-Encoding"]
         if headers.has_key("Content-Length"):
@@ -254,9 +254,9 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
     if encoding in ('gzip', 'x-gzip', 'deflate') and \
        (filename is None or not filename.endswith(".gz")):
         if encoding == 'deflate':
-            decoders.append(wc.proxy.DeflateStream.DeflateStream())
+            decoders.append(wc.proxy.decoder.DeflateStream.DeflateStream())
         else:
-            decoders.append(wc.proxy.GunzipStream.GunzipStream())
+            decoders.append(wc.proxy.decoder.GunzipStream.GunzipStream())
         # remove encoding because we unzip the stream
         to_remove = ['Content-Encoding']
         # remove no-transform cache control
