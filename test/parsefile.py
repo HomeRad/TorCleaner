@@ -10,6 +10,7 @@ def _main():
     else:
         f = file(fname)
     p = HtmlPrinter()
+    #p.debug(1)
     data = f.read(1024)
     while data:
         p.feed(data)
