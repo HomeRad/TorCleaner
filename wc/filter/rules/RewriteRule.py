@@ -49,12 +49,13 @@ def tagbuf2data (tagbuf, out):
         if item[0]==DATA:
             out.write(item[1])
         elif item[0]==STARTTAG:
-            s = "<"+item[1]
+            out.write("<")
+            out.write(item[1])
             for name,val in item[2].items():
-                s += ' %s'%name
+                out.write(' %s'%name)
                 if val:
-                    s += "=\"%s\""%wc.parser.htmllib.quote_attrval(val)
-            out.write(s+">")
+                    out.write("=\"%s\""%wc.parser.htmllib.quote_attrval(val))
+            out.write(">")
         elif item[0]==ENDTAG:
             out.write("</%s>"%item[1])
         elif item[0]==COMMENT:
