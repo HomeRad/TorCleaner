@@ -66,7 +66,7 @@ class Connection (Dispatcher):
         debug(PROXY, '%s <= read %d', self, len(data))
         debug(CONNECTION, 'data %r', data)
         if not data: # It's been closed, and handle_close has been called
-            debug(PROXY, "%s closed, got empty data")
+            debug(PROXY, "%s closed, got empty data", self)
             return
 	self.recv_buffer += data
         self.process_read()
