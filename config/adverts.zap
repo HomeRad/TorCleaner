@@ -214,4 +214,10 @@
  matchurl="\.imdb\.">
 <attr>/tiger_redirect\?</attr>
 </rewrite>
+
+<rewrite title="OSDN navbar"
+ desc="Navigation bar form"
+ tag="form">
+<attr name="action">http://www\.osdn\.com/osdnsearch\.pl</attr>
+</rewrite>
 </folder>
