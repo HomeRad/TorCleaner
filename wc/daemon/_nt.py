@@ -66,12 +66,7 @@ def start_nt (parent_exit=1):
     f.write("%d" % os.getpid())
     f.close()
     # starting
-    try:
-        startfunc()
-    except:
-        if os.path.exists(pidfile):
-	    os.remove(pidfile)
-        raise
+    startfunc()
 
 
 def stop ():

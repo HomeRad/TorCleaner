@@ -1,3 +1,7 @@
+1.1
+  * Dont try to remove the .pid file on startup errors, because we
+    might already have dropped root privileges
+
 1.0
   * Print access denied messages on stderr
     Changed files: wc/proxy/HttpClient.py
