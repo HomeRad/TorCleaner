@@ -18,7 +18,7 @@ FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
 
 Setup
 -----
-Run "./configure; make" to compile the JavaScript library.
+Run "./configure; make" to compile the included JavaScript library.
 Run "python setup.py build" to byte-compile the Python files.
 Run "python setup.py install" to install everything.
 Note: if you work from CVS, you must run "./autogen.sh" first to
