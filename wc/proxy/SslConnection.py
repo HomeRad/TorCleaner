@@ -20,25 +20,25 @@ class SslConnection (wc.proxy.Connection.Connection):
             return
         try:
             data = self.socket.read(wc.proxy.Connection.RECV_BUFSIZE)
-            wc.log.debug(wc.LOG_NET, 'data %r', data)
+            wc.log.debug(wc.LOG_NET, 'have read data %r', data)
         except SSL.WantReadError, err:
-            wc.log.debug(wc.LOG_NET, '%s want read error %s', self, err)
+            wc.log.debug(wc.LOG_NET, '%s want read error', self)
             # you _are_ already reading, stupid
             return
         except SSL.WantWriteError, err:
-            wc.log.debug(wc.LOG_NET, '%s want write error %s', self, err)
+            wc.log.debug(wc.LOG_NET, '%s want write error', self)
             # you want to write? here you go
             self.handle_write()
             return
         except SSL.WantX509LookupError, err:
-            wc.log.exception(wc.LOG_PROXY, "%s ssl read message %s", self, err)
+            wc.log.exception(wc.LOG_PROXY, "%s ssl read message", self)
             return
         except SSL.ZeroReturnError, err:
-            wc.log.debug(wc.LOG_PROXY, "%s ssl finished successfully (%s)", self, err)
+            wc.log.debug(wc.LOG_PROXY, "%s ssl finished successfully", self)
             self.delayed_close()
             return
         except SSL.Error, err:
-            wc.log.exception(wc.LOG_PROXY, "%s read error %s", self, err)
+            wc.log.exception(wc.LOG_PROXY, "%s read error", self)
             self.handle_error('read error')
             return
         if not data: # It's been closed, and handle_close has been called
@@ -56,27 +56,27 @@ class SslConnection (wc.proxy.Connection.Connection):
         wc.log.debug(wc.LOG_PROXY, '%s SslConnection.handle_write', self)
         num_sent = 0
         data = self.send_buffer[:wc.proxy.Connection.SEND_BUFSIZE]
-        wc.log.debug(wc.LOG_NET, 'data %r', data)
+        wc.log.debug(wc.LOG_NET, 'have written data %r', data)
         try:
             num_sent = self.socket.write(data)
         except SSL.WantReadError, err:
-            wc.log.debug(wc.LOG_NET, '%s want read error %s', self, err)
+            wc.log.debug(wc.LOG_NET, '%s want read error', self)
             # you want to read? here you go
             self.handle_read()
             return
         except SSL.WantWriteError, err:
-            wc.log.debug(wc.LOG_NET, '%s want write error %s', self, err)
+            wc.log.debug(wc.LOG_NET, '%s want write error', self)
             # you _are_ already writing, stupid
             return
         except SSL.WantX509LookupError, err:
-            wc.log.exception(wc.LOG_PROXY, "%s ssl write message %s", self, err)
+            wc.log.exception(wc.LOG_PROXY, "%s ssl write message", self)
             return
         except SSL.ZeroReturnError, err:
-            wc.log.debug(wc.LOG_PROXY, "%s ssl finished successfully (%s)", self, err)
+            wc.log.debug(wc.LOG_PROXY, "%s ssl finished successfully", self)
             self.delayed_close()
             return
         except SSL.Error, err:
-            wc.log.exception(wc.LOG_PROXY, "write error %s", err)
+            wc.log.exception(wc.LOG_PROXY, "write error")
             self.handle_error(str(err))
             return
         wc.log.debug(wc.LOG_NET, '%s => wrote %d', self, num_sent)
