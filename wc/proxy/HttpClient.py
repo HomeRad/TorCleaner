@@ -352,6 +352,7 @@ class HttpClient (Connection):
 
     def server_response (self, server, response, status, headers):
         assert server.connected, "%s server was not connected"%self
+        assert type(status)==type(1), "%s status was not int: %r"%(self, status)
         debug(PROXY, '%s server_response %r (%d)', self, response, status)
         # try google options
         if status in google_try_status and config['try_google']:

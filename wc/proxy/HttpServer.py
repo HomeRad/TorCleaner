@@ -441,6 +441,8 @@ class HttpServer (Server):
         """flush data of decoders (if any) and filters and write it to
            the client"""
         debug(PROXY, "%s flushing", self)
+        if not self.statuscode:
+            warn(PROXY, "%s flush without status", self)
         self.flushing = True
         data = flush_decoders(self.decoders)
         try:
@@ -454,13 +456,12 @@ class HttpServer (Server):
             return
         # the client might already have closed
         if self.client and self.statuscode!=407:
+            if not self.data_written and self.statuscode:
+                self.client.server_response(self, self.response,
+                                            self.statuscode, self.headers)
+                self.data_written = True
             if data:
-                if not self.data_written:
-                    self.client.server_response(self, self.response,
-                                                self.statuscode, self.headers)
-                    self.data_written = True
-                elif not hasattr(self.client, "server_content"):
-                    error(PROXY, "%s wrong client %s", self, self.client)
+                assert hasattr(self.client, "server_content"), "%s wrong client %s"%(self, self.client)
                 self.client.server_content(data)
             self.client.server_close(self)
         self.attrs = {}
