@@ -42,7 +42,7 @@ def read_blacklists (fname):
         if fname.endswith(".gz"):
             f = gzip.open(fname)
             fname = fname[:-3]
-            w = open(fname, 'wb')
+            w = file(fname, 'wb')
             w.write(f.read())
             w.close()
             f.close()
@@ -57,7 +57,7 @@ def read_blacklists (fname):
 def read_data (fname, name, data):
     cat = os.path.basename(os.path.dirname(fname))
     if cat not in mycats: return
-    f = open(fname)
+    f = file(fname)
     line = f.readline()
     while line:
         line = line.strip()
@@ -83,7 +83,7 @@ def write_filters ():
         print "writing", filename
         if os.path.exists(filename):
             os.remove(filename)
-	f = open(filename, 'wb')
+	f = file(filename, 'wb')
 	write_folder(cat, d, data, f)
         f.close()
 
@@ -112,26 +112,26 @@ def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
     d = {'title': cat+" domain filter",
          'desc': "You should not edit this filter, only disable or delete it.",
-         'file': "%s/%s/domains.gz" % (b, cat),
+         'filename': "%s/%s/domains.gz" % (b, cat),
          'type': ftype,
         }
     f.write("""<%(type)sdomains
  title="%(title)s"
  desc="%(desc)s"
- file="%(file)s"/>
+ filename="%(filename)s"/>
 """ % d)
 
 def write_urls (cat, b, ftype, f):
     print "write", cat, "urls"
     d = {'title': cat+" url filter",
          'desc': "You should not edit this filter, only disable or delete it.",
-         'file': "%s/%s/urls.gz" % (b, cat),
+         'filename': "%s/%s/urls.gz" % (b, cat),
          'type': ftype,
         }
     f.write("""<%(type)surls
  title="%(title)s"
  desc="%(desc)s"
- file="%(file)s"/>
+ filename="%(filename)s"/>
 """ % d)
 
 def write_expressions (cat, b, ftype, f):
@@ -176,7 +176,7 @@ def blacklist (fname):
         f = gzip.open(source)
         fname = "extracted/"+fname[:-3]
         os.makedirs(os.path.dirname(fname))
-        w = open(fname, 'wb')
+        w = file(fname, 'wb')
         w.write(f.read())
         w.close()
         f.close()
@@ -228,7 +228,7 @@ def geturl (basedir, fname, fun, saveas=None):
             os.makedirs(d)
         try:
             urldata = urllib2.urlopen(basedir+fname)
-            f = open("downloads/"+target, 'w')
+            f = file("downloads/"+target, 'w')
             f.write(urldata.read())
             f.close()
         except urllib2.HTTPError, msg:
