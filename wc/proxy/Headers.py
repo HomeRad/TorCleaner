@@ -5,30 +5,28 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re
-from wc import i18n, magic
-from wc.log import *
-from rfc822 import Message
-from wc.proxy.UnchunkStream import UnchunkStream
-from wc.proxy.GunzipStream import GunzipStream
-from wc.proxy.DeflateStream import DeflateStream
-from cStringIO import StringIO
-
+import rfc822
 import mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
+import cStringIO as StringIO
+import wc.magic
+import wc.proxy.UnchunkStream
+import wc.proxy.GunzipStream
+import wc.proxy.DeflateStream
+from wc.log import *
 
-class WcMessage (Message, object):
+
+class WcMessage (rfc822.Message, object):
     """Represents a single RFC 2822-compliant message, adding functions
        handling multiple headers with the same name"""
-
 
     def __init__ (self, fp=None, seekable=True):
         """initialize message reading from given optional file descriptor"""
         if fp is None:
-            fp = StringIO()
+            fp = StringIO.StringIO()
         super(WcMessage, self).__init__(fp, seekable=seekable)
-
 
     def getallmatchingheadervalues (self, name):
         """return a list of all header values for the given header name"""
@@ -50,17 +48,14 @@ class WcMessage (Message, object):
                 hit = False
         return vals
 
-
     def addheader (self, name, value):
         """add given header name and value to the end of the header list.
         Multiple headers with the same name are supported"""
         self.headers.append("%s: %s\r\n" % (name, value))
 
-
     def __contains__(self, name):
         """Determine whether a message contains the named header."""
         return name.lower() in self.dict
-
 
     def __str__ (self):
         return "\n".join([ repr(s) for s in self.headers ])
@@ -213,13 +208,13 @@ def server_set_content_headers (headers, content, document, mime, url):
         # note: recognizing a mime type here fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024
         try:
-            mime = magic.classify(StringIO(content))
+            mime = wc.magic.classify(StringIO.StringIO(content))
         except StandardError, msg:
             error(PROXY, "Could not classify %r: %s", url, msg)
     ct = headers.get('Content-Type', None)
     if mime:
         if ct is None:
-            warn(PROXY, i18n._("add Content-Type %r in %r"), mime, url)
+            warn(PROXY, wc.i18n._("add Content-Type %r in %r"), mime, url)
             headers['Content-Type'] = "%s\r"%mime
         elif not ct.startswith(mime):
             i = ct.find(';')
@@ -228,7 +223,7 @@ def server_set_content_headers (headers, content, document, mime, url):
                 val = mime + ct[i:]
             else:
                 val = mime
-            warn(PROXY, i18n._("set Content-Type from %r to %r in %r"),
+            warn(PROXY, wc.i18n._("set Content-Type from %r to %r in %r"),
                  str(ct), val, url)
             headers['Content-Type'] = "%s\r"%val
     else:
@@ -236,11 +231,11 @@ def server_set_content_headers (headers, content, document, mime, url):
         if gm[0]:
             # guessed an own content type
             if ct is None:
-                warn(PROXY, i18n._("add Content-Type %r to %r"), gm[0], url)
+                warn(PROXY, wc.i18n._("add Content-Type %r to %r"), gm[0], url)
                 headers['Content-Type'] = "%s\r"%gm[0]
     # hmm, fix application/x-httpd-php*
     if headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
-        warn(PROXY, i18n._("fix x-httpd-php Content-Type"))
+        warn(PROXY, wc.i18n._("fix x-httpd-php Content-Type"))
         headers['Content-Type'] = 'text/html\r'
 
 
@@ -257,11 +252,11 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         tenc = headers['Transfer-Encoding']
         if tenc != 'chunked':
             error(PROXY, "unknown transfer encoding %r, assuming chunked encoding", tenc)
-        decoders.append(UnchunkStream())
+        decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
         # remove encoding header
         to_remove = ["Transfer-Encoding"]
         if headers.has_key("Content-Length"):
-            warn(PROXY, i18n._('chunked encoding should not have Content-Length'))
+            warn(PROXY, wc.i18n._('chunked encoding should not have Content-Length'))
             to_remove.append("Content-Length")
             bytes_remaining = None
         remove_headers(headers, to_remove)
@@ -276,9 +271,9 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
     if encoding in ('gzip', 'x-gzip', 'deflate') and \
        (filename is None or not filename.endswith(".gz")):
         if encoding=='deflate':
-            decoders.append(DeflateStream())
+            decoders.append(wc.proxy.DeflateStream.DeflateStream())
         else:
-            decoders.append(GunzipStream())
+            decoders.append(wc.proxy.GunzipStream.GunzipStream())
         # remove encoding because we unzip the stream
         to_remove = ['Content-Encoding']
         # remove no-transform cache control
@@ -288,7 +283,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # add warning
         headers['Warning'] = "214 Transformation applied\r"
     elif encoding and encoding!='identity':
-        warn(PROXY, i18n._("unsupported encoding: %r"), encoding)
+        warn(PROXY, wc.i18n._("unsupported encoding: %r"), encoding)
         # do not disable filtering for unknown content-encodings
         # this could result in a DoS attack (server sending garbage
         # as content-encoding)

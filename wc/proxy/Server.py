@@ -4,11 +4,11 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from wc.proxy.StatefulConnection import StatefulConnection
+import wc.proxy.StatefulConnection
 from wc.log import *
 
 
-class Server (StatefulConnection):
+class Server (wc.proxy.StatefulConnection.StatefulConnection):
     """Basic class for server connections"""
 
     def __init__ (self, client, state):

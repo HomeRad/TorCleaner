@@ -4,23 +4,23 @@
 import socket
 import errno
 import sys
+import wc.proxy.Connection
 from wc.log import *
-from wc.proxy.Connection import Connection, MAX_BUFSIZE, RECV_BUFSIZE, SEND_BUFSIZE
 from OpenSSL import SSL
 
 
-class SslConnection (Connection):
+class SslConnection (wc.proxy.Connection.Connection):
     """mix-in class for SSL connections"""
     def handle_read (self):
         """read data from SSL connection, put it into recv_buffer and call
            process_read"""
         assert self.connected
         debug(PROXY, '%s SslConnection.handle_read', self)
-	if len(self.recv_buffer) > MAX_BUFSIZE:
+	if len(self.recv_buffer) > wc.proxy.Connection.MAX_BUFSIZE:
             warn(PROXY, '%s read buffer full', self)
 	    return
         try:
-            data = self.socket.read(RECV_BUFSIZE)
+            data = self.socket.read(wc.proxy.Connection.RECV_BUFSIZE)
         except SSL.WantReadError:
             # you _are_ already reading, stupid
             return
@@ -55,7 +55,7 @@ class SslConnection (Connection):
         assert self.send_buffer
         debug(PROXY, '%s SslConnection.handle_write', self)
         num_sent = 0
-        data = self.send_buffer[:SEND_BUFSIZE]
+        data = self.send_buffer[:wc.proxy.Connection.SEND_BUFSIZE]
         try:
             num_sent = self.socket.write(data)
         except SSL.WantReadError:

@@ -5,16 +5,12 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import urlparse
+import wc.url
+import wc.proxy.Headers
+import wc.proxy.HttpServer
+import wc.proxy.ClientServerMatchmaker
+import wc.filter
 from wc.log import *
-from wc.url import stripsite, spliturl, url_norm, url_quote
-from wc.proxy.Headers import get_wc_client_headers
-from wc.proxy.HttpServer import get_response_data
-from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
-from wc.filter import FILTER_REQUEST
-from wc.filter import FILTER_REQUEST_DECODE
-from wc.filter import FILTER_REQUEST_MODIFY
-from wc.filter import FILTER_REQUEST_ENCODE
-from wc.filter import applyfilter, get_filterattrs, FilterRating
 
 
 class HttpProxyClient (object):
@@ -30,20 +26,20 @@ class HttpProxyClient (object):
         self.handler = handler
         self.args = args
         self.method = "GET"
-        self.url = url_norm(self.args[0])
-        self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+        self.url = wc.url.url_norm(self.args[0])
+        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
         self.connected = True
         self.addr = ('localhost', 80)
         self.isredirect = False
-        attrs = get_filterattrs(self.url, [FILTER_REQUEST])
+        attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_REQUEST])
         attrs['mime'] = 'application/x-javascript'
-        request = "GET %s HTTP/1.0" % url_quote(self.url)
-        request = applyfilter(FILTER_REQUEST_DECODE, request, "filter", attrs)
-        request = applyfilter(FILTER_REQUEST_MODIFY, request, "filter", attrs)
-        self.request = applyfilter(FILTER_REQUEST_ENCODE, request, "filter", attrs)
+        request = "GET %s HTTP/1.0" % wc.url.url_quote(self.url)
+        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, request, "filter", attrs)
+        request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, request, "filter", attrs)
+        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, request, "filter", attrs)
         debug(PROXY, '%s init', self)
 
 
@@ -84,7 +80,7 @@ class HttpProxyClient (object):
         self.server = server
         assert self.server.connected
         debug(PROXY, '%s server_response %r', self, response)
-        protocol, status, msg = get_response_data(response, self.args[0])
+        protocol, status, msg = wc.proxy.HttpServer.get_response_data(response, self.args[0])
         debug(PROXY, '%s response %s %d %s', self, protocol, status, msg)
         if status in (302, 301):
             self.isredirect = True
@@ -132,21 +128,21 @@ class HttpProxyClient (object):
         url = self.server.headers.getheader("Location",
                      self.server.headers.getheader("Uri", ""))
         url = urlparse.urljoin(self.server.url, url)
-        self.url = url_norm(url)
+        self.url = wc.url.url_norm(url)
         self.args = (self.url, self.args[1])
         self.isredirect = False
         debug(PROXY, "%s redirected", self)
-        self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
-        host = stripsite(self.url)[0]
+        host = wc.url.stripsite(self.url)[0]
         mime = self.server.mime
         content = ''
         # note: use HTTP/1.0 for JavaScript
-        request = "GET %s HTTP/1.0"%url_quote(self.url)
+        request = "GET %s HTTP/1.0"%wc.url.url_quote(self.url)
         # close the server and try again
         self.server = None
-        headers = get_wc_client_headers(host)
+        headers = wc.proxy.Headers.get_wc_client_headers(host)
         headers['Accept-Encoding'] = 'identity\r'
-        ClientServerMatchmaker(self, request, headers, content, mime=mime)
+        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self, request, headers, content, mime=mime)

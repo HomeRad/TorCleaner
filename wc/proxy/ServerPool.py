@@ -5,8 +5,9 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import time
-from wc.proxy import make_timer
+import wc.proxy
 from wc.log import *
+
 
 class ServerPool (object):
     """server connection pool for reusing server connections
@@ -26,7 +27,7 @@ class ServerPool (object):
         self.smap = {} # {(ipaddr, port) -> {server -> ('available'|'busy')}}
         self.http_versions = {} # {(ipaddr, port) -> http_version}
         self.callbacks = {} # {(ipaddr, port) -> [functions to call]}
-        make_timer(60, self.expire_servers)
+        wc.proxy.make_timer(60, self.expire_servers)
 
 
     def count_servers (self, addr):
@@ -117,7 +118,7 @@ class ServerPool (object):
             server.close()
             if addr in self.smap:
                 assert not self.smap[addr].has_key(server), "Not expired: %s"%str(self.smap[addr])
-        make_timer(60, self.expire_servers)
+        wc.proxy.make_timer(60, self.expire_servers)
 
 
     def invoke_callbacks (self, addr):

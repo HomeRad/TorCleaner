@@ -25,25 +25,24 @@ import urllib
 import urlparse
 import gettext
 import mimetypes
-from wc.webgui.simpletal import simpleTAL, simpleTALES
-from cStringIO import StringIO
-from wc import i18n, config, TemplateDir, Name, LocaleDir
+import cStringIO as StringIO
+import wc.webgui.simpletal
+import wc.proxy.auth
+import wc.proxy.Headers
 from wc.log import *
-from wc.proxy.auth import get_challenges
-from wc.proxy.Headers import WcMessage
 
 
 class WebConfig (object):
     """class for web configuration templates"""
 
     def __init__ (self, client, url, form, protocol, clientheaders,
-                  status=200, msg=i18n._('Ok'), localcontext=None, auth=''):
+                  status=200, msg=wc.i18n._('Ok'), localcontext=None, auth=''):
         """load a web configuration template and return response"""
         debug(GUI, "WebConfig %s %s", url, form)
         self.client = client
         # we pretend to be the server
         self.connected = True
-        headers = WcMessage()
+        headers = wc.proxy.Headers.WcMessage()
         headers['Server'] = 'Proxy\r'
         if auth:
             if status==407:
@@ -69,11 +68,11 @@ class WebConfig (object):
                 # get TAL context
                 context, newstatus = get_context(dirs, form, localcontext, lang)
                 if newstatus==401 and status!=newstatus:
-                    client.error(401, i18n._("Authentication Required"),
-                                 auth=get_challenges())
+                    client.error(401, wc.i18n._("Authentication Required"),
+                                 auth=wc.proxy.auth.get_challenges())
                     return
                 # get translator
-                translator = gettext.translation(Name, LocaleDir, [lang], fallback=True)
+                translator = gettext.translation(wc.Name, wc.LocaleDir, [lang], fallback=True)
                 #debug(GUI, "Using translator %s", translator.info())
                 # expand template
                 data = expand_template(fp, context, translator=translator)
@@ -85,12 +84,12 @@ class WebConfig (object):
             exception(GUI, "Wrong path %r", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
-            client.error(404, i18n._("Not Found"))
+            client.error(404, wc.i18n._("Not Found"))
             return
         except StandardError:
             # catch standard exceptions and report internal error
             exception(GUI, "Template error")
-            client.error(500, i18n._("Internal Error"))
+            client.error(500, wc.i18n._("Internal Error"))
             return
         # not catched builtin exceptions are:
         # SystemExit, StopIteration and all warnings
@@ -121,8 +120,8 @@ def expand_template (fp, context, translator=None):
     """expand the given template file fp in context
        return expanded data"""
     # note: standard input encoding is iso-8859-1 for html templates
-    template = simpleTAL.compileHTMLTemplate(fp)
-    out = StringIO()
+    template = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(fp)
+    out = StringIO.StringIO()
     template.expand(context, out, translator=translator)
     return out.getvalue()
 
@@ -149,7 +148,7 @@ def get_template_url (url, lang):
 
 def _get_template_path (path):
     """return tuple (path, dirs)"""
-    base = os.path.join(TemplateDir, config['gui_theme'])
+    base = os.path.join(wc.TemplateDir, wc.config['gui_theme'])
     base = norm(base)
     dirs = get_relative_path(path)
     if not dirs:
@@ -193,7 +192,7 @@ def get_context (dirs, form, localcontext, lang):
     # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
     # make TAL context
-    context = simpleTALES.Context()
+    context = wc.webgui.simpletal.simpleTALES.Context()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
         debug(GUI, "got form %s", form)
@@ -216,18 +215,18 @@ def add_default_context (context, filename, lang):
     """add context variables used by all templates"""
     # rule macros
     path, dirs = _get_template_path("macros/rules.html")
-    rulemacros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
+    rulemacros = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(file(path, 'r'))
     context.addGlobal("rulemacros", rulemacros.macros)
     # standard macros
     path, dirs = _get_template_path("macros/standard.html")
-    macros = simpleTAL.compileHTMLTemplate(file(path, 'r'))
+    macros = wc.webgui.simpletal.simpleTAL.compileHTMLTemplate(file(path, 'r'))
     context.addGlobal("macros", macros.macros)
     # used by navigation macro
     context.addGlobal("nav", {filename.replace('.', '_'): True})
     # page template name
     context.addGlobal("filename", filename)
     # base url
-    context.addGlobal("baseurl", "http://localhost:%d/" % config['port'])
+    context.addGlobal("baseurl", "http://localhost:%d/" % wc.config['port'])
     # language
     context.addGlobal("lang", lang)
     # other available languges

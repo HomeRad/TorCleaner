@@ -87,7 +87,6 @@ class Dispatcher (object):
         else:
             self.socket = None
 
-
     def __repr__ (self):
         status = [self.__class__.__module__+"."+self.__class__.__name__]
         if self.accepting and self.addr:
@@ -104,16 +103,13 @@ class Dispatcher (object):
         MAX = 2L*sys.maxint+1
         return '<%s at %#x>' % (' '.join(status), id(self)&MAX)
 
-
     def add_channel (self):
         socket_map[self.fileno()] = self
-
 
     def del_channel (self):
         fd = self.fileno()
         if socket_map.has_key(fd):
             del socket_map[fd]
-
 
     def create_socket (self, family, socktype, sslctx=None):
         self.family_and_type = family, socktype
@@ -121,11 +117,9 @@ class Dispatcher (object):
         self.socket.setblocking(0)
         self.add_channel()
 
-
     def set_socket (self, sock):
         self.socket = sock
         self.add_channel()
-
 
     def set_reuse_addr (self):
         # try to re-use a server port if possible
@@ -138,7 +132,6 @@ class Dispatcher (object):
         except socket.error:
             pass
 
-
     # ==================================================
     # predicates for select()
     # these are used as filters for the lists of sockets
@@ -147,7 +140,6 @@ class Dispatcher (object):
 
     def readable (self):
         return True
-
 
     if os.name == 'mac':
         # The macintosh will select a listening socket for
@@ -158,7 +150,6 @@ class Dispatcher (object):
         def writable (self):
             return True
 
-
     # ==================================================
     # socket object methods.
     # ==================================================
@@ -166,18 +157,15 @@ class Dispatcher (object):
     def fileno (self):
         return self.socket.fileno()
 
-
     def listen (self, num):
         self.accepting = True
         if os.name == 'nt' and num > 5:
             num = 1
         return self.socket.listen(num)
 
-
     def bind (self, addr):
         self.addr = addr
         return self.socket.bind(addr)
-
 
     def connect (self, address):
         self.connected = False
@@ -192,7 +180,6 @@ class Dispatcher (object):
         else:
             raise socket.error, (err, errno.errorcode[err])
 
-
     def accept (self):
         # XXX can return either an address pair or None
         try:
@@ -203,7 +190,6 @@ class Dispatcher (object):
                 pass
             else:
                 raise socket.error, why
-
 
     def send (self, data):
         try:
@@ -216,7 +202,6 @@ class Dispatcher (object):
                 self.handle_close()
                 return 0
             raise
-
 
     def recv (self, buffer_size):
         try:
@@ -236,7 +221,6 @@ class Dispatcher (object):
             else:
                 raise socket.error, why
 
-
     def close (self):
         self.del_channel()
         if hasattr(self.socket, "do_handshake"):
@@ -248,7 +232,6 @@ class Dispatcher (object):
             except socket.error:
                 pass
         self.socket.close()
-
 
     def handle_read_event (self):
         if self.accepting:
@@ -264,7 +247,6 @@ class Dispatcher (object):
         else:
             self.handle_read()
 
-
     def handle_write_event (self):
         # getting a write implies that we are connected
         if not self.connected:
@@ -273,35 +255,28 @@ class Dispatcher (object):
         else:
             self.handle_write()
 
-
     def handle_expt_event (self):
         self.handle_expt()
-
 
     def handle_error (self, what):
         exception(PROXY, "%s %s", self, what)
 
-
     def handle_expt (self):
         warn(PROXY, '%s unhandled exception', self)
-
 
     def handle_read (self):
         warn(PROXY, '%s unhandled read event', self)
 
-
     def handle_write (self):
         warn(PROXY, '%s unhandled write event', self)
-
 
     def handle_connect (self):
         warn(PROXY, '%s unhandled connect event', self)
 
-
     def handle_accept (self):
         warn(PROXY, '%s unhandled accept event', self)
-
 
     def handle_close (self):
         warn(PROXY, '%s unhandled close event', self)
         self.close()
+

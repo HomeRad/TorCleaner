@@ -1,17 +1,17 @@
 # -*- coding: iso-8859-1 -*-
 """ssl client connection"""
 
-from wc import i18n
-from wc.url import spliturl, url_norm
+import wc
+import wc.url
+import wc.webgui
+import wc.proxy.HttpClient
+import wc.proxy.ClientServerMatchmaker
+import wc.proxy.SslConnection
+import wc.proxy.Allowed
 from wc.log import *
-from wc.webgui import WebConfig
-from wc.proxy.HttpClient import HttpClient
-from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
-from wc.proxy.SslConnection import SslConnection
-from wc.proxy.Allowed import AllowedSslClient
 
 
-class SslClient (HttpClient, SslConnection):
+class SslClient (wc.proxy.HttpClient.HttpClient, wc.proxy.SslConnection.SslConnection):
     """Handle SSL server requests, no proxy functionality is here.
        Response data will be encrypted with the WebCleaner SSL server
        certificate. The browser will complain about differing certificate
@@ -22,7 +22,7 @@ class SslClient (HttpClient, SslConnection):
 
     def __init__ (self, sock, addr):
         super(SslClient, self).__init__(sock, addr)
-        self.allow = AllowedSslClient()
+        self.allow = wc.proxy.Allowed.AllowedSslClient()
 
 
     def __repr__ (self):
@@ -47,14 +47,14 @@ class SslClient (HttpClient, SslConnection):
         # enforce a maximum url length
         if len(self.url) > 2048:
             error(PROXY, "%s request url length %d chars is too long", self, len(self.url))
-            self.error(400, i18n._("URL too long"),
-                       txt=i18n._('URL length limit is %d bytes.')%2048)
+            self.error(400, wc.i18n._("URL too long"),
+                       txt=wc.i18n._('URL length limit is %d bytes.')%2048)
             return False
         if len(self.url) > 255:
             warn(PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # and unquote again
-        self.url = url_norm(self.url)
-        self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+        self.url = wc.url.url_norm(self.url)
+        self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
         # fix missing trailing /
         if not self.document:
             self.document = '/'
@@ -64,7 +64,7 @@ class SslClient (HttpClient, SslConnection):
             self.scheme = "https"
         if not self.allow.scheme(self.scheme):
             warn(PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
-            self.error(403, i18n._("Forbidden"))
+            self.error(403, wc.i18n._("Forbidden"))
             return False
         # request is ok
         return True
@@ -74,7 +74,7 @@ class SslClient (HttpClient, SslConnection):
         assert self.state=='receive', "%s server_request in non-receive state"%self
         debug(PROXY, "%s server_request", self)
         # this object will call server_connected at some point
-        ClientServerMatchmaker(self, self.request, self.headers, self.content)
+        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self, self.request, self.headers, self.content)
 
 
     def handle_local (self, is_public_doc=False):
@@ -83,7 +83,7 @@ class SslClient (HttpClient, SslConnection):
         form = None
         self.url = "/blocked.html"
         self.headers['Host'] = 'localhost\r'
-        WebConfig(self, self.url, form, self.protocol, self.headers)
+        wc.webgui.WebConfig(self, self.url, form, self.protocol, self.headers)
 
 
     def mangle_request_headers (self, headers):

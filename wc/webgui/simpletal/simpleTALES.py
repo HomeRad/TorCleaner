@@ -36,9 +36,9 @@ Module Dependencies: logging
 
 import copy
 import logging
-from wc.webgui import simpletal
+import wc.webgui.simpleTal
 
-__version__ = simpletal.__version__
+__version__ = wc.webgui.simpletal.__version__
 
 
 class ContextVariable (object):

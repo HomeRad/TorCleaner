@@ -42,10 +42,10 @@ import cgi
 import codecs
 import re
 import htmlentitydefs
-from wc.webgui import simpletal
-from StringIO import StringIO
+import StringIO
+import wc.webgui.simpleTal
 
-__version__ = simpletal.__version__
+__version__ = wc.webgui.simpletal.__version__
 
 try:
     # check to see if pyxml is installed
@@ -1641,7 +1641,7 @@ def compileHTMLTemplate (template, inputEncoding="ISO-8859-1"):
     template.expand (context, outputFile)
     """
     if isinstance(template, basestring):
-        templateFile = StringIO(template)
+        templateFile = StringIO.StringIO(template)
     else:
         templateFile = template
     compiler = HTMLTemplateCompiler()
@@ -1656,7 +1656,7 @@ def compileXMLTemplate (template):
     """
     if isinstance(template, basestring):
         # It's a string!
-        templateFile = StringIO(template)
+        templateFile = StringIO.StringIO(template)
     else:
         templateFile = template
     compiler = XMLTemplateCompiler()

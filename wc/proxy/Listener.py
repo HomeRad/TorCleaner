@@ -5,19 +5,19 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import socket
-from wc import config
+import wc
+import wc.proxy.Dispatcher
 from wc.log import *
-from wc.proxy.Dispatcher import Dispatcher
 
 
-class Listener (Dispatcher):
+class Listener (wc.proxy.Dispatcher.Dispatcher):
     """A listener accepts connections on a specified port. Each
        accepted incoming connection gets delegated to an instance of the
        handler class"""
     def __init__ (self, port, handler, sslctx=None):
         """create a socket on specified port and start listening to it"""
         super(Listener, self).__init__()
-        self.addr = (('', 'localhost')[config['local_sockets_only']], port)
+        self.addr = (('', 'localhost')[wc.config['local_sockets_only']], port)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=sslctx)
         if sslctx is not None:
             self.socket.set_accept_state()

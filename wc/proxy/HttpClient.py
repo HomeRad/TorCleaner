@@ -8,30 +8,23 @@ import time
 import cgi
 import urlparse
 import os
-from cStringIO import StringIO
-from wc import i18n, config
-from wc.proxy.StatefulConnection import StatefulConnection
-from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
-from wc.proxy.ServerHandleDirectly import ServerHandleDirectly
-from wc.proxy.UnchunkStream import UnchunkStream
-from wc.proxy.Allowed import AllowedHttpClient
-from wc.proxy import get_http_version, fix_http_version
-from wc.proxy.Headers import client_set_headers, client_get_max_forwards, WcMessage
-from wc.proxy.Headers import client_remove_encoding_headers, has_header_value
-from wc.proxy.Headers import get_content_length, client_set_encoding_headers
-from wc.proxy.auth import *
-from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE, NTLMSSP_CHALLENGE
-from wc.url import spliturl, url_norm, url_quote
-from urllib import splitnport
+import urllib
+import cStringIO as StringIO
+import wc
+import wc.proxy.StatefulConnection
+import wc.proxy.ClientServerMatchmaker
+import wc.proxy.ServerHandleDirectly
+import wc.proxy.UnchunkStream
+import wc.proxy.Allowed
+import wc.proxy
+import wc.proxy.Headers
+import wc.proxy.auth
+import wc.proxy.auth.ntlm
+import wc.url
+import wc.filter
+import wc.webgui
+import wc.google
 from wc.log import *
-from wc.google import google_try_status, get_google_context
-from wc.webgui import WebConfig
-from wc.filter import FILTER_REQUEST
-from wc.filter import FILTER_REQUEST_HEADER
-from wc.filter import FILTER_REQUEST_DECODE
-from wc.filter import FILTER_REQUEST_MODIFY
-from wc.filter import FILTER_REQUEST_ENCODE
-from wc.filter import applyfilter, get_filterattrs, FilterRating
 
 
 _all_methods = ['GET', 'HEAD', 'CONNECT', 'POST', 'PUT']
@@ -46,7 +39,7 @@ def is_http_method (s):
     return False
 
 
-class HttpClient (StatefulConnection):
+class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
     """States:
         request (read first line)
         headers (read HTTP headers)
@@ -60,7 +53,7 @@ class HttpClient (StatefulConnection):
         """initialize connection data, test if client connection is allowed"""
         super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
-        self.allow = AllowedHttpClient()
+        self.allow = wc.proxy.Allowed.AllowedHttpClient()
         self.reset()
         host = self.addr[0]
         if not self.allow.host(host):
@@ -86,15 +79,15 @@ class HttpClient (StatefulConnection):
         """display error page"""
         self.state = 'done'
         debug(PROXY, '%s error %r (%d)', self, msg, status)
-        if status in google_try_status and config['try_google']:
+        if status in wc.google.google_try_status and wc.config['try_google']:
             self.try_google(self.url, msg)
         else:
-            err = i18n._('Proxy Error %d %s') % (status, msg)
+            err = wc.i18n._('Proxy Error %d %s') % (status, msg)
             if txt:
                 err = "%s (%s)" % (err, txt)
             form = None
             # this object will call server_connected at some point
-            WebConfig(self, '/error.html', form, self.protocol, self.headers,
+            wc.webgui.WebConfig(self, '/error.html', form, self.protocol, self.headers,
                       localcontext={'error': err,}, status=status, msg=msg,
                       auth=auth)
 
@@ -134,23 +127,23 @@ class HttpClient (StatefulConnection):
         try:
             self.method, self.url, protocol = self.request.split()
         except ValueError:
-            self.error(400, i18n._("Can't parse request"))
+            self.error(400, wc.i18n._("Can't parse request"))
             return
         if  not self.allow.method(self.method):
-            self.error(405, i18n._("Method Not Allowed"))
+            self.error(405, wc.i18n._("Method Not Allowed"))
             return
         # fix broken url paths, and unquote
-        self.url = url_norm(self.url)
+        self.url = wc.url.url_norm(self.url)
         if not self.url:
-            self.error(400, i18n._("Empty URL"))
+            self.error(400, wc.i18n._("Empty URL"))
             return
-        self.attrs = get_filterattrs(self.url, [FILTER_REQUEST])
-        self.protocol = fix_http_version(protocol)
-        self.http_ver = get_http_version(self.protocol)
-        self.request = "%s %s %s" % (self.method, url_quote(self.url), self.protocol)
+        self.attrs = wc.filter.get_filterattrs(self.url, [wc.filter.FILTER_REQUEST])
+        self.protocol = wc.proxy.fix_http_version(protocol)
+        self.http_ver = wc.proxy.get_http_version(self.protocol)
+        self.request = "%s %s %s" % (self.method, wc.url.url_quote(self.url), self.protocol)
         debug(PROXY, "%s request %r", self, self.request)
         # filter request
-        self.request = applyfilter(FILTER_REQUEST, self.request,
+        self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, self.request,
                                    "finish", self.attrs)
         # final request checking
         if not self.fix_request():
@@ -167,21 +160,21 @@ class HttpClient (StatefulConnection):
         # enforce a maximum url length
         if len(self.url) > 2048:
             error(PROXY, "%s request url length %d chars is too long", self, len(self.url))
-            self.error(400, i18n._("URL too long"),
-                       txt=i18n._('URL length limit is %d bytes.')%2048)
+            self.error(400, wc.i18n._("URL too long"),
+                       txt=wc.i18n._('URL length limit is %d bytes.')%2048)
             return False
         if len(self.url) > 255:
             warn(PROXY, "%s request url length %d chars is very long", self, len(self.url))
         # and unquote again
-        self.url = url_norm(self.url)
+        self.url = wc.url.url_norm(self.url)
         # fix CONNECT urls
         if self.method=='CONNECT':
             # XXX scheme could also be nntps
             self.scheme = 'https'
-            self.hostname, self.port = splitnport(self.url, 443)
+            self.hostname, self.port = urllib.splitnport(self.url, 443)
             self.document = '/'
         else:
-            self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
+            self.scheme, self.hostname, self.port, self.document = wc.url.spliturl(self.url)
             # fix missing trailing /
             if not self.document:
                 self.document = '/'
@@ -192,17 +185,17 @@ class HttpClient (StatefulConnection):
             self.scheme = 'http'
         if not self.allow.scheme(self.scheme):
             warn(PROXY, "%s forbidden scheme %r encountered", self, self.scheme)
-            self.error(403, i18n._("Forbidden"))
+            self.error(403, wc.i18n._("Forbidden"))
             return False
         # check CONNECT values sanity
         if self.method == 'CONNECT':
             if self.scheme != 'https':
                 warn(PROXY, "%s CONNECT method with forbidden scheme %r encountered", self, self.scheme)
-                self.error(403, i18n._("Forbidden"))
+                self.error(403, wc.i18n._("Forbidden"))
                 return False
             if not self.allow.connect_port(self.port):
                 warn(PROXY, "%s CONNECT method with invalid port %r encountered", self, str(self.port))
-                self.error(403, i18n._("Forbidden"))
+                self.error(403, wc.i18n._("Forbidden"))
                 return False
         # request is ok
         return True
@@ -216,8 +209,8 @@ class HttpClient (StatefulConnection):
             return
         i += 4 # Skip over newline terminator
         # the first 2 chars are the newline of request
-        fp = StringIO(self.read(i)[2:])
-        msg = WcMessage(fp)
+        fp = StringIO.StringIO(self.read(i)[2:])
+        msg = wc.proxy.Headers.WcMessage(fp)
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
@@ -226,20 +219,20 @@ class HttpClient (StatefulConnection):
         self.attrs['headers'] = msg
         self.set_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
-        self.compress = client_set_encoding_headers(msg)
+        self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
         # filter headers
-        self.headers = applyfilter(FILTER_REQUEST_HEADER,
+        self.headers = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_HEADER,
                                    msg, "finish", self.attrs)
         # add decoders
         self.decoders = []
         # if content-length header is missing, assume zero length
-        self.bytes_remaining = get_content_length(self.headers, 0)
+        self.bytes_remaining = wc.proxy.Headers.get_content_length(self.headers, 0)
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
             debug(PROXY, '%s Transfer-encoding %r', self, self.headers['Transfer-encoding'])
-            self.decoders.append(UnchunkStream())
-            client_remove_encoding_headers(self.headers)
+            self.decoders.append(wc.proxy.UnchunkStream.UnchunkStream())
+            wc.proxy.Headers.client_remove_encoding_headers(self.headers)
             self.bytes_remaining = None
         if self.bytes_remaining is None:
             self.persistent = False
@@ -249,12 +242,12 @@ class HttpClient (StatefulConnection):
             else:
                 defaultport = 80
             host = self.headers['Host']
-            self.hostname, self.port = splitnport(host, defaultport)
+            self.hostname, self.port = urllib.splitnport(host, defaultport)
         if not self.hostname:
             error(PROXY, "%s missing hostname in request", self)
-            self.error(400, i18n._("Bad Request"))
+            self.error(400, wc.i18n._("Bad Request"))
         # local request?
-        if self.hostname in config['localhosts'] and self.port==config['port']:
+        if self.hostname in wc.config['localhosts'] and self.port==wc.config['port']:
             # this is a direct proxy call, jump directly to content
             self.state = 'content'
             return
@@ -265,40 +258,41 @@ class HttpClient (StatefulConnection):
                 self.headers['Host'] = "%s:%d\r"%(self.hostname, self.port)
             else:
                 self.headers['Host'] = "%s\r"%self.hostname
-        if config["proxyuser"]:
-            creds = get_header_credentials(self.headers, 'Proxy-Authorization')
+        if wc.config["proxyuser"]:
+            creds = wc.proxy.auth.get_header_credentials(self.headers, 'Proxy-Authorization')
             if not creds:
-                auth = ", ".join(get_challenges())
-                self.error(407, i18n._("Proxy Authentication Required"),
+                auth = ", ".join(wc.proxy.auth.get_challenges())
+                self.error(407, wc.i18n._("Proxy Authentication Required"),
                            auth=auth)
                 return
             if 'NTLM' in creds:
-                if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
+                if creds['NTLM'][0]['type']==wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     attrs = {
                         'host': creds['NTLM'][0]['host'],
                         'domain': creds['NTLM'][0]['domain'],
-                        'type': NTLMSSP_CHALLENGE,
+                        'type': wc.proxy.auth.ntlm.NTLMSSP_CHALLENGE,
                     }
-                    auth = ",".join(get_challenges(**attrs))
-                    self.error(407, i18n._("Proxy Authentication Required"),
+                    auth = ",".join(wc.proxy.auth.get_challenges(**attrs))
+                    self.error(407, wc.i18n._("Proxy Authentication Required"),
                                auth=auth)
                     return
             # XXX the data=None argument should hold POST data
-            if not check_credentials(creds, username=config['proxyuser'],
-                                     password_b64=config['proxypass'],
+            if not wc.proxy.auth.check_credentials(creds, username=wc.config['proxyuser'],
+                                     password_b64=wc.config['proxypass'],
                                      uri=get_auth_uri(self.url),
                                      method=self.method, data=None):
                 warn(AUTH, "Bad proxy authentication from %s", self.addr[0])
-                auth = ", ".join(get_challenges())
-                self.error(407, i18n._("Proxy Authentication Required"),
+                auth = ", ".join(wc.proxy.auth.get_challenges())
+                self.error(407, wc.i18n._("Proxy Authentication Required"),
                            auth=auth)
                 return
         if self.method in ['OPTIONS', 'TRACE'] and \
-           client_get_max_forwards(self.headers)==0:
+           wc.proxy.Headers.client_get_max_forwards(self.headers)==0:
             # XXX display options ?
             self.state = 'done'
-            ServerHandleDirectly(self, '%s 200 OK'%self.protocol, 200,
-                 WcMessage(StringIO('Content-Type: text/plain\r\n\r\n')), '')
+            wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
+                 '%s 200 OK'%self.protocol, 200,
+        wc.proxy.Headers.WcMessage(StringIO.StringIO('Content-Type: text/plain\r\n\r\n')), '')
             return
         self.state = 'content'
 
@@ -308,15 +302,15 @@ class HttpClient (StatefulConnection):
         # look if client wants persistent connections
         if http_ver >= (1,1):
             self.persistent = \
-              not (has_header_value(headers, 'Proxy-Connection', 'Close') or
-                   has_header_value(headers, 'Connection', 'Close'))
+              not (wc.proxy.Headers.has_header_value(headers, 'Proxy-Connection', 'Close') or
+                   wc.proxy.Headers.has_header_value(headers, 'Connection', 'Close'))
         else:
-            self.persistent = has_header_value(headers, "Proxy-Connection", "Keep-Alive")
+            self.persistent = wc.proxy.Headers.has_header_value(headers, "Proxy-Connection", "Keep-Alive")
 
 
     def mangle_request_headers (self, headers):
         """modify request headers"""
-        client_set_headers(headers)
+        wc.proxy.Headers.client_set_headers(headers)
 
 
     def process_content (self):
@@ -332,9 +326,9 @@ class HttpClient (StatefulConnection):
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
-        data = applyfilter(FILTER_REQUEST_DECODE, data, "filter", self.attrs)
-        data = applyfilter(FILTER_REQUEST_MODIFY, data, "filter", self.attrs)
-        data = applyfilter(FILTER_REQUEST_ENCODE, data, "filter", self.attrs)
+        data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, data, "filter", self.attrs)
+        data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, data, "filter", self.attrs)
+        data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, data, "filter", self.attrs)
         self.content += data
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
@@ -342,23 +336,23 @@ class HttpClient (StatefulConnection):
             warn(PROXY, "client received %d bytes more than content-length",
                  (-self.bytes_remaining))
         if is_closed or self.bytes_remaining <= 0:
-            data = applyfilter(FILTER_REQUEST_DECODE, "", "finish", self.attrs)
-            data = applyfilter(FILTER_REQUEST_MODIFY, data, "finish", self.attrs)
-            data = applyfilter(FILTER_REQUEST_ENCODE, data, "finish", self.attrs)
+            data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, "", "finish", self.attrs)
+            data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, data, "finish", self.attrs)
+            data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, data, "finish", self.attrs)
             self.content += data
             if self.content and not self.headers.has_key('Content-Length'):
                 self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
-            is_local = self.hostname in config['localhosts'] and \
-               self.port in (config['port'], config['sslport'])
-            if config['adminuser'] and not config['adminpass']:
+            is_local = self.hostname in wc.config['localhosts'] and \
+               self.port in (wc.config['port'], wc.config['sslport'])
+            if wc.config['adminuser'] and not wc.config['adminpass']:
                 if is_local and self.allow.public_document(self.document):
                     self.handle_local(is_public_doc=True)
                 else:
                     # ignore request, must init admin password
-                    self.headers['Location'] = "http://localhost:%d/adminpass.html\r"%config['port']
-                    self.error(302, i18n._("Moved Temporarily"))
+                    self.headers['Location'] = "http://localhost:%d/adminpass.html\r"%wc.config['port']
+                    self.error(302, wc.i18n._("Moved Temporarily"))
             elif is_local:
                 # this is a direct proxy call
                 self.handle_local()
@@ -383,8 +377,9 @@ class HttpClient (StatefulConnection):
         """issue server request through ClientServerMatchmaker object"""
         assert self.state=='receive', "%s server_request in non-receive state"%self
         # this object will call server_connected at some point
-        ClientServerMatchmaker(self, self.request, self.headers,
-                               self.content, mime=self.attrs['mime'])
+        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
+                             self.request, self.headers,
+                             self.content, mime=self.attrs['mime'])
 
 
     def server_response (self, server, response, status, headers):
@@ -392,7 +387,7 @@ class HttpClient (StatefulConnection):
         assert server.connected, "%s server was not connected"%self
         debug(PROXY, '%s server_response %r (%d)', self, response, status)
         # try google options
-        if status in google_try_status and config['try_google']:
+        if status in wc.google.google_try_status and wc.config['try_google']:
             server.client_abort()
             self.try_google(self.url, response)
         else:
@@ -412,8 +407,8 @@ class HttpClient (StatefulConnection):
         """display page with google cache links for requests page"""
         debug(PROXY, '%s try_google %r', self, response)
         form = None
-        WebConfig(self, '/google.html', form, self.protocol, self.headers,
-                  localcontext=get_google_context(url, response))
+        wc.webgui.WebConfig(self, '/google.html', form, self.protocol, self.headers,
+                  localcontext=wc.google.get_google_context(url, response))
 
 
     def server_content (self, data):
@@ -469,33 +464,33 @@ class HttpClient (StatefulConnection):
         debug(PROXY, '%s handle_local', self)
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
-            self.error(403, i18n._("Invalid Method"))
+            self.error(403, wc.i18n._("Invalid Method"))
             return
         # check admin pass
-        if not is_public_doc and config["adminuser"]:
+        if not is_public_doc and wc.config["adminuser"]:
             creds = get_header_credentials(self.headers, 'Authorization')
             if not creds:
                 auth = ", ".join(get_challenges())
-                self.error(401, i18n._("Authentication Required"), auth=auth)
+                self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                 return
             if 'NTLM' in creds:
-                if creds['NTLM'][0]['type']==NTLMSSP_NEGOTIATE:
+                if creds['NTLM'][0]['type']==wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
                     auth = ",".join(creds['NTLM'][0])
-                    self.error(401, i18n._("Authentication Required"), auth=auth)
+                    self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                     return
             # XXX the data=None argument should hold POST data
-            if not check_credentials(creds, username=config['adminuser'],
-                                     password_b64=config['adminpass'],
+            if not check_credentials(creds, username=wc.config['adminuser'],
+                                     password_b64=wc.config['adminpass'],
                                      uri=get_auth_uri(self.url),
                                      method=self.method, data=None):
                 warn(AUTH, "Bad authentication from %s", self.addr[0])
                 auth = ", ".join(get_challenges())
-                self.error(401, i18n._("Authentication Required"), auth=auth)
+                self.error(401, wc.i18n._("Authentication Required"), auth=auth)
                 return
         # get cgi form data
         form = self.get_form_data()
         # this object will call server_connected at some point
-        WebConfig(self, self.url, form, self.protocol, self.headers)
+        wc.webgui.WebConfig(self, self.url, form, self.protocol, self.headers)
 
 
     def get_form_data (self):
@@ -508,7 +503,7 @@ class HttpClient (StatefulConnection):
                 form = cgi.parse_qs(qs)
         elif self.method=='POST':
             # XXX this uses FieldStorage internals
-            form = cgi.FieldStorage(fp=StringIO(self.content),
+            form = cgi.FieldStorage(fp=StringIO.StringIO(self.content),
                                     headers=self.headers,
                                     environ={'REQUEST_METHOD': 'POST'})
         return form

@@ -5,9 +5,9 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 
-from wc.proxy.Connection import Connection
+import wc.proxy.Connection
 
-class Interpreter (Connection):
+class Interpreter (wc.proxy.Connection.Connection):
     """accept python commands on a telnet-like prompt and send them
        to a running proxy instance"""
 
@@ -17,11 +17,9 @@ class Interpreter (Connection):
         super(Interpreter, self).__init__(sock=sock)
         self.write('>> ')
 
-
     def __repr__ (self):
         """return class name"""
         return '<interpreter>'
-
 
     def process_read (self):
         """read and send commands given at the displayed prompt until
@@ -44,4 +42,3 @@ class Interpreter (Connection):
             self.write('>> ')
 
 # TODO: make other modules accessible somehow
-

@@ -8,6 +8,7 @@ __date__    = "$Date$"[7:-2]
 
 import zlib
 
+
 class DeflateStream (object):
     """Filter object unzip'ing all data"""
 
@@ -16,16 +17,13 @@ class DeflateStream (object):
         self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
         self.closed = False
 
-
     def __repr__ (self):
         """object representation"""
         return '<%s closed=%s>'%('deflate', self.closed)
 
-
     def decode (self, s):
         """unzip given data s and return decompressed data"""
         return self.decompressor.decompress(s)
-
 
     def flush (self):
         """flush all buffered data and return it"""

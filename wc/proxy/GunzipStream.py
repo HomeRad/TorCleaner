@@ -11,16 +11,12 @@ but exports a proxy4 encoding interface:
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-# TEST CASE:
-#    http://tv.excite.com/grid
-
-# Changes: fall back to non-gzip on error to defeat b0rked servers
-
-from wc.proxy.DeflateStream import DeflateStream
-from wc import i18n
+import wc
+import wc.proxy.DeflateStream
 from wc.log import *
 
-class GunzipStream (DeflateStream):
+
+class GunzipStream (wc.proxy.DeflateStream.DeflateStream):
     """stream filter ungzipp'ing data"""
 
     # Flags in the gzip header
@@ -33,12 +29,10 @@ class GunzipStream (DeflateStream):
         self.header_seen = False
         self.error = False
 
-
     def __repr__ (self):
         """object representation"""
         return '<%s closed=%s buflen=%d error=%s>'%\
                ('gunzip', self.closed, len(self.buf), self.error)
-
 
     def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
@@ -47,13 +41,13 @@ class GunzipStream (DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            warn(PROXY, i18n._("zlib error: not gzip format, disabling gunzip"))
+            warn(PROXY, wc.i18n._("zlib error: not gzip format, disabling gunzip"))
             self.error = True
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            warn(PROXY, i18n._("zlib error: unknown compression method, disabling gunzip"))
+            warn(PROXY, wc.i18n._("zlib error: unknown compression method, disabling gunzip"))
             self.error = True
             return
 
@@ -90,7 +84,6 @@ class GunzipStream (DeflateStream):
         self.buf = s
         self.header_seen = True
 
-
     def decode (self, s):
         """gunzip data s"""
         if self.error:
@@ -111,7 +104,6 @@ class GunzipStream (DeflateStream):
 
         # We have seen the header, so we can move on to zlib
         return super(GunzipStream, self).decode(s)
-
 
     def flush (self):
         """flush buffer data and return it"""

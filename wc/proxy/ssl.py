@@ -2,14 +2,14 @@
 """ssl related utility functions"""
 
 import os
-from wc import ConfigDir, AppName
+import wc
 from OpenSSL import SSL, crypto
 from wc.log import *
 
 
 def absfile (fname):
     """return absolute filename for certificate files"""
-    return os.path.join(ConfigDir, fname)
+    return os.path.join(wc.ConfigDir, fname)
 
 
 def dumpCertificate (cert, filetype=crypto.FILETYPE_PEM):
@@ -68,7 +68,7 @@ def create_certificates ():
     cacert = createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5)) # five years
     file(absfile('CA.pkey'), 'w').write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))
     file(absfile('CA.cert'), 'w').write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))
-    for (fname, cname) in [('client', '%s Client'%AppName), ('server', '%s Server'%AppName)]:
+    for (fname, cname) in [('client', '%s Client'%wc.AppName), ('server', '%s Server'%wc.AppName)]:
         pkey = createKeyPair(TYPE_RSA, 1024)
         req = createCertRequest(pkey, CN=cname)
         cert = createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5)) # five years

@@ -11,9 +11,8 @@ import socket
 import select
 import re
 import time
-from wc import i18n, ip
+import wc
 from wc.log import *
-from wc.proxy.LimitQueue import LimitQueue
 
 
 # test for IPv6, both in Python build and in kernel build
@@ -44,10 +43,10 @@ def get_http_version (protocol):
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
         if f > (1,1):
-            error(PROXY, i18n._("unsupported HTTP version %s"), f)
+            error(PROXY, wc.i18n._("unsupported HTTP version %s"), f)
             f = (1,1)
         return f
-    error(PROXY, i18n._("invalid HTTP version %r"), protocol)
+    error(PROXY, wc.i18n._("invalid HTTP version %r"), protocol)
     return (1,0)
 
 

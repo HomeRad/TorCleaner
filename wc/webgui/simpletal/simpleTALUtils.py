@@ -42,10 +42,11 @@ import codecs
 import sgmllib
 import cgi
 import re
-from wc.webgui import simpletal, simpleTAL
-from StringIO import StringIO
+import StringIO
+import wc.webgui.simpleTal
 
-__version__ = simpletal.__version__
+__version__ = wc.webgui.simpletal.__version__
+
 
 # This is used to check for already escaped attributes.
 ESCAPED_TEXT_REGEX= re.compile(r"\&\S+?;")
@@ -70,9 +71,9 @@ class HTMLStructureCleaner (sgmllib.SGMLParser, object):
         if type(content) == type(""):
             # Not unicode, convert
             converter = codecs.lookup(encoding)[1]
-            fp = StringIO(converter(content)[0])
+            fp = StringIO.StringIO(converter(content)[0])
         elif type(content) == type(u""):
-            fp = StringIO(content)
+            fp = StringIO.StringIO(content)
         else:
             # Treat it as a file type object - and convert it if we have an encoding
             if encoding is not None:
@@ -81,7 +82,7 @@ class HTMLStructureCleaner (sgmllib.SGMLParser, object):
             else:
                 fp = content
 
-        self.outputFile = StringIO(u"")
+        self.outputFile = StringIO.StringIO(u"")
         self.feed(fp.read())
         self.close()
         return self.outputFile.getvalue()
@@ -276,7 +277,7 @@ class MacroExpansionInterpreter (simpleTAL.TemplateInterpreter):
 def ExpandMacros (context, template, outputEncoding="ISO-8859-1"):
     """expand macros of template within context, return result with
        given output encoding"""
-    out = StringIO()
+    out = StringIO.StringIO()
     interp = MacroExpansionInterpreter()
     interp.initialise(context, out)
     template.expand(context, out, outputEncoding=outputEncoding, interpreter=interp)

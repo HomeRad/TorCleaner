@@ -11,6 +11,7 @@ from wc.log import *
 
 match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
 
+
 class UnchunkStream (object):
     """stream filter for chunked transfer encoding
     States:

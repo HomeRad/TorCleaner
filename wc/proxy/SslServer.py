@@ -2,30 +2,29 @@
 """connection handling WebCleaner SSL server <--> Remote SSL server"""
 
 import socket
-from wc import config
+import wc
+import wc.proxy.HttpServer
+import wc.proxy.SslConnection
+import wc.proxy.ssl
 from wc.log import *
-from wc.proxy.HttpServer import HttpServer, flush_decoders
-from wc.proxy.SslConnection import SslConnection
-from wc.proxy.Headers import server_set_encoding_headers, server_set_content_headers
-from wc.proxy.ssl import get_clientctx
 
 
-class SslServer (HttpServer, SslConnection):
+class SslServer (wc.proxy.HttpServer.HttpServer,
+                 wc.proxy.SslConnection.SslConnection):
     """Server object for SSL connections. Since this class must not have Proxy
        functionality, the header mangling is different."""
 
     def __init__ (self, ipaddr, port, client):
         """initialize connection object and connect to remove server"""
-        super(HttpServer, self).__init__(client, 'connect')
+        super(wc.proxy.HttpServer.HttpServer, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
         self.reset()
         # attempt connect
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=get_clientctx())
-        self.socket.settimeout(config['timeout'])
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM, sslctx=wc.proxy.ssl.get_clientctx())
+        self.socket.settimeout(wc.config['timeout'])
         self.try_connect()
         self.socket.set_connect_state()
-
 
     def __repr__ (self):
         """object description"""
@@ -41,16 +40,14 @@ class SslServer (HttpServer, SslConnection):
         #if len(extra) > 46: extra = extra[:43] + '...'
         return '<%s:%-8s %s>' % ('sslserver', self.state, extra)
 
-
     def mangle_request_headers (self):
         """modify HTTP request headers"""
         # nothing to do
         pass
 
-
     def mangle_response_headers (self):
         """modify HTTP response headers"""
-        self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
+        self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
             self.persistent = False
         # 304 Not Modified does not send any type info, because it was cached
@@ -60,10 +57,9 @@ class SslServer (HttpServer, SslConnection):
             data = self.recv_buffer
             for decoder in decoders:
                 data = decoder.decode(data)
-            data += flush_decoders(decoders)
-            server_set_content_headers(self.headers, data, self.document,
+            data += wc.proxy.HttpServer.flush_decoders(decoders)
+            wc.proxy.Headers.server_set_content_headers(self.headers, data, self.document,
                                        self.mime, self.url)
-
 
     def process_recycle (self):
         """recycle this server connection into the connection pool"""
