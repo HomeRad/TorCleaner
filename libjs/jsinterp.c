@@ -4298,7 +4298,7 @@ js_Interpret(JSContext *cx, jsval *result)
              * and has stub getter and setter, into a "fast global" accessed
              * by the JSOP_*GVAR opcodes.
              */
-            if (script->numGlobalVars &&
+            if (atomIndex < script->numGlobalVars &&
                 (attrs & JSPROP_PERMANENT) &&
                 obj2 == obj &&
                 OBJ_IS_NATIVE(obj)) {
@@ -4423,6 +4423,7 @@ js_Interpret(JSContext *cx, jsval *result)
             if (!ok)
                 goto out;
 
+#if 0
             if (attrs == (JSPROP_ENUMERATE | JSPROP_PERMANENT) &&
                 script->numGlobalVars) {
                 /*
@@ -4433,6 +4434,7 @@ js_Interpret(JSContext *cx, jsval *result)
                 sprop = (JSScopeProperty *) prop;
                 fp->vars[atomIndex] = INT_TO_JSVAL(sprop->slot);
             }
+#endif
             OBJ_DROP_PROPERTY(cx, parent, prop);
             break;
           }
@@ -4633,6 +4635,7 @@ js_Interpret(JSContext *cx, jsval *result)
                 goto out;
             }
 
+#if 0
             if (attrs == 0 && script->numGlobalVars) {
                 /*
                  * As with JSOP_DEFVAR and JSOP_DEFCONST (above), fast globals
@@ -4642,6 +4645,7 @@ js_Interpret(JSContext *cx, jsval *result)
                 sprop = (JSScopeProperty *) prop;
                 fp->vars[atomIndex] = INT_TO_JSVAL(sprop->slot);
             }
+#endif
             OBJ_DROP_PROPERTY(cx, parent, prop);
             break;
           }
