@@ -18,10 +18,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import sys
+if not hasattr(sys, "version_info"):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
+if sys.version_info < (2, 3, 1, 'final', 0):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
 import os
 import stat
 import re
-import sys
 import string
 from types import StringType, TupleType, ListType
 from distutils.core import setup, Extension, DEBUG
@@ -284,7 +288,10 @@ class MyBdistWininst (bdist_wininst, object):
             # wininst.exe is in the same directory as bdist_wininst
             # XXX for python2.4, use wininst-X.Y.exe
             directory = os.path.dirname(distutils.command.__file__)
-            filename = os.path.join(directory, "wininst.exe")
+            if sys.version_info < (2, 4, 0, 'final', 0):
+                filename = os.path.join(directory, "wininst.exe")
+            else:
+                filename = os.path.join(directory, "wininst-7.1.exe")
             return open(filename, "rb").read()
         return super(MyBdistWininst, self).get_exe_bytes()
 
