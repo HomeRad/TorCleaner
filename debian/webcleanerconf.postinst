@@ -25,6 +25,7 @@ db_version 2.0
 #     `abort-remove' or `abort-deconfigure'.
 
 package=webcleaner
+PYTHON=/usr/bin/python2
 SITEPACKAGES="/usr/lib/python2.0/site-packages"
 DIRLIST="wc/gui"
 COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
@@ -32,8 +33,8 @@ COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
 case "$1" in
     configure|abort-upgrade|abort-remove|abort-deconfigure)
         for i in $DIRLIST; do
-            python2 -O /usr/lib/python2.0/compileall.py -q $SITEPACKAGES/$i
-            python2 /usr/lib/python2.0/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON -O /usr/lib/python2.0/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON /usr/lib/python2.0/compileall.py -q $SITEPACKAGES/$i
         done
     ;;
     *)

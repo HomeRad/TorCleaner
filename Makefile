@@ -2,9 +2,9 @@
 # call make.
 VERSION=$(shell ./setup.py --version)
 PACKAGE=webcleaner
-DEBS=$(PACKAGE)_$(VERSION)_i386.deb $(PACKAGE)conf_$(VERSION)_all.deb
 HTMLDIR=shell1.sourceforge.net:/home/groups/w/we/$(PACKAGE)/htdocs
 FTPDIR=shell1.sourceforge.net:/home/groups/ftp/pub/$(PACKAGE)/
+
 .PHONY: all
 all:
 	@echo "Read the file INSTALL to see how to build and install"
@@ -28,13 +28,13 @@ cleandeb:
 
 .PHONY: deb
 deb:	locale
-	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k959C340F -rfakeroot
+	debuild binary
+	#env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k959C340F -rfakeroot
 
 
 .PHONY: dist
 dist:	locale
 	./setup.py sdist --formats=gztar
-	# no more .deb creation as its in unstable/testing now
 
 # only visual test
 .PHONY: test
