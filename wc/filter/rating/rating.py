@@ -24,15 +24,25 @@ class Rating (object):
 
     def __init__ (self, url, generic):
         """Initialize url and generic flag. Set category values to
-           an empty map."""
+           an empty map and modified time to now."""
         self.url = url
         self.category_values = {}
         self.generic = generic
+        self.modified = time.time()
 
     def add_category_value (self, category, value):
+        """Add value for given category. Updates modified time."""
         self.category_values[category] = value
+        self.modified = time.time()
 
-    def delete_category (self, category):
+    def remove_category (self, category):
+        """Remove given category. Updates modified time."""
         if category in self.category_values:
             del self.category_values[category]
+            self.modified = time.time()
 
+    def remove_categories (self):
+        """Remove all categories. Updates modified time."""
+        if self.category_values:
+            self.category_values = {}
+            self.modified = time.time()
