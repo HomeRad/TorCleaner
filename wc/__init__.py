@@ -16,8 +16,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os
 import sys
+if not hasattr(sys, "version_info"):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
+if sys.version_info < (2, 3, 1, 'final', 0):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
+import os
 import time
 import socket
 import glob
