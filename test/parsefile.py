@@ -11,14 +11,16 @@ def _main ():
         f = sys.stdin
     else:
         f = file(sys.argv[1])
-    from wc.parser.htmllib import HtmlPrettyPrinter
+    from wc.parser.htmllib import HtmlPrinter
     from wc.parser import htmlsax
-    p = htmlsax.parser(HtmlPrettyPrinter())
+    p = htmlsax.parser(HtmlPrinter())
     p.debug(1)
-    data = f.read(1024)
+    #size = 1024
+    size = 1
+    data = f.read(size)
     while data:
         p.feed(data)
-        data = f.read(1024)
+        data = f.read(size)
     p.flush()
 
 if __name__=='__main__':
