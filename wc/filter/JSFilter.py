@@ -134,7 +134,7 @@ class JSFilter (JSListener):
                 debug(FILTER, "%s JS subprocessor is waiting", self)
                 self.htmlparser.state = ('wait', 'recursive script')
                 self.htmlparser.waited = 1
-                make_timer(0.2, lambda : self.jsEndScript(item))
+                make_timer(2, lambda: self.jsEndScript(item))
                 return
             self.js_htmlparser.debugbuf()
             assert not self.js_htmlparser.inbuf.getvalue()
