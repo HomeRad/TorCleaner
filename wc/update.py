@@ -213,8 +213,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         # parse new filter
         url = baseurl+filename
         page = open_url(url)
-        p = wc.configuration.ZapperParser(fullname, wconfig,
-                                          compile_data=False)
+        p = wc.configuration.ZapperParser(fullname, compile_data=False)
         p.parse(fp=page)
         page.close()
         if wconfig.merge_folder(p.folder, dryrun=dryrun, log=log):
