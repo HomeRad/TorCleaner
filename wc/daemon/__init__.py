@@ -56,20 +56,23 @@ if not iswriteable(pidfile):
 watchfile = pidfile+".watch"
 
 def restart (parent_exit=1):
-    msg1 = stop()
+    msg1, status = stop()
+    if status:
+        return msg1, status
     # sleep 2 seconds, should be enough to clean up
     import time
     time.sleep(2)
-    msg2 = start(parent_exit=parent_exit)
-    return (msg1 or "") + (msg2 or "")
+    msg2, status = start(parent_exit=parent_exit)
+    return (msg1 or "") + (msg2 or ""), status
 
 
 def status ():
     if os.path.exists(pidfile):
         pid = open(pidfile).read()
-        return i18n._("WebCleaner is running (PID %s)") % pid
+        return i18n._("WebCleaner is running (PID %s)") % pid, 0
     else:
-        return i18n._("WebCleaner is not running (no lock file found)")
+        return i18n._("WebCleaner is not running (no lock file found)"), 3
+
 
 # import platform specific functions
 # POSIX
@@ -81,4 +84,3 @@ elif os.name=='nt':
 # other
 else:
     from _other import *
-

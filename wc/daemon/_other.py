@@ -17,13 +17,14 @@
 from wc import i18n
 
 def start (parent_exit=1):
+    """does not return"""
     startfunc()
 
 def stop ():
-    pass
+    return "", 0
 
 def reload ():
-    return i18n._("reload not supported for this platform")
+    return i18n._("reload not supported for this platform"), 1
 
 def startwatch (parent_exit=1, sleepsecs=5):
     start()

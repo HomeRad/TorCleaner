@@ -144,9 +144,10 @@ def main():
             print i18n._("warning: only first command is valid")
     # start the command
     if hasattr(daemon, command):
-        msg = getattr(daemon, command)()
+        msg, status = getattr(daemon, command)()
         if msg:
 	    print >>sys.stderr, msg
+        sys.exit(status)
     else:
         _print_usage(i18n._("Unknown command %s") % `command`)
 

@@ -54,7 +54,7 @@ Do 'webcleaner stop' first.""")
 
 def stop ():
     if not os.path.exists(pidfile):
-        return i18n._("WebCleaner was not running (no lock file found)")
+        return i18n._("WebCleaner was not running (no lock file found)"), 0
     return _stop(pidfile)
 
 
@@ -67,7 +67,7 @@ def _stop (file):
     except OSError:
         msg = i18n._("warning: could not terminate process PID %d")%pid
     os.remove(file)
-    return msg
+    return msg, 0
 
 
 def startwatch (parent_exit=1, sleepsecs=5):
