@@ -56,7 +56,7 @@ class ClientServerMatchmaker:
         self.content = content
         self.nofilter = nofilter
         self.mime = mime
-        debug(BRING_IT_ON, "Proxy:", `self.request`)
+        debug(BRING_IT_ON, "ClientServer:", `self.request`)
         self.method, self.url, protocol = self.request.split()
         scheme, hostname, port, document = spliturl(self.url)
         # some clients send partial URI's without scheme, hostname
@@ -81,7 +81,7 @@ class ClientServerMatchmaker:
             self.headers['Host'] = hostname
             if port!=80:
                 self.headers['Host'] += ":%d"%port
-        debug(HURT_ME_PLENTY, "Proxy: splitted url", scheme, hostname, port, document)
+        debug(HURT_ME_PLENTY, "ClientServer: splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
             # this means we should _not_ use this proxy for local
@@ -122,7 +122,7 @@ class ClientServerMatchmaker:
 
 
     def handle_local (self, document):
-        debug(HURT_ME_PLENTY, "Proxy: handle local request for", document)
+        debug(HURT_ME_PLENTY, "ClientServer: handle local request for", document)
         if self.client and self.client.addr[0] not in _localhosts:
             self.client.error(403, i18n._("Forbidden"),
                               wc.proxy.access_denied(self.client.addr))
@@ -173,7 +173,7 @@ class ClientServerMatchmaker:
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            debug(BRING_IT_ON, 'Proxy: resurrecting', server)
+            debug(BRING_IT_ON, 'ClientServer: resurrecting', server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr)>=serverpool.connection_limit(addr):
@@ -232,7 +232,7 @@ class ClientServerMatchmaker:
 
 
     def server_close (self):
-        debug(BRING_IT_ON, 'Proxy: resurrection failed', self.server.sequence_number, self.server)
+        debug(BRING_IT_ON, 'ClientServer: resurrection failed', self.server.sequence_number, self.server)
         # Look for a server again
         if self.server.sequence_number > 0:
             # It has already handled a request, so the server is allowed

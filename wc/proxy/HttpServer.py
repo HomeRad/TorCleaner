@@ -228,7 +228,7 @@ class HttpServer (Server):
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
                                        msg, attrs=self.nofilter)
         except FilterPics, msg:
-            debug(NIGHTMARE, "Proxy: FilterPics", msg)
+            debug(NIGHTMARE, "Server: FilterPics", msg)
             response = "HTTP/1.1 200 OK"
             headers = {
                 "Content-Type": "text/plain",
@@ -241,7 +241,7 @@ class HttpServer (Server):
             self.state = 'recycle'
             self.reuse()
             return
-        debug(HURT_ME_PLENTY, "Proxy: S/Headers", `str(self.headers)`)
+        debug(HURT_ME_PLENTY, "Server: Headers", `str(self.headers)`)
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()
@@ -251,10 +251,12 @@ class HttpServer (Server):
             self.attrs = self.nofilter
         else:
             self.attrs = initStateObjects(self.headers, self.url)
-        # XXX doh
-        if self.headers.get('Content-Length') is None:
-            self.headers['Connection'] = 'close\r'
-        debug(HURT_ME_PLENTY, "Proxy: S/Headers filtered", self.headers)
+        # XXX <doh>
+        #if self.headers.get('Content-Length') is None:
+        #    self.headers['Connection'] = 'close\r'
+        #remove_headers(self.headers, ['Keep-Alive'])
+        # XXX </doh>
+        debug(HURT_ME_PLENTY, "Server: Headers filtered", `str(self.headers)`)
         wc.proxy.HEADERS.append((self.url, "server", self.headers))
         self.client.server_response(self.response, self.headers)
         if self.statuscode in ('204', '304') or self.method == 'HEAD':
@@ -265,9 +267,7 @@ class HttpServer (Server):
 
 
     def check_headers (self):
-        """- add missing content-type and/or encoding headers
-           - remove Keep-Alive
-        """
+        """add missing content-type and/or encoding headers"""
         # 304 Not Modified does not send any type or encoding info,
         # because this info was cached
         if self.statuscode == '304':
@@ -284,35 +284,34 @@ class HttpServer (Server):
             if ct != self.mime:
                 print >>sys.stderr, "Warning: set Content-Type from %s to %s in %s" % \
                         (`str(ct)`, `self.mime`, `self.url`)
-                self.headers['Content-Type'] = self.mime
+                self.headers['Content-Type'] = "%s\r"%self.mime
         elif gm[0]:
             # guessed an own content type
             if ct is None:
                 print >>sys.stderr, "Warning: add Content-Type %s to %s" % \
                                       (`gm[0]`, `self.url`)
-                self.headers['Content-Type'] = gm[0]
+                self.headers['Content-Type'] = "%s\r"%gm[0]
            # fix some content types
             elif not ct.startswith(gm[0]) and \
                  gm[0] in _fix_content_types:
                 print >>sys.stderr, "Warning: change Content-Type from %s to %s in %s" % \
                  (`ct`, `gm[0]`, `self.url`)
-                self.headers['Content-Type'] = gm[0]
+                self.headers['Content-Type'] = "%s\r"%gm[0]
         if gm[1] and gm[1] in _fix_content_encodings:
             ce = self.headers.get('Content-Encoding')
             # guessed an own encoding type
             if ce is None:
-                self.headers['Content-Encoding'] = gm[1]
+                self.headers['Content-Encoding'] = "%s\r"%gm[1]
                 print >>sys.stderr, "Warning: add Content-Encoding %s to %s" % \
                                       (`gm[1]`, `self.url`)
             elif ce != gm[1]:
                 print >>sys.stderr, "Warning: change Content-Encoding from %s to %s in %s" % \
                  (`ce`, `gm[1]`, `self.url`)
-                self.headers['Content-Encoding'] = gm[1]
+                self.headers['Content-Encoding'] = "%s\r"%gm[1]
         # hmm, fix application/x-httpd-php*
         if self.headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
             print >>sys.stderr, "Warning: fix x-httpd-php Content-Type"
-            self.headers['Content-Type'] = 'text/html'
-        remove_headers(self.headers, ['Keep-Alive'])
+            self.headers['Content-Type'] = 'text/html\r'
 
 
     def add_encoding_headers (self):
@@ -322,7 +321,7 @@ class HttpServer (Server):
         self.headers['Accept-Encoding'] = "%s\r"%self.client.compress
         if self.headers.get('Content-Length') is not None:
             self.bytes_remaining = int(self.headers['Content-Length'])
-            debug(HURT_ME_PLENTY, "Proxy: %d bytes remaining"%self.bytes_remaining)
+            debug(HURT_ME_PLENTY, "Server: %d bytes remaining"%self.bytes_remaining)
             if rewrite:
                 remove_headers(self.headers, ['Content-Length'])
         else:
@@ -330,12 +329,13 @@ class HttpServer (Server):
         # add decoders
         self.decoders = []
         # Chunked encoded
-        if self.headers.get('Transfer-Encoding') is not None:
-            debug(BRING_IT_ON, 'Proxy: S/Transfer-encoding:', `self.headers['transfer-encoding']`)
+        if self.headers.has_key('Transfer-Encoding'):
+            # XXX don't look at value, assume chunked encoding for now
+            debug(BRING_IT_ON, 'Server: Transfer-encoding:', `self.headers['Transfer-Encoding']`)
             self.decoders.append(UnchunkStream())
             # remove encoding header
             to_remove = ["Transfer-Encoding"]
-            if self.headers.get("Content-Length") is not None:
+            if self.headers.has_key("Content-Length"):
                 print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
                 to_remove.append("Content-Length")
                 self.bytes_remaining = None
@@ -346,6 +346,7 @@ class HttpServer (Server):
         if not rewrite: return
         # Compressed content (uncompress only for rewriting modules)
         encoding = self.headers.get('Content-Encoding', '').lower()
+        # XXX test for .gz files ???
         if encoding in ('gzip', 'x-gzip', 'deflate'):
             if encoding=='deflate':
                 self.decoders.append(DeflateStream())
@@ -358,7 +359,7 @@ class HttpServer (Server):
                 to_remove.append('Cache-Control')
             remove_headers(self.headers, to_remove)
             # add warning
-            self.headers['Warning'] = "214 Transformation applied"
+            self.headers['Warning'] = "214 Transformation applied\r"
         elif encoding and encoding!='identity':
             print >>sys.stderr, "Warning: unsupported encoding:",`encoding`
             # do not disable filtering for unknown content-encodings
@@ -378,7 +379,7 @@ class HttpServer (Server):
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
-            debug(HURT_ME_PLENTY, "Proxy: %d bytes remaining"%self.bytes_remaining)
+            debug(HURT_ME_PLENTY, "Server: %d bytes remaining"%self.bytes_remaining)
         is_closed = 0
         for decoder in self.decoders:
             data = decoder.decode(data)
@@ -390,9 +391,9 @@ class HttpServer (Server):
                 self.client.server_content(data)
                 self.data_written = "True"
         except FilterWait, msg:
-            debug(NIGHTMARE, "Proxy: FilterWait", msg)
+            debug(NIGHTMARE, "Server: FilterWait", msg)
         except FilterPics, msg:
-            debug(NIGHTMARE, "Proxy: FilterPics", msg)
+            debug(NIGHTMARE, "Server: FilterPics", msg)
             assert not self.data_written
             self.client.server_content(str(msg))
             self.client.server_close()
@@ -413,14 +414,14 @@ class HttpServer (Server):
     def process_recycle (self):
         # We're done sending things to the client, and we can reuse
         # this connection
-        debug(NIGHTMARE, "Proxy: S/recycling", self)
+        debug(NIGHTMARE, "Server: recycling", self)
         client, self.client = self.client, None
         self.flush(client, reuse="True")
 
 
     def flush (self, client, reuse=None):
         """flush data of decoders (if any) and filters"""
-        debug(NIGHTMARE, "Proxy: S/flushing", self)
+        debug(NIGHTMARE, "Server: flushing", self)
         data = ""
         while self.decoders:
             data = self.decoders[0].flush()
@@ -431,7 +432,7 @@ class HttpServer (Server):
             for i in _RESPONSE_FILTERS:
                 data = applyfilter(i, data, fun="finish", attrs=self.attrs)
         except FilterWait, msg:
-            debug(NIGHTMARE, "Proxy: FilterWait", msg)
+            debug(NIGHTMARE, "Server: FilterWait", msg)
             # the filter still needs some data so try flushing again
             # after a while
             make_timer(0.2, lambda : HttpServer.flush(self, client, reuse))
@@ -467,7 +468,7 @@ class HttpServer (Server):
             # We can't reuse this connection
             self.close()
         else:
-            debug(HURT_ME_PLENTY, 'Proxy: S/recycling', self.sequence_number, self)
+            debug(HURT_ME_PLENTY, 'Server: reusing', self.sequence_number, self)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
@@ -477,7 +478,7 @@ class HttpServer (Server):
 
 
     def close (self):
-        debug(HURT_ME_PLENTY, "Proxy: S/close", self)
+        debug(HURT_ME_PLENTY, "Server: close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -492,7 +493,7 @@ class HttpServer (Server):
 
 
     def handle_close (self):
-        debug(HURT_ME_PLENTY, "Proxy: S/handle_close", self)
+        debug(HURT_ME_PLENTY, "Server: handle_close", self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None
@@ -503,7 +504,7 @@ def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        debug(BRING_IT_ON, 'Proxy: speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
+        debug(BRING_IT_ON, 'Server: speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
