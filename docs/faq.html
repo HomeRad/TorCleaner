@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.3.1: http://docutils.sourceforge.net/" />
+<title>Frequently asked questions</title>
+<meta content="1" name="navigation.order" />
+<meta content="FAQ" name="navigation.name" />
+<link rel="stylesheet" href="wc.css" type="text/css" />
+<link rel="stylesheet" href="navigation.css" type="text/css" />
+<script type="text/javascript">
+window.onload = function() {
+  if (top.location != location) {
+    top.location.href = document.location.href;
+  }
+}
+</script>
+</head>
+<body>
+<!-- bfknav -->
+<div class="navigation">
+<div class="navrow" style="padding: 0em 0em 0em 1em;">
+<a href="./index.html">WebCleaner</a>
+<span>FAQ</span>
+<a href="./install.html">Installation</a>
+<a href="./devel/devel.html">Development &gt;</a>
+<a href="./misc/squid.html">Examples &gt;</a>
+
+</div>
+</div>
+<!-- /bfknav -->
+<div class="document" id="frequently-asked-questions">
+<h1 class="title">Frequently asked questions</h1>
+<p><strong>Q: The filter is not working - I still see some advertisings that are
+definitely filtered out.</strong></p>
+<p>A: Send the URL to <a class="reference" href="mailto:calvin&#64;users.sf.net">calvin&#64;users.sf.net</a> and I will add a filter rule for it.</p>
+<p><strong>Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
+some tags or is completely crippled.</strong></p>
+<p>A: First, try to disable the WebCleaner proxy and look at the page again.
+If it renders ok, you most likely have encountered a bug in WebCleaner.
+Please write a bug report to <a class="reference" href="mailto:calvin&#64;users.sf.net">calvin&#64;users.sf.net</a> and
+include the URL you have problems with.</p>
+<p><strong>Q: I am seeing the error &quot;client sent data in state receive&quot;.</strong></p>
+<p>A: Your client was sending data when it shouldn't have. This is mostly
+a broken HTTP proxy (eg. when WebCleaner is parent proxy of Oops).</p>
+<p><strong>Q: Are there security concerns running this proxy?</strong></p>
+<p>A: Yes.</p>
+<ul class="simple">
+<li>Be sure no one but you or your users can access the proxy.
+The default configuration is that only local users can
+access the proxy. Additionally, you should define a proxy password.</li>
+<li>WebCleaner uses 3rd-party libraries and inherits their potential
+security flaws.</li>
+</ul>
+<p><strong>Q: I get &quot;zlib error&quot; entries in my error log.</strong></p>
+<p>A: Some b0rked servers are sending Content-Type: gzip for pages
+that are not compressed. In this case WebCleaner switches to
+non-compressing filtering and prints the above error.</p>
+<p><strong>Q: I am paranoid. What should I do besides running WebCleaner?</strong></p>
+<p>A: The default config of WebCleaner is strict when it comes
+to passing private information, so there is not more that can
+be done (except adding new filters yourself).
+Here are some more tips for browser settings:</p>
+<ul class="simple">
+<li>Use Mozillas JavaScript Popup filtering. See
+<em>Mozilla -&gt; Edit -&gt; Preferences -&gt; Advanced -&gt; Scripts &amp; Plugins</em></li>
+<li>Disable Java. See
+<em>Mozilla -&gt; Edit -&gt; Preferences -&gt; Advanced</em></li>
+<li>Don't send your real email address to FTP servers. See
+<em>Mozilla -&gt; Edit -&gt; Preferences -&gt; Advanced</em></li>
+<li>Don't accept cookies, or at least set the browser to warn you
+of every attempt to store cookies. See
+<em>Mozilla -&gt; Edit -&gt; Preferences -&gt; Privacy &amp; Security -&gt; Cookies</em></li>
+<li>Disable image animation. See
+<em>Mozilla -&gt; Edit -&gt; Preferences -&gt; Privacy &amp; Security -&gt; Images</em></li>
+<li>Don't save form data. See
+<em>Mozilla -&gt; Edit -&gt; Preferences -&gt; Privacy &amp; Security -&gt; Forms</em></li>
+<li>Don't save passwords. See
+<em>Mozilla -&gt; Edit -&gt; Preferences -&gt; Privacy &amp; Security -&gt;
+Passwords</em></li>
+<li>Don't install the Flash Plugin. It has security problems.</li>
+</ul>
+</div>
+<hr class="footer" />
+<div class="footer">
+Generated on: 2004-04-25 08:57 UTC.
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.3.1: http://docutils.sourceforge.net/" />
+<title>Development</title>
+<meta content="Development" name="navigation.name" />
+<link rel="stylesheet" href="../wc.css" type="text/css" />
+<link rel="stylesheet" href="../navigation.css" type="text/css" />
+<script type="text/javascript">
+window.onload = function() {
+  if (top.location != location) {
+    top.location.href = document.location.href;
+  }
+}
+</script>
+</head>
+<body>
+<!-- bfknav -->
+<div class="navigation">
+<div class="navrow" style="padding: 0em 0em 0em 1em;">
+<a href=".././index.html">WebCleaner</a>
+<a href=".././faq.html">FAQ</a>
+<a href=".././install.html">Installation</a>
+<span>Development &gt;</span>
+<a href=".././misc/squid.html">Examples &gt;</a>
+</div>
+<div class="navrow" style="padding: 0em 0em 0em 2em;"><span>Development</span>
+<a href=".././devel/simpletal.html">simpleTAL</a>
+<a href=".././devel/api/index.html">WebCleaner API &gt;</a>
+<a href=".././devel/sslgateway.html">SSL Gateway</a>
+
+</div>
+</div>
+<!-- /bfknav -->
+<div class="document" id="development">
+<h1 class="title">Development</h1>
+<p>As with all OpenSource projects, it is easy for you to help or advance
+WebCleaner.</p>
+<p>The easiest thing is probably sending me URLs of web pages that do
+not work correctly through the WebCleaner proxy.</p>
+<p>If you want to implement a feature you need for yourself, here are
+some suggestions that might be helpful.</p>
+<ul class="simple">
+<li>When generating patches, they should be against the latest released
+version or the CVS tree. Instructions to pull the CVS version are
+at the <a class="reference" href="http://sourceforge.net/cvs/?group_id=7692">WebCleaner CVS</a> repository page.</li>
+<li>Unified diffs are much more readable, for example you can use
+<tt class="literal"><span class="pre">diff</span> <span class="pre">-BurN</span> <span class="pre">webcleaner</span> <span class="pre">webcleaner_patched</span> <span class="pre">&gt;</span> <span class="pre">mypatch.diff</span></tt>, or
+<tt class="literal"><span class="pre">cvs</span> <span class="pre">diff</span> <span class="pre">-u</span></tt> if you work with the CVS version of WebCleaner.</li>
+<li>A consistent programming style helps others read and understand
+the code. For that Python has released a
+<a class="reference" href="http://www.python.org/peps/pep-0008.html">Style Guide for Python Code</a></li>
+</ul>
+</div>
+<hr class="footer" />
+<div class="footer">
+Generated on: 2004-04-25 08:57 UTC.
+</div>
+</body>
+</html>

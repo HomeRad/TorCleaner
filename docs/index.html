@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.3.1: http://docutils.sourceforge.net/" />
+<title>WebCleaner - a filtering HTTP proxy</title>
+<meta content="0" name="navigation.order" />
+<meta content="WebCleaner" name="navigation.name" />
+<link rel="stylesheet" href="wc.css" type="text/css" />
+<link rel="stylesheet" href="navigation.css" type="text/css" />
+<script type="text/javascript">
+window.onload = function() {
+  if (top.location != location) {
+    top.location.href = document.location.href;
+  }
+}
+</script>
+</head>
+<body>
+<!-- bfknav -->
+<div class="navigation">
+<div class="navrow" style="padding: 0em 0em 0em 1em;">
+<span>WebCleaner</span>
+<a href="./faq.html">FAQ</a>
+<a href="./install.html">Installation</a>
+<a href="./devel/devel.html">Development &gt;</a>
+<a href="./misc/squid.html">Examples &gt;</a>
+
+</div>
+</div>
+<!-- /bfknav -->
+<div class="document" id="webcleaner-a-filtering-http-proxy">
+<h1 class="title">WebCleaner - a filtering HTTP proxy</h1>
+<div class="section" id="features">
+<h1><a name="features">Features</a></h1>
+<ul class="simple">
+<li>HTTP/1.1 support</li>
+<li>HTTPS proxy CONNECT and optional SSL gateway support</li>
+<li>integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)</li>
+<li>integrated JavaScript engine, allows popup filtering</li>
+<li>detection and correction of known HTML security flaws</li>
+<li>compress documents on-the-fly (with gzip)</li>
+<li>disable animated GIFs</li>
+<li>filter images by size, removes banner adverts</li>
+<li>reduce images to low-bandwidth JPEGs</li>
+<li>remove/add/modify arbitrary HTTP headers</li>
+<li>usage of SquidGuard blacklists</li>
+<li>antivirus filter module</li>
+<li>Basic, Digest and (untested) NTLM proxy authentication support</li>
+<li>per-host access control</li>
+<li>configurable over a themable web interface</li>
+</ul>
+</div>
+<div class="section" id="download">
+<h1><a name="download">Download</a></h1>
+<p>Download the latest packages from <a class="reference" href="http://sourceforge.net/project/showfiles.php?group_id=7692">WebCleaner download section</a>.
+There are also <a class="reference" href="webcleaner-md5sums.txt">Md5sum checksums</a> from above files.</p>
+<p>Requirements and installation instructions are located at the
+<a class="reference" href="install.html">install</a> documentation. To see what has changed between releases
+look at the <a class="reference" href="changes.txt">ChangeLog</a>.</p>
+</div>
+<div class="section" id="screenshots">
+<h1><a name="screenshots">Screenshots</a></h1>
+<blockquote>
+<table border class="table">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr><td><p><a class="first last reference" href="shot1.png"><img align="middle" alt="shot1_thumb.jpg" src="shot1_thumb.jpg" /></a></p>
+</td>
+<td><p><a class="first last reference" href="shot2.png"><img align="middle" alt="shot2_thumb.jpg" src="shot2_thumb.jpg" /></a></p>
+</td>
+</tr>
+<tr><td>Proxy configuration</td>
+<td>Filter configuration</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</div>
+<div class="section" id="why-should-i-use-webcleaner">
+<h1><a name="why-should-i-use-webcleaner">Why should I use WebCleaner?</a></h1>
+<p>The first feature that sets WebCleaner apart from other proxies is
+exact HTML filtering, and this removes a lot of advertisings.
+The filter does not just replace some strings, the proxy parses all HTML
+data. The parser is fast (written in C) and can cope with every
+broken HTML page out there; if the parser does not recognize HTML
+structures, it just passes the data over to the proxy until it recognizes
+a tag again. No valid HTML data is ever discarded or dropped.</p>
+<p>Another feature is the JavaScript filtering: JavaScript data is
+executed in the integrated Spidermonkey JavaScript engine which is also
+used by the Mozilla browser suite.
+This eliminates all JavaScript obfuscation, popups, and document.write()
+stuff, but the other JavaScript functions still work as usual.</p>
+<p>Exact HTML filtering has another good side-effect: it is possible to
+detect and prevent known security flaws in HTML processors. Several
+known buffer overflow exploits or Denial of Service attacks are detected
+and fixed by the HtmlSecurity class.</p>
+<p>Furthermore, WebCleaner can filter SSL traffic used in <tt class="literal"><span class="pre">https://</span></tt> URLs.
+See the <a class="reference" href="devel/sslgateway.html">SSL gateway</a> documentation for more info.</p>
+</div>
+<div class="section" id="configuration">
+<h1><a name="configuration">Configuration</a></h1>
+<p>Assuming your proxy runs on port <em>8080</em>, point your browser to
+<a class="reference" href="http://localhost:8080/">http://localhost:8080/</a> to configure the proxy.
+The underlying configuration format is a custom XML format which is
+explained in config/filter.dtd and config/webcleaner.dtd.</p>
+</div>
+<div class="section" id="running">
+<h1><a name="running">Running</a></h1>
+<p>Please note that the web configuration interface needs write permissions
+in the configuration directory.</p>
+<div class="section" id="running-under-unix-linux">
+<h2><a name="running-under-unix-linux">Running under Unix/Linux</a></h2>
+<p>The proxy is supervised and automatically (re-)started from the runit
+package.
+See the <a class="reference" href="http://smarden.org/runit/">runit homepage</a> for more information.</p>
+</div>
+<div class="section" id="running-under-windows">
+<h2><a name="running-under-windows">Running under Windows</a></h2>
+<p>The proxy is a normal NT service and can be started/stopped from the
+&quot;Administrative Tasks&quot; entry in the system configuration.</p>
+</div>
+</div>
+<div class="section" id="notes">
+<h1><a name="notes">Notes</a></h1>
+<p>WebCleaner is <em>not</em> a HTTP compliant proxy because it modifies requests,
+headers and data. Modifications aside, the proxy tries to fulfill
+the HTTP/1.1 specifications found in RFC 2616.</p>
+<p>Surf performance will decrease, especially with the Rewriter and the
+Replacer module enabled. It will decrease further with JavaScript
+parsing enabled, since the proxy downloads and parses &lt;script src=&quot;&quot;&gt;
+tags in the background.</p>
+<p>The Rewriter module parses the HTML. It optimizes HTML by making
+tags and attribute names lowercase and removing some (but not all)
+ignorable whitespace.</p>
+<p>The warning &quot;unsupported content encoding&quot; could lead to corrupted
+HTML pages. WebCleaner tries to filter even unknown-encoded content
+to prevent Denial of Service attacks (eg webservers sending always an
+unknown content-encoding).
+Currently, this affects only the &quot;compress&quot; or &quot;x-compress&quot; encoding,
+because the LZW algorithm to uncompress such content is patented and
+therefore not included in WebCleaner. See <a class="reference" href="http://www.burnallgifs.org">http://www.burnallgifs.org</a>.</p>
+<p><a class="reference" href="http://sourceforge.net/"><img align="right" alt="SourceForge Logo" height="31" src="http://sourceforge.net/sflogo.php?group_id=7692&amp;type=1" width="88" /></a></p>
+</div>
+</div>
+<hr class="footer" />
+<div class="footer">
+Generated on: 2004-04-25 08:57 UTC.
+</div>
+</body>
+</html>

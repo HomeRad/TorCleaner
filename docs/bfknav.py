@@ -34,7 +34,10 @@ class Node (object):
         self.parent = None
 
     def get_url (self, level):
-        return "../"*level + self.filename
+        if self.children:
+            return self.children[0].get_url(level)
+        else:
+            return "../"*level + self.filename
 
     def addChildren (self, nodes):
         for node in nodes:
@@ -110,22 +113,32 @@ def parse_navtree (dirname):
     for f in files:
         filename = os.path.join(dirname, f)
         htmlname = os.path.join(dirname, os.path.splitext(f)[0]+".html")
-        if os.path.isfile(filename) and f.endswith('.nav'):
-            flocals = {}
-            execfile(filename, {}, flocals)
-            nodes.append(Node(flocals['name'], flocals['order'], htmlname))
+        if os.path.isfile(filename) and os.path.isfile(htmlname) and \
+           f.endswith('.nav'):
+            nodes.append(get_nav_node(filename, htmlname))
         elif os.path.isdir(filename):
             subnodes = parse_navtree(filename)
             if subnodes:
-                n = subnodes[0].new_node()
-                n.addChildren(subnodes)
-                nodes.append(n)
+                if os.path.isfile(filename+".nav"):
+                    node = get_nav_node(filename+".nav", filename)
+                else:
+                    node = subnodes[0].new_node()
+                node.addChildren(subnodes)
+                nodes.append(node)
     nodes.sort()
     for i,n in enumerate(nodes):
         if (i+1)<len(nodes):
             n.sibling_right = nodes[i+1]
     #print_nodes(nodes)
     return nodes
+
+
+def get_nav_node (navfile, htmlname):
+    flocals = {}
+    execfile(navfile, {}, flocals)
+    order = flocals.get('order', sys.maxint)
+    name = flocals['name']
+    return Node(name, order, htmlname)
 
 
 def print_nodes (nodes):

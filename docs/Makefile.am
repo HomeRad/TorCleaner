@@ -1,11 +1,13 @@
 SUBDIRS = devel misc
 
 RESTFILES = $(wildcard *.txt)
+HTMLFILES = $(patsubst %.txt, %.html, $(RESTFILES) )
+NAVFILES = $(patsubst %.txt, %.nav, $(RESTFILES) )
 DOCDIR = $(top_builddir)/docs
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 
 htmldir = $(prefix)/html
-html_DATA = $(patsubst %.txt, %.html, $(RESTFILES) )
+html_DATA = $(HTMLFILES)
 
 %.html: %.txt htmlnav.py bfknav.py
 	$(DOCDIR)/rest2htmlnav --stylesheet-path=wc.css --time $< $@
@@ -22,5 +24,3 @@ homepage: nav apidocs
 	cp misc/*.html $(HTMLDIR)/htdocs/misc
 	cp -r devel/api $(HTMLDIR)/htdocs/devel
 
-clean-local:
-	rm -f *.html *.nav

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.3.1: http://docutils.sourceforge.net/" />
+<title>Installation</title>
+<meta content="2" name="navigation.order" />
+<meta content="Installation" name="navigation.name" />
+<link rel="stylesheet" href="wc.css" type="text/css" />
+<link rel="stylesheet" href="navigation.css" type="text/css" />
+<script type="text/javascript">
+window.onload = function() {
+  if (top.location != location) {
+    top.location.href = document.location.href;
+  }
+}
+</script>
+</head>
+<body>
+<!-- bfknav -->
+<div class="navigation">
+<div class="navrow" style="padding: 0em 0em 0em 1em;">
+<a href="./index.html">WebCleaner</a>
+<a href="./faq.html">FAQ</a>
+<span>Installation</span>
+<a href="./devel/devel.html">Development &gt;</a>
+<a href="./misc/squid.html">Examples &gt;</a>
+
+</div>
+</div>
+<!-- /bfknav -->
+<div class="document" id="installation">
+<h1 class="title">Installation</h1>
+<div class="section" id="requirements-for-unix-linux">
+<h1><a name="requirements-for-unix-linux">Requirements for Unix/Linux:</a></h1>
+<ol class="arabic simple">
+<li>You need a standard GNU development environment with<ol class="loweralpha">
+<li>C compiler (for example the GNU C Compiler gcc)</li>
+<li>gettext</li>
+</ol>
+</li>
+<li>Python &gt;= 2.3.1 from <a class="reference" href="http://www.python.org/">http://www.python.org/</a> with zlib support</li>
+<li>Python Imaging Library (PIL) from <a class="reference" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a></li>
+<li>Python Crypto Module from <a class="reference" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a></li>
+<li>runit from <a class="reference" href="http://smarden.org/runit/">http://smarden.org/runit/</a></li>
+<li>openssl from <a class="reference" href="http://www.openssl.org/">http://www.openssl.org/</a></li>
+<li>PyOpenSSL from <a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a></li>
+</ol>
+</div>
+<div class="section" id="requirements-for-windows">
+<h1><a name="requirements-for-windows">Requirements for Windows:</a></h1>
+<p>Direct download links are in brackets.</p>
+<ol class="arabic simple">
+<li>Install the MinGW suite from <a class="reference" href="http://mingw.sourceforge.net">http://mingw.sourceforge.net</a>.
+Be sure to install in the given order:<ol class="loweralpha">
+<li>MingGW
+[<a class="reference" href="http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-3.1.0-1.exe">http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-3.1.0-1.exe</a>]</li>
+<li>MSYS
+[<a class="reference" href="http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe">http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe</a>]</li>
+<li>libiconv
+[<a class="reference" href="http://osdn.dl.sourceforge.net/sourceforge/mingw/libiconv-1.8.0-2003.02.01-1.exe">http://osdn.dl.sourceforge.net/sourceforge/mingw/libiconv-1.8.0-2003.02.01-1.exe</a>]</li>
+<li>gettext
+[<a class="reference" href="http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe">http://osdn.dl.sourceforge.net/sourceforge/mingw/gettext-0.11.5-2003.02.01-1.exe</a>]</li>
+</ol>
+</li>
+<li>Install Python &gt;= 2.3.1 from <a class="reference" href="http://www.python.org/">http://www.python.org/</a>
+[<a class="reference" href="http://www.python.org/ftp/python/2.3.3/Python-2.3.3.exe">http://www.python.org/ftp/python/2.3.3/Python-2.3.3.exe</a>]</li>
+<li>Install Python for Windows Extensions from
+<a class="reference" href="http://starship.python.net/crew/mhammond/">http://starship.python.net/crew/mhammond/</a>
+[<a class="reference" href="http://starship.python.net/crew/mhammond/downloads/win32all-163.exe">http://starship.python.net/crew/mhammond/downloads/win32all-163.exe</a>]</li>
+<li>Install Python Imaging Library (PIL) from
+<a class="reference" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a>
+[<a class="reference" href="http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe">http://www.pythonware.net/storage/PIL-1.1.4.win32-py2.3.exe</a>]</li>
+<li>Download Python Crypto Module from
+<a class="reference" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a>
+[<a class="reference" href="http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz">http://www.amk.ca/files/python/crypto/pycrypto-1.9a6.tar.gz</a>]
+For Installation of PyCrypto see below.</li>
+<li>Install OpenSSL for Windows from
+<a class="reference" href="http://www.slproweb.com/products/Win32OpenSSL.html">http://www.slproweb.com/products/Win32OpenSSL.html</a>
+[<a class="reference" href="http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe">http://www.slproweb.com/download/Win32OpenSSL-v0.9.7d.exe</a>]</li>
+<li>Download PyOpenSSL from
+<a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a>
+[<a class="reference" href="http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz">http://osdn.dl.sourceforge.net/pyopenssl/pyOpenSSL-0.5.1.tar.gz</a>]
+For Installation of PyOpenSSL see below.</li>
+</ol>
+</div>
+<div class="section" id="setup-for-unix-linux">
+<h1><a name="setup-for-unix-linux">Setup for Unix/Linux:</a></h1>
+<ol class="arabic">
+<li><p class="first">Install check</p>
+<p>Be sure to have installed all required Unix/Linux software listed above.</p>
+</li>
+<li><p class="first">Compilation</p>
+<p>Run <tt class="literal"><span class="pre">./configure;</span> <span class="pre">make</span></tt> to compile the included C libraries.
+Run <tt class="literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build</span></tt> to compile the Python files.
+The CC environment variable is checked before compilation, so you can
+change the default C compiler with <tt class="literal"><span class="pre">export</span> <span class="pre">CC=myccompiler</span></tt>.
+If you work from CVS, you must run <tt class="literal"><span class="pre">./autogen.sh</span></tt> first to generate the
+configure and Makefile files.</p>
+</li>
+<li><blockquote class="first">
+<ol class="loweralpha">
+<li><p class="first">Installation as root</p>
+<p>Run <tt class="literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'python</span> <span class="pre">setup.py</span> <span class="pre">install'</span></tt> to install the proxy.
+Run <tt class="literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'webcleaner-certificates</span> <span class="pre">install'</span></tt> to install the
+certificates.
+Run <tt class="literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'make</span> <span class="pre">installservice'</span></tt> to install the runit service.</p>
+</li>
+<li><p class="first">Installation as a normal user</p>
+<p>Run <tt class="literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--home</span> <span class="pre">$HOME</span></tt>
+Run <tt class="literal"><span class="pre">webcleaner-certificates</span> <span class="pre">install</span></tt> to install the certificates.
+Now read the runsvdir(8) documentation on how to setup a local
+runit service.</p>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p class="first">Enjoy</p>
+<p>WebCleaner is now installed as a runit service and will start
+automatically in 5 seconds.
+See the README on how to configure the proxy filters.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="setup-for-windows">
+<h1><a name="setup-for-windows">Setup for Windows:</a></h1>
+<ol class="arabic">
+<li><p class="first">Install check</p>
+<p>Be sure to have installed all required windows software listed above.</p>
+</li>
+<li><p class="first">Preparing Python for the MinGW compiler</p>
+<p>Search the file python23.dll in your windows folder.
+After you found it, launch MSYS and execute
+<tt class="literal"><span class="pre">%</span> <span class="pre">pexports</span> <span class="pre">python23.dll</span> <span class="pre">&gt;</span> <span class="pre">python23.def</span></tt>.
+Then use the dlltool with
+<tt class="literal"><span class="pre">%</span> <span class="pre">dlltool</span> <span class="pre">--dllname</span> <span class="pre">python23.dll</span> <span class="pre">--def</span> <span class="pre">python23.def</span> <span class="pre">--output-lib</span>
+<span class="pre">libpython23.a</span></tt>.
+The resulting library has to be placed in the same directory as
+python23.lib. (Should be the libs directory under your Python installation
+directory, for example c:\Python23\Libs\.)</p>
+</li>
+<li><p class="first">Compile the JavaScript library</p>
+<p>Copy the webcleaner-X.X.tar.gz into your MSYS home directory,
+which is usually under c:\msys\1.0\home\user\.
+Launch MSYS and extract the tarball with
+<tt class="literal"><span class="pre">%</span> <span class="pre">tar</span> <span class="pre">xzvf</span> <span class="pre">webcleaner-X.X.tar.gz</span></tt>.
+Now change into the generated directory with
+<tt class="literal"><span class="pre">%</span> <span class="pre">cd</span> <span class="pre">webcleaner-X.X</span></tt> and configure and compile the JavaScript
+library:
+<tt class="literal"><span class="pre">%</span> <span class="pre">./configure;</span> <span class="pre">make</span></tt>.</p>
+</li>
+<li><p class="first">Compile and install PyCrypto</p>
+<p>Close the MSYS application and open a DOS command prompt.
+Change to the pycrypto-1.9a6 directory and run
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build</span> <span class="pre">-c</span> <span class="pre">mingw32</span> <span class="pre">install</span></tt></p>
+</li>
+<li><p class="first">Install OpenSSL and compile PyOpenSSL</p>
+<p>Change to the directory where you installed OpenSSL (for example
+c:\OpenSSL).
+Fix the library names for the mingw compiler:
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">move</span> <span class="pre">lib\MinGW\ssleay.a</span> <span class="pre">lib\MinGW\libssleay.a</span></tt>
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">move</span> <span class="pre">lib\MinGW\ssleay.def</span> <span class="pre">lib\MinGW\libssleay.def</span></tt>
+Change to the directory where you extracted PyOpenSSL (for
+example c:\pyOpenSSL-0.5.1)
+Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
+Then run:
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">-c</span> <span class="pre">mingw32</span> <span class="pre">-I</span> <span class="pre">c:\OpenSSL\include</span>
+<span class="pre">-L</span> <span class="pre">c:\OpenSSL\lib\MinGW</span> <span class="pre">build</span> <span class="pre">install</span></tt></p>
+</li>
+<li><p class="first">Compile and install the Python modules</p>
+<p>Change to the webcleaner-X.X directory and run
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build</span> <span class="pre">-c</span> <span class="pre">mingw32</span> <span class="pre">install</span></tt>.</p>
+</li>
+<li><p class="first">Generate and install WebCleaner certificates</p>
+<p>Change to the directory where you installed Python into
+(for example c:\Python23\).
+Run the webcleaner-certificates script to install the certificates:
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-certificates</span> <span class="pre">install</span></tt>
+To remove the certificates later, you can run
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-certificates</span> <span class="pre">remove</span></tt></p>
+</li>
+<li><p class="first">Install and start the WebCleaner NT service</p>
+<p>Change to the directory where you installed Python into
+(for example c:\Python23\).
+Run the webcleaner-service script to install the service:
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-service</span> <span class="pre">install</span></tt>
+To remove the service later, you can run
+<tt class="literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">scripts\webcleaner-service</span> <span class="pre">remove</span></tt></p>
+</li>
+<li><p class="first">Enjoy</p>
+<p>WebCleaner is now installed and started as a regular Windows service.
+See the README on how to configure the proxy filters.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="troubleshooting-for-linux">
+<h1><a name="troubleshooting-for-linux">Troubleshooting for Linux</a></h1>
+<p>Proxy startup errors are logged in the runit log file located at
+/var/service/webcleaner/log/main/current</p>
+</div>
+<div class="section" id="troubleshooting-for-windows">
+<h1><a name="troubleshooting-for-windows">Troubleshooting for Windows</a></h1>
+<p>Proxy startup errors are logged in the system event logger. Execute
+Settings -&gt; Control Panel -&gt; Administrative Tools -&gt; Event Viewer
+and look at the &quot;Application Log&quot; events.</p>
+</div>
+</div>
+<hr class="footer" />
+<div class="footer">
+Generated on: 2004-04-25 08:57 UTC.
+</div>
+</body>
+</html>
