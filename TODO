@@ -1,8 +1,10 @@
 TODO
 
-version 2.25 and above
+version 2.26 and above
 
-- fix rating config and storage
+- restart button
+
+- implement rating config and storage
 
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
