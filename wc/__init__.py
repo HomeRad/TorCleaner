@@ -75,21 +75,21 @@ def startfunc (handle=None):
         signal.signal(signal.SIGHUP, reload_config)
         # drop privileges
         os.chdir("/")
-        if os.geteuid()==0:
-            import pwd, grp
-            try:
-                pentry = pwd.getpwnam("nobody")
-                pw_uid = 2
-                nobody = pentry[pw_uid]
-                gentry = grp.getgrnam("nogroup")
-                gr_gid = 2
-                nogroup = gentry[gr_gid]
-                os.setgid(nogroup)
-                os.setuid(nobody)
-            except KeyError:
-                warn(WC, "could not drop root privileges, user nobody "+\
-                         "and/or group nogroup not found")
-                pass
+        #if os.geteuid()==0:
+        #    import pwd, grp
+        #    try:
+        #        pentry = pwd.getpwnam("nobody")
+        #        pw_uid = 2
+        #        nobody = pentry[pw_uid]
+        #        gentry = grp.getgrnam("nogroup")
+        #        gr_gid = 2
+        #        nogroup = gentry[gr_gid]
+        #        os.setgid(nogroup)
+        #        os.setuid(nobody)
+        #    except KeyError:
+        #        warn(WC, "could not drop root privileges, user nobody "+\
+        #                 "and/or group nogroup not found")
+        #        pass
     # read configuration
     global config
     config = Configuration()
