@@ -26,10 +26,10 @@
 <!-- folders -->
 <td>
 <div tal:repeat="folder config/folderrules"><img
- tal:condition="not:folder/up" src="blocked.png" width="12" alt=""><input
+ tal:condition="not:folder/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="folder/up"
  tal:attributes="name string:folder_up_${folder/oid}; title t_foldermoveup; alt t_up"
-><img tal:condition="not:folder/down" src="blocked.png" width="12" alt=""><input
+><img tal:condition="not:folder/down" src="blocked.png" width="10" alt=""><input
  type="image" src="down.png" border="0" tal:condition="folder/down"
  tal:attributes="name string:folder_down_${folder/oid}; title t_foldermovedown; alt t_down"
 ><img tal:condition="folder/disable" src="disabled.png"
@@ -64,10 +64,10 @@
 <div tal:condition="curfolder">
 <input type="hidden" name="selfolder" tal:attributes="value string:${curfolder/oid}">
 <div tal:repeat="rule curfolder/rules"><img
- tal:condition="not:rule/up" src="blocked.png" width="12" alt=""><input
+ tal:condition="not:rule/up" src="blocked.png" width="10" alt=""><input
  type="image" src="up.png" border="0" tal:condition="rule/up"
  tal:attributes="name string:rule_up_${rule/oid}; title t_rulemoveup; alt t_up"
-><img tal:condition="not:rule/down" src="blocked.png" width="12" alt=""><input 
+><img tal:condition="not:rule/down" src="blocked.png" width="10" alt=""><input 
  type="image" src="down.png" border="0"
  tal:condition="rule/down"
  tal:attributes="name string:rule_down_${rule/oid}; title t_rulemovedown; alt t_down"
@@ -91,7 +91,7 @@
  tal:attributes="value curfolder/title">
 </td>
 <td>
-<input type="submit" class="submit" name="renamefolder"
+<input type="submit" class="submit" name="renamefolder" value="Rename folder"
  tal:attributes="value t_renamefolder">
 </td>
 </tr>
@@ -109,12 +109,14 @@
 </tr>
 <tr>
 <td colspan="2">
-<input type="submit" class="submit"
+<input type="submit" class="submit" value="Remove folder"
  tal:attributes="name string:removefolder${curfolder/oid}; value t_removefolder; onclick string:return window.confirm('${t_really_remove_folder}')">
-<input tal:condition="not:curfolder/disable" type="submit" class="submit"
+<input tal:condition="curfolder/disable"
+ type="submit" class="submit" value="Enable folder"
+ tal:attributes="name string:enablefolder${curfolder/oid}; value t_enablefolder"
+><input tal:condition="not:curfolder/disable"
+ type="submit" class="submit" value="Disable folder"
  tal:attributes="name string:disablefolder${curfolder/oid}; value t_disablefolder">
-<input tal:condition="curfolder/disable" type="submit" class="submit"
- tal:attributes="name string:enablefolder${curfolder/oid}; value t_enablefolder">
 </td>
 </tr>
 </table>
@@ -136,11 +138,13 @@ Here is the rule configuration...
 </div></span>
 </span>
 <hr noshade size="1">
-<input type="submit" class="submit"
+<input type="submit" class="submit" value="Remove rule"
  tal:attributes="name string:removerule${currule/oid}; value t_removerule; onclick string:return window.confirm('${t_really_remove_rule}')">
-<input tal:condition="currule/disable" type="submit" class="submit"
- tal:attributes="name string:enablerule${currule/oid}; value t_enablerule">
-<input tal:condition="not:currule/disable" type="submit" class="submit"
+<input tal:condition="currule/disable"
+ type="submit" class="submit" value="Enable rule"
+ tal:attributes="name string:enablerule${currule/oid}; value t_enablerule"
+><input tal:condition="not:currule/disable"
+ type="submit" class="submit" value="Disable rule"
  tal:attributes="name string:disablerule${currule/oid}; value t_disablerule">
 </div>
 </td>

@@ -1,12 +1,20 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href="../wc.css" type="text/css" rel="Stylesheet">
+<title>Rule macros</title>
+</head>
 <body>
-
+<div class="content">
+<h1>Rule macros...</h1>
 <!-- macro definitions for rule editing
   Note: the TAL contexts from the calling templates are used here
  -->
 
 <!-- title and description (used below) -->
+<h2>Title and description</h2>
+<table>
 <div metal:define-macro="titledesc">
 <tr><td>
 <label for="rule_title" tal:content="t_ruletitle">Title</label>:
@@ -21,8 +29,12 @@
  tal:content="currule/desc">Rule description</textarea>
 </td></tr>
 </div>
+</table>
+<hr noshade size="1">
 
 <!-- matchurl and dontmatchurl (used below) -->
+<h2>Match url</h2>
+<table>
 <div metal:define-macro="matchurl">
 <tr><td>
 <label for="rule_matchurl" tal:content="t_rulematchurl">Match URL</label>:
@@ -37,8 +49,12 @@
  value="Don't match url" tal:attributes="value currule/dontmatchurl">
 </td></tr>
 </div>
+</table>
+<hr noshade size="1">
 
 <!-- url parts (used by AllowRule and BlockRule) -->
+<h2>Url parts</h2>
+<table>
 <div metal:define-macro="urlparts">
 <tr><td>
 <label for="rule_urlscheme" tal:content="t_ruleurlscheme">URL scheme</label>:
@@ -81,9 +97,14 @@
 </td><td>
 <input type="text" class="text" name="rule_urlfragment" value=""
  tal:attributes="value currule/fragment">
+</td></tr>
 </div>
+</table>
+<hr noshade size="1">
 
 <!-- externfile (used by Allowdomains, Allowurls, Blockdomains, Blockurls) -->
+<h2>Extern file</h2>
+<table>
 <div metal:define-macro="externfile">
 <tr><td>
 <span tal:replace="t_ruletitle">Title</span>:
@@ -101,11 +122,14 @@
 <span tal:replace="currule/file">/path/to/file</span>
 </td></tr>
 </div>
+</table>
+<hr noshade size="1">
 
 
 <!-- Rule macros, each in a table tag -->
 
 <!-- AllowRule -->
+<h2>Allowrule</h2>
 <table metal:define-macro="allow">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -118,36 +142,46 @@ Rule url parts
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 <!-- Allowdomains -->
+<h2>Allowdomains</h2>
 <table metal:define-macro="allowdomains">
 <tr metal:use-macro="rulemacros/macros/externfile">
-Extern file name
+Extern file name allowdomains
 </tr>
 </table>
+<hr noshade size="1">
 
 <!-- Allowurls -->
+<h2>Allowurls</h2>
 <table metal:define-macro="allowurls">
 <tr metal:use-macro="rulemacros/macros/externfile">
-Extern file name
+Extern file name allowurls
 </tr>
 </table>
+<hr noshade size="1">
 
 <!-- Blockdomains -->
+<h2>Blockdomains</h2>
 <table metal:define-macro="blockdomains">
 <tr metal:use-macro="rulemacros/macros/externfile">
-Extern file name
+Extern file name blockdomains
 </tr>
 </table>
+<hr noshade size="1">
 
 <!-- Blockurls -->
+<h2>Blockurls</h2>
 <table metal:define-macro="blockurls">
 <tr metal:use-macro="rulemacros/macros/externfile">
-Extern file name
+Extern file name blockurls
 </tr>
 </table>
+<hr noshade size="1">
 
 <!-- BlockRule -->
+<h2>BlockRule</h2>
 <table metal:define-macro="block">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -166,8 +200,10 @@ Rule url parts
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 <!-- HeaderRule -->
+<h2>HeaderRule</h2>
 <table metal:define-macro="header">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -192,8 +228,10 @@ Rule (don't) match url
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 <!-- ImageRule -->
+<h2>ImageRule</h2>
 <table metal:define-macro="image">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -225,8 +263,10 @@ Rule (don't) match url
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 <!-- JavascriptRule -->
+<h2>JavascriptRule</h2>
 <table metal:define-macro="javascript">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -239,8 +279,10 @@ Rule (don't) match url
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 <!-- NocommentsRule -->
+<h2>NocommentsRule</h2>
 <table metal:define-macro="nocomments">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -253,8 +295,10 @@ Rule (don't) match url
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 <!-- PicsRule -->
+<h2>PicsRule</h2>
 <table metal:define-macro="pics">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -301,8 +345,10 @@ Rule (don't) match url
 </td>
 </tr>
 </table>
+<hr noshade size="1">
 
 <!-- ReplaceRule -->
+<h2>ReplaceRule</h2>
 <table metal:define-macro="replace">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
@@ -328,8 +374,10 @@ Rule (don't) match url
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 <!-- RewriteRule -->
+<h2>RewriteRule</h2>
 <table metal:define-macro="rewrite">
 <tr metal:use-macro="rulemacros/macros/titledesc">
 <td>Rule title and description</td>
@@ -418,6 +466,7 @@ Rule (don't) match url
  tal:attributes="value t_apply">
 </td></tr>
 </table>
+<hr noshade size="1">
 
 </body>
 </html>
