@@ -144,11 +144,13 @@ def _slow_check (x, t, stype):
 
 def mainloop (handle=None):
     from HttpClient import HttpClient
-    #from HttpsServer import serverctx, HttpsServer
     from Listener import Listener
     from wc import config
     Listener(config['port'], HttpClient)
-    #Listener(config['sslport'], HttpsServer, sslctx=serverctx)
+    if config['sslgateway']:
+        from ssl import serverctx
+        from SslClient import SslClient
+        Listener(config['sslport'], SslClient, sslctx=serverctx)
     # experimental interactive command line
     #from Interpreter import Interpreter
     #Listener(config['cmdport'], Interpreter)

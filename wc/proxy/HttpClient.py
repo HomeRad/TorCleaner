@@ -367,7 +367,7 @@ class HttpClient (StatefulConnection):
 
     def server_request (self):
         assert self.state=='receive', "%s server_request in non-receive state"%self
-        # This object will call server_connected at some point
+        # this object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
                                self.content)
 
@@ -470,7 +470,6 @@ class HttpClient (StatefulConnection):
                 return
         # get cgi form data
         form = self.get_form_data()
-        debug(PROXY, '%s handle_local', self)
         # this object will call server_connected at some point
         WebConfig(self, self.url, form, self.protocol, self.headers)
 

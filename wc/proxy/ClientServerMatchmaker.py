@@ -12,6 +12,7 @@ from wc.log import *
 from wc.url import document_quote
 
 from HttpServer import HttpServer
+from HttpsServer import HttpsServer
 
 BUSY_LIMIT = 10
 
@@ -65,17 +66,23 @@ class ClientServerMatchmaker (object):
                 auth = config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r"%auth
         else:
-            self.hostname = client.hostname
-            self.port = client.port
+            if client.method=='CONNECT' and config['sslgateway']:
+                # delegate to SSL gateway
+                self.hostname = 'localhost'
+                self.port = config['sslport']
+            else:
+                self.hostname = client.hostname
+                self.port = client.port
             self.document = document_quote(client.document)
         assert self.hostname
         # start DNS lookup
+        debug(PROXY, "background dns lookup %r", self.hostname)
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
 
     def handle_dns (self, hostname, answer):
         assert self.state == 'dns'
-        debug(PROXY, "%s handle dns", self)
+        debug(PROXY, "%s handle dns %r", self, hostname)
         if not self.client.connected:
             warn(PROXY, "%s client closed after DNS", self)
             # The browser has already closed this connection, so abort
@@ -139,8 +146,13 @@ class ClientServerMatchmaker (object):
             debug(PROXY, "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
-            # HttpServer eventually call server_connected
-            server = HttpServer(self.ipaddr, self.port, self)
+            # All Server objects eventually call server_connected
+            if self.client.method=='CONNECT':
+                server = HttpsServer(self.ipaddr, self.port, self)
+            elif self.url.startswith("https"):
+                server = SslServer(self.ipaddr, self.port, self)
+            else:
+                server = HttpServer(self.ipaddr, self.port, self)
             serverpool.register_server(addr, server)
 
 
@@ -158,6 +170,12 @@ class ClientServerMatchmaker (object):
             self.state = 'response'
             headers = WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
+            if config['sslgateway']:
+                server.client_send_request('GET', self.protocol,
+                                       self.hostname, self.port,
+                                       self.document, self.headers,
+                                       self.content, self,
+                                       self.url, self.mime)
             return
         # check expectations
         addr = (self.ipaddr, self.port)

@@ -22,6 +22,7 @@ class HttpProxyClient (object):
         assert callable(handler)
         self.handler = handler
         self.args = args
+        self.method = "GET"
         self.url = url_norm(self.args[0])
         self.scheme, self.hostname, self.port, self.document = spliturl(self.url)
         # fix missing trailing /

@@ -172,6 +172,7 @@ class Configuration (dict):
             self['port'] += 1
             # test data directory url
             self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
+            self['sslgateway'] = 1
 
 
     def reset (self):
@@ -179,6 +180,7 @@ class Configuration (dict):
         self['configfile'] = proxyconf_file()
         self['port'] = 8080
         self['sslport'] = 8443
+        self['sslgateway'] = 0
         self['adminuser'] = ""
         self['adminpass'] = ""
         self['proxyuser'] = ""
@@ -228,6 +230,9 @@ class Configuration (dict):
 """ % ConfigCharset)
         f.write(' version="%s"\n' % xmlquoteattr(self['version']))
         f.write(' port="%d"\n' % self['port'])
+        f.write(' sslport="%d"\n' % self['sslport'])
+        if self['sslgateway']:
+            f.write(' sslgateway="%d"\n' % self['sslgateway'])
         f.write(' adminuser="%s"\n' % xmlquoteattr(self['adminuser']))
         f.write(' adminpass="%s"\n' % xmlquoteattr(self['adminpass']))
         f.write(' proxyuser="%s"\n' % xmlquoteattr(self['proxyuser']))
@@ -372,9 +377,8 @@ import wc.filter
 
 def make_xmlparser ():
     """return a new xml parser object"""
-    p = xml.parsers.expat.ParserCreate()
-    #p.returns_unicode = 0 # pass utf8-encoded strings to handlers
-    return p
+    # note: this parser returns unicode strings
+    return xml.parsers.expat.ParserCreate()
 
 
 class ParseException (Exception): pass
@@ -491,8 +495,9 @@ class WConfigParser (BaseParser):
         if name=='webcleaner':
             for key,val in attrs.items():
                 self.config[key] = val
-            for key in ('port', 'parentproxyport', 'timeout', 'auth_ntlm',
-	                'colorize', 'development', 'try_google'):
+            for key in ('port', 'sslport', 'parentproxyport', 'timeout',
+                        'auth_ntlm', 'colorize', 'development', 'try_google',
+                        'sslgateway',):
                 self.config[key] = int(self.config[key])
             if self.config['nofilterhosts'] is not None:
                 strhosts = self.config['nofilterhosts']
