@@ -52,7 +52,7 @@ class WebConfig (object):
             elif status==401:
                 headers['WWW-Authenticate'] = "%s\r"%auth
             else:
-                error(GUI, "Authentication with wrong status %d", status)
+                wc.log.error(wc.LOG_GUI, "Authentication with wrong status %d", status)
         if status in [301,302]:
             headers['Location'] = clientheaders['Location']
         gm = mimetypes.guess_type(url, None)
@@ -88,14 +88,14 @@ class WebConfig (object):
                 data = fp.read()
             fp.close()
         except IOError:
-            wc.log.exception(GUI, "Wrong path %r", url)
+            wc.log.exception(wc.LOG_GUI, "Wrong path %r", url)
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
             client.error(404, wc.i18n._("Not Found"))
             return
         except StandardError:
             # catch standard exceptions and report internal error
-            wc.log.exception(GUI, "Template error")
+            wc.log.exception(wc.LOG_GUI, "Template error")
             client.error(500, wc.i18n._("Internal Error"))
             return
         # not catched builtin exceptions are:
