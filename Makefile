@@ -13,7 +13,7 @@ all:
 clean:
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
 	$(MAKE) -C po clean
-	rm -f linkcheck/parser/htmlsax.so
+	rm -f wc/parser/htmlsax.so wc/js/jslib.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 
@@ -21,7 +21,8 @@ clean:
 localbuild:
 	$(MAKE) -C wc/parser
 	$(PYTHON) setup.py build
-	cp -f build/lib.linux-i686-2.2/wc/parser/htmlsax.so wc/parser
+	cp -f build/lib.linux-i686-2.2/wc/parser/htmlsax.so wc/parser/
+	cp -f build/lib.linux-i686-2.2/wc/js/jslib.so wc/js/
 
 localtest:
 	cd wc/parser && python htmllib.py
