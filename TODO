@@ -5,23 +5,6 @@ version 2.20
 - document how to install a proxy that can be used from outside
   (intranet or internet)
 
-- every intern string should be Unicode:
- File "/home/calvin/projects/webcleaner/wc/filter/__init__.py", line 133, in _appl
-yfilter                      
-    data = ffun(data, **attrs)
-  File "/home/calvin/projects/webcleaner/wc/filter/Rewriter.py", line 42, in filter
-    p.feed(data)             
-  File "/home/calvin/projects/webcleaner/wc/filter/HtmlParser.py", line 108, in fee
-d                            
-    super(HtmlParser, self).feed(data)
-  File "/home/calvin/projects/webcleaner/wc/filter/HtmlFilter.py", line 168, in start_element                   
-    self.filter_start_element(tag, attrs)
-  File "/home/calvin/projects/webcleaner/wc/filter/HtmlFilter.py", line 180, in filter_start_element            
-    if rule.match_tag(tag) and rule.match_attrs(attrs):
-  File "/home/calvin/projects/webcleaner/wc/filter/rules/RewriteRule.py", line 180, in match_tag                
-    return self.tag == tag   
-UnicodeDecodeError: 'ascii' codec can't decode byte 0xac in position 1: ordinal not in range(128)               
-
 version 2.21 and above
 
 - use ssl-cert-check bash script
