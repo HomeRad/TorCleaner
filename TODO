@@ -1,5 +1,9 @@
 TODO
 
+- resove html entities (numeric)
+
+- javascript module with spidermonkey
+
 - Python 2.3:
   use Bool type
   use builtin timeout in socket module
@@ -15,8 +19,7 @@ TODO
 
 - Use FOX 1.2 Python bindings (fxpy 1.2)
   When FOX 1.2 is released, help to update fxpy to this release using
-  the much faster new SWIG 1.3 code. Then the gui tools will be
-  considerably faster.
+  the new SWIG 1.3 code.
 
 - dockapp to visualize config and status
   I made machine-parseable config and status output, so write a tool
