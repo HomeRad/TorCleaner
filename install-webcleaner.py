@@ -13,14 +13,17 @@ import sys
 if not sys.platform.startswith('win'):
     # not for us
     sys.exit()
-if sys.version[:5] < "2.3":
-    raise SystemExit, "This program requires Python 2.3 or later."
+if not hasattr(sys, "version_info"):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
+if sys.version_info < (2, 3, 1, 'final', 0):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
 import os
 import time
 import webbrowser
 import distutils.sysconfig
 import win32service
 import win32serviceutil
+import pywintypes
 import wc
 import wc.configuration
 # initialize i18n
@@ -93,7 +96,11 @@ def install_certificates ():
 
 def state_nt_service (name):
     """return status of NT service"""
-    return win32serviceutil.QueryServiceStatus(name)[1]
+    try:
+        return win32serviceutil.QueryServiceStatus(name)[1]
+    except pywintypes.error, msg:
+        print _("Service status error: %s") % str(msg)
+    return None
 
 
 def install_service ():
