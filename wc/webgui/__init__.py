@@ -50,6 +50,9 @@ class WebConfig:
             # XXX this can actually lead to a maximum recursion
             # error when client.error caused the exception
             return client.error(404, i18n._("Not Found"))
+        except ImportError, e:
+            exception(GUI, "No context found")
+            return client.error(500, i18n._("Internal Error"))
         f.close()
         # write response
         self.put_response(data, protocol, status, msg, headers)
@@ -110,9 +113,11 @@ def get_template (url):
 
 
 def get_context (dirs, form, localcontext):
+    """get template context, raise ImportError if not found"""
     # get template-specific context dict
     modulepath = ".".join(['context'] + dirs[:-1])
     template = dirs[-1].replace(".", "_")
+    # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
     if hasattr(template_context, "exec_form") and form:
         # handle form action
