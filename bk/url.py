@@ -142,7 +142,6 @@ def url_norm (url):
         else:
             l.append(k)
     urlparts[3] = '&'.join(l)
-    urlparts[4] = urllib.unquote(urlparts[4]) # anchor
     path = urlparts[2].replace('\\', '/').replace('//', '/')
     if not path or path=='/':
         urlparts[2] = '/'
@@ -152,6 +151,10 @@ def url_norm (url):
         urlparts[2] = os.path.normpath(path).replace('\\', '/')
         if path.endswith('/'):
             urlparts[2] += '/'
+    # quote parts again
+    urlparts[0] = urllib.quote(urlparts[0]) # scheme
+    urlparts[1] = urllib.quote(urlparts[1], ':') # host
+    urlparts[2] = urllib.quote(urlparts[2], '/=,') # path
     return urlparse.urlunsplit(urlparts)
 
 

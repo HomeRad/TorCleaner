@@ -17,6 +17,9 @@ class TestUrl (unittest.TestCase):
         url = "http://redirect.alexa.com/redirect?http://www.offeroptimizer.com"
         nurl = url
         self.assertEqual(bk.url.url_norm(url), nurl)
+        url = "http://www.lesgensducinema.com/photo/Philippe%20Nahon.jpg"
+        nurl = url
+        self.assertEqual(bk.url.url_norm(url), nurl)
 
     def test_fixing (self):
         url = r"http://groups.google.com\test.html"
