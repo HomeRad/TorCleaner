@@ -29,6 +29,11 @@
     Type: feature
     Changed: setup.py
 
+  * HTML data will be defered until all filters have seen some data.
+    This ensures correct header values.
+    Type: bugfix
+    Changed: wc/proxy/HttpServer.py
+
 2.26 "Tokyo Raiders" (released 2.1.2005)
 
   * Do not include test packages in installed binaries. This prevents
