@@ -69,6 +69,7 @@ class Connection(asyncore.dispatcher):
         else:
             self.close()
 
+
     # handler functions
 
     def handle_write(self):
@@ -86,8 +87,10 @@ class Connection(asyncore.dispatcher):
             self.close()
         return num_sent
 
+
     def handle_connect(self):
         debug(BRING_IT_ON, 'connect', self)
+
 
     def handle_read(self):
         if not self.connected:
@@ -106,14 +109,15 @@ class Connection(asyncore.dispatcher):
 	self.recv_buffer += data
         self.process_read()
 
+
     def handle_close(self):
         if self.connected:
             self.delayed_close()
-        
+
+
     def handle_error(self, type, value, tb=None):
         debug(ALWAYS, 'error', self, type, value)
 	import traceback
         if tb: traceback.print_tb(tb)
-        if self.connected:
-            self.close()
+        self.close()
         self.del_channel()

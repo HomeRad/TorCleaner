@@ -5,12 +5,14 @@ webcleaner (0.12) unstable; urgency=low
   * use FOX and FXPy >= 0.99.167
   * global config object in wc.proxy
   * more status info (get it with http://_webcleaner/)
+    hit statistics still need to be filled out
   * added missing return in daemon/posix.py:start()
     now the GUI Proxy buttons are working for POSIX systems
   * new proxy config option "no proxy for" to disable filtering
     for specific sites
+  * POST requests no longer block forever
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 24 Apr 2001 00:21:14 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 25 Apr 2001 01:23:50 +0200
 
 webcleaner (0.11) unstable; urgency=low
 

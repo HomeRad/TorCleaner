@@ -82,7 +82,7 @@ class HttpClient(Connection):
                 data = applyfilter(FILTER_REQUEST_ENCODE, data,
 		                   attrs=self.nofilter)
                 self.content += data
-            else:
+            if self.bytes_remaining <= 0:
                 data = applyfilter(FILTER_REQUEST_DECODE, "",
 		                   fun="finish", attrs=self.nofilter)
                 data = applyfilter(FILTER_REQUEST_DECODE, data,

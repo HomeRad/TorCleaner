@@ -66,6 +66,7 @@ class HttpServer(Server):
             debug(ALWAYS, 'connect error', self.addr, msg)
 
     def handle_connect(self):
+        # XXX assertion ?
         assert self.state == 'connect'
         debug(HURT_ME_PLENTY, 'handle_connect', self)
         self.state = 'client'
