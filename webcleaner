@@ -149,7 +149,8 @@ def main_nt (configdir, args):
     else:
         command = args[0]
     import wc.win32start
-    wc.win32start.ProxyService.configdir = configdir
+    if configdir:
+        wc.win32start.ProxyService.configdir = configdir
     if command=='status':
         print win32start.status()
     elif command in ['start', 'stop', 'restart', 'install', 'remove']:
