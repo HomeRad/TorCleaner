@@ -8,6 +8,8 @@
     Changed files: wc/filter/rules/RewriteRule.py
   * updated filters:
     o remove _blank and _new targets
+    o prevent javascript top frame bashing
+    o use Calzilla/6.0 as user agent
     Changed files: config/*.zap
   * Removed unneeded guruguru.bmp
   * #define YY_NO_UNISTD_H on Windows systems, fixes build error with
