@@ -44,12 +44,13 @@ class Connection (asyncore.dispatcher):
             # It's been closed (presumably recently)
             return
 	if len(self.recv_buffer) > MAX_BUFSIZE:
+            self.handle_error('read buffer full', '', '')
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
             if not data: # It's been closed, and handle_close has been called
                 return
-            debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
+            #debug(HURT_ME_PLENTY, 'read', len(data), '<=', self)
         except socket.error, err:
             self.handle_error('read error', socket.error, err)
             return
@@ -101,7 +102,7 @@ class Connection (asyncore.dispatcher):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            debug(HURT_ME_PLENTY, 'close ready', self)
+            #debug(HURT_ME_PLENTY, 'close ready', self)
             self.close_pending = 1
         else:
             self.close()

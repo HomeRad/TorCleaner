@@ -144,23 +144,23 @@ class Configuration (UserDict.UserDict):
         self['parentproxypass'] = ""
         self['logfile'] = ""
         self['timeout'] = 30
-        self['strict_whitelist'] = 0
-        self['obfuscateip'] = 0
+        self['strict_whitelist'] = False
+        self['obfuscateip'] = False
         self['debuglevel'] = 0
         self['rules'] = []
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
         self['errorlen'] = ErrorLen
         self['errortext'] = ErrorText
-        self['colorize'] = 0
+        self['colorize'] = False
         self['noproxyfor'] = {}
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
-        self['local_sockets_only'] = 0
+        self['local_sockets_only'] = False
         self['localip'] = socket.gethostbyname(socket.gethostname())
         self['mime_content_rewriting'] = []
         self['headersave'] = 100
-        self['showerrors'] = 0
+        self['showerrors'] = False
 
     def read_proxyconf (self):
         """read proxy configuration"""
@@ -174,7 +174,7 @@ class Configuration (UserDict.UserDict):
         from glob import glob
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
-            debug(BRING_IT_ON, "parsing", f)
+            #debug(BRING_IT_ON, "parsing", f)
             ZapperParser().parse(f, self)
         for f in self['rules']:
             f.sort()
@@ -271,7 +271,7 @@ class ParseException (Exception): pass
 
 class BaseParser:
     def parse (self, filename, config):
-        debug("Parsing "+filename)
+        #debug("Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate()
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
@@ -355,6 +355,6 @@ class WConfigParser (BaseParser):
             elif self.config['logfile']:
                 self.config['logfile'] = open(self.config['logfile'], 'a')
         elif name=='filter':
-            debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
+            #debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 

@@ -225,7 +225,7 @@
 <attr>/tiger_redirect\?</attr>
 </rewrite>
 
-<rewrite title="IMDB Advert 3" oid="100"
+<rewrite title="IMDB Advert 3" oid="38"
  desc="The ultimate solution"
  matchurl="imdb"
  tag="img">
