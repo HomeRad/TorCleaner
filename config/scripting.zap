@@ -93,7 +93,8 @@
  search="top\.location\.href\s*=\s*self\.location\.href"/>
 
 <javascript title="Enable JavaScript" oid="14"
- desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"/>
+ desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"
+ disable="1"/>
 
 <rewrite title="&lt;frameset&gt; onunload" oid="15"
  desc="onunload is used for advert popups"
