@@ -17,8 +17,12 @@ clean:
 
 # to build in the current directory (assumes python 2.1)
 localbuild:
+	$(MAKE) -C wc/parser
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-2.1/wc/parser/htmlsax.so wc/parser
+
+localtest:
+	cd wc/parser && python htmllib.py
 
 distclean:	clean cleandeb
 	rm -rf dist build # just to be sure: clean build dir too

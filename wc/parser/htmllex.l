@@ -107,7 +107,7 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align fast
-%option debug
+/*%option debug*/
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
@@ -213,7 +213,7 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** PI ************************/
-<INITIAL>"<?" {
+<INITIAL><\? {
     UPDATE_BUFPOS;
     BEGIN(S_PI);
 }
@@ -225,10 +225,15 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_PI);
 }
 
-<S_PI>[^\?]*|\? {
+<S_PI>[^\?]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
 }
+
+<S_PI>. {
+    return T_WAIT;
+}
+
 
   /*********************** TAGSTART ************************/
 <INITIAL><{RX_WHITE_SPACE}*/[A-Za-z] {
@@ -536,11 +541,11 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     strncat(data->buf, s, slen);
     if (len > data->bufpos) {
         int rewind = len - data->bufpos;
-	fprintf(stderr, "REWIND %d\n", rewind);
+	//fprintf(stderr, "REWIND %d\n", rewind);
 	slen += rewind;
 	len -= rewind;
     }
-    fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
+    //fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
     /* reset userdata */
     data->bufpos = len;
     data->nextpos = 0;
