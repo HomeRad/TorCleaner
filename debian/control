@@ -7,9 +7,10 @@ Build-Depends: python-dev (>= 2.3.1), debhelper (>= 4.1.16), debconf (>= 1.2.9),
 
 Package: webcleaner
 Architecture: any
-Depends: python (>= 2.3.1), python (<< 2.4), debconf (>= 1.2.9), python-imaging, python-crypto, runit, webcleaner-common (>= ${Source-Version}), python-pyopenssl
+Depends: python (>= 2.3.1), python (<< 2.4), debconf (>= 1.2.9), runit, webcleaner-common (>= ${Source-Version})
+Recommends: python-imaging, python-pyopenssl
 Conflicts: python-psyco (<< 1.1.1)
-Suggests: python-psyco, clamav-daemon
+Suggests: python-crypto, python-psyco, clamav-daemon
 Description: a filtering HTTP proxy
  Features:
   * remove unwanted HTML (adverts, flash, etc.)
