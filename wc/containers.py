@@ -25,19 +25,32 @@ class SetList (list):
     """
 
     def append (self, x):
+        """append only if not already there"""
         if x not in self:
             super(SetList, self).append(x)
 
     def extend (self, x):
-        super(SetList, self).extend([i for i in x if i not in self])
+        """extend while eliminating duplicates by appending item for item"""
+        for i in x:
+            self.append(i)
 
     def insert (self, i, x):
-       if x not in self:
-           super(SetList, self).insert(i, x)
+        """insert only if not already there"""
+        if x not in self:
+            super(SetList, self).insert(i, x)
 
     def __setitem__ (self, key, value):
-        if value not in self:
-            super(SetList, self).__setitem__(key, value)
+        """set new value, and eliminate old duplicates (if any)"""
+        oldvalues = []
+        for i in range(len(self)):
+            if self[i]==value:
+                oldvalues.append(i)
+        super(SetList, self).__setitem__(key, value)
+        # remove old duplicates (from last to first)
+        oldvalues.reverse()
+        for i in oldvalues:
+            if i!=key:
+                del self[key]
 
 
 class ListDict (dict):
