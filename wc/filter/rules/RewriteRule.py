@@ -41,9 +41,9 @@ ATTRVAL = 3
 COMPLETE = 4
 ENCLOSED = 5
 
-def buf2data (buf, out):
-    """write buffered data items to output stream out"""
-    for item in buf:
+def tagbuf2data (tagbuf, out):
+    """write tag buffer items to output stream out and returns out"""
+    for item in tagbuf:
         if item[0]==DATA:
             out.write(item[1])
         elif item[0]==STARTTAG:
@@ -198,14 +198,14 @@ class RewriteRule (UrlRule):
         return True
 
 
-    def match_complete (self, pos, buf):
+    def match_complete (self, pos, tagbuf):
         """We know that the tag (and tag attributes) match. Now match
 	   the enclosing block."""
         if not self.enclosed:
             # no enclosed expression => match
             return True
         # put buf items together for matching
-        data = buf2data(buf[pos:], StringIO()).getvalue()
+        data = tagbuf2data(tagbuf[pos:], StringIO()).getvalue()
         return self.enclosed_ro.search(data)
 
 
