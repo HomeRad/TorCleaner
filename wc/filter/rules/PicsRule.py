@@ -52,5 +52,17 @@ class PicsRule (UrlRule):
             # ignore other content
             pass
 
+
+    def toxml (self):
+	s = UrlRule.toxml(self)+">\n"
+        for service, data in self.ratings.items():
+            s += "<service name=\"%s\">\n"%xmlify(service)
+            for category, value in data.items():
+                s += "<category name=\"%s\">%d</category>\n"% \
+                      (xmlify(category), value)
+            s += "</service>\n"
+        return s+"</pics>"
+
+
     def fromFactory (self, factory):
         return factory.fromPicsRule(self)
