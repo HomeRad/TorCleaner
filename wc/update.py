@@ -157,7 +157,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         return chg
     # remember all local config files
     filemap = {}
-    for filename in wc.filterconf_files(wconfig.filterdir):
+    for filename in wc.configuration.filterconf_files(wconfig.filterdir):
         filemap[os.path.basename(filename)] = filename
     # read md5sums
     for line in page.read().splitlines():

@@ -31,7 +31,7 @@ import wc.ip
 # safely set config values upon import
 config = {}
 
-def init (confdir=wc.ConfDir):
+def init (confdir=wc.ConfigDir):
     global config
     config = Configuration(confdir)
     return config
