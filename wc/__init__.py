@@ -189,7 +189,7 @@ from wc.XmlUtils import xmlquote, xmlquoteattr
 class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
 
-    def __init__ (self, configfile=None):
+    def __init__ (self, configfile=None, filterdir=None):
         """Initialize the options"""
         dict.__init__(self)
         if configfile is None:
