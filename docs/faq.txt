@@ -27,7 +27,7 @@ definitely filtered out.**
 
 A: Write a `bug report`_ and I will add a filter rule for it.
 
-.. _bug report: index.html
+.. _bug report: index.html#bug-reports-and-mailing-list
 
 **Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
 some tags or is completely crippled.**
@@ -38,7 +38,7 @@ Then look at the page again.
 If it renders ok, you most likely have encountered a bug in WebCleaner.
 Please write a `bug report`_ and include the URL you have problems with.
 
-.. _bug report: index.html
+.. _bug report: index.html#bug-reports-and-mailing-list
 
 **Q: I am seeing the error "client sent data in state receive".**
 

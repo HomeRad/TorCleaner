@@ -142,8 +142,10 @@ Bug reports and mailing list
 
 For help and bug reports you can join the
 webcleaner-users@lists.sourceforge.net
-mailing list.
+mailing list or read the `list archives`_.
 
+.. _list archives:
+   http://sourceforge.net/mailarchive/forum.php?forum=webcleaner-users
 
 Notes
 =====
