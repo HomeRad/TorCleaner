@@ -367,7 +367,7 @@ For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host).</span><br>
 </tr>
 <tr>
 <td colspan="2">
-<input type="submit" value="Apply" class="submit"
+<input type="submit" value="Apply" class="submit" name="apply"
  i18n:attributes="value">
 </td>
 </tr>
@@ -403,6 +403,14 @@ For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host).</span><br>
 <div tal:condition="error/parentproxyport" i18n:translate="">Invalid parent proxy port.</div>
 <div tal:condition="error/timeout" i18n:translate="">Invalid timeout value.</div>
 <div tal:condition="error/addallowed" i18n:translate="">Invalid host name.</div>
+</div>
+
+<div align="right">
+<form action="restart.html" method="POST"
+ tal:attributes="action string:restart.html.${lang}">
+<input type="submit" value="Restart proxy" class="submit" name="restart"
+ i18n:attributes="value">
+</form>
 </div>
 
 </div>
