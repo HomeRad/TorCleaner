@@ -126,7 +126,11 @@ def update (config, baseurl, dryrun=False, log=None):
     throws IOError on error
     """
     url = baseurl+"md5sums.gz"
-    page = open_url(url)
+    try:
+        page = open_url(url)
+    except IOError, msg:
+        print >>log, "error fetching", url
+        return False
     filemap = {}
     for filename in wc.filterconf_files():
         filemap[os.path.basename(filename)] = filename
@@ -134,14 +138,15 @@ def update (config, baseurl, dryrun=False, log=None):
     chg = False
     for line in lines:
         if "<" in line:
-            raise IOError, "error fetching url "+url
+            print >>log, "error fetching", url
+            return False
         if not line:
             continue
         md5sum, filename = line.split()
         assert filename.endswith('.zap')
+        fullname = os.path.join(ConfigDir, filename)
         # compare checksums
         if filemap.has_key(filename):
-            fullname = filemap[filename]
             data = file(fullname).read()
             digest = list(md5.new(data).digest())
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
@@ -150,11 +155,10 @@ def update (config, baseurl, dryrun=False, log=None):
                 continue
             print >>log, "updating filter", filename
         else:
-            fullname = os.path.join(ConfigDir, filename)
             print >>log, "inserting new filter", filename
         url = baseurl+filename+".gz"
         page = open_url(url)
-        p = ZapperParser(filename)
+        p = ZapperParser(fullname)
         p.parse(page)
         chg = config.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
     return chg
