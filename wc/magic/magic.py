@@ -575,8 +575,6 @@ class Magic (object):
 
                 # If it is out of the file then the test fails.
                 if file_length < offset:
-                    print "X", repr(file_length)
-                    print "X", repr(offset)
                     raise Failed("Data length %d too small, needed %d"%(file_length, offset))
 
                 # Make sure we can read the data at the offset position
