@@ -11,7 +11,8 @@
 #define YYLEX_PARAM scanner
 extern int htmllexInit(void** scanner, void* data);
 extern int htmllexStart(void* scanner, UserData* data, const char* s, int slen);
-extern int htmllexStop(UserData* data);
+extern int htmllexStop(void* scanner, UserData* data);
+extern int htmllexRestart (void* scanner);
 extern int htmllexDestroy(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
@@ -55,6 +56,7 @@ staticforward PyTypeObject parser_type;
 /* parser options */
 %verbose
 %defines
+%debug
 %output="htmlparse.c"
 %pure_parser
 
@@ -332,7 +334,8 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     NEW_BUF(p->userData->buf);
     NEW_BUF(p->userData->tmp_buf);
     p->userData->tmp_tag = p->userData->tmp_attrname =
-	p->userData->tmp_attrval = p->userData->tmp_attrs = NULL;
+	p->userData->tmp_attrval = p->userData->tmp_attrs =
+	p->userData->lexbuf = NULL;
     p->userData->exc_type = NULL;
     p->userData->exc_val = NULL;
     p->userData->exc_tb = NULL;
@@ -372,8 +375,12 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 	Py_DECREF(result);
 	Py_DECREF(s);
 	// reset buffer
-        RESIZE_BUF(self->userData->buf);
+	RESIZE_BUF(self->userData->buf);
+        self->userData->bufpos = self->userData->nextpos = 0;
     }
+    self->userData->tmp_tag = self->userData->tmp_attrs =
+	self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
+    htmllexRestart(self->scanner);
     return Py_BuildValue("i", res);
 }
 
@@ -398,7 +405,7 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
         }
         return NULL;
     }
-    htmllexStop(self->userData);
+    htmllexStop(self->scanner, self->userData);
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -413,6 +420,10 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
     htmllexDestroy(self->scanner);
     // reset buffer
     RESIZE_BUF(self->userData->buf);
+    RESIZE_BUF(self->userData->tmp_buf);
+    self->userData->nextpos = self->userData->bufpos = 0;
+    self->userData->tmp_tag = self->userData->tmp_attrs =
+        self->userData->tmp_attrval = self->userData->tmp_attrname = NULL;
     self->scanner = NULL;
     htmllexInit(&(self->scanner), self->userData);
     Py_INCREF(Py_None);
@@ -461,7 +472,7 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 void inithtmlsax(void) {
     Py_InitModule("htmlsax", htmlsax_methods);
-    //yydebug = 1;
+    yydebug = 1;
 }
 
 /* standard error reporting, indicating an internal error */

@@ -26,6 +26,7 @@ typedef struct {
     /* current position of next syntax element */
     int nextpos;
     /* temporary vars */
+    void* lexbuf;
     char* tmp_buf;
     PyObject* tmp_tag;
     PyObject* tmp_attrname;

@@ -107,6 +107,7 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align fast
+%option debug
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
@@ -486,6 +487,7 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     /* append s to data buffer and scan those bytes */
     int len = strlen(data->buf);
     data->buf = PyMem_Resize(data->buf, char, len+slen+1);
+    if (!data->buf) return -1;
     strncat(data->buf, s, slen);
     /* reset userdata */
     data->bufpos = len;
@@ -493,12 +495,12 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     data->exc_type = NULL;
     data->exc_val = NULL;
     data->exc_tb = NULL;
-    yy_scan_bytes(s, slen, scanner);
+    data->lexbuf = yy_scan_bytes(s, slen, scanner);
     return 0;
 }
 
 /* delete scanned buffer data */
-int htmllexStop (UserData* data) {
+int htmllexStop (void* scanner, UserData* data) {
     if (data->nextpos<=0) return 0;
     else {
 	int len = strlen(data->buf);
@@ -508,7 +510,18 @@ int htmllexStop (UserData* data) {
 	}
 	data->buf[j] = '\0';
 	data->buf = PyMem_Resize(data->buf, char, len-data->nextpos+1);
+	if (!data->buf) return -1;
     }
+    if (data->lexbuf) {
+	yy_delete_buffer(data->lexbuf, scanner);
+	data->lexbuf = NULL;
+    }
+    return 0;
+}
+
+
+int htmllexRestart (void* scanner) {
+    //((struct yy_globals_t*)scanner)->yy_start = 0;
     return 0;
 }
 
