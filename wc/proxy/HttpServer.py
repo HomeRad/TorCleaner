@@ -212,17 +212,17 @@ class HttpServer (Server):
         self.statuscode = None
         if response:
             self.statuscode = response[1]
-        if self.statuscode == '100':
-            # it's a Continue request, so go back to waiting for headers
-            # XXX for HTTP/1.1 clients, forward this
-            self.state = 'response'
-            return
         # get headers
         fp = StringIO(self.read(m.end()))
         msg = rfc822.Message(fp)
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
+        if self.statuscode == '100':
+            # it's a Continue request, so go back to waiting for headers
+            # XXX for HTTP/1.1 clients, forward this
+            self.state = 'response'
+            return
         # filter headers
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
