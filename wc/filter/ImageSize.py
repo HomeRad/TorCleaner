@@ -16,7 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import Image
 import os
 import cStringIO as StringIO
 
@@ -24,6 +23,8 @@ import wc
 import wc.log
 import wc.configuration
 import wc.filter
+if wc.HasPil:
+    import Image
 
 
 class ImageSize (wc.filter.Filter.Filter):
@@ -137,6 +138,9 @@ class ImageSize (wc.filter.Filter.Filter):
 
     def get_attrs (self, url, headers):
         d = super(ImageSize, self).get_attrs(url, headers)
+        # check PIL support
+        if not wc.HasPil:
+            return d
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
