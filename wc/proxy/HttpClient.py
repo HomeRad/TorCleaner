@@ -18,7 +18,8 @@ import wc.proxy.Allowed
 import wc.proxy
 import wc.proxy.Headers
 import wc.proxy.auth
-import wc.proxy.auth.ntlm
+if wc.HasCrypto:
+    import wc.proxy.auth.ntlm
 import wc.filter
 import wc.webgui
 import wc.webgui.webconfig
