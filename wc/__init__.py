@@ -86,20 +86,20 @@ def initlog (filename, appname, filelogs=True):
 def get_wc_handler (logfile):
     """return a handler for webcleaner logging"""
     mode = 'a'
-    maxBytes = 1024*1024*2 # 2 MB
-    backupCount = 5 # number of files to generate
+    max_bytes = 1024*1024*2 # 2 MB
+    backup_count = 5 # number of files to generate
     handler = logging.handlers.RotatingFileHandler(
-                                     logfile, mode, maxBytes, backupCount)
+                                     logfile, mode, max_bytes, backup_count)
     return wc.log.set_format(handler)
 
 
 def get_access_handler (logfile):
     """return a handler for access logging"""
     mode = 'a'
-    maxBytes = 1024*1024*2 # 2 MB
-    backupCount = 5 # number of files to generate
+    max_bytes = 1024*1024*2 # 2 MB
+    backup_count = 5 # number of files to generate
     handler = logging.handlers.RotatingFileHandler(
-                                     logfile, mode, maxBytes, backupCount)
+                                     logfile, mode, max_bytes, backup_count)
     # log only the message
     handler.setFormatter(logging.Formatter("%(message)s"))
     return handler
@@ -423,6 +423,8 @@ class BaseParser (object):
         super(BaseParser, self).__init__()
         self.filename = filename
         self.config = _config
+        # set by _preparse() and _postparse()
+        self.xmlparser = None
 
     def _preparse (self):
         """set handler functions before parsing"""
@@ -526,6 +528,9 @@ class WConfigParser (BaseParser):
     """parser class for webcleaner.conf configuration files"""
 
     def start_element (self, name, attrs):
+        """handle xml configuration for webcleaner attributes and filter
+           modules
+        """
         if name == 'webcleaner':
             for key, val in attrs.items():
                 self.config[key] = val

@@ -70,15 +70,18 @@ def decode (page):
 
 class HttpWithGzipHandler (urllib2.HTTPHandler):
     "support gzip encoding"
+
     def http_open (self, req):
+        """open and gunzip request data"""
         return decode(urllib2.HTTPHandler.http_open(self, req))
 
 
 if hasattr(httplib, 'HTTPS'):
     class HttpsWithGzipHandler (urllib2.HTTPSHandler):
         "support gzip encoding"
+
         def http_open (self, req):
-            """open gzip-decoded request with https handler"""
+            """open and gunzip request data"""
             return decode(urllib2.HTTPSHandler.http_open(self, req))
 
 
