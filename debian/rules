@@ -23,7 +23,12 @@ makebuilddir/webcleaner::
 # for CVS build regenerate ./configure
 	@if ! test -f ./configure; then ./autogen.sh; fi
 
-binary-post-install/webcleaner::
+binary-post-install/webcleaner-common::
+# move files
+	dh_movefiles --sourcedir=debian/webcleaner
+# and cleanup after moving
+	rm -rf $(BASE)/usr/share/webcleaner/templates
+	rm -rf $(BASE)/usr/share/webcleaner/examples
 	chown root:adm $(BASE)/var/log/webcleaner
 	chmod 0750 $(BASE)/var/log/webcleaner
 # delete INSTALL file
