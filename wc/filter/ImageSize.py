@@ -41,7 +41,7 @@ class ImageSize (Filter):
     def __init__ (self, mimelist):
         super(ImageSize, self).__init__(mimelist)
         # minimal amount of image data for PIL to read header info
-        self.min_bufsize = 256
+        self.min_bufsize = 6000
 
 
     def addrule (self, rule):
@@ -51,14 +51,14 @@ class ImageSize (Filter):
 
 
     def filter (self, data, **attrs):
-        if attrs['buffer'].closed:
+        if not attrs.has_key('buffer') or attrs['buffer'].closed:
             # we do not block this image
-            # or we do not have enough buffer data
+            # or we do not have enough buffer data yet
             return data
         buf = attrs['buffer']
         buf.write(data)
         if buf.tell() > self.min_bufsize:
-            if self.check_sizes(buf):
+            if self.check_sizes(buf, attrs['sizes']):
                 # size is ok
                 data = buf.getvalue()
                 buf.close()
@@ -67,12 +67,22 @@ class ImageSize (Filter):
 
 
     def finish (self, data, **attrs):
-        # XXX
-        pass
+        if not attrs.has_key('buffer') or attrs['buffer'].closed:
+            # we do not block this image
+            return data
+        buf = attrs['buffer']
+        buf.write(data)
+        if self.check_sizes(buf, attrs['sizes']):
+            # size is ok
+            data = buf.getvalue()
+            buf.close()
+            return data
+        return ''
 
 
-    def check_sizes (self, buf):
+    def check_sizes (self, buf, sizes):
         try:
+            buf.seek(0)
             img = Image.open(buf, 'r')
             for size, formats in sizes:
                 if size==img.size:
@@ -82,8 +92,7 @@ class ImageSize (Filter):
                     elif img.format.lower() in formats:
                         return False
         except IOError:
-            # XXX print error
-            pass
+            exception(FILTER, "Could not get image size")
         return True
 
 
