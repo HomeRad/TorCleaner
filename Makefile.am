@@ -21,7 +21,7 @@ clean-local:
 	rm -f index.html* test.gif
 
 # to build in the current directory
-localbuild:
+localbuild: all
 	$(MAKE) -C wc/parser
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-$(PYVER)/wc/parser/htmlsax.so wc/parser/
