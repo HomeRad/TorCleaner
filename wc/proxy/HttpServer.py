@@ -5,6 +5,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer, get_http_version
+from wc.proxy.Headers import server_set_headers
 from wc import i18n, config, remove_headers, has_header_value
 from wc.debug import *
 from ClientServerMatchmaker import serverpool
@@ -251,7 +252,7 @@ class HttpServer (Server):
             self.state = 'recycle'
             self.reuse()
             return
-        server_set_proxy_headers(self.headers)
+        server_set_headers(self.headers)
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()

@@ -1,4 +1,6 @@
 """Header mangling"""
+from wc import remove_headers
+import sys
 
 def set_via_header (headers):
     """set via header"""
@@ -76,7 +78,7 @@ def client_get_max_forwards (headers):
     return mf
 
 
-def server_set_proxy_headers (headers):
+def server_set_headers (headers):
     server_remove_hop_by_hop_headers(headers)
     set_via_header(headers)
     server_set_date_header(headers)

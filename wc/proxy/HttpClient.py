@@ -6,6 +6,7 @@ from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip, remove_headers
 from wc.proxy import log, match_host
+from wc.proxy.Headers import client_set_headers
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.debug import *
@@ -122,7 +123,7 @@ class HttpClient (Connection):
             msg.rewindbody()
             self.recv_buffer = fp.read() + self.recv_buffer
             # work on these headers
-            self.compress = client_set_proxy_headers(msg)
+            self.compress = client_set_headers(msg)
             # filter headers
             self.headers = applyfilter(FILTER_REQUEST_HEADER,
                               msg, fun="finish", attrs=self.nofilter)
