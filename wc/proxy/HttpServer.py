@@ -268,7 +268,9 @@ class HttpServer (Server):
                 print >>sys.stderr, "Warning: change Content-Encoding from %s to %s in %s" % \
                  (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
                 self.headers['Content-Encoding'] = gm[1]
-
+        # hmm, fix application/x-httpd-php*
+        if self.headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
+            self.headers['Content-Type'] = 'text/html'
 
     def add_encoding_headers (self):
         # will content be rewritten?
