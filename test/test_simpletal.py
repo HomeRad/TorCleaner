@@ -23,6 +23,6 @@ def get_context ():
     return context
 
 
-fp = file(os.path.join(os.getcwd(), "templates", "classic", "macros", "rules.html"))
+fp = file(os.path.join(os.getcwd(), "test", "html", "taltest.html"))
 context = get_context()
 print expand_template(fp, context)
