@@ -8,6 +8,9 @@
     Added: doc/en/*, doc/de/*
     Changed: MANIFEST.in, setup.py
 
+  * Ignore unknown or unsupported tags in XML configuration files.
+    Changed: wc/configuration.py
+
 2.24 "Tootsie" (released 10.12.2004)
 
   * Really ignore encoding errors of HTML content.

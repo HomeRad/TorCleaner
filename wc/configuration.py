@@ -343,6 +343,8 @@ class BaseParser (object):
         super(BaseParser, self).__init__()
         self.filename = filename
         self.config = _config
+        # error condition
+        self.error = None
         # set by _preparse() and _postparse()
         self.xmlparser = None
 
@@ -399,7 +401,6 @@ class ZapperParser (BaseParser):
         from wc.filter.rules.FolderRule import FolderRule
         self.folder = FolderRule(filename=filename)
         self.cmode = None
-        self.error = None
         self.rule = None
         self.compile_data = compile_data
 
@@ -422,7 +423,7 @@ class ZapperParser (BaseParser):
         elif name == 'folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            wc.log.warn(wc.LOG_PROXY, _("unknown tag name %r"), name)
+            wc.log.warn(wc.LOG_FILTER, _("unknown tag name %r"), name)
             self.error = name
             self.cmode = None
 
@@ -462,6 +463,8 @@ class WConfigParser (BaseParser):
         """handle xml configuration for webcleaner attributes and filter
            modules
         """
+        if self.error:
+            return
         if name == 'webcleaner':
             for key, val in attrs.items():
                 self.config[key] = val
@@ -485,3 +488,12 @@ class WConfigParser (BaseParser):
             wc.log.debug(wc.LOG_FILTER, "enable filter module %s",
                          attrs['name'])
             self.config['filters'].append(attrs['name'])
+        else:
+            wc.log.warn(wc.LOG_PROXY, _("unknown tag name %r"), name)
+            self.error = name
+
+    def end_element (self, name):
+        """handle error case"""
+        if self.error:
+            if name == self.error:
+                self.error = None
