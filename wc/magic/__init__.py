@@ -46,7 +46,11 @@ def classify (fp):
         assert os.path.exists(magicfile)
         magiccache = magicfile+".mgc"
         _magic = Magic(magicfile, magiccache)
-    return _magic.classify(fp)
+    mime = _magic.classify(fp)
+    if mime:
+        # split off any trailing info
+        return mime.split()[0]
+    return None
 
 
 # Need to have a checksum on the cache and source file to update at object
