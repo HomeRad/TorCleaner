@@ -36,7 +36,7 @@ def get_localaddrs ():
                 ip = subkey.get('IPAddress', '')
             if not (isinstance(ip, basestring) and ip):
                 continue
-            addrs.add(str(ip))
+            addrs.add(str(ip).lower())
     except EnvironmentError:
         pass
     return addrs
@@ -60,8 +60,8 @@ def resolver_config (config):
         else:
             servers = wc.winreg.stringdisplay(key.get("NameServer", ""))
             domains = key.get("SearchList", "").split()
-        config.nameservers.extend([ str(s) for s in servers if s ])
-        config.search_domains.extend([ str(d) for d in domains if d ])
+        config.nameservers.extend([ str(s).lower() for s in servers if s ])
+        config.search_domains.extend([ str(d).lower() for d in domains if d ])
     try: # search adapters
         key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
   r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\DNSRegisteredAdapters")
@@ -71,7 +71,7 @@ def resolver_config (config):
         for subkey in key.subkeys():
             values = subkey.get("DNSServerAddresses", "")
             servers = wc.winreg.binipdisplay(values)
-            config.nameservers.extend([ str(s) for s in servers if s ])
+            config.nameservers.extend([ str(s).lower() for s in servers if s ])
     try: # search interfaces
         key = wc.winreg.key_handle(wc.winreg.HKEY_LOCAL_MACHINE,
            r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
@@ -85,6 +85,6 @@ def resolver_config (config):
             else:
                 servers = wc.winreg.stringdisplay(subkey.get('NameServer', ''))
                 domains = subkey.get("SearchList", "").split()
-            config.nameservers.extend([ str(s) for s in servers if s ])
-            config.search_domains.extend([ str(d) for d in domains if d ])
+            config.nameservers.extend([ str(s).lower() for s in servers if s ])
+            config.search_domains.extend([ str(d).lower() for d in domains if d ])
 

@@ -58,13 +58,13 @@ def add_addrinfo (hosts, host):
     try:
         addrinfo = socket.gethostbyaddr(host)
     except socket.error:
-        hosts.add(host)
+        hosts.add(host.lower())
         return
-    hosts.add(addrinfo[0])
+    hosts.add(addrinfo[0].lower())
     for h in addrinfo[1]:
-        hosts.add(h)
+        hosts.add(h.lower())
     for h in addrinfo[2]:
-        hosts.add(h)
+        hosts.add(h.lower())
 
 
 class DnsConfig (object):

@@ -130,6 +130,6 @@ def resolver_config (config):
                 config.search_domains.append('.'+domain.lower())
         m = re.match(r'^nameserver\s+(\S+)\s*$', line)
         if m:
-            config.nameservers.append(m.group(1))
+            config.nameservers.append(m.group(1).lower())
 
 
