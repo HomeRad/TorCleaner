@@ -30,8 +30,8 @@ class Header (wc.filter.Filter.Filter):
     """filter for adding, modifying and deleting headers"""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [wc.filter.FILTER_REQUEST_HEADER,
-              wc.filter.FILTER_RESPONSE_HEADER]
+    stages = [wc.filter.STAGE_REQUEST_HEADER,
+              wc.filter.STAGE_RESPONSE_HEADER]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ['header']
@@ -42,42 +42,44 @@ class Header (wc.filter.Filter.Filter):
         """configure header rules to add/delete"""
         d = super(Header, self).get_attrs(url, headers)
         delete = {
-            wc.filter.FILTER_REQUEST_HEADER: [],
-            wc.filter.FILTER_RESPONSE_HEADER: [],
+            wc.filter.STAGE_REQUEST_HEADER: [],
+            wc.filter.STAGE_RESPONSE_HEADER: [],
         }
         add = {
-            wc.filter.FILTER_REQUEST_HEADER: [],
-            wc.filter.FILTER_RESPONSE_HEADER: [],
+            wc.filter.STAGE_REQUEST_HEADER: [],
+            wc.filter.STAGE_RESPONSE_HEADER: [],
         }
         for rule in self.rules:
             # filter out unwanted rules
             if not rule.applies_to(url) or not rule.name:
                 continue
             # name is a regular expression match object
+            wc.log.debug(wc.LOG_FILTER, "XXX %r %r", rule.name, rule.value)
             if not rule.value:
                 # no value --> header name should be deleted
                 # deletion can apply to many headers
                 matcher = re.compile(rule.name, re.I).match
                 if rule.filterstage in ('both', 'request'):
-                    delete[wc.filter.FILTER_REQUEST_HEADER].append(matcher)
+                    delete[wc.filter.STAGE_REQUEST_HEADER].append(matcher)
                 if rule.filterstage in ('both', 'response'):
-                    delete[wc.filter.FILTER_RESPONSE_HEADER].append(matcher)
+                    delete[wc.filter.STAGE_RESPONSE_HEADER].append(matcher)
             else:
                 # name, value must be ASCII strings
                 name = str(rule.name)
                 val = str(rule.value)
                 if rule.filterstage in ('both', 'request'):
-                    add[wc.filter.FILTER_REQUEST_HEADER].append((name, val))
+                    add[wc.filter.STAGE_REQUEST_HEADER].append((name, val))
                 if rule.filterstage in ('both', 'response'):
-                    add[wc.filter.FILTER_RESPONSE_HEADER].append((name, val))
+                    add[wc.filter.STAGE_RESPONSE_HEADER].append((name, val))
         d['header_add'] = add
         d['header_delete'] = delete
         return d
 
     def doit (self, data, attrs):
         """apply stored header rules to data, which is a WcMessage object"""
+        wc.log.debug(wc.LOG_FILTER, "%s filter %s", self, data)
         delete = sets.Set()
-        # stage is FILTER_REQUEST_HEADER or FILTER_RESPONSE_HEADER
+        # stage is STAGE_REQUEST_HEADER or STAGE_RESPONSE_HEADER
         stage = attrs['filterstage']
         for h in data.keys():
             for name_match in attrs['header_delete'][stage]:

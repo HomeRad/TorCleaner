@@ -6,7 +6,7 @@ import unittest
 
 import wc
 import wc.configuration
-from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
+from wc.filter import applyfilter, get_filterattrs, STAGE_REQUEST
 
 class TestBlocker (unittest.TestCase):
 
@@ -18,8 +18,8 @@ class TestBlocker (unittest.TestCase):
 
     def test_block (self):
         data = "GET %s HTTP/1.0" % self.url
-        attrs = get_filterattrs(self.url, [FILTER_REQUEST])
-        filtered = applyfilter(FILTER_REQUEST, data, 'finish', attrs)
+        attrs = get_filterattrs(self.url, [STAGE_REQUEST])
+        filtered = applyfilter(STAGE_REQUEST, data, 'finish', attrs)
         self.assert_(filtered.find("blocked.html")!=-1)
 
 

@@ -27,7 +27,7 @@ import wc.log
 class ImageReducer (wc.filter.Filter.Filter):
     """Reduce the image size by making low quality JPEGs"""
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
+    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = ["imagereduce"]

@@ -29,7 +29,7 @@ class BinaryCharFilter (wc.filter.Filter.Filter):
        with their correct HTML equivalent.
     """
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [wc.filter.FILTER_RESPONSE_MODIFY]
+    stages = [wc.filter.STAGE_RESPONSE_MODIFY]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = []

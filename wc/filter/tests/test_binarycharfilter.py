@@ -6,7 +6,7 @@ import unittest
 import wc
 import wc.configuration
 import wc.proxy.Headers
-from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 
 
 class TestBinaryCharFilter (unittest.TestCase):
@@ -21,9 +21,9 @@ class TestBinaryCharFilter (unittest.TestCase):
     def filt (self, data, result):
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-Type'] = "text/html"
-        attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY],
+        attrs = get_filterattrs("", [STAGE_RESPONSE_MODIFY],
                                 serverheaders=headers, headers=headers)
-        filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
+        filtered = applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', attrs)
         self.assertEqual(filtered, result)
 
     def test_quotes (self):

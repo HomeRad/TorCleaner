@@ -53,7 +53,7 @@ class Compress (wc.filter.Filter.Filter):
     """filter class compressing its input with zlib"""
 
     # which filter stages this filter applies to (see filter/__init__.py)
-    orders = [wc.filter.FILTER_RESPONSE_ENCODE]
+    stages = [wc.filter.STAGE_RESPONSE_ENCODE]
     # which rule types this filter applies to (see Rules.py)
     # all rules of these types get added with Filter.addrule()
     rulenames = []

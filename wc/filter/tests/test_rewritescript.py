@@ -7,7 +7,7 @@ import wc.configuration
 from wc.proxy import proxy_poll, run_timers
 from wc.proxy.Headers import WcMessage
 from wc.filter import FilterException
-from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 
 
 class TestRewriteScript (unittest.TestCase):
@@ -21,20 +21,20 @@ class TestRewriteScript (unittest.TestCase):
         wc.proxy.dns_lookups.init_resolver()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
-        self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY],
+        self.attrs = get_filterattrs("", [STAGE_RESPONSE_MODIFY],
                                      serverheaders=self.headers,
                                      headers=self.headers)
 
     def filt (self, data, result):
         filtered = ""
         try:
-            filtered += applyfilter(FILTER_RESPONSE_MODIFY, data, 'filter', self.attrs)
+            filtered += applyfilter(STAGE_RESPONSE_MODIFY, data, 'filter', self.attrs)
         except FilterException:
             pass
         i = 1
         while 1:
             try:
-                filtered += applyfilter(FILTER_RESPONSE_MODIFY, "", 'finish', self.attrs)
+                filtered += applyfilter(STAGE_RESPONSE_MODIFY, "", 'finish', self.attrs)
                 break
             except FilterException:
                 proxy_poll(timeout=max(0, run_timers()))

@@ -37,42 +37,41 @@ import wc.configuration
 import wc.filter.rules
 import wc.proxy.Headers
 
-# filter orders
+# filter stages
 
-
-# Filter complete request (blocking)
-FILTER_REQUEST = 0
+# Filter complete request (eg. Block filter module)
+STAGE_REQUEST = "Request"
 # Outgoing header manglers
-FILTER_REQUEST_HEADER = 1
+STAGE_REQUEST_HEADER = "Request header"
 # May decode outgoing content.
-FILTER_REQUEST_DECODE = 2
+STAGE_REQUEST_DECODE = "Request decode"
 # May modify outgoing content.
-FILTER_REQUEST_MODIFY = 3
+STAGE_REQUEST_MODIFY = "Request modify"
 # May modify outgoing content.
-FILTER_REQUEST_ENCODE = 4
+STAGE_REQUEST_ENCODE = "Request encode"
 # Filter complete response
-FILTER_RESPONSE = 5
+STAGE_RESPONSE = "Response"
 # Filter complete response
-FILTER_RESPONSE_HEADER = 6
+STAGE_RESPONSE_HEADER = "Response header"
 # May decode incoming content
-FILTER_RESPONSE_DECODE = 7
+STAGE_RESPONSE_DECODE = "Response decode"
 # May modify incoming content
-FILTER_RESPONSE_MODIFY = 8
+STAGE_RESPONSE_MODIFY = "Response modify"
 # May encode incoming content
-FILTER_RESPONSE_ENCODE = 9
+STAGE_RESPONSE_ENCODE = "Response encode"
 
-FilterOrder = {
-    FILTER_REQUEST: "Request",
-    FILTER_REQUEST_HEADER: "Request Header",
-    FILTER_REQUEST_DECODE: "Request Decode",
-    FILTER_REQUEST_MODIFY: "Request Modify",
-    FILTER_REQUEST_ENCODE: "Request Encode",
-    FILTER_RESPONSE: "Response",
-    FILTER_RESPONSE_HEADER: "Response Header",
-    FILTER_RESPONSE_DECODE: "Response Decode",
-    FILTER_RESPONSE_MODIFY: "Response Modify",
-    FILTER_RESPONSE_ENCODE: "Response Encode",
-}
+FilterStages = [
+    STAGE_REQUEST,
+    STAGE_REQUEST_HEADER,
+    STAGE_REQUEST_DECODE,
+    STAGE_REQUEST_MODIFY,
+    STAGE_REQUEST_ENCODE,
+    STAGE_RESPONSE,
+    STAGE_RESPONSE_HEADER,
+    STAGE_RESPONSE_DECODE,
+    STAGE_RESPONSE_MODIFY,
+    STAGE_RESPONSE_ENCODE,
+]
 
 class FilterException (Exception):
     """Generic filter exception"""
@@ -103,11 +102,6 @@ class FilterProxyError (FilterException):
         self.text = text
 
 
-def printFilterOrder (i):
-    """return string representation of filter order i"""
-    return FilterOrder.get(i, "Invalid")
-
-
 def compile_mime (mime):
     """compile mimelist entry to regex object and return it"""
     return re.compile("^(?i)%s(;.+)?$"%mime)
@@ -120,21 +114,18 @@ def GetRuleFromName (name):
     return getattr(mod, name)()
 
 
-def applyfilter (i, data, fun, attrs):
-    """Apply all filters which are registered in filter level i.
-    For different filter levels we have different data objects.
-    Look at the filter examples.
+def applyfilter (filterstage, data, fun, attrs):
+    """Apply all filters which are registered in the given filter stage.
+       For different filter stages we have different data objects.
+       Look at the filter examples.
     """
-    wc.log.debug(wc.LOG_FILTER, "Filter %d bytes with %s..", len(data), attrs)
+    wc.log.debug(wc.LOG_FILTER, "Filter %d bytes in %s..",
+                 len(data), filterstage)
     if attrs.get('nofilter') or (fun!='finish' and not data):
         wc.log.debug(wc.LOG_FILTER, ".. don't filter")
         return data
-    return _applyfilter(i, data, fun, attrs)
-
-
-def _applyfilter (i, data, fun, attrs):
-    attrs['filterstage'] = i
-    filters = wc.configuration.config['filterlist'][i]
+    attrs['filterstage'] = filterstage
+    filters = wc.configuration.config['filterlist'][filterstage]
     for f in filters:
         ffun = getattr(f, fun)
         if f.applies_to_mime(attrs['mime']):
@@ -145,21 +136,7 @@ def _applyfilter (i, data, fun, attrs):
     return data
 
 
-def applyfilters (levels, data, fun, attrs):
-    """Apply all filters which are registered in filter levels.
-    For different filter levels we have different data objects.
-    Look at the filter examples.
-    """
-    wc.log.debug(wc.LOG_FILTER, "Filter %d bytes with %s..", len(data), attrs)
-    if attrs.get('nofilter') or (fun!='finish' and not data):
-        wc.log.debug(wc.LOG_FILTER, ".. don't filter")
-        return data
-    for i in levels:
-        data = _applyfilter(i, data, fun, attrs)
-    return data
-
-
-def get_filterattrs (url, filterstages, browser='Calzilla/6.0',
+def get_filterattrs (url, filterstage, browser='Calzilla/6.0',
                      clientheaders=None, serverheaders=None, headers=None):
     """init external state objects"""
     if clientheaders is None:
@@ -185,11 +162,10 @@ def get_filterattrs (url, filterstages, browser='Calzilla/6.0',
         charset = get_mime_charset(attrs['mime'])
         if charset:
             attrs['charset'] = charset
-    for i in filterstages:
-        for f in wc.configuration.config['filterlist'][i]:
-            # note: get attributes of _all_ filters since the
-            # mime type can change dynamically
-            attrs.update(f.get_attrs(url, attrheaders))
+    for f in wc.configuration.config['filterlist'][filterstage]:
+        # note: get attributes of _all_ filters since the
+        # mime type can change dynamically
+        attrs.update(f.get_attrs(url, attrheaders))
     return attrs
 
 

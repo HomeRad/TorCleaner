@@ -4,7 +4,7 @@
 import unittest
 import wc
 import wc.configuration
-from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 from wc.proxy.Headers import WcMessage
 
 
@@ -18,14 +18,14 @@ class TestRewriter (unittest.TestCase):
         wc.configuration.config.init_filter_modules()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
-        self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY],
+        self.attrs = get_filterattrs("", [STAGE_RESPONSE_MODIFY],
                                      serverheaders=self.headers,
                                      headers=self.headers)
 
     def filt (self, data, result):
         """filter specified data, expect result. Call this only once per
            test!"""
-        filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', self.attrs)
+        filtered = applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', self.attrs)
         self.assertEqual(filtered, result)
 
     def testClosingTag (self):
