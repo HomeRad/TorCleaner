@@ -1,9 +1,5 @@
-#!/usr/bin/python -O
+#!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
-"""
-Setup file for the distuils module.
-XXX Some patches here can be removed when moving to Python >= 2.4.
-"""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -19,6 +15,10 @@ XXX Some patches here can be removed when moving to Python >= 2.4.
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Setup file for the distuils module.
+XXX Some patches here can be removed when moving to Python >= 2.4.
+"""
 
 import sys
 if not hasattr(sys, "version_info"):
@@ -30,30 +30,19 @@ import stat
 import re
 import string
 import glob
-from types import StringType, TupleType, ListType
 from distutils.core import setup, Extension, DEBUG
-#try:
-#    import py2exe
-#    distklass = py2exe.Distribution
-#except ImportError:
-#    import distutils.dist
-#    distklass = distutils.dist.Distribution
-import distutils.command
 import distutils.dist
-from distutils.errors import CompileError
-distklass = distutils.dist.Distribution
-from distutils.command.install import install
+import distutils.command
 from distutils.command.bdist_wininst import bdist_wininst
+from distutils.command.install import install
 from distutils.command.install_data import install_data
 from distutils.command.build_ext import build_ext
 from distutils.command.build import build
 from distutils.command.clean import clean
-from distutils.file_util import write_file
 from distutils.dir_util import create_tree, remove_tree
-from distutils import util, log
+from distutils.file_util import write_file
 from distutils.sysconfig import get_python_version
-
-from wc import msgfmt
+from distutils import util, log
 
 # cross compile config
 cc = os.environ.get("CC")
@@ -153,7 +142,7 @@ class MyInstallData (install_data, object):
                 os.chmod(path, mode)
 
 
-class MyDistribution (distklass, object):
+class MyDistribution (distutils.dist.Distribution, object):
 
     def __init__ (self, attrs=None):
         super(MyDistribution, self).__init__(attrs=attrs)
@@ -372,6 +361,7 @@ class MyBuild (build, object):
             _build_dst = os.path.join("build", _dst)
             self.mkpath(os.path.dirname(_build_dst))
             self.announce("Compiling %s -> %s" % (_src, _build_dst))
+            from wc import msgfmt
             msgfmt.make(_src, _build_dst)
 
     def run (self):
