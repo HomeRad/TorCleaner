@@ -50,7 +50,7 @@ class Rewriter(Filter):
 
     def filter(self, data, **attrs):
         p = attrs['filter']
-        debug(NIGHTMARE, "Rewriting filter", p)
+        debug(NIGHTMARE, p, `data`)
         p.feed(data)
         return p.flush()
 
@@ -80,7 +80,7 @@ class HtmlFilter(SGMLParser):
 
 
     def __repr__(self):
-        return "<HtmlFilter with buffer %s >" % self.buffer
+        return "<HtmlFilter with rulestack %s >" % self.rulestack
 
     def buffer_append_data(self, data):
         """we have to make sure that we have no two following
@@ -154,7 +154,8 @@ class HtmlFilter(SGMLParser):
         tobuffer = (STARTTAG, tag, attrs)
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                debug(NIGHTMARE, "matched rule %s" % rule.title)
+                debug(NIGHTMARE, "matched rule %s on tag %s" % \
+		      (`rule.title`, `tag`))
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute

@@ -12,6 +12,13 @@ from wc.debug_levels import *
 
 TIMERS = [] # list of (time, function)
 
+def log(msg):
+    """If _LOGFILE is defined write the msg into it. The message msg
+       must be in common log file format."""
+    if _LOGFILE:
+        _LOGFILE.write(msg)
+
+
 # XXX better name/implementation for this function
 def stripsite(url):
     import urlparse

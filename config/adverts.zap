@@ -167,6 +167,7 @@
 
 <rewrite title="wohin.heute.de"
  desc="Scheissendreck Werbeframe auf wohin.heute.de, wech damit."
+ disable="1"
  tag="head">
 <enclosed>Werbeframe</enclosed>
 <replace part="enclosed"/>

@@ -18,6 +18,7 @@
 import os,sys,UserDict
 import _webcleaner2_configdata as configdata
 from string import ljust,rjust,replace,join
+from debug_levels import *
 
 Version = configdata.version
 AppName = configdata.name
@@ -239,5 +240,6 @@ class WConfigParser(BaseParser):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
         elif name=='filter':
+            debug(ALWAYS, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 

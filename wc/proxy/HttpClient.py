@@ -1,9 +1,9 @@
-import rfc822
+import rfc822,time
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from string import split,find,join
-from wc import debug
+from wc import debug,log
 from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
@@ -43,7 +43,9 @@ class HttpClient(Connection):
             i = find(self.recv_buffer, '\r\n')
             if i >= 0: # One newline ends request
                  # self.read(i) is not including the newline
-                self.request = applyfilter(FILTER_REQUEST, self.read(i))
+                self.request = applyfilter(FILTER_REQUEST, self.read(i), fun="finish")
+                log('%s - %s - %s\n' % (self.addr,
+		    time.ctime(time.time()), self.request))
                 self.state = 'headers'
 
         if self.state == 'headers':
@@ -53,7 +55,8 @@ class HttpClient(Connection):
                 assert self.read(2) == '\r\n'
                 i -= 2 # Skip over newline before headers
                 self.headers = applyfilter(FILTER_REQUEST_HEADER,
-		               rfc822.Message(StringIO(self.read(i))))
+		               rfc822.Message(StringIO(self.read(i))),
+			       fun="finish")
                 self.state = 'content'
                 if self.headers.has_key('content-length'):
                     self.bytes_remaining = int(self.headers.getheader('content-length'))
@@ -72,7 +75,10 @@ class HttpClient(Connection):
                 self.bytes_remaining -= len(data)
                 self.content += data
             else:
-                # XXX finish
+                data = applyfilter(FILTER_REQUEST_DECODE, "", fun="finish")
+                data = applyfilter(FILTER_REQUEST_DECODE, data, fun="finish")
+                data = applyfilter(FILTER_REQUEST_DECODE, data, fun="finish")
+                self.content += data
 
                 # We're done reading content
                 self.state = 'receive'

@@ -52,7 +52,7 @@ test:
 
 .PHONY: test_remote
 test_remote:
-	env http_proxy="http://localhost:9090" wget -t1 http://freshmeat.net/
+	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/
 
 .PHONY: md5sums
 md5sums:

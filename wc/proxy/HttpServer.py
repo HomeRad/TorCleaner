@@ -169,15 +169,15 @@ class HttpServer(Server):
                 elif re.match('content-length:', lower(h)):
                     assert 0, 'chunked encoding should not have content-length'
 
-        if self.headers.has_key('content-encoding') and self.headers['content-encoding'] == 'gzip':
-            debug(BRING_IT_ON, 'Content-encoding:', 'gzip')
-            self.decoders.append(GunzipStream())
-            # HACK - remove content length and encoding
-            for h in self.headers.headers[:]:
-                if re.match('content-length:', lower(h)):
-                    self.headers.headers.remove(h)
-                elif re.match('content-encoding:', lower(h)):
-                    self.headers.headers.remove(h)
+#        if self.headers.has_key('content-encoding') and self.headers['content-encoding'] == 'gzip':
+#            debug(BRING_IT_ON, 'Content-encoding:', 'gzip')
+#            self.decoders.append(GunzipStream())
+#            # HACK - remove content length and encoding
+#            for h in self.headers.headers[:]:
+#                if re.match('content-length:', lower(h)):
+#                    self.headers.headers.remove(h)
+#                elif re.match('content-encoding:', lower(h)):
+#                    self.headers.headers.remove(h)
 
         self.client.server_response(self.response, self.headers)
         if ((response and response[1] in ('204', '304')) or
@@ -186,6 +186,7 @@ class HttpServer(Server):
             self.state = 'recycle'
         else:
             mime = self.headers.get('content-type', 'application/octeet-stream')
+            debug(ALWAYS, "init state objects")
             self.attrs = initStateObjects(mime, self.headers)
             self.state = 'content'
 
