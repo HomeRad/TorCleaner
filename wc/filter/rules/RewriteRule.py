@@ -17,13 +17,14 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import re
-import cStringIO as StringIO
+
 import wc
 import wc.log
 import wc.XmlUtils
 import wc.filter.rules.UrlRule
 import wc.filter.rules.Rule
 import wc.HtmlParser.htmllib
+from wc.webgui import ZTUtils
 
 
 # tag ids
@@ -204,7 +205,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             # no enclosed expression => match
             return True
         # put buf items together for matching
-        data = tagbuf2data(tagbuf[pos:], StringIO.StringIO()).getvalue()
+        data = tagbuf2data(tagbuf[pos:], ZTUtils.FasterStringIO()).getvalue()
         return self.enclosed_ro.search(data)
 
     def filter_tag (self, tag, attrs):
