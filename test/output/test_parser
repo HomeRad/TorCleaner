@@ -43,11 +43,11 @@ startElement ('a', {'b': '"c><a b="', 'c': None})
 HTML '<!---->'
 comment ('',)
 HTML '<!----->'
-characters ('<!----->',)
+comment ('-',)
 HTML '<!------>'
-characters ('<!------>',)
+comment ('--',)
 HTML '<!------->'
-characters ('<!------->',)
+comment ('---',)
 HTML '<!---- >'
 characters ('<!---- >',)
 HTML '<!-- -->'
@@ -55,7 +55,7 @@ comment (' ',)
 HTML '<!-- -- >'
 characters ('<!-- -- >',)
 HTML '<!---- />-->'
-characters ('<!---- />-->',)
+comment ('-- />',)
 HTML '</a>'
 endElement ('a',)
 HTML '</ a>'
@@ -105,11 +105,11 @@ startElement ('a', {'c': None})
 HTML '<a =>'
 startElement ('a', {})
 HTML '<a b= "c">'
-startElement ('a', {'b': '', 'c': None})
+startElement ('a', {'b': 'c'})
 HTML '<a b ="c">'
 startElement ('a', {'b': 'c'})
 HTML '<a b = "c">'
-startElement ('a', {'b': '', 'c': None})
+startElement ('a', {'b': 'c'})
 HTML '<a >'
 startElement ('a', {})
 HTML '< a>'
@@ -134,11 +134,11 @@ startElement ('a', {'b': '"c><a b="', 'c': None})
 HTML '<!---->'
 comment ('',)
 HTML '<!----->'
-characters ('<!----->',)
+comment ('-',)
 HTML '<!------>'
-characters ('<!------>',)
+comment ('--',)
 HTML '<!------->'
-characters ('<!------->',)
+comment ('---',)
 HTML '<!---- >'
 characters ('<!---- >',)
 HTML '<!-- -->'
@@ -146,7 +146,7 @@ comment (' ',)
 HTML '<!-- -- >'
 characters ('<!-- -- >',)
 HTML '<!---- />-->'
-characters ('<!---- />-->',)
+comment ('-- />',)
 HTML '</a>'
 endElement ('a',)
 HTML '</ a>'

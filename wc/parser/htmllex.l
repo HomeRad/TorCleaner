@@ -22,10 +22,10 @@
     *yylval = s; \
     }
 
-#define APPEND_TO_TMP {\
+#define APPEND_TO_TMP(n) {\
     int len = strlen(yyextra->tmp_buf); \
-    yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, len+yyleng+1); \
-    strncat(yyextra->tmp_buf, yytext, yyleng); \
+    yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, len+n+1); \
+    strncat(yyextra->tmp_buf, yytext, n); \
     }
 
 #define LOWER_TMP {\
@@ -150,31 +150,27 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** COMMENT ************************/
-<INITIAL>"<!--" {
+<INITIAL><!-- {
     UPDATE_BUFPOS;
     BEGIN(S_COMMENT);
 }
 
-<S_COMMENT>"-->" {
+<S_COMMENT>-*--> {
     UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng-3);
     SETLVAL;
     BEGIN(INITIAL);
     RETURN(T_COMMENT);
 }
 
-<S_COMMENT>-[^\-]+ {
+<S_COMMENT>[^-]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>--[^>] {
+<S_COMMENT>-+[^->]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
-}
-
-<S_COMMENT>[^\-]+ {
-    UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
 <S_COMMENT>. {
@@ -182,44 +178,49 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** DOCTYPE ************************/
-<INITIAL>"<!DOCTYPE" {
+<INITIAL><!DOCTYPE {
     UPDATE_BUFPOS;
     BEGIN(S_DOCTYPE);
 }
 
-<S_DOCTYPE>">" {
+<S_DOCTYPE>> {
     UPDATE_BUFPOS;
     SETLVAL;
     BEGIN(INITIAL);
     RETURN(T_DOCTYPE);
 }
 
-<S_DOCTYPE>[^\>]* {
+<S_DOCTYPE>[^>]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
   /*********************** CDATA ************************/
-<INITIAL>"<![CDATA[" { 
+<INITIAL><!\[CDATA\[ {
     UPDATE_BUFPOS;
     BEGIN(S_CDATA);
 }
 
-<S_CDATA>"]]>" {
+<S_CDATA>\]*\]\]> {
     UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng-3);
     SETLVAL;
     BEGIN(INITIAL);
     RETURN(T_CDATA);
 }
 
-<S_CDATA>"]" {
+<S_CDATA>[^\]]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_CDATA>[^\]]* {
+<S_CDATA>\]+[^>\]]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_CDATA>. {
+    return T_WAIT;
 }
 
   /*********************** PI ************************/
@@ -228,16 +229,22 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_PI);
 }
 
-<S_PI>"?>" {
+<S_PI>\?*\?> {
     UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng-2);
     SETLVAL;
     BEGIN(INITIAL);
     RETURN(T_PI);
 }
 
-<S_PI>[^\?]+ {
+<S_PI>[^?]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_PI>\?+[^?>]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
 }
 
 <S_PI>. {
@@ -255,7 +262,7 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_TAGSTART>{RX_NAME} {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
 <S_TAGSTART>{RX_WHITE_SPACE}+ {
@@ -266,7 +273,7 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_ATTR1);
 }
 
-<S_TAGSTART>"/>" {
+<S_TAGSTART>\/> {
     UPDATE_BUFPOS;
     BEGIN(INITIAL);
     if (!strlen(yyextra->tmp_buf)) {
@@ -284,7 +291,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_START_END);
 }
 
-<S_TAGSTART>">" {
+<S_TAGSTART>> {
     UPDATE_BUFPOS;
     if (!strlen(yyextra->tmp_buf)) {
 	yyextra->tmp_buf = PyMem_Resize(yyextra->tmp_buf, char, 3);
@@ -316,48 +323,48 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_SCRIPT>[^<]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
   /* this is so shitty */
-<S_SCRIPT><[^/] {
+<S_SCRIPT></[^/] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_SCRIPT><\/{RX_WHITE_SPACE}*[^Ss] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*/[^Ss] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][^Cc] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss]/[^Cc] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][^Rr] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc]/[^Rr] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][^Ii] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr]/[^Ii] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][^Pp] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii]/[^Pp] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][Pp][^Tt] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][Pp]/[^Tt] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][Pp][Tt]{RX_WHITE_SPACE}*[^>] {
+<S_SCRIPT><\/{RX_WHITE_SPACE}*[Ss][Cc][Rr][Ii][Pp][Tt]{RX_WHITE_SPACE}*/[^>] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
 <S_SCRIPT>. {
@@ -374,43 +381,43 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_STYLE>[^<]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
   /* this is so shitty */
-<S_STYLE><[^/] {
+<S_STYLE></[^/] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_STYLE><\/{RX_WHITE_SPACE}*[^Ss] {
+<S_STYLE><\/{RX_WHITE_SPACE}*/[^Ss] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][^Tt] {
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss]/[^Tt] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][^Yy] {
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt]/[^Yy] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][^Ll] {
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy]/[^Ll] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][Ll][^Ee] {
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][Ll]/[^Ee] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][Ll][Ee]{RX_WHITE_SPACE}*[^>] {
+<S_STYLE><\/{RX_WHITE_SPACE}*[Ss][Tt][Yy][Ll][Ee]{RX_WHITE_SPACE}*/[^>] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
 <S_STYLE>. {
@@ -420,11 +427,11 @@ RX_DATA [-a-zA-Z0-9_]+
   /*********************** ATTRS ************************/
 <S_ATTR1>{RX_NAME} {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
     BEGIN(S_ATTR2);
 }
 
-<S_ATTR1,S_ATTR2,S_ATTR3>"/>" {
+<S_ATTR1,S_ATTR2,S_ATTR3>\/> {
     UPDATE_BUFPOS;
     FLUSH_ATTRS;
     BEGIN(INITIAL);
@@ -432,7 +439,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_START_END);
 }
 
-<S_ATTR1,S_ATTR2,S_ATTR3>">" {
+<S_ATTR1,S_ATTR2,S_ATTR3>> {
     UPDATE_BUFPOS;
     FLUSH_ATTRS;
     SCRIPT_CHECK;
@@ -442,7 +449,7 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR2>{RX_DATA} {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
 <S_ATTR2>{RX_WHITE_SPACE}+ {
@@ -470,7 +477,7 @@ RX_DATA [-a-zA-Z0-9_]+
     CLEAR_BUF(yyextra->tmp_buf);
     Py_INCREF(Py_None);
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) { return T_ERROR; }
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
     BEGIN(S_ATTR2);
 }
 
@@ -488,11 +495,11 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_ATTR4>[^\012 \t\b\r\n>\'\"]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
     BEGIN(S_ATTR5);
 }
 
-<S_ATTR4>">" {
+<S_ATTR4>> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
@@ -503,7 +510,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_START);
 }
 
-<S_ATTR4>"/>" {
+<S_ATTR4>\/> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
@@ -514,12 +521,16 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_START_END);
 }
 
-<S_ATTR5>[^\012 \t\b\r\n>]+ {
+<S_ATTR4>{RX_WHITE_SPACE}+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
 }
 
-<S_ATTR5>">" {
+<S_ATTR5>[^\012 \t\b\r\n>]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_ATTR5>> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
@@ -530,7 +541,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_START);
 }
 
-<S_ATTR5>"/>" {
+<S_ATTR5>\/> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
@@ -560,9 +571,9 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_ATTR1);
 }
 
-<S_APOSSTRING>[^']* { 
+<S_APOSSTRING>[^']+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
 
@@ -577,9 +588,9 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_ATTR1);
 }
 
-<S_STRING>[^"]* { 
+<S_STRING>[^"]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
   /*********************** TAGEND ************************/
@@ -590,10 +601,10 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_TAGEND>{RX_NAME} {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
 }
 
-<S_TAGEND>">" {
+<S_TAGEND>> {
     UPDATE_BUFPOS;
     LOWER_TMP;
     SETLVAL;
@@ -601,7 +612,7 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_ELEMENT_END);
 }
 
-<S_TAGEND>"<"{RX_WHITE_SPACE}* {
+<S_TAGEND><{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
     BEGIN(S_TAGSTART);
 }
@@ -613,14 +624,21 @@ RX_DATA [-a-zA-Z0-9_]+
   /*********************** TEXT ************************/
 <INITIAL>[^<]+ {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
     SETLVAL;
     RETURN(T_TEXT);
 }
 
-<INITIAL><[^A-Za-z!?/] {
+<INITIAL><[^\012 \t\b\r\nA-Za-z!?/] {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP;
+    APPEND_TO_TMP(yyleng);
+    SETLVAL;
+    RETURN(T_TEXT);
+}
+
+<INITIAL><{RX_WHITE_SPACE}+[^A-Za-z/] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
     SETLVAL;
     RETURN(T_TEXT);
 }
