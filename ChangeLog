@@ -42,6 +42,7 @@
   * move special container classes into own submodule and use them
     Type: feature
     Added: wc/containers.py
+    Moved: tests/TestSortedDict.py -> tests/TestContainers.py
     Changed: wc/parser/{htmllex.l,htmlparse.y,htmlsax.h},
       wc/network/__init__.py
 
