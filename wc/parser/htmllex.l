@@ -103,10 +103,11 @@ void yyfree (void* ptr, void* yyscanner) {
 static PyObject* quote_string (PyObject* val) {
     int quote = 0;
     int replace = 0;
-    unsigned int len = PyString_GET_SIZE(val);
-    char* internal = PyString_AS_STRING(val);
+    int len = (int)PyString_Size(val);
+    char* internal = PyString_AsString(val);
     int i;
     PyObject* prefix;
+    if (len<0) return NULL;
     for (i=0; i<len; i++) {
 	if (isspace(internal[i]) ||
 	    internal[i]=='<' ||
@@ -125,7 +126,7 @@ static PyObject* quote_string (PyObject* val) {
     else if (internal[len-1]=='/') {
 	quote = 1;
     }
-    if (replace) {
+    if (replace!=0) {
 	PyObject* nval = PyObject_CallMethod(val, "replace", "ss", "\"", "&quot;");
 	Py_DECREF(val);
         val = nval;

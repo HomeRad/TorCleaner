@@ -21,3 +21,6 @@ test:	testsax
 
 clean:
 	rm -f htmlparse.c htmlparse.h htmllex.c *.o *.output
+
+splint:
+	splint -initallelements +posixlib -I/usr/include/linux -I. -I/usr/include/$(PYTHON) htmllex.c | less
