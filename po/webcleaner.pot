@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Nov 10 09:41:44 2003\n"
+"POT-Creation-Date: Wed Nov 12 22:32:11 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "unknown tag name %s"
 msgstr ""
 
-msgid "WebCleaner is running (PID %s)"
+msgid "WebCleaner is running (PID %d)"
 msgstr ""
 
 msgid "WebCleaner is not running (no lock file found)"
@@ -517,6 +517,9 @@ msgstr ""
 msgid "Forbidden"
 msgstr ""
 
+msgid "Bad Request"
+msgstr ""
+
 msgid "Host %s is an abbreviation for %s"
 msgstr ""
 
@@ -575,6 +578,9 @@ msgid "Method Not Allowed"
 msgstr ""
 
 msgid "Empty URL"
+msgstr ""
+
+msgid "URL too long"
 msgstr ""
 
 msgid "Proxy Authentication Required"

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Mon Nov 10 09:41:44 2003\n"
+"POT-Creation-Date: Wed Nov 12 22:32:11 2003\n"
 "PO-Revision-Date: 2003-11-05 19:54+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -15,7 +15,8 @@ msgstr ""
 msgid "unknown tag name %s"
 msgstr "Unbekannter Tagname %s"
 
-msgid "WebCleaner is running (PID %s)"
+#, fuzzy
+msgid "WebCleaner is running (PID %d)"
 msgstr "WebCleaner läuft (PID %s)"
 
 msgid "WebCleaner is not running (no lock file found)"
@@ -582,6 +583,10 @@ msgstr "Über WebCleaner"
 msgid "Forbidden"
 msgstr "Verboten"
 
+#, fuzzy
+msgid "Bad Request"
+msgstr "Ihre Anfrage"
+
 msgid "Host %s is an abbreviation for %s"
 msgstr "Rechner %s ist eine Abkürzung für %s"
 
@@ -641,6 +646,9 @@ msgstr "Anfrage nicht erlaubt"
 
 msgid "Empty URL"
 msgstr "Leere URL"
+
+msgid "URL too long"
+msgstr ""
 
 msgid "Proxy Authentication Required"
 msgstr "Proxy Authorisierung benötigt"
