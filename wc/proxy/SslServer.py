@@ -9,7 +9,7 @@ import wc.proxy.HttpServer
 import wc.proxy.SslConnection
 import wc.proxy.ssl
 import wc.log
-
+import OpenSSL.SSL
 
 class SslServer (wc.proxy.HttpServer.HttpServer,
                  wc.proxy.SslConnection.SslConnection):
@@ -19,11 +19,11 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
     def __init__ (self, ipaddr, port, client):
         """initialize connection object and connect to remove server"""
         super(wc.proxy.HttpServer.HttpServer, self).__init__(client,
-                                                             'connect')
         # default values
         self.addr = (ipaddr, port)
-        self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM,
-         sslctx=wc.proxy.ssl.get_clientctx(wc.configuration.config.configdir))
+        self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
+        sslctx = wc.proxy.ssl.get_clientctx(wc.configuration.config.configdir)
+        self.socket = OpenSSL.SSL.Connection(sslctx, self.socket)
         self.socket.set_connect_state()
         # attempt connect
         self.try_connect()
@@ -36,7 +36,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         if hasattr(self, "addr") and self.addr and self.addr[1] != 80:
             portstr = ':%d' % self.addr[1]
             extra += '%s%s' % (self.addr[0], portstr)
-        if self.socket:
+        if hasattr(self.socket, "state_string"):
             extra += " (%s)" % self.socket.state_string()
         if not self.connected:
             extra += " (unconnected)"
