@@ -1,0 +1,62 @@
+#!/bin/sh -e
+## 01_webcleanerconf_proxy_control.dpatch by Bastian Kleineidam <calvin@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+if [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch}"
+
+case "$1" in
+       -patch) patch $patch_opts -p1 < $0;;
+       -unpatch) patch $patch_opts -p1 -R < $0;;
+        *)
+                echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+                exit 1;;
+esac
+
+exit 0
+
+@DPATCH@
+diff -urNad /home/calvin/projects/webcleaner/wc/gui/ConfWindow.py webcleaner/wc/gui/ConfWindow.py
+--- /home/calvin/projects/webcleaner/wc/gui/ConfWindow.py	2003-05-30 16:14:36.000000000 +0200
++++ webcleaner/wc/gui/ConfWindow.py	2003-06-06 00:03:26.000000000 +0200
+@@ -595,29 +595,25 @@
+ 
+ 
+     def onCmdProxyStart (self, sender, sel, ptr):
+-        from wc import daemon
+-        daemon.start(parent_exit=0)
++        os.system('invoke-rc.d webcleaner start')
+         debug(GUI, "webcleaner start")
+         return 1
+ 
+ 
+     def onCmdProxyStop (self, sender, sel, ptr):
+-        from wc import daemon
+-        daemon.stop()
++        os.system('invoke-rc.d webcleaner stop')
+         debug(GUI, "webcleaner stop")
+         return 1
+ 
+ 
+     def onCmdProxyRestart (self, sender, sel, ptr):
+-        from wc import daemon
+-        daemon.restart(parent_exit=0)
++        os.system('invoke-rc.d webcleaner restart')
+         debug(GUI, "webcleaner restart")
+         return 1
+ 
+ 
+     def onCmdProxyReload (self, sender, sel, ptr):
+-        from wc import daemon
+-        daemon.reload()
++        os.system('invoke-rc.d webcleaner reload')
+         debug(GUI, "webcleaner reload")
+         return 1
+ 
