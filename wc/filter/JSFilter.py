@@ -35,7 +35,7 @@ import wc.js.JSListener
 import wc.filter.rules.RewriteRule
 
 
-_replace_ws = re.compile(r"\s+").sub
+_replace_ws = re.compile(ur"\s+").sub
 js_event_attrs = (
     'onmouseover',
     'onmouseout',
@@ -244,9 +244,9 @@ class JSFilter (wc.js.JSListener.JSListener):
                         attrs.get('target', ''))
         elif tag == 'script':
             js_ok, js_lang = wc.js.get_js_data(attrs)
-            url = attrs.get('src', '')
+            url = attrs.get('src', u'')
             # sanitize script src url
-            url = _replace_ws("", url)
+            url = _replace_ws(u"", url)
             url = wc.HtmlParser.resolve_html_entities(url)
             if js_ok and url:
                 self.jsScriptSrc(url, js_lang)
@@ -334,3 +334,4 @@ class JSFilter (wc.js.JSListener.JSListener):
         if self.js_htmlparser is not None:
             self.js_htmlparser.handler.finish()
             self.js_htmlparser = None
+

@@ -126,12 +126,12 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
     def doctype (self, data):
         """HTML doctype"""
         wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
-        return self._data("<!DOCTYPE%s>" % data)
+        return self._data(u"<!DOCTYPE%s>" % data)
 
     def pi (self, data):
         """HTML pi"""
         wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
-        return self._data("<?%s?>" % data)
+        return self._data(u"<?%s?>" % data)
 
     def start_element (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
@@ -147,9 +147,9 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             if self.stackcount[-1][0] == tag:
                 self.stackcount[-1][1] += 1
         if tag == "meta":
-            if attrs.get('http-equiv', '').lower() == 'content-rating':
+            if attrs.get('http-equiv', u'').lower() == 'content-rating':
                 rating = wc.HtmlParser.resolve_html_entities(
-                                                  attrs.get('content', ''))
+                                                  attrs.get('content', u''))
                 url, rating = wc.filter.Rating.rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
