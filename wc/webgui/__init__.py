@@ -23,9 +23,9 @@ __date__    = "$Date$"[7:-2]
 from simpletal import simpleTAL, simpleTALES
 from context import getval
 from cStringIO import StringIO
-from wc import i18n, config, TemplateDir, App, filtermodules
+from wc import i18n, config, TemplateDir, App, filtermodules, Name, LocaleDir
 from wc.log import *
-import os, urllib, urlparse
+import os, urllib, urlparse, gettext
 
 class WebConfig (object):
     def __init__ (self, client, url, form, protocol,
@@ -44,8 +44,10 @@ class WebConfig (object):
                 f = file(path)
                 # get TAL context
                 context = get_context(dirs, form, context, lang)
+                # get translator
+                translator = gettext.translation(Name, LocaleDir, [lang])
                 # expand template
-                data = expand_template(f, context)
+                data = expand_template(f, context, translator=translator)
             else:
                 f = file(path, 'rb')
                 data = f.read()
@@ -86,13 +88,13 @@ def norm (path):
     return os.path.realpath(os.path.normpath(os.path.normcase(path)))
 
 
-def expand_template (f, context):
+def expand_template (f, context, translator=None):
     """expand the given template file in context
        return expanded data"""
     # note: standard input encoding is iso-8859-1 for html templates
     template = simpleTAL.compileHTMLTemplate(f)
     out = StringIO()
-    template.expand(context, out)
+    template.expand(context, out, translator=translator)
     data = out.getvalue()
     out.close()
     return data
@@ -133,15 +135,17 @@ def get_template_path (path):
 
 
 def get_context (dirs, form, localcontext, lang):
-    """get template context, raise ImportError if not found"""
+    """Get template context, raise ImportError if not found.
+       The context includes the given local context, plus all variables
+       defined by the imported context module"""
     # get template-specific context dict
     modulepath = ".".join(['context'] + dirs[:-1])
     template = dirs[-1].replace(".", "_")
     # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
-    if hasattr(template_context, "exec_form") and form is not None:
+    if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
-        template_context.exec_form(form)
+        template_context._exec_form(form)
     # make TAL context
     context = simpleTALES.Context()
     # add default context values
