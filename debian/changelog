@@ -1,7 +1,9 @@
 webcleaner (1.5-0.1) unstable; urgency=low
 
   * New upstream release.
-  * Add tarfile suggests to >= 1.6.3 because of new TarFile interface
+  * Upped tarfile suggests to >= 1.6.3 because of new TarFile interface
+  * set DH_COMPAT=4
+  * Depends: debconf (>= 1.2.9)
 
  -- Bastian Kleineidam <calvin@debian.org>  Tue, 17 Dec 2002 23:46:54 +0100
 
