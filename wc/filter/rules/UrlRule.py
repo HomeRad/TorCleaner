@@ -25,14 +25,18 @@ import wc.XmlUtils
 class UrlRule (wc.filter.rules.Rule.Rule):
     """rule which applies only to urls which match a regular expression"""
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, matchurls=[], nomatchurls=[]):
+                  disable=0, matchurls=None, nomatchurls=None):
         """initialize rule attributes"""
         super(UrlRule, self).__init__(sid=sid, titles=titles,
                                    descriptions=descriptions, disable=disable)
-        self.matchurls = []
-        self.nomatchurls = []
-        self.matchurls.extend(matchurls)
-        self.nomatchurls.extend(nomatchurls)
+        if matchurls is None:
+            self.matchurls = []
+        else:
+            self.matchurls = matchurls
+        if nomatchurls is None:
+            self.nomatchurls = []
+        else:
+            self.nomatchurls = nomatchurls
 
 
     def appliesTo (self, url):

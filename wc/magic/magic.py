@@ -226,7 +226,7 @@ class Magic (object):
                 # \rnt are special
                 else:
                     data.append(result[pos:pos+2])
-                pos +=2
+                pos += 2
             else:
                 base = wc.magic.convert.which_base(result[pos:])
                 if base == 0:
@@ -265,7 +265,7 @@ class Magic (object):
         return length
 
     def _mime (self, list):
-        mime=''
+        mime = ''
         for name in list:
             mime += name + " "
         mime = mime.rstrip()

@@ -100,13 +100,16 @@ class GifParser (object):
     DATA = 4
     NOFILTER = 5
 
-    def __init__ (self, sizes=[]):
+    def __init__ (self, sizes=None):
         """initialize GIF parser buffers and flags"""
         self.state = GifParser.INIT
         self.data = self.consumed = self.output = ''
         self.finish = False
         self.removing = False
-        self.sizes = sizes
+        if sizes is None:
+            self.sizes = []
+        else:
+            self.sizes = sizes
 
 
     def str_state (self):

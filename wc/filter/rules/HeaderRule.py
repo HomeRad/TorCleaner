@@ -25,7 +25,7 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, name="noname", value="", filterstage="request",
-                  matchurls=[], nomatchurls=[]):
+                  matchurls=None, nomatchurls=None):
         """init rule name and value"""
         super(HeaderRule, self).__init__(sid=sid, titles=titles,
                                  descriptions=descriptions, disable=disable,

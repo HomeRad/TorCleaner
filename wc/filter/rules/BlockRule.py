@@ -26,8 +26,8 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
        See also the Blocker filter module.
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, url="", replacement="", matchurls=[],
-                  nomatchurls=[]):
+                  disable=0, url="", replacement="", matchurls=None,
+                  nomatchurls=None):
         """initialize rule data"""
         super(BlockRule, self).__init__(sid=sid, titles=titles,
                           descriptions=descriptions, disable=disable, url=url,

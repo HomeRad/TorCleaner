@@ -26,7 +26,7 @@ import wc.filter.Rating
 class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     """holds configured rating data"""
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
-                  matchurls=[], nomatchurls=[]):
+                  matchurls=None, nomatchurls=None):
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)

@@ -130,7 +130,7 @@ def netmask2mask (ip):
 
 def mask2netmask (mask):
     """return dotted quad string as netmask"""
-    return num2dq(ip)
+    return num2dq(mask)
 
 def dq2net (ip, mask):
     "return a tuple (network ip, network mask) for given ip and mask"
@@ -225,6 +225,8 @@ def resolve_host (host):
     """return set of ip numbers for given host"""
     ips = sets.Set()
     for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
-        af, socktype, proto, canonname, sa = res
-        ips.add(sa[0])
+        # res is a tuple (address family, socket type, protocol,
+        #  canonical name, socket address)
+        # add first ip of socket address
+        ips.add(res[4][0])
     return ips

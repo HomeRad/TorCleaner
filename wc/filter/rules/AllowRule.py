@@ -27,7 +27,7 @@ class AllowRule (wc.filter.rules.UrlRule.UrlRule):
     """
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, url="", matchurls=[], nomatchurls=[]):
+                  disable=0, url="", matchurls=None, nomatchurls=None):
         """initialize rule data"""
         super(AllowRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,

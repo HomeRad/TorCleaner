@@ -24,7 +24,7 @@ class ImagereduceRule (wc.filter.rules.UrlRule.UrlRule):
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, quality=20, minimal_size_bytes=5120,
-                  matchurls=[], nomatchurls=[]):
+                  matchurls=None, nomatchurls=None):
         """initalize rule data"""
         super(ImagereduceRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,

@@ -24,8 +24,8 @@ class ImageRule (wc.filter.rules.UrlRule.UrlRule):
     """if enabled, tells the Image filter to block certain images"""
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, width=0, height=0, formats=[], url="",
-                  matchurls=[], nomatchurls=[]):
+                  disable=0, width=0, height=0, formats=None, url="",
+                  matchurls=None, nomatchurls=None):
         """initalize rule data"""
         super(ImageRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
@@ -34,7 +34,10 @@ class ImageRule (wc.filter.rules.UrlRule.UrlRule):
         self.height = height
         self.intattrs.extend(('width', 'height'))
         self.listattrs.append('formats')
-        self.formats = formats
+        if formarts is None:
+            self.formats = []
+        else:
+            self.formats = formats
         self.url = url
         self.attrnames.extend(('formats', 'url', 'width', 'height'))
 

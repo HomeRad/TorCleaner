@@ -63,6 +63,9 @@ LOG_ACCESS = "wc.access"
 LOG_RATING = "wc.rating"
 
 def init_i18n ():
+    """Deploy i18n gettext method into the default namespace.
+       The LOCPATH environment variable is supported.
+    """
     locdir = os.environ.get('LOCPATH')
     if locdir is None:
         locdir = os.path.join(configdata.install_data, 'share', 'locale')
