@@ -9,7 +9,7 @@
     Changed: wc/proxy/dns/*.py
   * corrected the reversed google cache urls
     Changed: templates/classic/google.html
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20031111
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031114
     Changed: libjs/*
   * FILTER_REQUEST must have the complete request for filtering, not
     only the URL
