@@ -19,6 +19,7 @@
 import os
 import sys
 import re
+import bk.log
 import wc.net.url
 
 

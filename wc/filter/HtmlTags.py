@@ -18,6 +18,7 @@
 
 import re
 import wc.levenshtein
+import bk.log
 
 
 # checker for namespaces
@@ -293,17 +294,17 @@ def check_spelling (tag, url):
     if tag in HtmlTags or tag in MathTags:
         return tag
     if tag in OldTags:
-        #wc.log.warn(wc.LOG_FILTER, "non-HTML4 tag %r at %r", tag, url)
+        #bk.log.warn(wc.LOG_FILTER, "non-HTML4 tag %r at %r", tag, url)
         return tag
     if tag in KnownInvalidTags:
-        #wc.log.warn(wc.LOG_FILTER, "known invalid tag %r at %r", tag, url)
+        #bk.log.warn(wc.LOG_FILTER, "known invalid tag %r at %r", tag, url)
         return tag
     if is_other_namespace(tag):
         # ignore other namespaces
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
          if wc.levenshtein.distance(tag, htmltag)==1:
-             wc.log.warn(wc.LOG_FILTER, "HTML tag %r corrected to %r at %r", tag, htmltag, url)
+             bk.log.warn(wc.LOG_FILTER, "HTML tag %r corrected to %r at %r", tag, htmltag, url)
              return htmltag
     bk.log.error(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
     # filter possibly trailing garbage the parser accepted

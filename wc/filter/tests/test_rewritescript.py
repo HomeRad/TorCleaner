@@ -14,16 +14,13 @@ class TestRewriteScript (unittest.TestCase):
     """All these tests work with a _default_ filter configuration.
        If you change any of the *.zap filter configs, tests can fail..."""
 
-    def init (self):
-        super(TestRewriteScript, self).init()
+    def setUp (self):
         wc.config = wc.Configuration()
         disable_rating_rules(wc.config)
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
-
-    def setUp (self):
         self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY], headers=self.headers)
 
     def filt (self, data, result):
