@@ -247,6 +247,7 @@ def rm_rf (directory):
         else:
             os.remove(f)
 
+
 def download_and_merge ():
     """Download all available filters and merge them"""
     # remove old files
@@ -267,14 +268,18 @@ def download_and_merge ():
     # distribute it with WebCleaner!
     #geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
 
+
 def write_lists ():
     open_files("config")
     for data, name in ((domains,"domains"),(urls,"urls")):
         print "writing", name
         for key,val in data.items():
+            if key=="thesimpsons.com":
+                continue
             for cat in val.keys():
                 categories[cat][name].write(key+"\n")
     close_files()
+
 
 def open_files (directory):
     for cat in categories.keys():
