@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Jun 25 00:11:13 2004\n"
+"POT-Creation-Date: Tue Jul 20 17:00:17 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,6 +14,15 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
+
+msgid "seconds"
+msgstr ""
+
+msgid "minutes"
+msgstr ""
+
+msgid "hours"
+msgstr ""
 
 msgid "inserting %s"
 msgstr ""
@@ -228,15 +237,6 @@ msgstr ""
 msgid "invalid HTTP version %r"
 msgstr ""
 
-msgid "seconds"
-msgstr ""
-
-msgid "minutes"
-msgstr ""
-
-msgid "hours"
-msgstr ""
-
 msgid "updating filters"
 msgstr ""
 
@@ -298,6 +298,9 @@ msgid "Error: nothing to update."
 msgstr ""
 
 msgid "Error: %s"
+msgstr ""
+
+msgid "Transe test successful"
 msgstr ""
 
 msgid "%s Proxy"
@@ -523,6 +526,9 @@ msgstr ""
 msgid "Saved ratings"
 msgstr ""
 
+msgid "Disabled folder icon"
+msgstr ""
+
 msgid "before"
 msgstr ""
 
@@ -534,7 +540,7 @@ msgid ""
 "<a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
 msgstr ""
 
-msgid "Invalid rule move down id."
+msgid "Rule rewrite part successfully changed."
 msgstr ""
 
 msgid "Empty rewrite tag name."
@@ -555,6 +561,12 @@ msgid "Proxy user"
 msgstr ""
 
 msgid "Your request"
+msgstr ""
+
+msgid "Invalid folder move up id."
+msgstr ""
+
+msgid "Minimum image size"
 msgstr ""
 
 msgid "supply a different rating for this page"
@@ -620,7 +632,7 @@ msgstr ""
 msgid "Location of the Clamav Antivirus software configuration file"
 msgstr ""
 
-msgid "Folder successfully disabled."
+msgid "Invalid image quality value."
 msgstr ""
 
 msgid "%(AppName)s filter update"
@@ -636,9 +648,6 @@ msgid ""
 msgstr ""
 
 msgid "Email URL rating to %(Email)s"
-msgstr ""
-
-msgid "Remove rule"
 msgstr ""
 
 msgid "Filter https traffic through a local SSL server"
@@ -683,10 +692,7 @@ msgid ""
 "spoofing attacks."
 msgstr ""
 
-msgid "Rule successfully disabled."
-msgstr ""
-
-msgid "Rule match-url successfully changed."
+msgid "Remove rule"
 msgstr ""
 
 msgid "Parent proxy settings"
@@ -753,7 +759,7 @@ msgstr ""
 msgid "Allowed host successfully added."
 msgstr ""
 
-msgid "Rule url replacement successfully changed."
+msgid "Invalid rule type."
 msgstr ""
 
 msgid "Response data of html pages"
@@ -886,9 +892,6 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-msgid "Rule replace search successfully changed."
-msgstr ""
-
 msgid "Disable rule"
 msgstr ""
 
@@ -959,7 +962,7 @@ msgstr ""
 msgid "Rule successfully enabled."
 msgstr ""
 
-msgid "Move rule up"
+msgid "Image JPEG quality"
 msgstr ""
 
 msgid "Nofilter host successfully added."
@@ -1021,10 +1024,7 @@ msgstr ""
 msgid "Access keys"
 msgstr ""
 
-msgid "Invalid rule type."
-msgstr ""
-
-msgid "Invalid folder move up id."
+msgid "Rule url replacement successfully changed."
 msgstr ""
 
 msgid "Hostname"
@@ -1105,6 +1105,9 @@ msgstr ""
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
+msgid "Invalid minimum size bytes value."
+msgstr ""
+
 msgid ""
 "You can rate and review web pages according to\n"
 "several given categories."
@@ -1120,6 +1123,9 @@ msgid "%(AppName)s web interface main page"
 msgstr ""
 
 msgid "SSL gateway"
+msgstr ""
+
+msgid "Move rule up"
 msgstr ""
 
 msgid "Invalid rule move up id."
@@ -1148,16 +1154,13 @@ msgstr ""
 msgid "Rule title successfully changed."
 msgstr ""
 
-msgid "Disable folder"
+msgid "Invalid image height value."
 msgstr ""
 
 msgid "Rename folder"
 msgstr ""
 
 msgid "Feedback for %(AppName)s"
-msgstr ""
-
-msgid "Rule rewrite part successfully changed."
 msgstr ""
 
 msgid ""
@@ -1296,6 +1299,9 @@ msgstr ""
 msgid "Folder rules"
 msgstr ""
 
+msgid "Invalid rule move down id."
+msgstr ""
+
 msgid "see footnote 1"
 msgstr ""
 
@@ -1317,6 +1323,9 @@ msgid ""
 msgstr ""
 
 msgid "SSL port successfully changed."
+msgstr ""
+
+msgid "Rule match-url successfully changed."
 msgstr ""
 
 msgid "Proxy settings"
@@ -1404,6 +1413,9 @@ msgstr ""
 msgid "Parent proxy password successfully changed."
 msgstr ""
 
+msgid "Disable folder"
+msgstr ""
+
 msgid "There are no url ratings saved."
 msgstr ""
 
@@ -1454,10 +1466,10 @@ msgstr ""
 msgid "Empty rule title."
 msgstr ""
 
-msgid "Invalid image height value."
+msgid "Rule replace search successfully changed."
 msgstr ""
 
-msgid "Disabled folder icon"
+msgid "Rule successfully disabled."
 msgstr ""
 
 msgid ""
@@ -1497,6 +1509,9 @@ msgid "Rewrite attribute(s) removed."
 msgstr ""
 
 msgid "Enabled filter module(s) %(filterenabled)s."
+msgstr ""
+
+msgid "Folder successfully disabled."
 msgstr ""
 
 msgid "URL rating"

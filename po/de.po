@@ -4,13 +4,22 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Fri Jun 25 00:11:13 2004\n"
+"POT-Creation-Date: Tue Jul 20 17:00:17 2004\n"
 "PO-Revision-Date: 2004-05-25 22:41+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "seconds"
+msgstr "Sekunden"
+
+msgid "minutes"
+msgstr "Minuten"
+
+msgid "hours"
+msgstr "Stunden"
 
 msgid "inserting %s"
 msgstr "füge %s ein"
@@ -232,15 +241,6 @@ msgstr "nicht unterstützte HTTP Version %s"
 msgid "invalid HTTP version %r"
 msgstr "ungültige HTTP Version %r"
 
-msgid "seconds"
-msgstr "Sekunden"
-
-msgid "minutes"
-msgstr "Minuten"
-
-msgid "hours"
-msgstr "Stunden"
-
 msgid "updating filters"
 msgstr "aktualisiere Filter"
 
@@ -303,6 +303,9 @@ msgstr "Fehler: keine Aktualisierungen vorhanden."
 
 msgid "Error: %s"
 msgstr "Fehler: %s"
+
+msgid "Transe test successful"
+msgstr ""
 
 msgid "%s Proxy"
 msgstr "%s Proxy"
@@ -602,6 +605,9 @@ msgstr "Diese Seite ist auch verfügbar auf"
 msgid "Saved ratings"
 msgstr "Gespeicherte Bewertungen"
 
+msgid "Disabled folder icon"
+msgstr "Bild für inaktiven Ordner"
+
 msgid "before"
 msgstr "vorher"
 
@@ -615,8 +621,8 @@ msgstr ""
 "Dieser Wert ist ein <a href=\"http://www.amk.ca/python/howto/regex/"
 "\">regulärer Ausdruck</a>."
 
-msgid "Invalid rule move down id."
-msgstr "Ungültige Regel-nach-unten-Verschieben Nummer."
+msgid "Rule rewrite part successfully changed."
+msgstr "Rewrite-Regel Teilwert wurde erfolgreich geändert."
 
 msgid "Empty rewrite tag name."
 msgstr "Leerer Rewrite-Regel Tagname."
@@ -643,6 +649,12 @@ msgstr "Proxy Benutzer"
 
 msgid "Your request"
 msgstr "Ihre Anfrage"
+
+msgid "Invalid folder move up id."
+msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
+
+msgid "Minimum image size"
+msgstr ""
 
 msgid "supply a different rating for this page"
 msgstr "ändern Sie die Bewertung dieser Seite"
@@ -728,8 +740,9 @@ msgstr "Wert"
 msgid "Location of the Clamav Antivirus software configuration file"
 msgstr "Ort der Clamav Antivirus Software Konfigurationsdatei."
 
-msgid "Folder successfully disabled."
-msgstr "Ordner erfolgreich deaktiviert."
+#, fuzzy
+msgid "Invalid image quality value."
+msgstr "Ungültige Bildbreite."
 
 msgid "%(AppName)s filter update"
 msgstr "%(AppName)s Filteraktualisierung"
@@ -748,9 +761,6 @@ msgstr ""
 
 msgid "Email URL rating to %(Email)s"
 msgstr "Versende Mail nach %(Email)s mit dieser URL Bewertung"
-
-msgid "Remove rule"
-msgstr "Regel löschen"
 
 msgid "Filter https traffic through a local SSL server"
 msgstr "Filtere https Daten über einen lokalen SSL Server"
@@ -805,11 +815,8 @@ msgstr ""
 "Bevor eine URL zutrifft wird der Rechnername und der Pfad\n"
 "dekodiert, um Verschleirungs-Attacken zu vermeiden."
 
-msgid "Rule successfully disabled."
-msgstr "Ordner erfolgreich deaktiviert."
-
-msgid "Rule match-url successfully changed."
-msgstr "Regel Treffer-URL wurde erfolgreich geändert."
+msgid "Remove rule"
+msgstr "Regel löschen"
 
 msgid "Parent proxy settings"
 msgstr "Übergeordnete Proxy Einstellungen"
@@ -886,8 +893,8 @@ msgstr "Ungültige oder fehlende Absenderadresse."
 msgid "Allowed host successfully added."
 msgstr "Erlaubter Rechner wurde erfolgreich hinzugefügt."
 
-msgid "Rule url replacement successfully changed."
-msgstr "Regel URL-Ersatzwert wurde erfolgreich geändert."
+msgid "Invalid rule type."
+msgstr "Ungültiger Regeltyp."
 
 msgid "Response data of html pages"
 msgstr "Antwortdaten von HTML Seiten"
@@ -1042,9 +1049,6 @@ msgstr "return window.confirm('Diese Bewertung wirklich löschen?')"
 msgid "Rule"
 msgstr "Regel"
 
-msgid "Rule replace search successfully changed."
-msgstr "Replace-Regel Suchwert wurde erfolgreich geändert."
-
 msgid "Disable rule"
 msgstr "Deaktiviere Regel"
 
@@ -1131,8 +1135,8 @@ msgstr "Inhaltsbewertung"
 msgid "Rule successfully enabled."
 msgstr "Regel wurde erfolgreich aktiviert."
 
-msgid "Move rule up"
-msgstr "Regel nach oben schieben"
+msgid "Image JPEG quality"
+msgstr ""
 
 msgid "Nofilter host successfully added."
 msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
@@ -1198,11 +1202,8 @@ msgstr "Lösche Auswahl"
 msgid "Access keys"
 msgstr "Tastaturkommandos"
 
-msgid "Invalid rule type."
-msgstr "Ungültiger Regeltyp."
-
-msgid "Invalid folder move up id."
-msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
+msgid "Rule url replacement successfully changed."
+msgstr "Regel URL-Ersatzwert wurde erfolgreich geändert."
 
 msgid "Hostname"
 msgstr "Rechnername"
@@ -1305,6 +1306,10 @@ msgstr ""
 msgid "Nofilter host(s) successfully removed."
 msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
 
+#, fuzzy
+msgid "Invalid minimum size bytes value."
+msgstr "Ungültiger Timeoutwert."
+
 msgid ""
 "You can rate and review web pages according to\n"
 "several given categories."
@@ -1323,6 +1328,9 @@ msgstr "%(AppName)s Weboberfläche Hauptseite"
 
 msgid "SSL gateway"
 msgstr "SSL Zugang"
+
+msgid "Move rule up"
+msgstr "Regel nach oben schieben"
 
 msgid "Invalid rule move up id."
 msgstr "Ungültige Regel-nach-oben-Verschieben Nummer."
@@ -1352,17 +1360,14 @@ msgstr ""
 msgid "Rule title successfully changed."
 msgstr "Regel Titel wurde erfolgreich geändert."
 
-msgid "Disable folder"
-msgstr "Ordner deaktivieren"
+msgid "Invalid image height value."
+msgstr "Ungültige Bildhöhe."
 
 msgid "Rename folder"
 msgstr "Ordner umbenennen"
 
 msgid "Feedback for %(AppName)s"
 msgstr "Feedback für %(AppName)s"
-
-msgid "Rule rewrite part successfully changed."
-msgstr "Rewrite-Regel Teilwert wurde erfolgreich geändert."
 
 msgid ""
 "resulted in the following error:<br>\n"
@@ -1520,6 +1525,9 @@ msgstr "Administrator Passwort"
 msgid "Folder rules"
 msgstr "Ordner Regeln"
 
+msgid "Invalid rule move down id."
+msgstr "Ungültige Regel-nach-unten-Verschieben Nummer."
+
 msgid "see footnote 1"
 msgstr "siehe Fußnote 1"
 
@@ -1544,6 +1552,9 @@ msgstr ""
 
 msgid "SSL port successfully changed."
 msgstr "SSL Portnummer erfolgreich geändert."
+
+msgid "Rule match-url successfully changed."
+msgstr "Regel Treffer-URL wurde erfolgreich geändert."
 
 msgid "Proxy settings"
 msgstr "Proxy Einstellungen"
@@ -1635,6 +1646,9 @@ msgstr "Ungültige übergeordnete Proxy Portnummer."
 msgid "Parent proxy password successfully changed."
 msgstr "Passwort des übergeordneten Proxy wurde erfolgreich geändert."
 
+msgid "Disable folder"
+msgstr "Ordner deaktivieren"
+
 msgid "There are no url ratings saved."
 msgstr "Es sind keine URL Bewertungen gespeichert."
 
@@ -1687,11 +1701,11 @@ msgstr "SSL Portnummer"
 msgid "Empty rule title."
 msgstr "Leerer Regel Titel."
 
-msgid "Invalid image height value."
-msgstr "Ungültige Bildhöhe."
+msgid "Rule replace search successfully changed."
+msgstr "Replace-Regel Suchwert wurde erfolgreich geändert."
 
-msgid "Disabled folder icon"
-msgstr "Bild für inaktiven Ordner"
+msgid "Rule successfully disabled."
+msgstr "Ordner erfolgreich deaktiviert."
 
 msgid ""
 "Most browsers support jumping to specific links by typing keys defined on\n"
@@ -1737,6 +1751,9 @@ msgstr "Rewrite Attribut(e) wurde(n) gelöscht."
 
 msgid "Enabled filter module(s) %(filterenabled)s."
 msgstr "Filter Modul(e) %(filterenabled)s wurde(n) aktiviert."
+
+msgid "Folder successfully disabled."
+msgstr "Ordner erfolgreich deaktiviert."
 
 msgid "URL rating"
 msgstr "URL Bewertung"

@@ -56,11 +56,11 @@ include test/Makefile
 include test/logging.conf
 include test/rating/rating.txt
 recursive-include tests *.py test*
-include wc/parser/htmllex.l
-include wc/parser/htmlparse.y
-include wc/parser/*.h
-include wc/parser/s_util.c
-include wc/parser/Makefile
+include bk/HtmlParser/htmllex.l
+include bk/HtmlParser/htmlparse.y
+include bk/HtmlParser/*.h
+include bk/HtmlParser/s_util.c
+include bk/HtmlParser/Makefile
 include po/*.po
 include po/*.pot
 include po/*.py
