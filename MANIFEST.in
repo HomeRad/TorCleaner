@@ -2,10 +2,12 @@ include MANIFEST.in TODO
 include README.squid README.sshtunnel README.parser BADURLS
 include webcleaner webcleanerconf wcheaders _webcleaner2_configdata.py
 include wcheaders.bat webcleanerconf.bat
-include debian/changelog debian/config debian/control debian/ConfWindow.patch
+include debian/changelog debian/config debian/control debian/compat
+include debian/patches/*.dpatch debian/patches/00list*
 include debian/webcleaner.dirs debian/webcleaner.docs
 include debian/webcleaner.init debian/webcleaner.postinst
-include debian/webcleaner.links debian/webcleaner.logrotate
+include debian/webcleaner.links debian/po/*.po debian/po/*.pot
+include debian/po/*.py debian/po/Makefile
 include debian/webcleanertools.postinst debian/webcleanertools.prerm
 include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright

@@ -34,28 +34,15 @@ distclean-local:
 	rm -rf dist build # just to be sure: clean build dir too
 	rm -f VERSION MANIFEST _*_configdata.*
 
-cleandeb:
-	rm -rf debian/$(WCPACKAGE) debian/$(WCPACKAGE)conf debian/tmp
-	rm -f debian/*.debhelper debian/{files,substvars}
-	rm -f configure-stamp build-stamp
-
-# produce the .deb Debian package
-deb_local: clean locale
-	fakeroot debian/rules binary
-
-deb_localsigned: clean locale
-	debuild -sgpg -pgpg -k32EC6F3E -rfakeroot
-
 # ready for upload, signed with my GPG key
 deb_signed: clean locale
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -rfakeroot
 
-# same thing, but unsigned (for local archives)
-deb_unsigned: distclean locale
-	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/usr/local/src/debian -Mwebcleaner2 -us -uc -rfakeroot
-
 # add setup.py generated files to $(distdir)
+# note: debian/rules install generates broken links, so delete debian
+# package dirs before running sdist
 dist-hook:	locale
+	rm -rf debian/webcleaner debian/webcleanertools
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
 	rm -f $(MD5SUMS)
@@ -130,9 +117,6 @@ doc:
 	rm -f README
 	pydoc2 ./webcleaner > README
 
-tar:	distclean
-	cd .. && tar cjvf webcleaner.tar.bz2 webcleaner2
-
 debug:
 	@for f in `find . -name \*.py`; do \
 	  cat $$f | sed 's/#self._debug(/self._debug(/' > $$f.bak; \
@@ -153,7 +137,7 @@ update-blacklists:
 	$(PYTHON) config/bl2wc.py
 
 
-.PHONY: localbuild distclean cleandeb deb_local deb_signed 
-.PHONY: deb_unsigned dist test gentest onlinetest offlinetest md5sums package
+.PHONY: localbuild locale distclean deb_signed update-blacklists
+.PHONY: gentest onlinetest offlinetest md5sums package splint
 .PHONY: filterfiles upload doc tar debug ndebug
 
