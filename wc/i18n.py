@@ -23,7 +23,8 @@ __date__    = "$Date$"[7:-2]
 import os, locale, gettext
 from wc import LocaleDir, Name
 
-supported_languages = []
+# more supported languages are added in init_gettext
+supported_languages = ['en']
 default_language = None
 
 def init_gettext ():
@@ -94,6 +95,6 @@ def lang_name (lang):
     return lang_names[lang]
 
 def lang_trans (lang, curlang):
-    return lang_trans[lang][curlang]
+    return lang_transis[lang][curlang]
 
 init_gettext()
