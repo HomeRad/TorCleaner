@@ -4,7 +4,7 @@
 
 # TEST CASE:
 #    http://www.apache.org/
-from wc.debug import *
+from wc.log import *
 
 import re
 match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
@@ -22,7 +22,7 @@ class UnchunkStream:
 
 
     def decode (self, s):
-        debug(NIGHTMARE, "Proxy: chunked data", `s`)
+        debug(PROXY, "Proxy: chunked data %s", `s`)
         self.buffer += s
         s = ''
 
@@ -43,7 +43,7 @@ class UnchunkStream:
                             # chunklen is hex
                             self.bytes_remaining = int(mo.group('bytes'), 16)
                         else:
-                            print >> sys.stderr, "Invalid chunk size", `line`
+                            warn(PROXY, "invalid chunk size %s", `line`)
                             self.bytes_remaining = 0
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:
@@ -63,7 +63,7 @@ class UnchunkStream:
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
-        debug(NIGHTMARE, "Proxy: decoded chunk", `s`)
+        debug(PROXY, "Proxy: decoded chunk %s", `s`)
         return s
 
     def flush (self):

@@ -15,7 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import os, sys
+import os
+from wc.log import *
 
 # Escape for ANSI colors
 AnsiEsc="\x1b[%sm"
@@ -61,14 +62,12 @@ def esc_ansicolor (color):
     if ";" in color:
         ctype, color = color.split(";", 1)
         if not AnsiType.has_key(ctype):
-            print >>sys.stderr, "invalid ANSI color type", `ctype`
-            print >>sys.stderr, "valid values are", AnsiType.keys()
+            error(WC, "invalid ANSI color type %s, valid values are %s", `ctype`, str(AnsiType.keys()))
             ctype = ''
         else:
             ctype = AnsiType[ctype]+";"
     if not AnsiColor.has_key(color):
-        print >>sys.stderr, "invalid ANSI color name", `color`
-        print >>sys.stderr, "valid values are", AnsiColor.keys()
+        error(WC, "invalid ANSI color name %s, valid values are %s", `color`, str(AnsiColor.keys()))
         cnum = '0'
     else:
         cnum = AnsiColor[color]

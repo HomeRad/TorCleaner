@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-from wc.debug import *
+from wc.log import *
 
 class Filter:
     """the base filter class"""
@@ -22,7 +22,7 @@ class Filter:
         self.mimelist = mimelist
 
     def addrule (self, rule):
-        debug(HURT_ME_PLENTY, "Filter: enable %s rule '%s'"%(rule.get_name(),rule.title))
+        debug(FILTER, "enable %s rule %s", rule.get_name(), `rule.title`)
         self.rules.append(rule)
 
     def filter (self, data, **args):

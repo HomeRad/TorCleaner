@@ -1,5 +1,4 @@
-import sys
-from wc.debug import *
+from wc.log import *
 
 class HttpProxyClient:
     """A class buffering all incoming data from a server for later use.
@@ -13,7 +12,7 @@ class HttpProxyClient:
         self.args = args
         self.connected = "True"
         self.addr = ('localhost', 80)
-        debug(NIGHTMARE, 'ProxyClient: init', self)
+        debug(PROXY, 'ProxyClient: init %s', str(self))
 
 
     def __repr__ (self):
@@ -27,7 +26,7 @@ class HttpProxyClient:
 
 
     def finish (self):
-        debug(NIGHTMARE, 'ProxyClient: finish', self)
+        debug(PROXY, 'ProxyClient: finish %s', str(self))
         if self.handler:
             self.handler(None, *self.args)
             self.handler = None
@@ -45,7 +44,7 @@ class HttpProxyClient:
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'ProxyClient: server_response', self, `response`)
+        debug(PROXY, 'ProxyClient: server_response %s %s', str(self), `response`)
         try:
             http_ver, status, msg = response.split()
             if status in ["302", "301"]:
@@ -65,7 +64,7 @@ class HttpProxyClient:
                                'identity', # compress
                                )
             elif status!="200":
-                print >> sys.stderr, "Error fetching data", status, msg
+                error(PROXY, "fetching data status: %s %s", status, msg)
                 self.finish()
         except:
             self.finish()
@@ -73,16 +72,16 @@ class HttpProxyClient:
 
     def server_content (self, data):
         assert self.server
-        debug(NIGHTMARE, 'ProxyClient: server_content', self)
+        debug(PROXY, 'ProxyClient: server_content %s', str(self))
         self.write(data)
 
 
     def server_close (self):
         assert self.server
-        debug(NIGHTMARE, 'ProxyClient: server_close', self)
+        debug(PROXY, 'ProxyClient: server_close %s', str(self))
         self.finish()
 
 
     def server_abort (self):
-        debug(NIGHTMARE, 'ProxyClient: server_abort', self)
+        debug(PROXY, 'ProxyClient: server_abort %s', str(self))
         self.finish()

@@ -1,7 +1,7 @@
 import time
 from wc.proxy import make_timer
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 
 class ServerPool:
     """server connection pool for reusing server connections
@@ -31,7 +31,7 @@ class ServerPool:
             if status[0] == 'available':
                 # Let's reuse this one
                 self.map[addr][server] = ('busy', )
-                debug(BRING_IT_ON, 'Proxy: reserve_server', addr, server)
+                debug(PROXY, 'Proxy: reserve_server %s %s', str(addr), str(server))
                 return server
         return None
 

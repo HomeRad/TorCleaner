@@ -4,9 +4,9 @@
 import sys, os, time, socket, re
 from Connection import Connection
 from wc.proxy import make_timer
-from wc.proxy import dns as DNS
+from wc.proxy import dns as dnslib
 from wc import ip
-from wc.debug import *
+from wc.log import *
 from pprint import pformat
 
 ###################### configuration ########################
@@ -31,8 +31,8 @@ def init_dns_resolver ():
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
-    debug(BRING_IT_ON, "DNS: nameservers", DnsConfig.nameservers)
-    debug(BRING_IT_ON, "DNS: search domains", DnsConfig.search_domains)
+    debug(DNS, "nameservers %s", str(DnsConfig.nameservers))
+    debug(DNS, "search domains %s", str(DnsConfig.search_domains))
     # re-read config every 10 minutes
     # disabled, there is a reload option in webcleaner
     #make_timer(600, init_dns_resolver)
@@ -105,7 +105,7 @@ init_dns_resolver()
 def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    debug(HURT_ME_PLENTY, 'DNS: background_lookup', hostname.lower())
+    debug(DNS, 'background_lookup %s', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
@@ -166,7 +166,7 @@ class DnsExpandHostname:
             make_timer(self.delay, self.handle_issue_request)
 
     def handle_issue_request (self):
-        debug(HURT_ME_PLENTY, 'DNS: issue_request')
+        debug(DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             request = self.requests[0]
@@ -180,7 +180,7 @@ class DnsExpandHostname:
             if self.requests: make_timer(self.delay, self.handle_issue_request)
 
     def handle_dns (self, hostname, answer):
-        debug(HURT_ME_PLENTY, 'DNS: handle_dns', hostname, answer)
+        debug(DNS, 'handle_dns %s %s', hostname, answer)
         if not self.callback:
             # Already handled this query
             return
@@ -264,7 +264,7 @@ class DnsCache:
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
-        debug(HURT_ME_PLENTY, 'DNS: dnscache lookup', hostname)
+        debug(DNS, 'dnscache lookup %s', hostname)
         # see if hostname is already a resolved IP address
         hostname, numeric = ip.expand_ip(hostname)
         if numeric:
@@ -282,7 +282,7 @@ class DnsCache:
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
-                debug(HURT_ME_PLENTY, 'DNS: cached!', hostname)
+                debug(DNS, 'cached! %s', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -446,12 +446,12 @@ class DnsLookupConnection (Connection):
     def send_dns_request (self):
         # Issue the request and set a timeout
         if not self.callback: return # Only issue if we have someone waiting
-        msg = DNS.Lib.Mpacker()
-        msg.addHeader(0, 0, DNS.Opcode.QUERY, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-        msg.addQuestion(self.hostname, DNS.Type.A, DNS.Class.IN)
+        msg = dnslib.Lib.Mpacker()
+        msg.addHeader(0, 0, dnslib.Opcode.QUERY, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+        msg.addQuestion(self.hostname, dnslib.Type.A, dnslib.Class.IN)
         msg = msg.getbuf()
         if self.conntype == 'tcp':
-            self.send_buffer = DNS.Lib.pack16bit(len(msg))+msg
+            self.send_buffer = dnslib.Lib.pack16bit(len(msg))+msg
         else:
             self.send_buffer = msg
         make_timer(self.TIMEOUT + 0.2*self.retries, self.handle_timeout)
@@ -491,7 +491,7 @@ class DnsLookupConnection (Connection):
         if self.conntype == 'tcp':
             if len(self.recv_buffer) < 2: return
             header = self.recv_buffer[:2]
-            count = DNS.Lib.unpack16bit(header)
+            count = dnslib.Lib.unpack16bit(header)
             if len(self.recv_buffer) < 2+count: return
             self.read(2) # header
             data = self.read(count)
@@ -499,16 +499,17 @@ class DnsLookupConnection (Connection):
         else:
             data = self.read(1024)
 
-        msg = DNS.Lib.Munpacker(data)
+        msg = dnslib.Lib.Munpacker(data)
         (id, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
             # dont handle truncated packets; try to switch to TCP
             # See http://cr.yp.to/djbdns/notes.html
             if self.conntype == 'tcp':
-                self.handle_error("dns error", socket.error,
-                        (84, 'Truncated TCP DNS packet: %s from %s for %s' %
-                          (tc, self.nameserver, self.hostname)))
+                # socket.error((84, ''))
+                error(PROXY, 'Truncated TCP DNS packet: %s from %s for %s',
+                      tc, self.nameserver, self.hostname)
+                self.handle_error("dns error")
             else:
                 warning('truncated UDP DNS packet: %s from %s for %s' %
                         (tc, self.nameserver, self.hostname))
@@ -544,14 +545,14 @@ class DnsLookupConnection (Connection):
         ip_addrs = []
         for i in range(ancount):
             name, type, klass, ttl, rdlength = msg.getRRheader()
-            mname = 'get%sdata' % DNS.Type.typestr(type)
+            mname = 'get%sdata' % dnslib.Type.typestr(type)
             if hasattr(msg, mname): data = getattr(msg, mname)()
             else: data = msg.getbytes(rdlength)
-            if type == DNS.Type.A:
+            if type == dnslib.Type.A:
                 ip_addrs.append(data)
-            if type == DNS.Type.CNAME:
+            if type == dnslib.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                debug(HURT_ME_PLENTY, 'DNS: cname record', self.hostname, '=', `data`)
+                debug(DNS, 'cname record %s=%s', self.hostname, `data`)
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records

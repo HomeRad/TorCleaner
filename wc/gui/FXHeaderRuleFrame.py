@@ -17,7 +17,7 @@
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 
 class FXHeaderRuleFrame (FXRuleFrame):
     """display all variables found in a HeaderRule"""
@@ -45,12 +45,12 @@ class FXHeaderRuleFrame (FXRuleFrame):
         else:
             sender.setText(self.rule.name)
             self.getApp().error(i18n._("Header rule"), i18n._("Header name must not be empty"))
-        debug(BRING_IT_ON, "Changed rule header name")
+        debug(GUI, "Changed rule header name")
         return 1
 
     def onCmdValue (self, sender, sel, ptr):
         self.rule.value = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule header value")
+        debug(GUI, "Changed rule header value")
         return 1
 

@@ -17,7 +17,7 @@
 from FXAllowRuleFrame import FXAllowRuleFrame
 from FXPy.fox import *
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 
 class FXBlockRuleFrame (FXAllowRuleFrame):
     """display all variables found in a BlockRule"""
@@ -33,6 +33,6 @@ class FXBlockRuleFrame (FXAllowRuleFrame):
     def onCmdUrl (self, sender, sel, ptr):
         self.rule.url = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule blocked url")
+        debug(GUI, "Changed rule blocked url")
         return 1
 

@@ -16,7 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import os, re, sys, UserDict, time, socket, ip, i18n
 import _webcleaner2_configdata as configdata
-from debug import *
+from log import *
 
 Version = configdata.version
 AppName = configdata.name
@@ -77,9 +77,8 @@ def startfunc (handle=None):
                 os.setgid(nogroup)
                 os.setuid(nobody)
             except KeyError:
-                print >>sys.stderr, \
-                    "warning: could not drop root privileges, user nobody "+\
-                    "and/or group nogroup not found"
+                warn(WC, "could not drop root privileges, user nobody "+\
+                         "and/or group nogroup not found")
                 pass
     # read configuration
     global config
@@ -122,9 +121,7 @@ class Configuration (dict):
         self['parentproxyport'] = 3128
         self['parentproxyuser'] = ""
         self['parentproxypass'] = ""
-        self['logfile'] = ""
         self['strict_whitelist'] = 0
-        self['debuglevel'] = 0
         self['rules'] = []
         self['filters'] = []
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
@@ -143,7 +140,6 @@ class Configuration (dict):
         """read proxy configuration"""
         p = WConfigParser()
         p.parse(os.path.join(ConfigDir, "webcleaner.conf"), self)
-        set_debuglevel(self['debuglevel'])
 
     def read_filterconf (self):
         """read filter rules"""
@@ -186,8 +182,6 @@ WebCleaner Configuration
 
 Port:          %(port)d
 Parent proxy:  %(parentproxy)s
-Logfile:       %(logfile)s
-Debug level:   %(debuglevel)d
 Show errors:   %(showerrors)d
 Headers saved: %(headersave)d
 
@@ -223,7 +217,7 @@ class ParseException (Exception): pass
 
 class BaseParser:
     def parse (self, filename, config):
-        debug(BRING_IT_ON, "Parsing "+filename)
+        debug(WC, "Parsing %s", filename)
         self.p = xml.parsers.expat.ParserCreate("ISO-8859-1")
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
@@ -288,11 +282,10 @@ class WConfigParser (BaseParser):
         if name=='webcleaner':
             for key,val in attrs.items():
                 self.config[str(key)] = unxmlify(val)
-            for key in ('port','parentproxyport',
-	                'debuglevel','colorize','showerrors',
-                        'strict_whitelist'):
+            for key in ('port', 'parentproxyport',
+	                'colorize', 'showerrors', 'strict_whitelist'):
                 self.config[key] = int(self.config[key])
-            for key in ('version', 'parentproxy', 'logfile', 'proxyuser',
+            for key in ('version', 'parentproxy', 'proxyuser',
                         'proxypass', 'parentproxyuser', 'parentproxypass',
                         ):
                 if self.config[key] is not None:
@@ -307,11 +300,7 @@ class WConfigParser (BaseParser):
                 self.config['allowedhosts'] = ip.host_set(strhosts)
             else:
                 self.config['allowedhosts'] = [{}, [], {}]
-            if self.config['logfile'] == '<stdout>':
-                self.config['logfile'] = sys.stdout
-            elif self.config['logfile']:
-                self.config['logfile'] = open(self.config['logfile'], 'a')
         elif name=='filter':
-            debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
+            debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
 

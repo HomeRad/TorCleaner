@@ -17,7 +17,7 @@
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 
 class FXImageRuleFrame (FXRuleFrame):
     """display all variables found in a ImageRule"""
@@ -42,12 +42,12 @@ class FXImageRuleFrame (FXRuleFrame):
     def onCmdWidth (self, sender, sel, ptr):
         self.rule.width = sender.getValue()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule image width")
+        debug(GUI, "Changed rule image width")
         return 1
 
     def onCmdHeight (self, sender, sel, ptr):
         self.rule.height = sender.getValue()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule image height")
+        debug(GUI, "Changed rule image height")
         return 1
 

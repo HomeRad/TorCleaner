@@ -17,7 +17,7 @@
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 from wc.filter.PICS import services
 
 class FXPicsRuleFrame (FXRuleFrame):
@@ -78,7 +78,7 @@ class FXPicsRuleFrame (FXRuleFrame):
         # XXX url syntax check ???
         self.rule.url = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule pics url")
+        debug(GUI, "Changed rule pics url")
         return 1
 
 
@@ -104,7 +104,7 @@ class FXPicsRuleFrame (FXRuleFrame):
                 c.disable()
                 #v.disable()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule pics service data")
+        debug(GUI, "Changed rule pics service data")
         return 1
 
 
@@ -116,6 +116,6 @@ class FXPicsRuleFrame (FXRuleFrame):
         else:
             del self.rule.ratings[service][cat]
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed rule pics category data")
+        debug(GUI, "Changed rule pics category data")
         return 1
 

@@ -16,7 +16,7 @@
 
 from UrlRule import UrlRule
 from wc.XmlUtils import xmlify, unxmlify
-from wc.debug import *
+from wc.log import *
 
 # tag ids
 STARTTAG = 0
@@ -35,6 +35,7 @@ ENCLOSED = 5
 # be filtered...
 NO_CLOSE_TAGS = ('img', 'image', 'meta', 'br', 'link', 'area')
 
+
 def part_num (s):
     """translation: tag name ==> tag number"""
     if s=='tag':
@@ -49,6 +50,7 @@ def part_num (s):
         return COMMENT
     if s=='enclosed':
         return ENCLOSED
+
 
 def num_part (s):
     """translation: tag number ==> tag name"""
@@ -65,6 +67,7 @@ def num_part (s):
     if s==ENCLOSED:
         return 'enclosed'
     return 'unknown'
+
 
 class RewriteRule (UrlRule):
     """A rewrite rule applies to a specific tag, optional with attribute
@@ -87,6 +90,7 @@ class RewriteRule (UrlRule):
             raise ValueError("reading rule %s: tag %s has no end tag, so specifying an enclose value is invalid." % (`rule.title`, `tag`))
         self.attrnames.append('tag')
 
+
     def fill_attrs (self, attrs, name):
         if name=='rewrite':
             UrlRule.fill_attrs(self, attrs, name)
@@ -97,6 +101,7 @@ class RewriteRule (UrlRule):
         elif name=='replace' and attrs.has_key('part'):
             self.replace[0] = part_num(unxmlify(attrs['part']).encode('iso8859-1'))
 
+
     def fill_data (self, data, name):
         data = unxmlify(data).encode('iso8859-1')
         if name=='attr':
@@ -106,8 +111,10 @@ class RewriteRule (UrlRule):
         elif name=='replace':
             self.replace[1] += data
 
+
     def fromFactory (self, factory):
         return factory.fromRewriteRule(self)
+
 
     def _compute_start_sufficient (self):
         if self.tag in NO_CLOSE_TAGS:
@@ -117,11 +124,14 @@ class RewriteRule (UrlRule):
             return 1
         return 0
 
+
     def set_start_sufficient (self):
         self.start_sufficient = self._compute_start_sufficient()
 
+
     def match_tag (self, tag):
         return self.tag == tag
+
 
     def match_attrs (self, attrs):
         occurred = []
@@ -138,6 +148,7 @@ class RewriteRule (UrlRule):
                 return 0
         return 1
 
+
     def match_complete (self, pos, buf):
         """We know that the tag (and tag attributes) match. Now match
 	   the enclosing block."""
@@ -151,11 +162,12 @@ class RewriteRule (UrlRule):
                 return 1
         return 0
 
+
     def filter_tag (self, tag, attrs):
-        debug(NIGHTMARE, "Filter: rule %s filter_tag" % self.title)
+        debug(FILTER, "rule %s filter_tag", self.title)
         part = self.replace[0]
-        debug(NIGHTMARE, "Filter: original tag", `tag`, "attrs", attrs)
-        debug(NIGHTMARE, "Filter: replace", num_part(part), "with", `self.replace[1]`)
+        debug(FILTER, "original tag %s attrs %s", `tag`, attrs)
+        debug(FILTER, "replace %s with %s", num_part(part), `self.replace[1]`)
         if part==COMPLETE:
             return [DATA, ""]
         if part==TAGNAME:
@@ -194,14 +206,15 @@ class RewriteRule (UrlRule):
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        debug(NIGHTMARE, "Filter: filtered tag", tag, "attrs", newattrs)
+        debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
         return (STARTTAG, tag, newattrs)
 
+
     def filter_complete (self, i, buf):
-        debug(NIGHTMARE, "Filter: rule %s filter_complete" % self.title)
+        debug(FILTER, "rule %s filter_complete", self.title)
         part = self.replace[0]
-        debug(NIGHTMARE, "Filter: original buffer", `buf`)
-        debug(NIGHTMARE, "Filter: part",num_part(part))
+        debug(FILTER, "original buffer %s", `buf`)
+        debug(FILTER, "part %s", num_part(part))
         if part==COMPLETE:
             buf[i:] = [[DATA, self.replace[1]]]
         elif part==TAG:
@@ -212,7 +225,8 @@ class RewriteRule (UrlRule):
             buf[-1] = [ENDTAG, self.replace[1]]
         elif part==ENCLOSED:
             buf[i+1:-1] = [[DATA, self.replace[1]]]
-        debug(NIGHTMARE, "Filter: filtered buffer", `buf`)
+        debug(FILTER, "filtered buffer %s", `buf`)
+
 
     def toxml (self):
         s = UrlRule.toxml(self)
@@ -241,6 +255,7 @@ class RewriteRule (UrlRule):
                 s += "/>\n"
         return s + "</rewrite>"
 
+
     def __str__ (self):
         s = UrlRule.__str__(self)
         s += "tag %s\n" % self.tag
@@ -251,4 +266,3 @@ class RewriteRule (UrlRule):
 	    (num_part(self.replace[0]), `self.replace[1]`)
         s += "start suff. %d" % self.start_sufficient
         return s
-

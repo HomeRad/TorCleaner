@@ -1,7 +1,7 @@
 """ ip related utility functions """
 
 import re, socket, struct
-
+from log import *
 
 # IP Adress regular expressions
 _ipv4_num = r"\d{1,3}"
@@ -115,19 +115,19 @@ def host_map (hosts):
             host, mask = host.split("/")
             mask = int(mask)
             if not is_valid_bitmask(mask):
-                print >>sys.stderr, "bitmask %d is not a valid network mask"%mask
+                error(WC, "bitmask %d is not a valid network mask", mask)
                 continue
             if not is_valid_dq(host):
-                print >>sys.stderr, "host %s is not a valid ip address"%host
+                error(WC, "host %s is not a valid ip address", host)
                 continue
             nets.append(dq2net(host, suffix2mask(mask)))
         elif _host_netmask_re.match(host):
             host, mask = host.split("/")
             if not is_valid_dq(host):
-                print >>sys.stderr, "host %s is not a valid ip address"%host
+                error(WC, "host %s is not a valid ip address", host)
                 continue
             if not is_valid_dq(mask):
-                print >>sys.stderr, "mask %s is not a valid ip network mask"%mask
+                error(WC, "mask %s is not a valid ip network mask", mask)
                 continue
             nets.append(dq2net(host, dq2mask(mask)))
         else:

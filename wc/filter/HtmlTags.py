@@ -285,17 +285,17 @@ def check_spelling (tag, url):
     if tag in HtmlTags or tag in MathTags:
         return tag
     if tag in OldTags:
-        #print >>sys.stderr, "Warning: non-HTML4 tag", `tag`, "at", `url`
+        #warn(PARSER, "non-HTML4 tag %s at %s", `tag`, `url`)
         return tag
     if tag in KnownInvalidTags:
-        #print >>sys.stderr, "Warning: known invalid tag", `tag`, "at", `url`
+        #warn(PARSER, "known invalid tag %s at %s", `tag`, `url`)
         return tag
     for htmltag in HtmlTags.keys()+MathTags.keys():
          if distance(tag, htmltag)==1:
-             print >>sys.stderr, "Warning: HTML tag", `tag`, \
-                                 "corrected to", `htmltag`, "at", `url`
+             warn(PARSER, "HTML tag %s corrected to %s at %s", `tag`,
+                           `htmltag`, `url`)
              return htmltag
-    print >>sys.stderr, "Error: unknown HTML tag", `tag`, "at", `url`
+    error(PARSER, "unknown HTML tag %s at %s", `tag`, `url`)
     # filter possibly trailing garbage the parser accepted
     mo = filter_tag_garbage(tag)
     if mo:

@@ -19,7 +19,7 @@ import re, struct, time, zlib
 from wc.filter import FILTER_RESPONSE_ENCODE, compileMime
 from wc.filter.Filter import Filter
 from wc import remove_headers
-from wc.debug import *
+from wc.log import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_ENCODE]
@@ -68,7 +68,7 @@ class Compress (Filter):
             header = compobj['header']
             if header:
                 compobj['header'] = ''
-                debug(NIGHTMARE, 'Filter: writing gzip header')
+                debug(FILTER, 'writing gzip header')
             compobj['size'] += len(data)
             compobj['crc'] = zlib.crc32(data, compobj['crc'])
             data = "%s%s"%(header, compobj['compressor'].compress(data))
@@ -80,7 +80,7 @@ class Compress (Filter):
         if compobj:
             header = compobj['header']
             if header:
-                debug(NIGHTMARE, 'Filter: final writing gzip header')
+                debug(FILTER, 'final writing gzip header')
                 pass
             if data:
                 compobj['size'] += len(data)
@@ -88,7 +88,7 @@ class Compress (Filter):
                 data = "%s%s"%(header, compobj['compressor'].compress(data))
             else:
                 data = header
-            debug(NIGHTMARE, 'Filter: finishing compressor')
+            debug(FILTER, 'finishing compressor')
             data += "%s%s%s" % (compobj['compressor'].flush(zlib.Z_FINISH),
                                 struct.pack('<l', compobj['crc']),
                                 struct.pack('<l', compobj['size']))
@@ -106,7 +106,7 @@ class Compress (Filter):
         else:
             compressobj = getCompressObject()
             headers['Content-Encoding'] = 'gzip\r'
-        debug(HURT_ME_PLENTY, "Filter: compress object", compressobj)
+        debug(FILTER, "compress object %s", str(compressobj))
         d = Filter.getAttrs(self, headers, url)
         d['compressobj'] = compressobj
         return d

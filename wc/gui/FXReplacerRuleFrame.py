@@ -17,7 +17,7 @@
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 
 class FXReplacerRuleFrame (FXRuleFrame):
     """display all variables found in a ReplacerRule"""
@@ -40,12 +40,12 @@ class FXReplacerRuleFrame (FXRuleFrame):
     def onCmdSearch (self, sender, sel, ptr):
         self.rule.search = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed replace rule search value")
+        debug(GUI, "Changed replace rule search value")
         return 1
 
     def onCmdReplace (self, sender, sel, ptr):
         self.rule.replace = sender.getText().strip()
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Changed replace rule replace value")
+        debug(GUI, "Changed replace rule replace value")
         return 1
 

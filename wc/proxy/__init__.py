@@ -13,7 +13,7 @@ def fileno(self):
 asyncore.dispatcher.fileno = fileno
 from wc import i18n, config, ip
 from wc.XmlUtils import xmlify
-from wc.debug import *
+from wc.log import *
 from urllib import splittype, splithost, splitnport
 from LimitQueue import LimitQueue
 
@@ -23,14 +23,6 @@ TIMERS = [] # list of (time, function)
 # entries have the form
 # (url, 0(incoming)/1(outgoing), headers)
 HEADERS = LimitQueue(config['headersave'])
-
-def log (msg):
-    """If logfile is defined write the msg into it. The message msg
-       should be in common log file format."""
-    debug(HURT_ME_PLENTY, "Proxy: logging", `msg`)
-    if config['logfile']:
-        config['logfile'].write(msg)
-        config['logfile'].flush()
 
 
 # XXX better name/implementation for this function
@@ -55,10 +47,10 @@ def get_http_version (protocol):
         major, minor = int(mo.group("major")), int(mo.group("minor"))
         f = float("%d.%d"%(minor, major))
         if f > 1.1:
-            print >>sys.stderr, "Error: invalid HTTP version", f
+            error(PROXY, "invalid HTTP version %f", f)
             f = 1.1
         return f
-    print >>sys.stderr, "Error: invalid HTTP version", `protocol`
+    error(PROXY, "invalid HTTP version %s", `protocol`)
     return 1.0
 
 
@@ -113,7 +105,7 @@ def proxy_poll (timeout=0.0):
                 x.handle_expt_event()
                 handlerCount += 1
             except:
-                x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
+                x.handle_error("poll error")
         for x in w:
             try:
                 t = time.time()
@@ -121,10 +113,10 @@ def proxy_poll (timeout=0.0):
                     x.handle_write_event()
                     handlerCount += 1
                     #if time.time() - t > 0.1:
-                    #    debug(BRING_IT_ON, 'Proxy: wslow', '%4.1f'%(time.time()-t), 's', x)
+                    #    debug(PROXY, 'Proxy: wslow %4.1f %s %s', (time.time()-t), 's', str(x))
                     #    pass
             except:
-                x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
+                x.handle_error("poll error")
         for x in r:
             try:
                 t = time.time()
@@ -132,10 +124,10 @@ def proxy_poll (timeout=0.0):
                     x.handle_read_event()
                     handlerCount += 1
                     #if time.time() - t > 0.1:
-                    #    debug(BRING_IT_ON, 'Proxy: rslow', '%4.1f'%(time.time()-t), 's', x)
+                    #    debug(PROXY, 'Proxy: rslow %4.1f %s %s', (time.time()-t), 's', str(x))
                     #    pass
             except:
-                x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
+                x.handle_error("poll error")
         return handlerCount
 
 
@@ -150,7 +142,7 @@ def match_host (request):
     try:
         foo, url, bar = request.split()
     except Exception, why:
-        print >> sys.stderr, "bad request", why
+        error(PROXY, "bad request: %s", why)
         return None
     hostname = spliturl(url)[1]
     if not hostname:

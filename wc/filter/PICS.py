@@ -52,7 +52,7 @@ if __name__=='__main__':
     import sys, os
     sys.path.insert(0, os.getcwd())
 import re, wc
-from wc.debug import *
+from wc.log import *
 from wc import i18n
 
 # rating phrase searcher
@@ -163,10 +163,10 @@ def check_pics (rule, labellist):
     last = 0
     for mo in ratings(labellist):
         rating = mo.group('rating')
-        debug(NIGHTMARE, "PICS: rating", rating)
+        debug(PICS, "rating %s", rating)
         # the blurb contains the service name and options
         blurb = labellist[last:mo.start()].lower()
-        debug(NIGHTMARE, "PICS: blurb", blurb)
+        debug(PICS, "blurb %s", blurb)
         last = mo.end()
         # check all in the rule configured PICS services
         for service, options in rule.ratings.items():

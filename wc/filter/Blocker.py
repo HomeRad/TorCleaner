@@ -19,7 +19,7 @@ from wc.filter.rules.AllowRule import Netlocparts
 from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
 from wc import ConfigDir, config
-from wc.debug import *
+from wc.log import *
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_REQUEST]
@@ -112,20 +112,20 @@ class Blocker (Filter):
             if not line or line[0]=='#': continue
             self.allowed_urls.append(line.split("/", 1))
 
-    def get_file_data (self, file):
-        debug(BRING_IT_ON, "Filter: reading", file)
-        file = os.path.join(ConfigDir, file)
-        if file.endswith(".gz"):
-            file = gzip.GzipFile(file, 'rb')
+    def get_file_data (self, filename):
+        debug(FILTER, "reading %s", filename)
+        filename = os.path.join(ConfigDir, filename)
+        if filename.endswith(".gz"):
+            f = gzip.GzipFile(filename, 'rb')
         else:
-            file = open(file)
-        return file.readlines()
+            f = file(filename)
+        return f.readlines()
 
     def doit (self, data, **args):
-        debug(HURT_ME_PLENTY, "Filter: block filter working on %s" % `data`)
+        debug(FILTER, "block filter working on %s", `data`)
         splitted = data.split()
         if len(splitted)!=3:
-            print >>sys.stderr, "invalid request:", `data`
+            error(FILTER, "invalid request: %s", `data`)
             return data
         method,url,protocol = splitted
         urlTuple = list(urlparse.urlparse(url))
@@ -139,7 +139,7 @@ class Blocker (Filter):
             return data
         blocked = self.strict_whitelist or self.blocked(urlTuple)
         if blocked is not None:
-            debug(BRING_IT_ON, "Filter: blocked url %s" % url)
+            debug(FILTER, "blocked url %s", url)
             # index 3, not 2!
             if image_re.match(urlTuple[3][-4:]):
                 return '%s %s %s' % (method,
@@ -168,7 +168,7 @@ class Blocker (Filter):
                     if not _block[i].search(urlTuple[i]):
                         match = 0
             if match:
-                debug(HURT_ME_PLENTY, "Filter: blocked", urlTuple, "with", _block[-1])
+                debug(FILTER, "blocked %s with %s", urlTuple, _block[-1])
                 return _block[-1]
         return None
 
@@ -187,6 +187,6 @@ class Blocker (Filter):
 		    if not _allow[i].search(urlTuple[i]):
                         match = 0
             if match:
-                debug(NIGHTMARE, "Filter: allowed", urlTuple)
+                debug(FILTER, "allowed %s", str(urlTuple))
 	        return 1
         return 0

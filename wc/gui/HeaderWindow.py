@@ -18,7 +18,7 @@ import sys, os, httplib
 from ToolWindow import ToolWindow
 
 from wc import i18n, BaseParser, ConfigDir, Configuration
-from wc.debug import *
+from wc.log import *
 from FXPy.fox import *
 
 SCROLLING_NONE = 0
@@ -40,7 +40,7 @@ def parse_headers ():
     headers = []
     try:
         s = get_data("/headers/")
-        debug(BRING_IT_ON, "headers data", s)
+        debug(GUI, "headers data", s)
     except (IOError, ValueError):
         print >> sys.stderr, i18n._("WebCleaner is not running")
         return headers
@@ -69,9 +69,9 @@ def get_data (selector):
     config = Configuration()
     h = httplib.HTTP()
     host = "localhost:%d"%config['port']
-    debug(BRING_IT_ON, "connect to", host)
+    debug(GUI, "connect to", host)
     h.connect(host)
-    debug(BRING_IT_ON, "GET", selector)
+    debug(GUI, "GET", selector)
     h.putrequest("GET", selector)
     if config["proxyuser"]:
         import base64
@@ -79,7 +79,7 @@ def get_data (selector):
         auth = "%s:%s" % (config['proxyuser'], p)
         auth = "Basic "+base64.encodestring(auth).strip()
         h.putheader("Proxy-Authorization", auth)
-    debug(BRING_IT_ON, "endheaders")
+    debug(GUI, "endheaders")
     h.endheaders()
     status, message, headers = h.getreply()
     if status == 200:
@@ -189,18 +189,18 @@ class HeaderWindow (ToolWindow):
 
 
     def onCmdAbout (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "About")
+        debug(GUI, "About")
         self.getApp().doShow(self.about)
         return 1
 
 
     def onCmdOptions (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "About")
+        debug(GUI, "About")
         self.getApp().doShow(self.options)
         return 1
 
     def onCmdAddHeader (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Add header")
+        debug(GUI, "Add header")
         dialog = FXDialogBox(self,i18n._("Add Header"),DECOR_TITLE|DECOR_BORDER)
         frame = FXVerticalFrame(dialog, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|PACK_UNIFORM_WIDTH)
         matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
@@ -220,11 +220,11 @@ class HeaderWindow (ToolWindow):
             self.config['nodisplay'].append(header)
             self.options.headers.appendItem(header)
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Added nodisplay header")
+            debug(GUI, "Added nodisplay header")
         return 1
 
     def onCmdRemoveHeader (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Remove header")
+        debug(GUI, "Remove header")
         headers = self.options.headers
         index = headers.getCurrentItem()
         item = headers.retrieveItem(index)
@@ -232,11 +232,11 @@ class HeaderWindow (ToolWindow):
         self.config['nodisplay'].remove(header)
         headers.removeItem(index)
         self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Removed nodisplay header")
+        debug(GUI, "Removed nodisplay header")
         return 1
 
     def onCmdEditHeader (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Edit header")
+        debug(GUI, "Edit header")
         headers = self.options.headers
         index = headers.getCurrentItem()
         item = headers.retrieveItem(index)
@@ -256,7 +256,7 @@ class HeaderWindow (ToolWindow):
             self.config['nodisplay'].append(item)
             headers.replaceItem(index, newheader)
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Changed nodisplay header")
+            debug(GUI, "Changed nodisplay header")
         return 1
 
     def onUpdHeader (self, sender, sel, ptr):
@@ -270,7 +270,7 @@ class HeaderWindow (ToolWindow):
         return 1
 
     def onCmdQuit (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Quit")
+        debug(GUI, "Quit")
         self.getApp().handle(self, MKUINT(FXApp.ID_QUIT,SEL_COMMAND), ptr)
         return 1
 
@@ -286,7 +286,7 @@ class HeaderWindow (ToolWindow):
         }
         p = WHeadersParser()
         p.parse(os.path.join(ConfigDir, "wcheaders.conf"), self.config)
-        debug(BRING_IT_ON, "config", self.config)
+        debug(GUI, "config", self.config)
 
 
     def onCmdSaveOptions (self, sender, sel, ptr):
@@ -325,35 +325,35 @@ class HeaderWindow (ToolWindow):
 
 
     def onCmdRefresh (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Refresh")
+        debug(GUI, "Refresh")
         if self.timer:
             self.getApp().removeTimeout(self.timer)
         return self.refresh()
 
 
     def onSetRefresh (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "SetRefresh", sender.getValue())
+        debug(GUI, "SetRefresh", sender.getValue())
         self.config['refresh'] = sender.getValue()
         self.getApp().dirty = 1
         return 1
 
 
     def onSetOnlyfirst (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "SetOnlyFirst", sender.getCheck())
+        debug(GUI, "SetOnlyFirst", sender.getCheck())
         self.config['onlyfirst'] = sender.getCheck()
         self.getApp().dirty = 1
         return 1
 
 
     def onSetScrolling (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "SetScrolling", sender.getCurrentItem())
+        debug(GUI, "SetScrolling", sender.getCurrentItem())
         self.config['scrolling'] = sender.getCurrentItem()
         self.getApp().dirty = 1
         return 1
 
 
     def onSetSavedHeaders (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "SetSavedHeaders", sender.getValue())
+        debug(GUI, "SetSavedHeaders", sender.getValue())
         self.config['headersave'] = sender.getValue()
         self.getApp().dirty = 1
         return 1
@@ -364,7 +364,7 @@ class HeaderWindow (ToolWindow):
 
 
     def onTimerRefresh (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "TimerRefresh")
+        debug(GUI, "TimerRefresh")
         return self.refresh()
 
 

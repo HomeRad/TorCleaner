@@ -1,6 +1,6 @@
 import asyncore, socket, sys
 from wc import i18n, config
-from wc.debug import *
+from wc.log import *
 
 class Listener (asyncore.dispatcher):
     """A listener accepts connections on a specified port. Each
@@ -33,11 +33,8 @@ class Listener (asyncore.dispatcher):
 
     def handle_accept (self):
         """start the handler class with the new socket"""
-        debug(HURT_ME_PLENTY, 'Proxy: accept', self)
+        debug(PROXY, 'Proxy: accept %s', str(self))
         apply(self.handler, self.accept())
 
-    def handle_error (self, what, type, value, tb=None):
-        print >> sys.stderr, what, self, type, value
-        if tb:
-            import traceback
-            traceback.print_tb(tb)
+    def handle_error (self, what):
+        exception(PROXY, what)

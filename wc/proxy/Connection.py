@@ -12,7 +12,7 @@
 # own poll loop to avoid this problem. :P
 
 import asyncore, socket, sys, errno
-from wc.debug import *
+from wc.log import *
 
 RECV_BUFSIZE = 1024
 SEND_BUFSIZE = 1024
@@ -43,19 +43,19 @@ class Connection (asyncore.dispatcher):
             # It's been closed (presumably recently)
             return
 	if len(self.recv_buffer) > MAX_BUFSIZE:
-            print >>sys.stderr, 'Warning: read buffer full'
+            warn(PROXY, 'read buffer full')
 	    return
         try:
             data = self.recv(RECV_BUFSIZE)
         except socket.error, err:
             if err==errno.EAGAIN:
                 return
-            self.handle_error('read error', socket.error, err)
+            self.handle_error('read error')
             return
         if not data: # It's been closed, and handle_close has been called
             return
-        debug(HURT_ME_PLENTY, 'Proxy: read', len(data), '<=', self)
-        debug(NIGHTMARE, 'Proxy: data', `data`)
+        debug(PROXY, 'Proxy: read %d <= %s', len(data), str(self))
+        debug(PROXY, 'Proxy: data %s', `data`)
 	self.recv_buffer += data
         self.process_read()
 
@@ -76,10 +76,10 @@ class Connection (asyncore.dispatcher):
         try:
             num_sent = self.send(data)
         except socket.error, err:
-            self.handle_error('write error', socket.error, err)
+            self.handle_error('write error')
             return
-        debug(HURT_ME_PLENTY, 'Proxy: wrote', num_sent, '=>', self)
-        debug(NIGHTMARE, 'Proxy: data', `data[:num_sent]`)
+        debug(PROXY, 'Proxy: wrote %d => %s', num_sent, str(self))
+        debug(PROXY, 'Proxy: data %s', `data[:num_sent]`)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and not self.send_buffer:
             self.close_pending = 0
@@ -107,17 +107,13 @@ class Connection (asyncore.dispatcher):
         assert self.connected
         if self.send_buffer:
             # We can't close yet because there's still data to send
-            debug(HURT_ME_PLENTY, 'Proxy: close ready', self)
+            debug(PROXY, 'Proxy: close ready %s', str(self))
             self.close_pending = 1
         else:
             self.close()
 
 
-    def handle_error (self, what, type, value, tb=None):
-        print >> sys.stderr, what, self, type, value
-        if tb:
-            import traceback
-            traceback.print_tb(tb)
-            print >> sys.stderr, "="*70
+    def handle_error (self, what):
+        exception(PROXY, what)
         self.close()
         self.del_channel()

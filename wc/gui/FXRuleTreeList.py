@@ -18,7 +18,7 @@ from FXPy.fox import *
 from wc import i18n
 from wc.gui import loadIcon
 from FXRuleFrameFactory import FXRuleFrameFactory
-from wc.debug import *
+from wc.log import *
 
 
 class FXRuleTreeList (FXTreeList):
@@ -57,12 +57,12 @@ class FXRuleTreeList (FXTreeList):
     def newRule (self, rule):
         item = self.getCurrentItem()
         # we must have selected a rule folder:
-        debug(BRING_IT_ON, "item index %d"%item.getData())
+        debug(GUI, "item index %d"%item.getData())
         if item.getData()==0:
             item = item.getBelow()
         elif not self.searchIndexFolder(item.getData()):
             item = item.getParent()
-        debug(BRING_IT_ON, "item index %d"%item.getData())
+        debug(GUI, "item index %d"%item.getData())
         self.expandTree(item)
         folder = self.searchIndexFolder(item.getData())
         rule.parent = folder
@@ -108,9 +108,9 @@ class FXRuleTreeList (FXTreeList):
         item = self.getCurrentItem()
         if self.isItemSelected(item):
             index = item.getData()
-            debug(BRING_IT_ON, "onCmdUp: tree item index %d" % index)
+            debug(GUI, "onCmdUp: tree item index %d" % index)
             rule = self.searchIndexRule(index)
-            debug(BRING_IT_ON, "onCmdUp: rule %s" % rule)
+            debug(GUI, "onCmdUp: rule %s" % rule)
             rule_before = self.searchOidRule(item, rule.oid-1)
             rule_before.oid, rule.oid = rule.oid, rule_before.oid
             self.sort()
@@ -121,7 +121,7 @@ class FXRuleTreeList (FXTreeList):
         item = self.getCurrentItem()
         if self.isItemSelected(item):
             index = item.getData()
-            debug(BRING_IT_ON, "onCmdUp: tree item index %d" % index)
+            debug(GUI, "onCmdUp: tree item index %d" % index)
             rule = self.searchIndexRule(index)
             rule_after = self.searchOidRule(item, rule.oid+1)
             rule_after.oid, rule.oid = rule.oid, rule_after.oid

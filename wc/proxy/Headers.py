@@ -1,6 +1,6 @@
 """Header mangling"""
 from wc import remove_headers
-import sys
+from wc.log import *
 
 def set_via_header (headers):
     """set via header"""
@@ -59,7 +59,7 @@ def client_remove_encoding_headers (headers):
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
     if headers.get("Content-Length") is not None:
-        print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
+        warn(PROXY, 'chunked encoding should not have Content-Length')
         to_remove.append("Content-Length")
     remove_headers(headers, to_remove)
     # add warning
@@ -71,7 +71,7 @@ def client_get_max_forwards (headers):
     try:
         mf = int(headers.get('Max-Forwards', -1))
     except ValueError:
-        print >>sys.stderr, "Invalid Max-Forwards header value", headers.get('Max-Forwards')
+        error(PROXY, "invalid Max-Forwards header value %s", headers.get('Max-Forwards', ''))
         mf = -1
     if mf>0:
         headers['Max-Forwards'] = "%d\r" % (mf-1)

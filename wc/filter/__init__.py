@@ -29,8 +29,7 @@ to work properly.
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import sys, re, wc
-from wc.debug import *
+import re, wc
 
 # filter order
 FILTER_REQUEST         = 0 # Filter complete request (blocking)

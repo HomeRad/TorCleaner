@@ -1,15 +1,15 @@
-import rfc822, time, sys
+import rfc822, time
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip, remove_headers
-from wc.proxy import log, match_host
+from wc.proxy import match_host
 from wc.proxy.Headers import client_set_headers
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
-from wc.debug import *
+from wc.log import *
 from wc.filter import FILTER_REQUEST
 from wc.filter import FILTER_REQUEST_HEADER
 from wc.filter import FILTER_REQUEST_DECODE
@@ -38,7 +38,7 @@ class HttpClient (Connection):
         host = self.addr[0]
         hosts, nets, nil = config['allowedhosts']
         if not ip.host_in_set(host, hosts, nets):
-            print >>sys.stderr, host, "access denied"
+            warn(PROXY, "host %s access denied", host)
             self.close()
 
 
@@ -96,11 +96,11 @@ class HttpClient (Connection):
             # self.read(i) is not including the newline
             self.request = self.read(i)
             self.nofilter = {'nofilter': match_host(self.request)}
-            debug(BRING_IT_ON, "Client: request", self.request)
+            debug(PROXY, "Client: request %s", self.request)
             self.request = applyfilter(FILTER_REQUEST, self.request,
                            fun="finish", attrs=self.nofilter)
-            log('%s - %s - %s\n' % (self.addr[0],
-                time.ctime(time.time()), self.request))
+            info(ACCESS, '%s - %s - %s', self.addr[0],
+                 time.ctime(time.time()), self.request)
             try: self.method, url, protocol = self.request.split()
             except:
                 config['requests']['error'] += 1
@@ -133,11 +133,11 @@ class HttpClient (Connection):
             # chunked encoded
             if self.headers.has_key('Transfer-Encoding'):
                 # XXX don't look at value, assume chunked encoding for now
-                debug(BRING_IT_ON, 'Client: Transfer-encoding:', `self.headers['transfer-encoding']`)
+                debug(PROXY, 'Client: Transfer-encoding: %s', `self.headers['transfer-encoding']`)
                 self.decoders.append(UnchunkStream())
                 client_remove_encoding_headers(self.headers)
                 self.bytes_remaining = None
-            debug(HURT_ME_PLENTY, "Client: Headers", `str(self.headers)`)
+            debug(PROXY, "Client: Headers %s", `str(self.headers)`)
             if config["proxyuser"]:
                 if not self.headers.has_key('Proxy-Authentication'):
                     return self.error(407,
@@ -178,8 +178,8 @@ class HttpClient (Connection):
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
         if underflow:
-            print >>sys.stderr, "Warning: client received"+\
-               " %d bytes more than content-length" % (-self.bytes_remaining)
+            warn(PROXY, "client received %d bytes more than content-length",
+                 (-self.bytes_remaining))
         if is_closed or self.bytes_remaining==0:
             data = applyfilter(FILTER_REQUEST_DECODE, "",
     	                   fun="finish", attrs=self.nofilter)
@@ -201,7 +201,7 @@ class HttpClient (Connection):
     def server_response (self, server, response, headers):
         self.server = server
         assert self.server.connected
-        debug(NIGHTMARE, 'Client: server_response', self, `response`)
+        debug(PROXY, 'Client: server_response %s %s', str(self), `response`)
         self.write(response)
         self.write(''.join(headers.headers))
         self.write('\r\n')
@@ -214,20 +214,20 @@ class HttpClient (Connection):
 
     def server_close (self):
         assert self.server
-        debug(NIGHTMARE, 'Client: server_close', self)
+        debug(PROXY, 'Client: server_close %s', str(self))
         if self.connected and not self.close_pending:
             self.delayed_close()
         self.server = None
 
 
     def server_abort (self):
-        debug(NIGHTMARE, 'Client: server_abort', self)
+        debug(PROXY, 'Client: server_abort %s', str(self))
         self.close()
         self.server = None
 
 
-    def handle_error (self, what, type, value, tb=None):
-        Connection.handle_error(self, what, type, value, tb=tb)
+    def handle_error (self):
+        Connection.handle_error(self)
         # We should close the server connection
         if self.server:
             server, self.server = self.server, None
@@ -237,7 +237,7 @@ class HttpClient (Connection):
     def handle_close (self):
         # The client closed the connection, so cancel the server connection
         self.send_buffer = ''
-        debug(HURT_ME_PLENTY, 'Client: handle_close', self)
+        debug(PROXY, 'Client: handle_close %s', str(self))
         Connection.handle_close(self)
         if self.server:
             server, self.server = self.server, None
@@ -248,7 +248,7 @@ class HttpClient (Connection):
 
 
     def close (self):
-        debug(HURT_ME_PLENTY, 'Client: close', self)
+        debug(PROXY, 'Client: close %s', str(self))
         self.state = 'closed'
         Connection.close(self)
 
@@ -258,7 +258,7 @@ def get_content_length (headers):
     try:
         return int(headers.get('Content-Length', 0))
     except ValueError:
-        print >>sys.stderr, "Invalid Content-Length value", headers.get('Content-Length')
+        warn(PROXY, "invalid Content-Length value %s", headers.get('Content-Length', ''))
     return 0
 
 

@@ -17,7 +17,7 @@
 from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 
 class FXFolderRuleFrame (FXRuleFrame):
     """display all variables found in a FolderRule"""

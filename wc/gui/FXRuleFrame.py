@@ -16,7 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 from FXPy.fox import *
 from wc import i18n
-from wc.debug import *
+from wc.log import *
 
 class FXRuleFrame (FXVerticalFrame):
     """display all variables found in a basic Rule.
@@ -88,18 +88,18 @@ class FXRuleFrame (FXVerticalFrame):
         win.handle(sender, MKUINT(win.ID_TITLE, SEL_COMMAND), ptr)
         # restore original title without prefix
         sender.setText(title)
-        debug(BRING_IT_ON, "Rule title changed")
+        debug(GUI, "Rule title changed")
         return 1
 
     def onCmdDesc (self, sender, sel, ptr):
         if self.rule.desc != sender.getText():
             self.rule.desc = sender.getText()
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Rule description changed")
+            debug(GUI, "Rule description changed")
         return 1
 
     def onCmdDisableRule (self, sender, sel, ptr):
-        debug(BRING_IT_ON, "Rule %d %s"%(self.rule.index, (self.rule.disable and "disabled" or "enabled")))
+        debug(GUI, "Rule %d %s"%(self.rule.index, (self.rule.disable and "disabled" or "enabled")))
         self.rule.disable = sender.getCheck()
         self.getApp().dirty = 1
         # send message to main window for icon updating
@@ -111,14 +111,14 @@ class FXRuleFrame (FXVerticalFrame):
         if self.rule.matchurl != sender.getText():
             self.rule.matchurl = sender.getText()
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Rule matchurl changed")
+            debug(GUI, "Rule matchurl changed")
         return 1
 
     def onCmdDontMatchUrl (self, sender, sel, ptr):
         if self.rule.dontmatchurl != sender.getText():
             self.rule.dontmatchurl = sender.getText()
             self.getApp().dirty = 1
-            debug(BRING_IT_ON, "Rule dontmatchurl changed")
+            debug(GUI, "Rule dontmatchurl changed")
         return 1
 
     def onCmdNone (self, sender, sel, ptr):
