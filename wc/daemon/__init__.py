@@ -27,20 +27,33 @@ __date__    = "$Date$"[7:-2]
 import os
 from wc import i18n, startfunc, Version, iswriteable, AppName
 
-fname = "%s-%s.pid"%(AppName, Version)
+def get_user ():
+    """return current logged in user, or an empty string if there is no
+    username available"""
+    if hasattr(os, "getlogin"):
+        u = os.getlogin()
+    return ""
+
+
+# determine pid lockfile name
+fname = "%s-%s.pid" % (AppName, Version)
 if os.name=="nt":
-    pidfile=os.path.join(os.environ.get("TEMP"), fname)
+    pidfile = os.path.join(os.environ.get("TEMP"), fname)
 else:
-    pidfile=os.path.join('/var/run', fname)
+    pidfile = os.path.join('/var/run', fname)
     if not iswriteable(pidfile):
+        # an unwriteable /var/run means we are not running as root
+        # to enable multiple running webcleaner instances, we use a
+        # user-specific lock file name
+        fname = get_user() + fname
         pidfile = os.path.join('/var/tmp', fname)
     if not iswriteable(pidfile):
         pidfile = os.path.join('/tmp', fname)
-
 # last fallback: the current directory
 if not iswriteable(pidfile):
     pidfile = fname
 watchfile = pidfile+".watch"
+
 
 def restart (parent_exit=1):
     msg1, status = stop()
