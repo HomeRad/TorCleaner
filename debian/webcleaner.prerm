@@ -7,7 +7,7 @@
 
 #DEBHELPER#
 
-if [ "$1"=="remove" ]; then
+if [ "$1" = "remove" ]; then
     # remove service link
     rm -f /service/webcleaner
     # exit supervise

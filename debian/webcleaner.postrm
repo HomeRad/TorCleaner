@@ -28,7 +28,7 @@ esac
 
 #DEBHELPER#
 
-if [ "$1"=="purge" ]; then
+if [ "$1" = "purge" ]; then
     # delete remaining supervise stuff
     rm -rf /etc/webcleaner/log || true
     rm -rf /etc/webcleaner/supervise || true
