@@ -1,3 +1,11 @@
+webcleaner (2.9-0.1) unstable; urgency=low
+
+  * New upstream release.
+  * split package into arch independent webcleaner-common and the proxy
+    package
+
+ -- Bastian Kleineidam <calvin@debian.org>  Fri, 20 Feb 2004 09:13:08 +0100
+
 webcleaner (2.8-0.3) unstable; urgency=low
 
   * fix tests in postinst, postrm, prerm and config scripts
