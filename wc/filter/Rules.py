@@ -214,6 +214,9 @@ class RewriteRule (UrlRule):
     def match_attrs (self, attrs):
         occurred = []
         for attr,val in attrs.items():
+            # attr or val could be None
+            if attr is None: attr = ''
+            if val is None: val = ''
             occurred.append(attr)
             ro = self.attrs.get(attr)
             if ro and not ro.search(val):
