@@ -230,9 +230,50 @@ Rule (don't) match url
  tal:attributes="value currule/tag">
 <br>
 <span tal:replace="t_ruleattrs">Attributes</span>:
-XXX attrs
+<table border="1">
+<tr>
+<td></td>
+<td tal:content="t_attrname">Name</td>
+<td tal:content="t_attrval">Value</td>
+</tr>
+<tr tal:repeat="attr currule/attrs/keys">
+<td><input type="checkbox" name="delattr"
+ tal:attributes="value attr">
+</td>
+<td tal:content="attr"></td>
+<td tal:content="currule/attrs/?attr"></td>
+</tr>
+</table>
+<input type="submit" name="removeattrs" value="Remove selected"
+ tal:attributes="value t_removeattrs">
 <br>
-XXX more
+<span tal:replace="t_attrname">Name</span>:
+<input type="text" name="attrname" value="">
+<br>
+<span tal:replace="t_attrval">Value</span>:
+<input type="text" name="attrval" value="">
+<br>
+<input type="submit" name="addattr" value="Add attribute"
+ tal:attributes="value t_addattr">
+<br>
+<span tal:replace="t_enclosedblock">Enclosed block</span>:
+<input type="text" name="enclosedblock" value=""
+ tal:attributes="value currule/enclosed">
+<br>
+<span tal:replace="t_replacepart">Replace part</span>:
+<select name="replacepart">
+<span tal:repeat="part replaceparts" tal:omit-tag="">
+<span tal:define="valname part/valname" tal:replace="nothing"></span>
+<option tal:condition="curparts/?valname" selected
+ tal:attributes="value valname" tal:content="part/name">a part</option>
+<option tal:condition="not:curparts/?valname"
+ tal:attributes="value valname" tal:content="part/name">a part</option>
+ </span>
+</select>
+<br>
+<span tal:replace="t_replacevalue">Replace value</span>:
+<input type="text" name="replacevalue" value=""
+ tal:attributes="value currule/replacement">
 </p>
 
 </body>

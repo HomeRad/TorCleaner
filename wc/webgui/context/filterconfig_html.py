@@ -2,6 +2,7 @@
 from wc import i18n, AppName
 from wc import Configuration as _Configuration
 from wc.webgui.context import getval
+from wc.filter.rules.RewriteRule import replaceparts
 
 t_title = i18n._("%s filter configuration") % AppName
 t_back = i18n._("Back")
@@ -43,6 +44,13 @@ t_rulesearch = i18n._("Replace regex")
 t_rulereplace = i18n._("Replacement")
 t_ruletag = i18n._("Tag name")
 t_ruleattrs = i18n._("Attributes")
+t_attrname = i18n._("Name")
+t_attrval = i18n._("Value")
+t_removeattrs = i18n._("Remove selected attributes")
+t_addattr = i18n._("Add attribute")
+t_enclosedblock = i18n._("Enclosed block")
+t_replacepart = i18n._("Replace part")
+t_replacevalue = i18n._("Replace value")
 
 # config vars
 info = []
@@ -105,6 +113,7 @@ def _form_reset ():
     global curfolder, currule
     curfolder = None
     currule = None
+    curparts = None
 
 
 def _form_selfolder (index):
@@ -123,5 +132,10 @@ def _form_selrule (index):
         currule = [ r for r in curfolder.rules if r.oid==index ][0]
         for rt in ruletypes:
             ruletype[rt] = (currule.get_name()==rt.lower())
+        if currule.get_name()=="rewrite":
+            global curparts
+            curparts = {}
+            for i, part in enumerate(replaceparts):
+                curparts[part['valname']] = (currule.part==i)
     except (ValueError, IndexError):
         error.append(i18n._("Invalid filter index"))

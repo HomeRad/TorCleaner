@@ -24,6 +24,8 @@ from FXRuleFrame import FXRuleFrame
 from FXPy.fox import *
 from wc import i18n
 from wc.log import *
+from wc.filter.rules.RewriteRule import replaceparts
+
 
 class FXRewriteRuleFrame (FXRuleFrame):
     """display all variables found in a RewriteRule"""
@@ -70,17 +72,13 @@ class FXRewriteRuleFrame (FXRuleFrame):
             t.setText(self.rule.enclosed)
         FXLabel(matrix, i18n._("Replace part")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXComboBox(matrix,23,6,self, self.ID_REPLACE_PART,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        t.appendItem(i18n._("Tag"))
-        t.appendItem(i18n._("Tag name"))
-        t.appendItem(i18n._("Attribute"))
-        t.appendItem(i18n._("Attribute value"))
-        t.appendItem(i18n._("Complete tag"))
-        t.appendItem(i18n._("Enclosed block"))
+        for part in replaceparts:
+            t.appendItem(part['name'])
         t.setEditable(0)
-        t.setCurrentItem(self.rule.replace[0])
+        t.setCurrentItem(self.rule.part)
         FXLabel(matrix, i18n._("Replace value")+":", opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         t = FXTextField(matrix, 25, self, FXRewriteRuleFrame.ID_REPLACE_VALUE)
-        t.setText(self.rule.replace[1])
+        t.setText(self.rule.replacement)
 
 
     def onCmdTag (self, sender, sel, ptr):
@@ -107,7 +105,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
 
 
     def onCmdReplacePart (self, sender, sel, ptr):
-        self.rule.replace[0] = sender.getCurrentItem()
+        self.rule.part = sender.getCurrentItem()
         self.getApp().dirty = 1
         debug(GUI, "Changed rule replace part")
         return 1
@@ -202,7 +200,7 @@ class FXRewriteRuleFrame (FXRuleFrame):
 
 
     def onCmdReplaceValue (self, sender, sel, ptr):
-        self.rule.replace[1] = sender.getText()
+        self.rule.replacement = sender.getText()
         self.getApp().dirty = 1
         debug(GUI, "Changed rule replace value")
         return 1
