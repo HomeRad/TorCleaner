@@ -135,9 +135,9 @@ class UrlRule(Rule):
 
     def appliesTo (self, url):
         if self.matchurl:
-            return self.matchurl.match(url)
+            return self.matchurl.search(url)
         if self.dontmatchurl:
-            return not self.dontmatchurl.match(url)
+            return not self.dontmatchurl.search(url)
         return 1
 
     def toxml (self):
