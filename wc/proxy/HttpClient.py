@@ -98,7 +98,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def __repr__ (self):
         """object representation"""
-        extra = self.persistent and "persistent " or ""
+        extra = ""
+        if self.persistent:
+            extra += "persistent "
+        if self.server:
+            extra += "server "
         if self.request:
             try:
                 extra += self.request.split()[1]
@@ -463,7 +467,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
 
     def server_content (self, data):
         """The server received some content. Write it to the client."""
-        assert self.server, "%s server_content(%s) had no server" % \
+        assert self.server, "%s server_content(%r) had no server" % \
                             (self, data)
         if data:
             self.write(data)
@@ -496,13 +500,13 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
            connection"""
         wc.log.debug(wc.LOG_PROXY, '%s handle_close', self)
         self.send_buffer = ''
-        super(HttpClient, self).handle_close()
         if self.server:
             self.server.client_abort()
             self.server = None
             # If there isn't a server, then it's in the process of
             # doing DNS lookup or connecting.  The matchmaker will
             # check to see if the client is still connected.
+        super(HttpClient, self).handle_close()
 
     def handle_local (self, is_public_doc=False):
         """handle local request by delegating it to the web configuration"""
