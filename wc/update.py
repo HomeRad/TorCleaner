@@ -7,7 +7,7 @@ import md5
 import wc
 import wc.log
 import wc.configuration
-from wc.filter.Rating import rating_cache_merge, rating_cache_parse
+#XXXfrom wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
 # urlutils.py - Simplified urllib handling
