@@ -22,7 +22,7 @@ Description: a filtering HTTP proxy
 Package: webcleanertools
 Section: x11
 Architecture: all
-Depends: fxpy0.99-python2.1 (>= 0.99.193), webcleaner, python (>= 2.1)
+Depends: fxpy-python2.1 (>= 1.0.0), webcleaner, python (>= 2.1)
 Conflicts: python (>= 2.2)
 Description: configuration and visualization tools for webcleaner
  webcleanerconf is a nice GUI configuration tool for the WebCleaner proxy.

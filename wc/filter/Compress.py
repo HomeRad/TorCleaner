@@ -79,7 +79,7 @@ class Compress (Filter):
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
                 #debug(NIGHTMARE, 'compressing %s\n' % `data`)
-                data = header + compobj['compressor'].compress(data)
+                data = "%s%s" % (header, compobj['compressor'].compress(data))
             else:
                 data = header
         return data

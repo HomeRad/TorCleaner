@@ -1,3 +1,12 @@
+webcleaner (0.34) unstable; urgency=low
+
+  * fix BinaryCharFilter: use string.maketrans
+  * webcleanerconf: dont sort rules alphabetically
+  * HttpServer.py: fix Compress module by calling initStateObject before
+    sending headers
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue,  9 Apr 2002 00:11:22 +0200
+
 webcleaner (0.33) unstable; urgency=low
 
   * Fix DOCTYPE filtering with no pubid content (added missing >)

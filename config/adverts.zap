@@ -202,4 +202,10 @@
  desc="Kill links with ad words in the host name.">
 <attr>easy-cash</attr>
 </rewrite>
+
+<rewrite title="Salon.com"
+ desc="Jump ads at Salon"
+ matchurl="salon.com">
+<attr>jump.salon.com</attr>
+</rewrite>
 </folder>

@@ -64,7 +64,9 @@ class ConfWindow(ToolWindow):
      ID_NOPROXYFOR_ADD,
      ID_NOPROXYFOR_EDIT,
      ID_NOPROXYFOR_REMOVE,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+29)
+     ID_UP,
+     ID_DOWN,
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+31)
 
 
     def __init__(self, app):
@@ -138,6 +140,10 @@ class ConfWindow(ToolWindow):
         FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_EDIT,ConfWindow.onUpdNoProxy)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onCmdNoProxyForRemove)
         FXMAPFUNC(self,SEL_UPDATE, ConfWindow.ID_NOPROXYFOR_REMOVE,ConfWindow.onUpdNoProxy)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_UP,ConfWindow.onCmdUp)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DOWN,ConfWindow.onCmdDown)
+        FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_UP,ConfWindow.onCmdUpUpdate)
+        FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_DOWN,ConfWindow.onCmdDownUpdate)
 
 
     def proxySettings(self, tabbook):
@@ -236,6 +242,8 @@ class ConfWindow(ToolWindow):
         FXMenuCascade(addmenu, _("Filter"), None, filtermenu)
         FXMenuButton(f, _("Add"), None, addmenu, MENUBUTTON_ATTACH_BOTH|MENUBUTTON_DOWN|JUSTIFY_HZ_APART|LAYOUT_TOP|FRAME_RAISED|FRAME_THICK|ICON_AFTER_TEXT)
         FXButton(f, _("Remove"), None, self, self.ID_REMOVE)
+        FXButton(f, _("Up"), None, self, self.ID_UP)
+        FXButton(f, _("Dwn"), None, self, self.ID_DOWN)
 
 
     def onUpdNoProxy (self, sender, sel, ptr):
@@ -253,6 +261,7 @@ class ConfWindow(ToolWindow):
         #debug(BRING_IT_ON, "new folder")
         f = FolderRule("No title","",0,0,tempfile.mktemp()+".zap")
         self.tree.addFolder(f, create=1)
+        self.sort_rules()
         self.getApp().dirty = 1
         return 1
 
@@ -506,6 +515,28 @@ class ConfWindow(ToolWindow):
         return 1
 
 
+    def onCmdUp (self, sender, sel, ptr):
+        # XXX todo
+        return 1
+
+
+    def onCmdDown (self, sender, sel, ptr):
+        # XXX todo
+        return 1
+
+
+    def onCmdUpUpdate (self, sender, sel, ptr):
+        # XXX todo
+        sender.disable()
+        return 1
+
+
+    def onCmdDownUpdate (self, sender, sel, ptr):
+        # XXX todo
+        sender.disable()
+        return 1
+
+
     def onCmdConfUpdate(self, sender, sel, ptr):
         """download files from http://webcleaner.sourceforge.net/zapper/
            and copy them over the existing config"""
@@ -587,8 +618,6 @@ class ConfWindow(ToolWindow):
             self.modules[f] = 1
         # sort the filter list by title
         self.folders = self.config['rules']
-        for rules in self.folders:
-            rules.sort()
 
 
     def writeconfig(self):

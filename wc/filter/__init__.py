@@ -72,6 +72,7 @@ def GetRuleFromName (name):
         return klass()
     raise ValueError, _("unknown rule name %s")+name
 
+
 def applyfilter (i, arg, fun='filter', attrs={}):
     """Apply all filters which are registered in filter level i.
     For different filter levels we have different arg objects.
@@ -92,6 +93,7 @@ def applyfilter (i, arg, fun='filter', attrs={}):
         #debug(NIGHTMARE, msg)
         pass
     return arg
+
 
 def initStateObjects (headers={'content-type': 'text/html'}, url=None):
     """init external state objects"""

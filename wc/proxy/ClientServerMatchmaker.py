@@ -93,8 +93,9 @@ class ClientServerMatchmaker:
 
         if hostname.lower()=='localhost' and port==config['port']:
             return self.handle_local(document)
-
+        # append information for wcheaders tool
         wc.proxy.HEADERS.append((self.url, 0, self.headers.headers))
+        # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']
             self.port = config['parentproxyport']

@@ -1,9 +1,9 @@
 TODO
 
 - documentation of the GUI tools
+- webcleanerconf: sortable filters (with up/down)
 
 WONTDO
 
 - javascript popup filtering. There is already a nice option for this
-  on Mozilla (>= 0.9.4) by putting this in your user.js:
-  user_pref("dom.disable_open_during_load", true);
+  on Mozilla (>= 0.9.4) under Edit->Preferences->Advanced->Scripts
