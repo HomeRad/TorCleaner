@@ -149,7 +149,7 @@ msgid "Refresh"
 msgstr ""
 
 msgid "New Folder"
-msgstr "Neuer Filter"
+msgstr "Neuer Ordner"
 
 msgid "Port"
 msgstr "Portnummer"
