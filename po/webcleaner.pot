@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat May  8 10:03:12 2004\n"
+"POT-Creation-Date: Mon May 10 01:41:14 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -468,9 +468,7 @@ msgstr ""
 msgid "Parent proxy successfully changed."
 msgstr ""
 
-msgid ""
-"Read the help for information on how to set up your\n"
-"browser to work with %(AppName)s"
+msgid "Enable rule"
 msgstr ""
 
 msgid "Rated"
@@ -509,6 +507,11 @@ msgid "Invalid rule move down id."
 msgstr ""
 
 msgid "Empty rewrite tag name."
+msgstr ""
+
+msgid ""
+"Read the help for information on how to set up your\n"
+"browser to work with %(AppName)s."
 msgstr ""
 
 msgid ""
@@ -1312,6 +1315,11 @@ msgstr ""
 msgid "Go to rating:"
 msgstr ""
 
+msgid ""
+"Welcome to the wonderful\n"
+"world of %(AppName)s."
+msgstr ""
+
 msgid "Response content data of mime types image/gif"
 msgstr ""
 
@@ -1363,11 +1371,6 @@ msgid "Invalid parent proxy port."
 msgstr ""
 
 msgid "Parent proxy password successfully changed."
-msgstr ""
-
-msgid ""
-"Welcome to the wonderful\n"
-"world of %(AppName)s, the land of lounge lizards."
 msgstr ""
 
 msgid "There are no url ratings saved."
@@ -1463,9 +1466,6 @@ msgid "Rewrite attribute(s) removed."
 msgstr ""
 
 msgid "Enabled filter module(s) %(filterenabled)s."
-msgstr ""
-
-msgid "Enable rule"
 msgstr ""
 
 msgid "URL rating"

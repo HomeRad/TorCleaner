@@ -1,4 +1,7 @@
 2.13 (released x.x.xxxx)
+  * remove all old simpletal imports
+    Type: bugfix
+    Changed: wc/webgui/simpletal/simpleTAL.py
 
 2.12 (released 8.5.2004)
   * do not assume zero content size if Content-Length header is
