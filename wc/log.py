@@ -108,6 +108,8 @@ def _get_log_file_nt (fname, trydir):
     """get full path name to writeable logfile on Windows systems"""
     logfile = os.path.join(ConfigDir, fname)
     if not iswriteable(logfile):
+        logfile = os.path.join(trydir, fname)
+    if not iswriteable(logfile):
         logfile = os.path.join(os.environ.get("TEMP"), fname)
     return logfile
 

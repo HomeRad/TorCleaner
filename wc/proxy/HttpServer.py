@@ -585,4 +585,3 @@ def speedcheck_print_status ():
     #            print '  %15s:%-4d %10s %s' % (addr[0], addr[1],
     #                                          status[0], server.hostname)
 
-import wc

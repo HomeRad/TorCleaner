@@ -514,8 +514,6 @@ class Magic (object):
             raise StandardError("Not initialised properly")
         # Are we still looking for the ruleset to apply or are we in a rule
         found_rule = False
-        # When we found the rule, what is the level that we successfull passed
-        in_level = 0
         # If we failed part of the rule there is no point looking for higher level subrule
         allow_next = 0
         # String provided by the successfull rule
@@ -670,7 +668,6 @@ class Magic (object):
 
                 if success:
                     found_rule = True
-                    in_level = level
                     allow_next = level+1
 
                     if replace is not None:
@@ -684,7 +681,7 @@ class Magic (object):
                         result += ' '
                 else:
                     raise Failed("No success")
-            except (Failed, IOError), msg:
+            except (Failed, IOError):
                 allow_next = level
         f.close()
 

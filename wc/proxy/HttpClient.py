@@ -219,11 +219,6 @@ class HttpClient (StatefulConnection):
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
         debug(PROXY, "%s client headers \n%s", self, msg)
-        filters = [FILTER_REQUEST_HEADER,
-                   FILTER_REQUEST_DECODE,
-                   FILTER_REQUEST_MODIFY,
-                   FILTER_REQUEST_ENCODE,
-                  ]
         self.attrs['headers'] = msg
         self.set_persistent(msg, self.http_ver)
         self.mangle_request_headers(msg)
