@@ -3,8 +3,10 @@
 
 import os
 import md5
+
 import wc
 import wc.log
+import wc.configuration
 from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
@@ -211,7 +213,8 @@ def update_filter (wconfig, dryrun=False, log=None):
         # parse new filter
         url = baseurl+filename
         page = open_url(url)
-        p = wc.ZapperParser(fullname, wconfig, compile_data=False)
+        p = wc.configuration.ZapperParser(fullname, wconfig,
+                                          compile_data=False)
         p.parse(fp=page)
         page.close()
         if wconfig.merge_folder(p.folder, dryrun=dryrun, log=log):
