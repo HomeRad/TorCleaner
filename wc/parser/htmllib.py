@@ -67,7 +67,7 @@ def quote_attrval (val):
 
 
 def _test():
-    p = htmlsax.new_parser(HtmlPrinter())
+    p = htmlsax.parser(HtmlPrinter())
     p.feed("<hTml>")
     p.feed("<a href>")
     p.feed("<a href=''>")
@@ -91,7 +91,7 @@ def _test():
     p.flush()
 
 def _broken ():
-    p = htmlsax.new_parser(HtmlPrinter())
+    p = htmlsax.parser(HtmlPrinter())
     # turn on debugging
     p.debug(1)
     p.feed("""<base href="http://www.msnbc.com/news/">""")
