@@ -212,7 +212,8 @@
 <rewrite title="IMDB Advert" oid="35"
  desc="redirect CGI at the Internet Movie database"
  matchurl="\.imdb\.">
-<attr>/tiger_redirect\?</attr>
+<attr>/tiger_redirect\?TITLE_TOP</attr>
+<replace>&amp;nbsp;</replace>
 </rewrite>
 
 <rewrite title="OSDN navbar" oid="36"
