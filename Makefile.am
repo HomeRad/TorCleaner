@@ -1,4 +1,4 @@
-SUBDIRS 		= libjs
+SUBDIRS 		= po libjs
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
@@ -35,13 +35,13 @@ distclean-local:
 	rm -f VERSION MANIFEST _*_configdata.*
 
 # ready for upload, signed with my GPG key
-deb_signed: clean locale
+deb_signed: clean
 	env CVSROOT=:ext:calvin@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -rfakeroot
 
 # add setup.py generated files to $(distdir)
 # note: debian/rules install generates broken links, so delete debian
 # package dirs before running sdist
-dist-hook:	locale
+dist-hook:
 	rm -rf debian/webcleaner debian/webcleanertools
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
@@ -119,9 +119,6 @@ homepage: VERSION
 	cp VERSION $(HTMLDIR)/raw/
 	cp $(MD5SUMS) $(HTMLDIR)/
 
-locale:
-	$(MAKE) -C po
-
 doc:
 	rm -f README
 	pydoc2 ./webcleaner > README
@@ -146,7 +143,7 @@ update-blacklists:
 	$(PYTHON) config/bl2wc.py
 
 
-.PHONY: localbuild locale distclean deb_signed update-blacklists
+.PHONY: localbuild distclean deb_signed update-blacklists
 .PHONY: gentest onlinetest offlinetest md5sums package splint
 .PHONY: filterfiles upload doc tar debug ndebug
 
