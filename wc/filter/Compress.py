@@ -95,7 +95,7 @@ class Compress (Filter):
         return data
 
     def getAttrs (self, headers, url):
-        debug(HURT_ME_PLENTY, "Filter: compress headers", `headers.headers`)
+        debug(HURT_ME_PLENTY, "Filter: compress headers", `headers.values()`)
         compressobj = None
         accept = headers.get('Accept-Encoding', '')
         encoding = headers.get('Content-Encoding', '').lower()
