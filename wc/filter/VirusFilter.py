@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import socket
+import socket, os
 from cStringIO import StringIO
 from wc import i18n
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime, FilterProxyError
