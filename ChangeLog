@@ -1,3 +1,10 @@
+1.6
+  * updated filters: remove more imdb ads, replace <marquee> with
+    <span>
+  * Recognise "<! --" HTML comments
+    Changed files: wc/parser/htmllex.l
+  * ...
+
 1.5
   * - increase TCP dns query timeout from 10 to 20 seconds
     - remember dns errors and return them

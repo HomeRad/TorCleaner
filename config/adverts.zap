@@ -230,4 +230,8 @@
  tag="image">
 <attr name="src">/Icons/apix/</attr>
 </rewrite>
+
+<rewrite title="EOnline ads" oid="104">
+<attr>/cgi-bin/acc_clickthru\?</attr>
+</rewrite>
 </folder>
