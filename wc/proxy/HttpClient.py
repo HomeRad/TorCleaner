@@ -137,8 +137,8 @@ class HttpClient(Connection):
         self.server = None
 
 
-    def handle_error(self, type, value, tb=None):
-        Connection.handle_error(self, 'client error', type, value, tb)
+    def handle_error(self, what, type, value, tb=None):
+        Connection.handle_error(self, what, type, value, tb)
         # We should close the server connection
         if self.server:
             server, self.server = self.server, None

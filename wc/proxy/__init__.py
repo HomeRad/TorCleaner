@@ -120,7 +120,7 @@ def proxy_poll(timeout=0.0):
                 x.handle_expt_event()
                 handlerCount = handlerCount + 1
             except:
-                x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
+                x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
         for x in w:
             try:
                 t = time.time()
@@ -130,7 +130,7 @@ def proxy_poll(timeout=0.0):
                     if time.time() - t > 0.1:
                         debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
             except:
-                x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
+                x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
         for x in r:
             try:
                 t = time.time()
@@ -140,7 +140,7 @@ def proxy_poll(timeout=0.0):
                     if time.time() - t > 0.1:
                         debug(BRING_IT_ON, 'rslow', '%4.1f'%(time.time()-t), 's', x)
             except:
-                x.handle_error(sys.exc_type, sys.exc_value, sys.exc_traceback)
+                x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
         return handlerCount
 
     #_OBFUSCATE_IP = config['obfuscateip']

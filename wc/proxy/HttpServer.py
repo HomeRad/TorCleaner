@@ -61,11 +61,11 @@ class HttpServer(Server):
         try:
 	    self.connect(self.addr)
         except socket.error, err:
-            print >> sys.stderr, 'connect error', err
-            self.handle_error(socket.error, err)
+            self.handle_error('connect error', socket.error, err)
             return
-        except Exception, msg:
-            print >> sys.stderr, 'connect error', self.addr, msg
+        # XXX
+        #except Exception, msg:
+        #    print >> sys.stderr, 'connect error', self.addr, msg
 
     def handle_connect(self):
         if self.state != 'connect':
@@ -316,8 +316,8 @@ class HttpServer(Server):
             serverpool.unregister_server(self.addr, self)
         Server.close(self)
 
-    def handle_error(self, type, value, traceback=None):
-        Server.handle_error(self, type, value, traceback)
+    def handle_error(self, what, type, value, tb=None):
+        Server.handle_error(self, what, type, value, tb=tb)
         if self.client:
             client, self.client = self.client, None
             client.server_abort()

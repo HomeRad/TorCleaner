@@ -487,7 +487,7 @@ class DnsLookupConnection(Connection):
         (id, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
-            self.handle_error(socket.error,
+            self.handle_error("dns error", socket.error,
                               (84, 'Truncated DNS packet: %s from %s for %s' %
                                (tc, self.nameserver, self.hostname)))
             return
@@ -536,8 +536,8 @@ class DnsLookupConnection(Connection):
             else:        callback(self.hostname, DnsResponse('error', 'not found'))
         self.close()
 
-    def handle_error(self, type, value, traceback=None):
-        Connection.handle_error(self, type, value, traceback)
+    def handle_error(self, what, type, value, tb=None):
+        Connection.handle_error(self, what, type, value, tb=tb)
         if self.callback:
             callback, self.callback = self.callback, None
             callback(self.hostname, DnsResponse('error', 'failed lookup .. %s' % self))

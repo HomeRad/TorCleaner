@@ -25,7 +25,7 @@ class Listener(asyncore.dispatcher):
         debug(HURT_ME_PLENTY, 'accept', self)
         apply(self.handler, self.accept())
 
-    def handle_error(self, type, value, tb=None):
-        print >> sys.stderr, 'error', self, type, value
+    def handle_error(self, what, type, value, tb=None):
+        print >> sys.stderr, what, self, type, value
 	import traceback
         if tb: traceback.print_tb(tb)
