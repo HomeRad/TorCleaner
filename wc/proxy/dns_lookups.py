@@ -6,12 +6,11 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import sys, os, time, socket, re
+from pprint import pformat
 from Connection import Connection
-from wc.proxy import make_timer
-from wc.proxy import dns as dnslib
 from wc import ip
 from wc.log import *
-from pprint import pformat
+from wc.proxy import dns as dnslib
 
 ###################### configuration ########################
 
@@ -280,15 +279,13 @@ class DnsCache (object):
 
         if len(hostname) > 100:
             # It's too long .. assume it's an error
-            callback(hostname, DnsResponse('error', 'hostname %s too long' % hostname))
-            return
+            return callback(hostname, DnsResponse('error', 'hostname %s too long' % hostname))
         
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
                 debug(DNS, 'cached! %s', hostname)
-                callback(hostname, self.cache[hostname])
-                return
+                return callback(hostname, self.cache[hostname])
             elif not self.cache[hostname].isError():
                 # It has expired, but we can use the old value for now
                 callback(hostname, self.cache[hostname])
@@ -595,4 +592,5 @@ class DnsLookupConnection (Connection):
             callback(self.hostname, DnsResponse('error', 'closed with no answer .. %s' % self))
 
 
+from wc.proxy import make_timer
 dnscache = DnsCache()

@@ -129,7 +129,8 @@ Changes to this option require a proxy restart to take effect.
 <table>
 <tr>
 <td>
-<select name="allowedhosts" id="allowedhosts" multiple size="5">
+<select name="allowedhosts" id="allowedhosts" multiple size="5"
+ tal:attributes="title tt_allowedhosts">
 <option tal:repeat="host config/allowedhostlist" tal:attributes="value host">
 <span tal:replace="host">127.0.0.1</span>
 </option>
@@ -142,7 +143,8 @@ Changes to this option require a proxy restart to take effect.
 </tr>
 <tr>
 <td>
-<input class="text" type="text" name="newallowed" value="">
+<input class="text" type="text" name="newallowed" value=""
+ tal:attributes="title tt_addallowed">
 </td>
 <td>
 <input type="submit" name="addallowed" value="Add new" class="submit"
@@ -158,7 +160,8 @@ Changes to this option require a proxy restart to take effect.
 <table>
 <tr>
 <td>
-<select name="nofilterhosts" id="nofilterhosts" multiple size="5">
+<select name="nofilterhosts" id="nofilterhosts" multiple size="5"
+ tal:attributes="title tt_nofilterhosts">
 <option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
  tal:content="host">127.0.0.1</option>
 </select>
@@ -170,7 +173,8 @@ Changes to this option require a proxy restart to take effect.
 </tr>
 <tr>
 <td>
-<input class="text" type="text" name="newnofilter" value="">
+<input class="text" type="text" name="newnofilter" value=""
+ tal:attributes="title tt_addnofilter">
 </td>
 <td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"

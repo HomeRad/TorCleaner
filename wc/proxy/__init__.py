@@ -10,6 +10,7 @@ __date__    = "$Date$"[7:-2]
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
 import time, select, asyncore, re
+from sets import Set
 # fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 def fileno(self):
@@ -143,12 +144,6 @@ def match_host (host, hostset):
     if not host:
         return False
     return ip.host_in_set(host, hostset[0], hostset[1])
-
-
-def resolve_hostmap (hostmap):
-    hosts, nets = hostmap
-    # XXX
-    return hostmap
 
 
 def spliturl (url):

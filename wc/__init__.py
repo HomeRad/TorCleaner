@@ -188,7 +188,6 @@ class Configuration (dict):
         self['colorize'] = 0
         self['nofilterhosts'] = None
         # DNS resolved nofilterhosts
-        self['xnofilterhosts'] = None
         self['allowedhosts'] = None
         self['starttime'] = time.time()
         self['requests'] = {'valid':0, 'error':0, 'blocked':0}
@@ -293,13 +292,11 @@ class Configuration (dict):
         """Decide whether to filter this url or not.
            returns True if the request must not be filtered, else False
         """
-        from wc.proxy import match_url
         return match_url(url, self['nofilterhosts'])
 
 
     def allowed (self, host):
         """return True if the host is allowed for proxying, else False"""
-        from wc.proxy import match_host
         return match_host(host, self['allowedhosts'])
 
 
@@ -422,8 +419,6 @@ class WConfigParser (BaseParser):
                 self.config['nofilterhosts'] = ip.strhosts2map(strhosts)
             else:
                 self.config['nofilterhosts'] = [Set(), []]
-            self.config['xnofilterhosts'] = \
-                              resolve_hostmap(self.config['nofilterhosts'])
             if self.config['allowedhosts'] is not None:
                 strhosts = str(self.config['allowedhosts'])
                 self.config['allowedhosts'] = ip.strhosts2map(strhosts)
@@ -436,4 +431,4 @@ class WConfigParser (BaseParser):
 
 from log import *
 import ip, i18n
-from proxy import resolve_hostmap
+from wc.proxy import match_url, match_host
