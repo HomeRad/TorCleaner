@@ -45,9 +45,13 @@ class JSFilter (JSListener):
         self.level = opts.get('level', 0)
         self.comments = opts['comments']
         self.url = url or "unknown"
-        self.js_htmlparser = None
         self.js_src = False
         self.js_script = ''
+        # HttpProxyClient object used in background downloads,
+        # has self.jsScriptData as handler
+        self.js_client = None
+        # HtmlParser used in background downloads
+        self.js_htmlparser = None
         if self.javascript:
             self.js_env = jslib.JSEnv()
             self.js_output = 0
@@ -301,5 +305,8 @@ class JSFilter (JSListener):
 
     def finish (self):
         """stop background download"""
+        debug(FILTER, "%s finish", self)
         self.js_client.finish()
+        self.js_client = None
+        self.js_htmlparser = None
 
