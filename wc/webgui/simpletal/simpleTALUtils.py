@@ -35,7 +35,7 @@
 		Module Dependencies: None
 """
 
-import StringIO, os, stat, threading, sys, codecs, sgmllib, cgi, re
+import StringIO, os, stat, threading, codecs, sgmllib, cgi, re
 import simpleTAL
 
 # This is used to check for already escaped attributes.

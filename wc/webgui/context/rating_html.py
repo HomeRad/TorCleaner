@@ -49,9 +49,9 @@ def _calc_ratings_display ():
     urls = rating_cache.keys()
     urls.sort()
     ratings_display = urls[curindex:curindex+_entries_per_page]
-    for url in ratings_display:
-        t = _strtime(float(rating_cache[url]['modified']))
-        rating_modified[url] = t.replace(u" ", u"&nbsp;")
+    for _url in ratings_display:
+        t = _strtime(float(rating_cache[_url]['modified']))
+        rating_modified[_url] = t.replace(u" ", u"&nbsp;")
 
 
 # config vars

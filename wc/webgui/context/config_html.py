@@ -87,7 +87,7 @@ def _exec_form (form, lang):
             res[0] = 401
     # proxy user
     if form.has_key('proxyuser'):
-        _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
+        _form_proxyuser(_getval(form, 'proxyuser').strip())
     elif config['proxyuser']:
         config['proxyuser'] = u''
         config.write_proxyconf()
@@ -97,7 +97,7 @@ def _exec_form (form, lang):
         val = _getval(form, 'proxypass')
         # ignore dummy values
         if val!=u'__dummy__':
-            _form_proxypass(base64.encodestring(val).strip(), res)
+            _form_proxypass(base64.encodestring(val).strip())
     elif config['proxypass']:
         config['proxypass'] = u''
         config.write_proxyconf()
@@ -232,14 +232,14 @@ def _form_adminpass (adminpass, res):
             res[0] = 401
 
 
-def _form_proxyuser (proxyuser, res):
+def _form_proxyuser (proxyuser):
     if proxyuser != config['proxyuser']:
         config['proxyuser'] = proxyuser
         config.write_proxyconf()
         info['proxyuser'] = True
 
 
-def _form_proxypass (proxypass, res):
+def _form_proxypass (proxypass):
     if proxypass != config['proxypass']:
         config['proxypass'] = proxypass
         config.write_proxyconf()
