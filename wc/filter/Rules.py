@@ -231,8 +231,9 @@ class RewriteRule(Rule):
         """We know that the tag (and tag attributes) match. Now match
 	   the enclosing block."""
         if not self.enclosed:
-            # match every enclosing block
+            # no enclosed expression => match
             return 1
+        # check every data for a match (data is _not_ chunked)
         for n in buf[i:]:
             if n[0]==DATA and self.enclosed.search(n[1]):
                 return 1
@@ -443,7 +444,7 @@ class ImageRule(Rule):
         self.intattrs.extend(('width','height'))
         self.type=type
         self.url = url
-        self.attrnames.extend(('type','url'))
+        self.attrnames.extend(('type','url','width','height'))
 
     def fromFactory(self, factory):
         return factory.fromImageRule(self)

@@ -231,10 +231,10 @@ feed(FastSGMLParserObject* self, char* string, int stringlen, int last)
     int length;
 
     if (self->feed) {
-	/* dealing with recursive feeds isn's exactly trivial, so
+	/* dealing with recursive feeds isn't exactly trivial, so
 	 let's just bail out before the parser messes things up */
-	PyErr_SetString(PyExc_AssertionError, "recursive feed");
-	return NULL;
+        PyErr_SetString(PyExc_AssertionError, "recursive feed");
+        return NULL;
     }
 
     /* append new text block to local buffer */

@@ -27,12 +27,14 @@ class Filter:
         pass
 
     def filter(self, data, **args):
-        return data
+        return apply(self.doit, (data,), args)
 
     def finish(self, data, **args):
+        return apply(self.doit, (data,), args)
+
+    def doit(self, data, **args):
         return data
 
     def getAttrs(self, headers):
         return {}
-
 

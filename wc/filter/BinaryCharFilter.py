@@ -26,8 +26,5 @@ class BinaryCharFilter(Filter):
 
     TRANS = string.maketrans('\x00\x84\x91\x92\x93\x94', ' "`\'""')
 
-    def filter(self, data, **attrs):
-        return string.translate(data, self.TRANS)
-
-    def finish(self, data, **attrs):
+    def doit(self, data, **attrs):
         return string.translate(data, self.TRANS)

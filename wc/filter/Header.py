@@ -36,13 +36,7 @@ class Header(Filter):
         else:
             self.add[rule.name] = rule.value
 
-    def filter(self, data, **attrs):
-        return self.doit(data)
-
-    def finish(self, data, **attrs):
-        return self.doit(data)
-
-    def doit(self, data):
+    def doit(self, data, **args):
         headers = data.keys()[:]
         for header in headers:
             for name in self.delete:

@@ -45,7 +45,7 @@
 
 <rewrite title="Adverts in the path name 1"
  desc="Kill links with ad words in the path name.">
-<attr>/(web)?ad(vert(s)?|click|s)</attr>
+<attr>/(web)?ad(vert(s)?|click|s/)</attr>
 </rewrite>
 
 <rewrite title="Adverts in the path name 2"
@@ -70,7 +70,9 @@
 </rewrite>
 
 <image title="Banner at rootprompt.org"
- desc="The website rootprompt.org has a banner image."/>
+ desc="The website rootprompt.org has a banner image."
+ width="465"
+ height="58"/>
 
 <block title="CGI adverts 1"
  desc="Search for the words &quot;ad&quot; and &quot;click&quot;  in the path and a non-empty query."
@@ -88,13 +90,13 @@
 </rewrite>
 
 <block title="CGI adverts 3"
- desc="Search for advert,banner,adid,profileid in the path  and for a non-empty query."
+ desc="Search for advert,banner,adid,profileid in the path."
  scheme=""
  host=""
  port=""
  path="(advert|banner|adid|profileid)"
  parameters=""
- query=".+"
+ query=""
  fragment=""/>
 
 <rewrite title="CGI adverts 4"

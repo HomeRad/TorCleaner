@@ -109,32 +109,32 @@ class HtmlFilter(SGMLParser):
         """Append all tags of the buffer to the data"""
         for n in self.buffer:
             if n[0]==DATA:
-                self.data = self.data + n[1]
+                self.data += n[1]
             elif n[0]==COMMENT:
-                self.data = self.data+"<!--"+n[1]+"-->"
+                self.data += "<!--%s-->"%n[1]
             elif n[0]==STARTTAG:
                 s = "<"+n[1]
                 for name,val in n[2]:
-                    s = s+' '+name+'="'+val+'"'
-                self.data = self.data +s+">"
+                    s += ' %s="%s"'%(name,val)
+                self.data += s+">"
             elif n[0]==ENDTAG:
-                self.data = self.data+"</"+n[1]+">"
+                self.data += "</%s>"%n[1]
             else:
                 error("unknown buffer element %s" % n[0])
         self.buffer = []
 
 
     def handle_comment(self, data):
-        """a comment. either delete it or print it, nothing more
-	   because we dont filter inside comments"""
+        """a comment. If we accept comments, filter them because JavaScript
+	is often in wrapped in comments"""
         if self.comments:
-            self.buffer.append((COMMENT,data))
+            self.buffer.append([COMMENT, data])
 
 
     def handle_entityref(self, name):
         """dont translate, we leave that for the browser"""
         if name:
-            name = "&"+name+";"
+            name = "&%s;"%name
         else:
             # a single &, parsed by the FastSGMLParser
             # leads to an empty name

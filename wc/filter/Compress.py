@@ -16,8 +16,12 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re,struct,time,zlib,wc
 
-debug = wc.debug
-orders = [webfilter.FILTER_RESPONSE_ENCODE]
+from wc.filter.Filter import Filter
+from wc.filter import FILTER_RESPONSE_ENCODE
+from wc import debug
+from wc.debug_levels import *
+
+orders = [FILTER_RESPONSE_ENCODE]
 rulenames = []
 
 GZIP_HEADER = '%s%s%s%s' % (

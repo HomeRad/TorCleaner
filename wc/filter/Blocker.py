@@ -54,7 +54,8 @@ class Blocker(Filter):
         getattr(self, rule.get_name()).append(_rule)
 
 
-    def filter(self, data, **args):
+    def doit(self, data, **args):
+        debug(HURT_ME_PLENTY, "block filter working on %s" % data)
         splitted = string.split(data)
         if len(splitted)==3:
             method,url,protocol = splitted

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder title="Scripting"
- desc="No scripting. Scripting steenks! Yes.">
+ desc="Scripting related.">
 
 <rewrite title="&lt;a&gt; onfocus"
  disable="1">
@@ -63,18 +63,6 @@
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;noscript&gt; OFF"
- desc="Remove &lt;noscript&gt; contents."
- disable="1"
- tag="noscript">
-</rewrite>
-
-<rewrite title="&lt;noscript&gt; ON"
- disable="1"
- tag="noscript">
-<replace part="tag"/>
-</rewrite>
-
 <rewrite title="&lt;script&gt; OFF"
  disable="1"
  tag="script">
@@ -83,5 +71,24 @@
 <rewrite title="Javascript links"
  disable="1">
 <attr>javascript:.*</attr>
+</rewrite>
+
+<rewrite title="remove noscript tag"
+ desc="Remove &lt;noscript&gt; tag (use if you allowed scripting)"
+ tag="noscript">
+</rewrite>
+
+<rewrite title="remove popups"
+ desc="delete window.open in Javascripts"
+ disable="1"
+ tag="script">
+<enclosed>(?P&lt;remove&gt;window\.open\(.*?\))</enclosed>
+<replace part="enclosed"/>
+</rewrite>
+
+<rewrite title="use contents of noscript tag"
+ disable="1"
+ tag="noscript">
+<replace part="tag"/>
 </rewrite>
 </folder>
