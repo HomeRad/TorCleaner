@@ -88,7 +88,7 @@ OPTIONS
         webcleaner.conf, logging.conf and several .zap files.
 
 --no-file-logs
-        Do not add automatic .log files to the logging configuration.
+        Log to stdout instead of *.log files.
 """)
 
 
@@ -129,7 +129,7 @@ def parse_options (sysargs):
     """
     import getopt
     configdir = wc.ConfigDir
-    file_logs = True
+    filelogs = True
     try:
         # Note: cut out the name of the script in sys.argv
         options, args = getopt.getopt(sysargs, "hd:",
@@ -142,25 +142,25 @@ def parse_options (sysargs):
         elif opt=="--configdir" or opt=="-d":
             configdir = arg
         elif opt=="--no-file-logs":
-            file_logs = False
+            filelogs = False
         else:
             print_usage(wc.i18n._("Unknown option %(option)r")%{'option': opt})
-    return (configdir, file_logs, args)
+    return (configdir, filelogs, args)
 
 
-def main_posix (configdir, file_logs):
+def main_posix (configdir, filelogs):
     """start the proxy"""
-    wc.wstartfunc(confdir=configdir, file_logs=file_logs)
+    wc.wstartfunc(confdir=configdir, filelogs=filelogs)
 
 
-def main_nt (configdir, file_logs, args):
+def main_nt (configdir, filelogs, args):
     """start nt proxy service"""
     if len(args) < 1:
         print_usage(wc.i18n._("No command given."))
     else:
         command = args[0]
     import wc.win32start
-    wc.win32start.ProxyService.file_logs = file_logs
+    wc.win32start.ProxyService.filelogs = filelogs
     if configdir:
         wc.win32start.ProxyService.configdir = configdir
     if command=='status':
@@ -173,10 +173,10 @@ def main_nt (configdir, file_logs, args):
 
 
 def main (sysargs):
-    configdir, file_logs, args = parse_options(sysargs)
+    configdir, filelogs, args = parse_options(sysargs)
     if os.name=='nt':
         return main_nt(configdir, args)
-    return main_posix(configdir, file_logs)
+    return main_posix(configdir, filelogs)
 
 
 if __name__ == '__main__':

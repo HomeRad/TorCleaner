@@ -93,9 +93,10 @@ class JSFilter (wc.js.JSListener.JSListener):
 
     def jsPopup (self, attrs, name):
         """check if attrs[name] javascript opens a popup window"""
-        wc.log.debug(wc.LOG_FILTER, "%s jsPopup", self)
+        wc.log.debug(wc.LOG_FILTER, "%s jsPopup %r", self, attrs[name])
         val = wc.parser.resolve_html_entities(attrs[name])
-        if not val: return
+        if not val:
+            return
         self.js_env.listeners.append(self)
         try:
             self.js_env.executeScriptAsFunction(val, 0.0)

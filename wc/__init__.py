@@ -65,10 +65,10 @@ LOG_ACCESS = "wc.access"
 LOG_RATING = "wc.rating"
 
 
-def initlog (filename, appname, file_logs=True):
+def initlog (filename, appname, filelogs=True):
     """initialize logfiles and configuration"""
     logging.config.fileConfig(filename)
-    if file_logs:
+    if filelogs:
         trydirs = []
         if os.name=="nt":
             trydirs.append(ConfigDir)
@@ -125,12 +125,12 @@ import wc.filter.VirusFilter
 # safely set config values upon import
 config = {}
 
-def wstartfunc (handle=None, abort=None, confdir=ConfigDir, file_logs=True):
+def wstartfunc (handle=None, abort=None, confdir=ConfigDir, filelogs=True):
     """Initalize configuration, start psyco compiling and the proxy loop.
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
-    initlog(os.path.join(confdir, "logging.conf"), Name, file_logs=file_logs)
+    initlog(os.path.join(confdir, "logging.conf"), Name, filelogs=filelogs)
     # read configuration
     config = Configuration(confdir=confdir)
     if abort is not None:

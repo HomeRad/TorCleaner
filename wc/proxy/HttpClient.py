@@ -146,8 +146,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                                                [wc.filter.FILTER_REQUEST])
         self.protocol = wc.proxy.fix_http_version(protocol)
         self.http_ver = wc.proxy.get_http_version(self.protocol)
-        # build request, quote url again
-        self.request = "%s %s %s" % (self.method, wc.url.url_quote(self.url), self.protocol)
+        # build request
+        # be sure to quote url only where absolutely needed, as lots
+        # of servers (eg. apple.com) cannot unquote properly
+        qurl = wc.url.url_quote(self.url)
+        self.request = "%s %s %s" % (self.method, qurl, self.protocol)
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, self.request)
         # filter request
         self.request = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, self.request,
