@@ -128,6 +128,9 @@ def netmask2mask (ip):
     "return a mask of bits as a long integer"
     return dq2num(ip)
 
+def mask2netmask (mask):
+    """return dotted quad string as netmask"""
+    return num2dq(ip)
 
 def dq2net (ip, mask):
     "return a tuple (network ip, network mask) for given ip and mask"
@@ -203,7 +206,7 @@ def map2hosts (hostmap):
        suitable for storing in a config file"""
     ret = hostmap[0].copy()
     for net, mask in hostmap[1]:
-        ret.add("%s/%d" % (num2dq(net), mask2suffix(mask)))
+        ret.add("%s/%d" % (num2dq(net), mask2netmask(mask)))
     return ret
 
 
