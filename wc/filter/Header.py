@@ -19,6 +19,8 @@
 import re
 import sets
 
+import wc
+import wc.log
 import wc.proxy.Headers
 import wc.filter
 import wc.filter.Filter
@@ -80,10 +82,14 @@ class Header (wc.filter.Filter.Filter):
         for h in data.keys():
             for name_match in self.delete[stage]:
                 if name_match(h):
+                    wc.log.debug(wc.LOG_FILTER,
+                                 "%s removing header %r", self, h)
                     delete.add(h.lower())
                     # go to next header name
                     break
         wc.proxy.Headers.remove_headers(data, delete)
         for name, val in self.add[stage]:
+            wc.log.debug(wc.LOG_FILTER,
+                         "%s adding header %r: %r", self, name, val)
             data[name] = val+"\r"
         return data
