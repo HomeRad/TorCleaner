@@ -1,4 +1,4 @@
-2.4
+2.4 (released 1.11.2003)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20031101
     Changed: js/*
   * enabled persistent client connections
