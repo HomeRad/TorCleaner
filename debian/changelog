@@ -6,8 +6,11 @@ webcleaner (0.43) unstable; urgency=low
   * wc/parser/htmlsax.h: add error string
   * wc/parser/htmlparse.y: check error string
   * wc/gui/__init__.py: updated webcleanerconf documentation
+  * wc/gui/ConfWindow.py, wc/filter/Rules.py: ground work for rules
+    sorting
+  * wc/gui/FXRuleTreeList.py: prepend rule type name on tree titles
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon,  3 Jun 2002 23:34:07 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sat,  8 Jun 2002 13:56:22 +0200
 
 webcleaner (0.42) unstable; urgency=low
 
