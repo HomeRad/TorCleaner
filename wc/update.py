@@ -119,7 +119,8 @@ def urlopen (url, proxies=None, data=None):
     request = urllib2.Request(url, data, headers)
     proxy_support = urllib2.ProxyHandler(proxies)
     if _opener is None:
-        pwd_manager = PasswordManager(self.user, self.password)
+        # XXX heh, not really protected :)
+        pwd_manager = PasswordManager("WebCleaner", "imadoofus")
         handlers = [proxy_support,
             urllib2.UnknownHandler,
             HttpWithGzipHandler,
