@@ -16,7 +16,7 @@ Features
 * user/password protection with proxy authentication
   (requires HTTP/1.1 capable browser)
 * per-host access control
-* completely customizable over web interface
+* customizable with a themable web interface
 
 
 Installing
@@ -33,6 +33,8 @@ data into tags. The parser is fast (written in C) and can cope with every
 broken HTML page out there; if the parser does not recognize HTML
 structures, it just passes the data over to the browser until it recognizes
 a tag again. No data is ever discarded or dropped by the parser.
+The parser can also correct invalid HTML and even prevents some common
+security risks like HTML buffer overflows (see ChangeLog for details).
 
 The second thing is the Javascript filtering: Javascript data is
 executed in the integrated Spidermonkey JS engine which is also used by

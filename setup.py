@@ -202,12 +202,14 @@ setup (name = "webcleaner",
 * user/password protection with proxy authentication
   (requires HTTP/1.1 capable browser)
 * per-host access control
-* completely customizable over web interface
+* customizable with a themable web interface
 """,
-       classifiers = ['Development Status :: 4 - Beta',
+       classifiers = ['Development Status :: 5 - Production/Stable',
            'Environment :: No Input/Output (Daemon)',
            'Programming Language :: Python',
+           'Programming Language :: C',
            'Topic :: Internet :: Proxy Servers',
+           'License :: OSI Approved :: GNU General Public License (GPL)',
        ],
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
@@ -279,6 +281,10 @@ setup (name = "webcleaner",
        'templates/classic/macros/standard.html',
       ]),
      ('share/webcleaner/examples',
-      ['webcleanerconf.bat', 'wcheaders.bat', 'config/bl2wc.py']),
+      ['webcleanerconf.bat',
+       'wcheaders.bat',
+       'config/bl2wc.py',
+       'config/dmozfilter.py',
+      ]),
      ]
 )
