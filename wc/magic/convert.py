@@ -18,7 +18,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import sys
+import sys, re
 
 _oct='01234567'
 _dec='0123456789'
@@ -26,41 +26,11 @@ _hex='0123456789abcdefABCDEF'
 
 _size = { 10:0, 8:1, 16:2 }
 
-# Assume that the string have the appropriate length for tests
+_is_oct_start = re.compile(r"^[0\\][1-7]").match
+_is_dec_start = re.compile(r"^[1-9]").match
+_is_hex_start = re.compile(r"^[0\\][xX][1-9a-fA-F]").match
+_is_number_start = re.compile(r"^([0\\]([1-7]|[xX][1-9a-fA-F])|[1-9])").match
 
-def _is_cross (char):
-    return char in "xX"
-
-def _is_digit_start (char):
-    return char in "0\\"
-
-def _is_oct_digit (char):
-    return char in _oct
-
-def _is_dec_digit (char):
-    return char in _dec
-
-def _is_hex_digit (char):
-    return char in _hex
-
-
-def _is_oct_start (text):
-    return _is_digit_start(text[0]) and _is_oct_digit(text[1])
-
-def _is_dec_start (text):
-    return _is_dec_digit(text[0])
-
-def _is_hex_start (text):
-    return _is_digit_start(text[0]) and _is_cross(text[1]) and  _is_hex_digit(text[2])
-
-
-def _is_number_start (text):
-    # The order of the test are important as they can raise exceptions
-    return _is_dec_start(text) or \
-           _is_oct_start(text) or \
-           _is_hex_start(text)
-
-# End of Assume
 
 def base10 (text, base):
     number = str(text).lower()
@@ -75,12 +45,11 @@ def base10 (text, base):
 def which_base (text):
     # return the base in (8,10,16) or 0 if not a number
     length = len(text)
-    text.lower()
-    if length > 2 and _is_hex_start(text):
+    if _is_hex_start(text):
         return 16
-    if length > 1 and _is_oct_start(text):
+    if _is_oct_start(text):
         return 8
-    if length > 0 and _is_dec_start(text):
+    if _is_dec_start(text):
         return 10
     return 0
 
@@ -107,16 +76,10 @@ def size_number (text):
 
 
 def index_number (text):
-    index = 0
-    try:
-        while True:
-            if _is_number_start(text[index:]):
-                break
-            index += 1
-    except IndexError:
-        # for the offstring access
-        index = -1
-    return index
+    for index in range(len(text)):
+        if _is_number_start(text[index:]) or not text[index:]:
+            return index
+    return -1
 
 
 def convert (text):
@@ -134,6 +97,7 @@ def is_final_dash (text):
         return text[-1] == '\\'
     else:
         return text[-1] == '\\' and text[-2] != '\\'
+
 
 def is_c_escape (text):
     if len(text) < 2:
