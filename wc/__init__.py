@@ -209,6 +209,7 @@ class Configuration (dict):
             self['sslport'] += 1
             # test data directory url
             self['baseurl'] = "file:///home/calvin/projects/webcleaner/test/"
+            self['adminuser'] = ""
 
 
     def reset (self):
