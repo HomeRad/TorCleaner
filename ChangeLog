@@ -37,7 +37,17 @@
     Type: feature
     Changed: wc/google.py
 
-  
+  * added a virus filter module using the clamav virus scanner
+    Type: feature
+    Changed: wc/__init__.py, wc/webgui/context/filterconfig_html.py,
+      templates/classic/macors/rules.html
+    Added: wc/filter/VirusFilter.py, wc/filter/rules/AntivirusRule.py,
+      tests/TestClamdScanner.py, test/virus/*
+
+  * fixed the magic(5) rule checking for string types
+    Type: bugfix
+    Changed: wc/magic/{convert,magic}.py
+
 
 2.10 (released 27.3.2004)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20040323

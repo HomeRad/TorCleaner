@@ -29,6 +29,7 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(63, convert.convert(r"\77"))
         # the E is not used
         self.assertEqual(127, convert.convert(r"\177E"))
+        self.assertEqual(2, convert.convert(r"02f7"))
 
 
     def testSizeNumber (self):
@@ -36,6 +37,7 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(3, convert.size_number(r"100FFF"))
         self.assertEqual(2, convert.size_number(r"\77FF"))
         self.assertEqual(2, convert.size_number(r"\XFFG"))
+        self.assertEqual(1, convert.size_number(r"02f7"))
 
 
     def testIndexNumber (self):
