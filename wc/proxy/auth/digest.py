@@ -39,8 +39,8 @@ def get_digest_challenge (stale="false"):
     assert nonce not in nonces
     nonces[nonce] = time.time()
     opaque = wc_opaque
-    auth = 'realm="%(realm)s", nonce="%(nonce)s", opaque="%(opaque)s", stale=%(stale)s' % \
-           locals()
+    auth = 'realm="%s", nonce="%s", opaque="%s", stale=%s' % \
+           (realm, nonce, opaque, stale)
     return "Digest %s"%auth
 
 
