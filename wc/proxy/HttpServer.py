@@ -190,15 +190,28 @@ class HttpServer (Server):
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
         #debug(HURT_ME_PLENTY, "S/Headers", `self.headers.headers`)
-        # check for unusual compressed files
-        if not self.headers.has_key('Content-Type') and \
-           (self.document.endswith(".bz2") or \
-           self.document.endswith(".tgz") or \
-           self.document.endswith(".gz")):
-            gm = mimetypes.guess_type(self.document, None)
-            if gm[0] and gm[1]:
-                self.headers['Content-Encoding'] = gm[1]
+        # check content-type against our own guess
+        gm = mimetypes.guess_type(self.document, None)
+        if gm[0]:
+            # guessed an own content type
+            if not self.headers.has_key('Content-Type'):
                 self.headers['Content-Type'] = gm[0]
+                print >>sys.stderr, _("Warning: %s guessed Content-Type (%s)") % \
+                                      (self.url, gm[0])
+            elif self.headers.get('Content-Type') != gm[0]:
+                print >>sys.stderr, _("Warning: %s guessed Content-Type (%s) != server Content-Type (%s)") % \
+                                      (self.url, gm[0], self.headers.get('Content-Type'))
+                self.headers['Content-Type'] = gm[0]
+        if gm[1]:
+            # guessed an own encoding type
+            if not self.headers.has_key('Content-Encoding'):
+                self.headers['Content-Encoding'] = gm[1]
+                print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s)") % \
+                                      (self.url, gm[1]))
+            elif self.headers.get('Content-Encoding') != gm[1]:
+                print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)") % \
+                                      (self.url, gm[1], self.headers.get('Content-Encoding'))
+                self.headers['Content-Encoding'] = gm[1]
         # will content be rewritten?
         rewrite = None
         for ro in config['mime_content_rewriting']:
