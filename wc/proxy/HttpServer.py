@@ -36,6 +36,10 @@ _fix_content_types = [
     'text/html',
 ]
 
+_fix_content_encodings = [
+    'bzip',
+]
+
 class HttpServer (Server):
     def __init__ (self, ipaddr, port, client):
         Server.__init__(self, client)
@@ -199,6 +203,62 @@ class HttpServer (Server):
 		       attrs=self.nofilter)
         #debug(HURT_ME_PLENTY, "S/Headers", `self.headers.headers`)
         self.check_headers()
+        # add encoding specific headers and objects
+        self.add_encoding_headers()
+        # initStateObject can modify headers (see Compress.py)!
+        self.attrs = initStateObjects(self.headers, self.url)
+        if self.headers.get('Content-Length') is None:
+            self.headers['Connection'] = 'close'
+        #debug(HURT_ME_PLENTY, "S/Headers filtered", `self.headers.headers`)
+        wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
+        self.client.server_response(self.response, self.headers)
+        self.attrs['nofilter'] = self.nofilter['nofilter']
+        if self.statuscode in ('204', '304') or self.method == 'HEAD':
+            # These response codes indicate no content
+            self.state = 'recycle'
+        else:
+            self.state = 'content'
+
+
+    def check_headers (self):
+        """add missing content-type and/or encoding headers if
+           needed"""
+        # 304 Not Modified does not send any type or encoding info,
+        # because this info was cached
+        if self.statuscode == '304':
+            return
+        # check content-type against our own guess
+        i = self.document.find('?')
+        if i>0:
+            document = self.document[:i]
+        else:
+            document = self.document
+        gm = mimetypes.guess_type(document, None)
+        if gm[0]:
+            # guessed an own content type
+            if self.headers.get('Content-Type') is None:
+                print >>sys.stderr, _("Warning: add Content-Type %s to %s") % \
+                                      (`gm[0]`, `self.url`)
+                self.headers['Content-Type'] = gm[0]
+           # fix some content types
+            elif not self.headers['Content-Type'].startswith(gm[0]) and \
+                 gm[0] in _fix_content_types:
+                print >>sys.stderr, _("Warning: change Content-Type from %s to %s in %s") % \
+                 (`self.headers['Content-Type']`, `gm[0]`, `self.url`)
+                self.headers['Content-Type'] = gm[0]
+        if gm[1] and gm[1] in _fix_content_encodings:
+            # guessed an own encoding type
+            if self.headers.get('Content-Encoding') is None:
+                self.headers['Content-Encoding'] = gm[1]
+                print >>sys.stderr, _("Warning: add Content-Encoding %s to %s") % \
+                                      (`gm[1]`, `self.url`)
+            elif self.headers.get('Content-Encoding') != gm[1]:
+                print >>sys.stderr, _("Warning: change Content-Encoding from %s to %s in %s") % \
+                 (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
+                self.headers['Content-Encoding'] = gm[1]
+
+
+    def add_encoding_headers (self):
         # will content be rewritten?
         rewrite = self.is_rewrite()
         # add client accept-encoding value
@@ -225,9 +285,11 @@ class HttpServer (Server):
             remove_headers(self.headers, to_remove)
             # add warning
             self.headers['Warning'] = "214 WebCleaner Transformation applied"
+        # only decompress on rewrite
+        if not rewrite: return
         # Compressed content (uncompress only for rewriting modules)
         encoding = self.headers.get('Content-Encoding', '').lower()
-        if encoding in ('gzip', 'x-gzip', 'deflate') and rewrite:
+        if encoding in ('gzip', 'x-gzip', 'deflate'):
             if encoding=='deflate':
                 self.decoders.append(DeflateStream())
             else:
@@ -240,58 +302,11 @@ class HttpServer (Server):
             remove_headers(self.headers, to_remove)
             # add warning
             self.headers['Warning'] = "214 WebCleaner Transformation applied"
-        elif encoding and encoding!='identity' and rewrite:
+        elif encoding and encoding!='identity':
             print >>sys.stderr, _("Warning: unsupported encoding:"),`encoding`
             # do not disable filtering for unknown content-encodings
             # this could result in a DoS attack (server sending garbage
             # as content-encoding)
-        # initStateObject can modify headers (see Compress.py)!
-        self.attrs = initStateObjects(self.headers, self.url)
-        if self.headers.get('Content-Length') is None:
-            self.headers['Connection'] = 'close'
-        #debug(HURT_ME_PLENTY, "S/Headers filtered", `self.headers.headers`)
-        wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
-        self.client.server_response(self.response, self.headers)
-        self.attrs['nofilter'] = self.nofilter['nofilter']
-        if ((response and response[1] in ('204', '304')) or \
-           self.method == 'HEAD'):
-            # These response codes indicate no content
-            self.state = 'recycle'
-        else:
-            self.state = 'content'
-
-
-    def check_headers (self):
-        """add missing content-type and/or encoding headers if
-           needed"""
-        # 304 Not Modified does not send any type or encoding info,
-        # because this info was cached
-        if self.statuscode == '304':
-            return
-        # check content-type against our own guess
-        gm = mimetypes.guess_type(self.document, None)
-        if gm[0]:
-            # guessed an own content type
-            if self.headers.get('Content-Type') is None:
-                print >>sys.stderr, _("Warning: add Content-Type %s to %s") % \
-                                      (`gm[0]`, `self.url`)
-                self.headers['Content-Type'] = gm[0]
-           # fix some content types
-            elif not self.headers['Content-Type'].startswith(gm[0]) and \
-                 gm[0] in _fix_content_types:
-                print >>sys.stderr, _("Warning: change Content-Type from %s to %s in %s") % \
-                 (`self.headers['Content-Type']`, `gm[0]`, `self.url`)
-                self.headers['Content-Type'] = gm[0]
-        if gm[1]:
-            # guessed an own encoding type
-            if self.headers.get('Content-Encoding') is None:
-                self.headers['Content-Encoding'] = gm[1]
-                print >>sys.stderr, _("Warning: add Content-Encoding %s to %s") % \
-                                      (`gm[1]`, `self.url`)
-            elif self.headers.get('Content-Encoding') != gm[1]:
-                print >>sys.stderr, _("Warning: change Content-Encoding from %s to %s in %s") % \
-                 (`self.headers['Content-Encoding']`, `gm[1]`, `self.url`)
-                self.headers['Content-Encoding'] = gm[1]
 
 
     def is_rewrite (self):
