@@ -155,10 +155,10 @@ services = {
 
 
 def check_pics (rule, labellist):
-    """parse and check pics labels according to given PicsRule
+    """parse and check PICS labels according to given PicsRule
        return None if no rating is exceeded
        return non-empty match message if some rating exceeds the configured
-       rating level
+       PicsRule rating levels
     """
     last = 0
     for mo in ratings(labellist):
@@ -168,11 +168,17 @@ def check_pics (rule, labellist):
         blurb = labellist[last:mo.start()].lower()
         debug(NIGHTMARE, "PICS blurb", blurb)
         last = mo.end()
+        # check all in the rule configured PICS services
         for service, options in rule.ratings.items():
-            sdata = services[service]
+            # options has the configured rating values which get
+            # compared with the given rating
             if blurb.find(service) != -1:
+                # sdata contains category names
+                sdata = services[service]
+                # check one PICS service
                 msg = check_service(rating, sdata['categories'],
                                     sdata['name'], options)
+                # stop on the first match
                 if msg: return msg
     return None
 
@@ -187,6 +193,7 @@ def check_service (rating, categories, name, options):
         category_label = categories[category]
         msg = check_pics_option(rating, category_label, value,
                                 "%s %s" % (name, category));
+        # stop on the first match
         if msg: return msg
     return None
 
@@ -201,6 +208,8 @@ def check_pics_option (rating, category_label, option, category):
         return None
     # get the rating value
     rating = int(mo.group("val"))
+    # XXX we do not support intervals (the PICS standard does)
+    # XXX we cast to an integer
     if rating > option:
         return i18n._("PICS %s match") % category
     return None
