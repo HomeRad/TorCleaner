@@ -1,3 +1,10 @@
+webcleaner (1.13-0.1) unstable; urgency=low
+
+  * New upstream version
+  * resurrect debian log rotating
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 11 Jun 2003 20:20:28 +0200
+
 webcleaner (1.12-0.1) unstable; urgency=low
 
   * New upstream version
