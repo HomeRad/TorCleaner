@@ -273,7 +273,7 @@ class JSFilter (JSListener):
         # so only accept non-encoded content here
         headers['Accept-Encoding'] = 'identity\r'
         ClientServerMatchmaker(self.js_client,
-                               "GET %s HTTP/1.0" % url_quote(url), # request
+                               self.js_client.request,
                                headers,
                                '', # content
                                mime="application/x-javascript",
