@@ -583,9 +583,9 @@ def _form_apply_replace (form):
         currule.search = search
         _compileRegex(currule, "search")
         info['rulesearch'] = True
-    replace = _getval(form, 'rule_replace')
-    if replace!=currule.replace:
-        currule.replace = replace
+    replacement = _getval(form, 'rule_replace')
+    if replacement!=currule.replacement:
+        currule.replacement = replacement
         info['rulereplace'] = True
 
 

@@ -91,12 +91,12 @@
 <tr valign="top"><td>
 <span i18n:translate="">Title</span>:
 </td><td>
-<span tal:replace="currule/title">rule title</span>
+<span tal:replace="currule/titles/?lang">rule title</span>
 </td></tr>
 <tr valign="top"><td>
 <span i18n:translate="">Description</span>:
 </td><td>
-<span tal:replace="currule/desc">rule description</span>
+<span tal:replace="currule/descriptions/?lang">rule description</span>
 </td></tr>
 <tr valign="top"><td>
 <span i18n:translate="">Filename</span>:
@@ -363,7 +363,7 @@ Rule (don't) match url
 <label for="rule_replace" i18n:translate="">Replacement</label>:
 </td><td>
 <input type="text" class="text" name="rule_replace" id="rule_replace"
- value="Something good" tal:attributes="value currule/replace">
+ value="Something good" tal:attributes="value currule/replacement">
 </td></tr>
 <tr>
 <td colspan="2">
