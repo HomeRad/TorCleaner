@@ -16,21 +16,22 @@ class ServerPool:
        register_callback to express an interest in a server
     """
     def __init__ (self):
-        self.map = {} # {(ipaddr, port) -> {server -> ('available'|'busy')}}
+        self.smap = {} # {(ipaddr, port) -> {server -> ('available'|'busy')}}
         self.http_versions = {} # {(ipaddr, port) -> http_version}
         self.callbacks = {} # {(ipaddr, port) -> [functions to call]}
         make_timer(60, self.expire_servers)
 
+
     def count_servers (self, addr):
         "How many server objects connect to this address?"
-        return len(self.map.get(addr, {}))
+        return len(self.smap.get(addr, {}))
 
 
     def reserve_server (self, addr):
-        for server,status in self.map.get(addr, {}).items():
+        for server,status in self.smap.get(addr, {}).items():
             if status[0] == 'available':
                 # Let's reuse this one
-                self.map[addr][server] = ('busy', )
+                self.smap[addr][server] = ('busy', )
                 debug(PROXY, 'pool reserve %s %s', str(addr), str(server))
                 return server
         return None
@@ -38,31 +39,29 @@ class ServerPool:
 
     def unreserve_server (self, addr, server):
         debug(PROXY, "pool unreserve %s %s", str(addr), str(server))
-        assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
-        assert self.map[addr].has_key(server), \
+        assert addr in self.smap, '%s missing %s' % (self.smap, addr)
+        assert server in self.smap[addr], \
                '%s missing %s' % (self.map[addr], server)
-        assert self.map[addr][server][0] == 'busy', \
-               '%s is not busy but %s' % (server, self.map[addr][server][0])
-        self.map[addr][server] = ('available', time.time())
+        assert self.smap[addr][server][0] == 'busy', \
+               '%s is not busy but %s' % (server, self.smap[addr][server][0])
+        self.smap[addr][server] = ('available', time.time())
         self.invoke_callbacks(addr)
 
 
     def register_server (self, addr, server):
         "Register the server as being used"
         debug(PROXY, "pool register %s %s", str(addr), str(server))
-        if not self.map.has_key(addr):
-            self.map[addr] = {}
-        self.map[addr][server] = ('busy',)
+        self.smap.setdefault(addr, {})[server] = ('busy',)
 
 
     def unregister_server (self, addr, server):
         "Unregister the server"
         debug(PROXY, "pool unregister %s %s", str(addr), str(server))
-        assert self.map.has_key(addr), '%s missing %s' % (self.map, addr)
-        assert self.map[addr].has_key(server), \
-               '%s missing %s' % (self.map[addr], server)
-        del self.map[addr][server]
-        if not self.map[addr]: del self.map[addr]
+        assert addr in self.smap, '%s missing %s' % (self.smap, addr)
+        assert server in self.smap[addr], \
+               '%s missing %s' % (self.smap[addr], server)
+        del self.smap[addr][server]
+        if not self.smap[addr]: del self.smap[addr]
         self.invoke_callbacks(addr)
 
 
@@ -70,13 +69,11 @@ class ServerPool:
         # Callbacks are called whenever a server may be available
         # for (addr).  It's the callback's responsibility to re-register
         # if someone else has stolen the server already.
-        if not self.callbacks.has_key(addr):
-            self.callbacks[addr] = []
-        self.callbacks[addr].append(callback)
+        self.callbacks.setdefault(addr, []).append(callback)
 
 
     def connection_limit (self, addr):
-        if self.http_versions.get(addr, 1.1) <= 1.0:
+        if self.http_versions.get(addr, (1,1)) <= (1,0):
             # For older versions of HTTP, we open lots of connections
             return 6
         else:
@@ -89,21 +86,23 @@ class ServerPool:
 
 
     def expire_servers (self):
+        debug(PROXY, "expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
-        for addr,set in self.map.items():
+        for addr,set in self.smap.items():
             for server,status in set.items():
                 if status[0] == 'available' and status[1] < expire_time:
                     # It's old .. let's get rid of it
                     to_expire.append(server)
         for server in to_expire:
+            debug(PROXY, "expire server %s", str(server))
             server.close()
         make_timer(60, self.expire_servers)
 
 
     def invoke_callbacks (self, addr):
         # Notify whoever wants to know about a server becoming available
-        if self.callbacks.has_key(addr):
+        if addr in self.callbacks:
             callbacks = self.callbacks[addr]
             del self.callbacks[addr] 
             for callback in callbacks:
