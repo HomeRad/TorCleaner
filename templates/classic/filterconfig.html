@@ -127,6 +127,10 @@
  tal:attributes="value string:${currule/oid}">
 <span tal:repeat="rule rulenames" tal:omit-tag="">
 <span tal:condition="ruletype/?rule" tal:omit-tag="">
+<div>
+<span tal:content="rule/capitalize">Javascript</span>
+<span tal:content="t_rule">Rule</span>
+</div>
 <div metal:use-macro="rulemacros/macros/?rule">
 Here is the rule configuration...
 </div></span>

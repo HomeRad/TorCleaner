@@ -343,24 +343,31 @@ Rule (don't) match url
 <input type="text" class="text" name="rule_tag" id="rule_tag" value="img"
  tal:attributes="value currule/tag">
 </td></tr>
-<tr><td colspan="2">
+<tr><td>
 <span tal:content="t_ruleattrs">Attributes</span>:
-<table>
-<tr>
-<td></td>
-<td tal:content="t_attrname">Name</td>
-<td tal:content="t_attrval">Value</td>
+</td><td>
+<table rules="cols" cellpadding="2">
+<thead>
+<tr style="border-bottom:1px solid black;">
+<td>&nbsp;</td>
+<th tal:content="t_attrname">Name</th>
+<th tal:content="t_attrval">Value</th>
 </tr>
+</thead>
+<tbody>
 <tr tal:repeat="attr currule/attrs/keys">
 <td><input type="checkbox" name="delattr"
  tal:attributes="value attr">
 </td>
-<td tal:content="attr"></td>
-<td tal:content="currule/attrs/?attr"></td>
+<td tal:content="attr">href</td>
+<td><div tal:content="currule/attrs/?attr" style="width:180px;overflow:auto;">bla</div></td>
 </tr>
 <tr tal:condition="not:currule/attrs">
-<td colspan="3">-</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
+</tbody>
 </table>
 <span tal:condition="currule/attrs">
 <input type="submit" class="submit" name="removeattrs" value="Remove selected"
@@ -377,8 +384,8 @@ Rule (don't) match url
 </td><td>
 <input type="text" class="text" name="attrval" id="attrval" value="">
 </td></tr>
-<tr><td colspan="2">
-<input type="submit" class="submit" name="addattr" value="Add attribute"
+<tr><td>&nbsp;</td>
+<td><input type="submit" class="submit" name="addattr" value="Add attribute"
  tal:attributes="value t_addattr">
 </td></tr>
 <tr><td>
