@@ -18,7 +18,9 @@ class AllowedHttpClient (object):
         """
         self.methods = ['GET', 'HEAD', 'CONNECT', 'POST']
         self.schemes = ['http', 'https'] # 'nntps' is untested
+
         self.connect_ports = [443] # 563 (NNTP over SSL) is untested
+        self.http_ports = [80, 81, 8080, 3128]
         self.public_docs = [
           '/blocked.html',
           '/blocked.png',
@@ -32,18 +34,6 @@ class AllowedHttpClient (object):
           '/rated.html',
           '/robots.txt',
         ]
-
-    def method (self, meth):
-        """
-        Return True iff method is allowed.
-        """
-        return meth in self.methods
-
-    def scheme (self, schem):
-        """
-        Return True iff scheme is allowed.
-        """
-        return schem in self.schemes
 
     def public_document (self, doc):
         """
@@ -60,11 +50,30 @@ class AllowedHttpClient (object):
         """
         return wc.configuration.config.allowed(host)
 
-    def connect_port (self, port):
-        """
-        Return True iff port is a valid port for CONNECT method.
-        """
-        return port in self.connect_ports
+    def method (self, method):
+        return method in self.methods
+
+    def is_allowed (self, method, scheme, port):
+        if not self.method(method):
+            wc.log.warn(wc.LOG_PROXY, "illegal method %s", method)
+            return False
+        if scheme not in self.schemes:
+            wc.log.warn(wc.LOG_PROXY, "illegal scheme %s", scheme)
+            return False
+        if method == 'CONNECT':
+            # CONNECT method sanity
+            if port not in self.connect_ports:
+                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT port %d", port)
+                return False
+            if self.scheme != 'https':
+                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT scheme %d", scheme)
+                return False
+        else:
+            # all other methods
+            if port not in self.http_ports:
+                wc.log.warn(wc.LOG_PROXY, "illegal port %d", port)
+                return False
+        return True
 
 
 class AllowedSslClient (AllowedHttpClient):

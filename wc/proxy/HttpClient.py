@@ -220,25 +220,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.scheme:
             # default scheme is http
             self.scheme = 'http'
-        if not self.allow.scheme(self.scheme):
-            wc.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered",
-                        self, self.scheme)
+        if not self.allow.is_allowed(self.method, self.scheme, self.port):
             self.error(403, _("Forbidden"))
             return False
-        # check CONNECT values sanity
-        if self.method == 'CONNECT':
-            if self.scheme != 'https':
-                wc.log.warn(wc.LOG_PROXY,
-                     "%s CONNECT method with forbidden scheme %r encountered",
-                     self, self.scheme)
-                self.error(403, _("Forbidden"))
-                return False
-            if not self.allow.connect_port(self.port):
-                wc.log.warn(wc.LOG_PROXY,
-                         "%s CONNECT method with invalid port %r encountered",
-                         self, str(self.port))
-                self.error(403, _("Forbidden"))
-                return False
         # request is ok
         return True
 
@@ -541,11 +525,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """
         An error occured, close the connection and inform the server.
         """
-        super(HttpClient, self).handle_error(what)
-        # We should close the server connection
+        # close the server connection
         if self.server:
             self.server.client_abort()
             self.server = None
+        super(HttpClient, self).handle_error(what)
 
     def handle_close (self):
         """
