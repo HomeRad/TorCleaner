@@ -101,12 +101,12 @@ def num2dq (n):
 
 def suffix2mask (n):
     "return a mask of n bits as a long integer"
-    return (2L<<n-1)-1
+    return (1L << (32 - n)) - 1
 
 
 def mask2suffix (mask):
     """return suff for given bit mask"""
-    return int(math.log(mask+1, 2))
+    return 32 - int(math.log(mask+1, 2))
 
 
 def dq2mask (ip):
@@ -183,10 +183,49 @@ def map2hosts (hostmap):
 
 
 def _test ():
-    hosts = ["192.168.1.1/16"]
-    hostmap = hosts2map(hosts)
-    print hostmap
-    print map2hosts(hostmap)
+    hosts, nets = hosts2map([
+        "192.168.2.1",
+        "192.168.2.1/32",
+        "192.168.2.1/31",
+        "192.168.2.1/30",
+        "192.168.2.1/29",
+        "192.168.2.1/28",
+        "192.168.2.1/27",
+        "192.168.2.1/26",
+        "192.168.2.1/25",
+        "192.168.2.1/24",
+        "192.168.2.1/23",
+        "192.168.2.1/22",
+        "192.168.2.1/21",
+        "192.168.2.1/20",
+        "192.168.2.1/19",
+        "192.168.2.1/18",
+        "192.168.2.1/17",
+        "192.168.2.1/16",
+        "192.168.2.1/15",
+        "192.168.2.1/14",
+        "192.168.2.1/13",
+        "192.168.2.1/12",
+        "192.168.2.1/11",
+        "192.168.2.1/10",
+        "192.168.2.1/9",
+        "192.168.2.1/8",
+        "192.168.2.1/7",
+        "192.168.2.1/6",
+        "192.168.2.1/5",
+        "192.168.2.1/4",
+        "192.168.2.1/3",
+        "192.168.2.1/2",
+        "192.168.2.1/1",
+        "127.0.0.1/8"
+        ])
+    for host in hosts:
+        print "host: %s" % (host)
+    for net, mask in nets:
+        print "net:  %s %s => %s/%s" % (net, mask, num2dq(net), mask2suffix(mask))
+    maps = map2hosts([hosts, nets])
+    for map in maps:
+        print "map:  %s" % (map)
 
 
 if __name__=='__main__':
