@@ -24,6 +24,8 @@ from distutils.command.install import install
 from distutils.file_util import write_file
 from distutils import util
 
+# set to 1 to use JavaScript
+USE_JS = 0
 
 class MyInstall(install):
     def run(self):
@@ -135,19 +137,21 @@ else:
     cargs = ['-pedantic', '-std=gnu99']
 
 # parser extension
-ext_parser = Extension('wc.parser.htmlsax',
+extensions = [Extension('wc.parser.htmlsax',
                         ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
                         include_dirs = ["wc/parser"],
                         define_macros = macros,
                         extra_compile_args = cargs,
-                      )
+                      ),
+             ]
 # javascript extension
-ext_js = Extension('wc.js.jslib',
+if USE_JS:
+    extensions.append(Extension('wc.js.jslib',
                     ['wc/js/jslib.c'],
                     include_dirs = ["/usr/include/smjs",],
                     libraries = ['smjs'],
                     extra_compile_args = cargs,
-                  )
+                  ))
 
 # no to the main stuff
 myname = "Bastian Kleineidam"
@@ -165,7 +169,7 @@ setup (name = "webcleaner",
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns',
                    'wc/filter/rules', 'wc/webgui', 'wc/webgui/PageTemplates',
                    'wc/webgui/TAL', 'wc/webgui/ZTUtils'],
-       ext_modules = [ext_parser, ext_js, ],
+       ext_modules = extensions,
        scripts = ['webcleaner', 'webcleanerconf', 'wcheaders'],
        long_description =
 """WebCleaner features:
