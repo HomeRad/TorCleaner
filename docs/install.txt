@@ -26,18 +26,27 @@ Requirements for Unix/Linux or Max OS X
 
 3. runit from http://smarden.org/runit/
 
-4. *Optional (used by ImageSize and ImageReducer module)* Python Imaging
-   Library (PIL) from http://www.pythonware.com/products/pil/
+4. *Optional (used by ImageSize and ImageReducer module)*
+   Python Imaging Library (PIL) from
+   http://www.pythonware.com/products/pil/
 
-5. *Optional (used for NTLM authentication)* Python Crypto Module from
+5. *Optional (used for NTLM authentication)*
+   Python Crypto Module from
    http://www.amk.ca/python/code/crypto.html
 
-6. *Optional (used for SSL connections)* OpenSSL and PyOpenSSL from
+6. *Optional (used for SSL connections)*
+   OpenSSL and PyOpenSSL from
    http://www.openssl.org/ and
    http://pyopenssl.sourceforge.net/
 
-7. *Optional (used by VirusFilter module)* ClamAv from
+7. *Optional (used by VirusFilter module)*
+   ClamAv from
    http://www.clamav.net/
+
+8. *Optional (speedup for i386 compatible PCs)*
+   Psyco from
+   http://psyco.sourceforge.net/
+   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-linux.i386-2.4.tar.gz]
 
 Requirements for Windows:
 -------------------------
@@ -68,22 +77,29 @@ Direct download links are in brackets.
    http://www.pythonware.com/products/pil/
    [http://webcleaner.sf.net/PIL-1.1.4.win32-py2.4.exe]
 
-5. *Optional (used for NTLM authentication)* Download Python Crypto Module
-   from http://www.amk.ca/python/code/crypto.html
+5. *Optional (used for NTLM authentication)*
+   Download Python Crypto Module from
+   http://www.amk.ca/python/code/crypto.html
    [http://webcleaner.sf.net/pycrypto-2.0.win32-py2.4.exe]
    For Installation of PyCrypto see below.
 
-6. *Optional (used for SSL connections)* Install OpenSSL and PyOpenSSL
-   for Windows from
+6. *Optional (used for SSL connections)*
+   Install OpenSSL and PyOpenSSL for Windows from
    http://www.slproweb.com/products/Win32OpenSSL.html
    [http://www.slproweb.com/download/Win32OpenSSL-v0.9.7e.exe]
    and
    http://pyopenssl.sourceforge.net/
    [http://webcleaner.sf.net/pyOpenSSL-0.6.win32-py2.4.exe]
 
-7. *Optional (used by VirusFilter module)* ClamAv from
+7. *Optional (used by VirusFilter module)*
+   ClamAv from
    http://www.sosdg.org/clamav-win32/index.php
    [http://www.sosdg.org/clamav-win32/clamav-devel.exe]
+
+8. *Optional (speedup for i386 compatible PCs)*
+   Psyco from
+   http://psyco.sourceforge.net/
+   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-win-2.4.zip]
 
 Setup for Unix/Linux:
 ---------------------
@@ -132,6 +148,11 @@ Setup for Unix/Linux:
       
       .. _runsvdir(8):
          http://smarden.org/runit/runsvdir.8.html
+   
+   If you installed Psyco please read the `psyco installation docs`_.
+   
+   .. _psyco installation docs:
+      http://psyco.sourceforge.net/psycoguide/node2.html
 
 4. Enjoy
    
@@ -205,6 +226,11 @@ Setup for Windows - compiling from source:
    This generates a binary installer
    ``dist\webcleaner-X.X.win32-py2.4.exe`` which you just have to
    execute.
+
+   If you installed Psyco please read the `psyco installation docs`_.
+   
+   .. _psyco installation docs:
+      http://psyco.sourceforge.net/psycoguide/node2.html
 
 7. Enjoy
    

@@ -55,18 +55,27 @@ This is available in gettext &gt;= 0.12.</p>
 </li>
 <li><p class="first">runit from <a class="reference" href="http://smarden.org/runit/">http://smarden.org/runit/</a></p>
 </li>
-<li><p class="first"><em>Optional (used by ImageSize and ImageReducer module)</em> Python Imaging
-Library (PIL) from <a class="reference" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a></p>
+<li><p class="first"><em>Optional (used by ImageSize and ImageReducer module)</em>
+Python Imaging Library (PIL) from
+<a class="reference" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a></p>
 </li>
-<li><p class="first"><em>Optional (used for NTLM authentication)</em> Python Crypto Module from
+<li><p class="first"><em>Optional (used for NTLM authentication)</em>
+Python Crypto Module from
 <a class="reference" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a></p>
 </li>
-<li><p class="first"><em>Optional (used for SSL connections)</em> OpenSSL and PyOpenSSL from
+<li><p class="first"><em>Optional (used for SSL connections)</em>
+OpenSSL and PyOpenSSL from
 <a class="reference" href="http://www.openssl.org/">http://www.openssl.org/</a> and
 <a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a></p>
 </li>
-<li><p class="first"><em>Optional (used by VirusFilter module)</em> ClamAv from
+<li><p class="first"><em>Optional (used by VirusFilter module)</em>
+ClamAv from
 <a class="reference" href="http://www.clamav.net/">http://www.clamav.net/</a></p>
+</li>
+<li><p class="first"><em>Optional (speedup for i386 compatible PCs)</em>
+Psyco from
+<a class="reference" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
+[<a class="reference" href="http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-linux.i386-2.4.tar.gz">http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-linux.i386-2.4.tar.gz</a>]</p>
 </li>
 </ol>
 </div>
@@ -96,20 +105,26 @@ Be sure to install in the given order:<ol class="loweralpha">
 Install Python Imaging Library (PIL) from
 <a class="reference" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a>
 [<a class="reference" href="http://webcleaner.sf.net/PIL-1.1.4.win32-py2.4.exe">http://webcleaner.sf.net/PIL-1.1.4.win32-py2.4.exe</a>]</li>
-<li><em>Optional (used for NTLM authentication)</em> Download Python Crypto Module
-from <a class="reference" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a>
+<li><em>Optional (used for NTLM authentication)</em>
+Download Python Crypto Module from
+<a class="reference" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a>
 [<a class="reference" href="http://webcleaner.sf.net/pycrypto-2.0.win32-py2.4.exe">http://webcleaner.sf.net/pycrypto-2.0.win32-py2.4.exe</a>]
 For Installation of PyCrypto see below.</li>
-<li><em>Optional (used for SSL connections)</em> Install OpenSSL and PyOpenSSL
-for Windows from
+<li><em>Optional (used for SSL connections)</em>
+Install OpenSSL and PyOpenSSL for Windows from
 <a class="reference" href="http://www.slproweb.com/products/Win32OpenSSL.html">http://www.slproweb.com/products/Win32OpenSSL.html</a>
 [<a class="reference" href="http://www.slproweb.com/download/Win32OpenSSL-v0.9.7e.exe">http://www.slproweb.com/download/Win32OpenSSL-v0.9.7e.exe</a>]
 and
 <a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a>
 [<a class="reference" href="http://webcleaner.sf.net/pyOpenSSL-0.6.win32-py2.4.exe">http://webcleaner.sf.net/pyOpenSSL-0.6.win32-py2.4.exe</a>]</li>
-<li><em>Optional (used by VirusFilter module)</em> ClamAv from
+<li><em>Optional (used by VirusFilter module)</em>
+ClamAv from
 <a class="reference" href="http://www.sosdg.org/clamav-win32/index.php">http://www.sosdg.org/clamav-win32/index.php</a>
 [<a class="reference" href="http://www.sosdg.org/clamav-win32/clamav-devel.exe">http://www.sosdg.org/clamav-win32/clamav-devel.exe</a>]</li>
+<li><em>Optional (speedup for i386 compatible PCs)</em>
+Psyco from
+<a class="reference" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
+[<a class="reference" href="http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-win-2.4.zip">http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.3-win-2.4.zip</a>]</li>
 </ol>
 </div>
 <div class="section" id="setup-for-unix-linux">
@@ -150,6 +165,7 @@ After that read the <a class="reference" href="http://smarden.org/runit/runsvdir
 local runit service.</p>
 </li>
 </ol>
+<p>If you installed Psyco please read the <a class="reference" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
 </blockquote>
 </li>
 <li><p class="first">Enjoy</p>
@@ -219,6 +235,7 @@ Then run:
 <p>This generates a binary installer
 <tt class="literal"><span class="pre">dist\webcleaner-X.X.win32-py2.4.exe</span></tt> which you just have to
 execute.</p>
+<p>If you installed Psyco please read the <a class="reference" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
 </li>
 <li><p class="first">Enjoy</p>
 <p>WebCleaner is now installed and started as a regular Windows service.
@@ -246,7 +263,7 @@ and look at the &quot;Application Log&quot; events.</p>
 </div>
 <hr class="footer" />
 <div class="footer">
-Generated on: 2004-12-10 00:34 UTC.
+Generated on: 2004-12-16 11:49 UTC.
 </div>
 </body>
 </html>
