@@ -19,15 +19,27 @@ def test ():
         usage()
     bufsize = 6000
     url = sys.argv[1]
-    if len(sys.argv) > 3:
+    if len(sys.argv) > 2:
         bufsize = int(sys.argv[2])
+    print "using bufsize", bufsize
     page = open_url(url)
-    buf = StringIO()
     data = page.read()
     print "downloaded", len(data), "bytes"
-    buf.write(data[:bufsize])
-    buf.seek(0)
-    dummy = Image.open(buf, 'r')
+    buf = StringIO()
+    pos = 0
+    while True:
+        buf.write(data[pos:bufsize])
+        pos = bufsize
+        buf.seek(0)
+        try:
+            dummy = Image.open(buf, 'r')
+            print "succeeded at bufsize", bufsize
+            break
+        except IOError:
+            buf.seek(bufsize)
+            bufsize += 2000
+            print "increased buf to", bufsize
+    assert data.startswith(buf.getvalue())
 
 
 if __name__=='__main__':
