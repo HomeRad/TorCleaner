@@ -21,6 +21,10 @@ img {
   border: 0;
 }
 
+acronym {
+    border-bottom: 1px dotted black;
+}
+
 a {
     color: #222222;
 }
@@ -79,6 +83,10 @@ div.content {
 form {
     border: none;
     margin: 0;
+}
+
+.floating {
+    float: left;
 }
 
 input.text {

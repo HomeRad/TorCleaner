@@ -7,32 +7,44 @@ from wc.webgui.context import getval, getlist
 
 # translations
 title = i18n._("%s proxy configuration") % AppName
+t_accessibility = i18n._("Accessibility statement")
+tt_accessibility = i18n._("accessibility features of these pages")
 t_skip_to_main = i18n._("Skip to main content")
 t_webcleaner = AppName
 t_proxyconf = i18n._("Proxy configuration")
 t_filterconf = i18n._("Filter configuration")
-port = i18n._("Port number")
-proxyuser = i18n._("Proxy user")
-proxypass = i18n._("Proxy password")
-parentproxy = i18n._("Parent proxy")
-parentproxyport = i18n._("Parent proxy port")
-parentproxyuser = i18n._("Parent proxy user")
-parentproxypass = i18n._("Parent proxy pass")
-timeout = i18n._("Timeout (seconds)")
-proxyfiltermodules = i18n._("Proxy filter modules")
-allowedhosts = i18n._("Allowed hosts")
-remove = i18n._("Remove selected")
-add = i18n._("Add new")
-nofilterhosts = i18n._("Don't filter hosts")
-configapply = i18n._("Apply")
-back = i18n._("Back")
+t_proxy_settings = i18n._("Proxy settings")
+t_parentproxy_settings = i18n._("Parent proxy settings")
+t_port = i18n._("Port number")
+tt_port = i18n._("Port number the proxy is listening on for requests")
+t_proxyuser = i18n._("Username")
+tt_proxyuser = i18n._("Username used for proxy authentication")
+t_proxypass = i18n._("Password")
+tt_proxypass = i18n._("Password used for proxy authentitaction")
+t_parentproxy = i18n._("Hostname")
+tt_parentproxy = i18n._("Hostname of the parent proxy")
+t_parentproxyport = i18n._("Port number")
+tt_parentproxyport = i18n._("Port number of the parent proxy")
+t_parentproxyuser = i18n._("Username")
+tt_parentproxyuser = i18n._("Username used for parent proxy authentication")
+t_parentproxypass = i18n._("Password")
+tt_parentproxypass = i18n._("Password used for parent proxy authentication")
+t_timeout = i18n._("Timeout")
+tt_timeout = i18n._("Connection timeout in seconds")
+t_proxyfiltermodules = i18n._("Proxy filter modules")
+t_allowedhosts = i18n._("Allowed hosts")
+tt_allowedhosts = i18n._("Allowed hosts XXX")
+t_remove = i18n._("Remove selected")
+t_add = i18n._("Add new")
+t_nofilterhosts = i18n._("Don't filter hosts")
+tt_nofilterhosts = i18n._("Don't filter hosts XXX")
+t_configapply = i18n._("Apply")
+t_back = i18n._("Back")
 
 # config vars
 info = []
 error = []
 config = _Configuration()
-for _i in ['port', 'parentproxyport', 'timeout']:
-    config["str"+_i] = str(config[_i])
 config['filterdict'] = {}
 for _i in filtermodules:
     config['filterdict'][_i] = False

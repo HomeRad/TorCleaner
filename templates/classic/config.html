@@ -1,7 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en" tal:attributes="lang lang">
 <head>
-<link href="wc.css" type="text/css" rel="Stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href="wc.css" type="text/css" rel="stylesheet">
 <link href="/" rel="home" title="Home">
 <title tal:content="title">WebCleaner Proxy Configuration</title>
 </head>
@@ -12,118 +13,101 @@
 
 <div class="content" id="main">
 <form action="config.html" method="POST">
+
 <table>
 <tr>
-<td colspan="2">
-<caption><big><span tal:replace="title">WebCleaner Proxy Configuration</span>
-</big><caption>
-</td>
-</tr>
-<tr valign="top">
-<td><table>
-<tr valign="top">
-<td><span tal:replace="port">Port number</span><a href="#restart">*</a></td>
 <td>
-  <input class="number" type="text" name="port" maxlength="5"
-   tal:attributes="value config/strport">
+<fieldset>
+<legend tal:content="t_proxy_settings">Proxy settings</legend>
+<label for="port" tal:content="t_port" tal:attributes="title tt_port"
+ >Port number</label><a href="#restart">*</a>
+<input class="number" type="text" name="port" id="port" maxlength="5"
+ tal:attributes="value string:${config/port}">
+<br>
+<label for="timeout" tal:content="t_timeout"
+ tal:attributes="title tt_timeout">Timeout (seconds)</label>
+<input class="number" type="text" name="timeout" id="timeout" value=""
+ maxlength="5" tal:attributes="value string:${config/timeout}">
+<br>
+<label for="proxyuser" tal:content="t_proxyuser"
+ tal:attributes="title tt_proxyuser">Proxy user</label>
+<input class="text" type="text" name="proxyuser" id="proxyuser"
+ tal:attributes="value config/proxyuser">
+<br>
+<label for="proxypass" tal:content="t_proxypass"
+ tal:attributes="title tt_proxypass">Proxy pass</label>
+<input class="text" type="password" name="proxypass" id="proxypass" value="">
+</fieldset>
+
+<fieldset>
+<legend tal:content="t_parentproxy_settings">Parent proxy settings</legend>
+<label for="parentproxy" tal:content="t_parentproxy">Parent proxy</label>
+<input class="text" type="text" name="parentproxy" id="parentproxy"
+ tal:attributes="value config/parentproxy">
+<br>
+<label for="parentproxyport" tal:content="t_parentproxyport"
+ tal:attributes="title tt_parentproxyport">Parent proxy port number</label>
+<input class="number" type="text" name="parentproxyport" id="parentproxyport"
+ maxlength="5" tal:attributes="value string:${config/parentproxyport}">
+<br>
+<label for="parentproxyuser" tal:content="t_parentproxyuser"
+ tal:attributes="title tt_parentproxyuser">Parent proxy user</label>
+<input class="text" type="text" name="parentproxyuser" id="parentproxyuser"
+ tal:attributes="value config/parentproxyuser">
+<br>
+<label for="parentproxypass" tal:content="t_parentproxypass"
+ tal:attributes="title tt_parentproxypass">Parent proxy pass</label>
+<input class="text" type="password" name="parentproxypass"
+ id="parentproxypass" value="">
+</fieldset>
 </td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="proxyuser">Proxy user</span></td>
 <td>
-  <input class="text" type="text" name="proxyuser"
-   tal:attributes="value config/proxyuser">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="proxypass">Proxy pass</span></td>
-<td>
-  <input class="text" type="password" name="proxypass" value="">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="timeout">Timeout (seconds)</span></td>
-<td>
-  <input class="number" type="text" name="timeout" value="" maxlength="5"
-   tal:attributes="value config/strtimeout">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="parentproxy">Parent proxy</span></td>
-<td>
-  <input class="text" type="text" name="parentproxy"
-   tal:attributes="value config/parentproxy">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="parentproxyport">Parent proxy port number</span></td>
-<td>
-  <input class="number" type="text" name="parentproxyport" maxlength="5"
-   tal:attributes="value config/strparentproxyport">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="parentproxyuser">Parent proxy user</span></td>
-<td>
-  <input class="text" type="text" name="parentproxyuser"
-   tal:attributes="value config/parentproxyuser">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="parentproxypass">Parent proxy pass</span></td>
-<td>
-  <input class="text" type="password" name="parentproxypass" value="">
-</td>
-</tr>
-<tr valign="top">
-<td><span tal:replace="proxyfiltermodules">Proxy filter modules</span></td>
-<td>
+<fieldset>
+<legend tal:content="t_proxyfiltermodules">Proxy filter modules</legend>
 <div tal:repeat="module filtermodules">
   <input tal:condition="config/filterdict/?module" type="checkbox" checked tal:attributes="value module;name string:filter${module}">
   <input tal:condition="not:config/filterdict/?module" type="checkbox" tal:attributes="value module;name string:filter${module}">
   <span tal:replace="module">SomeFilter</span>
 </div>
+</fieldset>
 </td>
-</table></td>
+</tr>
+<tr>
 <td>
-<div tal:replace="allowedhosts">Allowed hosts</div>
-<br>
-<select name="allowedhosts" multiple size="5">
+<fieldset>
+<legend tal:content="t_allowedhosts">Allowed hosts</legend>
+<select name="allowedhosts" id="allowedhosts" multiple size="5">
 <option tal:repeat="host config/allowedhostlist" tal:attributes="value host">
 <span tal:replace="host">127.0.0.1</span>
 </option>
 </select>
-<br>
 <input type="submit" name="delallowed" value="Remove selected" class="submit"
- tal:attributes="value remove">
+ tal:attributes="value t_remove">
 <br>
 <input class="text" type="text" name="newallowed" value="">
 <input type="submit" name="addallowed" value="Add new" class="submit"
- tal:attributes="value add">
-<br><br>
-
-<div tal:replace="nofilterhosts">Don't filter hosts</div>
-<br>
-<select name="nofilterhosts" size="5" multiple>
+ tal:attributes="value t_add">
+</fieldset>
+</td>
+<td>
+<fieldset>
+<legend tal:content="t_nofilterhosts">Don't filter hosts</legend>
+<select name="nofilterhosts" id="nofilterhosts" size="5" multiple>
 <option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
- tal:content="host">127.0.0.1</option>
+ tal:content="t_host">127.0.0.1</option>
 </select>
-<br>
 <input type="submit" name="delnofilter" value="Remove selected" class="submit"
- tal:attributes="value remove">
+ tal:attributes="value t_remove">
 <br>
 <input class="text" type="text" name="newnofilter" value="">
 <input type="submit" name="addnofilter" value="Add new" class="submit"
- tal:attributes="value add">
-</td>
-</tr>
-<tr>
-<td colspan="2">
-<input type="submit" value="Apply" class="submit"
- tal:attributes="value configapply">
+ tal:attributes="value t_add">
+</fieldset>
 </td>
 </tr>
 </table>
+<input type="submit" value="Apply" class="submit"
+ tal:attributes="value t_configapply">
 </form>
 
 <div tal:repeat="item info">
