@@ -20,10 +20,14 @@
 __author__ = "Bastian Kleineidam"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
+# $Source$
 
-import sys, os
-if sys.version[:5] < "2.3":
-    raise SystemExit, "This program requires Python 2.3 or later."
+import sys
+if not hasattr(sys, "version_info"):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
+if sys.version_info < (2, 3, 1, 'final', 0):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
+import os
 from wc import i18n, wstartfunc
 
 _nt_usage = i18n._("""USAGE\twebcleaner command [options]
