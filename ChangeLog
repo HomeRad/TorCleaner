@@ -1,3 +1,6 @@
+Changes since 0.56:
+  * Oopsie, fix umask to 0177
+
 Changes since 0.55:
   * fix dropping of root privileges if run as root
   * set umask to 0277
