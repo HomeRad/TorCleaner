@@ -1,6 +1,6 @@
 #!/usr/bin/python -O
 """setup file for the distuils module"""
-# Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000-2003  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -122,7 +122,7 @@ class MyDistribution(Distribution):
         util.execute(write_file, (filename, data),
                  "creating %s" % filename, self.verbose>=1, self.dry_run)
 
-
+# extension compile arguments
 if os.name=='nt':
     macros = [('YY_NO_UNISTD_H', None)]
     cargs = []
@@ -132,9 +132,24 @@ else:
     # - Python 2.2 defines long long int, which is C99
     # - and flex uses fileno(3), which is a gnu extension
     cargs = ['-pedantic', '-std=gnu99']
+
+# parser extension
+ext_parser = Extension('wc.parser.htmlsax',
+                        ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
+                        include_dirs = ["wc/parser"],
+                        define_macros = macros,
+                        extra_compile_args = cargs,
+                      )
+# javascript extension
+ext_js = Extension('wc.js.jslib',
+                    ['wc/js/jslib.c'],
+                    include_dirs = ["/usr/include/smjs"],
+                    extra_compile_args = cargs,
+                  )
+
+# no to the main stuff
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
-
 setup (name = "webcleaner",
        version = "1.7",
        description = "a filtering HTTP proxy",
@@ -148,12 +163,7 @@ setup (name = "webcleaner",
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns',
                    'wc/filter/rules', 'wc/webgui', 'wc/webgui/PageTemplates',
                    'wc/webgui/TAL', 'wc/webgui/ZTUtils'],
-       ext_modules = [Extension('wc.parser.htmlsax',
-                  ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
-                  include_dirs = ["wc/parser"],
-                  define_macros = macros,
-                  extra_compile_args = cargs,
-                  )],
+       ext_modules = [ext_parser, ext_js, ],
        scripts = ['webcleaner', 'webcleanerconf', 'wcheaders'],
        long_description =
 """WebCleaner features:
