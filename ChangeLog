@@ -24,6 +24,8 @@
     Changed: wc/webgui/__init__.py
   * new filter module ImageSize that filters images by size
     Added: wc/filter/ImageSize
+  * parse JS strings and comments
+    Changed: wc/parser/htmlex.l
 
 1.13
   * - when the HTTP server closes, flush any existing data
