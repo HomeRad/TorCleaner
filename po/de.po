@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Sat Feb 23 18:58:55 2002\n"
+"POT-Creation-Date: Fri Apr 26 23:05:15 2002\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,9 @@ msgstr "Keine Angabe von <enclose> mit Tagname %s"
 
 msgid "No debugging"
 msgstr "Kein debugging"
+
+msgid "Add Attribute"
+msgstr "Attribut hinzufügen"
 
 msgid "warning: only first command is valid"
 msgstr "Warnung: nur der erste Befehl ist gültig"
@@ -106,6 +109,9 @@ msgstr "P&roxy Einstellungen"
 msgid "Replace value:"
 msgstr "Ersetzter Text"
 
+msgid "unknown tag name %s"
+msgstr "Unbekannte Option %s"
+
 msgid "unknown rule name %s"
 msgstr "Unbekannte Option %s"
 
@@ -152,8 +158,8 @@ msgstr "Gibs mir"
 msgid "Remove"
 msgstr "Löschen"
 
-msgid "Save options"
-msgstr " &Optionen "
+msgid "Up"
+msgstr ""
 
 msgid "No proxy for"
 msgstr "Kein Proxy für"
@@ -164,14 +170,17 @@ msgstr "Kann Anfrage nicht parsen"
 msgid "Name"
 msgstr "Neuer Name:"
 
+msgid "Proxy Authentication Required"
+msgstr ""
+
 msgid "WebCleaner is running (PID %s)"
 msgstr "WebCleaner läuft (PID %s)"
 
 msgid "filter selection"
 msgstr "Kein Filter ausgewählt"
 
-msgid "New Folder"
-msgstr "Neuer Ordner"
+msgid "Attribute value"
+msgstr "Attributwert"
 
 msgid "Port"
 msgstr "Portnummer"
@@ -203,8 +212,8 @@ msgstr "URL Pfad:\tRegulärer Ausdruck welcher den Pfad matcht"
 msgid "Image height:"
 msgstr "Bildhöhe:"
 
-msgid "Add Attribute"
-msgstr "Attribut hinzufügen"
+msgid "Enclosed block:"
+msgstr "Enthaltener Text:"
 
 msgid "empty title"
 msgstr "leerer Titel"
@@ -229,6 +238,9 @@ msgstr "Bildbreite:"
 
 msgid "URL Fragment:\tRegular expression to match the fragment"
 msgstr "URL Fragment:\tRegulärer Ausdruck welcher das Fragment matcht"
+
+msgid "Dwn"
+msgstr ""
 
 msgid "Remove Folder"
 msgstr "Lösche Ordner"
@@ -427,17 +439,14 @@ msgstr "Tag"
 msgid "Replacement:\tReplacement value (empty means delete)"
 msgstr "Header Wert:\tHeader Wert (leer heißt löschen)"
 
-msgid "Enclosed block:"
-msgstr "Enthaltener Text:"
+msgid "Scrolling"
+msgstr "Scrollen"
 
 msgid "Connections"
 msgstr "Verbindungen"
 
-msgid "Value:"
-msgstr "Text:"
-
-msgid "WebCleaner is not running. Do 'webcleaner start' first."
-msgstr "WebCleaner läuft nicht. Führen Sie zuerst 'webcleaner start' aus."
+msgid "Password"
+msgstr "Passwort"
 
 msgid "URL Scheme:\tRegular expression to match the URL scheme"
 msgstr "URL Schema:\tRegulärer Ausdruck welcher das URL Schema matcht"
@@ -448,20 +457,30 @@ msgstr " &Aktualisieren "
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
 
+msgid ""
+"WebCleaner already started (lock file found).\n"
+"Do 'webcleaner stop' first."
+msgstr ""
+"WebCleaner bereits gestartet (Lockdatei gefunden).\n"
+"Führen Sie zuerst 'webcleaner stop' aus."
+
 msgid "auto"
 msgstr "auto"
 
 msgid "Match url"
 msgstr "Matche url"
 
-msgid "Attribute value"
-msgstr "Attributwert"
+msgid "Invalid Proxy User"
+msgstr "Ungültiger Proxy Benutzername"
 
 msgid "none"
 msgstr "kein"
 
 msgid "URL Port:\tRegular expression to match the port"
 msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
+
+msgid "WebCleaner is not running"
+msgstr "WebCleaner ist nicht gestarted"
 
 msgid "command '%s' killed by signal %d"
 msgstr "Kommando '%s' wurde beendet durch Signal %d"
@@ -470,7 +489,7 @@ msgid "Tag name"
 msgstr "Tag Name"
 
 msgid "parsing %s:%d:%d: %s"
-msgstr ""
+msgstr "parse %s:%d:%d: %s"
 
 msgid "Duplicate hostname"
 msgstr "Doppelter Rechnername"
@@ -549,8 +568,8 @@ msgstr "immer"
 msgid "URL"
 msgstr "URL"
 
-msgid "Scrolling"
-msgstr "Scrollen"
+msgid "Value:"
+msgstr "Text:"
 
 msgid "Filter Modules"
 msgstr "Filter Module"
@@ -564,14 +583,17 @@ msgstr "Füge Proxy hinzu"
 msgid "Logfile"
 msgstr "Logdatei"
 
+msgid "About webcleaner"
+msgstr "Über WebCleaner"
+
 msgid "Log HTML errors"
 msgstr "Zeige HTML Fehler an"
 
 msgid "unknown buffer element %s"
 msgstr "Unbekannte Option %s"
 
-msgid "A&bout"
-msgstr "Ü&ber"
+msgid "User"
+msgstr "Benutzer"
 
 msgid "empty filename"
 msgstr "leerer Dateiname"
@@ -579,27 +601,29 @@ msgstr "leerer Dateiname"
 msgid "Host"
 msgstr "Rechner"
 
-msgid "About webcleaner"
-msgstr "Über WebCleaner"
+msgid "New Folder"
+msgstr "Neuer Ordner"
 
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d Tage, %02d:%02d:%02d"
 
+msgid "Proxy"
+msgstr "Proxy"
+
+msgid "WebCleaner is not running. Do 'webcleaner start' first."
+msgstr "WebCleaner läuft nicht. Führen Sie zuerst 'webcleaner start' aus."
+
 msgid "No. of saved Headers"
 msgstr "Nr. des gesp. Headers"
 
-msgid ""
-"WebCleaner already started (lock file found).\n"
-"Do 'webcleaner stop' first."
-msgstr ""
-"WebCleaner bereits gestartet (Lockdatei gefunden).\n"
-"Führen Sie zuerst 'webcleaner stop' aus."
+msgid "Save options"
+msgstr " &Optionen "
 
 msgid "command '%s' failed: %s"
 msgstr "Kommando '%s' fehlgeschlagen: %s"
 
-msgid "unknown tag name %s"
-msgstr "Unbekannte Option %s"
+msgid "A&bout"
+msgstr "Ü&ber"
 
 msgid " rule"
 msgstr " Regel"
@@ -612,6 +636,9 @@ msgstr "WebCleanerConf Hilfe"
 
 msgid "execute 'webcleaner -h' for help\n"
 msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
+
+msgid "You have to use -A-Za-z0-9._ for the proxy user name."
+msgstr "Sie dürfen nur -A-Za-z0-9._ für den Proxy Benutzernamen verwenden."
 
 msgid "Enclosed block"
 msgstr "Enthaltener Text"
@@ -665,9 +692,6 @@ msgstr "Titel:"
 msgid " &Options "
 msgstr " &Optionen "
 
-msgid "Basic Values"
-msgstr "Basiswerte"
-
 msgid "New name:"
 msgstr "Neuer Name:"
 
@@ -676,3 +700,6 @@ msgstr "Header hinzufügen"
 
 msgid "Tag name:"
 msgstr "Tag Name:"
+
+#~ msgid "Basic Values"
+#~ msgstr "Basiswerte"

@@ -1,7 +1,7 @@
 # we use the scripts in Tools/i18n of the Python 2.0 distribution
 I18NTOOLS=.
-GETTEXT=$(I18NTOOLS)/pygettext.py
-MSGFMT=$(I18NTOOLS)/msgfmt.py
+GETTEXT=python $(I18NTOOLS)/pygettext.py
+MSGFMT=python $(I18NTOOLS)/msgfmt.py
 MSGMERGE=msgmerge
 SOURCES=\
 ../webcleaner \
@@ -53,7 +53,6 @@ SOURCES=\
 ../wc/filter/Rewriter.py \
 ../wc/filter/Blocker.py \
 ../wc/filter/Header.py \
-../wc/filter/Filter.py \
 ../wc/filter/__init__.py \
 ../wc/parser/__init__.py \
 ../wc/parser/htmllib.py \
