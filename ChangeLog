@@ -2,6 +2,11 @@
   * parser changes:
     o rebuild with flex 2.5.27
     Changed files: wc/parser/htmllex.c
+  * fix replacing of attributes with non-empty values
+    Changed files: wc/filter/rules/RewriteRule.py
+  * updated filters:
+    o remove _blank and _new targets
+    Changed files: config/*.zap
 
 1.6
   * updated filters:
