@@ -172,21 +172,21 @@ _nt_usage = i18n._("""USAGE\twebcleaner command [options]
 
 COMMANDS
 start
-        Start the proxy. If it is already started, do nothing.
+        Start WebCleaner proxy service.
 stop
-        Stop the proxy. If it is already stopped, do nothing.
+        Stop WebCleaner proxy service.
 restart
-        Restart the proxy.
+        Restart WebCleaner proxy service.
 status
-        Print info if the proxy is running or not.
+        Print status info of WebCleaner proxy service.
 debug
-        Start the proxy printing service debug messages.
+        Start WebCleaner proxy service with debug messages.
 install [options]
-        Install WebCleaner Windows service.
+        Install WebCleaner proxy service.
 update [options]
-        Update WebCleaner Windows service.
+        Update WebCleaner proxy service.
 remove
-        Remove WebCleaner Windows service.
+        Remove WebCleaner proxy service.
 
 OPTIONS (for 'install' and 'update' commands only)
 --username <domain\username>
