@@ -23,7 +23,7 @@ import stat
 import re
 import sys
 import string
-from types import StringType, TupleType
+from types import StringType, TupleType, ListType
 from distutils.core import setup, Extension, DEBUG
 #try:
 #    import py2exe
@@ -33,10 +33,12 @@ from distutils.core import setup, Extension, DEBUG
 #    distklass = distutils.dist.Distribution
 import distutils.command
 import distutils.dist
+from distutils.errors import CompileError
 distklass = distutils.dist.Distribution
 from distutils.command.install import install
 from distutils.command.bdist_wininst import bdist_wininst
 from distutils.command.install_data import install_data
+from distutils.command.build_ext import build_ext
 from distutils.file_util import write_file
 from distutils.dir_util import create_tree, remove_tree
 from distutils import util, log
@@ -286,6 +288,62 @@ class MyBdistWininst (bdist_wininst, object):
             return open(filename, "rb").read()
         return super(MyBdistWininst, self).get_exe_bytes()
 
+class MyBuildExt (build_ext, object):
+
+    def build_extensions (self):
+        # First, sanity-check the 'extensions' list
+        self.check_extensions_list(self.extensions)
+        for ext in self.extensions:
+            if hasattr(ext, "try_compile_args") and ext.try_compile_args:
+                old_extra = ext.extra_compile_args
+                extra_args = ext.extra_compile_args or []
+                ext.extra_compile_args = extra_args + ext.try_compile_args
+                try:
+                    self.build_extension(ext)
+                except CompileError:
+                    ext.extra_compile_args = old_extra
+                    self.build_extension(ext)
+            else:
+                self.build_extension(ext)
+
+class MyExtension (Extension, object):
+    def __init__ (self, name, sources,
+                  include_dirs=None,
+                  define_macros=None,
+                  undef_macros=None,
+                  library_dirs=None,
+                  libraries=None,
+                  runtime_library_dirs=None,
+                  extra_objects=None,
+                  extra_compile_args=None,
+                  try_compile_args=None,
+                  extra_link_args=None,
+                  export_symbols=None,
+                  depends=None,
+                  language=None,
+                  **kw                      # To catch unknown keywords
+                 ):
+        assert type(name) is StringType, "'name' must be a string"
+        assert (type(sources) is ListType and
+                map(type, sources) == [StringType]*len(sources)), \
+                "'sources' must be a list of strings"
+
+        self.name = name
+        self.sources = sources
+        self.include_dirs = include_dirs or []
+        self.define_macros = define_macros or []
+        self.undef_macros = undef_macros or []
+        self.library_dirs = library_dirs or []
+        self.libraries = libraries or []
+        self.runtime_library_dirs = runtime_library_dirs or []
+        self.extra_objects = extra_objects or []
+        self.extra_compile_args = extra_compile_args or []
+        self.try_compile_args = try_compile_args or []
+        self.extra_link_args = extra_link_args or []
+        self.export_symbols = export_symbols or []
+        self.depends = depends or []
+        self.language = language
+
 
 # global include dirs
 include_dirs = []
@@ -293,6 +351,8 @@ include_dirs = []
 define_macros = []
 # compiler args
 extra_compile_args = []
+# for gcc 3.x we try to add -std=gnu99 to get rid of warnings
+try_compile_args = ["-std=c99"]
 # library directories
 library_dirs = []
 # libraries
@@ -303,8 +363,6 @@ if os.name=='nt':
     # windows does not have unistd.h
     define_macros.append(('YY_NO_UNISTD_H', None))
 else:
-    # for gcc 3.x we could add -std=gnu99 to get rid of warnings, but
-    # that breaks other compilers
     extra_compile_args.append("-pedantic")
     if win_compiling:
         # we are cross compiling with mingw
@@ -320,7 +378,7 @@ else:
 extensions = []
 
 # HTML parser
-extensions.append(Extension('wc.HtmlParser.htmlsax',
+extensions.append(MyExtension('wc.HtmlParser.htmlsax',
               sources = [normpath('wc/HtmlParser/htmllex.c'),
                          normpath('wc/HtmlParser/htmlparse.c'),
                          normpath('wc/HtmlParser/s_util.c'),
@@ -330,16 +388,18 @@ extensions.append(Extension('wc.HtmlParser.htmlsax',
               include_dirs = include_dirs + [normpath("wc/HtmlParser")],
               define_macros = define_macros,
               extra_compile_args = extra_compile_args,
+              try_compile_args = try_compile_args,
               library_dirs = library_dirs,
               libraries = libraries,
              ))
 
 # levenshtein distance method
-extensions.append(Extension('wc.levenshtein',
+extensions.append(MyExtension('wc.levenshtein',
               sources = [normpath('wc/levenshtein.c'),],
               include_dirs = include_dirs,
               define_macros = define_macros,
               extra_compile_args = extra_compile_args,
+              try_compile_args = try_compile_args,
               library_dirs = library_dirs,
               libraries = libraries,
              ))
@@ -352,11 +412,12 @@ if win_compiling:
                     ]
 else:
     define_macros = []
-extensions.append(Extension('wc.js.jslib',
+extensions.append(MyExtension('wc.js.jslib',
                   sources=['wc/js/jslib.c'],
                   include_dirs = include_dirs + ['libjs'],
                   define_macros = define_macros,
                   extra_compile_args = extra_compile_args,
+                  try_compile_args = try_compile_args,
                   extra_objects = ['libjs/.libs/libjs.a'],
                   library_dirs = library_dirs,
                   libraries = libraries,
@@ -511,6 +572,7 @@ setup (name = "webcleaner",
        cmdclass = {'install': MyInstall,
                    'install_data': MyInstallData,
                    'bdist_wininst': MyBdistWininst,
+                   'build_ext': MyBuildExt,
                   },
        data_files = data_files,
 )
