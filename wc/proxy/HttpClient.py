@@ -422,9 +422,12 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # server is not yet there, delay
             return
         if self.method == "CONNECT":
-            wc.log.debug(wc.LOG_PROXY,
-                 "%s write SSL tunneled data to server %s", self, self.server)
-            self.server.write(self.read())
+            data = self.read()
+            if data:
+                wc.log.debug(wc.LOG_PROXY,
+                 "%s send %d bytes SSL tunneled data to server %s",
+                  self, len(data), self.server)
+                self.server.write(data)
         else:
             wc.log.error(wc.LOG_PROXY, "%s invalid data", self)
 
