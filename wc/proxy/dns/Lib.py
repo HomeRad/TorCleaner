@@ -254,10 +254,10 @@ def testpacker():
                u.getname(),
                u.getbytes(26),
                u.getname())
+        print res
     timing.finish()
     print timing.milli(), "ms total for unpacking"
     print round(timing.milli() / i, 4), 'ms per unpacking'
-    #for item in res: print item
 
 
 # Pack/unpack RR toplevel format (section 3.2.1)
@@ -631,6 +631,9 @@ if __name__ == "__main__":
     testpacker()
 #
 # $Log$
+# Revision 1.2  2003/01/05 17:42:49  calvin
+# pychecker fixes
+#
 # Revision 1.1  2002/11/27 23:27:05  calvin
 # update tests
 #
