@@ -10,6 +10,8 @@ Your Python installation has to be compiled with the
 expat XML parser module. The expat library needed for this can be
 found at http://expat.sourceforge.net/.
 
+The gettext package (for calling msgmerge).
+
 For the GUI config tool webcleanerconf you need
 FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
 FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
