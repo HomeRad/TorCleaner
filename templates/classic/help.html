@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en" tal:attributes="lang lang">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -58,50 +58,217 @@ XXX to be written.
 <h2 i18n:translate="">Proxy filter modules</h2>
 
 <p i18n:translate="">%(AppName)s uses a modular filter design allowing
-a lot of flexibility for different uses. Each of these modules can
+a lot of flexibility for different uses.<br>
+Each module has a list if mime types and a list of which
+parts of request/response challenge it applies to. And each module can
 be further customized by separate rules in the filter configuration.
 </p>
 
 <h3>BinaryCharFilter</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">None</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Replace illegal binary characters in HTML code like
+the quote chars often found in Microsoft pages.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response content data of text/html mime type.</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+<p i18n:translate="">None</p>
+
 <h3>Blocker</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">Block, Allow</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Block or allow specific sites by URL name.
+Before matching a URL the hostname and path is unquoted to avoid
+spoofing attacks.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Request url of all mime types.</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Block, Allow
+
 <h3>Compress</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">None</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Compression of documents with good compression ratio
+like HTML, WAV, etc.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response content data of mime types
+text/*, application/postscript, application/pdf, application/x-dvi,
+audio/basic, audio/midi, audio/x-wav,
+image/x-portable-*map, x-world/x-vrml.</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+<p i18n:translate="">None</p>
+
 <h3>GifImage</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">None</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Deanimates GIFs and removes all unwanted GIF image
+extensions (for example GIF comments).</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response content data of mime types image/gif</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+<p i18n:translate="">None</p>
+
 <h3>Header</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">Header</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Add, modify and delete HTTP headers of request and response.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Request and response headers of all mime types.</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Header
+
 <h3>ImageReducer</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">None</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Convert images to low quality JPEG files to reduce
+bandwidth</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response content data of all image types supported by the
+Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.
+</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+<p i18n:translate="">None</p>
+
 <h3>ImageSize</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">Image</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Remove images with certain width and/or height.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response content data of all image types supported by the
+Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.
+</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Image
+
 <h3>PicsHeader</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">Pics</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Parse and evaluate PICS rating system header values.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response headers of all mime types.</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Pics
+
 <h3>Replacer</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">Replace</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Replace regular expressions in data streams.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response data of html and javascript</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Replace
+
 <h3>Rewriter</h3>
-<h4 i18n:translator="">Description</h4>
-<h4 i18n:translator="">Configuration rules</h4>
-<p i18n:translator="">Javascript, Nocomments, Pics, Rewrite</p>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Parse HTML code and rewrite single tags, attributes
+and values. Execute and filter JavaScript. Parse and filter PICS rated
+pages. Filter HTML comments.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response data of html pages</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Javascript, Nocomments, Pics, Rewrite
+
+
+<h2 i18n:translate="">Filter configuration rules</h2>
+
+<h3>Allow</h3>
+<p i18n:translate="">An allow rule specifies regular expressions for urls
+which must be allowed, even if a matching block rule exists.</p>
+
+<h3>Block</h3>
+<p i18n:translate="">A block rule specifies regular expressions for urls
+which must be blocked.<br>
+The replacement URL specifies the URL to show when the block matches. If none
+is given a default block message is shown.<br>
+Back references to matched subgroups can be specified in the replacement
+url with a backslash and the subgroup number (ie. \1, \2, ...).</p>
+
+<h3>Header</h3>
+<p i18n:translate="">Modify HTTP headers. If the replacement value is empty,
+the header is deleted, else it gets replaced or added if it did not exist
+before.</p>
+
+<h3>Image</h3>
+<p i18n:translate="">Block images with a certain size which is replacing
+them with a transparent 1x1 image.</p>
+
+<h3>Javascript</h3>
+<p i18n:translate="">Execute and filter JavaScript (JS) in HTML pages using
+the integrated Spidermonkey JS engine. The filter deletes popups and places
+dynamic content emitted with document.write() into the HTML file.</p>
+
+<h3>Nocomments</h3>
+<p i18n:translate="">Remove comments from HTML source. Comments inside
+&lt;script&gt; or &lt;style&gt; tags are not removed.</p>
+
+<h3>Pics</h3>
+<p i18n:translate="">One activated Pics rule enables the PICS content rating
+system in %(AppName)s. Several distinct content rating services including
+the one defined by %(AppName)s itself can be configured.</p>
+
+<h3>Replace</h3>
+<p i18n:translate="">Replace regular expressions in a HTML or JavaScript
+pages.</p>
+
+<h3>Rewrite</h3>
+<h4 i18n:translate="">Matching</h4>
+<p i18n:translate="">A rewrite rule applies to one specified HTML tag and
+can replace (or delete if the replacement data is empty) parts of or the
+complete tag. The tag name is a case insensitive string.<br>
+If attributes are given, they must match too before the rule applies.</p>
+
+<h4 i18n:translate="">Action</h4>
+<p i18n:translate="">If there is no replacement given the specified tag
+part will be removed, else it will be replaced.<br>
+Back references to matched subgroups can be specified in the replacement
+string with a backslash and the subgroup number (ie. \1, \2, ...).</p>
+
+<table rules="cols" border="0" cellpadding="4" cellspacing="0" summary="">
+<thead>
+<tr>
+<th>&nbsp;</th>
+<th colspan="2" i18n:translate="">What it does when replacement is <i>foo</i></th>
+</tr>
+<tr style="border-bottom:1px solid black;">
+<th i18n:translate="">replace part</th>
+<th i18n:translate="">before</th>
+<th i18n:translate="">after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tag</td>
+<td>&lt;blink&gt;text&lt;/blink&gt;</td>
+<td>footextfoo</td>
+</tr>
+
+<tr>
+<td>tagname</td>
+<td>&lt;blink&gt;text&lt;/blink&gt;</td>
+<td>&lt;foo&gt;text&lt;/foo&gt;</td>
+</tr>
+
+<tr>
+<td>enclosed</td>
+<td>&lt;blink&gt;text&lt;/blink&gt;</td>
+<td>&lt;blink&gt;foo&lt;/blink&gt;</td>
+</tr>
+
+<tr>
+<td>attr</td>
+<td>&lt;a href="bla"&gt;..&lt;/a&gt;</td>
+<td>&lt;a foo&gt;..&lt;/a&gt;</td>
+</tr>
+
+<tr>
+<td>attrval</td>
+<td>&lt;a href="bla"&gt;..&lt;/a&gt;</td>
+<td>&lt;a href="foo"&gt;..&lt;/a&gt;</td>
+</tr>
+
+<tr>
+<td>complete</td>
+<td>&lt;a href="bla"&gt;..&lt;/a&gt;</td>
+<td>foo</td>
+</tr>
+</tbody>
+</table>
+
+<p i18n:translate="">If you specified zero or more than one attributes
+to match, 'attr' and 'attrvalue' replace the first occuring or matching
+attribute or nothing.</p>
+
 </div>
 
 <div metal:use-macro="macros/macros/footer">Footer...</div>

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Dec 19 23:26:34 2003\n"
+"POT-Creation-Date: Sat Dec 20 11:52:09 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -334,6 +334,11 @@ msgstr ""
 msgid "%(AppName)s proxy configuration"
 msgstr ""
 
+msgid ""
+"Convert images to low quality JPEG files to reduce\n"
+"bandwidth"
+msgstr ""
+
 msgid "Always change the complete password since the displayed value is only a dummy."
 msgstr ""
 
@@ -351,6 +356,11 @@ msgid ""
 "browser to work with %(AppName)s"
 msgstr ""
 
+msgid ""
+"Compression of documents with good compression ratio\n"
+"like HTML, WAV, etc."
+msgstr ""
+
 msgid "List of hostnames the proxy must not filter."
 msgstr ""
 
@@ -366,7 +376,22 @@ msgstr ""
 msgid "This page is also available in"
 msgstr ""
 
+msgid "before"
+msgstr ""
+
+msgid ""
+"A block rule specifies regular expressions for urls\n"
+"which must be blocked.<br>\n"
+"The element data specifies the URL to show when the block matches. If none\n"
+"is given a default block message is shown.<br>\n"
+"Back references to matched subgroups can be specified in the replacement\n"
+"url with a backslash and the subgroup number (ie. \\1, \\2, ...)."
+msgstr ""
+
 msgid "Service"
+msgstr ""
+
+msgid "Response content data of mime types image/gif"
 msgstr ""
 
 msgid "Empty folder name."
@@ -402,6 +427,13 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
+msgid ""
+"A rewrite rule applies to one specified HTML tag and\n"
+"can replace (or delete if the replacement data is empty) parts of or the\n"
+"complete tag. The tag name is a case insensitive string.<br>\n"
+"If attributes are given, they must match too before the rule applies."
+msgstr ""
+
 msgid "Access key 9"
 msgstr ""
 
@@ -414,22 +446,30 @@ msgstr ""
 msgid "%(AppName)s filter update"
 msgstr ""
 
+msgid "Filter configuration rules"
+msgstr ""
+
 msgid ""
-"Select <b>File -&gt; Preferences -&gt; Network\n"
-"-&gt; Proxy servers</b>.<br>\n"
-"Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is\n"
-"<i>%(port)d</i>.<br>\n"
-"Activate <b>Do not use Proxy on the adresses below</b> and enter\n"
-"<i>localhost, 127.0.0.1</i>.<br>\n"
-"Click <b>Ok</b> to use your new settings."
+"If you specified zero or more than one attributes\n"
+"to match, 'attr' and 'attrvalue' replace the first occuring or matching\n"
+"attribute or nothing."
 msgstr ""
 
 msgid "Rule enclosed block successfully changed."
 msgstr ""
 
 msgid "Attributes"
+msgstr ""
+
+msgid ""
+"Parse HTML code and rewrite single tags, attributes\n"
+"and values. Execute and filter JavaScript. Parse and filter PICS rated\n"
+"pages. Filter HTML comments."
+msgstr ""
+
+msgid ""
+"Block images with a certain size which is replacing\n"
+"them with a transparent 1x1 image."
 msgstr ""
 
 msgid "Replace regex"
@@ -445,6 +485,12 @@ msgid "%(AppName)s feedback information"
 msgstr ""
 
 msgid "Help"
+msgstr ""
+
+msgid ""
+"Block or allow specific sites by URL name.\n"
+"Before matching a URL the hostname and path is unquoted to avoid\n"
+"spoofing attacks."
 msgstr ""
 
 msgid "Don't match URL"
@@ -476,7 +522,21 @@ msgstr ""
 msgid "Folder successfully removed."
 msgstr ""
 
+msgid "Parse and evaluate PICS rating system header values."
+msgstr ""
+
 msgid "Update filter configuration"
+msgstr ""
+
+msgid "Applies to"
+msgstr ""
+
+msgid ""
+"Remove comments from HTML source. Comments inside\n"
+"&lt;script&gt; or &lt;style&gt; tags are not removed."
+msgstr ""
+
+msgid "Response data of html and javascript"
 msgstr ""
 
 msgid "PICS data for %(AppName)s"
@@ -492,6 +552,9 @@ msgid "Administrator password for %(AppName)s"
 msgstr ""
 
 msgid "Invalid rule type."
+msgstr ""
+
+msgid "Response data of html pages"
 msgstr ""
 
 msgid "Port successfully changed."
@@ -521,6 +584,12 @@ msgstr ""
 msgid "PICS ratings"
 msgstr ""
 
+msgid ""
+"Modify HTTP headers. If the replacement value is empty,\n"
+"the header is deleted, else it gets replaced or added if it did not exist\n"
+"before."
+msgstr ""
+
 msgid "Internet Explorer"
 msgstr ""
 
@@ -534,6 +603,9 @@ msgid "Search in %(site)s"
 msgstr ""
 
 msgid "Rule image width successfully changed."
+msgstr ""
+
+msgid "replace part"
 msgstr ""
 
 msgid "Invalid image width value."
@@ -569,6 +641,9 @@ msgstr ""
 msgid "Rule already enabled."
 msgstr ""
 
+msgid "Replace regular expressions in data streams."
+msgstr ""
+
 msgid "%(AppName)s error"
 msgstr ""
 
@@ -583,7 +658,18 @@ msgid ""
 "<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr ""
 
+msgid "None"
+msgstr ""
+
+msgid "Response headers of all mime types."
+msgstr ""
+
 msgid "Rule"
+msgstr ""
+
+msgid ""
+"Replace illegal binary characters in HTML code like\n"
+"the quote chars often found in Microsoft pages."
 msgstr ""
 
 msgid "PICS service successfully enabled."
@@ -613,13 +699,37 @@ msgstr ""
 msgid "Rule title successfully changed."
 msgstr ""
 
+msgid ""
+"Deanimates GIFs and removes all unwanted GIF image\n"
+"extensions (for example GIF comments)."
+msgstr ""
+
+msgid "Request and response headers of all mime types."
+msgstr ""
+
 msgid "Opera 6"
+msgstr ""
+
+msgid ""
+"If there is no replacement given the specified tag\n"
+"part will be removed, else it will be replaced.<br>\n"
+"Back references to matched subgroups can be specified in the replacement\n"
+"string with a backslash and the subgroup number (ie. \\1, \\2, ...)."
 msgstr ""
 
 msgid "Rule successfully enabled."
 msgstr ""
 
 msgid "Nofilter host successfully added."
+msgstr ""
+
+msgid "Matching"
+msgstr ""
+
+msgid ""
+"One activated Pics rule enables the PICS content rating\n"
+"system in %(AppName)s. Several distinct content rating services including\n"
+"the one defined by %(AppName)s itself can be configured."
 msgstr ""
 
 msgid "Rule replace search successfully changed."
@@ -632,6 +742,11 @@ msgid "List of hosts allowed to use this proxy."
 msgstr ""
 
 msgid "Allowed host successfully added."
+msgstr ""
+
+msgid ""
+"Replace regular expressions in a HTML or JavaScript\n"
+"pages."
 msgstr ""
 
 msgid "Go to rule:"
@@ -725,6 +840,9 @@ msgstr ""
 msgid "Move folder up"
 msgstr ""
 
+msgid "Request url of all mime types."
+msgstr ""
+
 msgid "Rule url successfully changed."
 msgstr ""
 
@@ -734,7 +852,18 @@ msgstr ""
 msgid "Don't filter hosts"
 msgstr ""
 
+msgid ""
+"%(AppName)s uses a modular filter design allowing\n"
+"a lot of flexibility for different uses.<br>\n"
+"Each module has a list if mime types and a list of which\n"
+"parts of request/response challenge it applies to. And each module can\n"
+"be further customized by separate rules in the filter configuration.\n"
+msgstr ""
+
 msgid "Filter update"
+msgstr ""
+
+msgid "What it does when replacement is <i>foo</i>"
 msgstr ""
 
 msgid "Use NTLM authentication (Windows domain controller)"
@@ -780,10 +909,18 @@ msgstr ""
 msgid "Generated by %(AppName)s %(Version)s"
 msgstr ""
 
+msgid "Response content data of text/html mime type."
+msgstr ""
+
 msgid "Folder moved down."
 msgstr ""
 
 msgid "Rule match-url successfully changed."
+msgstr ""
+
+msgid ""
+"An allow rule specifies regular expressions for urls\n"
+"which must be allowed, even if a matching block rule exists."
 msgstr ""
 
 msgid "PICS data"
@@ -793,6 +930,9 @@ msgid "Folders"
 msgstr ""
 
 msgid "Timeout"
+msgstr ""
+
+msgid "Action"
 msgstr ""
 
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
@@ -840,10 +980,20 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
+msgid "Remove images with certain width and/or height."
+msgstr ""
+
 msgid "Down"
 msgstr ""
 
 msgid "%(AppName)s help"
+msgstr ""
+
+msgid ""
+"Response content data of mime types\n"
+"text/*, application/postscript, application/pdf, application/x-dvi,\n"
+"audio/basic, audio/midi, audio/x-wav,\n"
+"image/x-portable-*map, x-world/x-vrml."
 msgstr ""
 
 msgid ""
@@ -887,7 +1037,16 @@ msgstr ""
 msgid "Feedback for %(AppName)s"
 msgstr ""
 
+msgid "Add, modify and delete HTTP headers of request and response."
+msgstr ""
+
 msgid "Rule don't-match-url successfully changed."
+msgstr ""
+
+msgid ""
+"Execute and filter JavaScript (JS) in HTML pages using\n"
+"the integrated Spidermonkey JS engine. The filter deletes popups and places\n"
+"dynamic content emitted with document.write() into the HTML file."
 msgstr ""
 
 msgid "Display Google search options for invalid pages"
@@ -990,13 +1149,10 @@ msgstr ""
 msgid "NTLM authentication"
 msgstr ""
 
-msgid "%(AppName)s"
+msgid "after"
 msgstr ""
 
-msgid ""
-"%(AppName)s uses a modular filter design allowing\n"
-"a lot of flexibility for different uses. Each of these modules can\n"
-"be further customized by separate rules in the filter configuration.\n"
+msgid "%(AppName)s"
 msgstr ""
 
 msgid ""
@@ -1058,6 +1214,18 @@ msgstr ""
 msgid "Invalid proxy port."
 msgstr ""
 
+msgid ""
+"Select <b>File -&gt; Preferences -&gt; Network\n"
+"-&gt; Proxy servers</b>.<br>\n"
+"Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is\n"
+"<i>%(port)d</i>.<br>\n"
+"Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is\n"
+"<i>%(port)d</i>.<br>\n"
+"Activate <b>Do not use Proxy on the adresses below</b> and enter\n"
+"<i>localhost, 127.0.0.1</i>.<br>\n"
+"Click <b>Ok</b> to use your new settings."
+msgstr ""
+
 msgid "Replacement URL"
 msgstr ""
 
@@ -1074,6 +1242,11 @@ msgid "Connection timeout in seconds"
 msgstr ""
 
 msgid "Port number of the parent proxy"
+msgstr ""
+
+msgid ""
+"Response content data of all image types supported by the\n"
+"Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.\n"
 msgstr ""
 
 msgid "Invalid image height value."
