@@ -147,10 +147,11 @@ fi
 
 AC_CONFIG_FILES([
 Makefile
-docs/Makefile
-docs/devel/Makefile
-docs/devel/api/Makefile
-docs/misc/Makefile
+doc/Makefile
+doc/de/Makefile
+doc/en/Makefile
+doc/en/devel/Makefile
+doc/en/misc/Makefile
 po/Makefile
 libjs/Makefile
 libjs/fdlibm/Makefile
