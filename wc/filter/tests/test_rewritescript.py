@@ -185,6 +185,18 @@ function a () {
 }
 //-->
 </script>""")
+        self.filt(
+"""<script language="JavaScript">
+<!--
+function a () {
+}//-->
+</script>""",
+"""<script language="JavaScript">
+<!--
+function a () {
+}
+//-->
+</script>""")
 
     def testFlash (self):
         self.filt(
