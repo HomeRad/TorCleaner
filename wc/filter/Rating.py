@@ -98,20 +98,25 @@ def rating_cache_write ():
 def rating_cache_load ():
     """load cached rating data from disk or return an empty cache if no
     cached data is found"""
+    global rating_cache
     if os.path.isfile(rating_cachefile):
         fp = file(rating_cachefile)
-        data = pickle.load(fp)
+        rating_cache = pickle.load(fp)
         fp.close()
         # remove invalid entries
-        for url in data:
+        toremove = []
+        for url in rating_cache:
             if not is_valid_url(url):
                 error(FILTER, "Invalid rating url %r", url)
-                del data[url]
-        return data
-    return {}
+                toremove.append(url)
+        if toremove:
+            for url in toremove:
+                del rating_cache[url]
+            rating_cache_write()
 
 
-rating_cache = rating_cache_load()
+rating_cache = {}
+rating_cache_load()
 
 
 def rating_is_cached (url):
