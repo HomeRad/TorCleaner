@@ -109,5 +109,5 @@ def get_context (dirs, form):
 
 
 TemplateContext = {
-    "test.html": {'title': 'HullaBulla'},
+    "test.html": {'title': 'HullaBulla', 'test': 'Teeeeest'},
 }
