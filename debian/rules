@@ -1,0 +1,89 @@
+#! /usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+PACKAGE=webcleaner
+DOCDIR = debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This is the debhelper compatability version to use.
+export DH_COMPAT=2
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	./setup.py config
+	touch configure-stamp
+
+build: configure-stamp build-stamp
+build-stamp:
+	dh_testdir
+	./setup.py build
+	touch build-stamp
+
+clean:
+	dh_testdir
+	rm -f build-stamp configure-stamp
+	$(MAKE) clean
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_clean -k
+	dh_installdirs
+	./setup.py install --root=`pwd`/debian/$(PACKAGE) --no-compile
+	# delete man pages, we install them with dh_installmanpages
+	rm -rf debian/$(PACKAGE)/usr/man
+	# delete INSTALL file
+	rm -f debian/$(PACKAGE)/usr/share/doc/$(PACKAGE)/INSTALL
+	# move webcleaner binaries to /usr/sbin
+	mv -f debian/$(PACKAGE)/usr/bin/webcleaner debian/$(PACKAGE)/usr/sbin
+	mv -f debian/$(PACKAGE)/usr/bin/webcleanerconf debian/$(PACKAGE)/usr/sbin
+	# remove example and config files, we install them ourselves
+	rm -rf debian/$(PACKAGE)/usr/share/webcleaner
+	# install configuration
+	install -c -m 644 config/*.{zap,dtd,gif,png,conf} debian/$(PACKAGE)/etc/webcleaner
+
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_movefiles --sourcedir=debian/$(PACKAGE) -pwebcleanerconf \
+            usr/sbin/webcleanerconf usr/lib/python2.0/site-packages/webgui/
+	dh_installdebconf
+	dh_installdocs
+	dh_installexamples filtertest filtertest.html
+#	dh_installmenu
+#	dh_installemacsen
+#	dh_installpam
+	dh_installinit
+#	dh_installcron
+	dh_installman webcleaner.1
+	dh_installman -pwebcleanerconf webcleanerconf.1
+#	dh_installinfo
+#	dh_undocumented webcleaner.1
+#	dh_undocumented -pwebcleanerconf webcleanerconf.1
+	dh_installchangelogs 
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_makeshlibs
+	dh_installdeb
+#	dh_perl
+#	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# We have nothing to do by default.
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

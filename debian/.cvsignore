@@ -1,0 +1,7 @@
+tmp
+webcleaner
+webcleanerconf
+files
+substvars
+*.debhelper
+*.ex

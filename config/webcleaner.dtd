@@ -1,0 +1,29 @@
+<!ELEMENT webcleaner (filter+,Blocker?,GifImage?,Rewriter?)>
+<!ATTLIST webcleaner
+ version     CDATA #REQUIRED
+ port        CDATA "8080"
+ parentproxy     CDATA #IMPLIED
+ parentproxyport CDATA "8080"
+ buffersize  CDATA "1024"
+ debuglevel  CDATA "0"
+ logfile     CDATA #IMPLIED
+ timeout     CDATA "300"
+ obfuscateip CDATA "0"
+>
+<!ELEMENT filter EMPTY>
+<!ATTLIST filter
+ name (Header|Blocker|GifImage|BinaryCharFilter|Rewriter|Compress) #REQUIRED
+>
+<!ELEMENT Blocker EMPTY>
+<!ATTLIST Blocker
+ url CDATA "blocked.html"
+ image CDATA "blocked.gif"
+>
+<!ELEMENT GifImage EMPTY>
+<!ATTLIST GifImage
+ image CDATA "1x1.gif"
+>
+<!ELEMENT Rewriter EMPTY>
+<!ATTLIST Rewriter
+ buffersize CDATA "1024"
+>

@@ -1,0 +1,324 @@
+# German translation for WebCleaner
+# Bastian Kleineidam <calvin@usrs.sourceforge.net>, 2000.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.1\n"
+
+msgid "Execute 'webcleaner -h' for help\n"
+msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
+
+msgid "No command given."
+msgstr "Kein Befehl angegeben."
+
+#, fuzzy
+msgid ""
+"USAGE\twebcleaner command\n"
+"\n"
+"COMMANDS\n"
+"start\n"
+"        Start the proxy. If it is already started, do nothing.\n"
+"stop\n"
+"        Stop the proxy. If it is already stopped, do nothing.\n"
+"restart\n"
+"        Try to stop the proxy, then start it.\n"
+"reload\n"
+"        If the proxy is running read the configuration files again.\n"
+"        If it is not running, do nothing. (only supported under\n"
+"        POSIX systems)\n"
+"status\n"
+"        Print info if the proxy is running or not."
+msgstr ""
+"GEBRAUCH\twebcleaner befehl\n"
+"\n"
+"BEFEHLE\n"
+"start\n"
+"        Starte den Proxy. Falls er schon gestartet ist, tue nichts.\n"
+"stop\n"
+"        Stoppe den Proxy. Falls er schon gestoppt ist, tue nichts.\n"
+"restart\n"
+"        Versuche, den Proxy zu stoppen. Dann starte ihn.\n"
+"reload\n"
+"        Falls der Proxy läuft lese die Konfigurationsdateien neu ein.\n"
+"        Falls er nicht läuft, tue nichts.\n"
+"status\n"
+"        Drucke Info, ob der Proxy läuft oder nicht.\n"
+
+msgid "press return to continue..."
+msgstr "drücken Sie Return um fortzufahren..."
+
+msgid "Unknown option %s"
+msgstr "Unbekannte Option %s"
+
+msgid "Unknown command %s"
+msgstr "Unbekannter Befehl %s"
+
+msgid "Error: %s\n"
+msgstr "Fehler: %s\n"
+
+msgid "WebCleaner: warning, only first command is valid"
+msgstr "WebCleaner: Warnung, nur der erste Befehl ist gültig"
+
+#~ msgid "Parent Proxy"
+#~ msgstr "Übergeordneter Proxy"
+
+#~ msgid "The parent proxy port WebCleaner should use."
+#~ msgstr "Der übergeordnete Proxy den WebCleaner benutzen soll."
+
+#~ msgid "New Filter"
+#~ msgstr "Neuer Filter"
+
+#~ msgid "can not write to file %s"
+#~ msgstr "kann nicht in Datei %s schreiben"
+
+#~ msgid "Add Attribute"
+#~ msgstr "Attribut hinzufügen"
+
+#~ msgid ""
+#~ "You cannot remove folders. If you really want to get rid\n"
+#~ "of this folder, delete the appropriate configuration file.\n"
+#~ "It is always safer to disable a folder or filter instead of\n"
+#~ "deleting it!"
+#~ msgstr ""
+#~ "Sie können Ordner nicht löschen. Wenn Sie diesen Ordner\n"
+#~ "wirklich loswerden wollen, löschen Sie die entsprechende\n"
+#~ "Konfigurationsdatei.\n"
+#~ "Es ist immer sicherer, einen Ordner oder Filter zu deaktivieren\n"
+#~ "anstatt ihn zu löschen!"
+
+#~ msgid "&Cancel"
+#~ msgstr "&Abbrechen"
+
+#~ msgid "no filter item selected"
+#~ msgstr "Kein Filter ausgewählt"
+
+#~ msgid "Attribute"
+#~ msgstr "Attribut"
+
+#~ msgid "Debug level"
+#~ msgstr "Debugstufe"
+
+#~ msgid ""
+#~ "Deanimates GIFs and removes all unwanted GIF image\n"
+#~ "extensions (for example GIF comments)."
+#~ msgstr ""
+#~ "Deanimiert GIF Bilder und löscht alle ungewollten GIF\n"
+#~ "Erweiterungen (zum Beispiel Kommentare)."
+
+#~ msgid "P&roxy Settings"
+#~ msgstr "P&roxy Einstellungen"
+
+#~ msgid ""
+#~ "If you specify incompatible regular expressions\n"
+#~ "choose the appropriate language here."
+#~ msgstr ""
+#~ "Wenn sie inkompatible reguläre Ausdrücke spezifiziern\n"
+#~ "dann wählen sie die entsprechende Sprache hier."
+
+#~ msgid "Replace part:"
+#~ msgstr "Ersetzter Teil:"
+
+#~ msgid "disable"
+#~ msgstr "deaktivieren"
+
+#~ msgid " &Ok "
+#~ msgstr " &Ok "
+
+#~ msgid "Remove"
+#~ msgstr "Löschen"
+
+#~ msgid "Enclosed block"
+#~ msgstr "Enthaltener Text"
+
+#~ msgid "Block specific sites by URL name."
+#~ msgstr "Blockiere bestimmte Seiten nach dem URL Namen."
+
+#~ msgid "Some good description what this filter does."
+#~ msgstr "Eine gute Beschreibung was dieser Filter macht."
+
+#~ msgid "Duplicate attribute name"
+#~ msgstr "Doppelter Attributname"
+
+#~ msgid "Replace value:"
+#~ msgstr "Ersetzter Text"
+
+#~ msgid "Empty attribute name"
+#~ msgstr "Leerer Attributname"
+
+#~ msgid "All filters"
+#~ msgstr "Alle Filter"
+
+#~ msgid "Invalid regex %s: %s"
+#~ msgstr "Ungültiger regulärer Ausdruck %s: %s"
+
+#~ msgid "URL Path:\tRegular expression to match the path"
+#~ msgstr "URL Pfad:\tRegulärer Ausdruck welcher den Pfad matcht"
+
+#~ msgid "Image height:"
+#~ msgstr "Bildhöhe:"
+
+#~ msgid "Enclosed block:"
+#~ msgstr "Enthaltener Text:"
+
+#~ msgid "empty title"
+#~ msgstr "leerer Titel"
+
+#, fuzzy
+#~ msgid "Description"
+#~ msgstr "Beschreibung:"
+
+#~ msgid "&Filter Settings"
+#~ msgstr "&Filter Einstellungen"
+
+#~ msgid "Header name:\tRegular expression to match the header name"
+#~ msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
+
+#~ msgid "Image width:"
+#~ msgstr "Bildbreite:"
+
+#~ msgid "Buffer size"
+#~ msgstr "Puffer Größe"
+
+#~ msgid "URL Fragment:\tRegular expression to match the fragment"
+#~ msgstr "URL Fragment:\tRegulärer Ausdruck welcher das Fragment matcht"
+
+#~ msgid "Remove Folder"
+#~ msgstr "Lösche Ordner"
+
+#~ msgid "Edit"
+#~ msgstr "Bearbeiten"
+
+#~ msgid "Update Error"
+#~ msgstr "Update Fehler"
+
+#~ msgid "You can disable a whole folder or single filter rules"
+#~ msgstr ""
+#~ "Sie können einen ganzen Ordner oder eine einzelne Filter Regel\n"
+#~ "deaktivieren"
+
+#~ msgid "URL Query:\tRegular expression to match the query"
+#~ msgstr "URL Query:\tRegulärer Ausdruck welcher den Query matcht"
+
+#~ msgid "Attributes:"
+#~ msgstr "Attribute:"
+
+#~ msgid "Blocked URL\tThe URL we want to show instead"
+#~ msgstr ""
+#~ "Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
+
+#, fuzzy
+#~ msgid "Update Help"
+#~ msgstr "Update Fehler"
+
+#~ msgid "URL Host:\tRegular expression to match the host"
+#~ msgstr "URL Host:\tRegulärer Ausdruck welcher den Host matcht"
+
+#~ msgid "Value:"
+#~ msgstr "Text:"
+
+#~ msgid "URL Scheme:\tRegular expression to match the URL scheme"
+#~ msgstr "URL Schema:\tRegulärer Ausdruck welcher das URL Schema matcht"
+
+#~ msgid "Attribute value"
+#~ msgstr "Attributwert"
+
+#~ msgid "Tag name"
+#~ msgstr "Tag Name"
+
+#, fuzzy
+#~ msgid "Update Error: %s"
+#~ msgstr "Fehler: %s\n"
+
+#~ msgid "New value:"
+#~ msgstr "Neuer Wert:"
+
+#~ msgid "&Help"
+#~ msgstr "&Hilfe"
+
+#~ msgid "Value"
+#~ msgstr "Wert"
+
+#, fuzzy
+#~ msgid "Language"
+#~ msgstr "Sprache:\t"
+
+#~ msgid "Filter Modules"
+#~ msgstr "Filter Module"
+
+#~ msgid "A&pply"
+#~ msgstr "Ü&bernehmen"
+
+#~ msgid "URL Parameters:\tRegular expression to match the parameters"
+#~ msgstr "URL Parameter:\tRegulärer Ausdruck welcher die URL Parameter matcht"
+
+#~ msgid "A&bout"
+#~ msgstr "Ü&ber"
+
+#~ msgid "empty filename"
+#~ msgstr "leerer Dateiname"
+
+#, fuzzy
+#~ msgid "About webcleaner"
+#~ msgstr "Über WebCleaner"
+
+#~ msgid " rule"
+#~ msgstr " Regel"
+
+#~ msgid "URL Port:\tRegular expression to match the port"
+#~ msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
+
+#, fuzzy
+#~ msgid "webcleanerconf Help"
+#~ msgstr "WebCleanerConf Hilfe"
+
+#~ msgid "Add"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Header value:\tHeader value (empty means delete)"
+#~ msgstr "Header Wert:\tHeader Wert (leer heißt löschen)"
+
+#, fuzzy
+#~ msgid "Filename"
+#~ msgstr "Dateiname:"
+
+#~ msgid "Complete tag"
+#~ msgstr "Ganzes Tag"
+
+#~ msgid "Edit Attribute"
+#~ msgstr "Bearbeite Attribut"
+
+#, fuzzy
+#~ msgid "Title"
+#~ msgstr "Titel:"
+
+#~ msgid "Basic Values"
+#~ msgstr "Basiswerte"
+
+#~ msgid "Logfile"
+#~ msgstr "Logdatei"
+
+#~ msgid "New name:"
+#~ msgstr "Neuer Name:"
+
+#~ msgid "New Folder\t\tCreate a new folder."
+#~ msgstr "Neuer Ordner\t\tErstelle einen neuen Ordner."
+
+#~ msgid "Tag name:"
+#~ msgstr "Tag Name:"
+
+#~ msgid "can not read file %s"
+#~ msgstr "kann Datei %s nicht lesen"
+
+#~ msgid "Wrong config file version %s, I only understand <= %s"
+#~ msgstr "Falsche Version %s der Konfigurationsdatei, ich verstehe nur <= %s"
+
+#~ msgid "Sorry, unimplemented"
+#~ msgstr "Tschuldigung, das fehlt noch"

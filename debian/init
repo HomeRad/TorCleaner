@@ -1,0 +1,41 @@
+#!/bin/sh -e
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+DAEMON="/usr/sbin/webcleaner"
+NAME="webcleaner"
+DESC="WebCleaner"
+
+test -x $DAEMON || exit 0
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	$DAEMON start
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	$DAEMON stop
+	echo "$NAME."
+	;;
+  reload)
+        echo -n "Reloading $DESC: "
+	$DAEMON reload
+	echo "$NAME."
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: "
+	$DAEMON restart
+	echo "$NAME."
+	;;
+  status)
+  	$DAEMON status
+	;;
+  *)
+	N="/etc/init.d/$NAME"
+	echo "Usage: $N {start|stop|restart|reload|force-reload|status}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

@@ -1,0 +1,108 @@
+"""block specific URLs"""
+# Copyright (C) 2000,2001  Bastian Kleineidam
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+import re,string,urlparse,wc
+from Rules import Netlocparts
+from wc.filter import FILTER_REQUEST
+from wc.filter.Filter import Filter
+from wc import debug
+
+orders = [FILTER_REQUEST]
+# regular expression for image filenames
+image_re=re.compile(r'\.(?i)(gif|jpg|png)')
+rulenames = ['block','allow']
+
+def strblock(block):
+    s="("
+    for b in block:
+        s = s + ","+(b and b.pattern or "")
+    return s+")"
+
+class Blocker(Filter):
+    def __init__(self):
+        """With no blocker and no allower we never block.
+        """
+        from os.path import join
+        self.block = []
+        self.allow = []
+        self.blocked_url="file://"+join(wc.ConfigDir, "blocked.html")
+        self.blocked_image="file://"+join(wc.ConfigDir, "blocked.gif")
+
+
+    def addrule(self, rule):
+        debug("enable %s '%s'" % (rule.get_name(),rule.title), 2)
+        _rule = []
+        for part in Netlocparts:
+            _rule.append(getattr(rule, part))
+        _rule = map(lambda x: x and re.compile(x) or None, _rule)
+        # append the block url (if any)
+        _rule.append(rule.url)
+        getattr(self, rule.get_name()).append(_rule)
+
+
+    def filter(self, data, **args):
+        splitted = string.split(data)
+        if len(splitted)==3:
+            method,url,protocol = splitted
+            urlTuple = list(urlparse.urlparse(url))
+            netloc = urlTuple[1]
+            s = string.split(netloc, ":")
+            if len(s)==2:
+                urlTuple[1:2] = s
+            else:
+                urlTuple[1:2] = [netloc,80]
+            blocked = self.blocked(urlTuple)
+            if blocked is not None:
+                debug("blocked url %s" % url, 2)
+                # index 3, not 2!
+                if image_re.match(urlTuple[3][-4:]):
+                    return '%s %s %s' % (method,
+		           blocked or self.blocked_image, 'image/gif')
+                else:
+                    # XXX hmmm, what about CGI images?
+                    # make HTTP request?
+                    return '%s %s %s' % (method,
+                           blocked or self.blocked_url, 'text/html')
+        return data
+
+
+    def blocked(self, urlTuple):
+        debug("checking block", 3)
+        for _block in self.block:
+            match = 1
+            for i in range(len(urlTuple)):
+                if _block[i]:
+                    debug("block pattern "+_block[i].pattern, 3)
+                    if not _block[i].search(urlTuple[i]):
+                        debug("no match", 3)
+                        match = 0
+            if match and not self.allowed(urlTuple):
+                return _block[-1]
+        return None
+
+
+    def allowed(self, urlTuple):
+        debug("checking allow", 3)
+        for _allow in self.allow:
+            match = 1
+            for i in range(len(urlTuple)):
+                if _allow[i]:
+                    debug("allow pattern "+_allow[i].pattern, 3)
+		    if not _allow[i].search(urlTuple[i]):
+                        debug("no match", 3)
+                        match = 0
+            if match: return 1
+        return 0

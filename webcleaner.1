@@ -1,0 +1,45 @@
+.TH WEBCLEANER 1 "6 December 2000"
+.SH NAME
+webcleaner \- a filtering HTTP proxy
+.SH SYNOPSIS
+\fBwebcleaner\fP
+[\fIoptions\fP]
+\fIcommand\fP
+.SH DESCRIPTION
+.LP
+WebCleaner is a filtering HTTP proxy inspired by Junkbuster,
+WebWasher and FilterProxy. You can encode, decode and modify
+each part of an HTTP request. WebCleaner enhances your privacy and
+efficiency on the web and comes with several ready-to-use
+filters to remove advertisement and unwanted HTML content,
+compress documents on-the-fly, disable animated GIFs and more.
+.SH COMMANDS
+.TP
+\fBstart\fP
+Start the proxy. If it is already started, do nothing.
+.TP
+\fBstop\fP
+Stop the proxy. If it is already stopped, do nothing.
+.TP
+\fBrestart\fP
+Try to stop the proxy, then start it.
+.TP
+\fBreload\fP
+If the proxy is running read the configuration files again. If it is
+not running, do nothing.
+.TP
+\fBstatus\fP
+Print info if the proxy is running or not.
+.SH OPTIONS
+.TP
+\fB-h\fP
+Display help text.
+.SH CONFIGURATION
+Run the nice GUI tool \fIwebcleanerconf(1)\fP.
+The underlying configuration format is a custom XML format which
+is explained in \fIconfig/filter.dtd\fP and
+\fIconfig/webcleaner.dtd\fP.
+.SH "SEE ALSO"
+webcleanerconf(1)
+.SH AUTHOR
+Bastian Kleineidam <calvin@users.sourceforge.net>

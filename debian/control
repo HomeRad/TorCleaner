@@ -1,0 +1,24 @@
+Source: webcleaner
+Section: web
+Priority: optional
+Maintainer: Bastian Kleineidam <calvin@users.sourceforge.net>
+Standards-Version: 3.5.2
+Build-Depends: python2-base, debhelper (>= 3.0.0), debconf
+
+Package: webcleaner
+Architecture: any
+Depends: python2-base, python2-zlib, debconf
+Suggests: webcleanerconf
+Description: a filtering HTTP proxy
+ Features:
+  o disable animated GIFs
+  o on-the-fly compression of documents
+  o privacy (remove user-agent: header and obfuscate IP address)
+  o can remove all HTML crap (adverts, javascript, ...)
+  o completely customizable
+
+Package: webcleanerconf
+Architecture: all
+Depends: python2-base, libfox0.99 (>= 0.99.147), python-fox0.99 (>= 0.99.147), webcleaner
+Description: configuration tool for webcleaner
+ This is a nice GUI configuration tool for the WebCleaner proxy.

@@ -1,0 +1,152 @@
+#!/usr/bin/env python2
+#    Copyright (C) 2000,2001  Bastian Kleineidam
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""a filtering HTTP proxy.
+
+It can
+o disable animated GIFs
+o compress documents on-the-fly (with gzip)
+o enhance your privacy (remove/add HTTP headers and obfuscate IP address)
+o remove unwanted HTML (adverts, javascript, ...)
+o be completely customized to your needs
+
+
+Installing
+----------
+Read the file INSTALL
+
+
+Configuration
+-------------
+Run the nice GUI config tool "webcleanerconf".
+The underlying configuration format is a custom XML format which is
+explained in config/filter.dtd and config/webcleaner.dtd.
+
+
+Notes
+-----
+WebCleaner is _not_ an HTTP compliant proxy because it modifies requests
+and headers!
+Obfuscate IP address does not spoof your address, it just encodes the
+IP numbers in one big integer ;)
+Yes, surf performance will decrease, espacially with the Rewriter module
+enabled.
+"""
+
+__author__ = "Bastian Kleineidam"
+__credits__ = \
+"""Credits go to munchy.py from Neil Schemenauer <nascheme@enme.ucalgary.ca>.
+The proxy class is based on his code.
+The filter code design is inspired from FilterProxy, a Perl program from
+Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
+Me, Bob and the author of AIFilter (Tels) had a nice discussion about
+filter formats with good ideas. Tels convinced me to try stateful
+filtering and I realize that it is very nice indeed.
+Disabling animated GIFs is a question of honor, but the idea goes back to
+the Webwasher.
+Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
+HTTP/1.1 Proxy written in Java."""
+
+import sys
+if sys.version[:5] < "2.0":
+    raise SystemExit, "This program requires Python 2.0 or later."
+# for pydoc testing
+#sys.path.append(".")
+from wc import _,daemon
+
+_usage = _("""USAGE\twebcleaner command
+
+COMMANDS
+start
+        Start the proxy. If it is already started, do nothing.
+stop
+        Stop the proxy. If it is already stopped, do nothing.
+restart
+        Try to stop the proxy, then start it.
+reload
+        If the proxy is running read the configuration files again.
+        If it is not running, do nothing. (only supported under
+        POSIX systems)
+status
+        Print info if the proxy is running or not.""")
+
+
+def _print_usage(msg):
+    """print short usage info and exit"""
+    print msg
+    print _("execute 'webcleaner -h' for help\n")
+    sys.exit(1)
+
+
+
+def _paginate(text, lines=22):
+    """print text in pages of lines size"""
+    textlines = string.split(text, "\n")
+    curline = 1
+    for line in textlines:
+        print line
+        curline = curline + 1
+        if curline >= lines and sys.stdin.isatty():
+            curline = 1
+            print _("press return to continue...")
+            sys.stdin.read(1)
+
+
+def _print_help():
+    """print long usage info"""
+    if os.name!='posix':
+        _paginate(_usage)
+    else:
+        print _usage
+    sys.exit(0)
+
+
+def main():
+    # Read command line arguments
+    import getopt,sys,string,os
+    try:
+        # Note: cut out the name of the script
+        options, args = getopt.getopt(sys.argv[1:], "h", ["help","pidfile="])
+    except getopt.error:
+        type, value = sys.exc_info()[:2]
+        _print_usage(value)
+    for opt,arg in options:
+        if opt=="-h" or opt=="--help":
+            _print_help()
+        elif opt=='--pidfile':
+            daemon.pidfile = arg
+        else:
+            _print_usage(_("Unknown option %s") % opt)
+    if len(args) < 1:
+        _print_usage(_("No command given."))
+    else:
+        command=args[0]
+        if len(args) > 1:
+            print _("warning: only first command is valid")
+    # start the command
+    if hasattr(daemon, command):
+        msg = getattr(daemon, command)()
+        if msg:
+	    print msg
+    else:
+        _print_usage(_("Unknown command %s") % command)
+
+#def main():
+#    import wc.proxy
+#    wc.proxy.mainloop()
+
+if __name__ == "__main__":
+    main()

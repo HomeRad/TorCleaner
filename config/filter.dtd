@@ -1,0 +1,192 @@
+<!-- 
+ Document Type Definition (DTD) for WWW filters.
+ See http://webcleaner.sourceforge.net/filter.html
+ 
+ WWW filters are configuration files for blocking URLs and rewriting
+ HTML and image data and HTTP headers.
+ Each file must have exactly one filter element (the "root" element).
+ Each filter can have any number of rules (including zero).
+ Filter files should have a .zap extension.
+ In DATA sections, the following characters must be XML-encoded:
+ Character	Code
+   <             &lt;
+   >             &gt;
+   &             &amp;
+   "             &quot;
+   '             &apos;
+
+-->
+
+
+<!--                      Filter
+
+   The filter and each rule element has a "disable" attribute. By default
+   it is "0" which means the filter resp. the rule is enabled.
+   This way configuration tools can display the description "desc" of all
+   filters and rules and can enable/disable each of them separately.
+
+   The filter is identified by filename.
+   
+   The lang attribute can restrict the filter only to this language,
+   which is used for language-specific regular expressions.
+   If there is no lang attribute, this filter can be used by all
+   languages. This is because some programs might do language specific
+   things with regular expressions.
+-->
+<!ELEMENT folder ((rewrite|block|allow|header|image|nocomments)*)>
+<!ATTLIST folder
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ lang     (Perl|Python) #IMPLIED
+ disable  CDATA "0"
+>
+
+
+
+<!--                        Rewriter
+
+   The rewrite tag applies to HTML tags and can replace (or delete if
+   the replacement data is empty) arbitrary HTML tag blocks.
+   The tag name is a case insensitive string.
+
+   If there is no <replace> tag the complete tag will be removed.
+-->
+<!ELEMENT rewrite (attr*,enclosed?,replace?)>
+<!ATTLIST rewrite
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ disable  CDATA "0"
+ tag      CDATA "a"
+>
+
+
+
+<!--                      Attribute
+
+   We can specify attributes the tag must have.
+   The attribute name is a case insensitive string.
+   The attribute value is a regular expression.
+-->
+<!ELEMENT attr (#PCDATA)>
+<!ATTLIST attr
+ name CDATA "href"
+>
+
+
+
+<!--                       Enclosed
+
+   Specify a regular expression which matches the enclosed block of a 
+   tag.
+-->
+<!ELEMENT enclosed (#PCDATA)>
+
+
+
+<!--                    Replace
+
+   replace part   What it does when replacement is 'foo'
+   ==========================================================
+   tag            <blink>text</blink>  => footextfoo
+   tagname        <blink>text</blink>  => <foo>text</foo>
+   enclosed       <blink>text</blink>  => <blink>foo</blink>
+   attr           <a href="bla">..</a> => <a foo>..</a>
+   attrval        <a href="bla">..</a> => <a href="foo">..</a>
+   complete       <a href="bla">..</a> => foo
+   
+   If you specified zero or more than one attributes to match, 
+   'attr' and 'attrvalue' replace the first occuring or matching 
+   attribute or nothing.
+-->
+<!ELEMENT replace (#PCDATA)>
+<!ATTLIST replace
+ part     (tag|tagname|attr|attrval|enclosed|complete) "complete"
+>
+
+
+
+<!--                       Blocker
+
+    Here we can specify urls to block. We split urls in 
+    scheme://host:port/path;parameters?query#fragment
+    and can specify regular expressions to match each fragment.
+    The host and scheme regular expressions are case insensitive.
+
+    The element data specifies the URL to show when the block matches.
+    Applications should have a default URL.
+-->
+<!ELEMENT block (#PCDATA)>
+<!ATTLIST block
+ title      CDATA #REQUIRED
+ desc       CDATA #IMPLIED
+ scheme     CDATA #IMPLIED
+ host       CDATA #IMPLIED
+ port       CDATA #IMPLIED
+ path       CDATA #IMPLIED
+ parameters CDATA #IMPLIED
+ query      CDATA #IMPLIED
+ fragment   CDATA #IMPLIED
+ disable    CDATA "0"
+>
+
+
+
+<!--                       Allow
+
+    Here we can specify urls to allow if they would be blocked
+    otherwise.
+-->
+<!ELEMENT allow EMPTY>
+<!ATTLIST allow
+ title      CDATA #REQUIRED
+ desc       CDATA #IMPLIED
+ scheme     CDATA #IMPLIED
+ host       CDATA #IMPLIED
+ port       CDATA #IMPLIED
+ path       CDATA #IMPLIED
+ parameters CDATA #IMPLIED
+ query      CDATA #IMPLIED
+ fragment   CDATA #IMPLIED
+ disable    CDATA "0"
+>
+
+
+
+<!--                       Header
+     Modify HTTP headers. If the element value is empty, the header gets
+     deleted. If its not empty, the specified header is removed/deleted.
+-->
+<!ELEMENT header (#PCDATA)>
+<!ATTLIST header
+ title   CDATA #REQUIRED
+ desc    CDATA #IMPLIED
+ name    CDATA #REQUIRED
+ disable CDATA "0"
+>
+
+
+
+<!--                       Image
+
+    Block images with a certain size.
+-->
+<!ELEMENT image (#PCDATA)>
+<!ATTLIST image
+ title   CDATA #REQUIRED
+ desc    CDATA #IMPLIED
+ width   CDATA #REQUIRED
+ height  CDATA #REQUIRED
+ type    (gif|jpg|png) "gif"
+ disable CDATA "0"
+>
+
+<!--                      No comments
+
+    Remove comments from HTML source
+-->
+<!ELEMENT nocomments EMPTY>
+<!ATTLIST nocomments
+ title    CDATA #REQUIRED
+ desc     CDATA #IMPLIED
+ disable  CDATA "0"
+>

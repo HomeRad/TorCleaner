@@ -1,0 +1,147 @@
+webcleaner (0.9) unstable; urgency=low
+
+  * rename from WebCleaner to webcleaner
+  * bumped standards to 3.5.2
+  * remove INSTALL from .deb package
+  * updated filtering rules
+  * implemented filter config update
+  * fixed parent proxy support
+  * use fast expat XML parsing for configuration; this
+    replaces PyXML
+  * basic support for non-POSIX systems for daemon.py
+  * use FOX registry for color values
+  * burn all GIFs from webcleanerconf
+  * webcleanerconf uses disablement icons in the filter tree list
+
+ -- Bastian Kleineidam <calvin@debian.org>  Thu, 29 Mar 2001 00:00:19 +0200
+
+webcleaner (0.8) unstable; urgency=low
+
+  * Require PyXML >= 0.5.2 (compatibility functions again)
+  * translation updates
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Sun, 14 Jan 2001 23:04:55 +0100
+
+webcleaner (0.7) unstable; urgency=low
+
+  * setup.py:
+    - fix for distutils debugging function dump_dirs
+    - hack for handling man pages correctly with bdist_rpm target
+  * *.py:
+    - require Python >= 2.0
+    - require PyXML >= 0.6.2
+  * webcleaner, webcleanerconf:
+    - use compatibility functions in get_dom.py
+    - i18n and german translation
+  * webcleaner:
+    - move proxy code to webfilter/proxy.py
+  * webfilter/proxy.py:
+    - ip obfuscation
+    - set SO_REUSEADDR to be able to restart immediately after
+      an interruption with ctrl-c
+    - SSL tunneling stubs, but this code is still ALPHA, dont use it.
+  * webcleaner.1, webcleanerconf.1:
+    - added man pages
+  * webfilter/Rewriter.py:
+    - a rule can match and filter more than once on the start tag
+      (use this to remove multiple scripting attributes like onmouseover,
+      onmouseout, onfocus,...)
+    - dont decode entity references, we leave that for the browser
+  * webparser/*:
+    - optimized HTML parser added (adjusted from sgmlop.c)
+  * webcleanerconf, webfilter/Rules.py:
+    - alphabetically sorted rules
+  * webcleanerconf:
+    - change tree folder name with the rule title
+    - use SEL_CHANGED to correctly detect a change of FXText
+    - basic merging stuff, but not complete yet
+  * webfilter/Rules.py:
+    - fixed off-by-one error in Rule.filter_complete()
+    - use pattern value in RewriteRule.enclosed()
+  * webfilter/daemon.py:
+    - daemon options to start,stop,restart and reload daemon processes
+  * config/README.txt, webcleanerconf, webcleanerconf.1:
+    - better help for config options
+  * MANIFEST.in:
+    - exclude WebCleanerConf.py, it is generated automatically
+  * webfilter/daemon.py:
+    - start/stop/restart/reload/status functions for proxy control
+      (only under POSIX systems!)
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Wed, 20 Dec 2000 13:40:40 +0100
+
+webcleaner (0.6) unstable; urgency=low
+
+  * added some ad filters
+  * debian/control: new field Build-Depends
+  * debian/control: Standards version 3.1.1
+  * debian/control: depend on Python 1.5.2
+  * debian/copyright: first line was too long
+  * debian/postinst: compile .py files
+  * debian/rules: new configuration target
+  * debian/prerm: new file; delete compiled .py files
+  * debian/*, setup.py, MANIFEST.in:
+    numerous small fixes: add a file here, adjust a command line
+    there...
+  * filtertest, filtertest.html: test suite added
+  * config/*: configuration with XML and zappers; see
+    http://webcleaner.sourceforge.net/zapper.html
+  * webfilter/*.py: completely new HTML parser and filter code, with
+    ideas from Tels AIFilter and his Html::Parser module, which is
+    originally a work of Gisle Aas
+  * webcleanerconf: new GUI config tool
+  * compatibility layer for the new SAX-2 and DOM-2 interfaces found in
+    PyXML >= 0.6
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Fri, 17 Nov 2000 20:11:41 +0100
+
+webcleaner (0.5) unstable; urgency=low
+
+  * config files for filters
+  * added microexchange.de to ad filters
+  * mime fix: strip parameters from content-type value
+  * better error handling
+  * parent proxy configuration parameter
+  * fixed heise news ad filtering
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Fri, 13 Oct 2000 01:35:57 +0200
+
+webcleaner (0.4) unstable; urgency=low
+
+  * exceptions were printed on sys.stderr => fixed
+  * you can replace subgroups of matches
+  * remove URL redirectors
+  * implemented REPLACE_ATTRIBUTE
+  * remove unwanted href attributes
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Sun, 17 Sep 2000 22:32:12 +0200
+
+webcleaner (0.3) unstable; urgency=low
+
+  * distribution restructuring
+  * socket.IOError -> socket.error
+  * a little more ad munching
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Wed, 13 Sep 2000 13:20:21 +0200
+
+webcleaner (0.2) unstable; urgency=low
+
+  * filter header by regular expression
+  * more advertising and CSS removing
+  * ignore false GIF version when filtering animated GIFs
+  * dont print errors on stdout
+  * fixed TagAttrMatcher regular expression
+  * implemented Blocker.py
+  * include Template.py in dist
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Fri,  8 Sep 2000 17:45:08 +0200
+
+webcleaner (0.1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Bastian Kleineidam <calvin@users.sourceforge.net>  Mon, 10 Jul 2000 11:54:11 +0200
+
+Local variables:
+mode: debian-changelog
+End:

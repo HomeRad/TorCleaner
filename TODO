@@ -1,0 +1,23 @@
+TODO
+- additionally give _all_ modules the URL info
+- more status info (look at surfboard: the WM applet is cool)
+  o uptime
+  o successful handled requests
+  o invalid requests
+  o active connections
+  o cookies
+- new filtering:
+  Stop/limit Javascript Pop-ups/alert/confirms
+    javascript:window.onload=window.onunload=window.onbeforeunload=null;window.close();
+  Stop refreshs for specific ad frames
+  Remove dynamic HTML
+  Control sounds
+  Highlight keywords
+- HTTP Proxy redesign: use asyncore.dispatcher
+  HTTP/1.1, persistent connections, connection pools
+- NT specific functions in daemon module (works now with generic functions)
+- HTTPS support
+  It's sort of an extension to HTTP - you just send the proxy the request
+  CONNECT home.netscape.com:443 HTTP/1.0\r\n\r\n
+  and after reading all the response headers and a blank line you
+  have a transparent connection

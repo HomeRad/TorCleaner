@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+. /usr/share/debconf/confmodule
+db_version 2.0
+
+package=webcleaner
+
+db_input medium $package/port || true
+db_input high $package/note || true
+db_go

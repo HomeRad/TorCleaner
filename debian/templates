@@ -1,0 +1,15 @@
+Template: webcleaner/port
+Type: string
+Default: 8080
+Description: Default proxy port
+ This is the port number the proxy will listen on for requests.
+Description-de: Standard Proxy port
+ Dies ist die Port Nummer, unter der der Proxy Anfragen akzeptiert.
+
+Template: webcleaner/note
+Type: note
+Description: Configuration of WebCleaner.
+ The "webcleanerconf" package has a nice GUI configuration tool.
+Description-de: Konfiguration von WebCleaner
+ Das "webcleanerconf" Paket besitzt ein nettes grafisches 
+ Konfigurationstool.
