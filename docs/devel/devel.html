@@ -43,21 +43,36 @@ WebCleaner.</p>
 not work correctly through the WebCleaner proxy.</p>
 <p>If you want to implement a feature you need for yourself, here are
 some suggestions that might be helpful.</p>
+<ul>
+<li><p class="first">You will need additional software packages to work with the
+<a class="reference" href="http://sourceforge.net/cvs/?group_id=7692">WebCleaner CVS</a> repository:</p>
 <ul class="simple">
-<li>When generating patches, they should be against the latest released
-version or the CVS tree. Instructions to pull the CVS version are
-at the <a class="reference" href="http://sourceforge.net/cvs/?group_id=7692">WebCleaner CVS</a> repository page.</li>
-<li>Unified diffs are much more readable, for example you can use
+<li>cvs client (evidently ;)</li>
+<li>automake &gt;= 1.8</li>
+<li>libtool</li>
+<li>python docutils &gt;= 3.3</li>
+</ul>
+<p>Instructions to pull the CVS version are at the <a class="reference" href="http://sourceforge.net/cvs/?group_id=7692">WebCleaner CVS</a>
+repository page.
+After checking out the CVS tree, run <tt class="literal"><span class="pre">./autogen.sh</span></tt> to generate
+all the Makefiles.</p>
+</li>
+<li><p class="first">When generating patches, they should be against the latest released
+version or the CVS tree.</p>
+</li>
+<li><p class="first">Unified diffs are much more readable, for example you can use
 <tt class="literal"><span class="pre">diff</span> <span class="pre">-BurN</span> <span class="pre">webcleaner</span> <span class="pre">webcleaner_patched</span> <span class="pre">&gt;</span> <span class="pre">mypatch.diff</span></tt>, or
-<tt class="literal"><span class="pre">cvs</span> <span class="pre">diff</span> <span class="pre">-u</span></tt> if you work with the CVS version of WebCleaner.</li>
-<li>A consistent programming style helps others read and understand
+<tt class="literal"><span class="pre">cvs</span> <span class="pre">diff</span> <span class="pre">-u</span></tt> if you work with the CVS version of WebCleaner.</p>
+</li>
+<li><p class="first">A consistent programming style helps others read and understand
 the code. For that Python has released a
-<a class="reference" href="http://www.python.org/peps/pep-0008.html">Style Guide for Python Code</a></li>
+<a class="reference" href="http://www.python.org/peps/pep-0008.html">Style Guide for Python Code</a>.</p>
+</li>
 </ul>
 </div>
 <hr class="footer" />
 <div class="footer">
-Generated on: 2004-07-27 22:47 UTC.
+Generated on: 2004-08-29 08:44 UTC.
 </div>
 </body>
 </html>
