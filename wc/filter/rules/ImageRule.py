@@ -23,6 +23,8 @@ from UrlRule import UrlRule
 from wc.XmlUtils import xmlquote, xmlquoteattr
 
 class ImageRule (UrlRule):
+    """if enabled, tells the Image filter to block certain images"""
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, width=0, height=0, formats=[], url=""):
         """initalize rule data"""

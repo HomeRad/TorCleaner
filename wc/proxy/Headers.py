@@ -22,6 +22,7 @@ class WcMessage (Message, object):
 
 
     def __init__ (self, fp=None, seekable=True):
+        """initialize message reading from given optional file descriptor"""
         if fp is None:
             fp = StringIO()
         super(WcMessage, self).__init__(fp, seekable=seekable)
@@ -75,6 +76,7 @@ def get_content_length (headers):
 
 
 def get_wc_client_headers (host):
+    """get default webcleaner proxy request headers"""
     headers = WcMessage()
     headers['host'] = '%s\r' % host
     headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
@@ -110,11 +112,13 @@ def set_via_header (headers):
 
 
 def remove_warning_headers (headers):
+    """remove warning headers"""
     # XXX todo
     pass
 
 
 def client_set_headers (headers):
+    """modify client request headers"""
     client_remove_hop_by_hop_headers(headers)
     remove_warning_headers(headers)
     set_via_header(headers)
@@ -149,6 +153,7 @@ def client_set_encoding_headers (headers):
 
 
 def client_remove_encoding_headers (headers):
+    """remove encoding headers of client request headers"""
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
     if headers.has_key("Content-Length"):
@@ -172,6 +177,7 @@ def client_get_max_forwards (headers):
 
 
 def server_set_headers (headers):
+    """modify server response headers"""
     server_remove_hop_by_hop_headers(headers)
     set_via_header(headers)
     server_set_date_header(headers)

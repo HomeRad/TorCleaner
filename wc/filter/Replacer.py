@@ -1,8 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """replace expressions in a data stream
-you can use this for
-- highlighting
-- removing/replacing certain strings
+   you can use this for highlighting and removing/replacing certain strings
 """
 # Copyright (C) 2000-2004  Bastian Kleineidam
 #
@@ -41,11 +39,13 @@ class Replacer (Filter):
 
 
     def filter (self, data, **attrs):
+        """feed data to replacer buffer"""
         if not attrs.has_key('replacer_buf'): return data
         return attrs['replacer_buf'].replace(data)
 
 
     def finish (self, data, **attrs):
+        """feed data to replacer buffer, flush and return it"""
         if not attrs.has_key('replacer_buf'): return data
         buf = attrs['replacer_buf']
         if data: data = buf.replace(data)
@@ -53,6 +53,7 @@ class Replacer (Filter):
 
 
     def getAttrs (self, url, headers):
+        """initialize replacer buffer object"""
         d = super(Replacer, self).getAttrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
@@ -63,12 +64,16 @@ class Replacer (Filter):
 
 
 class Buf (object):
+    """buffer data ready for replacing, with overlapping scans"""
+
     def __init__ (self, rules):
+        """store rules and initialize buffer"""
         self.rules = rules
         self.buf = ""
 
 
     def replace (self, data):
+        """fill up buffer with given data, and scan for replacements"""
         self.buf += data
         if len(self.buf) > 512:
             self._replace()
@@ -80,12 +85,14 @@ class Buf (object):
 
 
     def _replace (self):
+        """scan for replacements"""
         for rule in self.rules:
             if rule.search:
                 self.buf = rule.search_ro.sub(rule.replacement, self.buf)
 
 
     def flush (self):
+        """flush buffered data and return it"""
         self._replace()
         self.buf, data = "", self.buf
         return data

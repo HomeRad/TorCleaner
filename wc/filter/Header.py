@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-"""webcleaner module: add or delete HTTP headers"""
+"""add or delete HTTP headers"""
 # Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,8 @@ from wc.filter.Filter import Filter
 
 
 class Header (Filter):
+    """filter for adding, modifying and deleting headers"""
+
     # which filter stages this filter applies to (see filter/__init__.py)
     orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]
     # which rule types this filter applies to (see Rules.py)
@@ -34,6 +36,7 @@ class Header (Filter):
     mimelist = []
 
     def __init__ (self):
+        """initalize filter delete/add lists"""
         super(Header, self).__init__()
         self.delete = {
             FILTER_REQUEST_HEADER: [],
@@ -46,6 +49,7 @@ class Header (Filter):
 
 
     def addrule (self, rule):
+        """add given rule to filter, filling header delete/add lists"""
         super(Header, self).addrule(rule)
         # ignore empty rules
         if not rule.name:
@@ -63,6 +67,7 @@ class Header (Filter):
 
 
     def doit (self, data, **args):
+        """apply stored header rules to data, which is a WcMessage object"""
         delete = {}
         # stage is FILTER_REQUEST_HEADER or FILTER_RESPONSE_HEADER
         stage = args['filterstage']

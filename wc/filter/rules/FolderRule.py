@@ -33,6 +33,8 @@ def recalc_up_down (rules):
 
 
 class FolderRule (Rule):
+    """container for a list of rules"""
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, filename=""):
         """initialize rule data"""
@@ -77,20 +79,20 @@ class FolderRule (Rule):
         recalc_up_down(self.rules)
 
 
-    def update (self, folder, dryrun=False, log=None):
-        """update this folder with given folder data"""
-        chg = super(FolderRule, self).update(folder, dryrun=dryrun, log=log)
-        for rule in folder.rules:
-            if not rule.sid.startswith("wc"):
+    def update (self, rule, dryrun=False, log=None):
+        """update this folder with given folder rule data"""
+        chg = super(FolderRule, self).update(rule, dryrun=dryrun, log=log)
+        for child in rule.rules:
+            if not child.sid.startswith("wc"):
                 # ignore local rules
                 continue
-            oldrule = self.get_rule(rule.sid)
+            oldrule = self.get_rule(child.sid)
             if oldrule is not None:
-                chg = oldrule.update(rule, dryrun=dryrun, log=log) or chg
+                chg = oldrule.update(child, dryrun=dryrun, log=log) or chg
             else:
-                print >>log, i18n._("inserting new rule %s")%rule.tiptext()
+                print >>log, i18n._("inserting new rule %s")%child.tiptext()
                 if not dryrun:
-                    self.rules.append(rule)
+                    self.rules.append(child)
                     chg = True
         if chg:
             recalc_up_down(self.rules)

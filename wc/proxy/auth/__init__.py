@@ -17,10 +17,12 @@ from ntlm import *
 
 
 def get_auth_uri (url):
+    """return uri ready for authentication purposes"""
     return stripsite(url)[1]
 
 
 def get_header_challenges (headers, key):
+    """get parsed challenge(s) out of headers[key]"""
     auths = {}
     for auth in headers.getallmatchingheadervalues(key):
         debug(AUTH, "%s header challenge: %s", key, auth)
@@ -31,6 +33,7 @@ def get_header_challenges (headers, key):
 
 
 def parse_challenges (challenge):
+    """return a parsed challenge dict"""
     auths = {}
     while challenge:
         if challenge.startswith('Basic'):
@@ -64,6 +67,7 @@ def get_challenges (**args):
 
 
 def get_header_credentials (headers, key):
+    """Return parsed credentials out of headers[key]"""
     creds = {}
     for cred in headers.getallmatchingheadervalues(key):
         debug(AUTH, "%s header credential: %s", key, cred)
@@ -74,6 +78,7 @@ def get_header_credentials (headers, key):
 
 
 def parse_credentials (creds):
+    """return a parsed credential dict"""
     auths = {}
     while creds:
         if creds.startswith('Basic'):
@@ -108,6 +113,7 @@ def get_credentials (challenges, **attrs):
 
 
 def check_credentials (creds, **attrs):
+    """check credentials agains given attributes"""
     debug(AUTH, "check credentials %s with attrs %s", creds, attrs)
     if not creds:
         res = False
@@ -125,71 +131,3 @@ def check_credentials (creds, **attrs):
         res = False
     return res
 
-
-def _test ():
-    from wc.log import initlog
-    initlog("test/logging.conf")
-    _test_ntlm()
-
-
-def _test_ntlm ():
-    import base64, pprint
-    challenges = get_challenges(type=NTLMSSP_INIT)
-    print "challenges type 0"
-    pprint.pprint(challenges)
-    challenges = parse_challenges(", ".join(challenges))
-    print "parsed challenges type 0"
-    pprint.pprint(challenges)
-    print
-    attrs = {"username": "calvin", "type": NTLMSSP_NEGOTIATE,}
-    creds = get_credentials(challenges, **attrs)
-    print "credentials type 1"
-    pprint.pprint(creds)
-    creds = parse_credentials(creds)
-    print "parsed credentials type 1"
-    pprint.pprint(creds)
-    print
-    attrs['host'] = creds['NTLM'][0]['host']
-    attrs['domain'] = creds['NTLM'][0]['domain']
-    attrs['type'] = NTLMSSP_CHALLENGE
-    challenges = get_challenges(**attrs)
-    print "challenges type 2"
-    pprint.pprint(challenges)
-    challenges = parse_challenges(", ".join(challenges))
-    print "parsed challenges type 2"
-    pprint.pprint(challenges)
-    print
-    attrs['type'] = NTLMSSP_AUTH
-    attrs['nonce'] = challenges['NTLM'][0]['nonce']
-    attrs['password_b64'] = base64.encodestring("Beeblebrox")
-    creds = get_credentials(challenges, **attrs)
-    print "credentials type 3"
-    print repr(creds)
-    creds = parse_credentials(creds)
-    print "parsed credentials type 3"
-    pprint.pprint(creds)
-    print "Check:", check_credentials(creds, **attrs)
-
-
-def _test_digest ():
-    chals = parse_challenges("Digest realm=\"This is my digest auth\", nonce=\"i5tbP9h2RAiGbccW\", qop=\"auth\", stale=false")
-    print "chals:", chals
-    attrs = {"username": "calvin", "password_b64": "Y2Fsdmlu",
-             "uri":"/logo.gif", "method":"GET"}
-    # test credentials recorded from mozilla session
-    mozcreds = {"username":"calvin",  "realm":"This is my digest auth",
-            "nonce":"i5tbP9h2RAiGbccW", "uri":"/logo.gif",
-            "response":"73b8f33cd4ef569ec05dca533209a647",
-            "qop":"auth", "nc":"00000001", "cnonce":"5993211954416e83"}
-    creds = get_credentials(chals, **attrs)
-    print "creds:", creds
-    creds = parse_credentials(creds)
-    for key, item in creds['Digest'][0].items():
-        if key not in mozcreds:
-            print "key", key, "is not in mozcreds"
-        elif item != mozcreds[key]:
-            print "key", key, "creds=", item, "mozcreds=", mozcreds[key]
-
-
-if __name__=='__main__':
-    _test()

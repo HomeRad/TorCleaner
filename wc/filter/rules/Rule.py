@@ -25,15 +25,17 @@ from wc.XmlUtils import xmlquote, xmlquoteattr, xmlunquote
 from wc.filter.rules import register_rule
 
 
-# compile object attribute
 def compileRegex (obj, attr):
+    """regex-compile object attribute into <attr>_ro"""
     if hasattr(obj, attr) and getattr(obj, attr):
         setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
 
 class LangDict (dict):
     """accessing an entry with unknown translation returns the default
        translated entry or a random one"""
+
     def __getitem__ (self, key):
+        """get translation for key or default translation"""
         if not self.has_key(key):
             # default is english
             if 'en' in self:
@@ -47,14 +49,14 @@ class LangDict (dict):
 class Rule (object):
     """Basic rule class for filtering.
        After loading from XML (and having called compile_data), a rule has:
-        titles - mapping of {lang -> translated titles}
-        descriptions - mapping of {lang -> translated description}
-        sid - identification string (unique among all rules)
-        oid - dynamic sorting number (unique only for sorting in one level)
-        disable - flag to disable this rule
-        urlre - regular expression that matches urls applicable for this rule.
-                leave empty to apply to all urls.
-        parent - the parent folder (if any); look at FolderRule class
+       titles - mapping of {lang -> translated titles}
+       descriptions - mapping of {lang -> translated description}
+        - sid - identification string (unique among all rules)
+        - oid - dynamic sorting number (unique only for sorting in one level)
+        - disable - flag to disable this rule
+        - urlre - regular expression that matches urls applicable for this rule.
+          leave empty to apply to all urls.
+        - parent - the parent folder (if any); look at FolderRule class
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, parent=None):
@@ -74,6 +76,7 @@ class Rule (object):
 
 
     def _reset_parsed_data (self):
+        """reset parsed rule data"""
         self._data = ""
         self._lang = "en"
 
@@ -234,6 +237,7 @@ class Rule (object):
 
 
     def title_desc_toxml (self, prefix=""):
+        """return XML for rule title and description"""
         t = ['%s<title lang="%s">%s</title>' % \
              (prefix, xmlquoteattr(key), xmlquote(value)) \
              for key,value in self.titles.iteritems() if value]

@@ -49,6 +49,7 @@ LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
 
 def iswriteable (fname):
+    """return True if given file is writable"""
     if os.path.isdir(fname) or os.path.islink(fname):
         return False
     try:
@@ -74,9 +75,11 @@ import ip, i18n
 from wc.proxy.dns_lookups import init_dns_resolver
 from wc.filter.VirusFilter import init_clamav_conf
 
-config = None
+config = {}
 
 def wstartfunc (handle=None):
+    """Initalize configuration, start psyco compiling and the proxy loop.
+       This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
     initlog(os.path.join(ConfigDir, "logging.conf"))
@@ -394,11 +397,16 @@ def make_xmlparser ():
     return xml.parsers.expat.ParserCreate()
 
 
-class ParseException (Exception): pass
+class ParseException (Exception):
+    """exception thrown at parse errors"""
+    pass
 
 
 class BaseParser (object):
+    """base class for parsing xml config files"""
+
     def __init__ (self, filename, _config):
+        """initialize filename and configuration for this parser"""
         self.filename = filename
         self.config = _config
 
@@ -453,6 +461,8 @@ class BaseParser (object):
 
 
 class ZapperParser (BaseParser):
+    """parser class for *.zap filter configuration files"""
+
     def __init__ (self, filename, _config, compile_data=True):
         super(ZapperParser, self).__init__(filename, _config)
         from wc.filter.rules import FolderRule
@@ -504,6 +514,8 @@ class ZapperParser (BaseParser):
 
 
 class WConfigParser (BaseParser):
+    """parser class for webcleaner.conf configuration files"""
+
     def start_element (self, name, attrs):
         if name=='webcleaner':
             for key,val in attrs.items():

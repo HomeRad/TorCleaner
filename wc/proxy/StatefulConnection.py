@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""stateful connections"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -7,7 +8,10 @@ from Connection import Connection
 
 
 class StatefulConnection (Connection):
+    """connection class allowing the connection to be in a specified state
+    """
     def __init__ (self, state, sock=None):
+        """initialize connection with given start state"""
         super(StatefulConnection, self).__init__(sock=sock)
         self.state = state
 

@@ -28,6 +28,7 @@ supported_languages = ['en']
 default_language = None
 
 def init_gettext ():
+    """initialize this gettext i18n module"""
     global _, default_language
     try:
         _ = gettext.translation(Name, LocaleDir).gettext
@@ -49,12 +50,14 @@ def init_gettext ():
 
 
 def get_lang (lang):
+    """return lang if it is supported, or the default language"""
     if lang in supported_languages:
         return lang
     return default_language
 
 
 def get_headers_lang (headers):
+    """return preferred supported language in given HTTP headers"""
     if not headers.has_key('Accept-Language'):
         return default_language
     languages = headers['Accept-Language'].split(",")
@@ -67,6 +70,7 @@ def get_headers_lang (headers):
 
 
 def get_locale ():
+    """return current configured locale"""
     loc = locale.getdefaultlocale()[0]
     if loc is None:
         loc = 'C'
@@ -94,9 +98,13 @@ lang_transis = {
 }
 
 def lang_name (lang):
+    """return full name of given language"""
     return lang_names[lang]
 
+
 def lang_trans (lang, curlang):
+    """return translated full name of given language"""
     return lang_transis[lang][curlang]
+
 
 init_gettext()

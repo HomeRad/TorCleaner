@@ -28,10 +28,12 @@ google_domain = "http://www.google.com"
 google_try_status = (410, 503, 504, )
 
 def get_google_cache_url (url):
+    """return google cache url for given url"""
     return "%s/search?q=cache:%s" % (google_domain, urllib.quote_plus(url))
 
 
 def get_google_search_url (query):
+    """return google search url for given url"""
     return "%s/search?q=%s" % (google_domain, query)
 
 
@@ -39,11 +41,11 @@ def get_google_clean_url (url):
     """Google ignores scheme, query and anchor parts when caching urls.
        Additionally it ignores unusual filenames from urls
        (example: http://slashdot.org/index.pl is not found in cache,
-        but http.//slashdot.org/ is found)
+       but http.//slashdot.org/ is found)
        So this function does the following:
-       - remove scheme, query and anchor from url
-       - if path does not end with ".html" or "/", replace the path with
-         the root path "/"
+        - remove scheme, query and anchor from url
+        - if path does not end with ".html" or "/", replace the path with
+          the root path "/"
     """
     parts = urlparse.urlsplit(url)
     if not parts[2].endswith(".html") and not parts[2].endswith("/"):
@@ -55,6 +57,7 @@ def get_google_clean_url (url):
 
 
 def get_google_context (url, response):
+    """return google template context for given url and response data"""
     url_parts = urlparse.urlsplit(url)
     context = {
       'url': url,

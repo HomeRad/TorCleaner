@@ -85,13 +85,10 @@ def run_timers ():
     else:      return 60
 
 
-def periodic_print_status ():
-    print status_info()
-    make_timer(60, periodic_print_status)
-
-
 from Dispatcher import socket_map
 def proxy_poll (timeout=0.0):
+    """look for sockets with pending data and call the appropriate
+       connection handlers"""
     handlerCount = 0
     if socket_map:
         r = [ x for x in socket_map.itervalues() if x.readable() ]
@@ -145,6 +142,7 @@ def _slow_check (x, t, stype):
 
 
 def mainloop (handle=None):
+    """proxy main loop, handles requests forever"""
     from HttpClient import HttpClient
     from Listener import Listener
     from wc import config

@@ -1,4 +1,6 @@
 # -*- coding: iso-8859-1 -*-
+"""connection handling"""
+
 # asyncore problem -- we can't separately register for reading/writing
 # (less efficient: it calls writable(), readable() a LOT)
 # (however, for the proxy it may not be a big deal)
@@ -23,7 +25,9 @@ MAX_BUFSIZE = 1024*1024
 
 class Connection (Dispatcher):
     """add buffered input and output capabilities"""
+
     def __init__(self, sock=None):
+        """initialize buffers"""
         super(Connection, self).__init__(sock)
         self.recv_buffer = ''
         self.send_buffer = ''
@@ -36,6 +40,7 @@ class Connection (Dispatcher):
 
 
     def readable (self):
+        """return True if connection is readable"""
         return self.connected
 
 
@@ -74,10 +79,12 @@ class Connection (Dispatcher):
 
 
     def process_read (self):
+        """handle read event"""
         raise NotImplementedError("must be implemented in a subclass")
 
 
     def writable (self):
+        """return True if connection is writable"""
         return (not self.connected) or self.send_buffer
 
 
@@ -110,10 +117,12 @@ class Connection (Dispatcher):
 
 
     def handle_connect (self):
+        """empty function; per default we don't connect to anywhere"""
         pass
 
 
     def close (self):
+        """close connection"""
         debug(PROXY, '%s Connection.close', self)
         self.close_pending = False
         if self.persistent:
@@ -123,6 +132,7 @@ class Connection (Dispatcher):
 
 
     def close_close (self):
+        """close the connection socket"""
         debug(PROXY, '%s Connection.close_close', self)
         if self.connected:
             self.connected = False
@@ -130,6 +140,8 @@ class Connection (Dispatcher):
 
 
     def handle_close (self):
+        """if we are still connected, wait until all data is sent, then close
+           otherwise just close"""
         if self.connected:
             self.delayed_close()
         else:
@@ -137,6 +149,8 @@ class Connection (Dispatcher):
 
 
     def close_ready (self):
+        """return True if all data is sent and this connection can be closed
+        """
         return not self.send_buffer
 
 
@@ -153,6 +167,8 @@ class Connection (Dispatcher):
 
 
     def close_reuse (self):
+        """don't close the socket, just reset the connection state.
+           Must only be called for persistent connections"""
         assert self.persistent
         assert self.connected
         debug(PROXY, '%s Connection.close_reuse %d', self, self.sequence_number)
@@ -160,9 +176,11 @@ class Connection (Dispatcher):
 
 
     def handle_error (self, what):
+        """print error and close the connection"""
         super(Connection, self).handle_error(what)
         self.close()
 
 
     def handle_expt (self):
+        """print exception"""
         exception(PROXY, "%s exception", self)

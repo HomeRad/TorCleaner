@@ -7,7 +7,10 @@ __date__    = "$Date$"[7:-2]
 from wc import config
 
 class AllowedHttpClient (object):
+    """Allowance data for http clients"""
+
     def __init__ (self):
+        """initialize allowances"""
         self.methods = ['GET', 'HEAD', 'CONNECT', 'POST']
         self.schemes = ['http', 'https'] # 'nntps' is untested
         self.connect_ports = [443] # 563 (NNTP over SSL) is untested
@@ -52,7 +55,10 @@ class AllowedHttpClient (object):
 
 
 class AllowedSslClient (AllowedHttpClient):
+    """Allowance data for ssl clients"""
+
     def __init__ (self):
+        """initialize allowances"""
         super(AllowedSslClient, self).__init__()
         self.methods = ['GET', 'HEAD', 'POST']
         self.schemes = ['https']

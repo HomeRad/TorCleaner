@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""ssl related utility functions"""
 
 import os
 from wc import ConfigDir, AppName
@@ -12,7 +13,7 @@ def absfile (fname):
 
 
 def dumpCertificate (cert, filetype=crypto.FILETYPE_PEM):
-    ''' a helper to dump an incoming cert as a PEM '''
+    """a helper to dump an incoming cert as a PEM"""
     return crypto.dump_certificate(filetype, cert)
 
 
@@ -87,8 +88,7 @@ TYPE_RSA = crypto.TYPE_RSA
 TYPE_DSA = crypto.TYPE_DSA
 
 def createKeyPair (ktype, bits):
-    """
-    Create a public/private key pair.
+    """Create a public/private key pair.
 
     Arguments: ktype - Key type, must be one of TYPE_RSA and TYPE_DSA
                bits - Number of bits to use in the key
@@ -99,8 +99,7 @@ def createKeyPair (ktype, bits):
     return pkey
 
 def createCertRequest (pkey, digest="md5", **name):
-    """
-    Create a certificate request.
+    """Create a certificate request.
 
     Arguments: pkey   - The key to associate with the request
                digest - Digestion method to use for signing, default is md5
@@ -126,8 +125,7 @@ def createCertRequest (pkey, digest="md5", **name):
     return req
 
 def createCertificate (req, (issuerCert, issuerKey), serial, (notBefore, notAfter), digest="md5"):
-    """
-    Generate a certificate given a certificate request.
+    """Generate a certificate given a certificate request.
 
     Arguments: req        - Certificate reqeust to use
                issuerCert - The certificate of the issuer

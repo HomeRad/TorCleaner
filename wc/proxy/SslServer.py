@@ -12,7 +12,9 @@ from ssl import get_clientctx
 class SslServer (HttpServer, SslConnection):
     """Server object for SSL connections. Since this class must not have Proxy
        functionality, the header mangling is different."""
+
     def __init__ (self, ipaddr, port, client):
+        """initialize connection object and connect to remove server"""
         super(HttpServer, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
@@ -40,11 +42,13 @@ class SslServer (HttpServer, SslConnection):
 
 
     def mangle_request_headers (self):
+        """modify HTTP request headers"""
         # nothing to do
         pass
 
 
     def mangle_response_headers (self):
+        """modify HTTP response headers"""
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
             self.persistent = False
@@ -61,6 +65,7 @@ class SslServer (HttpServer, SslConnection):
 
 
     def process_recycle (self):
+        """recycle this server connection into the connection pool"""
         debug(PROXY, "%s recycling", self)
         # flush pending client data and try to reuse this connection
         self.delayed_close()

@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""parameters for update.html page"""
 # Copyright (C) 2003-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -19,5 +20,5 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import AppName, Version, config
-updatezapperurl = config['baseurl']+"zapper/"
-updateratingurl = config['baseurl']+"rating/"
+updatezapperurl = config.get('baseurl', '')+"zapper/"
+updateratingurl = config.get('baseurl', '')+"rating/"

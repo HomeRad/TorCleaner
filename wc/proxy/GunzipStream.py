@@ -1,13 +1,13 @@
 # -*- coding: iso-8859-1 -*-
-# gunzip.py, amitp@cs.stanford.edu, March 2000a
-#
-# Implements the minimal amount of work needed to ungzip an input stream
-#
-# Based on gzip.py in the standard Python distribution,
-# but exports a proxy4 encoding interface:
-#      decode(string) => return as much of the string as can be decoded
-#      flush()        => return everything else
+"""gunzip.py, amitp@cs.stanford.edu, March 2000a
 
+Implements the minimal amount of work needed to ungzip an input stream
+
+Based on gzip.py in the standard Python distribution,
+but exports a proxy4 encoding interface:
+  - decode(string) => return as much of the string as can be decoded
+  - flush()        => return everything else
+"""
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -21,10 +21,13 @@ from wc import i18n
 from wc.log import *
 
 class GunzipStream (DeflateStream):
+    """stream filter ungzipp'ing data"""
+
     # Flags in the gzip header
     FTEXT, FHCRC, FEXTRA, FNAME, FCOMMENT = 1, 2, 4, 8, 16
 
     def __init__ (self):
+        """initialize internal data buffer and flags"""
         super(GunzipStream, self).__init__()
         self.buf = ''
         self.header_seen = False
@@ -32,6 +35,7 @@ class GunzipStream (DeflateStream):
 
 
     def __repr__ (self):
+        """object representation"""
         return '<%s closed=%s buflen=%d error=%s>'%\
                ('gunzip', self.closed, len(self.buf), self.error)
 
@@ -88,7 +92,9 @@ class GunzipStream (DeflateStream):
 
 
     def decode (self, s):
-        if self.error: return s
+        """gunzip data s"""
+        if self.error:
+            return s
         if not self.header_seen:
             # Try to parse the header
             self.buf += s
@@ -108,7 +114,9 @@ class GunzipStream (DeflateStream):
 
 
     def flush (self):
-        if self.error: return self.buf
+        """flush buffer data and return it"""
+        if self.error:
+            return self.buf
         if not self.header_seen:
             # We still haven't finished parsing the header .. oh well
             return self.buf

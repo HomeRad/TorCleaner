@@ -32,6 +32,7 @@ from Allowed import AllowedHttpClient
 
 _all_methods = ['GET', 'HEAD', 'CONNECT', 'POST', 'PUT']
 def is_http_method (s):
+    """return True if s is a valid HTTP request method"""
     if len(s)<7:
         # not enough data, say yes for now
         return True
@@ -52,6 +53,7 @@ class HttpClient (StatefulConnection):
     """
 
     def __init__ (self, sock, addr):
+        """initialize connection data, test if client connection is allowed"""
         super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
         self.allow = AllowedHttpClient()
@@ -63,6 +65,7 @@ class HttpClient (StatefulConnection):
 
 
     def reset (self):
+        """reset connection state"""
         self.state = 'request'
         self.server = None
         self.request = ''
@@ -76,6 +79,7 @@ class HttpClient (StatefulConnection):
 
 
     def error (self, status, msg, txt='', auth=''):
+        """display error page"""
         self.state = 'done'
         debug(PROXY, '%s error %r (%d)', self, msg, status)
         if status in google_try_status and config['try_google']:
@@ -92,6 +96,7 @@ class HttpClient (StatefulConnection):
 
 
     def __repr__ (self):
+        """object representation"""
         extra = self.persistent and "persistent " or ""
         if self.request:
             try:
@@ -104,6 +109,7 @@ class HttpClient (StatefulConnection):
 
 
     def process_read (self):
+        """delegate read according to current connection state"""
         assert self.state!='closed'
         while True:
             if self.state=='done':
@@ -113,6 +119,7 @@ class HttpClient (StatefulConnection):
 
 
     def process_request (self):
+        """read request, split it up and filter it"""
         # One newline ends request
         i = self.recv_buffer.find('\r\n')
         if i < 0:
@@ -150,6 +157,7 @@ class HttpClient (StatefulConnection):
 
 
     def fix_request (self):
+        """try to fix requests. Return False on error, else True"""
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
@@ -197,6 +205,7 @@ class HttpClient (StatefulConnection):
 
 
     def process_headers (self):
+        """read and filter client request headers"""
         # Two newlines ends headers
         i = self.recv_buffer.find('\r\n\r\n')
         if i < 0:
@@ -290,6 +299,7 @@ class HttpClient (StatefulConnection):
 
 
     def get_persistent (self, headers, http_ver):
+        """return True if connection is persistent"""
         # look if client wants persistent connections
         if http_ver >= (1,1):
             persistent = not has_header_value(headers, 'Proxy-Connection', 'Close') and \
@@ -301,10 +311,12 @@ class HttpClient (StatefulConnection):
 
 
     def mangle_request_headers (self, headers):
+        """modify request headers"""
         client_set_headers(headers)
 
 
     def process_content (self):
+        """read and filter client request content"""
         data = self.read(self.bytes_remaining)
         if self.bytes_remaining is not None:
             # Just pass everything through to the server
@@ -364,6 +376,7 @@ class HttpClient (StatefulConnection):
 
 
     def server_request (self):
+        """issue server request through ClientServerMatchmaker object"""
         assert self.state=='receive', "%s server_request in non-receive state"%self
         # this object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
@@ -371,6 +384,7 @@ class HttpClient (StatefulConnection):
 
 
     def server_response (self, server, response, status, headers):
+        """read and filter server response data"""
         assert server.connected, "%s server was not connected"%self
         debug(PROXY, '%s server_response %r (%d)', self, response, status)
         # try google options
@@ -390,6 +404,7 @@ class HttpClient (StatefulConnection):
 
 
     def try_google (self, url, response):
+        """display page with google cache links for requests page"""
         debug(PROXY, '%s try_google %r', self, response)
         form = None
         WebConfig(self, '/google.html', form, self.protocol, self.headers,
@@ -397,12 +412,14 @@ class HttpClient (StatefulConnection):
 
 
     def server_content (self, data):
+        """The server received some content. Write it to the client."""
         assert self.server, "%s server_content had no server"%self
         if data:
             self.write(data)
 
 
     def server_close (self, server):
+        """The server closed"""
         assert self.server, "%s server_close had no server"%self
         debug(PROXY, '%s server_close', self)
         if self.connected:
@@ -413,11 +430,13 @@ class HttpClient (StatefulConnection):
 
 
     def server_abort (self):
+        """The server aborted the connection"""
         debug(PROXY, '%s server_abort', self)
         self.close()
 
 
     def handle_error (self, what):
+        """An error occured, close the connection and inform the server"""
         super(HttpClient, self).handle_error(what)
         # We should close the server connection
         if self.server:
@@ -426,7 +445,8 @@ class HttpClient (StatefulConnection):
 
 
     def handle_close (self):
-        # The client closed the connection, so cancel the server connection
+        """The client closed the connection, so cancel the server
+           connection"""
         debug(PROXY, '%s handle_close', self)
         self.send_buffer = ''
         super(HttpClient, self).handle_close()
@@ -439,6 +459,7 @@ class HttpClient (StatefulConnection):
 
 
     def handle_local (self, is_public_doc=False):
+        """handle local request by delegating it to the web configuration"""
         assert self.state=='receive'
         debug(PROXY, '%s handle_local', self)
         # reject invalid methods
@@ -473,6 +494,7 @@ class HttpClient (StatefulConnection):
 
 
     def get_form_data (self):
+        """return CGI form data from stored request"""
         form = None
         if self.method=='GET':
             # split off query string and parse it
@@ -488,12 +510,14 @@ class HttpClient (StatefulConnection):
 
 
     def close_reuse (self):
+        """Reset connection state, leave connection alive for pipelining"""
         debug(PROXY, '%s reuse', self)
         super(HttpClient, self).close_reuse()
         self.reset()
 
 
     def close_close (self):
+        """close this connection"""
         debug(PROXY, '%s close', self)
         self.state = 'closed'
         super(HttpClient, self).close_close()

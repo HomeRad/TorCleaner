@@ -1,3 +1,6 @@
+# -*- coding: iso-8859-1 -*-
+"""ssl client connection"""
+
 from wc import i18n
 from wc.log import *
 from HttpClient import HttpClient

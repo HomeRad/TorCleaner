@@ -1,4 +1,6 @@
 # -*- coding: iso-8859-1 -*-
+"""Mediator between client and server connection objects"""
+
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
@@ -20,32 +22,37 @@ class ClientServerMatchmaker (object):
     """ The Matchmaker waits until the server connection is established
     and a response was received from it. Then it matches the client
     and server connections together.
-    .
-     States:
 
-     dns:      Client has sent all of the browser information
+    States:
+
+     - dns
+       Client has sent all of the browser information
                We have asked for a DNS lookup
                We are waiting for an IP address
            =>  Either we get an IP address, we redirect, or we fail
 
-     server:   We have an IP address
+     - server
+       We have an IP address
                We are looking for a suitable server
            =>  Either we find a server from ServerPool and use it
                (go into 'response'), or we create a new server
                (go into 'connect'), or we wait a bit (stay in 'server')
 
-     connect:  We have a brand new server object
-               We are waiting for it to connect
-           =>  Either it connects and we send the request (go into
-               'response'), or it fails and we notify the client
+     - connect
+       We have a brand new server object
+       We are waiting for it to connect
+       =>  Either it connects and we send the request (go into
+      'response'), or it fails and we notify the client
 
-     response: We have sent a request to the server
-               We are waiting for it to respond
-           =>  Either it responds and we have a client/server match
-               (go into 'done'), it doesn't and we retry (go into
-               'server'), or it doesn't and we give up (go into 'done')
+      - response
+        We have sent a request to the server
+        We are waiting for it to respond
+        =>  Either it responds and we have a client/server match
+        (go into 'done'), it doesn't and we retry (go into
+        'server'), or it doesn't and we give up (go into 'done')
 
-     done:     We are done matching up the client and server
+      - done
+        We are done matching up the client and server
     """
 
     def __init__ (self, client, request, headers, content, mime=None):
@@ -85,6 +92,7 @@ class ClientServerMatchmaker (object):
 
 
     def handle_dns (self, hostname, answer):
+        """got dns answer, look for server"""
         assert self.state == 'dns'
         debug(PROXY, "%s handle dns %r", self, hostname)
         if not self.client.connected:
@@ -211,8 +219,8 @@ class ClientServerMatchmaker (object):
 
 
     def server_abort (self):
-        # The server had an error, so we need to tell the client
-        # that we couldn't connect
+        """The server had an error, so we need to tell the client
+           that we couldn't connect"""
         if self.client.connected:
             self.client.error(503, i18n._("No response from server"))
 
@@ -244,6 +252,7 @@ class ClientServerMatchmaker (object):
 
 
     def __repr__ (self):
+        """object representation"""
         if self.client:
             extra = "client"
         else:

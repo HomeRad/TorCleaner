@@ -44,4 +44,5 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
 
 
 def mail_date ():
+    """return date string formatted for a mail header"""
     return formatdate()

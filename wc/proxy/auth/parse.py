@@ -26,6 +26,8 @@ token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
                'ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`0123456789|~')
 
 def parse_token (s, tok="", relax=False, more_chars=""):
+    """Parse a token of data s, return tuple (tok, remaining data).
+       If tok is empty, parse a default token"""
     if tok:
         if not s.startswith(tok):
             warn(AUTH, "expected %r start with %r", s, tok)
@@ -42,6 +44,8 @@ def parse_token (s, tok="", relax=False, more_chars=""):
 
 
 def parse_quotedstring (s):
+    """parse a quoted string token of s
+       return tuple (quoted, remaining data)"""
     dummy, s = parse_token(s, tok='"')
     quoted = ""
     esc = False
@@ -62,9 +66,8 @@ def parse_quotedstring (s):
 
 def parse_auth (auth, data):
     """generic authentication tokenizer
-       auth - default dictionary
-       data - string data to parse
-
+     - auth - default dictionary
+     - data - string data to parse
     returns augmented auth dict and unparsed data
     """
     debug(AUTH, "parse authentication %r", data)

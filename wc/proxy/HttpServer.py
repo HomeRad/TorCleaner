@@ -53,6 +53,7 @@ def get_response_data (response, url):
 
 
 def flush_decoders (decoders):
+    """flush given decoders and return flushed data"""
     data = ""
     while decoders:
         debug(PROXY, "flush decoder %s", decoders[0])
@@ -69,7 +70,9 @@ class HttpServer (Server):
      to the client connection object, which is in most cases a HttpClient,
      but could also be a HttpProxyClient (for Javascript sources)
     """
+
     def __init__ (self, ipaddr, port, client):
+        """initialize connection data and connect to remove server"""
         super(HttpServer, self).__init__(client, 'connect')
         # default values
         self.addr = (ipaddr, port)
@@ -81,6 +84,7 @@ class HttpServer (Server):
 
 
     def reset (self):
+        """reset connection values"""
         self.hostname = ''
         self.method = None
         self.document = ''
@@ -154,6 +158,7 @@ class HttpServer (Server):
 
 
     def mangle_request_headers (self):
+        """modify request headers"""
         if config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
             self.clientheaders['Proxy-Authorization'] = "%s\r"%config['parentproxycreds']
@@ -285,6 +290,7 @@ class HttpServer (Server):
 
 
     def mangle_response_headers (self):
+        """modify response headers"""
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
@@ -302,6 +308,7 @@ class HttpServer (Server):
 
 
     def get_persistent (self, headers, http_ver):
+        """return True iff this server connection is persistent"""
         if http_ver >= (1,1):
             persistent = not has_header_value(headers, 'Connection', 'Close')
         elif http_ver >= (1,0):
@@ -395,6 +402,7 @@ class HttpServer (Server):
 
 
     def process_recycle (self):
+        """recycle the server connection and put it in the server pool"""
         debug(PROXY, "%s recycling", self)
         if self.statuscode==407 and config['parentproxy']:
             debug(PROXY, "%s need parent proxy authentication", self)
@@ -455,11 +463,13 @@ class HttpServer (Server):
 
 
     def set_unreadable (self, secs):
+        """make this connection unreadable for (secs) seconds"""
         oldstate, self.state = self.state, 'unreadable'
         make_timer(secs, lambda: self.set_readable(oldstate))
 
 
     def set_readable (self, state):
+        """make the connection readable again"""
         debug(PROXY, "%s set readable", self)
         # the client might already have closed
         if self.client:
@@ -469,6 +479,8 @@ class HttpServer (Server):
 
 
     def close_reuse (self):
+        """reset connection data, but to not close() the socket. Put this
+           connection in server pool"""
         debug(PROXY, "%s HttpServer.close_reuse", self)
         assert not self.client, "reuse with open client"
         super(HttpServer, self).close_reuse()
@@ -479,6 +491,8 @@ class HttpServer (Server):
 
 
     def close_ready (self):
+        """return True if connection has all data sent and is ready for
+           closing"""
         debug(PROXY, "%s HttpServer.close_ready", self)
         if not (self.client and self.connected):
             # client has lost interest, or we closed already
@@ -494,6 +508,8 @@ class HttpServer (Server):
 
 
     def close_close (self):
+        """close the connection socket and remove this connection from
+           the connection pool"""
         debug(PROXY, "%s HttpServer.close_close", self)
         assert not self.client, "close with open client"
         unregister = (self.connected and self.state!='closed')
@@ -506,6 +522,8 @@ class HttpServer (Server):
 
 
     def handle_error (self, what):
+        """tell the client that connection had an error, and close the
+           connection"""
         debug(PROXY, "%s HttpServer.handle_error", self)
         if self.client:
             client, self.client = self.client, None
@@ -514,12 +532,14 @@ class HttpServer (Server):
 
 
     def handle_close (self):
+        """close the connection"""
         debug(PROXY, "%s HttpServer.handle_close", self)
         self.persistent = False
         super(HttpServer, self).handle_close()
 
 
     def reconnect (self):
+        """reconnect to server"""
         debug(PROXY, "%s HttpServer.reconnect", self)
         # we still must have the client connection
         if not self.client:
@@ -536,6 +556,7 @@ class HttpServer (Server):
 
 
 def speedcheck_print_status ():
+    """print speed statistics for connections"""
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:

@@ -80,10 +80,12 @@ def expand_ip (ip):
 
 
 def is_valid_ip (ip):
+    """Return True if given ip is a valid IPv4 or IPv6 address"""
     return is_valid_ipv4(ip) or is_valid_ipv6(ip)
 
 
 def is_valid_ipv4 (ip):
+    """Return True if given ip is a valid IPv4 address"""
     if not _ipv4_re.match(ip):
         return False
     a,b,c,d = [int(i) for i in ip.split(".")]
@@ -91,6 +93,7 @@ def is_valid_ipv4 (ip):
 
 
 def is_valid_ipv6 (ip):
+    """Return True if given ip is a valid IPv6 address"""
     # XXX this is not complete: check ipv6 and ipv4 semantics too here
     if not (_ipv6_re.match(ip) or _ipv6_ipv4_re.match(ip) or
             _ipv6_abbr_re.match(ip) or _ipv6_ipv4_abbr_re.match(ip)):
@@ -99,6 +102,7 @@ def is_valid_ipv6 (ip):
 
 
 def is_valid_bitmask (mask):
+    """Return True if given mask is a valid network bitmask"""
     return 1<=mask<=32
 
 
@@ -129,6 +133,7 @@ def dq2mask (ip):
 
 
 def dq2net (ip, mask):
+    "return a tuple (network ip, network mask) for given ip and mask"
     n = dq2num(ip)
     net = n - (n & mask)
     return (net, mask)
@@ -142,6 +147,7 @@ def dq_in_net (n, net, mask):
 
 
 def host_in_set (ip, hosts, nets):
+    """return True if given ip is in host or network list"""
     if ip in hosts:
         return True
     if is_valid_ipv4(ip):
@@ -153,6 +159,8 @@ def host_in_set (ip, hosts, nets):
 
 
 def strhosts2map (strhosts):
+    """convert a string representation of hosts and networks to
+       a tuple (hosts, networks)"""
     return hosts2map([s.strip() for s in strhosts.split(",") if s])
 
 
@@ -194,6 +202,8 @@ def hosts2map (hosts):
 
 
 def map2hosts (hostmap):
+    """convert a tuple (hosts, networks) into a host/network list
+       suitable for storing in a config file"""
     ret = hostmap[0].copy()
     for net, mask in hostmap[1]:
         ret.add("%s/%d" % (num2dq(net), mask2suffix(mask)))

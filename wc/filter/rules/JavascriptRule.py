@@ -22,6 +22,8 @@ __date__    = "$Date$"[7:-2]
 from UrlRule import UrlRule
 
 class JavascriptRule (UrlRule):
+    """if enabled, this rule tells the Rewriter to filter JavaScript"""
+
     def fromFactory (self, factory):
         """rule factory"""
         return factory.fromJavascriptRule(self)

@@ -100,6 +100,7 @@ def rating_import (url, ratingdata, debug=0):
 
 
 def rating_export (rating):
+    """return string representation of given rating data"""
     return "\n".join([ "%s %s"%item for item in rating.items() ])
 
 
@@ -239,6 +240,7 @@ def rating_allow (url, rule):
 
 
 def rating_is_valid_value (data, value):
+    """return True if given value is valid according to rating data"""
     res = False
     if data.has_key("rvalues"):
         res = value in data["rvalues"]

@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-"""NTLM authentication routines"""
+"""HTTP NTLM authentication routines"""
 # Used parts form NTLM auth proxy server and NTLM.py
 
 # NTLM.pm - An implementation of NTLM. In this version, I only

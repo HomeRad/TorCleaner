@@ -29,22 +29,24 @@ from wc.log import *
 class HtmlParser (htmlsax.parser):
     """HTML parser with ability to buffer incoming and outgoing data.
        States:
-       parse - default parsing state, no background fetching
-       wait  - this parser (or a recursive one used by javascript)
-               is fetching additionally data in the background.
-               Flushing data in wait state raises a FilterWait
-               When finished for <script src="">, the buffers look like this:
+        - parse:
+         default parsing state, no background fetching
+        - wait:
+         this parser (or a recursive one used by javascript)
+         is fetching additionally data in the background.
+         Flushing data in wait state raises a FilterWait
+         When finished for <script src="">, the buffers look like this:
 
-               fed data chunks (example):
-                       [------------------][-------][----------][--...
-               outbuf: [--]
-               tagbuf:     [-----]
-               waitbuf:           [-------]
-               inbuf:                      [-------------- ...
-                                  ^-- <script src> tag
+         fed data chunks (example):
+                 [------------------][-------][----------][--...
+         outbuf: [--]
+         tagbuf:     [-----]
+         waitbuf:           [-------]
+         inbuf:                      [-------------- ...
+                            ^-- <script src> tag
 
-               When finished with script data, the buffers look like
-               XXX (to be done)
+         When finished with script data, the buffers look like
+         XXX (to be done)
 
        After a wait state, replays the waitbuf and re-feed the inbuf data.
     """

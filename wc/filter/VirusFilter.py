@@ -40,6 +40,7 @@ class VirusFilter (Filter):
 
 
     def filter (self, data, **attrs):
+        """write data to scanner and internal buffer"""
         if not attrs.has_key('scanner'): return data
         scanner = attrs['scanner']
         buf = attrs['virus_buf']
@@ -50,6 +51,9 @@ class VirusFilter (Filter):
 
 
     def finish (self, data, **attrs):
+        """write data to scanner and internal buffer.
+           If scanner is clean, return buffered data, else print error
+           message and return an empty string."""
         if not attrs.has_key('scanner'): return data
         scanner = attrs['scanner']
         buf = attrs['virus_buf']
@@ -70,6 +74,7 @@ class VirusFilter (Filter):
 
 
     def getAttrs (self, url, headers):
+        """return virus scanner and internal data buffer"""
         d = super(VirusFilter, self).getAttrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
@@ -82,6 +87,7 @@ class VirusFilter (Filter):
 
 class ClamdScanner (object):
     """virus scanner using a clamd daemon process"""
+
     def __init__ (self, clamav_conf):
         """initialize clamd daemon process sockets"""
         self.infected = []
@@ -111,23 +117,28 @@ class ClamdScanner (object):
 
 _clamav_conf = None
 def init_clamav_conf ():
+    """initialize clamav configuration"""
     global _clamav_conf
     from wc import config
     _clamav_conf = ClamavConfig(config['clamavconf'])
 
 
 def get_clamav_conf ():
+    """get the ClamavConfig instance"""
     return _clamav_conf
 
 
 def get_sockinfo (host, port=None):
+    """return socket.getaddrinfo for given host and port"""
     family, socktype = socket.AF_INET, socket.SOCK_STREAM
     return socket.getaddrinfo(host, port, family, socktype)
 
 
 class ClamavConfig (dict):
     """clamav configuration wrapper, with clamd connection method"""
+
     def __init__ (self, filename):
+        """parse clamav configuration file"""
         super(ClamavConfig, self).__init__()
         self.parseconf(filename)
         if self.get('ScannerDaemonOutputFormat'):

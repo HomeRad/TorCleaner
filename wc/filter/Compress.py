@@ -29,6 +29,7 @@ from wc.log import *
 _compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
 
 def gzip_header ():
+    """return a GZIP header string"""
     return '%s%s%s%s' % (
               '\037\213\010', # header
 	      chr(0),         # flags
@@ -38,6 +39,7 @@ def gzip_header ():
 
 
 def getCompressObject ():
+    """return attributes for Compress filter"""
     return {'compressor': zlib.compressobj(6, zlib.DEFLATED,
                                              -zlib.MAX_WBITS,
                                               zlib.DEF_MEM_LEVEL, 0),
@@ -48,6 +50,8 @@ def getCompressObject ():
 
 
 class Compress (Filter):
+    """filter class compressing its input with zlib"""
+
     # which filter stages this filter applies to (see filter/__init__.py)
     orders = [FILTER_RESPONSE_ENCODE]
     # which rule types this filter applies to (see Rules.py)

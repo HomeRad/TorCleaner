@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-"""configuration classes for all available filter modules."""
+"""Rule objects represent configured filter rules"""
 # Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,7 @@ _sids = Set()
 _sidcounter = 0
 
 def register_rule (rule):
+    """register given rule to internal rule id list"""
     if rule.sid is None:
         _rules_without_sid.append(rule)
     else:
@@ -33,26 +34,31 @@ def register_rule (rule):
 
 
 def register_sid (sid):
+    """register given sequential id in id list"""
     assert sid not in _sids, "%s is not a unique id"%sid
     _sids.add(sid)
     return sid
 
 
 def delete_registered_sids ():
+    """clear registered id list"""
     _sids.clear()
 
 
 def has_sid (sid):
+    """return True if given id is registered"""
     return sid in _sids
 
 
 def generate_sids (prefix):
+    """add missing ids with given prefix to rules"""
     for rule in _rules_without_sid:
         rule.sid = generate_unique_sid(prefix)
     del _rules_without_sid[:]
 
 
 def generate_unique_sid (prefix):
+    """generate a unique id with given prefix"""
     sid = generate_sid(prefix)
     while has_sid(sid):
         sid = generate_sid(prefix)
@@ -60,6 +66,7 @@ def generate_unique_sid (prefix):
 
 
 def generate_sid (prefix):
+    """generate an id with given prefix"""
     global _sidcounter
     _sidcounter += 1
     return "%s.%d" % (prefix, _sidcounter)

@@ -1,4 +1,6 @@
 # -*- coding: iso-8859-1 -*-
+"""routines for updating filter and rating configuration"""
+
 import os, md5, wc
 from wc.log import *
 from wc import i18n
@@ -66,11 +68,14 @@ if hasattr(httplib, 'HTTPS'):
     class HttpsWithGzipHandler (urllib2.HTTPSHandler):
         "support gzip encoding"
         def http_open (self, req):
+            """open gzip-decoded request with https handler"""
             return decode(urllib2.HTTPSHandler.http_open(self, req))
 
 
 _opener = None
 def urlopen (url, proxies=None, data=None):
+    """Return connected request object for given url.
+       All errors raise exceptions."""
     global _opener
     if proxies is None:
         proxies = urllib.getproxies()
@@ -94,6 +99,8 @@ def urlopen (url, proxies=None, data=None):
 
 # Global useful URL opener; throws IOError on error
 def open_url (url, proxies=None):
+    """return connected request object for given url.
+       Raises IOError on error"""
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
@@ -213,6 +220,7 @@ def update_filter (wconfig, dryrun=False, log=None):
 
 
 def update_ratings (wconfig, dryrun=False, log=None):
+    """update rating database from configured online rating service"""
     chg = False
     baseurl = wconfig['baseurl']+"rating/"
     url = baseurl+"rating.txt"

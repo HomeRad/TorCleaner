@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""HTTP digest authentication routines"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -136,8 +137,8 @@ def get_response_digest (challenge, **attrs):
     """Calculate the response digest.
        The get_response_digest function is taken from the following sources
        and falls under their respective licenses:
-       - Mozilla browser 1.4, netwerk/protocol/http/src/nsHttpDigestAuth.cpp
-       - Python 2.3, urllib2.py
+         - Mozilla browser 1.4, netwerk/protocol/http/src/nsHttpDigestAuth.cpp
+         - Python 2.3, urllib2.py
        You'll find both copyrights in the file debian/copyright that
        comes with the WebCleaner source distribution.
     """
@@ -215,5 +216,3 @@ def init ():
     pass
 
 from wc.proxy import make_timer
-if __name__!='__main__':
-    init()

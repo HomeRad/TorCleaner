@@ -35,17 +35,17 @@ class Filter (object):
         self.rules.append(rule)
 
 
-    def filter (self, data, **kwargs):
+    def filter (self, data, **attrs):
         args = (data,)
-        return self.doit(*args, **kwargs)
+        return self.doit(*args, **attrs)
 
 
-    def finish (self, data, **kwargs):
+    def finish (self, data, **attrs):
         args = (data,)
-        return self.doit(*args, **kwargs)
+        return self.doit(*args, **attrs)
 
 
-    def doit (self, data, **kwargs):
+    def doit (self, data, **attrs):
         return data
 
 

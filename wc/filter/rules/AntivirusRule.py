@@ -22,6 +22,8 @@ __date__    = "$Date$"[7:-2]
 from UrlRule import UrlRule
 
 class AntivirusRule (UrlRule):
+    """if enabled, tells the VirusFilter to scan web content for viruses"""
+
     def fromFactory (self, factory):
         """rule factory"""
         return factory.fromAntivirusRule(self)

@@ -1,4 +1,5 @@
-# use a modified dispatcher class, taken from python2.3/asyncore.py
+# -*- coding: iso-8859-1 -*-
+"""a modified dispatcher class, taken from python2.3/asyncore.py
 # - use new-style object inheritance
 # - get rid of __getattr__ cludge
 # - add fileno function
@@ -6,7 +7,7 @@
 # - use webcleaner logging functions
 # - handle_write_event only calls handle_write if there is pending data
 # - use a single global socket map
-
+"""
 # -*- Mode: Python -*-
 #   Id: asyncore.py,v 2.51 2000/09/07 22:29:26 rushing Exp
 #   Author: Sam Rushing <rushing@nightmare.com>
@@ -44,6 +45,8 @@ from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
 socket_map = {}
 
 def create_socket (family, socktype, sslctx=None):
+    """Create a socket with given family and type. If SSL context
+       is given an SSL socket is created"""
     if sslctx is not None:
         sock = SSL.Connection(sslctx, socket.socket(family, socktype))
     else:
@@ -57,6 +60,7 @@ def create_socket (family, socktype, sslctx=None):
 
 
 class Dispatcher (object):
+    """dispatch socket events to handler functions"""
 
     connected = False
     accepting = False

@@ -1,3 +1,6 @@
+# -*- coding: iso-8859-1 -*-
+"""ssl connection, usable for both client and server connections"""
+
 import socket, errno, sys
 from wc.log import *
 from Connection import Connection, MAX_BUFSIZE, RECV_BUFSIZE, SEND_BUFSIZE

@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""parameters for config.html page"""
 # Copyright (C) 2003-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,9 +36,9 @@ for _i in filtermodules:
     config['filterdict'][_i] = False
 for _i in config['filters']:
     config['filterdict'][_i] = True
-config['newport'] = config['port']
-config['newsslport'] = config['sslport']
-config['newsslgateway'] = config['sslgateway']
+config['newport'] = config.get('port', 8080)
+config['newsslport'] = config.get('sslport', 8443)
+config['newsslgateway'] = config.get('sslgateway', 0)
 filterenabled = ""
 filterdisabled = ""
 

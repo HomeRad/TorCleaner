@@ -50,4 +50,5 @@ for _name in dir():
         _typemap[eval(_name)] = _name
 
 def typestr (dnstype):
+    """return string representation of DNS type"""
     return _typemap.get(dnstype, repr(dnstype))

@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""pool for server connections"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -19,7 +20,9 @@ class ServerPool (object):
 
        register_callback to express an interest in a server
     """
+
     def __init__ (self):
+        """initialize pool data"""
         self.smap = {} # {(ipaddr, port) -> {server -> ('available'|'busy')}}
         self.http_versions = {} # {(ipaddr, port) -> http_version}
         self.callbacks = {} # {(ipaddr, port) -> [functions to call]}
@@ -33,6 +36,8 @@ class ServerPool (object):
 
 
     def reserve_server (self, addr):
+        """Try to return an existing server connection for given addr,
+           or return None if on connection is available at the moment"""
         for server,status in self.smap.get(addr, {}).items():
             if status[0] == 'available':
                 # Let's reuse this one
@@ -43,6 +48,7 @@ class ServerPool (object):
 
 
     def unreserve_server (self, addr, server):
+        """make given server connection available"""
         debug(PROXY, "pool unreserve %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
@@ -60,7 +66,7 @@ class ServerPool (object):
 
 
     def unregister_server (self, addr, server):
-        """Unregister the server"""
+        """Unregister the server and remove it from the pool"""
         debug(PROXY, "pool unregister %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
@@ -72,9 +78,9 @@ class ServerPool (object):
 
 
     def register_callback (self, addr, callback):
-        # Callbacks are called whenever a server may be available
-        # for (addr). It's the callback's responsibility to re-register
-        # if someone else has stolen the server already.
+        """Callbacks are called whenever a server may be available
+           for (addr). It's the callback's responsibility to re-register
+           if someone else has stolen the server already."""
         self.callbacks.setdefault(addr, []).append(callback)
 
 
@@ -88,12 +94,15 @@ class ServerPool (object):
         else:
             return 40
 
+
     def set_http_version (self, addr, http_version):
+        """store http version for a given server"""
         self.http_versions[addr] = http_version
         self.invoke_callbacks(addr)
 
 
     def expire_servers (self):
+        """expire server connection that have been unused for too long"""
         debug(PROXY, "expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
@@ -111,7 +120,7 @@ class ServerPool (object):
 
 
     def invoke_callbacks (self, addr):
-        # Notify whoever wants to know about a server becoming available
+        """Notify whoever wants to know about a server becoming available"""
         if addr in self.callbacks:
             callbacks = self.callbacks[addr]
             del self.callbacks[addr] 

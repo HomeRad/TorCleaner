@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""internal http client"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -22,6 +23,7 @@ class HttpProxyClient (object):
        On completion the handler function is called.
        Buffered data is None on error, else the content string.
     """
+
     def __init__ (self, handler, args):
         """args is a tuple (url, JS version)"""
         assert callable(handler)
@@ -46,6 +48,7 @@ class HttpProxyClient (object):
 
 
     def __repr__ (self):
+        """object representation"""
         if self.handler is None:
             handler = "None"
         else:
@@ -56,6 +59,7 @@ class HttpProxyClient (object):
 
 
     def finish (self):
+        """tell handler all data is written and remove handler"""
         debug(PROXY, '%s finish', self)
         if self.handler:
             self.handler(None, *self.args)
@@ -63,16 +67,20 @@ class HttpProxyClient (object):
 
 
     def error (self, status, msg, txt=''):
+        """on error the client finishes"""
         error(PROXY, '%s error %s %s %s', self, status, msg, txt)
         self.finish()
 
 
     def write (self, data):
+        """give data to handler"""
         if self.handler:
             self.handler(data, *self.args)
 
 
     def server_response (self, server, response, status, headers):
+        """Follow redirects, and finish on errors. For HTTP status 2xx
+           continue."""
         self.server = server
         assert self.server.connected
         debug(PROXY, '%s server_response %r', self, response)
@@ -86,6 +94,8 @@ class HttpProxyClient (object):
 
 
     def server_content (self, data):
+        """delegate server content to handler if it is not from a redirect
+           response"""
         assert self.server
         debug(PROXY, '%s server_content with %d bytes', self, len(data))
         if data and not self.isredirect:
@@ -93,6 +103,7 @@ class HttpProxyClient (object):
 
 
     def server_close (self, server):
+        """The server has closed. Either redirect to new url, or finish"""
         assert self.server
         debug(PROXY, '%s server_close', self)
         if self.isredirect:
@@ -102,16 +113,19 @@ class HttpProxyClient (object):
 
 
     def server_abort (self):
+        """The server aborted, so finish"""
         debug(PROXY, '%s server_abort', self)
         self.finish()
 
 
     def handle_local (self):
+        """Local data is not allowed here, finish."""
         error(PROXY, "%s handle_local %s", self, self.args)
         self.finish()
 
 
     def redirect (self):
+        """handle redirection to new url"""
         assert self.server
         # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
         # make a new ClientServerMatchmaker

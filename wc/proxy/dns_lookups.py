@@ -1,6 +1,8 @@
 # -*- coding: iso-8859-1 -*-
-# For a high level overview of DNS, see
-# http://www.rad.com/networks/1998/dns/main.html
+"""dns lookup routines
+For a high level overview of DNS, see
+http://www.rad.com/networks/1998/dns/main.html
+"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -16,10 +18,12 @@ from wc.proxy import create_inet_socket
 ###################### configuration ########################
 
 class DnsConfig (object):
+    """DNS configuration storage"""
     pass
 
 
 def init_dns_resolver ():
+    """initialize this module, filling the DNS config"""
     DnsConfig.nameservers = []
     DnsConfig.search_domains = []
     DnsConfig.search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
@@ -59,6 +63,7 @@ def init_dns_resolver_posix ():
 
 
 def init_dns_resolver_nt ():
+    """get DNS config from Windows registry settings"""
     import winreg
     key = None
     try:
@@ -125,20 +130,30 @@ class DnsResponse (object):
         ('found', [ipaddrs])
         ('error', why-str)
         ('redirect', new-hostname)"""
+
     def __init__ (self, kind, data):
+        """initialize response data"""
         self.kind = kind
         self.data = data
 
+
     def __repr__ (self):
+        """object representation"""
         return "DnsResponse(%s, %s)" % (self.kind, self.data)
 
+
     def isError (self):
+        """return True if dns response is an error"""
         return self.kind == 'error'
 
+
     def isFound (self):
+        """return True if dns response is found valid"""
         return self.kind == 'found'
 
+
     def isRedirect (self):
+        """return True if dns response is a redirection"""
         return self.kind == 'redirect'
 
 
@@ -146,6 +161,7 @@ has_whitespace = re.compile(r'\s').search
 
 class DnsExpandHostname (object):
     "Try looking up a hostname and its expansions"
+
     # This routine calls DnsCache to do the individual lookups
     def __init__ (self, hostname, callback):
         self.erroranswer = None # set if one answer failed
@@ -181,6 +197,7 @@ class DnsExpandHostname (object):
         if self.delay < 1: # (it's likely to be needed)
             make_timer(self.delay, self.handle_issue_request)
 
+
     def handle_issue_request (self):
         debug(DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
@@ -194,6 +211,7 @@ class DnsExpandHostname (object):
             # being executed at once.  To avoid that, we could check
             # if there's already a timer for this object ..
             if self.requests: make_timer(self.delay, self.handle_issue_request)
+
 
     def handle_dns (self, hostname, answer):
         debug(DNS, 'handle_dns %r %s', hostname, answer)
@@ -245,8 +263,10 @@ class DnsCache (object):
         self.well_known_hosts = {} # hostname to 1, if it's from /etc/hosts
         self.read_localhosts()
 
+
     def __repr__ (self):
         return pformat(self.cache)
+
 
     def read_localhosts (self):
         "Fill DnsCache with /etc/hosts information"
@@ -278,6 +298,7 @@ class DnsCache (object):
                 self.well_known_hosts[name] = 1
                 self.cache[name] = DnsResponse('found', [fields[0]])
                 self.expires[name] = sys.maxint
+
 
     def lookup (self, hostname, callback):
         debug(DNS, 'dnscache lookup %r', hostname)
@@ -319,6 +340,7 @@ class DnsCache (object):
             self.pending[hostname] = [callback]
             DnsLookupHostname(hostname, self.handle_dns)
 
+
     def handle_dns (self, hostname, answer):
         assert self.pending.has_key(hostname)
         callbacks = self.pending[hostname]
@@ -345,6 +367,7 @@ class DnsLookupHostname (object):
     # haven't gotten any responses.  For each successive nameserver we
     # set the timeout higher, so that the first nameserver has to try
     # harder.
+
     def __init__ (self, hostname, callback):
         self.hostname = hostname
         self.callback = callback
@@ -352,6 +375,7 @@ class DnsLookupHostname (object):
         self.requests = []
         self.outstanding_requests = 0
         self.issue_request()
+
 
     def cancel (self):
         if self.callback:
@@ -365,9 +389,10 @@ class DnsLookupHostname (object):
                 assert r.callback is None
             assert self.outstanding_requests == 0
 
-    def issue_request (self):
-        if not self.callback: return
 
+    def issue_request (self):
+        if not self.callback:
+            return
         if not self.nameservers and not self.outstanding_requests:
             self.callback(self.hostname, DnsResponse('error', 'no nameserver found host'))
             self.callback = None
@@ -385,9 +410,11 @@ class DnsLookupHostname (object):
                 # Let's create another one soon
                 make_timer(1, self.issue_request)
 
+
     def handle_dns (self, hostname, answer):
         self.outstanding_requests -= 1
-        if not self.callback: return
+        if not self.callback:
+            return
         if not answer.isError():
             self.callback(hostname, answer)
             self.cancel()
@@ -625,8 +652,3 @@ class DnsLookupConnection (Connection):
 from wc.proxy import make_timer
 dnscache = DnsCache()
 
-
-if __name__=='__main__':
-    init_dns_resolver()
-    print "Nameservers:", DnsConfig.nameservers
-    print "Search domains:", DnsConfig.search_domains

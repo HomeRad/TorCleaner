@@ -29,7 +29,9 @@ def i16 (c):
     return ord(c[0]) | (ord(c[1])<<8)
 
 
-class RewindException (Exception): pass
+class RewindException (Exception):
+    """Exception saying that more image data is needed for parsing"""
+    pass
 
 
 class GifImage (Filter):
@@ -44,6 +46,7 @@ class GifImage (Filter):
     mimelist = [compileMime(x) for x in ['image/gif']]
 
     def filter (self, data, **attrs):
+        """feed data to GIF image parser, return processed data"""
         if not attrs.has_key('gifparser'): return data
         gifparser = attrs['gifparser']
         gifparser.addData(data)
@@ -55,19 +58,25 @@ class GifImage (Filter):
 
 
     def finish (self, data, **attrs):
+        """feed data to GIF image parser, flush it and return processed
+           data"""
         if not attrs.has_key('gifparser'): return data
-        if data: data = self.filter(data, **attrs)
+        if data:
+            data = self.filter(data, **attrs)
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
 
 
     def getAttrs (self, url, headers):
+        """add GIF parser to attributes"""
         d = super(GifImage, self).getAttrs(url, headers)
         d['gifparser'] = GifParser()
         return d
 
 
+# little 1x1 transparent GIF
 _TINY_GIF = """R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="""
+
 
 class GifParser (object):
     """Here we have a parser (and filter) for GIF images.
@@ -90,7 +99,17 @@ class GifParser (object):
     DATA = 4
     NOFILTER = 5
 
+    def __init__ (self, sizes=[]):
+        """initialize GIF parser buffers and flags"""
+        self.state = GifParser.INIT
+        self.data = self.consumed = self.output = ''
+        self.finish = False
+        self.removing = False
+        self.sizes = sizes
+
+
     def strState (self):
+        """return string representation of parser state"""
         if self.state==GifParser.SKIP:     return 'SKIP'
         if self.state==GifParser.INIT:     return 'INIT'
         if self.state==GifParser.FRAME:    return 'FRAME'
@@ -100,26 +119,23 @@ class GifParser (object):
         return 'UNKNOWN'
 
 
-    def __init__ (self, sizes=[]):
-        self.state = GifParser.INIT
-        self.data = self.consumed = self.output = ''
-        self.finish = False
-        self.removing = False
-        self.sizes = sizes
-
-
     def addData (self, data):
+        """add image data to internal parse buffer"""
         self.data += data
 
 
     def flush (self):
+        """flush already parsed image data to output buffer"""
         if self.consumed:
             self.output += self.consumed
             self.consumed = ''
 
 
     def read (self, i):
-        if i<=0: return
+        """Read i data from internal buffer. Raise RewindException if
+           more data is needed"""
+        if i<=0:
+            return
         if len(self.data)<i:
             # rewind and stop filtering; wait for next data chunk
             debug(FILTER, 'GIF rewinding')
@@ -132,10 +148,12 @@ class GifParser (object):
 
 
     def remove (self, i):
+        """remove i bytes from already parsed image data"""
         self.consumed = self.consumed[:-i]
 
 
     def getOutput (self):
+        """get output buffer data and flush it"""
         if self.output:
             res = self.output
             self.output = ''

@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 """Fast HTML parser module written in C"""
+
 # Copyright (C) 2000-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,47 +26,58 @@ class SortedDict (dict):
     """a dictionary whose listing functions for keys and values preserve
        the order in which elements were added
     """
+
     def __init__ (self):
+        """initialize sorted key list"""
         # sorted list of keys
         self._keys = []
 
 
     def __setitem__ (self, key, value):
+        """add key,value to dict, append key to sorted list"""
         if not self.has_key(key):
             self._keys.append(key)
         super(SortedDict, self).__setitem__(key, value)
 
 
     def __delitem__ (self, key):
+        """remove key from dict"""
         self._keys.remove(key)
         super(SortedDict, self).__delitem__(key)
 
 
     def values (self):
+        """return sorted list of values"""
         return [self[k] for k in self._keys]
 
 
     def items (self):
+        """return sorted list of items"""
         return [(k, self[k]) for k in self._keys]
 
 
     def keys (self):
+        """return sorted list of keys"""
         return self._keys[:]
 
 
     def itervalues (self):
+        """return iterator over sorted values"""
         return iter(self.values())
 
 
     def iteritems (self):
+        """return iterator over sorted items"""
         return iter(self.items())
 
 
     def iterkeys (self):
+        """return iterator over sorted keys"""
         return iter(self.keys())
 
 
     def clear (self):
+        """remove all dict entires"""
         self._keys = []
         super(SortedDict, self).clear()
 
@@ -106,6 +118,7 @@ def applyTable (table, s):
 
 
 def resolve_html_entities (s):
+    """resolve html entites in s and return result"""
     return applyTable(UnHtmlTable, s)
 
 

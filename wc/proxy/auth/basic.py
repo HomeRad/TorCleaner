@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-"""support for Basic HTTP proxy authentication"""
+"""HTTP basic authentication routines"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -9,7 +9,7 @@ __all__ = ["get_basic_challenge", "parse_basic_challenge",
            "check_basic_credentials"]
 import base64
 from wc.log import *
-# the default realm
+# wc_realm is the default realm
 from wc.proxy.auth import wc_realm
 from parse import *
 
@@ -19,11 +19,13 @@ def get_basic_challenge ():
 
 
 def parse_basic_challenge (challenge):
+    """parse basic authentication challenge, return dict with
+       challenge data"""
     return parse_auth({}, challenge)
 
 
 def get_basic_credentials (challenge, **attrs):
-    """return basic credentials for given challenge"""
+    """return basic credential string for given challenge"""
     password = base64.decodestring(attrs['password_b64'])
     username = attrs['username']
     auth = base64.encodestring("%s:%s"%(username, password)).strip()
@@ -31,6 +33,7 @@ def get_basic_credentials (challenge, **attrs):
 
 
 def parse_basic_credentials (credentials):
+    """parse basic authentication credentials, return dict with credentials"""
     auth, credentials = parse_token(credentials, more_chars="=")
     auth = base64.decodestring(auth)
     if ':' not in auth:

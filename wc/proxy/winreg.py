@@ -20,7 +20,11 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 # import all from _winreg
-from _winreg import *
+try:
+    from _winreg import *
+except ImportError:
+    # assume a non-windows platform
+    pass
 from types import StringType
 
 class key_handle (object):
@@ -93,14 +97,14 @@ class key_handle (object):
 #          License analog to the current Python license
 
 def binipdisplay (s):
-    "convert a binary array of ip adresses to a python list"
-    if len(s)%4!= 0:
+    """convert a binary array of ip adresses to a python list"""
+    if len(s)%4 != 0:
         raise EnvironmentError # well ...
-    ol=[]
+    ol = []
     for i in range(len(s)/4):
-        s1=s[:4]
-        s=s[4:]
-        ip=[]
+        s1 = s[:4]
+        s = s[4:]
+        ip = []
         for j in s1:
             ip.append(str(ord(j)))
         ol.append('.'.join(ip))
@@ -111,9 +115,3 @@ def stringdisplay (s):
     return s.split(",")
 
 #################################################################
-
-def test ():
-    pass
-
-if __name__=="__main__":
-    test()

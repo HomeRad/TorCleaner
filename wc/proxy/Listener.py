@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""TCP socket listener"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -28,6 +29,7 @@ class Listener (Dispatcher):
 
 
     def __repr__ (self):
+        """return listener class and address"""
         return '<Listener:%s>' % self.addr[1]
 
 

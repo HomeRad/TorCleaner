@@ -93,6 +93,7 @@ def get_log_file (fname, trydir=os.getcwd()):
 
 
 def _get_log_file_posix (fname, trydir):
+    """get full path name to writeable logfile on posix systems"""
     logfile = os.path.join('/', 'var', 'log', 'webcleaner', fname)
     if not iswriteable(logfile):
         logfile = os.path.join(trydir, fname)
@@ -104,6 +105,7 @@ def _get_log_file_posix (fname, trydir):
 
 
 def _get_log_file_nt (fname, trydir):
+    """get full path name to writeable logfile on Windows systems"""
     logfile = os.path.join(ConfigDir, fname)
     if not iswriteable(logfile):
         logfile = os.path.join(os.environ.get("TEMP"), fname)
@@ -120,11 +122,13 @@ def set_format (handler):
 #import gc
 #gc.set_debug(gc.DEBUG_LEAK)
 def debug (log, msg, *args):
+    """log a debug message"""
     logging.getLogger(log).debug(msg, *args)
     #logging.getLogger(log).debug("Mem: %d kB"%usedmemory())
 
 
 def usedmemory ():
+    """return string with used memory"""
     pid = os.getpid()
     fp = file('/proc/%d/status'%pid)
     val = 0
@@ -138,20 +142,25 @@ def usedmemory ():
 
 
 def info (log, msg, *args):
+    """log in informational message"""
     logging.getLogger(log).info(msg, *args)
 
 
 def warn (log, msg, *args):
+    """log a warning"""
     logging.getLogger(log).warn(msg, *args)
 
 
 def error (log, msg, *args):
+    """log an error"""
     logging.getLogger(log).error(msg, *args)
 
 
 def critical (log, msg, *args):
+    """log a critical error"""
     logging.getLogger(log).critical(msg, *args)
 
 
 def exception (log, msg, *args):
+    """log an exception"""
     logging.getLogger(log).exception(msg, *args)

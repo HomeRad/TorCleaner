@@ -26,26 +26,35 @@ from wc import ConfigDir, config
 from wc.log import *
 from wc.url import DOMAIN, spliturl
 
-# regular expression for image filenames
 def is_flash_mime (mime):
+    """return True if mime is Shockwave Flash"""
     return mime.startswith('application/x-shockwave-flash')
 
+
 def is_image_mime (mime):
+    """return True if mime is an image"""
     return mime.startswith('image/')
 
+
 def is_javascript_mime (mime):
+    """return True if mime is JavaScript"""
     return mime.startswith('application/x-javascript') or \
            mime.startswith('text/javascript')
 
+
 def is_html_mime (mime):
+    """return True if mime is HTML"""
     return mime.startswith('text/html')
 
 
+# regular expression for image urls
 is_image_url = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
 is_flash_url = re.compile(r'(?i)\.(swf|flash)$').search
 is_javascript_url = re.compile(r'(?i)\.js$').search
 
+
 def strblock (block):
+    """return string representation of block pattern(s)"""
     patterns = [ repr(b and b.pattern or "") for b in block ]
     return "[%s]" % ", ".join(patterns)
 
@@ -88,19 +97,23 @@ class Blocker (Filter):
 
 
     def addrule (self, rule):
+        """add rule data to blocker, delegated to add_* methods"""
         super(Blocker, self).addrule(rule)
         getattr(self, "add_"+rule.get_name())(rule)
 
 
     def add_allow (self, rule):
+        """add AllowRule data"""
         self.allow.append((re.compile(rule.url), rule.sid))
 
 
     def add_block (self, rule):
+        """add BlockRule data"""
         self.block.append((re.compile(rule.url), rule.replacement, rule.sid))
 
 
     def add_blockdomains (self, rule):
+        """add BlockdomainsRule data"""
         for line in self.get_file_data(rule.filename):
             line = line.strip()
             if not line or line[0]=='#':
@@ -109,6 +122,7 @@ class Blocker (Filter):
 
 
     def add_allowdomains (self, rule):
+        """add AllowdomainsRule data"""
         for line in self.get_file_data(rule.filename):
             line = line.strip()
             if not line or line[0]=='#':
@@ -117,6 +131,7 @@ class Blocker (Filter):
 
 
     def add_blockurls (self, rule):
+        """add BlockurlsRule data"""
         for line in self.get_file_data(rule.filename):
             line = line.strip()
             if not line or line[0]=='#':
@@ -125,6 +140,7 @@ class Blocker (Filter):
 
 
     def add_allowurls (self, rule):
+        """add AllowurlsRule data"""
         for line in self.get_file_data(rule.filename):
             line = line.strip()
             if not line or line[0]=='#':
@@ -133,6 +149,7 @@ class Blocker (Filter):
 
 
     def get_file_data (self, filename):
+        """return plain file object, possible gunzipping the file"""
         debug(FILTER, "reading %s", filename)
         filename = os.path.join(ConfigDir, filename)
         if filename.endswith(".gz"):
@@ -142,13 +159,13 @@ class Blocker (Filter):
         return f
 
 
-    def doit (self, data, **args):
+    def doit (self, data, **attrs):
         """investigate request data for a block.
            data is the complete request (with quoted url),
            we get the unquoted url from args
         """
-        url = args['url']
-        mime = args['mime']
+        url = attrs['url']
+        mime = attrs['mime']
         parts = spliturl(url)
         debug(FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
@@ -163,18 +180,18 @@ class Blocker (Filter):
                 doc = blocked
             elif is_image_mime(mime) or is_image_url(url):
                 doc = self.block_image
-                args['mime'] = 'image/png'
+                attrs['mime'] = 'image/png'
             elif is_flash_mime(mime) or is_flash_url(url):
                 doc = self.block_flash
-                args['mime'] = 'application/x-shockwave-flash'
+                attrs['mime'] = 'application/x-shockwave-flash'
             elif is_javascript_mime(mime) or is_javascript_url(url):
                 doc = self.block_js
-                args['mime'] = 'application/x-javascript'
+                attrs['mime'] = 'application/x-javascript'
             else:
                 if not is_html_mime(mime):
                     warn(PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
-                args['mime'] = 'text/html'
+                attrs['mime'] = 'text/html'
                 rule = [r for r in self.rules if r.sid==sid][0]
                 query = urllib.urlencode({"rule": rule.tiptext(),
                                           "selfolder": "%d"%rule.parent.oid,
@@ -192,6 +209,7 @@ class Blocker (Filter):
 
 
     def blocked (self, url, parts):
+        """return True if url is blocked. Parts are the splitted url parts."""
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
             if blockdomain == parts[DOMAIN]:
@@ -214,6 +232,7 @@ class Blocker (Filter):
 
 
     def allowed (self, url, parts):
+        """return True if url is allowed. Parts are the splitted url parts."""
         for allowdomain, sid in self.allowed_domains:
             if allowdomain == parts[DOMAIN]:
                 return True, sid

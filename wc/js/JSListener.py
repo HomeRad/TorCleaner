@@ -1,4 +1,6 @@
 # -*- coding: iso-8859-1 -*-
+"""JavaScript engine listener"""
+
 #  BFilter - a smart ad-filtering web proxy
 #  Copyright (C) 2002-2003  Joseph Artsimovich <joseph_a@mail.ru>
 #
@@ -32,6 +34,6 @@ class JSListener (object):
         """handler for popup windows"""
         raise NotImplementedError("abstract method jsProcessPopup")
 
-    def jsProcessError (self, err):
+    def jsProcessError (self, msg):
         """handler for syntax errors"""
         raise NotImplementedError("abstract method jsProcessError")

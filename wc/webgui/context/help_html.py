@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""parameters for help.html page"""
 # Copyright (C) 2003-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -20,4 +21,4 @@ __date__    = "$Date$"[7:-2]
 
 from wc import AppName, Version, config
 
-port = config['port']
+port = config.get('port', 8080)

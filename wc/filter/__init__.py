@@ -69,6 +69,7 @@ class FilterRating (FilterException):
 
 
 def printFilterOrder (i):
+    """return string representation of filter order i"""
     if i==FILTER_REQUEST:
         s = "Request"
     elif i==FILTER_REQUEST_HEADER:
@@ -94,12 +95,13 @@ def printFilterOrder (i):
     return s
 
 
-# compile mimelist entry
 def compileMime (mime):
+    """compile mimelist entry to regex object and return it"""
     return re.compile("^(?i)%s(;.+)?$"%mime)
 
 
 def GetRuleFromName (name):
+    """return new rule instance for given rule name"""
     name = '%sRule' % name.capitalize()
     return getattr(wc.filter.rules, name)()
 

@@ -29,8 +29,11 @@ from wc.proxy.Headers import WcMessage
 
 
 class WebConfig (object):
+    """class for web configuration templates"""
+
     def __init__ (self, client, url, form, protocol, clientheaders,
                   status=200, msg=i18n._('Ok'), localcontext=None, auth=''):
+        """load a web configuration template and return response"""
         debug(GUI, "WebConfig %s %s", url, form)
         self.client = client
         # we pretend to be the server
@@ -92,6 +95,7 @@ class WebConfig (object):
 
 
     def put_response (self, data, protocol, status, msg, headers):
+        """write response to client"""
         response = "%s %d %s"%(protocol, status, msg)
         self.client.server_response(self, response, status, headers)
         self.client.server_content(data)
@@ -99,6 +103,7 @@ class WebConfig (object):
 
 
     def client_abort (self):
+        """client has aborted the connection"""
         self.client = None
 
 
@@ -119,6 +124,7 @@ def expand_template (fp, context, translator=None):
 
 safe_path = re.compile(r"[-a-zA-Z0-9_.]+").match
 def is_safe_path (path):
+    """return True iff path is safe for opening"""
     return safe_path(path) and ".." not in path
 
 
@@ -202,6 +208,7 @@ def get_context (dirs, form, localcontext, lang):
 
 
 def add_default_context (context, filename, lang):
+    """add context variables used by all templates"""
     # rule macros
     path, dirs = _get_template_path("macros/rules.html")
     rulemacros = simpleTAL.compileHTMLTemplate(file(path, 'r'))

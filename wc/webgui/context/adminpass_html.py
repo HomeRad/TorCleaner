@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+"""parameters for adminpass.html page"""
 # Copyright (C) 2003-2004  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -26,6 +27,6 @@ import string as _string
 ConfigFile = _join(ConfigDir, "webcleaner.conf")
 _chars = _string.letters + _string.digits
 adminpass = ''.join([_choice(_chars) for i in range(8)])
-adminuser = config['adminuser']
+adminuser = config.get('adminuser', 'admin')
 adminpass_b64 = adminpass.encode("base64").strip()
 

@@ -2,12 +2,12 @@
 """
 $Id$
 
- This file is part of the pydns project.
- Homepage: http://pydns.sourceforge.net
+This file is part of the pydns project.
+Homepage: http://pydns.sourceforge.net
 
- This code is covered by the standard Python License.
+This code is covered by the standard Python License.
 
- CLASS values (section 3.2.4)
+CLASS values (section 3.2.4)
 """
 
 
@@ -31,5 +31,6 @@ for _name in dir():
         _classmap[eval(_name)] = _name
 
 def classstr (klass):
+    """return string representation of DNS class"""
     return _classmap.get(klass, repr(klass))
 

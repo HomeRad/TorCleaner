@@ -21,30 +21,43 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import win32service
-import win32serviceutil
-import win32event
+try:
+    import win32service
+    import win32serviceutil
+    import win32event
+    service_klass = win32serviceutil.ServiceFramework
+except ImportError:
+    # assume non-windows platform
+    service_klass = object
 from wc.log import *
 from wc import i18n, wstartfunc, AppName
 
 
-class ProxyService (win32serviceutil.ServiceFramework):
+class ProxyService (service_klass):
+    """NT service class for the WebCleaner proxy"""
+
     _svc_name_ = AppName
     _svc_display_name_ = i18n._("%s Proxy") % AppName
+
     def __init__(self, args):
+        """initialize service framework and set stop handler"""
         win32serviceutil.ServiceFramework.__init__(self, args)
         # Create an event which we will use to wait on.
         # The "service stop" request will set this event.
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
 
+
     def SvcStop(self):
+        """stop this service"""
         # Before we do anything, tell the SCM we are starting the
         # stop process.
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         # And set my event.
         win32event.SetEvent(self.hWaitStop)
 
+
     def SvcDoRun(self):
+        """start this service"""
         import servicemanager
         # Log a "started" message to the event log.
         servicemanager.LogMsg(
@@ -89,5 +102,6 @@ def _service_status (status):
 
 
 def status ():
+    """return message with current status of WebCleaner service"""
     return _service_status(win32serviceutil.QueryServiceStatus(AppName))
 

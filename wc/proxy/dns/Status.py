@@ -37,5 +37,6 @@ for _name in dir():
         _statusmap[eval(_name)] = _name
 
 def statusstr (status):
+    """return string representation of DNS status"""
     return _statusmap.get(status, repr(status))
 

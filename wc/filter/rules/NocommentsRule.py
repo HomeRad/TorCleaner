@@ -22,6 +22,8 @@ __date__    = "$Date$"[7:-2]
 from UrlRule import UrlRule
 
 class NocommentsRule (UrlRule):
+    """if enabled, this rule tells the Rewriter to remove HTML comments"""
+
     def fromFactory (self, factory):
         """rule factory"""
         return factory.fromNocommentsRule(self)

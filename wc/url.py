@@ -64,6 +64,7 @@ def is_valid_js_url (urlstr):
 
 
 def safe_host_pattern (host):
+    """return regular expression pattern with given host for url testing"""
     return "(?i)%s://%s%s(#%s)?" % \
      (_safe_scheme_pattern, host, _safe_path_pattern, _safe_fragment_pattern)
 
@@ -114,12 +115,15 @@ def document_quote (document):
 
 
 def match_url (url, domainlist):
+    """return True if host part of url matches an entry in given domain
+       list"""
     if not url:
         return False
     return match_host(spliturl(url)[1], domainlist)
 
 
 def match_host (host, domainlist):
+    """return True if host matches an entry in given domain list"""
     if not host:
         return False
     for domain in domainlist:

@@ -38,18 +38,21 @@ class ImageReducer (Filter):
     mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
     def __init__ (self, apply_to_mimelist):
+        """initialize image reducer flags"""
         super(ImageReducer, self).__init__(apply_to_mimelist)
         # minimal number of bytes before we start reducing
         self.minimal_size_bytes = 5120
 
 
     def filter (self, data, **attrs):
+        """feed image data to buffer"""
         if not attrs.has_key('imgreducer_buf'): return data
         attrs['imgreducer_buf'].write(data)
         return ''
 
 
     def finish (self, data, **attrs):
+        """feed image data to buffer, then convert it and return result"""
         if not attrs.has_key('imgreducer_buf'): return data
         p = attrs['imgreducer_buf']
         if data: p.write(data)
@@ -68,6 +71,7 @@ class ImageReducer (Filter):
 
 
     def getAttrs (self, url, headers):
+        """initialize image reducer buffer and flags"""
         # don't filter tiny images
         d = super(ImageReducer, self).getAttrs(url, headers)
         if headers.get('Content-Length', 0) < self.minimal_size_bytes:
@@ -82,4 +86,5 @@ class ImageReducer (Filter):
 
 
 def convert (ctype):
+    """return True if an image has to be convert()ed before saving"""
     return ctype in ('image/gif',)

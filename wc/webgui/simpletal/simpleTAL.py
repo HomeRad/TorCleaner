@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """ simpleTAL Interpreter
 
 Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
@@ -6,14 +7,13 @@ All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
-
-1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-3. The name of the author may not be used to endorse or promote products
-   derived from this software without specific prior written permission.
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
 IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -664,9 +664,9 @@ class SubTemplate (Template):
     """ A SubTemplate is part of another template, and is used for the METAL
         implementation.
         The two uses for this class are:
-          1 - metal:define-macro results in a SubTemplate that is the macro
-          2 - metal:fill-slot results in a SubTemplate that is a parameter to
-              metal:use-macro
+          1. metal:define-macro results in a SubTemplate that is the macro
+          2. metal:fill-slot results in a SubTemplate that is a parameter to
+             metal:use-macro
     """
     def __init__ (self, startRange, endRangeSymbol, doctype = None):
         """The parentTemplate is the template for which we are a sub-template.
@@ -895,16 +895,16 @@ class TemplateCompiler (object):
         """Used to add a tag to the stack.  Various properties can be passed
            in the dictionary as being information required by the tag.
            Currently supported properties are:
-             'command'         - The (command,args) tuple associated
-                                 with this command
-             'originalAtts'    - The original attributes that include any
-                                 metal/tal attributes
-             'endTagSymbol'    - The symbol associated with the end tag for
-                                 this element
-             'popFunctionList' - A list of functions to execute when this
-                                 tag is popped
-             'singletonTag'    - A boolean to indicate that this is a
-                                 singleton flag
+            - 'command'
+               The (command,args) tuple associated with this command
+            - 'originalAtts'
+               The original attributes that include any metal/tal attributes
+            - 'endTagSymbol'
+               The symbol associated with the end tag for this element
+            - 'popFunctionList'
+               A list of functions to execute when this tag is popped
+            - 'singletonTag'
+               A boolean to indicate that this is a singleton flag
         """
         # Add the tag to the tagStack (list of tuples (tag, properties, useMacroLocation))
         self.log.debug("Adding tag %r to stack" % tag[0])
@@ -1590,7 +1590,7 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler, xml
 def compileHTMLTemplate (template, inputEncoding="ISO-8859-1"):
     """ Reads the templateFile and produces a compiled template.
     To use the resulting template object call:
-        template.expand (context, outputFile)
+    template.expand (context, outputFile)
     """
     if isinstance(template, basestring):
         templateFile = StringIO(template)
@@ -1604,7 +1604,7 @@ def compileHTMLTemplate (template, inputEncoding="ISO-8859-1"):
 def compileXMLTemplate (template):
     """ Reads the templateFile and produces a compiled template.
     To use the resulting template object call:
-        template.expand(context, outputFile)
+    template.expand(context, outputFile)
     """
     if isinstance(template, basestring):
         # It's a string!
