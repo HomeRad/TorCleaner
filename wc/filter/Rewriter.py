@@ -203,7 +203,6 @@ class HtmlFilter (HtmlParser):
     def _error (self, msg):
         self.errorfun(msg, "error")
 
-
     def _warning (self, msg):
         self.errorfun(msg, "warning")
 

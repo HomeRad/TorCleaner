@@ -124,29 +124,31 @@ class Blocker (Filter):
     def doit (self, data, **args):
         #debug(HURT_ME_PLENTY, "block filter working on %s" % `data`)
         splitted = data.split()
-        if len(splitted)==3:
-            method,url,protocol = splitted
-            urlTuple = list(urlparse.urlparse(url))
-            netloc = urlTuple[1]
-            s = netloc.split(":")
-            if len(s)==2:
-                urlTuple[1:2] = s
+        if len(splitted)!=3:
+            print >>sys.stderr, "invalid request:", `data`
+            return data
+        method,url,protocol = splitted
+        urlTuple = list(urlparse.urlparse(url))
+        netloc = urlTuple[1]
+        s = netloc.split(":")
+        if len(s)==2:
+            urlTuple[1:2] = s
+        else:
+            urlTuple[1:2] = [netloc,80]
+        if self.allowed(urlTuple):
+            return data
+        blocked = self.strict_whitelist or self.blocked(urlTuple)
+        if blocked is not None:
+            #debug(BRING_IT_ON, "blocked url %s" % url)
+            # index 3, not 2!
+            if image_re.match(urlTuple[3][-4:]):
+                return '%s %s %s' % (method,
+                      blocked or self.block_image, 'image/gif')
             else:
-                urlTuple[1:2] = [netloc,80]
-            if self.allowed(urlTuple):
-                return data
-            blocked = self.strict_whitelist or self.blocked(urlTuple)
-            if blocked is not None:
-                #debug(BRING_IT_ON, "blocked url %s" % url)
-                # index 3, not 2!
-                if image_re.match(urlTuple[3][-4:]):
-                    return '%s %s %s' % (method,
-		           blocked or self.block_image, 'image/gif')
-                else:
-                    # XXX hmmm, what about CGI images?
-                    # make HTTP request?
-                    return '%s %s %s' % (method,
-                           blocked or self.block_url, 'text/html')
+                # XXX hmmm, what about CGI images?
+                # make HTTP HEAD request?
+                return '%s %s %s' % (method,
+                      blocked or self.block_url, 'text/html')
         return data
 
     def blocked (self, urlTuple):
