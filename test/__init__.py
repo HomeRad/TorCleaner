@@ -21,6 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 import logging, logging.config
 
+
 def initlog (filename):
     """initialize logfiles and configuration for console"""
     logging.config.fileConfig(filename)
@@ -31,6 +32,7 @@ def initlog (filename):
     logging.getLogger("wc").addHandler(handler)
     logging.getLogger("simpleTAL").addHandler(handler)
     logging.getLogger("simpleTALES").addHandler(handler)
+
 
 def disable_rating_rules (config):
     """disable rating rules for testing"""

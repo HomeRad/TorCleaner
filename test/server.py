@@ -2,11 +2,9 @@
 # -*- coding: iso-8859-1 -*-
 """server simulator"""
 
-import sys, os, logging
 
-
-def get_data (config, test):
-    exec "from test.tests.%s import server_send, server_recv"%test
+def get_data (config, testklass):
+    exec "from test.tests.%s import server_send, server_recv"%testklass
     return [ s%config for s in [server_send, server_recv] ]
 
 
@@ -16,21 +14,6 @@ def startfunc ():
     Listener.Listener(wc.config['port'], TestClient)
     while True:
         proxy_poll(timeout=max(0, run_timers()))
-
-
-def start (test):
-    # init log
-    logfile = os.path.join(os.getcwd(), "test", "logging.conf")
-    initconsolelog(logfile)
-    # init configuration
-    import wc
-    wc.config = wc.Configuration()
-    # disable all filters
-    wc.config['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
-    # start one port above the proxy
-    wc.config['port'] += 1
-    pidfile = os.path.join(os.getcwd(), "test", "server.pid")
-    msg, status = wc.daemon.start(startfunc, pidfile, parent_exit=False)
 
 
 if __name__=='__main__':
