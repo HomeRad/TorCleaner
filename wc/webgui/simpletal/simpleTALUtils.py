@@ -47,7 +47,7 @@ ESCAPED_TEXT_REGEX=re.compile (r"\&\S+?;")
 
 class HTMLStructureCleaner (sgmllib.SGMLParser):
 	""" A helper class that takes HTML content and parses it, so converting
-			any stray '&', '<', or '>' symbols into their respective entity references.
+	any stray '&', '<', or '>' symbols into their respective entity references.
 	"""
 	def clean (self, content, encoding=None):
 		""" Takes the HTML content given, parses it, and converts stray markup.

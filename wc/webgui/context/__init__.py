@@ -24,3 +24,8 @@ def getlist (form, key):
     if hasattr(item, "value"):
         return [item.value]
     return [item]
+
+is_safe = re.compile(r"^[a-zA-Z0-9 ]$").match
+def filter_safe (text):
+    """safe whitelist quoting for html content"""
+    return "".join([c for c in text if is_safe(c)])

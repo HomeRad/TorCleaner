@@ -2,12 +2,13 @@
 import tempfile, os
 from wc import i18n, AppName, ConfigDir, rulenames
 from wc import Configuration as _Configuration
-from wc.webgui.context import getval, getlist
+from wc.webgui.context import getval, getlist, filter_safe
 from wc.filter.rules.RewriteRule import partvalnames, partnames, part_num
 from wc.filter.rules.FolderRule import FolderRule
 from wc.filter import GetRuleFromName
 from wc.filter.PICS import services as pics_data
 
+# t_* variables are translated texts
 t_title = i18n._("%s filter configuration") % AppName
 t_back = i18n._("Back")
 t_apply = i18n._("Apply")
@@ -60,6 +61,8 @@ t_rulefallback = i18n._("Fallback URL")
 t_service = i18n._("Service")
 t_category = i18n._("Category")
 t_picsratings = i18n._("PICS ratings")
+t_really_remove_folder = i18n._("Really remove this folder?")
+t_really_remove_rule = i18n._("Really remove this rule?")
 
 # config vars
 info = []
@@ -177,6 +180,7 @@ def _form_selrule (index):
         for rt in rulenames:
             ruletype[rt] = (currule.get_name()==rt)
         # fill part flags
+        # XXX this side effect on rule parts is bad :(
         if currule.get_name()=="rewrite":
             global curparts
             curparts = {}
@@ -470,12 +474,12 @@ def _form_apply_rewrite (form):
     part = getval(form, 'rule_rewritepart')
     partnum = part_num(part)
     if partnum is None:
-        error.append(i18n._("Invalid part value %s") % part)
+        error.append(i18n._("Invalid part value %s") % filter_safe(part))
         return
     if partnum!=currule.part:
         currule.part = partnum
         info.append(i18n._("Rule rewrite part changed"))
-        # select again, XXX side effect :(
+        # select again because of side effect (XXX see above)
         _form_selrule(currule.oid)
     replacement = getval(form, 'rule_rewritereplacement').strip()
     if replacement!=currule.replacement:

@@ -13,7 +13,8 @@
 <span tal:replace="item">Error</span>
 </div>
 
-<form action="filterconfig.html" method="POST">
+<form action="filterconfig.html" method="POST" 
+ name="filterform">
 <table>
 <tr>
 <td><big tal:content="t_folders">Folders</big></td>
@@ -65,7 +66,7 @@
  tal:attributes="value t_renamefolder">
 <br>
 <input type="submit"
- tal:attributes="name string:removefolder${curfolder/oid}; value t_removefolder">
+ tal:attributes="name string:removefolder${curfolder/oid}; value t_removefolder; onclick string:return window.confirm('${t_really_remove_folder}')">
 <br>
 <input tal:condition="curfolder/disable" type="submit"
  tal:attributes="name string:enablefolder${curfolder/oid}; value t_enablefolder">
@@ -83,7 +84,8 @@
 <!-- rule -->
 <td>
 <div tal:condition="currule">
-<input type="hidden" name="selrule" tal:attributes="value string:${currule/oid}">
+<input type="hidden" name="selrule"
+ tal:attributes="value string:${currule/oid}">
 <span tal:repeat="rule rulenames" tal:omit-tag="">
 <span tal:condition="ruletype/?rule" tal:omit-tag="">
 <div metal:use-macro="rulemacros/macros/?rule">
@@ -92,7 +94,7 @@ Here is the rule configuration...
 </span>
 <hr noshade size="1">
 <input type="submit"
- tal:attributes="name string:removerule${currule/oid}; value t_removerule">
+ tal:attributes="name string:removerule${currule/oid}; value t_removerule; onclick string:return window.confirm('${t_really_remove_rule}')">
 <br>
 <input tal:condition="currule/disable" type="submit"
  tal:attributes="name string:enablerule${currule/oid}; value t_enablerule">
