@@ -7,6 +7,9 @@
     Changed: webcleaner, wc/__init__.py
   * do not use locals(), this does not work for psyco-compiled functions
     Changed: wc/proxy/auth/digest.py
+  * really filter unreadable or unwritable sockets from socket handler
+    list
+    Changed: wc/proxy/__init__.py
 
 2.9 (released 1.3.2004)
   * do not ship _webcleaner2_configdata.py, and adjust file permissions
