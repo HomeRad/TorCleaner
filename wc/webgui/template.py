@@ -21,6 +21,7 @@ import cStringIO as StringIO
 import wc.webgui.PageTemplates.PageTemplate
 import wc.webgui.PageTemplates.Expressions
 import wc.webgui.TAL.TALInterpreter
+import wc.webgui.ZTUtils
 
 
 class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
@@ -43,7 +44,7 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
 
     def render (self, context):
         """Render this Page Template"""
-        out = wc.webgui.TAL.TALInterpreter.FasterStringIO()
+        out = wc.webgui.ZTUtils.FasterStringIO()
         __traceback_supplement__ = \
   (wc.webgui.PageTemplates.PageTemplate.PageTemplateTracebackSupplement, self)
         engine = wc.webgui.PageTemplates.Expressions.getEngine()
