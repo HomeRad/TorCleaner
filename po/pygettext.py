@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
 # Originally written by Barry Warsaw <barry@zope.com>
 #
@@ -499,6 +499,79 @@ class TokenEater:
                 print >> fp, 'msgstr ""\n'
 
 
+try:
+    from wc.parser.htmllib import HtmlParser
+except ImportError, msg:
+    sys.path.insert(0, os.path.dirname(os.getcwd()))
+    from wc.parser.htmllib import HtmlParser
+from sets import Set
+
+class HtmlGettext (HtmlParser):
+    """handles all functions by printing the function name and
+       attributes"""
+    def __init__ (self, debug=0):
+        super(HtmlGettext, self).__init__(debug=debug)
+        self.tag = None
+        self.translations = Set()
+        self.data = ""
+
+
+    def _errorfun (self, msg, name):
+        """print msg to stderr with name prefix"""
+        print >> sys.stderr, name, msg
+
+
+    def error (self, msg):
+        """signal a filter/parser error"""
+        self._errorfun(msg, "error:")
+
+
+    def warning (self, msg):
+        """signal a filter/parser warning"""
+        self._errorfun(msg, "warning:")
+
+
+    def fatalError (self, msg):
+        """signal a fatal filter/parser error"""
+        self._errorfun(msg, "fatal error:")
+
+
+    def comment (self, data):
+        pass
+
+
+    def startElement (self, tag, attrs):
+        msgid = attrs.get('i18n:translate', None)
+        self.tag = None
+        if msgid == '""':
+            self.tag = tag
+            self.data = ""
+        elif msgid is not None:
+            self.translations.add(msgid)
+
+
+    def endElement (self, tag):
+        if tag==self.tag:
+            self.translations.add(self.data)
+            self.data = ""
+
+
+    def doctype (self, data):
+        pass
+
+
+    def pi (self, name, data=None):
+        pass
+
+
+    def cdata (self, data):
+        pass
+
+
+    def characters (self, data):
+        self.data += data
+
+
 
 def main():
     global default_keywords
@@ -618,6 +691,7 @@ def main():
             expanded.extend(getFilesForName(arg))
     args = expanded
 
+    html_translations = Set()
     # slurp through all the files
     eater = TokenEater(options)
     for filename in args:
@@ -629,15 +703,21 @@ def main():
         else:
             if options.verbose:
                 print _('Working on %s') % filename
-            fp = open(filename)
+            fp = file(filename)
             closep = 1
         try:
-            eater.set_filename(filename)
-            try:
-                tokenize.tokenize(fp.readline, eater)
-            except tokenize.TokenError, e:
-                print >> sys.stderr, '%s: %s, line %d, column %d' % (
-                    e[0], filename, e[1][0], e[1][1])
+            if filename.endswith('.html'):
+                p = HtmlGettext()
+                p.feed(fp.read())
+                p.flush()
+                html_translations.update(p.translations)
+            else:
+                eater.set_filename(filename)
+                try:
+                    tokenize.tokenize(fp.readline, eater)
+                except tokenize.TokenError, e:
+                    print >> sys.stderr, '%s: %s, line %d, column %d' % (
+                        e[0], filename, e[1][0], e[1][1])
         finally:
             if closep:
                 fp.close()
@@ -649,10 +729,14 @@ def main():
     else:
         if options.outpath:
             options.outfile = os.path.join(options.outpath, options.outfile)
-        fp = open(options.outfile, 'w')
+        fp = file(options.outfile, 'w')
         closep = 1
     try:
         eater.write(fp)
+        for trans in html_translations:
+            print >> fp, '#, html translation'
+            print >> fp, 'msgid', normalize(trans)
+            print >> fp, 'msgstr ""\n'
     finally:
         if closep:
             fp.close()

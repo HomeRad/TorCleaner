@@ -8,7 +8,8 @@ MSGMERGE := msgmerge
 SOURCES = $(shell find ../wc -name \*.py) \
 ../wcheaders \
 ../webcleaner \
-../webcleanerconf
+../webcleanerconf \
+$(shell find ../templates -name \*.html)
 
 LDIR=../share/locale
 LFILE=LC_MESSAGES/$(PACKAGE).mo

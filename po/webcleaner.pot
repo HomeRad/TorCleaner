@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Jul 30 02:35:25 2003\n"
+"POT-Creation-Date: Fri Aug  1 09:47:10 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,10 +56,10 @@ msgstr ""
 msgid "PICS %s match"
 msgstr ""
 
-msgid "%d rule"
+msgid "with 1 rule"
 msgstr ""
 
-msgid "%d rules"
+msgid "with %d rules"
 msgstr ""
 
 msgid "Invalid pics rule tag name `%s', check your configuration"
@@ -1160,5 +1160,11 @@ msgid "warning: only first command is valid"
 msgstr ""
 
 msgid "Unknown command %s"
+msgstr ""
+
+#, html translation
+msgid ""
+"\n"
+"Welcome to the wonderful world of WebCleaner, the land of lounge lizards.\n"
 msgstr ""
 
