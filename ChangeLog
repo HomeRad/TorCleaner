@@ -24,6 +24,9 @@
     Changed: wc/proxy/winreg.py
   * fixed and documented the windows installation procedure
     Changed: INSTALL, setup.py
+  * added note nedding zlib support for python
+    Changed: INSTALL
+    Closes: SF #869424
   * added help for the web gui
     Added: templates/classic/help.html, wc/webgui/context/help_html.py
     Changed: templates/classic/macros/standard.html, po/*.po
@@ -31,6 +34,12 @@
     Changed: libjs/*
   * disabled psyco for now, it is unstable
     Changed: webcleaner
+  * do not (un)quote query parts of urls
+    Changed: wc/proxy/__init__.py
+    Closes: SF #868823
+  * unquote network ips in configuration interface
+    Changed: wc/ip.py, wc/webgui/context/config_html.py
+    Closes: SF #868811
 
 2.7 (released 04.12.2003)
   * updated filters:
