@@ -28,6 +28,7 @@ from wc.url import DOMAIN, spliturl
 
 # regular expression for image filenames
 is_image = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
+is_flash = re.compile(r'(?i)\.(swf|flash)$').search
 
 def strblock (block):
     patterns = [ repr(b and b.pattern or "") for b in block ]
@@ -138,13 +139,15 @@ class Blocker (Filter):
             return data
         blocked, sid = self.blocked(url, parts)
         if blocked:
+            # XXX hmmm, make HTTP HEAD request to get content type???
             debug(FILTER, "blocked url %s by rule %s", url, sid)
             if isinstance(blocked, basestring):
                 doc = blocked
             elif is_image(url):
                 doc = self.block_image
+            elif is_flash(url):
+                doc = self.block_flash
             else:
-                # XXX hmmm, what about CGI images, make HTTP HEAD request?
                 doc = self.block_url
                 rule = [r for r in self.rules if r.sid==sid][0]
                 query = urllib.urlencode({"rule": rule.tiptext(),
