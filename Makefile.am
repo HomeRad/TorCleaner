@@ -50,9 +50,12 @@ localbuild: all
 crossbuild: all
 # build the .exe
 	CC=/usr/bin/i586-mingw32msvc-gcc \
+	CCSHARED=/usr/bin/i586-mingw32msvc-gcc \
 	  CXX=/usr/bin/i586-mingw32msvc-g++ \
 	  LDSHARED="/usr/bin/i586-mingw32msvc-gcc -shared" \
-	  $(PYTHON) setup.py build bdist_wininst
+	  CROSS_COMPILE=nt \
+	  $(PYTHON) setup.py build -c mingw32 bdist_wininst \
+	  2>&1 | tee --append crossbuild.log
 
 distclean-local:
 	rm -rf dist build # just to be sure: clean build dir too
