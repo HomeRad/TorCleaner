@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Mar 29 23:27:07 2004\n"
+"POT-Creation-Date: Fri Apr  9 10:24:51 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,6 +58,18 @@ msgid "generic url %r doesn't match %r"
 msgstr ""
 
 msgid "adding new rating for %r"
+msgstr ""
+
+msgid "You have to disable ScannerDaemonOutputFormat"
+msgstr ""
+
+msgid "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
+msgstr ""
+
+msgid "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
+msgstr ""
+
+msgid "Clamd is not ready for stream scanning"
 msgstr ""
 
 msgid "inserting new rule %s"
@@ -172,6 +184,9 @@ msgid "Empty URL"
 msgstr ""
 
 msgid "URL too long"
+msgstr ""
+
+msgid "URL length limit is %d bytes."
 msgstr ""
 
 msgid "Forbidden"

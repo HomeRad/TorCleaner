@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Mon Mar 29 23:27:07 2004\n"
+"POT-Creation-Date: Fri Apr  9 10:24:51 2004\n"
 "PO-Revision-Date: 2004-03-22 19:50+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -57,6 +57,21 @@ msgstr "Allgemeine URL %r passt nicht zu %r"
 
 msgid "adding new rating for %r"
 msgstr "füge neuen externen Filter %r hinzu"
+
+msgid "You have to disable ScannerDaemonOutputFormat"
+msgstr ""
+
+msgid ""
+"Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
+msgstr ""
+
+msgid ""
+"You have to enable either TCPSocket or LocalSocket in your Clamd "
+"configuration"
+msgstr ""
+
+msgid "Clamd is not ready for stream scanning"
+msgstr ""
 
 msgid "inserting new rule %s"
 msgstr "füge neue Regel %s ein"
@@ -172,6 +187,9 @@ msgstr "Leere URL"
 
 msgid "URL too long"
 msgstr "URL zu lang"
+
+msgid "URL length limit is %d bytes."
+msgstr ""
 
 msgid "Forbidden"
 msgstr "Verboten"
