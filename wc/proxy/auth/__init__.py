@@ -135,25 +135,24 @@ def _test ():
 
 def _test_ntlm ():
     challenges = get_challenges(type=NTLMSSP_INIT)
-    print "challenges 0", challenges
+    print "challenges 0", `challenges`
     challenges = parse_challenges(", ".join(challenges))
     print "parsed challenges 0", challenges
     attrs = {"username": "calvin", "type": NTLMSSP_NEGOTIATE,}
     creds = get_credentials(challenges, **attrs)
-    print "credentials 1", creds
+    print "credentials 1", `creds`
     creds = parse_credentials(creds)
     print "parsed credentials 1", creds
     attrs['host'] = creds['NTLM'][0]['host']
     attrs['domain'] = creds['NTLM'][0]['domain']
-    print check_credentials(creds, **attrs)
     attrs['type'] = NTLMSSP_CHALLENGE
     challenges = get_challenges(**attrs)
-    print "challenges 2", challenges
+    print "challenges 2", `challenges`
     challenges = parse_challenges(", ".join(challenges))
     print "parsed challenges 2", challenges
     attrs['type'] = NTLMSSP_AUTH
     creds = get_credentials(challenges, **attrs)
-    print "credentials 3", creds
+    print "credentials 3", `creds`
     creds = parse_credentials(creds)
     print "parsed credentials 3", creds
     print check_credentials(creds, **attrs)

@@ -36,6 +36,7 @@ __date__    = "$Date$"[7:-2]
 __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "get_ntlm_credentials", "parse_ntlm_credentials",
            "check_ntlm_credentials",
+           "create_lm_hashed_password", "create_nt_hashed_password",
            "NTLMSSP_INIT", "NTLMSSP_NEGOTIATE",
            "NTLMSSP_CHALLENGE", "NTLMSSP_AUTH",
  ]
@@ -187,8 +188,17 @@ def parse_ntlm_credentials (credentials):
 
 
 def check_ntlm_credentials (credentials, **attrs):
+    if credentials['host']!="UNKNOWN":
+        warn(AUTH, "NTLM wrong host %s", `credentials['host']`)
+        return False
+    if credentials['domain']!='WORKGROUP':
+        warn(AUTH, "NTLM wrong domain %s", `credentials['domain']`)
+        return False
+    if credentials['username']!=attrs['username']:
+        warn(AUTH, "NTLM wrong username")
+        return False
     # XXX
-    return False
+    return True
 
 
 ################## message construction and parsing ####################
@@ -241,9 +251,14 @@ challenge_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
 def create_message2 (domain, flags=challenge_flags):
     msg = '%s\x00'% NTLMSSP_SIGNATURE # name
     msg += struct.pack("<l", NTLMSSP_CHALLENGE) # message type
-    msg += struct.pack("<h", len(domain))
-    msg += struct.pack("<h", len(domain))
-    msg += struct.pack("<l", 48) # domain offset (always 48)
+    if flags & NTLMSSP_TARGET_TYPE_DOMAIN:
+        msg += struct.pack("<h", 2*len(domain))
+        msg += struct.pack("<h", 2*len(domain))
+        msg += struct.pack("<l", 48) # domain offset
+    else:
+        msg += struct.pack("<h", 0)
+        msg += struct.pack("<h", 0)
+        msg += struct.pack("<l", 40) # domain offset
     msg += struct.pack("<l", flags) # flags
     # compute nonce
     nonce = compute_nonce() # eight random bytes
@@ -252,9 +267,10 @@ def create_message2 (domain, flags=challenge_flags):
     msg += nonce
     msg += struct.pack("<l", 0) # 8 bytes of reserved 0s
     msg += struct.pack("<l", 0)
-    msg += struct.pack("<l", 0)    # ServerContextHandleLower
-    msg += struct.pack("<l", 0x3c) # ServerContextHandleUpper
-    msg += utils.str2unicode(domain)
+    if flags & NTLMSSP_TARGET_TYPE_DOMAIN:
+        msg += struct.pack("<l", 0)    # ServerContextHandleLower
+        msg += struct.pack("<l", 0x3c) # ServerContextHandleUpper
+        msg += utils.str2unicode(domain)
     return msg
 
 
@@ -269,7 +285,9 @@ def parse_message2 (msg):
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])
     res['nonce'] = msg[24:32]
-    res['domain'] = utils.unicode2str(msg[48:])
+    if res['flags'] & NTLMSSP_TARGET_TYPE_DOMAIN:
+        offset = getint32(msg[16:20])
+        res['domain'] = utils.unicode2str(msg[offset:])
     return res
 
 
@@ -292,14 +310,26 @@ def create_message3 (nonce, domain, username, host,
     msg = '%s\x00'% NTLMSSP_SIGNATURE # name
     msg += struct.pack("<l", NTLMSSP_AUTH) # message type
     offset = len(msg) + 8*6 + 4
+    msg += struct.pack("<h", len(lm_resp))
+    msg += struct.pack("<h", len(lm_resp))
     lm_offset = offset + 2*len(domain) + 2*len(username) + 2*len(host) + len(session_key)
-    nt_offset = lm_offset + len(lm_resp)
-    msg += struct.pack("<h", len(lm_resp))
-    msg += struct.pack("<h", len(lm_resp))
     msg += struct.pack("<l", lm_offset)
     msg += struct.pack("<h", len(nt_resp))
     msg += struct.pack("<h", len(nt_resp))
+    nt_offset = lm_offset + len(lm_resp)
     msg += struct.pack("<l", nt_offset)
+    msg += struct.pack("<h", 2*len(domain))
+    msg += struct.pack("<h", 2*len(domain))
+    msg += struct.pack("<l", offset) # domain offset
+    msg += struct.pack("<h", 2*len(username))
+    msg += struct.pack("<h", 2*len(username))
+    msg += struct.pack("<l", offset + 2*len(domain)) # username offset
+    msg += struct.pack("<h", 2*len(host))
+    msg += struct.pack("<h", 2*len(host))
+    msg += struct.pack("<l", offset + 2*len(domain) + 2*len(username)) # host offset
+    msg += struct.pack("<h", len(session_key))
+    msg += struct.pack("<h", len(session_key))
+    msg += struct.pack("<l", offset + 2*len(domain) + 2*len(username) + 2*len(host)+ 48) # session offset
     msg += struct.pack("<l", flags) # flags
     msg += utils.str2unicode(domain)
     msg += utils.str2unicode(username)
@@ -313,10 +343,18 @@ def parse_message3 (msg):
     lm_offset = getint32(msg[16:20])
     nt_len = getint16(msg[20:22])
     nt_offset = getint32(msg[24:28])
-    res['flags'] = getint32(msg[28:32])
+    domain_offset = getint32(msg[32:36])
+    username_offset = getint32(msg[40:44])
+    host_offset = getint32(msg[48:52])
+    session_offset = getint32(msg[56:60])
+    res['flags'] = getint16(msg[60:62])
+    res['session_key'] = msg[(nt_offset+nt_len):]
+    res['domain'] = utils.unicode2str(msg[domain_offset:username_offset])
+    res['username'] = utils.unicode2str(msg[username_offset:host_offset])
+    res['host'] = utils.unicode2str(msg[host_offset:lm_offset])
     res['lm_resp'] = msg[lm_offset:nt_offset]
     res['nt_resp'] = msg[nt_offset:(nt_offset+nt_len)]
-    res['session_key'] = msg[(nt_offset+nt_len):]
+    res['session_key'] = msg[session_offset:]
     return res
 
 
@@ -360,9 +398,43 @@ def getint16 (s):
     return struct.unpack("<h", s)[0]
 
 
-def create_LM_hashed_password (passwd):
-    "setup LanManager password"
-    "create LanManager hashed password"
+def convert_key (key):
+    """converts a 7-bytes key to an 8-bytes key based on an algorithm"""
+    assert len(key)==7, "NTLM convert_key needs 7-byte key"
+    bytes = [key[0],
+             chr(((ord(key[0]) << 7) & 0xFF) | (ord(key[1]) >> 1)),
+             chr(((ord(key[1]) << 6) & 0xFF) | (ord(key[2]) >> 2)),
+             chr(((ord(key[2]) << 5) & 0xFF) | (ord(key[3]) >> 3)),
+             chr(((ord(key[3]) << 4) & 0xFF) | (ord(key[4]) >> 4)),
+             chr(((ord(key[4]) << 3) & 0xFF) | (ord(key[5]) >> 5)),
+             chr(((ord(key[5]) << 2) & 0xFF) | (ord(key[6]) >> 6)),
+             chr( (ord(key[6]) << 1) & 0xFF),
+            ]
+    return "".join([ set_odd_parity(b) for b in bytes ])
+
+
+def set_odd_parity (byte):
+    """turns one-byte into odd parity. Odd parity means that a number in
+        binary has odd number of 1's.
+    """
+    assert len(byte)==1
+    parity = 0
+    ordbyte = ord(byte)
+    for dummy in range(8):
+	if ordbyte & 0x01:
+            parity += 1
+	ordbyte >>= 1
+    ordbyte = ord(byte)
+    if parity % 2 == 0:
+	if ordbyte & 0x01:
+	    ordbyte &= 0xFE
+	else:
+	    ordbyte |= 0x01
+    return chr(ordbyte)
+
+
+def create_lm_hashed_password (passwd):
+    """create LanManager hashed password"""
     passwd = passwd.upper()
     if len(passwd) < 14:
         lm_pw = passwd + ('\x00'*(len(passwd)-14))
@@ -378,8 +450,8 @@ def create_LM_hashed_password (passwd):
     return lm_hpw
 
 
-def create_NT_hashed_password (passwd):
-    "create NT hashed password"
+def create_nt_hashed_password (passwd):
+    """create NT hashed password"""
     # we have to have UNICODE password
     pw = utils.str2unicode(passwd)
     # do MD4 hash
