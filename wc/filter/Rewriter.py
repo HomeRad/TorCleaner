@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re, sys, wc
+from wc import urlutils
 from wc.parser.htmllib import HtmlParser
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.debug import *
@@ -110,6 +111,7 @@ class HtmlFilter (HtmlParser,JSListener):
     def __repr__ (self):
         return "<HtmlFilter with rulestack %s >" % self.rulestack
 
+
     def buffer_append_data (self, data):
         """we have to make sure that we have no two following
         DATA things in the buffer. Why? To be 100% sure that
@@ -120,9 +122,11 @@ class HtmlFilter (HtmlParser,JSListener):
         else:
             self.buffer.append(data)
 
+
     def cdata (self, d):
         """handler for data"""
         self.buffer_append_data([DATA, d])
+
 
     def flushbuf (self):
         """flush internal data buffer"""
@@ -130,6 +134,7 @@ class HtmlFilter (HtmlParser,JSListener):
         if data:
             self.data = []
         return data
+
 
     def buffer2data (self):
         """Append all tags of the buffer to the data"""
@@ -151,13 +156,16 @@ class HtmlFilter (HtmlParser,JSListener):
                 error("unknown buffer element %s" % n[0])
         self.buffer = []
 
+
     def comment (self, data):
         """a comment: accept only non-empty comments"""
         if self.comments and data:
             self.buffer.append([COMMENT, data])
 
+
     def characters (self, s):
         self.buffer_append_data([DATA, s])
+
 
     def startElement (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
@@ -212,8 +220,13 @@ class HtmlFilter (HtmlParser,JSListener):
             name = attrs.get('name', attrs.get('id'))
             self.jsForm(name, attrs.get('action'), attrs.get('target'))
         elif tag=='script':
-            # XXX
-            pass
+            lang = attrs.get('language', '').lower()
+            scrtype = attrs.get('type', '').lower()
+            if scrtype=='text/javascript' or \
+               lang.startswith('javascript') or \
+               not (lang or scrtype):
+                self.jsScriptSrc(attrs.get('src'), lang)
+                return
         self.buffer.append((STARTTAG, tag, attrs))
 
 
@@ -224,13 +237,40 @@ class HtmlFilter (HtmlParser,JSListener):
         self.jsEnv.attachListener(self)
         self.jsEnv.executeScriptAsFunction(val, 0.0)
         self.jsEnv.detachListener(self)
-        return self.popup_counter
+        res = self.popup_counter
+        self.popup_counter = 0
+        return res
 
 
     def jsForm (self, name, action, target):
         if not name: return
         #debug(HURT_ME_PLENTY, "jsForm", `name`, `action`, `target`)
         self.jsEnv.addForm(name, action, target)
+
+
+    def jsScriptSrc (self, url, language):
+        if not url: return
+        #debug(HURT_ME_PLENTY, "jsScriptSrc", url, language)
+        try:
+            script = urlutils.open_url(url)
+        except:
+            print >>sys.stderr, "exception fetching script url", `url`
+            return
+        if not script: return
+        ver = 0.0
+        if language:
+            mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
+            if mo:
+                ver = float(mo.group('num'))
+        self.jsEnv.attachListener(self)
+        self.jsfilter = HtmlFilter(self.rules, self.document,
+                 comments=self.comments, javascript=self.javascript)
+        self.jsEnv.executeScript(script, ver)
+        self.jsEnv.detachListener(self)
+        self.jsfilter.flush()
+        self.buffer.append([DATA, self.jsfilter.flushbuf()])
+        self.buffer += self.jsfilter.buffer
+        self.jsfilter = None
 
 
     def processData (self, data):
@@ -269,20 +309,26 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def jsEndElement (self, tag):
         """parse generated html for scripts"""
-        if len(self.buffer)<2:
-            print >>sys.stderr, "short buffer on </script>", self.buffer
+        if not self.buffer:
+            print >>sys.stderr, "empty buffer on </script>"
             return
-        if self.buffer[-1][0]!=DATA or self.buffer[-2][0]!=STARTTAG:
-            print >>sys.stderr, "missing tags for </script>", self.buffer[-2:]
+        if self.buffer[-1][0]!=DATA:
+            print >>sys.stderr, "missing data for </script>", self.buffer[-1:]
             return
         script = self.buffer[-1][1].strip()
-        self.buffer[-2:] = []
+        del self.buffer[-1]
+        if not (self.buffer and self.buffer[-1][0]==STARTTAG and \
+                self.buffer[1][1]=='script'):
+            # there was a <script src="..."> already
+            return
+        del self.buffer[-1]
+        if not script: return
         if script.startswith("<!--"):
             script = script[4:].strip()
         self.jsEnv.attachListener(self)
         self.jsfilter = HtmlFilter(self.rules, self.document,
                  comments=self.comments, javascript=self.javascript)
-        self.jsEnv.executeScriptAsFunction(script, 0.0)
+        self.jsEnv.executeScript(script, 0.0)
         self.jsEnv.detachListener(self)
         self.jsfilter.flush()
         self.buffer.append([DATA, self.jsfilter.flushbuf()])
