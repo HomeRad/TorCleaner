@@ -37,6 +37,10 @@ def is_javascript_mime (mime):
     return mime.startswith('application/x-javascript') or \
            mime.startswith('text/javascript')
 
+def is_html_mime (mime):
+    return mime.startswith('text/html')
+
+
 is_image_url = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
 is_flash_url = re.compile(r'(?i)\.(swf|flash)$').search
 is_javascript_url = re.compile(r'(?i)\.js$').search
