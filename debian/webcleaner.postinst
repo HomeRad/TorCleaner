@@ -27,7 +27,7 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
     RET=""
     db_get $package/adminpass
-    P=`echo -n $RET | python -c "import sys, base64; print base64.encodestring(sys.stdin.read()).strip()"`
+    P=`echo -n "$RET" | python -c "import sys, base64; print base64.encodestring(sys.stdin.read()).strip()"`
     sed -e "s/ adminpass=.*/ adminpass=\"${P}\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
     mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
     db_unregister $package/adminpass
@@ -40,10 +40,12 @@ if [ "$1" = "configure" ]; then
     rm -f /var/log/webcleaner.log
     rm -f /var/log/webcleaner.err
     rm -f /var/log/webcleaner-access.log
+fi
+if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     # install service link
-    if [ ! -h /etc/$package ]; then
-        ln -s /etc/$package /service/$package
-        echo "waiting 5 seconds until supervise process is started..."
+    if [ ! -e /var/service/$package ]; then
+        ln -s /etc/$package/service /var/service/$package
+        echo "waiting 5 seconds for $package service to start"
         sleep 5
     fi
 fi

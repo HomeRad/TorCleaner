@@ -88,7 +88,7 @@ binary-arch: build install
 	dh_installexamples config/bl2wc.py config/dmozfilter.py
 	dh_installmenu
 #	dh_installlogrotate
-	dh_installinit
+	dh_installinit --no-start
 #	dh_installcron
 	dh_installman webcleaner.1 webcleaner.conf.5
 #	dh_installinfo

@@ -3,15 +3,17 @@
 #
 # see: dh_installdeb(1)
 
-# note: debhelper of dh_installinit calls svc -d
-
 #DEBHELPER#
 
+package=webcleaner
+service=/var/service/$package
+
 if [ "$1" = "remove" ]; then
+    # stop service
+    svwaitdown $service
     # remove service link
-    rm -f /service/webcleaner
-    # exit supervise
-    svc -x /etc/webcleaner
-    svc -x /etc/webcleaner/log
+    if [ -h /var/service/webcleaner ]; then
+        rm -f /var/service/webcleaner
+    fi
 fi
 exit 0

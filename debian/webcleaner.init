@@ -3,7 +3,7 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 NAME=webcleaner
 DESC=WebCleaner
-SERVICE=/service/$NAME
+SERVICE=/var/service/$NAME
 
 test -l $SERVER || exit 0
 
