@@ -98,7 +98,7 @@ Server response <b>%(response)s</b></span>
 <p>
 <span i18n:translate="">Google Cache for</span>
 <a href="cache:www.imadoofus.org/index.pl"
- tal:attributes="href cache_site"
+ tal:attributes="href cache_path"
  tal:content="string:${site}${path}"
 >www.imadoofus.org/index.pl</a>
 </p>
@@ -106,7 +106,7 @@ Server response <b>%(response)s</b></span>
 <p>
 <span i18n:translate="">Google Cache for</span>
 <a href="cache:www.imadoofus.org/"
- tal:attributes="href cache_path"
+ tal:attributes="href cache_site"
  tal:content="string:${site}/"
 >www.imadoofus.org/</a>
 </p>
