@@ -30,8 +30,8 @@ from wc.filter import applyfilter, get_filterattrs, FilterRating
 allowed_methods = ['GET', 'HEAD', 'CONNECT', 'POST']
 allowed_schemes = ['http', 'https'] # 'nntps' is untested
 allowed_connect_ports = [443] # 563 (NNTP over SSL) is untested
-allowed_local_docs = ['/blocked.png', '/error.html', '/wc.css', '/robots.txt',
-                      '/adminpass.html', '/rated.html']
+allowed_local_docs = ['/blocked.html', '/blocked.png', '/error.html',
+    '/wc.css', '/adminpass.html', '/rated.html', '/robots.txt',]
 
 def is_allowed_document (doc):
     for f in allowed_local_docs:
