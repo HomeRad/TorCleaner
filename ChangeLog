@@ -12,7 +12,7 @@
     Type: bugfix
     Changed: wc/proxy/HttpClient.py
 
-  * merge upstream CVS changes of libjs (spidermonkey) as of 20040516
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20040522
     Type: feature
     Changed: libjs/*
 
@@ -24,6 +24,10 @@
     configuration files
     Type: bugfix
     Changed: wc/filter/Blocker.py
+
+  * new function applyfilters to apply filters of multiple levels
+    Type: feature
+    Changed: wc/filter/__init__.py, wc/proxy/Http{Client,Server}.py
 
 2.13 (released 11.5.2004)
   * remove all old simpletal imports

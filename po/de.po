@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Fri May 21 20:11:59 2004\n"
+"POT-Creation-Date: Sat May 22 00:18:18 2004\n"
 "PO-Revision-Date: 2004-05-11 10:38+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -171,9 +171,6 @@ msgstr "setze Content-Type von %r nach %r in %r"
 
 msgid "add Content-Type %r to %r"
 msgstr "füge Content-Type %r zu %r hinzu"
-
-msgid "fix x-httpd-php Content-Type"
-msgstr "korrigiere x-httpd-php Content-Type"
 
 msgid "chunked encoding should not have Content-Length"
 msgstr "chunked encoding darf kein Content-Length besitzen"
@@ -1783,3 +1780,6 @@ msgstr "Die Portnummer des übergeordneten Proxy"
 
 msgid "Configure rule %(rule)s."
 msgstr "Konfiguriere Regel %(rule)s."
+
+#~ msgid "fix x-httpd-php Content-Type"
+#~ msgstr "korrigiere x-httpd-php Content-Type"

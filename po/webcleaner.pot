@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri May 21 20:11:59 2004\n"
+"POT-Creation-Date: Sat May 22 00:18:18 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,9 +166,6 @@ msgid "set Content-Type from %r to %r in %r"
 msgstr ""
 
 msgid "add Content-Type %r to %r"
-msgstr ""
-
-msgid "fix x-httpd-php Content-Type"
 msgstr ""
 
 msgid "chunked encoding should not have Content-Length"
