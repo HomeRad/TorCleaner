@@ -1071,7 +1071,7 @@ msgid ""
 "If you have any suggestions or comments about %(AppName)s, feel free to\n"
 "email me at\n"
 "<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
-msgstr "Falls sie Vorschläge oder Kommentar zu %(AppName)s haben können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
+msgstr "Falls sie Vorschläge oder Kommentare zu %(AppName)s haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen."
 
 msgid "Rule icon"
 msgstr "Regelicon"
