@@ -48,7 +48,7 @@ class SslConnection (Connection):
         try:
             num_sent = self.send(data)
         except (SSL.WantReadError, SSL.WantWriteError, SSL.WantX509LookupError):
-            debug(PROXY, "%s ssl write message", self)
+            exception(PROXY, "%s ssl write message", self)
             return
         except SSL.Error, err:
             self.handle_error('write error')
