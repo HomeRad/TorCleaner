@@ -68,6 +68,8 @@ LOG_RATING = "wc.rating"
 def initlog (filename, appname):
     """initialize logfiles and configuration"""
     trydirs = []
+    if os.name=="nt":
+        trydirs.append(ConfigDir)
     if os.environ.get("WC_DEVELOPMENT"):
         trydirs.append(os.getcwd())
     logging.config.fileConfig(filename)

@@ -48,7 +48,6 @@ def get_log_file (name, logname, trydirs=[]):
     """get full path name to writeable logfile"""
     dirs = []
     if os.name =='nt':
-        dirs.append(wc.ConfigDir)
         dirs.append(os.environ.get("TEMP"))
     else:
         dirs.append(os.path.join('/', 'var', 'log', name))
