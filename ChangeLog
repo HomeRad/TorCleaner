@@ -10,6 +10,7 @@
 
   * Install both ugettext() and ungettext() into the default namespace
     for translation.
+    Make fallback class customizable in get_translator().
     Type: feature
     Changed: wc/i18n.py
 
@@ -18,11 +19,6 @@
     requested.
     Type: bugfix
     Changed: wc/webgui/webconfig.py
-
-  * ANSI color support for the colored text logger is now detected
-    on Windows systems.
-    Type: feature
-    Changed: wc/ansicolor.py
 
 2.23 "The fog of war" (released 27.10.2004)
 
