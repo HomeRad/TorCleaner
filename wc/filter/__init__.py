@@ -114,17 +114,17 @@ def GetRuleFromName (name):
     return getattr(mod, name)()
 
 
-def applyfilter (filterstage, data, fun, attrs):
+def applyfilter (data, fun, attrs):
     """Apply all filters which are registered in the given filter stage.
        For different filter stages we have different data objects.
        Look at the filter examples.
     """
+    filterstage = attrs['filterstage']
     wc.log.debug(wc.LOG_FILTER, "Filter %d bytes in %s..",
                  len(data), filterstage)
     if attrs.get('nofilter') or (fun!='finish' and not data):
         wc.log.debug(wc.LOG_FILTER, ".. don't filter")
         return data
-    attrs['filterstage'] = filterstage
     filters = wc.configuration.config['filterlist'][filterstage]
     for f in filters:
         ffun = getattr(f, fun)
@@ -157,6 +157,7 @@ def get_filterattrs (url, filterstage, browser='Calzilla/6.0',
         'mime_types': None,
         'headers': attrheaders,
         'browser': browser,
+        'filterstage': filterstage,
     }
     if attrs['mime']:
         charset = get_mime_charset(attrs['mime'])
