@@ -62,6 +62,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_htmlparser = None
         if self.javascript:
             self.js_env = wc.js.jslib.JSEnv()
+            #self.js_env.setBrowser(opts['browser'])
             self.js_output = 0
             self.js_popup = 0
 
