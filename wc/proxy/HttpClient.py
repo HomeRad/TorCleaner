@@ -2,7 +2,7 @@ import rfc822, time, sys
 from cStringIO import StringIO
 from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
-from wc import debug, config
+from wc import debug, config, _
 from wc.proxy import log, match_host
 from wc.debug_levels import *
 from wc.filter import FILTER_REQUEST
@@ -27,7 +27,9 @@ class HttpClient (Connection):
         self.headers = None
         self.bytes_remaining = None # for content only
         self.content = ''
-        if not config['allowedhosts'].has_key(self.addr[0]):
+        host = self.addr[0]
+        if not config['allowedhosts'].has_key(host):
+            print >>sys.stderr, _("%s access denied")%host
             self.close()
 
 

@@ -1,0 +1,4 @@
+#!/bin/sh
+# I use this from work to my home dsl box
+# dont forget to add your external IP to the allowed host list!
+ssh -X -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org

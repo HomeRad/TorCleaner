@@ -1,6 +1,7 @@
 TODO
 
 - webcleanerconf: sortable filters (with up/down)
+- dockapp to visualize config and status
 - test parent proxy authentication
 - more error/warning recognition in parser
 - error recovery in parser (damn it!)

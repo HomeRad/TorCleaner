@@ -13,6 +13,8 @@
 # at localhost, port 3128)
 # Remember, only localhost can connect to this squid proxy
 
+# change it if you like
+# http_port 3128
 
 # disable icp
 icp_port 0
