@@ -6,6 +6,8 @@
       config/webcleaner.conf
   * Updated ssh tunnel scripts
     Changed files: README.sshtunnel
+  * fixed reloading on SIGHUP
+    Changed files: wc/__init__.py
 
 0.60
   * Dont filter comments in *.oreillynet.com - they have some funky

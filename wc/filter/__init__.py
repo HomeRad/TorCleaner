@@ -104,4 +104,3 @@ def initStateObjects (headers={'content-type': 'text/html'}, url=None):
                 attrs.update(f.getAttrs(headers, url))
     return attrs
 
-

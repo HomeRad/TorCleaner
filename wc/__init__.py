@@ -117,6 +117,8 @@ def startfunc ():
 # reload configuration
 def reload_config (signum, frame):
     global config
+    config.reset()
+    config.read_proxyconf()
     config.read_filterconf()
     config.init_filter_modules()
 
