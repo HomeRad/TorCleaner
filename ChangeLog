@@ -1,4 +1,4 @@
-2.27 "" (released xx.xx.2005)
+2.27 "Aliens" (released 11.2.2005)
 
   * Add <nbr> to the list of known deprecated tags so it does not get
     corrected to <br> anymore.
