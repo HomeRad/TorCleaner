@@ -44,6 +44,8 @@ class UrlRule (Rule):
         for mo in self.matchurls_ro:
             if mo.search(url):
                 return True
+        if self.matchurls:
+            return False
         for mo in self.nomatchurls_ro:
             if mo.search(url):
                 return False
