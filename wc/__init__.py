@@ -117,7 +117,7 @@ class Configuration (UserDict.UserDict):
         self['proxyuser'] = ""
         self['proxypass'] = ""
         self['parentproxy'] = ""
-        self['parentproxyport'] = 8080
+        self['parentproxyport'] = 3128
         self['parentproxyuser'] = ""
         self['parentproxypass'] = ""
         self['buffersize'] = 1024

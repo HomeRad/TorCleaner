@@ -2,7 +2,8 @@ webcleaner (0.50) unstable; urgency=low
 
   * change imdb advert filter
   * debian/rules: s#/etc/webcleaner/config/*#/etc/webcleaner/*#
-  * config/webcleaner.conf: change default port to 8080
+  * config/webcleaner.conf: change default port to 8080 and parent
+    proxy port to 3128 (squid).
 
  -- Bastian Kleineidam <calvin@debian.org>  Wed, 10 Jul 2002 00:46:14 +0200
 
