@@ -47,8 +47,8 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
-#BaseUrl = "http://webcleaner.sourceforge.net/zapper/"
-BaseUrl = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
+BaseUrl = "http://webcleaner.sourceforge.net/zapper/"
+#BaseUrl = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
 
 from XmlUtils import xmlify, unxmlify
 

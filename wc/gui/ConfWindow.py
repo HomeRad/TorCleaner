@@ -693,7 +693,7 @@ class ConfWindow (ToolWindow):
         try:
             config = Configuration()
             # XXX log into window
-            doreload = update.update(config, BaseUrl, dryrun=True)
+            doreload = update.update(config, BaseUrl, dryrun=False)
             config.write_filterconf()
         except IOError, msg:
             self.getApp().error(i18n._("Update Error"), "%s: %s" % (i18n._("Update Error"), msg))

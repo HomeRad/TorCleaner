@@ -12,7 +12,7 @@ def _exec_form (form):
     config = _Configuration()
     doreload = False
     try:
-        doreload = _update(config, BaseUrl, log=log, dryrun=True)
+        doreload = _update(config, BaseUrl, log=log, dryrun=False)
         updatelog = log.getvalue()
         config.write_filterconf()
     except IOError, msg:
