@@ -15,3 +15,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+from simpletal import simpleTAL, simpleTALES
+from cStringIO import StringIO
+from wc import config
+
+class WebConfig:
+    def __init__ (self, client, url, form={}):
+        self.client = client
+        # we pretend to be the server
+        self.connected = "True"
+        # make TAL context
+        self.context = simpleTALES.Context()
+        self.context.addGlobal("form", form)
+        self.context.addGlobal("config", config)
+        # note: get_template augments the context
+        templateFile = file(self.get_template(url))
+        # write template
+        template = simpleTAL.compileHTMLTemplate(templateFile)
+        templateFile.close()
+        out = StringIO()
+        template.expand(context, out)
+        # write response
+        self.put_response(out)
+
+
+    def get_template (self, url):
+        # XXX
+        return "error.html"
+
+
+    def put_response (self, out):
+        self.client.server_response(self, response, headers)
+        self.client.server_content(out)
+        self.client.server_close()
