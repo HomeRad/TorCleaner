@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sf.net\n"
-"POT-Creation-Date: 2004-10-01 12:07+0200\n"
+"POT-Creation-Date: 2004-10-02 10:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,8 +94,8 @@ msgstr ""
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:411 ../wc/proxy/HttpServer.py:373
-#: ../wc/proxy/HttpServer.py:393
+#: ../wc/proxy/HttpClient.py:411 ../wc/proxy/HttpServer.py:376
+#: ../wc/proxy/HttpServer.py:396
 msgid "Moved Temporarily"
 msgstr ""
 
@@ -108,21 +108,21 @@ msgstr ""
 msgid "Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:237
+#: ../wc/proxy/HttpServer.py:240
 #, python-format
 msgid "invalid or missing response from %r: %r"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:247
+#: ../wc/proxy/HttpServer.py:250
 #, python-format
 msgid "missing headers in response from %r"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:316
+#: ../wc/proxy/HttpServer.py:319
 msgid "redirection to localhost"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:447
+#: ../wc/proxy/HttpServer.py:450
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr ""
@@ -608,7 +608,6 @@ msgstr ""
 #, python-format
 msgid "Invalid command %r."
 msgstr ""
-
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91
 msgid "${appname} Google Selection"

@@ -1,13 +1,13 @@
 TODO
 
-version 2.20
+version 2.21 and above
 
-- document how to install a proxy that can be used from outside
-  (intranet or internet)
+- SSL gateway seems to have a recursive redirection problem.
+  Investigate this.
 
 - empty page after first load
-
-version 2.21 and above
+  It seems the browser closes the client connection prematurely.
+  Have to test with other browsers as well.
 
 - use ssl-cert-check bash script
 
