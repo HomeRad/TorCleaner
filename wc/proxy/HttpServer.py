@@ -182,10 +182,13 @@ class HttpServer (Server):
             self.state = 'content'
             self.client.server_response(self.response, self.headers)
         else:
-            # We have no idea what it is!?
+            # the HTTP line was missing, just assume that it was there
             print >> sys.stderr, \
                     'Warning: puzzling header received from host %s:' % \
                     self.hostname, `self.response`
+            self.state = 'headers'
+            # Let the server pool know what version this is
+            serverpool.set_http_version(self.addr, self.http_version())
 
 
     def process_headers (self):
@@ -337,20 +340,19 @@ class HttpServer (Server):
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
             #debug(HURT_ME_PLENTY, "%d bytes remaining"%self.bytes_remaining)
-            if self.bytes_remaining < 0:
-                print >>sys.stderr, "Warning: server received %d bytes more than content-length" % (-self.bytes_remaining)
-        filtered_data = data
         is_closed = 0
         for decoder in self.decoders:
-            filtered_data = decoder.decode(filtered_data)
+            data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
         for i in _RESPONSE_FILTERS:
-            filtered_data = applyfilter(i, filtered_data, attrs=self.attrs)
-        if filtered_data:
-	    self.client.server_content(filtered_data)
+            data = applyfilter(i, data, attrs=self.attrs)
+        if data:
+	    self.client.server_content(data)
         if (is_closed or
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
+            if self.bytes_remaining < 0:
+                print >>sys.stderr, "Warning: server received %d bytes more than content-length" % (-self.bytes_remaining)
             # Either we ran out of bytes, or the decoder says we're done
             #debug(HURT_ME_PLENTY, "S/contentfinished")
             self.state = 'recycle'
