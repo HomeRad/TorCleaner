@@ -10,6 +10,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer, get_http_version
+from wc.proxy.auth import *
 from Headers import server_set_headers, remove_headers
 from Headers import has_header_value, WcMessage
 from wc import i18n, config
@@ -43,15 +44,21 @@ _fix_content_encodings = [
 #    'x-bzip2',
 ]
 
+is_http_status = re.compile(r'^\d\d\d$').search
 def get_response_data (response):
     """parse a response status line into tokens (protocol, status, msg)"""
     parts = response.split(None, 2)
-    if len(parts)==3:
-        return parts
     if len(parts)==2:
-        return parts[0], parts[1], "Bummer"
-    error(PROXY, "Invalid response %s", `response`)
-    return "HTTP/1.0", 200, "Ok"
+        warn(PROXY, "Empty response message")
+        parts += ['Bummer']
+    elif len(parts)!=3:
+        error(PROXY, "Invalid response %s", `response`)
+        parts = ['HTTP/1.0', 200, 'Ok']
+    if not is_http_status(parts[1]):
+        error(PROXY, "Invalid http statuscode %s", parts[1])
+        parts[1] = 200
+    parts[1] = int(parts[1])
+    return parts
 
 
 class HttpServer (Server):
@@ -74,8 +81,8 @@ class HttpServer (Server):
         self.attempt_connect()
         self.can_reuse = False
         self.flushing = False
-        # proxy challenge for authentication
-        self.challenge = None
+        # for authentication, hold back the unauthorized data
+        self.holdback = False
 
 
     def __repr__ (self):
@@ -131,15 +138,15 @@ class HttpServer (Server):
             self.reuse()
 
 
-    def send_request (self, headers):
+    def send_request (self):
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         self.write(request)
-        if hasattr(headers, "headers"):
+        if hasattr(self.clientheaders, "headers"):
             # write original Message object headers to preserve
             # case sensitivity (!)
-            self.write("".join(headers.headers))
+            self.write("".join(self.clientheaders.headers))
         else:
-            for key,val in headers.items():
+            for key,val in self.clientheaders.items():
                 header = "%s: %s\r\n" % (key, val.rstrip())
                 self.write(header)
         self.write('\r\n')
@@ -157,8 +164,11 @@ class HttpServer (Server):
         self.content = content
         self.nofilter = nofilter
         self.url = url
+        # fix mime content-type for eg JavaScript
         self.mime = mime
-        self.send_request(headers)
+        # remember client header for authorization resend
+        self.clientheaders = headers
+        self.send_request()
 
 
     def process_read (self):
@@ -226,6 +236,7 @@ class HttpServer (Server):
             self.response = "HTTP/1.0 200 Ok"
             self.statuscode = 200
             self.state = 'headers'
+        debug(PROXY, "Server: Response %s", `self.response`)
 
 
     def process_headers (self):
@@ -243,7 +254,7 @@ class HttpServer (Server):
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
         debug(PROXY, "Server: Headers %s", `str(msg)`)
-        if self.statuscode == '100':
+        if self.statuscode == 100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
             self.state = 'response'
@@ -262,7 +273,7 @@ class HttpServer (Server):
         except FilterPics, msg:
             debug(PROXY, "Server: FilterPics %s", msg)
             # XXX get version
-            response = "HTTP/1.0 200 OK"
+            response = "HTTP/1.1 200 OK"
             headers = {
                 "Content-Type": "text/plain",
                 "Content-Length": len(msg),
@@ -270,7 +281,6 @@ class HttpServer (Server):
             self.client.server_response(response, headers)
             self.client.server_content(msg)
             self.client.server_close()
-            # XXX state?
             self.state = 'recycle'
             self.reuse()
             return
@@ -291,12 +301,9 @@ class HttpServer (Server):
         # XXX </doh>
         debug(PROXY, "Server: Headers filtered %s", `str(self.headers)`)
         wc.proxy.HEADERS.append((self.url, "server", self.headers))
-        if config['parentproxy'] and self.statuscode==407:
-            self.challenges = get_header_challenges(headers, 'Proxy-Authenticate')
-            # resubmit the request with proxy credentials
-            # XXX
-        self.client.server_response(self.response, self.headers)
-        if self.statuscode in ('204', '304') or self.method == 'HEAD':
+        if self.statuscode!=407:
+            self.client.server_response(self.response, self.headers)
+        if self.statuscode in (204, 304) or self.method == 'HEAD':
             # These response codes indicate no content
             self.state = 'recycle'
         else:
@@ -308,7 +315,7 @@ class HttpServer (Server):
         """add missing content-type and/or encoding headers"""
         # 304 Not Modified does not send any type or encoding info,
         # because this info was cached
-        if self.statuscode == '304':
+        if self.statuscode == 304:
             return
         # check content-type against our own guess
         i = self.document.find('?')
@@ -325,7 +332,7 @@ class HttpServer (Server):
                 self.headers['Content-Type'] = "%s\r"%self.mime
             elif not ct.startswith(self.mime):
                 i = ct.find(';')
-                if i== -1:
+                if i == -1:
                     val = self.mime
                 else:
                     val = self.mime + ct[i:]
@@ -439,16 +446,17 @@ class HttpServer (Server):
             for i in _RESPONSE_FILTERS:
                 data = applyfilter(i, data, attrs=self.attrs)
             if data:
-                self.client.server_content(data)
+                if self.statuscode!=407:
+                    self.client.server_content(data)
                 self.data_written = True
         except FilterWait, msg:
             debug(PROXY, "Server: FilterWait %s", msg)
         except FilterPics, msg:
             debug(PROXY, "Server: FilterPics %s", msg)
             assert not self.data_written
+            # XXX interactive options here
             self.client.server_content(str(msg))
             self.client.server_close()
-            # XXX state?
             self.state = 'recycle'
             self.reuse()
             return
@@ -467,6 +475,22 @@ class HttpServer (Server):
         # flush pending client data and try to reuse this connection
         self.flushing = True
         self.flush()
+        if self.statuscode==407:
+            assert config['parentproxy']
+            challenges = get_header_challenges(self.headers, 'Proxy-Authenticate')
+            remove_headers(self.headers, ['Proxy-Authentication'])
+            debug(PROXY, "Server: 407 challenges %s", str(challenges))
+            attrs = {}
+            if 'NTLM' in challenges:
+                attrs['type'] = challenges['NTLM'][0]['type']+1
+            creds = get_credentials(challenges, **attrs)
+            debug(PROXY, "Server: credentials %s", str(creds))
+            # resubmit the request with proxy credentials
+            self.state = 'client'
+            self.clientheaders['Proxy-Authorization'] = "%s\r" % creds
+            self.send_request()
+            return
+            # XXX
 
 
     def flush (self):
@@ -488,12 +512,13 @@ class HttpServer (Server):
             make_timer(0.2, lambda : self.flush())
             return
         # the client might already have closed
-        if self.client:
+        if self.client and self.statuscode!=407:
             if data:
                 self.client.server_content(data)
             self.client.server_close()
         self.attrs = {}
-        self.reuse()
+        if self.statuscode!=407:
+            self.reuse()
 
 
     def reuse (self):

@@ -53,7 +53,7 @@ class HttpProxyClient (object):
         assert self.server.connected
         debug(PROXY, 'ProxyClient: server_response %s %s', str(self), `response`)
         protocol, status, msg = get_response_data(response)
-        if status in ["302", "301"]:
+        if status in (302, 301):
             # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
             # make a new ClientServerMatchmaker
             url = self.server.headers.getheader("Location",
@@ -70,8 +70,8 @@ class HttpProxyClient (object):
                            'identity', # compress
                            )
             return
-        elif status!="200":
-            error(PROXY, "ProxyClient: got %s status %s %s from %s",
+        elif status!=200:
+            error(PROXY, "ProxyClient: got %s status %d %s from %s",
                           protocol, status, `msg`, self.args[0])
             self.finish()
 

@@ -147,8 +147,8 @@ def server_set_headers (headers):
 
 def server_remove_hop_by_hop_headers (headers):
     """Remove hop-by-hop headers"""
-    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer',
-                 'Proxy-Authenticate']
+    # note: do not remove Proxy-Authenticate, we still need it
+    to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer',]
     remove_headers(headers, to_remove)
 
 
