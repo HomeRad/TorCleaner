@@ -9,7 +9,7 @@ __date__    = "$Date$"[7:-2]
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import time, select, asyncore, re
+import time, select, asyncore, re, urlparse
 from sets import Set
 # fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
@@ -32,7 +32,6 @@ HEADERS = LimitQueue(100)
 # XXX better name/implementation for this function
 def stripsite (url):
     """remove scheme and host from url. return host, newurl"""
-    import urlparse
     url = urlparse.urlparse(url)
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
 
@@ -45,7 +44,7 @@ def fix_http_version (protocol):
 
 
 def get_http_version (protocol):
-    """return http version number as a float"""
+    """return http version number as a tuple"""
     mo = is_http(protocol)
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
