@@ -8841,19 +8841,19 @@ static yyconst yy_state_type yy_NUL_trans[264] =
 
 static yyconst flex_int32_t yy_rule_linenum[114] =
     {   0,
-      226,  231,  239,  244,  249,  254,  259,  266,  271,  276,
-      282,  287,  294,  300,  305,  313,  318,  323,  328,  333,
-      338,  346,  351,  358,  364,  370,  377,  385,  403,  421,
-      426,  433,  438,  444,  450,  456,  462,  468,  473,  478,
-      483,  488,  493,  498,  503,  508,  512,  518,  523,  529,
-      535,  541,  546,  552,  558,  563,  569,  574,  580,  584,
-      589,  596,  603,  609,  614,  619,  624,  629,  634,  639,
-      644,  649,  655,  663,  671,  676,  681,  689,  706,  711,
-      717,  723,  729,  735,  754,  773,  777,  782,  801,  820,
-      837,  843,  860,  866,  872,  878,  895,  900,  908,  913,
+      170,  175,  183,  188,  193,  198,  203,  210,  215,  220,
+      226,  231,  238,  244,  249,  257,  262,  267,  272,  277,
+      282,  290,  295,  302,  308,  314,  321,  329,  347,  365,
+      370,  377,  382,  388,  394,  400,  406,  412,  417,  422,
+      427,  432,  437,  442,  447,  452,  456,  462,  467,  473,
+      479,  485,  490,  496,  502,  507,  513,  518,  524,  528,
+      533,  540,  547,  553,  558,  563,  568,  573,  578,  583,
+      588,  593,  599,  607,  615,  620,  625,  633,  650,  655,
+      661,  667,  673,  679,  696,  713,  717,  722,  739,  756,
+      771,  777,  792,  798,  804,  810,  825,  830,  838,  843,
 
-      918,  926,  935,  945,  951,  959,  963,  972,  982,  986,
-      993, 1000, 1007
+      848,  856,  865,  875,  881,  889,  893,  902,  912,  916,
+      923,  930,  937
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -8971,62 +8971,6 @@ void yyfree (void* ptr, void* yyscanner) {
 }
 
 #include "htmlparse.h"
-
-/* Find out if the given HTML attribute val must be quoted.
- The string will be surrounded by double quotes if it contains white space
- or <> or ends with /.
- All double quotes inside the string will be replaced with &quot;.
- val must be a Python String object
-*/
-static PyObject* quote_string (PyObject* val) {
-    int quote = 0;
-    int replace = 0;
-    int len = (int)PyString_Size(val);
-    char* internal = PyString_AsString(val);
-    int i;
-    PyObject* prefix;
-    if (len<0) return NULL;
-    for (i=0; i<len; i++) {
-	if (isspace(internal[i]) ||
-	    internal[i]=='<' ||
-	    internal[i]=='>' ||
-	    internal[i]=='\'') {
-            quote = 1;
-	}
-	else if (internal[i]=='"') {
-            replace = 1;
-	}
-    }
-    if (len==0) {
-        /* its an empty string */
-	quote = 1;
-    }
-    else if (internal[len-1]=='/') {
-	quote = 1;
-    }
-    if (replace!=0) {
-	PyObject* nval = PyObject_CallMethod(val, "replace", "ss", "\"", "&quot;");
-	Py_DECREF(val);
-        val = nval;
-    }
-    if (quote==0) {
-        return val;
-    }
-    /* quote suffix */
-    if ((prefix = PyString_FromString("\""))==NULL) return NULL;
-    PyString_Concat(&val, prefix);
-    if (val==NULL) {
-        Py_DECREF(prefix);
-	return NULL;
-    }
-    /* quote prefix */
-    PyString_ConcatAndDel(&prefix, val);
-    if (prefix==NULL) {
-        Py_DECREF(val);
-	return NULL;
-    }
-    return prefix;
-}
 /* use our own memory management functions (see above) */
 /* handle 8bit characters */
 /* define output file */
@@ -9060,7 +9004,7 @@ static PyObject* quote_string (PyObject* val) {
 
 
 
-#line 9064 "htmllex.c"
+#line 9008 "htmllex.c"
 
 #define INITIAL 0
 #define S_PI 1
@@ -9352,11 +9296,11 @@ YY_DECL
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
 /* %% [7.0] user's declarations go here */
-#line 215 "htmllex.l"
+#line 159 "htmllex.l"
 
 
   /*********************** EOF ************************/
-#line 9360 "htmllex.c"
+#line 9304 "htmllex.c"
 
     yylval = yylval_param;
 
@@ -9486,7 +9430,7 @@ case YY_STATE_EOF(S_APOSSTRING):
 case YY_STATE_EOF(S_APOSSTRING_ESC):
 case YY_STATE_EOF(S_STRING):
 case YY_STATE_EOF(S_STRING_ESC):
-#line 218 "htmllex.l"
+#line 162 "htmllex.l"
 {
     /* wait for more data */
     return T_WAIT;
@@ -9497,7 +9441,7 @@ case YY_STATE_EOF(S_STRING_ESC):
 /* Note: a bug report about "<!- " comments was filed */
 case 1:
 YY_RULE_SETUP
-#line 226 "htmllex.l"
+#line 170 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_COMMENT);
@@ -9505,7 +9449,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 231 "htmllex.l"
+#line 175 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng-3);
@@ -9517,7 +9461,7 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 239 "htmllex.l"
+#line 183 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9526,7 +9470,7 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 244 "htmllex.l"
+#line 188 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9534,7 +9478,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 249 "htmllex.l"
+#line 193 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9542,7 +9486,7 @@ YY_RULE_SETUP
 /* Note: www.nba.com had some <! Copyright !> comment */
 case 6:
 YY_RULE_SETUP
-#line 254 "htmllex.l"
+#line 198 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_COMMENT2);
@@ -9550,7 +9494,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 259 "htmllex.l"
+#line 203 "htmllex.l"
 {
     UPDATE_BUFPOS;
     SETLVAL;
@@ -9561,7 +9505,7 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 266 "htmllex.l"
+#line 210 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9570,7 +9514,7 @@ YY_RULE_SETUP
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 271 "htmllex.l"
+#line 215 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9578,7 +9522,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 276 "htmllex.l"
+#line 220 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9586,7 +9530,7 @@ YY_RULE_SETUP
 /*********************** DOCTYPE ************************/
 case 11:
 YY_RULE_SETUP
-#line 282 "htmllex.l"
+#line 226 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_DOCTYPE);
@@ -9594,7 +9538,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 287 "htmllex.l"
+#line 231 "htmllex.l"
 {
     UPDATE_BUFPOS;
     SETLVAL;
@@ -9605,7 +9549,7 @@ YY_RULE_SETUP
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 294 "htmllex.l"
+#line 238 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9614,7 +9558,7 @@ YY_RULE_SETUP
 /*********************** CDATA ************************/
 case 14:
 YY_RULE_SETUP
-#line 300 "htmllex.l"
+#line 244 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_CDATA);
@@ -9622,7 +9566,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 305 "htmllex.l"
+#line 249 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng-3);
@@ -9634,7 +9578,7 @@ YY_RULE_SETUP
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 313 "htmllex.l"
+#line 257 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9643,7 +9587,7 @@ YY_RULE_SETUP
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 318 "htmllex.l"
+#line 262 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9651,7 +9595,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 323 "htmllex.l"
+#line 267 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9659,7 +9603,7 @@ YY_RULE_SETUP
 /*********************** PI ************************/
 case 19:
 YY_RULE_SETUP
-#line 328 "htmllex.l"
+#line 272 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_PI);
@@ -9668,7 +9612,7 @@ YY_RULE_SETUP
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 333 "htmllex.l"
+#line 277 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9676,7 +9620,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 338 "htmllex.l"
+#line 282 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng-2);
@@ -9688,7 +9632,7 @@ YY_RULE_SETUP
 case 22:
 /* rule 22 can match eol */
 YY_RULE_SETUP
-#line 346 "htmllex.l"
+#line 290 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9696,7 +9640,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 351 "htmllex.l"
+#line 295 "htmllex.l"
 {
     UPDATE_BUFPOS;
     SETLVAL;
@@ -9706,7 +9650,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 358 "htmllex.l"
+#line 302 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9718,7 +9662,7 @@ case 25:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 364 "htmllex.l"
+#line 308 "htmllex.l"
 {
     UPDATE_BUFPOS;
     if (!(yyextra->tmp_attrs = PyDict_New())) return T_ERROR;
@@ -9727,7 +9671,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 370 "htmllex.l"
+#line 314 "htmllex.l"
 {
     /* actually accept a lot of tag chars, which may be illegal,
      but we dont care, its the browsers job */
@@ -9738,7 +9682,7 @@ YY_RULE_SETUP
 case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
-#line 377 "htmllex.l"
+#line 321 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -9749,7 +9693,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 385 "htmllex.l"
+#line 329 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(INITIAL);
@@ -9770,7 +9714,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 403 "htmllex.l"
+#line 347 "htmllex.l"
 {
     UPDATE_BUFPOS;
     if (!strlen(yyextra->tmp_buf)) {
@@ -9791,7 +9735,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 421 "htmllex.l"
+#line 365 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9800,7 +9744,7 @@ YY_RULE_SETUP
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 426 "htmllex.l"
+#line 370 "htmllex.l"
 {
     UPDATE_BUFPOS;
     SETLVAL;
@@ -9811,7 +9755,7 @@ YY_RULE_SETUP
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 433 "htmllex.l"
+#line 377 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9819,7 +9763,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 438 "htmllex.l"
+#line 382 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9828,7 +9772,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 444 "htmllex.l"
+#line 388 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9837,7 +9781,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 450 "htmllex.l"
+#line 394 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9846,7 +9790,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 456 "htmllex.l"
+#line 400 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9856,7 +9800,7 @@ YY_RULE_SETUP
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 462 "htmllex.l"
+#line 406 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9869,7 +9813,7 @@ case 38:
 yyg->yy_c_buf_p = yy_cp = yy_bp + 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 468 "htmllex.l"
+#line 412 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9881,7 +9825,7 @@ case 39:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 473 "htmllex.l"
+#line 417 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9893,7 +9837,7 @@ case 40:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 478 "htmllex.l"
+#line 422 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9905,7 +9849,7 @@ case 41:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 483 "htmllex.l"
+#line 427 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9917,7 +9861,7 @@ case 42:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 488 "htmllex.l"
+#line 432 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9929,7 +9873,7 @@ case 43:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 493 "htmllex.l"
+#line 437 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9941,7 +9885,7 @@ case 44:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 498 "htmllex.l"
+#line 442 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9953,7 +9897,7 @@ case 45:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 503 "htmllex.l"
+#line 447 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9961,14 +9905,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 508 "htmllex.l"
+#line 452 "htmllex.l"
 {
     return T_WAIT;
 }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 512 "htmllex.l"
+#line 456 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9978,7 +9922,7 @@ YY_RULE_SETUP
 case 48:
 /* rule 48 can match eol */
 YY_RULE_SETUP
-#line 518 "htmllex.l"
+#line 462 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9986,7 +9930,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 523 "htmllex.l"
+#line 467 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -9995,7 +9939,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 529 "htmllex.l"
+#line 473 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10004,7 +9948,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 535 "htmllex.l"
+#line 479 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10014,7 +9958,7 @@ YY_RULE_SETUP
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 541 "htmllex.l"
+#line 485 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10022,7 +9966,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 546 "htmllex.l"
+#line 490 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10031,7 +9975,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 552 "htmllex.l"
+#line 496 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10040,7 +9984,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 558 "htmllex.l"
+#line 502 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10049,7 +9993,7 @@ YY_RULE_SETUP
 case 56:
 /* rule 56 can match eol */
 YY_RULE_SETUP
-#line 563 "htmllex.l"
+#line 507 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10058,7 +10002,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 569 "htmllex.l"
+#line 513 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10066,7 +10010,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 574 "htmllex.l"
+#line 518 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10075,7 +10019,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 580 "htmllex.l"
+#line 524 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -10083,7 +10027,7 @@ YY_RULE_SETUP
 case 60:
 /* rule 60 can match eol */
 YY_RULE_SETUP
-#line 584 "htmllex.l"
+#line 528 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10091,7 +10035,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 589 "htmllex.l"
+#line 533 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10102,7 +10046,7 @@ YY_RULE_SETUP
 case 62:
 /* rule 62 can match eol */
 YY_RULE_SETUP
-#line 596 "htmllex.l"
+#line 540 "htmllex.l"
 {
     UPDATE_BUFPOS;
     SETLVAL;
@@ -10113,7 +10057,7 @@ YY_RULE_SETUP
 case 63:
 /* rule 63 can match eol */
 YY_RULE_SETUP
-#line 603 "htmllex.l"
+#line 547 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10126,7 +10070,7 @@ case 64:
 yyg->yy_c_buf_p = yy_cp = yy_bp + 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 609 "htmllex.l"
+#line 553 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10138,7 +10082,7 @@ case 65:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 614 "htmllex.l"
+#line 558 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10150,7 +10094,7 @@ case 66:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 619 "htmllex.l"
+#line 563 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10162,7 +10106,7 @@ case 67:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 624 "htmllex.l"
+#line 568 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10174,7 +10118,7 @@ case 68:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 629 "htmllex.l"
+#line 573 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10186,7 +10130,7 @@ case 69:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 634 "htmllex.l"
+#line 578 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10198,7 +10142,7 @@ case 70:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 639 "htmllex.l"
+#line 583 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10206,7 +10150,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 644 "htmllex.l"
+#line 588 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -10214,7 +10158,7 @@ YY_RULE_SETUP
 /*********************** ATTRS ************************/
 case 72:
 YY_RULE_SETUP
-#line 649 "htmllex.l"
+#line 593 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10223,7 +10167,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 655 "htmllex.l"
+#line 599 "htmllex.l"
 {
     UPDATE_BUFPOS;
     FLUSH_ATTRS;
@@ -10234,7 +10178,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 663 "htmllex.l"
+#line 607 "htmllex.l"
 {
     UPDATE_BUFPOS;
     FLUSH_ATTRS;
@@ -10245,7 +10189,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 671 "htmllex.l"
+#line 615 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10254,7 +10198,7 @@ YY_RULE_SETUP
 case 76:
 /* rule 76 can match eol */
 YY_RULE_SETUP
-#line 676 "htmllex.l"
+#line 620 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_ATTR3);
@@ -10263,7 +10207,7 @@ YY_RULE_SETUP
 case 77:
 /* rule 77 can match eol */
 YY_RULE_SETUP
-#line 681 "htmllex.l"
+#line 625 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10274,7 +10218,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 689 "htmllex.l"
+#line 633 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10295,7 +10239,7 @@ YY_RULE_SETUP
 case 79:
 /* rule 79 can match eol */
 YY_RULE_SETUP
-#line 706 "htmllex.l"
+#line 650 "htmllex.l"
 {
     /* this also skips whitespace! */
     UPDATE_BUFPOS;
@@ -10303,7 +10247,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 711 "htmllex.l"
+#line 655 "htmllex.l"
 {
     /* backslash escapes seen at freshmeat.net */
     UPDATE_BUFPOS;
@@ -10312,7 +10256,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 717 "htmllex.l"
+#line 661 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_STRING);
@@ -10320,7 +10264,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 723 "htmllex.l"
+#line 667 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_APOSSTRING);
@@ -10328,7 +10272,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 729 "htmllex.l"
+#line 673 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10337,13 +10281,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 735 "htmllex.l"
+#line 679 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
-    yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     RESIZE_BUF(yyextra->tmp_buf,1);
     if (PyDict_SetItem(yyextra->tmp_attrs,
@@ -10359,14 +10301,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 754 "htmllex.l"
+#line 696 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
-    yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
@@ -10382,14 +10322,14 @@ YY_RULE_SETUP
 case 86:
 /* rule 86 can match eol */
 YY_RULE_SETUP
-#line 773 "htmllex.l"
+#line 713 "htmllex.l"
 {
     UPDATE_BUFPOS;
 }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 777 "htmllex.l"
+#line 717 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10397,14 +10337,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 782 "htmllex.l"
+#line 722 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
-    yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
@@ -10419,14 +10357,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 801 "htmllex.l"
+#line 739 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
-    yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
@@ -10442,14 +10378,12 @@ YY_RULE_SETUP
 case 90:
 /* rule 90 can match eol */
 YY_RULE_SETUP
-#line 820 "htmllex.l"
+#line 756 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
-    yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
@@ -10462,7 +10396,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 837 "htmllex.l"
+#line 771 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10471,14 +10405,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 843 "htmllex.l"
+#line 777 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
-    yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
@@ -10492,7 +10424,7 @@ YY_RULE_SETUP
 case 93:
 /* rule 93 can match eol */
 YY_RULE_SETUP
-#line 860 "htmllex.l"
+#line 792 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10500,7 +10432,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 866 "htmllex.l"
+#line 798 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10509,7 +10441,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 872 "htmllex.l"
+#line 804 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10518,14 +10450,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 878 "htmllex.l"
+#line 810 "htmllex.l"
 {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
-    yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
@@ -10539,7 +10469,7 @@ YY_RULE_SETUP
 case 97:
 /* rule 97 can match eol */
 YY_RULE_SETUP
-#line 895 "htmllex.l"
+#line 825 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10547,7 +10477,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 900 "htmllex.l"
+#line 830 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10561,7 +10491,7 @@ case 99:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 908 "htmllex.l"
+#line 838 "htmllex.l"
 {
     UPDATE_BUFPOS;
     BEGIN(S_TAGEND);
@@ -10569,7 +10499,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 913 "htmllex.l"
+#line 843 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10578,7 +10508,7 @@ YY_RULE_SETUP
 case 101:
 /* rule 101 can match eol */
 YY_RULE_SETUP
-#line 918 "htmllex.l"
+#line 848 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10593,7 +10523,7 @@ case 102:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 926 "htmllex.l"
+#line 856 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10609,7 +10539,7 @@ case 103:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 935 "htmllex.l"
+#line 865 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10623,7 +10553,7 @@ YY_RULE_SETUP
 case 104:
 /* rule 104 can match eol */
 YY_RULE_SETUP
-#line 945 "htmllex.l"
+#line 875 "htmllex.l"
 {
     UPDATE_BUFPOS;
     /* ignore any trailing garbage of this end tag */
@@ -10632,7 +10562,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 951 "htmllex.l"
+#line 881 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10644,7 +10574,7 @@ YY_RULE_SETUP
 case 106:
 /* rule 106 can match eol */
 YY_RULE_SETUP
-#line 959 "htmllex.l"
+#line 889 "htmllex.l"
 {
     UPDATE_BUFPOS;
 }
@@ -10655,7 +10585,7 @@ case 107:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 963 "htmllex.l"
+#line 893 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10671,7 +10601,7 @@ case 108:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 972 "htmllex.l"
+#line 902 "htmllex.l"
 {
     UPDATE_BUFPOS;
     LOWER_TMP;
@@ -10684,7 +10614,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 982 "htmllex.l"
+#line 912 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -10693,7 +10623,7 @@ YY_RULE_SETUP
 case 110:
 /* rule 110 can match eol */
 YY_RULE_SETUP
-#line 986 "htmllex.l"
+#line 916 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10703,7 +10633,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 993 "htmllex.l"
+#line 923 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10714,7 +10644,7 @@ YY_RULE_SETUP
 case 112:
 /* rule 112 can match eol */
 YY_RULE_SETUP
-#line 1000 "htmllex.l"
+#line 930 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -10724,17 +10654,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 1007 "htmllex.l"
+#line 937 "htmllex.l"
 {
     return T_WAIT;
 }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 1011 "htmllex.l"
+#line 941 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 10738 "htmllex.c"
+#line 10668 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -11921,7 +11851,7 @@ static int yy_flex_strlen (yyconst char * s , yyscan_t yyscanner)
 #undef YY_DECL_IS_OURS
 #undef YY_DECL
 #endif
-#line 1011 "htmllex.l"
+#line 941 "htmllex.l"
 
 
 
