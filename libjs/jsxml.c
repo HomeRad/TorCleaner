@@ -1298,13 +1298,30 @@ static JSPropertySpec xml_static_props[] = {
  */
 #define XSF_PRECOMPILED_ROOT    (XSF_CACHE_VALID << 1)
 
-/* Macros for special-casing xmlns= and xmlns:foo= in ParseNodeToQName. */
+/* Macros for special-casing xml:, xmlns= and xmlns:foo= in ParseNodeToQName. */
+#define IS_XML(str)                                                           \
+    (JSSTRING_LENGTH(str) == 3 && IS_XML_CHARS(JSSTRING_CHARS(str)))
+
 #define IS_XMLNS(str)                                                         \
     (JSSTRING_LENGTH(str) == 5 && IS_XMLNS_CHARS(JSSTRING_CHARS(str)))
 
+#define IS_XML_CHARS(chars)                                                   \
+    (JS_TOLOWER((chars)[0]) == 'x' &&                                         \
+     JS_TOLOWER((chars)[1]) == 'm' &&                                         \
+     JS_TOLOWER((chars)[2]) == 'l')
+
+#define HAS_NS_AFTER_XML(chars)                                               \
+    (JS_TOLOWER((chars)[3]) == 'n' &&                                         \
+     JS_TOLOWER((chars)[4]) == 's')
+
 #define IS_XMLNS_CHARS(chars)                                                 \
-    ((chars)[0] == 'x' && (chars)[1] == 'm' && (chars)[2] == 'l' &&           \
-     (chars)[3] == 'n' && (chars)[4] == 's')
+    (IS_XML_CHARS(chars) && HAS_NS_AFTER_XML(chars))
+
+#define STARTS_WITH_XML(chars,length)                                         \
+    (length >= 3 && IS_XML_CHARS(chars))
+
+static const char xml_namespace_str[] = "http://www.w3.org/XML/1998/namespace";
+static const char xmlns_namespace_str[] = "http://www.w3.org/2000/xmlns/";
 
 static JSXMLQName *
 ParseNodeToQName(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
@@ -1332,7 +1349,19 @@ ParseNodeToQName(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
         if (!prefix)
             return NULL;
 
-        if (!IS_XMLNS(prefix)) {
+        if (STARTS_WITH_XML(start, offset)) {
+            if (offset == 3) {
+                uri = JS_InternString(cx, xml_namespace_str);
+                if (!uri)
+                    return NULL;
+            } else if (offset == 5 && HAS_NS_AFTER_XML(start)) {
+                uri = JS_InternString(cx, xmlns_namespace_str);
+                if (!uri)
+                    return NULL;
+            } else {
+                uri = NULL;
+            }
+        } else {
             uri = NULL;
             n = inScopeNSes->length;
             while (n != 0) {
@@ -1342,14 +1371,15 @@ ParseNodeToQName(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
                     break;
                 }
             }
-            if (!uri) {
-                js_ReportCompileErrorNumber(cx, pn,
-                                            JSREPORT_PN | JSREPORT_ERROR,
-                                            JSMSG_BAD_XML_NAMESPACE,
-                                            js_ValueToPrintableString(cx,
-                                                STRING_TO_JSVAL(prefix)));
-                return NULL;
-            }
+        }
+
+        if (!uri) {
+            js_ReportCompileErrorNumber(cx, pn,
+                                        JSREPORT_PN | JSREPORT_ERROR,
+                                        JSMSG_BAD_XML_NAMESPACE,
+                                        js_ValueToPrintableString(cx,
+                                            STRING_TO_JSVAL(prefix)));
+            return NULL;
         }
 
         localName = js_NewStringCopyN(cx, colon + 1, length - (offset + 1), 0);
@@ -1417,7 +1447,7 @@ ParseNodeToXML(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
     JSBool inLRS;
     JSString *str;
     uint32 length, n, i;
-    JSParseNode *pn2, *next, **pnp;
+    JSParseNode *pn2, *pn3, *head, **pnp;
     JSXMLNamespace *ns;
     JSXMLQName *qn;
     JSXMLClass xml_class;
@@ -1448,8 +1478,7 @@ ParseNodeToXML(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
 
         i = 0;
         while ((pn2 = pn2->pn_next) != NULL) {
-            next = pn2->pn_next;
-            if (!next) {
+            if (!pn2->pn_next) {
                 /* Don't append the end tag! */
                 JS_ASSERT(pn2->pn_type == TOK_XMLETAGO);
                 break;
@@ -1556,12 +1585,25 @@ ParseNodeToXML(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
         JS_ASSERT(pn->pn_count >= 1);
         n = pn->pn_count - 1;
         pnp = &pn2->pn_next;
+        head = *pnp;
         while ((pn2 = *pnp) != NULL) {
             size_t length;
             const jschar *chars;
 
             if (pn2->pn_type != TOK_XMLNAME || pn2->pn_arity != PN_NULLARY)
                 goto syntax;
+
+            /* Enforce "Well-formedness constraint: Unique Att Spec". */
+            for (pn3 = head; pn3 != pn2; pn3 = pn3->pn_next->pn_next) {
+                if (pn3->pn_atom == pn2->pn_atom) {
+                    js_ReportCompileErrorNumber(cx, pn2,
+                                                JSREPORT_PN | JSREPORT_ERROR,
+                                                JSMSG_DUPLICATE_XML_ATTR,
+                                                js_ValueToPrintableString(cx,
+                                                    ATOM_KEY(pn2->pn_atom)));
+                    return NULL;
+                }
+            }
 
             str = ATOM_TO_STRING(pn2->pn_atom);
             pn2 = pn2->pn_next;
@@ -1692,8 +1734,18 @@ ParseNodeToXML(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
                 return PN2X_SKIP_CHILD;
             xml_class = JSXML_CLASS_COMMENT;
         } else if (pn->pn_type == TOK_XMLPI) {
+            if (IS_XML(str)) {
+                js_ReportCompileErrorNumber(cx, pn,
+                                            JSREPORT_PN | JSREPORT_ERROR,
+                                            JSMSG_RESERVED_ID,
+                                            js_ValueToPrintableString(cx,
+                                                STRING_TO_JSVAL(str)));
+                return NULL;
+            }
+
             if (flags & XSF_IGNORE_PROCESSING_INSTRUCTIONS)
                 return PN2X_SKIP_CHILD;
+
             inLRS = JS_EnterLocalRootScope(cx);
             if (!inLRS)
                 goto fail;
@@ -2379,6 +2431,17 @@ GeneratePrefix(JSContext *cx, JSString *uri, JSXMLArray *decls)
     return prefix;
 }
 
+static JSBool
+namespace_match(const void *a, const void *b)
+{
+    const JSXMLNamespace *nsa = (const JSXMLNamespace *) a;
+    const JSXMLNamespace *nsb = (const JSXMLNamespace *) b;
+
+    if (nsb->prefix)
+        return nsa->prefix && !js_CompareStrings(nsa->prefix, nsb->prefix);
+    return !js_CompareStrings(nsa->uri, nsb->uri);
+}
+
 /* ECMA-357 10.2.1 and 10.2.2 */
 static JSString *
 XMLToXMLString(JSContext *cx, JSXML *xml, const JSXMLArray *ancestorNSes,
@@ -2564,7 +2627,7 @@ XMLToXMLString(JSContext *cx, JSXML *xml, const JSXMLArray *ancestorNSes,
          * Assign the new prefix to a copy of ns.  Flag this namespace as if
          * it were declared, for assertion-testing's sake later below.
          *
-         * Erratum: ns->prefix and xml->name are both null (*undefined* in
+         * Erratum: if ns->prefix and xml->name are both null (*undefined* in
          * ECMA-357), we know that xml was named using the default namespace
          * (proof: see GetNamespace and the Namespace constructor called with
          * two arguments).  So we ought not generate a new prefix here, when
@@ -2583,6 +2646,25 @@ XMLToXMLString(JSContext *cx, JSXML *xml, const JSXMLArray *ancestorNSes,
         ns = js_NewXMLNamespace(cx, prefix, ns->uri, JS_TRUE);
         if (!ns)
             goto out;
+
+        /*
+         * If the xml->name was unprefixed, we must remove any declared default
+         * namespace from decls before appending ns.  How can you get a default
+         * namespace in decls that doesn't match the one from name?  Apparently
+         * by calling x.setNamespace(ns) where ns has no prefix.  The other way
+         * to fix this is to update x's in-scope namespaces when setNamespace
+         * is called, but that's not specified by ECMA-357.
+         *
+         * Likely Erratum here, depending on whether the lack of update to x's
+         * in-scope namespace in XML.prototype.setNamespace (13.4.4.36) is an
+         * erratum or not.  Note that changing setNamespace to update the list
+         * of in-scope namespaces will change x.namespaceDeclarations().
+         */
+        if (IS_EMPTY(prefix)) {
+            i = XMLArrayFindMember(&decls, ns, namespace_match);
+            if (i != XML_NOT_FOUND)
+                XMLArrayDelete(cx, &decls, i, JS_TRUE);
+        }
 
         /*
          * In the spec, ancdecls has no name, but is always written out as
@@ -2800,7 +2882,7 @@ ToAttributeName(JSContext *cx, jsval v)
             name = js_DecompileValueGenerator(cx, JSDVG_IGNORE_STACK, v, NULL);
             if (name) {
                 JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                                     JSMSG_BAD_XML_ATTRIBUTE_NAME,
+                                     JSMSG_BAD_XML_ATTR_NAME,
                                      JS_GetStringBytes(name));
             }
             return NULL;
@@ -5888,17 +5970,6 @@ xml_namespace(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
         *rval = (i < length) ? OBJECT_TO_JSVAL(ns->object) : JSVAL_VOID;
     }
     return JS_TRUE;
-}
-
-static JSBool
-namespace_match(const void *a, const void *b)
-{
-    const JSXMLNamespace *nsa = (const JSXMLNamespace *) a;
-    const JSXMLNamespace *nsb = (const JSXMLNamespace *) b;
-
-    if (nsb->prefix)
-        return nsa->prefix && !js_CompareStrings(nsa->prefix, nsb->prefix);
-    return !js_CompareStrings(nsa->uri, nsb->uri);
 }
 
 static JSBool
