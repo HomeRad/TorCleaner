@@ -20,13 +20,13 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 # import all from _winreg
-import _winreg
+from _winreg import *
 from types import StringType
 
 class key_handle (object):
     """represent an opened key with dictionary-like access"""
     def __init__ (self, key, sub_key):
-        self._key = _winreg.OpenKey(key, sub_key)
+        self._key = OpenKey(key, sub_key)
         self.closed = False
 
 
@@ -34,7 +34,7 @@ class key_handle (object):
         if type(key) != StringType:
             raise TypeError, "key type must be string"
         try:
-	    val = _winreg.QueryValueEx(self._key, key)
+	    val = QueryValueEx(self._key, key)
         except WindowsError:
             raise IndexError, "subkey %s not found"%key
         return val[0]
@@ -54,7 +54,7 @@ class key_handle (object):
         while 1:
             try:
                 #print repr(EnumKey(self._key, i))
-                keys.append(key_handle(self._key, _winreg.EnumKey(self._key, i)))
+                keys.append(key_handle(self._key, EnumKey(self._key, i)))
             except EnvironmentError:
                 break
             i += 1
@@ -62,7 +62,7 @@ class key_handle (object):
 
 
     def __len__ (self):
-        return _winreg.QueryInfoKey(self._key)[0]
+        return QueryInfoKey(self._key)[0]
 
 
     def __setitem__ (self, key, value):
@@ -70,7 +70,7 @@ class key_handle (object):
            value is a tuple (type, val). For available types
            see the _winreg module documentation."""
         key = self.__getitem__(key)
-        _winreg.SetValueEx(self._key, key, value[0], value[1])
+        SetValueEx(self._key, key, value[0], value[1])
 
 
     def __delitem__ (self, key):
@@ -79,7 +79,7 @@ class key_handle (object):
 
 
     def close (self):
-        _winreg.CloseKey(self._key)
+        CloseKey(self._key)
         self.closed = True
 
 
