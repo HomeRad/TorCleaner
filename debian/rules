@@ -1,7 +1,9 @@
-#! /usr/bin/make -f
-# Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
-PYTHON := python2.3
+#!/usr/bin/make -f
+# example debian/rules for cdbs packages
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+
 PACKAGE := webcleaner
 BASE := debian/$(PACKAGE)
 DOCDIR := $(BASE)/usr/share/doc/$(PACKAGE)
@@ -9,53 +11,13 @@ SHAREDIR := $(BASE)/usr/share/$(PACKAGE)
 ETCDIR := $(BASE)/etc/$(PACKAGE)
 SERVICEDIR := $(ETCDIR)/service
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+DEB_FIXPERMS_EXCLUDE += /etc/webcleaner/webcleaner.conf /var/log/webcleaner
 
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
-
-# These are used for cross-compiling and for saving the configure script
-# from having to guess our platform (since we know it already)
-DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-
-CONFIG_OPTS :=
-CONFIG_PATHS := --prefix=/usr \
-	--mandir=\$${prefix}/share/man \
-	--infodir=\$${prefix}/share/info
-CONFIG_DEB := --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE)
-
-configure-stamp:
-	dh_testdir
-	./autogen.sh
-	./configure $(CONFIG_DEB) $(CONFIG_PATHS) $(CONFIG_OPTS)
-	touch configure-stamp
-
-build: build-stamp
-build-stamp: configure-stamp
-	dh_testdir
-	$(MAKE)
-	touch build-stamp
-
-clean:
-	dh_testdir
-	rm -f build-stamp configure-stamp
-	$(PYTHON) setup.py clean --all
-	-$(MAKE) clean
-	find . -name '*.py[co]' | xargs rm -f
-	rm -f index.html* test.gif
-	dh_clean
-
-install: build
-	dh_testdir
-	dh_clean -k
-	dh_installdirs
+# available custom targets are for example
+binary-post-install/my_binary_package::
 	chown root:adm $(BASE)/var/log/webcleaner
 	chmod 0750 $(BASE)/var/log/webcleaner
-	$(PYTHON) setup.py install --root=$(CURDIR)/$(BASE) --no-compile
-# delete man pages, we install them with dh_installmanpages
-	rm -rf $(BASE)/usr/man
+	python setup.py install --root=$(CURDIR)/$(BASE) --no-compile
 # delete INSTALL file
 	rm -f $(DOCDIR)/INSTALL
 # move config files
@@ -74,39 +36,4 @@ install: build
 # overrides
 	install -m 0644 debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
 	install -m 0644 debian/webcleaner.linda debian/webcleaner/usr/share/linda/overrides/webcleaner
-# move files to packages
-	dh_movefiles --sourcedir=$(BASE)
 
-
-# Build architecture-independent files here.
-binary-indep: build install
-# nothing to do
-
-# Build architecture-dependent files here.
-binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installdebconf
-	dh_installdocs
-	dh_installexamples
-	dh_installmenu
-#	dh_installlogrotate
-#	dh_installinit --no-start
-#	dh_installcron
-	dh_installman
-#	dh_installinfo
-	dh_installchangelogs
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms -X /etc/webcleaner/webcleaner.conf -X /var/log/webcleaner
-	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install patch unpatch

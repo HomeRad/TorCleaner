@@ -3,21 +3,21 @@ Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@debian.org>
 Standards-Version: 3.6.1
-Build-Depends: python (>= 2.3.1), python2.3-dev (>= 2.3.1), debhelper (>= 4.1.16), debconf (>= 1.2.9), gettext
+Build-Depends: python-dev (>= 2.3.1), debhelper (>= 4.1.16), debconf (>= 1.2.9), gettext, cdbs
 
 Package: webcleaner
 Architecture: any
-Depends: python2.3 (>= 2.3.1), debconf (>= 1.2.9), python2.3-imaging, python2.3-crypto, runit, webcleaner-common (>= ${Source-Version}), python2.3-pyopenssl
-Conflicts: python2.3-psyco (<< 1.1.1)
-Suggests: python2.3-psyco, clamav-daemon
+Depends: python (>= 2.3.1), python (<< 2.4), debconf (>= 1.2.9), python-imaging, python-crypto, runit, webcleaner-common (>= ${Source-Version}), python-pyopenssl
+Conflicts: python-psyco (<< 1.1.1)
+Suggests: python-psyco, clamav-daemon
 Description: a filtering HTTP proxy
  Features:
   * remove unwanted HTML (adverts, flash, etc.)
   * popup blocker
-  * disable animated GIFs
+  * disable animated GIF images
   * filter images by size, remove banner adverts
   * compress documents on-the-fly (with gzip)
-  * reduce images to low-bandwidth JPEGs
+  * reduce images to low-bandwidth JPEG images
   * remove/add/modify arbitrary HTTP headers
   * configurable over a web interface
   * usage of SquidGuard domain and url blacklists
