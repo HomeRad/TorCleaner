@@ -351,16 +351,20 @@ class HttpClient (Connection):
 
     def process_receive (self):
         """called for tunneled ssl connections
-        XXX will also be called on pipelining?
         """
         if not self.server:
             # server is not yet there, delay
             return
-        self.server.write(self.read())
+        if self.method=="CONNECT":
+            self.server.write(self.read())
+        #elif not self.persistent:
+        #    warn(PROXY, "%s data in non-persistent receive state", self)
+        # all other received data will be handled when the ongoing request
+        # is finished
 
 
     def server_request (self):
-        assert self.state=='receive', "%s server_request not in receive state"%self
+        assert self.state=='receive', "%s server_request in non-receive state"%self
         # This object will call server_connected at some point
         ClientServerMatchmaker(self, self.request, self.headers,
                                self.content)
