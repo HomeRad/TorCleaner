@@ -2,10 +2,6 @@ TODO
 
 version 2.5 and above
 
-- I get a lot of these, why?
-  ERROR wc.filter Empty image data found at
-  'http://images.sourceforge.net/images/chrome_bar.png'
-
 - use test/client.py, test/server.py for testing
 
 - test NTLM authentication
@@ -91,3 +87,5 @@ for your application make sure to deny these requests: add
 
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
+
+- bfilter has Flash parse and generation library, I want that too .)

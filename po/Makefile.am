@@ -34,3 +34,4 @@ webcleaner.pot: $(SOURCES)
 
 clean-local:
 	for f in $(LANGUAGES); do rm -f $(LDIR)/$$f/$(LFILE); done
+	rm -f de.mo
