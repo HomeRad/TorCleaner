@@ -34,49 +34,59 @@ def _exec_form (form):
     # proxy port
     if form.has_key('port'):
         _form_proxyport(_getval(form, 'port'))
+    elif config['port']!=8080:
+        config['port'] = 8080
+        info['port'] = True
     # proxy user
     if form.has_key('proxyuser'):
         _form_proxyuser(_getval(form, 'proxyuser').strip(), res)
-    else:
+    elif config['proxyuser']:
         config['proxyuser'] = ''
+        info['proxyuser'] = True
     # proxy pass
     if form.has_key('proxypass'):
         val = _getval(form, 'proxypass')
         # ignore dummy values
         if val!='__dummy__':
             _form_proxypass(base64.encodestring(val).strip(), res)
-    else:
+    elif config['proxypass']:
         config['proxypass'] = ''
-        if config['proxypass'] and config['proxyuser']:
+        info['proxypass'] = True
+        if config['proxyuser']:
             res[0] = 407
     # parent proxy host
     if form.has_key('parentproxy'):
         _form_parentproxy(_getval(form, 'parentproxy').strip())
-    else:
+    elif config['parentproxy']:
         config['parentproxy'] = ''
+        info['parentproxy'] = True
     # parent proxy port
     if form.has_key('parentproxyport'):
         _form_parentproxyport(_getval(form, 'parentproxyport'))
-    else:
+    elif config['parentproxyport'] != 3128:
         config['parentproxyport'] = 3128
+        info['parentproxyport'] = True
     # parent proxy user
     if form.has_key('parentproxyuser'):
         _form_parentproxyuser(_getval(form, 'parentproxyuser').strip())
-    else:
+    elif config['parentproxyuser']:
         config['parentproxyuser'] = ''
+        info['parentproxyuser'] = True
     # parent proxy pass
     if form.has_key('parentproxypass'):
         val = _getval(form, 'parentproxypass')
         # ignore dummy values
         if val!='__dummy__':
             _form_parentproxypass(base64.encodestring(val).strip())
-    else:
+    elif config['parentproxypass']:
         config['parentproxypass'] = ''
+        info['parentproxypass'] = True
     # timeout
     if form.has_key('timeout'):
         _form_timeout(_getval(form, 'timeout'))
-    else:
-        config['timeout'] = 0
+    elif config['timeout']!=30:
+        config['timeout'] = 30
+        info['timeout'] = True
     # filter modules
     _form_filtermodules(form)
     # allowed hosts
