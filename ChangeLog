@@ -1,3 +1,13 @@
+2.14 (released xx.xx.xxxx)
+  * honor unreadable state in StatefulConnection.readable()
+    Type: bugfix
+    Changed: wc/proxy/StatefulConnection.py
+
+  * use out.write() in tagbuffer output directly instead of putting
+    together a string; solves encoding problems
+    Type: bugfix
+    Changed: wc/filter/rules/RewriteRule.py
+
 2.13 (released 11.5.2004)
   * remove all old simpletal imports
     Type: bugfix
