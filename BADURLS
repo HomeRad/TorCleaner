@@ -1,8 +1,11 @@
 Desc: JavaScript in clear text:
-Tags: browsable_without
+Tags: browseable without proxy
 Url: http://www.msnbc.com/news/922215.asp?cp1=1
 
 Desc: No link is clickable (a function is not run becuase of document.write?)
-Tags: browsable_without
+Tags: browseable without proxy
 Url: http://www.mvhs.de not working
 
+Desc: white page
+Tags: browseable without proxy
+Url: http://www.vnunet.com/News/1141398
