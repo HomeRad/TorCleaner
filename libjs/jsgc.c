@@ -909,8 +909,33 @@ gc_dump_thing(JSGCThing *thing, uint8 flags, GCMarkNode *prev, FILE *fp)
         fprintf(fp, "object %8p %s", privateThing, className);
         break;
       }
+      case GCX_NAMESPACE:
+      {
+        JSXMLNamespace *ns = (JSXMLNamespace *)thing;
+        fprintf(fp, "namespace %s:%s",
+                JS_GetStringBytes(ns->prefix), JS_GetStringBytes(ns->uri));
+        break;
+      }
+      case GCX_QNAME:
+      {
+        JSXMLQName *qn = (JSXMLQName *)thing;
+        fprintf(fp, "qname %s(%s):%s",
+                JS_GetStringBytes(qn->prefix), JS_GetStringBytes(qn->uri),
+                JS_GetStringBytes(qn->localName));
+        break;
+      }
+      case GCX_XML:
+      {
+        extern const char *js_xml_class_str[];
+        JSXML *xml = (JSXML *)thing;
+        fprintf(fp, "xml %8p %s", xml, js_xml_class_str[xml->xml_class]);
+        break;
+      }
       case GCX_DOUBLE:
         fprintf(fp, "double %g", *(jsdouble *)thing);
+        break;
+      case GCX_PRIVATE:
+        fprintf(fp, "private %8p", (void *)thing);
         break;
       default:
         fprintf(fp, "string %s", JS_GetStringBytes((JSString *)thing));
@@ -1074,26 +1099,24 @@ MARK_GC_THING(JSContext *cx, void *thing, uint8 *flagp, void *arg)
 
     switch (*flagp & GCF_TYPEMASK) {
       case GCX_OBJECT:
-        /*
-         * Switch to Deutsch-Schorr-Waite if we exhaust our stack quota.
-         */
+        /* If obj->slots is null, obj must be a newborn. */
+        obj = (JSObject *) thing;
+        vp = obj->slots;
+        if (!vp)
+            goto out;
+
+        /* Mark slots if they are small enough to be GC-allocated. */
+        if (vp[-1] * sizeof(jsval) <= GC_NBYTES_MAX)
+            GC_MARK(cx, vp - 1, "slots", arg);
+
+        /* Switch to Deutsch-Schorr-Waite if we exhaust our stack quota. */
         if (!JS_CHECK_STACK_SIZE(cx, stackDummy)) {
             METER(rt->gcStats.dswmark++);
             DeutschSchorrWaite(cx, thing, flagp);
             goto out;
         }
 
-        obj = (JSObject *) thing;
-        vp = obj->slots;
-        if (!vp) {
-            /* If obj->slots is null, obj must be a newborn. */
-            goto out;
-        }
-
-        /* Mark slots if they are small enough to be GC-allocated. */
-        if (vp[-1] * sizeof(jsval) <= GC_NBYTES_MAX)
-            GC_MARK(cx, vp - 1, js_private_str, arg);
-
+        /* Set up local variables to loop over unmarked things. */
         end = vp + ((obj->map->ops->mark)
                     ? CALL_GC_THING_MARKER(obj->map->ops->mark, cx, obj, arg)
                     : JS_MIN(obj->map->freeslot, obj->map->nslots));
@@ -1126,13 +1149,10 @@ MARK_GC_THING(JSContext *cx, void *thing, uint8 *flagp, void *arg)
                     if (!sprop) {
                         switch (slot) {
                           case JSSLOT_PROTO:
-                            strcpy(name, "__proto__");
+                            strcpy(name, js_proto_str);
                             break;
                           case JSSLOT_PARENT:
-                            strcpy(name, "__parent__");
-                            break;
-                          case JSSLOT_PRIVATE:
-                            strcpy(name, "__private__");
+                            strcpy(name, js_parent_str);
                             break;
                           default:
                             JS_snprintf(name, sizeof name,
@@ -1361,7 +1381,7 @@ down:
                 : NULL;
         if (scope)
             vp += DecodeDSWIndex(scope->dswIndex, vp);
-        
+
         /*
          * Alas, we must search for the reversed pointer.  If we used the
          * scope->dswIndex hint, we'll step over a few slots for objects with
@@ -1522,7 +1542,7 @@ js_GC(JSContext *cx, uintN gcflags)
     if (!(gcflags & GC_ALREADY_LOCKED))
         JS_LOCK_GC(rt);
 
-    /* Do nothing if no assignment has executed since the last GC. */
+    /* Do nothing if no mutator has executed since the last GC. */
     if (!rt->gcPoke) {
         METER(rt->gcStats.nopoke++);
         if (!(gcflags & GC_ALREADY_LOCKED))
@@ -1637,7 +1657,7 @@ js_GC(JSContext *cx, uintN gcflags)
     /* Drop atoms held by the property cache, and clear property weak links. */
     js_DisablePropertyCache(cx);
     js_FlushPropertyCache(cx);
-#ifdef DEBUG_brendan
+#ifdef DEBUG_notme
   { extern void js_DumpScopeMeters(JSRuntime *rt);
     js_DumpScopeMeters(rt);
   }
@@ -1860,7 +1880,7 @@ restart:
 
     if (rt->gcCallback)
         (void) rt->gcCallback(cx, JSGC_FINALIZE_END);
-#ifdef DEBUG_brendan
+#ifdef DEBUG_notme
   { extern void DumpSrcNoteSizeHist();
     DumpSrcNoteSizeHist();
     printf("GC HEAP SIZE %lu (%lu)\n",
