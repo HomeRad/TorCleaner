@@ -52,6 +52,14 @@
  tal:condition="nav/pics_html"
  tal:attributes="href string:pics.html.${lang}"
  i18n:translate="">PICS data</a>
+<a href="help.html" class="plain"
+ tal:condition="not:nav/help_html"
+ tal:attributes="href string:help.html.${lang}"
+ i18n:translate="">Help</a>
+<a href="help.html" class="selected"
+ tal:condition="nav/help_html"
+ tal:attributes="href string:help.html.${lang}"
+ i18n:translate="">Help</a>
 </div>
 
 <!-- footer -->
