@@ -341,10 +341,11 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         if tag=="meta":
             if attrs.get('http-equiv', '').lower() =='content-rating':
                 rating = resolve_html_entities(attrs.get('content', ''))
+                url, rating = rating_import(url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more
                 # often
-                rating_add(self.url, rating_parse(rating))
+                rating_add(url, rating)
         elif tag=="body":
             if self.ratings:
                 # headers finished, check rating data
