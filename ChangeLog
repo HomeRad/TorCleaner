@@ -3,8 +3,14 @@
     Changed: wc/*.py
   * make mimelist of filter modules to class variables
     Changed: wc/filter/*.py
-  * you can now have a priority to a filter
+  * you can now have a priority in a filter
     Changed: wc/__init__.py, wc/filter/Filter.py
+  * fix proxy passwort web configuration
+    Changed: wc/webgui/context/config.py
+  * remove i18n from web context files, use i18n:translate in templates
+    Changed: wc/webgui/context/*.py, templates/classic/*.html
+  * wait until enough image data is available to get size info
+    Changed: wc/filter/ImageSize.py
 
 2.0
   * require and use python 2.3
