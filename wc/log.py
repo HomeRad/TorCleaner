@@ -26,7 +26,7 @@ __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import sys, os, re, logging, logging.config
+import sys, os, re, logging, logging.config, textwrap
 from logging.handlers import RotatingFileHandler
 try:
     from wc import ConfigDir, AppName, iswriteable
@@ -136,6 +136,10 @@ def exception (log, msg, *args):
 
 
 def blocktext (s, width):
+    return textwrap.fill(s, width)
+
+
+def blocktext2 (s, width):
     """Adjust lines of s to be not wider than width and fill up
     the lines to maximal length.
     We leave Returns if the previous sentence ended with a punctuation.
