@@ -51,7 +51,7 @@ Requirements and installation instructions are located at the
 look at the ChangeLog_.
 
 .. _install documentation: install.html
-.. _ChangeLog: changes.txt
+.. _ChangeLog: http://cvs.sourceforge.net/viewcvs.py/webcleaner/webcleaner2/ChangeLog?view=markup
 
 
 Screenshots
