@@ -91,6 +91,26 @@ class Rewriter (Filter):
         return {'filter': HtmlFilter(rewrites, url, **opts)}
 
 
+def _buf2data (buf, outbuf):
+    """Append all tags of the buffer to the data"""
+    for item in buf:
+        if item[0]==DATA:
+            outbuf.write(item[1])
+        elif item[0]==STARTTAG:
+            s = "<"+item[1]
+            for name,val in item[2].items():
+                s += ' %s'%name
+                if val:
+                    s += "=%s"%val
+            outbuf.write(s+">")
+        elif item[0]==ENDTAG:
+            outbuf.write("</%s>"%item[1])
+        elif item[0]==COMMENT:
+            outbuf.write("<!--%s-->"%item[1])
+        else:
+            error("unknown buffer element %s" % item[0])
+
+
 class HtmlFilter (HtmlParser,JSListener):
     """The parser has the rules, a data buffer and a rule stack."""
     def __init__ (self, rules, url, **opts):
@@ -103,8 +123,10 @@ class HtmlFilter (HtmlParser,JSListener):
         self.comments = opts['comments']
         self.javascript = opts['javascript']
         self.outbuf = StringIO()
-        self.inbuf = ''
+        self.inbuf = StringIO()
+        self.waitbuf = StringIO()
         self.state = 'parse'
+        self.waited = 0
         self.rulestack = []
         self.buf = []
         self.url = url or "unknown"
@@ -120,12 +142,18 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def feed (self, data):
         if self.state=='parse':
-            if self.inbuf:
-                data = self.inbuf + data
-                self.inbuf = ''
+            if self.waited:
+                data = "%s%s%s" % (self.waitbuf.getvalue(),
+                                   self.inbuf.getvalue(),
+                                   data)
+                self.inbuf.close()
+                self.waitbuf.close()
+                self.inbuf = StringIO()
+                self.waitbuf = StringIO()
+                self.waited = 0
             HtmlParser.feed(self, data)
         else:
-            self.inbuf += data
+            self.inbuf.write(data)
 
 
     def buf_append_data (self, data):
@@ -133,15 +161,10 @@ class HtmlFilter (HtmlParser,JSListener):
         DATA things in the buffer. Why? To be 100% sure that
         an ENCLOSED match really matches enclosed data.
         """
-        if self.buf and data[0]==DATA and self.buf[-1][0]==DATA:
+        if data[0]==DATA and self.buf and self.buf[-1][0]==DATA:
             self.buf[-1][1] += data[1]
         else:
             self.buf.append(data)
-
-
-    def cdata (self, d):
-        """handler for data"""
-        self.buf_append_data([DATA, d])
 
 
     def flushbuf (self):
@@ -153,53 +176,68 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def buf2data (self):
-        """Append all tags of the buffer to the data"""
-        for n in self.buf:
-            if n[0]==DATA:
-                self.outbuf.write(n[1])
-            elif n[0]==STARTTAG:
-                s = "<"+n[1]
-                for name,val in n[2].items():
-                    s += ' %s'%name
-                    if val:
-                        s += "=%s"%val
-                self.outbuf.write(s+">")
-            elif n[0]==ENDTAG:
-                self.outbuf.write("</%s>"%n[1])
-            elif n[0]==COMMENT:
-                self.outbuf.write("<!--%s-->"%n[1])
-            else:
-                error("unknown buffer element %s" % n[0])
+        _buf2data(self.buf, self.outbuf)
         self.buf = []
 
 
+    def cdata (self, d):
+        """handler for data"""
+        item = [DATA, d]
+        if self.state=='wait':
+            return _buf2data([item], self.waitbuf)
+        self.buf_append_data(item)
+
+
     def comment (self, data):
-        """a comment: accept only non-empty comments"""
+        """a comment; accept only non-empty comments"""
+        item = [COMMENT, data]
+        if self.state=='wait':
+            return _buf2data([item], self.waitbuf)
         if self.comments and data:
-            self.buf.append([COMMENT, data])
+            self.buf.append(item)
 
 
     def characters (self, s):
-        self.buf_append_data([DATA, s])
+        """handler for characters"""
+        item = [DATA, s]
+        if self.state=='wait':
+            return _buf2data([item], self.waitbuf)
+        self.buf_append_data(item)
+
+
+    def doctype (self, data):
+        item = [DATA, "<!DOCTYPE%s>"%data]
+        if self.state=='wait':
+            return _buf2data([item], self.waitbuf)
+        self.buf_append_data(item)
+
+
+    def pi (self, data):
+        item = [DATA, "<?%s?>"%data]
+        if self.state=='wait':
+            return _buf2data([item], self.waitbuf)
+        self.buf_append_data(item)
 
 
     def startElement (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
+        # default data
+        item = [STARTTAG, tag, attrs]
+        if self.state=='wait':
+            return _buf2data([item], self.waitbuf)
         rulelist = []
         filtered = 0
-        # default data
-        tobuffer = (STARTTAG, tag, attrs)
         # look for filter rules which apply
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
                 debug(NIGHTMARE, "Filter: matched rule %s on tag %s" % (`rule.title`, `tag`))
                 if rule.start_sufficient:
-                    tobuffer = rule.filter_tag(tag, attrs)
+                    item = rule.filter_tag(tag, attrs)
                     filtered = "True"
                     # give'em a chance to replace more than one attribute
-                    if tobuffer[0]==STARTTAG and tobuffer[1]==tag:
-                        foo,tag,attrs = tobuffer
+                    if item[0]==STARTTAG and item[1]==tag:
+                        foo,tag,attrs = item
                         continue
                     else:
                         break
@@ -212,14 +250,41 @@ class HtmlFilter (HtmlParser,JSListener):
             self.rulestack.append((pos, rulelist))
         # if its not yet filtered, try filter javascript
         if filtered:
-            self.buf_append_data(tobuffer)
+            self.buf_append_data(item)
         elif self.javascript:
             self.jsStartElement(tag, attrs)
         else:
-            self.buf.append(tobuffer)
+            self.buf.append(item)
         # if rule stack is empty, write out the buffered data
         if not self.rulestack and \
            (not self.javascript or tag!='script'):
+            self.buf2data()
+
+
+    def endElement (self, tag):
+        """We know the following: if a rule matches, it must be
+        the one on the top of the stack. So we look only at the top
+        rule.
+	If it matches and the rule stack is now empty we can flush
+	the buffer (by calling buf2data)"""
+        filtered = 0
+        # remember: self.rulestack[-1][1] is the rulelist that
+        # matched for a start tag. and if the first one ([0])
+        # matches, all other match too
+        if self.rulestack and self.rulestack[-1][1][0].match_tag(tag):
+            pos, rulelist = self.rulestack.pop()
+            for rule in rulelist:
+                if rule.match_complete(pos, self.buf):
+                    rule.filter_complete(pos, self.buf)
+                    filtered = 1
+                    break
+        if not filtered and self.javascript and tag=='script' and \
+            self.jsEndElement(tag):
+            del self.buf[-1]
+            del self.buf[-1]
+        else:
+            self.buf.append((ENDTAG, tag))
+        if not self.rulestack:
             self.buf2data()
 
 
@@ -264,14 +329,13 @@ class HtmlFilter (HtmlParser,JSListener):
 
     def jsForm (self, name, action, target):
         if not name: return
-        debug(HURT_ME_PLENTY, "Filter: jsForm", `name`, `action`, `target`)
+        debug(HURT_ME_PLENTY, "JS: jsForm", `name`, `action`, `target`)
         self.jsEnv.addForm(name, action, target)
 
 
     def jsScriptData (self, data, url, ver):
-        assert self.state=='script'
+        assert self.state=='wait'
         if data is None:
-            debug(HURT_ME_PLENTY, "Filter: jsScriptData", url)
             if not self.script:
                 print >> sys.stderr, "empty JS src", url
             elif self.jsScript(self.script, ver):
@@ -283,19 +347,21 @@ class HtmlFilter (HtmlParser,JSListener):
                 self.buf.append([ENDTAG, "script"])
             self.state = 'parse'
         else:
+            debug(HURT_ME_PLENTY, "JS: data", data)
             self.script += data
 
 
     def jsScriptSrc (self, url, language):
+        assert self.state=='parse'
         ver = 0.0
         if language:
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
             if mo:
                 ver = float(mo.group('num'))
         url = urlparse.urljoin(self.url, url)
-        debug(HURT_ME_PLENTY, "Filter: jsScriptSrc", url, ver)
+        debug(HURT_ME_PLENTY, "JS: jsScriptSrc", url, ver)
         self.script = ''
-        self.state = 'script'
+        self.state = 'wait'
         client = HttpProxyClient(self.jsScriptData, (url, ver))
         ClientServerMatchmaker(client,
                                "GET %s HTTP/1.1" % url, #request
@@ -309,7 +375,7 @@ class HtmlFilter (HtmlParser,JSListener):
     def jsScript (self, script, ver):
         """execute given script with javascript version ver
            return True if the script generates any output, else False"""
-        debug(HURT_ME_PLENTY, "Filter: jsScript", script, ver)
+        debug(HURT_ME_PLENTY, "JS: jsScript", ver, `script`)
         self.output_counter = 0
         self.jsEnv.attachListener(self)
         self.jsfilter = HtmlFilter(self.rules, self.url,
@@ -335,40 +401,13 @@ class HtmlFilter (HtmlParser,JSListener):
         self.popup_counter += 1
 
 
-    def endElement (self, tag):
-        """We know the following: if a rule matches, it must be
-        the one on the top of the stack. So we look only at the top
-        rule.
-	If it matches and the rule stack is now empty we can flush
-	the buffer (by calling buf2data)"""
-        filtered = 0
-        # remember: self.rulestack[-1][1] is the rulelist that
-        # matched for a start tag. and if the first one ([0])
-        # matches, all other match too
-        if self.rulestack and self.rulestack[-1][1][0].match_tag(tag):
-            pos, rulelist = self.rulestack.pop()
-            for rule in rulelist:
-                if rule.match_complete(pos, self.buf):
-                    rule.filter_complete(pos, self.buf)
-                    filtered = 1
-                    break
-        if not filtered and self.javascript and tag=='script' and \
-            self.jsEndElement(tag):
-            del self.buf[-1]
-            del self.buf[-1]
-        else:
-            self.buf.append((ENDTAG, tag))
-        if not self.rulestack:
-            self.buf2data()
-
-
     def jsEndElement (self, tag):
         """parse generated html for scripts
            return True if the script generates any output, else False"""
         if len(self.buf)<2:
             return
         if self.buf[-1][0]!=DATA:
-            print >>sys.stderr, "missing data for </script>", self.buf[-1:]
+            # <script></script>
             return
         script = self.buf[-1][1].strip()
         if not (self.buf[-2][0]==STARTTAG and \
@@ -387,13 +426,6 @@ class HtmlFilter (HtmlParser,JSListener):
         if not script: return
         return self.jsScript(script, 0.0)
 
-
-    def doctype (self, data):
-        self.buf_append_data([DATA, "<!DOCTYPE%s>"%data])
-
-
-    def pi (self, data):
-        self.buf_append_data([DATA, "<?%s?>"%data])
 
     def errorfun (self, msg, name):
         print >> sys.stderr, name, "parsing %s: %s" % (self.url, msg)
