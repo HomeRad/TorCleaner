@@ -268,4 +268,9 @@
   <attr name="width">^(25|100)%$</attr>
   <enclosed>&amp;ai=A</enclosed>
 </rewrite>
+
+<block sid="wc.30"
+ url="pagead\d+\.googlesyndication\.com">
+  <title lang="de">Google pageads</title>
+</block>
 </folder>
