@@ -17,109 +17,19 @@ import wc.proxy
 import wc.proxy.dns
 import wc.proxy.Connection
 import wc.ip
+import wc.network
 
 
-###################### configuration ########################
+dns_config = None
 
-class DnsConfig (object):
-    """DNS configuration storage"""
-    pass
+def init_config ():
+    global dns_config
+    dns_config = wc.network.resolver_config()
+    # re-read dns config every minute
+    wc.proxy.make_timer(60, init_config)
 
+init_config()
 
-def init_dns_resolver ():
-    """initialize this module, filling the DNS config"""
-    DnsConfig.nameservers = []
-    DnsConfig.search_domains = []
-    DnsConfig.search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
-    if os.name=='posix':
-        init_dns_resolver_posix()
-    elif os.name=='nt':
-        init_dns_resolver_nt()
-    else:
-        # other platforms not supported (what about Mac?)
-        pass
-    if not DnsConfig.search_domains:
-        DnsConfig.search_domains.append('')
-    if not DnsConfig.nameservers:
-        DnsConfig.nameservers.append('127.0.0.1')
-    wc.log.debug(wc.LOG_DNS, "nameservers %s", DnsConfig.nameservers)
-    wc.log.debug(wc.LOG_DNS, "search domains %s", DnsConfig.search_domains)
-    # re-read config every 10 minutes
-    # disabled, there is a reload option in webcleaner
-    #wc.proxy.make_timer(600, init_dns_resolver)
-
-
-def init_dns_resolver_posix ():
-    "Set up the DnsLookupConnection class with /etc/resolv.conf information"
-    if not os.path.exists('/etc/resolv.conf'):
-        return
-    for line in file('/etc/resolv.conf', 'r').readlines():
-        line = line.strip()
-        if (not line) or line[0]==';' or line[0]=='#':
-            continue
-        m = re.match(r'^search\s+(\.?.+)$', line)
-        if m:
-            for domain in m.group(1).split():
-                DnsConfig.search_domains.append('.'+domain.lower())
-        m = re.match(r'^nameserver\s+(\S+)\s*$', line)
-        if m: DnsConfig.nameservers.append(m.group(1))
-
-
-def init_dns_resolver_nt ():
-    """get DNS config from Windows registry settings"""
-    import winreg
-    key = None
-    try:
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
-               r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
-    except EnvironmentError:
-        try: # for Windows ME
-            key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
-                    r"SYSTEM\CurrentControlSet\Services\VxD\MSTCP")
-        except EnvironmentError:
-            pass
-    if key:
-        for server in winreg.stringdisplay(key.get("NameServer", "")):
-            if server:
-                DnsConfig.nameservers.append(str(server))
-        for item in winreg.stringdisplay(key.get("SearchList", "")):
-            if item:
-                DnsConfig.search_domains.append(str(item))
-        if not DnsConfig.nameservers:
-            # XXX the proper way to test this is to search for
-            # the "EnableDhcp" key in the interface adapters...
-            for server in winreg.stringdisplay(key.get("DhcpNameServer", "")):
-                if server:
-                    DnsConfig.nameservers.append(str(server))
-            for item in winreg.stringdisplay(key.get("DhcpDomain", "")):
-                if item:
-                    DnsConfig.search_domains.append(str(item))
-
-    try: # search adapters
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
-  r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\DNSRegisteredAdapters")
-        for subkey in key.subkeys():
-            values = subkey.get('DNSServerAddresses', "")
-            for server in winreg.binipdisplay(values):
-                if server:
-                    DnsConfig.nameservers.append(server)
-    except EnvironmentError:
-        pass
-
-    try: # search interfaces
-        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
-           r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")
-        for subkey in key.subkeys():
-            for server in winreg.stringdisplay(subkey.get('NameServer', '')):
-                if server:
-                    DnsConfig.nameservers.append(server)
-    except EnvironmentError:
-        pass
-
-
-init_dns_resolver()
-
-######################################################################
 
 def background_lookup (hostname, callback):
     "Return immediately, but call callback with a DnsResponse object later"
@@ -174,11 +84,11 @@ class DnsExpandHostname (object):
         self.answers = {} # Map hostname to DNS answer
         self.delay = 0.2 # How long do we wait before trying another expansion?
         if not dnscache.well_known_hosts.has_key(hostname):
-            for domain in DnsConfig.search_domains:
+            for domain in dns_config.search_domains:
                 self.queries.append(hostname + domain)
             if hostname.find('.') < 0 and hostname.find(':') < 0:
                 # If there's no dot, we should try expanding patterns
-                for pattern in DnsConfig.search_patterns:
+                for pattern in dns_config.search_patterns:
                     self.queries.append(pattern % hostname)
             else:
                 # But if there is a dot, let's increase the delay
@@ -376,7 +286,7 @@ class DnsLookupHostname (object):
     def __init__ (self, hostname, callback):
         self.hostname = hostname
         self.callback = callback
-        self.nameservers = DnsConfig.nameservers[:]
+        self.nameservers = dns_config.nameservers[:]
         self.requests = []
         self.outstanding_requests = 0
         self.issue_request()
@@ -467,7 +377,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
 
     def __repr__ (self):
         where = ''
-        if self.nameserver != DnsConfig.nameservers[0]:
+        if self.nameserver != dns_config.nameservers[0]:
             where = ' @ %s'%self.nameserver
         retry = ''
         if self.retries != 0:
