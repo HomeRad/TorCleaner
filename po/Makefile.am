@@ -1,20 +1,19 @@
-# we use the scripts in Tools/i18n of the Python 2.3 distribution
+# use scripts found in Tools/i18n of the Python distribution
 PYTHON := python2.3
-I18NTOOLS := .
-GETTEXT := $(PYTHON) $(I18NTOOLS)/pygettext.py -k i18n._
-#MSGFMT := $(PYTHON) $(I18NTOOLS)/msgfmt.py
-MSGFMT := msgfmt -c
+GETTEXT := $(PYTHON) pygettext.py -k i18n._
+MSGFMT := $(PYTHON) msgfmt.py
+#MSGFMT := msgfmt -c
 MSGMERGE := msgmerge
 SOURCES = $(shell find ../wc -name \*.py) \
 ../webcleaner \
 $(shell find ../templates -name \*.html)
 
-LDIR=../share/locale
-PACKAGE=webcleaner
-LFILE=LC_MESSAGES/$(PACKAGE).mo
+LDIR = ../share/locale
+PACKAGE = webcleaner
+LFILE = LC_MESSAGES/$(PACKAGE).mo
 # defined language (add new languages here)
-LANGUAGES=de
-MOS=$(patsubst %, %.mo, $(LANGUAGES) )
+LANGUAGES = de
+MOS = $(patsubst %, %.mo, $(LANGUAGES) )
 
 all:	$(MOS)
 
