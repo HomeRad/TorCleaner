@@ -65,25 +65,26 @@ LOG_ACCESS = "wc.access"
 LOG_RATING = "wc.rating"
 
 
-def initlog (filename, appname):
+def initlog (filename, appname, file_logs=True):
     """initialize logfiles and configuration"""
-    trydirs = []
-    if os.name=="nt":
-        trydirs.append(ConfigDir)
-    if os.environ.get("WC_DEVELOPMENT"):
-        trydirs.append(os.getcwd())
     logging.config.fileConfig(filename)
-    logname = "%s.log"%appname
-    logfile = log.get_log_file(appname, logname, trydirs=trydirs)
-    handler = get_wc_handler(logfile)
-    logging.getLogger("wc").addHandler(handler)
-    logging.getLogger("simpleTAL").addHandler(handler)
-    logging.getLogger("simpleTALES").addHandler(handler)
-    # access log is always a file
-    logname = "%s-access.log"%appname
-    logfile = log.get_log_file(appname, logname, trydirs=trydirs)
-    handler = get_access_handler(logfile)
-    logging.getLogger("wc.access").addHandler(handler)
+    if file_logs:
+        trydirs = []
+        if os.name=="nt":
+            trydirs.append(ConfigDir)
+        if os.environ.get("WC_DEVELOPMENT"):
+            trydirs.append(os.getcwd())
+        logname = "%s.log"%appname
+        logfile = log.get_log_file(appname, logname, trydirs=trydirs)
+        handler = get_wc_handler(logfile)
+        logging.getLogger("wc").addHandler(handler)
+        logging.getLogger("simpleTAL").addHandler(handler)
+        logging.getLogger("simpleTALES").addHandler(handler)
+        # access log is always a file
+        logname = "%s-access.log"%appname
+        logfile = log.get_log_file(appname, logname, trydirs=trydirs)
+        handler = get_access_handler(logfile)
+        logging.getLogger("wc.access").addHandler(handler)
 
 
 def get_wc_handler (logfile):
@@ -126,12 +127,12 @@ import wc.filter.VirusFilter
 # safely set config values upon import
 config = {}
 
-def wstartfunc (handle=None, abort=None, confdir=ConfigDir):
+def wstartfunc (handle=None, abort=None, confdir=ConfigDir, file_logs=True):
     """Initalize configuration, start psyco compiling and the proxy loop.
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
-    initlog(os.path.join(confdir, "logging.conf"), Name)
+    initlog(os.path.join(confdir, "logging.conf"), Name, file_logs=file_logs)
     # read configuration
     config = Configuration(confdir=confdir)
     if abort is not None:
