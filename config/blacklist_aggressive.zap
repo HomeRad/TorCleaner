@@ -3,8 +3,8 @@
 <folder disable="0">
 <title lang="en">Blacklist aggressive</title>
 <title lang="de">Filter für Aggression</title>
-<description lang="en">Automatically generated on 2004-07-25 13:18:15</description>
-<description lang="de">Automatisch generiert am 2004-07-25 13:18:15</description>
+<description lang="en">Automatically generated on 2004-12-26 23:27:59</description>
+<description lang="de">Automatisch generiert am 2004-12-26 23:27:59</description>
 <blockdomains
  filename="blacklists/aggressive/domains.gz">
   <title lang="en">Aggressive domain filter</title>
