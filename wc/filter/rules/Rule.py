@@ -31,11 +31,14 @@ def compileRegex (obj, attr):
         setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
 
 class LangDict (dict):
-    """accessing an entry with unknown translation returns the default
-       translated entry or a random one"""
+    """Dictionary with a fallback algorithm, getting a default key entry if
+       the requested key is not already mapped. Keys are usually languages
+       like 'en' or 'de'."""
 
     def __getitem__ (self, key):
-        """get translation for key or default translation"""
+        """accessing an entry with unknown translation returns the default
+           translated entry or if not found a random one or if the dict
+           is empty an empty string"""
         if not self.has_key(key):
             # default is english
             if 'en' in self:
