@@ -42,7 +42,7 @@ def remove_headers (headers, to_remove):
     """utility function to remove entries from RFC822 headers"""
     for h in to_remove:
         if headers.has_key(h):
-            #debug(BRING_IT_ON, "remove header", `h`)
+            debug(BRING_IT_ON, "remove header", `h`)
             del headers[h]
 
 config = None
@@ -202,7 +202,7 @@ class ParseException (Exception): pass
 
 class BaseParser:
     def parse (self, filename, config):
-        #debug(BRING_IT_ON, "Parsing "+filename)
+        debug(BRING_IT_ON, "Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate("ISO-8859-1")
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
@@ -287,7 +287,7 @@ class WConfigParser (BaseParser):
             elif self.config['logfile']:
                 self.config['logfile'] = open(self.config['logfile'], 'a')
         elif name=='filter':
-            #debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
+            debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 
 

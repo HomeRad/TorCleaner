@@ -44,7 +44,7 @@ def error (*args):
 
 
 def test ():
-    #debug("a")
+    debug("a")
     warn("a", "b")
     info(None)
     error()

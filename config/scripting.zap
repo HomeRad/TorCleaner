@@ -43,7 +43,8 @@
 <replace part="attr"/>
 </rewrite>
 
-<rewrite title="&lt;body&gt; onload" oid="6"
+<rewrite title="[rewrite] &lt;body&gt; onload" oid="6"
+ desc="Remove onload javascript attribute"
  disable="1"
  tag="body">
 <attr name="onload"/>
@@ -58,7 +59,7 @@
 </rewrite>
 
 <rewrite title="&lt;body&gt; onunload" oid="8"
- desc="unonload is almost always used for advert popups "
+ desc="onunload is used for advert popups "
  tag="body">
 <attr name="onunload"/>
 <replace part="attr"/>
@@ -94,4 +95,17 @@
 <javascript title="Enable JavaScript" oid="14"
  desc="The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()"
  disable="1"/>
+
+<rewrite title="&lt;frameset&gt; onunload" oid="15"
+ desc="onunload is used for advert popups">
+<attr name="onunload"/>
+<replace part="attr"/>
+</rewrite>
+
+<rewrite title="&lt;frame&gt; onunload" oid="16"
+ desc="onunload is used for advert popups"
+ tag="frame">
+<attr name="onunload"/>
+<replace part="attr"/>
+</rewrite>
 </folder>
