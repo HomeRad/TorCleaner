@@ -393,10 +393,6 @@ def _form_rule_urlparts (form):
     if path!=currule.path:
         currule.path = path
         info['ruleurlpath'] = True
-    parameters = _getval(form, 'rule_urlparameters').strip()
-    if parameters!=currule.parameters:
-        currule.parameters = parameters
-        info['ruleurlparameters'] = True
     query = _getval(form, 'rule_urlquery').strip()
     if query!=currule.query:
         currule.query = query

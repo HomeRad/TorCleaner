@@ -9,7 +9,6 @@
  host="naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn"
  port=""
  path=""
- parameters=""
  query=""
  fragment=""/>
 
@@ -18,7 +17,6 @@
  host=""
  port=""
  path="naughty|cumshot|lesbian|hardcore|pussie|playboy|ficken|penis|xxx|adult|porn"
- parameters=""
  query=""
  fragment=""/>
 

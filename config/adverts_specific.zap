@@ -133,7 +133,6 @@
  host="images2.slashdot.org"
  port=""
  path="/Slashdot/pc.gif"
- parameters=""
  query=""
  fragment=""/>
 
@@ -142,7 +141,6 @@
  host="images.slashdot.org"
  port=""
  path="/banner/"
- parameters=""
  query=""
  fragment=""/>
 

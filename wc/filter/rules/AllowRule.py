@@ -27,7 +27,6 @@ Netlocparts = [
         'host',
         'port',
         'path',
-        'parameters',
         'query',
         'fragment',
     ]
@@ -35,18 +34,17 @@ Netlocparts = [
 class AllowRule (Rule):
     def __init__ (self, sid=None, oid=None, title="No title", desc="",
                   disable=0, scheme="", host="", port="", path="",
-                  parameters="", query="", fragment=""):
+                  query="", fragment=""):
         super(AllowRule, self).__init__(sid=sid, oid=oid, title=title,
                                         desc=desc, disable=disable)
         self.scheme = scheme
         self.host = host
         self.port = port
         self.path = path
-        self.parameters = parameters
         self.query = query
         self.fragment = fragment
-        self.attrnames.extend(('scheme','host','port','path','parameters',
-                                'query','fragment'))
+        self.attrnames.extend(('scheme', 'host', 'port', 'path', 'query',
+                               'fragment'))
 
 
     def fromFactory (self, factory):

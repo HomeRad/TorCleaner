@@ -44,7 +44,6 @@
  host="^ad(s|server)?\."
  port=""
  path=""
- parameters=""
  query=""
  fragment=""/>
 
@@ -71,7 +70,6 @@
  host="ad(s|server)?\."
  port=""
  path=""
- parameters=""
  query=""
  fragment=""/>
 
@@ -110,7 +108,6 @@
  host=""
  port=""
  path="(ad.*click|click.*thr|click.*ad)"
- parameters=""
  query=".+"
  fragment=""/>
 
@@ -126,7 +123,6 @@
  host=""
  port=""
  path="/(advert|banners?|adid|profileid)/"
- parameters=""
  query=""
  fragment=""/>
 
@@ -142,7 +138,6 @@
  host="^[\d.]+$"
  port=""
  path=""
- parameters=""
  query="\.gif$"
  fragment=""/>
 

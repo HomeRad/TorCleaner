@@ -141,7 +141,7 @@ class Blocker (Filter):
 
     def doit (self, data, **args):
         debug(FILTER, "block filter working on %s", `data`)
-        urlTuple = list(urlparse.urlparse(data))
+        urlTuple = list(urlparse.urlsplit(data))
         netloc = urlTuple[1]
         s = netloc.split(":")
         if len(s)==2:

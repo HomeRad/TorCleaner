@@ -148,7 +148,6 @@ def write_expressions (cat, b, ftype, f):
  scheme=""
  host=""
  path="%(path)s"
- parameters=""
  query=""
  fragment=""/>
 """ % d)

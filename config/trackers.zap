@@ -9,7 +9,6 @@
  host="(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)"
  port=""
  path=""
- parameters=""
  query=""
  fragment=""/>
 

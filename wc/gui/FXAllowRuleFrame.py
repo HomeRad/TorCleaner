@@ -30,11 +30,10 @@ class FXAllowRuleFrame (FXRuleFrame):
      ID_HOST,
      ID_PORT,
      ID_PATH,
-     ID_PARAMETERS,
      ID_QUERY,
      ID_FRAGMENT,
      ID_LAST,
-    ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+8)
+    ) = range(FXRuleFrame.ID_LAST, FXRuleFrame.ID_LAST+7)
 
     def __init__ (self, parent, rule, index):
         FXRuleFrame.__init__(self, parent, rule, index)
@@ -42,7 +41,6 @@ class FXAllowRuleFrame (FXRuleFrame):
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_HOST,FXAllowRuleFrame.onCmdHost)
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_PORT,FXAllowRuleFrame.onCmdPort)
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_PATH,FXAllowRuleFrame.onCmdPath)
-        FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_PARAMETERS,FXAllowRuleFrame.onCmdParameters)
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_QUERY,FXAllowRuleFrame.onCmdQuery)
         FXMAPFUNC(self,SEL_COMMAND,FXAllowRuleFrame.ID_FRAGMENT,FXAllowRuleFrame.onCmdFragment)
         self.matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
@@ -58,9 +56,6 @@ class FXAllowRuleFrame (FXRuleFrame):
         FXLabel(self.matrix, i18n._("URL Path:\tRegular expression to match the path"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_PATH)
         tf.setText(self.rule.path)
-        FXLabel(self.matrix, i18n._("URL Parameters:\tRegular expression to match the parameters"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_PARAMETERS)
-        tf.setText(self.rule.parameters)
         FXLabel(self.matrix, i18n._("URL Query:\tRegular expression to match the query"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
         tf = FXTextField(self.matrix, 25, self, FXAllowRuleFrame.ID_QUERY)
         tf.setText(self.rule.query)
@@ -90,12 +85,6 @@ class FXAllowRuleFrame (FXRuleFrame):
         self.rule.path = sender.getText().strip()
         self.getApp().dirty = 1
         debug(GUI, "Changed rule path")
-        return 1
-
-    def onCmdParameters (self, sender, sel, ptr):
-        self.rule.parameters = sender.getText().strip()
-        self.getApp().dirty = 1
-        debug(GUI, "Changed rule parameters")
         return 1
 
     def onCmdQuery (self, sender, sel, ptr):

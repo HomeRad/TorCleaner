@@ -4,12 +4,14 @@
  
  Changes:
 
+ 20031029 Bastian Kleineidam
+ * removed parameters attributes
  20030806 Bastian Kleineidam
  * removed lang attribute, it was not used
  20030730 Bastian Kleineidam
  * renamed file attribute to filename
  * changed oid attribute from #IMPLIED to #REQUIRED
- + added sid attribute
+ * added sid attribute
  20030705 Bastian Kleineidam
  * renamed replacer to replace
  * added pics element
@@ -131,7 +133,7 @@
 <!--                       Blocker
 
     Here we can specify urls to block. We split urls in 
-    scheme://host:port/path;parameters?query#fragment
+    scheme://host:port/path?query#fragment
     and can specify regular expressions to match each fragment.
     The host and scheme regular expressions are case insensitive.
 
@@ -148,7 +150,6 @@
  host       CDATA #IMPLIED
  port       CDATA #IMPLIED
  path       CDATA #IMPLIED
- parameters CDATA #IMPLIED
  query      CDATA #IMPLIED
  fragment   CDATA #IMPLIED
  disable    CDATA "0"
@@ -235,7 +236,6 @@
  host       CDATA #IMPLIED
  port       CDATA #IMPLIED
  path       CDATA #IMPLIED
- parameters CDATA #IMPLIED
  query      CDATA #IMPLIED
  fragment   CDATA #IMPLIED
  disable    CDATA "0"
