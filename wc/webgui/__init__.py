@@ -92,7 +92,7 @@ class WebConfig (object):
         response = "%s %d %s"%(protocol, status, msg)
         self.client.server_response(self, response, status, headers)
         self.client.server_content(data)
-        self.client.server_close()
+        self.client.server_close(self)
 
 
     def client_abort (self):
