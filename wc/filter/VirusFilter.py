@@ -20,9 +20,11 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import socket
+from cStringIO import StringIO
 from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter
 from wc.proxy.Connection import RECV_BUFSIZE
+from wc.log import *
 
 
 class VirusFilter (Filter):
@@ -40,24 +42,26 @@ class VirusFilter (Filter):
     def filter (self, data, **attrs):
         if not attrs.has_key('scanner'): return data
         scanner = attrs['scanner']
-        if not scanner.infected and data:
+        buf = attrs['virus_buf']
+        if data:
             scanner.scan(data)
-        if not scanner.infected:
-            return data
-        for msg in scanner.infected:
-            warn(FILTER, "Found virus %r in %r", msg, attrs['url'])
+            buf.write(data)
         return ""
 
 
     def finish (self, data, **attrs):
         if not attrs.has_key('scanner'): return data
         scanner = attrs['scanner']
-        if not scanner.infected and data:
+        buf = attrs['virus_buf']
+        if data:
             scanner.scan(data)
+            buf.write(data)
         scanner.close()
         for msg in scanner.errors:
             warn(FILTER, "Virus scanner error %r", msg)
         if not scanner.infected:
+            data = buf.getvalue()
+            buf.close()
             return data
         for msg in scanner.infected:
             warn(FILTER, "Found virus %r in %r", msg, attrs['url'])
@@ -70,24 +74,30 @@ class VirusFilter (Filter):
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
             return d
-        d['scanner'] = ClamdScanner()
+        d['scanner'] = ClamdScanner(get_clamav_conf())
+        d['virus_buf'] = StringIO()
         return d
 
 
 class ClamdScanner (object):
     """virus scanner using a clamd daemon process"""
-    def __init__ (self):
-        """initialize clamd daemon process connection"""
+    def __init__ (self, clamav_conf):
+        """initialize clamd daemon process sockets"""
         self.infected = []
         self.errors = []
-        self.sock, host = clamav_conf.new_connection()
-        self.wsock = clamav_conf.new_scansock(self.sock, host)
+        self.clamav_conf = clamav_conf
+        self.sock, host = self.clamav_conf.new_connection()
+        self.wsock = self.clamav_conf.new_scansock(self.sock, host)
 
 
     def scan (self, data):
-        """scan given data for viruses, add results to infected and errors
-           attributes"""
+        """scan given data for viruses"""
         self.wsock.sendall(data)
+
+
+    def close (self):
+        """get results and close clamd daemon sockets"""
+        self.wsock.close()
         data = self.sock.recv(RECV_BUFSIZE)
         while data:
             if "FOUND\n" in data:
@@ -95,18 +105,18 @@ class ClamdScanner (object):
             if "ERROR\n" in data:
                 self.errors.append(data)
             data = self.sock.recv(RECV_BUFSIZE)
-
-
-    def close (self):
-        """close clamd daemon connection"""
         self.sock.close()
 
 
-clamav_conf = None
+_clamav_conf = None
 def init_clamav_conf ():
-    global clamav_conf
+    global _clamav_conf
     from wc import config
-    clamav_conf = ClamavConfig(config['clamavconf'])
+    _clamav_conf = ClamavConfig(config['clamavconf'])
+
+
+def get_clamav_conf ():
+    return _clamav_conf
 
 
 def get_sockinfo (host, port=None):
