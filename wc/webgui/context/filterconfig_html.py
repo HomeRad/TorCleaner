@@ -184,7 +184,10 @@ def _form_newfolder (foldername):
     curfolder = _FolderRule(title=foldername, desc="", disable=0, filename=filename)
     _register_rule(curfolder)
     _generate_sids(prefix="lc")
-    curfolder.oid = len(config['folderrules'])
+    if not config['folderrules']:
+        curfolder.oid = 0
+    else:
+        curfolder.oid = config['folderrules'][-1].oid+1
     curfolder.write()
     config['folderrules'].append(curfolder)
     _recalc_up_down(config['folderrules'])
@@ -265,10 +268,14 @@ def _form_enablerule (rule):
 
 def _form_removerule (rule):
     # XXX error handling
-    curfolder.rules.remove(rule)
+    rules = curfolder.rules
+    rules.remove(rule)
+    for i in range(rule.oid, len(rules)):
+        rules[i].oid = i
+    curfolder.write()
+    # deselect current rule
     global currule
     currule = None
-    curfolder.write()
     info['removerule'] = True
 
 
