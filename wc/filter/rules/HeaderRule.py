@@ -45,6 +45,11 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         chg = super(HeaderRule, self).update(rule, dryrun=dryrun, log=log)
         return self.update_attrs(['value'], rule, dryrun, log) or chg
 
+    def __str__ (self):
+        """return rule data as string"""
+        return super(HeaderRule, self).__str__() + \
+            ("\nname:   %r\nvalue:   %r" % (self.name, self.value))
+
     def toxml (self):
         """Rule data as XML for storing"""
         s = u'%s\n name="%s"' % (super(HeaderRule, self).toxml(),
