@@ -47,13 +47,13 @@ class HttpServer(Server):
         # It's writable if we're connecting .. TODO: move this
         # logic into the Connection class
         return self.state == 'connect' or self.send_buffer != ''
-    
+
     def request(self):
         portstr = ''
         if self.addr[1] != 80: portstr = ':%s' % self.addr[1]
         return '%s%s%s' % (self.hostname or self.addr[0],
                             portstr, self.document)
-    
+
     def attempt_connect(self):
         self.state = 'connect'
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -139,7 +139,7 @@ class HttpServer(Server):
         # until we get to a blank line...
         m = re.match(r'^((?:[^\r\n]+\r?\n)*\r?\n)', self.recv_buffer)
         if not m: return
-        
+
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
@@ -254,7 +254,7 @@ class HttpServer(Server):
             try: handler = getattr(self, 'process_'+self.state)
             except AttributeError: handler = lambda:None # NO-OP
             handler()
-            
+
             bytes_after = len(self.recv_buffer)
             if (self.client is None or
                 (bytes_before == bytes_after and state_before == self.state)):
@@ -267,7 +267,7 @@ class HttpServer(Server):
             return float(version.group(1))
         else:
             return 0.9
-        
+
     def reuse(self):
         if self.http_version() >= 1.1:
             can_reuse = 1
@@ -279,7 +279,7 @@ class HttpServer(Server):
             if (self.headers and self.headers.has_key('connection') and
                 lower(self.headers['connection']) == 'keep-alive'):
                 can_reuse = 1
-                
+
         if not can_reuse:
             # We can't reuse this connection
             self.close()
@@ -292,7 +292,7 @@ class HttpServer(Server):
 
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
-        
+
     def close(self):
         self.state = 'closed'
         Server.close(self)
@@ -303,7 +303,7 @@ class HttpServer(Server):
         if self.client:
             client, self.client = self.client, None
             client.server_abort()
-        
+
     def handle_close(self):
         debug(HURT_ME_PLENTY, 'server close; '+self.state, self)
         Server.handle_close(self)
@@ -319,7 +319,6 @@ def speedcheck_print_status():
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
     make_timer(5, speedcheck_print_status)
-
     #if serverpool.map:
     #    print 'server pool:'
     #    for addr,set in serverpool.map.items():

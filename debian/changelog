@@ -3,9 +3,8 @@ webcleaner (0.12) unstable; urgency=low
   * always initialize filter attributes in HttpServer.py
   * minor bugfixes with unintialized vars
   * use FOX and FXPy >= 0.99.167
-  * config var "no proxy for"
   * global config object in wc.proxy
-  * more status info
+  * more status info (get it with http://_webcleaner/)
   * added missing return in daemon/posix.py:start()
     now the GUI Proxy buttons are working for POSIX systems
   * new proxy config option "no proxy for" to disable filtering

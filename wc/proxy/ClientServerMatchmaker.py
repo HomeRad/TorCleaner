@@ -70,7 +70,7 @@ class ClientServerMatchmaker:
             port = 80
         else:
             port = int(port)
-        if hostname == '_proxy':
+        if hostname == '_webcleaner':
             # proxy info
             ServerHandleDirectly(self.client,
                 'HTTP/1.0 200 OK\r\n',
@@ -175,7 +175,7 @@ class ClientServerMatchmaker:
         # that we couldn't connect
         if self.client.connected:
             self.client.server_no_response()
-        
+
     def server_close(self):
         debug(BRING_IT_ON, 'resurrection failed',
 	      self.server.sequence_number, self.server)
