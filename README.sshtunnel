@@ -3,14 +3,14 @@ over ssh and dialup from your box at work (my.atworkbox.com) to your box
 at home (my.homedslbox.org).
 
 |=========================================================================|
-| Remember: do NOT open port 8080 in your home-firewall for this to work! |
-| If you do not have a firewall on your home dsl box or you dont know what|
-| I am talking about, leave these scripts alone!                          |
+| Remember: do not open port 8080 in your home-firewall for this to work. |
+| If you do not have a firewall on your home dsl box or don't know what I |
+| am talking about, leave these scripts alone!                            |
 |=========================================================================|
 
 0) Put this iptables line in your firewall at my.homedslbox.org:
 $IPTABLES -A INPUT -i ppp0 -p tcp -s my.atworkbox.com --dport ssh -m state --state NEW -j ACCEPT
-This presumes your ppp interface is ppp0. And you must have state
+This assumes your ppp interface is ppp0. And you must have state
 matching enabled in your kernel.
 
 1) copy this script on my.homedslbox.org
@@ -38,5 +38,5 @@ ssh -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
 3) Start your home box, start webcleaner, then start your network with "pon".
    The script under 1) gets executed.
 
-4) Go at work, start script 2) and you can surf over
-   http_proxy="localhost:8080" :)
+4) Go at work, start script 2) and you can surf with this setting:
+   export http_proxy="localhost:8080" :)
