@@ -205,7 +205,8 @@ def server_set_content_headers (headers, mime_types, url):
         wc.log.warn(wc.LOG_PROXY, _("Missing content type in %r"), url)
     if not mime_types:
         return
-    matching_mimes = [m for m in mime_types if origmime.startswith(m)]
+    matching_mimes = [m for m in mime_types
+                      if origmime and origmime.startswith(m)]
     if len(matching_mimes) > 0:
         return
     # we have a mime type override, pick the first one out of the list
