@@ -217,7 +217,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>-+[ ]+[^>] {
+<S_COMMENT>-+[ ]+([^ \->]+) {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
 }
@@ -337,7 +337,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 
   /*********************** TAGSTART ************************/
-<INITIAL><{RX_WHITE_SPACE}*/[A-Za-z] {
+<INITIAL><{RX_WHITE_SPACE}*/[A-Za-z0-9] {
     UPDATE_LINE;
     yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
     if (yyextra->tmp_attrs==NULL) {
