@@ -59,6 +59,7 @@ class HttpClient (Connection):
             err = "%s (%s)" % (err, txt)
         if config['try_google']:
             page = '/google.html'
+            status = 200
             context = get_google_context(self.url, msg)
         else:
             page = '/error.html'
