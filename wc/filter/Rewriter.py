@@ -232,7 +232,6 @@ class HtmlFilter (HtmlParser,JSListener):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
                 del attrs[name]
                 changed = 1
-        self.tobuffer = (STARTTAG, tag, attrs)
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
             self.jsForm(name, attrs.get('action', ''), attrs.get('target', ''))
@@ -245,7 +244,7 @@ class HtmlFilter (HtmlParser,JSListener):
                     not (lang or scrtype)
             if is_js and url:
                 self.jsScriptSrc(url, lang)
-        self.buf.append(self.tobuffer)
+        self.buf.append((STARTTAG, tag, attrs))
 
 
     def jsPopup (self, attrs, name):
@@ -270,15 +269,18 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def jsScriptData (self, data, url, ver):
+        assert self.state=='script'
         if data is None:
-            debug(BRING_IT_ON, "Filter: jsScriptData", time.ctime(time.time()))
+            debug(HURT_ME_PLENTY, "Filter: jsScriptData", url)
             if not self.script:
-                self.state = 'parse'
-                return
-            if self.jsScript(self.script, ver):
+                print >> sys.stderr, "empty JS src", url
+            elif self.jsScript(self.script, ver):
                 print >> sys.stderr, "JS popup src", url
             else:
-                self.buf.append(self.tobuffer)
+                self.buf.append([STARTTAG, "script", {'type':
+                                                      'text/javascript'}])
+                self.buf.append([DATA, "<!--\n%s\n//-->"%self.script])
+                self.buf.append([ENDTAG, "script"])
             self.state = 'parse'
         else:
             self.script += data

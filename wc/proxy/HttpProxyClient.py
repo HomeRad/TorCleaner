@@ -1,3 +1,4 @@
+import sys
 from wc.debug import *
 
 class HttpProxyClient:
@@ -31,6 +32,7 @@ class HttpProxyClient:
         try:
             http_ver, status, msg = response.split()
             if status!="200":
+                print >> sys.stderr, "error fetching data", status, msg
                 self.finish()
         except:
             self.finish()

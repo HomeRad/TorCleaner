@@ -25,7 +25,7 @@
   * fix some typos and grammar
     Changed files: FAQ, README*
   * add javascript interpreter wrapper library. This filters popups
-    and executes internal scripts
+    and executes scripts
     Added files: wc/js/*, test/test_js.py, wc/filter/rule/JavascriptRule.py,
       wc/gui/FXJavascriptRuleFrame.py
     Changed files: wc/filter/Rewriter.py, conf/{filter.dtd,scripting.zap},
