@@ -143,8 +143,10 @@ def write_filters (res):
 def convert_adzapper_pattern (pattern):
     pattern = pattern.replace(".", "\\.")
     pattern = pattern.replace("?", "\\?")
+    pattern = pattern.replace("+", "\\+")
+    pattern = re.sub(r"/(?!/)", r"/+", pattern)
     pattern = pattern.replace("**", ".*?")
-    pattern = re.sub(r"([^.])\*([^?])", r"\1[^/]*\2", pattern)
+    pattern = re.sub(r"([^.])\*([^?]|$)", r"\1[^/]*\2", pattern)
     return pattern
 
 
@@ -160,7 +162,7 @@ def write_allow (zapfile, adclass, pattern):
     zapfile.write("""<allow
  title="%(title)s"
  desc="%(desc)s"
- url="%(url)s"
+ url="%(url)s"/>
 """ % d)
 
 
@@ -170,11 +172,11 @@ def write_block (zapfile, adclass, pattern, replacement=None):
     zapfile.write("""<block
  title="%(title)s"
  desc="%(desc)s"
- url="%(url)s" """ % d)
+ url="%(url)s""" % d)
     if replacement is not None:
-        zapfile.write(">%s</block>" % xmlify(replacement))
+        zapfile.write("\">%s</block>" % xmlify(replacement))
     else:
-        zapfile.write("/>")
+        zapfile.write("\"/>")
     zapfile.write("\n")
 
 
