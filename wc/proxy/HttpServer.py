@@ -7,6 +7,12 @@ from ClientServerMatchmaker import serverpool
 from string import find,strip,split,join,lower
 from UnchunkStream import UnchunkStream
 from GunzipStream import GunzipStream
+from wc.filter import applyfilter, initStateObjects,
+     FILTER_RESPONSE,
+     FILTER_RESPONSE_HEADER,
+     FILTER_RESPONSE_DECODE,
+     FILTER_RESPONSE_MODIFY,
+     FILTER_RESPONSE_ENCODE
 
 # DEBUGGING
 PRINT_SERVER_HEADERS = 0
@@ -15,7 +21,6 @@ SPEEDCHECK_BYTES = 0
 
 class HttpServer(Server):
     def __init__(self, ipaddr, port, client):
-        print "init HttpServer"
         Server.__init__(self, client)
         self.addr = (ipaddr, port)
         self.hostname = ''
@@ -98,7 +103,7 @@ class HttpServer(Server):
         i = find(self.recv_buffer, '\n')
         if i < 0: return
         
-        self.response = self.read(i+1)
+        self.response = applyfilter(FILTER_RESPONSE, self.read(i+1))
         if find(self.response, 'HTTP') >= 0:
             # Okay, we got a valid response line
             self.state = 'headers'
@@ -106,7 +111,8 @@ class HttpServer(Server):
             serverpool.set_http_version(self.addr, self.http_version())
         elif not strip(self.response):
             # It's a blank line, so assume HTTP/0.9
-            self.headers = rfc822.Message(StringIO(''))
+            self.headers = applyfilter(FILTER_RESPONSE_HEADER,
+	                   rfc822.Message(StringIO('')))
             self.bytes_remaining = None
             self.decoders = []
             self.state = 'content'
@@ -125,12 +131,12 @@ class HttpServer(Server):
         m = re.match(r'^((?:[^\r\n]+\r?\n)*\r?\n)', self.recv_buffer)
         if not m: return
         
-        self.headers = rfc822.Message(StringIO(self.read(m.end())))
+        self.headers = applyfilter(FILTER_RESPONSE_HEADER,
+	               rfc822.Message(StringIO(self.read(m.end()))))
         if self.headers.has_key('content-length'):
             self.bytes_remaining = int(self.headers.getheader('content-length'))
         else:
             self.bytes_remaining = None
-
         response = split(self.response)
         if response and response[1] == '100':
             # It's a Continue request, so go back to waiting for
@@ -173,6 +179,8 @@ class HttpServer(Server):
             # These response codes indicate no content
             self.state = 'recycle'
         else:
+            mime = self.headers.get('content-type', 'application/octeet-stream')
+            self.attrs = initStateObjects(mime, self.headers)
             self.state = 'content'
 
     def process_content(self):
@@ -188,7 +196,11 @@ class HttpServer(Server):
         for decoder in self.decoders:
             filtered_data = decoder.decode(filtered_data)
             is_closed = decoder.closed or is_closed
-        if filtered_data: self.client.server_content(filtered_data)
+        for i in _RESPONSE_FILTERS:
+            filtered_data = applyfilter(i, filtered_data, attrs=self.attrs)
+        if filtered_data:
+            # XXX FILTER_RESPONSE_MODIFY
+	    self.client.server_content(filtered_data)
 
         if (is_closed or
             (self.bytes_remaining is not None and
@@ -209,6 +221,8 @@ class HttpServer(Server):
             del self.decoders[0]
             for decoder in self.decoders:
                 data = decoder.decode(data)
+            for i in _RESPONSE_FILTERS:
+                data = applyfilter(i, data, attrs=self.attrs)
             if data: client.server_content(data)
 
         client.server_close()

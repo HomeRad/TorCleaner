@@ -6,7 +6,7 @@ used by Bastian Kleineidam for WebCleaner
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import sys, os, urlparse, time, select, asyncore
+import sys, os, urlparse, time, select, asyncore, wc
 
 TIMERS = [] # list of (time, function)
 
@@ -99,13 +99,12 @@ def proxy_poll(timeout=0.0):
 def configure(config):
     global _PORT
     _PORT = config['port']
-    _BUF_SIZE = config['buffersize']
     _PARENT_PROXY_PORT = config['parentproxyport']
     _PARENT_PROXY = config['parentproxy']
     _LOGFILE = config['logfile']
     _TIMEOUT = config['timeout']
     _OBFUSCATE_IP = config['obfuscateip']
-    _FILTER_LIST = config['filterlist']
+    wc.filter._FILTER_LIST = config['filterlist']
     _ERROR_LEN = config["errorlen"]
     _ERROR_TEXT = config["errortext"]
     if _LOGFILE == 'stdout':

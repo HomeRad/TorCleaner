@@ -59,3 +59,34 @@ def GetRuleFromName(name):
         return klass()
     raise ValueError, "unknown rule name "+name
 
+def applyfilter(i, arg, fun='filter', attrs={}):
+    """Apply all filters which are registered in filter level i.
+    For different filter levels we have different arg objects.
+    Look at the filter examples.
+    An exception in a filter causes the filtering to stop
+    and we return the result we have achieved so far.
+    """
+    if attrs.get('nofilter'): return arg
+    try:
+        debug('filter stage %s' % printFilterOrder(i), 2)
+        for f in _FILTER_LIST[i]:
+            ffun = getattr(f, fun)
+            if hasattr(f, 'mimelist'):
+                if attrs['mime'] in f.mimelist:
+                    arg = apply(ffun, (arg,), attrs)
+            else:
+                # no mimelist? then this filter applies to all files!
+                arg = apply(ffun, (arg,), attrs)
+    finally:
+        return arg
+
+def initStateObjects(mime="text/html", headers={}):
+    attrs = {'mime': mime}
+    for i in range(10):
+        for f in _FILTER_LIST[i]:
+            if hasattr(f, 'mimelist'):
+                if mime in f.mimelist:
+                    attrs.update(f.getAttrs(headers))
+            else:
+                attrs.update(f.getAttrs(headers))
+    return attrs

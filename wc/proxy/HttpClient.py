@@ -4,6 +4,11 @@ from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from string import split,find,join
 from wc import message,color
+from wc.filter import FILTER_REQUEST,
+                      FILTER_REQUEST_HEADER,
+                      FILTER_REQUEST_DECODE,
+                      FILTER_REQUEST_MODIFY,
+                      FILTER_REQUEST_ENCODE
 
 class HttpClient(Connection):
     # States:
@@ -36,16 +41,18 @@ class HttpClient(Connection):
         if self.state == 'request':
             i = find(self.recv_buffer, '\r\n')
             if i >= 0: # One newline ends request
-                self.request = self.read(i) # not including the newline
+                 # self.read(i) is not including the newline
+                self.request = applyfilter(FILTER_REQUEST, self.read(i))
                 self.state = 'headers'
 
         if self.state == 'headers':
             i = find(self.recv_buffer, '\r\n\r\n')
             if i >= 0: # Two newlines ends headers
-                i = i+4 # Skip over newline terminator
+                i += 4 # Skip over newline terminator
                 assert self.read(2) == '\r\n'
-                i = i-2 # Skip over newline before headers
-                self.headers = rfc822.Message(StringIO(self.read(i)))
+                i -= 2 # Skip over newline before headers
+                self.headers = applyfilter(FILTER_REQUEST_HEADER,
+		               rfc822.Message(StringIO(self.read(i))))
                 self.state = 'content'
                 if self.headers.has_key('content-length'):
                     self.bytes_remaining = int(self.headers.getheader('content-length'))
@@ -58,7 +65,9 @@ class HttpClient(Connection):
                 # NOTE: It's possible to have 'chunked' encoding here,
                 # and then the current system of counting bytes remaining
                 # won't work; we have to deal with chunks
-                data = self.read()
+                data = applyfilter(FILTER_REQUEST_DECODE, self.read())
+                data = applyfilter(FILTER_REQUEST_MODIFY, data)
+                data = applyfilter(FILTER_REQUEST_ENCODE, data)
                 self.bytes_remaining -= len(data)
                 self.content += data
             else:
