@@ -99,7 +99,7 @@ def url_quote (url):
     urlparts = list(urlparse.urlsplit(url))
     urlparts[0] = quote(urlparts[0]) # scheme
     urlparts[1] = quote(urlparts[1], ':') # host
-    urlparts[2] = quote(urlparts[2], '/=') # path
+    urlparts[2] = quote(urlparts[2], '/=,') # path
     urlparts[4] = quote(urlparts[4]) # anchor
     return urlparse.urlunsplit(urlparts)
 
@@ -107,7 +107,7 @@ def url_quote (url):
 def document_quote (document):
     """quote given document"""
     doc, query = splitquery(document)
-    doc = quote(doc, '/=')
+    doc = quote(doc, '/=,')
     if query:
         return "%s?%s" % (doc, query)
     return doc
