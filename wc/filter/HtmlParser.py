@@ -486,7 +486,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsScriptData (self, data, url, ver):
         """Callback for loading <script src=""> data in the background
            If downloading is finished, data is None"""
-        assert self.state[0]=='wait'
+        assert self.state[0]=='wait', "non-wait state %s" % str(self.state)
         if data is None:
             if not self.js_script:
                 warn(PARSER, "HtmlParser[%d]: empty JS src %s", self.level, url)
@@ -509,7 +509,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsScriptSrc (self, url, language):
         """Start a background download for <script src=""> tags"""
-        assert self.state[0]=='parse'
+        assert self.state[0]=='parse', "non-parse state %s" % str(self.state)
         ver = 0.0
         if language:
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
@@ -540,8 +540,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
         self._debug("JS: jsScript %s %s", ver, `script`)
-        assert self.state[0]=='parse'
-        assert len(self.buf) >= 2
+        assert self.state[0]=='parse', "non-parse state %s" % str(self.state)
+        assert len(self.buf) >= 2, "too small buffer %s" % str(self.buf)
         self.js_output = 0
         self.js_env.attachListener(self)
         # start recursive html filter (used by jsProcessData)
@@ -556,7 +556,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
 
     def jsEndScript (self, item):
         self._debug("JS: endScript")
-        assert len(self.buf) >= 2
+        assert len(self.buf) >= 2, "too small buffer %s" % str(self.buf)
         if self.js_output:
             try:
                 self.js_html.feed('')
@@ -569,7 +569,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             self.js_html._debugbuf()
             assert not self.js_html.inbuf.getvalue()
             assert not self.js_html.waitbuf
-            assert len(self.buf) >= 2
+            assert len(self.buf) >= 2, "too small buffer %s" % str(self.buf)
             self.buf[-2:-2] = [[DATA, self.js_html.outbuf.getvalue()]]+self.js_html.buf
         self.js_html = None
         if (self.js_popup + self.js_output) > 0:
