@@ -40,3 +40,4 @@ missing
 mkinstalldirs
 depcomp
 servertests.txt
+crossbuild.log
