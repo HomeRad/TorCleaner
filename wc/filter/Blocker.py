@@ -26,7 +26,7 @@ from wc import ConfigDir, config
 from wc.log import *
 
 # regular expression for image filenames
-is_image = re.compile(r'^(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
+is_image = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
 
 def strblock (block):
     patterns = [ repr(b and b.pattern or "") for b in block ]
@@ -132,10 +132,9 @@ class Blocker (Filter):
             return data
         blocked = self.strict_whitelist or self.blocked(url)
         if blocked:
-            debug(FILTER, "blocked url %s", url)
+            debug(FILTER, "blocked url %s: %s", url, str(blocked))
             if isinstance(blocked, basestring):
                 doc = blocked
-            # index 3, not 2!
             elif is_image(url):
                 doc = self.block_image
             else:
