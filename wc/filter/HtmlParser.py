@@ -98,7 +98,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                 if self.state[0] == 'wait':
                     self.inbuf.write(data)
                     return
-                data = self.inbuf.getvalue() + data
+                data = self.inbuf.getvalue().encode(self.encoding) + data
                 self.inbuf.close()
                 self.inbuf = ZTUtils.FasterStringIO()
             if data:
