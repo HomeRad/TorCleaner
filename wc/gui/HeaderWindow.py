@@ -133,6 +133,8 @@ class HeaderWindow (ToolWindow):
         if self.config['refresh']:
             self.timer = app.addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
         self.eventMap()
+        self.setWidth(640)
+        self.setHeight(480)
 
 
     def connectionFrame (self, frame):
@@ -143,7 +145,7 @@ class HeaderWindow (ToolWindow):
         headers = FXGroupBox(frame, _("Headers"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         self.headers = FXIconList(headers, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|ICONLIST_SINGLESELECT|ICONLIST_AUTOSIZE)
         self.headers.appendHeader(_("Name"),NULL,100)
-        self.headers.appendHeader(_("Value"),NULL,200)
+        self.headers.appendHeader(_("Value"),NULL,500)
 
 
     def eventMap (self):
