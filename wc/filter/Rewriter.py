@@ -388,8 +388,8 @@ class HtmlFilter (HtmlParser,JSListener):
         except jslib.error, msg:
             pass
         self.js_env.detachListener(self)
-        res = self.popup_counter
-        self.popup_counter = 0
+        res = self.js_popup
+        self.js_popup = 0
         return res
 
 
