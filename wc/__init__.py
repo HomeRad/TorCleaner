@@ -213,5 +213,5 @@ def restart ():
     else:
         py_exe = sys.executable
     script = os.path.join(wc.ScriptDir, "webcleaner")
-    wc.log.warn(LOG_PROXY, "restarting with: %s %s restart", py_exe, script)
+    wc.log.info(LOG_PROXY, "Restarting with: %s %s restart", py_exe, script)
     os.spawnl(os.P_NOWAIT, py_exe, py_exe, script, "restart")
