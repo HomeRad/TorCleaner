@@ -5,16 +5,24 @@
     Changed: setup.py
   * do not setuid/setgid any more to enable web config
     Changed: wc/__init__.py
-  * fix config import
-    Changed: wc/webgui/context/config_html.py
-  * add index.html template
-    Added: templates/classic/index.html
   * updated simpleTAL to 3.3
     Changed: wc/webgui/simpletal/*.py
   * - fix blocking filter
     - burn gif and switch to blocked.png
     Added: templates/classic/blocked.png
     Changed: wc/filter/Blocker.py, wc/webgui/__init__.py
+  * fix IE and Mozilla crash bugs with filters in the HTML parser
+    Changed: wc/filter/HtmlParser.py
+  * add index.html template
+    Added: templates/classic/index.html
+  * proxy configuration at http://localhost:<proxy port>/config.html
+    Added: templates/classic/config.html, wc/webgui/context/config_html.py
+  * filter config at http://localhost:<proxy port>/filterconfig.html
+    Added: templates/classic/filterconfig.html,
+           templates/classic/macros/rules.html,
+           wc/webgui/context/filterconfig_html.py
+    Changed: wc/webgui/__init__.py
+
 
 1.13
   * - when the HTTP server closes, flush any existing data
