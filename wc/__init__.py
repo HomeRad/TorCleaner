@@ -203,7 +203,7 @@ class ParseException (Exception): pass
 class BaseParser:
     def parse (self, filename, config):
         #debug(HURT_ME_PLENTY, "Parsing "+filename)
-        self.p = xml.parsers.expat.ParserCreate()
+        self.p = xml.parsers.expat.ParserCreate("ISO-8859-1")
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
         self.p.CharacterDataHandler = self.character_data

@@ -8,6 +8,8 @@
     Added files: wc/i18n.py, wc/AnsiColor.py, wc/debug.py,
       wc/XmlUtils.py
     Removed files: wc/debug_levels.py
+  * Parse config files with ISO-8859-1
+    Changed files: wc/__init__.py
   * working TAL template example, lets see how this integrates into
     WebCleaner local file handling
 
