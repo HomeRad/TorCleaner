@@ -107,7 +107,7 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align fast
-/*%option debug */
+%option debug
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
@@ -140,6 +140,10 @@ RX_DATA [-a-zA-Z0-9_]+
     return T_WAIT;
 }
 
+<INITIAL>. {
+    return T_WAIT;
+}
+
   /*********************** COMMENT ************************/
 <INITIAL>"<!--" {
     UPDATE_BUFPOS;
@@ -153,14 +157,18 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_COMMENT);
 }
 
-<S_COMMENT>"-" {
+<S_COMMENT>-[^-] {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
 }
 
-<S_COMMENT>[^\-]* {
+<S_COMMENT>[^\-]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP;
+}
+
+<S_COMMENT>. {
+    return T_WAIT;
 }
 
   /*********************** DOCTYPE ************************/
@@ -223,7 +231,7 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
   /*********************** TAGSTART ************************/
-<INITIAL><{RX_WHITE_SPACE}* {
+<INITIAL><{RX_WHITE_SPACE}*/[A-Za-z] {
     UPDATE_BUFPOS;
     yyextra->tmp_attrs = PyDict_New();
     if (!yyextra->tmp_attrs) return T_ERROR;
@@ -511,7 +519,6 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_TEXT);
 }
 
-  /*********************** END ************************/
 %%
 
 int htmllexInit (void** scanner, UserData* data) {
@@ -527,20 +534,27 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     data->buf = PyMem_Resize(data->buf, char, len+slen+1);
     if (!data->buf) return -1;
     strncat(data->buf, s, slen);
+    if (len > data->bufpos) {
+        int rewind = len - data->bufpos;
+	fprintf(stderr, "REWIND %d\n", rewind);
+	slen += rewind;
+	len -= rewind;
+    }
+    fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
     /* reset userdata */
     data->bufpos = len;
     data->nextpos = 0;
     data->exc_type = NULL;
     data->exc_val = NULL;
     data->exc_tb = NULL;
-    data->lexbuf = yy_scan_bytes(s, slen, scanner);
+    data->lexbuf = yy_scan_bytes(data->buf+len, slen, scanner);
     return 0;
 }
 
 /* delete scanned buffer data */
 int htmllexStop (void* scanner, UserData* data) {
-    if (data->nextpos<=0) return 0;
-    else {
+    yy_delete_buffer(data->lexbuf, scanner);
+    if (data->nextpos > 0) {
 	int len = strlen(data->buf);
 	int i, j;
 	for (i=data->nextpos,j=0; i<len; i++,j++) {
@@ -550,7 +564,6 @@ int htmllexStop (void* scanner, UserData* data) {
 	data->buf = PyMem_Resize(data->buf, char, len-data->nextpos+1);
 	if (!data->buf) return -1;
     }
-    yy_delete_buffer(data->lexbuf, scanner);
     return 0;
 }
 
