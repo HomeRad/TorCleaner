@@ -241,7 +241,15 @@ class HttpServer (Server):
             self.reuse()
             return
         debug(HURT_ME_PLENTY, "Server: Headers", `str(self.headers)`)
-        remove_hop_by_hop_headers(self.headers)
+        key = 'Connection'
+        http_ver = serverpool.http_versions[self.addr]
+        if http_ver >= 1.1:
+            self.can_reuse = not has_header_value(self.headers, key, 'Close')
+        elif http_ver >= 1.0:
+            self.can_reuse = has_header_value(self.headers, key, 'Keep-Alive')
+        else:
+            self.can_reuse = None
+        set_proxy_headers(self.headers)
         self.check_headers()
         # add encoding specific headers and objects
         self.add_encoding_headers()
@@ -446,14 +454,7 @@ class HttpServer (Server):
 
     def reuse (self):
         self.client = None
-        key = 'Connection'
-        if self.http_version() >= 1.1:
-            can_reuse = not has_header_value(self.headers, key, 'Close')
-        elif self.http_version() >= 1.0:
-            can_reuse = has_header_value(self.headers, key, 'Keep-Alive')
-        else:
-            can_reuse = None
-        if can_reuse:
+        if self.can_reuse:
             debug(HURT_ME_PLENTY, 'Server: reusing', self.sequence_number, self)
             self.sequence_number += 1
             self.state = 'client'
@@ -486,12 +487,23 @@ class HttpServer (Server):
         if self.client:
             self.flush()
 
+def set_proxy_headers (headers):
+    remove_hop_by_hop_headers(headers)
+    set_date_header(headers)
+
 
 def remove_hop_by_hop_headers (headers):
     """Remove hop-by-hop headers"""
     to_remove = ['Connection', 'Keep-Alive', 'Upgrade', 'Trailer',
                  'Proxy-Authenticate']
     remove_headers(headers, to_remove)
+
+
+def set_date_header (headers):
+    """add rfc2822 date if it was missing"""
+    if not headers.hey_key('Date'):
+        from email import Utils
+        headers['Date'] = "%s\r"%Utils.formatdate()
 
 
 def speedcheck_print_status ():
