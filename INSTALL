@@ -1,29 +1,33 @@
                      Installation
                     ==============
 
-Requirements
-------------
-1. You need a C compiler (for example the GNU C Compiler gcc).
-  For Windows, install MinGW and MSYS from http://mingw.sourceforge.net.
-  Install MinGW first, then MSYS
+Requirements for Unix/Linux:
+----------------------------
+1. You need a standard GNU development environment with
+   a) C compiler (for example the GNU C Compiler gcc)
+   b) gettext
 2. Python >= 2.3.1 from http://www.python.org/
-  Your Python installation has to be compiled with the
-  expat XML parser module. The expat library needed for this can be
-  found at http://expat.sourceforge.net/.
 3. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
 4. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
 
-For compiling under Unix/Linux, the gettext package for calling
-msgmerge is needed.
+Requirements for Windows:
+-------------------------
+1. Install the MinGW suite from http://mingw.sourceforge.net.
+   Be sure to install in the given order:
+   a) MingGW
+   b) MSYS
+   c) libiconv
+   d) gettext
+2. Python >= 2.3.1 from http://www.python.org/
+3. Python for Windows Extensions from http://starship.python.net/crew/mhammond/
+4. PExports from http://starship.python.net/crew/kernr/mingw32/pexports-0.42h.zip
+5. Python Imaging Library (PIL) from http://www.pythonware.com/products/pil/
+6. Python Crypto Module from http://www.amk.ca/python/code/crypto.html
 
-Optional requirements
----------------------
+Optional requirements (all platforms)
+-------------------------------------
 For faster code execution you can install psyco from
 http://psyco.sourceforge.net/
-
-For the optional GUI config tool webcleanerconf you need
-FOX Toolkit >= 1.0.0 from http://www.fox-toolkit.org/fox.html
-FXPy >= 1.0.0 from http://fxpy.sourceforge.net/
 
 Setup for Unix/Linux:
 ---------------------
@@ -37,8 +41,25 @@ generate the configure and Makefile files.
 
 Setup for Windows:
 ------------------
-XXX this is incomplete, needs python patch...
-Inside mingw32 shell do "./configure; make" to compile the included
-C libraries.
-Run "python setup.py build -c mingw32" to compile the Python files.
-Run "python setup.py install" to install everything.
+1. Compile the JavaScript library
+   First, copy the webcleaner-X.X.tar.gz into your MSYS home directory,
+   which is usually under c:\msys\1.0\home\user\.
+   Launch MSYS and extract the tarball:
+   % tar xzvf webcleaner-X.X.tar.gz
+   Change into the generated directory:
+   % cd webcleaner-X.X
+   Configure and compile the JavaScript library:
+   % ./configure; make
+2. Preparing Python for the MinGW compiler
+   Search the file python23.dll in your windows folder.
+   After you found it, use the pexports tool you downloaded above:
+   % pexports python23.dll > python23.def
+   Then use the dlltool
+   % dlltool --dllname python23.dll --def python23.def --output-lib libpython23.a
+   The resulting library has to be placed in the same directory as
+   python23.lib. (Should be the libs directory under your Python installation
+   directory.)
+3. Compile and install the Python modules
+   Close the MSYS application and open a DOS command prompt.
+   Compile and install everything with:
+   c:> python setup.py build -c mingw32 install
