@@ -123,7 +123,7 @@ class HttpServer (Server):
 
 
     def client_send_request (self, method, hostname, document, headers,
-                            content, client, nofilter, url):
+                            content, client, nofilter, url, mime):
         assert self.state == 'client'
         self.client = client
         self.method = method
@@ -132,6 +132,7 @@ class HttpServer (Server):
         self.content = content
         self.nofilter = nofilter
         self.url = url
+        self.mime = mime
         self.send_request(headers)
 
 
@@ -264,7 +265,12 @@ class HttpServer (Server):
         else:
             document = self.document
         gm = mimetypes.guess_type(document, None)
-        if gm[0]:
+        if self.mime:
+            if self.headers.get('Content-Type', '') != self.mime:
+                print >>sys.stderr, "Warning: set Content-Type from to %s in %s" % \
+                        (`self.mime`, `self.url`)
+                self.headers['Content-Type'] = self.mime
+        elif gm[0]:
             # guessed an own content type
             if self.headers.get('Content-Type') is None:
                 print >>sys.stderr, "Warning: add Content-Type %s to %s" % \

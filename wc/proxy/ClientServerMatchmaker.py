@@ -47,13 +47,15 @@ class ClientServerMatchmaker:
 
      done:     We are done matching up the client and server
     """
-    def __init__ (self, client, request, headers, content, nofilter,compress):
+    def __init__ (self, client, request, headers, content, nofilter,
+                  compress, mime=None):
         self.client = client
         self.request = request
         self.headers = headers
         self.compress = compress
         self.content = content
         self.nofilter = nofilter
+        self.mime = mime
         debug(BRING_IT_ON, "Proxy:", `self.request`)
         self.method, self.url, protocol = self.request.split()
         scheme, hostname, port, document = spliturl(self.url)
@@ -203,7 +205,8 @@ class ClientServerMatchmaker:
                                         self.content,
                                         self,
 					self.nofilter,
-                                        self.url)
+                                        self.url,
+                                        self.mime)
 
 
     def server_abort (self):

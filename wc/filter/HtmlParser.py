@@ -454,8 +454,9 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                                "GET %s HTTP/1.1" % url, #request
                                {}, #headers
                                '', #content
-                               {'nofilter': None},
+                               {'nofilter': None}, # nofilter
                                'identity', # compress
+                               mime = "text/javascript",
                                )
 
 
