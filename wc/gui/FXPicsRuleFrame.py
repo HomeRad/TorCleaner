@@ -67,13 +67,11 @@ class FXPicsRuleFrame (FXRuleFrame):
         widgets = self.widgets[service].values()
         # enable this service
         if sender.getCheck():
+            # rule update
             self.rule.ratings[service] = {}
             for c in widgets:
                 # gui update
                 c.enable()
-                # rule update
-                cat = c.getHelpText()
-                self.rule.ratings[service][cat] = 1 #v.getValue()
         # disable this service
         else:
             # rule update
