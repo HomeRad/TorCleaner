@@ -70,10 +70,12 @@ class Magic (object):
     type_size = {'b':1, 'B':1, 's':2, 'S':2, 'l':4, 'L':5}
 
 
-    se_offset_abs = "^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)" \
-                    "(\.[bslBSL])*\)"
-    se_offset_add = "^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)" \
-              "(\.[bslBSL])*([-+])([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)\)"
+    se_offset_abs = re.compile(
+       r"^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)" \
+       r"(\.[bslBSL])*\)").match
+    se_offset_add = re.compile(
+       r"^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)" \
+       r"(\.[bslBSL])*([-+])([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)\)").match
 
     def __init__ (self, filename, cachename):
         self.entries = 0
@@ -147,8 +149,8 @@ class Magic (object):
         if direct:
             offset_delta = wc.magic.convert.convert(text)
         else:
-            match_abs = re.compile(self.se_offset_abs).match(text)
-            match_add = re.compile(self.se_offset_add).match(text)
+            match_abs = self.se_offset_abs(text)
+            match_add = self.se_offset_add(text)
 
             if match_abs:
                 offset_relatif = wc.magic.convert.convert(match_abs.group(1))
@@ -310,64 +312,65 @@ class Magic (object):
         index = 0
         for line in f.readlines():
             line = line.strip()
+            if not line or line.startswith('#'):
+                continue
 
-            if line and not line.startswith('#'):
-                part = self._split(line)
+            part = self._split(line)
 
-                # If the line is missing a text string assume it is '\b'
-                while len(part) < 4:
-                    part.append('\b')
+            # If the line is missing a text string assume it is '\b'
+            while len(part) < 4:
+                part.append(r'\b')
 
-                # Get the level of the test
-                level = self._level(part[0])
+            # Get the level of the test
+            level = self._level(part[0])
 
-                # XXX: What does the & is used for in ">>&2" as we do
-                # not know skip it
-                offset_string = self._strip_start('&', part[0][level:])
+            # XXX: What does the & is used for in ">>&2" as we do
+            # not know skip it
+            offset_string = self._strip_start('&', part[0][level:])
 
-                # offset such as (<number>[.[bslBSL]][+-][<number>]) are
-                # indirect offset
-                (direct, offset_type, offset_delta, offset_relatif) = \
-                                                self._offset(offset_string)
+            # offset such as (<number>[.[bslBSL]][+-][<number>]) are
+            # indirect offset
+            (direct, offset_type, offset_delta, offset_relatif) = \
+                                            self._offset(offset_string)
 
-                # The type can be associated to a netmask
-                (oper, mask, rest) = self._oper_mask(part[1])
+            # The type can be associated to a netmask
+            (oper, mask, rest) = self._oper_mask(part[1])
 
-                # No idea what this 'u' is so skip it
-                full_type = self._strip_start('u', rest)
+            # No idea what this 'u' is so skip it
+            full_type = self._strip_start('u', rest)
 
-                endian = self._endian(full_type)
-                kind = self._kind(full_type, endian)
+            endian = self._endian(full_type)
+            kind = self._kind(full_type, endian)
 
-                # Get the comparaison test and result
-                (test, result) = self._test_result(part[2])
+            # Get the comparaison test and result
+            (test, result) = self._test_result(part[2])
 
-                # Get the value to check against
-                data = self._data(kind, result)
+            # Get the value to check against
+            data = self._data(kind, result)
 
-                # Get the length of the data
-                length = self._length(kind, data)
+            # Get the length of the data
+            length = self._length(kind, data)
 
-                # Special characters
-                mime = self._mime(part[3:])
+            # Special characters
+            mime = self._mime(part[3:])
 
-                # Append the line to the list
-                self._leveldict[index] = level
-                self._direct[index] = direct
-                self._offset_type[index] = offset_type
-                self._offset_delta[index] = offset_delta
-                self._offset_relatif[index] = offset_relatif
-                self._endiandict[index] = endian
-                self._kinddict[index] = kind
-                self._oper[index] = oper
-                self._mask[index] = mask
-                self._test[index] = test
-                self._datadict[index] = data
-                self._lengthdict[index] = length
-                self._mimedict[index] = mime
+            # Append the line to the list
+            self._leveldict[index] = level
+            self._direct[index] = direct
+            self._offset_type[index] = offset_type
+            self._offset_delta[index] = offset_delta
+            self._offset_relatif[index] = offset_relatif
+            self._endiandict[index] = endian
+            self._kinddict[index] = kind
+            self._oper[index] = oper
+            self._mask[index] = mask
+            self._test[index] = test
+            self._datadict[index] = data
+            self._lengthdict[index] = length
+            self._mimedict[index] = mime
 
-                index += 1
-                self.entries = index
+            index += 1
+            self.entries = index
 
         f.close()
 
@@ -434,7 +437,7 @@ class Magic (object):
 
     def _convert (self, kind, endian, data):
         # Can raise StandardError and IOError
-        value = 0
+        value = data
 
         # Convert the data from the file
         if kind == 'byte':
