@@ -156,8 +156,13 @@ class Blocker (Filter):
                                           "selrule": "%d"%rule.oid})
                 doc += "?%s" % query
             port = config['port']
-            # XXX handle https requests here?
-            return 'GET http://localhost:%d%s HTTP/1.1' % (port, doc)
+            # XXX activate when https can be served locally
+            #if url.startswith("https://"):
+            #    scheme = "https"
+            #else:
+            #    scheme = "http"
+            scheme = "http"
+            return 'GET %s://localhost:%d%s HTTP/1.1' % (scheme, port, doc)
         return data
 
 
