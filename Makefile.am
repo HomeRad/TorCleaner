@@ -1,4 +1,5 @@
-SUBDIRS 		= po libjs
+SUBDIRS 		= po libjs service
+TESTS = unittests
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
@@ -51,25 +52,18 @@ dist-hook:
 	rm -f $(distdir)/webcleaner-$(VERSION).tar.gz
 	rm -f webcleaner-md5sums.txt
 
-testwc:
+unittests: localbuild
+# regression tests
 	test/run.sh test/regrtest.py
-
-testgen:
-	test/run.sh test/regrtest.py -g
-
+# python unit framework tests
+	@for f in tests/Test*.py; do test/run.sh $$f; done
 # filter and parse random data
-testrandom:
 	@echo "parse random data..."
-	rm -f randomparse.txt
 	head -c 20000 /dev/urandom | test/run.sh test/parsefile.py - > /dev/null
 	@echo "done."
-	rm -f randomfilter.txt
 	@echo "filter random data..."
 	head -c 20000 /dev/urandom | test/run.sh test/filterfile.py - > /dev/null
 	@echo "done."
-
-testupdate:
-	test/run.sh wc/update.py
 
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
