@@ -21,6 +21,8 @@ __date__    = "$Date$"[7:-2]
 
 import os, sys, re
 from wc.log import *
+from wc.url import url_norm
+
 
 _percent_encodings = re.compile('%+').findall
 def _has_lots_of_percents (url):
@@ -90,6 +92,19 @@ class HtmlSecurity (object):
                 attrs['type'] = t
         if attrs.has_key('codebase'):
             self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
+        # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
+        if attrs.has_key('data'):
+            url = url_norm(attrs['data'])
+            if url.startswith('its:') or \
+               url.startswith('mk:') or \
+               url.startswith('ms-its:') or \
+               url.startswith('ms-itss:'):
+                # url scheme is vulnerable
+                i = url.find('!')
+                if i != -1:
+                    # url specifies alternate location
+                    warn(FILTER, "%s\n Detected and prevented Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability", htmlfilter)
+                    attrs['data'] = url[:i]
 
 
     def table_start (self, attrs, htmlfilter):

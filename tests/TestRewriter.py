@@ -139,6 +139,11 @@ class TestRewriter (unittest.TestCase):
                   """<a></a>""")
 
 
+    def testItsVuln (self):
+        """Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability"""
+        self.filt("""<object data="&#109;s-its:mhtml:file://C:\\foo.mht!${PATH}/EXPLOIT.CHM::/exploit.htm">""",
+                  """<object data="ms-its:mhtml:file:/C:/foo.mht">""")
+
 suite = unittest.makeSuite(TestRewriter,'test')
 
 if __name__ == '__main__':
