@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sun Oct  5 20:30:00 2003\n"
+"POT-Creation-Date: Fri Oct 10 10:33:21 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -667,6 +667,9 @@ msgstr ""
 msgid "PICS category successfully enabled."
 msgstr ""
 
+msgid "Rule match-url successfully changed."
+msgstr ""
+
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -846,6 +849,9 @@ msgstr ""
 msgid "URL scheme"
 msgstr ""
 
+msgid "Search in %(site)s"
+msgstr ""
+
 msgid "Changes to this option require a proxy restart to take effect."
 msgstr ""
 
@@ -871,9 +877,6 @@ msgid "Hostname of the parent proxy"
 msgstr ""
 
 msgid "Username"
-msgstr ""
-
-msgid "Rewrite attribute(s) removed."
 msgstr ""
 
 msgid "Invalid image width value."
@@ -945,7 +948,7 @@ msgstr ""
 msgid "Password used for parent proxy authentication"
 msgstr ""
 
-msgid "Parent proxy user successfully changed."
+msgid "Rule title successfully changed."
 msgstr ""
 
 msgid "Rule successfully enabled."
@@ -1007,6 +1010,9 @@ msgstr ""
 msgid "Rule rewrite tag successfully changed."
 msgstr ""
 
+msgid "Your request"
+msgstr ""
+
 msgid "Image height"
 msgstr ""
 
@@ -1028,7 +1034,7 @@ msgstr ""
 msgid "Empty attribute name."
 msgstr ""
 
-msgid "Use Google cache contents for invalid pages"
+msgid "Parent proxy user successfully changed."
 msgstr ""
 
 msgid "Nofilter host(s) successfully removed."
@@ -1067,7 +1073,7 @@ msgstr ""
 msgid "Blank page due to block by %(AppName)s"
 msgstr ""
 
-msgid "Rule title successfully changed."
+msgid "Rewrite attribute(s) removed."
 msgstr ""
 
 msgid "Disable folder"
@@ -1079,6 +1085,11 @@ msgstr ""
 msgid "PICS service successfully disabled."
 msgstr ""
 
+msgid ""
+"resulted in the following error:<br>\n"
+"Server response <b>%(response)s</b>"
+msgstr ""
+
 msgid "Folder already disabled."
 msgstr ""
 
@@ -1088,7 +1099,7 @@ msgstr ""
 msgid "Folder moved down."
 msgstr ""
 
-msgid "Rule"
+msgid "Try Google"
 msgstr ""
 
 msgid "Folders"
@@ -1133,6 +1144,9 @@ msgstr ""
 msgid "Access key 0"
 msgstr ""
 
+msgid "%(AppName)s Google Selection"
+msgstr ""
+
 msgid "Remove rule"
 msgstr ""
 
@@ -1164,6 +1178,9 @@ msgid "URL fragment"
 msgstr ""
 
 msgid "Proxy settings"
+msgstr ""
+
+msgid "Display Google search options for invalid pages"
 msgstr ""
 
 msgid "Disabled rule icon"
@@ -1245,7 +1262,7 @@ msgstr ""
 msgid "Rule successfully disabled."
 msgstr ""
 
-msgid "Rule match-url successfully changed."
+msgid "Rule"
 msgstr ""
 
 msgid "URL parameters"
@@ -1260,6 +1277,9 @@ msgstr ""
 msgid "footnote 1"
 msgstr ""
 
+msgid "Search Google"
+msgstr ""
+
 msgid "Rule url path successfully changed."
 msgstr ""
 
@@ -1272,6 +1292,9 @@ msgstr ""
 msgid "Enabled filter module(s) %(filterenabled)s."
 msgstr ""
 
+msgid "Google Cache for"
+msgstr ""
+
 msgid "Invalid rewrite part name."
 msgstr ""
 
@@ -1282,9 +1305,6 @@ msgid "Invalid proxy port."
 msgstr ""
 
 msgid "Invalid attribute name."
-msgstr ""
-
-msgid "Use Google cache"
 msgstr ""
 
 msgid "Apply"
