@@ -35,7 +35,7 @@
 
 <rewrite title="Ad servers 06" oid="6"
  desc="Kill ad servers.">
-<attr>http://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com)</attr>
+<attr>http://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
 </rewrite>
 
 <rewrite title="Ad servers 07" oid="7"
@@ -65,7 +65,7 @@
 
 <rewrite title="Adverts in the path name 03" oid="11"
  desc="Kill links with ad words in the path name.">
-<attr>/event\.ng\?Type=click</attr>
+<attr>/event\.ng(\?|/)Type=click</attr>
 </rewrite>
 
 <rewrite title="Adverts in the path name 04" oid="12"
