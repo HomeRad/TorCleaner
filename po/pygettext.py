@@ -525,7 +525,7 @@ class HtmlGettext (sgmllib.SGMLParser, object):
             if self.tag:
                 raise Exception, "nested i18n:translate is unsupported"
             if msgid.startswith("string:"):
-                self.translations.add(msgid[7:]).replace(';;', ';')
+                self.translations.add(msgid[7:].replace(';;', ';'))
             else:
                 print >>sys.stderr, "tag <%s> has unsupported dynamic msgid %s" % (tag, `msgid`)
         elif self.tag:
@@ -746,7 +746,7 @@ def main():
         eater.write(fp)
         msgs = [msg for msg in html_translations if not eater.has_entry(msg)]
         for msg in msgs:
-            print >> fp, '#, html translation'
+            print >> fp, '#: html translation'
             print >> fp, 'msgid', normalize(msg)
             print >> fp, 'msgstr ""\n'
     finally:
