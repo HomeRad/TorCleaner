@@ -73,8 +73,11 @@ md5sums:
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
 
 releasecheck:
-	@if grep xxxx ChangeLog; then \
+	@if grep xxxx ChangeLog > /dev/null; then \
 	  echo "Could not release: edit ChangeLog release date"; false; \
+	fi
+	@if ! grep 'adminuser="admin"' config/webcleaner.conf > /dev/null; then \
+	  echo "Could not release: add admin user to config"; false; \
 	fi
 
 release: releasecheck dist upload homepage
