@@ -3,7 +3,9 @@
     Changed: wc/*.py
   * updated filters, whitelists removed due to conflict with GPL
     Changed: config/*.zap
-  * fixed parsing of end tags with trailing garbage
+  * parser fixes:
+    - fixed parsing of end tags with trailing garbage
+    - fixed parsing of script single comment lines
     Changed: wc/parser/htmllex.l
   * cope with falsely advertised GIF images, the GIF parsers ignores
     them now
