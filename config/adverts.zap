@@ -208,4 +208,10 @@
  matchurl="salon.com">
 <attr>jump.salon.com</attr>
 </rewrite>
+
+<rewrite title="IMDB Advert"
+ desc="redirect CGI at the Internet Movie database"
+ matchurl="imdb">
+<attr>tiger_redirect\?</attr>
+</rewrite>
 </folder>

@@ -148,8 +148,10 @@ class ConfWindow(ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DOWN,ConfWindow.onCmdDown)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_UP,ConfWindow.onCmdUpUpdate)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_DOWN,ConfWindow.onCmdDownUpdate)
-        #FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYUSER,ConfWindow.onCmdProxyUser)
-        #FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYPASS,ConfWindow.onCmdProxyPass)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYUSER,ConfWindow.onCmdProxyUser)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYPASS,ConfWindow.onCmdProxyPass)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYUSER,ConfWindow.onCmdParentProxyUser)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PARENTPROXYPASS,ConfWindow.onCmdParentProxyPass)
 
 
     def proxySettings(self, tabbook):
@@ -361,6 +363,20 @@ class ConfWindow(ToolWindow):
         return 1
 
 
+    def onCmdProxyUser (self, sender, sel, ptr):
+        self.proxyuser = sender.getText()
+        self.getApp().dirty = 1
+        #debug(BRING_IT_ON, "Proxy user=%s"%self.proxyuser)
+        return 1
+
+
+    def onCmdProxyPass (self, sender, sel, ptr):
+        self.proxypass = sender.getText()
+        self.getApp().dirty = 1
+        #debug(BRING_IT_ON, "Proxy password was changed")
+        return 1
+
+
     def onCmdDebuglevel(self, sender, sel, ptr):
         if self.debuglevel != sender.getCurrentItem():
             self.debuglevel = sender.getCurrentItem()
@@ -402,6 +418,20 @@ class ConfWindow(ToolWindow):
         self.parentproxyport = sender.getValue()
         self.getApp().dirty = 1
         #debug(BRING_IT_ON, "Parentproxyport=%d"%self.parentproxyport)
+        return 1
+
+
+    def onCmdParentProxyUser (self, sender, sel, ptr):
+        self.parentproxyuser = sender.getText()
+        self.getApp().dirty = 1
+        #debug(BRING_IT_ON, "Parentproxyuser=%s"%self.parentproxyuser)
+        return 1
+
+
+    def onCmdParentProxyPass (self, sender, sel, ptr):
+        self.parentproxypass = sender.getText()
+        self.getApp().dirty = 1
+        #debug(BRING_IT_ON, "Parentproxypass was changed")
         return 1
 
 

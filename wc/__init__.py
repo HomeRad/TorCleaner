@@ -103,14 +103,14 @@ class Configuration(UserDict.UserDict):
     def reset(self):
         """Reset to default values"""
         self['port'] = 8080
-        self['proxyuser'] = None
-        self['proxypass'] = None
-        self['parentproxy'] = None
+        self['proxyuser'] = ""
+        self['proxypass'] = ""
+        self['parentproxy'] = ""
         self['parentproxyport'] = 8080
-        self['parentproxyuser'] = None
-        self['parentproxypass'] = None
+        self['parentproxyuser'] = ""
+        self['parentproxypass'] = ""
         self['buffersize'] = 1024
-        self['logfile'] = None
+        self['logfile'] = ""
         self['timeout'] = 30
         self['obfuscateip'] = 0
         self['debuglevel'] = 0
