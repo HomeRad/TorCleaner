@@ -107,14 +107,15 @@ class MyInstall (install, object):
         self.distribution.create_conf_file(data, directory=self.install_lib)
 
     def get_outputs (self):
-        """add the generated config file from distribution.create_conf_file()
-           to the list of outputs.
+        """
+        Add the generated config file from distribution.create_conf_file()
+        to the list of outputs.
         """
         outs = super(MyInstall, self).get_outputs()
         outs.append(self.distribution.get_conf_filename(self.install_lib))
         return outs
 
-    # sent a patch for this, but here it is for compatibility
+    # compatibility bugfix for Python << 2.5, << 2.4.1, << 2.3.5
     def dump_dirs (self, msg):
         if DEBUG:
             from distutils.fancy_getopt import longopt_xlate
@@ -137,7 +138,9 @@ class MyInstallData (install_data, object):
     """My own data installer to handle permissions"""
 
     def run (self):
-        """adjust permissions on POSIX systems"""
+        """
+        Adjust permissions on POSIX systems.
+        """
         super(MyInstallData, self).run()
         if os.name == 'posix' and not self.dry_run:
             # Make the data files we just installed world-readable,
