@@ -24,25 +24,19 @@ class FXRuleTreeList (FXTreeList):
             self.addFolder(f)
 
     def addFolder (self, f, create=0):
-        item = self.createRuleItem(f)
-        frame = f.fromFactory(self.factory)
-        item.setData(frame.rule.index)
-        branch = self.addItemLast(self.topmost, item)
+        frame = self.createRuleItem(f)
+        branch = self.addItemLast(self.topmost, f.item)
         if create:
             frame.create()
             self.folders.append(f)
         for r in f.rules:
-            self.addRule(branch, r, create)
-        return item
+            self.addRule(branch, r, create=create)
 
     def addRule (self, branch, rule, create=0):
-        item = self.createRuleItem(rule)
-        frame = rule.fromFactory(self.factory)
-        item.setData(frame.rule.index)
-        self.addItemLast(branch, item)
+        frame = self.createRuleItem(rule)
+        self.addItemLast(branch, rule.item)
         if create:
             frame.create()
-        return item
 
     def newRule (self, rule):
         item = self.getCurrentItem()
@@ -50,22 +44,22 @@ class FXRuleTreeList (FXTreeList):
         #debug(BRING_IT_ON, "item index %d"%item.getData())
         if item.getData()==0:
             item = item.getBelow()
-        elif not self.searchFolder(item.getData()):
+        elif not self.searchIndexFolder(item.getData()):
             item = item.getParent()
         #debug(BRING_IT_ON, "item index %d"%item.getData())
         self.expandTree(item)
-        folder = self.searchFolder(item.getData())
+        folder = self.searchIndexFolder(item.getData())
         rule.parent = folder
         folder.append_rule(rule)
         item = self.addRule(item, rule, 1)
         #debug(BRING_IT_ON, "item index %d"%item.getData())
 
-    def searchFolder (self, index):
+    def searchIndexFolder (self, index):
         for f in self.folders:
             if f.index == index:
                 return f
 
-    def searchRule (self, index):
+    def searchIndexRule (self, index):
         for f in self.folders:
             if f.index == index:
                 return f
@@ -73,72 +67,70 @@ class FXRuleTreeList (FXTreeList):
                 if r.index == index:
                     return r
 
+    def searchOidRule (self, item, oid):
+        if self.isItemLeaf(item):
+            for f in self.folders:
+                for r in f.rules:
+                    if r.oid == oid:
+                        return r
+        else:
+            for f in self.folders:
+                if f.oid == oid:
+                    return f
+
     def createRuleItem (self, rule):
         if rule.get_name()!="folder":
             title = "[%s] %s" % (rule.get_name(), rule.title)
         else:
             title = rule.title
-        item = FXTreeItem(title)
-        self.setItemIcons(item, rule)
-        return item
-
-    def setItemIcons (self, item, rule):
+        rule.item = FXTreeItem(title)
         if rule.disable:
             # disabled
-            self.setItemOpenIcon(item, self.icon_disabled)
-	    self.setItemClosedIcon(item, self.icon_disabled)
+            self.setItemOpenIcon(rule.item, self.icon_disabled)
+	    self.setItemClosedIcon(rule.item, self.icon_disabled)
         elif rule.get_name()=='folder':
             # folder rule
-            self.setItemOpenIcon(item, self.icon_open)
-	    self.setItemClosedIcon(item, self.icon_closed)
+            self.setItemOpenIcon(rule.item, self.icon_open)
+	    self.setItemClosedIcon(rule.item, self.icon_closed)
         else:
             # normal rule
-            self.setItemOpenIcon(item, self.icon_doc)
-	    self.setItemClosedIcon(item, self.icon_doc)
+            self.setItemOpenIcon(rule.item, self.icon_doc)
+	    self.setItemClosedIcon(rule.item, self.icon_doc)
+        frame = rule.fromFactory(self.factory)
+        rule.item.setData(rule.index)
 
     def onCmdUp (self):
         item = self.getCurrentItem()
         if self.isItemSelected(item):
             index = item.getData()
             #debug(BRING_IT_ON, "onCmdUp: tree item index %d" % index)
-            rule = self.searchRule(index)
-            debug(BRING_IT_ON, "onCmdUp: rule %s" % rule)
-            # XXX todo
+            rule = self.searchIndexRule(index)
+            #debug(BRING_IT_ON, "onCmdUp: rule %s" % rule)
+            rule_before = self.searchOidRule(item, rule.oid-1)
+            item_before = rule_before.item
+            rule_before.oid, rule.oid = rule.oid, rule_before.oid
+            self.sort()
+            self.removeItem(item)
+            self.addItemBefore(item_before, item)
+            self.getApp().dirty = 1
 
-    def onCmdUpUpdate (self, sender):
+    def onCmdDown (self):
         item = self.getCurrentItem()
         if self.isItemSelected(item):
             index = item.getData()
             #debug(BRING_IT_ON, "onCmdUp: tree item index %d" % index)
-            rule = self.searchRule(index)
-            if rule.oid!=0:
-                sender.enable()
-                return 1
-        sender.disable()
-        return 1
+            rule = self.searchIndexRule(index)
+            rule_after = self.searchOidRule(item, rule.oid+1)
+            item_after = rule_after.item
+            rule_after.oid, rule.oid = rule.oid, rule_after.oid
+            self.sort()
+            self.removeItem(item)
+            print item_after, item
+            # this segfaults
+            self.addItemAfter(item_after, item)
+            self.getApp().dirty = 1
 
-    def onCmdDown (self):
-        # XXX todo
-        return
+    def sort (self):
+        for f in self.folders: f.sort()
+        self.folders.sort()
 
-    def onCmdDownUpdate (self, sender):
-        item = self.getCurrentItem()
-        if self.isItemSelected(item):
-            index = item.getData()
-            rule = self.searchRule(index)
-            #debug(BRING_IT_ON, "onCmdDown: tree item index %d" % index)
-            # last rule of last folder?
-            if self.searchRule(index+1) is None:
-                sender.disable()
-                return 1
-            # last rule of a folder?
-            if self.searchFolder(index+1) is not None:
-                sender.disable()
-                return 1
-            # last folder?
-            if rule == self.folders[-1]:
-                sender.disable()
-                return 1
-            sender.enable()
-        else: sender.disable()
-        return 1

@@ -560,21 +560,31 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdUp (self, sender, sel, ptr):
-        self.tree.onCmdUp()
+        #XXXself.tree.onCmdUp()
         return 1
 
 
     def onCmdUpUpdate (self, sender, sel, ptr):
-        return self.tree.onCmdUpUpdate(sender)
+        item = self.tree.getCurrentItem()
+        if self.tree.isItemSelected(item) and item.getPrev():
+            sender.enable()
+        else:
+            sender.disable()
+        return 1
 
 
     def onCmdDown (self, sender, sel, ptr):
-        self.tree.onCmdDown()
+        #XXXself.tree.onCmdDown()
         return 1
 
 
     def onCmdDownUpdate (self, sender, sel, ptr):
-        return self.tree.onCmdDownUpdate(sender)
+        item = self.tree.getCurrentItem()
+        if self.tree.isItemSelected(item) and item.getNext():
+            sender.enable()
+        else:
+            sender.disable()
+        return 1
 
 
     def onCmdConfUpdate (self, sender, sel, ptr):
