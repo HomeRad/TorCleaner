@@ -190,6 +190,10 @@ static PyObject* quote_string (PyObject* val) {
 %x S_TAGEND
 %x S_TAGEND2
 %x S_SCRIPT
+%x S_SCRIPT_APOS
+%x S_SCRIPT_STRING
+%x S_SCRIPT_COMMENT
+%x S_SCRIPT_MCOMMENT
 %x S_STYLE
 %x S_ATTR1
 %x S_ATTR2
@@ -414,12 +418,41 @@ RX_DATA [-a-zA-Z0-9_]+
     RETURN(T_SCRIPT);
 }
 
-<S_SCRIPT>[^<]+ {
+<S_SCRIPT>[^/'"<]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
 
-  /* this is so shitty */
+<S_SCRIPT>\' {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_APOS);
+}
+
+<S_SCRIPT>\" {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_STRING);
+}
+
+<S_SCRIPT>\/\/ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_COMMENT);
+}
+
+<S_SCRIPT>\/\* {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_MCOMMENT);
+}
+
+<S_SCRIPT>\/[^/*] {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+  /* XXX this is so shitty */
 <S_SCRIPT></[^/] {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -461,6 +494,69 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
 <S_SCRIPT>. {
+    return T_WAIT;
+}
+
+<S_SCRIPT_APOS>[^']+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_SCRIPT_APOS>\' {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT);
+}
+
+<S_SCRIPT_STRING>[^"]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_SCRIPT_STRING>\" {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT);
+}
+
+<S_SCRIPT_COMMENT>[^\-\n]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_SCRIPT_COMMENT>\n {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT);
+}
+
+<S_SCRIPT_COMMENT>-([^-]+|-[^>]+) {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_SCRIPT_COMMENT>--> {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT);
+}
+
+<S_SCRIPT_COMMENT>. {
+    return T_WAIT;
+}
+
+<S_SCRIPT_MCOMMENT>[^*]+|\*[^/]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_SCRIPT_MCOMMENT>\*\/ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT);
+}
+
+<S_SCRIPT_MCOMMENT>. {
     return T_WAIT;
 }
 
