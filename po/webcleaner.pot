@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Dec 17 15:39:10 2003\n"
+"POT-Creation-Date: Wed Dec 17 20:16:05 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,19 +18,34 @@ msgstr ""
 msgid "unknown tag name %s"
 msgstr ""
 
-msgid "WebCleaner (PID %d) is running"
-msgstr ""
-
-msgid "WebCleaner (PID %d) and watch daemon (PID %d) are running"
-msgstr ""
-
-msgid "WebCleaner and watch daemon are not running (no lock files found)"
-msgstr ""
-
-msgid "WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)"
-msgstr ""
-
 msgid "%s Proxy"
+msgstr ""
+
+msgid "The %s service runs in its own process."
+msgstr ""
+
+msgid "The %s service shares a process with other services."
+msgstr ""
+
+msgid "The %s service can interact with the desktop."
+msgstr ""
+
+msgid "The %s service is stopped."
+msgstr ""
+
+msgid "The %s service is starting."
+msgstr ""
+
+msgid "The %s service is stopping."
+msgstr ""
+
+msgid "The %s service is running."
+msgstr ""
+
+msgid "The %s service can be stopped."
+msgstr ""
+
+msgid "The %s service can be paused."
 msgstr ""
 
 msgid ""
@@ -38,10 +53,10 @@ msgid ""
 "Do 'webcleaner stop' first."
 msgstr ""
 
-msgid "command '%s' failed: %s"
+msgid "command %r failed: %s"
 msgstr ""
 
-msgid "command '%s' killed by signal %d"
+msgid "command %r killed by signal %d"
 msgstr ""
 
 msgid "WebCleaner was not running (no lock file found)"
@@ -53,6 +68,12 @@ msgstr ""
 msgid "reload not supported for this platform"
 msgstr ""
 
+msgid "WebCleaner (PID %d) is running"
+msgstr ""
+
+msgid "WebCleaner is not running (no lock file found)"
+msgstr ""
+
 msgid "Watch program already started (lock file found)."
 msgstr ""
 
@@ -60,6 +81,15 @@ msgid "Watcher was not running (no lock file found)"
 msgstr ""
 
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
+msgstr ""
+
+msgid "WebCleaner (PID %d) and watch daemon (PID %d) are running"
+msgstr ""
+
+msgid "WebCleaner and watch daemon are not running (no lock files found)"
+msgstr ""
+
+msgid "WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)"
 msgstr ""
 
 msgid "Unknown page"
@@ -236,11 +266,11 @@ msgid ""
 "status\n"
 "        Print info if the proxy is running or not.\n"
 "debug\n"
-"        XXX\n"
+"        Start the proxy printing service debug messages.\n"
 "install [options]\n"
 "        Install WebCleaner Windows service.\n"
 "update [options]\n"
-"        XXX\n"
+"        Update WebCleaner Windows service.\n"
 "remove\n"
 "        Remove WebCleaner Windows service.\n"
 "\n"
@@ -262,7 +292,7 @@ msgstr ""
 msgid "press return to continue..."
 msgstr ""
 
-msgid "Unknown option %(option)s"
+msgid "Unknown option %(option)r"
 msgstr ""
 
 msgid "No command given."
@@ -457,6 +487,9 @@ msgid "Move rule up"
 msgstr ""
 
 msgid "Invalid rule move up id."
+msgstr ""
+
+msgid "%(AppName)s Google Selection"
 msgstr ""
 
 msgid "Folder successfully enabled."
@@ -761,7 +794,9 @@ msgstr ""
 msgid "Access key 0"
 msgstr ""
 
-msgid "%(AppName)s Google Selection"
+msgid ""
+"Read the <a href=\"help.html\" tal:attributes=\"href string:help.html.${lang}\">help pages</a> for\n"
+" information on how to set up your browser to work with %(AppName)s"
 msgstr ""
 
 msgid "Proxy password"

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Wed Dec 17 15:39:10 2003\n"
-"PO-Revision-Date: 2003-12-17 15:44+0100\n"
+"POT-Creation-Date: Wed Dec 17 20:16:05 2003\n"
+"PO-Revision-Date: 2003-12-17 20:20+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,20 +15,35 @@ msgstr ""
 msgid "unknown tag name %s"
 msgstr "Unbekannter Tagname %s"
 
-msgid "WebCleaner (PID %d) is running"
-msgstr "WebCleaner (PID %d) läuft"
-
-msgid "WebCleaner (PID %d) and watch daemon (PID %d) are running"
-msgstr "WebCleaner (PID %d) und Startdämon (PID %d) laufen"
-
-msgid "WebCleaner and watch daemon are not running (no lock files found)"
-msgstr "WebCleaner und Startdämon laufen nicht (keine Lockdateien gefunden)"
-
-msgid "WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)"
-msgstr "WebCleaner läuft nicht (keine Lockdatei gefunden) aber der Startdämon läuft (PID %d)"
-
 msgid "%s Proxy"
 msgstr "%s Proxy"
+
+msgid "The %s service runs in its own process."
+msgstr "Der %s Dienst läuft in einem eigenen Prozess."
+
+msgid "The %s service shares a process with other services."
+msgstr "Der %s Dienst teilt sich ein Prozess mit anderen Diensten."
+
+msgid "The %s service can interact with the desktop."
+msgstr "Der %s Dienst kann mit dem Desktop interagieren."
+
+msgid "The %s service is stopped."
+msgstr "Der %s Dienst ist angehalten."
+
+msgid "The %s service is starting."
+msgstr "Der %s Dienst startet."
+
+msgid "The %s service is stopping."
+msgstr "Der %s Dienst stoppt."
+
+msgid "The %s service is running."
+msgstr "Der %s Dienst ist gestartet."
+
+msgid "The %s service can be stopped."
+msgstr "Der %s Dienst kann angehalten werden."
+
+msgid "The %s service can be paused."
+msgstr "Der %s Dienst kann pausieren."
 
 msgid ""
 "WebCleaner already started (lock file found).\n"
@@ -37,11 +52,11 @@ msgstr ""
 "WebCleaner bereits gestartet (Lockdatei gefunden).\n"
 "Führen Sie zuerst 'webcleaner stop' aus."
 
-msgid "command '%s' failed: %s"
-msgstr "Kommando '%s' fehlgeschlagen: %s"
+msgid "command %r failed: %s"
+msgstr "Kommando %r fehlgeschlagen: %s"
 
-msgid "command '%s' killed by signal %d"
-msgstr "Kommando '%s' wurde beendet durch Signal %d"
+msgid "command %r killed by signal %d"
+msgstr "Kommando %r wurde beendet durch Signal %d"
 
 msgid "WebCleaner was not running (no lock file found)"
 msgstr "WebCleaner lief nicht (keine Lockdatei gefunden)"
@@ -52,6 +67,12 @@ msgstr "Warnung: konnte Prozess PID %d nicht beenden"
 msgid "reload not supported for this platform"
 msgstr "reload wird von diesem System nicht unterstützt"
 
+msgid "WebCleaner (PID %d) is running"
+msgstr "WebCleaner (PID %d) läuft"
+
+msgid "WebCleaner is not running (no lock file found)"
+msgstr "WebCleaner läuft nicht (keine Lockdatei gefunden)"
+
 msgid "Watch program already started (lock file found)."
 msgstr "Überwachungsprogramm bereits gestartet (Lockdatei gefunden)."
 
@@ -60,6 +81,15 @@ msgstr "WebCleaner lief nicht (keine Lockdatei gefunden)"
 
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
 msgstr "WebCleaner läuft nicht. Führen Sie zuerst 'webcleaner start' aus."
+
+msgid "WebCleaner (PID %d) and watch daemon (PID %d) are running"
+msgstr "WebCleaner (PID %d) und Startdämon (PID %d) laufen"
+
+msgid "WebCleaner and watch daemon are not running (no lock files found)"
+msgstr "WebCleaner und Startdämon laufen nicht (keine Lockdateien gefunden)"
+
+msgid "WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)"
+msgstr "WebCleaner läuft nicht (keine Lockdatei gefunden) aber der Startdämon läuft (PID %d)"
 
 msgid "Unknown page"
 msgstr "Unbekannte Seite"
@@ -254,11 +284,11 @@ msgid ""
 "status\n"
 "        Print info if the proxy is running or not.\n"
 "debug\n"
-"        XXX\n"
+"        Start the proxy printing service debug messages.\n"
 "install [options]\n"
 "        Install WebCleaner Windows service.\n"
 "update [options]\n"
-"        XXX\n"
+"        Update WebCleaner Windows service.\n"
 "remove\n"
 "        Remove WebCleaner Windows service.\n"
 "\n"
@@ -279,8 +309,8 @@ msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
 msgid "press return to continue..."
 msgstr "drücken Sie Return, um fortzufahren..."
 
-msgid "Unknown option %(option)s"
-msgstr "Unbekannte Option %(option)s"
+msgid "Unknown option %(option)r"
+msgstr "Unbekannte Option %(option)r"
 
 msgid "No command given."
 msgstr "Kein Befehl angegeben."
@@ -477,6 +507,9 @@ msgstr "Regel nach oben schieben"
 
 msgid "Invalid rule move up id."
 msgstr "Ungültige Regel-nach-oben-Verschieben Nummer."
+
+msgid "%(AppName)s Google Selection"
+msgstr "%(AppName)s Google Auswahl"
 
 msgid "Folder successfully enabled."
 msgstr "Ordner erfolgreich aktiviert."
@@ -789,8 +822,12 @@ msgstr "Ordner aktivieren"
 msgid "Access key 0"
 msgstr "Tastaturkommando 0"
 
-msgid "%(AppName)s Google Selection"
-msgstr "%(AppName)s Google Auswahl"
+msgid ""
+"Read the <a href=\"help.html\" tal:attributes=\"href string:help.html.${lang}\">help pages</a> for\n"
+" information on how to set up your browser to work with %(AppName)s"
+msgstr ""
+"Lesen Sie die <a href=\"help.html\" tal:attributes=\"href string:help.html.${lang}\">Hilfe</a> um\n"
+"zu erfahren welche Einstellungen Ihr Browser benötigt, um mit %(AppName)s zusammenzuarbeiten."
 
 msgid "Proxy password"
 msgstr "Proxy Passwort"
