@@ -2,7 +2,7 @@
 <!DOCTYPE filter SYSTEM "filter.dtd">
 <folder sid="wc.7" title="Content Rating" oid="13">
 <rating sid="wc.8" title="Content Rating"
- desc="Enable the content rating system to protect your children or yourself from pages that suck."
+ desc="Enable the content rating system to protect your children or yourself from inappropriate pages."
  disable="1">
 <category name="agerange">14-</category>
 <category name="violence">0</category>
