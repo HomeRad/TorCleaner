@@ -1,7 +1,6 @@
 body {
     font-family: Verdana, Helvetica, Arial, sans-serif;
     background: #f7ebd3;
-    color: Black;
     margin: 0;
     padding: 0;
 /* These work in IE only, changes the look of the scrollbar + textareas */
@@ -12,6 +11,14 @@ body {
     scrollbar-3dlight-color: #8CACBB;
     scrollbar-shadow-color: #8CACBB;
     scrollbar-arrow-color: #436976;
+}
+
+a {
+    color: #222222;
+}
+
+a:hover {
+    color: black;
 }
 
 div.tabs {
@@ -27,11 +34,11 @@ div.tabs {
 
 div.tabs a {
     /* The normal, unselected tabs. They are all links */
+    color: #222222;
     background: transparent;
     border-left-width: 10px;
     border-left-style: solid;
     border-left-color: #f86821;
-    color: #222222;
     font-weight: normal;
     /*height: 1.2em;*/
     margin-right: 1.5em;
@@ -41,18 +48,18 @@ div.tabs a {
 
 div.tabs a.selected {
     /* The selected tab. There's only one of this */
+    color: #222222;
     background: #f8c218;
     border-left-width: 10px;
     border-left-style: solid;
     border-left-color: #f85b0d;
-    color: #222222;
     font-weight: normal;
 }
 
 div.tabs a:hover {
+    color: black;
     background: #f8c218;
     border-color: #f85b0d;
-    color: black;
 }
 
 div.content {
@@ -66,26 +73,69 @@ form {
     margin: 0;
 }
 
-input.context {
-    font: 100% Verdana, Helvetica, Arial, sans-serif;
+input.text {
+    font-size: 85%;
     border: 1px solid #777777;
-    color: black;
-    background-color: white;
+    color: Black;
+    background: #fff7ee;
     vertical-align: middle;
     margin-bottom: 1px; /* IE bug fix */
     padding: 0 0 0 0.1em;
+    width: 180px;
+}
+
+input.number {
+    font-size: 85%;
+    border: 1px solid #777777;
+    color: Black;
+    background: #fff7ee;
+    vertical-align: middle;
+    margin-bottom: 1px; /* IE bug fix */
+    padding: 0 0 0 0.1em;
+    width: 60px;
+}
+
+input.submit {
+    font-size: 85%;
+    color: #222222;
+    background: transparent;
+    vertical-align: middle;
+    margin-bottom 1px;
+    border: 1px dotted #f85b0d;
+}
+
+input.submit:hover {
+    color: Black;
+    background: #f8c218;
+}
+
+input.submit:focus {
+    color: Black;
+    background: #f8c218;
 }
 
 textarea {
-    border: 1px solid #8cacbb;
+    font-size: 85%;
+    border: 1px solid #777777;
     color: Black;
-    background-color: white;
+    background: #fff7ee;
     width: 88%;
     padding: 0.1em;
 }
 
 select {
-    font: 100% Verdana, Helvetica, Arial, sans-serif;
-    border: 1px solid #8cacbb;
+    font-size: 85%;
+    border: 1px solid #777777;
+    color: Black;
+    background: #fff7ee;
     vertical-align: top;
+    width: 180px;
+}
+
+div.footer {
+    /* the footer container */
+    padding: 1em 2em 1em 2em;
+    color: #555555;
+    text-align: right;
+    font-size: 70%;
 }

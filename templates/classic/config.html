@@ -5,14 +5,7 @@
 <title tal:content="title">WebCleaner Proxy Configuration</title>
 </head>
 <body>
-<div class="tabs">
-<a href="index.html" class="plain"
- tal:content="t_webcleaner">WebCleaner</a>
-<a href="config.html" class="selected"
- tal:content="t_proxyconf">Proxy configuration</a>
-<a href="filterconfig.html" class="plain"
- tal:content="t_filterconf">Filter configuration</a>
-</div>
+<div metal:use-macro="macros/macros/nav">Navigation...</div>
 
 <div class="content">
 <div tal:repeat="item info">
@@ -36,55 +29,55 @@
 <tr valign="top">
 <td><span tal:replace="port">Port number</span><a href="#restart">*</a></td>
 <td>
-  <input class="context" type="text" name="port" size="5" maxlength="5"
+  <input class="number" type="text" name="port" maxlength="5"
    tal:attributes="value config/strport">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="proxyuser">Proxy user</span></td>
 <td>
-  <input class="context" type="text" name="proxyuser" size="20"
+  <input class="text" type="text" name="proxyuser"
    tal:attributes="value config/proxyuser">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="proxypass">Proxy pass</span></td>
 <td>
-  <input class="context" type="password" name="proxypass" value="" size="20">
+  <input class="text" type="password" name="proxypass" value="">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="timeout">Timeout (seconds)</span></td>
 <td>
-  <input class="context" type="text" name="timeout" value="" size="5" maxlength="5"
+  <input class="number" type="text" name="timeout" value="" maxlength="5"
    tal:attributes="value config/strtimeout">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxy">Parent proxy</span></td>
 <td>
-  <input class="context" type="text" name="parentproxy" size="20"
+  <input class="text" type="text" name="parentproxy"
    tal:attributes="value config/parentproxy">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxyport">Parent proxy port number</span></td>
 <td>
-  <input class="context" type="text" name="parentproxyport" size="5" maxlength="5"
+  <input class="number" type="text" name="parentproxyport" maxlength="5"
    tal:attributes="value config/strparentproxyport">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxyuser">Parent proxy user</span></td>
 <td>
-  <input class="context" type="text" name="parentproxyuser" size="20"
+  <input class="text" type="text" name="parentproxyuser"
    tal:attributes="value config/parentproxyuser">
 </td>
 </tr>
 <tr valign="top">
 <td><span tal:replace="parentproxypass">Parent proxy pass</span></td>
 <td>
-  <input class="context" type="password" name="parentproxypass" value="" size="20">
+  <input class="text" type="password" name="parentproxypass" value="">
 </td>
 </tr>
 <tr valign="top">
@@ -100,40 +93,39 @@
 <td>
 <div tal:replace="allowedhosts">Allowed hosts</div>
 <br>
-<select name="allowedhosts" size="5" multiple style="width:200px;">
+<select name="allowedhosts" multiple size="5">
 <option tal:repeat="host config/allowedhostlist" tal:attributes="value host">
 <span tal:replace="host">127.0.0.1</span>
 </option>
 </select>
 <br>
-<input type="submit" name="delallowed" value="Remove selected"
+<input type="submit" name="delallowed" value="Remove selected" class="submit"
  tal:attributes="value remove">
 <br>
-<input type="submit" name="addallowed" value="Add new"
+<input class="text" type="text" name="newallowed" value="">
+<input type="submit" name="addallowed" value="Add new" class="submit"
  tal:attributes="value add">
-<input class="context" type="text" name="newallowed" value="" size="20">
-
 <br><br>
 
 <div tal:replace="nofilterhosts">Don't filter hosts</div>
 <br>
-<select name="nofilterhosts" size="5" multiple style="width:200px;">
+<select name="nofilterhosts" size="5" multiple>
 <option tal:repeat="host config/nofilterhostlist" tal:attributes="value host"
  tal:content="host">127.0.0.1</option>
 </select>
 <br>
-<input type="submit" name="delnofilter" value="Remove selected"
+<input type="submit" name="delnofilter" value="Remove selected" class="submit"
  tal:attributes="value remove">
 <br>
-<input type="submit" name="addnofilter" value="Add new"
+<input class="text" type="text" name="newnofilter" value="">
+<input type="submit" name="addnofilter" value="Add new" class="submit"
  tal:attributes="value add">
-<input class="context" type="text" name="newnofilter" value="" size="20">
-
 </td>
 </tr>
 <tr>
 <td colspan="2">
-  <input type="submit" value="Apply" tal:attributes="value configapply">
+<input type="submit" value="Apply" class="submit"
+ tal:attributes="value configapply">
 </td>
 </tr>
 </table>
@@ -141,5 +133,7 @@
 <a name="restart">*</a>
 The marked options require a proxy restart to take effect.
 </div>
+
+<div metal:use-macro="macros/macros/footer">Footer...</div>
 </body>
 </html>
