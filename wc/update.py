@@ -175,7 +175,7 @@ def open_url (url, proxies=None):
     """
     Return connected request object for given url.
 
-    @raise: IOError on error
+    @raise: IOError
     """
     try:
         page = urlopen(url, proxies=proxies)
@@ -203,7 +203,7 @@ def update_filter (wconfig, dryrun=False, log=None):
     Update the given configuration object with .zap files found at baseurl.
     If dryrun is True, only print out the changes but do nothing.
 
-    @raise: IOError on error
+    @raise: IOError
     """
     print >> log, _("updating filters"), "..."
     chg = False
