@@ -2,12 +2,13 @@ TODO
 
 version 2.0
 
-- german translation
+- unique rule ids
+- sorting ids in rules
+- automatic filter update
 - tests, packaging, wait for python 2.3final
 
 version 2.1
 
-- automatic filter update
 
 - HTTPS tunneling (RFC 2818)
 
