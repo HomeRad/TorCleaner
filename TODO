@@ -6,6 +6,11 @@ version 2.2
   (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
    client auth)
 
+- NTLM: restore old method type when method was not GET
+
+- NTLM: reconnect to parent proxy after first 407 error (squid closes
+  the connection)
+
 version 2.3 and above
 
 - parse and import adzapper.sf.net filters
