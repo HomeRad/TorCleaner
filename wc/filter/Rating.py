@@ -233,18 +233,14 @@ def rating_range (value):
     mo = _range_re.match(value)
     if not mo:
         return None
-    return (mo.group(1), mo.group(2))
+    vmin, vmax = mo.group(1), mo.group(2)
+    if vmin=="":
+        vmin = None
+    else:
+        vmin = int(vmin)
+    if vmax=="":
+        vmax = None
+    else:
+        vmax = int(vmax)
+    return (vmin, vmax)
 
-
-if __name__=='__main__':
-    for url in ['', 'a', 'a/b',
-                'http://imadoofus.com',
-                'http://imadoofus.com//',
-                'http://imadoofus.com/?q=a',
-                'http://imadoofus.com/?q=a#a',
-                'http://imadoofus.com/a/b//c',
-                'http://imadoofus.com/forum',
-                'http://imadoofus.com/forum/',
-               ]:
-        print rating_split_url(url)
-    print rating_cache_get('http://www.heise.de/foren/')
