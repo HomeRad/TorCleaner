@@ -49,7 +49,7 @@ def _main():
             # background downloading if javascript is too slow
             print "Test: oooooops"
             break
-    print filtered
+    print "Filtered:", filtered
 
 
 if __name__=='__main__':

@@ -40,3 +40,4 @@ Makefile.in
 missing
 mkinstalldirs
 depcomp
+random*.txt
