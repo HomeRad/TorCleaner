@@ -19,7 +19,6 @@
 import os
 import urllib
 import sys
-import re
 
 import wc
 import wc.log
