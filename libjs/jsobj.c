@@ -2400,6 +2400,8 @@ js_LookupProperty(JSContext *cx, JSObject *obj, jsid id, JSObject **objp,
     uint32 generation;
     JSNewResolveOp newresolve;
     uintN flags;
+    jsbytecode *pc;
+    const JSCodeSpec *cs;
     uint32 format;
     JSBool ok;
 
@@ -2454,13 +2456,20 @@ js_LookupProperty(JSContext *cx, JSObject *obj, jsid id, JSObject **objp,
                 if (clasp->flags & JSCLASS_NEW_RESOLVE) {
                     newresolve = (JSNewResolveOp)resolve;
                     flags = 0;
-                    if (cx->fp && cx->fp->pc) {
-                        format = js_CodeSpec[*cx->fp->pc].format;
+                    if (cx->fp && (pc = cx->fp->pc)) {
+                        cs = &js_CodeSpec[*pc];
+                        format = cs->format;
                         if ((format & JOF_MODEMASK) != JOF_NAME)
                             flags |= JSRESOLVE_QUALIFIED;
                         if ((format & JOF_ASSIGNING) ||
                             (cx->fp->flags & JSFRAME_ASSIGNING)) {
                             flags |= JSRESOLVE_ASSIGNING;
+                        } else {
+                            pc += cs->length;
+                            while (*pc == JSOP_GROUP)
+                                pc++;
+                            if (*pc == JSOP_IFEQ)
+                                flags |= JSRESOLVE_DETECTING;
                         }
                     }
                     obj2 = (clasp->flags & JSCLASS_NEW_RESOLVE_GETS_START)
@@ -3911,7 +3920,7 @@ js_Mark(JSContext *cx, JSObject *obj, void *arg)
          */
         return (uint32) obj->slots[-1];
     }
-    return JS_MIN(obj->map->freeslot, obj->map->nslots);
+    return JS_MIN(scope->map.freeslot, scope->map.nslots);
 }
 
 void
@@ -3964,7 +3973,7 @@ js_GetRequiredSlot(JSContext *cx, JSObject *obj, uint32 slot)
     return v;
 }
 
-void
+JSBool
 js_SetRequiredSlot(JSContext *cx, JSObject *obj, uint32 slot, jsval v)
 {
     uint32 nslots, rlimit, i;
@@ -3986,7 +3995,7 @@ js_SetRequiredSlot(JSContext *cx, JSObject *obj, uint32 slot, jsval v)
             JS_realloc(cx, obj->slots - 1, (nslots + 1) * sizeof(jsval));
         if (!newslots) {
             JS_UNLOCK_OBJ(cx, obj);
-            return;
+            return JS_FALSE;
         }
         for (i = 1 + newslots[0]; i <= rlimit; i++)
             newslots[i] = JSVAL_VOID;
@@ -3998,6 +4007,7 @@ js_SetRequiredSlot(JSContext *cx, JSObject *obj, uint32 slot, jsval v)
 
     obj->slots[slot] = v;
     JS_UNLOCK_OBJ(cx, obj);
+    return JS_TRUE;
 }
 
 #ifdef DEBUG

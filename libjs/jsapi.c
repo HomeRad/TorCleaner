@@ -1056,7 +1056,7 @@ JS_ToggleOptions(JSContext *cx, uint32 options)
 JS_PUBLIC_API(const char *)
 JS_GetImplementationVersion(void)
 {
-    return "JavaScript-C 1.5 pre-release 6 2004-01-27";
+    return "JavaScript-C 1.5 pre-release 6a 2004-06-09";
 }
 
 
@@ -2880,8 +2880,7 @@ JS_SetReservedSlot(JSContext *cx, JSObject *obj, uint32 index, jsval v)
     if (index >= limit && !ReservedSlotIndexOK(cx, obj, clasp, index, limit))
         return JS_FALSE;
     slot = JSSLOT_START(clasp) + index;
-    OBJ_SET_REQUIRED_SLOT(cx, obj, slot, v);
-    return JS_TRUE;
+    return OBJ_SET_REQUIRED_SLOT(cx, obj, slot, v);
 }
 
 #ifdef JS_THREADSAFE

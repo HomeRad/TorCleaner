@@ -487,7 +487,7 @@ typedef jsval
 (* JS_DLL_CALLBACK JSGetRequiredSlotOp)(JSContext *cx, JSObject *obj,
                                         uint32 slot);
 
-typedef void
+typedef JSBool
 (* JS_DLL_CALLBACK JSSetRequiredSlotOp)(JSContext *cx, JSObject *obj,
                                         uint32 slot, jsval v);
 
@@ -546,6 +546,9 @@ typedef JSBool
 (* JS_DLL_CALLBACK JSLocaleCompare)(JSContext *cx,
                                     JSString *src1, JSString *src2,
                                     jsval *rval);
+
+typedef JSBool
+(* JS_DLL_CALLBACK JSLocaleToUnicode)(JSContext *cx, char *src, jsval *rval);
 
 /*
  * Security protocol types.
