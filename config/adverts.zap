@@ -135,7 +135,7 @@
 
 <rewrite sid="wc.357" title="Remove &lt;layer&gt; tag"
  desc="Don&apos;t know some example sites, but I dont want layers."
- dontmatchurl="www\.on2\.com|www\.mplayerhq\.hu|\.imdb\.com"
+ dontmatchurl="www\.on2\.com|www\.mplayerhq\.hu|\.imdb\.com|www\.spielen-lernen-bewegen\.de"
  tag="layer"/>
 
 
