@@ -24,6 +24,10 @@ from distutils.command.install import install
 from distutils.file_util import write_file
 from distutils import util
 
+def p (path):
+    """norm a path name to platform specific notation"""
+    return os.path.normpath(path)
+
 # set to 1 to use JavaScript
 USE_JS = 1
 
@@ -125,26 +129,27 @@ class MyDistribution(Distribution):
         util.execute(write_file, (filename, data),
                  "creating %s" % filename, self.verbose>=1, self.dry_run)
 
-# extension compile arguments
 if os.name=='nt':
     macros = [('YY_NO_UNISTD_H', None)]
     cargs = []
+    scripts = ['webcleanerconf', 'wcheaders'],
 else:
     macros = []
     # use -std=gnu99 because
     # - Python 2.2 defines long long int, which is C99
     # - and flex uses fileno(3), which is a gnu extension
     cargs = ['-pedantic', '-std=gnu99']
+    scripts = ['webcleaner', 'webcleanerconf', 'wcheaders'],
 
 # extensions
 extensions = [Extension('wc.parser.htmlsax',
-                        ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
-                        include_dirs = ["wc/parser"],
+                        [p('wc/parser/htmllex.c'), p('wc/parser/htmlparse.c')],
+                        include_dirs = [p("wc/parser")],
                         define_macros = macros,
                         extra_compile_args = cargs,
                       ),
              Extension('wc.levenshtein',
-                        ['wc/levenshtein.c',],
+                        [p('wc/levenshtein.c'),],
                         define_macros = macros,
                         extra_compile_args = cargs,
                       ),
@@ -176,7 +181,7 @@ setup (name = "webcleaner",
                    'wc/filter/rules', 'wc/webgui', 'wc/webgui/PageTemplates',
                    'wc/webgui/TAL', 'wc/webgui/ZTUtils'],
        ext_modules = extensions,
-       scripts = ['webcleaner', 'webcleanerconf', 'wcheaders'],
+       scripts = scripts,
        long_description =
 """WebCleaner features:
 o disable animated GIFs
