@@ -10,11 +10,10 @@ except ImportError:
     from wc.parser.htmllib import HtmlPrinter
 
 def _main():
-    fname = sys.argv[1]
-    if fname=='-':
+    if len(sys.argv)==0 or sys.argv[1]=='-':
         f = sys.stdin
     else:
-        f = file(fname)
+        f = file(sys.argv[1])
     p = HtmlPrinter()
     p.debug(1)
     data = f.read(1024)

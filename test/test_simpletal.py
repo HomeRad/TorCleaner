@@ -1,18 +1,20 @@
 from StringIO import StringIO
-import sys, os
+import sys, os, gettext
 try:
     from wc.webgui.simpletal import simpleTAL, simpleTALES
     raise SystemExit("Global WebCleaner installation found")
 except ImportError:
     sys.path.insert(0, os.getcwd())
     from wc.webgui.simpletal import simpleTAL, simpleTALES
+from wc import LocaleDir, Name
 
 def expand_template (f, context):
     """expand the given template file in context
        return expanded data"""
     template = simpleTAL.compileHTMLTemplate(f)
     out = StringIO()
-    template.expand(context, out)
+    translator = gettext.translation(Name, LocaleDir, ["de"])
+    template.expand(context, out, translator=translator)
     data = out.getvalue()
     out.close()
     return data
