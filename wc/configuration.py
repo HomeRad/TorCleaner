@@ -29,29 +29,37 @@ import wc.ip
 
 ConfigCharset = "iso-8859-1"
 
-# set this to an empty dictionary so that webgui/context/*.py can
-# safely set config values upon import
-config = {}
+# global config var
+config = None
+# if config is about to be reloaded
+pending_reload = False
 
 def init (confdir=wc.ConfigDir):
     global config
     config = Configuration(confdir)
+    import wc.filter.Rating
+    wc.filter.Rating.rating_cache_load()
     return config
 
 
 def sighup_reload_config (signum, frame):
     """store timer for reloading configuration data"""
-    wc.proxy.make_timer(1, reload_config)
+    global pending_reload
+    if not pending_reload:
+        pending_reload = True
+        wc.proxy.make_timer(1, reload_config)
 
 
 def reload_config ():
     """reload configuration"""
+    global pending_reload
     config.reset()
     config.read_proxyconf()
     config.read_filterconf()
     config.init_filter_modules()
     wc.proxy.dns_lookups.init_resolver()
     wc.filter.VirusFilter.init_clamav_conf()
+    pending_reload = False
 
 
 def proxyconf_file (confdir):
