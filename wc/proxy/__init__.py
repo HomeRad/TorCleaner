@@ -128,7 +128,7 @@ def mainloop (handle=None, abort=None):
     import wc.proxy.Listener
     import wc.proxy.SslClient
     import wc.proxy.ssl
-    host = wc.configuration.config['bindaddress']
+    host = str(wc.configuration.config['bindaddress'])
     port = wc.configuration.config['port']
     wc.proxy.Listener.Listener(host, port, wc.proxy.HttpClient.HttpClient)
     if wc.configuration.config['sslgateway']:
@@ -138,7 +138,7 @@ def mainloop (handle=None, abort=None):
                                    sslctx=sslctx)
     # experimental interactive command line
     #from Interpreter import Interpreter
-    #Listener(wc.configuration.config['cmdport'], Interpreter)
+    #Listener(host, wc.configuration.config['cmdport'], Interpreter)
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
