@@ -39,7 +39,7 @@ def norm_url (url):
     """replace empty paths with / and normalize them"""
     urlparts = list(urlparse.urlparse(url))
     path = urlparts[2]
-    if not path:
+    if not path or path=='/':
         urlparts[2] = '/'
     else:
         # XXX only windows and posix??
