@@ -34,6 +34,7 @@ def proxyrequest1 (url, port):
     host = parts[1]
     #path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
     h = httplib.HTTPSConnection("localhost:%d"%port)
+    h.set_debuglevel(1)
     h.connect()
     h.putrequest("GET", url, skip_host=1)
     h.putheader("Host", host)
@@ -140,9 +141,10 @@ def _main ():
         sys.exit(1)
     #request1(sys.argv[1])
     import wc.configuration
-    wc.configuration.config = wc.configuration.init()
+    wc.configuration.config = wc.configuration.init("localconfig")
     port = wc.configuration.config['port']
     sslport = wc.configuration.config['sslport']
+    print "Get %s from localhost:%d" % (sys.argv[1], sslport)
     proxyrequest1(sys.argv[1], sslport)
     #proxyrequest2(sys.argv[1], sslport)
     #proxyrequest3(sys.argv[1], sslport)
