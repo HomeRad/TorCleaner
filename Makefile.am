@@ -12,17 +12,19 @@ PYCHECKERFILES := wc/*.py wc/filter/*.py wc/filter/rules/*.py wc/js/*.py \
 		  wc/webgui/*.py wc/webgui/context/*.py \
 		  wc/webgui/simpletal/*.py
 
-clean-local:
+clean-local: clean-log
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
 	rm -f wc/parser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
-	rm -f webcleaner*.log* webcleaner.err*
 	rm -f config/magic.mime.mgc
 	rm -f webcleaner-md5sums.txt
 	rm -f _webcleaner2_configdata.py
 # delete possible aborted dist build
 	rm -rf webcleaner-$(VERSION)
+
+clean-log:
+	rm -f webcleaner*.log* webcleaner.err*
 
 # to build in the current directory
 localbuild: all
