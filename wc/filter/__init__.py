@@ -68,6 +68,14 @@ class FilterRating (FilterException):
     pass
 
 
+class FilterProxyError (FilterException):
+    """Raised to signal a proxy error"""
+    def __init__ (self, status, msg, text):
+        self.status = status
+        self.msg = msg
+        self.text = text
+
+
 def printFilterOrder (i):
     """return string representation of filter order i"""
     if i==FILTER_REQUEST:
