@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 from wc.filter import FILTER_RESPONSE_MODIFY, Filter, compileMime
+import string
 
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
@@ -28,4 +29,5 @@ mimelist = map(compileMime, ['text/html'])
 class BinaryCharFilter (Filter):
 
     def doit (self, data, **attrs):
-        return data.translate('\x00\x84\x91\x92\x93\x94', ' "`\'""')
+        return data.translate(string.maketrans('\x00\x84\x91\x92\x93\x94',
+                                               ' "`\'""'))
