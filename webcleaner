@@ -15,14 +15,25 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""a filtering HTTP proxy.
+"""
+            WebCleaner - a filtering HTTP proxy
+	   =====================================
 
-It can
-o disable animated GIFs
-o compress documents on-the-fly (with gzip)
-o enhance your privacy (remove/add HTTP headers and obfuscate IP address)
-o remove unwanted HTML (adverts, javascript, ...)
-o be completely customized to your needs
+
+Features
+--------
+* HTTP/1.1 support
+* integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
+* integrated JavaScript engine, allows popup filtering
+* compress documents on-the-fly (with gzip)
+* disable animated GIFs
+* filter images by size, removes banner adverts
+* reduce images to low-bandwidth JPEGs
+* remove/add/modify arbitrary HTTP headers
+* usage of SquidGuard blacklists
+* Basic, Digest and (untested) NTLM proxy authentication support
+* per-host access control
+* configurable over a themable web interface
 
 
 Installing
@@ -30,21 +41,96 @@ Installing
 Read the file INSTALL
 
 
+Why should I use WebCleaner?
+----------------------------
+The first feature that set WebCleaner apart from other proxies is
+exact HTML filtering, and this removes a lot of advertisings.
+The filter does not just replace some strings, the proxy parses all HTML
+data into tags. The parser is fast (written in C) and can cope with every
+broken HTML page out there; if the parser does not recognize HTML
+structures, it just passes the data over to the browser until it recognizes
+a tag again. No data is ever discarded or dropped by the parser.
+The parser can also correct invalid HTML and even prevents some common
+security risks like HTML buffer overflows (see ChangeLog for details).
+
+The second thing is the Javascript filtering: Javascript data is
+executed in the integrated Spidermonkey JS engine which is also used by
+the Mozilla browser suite.
+This eliminates all JavaScript obfuscation, popups, and document.write()
+stuff, but the other JS functions still work as usual.
+
+
 Configuration
 -------------
-Run the nice GUI config tool "webcleanerconf".
+Assuming your proxy runs on port 8080, point your browser to
+http://localhost:8080/ to configure the proxy.
 The underlying configuration format is a custom XML format which is
 explained in config/filter.dtd and config/webcleaner.dtd.
+Of course the default configuration is tuned to websites I visit
+regularly. You can help me extend the current config data by sending
+me patches!
+If you installed from source or have the "webcleanertools" Debian
+package installed, you can additionally run the GUI config tool
+"webcleanerconf".
+
+
+Running
+-------
+You can start the proxy by executing "webcleaner start".
 
 
 Notes
 -----
-WebCleaner is _not_ an HTTP compliant proxy because it modifies requests
-and headers!
-Obfuscate IP address does not spoof your address, it just encodes the
-IP numbers in one big integer ;)
-Yes, surf performance will decrease, espacially with the Rewriter module
-enabled.
+WebCleaner is _not_ a HTTP compliant proxy because it modifies requests,
+headers and data! Modifications aside, the proxy tries to fulfill
+the HTTP/1.1 specifications found in RFC 2616.
+
+Surf performance will decrease, especially with the Rewriter and the
+Replacer module enabled. It will decrease further with JavaScript
+parsing enabled, since the proxy downloads and parses <script src="">
+tags in the background.
+WebCleaner is intended for a single user system; it does not scale well
+beyond 5-10 users.
+
+The Rewriter module parses the HTML. It optimizes HTML by making
+tags and attribute names lowercase, quoting attribute values only
+when necessary and removing some (but not all) ignorable whitespace.
+
+The warning "unsupported content encoding" could lead to corrupted
+HTML pages. WebCleaner tries to filter even unknown-encoded content
+to prevent Denial of Service attacks (eg webservers sending always an
+unknown content-encoding).
+Currently, this affects only the "compress" or "x-compress" encoding,
+because the LZW algorithm to uncompress such content is patented and
+therefore not included in WebCleaner. See www.burnallgifs.org.
+
+
+Credits
+-------
+The proxy code is based on the fourth incarnation of Amit's web proxy.
+
+The filter code design is inspired from FilterProxy, a Perl program from
+Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
+
+Me, Bob and the author of AIFilter (Tels) had a nice discussion about
+filter formats with good ideas. Tels convinced me to try stateful
+filtering and I realize that it is very nice indeed.
+
+Disabling animated GIFs is a question of honor, but the idea goes back to
+the Webwasher.
+
+The HTML parser is inspired from HotSAX.
+
+CoAdvisor, for extracting all the important RFC stuff for non-caching
+proxies in their test case documentation.
+
+Colin Stewart for making simpleTAL.
+
+What you can do
+---------------
+- Send me urls with adverts WebCleaner is not filtering.
+- Send me urls that do not display correctly in WebCleaner.
+- Implement something on the TODO list and send me a patch.
 """
 
 __author__ = "Bastian Kleineidam"
@@ -83,7 +169,7 @@ stopwatch
         Stop the monitor program and the proxy.""")
 
 
-def _print_usage(msg):
+def _print_usage (msg):
     """print short usage info and exit"""
     print msg
     print i18n._("execute 'webcleaner -h' for help\n")
@@ -91,7 +177,7 @@ def _print_usage(msg):
 
 
 
-def _paginate(text, lines=22):
+def _paginate (text, lines=22):
     """print text in pages of lines size"""
     textlines = text.split("\n")
     curline = 1
@@ -104,7 +190,7 @@ def _paginate(text, lines=22):
             sys.stdin.read(1)
 
 
-def _print_help():
+def _print_help ():
     """print long usage info"""
     if os.name!='posix':
         _paginate(_usage)
@@ -113,7 +199,7 @@ def _print_help():
     sys.exit(0)
 
 
-def main():
+def main ():
     # Read command line arguments
     import getopt
     try:
@@ -143,6 +229,7 @@ def main():
         sys.exit(status)
     else:
         _print_usage(i18n._("Unknown command %s") % `command`)
+
 
 def main_nt ():
     import win32serviceutil
