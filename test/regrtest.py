@@ -133,6 +133,7 @@ STDTESTS = [
     'test_replacer',
     'test_parserhtml',
     'test_script',
+    'test_simpletal',
    ]
 
 NOTTESTS = [

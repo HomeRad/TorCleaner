@@ -6,14 +6,14 @@ def filterfile (fname):
     f = file(fname)
     attrs = wc.filter.initStateObjects(url=fname)
     filtered = ""
-    data = f.read(1024)
+    data = f.read(4096)
     while data:
         try:
             filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
                                               data, 'filter', attrs)
         except FilterException, msg:
             pass
-        data = f.read(1024)
+        data = f.read(4096)
     i = 1
     while 1:
         try:
@@ -23,7 +23,7 @@ def filterfile (fname):
         except FilterException, msg:
             proxy_poll(timeout=max(0, run_timers()))
         i+=1
-        if i==200:
+        if i==100:
             # background downloading of javascript is too slow
             print "Test: oooooops"
             break
