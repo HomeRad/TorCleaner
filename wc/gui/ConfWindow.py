@@ -74,8 +74,8 @@ tempfile.tempdir = ConfigDir
 
 
 def get_available_themes ():
-    return [os.path.isdir(os.path.join(TemplateDir, d) \
-             for d in os.listdir(TemplateDir) ]
+    return [ d for d in os.listdir(TemplateDir) \
+             if os.path.isdir(os.path.join(TemplateDir, d)) and d!='CVS' ]
 
 
 class ConfWindow (ToolWindow):
@@ -93,6 +93,7 @@ class ConfWindow (ToolWindow):
      ID_APPLY,
      ID_ABOUT,
      ID_TITLE,
+     ID_THEME,
      ID_FILTER,
      ID_NEWFOLDER,
      ID_NEWRULE,
@@ -112,7 +113,7 @@ class ConfWindow (ToolWindow):
      ID_ALLOWEDHOSTS_REMOVE,
      ID_UP,
      ID_DOWN,
-     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+32)
+     ) = range(ToolWindow.ID_LAST, ToolWindow.ID_LAST+33)
 
 
     def __init__ (self, app):
@@ -159,6 +160,7 @@ class ConfWindow (ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_NEWRULE,ConfWindow.onCmdNewRule)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_REMOVE,ConfWindow.onCmdRemove)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_TITLE,ConfWindow.onCmdTitle)
+        FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_THEME,ConfWindow.onCmdTheme)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYSTART,ConfWindow.onCmdProxyStart)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYSTOP,ConfWindow.onCmdProxyStop)
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYRESTART,ConfWindow.onCmdProxyRestart)
@@ -204,7 +206,18 @@ class ConfWindow (ToolWindow):
         widget = FXSpinner(matrix, 4, self, self.ID_PORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
         widget.setRange(0,65535)
         widget.setValue(self.port)
-
+        FXLabel(matrix, i18n._("Web GUI theme"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        cols=0
+        d = FXComboBox(matrix,0,len(self.themes),self, self.ID_THEME,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
+        i = 0
+        for theme in self.themes:
+             cols = max(len(theme), cols)
+             d.appendItem(theme)
+             if theme == self.webgui_theme:
+                 d.setCurrentItem(i)
+             i += 1
+        d.setEditable(0)
+        d.setNumColumns(cols)
         f = FXGroupBox(proxy_top, i18n._("No filtering for"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         f = FXVerticalFrame(f, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y)
         self.noproxylist = FXList(f, 4, opts=LAYOUT_FILL_X|LAYOUT_FILL_Y|LIST_SINGLESELECT)
@@ -310,6 +323,16 @@ class ConfWindow (ToolWindow):
         debug(GUI, "new filter rule")
         self.tree.newRule(GetRuleFromName(sender.getText()))
         self.getApp().dirty = 1
+        return 1
+
+
+    def onCmdTheme (self, sender, sel, ptr):
+        theme = sender.retrieveItem(sender.getCurrentItem())
+        debug(GUI, "theme=%s", theme)
+        if self.webgui_theme != theme:
+            self.webgui_theme = theme
+            self.getApp().dirty = 1
+            debug(GUI, "Webgui theme=%s", self.webgui_theme)
         return 1
 
 
