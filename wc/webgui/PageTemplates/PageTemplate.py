@@ -127,7 +127,7 @@ class PageTemplate (object):
         return None  # Unknown.
 
     def write (self, text):
-        assert type(text) is type('')
+        assert type(text) is type(''), repr(text)
         if text[:len(self._error_start)] == self._error_start:
             errend = text.find('-->')
             if errend >= 0:
