@@ -157,13 +157,7 @@ Options:
 If `inputfile' is -, standard input is read.
 """)
 
-import os
-import sys
-import time
-import getopt
-import token
-import tokenize
-import operator
+import os, sys, re, time, getopt, token, tokenize, operator
 
 __version__ = '1.5'
 
@@ -549,9 +543,32 @@ class HtmlGettext (HtmlParser):
             self.data = ""
         elif msgid is not None:
             if msgid.startswith("string:"):
-                self.translations.add(msgid[7:])
+                self.translations.add(msgid[7:]).replace(';;', ';')
             else:
                 self.warning("tag %s has unsupported dynamic msgid"%tag)
+        argument = attrs.get('i18n:attributes', None)
+        if argument is not None:
+            for name, msgid in self.get_attribute_list(argument):
+                self.translations.add(msgid)
+
+
+    def get_attribute_list (self, argument):
+        # Break up the list of attribute settings
+        commandArgs = []
+        # We only want to match semi-colons that are not escaped
+        argumentSplitter =  re.compile('(?<!;);(?!;)')
+        for attributeStmt in argumentSplitter.split(argument):
+            #  remove any leading space and un-escape any semi-colons
+            attributeStmt = attributeStmt.lstrip().replace(';;', ';')
+            # Break each attributeStmt into name and expression
+            stmtBits = attributeStmt.split(' ')
+            if len(stmtBits) < 2:
+                # Error, badly formed attributes command
+                self.warning("Badly formed attributes command '%s'.  Attributes commands must be of the form: 'name expression[;name expression]'" % argument)
+            attName = stmtBits[0]
+            attExpr = " ".join(stmtBits[1:])
+            commandArgs.append((attName, attExpr))
+        return commandArgs
 
 
     def endElement (self, tag):
