@@ -119,7 +119,6 @@ HtmlTags = {
 
 # invalid and old tags
 OldTags = {
-    "image" : None, # ??? unknown
     "layer" : None, # Netscape Navigator 4
     "listing" : None, # HTML 3.2
     "nobr" : None, # Netscape Navigator 1.1
