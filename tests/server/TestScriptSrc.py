@@ -13,7 +13,7 @@ import wc.filter
 
 
 jsfiles = {
-    "/1.js": """// check url validity
+    "/1.js": r"""// check url validity
 function isValid (thisForm) {
     if (thisForm.url.value=="" || thisForm.url.value=="http://") {
         alert(gettext("Empty URL was given."));
@@ -41,13 +41,17 @@ function checkSyntax (url) {
 }
 """,
 
-    "/2.js": """document.write('<iframe frameborder="0" framespacing="0" marginheight="0" marginwidth="0" scrolling="no" src="http://www.n24.de/service/dynabanner/n24_banner.html" vspace="0" width="468" height="60" border="0"></iframe>');
-<!--
-soi_place=escape("fullbanner2");soi_ad=escape("030219 dynamic banner 468 ohne Clicks (18095)");soi_adplace=soi_place+escape(" - ")+soi_ad+" \n";if (soi_adtrace) soi_adtrace+=soi_adplace;else var soi_adtrace=soi_adplace;soi_ad=soi_ad.toLowerCase();if (window.add2tag){if ((soi_ad.indexOf("powerlayer") > -1) || (soi_ad.indexOf("interstitial") > -1) || (soi_ad.indexOf("popup") > -1)) {add2tag += "&sowefo_ausschluss=powerlayer_popup_interstitial";}}
+    "/2.js": r"""<!--
+document.write('<iframe frameborder="0" framespacing="0" marginheight="0" marginwidth="0" scrolling="no" src="http://www.n24.de/service/dynabanner/n24_banner.html" vspace="0" width="468" height="60" border="0"></iframe>');
+soi_place=escape("fullbanner2");soi_ad=escape("030219 dynamic banner 468 ohne Clicks (18095)");
+soi_adplace=soi_place+escape(" - ")+soi_ad+" \n";if (soi_adtrace) soi_adtrace+=soi_adplace;
+else var soi_adtrace=soi_adplace;soi_ad=soi_ad.toLowerCase();if (window.add2tag){
+if ((soi_ad.indexOf("powerlayer") > -1) || (soi_ad.indexOf("interstitial") > -1) ||
+(soi_ad.indexOf("popup") > -1)) {add2tag += "&sowefo_ausschluss=powerlayer_popup_interstitial";}}
 //-->
 """,
 
-    "/3.js": """window.open("datei.htm","Fenster1","width=310,height=400,left=0,top=0");
+    "/3.js": r"""window.open("datei.htm","Fenster1","width=310,height=400,left=0,top=0");
 """,
 }
 
@@ -119,7 +123,7 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
         self.assertEqual(filtered, result)
 
 
-    def XtestScriptSrc1 (self):
+    def testScriptSrc1 (self):
         self.filt(
 """<script src="http://localhost:%d/1.js"></script>
 
@@ -132,7 +136,7 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
 </html>""" % jsfiles['/1.js'])
 
 
-    def XtestScriptSrc2 (self):
+    def testScriptSrc2 (self):
         self.filt(
 """<script src="http://localhost:%d/1.js">
  
@@ -147,7 +151,7 @@ class TestScriptSrc (tests.StandardTest.StandardTest):
 </html>""" % jsfiles['/1.js'])
 
 
-    def XtestScriptSrc3 (self):
+    def testScriptSrc3 (self):
         """missing </script>"""
         self.filt(
 """<script src="http://localhost:%d/3.js"/>
