@@ -47,7 +47,7 @@ HTML '<a b=c"><a b="c">'
 startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
-startElement ('a', {'b': '"c><a b="', 'c': None})
+startElement ('a', {'c': None, 'b': '"c><a b="'})
 HTML '<a b=/c/></a><br>'
 startElement ('a', {'b': '/c/'})
 endElement ('a',)
@@ -158,7 +158,7 @@ HTML '<a b=c"><a b="c">'
 startElement ('a', {'b': 'c"'})
 startElement ('a', {'b': 'c'})
 HTML '<a b="c><a b="c">'
-startElement ('a', {'b': '"c><a b="', 'c': None})
+startElement ('a', {'c': None, 'b': '"c><a b="'})
 HTML '<a b=/c/></a><br>'
 startElement ('a', {'b': '/c/'})
 endElement ('a',)
