@@ -534,7 +534,7 @@ class HtmlGettext (sgmllib.SGMLParser, object):
             if attrs:
                 self.data += " "
                 for key,val in attrs.items():
-                    self.data += "%s=%s" % (key, cgi.escape(val, True))
+                    self.data += "%s=\"%s\"" % (key, cgi.escape(val, True))
             self.data += ">"
         argument = attrs.get('i18n:attributes', None)
         if argument is not None:
