@@ -124,7 +124,7 @@ myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 
 setup (name = "webcleaner",
-       version = "0.48",
+       version = "0.49",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -133,7 +133,7 @@ setup (name = "webcleaner",
        url = "http://webcleaner.sourceforge.net/",
        licence = "GPLv2",
        packages = ['', 'wc', 'wc/filter', 'wc/daemon',
-                   'wc/parser', 'wc/gui', 'wc/proxy'],
+                   'wc/parser', 'wc/gui', 'wc/proxy', 'wc/filter/rules'],
        ext_modules = [Extension('wc.parser.htmlsax',
                   ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
                   include_dirs = ["wc/parser"],
