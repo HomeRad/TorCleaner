@@ -19,12 +19,16 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os, sys, time, socket, threading
+import os
+import sys
+import time
+import socket
+import glob
+import sets
+import stat
 import xml.parsers.expat
 import _webcleaner2_configdata as configdata
-from glob import glob
-from sets import Set
-from stat import ST_SIZE
+
 Version = configdata.version
 AppName = configdata.appname
 Name = configdata.name
@@ -47,27 +51,6 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
-
-_lock = None
-
-def _acquireLock ():
-    """
-    Acquire the module-level lock for serializing access to shared data.
-
-    This should be released with _releaseLock().
-    """
-    global _lock
-    if not _lock:
-        _lock = threading.RLock()
-    if _lock:
-        _lock.acquire()
-
-
-def _releaseLock ():
-    """Release the module-level lock acquired by calling _acquireLock()."""
-    if _lock:
-        _lock.release()
-
 
 def iswriteable (fname):
     """return True if given file is writable"""
@@ -174,7 +157,7 @@ def proxyconf_file ():
 
 def filterconf_files (dirname):
     """return list of filter configuration filenames"""
-    return glob(os.path.join(dirname, "*.zap"))
+    return glob.glob(os.path.join(dirname, "*.zap"))
 
 
 # available filter modules
@@ -241,7 +224,7 @@ class Configuration (dict):
 	# hosts except localhost; normally not needed
         self['local_sockets_only'] = 0
         self['localhosts'] = get_localhosts()
-        self['mime_content_rewriting'] = Set()
+        self['mime_content_rewriting'] = sets.Set()
         self['gui_theme'] = "classic"
         self['timeout'] = 10
         self['auth_ntlm'] = 0
@@ -263,19 +246,6 @@ class Configuration (dict):
     def read_proxyconf (self):
         """read proxy configuration"""
         WConfigParser(self.configfile, self).parse()
-
-
-    def set_abort (self, val):
-        _acquireLock()
-        self.abort = val
-        _releaseLock()
-
-
-    def get_abort (self):
-        _acquireLock()
-        val = self.abort
-        _releaseLock()
-        return val
 
 
     def write_proxyconf (self):
@@ -324,7 +294,7 @@ class Configuration (dict):
         """read filter rules"""
         from wc.filter.rules import generate_sids, recalc_up_down
         for filename in filterconf_files(self.filterdir):
-            if os.stat(filename)[ST_SIZE]==0:
+            if os.stat(filename)[stat.ST_SIZE]==0:
                 warn(PROXY, "Skipping empty file %r", filename)
                 continue
             p = ZapperParser(filename, self)
@@ -371,7 +341,7 @@ class Configuration (dict):
         to regular expression objects"""
         import wc.filter
         self['filterlist'] = [[],[],[],[],[],[],[],[],[],[]]
-        self['mime_content_rewriting'] = Set()
+        self['mime_content_rewriting'] = sets.Set()
         for filtername in self['filters']:
             # import filter module
             exec "from filter import %s" % filtername
@@ -584,7 +554,7 @@ class WConfigParser (BaseParser):
                 self.config['allowedhostset'] = ip.hosts2map(hosts)
             else:
                 self.config['allowedhosts'] = []
-                self.config['allowedhostset'] = [Set(), []]
+                self.config['allowedhostset'] = [sets.Set(), []]
         elif name=='filter':
             debug(FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
