@@ -96,7 +96,7 @@ class MyInstall (install, object):
                 print "  %s: %s" % (opt_name, val)
 
 
-class MyInstallData (install_data):
+class MyInstallData (install_data, object):
     """My own data installer to handle permissions and .man pages"""
 
     def run (self):
