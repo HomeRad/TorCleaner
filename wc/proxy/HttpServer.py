@@ -482,11 +482,12 @@ class HttpServer (Server):
 
 
     def set_readable (self, state):
-        """make the connection readable again"""
+        """make the connection readable again and close"""
         debug(PROXY, "%s set readable", self)
         # the client might already have closed
         if self.client:
             self.state = state
+            self.delayed_close()
         else:
             debug(PROXY, "%s client is gone", self)
 
