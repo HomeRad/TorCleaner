@@ -55,14 +55,14 @@ class ClientServerMatchmaker (object):
         debug(PROXY, "ClientServer: %s", `self.request`)
         self.method, self.url, protocol = self.request.split()
         # strip leading zeros and other stuff
-        protocol = fix_http_version(protocol)
-        scheme, hostname, port, document = spliturl(self.url)
+        self.protocol = fix_http_version(protocol)
+        self.scheme, hostname, port, document = spliturl(self.url)
         # some clients send partial URI's without scheme, hostname
         # and port to clients, so we have to handle this
-        if not scheme:
+        if not self.scheme:
             # default scheme is http
-            scheme = "http"
-        elif scheme != 'http':
+            self.scheme = "http"
+        elif self.scheme != 'http':
             warn(PROXY, "Forbidden scheme encountered at %s", self.url)
             client.error(403, i18n._("Forbidden"))
             return
@@ -77,12 +77,12 @@ class ClientServerMatchmaker (object):
         # fix missing trailing /
         if not document: document = '/'
         # add missing host headers for HTTP/1.1
-        if protocol=='HTTP/1.1' and not self.headers.has_key('Host'):
+        if self.protocol=='HTTP/1.1' and not self.headers.has_key('Host'):
             if port!=80:
                 self.headers['Host'] = "%s:%d\r"%(hostname, port)
             else:
                 self.headers['Host'] = "%s\r"%hostname
-        debug(PROXY, "ClientServer: splitted url %s %s %d %s", scheme, hostname, port, document)
+        debug(PROXY, "ClientServer: splitted url %s %s %d %s", self.scheme, hostname, port, document)
         # prepare DNS lookup
         if config['parentproxy']:
             self.hostname = config['parentproxy']
@@ -113,7 +113,7 @@ class ClientServerMatchmaker (object):
             self.find_server()
         elif answer.isRedirect():
             # Let's use a different hostname
-            new_url = answer.data
+            new_url = self.scheme+"://"+answer.data
             if self.port != 80:
 	        new_url += ':%d' % self.port
             new_url += self.document
@@ -123,10 +123,9 @@ class ClientServerMatchmaker (object):
             # XXX find http version!
             ServerHandleDirectly(
               self.client,
-              'HTTP/1.0 301 Use different host\r\n',
-              'Content-type: text/html\r\n'
-              'Location: http://%s\r\n'
-              '\r\n' % new_url,
+              '%s 301 Moved Permanently' % self.protocol,
+              'Content-type: text/plain\r\n'
+              'Location: %s\r\n\r\n' % new_url,
               i18n._('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host, so close this connection

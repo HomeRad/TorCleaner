@@ -162,7 +162,7 @@ class HttpClient (Connection):
                client_get_max_forwards(self.headers)==0:
                 # XXX display options ?
                 self.state = 'done'
-                ServerHandleDirectly(self, '%s 200 OK\r\n'%self.protocol,
+                ServerHandleDirectly(self, '%s 200 OK'%self.protocol,
                                      'Content-Type: text/plain\r\n\r\n', '')
                 return
             self.state = 'content'
@@ -178,7 +178,7 @@ class HttpClient (Connection):
             self.bytes_remaining -= len(data)
         is_closed = False
         debug(PROXY, "Proxy: client data %s", blocktext(`data`, 72))
-        debug(PROXY, "decoders", self.decoders)
+        debug(PROXY, "decoders %s", str(self.decoders))
         for decoder in self.decoders:
             data = decoder.decode(data)
             is_closed = decoder.closed or is_closed
