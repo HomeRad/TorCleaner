@@ -4,7 +4,7 @@
     Changed files: wc/proxy/dns_lookups.py
   * recognize .ico and .jpeg as images
     Changed files: wc/filter/Blocker.py
-  * - Updated and reorganized filters
+  * - updated and reorganized filters
     - remove onmouseover redirects
     Changed files: config/*.zap, config/bl2wc.py
   * - when type/encoding header is not what we guessed, fix only some
@@ -16,6 +16,10 @@
     - use only double quotes for attribute quoting
     - check quoting of all attributes
     Changed files: wc/parser/htmllex.l
+  * add TAL packages for web configuration
+    Added files: wc/webgui/*
+  * add header test fetcher
+    Added files: test/head.py
 
 1.4
   * blocked.html has no content anymore and displays much cleaner
