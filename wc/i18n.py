@@ -81,4 +81,19 @@ def get_locale ():
     return loc
 
 
+lang_names = {
+    'en': 'English',
+    'de': 'Deutsch',
+}
+lang_transis = {
+    'de': {'en': 'German'},
+    'en': {'de': 'Englisch'},
+}
+
+def lang_name (lang):
+    return lang_names[lang]
+
+def lang_trans (lang, curlang):
+    return lang_trans[lang][curlang]
+
 init_gettext()
