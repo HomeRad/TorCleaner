@@ -6,10 +6,10 @@ def _main():
     file = sys.argv[1]
     data = open(file).read()
     import wc, time
-    wc.DebugLevel = 0
+    wc.DebugLevel = 3
     wc.config['filters'] = ['Rewriter']
     wc.config.init_filter_modules()
-    attrs = wc.filter.initStateObjects()
+    attrs = wc.filter.initStateObjects(url=file)
     filtered = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
            data, 'finish', attrs)
     print filtered
