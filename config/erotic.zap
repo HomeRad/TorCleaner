@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Erotic" oid="2"
+<folder title="Erotic" oid="7"
  desc="Protect your children from looking erotic sites."
  disable="1">
 

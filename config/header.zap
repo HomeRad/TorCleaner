@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="HTTP Headers" oid="6"
+<folder title="HTTP Headers" oid="2"
  desc="Add, delete and modify HTTP headers.">
 
 <header title="My own user-agent" oid="0"

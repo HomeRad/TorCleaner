@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Trackers and Counters" oid="9"
+<folder title="Trackers and counters" oid="1"
  desc="Statistic links and tracker images deserve now a separate category as they became a lot more in the last couple of months.">
 
 <block title="Statistic sites" oid="0"
@@ -13,11 +13,16 @@
  query=""
  fragment=""/>
 
-<rewrite title="1x1 Tracker images" oid="1"
+<rewrite title="1x1 tracker images" oid="1"
  desc="Several sites use 1x1 images to track users."
  tag="img">
 <attr name="width">^1$</attr>
 <attr name="height">^1$</attr>
 <replacement part="complete"/>
 </rewrite>
+
+<image title="1x1 tracker images 2" oid="2"
+ desc="In case the width and height attributes are missing"
+ width="1"
+ height="1"/>
 </folder>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Advertisements" oid="7"
+<folder title="Adverts" oid="0"
  desc="A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href=&amp;quot;http://company.com&amp;quot;&gt;&lt;img  src=&amp;quot;http://adserver.de/banner.gif&amp;quot;&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.">
 
 <rewrite title="/werbung" oid="0"
@@ -15,43 +15,31 @@
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="Ad servers 10" oid="2"
- desc="Kill links with &apos;click&apos; words in the host name.">
-<attr>http://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
-<replacement part="complete"/>
-</rewrite>
-
-<rewrite title="Ad servers 02" oid="3"
+<rewrite title="Ad servers 02" oid="2"
  desc="Kill links with ad words in the host name.">
 <attr>http://[^/]*(tradedoubler|emerchandise|ecommercetimes)\.</attr>
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="counter and tracker" oid="4"
- desc="Kill tracker and counter cgi scripts.">
-<attr>/.*(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
-<replacement part="complete"/>
-</rewrite>
-
-<rewrite title="Ad servers 05" oid="5"
+<rewrite title="Ad servers 05" oid="3"
  desc="Kill links with ad words in the host name.">
 <attr>http://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="Ad servers 06" oid="6"
+<rewrite title="Ad servers 06" oid="4"
  desc="Kill ad servers.">
 <attr>http://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="Ad servers 07" oid="7"
+<rewrite title="Ad servers 07" oid="5"
  desc="Kill links with &apos;banner&apos; in the host name.">
 <attr>banner.*\.</attr>
 <replacement part="complete"/>
 </rewrite>
 
-<block title="Ad servers 08" oid="8"
+<block title="Ad servers 08" oid="6"
  desc="matches ad. ads. adserver."
  scheme=""
  host="^ad(s|server)?\."
@@ -60,6 +48,18 @@
  parameters=""
  query=""
  fragment=""/>
+
+<rewrite title="Ad servers 10" oid="7"
+ desc="Kill links with &apos;click&apos; words in the host name.">
+<attr>http://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
+<replacement part="complete"/>
+</rewrite>
+
+<rewrite title="counter and tracker" oid="8"
+ desc="Kill tracker and counter cgi scripts.">
+<attr>/.*(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
+<replacement part="complete"/>
+</rewrite>
 
 <rewrite title="Adverts in the path name 01" oid="9"
  desc="Kill links with ad words in the path name.">
@@ -321,17 +321,17 @@
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="Freshmeat ads" oid="47"
+<rewrite title="Ad servers 11" oid="47"
+ desc="Tribal fusion">
+<attr>a\.tribalfusion\.com</attr>
+<replacement part="complete"/>
+</rewrite>
+
+<rewrite title="Freshmeat ads" oid="48"
  desc="Freshmeat ad server"
  matchurl="freshmeat.net"
  tag="img">
 <attr name="src">fmads.osdn.com</attr>
-<replacement part="complete"/>
-</rewrite>
-
-<rewrite title="MSN ads" oid="48"
- desc="Found at MSN">
-<attr>g\.msn(bc)?\.com</attr>
 <replacement part="complete"/>
 </rewrite>
 
@@ -341,9 +341,9 @@
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="Ad servers 11" oid="50"
- desc="Tribal fusion">
-<attr>a\.tribalfusion\.com</attr>
+<rewrite title="Ad servers 12" oid="50"
+ desc="adclick stuff">
+<attr>/adclick\.(exe|php)</attr>
 <replacement part="complete"/>
 </rewrite>
 
@@ -353,16 +353,16 @@
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="Ad servers 12" oid="52"
- desc="adclick stuff">
-<attr>/adclick\.(exe|php)</attr>
-<replacement part="complete"/>
-</rewrite>
-
-<rewrite title="Schmidtie" oid="53"
+<rewrite title="Schmidtie" oid="52"
  desc="Harald-Schmidt-Show homepage sux"
  matchurl="www.sat1.de">
 <attr>/jump\.hbs</attr>
+<replacement part="complete"/>
+</rewrite>
+
+<rewrite title="MSN ads" oid="53"
+ desc="Found at MSN">
+<attr>g\.msn(bc)?\.com</attr>
 <replacement part="complete"/>
 </rewrite>
 

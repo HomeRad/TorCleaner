@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
-<folder title="Miscellaneous" oid="3"
+<folder title="Miscellaneous" oid="6"
  desc="Misc things we dont like in our HTML source :)">
 
 <rewrite title="No meta tags 1" oid="0"
@@ -37,53 +37,48 @@
 <replacement part="tagname">b</replacement>
 </rewrite>
 
-<replace title="The Dude" oid="6"
- desc="Just a silly example."
- disable="1"
- search="Bastian"/>
-
-<replace title="Replace blink CSS" oid="7"
+<replace title="Replace blink CSS" oid="6"
  desc="Unfuckingbelievable they made a blink CSS entry."
  search="text-decoration:\s*blink"/>
 
-<rewrite title="Replace MARQUEE with SPAN" oid="8"
+<rewrite title="Replace MARQUEE with SPAN" oid="7"
  desc="Jeeesus, as if blinking isn&apos;t enough."
  tag="marquee">
 <replacement part="tagname">span</replacement>
 </rewrite>
 
-<replace title="Love and Peace" oid="9"
+<replace title="Love and Peace" oid="8"
  desc="Love &amp; Peace!"
  search="(US-Präsident|George( W.)?) Bush"/>
 
-<replace title="bllnk" oid="10"
- desc="&lt;blink&gt;&lt;/bllnk&gt; still does blink, so replace it. We might want to think later about correcting such typos automatically. For now it happens only at the india page. "
- matchurl="allindiaradio.org"
- search="&lt;/bllnk&gt;"/>
-
-<rewrite title="Remove LOWSRC" oid="11"
+<rewrite title="Remove LOWSRC" oid="9"
  desc="The lowsrc is waste of bandwidth if you have enough of it ;)"
  tag="img">
 <attr name="lowsrc"/>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite title="Remove _blank and _new targets" oid="12"
+<rewrite title="Remove _blank and _new targets" oid="10"
  desc="Can&apos;t believe I have to make this case-insensitive 8-)">
 <attr name="target">(?i)_(blank|new)</attr>
 <replacement part="attr"/>
 </rewrite>
 
-<rewrite title="Layer" oid="13"
+<rewrite title="Remove _blank and _new area targets" oid="11"
+ tag="area">
+<attr name="target">(?i)_(blank|new)</attr>
+<replacement part="attr"/>
+</rewrite>
+
+<rewrite title="Eselfilme layer" oid="12"
  matchurl="eselfilme.de"
  tag="div">
 <attr name="id">Layer1</attr>
 <replacement part="complete"/>
 </rewrite>
 
-<rewrite title="Remove _blank and _new area targets" oid="14"
- tag="area">
-<attr name="target">(?i)_(blank|new)</attr>
-<replacement part="attr"/>
-</rewrite>
+<replace title="The Dude" oid="13"
+ desc="Just a silly example."
+ disable="1"
+ search="Bastian"/>
 </folder>
