@@ -113,7 +113,7 @@ def _get_log_file_nt (fname, trydir):
 
 def set_format (handler):
     """set standard format for handler"""
-    handler.setFormatter(logging.Formatter("%(levelname)s %(name)s %(message)s"))
+    handler.setFormatter(logging.Formatter("%(levelname)s %(asctime)s %(name)s %(message)s"))
     return handler
 
 
