@@ -30,7 +30,6 @@ def filterfile (fname):
     print filtered
 
 import wc, time
-reload(wc)
 from wc.log import initlog
 initlog("test/logging.conf")
 wc.config = wc.Configuration()

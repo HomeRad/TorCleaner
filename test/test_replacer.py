@@ -22,7 +22,6 @@ document.write("</OBJECT>");
 """
 
 import wc, time
-reload(wc)
 from wc.log import initlog
 initlog("test/logging.conf")
 wc.config = wc.Configuration()
