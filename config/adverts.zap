@@ -315,6 +315,6 @@
 
 <rewrite title="Ad servers 12" oid="52"
  desc="adclick stuff">
-<attr>/adclick\.exe/</attr>
+<attr>/adclick\.(exe|php)</attr>
 </rewrite>
 </folder>
