@@ -43,6 +43,7 @@ import socket
 import errno
 
 import wc
+import wc.configuration
 import wc.log
 
 
@@ -66,20 +67,21 @@ if socket.has_ipv6:
 def create_socket (family, socktype, sslctx=None):
     """Create a socket with given family and type. If SSL context
        is given an SSL socket is created"""
+    sock = socket.socket(family, socktype)
+    sock.settimeout(wc.configuration.config['timeout'])
+    socktypes_inet = [socket.AF_INET]
+    if has_ipv6:
+        socktypes_inet.append(socket.AF_INET6)
+    if family in socktypes_inet and socktype == socket.SOCK_STREAM:
+        # disable NAGLE algorithm, which means sending pending data
+        # immediately, possibly wasting bandwidth but improving
+        # responsiveness for fast networks
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     if sslctx is not None:
+        # make SSL socket
         import OpenSSL
-        sock = OpenSSL.SSL.Connection(sslctx, socket.socket(family, socktype))
-    else:
-        sock = socket.socket(family, socktype)
-        socktypes_inet = [socket.AF_INET]
-        if has_ipv6:
-            socktypes_inet.append(socket.AF_INET6)
-        if family in socktypes_inet and \
-           socktype == socket.SOCK_STREAM:
-            # disable NAGLE algorithm, which means sending pending data
-            # immediately, possibly wasting bandwidth but improving
-            # responsiveness for fast networks
-            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        # XXX has SSL its own timeout?
+        sock = OpenSSL.SSL.Connection(sslctx, sock)
     return sock
 
 
