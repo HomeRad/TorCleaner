@@ -9,6 +9,7 @@
     - do not #include <stdint.h>, fixes build on some FreeBSD, Windows
       and Solaris/SunOS platforms
     - ignore first leading invalid backslash in a=\"b\" attributes
+    - fixed parsing of script with \r line endings
     Changed: wc/parser/htmllex.{l,c}
   * cope with falsely advertised GIF images, the GIF parser skips
     invalid GIF data now
@@ -45,7 +46,7 @@
     cStringIO().closed attribute
     Changed: INSTALL, wc/filter/ImageSize.py
   * for non-existing .com and .net hosts, the DNS server returns valid
-    "host not found" messages , fixing the verisign wildcard DNS change
+    "host not found" messages, fixing the verisign wildcard DNS change
     Changed: wc/proxy/dns_lookups.py
 
 2.1
