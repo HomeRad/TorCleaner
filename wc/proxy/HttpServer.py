@@ -32,6 +32,10 @@ _RESPONSE_FILTERS = (
 # http request matcher
 _http_re = re.compile(r'(?i).*HTTP/(\d+\.?\d*)\s*$')
 
+_fix_content_types = [
+    'text/html',
+]
+
 class HttpServer (Server):
     def __init__ (self, ipaddr, port, client):
         Server.__init__(self, client)
@@ -213,7 +217,9 @@ class HttpServer (Server):
             elif self.headers.get('Content-Encoding') != gm[1]:
                 print >>sys.stderr, _("Warning: %s guessed Content-Encoding (%s) != server Content-Encoding (%s)") % \
                                       (self.url, gm[1], self.headers.get('Content-Encoding'))
-                self.headers['Content-Encoding'] = gm[1]
+                # only fix html content type
+                if gm[1] in _fix_content_types:
+                    self.headers['Content-Encoding'] = gm[1]
         # will content be rewritten?
         rewrite = None
         for ro in config['mime_content_rewriting']:
