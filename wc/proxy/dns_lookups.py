@@ -232,7 +232,7 @@ class DnsCache:
         elif os.name=='nt':
             # XXX find correct %WINDIR% and place for hosts.sam
             # Win98SE: c:\windows\hosts.sam
-            # Win2000: ???
+            # Win2000: c:\winnt\system32\drivers\etc\hosts
             # WinNT: ???
             filename = 'c:\\windows\\hosts.sam'
         else:
