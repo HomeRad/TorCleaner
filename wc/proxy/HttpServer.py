@@ -5,7 +5,7 @@ mimetypes.encodings_map['.bz2'] = 'bzip'
 from cStringIO import StringIO
 from Server import Server
 from wc.proxy import make_timer
-from wc import debug, config, remove_headers
+from wc import debug, config, remove_headers, _
 from wc.debug_levels import *
 from ClientServerMatchmaker import serverpool
 from UnchunkStream import UnchunkStream
