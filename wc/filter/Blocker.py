@@ -27,8 +27,19 @@ from wc.log import *
 from wc.url import DOMAIN, spliturl
 
 # regular expression for image filenames
-is_image = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
-is_flash = re.compile(r'(?i)\.(swf|flash)$').search
+def is_flash_mime (mime):
+    return mime.startswith('application/x-shockwave-flash')
+
+def is_image_mime (mime):
+    return mime.startswith('image/')
+
+def is_javascript_mime (mime):
+    return mime.startswith('application/x-javascript') or \
+           mime.startswith('text/javascript')
+
+is_image_url = re.compile(r'(?i)\.(gif|jpe?g|ico|png|bmp|pcx|tga|tiff?)$').search
+is_flash_url = re.compile(r'(?i)\.(swf|flash)$').search
+is_javascript_url = re.compile(r'(?i)\.js$').search
 
 def strblock (block):
     patterns = [ repr(b and b.pattern or "") for b in block ]
@@ -69,6 +80,7 @@ class Blocker (Filter):
         self.block_url = "/blocked.html"
         self.block_image = "/blocked.png"
         self.block_flash = "/blocked.swf"
+        self.block_js = "/blocked.js"
 
 
     def addrule (self, rule):
@@ -132,6 +144,7 @@ class Blocker (Filter):
            we get the unquoted url from args
         """
         url = args['url']
+        mime = args['mime']
         parts = spliturl(url)
         debug(FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
@@ -144,11 +157,17 @@ class Blocker (Filter):
             debug(FILTER, "blocked url %s by rule %s", url, sid)
             if isinstance(blocked, basestring):
                 doc = blocked
-            elif is_image(url):
+            elif is_image_mime(mime) or is_image_url(url):
                 doc = self.block_image
-            elif is_flash(url):
+                # XXX side effect
+                args['mime'] = 'image/png'
+            elif is_flash_mime(mime) or is_flash_url(url):
                 doc = self.block_flash
+            elif is_javascript_mime(mime) or is_javascript_url(url):
+                doc = self.block_js
             else:
+                if not is_html_mime(mime):
+                    warn(PROXY, "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
                 rule = [r for r in self.rules if r.sid==sid][0]
                 query = urllib.urlencode({"rule": rule.tiptext(),
