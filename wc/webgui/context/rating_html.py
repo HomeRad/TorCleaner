@@ -20,11 +20,10 @@ import time as _time
 from wc import AppName, Email, Version
 from wc.configuration import config
 from wc.webgui.context import getval as _getval
-from wc.filter.Rating import service, rangenames, rating_cache
-from wc.filter.Rating import rating_cache_write as _rating_cache_write
-from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
+from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.url import is_safe_url as _is_safe_url
 from wc.strformat import strtime as _strtime
+from wc.filter.rating import services, categories
 
 _entries_per_page = 50
 
@@ -38,25 +37,23 @@ error = {
     "selindex": False,
     "url": False,
 }
-ratings = {}
 values = {}
 rating_modified = {}
 
-def _reset_ratings ():
-    for category, catdata in service['categories'].items():
-        if catdata['rvalues']:
-            ratings[category] = catdata['rvalues'][0]
+def _reset_values ():
+    for category in categories:
+        values[category.name] = {}
+        if category.iterable:
+            for value in category.values:
+                values[category.name][value] = False
         else:
-            ratings[category] = ""
-        values[category] = {}
-        for value in catdata['rvalues']:
-            values[category][value] = False
+            values[category.name] = None
     rating_modified.clear()
 
 
 def _calc_ratings_display ():
     global ratings_display
-    urls = rating_cache.keys()
+    urls = []#XXXrating_cache.keys()
     urls.sort()
     ratings_display = urls[curindex:curindex+_entries_per_page]
     for _url in ratings_display:
@@ -64,7 +61,7 @@ def _calc_ratings_display ():
         rating_modified[_url] = t.replace(u" ", u"&nbsp;")
 
 
-_reset_ratings()
+_reset_values()
 url = u""
 generic = False
 # current index of entry to display
@@ -110,7 +107,7 @@ def _form_reset ():
         info[key] = False
     for key in error.keys():
         error[key] = False
-    _reset_ratings()
+    _reset_values()
     global url, generic, curindex
     url = u""
     generic = False
@@ -136,17 +133,15 @@ def _form_generic (form):
 
 
 def _form_ratings (form):
-    for category, catdata in service['categories'].items():
-        key = 'category_%s' % category
-        if form.has_key(key):
-            value = _getval(form, key)
-            if not _rating_is_valid_value(catdata, value):
-                error['categoryvalue'] = True
-                return False
-            else:
-                ratings[category] = value
-                if category not in ["generic", "modified"]:
-                    values[category] = {value: True}
+    for key, value in _get_prefix_vals('category_'):
+        category = _get_category(key)
+        if not category.is_valid_value(value):
+            error['categoryvalue'] = True
+            return False
+        else:
+            ratings[category] = value
+            if category not in ["generic", "modified"]:
+                values[category] = {value: True}
     return True
 
 

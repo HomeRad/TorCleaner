@@ -32,9 +32,7 @@ from wc.filter.rules.FolderRule import recalc_up_down as _recalc_up_down
 from wc.filter.rules import register_rule as _register_rule
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
-# XXX disabled
-#from wc.filter.Rating import service, rangenames
-#from wc.filter.Rating import rating_is_valid_value as _rating_is_valid_value
+from wc.filter.rating import categories
 
 # config vars
 info = {
@@ -676,7 +674,7 @@ def _form_apply_nocomments (form):
 
 def _form_XXX_apply_rating (form):
     # rating categories
-    for category, catdata in service['categories'].items():
+    for category in registered_categories:
         key = "category_%s" % category
         if form.has_key(key):
             value = _getval(form, key)
