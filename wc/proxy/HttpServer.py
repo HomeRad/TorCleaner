@@ -136,7 +136,7 @@ class HttpServer (Server):
     def client_send_request (self, method, protocol, hostname, port,
                              document, headers, content, client, url, mime):
         """the client (matchmaker) sends the request to the server"""
-        assert self.state == 'client'
+        assert self.state == 'client', "%s invalid state %r"%(self, self.state)
         self.method = method
         # the client protocol
         self.protocol = protocol
@@ -176,14 +176,16 @@ class HttpServer (Server):
 
     def process_read (self):
         """process read event by delegating it to process_* functions"""
-        assert self.state!='closed'
+        assert self.state!='closed', "%s invalid state %r"%(self, self.state)
         while True:
-            if not self.client or self.state=='unreadable':
+            if not self.client:
                 # By the time this server object was ready to receive
                 # data, the client has already closed the connection!
                 # We never received the client_abort because the server
                 # didn't exist back when the client aborted.
                 self.client_abort()
+                return
+            if self.state=='unreadable':
                 return
             if self.delegate_read():
                 break
@@ -432,7 +434,7 @@ class HttpServer (Server):
             for i in _response_filters:
                 data = applyfilter(i, data, "finish", self.attrs)
         except FilterWait, msg:
-            debug(PROXY, "%s FilterWait %r", self, msg)
+            debug(PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data
             # to save CPU time make connection unreadable for a while
             self.set_unreadable(0.5)
@@ -449,7 +451,12 @@ class HttpServer (Server):
 
 
     def set_readable (self, state):
-        self.state = state
+        debug(PROXY, "%s set readable", self)
+        # the client might already have closed
+        if self.client:
+            self.state = state
+        else:
+            debug(PROXY, "%s client is gone", self)
 
 
     def close_reuse (self):
@@ -458,7 +465,7 @@ class HttpServer (Server):
         super(HttpServer, self).close_reuse()
         self.state = 'client'
         self.reset()
-        # be sure to unreserve after reset because of callbacks
+        # be sure to unreserve _after_ reset because of callbacks
         serverpool.unreserve_server(self.addr, self)
 
 
