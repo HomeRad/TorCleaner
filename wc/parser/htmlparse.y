@@ -24,6 +24,9 @@ static int yyerror (char* msg) {
     return 0;
 }
 
+/* wc.parser.resolve_entities */
+static PyObject* resolve_entities;
+
 /* macros for easier scanner state manipulation */
 
 /* test whether tag does not need an HTML end tag */
@@ -491,6 +494,7 @@ static PyObject* htmlsax_parser_new(PyObject* self, PyObject* args) {
     p->userData->tmp_tag = p->userData->tmp_attrname =
 	p->userData->tmp_attrval = p->userData->tmp_attrs =
 	p->userData->lexbuf = NULL;
+    p->userData->resolve_entities = resolve_entities;
     p->userData->exc_type = NULL;
     p->userData->exc_val = NULL;
     p->userData->exc_tb = NULL;
@@ -672,6 +676,11 @@ static PyMethodDef htmlsax_methods[] = {
 
 /* initialization of the htmlsaxhtmlop module */
 DL_EXPORT(void) inithtmlsax(void) {
+    PyObject* m;
     Py_InitModule("htmlsax", htmlsax_methods);
+    if (!(m = PyImport_ImportModule("wc.parser")))
+        return;
+    if (!(resolve_entities = PyObject_GetAttrString(m, "resolve_entities")))
+        return;
     /*yydebug = 1;*/
 }

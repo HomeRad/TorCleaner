@@ -64,7 +64,8 @@ tests = (
     """<a href=/>""",
     """<a href="'">""",
     """<a href='"'>""",
-
+    # entities
+    """<a href="&#109;ailto:">"""
 )
 
 flushtests = (

@@ -554,8 +554,8 @@ RX_DATA [-a-zA-Z0-9_]+
     Py_INCREF(Py_None);
     yyextra->tmp_attrval = Py_None;
     if (PyDict_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, yyextra->tmp_attrval)==-1) return T_ERROR;
-    Py_DECREF(yyextra->tmp_attrname);
-    Py_DECREF(yyextra->tmp_attrval);
+    /*Py_DECREF(yyextra->tmp_attrname);*/
+    /*Py_DECREF(yyextra->tmp_attrval);*/
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     APPEND_TO_TMP(yyleng);
     BEGIN(S_ATTR2);
@@ -587,7 +587,10 @@ RX_DATA [-a-zA-Z0-9_]+
 <S_ATTR4>> {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
+    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     CLEAR_BUF(yyextra->tmp_buf);
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
@@ -604,12 +607,15 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
+    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
-    Py_DECREF(yyextra->tmp_attrname);
-    Py_DECREF(yyextra->tmp_attrval);
+    /*Py_DECREF(yyextra->tmp_attrname);*/
+    /*Py_DECREF(yyextra->tmp_attrval);*/
     yyextra->tmp_attrname = yyextra->tmp_attrval = NULL;
     BEGIN(INITIAL);
     SET_ATTR_LVAL;
@@ -629,7 +635,10 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
+    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
@@ -645,7 +654,10 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
+    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
@@ -661,7 +673,10 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
+    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
@@ -675,6 +690,8 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
+    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
@@ -696,6 +713,8 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
     CLEAR_BUF(yyextra->tmp_buf);
+    yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
+    if (!yyextra->tmp_attrval) return T_ERROR;
     yyextra->tmp_attrval = quote_string(yyextra->tmp_attrval);
     if (!yyextra->tmp_attrval) { return T_ERROR; }
     if (PyDict_SetItem(yyextra->tmp_attrs,

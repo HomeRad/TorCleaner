@@ -1,9 +1,5 @@
 TODO
 
-- resove html entities (numeric)
-
-- javascript module with spidermonkey
-
 - Python 2.3:
   use Bool type
   use builtin timeout in socket module

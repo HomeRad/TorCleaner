@@ -114,6 +114,8 @@ HTML '<a href="\'">'
 startElement ('a', {'href': '"\'"'})
 HTML '<a href=\'"\'>'
 startElement ('a', {'href': '&quot;'})
+HTML '<a href="&#109;ailto:">'
+startElement ('a', {'href': 'mailto:'})
 ======== sequential feed tests =========
 HTML '<a b="c">'
 startElement ('a', {'b': 'c'})
@@ -231,6 +233,8 @@ HTML '<a href="\'">'
 startElement ('a', {'href': '"\'"'})
 HTML '<a href=\'"\'>'
 startElement ('a', {'href': '&quot;'})
+HTML '<a href="&#109;ailto:">'
+startElement ('a', {'href': 'mailto:'})
 ===== subsequent interwoven parsing ====
 startElement ('html', {})
 startElement ('html', {})
