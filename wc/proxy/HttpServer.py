@@ -395,7 +395,7 @@ class HttpServer (Server):
             debug(NIGHTMARE, "Proxy: FilterException", msg)
             # the filter still needs some data from a different client
             # connection, so try flushing again after a while
-            make_timer(0.5, lambda : HttpServer.flush(self, client))
+            make_timer(0.1, lambda : HttpServer.flush(self, client))
 
 
     def http_version (self):
