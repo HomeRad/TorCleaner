@@ -79,10 +79,23 @@ def expand_ip (ip):
     return (ip, 0)
 
 
-def is_valid_dq (ip):
-    if not _ipv4_re.match(ip): return
+def is_valid_ip (ip):
+    return is_valid_ipv4(ip) or is_valid_ipv6(ip)
+
+
+def is_valid_ipv4 (ip):
+    if not _ipv4_re.match(ip):
+        return False
     a,b,c,d = [int(i) for i in ip.split(".")]
     return a<=255 and b<=255 and c<=255 and d<=255
+
+
+def is_valid_ipv6 (ip):
+    # XXX this is not complete: check ipv6 and ipv4 semantics too here
+    if not (_ipv6_re.match(ip) or _ipv6_ipv4_re.match(ip) or
+            _ipv6_abbr_re.match(ip) or _ipv6_ipv4_abbr_re.match(ip)):
+        return False
+    return True
 
 
 def is_valid_bitmask (mask):
@@ -131,7 +144,7 @@ def dq_in_net (n, net, mask):
 def host_in_set (ip, hosts, nets):
     if ip in hosts:
         return True
-    if is_valid_dq(ip):
+    if is_valid_ipv4(ip):
         n = dq2num(ip)
         for net, mask in nets:
             if dq_in_net(n, net, mask):
@@ -157,21 +170,28 @@ def hosts2map (hosts):
             if not is_valid_bitmask(mask):
                 error(PROXY, "bitmask %d is not a valid network mask", mask)
                 continue
-            if not is_valid_dq(host):
+            if not is_valid_ipv4(host):
                 error(PROXY, "host %s is not a valid ip address", host)
                 continue
             nets.append(dq2net(host, suffix2mask(mask)))
         elif _host_netmask_re.match(host):
             host, mask = host.split("/")
-            if not is_valid_dq(host):
+            if not is_valid_ipv4(host):
                 error(PROXY, "host %s is not a valid ip address", host)
                 continue
-            if not is_valid_dq(mask):
+            if not is_valid_ipv4(mask):
                 error(PROXY, "mask %s is not a valid ip network mask", mask)
                 continue
             nets.append(dq2net(host, dq2mask(mask)))
+        elif is_valid_ip(host):
+            hostset.add(expand_ip(host))
         else:
-            hostset.add(host)
+            try:
+                for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
+                    af, socktype, proto, canonname, sa = res
+                    hostset.add(sa[0])
+            except socket.gaierror:
+                pass
     return (hostset, nets)
 
 
