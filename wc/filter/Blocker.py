@@ -143,8 +143,7 @@ class Blocker (Filter):
                 # make HTTP HEAD request?
                 doc = self.block_url
             port = config['port']
-            if method=='CONNECT':
-                return 'CONNECT https://localhost:%d%s HTTP/1.1'%(port, doc)
+            # XXX handle https requests here?
             return 'GET http://localhost:%d%s HTTP/1.1'%(port, doc)
         return data
 
