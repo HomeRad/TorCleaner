@@ -35,7 +35,11 @@ class BlockRule (AllowRule):
 
     def fill_data (self, data, name):
         if name=='block':
-            self.url += unxmlify(data).encode('iso8859-1')
+            self.url += data
+
+
+    def compile_data (self):
+        self.url = unxmlify(self.url).encode('iso8859-1')
 
 
     def fromFactory (self, factory):

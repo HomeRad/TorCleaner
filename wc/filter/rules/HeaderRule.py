@@ -36,7 +36,11 @@ class HeaderRule (UrlRule):
 
     def fill_data (self, data, name):
         if name=='header':
-            self.value = unxmlify(data).encode('iso8859-1')
+            self.value += data
+
+
+    def compile_data (self):
+        self.value = unxmlify(self.value).encode('iso8859-1')
 
 
     def fromFactory (self, factory):

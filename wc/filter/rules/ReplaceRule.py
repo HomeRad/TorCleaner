@@ -33,7 +33,11 @@ class ReplaceRule (UrlRule):
 
     def fill_data (self, data, name):
         if name=='replacer':
-            self.replace += unxmlify(data).encode('iso8859-1')
+            self.replace += data
+
+
+    def compile_data (self):
+        self.replace = unxmlify(self.replace).encode('iso8859-1')
 
 
     def fromFactory (self, factory):

@@ -124,6 +124,12 @@ class Rule (object):
 
 
     def fill_data (self, data, name):
+        """called when XML character data was parsed to fill rule values"""
+        pass
+
+
+    def compile_data (self):
+        """called when all XML parsing of rule finished"""
         pass
 
 

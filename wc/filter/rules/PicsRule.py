@@ -51,17 +51,28 @@ class PicsRule (UrlRule):
 
 
     def fill_data (self, data, name):
-        data = unxmlify(data).encode('iso8859-1')
         if name=='category':
             assert self._service
             assert self._category
             assert self.ratings.has_key(self._service)
-            self.ratings[self._service][self._category] = int(data)
+            cats = self.ratings[self._service]
+            if self._category not in cats:
+                cats[self._category] = ""
+            cats[self._category] += data
         elif name=='url':
-            self.url = data
+            self.url += data
         else:
             # ignore other content
             pass
+
+
+    def compile_data (self):
+        self.url = unxmlify(self.url).encode('iso8859-1')
+        for service in self.ratings:
+            for category in self.ratings[service]:
+                val = self.ratings[service][category]
+                val = int(unxmlify(val).encode('iso8859-1'))
+                self.ratings[service][category] = val
 
 
     def fromFactory (self, factory):
