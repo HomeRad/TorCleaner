@@ -1,12 +1,37 @@
 <html>
-<head>
-<title i18n:translate="">Hello english speaking friend</title>
-</head>
+<head></head>
 <body>
-<img i18n:attributes="alt English image description">
-<div i18n:translate="string:This will be translated">This will be replace by
-the translation</div>
+<ul>
+
+<li>translate replaced tag contents 1<br>
+<div i18n:translate="">Hello english speaking friend</div>
+</li>
+
+<li>translate replaced tag contents 2<br>
+<div i18n:translate="string:This will be translated">error</div>
+</li>
+
+<li>translate replaced tag contents 3<br>
+<div i18n:translate="" tal:content="transe">error</div>
+</li>
+
+<li>translate replaced tag<br>
+<div i18n:translate="" tal:replace="transe">error</div>
+</li>
+
+<li>translate with keyword expansion<br>
 <div i18n:translate="">this is a %(parameter)s example</div>
-<div i18n:translate="" tal:replace="transe">replace example</div>
+</li>
+
+<li>translate attributes 1<br>
+<img i18n:attributes="alt English image description">
+</li>
+
+<li>translate attributes 2<br>
+<input type="text" name="rule_title" i18n:translate=""
+ value="error" tal:attributes="value transe">
+</li>
+
+</ul>
 </body>
 </html>

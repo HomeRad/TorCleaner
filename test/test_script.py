@@ -36,6 +36,6 @@ wc.config.init_filter_modules()
 from wc.proxy import proxy_poll, run_timers
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-for i in range(11):
+for i in range(14):
     fname = "test/html/script%d.html"%i
     filterfile(fname)

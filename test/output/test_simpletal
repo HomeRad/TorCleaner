@@ -1,13 +1,38 @@
 test_simpletal
 <html>
-<head>
-<title>Hallo deutschsprachiger Freund</title>
-</head>
+<head></head>
 <body>
-<img alt="Deutsche Bildbeschreibung">
+<ul>
+
+<li>translate replaced tag contents 1<br>
+<div>Hallo deutschsprachiger Freund</div>
+</li>
+
+<li>translate replaced tag contents 2<br>
 <div>Das ist übersetzt</div>
-<div>dies ist ein hullabulla Beispiel</div>
+</li>
+
+<li>translate replaced tag contents 3<br>
+<div>Transe Test erfolgreich</div>
+</li>
+
+<li>translate replaced tag<br>
 Transe Test erfolgreich
+</li>
+
+<li>translate with keyword expansion<br>
+<div>dies ist ein hullabulla Beispiel</div>
+</li>
+
+<li>translate attributes 1<br>
+<img alt="Deutsche Bildbeschreibung">
+</li>
+
+<li>translate attributes 2<br>
+<input value="Transe Test erfolgreich" type="text" name="rule_title">
+</li>
+
+</ul>
 </body>
 </html>
 
