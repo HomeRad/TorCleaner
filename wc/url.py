@@ -78,11 +78,15 @@ def splitparams (path):
 
 def is_safe_js_url (urlstr):
     """test javascript URLs"""
-    url = urlparse.urlsplit(urlstr)
+    url = list(urlparse.urlsplit(urlstr))
     if url[0].lower() != 'http':
         return False
     if not is_safe_host(url[1]):
         return False
+    if ";" in urlstr:
+        url[2], parameter = splitparams(url[2])
+        if not is_safe_parameter(parameter):
+            return False
     if not is_safe_path(url[2]):
         return False
     if not is_safe_query(url[3]):
