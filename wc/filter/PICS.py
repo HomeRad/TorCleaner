@@ -50,12 +50,13 @@ Servicematch: vancouver
 
 import wc
 from wc.debug import *
+from wc import i18n
 
 # rating phrase searcher
 ratings = re.compile(r'r(atings)?\s*\((?P<rating>[^)]*)\)').finditer
 
 # PICS rating associations and their categories
-services = [
+services = {
   "safesurf": {'name': 'Safesurf',
                'categories': {'agerange':                '000',
                               'profanity':               '001',
@@ -134,25 +135,27 @@ services = [
                              },
               },
   "vancouver": {'name': 'Vancouver',
-                'categories': {'multiculturalism':       'MC',
-                               'educationalcontent':     'Edu',
-                               'environmentalawareness': 'Env',
-                               'tolerance':              'Tol',
-                               'violence':               'V',
-                               'sex':                    'S',
-                               'profanity':              'P',
-                               'safety':                 'SF',
-                               'canadiancontent':        'Can',
-                               'commercialcontent':      'Com',
-                               'gambling':               'Gam',
-                              },
+               'categories': {'multiculturalism':       'MC',
+                              'educationalcontent':     'Edu',
+                              'environmentalawareness': 'Env',
+                              'tolerance':              'Tol',
+                             'violence':               'V',
+                              'sex':                    'S',
+                              'profanity':              'P',
+                              'safety':                 'SF',
+                              'canadiancontent':        'Can',
+                              'commercialcontent':      'Com',
+                              'gambling':               'Gam',
+                             },
                },
-]
+}
+
 
 def check_pics (rule, labellist):
-    """parse pics labels according to given rule config
-       return false if no rating matches
-       return match message if some rating exceeds the configured rating level
+    """parse and check pics labels according to given PicsRule
+       return None if no rating is exceeded
+       return non-empty match message if some rating exceeds the configured
+       rating level
     """
     last = 0
     for mo in ratings(labellist):
@@ -170,32 +173,37 @@ def check_pics (rule, labellist):
     return None
 
 
-def check_service (rating, tags, name, options):
+def check_service (rating, categories, name, options):
+    """find given categories in rating and compare the according option
+       value with the rating value.
+       If one of the ratings exceed its option value, return a non-empty
+       message, else return None.
+    """
     for category, value in options:
-        tag = tags[category]
-        msg = check_pics_option(rating, tag, value,
+        category_label = categories[category]
+        msg = check_pics_option(rating, category_label, value,
                                 "%s %s" % (name, category));
         if msg: return msg
     return None
 
 
-def check_pics_option (rating, label, option, category) {
-    i = rating.find(label)
-    if i==-1: return None
+def check_pics_option (rating, category_label, option, category) {
+    """find the given label in rating and compare the value with
+       option. If the rating exceeds the option, a non-empty message
+       is returned, else None"""
+    mo = re.search(r'%s\s+(?P<val>\d+)'%category_label, rating)
+    if not mo:
+        # label not found
+        return None
     # get the rating value
-    rating = rating[i:]
-    # remove anything after whitespace
-    i = rating.find(" ")
-    if i != -1:
-        rating = rating[:i]
-    if not rating: return None
-    # convert the rating value
-    if int(rating) > option:
+    rating = int(mo.group("val"))
+    if rating > option:
         return i18n._("PICS %s match") % category
     return None
 
 
 def _test ():
+    from wc.filter.rules.PicsRule import PicsRule
     labellist = """(pics-1.1
 "http://www.icra.org/ratingsv02.html"
  l gen true for "http://www.jesusfilm.org"
@@ -206,6 +214,7 @@ def _test ():
     0 v 0 l 0))"""
     rule = PicsRule()
     print check_pics(rule, labellist)
+
 
 if __name__=='__main__':
     _test()
