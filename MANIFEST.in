@@ -1,29 +1,53 @@
-include MANIFEST.in TODO proxy.pac cross-build.sh
-include README README.squid README.sshtunnel README.parser
-include README.patches README.sslgateway
-include webcleaner webcleaner-service webcleaner-certificates
-include debian/changelog debian/config debian/control debian/compat
-include debian/patches/*.dpatch debian/patches/00list*
-include debian/webcleaner.dirs debian/webcleaner.docs
-include debian/webcleaner.init debian/webcleaner.postinst
-include debian/webcleaner.links debian/po/*.po debian/po/*.pot
-include debian/po/*.py debian/po/Makefile
-include debian/webcleanertools.postinst debian/webcleanertools.prerm
-include debian/webcleaner.postrm debian/webcleaner.prerm
-include debian/rules debian/templates debian/copyright
-include webcleaner.1 webcleaner.conf.5 webcleaner-certificates.1
-include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
-include config/*.py config/magic.mime
+include MANIFEST.in
+include README
+include TODO
+include cross-build.sh
+include proxy.pac
+include webcleaner
+include webcleaner-service
+include webcleaner-certificates
+include debian/changelog
+include debian/compat
+include debian/control
+include debian/copyright
+include debian/po/*.po
+include debian/po/*.pot
+include debian/rules
+include debian/webcleaner-common.dirs
+include debian/webcleaner-common.files
+include debian/webcleaner.config
+include debian/webcleaner.dirs
+include debian/webcleaner.docs
+include debian/webcleaner.init
+include debian/webcleaner.links
+include debian/webcleaner.postinst
+include debian/webcleaner.postrm
+include debian/webcleaner.prerm
+include debian/webcleaner.templates
+include webcleaner.1
+include webcleaner.conf.5
+include webcleaner-certificates.1
+include config/*.txt
+include config/*.zap
+include config/*.conf
+include config/*.dtd
+include config/*.py
+include config/magic.mime
 recursive-include config/blacklists *.gz README
-include config/*.png config/*.html
 include templates/classic/*.html
 include templates/classic/*.txt
 include templates/classic/*.png
 include templates/classic/*.js
 include templates/classic/*.css
+include templates/classic/blocked.*
 include templates/classic/macros/*.html
-include test/*.py test/output/test_* test/html/*.html test/*.sh
-include tests/*.py
-include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparse.y
-include wc/parser/*.h wc/parser/Makefile
-include po/*.po po/*.pot po/*.py
+include test/*.py
+include test/*.sh
+recursive-include tests *.py test*
+include wc/parser/htmllex.l
+include wc/parser/htmlparse.y
+include wc/parser/*.h
+include wc/parser/Makefile
+include po/*.po
+include po/*.pot
+include po/*.py
