@@ -61,13 +61,18 @@ class FXRuleFrame (FXVerticalFrame):
             return 1
         self.rule.title = title
         self.getApp().dirty = 1
+        # add prefix for treelist updating
         if self.rule.get_name()!="folder":
-            title = "[%s] %s" % (self.rule.get_name(), title)
-        sender.setText(title)
-        debug(BRING_IT_ON, "Rule title changed")
+            tmptitle = "[%s] %s" % (self.rule.get_name(), title)
+        else:
+            tmptitle = title
+        sender.setText(tmptitle)
         # send message to main window for treelist updating
         win = self.getApp().getMainWindow()
         win.handle(sender, MKUINT(win.ID_TITLE, SEL_COMMAND), ptr)
+        # restore original title without prefix
+        sender.setText(title)
+        debug(BRING_IT_ON, "Rule title changed")
         return 1
 
     def onCmdDesc (self, sender, sel, ptr):
