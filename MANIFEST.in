@@ -11,7 +11,8 @@ include debian/webcleaner.postrm debian/webcleaner.prerm
 include debian/rules debian/templates debian/copyright
 include webcleaner.1 webcleanerconf.1 webcleaner.conf.5 wcheaders.1
 include rpm_build_script
-include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif
+include config/*.txt config/*.zap config/*.conf config/*.dtd config/*.gif config/*.py
+recursive-include config/blacklists *.gz README
 include config/*.png config/*.html
 include test/*.py test/output/test_* test/html/*.html
 include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparse.y
