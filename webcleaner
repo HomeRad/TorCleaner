@@ -162,10 +162,10 @@ def main_nt (configdir, filelogs, args):
     if configdir:
         wc.win32start.ProxyService.configdir = configdir
     if command=='status':
-        print win32start.status()
+        print wc.win32start.status()
     elif command in ['start', 'stop', 'restart', 'install', 'remove']:
         import win32serviceutil
-        win32serviceutil.HandleCommandLine(win32start.ProxyService)
+        win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     else:
         print_usage(_("Unknown command %r") % command)
 
