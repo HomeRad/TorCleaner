@@ -256,6 +256,7 @@ MathTags = {
 
 # old tags
 OldTags = {
+    "bgsound": None, # IE 2.x-6.x
     "blink" : None, # Netscape Navigator
     "embed" : None, # Netscape Navigator 4
     "ilayer" : None, # Netscape Navigator 4
