@@ -14,8 +14,14 @@ asyncore.dispatcher.fileno = fileno
 from wc import debug,_,config
 from wc.debug_levels import *
 from urllib import splittype, splithost, splitport
+from LimitList import LimitList
 
 TIMERS = [] # list of (time, function)
+
+# list of gathered headers
+# entries have the form
+# (url, 0(incoming)/1(outgoing), headers)
+HEADERS = LimitList(config['headersave'])
 
 HTML_TEMPLATE = """<html><head>
 <title>%(title)s</title>
@@ -31,20 +37,18 @@ WebCleaner Proxy Status Info
 
 Uptime: %(uptime)s
 
-Valid Requests:   %(valid)d
-Invalid Requests: %(invalid)d
-Failed Requests:  %(failed)d
+Requests:
+  Valid:   %(valid)d
+  Error:   %(error)d
+  Blocked: %(blocked)d
 
-A failed request indicates that we could not connect to
-the server (either the request was not syntactical correct,
-the host was not found or the connection was down).
-
-Active connections: ["""
+Active connections:
+["""
 
 
 def log(msg):
-    """If _LOGFILE is defined write the msg into it. The message msg
-       must be in common log file format."""
+    """If the logfile is defined write the msg into it. The message msg
+       should be in common log file format."""
     debug(HURT_ME_PLENTY, "logging", `msg`)
     if config['logfile']:
         config['logfile'].write(msg)
@@ -57,10 +61,12 @@ def stripsite(url):
     url = urlparse.urlparse(url)
     return url[1], urlparse.urlunparse( (0,0,url[2],url[3],url[4],url[5]) )
 
+
 def make_timer(delay, callback):
     "After DELAY seconds, run the CALLBACK function"
     TIMERS.append( (time.time() + delay, callback) )
     TIMERS.sort()
+
 
 def run_timers():
     "Run all timers ready to be run, and return seconds to the next timer"
@@ -82,8 +88,8 @@ def text_status():
     data = {
     'uptime': format_seconds(time.time() - config['starttime']),
     'valid':  config['requests']['valid'],
-    'invalid': config['requests']['invalid'],
-    'failed': config['requests']['failed'],
+    'error': config['requests']['error'],
+    'blocked': config['requests']['blocked'],
     }
     s = STATUS_TEMPLATE % data
     first = 1
@@ -93,21 +99,32 @@ def text_status():
             first = 0
         else:
             s += '\n              %s\n' % conn
-    s += ']\n\ndnscache: '+dns_lookups.dnscache
+    s += ']\n\ndnscache: %s'%dns_lookups.dnscache
     return s
 
 
 def html_portal():
-    content = """
-    <ul>
-    <li><a href="/status">Status information</a>
-    <li><a href="/config">Configuration</a>
-    </ul>
-    """
     data = {
     'title': 'WebCleaner Proxy',
     'header': 'WebCleaner Proxy',
-    'content': content,
+    'content': "<pre>"+text_config()+"\n"+text_status()+"</pre>",
+    }
+    return HTML_TEMPLATE % data
+
+
+def new_headers(i):
+    l = []
+    while HEADERS.hasnext(i):
+        l.append(str(HEADERS[i]))
+        i = HEADERS.next(i)
+    return "\n".join(l)
+
+
+def access_denied(addr):
+    data = {
+      'title': "WebCleaner Proxy",
+      'header': "WebCleaner Proxy",
+      'content': "access denied for %s"%str(addr),
     }
     return HTML_TEMPLATE % data
 
@@ -234,6 +251,7 @@ def mainloop():
         # have to worry about being in asyncore.poll when a timer goes
         # off.
         proxy_poll(timeout=max(0, run_timers()))
+
 
 if __name__=='__main__':
     mainloop()

@@ -63,8 +63,8 @@ def main(tests=None, testdir=None, verbose=0, quiet=0, generate=0,
 	     'exclude',
 	     'random',])
     except getopt.error, msg:
-        error(msg)
-        usage()
+        print msg
+        print __doc__
         return -1
     for opt, val in opts:
         if opt in ('-v','--verbose'): verbose = verbose + 1

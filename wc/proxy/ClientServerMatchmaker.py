@@ -1,4 +1,4 @@
-import dns_lookups, socket, mimetypes
+import dns_lookups, socket, mimetypes, re
 import wc.proxy
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
@@ -6,6 +6,9 @@ from wc import _,debug,config
 from wc.debug_levels import *
 
 serverpool = ServerPool()
+
+_localhosts = ('localhost', '127.0.0.1',)
+_intre = re.compile("^\d+$")
 
 from HttpServer import HttpServer
 
@@ -38,17 +41,18 @@ class ClientServerMatchmaker:
      done:     We are done matching up the client and server
     """
     def error(self, code, msg, txt=""):
+        content = wc.HTML_TEMPLATE % \
+            {'title': "WebCleaner Proxy Error %d %s" % (code, msg),
+             'header': "Bummer!",
+             'content': "WebCleaner Proxy Error %d %s<br>%s<br>" % \
+                        (code, msg, txt),
+            }
         ServerHandleDirectly(self.client,
             'HTTP/1.0 %d %s\r\n',
             'Server: WebCleaner Proxy\r\n'
             'Content-type: text/html\r\n'
-            '\r\n'
-            '<html><head>'
-            '<title>WebCleaner Proxy Error %d %s</title>'
-            '</head><body bgcolor="#fff7e5"><br><center><b>Bummer!</b><br>'
-            'WebCleaner Proxy Error %d %s<br>'
-            '%s<br></center></body></html>' % (code, msg, code, msg, txt),
-            msg)
+            '\r\n', content)
+
 
     def __init__(self, client, request, headers, content, nofilter):
         self.client = client
@@ -56,22 +60,23 @@ class ClientServerMatchmaker:
         self.headers = headers
         self.content = content
         self.nofilter = nofilter
-        url = ""
-        try: self.method, url, protocol = request.split()
+        self.url = ""
+        try: self.method, self.url, protocol = request.split()
         except:
-            config['requests']['failed'] += 1
+            config['requests']['error'] += 1
             self.error(400, _("Can't parse request"))
-        if not url:
-            config['requests']['failed'] += 1
+        if not self.url:
+            config['requests']['error'] += 1
             self.error(400, _("Empty URL"))
-        scheme, hostname, port, document = wc.proxy.spliturl(url)
+        scheme, hostname, port, document = wc.proxy.spliturl(self.url)
         debug(HURT_ME_PLENTY, "splitted url", scheme, hostname, port, document)
         if scheme=='file':
             # a blocked url is a local file:// link
             # this means we should _not_ use this proxy for local
             # file links :)
-            mtype = mimetypes.guess_type(url)[0]
+            mtype = mimetypes.guess_type(self.url)[0]
             config['requests']['valid'] += 1
+            config['requests']['blocked'] += 1
             ServerHandleDirectly(self.client,
 	        'HTTP/1.0 200 OK\r\n',
                 'Content-Type: %s\r\n\r\n' % (mtype or 'application/octet-stream'),
@@ -81,10 +86,11 @@ class ClientServerMatchmaker:
         if hostname.lower()=='localhost' and port==config['port']:
             return self.handle_local(document)
 
+        wc.proxy.HEADERS.add((self.url, 0, self.headers.headers))
         if config['parentproxy']:
             self.hostname = config['parentproxy']
             self.port = config['parentproxyport']
-            self.document = url
+            self.document = self.url
         else:
             self.hostname = hostname
             self.port = port
@@ -94,25 +100,23 @@ class ClientServerMatchmaker:
 
 
     def handle_local(self, document):
-        if document.startswith("/status"):
-            # proxy info
-            ServerHandleDirectly(self.client,
-                'HTTP/1.0 200 OK\r\n',
-                'Content-Type: text/plain\r\n'
-                '\r\n',
-                wc.proxy.text_status())
-        elif document.startswith("/config"):
-            ServerHandleDirectly(self.client,
-                'HTTP/1.0 200 OK\r\n',
-                'Content-Type: text/plain\r\n'
-                '\r\n',
-                wc.proxy.text_config())
+        if self.client and self.client.addr[0] not in _localhosts:
+            contenttype = "text/html"
+            content = wc.proxy.access_denied(self.client.addr)
+        elif document.startswith("/headers/"):
+            contenttype = "text/plain"
+            i = document[9:]
+            if _intre.match(i):
+                content = wc.proxy.new_headers(int(i)) or "-"
+            else:
+                content = "-"
         else:
-            ServerHandleDirectly(self.client,
-                'HTTP/1.0 200 OK\r\n',
-                'Content-Type: text/html\r\n'
-                '\r\n',
-                wc.proxy.html_portal())
+            contenttype = "text/html"
+            content = wc.proxy.html_portal()
+        ServerHandleDirectly(self.client,
+            'HTTP/1.0 200 OK\r\n',
+            'Content-Type: %s\r\n\r\n'%contenttype,
+            content)
 
 
     def handle_dns(self, hostname, answer):
@@ -132,6 +136,7 @@ class ClientServerMatchmaker:
 	        new_url += ':%s' % self.port
             new_url += self.document
             self.state = 'done'
+            config['requests']['valid'] += 1
             ServerHandleDirectly(
                 self.client,
                 'HTTP/1.0 301 Use different host\r\n',
@@ -143,7 +148,7 @@ class ClientServerMatchmaker:
         else:
             # Couldn't look up the host, so close this connection
             self.state = 'done'
-            config['requests']['failed'] += 1
+            config['requests']['error'] += 1
             self.error(504, "Host not found",
                 'Host %s not found .. %s\r\n' % (hostname, answer.data))
 
@@ -189,7 +194,8 @@ class ClientServerMatchmaker:
                                         self.headers,
                                         self.content,
                                         self,
-					self.nofilter)
+					self.nofilter,
+                                        self.url)
 
 
     def server_abort(self):
@@ -219,6 +225,7 @@ class ClientServerMatchmaker:
     def server_response(self, response, headers):
         # Okay, transfer control over to the real client
         if self.client.connected:
+            config['requests']['valid'] += 1
             self.server.client = self.client
             self.client.server_response(self.server, response, headers)
         else:

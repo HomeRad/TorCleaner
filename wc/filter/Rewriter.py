@@ -25,6 +25,7 @@ from wc.filter.Filter import Filter
 orders = [FILTER_RESPONSE_MODIFY]
 rulenames = ['rewrite','nocomments']
 
+_noquoteval = re.compile("^[a-zA-Z0-9_]+$")
 
 class Rewriter(Filter):
     """This class can rewrite HTML tags. It uses a parser class."""
@@ -79,10 +80,12 @@ class HtmlFilter(HtmlParser):
         self.data = ""
         self.rulestack = []
         self.buffer = []
+        self.document = "unknown"
 
 
     def __repr__(self):
         return "<HtmlFilter with rulestack %s >" % self.rulestack
+
 
     def buffer_append_data(self, data):
         """we have to make sure that we have no two following
@@ -100,9 +103,9 @@ class HtmlFilter(HtmlParser):
         self.buffer_append_data([DATA, d])
 
 
-    #def ignorableWhitespace(self, d):
-    #    """handler for ignorable whitespace"""
-    #    self.buffer_append_data([DATA, d])
+    def ignorableWhitespace(self, d):
+        """handler for ignorable whitespace"""
+        self.buffer_append_data([DATA, d])
 
 
     def flushbuf(self):
@@ -125,7 +128,9 @@ class HtmlFilter(HtmlParser):
                 for name,val in n[2].items():
                     s += ' %s'%name
                     if val:
-                        if val.find('"')!=-1:
+                        if _noquoteval.match(val):
+                            s += "=%s"%val
+                        elif val.find('"')!=-1:
                             s += "='%s'"%val
                         else:
                             s += '="%s"'%val
@@ -145,7 +150,6 @@ class HtmlFilter(HtmlParser):
 
 
     def characters (self, s):
-        # XXX handle entities ???
         self.buffer_append_data([DATA, s])
 
 
@@ -191,3 +195,8 @@ class HtmlFilter(HtmlParser):
         if not self.rulestack:
             self.buffer2data()
 
+
+    def error(self, line, col, msg):
+        print >> sys.stderr, "error parsing", \
+                 "%s:%d:%d" % (self.document,line,col)
+        print >> sys.stderr, " ", msg

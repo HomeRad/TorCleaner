@@ -1,7 +1,8 @@
 TODO
 
-- some .tgz files have content-type text/plain. Adjust guess_mimetypes
-  for that
+- FXPy program to watch headers and connections
+
+- Rule matching in C for speed
 
 - HTTPS support (only proxy, no filtering)
   It's sort of an extension to HTTP - you just send the proxy the request

@@ -125,11 +125,12 @@ class Configuration(UserDict.UserDict):
         self['colorize'] = 0
         self['noproxyfor'] = {}
         self['starttime'] = time.time()
-        self['requests'] = {'valid':0, 'invalid':0, 'failed':0}
+        self['requests'] = {'valid':0, 'error':0, 'blocked':0}
         self['local_sockets_only'] = 0
         self['localip'] = socket.gethostbyname(socket.gethostname())
         self['mime_no_length'] = []
         self['mime_gunzip_ok'] = []
+        self['headersave'] = 100
 
     def read_proxyconf(self):
         p = WConfigParser()

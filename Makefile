@@ -55,15 +55,24 @@ gentest:
 
 .PHONY: onlinetest
 onlinetest:
+	$(PYTHON) webcleaner restart
 	rm -f index.html* test.gif
 	# get a standard page with included adverts
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/
-	# get own config
-	env http_proxy="http://localhost:9090" wget -t1 http://localhost:9090/
 	# get a blocked page
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/advert/
 	# get a blocked image
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/advert/test.gif
+
+.PHONY: offlinetest
+offlinetest:
+	$(PYTHON) webcleaner restart
+	rm -f index.html
+	sleep 4
+	# get own config
+	env http_proxy="http://localhost:9090" wget -t1 http://localhost:9090/
+	cat index.html
+	rm -f index.html
 
 .PHONY: md5sums
 md5sums:

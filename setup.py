@@ -107,7 +107,7 @@ else:
     data_files.append(('share/webcleaner/examples', ['webcleaner.bat','webcleanerconf.bat']))
 
 setup (name = "webcleaner",
-       version = "0.21",
+       version = "0.22",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,

@@ -104,7 +104,7 @@ class HttpServer(Server):
 
 
     def client_send_request(self, method, hostname, document, headers,
-                            content, client, nofilter):
+                            content, client, nofilter, url):
         assert self.state == 'client'
         self.client = client
         self.method = method
@@ -112,6 +112,7 @@ class HttpServer(Server):
         self.document = document
         self.content = content
         self.nofilter = nofilter
+        self.url = url
         self.send_request()
 
 
@@ -164,6 +165,7 @@ class HttpServer(Server):
             self.state = 'response'
             return
 
+        wc.proxy.HEADERS.add((self.url, 1, self.headers.headers))
         if self.headers.get('content-type') in config['mime_no_length']:
             # remove content length
             debug(HURT_ME_PLENTY, "remove content length")
@@ -356,3 +358,4 @@ def speedcheck_print_status():
     #            print '  %15s:%-4d %10s %s' % (addr[0], addr[1],
     #                                          status[0], server.hostname)
 
+import wc

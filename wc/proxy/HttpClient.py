@@ -45,7 +45,7 @@ class HttpClient(Connection):
             if i >= 0: # One newline ends request
                 # self.read(i) is not including the newline
                 self.request = self.read(i)
-                assert self.read(2) == '\r\n'
+                self.read(2)
                 self.nofilter = {'nofilter': match_host(self.request)}
                 self.request = applyfilter(FILTER_REQUEST, self.request,
                                fun="finish", attrs=self.nofilter)
@@ -58,14 +58,14 @@ class HttpClient(Connection):
             i = self.recv_buffer.find('\r\n\r\n')
             if i >= 0: # Two newlines ends headers
                 i += 4 # Skip over newline terminator
-                self.headers = applyfilter(FILTER_REQUEST_HEADER,
-		               rfc822.Message(StringIO(self.read(i))),
+                headers = rfc822.Message(StringIO(self.read(i)))
+                self.headers = applyfilter(FILTER_REQUEST_HEADER, headers,
 			       fun="finish", attrs=self.nofilter)
-                self.state = 'content'
                 if self.headers.has_key('content-length'):
-                    self.bytes_remaining = int(self.headers.getheader('content-length'))
+                    self.bytes_remaining = int(self.headers['content-length'])
                 else:
                     self.bytes_remaining = 0
+                self.state = 'content'
 
         if self.state == 'content':
 	    if self.bytes_remaining > 0:
@@ -112,7 +112,7 @@ class HttpClient(Connection):
 
     def server_no_response(self):
         debug(NIGHTMARE, 'S/failed', self)
-        self.write('**Aborted**')
+        self.write('**No response from server. Aborted**')
         self.delayed_close()
 
 

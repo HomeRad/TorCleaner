@@ -314,11 +314,14 @@ static void error (void* user_data, const char* msg, ...) {
 						"error");
     PyObject* arglist;
     va_list args;
+    int line = getLineNumber(ud->context);
+    int col = getColumnNumber(ud->context);
     char* buf = PyMem_New(char, 1024);
     va_start(args, msg);
     vsnprintf(buf, 1024, msg, args);
     va_end(args);
-    arglist = Py_BuildValue("(s)", buf);
+
+    arglist = Py_BuildValue("(iis)", line, col, buf);
     PyEval_CallObject(callback, arglist);
     Py_DECREF(arglist);
     PyMem_Del(buf);
