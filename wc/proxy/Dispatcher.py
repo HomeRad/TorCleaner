@@ -44,7 +44,6 @@ import errno
 
 import wc
 import wc.log
-import OpenSSL
 
 
 # map of sockets
@@ -54,6 +53,7 @@ def create_socket (family, socktype, sslctx=None):
     """Create a socket with given family and type. If SSL context
        is given an SSL socket is created"""
     if sslctx is not None:
+        import OpenSSL
         sock = OpenSSL.SSL.Connection(sslctx, socket.socket(family, socktype))
     else:
         sock = socket.socket(family, socktype)
