@@ -1,5 +1,22 @@
 2.19 "A Knight's Tale" (released xx.xx.xxxx)
-  *
+  * Fix _webcleaner2_config.py file writing when --root directory has a
+    trailing slash, and don't write the unneeded output file list.
+    This should fix custom installers (eg Gentoo scripts).
+    Type: bugfix
+    Changed: setup.py
+
+  * Fixed ImageReducer initialization
+    Type: bugfix
+    Changed: wc/filter/ImageReducer.py
+
+  * Redirections to the proxy host are forbidden.
+    Type: feature
+    Changed: wc/proxy/HttpServer.py
+
+  * don't quote colons in url cgi data, else some servers cannot unquote
+    properly
+    Type: feature
+    Changed: wc/url.py
 
 2.18 "Bubba Ho-tep" (released 1.6.2004)
   * rename local var 'data' to correct name 'content'

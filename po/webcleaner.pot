@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Jun  1 00:20:53 2004\n"
+"POT-Creation-Date: Fri Jun 18 21:27:25 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -216,6 +216,9 @@ msgstr ""
 msgid "missing headers in response from %r"
 msgstr ""
 
+msgid "redirection to localhost"
+msgstr ""
+
 msgid "server received %d bytes more than content-length"
 msgstr ""
 
@@ -385,7 +388,7 @@ msgid ""
 "        webcleaner.conf, logging.conf and several .zap files.\n"
 "\n"
 "--no-file-logs\n"
-"        Do not add automatic .log files to the logging configuration.\n"
+"        Log to stdout instead of *.log files.\n"
 msgstr ""
 
 msgid ""
