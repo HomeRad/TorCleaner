@@ -22,25 +22,34 @@ case "$1" in
   start)
 	echo -n "Starting $DESC: "
 	$DAEMON start${MONITOR} >> $ACCESSLOG 2>>$ERRORLOG
+        R=$?
 	echo "$NAME."
+        exit $R
 	;;
   stop)
 	echo -n "Stopping $DESC: "
 	$DAEMON stop${MONITOR} >> $ACCESSLOG 2>>$ERRORLOG
+        R=$?
 	echo "$NAME."
+        exit $R
 	;;
   reload|force-reload)
         echo -n "Reloading $DESC: "
 	$DAEMON reload >> $ACCESSLOG 2>>$ERRORLOG
+        R=$?
 	echo "$NAME."
+        exit $R
 	;;
   restart)
 	echo -n "Restarting $DESC: "
 	$DAEMON restart >> $ACCESSLOG 2>>$ERRORLOG
+        R=$?
 	echo "$NAME."
+        exit $R
 	;;
   status)
   	$DAEMON status
+        exit $?
 	;;
   *)
 	N=/etc/init.d/$NAME
