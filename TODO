@@ -37,10 +37,3 @@ TODO
 
 - test parent proxy authentication
   I never tested this.
-
-- more error/warning recognition in parser
-  o parser should correct typos in start/end tags,
-    I noticed this with <blink></bllnk>: it doesnt get filtered, and blinks.
-    Annoying!
-  o HTML bugs should issue a warning on stderr.
-
