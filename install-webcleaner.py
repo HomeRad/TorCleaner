@@ -22,6 +22,7 @@ import distutils.sysconfig
 import win32service
 import win32serviceutil
 import wc
+import wc.configuration
 # initialize i18n
 wc.init_i18n()
 import wc.win32start
