@@ -38,8 +38,14 @@
 
 /* make python unicode string from tmp_buf and assign it to a */
 #define PYSTRING_TMP(a) { \
-    const char* enc = PyString_AsString(yyextra->encoding); \
-    (a) = PyUnicode_Decode(yyextra->tmp_buf, strlen(yyextra->tmp_buf), enc, "ignore"); \
+    PyObject* pencoding; \
+    char* encoding; \
+    pencoding = PyObject_GetAttrString(yyextra->parser, "encoding"); \
+    if (pencoding==NULL) return T_ERROR; \
+    encoding = PyString_AsString(pencoding); \
+    if (encoding==NULL) { Py_DECREF(pencoding); return T_ERROR; } \
+    (a) = PyUnicode_Decode(yyextra->tmp_buf, strlen(yyextra->tmp_buf),  \
+                           encoding, "ignore"); \
     if ((a)==NULL) return T_ERROR; \
 }
 

@@ -128,10 +128,12 @@ def strip_quotes (s):
     return s
 
 
-def set_encoding (self, attrs):
+def set_encoding (self, tag, attrs):
     """Set document encoding for given parser. Tag must be a meta tag."""
-    if attrs.get('http-equiv', '').lower() == "content-type":
-        content = attrs.get('content', '')
+    if tag != u'meta':
+        return
+    if attrs.get('http-equiv', u'').lower() == u"content-type":
+        content = attrs.get('content', u'')
         mo = _encoding_ro.search(content)
         if mo:
             encoding = mo.group("encoding").encode("ascii")
@@ -145,6 +147,6 @@ def set_encoding (self, attrs):
 
 
 def set_doctype (self, doctype):
-    if "XHTML" in doctype:
+    if u"XHTML" in doctype:
         self.doctype = "XHTML"
 

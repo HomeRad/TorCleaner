@@ -9000,19 +9000,19 @@ static yyconst yy_state_type yy_NUL_trans[269] =
 
 static yyconst flex_int32_t yy_rule_linenum[116] =
     {   0,
-      203,  208,  215,  220,  225,  230,  235,  240,  245,  250,
-      257,  262,  267,  273,  278,  285,  291,  296,  304,  309,
-      314,  319,  324,  329,  337,  342,  349,  355,  364,  371,
-      379,  397,  416,  421,  428,  433,  439,  445,  451,  457,
-      463,  468,  473,  478,  483,  488,  493,  498,  503,  507,
-      513,  518,  524,  530,  536,  541,  547,  553,  558,  564,
-      569,  575,  579,  584,  591,  598,  604,  609,  614,  619,
-      624,  629,  634,  639,  644,  650,  658,  666,  671,  676,
-      684,  701,  706,  712,  718,  724,  730,  747,  751,  756,
-      773,  790,  805,  811,  826,  832,  838,  844,  859,  864,
+      209,  214,  221,  226,  231,  236,  241,  246,  251,  256,
+      263,  268,  273,  279,  284,  291,  297,  302,  310,  315,
+      320,  325,  330,  335,  343,  348,  355,  361,  370,  377,
+      385,  403,  422,  427,  434,  439,  445,  451,  457,  463,
+      469,  474,  479,  484,  489,  494,  499,  504,  509,  513,
+      519,  524,  530,  536,  542,  547,  553,  559,  564,  570,
+      575,  581,  585,  590,  597,  604,  610,  615,  620,  625,
+      630,  635,  640,  645,  650,  656,  664,  672,  677,  682,
+      690,  707,  712,  718,  724,  730,  736,  753,  757,  762,
+      779,  796,  811,  817,  832,  838,  844,  850,  865,  870,
 
-      872,  877,  882,  890,  899,  912,  918,  926,  930,  939,
-      952,  956,  963,  970,  977
+      878,  883,  888,  896,  905,  918,  924,  932,  936,  945,
+      958,  962,  969,  976,  983
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -9062,8 +9062,14 @@ static yyconst flex_int32_t yy_rule_linenum[116] =
 
 /* make python unicode string from tmp_buf and assign it to a */
 #define PYSTRING_TMP(a) { \
-    const char* enc = PyString_AsString(yyextra->encoding); \
-    (a) = PyUnicode_Decode(yyextra->tmp_buf, strlen(yyextra->tmp_buf), enc, "ignore"); \
+    PyObject* pencoding; \
+    char* encoding; \
+    pencoding = PyObject_GetAttrString(yyextra->parser, "encoding"); \
+    if (pencoding==NULL) return T_ERROR; \
+    encoding = PyString_AsString(pencoding); \
+    if (encoding==NULL) { Py_DECREF(pencoding); return T_ERROR; } \
+    (a) = PyUnicode_Decode(yyextra->tmp_buf, strlen(yyextra->tmp_buf),  \
+                           encoding, "ignore"); \
     if ((a)==NULL) return T_ERROR; \
 }
 
@@ -9196,7 +9202,7 @@ void yyfree (void* ptr, void* yyscanner) {
 
 
 /* regular expression definitions used below */
-#line 9199 "htmllex.c"
+#line 9205 "htmllex.c"
 
 #define INITIAL 0
 #define S_PI 1
@@ -9488,11 +9494,11 @@ YY_DECL
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
 /* %% [7.0] user's declarations go here */
-#line 192 "htmllex.l"
+#line 198 "htmllex.l"
 
 
   /*********************** EOF ************************/
-#line 9495 "htmllex.c"
+#line 9501 "htmllex.c"
 
     yylval = yylval_param;
 
@@ -9622,7 +9628,7 @@ case YY_STATE_EOF(S_APOSSTRING):
 case YY_STATE_EOF(S_APOSSTRING_ESC):
 case YY_STATE_EOF(S_STRING):
 case YY_STATE_EOF(S_STRING_ESC):
-#line 195 "htmllex.l"
+#line 201 "htmllex.l"
 {
     /* hit end-of-file, wait for more data */
     return T_WAIT;
@@ -9633,7 +9639,7 @@ case YY_STATE_EOF(S_STRING_ESC):
 /* Note: a bug report about "<!- " comments was filed */
 case 1:
 YY_RULE_SETUP
-#line 203 "htmllex.l"
+#line 209 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(S_COMMENT);
@@ -9641,7 +9647,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 208 "htmllex.l"
+#line 214 "htmllex.l"
 {
     UPDATE_COLUMN;
     SETLVAL;
@@ -9654,7 +9660,7 @@ case 3:
 yyg->yy_c_buf_p = yy_cp = yy_bp + 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 215 "htmllex.l"
+#line 221 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -9666,7 +9672,7 @@ case 4:
 yyg->yy_c_buf_p = yy_cp = yy_bp + 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 220 "htmllex.l"
+#line 226 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -9678,7 +9684,7 @@ case 5:
 yyg->yy_c_buf_p = yy_cp = yy_bp + 2;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 225 "htmllex.l"
+#line 231 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -9690,7 +9696,7 @@ case 6:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 230 "htmllex.l"
+#line 236 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -9699,7 +9705,7 @@ YY_RULE_SETUP
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 235 "htmllex.l"
+#line 241 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9707,7 +9713,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 240 "htmllex.l"
+#line 246 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9715,7 +9721,7 @@ YY_RULE_SETUP
 /* Note: www.nba.com had some <! Copyright !> comment */
 case 9:
 YY_RULE_SETUP
-#line 245 "htmllex.l"
+#line 251 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(S_COMMENT2);
@@ -9723,7 +9729,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 250 "htmllex.l"
+#line 256 "htmllex.l"
 {
     UPDATE_COLUMN;
     SETLVAL;
@@ -9734,7 +9740,7 @@ YY_RULE_SETUP
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 257 "htmllex.l"
+#line 263 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9743,7 +9749,7 @@ YY_RULE_SETUP
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 262 "htmllex.l"
+#line 268 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9751,7 +9757,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 267 "htmllex.l"
+#line 273 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9759,7 +9765,7 @@ YY_RULE_SETUP
 /*********************** DOCTYPE ************************/
 case 14:
 YY_RULE_SETUP
-#line 273 "htmllex.l"
+#line 279 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(S_DOCTYPE);
@@ -9767,7 +9773,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 278 "htmllex.l"
+#line 284 "htmllex.l"
 {
     UPDATE_COLUMN;
     SETLVAL;
@@ -9778,7 +9784,7 @@ YY_RULE_SETUP
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 285 "htmllex.l"
+#line 291 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9787,7 +9793,7 @@ YY_RULE_SETUP
 /*********************** CDATA ************************/
 case 17:
 YY_RULE_SETUP
-#line 291 "htmllex.l"
+#line 297 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(S_CDATA);
@@ -9795,7 +9801,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 296 "htmllex.l"
+#line 302 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng-3);
@@ -9807,7 +9813,7 @@ YY_RULE_SETUP
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 304 "htmllex.l"
+#line 310 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9816,7 +9822,7 @@ YY_RULE_SETUP
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 309 "htmllex.l"
+#line 315 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9824,7 +9830,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 314 "htmllex.l"
+#line 320 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9832,7 +9838,7 @@ YY_RULE_SETUP
 /*********************** PI ************************/
 case 22:
 YY_RULE_SETUP
-#line 319 "htmllex.l"
+#line 325 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(S_PI);
@@ -9841,7 +9847,7 @@ YY_RULE_SETUP
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 324 "htmllex.l"
+#line 330 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9849,7 +9855,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 329 "htmllex.l"
+#line 335 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng-2);
@@ -9861,7 +9867,7 @@ YY_RULE_SETUP
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 337 "htmllex.l"
+#line 343 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9869,7 +9875,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 342 "htmllex.l"
+#line 348 "htmllex.l"
 {
     UPDATE_COLUMN;
     SETLVAL;
@@ -9879,7 +9885,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 349 "htmllex.l"
+#line 355 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9891,7 +9897,7 @@ case 28:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 355 "htmllex.l"
+#line 361 "htmllex.l"
 {
     UPDATE_LINE;
     yyextra->tmp_attrs = PyObject_CallObject(yyextra->list_dict, NULL);
@@ -9903,7 +9909,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 364 "htmllex.l"
+#line 370 "htmllex.l"
 {
     /* actually accept a lot of tag chars, which may be illegal,
      but we dont care, it's the browsers job */
@@ -9914,7 +9920,7 @@ YY_RULE_SETUP
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 371 "htmllex.l"
+#line 377 "htmllex.l"
 {
     UPDATE_LINE;
     LOWER_TMP;
@@ -9925,7 +9931,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 379 "htmllex.l"
+#line 385 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(INITIAL);
@@ -9946,7 +9952,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 397 "htmllex.l"
+#line 403 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(INITIAL);
@@ -9968,7 +9974,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 416 "htmllex.l"
+#line 422 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -9977,7 +9983,7 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 421 "htmllex.l"
+#line 427 "htmllex.l"
 {
     UPDATE_LINE;
     SETLVAL;
@@ -9988,7 +9994,7 @@ YY_RULE_SETUP
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 428 "htmllex.l"
+#line 434 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -9996,7 +10002,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 433 "htmllex.l"
+#line 439 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10005,7 +10011,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 439 "htmllex.l"
+#line 445 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10014,7 +10020,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 445 "htmllex.l"
+#line 451 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10023,7 +10029,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 451 "htmllex.l"
+#line 457 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10033,7 +10039,7 @@ YY_RULE_SETUP
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 457 "htmllex.l"
+#line 463 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10046,7 +10052,7 @@ case 41:
 yyg->yy_c_buf_p = yy_cp = yy_bp + 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 463 "htmllex.l"
+#line 469 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10058,7 +10064,7 @@ case 42:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 468 "htmllex.l"
+#line 474 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10070,7 +10076,7 @@ case 43:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 473 "htmllex.l"
+#line 479 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10082,7 +10088,7 @@ case 44:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 478 "htmllex.l"
+#line 484 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10094,7 +10100,7 @@ case 45:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 483 "htmllex.l"
+#line 489 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10106,7 +10112,7 @@ case 46:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 488 "htmllex.l"
+#line 494 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10118,7 +10124,7 @@ case 47:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 493 "htmllex.l"
+#line 499 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10130,7 +10136,7 @@ case 48:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 498 "htmllex.l"
+#line 504 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10138,14 +10144,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 503 "htmllex.l"
+#line 509 "htmllex.l"
 {
     return T_WAIT;
 }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 507 "htmllex.l"
+#line 513 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10155,7 +10161,7 @@ YY_RULE_SETUP
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 513 "htmllex.l"
+#line 519 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10163,7 +10169,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 518 "htmllex.l"
+#line 524 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10172,7 +10178,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 524 "htmllex.l"
+#line 530 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10181,7 +10187,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 530 "htmllex.l"
+#line 536 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10191,7 +10197,7 @@ YY_RULE_SETUP
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 536 "htmllex.l"
+#line 542 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10199,7 +10205,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 541 "htmllex.l"
+#line 547 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10208,7 +10214,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 547 "htmllex.l"
+#line 553 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10217,7 +10223,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 553 "htmllex.l"
+#line 559 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10226,7 +10232,7 @@ YY_RULE_SETUP
 case 59:
 /* rule 59 can match eol */
 YY_RULE_SETUP
-#line 558 "htmllex.l"
+#line 564 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10235,7 +10241,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 564 "htmllex.l"
+#line 570 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10243,7 +10249,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 569 "htmllex.l"
+#line 575 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10252,7 +10258,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 575 "htmllex.l"
+#line 581 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -10260,7 +10266,7 @@ YY_RULE_SETUP
 case 63:
 /* rule 63 can match eol */
 YY_RULE_SETUP
-#line 579 "htmllex.l"
+#line 585 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10268,7 +10274,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 584 "htmllex.l"
+#line 590 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10279,7 +10285,7 @@ YY_RULE_SETUP
 case 65:
 /* rule 65 can match eol */
 YY_RULE_SETUP
-#line 591 "htmllex.l"
+#line 597 "htmllex.l"
 {
     UPDATE_LINE;
     SETLVAL;
@@ -10290,7 +10296,7 @@ YY_RULE_SETUP
 case 66:
 /* rule 66 can match eol */
 YY_RULE_SETUP
-#line 598 "htmllex.l"
+#line 604 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10303,7 +10309,7 @@ case 67:
 yyg->yy_c_buf_p = yy_cp = yy_bp + 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 604 "htmllex.l"
+#line 610 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10315,7 +10321,7 @@ case 68:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 609 "htmllex.l"
+#line 615 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10327,7 +10333,7 @@ case 69:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 614 "htmllex.l"
+#line 620 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10339,7 +10345,7 @@ case 70:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 619 "htmllex.l"
+#line 625 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10351,7 +10357,7 @@ case 71:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 624 "htmllex.l"
+#line 630 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10363,7 +10369,7 @@ case 72:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 629 "htmllex.l"
+#line 635 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10375,7 +10381,7 @@ case 73:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 634 "htmllex.l"
+#line 640 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10383,7 +10389,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 639 "htmllex.l"
+#line 645 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -10391,7 +10397,7 @@ YY_RULE_SETUP
 /*********************** ATTRS ************************/
 case 75:
 YY_RULE_SETUP
-#line 644 "htmllex.l"
+#line 650 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10400,7 +10406,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 650 "htmllex.l"
+#line 656 "htmllex.l"
 {
     UPDATE_COLUMN;
     FLUSH_ATTRS;
@@ -10411,7 +10417,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 658 "htmllex.l"
+#line 664 "htmllex.l"
 {
     UPDATE_COLUMN;
     FLUSH_ATTRS;
@@ -10422,7 +10428,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 666 "htmllex.l"
+#line 672 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10431,7 +10437,7 @@ YY_RULE_SETUP
 case 79:
 /* rule 79 can match eol */
 YY_RULE_SETUP
-#line 671 "htmllex.l"
+#line 677 "htmllex.l"
 {
     UPDATE_LINE;
     BEGIN(S_ATTR3);
@@ -10440,7 +10446,7 @@ YY_RULE_SETUP
 case 80:
 /* rule 80 can match eol */
 YY_RULE_SETUP
-#line 676 "htmllex.l"
+#line 682 "htmllex.l"
 {
     UPDATE_LINE;
     LOWER_TMP;
@@ -10451,7 +10457,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 684 "htmllex.l"
+#line 690 "htmllex.l"
 {
     UPDATE_COLUMN;
     LOWER_TMP;
@@ -10472,7 +10478,7 @@ YY_RULE_SETUP
 case 82:
 /* rule 82 can match eol */
 YY_RULE_SETUP
-#line 701 "htmllex.l"
+#line 707 "htmllex.l"
 {
     /* this also skips whitespace! */
     UPDATE_LINE;
@@ -10480,7 +10486,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 706 "htmllex.l"
+#line 712 "htmllex.l"
 {
     /* backslash escapes seen at freshmeat.net */
     UPDATE_COLUMN;
@@ -10489,7 +10495,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 712 "htmllex.l"
+#line 718 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(S_STRING);
@@ -10497,7 +10503,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 718 "htmllex.l"
+#line 724 "htmllex.l"
 {
     UPDATE_COLUMN;
     BEGIN(S_APOSSTRING);
@@ -10505,7 +10511,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 724 "htmllex.l"
+#line 730 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10514,7 +10520,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 730 "htmllex.l"
+#line 736 "htmllex.l"
 {
     UPDATE_COLUMN;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -10535,14 +10541,14 @@ YY_RULE_SETUP
 case 88:
 /* rule 88 can match eol */
 YY_RULE_SETUP
-#line 747 "htmllex.l"
+#line 753 "htmllex.l"
 {
     UPDATE_LINE;
 }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 751 "htmllex.l"
+#line 757 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10550,7 +10556,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 756 "htmllex.l"
+#line 762 "htmllex.l"
 {
     UPDATE_COLUMN;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -10570,7 +10576,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 773 "htmllex.l"
+#line 779 "htmllex.l"
 {
     UPDATE_COLUMN;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -10591,7 +10597,7 @@ YY_RULE_SETUP
 case 92:
 /* rule 92 can match eol */
 YY_RULE_SETUP
-#line 790 "htmllex.l"
+#line 796 "htmllex.l"
 {
     UPDATE_LINE;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -10609,7 +10615,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 805 "htmllex.l"
+#line 811 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10618,7 +10624,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 811 "htmllex.l"
+#line 817 "htmllex.l"
 {
     UPDATE_COLUMN;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -10637,7 +10643,7 @@ YY_RULE_SETUP
 case 95:
 /* rule 95 can match eol */
 YY_RULE_SETUP
-#line 826 "htmllex.l"
+#line 832 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10645,7 +10651,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 832 "htmllex.l"
+#line 838 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10654,7 +10660,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 838 "htmllex.l"
+#line 844 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10663,7 +10669,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 844 "htmllex.l"
+#line 850 "htmllex.l"
 {
     UPDATE_COLUMN;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -10682,7 +10688,7 @@ YY_RULE_SETUP
 case 99:
 /* rule 99 can match eol */
 YY_RULE_SETUP
-#line 859 "htmllex.l"
+#line 865 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10690,7 +10696,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 864 "htmllex.l"
+#line 870 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10704,7 +10710,7 @@ case 101:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 872 "htmllex.l"
+#line 878 "htmllex.l"
 {
     UPDATE_LINE;
     BEGIN(S_TAGEND);
@@ -10712,7 +10718,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 877 "htmllex.l"
+#line 883 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10721,7 +10727,7 @@ YY_RULE_SETUP
 case 103:
 /* rule 103 can match eol */
 YY_RULE_SETUP
-#line 882 "htmllex.l"
+#line 888 "htmllex.l"
 {
     UPDATE_LINE;
     LOWER_TMP;
@@ -10736,7 +10742,7 @@ case 104:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 890 "htmllex.l"
+#line 896 "htmllex.l"
 {
     UPDATE_LINE;
     LOWER_TMP;
@@ -10752,7 +10758,7 @@ case 105:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 899 "htmllex.l"
+#line 905 "htmllex.l"
 {
     UPDATE_LINE;
     LOWER_TMP;
@@ -10769,7 +10775,7 @@ YY_RULE_SETUP
 case 106:
 /* rule 106 can match eol */
 YY_RULE_SETUP
-#line 912 "htmllex.l"
+#line 918 "htmllex.l"
 {
     UPDATE_LINE;
     /* ignore any trailing garbage of this end tag */
@@ -10778,7 +10784,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 918 "htmllex.l"
+#line 924 "htmllex.l"
 {
     UPDATE_COLUMN;
     LOWER_TMP;
@@ -10790,7 +10796,7 @@ YY_RULE_SETUP
 case 108:
 /* rule 108 can match eol */
 YY_RULE_SETUP
-#line 926 "htmllex.l"
+#line 932 "htmllex.l"
 {
     UPDATE_LINE;
 }
@@ -10801,7 +10807,7 @@ case 109:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 930 "htmllex.l"
+#line 936 "htmllex.l"
 {
     UPDATE_LINE;
     LOWER_TMP;
@@ -10817,7 +10823,7 @@ case 110:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 939 "htmllex.l"
+#line 945 "htmllex.l"
 {
     UPDATE_LINE;
     LOWER_TMP;
@@ -10833,7 +10839,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 952 "htmllex.l"
+#line 958 "htmllex.l"
 {
     return T_WAIT;
 }
@@ -10842,7 +10848,7 @@ YY_RULE_SETUP
 case 112:
 /* rule 112 can match eol */
 YY_RULE_SETUP
-#line 956 "htmllex.l"
+#line 962 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10852,7 +10858,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 963 "htmllex.l"
+#line 969 "htmllex.l"
 {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
@@ -10863,7 +10869,7 @@ YY_RULE_SETUP
 case 114:
 /* rule 114 can match eol */
 YY_RULE_SETUP
-#line 970 "htmllex.l"
+#line 976 "htmllex.l"
 {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
@@ -10873,17 +10879,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 977 "htmllex.l"
+#line 983 "htmllex.l"
 {
     return T_WAIT;
 }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 981 "htmllex.l"
+#line 987 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 10886 "htmllex.c"
+#line 10892 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -12070,7 +12076,7 @@ static int yy_flex_strlen (yyconst char * s , yyscan_t yyscanner)
 #undef YY_DECL_IS_OURS
 #undef YY_DECL
 #endif
-#line 981 "htmllex.l"
+#line 987 "htmllex.l"
 
 
 
