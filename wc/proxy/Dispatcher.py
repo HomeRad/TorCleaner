@@ -42,11 +42,10 @@ from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
 # map of sockets
 socket_map = {}
 
-def create_socket (family, socktype, ssl=False):
-    if ssl:
-        from ssl import ctx
+def create_socket (family, socktype, sslctx=None):
+    if sslctx:
         from OpenSSL import SSL
-        sock = SSL.Connection(ctx, socket.socket(family, socktype))
+        sock = SSL.Connection(sslctx, socket.socket(family, socktype))
     else:
         sock = socket.socket(family, socktype)
         if family==socket.AF_INET and socktype==socket.SOCK_STREAM:
@@ -108,9 +107,9 @@ class Dispatcher (object):
             del socket_map[fd]
 
 
-    def create_socket (self, family, socktype, ssl=False):
+    def create_socket (self, family, socktype, sslctx=None):
         self.family_and_type = family, socktype
-        self.socket = create_socket(family, socktype, ssl=ssl)
+        self.socket = create_socket(family, socktype, sslctx=sslctx)
         self.socket.setblocking(0)
         self.add_channel()
 
