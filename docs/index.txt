@@ -26,6 +26,14 @@ Features
 - per-host access control
 - configurable over a themable web interface
 
+WebCleaner is featured in the `Linux Magazine Issue 43`_.
+The `article`_ is downloadable as PDF.
+
+.. _Linux Magazine Issue 43:
+   http://www.linux-magazine.com/issue/43
+.. _article:
+   http://www.linux-magazine.com/issue/43/Charly_Column.pdf
+
 
 Download
 ========
