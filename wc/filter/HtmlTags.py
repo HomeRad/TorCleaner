@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import sys
+import sys, re
 if __name__=='__main__':
     import os
     sys.path.insert(0, os.getcwd())
