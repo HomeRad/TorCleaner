@@ -9,9 +9,10 @@
     Changed files: wc/filter/rules/RewriteRule.py
   * updated filters:
     o remove _blank and _new targets
+    o remove frame(set) onunload attribute
     o prevent javascript top frame bashing
     o use Calzilla/6.0 as user agent
-    * more ad filters
+    o more ad filters
     Changed files: config/*.zap
   * Removed unneeded guruguru.bmp
   * #define YY_NO_UNISTD_H on Windows systems, fixes build error with
@@ -29,6 +30,8 @@
       wc/gui/FXJavascriptRuleFrame.py
     Changed files: wc/filter/Rewriter.py, conf/{filter.dtd,scripting.zap},
       wc/gui/FXRuleFrameFactory.py
+  * rule renaming does not remove the rule type anymore
+    Changed files: wc/gui/FXRuleFrame.py
 
 1.6
   * updated filters:
