@@ -8,42 +8,32 @@ separate this tool from the webcleaner source.
 Developer note: you have to create() all windows which are created at
 runtime. This is also a FAQ entry in the FOX documentation.
 """
-#    Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000,2001  Bastian Kleineidam
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import sys
 if sys.version[:5] < "2.0":
     raise SystemExit, "This program requires Python 2.0 or later."
 
-from FXPy.fox import FXApp, FXRGB
+from wc.gui.ConfWindow import ConfWindow
+from wc.gui.ToolApp import ToolApp
 
 if __name__=='__main__':
-    app = FXApp("webcleanerconf", "TheDude")
-    # set default color scheme
-    app.reg().writeColorEntry("SETTINGS","basecolor",FXRGB(141,157,170))
-    app.reg().writeColorEntry("SETTINGS","backcolor",FXRGB(211,223,232))
-    app.reg().writeColorEntry("SETTINGS","hilitecolor",FXRGB(226,225,220))
-    app.reg().writeColorEntry("SETTINGS","shadowcolor",FXRGB(158,165,191))
-    app.reg().writeColorEntry("SETTINGS","bordercolor",FXRGB(86,90,104))
-    app.reg().writeColorEntry("SETTINGS","selbackcolor",FXRGB(20,58,84))
-    app.init(sys.argv)
-    # dirty flag for the apply button
-    app.dirty = 0
+    app = ToolApp("webcleanerconf")
     # create and run
-    from wc.gui.ConfWindow import ConfWindow
     ConfWindow(app)
     app.create()
     app.run()

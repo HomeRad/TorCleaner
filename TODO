@@ -1,8 +1,8 @@
 TODO
 
-- documentation of the GUI tools
 - webcleanerconf: sortable filters (with up/down)
 - parent proxy authentication
+- issue error callbacks in HTML parser
 
 WONTDO
 

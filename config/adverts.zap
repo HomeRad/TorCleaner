@@ -103,7 +103,7 @@
 
 <image title="Banner at rootprompt.org"
  desc="The website rootprompt.org has a banner image."
- matchurl="^https?://(www\.)?rootprompt\.org"
+ matchurl="rootprompt\.org"
  width="465"
  height="58"/>
 

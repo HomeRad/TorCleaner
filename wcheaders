@@ -24,22 +24,12 @@ import sys
 if sys.version[:5] < "2.0":
     raise SystemExit, "This program requires Python 2.0 or later."
 
-from FXPy.fox import FXApp, FXRGB
+from wc.gui.ToolApp import ToolApp
+from wc.gui.HeaderWindow import HeaderWindow
 
 if __name__=='__main__':
-    app = FXApp("wcheaders", "TheDude")
-    # set default color scheme
-    app.reg().writeColorEntry("SETTINGS","basecolor",FXRGB(141,157,170))
-    app.reg().writeColorEntry("SETTINGS","backcolor",FXRGB(211,223,232))
-    app.reg().writeColorEntry("SETTINGS","hilitecolor",FXRGB(226,225,220))
-    app.reg().writeColorEntry("SETTINGS","shadowcolor",FXRGB(158,165,191))
-    app.reg().writeColorEntry("SETTINGS","bordercolor",FXRGB(86,90,104))
-    app.reg().writeColorEntry("SETTINGS","selbackcolor",FXRGB(20,58,84))
-    app.init(sys.argv)
-    # dirty flag for the apply button
-    app.dirty = 0
+    app = ToolApp("wcheaders")
     # create and run
-    from wc.gui.HeaderWindow import HeaderWindow
     HeaderWindow(app)
     app.create()
     app.run()

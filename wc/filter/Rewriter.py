@@ -192,16 +192,16 @@ class HtmlFilter (HtmlParser):
     def pi (self, data):
         self.buffer_append_data([DATA, "<?%s?>"%data])
 
-    def errorfun (self, line, col, msg, name):
-        print >> sys.stderr, name, _("parsing %s:%d:%d: %s") % \
-            (self.document, line, col, msg.strip())
+    def errorfun (self, msg, name):
+        print >> sys.stderr, name, _("parsing %s: %s") % \
+            (self.document, msg)
 
-    def _error (self, line, col, msg):
-        self.errorfun(line, col, msg, "error")
+    def _error (self, msg):
+        self.errorfun(msg, "error")
 
 
-    def _warning (self, line, col, msg):
-        self.errorfun(line, col, msg, "warning")
+    def _warning (self, msg):
+        self.errorfun(msg, "warning")
 
-    def _fatalError (self, line, col, msg):
-        self.errorfun(line, col, msg, "fatalError")
+    def _fatalError (self, msg):
+        self.errorfun(msg, "fatalError")

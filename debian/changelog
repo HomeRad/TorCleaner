@@ -1,8 +1,13 @@
 webcleaner (0.43) unstable; urgency=low
 
   * wc/parser/htmllex.l: fix segfault with unterminated end tags
+  * wc/gui/ToolApp.py: factorize common app code
+  * wc/gui/FXHeaderRuleFrame.py: dont accept empty header name
+  * wc/parser/htmlsax.h: add error string
+  * wc/parser/htmlparse.y: check error string
+  * wc/gui/__init__.py: updated webcleanerconf documentation
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon,  3 Jun 2002 21:00:19 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Mon,  3 Jun 2002 23:34:07 +0200
 
 webcleaner (0.42) unstable; urgency=low
 
