@@ -18,7 +18,7 @@ class HttpProxyClient (object):
        Buffered data is None on error, else the content string.
     """
 
-    def __init__ (self, handler, args):
+    def __init__ (self, handler, args, localhost):
         """args is a tuple (url, JS version)"""
         self.handler = handler
         self.args = args
@@ -31,8 +31,9 @@ class HttpProxyClient (object):
             self.document = '/'
         self.connected = True
         self.addr = ('localhost', 80)
+        self.localhost = localhost
         self.isredirect = False
-        attrs = wc.filter.get_filterattrs(self.url,
+        attrs = wc.filter.get_filterattrs(self.url, self.localhost,
                                           [wc.filter.STAGE_REQUEST])
         # note: use HTTP/1.0 for JavaScript
         request = "GET %s HTTP/1.0" % self.url

@@ -59,6 +59,7 @@ class ClientServerMatchmaker (object):
         """
         self.sslserver = sslserver
         self.client = client
+        self.localhost = client.localhost
         self.request = request
         self.headers = headers
         self.content = content

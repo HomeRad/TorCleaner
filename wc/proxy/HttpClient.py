@@ -58,6 +58,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """initialize connection data, test if client connection is allowed"""
         super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
+        self.localhost = self.socket.getsockname()[0]
         wc.log.debug(wc.LOG_PROXY, "Connection to %s from %s",
                      self.socket.getsockname(), self.addr)
         self.allow = wc.proxy.Allowed.AllowedHttpClient()
@@ -153,7 +154,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, request)
         # filter request
         stage = wc.filter.STAGE_REQUEST
-        self.attrs = wc.filter.get_filterattrs(self.url, [stage])
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                                               self.localhost, [stage])
         request = wc.filter.applyfilter(stage, request, "finish", self.attrs)
         self.request = request
         # final request checking
@@ -239,7 +241,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.fix_request_headers(msg)
         clientheaders = msg.copy()
         stage = wc.filter.STAGE_REQUEST_HEADER
-        self.attrs = wc.filter.get_filterattrs(self.url, [stage],
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                       self.localhost, [stage],
                        clientheaders=clientheaders,
                        headers=msg)
         self.set_persistent(msg, self.http_ver)

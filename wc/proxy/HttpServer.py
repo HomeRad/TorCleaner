@@ -236,7 +236,8 @@ class HttpServer (wc.proxy.Server.Server):
             self.statuscode = 200
         self.state = 'headers'
         stage = wc.filter.STAGE_RESPONSE
-        self.attrs = wc.filter.get_filterattrs(self.url, [])
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                                               self.client.localhost, [])
         self.response = wc.filter.applyfilter(stage, self.response,
                               "finish", self.attrs).strip()
         if self.statuscode >= 400:
@@ -272,7 +273,8 @@ class HttpServer (wc.proxy.Server.Server):
         self.set_persistent(msg,
                      wc.proxy.ServerPool.serverpool.http_versions[self.addr])
         stage = wc.filter.STAGE_RESPONSE_HEADER
-        self.attrs = wc.filter.get_filterattrs(self.url, [stage],
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                        self.client.localhost, [stage],
                         clientheaders=self.client.headers,
                         serverheaders=serverheaders)
         try:
@@ -300,7 +302,8 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
-        self.attrs = wc.filter.get_filterattrs(self.url, FilterStages,
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                                     self.client.localhost, FilterStages,
                                      clientheaders=self.client.headers,
                                      serverheaders=serverheaders,
                                      headers=self.headers)
@@ -361,10 +364,10 @@ class HttpServer (wc.proxy.Server.Server):
         self.statuscode = 302
         response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
         headers = wc.proxy.Headers.WcMessage()
+        # XXX content type adaption?
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://%s:%d/rated.html?%s\r' % \
-               (self.client.client.socket.getsockname()[0],
-                wc.configuration.config['port'], query)
+               (self.client.localhost, wc.configuration.config['port'], query)
         headers['Content-Length'] = '%d\r' % len(msg)
         wc.log.debug(wc.LOG_PROXY, "%s headers\n%s", self, headers)
         self.client.server_response(self, response, self.statuscode, headers)
