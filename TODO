@@ -2,11 +2,6 @@ TODO
 
 version 2.24 and above
 
-- UTF-8 encoded "" (gro geschriebene &Auml;) werden einfach                                 
-  rausgefiltert. (Siehe http://de.wikipedia.org/wiki/Wasserzeichen                            
-  (http://tinyurl.com/3oc5a) Abschnitt "Merkmale" unter "Robustheit" als                      
-  Beispiel)                                                                                   
-
 - Geht net:
   http://msdn.microsoft.com/library/shared/deeptree/bot/bot.asp?dtcnfg=/library/deeptreeconfig.xml
 
