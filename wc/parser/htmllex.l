@@ -330,7 +330,12 @@ RX_DATA [-a-zA-Z0-9_:]+
     BEGIN(S_PI);
 }
 
-<S_PI>\?*\?> {
+<S_PI>[^?>]+ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_PI>\?+> {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng-2);
     SETLVAL;
@@ -338,14 +343,16 @@ RX_DATA [-a-zA-Z0-9_:]+
     RETURN(T_PI);
 }
 
-<S_PI>[^?]+ {
+<S_PI>\?+[^?>]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
 
-<S_PI>\?+[^?>]+ {
+<S_PI>> {
     UPDATE_BUFPOS;
-    APPEND_TO_TMP(yyleng);
+    SETLVAL;
+    BEGIN(INITIAL);
+    RETURN(T_PI);
 }
 
 <S_PI>. {
