@@ -106,6 +106,7 @@ class HtmlFilter (HtmlParser,JSListener):
         self.url = url or "unknown"
         if self.javascript:
             self.jsEnv = jslib.new_jsenv()
+            self.output_counter = 0
             self.popup_counter = 0
 
     def __repr__ (self):
@@ -263,27 +264,31 @@ class HtmlFilter (HtmlParser,JSListener):
             mo = re.search(r'(?i)javascript(?P<num>\d\.\d)', language)
             if mo:
                 ver = float(mo.group('num'))
-        self.jsScript(script, ver)
-        return 1
+        return self.jsScript(script, ver)
 
 
     def jsScript (self, script, ver):
-        """execute given script with javascript version ver"""
+        """execute given script with javascript version ver
+           return True if the script generates any output, else False"""
         #debug(HURT_ME_PLENTY, "jsScript", script, ver)
+        self.output_counter = 0
         self.jsEnv.attachListener(self)
         self.jsfilter = HtmlFilter(self.rules, self.url,
                  comments=self.comments, javascript=self.javascript)
         self.jsEnv.executeScript(script, ver)
         self.jsEnv.detachListener(self)
-        self.jsfilter.flush()
-        self.data.append(self.jsfilter.flushbuf())
-        self.buffer += self.jsfilter.buffer
-        self.rulestack += self.jsfilter.rulestack
+        if self.output_counter:
+            self.jsfilter.flush()
+            self.data.append(self.jsfilter.flushbuf())
+            self.buffer += self.jsfilter.buffer
+            self.rulestack += self.jsfilter.rulestack
         self.jsfilter = None
+        return self.output_counter
 
 
     def processData (self, data):
         # parse recursively
+        self.output_counter += 1
         self.jsfilter.feed(data)
 
 
@@ -308,8 +313,10 @@ class HtmlFilter (HtmlParser,JSListener):
                     rule.filter_complete(pos, self.buffer)
                     filtered = 1
                     break
-        if not filtered and self.javascript and tag=='script':
-            self.jsEndElement(tag)
+        if not filtered and self.javascript and tag=='script' and \
+            self.jsEndElement(tag):
+            del self.buffer[-1]
+            del self.buffer[-1]
         else:
             self.buffer.append((ENDTAG, tag))
         if not self.rulestack:
@@ -317,24 +324,29 @@ class HtmlFilter (HtmlParser,JSListener):
 
 
     def jsEndElement (self, tag):
-        """parse generated html for scripts"""
-        if not self.buffer:
-            print >>sys.stderr, "empty buffer on </script>"
+        """parse generated html for scripts
+           return True if the script generates any output, else False"""
+        if len(self.buffer)<2:
             return
         if self.buffer[-1][0]!=DATA:
             print >>sys.stderr, "missing data for </script>", self.buffer[-1:]
             return
         script = self.buffer[-1][1].strip()
-        del self.buffer[-1]
-        if not (self.buffer and self.buffer[-1][0]==STARTTAG and \
-                self.buffer[-1][1]=='script'):
+        if not (self.buffer[-2][0]==STARTTAG and \
+                self.buffer[-2][1]=='script'):
             # there was a <script src="..."> already
             return
-        del self.buffer[-1]
+        # remove html comments
         if script.startswith("<!--"):
-            script = script[4:].strip()
+            i = script.index('\n')
+            if i==-1:
+                script = script[4:]
+            else:
+                script = script[(i+1):]
+        if script.endswith("-->"):
+            script = script[:-3]
         if not script: return
-        self.jsScript(script, 0.0)
+        return self.jsScript(script, 0.0)
 
 
     def doctype (self, data):

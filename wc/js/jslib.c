@@ -97,7 +97,6 @@ disp_error:
 }
 
 
-// XXX error check
 int dispatchPopupNotification (JSEnvObject* env) {
     PyObject* keys;
     int size;
@@ -121,7 +120,6 @@ dispp_error:
 }
 
 
-// XXX error checking
 static void errorReporter (JSContext *cx, const char *msg, JSErrorReport *report) {
     PyObject* sys;
     PyObject* stderr;
@@ -184,30 +182,70 @@ static JSBool cookieSetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
 }
 
 
-// XXX error check
 static JSBool onloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
     JSEnvObject* env = getEnvironment(cx);
     PyObject* functup;
+    PyObject* delay = NULL;
+    PyObject* funcname = NULL;
     JSFunction* func = JS_ValueToFunction(cx, *vp);
     if (!func) return JS_FALSE;
-    functup = PyTuple_New(2);
-    PyTuple_SetItem(functup, 0, PyInt_FromLong(2000));
-    PyTuple_SetItem(functup, 1, PyString_FromFormat("%s%s", JS_GetFunctionName(func), "()"));
-    PyList_Append(env->scheduled_actions, functup);
+    if (!(functup = PyTuple_New(2))) return JS_FALSE;
+    if (!(delay = PyInt_FromLong(2000))) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (PyTuple_SetItem(functup, 0, delay)!=0) {
+	// remember: SetItem has ownership of delay now
+	Py_DECREF(functup);
+	return JS_FALSE;
+    }
+    if (!(funcname = PyString_FromFormat("%s%s", JS_GetFunctionName(func), "()"))) { 
+	Py_DECREF(functup);
+	return JS_FALSE;
+    }
+    if (PyTuple_SetItem(functup, 1, funcname)!=0) {
+	// remember: SetItem has ownership of delay and funcname now
+	Py_DECREF(functup);
+	return JS_FALSE;
+    }
+    if (PyList_Append(env->scheduled_actions, functup)!=0) {
+	Py_DECREF(functup);
+	return JS_FALSE;
+    }
     return JS_TRUE;
 }
 
 
-// XXX error check
 static JSBool onunloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
     JSEnvObject* env = getEnvironment(cx);
     PyObject* functup;
+    PyObject* delay = NULL;
+    PyObject* funcname = NULL;
     JSFunction* func = JS_ValueToFunction(cx, *vp);
     if (!func) return JS_FALSE;
-    functup = PyTuple_New(2);
-    PyTuple_SetItem(functup, 0, PyInt_FromLong(10000));
-    PyTuple_SetItem(functup, 1, PyString_FromFormat("%s%s", JS_GetFunctionName(func), "()"));
-    PyList_Append(env->scheduled_actions, functup);
+    if (!(functup = PyTuple_New(2))) return JS_FALSE;
+    if (!(delay = PyInt_FromLong(2000))) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (PyTuple_SetItem(functup, 0, delay)!=0) {
+	// remember: SetItem has ownership of delay now
+	Py_DECREF(functup);
+	return JS_FALSE;
+    }
+    if (!(funcname = PyString_FromFormat("%s%s", JS_GetFunctionName(func), "()"))) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (PyTuple_SetItem(functup, 1, funcname)!=0) {
+	// remember: SetItem has ownership of delay and funcname now
+	Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (PyList_Append(env->scheduled_actions, functup)!=0) {
+	Py_DECREF(functup);
+	return JS_FALSE;
+    }
     return JS_TRUE;
 }
 
@@ -225,30 +263,48 @@ static JSBool windowOpen (JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 }
 
 
-// XXX error check
 static JSBool setTimeout (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
     JSEnvObject* env;
-    PyObject* functup;
+    PyObject* functup = NULL;
+    PyObject* delay = NULL;
+    PyObject* funcname = NULL;
     static int idc = 1;
     *rval = INT_TO_JSVAL(idc++);
     if (argc < 2)
         return JS_TRUE;
     env = getEnvironment(cx);
-    functup = PyTuple_New(2);
-    PyTuple_SetItem(functup, 0, PyInt_FromLong(JSVAL_TO_INT(argv[1])));
-    PyTuple_SetItem(functup, 1, PyString_FromString(JS_GetStringBytes(JS_ValueToString(cx, argv[0]))));
-    PyList_Append(env->scheduled_actions, functup);
+    if (!(functup = PyTuple_New(2))) return JS_FALSE;
+    if (!(delay = PyInt_FromLong(JSVAL_TO_INT(argv[1])))) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (PyTuple_SetItem(functup, 0, delay)!=0) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (!(funcname = PyString_FromString(JS_GetStringBytes(JS_ValueToString(cx, argv[0]))))) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (PyTuple_SetItem(functup, 1, funcname)!=0) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
+    if (PyList_Append(env->scheduled_actions, functup)!=0) {
+        Py_DECREF(functup);
+        return JS_FALSE;
+    }
     return JS_TRUE;
 }
 
 
-// XXX error check
 static JSBool documentWrite (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
     PyObject* data;
     *rval = JSVAL_VOID;
     if (argc < 1)
         return JS_TRUE;
     data = PyString_FromString(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+    if (!data) return JS_FALSE;
     return (dispatchOutput(getEnvironment(cx), data)==0 ? JS_TRUE : JS_FALSE);
 }
 
@@ -259,6 +315,7 @@ static JSBool documentWriteln (JSContext *cx, JSObject *obj, uintN argc, jsval *
     if (argc < 1)
         return JS_TRUE;
     data = PyString_FromFormat("%s\r\n", JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+    if (!data) return JS_FALSE;
     return (dispatchOutput(getEnvironment(cx), data)==0 ? JS_TRUE : JS_FALSE);
 }
 
@@ -267,7 +324,11 @@ static JSBool imageConstructor (JSContext *cx, JSObject *obj, uintN argc, jsval 
     JSObject* image_obj = JS_NewObject(cx, &getEnvironment(cx)->image_class, 0, 0);
     if (!image_obj)
         return JS_FALSE;
-    JS_DefineProperty(cx, image_obj, "complete", JSVAL_TRUE, 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT|JSPROP_READONLY);
+    if (JS_DefineProperty(cx, image_obj, "complete", JSVAL_TRUE, 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_PERMANENT|JSPROP_READONLY)
+        ==JS_FALSE) {
+        return JS_FALSE;
+    }
     *rval = OBJECT_TO_JSVAL(image_obj);
     return JS_TRUE;
 }
@@ -293,7 +354,6 @@ static JSBool doNothing (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
 }
 
 
-// XXX error check
 static JSBool wcDebugLog (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
     PyObject* sys;
     PyObject* stderr;
@@ -719,7 +779,7 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
         ==JS_FALSE) {
         return shutdown(env, "Could not set location.search property");
     }
-    // init navigation object
+    // init navigator object
     if (!(nav_obj=JS_DefineObject(env->ctx, env->global_obj, "navigator",
                                   &env->navigator_class, 0,
                                   JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
@@ -750,6 +810,12 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
     }
     if (JS_DefineProperty(env->ctx, nav_obj, "userAgent",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(env->ctx, "Mozilla/3.01Gold (Win95; I)")), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
+        ==JS_FALSE) {
+        return shutdown(env, "Could not set navigator.userAgent property");
+    }
+    if (JS_DefineProperty(env->ctx, nav_obj, "platform",
+                          STRING_TO_JSVAL(JS_NewStringCopyZ(env->ctx, "Windows")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
         return shutdown(env, "Could not set navigator.userAgent property");
