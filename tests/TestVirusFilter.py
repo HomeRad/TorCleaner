@@ -15,7 +15,7 @@ class TestVirusFilter (unittest.TestCase):
        If you change any of the *.zap filter configs, tests can fail..."""
 
     def setUp (self):
-        wc.set_config(wc.Configuration())
+        wc.config = wc.Configuration()
         wc.config['filters'] = ['VirusFilter']
         wc.config.init_filter_modules()
         initlog(os.path.join("test", "logging.conf"))
