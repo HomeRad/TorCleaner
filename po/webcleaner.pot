@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Jul  2 16:50:52 2003\n"
+"POT-Creation-Date: Thu Jul 10 01:41:41 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,7 +56,31 @@ msgstr ""
 msgid "PICS %s match"
 msgstr ""
 
+msgid "%d rule"
+msgstr ""
+
+msgid "%d rules"
+msgstr ""
+
 msgid "Invalid pics rule tag name `%s', check your configuration"
+msgstr ""
+
+msgid "Tag"
+msgstr ""
+
+msgid "Tag name"
+msgstr ""
+
+msgid "Attribute"
+msgstr ""
+
+msgid "Attribute value"
+msgstr ""
+
+msgid "Complete tag"
+msgstr ""
+
+msgid "Enclosed block"
 msgstr ""
 
 msgid ""
@@ -109,6 +133,9 @@ msgstr ""
 msgid ""
 "Convert images to low quality JPEG files to reduce\n"
 "bandwidth"
+msgstr ""
+
+msgid "Remove images with certain sizes"
 msgstr ""
 
 msgid "Remove Folder"
@@ -228,7 +255,7 @@ msgstr ""
 msgid "Up"
 msgstr ""
 
-msgid "Dwn"
+msgid "Down"
 msgstr ""
 
 msgid "filter selection"
@@ -246,7 +273,7 @@ msgstr ""
 msgid "Add Hostname"
 msgstr ""
 
-msgid "Hostname:"
+msgid "Hostname"
 msgstr ""
 
 msgid "&Ok"
@@ -264,7 +291,7 @@ msgstr ""
 msgid "Edit Hostname"
 msgstr ""
 
-msgid "New hostname:"
+msgid "New hostname"
 msgstr ""
 
 msgid "Proxy Status"
@@ -353,10 +380,7 @@ msgstr ""
 msgid "Replacement:\tReplacement value (empty means delete)"
 msgstr ""
 
-msgid "Tag name:"
-msgstr ""
-
-msgid "Attributes:"
+msgid "Attributes"
 msgstr ""
 
 msgid "Name"
@@ -365,40 +389,19 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-msgid "Enclosed block:"
+msgid "Replace part"
 msgstr ""
 
-msgid "Replace part:"
+msgid "Replace value"
 msgstr ""
 
-msgid "Tag"
+msgid "Empty tag name"
 msgstr ""
 
-msgid "Tag name"
-msgstr ""
-
-msgid "Attribute"
-msgstr ""
-
-msgid "Attribute value"
-msgstr ""
-
-msgid "Complete tag"
-msgstr ""
-
-msgid "Enclosed block"
-msgstr ""
-
-msgid "Replace value:"
+msgid "Error"
 msgstr ""
 
 msgid "Add Attribute"
-msgstr ""
-
-msgid "Name:"
-msgstr ""
-
-msgid "Value:"
 msgstr ""
 
 msgid "Empty attribute name"
@@ -413,10 +416,10 @@ msgstr ""
 msgid "Edit Attribute"
 msgstr ""
 
-msgid "New name:"
+msgid "New name"
 msgstr ""
 
-msgid "New value:"
+msgid "New value"
 msgstr ""
 
 msgid "disable\tYou can disable a single rule or all rules in a folder."
@@ -436,10 +439,10 @@ msgstr ""
 msgid "Description:\tA description what this filter rule does."
 msgstr ""
 
-msgid " rule"
+msgid "rule"
 msgstr ""
 
-msgid "empty title"
+msgid "Empty title"
 msgstr ""
 
 msgid "WebCleaner is not running"
@@ -463,7 +466,7 @@ msgstr ""
 msgid "Add Header"
 msgstr ""
 
-msgid "Header:"
+msgid "Header"
 msgstr ""
 
 msgid "Empty header"
@@ -478,7 +481,7 @@ msgstr ""
 msgid "Edit Header"
 msgstr ""
 
-msgid "New header:"
+msgid "New header"
 msgstr ""
 
 msgid "Save options"
@@ -622,10 +625,16 @@ msgstr ""
 msgid "Not Found"
 msgstr ""
 
+msgid "Internal Error"
+msgstr ""
+
 msgid "Blocked by %s"
 msgstr ""
 
-msgid "%s proxy configuration"
+msgid "Proxy configuration"
+msgstr ""
+
+msgid "Filter configuration"
 msgstr ""
 
 msgid "Port number"
@@ -724,13 +733,322 @@ msgstr ""
 msgid "%s error"
 msgstr ""
 
-msgid "%s filter configuration"
+msgid "Remove folder"
 msgstr ""
 
-msgid "Proxy configuration"
+msgid "Rename folder"
 msgstr ""
 
-msgid "Filter configuration"
+msgid "Enable folder"
+msgstr ""
+
+msgid "Disable folder"
+msgstr ""
+
+msgid "Disabled folder icon"
+msgstr ""
+
+msgid "Folder icon"
+msgstr ""
+
+msgid "Remove rule"
+msgstr ""
+
+msgid "Enable rule"
+msgstr ""
+
+msgid "Disable rule"
+msgstr ""
+
+msgid "Disabled rule icon"
+msgstr ""
+
+msgid "Rule icon"
+msgstr ""
+
+msgid "New folder"
+msgstr ""
+
+msgid "New rule"
+msgstr ""
+
+msgid "Folders"
+msgstr ""
+
+msgid "Folder Rules"
+msgstr ""
+
+msgid "Rule"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Match url"
+msgstr ""
+
+msgid "Don't match url"
+msgstr ""
+
+msgid "URL scheme"
+msgstr ""
+
+msgid "URL host"
+msgstr ""
+
+msgid "URL port"
+msgstr ""
+
+msgid "URL path"
+msgstr ""
+
+msgid "URL parameters"
+msgstr ""
+
+msgid "URL query"
+msgstr ""
+
+msgid "URL fragment"
+msgstr ""
+
+msgid "Blocked URL"
+msgstr ""
+
+msgid "Filename"
+msgstr ""
+
+msgid "Header name"
+msgstr ""
+
+msgid "Header value"
+msgstr ""
+
+msgid "Image width"
+msgstr ""
+
+msgid "Image height"
+msgstr ""
+
+msgid "Blocked image url"
+msgstr ""
+
+msgid "Replace regex"
+msgstr ""
+
+msgid "Replacement"
+msgstr ""
+
+msgid "Remove selected attributes"
+msgstr ""
+
+msgid "Add attribute"
+msgstr ""
+
+msgid "Fallback URL"
+msgstr ""
+
+msgid "Service"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "PICS ratings"
+msgstr ""
+
+msgid "Really remove this folder?"
+msgstr ""
+
+msgid "Really remove this rule?"
+msgstr ""
+
+msgid "Move rule up"
+msgstr ""
+
+msgid "Move rule down"
+msgstr ""
+
+msgid "Invalid folder index"
+msgstr ""
+
+msgid "Invalid filter index"
+msgstr ""
+
+msgid "Empty folder name"
+msgstr ""
+
+msgid "New folder %s created"
+msgstr ""
+
+msgid "Folder successfully renamed"
+msgstr ""
+
+msgid "Folder already disabled"
+msgstr ""
+
+msgid "Folder disabled"
+msgstr ""
+
+msgid "Folder already enabled"
+msgstr ""
+
+msgid "Folder enabled"
+msgstr ""
+
+msgid "Folder removed"
+msgstr ""
+
+msgid "Invalid rule type"
+msgstr ""
+
+msgid "New rule created"
+msgstr ""
+
+msgid "Rule already disabled"
+msgstr ""
+
+msgid "Rule disabled"
+msgstr ""
+
+msgid "Rule already enabled"
+msgstr ""
+
+msgid "Rule enabled"
+msgstr ""
+
+msgid "Rule removed"
+msgstr ""
+
+msgid "Rewrite attribute added"
+msgstr ""
+
+msgid "Rewrite attributes removed"
+msgstr ""
+
+msgid "Folder moved up"
+msgstr ""
+
+msgid "Invalid folder move up id"
+msgstr ""
+
+msgid "Folder moved down"
+msgstr ""
+
+msgid "Invalid folder move down id"
+msgstr ""
+
+msgid "Rule moved up"
+msgstr ""
+
+msgid "Invalid rule move up id"
+msgstr ""
+
+msgid "Rule moved down"
+msgstr ""
+
+msgid "Invalid rule move down id"
+msgstr ""
+
+msgid "Empty rule title"
+msgstr ""
+
+msgid "Rule title changed"
+msgstr ""
+
+msgid "Rule description changed"
+msgstr ""
+
+msgid "Rule match url changed"
+msgstr ""
+
+msgid "Rule dontmatch url changed"
+msgstr ""
+
+msgid "Rule url scheme changed"
+msgstr ""
+
+msgid "Rule url host changed"
+msgstr ""
+
+msgid "Rule url port changed"
+msgstr ""
+
+msgid "Rule url path changed"
+msgstr ""
+
+msgid "Rule url parameters changed"
+msgstr ""
+
+msgid "Rule url query changed"
+msgstr ""
+
+msgid "Rule url fragment changed"
+msgstr ""
+
+msgid "Rule blocked url changed"
+msgstr ""
+
+msgid "Empty header rule name"
+msgstr ""
+
+msgid "Rule header name changed"
+msgstr ""
+
+msgid "Rule header value changed"
+msgstr ""
+
+msgid "Invalid image width value"
+msgstr ""
+
+msgid "Rule image width changed"
+msgstr ""
+
+msgid "Invalid image height value"
+msgstr ""
+
+msgid "Rule image height changed"
+msgstr ""
+
+msgid "PICS service %s enabled"
+msgstr ""
+
+msgid "PICS service %s disabled"
+msgstr ""
+
+msgid "PICS service %s, category %s enabled"
+msgstr ""
+
+msgid "PICS service %s, category %s disabled"
+msgstr ""
+
+msgid "Empty replace search value"
+msgstr ""
+
+msgid "Rule replace search changed"
+msgstr ""
+
+msgid "Rule replacement changed"
+msgstr ""
+
+msgid "Empty rewrite tag name"
+msgstr ""
+
+msgid "Rule rewrite tag changed"
+msgstr ""
+
+msgid "Rule rewrite enclosed block changed"
+msgstr ""
+
+msgid "Invalid part value %s"
+msgstr ""
+
+msgid "Rule rewrite part changed"
+msgstr ""
+
+msgid "Rule rewrite replacement changed"
 msgstr ""
 
 msgid ""
