@@ -18,6 +18,8 @@ class AllowedHttpClient (object):
         self.public_docs = [
           '/blocked.html',
           '/blocked.png',
+          '/blocked.swf',
+          '/blocked.js',
           '/error.html',
           '/wc.css',
           '/adminpass.html',
