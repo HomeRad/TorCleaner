@@ -2,7 +2,6 @@ SUBDIRS 		= po libjs
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
-ENV = env http_proxy="" ftp_proxy="" LANG=C PYTHONPATH=$(CURDIR)
 WCVERSION := $(shell $(PYTHON) setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
@@ -46,24 +45,24 @@ dist-hook:
 	rm -f webcleaner-md5sums.txt
 
 testwc:
-	$(ENV) $(PYTHON) test/regrtest.py
+	test/run.sh test/regrtest.py
 
 testgen:
-	$(ENV) $(PYTHON) test/regrtest.py -g
+	test/run.sh test/regrtest.py -g
 
 # filter and parse random data
 testrandom:
 	@echo "parse random data..."
 	rm -f randomparse.txt
-	head -c 20000 /dev/urandom | $(ENV) $(PYTHON) test/parsefile.py - > /dev/null 2> randomparse.txt
+	head -c 20000 /dev/urandom | test/run.sh test/parsefile.py - > /dev/null 2> randomparse.txt
 	@echo "done."
 	rm -f randomfilter.txt
 	@echo "filter random data..."
-	head -c 20000 /dev/urandom | $(ENV) $(PYTHON) test/filterfile.py - > /dev/null 2> randomfilter.txt
+	head -c 20000 /dev/urandom | test/run.sh test/filterfile.py - > /dev/null 2> randomfilter.txt
 	@echo "done."
 
 testupdate:
-	$(ENV) $(PYTHON) wc/update.py
+	test/run.sh wc/update.py
 
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
