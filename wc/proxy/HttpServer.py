@@ -193,7 +193,6 @@ class HttpServer(Server):
             self.state = 'response'
             return
 
-        wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
         if self.bytes_remaining is not None:
             for ro in config['mime_content_rewriting']:
                 if ro.match(self.headers.get('content-type')):
@@ -223,7 +222,7 @@ class HttpServer(Server):
             gm = mimetypes.guess_type(self.document)
             self.headers['content-encoding'] = gm[1]
             self.headers['content-type'] = gm[0]
-
+        # uncompress server-compressed content
         if self.headers.get('content-encoding')=='gzip':
             for ro in config['mime_content_rewriting']:
                 if ro.match(self.headers.get('content-type')):
@@ -238,8 +237,10 @@ class HttpServer(Server):
                         elif re.match('(?i)content-encoding:', h):
                             self.headers.headers.remove(h)
                     break
-        self.client.server_response(self.response, self.headers)
+        # initStateObject can modify headers (see Compress.py)!
         self.attrs = initStateObjects(self.headers, self.url)
+        wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
+        self.client.server_response(self.response, self.headers)
         self.attrs['nofilter'] = self.nofilter['nofilter']
         if ((response and response[1] in ('204', '304')) or
             self.method == 'HEAD'):
