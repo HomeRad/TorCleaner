@@ -752,6 +752,11 @@ static PyObject* JSEnv_new(PyObject* self, PyObject* args) {
                            1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global open function");
     }
+    /* note: window.createPopup() is an IE extension */
+    if (!JS_DefineFunction(env->ctx, env->global_obj, "createPopup", &windowOpen,
+                           0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
+        return shutdown(env, "Could not set global createPopup function");
+    }
     if (!JS_DefineFunction(env->ctx, env->global_obj, "setTimeout", &setTimeout,
                            2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(env, "Could not set global setTimeout function");
