@@ -1,0 +1,2 @@
+#!/bin/sh
+anytopnm < $1 | pnmscale -xysize 16 16 | ppmtowinicon > favicon.ico
