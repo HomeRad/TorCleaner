@@ -2,6 +2,7 @@ include MANIFEST.in
 include README
 include TODO
 include cross-build.sh
+include noop
 include proxy.pac
 include webcleaner
 include webcleaner-service
