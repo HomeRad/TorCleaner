@@ -48,6 +48,7 @@ clean-log:
 
 # to build in the current directory
 localbuild: all
+	$(MAKE) -C wc/HtmlParser
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-$(PYVER)/wc/HtmlParser/htmlsax.so wc/HtmlParser/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
