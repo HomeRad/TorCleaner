@@ -1,3 +1,7 @@
+1.5
+  * recognize .ico and .jpeg as images
+    Changed files: wc/filter/Blocker.py
+
 1.4
   * blocked.html has no content anymore and displays much cleaner
     Changed files: config/blocked.html
