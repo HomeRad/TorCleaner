@@ -21,7 +21,7 @@
 
 <rewrite sid="wc.401" oid="3" title="Userfriendly outbound links"
  desc="Links on userfriendly.org which point outbound. This is a redirector host.">
-<attr>http://links\.userfriendly\.org</attr>
+<attr>https?://links\.userfriendly\.org</attr>
 <replacement part="complete"/>
 </rewrite>
 
@@ -47,7 +47,7 @@
 <rewrite sid="wc.405" oid="7" title="OSDN navbar"
  desc="Navigation bar form"
  tag="form">
-<attr name="action">http://www\.osdn\.com/osdnsearch\.pl</attr>
+<attr name="action">https?://www\.osdn\.com/osdnsearch\.pl</attr>
 <replacement part="complete"/>
 </rewrite>
 
@@ -178,7 +178,7 @@
  desc="Freshmeat ad server"
  matchurl="freshmeat.net"
  tag="img">
-<attr name="src">fmads.osdn.com</attr>
+<attr name="src">fmads\.osdn\.com</attr>
 <replacement part="complete"/>
 </rewrite>
 
