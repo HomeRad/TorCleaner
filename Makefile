@@ -4,8 +4,9 @@ PYVER=2.2
 PYTHON=python$(PYVER)
 VERSION=$(shell $(PYTHON) setup.py --version)
 PACKAGE=webcleaner
-GROUPDIR=shell1.sourceforge.net:/home/groups
-HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
+#GROUPDIR=shell1.sourceforge.net:/home/groups
+#HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
+HTMLDIR=/home/calvin/public_html/webcleaner.sf.net/htdocs
 MD5SUMS=$(PACKAGE)-md5sums.txt
 
 all:
@@ -104,16 +105,19 @@ VERSION:
 	echo $(VERSION) > VERSION
 
 filterfiles:	md5sums
-	scp config/*.zap config/*.dtd config/*.conf config/md5sums $(HTMLDIR)/zapper
-	scp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
-	scp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
+	cp config/*.zap config/*.dtd config/*.conf config/md5sums $(HTMLDIR)/zapper
+	cp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
+	cp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
 
-upload: distclean dist VERSION
-	scp ChangeLog $(HTMLDIR)/changes.txt
-	scp VERSION $(HTMLDIR)/raw/
-	scp $(MD5SUMS) $(HTMLDIR)/
-	ncftpput upload.sourceforge.net /incoming dist/* && read -p "Make new SF file releases and then press Enter:"
-	ssh -C -t shell1.sourceforge.net "cd /home/groups/w/we/$(PACKAGE) && make"
+upload: distclean dist VERSION homepage
+	ncftpput upload.sourceforge.net /incoming dist/*
+
+homepage:
+	cp ChangeLog $(HTMLDIR)/changes.txt
+	cp README $(HTMLDIR)/readme.txt
+	cp linkchecker-out.*.gz $(HTMLDIR)
+	cp VERSION $(HTMLDIR)/raw/
+	cp $(MD5SUMS) $(HTMLDIR)/
 
 locale:
 	$(MAKE) -C po
