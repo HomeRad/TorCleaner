@@ -173,7 +173,7 @@ class HtmlFilter (JSFilter):
         item = [STARTTAG, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                debug(FILTER, "%s matched rule %r on tag %r", self, rule.title, tag)
+                debug(FILTER, "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
                 if rule.start_sufficient:
                     item = rule.filter_tag(tag, attrs)
                     filtered = True
@@ -184,7 +184,7 @@ class HtmlFilter (JSFilter):
                     else:
                         break
                 else:
-                    debug(FILTER, "%s put rule %r on buffer", self, rule.title)
+                    debug(FILTER, "%s put rule %r on buffer", self, rule.titles['en'])
                     rulelist.append(rule)
         if rulelist:
             # remember buffer position for end tag matching

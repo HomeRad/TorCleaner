@@ -82,7 +82,7 @@ class Buf (object):
     def _replace (self):
         for rule in self.rules:
             if rule.search:
-                self.buf = rule.search_ro.sub(rule.replace, self.buf)
+                self.buf = rule.search_ro.sub(rule.replacement, self.buf)
 
 
     def flush (self):
