@@ -1,6 +1,22 @@
 """Header mangling"""
-from wc import remove_headers
 from wc.log import *
+
+def remove_headers (headers, to_remove):
+    """remove entries from RFC822 headers"""
+    for h in to_remove:
+        if headers.has_key(h):
+            # note: this removes all headers with that name
+            del headers[h]
+
+def has_header_value (headers, key, value):
+    if hasattr(headers, "getallmatchingheaders"):
+        # rfc822.Message() object
+        for h in headers.getallmatchingheaders(key):
+            if h.strip().lower() == value.lower():
+                return "True"
+        return None
+    return headers.get(key, '').lower() == value.lower()
+
 
 def set_via_header (headers):
     """set via header"""

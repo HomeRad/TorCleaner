@@ -37,25 +37,26 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'locale')
 
+def iswriteable (file):
+    if os.path.isdir(file) or os.path.islink(file):
+        return 0
+    try:
+        if os.path.exists(file):
+            f = open(file, 'a')
+            f.close()
+            return 1
+        else:
+            f = open(file, 'w')
+            f.close()
+            os.remove(file)
+            return 1
+    except IOError:
+        pass
+    return 0
+
+
 import ip, i18n
 from log import *
-
-def remove_headers (headers, to_remove):
-    """remove entries from RFC822 headers"""
-    for h in to_remove:
-        if headers.has_key(h):
-            # note: this removes all headers with that name
-            del headers[h]
-
-def has_header_value (headers, key, value):
-    if hasattr(headers, "getallmatchingheaders"):
-        # rfc822.Message() object
-        for h in headers.getallmatchingheaders(key):
-            if h.strip().lower() == value.lower():
-                return "True"
-        return None
-    return headers.get(key, '').lower() == value.lower()
-
 
 config = None
 

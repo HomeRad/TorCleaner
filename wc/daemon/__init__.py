@@ -20,25 +20,7 @@ with no fork().
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import os
-from wc import i18n, startfunc, Version
-
-def iswriteable (file):
-    if os.path.isdir(file) or os.path.islink(file):
-        return 0
-    try:
-        if os.path.exists(file):
-            f = open(file, 'a')
-            f.close()
-            return 1
-        else:
-            f = open(file, 'w')
-            f.close()
-            os.remove(file)
-            return 1
-    except IOError:
-        pass
-    return 0
-
+from wc import i18n, startfunc, Version, iswriteable
 
 fname = "webcleaner-%s.pid"%Version
 if os.name=="nt":

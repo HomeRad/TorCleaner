@@ -20,6 +20,7 @@ if __name__=='__main__':
     import os
     sys.path.insert(0, os.getcwd())
 from wc.levenshtein import distance
+from wc.log import *
 
 # HTML 4.01 tags
 HtmlTags = {

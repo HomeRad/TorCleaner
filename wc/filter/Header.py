@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
-from wc import remove_headers
+from wc.proxy.Headers import remove_headers
 from wc.filter import FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER, compileRegex
 from wc.filter.Filter import Filter
 

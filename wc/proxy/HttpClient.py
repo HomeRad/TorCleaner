@@ -4,9 +4,9 @@ from Connection import Connection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
-from wc import i18n, config, ip, remove_headers
+from wc import i18n, config, ip
 from wc.proxy import match_host
-from wc.proxy.Headers import client_set_headers
+from wc.proxy.Headers import client_set_headers, remove_headers
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.log import *
