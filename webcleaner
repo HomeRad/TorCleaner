@@ -17,7 +17,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """WebCleaner - a filtering HTTP proxy"""
 
-__author__ = "Bastian Kleineidam"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 # $Source$
@@ -36,10 +35,10 @@ nt_usage = wc.i18n._("""USAGE\twebcleaner [options] <command> [command options]
 
 OPTIONS
 -h      Print this help.
---config=<file>
-        Use given configuration file.
---filterdir=<directory>
-        Use given directory to search for *.zap filter definitions.
+
+-d <directory>, --configdir=<directory>
+        Use given directory for configuration. It should include a
+        webcleaner.conf file and several .zap files.
 
 COMMANDS
 start [-f <config>]
@@ -115,47 +114,42 @@ def print_help ():
     sys.exit(0)
 
 
-def parse_options ():
+def parse_options (sysargs):
     """read command line arguments
 
     @return: (configfile, filterdir, args)
     """
     import getopt
-    configfile = None
-    filterdir = None
+    configdir = None
     try:
         # Note: cut out the name of the script in sys.argv
-        options, args = getopt.getopt(sys.argv[1:], "h",
-                                      ["help", "config", "filterdir"])
+        options, args = getopt.getopt(sysargs, "hd",
+                                      ["help", "configdir"])
     except getopt.error:
-        type, value = sys.exc_info()[:2]
-        print_usage(value)
+        print_usage(sys.exc_info()[1])
     for opt,arg in options:
         if opt=="-h" or opt=="--help":
             print_help()
-        elif opt=="--config":
-            configfile = arg
-        elif opt=="--filterdir":
-            filterdir = arg
+        elif opt=="--configdir" or opt=="-d":
+            configdir = arg
         else:
             print_usage(wc.i18n._("Unknown option %(option)r")%{'option': opt})
-    return (configfile, filterdir, args)
+    return (configdir, args)
 
 
-def main_posix (configfile, filterdir):
+def main_posix (configdir):
     """start the proxy"""
-    wc.wstartfunc(configfile=configfile, filterdir=filterdir)
+    wc.wstartfunc(confdir=configdir)
 
 
-def main_nt (configfile, filterdir, args):
+def main_nt (configdir, args):
     """start nt proxy service"""
     if len(args) < 1:
         print_usage(wc.i18n._("No command given."))
     else:
         command = args[0]
     import wc.win32start
-    wc.win32start.ProxyService.configfile = configfile
-    wc.win32start.ProxyService.filterdir = filterdir
+    wc.win32start.ProxyService.configdir = configdir
     if command=='status':
         print win32start.status()
     elif command in ['start', 'stop', 'restart', 'install', 'remove']:
@@ -165,12 +159,12 @@ def main_nt (configfile, filterdir, args):
         print_usage(wc.i18n._("Unknown command %r") % command)
 
 
-def main ():
-    configfile, filterdir, args = parse_options()
+def main (sysargs):
+    configdir, args = parse_options(sysargs)
     if os.name=='nt':
-        return main_nt(configfile, filterdir, args)
-    return main_posix(configfile, filterdir)
+        return main_nt(configdir, args)
+    return main_posix(configdir)
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

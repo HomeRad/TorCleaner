@@ -1946,7 +1946,7 @@ static PyMethodDef parser_methods[] = {
 static PyTypeObject parser_type = {
     PyObject_HEAD_INIT(NULL)
     0,              /* ob_size */
-    "htmlsax.parser",      /* tp_name */
+    "wc.parser.htmlsax.parser",      /* tp_name */
     sizeof(parser_object), /* tp_size */
     0,              /* tp_itemsize */
     /* methods */

@@ -123,14 +123,14 @@ import wc.filter.VirusFilter
 # safely set config values upon import
 config = {}
 
-def wstartfunc (handle=None, abort=None, configfile=None, filterdir=None):
+def wstartfunc (handle=None, abort=None, confdir=ConfigDir):
     """Initalize configuration, start psyco compiling and the proxy loop.
        This function does not return until Ctrl-C is pressed."""
     global config
     # init logging
-    initlog(os.path.join(ConfigDir, "logging.conf"), Name)
+    initlog(os.path.join(confdir, "logging.conf"), Name)
     # read configuration
-    config = Configuration(configfile=configfile, filterdir=filterdir)
+    config = Configuration(confdir=confdir)
     if abort is not None:
         abort(False)
     # support reload on posix systems
@@ -187,9 +187,9 @@ def get_localhosts ():
     return localhosts.keys()
 
 
-def proxyconf_file ():
+def proxyconf_file (confdir):
     """return proxy configuration filename"""
-    return os.path.join(ConfigDir, "webcleaner.conf")
+    return os.path.join(confdir, "webcleaner.conf")
 
 
 def filterconf_files (dirname):
@@ -209,17 +209,11 @@ from wc.XmlUtils import xmlquote, xmlquoteattr
 class Configuration (dict):
     """hold all configuration data, inclusive filter rules"""
 
-    def __init__ (self, configfile=None, filterdir=None):
+    def __init__ (self, confdir=ConfigDir):
         """Initialize the options"""
         dict.__init__(self)
-        if configfile is None:
-            self.configfile = proxyconf_file()
-        else:
-            self.configfile = configfile
-        if filterdir is None:
-            self.filterdir = ConfigDir
-        else:
-            self.filterdir = filterdir
+        self.configfile = proxyconf_file(confdir)
+        self.filterdir = confdir
         # reset to default values
         self.reset()
         # read configuration

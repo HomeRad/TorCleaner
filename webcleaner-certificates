@@ -22,18 +22,25 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import sys, os
-if sys.version[:5] < "2.3":
-    raise SystemExit, "This program requires Python 2.3 or later."
+if not hasattr(sys, "version_info"):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
+if sys.version_info < (2, 3, 1, 'final', 0):
+    raise SystemExit, "This program requires Python 2.3.1 or later."
 
-from wc import i18n, AppName
-from wc.proxy import ssl
+import wc
+import wc.proxy
 
-_usage = i18n._("""Usage: webcleaner-certificates <command>
+_usage = wc.i18n._("""Usage: webcleaner-certificates [options] <command>
+Options:
+-d <directory>
+        Generate certificates in given directory instead of the
+        default one for %(app)s.
+        This should be the same directory as given in "%(name)s -d"
 
 Commands:
-install - generate and install %s SSL certificates if not already there
-remove  - remove %s SSL certificates
-""") % (AppName, AppName)
+install - generate and install %(app)s SSL certificates if not already there
+remove  - remove %(app)s SSL certificates
+""") % {'app': wc.AppName, 'name': wc.Name}
 
 
 def _print_usage (msg):
@@ -59,8 +66,7 @@ def remove_ssl_certs ():
                 os.remove(fname)
 
 
-def main ():
-    args = sys.argv[1:]
+def main (args):
     if len(args) < 1:
         print_usage(i18n._("No command given."))
     else:
@@ -74,4 +80,4 @@ def main ():
 
 
 if __name__=='__main__':
-    main()
+    main(sys.argv[1:])

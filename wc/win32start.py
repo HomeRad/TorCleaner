@@ -37,19 +37,16 @@ class ProxyService (service_klass):
 
     _svc_name_ = wc.AppName
     _svc_display_name_ = wc.i18n._("%s Proxy") % wc.AppName
-    configfile = None
-    filterdir = None
+    configdir = None
 
-
-    def __init__(self, args):
+    def __init__ (self, args):
         """initialize service framework and set stop handler"""
         win32serviceutil.ServiceFramework.__init__(self, args)
         # Create an event which we will use to wait on.
         # The "service stop" request will set this event.
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
 
-
-    def SvcStop(self):
+    def SvcStop (self):
         """stop this service"""
         # Before we do anything, tell the SCM we are starting the
         # stop process.
@@ -57,8 +54,7 @@ class ProxyService (service_klass):
         # And set my event.
         win32event.SetEvent(self.hWaitStop)
 
-
-    def SvcDoRun(self):
+    def SvcDoRun (self):
         """start this service"""
         import servicemanager
         # Log a "started" message to the event log.
@@ -66,8 +62,7 @@ class ProxyService (service_klass):
            servicemanager.EVENTLOG_INFORMATION_TYPE,
            servicemanager.PYS_SERVICE_STARTED,
            (self._svc_name_, ''))
-        wc.wstartfunc(handle=self.hWaitStop,
-                configfile=self.configfile, filterdir=self.filterdir)
+        wc.wstartfunc(handle=self.hWaitStop, confdir=self.configdir)
         # Now log a "service stopped" message
         servicemanager.LogMsg(
            servicemanager.EVENTLOG_INFORMATION_TYPE,
