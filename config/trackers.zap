@@ -19,6 +19,6 @@
  width="1"
  height="1"/>
 
-<block sid="lc.2" title="Siemens StatServ"
+<block sid="wc.1" title="Siemens StatServ"
  url="siemens\.com/tracking_engine/StatServ"/>
 </folder>
