@@ -21,7 +21,9 @@ class TestRewriteScript (unittest.TestCase):
         wc.config.init_filter_modules()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
-        self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY], headers=self.headers)
+        self.attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY],
+                                     serverheaders=self.headers,
+                                     headers=self.headers)
 
     def filt (self, data, result):
         filtered = ""

@@ -19,7 +19,8 @@ class TestBinaryCharFilter (unittest.TestCase):
     def filt (self, data, result):
         headers = wc.proxy.Headers.WcMessage()
         headers['Content-Type'] = "text/html"
-        attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY], headers=headers)
+        attrs = get_filterattrs("", [FILTER_RESPONSE_MODIFY],
+                                serverheaders=headers, headers=headers)
         filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
         self.assertEqual(filtered, result)
 
