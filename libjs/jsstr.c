@@ -529,6 +529,10 @@ str_enumerate(JSContext *cx, JSObject *obj)
     JSString *str, *str1;
     size_t i, length;
 
+    /* Avoid infinite recursion via js_obj_toSource (see bug 271477). */
+    if (cx->version == JSVERSION_1_2)
+        return JS_TRUE;
+
     str = js_ValueToString(cx, OBJECT_TO_JSVAL(obj));
     if (!str)
         return JS_FALSE;
@@ -1172,7 +1176,6 @@ match_or_replace(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
              * would normally be returned in *rval.
              */
             JS_ASSERT(*cx->fp->down->pc == JSOP_CALL ||
-                      *cx->fp->down->pc == JSOP_CALLMETHOD ||
                       *cx->fp->down->pc == JSOP_NEW);
             JS_ASSERT(js_CodeSpec[*cx->fp->down->pc].length == 3);
             switch (cx->fp->down->pc[3]) {
@@ -2643,7 +2646,7 @@ js_StringToObject(JSContext *cx, JSString *str)
     return obj;
 }
 
-const char *
+JS_FRIEND_API(const char *)
 js_ValueToPrintableString(JSContext *cx, jsval v)
 {
     JSString *str;
