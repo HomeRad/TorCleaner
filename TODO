@@ -2,7 +2,22 @@ TODO
 
 version 2.16 and above
 
-Traceback (most recent call last):
+- Traceback (most recent call last):
+  File "c:\Python23\Lib\site-packages\wc\webgui\__init__.py", line 74, in __init__
+    context, newstatus = \
+  File "c:\Python23\Lib\site-packages\wc\webgui\__init__.py", line 206, in get_context
+    status = template_context._exec_form(form, lang)
+  File "c:\Python23\Lib\site-packages\wc\webgui\context\update_doit_html.py", line 31, in _exec_form
+    _updatezapper()
+  File "c:\Python23\Lib\site-packages\wc\webgui\context\update_doit_html.py", line 44, in _updatezapper
+    doreload = _update_filter(config, log=log, dryrun=False)
+  File "c:\Python23\Lib\site-packages\wc\update.py", line 176, in update_filter
+    if wconfig.merge_folder(p.folder, dryrun=dryrun, log=log):
+  File "c:\Python23\Lib\site-packages\wc\__init__.py", line 331, in merge_folder
+    assert folder.sid.startswith("wc")
+AttributeError: 'NoneType' object has no attribute 'startswith'
+
+- Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/webcleaner", line 170, in ?
     main(sys.argv[1:])
   File "/home/calvin/projects/webcleaner/webcleaner", line 166, in main
@@ -28,8 +43,6 @@ Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 443, in server_content
     assert self.server, "%s server_content had no server"%self
 AssertionError: <client:request  being read> server_content had no server
-
-- windows network config
 
 ======================================================================
 FAIL: testRecursionSrc (tests.server.TestScriptSrc.TestScriptSrc)
