@@ -28,3 +28,6 @@ class BinaryCharFilter(Filter):
 
     def filter(self, data, **attrs):
         return string.translate(data, self.TRANS)
+
+    def finish(self, data, **attrs):
+        return string.translate(data, self.TRANS)

@@ -54,7 +54,7 @@ binary-indep: build install
 	dh_testdir
 	dh_testroot
 	dh_movefiles --sourcedir=debian/$(PACKAGE) -pwebcleanerconf \
-            usr/sbin/webcleanerconf usr/lib/python2.0/site-packages/webgui/
+            usr/sbin/webcleanerconf usr/lib/python2.0/site-packages/wc/gui/
 	dh_installdebconf
 	dh_installdocs
 	dh_installexamples filtertest filtertest.html

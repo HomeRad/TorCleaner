@@ -13,7 +13,8 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.1\n"
 
-msgid "Execute 'webcleaner -h' for help\n"
+#, fuzzy
+msgid "execute 'webcleaner -h' for help\n"
 msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
 
 msgid "No command given."
@@ -61,11 +62,12 @@ msgstr "Unbekannte Option %s"
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
 
-msgid "Error: %s\n"
-msgstr "Fehler: %s\n"
-
-msgid "WebCleaner: warning, only first command is valid"
+#, fuzzy
+msgid "warning: only first command is valid"
 msgstr "WebCleaner: Warnung, nur der erste Befehl ist gültig"
+
+#~ msgid "Error: %s\n"
+#~ msgstr "Fehler: %s\n"
 
 #~ msgid "Parent Proxy"
 #~ msgstr "Übergeordneter Proxy"

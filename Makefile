@@ -37,18 +37,16 @@ deb:	locale
 
 .PHONY: dist
 dist:	locale
-	./setup.py sdist --formats=gztar,zip bdist_rpm
-	# no cross compiler suitable
-	#./setup.py bdist_wininst
-	$(MAKE) cleandeb
-	fakeroot debian/rules binary
-	@for i in $(DEBS); do cp -f ../$$i dist; done
+	./setup.py sdist --formats=gztar
+	#$(MAKE) cleandeb
+	#fakeroot debian/rules binary
+	#@for i in $(DEBS); do cp -f ../$$i dist; done
 
 # only visual test
 .PHONY: test
 test:
-	#./filtertest filter filtertest.html
-	env http_proxy="http://localhost:9090" wget -t1 http://localhost/
+	./filtertest filter filtertest.html
+	#env http_proxy="http://localhost:9090" wget -t1 http://localhost/
 
 .PHONY: test_remote
 test_remote:
@@ -67,7 +65,7 @@ VERSION:
 
 .PHONY: filterfiles
 filterfiles:	md5sums
-	scp config/*.zap config/*.dtd config/md5sums $(HTMLDIR)/zapper
+	scp config/*.zap config/*.dtd config/*.conf config/md5sums $(HTMLDIR)/zapper
 	scp config/filter.dtd $(HTMLDIR)/filter.dtd.txt
 	scp config/adverts.zap $(HTMLDIR)/adverts.zap.txt
 

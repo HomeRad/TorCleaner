@@ -1,6 +1,5 @@
 TODO
-- a single debug() function, no more message()
-- filter debugging
+- parent proxy support
 - additionally give _all_ modules the URL info
 - more status info (look at surfboard: the WM applet is cool)
   o uptime
