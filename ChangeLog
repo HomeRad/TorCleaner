@@ -8,6 +8,11 @@
     Type: bugfix
     Changed: wc/proxy/Headers.py
 
+  * Install both ugettext() and ungettext() into the default namespace
+    for translation.
+    Type: feature
+    Changed: wc/i18n.py
+
 2.23 "The fog of war" (released 27.10.2004)
 
   * Fixed MIME type changing.
