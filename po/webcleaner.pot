@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Thu Dec  4 14:57:09 2003\n"
+"POT-Creation-Date: Sun Dec  7 23:59:55 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "with %d rules"
 msgstr ""
 
-msgid "Invalid pics rule tag name `%s', check your configuration"
+msgid "Invalid pics rule tag name %r, check your configuration"
 msgstr ""
 
 msgid "Tag"
@@ -81,437 +81,6 @@ msgid "Complete tag"
 msgstr ""
 
 msgid "Enclosed block"
-msgstr ""
-
-msgid ""
-"Updating procedure:\n"
-"\n"
-"We download the new configuration files from\n"
-"'%s'\n"
-"and merge their changes into the current configuration.\n"
-"\n"
-"If something has changed, we save the new filter\n"
-"configuration files and reload them into the proxy."
-msgstr ""
-
-msgid ""
-"You cannot remove folders. If you really want to get rid\n"
-"of this folder, delete the appropriate configuration file.\n"
-"It is always safer to disable a folder or filter instead of\n"
-"deleting it."
-msgstr ""
-
-msgid ""
-"Rewrite HTML code. This is very powerful and can filter\n"
-"almost all advertising and other crap."
-msgstr ""
-
-msgid "Replace regular expressions in (HTML) data streams."
-msgstr ""
-
-msgid ""
-"Replace illegal binary characters in HTML code like the quote\n"
-"chars often found in Microsoft pages."
-msgstr ""
-
-msgid "Add, modify and delete HTTP headers of request and response."
-msgstr ""
-
-msgid "Block or allow specific sites by URL name."
-msgstr ""
-
-msgid ""
-"Deanimates GIFs and removes all unwanted GIF image\n"
-"extensions (for example GIF comments)."
-msgstr ""
-
-msgid ""
-"Compression of documents with good compression ratio\n"
-"like HTML, WAV, etc."
-msgstr ""
-
-msgid ""
-"Convert images to low quality JPEG files to reduce\n"
-"bandwidth"
-msgstr ""
-
-msgid "Remove images with certain sizes"
-msgstr ""
-
-msgid "Remove Folder"
-msgstr ""
-
-msgid " &Ok "
-msgstr ""
-
-msgid "&Cancel"
-msgstr ""
-
-msgid "A&pply"
-msgstr ""
-
-msgid "A&bout"
-msgstr ""
-
-msgid "Start"
-msgstr ""
-
-msgid "Stop"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
-msgid "Reload"
-msgstr ""
-
-msgid "Status"
-msgstr ""
-
-msgid "Proxy"
-msgstr ""
-
-msgid "Update..."
-msgstr ""
-
-msgid "P&roxy Settings"
-msgstr ""
-
-msgid "Version"
-msgstr ""
-
-msgid "User\tRequire proxy authentication with the given user."
-msgstr ""
-
-msgid "Password\tRequire proxy authentication with the given password which is stored base64 encoded."
-msgstr ""
-
-msgid "Port\tThe port adress the WebCleaner proxy is listening on."
-msgstr ""
-
-msgid "Timeout\tConnection timeout in seconds, a zero value uses the default platform timeout."
-msgstr ""
-
-msgid "Web GUI theme"
-msgstr ""
-
-msgid "No filtering for"
-msgstr ""
-
-msgid ""
-"Add\tAdd hostname and networks that are not filtered.\n"
-"Networks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."
-msgstr ""
-
-msgid "Edit"
-msgstr ""
-
-msgid "Remove"
-msgstr ""
-
-msgid "Allowed hosts"
-msgstr ""
-
-msgid ""
-"Add\tAdd hostname and networks that are allowed to use this proxy.\n"
-"Networks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."
-msgstr ""
-
-msgid "Filter Modules"
-msgstr ""
-
-msgid "Parent Proxy"
-msgstr ""
-
-msgid "Host\tThe hostname of the parent proxy WebCleaner should use."
-msgstr ""
-
-msgid "Port\tThe port number of the parent proxy WebCleaner should use."
-msgstr ""
-
-msgid "User\tAuthentication user for the parent proxy."
-msgstr ""
-
-msgid ""
-"Password\tAuthentication password for the parent proxy.\n"
-"The password is saved base64 encoded."
-msgstr ""
-
-msgid "&Filter Settings"
-msgstr ""
-
-msgid "All filters"
-msgstr ""
-
-msgid "New Folder"
-msgstr ""
-
-msgid "Filter"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Up"
-msgstr ""
-
-msgid "Down"
-msgstr ""
-
-msgid "filter selection"
-msgstr ""
-
-msgid "no filter item selected"
-msgstr ""
-
-msgid "Invalid Proxy User"
-msgstr ""
-
-msgid "You have to use -A-Za-z0-9._ for the proxy user name."
-msgstr ""
-
-msgid "Add Hostname"
-msgstr ""
-
-msgid "Hostname"
-msgstr ""
-
-msgid "&Ok"
-msgstr ""
-
-msgid "Add proxy"
-msgstr ""
-
-msgid "Empty hostname"
-msgstr ""
-
-msgid "Duplicate hostname"
-msgstr ""
-
-msgid "Edit Hostname"
-msgstr ""
-
-msgid "New hostname"
-msgstr ""
-
-msgid "Proxy Status"
-msgstr ""
-
-msgid "Update Help"
-msgstr ""
-
-msgid "Update Error"
-msgstr ""
-
-msgid "cannot write to file %s"
-msgstr ""
-
-msgid "Write config"
-msgstr ""
-
-msgid "URL:\tRegular expression to match the URL"
-msgstr ""
-
-msgid "Domainfile\tExternal file with domains; one per line"
-msgstr ""
-
-msgid "Urlsfile\tExternal file with urls; one per line"
-msgstr ""
-
-msgid "URL replacement\tThe URL we want to show instead"
-msgstr ""
-
-msgid "Filename:\tThe name of the configuration file where these filters are stored (cannot be changed)."
-msgstr ""
-
-msgid "Header name:\tRegular expression to match the header name"
-msgstr ""
-
-msgid "Header value:\tIf empty, delete the header. Else add or, if already there modify the header."
-msgstr ""
-
-msgid "Header name must not be empty"
-msgstr ""
-
-msgid "Header rule"
-msgstr ""
-
-msgid "Image width:\tThe width of the image to be blocked."
-msgstr ""
-
-msgid "Image height:\tThe height of the image to be blocked."
-msgstr ""
-
-msgid "PICS services"
-msgstr ""
-
-msgid ""
-"Fallback URL:\tA URL to display if the page is censored\n"
-"The default is to return a 403 Forbidden HTTP error."
-msgstr ""
-
-msgid "%s\tEnable/disable this rating service."
-msgstr ""
-
-msgid "%s\tEnable/disable this category."
-msgstr ""
-
-msgid "Replace regex:\tRegular expression to match the data stream"
-msgstr ""
-
-msgid "Replacement:\tReplacement value (empty means delete)"
-msgstr ""
-
-msgid "Attributes"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Value"
-msgstr ""
-
-msgid "Replace part"
-msgstr ""
-
-msgid "Replace value"
-msgstr ""
-
-msgid "Empty tag name"
-msgstr ""
-
-msgid "Error"
-msgstr ""
-
-msgid "Add Attribute"
-msgstr ""
-
-msgid "Empty attribute name"
-msgstr ""
-
-msgid "Duplicate attribute name"
-msgstr ""
-
-msgid "Edit Attribute"
-msgstr ""
-
-msgid "New name"
-msgstr ""
-
-msgid "New value"
-msgstr ""
-
-msgid "disable\tYou can disable a single rule or all rules in a folder."
-msgstr ""
-
-msgid "Title:\tThe title of the filter rule"
-msgstr ""
-
-msgid "Match url:\tApplies this rule only to urls matching the regular expression"
-msgstr ""
-
-msgid ""
-"Dont match url:\tApplies this rule only to urls not matching the regular expression.\n"
-"Match url entries are tested first."
-msgstr ""
-
-msgid "Description:\tA description what this filter rule does."
-msgstr ""
-
-msgid "rule"
-msgstr ""
-
-msgid "Empty title"
-msgstr ""
-
-msgid "WebCleaner is not running"
-msgstr ""
-
-msgid " &Quit "
-msgstr ""
-
-msgid " &Refresh "
-msgstr ""
-
-msgid " &Options "
-msgstr ""
-
-msgid "Connections"
-msgstr ""
-
-msgid "Headers"
-msgstr ""
-
-msgid "Add Header"
-msgstr ""
-
-msgid "Header"
-msgstr ""
-
-msgid "Empty header"
-msgstr ""
-
-msgid "Add header"
-msgstr ""
-
-msgid "Duplicate header"
-msgstr ""
-
-msgid "Edit Header"
-msgstr ""
-
-msgid "New header"
-msgstr ""
-
-msgid "Save options"
-msgstr ""
-
-msgid "<- RESPONSE"
-msgstr ""
-
-msgid "-> REQUEST"
-msgstr ""
-
-msgid "Refresh"
-msgstr ""
-
-msgid "Only first\tDisplay only the first hit in a series of headers for the same host"
-msgstr ""
-
-msgid "Scrolling"
-msgstr ""
-
-msgid "none"
-msgstr ""
-
-msgid "auto"
-msgstr ""
-
-msgid "always"
-msgstr ""
-
-msgid "No. of saved Headers"
-msgstr ""
-
-msgid "Suppress headers"
-msgstr ""
-
-msgid "&Add"
-msgstr ""
-
-msgid "&Edit"
-msgstr ""
-
-msgid "&Remove"
-msgstr ""
-
-msgid "&Save"
-msgstr ""
-
-msgid "&Close"
-msgstr ""
-
-msgid "About WebCleaner"
 msgstr ""
 
 msgid "Forbidden"
@@ -535,7 +104,7 @@ msgstr ""
 msgid "Server does not understand HTTP/1.1"
 msgstr ""
 
-msgid "Unsupported expectation `%s'"
+msgid "Unsupported expectation %r"
 msgstr ""
 
 msgid "No response from server"
@@ -550,13 +119,13 @@ msgstr ""
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr ""
 
-msgid "add Content-Type %s in %s"
+msgid "add Content-Type %r in %r"
 msgstr ""
 
-msgid "set Content-Type from %s to %s in %s"
+msgid "set Content-Type from %r to %r in %r"
 msgstr ""
 
-msgid "add Content-Type %s to %s"
+msgid "add Content-Type %r to %r"
 msgstr ""
 
 msgid "fix x-httpd-php Content-Type"
@@ -565,7 +134,7 @@ msgstr ""
 msgid "chunked encoding should not have Content-Length"
 msgstr ""
 
-msgid "unsupported encoding: %s"
+msgid "unsupported encoding: %r"
 msgstr ""
 
 msgid "Proxy Error %d %s"
@@ -589,7 +158,7 @@ msgstr ""
 msgid "Invalid Method"
 msgstr ""
 
-msgid "invalid or missing response from %s: %s"
+msgid "invalid or missing response from %s: %r"
 msgstr ""
 
 msgid "server received %d bytes more than content-length"
@@ -598,7 +167,7 @@ msgstr ""
 msgid "unsupported HTTP version %s"
 msgstr ""
 
-msgid "invalid HTTP version %s"
+msgid "invalid HTTP version %r"
 msgstr ""
 
 msgid "Ok"
@@ -658,9 +227,6 @@ msgstr ""
 msgid "PICS category successfully enabled."
 msgstr ""
 
-msgid "Rule match-url successfully changed."
-msgstr ""
-
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -718,7 +284,7 @@ msgstr ""
 msgid "Service"
 msgstr ""
 
-msgid "Go to rule:"
+msgid "Empty folder name."
 msgstr ""
 
 msgid "return window.confirm('Really remove this folder?')"
@@ -751,16 +317,19 @@ msgstr ""
 msgid "Access key 9"
 msgstr ""
 
+msgid "Value"
+msgstr ""
+
 msgid "Folder successfully disabled."
 msgstr ""
 
 msgid "%(AppName)s filter update"
 msgstr ""
 
-msgid "Invalid image height value."
+msgid "Rule enclosed block successfully changed."
 msgstr ""
 
-msgid "Remove rule"
+msgid "Attributes"
 msgstr ""
 
 msgid "Replace regex"
@@ -769,7 +338,7 @@ msgstr ""
 msgid "Rule already disabled."
 msgstr ""
 
-msgid "Timeout sucessfully changed."
+msgid "Password"
 msgstr ""
 
 msgid "%(AppName)s feedback information"
@@ -778,13 +347,16 @@ msgstr ""
 msgid "Don't match URL"
 msgstr ""
 
-msgid "Rule successfully disabled."
-msgstr ""
-
 msgid "Parent proxy settings"
 msgstr ""
 
 msgid "Parent proxy port successfully changed."
+msgstr ""
+
+msgid "Replace value"
+msgstr ""
+
+msgid "Admin password successfully changed."
 msgstr ""
 
 msgid "Folder already enabled."
@@ -807,16 +379,16 @@ msgstr ""
 msgid "Access key 1"
 msgstr ""
 
-msgid "Allowed host successfully added."
+msgid "Rule successfully removed."
 msgstr ""
 
 msgid "Invalid rule type."
 msgstr ""
 
-msgid "Search in %(site)s"
+msgid "Port successfully changed."
 msgstr ""
 
-msgid "Changes to this option require a proxy restart to take effect."
+msgid "Folder successfully renamed."
 msgstr ""
 
 msgid "Move rule up"
@@ -840,7 +412,10 @@ msgstr ""
 msgid "Hostname of the parent proxy"
 msgstr ""
 
-msgid "Username"
+msgid "Search in %(site)s"
+msgstr ""
+
+msgid "Rule image width successfully changed."
 msgstr ""
 
 msgid "Invalid image width value."
@@ -890,7 +465,13 @@ msgid ""
 "<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr ""
 
+msgid "Rule"
+msgstr ""
+
 msgid "PICS service successfully enabled."
+msgstr ""
+
+msgid "Up"
 msgstr ""
 
 msgid "Filter update log"
@@ -902,10 +483,13 @@ msgstr ""
 msgid "Proxy configuration"
 msgstr ""
 
-msgid "Don't filter hosts"
+msgid "Rule description successfully changed."
 msgstr ""
 
 msgid "Password used for parent proxy authentication"
+msgstr ""
+
+msgid "Username"
 msgstr ""
 
 msgid "Rule title successfully changed."
@@ -926,10 +510,10 @@ msgstr ""
 msgid "List of hosts allowed to use this proxy."
 msgstr ""
 
-msgid "Rule successfully removed."
+msgid "Allowed host successfully added."
 msgstr ""
 
-msgid "Empty folder name."
+msgid "Go to rule:"
 msgstr ""
 
 msgid "Rule moved up."
@@ -945,6 +529,9 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
+msgid "Replace part"
+msgstr ""
+
 msgid "Remove selected"
 msgstr ""
 
@@ -954,13 +541,16 @@ msgstr ""
 msgid "Invalid folder move up id."
 msgstr ""
 
+msgid "Hostname"
+msgstr ""
+
 msgid "Folder moved up."
 msgstr ""
 
 msgid "Accessibility statement for %(AppName)s"
 msgstr ""
 
-msgid "Rule rewrite tag successfully changed."
+msgid "see footnote 2"
 msgstr ""
 
 msgid "Your request"
@@ -978,13 +568,13 @@ msgstr ""
 msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
 msgstr ""
 
-msgid "Folder successfully renamed."
+msgid "Changes to this option require a proxy restart to take effect."
 msgstr ""
 
 msgid "Filter configuration"
 msgstr ""
 
-msgid "Empty attribute name."
+msgid "footnote 1"
 msgstr ""
 
 msgid "Parent proxy user successfully changed."
@@ -1003,6 +593,9 @@ msgid "Rule url successfully changed."
 msgstr ""
 
 msgid "%(AppName)s web interface main page"
+msgstr ""
+
+msgid "Don't filter hosts"
 msgstr ""
 
 msgid "Filter update"
@@ -1032,7 +625,7 @@ msgstr ""
 msgid "Rename folder"
 msgstr ""
 
-msgid "PICS service successfully disabled."
+msgid "Enabled filter module(s) %(filterenabled)s."
 msgstr ""
 
 msgid ""
@@ -1049,19 +642,13 @@ msgstr ""
 msgid "Folder moved down."
 msgstr ""
 
-msgid "Try Google"
-msgstr ""
-
-msgid "Folders"
+msgid "Rule match-url successfully changed."
 msgstr ""
 
 msgid "Timeout"
 msgstr ""
 
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
-msgstr ""
-
-msgid "Rule enclosed block successfully changed."
 msgstr ""
 
 msgid "New folder"
@@ -1082,7 +669,7 @@ msgstr ""
 msgid "Invalid rule index."
 msgstr ""
 
-msgid "Rule don't-match-url successfully changed."
+msgid "Proxy settings"
 msgstr ""
 
 msgid "Username used for proxy authentication"
@@ -1100,6 +687,9 @@ msgstr ""
 msgid "%(AppName)s Google Selection"
 msgstr ""
 
+msgid "Down"
+msgstr ""
+
 msgid ""
 "The <b>Update filter configuration</b> button\n"
 "downloads new filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a>\n"
@@ -1108,7 +698,10 @@ msgid ""
 "are saved and reloaded into the proxy."
 msgstr ""
 
-msgid "Rule description successfully changed."
+msgid "Remove rule"
+msgstr ""
+
+msgid "Administrator password"
 msgstr ""
 
 msgid "Folder rules"
@@ -1120,7 +713,7 @@ msgstr ""
 msgid "see footnote 3"
 msgstr ""
 
-msgid "see footnote 2"
+msgid "Rule rewrite tag successfully changed."
 msgstr ""
 
 msgid "see footnote 5"
@@ -1129,10 +722,13 @@ msgstr ""
 msgid "see footnote 4"
 msgstr ""
 
+msgid "Admin password"
+msgstr ""
+
 msgid "Feedback for %(AppName)s"
 msgstr ""
 
-msgid "Proxy settings"
+msgid "Rule don't-match-url successfully changed."
 msgstr ""
 
 msgid "Display Google search options for invalid pages"
@@ -1150,7 +746,7 @@ msgstr ""
 msgid "Rule header name successfully changed."
 msgstr ""
 
-msgid "Port successfully changed."
+msgid "Folders"
 msgstr ""
 
 msgid "Disable rule"
@@ -1163,6 +759,9 @@ msgid "Accessibility statement"
 msgstr ""
 
 msgid "Rule moved down."
+msgstr ""
+
+msgid "Allowed hosts"
 msgstr ""
 
 msgid "Empty rewrite tag name."
@@ -1185,7 +784,7 @@ msgid ""
 "world of %(AppName)s, the land of lounge lizards."
 msgstr ""
 
-msgid "Password"
+msgid "Timeout sucessfully changed."
 msgstr ""
 
 msgid "Port number"
@@ -1194,7 +793,10 @@ msgstr ""
 msgid "Add new rule to current folder."
 msgstr ""
 
-msgid "Rule image width successfully changed."
+msgid "Rule successfully disabled."
+msgstr ""
+
+msgid "Name"
 msgstr ""
 
 msgid "Rule image height successfully changed."
@@ -1217,7 +819,7 @@ msgstr ""
 msgid "Disabled folder icon"
 msgstr ""
 
-msgid "Rule"
+msgid "Try Google"
 msgstr ""
 
 msgid "Add/replace attribute"
@@ -1229,7 +831,7 @@ msgstr ""
 msgid "footnote 3"
 msgstr ""
 
-msgid "footnote 1"
+msgid "Empty attribute name."
 msgstr ""
 
 msgid "Search Google"
@@ -1244,7 +846,7 @@ msgstr ""
 msgid "footnote 5"
 msgstr ""
 
-msgid "Enabled filter module(s) %(filterenabled)s."
+msgid "PICS service successfully disabled."
 msgstr ""
 
 msgid "Google Cache for"
@@ -1278,5 +880,8 @@ msgid "Connection timeout in seconds"
 msgstr ""
 
 msgid "Port number of the parent proxy"
+msgstr ""
+
+msgid "Invalid image height value."
 msgstr ""
 
