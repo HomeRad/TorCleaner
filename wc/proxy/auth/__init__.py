@@ -151,6 +151,7 @@ def _test_ntlm ():
     challenges = parse_challenges(", ".join(challenges))
     print "parsed challenges 2", challenges
     attrs['type'] = NTLMSSP_AUTH
+    attrs['password_b64'] = base64.encodestring("Beeblebrox")
     creds = get_credentials(challenges, **attrs)
     print "credentials 3", `creds`
     creds = parse_credentials(creds)

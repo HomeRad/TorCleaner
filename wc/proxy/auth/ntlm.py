@@ -41,8 +41,10 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "NTLMSSP_CHALLENGE", "NTLMSSP_AUTH",
  ]
 
-import des, md4, utils, base64, random, struct, time
-from wc.log import *
+import utils, base64, random, struct, time
+from Crypto.Hash import MD4
+from Crypto.Cipher import DES
+#from wc.log import *
 random.seed()
 
 nonces = {} # nonce to timestamp
@@ -156,7 +158,10 @@ def get_ntlm_credentials (challenge, **attrs):
         domain = attrs['domain']
         username = attrs['username']
         host = attrs['host']
-        msg = create_message3(nonce, domain, username, host)
+        password = base64.decodestring(attrs['password_b64'])
+        nt_hpw = create_nt_hashed_password(password)
+        lm_hpw = create_lm_hashed_password(password)
+        msg = create_message3(nonce, domain, username, host, nt_hpw, lm_hpw)
     else:
         raise IOError("Invalid NTLM credentials type")
     return "NTLM %s" % base64.encodestring(msg).strip()
@@ -297,7 +302,7 @@ auth_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
    NTLMSSP_REQUEST_TARGET
 
 def create_message3 (nonce, domain, username, host,
-                     lm_hashed_pw=None, nt_hashed_pw=None, flags=auth_flags):
+                     lm_hashed_pw, nt_hashed_pw, flags=auth_flags):
     if lm_hashed_pw:
         lm_resp = calc_resp(lm_hashed_pw, nonce)
     else:
@@ -379,10 +384,10 @@ def calc_resp (key, nonce):
        nonce - nonce from server
     """
     assert len(key)==21, "key must be 21 bytes long"
-    assert len(nonce)==8, "nonce must be 21 bytes long"
-    res1 = des.DES(key[0:7]).encrypt(nonce[0:8])
-    res2 = des.DES(key[7:14]).encrypt(nonce[0:8])
-    res3 = des.DES(key[14:21]).encrypt(nonce[0:8])
+    assert len(nonce)==8, "nonce must be 8 bytes long"
+    res1 = DES.new(convert_key(key[0:7])).encrypt(nonce)
+    res2 = DES.new(convert_key(key[7:14])).encrypt(nonce)
+    res3 = DES.new(convert_key(key[14:21])).encrypt(nonce)
     return "%s%s%s" % (res1, res2, res3)
 
 
@@ -435,19 +440,26 @@ def set_odd_parity (byte):
 
 def create_lm_hashed_password (passwd):
     """create LanManager hashed password"""
-    passwd = passwd.upper()
-    if len(passwd) < 14:
-        lm_pw = passwd + ('\x00'*(len(passwd)-14))
-    else:
-        lm_pw = passwd[0:14]
+    # get 14-byte LanManager-suitable password
+    lm_pw = create_lm_password(passwd)
     # do hash
     magic_lst = [0x4B, 0x47, 0x53, 0x21, 0x40, 0x23, 0x24, 0x25]
     magic_str = utils.lst2str(magic_lst)
-    lm_hpw = des.DES(convert_key(lm_pw[0:7])).encrypt(magic_str)
-    lm_hpw += des.DES(convert_key(lm_pw[7:14])).encrypt(magic_str)
+    lm_hpw = DES.new(convert_key(lm_pw[0:7])).encrypt(magic_str)
+    lm_hpw += DES.new(convert_key(lm_pw[7:14])).encrypt(magic_str)
     # adding zeros for padding
     lm_hpw += '\x00'*5
     return lm_hpw
+
+
+def create_lm_password (passwd):
+    passwd = passwd.upper()
+    if len(passwd) < 14:
+        lm_pw = passwd + ('\x00'*(14-len(passwd)))
+    else:
+        lm_pw = passwd[0:14]
+    assert len(lm_pw)==14, "NTLM invalid password length %d"%len(lm_pw)
+    return lm_pw
 
 
 def create_nt_hashed_password (passwd):
@@ -455,7 +467,7 @@ def create_nt_hashed_password (passwd):
     # we have to have UNICODE password
     pw = utils.str2unicode(passwd)
     # do MD4 hash
-    md4_context = md4.new()
+    md4_context = MD4.new()
     md4_context.update(pw)
     nt_hpw = md4_context.digest()
     # adding zeros for padding
@@ -463,6 +475,33 @@ def create_nt_hashed_password (passwd):
     return nt_hpw
 
 
-from wc.proxy import make_timer
-# check for timed out nonces every 5 minutes
-make_timer(300, check_nonces)
+def _test ():
+    password = "Beeblebrox"
+    nonce = "SrvNonce"
+    lm_hashed_pw = create_lm_hashed_password(password)
+    nt_hashed_pw = create_nt_hashed_password(password)
+    correct_lm_resp = "\xad\x87\xca\x6d\xef\xe3\x46\x85\xb9\xc4\x3c\x47\x7a\x8c\x42\xd6\x00\x66\x7d\x68\x92\xe7\xe8\x97"
+    correct_nt_resp = "\xe0\xe0\x0d\xe3\x10\x4a\x1b\xf2\x05\x3f\x07\xc7\xdd\xa8\x2d\x3c\x48\x9a\xe9\x89\xe1\xb0\x00\xd3"
+    lm_resp = calc_resp(lm_hashed_pw, nonce)
+    nt_resp = calc_resp(nt_hashed_pw, nonce)
+    error = False
+    if lm_resp!=correct_lm_resp:
+        print "lm_resp"
+        print `lm_resp`
+        print `correct_lm_resp`
+        error = True
+    if nt_resp!=correct_nt_resp:
+        print "nt_resp"
+        print `nt_resp`
+        print `correct_nt_resp`
+        error = True
+    if not error:
+        print "finished ok"
+
+
+if __name__=='__main__':
+    _test()
+else:
+    from wc.proxy import make_timer
+    # check for timed out nonces every 5 minutes
+    make_timer(300, check_nonces)
