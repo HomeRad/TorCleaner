@@ -26,7 +26,9 @@ from wc.log import *
 import os, urllib, urlparse
 
 class WebConfig:
-    def __init__ (self, client, url, form, protocol):
+    def __init__ (self, client, url, form, protocol,
+                  status=200, msg=i18n._('Ok'), context={},
+                  headers={'Content-Type': 'text/html'}):
         self.client = client
         # we pretend to be the server
         self.connected = "True"
@@ -34,7 +36,7 @@ class WebConfig:
             # get the template filename
             f, dirs = get_template(url)
             # get TAL context
-            context = get_context(dirs, form)
+            context = get_context(dirs, form, context)
         except IOError, msg:
             exception(GUI, "Wrong path")
             return client.error(404, i18n._("Not Found"))
@@ -42,12 +44,11 @@ class WebConfig:
         data = expand_template(f, context)
         f.close()
         # write response
-        self.put_response(data, protocol)
+        self.put_response(data, protocol, status, msg, headers)
 
 
-    def put_response (self, out, protocol):
-        response = "%s 200 Ok"%protocol
-        headers = {'Content-Type': 'text/html'}
+    def put_response (self, out, protocol, status, msg, headers):
+        response = "%s %d %s"%(protocol, status, msg)
         self.client.server_response(self, response, headers)
         self.client.server_content(out)
         self.client.server_close()
@@ -96,23 +97,21 @@ def get_template (url):
     return file(path), dirs
 
 
-def get_context (dirs, form):
+def get_context (dirs, form, localcontext):
     # get template-specific context dict
-    cdict = TemplateContext
-    for d in dirs:
-        cdict = cdict.get(d, {})
-        if not cdict:
-            break
+    modulepath = ".".join(['context'] + dirs[:-1])
+    template = dirs[-1].replace(".", "_")
+    exec "from %s import %s as template_context" % (modulepath, template)
+    attrs = [ x for x in dir(template_context) if not x.startswith('_') ]
     # make TAL context
     context = simpleTALES.Context()
     # add default context values
     context.addGlobal("form", form)
     context.addGlobal("config", config)
     # augment the context
-    for key, value in cdict.items():
+    for attr in attrs:
+        context.addGlobal(attr, getattr(template_context, attr))
+    # add local context
+    for key, value in localcontext.items():
         context.addGlobal(key, value)
     return context
-
-
-TemplateContext = {
-}
