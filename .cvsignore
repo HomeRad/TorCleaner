@@ -36,3 +36,4 @@ Makefile
 Makefile.in
 missing
 mkinstalldirs
+depcomp
