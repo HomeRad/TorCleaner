@@ -91,12 +91,12 @@ def get_locale ():
 
 
 lang_names = {
-    'en': 'English',
-    'de': 'Deutsch',
+    'en': u'English',
+    'de': u'Deutsch',
 }
 lang_transis = {
-    'de': {'en': 'German'},
-    'en': {'de': 'Englisch'},
+    'de': {'en': u'German'},
+    'en': {'de': u'Englisch'},
 }
 
 def lang_name (lang):
