@@ -51,9 +51,7 @@ class ContextVariable:
 		return 0
 		
 	def isNothing (self):
-		if (self.value() is None):
-			return 1
-		return 0
+		return self.value() is None
 		
 	def isSequence (self):
 		# Return the length of the sequence - if it's zero length then it's handled
