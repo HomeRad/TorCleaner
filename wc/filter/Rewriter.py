@@ -60,8 +60,6 @@ class Rewriter (wc.filter.Filter.Filter):
         if p.handler.ratings:
             # XXX correct raise
             raise wc.filter.FilterRating("missing rating")
-        # break cyclic references
-        p.handler = None
         p.tagbuf2data()
         return p.getoutput()
 
