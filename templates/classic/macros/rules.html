@@ -314,6 +314,25 @@ Regex footnote
 </table>
 <hr noshade size="1">
 
+<!-- AntivirusRule -->
+<h2>AntivirusRule</h2>
+<table metal:define-macro="antivirus" summary="">
+<tr metal:use-macro="rulemacros/titledesc">
+Rule title and description
+</tr>
+<tr metal:use-macro="rulemacros/matchurl">
+Rule (don't) match url
+</tr>
+<tr><td colspan="2">
+<input type="submit" class="submit" name="apply" value="Apply"
+ i18n:attributes="value string:Apply">
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
+</div>
+</td></tr>
+</table>
+<hr noshade size="1">
+
 <!-- NocommentsRule -->
 <h2>NocommentsRule</h2>
 <table metal:define-macro="nocomments" summary="">

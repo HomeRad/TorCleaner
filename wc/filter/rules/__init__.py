@@ -81,3 +81,4 @@ from RatingRule import *
 from ReplaceRule import *
 from RewriteRule import *
 from UrlRule import *
+from AntivirusRule import *

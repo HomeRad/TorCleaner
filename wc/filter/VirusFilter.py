@@ -25,7 +25,6 @@ from wc.filter.Filter import Filter
 from wc.proxy.Connection import RECV_BUFSIZE
 
 
-# XXX group matches?
 class VirusFilter (Filter):
     """scan for virus signatures in a data stream"""
 
@@ -106,6 +105,7 @@ class ClamdScanner (object):
 clamav_conf = None
 def init_clamav_conf ():
     global clamav_conf
+    from wc import config
     clamav_conf = ClamavConfig(config['clamavconf'])
 
 

@@ -564,6 +564,9 @@ def _form_apply_image (form):
 def _form_apply_javascript (form):
     pass
 
+def _form_apply_antivirus (form):
+    pass
+
 def _form_apply_nocomments (form):
     pass
 

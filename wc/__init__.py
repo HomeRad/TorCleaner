@@ -72,6 +72,7 @@ def sort_seq (seq):
 
 import ip, i18n
 from wc.proxy.dns_lookups import init_dns_resolver
+from wc.filter.VirusFilter import init_clamav_conf
 
 config = None
 
@@ -88,6 +89,7 @@ def wstartfunc (handle=None):
     # read configuration
     config = Configuration()
     config.init_filter_modules()
+    init_clamav_conf()
     # psyco library for speedup
     try:
         import psyco
@@ -112,6 +114,7 @@ def reload_config ():
     config.read_filterconf()
     config.init_filter_modules()
     init_dns_resolver()
+    init_clamav_conf()
 
 
 def get_localhosts ():
@@ -147,7 +150,7 @@ def filterconf_files ():
 # available filter modules
 filtermodules = ["Header", "Blocker", "GifImage", "ImageSize", "ImageReducer",
                  "BinaryCharFilter", "Rewriter", "Replacer", "Compress",
-                 "RatingHeader",
+                 "RatingHeader", "VirusFilter",
                 ]
 filtermodules.sort()
 
@@ -324,7 +327,8 @@ class Configuration (dict):
             clazz = getattr(getattr(wc.filter, filtername), filtername)
             # add content-rewriting mime types to special list
             if filtername in ['Rewriter', 'Replacer', 'GifImage',
-                              'Compress', 'ImageReducer', 'ImageSize']:
+                              'Compress', 'ImageReducer', 'ImageSize',
+                              'VirusFilter']:
                 self['mime_content_rewriting'].update(clazz.mimelist)
             instance = clazz()
             for order in clazz.orders:
@@ -368,7 +372,8 @@ rulenames = (
   'nocomments',
   'javascript',
   'replace',
-  'rating'
+  'rating',
+  'antivirus',
 )
 _nestedtags = (
   'title', 'description',
