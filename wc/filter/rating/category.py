@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Rating categories."""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,12 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Rating categories.
+"""
 
 import re
 
 class Category (object):
-    """A rating category has a name and an object describing what
-       values it can hold.
+    """
+    A rating category has a name and an object describing what
+    values it can hold.
     """
 
     def __init__ (self, name, values, iterable=False):
@@ -30,35 +33,48 @@ class Category (object):
         self.iterable = iterable
 
     def valid_value (self, value):
-        """True if value is valid according to this category."""
+        """
+        True if value is valid according to this category.
+        """
         raise NotImplementedError, "unimplemented"
 
     def allowance (self, value, limit):
-        """check if value exceeds limit"""
+        """
+        Check if value exceeds limit.
+        """
         raise NotImplementedError, "unimplemented"
 
     def __cmp__ (self, other):
-        """Compare with another category by name."""
+        """
+        Compare with another category by name.
+        """
         return cmp(self.name, other.name)
 
 
 class ValueCategory (Category):
-    """Rating category that can hold the discrete values none, mild,
-       heavy."""
+    """
+    Rating category that can hold the discrete values none, mild, heavy.
+    """
 
     def __init__ (self, name):
-        """Initialize name and values."""
+        """
+        Initialize name and values.
+        """
         _ = lambda x: x
         values = [_("none"), _("mild"), _("heavy")]
         del _
         super(ValueCategory, self).__init__(name, values, iterable=True)
 
     def valid_value (self, value):
-        """True if value is in values list."""
+        """
+        True if value is in values list.
+        """
         return value in self.values
 
     def allowance (self, value, limit):
-        """check if value exceeds limit"""
+        """
+        Check if value exceeds limit.
+        """
         if self.values.index(value) > self.values.index(limit):
             return _("Rating %r for category %r exceeds limit %r") % \
                      (value, self.name, limit)
@@ -66,17 +82,22 @@ class ValueCategory (Category):
 
 
 class RangeCategory (Category):
-    """Rating category that can hold values in a range between a given
-       minimum and maximum.
+    """
+    Rating category that can hold values in a range between a given
+    minimum and maximum.
     """
 
     def __init__ (self, name, minval=None, maxval=None):
-        """Initialize name and values."""
+        """
+        Initialize name and values.
+        """
         super(RangeCategory, self).__init__(name, [minval, maxval])
         self.is_range = True
 
     def valid_value (self, value):
-        """Check range value."""
+        """
+        Check range value.
+        """
         if isinstance(value, tuple):
             assert len(value) == 2, "Invalid value %r" % repr(value)
             return range_in_range(value, self.values)
@@ -84,7 +105,9 @@ class RangeCategory (Category):
             return value_in_range(value, self.values)
 
     def allowance (self, value, limit):
-        """check if value exceeds limit"""
+        """
+        Check if value exceeds limit.
+        """
         if isinstance(value, tuple):
             assert len(value) == 2, "Invalid value %r" % repr(value)
             allow = range_in_range(value, limit)
@@ -96,9 +119,11 @@ class RangeCategory (Category):
         return None
 
 def value_in_range (num, prange):
-    """return True iff number is in range.
-       prange - tuple (min, max)
-       value - a number
+    """
+    return True iff number is in range.
+
+    @param prange: tuple (min, max)
+    @param value: a number
     """
     isnum = isinstance(num, int) or isinstance(num, float)
     assert num is None or (isnum and num >= 0), "Invalid value %r" % repr(num)
@@ -110,9 +135,11 @@ def value_in_range (num, prange):
 
 
 def range_in_range (vrange, prange):
-    """return True iff num vrange is in prange.
-       prange - tuple (min, max)
-       vrange - tuple (min, max)
+    """
+    return True iff num vrange is in prange.
+
+    @param prange: tuple (min, max)
+    @param vrange: tuple (min, max)
     """
     return value_in_range(vrange[0], prange) and \
            value_in_range(vrange[1], prange)
@@ -120,7 +147,9 @@ def range_in_range (vrange, prange):
 
 _range_re = re.compile(r'^(\d*)-(\d*)$')
 def intrange_from_string (value):
-    """parse value as range; return tuple (rmin, rmax) or None on error"""
+    """
+    Parse value as range; return tuple (rmin, rmax) or None on error.
+    """
     if not value:
         # empty range
         return (None, None)
@@ -140,7 +169,9 @@ def intrange_from_string (value):
 
 
 def string_from_intrange (vrange):
-    """represent vrange as string"""
+    """
+    Represent vrange as string.
+    """
     s = ""
     if vrange[0]:
         s += "%d-" % vrange[0]

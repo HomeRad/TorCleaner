@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Storage."""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Directory storage.
+"""
 
 import re
 import os
@@ -25,7 +27,9 @@ is_time = re.compile(r"^\d+$").search
 
 
 class DirectoryStorage (wc.filter.rating.storage.Storage):
-    """Store ratings in as plain file data in dictionaries."""
+    """
+    Store ratings in as plain file data in dictionaries.
+    """
 
     def __init__ (self):
         super(DirectoryStorage, self).__init__()
@@ -33,7 +37,9 @@ class DirectoryStorage (wc.filter.rating.storage.Storage):
 
 
 def rating_import (url, ratingdata, debug=0):
-    """parse given rating data, throws ParseError on error"""
+    """
+    Parse given rating data, throws ParseError on error.
+    """
     categories = {}
     for line in ratingdata.splitlines():
         if debug:
@@ -62,13 +68,16 @@ def rating_import (url, ratingdata, debug=0):
 
 
 def rating_export (rating):
-    """return string representation of given rating data"""
+    """
+    Return string representation of given rating data.
+    """
     return "\n".join([ "%s %s"%item for item in rating.items() ])
     # XXX
 
 def rating_exportall ():
-    """export all ratings in a text file called `rating.txt', located
-       in the same directory as the file `rating.dat'
+    """
+    Export all ratings in a text file called `rating.txt', located
+    in the same directory as the file `rating.dat'.
     """
     config = wc.configuration.config
     fp = file(os.path.join(config.configdir, "rating.txt"), 'w')
@@ -84,7 +93,9 @@ def rating_exportall ():
 
 
 def rating_cache_parse (fp):
-    """parse previously exported rating data from given file"""
+    """
+    Parse previously exported rating data from given file.
+    """
     url = None
     ratingdata = []
     newrating_cache = {}

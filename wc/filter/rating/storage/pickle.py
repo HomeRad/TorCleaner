@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Storage."""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Pickle storage.
+"""
 
 import os
 import cPickle as pickle
@@ -27,10 +29,14 @@ import wc.filter.rating.storage
 
 
 class PickleStorage (wc.filter.rating.storage.Storage):
-    """Store ratings in a pickled dictionary."""
+    """
+    Store ratings in a pickled dictionary.
+    """
 
     def __init__ (self):
-        """Initialize and load."""
+        """
+        Initialize and load.
+        """
         super(PickleStorage, self).__init__()
         config = wc.configuration.config
         self.filename = os.path.join(config.configdir, "rating.dat")
@@ -38,12 +44,16 @@ class PickleStorage (wc.filter.rating.storage.Storage):
         self.load()
 
     def __setitem__ (self, url, rating):
-        """Add rating for given url."""
+        """
+        Add rating for given url.
+        """
         self.check_url(url)
         self.cache[url] = rating
 
     def __getitem__ (self, url):
-        """Get rating for given url."""
+        """
+        Get rating for given url.
+        """
         self.check_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
@@ -56,7 +66,9 @@ class PickleStorage (wc.filter.rating.storage.Storage):
         raise KeyError(url)
 
     def __contains__ (self, url):
-        """True if rating for given url is stored."""
+        """
+        True if rating for given url is stored.
+        """
         self.check_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
@@ -69,26 +81,36 @@ class PickleStorage (wc.filter.rating.storage.Storage):
         return False
 
     def __iter__ (self):
-        """Iterate over stored rating urls."""
+        """
+        Iterate over stored rating urls.
+        """
         return iter(self.cache)
 
     def __len__ (self):
-        """Number of stored ratings."""
+        """
+        Number of stored ratings.
+        """
         return len(self.cache)
 
     def __delitem__ (self, url):
-        """Remove rating for given url."""
+        """
+        Remove rating for given url.
+        """
         self.check_url(url)
         del self.cache[url]
 
     def write (self):
-        """Write pickled cache to disk."""
+        """
+        Write pickled cache to disk.
+        """
         fp = file(self.filename, 'wb')
         pickle.dump(self.cache, fp, 1)
         fp.close()
 
     def load (self):
-        """Load pickled cache from disk."""
+        """
+        Load pickled cache from disk.
+        """
         if os.path.isfile(self.filename):
             fp = file(self.filename, 'rb')
             self.cache = pickle.load(fp)

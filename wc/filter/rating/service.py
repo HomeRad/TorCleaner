@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-"""Services."""
 # Copyright (C) 2004-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,31 +14,44 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Services.
+"""
 
 import wc
 import wc.filter.rating.category
 
 
 class Service (object):
-    """A named service with url and list of supported categories."""
+    """
+    A named service with url and list of supported categories.
+    """
 
     def __init__ (self, name, url, categories):
-        """Initialize name, url and category list."""
+        """
+        Initialize name, url and category list.
+        """
         self.name = name
         self.url = url
         self.categories = categories
 
     def __cmp__ (self, other):
-        """Compare two service objects by name."""
+        """
+        Compare two service objects by name.
+        """
         return cmp(self.name, other.name)
 
 
 class WebCleanerService (Service):
-    """WebCleaner rating service supporting some basic categories:
-       violence, sex, language, age."""
+    """
+    WebCleaner rating service supporting some basic categories:
+    violence, sex, language, age.
+    """
 
     def __init__ (self):
-        """Initialize service data and a submit and request CGI url."""
+        """
+        Initialize service data and a submit and request CGI url.
+        """
         # service name
         name = wc.AppName
         # service homepage
