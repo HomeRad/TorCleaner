@@ -22,7 +22,6 @@ import urllib
 import urlparse
 import gettext
 import mimetypes
-import cStringIO as StringIO
 
 import wc
 import wc.configuration
@@ -118,8 +117,7 @@ def expand_template (template, context):
     """expand the given template file fp in context
        return expanded data
     """
-    return template(**context)
-    return out.getvalue()
+    return template.render(context)
 
 
 def get_context (dirs, form, localcontext, lang):

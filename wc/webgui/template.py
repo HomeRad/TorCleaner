@@ -16,6 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import cStringIO as StringIO
+
 import wc.webgui.PageTemplates.PageTemplate
 import wc.webgui.PageTemplates.Expressions
 import wc.webgui.TAL.TALInterpreter
