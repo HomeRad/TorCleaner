@@ -19,6 +19,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
     def __init__ (self, ipaddr, port, client):
         """initialize connection object and connect to remove server"""
         super(wc.proxy.HttpServer.HttpServer, self).__init__(client,
+                                                             'connect')
         # default values
         self.addr = (ipaddr, port)
         self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
