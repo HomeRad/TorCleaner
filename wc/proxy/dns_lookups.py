@@ -427,9 +427,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         # packet somewhere, so let's try it again, unless the retry
         # count is too large.  Each time we retry, we increase the
         # timeout (see send_dns_request).
-        wc.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
         if not self.callback:
             return # It's already handled, so ignore this
+        wc.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
         if not self.connected:
             self.callback(self.hostname,
                           DnsResponse('error', 'timed out connecting'))
