@@ -24,6 +24,11 @@
     Type: bugfix
     Changed: wc/filter/HtmlParser.py
 
+  * Proper reset of Connection objects, including empty all send and
+    receive buffers.
+    Type: bugfix
+    Changed: wc/proxy/*Connection.py
+
 2.22 "Monster" (released 20.10.2004)
 
   * added favicon.ico to distributed files
