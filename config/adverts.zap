@@ -100,7 +100,7 @@
 
 <rewrite title="CGI adverts 4" oid="16"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
-<attr>/cgi-acc/clickthru.acc\?</attr>
+<attr>clickthru.(acc|aspx)\?</attr>
 </rewrite>
 
 <rewrite title="Deja.com adverts" oid="17"
