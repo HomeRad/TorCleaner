@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 """ test script to test filtering"""
 
-import wc
+import os, wc
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()
