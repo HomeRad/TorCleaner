@@ -51,7 +51,7 @@ Requirements for Windows:
 Direct download links are in brackets.
 
 1. Install Python >= 2.3.1 from http://www.python.org/
-   [[http://www.python.org/ftp/python/2.4/python-2.4.msi]
+   [http://www.python.org/ftp/python/2.4.1/python-2.4.1.msi]
 
 2. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
