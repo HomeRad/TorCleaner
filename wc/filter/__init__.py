@@ -54,9 +54,9 @@ class FilterWait (FilterException):
     """
     pass
 
-class FilterRedirect (FilterException):
-    """Raised when filter wants to redirect to another url.
-       Proxy must not have sent headers or data(!).
+class FilterPics (FilterException):
+    """Raised when filter detected PICS rated content.
+       Proxy must not have sent any content.
     """
     pass
 

@@ -212,9 +212,21 @@ class HttpServer (Server):
             self.state = 'response'
             return
         # filter headers
-        self.headers = applyfilter(FILTER_RESPONSE_HEADER,
-	               rfc822.Message(StringIO(self.read(m.end()))),
-		       attrs=self.nofilter)
+        try:
+            self.headers = applyfilter(FILTER_RESPONSE_HEADER,
+                   rfc822.Message(StringIO(self.read(m.end()))),
+                   attrs=self.nofilter)
+        except FilterPics, msg:
+            response = "HTTP/1.1 200 OK"
+            headers = {
+                "Content-Type": "text/plain",
+                "Content-Length": len(msg),
+            }
+            self.client.server_response(response, headers)
+            self.client.server_content(msg)
+            self.state = 'recycle'
+            self.reuse()
+            return
         debug(HURT_ME_PLENTY, "Proxy: S/Headers", `str(self.headers)`)
         self.check_headers()
         # add encoding specific headers and objects
