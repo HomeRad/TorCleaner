@@ -35,7 +35,7 @@ class FasterStringIO (StringIO):
     def write (self, s):
         #assert self.pos == self.len
         if not isinstance(s, unicode):
-            wc.log.warn(wc.LOG_GUI, "non-unicode string %r", s)
+            #wc.log.warn(wc.LOG_GUI, "non-unicode string %r", s)
             #traceback.print_stack()
             s = unicode(s, "iso-8859-1")
         self.buflist.append(s)
