@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.7" oid="10">
+<folder sid="wc.7" oid="13">
 <title lang="de">Inhaltsbewertung</title>
 <title lang="en">Content Rating</title>
 

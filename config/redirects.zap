@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.389" oid="7">
+<folder sid="wc.389" oid="10">
 <title lang="de">Weiterleitungen</title>
 <title lang="en">Redirections</title>
 <description lang="en">These are Python specific rules to rewrite some nasty URLs, notably redirections, and get rid of the rest of the meta tags.</description>

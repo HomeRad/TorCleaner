@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.289" oid="2">
+<folder sid="wc.289" oid="3">
 <title lang="en">Plugins</title>
 <description lang="en">The filter rules found here remove plugin (eg flash) contents, but only for selected sites.</description>
 
