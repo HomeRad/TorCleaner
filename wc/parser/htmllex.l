@@ -250,14 +250,14 @@ RX_NAME	[a-zA-Z]([-a-zA-Z0-9_])*
 
 %%
 
-int htmllexStart (void** scanner, const char* s, int slen, UserData* data) {
-    /* reset error state */
-    data->exc_type = NULL;
-    data->exc_val = NULL;
-    data->exc_tb = NULL;
+int htmllexInit (void** scanner, const char* s, int slen, UserData* data) {
     yylex_init(scanner);
     yyset_extra(data, *scanner);
-    yy_scan_bytes(s, slen, *scanner);
+    return 0;
+}
+
+int htmllexStart (void* scanner, const char* s, int slen) {
+    yy_scan_bytes(s, slen, scanner);
     return 0;
 }
 

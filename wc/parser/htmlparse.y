@@ -8,7 +8,8 @@
 #define YYSTYPE PyObject*
 #define YYPARSE_PARAM scanner
 #define YYLEX_PARAM scanner
-extern int htmllexStart(void** scanner, const char* s, int slen, void* data);
+extern int htmllexInit(void** scanner, void* data);
+extern int htmllexStart(void* scanner, const char* s, int slen);
 extern int htmllexStop(void* scanner);
 extern int yylex(YYSTYPE* yylvalp, void* scanner);
 extern void* yyget_extra(void*);
@@ -20,6 +21,7 @@ int yyerror(char* msg);
 typedef struct {
     PyObject_HEAD
     UserData* userData;
+    void* scanner;
 } parser_object;
 
 staticforward PyTypeObject parser_type;
@@ -451,6 +453,8 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     p->userData->exc_type = NULL;
     p->userData->exc_val = NULL;
     p->userData->exc_tb = NULL;
+    p->scanner = NULL;
+    htmllexInit(&(p->scanner), p->userData);
     return (PyObject*) p;
 }
 
@@ -472,8 +476,6 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
     self->userData->exc_type = NULL;
     self->userData->exc_val = NULL;
     self->userData->exc_tb = NULL;
-
-    // XXX
     error = 0;
     if (error!=0) {
         if (self->userData->exc_type!=NULL) {
@@ -491,21 +493,20 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 /* feed a chunk of data to the parser */
 static PyObject* parser_feed(parser_object* self, PyObject* args) {
     /* set up the parse string */
-    int slen, error;
+    int slen;
     char* s;
-    void* scanner;
     if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
     }
 
-    /* feed data to lexer and parse */
-    htmllexStart(&scanner, s, slen, (UserData*)self->userData);
-    error = yyparse(scanner);
-    htmllexStop(scanner);
-
-    /* check error state */
-    if (error!=0) {
+    /* reset error state */
+    self->userData->exc_type = NULL;
+    self->userData->exc_val = NULL;
+    self->userData->exc_tb = NULL;
+    
+    /* parse */
+    if (yyparse(self->scanner)!=0) {
         if (self->userData->exc_type!=NULL) {
 	    /* note: we give away these objects, so dont decref */
             PyErr_Restore(self->userData->exc_type,
@@ -524,6 +525,12 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
 	return NULL;
     }
+    htmllexStop(self->scanner);
+    self->userData->exc_type = NULL;
+    self->userData->exc_val = NULL;
+    self->userData->exc_tb = NULL;
+    self->scanner = NULL;
+    htmllexInit(&(self->scanner), self->userData);
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -579,18 +586,3 @@ int yyerror (char* msg) {
     fprintf(stderr, "htmllex: error: %s\n", msg);
     return 0;
 }
-
-/*
-int main (void) {
-    void* scanner;
-    UserData userData;
-    userData.handler = NULL;
-    userData.exc_type = NULL;
-    userData.exc_val = NULL;
-    userData.exc_tb = NULL;
-    yydebug=1;
-    htmllexStart(&scanner, "<!--html-->", 11, &userData);
-    yyparse(scanner);
-    return htmllexStop(scanner);
-}
-*/
