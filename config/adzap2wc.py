@@ -181,11 +181,11 @@ def write_block (zapfile, adclass, pattern, lineno, replace=None):
 def get_rule_dict (adclass, pattern, lineno, replace=None):
     d = {
         'title': xmlify("%s filter line %d" % (adclass, lineno)),
-        'desc': xmlify("AdZapper pattern %s." % pattern),
+        'desc': xmlify("AdZapper pattern:\n%s." % pattern),
         'url': xmlify(convert_adzapper_pattern(pattern)),
     }
     if replace is not None:
-        d['desc'] += xmlify("Replacement %s." % replace)
+        d['desc'] += xmlify("\nReplacement:\n%s." % replace)
     return d
 
 
