@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Tue Aug 12 19:46:51 2003\n"
-"PO-Revision-Date: 2003-08-12 19:48+0100\n"
+"POT-Creation-Date: Wed Aug 13 15:52:13 2003\n"
+"PO-Revision-Date: 2003-08-13 15:59+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -438,9 +438,6 @@ msgstr "Leerer Attributname"
 msgid "Duplicate attribute name"
 msgstr "Doppelter Attributname"
 
-msgid "Invalid regex %s: %s"
-msgstr "Ungültiger regulärer Ausdruck %s: %s"
-
 msgid "Edit Attribute"
 msgstr "Bearbeite Attribut"
 
@@ -565,6 +562,9 @@ msgstr "Schliessen"
 msgid "About WebCleaner"
 msgstr "Über WebCleaner"
 
+msgid "Forbidden"
+msgstr "Verboten"
+
 msgid "Host %s is an abbreviation for %s"
 msgstr "Rechner %s ist eine Abkürzung für %s"
 
@@ -661,192 +661,6 @@ msgstr "Interner Fehler"
 msgid "%s error"
 msgstr "%s error"
 
-msgid "Invalid folder index"
-msgstr "Ungültiger Ordnerindex"
-
-msgid "Invalid filter index"
-msgstr "Ungültiger Filter Index."
-
-msgid "Empty folder name"
-msgstr "Leerer Ordnername"
-
-msgid "New folder %s created."
-msgstr "Neuer Ordner %s erstellt."
-
-msgid "Empty folder name."
-msgstr "Leerer Ordnername."
-
-msgid "Folder successfully renamed."
-msgstr "Ordner erfolgreich umbenannt."
-
-msgid "Folder already disabled."
-msgstr "Ordner ist bereits deaktiviert."
-
-msgid "Folder disabled."
-msgstr "Ordner wurde deaktiviert."
-
-msgid "Folder already enabled."
-msgstr "Ordner ist bereits aktiviert."
-
-msgid "Folder enabled."
-msgstr "Ordner wurde aktiviert."
-
-msgid "Folder removed."
-msgstr "Ordner wurde gelöscht."
-
-msgid "Invalid rule type."
-msgstr "Ungültiger Regeltyp."
-
-msgid "New rule created."
-msgstr "Neue Regel wurde erstellt."
-
-msgid "Rule already disabled."
-msgstr "Regel ist bereits deaktiviert."
-
-msgid "Rule disabled."
-msgstr "Regel wurde deaktiviert."
-
-msgid "Rule already enabled."
-msgstr "Regel ist bereits aktiviert."
-
-msgid "Rule enabled."
-msgstr "Regel wurde aktiviert."
-
-msgid "Rule removed."
-msgstr "Regel wurde gelöscht."
-
-msgid "Empty attribute name."
-msgstr "Leerer Attributname."
-
-msgid "Rewrite attribute added."
-msgstr "Rewrite Attribut wurde hinzugefügt."
-
-msgid "Rewrite attributes removed."
-msgstr "Rewrite Attribut wurde gelöscht."
-
-msgid "Folder moved up."
-msgstr "Ordner wurde nach oben geschoben."
-
-msgid "Invalid folder move up id."
-msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
-
-msgid "Folder moved down."
-msgstr "Ordner wurde nach unten geschoben."
-
-msgid "Invalid folder move down id."
-msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
-
-msgid "Rule moved up."
-msgstr "Regel wurde nach oben geschoben"
-
-msgid "Invalid rule move up id."
-msgstr "Ungültige Regel-nach-oben-Verschieben Nummer."
-
-msgid "Rule moved down."
-msgstr "Regel wurde nach unten geschoben."
-
-msgid "Invalid rule move down id."
-msgstr "Ungültige Regel-nach-unten-Verschieben Nummer."
-
-msgid "Empty rule title"
-msgstr "Leerer Regel Titel"
-
-msgid "Rule title changed."
-msgstr "Regelname wurde geändert."
-
-msgid "Rule description changed."
-msgstr "Regelbeschreibung wurde geändert."
-
-msgid "Rule match url changed."
-msgstr "Regel Treffer-URL wurde geändert."
-
-msgid "Rule dontmatch url changed."
-msgstr "Regel Nichttreffer-URL wurde geändert."
-
-msgid "Rule url scheme changed."
-msgstr "Regel URL Schema wurde geändert."
-
-msgid "Rule url host changed."
-msgstr "Regel URL Rechner wurde geändert."
-
-msgid "Rule url port changed."
-msgstr "Regel URL Portnummer wurde geändert."
-
-msgid "Rule url path changed."
-msgstr "Regel URL Pfad wurde geändert."
-
-msgid "Rule url parameters changed."
-msgstr "Regel URL Parameter wurde geändert."
-
-msgid "Rule url query changed."
-msgstr "Regel URL Anfrage wurde geändert."
-
-msgid "Rule url fragment changed."
-msgstr "Regel URL Fragment wurde geändert."
-
-msgid "Rule blocked url changed."
-msgstr "Regel Block-URL wurde geändert."
-
-msgid "Empty header rule name."
-msgstr "Leerer Header-Regel Name."
-
-msgid "Rule header name changed."
-msgstr "Regel Header-Name wurde geändert."
-
-msgid "Rule header value changed."
-msgstr "Regel Header-Wert wurde geändert."
-
-msgid "Invalid image width value."
-msgstr "Ungültige Bildbreite."
-
-msgid "Rule image width changed."
-msgstr "Regel Bildbreite wurde geändert."
-
-msgid "Invalid image height value."
-msgstr "Ungültige Bildhöhe."
-
-msgid "Rule image height changed."
-msgstr "Regel Bildhöhe wurde geändert."
-
-msgid "PICS service %s enabled."
-msgstr "PICS Dienstleister %s aktiviert."
-
-msgid "PICS service %s disabled."
-msgstr "PICS Dienstleister %s deaktiviert."
-
-msgid "PICS service %s, category %s enabled."
-msgstr "PICS Dienstleister %s, Kategorie %s aktiviert."
-
-msgid "PICS service %s, category %s disabled."
-msgstr "PICS Dienstleister %s, Kategorie %s deaktiviert."
-
-msgid "Empty replace search value."
-msgstr "Leerer Textersatzwert."
-
-msgid "Rule replace search changed."
-msgstr "Replace-Regel Suchwert geändert."
-
-msgid "Rule replacement changed."
-msgstr "Regel Ersatzwert geändert."
-
-msgid "Empty rewrite tag name."
-msgstr "Leerer Rewrite-Regel Tagname."
-
-msgid "Rule rewrite tag changed."
-msgstr "Rewrite-Regel Tagname geändert."
-
-msgid "Rule rewrite enclosed block changed."
-msgstr "Rewrite-Regel eingeschlossener Block wurde geändert."
-
-msgid "Invalid part value %s."
-msgstr "Ungültiger Teilwert %s."
-
-msgid "Rule rewrite part changed."
-msgstr "Rewrite-Regel Teilwert geändert."
-
-msgid "Rule rewrite replacement changed."
-msgstr "Rewrite-Regel Ersatztext wurde geändert."
-
 msgid ""
 "USAGE\twebcleaner command\n"
 "\n"
@@ -907,17 +721,17 @@ msgstr "Warnung: nur der erste Befehl ist gültig"
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
 
-msgid "Category"
-msgstr "Kategorie"
+msgid "PICS category successfully enabled."
+msgstr "PICS Kategorie wurde erfolgreich aktiviert."
 
 msgid "Proxy user successfully changed."
 msgstr "Proxybenutzer erfolgreich geändert."
 
-msgid "Apply"
-msgstr "Übernehmen"
+msgid "Rule url fragment successfully changed."
+msgstr "Regel URL Fragment wurde erfolgreich geändert."
 
-msgid "Remove selected"
-msgstr "Lösche Auswahl"
+msgid "Allowed host(s) successfully removed."
+msgstr "Erlaubte(r) Rechner wurde(n) erfolgreich entfernt."
 
 msgid "Invalid timeout value."
 msgstr "Ungültiger Timeoutwert."
@@ -931,11 +745,14 @@ msgstr "Überschrift"
 msgid "Blocked URL"
 msgstr "Blockierte URL"
 
+msgid ""
+"If you have any suggestions or comments about %(AppName)s, feel free to\n"
+"email me at\n"
+"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
+msgstr "Falls sie Vorschläge oder Kommentare zu %(AppName)s haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen.\n"
+
 msgid "%(AppName)s proxy configuration"
 msgstr "%(AppName)s Proxykonfiguration"
-
-msgid "Access key 1"
-msgstr "Tastaturkommando 1"
 
 msgid "Always change the complete password since the displayed value is only a dummy."
 msgstr "Ändern sie stets das ganze Passwort, da der angezeigte Wert nur ein Platzhalter ist."
@@ -955,26 +772,20 @@ msgstr "Aktiviere Regel"
 msgid "List of hostnames the proxy must not filter."
 msgstr "Liste von Rechnernamen die dieser Proxy nicht filtern darf"
 
-msgid "Allowed host(s) successfully removed."
-msgstr "Erlaubte(r) Rechner wurde(n) erfolgreich entfernt."
+msgid "Rewrite attribute added."
+msgstr "Rewrite Attribut wurde hinzugefügt."
 
 msgid "Port number the proxy is listening on for requests"
 msgstr "Portnummer auf der dieser Proxy auf Anfragen wartet"
 
-msgid "New rule"
-msgstr "Neue Regel"
+msgid "Header name"
+msgstr "Header Name"
 
-msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
-msgstr "Stellen sie sicher, alle Rechner Aliase und IPs angegeben zu haben weil DNS Auflösung nicht stattfindet."
+msgid "This page is also available in"
+msgstr "Diese Seite ist auch verfügbar auf"
 
-msgid "Match URL"
-msgstr "Betroffene URL"
-
-msgid "Filter configuration"
-msgstr "Filterkonfiguration"
-
-msgid "Skip to main content"
-msgstr "Zum Hauptinhalt springen"
+msgid "Rule description successfully changed."
+msgstr "Regelbeschreibung wurde erfolgreich geändert."
 
 msgid ""
 "Most browsers support jumping to specific links by typing keys defined on\n"
@@ -983,38 +794,50 @@ msgid ""
 "access key."
 msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können sie <acronym>ALT</acronym> + Tastaturkommando tippen, unter Macintoshkönnen sie <acronym>Control</acronym> + Tastaturkommando tippen."
 
-msgid "Parent proxy user successfully changed."
-msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
+msgid "Service"
+msgstr "Dienstleister"
 
-msgid "Nofilter host(s) successfully removed."
-msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
-
-msgid "%(AppName)s filter update script"
-msgstr "%(AppName)s Filteraktualisierung Skript"
-
-msgid "Move folder up"
-msgstr "Ordner nach oben schieben"
-
-msgid "%(AppName)s web interface main page"
-msgstr "%(AppName)s Weboberfläche Hauptseite"
+msgid "Empty folder name."
+msgstr "Leerer Ordnername."
 
 msgid "return window.confirm('Really remove this folder?')"
 msgstr "return window.confirm('Diesen Ordner wirklich löschen?')"
 
-msgid "Folder icon"
-msgstr "Ordnericon"
-
-msgid "Proxy filter modules"
-msgstr "Proxy Filter Module"
-
 msgid "Folder name"
 msgstr "Ordnername"
 
-msgid "Username used for parent proxy authentication"
-msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
+msgid "Rule blocked url successfully changed."
+msgstr "Regel Block-URL wurde erfolgreich geändert."
 
-msgid "Blank page due to block by %(AppName)s"
-msgstr "Leere Seite aufgrund von Blockierung durch %(AppName)s"
+msgid "Header value"
+msgstr "Header Wert"
+
+msgid "Disabled filter module(s) %(filterdisabled)s."
+msgstr "Filter Modul(e) %(filterdisabled)s wurde(n) deaktiviert."
+
+msgid "Back to update overview"
+msgstr "Zurück zur Aktualisierungsübersicht"
+
+msgid "Rule icon"
+msgstr "Regelicon"
+
+msgid "Fallback URL"
+msgstr "Ersatz-URL"
+
+msgid "accessibility features of these pages"
+msgstr "Zugänglichkeitseigenschaften dieser Seiten"
+
+msgid "Access key 9"
+msgstr "Tastaturkommando 9"
+
+msgid "Folder successfully disabled."
+msgstr "Ordner erfolgreich deaktiviert."
+
+msgid "%(AppName)s filter update"
+msgstr "%(AppName)s Filteraktualisierung"
+
+msgid "Rule enclosed block successfully changed."
+msgstr "Rewrite-Regel eingeschlossener Block wurde erfolgreich geändert."
 
 msgid "URL host"
 msgstr "URL Rechner"
@@ -1031,52 +854,312 @@ msgstr ""
 "Falls etwas geändert wurde, wird die neue Filterkonfiguration gespeichert und\n"
 "in den Proxy neu geladen."
 
-msgid "Header value"
-msgstr "Header Wert"
+msgid "Replace regex"
+msgstr "Ersetze"
 
-msgid "Disabled filter module(s) %(filterdisabled)s."
-msgstr "Filter Modul(e) %(filterdisabled)s wurde(n) deaktiviert."
+msgid "Rule already disabled."
+msgstr "Regel ist bereits deaktiviert."
 
-msgid "Rename folder"
-msgstr "Benenne Ordner um"
+msgid "Timeout sucessfully changed."
+msgstr "Zeitüberschreitung wurde erfolgreich geändert."
 
-msgid "Blocked image URL"
-msgstr "Blockierte Bild URL"
+msgid "%(AppName)s feedback information"
+msgstr "%(AppName)s Feedback Information"
+
+msgid "Don't match URL"
+msgstr "Nicht betroffene URL"
+
+msgid "Parent proxy settings"
+msgstr "Übergeordnete Proxy-Einstellungen"
+
+msgid "Parent proxy port successfully changed."
+msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
+
+msgid "Folder already enabled."
+msgstr "Ordner ist bereits aktiviert."
+
+msgid "Password used for proxy authentitaction"
+msgstr "Passwort zur Proxy Authentifizierung"
 
 msgid ""
-"If you have any suggestions or comments about %(AppName)s, feel free to\n"
-"email me at\n"
+"You can of course always add your own filter rules, they will not be\n"
+"touched on a filter update."
+msgstr ""
+"Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden\n"
+"bei einem Filter update nicht gelöscht."
+
+msgid "Folder successfully removed."
+msgstr "Ordner erfolgreich gelöscht."
+
+msgid "URL path"
+msgstr "URL Pfad"
+
+msgid "Update filter configuration"
+msgstr "Aktualisierung der Filterkonfiguration"
+
+msgid "Access key 1"
+msgstr "Tastaturkommando 1"
+
+msgid "Allowed host successfully added."
+msgstr "Erlaubter Rechner wurde erfolgreich hinzugefügt."
+
+msgid "Invalid rule type."
+msgstr "Ungültiger Regeltyp."
+
+msgid "URL scheme"
+msgstr "URL Schema"
+
+msgid "Changes to this option require a proxy restart to take effect."
+msgstr "Änderungen dieser Option erfordern einen Proxy-Neustart um wirksam zu werden."
+
+msgid "Move rule up"
+msgstr "Regel nach oben schieben"
+
+msgid "Invalid rule move up id."
+msgstr "Ungültige Regel-nach-oben-Verschieben Nummer."
+
+msgid "Folder successfully enabled."
+msgstr "Ordner erfolgreich aktiviert."
+
+msgid "New rule successfully created."
+msgstr "Neue Regel wurde erfolgreich erstellt."
+
+msgid "PICS ratings"
+msgstr "PICS Bewertungen"
+
+msgid "Proxy password successfully changed."
+msgstr "Proxypasswort erfolgreich geändert."
+
+msgid "Hostname of the parent proxy"
+msgstr "Rechnername des übergeordneten Proxy"
+
+msgid "Username"
+msgstr "Benutzername"
+
+msgid "Invalid image width value."
+msgstr "Ungültige Bildbreite."
+
+msgid "Image width"
+msgstr "Bildbreite"
+
+msgid ""
+"I wrote this software to get rid of advertisings. If you still see advert images\n"
+"on pages you surf on, you are free to send me the url of those pages and I\n"
+"will include filters to remove the adverts.\n"
+msgstr ""
+"Ich habe dieses Progamm geschrieben, um Werbung zu entfernen.\n"
+"Falls sie immer noch Werbebanner auf Seiten sehen, können sie mir eine\n"
+"Url dieser Seiten schicken und ich werde Filter einfügen, um diese Werbung\n"
+"zu entfernen.\n"
+
+msgid "Empty header rule name."
+msgstr "Leerer Header-Regel Name."
+
+msgid "%(AppName)s filter rule configuration"
+msgstr "%(AppName)s Filterregeln Konfiguration"
+
+msgid "Empty replace search value."
+msgstr "Leerer Textersatzwert."
+
+msgid "Skip to main content"
+msgstr "Zum Hauptinhalt springen"
+
+msgid "Rule rewrite part successfully changed."
+msgstr "Rewrite-Regel Teilwert wurde erfolgreich geändert."
+
+msgid "Move folder down"
+msgstr "Ordner nach unten schieben"
+
+msgid "Rule already enabled."
+msgstr "Regel ist bereits aktiviert."
+
+msgid "%(AppName)s error"
+msgstr "%(AppName)s error"
+
+msgid "Rule url query successfully changed."
+msgstr "Regel URL Query wurde erfolgreich geändert."
+
+msgid "Rule rewrite replacement successfully changed."
+msgstr "Rewrite-Regel Ersatztext wurde erfolgreich geändert."
+
+msgid "Match URL"
+msgstr "Betroffene URL"
+
+msgid "Rule url host successfully changed."
+msgstr "Regel URL Rechnername wurde erfolgreich geändert."
+
+msgid "Rule url parameters successfully changed."
+msgstr "Regel URL Parameter wurde erfolgreich geändert."
+
+msgid "PICS service successfully enabled."
+msgstr "PICS Dienstleister wurde erfolgreich aktiviert."
+
+msgid "Filter update log"
+msgstr "Filteraktualisierung Protokoll"
+
+msgid "Move rule down"
+msgstr "Regel nach unten schieben"
+
+msgid "Proxy configuration"
+msgstr "Proxykonfiguration"
+
+msgid "Don't filter hosts"
+msgstr "Nicht zu filternde Rechner"
+
+msgid "Password used for parent proxy authentication"
+msgstr "Passwort zur Authentifizierung des übergeordneten Proxy"
+
+msgid "Rule title successfully changed."
+msgstr "Regel Titel wurde erfolgreich geändert."
+
+msgid "Rule successfully enabled."
+msgstr "Regel wurde erfolgreich aktiviert."
+
+msgid "Nofilter host successfully added."
+msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
+
+msgid "URL query"
+msgstr "URL Anfrage"
+
+msgid "Disabled folder icon"
+msgstr "Bild für inaktiven Ordner"
+
+msgid "Rule replace search successfully changed."
+msgstr "Replace-Regel Suchwert wurde erfolgreich geändert."
+
+msgid "Remove folder"
+msgstr "Ordner löschen"
+
+msgid "List of hosts allowed to use this proxy."
+msgstr "Liste der Rechner die diesen Proxy benutzen dürfen"
+
+msgid "Rule successfully removed."
+msgstr "Regel wurde erfolgreich gelöscht."
+
+msgid "Rule moved up."
+msgstr "Regel wurde nach oben geschoben"
+
+msgid ""
+"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
 "<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
-msgstr "Falls sie Vorschläge oder Kommentare zu %(AppName)s haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen.\n"
+msgstr "Falls sie Fragen oder Vorschläge zu den Zugänglichkeitseigenschaften dieser Seiten haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen.\n"
 
-msgid "Rule icon"
-msgstr "Regelicon"
+msgid "Category"
+msgstr "Kategorie"
 
-msgid "Fallback URL"
-msgstr "Ersatz-URL"
+msgid "Rule url scheme successfully changed."
+msgstr "Regel URL Schema wurde erfolgreich geändert."
 
-msgid "Generated by %(AppName)s %(Version)s"
-msgstr "Generiert durch %(AppName)s %(Version)s"
+msgid "Remove selected"
+msgstr "Lösche Auswahl"
 
-msgid "accessibility features of these pages"
-msgstr "Zugänglichkeitseigenschaften dieser Seiten"
+msgid "Access keys"
+msgstr "Tastaturkommandos"
+
+msgid "Invalid folder move up id."
+msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
 
 msgid "URL port"
 msgstr "URL Portnummer"
 
-msgid ""
-"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
-"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
-msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Webseiten stammen von Mark Pilgrims <a href=\"http://diveintoaccessibility.org/\">Accessibility Seiten</a>.\n"
+msgid "Folder moved up."
+msgstr "Ordner wurde nach oben geschoben."
+
+msgid "Accessibility statement for %(AppName)s"
+msgstr "Zugänglichkeitserklärung für %(AppName)s"
+
+msgid "Rule rewrite tag successfully changed."
+msgstr "Rewrite-Regel Tagname wurde erfolgreich geändert."
+
+msgid "Image height"
+msgstr "Bildhöhe"
+
+msgid "Rule replacement successfully changed."
+msgstr "Regel Ersatzwert wurde erfolgreich geändert."
+
+msgid "New rule"
+msgstr "Neue Regel"
+
+msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
+msgstr "Stellen sie sicher, alle Rechner Aliase und IPs angegeben zu haben weil DNS Auflösung nicht stattfindet."
+
+msgid "Folder successfully renamed."
+msgstr "Ordner erfolgreich umbenannt."
+
+msgid "Filter configuration"
+msgstr "Filterkonfiguration"
+
+msgid "Empty attribute name."
+msgstr "Leerer Attributname."
+
+msgid "Parent proxy user successfully changed."
+msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
+
+msgid "Nofilter host(s) successfully removed."
+msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
+
+msgid "%(AppName)s filter update script"
+msgstr "%(AppName)s Filteraktualisierung Skript"
+
+msgid "Move folder up"
+msgstr "Ordner nach oben schieben"
+
+msgid "%(AppName)s web interface main page"
+msgstr "%(AppName)s Weboberfläche Hauptseite"
+
+msgid "All pages define the following access keys:"
+msgstr "Alle Seiten definieren folgende Tastaturkommandos:"
+
+msgid "Filter update"
+msgstr "Filteraktualisierung"
+
+msgid "Rule url port successfully changed."
+msgstr "Regel URL Portnummer wurde erfolgreich geändert."
+
+msgid "Folder icon"
+msgstr "Ordnericon"
+
+msgid "Proxy filter modules"
+msgstr "Proxy Filter Module"
+
+msgid "Username used for parent proxy authentication"
+msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
+
+msgid "Blank page due to block by %(AppName)s"
+msgstr "Leere Seite aufgrund von Blockierung durch %(AppName)s"
+
+msgid "Rewrite attribute(s) removed."
+msgstr "Rewrite Attribut(e) wurde(n) gelöscht."
+
+msgid "Disable folder"
+msgstr "Ordner deaktivieren"
+
+msgid "Rename folder"
+msgstr "Benenne Ordner um"
+
+msgid "PICS service successfully disabled."
+msgstr "PICS Dienstleister wurde erfolgreich deaktiviert."
+
+msgid "Folder already disabled."
+msgstr "Ordner ist bereits deaktiviert."
+
+msgid "Generated by %(AppName)s %(Version)s"
+msgstr "Generiert durch %(AppName)s %(Version)s"
+
+msgid "Folder moved down."
+msgstr "Ordner wurde nach unten geschoben."
 
 msgid "Rule"
 msgstr "Regel"
 
-msgid "%(AppName)s filter update"
-msgstr "%(AppName)s Filteraktualisierung"
+msgid "Folders"
+msgstr "Ordner"
 
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
+
+msgid "Blocked image URL"
+msgstr "Blockierte Bild URL"
 
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
 msgstr "Nur numerische IPs/Netzwerke sind hier nützlich weil DNS Auflösung nicht stattfindet."
@@ -1087,23 +1170,17 @@ msgstr "Neuer Ordner"
 msgid "Replacement"
 msgstr "Ersetzter Teil"
 
-msgid "Replace regex"
-msgstr "Ersetze"
-
-msgid "Access key 9"
-msgstr "Tastaturkommando 9"
-
-msgid "Timeout sucessfully changed."
-msgstr "Zeitüberschreitung wurde erfolgreich geändert."
-
-msgid "%(AppName)s feedback information"
-msgstr "%(AppName)s Feedback Information"
+msgid "Invalid folder index."
+msgstr "Ungültiger Ordnerindex."
 
 msgid "Feedback"
 msgstr "Feedback"
 
-msgid "Don't match URL"
-msgstr "Nicht betroffene URL"
+msgid "Invalid rule index."
+msgstr "Ungültiger Regel Index."
+
+msgid "Rule don't-match-url successfully changed."
+msgstr "Regel Nichttreffer-URL wurde erfolgreich geändert."
 
 msgid "Username used for proxy authentication"
 msgstr "Benutzername zur Proxy Authentifizierung"
@@ -1117,63 +1194,29 @@ msgstr "Ordner aktivieren"
 msgid "Access key 0"
 msgstr "Tastaturkommando 0"
 
-msgid "Parent proxy port successfully changed."
-msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
-
-msgid "Password used for proxy authentitaction"
-msgstr "Passwort zur Proxy Authentifizierung"
-
-msgid ""
-"You can of course always add your own filter rules, they will not be\n"
-"touched on a filter update."
-msgstr ""
-"Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden\n"
-"bei einem Filter update nicht gelöscht."
-
-msgid "Move folder down"
-msgstr "Ordner nach unten schieben"
-
-msgid "URL path"
-msgstr "URL Pfad"
-
-msgid "Disable folder"
-msgstr "Ordner deaktivieren"
-
-msgid "Update filter configuration"
-msgstr "Aktualisierung der Filterkonfiguration"
-
 msgid "Remove rule"
 msgstr "Regel löschen"
 
 msgid "Folder rules"
 msgstr "Ordner Regeln"
 
-msgid "Allowed host successfully added."
-msgstr "Erlaubter Rechner wurde erfolgreich hinzugefügt."
+msgid "see footnote 1"
+msgstr "siehe Fußnote 1"
 
-msgid "Info"
-msgstr "Info"
+msgid "see footnote 3"
+msgstr "siehe Fußnote 3"
 
-msgid "URL scheme"
-msgstr "URL Schema"
+msgid "see footnote 2"
+msgstr "siehe Fußnote 2"
 
-msgid "Port successfully changed."
-msgstr "Portnummer erfolgreich geändert."
+msgid "see footnote 5"
+msgstr "siehe Fußnote 5"
 
-msgid "Image height"
-msgstr "Bildhöhe"
-
-msgid "Changes to this option require a proxy restart to take effect."
-msgstr "Änderungen dieser Option erfordern einen Proxy-Neustart um wirksam zu werden."
-
-msgid "Move rule up"
-msgstr "Regel nach oben schieben"
+msgid "see footnote 4"
+msgstr "siehe Fußnote 4"
 
 msgid "Feedback for %(AppName)s"
 msgstr "Feedback für %(AppName)s"
-
-msgid "Filter update"
-msgstr "Filteraktualisierung"
 
 msgid "Add attribute"
 msgstr "Attribut hinzufügen"
@@ -1184,23 +1227,20 @@ msgstr "URL Fragment"
 msgid "Proxy settings"
 msgstr "Proxy-Einstellungen"
 
-msgid "Back to update overview"
-msgstr "Zurück zur Aktualisierungsübersicht"
-
-msgid "PICS ratings"
-msgstr "PICS Bewertungen"
-
 msgid "Disabled rule icon"
 msgstr "Bild von inaktiver Regel"
 
-msgid "Proxy password successfully changed."
-msgstr "Proxypasswort erfolgreich geändert."
+msgid "Rule header value successfully changed."
+msgstr "Regel Header-Wert wurde erfolgreich geändert."
 
-msgid "Hostname of the parent proxy"
-msgstr "Rechnername des übergeordneten Proxy"
+msgid "Invalid folder move down id."
+msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
 
-msgid "Username"
-msgstr "Benutzername"
+msgid "Rule header name successfully changed."
+msgstr "Regel Header-Name wurde erfolgreich geändert."
+
+msgid "Port successfully changed."
+msgstr "Portnummer erfolgreich geändert."
 
 msgid "Disable rule"
 msgstr "Deaktiviere Regel"
@@ -1208,29 +1248,23 @@ msgstr "Deaktiviere Regel"
 msgid "Description"
 msgstr "Beschreibung"
 
-msgid "Image width"
-msgstr "Bildbreite"
+msgid "Accessibility statement"
+msgstr "Zugänglichkeitserklärung"
 
-msgid "This page is also available in"
-msgstr "Diese Seite ist auch verfügbar auf"
+msgid "Rule moved down."
+msgstr "Regel wurde nach unten geschoben."
 
-msgid "Accessibility statement for %(AppName)s"
-msgstr "Zugänglichkeitserklärung für %(AppName)s"
-
-msgid "%(AppName)s filter rule configuration"
-msgstr "%(AppName)s Filterregeln Konfiguration"
-
-msgid "Header name"
-msgstr "Header Name"
+msgid "Empty rewrite tag name."
+msgstr "Leerer Rewrite-Regel Tagname."
 
 msgid "Remove selected attributes"
 msgstr "Lösche ausgewählte Attribute"
 
+msgid "Invalid rule move down id."
+msgstr "Ungültige Regel-nach-unten-Verschieben Nummer."
+
 msgid "Invalid parent proxy port."
 msgstr "Ungültige übergeordnete Proxy Portnummer."
-
-msgid "%(AppName)s error"
-msgstr "%(AppName)s error"
 
 msgid "Parent proxy password successfully changed."
 msgstr "Passwort des übergeordneten Proxy wurde erfolgreich geändert."
@@ -1251,77 +1285,67 @@ msgstr "Portnummer"
 msgid "Add new rule to current folder."
 msgstr "Neue Regel zu aktuellem Ordner hinzufügen"
 
-msgid "Folders"
-msgstr "Ordner"
+msgid "Rule image width successfully changed."
+msgstr "Regel Bildbreite wurde erfolgreich geändert."
+
+msgid "Rule image height successfully changed."
+msgstr "Regel Bildhöhe wurde erfolgreich geändert."
 
 msgid "%(AppName)s"
 msgstr "%(AppName)s"
 
-msgid "Filter update log"
-msgstr "Filteraktualisierung Protokoll"
+msgid ""
+"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
+"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
+msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Webseiten stammen von Mark Pilgrims <a href=\"http://diveintoaccessibility.org/\">Accessibility Seiten</a>.\n"
 
-msgid "Disabled folder icon"
-msgstr "Bild für inaktiven Ordner"
+msgid "Empty rule title."
+msgstr "Leerer Regel Titel."
 
-msgid "Don't filter hosts"
-msgstr "Nicht zu filternde Rechner"
+msgid "Rule successfully disabled."
+msgstr "Ordner erfolgreich deaktiviert."
 
-msgid "Password used for parent proxy authentication"
-msgstr "Passwort zur Authentifizierung des übergeordneten Proxy"
-
-msgid "All pages define the following access keys:"
-msgstr "Alle Seiten definieren folgende Tastaturkommandos:"
-
-msgid "Service"
-msgstr "Dienstleister"
-
-msgid "Enabled filter module(s) %(filterenabled)s."
-msgstr "Filter Modul(e) %(filterenabled)s wurde(n) aktiviert."
+msgid "Rule match-url successfully changed."
+msgstr "Regel Treffer-URL wurde erfolgreich geändert."
 
 msgid "URL parameters"
 msgstr "URL Parameter"
 
-msgid ""
-"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
-"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
-msgstr "Falls sie Fragen oder Vorschläge zu den Zugänglichkeitseigenschaften dieser Seiten haben, können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> erreichen.\n"
+msgid "footnote 2"
+msgstr "Fußnote 2"
 
-msgid "Parent proxy settings"
-msgstr "Übergeordnete Proxy-Einstellungen"
+msgid "footnote 3"
+msgstr "Fußnote 3"
+
+msgid "footnote 1"
+msgstr "Fußnote 1"
+
+msgid "Rule url path successfully changed."
+msgstr "Regel URL Pfad wurde erfolgreich geändert."
+
+msgid "footnote 4"
+msgstr "Fußnote 4"
+
+msgid "footnote 5"
+msgstr "Fußnote 5"
+
+msgid "Enabled filter module(s) %(filterenabled)s."
+msgstr "Filter Modul(e) %(filterenabled)s wurde(n) aktiviert."
+
+msgid "Invalid rewrite part name."
+msgstr "Ungültiger Rewrite-Regel Teilwert."
+
+msgid "New folder successfully created."
+msgstr "Neuer Ordner erfolgreich erstellt."
 
 msgid "Invalid proxy port."
 msgstr "Ungültige Proxy Portnummer."
 
-msgid "Nofilter host successfully added."
-msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
+msgid "Invalid attribute name."
+msgstr "Ungültiger Attributname."
 
-msgid "Accessibility statement"
-msgstr "Zugänglichkeitserklärung"
-
-msgid "URL query"
-msgstr "URL Anfrage"
-
-msgid "Move rule down"
-msgstr "Regel nach unten schieben"
-
-msgid "Access keys"
-msgstr "Tastaturkommandos"
-
-msgid ""
-"I wrote this software to get rid of advertisings. If you still see advert images\n"
-"on pages you surf on, you are free to send me the url of those pages and I\n"
-"will include filters to remove the adverts.\n"
-msgstr ""
-"Ich habe dieses Progamm geschrieben, um Werbung zu entfernen.\n"
-"Falls sie immer noch Werbebanner auf Seiten sehen, können sie mir eine\n"
-"Url dieser Seiten schicken und ich werde Filter einfügen, um diese Werbung\n"
-"zu entfernen.\n"
-
-msgid "Remove folder"
-msgstr "Ordner löschen"
-
-msgid "List of hosts allowed to use this proxy."
-msgstr "Liste der Rechner die diesen Proxy benutzen dürfen"
+msgid "Apply"
+msgstr "Übernehmen"
 
 msgid "Home page"
 msgstr "Startseite"
@@ -1332,6 +1356,6 @@ msgstr "Verbindungszeitüberschreitung in Sekunden"
 msgid "Port number of the parent proxy"
 msgstr "Die Portnummer des übergeordneten Proxy"
 
-msgid "Proxy configuration"
-msgstr "Proxykonfiguration"
+msgid "Invalid image height value."
+msgstr "Ungültige Bildhöhe."
 

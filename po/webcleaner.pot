@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Aug 12 19:46:51 2003\n"
+"POT-Creation-Date: Wed Aug 13 15:52:13 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -410,9 +410,6 @@ msgstr ""
 msgid "Duplicate attribute name"
 msgstr ""
 
-msgid "Invalid regex %s: %s"
-msgstr ""
-
 msgid "Edit Attribute"
 msgstr ""
 
@@ -535,6 +532,9 @@ msgstr ""
 msgid "About WebCleaner"
 msgstr ""
 
+msgid "Forbidden"
+msgstr ""
+
 msgid "Host %s is an abbreviation for %s"
 msgstr ""
 
@@ -631,192 +631,6 @@ msgstr ""
 msgid "%s error"
 msgstr ""
 
-msgid "Invalid folder index"
-msgstr ""
-
-msgid "Invalid filter index"
-msgstr ""
-
-msgid "Empty folder name"
-msgstr ""
-
-msgid "New folder %s created."
-msgstr ""
-
-msgid "Empty folder name."
-msgstr ""
-
-msgid "Folder successfully renamed."
-msgstr ""
-
-msgid "Folder already disabled."
-msgstr ""
-
-msgid "Folder disabled."
-msgstr ""
-
-msgid "Folder already enabled."
-msgstr ""
-
-msgid "Folder enabled."
-msgstr ""
-
-msgid "Folder removed."
-msgstr ""
-
-msgid "Invalid rule type."
-msgstr ""
-
-msgid "New rule created."
-msgstr ""
-
-msgid "Rule already disabled."
-msgstr ""
-
-msgid "Rule disabled."
-msgstr ""
-
-msgid "Rule already enabled."
-msgstr ""
-
-msgid "Rule enabled."
-msgstr ""
-
-msgid "Rule removed."
-msgstr ""
-
-msgid "Empty attribute name."
-msgstr ""
-
-msgid "Rewrite attribute added."
-msgstr ""
-
-msgid "Rewrite attributes removed."
-msgstr ""
-
-msgid "Folder moved up."
-msgstr ""
-
-msgid "Invalid folder move up id."
-msgstr ""
-
-msgid "Folder moved down."
-msgstr ""
-
-msgid "Invalid folder move down id."
-msgstr ""
-
-msgid "Rule moved up."
-msgstr ""
-
-msgid "Invalid rule move up id."
-msgstr ""
-
-msgid "Rule moved down."
-msgstr ""
-
-msgid "Invalid rule move down id."
-msgstr ""
-
-msgid "Empty rule title"
-msgstr ""
-
-msgid "Rule title changed."
-msgstr ""
-
-msgid "Rule description changed."
-msgstr ""
-
-msgid "Rule match url changed."
-msgstr ""
-
-msgid "Rule dontmatch url changed."
-msgstr ""
-
-msgid "Rule url scheme changed."
-msgstr ""
-
-msgid "Rule url host changed."
-msgstr ""
-
-msgid "Rule url port changed."
-msgstr ""
-
-msgid "Rule url path changed."
-msgstr ""
-
-msgid "Rule url parameters changed."
-msgstr ""
-
-msgid "Rule url query changed."
-msgstr ""
-
-msgid "Rule url fragment changed."
-msgstr ""
-
-msgid "Rule blocked url changed."
-msgstr ""
-
-msgid "Empty header rule name."
-msgstr ""
-
-msgid "Rule header name changed."
-msgstr ""
-
-msgid "Rule header value changed."
-msgstr ""
-
-msgid "Invalid image width value."
-msgstr ""
-
-msgid "Rule image width changed."
-msgstr ""
-
-msgid "Invalid image height value."
-msgstr ""
-
-msgid "Rule image height changed."
-msgstr ""
-
-msgid "PICS service %s enabled."
-msgstr ""
-
-msgid "PICS service %s disabled."
-msgstr ""
-
-msgid "PICS service %s, category %s enabled."
-msgstr ""
-
-msgid "PICS service %s, category %s disabled."
-msgstr ""
-
-msgid "Empty replace search value."
-msgstr ""
-
-msgid "Rule replace search changed."
-msgstr ""
-
-msgid "Rule replacement changed."
-msgstr ""
-
-msgid "Empty rewrite tag name."
-msgstr ""
-
-msgid "Rule rewrite tag changed."
-msgstr ""
-
-msgid "Rule rewrite enclosed block changed."
-msgstr ""
-
-msgid "Invalid part value %s."
-msgstr ""
-
-msgid "Rule rewrite part changed."
-msgstr ""
-
-msgid "Rule rewrite replacement changed."
-msgstr ""
-
 msgid ""
 "USAGE\twebcleaner command\n"
 "\n"
@@ -859,16 +673,16 @@ msgstr ""
 msgid "Unknown command %s"
 msgstr ""
 
-msgid "Category"
+msgid "PICS category successfully enabled."
 msgstr ""
 
 msgid "Proxy user successfully changed."
 msgstr ""
 
-msgid "Apply"
+msgid "Rule url fragment successfully changed."
 msgstr ""
 
-msgid "Remove selected"
+msgid "Allowed host(s) successfully removed."
 msgstr ""
 
 msgid "Invalid timeout value."
@@ -883,10 +697,13 @@ msgstr ""
 msgid "Blocked URL"
 msgstr ""
 
-msgid "%(AppName)s proxy configuration"
+msgid ""
+"If you have any suggestions or comments about %(AppName)s, feel free to\n"
+"email me at\n"
+"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr ""
 
-msgid "Access key 1"
+msgid "%(AppName)s proxy configuration"
 msgstr ""
 
 msgid "Always change the complete password since the displayed value is only a dummy."
@@ -907,10 +724,299 @@ msgstr ""
 msgid "List of hostnames the proxy must not filter."
 msgstr ""
 
-msgid "Allowed host(s) successfully removed."
+msgid "Rewrite attribute added."
 msgstr ""
 
 msgid "Port number the proxy is listening on for requests"
+msgstr ""
+
+msgid "Header name"
+msgstr ""
+
+msgid "This page is also available in"
+msgstr ""
+
+msgid "Rule description successfully changed."
+msgstr ""
+
+msgid ""
+"Most browsers support jumping to specific links by typing keys defined on\n"
+"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
+"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
+"access key."
+msgstr ""
+
+msgid "Service"
+msgstr ""
+
+msgid "Empty folder name."
+msgstr ""
+
+msgid "return window.confirm('Really remove this folder?')"
+msgstr ""
+
+msgid "Folder name"
+msgstr ""
+
+msgid "Rule blocked url successfully changed."
+msgstr ""
+
+msgid "Header value"
+msgstr ""
+
+msgid "Disabled filter module(s) %(filterdisabled)s."
+msgstr ""
+
+msgid "Back to update overview"
+msgstr ""
+
+msgid "Rule icon"
+msgstr ""
+
+msgid "Fallback URL"
+msgstr ""
+
+msgid "accessibility features of these pages"
+msgstr ""
+
+msgid "Access key 9"
+msgstr ""
+
+msgid "Folder successfully disabled."
+msgstr ""
+
+msgid "%(AppName)s filter update"
+msgstr ""
+
+msgid "Rule enclosed block successfully changed."
+msgstr ""
+
+msgid "URL host"
+msgstr ""
+
+msgid ""
+"The following button downloads new\n"
+"filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a> and merges their\n"
+"changes into the current configuration.<br>\n"
+"If something has changed, the new filter configuration files\n"
+"are saved and reloaded into the proxy."
+msgstr ""
+
+msgid "Replace regex"
+msgstr ""
+
+msgid "Rule already disabled."
+msgstr ""
+
+msgid "Timeout sucessfully changed."
+msgstr ""
+
+msgid "%(AppName)s feedback information"
+msgstr ""
+
+msgid "Don't match URL"
+msgstr ""
+
+msgid "Parent proxy settings"
+msgstr ""
+
+msgid "Parent proxy port successfully changed."
+msgstr ""
+
+msgid "Folder already enabled."
+msgstr ""
+
+msgid "Password used for proxy authentitaction"
+msgstr ""
+
+msgid ""
+"You can of course always add your own filter rules, they will not be\n"
+"touched on a filter update."
+msgstr ""
+
+msgid "Folder successfully removed."
+msgstr ""
+
+msgid "URL path"
+msgstr ""
+
+msgid "Update filter configuration"
+msgstr ""
+
+msgid "Access key 1"
+msgstr ""
+
+msgid "Allowed host successfully added."
+msgstr ""
+
+msgid "Invalid rule type."
+msgstr ""
+
+msgid "URL scheme"
+msgstr ""
+
+msgid "Changes to this option require a proxy restart to take effect."
+msgstr ""
+
+msgid "Move rule up"
+msgstr ""
+
+msgid "Invalid rule move up id."
+msgstr ""
+
+msgid "Folder successfully enabled."
+msgstr ""
+
+msgid "New rule successfully created."
+msgstr ""
+
+msgid "PICS ratings"
+msgstr ""
+
+msgid "Proxy password successfully changed."
+msgstr ""
+
+msgid "Hostname of the parent proxy"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Invalid image width value."
+msgstr ""
+
+msgid "Image width"
+msgstr ""
+
+msgid ""
+"I wrote this software to get rid of advertisings. If you still see advert images\n"
+"on pages you surf on, you are free to send me the url of those pages and I\n"
+"will include filters to remove the adverts.\n"
+msgstr ""
+
+msgid "Empty header rule name."
+msgstr ""
+
+msgid "%(AppName)s filter rule configuration"
+msgstr ""
+
+msgid "Empty replace search value."
+msgstr ""
+
+msgid "Skip to main content"
+msgstr ""
+
+msgid "Rule rewrite part successfully changed."
+msgstr ""
+
+msgid "Move folder down"
+msgstr ""
+
+msgid "Rule already enabled."
+msgstr ""
+
+msgid "%(AppName)s error"
+msgstr ""
+
+msgid "Rule url query successfully changed."
+msgstr ""
+
+msgid "Rule rewrite replacement successfully changed."
+msgstr ""
+
+msgid "Match URL"
+msgstr ""
+
+msgid "Rule url host successfully changed."
+msgstr ""
+
+msgid "Rule url parameters successfully changed."
+msgstr ""
+
+msgid "PICS service successfully enabled."
+msgstr ""
+
+msgid "Filter update log"
+msgstr ""
+
+msgid "Move rule down"
+msgstr ""
+
+msgid "Proxy configuration"
+msgstr ""
+
+msgid "Don't filter hosts"
+msgstr ""
+
+msgid "Password used for parent proxy authentication"
+msgstr ""
+
+msgid "Rule title successfully changed."
+msgstr ""
+
+msgid "Rule successfully enabled."
+msgstr ""
+
+msgid "Nofilter host successfully added."
+msgstr ""
+
+msgid "URL query"
+msgstr ""
+
+msgid "Disabled folder icon"
+msgstr ""
+
+msgid "Rule replace search successfully changed."
+msgstr ""
+
+msgid "Remove folder"
+msgstr ""
+
+msgid "List of hosts allowed to use this proxy."
+msgstr ""
+
+msgid "Rule successfully removed."
+msgstr ""
+
+msgid "Rule moved up."
+msgstr ""
+
+msgid ""
+"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
+"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Rule url scheme successfully changed."
+msgstr ""
+
+msgid "Remove selected"
+msgstr ""
+
+msgid "Access keys"
+msgstr ""
+
+msgid "Invalid folder move up id."
+msgstr ""
+
+msgid "URL port"
+msgstr ""
+
+msgid "Folder moved up."
+msgstr ""
+
+msgid "Accessibility statement for %(AppName)s"
+msgstr ""
+
+msgid "Rule rewrite tag successfully changed."
+msgstr ""
+
+msgid "Image height"
+msgstr ""
+
+msgid "Rule replacement successfully changed."
 msgstr ""
 
 msgid "New rule"
@@ -919,20 +1025,13 @@ msgstr ""
 msgid "Be sure to supply all host aliases and IPs as DNS resolution is not performed."
 msgstr ""
 
-msgid "Match URL"
+msgid "Folder successfully renamed."
 msgstr ""
 
 msgid "Filter configuration"
 msgstr ""
 
-msgid "Skip to main content"
-msgstr ""
-
-msgid ""
-"Most browsers support jumping to specific links by typing keys defined on\n"
-"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
-"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
-"access key."
+msgid "Empty attribute name."
 msgstr ""
 
 msgid "Parent proxy user successfully changed."
@@ -950,7 +1049,13 @@ msgstr ""
 msgid "%(AppName)s web interface main page"
 msgstr ""
 
-msgid "return window.confirm('Really remove this folder?')"
+msgid "All pages define the following access keys:"
+msgstr ""
+
+msgid "Filter update"
+msgstr ""
+
+msgid "Rule url port successfully changed."
 msgstr ""
 
 msgid "Folder icon"
@@ -959,71 +1064,43 @@ msgstr ""
 msgid "Proxy filter modules"
 msgstr ""
 
-msgid "Folder name"
-msgstr ""
-
 msgid "Username used for parent proxy authentication"
 msgstr ""
 
 msgid "Blank page due to block by %(AppName)s"
 msgstr ""
 
-msgid "URL host"
+msgid "Rewrite attribute(s) removed."
 msgstr ""
 
-msgid ""
-"The following button downloads new\n"
-"filter files from <a href=\"%(BaseUrl)s\">%(BaseUrl)s</a> and merges their\n"
-"changes into the current configuration.<br>\n"
-"If something has changed, the new filter configuration files\n"
-"are saved and reloaded into the proxy."
-msgstr ""
-
-msgid "Header value"
-msgstr ""
-
-msgid "Disabled filter module(s) %(filterdisabled)s."
+msgid "Disable folder"
 msgstr ""
 
 msgid "Rename folder"
 msgstr ""
 
-msgid "Blocked image URL"
+msgid "PICS service successfully disabled."
 msgstr ""
 
-msgid ""
-"If you have any suggestions or comments about %(AppName)s, feel free to\n"
-"email me at\n"
-"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
-msgstr ""
-
-msgid "Rule icon"
-msgstr ""
-
-msgid "Fallback URL"
+msgid "Folder already disabled."
 msgstr ""
 
 msgid "Generated by %(AppName)s %(Version)s"
 msgstr ""
 
-msgid "accessibility features of these pages"
-msgstr ""
-
-msgid "URL port"
-msgstr ""
-
-msgid ""
-"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
-"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
+msgid "Folder moved down."
 msgstr ""
 
 msgid "Rule"
 msgstr ""
 
-msgid "%(AppName)s filter update"
+msgid "Folders"
 msgstr ""
 
 msgid "Timeout"
+msgstr ""
+
+msgid "Blocked image URL"
 msgstr ""
 
 msgid "Only numeric IPs/networks are useful as DNS resolution is not performed."
@@ -1035,22 +1112,16 @@ msgstr ""
 msgid "Replacement"
 msgstr ""
 
-msgid "Replace regex"
-msgstr ""
-
-msgid "Access key 9"
-msgstr ""
-
-msgid "Timeout sucessfully changed."
-msgstr ""
-
-msgid "%(AppName)s feedback information"
+msgid "Invalid folder index."
 msgstr ""
 
 msgid "Feedback"
 msgstr ""
 
-msgid "Don't match URL"
+msgid "Invalid rule index."
+msgstr ""
+
+msgid "Rule don't-match-url successfully changed."
 msgstr ""
 
 msgid "Username used for proxy authentication"
@@ -1065,60 +1136,28 @@ msgstr ""
 msgid "Access key 0"
 msgstr ""
 
-msgid "Parent proxy port successfully changed."
-msgstr ""
-
-msgid "Password used for proxy authentitaction"
-msgstr ""
-
-msgid ""
-"You can of course always add your own filter rules, they will not be\n"
-"touched on a filter update."
-msgstr ""
-
-msgid "Move folder down"
-msgstr ""
-
-msgid "URL path"
-msgstr ""
-
-msgid "Disable folder"
-msgstr ""
-
-msgid "Update filter configuration"
-msgstr ""
-
 msgid "Remove rule"
 msgstr ""
 
 msgid "Folder rules"
 msgstr ""
 
-msgid "Allowed host successfully added."
+msgid "see footnote 1"
 msgstr ""
 
-msgid "Info"
+msgid "see footnote 3"
 msgstr ""
 
-msgid "URL scheme"
+msgid "see footnote 2"
 msgstr ""
 
-msgid "Port successfully changed."
+msgid "see footnote 5"
 msgstr ""
 
-msgid "Image height"
-msgstr ""
-
-msgid "Changes to this option require a proxy restart to take effect."
-msgstr ""
-
-msgid "Move rule up"
+msgid "see footnote 4"
 msgstr ""
 
 msgid "Feedback for %(AppName)s"
-msgstr ""
-
-msgid "Filter update"
 msgstr ""
 
 msgid "Add attribute"
@@ -1130,22 +1169,19 @@ msgstr ""
 msgid "Proxy settings"
 msgstr ""
 
-msgid "Back to update overview"
-msgstr ""
-
-msgid "PICS ratings"
-msgstr ""
-
 msgid "Disabled rule icon"
 msgstr ""
 
-msgid "Proxy password successfully changed."
+msgid "Rule header value successfully changed."
 msgstr ""
 
-msgid "Hostname of the parent proxy"
+msgid "Invalid folder move down id."
 msgstr ""
 
-msgid "Username"
+msgid "Rule header name successfully changed."
+msgstr ""
+
+msgid "Port successfully changed."
 msgstr ""
 
 msgid "Disable rule"
@@ -1154,28 +1190,22 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-msgid "Image width"
+msgid "Accessibility statement"
 msgstr ""
 
-msgid "This page is also available in"
+msgid "Rule moved down."
 msgstr ""
 
-msgid "Accessibility statement for %(AppName)s"
-msgstr ""
-
-msgid "%(AppName)s filter rule configuration"
-msgstr ""
-
-msgid "Header name"
+msgid "Empty rewrite tag name."
 msgstr ""
 
 msgid "Remove selected attributes"
 msgstr ""
 
-msgid "Invalid parent proxy port."
+msgid "Invalid rule move down id."
 msgstr ""
 
-msgid "%(AppName)s error"
+msgid "Invalid parent proxy port."
 msgstr ""
 
 msgid "Parent proxy password successfully changed."
@@ -1195,72 +1225,66 @@ msgstr ""
 msgid "Add new rule to current folder."
 msgstr ""
 
-msgid "Folders"
+msgid "Rule image width successfully changed."
+msgstr ""
+
+msgid "Rule image height successfully changed."
 msgstr ""
 
 msgid "%(AppName)s"
 msgstr ""
 
-msgid "Filter update log"
+msgid ""
+"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
+"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
 msgstr ""
 
-msgid "Disabled folder icon"
+msgid "Empty rule title."
 msgstr ""
 
-msgid "Don't filter hosts"
+msgid "Rule successfully disabled."
 msgstr ""
 
-msgid "Password used for parent proxy authentication"
-msgstr ""
-
-msgid "All pages define the following access keys:"
-msgstr ""
-
-msgid "Service"
-msgstr ""
-
-msgid "Enabled filter module(s) %(filterenabled)s."
+msgid "Rule match-url successfully changed."
 msgstr ""
 
 msgid "URL parameters"
 msgstr ""
 
-msgid ""
-"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
-"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
+msgid "footnote 2"
 msgstr ""
 
-msgid "Parent proxy settings"
+msgid "footnote 3"
+msgstr ""
+
+msgid "footnote 1"
+msgstr ""
+
+msgid "Rule url path successfully changed."
+msgstr ""
+
+msgid "footnote 4"
+msgstr ""
+
+msgid "footnote 5"
+msgstr ""
+
+msgid "Enabled filter module(s) %(filterenabled)s."
+msgstr ""
+
+msgid "Invalid rewrite part name."
+msgstr ""
+
+msgid "New folder successfully created."
 msgstr ""
 
 msgid "Invalid proxy port."
 msgstr ""
 
-msgid "Nofilter host successfully added."
+msgid "Invalid attribute name."
 msgstr ""
 
-msgid "Accessibility statement"
-msgstr ""
-
-msgid "URL query"
-msgstr ""
-
-msgid "Move rule down"
-msgstr ""
-
-msgid "Access keys"
-msgstr ""
-
-msgid ""
-"I wrote this software to get rid of advertisings. If you still see advert images\n"
-"on pages you surf on, you are free to send me the url of those pages and I\n"
-"will include filters to remove the adverts.\n"
-msgstr ""
-
-msgid "Remove folder"
-msgstr ""
-
-msgid "List of hosts allowed to use this proxy."
+msgid "Apply"
 msgstr ""
 
 msgid "Home page"
@@ -1272,6 +1296,6 @@ msgstr ""
 msgid "Port number of the parent proxy"
 msgstr ""
 
-msgid "Proxy configuration"
+msgid "Invalid image height value."
 msgstr ""
 
