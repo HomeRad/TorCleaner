@@ -6,34 +6,6 @@ version 2.11 and above
 
 - use test/client.py, test/server.py for testing
 
-- at http://pymonitor.sf.net/ ?
-  Traceback (most recent call last):
-  File "/home/calvin/projects/webcleaner/webcleaner", line 132, in ?
-    main()
-  File "/home/calvin/projects/webcleaner/webcleaner", line 94, in main
-    return _main_posix()
-  File "/home/calvin/projects/webcleaner/webcleaner", line 99, in _main_posix
-    wstartfunc()
-  File "/home/calvin/projects/webcleaner/wc/__init__.py", line 100, in wstartfunc
-    mainloop(handle=handle)
-  File "/home/calvin/projects/webcleaner/wc/proxy/__init__.py", line 167, in mainloop
-    proxy_poll(timeout=max(0, run_timers()))
-  File "/home/calvin/projects/webcleaner/wc/proxy/__init__.py", line 83, in run_timers
-    callback()
-  File "/home/calvin/projects/webcleaner/wc/proxy/HttpServer.py", line 128, in <lambda>
-    make_timer(0, lambda s=self: s.client and s.client.server_connected(s))
-  File "/home/calvin/projects/webcleaner/wc/proxy/ClientServerMatchmaker.py", line 174, in server_connected
-    server.client_abort()
-  File "/home/calvin/projects/webcleaner/wc/proxy/Server.py", line 19, in client_abort
-    self.close()
-  File "/home/calvin/projects/webcleaner/wc/proxy/Connection.py", line 122, in close
-    self.close_close()
-  File "/home/calvin/projects/webcleaner/wc/proxy/HttpServer.py", line 504, in close_close
-    serverpool.unregister_server(self.addr, self)
-  File "/home/calvin/projects/webcleaner/wc/proxy/ServerPool.py", line 65, in unregister_server  
-    assert addr in self.smap, '%s missing %s' % (self.smap, addr)
-AssertionError: {} missing ('192.25.206.16', 80)
-
 - memory leaks while operating the proxy
 
 - allow filtering/blocking by MIME type?
