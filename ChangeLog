@@ -29,6 +29,7 @@
     Added: wc/filter/ImageSize
   * - parse JS strings and comments
     - accept "<!- " as comment begin
+    - allow colons in attribute names for namespaces
     Changed: wc/parser/htmlex.l
   * handle empty status messages like 'HTTP/1.1 302 \r\n'
     Changed: wc/proxy/HttpServer.py
