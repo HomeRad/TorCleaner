@@ -182,14 +182,13 @@ class HttpServer(Server):
 #                    self.headers.headers.remove(h)
 
         self.client.server_response(self.response, self.headers)
+        mime = self.headers.get('content-type', 'application/octeet-stream')
+        self.attrs = initStateObjects(mime, self.headers)
         if ((response and response[1] in ('204', '304')) or
             self.method == 'HEAD'):
             # These response codes indicate no content
             self.state = 'recycle'
         else:
-            mime = self.headers.get('content-type', 'application/octeet-stream')
-            debug(HURT_ME_PLENTY, "init state objects")
-            self.attrs = initStateObjects(mime, self.headers)
             self.state = 'content'
 
     def process_content(self):

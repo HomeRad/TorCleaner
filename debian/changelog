@@ -1,3 +1,9 @@
+webcleaner (0.12) unstable; urgency=low
+
+  * always initialize filter attributes in HttpServer.py
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 18 Apr 2001 20:53:06 +0200
+
 webcleaner (0.11) unstable; urgency=low
 
   * new proxy code: HTTP/1.1 and select() I/O
