@@ -169,8 +169,9 @@ scripts = ['webcleaner', 'webcleanerconf']
 
 if os.name=="nt":
     scripts.append("webcleaner.bat")
+    scripts.append("webcleanerconf.bat")
 else:
-    data_files.append(('share/webcleaner/examples', ['webcleaner.bat']))
+    data_files.append(('share/webcleaner/examples', ['webcleaner.bat','webcleanerconf.bat']))
 
 setup (name = "webcleaner",
        version = "0.19",

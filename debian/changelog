@@ -3,8 +3,10 @@ webcleaner (0.19) unstable; urgency=low
   * fix <script> lexer code by using my own strncasecmp function
   * correct use of logfiles in Debian init.d script
   * minor code cleanups
+  * help for french output in .bat files
+  * added webcleanerconf.bat
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 17 Oct 2001 23:47:42 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri, 19 Oct 2001 10:04:06 +0200
 
 webcleaner (0.18) unstable; urgency=low
 
