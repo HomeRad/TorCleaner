@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Thu Nov 29 15:19:55 2001\n"
+"POT-Creation-Date: Thu Nov 29 16:03:25 2001\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -429,6 +429,9 @@ msgstr "kein"
 
 msgid "URL Port:\tRegular expression to match the port"
 msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
+
+msgid "WebCleaner is not running"
+msgstr ""
 
 msgid "Tag name"
 msgstr "Tag Name"
