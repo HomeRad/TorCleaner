@@ -88,6 +88,7 @@ class Compress (wc.filter.Filter.Filter):
             wc.log.debug(wc.LOG_FILTER, 'writing gzip header')
         compobj['size'] += len(data)
         compobj['crc'] = zlib.crc32(data, compobj['crc'])
+        wc.log.debug(wc.LOG_FILTER, "compressing %d bytes", len(data))
         data = "%s%s" % (header, compobj['compressor'].compress(data))
         return data
 
@@ -103,6 +104,7 @@ class Compress (wc.filter.Filter.Filter):
         if header:
             wc.log.debug(wc.LOG_FILTER, 'final writing gzip header')
             pass
+        wc.log.debug(wc.LOG_FILTER, "compressing %d bytes", len(data))
         if data:
             compobj['size'] += len(data)
             compobj['crc'] = zlib.crc32(data, compobj['crc'])
