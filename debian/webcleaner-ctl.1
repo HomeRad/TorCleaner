@@ -1,0 +1,28 @@
+.TH WEBCLEANER-CTL 1 "31 May 2004"
+.SH NAME
+webcleaner-ctl \- WebCleaner proxy control interface
+.SH SYNOPSIS
+\fBwebcleaner-ctl\fP \fIcommand\fP
+.SH DESCRIPTION
+\fBwebcleaner-ctl\fP is a front end to the WebCleaner proxy.
+It is designed to help the administrator control the functioning of the
+proxy daemon.
+
+The webcleaner-ctl script returns a 0 exit value on success, and >0 if an
+error occurs. For more details, view the comments in the script.
+.SH OPTIONS
+The \fIcommand\fP can be any one or more of the following options:
+.TP
+\fBstart\fP
+If the WebCleaner proxy is not runinng, start it. If the proxy stops,
+restart it.
+\fBstop\fP
+Stops the WebCleaner proxy.
+\fBreload\fP
+Reload the WebCleaner proxy configuration.
+\fBstatus\fP
+Print status of the WebCleaner proxy.
+.SH "SEE ALSO"
+webcleaner(1) runsvctrl(8) runsvstat(8) svwaitdown(8)
+.SH AUTHOR
+Bastian Kleineidam <calvin@users.sourceforge.net>

@@ -56,25 +56,26 @@ install: build
 	chown root:adm $(BASE)/var/log/webcleaner
 	chmod 0750 $(BASE)/var/log/webcleaner
 	$(PYTHON) setup.py install --root=$(CURDIR)/$(BASE) --no-compile
-	# delete man pages, we install them with dh_installmanpages
+# delete man pages, we install them with dh_installmanpages
 	rm -rf $(BASE)/usr/man
-	# delete INSTALL file
+# delete INSTALL file
 	rm -f $(DOCDIR)/INSTALL
-	# move config files
+# move config files
 	mv $(SHAREDIR)/config/* $(ETCDIR)/
 	rmdir $(SHAREDIR)/config
-	# fix config permission
+# fix config permission
 	chmod go-rwx $(ETCDIR)/webcleaner.conf
-	# remove example files, we install them ourselves
+# remove example files, we install them ourselves
 	rm -rf $(SHAREDIR)/examples
-	# install into /var/service directory
+# install service files
 	install -m 0755 service/webcleaner/run2 $(SERVICEDIR)/run
 	install -m 0755 service/webcleaner/log/run $(SERVICEDIR)/log/
-	# move files to packages
+	install -m 0755 debian/webcleaner-ctl $(BASE)/usr/bin
+# overrides
+	install -m 0644 debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
+	install -m 0644 debian/webcleaner.linda debian/webcleaner/usr/share/linda/overrides/webcleaner
+# move files to packages
 	dh_movefiles --sourcedir=$(BASE)
-	# overrides
-	cp -a debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
-	cp -a debian/webcleaner.linda debian/webcleaner/usr/share/linda/overrides/webcleaner
 
 
 # Build architecture-independent files here.
@@ -90,9 +91,9 @@ binary-arch: build install
 	dh_installexamples
 	dh_installmenu
 #	dh_installlogrotate
-	dh_installinit --no-start
+#	dh_installinit --no-start
 #	dh_installcron
-	dh_installman webcleaner.1 webcleaner-certificates.1 webcleaner.conf.5
+	dh_installman
 #	dh_installinfo
 	dh_installchangelogs
 	dh_link

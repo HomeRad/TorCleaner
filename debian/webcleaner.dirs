@@ -4,3 +4,4 @@ var/run/webcleaner.log
 etc/webcleaner/service/log
 usr/share/lintian/overrides
 usr/share/linda/overrides
+usr/bin
