@@ -33,7 +33,12 @@ class Server (Connection):
 
     def writable (self):
         """a server is writable if we're connecting"""
-        return self.state == 'connect' or self.send_buffer != ''
+        return self.send_buffer or self.state=='connect'
+
+
+    def readable (self):
+        """a server is readable if we're connected and not in client or closed state"""
+        return self.connected and self.state not in ('client', 'closed')
 
 
     def process_connect (self):
