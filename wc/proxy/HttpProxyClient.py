@@ -55,7 +55,7 @@ class HttpProxyClient (object):
         self.server = server
         assert self.server.connected
         debug(PROXY, '%s server_response %s', str(self), `response`)
-        protocol, status, msg = get_response_data(response)
+        protocol, status, msg = get_response_data(response, self.args[0])
         if status in (302, 301):
             # eg: http://ezpolls.mycomputer.com/ezpoll.html?u=shuochen&p=1
             # make a new ClientServerMatchmaker
