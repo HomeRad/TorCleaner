@@ -69,6 +69,9 @@ except IOError:
 def error (s):
     print >>sys.stderr, "error:", s
 
+def warning (s):
+    print >>sys.stderr, "warning:", s
+
 ErrorText = _("""<html><head>
 <title>WebCleaner Proxy Error %d %s</title>
 </head><body bgcolor="#fff7e5"><br><center><b>Bummer!</b><br>

@@ -136,6 +136,7 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align full
+/* uncomment the next line for debugging */
 /*%option debug*/
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
@@ -166,6 +167,7 @@ RX_DATA [-a-zA-Z0-9_]+
 
   /*********************** EOF ************************/
 <<EOF>> {
+    /* wait for more data */
     return T_WAIT;
 }
 

@@ -1,10 +1,10 @@
 # For a high level overview of DNS, see
 # http://www.rad.com/networks/1998/dns/main.html
 
-import sys,os,time,socket,re,DNS
+import sys, os, time, socket, re,DNS
 from Connection import Connection
 from wc.proxy import make_timer
-from wc import debug
+from wc import debug, warning
 from wc.debug_levels import *
 from pprint import pformat
 
@@ -39,12 +39,13 @@ def ipv6_expand (ip, num):
 ###################### configuration ########################
 
 class DnsConfig:
-    nameservers = []
-    search_domains = []
-    search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
+    pass
 
 
 def init_dns_resolver ():
+    DnsConfig.nameservers = []
+    DnsConfig.search_domains = []
+    DnsConfig.search_patterns = ('www.%s.com', 'www.%s.net', 'www.%s.org')
     import os
     if os.name=='posix':
         init_dns_resolver_posix()
@@ -58,6 +59,8 @@ def init_dns_resolver ():
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
     #debug(BRING_IT_ON, "DNS nameservers", DnsConfig.nameservers, "\nsearch", DnsConfig.search_domains)
+    # re-read config every 10 minutes
+    make_timer(600, init_dns_resolver)
 
 
 def init_dns_resolver_posix ():
@@ -517,10 +520,18 @@ class DnsLookupConnection (Connection):
         (id, qr, opcode, aa, tc, rd, ra, z, rcode,
          qdcount, ancount, nscount, arcount) = msg.getHeader()
         if tc:
-            self.handle_error("dns error", socket.error,
-                              (84, 'Truncated DNS packet: %s from %s for %s' %
-                               (tc, self.nameserver, self.hostname)))
+            # dont handle truncated packets; try to switch to TCP
+            # See http://cr.yp.to/djbdns/notes.html
+            if self.conntype == 'tcp':
+                self.handle_error("dns error", socket.error,
+                        (84, 'Truncated TCP DNS packet: %s from %s for %s' %
+                          (tc, self.nameserver, self.hostname)))
+            else:
+                warning('truncated UDP DNS packet: %s from %s for %s' %
+                        (tc, self.nameserver, self.hostname))
+            # we ignore this read, and let the timeout take its course
             return
+
         if rcode:
             if self.callback:
                 callback, self.callback = self.callback, None
@@ -557,7 +568,7 @@ class DnsLookupConnection (Connection):
                 ip_addrs.append(data)
             if type == DNS.Type.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                #debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
+                #debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', `data`)
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records
