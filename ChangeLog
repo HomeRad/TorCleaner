@@ -1,7 +1,7 @@
 Changes since 0.55:
   * fix dropping of root privileges if run as root
   * set umask to 0277
-  * Dont compress if no Accept-Encoding header is found
+  * dont compress if no appropriate Accept-Encoding header is found
 
 Changes since 0.54:
   * Also support Content-Encoding: deflate and identity
