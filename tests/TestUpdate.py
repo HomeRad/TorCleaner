@@ -11,11 +11,11 @@ class TestUpdate (unittest.TestCase):
 
 
     def testUpdateFilter (self):
-        update_filter(config, dryrun=True)
+        update_filter(self.config, dryrun=True)
 
 
     def testUpdateRatings (self):
-        update_ratings(config, dryrun=True)
+        update_ratings(self.config, dryrun=True)
 
 
 if __name__ == '__main__':
