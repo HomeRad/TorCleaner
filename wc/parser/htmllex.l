@@ -120,7 +120,7 @@ static PyObject* quote_string (PyObject* val) {
 
 %option 8bit outfile="htmllex.c"
 %option align full
-/*%option debug*/
+%option debug
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
 %option warn
@@ -618,7 +618,12 @@ RX_DATA [-a-zA-Z0-9_]+
 
 <S_TAGEND><{RX_WHITE_SPACE}* {
     UPDATE_BUFPOS;
+    LOWER_TMP;
+    SETLVAL;
+    yyextra->tmp_attrs = PyDict_New();
+    if (!yyextra->tmp_attrs) return T_ERROR;
     BEGIN(S_TAGSTART);
+    RETURN(T_ELEMENT_END);
 }
 
 <S_TAGEND>.|{RX_WHITE_SPACE}+ {
@@ -685,7 +690,7 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     data->exc_type = NULL;
     data->exc_val = NULL;
     data->exc_tb = NULL;
-    //fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
+    fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
     data->lexbuf = yy_scan_bytes(data->buf+len, slen, scanner);
     return 0;
 }

@@ -350,6 +350,8 @@ static void yy_flex_free YY_PROTO(( void * YY_LAST_ARG ));
 
 #define yywrap(n) 1
 #define YY_SKIP_YYWRAP
+
+#define FLEX_DEBUG
 #ifndef yyIN_HEADER
 typedef unsigned char YY_CHAR;
 #endif /* !yyIN_HEADER */
@@ -361,6 +363,8 @@ FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 #ifndef yyIN_HEADER
 typedef int yy_state_type;
 #endif /* !yyIN_HEADER */
+
+#define FLEX_DEBUG
 #define yytext_ptr yytext_r
 static yyconst long yy_nxt[][256] =
     {
@@ -6449,6 +6453,21 @@ static yyconst yy_state_type yy_NUL_trans[190] =
       187,    0,  182,    0,    0,    0,    0,  187,    0
     } ;
 
+extern int yy_flex_debug;
+int yy_flex_debug = 1;
+
+static yyconst long int yy_rule_linenum[77] =
+    {   0,
+      157,  162,  170,  175,  180,  185,  190,  197,  203,  208,
+      216,  221,  226,  231,  236,  244,  249,  254,  260,  267,
+      272,  280,  298,  316,  321,  328,  334,  339,  344,  349,
+      354,  359,  364,  369,  374,  379,  386,  392,  397,  402,
+      407,  412,  417,  422,  427,  432,  438,  446,  454,  459,
+      464,  472,  477,  488,  494,  500,  506,  517,  528,  532,
+      537,  548,  559,  568,  578,  584,  595,  601,  606,  611,
+      619,  629,  634,  641,  648,  655
+    } ;
+
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
  */
@@ -6578,7 +6597,6 @@ static PyObject* quote_string (PyObject* val) {
     }
     return prefix;
 }
-/*%option debug*/
 #define YY_NO_UNPUT 1
 #define YY_MAIN 0
 #define YY_NEVER_INTERACTIVE 1
@@ -6612,7 +6630,7 @@ static PyObject* quote_string (PyObject* val) {
 
 #define S_STRING 15
 
-#line 6616 "htmllex.c"
+#line 6634 "htmllex.c"
 /* %e */
 #endif /* !yyIN_HEADER */
 
@@ -6956,7 +6974,7 @@ YY_DECL
 
 
   /*********************** EOF ************************/
-#line 6960 "htmllex.c"
+#line 6978 "htmllex.c"
 
 #ifdef YY_REENTRANT_BISON_PURE
     yylval = yylvalp;
@@ -7035,6 +7053,21 @@ yy_find_action:
 do_action:	/* This label is used only to access EOF actions. */
 
 /* %% [12.0] debug code goes here */
+		if ( yy_flex_debug )
+			{
+			if ( yy_act == 0 )
+				fprintf( stderr, "--scanner backing up\n" );
+			else if ( yy_act < 77 )
+				fprintf( stderr, "--accepting rule at line %d (\"%s\")\n",
+				         yy_rule_linenum[yy_act], yytext );
+			else if ( yy_act == 77 )
+				fprintf( stderr, "--accepting default rule (\"%s\")\n",
+				         yytext );
+			else if ( yy_act == 78 )
+				fprintf( stderr, "--(end of buffer or a NUL)\n" );
+			else
+				fprintf( stderr, "--EOF (start condition %d)\n", YY_START );
+			}
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
@@ -7792,12 +7825,17 @@ YY_RULE_SETUP
 #line 619 "htmllex.l"
 {
     UPDATE_BUFPOS;
+    LOWER_TMP;
+    SETLVAL;
+    yyextra->tmp_attrs = PyDict_New();
+    if (!yyextra->tmp_attrs) return T_ERROR;
     BEGIN(S_TAGSTART);
+    RETURN(T_ELEMENT_END);
 }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 624 "htmllex.l"
+#line 629 "htmllex.l"
 {
     UPDATE_BUFPOS;
 }
@@ -7805,7 +7843,7 @@ YY_RULE_SETUP
 /*********************** TEXT ************************/
 case 73:
 YY_RULE_SETUP
-#line 629 "htmllex.l"
+#line 634 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -7815,7 +7853,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 636 "htmllex.l"
+#line 641 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -7825,7 +7863,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 643 "htmllex.l"
+#line 648 "htmllex.l"
 {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
@@ -7835,17 +7873,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 650 "htmllex.l"
+#line 655 "htmllex.l"
 {
     return T_WAIT;
 }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 654 "htmllex.l"
+#line 659 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 7849 "htmllex.c"
+#line 7887 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -9125,7 +9163,7 @@ int main()
 #endif
 /* %e */
 #endif /* !yyIN_HEADER */
-#line 654 "htmllex.l"
+#line 659 "htmllex.l"
 #ifndef yyIN_HEADER
 
 
@@ -9161,7 +9199,7 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     data->exc_type = NULL;
     data->exc_val = NULL;
     data->exc_tb = NULL;
-    //fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
+    fprintf(stderr, "SCANNING '%s'\n", data->buf+len);
     data->lexbuf = yy_scan_bytes(data->buf+len, slen, scanner);
     return 0;
 }
