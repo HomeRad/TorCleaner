@@ -446,7 +446,7 @@ msgid "Replace part"
 msgstr "Ersetzter Teil"
 
 msgid "Replace value"
-msgstr "Zu ersetztender Text"
+msgstr "Zu ersetzender Text"
 
 msgid "Empty tag name"
 msgstr "Leerer Tagname"
