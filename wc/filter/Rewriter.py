@@ -74,6 +74,10 @@ class Rewriter(Filter):
 class HtmlFilter(HtmlParser):
     """The parser has the rules, a data buffer and a rule stack."""
     def __init__(self, rules, comments, url):
+        if wc.config['showerrors']:
+            self.error = self._error
+            self.warning = self._warning
+            self.fatalError = self._fatalError
         HtmlParser.__init__(self)
         self.rules = rules
         self.comments = comments
@@ -81,10 +85,6 @@ class HtmlFilter(HtmlParser):
         self.rulestack = []
         self.buffer = []
         self.document = url or "unknown"
-        if wc.config['showerrors']:
-            self.error = self._error
-            self.warning = self._warning
-            self.fatalError = self._fatalError
 
 
     def __repr__(self):
