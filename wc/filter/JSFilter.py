@@ -127,12 +127,12 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_env.executeScript(script, ver)
         self.js_env.listeners.remove(self)
         # wait for recursive filter to finish
-        self.jsEndScript(item)
+        self.js_end_script(item)
 
 
-    def jsEndScript (self, item):
+    def js_end_script (self, item):
         """</script> was encountered"""
-        wc.log.debug(wc.LOG_JS, "%s jsEndScript %s", self, item)
+        wc.log.debug(wc.LOG_JS, "%s js_end_script %s", self, item)
         self.htmlparser.debugbuf(wc.LOG_JS)
         if len(self.htmlparser.tagbuf) < 2:
             assert False, "parser %s must have script start and content tags in tag buffer" % self.htmlparser
@@ -144,7 +144,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                 wc.log.debug(wc.LOG_JS, "%s JS subprocessor is waiting", self)
                 self.htmlparser.state = ('wait', 'recursive script')
                 self.htmlparser.waited = 1
-                wc.proxy.make_timer(1, lambda: self.jsEndScript(item))
+                wc.proxy.make_timer(1, lambda: self.js_end_script(item))
                 return
             self.js_htmlparser.debugbuf(wc.LOG_JS)
             assert not self.js_htmlparser.inbuf.getvalue()
@@ -164,21 +164,21 @@ class JSFilter (wc.js.JSListener.JSListener):
             # rule.
             del self.htmlparser.tagbuf[-1]
             del self.htmlparser.tagbuf[-1]
-        elif not self.filterEndElement(item[1]):
+        elif not self.filter_end_element(item[1]):
             self.htmlparser.tagbuf.append(item)
         self.htmlparser.state = ('parse',)
         wc.log.debug(wc.LOG_JS, "%s switching back to parse with", self)
         self.htmlparser.debugbuf(wc.LOG_JS)
 
 
-    def filterEndElement (self, tag):
+    def filter_end_element (self, tag):
         """filters an end tag, return True if tag was filtered, else False"""
         raise NotImplementedError("Must be overridden in subclass")
 
 
-    def jsEndElement (self, item):
+    def js_end_element (self, item):
         """parse generated html for scripts"""
-        wc.log.debug(wc.LOG_JS, "%s jsEndElement buf %r", self, self.htmlparser.tagbuf)
+        wc.log.debug(wc.LOG_JS, "%s js_end_element buf %r", self, self.htmlparser.tagbuf)
         if len(self.htmlparser.tagbuf)<2:
             # syntax error, ignore
             wc.log.warn(wc.LOG_JS, "JS syntax error, self.tagbuf %r", self.htmlparser.tagbuf)
@@ -222,10 +222,10 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.jsScript(script, ver, item)
 
 
-    def jsStartElement (self, tag, attrs):
+    def js_start_element (self, tag, attrs):
         """Check popups for onmouseout and onmouseover.
            Inline extern javascript sources"""
-        wc.log.debug(wc.LOG_JS, "%s jsStartElement", self)
+        wc.log.debug(wc.LOG_JS, "%s js_start_element", self)
         self.js_src = False
         self.js_output = 0
         self.js_popup = 0

@@ -61,7 +61,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         wc.log.warn(wc.LOG_FILTER, msg)
 
 
-    def fatalError (self, msg):
+    def fatal_error (self, msg):
         """signal a fatal filter/parser error"""
         wc.log.critical(wc.LOG_FILTER, msg)
 
@@ -121,7 +121,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         return self._data("<?%s?>"%data)
 
 
-    def startElement (self, tag, attrs):
+    def start_element (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         # default data
@@ -159,13 +159,13 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply
-        self.filterStartElement(tag, attrs)
+        self.filter_start_element(tag, attrs)
         # if rule stack is empty, write out the buffered data
         if not self.rulestack and not self.javascript:
             self.htmlparser.tagbuf2data()
 
 
-    def filterStartElement (self, tag, attrs):
+    def filter_start_element (self, tag, attrs):
         """filter the start element according to filter rules"""
         rulelist = []
         filtered = False
@@ -195,13 +195,13 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             self.htmlparser.tagbuf.append(item)
         elif self.javascript:
             # if it's not yet filtered, try filter javascript
-            self.jsStartElement(tag, attrs)
+            self.js_start_element(tag, attrs)
         else:
             # put original item on tag buffer
             self.htmlparser.tagbuf.append(item)
 
 
-    def endElement (self, tag):
+    def end_element (self, tag):
         """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
@@ -216,9 +216,9 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
         item = [wc.filter.rules.RewriteRule.ENDTAG, tag]
-        if not self.filterEndElement(tag):
+        if not self.filter_end_element(tag):
             if self.javascript and tag=='script':
-                self.jsEndElement(item)
+                self.js_end_element(item)
                 self.js_src = False
                 return
             self.htmlparser.tagbuf.append(item)
@@ -229,7 +229,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
             self.htmlparser.tagbuf2data()
 
 
-    def filterEndElement (self, tag):
+    def filter_end_element (self, tag):
         """filters an end tag, return True if tag was filtered, else False"""
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
