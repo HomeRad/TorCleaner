@@ -139,6 +139,7 @@ class HttpClient (Connection):
                     'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
             # add decoders
             self.decoders = []
+            self.bytes_remaining = int(self.headers.get('Content-Length', 0))
             # Chunked encoded
             if self.headers.get('Transfer-Encoding') is not None:
                 debug(BRING_IT_ON, 'Proxy: C/Transfer-encoding:', `self.headers['transfer-encoding']`)
@@ -148,13 +149,11 @@ class HttpClient (Connection):
                 if self.headers.get("Content-Length") is not None:
                     print >>sys.stderr, 'Warning: chunked encoding should not have Content-Length'
                     to_remove.append("Content-Length")
-                    self.bytes_remaining = None
+                self.bytes_remaining = None
                 remove_headers(self.headers, to_remove)
                 # add warning
                 self.headers['Warning'] = "214 Transformation applied\r"
             debug(HURT_ME_PLENTY, "Proxy: C/Headers", `str(self.headers)`)
-            if self.headers.has_key('Content-Length'):
-                self.bytes_remaining = int(self.headers['Content-Length'])
             if config["proxyuser"] and not self.check_proxy_auth():
                 return self.error(407, i18n._("Proxy Authentication Required"))
             if self.method=='OPTIONS':
