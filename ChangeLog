@@ -3,6 +3,8 @@
     Changed files: wc/proxy/HttpClient.py
   * Remove unsupported timeout and obfuscateip config options
     Changed files: wc/gui/ConfWindow.py, wc/__init__.py, README
+  * Updated ssh tunnel scripts
+    Changed files: README.sshtunnel
 
 0.60
   * Dont filter comments in *.oreillynet.com - they have some funky
