@@ -44,10 +44,10 @@ Do 'webcleaner stop' first."""), 1
         os._exit(0)
     # set umask
     os.umask(0177)
-    # we are logging into files, so close these files:
+    # we are logging into files, so close these files (except stderr
+    # used by the logging module)
     os.close(sys.__stdin__.fileno())
     os.close(sys.__stdout__.fileno())
-    os.close(sys.__stderr__.fileno())
     # write pid in pidfile
     f = file(pidfile, 'w')
     f.write("%d" % os.getpid())
