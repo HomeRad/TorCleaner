@@ -6,7 +6,7 @@ __date__    = "$Date$"[7:-2]
 
 import time, cgi, urlparse, urllib, os
 from cStringIO import StringIO
-from Connection import Connection
+from StatefulConnection import StatefulConnection
 from ClientServerMatchmaker import ClientServerMatchmaker
 from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
@@ -40,7 +40,7 @@ def is_allowed_document (doc):
             return True
     return False
 
-class HttpClient (Connection):
+class HttpClient (StatefulConnection):
     """States:
         request (read first line)
         headers (read HTTP headers)
@@ -50,7 +50,7 @@ class HttpClient (Connection):
     """
 
     def __init__ (self, sock, addr):
-        super(HttpClient, self).__init__(sock=sock)
+        super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
         self.reset()
         host = self.addr[0]

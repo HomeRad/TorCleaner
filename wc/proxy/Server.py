@@ -3,16 +3,15 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from Connection import Connection
+from StatefulConnection import StatefulConnection
 from wc.log import *
 
 # XXX there should be an API for this class, and it should be moved
 # elsewhere
-class Server (Connection):
+class Server (StatefulConnection):
     def __init__ (self, client, state):
-        super(Server, self).__init__()
+        super(Server, self).__init__(state)
         self.client = client
-        self.state = state
 
 
     def client_abort (self):
