@@ -136,10 +136,15 @@ else:
     # - and flex uses fileno(3), which is a gnu extension
     cargs = ['-pedantic', '-std=gnu99']
 
-# parser extension
+# extensions
 extensions = [Extension('wc.parser.htmlsax',
                         ['wc/parser/htmllex.c', 'wc/parser/htmlparse.c'],
                         include_dirs = ["wc/parser"],
+                        define_macros = macros,
+                        extra_compile_args = cargs,
+                      ),
+             Extension('wc.levenshtein',
+                        ['wc/levenshtein.c',],
                         define_macros = macros,
                         extra_compile_args = cargs,
                       ),
