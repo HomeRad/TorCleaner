@@ -1,9 +1,9 @@
 SUBDIRS = po libjs service docs
-TESTS = unittests
+TESTS = noop
 
 PYVER := 2.3
 PYTHON := python$(PYVER)
-VERSION := $($(PYTHON) setup.py --version)
+VERSION := $(shell python setup.py --version)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/parser -Ilibjs -I/usr/include/$(PYTHON) \
@@ -57,7 +57,8 @@ dist-hook:
 	rm -f $(distdir)/_webcleaner2_configdata.py
 	rm -f webcleaner-md5sums.txt
 
-unittests: localbuild
+# noop is a script doing nothing, to fool automake check routines
+noop: localbuild
 	test/run.sh tests/runall.py
 	test/run.sh tests/runsimpletaltests.py
 
