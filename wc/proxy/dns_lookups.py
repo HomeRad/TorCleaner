@@ -1,5 +1,7 @@
 # For a high level overview of DNS, see
 # http://www.rad.com/networks/1998/dns/main.html
+# added by Bastian Kleineidam:
+#     Windows dns configuration routines
 
 import sys,time,socket,re
 from Connection import Connection
@@ -461,6 +463,11 @@ def init_dns_resolver():
         init_dns_resolver_posix()
     elif os.name=="nt":
         init_dns_resolver_nt()
+    if not DnsConfig.search_domains:
+        DnsConfig.search_domains.append('')
+    if not DnsConfig.nameservers:
+        debug(ALWAYS, 'Warning: no nameservers found')
+        DnsConfig.nameservers.append('127.0.0.1')
 
 
 def init_dns_resolver_posix():
@@ -475,28 +482,26 @@ def init_dns_resolver_posix():
                 DnsConfig.search_domains.append('.'+lower(domain))
         m = re.match(r'^nameserver\s+(\S+)\s*$', line)
         if m: DnsConfig.nameservers.append(m.group(1))
-    if not DnsConfig.search_domains:
-        DnsConfig.search_domains.append('')
-    if not DnsConfig.nameservers:
-        debug(ALWAYS, 'Warning: no nameservers found')
-        DnsConfig.nameservers.append('127.0.0.1')
+
 
 def init_dns_resolver_nt():
-    """requires at least Python >= 2.1"""
-    import _winreg
+    """Windows network config read from registry"""
+    import winreg
     try:
-        key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,
-                 "SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
+        key = winreg.key_handle(winreg.HKEY_LOCAL_MACHINE,
+                 r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters")
     except WindowsError:
-        debug(ALWAYS, 'Warning: no network config found in registry')
-        DnsConfig.nameservers.append('127.0.0.1')
+        # key not found :(
         return
-    dhcp = _winreg.QueryValue(key, "EnableDhcp")
-    if dhcp:
-        debug(BRING_IT_ON, _winreg.QueryValue(key, "DhcpNameServer"))
+    if key.get("EnableDhcp"):
+        nameserver = key.get("DhcpNameServer")
     else:
-        debug(BRING_IT_ON, _winreg.QueryValue(key, "NameServer"))
-    debug(BRING_IT_ON, _winreg.QueryValue(key, "SearchList"))
+        nameserver = key.get("NameServer")
+    if nameserver:
+        DnsConfig.nameservers.append(nameserver)
+    searchlist = key.get("SearchList", [])
+    for domain in searchlist:
+        DnsConfig.search_domains.append('.'+lower(domain))
 
 
 init_dns_resolver()
