@@ -7,6 +7,8 @@
       config/pics_raiting.zap
     Changed files: wc/filter/Rewriter.py, wc/__init__.py,
       wc/gui/FXRuleFrameFactory.py
+  * Correctly propagate and display parsing errors
+    Changed files: wc/parser/html{lex.l, parse.y}
 
 1.9
   * use the original headers list in rfc822 Message objects to preserve
