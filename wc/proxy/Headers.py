@@ -216,7 +216,7 @@ def server_set_content_headers (headers, content, document, mime, url):
         if ct is None:
             wc.log.warn(wc.LOG_PROXY, wc.i18n._("add Content-Type %r in %r"), mime, url)
             headers['Content-Type'] = "%s\r"%mime
-        elif not ct.startswith(mime):
+        elif not ct.startswith(mime) and mime.startswith('text/html'):
             i = ct.find(';')
             if i != -1 and mime.startswith('text'):
                 # add charset information
@@ -233,10 +233,6 @@ def server_set_content_headers (headers, content, document, mime, url):
             if ct is None:
                 wc.log.warn(wc.LOG_PROXY, wc.i18n._("add Content-Type %r to %r"), gm[0], url)
                 headers['Content-Type'] = "%s\r"%gm[0]
-    # hmm, fix application/x-httpd-php*
-    if headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
-        wc.log.warn(wc.LOG_PROXY, wc.i18n._("fix x-httpd-php Content-Type"))
-        headers['Content-Type'] = 'text/html\r'
 
 
 def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
