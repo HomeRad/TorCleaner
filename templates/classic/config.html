@@ -211,18 +211,27 @@
 </table>
 </form>
 
-<div tal:condition="info"  class="info">
-<span i18n:translate="">Info</span>:
-<span tal:repeat="item info">
-<span tal:replace="item">something happened</span>
-</span>
+<div class="info">
+<div tal:condition="info/port" i18n:translate="">Port successfully changed.</div>
+<div tal:condition="info/proxyuser" i18n:translate="">Proxy user successfully changed.</div>
+<div tal:condition="info/proxypass" i18n:translate="">Proxy password successfully changed.</div>
+<div tal:condition="info/parentproxy" i18n:translate="">Parent proxy successfully changed.</div>
+<div tal:condition="info/parentproxyport" i18n:translate="">Parent proxy port successfully changed.</div>
+<div tal:condition="info/parentproxyuser" i18n:translate="">Parent proxy user successfully changed.</div>
+<div tal:condition="info/parentproxypass" i18n:translate="">Parent proxy password successfully changed.</div>
+<div tal:condition="info/timeout" i18n:translate="">Timeout sucessfully changed.</div>
+<div tal:condition="filterenabled" i18n:translate="">Enabled filter module(s) %(filterenabled)s.</div>
+<div tal:condition="filterdisabled" i18n:translate="">Disabled filter module(s) %(filterdisabled)s.</div>
+<div tal:condition="info/addallowed" i18n:translate="">Allowed host successfully added.</div>
+<div tal:condition="info/delallowed" i18n:translate="">Allowed host(s) successfully removed.</div>
+<div tal:condition="info/addnofilter" i18n:translate="">Nofilter host successfully added.</div>
+<div tal:condition="info/delnofilter" i18n:translate="">Nofilter host(s) successfully removed.</div>
 </div>
 
-<div tal:condition="error" class="error">
-<span i18n:translate="">Error</span>:
-<span tal:repeat="item error">
-<span tal:replace="item">Error message</span>
-</span>
+<div class="error">
+<div tal:condition="error/port" i18n:translate="">Invalid proxy port.</div>
+<div tal:condition="error/parentproxyport" i18n:translate="">Invalid parent proxy port.</div>
+<div tal:condition="error/timeout" i18n:translate="">Invalid timeout value.</div>
 </div>
 
 </div>
