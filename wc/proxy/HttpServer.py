@@ -3,7 +3,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import time, socket, re, urlparse
+import time, socket, re, urlparse, urllib
 
 from cStringIO import StringIO
 from Server import Server
@@ -14,7 +14,8 @@ from Headers import has_header_value, WcMessage
 from wc import i18n, config
 from wc.log import *
 from ClientServerMatchmaker import serverpool
-from wc.filter import applyfilter, get_filterattrs, FilterWait, FilterPics
+from wc.filter.PICS import FilterPics
+from wc.filter import applyfilter, get_filterattrs, FilterWait
 from wc.filter import FILTER_RESPONSE
 from wc.filter import FILTER_RESPONSE_HEADER
 from wc.filter import FILTER_RESPONSE_DECODE
@@ -69,20 +70,21 @@ class HttpServer (Server):
     """
     def __init__ (self, ipaddr, port, client):
         super(HttpServer, self).__init__(client, 'connect')
+        # default values
         self.addr = (ipaddr, port)
         self.hostname = ''
         self.document = ''
         self.response = ''
-        self.headers = {}
-        self.data_written = False
+        self.headers = WcMessage(StringIO(''))
+        self.data_written = False # delay data writing flag
         self.decoders = [] # Handle each of these, left to right
-        self.sequence_number = 0 # For persistent connections
+        self.sequence_number = 0 # for persistent connections
+        self.persistent = False # also for persistent connections
         self.attrs = {} # initial filter attributes are empty
-        self.persistent = False
-        self.flushing = False
-        self.authtries = 0
-        self.statuscode = None
-        self.bytes_remaining = None
+        self.flushing = False # remember that flush is in progress
+        self.authtries = 0 # restrict number of authentication tries
+        self.statuscode = None # numeric HTTP status code
+        self.bytes_remaining = None # number of content bytes remaining
         # attempt connect
         create_inet_socket(self, socket.SOCK_STREAM)
         try:
@@ -92,7 +94,13 @@ class HttpServer (Server):
 
 
     def __repr__ (self):
-        extra = self.request()
+        """object description"""
+        if self.addr[1] != 80:
+	    portstr = ':%d' % self.addr[1]
+        else:
+            portstr = ''
+        extra = '%s%s%s' % (self.hostname or self.addr[0],
+                            portstr, self.document)
         if self.client:
             extra += " client"
         #if len(extra) > 46: extra = extra[:43] + '...'
@@ -100,21 +108,13 @@ class HttpServer (Server):
 
 
     def writable (self):
-        # It's writable if we're connecting .. TODO: move this
-        # logic into the Connection class
+        """a server is writable if we're connecting"""
+        # XXX: move this logic into the Connection (or Server) class
         return self.state == 'connect' or self.send_buffer != ''
 
 
-    def request (self):
-        if self.addr[1] != 80:
-	    portstr = ':%d' % self.addr[1]
-        else:
-            portstr = ''
-        return '%s%s%s' % (self.hostname or self.addr[0],
-                           portstr, self.document)
-
-
     def process_connect (self):
+        """notify client that this server has connected"""
         assert self.state == 'connect'
         self.state = 'client'
         if self.client:
@@ -172,6 +172,7 @@ class HttpServer (Server):
 
 
     def process_read (self):
+        """process read event by delegating it to process_* functions"""
         if self.state in ('connect', 'client') and \
              (self.client and self.client.method!='CONNECT'):
             # with http pipelining the client could send more data after
@@ -203,6 +204,7 @@ class HttpServer (Server):
 
 
     def process_response (self):
+        """look for response line and process it if found"""
         i = self.recv_buffer.find('\n')
         if i < 0: return
         self.response = self.read(i+1).strip()
@@ -224,7 +226,7 @@ class HttpServer (Server):
 	                   WcMessage(StringIO('')), "finish", self.attrs)
             self.decoders = []
             self.state = 'content'
-            self.client.server_response(self.response, self.statuscode,
+            self.client.server_response(self, self.response, self.statuscode,
                                         self.headers)
         else:
             # the HTTP line was missing, just assume that it was there
@@ -247,6 +249,7 @@ class HttpServer (Server):
 
 
     def process_headers (self):
+        """look for headers and process them if found"""
         # Headers are terminated by a blank line .. now in the regexp,
         # we want to say it's either a newline at the beginning of
         # the document, or it's a lot of headers followed by two newlines.
@@ -278,17 +281,11 @@ class HttpServer (Server):
             self.headers = applyfilter(FILTER_RESPONSE_HEADER, msg,
                                        "finish", self.attrs)
         except FilterPics, msg:
-            self.statuscode = 403
-            debug(PROXY, "%s FilterPics %r", self, msg)
-            # XXX get version
-            response = "HTTP/1.1 403 Forbidden"
-            headers = WcMessage(StringIO('Content-type: text/plain\r\n'
-                        'Content-Length: %d\r\n\r\n' % len(msg)))
-            self.client.server_response(response, self.statuscode, headers)
-            self.client.server_content(msg)
-            self.client.server_close()
-            self.state = 'recycle'
-            self.reuse()
+            debug(PROXY, "%s FilterPics from header: %s", self, msg)
+            if msg.isPicsMissing():
+                self.show_pics_config(str(msg))
+            else:
+                self.show_pics_deny(str(msg))
             return
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
@@ -307,10 +304,10 @@ class HttpServer (Server):
         #    self.headers['Connection'] = 'close\r'
         #remove_headers(self.headers, ['Keep-Alive'])
         # XXX </doh>
-        if self.statuscode!=407:
-            self.client.server_response(self.response, self.statuscode, self.headers)
         if self.statuscode in (204, 304) or self.method == 'HEAD':
             # These response codes indicate no content
+            self.client.server_response(self, self.response, self.statuscode,
+                                        self.headers)
             self.state = 'recycle'
         else:
             self.state = 'content'
@@ -319,13 +316,39 @@ class HttpServer (Server):
 
 
     def is_rewrite (self):
+        """return True iff this server will modify content"""
         for ro in config['mime_content_rewriting']:
             if ro.match(self.headers.get('Content-Type', '')):
                 return True
         return False
 
 
+    def show_pics_config (self, msg):
+        """called for missing PICS data, displays PICS configuration"""
+        self.statuscode = 302
+        # XXX get version
+        response = "HTTP/1.1 302 Moved Temporarly"
+        s = 'Content-type: text/plain\r\n'
+        s += 'Location: http://localhost:%d/pics.html?url=%s\r\n'%\
+               (config['port'], urllib.quote_plus(self.url))
+        s += 'Content-Length: %d\r\n'%len(msg)
+        headers = WcMessage(StringIO(s))
+        debug(PROXY, "%s headers\n%s", self, headers)
+        self.client.server_response(self, response, self.statuscode, headers)
+        self.client.server_content(msg)
+        self.client.server_close()
+        self.state = 'recycle'
+        self.reuse()
+
+
+    def show_pics_deny (self, msg):
+        """called for unallowed pages according to PICS label"""
+        # XXX
+        pass
+
+
     def process_content (self):
+        """process server data: filter it and write it to client"""
         data = self.read(self.bytes_remaining)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
@@ -343,18 +366,19 @@ class HttpServer (Server):
                 data = applyfilter(i, data, "filter", self.attrs)
             if data:
                 if self.statuscode!=407:
+                    if not self.data_written:
+                        self.client.server_response(self, self.response,
+                                              self.statuscode, self.headers)
                     self.client.server_content(data)
                 self.data_written = True
         except FilterWait, msg:
-            debug(PROXY, "%s FilterWait %r", self, msg)
+            debug(PROXY, "%s FilterWait %s", self, msg)
         except FilterPics, msg:
-            debug(PROXY, "%s FilterPics %r", self, msg)
-            assert not self.data_written
-            # XXX interactive options here
-            self.client.server_content(str(msg))
-            self.client.server_close()
-            self.state = 'recycle'
-            self.reuse()
+            debug(PROXY, "%s FilterPics from content %s", self, msg)
+            if msg.isPicsMissing():
+                self.show_pics_config(str(msg))
+            else:
+                self.show_pics_deny(str(msg))
             return
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
@@ -367,7 +391,8 @@ class HttpServer (Server):
 
 
     def process_client (self):
-        """gets called on SSL tunneled connections"""
+        """gets called on SSL tunneled connections, delegates server data
+           directly to the client without filtering"""
         if not self.client:
             # delay
             return
@@ -413,7 +438,8 @@ class HttpServer (Server):
 
 
     def flush (self):
-        """flush data of decoders (if any) and filters"""
+        """flush data of decoders (if any) and filters and write it to
+           the client"""
         debug(PROXY, "%s flushing", self)
         self.flushing = True
         data = flush_decoders(self.decoders)
