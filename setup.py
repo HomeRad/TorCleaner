@@ -162,6 +162,7 @@ if os.name=='nt':
                     define_macros = [('WIN32', None)],
                     include_dirs = ['libjs'],
                     extra_compile_args = cargs,
+                    extra_objects = ['libjs/.libs/libjs.a'],
                   ))
 else:
     extensions.append(Extension('wc.js.jslib',
