@@ -4,6 +4,7 @@
 import unittest
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+from wc.log import initlog
 
 
 class TestBinaryCharFilter (unittest.TestCase):
@@ -14,6 +15,7 @@ class TestBinaryCharFilter (unittest.TestCase):
         wc.config = wc.Configuration()
         wc.config['filters'] = ['BinaryCharFilter']
         wc.config.init_filter_modules()
+        initlog(os.path.join("test", "logging.conf"))
 
 
     def filt (self, data, result):

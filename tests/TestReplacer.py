@@ -3,6 +3,7 @@
 import unittest, random
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+from wc.log import initlog
 
 
 class TestReplacer (unittest.TestCase):
@@ -10,6 +11,7 @@ class TestReplacer (unittest.TestCase):
         wc.config = wc.Configuration()
         wc.config['filters'] = ['Replacer']
         wc.config.init_filter_modules()
+        initlog(os.path.join("test", "logging.conf"))
 
 
     def testReplaceRandom (self):

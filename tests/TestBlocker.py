@@ -5,6 +5,7 @@
 import unittest
 import wc
 from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
+from wc.log import initlog
 
 
 class TestBlocker (unittest.TestCase):
@@ -14,6 +15,7 @@ class TestBlocker (unittest.TestCase):
         wc.config = wc.Configuration()
         wc.config['filters'] = ['Blocker',]
         wc.config.init_filter_modules()
+        initlog(os.path.join("test", "logging.conf"))
 
 
     def testBlocker (self):

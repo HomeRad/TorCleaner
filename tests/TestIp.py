@@ -1,8 +1,16 @@
 # -*- coding: iso-8859-1 -*-
-import unittest
+
+import unittest, os
 from wc import ip
+from wc.log import initlog
+
 
 class TestIp (unittest.TestCase):
+
+    def setUp (self):
+        initlog(os.path.join("test", "logging.conf"))
+
+
     def testNames (self):
         hosts, nets = ip.hosts2map(["www.kampfesser.net",
                                     "q2345qwer9 u2 42ß3 i34 uq3tu ",

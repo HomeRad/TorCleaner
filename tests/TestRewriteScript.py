@@ -7,6 +7,8 @@ import wc
 from wc.proxy import proxy_poll, run_timers
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
+from wc.log import initlog
+
 
 class TestJavaScript (unittest.TestCase):
     """All these tests work with a _default_ filter configuration.
@@ -17,6 +19,7 @@ class TestJavaScript (unittest.TestCase):
         disable_rating_rules(wc.config)
         wc.config['filters'] = ['Rewriter',]
         wc.config.init_filter_modules()
+        initlog(os.path.join("test", "logging.conf"))
 
 
     def filt (self, data, result, name=""):

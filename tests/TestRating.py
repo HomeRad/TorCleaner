@@ -1,11 +1,17 @@
 # -*- coding: iso-8859-1 -*-
 """test rating routines"""
 
-import unittest
+import unittest, os
 from wc.filter.Rating import *
+from wc.log import initlog
 
 
 class TestRating (unittest.TestCase):
+
+    def setUp (self):
+        initlog(os.path.join("test", "logging.conf"))
+
+
     def testRating_split_url (self):
         urls = (
             ('', []),

@@ -5,6 +5,7 @@
 import unittest
 from wc.js import jslib, JSListener
 
+
 class JSTester (JSListener.JSListener):
     """JavaScript engine event listener"""
     def __init__ (self):

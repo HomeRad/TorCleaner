@@ -2,7 +2,7 @@
 """test sorted dictionary routines"""
 
 import unittest, random
-from wc.parser.htmllib import SortedDict
+from wc.parser import SortedDict
 
 
 class TestSortedDict (unittest.TestCase):
