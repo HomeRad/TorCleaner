@@ -1,37 +1,37 @@
 """ simpleTAL Interpreter
 
-		Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
-		All rights reserved.
-		
-		Redistribution and use in source and binary forms, with or without
-		modification, are permitted provided that the following conditions
-		are met:
-		1. Redistributions of source code must retain the above copyright
-		   notice, this list of conditions and the following disclaimer.
-		2. Redistributions in binary form must reproduce the above copyright
-		   notice, this list of conditions and the following disclaimer in the
-		   documentation and/or other materials provided with the distribution.
-		3. The name of the author may not be used to endorse or promote products
-		   derived from this software without specific prior written permission.
-		
-		THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-		IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-		OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-		IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-		INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-		NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-		DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-		THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-		(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-		THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-		
-		If you make any bug fixes or feature enhancements please let me know!
-		
-		
-		The classes in this module implement the TAL language, expanding
-		both XML and HTML templates.
-		
-		Module Dependencies: logging, simpleTALES, simpleTALTemplates
+	Copyright (c) 2003 Colin Stewart (http://www.owlfish.com/)
+	All rights reserved.
+
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions
+	are met:
+	1. Redistributions of source code must retain the above copyright
+	   notice, this list of conditions and the following disclaimer.
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
+	3. The name of the author may not be used to endorse or promote products
+	   derived from this software without specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+	IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+	NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+	THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+	If you make any bug fixes or feature enhancements please let me know!
+
+
+	The classes in this module implement the TAL language, expanding
+	both XML and HTML templates.
+
+	Module Dependencies: logging, simpleTALES, simpleTALTemplates
 """
 
 __version__ = "3.3"
@@ -96,7 +96,7 @@ METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
 SINGLETON_XML_REGEX = re.compile ('^<[^\s>]+?([\s]+?[^=]+?="[^"]+?")*?[\s]*?/>')
 
 class TemplateInterpreter:
-	def __init__ (self):
+	def __init__ (self, translator=None):
 		self.programStack = []
 		self.commandList = None
 		self.symbolTable = None
@@ -116,6 +116,7 @@ class TemplateInterpreter:
 		self.commandHandler [METAL_DEFINE_SLOT] = self.cmdDefineSlot
 		self.commandHandler [TAL_NOOP] = self.cmdNoOp
                 self.commandHandler [I18N_TRANSLATE] = self.cmdI18nTranslate
+                self.translator = translator
 	
 	def initialise (self, context, outputFile):
 		self.context = context
@@ -138,6 +139,8 @@ class TemplateInterpreter:
 		self.localVarsDefined = 0
 		# Pass in the parameters
 		self.currentSlots = self.slotParameters
+                # if true, replace tag content with translation
+                self.translateContent = 0
 		
 	def popProgram (self):
 		vars, self.commandList, self.symbolTable = self.programStack.pop()
@@ -326,7 +329,7 @@ class TemplateInterpreter:
 					# We have another template in the context, evaluate it!
 					# Save our state!
 					self.pushProgram()
-					resultVal.expandInline (self.context, self.file, self)
+					resultVal.expandInline (self.context, self.file, self, translator=self.translator)
 					# Restore state
 					self.popProgram()
 					# End of the macro expansion (if any) so clear the parameters
@@ -350,35 +353,39 @@ class TemplateInterpreter:
 			# Do NOT output end tag if a singleton with no content
 			if not (args[2] and self.tagContent is None):
 				self.file.write ('</' + args[0] + '>')
-		
+
 		if (self.movePCBack is not None):
 			self.programCounter = self.movePCBack
 			return
-			
+
 		if (self.localVarsDefined):
 			self.context.popLocals()
-			
-		self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined = self.scopeStack.pop()			
+		self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined,self.translateContent = self.scopeStack.pop()
 		self.programCounter += 1
-	
+
 	def cmdOutput (self, command, args):
-		self.file.write (args)
+                print "output", `args`, self.translateContent
+                if self.translator is not None and self.translateContent:
+                        self.file.write(self.translator.gettext(args))
+                else:
+                        self.file.write (args)
 		self.programCounter += 1
-		
+
 	def cmdStartScope (self, command, args):
 		""" args: (originalAttributes, currentAttributes)
 				Pushes the current state onto the stack, and sets up the new state
 		"""
 		self.scopeStack.append ((self.movePCForward
-								,self.movePCBack
-								,self.outputTag
-								,self.originalAttributes
-								,self.currentAttributes
-								,self.repeatVariable
-								,self.repeatIndex
-								,self.repeatSequence
-								,self.tagContent
-								,self.localVarsDefined))
+					,self.movePCBack
+					,self.outputTag
+					,self.originalAttributes
+					,self.currentAttributes
+					,self.repeatVariable
+					,self.repeatIndex
+					,self.repeatSequence
+					,self.tagContent
+					,self.localVarsDefined
+                                        ,self.translateContent))
 
 		self.movePCForward = None
 		self.movePCBack = None
@@ -390,12 +397,13 @@ class TemplateInterpreter:
 		self.repeatSequence = None
 		self.tagContent = None
 		self.localVarsDefined = 0
-		
-		self.programCounter += 1				
-				
+                self.translateContent = 0
+
+		self.programCounter += 1
+
 	def cmdNoOp (self, command, args):
 		self.programCounter += 1
-		
+
 	def cmdUseMacro (self, command, args):
 		""" args: (macroExpression, slotParams, endTagSymbol)
 				Evaluates the expression, if it resolves to a SubTemplate it then places
@@ -441,7 +449,24 @@ class TemplateInterpreter:
 		return
 
 	def cmdI18nTranslate (self, command, args):
-                print "XXX", command, args
+		""" args: translation string, endTagSymbol
+                        Translate tag content. If the translation string is
+                        an empty string, the translate message id is the tag
+                        content. Otherwise, the value of the tag content is
+                        the message id.
+		"""
+		if args[0] == "":
+			# an empty string means use tag content as message id
+                        self.translateContent = 1
+                else:
+                        result = self.context.evaluate (args[0], self.originalAttributes)
+                        if not (result is None or result.isNothing() or result.isDefault()):
+                                if self.translator is not None:
+                                        self.tagContent = (0, self.translator.gettext(result.value()))
+                                else:
+                                        self.tagContent = (0, result.value())
+        			self.movePCForward = self.symbolTable[args[1]]
+                # XXX add a HTML "lang=XX" attribute here ?
                 self.programCounter += 1
 
 class Template:
@@ -462,19 +487,23 @@ class Template:
 				for slot in slotMap.values():
 					slot.setParentTemplate (self)
 
-	def expand (self, context, outputFile, outputEncoding=None, interpreter=None):
+	def expand (self, context, outputFile, outputEncoding=None,
+                    interpreter=None, translator=None):
 		""" This method will write to the outputFile, using the encoding specified,
-				the expanded version of this template.  The context passed in is used to resolve
-				all expressions with the template.
+		the expanded version of this template.  The context passed in is used to resolve
+		all expressions with the template.
+                If a translator object is given, i18n tags are translated.
+                Otherwise the content to be translated is printed as-is.
 		"""
 		# This method must wrap outputFile if required by the encoding, and write out
 		# any template pre-amble (DTD, Encoding, etc)
-		self.expandInline (context, outputFile, interpreter)
+		self.expandInline (context, outputFile, interpreter, translator=translator)
 		
-	def expandInline (self, context, outputFile, interpreter=None):
+	def expandInline (self, context, outputFile, interpreter=None,
+                          translator=None):
 		""" Internally used when expanding a template that is part of a context."""
 		if (interpreter is None):
-			ourInterpreter = TemplateInterpreter()
+			ourInterpreter = TemplateInterpreter(translator=translator)
 			ourInterpreter.initialise (context, outputFile)
 		else:
 			ourInterpreter = interpreter
@@ -539,7 +568,7 @@ class HTMLTemplate (Template):
 	"""
 	
 	def expand (self, context, outputFile, outputEncoding="ISO-8859-1",
-                    interpreter=None):
+                    interpreter=None, translator=None):
 		""" This method will write to the outputFile, using the encoding specified,
 				the expanded version of this template.  The context passed in is used to resolve
 				all expressions with the template.
@@ -548,13 +577,15 @@ class HTMLTemplate (Template):
 		# any template pre-amble (DTD, Encoding, etc)
 		
 		#encodingFile = codecs.lookup (outputEncoding)[3](outputFile)
-		self.expandInline (context, outputFile, interpreter)
+		self.expandInline (context, outputFile, interpreter,
+                                   translator=translator)
 		
 class XMLTemplate (Template):
 	"""A specialised form of a template that knows how to output XML
 	"""
 	
-	def expand (self, context, outputFile, outputEncoding="iso8859-1", docType=None, interpreter=None):
+	def expand (self, context, outputFile, outputEncoding="iso8859-1", docType=None,
+                    interpreter=None, translator=None):
 		""" This method will write to the outputFile, using the encoding specified,
 			the expanded version of this template.  The context passed in is used to resolve
 			all expressions with the template.
@@ -571,7 +602,8 @@ class XMLTemplate (Template):
 		if (docType is not None):
 			encodingFile.write (docType)
 			encodingFile.write ('\n')
-		self.expandInline (context, encodingFile, interpreter)
+		self.expandInline (context, encodingFile, interpreter,
+                                   translator=translator)
 		
 def tagAsText ((tag,atts), singletonFlag=0):
 	result = ["<"]
@@ -1128,7 +1160,7 @@ class TemplateCompiler:
 		return (METAL_DEFINE_SLOT, (argument, self.endTagSymbol))
 
         def compileI18nTranslate (self, argument):
-		return (I18N_TRANSLATE, (argument, {}, self.endTagSymbol))
+		return (I18N_TRANSLATE, (argument, self.endTagSymbol))
 
 
 class TemplateParseException (Exception):
@@ -1261,8 +1293,8 @@ class XMLTemplateCompiler (TemplateCompiler, xml.sax.handler.ContentHandler):
 			
 def compileHTMLTemplate (template, inputEncoding="ISO8859-1"):
 	""" Reads the templateFile and produces a compiled template.
-			To use the resulting template object call:
-				template.expand (context, outputFile)
+	To use the resulting template object call:
+		template.expand (context, outputFile)
 	"""
 	if (isinstance (template, type ("")) or isinstance (template, type (u""))):
 		# It's a string!
@@ -1275,8 +1307,8 @@ def compileHTMLTemplate (template, inputEncoding="ISO8859-1"):
 
 def compileXMLTemplate (template):
 	""" Reads the templateFile and produces a compiled template.
-			To use the resulting template object call:
-				template.expand (context, outputFile)
+	To use the resulting template object call:
+        	template.expand (context, outputFile)
 	"""
 	if (isinstance (template, type (""))):
 		# It's a string!
