@@ -21,7 +21,7 @@ __date__    = "$Date$"[7:-2]
 
 from wc import i18n
 
-def start (parent_exit=1):
+def start (parent_exit=True):
     """does not return"""
     startfunc()
 
@@ -31,7 +31,7 @@ def stop ():
 def reload ():
     return i18n._("reload not supported for this platform"), 1
 
-def startwatch (parent_exit=1, sleepsecs=5):
+def startwatch (parent_exit=True, sleepsecs=5):
     start()
 
 def stopwatch ():

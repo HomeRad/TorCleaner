@@ -31,7 +31,7 @@ def get_user ():
     """return current logged in user, or an empty string if there is no
     username available"""
     if hasattr(os, "getlogin"):
-        u = os.getlogin()
+        return os.getlogin()
     return ""
 
 
@@ -55,7 +55,7 @@ if not iswriteable(pidfile):
 watchfile = pidfile+".watch"
 
 
-def restart (parent_exit=1):
+def restart (parent_exit=True):
     msg1, status = stop()
     if status:
         return msg1, status

@@ -30,7 +30,7 @@ from wc.daemon import pidfile
 from wc.debug import *
 from wc import i18n, configdata, startfunc
 
-def start (parent_exit=1):
+def start (parent_exit=True):
     # already running?
     if os.path.exists(pidfile):
         return i18n._("""WebCleaner already started (lock file found).
@@ -64,10 +64,10 @@ Do 'webcleaner stop' first."""), 0
     return None, 0
 
 
-def start_nt (parent_exit=1):
+def start_nt (parent_exit=True):
     # no need to spawn in this thing
     # write pid in pidfile
-    f = open(pidfile, 'w')
+    f = file(pidfile, 'w')
     f.write("%d" % os.getpid())
     f.close()
     # starting
@@ -77,7 +77,7 @@ def start_nt (parent_exit=1):
 def stop ():
     if not os.path.exists(pidfile):
         return i18n._("WebCleaner was not running (no lock file found)"), 0
-    pid = int(open(pidfile).read())
+    pid = int(file(pidfile).read())
     msg = None
     import win32api
     try:
@@ -89,7 +89,7 @@ def stop ():
     return msg, 0
 
 
-def startwatch (parent_exit=1, sleepsecs=5):
+def startwatch (parent_exit=True, sleepsecs=5):
     start()
 
 

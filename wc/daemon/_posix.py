@@ -23,7 +23,7 @@ import os
 from wc import i18n
 from wc.daemon import pidfile, watchfile, startfunc
 
-def start (parent_exit=1):
+def start (parent_exit=True):
     """start a daemon using the appropriate pidfile"""
     # already running?
     if os.path.exists(pidfile):
@@ -49,7 +49,7 @@ Do 'webcleaner stop' first."""), 1
     #os.close(sys.__stdout__.fileno())
     #os.close(sys.__stderr__.fileno())
     # write pid in pidfile
-    f = open(pidfile, 'w')
+    f = file(pidfile, 'w')
     f.write("%d" % os.getpid())
     f.close()
     # start function (drops privileges)
@@ -62,19 +62,19 @@ def stop ():
     return _stop(pidfile)
 
 
-def _stop (file):
-    pid=int(open(file).read())
+def _stop (pidfile):
+    pid=int(file(pidfile).read())
     import signal
     msg = None
     try:
         os.kill(pid, signal.SIGTERM)
     except OSError:
         msg = i18n._("warning: could not terminate process PID %d")%pid
-    os.remove(file)
+    os.remove(pidfile)
     return msg, 0
 
 
-def startwatch (parent_exit=1, sleepsecs=5):
+def startwatch (parent_exit=True, sleepsecs=5):
     """start a monitoring daemon for webcleaner"""
     import time
     if os.path.exists(watchfile):
@@ -85,17 +85,17 @@ def startwatch (parent_exit=1, sleepsecs=5):
             raise SystemExit
         else:
             return
-    f = open(watchfile, 'w')
+    f = file(watchfile, 'w')
     f.write("%d" % os.getpid())
     f.close()
     while 1:
         if os.path.exists(pidfile):
-            pid = int(open(pidfile).read())
+            pid = int(file(pidfile).read())
             # linux
             if not os.path.isdir("/proc/%d"%pid):
                 start(parent_exit=0)
         else:
-            start(parent_exit=0)
+            start(parent_exit=False)
         time.sleep(sleepsecs)
     return "", 0
 
@@ -112,7 +112,7 @@ def stopwatch ():
 def reload ():
     if not os.path.exists(pidfile):
         return i18n._("WebCleaner is not running. Do 'webcleaner start' first."), 1
-    pid = int(open(pidfile).read())
+    pid = int(file(pidfile).read())
     import signal
     os.kill(pid, signal.SIGHUP)
     return "", 0
