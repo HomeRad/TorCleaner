@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Feb  2 22:59:50 2004\n"
+"POT-Creation-Date: Tue Feb 17 00:34:49 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,6 +100,9 @@ msgid "Host not found"
 msgstr ""
 
 msgid "Host %s not found .. %s"
+msgstr ""
+
+msgid "Service unavailable"
 msgstr ""
 
 msgid "Expectation failed"
@@ -312,13 +315,10 @@ msgstr ""
 msgid "No command given."
 msgstr ""
 
-msgid "Unknown command %s"
+msgid "Unknown command %r"
 msgstr ""
 
-msgid ""
-"When you klick on the accept button below,\n"
-"the following information will be mailed to the author of %(AppName)s\n"
-"at %(Email)s:"
+msgid "Category"
 msgstr ""
 
 msgid "Proxy user successfully changed."
@@ -405,6 +405,13 @@ msgstr ""
 msgid "before"
 msgstr ""
 
+msgid ""
+"Most browsers support jumping to specific links by typing keys defined on\n"
+"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
+"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
+"access key."
+msgstr ""
+
 msgid "Response content data of mime types image/gif"
 msgstr ""
 
@@ -432,7 +439,7 @@ msgstr ""
 msgid "Header value"
 msgstr ""
 
-msgid "Disabled filter module(s) %(filterdisabled)s."
+msgid "Page blocked by %(AppName)s"
 msgstr ""
 
 msgid "Back to update overview"
@@ -549,7 +556,7 @@ msgstr ""
 msgid "Allowed limit"
 msgstr ""
 
-msgid "Parent proxy port successfully changed."
+msgid "New rule successfully created."
 msgstr ""
 
 msgid "Fallback URL"
@@ -624,7 +631,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-msgid "New rule successfully created."
+msgid "Parent proxy port successfully changed."
 msgstr ""
 
 msgid "Replace value"
@@ -818,14 +825,10 @@ msgstr ""
 msgid "Rule moved up."
 msgstr ""
 
-msgid ""
-"Most browsers support jumping to specific links by typing keys defined on\n"
-"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
-"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
-"access key."
+msgid "Invalid proxy port."
 msgstr ""
 
-msgid "Category"
+msgid "The content of this page is blocked by rule %(rule)s"
 msgstr ""
 
 msgid "Replace part"
@@ -958,9 +961,6 @@ msgid ""
 "%(AppName)s as a proxy."
 msgstr ""
 
-msgid "Blank page due to block by %(AppName)s"
-msgstr ""
-
 msgid "Rewrite attribute(s) removed."
 msgstr ""
 
@@ -1022,6 +1022,12 @@ msgstr ""
 msgid "accessibility features of these pages"
 msgstr ""
 
+msgid ""
+"When you klick on the accept button below,\n"
+"the following information will be mailed to the author of %(AppName)s\n"
+"at %(Email)s:"
+msgstr ""
+
 msgid "Replacement"
 msgstr ""
 
@@ -1071,6 +1077,9 @@ msgid "%(AppName)s help"
 msgstr ""
 
 msgid "URL to rate"
+msgstr ""
+
+msgid "Disabled filter module(s) %(filterdisabled)s."
 msgstr ""
 
 msgid ""
@@ -1323,7 +1332,7 @@ msgstr ""
 msgid "Match URL"
 msgstr ""
 
-msgid "Invalid proxy port."
+msgid "Configure rule %(rule)s."
 msgstr ""
 
 msgid ""

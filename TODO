@@ -2,6 +2,8 @@ TODO
 
 version 2.9 and above
 
+- lots of timers are generated while background download. why?
+
 - memory leaks while operating the proxy
 
 - content rating:

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"POT-Creation-Date: Mon Feb  2 22:59:50 2004\n"
+"POT-Creation-Date: Tue Feb 17 00:34:49 2004\n"
 "PO-Revision-Date: 2004-01-15 01:25+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -98,6 +98,9 @@ msgstr "Rechner nicht gefunden"
 
 msgid "Host %s not found .. %s"
 msgstr "Rechner %s nicht gefunden .. %s"
+
+msgid "Service unavailable"
+msgstr ""
 
 msgid "Expectation failed"
 msgstr "Erwartung fehlgeschlagen"
@@ -338,17 +341,12 @@ msgstr "Unbekannte Option %(option)r"
 msgid "No command given."
 msgstr "Kein Befehl angegeben."
 
-msgid "Unknown command %s"
+#, fuzzy
+msgid "Unknown command %r"
 msgstr "Unbekannter Befehl %s"
 
-msgid ""
-"When you klick on the accept button below,\n"
-"the following information will be mailed to the author of %(AppName)s\n"
-"at %(Email)s:"
-msgstr ""
-"Wenn Sie unten auf Übernehmen klicken, wird die folgende\n"
-"Information dem Autor von %(AppName)s zu der Adress\n"
-"%(Email)s geschickt:"
+msgid "Category"
+msgstr "Kategorie"
 
 msgid "Proxy user successfully changed."
 msgstr "Proxybenutzer erfolgreich geändert."
@@ -448,6 +446,17 @@ msgstr "Diese Seite ist auch verfügbar auf"
 msgid "before"
 msgstr "vorher"
 
+msgid ""
+"Most browsers support jumping to specific links by typing keys defined on\n"
+"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
+"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
+"access key."
+msgstr ""
+"Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen "
+"von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können "
+"sie <acronym>ALT</acronym> + Tastaturkommando tippen, unter Macintoshkönnen "
+"sie <acronym>Control</acronym> + Tastaturkommando tippen."
+
 msgid "Response content data of mime types image/gif"
 msgstr "Antwortdaten des Mimetyps image/gif"
 
@@ -475,8 +484,9 @@ msgstr "Blockierte Bild URL"
 msgid "Header value"
 msgstr "Header Wert"
 
-msgid "Disabled filter module(s) %(filterdisabled)s."
-msgstr "Filter Modul(e) %(filterdisabled)s wurde(n) deaktiviert."
+#, fuzzy
+msgid "Page blocked by %(AppName)s"
+msgstr "Leere Seite aufgrund von Blockierung durch %(AppName)s"
 
 msgid "Back to update overview"
 msgstr "Zurück zur Aktualisierungsübersicht"
@@ -624,8 +634,8 @@ msgstr ""
 msgid "Allowed limit"
 msgstr "Erlaubnisgrenze"
 
-msgid "Parent proxy port successfully changed."
-msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
+msgid "New rule successfully created."
+msgstr "Neue Regel wurde erfolgreich erstellt."
 
 msgid "Fallback URL"
 msgstr "Ersatz-URL"
@@ -708,8 +718,8 @@ msgstr "Ordner erfolgreich aktiviert."
 msgid "Send"
 msgstr "Senden"
 
-msgid "New rule successfully created."
-msgstr "Neue Regel wurde erfolgreich erstellt."
+msgid "Parent proxy port successfully changed."
+msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
 
 msgid "Replace value"
 msgstr "Zu ersetzender Text"
@@ -928,19 +938,11 @@ msgstr "Gehe zur Regel:"
 msgid "Rule moved up."
 msgstr "Regel wurde nach oben geschoben"
 
-msgid ""
-"Most browsers support jumping to specific links by typing keys defined on\n"
-"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
-"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
-"access key."
-msgstr ""
-"Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen "
-"von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können "
-"sie <acronym>ALT</acronym> + Tastaturkommando tippen, unter Macintoshkönnen "
-"sie <acronym>Control</acronym> + Tastaturkommando tippen."
+msgid "Invalid proxy port."
+msgstr "Ungültige Proxy Portnummer."
 
-msgid "Category"
-msgstr "Kategorie"
+msgid "The content of this page is blocked by rule %(rule)s"
+msgstr ""
 
 msgid "Replace part"
 msgstr "Ersetzter Teil"
@@ -1096,9 +1098,6 @@ msgstr ""
 "Sie müssen Ihren Browser konfigurieren damit\n"
 "%(AppName)s als Proxy verwendet wird."
 
-msgid "Blank page due to block by %(AppName)s"
-msgstr "Leere Seite aufgrund von Blockierung durch %(AppName)s"
-
 msgid "Rewrite attribute(s) removed."
 msgstr "Rewrite Attribut(e) wurde(n) gelöscht."
 
@@ -1168,6 +1167,15 @@ msgstr "Neuer Ordner"
 msgid "accessibility features of these pages"
 msgstr "Zugänglichkeitseigenschaften dieser Seiten"
 
+msgid ""
+"When you klick on the accept button below,\n"
+"the following information will be mailed to the author of %(AppName)s\n"
+"at %(Email)s:"
+msgstr ""
+"Wenn Sie unten auf Übernehmen klicken, wird die folgende\n"
+"Information dem Autor von %(AppName)s zu der Adress\n"
+"%(Email)s geschickt:"
+
 msgid "Replacement"
 msgstr "Ersetzter Teil"
 
@@ -1218,6 +1226,9 @@ msgstr "%(AppName)s Hilfe"
 
 msgid "URL to rate"
 msgstr "Zu bewertende URL"
+
+msgid "Disabled filter module(s) %(filterdisabled)s."
+msgstr "Filter Modul(e) %(filterdisabled)s wurde(n) deaktiviert."
 
 msgid ""
 "Response content data of mime types\n"
@@ -1515,8 +1526,8 @@ msgstr "Neuer Ordner erfolgreich erstellt."
 msgid "Match URL"
 msgstr "Betroffene URL"
 
-msgid "Invalid proxy port."
-msgstr "Ungültige Proxy Portnummer."
+msgid "Configure rule %(rule)s."
+msgstr ""
 
 msgid ""
 "Select <b>File -&gt; Preferences -&gt; Network\n"
