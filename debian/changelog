@@ -1,3 +1,12 @@
+webcleaner (0.44) unstable; urgency=low
+
+  * wc/filter/Compress.py: fix for compression of documents not calling
+    filter() but only finish() function
+  * add FAQ
+  * get rid of 'python2' in rpm build
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 11 Jun 2002 10:47:16 +0200
+
 webcleaner (0.43) unstable; urgency=low
 
   * wc/parser/htmllex.l: fix segfault with unterminated end tags

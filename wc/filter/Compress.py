@@ -48,7 +48,7 @@ def gzip_header ():
               '\002\377',     # end header
               )
 BASIC_CRC = zlib.crc32('')
-COMPRESS_RE = re.compile(r'(compress|gzip|bzip2)', re.I)
+COMPRESS_RE = re.compile(r'(?i)(compress|gzip|bzip2)')
 
 
 def getCompressObject ():
@@ -61,6 +61,8 @@ def getCompressObject ():
            }
 
 
+# XXX there is room for optimization here, but it works, and thats
+# important enough that I dont touch this thing for now
 class Compress (Filter):
 
     def filter (self, data, **attrs):
@@ -68,8 +70,7 @@ class Compress (Filter):
         Note that compression state is saved outside of this function
         in the compression object.
         """
-        if not attrs.has_key('compressobj'):
-            return data
+        if not attrs.has_key('compressobj'): return data
         compobj = attrs['compressobj']
         if compobj:
             header = compobj['header']
@@ -80,7 +81,7 @@ class Compress (Filter):
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
                 #debug(NIGHTMARE, 'compressing %s\n' % `data`)
-                data = "%s%s" % (header, compobj['compressor'].compress(data))
+                data = "%s%s"%(header, compobj['compressor'].compress(data))
             else:
                 data = header
         return data
@@ -89,11 +90,16 @@ class Compress (Filter):
         if not attrs.has_key('compressobj'): return data
         compobj = attrs['compressobj']
         if compobj:
+            header = compobj['header']
+            if header:
+                compobj['header'] = ''
             if data:
                 compobj['size'] += len(data)
                 compobj['crc'] = zlib.crc32(data, compobj['crc'])
                 #debug(NIGHTMARE, 'final compressing %s\n' % `data`)
-                data = compobj['compressor'].compress(data)
+                data = "%s%s"%(header, compobj['compressor'].compress(data))
+            else:
+                data = header
             #debug(NIGHTMARE, 'finishing compressor\n')
             data += compobj['compressor'].flush(zlib.Z_FINISH) + \
 	            struct.pack('<l', compobj['crc']) + \

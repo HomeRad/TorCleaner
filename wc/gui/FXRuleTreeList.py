@@ -107,12 +107,10 @@ class FXRuleTreeList (FXTreeList):
             rule = self.searchIndexRule(index)
             #debug(BRING_IT_ON, "onCmdUp: rule %s" % rule)
             rule_before = self.searchOidRule(item, rule.oid-1)
-            item_before = rule_before.item
             rule_before.oid, rule.oid = rule.oid, rule_before.oid
             self.sort()
             self.removeItem(item)
-            self.addItemBefore(item_before, item)
-            self.getApp().dirty = 1
+            self.addItemBefore2(rule_before.item, item)
 
     def onCmdDown (self):
         item = self.getCurrentItem()
@@ -121,14 +119,10 @@ class FXRuleTreeList (FXTreeList):
             #debug(BRING_IT_ON, "onCmdUp: tree item index %d" % index)
             rule = self.searchIndexRule(index)
             rule_after = self.searchOidRule(item, rule.oid+1)
-            item_after = rule_after.item
             rule_after.oid, rule.oid = rule.oid, rule_after.oid
             self.sort()
             self.removeItem(item)
-            print item_after, item
-            # this segfaults
-            self.addItemAfter(item_after, item)
-            self.getApp().dirty = 1
+            self.addItemAfter2(rule_after.item, item)
 
     def sort (self):
         for f in self.folders: f.sort()

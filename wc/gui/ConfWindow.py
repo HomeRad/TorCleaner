@@ -560,7 +560,8 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdUp (self, sender, sel, ptr):
-        #XXXself.tree.onCmdUp()
+        #self.tree.onCmdUp()
+        #self.getApp().dirty = 1
         return 1
 
 
@@ -574,7 +575,8 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdDown (self, sender, sel, ptr):
-        #XXXself.tree.onCmdDown()
+        #self.tree.onCmdDown()
+        #self.getApp().dirty = 1
         return 1
 
 
