@@ -55,6 +55,8 @@ generate the configure and Makefile files.
 
 Setup for Windows:
 ------------------
+0. Install check
+   Be sure to have installed all required software listed above.
 1. Preparing Python for the MinGW compiler
    Search the file python23.dll in your windows folder.
    After you found it, launch MSYS and do:
@@ -64,8 +66,8 @@ Setup for Windows:
    The resulting library has to be placed in the same directory as
    python23.lib. (Should be the libs directory under your Python installation
    directory.)
-3. Compile the JavaScript library
-   First, copy the webcleaner-X.X.tar.gz into your MSYS home directory,
+2. Compile the JavaScript library
+   Copy the webcleaner-X.X.tar.gz into your MSYS home directory,
    which is usually under c:\msys\1.0\home\user\.
    Launch MSYS and extract the tarball:
    % tar xzvf webcleaner-X.X.tar.gz
