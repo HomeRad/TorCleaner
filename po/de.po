@@ -1091,7 +1091,7 @@ msgstr "URL Portnummer"
 msgid ""
 "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
 "<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
-msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Websieten stammen von Mark Pilgrims<a href=\"http://diveintoaccessibility.org/\">Accessibility Seiten</a>."
+msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Websieten stammen von Mark Pilgrims <a href=\"http://diveintoaccessibility.org/\">Accessibility Seiten</a>."
 
 msgid "Rule"
 msgstr "Regel"
