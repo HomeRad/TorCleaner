@@ -21,30 +21,50 @@ import re
 
 charset = 'iso-8859-1'
 
+def get_item_value (item):
+    """return a plain value of the given form field item"""
+    if isinstance(item, list):
+        value = item[0]
+    elif hasattr(item, "value"):
+        value = item.value
+    else:
+        value = item
+    return value.decode(charset)
+
+
+def get_item_list (item):
+    """return a plain value of the given form field item"""
+    if isinstance(item, list):
+        value = [get_item_value(x) for x in item]
+    elif hasattr(item, "value"):
+        value = [item.value.decode(charset)]
+    else:
+        value = [item.decode(charset)]
+    return value
+
+
 def getval (form, key):
     """return a formfield value"""
     if not form.has_key(key):
         return u''
-    item = form[key]
-    if isinstance(item, list):
-        item = item[0]
-    elif hasattr(item, "value"):
-        item = item.value
-    return item.decode(charset)
+    return get_item_value(form[key])
 
 
 def getlist (form, key):
     """return a list of formfield values"""
     if not form.has_key(key):
         return []
-    item = form[key]
-    if isinstance(item, list):
-        l = [x.value for x in item]
-    elif hasattr(item, "value"):
-        l = [item.value]
-    else:
-        l = [item]
-    return [ x.decode(charset) for x in l ]
+    return get_item_list(form[key])
+
+
+def get_prefix_vals (form, prefix):
+    """return a list of (key, value) pairs where ``prefix+key'' is a valid
+       form field"""
+    res = []
+    for key, item in form.items():
+        if key.startswith(prefix):
+            res.append(key[len(prefix):], get_item_value(item))
+    return res
 
 
 is_safe = re.compile(r"^[a-zA-Z0-9 ]$").match
