@@ -6767,6 +6767,8 @@ static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 /* %e */
 #endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
+/* %c These go in the .c file only. */
+#ifndef yyIN_HEADER /* YY-DISCARD-FROM-HEADER */
 /* This must go here because YYSTYPE and YYLSTYPE are included
  * from bison output in section 1.*/
 #ifdef YY_REENTRANT_BISON_PURE
@@ -6775,6 +6777,8 @@ static int yy_init_globals YY_PARAMS(( YY_PROTO_ONLY_ARG ));
 #    define yylloc YY_G(yylloc_r)
 #  endif
 #endif /* YY_REENTRANT_BISON_PURE */
+/* %e */
+#endif /* !yyIN_HEADER YY-END-DISCARD-FROM-HEADER */
 
 #endif /* end if YY_REENTRANT */
 
@@ -7039,7 +7043,7 @@ YY_DECL
 
 
   /*********************** EOF ************************/
-#line 7043 "htmllex.c"
+#line 7047 "htmllex.c"
 
 #ifdef YY_REENTRANT_BISON_PURE
     yylval = yylvalp;
@@ -8026,7 +8030,7 @@ YY_RULE_SETUP
 #line 717 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 8030 "htmllex.c"
+#line 8034 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -9034,6 +9038,7 @@ int yylex_init( ptr_yy_globals )
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  YYFARGS0(void)
 {
+/* %- SNIP! this currently causes conflicts with the c++ scanner */
     /* Destroy the current (main) buffer. */
     yy_delete_buffer( YY_G(yy_current_buffer) YY_CALL_LAST_ARG );
     YY_G(yy_current_buffer) = NULL;
@@ -9055,6 +9060,7 @@ int yylex_destroy  YYFARGS0(void)
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner YY_CALL_LAST_ARG );
 #endif
+/* %* */
     return 0;
 }
 

@@ -8,8 +8,10 @@ set -e
 db_version 2.0
 
 package=webcleaner
-PYTHON=python2.1
-SITEPACKAGES=/usr/lib/$PYTHON/site-packages
+PYTHON=python
+PYVER=2.2
+PYTHONXY=${PYTHON}${PYVER}
+SITEPACKAGES=/usr/lib/$PYTHONXY/site-packages
 DIRLIST="wc"
 FILELIST="_webcleaner2_configdata.py"
 COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
@@ -17,8 +19,8 @@ COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
 case "$1" in
     configure|reconfigure|abort-upgrade|abort-remove|abort-deconfigure)
         for i in $DIRLIST; do
-            $PYTHON -O /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
-            $PYTHON /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON -O /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
         done
 	# use /bin/sh -c, otherwise I get a SyntaxError from Python
         for i in $FILELIST; do

@@ -4,16 +4,18 @@
 # see: dh_installdeb(1)
 set -e
 
-PYTHON=python2.1
-SITEPACKAGES=/usr/lib/$PYTHON/site-packages
+PYTHON=python
+PYVER=2.2
+PYTHONXY=${PYTHON}${PYVER}
+SITEPACKAGES=/usr/lib/$PYTHONXY/site-packages
 DIRLIST="wc/gui"
 COMMAND="'import sys,py_compile;py_compile.compile(sys.argv[1])'"
 
 case "$1" in
     configure|abort-upgrade|abort-remove|abort-deconfigure)
         for i in $DIRLIST; do
-            $PYTHON -O /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
-            $PYTHON /usr/lib/$PYTHON/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON -O /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
+            $PYTHON /usr/lib/$PYTHONXY/compileall.py -q $SITEPACKAGES/$i
         done
     ;;
     *)
