@@ -97,7 +97,7 @@ Setup for Unix/Linux:
 
 2. Compilation
    
-   Run ``./configure; make`` to compile the included C libraries.
+   Run ``./configure && make`` to compile the included C libraries.
    Run ``python setup.py build`` to compile the Python files.
    For help about the setup.py script options, run
    ``python setup.py --help``.
@@ -169,7 +169,7 @@ Setup for Windows - compiling from source:
    Now change into the generated directory with
    ``% cd webcleaner-X.X`` and configure and compile the JavaScript
    library:
-   ``% ./configure; make``.
+   ``% ./configure && make``.
 
 4. Compile and install PyCrypto
    
