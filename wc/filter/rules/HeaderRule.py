@@ -48,7 +48,8 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
     def __str__ (self):
         """return rule data as string"""
         return super(HeaderRule, self).__str__() + \
-            ("\nname:   %r\nvalue:   %r" % (self.name, self.value))
+            ("name %r\nvalue %r\nstage %s" %
+             (self.name, self.value, self.filterstage))
 
     def toxml (self):
         """Rule data as XML for storing"""
