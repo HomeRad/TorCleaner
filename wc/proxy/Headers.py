@@ -202,11 +202,11 @@ def server_set_content_headers (headers, mime, url):
     """add missing content-type headers"""
     if not headers.get('Content-Type', None):
         wc.log.warn(wc.LOG_PROXY, _("No content type in %r"), url)
-        if mime:
-            # we have a hint what mime type we can apply
-            wc.log.warn(wc.LOG_PROXY,
-                        _("Set content type of %r to %r"), url, mime)
-            headers['Content-Type'] = "%s\r" % mime
+    if mime:
+        # we have a mime type override
+        wc.log.warn(wc.LOG_PROXY,
+                    _("Set content type of %r to %r"), url, mime)
+        headers['Content-Type'] = "%s\r" % mime
 
 
 def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
