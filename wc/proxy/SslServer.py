@@ -26,17 +26,18 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         # attempt connect
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM,
          sslctx=wc.proxy.ssl.get_clientctx(wc.configuration.config.configdir))
-        self.socket.settimeout(wc.config['timeout'])
+        self.socket.settimeout(wc.configuration.config['timeout'])
         self.try_connect()
         self.socket.set_connect_state()
 
     def __repr__ (self):
         """object description"""
-        if self.addr[1] != 80:
+        extra = ""
+        if hasattr(self, "persistent") and self.persistent:
+            extra += "persistent "
+        if hasattr(self, "addr") and self.addr and self.addr[1] != 80:
             portstr = ':%d' % self.addr[1]
-        else:
-            portstr = ''
-        extra = '%s%s' % (self.addr[0], portstr)
+            extra += '%s%s' % (self.addr[0], portstr)
         if self.socket:
             extra += " (%s)" % self.socket.state_string()
         if not self.connected:
