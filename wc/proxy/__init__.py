@@ -126,12 +126,12 @@ def mainloop (handle=None, abort=None):
     """proxy main loop, handles requests forever"""
     import wc.proxy.HttpClient
     import wc.proxy.Listener
-    import wc.proxy.SslClient
-    import wc.proxy.ssl
     host = str(wc.configuration.config['bindaddress'])
     port = wc.configuration.config['port']
     wc.proxy.Listener.Listener(host, port, wc.proxy.HttpClient.HttpClient)
     if wc.configuration.config['sslgateway']:
+        import wc.proxy.SslClient
+        import wc.proxy.ssl
         port = wc.configuration.config['sslport']
         sslctx = wc.proxy.ssl.get_serverctx(wc.configuration.config.configdir)
         wc.proxy.Listener.Listener(host, port, wc.proxy.SslClient.SslClient,

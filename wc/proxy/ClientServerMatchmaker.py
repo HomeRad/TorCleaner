@@ -11,7 +11,6 @@ import wc.proxy.dns_lookups
 import wc.proxy.Headers
 import wc.proxy.ServerHandleDirectly
 import wc.proxy.HttpServer
-import wc.proxy.SslServer
 from wc.proxy.ServerPool import serverpool
 
 
@@ -160,6 +159,7 @@ class ClientServerMatchmaker (object):
             try:
                 if self.url.startswith("https://") and \
                    wc.configuration.config['sslgateway']:
+                    import wc.proxy.SslServer
                     klass = wc.proxy.SslServer.SslServer
                 else:
                     klass = wc.proxy.HttpServer.HttpServer
