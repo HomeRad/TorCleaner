@@ -23,10 +23,11 @@ A: Your client was sending data when it shouldn't have. This is mostly
 Q: Are there security concerns running this proxy?
 A: Yes.
    1) Be sure no one but you or your users can access the proxy.
-      This must be configured in your operating system! Use a
-      firewall product.
-   2) Every localhost users can read the configuration.
-   3) Every localhost user can issue a DoS by sending an unlimited
-      amount of headers.
-      Under Unix systems you can use ulimit to start the process.
+      The default configuration is that only local users can
+      access the proxy. Additionally, you should define a proxy password.
+   2) Every user with granted access can read the configuration.
 
+Q: I get "zlib error" entries in my error log.
+A: Some b0rked servers are sending Content-Type: gzip for pages
+   that are not compressed. In this case WebCleaner does not try to
+   decompress the content but prints the above error.

@@ -16,6 +16,8 @@
     compressed. So the decoding disables the decompression when such
     an error is encountered.
     Changed files: wc/proxy/GunzipStream.py
+  * updated documentation and german translation
+    Changed files: README, FAQ, po/de.po
 
 0.59
   * - add missing import of _
