@@ -111,7 +111,8 @@ def write_folder (cat, ftype, data, f):
 def write_domains (cat, b, ftype, f):
     print "write", cat, "domains"
     d = {'title': cat+" domain filter",
-         'desc': "You should not edit this filter, only disable or delete it.",
+         'desc': """You should not edit this filter, only disable or delete it.
+To update the filter data, run config/bl2wc.py from a WebCleaner source tree."""",
          'filename': "%s/%s/domains.gz" % (b, cat),
          'type': ftype,
         }
@@ -124,7 +125,8 @@ def write_domains (cat, b, ftype, f):
 def write_urls (cat, b, ftype, f):
     print "write", cat, "urls"
     d = {'title': cat+" url filter",
-         'desc': "You should not edit this filter, only disable or delete it.",
+         'desc': """You should not edit this filter, only disable or delete it.
+To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
          'filename': "%s/%s/urls.gz" % (b, cat),
          'type': ftype,
         }
@@ -136,7 +138,8 @@ def write_urls (cat, b, ftype, f):
 
 def write_expressions (cat, b, ftype, f):
     d = {'title': cat+" expression filter",
-         'desc': "Automatically generated, you should not edit this filter.",
+         'desc': """Automatically generated, you should not edit this filter.
+To update the filter data, run config/bl2wc.py from a WebCleaner source tree.""",
          'type': ftype,
         }
     print "write", cat, "expressions"
