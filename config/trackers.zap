@@ -63,7 +63,7 @@
 <rewrite sid="wc.21">
   <title lang="de">Verschiedene Zählskripte</title>
   <description lang="de">CGI Skripte zur Zählung</description>
-  <attr>/.*(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
+  <attr>/(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
 </rewrite>
 
 <rewrite sid="wc.406"
