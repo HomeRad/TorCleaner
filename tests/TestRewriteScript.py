@@ -152,7 +152,7 @@ document.write('</SCR'+'IPT>');
 </table>""")
 
 
-    def XXXtestRecursion3 (self):
+    def testRecursion3 (self):
         self.filt(
 """<script language="JavaScript">
 <!--
@@ -208,20 +208,26 @@ a = 1
 """XXX""")
 
 
-    def XXXtestScriptSrc4 (self):
+    def testScriptSrc4 (self):
         self.filt(
 """<script src="http://localhost/notfound.js">
 /* this should not be here **/ 
 </script>""",
-"""XXX""")
+"""<script type="text/javascript">
+<!--
+// error fetching script from 'http://localhost/notfound.js'
+//-->
+</script>""")
 
 
-    def XXXtestScriptSrc5 (self):
+    def testScriptSrc5 (self):
         self.filt(
 """<script src="file:///C:/Progra~1/1.js"></script>
 
 </html>""",
-"""XXX""")
+"""
+
+</html>""")
 
 
     def testCommentQuoting (self):
