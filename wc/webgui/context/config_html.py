@@ -22,9 +22,9 @@ from wc import AppName, filtermodules, Version, config
 from wc import sort_seq as _sort_seq
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
-from wc.network.ip import lookup_ips as _lookup_ips
-from wc.network.ip import resolve_host as _resolve_host
-from wc.network.ip import hosts2map as _hosts2map
+from bk.net.ip import lookup_ips as _lookup_ips
+from bk.net.ip import resolve_host as _resolve_host
+from bk.net.ip import hosts2map as _hosts2map
 
 # config vars
 info = {}
