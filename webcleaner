@@ -50,7 +50,7 @@ stop
 restart
         Restart %(service)s service.
 status
-        Print status info of %(AppName)s service.
+        Print status info of %(appname)s service.
 debug
         Start %(service)s service with debug messages.
 install [options]
@@ -72,9 +72,9 @@ COMMAND OPTIONS (for 'install' and 'update' commands only)
 """)
 
 
-usage = _("""USAGE\twebcleaner [options]
+usage = _("""USAGE\twebcleaner [options] [command]
 
-The %(AppName)s proxy is started as a foreground process.
+The %(appname)s proxy is started as a foreground process.
 
 OPTIONS
 -h, --help
@@ -86,6 +86,12 @@ OPTIONS
 
 --no-file-logs
         Log to stdout instead of *.log files.
+
+COMMANDS
+start
+        Start %(appname)s.
+restart
+        Restart %(appname)s.
 """)
 
 
@@ -97,7 +103,7 @@ def print_usage (msg):
 
 
 def paginate (text, lines=22):
-    """print text in pages of lines size"""
+    """Print text in pages of lines size."""
     textlines = text.split("\n")
     curline = 1
     for line in textlines:
@@ -110,12 +116,13 @@ def paginate (text, lines=22):
 
 
 def print_help ():
-    """print long usage info"""
+    """Print long usage info and exit."""
+    d = {'service': service, 'appname': wc.AppName}
     if os.name=='nt':
-        service = _("%s Proxy") % wc.AppName
-        paginate(nt_usage % {'service': service, 'AppName': wc.AppName})
+        service = _("%(appname)s Proxy") % d
+        paginate(nt_usage % d)
     else:
-        print usage % {'AppName': wc.AppName}
+        print usage % d
     sys.exit(0)
 
 
@@ -146,7 +153,7 @@ def parse_options (sysargs):
 
 
 def main_posix (configdir, filelogs, args):
-    """start the proxy"""
+    """Start (or restart) the webcleaner proxy."""
     if len(args) < 1:
         command = "start"
     else:
@@ -161,7 +168,7 @@ def main_posix (configdir, filelogs, args):
 
 
 def main_nt (configdir, filelogs, args):
-    """control nt proxy service"""
+    """Control webcleaner proxy NT service."""
     if len(args) < 1:
         print_usage(_("No command given."))
     else:
@@ -180,6 +187,9 @@ def main_nt (configdir, filelogs, args):
 
 
 def main (sysargs):
+    """Start webcleaner with given command line arguments which
+       are usually sys.argv[1:].
+    """
     configdir, filelogs, args = parse_options(sysargs)
     if os.name=='nt':
         return main_nt(configdir, filelogs, args)
