@@ -163,7 +163,7 @@ class GifParser (object):
                 # the GIF prefix
                 if not self.header.startswith('GIF'):
                     debug(FILTER, "No GIF file, switch to nofilter mode")
-                    self.state == GifParser.NOFILTER
+                    self.state = GifParser.NOFILTER
                     continue
                 self.size = (i16(self.read(2)), i16(self.read(2)))
                 debug(FILTER, 'GIF width=%d, height=%d', self.size[0], self.size[1])
