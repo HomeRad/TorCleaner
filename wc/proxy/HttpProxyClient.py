@@ -73,6 +73,7 @@ class HttpProxyClient (object):
                 error(PROXY, "fetching data status: %s %s", status, msg)
                 self.finish()
         except:
+            exception(PROXY, "ProxyClient error")
             # XXX really catch all exceptions?
             self.finish()
 
