@@ -27,7 +27,9 @@ import pywintypes
 
 
 def execute (pythonw, script, args):
-    """execute given script"""
+    """
+    Execute given script.
+    """
     cargs = " ".join(args)
     _in, _out = os.popen4("%s %s %s" % (pythonw, script, cargs))
     line = _out.readline()
@@ -39,12 +41,16 @@ def execute (pythonw, script, args):
 
 
 def fix_configdata ():
-    """fix install and config paths in the config file"""
+    """
+    Fix install and config paths in the config file.
+    """
     name = "_webcleaner2_configdata.py"
     conffile = os.path.join(sys.prefix, "Lib", "site-packages", name)
     lines = []
     for line in file(conffile):
-        if line.startswith("install_") or line.startswith("config_"):
+        if line.startswith("install_") or \
+           line.startswith("config_") or \
+           line.startswith("template_"):
             lines.append(fix_install_path(line))
         else:
             lines.append(line)
@@ -67,8 +73,10 @@ win_path_scheme = {
 }
 
 def fix_install_path (line):
-    """Replace placeholders written by bdist_wininst with those specified
-       in win_path_scheme."""
+    """
+    Replace placeholders written by bdist_wininst with those specified
+    in win_path_scheme.
+    """
     key, eq, val = line.split()
     # unescape string (do not use eval())
     val = val[1:-1].replace("\\\\", "\\")
@@ -83,7 +91,9 @@ def fix_install_path (line):
 
 
 def do_install ():
-    """install shortcuts and NT service"""
+    """
+    Install shortcuts and NT service.
+    """
     fix_configdata()
     import wc
     # initialize i18n
@@ -96,16 +106,17 @@ def do_install ():
 
 
 def install_shortcuts ():
-    """create_shortcut(target, description, filename[, arguments[, \
-                     workdir[, iconpath[, iconindex]]]])
+    """
+    create_shortcut(target, description, filename[, arguments[, \
+                    workdir[, iconpath[, iconindex]]]])
 
-       file_created(path)
-         - register 'path' so that the uninstaller removes it
+    file_created(path)
+      - register 'path' so that the uninstaller removes it
 
-       directory_created(path)
-         - register 'path' so that the uninstaller removes it
+    directory_created(path)
+      - register 'path' so that the uninstaller removes it
 
-       get_special_folder_location(csidl_string)
+    get_special_folder_location(csidl_string)
     """
     try:
         prg = get_special_folder_path("CSIDL_COMMON_PROGRAMS")
@@ -131,7 +142,9 @@ def install_shortcuts ():
 
 
 def install_certificates ():
-    """generate SSL certificates for SSL gateway functionality"""
+    """
+    Generate SSL certificates for SSL gateway functionality.
+    """
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     import wc
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
@@ -139,7 +152,9 @@ def install_certificates ():
 
 
 def state_nt_service (name):
-    """return status of NT service"""
+    """
+    Return status of NT service.
+    """
     try:
         return win32serviceutil.QueryServiceStatus(name)[1]
     except pywintypes.error, msg:
@@ -148,7 +163,9 @@ def state_nt_service (name):
 
 
 def install_service ():
-    """install WebCleaner as NT service"""
+    """
+    Install WebCleaner as NT service.
+    """
     import wc
     import wc.win32start
     oldargs = sys.argv
@@ -169,13 +186,17 @@ def remove_service ():
 
 
 def restart_service ():
-    """restart WebCleaner NT service"""
+    """
+    Restart WebCleaner NT service.
+    """
     stop_service()
     start_service()
 
 
 def stop_service ():
-    """stop WebCleaner NT service (if it is running)"""
+    """
+    Stop WebCleaner NT service (if it is running).
+    """
     import wc
     import wc.win32start
     print _("Stopping %s proxy...") % wc.AppName
@@ -195,7 +216,9 @@ def stop_service ():
 
 
 def start_service ():
-    """start WebCleaner NT service"""
+    """
+    Start WebCleaner NT service.
+    """
     import wc
     import wc.win32start
     print _("Starting %s proxy...") % wc.AppName
@@ -234,7 +257,9 @@ def open_browser (url):
 
 
 def do_remove ():
-    """stop and remove the installed NT service"""
+    """
+    Stop and remove the installed NT service.
+    """
     import wc
     # initialize i18n
     wc.init_i18n()
@@ -245,7 +270,9 @@ def do_remove ():
 
 
 def remove_certificates ():
-    """generate SSL certificates for SSL gateway functionality"""
+    """
+    Generate SSL certificates for SSL gateway functionality.
+    """
     import wc
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
@@ -253,7 +280,9 @@ def remove_certificates ():
 
 
 def remove_tempfiles ():
-    """remove log files and magic(1) cache file"""
+    """
+    Remove log files and magic(1) cache file.
+    """
     import wc
     remove_file(os.path.join(wc.ConfigDir, "magic.mime.mgc"))
     remove_file(os.path.join(wc.ConfigDir, "webcleaner.log"))
@@ -261,7 +290,9 @@ def remove_tempfiles ():
 
 
 def remove_file (fname):
-    """Remove a single file if it exists. Errors are printed to stdout"""
+    """
+    Remove a single file if it exists. Errors are printed to stdout.
+    """
     if os.path.exists(fname):
         try:
             os.remove(fname)
