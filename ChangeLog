@@ -32,9 +32,11 @@
     for the blocked page.
     Changed: templates/classic/blocked.html, wc/filter/Blocker.py,
       wc/webgui/context/blocked_html.py
-  * translate tal:replace and tal:content content if i18n:translate="" is
-    given in the template attributes
+  * translation improvements in the TAL interpreter
     Changed: wc/webgui/simpletal/simpleTAL.py
+  * translatable rule title and description
+    Changed: wc/filter/rules/*.py, wc/__init__.py, config/filter.dtd,
+      config/*.{zap,py}
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way

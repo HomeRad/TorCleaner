@@ -2,8 +2,6 @@ TODO
 
 version 2.9 and above
 
-- translatable rule title and description
-
 - memory leaks while operating the proxy
 
 - content rating:

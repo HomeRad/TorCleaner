@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Wed Feb 25 16:47:06 2004\n"
+"POT-Creation-Date: Thu Feb 26 01:25:40 2004\n"
 "PO-Revision-Date: 2003-08-04 19:10+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
