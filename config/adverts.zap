@@ -323,4 +323,10 @@
  matchurl="www.sat1.de">
 <attr>/jump\.hbs</attr>
 </rewrite>
+
+<rewrite title="MSN ads 2" oid="140"
+ desc="Same as MSN ads, only in area"
+ tag="area">
+<attr>g\.msn(bc)?\.com</attr>
+</rewrite>
 </folder>
