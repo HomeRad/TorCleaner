@@ -62,6 +62,8 @@ class HttpClient (Connection):
         if auth:
             headers['Proxy-Authenticate'] = auth
         form = {}
+        if not self.url:
+            self.url = '/error.html'
         WebConfig(self, self.url, form, self.protocol,
                   context=context,
                   headers=headers,
