@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Mon Aug  4 18:09:14 2003\n"
+"POT-Creation-Date: Mon Aug  4 19:08:33 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -990,6 +990,14 @@ msgid "Remove selected attributes"
 msgstr ""
 
 #, html translation
+msgid ""
+"Most browsers support jumping to specific links by typing keys defined on\n"
+"the web site.  On Windows, you can press <acronym>ALT</acronym> + an\n"
+"access key; on Macintosh, you can press <acronym>Control</acronym> + an\n"
+"access key."
+msgstr ""
+
+#, html translation
 msgid "Service"
 msgstr ""
 
@@ -1046,6 +1054,13 @@ msgid "Blocked image URL"
 msgstr ""
 
 #, html translation
+msgid ""
+"If you have any suggestions or comments about %(AppName)s, feel free to\n"
+"email me at\n"
+"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
+msgstr ""
+
+#, html translation
 msgid "Rule icon"
 msgstr ""
 
@@ -1063,6 +1078,12 @@ msgstr ""
 
 #, html translation
 msgid "URL port"
+msgstr ""
+
+#, html translation
+msgid ""
+"This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims\n"
+"<a href=\"http://diveintoaccessibility.org/\">Accessibility pages</a>.\n"
 msgstr ""
 
 #, html translation
@@ -1276,6 +1297,12 @@ msgstr ""
 
 #, html translation
 msgid "URL parameters"
+msgstr ""
+
+#, html translation
+msgid ""
+"If you have any questions or comments about the accessibility of these pages, feel free to email me at\n"
+"<a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>.\n"
 msgstr ""
 
 #, html translation
