@@ -64,12 +64,12 @@ class MyInstall (install):
 
 
     def install_nt_service (self):
-        from wc import daemon, AppName, Configuration
+        from wc import win32start, AppName, Configuration
         import win32serviceutil
         oldargs = sys.argv
         # install service
         sys.argv = ['webcleaner', 'install']
-        win32serviceutil.HandleCommandLine(daemon.ProxyService)
+        win32serviceutil.HandleCommandLine(win32start.ProxyService)
         # stop proxy (if it is running)
         state = self.state_nt_service(AppName)
         while state==win32service.SERVICE_START_PENDING:
@@ -77,14 +77,14 @@ class MyInstall (install):
             state = self.state_nt_service(AppName)
         if state==win32service.SERVICE_RUNNING:
             sys.argv = ['webcleaner', 'stop']
-            win32serviceutil.HandleCommandLine(daemon.ProxyService)
+            win32serviceutil.HandleCommandLine(win32start.ProxyService)
         state = self.state_nt_service(AppName)
         while state==win32service.SERVICE_STOP_PENDING:
             time.sleep(1)
             state = self.state_nt_service(AppName)
         # start proxy
         sys.argv = ['webcleaner', 'start']
-        win32serviceutil.HandleCommandLine(daemon.ProxyService)
+        win32serviceutil.HandleCommandLine(win32start.ProxyService)
         sys.argv = oldargs
         config = Configuration()
         config_url = "http://localhost:%d/" % config['port']
@@ -205,13 +205,15 @@ myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
        version = "2.8",
        description = "a filtering HTTP proxy",
+       keywords = "proxy,server,http,filters,daemon",
        author = myname,
        author_email = myemail,
        maintainer = myname,
        maintainer_email = myemail,
        url = "http://webcleaner.sourceforge.net/",
-       license = "GPLv2",
-       packages = ['', 'wc', 'wc/filter', 'wc/daemon', 'wc/js', 'wc/magic',
+       download_url = "http://sourceforge.net/project/showfiles.php?group_id=7692",
+       license = "GPL",
+       packages = ['', 'wc', 'wc/filter', 'wc/js', 'wc/magic',
            'wc/parser', 'wc/proxy', 'wc/proxy/dns', 'wc/proxy/auth',
            'wc/filter/rules', 'wc/webgui', 'wc/webgui/simpletal',
            'wc/webgui/context',],
