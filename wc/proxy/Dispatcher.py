@@ -84,27 +84,24 @@ class Dispatcher (object):
 
 
     def add_channel (self):
-        socket_map[self._fileno] = self
+        socket_map[self.fileno()] = self
 
 
     def del_channel (self):
-        fd = self._fileno
+        fd = self.fileno()
         if socket_map.has_key(fd):
             del socket_map[fd]
-            self._fileno = None
 
 
     def create_socket (self, family, type):
         self.family_and_type = family, type
         self.socket = socket.socket(family, type)
         self.socket.setblocking(0)
-        self._fileno = self.socket.fileno()
         self.add_channel()
 
 
     def set_socket (self, sock):
         self.socket = sock
-        self._fileno = sock.fileno()
         self.add_channel()
 
 
