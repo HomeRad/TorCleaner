@@ -12,11 +12,14 @@ def _main ():
     from test import initlog
     initlog("test/logging.conf")
     import wc
+    from wc.proxy.Headers import WcMessage
     wc.config = wc.Configuration()
     wc.config['filters'] = ['Blocker',]
     wc.config.init_filter_modules()
     from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
-    attrs = get_filterattrs(url, [FILTER_REQUEST])
+    headers = WcMessage()
+    headers['Content-Type'] = "text/html"
+    attrs = get_filterattrs(url, [FILTER_REQUEST], headers=headers)
     print applyfilter(FILTER_REQUEST, data, 'finish', attrs)
 
 

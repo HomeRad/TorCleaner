@@ -20,9 +20,12 @@ def _main ():
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
     from wc.proxy import proxy_poll, run_timers
+    from wc.proxy.Headers import WcMessage
     from wc.filter import FilterException, applyfilter, get_filterattrs
     from wc.filter import FILTER_RESPONSE_MODIFY
-    attrs = get_filterattrs(fname, [FILTER_RESPONSE_MODIFY])
+    headers = WcMessage()
+    headers['Content-Type'] = "text/html"
+    attrs = get_filterattrs(fname, [FILTER_RESPONSE_MODIFY], headers=headers)
     filtered = ""
     data = f.read(2048)
     while data:
