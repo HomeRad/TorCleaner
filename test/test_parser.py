@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 from wc.parser.htmllib import HtmlPrinter
 import sys
 sys.stderr = sys.stdout

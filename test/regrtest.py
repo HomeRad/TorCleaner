@@ -1,4 +1,5 @@
 #!/usr/bin/python2.3
+# -*- coding: iso-8859-1 -*-
 # this file is _not_ the original Python2 regression test suite.
 
 """Bastis Regression test.

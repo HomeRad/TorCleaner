@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python2.3
+# -*- coding: iso-8859-1 -*-
 from wc.js import jslib, JSListener
 import sys
 sys.stderr = sys.stdout

@@ -47,7 +47,7 @@ dist-hook:	locale
 	rm -f $(distdir)/webcleaner-$(WCVERSION).tar.gz
 	rm -f $(MD5SUMS)
 
-test:
+mytest:
 	env http_proxy="" ftp_proxy="" LANG=C $(PYTHON) test/regrtest.py
 
 gentest:
@@ -79,7 +79,7 @@ onlinetest: restart
 	less index.html
 
 offlinetest: restart
-	env http_proxy="http://localhost:9090" wget -S -t1 http://localhost:9090/
+	env http_proxy="http://localhost:8080" wget -S -t1 http://localhost:8080/
 	cat index.html
 	rm -f index.html
 

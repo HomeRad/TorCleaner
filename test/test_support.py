@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """Supporting definitions for the Python regression test."""
 
 

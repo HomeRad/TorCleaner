@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """test script to test javascript filtering"""
 
 def filterfile (fname):

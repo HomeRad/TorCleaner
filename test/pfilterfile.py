@@ -1,4 +1,5 @@
 #!/usr/bin/python2.3
+# -*- coding: iso-8859-1 -*-
 import sys, os, profile
 try:
     import wc
