@@ -2,9 +2,8 @@ TODO
 
 version 2.0
 
-- nofilterhosts dns name resolution
-
-- test nofilter mode
+- german translation
+- tests, packaging, wait for python 2.3final
 
 version 2.1
 
