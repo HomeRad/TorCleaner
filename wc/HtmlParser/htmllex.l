@@ -65,13 +65,17 @@
     }
 
 /* check for JavaScript or CSS tags; must be before SET_ATTR_LVAL */
-#define SCRIPT_CHECK \
-    if (strcmp("script", PyString_AS_STRING(yyextra->tmp_tag))==0) \
+#define SCRIPT_CHECK { \
+    PyObject* tagname = PyUnicode_AsEncodedString(yyextra->tmp_tag, "ascii", "ignore"); \
+    if (tagname==NULL) return T_ERROR; \
+    if (strcmp("script", PyString_AsString(tagname))==0) \
 	BEGIN(S_SCRIPT); \
-    else if (strcmp("style", PyString_AS_STRING(yyextra->tmp_tag))==0) \
+    else if (strcmp("style", PyString_AsString(tagname))==0) \
         BEGIN(S_STYLE); \
     else \
-	BEGIN(INITIAL)
+	BEGIN(INITIAL); \
+    Py_DECREF(tagname); \
+    }
 
 /* set return value from tag with attributes */
 #define SET_ATTR_LVAL \
