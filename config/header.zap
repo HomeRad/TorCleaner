@@ -5,7 +5,7 @@
 
 <header title="My own user-agent"
  desc="The user-agent is the most widely used HTTP header to detect your browser. Some people might like it, some dont. I dont."
- name="user-agent"/>
+ name="User-Agent">Calzilla</header>
 
 <header title="No x-meta tags"
  desc="What the hell are x-meta tag? Definitely not something I need."

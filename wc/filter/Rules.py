@@ -411,7 +411,12 @@ class HeaderRule(Rule):
         Rule.__init__(self, title, desc, disable)
         self.name = name
         self.value = value
-        self.attrnames.extend(('name','value'))
+        self.attrnames.append('name')
+
+    def fill_data(self, data, name):
+        data = data.encode('iso8859-1')
+        if name=='header':
+            self.value = data
 
     def fromFactory(self, factory):
         return factory.fromHeaderRule(self)

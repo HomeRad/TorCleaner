@@ -67,12 +67,10 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     """Apply all filters which are registered in filter level i.
     For different filter levels we have different arg objects.
     Look at the filter examples.
-    An exception in a filter causes the filtering to stop
-    and we return the result we have achieved so far.
     """
     if attrs.get('nofilter'): return arg
     try:
-        debug(BRING_IT_ON, 'filter stage %s' % printFilterOrder(i))
+        debug(BRING_IT_ON, 'filter stage', printFilterOrder(i))
         for f in _FILTER_LIST[i]:
             ffun = getattr(f, fun)
             if hasattr(f, 'mimelist'):
@@ -82,7 +80,8 @@ def applyfilter(i, arg, fun='filter', attrs={}):
                 # no mimelist? then this filter applies to all files!
                 arg = apply(ffun, (arg,), attrs)
     except FilterException, msg:
-        debug(NIGHTMARE, msg)
+        #debug(NIGHTMARE, msg)
+        pass
     return arg
 
 def initStateObjects(mime="text/html", headers={}):
