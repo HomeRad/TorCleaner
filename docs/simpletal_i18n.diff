@@ -1,0 +1,602 @@
+diff -BurN simpletal/simpleTAL.py /home/calvin/projects/webcleaner/wc/webgui/simpletal/simpleTAL.py
+--- simpletal/simpleTAL.py	2004-04-13 04:19:02.000000000 +0200
++++ /home/calvin/projects/webcleaner/wc/webgui/simpletal/simpleTAL.py	2004-05-05 22:02:08.000000000 +0200
+@@ -1,3 +1,4 @@
++# -*- coding: iso-8859-1 -*-
+ """ simpleTAL Interpreter
+ 
+ 		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
+@@ -58,7 +59,8 @@
+ # Name-space URIs
+ METAL_NAME_URI="http://xml.zope.org/namespaces/metal"
+ TAL_NAME_URI="http://xml.zope.org/namespaces/tal"
+-	
++I18N_NAME_URI="http://xml.zope.org/namespaces/i18n"
++
+ # All commands are of the form (opcode, args, commandList)
+ # The numbers are the opcodes, and also the order of priority
+ 
+@@ -96,17 +98,25 @@
+ METAL_FILL_SLOT=16
+ METAL_DEFINE_MACRO=17
+ 											
++# I18N Starts here
++# Argument: translation string, endTagSymbol
++I18N_TRANSLATE = 18
++# Argument: [(attributeName, expression)]
++I18N_ATTRIBUTES = 19
++
+ METAL_NAME_REGEX = re.compile ("[a-zA-Z_][a-zA-Z0-9_]*")
+ SINGLETON_XML_REGEX = re.compile ('^<[^\s/>]+(?:\s*[^=>]+="[^">]+")*\s*/>')
+ ESCAPED_ENTITIES_REGEX = re.compile ('(?:.*?)(&.*?;)')
+ 
+-class TemplateInterpreter:
+-	def __init__ (self):
++class TemplateInterpreter (object):
++	def __init__ (self, translator=None):
+ 		self.programStack = []
+ 		self.commandList = None
+ 		self.symbolTable = None
+ 		self.escapeAttributes = 0
+ 		self.slotParameters = {}
++                self.translator = translator
++                self.log = logging.getLogger("simpleTAL.TemplateInterpreter")
+ 		self.commandHandler  = {}
+ 		self.commandHandler [TAL_DEFINE] = self.cmdDefine
+ 		self.commandHandler [TAL_CONDITION] = self.cmdCondition
+@@ -121,6 +131,8 @@
+ 		self.commandHandler [METAL_USE_MACRO] = self.cmdUseMacro
+ 		self.commandHandler [METAL_DEFINE_SLOT] = self.cmdDefineSlot
+ 		self.commandHandler [TAL_NOOP] = self.cmdNoOp
++		self.commandHandler [I18N_TRANSLATE] = self.cmdI18nTranslate
++		self.commandHandler [I18N_ATTRIBUTES] = self.cmdI18nAttributes
+ 		
+ 	def tagAsText (self, (tag,atts), singletonFlag=0):
+ 		""" This returns a tag as text.
+@@ -148,6 +160,15 @@
+ 		self.context = context
+ 		self.file = outputFile
+ 		
++        def translate (self, msg):
++                if self.translator is None:
++                        return msg
++                self.log.debug("Translating %r...", msg)
++                val = self.translator.ugettext(msg) % \
++                        self.context.getVariableMap()
++                self.log.debug("...to %r", val)
++                return val
++
+ 	def cleanState (self):
+ 		self.scopeStack = []
+ 		self.programCounter = 0
+@@ -165,6 +186,8 @@
+ 		self.localVarsDefined = 0
+ 		# Pass in the parameters
+ 		self.currentSlots = self.slotParameters
++                # if true, replace tag content with translation
++                self.translateContent = 0
+ 		
+ 	def popProgram (self):
+ 		vars, self.commandList, self.symbolTable = self.programStack.pop()
+@@ -310,7 +333,7 @@
+ 			self.movePCForward = self.symbolTable [args[3]]
+ 			self.programCounter += 1
+ 			return
+-		elif (not result == simpleTALES.DEFAULTVALUE):
++		elif (result != simpleTALES.DEFAULTVALUE):
+ 			# We have content, so let's suppress the natural content and output this!
+ 			if (args[0]):
+ 				self.outputTag = 0
+@@ -323,7 +346,7 @@
+ 			self.programCounter += 1
+ 			return
+ 		
+-	def cmdAttributes (self, command, args):
++	def cmdAttributes (self, command, args, translateAttributes=False):
+ 		""" args: [(attributeName, expression)]
+ 				Add, leave, or remove attributes from the start tag
+ 		"""
+@@ -334,9 +357,11 @@
+ 			if (resultVal is None):
+ 				# Remove this attribute from the current attributes
+ 				attsToRemove [attName]=1
+-			elif (not resultVal == simpleTALES.DEFAULTVALUE):
++			elif (resultVal != simpleTALES.DEFAULTVALUE):
+ 				# We have a value - let's use it!
+ 				attsToRemove [attName]=1
++                                if translateAttributes:
++                                        resultVal = self.translate(resultVal)
+ 				if (type (resultVal) == type (u"")):
+ 					if (not self.escapeAttributes):
+ 						# XML will get escaped automatically, HTML will not...
+@@ -399,12 +424,14 @@
+ 					# We have another template in the context, evaluate it!
+ 					# Save our state!
+ 					self.pushProgram()
+-					resultVal.expandInline (self.context, self.file, self)
++					resultVal.expandInline (self.context, self.file, self, translator=self.translator)
+ 					# Restore state
+ 					self.popProgram()
+ 					# End of the macro expansion (if any) so clear the parameters
+ 					self.slotParameters = {}
+ 				else:
++                                        if self.translateContent:
++                                                resultVal = self.translate(resultVal)
+ 					if (type (resultVal) == type (u"")):
+ 						self.file.write (resultVal)
+ 					elif (type (resultVal) == type ("")):
+@@ -412,6 +439,8 @@
+ 					else:
+ 						self.file.write (unicode (str (resultVal), 'ascii'))
+ 			else:
++                                if self.translateContent:
++                                        resultVal = self.translate(resultVal)
+ 				if (type (resultVal) == type (u"")):
+ 					self.file.write (cgi.escape (resultVal))
+ 				elif (type (resultVal) == type ("")):
+@@ -422,7 +451,7 @@
+ 		if (self.outputTag and not args[1]):
+ 			# Do NOT output end tag if a singleton with no content
+ 			if not (args[2] and self.tagContent is None):
+-				self.file.write ('</' + args[0] + '>')
++				self.file.write (u'</%s>'% args[0])
+ 		
+ 		if (self.movePCBack is not None):
+ 			self.programCounter = self.movePCBack
+@@ -431,11 +460,14 @@
+ 		if (self.localVarsDefined):
+ 			self.context.popLocals()
+ 			
+-		self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined = self.scopeStack.pop()			
++		self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined,self.translateContent = self.scopeStack.pop()
+ 		self.programCounter += 1
+ 	
+ 	def cmdOutput (self, command, args):
+-		self.file.write (args)
++                if self.translateContent:
++                        self.file.write(self.translate(args))
++                else:
++		        self.file.write (args)
+ 		self.programCounter += 1
+ 		
+ 	def cmdStartScope (self, command, args):
+@@ -451,7 +483,8 @@
+ 								,self.repeatIndex
+ 								,self.repeatSequence
+ 								,self.tagContent
+-								,self.localVarsDefined))
++								,self.localVarsDefined
++                                                                ,self.translateContent))
+ 
+ 		self.movePCForward = None
+ 		self.movePCBack = None
+@@ -463,6 +496,7 @@
+ 		self.repeatSequence = None
+ 		self.tagContent = None
+ 		self.localVarsDefined = 0
++                self.translateContent = 0
+ 		
+ 		self.programCounter += 1				
+ 				
+@@ -482,7 +516,7 @@
+ 			self.movePCForward = self.symbolTable [args[2]]
+ 			self.programCounter += 1
+ 			return
+-		if (not value == simpleTALES.DEFAULTVALUE and isinstance (value, SubTemplate)):
++		if (value != simpleTALES.DEFAULTVALUE and isinstance (value, SubTemplate)):
+ 			# We have a macro, so let's use it
+ 			self.outputTag = 0
+ 			self.slotParameters = args[1]
+@@ -512,12 +546,48 @@
+ 		self.programCounter += 1
+ 		return
+ 	
+-class Template:
++        def cmdI18nTranslate (self, command, args):
++                """ args: translation string, translation args, endTagSymbol
++                Translate tag content. If the translation string is
++                an empty string, the translate message id is the tag
++                content. Otherwise, the value of the tag content is
++                the message id.
++                """
++                # an empty string means use tag content as message id
++                if args[0] == "":
++                        self.translateContent = 1
++                else:
++                        result = self.context.evaluate(args[0], self.originalAttributes)
++                        if not (result is None or result == simpleTALES.DEFAULTVALUE):
++                                self.tagContent = (0, self.translate(result))
++                                self.movePCForward = self.symbolTable[args[1]]
++                self.programCounter += 1
++
++        def cmdI18nAttributes (self, command, args):
++                """ args: [(attributeName, expression)]
++                translate attributes from the start tag
++                """
++                if self.translator is None:
++                        self.programCounter += 1
++                        return
++                if args:
++                        self.cmdAttributes(command, args, translateAttributes=True)
++                        return
++                # an empty attribute list means translate every attribute
++                newAttrs = []
++                for name, value in self.currentAttributes:
++                        newAttrs.append((name, self.translate(value)))
++                self.currentAttributes = newAttrs
++                self.programCounter += 1
++
++
++class Template (object):
+ 	def __init__ (self, commands, macros, symbols, doctype = None):
+ 		self.commandList = commands
+ 		self.macros = macros
+ 		self.symbolTable = symbols
+ 		self.doctype = doctype
++                self.log = logging.getLogger("simpleTAL")
+ 		
+ 		# Setup the macros
+ 		for macro in self.macros.values():
+@@ -531,27 +601,27 @@
+ 				for slot in slotMap.values():
+ 					slot.setParentTemplate (self)
+ 
+-	def expand (self, context, outputFile, outputEncoding=None, interpreter=None):
++	def expand (self, context, outputFile, outputEncoding=None, interpreter=None, translator=None):
+ 		""" This method will write to the outputFile, using the encoding specified,
+ 				the expanded version of this template.  The context passed in is used to resolve
+ 				all expressions with the template.
+ 		"""
+ 		# This method must wrap outputFile if required by the encoding, and write out
+ 		# any template pre-amble (DTD, Encoding, etc)
+-		self.expandInline (context, outputFile, interpreter)
++		self.expandInline (context, outputFile, interpreter, translator=translator)
+ 		
+-	def expandInline (self, context, outputFile, interpreter=None):
++	def expandInline (self, context, outputFile, interpreter=None, translator=None):
+ 		""" Internally used when expanding a template that is part of a context."""
+ 		if (interpreter is None):
+-			ourInterpreter = TemplateInterpreter()
++			ourInterpreter = TemplateInterpreter(translator=translator)
+ 			ourInterpreter.initialise (context, outputFile)
+ 		else:
+ 			ourInterpreter = interpreter
+ 		try:
+ 			ourInterpreter.execute (self)
+ 		except UnicodeError, unierror:
+-			logging.error ("UnicodeError most likely caused by placing a non-Unicode string in the Context object.")
+-			raise unierror
++			self.log.error ("UnicodeError most likely caused by placing a non-Unicode string in the Context object.")
++			raise
+ 			
+ 	def getProgram (self):
+ 		""" Returns a tuple of (commandList, startPoint, endPoint, symbolTable) """
+@@ -611,7 +681,7 @@
+ 	"""A specialised form of a template that knows how to output HTML
+ 	"""
+ 	
+-	def expand (self, context, outputFile, outputEncoding="ISO-8859-1",interpreter=None):
++	def expand (self, context, outputFile, outputEncoding="ISO-8859-1",interpreter=None, translator=None):
+ 		""" This method will write to the outputFile, using the encoding specified,
+ 			the expanded version of this template.  The context passed in is used to resolve
+ 			all expressions with the template.
+@@ -620,7 +690,7 @@
+ 		# any template pre-amble (DTD, Encoding, etc)
+ 		
+ 		encodingFile = codecs.lookup (outputEncoding)[3](outputFile, 'replace')
+-		self.expandInline (context, encodingFile, interpreter)
++		self.expandInline (context, encodingFile, interpreter, translator=translator)
+ 		
+ class XMLTemplate (Template):
+ 	"""A specialised form of a template that knows how to output XML
+@@ -630,7 +700,7 @@
+ 		Template.__init__ (self, commands, macros, symbols)
+ 		self.doctype = doctype
+ 	
+-	def expand (self, context, outputFile, outputEncoding="iso-8859-1", docType=None, suppressXMLDeclaration=0,interpreter=None):
++	def expand (self, context, outputFile, outputEncoding="iso-8859-1", docType=None, suppressXMLDeclaration=0,interpreter=None, translator=None):
+ 		""" This method will write to the outputFile, using the encoding specified,
+ 			the expanded version of this template.  The context passed in is used to resolve
+ 			all expressions with the template.
+@@ -650,19 +720,19 @@
+ 		if docType:
+ 			encodingFile.write (docType)
+ 			encodingFile.write ('\n')
+-		self.expandInline (context, encodingFile, interpreter)
++		self.expandInline (context, encodingFile, interpreter, translator=translator)
+ 		
+-	def expandInline (self, context, outputFile, interpreter=None):
++	def expandInline (self, context, outputFile, interpreter=None, translator=None):
+ 		""" Internally used when expanding a template that is part of a context.
+ 			This version replaces the default so that escapeAttributes can be passed."""
+ 		if (interpreter is None):
+-			ourInterpreter = TemplateInterpreter()
++			ourInterpreter = TemplateInterpreter(translator=translator)
+ 			ourInterpreter.initialise (context, outputFile)
+ 		else:
+ 			ourInterpreter = interpreter
+ 		ourInterpreter.execute (self, escapeAttributes=1)
+ 	
+-class TemplateCompiler:
++class TemplateCompiler (object):
+ 	def __init__ (self, attributesEscaped=0):
+ 		""" Initialise a template compiler.  If attribute values are still in escaped
+ 		form (e.g. &lt;) then set attributesEscaped to true.
+@@ -690,13 +760,20 @@
+ 		self.commandHandler [METAL_FILL_SLOT] = self.compileMetalFillSlot
+ 		self.commandHandler [METAL_DEFINE_MACRO] = self.compileMetalDefineMacro
+ 		
+-		# Default namespaces
++                # i18n commands
++                self.commandHandler [I18N_TRANSLATE] = self.compileI18nTranslate
++                self.commandHandler [I18N_ATTRIBUTES] = self.compileI18nAttributes
++
++                # Default namespaces
+ 		self.setTALPrefix ('tal')
+ 		self.tal_namespace_prefix_stack = []
+ 		self.metal_namespace_prefix_stack = []
++                self.i18n_namespace_prefix_stack = []
+ 		self.tal_namespace_prefix_stack.append ('tal')
+ 		self.setMETALPrefix ('metal')
+ 		self.metal_namespace_prefix_stack.append ('metal')
++                self.setI18NPrefix ('i18n')
++                self.i18n_namespace_prefix_stack.append ('i18n')
+ 		
+ 		self.log = logging.getLogger ("simpleTAL.TemplateCompiler")
+ 		
+@@ -719,6 +796,15 @@
+ 		self.metal_attribute_map ['%s:define-slot'%prefix] = METAL_DEFINE_SLOT
+ 		self.metal_attribute_map ['%s:fill-slot'%prefix] = METAL_FILL_SLOT
+ 		
++        def setI18NPrefix (self, prefix):
++                """configure I18N attribute map"""
++                self.i18n_namespace_prefix = prefix
++                self.i18n_attribute_map = {}
++                self.i18n_attribute_map['%s:translate'%prefix] = I18N_TRANSLATE
++                self.i18n_attribute_map['%s:attributes'%prefix] = I18N_ATTRIBUTES
++                # XXX support more i18n:XYZ commands ?
++
++
+ 	def popTALNamespace (self):
+ 		newPrefix = self.tal_namespace_prefix_stack.pop()
+ 		self.setTALPrefix (newPrefix)
+@@ -727,6 +813,11 @@
+ 		newPrefix = self.metal_namespace_prefix_stack.pop()
+ 		self.setMETALPrefix (newPrefix)
+ 		
++        def popI18NNamespace (self):
++                """pop I18N namespace from stack"""
++                newPrefix = self.i18n_namespace_prefix_stack.pop()
++                self.setI18NPrefix(newPrefix)
++
+ 	def tagAsText (self, (tag,atts), singletonFlag=0):
+ 		""" This returns a tag as text.
+ 		"""
+@@ -879,6 +970,7 @@
+ 		# Look for tal/metal attributes
+ 		foundTALAtts = []
+ 		foundMETALAtts = []
++                foundI18NAtts = []
+ 		foundCommandsArgs = {}
+ 		cleanAttributes = []
+ 		tagProperties = {}
+@@ -936,7 +1028,13 @@
+ 						# We don't allow METAL/TAL to be declared as a default
+ 						msg = "Can not use TAL name space by default, a prefix must be provided."
+ 						raise TemplateParseException (self.tagAsText (self.currentStartTag), msg)
+-				else:
++                                elif (value == I18N_NAME_URI):
++                                        if (len(prefix) > 0):
++                                                self.i18n_namespace_prefix_stack.append(self.i18n_namespace_prefix)
++                                                self.setI18NPrefix(prefix)
++						# We want this function called when the scope ends
++                                                popTagFuncList.append(self.popI18NNamespace)
++                                else:
+ 					# It's nothing special, just an ordinary namespace declaration
+ 					cleanAttributes.append ((att,value))
+ 			elif (self.tal_attribute_map.has_key (commandAttName)):
+@@ -952,12 +1050,17 @@
+ 				cmnd = self.metal_attribute_map [commandAttName]
+ 				foundCommandsArgs [cmnd] = value
+ 				foundMETALAtts.append (cmnd)
+-			else:
++                        elif (self.i18n_attribute_map.has_key(commandAttName)):
++				# It's a I18N attribute
++				cmnd = self.i18n_attribute_map [commandAttName]
++				foundCommandsArgs [cmnd] = value
++				foundI18NAtts.append (cmnd)
++                        else:
+ 				cleanAttributes.append ((att,value))
+ 		tagProperties ['popFunctionList'] = popTagFuncList
+ 
+ 		# This might be just content
+-		if ((len (foundTALAtts) + len (foundMETALAtts)) == 0):
++		if ((len (foundTALAtts) + len (foundMETALAtts) + len(foundI18NAtts)) == 0):
+ 			# Just content, add it to the various stacks
+ 			self.addTag ((tag, cleanAttributes), tagProperties)
+ 			return
+@@ -968,11 +1071,13 @@
+ 		
+ 		# Sort the METAL commands
+ 		foundMETALAtts.sort()
++		# Sort the I18N commands
++		foundI18NAtts.sort()
+ 		# Sort the tags by priority
+ 		foundTALAtts.sort()
+ 		
+ 		# We handle the METAL before the TAL
+-		allCommands = foundMETALAtts + foundTALAtts
++		allCommands = foundMETALAtts + foundI18NAtts + foundTALAtts
+ 		firstTag = 1
+ 		for talAtt in allCommands:
+ 			# Parse and create a command for each 
+@@ -1009,6 +1114,29 @@
+ 		# Just add it as an output
+ 		self.addCommand((TAL_OUTPUT, data))
+ 						
++        def get_command_args (self, argument, emptyAllowed=False):
++                # Break up the list of attribute settings
++                commandArgs = []
++                if not argument and emptyAllowed:
++                        return commandArgs
++                # We only want to match semi-colons that are not escaped
++                argumentSplitter =  re.compile('(?<!;);(?!;)')
++                for attributeStmt in argumentSplitter.split(argument):
++                        #  remove any leading space and un-escape any semi-colons
++                        attributeStmt = attributeStmt.lstrip().replace(';;', ';')
++                        # Break each attributeStmt into name and expression
++                        stmtBits = attributeStmt.split(' ')
++                        if len(stmtBits) < 2:
++                                # Error, badly formed attributes command
++                                msg = "Badly formed attributes command '%s'.  Attributes commands must be of the form: 'name expression[;name expression]'" % argument
++                                self.log.error(msg)
++                                raise TemplateParseException(self.tagAsText(self.currentStartTag), msg)
++                        attName = stmtBits[0]
++                        attExpr = " ".join(stmtBits[1:])
++                        commandArgs.append((attName, attExpr))
++                return commandArgs
++
++
+ 	def compileCmdDefine (self, argument):
+ 		# Compile a define command, resulting argument is:
+ 		# [(isLocalFlag (Y/n), variableName, variablePath),...]
+@@ -1236,6 +1364,16 @@
+ 			
+ 		return (METAL_DEFINE_SLOT, (argument, self.endTagSymbol))
+ 
++        def compileI18nTranslate (self, argument):
++                """Compile i18n:translate into command"""
++                return (I18N_TRANSLATE, (argument, self.endTagSymbol))
++
++        def compileI18nAttributes (self, argument):
++                """Compile i18n:attributes into attribute command"""
++                # Argument: [(attributeName, expression)]
++                return (I18N_ATTRIBUTES, self.get_command_args(argument, emptyAllowed=True))
++
++
+ class TemplateParseException (Exception):
+ 	def __init__ (self, location, errorDescription):
+ 		self.location = location
+diff -BurN simpletal/simpleTALES.py /home/calvin/projects/webcleaner/wc/webgui/simpletal/simpleTALES.py
+--- simpletal/simpleTALES.py	2004-04-13 04:19:02.000000000 +0200
++++ /home/calvin/projects/webcleaner/wc/webgui/simpletal/simpleTALES.py	2004-05-04 10:06:03.000000000 +0200
+@@ -1,3 +1,4 @@
++# -*- coding: iso-8859-1 -*-
+ """ simpleTALES Implementation
+ 
+ 		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
+@@ -33,15 +34,8 @@
+ 		Module Dependencies: logging
+ """
+ 
+-try:
+-	import logging
+-except:
+-	import DummyLogger as logging
++import logging
+ 	
+-import simpletal
+-
+-__version__ = simpletal.__version__
+-
+ DEFAULTVALUE = "This represents a Default value."
+ 
+ class PathNotFoundException (Exception):
+@@ -49,7 +43,7 @@
+ 	
+ PATHNOTFOUNDEXCEPTION = PathNotFoundException()
+ 
+-class ContextVariable:
++class ContextVariable (Exception):
+ 	def __init__ (self, value = None):
+ 		self.ourValue = value
+ 		
+@@ -193,7 +187,7 @@
+ 		except:
+ 			pass
+ 		
+-class PythonPathFunctions:
++class PythonPathFunctions (object):
+ 	def __init__ (self, context):
+ 		self.context = context
+ 		
+@@ -230,7 +224,7 @@
+ 				
+ 		return defaultValue
+ 
+-class Context:
++class Context (object):
+ 	def __init__ (self, options=None, allowPythonPath=0):
+ 		self.allowPythonPath = allowPythonPath
+ 		self.globals = {}
+@@ -273,6 +267,15 @@
+ 		# Override the current local if present with the new one
+ 		self.locals [name] = value
+ 		
++        def getVariableMap (self):
++                """return a mapping of all context variables"""
++                d = {}
++                for key, value in self.globals.items():
++                        d[key] = value
++                for key, value in self.locals.items():
++                        d[key] = value
++                return d
++
+ 	def popLocals (self):
+ 		self.locals = self.localStack.pop()
+ 		
+diff -BurN simpletal/simpleTALUtils.py /home/calvin/projects/webcleaner/wc/webgui/simpletal/simpleTALUtils.py
+--- simpletal/simpleTALUtils.py	2004-04-13 04:19:02.000000000 +0200
++++ /home/calvin/projects/webcleaner/wc/webgui/simpletal/simpleTALUtils.py	2004-05-04 00:39:28.000000000 +0200
+@@ -1,3 +1,4 @@
++# -*- coding: iso-8859-1 -*-
+ """ simpleTALUtils
+ 
+ 		Copyright (c) 2004 Colin Stewart (http://www.owlfish.com/)
+@@ -35,9 +36,7 @@
+ """
+ 
+ import StringIO, os, stat, threading, sys, codecs, sgmllib, cgi, re
+-import simpletal, simpleTAL
+-
+-__version__ = simpletal.__version__
++import simpleTAL
+ 
+ # This is used to check for already escaped attributes.
+ ESCAPED_TEXT_REGEX=re.compile (r"\&\S+?;")
+@@ -91,7 +90,7 @@
+ 		self.outputFile.write (u'&%s;' % ref)
+ 		
+ 
+-class FastStringOutput:
++class FastStringOutput (object):
+ 	""" A very simple StringIO replacement that only provides write() and getvalue()
+ 		and is around 6% faster than StringIO.
+ 	"""
+@@ -104,7 +103,7 @@
+ 	def getvalue (self):
+ 		return "".join (self.data)
+ 
+-class TemplateCache:
++class TemplateCache (object):
+ 	""" A TemplateCache is a multi-thread safe object that caches compiled templates.
+ 			This cache only works with file based templates, the ctime of the file is 
+ 			checked on each hit, if the file has changed the template is re-compiled.
+@@ -275,14 +274,14 @@
+ 		if (self.localVarsDefined):
+ 			self.context.popLocals()
+ 			
+-		self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined = self.scopeStack.pop()			
++		self.movePCForward,self.movePCBack,self.outputTag,self.originalAttributes,self.currentAttributes,self.repeatVariable,self.repeatIndex,self.repeatSequence,self.tagContent,self.localVarsDefined,self.translateContent = self.scopeStack.pop()			
+ 		self.programCounter += 1
+ 			
+-def ExpandMacros (context, template, outputEncoding="ISO-8859-1"):
++def ExpandMacros (context, template, outputEncoding="ISO-8859-1", translator=None):
+ 	out = StringIO.StringIO()
+ 	interp = MacroExpansionInterpreter()
+ 	interp.initialise (context, out)
+-	template.expand (context, out, outputEncoding=outputEncoding, interpreter=interp)
++	template.expand (context, out, outputEncoding=outputEncoding, interpreter=interp, translator=translator)
+ 	# StringIO returns unicode, so we need to turn it back into native string
+ 	result = out.getvalue()
+ 	reencoder = codecs.lookup (outputEncoding)[0]
