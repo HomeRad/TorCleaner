@@ -128,7 +128,7 @@ if os.name=='nt':
     macros = [('YY_NO_UNISTD_H', None)]
     cargs = []
 else:
-    macros = [('_REENTRANT', None)]
+    macros = []
     # use -std=gnu99 because
     # - Python 2.2 defines long long int, which is C99
     # - and flex uses fileno(3), which is a gnu extension
