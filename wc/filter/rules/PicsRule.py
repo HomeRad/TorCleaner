@@ -23,19 +23,20 @@ class PicsRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, oid=0):
         UrlRule.__init__(self, title=title, desc=desc,disable=disable,oid=oid)
         self.ratings = {}
-        self.service = None
-        self.category = None
+        self.url = None
 
 
     def fill_attrs (self, attrs, name):
-        if name=='pics':
-            UrlRule.fill_attrs(self, attrs, name)
-        elif name=='service':
-            self.service = unxmlify(attrs.get('name')).encode('iso8859-1')
-            self.ratings[self.service] = {}
+        if name=='service':
+            self._service = unxmlify(attrs.get('name')).encode('iso8859-1')
+            self.ratings[self._service] = {}
         elif name=='category':
-            assert self.service
-            self.category = unxmlify(attrs.get('name')).encode('iso8859-1')
+            assert self._service
+            self._category = unxmlify(attrs.get('name')).encode('iso8859-1')
+        elif name='url':
+            pass
+        elif name=='pics':
+            UrlRule.fill_attrs(self, attrs, name)
         else:
             raise ValueError(i18n._("Invalid pics rule tag name `%s',"+\
                                     " check your configuration")%name)
@@ -44,10 +45,12 @@ class PicsRule (UrlRule):
     def fill_data (self, data, name):
         data = unxmlify(data).encode('iso8859-1')
         if name=='category':
-            assert self.service
-            assert self.category
-            assert self.ratings.has_key(self.service)
-            self.ratings[self.service][self.category] = int(data)
+            assert self._service
+            assert self._category
+            assert self.ratings.has_key(self._service)
+            self.ratings[self._service][self._category] = int(data)
+        elif name=='url':
+            self.url = data
         else:
             # ignore other content
             pass
@@ -55,6 +58,8 @@ class PicsRule (UrlRule):
 
     def toxml (self):
 	s = UrlRule.toxml(self)+">\n"
+        if self.url:
+            s += "<url>%s</url>\n" % xmlify(self.url)
         for service, data in self.ratings.items():
             s += "<service name=\"%s\">\n"%xmlify(service)
             for category, value in data.items():
