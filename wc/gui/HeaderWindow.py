@@ -1,8 +1,35 @@
+if __name__=='__main__':
+    import sys
+    sys.path.insert(0, ".")
+
 import wc,os
 from wc import debug,_,error
 from wc.debug_levels import *
 from wc.gui import loadIcon
 from FXPy.fox import *
+os.environ['http_proxy'] = ""
+
+def parse_headers():
+    url = "http://localhost:%d/headers/"%wc.config['port']
+    from urllib2 import urlopen
+    s = urlopen(url).read()
+    headers = []
+    if s=="-": return headers
+    strheaders = s.split("\n")
+    for h in strheaders:
+        # strip off paranthesis
+        h = h[1:-1]
+        # split into three parts
+        url, io, hlist = h.split(",", 2)
+        # split headers
+        hlist = hlist.strip()[1:-1].split("', '")
+        # strip headers
+        hlist = map(lambda x: x.replace("\\r", ""), hlist)
+        hlist = map(lambda x: x.replace("\\n", ""), hlist)
+        # append
+        headers.append((url[1:-1], int(io), hlist))
+    return headers
+
 
 class HeaderWindow(FXMainWindow):
     """The main window holds all data and windows to display"""
@@ -66,9 +93,13 @@ class HeaderWindow(FXMainWindow):
 
     def onCmdRefresh(self, sender, sel, ptr):
         debug(BRING_IT_ON, "Refresh")
+        headers = parse_headers()
         return 1
 
 
     def doShow(self, win):
         return win.execute(PLACEMENT_OWNER)
 
+if __name__=='__main__':
+    for h in parse_headers():
+        print h

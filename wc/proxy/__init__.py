@@ -112,7 +112,7 @@ def html_portal():
     return HTML_TEMPLATE % data
 
 
-def new_headers(i):
+def new_headers():
     return "\n".join(HEADERS.getall()) or "-"
 
 

@@ -13,6 +13,6 @@ class LimitQueue:
 
 
     def getall(self):
-        q, self._queue = self._queue, None
-        return q
+        q, self._queue = self._queue, []
+        return map(str, q)
 

@@ -165,7 +165,7 @@ class HttpServer(Server):
             self.state = 'response'
             return
 
-        wc.proxy.HEADERS.add((self.url, 1, self.headers.headers))
+        wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
         if self.headers.get('content-type') in config['mime_no_length']:
             # remove content length
             debug(HURT_ME_PLENTY, "remove content length")
