@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Fri Aug  8 23:38:48 2003\n"
+"POT-Creation-Date: Sat Aug  9 10:17:48 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -940,6 +940,9 @@ msgstr ""
 msgid "Access key 1"
 msgstr ""
 
+msgid "Always change the complete password since the displayed value is only a dummy."
+msgstr ""
+
 msgid "Filename"
 msgstr ""
 
@@ -1089,7 +1092,7 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-msgid "Password used for proxy authentitaction"
+msgid "Username used for proxy authentication"
 msgstr ""
 
 msgid "Access key 2"
@@ -1101,7 +1104,7 @@ msgstr ""
 msgid "Access key 0"
 msgstr ""
 
-msgid "Username used for proxy authentication"
+msgid "Password used for proxy authentitaction"
 msgstr ""
 
 msgid ""
