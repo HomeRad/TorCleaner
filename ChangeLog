@@ -1,3 +1,13 @@
+2.6 (released xx.xx.xxxx)
+  * fixed background downloading with 30x redirects
+    Changed: wc/proxy/HttpProxyClient.py
+  * merge upstream CVS changes of libjs (spidermonkey) as of 20031116
+    Changed: libjs/*
+  * do not quote HTML attributes in the parser
+    Changed: wc/parser/htmllex.[lc]
+  * quote all HTML attributes after filtering
+    Changed: wc/filter/HtmlParser.py, wc/parser/htmllib.py
+
 2.5 (released 15.11.2003)
   * updated blacklist filters
     Changed: config/blacklist*, config/bl2wc.py
