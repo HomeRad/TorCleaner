@@ -21,6 +21,9 @@
   * cope with b0rked servers not sending any response or header lines,
     just the plain content
     Changed files: wc/proxy/HttpServer.py
+  * use levenshtein distance function to correct misspelled tag names
+    Added files: wc/levenshtein.c, wc/filter/HtmlTags.py
+    Changed files: wc/filter/HtmlParser.py
 
 1.9
   * use the original headers list in rfc822 Message objects to preserve
