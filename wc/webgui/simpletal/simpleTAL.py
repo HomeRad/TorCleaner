@@ -444,7 +444,6 @@ class TemplateInterpreter (object):
 				if (type (resultVal) == type (u"")):
 					self.file.write (cgi.escape (resultVal))
 				elif (type (resultVal) == type ("")):
-                                        print repr(resultVal)
 					self.file.write (cgi.escape (unicode (resultVal, 'ascii')))
 				else:
 					self.file.write (cgi.escape (unicode (str (resultVal), 'ascii')))
