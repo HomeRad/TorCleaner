@@ -42,10 +42,9 @@ def _exec_form (form):
     # proxy pass
     if form.has_key('proxypass'):
         val = _getval(form, 'proxypass')
-        if val=='__dummy__':
-            # ignore the dummy value
-            val = ""
-        _form_proxypass(base64.encodestring(val).strip(), res)
+        # ignore dummy values
+        if val!='__dummy__':
+            _form_proxypass(base64.encodestring(val).strip(), res)
     else:
         config['proxypass'] = ''
         if config['proxypass'] and config['proxyuser']:
@@ -68,10 +67,9 @@ def _exec_form (form):
     # parent proxy pass
     if form.has_key('parentproxypass'):
         val = _getval(form, 'parentproxypass')
-        if val=='__dummy__':
-            # ignore the dummy value
-            val = ""
-        _form_parentproxypass(base64.encodestring(val).strip())
+        # ignore dummy values
+        if val!='__dummy__':
+            _form_parentproxypass(base64.encodestring(val).strip())
     else:
         config['parentproxypass'] = ''
     # timeout
