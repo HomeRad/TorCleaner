@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, struct, time, zlib
+import struct, time, zlib
 
 from wc.filter import FILTER_RESPONSE_ENCODE, compileMime
 from wc.filter.Filter import Filter
-from wc.proxy.Headers import remove_headers
 from wc.log import *
 
 # which filter stages this filter applies to (see filter/__init__.py)

@@ -1,5 +1,5 @@
-import asyncore, socket, sys
-from wc import i18n, config
+import asyncore, socket
+from wc import config
 from wc.log import *
 
 class Listener (asyncore.dispatcher):

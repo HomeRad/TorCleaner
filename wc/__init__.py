@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import os, re, sys, UserDict, time, socket
+import os, sys, time, socket
 import _webcleaner2_configdata as configdata
 
 Version = configdata.version

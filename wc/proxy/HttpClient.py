@@ -6,7 +6,7 @@ from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip
 from wc.proxy import match_host, fix_http_version
-from Headers import client_set_headers, remove_headers, WcMessage
+from Headers import client_set_headers, WcMessage
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.log import *
 from wc.filter import FILTER_REQUEST

@@ -1,11 +1,10 @@
-import dns_lookups, socket, mimetypes, re, base64, sha
+import dns_lookups, mimetypes, base64
 import wc.proxy
 from wc.proxy import spliturl, fix_http_version
 from ServerPool import ServerPool
 from ServerHandleDirectly import ServerHandleDirectly
 from wc import i18n, config
 from wc.log import *
-from wc.webgui import WebConfig
 
 serverpool = ServerPool()
 

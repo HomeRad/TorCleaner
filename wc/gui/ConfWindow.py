@@ -18,7 +18,6 @@ import os, re, base64
 from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
-from FXFolderRuleFrame import FXFolderRuleFrame
 from wc import i18n, ConfigDir, TemplateDir, Configuration, Version
 from wc.XmlUtils import xmlify
 from FXPy.fox import *

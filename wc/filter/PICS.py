@@ -51,7 +51,7 @@ Servicematch: vancouver
 if __name__=='__main__':
     import sys, os
     sys.path.insert(0, os.getcwd())
-import re, wc
+import re
 from wc.log import *
 from wc import i18n
 

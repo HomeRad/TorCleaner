@@ -1,6 +1,5 @@
 import time
 from wc.proxy import make_timer
-from wc import i18n
 from wc.log import *
 
 class ServerPool:

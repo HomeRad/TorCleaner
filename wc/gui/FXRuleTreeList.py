@@ -15,9 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 from FXPy.fox import *
-from wc import i18n
 from wc.gui import loadIcon
-from FXRuleFrameFactory import FXRuleFrameFactory
 from wc.log import *
 
 

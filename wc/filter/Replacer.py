@@ -18,9 +18,6 @@ you can use this for
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re
-from cStringIO import StringIO
-from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.filter import FILTER_RESPONSE_MODIFY, compileRegex, compileMime
 from wc.filter.Filter import Filter
 

@@ -14,9 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, os, base64, Image, cStringIO
-from wc.filter import FILTER_RESPONSE_MODIFY, FilterException, \
-                      compileMime, compileRegex
+import Image, cStringIO
+from wc.filter import FILTER_RESPONSE_MODIFY, compileMime
 from wc.filter.Filter import Filter
 from wc.debug import *
 from wc import remove_headers

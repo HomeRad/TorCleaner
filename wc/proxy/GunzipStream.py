@@ -16,8 +16,6 @@ from DeflateStream import DeflateStream
 from wc import i18n
 from wc.log import *
 
-import zlib
-
 class GunzipStream (DeflateStream):
     # Flags in the gzip header
     FTEXT, FHCRC, FEXTRA, FNAME, FCOMMENT = 1, 2, 4, 8, 16
@@ -35,13 +33,13 @@ class GunzipStream (DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            warn(PROXY, "zlib error: not gzip format, disabling gunzip")
+            warn(PROXY, i18n._("zlib error: not gzip format, disabling gunzip"))
             self.error = "True"
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            warn(PROXY, "zlib error: unknown compression method, disabling gunzip")
+            warn(PROXY, i18n._("zlib error: unknown compression method, disabling gunzip"))
             self.error = "True"
             return
 

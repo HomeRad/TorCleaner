@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re, urlparse, time, rfc822, wc
+import re, urlparse, wc
 from cStringIO import StringIO
 from wc.parser.htmllib import HtmlParser
 from wc.parser import resolve_html_entities

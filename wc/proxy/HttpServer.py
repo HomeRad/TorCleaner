@@ -50,6 +50,7 @@ class HttpServer (Server):
         self.attrs = {} # initial filter attributes are empty
         self.attempt_connect()
         self.can_reuse = None
+        self.flushing = None
 
 
     def __repr__ (self):
@@ -192,7 +193,7 @@ class HttpServer (Server):
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
-            warn(PROXY, 'invalid or missing response from %s: %s',
+            warn(PROXY, i18n._('invalid or missing response from %s: %s'),
                  self.url, `self.response`)
             serverpool.set_http_version(self.addr, (1,0))
             # put the read bytes back to the buffer and fix the response
@@ -289,19 +290,19 @@ class HttpServer (Server):
         ct = self.headers.get('Content-Type')
         if self.mime:
             if ct != self.mime:
-                warn(PROXY, "set Content-Type from %s to %s in %s",
+                warn(PROXY, i18n._("set Content-Type from %s to %s in %s"),
                      `str(ct)`, `self.mime`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%self.mime
         elif gm[0]:
             # guessed an own content type
             if ct is None:
-                warn(PROXY, "add Content-Type %s to %s",
+                warn(PROXY, i18n._("add Content-Type %s to %s"),
                      `gm[0]`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%gm[0]
            # fix some content types
             elif not ct.startswith(gm[0]) and \
                  gm[0] in _fix_content_types:
-                warn(PROXY, "change Content-Type from %s to %s in %s",
+                warn(PROXY, i18n._("change Content-Type from %s to %s in %s"),
                      `ct`, `gm[0]`, `self.url`)
                 self.headers['Content-Type'] = "%s\r"%gm[0]
         if gm[1] and gm[1] in _fix_content_encodings:
@@ -309,15 +310,15 @@ class HttpServer (Server):
             # guessed an own encoding type
             if ce is None:
                 self.headers['Content-Encoding'] = "%s\r"%gm[1]
-                warn(PROXY, "add Content-Encoding %s to %s",
+                warn(PROXY, i18n._("add Content-Encoding %s to %s"),
                      `gm[1]`, `self.url`)
             elif ce != gm[1]:
-                warn(PROXY, "change Content-Encoding from %s to %s in %s",
+                warn(PROXY, i18n._("change Content-Encoding from %s to %s in %s"),
                      `ce`, `gm[1]`, `self.url`)
                 self.headers['Content-Encoding'] = "%s\r"%gm[1]
         # hmm, fix application/x-httpd-php*
         if self.headers.get('Content-Type', '').lower().startswith('application/x-httpd-php'):
-            warn(PROXY, "fix x-httpd-php Content-Type")
+            warn(PROXY, i18n._("fix x-httpd-php Content-Type"))
             self.headers['Content-Type'] = 'text/html\r'
 
 
@@ -343,7 +344,7 @@ class HttpServer (Server):
             # remove encoding header
             to_remove = ["Transfer-Encoding"]
             if self.headers.has_key("Content-Length"):
-                warn(PROXY, 'chunked encoding should not have Content-Length')
+                warn(PROXY, i18n._('chunked encoding should not have Content-Length'))
                 to_remove.append("Content-Length")
                 self.bytes_remaining = None
             remove_headers(self.headers, to_remove)
@@ -368,7 +369,7 @@ class HttpServer (Server):
             # add warning
             self.headers['Warning'] = "214 Transformation applied\r"
         elif encoding and encoding!='identity':
-            warn(PROXY, "unsupported encoding: %s", `encoding`)
+            warn(PROXY, i18n._("unsupported encoding: %s"), `encoding`)
             # do not disable filtering for unknown content-encodings
             # this could result in a DoS attack (server sending garbage
             # as content-encoding)
@@ -411,7 +412,7 @@ class HttpServer (Server):
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
         if underflow:
-            warn(PROXY, "server received %d bytes more than content-length",
+            warn(PROXY, i18n._("server received %d bytes more than content-length"),
                  (-self.bytes_remaining))
         if is_closed or self.bytes_remaining==0:
             # Either we ran out of bytes, or the decoder says we're done
@@ -421,6 +422,7 @@ class HttpServer (Server):
     def process_recycle (self):
         debug(PROXY, "Server: recycling %s", str(self))
         # flush pending client data and try to reuse this connection
+        self.flushing = "True"
         self.flush()
 
 
@@ -459,6 +461,7 @@ class HttpServer (Server):
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
+            self.flushing = None
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
         else:
@@ -468,8 +471,6 @@ class HttpServer (Server):
 
     def close (self):
         debug(PROXY, "Server: close %s", str(self))
-        if self.can_reuse:
-            error(PROXY, "oops, could reuse, but closing %s", str(self))
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -485,6 +486,9 @@ class HttpServer (Server):
 
     def handle_close (self):
         debug(PROXY, "Server: handle_close %s", str(self))
+        if self.flushing:
+            error(PROXY, "XXX handle_close while flushing")
+        self.can_reuse = None
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None

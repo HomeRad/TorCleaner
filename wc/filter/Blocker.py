@@ -47,7 +47,6 @@ class Blocker (Filter):
     def __init__ (self, mimelist):
         """load blocked/allowed urls/regex."""
         Filter.__init__(self, mimelist)
-        from os.path import join
         # block and allow regular expressions
         self.block = []
         self.allow = []

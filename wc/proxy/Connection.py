@@ -11,7 +11,7 @@
 # while trying to write .. argh.  NOTE: I just started using my
 # own poll loop to avoid this problem. :P
 
-import asyncore, socket, sys, errno
+import asyncore, socket, errno
 from wc.log import *
 
 RECV_BUFSIZE = 1024

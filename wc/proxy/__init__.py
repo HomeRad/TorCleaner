@@ -5,14 +5,13 @@ used by Bastian Kleineidam for WebCleaner
 
 # XXX investigate using TCP_NODELAY (disable Nagle)
 
-import sys, time, select, asyncore, re
+import time, select, asyncore, re
 # fix the ****ing asyncore getattr, as this is swallowing AttributeErrors
 del asyncore.dispatcher.__getattr__
 def fileno(self):
     return self.socket.fileno()
 asyncore.dispatcher.fileno = fileno
 from wc import i18n, config, ip
-from wc.XmlUtils import xmlify
 from wc.log import *
 from urllib import splittype, splithost, splitnport
 from LimitQueue import LimitQueue
@@ -46,10 +45,10 @@ def get_http_version (protocol):
     if mo:
         f = (int(mo.group("major")), int(mo.group("minor")))
         if f > (1,1):
-            error(PROXY, "unsupported HTTP version %s", str(f))
+            error(PROXY, i18n._("unsupported HTTP version %s"), str(f))
             f = (1,1)
         return f
-    error(PROXY, "invalid HTTP version %s", `protocol`)
+    error(PROXY, i18n._("invalid HTTP version %s"), `protocol`)
     return (1,0)
 
 
@@ -141,7 +140,7 @@ def match_host (request):
     try:
         foo, url, bar = request.split()
     except Exception, why:
-        error(PROXY, "bad request: %s", why)
+        error(PROXY, i18n._("bad request: %s"), why)
         return None
     hostname = spliturl(url)[1]
     if not hostname:
