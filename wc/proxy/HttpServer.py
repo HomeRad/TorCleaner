@@ -67,7 +67,7 @@ class HttpServer (Server):
         self.decoders = [] # Handle each of these, left to right
         self.sequence_number = 0 # For persistent connections
         self.attrs = {} # initial filter attributes are empty
-        self.can_reuse = False
+        self.persistent = False
         self.flushing = False
         self.authtries = 0
         self.statuscode = None
@@ -249,11 +249,11 @@ class HttpServer (Server):
             return
         http_ver = serverpool.http_versions[self.addr]
         if http_ver >= (1,1):
-            self.can_reuse = not has_header_value(msg, 'Connection', 'Close')
+            self.persistent = not has_header_value(msg, 'Connection', 'Close')
         elif http_ver >= (1,0):
-            self.can_reuse = has_header_value(msg, 'Connection', 'Keep-Alive')
+            self.persistent = has_header_value(msg, 'Connection', 'Keep-Alive')
         else:
-            self.can_reuse = False
+            self.persistent = False
         # filter headers
         try:
             self.headers = applyfilter(FILTER_RESPONSE_HEADER,
@@ -413,7 +413,7 @@ class HttpServer (Server):
     def reuse (self):
         debug(PROXY, "%s reuse", str(self))
         self.client = None
-        if self.connected and self.can_reuse:
+        if self.connected and self.persistent:
             debug(PROXY, '%s reusing %d', str(self), self.sequence_number)
             self.sequence_number += 1
             self.state = 'client'
@@ -444,7 +444,7 @@ class HttpServer (Server):
 
     def handle_close (self):
         debug(PROXY, "%s handle_close", str(self))
-        self.can_reuse = False
+        self.persistent = False
         super(HttpServer, self).handle_close()
         # flush unhandled data
         if not self.flushing:
