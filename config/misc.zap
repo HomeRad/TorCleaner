@@ -60,7 +60,7 @@
  matchurl="allindiaradio.org"
  search="&lt;/bllnk&gt;">&lt;/blink&gt;</replacer>
 
-<rewrite title="Remove LOWSRC" oid="112"
+<rewrite title="Remove LOWSRC" oid="11"
  desc="The lowsrc is waste of bandwidth."
  tag="img">
 <attr name="lowsrc"/>
