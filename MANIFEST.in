@@ -22,6 +22,7 @@ include templates/classic/*.js
 include templates/classic/*.css
 include templates/classic/macros/*.html
 include test/*.py test/output/test_* test/html/*.html test/*.sh
+include tests/*.py
 include wc/parser/README wc/parser/htmllex.l wc/parser/htmlparse.y
 include wc/parser/*.h wc/parser/Makefile
 include po/*.po po/*.pot po/*.py
