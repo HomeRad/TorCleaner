@@ -35,7 +35,7 @@ class FXBlockRuleFrame (FXAllowRuleFrame):
         tf = FXTextField(self.matrix, 25, self, FXBlockRuleFrame.ID_REPLACEMENT)
         tf.setText(self.rule.replacement)
 
-    def onCmdUrl (self, sender, sel, ptr):
+    def onCmdReplacement (self, sender, sel, ptr):
         self.rule.replacement = sender.getText().strip()
         self.getApp().dirty = 1
         debug(GUI, "Changed rule blocked url replacement")
