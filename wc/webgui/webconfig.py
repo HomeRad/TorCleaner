@@ -42,7 +42,7 @@ class WebConfig (object):
         self.client = client
         # we pretend to be the server
         self.connected = True
-        headers = self.get_headers(url, status, auth, clientheaders)
+        headers = get_headers(url, status, auth, clientheaders)
         path = ""
         try:
             lang = wc.i18n.get_headers_lang(clientheaders)
