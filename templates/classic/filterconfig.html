@@ -45,12 +45,19 @@
  >Scripting</a>
 </b>
 </div>
-<br>
 <hr noshade size="1">
-<input type="text" class="text" name="newfoldername" size="10"
+<table>
+<tr>
+<td>
+<input type="text" class="text" name="newfoldername"
  tal:attributes="value t_foldername">
+</td>
+<td>
 <input type="submit" class="submit" name="newfolder" value="New folder"
  tal:attributes="value t_newfolder">
+</td>
+</tr>
+</table>
 </td>
 <!-- rules -->
 <td>
@@ -77,25 +84,40 @@
 </b>
 </div>
 <hr noshade size="1">
+<table>
+<tr>
+<td>
 <input type="text" class="text" name="foldername" size="10"
  tal:attributes="value curfolder/title">
+</td>
+<td>
 <input type="submit" class="submit" name="renamefolder"
  tal:attributes="value t_renamefolder">
-<br>
-<input type="submit" class="submit"
- tal:attributes="name string:removefolder${curfolder/oid}; value t_removefolder; onclick string:return window.confirm('${t_really_remove_folder}')">
-<br>
-<input tal:condition="curfolder/disable" type="submit" class="submit"
- tal:attributes="name string:enablefolder${curfolder/oid}; value t_enablefolder">
-<input tal:condition="not:curfolder/disable" type="submit" class="submit"
- tal:attributes="name string:disablefolder${curfolder/oid}; value t_disablefolder">
-<br>
+</td>
+</tr>
+<tr>
+<td>
 <select name="newruletype">
 <option tal:repeat="rule newrulenames" tal:content="rule/capitalize"
  tal:attributes="value rule">Rewrite</option>
 </select>
+</td>
+<td>
 <input type="submit" class="submit" name="newrule" value="New rule"
  tal:attributes="value t_newrule; title tt_newrule">
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<input type="submit" class="submit"
+ tal:attributes="name string:removefolder${curfolder/oid}; value t_removefolder; onclick string:return window.confirm('${t_really_remove_folder}')">
+<input tal:condition="not:curfolder/disable" type="submit" class="submit"
+ tal:attributes="name string:disablefolder${curfolder/oid}; value t_disablefolder">
+<input tal:condition="curfolder/disable" type="submit" class="submit"
+ tal:attributes="name string:enablefolder${curfolder/oid}; value t_enablefolder">
+</td>
+</tr>
+</table>
 </div>
 </td>
 <!-- rule -->
@@ -112,7 +134,6 @@ Here is the rule configuration...
 <hr noshade size="1">
 <input type="submit" class="submit"
  tal:attributes="name string:removerule${currule/oid}; value t_removerule; onclick string:return window.confirm('${t_really_remove_rule}')">
-<br>
 <input tal:condition="currule/disable" type="submit" class="submit"
  tal:attributes="name string:enablerule${currule/oid}; value t_enablerule">
 <input tal:condition="not:currule/disable" type="submit" class="submit"

@@ -6,219 +6,271 @@
   Note: the TAL contexts from the calling templates are used here
  -->
 
-<!-- title and description -->
-<p metal:define-macro="titledesc">
-<span tal:replace="t_ruletitle">Title</span>:
-<input type="text" class="text" name="rule_title" value="Rule title"
- tal:attributes="value currule/title">
-<br>
-<span tal:replace="t_ruledescription">Description</span>:
-<textarea name="rule_description" cols="50" rows="5"
+<!-- title and description (used below) -->
+<div metal:define-macro="titledesc">
+<tr><td>
+<label for="rule_title" tal:content="t_ruletitle">Title</label>:
+</td><td>
+<input type="text" class="text" name="rule_title" id="rule_title"
+ value="Rule title" tal:attributes="value currule/title">
+</td></tr>
+<tr><td>
+<label for="rule_description" tal:content="t_ruledescription">Description</label>:
+</td><td>
+<textarea name="rule_description" id="rule_description" cols="50" rows="5"
  tal:content="currule/desc">Rule description</textarea>
-</p>
+</td></tr>
+</div>
 
-<!-- matchurl and dontmatchurl -->
-<p metal:define-macro="matchurl">
-<span tal:replace="t_rulematchurl">Match URL</span>:
-<input type="text" class="text" name="rule_matchurl" value="Match url"
- tal:attributes="value currule/matchurl">
-<br>
-<span tal:replace="t_ruledontmatchurl">Don't match URL</span>:
-<input type="text" class="text" name="rule_dontmatchurl" value="Don't match url"
- tal:attributes="value currule/dontmatchurl">
-</p>
+<!-- matchurl and dontmatchurl (used below) -->
+<div metal:define-macro="matchurl">
+<tr><td>
+<label for="rule_matchurl" tal:content="t_rulematchurl">Match URL</label>:
+</td><td>
+<input type="text" class="text" name="rule_matchurl" id="rule_matchurl"
+ value="Match url" tal:attributes="value currule/matchurl">
+</td></tr>
+<tr><td>
+<label for="rule_dontmatchurl" tal:content="t_ruledontmatchurl">Don't match URL</label>:
+</td><td>
+<input type="text" class="text" name="rule_dontmatchurl" id="rule_dontmatchurl"
+ value="Don't match url" tal:attributes="value currule/dontmatchurl">
+</td></tr>
+</div>
 
-<!-- url parts (AllowRule and BlockRule) -->
-<p metal:define-macro="urlparts">
-<span tal:replace="t_ruleurlscheme">URL scheme</span>:
+<!-- url parts (used by AllowRule and BlockRule) -->
+<div metal:define-macro="urlparts">
+<tr><td>
+<label for="rule_urlscheme" tal:content="t_ruleurlscheme">URL scheme</label>:
+</td><td>
 <input type="text" class="text" name="rule_urlscheme" value="http"
  tal:attributes="value currule/scheme">
-<br>
-<span tal:replace="t_ruleurlhost">URL host</span>:
+</td></tr>
+<tr><td>
+<label for="rule_urlhost" tal:content="t_ruleurlhost">URL host</label>:
+</td><td>
 <input type="text" class="text" name="rule_urlhost" value="www.imadoofus.com"
  tal:attributes="value currule/host">
-<br>
-<span tal:replace="t_ruleurlport">URL port</span>:
+</td></tr>
+<tr><td>
+<label for="rule_urlport" tal:content="t_ruleurlport">URL port</label>:
+</td><td>
 <input type="text" class="text" name="rule_urlport" value="80"
  tal:attributes="value currule/port">
-<br>
-<span tal:replace="t_ruleurlpath">URL path</span>:
+</td></tr>
+<tr><td>
+<label for="rule_urlpath" tal:content="t_ruleurlpath">URL path</label>:
+</td><td>
 <input type="text" class="text" name="rule_urlpath" value="/hulla/bulla"
  tal:attributes="value currule/path">
-<br>
-<span tal:replace="t_ruleurlparameters">URL parameters</span>:
+</td></tr>
+<tr><td>
+<label for="rule_urlparameters" tal:content="t_ruleurlparameters">URL parameters</label>:
+</td><td>
 <input type="text" class="text" name="rule_urlparameters" value=""
  tal:attributes="value currule/parameters">
-<br>
-<span tal:replace="t_ruleurlquery">URL query</span>:
+</td></tr>
+<tr><td>
+<label for="rule_urlquery" tal:content="t_ruleurlquery">URL query</label>:
+</td><td>
 <input type="text" class="text" name="rule_urlquery" value=""
  tal:attributes="value currule/query">
-<br>
-<span tal:replace="t_ruleurlfragment">URL fragment</span>:
+</td></tr>
+<tr><td>
+<label for="rule_urlfragment" tal:content="t_ruleurlfragment">URL fragment</label>:
+</td><td>
 <input type="text" class="text" name="rule_urlfragment" value=""
  tal:attributes="value currule/fragment">
-</p>
+</div>
 
-<!-- externfile (Allowdomains, Allowurls, Blockdomains, Blockurls) -->
-<p metal:define-macro="externfile">
+<!-- externfile (used by Allowdomains, Allowurls, Blockdomains, Blockurls) -->
+<div metal:define-macro="externfile">
+<tr><td>
 <span tal:replace="t_ruletitle">Title</span>:
+</td><td>
 <span tal:replace="currule/title">rule title</span>
-<br>
+</td></tr>
+<tr><td>
 <span tal:replace="t_ruledescription">Description</span>:
+</td><td>
 <span tal:replace="currule/desc">rule description</span>
-<br>
+</td></tr>
+<tr><td>
 <span tal:replace="t_rulefile">File</span>:
+</td><td>
 <span tal:replace="currule/file">/path/to/file</span>
-</p>
+</td></tr>
+</div>
 
+
+<!-- Rule macros, each in a table tag -->
 
 <!-- AllowRule -->
-<p metal:define-macro="allow">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="allow">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/urlparts">
+</tr>
+<tr metal:use-macro="rulemacros/macros/urlparts">
 Rule url parts
-</div>
-<br>
+</tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 <!-- Allowdomains -->
-<p metal:define-macro="allowdomains">
-<div metal:use-macro="rulemacros/macros/externfile">
+<table metal:define-macro="allowdomains">
+<tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name
-</div>
-</p>
+</tr>
+</table>
 
 <!-- Allowurls -->
-<p metal:define-macro="allowurls">
-<div metal:use-macro="rulemacros/macros/externfile">
+<table metal:define-macro="allowurls">
+<tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name
-</div>
-</p>
+</tr>
+</table>
 
 <!-- Blockdomains -->
-<p metal:define-macro="blockdomains">
-<div metal:use-macro="rulemacros/macros/externfile">
+<table metal:define-macro="blockdomains">
+<tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name
-</div>
-</p>
+</tr>
+</table>
 
 <!-- Blockurls -->
-<p metal:define-macro="blockurls">
-<div metal:use-macro="rulemacros/macros/externfile">
+<table metal:define-macro="blockurls">
+<tr metal:use-macro="rulemacros/macros/externfile">
 Extern file name
-</div>
-</p>
+</tr>
+</table>
 
 <!-- BlockRule -->
-<p metal:define-macro="block">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="block">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/urlparts">
+</tr>
+<tr metal:use-macro="rulemacros/macros/urlparts">
 Rule url parts
-</div>
-<span tal:replace="t_ruleblockedurl">Blocked URL</span>:
-<input type="text" class="text" name="rule_blockedurl" value="http://www.calvinandhobbes.com/"
- tal:attributes="value currule/url">
-<br>
+</tr>
+<tr><td>
+<label for="rule_blockedurl" tal:content="t_ruleblockedurl">Blocked URL</label>:
+</td><td>
+<input type="text" class="text" name="rule_blockedurl" id="rule_blockedurl"
+ value="http://www.calvinandhobbes.com/" tal:attributes="value currule/url">
+</td></tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 <!-- HeaderRule -->
-<p metal:define-macro="header">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="header">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/matchurl">
+</tr>
+<tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
-</div>
-<span tal:replace="t_ruleheadername">Header name</span>:
-<input type="text" class="text" name="rule_headername" value="x-meta"
- tal:attributes="value currule/name">
-<br>
-<span tal:replace="t_ruleheadervalue">Header value</span>:
-<input type="text" class="text" name="rule_headervalue" value=""
- tal:attributes="value currule/value">
-<br>
+</tr>
+<tr><td>
+<label for="rule_headername" tal:content="t_ruleheadername">Header name</label>:
+</td><td>
+<input type="text" class="text" name="rule_headername" id="rule_headername"
+ value="x-meta" tal:attributes="value currule/name">
+</td></tr>
+<tr><td>
+<label for="rule_headervalue" tal:content="t_ruleheadervalue">Header value</label>:
+</td><td>
+<input type="text" class="text" name="rule_headervalue" id="rule_headervalue"
+ value="" tal:attributes="value currule/value">
+</td></tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 <!-- ImageRule -->
-<p metal:define-macro="image">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="image">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/matchurl">
+</tr>
+<tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
-</div>
-<span tal:replace="t_ruleimgwidth">Image width</span>:
-<input type="text" class="number" name="rule_imgwidth" value="1"
- tal:attributes="value string:${currule/width}">
-<br>
-<span tal:replace="t_ruleimgheight">Image height</span>:
-<input type="text" class="number" name="rule_imgheight" value="1"
- tal:attributes="value string:${currule/height}">
- <!-- XXX todo
-<br>
-<span tal:replace="t_ruleimgtype">Image type</span>:
-<input type="text" name="rule_imgtype" value=""
- tal:attributes="value currule/type">
--->
-<br>
-<span tal:replace="t_ruleimgurl">Blocked image URL</span>:
-<input type="text" class="text" name="rule_imgurl" value="myblocked.gif"
- tal:attributes="value currule/url">
-<br>
+</tr>
+<tr><td>
+<label for="rule_imgwidth" tal:content="t_ruleimgwidth">Image width</label>:
+</td><td>
+<input type="text" class="number" name="rule_imgwidth" id="rule_imgwidth"
+ value="1" tal:attributes="value string:${currule/width}">
+</td></tr>
+<tr><td>
+<label for="rule_imgheight"  tal:content="t_ruleimgheight">Image height</label>:
+</td><td>
+<input type="text" class="number" name="rule_imgheight" id="rule_imgheight"
+ value="1" tal:attributes="value string:${currule/height}">
+</td></tr>
+<!-- XXX todo: image type select -->
+<tr><td>
+<label for="rule_imgurl" tal:content="t_ruleimgurl">Blocked image URL</label>:
+</td><td>
+<input type="text" class="text" name="rule_imgurl" id="rule_imgurl"
+ value="myblocked.gif" tal:attributes="value currule/url">
+</td></tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 <!-- JavascriptRule -->
-<p metal:define-macro="javascript">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="javascript">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/matchurl">
+</tr>
+<tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
-</div>
-<br>
+</tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 <!-- NocommentsRule -->
-<p metal:define-macro="nocomments">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="nocomments">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/matchurl">
+</tr>
+<tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
-</div>
-<br>
+</tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 <!-- PicsRule -->
-<p metal:define-macro="pics">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="pics">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/matchurl">
+</tr>
+<tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
-</div>
-<span tal:replace="t_rulefallback">Fallback URL</span>:
-<input type="text" class="text" name="rule_fallback" value="http://www..."
- tal:attributes="value currule/url">
-<br>
+</tr>
+<tr><td>
+<label for="rule_fallback" tal:content="t_rulefallback">Fallback URL</label>:
+</td><td>
+<input type="text" class="text" name="rule_fallback" id="rule_fallback"
+ value="http://www..." tal:attributes="value currule/url">
+</td></tr>
+<tr><td>
 <span tal:replace="t_picsratings">Pics ratings</span>:
-<br>
+</td><td>
 <div tal:repeat="service pics_services">
 <input tal:condition="currule/ratings/?service"
  type="checkbox" tal:attributes="name string:service_${service}" checked >
@@ -240,45 +292,60 @@ Rule (don't) match url
 <span tal:content="category">adult</span>
 </div>
 </div>
-<br>
+</td>
+</tr>
+<tr>
+<td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td>
+</tr>
+</table>
 
 <!-- ReplaceRule -->
-<p metal:define-macro="replace">
-<div metal:use-macro="rulemacros/macros/titledesc">
+<table metal:define-macro="replace">
+<tr metal:use-macro="rulemacros/macros/titledesc">
 Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/matchurl">
+</tr>
+<tr metal:use-macro="rulemacros/macros/matchurl">
 Rule (don't) match url
-</div>
-<span tal:replace="t_rulesearch">Replace search regex</span>:
-<input type="text" class="text" name="rule_search" value="A nasty word"
- tal:attributes="value currule/search">
-<br>
-<span tal:replace="t_rulereplace">Replacement</span>:
-<input type="text" class="text" name="rule_replace" value="Something good"
- tal:attributes="value currule/replace">
-<br>
+</tr>
+<tr><td>
+<label for="rule_search" tal:content="t_rulesearch">Replace search regex</label>:
+</td><td>
+<input type="text" class="text" name="rule_search" id="rule_search"
+ value="A nasty word" tal:attributes="value currule/search">
+</td></tr>
+<tr><td>
+<label for="rule_replace" tal:content="t_rulereplace">Replacement</label>:
+</td><td>
+<input type="text" class="text" name="rule_replace" id="rule_replace"
+ value="Something good" tal:attributes="value currule/replace">
+</td></tr>
+<tr>
+<td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 <!-- RewriteRule -->
-<p metal:define-macro="rewrite">
-<div metal:use-macro="rulemacros/macros/titledesc">
-Rule title and description
-</div>
-<div metal:use-macro="rulemacros/macros/matchurl">
-Rule (don't) match url
-</div>
-<span tal:replace="t_ruletag">Tag name</span>:
-<input type="text" class="text" name="rule_tag" value="img"
+<table metal:define-macro="rewrite">
+<tr metal:use-macro="rulemacros/macros/titledesc">
+<td>Rule title and description</td>
+</tr>
+<tr metal:use-macro="rulemacros/macros/matchurl">
+<td>Rule (don't) match url</td>
+</tr>
+<tr><td>
+<label for="rule_tag" tal:content="t_ruletag">Tag name</label>:
+</td><td>
+<input type="text" class="text" name="rule_tag" id="rule_tag" value="img"
  tal:attributes="value currule/tag">
-<br>
-<span tal:replace="t_ruleattrs">Attributes</span>:
-<table border="1">
+</td></tr>
+<tr><td colspan="2">
+<span tal:content="t_ruleattrs">Attributes</span>:
+<table>
 <tr>
 <td></td>
 <td tal:content="t_attrname">Name</td>
@@ -298,22 +365,31 @@ Rule (don't) match url
 <span tal:condition="currule/attrs">
 <input type="submit" class="submit" name="removeattrs" value="Remove selected"
  tal:attributes="value t_removeattrs">
-<br>
 </span>
-<span tal:replace="t_attrname">Name</span>:
-<input type="text" class="text" name="attrname" value="href">
-<br>
-<span tal:replace="t_attrval">Value</span>:
-<input type="text" class="text" name="attrval" value="">
-<br>
+</td></tr>
+<tr><td>
+<label for="attrname" tal:content="t_attrname">Name</label>:
+</td><td>
+<input type="text" class="text" name="attrname" id="attrname" value="href">
+</td></tr>
+<tr><td>
+<label for="attrval" tal:content="t_attrval">Value</label>:
+</td><td>
+<input type="text" class="text" name="attrval" id="attrval" value="">
+</td></tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="addattr" value="Add attribute"
  tal:attributes="value t_addattr">
-<br>
-<span tal:replace="t_enclosedblock">Enclosed block</span>:
-<input type="text" class="text" name="rule_enclosedblock" value=""
- tal:attributes="value currule/enclosed">
-<br>
-<span tal:replace="t_replacepart">Replace part</span>:
+</td></tr>
+<tr><td>
+<label for="rule_enclosedblock" tal:replace="t_enclosedblock">Enclosed block</label>:
+</td><td>
+<input type="text" class="text" name="rule_enclosedblock"
+ id="rule_enclosedblock" value="" tal:attributes="value currule/enclosed">
+</td></tr>
+<tr><td>
+<label for="rule_rewritepart" tal:replace="t_replacepart">Replace part</label>:
+</td><td>
 <select name="rule_rewritepart">
 <span tal:repeat="part partvalnames" tal:omit-tag="">
 <option tal:condition="not:curparts/?part"
@@ -322,14 +398,19 @@ Rule (don't) match url
  tal:attributes="value part" tal:content="partnames/?part">a part</option>
 </span>
 </select>
-<br>
-<span tal:replace="t_replacevalue">Replace value</span>:
+</td></tr>
+<tr><td>
+<label for="rule_rewritereplacement" 
+ tal:replace="t_replacevalue">Replace value</label>:
+</td><td>
 <input type="text" class="text" name="rule_rewritereplacement" value=""
- tal:attributes="value currule/replacement">
-<br>
+ id="rule_rewritereplacement" tal:attributes="value currule/replacement">
+</td></tr>
+<tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  tal:attributes="value t_apply">
-</p>
+</td></tr>
+</table>
 
 </body>
 </html>

@@ -25,6 +25,10 @@ acronym {
     border-bottom: 1px dotted black;
 }
 
+label:hover {
+    cursor: text;
+}
+
 a {
     color: #222222;
 }
@@ -147,6 +151,28 @@ select {
     background: #fff7ee;
     vertical-align: top;
     width: 180px;
+}
+
+.stable {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+div.info {
+    margin-top: 1em;
+}
+
+div.error {
+    margin-top: 1em;
+    color: #f85b0d;
+}
+
+div.footnote {
+    margin-top: 1em;
+    color: #555555;
+    text-decoration: overline;
+    font-size: 70%;
 }
 
 div.footer {

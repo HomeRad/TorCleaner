@@ -39,7 +39,8 @@ t_add = i18n._("Add new")
 t_nofilterhosts = i18n._("Don't filter hosts")
 tt_nofilterhosts = i18n._("Don't filter hosts XXX")
 t_configapply = i18n._("Apply")
-t_back = i18n._("Back")
+t_info = i18n._("Info")
+t_error = i18n._("Error")
 
 # config vars
 info = []
@@ -106,27 +107,27 @@ def _form_proxyport (port):
         port = int(port)
         if port != config['port']:
             config['port'] = port
-            info.append(i18n._("Port successfully changed"))
+            info.append(i18n._("Port successfully changed."))
     except ValueError:
-        error.append(i18n._("Invalid proxy port"))
+        error.append(i18n._("Invalid proxy port."))
 
 
 def _form_proxyuser (proxyuser):
     if proxyuser != config['proxyuser']:
         config['proxyuser'] = proxyuser
-        info.append(i18n._("Proxy user successfully changed"))
+        info.append(i18n._("Proxy user successfully changed."))
 
 
 def _form_proxypass (proxypass):
     if proxypass != config['proxypass']:
         config['proxypass'] = proxypass
-        info.append(i18n._("Proxy password successfully changed"))
+        info.append(i18n._("Proxy password successfully changed."))
 
 
 def _form_parentproxy (parentproxy):
     if parentproxy != config['parentproxy']:
         config['parentproxy'] = parentproxy
-        info.append(i18n._("Parent proxy successfully changed"))
+        info.append(i18n._("Parent proxy successfully changed."))
 
 
 def _form_parentproxyport (parentproxyport):
@@ -134,21 +135,21 @@ def _form_parentproxyport (parentproxyport):
         parentproxyport = int(parentproxyport)
         if parentproxyport != config['parentproxyport']:
             config['parentproxyport'] = parentproxyport
-            info.append(i18n._("Parent proxy port successfully changed"))
+            info.append(i18n._("Parent proxy port successfully changed."))
     except ValueError:
-        error.append(i18n._("Invalid parent proxy port"))
+        error.append(i18n._("Invalid parent proxy port."))
 
 
 def _form_parentproxyuser (parentproxyuser):
     if parentproxyuser != config['parentproxyuser']:
         config['parentproxyuser'] = parentproxyuser
-        info.append(i18n._("Parent proxy user successfully changed"))
+        info.append(i18n._("Parent proxy user successfully changed."))
 
 
 def _form_parentproxypass (parentproxypass):
     if parentproxypass != config['parentproxypass']:
         config['parentproxypass'] = parentproxypass
-        info.append(i18n._("Parent proxy password successfully changed"))
+        info.append(i18n._("Parent proxy password successfully changed."))
 
 
 def _form_timeout (timeout):
@@ -156,9 +157,9 @@ def _form_timeout (timeout):
         timeout = int(timeout)
         if timeout != config['timeout']:
             config['timeout'] = timeout
-            info.append(i18n._("Timeout sucessfully changed"))
-    except valueError:
-        error.append(i18n._("Invalid timeout value"))
+            info.append(i18n._("Timeout sucessfully changed."))
+    except ValueError:
+        error.append(i18n._("Invalid timeout value."))
 
 
 def _form_filtermodules (form):
@@ -171,12 +172,12 @@ def _form_filtermodules (form):
             config['filters'].append(m)
             config['filters'].sort()
             config['filterdict'][m] = True
-            info.append(i18n._("Enabled filter modules %s") % m)
+            info.append(i18n._("Enabled filter modules %s.") % m)
         if m not in newfilters and m in config['filters']:
             config['filters'].remove(m)
             config['filters'].sort()
             config['filterdict'][m] = False
-            info.append(i18n._("Disabled filter modules %s") % m)
+            info.append(i18n._("Disabled filter modules %s.") % m)
 
 
 def _form_addallowed (host):
@@ -185,7 +186,7 @@ def _form_addallowed (host):
         hosts.add(host)
         config['allowedhosts'] = ip.hosts2map(hosts)
         config['allowedhostlist'] = sort_seq(hosts)
-        info.append(i18n._("Allowed host successfully added"))
+        info.append(i18n._("Allowed host successfully added."))
 
 
 def _form_removehosts (form, key):
@@ -205,9 +206,9 @@ def _form_delallowed (form):
         config['allowedhosts'] = ip.hosts2map(hosts)
         config['allowedhostlist'] = sort_seq(hosts)
         if removed == 1:
-            info.append(i18n._("Allowed host successfully removed"))
+            info.append(i18n._("Allowed host successfully removed."))
         else:
-            info.append(i18n._("%d allowed hosts successfully removed") % \
+            info.append(i18n._("%d allowed hosts successfully removed.") % \
                         removed)
 
 
@@ -217,7 +218,7 @@ def _form_addnofilter (host):
         hosts.add(host)
         config['nofilterhosts'] = ip.hosts2map(hosts)
         config['nofilterhostlist'] = sort_seq(hosts)
-        info.append(i18n._("Nofilter host successfully added"))
+        info.append(i18n._("Nofilter host successfully added."))
 
 
 def _form_delnofilter (form):
@@ -226,8 +227,8 @@ def _form_delnofilter (form):
         config['nofilterhosts'] = ip.hosts2map(hosts)
         config['nofilterhostlist'] = sort_seq(hosts)
         if removed == 1:
-            info.append(i18n._("Nofilter host successfully removed"))
+            info.append(i18n._("Nofilter host successfully removed."))
         else:
-            info.append(i18n._("%d nofilter hosts successfully removed") % \
+            info.append(i18n._("%d nofilter hosts successfully removed.") % \
                         removed)
 

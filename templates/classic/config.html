@@ -23,7 +23,7 @@
 <tr>
 <td>
 <label for="port" tal:content="t_port" tal:attributes="title tt_port"
- >Port number</label><a href="#restart">*</a>
+ >Port number</label><sup>*</sup>
 </td>
 <td>
 <input class="number" type="text" name="port" id="port" maxlength="5"
@@ -60,6 +60,10 @@
 </td>
 </tr>
 </table>
+<div class="footnote">
+<sup>*</sup>
+Changes to this option require a proxy restart to take effect.
+</div>
 </fieldset>
 
 <fieldset>
@@ -177,21 +181,29 @@
 </fieldset>
 </td>
 </tr>
-</table>
+<tr>
+<td colspan="2">
 <input type="submit" value="Apply" class="submit"
  tal:attributes="value t_configapply">
+</td>
+</tr>
+</table>
 </form>
 
-<div tal:repeat="item info">
-<span tal:replace="item">Info</span>
+<div tal:condition="info"  class="info">
+<span tal:replace="t_info">Info</span>:
+<span tal:repeat="item info">
+<span tal:replace="item">something happened</span>
+</span>
 </div>
 
-<div tal:repeat="item error">
-<span tal:replace="item">Error</span>
+<div tal:condition="error" class="error">
+<span tal:replace="t_error">Error</span>:
+<span tal:repeat="item error">
+<span tal:replace="item">Error message</span>
+</span>
 </div>
 
-<a name="restart">*</a>
-The marked options require a proxy restart to take effect.
 </div>
 
 <div metal:use-macro="macros/macros/footer">Footer...</div>
