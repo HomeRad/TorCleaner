@@ -15,7 +15,8 @@
 
 from StringIO import StringIO
 
-ustr = unicode
+import wc
+import wc.log
 
 class FasterStringIO (StringIO):
     """Append-only version of StringIO.
@@ -33,7 +34,8 @@ class FasterStringIO (StringIO):
     def write (self, s):
         #assert self.pos == self.len
         if not isinstance(s, unicode):
-            s = ustr(s)
+            wc.log.warn(wc.LOG_GUI, "non-unicode string %r", s)
+            s = unicode(s, "iso-8859-1")
         self.buflist.append(s)
         self.len = self.pos = self.pos + len(s)
 
