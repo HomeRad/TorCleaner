@@ -404,18 +404,21 @@ setup (name = "webcleaner",
        ext_modules = extensions,
        scripts = scripts,
        long_description = """WebCleaner features:
-* HTTP/1.1 and HTTPS support
-* integrated HTML parser, removes unwanted HTML (adverts, flash, etc.)
-* integrated JavaScript engine, allows popup filtering
-* compress documents on-the-fly (with gzip)
+* remove unwanted HTML (adverts, flash, etc.)
+* popup blocker
 * disable animated GIFs
-* filter images by size, removes banner adverts
+* filter images by size, remove banner adverts
+* compress documents on-the-fly (with gzip)
 * reduce images to low-bandwidth JPEGs
 * remove/add/modify arbitrary HTTP headers
+* configurable over a web interface
 * usage of SquidGuard domain and url blacklists
+* antivirus filter module
+* detection and correction of known HTML security flaws
 * Basic, Digest and (untested) NTLM proxy authentication support
 * per-host access control
-* configurable over a themable web interface
+* HTTP/1.1 support (persistent connections, pipelining)
+* HTTPS proxy CONNECT and optional SSL gateway support
 """,
        classifiers = ['Development Status :: 5 - Production/Stable',
            'Environment :: No Input/Output (Daemon)',
