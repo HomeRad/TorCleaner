@@ -52,13 +52,14 @@ several given categories.</p>
  tal:attributes="name string:category_${category};value ratings/?category"
 ></td>
 <!-- loop over rvalues -->
-<td tal:repeat="value service/categories/?category/rvalues"><input
+<td tal:repeat="value service/categories/?category/rvalues"
+><input type="radio" checked
+ tal:condition="values/?category/?value"
  tal:attributes="name string:category_${category};value value"
- tal:condition="values/?category/?value" checked
- type="radio"><input
- tal:attributes="name string:category_${category};value value"
+><input type="radio"
  tal:condition="not:values/?category/?value"
- type="radio">&nbsp;<!-- XXX translation --><span 
+ tal:attributes="name string:category_${category};value value"
+>&nbsp;<!-- XXX translation --><span
  tal:content="rangenames/?value">Mild</span>
 </td>
 </tr>
@@ -130,7 +131,9 @@ several given categories.</p>
 <div class="error">
 <div tal:condition="error/categoryvalue" i18n:translate="">Invalid category value.</div>
 <div tal:condition="error/selindex" i18n:translate="">Invalid selection index.</div>
-<div tal:condition="error/url" i18n:translate="">Invalid url.</div>
+<div tal:condition="error/url" i18n:translate="">Invalid url.
+The url has to start with <code>http://</code>, <code>https://</code> or
+<code>ftp://</code>.</div>
 </div>
 
 </div>
