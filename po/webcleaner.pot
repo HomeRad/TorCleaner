@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-12-21 23:28+0100\n"
+"POT-Creation-Date: 2004-12-27 15:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,7 +95,7 @@ msgid "Invalid Method"
 msgstr ""
 
 #: ../wc/proxy/HttpClient.py:532 ../wc/proxy/HttpClient.py:538
-#: ../wc/proxy/HttpClient.py:549 ../wc/webgui/webconfig.py:76
+#: ../wc/proxy/HttpClient.py:549 ../wc/webgui/webconfig.py:57
 msgid "Authentication Required"
 msgstr ""
 
@@ -332,11 +332,11 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:92
+#: ../wc/webgui/webconfig.py:73
 msgid "Not Found"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:97
+#: ../wc/webgui/webconfig.py:78
 msgid "Internal Error"
 msgstr ""
 
@@ -553,13 +553,13 @@ msgstr ""
 msgid "Unknown option %(option)r"
 msgstr ""
 
-#: ../webcleaner:157 ../webcleaner-certificates:101
-msgid "No command given."
-msgstr ""
-
-#: ../webcleaner:170
+#: ../webcleaner:160 ../webcleaner:179
 #, python-format
 msgid "Unknown command %r"
+msgstr ""
+
+#: ../webcleaner:166 ../webcleaner-certificates:101
+msgid "No command given."
 msgstr ""
 
 #: ../webcleaner-certificates:35
@@ -619,6 +619,10 @@ msgstr ""
 
 #: ../templates/classic/config.html:12
 msgid "${appname} proxy configuration"
+msgstr ""
+
+#: ../templates/classic/restart.html:14
+msgid "${appname} restart"
 msgstr ""
 
 #: ../templates/classic/update_doit.html:12
@@ -1617,6 +1621,14 @@ msgstr ""
 msgid "Response headers of all mime types."
 msgstr ""
 
+#: ../templates/classic/config.html:411
+msgid "Restart proxy"
+msgstr ""
+
+#: ../templates/classic/restart.html:21
+msgid "Restarting..."
+msgstr ""
+
 #: ../templates/classic/filterconfig.html:191
 msgid "Rewrite attribute added."
 msgstr ""
@@ -1810,6 +1822,10 @@ msgstr ""
 #: ../templates/classic/macros/standard.html:75
 #: ../templates/classic/macros/standard.html:106
 msgid "This page is also available in"
+msgstr ""
+
+#: ../templates/classic/restart.html:23
+msgid "This proxy is restarting. You will be redirected to the <a href=\"\">main configuration page</a> automatically in 10 seconds."
 msgstr ""
 
 #: ../templates/classic/accessibility.html:21
