@@ -111,11 +111,14 @@ class HttpServer (Server):
     def send_request (self, headers):
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
         self.write(request)
-        for key,val in headers.items():
-            header = "%s: %s\r\n" % (key, val.rstrip())
-            self.write(header)
-        if headers.get('Connection') is None:
-            self.write('Connection: Keep-Alive\r\n')
+        if hasattr(headers, "headers"):
+            # write original rfc822 Message object headers to preserve
+            # case sensitivity (!)
+            self.write("".join(headers.headers))
+        else:
+            for key,val in headers.items():
+                header = "%s: %s\r\n" % (key, val.rstrip())
+                self.write(header)
         self.write('\r\n')
         self.write(self.content)
         self.state = 'response'

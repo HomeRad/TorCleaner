@@ -117,7 +117,6 @@ class HttpClient (Connection):
             # the first 2 chars are the newline of request
             data = self.read(i)[2:]
             self.headers = rfc822.Message(StringIO(data))
-            #debug(HURT_ME_PLENTY, "Proxy: C/Headers", `self.headers.headers`)
             # set via header
             via = self.headers.get('Via', "").strip()
             if via: via += " "
@@ -153,7 +152,7 @@ class HttpClient (Connection):
                 remove_headers(self.headers, to_remove)
                 # add warning
                 self.headers['Warning'] = "214 Transformation applied\r"
-            debug(HURT_ME_PLENTY, "Proxy: C/Headers", `str(self.headers)`)
+            debug(HURT_ME_PLENTY, "Proxy: C/Headers", self.headers.items())
             if config["proxyuser"] and not self.check_proxy_auth():
                 return self.error(407, i18n._("Proxy Authentication Required"))
             if self.method=='OPTIONS':
@@ -168,6 +167,8 @@ class HttpClient (Connection):
                     return
                 if mf>0:
                     self.headers['Max-Forwards'] = mf-1
+            if not self.headers.has_key('Connection'):
+                self.headers['Connection'] = 'Keep-Alive\r'
             self.state = 'content'
 
 
@@ -204,7 +205,7 @@ class HttpClient (Connection):
     	                   fun="finish", attrs=self.nofilter)
             self.content += data
             if not self.headers.has_key('Content-Length'):
-                self.headers['Content-Length'] = str(len(self.content))
+                self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
             # This object will call server_connected at some point
