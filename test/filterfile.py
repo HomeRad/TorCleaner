@@ -26,14 +26,14 @@ def _main():
     from wc.filter import FilterException
     attrs = wc.filter.initStateObjects(url=fname)
     filtered = ""
-    data = f.read(1024)
+    data = f.read(2048)
     while data:
         try:
             filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY,
                                               data, 'filter', attrs)
         except FilterException, msg:
             pass
-        data = f.read(1024)
+        data = f.read(2048)
     i = 1
     while True:
         print >>sys.stderr, "Test: finish", i
