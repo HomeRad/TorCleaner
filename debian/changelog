@@ -1,3 +1,9 @@
+webcleaner (2.22-0.1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 19 Oct 2004 09:35:20 +0200
+
 webcleaner (2.21-0.2) unstable; urgency=low
 
   * added favicon.ico to template files

@@ -387,7 +387,7 @@ if os.name=='nt' or win_cross_compiling:
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
-       version = "2.21",
+       version = "2.22",
        description = "a filtering HTTP proxy",
        keywords = "proxy,server,http,filters,daemon",
        author = myname,
