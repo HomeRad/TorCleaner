@@ -31,3 +31,11 @@ def initlog (filename):
     logging.getLogger("wc").addHandler(handler)
     logging.getLogger("simpleTAL").addHandler(handler)
     logging.getLogger("simpleTALES").addHandler(handler)
+
+def disable_pics_rules (config):
+    """disable PICS rules for testing"""
+    for folder in config['folderrules']:
+        for rule in folder.rules:
+            if rule.get_name()=='pics':
+                rule.disable = 1
+

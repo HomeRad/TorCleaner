@@ -29,10 +29,11 @@ def filterfile (fname):
             break
     print filtered
 
-from test import initlog
+from test import initlog, disable_pics_rules
 initlog("test/logging.conf")
 import wc
 wc.config = wc.Configuration()
+disable_pics_rules(wc.config)
 wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()
 from wc.proxy import proxy_poll, run_timers

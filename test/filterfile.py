@@ -12,10 +12,11 @@ def _main ():
         f = sys.stdin
     else:
         f = file(fname)
-    from test import initlog
+    from test import initlog, disable_pics_rules
     initlog("test/logging.conf")
     import wc
     wc.config = wc.Configuration()
+    disable_pics_rules(wc.config)
     # set debug level
     wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
     wc.config.init_filter_modules()
