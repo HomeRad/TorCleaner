@@ -31,6 +31,7 @@ from distutils.core import setup, Extension, DEBUG
 #except ImportError:
 #    import distutils.dist
 #    distklass = distutils.dist.Distribution
+import distutils.command
 import distutils.dist
 distklass = distutils.dist.Distribution
 from distutils.command.install import install
@@ -39,6 +40,7 @@ from distutils.command.install_data import install_data
 from distutils.file_util import write_file
 from distutils.dir_util import create_tree, remove_tree
 from distutils import util, log
+from distutils.sysconfig import get_python_version
 
 
 # cross compile config
@@ -242,7 +244,16 @@ class MyBdistWininst (bdist_wininst, object):
         if not self.keep_temp:
             remove_tree(self.bdist_dir, dry_run=self.dry_run)
 
-    # run()
+    def get_exe_bytes (self):
+        if win_cross_compiling:
+            bv = "7.1"
+            # wininst-x.y.exe is in the same directory as bdist_wininst
+            directory = os.path.dirname(distutils.command.__file__)
+            # we must use a wininst-x.y.exe built with the same C compiler
+            # used for python.
+            filename = os.path.join(directory, "wininst-%s.exe" % bv)
+            return open(filename, "rb").read()
+        return super(MyBdistWininst, self).get_exe_bytes()
 
 
 # global include dirs
@@ -272,7 +283,7 @@ else:
         include_dirs.append(os.path.join(win_python_dir, "Include"))
         # for finding libpythonX.Y.a
         library_dirs.append(win_python_dir)
-        libraries.append("python%d.%d" % tuple(sys.version_info[0:2]))
+        libraries.append("python%s" % get_python_version())
 
 # C extension modules
 extensions = []
