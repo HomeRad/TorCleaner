@@ -149,12 +149,12 @@ Setup for Windows:
 5. Install OpenSSL and compile PyOpenSSL
    
    Change to the directory where you installed OpenSSL (for example
-   ``c:> cd c:\\OpenSSL\``).
+   ``c:> cd c:\OpenSSL\``).
    Fix the library names for the mingw compiler:
    ``c:> cd lib\MinGW; move ssleay32.a libssleay32.a; move ssleay32.def
    libssleay32.def``
    Change to the directory where you extracted PyOpenSSL (for
-   example ``c:> cd c:\\pyOpenSSL-0.5.1``).
+   example ``c:> cd c:\pyOpenSSL-0.5.1``).
    Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
    Then run:
    ``c:> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
@@ -168,7 +168,7 @@ Setup for Windows:
 7. Generate and install the WebCleaner certificates
    
    Change to the directory where you installed Python into
-   (for example ``c:> cd c:\\Python23\\``).
+   (for example ``c:> cd c:\Python23\``).
    Run the webcleaner-certificates script to install the certificates:
    ``c:> python scripts\webcleaner-certificates install``.
    To remove the certificates later, you can run
@@ -177,7 +177,7 @@ Setup for Windows:
 8. Install and start the WebCleaner NT service
    
    Change to the directory where you installed Python into
-   (for example ``c:> cd c:\\Python23\\``).
+   (for example ``c:> cd c:\Python23\``).
    Run the webcleaner-service script to install the service:
    ``c:> python scripts\webcleaner-service install``.
    To remove the service later, you can run

@@ -97,6 +97,7 @@ class HTMLFileNavTranslator (HTMLNavTranslator):
     def __init__ (self, document):
         HTMLNavTranslator.__init__(self, document)
         self.body_prefix = [
+            self.get_favicon(),
             self.get_nav_css(),
             self.get_topframe_bashing(),
             '</head>\n<body>\n',
@@ -134,4 +135,12 @@ window.onload = function() {
         p = utils.relative_path(self.settings._destination, p)
         link = html4css1.HTMLTranslator.stylesheet_link
         return link % p
+
+
+    def get_favicon (self):
+        p = self.settings.stylesheet_path.split("/")[:-1]
+        p.append("favicon.png")
+        p = "/".join(p)
+        p = utils.relative_path(self.settings._destination, p)
+        return '<meta rel="SHORTCUT ICON" href="%s" />\n' % p
 
