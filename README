@@ -56,7 +56,18 @@ me patches!
 
 Running
 -------
-You can start the proxy by executing "webcleaner start".
+Please note that the web configuration interface needs write permissions
+in the configuration directory.
+
+Running under Unix/Linux
+------------------------
+The proxy is automatically started from the daemontools package.
+See http://cr.yp.to/daemontools.html for more information.
+
+Runing under Windows
+--------------------
+The proxy is a normal NT service and can be started/stopped from the
+"Administrative Tasks" entry in the system configuration.
 
 
 Notes

@@ -6,6 +6,13 @@
     Changed: wc/__init__.py
   * break cyclic references in simpleTAL compilers
     Changed: wc/webgui/simpletal/simpleTAL.py
+  * removed HtmlParser class in favor of pure handler class, the combined
+    parser/handler classes are now splitted.
+    Changed: wc/parser/htmllib.py, wc/filter/{Rewriter,HtmlParser}.py
+    Added: wc/filter/{JS,Html}Filter.py
+  * HTML parser and JS environment objects are now subclassable and
+    collectable by the cyclic garbage collector
+    Changed: wc/parser/htmlparse.y, wc/js/jslib.c
 
 2.8 (released 15.1.2004)
   * removed old webcleanerconf gui and wcheaders tool; the preferred way
