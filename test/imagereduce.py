@@ -11,7 +11,6 @@ except ImportError:
 def _main():
     f = sys.argv[1]
     data = file(f).read()
-    wc.DebugLevel = 3
     wc.config = wc.Configuration()
     wc.config['filters'] = ['ImageReducer']
     wc.config.init_filter_modules()

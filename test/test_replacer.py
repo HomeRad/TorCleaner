@@ -23,7 +23,6 @@ document.write("</OBJECT>");
 
 import wc, time
 reload(wc)
-wc.DebugLevel = 0
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Replacer']
 wc.config.init_filter_modules()

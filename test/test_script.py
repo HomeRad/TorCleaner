@@ -31,7 +31,6 @@ def filterfile (fname):
 
 import wc, time
 reload(wc)
-wc.DebugLevel = 0
 wc.config = wc.Configuration()
 wc.config['filters'] = ['Rewriter', 'BinaryCharFilter']
 wc.config.init_filter_modules()

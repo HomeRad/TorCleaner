@@ -4,12 +4,12 @@
 import wc, time
 from test_support import TestFailed
 reload(wc)
-htmldata = """GET http://ads.realmedia.com/ HTTP/1.0"""
+url = "http://ads.realmedia.com/"       
+htmldata = "GET %s HTTP/1.0"%url
 wc.config = wc.Configuration()
 wc.config.init_filter_modules()
-wc.DebugLevel = 0
 start = time.clock()
-attrs = wc.filter.initStateObjects(url="http://ads.realmedia.com/")
+attrs = wc.filter.initStateObjects(url=url)
 filtered = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, htmldata,
            'finish', attrs)
 stop = time.clock()
