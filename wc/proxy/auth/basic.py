@@ -11,18 +11,21 @@ def get_basic_challenge ():
     return 'Basic realm="unknown"'
 
 
-def check_basic_auth (auth, authuser, authpass_b64):
+def check_basic_auth (auth, proxyuser, proxypass_b64):
     """check a base64-encoded auth token against the given user and
        pass. The pass is also base64-encoded.
        returns None if authentication succeded, a new challenge if not
     """
     auth = base64decode(auth[6:])
     if ':' not in auth:
+        warn(PROXY, "invalid proxy authorization")
         return get_basic_challenge()
-    _user,_pass = auth.split(":", 1)
-    if _user!=authuser:
+    _user, _pass = auth.split(":", 1)
+    if _user!=proxyuser:
+        warn(PROXY, "failed proxy authorization")
         return get_basic_challenge()
-    if authpass and _pass!=base64decode(authpass_b64):
+    if _pass!=base64decode(proxypass_b64):
+        warn(PROXY, "failed proxy authorization")
         return get_basic_challenge()
     return None
 

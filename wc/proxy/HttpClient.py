@@ -139,11 +139,11 @@ class HttpClient (Connection):
                 self.bytes_remaining = None
             debug(PROXY, "Client: Headers %s", `str(self.headers)`)
             if config["proxyuser"]:
-                if not self.headers.has_key('Proxy-Authentication'):
+                if not self.headers.has_key('Proxy-Authorization'):
                     return self.error(407,
-                          i18n._("Proxy Authentication Required"),
-                          auth=get_proxy_auth_challenge())
-                auth = check_proxy_auth(self.headers['Proxy-Authentication'])
+                                     i18n._("Proxy Authentication Required"),
+                                     auth=get_proxy_auth_challenge())
+                auth = check_proxy_auth(self.headers['Proxy-Authorization'])
                 if auth:
                     return self.error(407,
                           i18n._("Proxy Authentication Required"), auth=auth)

@@ -5,6 +5,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc import config
+from wc.log import *
 from basic import get_basic_challenge, check_basic_auth
 
 def get_proxy_auth_challenge ():
@@ -25,6 +26,7 @@ def check_proxy_auth (auth):
     #    return check_proxy_auth_ntlm(auth)
     else:
         # unsupported proxy authorization scheme
+        warn(PROXY, "Unsupported proxy authorization %s", `auth`)
         return get_proxy_auth_challenge()
 
 
