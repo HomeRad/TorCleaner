@@ -19,13 +19,15 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import socket
+import smtplib
+import email.Utils
 from wc.log import *
-import socket, smtplib
-from email.Utils import formatdate, parseaddr
+
 
 def valid_mail (address):
     """return cleaned up mail, or an empty string on errors"""
-    cleaned = parseaddr(address)
+    cleaned = email.Utils.parseaddr(address)
     if not cleaned[0]:
         return cleaned[1]
     return '%s <%s>'%cleaned
@@ -45,4 +47,4 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
 
 def mail_date ():
     """return date string formatted for a mail header"""
-    return formatdate()
+    return email.Utils.formatdate()

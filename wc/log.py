@@ -26,9 +26,13 @@ __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import os, re, logging, logging.config, textwrap
-from logging.handlers import RotatingFileHandler
-from wc import Name, ConfigDir, iswriteable
+import os
+import re
+import logging
+import logging.config
+import logging.handlers
+import textwrap
+import wc
 
 
 # logger areas
@@ -48,19 +52,19 @@ def initlog (filename):
     if os.name=='nt':
         # log to event log
         #from logging.handlers import NTEventLogHandler
-        #handler = set_format(NTEventLogHandler(Name))
+        #handler = set_format(NTEventLogHandler(wc.Name))
         # log to file
-        logfile = get_log_file("%s.log"%Name)
+        logfile = get_log_file("%s.log"%wc.Name)
         handler = get_wc_handler(logfile)
     else:
         # log to file
-        logfile = get_log_file("%s.log"%Name)
+        logfile = get_log_file("%s.log"%wc.Name)
         handler = get_wc_handler(logfile)
     logging.getLogger("wc").addHandler(handler)
     logging.getLogger("simpleTAL").addHandler(handler)
     logging.getLogger("simpleTALES").addHandler(handler)
     # access log is always a file
-    logfile = get_log_file("%s-access.log"%Name)
+    logfile = get_log_file("%s-access.log"%wc.Name)
     handler = get_access_handler(logfile)
     logging.getLogger("wc.access").addHandler(handler)
 
@@ -70,7 +74,7 @@ def get_wc_handler (logfile):
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
-    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
     return set_format(handler)
 
 
@@ -79,7 +83,7 @@ def get_access_handler (logfile):
     mode = 'a'
     maxBytes = 1024*1024*2 # 2 MB
     backupCount = 5 # number of files to generate
-    handler = RotatingFileHandler(logfile, mode, maxBytes, backupCount)
+    handler = logging.handlers.RotatingFileHandler(logfile, mode, maxBytes, backupCount)
     # log only the message
     handler.setFormatter(logging.Formatter("%(message)s"))
     return handler
@@ -95,21 +99,21 @@ def get_log_file (fname, trydir=os.getcwd()):
 def _get_log_file_posix (fname, trydir):
     """get full path name to writeable logfile on posix systems"""
     logfile = os.path.join('/', 'var', 'log', 'webcleaner', fname)
-    if not iswriteable(logfile):
+    if not wc.iswriteable(logfile):
         logfile = os.path.join(trydir, fname)
-    if not iswriteable(logfile):
+    if not wc.iswriteable(logfile):
         logfile = os.path.join('/', 'var', 'tmp', fname)
-    if not iswriteable(logfile):
+    if not wc.iswriteable(logfile):
         logfile = os.path.join('/','tmp', fname)
     return logfile
 
 
 def _get_log_file_nt (fname, trydir):
     """get full path name to writeable logfile on Windows systems"""
-    logfile = os.path.join(ConfigDir, fname)
-    if not iswriteable(logfile):
+    logfile = os.path.join(wc.ConfigDir, fname)
+    if not wc.iswriteable(logfile):
         logfile = os.path.join(trydir, fname)
-    if not iswriteable(logfile):
+    if not wc.iswriteable(logfile):
         logfile = os.path.join(os.environ.get("TEMP"), fname)
     return logfile
 

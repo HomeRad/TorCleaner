@@ -19,6 +19,10 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+import time
+import wc
+
+
 def strtime (t):
     """return ISO 8601 formatted time"""
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t)) + \
@@ -27,13 +31,13 @@ def strtime (t):
 
 def strduration (duration):
     """return string formatted time duration"""
-    name = i18n._("seconds")
+    name = wc.i18n._("seconds")
     if duration > 60:
         duration = duration / 60
-        name = i18n._("minutes")
+        name = wc.i18n._("minutes")
     if duration > 60:
         duration = duration / 60
-        name = i18n._("hours")
+        name = wc.i18n._("hours")
     return " %.3f %s"%(duration, name)
 
 
@@ -44,7 +48,4 @@ def strtimezone ():
     else:
         zone = time.timezone
     return "%+04d" % int(-zone/3600)
-
-import time
-from wc import i18n
 

@@ -20,8 +20,10 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 # i18n suppport
-import os, locale, gettext
-from wc import LocaleDir, Name
+import os
+import locale
+import gettext
+import wc
 
 # more supported languages are added in init_gettext
 supported_languages = ['en']
@@ -31,16 +33,16 @@ def init_gettext ():
     """initialize this gettext i18n module"""
     global _, default_language
     try:
-        _ = gettext.translation(Name, LocaleDir).gettext
+        _ = gettext.translation(wc.Name, wc.LocaleDir).gettext
     except IOError:
         # default gettext function
         _ = lambda s: s
     # get supported languages
-    for lang in os.listdir(LocaleDir):
-        path = os.path.join(LocaleDir, lang)
+    for lang in os.listdir(wc.LocaleDir):
+        path = os.path.join(wc.LocaleDir, lang)
         if not os.path.isdir(path):
             continue
-        if os.path.exists(os.path.join(path, 'LC_MESSAGES', '%s.mo'%Name)):
+        if os.path.exists(os.path.join(path, 'LC_MESSAGES', '%s.mo'%wc.Name)):
             supported_languages.append(lang)
     loc = get_locale()
     if loc in supported_languages:

@@ -19,9 +19,12 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, socket, struct, math
-from sets import Set
-from log import *
+import re
+import socket
+import struct
+import math
+import sets
+from wc.log import *
 
 # IP Adress regular expressions
 _ipv4_num = r"\d{1,3}"
@@ -169,7 +172,7 @@ def hosts2map (hosts):
        adresses).
        Only IPv4 host/netmasks are supported.
     """
-    hostset = Set()
+    hostset = sets.Set()
     nets = []
     for host in hosts:
         if _host_bitmask_re.match(host):
@@ -212,7 +215,7 @@ def map2hosts (hostmap):
 
 def lookup_ips (ips):
     """return set of host names that resolve to given ips"""
-    hosts = Set()
+    hosts = sets.Set()
     for ip in ips:
         try:
             hosts.add(socket.gethostbyaddr(ip)[0])
@@ -223,7 +226,7 @@ def lookup_ips (ips):
 
 def resolve_host (host):
     """return set of ip numbers for given host"""
-    ips = Set()
+    ips = sets.Set()
     for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
         af, socktype, proto, canonname, sa = res
         ips.add(sa[0])

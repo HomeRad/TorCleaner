@@ -29,15 +29,15 @@ try:
 except ImportError:
     # assume non-windows platform
     service_klass = object
+import wc
 from wc.log import *
-from wc import i18n, wstartfunc, AppName
 
 
 class ProxyService (service_klass):
     """NT service class for the WebCleaner proxy"""
 
-    _svc_name_ = AppName
-    _svc_display_name_ = i18n._("%s Proxy") % AppName
+    _svc_name_ = wc.AppName
+    _svc_display_name_ = wc.i18n._("%s Proxy") % wc.AppName
     configfile = None
     filterdir = None
 
@@ -66,7 +66,7 @@ class ProxyService (service_klass):
            servicemanager.EVENTLOG_INFORMATION_TYPE,
            servicemanager.PYS_SERVICE_STARTED,
            (self._svc_name_,''))
-        wstartfunc(handle=self.hWaitStop, configfile=self.configfile,
+        wc.wstartfunc(handle=self.hWaitStop, configfile=self.configfile,
                    filterdir=self.filterdir)
         # Now log a "service stopped" message
         servicemanager.LogMsg(
@@ -81,30 +81,30 @@ def _service_status (status):
     svcType, svcState, svcControls, err, svcErr, svcCP, svcWH = status
     msg = ""
     if svcType & win32service.SERVICE_WIN32_OWN_PROCESS:
-        msg += "\n"+i18n._("The %s service runs in its own process.")%AppName
+        msg += "\n"+wc.i18n._("The %s service runs in its own process.")%wc.AppName
     if svcType & win32service.SERVICE_WIN32_SHARE_PROCESS:
-        msg += "\n"+i18n._("The %s service shares a process with other services.")%AppName
+        msg += "\n"+wc.i18n._("The %s service shares a process with other services.")%wc.AppName
     if svcType & win32service.SERVICE_INTERACTIVE_PROCESS:
-        msg += "\n"+i18n._("The %s service can interact with the desktop.")%AppName
+        msg += "\n"+wc.i18n._("The %s service can interact with the desktop.")%wc.AppName
     # Other svcType flags not shown.
     if svcState==win32service.SERVICE_STOPPED:
-        msg += "\n"+i18n._("The %s service is stopped.")%AppName
+        msg += "\n"+wc.i18n._("The %s service is stopped.")%wc.AppName
     elif svcState==win32service.SERVICE_START_PENDING:
-        msg += "\n"+i18n._("The %s service is starting.")%AppName
+        msg += "\n"+wc.i18n._("The %s service is starting.")%wc.AppName
     elif svcState==win32service.SERVICE_STOP_PENDING:
-        msg += "\n"+i18n._("The %s service is stopping.")%AppName
+        msg += "\n"+wc.i18n._("The %s service is stopping.")%wc.AppName
     elif svcState==win32service.SERVICE_RUNNING:
-        msg += "\n"+i18n._("The %s service is running.")%AppName
+        msg += "\n"+wc.i18n._("The %s service is running.")%wc.AppName
     # Other svcState flags not shown.
     if svcControls & win32service.SERVICE_ACCEPT_STOP:
-        msg += "\n"+i18n._("The %s service can be stopped.")%AppName
+        msg += "\n"+wc.i18n._("The %s service can be stopped.")%wc.AppName
     if svcControls & win32service.SERVICE_ACCEPT_PAUSE_CONTINUE:
-        msg += "\n"+i18n._("The %s service can be paused.")%AppName
+        msg += "\n"+wc.i18n._("The %s service can be paused.")%wc.AppName
     # Other svcControls flags not shown
     return msg.strip()
 
 
 def status ():
     """return message with current status of WebCleaner service"""
-    return _service_status(win32serviceutil.QueryServiceStatus(AppName))
+    return _service_status(win32serviceutil.QueryServiceStatus(wc.AppName))
 

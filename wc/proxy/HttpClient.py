@@ -18,7 +18,8 @@ from wc.proxy.Headers import client_remove_encoding_headers, has_header_value
 from wc.proxy.Headers import get_content_length, client_set_encoding_headers
 from wc.proxy.auth import *
 from wc.proxy.auth.ntlm import NTLMSSP_NEGOTIATE, NTLMSSP_CHALLENGE
-from wc.url import spliturl, splitnport, url_norm, url_quote
+from wc.url import spliturl, url_norm, url_quote
+from urllib import splitnport
 from wc.log import *
 from wc.google import google_try_status, get_google_context
 from wc.webgui import WebConfig

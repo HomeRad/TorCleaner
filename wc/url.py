@@ -19,9 +19,11 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-import re, urlparse, os
-from urllib import splittype, splithost, splitnport, splitquery, quote, unquote
-from wc import ip
+import re
+import urlparse
+import os
+import urllib
+
 
 # adapted from David Wheelers "Secure Programming for Linux and Unix HOWTO"
 _basic = {
@@ -79,10 +81,10 @@ def stripsite (url):
 def url_norm (url):
     """unquote and normalize url which must be quoted"""
     urlparts = list(urlparse.urlsplit(url))
-    urlparts[0] = unquote(urlparts[0]) # scheme
-    urlparts[1] = unquote(urlparts[1]) # host
-    urlparts[2] = unquote(urlparts[2]) # path
-    urlparts[4] = unquote(urlparts[4]) # anchor
+    urlparts[0] = urllib.unquote(urlparts[0]) # scheme
+    urlparts[1] = urllib.unquote(urlparts[1]) # host
+    urlparts[2] = urllib.unquote(urlparts[2]) # path
+    urlparts[4] = urllib.unquote(urlparts[4]) # anchor
     path = urlparts[2].replace('\\', '/')
     if not path or path=='/':
         urlparts[2] = '/'
@@ -98,17 +100,17 @@ def url_norm (url):
 def url_quote (url):
     """quote given url"""
     urlparts = list(urlparse.urlsplit(url))
-    urlparts[0] = quote(urlparts[0]) # scheme
-    urlparts[1] = quote(urlparts[1], ':') # host
-    urlparts[2] = quote(urlparts[2], '/=,') # path
-    urlparts[4] = quote(urlparts[4]) # anchor
+    urlparts[0] = urllib.quote(urlparts[0]) # scheme
+    urlparts[1] = urllib.quote(urlparts[1], ':') # host
+    urlparts[2] = urllib.quote(urlparts[2], '/=,') # path
+    urlparts[4] = urllib.quote(urlparts[4]) # anchor
     return urlparse.urlunsplit(urlparts)
 
 
 def document_quote (document):
     """quote given document"""
-    doc, query = splitquery(document)
-    doc = quote(doc, '/=,')
+    doc, query = urllib.splitquery(document)
+    doc = urllib.quote(doc, '/=,')
     if query:
         return "%s?%s" % (doc, query)
     return doc
@@ -142,12 +144,12 @@ def spliturl (url):
     """split url in a tuple (scheme, hostname, port, document) where
     hostname is always lowercased
     precondition: url is syntactically correct URI (eg has no whitespace)"""
-    scheme, netloc = splittype(url)
-    host, document = splithost(netloc)
+    scheme, netloc = urllib.splittype(url)
+    host, document = urllib.splithost(netloc)
     port = default_ports.get(scheme, 80)
     if host:
         host = host.lower()
-        host, port = splitnport(host, port)
+        host, port = urllib.splitnport(host, port)
     return scheme, host, port, document
 
 

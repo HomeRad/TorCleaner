@@ -1,8 +1,9 @@
 # -*- coding: iso-8859-1 -*-
 """routines for updating filter and rating configuration"""
 
-import os, md5
-from wc import Name, Version, ConfigDir, i18n, filterconf_files, ZapperParser
+import os
+import md5
+import wc
 from wc.log import *
 from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 
@@ -33,7 +34,7 @@ from wc.filter.Rating import rating_cache_merge, rating_cache_parse
 # modified by Bastian Kleineidam <calvin@users.sf.net> for WebCleaner
 
 import httplib, urllib, urllib2, re, socket
-UA_STR = '%s/%s' % (Name, Version)
+UA_STR = '%s/%s' % (wc.Name, wc.Version)
 
 def decode (page):
     "gunzip or deflate a compressed page"
@@ -137,7 +138,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         return chg
     # remember all local config files
     filemap = {}
-    for filename in filterconf_files(wconfig.filterdir):
+    for filename in wc.filterconf_files(wconfig.filterdir):
         filemap[os.path.basename(filename)] = filename
     # read md5sums
     for line in page.read().splitlines():
@@ -148,7 +149,7 @@ def update_filter (wconfig, dryrun=False, log=None):
             continue
         md5sum, filename = line.split()
         assert filename.endswith('.zap')
-        fullname = os.path.join(ConfigDir, filename)
+        fullname = os.path.join(wc.ConfigDir, filename)
         # compare checksums
         if filemap.has_key(filename):
             f = file(fullname)
@@ -157,15 +158,15 @@ def update_filter (wconfig, dryrun=False, log=None):
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
-                print >>log, i18n._("filter %s not changed, ignoring")%filename
+                print >>log, wc.i18n._("filter %s not changed, ignoring")%filename
                 continue
-            print >>log, i18n._("updating filter %s")%filename
+            print >>log, wc.i18n._("updating filter %s")%filename
         else:
-            print >>log, i18n._("adding new filter %s"), filename
+            print >>log, wc.i18n._("adding new filter %s"), filename
         # parse new filter
         url = baseurl+filename
         page = open_url(url)
-        p = ZapperParser(fullname, wconfig, compile_data=False)
+        p = wc.ZapperParser(fullname, wconfig, compile_data=False)
         p.parse(fp=page)
         page.close()
         chg = wconfig.merge_folder(p.folder, dryrun=dryrun, log=log) or chg
@@ -174,19 +175,19 @@ def update_filter (wconfig, dryrun=False, log=None):
     try:
         page = open_url(url)
     except IOError, msg:
-        print >>log, i18n._("error fetching %s:")%url, msg
+        print >>log, wc.i18n._("error fetching %s:")%url, msg
         return chg
     lines = page.read().splitlines()
     page.close()
     for line in lines:
         if "<" in line:
-            print >>log, i18n._("error fetching %s:")%url, i18n._("invalid content")
+            print >>log, wc.i18n._("error fetching %s:")%url, wc.i18n._("invalid content")
             return chg
         if not line:
             continue
         md5sum, filename = line.split()
         # XXX UNIX-generated md5sum filenames with subdirs are not portable
-        fullname = os.path.join(ConfigDir, filename)
+        fullname = os.path.join(wc.ConfigDir, filename)
         # compare checksums
         if os.path.exists(fullname):
             f = file(fullname)
@@ -195,22 +196,23 @@ def update_filter (wconfig, dryrun=False, log=None):
             f.close()
             digest = "".join([ "%0.2x"%ord(c) for c in digest ])
             if digest==md5sum:
-                print >>log, i18n._("extern filter %s not changed, ignoring")%filename
+                print >>log, wc.i18n._("extern filter %s not changed, ignoring")%filename
                 continue
-            print >>log, i18n._("updating extern filter %s")%filename
+            print >>log, wc.i18n._("updating extern filter %s")%filename
         else:
-            print >>log, i18n._("adding new extern filter %s")%filename
+            print >>log, wc.i18n._("adding new extern filter %s")%filename
         chg = True
         if not dryrun:
             url = baseurl+filename
             try:
                 page = open_url(url)
             except IOError, msg:
-                print >>log, i18n._("error fetching %s:")%url, msg
+                print >>log, wc.i18n._("error fetching %s:")%url, msg
                 continue
             data = page.read()
             if not data:
-                print >>log, i18n._("error fetching %s:")%url, i18n._("got no data")
+                print >>log, wc.i18n._("error fetching %s:")%url, \
+                             wc.i18n._("got no data")
                 continue
             f = file(fullname, 'wb')
             f.write(data)

@@ -19,7 +19,7 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from xml.sax.saxutils import escape, unescape
+import xml.sax.saxutils
 
 attr_entities = {
     "&": "&amp;",
@@ -31,20 +31,20 @@ attr_entities = {
 
 def xmlquote (s):
     """quote characters for XML"""
-    return escape(s)
+    return xml.sax.saxutils.escape(s)
 
 
 def xmlquoteattr (s):
     """quote XML attribute, ready for inclusion with double quotes"""
-    return escape(s, attr_entities)
+    return xml.sax.saxutils.escape(s, attr_entities)
 
 
 def xmlunquote (s):
     """unquote characters from XML"""
-    return unescape(s)
+    return xml.sax.saxutils.unescape(s)
 
 
 def xmlunquoteattr (s):
     """unquote attributes from XML"""
-    return unescape(s, attr_entities)
+    return xml.sax.saxutils.unescape(s, attr_entities)
 
