@@ -98,23 +98,7 @@ def get_category (category_name):
 
 
 
-
-
-
-MISSING = _("Unknown page")
-
-
-def rating_allow (url, rule):
-    """asks cache if the rule allows the rating data for given url
-    Looks up cache to find rating data, if not returns a MISSING message.
-    """
-    rating = rating_cache_get(url)
-    if rating is not None:
-        return rule.check_against(rating[1])
-    return MISSING
-
-
-def rating_cache_merge (newrating_cache, dryrun=False, log=None):
+def XXXrating_cache_merge (newrating_cache, dryrun=False, log=None):
     """add new ratings, but do not change existing ones"""
     chg = False
     for url, rating in newrating_cache.iteritems():
