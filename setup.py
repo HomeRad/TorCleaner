@@ -32,6 +32,7 @@ except ImportError:
     import distutils.dist
     distklass = distutils.dist.Distribution
 from distutils.command.install import install
+from distutils.command.install_data import install_data
 from distutils.file_util import write_file
 from distutils import util
 
