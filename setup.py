@@ -142,13 +142,15 @@ else:
 
 # extensions
 extensions = [Extension('wc.parser.htmlsax',
-                        [p('wc/parser/htmllex.c'), p('wc/parser/htmlparse.c')],
+                        sources=[p('wc/parser/htmllex.c'),
+                                 p('wc/parser/htmlparse.c')],
+                        depends=[p("wc/parser/htmlsax.h")],
                         include_dirs = [p("wc/parser")],
                         define_macros = macros,
                         extra_compile_args = cargs,
                       ),
              Extension('wc.levenshtein',
-                        [p('wc/levenshtein.c'),],
+                        sources=[p('wc/levenshtein.c'),],
                         define_macros = macros,
                         extra_compile_args = cargs,
                       ),
@@ -156,14 +158,14 @@ extensions = [Extension('wc.parser.htmlsax',
 # javascript extension
 if os.name=='nt':
     extensions.append(Extension('wc.js.jslib',
-                    ['wc/js/jslib.c'],
+                    sources=['wc/js/jslib.c'],
                     define_macros = [('WIN32', None)],
                     include_dirs = ['libjs'],
                     extra_compile_args = cargs,
                   ))
 else:
     extensions.append(Extension('wc.js.jslib',
-                    ['wc/js/jslib.c'],
+                    sources=['wc/js/jslib.c'],
                     include_dirs = ['libjs'],
                     extra_compile_args = cargs,
                     extra_objects = ['libjs/.libs/libjs.a'],
