@@ -50,16 +50,18 @@ def initlog (filename):
         # log to event log
         #from logging.handlers import NTEventLogHandler
         #handler = set_format(NTEventLogHandler(Name))
+        # log to file
         logfile = get_log_file("%s.log"%Name)
         handler = get_wc_handler(logfile)
     else:
-        # on posix/mac systems log to file
+        # log to file
         logfile = get_log_file("%s.log"%Name)
         handler = get_wc_handler(logfile)
     logging.getLogger("root").addHandler(handler)
     logging.getLogger("wc").addHandler(handler)
     logging.getLogger("simpleTAL").addHandler(handler)
     logging.getLogger("simpleTALES").addHandler(handler)
+    # access log is always a file
     logfile = get_log_file("%s-access.log"%Name)
     handler = get_access_handler(logfile)
     logging.getLogger("wc.access").addHandler(handler)

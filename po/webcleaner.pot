@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Sat Dec 20 14:27:21 2003\n"
+"POT-Creation-Date: Mon Dec 22 16:09:36 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,80 +16,6 @@ msgstr ""
 
 
 msgid "unknown tag name %s"
-msgstr ""
-
-msgid "%s Proxy"
-msgstr ""
-
-msgid "The %s service runs in its own process."
-msgstr ""
-
-msgid "The %s service shares a process with other services."
-msgstr ""
-
-msgid "The %s service can interact with the desktop."
-msgstr ""
-
-msgid "The %s service is stopped."
-msgstr ""
-
-msgid "The %s service is starting."
-msgstr ""
-
-msgid "The %s service is stopping."
-msgstr ""
-
-msgid "The %s service is running."
-msgstr ""
-
-msgid "The %s service can be stopped."
-msgstr ""
-
-msgid "The %s service can be paused."
-msgstr ""
-
-msgid ""
-"WebCleaner already started (lock file found).\n"
-"Do 'webcleaner stop' first."
-msgstr ""
-
-msgid "command %r failed: %s"
-msgstr ""
-
-msgid "command %r killed by signal %d"
-msgstr ""
-
-msgid "WebCleaner was not running (no lock file found)"
-msgstr ""
-
-msgid "warning: could not terminate process PID %d"
-msgstr ""
-
-msgid "reload not supported for this platform"
-msgstr ""
-
-msgid "WebCleaner (PID %d) is running"
-msgstr ""
-
-msgid "WebCleaner is not running (no lock file found)"
-msgstr ""
-
-msgid "Watch program already started (lock file found)."
-msgstr ""
-
-msgid "Watcher was not running (no lock file found)"
-msgstr ""
-
-msgid "WebCleaner is not running. Do 'webcleaner start' first."
-msgstr ""
-
-msgid "WebCleaner (PID %d) and watch daemon (PID %d) are running"
-msgstr ""
-
-msgid "WebCleaner and watch daemon are not running (no lock files found)"
-msgstr ""
-
-msgid "WebCleaner is not running (no lock file found) but watch daemon is running (PID %d)"
 msgstr ""
 
 msgid "Unknown page"
@@ -230,27 +156,34 @@ msgstr ""
 msgid "%s error"
 msgstr ""
 
-msgid ""
-"USAGE\twebcleaner command\n"
-"\n"
-"COMMANDS\n"
-"start\n"
-"        Start the proxy. If it is already started, do nothing.\n"
-"stop\n"
-"        Stop the proxy. If it is already stopped, do nothing.\n"
-"restart\n"
-"        Try to stop the proxy, then start it.\n"
-"reload\n"
-"        If the proxy is running read the configuration files again.\n"
-"        If it is not running, do nothing. (only supported under\n"
-"        POSIX systems)\n"
-"status\n"
-"        Print info if the proxy is running or not.\n"
-"startwatch\n"
-"        Start a monitor program. If the proxy is not running, it\n"
-"        starts the proxy again.\n"
-"stopwatch\n"
-"        Stop the monitor program and the proxy."
+msgid "%s Proxy"
+msgstr ""
+
+msgid "The %s service runs in its own process."
+msgstr ""
+
+msgid "The %s service shares a process with other services."
+msgstr ""
+
+msgid "The %s service can interact with the desktop."
+msgstr ""
+
+msgid "The %s service is stopped."
+msgstr ""
+
+msgid "The %s service is starting."
+msgstr ""
+
+msgid "The %s service is stopping."
+msgstr ""
+
+msgid "The %s service is running."
+msgstr ""
+
+msgid "The %s service can be stopped."
+msgstr ""
+
+msgid "The %s service can be paused."
 msgstr ""
 
 msgid ""
@@ -258,21 +191,21 @@ msgid ""
 "\n"
 "COMMANDS\n"
 "start\n"
-"        Start WebCleaner proxy service.\n"
+"        Start %(service)s service.\n"
 "stop\n"
-"        Stop WebCleaner proxy service.\n"
+"        Stop %(service)s service.\n"
 "restart\n"
-"        Restart WebCleaner proxy service.\n"
+"        Restart %(service)s service.\n"
 "status\n"
-"        Print status info of WebCleaner proxy service.\n"
+"        Print status info of %(AppName)s service.\n"
 "debug\n"
-"        Start WebCleaner proxy service with debug messages.\n"
+"        Start %(service)s service with debug messages.\n"
 "install [options]\n"
-"        Install WebCleaner proxy service.\n"
+"        Install %(service)s service.\n"
 "update [options]\n"
-"        Update WebCleaner proxy service.\n"
+"        Update %(service)s service.\n"
 "remove\n"
-"        Remove WebCleaner proxy service.\n"
+"        Remove %(service)s service.\n"
 "\n"
 "OPTIONS (for 'install' and 'update' commands only)\n"
 "--username <domain\\username>\n"
@@ -296,9 +229,6 @@ msgid "Unknown option %(option)r"
 msgstr ""
 
 msgid "No command given."
-msgstr ""
-
-msgid "warning: only first command is valid"
 msgstr ""
 
 msgid "Unknown command %s"

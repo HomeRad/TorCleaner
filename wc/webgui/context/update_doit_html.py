@@ -17,6 +17,6 @@ def _exec_form (form):
         updatelog = "Error: %s" % msg
     else:
         if doreload:
-            from wc import daemon as _daemon
-            _daemon.reload()
+            # pass
+            pass
 

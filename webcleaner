@@ -145,48 +145,27 @@ try:
     psyco.profile()
 except:
     pass
-from wc import i18n, daemon, wstartfunc
-
-_usage = i18n._("""USAGE\twebcleaner command
-
-COMMANDS
-start
-        Start the proxy. If it is already started, do nothing.
-stop
-        Stop the proxy. If it is already stopped, do nothing.
-restart
-        Try to stop the proxy, then start it.
-reload
-        If the proxy is running read the configuration files again.
-        If it is not running, do nothing. (only supported under
-        POSIX systems)
-status
-        Print info if the proxy is running or not.
-startwatch
-        Start a monitor program. If the proxy is not running, it
-        starts the proxy again.
-stopwatch
-        Stop the monitor program and the proxy.""")
+from wc import i18n, wstartfunc
 
 _nt_usage = i18n._("""USAGE\twebcleaner command [options]
 
 COMMANDS
 start
-        Start WebCleaner proxy service.
+        Start %(service)s service.
 stop
-        Stop WebCleaner proxy service.
+        Stop %(service)s service.
 restart
-        Restart WebCleaner proxy service.
+        Restart %(service)s service.
 status
-        Print status info of WebCleaner proxy service.
+        Print status info of %(AppName)s service.
 debug
-        Start WebCleaner proxy service with debug messages.
+        Start %(service)s service with debug messages.
 install [options]
-        Install WebCleaner proxy service.
+        Install %(service)s service.
 update [options]
-        Update WebCleaner proxy service.
+        Update %(service)s service.
 remove
-        Remove WebCleaner proxy service.
+        Remove %(service)s service.
 
 OPTIONS (for 'install' and 'update' commands only)
 --username <domain\username>
@@ -237,47 +216,8 @@ def main ():
 
 
 def _main_posix ():
-    # read command line arguments
-    import getopt
-    try:
-        # Note: cut out the name of the script
-        options, args = getopt.getopt(sys.argv[1:], "h", ["help", "pidfile="])
-    except getopt.error:
-        type, value = sys.exc_info()[:2]
-        _print_usage(value)
-    pidfile = daemon.wpidfile
-    for opt,arg in options:
-        if opt=="-h" or opt=="--help":
-            _print_help(_usage)
-        elif opt=='--pidfile':
-            pidfile = arg
-        else:
-            _print_usage(i18n._("Unknown option %(option)r")%{'option': opt})
-    watchfile = pidfile+".watch"
-    if len(args) < 1:
-        _print_usage(i18n._("No command given."))
-    else:
-        command = args[0]
-        if len(args) > 1:
-            print >>sys.stderr, i18n._("warning: only first command is valid")
-    # start the command
-    if command=='start':
-        msg, status = daemon.start(wstartfunc, pidfile)
-    elif command=='startwatch':
-        msg, status = daemon.startwatch(wstartfunc, pidfile, watchfile)
-    elif command=='stop':
-        msg, status = daemon.stop(pidfile)
-    elif command=='stopwatch':
-        msg, status = daemon.stopwatch(pidfile, watchfile)
-    elif command=='restart':
-        msg, status = daemon.restart(wstartfunc, pidfile)
-    elif command=='status':
-        msg, status = daemon.status(pidfile, watchfile)
-    elif command=='reload':
-        msg, status = daemon.reload(pidfile)
-    else:
-        _print_usage(i18n._("Unknown command %s") % `command`)
-    return msg, status
+    # start the proxy
+    wstartfunc()
 
 
 def _main_nt ():
@@ -291,26 +231,23 @@ def _main_nt ():
         _print_usage(value)
     for opt,arg in options:
         if opt=="-h" or opt=="--help":
-            _print_help(_nt_usage)
+            servicename = i18n._("%s Proxy") % AppName
+            _print_help(_nt_usage % {'service': service})
         else:
             _print_usage(i18n._("Unknown option %(option)r")%{'option': opt})
     if len(args) < 1:
         _print_usage(i18n._("No command given."))
     else:
         command = args[0]
+    from wc import win32start
     if command=='status':
-        msg, status = daemon.status()
+        print win32start.status()
     elif command in ['start', 'stop', 'restart', 'install', 'remove']:
         import win32serviceutil
-        win32serviceutil.HandleCommandLine(daemon.ProxyService)
-        msg, status = None, 0
+        win32serviceutil.HandleCommandLine(win32start.ProxyService)
     else:
         _print_usage(i18n._("Unknown command %s") % `command`)
-    return msg, status
 
 
 if __name__ == '__main__':
-    msg, status = main()
-    if msg:
-        print >>sys.stderr, msg
-    sys.exit(status)
+    main()

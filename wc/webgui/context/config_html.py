@@ -3,7 +3,6 @@
 import base64
 from wc import AppName, filtermodules, ip, Version, config
 from wc import sort_seq as _sort_seq
-from wc import daemon as _daemon
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 

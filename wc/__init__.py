@@ -80,32 +80,16 @@ def sort_seq (seq):
 config = None
 
 def wstartfunc (handle=None):
+    global config
     # init logging
     initlog(os.path.join(ConfigDir, "logging.conf"))
     # support reload on posix systems
     if os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, reload_config)
-        # drop privileges
+        # change dir to avoid open files on umount
         os.chdir("/")
-        # for web configuration, we cannot drop privileges
-        #if os.geteuid()==0:
-        #    import pwd, grp
-        #    try:
-        #        pentry = pwd.getpwnam("nobody")
-        #        pw_uid = 2
-        #        nobody = pentry[pw_uid]
-        #        gentry = grp.getgrnam("nogroup")
-        #        gr_gid = 2
-        #        nogroup = gentry[gr_gid]
-        #        os.setgid(nogroup)
-        #        os.setuid(nobody)
-        #    except KeyError:
-        #        warn(PROXY, "could not drop root privileges, user nobody "+\
-        #                 "and/or group nogroup not found")
-        #        pass
     # read configuration
-    global config
     config = Configuration()
     config.init_filter_modules()
     # start the proxy
@@ -118,7 +102,6 @@ def reload_config (*dummy):
     """reload configuration function with dummy params for (signum, frame)
     from the signal handler prototype
     """
-    global config
     config.reset()
     config.read_proxyconf()
     config.read_filterconf()
