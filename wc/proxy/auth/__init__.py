@@ -15,9 +15,10 @@ from basic import check_basic_credentials
 from digest import parse_digest_challenge, get_digest_challenge
 from digest import parse_digest_credentials, get_digest_credentials
 from digest import check_digest_credentials
-from ntlm import parse_ntlm_challenge, get_ntlm_challenge
-from ntlm import parse_ntlm_credentials, get_ntlm_credentials
-from ntlm import check_ntlm_credentials
+if wc.HasCrypto:
+    from ntlm import parse_ntlm_challenge, get_ntlm_challenge
+    from ntlm import parse_ntlm_credentials, get_ntlm_credentials
+    from ntlm import check_ntlm_credentials
 
 
 def get_auth_uri (url):
@@ -46,7 +47,7 @@ def parse_challenges (challenge):
         elif challenge.startswith('Digest'):
             auth, challenge = parse_digest_challenge(challenge[6:].strip())
             auths.setdefault('Digest', []).append(auth)
-        elif challenge.startswith('NTLM'):
+        elif challenge.startswith('NTLM') and wc.HasCrypto:
             auth, challenge = parse_ntlm_challenge(challenge[4:].strip())
             auths.setdefault('NTLM', []).append(auth)
         else:
@@ -60,7 +61,7 @@ def get_challenges (**args):
        Note that HTTP/1.1 allows multiple authentication challenges
        either as multiple headers with the same key, or as one single
        header whose value list is separated by commas"""
-    if wc.configuration.config['auth_ntlm']:
+    if wc.configuration.config['auth_ntlm'] and wc.HasCrypto:
         chals = [get_ntlm_challenge(**args)]
     else:
         chals = [get_digest_challenge(),
@@ -91,7 +92,7 @@ def parse_credentials (creds):
         elif creds.startswith('Digest'):
             auth, creds = parse_digest_credentials(creds[6:].strip())
             auths.setdefault('Digest', []).append(auth)
-        elif creds.startswith('NTLM'):
+        elif creds.startswith('NTLM') and wc.HasCrypto:
             auth, creds = parse_ntlm_credentials(creds[4:].strip())
             auths.setdefault('NTLM', []).append(auth)
         else:
@@ -104,7 +105,7 @@ def get_credentials (challenges, **attrs):
     """return a challenge response with supported authentication scheme
     or None if challenge could not be fulfilled (eg on error or if
     scheme is unsupported)"""
-    if 'NTLM' in challenges:
+    if 'NTLM' in challenges and wc.HasCrypto:
         creds = get_ntlm_credentials(challenges['NTLM'][0], **attrs)
     elif 'Digest' in challenges:
         creds = get_digest_credentials(challenges['Digest'][0], **attrs)
@@ -125,7 +126,7 @@ def check_credentials (creds, **attrs):
     elif wc.configuration.config['auth_ntlm'] and 'NTLM' not in creds:
         # forced NTLM auth
         res = False
-    elif 'NTLM' in creds:
+    elif 'NTLM' in creds and wc.HasCrypto:
         res = check_ntlm_credentials(creds['NTLM'][0], **attrs)
     elif 'Digest' in creds:
         res = check_digest_credentials(creds['Digest'][0], **attrs)
