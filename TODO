@@ -8,7 +8,7 @@ version 2.5 and above
 
 - use test/client.py, test/server.py for testing
 
-- support NTLM authentication, add README.squid example config
+- test NTLM authentication
   (Mozilla Windows >= 1.4b can test NTLM server auth, squid can test
    client auth)
 
