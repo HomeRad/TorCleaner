@@ -324,7 +324,7 @@ class Configuration (dict):
         return wc.ip.host_in_set(host, hostset[0], hostset[1])
 
 
-from wc.XmlUtils import xmlquote, xmlquoteattr
+from wc.XmlUtils import xmlquoteattr
 
 ##### xml parsers #########
 
