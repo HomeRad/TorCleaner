@@ -79,8 +79,8 @@ class JSHtmlListener (JSListener):
 
 class BufferHtmlParser (HtmlParser):
     """Define error functions for HTML parsing and two buffers:
-       1) self.buf - list of parsed HTML tags
-       2) self.outbuf - StringIO with already filtered HTML data
+         self.buf - list of parsed HTML tags
+         self.outbuf - StringIO with already filtered HTML data
     """
     def __init__ (self):
         HtmlParser.__init__(self)
