@@ -1,6 +1,7 @@
-1.8
+1.7.1
   * add document.layers property to jslib
   * escape inlined javascript
+  * add wc.js to packages in setup.py
 
 1.7
   * parser changes:

@@ -157,7 +157,7 @@ if USE_JS:
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
-       version = "1.8",
+       version = "1.7.1",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -165,7 +165,7 @@ setup (name = "webcleaner",
        maintainer_email = myemail,
        url = "http://webcleaner.sourceforge.net/",
        licence = "GPLv2",
-       packages = ['', 'wc', 'wc/filter', 'wc/daemon',
+       packages = ['', 'wc', 'wc/filter', 'wc/daemon', 'wc/js',
                    'wc/parser', 'wc/gui', 'wc/proxy', 'wc/proxy/dns',
                    'wc/filter/rules', 'wc/webgui', 'wc/webgui/PageTemplates',
                    'wc/webgui/TAL', 'wc/webgui/ZTUtils'],
