@@ -94,6 +94,7 @@ class HttpServer (Server):
         self.authtries = 0 # restrict number of authentication tries
         self.statuscode = None # numeric HTTP status code
         self.bytes_remaining = None # number of content bytes remaining
+        self.defer_data = False # for content rating
         debug(PROXY, "%s resetted", self)
 
 
@@ -284,8 +285,12 @@ class HttpServer (Server):
                                        "finish", self.attrs)
         except FilterRating, msg:
             debug(PROXY, "%s FilterRating from header: %s", self, msg)
-            self._show_rating_deny(str(msg), with_response=True)
-            return
+            if msg==MISSING:
+                # still have to look at content
+                self.defer_data = True
+            else:
+                self._show_rating_deny(str(msg))
+                return
         server_set_headers(self.headers)
         self.bytes_remaining = server_set_encoding_headers(self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
         if self.bytes_remaining is None:
@@ -307,9 +312,10 @@ class HttpServer (Server):
             self.state = 'content'
         self.attrs = get_filterattrs(self.url, _response_filters, headers=msg)
         debug(PROXY, "%s filtered headers %s", self, self.headers)
-        self.client.server_response(self, self.response, self.statuscode,
-                                    self.headers)
-        # note: self.client could be None here
+        if not self.defer_data:
+            self.client.server_response(self, self.response, self.statuscode,
+                                        self.headers)
+            # note: self.client could be None here
 
 
     def is_rewrite (self):
@@ -320,7 +326,7 @@ class HttpServer (Server):
         return False
 
 
-    def _show_rating_deny (self, msg, with_response=False):
+    def _show_rating_deny (self, msg):
         """requested page is rated"""
         query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
@@ -331,14 +337,14 @@ class HttpServer (Server):
                               (config['port'], query)
         headers['Content-Length'] = '%d\r'%len(msg)
         debug(PROXY, "%s headers\n%s", self, headers)
-        if with_response:
-            self.client.server_response(self, response, self.statuscode, headers)
-            if not self.client:
-                return
+        self.client.server_response(self, response, self.statuscode, headers)
+        if not self.client:
+            return
         self.client.server_content(msg)
         self.client.server_close(self)
         self.client = None
         self.state = 'recycle'
+        self.defer_data = False
         self.persistent = False
         self.close()
 
@@ -373,6 +379,12 @@ class HttpServer (Server):
             warn(PROXY, i18n._("server received %d bytes more than content-length"),
                  (-self.bytes_remaining))
         if data and self.statuscode!=407:
+            if self.defer_data:
+                self.defer_data = False
+                self.client.server_response(self, self.response,
+                                            self.statuscode, self.headers)
+                if not self.client:
+                    return
             self.client.server_content(data)
         if is_closed or self.bytes_remaining==0:
             # either we ran out of bytes, or the decoder says we're done
