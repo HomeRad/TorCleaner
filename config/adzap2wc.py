@@ -171,10 +171,13 @@ def write_block (zapfile, adclass, pattern, lineno, replace=None):
  title="%(title)s"
  desc="%(desc)s"
  url="%(url)s""" % d)
+    zapfile.write("\"")
+    if adclass=='PRINT':
+        zapfile.write("\n disable=\"1\"")
     if replace is not None:
-        zapfile.write("\">%s</block>" % xmlify(convert_adzapper_replace(replace)))
+        zapfile.write(">%s</block>" % xmlify(convert_adzapper_replace(replace)))
     else:
-        zapfile.write("\"/>")
+        zapfile.write("/>")
     zapfile.write("\n")
 
 
