@@ -15,7 +15,7 @@
 
 <rewrite title="Ad servers 2"
  desc="Kill links with ad words in the host name.">
-<attr>http://.*(doubleclick|adforce|tradedoubler|netadsrv|adrunner|link4ads)\.</attr>
+<attr>http://.*(doubleclick|adforce|tradedoubler|netadsrv|adrunner|link4ads|emerchandise)\.</attr>
 </rewrite>
 
 <rewrite title="Ad servers 3"
