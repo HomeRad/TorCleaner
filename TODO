@@ -2,8 +2,7 @@ TODO
 
 version 2.11 and above
 
-- enhance the HTML parser attribute dict by making items(), keys()
-  and values() return the attributes in original parsed order
+- use SortedDict in html parser attribute building
 
 - DNS automatic spell fix: replace ".." with "."
 

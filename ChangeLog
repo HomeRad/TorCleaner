@@ -38,9 +38,8 @@
     Changed: wc/filter/HtmlTags.py
 
   * added SSL gateway functionality, starting a local SSL server
-    to handle and filter https connections. this feature is still
-    considered unstable, since SSL certificates are not yet verified.
-    So, do not (yet) do your bank accounting with this feature :)
+    to handle and filter https connections. This feature is still
+    considered in development, since SSL certificates are not verified.
     Type: feature
     Changed: wc/__init__.py, wc/proxy/{__init__,ClientServerMatchmaker}.py
     Added: wc/proxy/{HttpsServer,SslClient,SslServer}.py, test/getssl.py,
