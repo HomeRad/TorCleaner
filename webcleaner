@@ -30,7 +30,7 @@ if sys.version_info < (2, 3, 1, 'final', 0):
 import os
 from wc import i18n, wstartfunc, AppName
 
-nt_usage = i18n._("""USAGE\twebcleaner [options] command [command options]
+nt_usage = i18n._("""USAGE\twebcleaner [options] <command> [command options]
 
 OPTIONS
 -h      Print this help.
@@ -103,10 +103,10 @@ def paginate (text, lines=22):
             sys.stdin.read(1)
 
 
-def print_help (usage):
+def print_help ():
     """print long usage info"""
-    if os.name!='nt':
-        servicename = i18n._("%s Proxy") % AppName
+    if os.name=='nt':
+        service = i18n._("%s Proxy") % AppName
         paginate(nt_usage % {'service': service, 'AppName': AppName})
     else:
         print usage % {'AppName': AppName}
@@ -152,8 +152,8 @@ def main_nt (configfile, filterdir, args):
     else:
         command = args[0]
     from wc import win32start
-    win32start.ProxyServer.configfile = configfile
-    win32start.ProxyServer.filterdir = filterdir
+    win32start.ProxyService.configfile = configfile
+    win32start.ProxyService.filterdir = filterdir
     if command=='status':
         print win32start.status()
     elif command in ['start', 'stop', 'restart', 'install', 'remove']:
