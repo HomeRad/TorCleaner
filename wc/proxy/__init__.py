@@ -71,6 +71,10 @@ def set_via_header (headers):
     headers['Via'] = via
 
 
+def remove_old_warning_headers (headers):
+    # XXX todo
+    pass
+
 def make_timer (delay, callback):
     "After DELAY seconds, run the CALLBACK function"
     TIMERS.append( [time.time() + delay, callback] )

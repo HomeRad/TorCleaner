@@ -6,6 +6,7 @@ from ServerHandleDirectly import ServerHandleDirectly
 from UnchunkStream import UnchunkStream
 from wc import i18n, config, ip, remove_headers
 from wc.proxy import log, match_host, set_via_header
+from wc.proxy import remove_old_warning_headers
 from wc.proxy.auth import get_proxy_auth_challenge, check_proxy_auth
 from wc.webgui.WebConfig import HTML_TEMPLATE
 from wc.debug import *
@@ -254,6 +255,7 @@ class HttpClient (Connection):
 
 def set_proxy_headers (headers):
     remove_hop_by_hop_headers(headers)
+    remove_old_warning_headers(headers)
     set_via_header(headers)
     set_connection_headers(headers)
     return set_encoding_headers(headers)
