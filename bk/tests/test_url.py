@@ -11,7 +11,7 @@ class TestUrl (unittest.TestCase):
         self.assertEquals(bk.url.url_quote(bk.url.url_norm(url)), nurl)
 
     def test_norm (self):
-        url = "http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&threadm=3845B54D.E546F9BD%40monmouth.com&rnum=2&prev=/groups%3Fq%3Dlogitech%2Bwingman%2Bextreme%2Bdigital%2B3d%26hl%3Den%26lr%3D%26ie%3DUTF-8%26selm%3D3845B54D.E546F9BD%2540monmouth.com%26rnum%3D2"
+        url = "http://groups.google.com/groups?hl=en&lr&ie=UTF-8&threadm=3845B54D.E546F9BD%40monmouth.com&rnum=2&prev=/groups%3Fq%3Dlogitech%2Bwingman%2Bextreme%2Bdigital%2B3d%26hl%3Den%26lr%3D%26ie%3DUTF-8%26selm%3D3845B54D.E546F9BD%2540monmouth.com%26rnum%3D2"
         nurl = url
         self.assertEqual(bk.url.url_norm(url), nurl)
         url = "http://redirect.alexa.com/redirect?http://www.offeroptimizer.com"
