@@ -59,7 +59,6 @@ class Connection(asyncore.dispatcher):
 
     def write(self, data):
         """write data to the internal buffer"""
-        debug(NIGHTMARE, 'sending %d bytes'% len(data))
         self.send_buffer += data
 
 

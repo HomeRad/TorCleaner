@@ -116,6 +116,33 @@ class HttpServer(Server):
         self.send_request()
 
 
+    def process_read(self):
+        if self.state in ('connect', 'client'):
+            assert 0, ('server should not receive data in %s state' %
+                       self.state)
+
+        while 1:
+            if not self.client:
+                # By the time this server object was ready to receive
+                # data, the client has already closed the connection!
+                # We never received the client_abort because the server
+                # didn't exist back when the client aborted.
+                self.client_abort()
+                return
+            
+            bytes_before = len(self.recv_buffer)
+            state_before = self.state
+            
+            try: handler = getattr(self, 'process_'+self.state)
+            except AttributeError: handler = lambda:None # NO-OP
+            handler()
+
+            bytes_after = len(self.recv_buffer)
+            if (self.client is None or #bytes_after==0 or
+                (bytes_before==bytes_after and state_before==self.state)):
+                break
+
+
     def process_response(self):
         i = self.recv_buffer.find('\n')
         if i < 0: return
@@ -167,7 +194,6 @@ class HttpServer(Server):
         wc.proxy.HEADERS.append((self.url, 1, self.headers.headers))
         if self.headers.get('content-type') in config['mime_no_length']:
             # remove content length
-            debug(HURT_ME_PLENTY, "remove content length")
             for h in self.headers.headers[:]:
                 if re.match('(?i)content-length:', h):
                     self.headers.headers.remove(h)
@@ -175,7 +201,7 @@ class HttpServer(Server):
 
         self.decoders = []
         if self.headers.has_key('transfer-encoding'):
-            debug(BRING_IT_ON, 'Transfer-encoding:', self.headers['transfer-encoding'])
+            debug(BRING_IT_ON, 'S/Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
             # remove encoding header
             for h in self.headers.headers[:]:
@@ -194,7 +220,7 @@ class HttpServer(Server):
 
         if self.headers.get('content-encoding')=='gzip' and \
              self.headers.get('content-type') in config['mime_gunzip_ok']:
-            debug(BRING_IT_ON, 'Content-encoding: gzip')
+            debug(BRING_IT_ON, 'S/Content-encoding: gzip')
             self.decoders.append(GunzipStream())
             # remove content length and encoding
             # because we unzip the stream
@@ -218,7 +244,7 @@ class HttpServer(Server):
 
     def process_content(self):
         data = self.read(self.bytes_remaining)
-        debug(NIGHTMARE, "data", `"..."+data[-30:]`)
+        debug(NIGHTMARE, "S/content", `".."+data[-30:]`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
@@ -238,19 +264,19 @@ class HttpServer(Server):
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
             # Either we ran out of bytes, or the decoder says we're done
+            debug(HURT_ME_PLENTY, "S/contentfinished")
             self.state = 'recycle'
 
 
     def process_recycle(self):
         # We're done sending things to the client, and we can reuse
         # this connection
+        client = self.client
         self.reuse()
-        self.flush()
-        if self.client:
-            self.client.server_close()
+        self.flush(client)
 
 
-    def flush(self):
+    def flush(self, client):
         """flush data of decoders (if any) and filters"""
         data = ""
         while self.decoders:
@@ -261,34 +287,8 @@ class HttpServer(Server):
         for i in _RESPONSE_FILTERS:
             data = applyfilter(i, data, fun="finish", attrs=self.attrs)
         if data:
-	    self.client.server_content(data)
-
-
-    def process_read(self):
-        if self.state in ('connect', 'client'):
-            assert 0, ('server should not receive data in %s state' %
-                       self.state)
-
-        while 1:
-            if not self.client:
-                # By the time this server object was ready to receive
-                # data, the client has already closed the connection!
-                # We never received the client_abort because the server
-                # didn't exist back when the client aborted.
-                self.client_abort()
-                return
-            
-            bytes_before = len(self.recv_buffer)
-            state_before = self.state
-            
-            try: handler = getattr(self, 'process_'+self.state)
-            except AttributeError: handler = lambda:None # NO-OP
-            handler()
-
-            bytes_after = len(self.recv_buffer)
-            if (self.client is None or
-                (bytes_before==bytes_after and state_before==self.state)):
-                break
+	    client.server_content(data)
+        client.server_close()
 
 
     def http_version(self):
@@ -314,17 +314,17 @@ class HttpServer(Server):
             # We can't reuse this connection
             self.close()
         else:
-            debug(HURT_ME_PLENTY, 'recycling', self.sequence_number, self)
+            debug(HURT_ME_PLENTY, 'S/recycling', self.sequence_number, self)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
             self.client = None
-
             # Put this server back into the list of available servers
             serverpool.unreserve_server(self.addr, self)
 
 
     def close(self):
+        debug(HURT_ME_PLENTY, "S/close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -339,11 +339,11 @@ class HttpServer(Server):
 
 
     def handle_close(self):
+        debug(HURT_ME_PLENTY, "S/handle_close", self)
         Server.handle_close(self)
         if self.client:
-            self.flush()
             client, self.client = self.client, None
-            client.server_close()
+            self.flush(client)
 
 
 def speedcheck_print_status():

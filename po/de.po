@@ -1,15 +1,15 @@
 # German translation for WebCleaner
-# Bastian Kleineidam <calvin@usrs.sourceforge.net>, 2000.
+# Bastian Kleineidam <calvin@users.sourceforge.net>, 2000.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=iso8859-1\n"
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.1\n"
 
@@ -20,17 +20,17 @@ msgid "Parent Proxy"
 msgstr "Übergeordneter Proxy"
 
 msgid "Suppress headers"
-msgstr ""
+msgstr "Unterdrücke Header"
 
 msgid "Hostname:"
-msgstr ""
+msgstr "Rechnername:"
 
 msgid "No debugging"
-msgstr ""
+msgstr "Kein debugging"
 
 #, fuzzy
 msgid "warning: only first command is valid"
-msgstr "WebCleaner: Warnung, nur der erste Befehl ist gültig"
+msgstr "Warnung: nur der erste Befehl ist gültig"
 
 msgid ""
 "You cannot remove folders. If you really want to get rid\n"
@@ -78,6 +78,20 @@ msgid ""
 "Headers saved: %(headersave)d\n"
 "\n"
 msgstr ""
+"\n"
+"WebCleaner Konfiguration\n"
+"========================\n"
+"\n"
+"Portnummer:        %(port)d\n"
+"Vaterproxy:        %(parentproxy)s\n"
+"Puffergröße:       %(buffersize)d\n"
+"Logdatei:          %(logfile)s\n"
+"TCP Timeout:       %(timeout)d\n"
+"Verschleiere IP:   %(obfuscateip)d\n"
+"Debuglevel:        %(debuglevel)d\n"
+"Fehler anzeigen:   %(showerrors)d\n"
+"Gespeicherte Header: %(headersave)d\n"
+"\n"
 
 msgid "P&roxy Settings"
 msgstr "P&roxy Einstellungen"
@@ -98,32 +112,40 @@ msgid ""
 "\n"
 "If something has changed, we restart the proxy."
 msgstr ""
+"Update Prozedere:\n"
+"\n"
+"Die neuen Konfigurationsdateien werden von.\n"
+"'%s' heruntergeladen.\n"
+"Geänderte Konfigurationsdateien werden nach .old umbenannt,\n"
+"neue Dateien werden in das Konfigurationsverzeichnis kopiert.\n"
+"\n"
+"Falls sich Dateien geändert haben, wird der Proxy neu gestartet."
 
 #, fuzzy
 msgid "cannot write to file %s"
-msgstr "kann nicht in Datei %s schreiben"
+msgstr "kann Datei %s nicht schreiben"
 
 #, fuzzy
 msgid "Empty hostname"
 msgstr "Leerer Attributname"
 
 msgid "URL Query:\tRegular expression to match the query"
-msgstr "URL Query:\tRegulärer Ausdruck welcher den Query matcht"
+msgstr "URL Query:\tRegulärer Ausdruck, welcher den Query matcht"
 
 msgid " &Ok "
 msgstr " &Ok "
 
 msgid "Hurt me plenty"
-msgstr ""
+msgstr "Gibs mir"
 
 msgid "Remove"
 msgstr "Löschen"
 
 msgid "No proxy for"
-msgstr ""
+msgstr "Kein Proxy für"
 
 msgid "Can't parse request"
-msgstr ""
+msgstr "Kann Anfrage nicht parsen"
 
 #, fuzzy
 msgid "Name"
@@ -137,10 +159,10 @@ msgid "New Folder"
 msgstr "Neuer Filter"
 
 msgid "Port"
-msgstr ""
+msgstr "Portnummer"
 
 msgid "Bring it on"
-msgstr ""
+msgstr "Los gehts"
 
 msgid "Duplicate attribute name"
 msgstr "Doppelter Attributname"
@@ -210,20 +232,19 @@ msgid "Version"
 msgstr ""
 
 msgid "Nightmare"
-msgstr ""
+msgstr "Alptraum"
 
 msgid "Attributes:"
 msgstr "Attribute:"
 
 msgid "Empty URL"
-msgstr ""
+msgstr "Leere URL"
 
 msgid "Edit Hostname"
-msgstr ""
+msgstr "Editiere Rechnername"
 
 msgid "Blocked URL\tThe URL we want to show instead"
-msgstr ""
-"Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
+msgstr "Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
 
 msgid ""
 "\n"
@@ -365,18 +386,19 @@ msgid "Update Help"
 msgstr "Update Fehler"
 
 msgid "Timeout (sec.)"
-msgstr ""
+msgstr "Timeout (Sek.)"
 
 msgid ""
 "Only first\tDisplay only the first hit in a series of headers for the same "
 "host"
 msgstr ""
+"Nur erster\tZeige nur den ersten Treffer einer Reihe von Headern für denselben Host an"
 
 msgid "URL Host:\tRegular expression to match the host"
 msgstr "URL Host:\tRegulärer Ausdruck welcher den Host matcht"
 
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #, fuzzy
 msgid "Replacement:\tReplacement value (empty means delete)"
@@ -401,7 +423,7 @@ msgid "Attribute value"
 msgstr "Attributwert"
 
 msgid "none"
-msgstr ""
+msgstr "kein"
 
 msgid "URL Port:\tRegular expression to match the port"
 msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
@@ -417,13 +439,13 @@ msgid "New value:"
 msgstr "Neuer Wert:"
 
 msgid "Obfuscate IP"
-msgstr ""
+msgstr "Verschleiere IP"
 
 msgid "&Help"
 msgstr "&Hilfe"
 
 msgid "Headers"
-msgstr ""
+msgstr "Header"
 
 #, fuzzy
 msgid "Filter"
@@ -466,7 +488,7 @@ msgstr ""
 "restart\n"
 "        Versuche, den Proxy zu stoppen. Dann starte ihn.\n"
 "reload\n"
-"        Falls der Proxy läuft lese die Konfigurationsdateien neu ein.\n"
+"        Falls der Proxy läuft, lese die Konfigurationsdateien neu ein.\n"
 "        Falls er nicht läuft, tue nichts.\n"
 "status\n"
 "        Drucke Info, ob der Proxy läuft oder nicht.\n"
@@ -483,10 +505,10 @@ msgid "Language"
 msgstr "Sprache:\t"
 
 msgid "always"
-msgstr ""
+msgstr "immer"
 
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 msgid "Filter Modules"
 msgstr "Filter Module"
@@ -495,13 +517,13 @@ msgid "A&pply"
 msgstr "Ü&bernehmen"
 
 msgid "Scrolling"
-msgstr ""
+msgstr "Scrollen"
 
 msgid "Logfile"
 msgstr "Logdatei"
 
 msgid "Log HTML errors"
-msgstr ""
+msgstr "Zeige HTML Fehler an"
 
 msgid "A&bout"
 msgstr "Ü&ber"
@@ -510,17 +532,17 @@ msgid "empty filename"
 msgstr "leerer Dateiname"
 
 msgid "Host"
-msgstr ""
+msgstr "Rechner"
 
 #, fuzzy
 msgid "About webcleaner"
 msgstr "Über WebCleaner"
 
 msgid "%d days, %02d:%02d:%02d"
-msgstr ""
+msgstr "%d Tage, %02d:%02d:%02d"
 
 msgid "No. of saved Headers"
-msgstr ""
+msgstr "Nr. des gesp. Headers"
 
 #, fuzzy
 msgid "unknown tag name %s"
@@ -531,7 +553,7 @@ msgstr " Regel"
 
 #, fuzzy
 msgid "&Ok"
-msgstr " &Ok "
+msgstr "&Ok"
 
 #, fuzzy
 msgid "webcleanerconf Help"
@@ -545,7 +567,7 @@ msgid "Enclosed block"
 msgstr "Enthaltener Text"
 
 msgid "Add Hostname"
-msgstr ""
+msgstr "Rechner hinzufügen"
 
 msgid "Add"
 msgstr "Hinzufügen"
@@ -558,7 +580,7 @@ msgid "Filename"
 msgstr "Dateiname:"
 
 msgid " &Quit "
-msgstr ""
+msgstr " &Beenden "
 
 msgid "Complete tag"
 msgstr "Ganzes Tag"
@@ -583,7 +605,7 @@ msgid "Title"
 msgstr "Titel:"
 
 msgid " &Options "
-msgstr ""
+msgstr " &Optionen "
 
 msgid "Basic Values"
 msgstr "Basiswerte"
@@ -593,49 +615,3 @@ msgstr "Neuer Name:"
 
 msgid "Tag name:"
 msgstr "Tag Name:"
-
-#~ msgid "Error: %s\n"
-#~ msgstr "Fehler: %s\n"
-
-#~ msgid "The parent proxy port WebCleaner should use."
-#~ msgstr "Der übergeordnete Proxy den WebCleaner benutzen soll."
-
-#~ msgid ""
-#~ "Deanimates GIFs and removes all unwanted GIF image\n"
-#~ "extensions (for example GIF comments)."
-#~ msgstr ""
-#~ "Deanimiert GIF Bilder und löscht alle ungewollten GIF\n"
-#~ "Erweiterungen (zum Beispiel Kommentare)."
-
-#~ msgid ""
-#~ "If you specify incompatible regular expressions\n"
-#~ "choose the appropriate language here."
-#~ msgstr ""
-#~ "Wenn sie inkompatible reguläre Ausdrücke spezifiziern\n"
-#~ "dann wählen sie die entsprechende Sprache hier."
-
-#~ msgid "Block specific sites by URL name."
-#~ msgstr "Blockiere bestimmte Seiten nach dem URL Namen."
-
-#~ msgid "Some good description what this filter does."
-#~ msgstr "Eine gute Beschreibung was dieser Filter macht."
-
-#~ msgid "Buffer size"
-#~ msgstr "Puffer Größe"
-
-#~ msgid "You can disable a whole folder or single filter rules"
-#~ msgstr ""
-#~ "Sie können einen ganzen Ordner oder eine einzelne Filter Regel\n"
-#~ "deaktivieren"
-
-#~ msgid "New Folder\t\tCreate a new folder."
-#~ msgstr "Neuer Ordner\t\tErstelle einen neuen Ordner."
-
-#~ msgid "can not read file %s"
-#~ msgstr "kann Datei %s nicht lesen"
-
-#~ msgid "Wrong config file version %s, I only understand <= %s"
-#~ msgstr "Falsche Version %s der Konfigurationsdatei, ich verstehe nur <= %s"
-
-#~ msgid "Sorry, unimplemented"
-#~ msgstr "Tschuldigung, das fehlt noch"
