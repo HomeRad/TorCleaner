@@ -1,12 +1,13 @@
 """ test script to test filtering"""
 
-htmldata = """GET http://ads.realmedia.com/ HTTP/1.0"""
 import wc, time
+from test_support import TestFailed
 reload(wc)
+htmldata = """GET http://ads.realmedia.com/ HTTP/1.0"""
 wc.config.init_filter_modules()
 wc.DebugLevel = 0
 start = time.clock()
-attrs = wc.filter.initStateObjects()
+attrs = wc.filter.initStateObjects(url="http://ads.realmedia.com/")
 filtered = wc.filter.applyfilter(wc.filter.FILTER_REQUEST, htmldata,
            'finish', attrs)
 stop = time.clock()

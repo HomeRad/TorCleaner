@@ -1,4 +1,5 @@
 test_rewriter
+
 <html><head>
 <!-- closing > before end of tag -->
 <!-- <META NAME="Author" CONTENT="Andrew McDonald <andrew@mcdonald.org.uk>"> -->
@@ -20,12 +21,12 @@ test_rewriter
 <!-- <link rel="shortcut icon"></link> -->
      
 <!-- missing start tag -->
-
+</title>
 </head>
 
 <!-- javascript in body tag -->
 <!-- <body onload="hulla();" onunload="holla();"> -->
-     <body onload="hulla();">
+     <body onload=hulla();>
 
 <!-- advert links -->
 <!-- <a href="http://www.doubleclick.net/">image data and such...</a> -->
@@ -47,15 +48,15 @@ test_rewriter
 
 <!-- redirect -->
 <!-- <a href="http://www.fileleech.com/dl/?filepath=http://www.counter-strike.de/downloads/ghl10full.exe&download=1">CS 1.0</a> -->
-     <a href=http://www.counter-strike.de/downloads/ghl10full.exe>CS 1.0</a>
+     <a href=h>CS 1.0</a>
 
 <!-- unquoted ampersand -->
-<!-- Hallo Ernie & Bert, was geht? --><p>
-     Hallo Ernie &amp; Bert, was geht?
+<!-- Hallo Ernie & Bert, was geht? -->
+     Hallo Ernie & Bert, was geht?
 
 <!-- entityrefs, should be left as is -->
-<!-- Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;&auml;&ouml;&uuml;? -->
-     Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&middot;&auml;&ouml;&uuml;?
+<!-- Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü? -->
+     Hallo Ernie &amp; Bert, was geht &lt;ab&gt;&#183;äöü?
 
 <!-- 1x1 image -->
 <!-- <img src="blubb" width="1" height="1"> -->
@@ -70,19 +71,19 @@ test_rewriter
 <a href=http://www/>link</a>
 
 <!-- illegal binary chars (see source) -->
-These &#145;Microsoft chars&#145; are history.
-&#132;Retter&#132; Majak trifft in der Schlussminute.
+These ‘Microsoft chars‘ are history.
+„Retter„ Majak trifft in der Schlussminute.
 <!-- bad quote in tag attributes -->
 <!-- <a href="bla" %]">seen at slashdot</a> -->
 <a href=bla>seen at slashdot</a>
 
 <!-- no beginning quote -->
 <!-- <a href=bla">link</a> -->
-<a href=bla>link</a>
+<a href=bla">link</a>
 
 <!-- no ending quote -->
 <!-- <a href="bla>link</a> -->
-<a href=bla>link</a>
+<a href=bla">link</a>
 
 <script defer type=text/javascript>
 <!-- Hide code for older browsers...
@@ -111,11 +112,11 @@ function get_time() {
 }
 
 function display() {
-    message = "Calvin w&uuml;nscht angenehmes Surfen am " + get_date() + " um " + get_time () + ".";
+    message = "Calvin wünscht angenehmes Surfen am " + get_date() + " um " + get_time () + ".";
     w.defaultStatus = message;
 }
 // end of script. -->
 </script>
 
-</p></body></html>
+</body></html>
 
