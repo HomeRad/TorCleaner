@@ -110,7 +110,7 @@ def rawrequest3 (url, port):
 
 
 def _main ():
-    """USAGE: test/getssl.py <https url>"""
+    """USAGE: test/run.sh test/getssl.py <https url>"""
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)

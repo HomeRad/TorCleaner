@@ -1,5 +1,7 @@
 #!/usr/bin/python2.3
 # -*- coding: iso-8859-1 -*-
+"""filter given .html file with Replacer, Rewriter and BinaryCharFilter
+module"""
 
 def _main ():
     """USAGE: test/run.sh test/filterfile.py <.html file>"""

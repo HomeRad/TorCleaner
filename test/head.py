@@ -4,7 +4,7 @@
 
 
 def _main ():
-    """USAGE: test/head.py <url>"""
+    """USAGE: test/run.sh test/head.py <url>"""
     import httplib, urlparse, sys
     if len(sys.argv)!=2:
         print _main.__doc__

@@ -6,7 +6,7 @@ from StringIO import StringIO
 from wc.update import open_url
 
 def _main ():
-    "USAGE: imagesize.py <url> [bufsize]"
+    "USAGE: test/run.sh test/imagesize.py <url> [bufsize]"
     if len(sys.argv)!=2:
         print _main.__doc__
         sys.exit(1)
