@@ -32,14 +32,14 @@ orders = [FILTER_RESPONSE_MODIFY]
 # all rules of these types get added with Filter.addrule()
 rulenames = []
 # which mime types this filter applies to
-mimelist = map(compileMime, ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)'])
+mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
 
 class ImageReducer (Filter):
     """Reduce the image size by making low quality JPEGs"""
 
-    def __init__ (self, mimelist):
-        super(ImageReducer, self).__init__(mimelist)
+    def __init__ (self, apply_to_mimelist):
+        super(ImageReducer, self).__init__(apply_to_mimelist)
         # minimal number of bytes before we start reducing
         self.minimal_size_bytes = 5120
 

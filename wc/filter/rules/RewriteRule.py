@@ -92,7 +92,7 @@ class RewriteRule (UrlRule):
         self.replacement = replacement
         self.enclosed = enclosed
         if self.enclosed and self.tag in NO_CLOSE_TAGS:
-            raise ValueError("reading rule %s: tag %s has no end tag, so specifying an enclose value is invalid." % (`rule.title`, `tag`))
+            raise ValueError("reading rule %s: tag %s has no end tag, so specifying an enclose value is invalid." % (`self.title`, `tag`))
         self.attrnames.append('tag')
 
 
@@ -214,7 +214,7 @@ class RewriteRule (UrlRule):
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
         #debug(FILTER, "filtered tag %s attrs %s", tag, newattrs)
-        return (STARTTAG, tag, newattrs)
+        return [STARTTAG, tag, newattrs]
 
 
     def filter_complete (self, i, buf):

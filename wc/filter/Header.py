@@ -33,8 +33,8 @@ mimelist = []
 
 
 class Header (Filter):
-    def __init__ (self, mimelist):
-        super(Header, self).__init__(mimelist)
+    def __init__ (self, apply_to_mimelist):
+        super(Header, self).__init__(apply_to_mimelist)
         self.delete = []
         self.add = {}
 

@@ -49,9 +49,9 @@ def strblock (block):
 
 class Blocker (Filter):
 
-    def __init__ (self, mimelist):
+    def __init__ (self, apply_to_mimelist):
         """load blocked/allowed urls/regex."""
-        super(Blocker, self).__init__(mimelist)
+        super(Blocker, self).__init__(apply_to_mimelist)
         # block and allow regular expressions
         self.block = []
         self.allow = []

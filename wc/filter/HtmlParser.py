@@ -131,7 +131,7 @@ class BufferHtmlParser (HtmlParser):
             elif item[0]==COMMENT:
                 self.outbuf.write("<!--%s-->"%item[1])
             else:
-                error("unknown buffer element %s" % item[0])
+                error(FILTER, "unknown buffer element %s", item[0])
         self.buf = []
 
 
@@ -268,7 +268,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         """general handler for data"""
         item = [DATA, d]
         if self.state[0]=='wait':
-            return self.waitbuf.append(item)
+            self.waitbuf.append(item)
+            return
         self.buf_append_data(item)
 
 
@@ -296,7 +297,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self._debug("comment %s", `data`)
         item = [COMMENT, data]
         if self.state[0]=='wait':
-            return self.waitbuf.append(item)
+            self.waitbuf.append(item)
+            return
         if self.comments and data:
             self.buf.append(item)
 
@@ -319,7 +321,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         tag = check_spelling(tag, self.url)
         item = [STARTTAG, tag, attrs]
         if self.state[0]=='wait':
-            return self.waitbuf.append(item)
+            self.waitbuf.append(item)
+            return
         rulelist = []
         filtered = False
         if tag=="meta" and \
@@ -406,7 +409,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         tag = check_spelling(tag, self.url)
         item = [ENDTAG, tag]
         if self.state[0]=='wait':
-            return self.waitbuf.append(item)
+            self.waitbuf.append(item)
+            return
         if not self.filterEndElement(tag):
             if self.js_filter and tag=='script':
                 self.jsEndElement(item)
@@ -433,7 +437,6 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
     def jsStartElement (self, tag, attrs):
         """Check popups for onmouseout and onmouseover.
            Inline extern javascript sources"""
-        changed = 0
         self.js_src = False
         self.js_output = 0
         self.js_popup = 0
@@ -441,7 +444,6 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
             if attrs.has_key(name) and self.jsPopup(attrs, name):
                 self._debug("JS: del %s from %s", `name`, `tag`)
                 del attrs[name]
-                changed = 1
         if tag=='form':
             name = attrs.get('name', attrs.get('id'))
             self.jsForm(name, attrs.get('action', ''), attrs.get('target', ''))
@@ -453,7 +455,8 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
                     lang.startswith('javascript') or \
                     not (lang or scrtype)
             if is_js and url:
-                return self.jsScriptSrc(url, lang)
+                self.jsScriptSrc(url, lang)
+                return
         self.buf.append([STARTTAG, tag, attrs])
 
 
@@ -465,7 +468,7 @@ class FilterHtmlParser (BufferHtmlParser, JSHtmlListener):
         self.js_env.attachListener(self)
         try:
             self.js_env.executeScriptAsFunction(val, 0.0)
-        except jslib.error, msg:
+        except jslib.error:
             pass
         self.js_env.detachListener(self)
         res = self.js_popup

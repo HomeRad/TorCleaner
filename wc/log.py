@@ -19,7 +19,7 @@ logging. Look in logging.conf if you want to customize their behaviour
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 # public api
-__all__ = ["WC", "FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS",
+__all__ = ["WC", "FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS", "PICS",
            "debug", "info", "warn", "error", "critical", "exception",
            "initlog", "blocktext"]
 __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
@@ -112,6 +112,7 @@ PROXY = "wc.proxy"
 GUI = "wc.gui"
 DNS = "wc.dns"
 ACCESS = "wc.access"
+PICS = "wc.pics"
 
 def debug (log, msg, *args):
     logging.getLogger(log).debug(msg, *args)

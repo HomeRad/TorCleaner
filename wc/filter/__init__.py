@@ -67,17 +67,29 @@ class FilterPics (FilterException):
 
 
 def printFilterOrder (i):
-    if   i==FILTER_REQUEST: return "Request"
-    elif i==FILTER_REQUEST_HEADER: return "Request Header"
-    elif i==FILTER_REQUEST_DECODE: return "Request Decode"
-    elif i==FILTER_REQUEST_MODIFY: return "Request Modify"
-    elif i==FILTER_REQUEST_ENCODE: return "Request Encode"
-    elif i==FILTER_RESPONSE: return "Response"
-    elif i==FILTER_RESPONSE_HEADER: return "Response Header"
-    elif i==FILTER_RESPONSE_DECODE: return "Response Decode"
-    elif i==FILTER_RESPONSE_MODIFY: return "Response Modify"
-    elif i==FILTER_RESPONSE_ENCODE: return "Response Encode"
-    return "Invalid"
+    if i==FILTER_REQUEST:
+        s = "Request"
+    elif i==FILTER_REQUEST_HEADER:
+        s = "Request Header"
+    elif i==FILTER_REQUEST_DECODE:
+        s = "Request Decode"
+    elif i==FILTER_REQUEST_MODIFY:
+        s = "Request Modify"
+    elif i==FILTER_REQUEST_ENCODE:
+        s = "Request Encode"
+    elif i==FILTER_RESPONSE:
+        s = "Response"
+    elif i==FILTER_RESPONSE_HEADER:
+        s = "Response Header"
+    elif i==FILTER_RESPONSE_DECODE:
+        s = "Response Decode"
+    elif i==FILTER_RESPONSE_MODIFY:
+        s = "Response Modify"
+    elif i==FILTER_RESPONSE_ENCODE:
+        s = "Response Encode"
+    else:
+        s = "Invalid"
+    return s
 
 
 # compile object attribute

@@ -50,6 +50,7 @@ class HtmlParser (object):
     def __init__ (self, debug=0):
         """initialize the internal parser"""
         self.parser = htmlsax.new_parser(self)
+        self.parser.debug(debug)
 
     def __getattr__ (self, name):
         """delegate attrs to self.parser"""

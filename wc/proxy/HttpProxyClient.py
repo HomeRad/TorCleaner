@@ -3,7 +3,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 from wc.log import *
-import urlparse
+import urlparse, urllib
 
 class HttpProxyClient (object):
     """A class buffering all incoming data from a server for later use.
@@ -58,20 +58,22 @@ class HttpProxyClient (object):
                 url = self.server.headers.getheader("Location",
                              self.server.headers.getheader("Uri", ""))
                 url = urlparse.urljoin(self.server.url, url)
-                url = unquote(url)
-                self.args = (url, args[1])
+                url = urllib.unquote(url)
+                self.args = (url, self.args[1])
                 # try again
-                return ClientServerMatchmaker(self,
+                ClientServerMatchmaker(self,
                                "GET %s HTTP/1.1" % url, #request
                                {}, #headers
                                '', #content
                                {'nofilter': None}, # nofilter
                                'identity', # compress
                                )
+                return
             elif status!="200":
                 error(PROXY, "fetching data status: %s %s", status, msg)
                 self.finish()
         except:
+            # XXX really catch all exceptions?
             self.finish()
 
 

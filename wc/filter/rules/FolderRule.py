@@ -64,7 +64,6 @@ class FolderRule (Rule):
 
 
     def delete_rule (self, i):
-        r = self.rules[i]
         del self.rules[i]
 
 

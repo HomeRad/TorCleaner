@@ -30,13 +30,13 @@ orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = ['rewrite', 'nocomments', 'javascript', 'pics']
-mimelist = map(compileMime, ['text/html'])
+mimelist = [compileMime(x) for x in ['text/html']]
 
 class Rewriter (Filter):
     """This filter can rewrite HTML tags. It uses a parser class."""
 
-    def __init__ (self, mimelist):
-        super(Rewriter, self).__init__(mimelist)
+    def __init__ (self, apply_to_mimelist):
+        super(Rewriter, self).__init__(apply_to_mimelist)
         self.comments = 1
 
 

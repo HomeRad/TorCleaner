@@ -29,7 +29,7 @@ orders = [FILTER_RESPONSE_MODIFY]
 # all rules of these types get added with Filter.addrule()
 rulenames = []
 # which mime types this filter applies to
-mimelist = map(compileMime, ['text/html'])
+mimelist = [compileMime(x) for x in ['text/html']]
 
 
 class BinaryCharFilter (Filter):

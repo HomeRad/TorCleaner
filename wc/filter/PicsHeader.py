@@ -21,6 +21,10 @@ See http://www.w3.org/PICS/labels.html for more info.
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
+from wc.filter.Filter import Filter
+from wc.filter.PICS import check_pics
+from wc.filter import FilterPics, FILTER_RESPONSE_HEADER
+
 # which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_HEADER,]
 
@@ -30,17 +34,12 @@ rulenames = ['pics']
 
 mimelist = []
 
-from wc.filter.Filter import Filter
-from wc.filter.PICS import check_pics
-from wc.filter import FilterPics
-
-
 class PicsHeader (Filter):
     def doit (self, data, **attrs):
         rules = attrs['rules']
         headers = attrs['headers']
         if headers.has_key('PICS-Label'):
-            for rule in self.rules:
+            for rule in rules:
                 msg = check_pics(rule, headers['PICS-Label'])
                 if msg:
                     raise FilterPics(msg)

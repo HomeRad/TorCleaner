@@ -31,7 +31,7 @@ orders = [FILTER_RESPONSE_MODIFY]
 # which rule types this filter applies to (see Rules.py)
 # all rules of these types get added with Filter.addrule()
 rulenames = ['replacer']
-mimelist = map(compileMime, ['text/html', 'text/javascript'])
+mimelist = [compileMime(x) for x in ['text/html', 'text/javascript']]
 
 
 # XXX group matches?

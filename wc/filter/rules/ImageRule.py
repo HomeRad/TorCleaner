@@ -46,7 +46,7 @@ class ImageRule (UrlRule):
         if self.height:
             s += '\n height="%d"' % self.height
         if self.formats:
-            s += '\n formats="%s"\n' % ",".join(formats)
+            s += '\n formats="%s"\n' % ",".join(self.formats)
         if self.url:
             return s+">"+xmlify(self.url)+"</image>\n"
         return s+"/>"

@@ -30,7 +30,7 @@ orders = [FILTER_RESPONSE_MODIFY]
 # all rules of these types get added with Filter.addrule()
 rulenames = []
 # which mime types this filter applies to
-mimelist = map(compileMime, ['image/gif'])
+mimelist = [compileMime(x) for x in ['image/gif']]
 # XXX also filter other image types than gif: at least jpg and png
 # should work with PIL
 
@@ -45,8 +45,8 @@ class RewindException (Exception): pass
 class GifImage (Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
-    def __init__ (self, mimelist):
-        super(GifImage, self).__init__(mimelist)
+    def __init__ (self, apply_to_mimelist):
+        super(GifImage, self).__init__(apply_to_mimelist)
         self.tiny_gif = None
 
 
@@ -72,6 +72,7 @@ class GifImage (Filter):
         return {'gifparser': GifParser()}
 
 
+_TINY_GIF = """R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="""
 
 class GifParser (object):
     """Here we have a parser (and filter) for GIF images.

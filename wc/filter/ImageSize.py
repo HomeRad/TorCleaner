@@ -32,15 +32,15 @@ orders = [FILTER_RESPONSE_MODIFY]
 # all rules of these types get added with Filter.addrule()
 rulenames = ['image']
 # which mime types this filter applies to
-mimelist = map(compileMime, ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)'])
+mimelist = [compileMime(x) for x in ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|x-xbitmap|x-xpixmap)']]
 
 class ImageSize (Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
 
 
-    def __init__ (self, mimelist):
-        super(ImageSize, self).__init__(mimelist)
+    def __init__ (self, apply_to_mimelist):
+        super(ImageSize, self).__init__(apply_to_mimelist)
         # minimal amount of image data for PIL to read header info
         # 6000 bytes should be enough, even for JPEG images
         self.min_bufsize = 6000

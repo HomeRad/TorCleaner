@@ -68,7 +68,8 @@ class ClientServerMatchmaker (object):
         if not hostname or \
            (hostname in config['localhosts'] and port==config['port']):
             # this is a direct proxy call, delegate it to local handler
-            return client.handle_local()
+            client.handle_local()
+            return
         # fix missing trailing /
         if not document: document = '/'
         # add missing host headers for HTTP/1.1
@@ -129,7 +130,6 @@ class ClientServerMatchmaker (object):
             config['requests']['error'] += 1
             self.client.error(504, i18n._("Host not found"),
                 i18n._('Host %s not found .. %s')%(hostname, answer.data))
-            return
 
 
     def find_server (self):
