@@ -136,8 +136,6 @@ def wstartfunc (handle=None, abort=None, confdir=ConfigDir, filelogs=True):
     elif os.name=='posix':
         import signal
         signal.signal(signal.SIGHUP, sighup_reload_config)
-        # change dir to avoid open files on umount
-        os.chdir("/")
     config.init_filter_modules()
     wc.filter.VirusFilter.init_clamav_conf()
     # psyco library for speedup
