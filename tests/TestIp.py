@@ -4,62 +4,24 @@ from wc import ip
 
 class TestIp (unittest.TestCase):
     def testNames (self):
-        hosts, nets = ip.hosts2map(["www.kampfesser.de","q2345qwer9 u2 42ß3 i34 uq3tu ",])
-        self.assert_(ip.host_in_set("www.kampfesser.de", hosts, nets))
-        self.assert_(ip.host_in_set("q2345qwer9 u2 42ß3 i34 uq3tu ", hosts, nets))
+        hosts, nets = ip.hosts2map(["www.kampfesser.net",
+                                    "q2345qwer9 u2 42ß3 i34 uq3tu ",
+                                    "2.3.4", ".3.4", "3.4", ".4", "4", ""])
+        for host in ip.resolve_host("www.kampfesser.net"):
+            self.assert_(ip.host_in_set(host, hosts, nets))
+        self.assert_(not ip.host_in_set("q2345qwer9 u2 42ß3 i34 uq3tu ", hosts, nets))
         self.assert_(not ip.host_in_set("q2345qwer9", hosts, nets))
+        self.assert_(not ip.host_in_set("2.3.4", hosts, nets))
+        self.assert_(not ip.host_in_set(".3.4", hosts, nets))
+        self.assert_(not ip.host_in_set("3.4", hosts, nets))
+        self.assert_(not ip.host_in_set(".4", hosts, nets))
+        self.assert_(not ip.host_in_set("4", hosts, nets))
+        self.assert_(not ip.host_in_set("", hosts, nets))
 
 
     def testIPv4_1 (self):
         hosts, nets = ip.hosts2map(["1.2.3.4"])
         self.assert_(ip.host_in_set("1.2.3.4", hosts, nets))
-
-
-    def testIPv4_2 (self):
-        hosts, nets = ip.hosts2map(["2.3.4"])
-        self.assert_(not ip.host_in_set("1.2.3.4", hosts, nets))
-        self.assert_(ip.host_in_set("2.3.4", hosts, nets))
-
-
-    def testIPv4_3 (self):
-        hosts, nets = ip.hosts2map([".3.4"])
-        self.assert_(not ip.host_in_set("1.2.3.4", hosts, nets))
-        self.assert_(ip.host_in_set(".3.4", hosts, nets))
-        self.assert_(not ip.host_in_set("3.4", hosts, nets))
-
-
-    def testIPv4_4 (self):
-        hosts, nets = ip.hosts2map(["3.4"])
-        self.assert_(not ip.host_in_set("1.2.3.4", hosts, nets))
-        self.assert_(not ip.host_in_set("2.3.4", hosts, nets))
-        self.assert_(not ip.host_in_set(".3.4", hosts, nets))
-        self.assert_(ip.host_in_set("3.4", hosts, nets))
-
-
-    def testIPv4_5 (self):
-        hosts, nets = ip.hosts2map([".4"])
-        self.assert_(not ip.host_in_set("1.2.3.4", hosts, nets))
-        self.assert_(not ip.host_in_set("2.3.4", hosts, nets))
-        self.assert_(not ip.host_in_set(".3.4", hosts, nets))
-        self.assert_(not ip.host_in_set("3.4", hosts, nets))
-        self.assert_(ip.host_in_set(".4", hosts, nets))
-
-
-    def testIPv4_6 (self):
-        hosts, nets = ip.hosts2map(["4"])
-        self.assert_(not ip.host_in_set("1.2.3.4", hosts, nets))
-        self.assert_(not ip.host_in_set("2.3.4", hosts, nets))
-        self.assert_(not ip.host_in_set(".3.4", hosts, nets))
-        self.assert_(not ip.host_in_set("3.4", hosts, nets))
-        self.assert_(not ip.host_in_set(".4", hosts, nets))
-        self.assert_(ip.host_in_set("4", hosts, nets))
-
-
-    def testIPv4_7 (self):
-        hosts, nets = ip.hosts2map([""])
-        self.assert_(not ip.host_in_set("1.2.3.4", hosts, nets))
-        self.assert_(not ip.host_in_set("2.3.4", hosts, nets))
-        self.assert_(ip.host_in_set("", hosts, nets))
 
 
     def testNetwork1 (self):
