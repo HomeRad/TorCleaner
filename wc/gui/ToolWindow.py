@@ -3,7 +3,7 @@ import wc
 from wc.gui import loadIcon
 from wc import _
 
-class ToolWindow(FXMainWindow):
+class ToolWindow (FXMainWindow):
     """common base class for webcleaner tool windows"""
     def __init__ (self, app, name):
 	FXMainWindow.__init__(self, app, name)

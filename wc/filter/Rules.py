@@ -69,24 +69,36 @@ def num_part (s):
         return 'enclosed'
     return 'unknown'
 
+# global counter in case the .zap rules dont yet have the oid entry
+rulecounter = 1
 
 class Rule:
     """Basic rule class for filtering.
     A basic rule has:
        title - the title
+       oid - identification number, also used for sorting
        desc - the description
        disable - flag to disable this rule
        urlre - regular expression that matches urls applicable for this rule.
                leave empty to apply to all urls.
        parent - the parent folder (if any); look at FolderRule class
     """
-    def __init__ (self, title="No title", desc="", disable=0, parent=None):
+    def __init__ (self, title="No title", desc="", disable=0, parent=None, oid=0):
         self.title = title
+        if not oid:
+            global rulecounter
+            self.oid = rulecounter
+            rulecounter += 1
+        else:
+            self.oid = oid
         self.desc = desc
         self.disable = disable
         self.parent = parent
-        self.attrnames = ['title', 'desc', 'disable']
-        self.intattrs = ['disable']
+        self.attrnames = ['title', 'desc', 'disable', 'oid']
+        self.intattrs = ['disable', 'oid']
+
+    def __cmp__ (self, other):
+        return cmp(self.oid, other.oid)
 
     def fill_attrs (self, attrs, name):
         for attr in self.attrnames:
@@ -111,6 +123,7 @@ class Rule:
     def toxml (self):
         s = "<"+self.get_name()
         s += ' title="%s"' % xmlify(self.title)
+	s += ' oid="%d"' % self.oid
         if self.desc:
             s += '\n desc="%s"' % xmlify(self.desc)
         if self.disable:
@@ -120,6 +133,7 @@ class Rule:
     def __str__ (self):
         s = self.get_name()+"\n"
         s += "title   %s\n" % self.title
+	s += "oid     %d\n" % self.oid
         s += "desc    %s\n" % self.desc
         s += "disable %d\n" % self.disable
         return s
@@ -128,8 +142,8 @@ class Rule:
 class UrlRule(Rule):
     """rule which applies only to urls which match a regular expression"""
     def __init__ (self, title="No title", desc="", disable=0, matchurl="",
-                  dontmatchurl=""):
-        Rule.__init__(self, title, desc, disable)
+                  dontmatchurl="", oid=0):
+        Rule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.matchurl = matchurl
         self.dontmatchurl = dontmatchurl
         self.attrnames.extend(('matchurl', 'dontmatchurl'))
@@ -164,8 +178,8 @@ class RewriteRule (UrlRule):
        two (self.replace == [repl. part, repl. string]).
     """
     def __init__ (self, title="No title", desc="", disable=0, tag="a",
-                 attrs=None, enclosed="", replace=[COMPLETE,""]):
-        UrlRule.__init__(self, title=title, desc=desc, disable=disable)
+                  attrs=None, enclosed="", replace=[COMPLETE,""], oid=0):
+        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.tag = tag
         if attrs is None:
             self.attrs = {}
@@ -339,8 +353,8 @@ class RewriteRule (UrlRule):
 class AllowRule (Rule):
     def __init__ (self, title="No title", desc="", disable=0, scheme="",
                   host="", port="", path="", parameters="", query="",
-		  fragment=""):
-        Rule.__init__(self, title=title, desc=desc, disable=disable)
+		  fragment="", oid=0):
+        Rule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.scheme = scheme
         self.host = host
         self.port = port
@@ -369,9 +383,11 @@ class AllowRule (Rule):
 class BlockRule (AllowRule):
     def __init__ (self, title="No title", desc="", disable=0, scheme="",
                   host="", port="", path="", parameters="", query="",
-		  fragment="", url=""):
-        AllowRule.__init__(self, title, desc, disable, scheme, host, port,
-                           path, parameters, query, fragment)
+		  fragment="", url="", oid=0):
+        AllowRule.__init__(self, title=title, desc=desc, disable=disable,
+                           scheme=scheme, host=host, port=port, path=path,
+                           parameters=parameters, query=query,
+                           fragment=fragment, oid=oid)
         self.url = url
 
     def fill_data (self, data, name):
@@ -390,8 +406,8 @@ class BlockRule (AllowRule):
 
 class HeaderRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, name="",
-                  value=""):
-        UrlRule.__init__(self, title, desc, disable)
+                  value="", oid=0):
+        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.name = name
         self.value = value
         self.attrnames.append('name')
@@ -412,8 +428,8 @@ class HeaderRule (UrlRule):
 
 class ImageRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0, width=0,
-                  height=0, type="gif", url=""):
-        UrlRule.__init__(self, title, desc, disable)
+                  height=0, type="gif", url="", oid=0):
+        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.width=width
         self.height=height
         self.intattrs.extend(('width','height'))
@@ -438,8 +454,8 @@ class ImageRule (UrlRule):
 
 
 class NocommentsRule (UrlRule):
-    def __init__ (self, title="No title", desc="", disable=0):
-        UrlRule.__init__(self, title, desc, disable)
+    def __init__ (self, title="No title", desc="", disable=0, oid=0):
+        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
 
     def fromFactory (self, factory):
         return factory.fromNocommentsRule(self)
@@ -450,8 +466,8 @@ class NocommentsRule (UrlRule):
 
 class ReplacerRule (UrlRule):
     def __init__ (self, title="No title", desc="", disable=0,
-                  search="", replace=""):
-        UrlRule.__init__(self, title, desc, disable)
+                  search="", replace="", oid=0):
+        UrlRule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.search = search
         self.replace = replace
         self.attrnames.append('search')
@@ -472,14 +488,10 @@ class ReplacerRule (UrlRule):
         return s+"/>"
 
 
-def rule_cmp (rule1, rule2):
-    return cmp(rule1.title, rule2.title)
-
-
 class FolderRule (Rule):
     def __init__ (self, title="No title", desc="", disable=0, lang="",
-                  filename=""):
-        Rule.__init__(self, title=title, desc=desc, disable=disable)
+                  filename="", oid=0):
+        Rule.__init__(self, title=title, desc=desc, disable=disable, oid=oid)
         self.filename = filename
         self.lang = lang
         self.rules = []
@@ -499,7 +511,7 @@ class FolderRule (Rule):
         del self.rules[i]
 
     def sort (self):
-        self.rules.sort(rule_cmp)
+        self.rules.sort()
 
     def newid (self):
         i=0

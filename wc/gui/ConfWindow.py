@@ -87,7 +87,6 @@ class ConfWindow (ToolWindow):
         t.setVisRows(40)
         t.setText(HelpText)
         FXButton(w, _(" &Ok "), None, self.help, FXDialogBox.ID_ACCEPT)
-
         self.removeDialog = FXMessageBox(self, _("Remove Folder"), RemoveText, None, MBOX_OK)
         # main frame
         mainframe = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
@@ -257,7 +256,7 @@ class ConfWindow (ToolWindow):
         FXButton(f, _("Remove"), None, self, self.ID_REMOVE)
         FXButton(f, _("Up"), None, self, self.ID_UP)
         FXButton(f, _("Dwn"), None, self, self.ID_DOWN)
-
+        # filterSettings
 
     def onUpdNoProxy (self, sender, sel, ptr):
         i = self.noproxylist.getCurrentItem()
@@ -274,7 +273,6 @@ class ConfWindow (ToolWindow):
         #debug(BRING_IT_ON, "new folder")
         f = FolderRule("No title","",0,0,tempfile.mktemp()+".zap")
         self.tree.addFolder(f, create=1)
-        self.sort_rules()
         self.getApp().dirty = 1
         return 1
 
@@ -562,6 +560,10 @@ class ConfWindow (ToolWindow):
 
 
     def onCmdUp (self, sender, sel, ptr):
+        item = self.tree.getCurrentItem()
+        if self.tree.isItemSelected(item):
+            index = item.getData()
+            debug(BRING_IT_ON, "unCmdUp: tree item index %d" % index)
         # XXX todo
         return 1
 
@@ -573,7 +575,7 @@ class ConfWindow (ToolWindow):
 
     def onCmdUpUpdate (self, sender, sel, ptr):
         # XXX todo
-        sender.disable()
+        sender.enable()
         return 1
 
 
@@ -665,7 +667,6 @@ class ConfWindow (ToolWindow):
 	}
         for f in self.config['filters']:
             self.modules[f] = 1
-        # sort the filter list by title
         self.folders = self.config['rules']
 
 

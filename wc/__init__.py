@@ -91,6 +91,8 @@ def reload_config (signum, frame):
 
 
 class Configuration (UserDict.UserDict):
+    """hold all configuration data, inclusive filter rules"""
+
     def __init__ (self):
         """Initialize the options"""
         UserDict.UserDict.__init__(self)
@@ -130,16 +132,21 @@ class Configuration (UserDict.UserDict):
         self['showerrors'] = 0
 
     def read_proxyconf (self):
+        """read proxy configuration"""
         p = WConfigParser()
         p.parse(os.path.join(ConfigDir, "webcleaner.conf"), self)
         global DebugLevel
         DebugLevel = self['debuglevel']
 
     def read_filterconf (self):
+        """read filter rules"""
         from glob import glob
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
             ZapperParser().parse(f, self)
+        for f in self['rules']:
+            f.sort()
+        self['rules'].sort()
 
     def init_filter_modules (self):
         """go through list of rules and store them in the filter

@@ -8,6 +8,8 @@
  * added Replacer
  23.2.2002 Bastian Kleineidam
  * added matchurl and dontmatchurl attributes
+ 7.6.2002 Bastian Kleineidam
+ * added oid
  
  WWW filters are configuration files for blocking URLs and rewriting
  HTML and image data and HTTP headers.
@@ -43,6 +45,7 @@
 <!ELEMENT folder ((rewrite|replacer|block|allow|header|image|nocomments)*)>
 <!ATTLIST folder
  title    CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  lang     (Perl|Python) #IMPLIED
  disable  CDATA "0"
@@ -61,6 +64,7 @@
 <!ELEMENT rewrite (attr*,enclosed?,replace?)>
 <!ATTLIST rewrite
  title    CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""
@@ -127,6 +131,7 @@
 <!ELEMENT block (#PCDATA)>
 <!ATTLIST block
  title      CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc       CDATA #IMPLIED
  scheme     CDATA #IMPLIED
  host       CDATA #IMPLIED
@@ -148,6 +153,7 @@
 <!ELEMENT allow EMPTY>
 <!ATTLIST allow
  title      CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc       CDATA #IMPLIED
  scheme     CDATA #IMPLIED
  host       CDATA #IMPLIED
@@ -168,6 +174,7 @@
 <!ELEMENT header (#PCDATA)>
 <!ATTLIST header
  title   CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc    CDATA #IMPLIED
  name    CDATA #REQUIRED
  disable CDATA "0"
@@ -184,6 +191,7 @@
 <!ELEMENT image (#PCDATA)>
 <!ATTLIST image
  title   CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc    CDATA #IMPLIED
  matchurl CDATA ""
  dontmatchurl CDATA ""
@@ -200,6 +208,7 @@
 <!ELEMENT nocomments EMPTY>
 <!ATTLIST nocomments
  title    CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""
@@ -213,6 +222,7 @@
 <!ELEMENT replacer (#PCDATA)>
 <!ATTLIST replacer
  title    CDATA #REQUIRED
+ oid      CDATA #IMPLIED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
  matchurl CDATA ""
