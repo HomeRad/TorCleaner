@@ -82,9 +82,10 @@ static int dispatchOutput (JSEnvObject* env, PyObject* output) {
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
+    int i;
     if (!(keys = PyMapping_Keys(env->listeners))) return -1;
     size = PySequence_Size(keys);
-    for (int i=0; i<size; i++) {
+    for (i=0; i<size; i++) {
         if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto disp_error; }
         if (!(callback = PyObject_GetAttrString(listener, "jsProcessData"))) { error=-1; goto disp_error; }
         if (!(result = PyObject_CallFunction(callback, "O", output))) { error=-1; goto disp_error; }
@@ -105,9 +106,10 @@ static int dispatchPopupNotification (JSEnvObject* env) {
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
+    int i;
     if (!(keys = PyMapping_Keys(env->listeners))) return -1;
     size = PySequence_Size(keys);
-    for (int i=0; i<PySequence_Size(keys); i++) {
+    for (i=0; i<PySequence_Size(keys); i++) {
         if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto dispp_error; }
         if (!(callback = PyObject_GetAttrString(listener, "jsProcessPopup"))) { error=-1; goto dispp_error; }
         if (!(result = PyObject_CallFunction(callback, ""))) { error=-1; goto dispp_error; }
@@ -128,9 +130,10 @@ static int dispatchError (JSEnvObject* env, PyObject* err) {
     PyObject* callback = NULL;
     PyObject* result = NULL;
     int error = 0;
+    int i;
     if (!(keys = PyMapping_Keys(env->listeners))) return -1;
     size = PySequence_Size(keys);
-    for (int i=0; i<PySequence_Size(keys); i++) {
+    for (i=0; i<PySequence_Size(keys); i++) {
         if (!(listener = PySequence_GetItem(keys, i))) { error=-1; goto dispe_error; }
         if (!(callback = PyObject_GetAttrString(listener, "jsProcessError"))) { error=-1; goto dispe_error; }
         if (!(result = PyObject_CallFunction(callback, ""))) { error=-1; goto dispe_error; }
@@ -155,10 +158,11 @@ static void errorReporter (JSContext* cx, const char* msg,
     PyFile_WriteString(msg, io);
     PyFile_WriteString("\n", io);
     if (report->linebuf) {
+		int i;
         PyFile_WriteString(report->linebuf, io);
         PyFile_WriteString("\n", io);
         skip_chars = report->tokenptr - report->linebuf;
-        for (int i=0; i<skip_chars; i++) {
+        for (i=0; i<skip_chars; i++) {
             PyFile_WriteString(" ", io);
         }
         PyFile_WriteString("^\n", io);
@@ -231,7 +235,7 @@ static JSBool onloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp) {
 	Py_DECREF(functup);
 	return JS_FALSE;
     }
-    if (!(funcname = PyString_FromFormat("%s%s", JS_GetFunctionName(func), "()"))) { 
+    if (!(funcname = PyString_FromFormat("%s%s", JS_GetFunctionName(func), "()"))) {
 	Py_DECREF(functup);
 	return JS_FALSE;
     }
@@ -387,16 +391,16 @@ static JSBool doNothing (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
 
 
 static JSBool wcDebugLog (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
-    PyObject* sys;
-    PyObject* stderr;
+    PyObject* _sys;
+    PyObject* _stderr;
     *rval = JSVAL_VOID;
     if (argc < 1)
         return JS_TRUE;
-    if (!(sys = PyImport_ImportModule("sys"))) return JS_TRUE;
-    if (!(stderr = PyObject_GetAttrString(sys, "stderr"))) return JS_TRUE;
-    PyFile_WriteString("JS: wcDebugLog(", stderr);
-    PyFile_WriteString(JS_GetStringBytes(JS_ValueToString(cx, argv[0])), stderr);
-    PyFile_WriteString(")\n", stderr);
+    if (!(_sys = PyImport_ImportModule("sys"))) return JS_TRUE;
+    if (!(_stderr = PyObject_GetAttrString(_sys, "stderr"))) return JS_TRUE;
+    PyFile_WriteString("JS: wcDebugLog(", _stderr);
+    PyFile_WriteString(JS_GetStringBytes(JS_ValueToString(cx, argv[0])), _stderr);
+    PyFile_WriteString(")\n", _stderr);
     return JS_TRUE;
 }
 
@@ -453,7 +457,8 @@ static void executeScheduledActions (JSEnvObject* self) {
     /* XXX error checking! */
     jsval rval;
     int len = PyList_Size(self->scheduled_actions);
-    for (int i=0; i<len; i++) {
+    int i;
+    for (i=0; i<len; i++) {
         PyObject* func;
         PyObject* tup = PyList_GetItem(self->scheduled_actions, i);
         if (!tup) {
