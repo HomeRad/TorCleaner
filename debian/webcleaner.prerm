@@ -3,8 +3,6 @@
 #
 # see: dh_installdeb(1)
 
-#DEBHELPER#
-
 package=webcleaner
 service=/var/service/$package
 
@@ -18,4 +16,11 @@ if [ "$1" = "remove" ]; then
     # remove SSL certificates
     webcleaner-certificates remove
 fi
+
+dpkg -L $package |
+	awk '$0~/\.py$/ {print $0"c\n" $0"o"}' |
+	xargs rm -f >&2
+
+#DEBHELPER#
+
 exit 0

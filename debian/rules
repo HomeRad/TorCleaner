@@ -96,7 +96,6 @@ binary-arch: build install
 	dh_installman webcleaner.1 webcleaner-certificates.1 webcleaner.conf.5
 #	dh_installinfo
 	dh_installchangelogs
-	dh_python -V 2.3
 	dh_link
 	dh_strip
 	dh_compress

@@ -52,6 +52,20 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     fi
 fi
 
+PYTHON=python2.3
+if which $PYTHON >/dev/null 2>&1; then
+    DIRLIST="/usr/lib/$PYTHON/site-packages/wc"
+    for i in $DIRLIST; do
+        $PYTHON -O /usr/lib/$PYTHON/compileall.py -q $i
+        $PYTHON /usr/lib/$PYTHON/compileall.py -q $i
+    done
+    FILELIST="/usr/lib/$PYTHON/site-packages/_webcleaner2_configdata.py"
+    for i in $FILELIST; do
+        $PYTHON -O /usr/lib/$PYTHON/py_compile.py $i
+        $PYTHON /usr/lib/$PYTHON/py_compile.py $i
+    done
+fi
+
 #DEBHELPER#
 
 exit 0

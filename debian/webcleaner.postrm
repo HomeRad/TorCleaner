@@ -35,4 +35,5 @@ if [ "$1" = "purge" ]; then
     # directory should be empty now
     rmdir /etc/webcleaner || true
 fi
+
 exit 0
