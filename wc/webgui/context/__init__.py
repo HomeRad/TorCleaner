@@ -63,7 +63,7 @@ def get_prefix_vals (form, prefix):
     res = []
     for key in form:
         if key.startswith(prefix):
-            res.append(key[len(prefix):], get_item_value(form[key]))
+            res.append((key[len(prefix):], get_item_value(form[key])))
     return res
 
 
