@@ -8,6 +8,10 @@ PACKAGE=webcleaner
 #HTMLDIR=$(GROUPDIR)/w/we/$(PACKAGE)/htdocs
 HTMLDIR=/home/calvin/public_html/webcleaner.sf.net/htdocs
 MD5SUMS=$(PACKAGE)-md5sums.txt
+SPLINTOPTS := +posixlib \
+              -Iwc/parser -I/usr/include/python2.2 \
+	      -nestcomment -ifempty
+
 
 all:
 	@echo "Read the file INSTALL to see how to build and install"
@@ -139,6 +143,9 @@ ndebug:
 	  cat $$f | sed 's/self._debug(/#self._debug(/' > $$f.bak; \
 	  mv -f $$f.bak $$f; \
 	done
+
+splint:
+	rm -f splint.txt; splint $(SPLINTOPTS) wc/parser/htmllex.c > splint.txt
 
 # (re)generate webcleaner rules
 update-blacklists:
