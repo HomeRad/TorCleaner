@@ -20,7 +20,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import re, os, gzip
-from wc.filter import FILTER_REQUEST, FilterException
+from wc.filter import FILTER_REQUEST
 from wc.filter.Filter import Filter
 from wc import ConfigDir, config
 from wc.log import *
@@ -143,11 +143,9 @@ class Blocker (Filter):
                 # make HTTP HEAD request?
                 doc = self.block_url
             port = config['port']
-            newurl = 'http://localhost:%d%s' % (port, doc)
             if method=='CONNECT':
-                # XXX we cannot handle https requests locally
-                raise FilterException(newurl)
-            return 'GET %s HTTP/1.1'%newurl
+                return 'CONNECT https://localhost:%d%s HTTP/1.1'%(port, doc)
+            return 'GET http://localhost:%d%s HTTP/1.1'%(port, doc)
         return data
 
 
