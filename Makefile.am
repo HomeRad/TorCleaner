@@ -62,11 +62,11 @@ authtest: restart
 randomtest:
 	@echo "parse random data..."
 	rm -f randomparse.txt
-	head -c 20000 /dev/random | $(PYTHON) test/parsefile.py - > /dev/null 2> randomparse.txt
+	head -c 20000 /dev/urandom | $(PYTHON) test/parsefile.py - > /dev/null 2> randomparse.txt
 	@echo "done."
 	rm -f randomfilter.txt
 	@echo "filter random data..."
-	head -c 20000 /dev/random | $(PYTHON) test/filterfile.py - > /dev/null 2> randomfilter.txt
+	head -c 20000 /dev/urandom | $(PYTHON) test/filterfile.py - > /dev/null 2> randomfilter.txt
 	@echo "done."
 
 
