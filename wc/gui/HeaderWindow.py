@@ -10,6 +10,20 @@ from FXPy.fox import *
 os.environ['http_proxy'] = ""
 wc.DebugLevel = 1
 
+SCROLLING_NONE = 0
+SCROLLING_AUTO = 1
+SCROLLING_ALWAYS = 2
+
+def scrollnum(s):
+    if s=='auto':
+        return SCROLLING_AUTO
+    elif s=='none':
+        return SCROLLING_NONE
+    elif s=='always':
+        return SCROLLING_ALWAYS
+    return -1
+
+
 def parse_headers():
     headers = []
     url = "http://localhost:%d/headers/"%wc.config['port']
@@ -54,7 +68,10 @@ class HeaderWindow(FXMainWindow):
      ID_QUIT,
      ID_REFRESH,
      ID_OPTIONS,
-     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+4)
+     ID_SETREFRESH,
+     ID_SETONLYFIRST,
+     ID_SETSCROLLING,
+     ) = range(FXMainWindow.ID_LAST, FXMainWindow.ID_LAST+7)
 
 
     def __init__(self, app):
@@ -79,7 +96,8 @@ class HeaderWindow(FXMainWindow):
         FXButton(frame, _(" &Options "), None, self, self.ID_OPTIONS)
         FXButton(frame, _("A&bout"), None, self, self.ID_ABOUT, opts=FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT)
         # start refresh timer
-        self.timer = app.addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
+        if self.config['refresh']:
+            self.timer = app.addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
 
 
     def connectionFrame(self, frame):
@@ -103,6 +121,9 @@ class HeaderWindow(FXMainWindow):
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_REFRESH, HeaderWindow.onCmdRefresh)
         FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_OPTIONS, HeaderWindow.onCmdOptions)
         FXMAPFUNC(self,SEL_TIMEOUT, HeaderWindow.ID_REFRESH, HeaderWindow.onTimerRefresh)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETREFRESH, HeaderWindow.onSetRefresh)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETONLYFIRST, HeaderWindow.onSetOnlyfirst)
+        FXMAPFUNC(self,SEL_COMMAND, HeaderWindow.ID_SETSCROLLING, HeaderWindow.onSetScrolling)
 
 
     def onCmdAbout(self, sender, sel, ptr):
@@ -128,7 +149,7 @@ class HeaderWindow(FXMainWindow):
             'version': '0.1',
             'onlyfirst': 1,
             'refresh': 5,
-            'scrolling': 'auto',
+            'scrolling': SCROLLING_AUTO,
             'nodisplay': [],
         }
         p = WHeadersParser()
@@ -137,24 +158,42 @@ class HeaderWindow(FXMainWindow):
 
 
     def onCmdRefresh(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "Refresh")
         if self.timer:
             self.getApp().removeTimeout(self.timer)
-        self.refresh()
-        self.getApp().addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
+        return self.refresh()
+
+
+    def onSetRefresh(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "SetRefresh", sender.getValue())
+        self.config['refresh'] = sender.getValue()
+        return 1
+
+
+    def onSetOnlyfirst(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "SetOnlyFirst", sender.getCheck())
+        self.config['onlyfirst'] = sender.getCheck()
+        return 1
+
+
+    def onSetScrolling(self, sender, sel, ptr):
+        debug(BRING_IT_ON, "SetScrolling", sender.getCurrentItem())
+        self.config['scrolling'] = sender.getCurrentItem()
+        return 1
 
 
     def onTimerRefresh(self, sender, sel, ptr):
-        self.refresh()
-        self.timer = self.getApp().addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
-
+        debug(BRING_IT_ON, "TimerRefresh")
+        return self.refresh()
 
 
     def refresh(self):
-        debug(BRING_IT_ON, "Refresh")
         headers = parse_headers()
         connections = parse_connections()
         # XXX
         #sender->handle(this,MKUINT(ID_SETSTRINGVALUE,SEL_COMMAND),(void*)&info);
+        if self.config['refresh']:
+            self.getApp().addTimeout(self.config['refresh']*1000, self, HeaderWindow.ID_REFRESH)
         return 1
 
 
@@ -176,9 +215,11 @@ class WHeadersParser(BaseParser):
                 self.config[str(key)] = val
             for key in ('onlyfirst', 'refresh'):
                 self.config[key] = int(self.config[key])
-            for key in ('version', 'scrolling'):
+            for key in ('version',):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
+            if type(self.config['scrolling']) != type(0):
+                self.config['scrolling'] = scrollnum(self.config['scrolling'])
 
 
     def end_element(self, name):
@@ -195,7 +236,37 @@ class OptionsWindow(FXDialogBox):
 
     def __init__(self, owner):
         FXDialogBox.__init__(self, owner, "Options",DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE,0,0,0,0, 4,4,4,4, 4,4)
-        close = FXHorizontalFrame(self,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
+        frame = FXVerticalFrame(self, LAYOUT_FILL_X|LAYOUT_FILL_Y)
+        # options
+        matrix = FXMatrix(frame, 2, MATRIX_BY_COLUMNS)
+        # refresh
+        FXLabel(matrix, _("Refresh"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        widget = FXSpinner(matrix, 4, owner, HeaderWindow.ID_SETREFRESH, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
+        widget.setRange(0,65535)
+        widget.setValue(owner.config['refresh'])
+        # only first
+        FXLabel(matrix, _("Only first\tDisplay only the first hit in a series of headers for the same host"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        widget = FXCheckButton(matrix, None, owner, HeaderWindow.ID_SETONLYFIRST, opts=ICON_BEFORE_TEXT|LAYOUT_SIDE_TOP)
+        widget.setCheck(owner.config['onlyfirst'])
+        # scrolling
+        FXLabel(matrix, _("Scrolling"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
+        cols=0
+        d = FXComboBox(matrix,0,3,owner, HeaderWindow.ID_SETSCROLLING,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
+        levels = [
+            _("none"),
+            _("auto"),
+            _("always"),
+        ]
+        for text in levels:
+            cols = max(len(text), cols)
+            d.appendItem(text)
+        d.setEditable(0)
+        # subtract 3 because acolumn is wider than text character
+        d.setNumColumns(cols-3) 
+        d.setCurrentItem(owner.config['scrolling'])
+
+        # close button
+        close = FXHorizontalFrame(frame,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH)
         FXButton(close,"&Close",None,self,FXDialogBox.ID_CANCEL,LAYOUT_RIGHT|FRAME_RAISED|FRAME_THICK,0,0,0,0, 20,20,5,5);
 
 

@@ -168,8 +168,13 @@ class ConfWindow(FXMainWindow):
         FXLabel(matrix, _("Debug level"), opts=LAYOUT_CENTER_Y|LAYOUT_RIGHT)
         cols=0
         d = FXComboBox(matrix,0,4,self, self.ID_DEBUGLEVEL,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
-        for text in ("No debugging", "Bring it on", "Hurt me plenty", "Nightmare"):
-            text = _(text)
+        levels = [
+            _("No debugging"),
+            _("Bring it on"),
+            _("Hurt me plenty"),
+            _("Nightmare"),
+        ]
+        for text in levels:
             cols = max(len(text), cols)
             d.appendItem(text)
         d.setEditable(0)

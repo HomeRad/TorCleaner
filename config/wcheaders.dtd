@@ -2,7 +2,7 @@
 <!ATTLIST wcheaders
  version   CDATA #REQUIRED
  refresh   CDATA "5"
- scrolling (auto|always|never)
+ scrolling (auto|always|none)
  onlyfirst (1|0)
 >
 
