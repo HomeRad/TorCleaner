@@ -105,6 +105,8 @@ characters ('bla </a> fasel',)
 endElement ('script',)
 HTML '<img bo\\\nrder=0 >'
 startElement ('img', {'bo': None, 'rder': '0'})
+HTML '<a href="123$456">'
+startElement ('a', {'href': '123$456'})
 ======== sequential feed tests =========
 HTML '<a b="c">'
 startElement ('a', {'b': 'c'})
@@ -214,6 +216,8 @@ characters ('bla </a> fasel',)
 endElement ('script',)
 HTML '<img bo\\\nrder=0 >'
 startElement ('img', {'bo': None, 'rder': '0'})
+HTML '<a href="123$456">'
+startElement ('a', {'href': '123$456'})
 ===== subsequent interwoven parsing ====
 startElement ('html', {})
 startElement ('html', {})
