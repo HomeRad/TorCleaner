@@ -50,7 +50,7 @@ def init_dns_resolver_posix ():
         line = line.strip()
         if (not line) or line[0]==';' or line[0]=='#':
             continue
-        m = re.match(r'^search\s+\.?(.*)$', line)
+        m = re.match(r'^search\s+(\.?.+)$', line)
         if m:
             for domain in m.group(1).split():
                 DnsConfig.search_domains.append('.'+domain.lower())

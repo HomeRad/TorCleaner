@@ -18,11 +18,11 @@
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
-from Rule import Rule
+from UrlRule import UrlRule
 from wc.XmlUtils import xmlify
 
 
-class AllowRule (Rule):
+class AllowRule (UrlRule):
     def __init__ (self, sid=None, title="No title", desc="",
                   disable=0, scheme="", url=""):
         super(AllowRule, self).__init__(sid=sid, title=title,

@@ -124,17 +124,17 @@ class Blocker (Filter):
         return f.readlines()
 
 
-    def doit (self, url, **args):
-        debug(FILTER, "block filter working on url %s", `url`)
-        if self.allowed(url):
-            return url
-        blocked = self.strict_whitelist or self.blocked(url)
+    def doit (self, data, **args):
+        debug(FILTER, "block filter working on url %s", `data`)
+        if self.allowed(data):
+            return data
+        blocked = self.strict_whitelist or self.blocked(data)
         if blocked:
-            debug(FILTER, "blocked url %s", url)
+            debug(FILTER, "blocked url %s", data)
             if isinstance(blocked, basestring):
                 doc = blocked
             # index 3, not 2!
-            elif is_image(url):
+            elif is_image(data):
                 doc = self.block_image
             else:
                 # XXX hmmm, what about CGI images?
@@ -142,17 +142,19 @@ class Blocker (Filter):
                 doc = self.block_url
             port = config['port']
             return 'http://localhost:%d%s' % (port, doc)
-        return url
+        return data
 
 
     def blocked (self, url):
         # check blocked domains
         for blockdomain in self.blocked_domains:
             if blockdomain in url:
+                debug(FILTER, "blocked by blockdomain %s", blockdomain)
                 return True
         # check blocked urls
         for blockurl in self.blocked_urls:
             if blockurl in url:
+                debug(FILTER, "blocked by blockurl %s", blockurl)
                 return True
         # check block patterns
         for ro, replacement in self.block:
