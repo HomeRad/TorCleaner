@@ -79,7 +79,7 @@ class ClientServerMatchmaker (object):
         # add missing host headers for HTTP/1.1
         if protocol=='HTTP/1.1' and not self.headers.has_key('Host'):
             if port!=80:
-                self.headers['Host'] += "%s:%d\r"%(hostname, port)
+                self.headers['Host'] = "%s:%d\r"%(hostname, port)
             else:
                 self.headers['Host'] = "%s\r"%hostname
         debug(PROXY, "ClientServer: splitted url %s %s %d %s", scheme, hostname, port, document)

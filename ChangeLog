@@ -8,6 +8,8 @@
   * cope with falsely advertised GIF images, the GIF parsers ignores
     them now
     Changed: wc/filter/GifImage.py
+  * fix setting of missing host header
+    Changed: wc/proxy/ClientServerMatchmaker.py
 
 2.1
   * lots of minor bugs fixed running pychecker
