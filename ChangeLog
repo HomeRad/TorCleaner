@@ -5,7 +5,10 @@
     - prevent document.onmousedown rebinding
     - some ad filter updates
     Changed files: config/{scripting,adverts,misc}.zap
-  * also apply filter rules to document.write content
+  * - fixed nasty bug in HTML filter buffer handling which resulted in
+       lost HTML data
+    - also apply filter rules to document.write content
+    - support <base href> for JS src fetching
     Changed files: wc/filter/HtmlParser.py
   * fix return types in the daemon package
     Changed files: wc/daemon/_posix.py
@@ -16,8 +19,6 @@
     Changed files: setup.py
   * 100 continue: switch back to response state only after reading headers
     Changed files: wc/proxy/HttpServer.py
-  * use python logging framework
-    Changed files: XXX
   * remove client Connection: and Proxy-Connection: headers
     Changed files: wc/proxy/HttpClient.py
   * handle partial proxy request uris
