@@ -1,8 +1,11 @@
 webcleaner (0.41) unstable; urgency=low
 
   * wc/parser/htmllex.l: fix sequential parsing of tags with numbers
+  * wc/filter/Compress.py: set modification time on each gzip-compress
+  * wc/filter/Blocker.py: added more image extensions in regex
+  * wc/parser/htmlparse.y: fix resetting of bufpos
 
- -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Jun 2002 13:38:04 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Jun 2002 15:23:51 +0200
 
 webcleaner (0.40) unstable; urgency=low
 
