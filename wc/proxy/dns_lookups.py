@@ -36,6 +36,8 @@ def init_dns_resolver():
 
 def init_dns_resolver_posix():
     "Set up the DnsLookupConnection class with /etc/resolv.conf information"
+    if not os.path.exists('/etc/resolv.conf'):
+        return
     for line in open('/etc/resolv.conf', 'r').readlines():
         line = line.strip()
         if (not line) or line[0]==';' or line[0]=='#':

@@ -6,7 +6,7 @@ from wc import _
 class ToolWindow(FXMainWindow):
     """common base class for webcleaner tools"""
     def __init__ (self, app):
-	FXMainWindow.__init__(self, app, "wcheaders", w=640, h=500)
+	FXMainWindow.__init__(self, app, "wcheaders", w=640, h=520)
         self.setIcon(loadIcon(app, 'iconbig.png'))
         self.eventMap()
         self.about = FXMessageBox(self, _("About webcleaner"),wc.AppInfo, self.getIcon(),MBOX_OK)
@@ -16,16 +16,13 @@ class ToolWindow(FXMainWindow):
         dialog = FXMessageBox(self, title, msg, None, MBOX_OK)
         self.doShow(dialog)
 
-
     def create (self):
         """create the main window and show myself on the screen"""
 	FXMainWindow.create(self)
 	self.show()
 
-
     def doShow (self, win):
         return win.execute(PLACEMENT_OWNER)
-
 
     def eventMap (self):
         raise Exception, "subclass responsibility"

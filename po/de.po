@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Mon Dec 10 10:00:46 2001\n"
+"POT-Creation-Date: Sat Feb 23 18:58:55 2002\n"
 "PO-Revision-Date: Thu Dec  7 10:59:50 2000\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,9 @@ msgstr "Unterdrücke Header"
 
 msgid "Hostname:"
 msgstr "Rechnername:"
+
+msgid "Dont specify <enclose> with tag name %s"
+msgstr "Keine Angabe von <enclose> mit Tagname %s"
 
 msgid "No debugging"
 msgstr "Kein debugging"
@@ -47,6 +50,9 @@ msgstr "Kein Befehl angegeben."
 
 msgid "disable"
 msgstr "deaktivieren"
+
+msgid "Write config"
+msgstr "Schreibe Konfiguration"
 
 msgid "Edit Header"
 msgstr "Header editieren"
@@ -100,6 +106,9 @@ msgstr "P&roxy Einstellungen"
 msgid "Replace value:"
 msgstr "Ersetzter Text"
 
+msgid "unknown rule name %s"
+msgstr "Unbekannte Option %s"
+
 msgid "Replace part:"
 msgstr "Ersetzter Teil:"
 
@@ -134,11 +143,17 @@ msgstr "URL Query:\tRegulärer Ausdruck, welcher den Query matcht"
 msgid " &Ok "
 msgstr " &Ok "
 
+msgid "reload not supported for this platform"
+msgstr "reload wird von diesem System nicht unterstützt"
+
 msgid "Hurt me plenty"
 msgstr "Gibs mir"
 
 msgid "Remove"
 msgstr "Löschen"
+
+msgid "Save options"
+msgstr " &Optionen "
 
 msgid "No proxy for"
 msgstr "Kein Proxy für"
@@ -149,8 +164,11 @@ msgstr "Kann Anfrage nicht parsen"
 msgid "Name"
 msgstr "Neuer Name:"
 
-msgid "Refresh"
-msgstr "Aktualisierung"
+msgid "WebCleaner is running (PID %s)"
+msgstr "WebCleaner läuft (PID %s)"
+
+msgid "filter selection"
+msgstr "Kein Filter ausgewählt"
 
 msgid "New Folder"
 msgstr "Neuer Ordner"
@@ -191,6 +209,9 @@ msgstr "Attribut hinzufügen"
 msgid "empty title"
 msgstr "leerer Titel"
 
+msgid "warning: could not terminate process PID %d"
+msgstr "Warnung: konnte Prozess PID %d nicht beenden"
+
 msgid "Name:"
 msgstr "Neuer Name:"
 
@@ -206,11 +227,8 @@ msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
 msgid "Image width:"
 msgstr "Bildbreite:"
 
-msgid "Value:"
-msgstr "Text:"
-
-msgid "Update Error: %s"
-msgstr "Fehler: %s\n"
+msgid "URL Fragment:\tRegular expression to match the fragment"
+msgstr "URL Fragment:\tRegulärer Ausdruck welcher das Fragment matcht"
 
 msgid "Remove Folder"
 msgstr "Lösche Ordner"
@@ -230,6 +248,9 @@ msgstr "Neuer Header:"
 msgid "Nightmare"
 msgstr "Alptraum"
 
+msgid "WebCleaner was not running (no lock file found)"
+msgstr "WebCleaner lief nicht (keine Lockdatei gefunden)"
+
 msgid "Attributes:"
 msgstr "Attribute:"
 
@@ -242,6 +263,9 @@ msgstr "Editiere Rechnername"
 msgid "Blocked URL\tThe URL we want to show instead"
 msgstr ""
 "Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
+
+msgid "Add header"
+msgstr "Header hinzufügen"
 
 msgid ""
 "\n"
@@ -409,6 +433,12 @@ msgstr "Enthaltener Text:"
 msgid "Connections"
 msgstr "Verbindungen"
 
+msgid "Value:"
+msgstr "Text:"
+
+msgid "WebCleaner is not running. Do 'webcleaner start' first."
+msgstr "WebCleaner läuft nicht. Führen Sie zuerst 'webcleaner start' aus."
+
 msgid "URL Scheme:\tRegular expression to match the URL scheme"
 msgstr "URL Schema:\tRegulärer Ausdruck welcher das URL Schema matcht"
 
@@ -421,6 +451,9 @@ msgstr "Unbekannter Befehl %s"
 msgid "auto"
 msgstr "auto"
 
+msgid "Match url"
+msgstr "Matche url"
+
 msgid "Attribute value"
 msgstr "Attributwert"
 
@@ -430,11 +463,14 @@ msgstr "kein"
 msgid "URL Port:\tRegular expression to match the port"
 msgstr "URL Port:\tRegulärer Ausdruck welcher den Port matcht"
 
-msgid "WebCleaner is not running"
-msgstr ""
+msgid "command '%s' killed by signal %d"
+msgstr "Kommando '%s' wurde beendet durch Signal %d"
 
 msgid "Tag name"
 msgstr "Tag Name"
+
+msgid "parsing %s:%d:%d: %s"
+msgstr ""
 
 msgid "Duplicate hostname"
 msgstr "Doppelter Rechnername"
@@ -445,6 +481,9 @@ msgstr "Neuer Wert:"
 msgid "Obfuscate IP"
 msgstr "Verschleiere IP"
 
+msgid "Dont match url"
+msgstr ""
+
 msgid "&Help"
 msgstr "&Hilfe"
 
@@ -454,11 +493,11 @@ msgstr "Header"
 msgid "Filter"
 msgstr "Neuer Filter"
 
-msgid "URL Fragment:\tRegular expression to match the fragment"
-msgstr "URL Fragment:\tRegulärer Ausdruck welcher das Fragment matcht"
-
 msgid "Value"
 msgstr "Wert"
+
+msgid "Refresh"
+msgstr "Aktualisierung"
 
 msgid "Empty header"
 msgstr "Leerer Header"
@@ -510,20 +549,26 @@ msgstr "immer"
 msgid "URL"
 msgstr "URL"
 
+msgid "Scrolling"
+msgstr "Scrollen"
+
 msgid "Filter Modules"
 msgstr "Filter Module"
 
 msgid "A&pply"
 msgstr "Ü&bernehmen"
 
-msgid "Scrolling"
-msgstr "Scrollen"
+msgid "Add proxy"
+msgstr "Füge Proxy hinzu"
 
 msgid "Logfile"
 msgstr "Logdatei"
 
 msgid "Log HTML errors"
 msgstr "Zeige HTML Fehler an"
+
+msgid "unknown buffer element %s"
+msgstr "Unbekannte Option %s"
 
 msgid "A&bout"
 msgstr "Ü&ber"
@@ -542,6 +587,16 @@ msgstr "%d Tage, %02d:%02d:%02d"
 
 msgid "No. of saved Headers"
 msgstr "Nr. des gesp. Headers"
+
+msgid ""
+"WebCleaner already started (lock file found).\n"
+"Do 'webcleaner stop' first."
+msgstr ""
+"WebCleaner bereits gestartet (Lockdatei gefunden).\n"
+"Führen Sie zuerst 'webcleaner stop' aus."
+
+msgid "command '%s' failed: %s"
+msgstr "Kommando '%s' fehlgeschlagen: %s"
 
 msgid "unknown tag name %s"
 msgstr "Unbekannte Option %s"
@@ -563,6 +618,9 @@ msgstr "Enthaltener Text"
 
 msgid "Header:"
 msgstr "Header"
+
+msgid "WebCleaner is not running (no lock file found)"
+msgstr "WebCleaner läuft nicht (keine Lockdatei gefunden)"
 
 msgid "Add Hostname"
 msgstr "Rechner hinzufügen"

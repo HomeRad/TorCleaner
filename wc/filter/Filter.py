@@ -15,27 +15,37 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import re
+from wc import debug
+from wc.debug_levels import *
 
-# every filter applies to a list of filter stages which
-# are described in filter/__init__.py
+# which filter stages this filter applies to (see filter/__init__.py)
 orders = []
-# every filter specifies which rules apply to it
+# which rule types this filter applies to (see Rules.py)
+# all rules of these types get added with Filter.addrule()
 rulenames = []
 
 # The base filter class
 class Filter:
-    def addrule(self, rule):
-        pass
+    def __init__ (self):
+        self.rules = []
 
-    def filter(self, data, **args):
+    def addrule (self, rule):
+        debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
+        self.rules.append(rule)
+
+    def filter (self, data, **args):
         return apply(self.doit, (data,), args)
 
-    def finish(self, data, **args):
+    def finish (self, data, **args):
         return apply(self.doit, (data,), args)
 
-    def doit(self, data, **args):
+    def doit (self, data, **args):
         return data
 
-    def getAttrs(self, headers, url):
-        return {}
+    def getAttrs (self, headers, url):
+        return {'url': url, 'headers': headers}
 
+    # XXX class method
+    def compileRegex (self, obj, attr):
+        if hasattr(obj, attr) and getattr(obj, attr):
+            setattr(obj, attr, re.compile(getattr(obj, attr)))

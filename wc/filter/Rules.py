@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-from wc import debug, error
+from wc import _, debug, error
 from wc.debug_levels import *
 from types import StringType, IntType
 import re
@@ -48,7 +48,7 @@ EntityTable = {
 }
 
 
-def quote(s):
+def quote (s):
     """quote characters for XML"""
     res = list(s)
     for i in range(len(res)):
@@ -56,8 +56,7 @@ def quote(s):
         res[i] = EntityTable.get(c, c)
     return ''.join(res)
 
-
-def part_num(s):
+def part_num (s):
     """translation: tag name ==> tag number"""
     if s=='tag':
         return TAG
@@ -72,8 +71,7 @@ def part_num(s):
     if s=='enclosed':
         return ENCLOSED
 
-
-def num_part(s):
+def num_part (s):
     """translation: tag number ==> tag name"""
     if s==TAG:
         return 'tag'
@@ -90,25 +88,25 @@ def num_part(s):
     return 'unknown'
 
 
-
 class Rule:
     """Basic rule class for filtering.
     A basic rule has:
        title - the title
        desc - the description
        disable - flag to disable this rule
+       urlre - regular expression that matches urls applicable for this rule.
+               leave empty to apply to all urls.
        parent - the parent folder (if any); look at FolderRule class
     """
-    def __init__(self, title="No title", desc="", disable=0, parent=None):
+    def __init__ (self, title="No title", desc="", disable=0, parent=None):
         self.title = title
         self.desc = desc
         self.disable = disable
         self.parent = parent
-        self.attrnames = ['title','desc','disable']
+        self.attrnames = ['title', 'desc', 'disable']
         self.intattrs = ['disable']
 
-
-    def fill_attrs(self, attrs, name):
+    def fill_attrs (self, attrs, name):
         for attr in self.attrnames:
             if attrs.has_key(attr):
                 setattr(self, attr, attrs[attr].encode('iso8859-1'))
@@ -117,20 +115,17 @@ class Rule:
             if val and type(val) != IntType:
                 setattr(self, attr, int(getattr(self, attr)))
 
-
-    def fill_data(self, data, name):
+    def fill_data (self, data, name):
         pass
 
-
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromRule(self)
 
+    def get_name (self):
+        """class name without "Rule" suffix, in lowercase"""
+        return self.__class__.__name__[:-4].lower()
 
-    def get_name(self):
-        return "rule"
-
-
-    def toxml(self):
+    def toxml (self):
         s = "<"+self.get_name()
         s += ' title="%s"' % quote(self.title)
         if self.desc:
@@ -139,8 +134,7 @@ class Rule:
             s += '\n disable="1"'
         return s
 
-
-    def __str__(self):
+    def __str__ (self):
         s = self.get_name()+"\n"
         s += "title   %s\n" % self.title
         s += "desc    %s\n" % self.desc
@@ -148,17 +142,47 @@ class Rule:
         return s
 
 
+class UrlRule(Rule):
+    """rule which applies only to urls which match a regular expression"""
+    def __init__ (self, title="No title", desc="", disable=0, matchurl="",
+                  dontmatchurl=""):
+        Rule.__init__(self, title, desc, disable)
+        self.matchurl = matchurl
+        self.dontmatchurl = dontmatchurl
+        self.attrnames.extend(('matchurl', 'dontmatchurl'))
 
-class RewriteRule(Rule):
+    def appliesTo (self, url):
+        if self.matchurl:
+            return self.matchurl.match(url)
+        if self.dontmatchurl:
+            return not self.dontmatchurl.match(url)
+        return 1
+
+    def toxml (self):
+        s = Rule.toxml(self)
+        if self.matchurl:
+            s += '\n matchurl="%s"' % quote(self.matchurl)
+        if self.dontmatchurl:
+            s += '\n dontmatchurl="%s"' % quote(self.dontmatchurl)
+        return s
+
+    def __str__ (self):
+        s = Rule.__str__(self)
+        s += "matchurl %s\n" % `self.matchurl`
+        s += "dontmatchurl %s\n" % `self.dontmatchurl`
+        return s
+
+
+class RewriteRule (UrlRule):
     """A rewrite rule applies to a specific tag, optional with attribute
        constraints (stored in self.attrs) or a regular expression to
        match the enclosed block (self.enclosed).
        The replacement part and value is stored in a list with length
        two (self.replace == [repl. part, repl. string]).
     """
-    def __init__(self, title="No title", desc="", disable=0, tag="a",
+    def __init__ (self, title="No title", desc="", disable=0, tag="a",
                  attrs=None, enclosed="", replace=[COMPLETE,""]):
-        Rule.__init__(self, title, desc, disable)
+        UrlRule.__init__(self, title=title, desc=desc, disable=disable)
         self.tag = tag
         if attrs is None:
             self.attrs = {}
@@ -167,21 +191,19 @@ class RewriteRule(Rule):
         self.replace = list(replace)
         self.enclosed = enclosed
         if self.enclosed and self.tag in NO_CLOSE_TAGS:
-            raise ValueError, "Dont specify <enclose> with tag name %s" % tag
+            raise ValueError, _("Dont specify <enclose> with tag name %s")%tag
         self.attrnames.append('tag')
 
-
-    def fill_attrs(self, attrs, name):
+    def fill_attrs (self, attrs, name):
         if name=='rewrite':
-            Rule.fill_attrs(self, attrs, name)
+            UrlRule.fill_attrs(self, attrs, name)
         elif name=='attr':
             self.current_attr = attrs.get('name','href').encode('iso8859-1')
             self.attrs[self.current_attr] = ""
         elif name=='replace' and attrs.has_key('part'):
             self.replace[0] = part_num(attrs['part'])
 
-
-    def fill_data(self, data, name):
+    def fill_data (self, data, name):
         data = data.encode('iso8859-1')
         if name=='attr':
             self.attrs[self.current_attr] += data
@@ -190,12 +212,10 @@ class RewriteRule(Rule):
         elif name=='replace':
             self.replace[1] += data
 
-
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromRewriteRule(self)
 
-
-    def _compute_start_sufficient(self):
+    def _compute_start_sufficient (self):
         if self.tag in NO_CLOSE_TAGS:
             return 1
         part = self.replace[0]
@@ -203,16 +223,13 @@ class RewriteRule(Rule):
             return 1
         return 0
 
-
-    def set_start_sufficient(self):
+    def set_start_sufficient (self):
         self.start_sufficient = self._compute_start_sufficient()
 
-
-    def match_tag(self, tag):
+    def match_tag (self, tag):
         return self.tag == tag#.lower()
 
-
-    def match_attrs(self, attrs):
+    def match_attrs (self, attrs):
         occurred = []
         for attr,val in attrs.items():
             #attr = attr.lower()
@@ -225,8 +242,7 @@ class RewriteRule(Rule):
                 return 0
         return 1
 
-
-    def match_complete(self, i, buf):
+    def match_complete (self, i, buf):
         """We know that the tag (and tag attributes) match. Now match
 	   the enclosing block."""
         if not self.enclosed:
@@ -238,8 +254,7 @@ class RewriteRule(Rule):
                 return 1
         return 0
 
-
-    def filter_tag(self, tag, attrs):
+    def filter_tag (self, tag, attrs):
         #debug(NIGHTMARE, "rule %s filter_tag" % self.title)
         part = self.replace[0]
         #debug(NIGHTMARE, "original tag", tag, "attrs", attrs)
@@ -275,8 +290,7 @@ class RewriteRule(Rule):
         #debug(NIGHTMARE, "filtered tag", tag, "attrs", newattrs)
         return (STARTTAG, tag, newattrs)
 
-
-    def filter_complete(self, i, buf):
+    def filter_complete (self, i, buf):
         #debug(NIGHTMARE, "rule %s filter_complete" % self.title)
         part = self.replace[0]
         #debug(NIGHTMARE, "original buffer", `buf`)
@@ -293,12 +307,8 @@ class RewriteRule(Rule):
             buf[i+1:-1] = [(DATA, self.replace[1])]
         #debug(NIGHTMARE, "filtered buffer", `buf`)
 
-    def get_name(self):
-        return "rewrite"
-
-
-    def toxml(self):
-        s = Rule.toxml(self)
+    def toxml (self):
+        s = UrlRule.toxml(self)
         if self.tag!='a':
             s += '\n tag="%s"' % self.tag
         if not (self.attrs or self.replace or self.enclosed):
@@ -328,9 +338,8 @@ class RewriteRule(Rule):
                 s += "/>\n"
         return s + "</rewrite>"
 
-
-    def __str__(self):
-        s = Rule.__str__(self)
+    def __str__ (self):
+        s = UrlRule.__str__(self)
         s += "tag %s\n" % self.tag
         for key,val in self.attrs.items():
             s += "attr: %s, %s\n" % (key,`val`)
@@ -341,11 +350,11 @@ class RewriteRule(Rule):
         return s
 
 
-class AllowRule(Rule):
-    def __init__(self, title="No title", desc="", disable=0, scheme="",
-                 host="", port="", path="", parameters="", query="",
-		 fragment=""):
-        Rule.__init__(self, title, desc, disable)
+class AllowRule (Rule):
+    def __init__ (self, title="No title", desc="", disable=0, scheme="",
+                  host="", port="", path="", parameters="", query="",
+		  fragment=""):
+        Rule.__init__(self, title=title, desc=desc, disable=disable)
         self.scheme = scheme
         self.host = host
         self.port = port
@@ -356,17 +365,13 @@ class AllowRule(Rule):
         self.attrnames.extend(('scheme','host','port','path','parameters',
                                 'query','fragment'))
 
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromAllowRule(self)
 
-    def get_name(self):
-        return "allow"
+    def toxml (self):
+        return "%s%s/>"%(Rule.toxml(self),self.netlocxml())
 
-    def toxml(self):
-        s = Rule.toxml(self) + self.netlocxml()
-        return s+"/>"
-
-    def netlocxml(self):
+    def netlocxml (self):
         s = ""
         for attr in Netlocparts:
             a = getattr(self, attr)
@@ -375,65 +380,54 @@ class AllowRule(Rule):
         return s
 
 
-
-class BlockRule(AllowRule):
-    def __init__(self, title="No title", desc="", disable=0, scheme="",
-                 host="", port="", path="", parameters="", query="",
-		 fragment="", url=""):
+class BlockRule (AllowRule):
+    def __init__ (self, title="No title", desc="", disable=0, scheme="",
+                  host="", port="", path="", parameters="", query="",
+		  fragment="", url=""):
         AllowRule.__init__(self, title, desc, disable, scheme, host, port,
                            path, parameters, query, fragment)
         self.url = url
 
-    def fill_data(self, data, name):
-        data = data.encode('iso8859-1')
+    def fill_data (self, data, name):
         if name=='block':
-            self.url += data
+            self.url += data.encode('iso8859-1')
 
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromBlockRule(self)
 
-    def get_name(self):
-        return "block"
-
-    def toxml(self):
-        s = Rule.toxml(self) + self.netlocxml()
+    def toxml (self):
+        s = Rule.toxml(self)+self.netlocxml()
         if self.url:
             return s+">"+quote(self.url)+"</block>"
         return s+"/>"
 
 
-
-class HeaderRule(Rule):
-    def __init__(self, title="No title", desc="", disable=0, name="",
-                 value=""):
-        Rule.__init__(self, title, desc, disable)
+class HeaderRule (UrlRule):
+    def __init__ (self, title="No title", desc="", disable=0, name="",
+                  value=""):
+        UrlRule.__init__(self, title, desc, disable)
         self.name = name
         self.value = value
         self.attrnames.append('name')
 
-    def fill_data(self, data, name):
-        data = data.encode('iso8859-1')
+    def fill_data (self, data, name):
         if name=='header':
-            self.value = data
+            self.value = data.encode('iso8859-1')
 
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromHeaderRule(self)
 
-    def get_name(self):
-        return "header"
-
-    def toxml(self):
-        s = Rule.toxml(self) + '\n name="%s"' % quote(self.name)
+    def toxml (self):
+        s = '%s\n name="%s"'%(UrlRule.toxml(self), quote(self.name))
         if self.value:
             return s+">"+quote(self.value)+"</header>"
         return s+"/>"
 
 
-
-class ImageRule(Rule):
-    def __init__(self, title="No title", desc="", disable=0, width=0,
-                 height=0, type="gif", url=""):
-        Rule.__init__(self, title, desc, disable)
+class ImageRule (UrlRule):
+    def __init__ (self, title="No title", desc="", disable=0, width=0,
+                  height=0, type="gif", url=""):
+        UrlRule.__init__(self, title, desc, disable)
         self.width=width
         self.height=height
         self.intattrs.extend(('width','height'))
@@ -441,14 +435,11 @@ class ImageRule(Rule):
         self.url = url
         self.attrnames.extend(('type','url','width','height'))
 
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromImageRule(self)
 
-    def get_name(self):
-        return "image"
-
-    def toxml(self):
-        s = Rule.toxml(self)
+    def toxml (self):
+        s = UrlRule.toxml(self)
         if self.width:
             s += '\n width="%d"' % self.width
         if self.height:
@@ -460,42 +451,34 @@ class ImageRule(Rule):
         return s+"/>"
 
 
+class NocommentsRule (UrlRule):
+    def __init__ (self, title="No title", desc="", disable=0):
+        UrlRule.__init__(self, title, desc, disable)
 
-class NocommentsRule(Rule):
-    def __init__(self, title="No title", desc="", disable=0):
-        Rule.__init__(self, title, desc, disable)
-
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromNocommentsRule(self)
 
-    def get_name(self):
-        return "nocomments"
-
-    def toxml(self):
-	return Rule.toxml(self) + "/>"
+    def toxml (self):
+	return UrlRule.toxml(self) + "/>"
 
 
-
-class ReplacerRule(Rule):
-    def __init__(self, title="No title", desc="", disable=0,
-                 search="", replace=""):
-        Rule.__init__(self, title, desc, disable)
+class ReplacerRule (UrlRule):
+    def __init__ (self, title="No title", desc="", disable=0,
+                  search="", replace=""):
+        UrlRule.__init__(self, title, desc, disable)
         self.search = search
         self.replace = replace
         self.attrnames.append('search')
 
-    def fill_data(self, data, name):
+    def fill_data (self, data, name):
         if name=='replacer':
             self.replace += data.encode('iso8859-1')
 
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromReplacerRule(self)
 
-    def get_name(self):
-        return "replacer"
-
-    def toxml(self):
-	s = Rule.toxml(self);
+    def toxml (self):
+	s = UrlRule.toxml(self);
         if self.search:
             s += '\n search="%s"'%quote(self.search)
         if self.replace:
@@ -503,38 +486,36 @@ class ReplacerRule(Rule):
         return s+"/>"
 
 
-
-def rule_cmp(rule1, rule2):
+def rule_cmp (rule1, rule2):
     return cmp(rule1.title, rule2.title)
 
 
-
-class FolderRule(Rule):
-    def __init__(self, title="No title", desc="", disable=0, lang="",
-                 filename=""):
-        Rule.__init__(self, title, desc, disable)
+class FolderRule (Rule):
+    def __init__ (self, title="No title", desc="", disable=0, lang="",
+                  filename=""):
+        Rule.__init__(self, title=title, desc=desc, disable=disable)
         self.filename = filename
         self.lang = lang
         self.rules = []
         self.ruleids = {}
 
-    def fromFactory(self, factory):
+    def fromFactory (self, factory):
         return factory.fromFolderRule(self)
 
-    def append_rule(self, r):
+    def append_rule (self, r):
         self.rules.append(r)
         r.ruleid = self.newid()
         r.parent = self
 
-    def delete_rule(self, i):
+    def delete_rule (self, i):
         r = self.rules[i]
         del self.ruleids[r.ruleid]
         del self.rules[i]
 
-    def sort(self):
+    def sort (self):
         self.rules.sort(rule_cmp)
 
-    def newid(self):
+    def newid (self):
         i=0
         while 1:
             if self.ruleids.has_key(i):
@@ -544,10 +525,7 @@ class FolderRule(Rule):
         self.ruleids[i] = 1
         return i
 
-    def get_name(self):
-        return "folder"
-
-    def toxml(self):
+    def toxml (self):
         s = """<?xml version="1.0"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 """ + Rule.toxml(self)
@@ -555,6 +533,6 @@ class FolderRule(Rule):
             s += '\n lang="%s"' % self.lang
         s += ">\n"
         for r in self.rules:
-            s += "\n"+r.toxml()+"\n"
+            s += "\n%s\n"%r.toxml()
         return s+"</folder>\n"
 

@@ -21,7 +21,10 @@ from wc.filter import FILTER_RESPONSE_ENCODE
 from wc import debug
 from wc.debug_levels import *
 
+# which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_ENCODE]
+# which rule types this filter applies to (see Rules.py)
+# all rules of these types get added with Filter.addrule()
 rulenames = []
 
 GZIP_HEADER = '%s%s%s%s' % (
@@ -37,14 +40,14 @@ COMPRESS_RE = re.compile(r'(compress|gzip|bzip2)', re.I)
 def getCompressObject():
     return {'compressor': zlib.compressobj(9, zlib.DEFLATED,
                                              -zlib.MAX_WBITS,
-					      zlib.DEF_MEM_LEVEL, 0),
+                                              zlib.DEF_MEM_LEVEL, 0),
             'header': GZIP_HEADER,
             'crc': BASIC_CRC,
             'size': 0,
            }
 
 
-class Compress(Filter):
+class Compress (Filter):
     # XXX I want to write text/*, requires re.match in mimelist matching
     mimelist = (
             'text/css',
@@ -53,7 +56,7 @@ class Compress(Filter):
             'text/plain',
             'text/richtext',
             'text/xml',
-	    'application/postscript',
+            'application/postscript',
             'application/pdf',
             'application/x-dvi',
             'audio/basic',
@@ -66,7 +69,7 @@ class Compress(Filter):
             'x-world/x-vrml',
             )
 
-    def filter(self, data, **attrs):
+    def filter (self, data, **attrs):
         """compress the string s.
         Note that compression state is saved outside of this function
         in the compression object.
@@ -87,7 +90,7 @@ class Compress(Filter):
                 data = header
         return data
 
-    def finish(self, data, **attrs):
+    def finish (self, data, **attrs):
         if not attrs.has_key('compressobj'): return data
         compobj = attrs['compressobj']
         if compobj:
@@ -102,7 +105,7 @@ class Compress(Filter):
 		    struct.pack('<l', compobj['size'])
         return data
 
-    def getAttrs(self, headers, url):
+    def getAttrs (self, headers, url):
         if headers.has_key('content-encoding'):
             if COMPRESS_RE.search(headers['content-encoding']):
                 compressobj = None
@@ -112,4 +115,6 @@ class Compress(Filter):
         else:
             compressobj = getCompressObject()
             headers['content-encoding'] = 'gzip'
-        return {'compressobj': compressobj}
+        d = Filter.getAttrs(self, headers, url)
+        d['compressobj'] = compressobj
+        return d

@@ -49,7 +49,7 @@ Active connections:
 def log(msg):
     """If the logfile is defined write the msg into it. The message msg
        should be in common log file format."""
-    debug(HURT_ME_PLENTY, "logging", `msg`)
+    #debug(HURT_ME_PLENTY, "logging", `msg`)
     if config['logfile']:
         config['logfile'].write(msg)
         config['logfile'].flush()
@@ -160,7 +160,7 @@ def proxy_poll(timeout=0.0):
         w = filter(lambda x: x.writable(), smap.values())
         e = smap.values()
         try:
-	    (r,w,e) = select.select(r,w,e, timeout)
+            (r,w,e) = select.select(r,w,e, timeout)
         except select.error, why:
             if why.args == (4, 'Interrupted system call'):
                 # this occurs on UNIX systems with a sighup signal
@@ -178,7 +178,7 @@ def proxy_poll(timeout=0.0):
                 handlerCount += 1
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
-        debug(NIGHTMARE, "write poll")
+        #debug(NIGHTMARE, "write poll")
         for x in w:
             try:
                 t = time.time()
@@ -189,7 +189,7 @@ def proxy_poll(timeout=0.0):
                         debug(BRING_IT_ON, 'wslow', '%4.1f'%(time.time()-t), 's', x)
             except:
                 x.handle_error("poll error", sys.exc_type, sys.exc_value, tb=sys.exc_traceback)
-        debug(NIGHTMARE, "read poll")
+        #debug(NIGHTMARE, "read poll")
         for x in r:
             try:
                 t = time.time()

@@ -11,7 +11,7 @@ class FXBlockRuleFrame(FXAllowRuleFrame):
         FXAllowRuleFrame.__init__(self, parent, rule, index)
         FXMAPFUNC(self,SEL_COMMAND,FXBlockRuleFrame.ID_URL,FXBlockRuleFrame.onCmdUrl)
         FXLabel(self.matrix, _("Blocked URL\tThe URL we want to show instead"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        tf = FXTextField(self.matrix, 15, self, FXBlockRuleFrame.ID_URL)
+        tf = FXTextField(self.matrix, 25, self, FXBlockRuleFrame.ID_URL)
         tf.setText(self.rule.fragment)
 
     def onCmdUrl(self, sender, sel, ptr):

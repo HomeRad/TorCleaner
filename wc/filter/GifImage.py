@@ -14,38 +14,39 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import re,sys,base64,wc
+import re, sys, base64, wc
 from wc.filter import FILTER_RESPONSE_MODIFY, FilterException
 from wc.filter.Filter import Filter
 from wc import debug
 from wc.debug_levels import *
 
+# which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
+# which rule types this filter applies to (see Rules.py)
+# all rules of these types get added with Filter.addrule()
 rulenames = ['image']
-_SIZES = []
 
-def i16(c):
+def i16 (c):
     """merge two bytes to an integer"""
     return ord(c[0]) | (ord(c[1])<<8)
 
-class RewindException(Exception): pass
+class RewindException (Exception): pass
 
-class GifImage(Filter):
+class GifImage (Filter):
     """Base filter class which is using the GifParser to deanimate the
        incoming GIF stream"""
     mimelist = ('image/gif',)
 
-    def __init__(self):
+    def __init__ (self):
+        Filter.__init__(self)
         self.tiny_gif = None
 
+    def addrule (self, rule):
+        Filter.addrule(self, rule)
+        self.compileRegex(rule, "matchurl")
+        self.compileRegex(rule, "dontmatchurl")
 
-    def addrule(self, rule):
-        if rule.type != 'gif': return
-        _SIZES.append((rule.width, rule.height))
-        self.url_re = re.compile(rule.url)
-
-
-    def filter(self, data, **attrs):
+    def filter (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
         gifparser = attrs['gifparser']
         if data:
@@ -56,20 +57,19 @@ class GifImage(Filter):
                 pass
         return gifparser.getOutput()
 
-
-    def finish(self, data, **attrs):
+    def finish (self, data, **attrs):
         if not attrs.has_key('gifparser'): return data
         data = apply(GifImage.filter, (self, data), attrs)
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
 
-
-    def getAttrs(self, headers, url):
-        if url:
-            match = self.url_re.match(url)
-        else:
-            match = 1
-        return {'gifparser': GifParser(match)}
+    def getAttrs (self, headers, url):
+        # first: weed out the rules that dont apply to this url
+        rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
+        if not rules:
+            return {}
+        sizes = map(lambda r: (r.width, r.height), rules)
+        return {'gifparser': GifParser(sizes)}
 
 
 
@@ -94,7 +94,7 @@ class GifParser:
     DATA = 4
     NOFILTER = 5
 
-    def strState(self):
+    def strState (self):
         if self.state==GifParser.SKIP:     return 'SKIP'
         if self.state==GifParser.INIT:     return 'INIT'
         if self.state==GifParser.FRAME:    return 'FRAME'
@@ -103,25 +103,22 @@ class GifParser:
         if self.state==GifParser.NOFILTER: return 'NOFILTER'
         return 'UNKNOWN'
 
-
-    def __init__(self, match=1):
-        self.state = match and GifParser.INIT or GifParser.SKIP
+    def __init__ (self, sizes=[]):
+        self.state = GifParser.INIT
         self.data = self.consumed = self.output = ''
         self.finish = 0
         self.removing = 0
+        self.sizes = sizes
 
-
-    def addData(self, data):
+    def addData (self, data):
         self.data += data
 
-
-    def flush(self):
+    def flush (self):
         if self.consumed:
             self.output += self.consumed
             self.consumed = ''
 
-
-    def read(self, i):
+    def read (self, i):
         if i<=0: return
         if len(self.data)<i:
             # rewind and stop filtering; wait for next data chunk
@@ -133,20 +130,17 @@ class GifParser:
         self.data = self.data[i:]
         return self.consumed[-i:]
 
-
-    def remove(self, i):
+    def remove (self, i):
         self.consumed = self.consumed[:-i]
 
-
-    def getOutput(self):
+    def getOutput (self):
         if self.output:
             res = self.output
             self.output = ''
             return res
         return self.output
 
-
-    def parse(self):
+    def parse (self):
         """Big parse function. The trick is the usage of self.read(),
 	   which throws an Exception  when it cant give enough data.
 	   In this case we just bail out ('rewind'), and continue
@@ -170,7 +164,7 @@ class GifParser:
                 #    continue
                 self.size = (i16(self.read(2)), i16(self.read(2)))
                 debug(NIGHTMARE, 'GIF width=%d, height=%d' % self.size)
-                if self.size in _SIZES:
+                if self.size in self.sizes:
                     self.output = base64.decodestring(_TINY_GIF)
                     self.data = self.consumed = ''
                     self.state = GifParser.SKIP

@@ -20,22 +20,28 @@ from wc.filter.Filter import Filter
 from wc import debug,config
 from wc.debug_levels import *
 
-orders = [FILTER_REQUEST_HEADER,
-          FILTER_RESPONSE_HEADER]
+# which filter stages this filter applies to (see filter/__init__.py)
+orders = [FILTER_REQUEST_HEADER, FILTER_RESPONSE_HEADER]
+# which rule types this filter applies to (see Rules.py)
+# all rules of these types get added with Filter.addrule()
 rulenames = ['header']
 
-class Header(Filter):
-    def __init__(self):
+class Header (Filter):
+    def __init__ (self):
+        Filter.__init__(self)
         self.delete = []
         self.add = {}
 
-    def addrule(self, rule):
+    def addrule (self, rule):
+        Filter.addrule(self, rule)
+        self.compileRegex(rule, "matchurl")
+        self.compileRegex(rule, "dontmatchurl")
         if not rule.value:
             self.delete.append(rule.name.lower())
         else:
             self.add[rule.name] = rule.value
 
-    def doit(self, data, **args):
+    def doit (self, data, **args):
         for h in data.keys()[:]:
             for name in self.delete:
                 if re.match(name, h):

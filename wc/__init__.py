@@ -1,5 +1,5 @@
 """configuration data"""
-# Copyright (C) 2000,2001  Bastian Kleineidam
+# Copyright (C) 2000-2002  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import os,sys,UserDict,time,socket
+import os, sys, UserDict, time, socket
 import _webcleaner2_configdata as configdata
 from debug_levels import *
 
@@ -24,8 +24,8 @@ App = AppName+" "+Version
 UserAgent = AppName+"/"+Version
 Author =  configdata.author
 HtmlAuthor = Author.replace(' ', '&nbsp;')
-Copyright = "Copyright © 2000,2001 by "+Author
-HtmlCopyright = "Copyright &copy; 2000,2001 by "+HtmlAuthor
+Copyright = "Copyright © 2000-2002 by "+Author
+HtmlCopyright = "Copyright &copy; 2000-2002 by "+HtmlAuthor
 AppInfo = App+"              "+Copyright
 HtmlAppInfo = App+", "+HtmlCopyright
 Url = configdata.url
@@ -84,12 +84,10 @@ def startfunc():
     import wc.proxy
     wc.proxy.mainloop()
 
-
 # reload configuration
 def reload_config(signum, frame):
     config.read_filterconf()
     config.init_filter_modules()
-
 
 
 class Configuration(UserDict.UserDict):
@@ -101,7 +99,6 @@ class Configuration(UserDict.UserDict):
         # read configuration
         self.read_proxyconf()
         self.read_filterconf()
-
 
     def reset(self):
         """Reset to default values"""
@@ -129,20 +126,17 @@ class Configuration(UserDict.UserDict):
         self['headersave'] = 100
         self['showerrors'] = 0
 
-
     def read_proxyconf(self):
         p = WConfigParser()
         p.parse(os.path.join(ConfigDir, "webcleaner.conf"), self)
         global DebugLevel
         DebugLevel = self['debuglevel']
 
-
     def read_filterconf(self):
         from glob import glob
         # filter configuration
         for f in glob(os.path.join(ConfigDir, "*.zap")):
             ZapperParser().parse(f, self)
-
 
     def init_filter_modules(self):
         for f in self['filters']:
@@ -163,7 +157,6 @@ class Configuration(UserDict.UserDict):
                         if rule.get_name() in getattr(_module, 'rulenames'):
                             instance.addrule(rule)
                 self['filterlist'][order].append(instance)
-
 
     def __repr__(self):
         return _("""

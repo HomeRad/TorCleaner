@@ -17,67 +17,71 @@
 import re, sys, wc
 from wc.parser.htmllib import HtmlParser
 from Rules import STARTTAG, ENDTAG, DATA, COMMENT
-from wc import debug,error
+from wc import _,debug,error
 from wc.debug_levels import *
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter.Filter import Filter
 
+# which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
+# which rule types this filter applies to (see Rules.py)
+# all rules of these types get added with Filter.addrule()
 rulenames = ['rewrite','nocomments']
 
+# regular expression which matches tag attributes that dont
+# need to be quoted
 # modern browsers can cope with a lot of non-quoted content
 _noquoteval = re.compile("^[-+~a-zA-Z0-9_/.#%:?,]+$")
 
-class Rewriter(Filter):
-    """This class can rewrite HTML tags. It uses a parser class."""
+class Rewriter (Filter):
+    """This filter can rewrite HTML tags. It uses a parser class."""
     mimelist = ('text/html',)
 
-
-    def __init__(self):
-        self.rules = []
+    def __init__ (self):
+        Filter.__init__(self)
         self.comments = 1
 
-
-    def addrule(self, rule):
-        debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
+    def addrule (self, rule):
+        Filter.addrule(self, rule)
+        self.compileRegex(rule, "matchurl")
+        self.compileRegex(rule, "dontmatchurl")
         if rule.get_name()=='rewrite':
-            if rule.enclosed:
-                rule.enclosed = re.compile(rule.enclosed)
+            self.compileRegex(rule, "enclosed")
             for key,val in rule.attrs.items():
                 rule.attrs[key] = re.compile(rule.attrs[key])
-            self.rules.append(rule)
         elif rule.get_name()=='nocomments':
             self.comments = 0
 
-
-    def filter(self, data, **attrs):
+    def filter (self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Rewriter filter", "\n...%s"%`data[-70:]`)
+        #debug(NIGHTMARE, "Rewriter filter", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         return p.flushbuf()
 
-
-    def finish(self, data, **attrs):
+    def finish (self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        debug(NIGHTMARE, "Rewriter finish", "\n...%s"%`data[-70:]`)
+        #debug(NIGHTMARE, "Rewriter finish", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         p.flush()
         p.buffer2data()
         return p.flushbuf()
 
-
-    def getAttrs(self, headers, url):
+    def getAttrs (self, headers, url):
         """We need a separate filter instance for stateful filtering"""
-        p = HtmlFilter(self.rules, self.comments, url)
-        return {'filter': p}
+        # first: weed out the rules that dont apply to this url
+        rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
+        # second: weed out the comments rules, but remember length
+        before = len(rules)
+        rules = filter(lambda r: r.get_name()=='rewrite', self.rules)
+        # generate the HTML filter
+        return {'filter': HtmlFilter(rules, (len(rules)==before), url)}
 
 
-
-class HtmlFilter(HtmlParser):
+class HtmlFilter (HtmlParser):
     """The parser has the rules, a data buffer and a rule stack."""
-    def __init__(self, rules, comments, url):
+    def __init__ (self, rules, comments, url):
         if wc.config['showerrors']:
             self.error = self._error
             self.warning = self._warning
@@ -90,41 +94,35 @@ class HtmlFilter(HtmlParser):
         self.buffer = []
         self.document = url or "unknown"
 
-
-    def __repr__(self):
+    def __repr__ (self):
         return "<HtmlFilter with rulestack %s >" % self.rulestack
 
-
-    def buffer_append_data(self, data):
+    def buffer_append_data (self, data):
         """we have to make sure that we have no two following
-        DATA things in the buffer. Why? well, just to be 100% sure
-        that an ENCLOSED match really matches enclosed data.
+        DATA things in the buffer. Why? To be 100% sure that
+        an ENCLOSED match really matches enclosed data.
         """
         if self.buffer and data[0]==DATA and self.buffer[-1][0]==DATA:
             self.buffer[-1][1] += data[1]
         else:
             self.buffer.append(data)
 
-
-    def cdataBlock(self, d):
+    def cdataBlock (self, d):
         """handler for data"""
         self.buffer_append_data([DATA, d])
 
-
-    def ignorableWhitespace(self, d):
+    def ignorableWhitespace (self, d):
         """handler for ignorable whitespace"""
         self.buffer_append_data([DATA, d])
 
-
-    def flushbuf(self):
+    def flushbuf (self):
         """flush internal data buffer"""
         data = self.data
         if data:
             self.data = ""
         return data
 
-
-    def buffer2data(self):
+    def buffer2data (self):
         """Append all tags of the buffer to the data"""
         for n in self.buffer:
             if n[0]==DATA:
@@ -146,20 +144,17 @@ class HtmlFilter(HtmlParser):
             elif n[0]==ENDTAG:
                 self.data += "</%s>"%n[1]
             else:
-                error("unknown buffer element %s" % n[0])
+                error(_("unknown buffer element %s") % n[0])
         self.buffer = []
-
 
     def comment (self, data):
         """a comment. If we accept comments, filter them because JavaScript
-	is often in wrapped in comments"""
+	is often wrapped in comments"""
         if self.comments:
             self.buffer.append([COMMENT, data])
 
-
     def characters (self, s):
         self.buffer_append_data([DATA, s])
-
 
     def startElement (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
@@ -168,7 +163,7 @@ class HtmlFilter(HtmlParser):
         tobuffer = (STARTTAG, tag, attrs)
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
+                #debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute
@@ -178,7 +173,7 @@ class HtmlFilter(HtmlParser):
                     else:
                         break
                 else:
-                    debug(NIGHTMARE, "put on buffer")
+                    #debug(NIGHTMARE, "put on buffer")
                     rulelist.append(rule)
         if rulelist:
             self.rulestack.append((len(self.buffer), rulelist))
@@ -186,8 +181,7 @@ class HtmlFilter(HtmlParser):
         if not self.rulestack:
             self.buffer2data()
 
-
-    def endElement(self, tag):
+    def endElement (self, tag):
         """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
@@ -203,30 +197,25 @@ class HtmlFilter(HtmlParser):
         if not self.rulestack:
             self.buffer2data()
 
-
     def internalSubset (self, name, externId, systemId):
         s = "<!DOCTYPE HTML "
         if externId:
-            s += 'PUBLIC "%s">'%name
+            s += "PUBLIC "
         elif systemId:
-            s += 'SYSTEM "%s">'%name
-        else:
-            s += '"%s"'%name
+            s += "SYSTEM "
+        s += '"%s">'%name
         self.buffer_append_data([DATA, s])
 
-
-    def errorfun(self, line, col, msg, name):
-        print >> sys.stderr, name, "parsing %s:%d:%d: %s" % \
+    def errorfun (self, line, col, msg, name):
+        print >> sys.stderr, name, _("parsing %s:%d:%d: %s") % \
             (self.document, line, col, msg.strip())
 
-
-    def _error(self, line, col, msg):
+    def _error (self, line, col, msg):
         self.errorfun(line, col, msg, "error")
 
 
-    def _warning(self, line, col, msg):
+    def _warning (self, line, col, msg):
         self.errorfun(line, col, msg, "warning")
 
-
-    def _fatalError(self, line, col, msg):
+    def _fatalError (self, line, col, msg):
         self.errorfun(line, col, msg, "fatalError")

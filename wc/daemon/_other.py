@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+from wc import _
+
 def start(parent_exit=1):
     startfunc()
 
@@ -21,4 +23,4 @@ def stop():
     pass
 
 def reload():
-    return "reload not supported for this platform"
+    return _("reload not supported for this platform")

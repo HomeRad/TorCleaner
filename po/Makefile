@@ -19,6 +19,7 @@ SOURCES=\
 ../wc/gui/FXRuleFrame.py \
 ../wc/gui/FXNocommentsRuleFrame.py \
 ../wc/gui/HeaderWindow.py \
+../wc/gui/ToolWindow.py \
 ../wc/debug_levels.py \
 ../wc/proxy/dns/dnslib.py \
 ../wc/proxy/dns/dnstype.py \

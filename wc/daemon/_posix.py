@@ -15,14 +15,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import os
-from wc.daemon import pidfile,startfunc
+from wc import _
+from wc.daemon import pidfile, startfunc
 
 def start(parent_exit=1):
     """start a daemon using the appropriate pidfile"""
     # already running?
     if os.path.exists(pidfile):
-        return """webcleaner already started (lock file found).
-Do 'webcleaner stop' first."""
+        return _("""WebCleaner already started (lock file found).
+Do 'webcleaner stop' first.""")
     # forking (only under POSIX systems)
     pid = os.fork()
     # the parent exits
@@ -46,14 +47,14 @@ Do 'webcleaner stop' first."""
 
 def stop():
     if not os.path.exists(pidfile):
-        return "webcleaner was not running (no lock file found)"
+        return _("WebCleaner was not running (no lock file found)")
     import signal
     msg = None
     pid = int(open(pidfile).read())
     try:
         os.kill(pid, signal.SIGTERM)
     except OSError:
-        msg = "warning: could not terminate process PID %d"%pid
+        msg = _("warning: could not terminate process PID %d")%pid
     os.remove(pidfile)
     return msg
 
@@ -61,7 +62,7 @@ def stop():
 
 def reload():
     if not os.path.exists(pidfile):
-        return "webcleaner is not running. Do 'webcleaner start' first."
+        return _("WebCleaner is not running. Do 'webcleaner start' first.")
     pid = int(open(pidfile).read())
     import signal
     os.kill(pid, signal.SIGHUP)

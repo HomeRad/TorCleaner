@@ -34,6 +34,9 @@ deb_local:	locale
 	# standard for local use
 	fakeroot debian/rules binary
 
+deb_localsigned:
+	debuild -sgpg -pgpg -k32EC6F3E -rfakeroot
+
 deb_signed:	locale
 	# ready for upload, signed with my GPG key
 	env CVSROOT=:pserver:anonymous@cvs.webcleaner.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -rfakeroot
@@ -98,6 +101,9 @@ doc:
 	rm -f README
 	pydoc2 ./webcleaner > README
 
+tar:	distclean
+	cd .. && tar cjvf webcleaner.tar.bz2 webcleaner2
+
 .PHONY: all clean localbuild distclean cleandeb deb_local deb_signed 
 .PHONY: deb_unsigned dist test gentest onlinetest offlinetest md5sums package
-.PHONY: filterfiles upload doc
+.PHONY: filterfiles upload doc tar

@@ -29,7 +29,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         FXMAPFUNC(self,SEL_UPDATE,FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE,FXRewriteRuleFrame.onUpdAttributes)
         matrix = FXMatrix(self, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, _("Tag name:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        t = FXTextField(matrix, 10, self, FXRewriteRuleFrame.ID_TAG)
+        t = FXTextField(matrix, 25, self, FXRewriteRuleFrame.ID_TAG)
         t.setText(self.rule.tag)
         FXLabel(matrix, _("Attributes:"))
         f = FXHorizontalFrame(matrix, LAYOUT_FILL_X|LAYOUT_FIX_HEIGHT|FRAME_SUNKEN|FRAME_THICK, 0,0,0,60, 0,0,0,0, 0,0)
@@ -44,11 +44,11 @@ class FXRewriteRuleFrame(FXRuleFrame):
         FXButton(f, _("Edit"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_EDIT)
         FXButton(f, _("Remove"), None, self, FXRewriteRuleFrame.ID_ATTRIBUTE_REMOVE)
         FXLabel(matrix, _("Enclosed block:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        t = FXTextField(matrix, 20, self, FXRewriteRuleFrame.ID_ENCLOSED_BLOCK)
+        t = FXTextField(matrix, 25, self, FXRewriteRuleFrame.ID_ENCLOSED_BLOCK)
         if self.rule.enclosed:
             t.setText(self.rule.enclosed)
         FXLabel(matrix, _("Replace part:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        t = FXComboBox(matrix,9,6,self, self.ID_REPLACE_PART,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
+        t = FXComboBox(matrix,23,6,self, self.ID_REPLACE_PART,opts=COMBOBOX_INSERT_LAST|FRAME_SUNKEN|FRAME_THICK|LAYOUT_SIDE_TOP)
         t.appendItem(_("Tag"))
         t.appendItem(_("Tag name"))
         t.appendItem(_("Attribute"))
@@ -58,7 +58,7 @@ class FXRewriteRuleFrame(FXRuleFrame):
         t.setEditable(0)
         t.setCurrentItem(self.rule.replace[0])
         FXLabel(matrix, _("Replace value:"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        t = FXTextField(matrix, 20, self, FXRewriteRuleFrame.ID_REPLACE_VALUE)
+        t = FXTextField(matrix, 25, self, FXRewriteRuleFrame.ID_REPLACE_VALUE)
         t.setText(self.rule.replace[1])
 
 

@@ -182,7 +182,7 @@ class HttpServer(Server):
         self.headers = applyfilter(FILTER_RESPONSE_HEADER,
 	               rfc822.Message(StringIO(self.read(m.end()))),
 		       attrs=self.nofilter)
-        debug(HURT_ME_PLENTY, "Headers\n", self.headers)
+        #debug(HURT_ME_PLENTY, "Headers\n", self.headers)
         if self.headers.has_key('content-length'):
             self.bytes_remaining = int(self.headers.getheader('content-length'))
         else:
@@ -203,7 +203,7 @@ class HttpServer(Server):
 
         self.decoders = []
         if self.headers.has_key('transfer-encoding'):
-            debug(BRING_IT_ON, 'S/Transfer-encoding:', self.headers['transfer-encoding'])
+            #debug(BRING_IT_ON, 'S/Transfer-encoding:', self.headers['transfer-encoding'])
             self.decoders.append(UnchunkStream())
             # remove encoding header
             for h in self.headers.headers[:]:
@@ -222,7 +222,7 @@ class HttpServer(Server):
 
         if self.headers.get('content-encoding')=='gzip' and \
              self.headers.get('content-type') in config['mime_gunzip_ok']:
-            debug(BRING_IT_ON, 'S/Content-encoding: gzip')
+            #debug(BRING_IT_ON, 'S/Content-encoding: gzip')
             self.decoders.append(GunzipStream())
             # remove content length and encoding
             # because we unzip the stream
@@ -246,7 +246,7 @@ class HttpServer(Server):
 
     def process_content(self):
         data = self.read(self.bytes_remaining)
-        debug(NIGHTMARE, "S/content", "\n"+`"..."+data[-70:]`)
+        #debug(NIGHTMARE, "S/content", "\n"+`"..."+data[-70:]`)
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
@@ -266,7 +266,7 @@ class HttpServer(Server):
             (self.bytes_remaining is not None and
              self.bytes_remaining <= 0)):
             # Either we ran out of bytes, or the decoder says we're done
-            debug(HURT_ME_PLENTY, "S/contentfinished")
+            #debug(HURT_ME_PLENTY, "S/contentfinished")
             self.state = 'recycle'
 
 
@@ -316,7 +316,7 @@ class HttpServer(Server):
             # We can't reuse this connection
             self.close()
         else:
-            debug(HURT_ME_PLENTY, 'S/recycling', self.sequence_number, self)
+            #debug(HURT_ME_PLENTY, 'S/recycling', self.sequence_number, self)
             self.sequence_number += 1
             self.state = 'client'
             self.document = ''
@@ -326,7 +326,7 @@ class HttpServer(Server):
 
 
     def close(self):
-        debug(HURT_ME_PLENTY, "S/close", self)
+        #debug(HURT_ME_PLENTY, "S/close", self)
         if self.connected and self.state!='closed':
             serverpool.unregister_server(self.addr, self)
             self.state = 'closed'
@@ -341,7 +341,7 @@ class HttpServer(Server):
 
 
     def handle_close(self):
-        debug(HURT_ME_PLENTY, "S/handle_close", self)
+        #debug(HURT_ME_PLENTY, "S/handle_close", self)
         Server.handle_close(self)
         if self.client:
             client, self.client = self.client, None
@@ -352,7 +352,7 @@ def speedcheck_print_status():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        debug(BRING_IT_ON, 'speed:', '%4d' % (SPEEDCHECK_BYTES/elapsed), 'b/s')
+        debug(BRING_IT_ON, 'speed: %4d b/s' % (SPEEDCHECK_BYTES/elapsed))
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
     make_timer(5, speedcheck_print_status)

@@ -17,11 +17,14 @@
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter.Filter import Filter
 
+# which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
+# which rule types this filter applies to (see Rules.py)
+# all rules of these types get added with Filter.addrule()
 rulenames = []
 
-class BinaryCharFilter(Filter):
+class BinaryCharFilter (Filter):
     mimelist = ('text/html',)
 
-    def doit(self, data, **attrs):
+    def doit (self, data, **attrs):
         return data.translate('\x00\x84\x91\x92\x93\x94', ' "`\'""')

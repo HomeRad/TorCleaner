@@ -20,13 +20,13 @@
 import os, sys
 from wc.daemon import startfunc,pidfile
 from wc.debug_levels import *
-from wc import debug, configdata
+from wc import _, debug, configdata
 
 def start(parent_exit=1):
     # already running?
     if os.path.exists(pidfile):
-        return """webcleaner already started (lock file found).
-Do 'webcleaner stop' first."""
+        return _("""WebCleaner already started (lock file found).
+Do 'webcleaner stop' first.""")
     script = os.path.join(configdata.install_scripts, 'webcleaner')
     command = (sys.executable, script, 'start_nt')
     from wc.proxy import winreg
@@ -48,11 +48,11 @@ Do 'webcleaner stop' first."""
     except OSError, exc:
         # this seems to happen when the command isn't found
         raise Exception, \
-              "command '%s' failed: %s" % (command, exc[-1])
+              _("command '%s' failed: %s") % (command, exc[-1])
     if ret < 0:
         # and this reflects the command running but failing
         raise Exception, \
-              "command '%s' killed by signal %d" % (command, -ret)
+              _("command '%s' killed by signal %d") % (command, -ret)
 
 
 def start_nt(parent_exit=1):
@@ -72,7 +72,7 @@ def start_nt(parent_exit=1):
 
 def stop():
     if not os.path.exists(pidfile):
-        return "WebCleaner was not running (no lock file found)"
+        return _("WebCleaner was not running (no lock file found)")
     pid = int(open(pidfile).read())
     msg = None
     import win32api
@@ -80,10 +80,10 @@ def stop():
         handle = win32api.OpenProcess(1, 0, pid)
         rc = win32api.TerminateProcess(handle, 0)
     except win32api.error:
-        msg = "warning: could not terminate process PID %d"%pid
+        msg = _("warning: could not terminate process PID %d")%pid
     os.remove(pidfile)
     return msg
 
 
 def reload():
-    return "reload not supported for this platform"
+    return _("reload not supported for this platform")

@@ -1,11 +1,4 @@
 test_parserhtml
-parsing 2.html
-setDocumentLocator ('documentlocator',)
-startDocument ()
-startElement ('html', {})
-startElement ('body', {})
-startElement ('p', {})
-characters ('These &#145;Microsoft chars&#145; are history.\n&#132;Retter&#132; Majak trifft in der Schlussminute.',)
 parsing 1.html
 setDocumentLocator ('documentlocator',)
 startDocument ()
@@ -186,6 +179,13 @@ endElement ('body',)
 endElement ('html',)
 ignorableWhitespace ('\n',)
 endDocument ()
+parsing 2.html
+setDocumentLocator ('documentlocator',)
+startDocument ()
+startElement ('html', {})
+startElement ('body', {})
+startElement ('p', {})
+characters ('These &#145;Microsoft chars&#145; are history.\n&#132;Retter&#132; Majak trifft in der Schlussminute.',)
 parsing 3.html
 setDocumentLocator ('documentlocator',)
 startDocument ()

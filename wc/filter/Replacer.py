@@ -25,61 +25,56 @@ from wc.debug_levels import *
 from wc.filter import FILTER_RESPONSE_MODIFY
 from wc.filter.Filter import Filter
 
+# which filter stages this filter applies to (see filter/__init__.py)
 orders = [FILTER_RESPONSE_MODIFY]
+# which rule types this filter applies to (see Rules.py)
+# all rules of these types get added with Filter.addrule()
 rulenames = ['replacer']
 
 
 # XXX group matches?
-class Replacer(Filter):
+class Replacer (Filter):
     """replace regular expressions in a data stream"""
     mimelist = ('text/html', 'text/javascript')
 
+    def addrule (self, rule):
+        Filter.addrule(self, rule)
+        self.compileRegex(rule, "matchurl")
+        self.compileRegex(rule, "dontmatchurl")
+        self.compileRegex(rule, "search")
 
-    def __init__(self):
-        self.rules = []
-
-
-    def addrule(self, rule):
-        debug(BRING_IT_ON, "enable %s rule '%s'"%(rule.get_name(),rule.title))
-        if rule.get_name()=='replacer':
-            if rule.search:
-                rule.search = re.compile(rule.search)
-            self.rules.append((rule.search, rule.replace))
-
-
-    def filter(self, data, **attrs):
+    def filter (self, data, **attrs):
         if not attrs.has_key('buf'): return data
         return attrs['buf'].replace(data)
 
-
-    def finish(self, data, **attrs):
+    def finish (self, data, **attrs):
         if not attrs.has_key('buf'): return data
         buf = attrs['buf']
         data = buf.replace(data)
         return data+buf.flush()
 
-
-    def getAttrs(self, headers, url):
-        return {'buf': Buf(self.rules)}
-
+    def getAttrs (self, headers, url):
+        # weed out the rules that dont apply to this url
+        rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
+        if not rules:
+            return {}
+        return {'buf': Buf(rules)}
 
 
 # buffer size in bytes
 BUF_SIZE=512
 
 class Buf:
-    def __init__(self, rules):
+    def __init__ (self, rules):
         self.buf = ""
         self.rules = rules
 
-
-    def replace(self, data):
+    def replace (self, data):
         data = self.buf + data
-        for ro,repl in self.rules:
-            data = ro.sub(repl, data)
+        for rule in self.rules:
+            data = rule.search.sub(rule.replace, data)
         self.buf = data[-BUF_SIZE:]
         return data[:-BUF_SIZE]
 
-
-    def flush(self):
+    def flush (self):
         return self.buf

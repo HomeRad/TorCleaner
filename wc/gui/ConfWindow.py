@@ -32,6 +32,7 @@ import tempfile
 # set the directory for new files
 tempfile.tempdir = wc.ConfigDir
 
+
 class ConfWindow(ToolWindow):
     """The main window holds all data and windows to display"""
     (ID_PORT,
@@ -342,16 +343,18 @@ class ConfWindow(ToolWindow):
 
 
     def onCmdDebuglevel(self, sender, sel, ptr):
-        self.debuglevel = sender.getCurrentItem()
-        self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Debuglevel=%d"%self.debuglevel)
+        if self.debuglevel != sender.getCurrentItem():
+            self.debuglevel = sender.getCurrentItem()
+            self.getApp().dirty = 1
+            debug(BRING_IT_ON, "Debuglevel=%d"%self.debuglevel)
         return 1
 
 
     def onCmdTimeout(self, sender, sel, ptr):
-        self.timeout = sender.getValue()
-        self.getApp().dirty = 1
-        debug(BRING_IT_ON, "Timeout=%d" % self.timeout)
+        if self.timeout != sender.getValue():
+            self.timeout = sender.getValue()
+            self.getApp().dirty = 1
+            debug(BRING_IT_ON, "Timeout=%d" % self.timeout)
         return 1
 
 

@@ -24,7 +24,7 @@ to see how its done.
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import sys, wc
-from wc import debug
+from wc import debug, _
 from wc.debug_levels import *
 
 # filter order
@@ -39,10 +39,10 @@ FILTER_RESPONSE_DECODE = 7 # May decode incoming content
 FILTER_RESPONSE_MODIFY = 8 # May modify incoming content
 FILTER_RESPONSE_ENCODE = 9 # May encode incoming content
 
-class FilterException(Exception): pass
+class FilterException (Exception): pass
 
 
-def printFilterOrder(i):
+def printFilterOrder (i):
     if   i==FILTER_REQUEST: return "Request"
     elif i==FILTER_REQUEST_HEADER: return "Request Header"
     elif i==FILTER_REQUEST_DECODE: return "Request Decode"
@@ -56,15 +56,15 @@ def printFilterOrder(i):
     return "Invalid"
 
 
-def GetRuleFromName(name):
+def GetRuleFromName (name):
     name = name.capitalize()+'Rule'
     if hasattr(Rules, name):
         klass = getattr(Rules, name)
         return klass()
-    raise ValueError, "unknown rule name "+name
+    raise ValueError, _("unknown rule name %s")+name
 
 
-def applyfilter(i, arg, fun='filter', attrs={}):
+def applyfilter (i, arg, fun='filter', attrs={}):
     """Apply all filters which are registered in filter level i.
     For different filter levels we have different arg objects.
     Look at the filter examples.
@@ -72,7 +72,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     if attrs.get('nofilter'):
         return arg
     try:
-        debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
+        #debug(BRING_IT_ON, 'filter stage', printFilterOrder(i), "(%s)"%fun)
         for f in wc.config['filterlist'][i]:
             ffun = getattr(f, fun)
             if hasattr(f, 'mimelist'):
@@ -87,7 +87,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     return arg
 
 
-def initStateObjects(headers={'content-type': 'text/html'}, url=None):
+def initStateObjects (headers={'content-type': 'text/html'}, url=None):
     """init external state objects"""
     attrs = {'mime': headers.get('content-type', 'application/octet-stream')}
     for i in range(10):

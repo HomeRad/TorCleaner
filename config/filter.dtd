@@ -6,6 +6,8 @@
 
  10.8.2001 Bastian Kleineidam
  * added Replacer
+ 23.2.2002 Bastian Kleineidam
+ * added matchurl and dontmatchurl attributes
  
  WWW filters are configuration files for blocking URLs and rewriting
  HTML and image data and HTTP headers.
@@ -61,6 +63,8 @@
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
+ matchurl CDATA ""
+ dontmatchurl CDATA ""
  tag      CDATA "a"
 >
 
@@ -167,6 +171,8 @@
  desc    CDATA #IMPLIED
  name    CDATA #REQUIRED
  disable CDATA "0"
+ matchurl CDATA ""
+ dontmatchurl CDATA ""
 >
 
 
@@ -179,6 +185,8 @@
 <!ATTLIST image
  title   CDATA #REQUIRED
  desc    CDATA #IMPLIED
+ matchurl CDATA ""
+ dontmatchurl CDATA ""
  width   CDATA #REQUIRED
  height  CDATA #REQUIRED
  type    (gif|jpg|png) "gif"
@@ -194,6 +202,8 @@
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
+ matchurl CDATA ""
+ dontmatchurl CDATA ""
 >
 
 <!--                      Replacer
@@ -205,5 +215,7 @@
  title    CDATA #REQUIRED
  desc     CDATA #IMPLIED
  disable  CDATA "0"
+ matchurl CDATA ""
+ dontmatchurl CDATA ""
  search    CDATA #REQUIRED
 >

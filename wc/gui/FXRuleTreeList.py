@@ -23,7 +23,6 @@ class FXRuleTreeList(FXTreeList):
         for f in self.folders:
             self.addFolder(f)
 
-
     def addFolder(self, f, create=0):
         item = self.createRuleItem(f)
         frame = f.fromFactory(self.factory)
@@ -36,7 +35,6 @@ class FXRuleTreeList(FXTreeList):
             self.addRule(branch, r, create)
         return item
 
-
     def addRule(self, branch, rule, create=0):
         item = self.createRuleItem(rule)
         frame = rule.fromFactory(self.factory)
@@ -45,7 +43,6 @@ class FXRuleTreeList(FXTreeList):
         if create:
             frame.create()
         return item
-
 
     def newRule(self, rule):
         item = self.getCurrentItem()
@@ -62,7 +59,6 @@ class FXRuleTreeList(FXTreeList):
         folder.append_rule(rule)
         item = self.addRule(item, rule, 1)
         debug(BRING_IT_ON, "item index %d"%item.getData())
-
 
     def searchFolder(self, index):
         for f in self.folders:
@@ -81,7 +77,6 @@ class FXRuleTreeList(FXTreeList):
         item = FXTreeItem(rule.title)
         self.setItemIcons(item, rule)
         return item
-
 
     def setItemIcons(self, item, rule):
         if rule.disable:

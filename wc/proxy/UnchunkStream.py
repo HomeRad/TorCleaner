@@ -22,7 +22,6 @@ class UnchunkStream:
 
         while self.buffer and not self.closed:
             # Keep looking for alternating chunk lengths and chunk content
-            
             if self.bytes_remaining is None:
                 # We want to find a chunk length
                 i = self.buffer.find('\n')

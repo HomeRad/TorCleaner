@@ -1,3 +1,15 @@
+webcleaner (0.33) unstable; urgency=low
+
+  * Fix DOCTYPE filtering with no pubid content (added missing >)
+  * Add url regular expression matchers to the filter rules Rewriter,
+    Replacer and Gifimage. This allows to match rules only to specific
+    urls.
+  * Updated webcleanerconf GUI for the modified rules.
+  * Update german translation.
+  * Dont bail out if /etc/resolv.conf could not be found on DNS init.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Sat, 23 Feb 2002 19:30:21 +0100
+
 webcleaner (0.32) unstable; urgency=low
 
   * setup.py: fix to work with Python 2.2
