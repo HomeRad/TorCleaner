@@ -46,6 +46,9 @@
     Changed: wc/proxy/HttpProxyClient.java
   * write new proxy config on all changes
     Changed: wc/webgui/context/config_html.py
+  * after changing filter rules or folders all the filter modules are
+    reinitialized
+    Changed: wc/webgui/context/filterconfig_html.py
 
 2.7 (released 04.12.2003)
   * updated filters:
