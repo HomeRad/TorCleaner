@@ -120,7 +120,7 @@ def parse_options (sysargs):
     @return: (configdir, args)
     """
     import getopt
-    configdir = None
+    configdir = wc.ConfigDir
     try:
         # Note: cut out the name of the script in sys.argv
         options, args = getopt.getopt(sysargs, "hd",
