@@ -1,16 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 # asyncore problem -- we can't separately register for reading/writing
 # (less efficient: it calls writable(), readable() a LOT)
-# (however, for the proxy it may not be a big deal)  I'd like to
-# assume everything is readable, at least.  Is that the case?
-
-# asyncore problem -- suppose we get an error while connecting.
-# it calls handle_read_event, and then the recv() gives an exception.
-# the problem now is that we can't just close(), because asyncore's
-# loop will call handle_write_event, which will then assume the
-# connection is reopened(!!!) and then we get another exception
-# while trying to write .. argh.  NOTE: I just started using my
-# own poll loop to avoid this problem. :P
+# (however, for the proxy it may not be a big deal)
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -83,7 +74,7 @@ class Connection (asyncore.dispatcher, object):
 
 
     def handle_write_event (self):
-        """overrides asyncore.dispatcher.handle_write_event
+        """overrides asyncore.dispatcher.handle_write_event:
         only calls handle_write if there is pending data"""
         if not self.connected:
             self.handle_connect()
