@@ -212,6 +212,7 @@ o embedded JavaScript engine and filtering
        'config/wcheaders.conf',
        'config/wcheaders.dtd',
        'config/filter.dtd',
+       'config/logging.conf',
        'config/adverts.zap',
        'config/blacklist_ads.zap',
        'config/blacklist_aggressive.zap',
