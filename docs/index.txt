@@ -39,10 +39,10 @@ There are also `Md5sum checksums`_ from above files.
    webcleaner-md5sums.txt
 
 Requirements and installation instructions are located at the
-install_ documentation. To see what has changed between releases
+`install documentation`_. To see what has changed between releases
 look at the ChangeLog_.
 
-.. _install: install.html
+.. _install documentation: install.html
 .. _ChangeLog: changes.txt
 
 
