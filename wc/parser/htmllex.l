@@ -191,7 +191,9 @@ static PyObject* quote_string (PyObject* val) {
 %x S_TAGEND2
 %x S_SCRIPT
 %x S_SCRIPT_APOS
+%x S_SCRIPT_APOS_ESC
 %x S_SCRIPT_STRING
+%x S_SCRIPT_STRING_ESC
 %x S_SCRIPT_COMMENT
 %x S_SCRIPT_MCOMMENT
 %x S_STYLE
@@ -201,7 +203,9 @@ static PyObject* quote_string (PyObject* val) {
 %x S_ATTR4
 %x S_ATTR5
 %x S_APOSSTRING
+%x S_APOSSTRING_ESC
 %x S_STRING
+%x S_STRING_ESC
 
 RX_WHITE_SPACE	[\n\r\ \t\b\012]
 RX_EQUAL	=
@@ -497,7 +501,13 @@ RX_DATA [-a-zA-Z0-9_]+
     return T_WAIT;
 }
 
-<S_SCRIPT_APOS>[^']+ {
+<S_SCRIPT_APOS>\\ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_APOS_ESC);
+}
+
+<S_SCRIPT_APOS>[^\\']+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
@@ -508,7 +518,19 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_SCRIPT);
 }
 
-<S_SCRIPT_STRING>[^"]+ {
+<S_SCRIPT_APOS_ESC>. {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_APOS);
+}
+
+<S_SCRIPT_STRING>\\ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_STRING_ESC);
+}
+
+<S_SCRIPT_STRING>[^\\"]+ {
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
@@ -517,6 +539,12 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
     BEGIN(S_SCRIPT);
+}
+
+<S_SCRIPT_STRING_ESC>. {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_SCRIPT_STRING);
 }
 
 <S_SCRIPT_COMMENT>[^\-\n]+ {
@@ -796,6 +824,12 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_ATTR1);
 }
 
+<S_APOSSTRING>\\ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_APOSSTRING_ESC);
+}
+
 <S_APOSSTRING>\' {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -819,6 +853,18 @@ RX_DATA [-a-zA-Z0-9_]+
 }
 
 
+<S_APOSSTRING_ESC>. {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_APOSSTRING);
+}
+
+<S_STRING>\\ {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_STRING_ESC);
+}
+
 <S_STRING>\" {
     UPDATE_BUFPOS;
     PYSTRING_TMP(yyextra->tmp_attrval);
@@ -840,6 +886,13 @@ RX_DATA [-a-zA-Z0-9_]+
     UPDATE_BUFPOS;
     APPEND_TO_TMP(yyleng);
 }
+
+<S_STRING_ESC>. {
+    UPDATE_BUFPOS;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_STRING);
+}
+
 
   /*********************** TAGEND ************************/
 <INITIAL><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}*/[A-Za-z] {
