@@ -13,8 +13,8 @@
     Type: feature
     Changed: wc/proxy/HttpServer.py
 
-  * don't quote colons in url cgi data, else some servers cannot unquote
-    properly
+  * don't quote colons or commas in url cgi data, else some servers
+    cannot unquote properly
     Type: feature
     Changed: wc/url.py
 
