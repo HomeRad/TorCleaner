@@ -6,7 +6,7 @@
 <rewrite title="No meta tags 1" oid="0"
  desc="Meta tags with name attribute are only for search engines."
  tag="meta">
-<attr name="name"/>
+<attr name="name">(?i)(author|description|keywords|revisit-after|page-topic|url|allow-search|searchtitle|robots|audience|content-language|copyright|MSSmartTagsPreventParsing)</attr>
 <replace part="tag"/>
 </rewrite>
 

@@ -110,7 +110,7 @@
 
 <rewrite title="CGI adverts 2" oid="18"
  desc="This rule matches GIFs served by CGI and with advert words in the path.">
-<attr>/cgi-bin/ads?(log|click)?\?</attr>
+<attr>/cgi-bin/ads?(log(\.pl)?|click)?\?</attr>
 </rewrite>
 
 <block title="CGI adverts 3" oid="19"
@@ -210,5 +210,11 @@
  desc="Navigation bar form"
  tag="form">
 <attr name="action">http://www\.osdn\.com/osdnsearch\.pl</attr>
+</rewrite>
+
+<rewrite title="SF tracker image" oid="36"
+ desc="akamai tracker image at sourceforge"
+ tag="img">
+<attr name="src">e\.akamai\.net</attr>
 </rewrite>
 </folder>
