@@ -327,7 +327,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         is_closed = False
         for decoder in self.decoders:
             data = decoder.decode(data)
-            is_closed = decoder.closed or is_closed
+            if not is_closed:
+                is_closed = decoder.closed
         data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_DECODE, data, "filter", self.attrs)
         data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_MODIFY, data, "filter", self.attrs)
         data = wc.filter.applyfilter(wc.filter.FILTER_REQUEST_ENCODE, data, "filter", self.attrs)
