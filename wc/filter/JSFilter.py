@@ -18,6 +18,7 @@
 
 import re
 import urlparse
+
 import wc
 import wc.HtmlParser
 import wc.log
@@ -53,7 +54,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.comments = opts['comments']
         self.url = url or "unknown"
         self.js_src = False
-        self.js_script = ''
+        self.js_script = u''
         # HttpProxyClient object used in background downloads,
         # has self.jsScriptData as handler
         self.js_client = None
@@ -149,7 +150,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             assert not self.js_htmlparser.waitbuf
             assert len(self.htmlparser.tagbuf) >= 2, \
                    "too small buffer %s" % self.htmlparser.tagbuf
-            data = self.js_htmlparser.getoutput()
+            data = unicode(self.js_htmlparser.getoutput())
             self.htmlparser.tagbuf[-2:-2] = \
         [[wc.filter.rules.RewriteRule.DATA, data]]+self.js_htmlparser.tagbuf
             self.htmlparser.debugbuf(wc.LOG_JS)
@@ -222,7 +223,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             return
         # put correctly quoted script data into buffer
         self.htmlparser.tagbuf[-1][1] = \
-                         "\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
+                         u"\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
         # execute script
         self.jsScript(script, ver, item)
 
@@ -316,7 +317,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             # Note: <script src=""> could be missing an end tag,
             # but now we need one. Look later for a duplicate </script>.
             self.htmlparser.tagbuf.append(
-                               [wc.filter.rules.RewriteRule.ENDTAG, "script"])
+                            [wc.filter.rules.RewriteRule.ENDTAG, u"script"])
             self.js_script = u''
             self.htmlparser.state = ('parse',)
             wc.log.debug(wc.LOG_JS, "%s switching back to parse with", self)
