@@ -1,5 +1,9 @@
 TODO
 
+ File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 244, in server_content
+     assert self.server
+     AssertionError
+
 - Python 2.3:
   use Bool type
   use builtin timeout in socket module
