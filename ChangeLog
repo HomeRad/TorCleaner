@@ -1,3 +1,9 @@
+2.29 "" (released xx.xx.xxxx)
+
+  * Replace template_dir in windows install script.
+    Type: bugfix
+    Changed: install-webcleaner.py
+
 2.28 "Shrek" (released 16.3.2005)
 
   * Initialize the ImageReducer attributes properly. Only change
