@@ -527,7 +527,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                      DnsResponse('error', 'not found .. %s' % self))
             self.close()
             return
-        ip_addrs = [rdata.address for rdata in answer]
+        ip_addrs = [rdata.address for rdata in answer
+                    if hasattr(rdata, "address")]
         callback, self.callback = self.callback, None
         if ip_addrs:
             # doh, verisign has a catch-all ip 64.94.110.11 for
