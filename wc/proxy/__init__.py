@@ -174,17 +174,21 @@ def match_host (host, hostset):
         return False
     return ip.host_in_set(host, hostset[0], hostset[1])
 
+default_ports = {
+    'http' : 80,
+    'https' : 443,
+    'nntps' : 563,
+}
 
 def spliturl (url):
     """split url in a tuple (scheme, hostname, port, document) where
     hostname is always lowercased"""
-    # XXX this relies on scheme==http!
     scheme, netloc = splittype(url)
     host, document = splithost(netloc)
-    port = 80
+    port = default_ports.get(scheme, 80)
     if host:
         host = host.lower()
-        host, port = splitnport(host, 80)
+        host, port = splitnport(host, port)
     return scheme, host, port, document
 
 
