@@ -53,10 +53,15 @@ class ClientServerMatchmaker:
              'content': "WebCleaner Proxy Error %d %s<br>%s<br>" % \
                         (code, msg, txt),
             }
+        if config['proxyuser']:
+            auth = 'Proxy-Authenticate: Basic realm="WebCleaner"\r\n'
+        else:
+            auth = ""
         ServerHandleDirectly(self.client,
             'HTTP/1.0 %d %s\r\n',
-            'Server: WebCleaner Proxy\r\n'
-            'Content-type: text/html\r\n'
+            'Server: WebCleaner Proxy\r\n' +\
+            'Content-type: text/html\r\n' +\
+            '%s'%auth +\
             '\r\n', content)
 
 
@@ -64,6 +69,12 @@ class ClientServerMatchmaker:
         self.client = client
         self.request = request
         self.headers = headers
+        if config["proxyuser"]:
+            if not self.headers.has_key("Proxy-Authorization"):
+                self.error(407, _("Proxy Authentication Required"))
+                return
+            auth = self.headers['Proxy-Authorization']
+            # XXX more
         self.content = content
         self.nofilter = nofilter
         self.url = ""

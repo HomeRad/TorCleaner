@@ -148,6 +148,8 @@ class ConfWindow(ToolWindow):
         FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_DOWN,ConfWindow.onCmdDown)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_UP,ConfWindow.onCmdUpUpdate)
         FXMAPFUNC(self,SEL_UPDATE,ConfWindow.ID_DOWN,ConfWindow.onCmdDownUpdate)
+        #FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYUSER,ConfWindow.onCmdProxyUser)
+        #FXMAPFUNC(self,SEL_COMMAND,ConfWindow.ID_PROXYPASS,ConfWindow.onCmdProxyPass)
 
 
     def proxySettings(self, tabbook):
@@ -214,12 +216,15 @@ class ConfWindow(ToolWindow):
         groupbox = FXGroupBox(frame, _("Parent Proxy"), FRAME_RIDGE|LAYOUT_LEFT|LAYOUT_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,5,5,5,5)
         matrix = FXMatrix(groupbox, 2, MATRIX_BY_COLUMNS)
         FXLabel(matrix, _("Host"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        parentproxy = FXTextField(matrix, 16, self, self.ID_PARENTPROXY)
-        parentproxy.setText(self.parentproxy)
+        FXTextField(matrix, 16, self, self.ID_PARENTPROXY).setText(self.parentproxy)
         FXLabel(matrix, _("Port"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
-        parentport = FXSpinner(matrix, 4, self, self.ID_PARENTPROXYPORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
-        parentport.setRange(0,65535)
-        parentport.setValue(self.parentproxyport)
+        widget = FXSpinner(matrix, 4, self, self.ID_PARENTPROXYPORT, SPIN_NORMAL|FRAME_SUNKEN|FRAME_THICK)
+        widget.setRange(0,65535)
+        widget.setValue(self.parentproxyport)
+        FXLabel(matrix, _("User"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXTextField(matrix, 16, self, self.ID_PARENTPROXYUSER).setText(self.parentproxyuser)
+        FXLabel(matrix, _("Password"), opts=LAYOUT_CENTER_Y|LAYOUT_LEFT)
+        FXTextField(matrix, 16, self, self.ID_PARENTPROXYPASS, opts=TEXTFIELD_NORMAL|TEXTFIELD_PASSWD).setText(self.parentproxypass)
         # proxySettings
 
 
@@ -608,7 +613,8 @@ class ConfWindow(ToolWindow):
         self.config = wc.Configuration()
         for key in ('version','port','parentproxy','parentproxyport',
          'timeout','obfuscateip','debuglevel','logfile',
-	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass'):
+	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
+         'parentproxyuser', 'parentproxypass'):
             setattr(self, key, self.config[key])
         self.modules = {
 	    "Header":0,
