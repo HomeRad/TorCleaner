@@ -77,7 +77,7 @@ class FolderRule (Rule):
 
 
     def toxml (self):
-        s = """<?xml version="1.0"?>
+        s = """<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE filter SYSTEM "filter.dtd">
 %s""" % super(FolderRule, self).toxml()
         if self.lang:

@@ -79,7 +79,7 @@ class Rule (object):
     def fill_attrs (self, attrs, name):
         for attr in self.attrnames:
             if attrs.has_key(attr):
-                val = unxmlify(attrs[attr]).encode('iso8859-1')
+                val = unxmlify(attrs[attr])
                 setattr(self, attr, val)
         for attr in self.intattrs:
             val = getattr(self, attr)

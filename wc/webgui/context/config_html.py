@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 # be sure not to import something in the context namespace we do not want
 import base64
-from wc import i18n, AppName, filtermodules, ip
+from wc import i18n, AppName, filtermodules, ip, Version
 from wc import sort_seq as _sort_seq
 from wc import Configuration as _Configuration
 from wc.webgui.context import getval as _getval

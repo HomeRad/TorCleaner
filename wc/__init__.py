@@ -208,7 +208,7 @@ class Configuration (dict):
     def write_proxyconf (self):
         """write proxy configuration"""
         f = file(proxyconf_file(), 'w')
-        f.write("""<?xml version="1.0"?>
+        f.write("""<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
 <webcleaner
 """)
@@ -329,13 +329,18 @@ class ParseException (Exception): pass
 class BaseParser (object):
     def parse (self, filename, config):
         debug(WC, "Parsing %s", filename)
-        self.p = xml.parsers.expat.ParserCreate("ISO-8859-1")
+        self.p = xml.parsers.expat.ParserCreate()
+        self.p.returns_unicode = 0
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
         self.p.CharacterDataHandler = self.character_data
         self.reset(filename)
         self.config = config
-        self.p.ParseFile(open(filename))
+        try:
+            self.p.ParseFile(open(filename))
+        except xml.parsers.expat.ExpatError:
+            error(WC, "Error parsing %s"%filename)
+            raise
 
 
     def start_element (self, name, attrs):
@@ -413,23 +418,17 @@ class WConfigParser (BaseParser):
     def start_element (self, name, attrs):
         if name=='webcleaner':
             for key,val in attrs.items():
-                self.config[str(key)] = unxmlify(val)
+                self.config[key] = unxmlify(val)
             for key in ('port', 'parentproxyport', 'timeout',
 	                'colorize', 'showerrors', 'strict_whitelist'):
                 self.config[key] = int(self.config[key])
-            for key in ('version', 'parentproxy', 'proxyuser',
-                        'proxypass', 'parentproxyuser', 'parentproxypass',
-                        'gui_theme',
-                        ):
-                if self.config[key] is not None:
-                    self.config[key] = str(self.config[key])
             if self.config['nofilterhosts'] is not None:
-                strhosts = str(self.config['nofilterhosts'])
+                strhosts = self.config['nofilterhosts']
                 self.config['nofilterhosts'] = ip.strhosts2map(strhosts)
             else:
                 self.config['nofilterhosts'] = [Set(), []]
             if self.config['allowedhosts'] is not None:
-                strhosts = str(self.config['allowedhosts'])
+                strhosts = self.config['allowedhosts']
                 self.config['allowedhosts'] = ip.strhosts2map(strhosts)
             else:
                 self.config['allowedhosts'] = [Set(), []]
