@@ -34,7 +34,7 @@ error = {}
 config['filterdict'] = {}
 for _i in filtermodules:
     config['filterdict'][_i] = False
-for _i in config['filters']:
+for _i in config.get('filters', []):
     config['filterdict'][_i] = True
 config['newport'] = config.get('port', 8080)
 config['newsslport'] = config.get('sslport', 8443)
