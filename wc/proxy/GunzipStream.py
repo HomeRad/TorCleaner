@@ -31,6 +31,11 @@ class GunzipStream (DeflateStream):
         self.error = False
 
 
+    def __repr__ (self):
+        return '<%s closed=%s buflen=%d error=%s>'%\
+               ('gunzip', str(self.closed), len(self.buf), str(self.error))
+
+
     def attempt_header_read (self):
         "Try to parse the header from buffer, and if we can, set flag"
         if len(self.buf) < 10: # Incomplete fixed part of header

@@ -25,6 +25,11 @@ class UnchunkStream (object):
         self.closed = False
 
 
+    def __repr__ (self):
+        return '<%s closed=%s buflen=%d bytes_remaining=%s>'%\
+      ('unchunk', str(self.closed), len(self.buf), str(self.bytes_remaining))
+
+
     def decode (self, s):
         #debug(PROXY, "chunked data %s", `s`)
         self.buf += s

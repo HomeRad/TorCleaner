@@ -12,8 +12,14 @@ class DeflateStream (object):
         self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
         self.closed = False
 
+
+    def __repr__ (self):
+        return '<%s closed=%s>'%('deflate', str(self.closed))
+
+
     def decode (self, s):
         return self.decompressor.decompress(s)
+
 
     def flush (self):
         return self.decompressor.flush()
