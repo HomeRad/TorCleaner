@@ -47,6 +47,10 @@
 	BEGIN(INITIAL)
 
 #define SET_ATTR_LVAL \
+    if (yyextra->tmp_tag==NULL || yyextra->tmp_attrs==NULL) { \
+    PyErr_SetString(PyExc_TypeError, "tmp_tag or tmp_attrs is NULL"); \
+    return T_ERROR; \
+    } \
     *yylval = Py_BuildValue("(OO)", yyextra->tmp_tag, yyextra->tmp_attrs); \
     if ((*yylval)==NULL) return T_ERROR; \
     yyextra->tmp_tag = yyextra->tmp_attrs = NULL;
@@ -115,7 +119,7 @@ static PyObject* quote_string (PyObject* val) {
 %}
 
 %option 8bit outfile="htmllex.c"
-%option align fast
+%option align full
 /*%option debug*/
 %option nounput nomain noyywrap noyymore noreject
 %option reentrant-bison never-interactive
@@ -465,7 +469,7 @@ RX_DATA [-a-zA-Z0-9_]+
     BEGIN(S_ATTR4);
 }
 
-<S_ATTR1,S_ATTR2>. {
+<S_ATTR1,S_ATTR2>.|\n {
     /* this also skips whitespace! */
     UPDATE_BUFPOS;
 }
@@ -681,7 +685,7 @@ int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     data->exc_type = NULL;
     data->exc_val = NULL;
     data->exc_tb = NULL;
-    //fprintf(stderr, "SCANNING %s\n", data->buf+len);
+    /*fprintf(stderr, "SCANNING '%s'\n", data->buf+len);*/
     data->lexbuf = yy_scan_bytes(data->buf+len, slen, scanner);
     return 0;
 }
