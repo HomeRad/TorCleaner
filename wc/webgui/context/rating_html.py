@@ -46,12 +46,12 @@ rating_modified = {}
 
 def _reset_values ():
     for category in categories:
-        values[category.name] = {}
         if category.iterable:
+            values[category.name] = {}
             for value in category.values:
-                values[category.name][value] = False
+                values[category.name][value] = value=='none'
         else:
-            values[category.name] = None
+            values[category.name] = ""
     rating_modified.clear()
 
 
@@ -141,16 +141,20 @@ def _form_generic (form):
 
 def _form_ratings (form):
     """Check category value validity"""
-    for key, value in _get_prefix_vals(form, 'category_'):
-        category = _get_category(key)
+    for catname, value in _get_prefix_vals(form, 'category_'):
+        category = _get_category(catname)
         if category is None:
             # unknown category
             error['categoryvalue'] = True
             return False
-        if not category.is_valid_value(value):
+        if not category.valid_value(value):
             error['categoryvalue'] = True
             return False
-        values[key] = value
+        if category.iterable:
+            values[catname]['none'] = False
+            values[catname][value] = True
+        else:
+            values[catname] = value
     return True
 
 
@@ -179,6 +183,8 @@ def _form_apply ():
     rating.remove_categories()
     for catname, value in values.items():
         category = _get_category(catname)
+        if category.iterable:
+            value = [x for x in value if value[x]][0]
         rating.add_category_value(category, value)
     rating_store[url] = rating
     try:
