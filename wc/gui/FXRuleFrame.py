@@ -47,8 +47,7 @@ class FXRuleFrame (FXVerticalFrame):
     def get_name (self):
         """display this name at the top of the window"""
         s = self.rule.get_name().capitalize()+_(" rule")
-        if hasattr(self.rule, "ruleid"):
-            s += " (ID %d)" % self.rule.ruleid
+        s += " (ID %d)" % self.rule.oid
         return s
 
     def onCmdTitle (self, sender, sel, ptr):

@@ -85,12 +85,14 @@ class Rule:
     """
     def __init__ (self, title="No title", desc="", disable=0, parent=None, oid=0):
         self.title = title
+        global rulecounter
         if not oid:
-            global rulecounter
             self.oid = rulecounter
             rulecounter += 1
         else:
             self.oid = oid
+	    if oid >= rulecounter:
+	        rulecounter = oid+1
         self.desc = desc
         self.disable = disable
         self.parent = parent
@@ -495,33 +497,20 @@ class FolderRule (Rule):
         self.filename = filename
         self.lang = lang
         self.rules = []
-        self.ruleids = {}
 
     def fromFactory (self, factory):
         return factory.fromFolderRule(self)
 
     def append_rule (self, r):
         self.rules.append(r)
-        r.ruleid = self.newid()
         r.parent = self
 
     def delete_rule (self, i):
         r = self.rules[i]
-        del self.ruleids[r.ruleid]
         del self.rules[i]
 
     def sort (self):
         self.rules.sort()
-
-    def newid (self):
-        i=0
-        while 1:
-            if self.ruleids.has_key(i):
-                i += 1
-            else:
-                break
-        self.ruleids[i] = 1
-        return i
 
     def toxml (self):
         s = """<?xml version="1.0"?>
