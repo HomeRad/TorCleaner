@@ -325,8 +325,8 @@ def _form_folder_up (oid):
     folders = config['folderrules']
     for i, folder in enumerate(folders):
         if folder.oid==oid and i>0:
-            # swap folders
-            folders[(i-1):(i+1)] = [folders[i], folders[i-1]]
+            # swap oids
+            folders[i-1].oid,folders[i].oid = folders[i].oid,folders[i-1].oid
             # sort folders
             config.sort()
             # deselet rule and folder
@@ -343,8 +343,8 @@ def _form_folder_down (oid):
     folders = config['folderrules']
     for i, folder in enumerate(folders):
         if folder.oid==oid and i<(len(folders)-1):
-            # swap folders
-            folders[i:(i+2)] = [folders[i+1], folders[i]]
+            # swap oids
+            folders[i].oid,folders[i+1].oid = folders[i+1].oid,folders[i].oid
             # sort folders
             config.sort()
             # deselet rule and folder
@@ -361,8 +361,8 @@ def _form_rule_up (oid):
     rules = curfolder.rules
     for i, rule in enumerate(rules):
         if rule.oid==oid and i>0:
-            # swap rules
-            rules[(i-1):(i+1)] = [rules[i], rules[i-1]]
+            # swap oids
+            rules[i-1].oid,rules[i].oid = rules[i].oid,rules[i-1].oid
             # sort folder
             curfolder.sort()
             # deselect rule
@@ -378,8 +378,8 @@ def _form_rule_down (oid):
     rules = curfolder.rules
     for i, rule in enumerate(rules):
         if rule.oid==oid and i<(len(rules)-1):
-            # swap rules
-            rules[i:(i+2)] = [rules[i+1], rules[i]]
+            # swap oids
+            rules[i].oid,rules[i+1].oid = rules[i+1].oid,rules[i].oid
             # sort folder
             curfolder.sort()
             # deselect rule

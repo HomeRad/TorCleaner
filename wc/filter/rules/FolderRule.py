@@ -70,8 +70,8 @@ class FolderRule (Rule):
 
 
     def sort (self):
-        recalc_oids(self.rules)
         self.rules.sort()
+        recalc_oids(self.rules)
         recalc_up_down(self.rules)
 
 

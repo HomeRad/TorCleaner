@@ -250,8 +250,8 @@ class Configuration (dict):
         from filter.rules.FolderRule import recalc_oids, recalc_up_down
         for f in self['folderrules']:
             f.sort()
-        recalc_oids(self['folderrules'])
         self['folderrules'].sort()
+        recalc_oids(self['folderrules'])
         recalc_up_down(self['folderrules'])
 
 
