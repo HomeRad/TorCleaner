@@ -61,19 +61,18 @@ class ClientServerMatchmaker:
         scheme, hostname, port, document = spliturl(self.url)
         # some clients send partial URI's without scheme, hostname
         # and port to clients, so we have to handle this
-        if not (scheme and hostname and port):
-            print >>sys.stderr, "Warning: partial request uri:", self.request
         if not scheme:
+            print >>sys.stderr, "Warning: partial request uri:", self.request
             # default scheme is http
             scheme = "http"
-        if not hostname:
+        if scheme!='file' and not hostname:
             # the 'Host' header has to be there
             hostname = self.headers.get('Host')
             if not hostname:
                 # we cannot handle the request
                 self.client.error(400, i18n._("Incomplete Proxy Request"))
                 return
-        if not port:
+        if scheme!='file' and not port:
             port = 80
         # fix missing trailing /
         if not document: document = '/'
