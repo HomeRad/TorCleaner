@@ -78,8 +78,8 @@ class Rule (object):
 
     def _reset_parsed_data (self):
         """reset parsed rule data"""
-        self._data = ""
-        self._lang = "en"
+        self._data = u""
+        self._lang = u"en"
 
     def update (self, rule, dryrun=False, log=None):
         """update title and description with given rule data"""
@@ -196,7 +196,7 @@ class Rule (object):
     def end_data (self, name):
         """called when XML end element was reached"""
         if name == self.get_name():
-            self._data = ""
+            self._data = u""
         else:
             self._data = wc.XmlUtils.xmlunquote(self._data)
         if name == 'title':

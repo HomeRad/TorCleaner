@@ -401,8 +401,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   145,   145,   146,   149,   150,   157,   192,   239,   270,
-     291,   312,   333,   354,   376,   398
+       0,   145,   145,   146,   149,   150,   157,   192,   240,   271,
+     292,   313,   334,   355,   377,   399
 };
 #endif
 
@@ -1135,7 +1135,7 @@ yyreduce:
 #line 158 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
-       <tag> is a PyString, <attrs> is a PyDict */
+       <tag> is a PyObject, <attrs> is a PyDict */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1173,14 +1173,14 @@ finish_start:
 #line 193 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
-       <tag> is a PyString, <attrs> is a PyDict */
+       <tag> is a PyObject, <attrs> is a PyDict */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
     PyObject* tag = PyTuple_GET_ITEM(yyvsp[0], 0);
     PyObject* attrs = PyTuple_GET_ITEM(yyvsp[0], 1);
     int error = 0;
-    char* tagname;
+    PyObject* tagname = NULL;
     if (!tag || !attrs) { error = 1; goto finish_start_end; }
     if (PyObject_HasAttrString(ud->handler, "start_element")==1) {
 	callback = PyObject_GetAttrString(ud->handler, "start_element");
@@ -1191,9 +1191,10 @@ finish_start:
         Py_DECREF(result);
         callback=result=NULL;
     }
-    tagname = PyString_AS_STRING(tag);
+    /* encode tagname in ASCII, ignoring any unknown chars */
+    tagname = PyUnicode_AsEncodedString(tag, "ascii", "ignore");
     if (PyObject_HasAttrString(ud->handler, "end_element")==1 &&
-	NO_HTML_END_TAG(tagname)) {
+	NO_HTML_END_TAG(PyString_AsString(tagname))) {
 	callback = PyObject_GetAttrString(ud->handler, "end_element");
 	if (callback==NULL) { error=1; goto finish_start_end; }
 	result = PyObject_CallFunction(callback, "O", tag);
@@ -1220,9 +1221,9 @@ finish_start_end:
     break;
 
   case 8:
-#line 240 "htmlparse.y"
+#line 241 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1254,9 +1255,9 @@ finish_end:
     break;
 
   case 9:
-#line 271 "htmlparse.y"
+#line 272 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1278,9 +1279,9 @@ finish_comment:
     break;
 
   case 10:
-#line 292 "htmlparse.y"
+#line 293 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1302,9 +1303,9 @@ finish_pi:
     break;
 
   case 11:
-#line 313 "htmlparse.y"
+#line 314 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1326,9 +1327,9 @@ finish_cdata:
     break;
 
   case 12:
-#line 334 "htmlparse.y"
+#line 335 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1350,9 +1351,9 @@ finish_doctype:
     break;
 
   case 13:
-#line 355 "htmlparse.y"
+#line 356 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1375,9 +1376,9 @@ finish_script:
     break;
 
   case 14:
-#line 377 "htmlparse.y"
+#line 378 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -1400,9 +1401,9 @@ finish_style:
     break;
 
   case 15:
-#line 399 "htmlparse.y"
+#line 400 "htmlparse.y"
     {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -1428,7 +1429,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1432 "htmlparse.c"
+#line 1433 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1622,7 +1623,7 @@ yyreturn:
 }
 
 
-#line 422 "htmlparse.y"
+#line 423 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1713,7 +1714,7 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
     self->userData->handler = NULL;
-    Py_DECREF(self->handler);
+    Py_XDECREF(self->handler);
     self->handler = NULL;
     return 0;
 }
@@ -1724,7 +1725,7 @@ static void parser_dealloc (parser_object* self) {
     htmllexDestroy(self->scanner);
     parser_clear(self);
     self->userData->encoding = NULL;
-    Py_DECREF(self->encoding);
+    Py_XDECREF(self->encoding);
     self->encoding = NULL;
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
@@ -1784,7 +1785,10 @@ static PyObject* parser_flush (parser_object* self, PyObject* args) {
     if (strlen(self->userData->buf)) {
         /* XXX set line, col */
         int error = 0;
-	PyObject* s = PyString_FromString(self->userData->buf);
+        const char* enc = PyString_AsString(self->encoding);
+	PyObject* s = PyUnicode_Decode(self->userData->buf,
+                                       strlen(self->userData->buf),
+                                       enc, "ignore");
 	PyObject* callback = NULL;
 	PyObject* result = NULL;
 	/* reset buffer */
@@ -1915,6 +1919,7 @@ static PyObject* parser_gethandler (parser_object* self, void* closure) {
     return self->handler;
 }
 
+
 static int parser_sethandler (parser_object* self, PyObject* value, void* closure) {
     if (value == NULL) {
        PyErr_SetString(PyExc_TypeError, "Cannot delete parser handler");
@@ -1927,10 +1932,12 @@ static int parser_sethandler (parser_object* self, PyObject* value, void* closur
     return 0;
 }
 
+
 static PyObject* parser_getencoding (parser_object* self, void* closure) {
     Py_INCREF(self->encoding);
     return self->encoding;
 }
+
 
 static int parser_setencoding (parser_object* self, PyObject* value, void* closure) {
     if (value == NULL) {
@@ -1947,6 +1954,7 @@ static int parser_setencoding (parser_object* self, PyObject* value, void* closu
     self->userData->encoding = value;
     return 0;
 }
+
 
 /* type interface */
 

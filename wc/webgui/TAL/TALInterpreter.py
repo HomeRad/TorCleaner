@@ -29,6 +29,7 @@ from TALDefs import TAL_VERSION, TALError, METALError, attrEscape
 from TALDefs import isCurrentVersion, getProgramVersion, getProgramMode
 from TALGenerator import TALGenerator
 from TranslationContext import TranslationContext
+from wc.webgui import ZTUtils
 
 BOOLEAN_HTML_ATTRS = [
     # List of Boolean attributes in HTML that should be rendered in
@@ -152,7 +153,7 @@ class TALInterpreter (object):
     def StringIO (self):
         # Third-party products wishing to provide a full Unicode-aware
         # StringIO can do so by monkey-patching this method.
-        return FasterStringIO()
+        return ZTUtils.FasterStringIO()
 
     def saveState (self):
         return (self.position, self.col, self.stream,
@@ -731,27 +732,3 @@ class TALInterpreter (object):
     bytecode_handlers_tal["<attrAction>"] = attrAction_tal
     bytecode_handlers_tal["optTag"] = do_optTag_tal
 
-
-class FasterStringIO (StringIO):
-    """Append-only version of StringIO.
-
-    This let's us have a much faster write() method.
-    """
-    def close (self):
-        if not self.closed:
-            self.write = _write_ValueError
-            StringIO.close(self)
-
-    def seek (self, pos, mode=0):
-        raise RuntimeError("FasterStringIO.seek() not allowed")
-
-    def write (self, s):
-        #assert self.pos == self.len
-        if not isinstance(s, unicode):
-            s = ustr(s)
-        self.buflist.append(s)
-        self.len = self.pos = self.pos + len(s)
-
-
-def _write_ValueError (s):
-    raise ValueError, "I/O operation on closed file"

@@ -59,6 +59,10 @@
    The parser quotes all attribute values.
    Python memory management interface is used.
 
+4. Character encoding aware
+
+   The parser itself is not encoding aware, but all the output are
+   always Python Unicode strings.
 """
 
 import re

@@ -389,7 +389,7 @@ class ZapperParser (BaseParser):
         elif name == 'folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            raise ParseException, _("unknown tag name %s")%name
+            raise ParseException, _("unknown tag name %r") % name
 
     def end_element (self, name):
         """handle end tag of folder, rule or nested element"""
@@ -404,7 +404,6 @@ class ZapperParser (BaseParser):
         elif name == 'folder':
             if self.compile_data:
                 self.folder.compile_data()
-
 
     def character_data (self, data):
         """handle rule of folder character data"""

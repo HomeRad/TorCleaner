@@ -121,19 +121,19 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
     def doctype (self, data):
         """HTML doctype"""
         wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
-        return self._data("<!DOCTYPE%s>"%data)
+        return self._data("<!DOCTYPE%s>" % data)
 
     def pi (self, data):
         """HTML pi"""
         wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
-        return self._data("<?%s?>"%data)
+        return self._data("<?%s?>" % data)
 
     def start_element (self, tag, attrs):
         """We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list."""
         self._check_encoding(tag, attrs)
         # default data
-        wc.log.debug(wc.LOG_FILTER, "%s start_element %r", self, tag)
+        wc.log.debug(wc.LOG_FILTER, "%s start_element %r %s", self, tag, attrs)
         if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG,
                              tag, attrs]):
             return

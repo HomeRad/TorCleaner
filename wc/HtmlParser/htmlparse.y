@@ -157,7 +157,7 @@ element: T_WAIT { YYACCEPT; /* wait for more lexer input */ }
 | T_ELEMENT_START
 {
     /* $1 is a PyTuple (<tag>, <attrs>)
-       <tag> is a PyString, <attrs> is a PyDict */
+       <tag> is a PyObject, <attrs> is a PyDict */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -192,14 +192,14 @@ finish_start:
 | T_ELEMENT_START_END
 {
     /* $1 is a PyTuple (<tag>, <attrs>)
-       <tag> is a PyString, <attrs> is a PyDict */
+       <tag> is a PyObject, <attrs> is a PyDict */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
     PyObject* tag = PyTuple_GET_ITEM($1, 0);
     PyObject* attrs = PyTuple_GET_ITEM($1, 1);
     int error = 0;
-    char* tagname;
+    PyObject* tagname = NULL;
     if (!tag || !attrs) { error = 1; goto finish_start_end; }
     if (PyObject_HasAttrString(ud->handler, "start_element")==1) {
 	callback = PyObject_GetAttrString(ud->handler, "start_element");
@@ -210,9 +210,10 @@ finish_start:
         Py_DECREF(result);
         callback=result=NULL;
     }
-    tagname = PyString_AS_STRING(tag);
+    /* encode tagname in ASCII, ignoring any unknown chars */
+    tagname = PyUnicode_AsEncodedString(tag, "ascii", "ignore");
     if (PyObject_HasAttrString(ud->handler, "end_element")==1 &&
-	NO_HTML_END_TAG(tagname)) {
+	NO_HTML_END_TAG(PyString_AsString(tagname))) {
 	callback = PyObject_GetAttrString(ud->handler, "end_element");
 	if (callback==NULL) { error=1; goto finish_start_end; }
 	result = PyObject_CallFunction(callback, "O", tag);
@@ -238,7 +239,7 @@ finish_start_end:
 }
 | T_ELEMENT_END
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -269,7 +270,7 @@ finish_end:
 }
 | T_COMMENT
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -290,7 +291,7 @@ finish_comment:
 }
 | T_PI
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -311,7 +312,7 @@ finish_pi:
 }
 | T_CDATA
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -332,7 +333,7 @@ finish_cdata:
 }
 | T_DOCTYPE
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -353,7 +354,7 @@ finish_doctype:
 }
 | T_SCRIPT
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -375,7 +376,7 @@ finish_script:
 }
 | T_STYLE
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
     PyObject* result = NULL;
@@ -397,7 +398,7 @@ finish_style:
 }
 | T_TEXT
 {
-    /* $1 is a PyString */
+    /* $1 is a PyUnicode */
     /* Remember this is also called as a lexer error fallback */
     UserData* ud = yyget_extra(scanner);
     PyObject* callback = NULL;
@@ -509,7 +510,7 @@ static int parser_traverse (parser_object* self, visitproc visit, void* arg) {
 /* clear all used subobjects participating in reference cycles */
 static int parser_clear (parser_object* self) {
     self->userData->handler = NULL;
-    Py_DECREF(self->handler);
+    Py_XDECREF(self->handler);
     self->handler = NULL;
     return 0;
 }
@@ -520,7 +521,7 @@ static void parser_dealloc (parser_object* self) {
     htmllexDestroy(self->scanner);
     parser_clear(self);
     self->userData->encoding = NULL;
-    Py_DECREF(self->encoding);
+    Py_XDECREF(self->encoding);
     self->encoding = NULL;
     PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData->tmp_buf);
@@ -580,7 +581,10 @@ static PyObject* parser_flush (parser_object* self, PyObject* args) {
     if (strlen(self->userData->buf)) {
         /* XXX set line, col */
         int error = 0;
-	PyObject* s = PyString_FromString(self->userData->buf);
+        const char* enc = PyString_AsString(self->encoding);
+	PyObject* s = PyUnicode_Decode(self->userData->buf,
+                                       strlen(self->userData->buf),
+                                       enc, "ignore");
 	PyObject* callback = NULL;
 	PyObject* result = NULL;
 	/* reset buffer */
@@ -711,6 +715,7 @@ static PyObject* parser_gethandler (parser_object* self, void* closure) {
     return self->handler;
 }
 
+
 static int parser_sethandler (parser_object* self, PyObject* value, void* closure) {
     if (value == NULL) {
        PyErr_SetString(PyExc_TypeError, "Cannot delete parser handler");
@@ -723,10 +728,12 @@ static int parser_sethandler (parser_object* self, PyObject* value, void* closur
     return 0;
 }
 
+
 static PyObject* parser_getencoding (parser_object* self, void* closure) {
     Py_INCREF(self->encoding);
     return self->encoding;
 }
+
 
 static int parser_setencoding (parser_object* self, PyObject* value, void* closure) {
     if (value == NULL) {
@@ -743,6 +750,7 @@ static int parser_setencoding (parser_object* self, PyObject* value, void* closu
     self->userData->encoding = value;
     return 0;
 }
+
 
 /* type interface */
 

@@ -14,3 +14,4 @@ __doc__='''Package of template utility classes and functions.'''
 
 from Batch import Batch
 from Iterator import Iterator
+from FasterStringIO import FasterStringIO

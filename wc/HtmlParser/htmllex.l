@@ -36,10 +36,12 @@
     if ((b)==NULL) return T_ERROR; \
     (b)[(n)-1] = '\0'
 
-/* make python string from tmp_buf and assign it to a */
-#define PYSTRING_TMP(a) \
-    (a) = PyString_FromString(yyextra->tmp_buf); \
-    if ((a)==NULL) return T_ERROR
+/* make python unicode string from tmp_buf and assign it to a */
+#define PYSTRING_TMP(a) { \
+    const char* enc = PyString_AsString(yyextra->encoding); \
+    (a) = PyUnicode_Decode(yyextra->tmp_buf, strlen(yyextra->tmp_buf), enc, "ignore"); \
+    if ((a)==NULL) return T_ERROR; \
+}
 
 /* set return value from tmp_buf */
 #define SETLVAL { \
@@ -88,7 +90,7 @@
     if (strlen(yyextra->tmp_buf) > 0) { \
         PYSTRING_TMP(yyextra->tmp_attrname); \
 	RESIZE_BUF(yyextra->tmp_buf, 1); \
-        if (PyMapping_SetItemString(yyextra->tmp_attrs, PyString_AsString(yyextra->tmp_attrname), Py_None)==-1) return T_ERROR; \
+        if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) return T_ERROR; \
         Py_DECREF(yyextra->tmp_attrname); \
         yyextra->tmp_attrname = NULL; \
     }
@@ -683,8 +685,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     if (yyextra->tmp_attrval!=NULL) return T_ERROR;
     Py_INCREF(Py_None);
     yyextra->tmp_attrval = Py_None;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-                       PyString_AsString(yyextra->tmp_attrname),
+    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
                        yyextra->tmp_attrval)==-1) return T_ERROR;
     /*Py_DECREF(yyextra->tmp_attrname);*/
     /*Py_DECREF(yyextra->tmp_attrval);*/
@@ -728,8 +729,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (yyextra->tmp_attrval==NULL) return T_ERROR;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-		       PyString_AsString(yyextra->tmp_attrname),
+    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
     Py_DECREF(yyextra->tmp_attrname);
     Py_DECREF(yyextra->tmp_attrval);
@@ -754,8 +754,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (yyextra->tmp_attrval==NULL) return T_ERROR;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-		       PyString_AsString(yyextra->tmp_attrname),
+    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
     Py_DECREF(yyextra->tmp_attrname);
     Py_DECREF(yyextra->tmp_attrval);
@@ -771,8 +770,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (yyextra->tmp_attrval==NULL) return T_ERROR;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-		       PyString_AsString(yyextra->tmp_attrname),
+    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
     Py_DECREF(yyextra->tmp_attrname);
     Py_DECREF(yyextra->tmp_attrval);
@@ -788,8 +786,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (yyextra->tmp_attrval==NULL) return T_ERROR;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-		       PyString_AsString(yyextra->tmp_attrname),
+    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
     Py_DECREF(yyextra->tmp_attrname);
     Py_DECREF(yyextra->tmp_attrval);
@@ -809,8 +806,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (yyextra->tmp_attrval==NULL) return T_ERROR;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-		       PyString_AsString(yyextra->tmp_attrname),
+    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
     Py_DECREF(yyextra->tmp_attrname);
     Py_DECREF(yyextra->tmp_attrval);
@@ -842,8 +838,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
     if (yyextra->tmp_attrval==NULL) return T_ERROR;
-    if (PyMapping_SetItemString(yyextra->tmp_attrs,
-		       PyString_AsString(yyextra->tmp_attrname),
+    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
     Py_DECREF(yyextra->tmp_attrname);
     Py_DECREF(yyextra->tmp_attrval);

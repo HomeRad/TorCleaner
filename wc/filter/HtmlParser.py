@@ -16,11 +16,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import cStringIO as StringIO
-
 import wc.filter
 import wc.filter.rules.RewriteRule
 import wc.HtmlParser.htmlsax
+from wc.webgui import ZTUtils
 
 
 class HtmlParser (wc.HtmlParser.htmlsax.parser):
@@ -58,9 +57,9 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         # parse state either normal parse or wait
         self.state = ('parse',)
         # already filtered HTML data
-        self.outbuf = StringIO.StringIO()
+        self.outbuf = ZTUtils.FasterStringIO()
         # incoming data in wait state
-        self.inbuf = StringIO.StringIO()
+        self.inbuf = ZTUtils.FasterStringIO()
         # buffer of parsed HTML tags
         self.tagbuf = []
         # buffer for wait state of parsed HTML tags
@@ -101,7 +100,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                     return
                 data = self.inbuf.getvalue() + data
                 self.inbuf.close()
-                self.inbuf = StringIO.StringIO()
+                self.inbuf = ZTUtils.FasterStringIO()
             if data:
                 # only feed non-empty data
                 wc.log.debug(wc.LOG_FILTER, "%s parser feed %r", self, data)
@@ -130,8 +129,8 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """returns all data in output buffer and clears the output buffer"""
         data = self.outbuf.getvalue()
         self.outbuf.close()
-        self.outbuf = StringIO.StringIO()
-        return data
+        self.outbuf = ZTUtils.FasterStringIO()
+        return data.encode(self.encoding)
 
     def replay (self, waitbuf):
         """call the handler functions again with buffer data"""

@@ -21,7 +21,8 @@ from wc.webgui.TAL.TALParser import TALParser
 from wc.webgui.TAL.HTMLTALParser import HTMLTALParser
 from wc.webgui.TAL.TALGenerator import TALGenerator
 # Do not use cStringIO here!  It's not unicode aware. :(
-from wc.webgui.TAL.TALInterpreter import TALInterpreter, FasterStringIO
+from wc.webgui.TAL.TALInterpreter import TALInterpreter
+from wc.webgui import ZTUtils
 from Expressions import getEngine
 
 
@@ -42,7 +43,7 @@ class PageTemplate (object):
     def StringIO (self):
         # Third-party products wishing to provide a full Unicode-aware
         # StringIO can do so by monkey-patching this method.
-        return FasterStringIO()
+        return ZTUtils.FasterStringIO()
 
     def pt_edit (self, text, content_type):
         if content_type:
