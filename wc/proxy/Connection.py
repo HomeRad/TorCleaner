@@ -84,7 +84,7 @@ class Connection (asyncore.dispatcher, object):
         try:
             num_sent = self.send(data)
         except socket.error, err:
-            self.handle_error('write error: %s' % str(err))
+            self.handle_error('write error')
             return
         debug(PROXY, 'Proxy: wrote %d => %s', num_sent, str(self))
         self.send_buffer = self.send_buffer[num_sent:]
