@@ -46,6 +46,7 @@ recursive-include config/blacklists *.gz README
 include templates/classic/*.html
 include templates/classic/*.txt
 include templates/classic/*.png
+include templates/classic/*.ico
 include templates/classic/*.js
 include templates/classic/*.css
 include templates/classic/*.xcf
