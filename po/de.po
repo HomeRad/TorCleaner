@@ -4,34 +4,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $id$\n"
-"POT-Creation-Date: Tue Jun 17 20:24:49 2003\n"
-"PO-Revision-Date: 2003-06-05 20:13+0100\n"
+"POT-Creation-Date: Wed Jul  2 16:42:52 2003\n"
+"PO-Revision-Date: 2003-07-02 16:49+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid ""
-"\n"
-"WebCleaner Configuration\n"
-"========================\n"
-"\n"
-"Port:          %(port)d\n"
-"Parent proxy:  %(parentproxy)s\n"
-"Show errors:   %(showerrors)d\n"
-"Headers saved: %(headersave)d\n"
-"\n"
-msgstr ""
-"\n"
-"WebCleaner Konfiguration\n"
-"========================\n"
-"\n"
-"Portnummer:           %(port)d\n"
-"Übergeordneter Proxy: %(parentproxy)s\n"
-"Fehler anzeigen:      %(showerrors)d\n"
-"Gespeicherte Header:  %(headersave)d\n"
-"\n"
 
 msgid "unknown tag name %s"
 msgstr "Unbekannte Option %s"
@@ -72,6 +51,9 @@ msgstr "WebCleaner lief nicht (keine Lockdatei gefunden)"
 
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
 msgstr "WebCleaner läuft nicht. Führen Sie zuerst 'webcleaner start' aus."
+
+msgid "PICS %s match"
+msgstr ""
 
 msgid ""
 "Updating procedure:\n"
@@ -122,8 +104,7 @@ msgstr ""
 "welche oft in Microsoft Seiten zu finden sind."
 
 msgid "Add, modify and delete HTTP headers of request and response."
-msgstr ""
-"Hinzufügen, verändern oder löschen von HTTP Header in Anfrage oder Antwort."
+msgstr "Hinzufügen, verändern oder löschen von HTTP Header in Anfrage oder Antwort."
 
 msgid "Block or allow specific sites by URL name."
 msgstr "Blocke oder erlaube spezifische Seiten je nach URL Name."
@@ -194,15 +175,14 @@ msgstr "Version"
 msgid "User\tRequire proxy authentication with the given user."
 msgstr "Benutzer\tVerlange Proxy Authentifizierung mit dem gegebenen Benutzer."
 
-msgid ""
-"Password\tRequire proxy authentication with the given password which is "
-"stored base64 encoded."
-msgstr ""
-"Passwort\tVerlange Proxy Authentifizierung mit dem gegebenen Passwort "
-"welches base64-kodiert gespeichert wird."
+msgid "Password\tRequire proxy authentication with the given password which is stored base64 encoded."
+msgstr "Passwort\tVerlange Proxy Authentifizierung mit dem gegebenen Passwort welches base64-kodiert gespeichert wird."
 
 msgid "Port\tThe port adress the WebCleaner proxy is listening on."
 msgstr "Portnummer\tPortnummer an der der WebCleaner Proxy horchen soll."
+
+msgid "Timeout\tConnection timeout in seconds, a zero value uses the default platform timeout."
+msgstr ""
 
 msgid "Web GUI theme"
 msgstr "Weboberfläche"
@@ -230,8 +210,7 @@ msgid ""
 "Add\tAdd hostname and networks that are allowed to use this proxy.\n"
 "Networks can be either in a.b.d.c/n or a.b.c.d/e.f.g.h format."
 msgstr ""
-"Hinzufügen\tFüge Rechner oder Netzwerke hinzu welche diesen Proxy benutzen "
-"dürfen.\n"
+"Hinzufügen\tFüge Rechner oder Netzwerke hinzu welche diesen Proxy benutzen dürfen.\n"
 "Netzwerke können entweder die Form a.b.c.d/n oder a.b.c.d/e.f.g.h haben."
 
 msgid "Filter Modules"
@@ -241,14 +220,10 @@ msgid "Parent Proxy"
 msgstr "Übergeordneter Proxy"
 
 msgid "Host\tThe hostname of the parent proxy WebCleaner should use."
-msgstr ""
-"Rechner\tDer Rechnername des übergeordneten Proxy den WebCleaner benutzen "
-"soll."
+msgstr "Rechner\tDer Rechnername des übergeordneten Proxy den WebCleaner benutzen soll."
 
 msgid "Port\tThe port number of the parent proxy WebCleaner should use."
-msgstr ""
-"Portnummer\tDie Portnummber des übergeordneten Proxy den WebCleaner benutzen "
-"soll."
+msgstr "Portnummer\tDie Portnummber des übergeordneten Proxy den WebCleaner benutzen soll."
 
 msgid "User\tAuthentication user for the parent proxy."
 msgstr "Benutzer\tBenutzer zur Authentifizierung für den übergeordneten Proxy."
@@ -256,9 +231,7 @@ msgstr "Benutzer\tBenutzer zur Authentifizierung für den übergeordneten Proxy."
 msgid ""
 "Password\tAuthentication password for the parent proxy.\n"
 "The password is saved base64 encoded."
-msgstr ""
-"Passwort\tPasswort zur Authentifizierung für den übergeordneten Proxy.Das "
-"Password wird base64-kodiert gespeichert."
+msgstr "Passwort\tPasswort zur Authentifizierung für den übergeordneten Proxy.Das Password wird base64-kodiert gespeichert."
 
 msgid "&Filter Settings"
 msgstr "&Filter Einstellungen"
@@ -360,25 +333,16 @@ msgid "Urlsfile\tExternal file with urls; one per line"
 msgstr "Urldatei\tExterne Datei mit URLs; eine pro Zeile"
 
 msgid "Blocked URL\tThe URL we want to show instead"
-msgstr ""
-"Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
+msgstr "Geblockte URL\tDie URL welche wir anstatt der anderen darstellen wollen"
 
-msgid ""
-"Filename:\tThe name of the configuration file where these filters are stored "
-"(cannot be changed)."
-msgstr ""
-"Dateiname:\tName der Konfigurationsdatei in der diese Filter gespeichert "
-"werden (ist nicht änderbar)."
+msgid "Filename:\tThe name of the configuration file where these filters are stored (cannot be changed)."
+msgstr "Dateiname:\tName der Konfigurationsdatei in der diese Filter gespeichert werden (ist nicht änderbar)."
 
 msgid "Header name:\tRegular expression to match the header name"
 msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
 
-msgid ""
-"Header value:\tIf empty, delete the header. Else add or, if already there "
-"modify the header."
-msgstr ""
-"Header Wert:\tWenn leergelassen, lösche den Header. Sonst füge hinzu oder, "
-"falls schon vorhanden, ändere den Header."
+msgid "Header value:\tIf empty, delete the header. Else add or, if already there modify the header."
+msgstr "Header Wert:\tWenn leergelassen, lösche den Header. Sonst füge hinzu oder, falls schon vorhanden, ändere den Header."
 
 msgid "Header name must not be empty"
 msgstr "Header Name darf nicht leer sein"
@@ -391,6 +355,20 @@ msgstr "Bildbreite:\tDie Breite des zu blockenden Bildes."
 
 msgid "Image height:\tThe height of the image to be blocked."
 msgstr "Bildhöhe:\tDie Höhe des zu blockenden Bildes."
+
+msgid "PICS services"
+msgstr ""
+
+msgid ""
+"Fallback URL:\tA URL to display if the page is censored\n"
+"The default is to return a 403 Forbidden HTTP error."
+msgstr ""
+
+msgid "%s\tEnable/disable this rating service."
+msgstr ""
+
+msgid "%s\tEnable/disable this category."
+msgstr ""
 
 msgid "Replace regex:\tRegular expression to match the data stream"
 msgstr "Header Name:\tRegulärer Ausdruck welcher den Header matcht"
@@ -465,26 +443,19 @@ msgid "New value:"
 msgstr "Neuer Wert:"
 
 msgid "disable\tYou can disable a single rule or all rules in a folder."
-msgstr ""
-"deaktivieren\tSie können einzelne Regeln oder alle Regeln in einem Ordner "
-"deaktivieren."
+msgstr "deaktivieren\tSie können einzelne Regeln oder alle Regeln in einem Ordner deaktivieren."
 
 msgid "Title:\tThe title of the filter rule"
 msgstr "Titel:\tDer Titel der Filterregel"
 
-msgid ""
-"Match url:\tApplies this rule only to urls matching the regular expression"
-msgstr ""
-"Passende URL:\tWendet diese Regel nur mit zum regulären Ausdruck passenden "
-"URLs an"
+msgid "Match url:\tApplies this rule only to urls matching the regular expression"
+msgstr "Passende URL:\tWendet diese Regel nur mit zum regulären Ausdruck passenden URLs an"
 
 msgid ""
-"Dont match url:\tApplies this rule only to urls not matching the regular "
-"expression.\n"
+"Dont match url:\tApplies this rule only to urls not matching the regular expression.\n"
 "Match url entries are tested first."
 msgstr ""
-"Nicht passende URL:\tWendet diese Regel nur mit nicht zum regulären Ausdruck "
-"passenden URLs an.\n"
+"Nicht passende URL:\tWendet diese Regel nur mit nicht zum regulären Ausdruck passenden URLs an.\n"
 "Passende URL Einträge werden zuerst probiert."
 
 msgid "Description:\tA description what this filter rule does."
@@ -547,12 +518,8 @@ msgstr "-> ANFRAGE"
 msgid "Refresh"
 msgstr "Aktualisierung"
 
-msgid ""
-"Only first\tDisplay only the first hit in a series of headers for the same "
-"host"
-msgstr ""
-"Nur erster\tZeige nur den ersten Treffer einer Reihe von Headern für "
-"denselben Host an"
+msgid "Only first\tDisplay only the first hit in a series of headers for the same host"
+msgstr "Nur erster\tZeige nur den ersten Treffer einer Reihe von Headern für denselben Host an"
 
 msgid "Scrolling"
 msgstr "Scrollen"
@@ -589,12 +556,6 @@ msgstr "Schliessen"
 
 msgid "About WebCleaner"
 msgstr "Über WebCleaner"
-
-msgid "Incomplete Proxy Request"
-msgstr "Unvollständige Proxy Anfrage"
-
-msgid "Invalid Proxy Request"
-msgstr "Ungültige Proxy Anfrage"
 
 msgid "Host %s is an abbreviation for %s"
 msgstr "Rechner %s ist eine Abkürzung für %s"
@@ -638,6 +599,9 @@ msgstr "Leere URL"
 msgid "Proxy Authentication Required"
 msgstr "Proxy Authorisierung benötigt"
 
+msgid "Invalid Method"
+msgstr "Ungültige Anfrage"
+
 msgid "invalid or missing response from %s: %s"
 msgstr "ungültige oder fehlende Antwort von %s: %s"
 
@@ -668,9 +632,6 @@ msgstr "Nicht unterstütztes Encoding: %s"
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
 
-msgid "Invalid Method"
-msgstr "Ungültige Anfrage"
-
 msgid "unsupported HTTP version %s"
 msgstr "nicht unterstützte HTTP Version %s"
 
@@ -686,8 +647,117 @@ msgstr "Ok"
 msgid "Not Found"
 msgstr "Nicht vorhanden"
 
+msgid "Blocked by %s"
+msgstr "Blockiert durch %s"
+
+msgid "%s proxy configuration"
+msgstr "%s Proxykonfiguration"
+
+msgid "Port number"
+msgstr "Portnummer"
+
+msgid "Proxy user"
+msgstr "Proxy Benutzer"
+
+msgid "Proxy password"
+msgstr "Proxy Passwort"
+
+#, fuzzy
+msgid "Parent proxy"
+msgstr "Übergeordneter Proxy"
+
+msgid "Parent proxy port"
+msgstr "Übergeordneter Proxy Port"
+
+msgid "Parent proxy user"
+msgstr "Übergeordneter Proxy Benutzer"
+
+msgid "Parent proxy pass"
+msgstr "Übergeordneter Proxy Passwort"
+
+msgid "Timeout (seconds)"
+msgstr ""
+
+msgid "Proxy filter modules"
+msgstr "Proxy Filter Module"
+
+msgid "Remove selected"
+msgstr "Lösche Auswahl"
+
+msgid "Add new"
+msgstr "Neu hinzufügen"
+
+msgid "Don't filter hosts"
+msgstr ""
+
+msgid "Apply"
+msgstr "Übernehmen"
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Port successfully changed"
+msgstr ""
+
+msgid "Invalid proxy port"
+msgstr "Ungültiger Proxy Port"
+
+msgid "Proxy user successfully changed"
+msgstr ""
+
+msgid "Proxy password successfully changed"
+msgstr ""
+
+msgid "Parent proxy successfully changed"
+msgstr ""
+
+msgid "Parent proxy port successfully changed"
+msgstr ""
+
+msgid "Invalid parent proxy port"
+msgstr "Ungültiger übergeordneter Proxy Port"
+
+msgid "Parent proxy user successfully changed"
+msgstr ""
+
+msgid "Parent proxy password successfully changed"
+msgstr ""
+
+msgid "Timeout sucessfully changed"
+msgstr ""
+
+msgid "Invalid timeout value"
+msgstr ""
+
+msgid "Enabled filter modules %s"
+msgstr "Filter Module %s aktiviert"
+
+msgid "Disabled filter modules %s"
+msgstr "Filter Module %s deaktiviert"
+
+msgid "Allowed host successfully added"
+msgstr ""
+
+msgid "Allowed host successfully removed"
+msgstr ""
+
+msgid "%d allowed hosts successfully removed"
+msgstr ""
+
+msgid "Nofilter host successfully added"
+msgstr ""
+
 msgid "%s error"
 msgstr "%s Fehler"
+
+msgid "%s filter configuration"
+msgstr "%s Filterkonfiguration"
+
+msgid "Proxy configuration"
+msgstr "Proxykonfiguration"
+
+msgid "Filter configuration"
+msgstr "Filterkonfiguration"
 
 msgid ""
 "USAGE\twebcleaner command\n"
@@ -748,3 +818,4 @@ msgstr "Warnung: nur der erste Befehl ist gültig"
 
 msgid "Unknown command %s"
 msgstr "Unbekannter Befehl %s"
+

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Tue Jun 17 20:24:49 2003\n"
+"POT-Creation-Date: Wed Jul  2 16:42:52 2003\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,18 +14,6 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
-
-msgid ""
-"\n"
-"WebCleaner Configuration\n"
-"========================\n"
-"\n"
-"Port:          %(port)d\n"
-"Parent proxy:  %(parentproxy)s\n"
-"Show errors:   %(showerrors)d\n"
-"Headers saved: %(headersave)d\n"
-"\n"
-msgstr ""
 
 msgid "unknown tag name %s"
 msgstr ""
@@ -63,6 +51,9 @@ msgid "Watcher was not running (no lock file found)"
 msgstr ""
 
 msgid "WebCleaner is not running. Do 'webcleaner start' first."
+msgstr ""
+
+msgid "PICS %s match"
 msgstr ""
 
 msgid ""
@@ -166,6 +157,9 @@ msgid "Password\tRequire proxy authentication with the given password which is s
 msgstr ""
 
 msgid "Port\tThe port adress the WebCleaner proxy is listening on."
+msgstr ""
+
+msgid "Timeout\tConnection timeout in seconds, a zero value uses the default platform timeout."
 msgstr ""
 
 msgid "Web GUI theme"
@@ -334,6 +328,20 @@ msgid "Image width:\tThe width of the image to be blocked."
 msgstr ""
 
 msgid "Image height:\tThe height of the image to be blocked."
+msgstr ""
+
+msgid "PICS services"
+msgstr ""
+
+msgid ""
+"Fallback URL:\tA URL to display if the page is censored\n"
+"The default is to return a 403 Forbidden HTTP error."
+msgstr ""
+
+msgid "%s\tEnable/disable this rating service."
+msgstr ""
+
+msgid "%s\tEnable/disable this category."
 msgstr ""
 
 msgid "Replace regex:\tRegular expression to match the data stream"
@@ -521,12 +529,6 @@ msgstr ""
 msgid "About WebCleaner"
 msgstr ""
 
-msgid "Incomplete Proxy Request"
-msgstr ""
-
-msgid "Invalid Proxy Request"
-msgstr ""
-
 msgid "Host %s is an abbreviation for %s"
 msgstr ""
 
@@ -569,6 +571,9 @@ msgstr ""
 msgid "Proxy Authentication Required"
 msgstr ""
 
+msgid "Invalid Method"
+msgstr ""
+
 msgid "invalid or missing response from %s: %s"
 msgstr ""
 
@@ -599,9 +604,6 @@ msgstr ""
 msgid "server received %d bytes more than content-length"
 msgstr ""
 
-msgid "Invalid Method"
-msgstr ""
-
 msgid "unsupported HTTP version %s"
 msgstr ""
 
@@ -617,7 +619,115 @@ msgstr ""
 msgid "Not Found"
 msgstr ""
 
+msgid "Blocked by %s"
+msgstr ""
+
+msgid "%s proxy configuration"
+msgstr ""
+
+msgid "Port number"
+msgstr ""
+
+msgid "Proxy user"
+msgstr ""
+
+msgid "Proxy password"
+msgstr ""
+
+msgid "Parent proxy"
+msgstr ""
+
+msgid "Parent proxy port"
+msgstr ""
+
+msgid "Parent proxy user"
+msgstr ""
+
+msgid "Parent proxy pass"
+msgstr ""
+
+msgid "Timeout (seconds)"
+msgstr ""
+
+msgid "Proxy filter modules"
+msgstr ""
+
+msgid "Remove selected"
+msgstr ""
+
+msgid "Add new"
+msgstr ""
+
+msgid "Don't filter hosts"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Port successfully changed"
+msgstr ""
+
+msgid "Invalid proxy port"
+msgstr ""
+
+msgid "Proxy user successfully changed"
+msgstr ""
+
+msgid "Proxy password successfully changed"
+msgstr ""
+
+msgid "Parent proxy successfully changed"
+msgstr ""
+
+msgid "Parent proxy port successfully changed"
+msgstr ""
+
+msgid "Invalid parent proxy port"
+msgstr ""
+
+msgid "Parent proxy user successfully changed"
+msgstr ""
+
+msgid "Parent proxy password successfully changed"
+msgstr ""
+
+msgid "Timeout sucessfully changed"
+msgstr ""
+
+msgid "Invalid timeout value"
+msgstr ""
+
+msgid "Enabled filter modules %s"
+msgstr ""
+
+msgid "Disabled filter modules %s"
+msgstr ""
+
+msgid "Allowed host successfully added"
+msgstr ""
+
+msgid "Allowed host successfully removed"
+msgstr ""
+
+msgid "%d allowed hosts successfully removed"
+msgstr ""
+
+msgid "Nofilter host successfully added"
+msgstr ""
+
 msgid "%s error"
+msgstr ""
+
+msgid "%s filter configuration"
+msgstr ""
+
+msgid "Proxy configuration"
+msgstr ""
+
+msgid "Filter configuration"
 msgstr ""
 
 msgid ""
