@@ -19,7 +19,8 @@ logging. Look in logging.conf if you want to customize their behaviour
 
 # public api
 __all__ = ["WC", "FILTER", "PROXY", "PARSER", "GUI", "DNS", "ACCESS",
-           "debug", "info", "warn", "error", "critical", "exception"]
+           "debug", "info", "warn", "error", "critical", "exception",
+           "loginit"]
 __author__  = "Bastian Kleineidam <calvin@users.sf.net>"
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
@@ -28,9 +29,9 @@ from wc import ConfigDir, AppName, iswriteable
 import os, logging, logging.config
 from logging.handlers import RotatingFileHandler, NTEventLogHandler
 
-def init ():
+def loginit (filename):
     """initialize logfiles and configuration"""
-    logging.config.fileConfig(os.path.join(ConfigDir, "logging.conf"))
+    logging.config.fileConfig(filename)
     logging.getLogger("wc").addHandler(get_wc_handler())
     logging.getLogger("wc.access").addHandler(get_access_handler())
 
@@ -106,6 +107,3 @@ def critical (log, msg, *args):
 def exception (log, msg, *args):
     logging.getLogger(log).exception(msg, *args)
 
-
-# init this module
-init()
