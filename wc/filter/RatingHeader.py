@@ -35,7 +35,7 @@ class RatingHeader (wc.filter.Filter.Filter):
 
     def doit (self, data, **attrs):
         url = attrs['url']
-        headers = attrs['serverheaders']
+        headers = attrs['headers']['server']
         if headers.has_key('Content-Rating'):
             cached_rating = wc.filter.Rating.rating_cache_get(url)
             if cached_rating is None:
@@ -53,8 +53,8 @@ class RatingHeader (wc.filter.Filter.Filter):
         return data
 
 
-    def getAttrs (self, url, clientheaders, serverheaders):
-        d = super(RatingHeader, self).getAttrs(url, clientheaders, serverheaders)
+    def getAttrs (self, url, headers):
+        d = super(RatingHeader, self).getAttrs(url, headers)
         # weed out the rules that don't apply to this url
         d['rating_rules'] = [ rule for rule in self.rules if rule.appliesTo(url) ]
         return d

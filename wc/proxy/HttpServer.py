@@ -261,7 +261,9 @@ class HttpServer (wc.proxy.Server.Server):
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
-        bk.log.debug(wc.LOG_PROXY, "%s server headers\n%s", self, msg)
+        # make a copy for later
+        serverheaders = msg.copy()
+        bk.log.debug(wc.LOG_PROXY, "%s server headers\n%s", self, serverheaders)
         if self.statuscode==100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
@@ -269,11 +271,13 @@ class HttpServer (wc.proxy.Server.Server):
             return
         self.set_persistent(msg, wc.proxy.ServerPool.serverpool.http_versions[self.addr])
         self.attrs = wc.filter.get_filterattrs(self.url,
-              [wc.filter.FILTER_RESPONSE_HEADER],
-              clientheaders=self.client.headers, serverheaders=msg)
+                        [wc.filter.FILTER_RESPONSE_HEADER],
+                        clientheaders=self.client.headers,
+                        serverheaders=serverheaders)
         try:
-            self.headers = wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_HEADER, msg,
-                                       "finish", self.attrs)
+            self.headers = \
+               wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_HEADER, msg,
+                                     "finish", self.attrs)
         except wc.filter.FilterRating, msg:
             bk.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s", self, msg)
             if msg==wc.filter.Rating.MISSING:
@@ -300,13 +304,14 @@ class HttpServer (wc.proxy.Server.Server):
         else:
             self.state = 'content'
         self.attrs = wc.filter.get_filterattrs(self.url, FilterLevels,
-                     clientheaders=self.client.headers, serverheaders=msg)
+                                     clientheaders=self.client.headers,
+                                     serverheaders=serverheaders,
+                                     headers=self.headers)
         bk.log.debug(wc.LOG_PROXY, "%s filtered headers %s", self, self.headers)
         if not self.defer_data:
             self.client.server_response(self, self.response, self.statuscode,
                                         self.headers)
             # note: self.client could be None here
-
 
     def mangle_response_headers (self):
         """modify response headers"""

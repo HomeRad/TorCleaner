@@ -21,6 +21,7 @@ import cStringIO as StringIO
 import wc.filter
 import wc.filter.Filter
 import wc.proxy.Headers
+import bk.log
 
 
 class ImageReducer (wc.filter.Filter.Filter):
@@ -77,16 +78,18 @@ class ImageReducer (wc.filter.Filter.Filter):
         return data.getvalue()
 
 
-    def getAttrs (self, url, clientheaders, serverheaders):
+    def getAttrs (self, url, headers):
         """initialize image reducer buffer and flags"""
         # don't filter tiny images
-        d = super(ImageReducer, self).getAttrs(url, clientheaders, serverheaders)
-        length = serverheaders.get('Content-Length')
-        if length is not None and length < self.minimal_size_bytes:
+        d = super(ImageReducer, self).getAttrs(url, headers)
+        length = headers['server'].get('Content-Length')
+        if length is None:
+            bk.log.warn(wc.LOG_FILTER, "unknown image size at %r", url)
+        elif length < self.minimal_size_bytes:
             return d
-        ctype = serverheaders['Content-Type']
-        serverheaders['Content-Type'] = 'image/jpeg'
-        wc.proxy.Headers.remove_headers(serverheaders, ['Content-Length'])
+        ctype = headers['server']['Content-Type']
+        headers['data']['Content-Type'] = 'image/jpeg'
+        wc.proxy.Headers.remove_headers(headers['data'], ['Content-Length'])
         d['imgreducer_buf'] = StringIO.StringIO()
         # some images have to be convert()ed before saving
         d['imgreducer_convert'] = convert(ctype)

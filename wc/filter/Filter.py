@@ -58,8 +58,13 @@ class Filter (object):
         """
         return data
 
-    def getAttrs (self, url, clientheaders, serverheaders):
-        """get filter-specific state data"""
+    def getAttrs (self, url, headers):
+        """get filter-specific state data
+
+           @param url the complete request url
+           @param headers dictionary with WcMessage objects under the keys
+                  ``client``, ``server`` and ``data``
+        """
         return {}
 
     def applies_to_mime (self, mime):

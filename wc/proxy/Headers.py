@@ -58,6 +58,9 @@ class WcMessage (rfc822.Message, object):
     def __str__ (self):
         return "\n".join([ repr(s) for s in self.headers ])
 
+    def copy (self):
+        return WcMessage(fp=StringIO.StringIO("".join(self.headers)))
+
 
 def get_content_length (headers, default=None):
     """get content length as int or None on error"""

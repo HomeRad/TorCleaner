@@ -63,9 +63,9 @@ class Replacer (wc.filter.Filter.Filter):
         return udata.encode(charset, 'ignore')
 
 
-    def getAttrs (self, url, clientheaders, serverheaders):
+    def getAttrs (self, url, headers):
         """initialize replacer buffer object"""
-        d = super(Replacer, self).getAttrs(url, clientheaders, serverheaders)
+        d = super(Replacer, self).getAttrs(url, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.appliesTo(url) ]
         if not rules:
