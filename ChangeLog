@@ -1,4 +1,4 @@
-2.10 (released xx.xx.xxxx)
+2.10 (released 27.3.2004)
   * merge upstream CVS changes of libjs (spidermonkey) as of 20040323
     Type: feature
     Changed: libjs/*
@@ -43,7 +43,7 @@
     Type: feature
     Changed: wc/__init__.py, wc/proxy/{__init__,ClientServerMatchmaker}.py
     Added: wc/proxy/{HttpsServer,SslClient,SslServer}.py, test/getssl.py,
-      webcleaner-service*
+      webcleaner-certificates*
 
   * web gui configuration for ssl gateway
     Type: feature
@@ -63,9 +63,12 @@
     Type: feature
     Changed: templates/classic/blocked.html
 
-  * proper wait for NT service to start up, then open web config
+  * decouple NT service install from setup.py, and proper wait for NT
+    service to start up, then open web config. this fixes the Windows
+    install.
     Type: bugfix
-    Changed: webcleaner-service
+    Added: webcleaner-service
+    Changed: setup.py
 
   * handle and correct missing start quotes in HTML attributes
     Type: feature
