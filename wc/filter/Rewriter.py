@@ -122,8 +122,6 @@ class HtmlFilter (HtmlParser):
         for n in self.buffer:
             if n[0]==DATA:
                 self.data.append(n[1])
-            elif n[0]==COMMENT:
-                self.data.append("<!--%s-->"%n[1])
             elif n[0]==STARTTAG:
                 s = "<"+n[1]
                 for name,val in n[2].items():
@@ -133,6 +131,8 @@ class HtmlFilter (HtmlParser):
                 self.data.append(s+">")
             elif n[0]==ENDTAG:
                 self.data.append("</%s>"%n[1])
+            elif n[0]==COMMENT:
+                self.data.append("<!--%s-->"%n[1])
             else:
                 error("unknown buffer element %s" % n[0])
         self.buffer = []
