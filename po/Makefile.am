@@ -2,8 +2,8 @@
 PYTHON := python2.3
 GETTEXT := $(PYTHON) pygettext.py -k i18n._
 #MSGFMT := $(PYTHON) msgfmt.py
-MSGFMT := msgfmt -c
-MSGMERGE := msgmerge
+MSGFMT := @MSGFMT@ -c
+MSGMERGE := @MSGMERGE@
 SOURCES = $(shell find ../wc -name \*.py) \
 ../webcleaner \
 $(shell find ../templates -name \*.html)
