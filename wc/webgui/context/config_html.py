@@ -20,7 +20,7 @@ remove = i18n._("Remove selected")
 add = i18n._("Add new")
 nofilterhosts = i18n._("No filter hosts")
 configapply = i18n._("Apply")
-cancel = i18n._("Cancel")
+back = i18n._("Back")
 
 # config vars
 info = []

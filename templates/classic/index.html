@@ -5,6 +5,9 @@
 </head>
 <body bgcolor="#ffffff">
 <h1 tal:content="title">WebCleaner</h1>
-<div><a href="config.html">Configuration</a></div>
+<div><a href="config.html"
+ tal:content="proxyconf">Proxy configuration</a></div>
+<div><a href="filterconfig.html"
+ tal:content="filterconf">Filter configuration</a></div>
 </body>
 </html>
