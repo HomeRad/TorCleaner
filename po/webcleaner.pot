@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: Wed Feb 25 20:15:35 2004\n"
+"POT-Creation-Date: Thu Feb 26 01:25:10 2004\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,9 +61,6 @@ msgid "with 1 rule"
 msgstr ""
 
 msgid "with %d rules"
-msgstr ""
-
-msgid "Invalid rating rule tag name %r, check your configuration"
 msgstr ""
 
 msgid "Rating %r for category %r is not in range %s"
