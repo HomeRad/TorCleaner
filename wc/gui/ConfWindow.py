@@ -19,7 +19,7 @@ from types import IntType
 from FXRuleTreeList import FXRuleTreeList
 from FXRuleFrameFactory import FXRuleFrameFactory
 from FXFolderRuleFrame import FXFolderRuleFrame
-from wc import i18n, ConfigDir, Configuration, Version
+from wc import i18n, ConfigDir, TemplateDir, Configuration, Version
 from wc.XmlUtils import xmlify
 from FXPy.fox import *
 from wc.filter.rules.FolderRule import FolderRule
@@ -71,6 +71,11 @@ _proxy_user_ro = re.compile("^[-A-Za-z0-9._]*$")
 import tempfile
 # set the directory for new files
 tempfile.tempdir = ConfigDir
+
+
+def get_available_themes ():
+    return [os.path.isdir(os.path.join(TemplateDir, d) \
+             for d in os.listdir(TemplateDir) ]
 
 
 class ConfWindow (ToolWindow):
@@ -692,9 +697,10 @@ class ConfWindow (ToolWindow):
         """read the configuration from disc"""
         debug(GUI, "reading config")
         self.config = Configuration()
-        for key in ('version','port','parentproxy','parentproxyport',
+        for key in ['version','port','parentproxy','parentproxyport',
 	 'configfile', 'noproxyfor', 'showerrors', 'proxyuser', 'proxypass',
-         'parentproxyuser', 'parentproxypass', 'allowedhosts'):
+         'parentproxyuser', 'parentproxypass', 'allowedhosts',
+         'webgui_theme',]:
             setattr(self, key, self.config[key])
         self.noproxyfor = self.noproxyfor[2]
         self.allowedhosts = self.allowedhosts[2]
@@ -711,6 +717,7 @@ class ConfWindow (ToolWindow):
         for f in self.config['filters']:
             self.modules[f] = 1
         self.folders = self.config['rules']
+        self.themes = get_available_themes()
 
 
     def writeconfig (self):
@@ -754,6 +761,7 @@ class ConfWindow (ToolWindow):
         s += ' parentproxypass="%s"\n' % xmlify(self.parentproxypass)
         s += ' parentproxyport="%d"\n' % self.parentproxyport +\
              ' showerrors="%d"\n' % self.showerrors
+        s += ' webgui_theme="%s"\n' % xmlify(self.webgui_theme)
         if self.noproxyfor:
             keys = self.noproxyfor.keys()
             keys.sort()

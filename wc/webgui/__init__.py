@@ -18,7 +18,8 @@
 
 from simpletal import simpleTAL, simpleTALES
 from cStringIO import StringIO
-from wc import config
+from wc import config, TemplateDir
+import os
 
 class WebConfig:
     def __init__ (self, client, url, form={}):
@@ -41,11 +42,14 @@ class WebConfig:
 
 
     def get_template (self, url):
+        d = os.path.join(TemplateDir, config['webgui_theme'])
         # XXX
-        return "error.html"
+        return os.path.join(d, "error.html")
 
 
     def put_response (self, out):
+        response = "HTTP/1.1 200 Ok"
+        headers = {'Content-Type': 'text/html'}
         self.client.server_response(self, response, headers)
         self.client.server_content(out)
         self.client.server_close()

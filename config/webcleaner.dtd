@@ -8,6 +8,7 @@
  timeout     CDATA "300"
  obfuscateip (0|1)
  showerrors  (0|1)
+ webgui_theme CDATA "classic"
 >
 
 <!ELEMENT filter EMPTY>

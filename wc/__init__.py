@@ -158,6 +158,7 @@ class Configuration (dict):
         self['mime_content_rewriting'] = []
         self['headersave'] = 100
         self['showerrors'] = None
+        self['webgui_theme'] = "classic"
 
     def read_proxyconf (self):
         """read proxy configuration"""
@@ -310,6 +311,7 @@ class WConfigParser (BaseParser):
                 self.config[key] = int(self.config[key])
             for key in ('version', 'parentproxy', 'proxyuser',
                         'proxypass', 'parentproxyuser', 'parentproxypass',
+                        'webgui_theme',
                         ):
                 if self.config[key] is not None:
                     self.config[key] = str(self.config[key])
