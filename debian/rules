@@ -60,9 +60,11 @@ install: build
 	mv debian/$(PACKAGE)/usr/share/webcleaner/config/* debian/$(PACKAGE)/etc/webcleaner/
 	rmdir debian/$(PACKAGE)/usr/share/webcleaner/config
 	# fix config permission
-	chown go-rwx debian/$(PACKAGE)/etc/webcleaner/webcleaner.conf
+	chmod go-rwx debian/$(PACKAGE)/etc/webcleaner/webcleaner.conf
 	# remove example files, we install them ourselves
 	rm -rf debian/$(PACKAGE)/usr/share/webcleaner/examples
+	# install into /service directory
+	cp -r service debian/$(PACKAGE)/
 
 
 # Build architecture-independent files here.

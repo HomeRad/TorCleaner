@@ -14,9 +14,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: $Id$\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-08 10:35+0200\n"
+"POT-Creation-Date: 2003-12-22 13:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,29 +24,35 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#. Type: string
 #. Default
 #: ../templates:3
 msgid "8080"
 msgstr ""
 
+#. Type: string
 #. Description
 #: ../templates:4
 msgid "Default proxy port"
 msgstr ""
 
+#. Type: string
 #. Description
 #: ../templates:4
 msgid "This is the port number this proxy will listen on for requests."
 msgstr ""
 
+#. Type: password
 #. Description
-#: ../templates:10
-msgid "Start WebCleaner with monitor daemon?"
+#: ../templates:9
+msgid "Administrator password"
 msgstr ""
 
+#. Type: password
 #. Description
-#: ../templates:10
+#: ../templates:9
 msgid ""
-"You can start WebCleaner with an additional monitor daemon that restarts the "
-"proxy automatically if it crashes."
+"The administrator password protects the web configuration frontend of "
+"WebCleaner. The default username is \"admin\" (without the quotes) if you "
+"did not already specify one from a previous installation."
 msgstr ""

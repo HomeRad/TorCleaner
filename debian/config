@@ -7,7 +7,6 @@ db_capb backup
 package=webcleaner
 
 db_input medium $package/port || true
-db_input medium $package/monitor || true
 db_input low $package/note || true
 db_input high $package/password || true
 db_go || true

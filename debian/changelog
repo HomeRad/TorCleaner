@@ -1,6 +1,8 @@
 webcleaner (2.7-0.1) unstable; urgency=low
 
   * New upstream release.
+  * remove monitor template
+  * add daemontools dependency
 
  -- Bastian Kleineidam <calvin@debian.org>  Wed, 26 Nov 2003 00:15:15 +0100
 

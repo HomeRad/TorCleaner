@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"Report-Msgid-Bugs-To: calvin@debian.org\n"
-"POT-Creation-Date: 2003-08-08 10:35+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-12-22 13:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -23,31 +23,45 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#. Type: string
 #. Default
 #: ../templates:3
 msgid "8080"
 msgstr "8080"
 
+#. Type: string
 #. Description
 #: ../templates:4
 msgid "Default proxy port"
 msgstr "Standard Proxy port"
 
+#. Type: string
 #. Description
 #: ../templates:4
 msgid "This is the port number this proxy will listen on for requests."
 msgstr "Dies ist die Portnummer, unter der dieser Proxy Anfragen akzeptiert."
 
+#. Type: password
 #. Description
-#: ../templates:10
-msgid "Start WebCleaner with monitor daemon?"
-msgstr "WebCleaner mit Monitor-Dämon starten?"
-
-#. Description
-#: ../templates:10
-msgid ""
-"You can start WebCleaner with an additional monitor daemon that restarts the "
-"proxy automatically if it crashes."
+#: ../templates:9
+msgid "Administrator password"
 msgstr ""
-"Sie können WebCleaner mit einem zusätzlichen Monitor-Dämon starten, der den "
-"Proxy bei Ausfall automatisch neu startet."
+
+#. Type: password
+#. Description
+#: ../templates:9
+msgid ""
+"The administrator password protects the web configuration frontend of "
+"WebCleaner. The default username is \"admin\" (without the quotes) if you "
+"did not already specify one from a previous installation."
+msgstr ""
+
+#~ msgid "Start WebCleaner with monitor daemon?"
+#~ msgstr "WebCleaner mit Monitor-Dämon starten?"
+
+#~ msgid ""
+#~ "You can start WebCleaner with an additional monitor daemon that restarts "
+#~ "the proxy automatically if it crashes."
+#~ msgstr ""
+#~ "Sie können WebCleaner mit einem zusätzlichen Monitor-Dämon starten, der "
+#~ "den Proxy bei Ausfall automatisch neu startet."
