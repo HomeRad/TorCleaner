@@ -14,26 +14,32 @@
 
 /* user_data type for SAX calls */
 typedef struct {
+    /* the Python SAX class instance */
     PyObject* handler;
+    /* the parser context */
     htmlParserCtxtPtr context;
+    /* error flag */
     int error;
+    /* stored Python exception (if error occurred) */
     PyObject* exc_type;
     PyObject* exc_val;
     PyObject* exc_tb;
+    /* to decode UTF8 we need a buffer */
+    unsigned char* buf;
+    unsigned int buflen;
 } UserData;
 
 
 /* parser type definition */
 typedef struct {
     PyObject_HEAD
-
     htmlSAXHandlerPtr sax;
     UserData* userData;
-
 } parser_object;
 
 
 staticforward PyTypeObject parser_type;
+
 
 /* =========== SAX C --> Python callbacks ========= */
 /* The SAX handler requires C functions. The C functions
@@ -41,9 +47,9 @@ staticforward PyTypeObject parser_type;
  * in the handler object).
  */
 
-/* to encode in UTF8->latin1 we need a buffer */
-#define ENC_BUF_LEN 1024
-static unsigned char encbuf[ENC_BUF_LEN];
+static int encodedStrlen(const xmlChar* value, int len) {
+    return ((len - xmlUTF8Strlen(value))*10)+len+1024;
+}
 
 
 static void _internalSubset (void* user_data, const xmlChar* name,
@@ -77,7 +83,7 @@ static void _entityDecl (void* user_data, const xmlChar* name, int type,
 
 
 static void _notationDecl (void* user_data, const xmlChar* name,
-			  const xmlChar* publicId, const xmlChar* systemId) {
+			   const xmlChar* publicId, const xmlChar* systemId) {
     UserData* ud = (UserData*) user_data;
     PyObject* callback = PyObject_GetAttrString(ud->handler,
 						"notationDecl");
@@ -91,12 +97,11 @@ static void _notationDecl (void* user_data, const xmlChar* name,
 
 
 static void _attributeDecl (void* user_data, const xmlChar* elem,
-			   const xmlChar* name, int type, int def,
-			   const xmlChar* defaultValue,
-			   xmlEnumerationPtr tree) {
+			    const xmlChar* name, int type, int def,
+			    const xmlChar* defaultValue,
+			    xmlEnumerationPtr tree) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"attributeDecl");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "attributeDecl");
     PyObject* arglist;
     PyObject* nameList;
     PyObject* newName;
@@ -124,7 +129,7 @@ static void _attributeDecl (void* user_data, const xmlChar* elem,
 
 
 static void _elementDecl (void* user_data, const xmlChar* name, int type,
-			xmlElementContentPtr content) {
+			  xmlElementContentPtr content) {
     UserData* ud = (UserData*) user_data;
     PyObject* callback = PyObject_GetAttrString(ud->handler,
 						"elementDecl");
@@ -171,8 +176,7 @@ static void _setDocumentLocator (void* user_data, xmlSAXLocatorPtr loc) {
 
 static void _startDocument (void* user_data) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"startDocument");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "startDocument");
     PyObject* arglist = Py_BuildValue("()");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
@@ -184,8 +188,7 @@ static void _startDocument (void* user_data) {
 
 static void _endDocument (void* user_data) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"endDocument");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "endDocument");
     PyObject* arglist = Py_BuildValue("()");
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
@@ -198,8 +201,7 @@ static void _endDocument (void* user_data) {
 static void _startElement (void* user_data, const xmlChar* name,
 			  const xmlChar** attrs) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"startElement");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "startElement");
     PyObject* arglist;
     PyObject* pyattrs = PyDict_New();
     PyObject* key;
@@ -274,8 +276,7 @@ static void _endElement (void* user_data, const xmlChar* name) {
 
 static void _reference (void* user_data, const xmlChar* name) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"reference");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "reference");
     PyObject* arglist = Py_BuildValue("(s)", name);
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
@@ -287,13 +288,28 @@ static void _reference (void* user_data, const xmlChar* name) {
 
 static void _characters (void* user_data, const xmlChar* ch, int len) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"characters");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "characters");
     PyObject* arglist;
-    int outlen = ENC_BUF_LEN;
+    int i;
+    // calculate space needed for encoding
+    int outlen = encodedStrlen(ch, len);
+    if (outlen > ud->buflen) {
+        ud->buf = PyMem_Resize(ud->buf, unsigned char, outlen);
+        ud->buflen = outlen;
+    }
     // re-encode entities
-    htmlEncodeEntities(encbuf, &outlen, ch, &len, 0);
-    arglist = Py_BuildValue("(s#)", encbuf, outlen);
+    if ((i=htmlEncodeEntities(ud->buf, &outlen, ch, &len, 0))!=0) {
+	ud->exc_type = PyExc_ValueError;
+	if (i==-2) {
+	    ud->exc_val = PyString_FromString("htmlEncodeEntities: transcoding error");
+	}
+	else {
+            ud->exc_val = PyString_FromString("htmlEncodeEntities: internal error");
+	}
+        ud->exc_tb = NULL;
+        return;
+    }
+    arglist = Py_BuildValue("(s#)", ud->buf, outlen);
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -331,13 +347,27 @@ static void _processingInstruction (void* user_data, const xmlChar* target,
 
 static void _comment (void* user_data, const xmlChar* value) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"comment");
-    int outlen = ENC_BUF_LEN;
-    int len = xmlUTF8Strlen(value);
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "comment");
     PyObject* arglist;
-    UTF8ToHtml(encbuf, &outlen, value, &len);
-    arglist = Py_BuildValue("(s#)", encbuf, outlen);
+    int len = strlen(value), i;
+    // calculate space needed for encoding
+    int outlen = encodedStrlen(value, len);
+    if (outlen > ud->buflen) {
+        ud->buf = PyMem_Resize(ud->buf, unsigned char, outlen);
+        ud->buflen = outlen;
+    }
+    if ((i=UTF8ToHtml(ud->buf, &outlen, value, &len))!=0) {
+	ud->exc_type = PyExc_ValueError;
+	if (i==-2) {
+	    ud->exc_val = PyString_FromString("UTF8ToHtml: transcoding error");
+	}
+	else {
+            ud->exc_val = PyString_FromString("UTF8ToHtml: internal error");
+	}
+        ud->exc_tb = NULL;
+        return;
+    }
+    arglist = Py_BuildValue("(s#)", ud->buf, outlen);
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -370,8 +400,7 @@ static void _warning (void* user_data, const char* msg, ...) {
 
 static void _error (void* user_data, const char* msg, ...) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"error");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "error");
     PyObject* arglist;
     va_list args;
     int line = getLineNumber(ud->context);
@@ -392,8 +421,7 @@ static void _error (void* user_data, const char* msg, ...) {
 
 static void _fatalError (void* user_data, const char* msg, ...) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"fatalError");
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "fatalError");
     PyObject* arglist;
     va_list args;
     int line = getLineNumber(ud->context);
@@ -414,17 +442,27 @@ static void _fatalError (void* user_data, const char* msg, ...) {
 
 static void _cdataBlock (void* user_data, const xmlChar* ch, int len) {
     UserData* ud = (UserData*) user_data;
-    PyObject* callback = PyObject_GetAttrString(ud->handler,
-						"cdataBlock");
-    int outlen = ENC_BUF_LEN;
+    PyObject* callback = PyObject_GetAttrString(ud->handler, "cdataBlock");
     PyObject* arglist;
-    if (UTF8ToHtml(encbuf, &outlen, ch, &len)!=0) {
+    int i;
+    // calculate space needed for encoding
+    int outlen = encodedStrlen(ch, len);
+    if (outlen > ud->buflen) {
+        ud->buf = PyMem_Resize(ud->buf, unsigned char, outlen);
+        ud->buflen = outlen;
+    }
+    if ((i=UTF8ToHtml(ud->buf, &outlen, ch, &len))!=0) {
 	ud->exc_type = PyExc_ValueError;
-	ud->exc_val = PyString_FromString("UTF8ToHtml encoding error");
-	ud->exc_tb = NULL;
+	if (i==-2) {
+	    ud->exc_val = PyString_FromString("UTF8ToHtml: transcoding error");
+	}
+	else {
+            ud->exc_val = PyString_FromString("UTF8ToHtml: internal error");
+	}
+        ud->exc_tb = NULL;
         return;
     }
-    arglist = Py_BuildValue("(s#)", encbuf, outlen);
+    arglist = Py_BuildValue("(s#)", ud->buf, outlen);
     if (PyEval_CallObject(callback, arglist)==NULL) {
 	ud->error = 1;
 	PyErr_Fetch(&(ud->exc_type), &(ud->exc_val), &(ud->exc_tb));
@@ -447,8 +485,6 @@ static void _externalSubset (void* user_data, const xmlChar* name,
     Py_DECREF(arglist);
 }
 
-#undef ENC_BUF_LEN
-
 
 /* create parser */
 static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
@@ -466,13 +502,9 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     p->userData->handler = handler;
 
     p->sax = PyMem_New(htmlSAXHandler, sizeof(htmlSAXHandler));
+    memset(p->sax, 0, sizeof(htmlSAXHandler));
     /* register SAX callbacks */
     p->sax->internalSubset     = PyObject_HasAttrString(handler, "internalSubset") ? _internalSubset : NULL;
-    p->sax->isStandalone       = NULL;
-    p->sax->hasInternalSubset  = NULL;
-    p->sax->hasExternalSubset  = NULL;
-    p->sax->resolveEntity      = NULL;
-    p->sax->getEntity          = NULL;
     p->sax->entityDecl         = PyObject_HasAttrString(handler, "entityDecl") ? _entityDecl : NULL;
     p->sax->notationDecl       = PyObject_HasAttrString(handler, "notationDecl") ? _notationDecl : NULL;
     p->sax->attributeDecl      = PyObject_HasAttrString(handler, "attributeDecl") ? _attributeDecl : NULL;
@@ -491,22 +523,22 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
     p->sax->warning            = PyObject_HasAttrString(handler, "warning") ? _warning : NULL;
     p->sax->error              = PyObject_HasAttrString(handler, "error") ? _error : NULL;
     p->sax->fatalError         = PyObject_HasAttrString(handler, "fatalError") ? _fatalError : NULL;
-    p->sax->getParameterEntity = NULL;
     p->sax->cdataBlock         = PyObject_HasAttrString(handler, "cdataBlock") ? _cdataBlock : NULL;
     p->sax->externalSubset     = PyObject_HasAttrString(handler, "externalSubset") ? _externalSubset : NULL;
-
     p->userData->context =
 	htmlCreatePushParserCtxt(p->sax, /* the SAX handler */
 				 p->userData, /* our user_data */
 				 NULL, /* chunk of data */
 				 0, /* size of chunk */
 				 NULL, /* filename (optional) */
-				 XML_CHAR_ENCODING_8859_1 /* encoding */
+				 0 /* encoding */
 				);
     p->userData->error = 0;
     p->userData->exc_type = NULL;
     p->userData->exc_val = NULL;
     p->userData->exc_tb = NULL;
+    p->userData->buf = NULL;
+    p->userData->buflen = 0;
     return (PyObject*) p;
 }
 
@@ -514,6 +546,7 @@ static PyObject* htmlsax_parser(PyObject* self, PyObject* args) {
 static void parser_dealloc(parser_object* self)
 {
     htmlFreeParserCtxt(self->userData->context);
+    PyMem_Del(self->userData->buf);
     PyMem_Del(self->userData);
     PyMem_Del(self->sax);
     PyMem_DEL(self);
@@ -522,7 +555,7 @@ static void parser_dealloc(parser_object* self)
 
 static PyObject* parser_flush(parser_object* self, PyObject* args) {
     /* flush parser buffers */
-    int res;
+    int res=0;
     if (!PyArg_ParseTuple(args, "")) {
 	PyErr_SetString(PyExc_TypeError, "no args required");
         return NULL;
@@ -533,14 +566,14 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 
     res = htmlParseChunk(self->userData->context, NULL, 0, 1);
     if (self->userData->error!=0) {
-	self->userData->error = 0;
-	if (self->userData->exc_type!=NULL) {
-	    /* note: we give away these objects, so dont decref */
-	    PyErr_Restore(self->userData->exc_type,
-			  self->userData->exc_val,
-			  self->userData->exc_tb);
-	}
-	return NULL;
+        self->userData->error = 0;
+        if (self->userData->exc_type!=NULL) {
+            /* note: we give away these objects, so dont decref */
+            PyErr_Restore(self->userData->exc_type,
+        		  self->userData->exc_val,
+        		  self->userData->exc_tb);
+        }
+        return NULL;
     }
     return Py_BuildValue("i", res);
 }
@@ -548,8 +581,8 @@ static PyObject* parser_flush(parser_object* self, PyObject* args) {
 
 static PyObject* parser_feed(parser_object* self, PyObject* args) {
     /* feed a chunk of data to the parser */
-    int res, slen;
-    char* s;
+    int res=0, slen;
+    const char* s;
     if (!PyArg_ParseTuple(args, "t#", &s, &slen)) {
 	PyErr_SetString(PyExc_TypeError, "string arg required");
 	return NULL;
@@ -560,14 +593,14 @@ static PyObject* parser_feed(parser_object* self, PyObject* args) {
 
     res = htmlParseChunk(self->userData->context, s, slen, 0);
     if (self->userData->error!=0) {
-	self->userData->error = 0;
-	if (self->userData->exc_type!=NULL) {
+        self->userData->error = 0;
+        if (self->userData->exc_type!=NULL) {
 	    /* note: we give away these objects, so dont decref */
-	    PyErr_Restore(self->userData->exc_type,
-			  self->userData->exc_val,
-			  self->userData->exc_tb);
-	}
-	return NULL;
+            PyErr_Restore(self->userData->exc_type,
+        		  self->userData->exc_val,
+        		  self->userData->exc_tb);
+        }
+        return NULL;
     }
     return Py_BuildValue("i", res);
 }
@@ -585,7 +618,7 @@ static PyObject* parser_reset(parser_object* self, PyObject* args) {
 				 NULL,
 				 0,
 				 NULL,
-				 XML_CHAR_ENCODING_8859_1);
+				 0);
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -634,8 +667,6 @@ static PyMethodDef htmlsax_methods[] = {
 /* initialization of the htmlsaxhtmlop module */
 
 void inithtmlsax(void) {
-    //memset(&entity, 0, sizeof(xmlEntity));
-    //entityname = NULL;
     Py_InitModule("htmlsax", htmlsax_methods);
 }
 

@@ -100,7 +100,7 @@ class Compress(Filter):
 		    struct.pack('<l', compobj['size'])
         return data
 
-    def getAttrs(self, headers):
+    def getAttrs(self, headers, url):
         if headers.has_key('content-encoding'):
             if COMPRESS_RE.search(headers['content-encoding']):
                 compressobj = None

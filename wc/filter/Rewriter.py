@@ -64,23 +64,23 @@ class Rewriter(Filter):
         return p.flushbuf()
 
 
-    def getAttrs(self, headers):
+    def getAttrs(self, headers, url):
         """We need a separate filter instance for stateful filtering"""
-        p = HtmlFilter(self.rules, self.comments)
+        p = HtmlFilter(self.rules, self.comments, url)
         return {'filter': p}
 
 
 
 class HtmlFilter(HtmlParser):
     """The parser has the rules, a data buffer and a rule stack."""
-    def __init__(self, rules, comments):
+    def __init__(self, rules, comments, url):
         HtmlParser.__init__(self)
         self.rules = rules
         self.comments = comments
         self.data = ""
         self.rulestack = []
         self.buffer = []
-        self.document = "unknown"
+        self.document = url or "unknown"
 
 
     def __repr__(self):
@@ -202,7 +202,7 @@ class HtmlFilter(HtmlParser):
             s += 'PUBLIC "%s">'%name
         elif systemId:
             s += 'SYSTEM "%s">'%name
-        else
+        else:
             s += '"%s"'%name
         self.buffer_append_data([DATA, s])
 

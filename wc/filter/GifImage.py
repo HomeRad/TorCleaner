@@ -65,9 +65,11 @@ class GifImage(Filter):
 	    return data
         return data + (gifparser.finish and ';' or '')
 
-    def getAttrs(self, headers):
-        # XXX match url and self.url_re
-        match = 1
+    def getAttrs(self, headers, url):
+        if url:
+            match = self.url_re.match(url)
+        else:
+            match = 1
         return {'gifparser': GifParser(match)}
 
 

@@ -36,6 +36,6 @@ class Filter:
     def doit(self, data, **args):
         return data
 
-    def getAttrs(self, headers):
+    def getAttrs(self, headers, url):
         return {}
 

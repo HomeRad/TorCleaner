@@ -87,7 +87,7 @@ def applyfilter(i, arg, fun='filter', attrs={}):
     return arg
 
 
-def initStateObjects(headers={'content-type': 'text/html'}):
+def initStateObjects(headers={'content-type': 'text/html'}, url=None):
     """init external state objects"""
     attrs = {'mime': headers.get('content-type', 'application/octet-stream')}
     for i in range(10):
@@ -95,8 +95,8 @@ def initStateObjects(headers={'content-type': 'text/html'}):
             if hasattr(f, 'mimelist'):
                 if attrs['mime'] in f.mimelist:
                     #pass
-                    attrs.update(f.getAttrs(headers))
+                    attrs.update(f.getAttrs(headers, url))
             else:
-                attrs.update(f.getAttrs(headers))
+                attrs.update(f.getAttrs(headers, url))
     return attrs
 

@@ -47,16 +47,17 @@ dist:	locale
 
 .PHONY: test
 test:
-	$(PYTHON) test/regrtest.py test_parser test_rewriter test_blocker
+	$(PYTHON) test/regrtest.py
 
 .PHONY: gentest
 gentest:
-	$(PYTHON) test/regrtest.py -g test_parser test_rewriter test_blocker
+	$(PYTHON) test/regrtest.py -g
 
 .PHONY: onlinetest
 onlinetest:
 	$(PYTHON) webcleaner restart
 	rm -f index.html* test.gif
+	sleep 4
 	# get a standard page with included adverts
 	env http_proxy="http://localhost:9090" wget -t1 http://www.heise.de/
 	# get a blocked page
