@@ -30,7 +30,7 @@ def init_dns_resolver():
         DnsConfig.search_domains.append('')
     if not DnsConfig.nameservers:
         DnsConfig.nameservers.append('127.0.0.1')
-    #debug(BRING_IT_ON, "DNS nameservers", DnsConfig.nameservers, "\nsearch", DnsConfig.search_domains)
+    debug(BRING_IT_ON, "DNS nameservers", DnsConfig.nameservers, "\nsearch", DnsConfig.search_domains)
 
 
 def init_dns_resolver_posix():
@@ -527,7 +527,7 @@ class DnsLookupConnection(Connection):
                 ip_addrs.append(data)
             if type == dnstype.CNAME:
                 # XXX: should we do anything with CNAMEs?
-                #debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
+                debug(HURT_ME_PLENTY, 'cname record', self.hostname, '=', repr(data))
                 pass
         # Ignore (nscount) authority records
         # Ignore (arcount) additional records

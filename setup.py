@@ -136,7 +136,7 @@ else:
                       )]
 
 setup (name = "webcleaner",
-       version = "0.36",
+       version = "0.37",
        description = "a filtering HTTP proxy",
        author = myname,
        author_email = myemail,
@@ -157,6 +157,7 @@ o remove unwanted HTML (adverts, javascript, ...)
 o completely customizable to suit your (filtering) needs
 o single process proxy with select() I/O
 o HTTP/1.1 support
+o Proxy Authentication (requires HTTP/1.1 capable browser)
 """,
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,

@@ -198,7 +198,7 @@ class ParseException(Exception): pass
 
 class BaseParser:
     def parse(self, filename, config):
-        #debug("Parsing "+filename)
+        debug("Parsing "+filename)
         self.p = xml.parsers.expat.ParserCreate()
         self.p.StartElementHandler = self.start_element
         self.p.EndElementHandler = self.end_element
@@ -282,7 +282,7 @@ class WConfigParser(BaseParser):
             elif self.config['logfile']:
                 self.config['logfile'] = open(self.config['logfile'], 'a')
         elif name=='filter':
-            #debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
+            debug(BRING_IT_ON, "enable filter module %s" % attrs['name'])
             self.config['filters'].append(attrs['name'])
 
 config = Configuration()

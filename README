@@ -10,7 +10,7 @@ o remove/add HTTP headers
 o remove unwanted HTML (adverts, javascript, ...)
 o customizable to suit your (filtering) needs
 o HTTP/1.1 support
-
+o Proxy Authentication (requires HTTP/1.1 capable browser)
 
 Installing
 ----------

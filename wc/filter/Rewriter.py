@@ -53,14 +53,14 @@ class Rewriter (Filter):
 
     def filter (self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        #debug(NIGHTMARE, "Rewriter filter", "\n...%s"%`data[-70:]`)
+        debug(NIGHTMARE, "Rewriter filter", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         return p.flushbuf()
 
     def finish (self, data, **attrs):
         if not attrs.has_key('filter'): return data
-        #debug(NIGHTMARE, "Rewriter finish", "\n...%s"%`data[-70:]`)
+        debug(NIGHTMARE, "Rewriter finish", "\n...%s"%`data[-70:]`)
         p = attrs['filter']
         p.feed(data)
         p.flush()
@@ -73,7 +73,7 @@ class Rewriter (Filter):
         rules = filter(lambda r, u=url: r.appliesTo(u), self.rules)
         # second: weed out the comments rules, but remember length
         before = len(rules)
-        rules = filter(lambda r: r.get_name()=='rewrite', self.rules)
+        rules = filter(lambda r: r.get_name()=='rewrite', rules)
         # generate the HTML filter
         return {'filter': HtmlFilter(rules, (len(rules)==before), url)}
 
@@ -162,7 +162,7 @@ class HtmlFilter (HtmlParser):
         tobuffer = (STARTTAG, tag, attrs)
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                #debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
+                debug(NIGHTMARE, "matched rule %s on tag %s" % (`rule.title`, `tag`))
                 if rule.start_sufficient:
                     tobuffer = rule.filter_tag(tag, attrs)
                     # give'em a chance to replace more than one attribute
@@ -172,7 +172,7 @@ class HtmlFilter (HtmlParser):
                     else:
                         break
                 else:
-                    #debug(NIGHTMARE, "put on buffer")
+                    debug(NIGHTMARE, "put on buffer")
                     rulelist.append(rule)
         if rulelist:
             self.rulestack.append((len(self.buffer), rulelist))
