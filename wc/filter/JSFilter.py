@@ -22,6 +22,7 @@ __date__    = "$Date$"[7:-2]
 import re, urlparse, wc
 from wc.parser import resolve_html_entities
 from wc.filter import FilterWait
+from wc.filter.HtmlParser import HtmlParser
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.log import *
 from wc.js.JSListener import JSListener
@@ -54,7 +55,7 @@ class JSFilter (JSListener):
 
     def _debug (self, msg, *args):
         """debug with recursion level and state"""
-        debug(FILTER, "HtmlFilter[%d]: %s"%(self.level, msg), *args)
+        debug(FILTER, "%s[%d]: %s"%(self.__class__.__name__, self.level, msg), *args)
 
 
     def jsProcessData (self, data):
@@ -100,6 +101,10 @@ class JSFilter (JSListener):
         return res
 
 
+    def new_instance (self, opts):
+        JSFilter(self.url, **opts)
+
+
     def jsScript (self, script, ver, item):
         """execute given script with javascript version ver"""
         self._debug("JS: jsScript %s %r", ver, script)
@@ -110,9 +115,9 @@ class JSFilter (JSListener):
         # start recursive html filter (used by jsProcessData)
         opts = dict(comments=self.comments, javascript=self.javascript,
                     level=self.level+1)
-        # XXX
-        handler = HtmlFilter(self.rules, self.ratings, self.url, **opts)
+        handler = self.new_instance(opts)
         self.js_htmlparser = HtmlParser(handler)
+        handler.htmlparser = self.js_htmlparser
         # execute
         self.js_env.executeScript(unescape_js(script), ver)
         self.js_env.listeners.remove(self)

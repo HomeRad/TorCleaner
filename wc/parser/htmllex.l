@@ -312,7 +312,9 @@ RX_DATA  [-a-zA-Z0-9_:]+
   /*********************** TAGSTART ************************/
 <INITIAL><{RX_WHITE_SPACE}*/[A-Za-z] {
     UPDATE_BUFPOS;
-    if (!(yyextra->tmp_attrs = PyDict_New())) return T_ERROR;
+    if ((yyextra->tmp_attrs = PyDict_New())==NULL) {
+        return T_ERROR;
+    }
     BEGIN(S_TAGSTART);
 }
 
@@ -351,6 +353,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 <S_TAGSTART>> {
     UPDATE_BUFPOS;
+    BEGIN(INITIAL);
     if (!strlen(yyextra->tmp_buf)) {
         /* the tag name was empty, assume a stray "<>" */
 	RESIZE_BUF(yyextra->tmp_buf, 3);
@@ -817,7 +820,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     PYSTRING_TMP(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities, "O", yyextra->tmp_attrval);
-    if (!yyextra->tmp_attrval) return T_ERROR;
+    if (yyextra->tmp_attrval==NULL) return T_ERROR;
     if (PyDict_SetItem(yyextra->tmp_attrs,
 		       yyextra->tmp_attrname,
 		       yyextra->tmp_attrval)==-1) return T_ERROR;
@@ -909,7 +912,9 @@ RX_DATA  [-a-zA-Z0-9_:]+
     LOWER_TMP;
     yyextra->error = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf);
     SETLVAL;
-    if (!(yyextra->tmp_attrs = PyDict_New())) return T_ERROR;
+    if ((yyextra->tmp_attrs = PyDict_New())==NULL) {
+        return T_ERROR;
+    }
     BEGIN(S_TAGSTART);
     RETURN(T_ELEMENT_END);
 }

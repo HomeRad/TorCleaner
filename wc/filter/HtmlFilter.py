@@ -22,9 +22,9 @@ __date__    = "$Date$"[7:-2]
 import re, urllib, wc
 from wc.parser import resolve_html_entities
 from wc.filter import FilterRating
+from wc.filter.JSFilter import JSFilter
 from wc.filter.rules.RewriteRule import STARTTAG, ENDTAG, DATA, COMMENT
 from wc.filter.Rating import rating_import, rating_add, rating_allow
-from wc.filter.JSFilter import JSFilter
 from wc.log import *
 from HtmlTags import check_spelling
 from HtmlSecurity import HtmlSecurity
@@ -47,6 +47,10 @@ class HtmlFilter (JSFilter):
         self.base_url = None
         # for security flaw scanning
         self.security = HtmlSecurity()
+
+
+    def new_instance (self, opts):
+        return HtmlFilter(self.rules, self.ratings, self.url, **opts)
 
 
     def error (self, msg):

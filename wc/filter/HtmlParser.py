@@ -96,7 +96,7 @@ class HtmlParser (htmlsax.parser):
             if data:
                 # only feed non-empty data
                 debug(FILTER, "parser feed %r", data)
-                self._parser.feed(data)
+                super(HtmlParser, self).feed(data)
             else:
                 debug(FILTER, "empty parser feed")
                 pass
@@ -112,7 +112,7 @@ class HtmlParser (htmlsax.parser):
         if self.waited > 100:
             error(FILTER, "waited too long for %s"%self.state[1])
             # tell recursive background downloaders to stop
-            if hasattr(self.handler, "finish")
+            if hasattr(self.handler, "finish"):
                 self.handler.finish()
             # switch back to parse
             self.state = ('parse',)
@@ -123,7 +123,7 @@ class HtmlParser (htmlsax.parser):
             self.waited += 1
             raise FilterWait("HtmlParser[wait]: waited %d times for %s"%\
                              (self.waited, self.state[1]))
-        self._parser.flush()
+        super(HtmlParser, self).flush()
         if finish:
             self.tagbuf2data()
         data = self.outbuf.getvalue()

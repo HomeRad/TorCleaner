@@ -153,6 +153,12 @@ static PyObject* resolve_entities;
     if (b==NULL) return NULL; \
     (b)[0] = '\0'
 
+/* clear buffer b, returning NULL and decref self on error */
+#define CLEAR_BUF_DECREF(self, b) \
+    b = PyMem_Resize(b, char, 1); \
+    if (b==NULL) { Py_DECREF(self); return NULL; } \
+    (b)[0] = '\0'
+
 #define CHECK_ERROR(ud, label) \
 if (ud->error && PyObject_HasAttrString(ud->handler, "error")==1) { \
 	callback = PyObject_GetAttrString(ud->handler, "error"); \
@@ -216,7 +222,7 @@ typedef int YYSTYPE;
 
 
 /* Line 214 of yacc.c.  */
-#line 220 "htmlparse.c"
+#line 226 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -386,8 +392,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   129,   129,   130,   133,   134,   141,   175,   221,   251,
-     271,   291,   311,   331,   352,   373
+       0,   135,   135,   136,   139,   140,   147,   181,   227,   257,
+     277,   297,   317,   337,   358,   379
 };
 #endif
 
@@ -1092,22 +1098,22 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 129 "htmlparse.y"
+#line 135 "htmlparse.y"
     {;}
     break;
 
   case 3:
-#line 130 "htmlparse.y"
+#line 136 "htmlparse.y"
     {;}
     break;
 
   case 4:
-#line 133 "htmlparse.y"
+#line 139 "htmlparse.y"
     { YYACCEPT; /* wait for more lexer input */ ;}
     break;
 
   case 5:
-#line 135 "htmlparse.y"
+#line 141 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1117,7 +1123,7 @@ yyreduce:
     break;
 
   case 6:
-#line 142 "htmlparse.y"
+#line 148 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1154,7 +1160,7 @@ finish_start:
     break;
 
   case 7:
-#line 176 "htmlparse.y"
+#line 182 "htmlparse.y"
     {
     /* $1 is a PyTuple (<tag>, <attrs>)
        <tag> is a PyString, <attrs> is a PyDict */
@@ -1203,7 +1209,7 @@ finish_start_end:
     break;
 
   case 8:
-#line 222 "htmlparse.y"
+#line 228 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1236,7 +1242,7 @@ finish_end:
     break;
 
   case 9:
-#line 252 "htmlparse.y"
+#line 258 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1259,7 +1265,7 @@ finish_comment:
     break;
 
   case 10:
-#line 272 "htmlparse.y"
+#line 278 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1282,7 +1288,7 @@ finish_pi:
     break;
 
   case 11:
-#line 292 "htmlparse.y"
+#line 298 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1305,7 +1311,7 @@ finish_cdata:
     break;
 
   case 12:
-#line 312 "htmlparse.y"
+#line 318 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1328,7 +1334,7 @@ finish_doctype:
     break;
 
   case 13:
-#line 332 "htmlparse.y"
+#line 338 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1352,7 +1358,7 @@ finish_script:
     break;
 
   case 14:
-#line 353 "htmlparse.y"
+#line 359 "htmlparse.y"
     {
     /* $1 is a PyString */
     UserData* ud = yyget_extra(scanner);
@@ -1376,7 +1382,7 @@ finish_style:
     break;
 
   case 15:
-#line 374 "htmlparse.y"
+#line 380 "htmlparse.y"
     {
     /* $1 is a PyString */
     /* Remember this is also called as a lexer error fallback */
@@ -1403,7 +1409,7 @@ finish_characters:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1407 "htmlparse.c"
+#line 1413 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1597,7 +1603,7 @@ yyreturn:
 }
 
 
-#line 396 "htmlparse.y"
+#line 402 "htmlparse.y"
 
 
 /* disable python memory interface */
@@ -1606,29 +1612,40 @@ yyreturn:
 #undef free
 
 /* create parser object */
-static PyObject* parser_new (PyTypeObject *type, PyObject* args, PyObject* kwds) {
-    parser_object* self = (parser_object *)type->tp_alloc(type, 0);
-    if (self != NULL) {
-        self->handler = NULL;
-        /* reset userData */
-        self->userData = PyMem_New(UserData, sizeof(UserData));
-        self->userData->handler = NULL;
-        self->userData->buf = NULL;
-        CLEAR_BUF(self->userData->buf);
-        self->userData->nextpos = 0;
-        self->userData->bufpos = 0;
-        self->userData->tmp_buf = NULL;
-        CLEAR_BUF(self->userData->tmp_buf);
-        self->userData->tmp_tag = self->userData->tmp_attrname =
-            self->userData->tmp_attrval = self->userData->tmp_attrs =
-            self->userData->lexbuf = NULL;
-        self->userData->resolve_entities = resolve_entities;
-        self->userData->exc_type = NULL;
-        self->userData->exc_val = NULL;
-        self->userData->exc_tb = NULL;
-        self->userData->error = NULL;
-        self->scanner = NULL;
-        htmllexInit(&(self->scanner), self->userData);
+static PyObject* parser_new (PyTypeObject* type, PyObject* args, PyObject* kwds) {
+    parser_object* self;
+    if ((self = (parser_object*) type->tp_alloc(type, 0)) == NULL)
+    {
+        return NULL;
+    }
+    self->handler = NULL;
+    /* reset userData */
+    self->userData = PyMem_New(UserData, sizeof(UserData));
+    if (self->userData == NULL)
+    {
+        Py_DECREF(self);
+        return NULL;
+    }
+    self->userData->handler = NULL;
+    self->userData->buf = NULL;
+    CLEAR_BUF_DECREF(self, self->userData->buf);
+    self->userData->nextpos = 0;
+    self->userData->bufpos = 0;
+    self->userData->tmp_buf = NULL;
+    CLEAR_BUF_DECREF(self, self->userData->tmp_buf);
+    self->userData->tmp_tag = self->userData->tmp_attrname =
+        self->userData->tmp_attrval = self->userData->tmp_attrs =
+        self->userData->lexbuf = NULL;
+    self->userData->resolve_entities = resolve_entities;
+    self->userData->exc_type = NULL;
+    self->userData->exc_val = NULL;
+    self->userData->exc_tb = NULL;
+    self->userData->error = NULL;
+    self->scanner = NULL;
+    if (htmllexInit(&(self->scanner), self->userData)!=0)
+    {
+        Py_DECREF(self);
+        return NULL;
     }
     return (PyObject*) self;
 }
@@ -1891,7 +1908,10 @@ PyMODINIT_FUNC inithtmlsax (void) {
         return;
     }
     Py_INCREF(&parser_type);
-    PyModule_AddObject(m, "parser", (PyObject *)&parser_type);
+    if (PyModule_AddObject(m, "parser", (PyObject *)&parser_type)==-1) {
+        /* init error */
+        PyErr_Print();
+    }
     if ((m = PyImport_ImportModule("wc.parser"))==NULL) {
         return;
     }
