@@ -26,6 +26,7 @@ import urlparse
 import gettext
 import mimetypes
 import cStringIO as StringIO
+import wc
 import wc.webgui.simpletal
 import wc.proxy.auth
 import wc.proxy.Headers
@@ -60,7 +61,7 @@ class WebConfig (object):
             # note: index.html is appended to directories
             headers['Content-Type'] = 'text/html\r'
         try:
-            lang = i18n.get_headers_lang(clientheaders)
+            lang = wc.i18n.get_headers_lang(clientheaders)
             # get the template filename
             path, dirs, lang = get_template_url(url, lang)
             if path.endswith('.html'):
@@ -167,7 +168,7 @@ def get_template_path (path, defaultlang):
     """return tuple (path, dirs, lang)"""
     path, dirs = _get_template_path(path)
     lang = defaultlang
-    for la in i18n.supported_languages:
+    for la in wc.i18n.supported_languages:
         assert len(la)==2
         if path.endswith(".html.%s"%la):
             path = path[:-3]
@@ -231,10 +232,10 @@ def add_default_context (context, filename, lang):
     context.addGlobal("lang", lang)
     # other available languges
     otherlanguages = []
-    for la in i18n.supported_languages:
+    for la in wc.i18n.supported_languages:
         if lang==la: continue
         otherlanguages.append({'code': la,
-                               'name': i18n.lang_name(la),
-                               'trans': i18n.lang_trans(la, lang),
+                               'name': wc.i18n.lang_name(la),
+                               'trans': wc.i18n.lang_trans(la, lang),
                               })
     context.addGlobal("otherlanguages", otherlanguages)
