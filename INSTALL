@@ -6,15 +6,13 @@ Requirements
 Python >= 2.0 from http://www.python.org/
 
 For the GUI config tool webcleanerconf you need
-FOX Toolkit >= 0.99.147 from http://www.cfdrc.com/FOX/fox.html
+FOX Toolkit >= 0.99.147 from http://www.cfdrc.com/FOX/fox.html and
 FXPy >= 0.99.147 from http://fxpy.sourceforge.net/
 (FXPy version must be the same as FOX version)
 
 Setup
 -----
-To install, execute "python setup.py install".
-Run "python setup.py install --help" for help on install options.
-Debian users can build the .deb package with "debian/rules binary" as
-root or "fakeroot debian/rules binary" as a normal user.
+To install, execute "python2 setup.py install".
+Run "python2 setup.py install --help" for help on install options.
 
 Now you can start the proxy by executing "webcleaner start".

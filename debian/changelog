@@ -3,8 +3,9 @@ webcleaner (0.11) unstable; urgency=low
   * new proxy code: HTTP/1.1 and select() I/O
   * use versioned PID file
   * new CVS module webcleaner2
+  * parent proxy support for the new proxy code
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 10 Apr 2001 17:26:55 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 18 Apr 2001 19:34:49 +0200
 
 webcleaner (0.10) unstable; urgency=low
 

@@ -191,12 +191,14 @@ setup (name = "webcleaner",
        ext_modules = [Extension('wc.parser.sgmlop',['wc/parser/sgmlop.c'])],
        scripts = ['webcleaner', 'webcleanerconf'],
        long_description =
-"""WebCleaner can
+"""WebCleaner features:
 o disable animated GIFs
 o compress documents on-the-fly (with gzip)
 o enhance your privacy (remove user-agent: header and obfuscate IP address)
 o remove unwanted HTML (adverts, javascript, ...)
-o be completely customized to your needs
+o completely customizable to suit your (filtering) needs
+o single process proxy with select() I/O
+o HTTP/0.9 - 1.1
 """,
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,

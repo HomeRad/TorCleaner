@@ -1,5 +1,5 @@
 TODO
-- parent proxy support
+- Update help text and .po files
 - additionally give _all_ modules the URL info
 - more status info (look at surfboard: the WM applet is cool)
   o uptime

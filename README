@@ -1,0 +1,57 @@
+            WebCleaner - a filtering HTTP proxy
+	   =====================================
+
+
+Features
+--------
+o disable animated GIFs
+o compress documents on-the-fly (with gzip)
+o enhance your privacy (remove/add HTTP headers and obfuscate IP address)
+o remove unwanted HTML (adverts, javascript, ...)
+o completely customizable to suit your (filtering) needs
+o single process proxy with select() I/O
+o HTTP/0.9 - 1.1
+
+
+Installing
+----------
+Read the file INSTALL
+
+
+Configuration
+-------------
+Run the nice GUI config tool "webcleanerconf".
+The underlying configuration format is a custom XML format which is
+explained in config/filter.dtd and config/webcleaner.dtd.
+
+
+Notes
+-----
+WebCleaner is _not_ an HTTP compliant proxy because it modifies requests,
+headers and data!
+
+Obfuscate IP address does not spoof your address, it just encodes the
+IP numbers in one big integer. This is know to *not* work with
+a Squid parent proxy.
+
+Yes, surf performance will decrease, espacially with the Rewriter module
+enabled.
+
+
+Credits
+-------
+Credits go to munchy.py from Neil Schemenauer <nascheme@enme.ucalgary.ca>.
+The original proxy class is based on his code.
+The new proxy code is based on the fourth incarnation of Amit's web proxy.
+
+The filter code design is inspired from FilterProxy, a Perl program from
+Bob McElrath <mcelrath+filterproxy@draal.physics.wisc.edu>.
+
+Me, Bob and the author of AIFilter (Tels) had a nice discussion about
+filter formats with good ideas. Tels convinced me to try stateful
+filtering and I realize that it is very nice indeed.
+Disabling animated GIFs is a question of honor, but the idea goes back to
+the Webwasher.
+
+Also, the Surfboard (surfboard.sourceforge.net) is a very inspiring
+HTTP/1.1 proxy written in Java.
