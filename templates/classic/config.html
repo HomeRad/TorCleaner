@@ -20,10 +20,10 @@ proxy configuration</title>
 <table border="0" cellpadding="5" cellspacing="0" summary="">
 <tr valign="top">
 <td>
+<!-- proxy settings -->
 <fieldset>
 <legend i18n:translate="">Proxy settings</legend>
 <table border="0" cellpadding="5" cellspacing="0" summary="">
-
 <tr>
 <td>
 <label for="bindaddress" i18n:translate=""
@@ -223,6 +223,7 @@ proxy configuration</title>
 </fieldset>
 </td>
 <td>
+<!-- parent proxy settings -->
 <fieldset>
 <legend i18n:translate="">Parent proxy settings</legend>
 <table summary="" border="0" cellpadding="5" cellspacing="0">
@@ -281,7 +282,7 @@ proxy configuration</title>
 </div>
 </fieldset>
 <br>
-
+<!-- proxy filter modules settings -->
 <fieldset>
 <legend i18n:translate="">Proxy filter modules</legend>
 <div tal:repeat="module filtermodules">
@@ -298,6 +299,7 @@ proxy configuration</title>
 </tr>
 <tr valign="top">
 <td>
+<!-- allowed hosts -->
 <fieldset>
 <legend i18n:translate="">Allowed hosts</legend>
 <table border="0" cellpadding="5" cellspacing="0" summary="">
@@ -335,6 +337,7 @@ For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host).</span><br>
 </fieldset>
 </td>
 <td>
+<!-- don't filter hosts -->
 <fieldset>
 <legend i18n:translate="">Don't filter hosts</legend>
 <table border="0" cellpadding="5" cellspacing="0" summary="">
@@ -355,6 +358,8 @@ For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host).</span><br>
 <tr>
 <td>
 <input class="text" type="text" name="newnofilter" value="">
+<sup><a href="#footnote5" class="footnote" title="see footnote 5"
+ i18n:attributes="title">5)</a></sup>
 </td>
 <td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"
@@ -362,6 +367,12 @@ For example 192.168.1.1/8 (local subnet) or 1.1.1.1/0 (every host).</span><br>
 </td>
 </tr>
 </table>
+<div class="footnote">
+<sup id="footnote5" title="footnote 5" i18n:attributes="title">5)</sup>
+<span i18n:translate="">You can specify complete domains or only their last
+parts with a leading dot. For example <code>.intra</code> will
+match any hosts ending with <code>.intra</code>.</span><br>
+</div>
 </fieldset>
 </td>
 </tr>
