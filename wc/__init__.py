@@ -47,8 +47,6 @@ ConfigDir = configdata.config_dir
 TemplateDir = configdata.template_dir
 LocaleDir = os.path.join(configdata.install_data, 'share', 'locale')
 ConfigCharset = "iso-8859-1"
-BaseUrl = "http://webcleaner.sourceforge.net/zapper/"
-#BaseUrl = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
 
 from XmlUtils import xmlify, unxmlify
 
@@ -162,6 +160,10 @@ class Configuration (dict):
             socket.setdefaulttimeout(self['timeout'])
         else:
             socket.setdefaulttimeout(None)
+        if self['development']:
+            self['updateurl'] = "http://localhost/~calvin/webcleaner.sf.net/htdocs/test/"
+        else:
+            self['updateurl'] = "http://webcleaner.sourceforge.net/zapper/"
 
 
     def reset (self):
@@ -392,12 +394,14 @@ class BaseParser (object):
         self.xmlparser = None
 
 
-    def parse (self):
+    def parse (self, fp=None):
         debug(PROXY, "Parsing %s", self.filename)
+        if fp is None:
+            fp = file(self.filename)
         self._preparse()
         try:
             try:
-                self.xmlparser.ParseFile(file(self.filename))
+                self.xmlparser.ParseFile(fp)
             except (xml.parsers.expat.ExpatError, ParseException):
                 exception(PROXY, "Error parsing %s", self.filename)
                 raise SystemExit("parse error in %s"%self.filename)
