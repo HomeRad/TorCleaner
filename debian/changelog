@@ -1,8 +1,10 @@
 webcleaner (2.4-0.2) unstable; urgency=low
 
-  * Use dh_python, indent webcleaner description
+  * Use dh_python
+  * indent webcleaner description
+  * remove hashbang from wc/update.py (fixes lintian warning)
 
- -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Nov 2003 12:06:14 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Sun,  2 Nov 2003 12:14:25 +0100
 
 webcleaner (2.4-0.1) unstable; urgency=low
 
