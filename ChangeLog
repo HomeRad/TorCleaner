@@ -1,3 +1,8 @@
+2.15 (released 22.5.2004)
+  * set default config dir in webcleaner script
+    Type: bugfix
+    Changed: webcleaner
+
 2.14 (released 22.5.2004)
   * honor unreadable state in StatefulConnection.readable()
     Type: bugfix
