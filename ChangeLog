@@ -37,6 +37,11 @@
     Type: code cleanup
     Changed: a lot :)
 
+  * Splittet filter header arguments in client, server and data headers.
+    Client and server headers are read-only, data headers are mutable.
+    Type: bugfix
+    Changed: wc/filter/*.py, wc/proxy/Http{Server,Client}.py
+
 2.18 "Bubba Ho-tep" (released 1.6.2004)
   * rename local var 'data' to correct name 'content'
     Type: bugfix
