@@ -104,9 +104,6 @@ releasecheck:
 	@if ! grep 'adminuser="admin"' config/webcleaner.conf > /dev/null; then \
 	  echo "Could not release: add admin user to config"; false; \
 	fi
-	@if grep $(VERSION) TODO > /dev/null; then \
-	  echo "Could not release: update TODO for next version"; false; \
-	fi
 
 release: releasecheck dist upload homepage
 	mozilla -remote "openUrl(https://sourceforge.net/projects/webcleaner,new-tab)"
