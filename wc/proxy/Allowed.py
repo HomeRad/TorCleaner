@@ -65,7 +65,7 @@ class AllowedHttpClient (object):
             if port not in self.connect_ports:
                 wc.log.warn(wc.LOG_PROXY, "illegal CONNECT port %d", port)
                 return False
-            if self.scheme != 'https':
+            if scheme != 'https':
                 wc.log.warn(wc.LOG_PROXY, "illegal CONNECT scheme %d", scheme)
                 return False
         else:
