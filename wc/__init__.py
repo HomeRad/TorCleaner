@@ -20,9 +20,9 @@ Basic start and init methods.
 
 import sys
 if not hasattr(sys, "version_info"):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
-if sys.version_info < (2, 3, 1, 'final', 0):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
+    raise SystemExit, "This program requires Python 2.4 or later."
+if sys.version_info < (2, 4, 0, 'final', 0):
+    raise SystemExit, "This program requires Python 2.4 or later."
 import os
 import time
 import socket

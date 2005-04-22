@@ -1,4 +1,4 @@
-#!/usr/bin/python2.3
+#!/usr/bin/python2.4
 #
 # SchoolTool - common information systems platform for school administration
 # Copyright (c) 2003 Shuttleworth Foundation

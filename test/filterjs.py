@@ -1,3 +1,4 @@
+#!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 """filter JavaScript."""
 # Copyright (C) 2000-2005  Bastian Kleineidam

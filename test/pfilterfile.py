@@ -1,6 +1,8 @@
-#!/usr/bin/python2.3
+#!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
-"""USAGE: test/run.sh test/pfilterfile.py <.html file>"""
+"""
+USAGE: test/run.sh test/pfilterfile.py <.html file>
+"""
 
 import sys
 import wc

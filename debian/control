@@ -3,14 +3,13 @@ Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@debian.org>
 Standards-Version: 3.6.1
-Build-Depends: python-dev (>= 2.3.1), debhelper (>= 4.1.16), debconf (>= 1.2.9), gettext, cdbs
+Build-Depends: python2.4-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), gettext, cdbs
 
 Package: webcleaner
 Architecture: any
-Depends: python (>= 2.3.1), python (<< 2.4), debconf (>= 1.2.9), runit, webcleaner-common (>= ${Source-Version})
-Recommends: python-imaging, python-pyopenssl
-Conflicts: python-psyco (<< 1.1.1)
-Suggests: python-crypto, python-psyco, clamav-daemon
+Depends: python2.4, debconf (>= 1.2.9), runit, webcleaner-common (>= ${Source-Version})
+Recommends: python2.4-imaging, python2.4-pyopenssl
+Suggests: python2.4-crypto, python2.4-psyco, clamav-daemon
 Description: a filtering HTTP proxy
  Features:
   * remove unwanted HTML (adverts, flash, etc.)

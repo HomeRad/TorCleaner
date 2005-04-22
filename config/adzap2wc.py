@@ -1,4 +1,4 @@
-#!/usr/bin/python2.3
+#!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 # this script has to be executed in the config parent dir
 """Generate WebCleaner .zap files from an AdZapper squid_redirect file"""

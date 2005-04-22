@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
@@ -22,9 +22,9 @@ XXX Some patches here can be removed when moving to Python >= 2.4.
 
 import sys
 if not hasattr(sys, "version_info"):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
-if sys.version_info < (2, 3, 1, 'final', 0):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
+    raise SystemExit, "This program requires Python 2.4 or later."
+if sys.version_info < (2, 4, 0, 'final', 0):
+    raise SystemExit, "This program requires Python 2.4 or later."
 import os
 import stat
 import re

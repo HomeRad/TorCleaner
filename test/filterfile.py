@@ -1,4 +1,4 @@
-#!/usr/bin/python2.3
+#!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 """
 Filter given .html file with Replacer, Rewriter and BinaryCharFilter module.

@@ -7,7 +7,7 @@ EXTRA_DIST = wc/tests \
 	wc/proxy/auth/tests \
 	wc/magic/tests
 
-PYVER := 2.3
+PYVER := 2.4
 PYTHON := python$(PYVER)
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 """download one image and try to guess its size"""
 import Image, sys
