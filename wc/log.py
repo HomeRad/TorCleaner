@@ -22,6 +22,7 @@ Logging and debug functions.
 __all__ = ["debug", "info", "warn", "error", "critical", "exception", ]
 
 import logging
+import os
 import traceback
 import inspect
 import cStringIO as StringIO
