@@ -753,7 +753,7 @@ call_enumerate(JSContext *cx, JSObject *obj)
             return JS_FALSE;
         JS_ASSERT(obj && prop);
         cprop = (JSScopeProperty *)prop;
-        LOCKED_OBJ_SET_SLOT(obj, cprop->slot, vec[sprop->shortid]);
+        LOCKED_OBJ_SET_SLOT(obj, cprop->slot, vec[(uint16) sprop->shortid]);
         OBJ_DROP_PROPERTY(cx, obj, prop);
     }
 
@@ -1411,6 +1411,7 @@ static JSBool
 fun_call(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     jsval fval, *sp, *oldsp;
+    JSObject *tmp;
     void *mark;
     uintN i;
     JSStackFrame *fp;
@@ -1429,8 +1430,9 @@ fun_call(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
 
     if (argc == 0) {
-        /* Call fun with its parent as the 'this' parameter if no args. */
-        obj = OBJ_GET_PARENT(cx, obj);
+        /* Call fun with its global object as the 'this' param if no args. */
+        while ((tmp = OBJ_GET_PARENT(cx, obj)) != NULL)
+            obj = tmp;
     } else {
         /* Otherwise convert the first arg to 'this' and skip over it. */
         if (!js_ValueToObject(cx, argv[0], &obj))
@@ -1781,6 +1783,11 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
                                           fun->nargs)) {
                     goto bad_formal;
                 }
+                if (fun->nargs == JS_BITMASK(16)) {
+                    JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
+                                         JSMSG_TOO_MANY_FUN_ARGS);
+                    goto bad;
+                }
                 fun->nargs++;
 
                 /*
@@ -1836,6 +1843,7 @@ bad_formal:
     if (!(ts->flags & TSF_ERROR))
         JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL, JSMSG_BAD_FORMAL);
 
+bad:
     /*
      * Clean up the arguments string and tokenstream if we failed to parse
      * the arguments.
@@ -1878,8 +1886,19 @@ bad:
 JSObject *
 js_InitCallClass(JSContext *cx, JSObject *obj)
 {
-    return JS_InitClass(cx, obj, NULL, &js_CallClass, NULL, 0,
-                        call_props, NULL, NULL, NULL);
+    JSObject *proto;
+
+    proto = JS_InitClass(cx, obj, NULL, &js_CallClass, NULL, 0,
+                         call_props, NULL, NULL, NULL);
+    if (!proto)
+        return NULL;
+
+    /*
+     * Null Call.prototype's proto slot so that Object.prototype.* does not
+     * pollute the scope of heavyweight functions.
+     */
+    OBJ_SET_PROTO(cx, proto, NULL);
+    return proto;
 }
 #endif
 
