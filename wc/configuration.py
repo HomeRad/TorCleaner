@@ -19,6 +19,7 @@ Store configuration data.
 """
 
 import time
+import signal
 import os
 import sets
 import stat
@@ -28,6 +29,7 @@ import xml.parsers.expat
 import wc
 import wc.log
 import wc.ip
+import wc.decorators
 
 ConfigCharset = "iso-8859-1"
 
@@ -49,8 +51,10 @@ def init (confdir=wc.ConfigDir):
     return config
 
 
+@wc.decorators.signal_handler(signal.SIGHUP)
 def sighup_reload_config (signum, frame):
     """
+    Support reload on posix systems.
     Store timer for reloading configuration data.
     """
     global pending_reload

@@ -42,10 +42,6 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
     config = wc.configuration.init(confdir)
     if abort is not None:
         abort(False)
-    # support reload on posix systems
-    elif os.name == 'posix':
-        import signal
-        signal.signal(signal.SIGHUP, wc.configuration.sighup_reload_config)
     config.init_filter_modules()
     wc.filter.VirusFilter.init_clamav_conf()
     wc.proxy.dns_lookups.init_resolver()
