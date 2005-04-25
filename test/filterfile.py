@@ -31,14 +31,16 @@ def _main ():
     wc.proxy.dns_lookups.init_resolver()
     headers = wc.proxy.Headers.WcMessage()
     headers['Content-Type'] = "text/html"
-    attrs = wc.filter.get_filterattrs(fname, [wc.filter.FILTER_RESPONSE_MODIFY],
+    attrs = wc.filter.get_filterattrs(fname, "127.0.0.1",
+                                      [wc.filter.STAGE_RESPONSE_MODIFY],
                                       headers=headers, serverheaders=headers)
     filtered = ""
     data = f.read(2048)
     while data:
         print >>sys.stderr, "Test: data", len(data)
         try:
-            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, data, 'filter', attrs)
+            filtered += wc.filter.applyfilter(
+                       wc.filter.STAGE_RESPONSE_MODIFY, data, 'filter', attrs)
         except wc.filter.FilterException, msg:
             print >>sys.stderr, "Test: exception:", msg
             pass
@@ -48,8 +50,8 @@ def _main ():
     while True:
         print >>sys.stderr, "Test: finish", i
         try:
-            filtered += wc.filter.applyfilter(wc.filter.FILTER_RESPONSE_MODIFY, "", 'finish',
-                                    attrs)
+            filtered += wc.filter.applyfilter(
+                         wc.filter.STAGE_RESPONSE_MODIFY, "", 'finish', attrs)
             break
         except wc.filter.FilterException, msg:
             print >>sys.stderr, "Test: finish: exception:", msg
