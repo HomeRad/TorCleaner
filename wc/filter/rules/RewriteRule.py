@@ -133,10 +133,12 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         super(RewriteRule, self).__init__(sid=sid, titles=titles,
                                   descriptions=descriptions, disable=disable)
         self.tag = tag
+        self.tag_ro = re.compile(tag)
         if attrs is None:
             self.attrs = {}
         else:
             self.attrs = attrs
+        self.attrs_ro = {}
         self.part = part
         self.replacement = replacement
         self.enclosed = enclosed
@@ -179,7 +181,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         super(RewriteRule, self).compile_data()
         wc.filter.rules.Rule.compileRegex(self, "enclosed")
-        self.attrs_ro = {}
+        wc.filter.rules.Rule.compileRegex(self, "tag", fullmatch=True)
         for attr, val in self.attrs.items():
             self.attrs_ro[attr] = re.compile(val)
         self.set_start_sufficient()
@@ -210,8 +212,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         Return True iff tag name matches this rule.
         """
-        # XXX support regular expressions for self.tag
-        return self.tag == tag
+        return self.tag_ro.match(tag)
 
     def match_attrs (self, attrs):
         """
@@ -226,7 +227,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
                 val = ''
             occurred.append(attr)
             ro = self.attrs_ro.get(attr)
-            if ro and not ro.search(val):
+            if ro and not ro.match(val):
                 return False
         for attr in self.attrs.keys():
             if attr not in occurred:
@@ -243,7 +244,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             return True
         # put buf items together for matching
         data = tagbuf2data(tagbuf[pos:], ZTUtils.FasterStringIO()).getvalue()
-        return self.enclosed_ro.search(data)
+        return self.enclosed_ro.match(data)
 
     def filter_tag (self, tag, attrs, starttype):
         """
@@ -266,7 +267,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         for attr, val in attrs.items():
             ro = self.attrs_ro.get(attr)
             if ro:
-                mo = ro.search(val)
+                mo = ro.match(val)
                 if mo:
                     if self.part == ATTR:
                         # replace complete attr, and make it possible
