@@ -24,12 +24,16 @@ import wc.XmlUtils
 import wc.filter.rules
 
 
-def compileRegex (obj, attr):
+def compileRegex (obj, attr, fullmatch=False):
     """
     Regex-compile object attribute into <attr>_ro.
     """
-    if hasattr(obj, attr) and getattr(obj, attr):
-        setattr(obj, attr+"_ro", re.compile(getattr(obj, attr)))
+    if hasattr(obj, attr):
+        val = getattr(obj, attr)
+        if val:
+            if fullmatch:
+                val = "^%s$" % val
+            setattr(obj, attr+"_ro", re.compile(val))
 
 
 class LangDict (dict):
