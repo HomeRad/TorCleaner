@@ -27,6 +27,9 @@ PYLINTFILES = $(filter-out $(PYLINTIGNORE),$(PYFILES))
 TESTFILES :=
 SERVICEDIR := /etc/webcleaner/service
 
+MANIFEST: MANIFEST.in setup.py
+	$(PYTHON) setup.py sdist --manifest-only
+
 clean-local: clean-log
 	-$(PYTHON) setup.py clean --all #  ignore errors for this command
 	rm -f wc/HtmlParser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
@@ -46,7 +49,7 @@ clean-log:
 	rm -f webcleaner*.log* webcleaner.err*
 
 # to build in the current directory
-localbuild: all
+localbuild: all MANIFEST
 	$(MAKE) -C wc/HtmlParser
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-$(PYVER)/wc/HtmlParser/htmlsax.so wc/HtmlParser/
@@ -57,7 +60,7 @@ crossdist: distclean
 	./crossbuild.sh
 
 # cross compilation Linux -> Win32 script
-crossbuild: all
+crossbuild: all MANIFEST
 # build the .exe
 	CC=/usr/bin/i586-mingw32msvc-gcc \
 	CCSHARED=/usr/bin/i586-mingw32msvc-gcc \
@@ -80,7 +83,7 @@ deb_signed: clean
 # add setup.py generated files to $(distdir)
 # note: debian/rules install generates broken links, so delete debian
 # package dirs before running sdist
-dist-hook:
+dist-hook: MANIFEST
 	rm -rf debian/webcleaner debian/webcleanertools
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(VERSION).tar.gz
