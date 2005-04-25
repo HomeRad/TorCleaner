@@ -295,10 +295,12 @@ class Dispatcher (object):
         except select.error, why:
             # not yet ready
             wc.log.debug(wc.LOG_PROXY, '%s connect error %s', self, str(why))
+            wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
             return
         if self.fileno() not in w:
             # not yet ready
             wc.log.debug(wc.LOG_PROXY, '%s not writable', self)
+            wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
             return
         err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
         if err == 0:
