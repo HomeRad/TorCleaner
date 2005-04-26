@@ -452,6 +452,8 @@ class TestUrl (unittest.TestCase):
         """
         u = "scid=kb;en-us;Q248840"
         self.assertEqual(wc.url.url_parse_query(u), u)
+        u = "scid=kb;en-us;Q248840&b=c;hulla=bulla"
+        self.assertEqual(wc.url.url_parse_query(u), u)
 
 
 def test_suite ():
