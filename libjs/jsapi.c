@@ -1842,11 +1842,9 @@ CheckStackGrowthDirection(int *dummy1addr, jsuword limitAddr)
 
 #if JS_STACK_GROWTH_DIRECTION > 0
     JS_ASSERT(dummy1addr < &dummy2);
-    JS_ASSERT((jsuword)&dummy2 < limitAddr);
 #else
     /* Stack grows downward, the common case on modern architectures. */
     JS_ASSERT(&dummy2 < dummy1addr);
-    JS_ASSERT(limitAddr < (jsuword)&dummy2);
 #endif
 }
 #endif
@@ -2470,7 +2468,8 @@ LookupResult(JSContext *cx, JSObject *obj, JSObject *obj2, JSProperty *prop)
 
 static JSBool
 GetPropertyAttributes(JSContext *cx, JSObject *obj, JSAtom *atom,
-                      uintN *attrsp, JSBool *foundp)
+                      uintN *attrsp, JSBool *foundp,
+                      JSPropertyOp *getterp, JSPropertyOp *setterp)
 {
     JSObject *obj2;
     JSProperty *prop;
@@ -2480,8 +2479,14 @@ GetPropertyAttributes(JSContext *cx, JSObject *obj, JSAtom *atom,
         return JS_FALSE;
     if (!OBJ_LOOKUP_PROPERTY(cx, obj, ATOM_TO_JSID(atom), &obj2, &prop))
         return JS_FALSE;
+
     if (!prop || obj != obj2) {
+        *attrsp = 0;
         *foundp = JS_FALSE;
+        if (getterp)
+            *getterp = NULL;
+        if (setterp)
+            *setterp = NULL;
         if (prop)
             OBJ_DROP_PROPERTY(cx, obj2, prop);
         return JS_TRUE;
@@ -2489,6 +2494,14 @@ GetPropertyAttributes(JSContext *cx, JSObject *obj, JSAtom *atom,
 
     *foundp = JS_TRUE;
     ok = OBJ_GET_ATTRIBUTES(cx, obj, ATOM_TO_JSID(atom), prop, attrsp);
+    if (ok && OBJ_IS_NATIVE(obj)) {
+        JSScopeProperty *sprop = (JSScopeProperty *) prop;
+
+        if (getterp)
+            *getterp = sprop->getter;
+        if (setterp)
+            *setterp = sprop->setter;
+    }
     OBJ_DROP_PROPERTY(cx, obj, prop);
     return ok;
 }
@@ -2518,7 +2531,6 @@ SetPropertyAttributes(JSContext *cx, JSObject *obj, JSAtom *atom,
     return ok;
 }
 
-
 JS_PUBLIC_API(JSBool)
 JS_GetPropertyAttributes(JSContext *cx, JSObject *obj, const char *name,
                          uintN *attrsp, JSBool *foundp)
@@ -2526,7 +2538,20 @@ JS_GetPropertyAttributes(JSContext *cx, JSObject *obj, const char *name,
     CHECK_REQUEST(cx);
     return GetPropertyAttributes(cx, obj,
                                  js_Atomize(cx, name, strlen(name), 0),
-                                 attrsp, foundp);
+                                 attrsp, foundp, NULL, NULL);
+}
+
+JS_PUBLIC_API(JSBool)
+JS_GetPropertyAttrsGetterAndSetter(JSContext *cx, JSObject *obj,
+                                   const char *name,
+                                   uintN *attrsp, JSBool *foundp,
+                                   JSPropertyOp *getterp,
+                                   JSPropertyOp *setterp)
+{
+    CHECK_REQUEST(cx);
+    return GetPropertyAttributes(cx, obj,
+                                 js_Atomize(cx, name, strlen(name), 0),
+                                 attrsp, foundp, getterp, setterp);
 }
 
 JS_PUBLIC_API(JSBool)
@@ -2689,7 +2714,20 @@ JS_GetUCPropertyAttributes(JSContext *cx, JSObject *obj,
     CHECK_REQUEST(cx);
     return GetPropertyAttributes(cx, obj,
                     js_AtomizeChars(cx, name, AUTO_NAMELEN(name, namelen), 0),
-                    attrsp, foundp);
+                    attrsp, foundp, NULL, NULL);
+}
+
+JS_PUBLIC_API(JSBool)
+JS_GetUCPropertyAttrsGetterAndSetter(JSContext *cx, JSObject *obj,
+                                     const jschar *name, size_t namelen,
+                                     uintN *attrsp, JSBool *foundp,
+                                     JSPropertyOp *getterp,
+                                     JSPropertyOp *setterp)
+{
+    CHECK_REQUEST(cx);
+    return GetPropertyAttributes(cx, obj,
+                    js_AtomizeChars(cx, name, AUTO_NAMELEN(name, namelen), 0),
+                    attrsp, foundp, getterp, setterp);
 }
 
 JS_PUBLIC_API(JSBool)
@@ -3094,12 +3132,12 @@ JS_SetPrincipalsTranscoder(JSRuntime *rt, JSPrincipalsTranscoder px)
 }
 
 JS_PUBLIC_API(JSObjectPrincipalsFinder)
-JS_SetObjectPrincipalsFinder(JSContext *cx, JSObjectPrincipalsFinder fop)
+JS_SetObjectPrincipalsFinder(JSRuntime *rt, JSObjectPrincipalsFinder fop)
 {
     JSObjectPrincipalsFinder oldfop;
 
-    oldfop = cx->findObjectPrincipals;
-    cx->findObjectPrincipals = fop;
+    oldfop = rt->findObjectPrincipals;
+    rt->findObjectPrincipals = fop;
     return oldfop;
 }
 
