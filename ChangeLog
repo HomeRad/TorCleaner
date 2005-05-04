@@ -4,6 +4,10 @@
     Type: bugfix
     Changed: wc/proxy/Allowed.py
 
+  * Fix case where connections were stalled in connect state forever.
+    Type: bugfix
+    Changed: wc/proxy/Dispatcher.py
+
 2.29 "The Forgotten" (released 12.4.2005)
 
   * Replace template_dir in windows install script.
