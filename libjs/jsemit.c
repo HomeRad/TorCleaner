@@ -1460,6 +1460,7 @@ js_LookupCompileTimeConstant(JSContext *cx, JSCodeGenerator *cg, JSAtom *atom,
 
         obj = fp->varobj;
         if (obj == fp->scopeChain &&
+            OBJ_IS_NATIVE(obj) &&
             !js_InWithStatement(&cg->treeContext) &&
             !js_InCatchBlock(&cg->treeContext, atom)) {
             ATOM_LIST_SEARCH(ale, &cg->constList, atom);
@@ -1476,7 +1477,8 @@ js_LookupCompileTimeConstant(JSContext *cx, JSCodeGenerator *cg, JSAtom *atom,
              * nor can prop be deleted.
              */
             prop = NULL;
-            ok = OBJ_LOOKUP_PROPERTY(cx, obj, ATOM_TO_JSID(atom), &pobj, &prop);
+            ok = js_LookupPropertyWithFlags(cx, obj, ATOM_TO_JSID(atom),
+                                            JSLOOKUP_HIDDEN, &pobj, &prop);
             if (ok) {
                 if (pobj == obj &&
                     (fp->flags & (JSFRAME_EVAL | JSFRAME_COMPILE_N_GO))) {
@@ -1728,6 +1730,17 @@ LookupArgOrVar(JSContext *cx, JSTreeContext *tc, JSParseNode *pn)
         return JS_TRUE;
 
     /*
+     * A Script object can be used to split an eval into a compile step done
+     * at construction time, and an execute step done separately, possibly in
+     * a different scope altogether.  We therefore cannot do any name-to-slot
+     * optimizations, but must lookup names at runtime.  Note that script_exec
+     * ensures that its caller's frame has a Call object, so arg and var name
+     * lookups will succeed.
+     */
+    if (cx->fp->flags & JSFRAME_SCRIPT_OBJECT)
+        return JS_TRUE;
+
+    /*
      * We can't optimize if var and closure (a local function not in a larger
      * expression and not at top-level within another's body) collide.
      * XXX suboptimal: keep track of colliding names and deoptimize only those
@@ -1811,8 +1824,10 @@ LookupArgOrVar(JSContext *cx, JSTreeContext *tc, JSParseNode *pn)
          * NB: We know that JSOP_DELNAME on an argument or variable evaluates
          * to false, due to JSPROP_PERMANENT.
          */
-        if (!js_LookupProperty(cx, obj, ATOM_TO_JSID(atom), &pobj, &prop))
+        if (!js_LookupPropertyWithFlags(cx, obj, ATOM_TO_JSID(atom),
+                                        JSLOOKUP_HIDDEN, &pobj, &prop)) {
             return JS_FALSE;
+        }
         sprop = (JSScopeProperty *) prop;
         if (sprop) {
             if (pobj == obj) {
@@ -2869,8 +2884,8 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
             uintN slot;
 
             obj = OBJ_GET_PARENT(cx, fun->object);
-            if (!js_LookupProperty(cx, obj, ATOM_TO_JSID(fun->atom), &pobj,
-                                   &prop)) {
+            if (!js_LookupPropertyWithFlags(cx, obj, ATOM_TO_JSID(fun->atom),
+                                            JSLOOKUP_HIDDEN, &pobj, &prop)) {
                 return JS_FALSE;
             }
             JS_ASSERT(prop && pobj == obj);

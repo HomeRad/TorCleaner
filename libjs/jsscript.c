@@ -209,6 +209,7 @@ script_compile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
      * tested in jsemit.c and jsscan.c to optimize based on identity of run-
      * and compile-time scope.
      */
+    fp->flags |= JSFRAME_SCRIPT_OBJECT;
     script = JS_CompileUCScriptForPrincipals(cx, scopeobj, principals,
                                              JSSTRING_CHARS(str),
                                              JSSTRING_LENGTH(str),
@@ -1031,6 +1032,23 @@ js_MarkScriptFilename(const char *filename)
           (filename - offsetof(ScriptFilenameEntry, filename));
     JS_ASSERT(sfe->key == sfe->filename);
     sfe->mark = JS_TRUE;
+}
+
+JS_STATIC_DLL_CALLBACK(intN)
+js_script_filename_marker(JSHashEntry *he, intN i, void *arg)
+{
+    ScriptFilenameEntry *sfe = (ScriptFilenameEntry *) he;
+
+    sfe->mark = JS_TRUE;
+    return HT_ENUMERATE_NEXT;
+}
+
+void
+js_MarkScriptFilenames(JSRuntime *rt)
+{
+    JS_HashTableEnumerateEntries(rt->scriptFilenameTable,
+                                 js_script_filename_marker,
+                                 rt);
 }
 
 JS_STATIC_DLL_CALLBACK(intN)

@@ -700,7 +700,9 @@ JS_NewRuntime(uint32 maxbytes)
     rt->requestDone = JS_NEW_CONDVAR(rt->gcLock);
     if (!rt->requestDone)
         goto bad;
-    js_SetupLocks(8, 16);       /* this is asymmetric with JS_ShutDown. */
+    /* this is asymmetric with JS_ShutDown: */
+    if (!js_SetupLocks(8, 16))
+        goto bad;
     rt->rtLock = JS_NEW_LOCK();
     if (!rt->rtLock)
         goto bad;
@@ -2062,6 +2064,12 @@ JS_InstanceOf(JSContext *cx, JSObject *obj, JSClass *clasp, jsval *argv)
         }
     }
     return JS_FALSE;
+}
+
+JS_PUBLIC_API(JSBool)
+JS_HasInstance(JSContext *cx, JSObject *obj, jsval v, JSBool *bp)
+{
+    return js_HasInstance(cx, obj, v, bp);
 }
 
 JS_PUBLIC_API(void *)
@@ -3576,7 +3584,8 @@ JS_CompileUCFunctionForPrincipals(JSContext *cx, JSObject *obj,
                                       SPROP_INVALID_SLOT,
                                       JSPROP_ENUMERATE | JSPROP_PERMANENT |
                                       JSPROP_SHARED,
-                                      SPROP_HAS_SHORTID, i)) {
+                                      SPROP_HAS_SHORTID | SPROP_IS_HIDDEN,
+                                      i)) {
                 break;
             }
         }
@@ -4397,7 +4406,7 @@ JS_DropExceptionState(JSContext *cx, JSExceptionState *state)
 JS_PUBLIC_API(JSErrorReport *)
 JS_ErrorFromException(JSContext *cx, jsval v)
 {
-#if JS_HAS_EXCEPTIONS
+#if JS_HAS_ERROR_EXCEPTIONS
     CHECK_REQUEST(cx);
     return js_ErrorFromException(cx, v);
 #else
