@@ -55,7 +55,7 @@ Direct download links are in brackets.
 
 2. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
-   [http://osdn.dl.sourceforge.net/sourceforge/pywin32/pywin32-203.win32-py2.4.exe]
+   [http://osdn.dl.sourceforge.net/sourceforge/pywin32/pywin32-204.win32-py2.4.exe]
 
 3. *Only needed if you compile from source:*
    install the MinGW suite from http://mingw.sourceforge.net/.
