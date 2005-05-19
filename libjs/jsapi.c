@@ -3579,13 +3579,12 @@ JS_CompileUCFunctionForPrincipals(JSContext *cx, JSObject *obj,
             argAtom = js_Atomize(cx, argnames[i], strlen(argnames[i]), 0);
             if (!argAtom)
                 break;
-            if (!js_AddNativeProperty(cx, fun->object, ATOM_TO_JSID(argAtom),
+            if (!js_AddHiddenProperty(cx, fun->object, ATOM_TO_JSID(argAtom),
                                       js_GetArgument, js_SetArgument,
                                       SPROP_INVALID_SLOT,
                                       JSPROP_ENUMERATE | JSPROP_PERMANENT |
                                       JSPROP_SHARED,
-                                      SPROP_HAS_SHORTID | SPROP_IS_HIDDEN,
-                                      i)) {
+                                      SPROP_HAS_SHORTID, i)) {
                 break;
             }
         }
