@@ -5,6 +5,7 @@ import warnings
 import signal
 import os
 
+
 def deprecated (func):
     """
     A decorator which can be used to mark functions as deprecated.
