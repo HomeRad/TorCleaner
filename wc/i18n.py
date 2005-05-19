@@ -146,7 +146,8 @@ def get_locale ():
     try:
         loc = locale.getdefaultlocale()[0]
     except ValueError:
-        # workaround (XXX delete this when python2.5 is fixed)
+        # XXX ignore Python CVS bug
+        # http://sourceforge.net/tracker/index.php?func=detail&aid=1158909&group_id=5470&atid=105470
         pass
     if loc is None:
         return 'C'
