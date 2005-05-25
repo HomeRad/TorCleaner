@@ -207,22 +207,28 @@ class TestRewriter (unittest.TestCase):
         """
         IE object type crash.
         """
-        self.filt("""<object type="////////////////////////////////////////////////////////////AAAAA">""",
+        # To avoid virus alarms we obfuscate the exploit URL.
+        # This code is harmless.
+        slashes = "/" * 60
+        self.filt("""<object type="/%sAAAAA">""" % slashes,
                   """<object type="/AAAAA">""")
 
     def testHrefPercent (self):
         """
         Opera file crash.
         """
-        self.filt("""<a href="file://server%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%text"></a>""",
+        # To avoid virus alarms we obfuscate the exploit URL.
+        # This code is harmless.
+        percents = "%" * 178
+        self.filt("""<a href="file://server%stext"></a>""" % percents,
                   """<a></a>""")
 
     def testITSVuln (self):
         """
         Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability.
         """
-        # To avoid virus alarms we obfuscate the exploit URL. This
-        # code is harmless.
+        # To avoid virus alarms we obfuscate the exploit URL.
+        # This code is harmless.
         data_url = "&#109;s-its:mhtml:file://"+ \
                    "C:\\foo.mht!${PATH}/"+ \
                    "EXPLOIT.CHM::"+ \
