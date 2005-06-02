@@ -745,40 +745,36 @@ js_LockGCThingRT(JSRuntime *rt, void *thing)
      * nests a lock -- then start such an entry with a count of 2, not 1.
      */
     if (lock || deep) {
-        if (lock == 0 || !deep) {
+        if (!rt->gcLocksHash) {
+            rt->gcLocksHash =
+                JS_NewDHashTable(JS_DHashGetStubOps(), NULL,
+                                 sizeof(JSGCLockHashEntry),
+                                 GC_ROOTS_SIZE);
             if (!rt->gcLocksHash) {
-                rt->gcLocksHash =
-                    JS_NewDHashTable(JS_DHashGetStubOps(), NULL,
-                                     sizeof(JSGCLockHashEntry),
-                                     GC_ROOTS_SIZE);
-                if (!rt->gcLocksHash) {
-                    ok = JS_FALSE;
-                    goto done;
-                }
-            } else {
-#ifdef DEBUG
-                JSDHashEntryHdr *hdr =
-                    JS_DHashTableOperate(rt->gcLocksHash, thing,
-                                         JS_DHASH_LOOKUP);
-                JS_ASSERT(JS_DHASH_ENTRY_IS_FREE(hdr));
-#endif
-            }
-            lhe = (JSGCLockHashEntry *)
-                  JS_DHashTableOperate(rt->gcLocksHash, thing, JS_DHASH_ADD);
-            if (!lhe) {
                 ok = JS_FALSE;
                 goto done;
             }
+        } else if (lock == 0) {
+#ifdef DEBUG
+            JSDHashEntryHdr *hdr =
+                JS_DHashTableOperate(rt->gcLocksHash, thing,
+                                     JS_DHASH_LOOKUP);
+            JS_ASSERT(JS_DHASH_ENTRY_IS_FREE(hdr));
+#endif
+        }
+
+        lhe = (JSGCLockHashEntry *)
+            JS_DHashTableOperate(rt->gcLocksHash, thing, JS_DHASH_ADD);
+        if (!lhe) {
+            ok = JS_FALSE;
+            goto done;
+        }
+        if (!lhe->thing) {
             lhe->thing = thing;
             lhe->count = deep ? 1 : 2;
         } else {
-            lhe = (JSGCLockHashEntry *)
-                  JS_DHashTableOperate(rt->gcLocksHash, thing, JS_DHASH_LOOKUP);
-            JS_ASSERT(JS_DHASH_ENTRY_IS_BUSY(&lhe->hdr));
-            if (JS_DHASH_ENTRY_IS_BUSY(&lhe->hdr)) {
-                JS_ASSERT(lhe->count >= 1);
-                lhe->count++;
-            }
+            JS_ASSERT(lhe->count >= 1);
+            lhe->count++;
         }
     }
 
@@ -1570,6 +1566,7 @@ js_GC(JSContext *cx, uintN gcflags)
         return;
     }
     METER(rt->gcStats.poke++);
+    rt->gcPoke = JS_FALSE;
 
 #ifdef JS_THREADSAFE
     /* Bump gcLevel and return rather than nest on this thread. */
@@ -1911,15 +1908,16 @@ restart:
 #endif
 
     JS_LOCK_GC(rt);
-    if (rt->gcLevel > 1) {
+    if (rt->gcLevel > 1 || rt->gcPoke) {
         rt->gcLevel = 1;
+        rt->gcPoke = JS_FALSE;
         JS_UNLOCK_GC(rt);
         goto restart;
     }
     js_EnablePropertyCache(cx);
     rt->gcLevel = 0;
     rt->gcLastBytes = rt->gcBytes;
-    rt->gcPoke = rt->gcRunning = JS_FALSE;
+    rt->gcRunning = JS_FALSE;
 
 #ifdef JS_THREADSAFE
     /* If we were invoked during a request, pay back the temporary debit. */

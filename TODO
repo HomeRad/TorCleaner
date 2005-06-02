@@ -1,5 +1,45 @@
 TODO
 
+- padding error when password ends with equal sign?
+  150, in check_credentials                                                                     
+  res = check_digest_credentials(creds['Digest'][0], **attrs)                               
+  File "C:\Python24\Lib\site-packages\wc\proxy\auth\digest.py", line                          
+    101, in check_digest_credentials                                                              
+    our_response = get_response_digest(credentials, **attrs)[2]                               
+  File "C:\Python24\Lib\site-packages\wc\proxy\auth\digest.py", line                          
+    187, in get_response_digest                                                                   
+    password = base64.decodestring(attrs['password_b64'])                                     
+  File "C:\Python24\lib\base64.py", line 317, in decodestring                                 
+    return binascii.a2b_base64(s)                                                             
+  binascii.Error: Incorrect padding        
+
+- use privoxy's entries in default.action.master
+
+- limit psyco memory (http://psyco.sourceforge.net/psycoguide/memlimits.html)
+
+- do not remove referrer but replace with a spoofed one, notably "http://www.google.com/"
+
+- add privoxy's UNBLOCK_REFERRER entries to dontmatch list of referrer rule
+
+- test ads domain filter disablement
+
+- > 188, in get_response_digest
+>     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
+> UnicodeDecodeError: 'ascii' codec can't decode byte 0xfa in position 2:  
+> ordinal not in range(128)
+
+- iframes whitelist www.flumserberg.ch
+
+- http://tracker.tradedoubler.com/click?p=3469&a=919547&url=http://www.apple.com/de/macmini
+
+- Invalid content?
+  From
+  http://www.v-markt.de/angebote/aktuell/muenchen/muenchen.htm
+  to
+  http://www.v-markt.de/angebote/vorschau/muenchen/muenchen.htm
+- Remove autostart and hidden in:
+  <embed SRC="annoy.wav" autostart=true hidden=true>
+
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/wc/proxy/Connection.py", line 126, in handle_write
@@ -116,3 +156,8 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
   Big problem: how do we decide when to send out IPv6 DNS queries?
 
 - use IPpy.py
+
+- filter replace values should also have teh opportunity to use
+  dynamic values, like the request domain url the complete URL.
+  A use case would be referrer spoofing to use the request domain
+  instead of a fixed value.
