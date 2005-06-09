@@ -236,7 +236,7 @@ class HtmlSecurity (object):
         self.check_attr_size(attrs, 'width', htmlfilter)
         self.check_attr_size(attrs, 'height', htmlfilter)
 
-    def check_attr_size (self, attrs, name, htmlfilter. maxlen=4):
+    def check_attr_size (self, attrs, name, htmlfilter, maxlen=4):
         """
         Sanitize too large (integer) values.
         """
@@ -249,6 +249,6 @@ class HtmlSecurity (object):
             if len(val) > maxlen:
                 msg = "%s %r\n Detected a too large image %s attribute " \
                       "value"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url, name)
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
                 attrs[name] = val[:maxlen]
 
