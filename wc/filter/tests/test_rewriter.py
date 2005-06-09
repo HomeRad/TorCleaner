@@ -236,6 +236,12 @@ class TestRewriter (unittest.TestCase):
         self.filt("""<object data="%s">""" % data_url,
                   """<object data="ms-its:mhtml:file:/C:/foo.mht">""")
 
+    def testImgWidthHeight (self):
+        for tag in ("width", "height"):
+            self.filt("""<img %s="9999">""" % tag,
+                      """<img %s="9999">""" % tag)
+            self.filt("""<img %s="12345">""" % tag,
+                      """<img %s="1234">""" % tag)
 
 def test_suite ():
     suite = unittest.TestSuite()
