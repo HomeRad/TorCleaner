@@ -225,3 +225,30 @@ class HtmlSecurity (object):
                       "encoding overflow crash"
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
                 del attrs[name]
+
+    def img_start (self, attrs, htmlfilter):
+        """
+        Check <img> start tag.
+        """
+        self.check_percent_url(attrs, 'src', htmlfilter)
+        self.check_percent_url(attrs, 'lowsrc', htmlfilter)
+        # sanitize width/height values
+        self.check_attr_size(attrs, 'width', htmlfilter)
+        self.check_attr_size(attrs, 'height', htmlfilter)
+
+    def check_attr_size (self, attrs, name, htmlfilter. maxlen=4):
+        """
+        Sanitize too large (integer) values.
+        """
+        if attrs.has_key(name):
+            val = attrs[name]
+            # Just chop off the string length if it is too long, there is
+            # no need to parse any integers.
+            # Note that a maxlen of 4 is recommended to also allow
+            # percentages like '100%'.
+            if len(val) > maxlen:
+                msg = "%s %r\n Detected a too large image %s attribute " \
+                      "value"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url, name)
+                attrs[name] = val[:maxlen]
+
