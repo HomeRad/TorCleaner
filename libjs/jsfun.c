@@ -1199,7 +1199,7 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
             JSPropertyOp getter, setter;
 
             for (i = n; i != 0; i--) {
-                uintN attrs = JSPROP_ENUMERATE | JSPROP_PERMANENT;
+                uintN attrs = JSPROP_PERMANENT;
 
                 if (!JS_XDRUint32(xdr, &type) ||
                     !JS_XDRUint32(xdr, &userid) ||
@@ -1351,7 +1351,7 @@ JS_FRIEND_DATA(JSClass) js_FunctionClass = {
     fun_getProperty,  JS_PropertyStub,
     JS_EnumerateStub, (JSResolveOp)fun_resolve,
     fun_convert,      fun_finalize,
-    NULL,             NULL,
+    NULL,             js_SharedCheckAccess,
     NULL,             NULL,
     fun_xdrObject,    fun_hasInstance,
     fun_mark,         fun_reserveSlots
@@ -1793,8 +1793,7 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
                 if (!js_AddHiddenProperty(cx, fun->object, ATOM_TO_JSID(atom),
                                           js_GetArgument, js_SetArgument,
                                           SPROP_INVALID_SLOT,
-                                          JSPROP_ENUMERATE | JSPROP_PERMANENT |
-                                          JSPROP_SHARED,
+                                          JSPROP_PERMANENT | JSPROP_SHARED,
                                           dupflag | SPROP_HAS_SHORTID,
                                           fun->nargs)) {
                     goto bad_formal;

@@ -1758,6 +1758,9 @@ JS_GC(JSContext *cx)
 JS_PUBLIC_API(void)
 JS_MaybeGC(JSContext *cx)
 {
+#ifdef WAY_TOO_MUCH_GC
+    JS_GC(cx);
+#else
     JSRuntime *rt;
     uint32 bytes, lastBytes;
 
@@ -1773,6 +1776,7 @@ JS_MaybeGC(JSContext *cx)
          */
         JS_GC(cx);
     }
+#endif
 }
 
 JS_PUBLIC_API(JSGCCallback)
@@ -3583,8 +3587,7 @@ JS_CompileUCFunctionForPrincipals(JSContext *cx, JSObject *obj,
             if (!js_AddHiddenProperty(cx, fun->object, ATOM_TO_JSID(argAtom),
                                       js_GetArgument, js_SetArgument,
                                       SPROP_INVALID_SLOT,
-                                      JSPROP_ENUMERATE | JSPROP_PERMANENT |
-                                      JSPROP_SHARED,
+                                      JSPROP_PERMANENT | JSPROP_SHARED,
                                       SPROP_HAS_SHORTID, i)) {
                 break;
             }
