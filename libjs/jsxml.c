@@ -118,9 +118,6 @@ static struct {
 const char js_AnyName_str[]       = "AnyName";
 const char js_AttributeName_str[] = "AttributeName";
 const char js_isXMLName_str[]     = "isXMLName";
-const char js_Namespace_str[]     = "Namespace";
-const char js_QName_str[]         = "QName";
-const char js_XML_str[]           = "XML";
 const char js_XMLList_str[]       = "XMLList";
 const char js_localName_str[]     = "localName";
 const char js_xml_parent_str[]    = "parent";
@@ -7347,17 +7344,21 @@ js_InitNamespaceClass(JSContext *cx, JSObject *obj)
 JSObject *
 js_InitQNameClass(JSContext *cx, JSObject *obj)
 {
-    if (!JS_InitClass(cx, obj, NULL, &js_AttributeNameClass, AttributeName, 2,
-                      qname_props, qname_methods, NULL, NULL)) {
-        return NULL;
-    }
-
-    if (!JS_InitClass(cx, obj, NULL, &js_AnyNameClass, AnyName, 0,
-                      qname_props, qname_methods, NULL, NULL)) {
-        return NULL;
-    }
-
     return JS_InitClass(cx, obj, NULL, &js_QNameClass.base, QName, 2,
+                        qname_props, qname_methods, NULL, NULL);
+}
+
+JSObject *
+js_InitAttributeNameClass(JSContext *cx, JSObject *obj)
+{
+    return JS_InitClass(cx, obj, NULL, &js_AttributeNameClass, AttributeName, 2,
+                        qname_props, qname_methods, NULL, NULL);
+}
+
+JSObject *
+js_InitAnyNameClass(JSContext *cx, JSObject *obj)
+{
+    return JS_InitClass(cx, obj, NULL, &js_AnyNameClass, AnyName, 0,
                         qname_props, qname_methods, NULL, NULL);
 }
 
@@ -7444,7 +7445,13 @@ js_InitXMLClass(JSContext *cx, JSObject *obj)
 JSObject *
 js_InitXMLClasses(JSContext *cx, JSObject *obj)
 {
-    if (!js_InitNamespaceClass(cx, obj) || !js_InitQNameClass(cx, obj))
+    if (!js_InitNamespaceClass(cx, obj))
+        return NULL;
+    if (!js_InitQNameClass(cx, obj))
+        return NULL;
+    if (!js_InitAttributeNameClass(cx, obj))
+        return NULL;
+    if (!js_InitAnyNameClass(cx, obj))
         return NULL;
     return js_InitXMLClass(cx, obj);
 }
@@ -7531,8 +7538,12 @@ js_GetDefaultXMLNamespace(JSContext *cx, jsval *vp)
     if (!nsobj)
         return JS_FALSE;
     v = OBJECT_TO_JSVAL(nsobj);
-    if (obj && !OBJ_SET_PROPERTY(cx, obj, JS_DEFAULT_XML_NAMESPACE_ID, &v))
+    if (obj &&
+        !OBJ_DEFINE_PROPERTY(cx, obj, JS_DEFAULT_XML_NAMESPACE_ID, v,
+                             JS_PropertyStub, JS_PropertyStub,
+                             JSPROP_PERMANENT, NULL)) {
         return JS_FALSE;
+    }
     fp->xmlNamespace = nsobj;
     *vp = v;
     return JS_TRUE;
@@ -7556,8 +7567,11 @@ js_SetDefaultXMLNamespace(JSContext *cx, jsval v)
     fp = cx->fp;
     varobj = fp->varobj;
     if (varobj) {
-        if (!OBJ_SET_PROPERTY(cx, varobj, JS_DEFAULT_XML_NAMESPACE_ID, &v))
+        if (!OBJ_DEFINE_PROPERTY(cx, varobj, JS_DEFAULT_XML_NAMESPACE_ID, v,
+                                 JS_PropertyStub, JS_PropertyStub,
+                                 JSPROP_PERMANENT, NULL)) {
             return JS_FALSE;
+        }
     } else {
         JS_ASSERT(fp->fun && !(fp->fun->flags & JSFUN_HEAVYWEIGHT));
     }

@@ -1236,6 +1236,11 @@ static struct {
 #if JS_HAS_SCRIPT_OBJECT
     {js_InitScriptClass,            ATOM_OFFSET(Script)},
 #endif
+#if JS_HAS_XML_SUPPORT
+    {js_InitXMLClass,               ATOM_OFFSET(XML)},
+    {js_InitNamespaceClass,         ATOM_OFFSET(Namespace)},
+    {js_InitQNameClass,             ATOM_OFFSET(QName)},
+#endif
     {NULL,                          0}
 };
 
@@ -1308,13 +1313,10 @@ static JSStdName standard_class_names[] = {
 #endif
 
 #if JS_HAS_XML_SUPPORT
-    {js_InitXMLClass,           LAZILY_PINNED_ATOM(isXMLName)},
-    {js_InitNamespaceClass,     LAZILY_PINNED_ATOM(Namespace)},
-    {js_InitQNameClass,         LAZILY_PINNED_ATOM(QName)},
-    {js_InitQNameClass,         LAZILY_PINNED_ATOM(AnyName)},
-    {js_InitQNameClass,         LAZILY_PINNED_ATOM(AttributeName)},
-    {js_InitXMLClass,           LAZILY_PINNED_ATOM(XML)},
+    {js_InitAnyNameClass,       LAZILY_PINNED_ATOM(AnyName)},
+    {js_InitAttributeNameClass, LAZILY_PINNED_ATOM(AttributeName)},
     {js_InitXMLClass,           LAZILY_PINNED_ATOM(XMLList)},
+    {js_InitXMLClass,           LAZILY_PINNED_ATOM(isXMLName)},
 #endif
 
     {NULL,                      0, NULL}
@@ -1372,7 +1374,7 @@ JS_ResolveStandardClass(JSContext *cx, JSObject *obj, jsval id,
     rt = cx->runtime;
 
 #if JS_HAS_UNDEFINED
-    /* See if we're resolving 'undefined', and define it if so. */
+    /* Check whether we're resolving 'undefined', and define it if so. */
     atom = rt->atomState.typeAtoms[JSTYPE_VOID];
     if (idstr == ATOM_TO_STRING(atom)) {
         *resolved = JS_TRUE;
@@ -1430,17 +1432,10 @@ JS_ResolveStandardClass(JSContext *cx, JSObject *obj, jsval id,
 }
 
 static JSBool
-HasOwnProperty(JSContext *cx, JSObject *obj, JSAtom *atom, JSBool *ownp)
+AlreadyHasOwnProperty(JSObject *obj, JSAtom *atom)
 {
-    JSObject *pobj;
-    JSProperty *prop;
-
-    if (!OBJ_LOOKUP_PROPERTY(cx, obj, ATOM_TO_JSID(atom), &pobj, &prop))
-        return JS_FALSE;
-    if (prop)
-        OBJ_DROP_PROPERTY(cx, pobj, prop);
-    *ownp = (pobj == obj && prop);
-    return JS_TRUE;
+    JS_ASSERT(OBJ_IS_NATIVE(obj));
+    return SCOPE_GET_PROPERTY(OBJ_SCOPE(obj), ATOM_TO_JSID(atom)) != NULL;
 }
 
 JS_PUBLIC_API(JSBool)
@@ -1448,18 +1443,15 @@ JS_EnumerateStandardClasses(JSContext *cx, JSObject *obj)
 {
     JSRuntime *rt;
     JSAtom *atom;
-    JSBool found;
     uintN i;
 
     CHECK_REQUEST(cx);
     rt = cx->runtime;
 
 #if JS_HAS_UNDEFINED
-    /* See if we need to bind 'undefined' and define it if so. */
+    /* Check whether we need to bind 'undefined' and define it if so. */
     atom = rt->atomState.typeAtoms[JSTYPE_VOID];
-    if (!HasOwnProperty(cx, obj, atom, &found))
-        return JS_FALSE;
-    if (!found &&
+    if (!AlreadyHasOwnProperty(obj, atom) &&
         !OBJ_DEFINE_PROPERTY(cx, obj, ATOM_TO_JSID(atom), JSVAL_VOID,
                              NULL, NULL, JSPROP_PERMANENT, NULL)) {
         return JS_FALSE;
@@ -1469,13 +1461,104 @@ JS_EnumerateStandardClasses(JSContext *cx, JSObject *obj)
     /* Initialize any classes that have not been resolved yet. */
     for (i = 0; standard_class_atoms[i].init; i++) {
         atom = OFFSET_TO_ATOM(rt, standard_class_atoms[i].atomOffset);
-        if (!HasOwnProperty(cx, obj, atom, &found))
+        if (!AlreadyHasOwnProperty(obj, atom) &&
+            !standard_class_atoms[i].init(cx, obj)) {
             return JS_FALSE;
-        if (!found && !standard_class_atoms[i].init(cx, obj))
-            return JS_FALSE;
+        }
     }
 
     return JS_TRUE;
+}
+
+static JSIdArray *
+AddAtomToArray(JSContext *cx, JSAtom *atom, JSIdArray *ida, jsint *ip)
+{
+    jsint i, length;
+    
+    i = *ip;
+    length = ida->length;
+    if (i >= length) {
+        ida = js_SetIdArrayLength(cx, ida, JS_MAX(length * 2, 8));
+        if (!ida)
+            return NULL;
+        JS_ASSERT(i < ida->length);
+    }
+    ida->vector[i] = ATOM_TO_JSID(atom);
+    *ip = i + 1;
+    return ida;
+}
+
+static JSIdArray *
+EnumerateIfResolved(JSContext *cx, JSObject *obj, JSAtom *atom, JSIdArray *ida,
+                    jsint *ip, JSBool *foundp)
+{
+    *foundp = AlreadyHasOwnProperty(obj, atom);
+    if (*foundp)
+        ida = AddAtomToArray(cx, atom, ida, ip);
+    return ida;
+}
+
+JS_PUBLIC_API(JSIdArray *)
+JS_EnumerateResolvedStandardClasses(JSContext *cx, JSObject *obj,
+                                    JSIdArray *ida)
+{
+    JSRuntime *rt;
+    jsint i, j, k;
+    JSAtom *atom;
+    JSBool found;
+    JSObjectOp init;
+
+    CHECK_REQUEST(cx);
+    rt = cx->runtime;
+    if (ida) {
+        i = ida->length;
+    } else {
+        ida = js_NewIdArray(cx, 8);
+        if (!ida)
+            return NULL;
+        i = 0;
+    }
+
+#if JS_HAS_UNDEFINED
+    /* Check whether 'undefined' has been resolved and enumerate it if so. */
+    atom = rt->atomState.typeAtoms[JSTYPE_VOID];
+    ida = EnumerateIfResolved(cx, obj, atom, ida, &i, &found);
+    if (!ida)
+        return NULL;
+#endif
+
+    /* Enumerate only classes that *have* been resolved. */
+    for (j = 0; standard_class_atoms[j].init; j++) {
+        atom = OFFSET_TO_ATOM(rt, standard_class_atoms[j].atomOffset);
+        ida = EnumerateIfResolved(cx, obj, atom, ida, &i, &found);
+        if (!ida)
+            return NULL;
+
+        if (found) {
+            init = standard_class_atoms[j].init;
+
+            for (k = 0; standard_class_names[k].init; k++) {
+                if (standard_class_names[k].init == init) {
+                    atom = StdNameToAtom(cx, &standard_class_names[k]);
+                    ida = AddAtomToArray(cx, atom, ida, &i);
+                    if (!ida)
+                        return NULL;
+                }
+            }
+
+            if (init == js_InitObjectClass) {
+                for (k = 0; object_prototype_names[k].init; k++) {
+                    atom = StdNameToAtom(cx, &object_prototype_names[k]);
+                    ida = AddAtomToArray(cx, atom, ida, &i);
+                    if (!ida)
+                        return NULL;
+                }
+            }
+        }
+    }
+
+    /* Trim to exact length via js_SetIdArrayLength. */
+    return js_SetIdArrayLength(cx, ida, i);
 }
 
 #undef ATOM_OFFSET
@@ -1841,30 +1924,9 @@ JS_GetExternalStringGCType(JSRuntime *rt, JSString *str)
     return -1;
 }
 
-#ifdef DEBUG
-/* FIXME: 242518 static */ void
-CheckStackGrowthDirection(int *dummy1addr, jsuword limitAddr)
-{
-    int dummy2;
-
-#if JS_STACK_GROWTH_DIRECTION > 0
-    JS_ASSERT(dummy1addr < &dummy2);
-#else
-    /* Stack grows downward, the common case on modern architectures. */
-    JS_ASSERT(&dummy2 < dummy1addr);
-#endif
-}
-#endif
-
 JS_PUBLIC_API(void)
 JS_SetThreadStackLimit(JSContext *cx, jsuword limitAddr)
 {
-#ifdef DEBUG
-    int dummy1;
-
-    CheckStackGrowthDirection(&dummy1, limitAddr);
-#endif
-
 #if JS_STACK_GROWTH_DIRECTION > 0
     if (limitAddr == 0)
         limitAddr = (jsuword)-1;
@@ -3025,25 +3087,22 @@ JS_Enumerate(JSContext *cx, JSObject *obj)
     i = 0;
     vector = &ida->vector[0];
     for (;;) {
-        if (i == ida->length) {
-            /* Grow length by factor of 1.5 instead of doubling. */
-            jsint newlen = ida->length + (((jsuint)ida->length + 1) >> 1);
-            ida = js_GrowIdArray(cx, ida, newlen);
-            if (!ida)
-                goto error;
-            vector = &ida->vector[0];
-        }
-
         if (!OBJ_ENUMERATE(cx, obj, JSENUMERATE_NEXT, &iter_state, &id))
             goto error;
 
         /* No more jsid's to enumerate ? */
         if (iter_state == JSVAL_NULL)
             break;
+
+        if (i == ida->length) {
+            ida = js_SetIdArrayLength(cx, ida, ida->length * 2);
+            if (!ida)
+                goto error;
+            vector = &ida->vector[0];
+        }
         vector[i++] = id;
     }
-    ida->length = i;
-    return ida;
+    return js_SetIdArrayLength(cx, ida, i);
 
 error:
     if (iter_state != JSVAL_NULL)
@@ -3604,7 +3663,7 @@ JS_CompileUCFunctionForPrincipals(JSContext *cx, JSObject *obj,
     if (obj && funAtom) {
         if (!OBJ_DEFINE_PROPERTY(cx, obj, ATOM_TO_JSID(funAtom),
                                  OBJECT_TO_JSVAL(fun->object),
-                                 NULL, NULL, 0, NULL)) {
+                                 NULL, NULL, JSPROP_ENUMERATE, NULL)) {
             return NULL;
         }
     }

@@ -412,8 +412,11 @@ js_DefaultValue(JSContext *cx, JSObject *obj, JSType hint, jsval *vp);
 extern JSIdArray *
 js_NewIdArray(JSContext *cx, jsint length);
 
+/*
+ * Unlike realloc(3), this function frees ida on failure.
+ */
 extern JSIdArray *
-js_GrowIdArray(JSContext *cx, JSIdArray *ida, jsint length);
+js_SetIdArrayLength(JSContext *cx, JSIdArray *ida, jsint length);
 
 extern JSBool
 js_Enumerate(JSContext *cx, JSObject *obj, JSIterateOp enum_op,
@@ -422,18 +425,6 @@ js_Enumerate(JSContext *cx, JSObject *obj, JSIterateOp enum_op,
 extern JSBool
 js_CheckAccess(JSContext *cx, JSObject *obj, jsid id, JSAccessMode mode,
                jsval *vp, uintN *attrsp);
-
-/*
- * Functions, their prototype properties, and regular expressions are often
- * shared, even across trust domains, in order to amortize scripted function
- * compilation costs across N sharing domains or contexts.  If there is a
- * runtime-wide checkObjectAccess callback, this JSClass.checkAccess hook
- * will invoke it for every such shared object operation that might cross a
- * trust domain boundary.
- */
-extern JSBool
-js_SharedCheckAccess(JSContext *cx, JSObject *obj, jsval id, JSAccessMode mode,
-                     jsval *vp);
 
 extern JSBool
 js_Call(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
