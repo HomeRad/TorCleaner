@@ -394,7 +394,7 @@ def remove_old_data ():
 def remove_gunziped_files (fname):
     if os.path.isdir(fname):
         for f in os.listdir(fname):
-            remove_gunziped_file(fname+"/"+f)
+            remove_gunziped_files(fname+"/"+f)
     elif os.path.basename(fname) in ("domains", "urls", "expressions"):
         os.remove(fname)
 
