@@ -3,14 +3,12 @@
 # this script has to be executed in the config parent dir
 """Generate WebCleaner .zap files from an AdZapper squid_redirect file"""
 
-import sys
 import os
 import os.path
 import re
 import time
 import tempfile
 import urllib2
-import urlparse
 import errno
 import wc
 import wc.XmlUtils

@@ -8,7 +8,6 @@ The XYZ folder name is the blacklist folder.
 Required are the "tarfile" module and Python 2.2
 """
 
-import sys
 import time
 import os
 import re

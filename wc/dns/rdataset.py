@@ -19,7 +19,6 @@
 import random
 import StringIO
 import struct
-import sets
 
 import wc.dns.exception
 import wc.dns.rdatatype
