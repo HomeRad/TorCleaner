@@ -25,7 +25,7 @@ class SslConnection (wc.proxy.Connection.Connection):
             wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
             return
         try:
-            data = self.socket.read(wc.proxy.Connection.RECV_BUFSIZE)
+            data = self.socket.read(self.socket_rcvbuf)
             wc.log.debug(wc.LOG_NET, 'have read data %r', data)
         except OpenSSL.SSL.WantReadError, err:
             wc.log.debug(wc.LOG_NET, '%s want read error', self)
@@ -63,7 +63,7 @@ class SslConnection (wc.proxy.Connection.Connection):
         assert self.send_buffer
         wc.log.debug(wc.LOG_PROXY, '%s SslConnection.handle_write', self)
         num_sent = 0
-        data = self.send_buffer[:wc.proxy.Connection.SEND_BUFSIZE]
+        data = self.send_buffer[:self.socket_sndbuf]
         wc.log.debug(wc.LOG_NET, 'have written data %r', data)
         try:
             num_sent = self.socket.write(data)

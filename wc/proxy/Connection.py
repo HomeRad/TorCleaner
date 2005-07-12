@@ -14,13 +14,6 @@ import wc
 import wc.log
 import wc.proxy.Dispatcher
 
-# *_BUFSIZE values are critical: setting them too low produces a lot of
-# applyfilter() calls with very few data
-# setting them too high produces lags if bandwidth is low
-# default values are in bytes
-SEND_BUFSIZE = 4096
-RECV_BUFSIZE = 4096
-
 # to prevent DoS attacks, specify a maximum buffer size
 MAX_BUFSIZE = 1024*1024
 
@@ -57,12 +50,12 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         return self.connected
 
-    def read (self, bytes=RECV_BUFSIZE):
+    def read (self, bytes=None):
         """
         Read up to LEN bytes from the internal buffer.
         """
         if bytes is None:
-            bytes = RECV_BUFSIZE
+            bytes = self.socket_rcvbuf
         data = self.recv_buffer[:bytes]
         self.recv_buffer = self.recv_buffer[bytes:]
         return data
@@ -78,7 +71,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
             return
         try:
-            data = self.recv(RECV_BUFSIZE)
+            data = self.recv(self.socket_rcvbuf)
         except socket.error, err:
             if err == errno.EAGAIN:
                 # try again later
@@ -121,7 +114,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         assert self.send_buffer
         wc.log.debug(wc.LOG_PROXY, '%s handle_write', self)
         num_sent = 0
-        data = self.send_buffer[:SEND_BUFSIZE]
+        data = self.send_buffer[:self.socket_sndbuf]
         try:
             num_sent = self.send(data)
         except socket.error, err:
