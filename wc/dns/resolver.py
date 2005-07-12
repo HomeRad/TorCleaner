@@ -25,6 +25,8 @@ import sys
 import time
 import encodings.idna
 
+import wc
+import wc.log
 import wc.dns.exception
 import wc.dns.message
 import wc.dns.name
@@ -655,4 +657,6 @@ def query(qname, rdtype=wc.dns.rdatatype.A, rdclass=wc.dns.rdataclass.IN,
     global default_resolver
     if default_resolver is None:
         default_resolver = Resolver()
+    wc.log.debug(wc.LOG_DNS,
+                        "Query %s %s %s", qname, rdtype, rdclass)
     return default_resolver.query(qname, rdtype, rdclass, tcp)
