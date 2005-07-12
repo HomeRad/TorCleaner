@@ -5,7 +5,6 @@ Fourth incarnation of Amit's web proxy
 Used and modified by Bastian Kleineidam for WebCleaner
 """
 
-import socket
 import select
 import re
 import time
