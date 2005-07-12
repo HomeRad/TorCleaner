@@ -64,12 +64,16 @@ if socket.has_ipv6:
         if msg[0] not in (97, 10047):
             raise
 
-def create_socket (family, socktype):
+def create_socket (family, socktype, proto=0):
     """
     Create a socket with given family and type. If SSL context
     is given an SSL socket is created.
     """
-    sock = socket.socket(family, socktype)
+    sock = socket.socket(family, socktype, proto=proto)
+    # store family, type and proto in the object
+    sock.family = family
+    sock.socktype = socktype
+    sock.proto = proto
     # XXX disable custom timeouts for now
     #sock.settimeout(wc.configuration.config['timeout'])
     socktypes_inet = [socket.AF_INET]
@@ -161,19 +165,18 @@ class Dispatcher (object):
         """
         Create a new socket.
         """
-        self.family_and_type = (family, socktype)
-        self.socket = create_socket(family, socktype)
-        self.socket.setblocking(0)
-        self.add_channel()
+        self.set_socket(create_socket(family, socktype))
 
     def set_socket (self, sock):
         """
         Set new socket.
         """
-        family = socket.AF_INET # XXX how to get socket family?
-        socktype = sock.getsockopt(socket.SOL_SOCKET, socket.SO_TYPE)
-        self.family_and_type = family, socktype
+        sock.setblocking(0)
         self.socket = sock
+        self.socket_rcvbuf = \
+             sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
+        self.socket_sndbuf = \
+             sock.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
         self.add_channel()
 
     def set_reuse_addr (self):
@@ -385,7 +388,7 @@ class Dispatcher (object):
         @rtype: string
         @raise: socket.error on error
         """
-        if self.family_and_type[1] == socket.SOCK_DGRAM:
+        if self.socket.socktype == socket.SOCK_DGRAM:
             data, addr = self.socket.recvfrom(buffer_size)
             if addr != self.addr:
                 # answer was for someone else
