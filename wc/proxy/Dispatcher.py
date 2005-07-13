@@ -44,6 +44,7 @@ import errno
 import wc
 import wc.configuration
 import wc.log
+import wc.objproxy
 
 
 # map of sockets
@@ -70,7 +71,9 @@ def create_socket (family, socktype, proto=0):
     is given an SSL socket is created.
     """
     sock = socket.socket(family, socktype, proto=proto)
-    # store family, type and proto in the object
+    # since socket object cannot store additional attributes use a proxy
+    sock = wc.objproxy.Proxy(sock)
+    # store family, type and proto in the (proxied) object
     sock.family = family
     sock.socktype = socktype
     sock.proto = proto
@@ -329,7 +332,13 @@ class Dispatcher (object):
         """
         # XXX can return either an address pair or None
         try:
-            return self.socket.accept()
+            res = self.socket.accept()
+            if res is not None:
+                sock = wc.objproxy.Proxy(res[0])
+                sock.family = self.socket.family
+                sock.socktype = self.socket.socktype
+                sock.proto = self.socket.proto
+                return (sock, res[1])
         except socket.error, why:
             if why[0] == errno.EWOULDBLOCK:
                 pass
