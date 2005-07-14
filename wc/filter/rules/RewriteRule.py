@@ -19,6 +19,7 @@ Rule rewriting html tags.
 """
 
 import re
+from StringIO import StringIO
 
 import wc
 import wc.log
@@ -26,7 +27,6 @@ import wc.XmlUtils
 import wc.filter.rules.UrlRule
 import wc.filter.rules.Rule
 import wc.HtmlParser.htmllib
-from wc.webgui import ZTUtils
 
 
 # tag ids
@@ -243,7 +243,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             # no enclosed expression => match
             return True
         # put buf items together for matching
-        data = tagbuf2data(tagbuf[pos:], ZTUtils.FasterStringIO()).getvalue()
+        data = tagbuf2data(tagbuf[pos:], StringIO()).getvalue()
         return self.enclosed_ro.match(data)
 
     def filter_tag (self, tag, attrs, starttype):

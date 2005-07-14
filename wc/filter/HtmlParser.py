@@ -18,13 +18,12 @@
 Buffered HTML parser.
 """
 
-from cStringIO import StringIO
+from StringIO import StringIO
 
 import wc.log
 import wc.filter
 import wc.filter.rules.RewriteRule
 import wc.HtmlParser.htmlsax
-from wc.webgui import ZTUtils
 
 
 class HtmlParser (wc.HtmlParser.htmlsax.parser):
@@ -61,7 +60,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         # parse state either normal parse or wait
         self.state = ('parse',)
         # already filtered HTML data
-        self.outbuf = ZTUtils.FasterStringIO()
+        self.outbuf = StringIO()
         # incoming data in wait state
         self.inbuf = StringIO()
         # buffer of parsed HTML tags
@@ -145,7 +144,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         data = self.outbuf.getvalue()
         self.outbuf.close()
-        self.outbuf = ZTUtils.FasterStringIO()
+        self.outbuf = StringIO()
         return data.encode(self.encoding, "ignore")
 
     def replay (self, waitbuf):
