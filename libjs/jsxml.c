@@ -177,7 +177,7 @@ static void
 namespace_finalize(JSContext *cx, JSObject *obj)
 {
     JSXMLNamespace *ns;
-    JSAtom *functionAtom;
+    JSRuntime *rt;
 
     ns = (JSXMLNamespace *) JS_GetPrivate(cx, obj);
     if (!ns)
@@ -186,10 +186,9 @@ namespace_finalize(JSContext *cx, JSObject *obj)
     ns->object = NULL;
     UNMETER(xml_stats.livenamespaceobj);
 
-    functionAtom = cx->runtime->atomState.lazy.functionNamespaceAtom;
-    if (functionAtom && JSVAL_TO_OBJECT(ATOM_KEY(functionAtom)) == obj) {
-        cx->runtime->atomState.lazy.functionNamespaceAtom = NULL;
-    }
+    rt = cx->runtime;
+    if (rt->functionNamespaceObject == obj)
+        rt->functionNamespaceObject = NULL;
 }
 
 static void
@@ -398,9 +397,13 @@ qname_finalize(JSContext *cx, JSObject *obj)
 static void
 anyname_finalize(JSContext* cx, JSObject* obj)
 {
-    /* Make sure the next call to js_GetAnyName doesn't try to use
-       this object */
-    cx->runtime->atomState.lazy.anynameAtom = NULL;
+    JSRuntime *rt;
+
+    /* Make sure the next call to js_GetAnyName doesn't try to use obj. */
+    rt = cx->runtime;
+    if (rt->anynameObject == obj)
+        rt->anynameObject = NULL;
+
     qname_finalize(cx, obj);
 }
 
@@ -7460,16 +7463,16 @@ JSBool
 js_GetFunctionNamespace(JSContext *cx, jsval *vp)
 {
     JSRuntime *rt;
+    JSObject *obj;
     JSAtom *atom;
     JSString *prefix, *uri;
-    JSObject *obj;
 
     /* An invalid URI, for internal use only, guaranteed not to collide. */
     static const char anti_uri[] = "@mozilla.org/js/function";
 
     rt = cx->runtime;
-    atom = rt->atomState.lazy.functionNamespaceAtom;
-    if (!atom) {
+    obj = rt->functionNamespaceObject;
+    if (!obj) {
         atom = js_Atomize(cx, js_function_str, 8, 0);
         JS_ASSERT(atom);
         prefix = ATOM_TO_STRING(atom);
@@ -7484,12 +7487,9 @@ js_GetFunctionNamespace(JSContext *cx, jsval *vp)
         if (!obj)
             return JS_FALSE;
 
-        atom = js_AtomizeObject(cx, obj, 0);
-        if (!atom)
-            return JS_FALSE;
-        rt->atomState.lazy.functionNamespaceAtom = atom;
+        rt->functionNamespaceObject = obj;
     }
-    *vp = ATOM_KEY(atom);
+    *vp = OBJECT_TO_JSVAL(obj);
     return JS_TRUE;
 }
 
@@ -7658,13 +7658,12 @@ JSBool
 js_GetAnyName(JSContext *cx, jsval *vp)
 {
     JSRuntime *rt;
-    JSAtom *atom;
-    JSXMLQName *qn;
     JSObject *obj;
+    JSXMLQName *qn;
 
     rt = cx->runtime;
-    atom = rt->atomState.lazy.anynameAtom;
-    if (!atom) {
+    obj = rt->anynameObject;
+    if (!obj) {
         qn = js_NewXMLQName(cx, rt->emptyString, rt->emptyString,
                             ATOM_TO_STRING(rt->atomState.starAtom));
         if (!qn)
@@ -7679,12 +7678,9 @@ js_GetAnyName(JSContext *cx, jsval *vp)
         METER(xml_stats.qnameobj);
         METER(xml_stats.liveqnameobj);
 
-        atom = js_AtomizeObject(cx, obj, 0);
-        if (!atom)
-            return JS_FALSE;
-        rt->atomState.lazy.anynameAtom = atom;
+        rt->anynameObject = obj;
     }
-    *vp = ATOM_KEY(atom);
+    *vp = OBJECT_TO_JSVAL(obj);
     return JS_TRUE;
 }
 

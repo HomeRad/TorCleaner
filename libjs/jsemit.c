@@ -2140,7 +2140,7 @@ static JSBool
 EmitElemOp(JSContext *cx, JSParseNode *pn, JSOp op, JSCodeGenerator *cg)
 {
     ptrdiff_t top;
-    JSParseNode *left, *right, *next;
+    JSParseNode *left, *right, *next, temp;
     jsint slot;
 
     top = CG_OFFSET(cg);
@@ -2192,9 +2192,22 @@ EmitElemOp(JSContext *cx, JSParseNode *pn, JSOp op, JSCodeGenerator *cg)
             next = next->pn_next;
         }
     } else {
-        JS_ASSERT(pn->pn_arity == PN_BINARY);
-        left = pn->pn_left;
-        right = pn->pn_right;
+        if (pn->pn_arity == PN_NAME) {
+            /*
+             * Set left and right so pn appears to be a TOK_LB node, instead
+             * of a TOK_DOT node (see the TOK_FOR/IN case in js_EmitTree).
+             */
+            left = pn->pn_expr;
+            right = &temp;
+            right->pn_type = TOK_STRING;
+            right->pn_arity = PN_NULLARY;
+            right->pn_op = JSOP_STRING;
+            right->pn_atom = pn->pn_atom;
+        } else {
+            JS_ASSERT(pn->pn_arity == PN_BINARY);
+            left = pn->pn_left;
+            right = pn->pn_right;
+        }
 
         /* Try to optimize arguments[0] (e.g.) into JSOP_ARGSUB<0>. */
         if (op == JSOP_GETELEM &&
@@ -2892,6 +2905,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
         if (cg->treeContext.flags & TCF_IN_FUNCTION) {
             JSObject *obj, *pobj;
             JSProperty *prop;
+            JSScopeProperty *sprop;
             uintN slot;
 
             obj = OBJ_GET_PARENT(cx, fun->object);
@@ -2899,8 +2913,11 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                                          &pobj, &prop)) {
                 return JS_FALSE;
             }
+
             JS_ASSERT(prop && pobj == obj);
-            slot = ((JSScopeProperty *) prop)->shortid;
+            sprop = (JSScopeProperty *) prop;
+            JS_ASSERT(sprop->getter == js_GetLocalVariable);
+            slot = sprop->shortid;
             OBJ_DROP_PROPERTY(cx, pobj, prop);
 
             if (atomIndex >= JS_BIT(16)) {
@@ -3118,6 +3135,8 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
         js_PushStatement(&cg->treeContext, &stmtInfo, STMT_FOR_LOOP, top);
 
         if (pn2->pn_type == TOK_IN) {
+            JSBool emitIFEQ;
+
             /* Set stmtInfo type for later testing. */
             stmtInfo.type = STMT_FOR_IN_LOOP;
             noteIndex = -1;
@@ -3166,6 +3185,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
 #endif
 
             /* Compile a JSOP_FOR* bytecode based on the left hand side. */
+            emitIFEQ = JS_TRUE;
             switch (pn3->pn_type) {
               case TOK_VAR:
                 pn3 = pn3->pn_head;
@@ -3203,9 +3223,17 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                 break;
 
               case TOK_DOT:
-                if (!EmitPropOp(cx, pn3, JSOP_FORPROP, cg))
+                useful = JS_TRUE;
+                if (!CheckSideEffects(cx, &cg->treeContext, pn3->pn_expr,
+                                      &useful)) {
                     return JS_FALSE;
-                break;
+                }
+                if (!useful) {
+                    if (!EmitPropOp(cx, pn3, JSOP_FORPROP, cg))
+                        return JS_FALSE;
+                    break;
+                }
+                /* FALL THROUGH */
 
               case TOK_LB:
                 /*
@@ -3214,6 +3242,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                  * expression (e.g., for (x[i++] in {}) should not bind x[i]
                  * or increment i at all).
                  */
+                emitIFEQ = JS_FALSE;
                 if (!js_Emit1(cx, cg, JSOP_FORELEM))
                     return JS_FALSE;
 
@@ -3240,7 +3269,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                 JS_ASSERT(0);
             }
 
-            if (pn3->pn_type != TOK_LB) {
+            if (emitIFEQ) {
                 /* Annotate so the decompiler can find the loop-closing jump. */
                 noteIndex = js_NewSrcNote(cx, cg, SRC_WHILE);
                 if (noteIndex < 0)

@@ -761,6 +761,11 @@ FunctionDef(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
 
     /* Scan the optional function name into funAtom. */
     funAtom = js_MatchToken(cx, ts, TOK_NAME) ? CURRENT_TOKEN(ts).t_atom : NULL;
+    if (!funAtom && !lambda) {
+        js_ReportCompileErrorNumber(cx, ts, JSREPORT_TS | JSREPORT_ERROR,
+                                    JSMSG_SYNTAX_ERROR);
+        return NULL;
+    }
 
     /* Find the nearest variable-declaring scope and use it as our parent. */
     fp = cx->fp;
@@ -825,7 +830,9 @@ FunctionDef(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
             }
             if (prop)
                 OBJ_DROP_PROPERTY(cx, pobj, prop);
-            if (!prop || pobj != varobj) {
+            if (!prop ||
+                pobj != varobj ||
+                ((JSScopeProperty *)prop)->getter != js_GetLocalVariable) {
                 if (!js_AddHiddenProperty(cx, varobj, ATOM_TO_JSID(funAtom),
                                           js_GetLocalVariable,
                                           js_SetLocalVariable,
@@ -949,13 +956,14 @@ FunctionDef(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
 #endif
 
 #if JS_HAS_LEXICAL_CLOSURE
-    if (lambda || !funAtom) {
+    JS_ASSERT(lambda || funAtom);
+    if (lambda) {
         /*
          * ECMA ed. 3 standard: function expression, possibly anonymous (even
          * if at top-level, an unnamed function is an expression statement, not
          * a function declaration).
          */
-        op = fun->atom ? JSOP_NAMEDFUNOBJ : JSOP_ANONFUNOBJ;
+        op = funAtom ? JSOP_NAMEDFUNOBJ : JSOP_ANONFUNOBJ;
     } else if (tc->topStmt) {
         /*
          * ECMA ed. 3 extension: a function expression statement not at the

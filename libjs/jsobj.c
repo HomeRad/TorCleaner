@@ -77,10 +77,6 @@ js_DropProperty(JSContext *cx, JSObject *obj, JSProperty *prop);
 #define NATIVE_DROP_PROPERTY NULL
 #endif
 
-#ifdef XP_MAC
-#pragma export on
-#endif
-
 JS_FRIEND_DATA(JSObjectOps) js_ObjectOps = {
     js_NewObjectMap,        js_DestroyObjectMap,
     js_LookupProperty,      js_DefineProperty,
@@ -95,10 +91,6 @@ JS_FRIEND_DATA(JSObjectOps) js_ObjectOps = {
     js_Mark,                js_Clear,
     js_GetRequiredSlot,     js_SetRequiredSlot
 };
-
-#ifdef XP_MAC
-#pragma export off
-#endif
 
 JSClass js_ObjectClass = {
     js_Object_str,
@@ -1128,14 +1120,19 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
 #endif
 
-    /* Belt-and-braces: check that this eval callee has access to scopeobj. */
-    rt = cx->runtime;
-    if (rt->findObjectPrincipals) {
-        scopePrincipals = rt->findObjectPrincipals(cx, scopeobj);
-        if (scopePrincipals != principals) {
-            JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                                 JSMSG_BAD_INDIRECT_CALL, js_eval_str);
-            return JS_FALSE;
+    /*
+     * Belt-and-braces: check that the lesser of eval's principals and the
+     * caller's principals has access to scopeobj.
+     */
+    if (principals) {
+        rt = cx->runtime;
+        if (rt->findObjectPrincipals) {
+            scopePrincipals = rt->findObjectPrincipals(cx, scopeobj);
+            if (!principals->subsume(principals, scopePrincipals)) {
+                JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
+                                     JSMSG_BAD_INDIRECT_CALL, js_eval_str);
+                return JS_FALSE;
+            }
         }
     }
 
@@ -3825,6 +3822,12 @@ js_TryMethod(JSContext *cx, JSObject *obj, JSAtom *atom,
     JSErrorReporter older;
     jsval fval;
     JSBool ok;
+    int stackDummy;
+
+    if (!JS_CHECK_STACK_SIZE(cx, stackDummy)) {
+        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL, JSMSG_OVER_RECURSED);
+        return JS_FALSE;
+    }
 
     /*
      * Report failure only if an appropriate method was found, and calling it
