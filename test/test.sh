@@ -1,2 +1,2 @@
 #!/bin/sh
-test/run.sh webcleaner --config=localconfig --no-file-logs
+test/run.sh test.py --resource=network --search-in=wc -upv "$@"
