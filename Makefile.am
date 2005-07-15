@@ -7,9 +7,12 @@ EXTRA_DIST = wc/tests \
 	wc/proxy/auth/tests \
 	wc/magic/tests
 
+# python settings
 PYVER := 2.4
 PYTHON := python$(PYVER)
+# homepage directory
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
+# source code checker settings
 SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
@@ -23,9 +26,16 @@ PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
 	wc/webgui/context/*.py wc/magic/*.py)
 PYLINTIGNORE = wc/win32start.py
 PYLINTFILES = $(filter-out $(PYLINTIGNORE),$(PYFILES))
-# XXX add test files
+# test files
+# XXX todo
 TESTFILES :=
+# "runit" service directory
 SERVICEDIR := /etc/webcleaner/service
+# ZOPE3 subversion repository checkout directory (for comparing ZPT dirs)
+# $ svn co svn://svn.zope.org/repos/main/Zope3/trunk/src/zope
+ZOPE_SVN := /home/calvin/src/zope-svn_
+# run unittests on check
+TESTS = test/test.sh
 
 MANIFEST: MANIFEST.in setup.py
 	$(PYTHON) setup.py sdist --manifest-only
@@ -149,8 +159,7 @@ installservice:
           ln -s /etc/webcleaner/service /var/service/webcleaner; \
 	fi
 
-unittest:
-	test/run.sh test.py --resource=network --search-in=wc -upv
+test/test.sh:	localbuild
 
 # (re)generate webcleaner rules
 update-blacklists:
@@ -159,6 +168,12 @@ update-blacklists:
 reindent:
 	$(PYTHON) config/reindent.py -r -v wc
 
+zptdiff:
+	@for d in tal tales pagetemplate; do \
+	  for f in wc/webgui/$$d/*.py; do \
+	    diff -u $(ZOPE_SVN)/$$d/`basename $$f` $$f; \
+	  done; \
+	done | less
 
 .PHONY: localbuild distclean deb_signed update-blacklists
 .PHONY: md5sums pycheck pylint ccheck installservice homepage upload
