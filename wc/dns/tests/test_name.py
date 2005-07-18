@@ -593,10 +593,9 @@ class TestName (unittest.TestCase):
             (n, cused) = wc.dns.name.from_wire(w, 0)
         self.assertRaises(wc.dns.name.BadLabelType, bad)
 
+
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestName))
-    return suite
+    return unittest.makeSuite(TestName)
 
 
 if __name__ == '__main__':
