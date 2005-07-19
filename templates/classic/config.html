@@ -207,9 +207,9 @@ proxy configuration</title>
 <input tal:condition="config/filterdict/VirusFilter"
  class="text" type="text" name="clamav_conf" id="clamav_conf" value=""
  tal:attributes="value config/clamavconf">
-<input tal:condition="not:config/filterdict/VirusFilter" disabled
- class="text" type="text" name="clamav_conf" id="clamav_conf" value=""
- tal:attributes="value config/clamavconf">
+<div tal:condition="not:config/filterdict/VirusFilter">
+Enable the VirusFilter module.
+</div>
 </td>
 </tr>
 
@@ -394,6 +394,7 @@ match any hosts ending with <code>.intra</code>.</span><br>
 <div tal:condition="info/adminpass" i18n:translate="">Admin password successfully changed.</div>
 <div tal:condition="info/proxyuser" i18n:translate="">Proxy user successfully changed.</div>
 <div tal:condition="info/proxypass" i18n:translate="">Proxy password successfully changed.</div>
+<div tal:condition="info/clamavconf" i18n:translate="">ClamAV config successfully changed.</div>
 <div tal:condition="info/parentproxy" i18n:translate="">Parent proxy successfully changed.</div>
 <div tal:condition="info/parentproxyport" i18n:translate="">Parent proxy port successfully changed.</div>
 <div tal:condition="info/parentproxyuser" i18n:translate="">Parent proxy user successfully changed.</div>
