@@ -37,6 +37,7 @@ info = {
     'adminpass': False,
     'proxyuser': False,
     'proxypass': False,
+    'clamavconf': False,
     'auth_ntlm': False,
     'try_google': False,
     'parentproxy': False,
@@ -146,6 +147,9 @@ def _exec_form (form, lang):
         config['proxypass'] = u''
         config.write_proxyconf()
         info['proxypass'] = True
+    # ClamAV config
+    if form.has_key('clamav_conf'):
+        _form_clamavconf(_getval(form, 'clamav_conf').strip())
     # ntlm authentication
     if form.has_key('auth_ntlm'):
         if not config['auth_ntlm']:
@@ -305,6 +309,11 @@ def _form_proxypass (proxypass):
         config.write_proxyconf()
         info['proxypass'] = True
 
+def _form_clamavconf (clamavconf):
+    if clamavconf != config['clamavconf']:
+        config['clamavconf'] = clamavconf
+        config.write_proxyconf()
+        info['clamavconf'] = True
 
 def _form_parentproxy (parentproxy):
     if parentproxy != config['parentproxy']:
