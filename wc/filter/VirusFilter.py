@@ -27,8 +27,7 @@ import wc.configuration
 import wc.log
 import wc.filter
 import wc.filter.Filter
-import wc.proxy.Connection
-
+from wc.proxy.Dispatcher import create_socket
 
 def strsize (b):
     """
@@ -66,15 +65,16 @@ class VirusFilter (wc.filter.Filter.Filter):
         """
         Write data to scanner and internal buffer.
         """
-        if not attrs.has_key('scanner'):
+        if not attrs.has_key('virus_scanner'):
             return data
-        scanner = attrs['scanner']
+        scanner = attrs['virus_scanner']
         buf = attrs['virus_buf']
         size = attrs['virus_buf_size'][0]
         if data:
-            if size+len(data) > VirusFilter.MAX_FILE_BYTES:
+            data_length = len(data)
+            if size+data_length > VirusFilter.MAX_FILE_BYTES:
                 self.size_error()
-            attrs['virus_buf_size'][0] += len(data)
+            attrs['virus_buf_size'][0] += data_length
             scanner.scan(data)
             buf.write(data)
         return ""
@@ -83,6 +83,7 @@ class VirusFilter (wc.filter.Filter.Filter):
         """
         Raise an exceptionto cause a 406 HTTP return code.
         """
+        wc.log.warn(wc.LOG_FILTER, "Virus filter size exceeded.")
         raise wc.filter.FilterProxyError, (406, _("Not acceptable"),
                 _("Maximum data size (%s) exceeded") % \
                 strsize(VirusFilter.MAX_FILE_BYTES))
@@ -93,9 +94,10 @@ class VirusFilter (wc.filter.Filter.Filter):
         If scanner is clean, return buffered data, else print error
         message and return an empty string.
         """
-        if not attrs.has_key('scanner'):
+        if not attrs.has_key('virus_scanner'):
+            wc.log.debug(wc.LOG_FILTER, "No virus scanner found.")
             return data
-        scanner = attrs['scanner']
+        scanner = attrs['virus_scanner']
         buf = attrs['virus_buf']
         size = attrs['virus_buf_size'][0]
         if data:
@@ -106,13 +108,13 @@ class VirusFilter (wc.filter.Filter.Filter):
         scanner.close()
         for msg in scanner.errors:
             wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
-        if not scanner.infected:
-            data = buf.getvalue()
-        else:
+        if scanner.infected:
             data = ""
             for msg in scanner.infected:
                 wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r",
                             msg, attrs['url'])
+        else:
+            data = buf.getvalue()
         buf.close()
         return data
 
@@ -129,7 +131,7 @@ class VirusFilter (wc.filter.Filter.Filter):
             return d
         conf = get_clamav_conf()
         if conf is not None:
-            d['scanner'] = ClamdScanner(conf)
+            d['virus_scanner'] = ClamdScanner(conf)
             d['virus_buf'] = StringIO.StringIO()
             d['virus_buf_size'] = [0]
         return d
@@ -148,7 +150,10 @@ class ClamdScanner (object):
         self.errors = []
         self.clamav_conf = clamav_conf
         self.sock, host = self.clamav_conf.new_connection()
-        self.wsock = self.clamav_conf.new_scansock(self.sock, host)
+        self.sock_rcvbuf = \
+             self.sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
+        self.wsock = self.clamav_conf.new_scansock(self.sock,
+                                                   self.sock_rcvbuf, host)
 
     def scan (self, data):
         """
@@ -161,13 +166,13 @@ class ClamdScanner (object):
         Get results and close clamd daemon sockets.
         """
         self.wsock.close()
-        data = self.sock.recv(wc.proxy.Connection.RECV_BUFSIZE)
+        data = self.sock.recv(self.sock_rcvbuf)
         while data:
             if "FOUND\n" in data:
                 self.infected.append(data)
             if "ERROR\n" in data:
                 self.errors.append(data)
-            data = self.sock.recv(wc.proxy.Connection.RECV_BUFSIZE)
+            data = self.sock.recv(self.sock_rcvbuf)
         self.sock.close()
 
 
@@ -176,7 +181,9 @@ def init_clamav_conf ():
     """
     Initialize clamav configuration.
     """
-    if not os.path.exists(wc.configuration.config['clamavconf']):
+    conf = wc.configuration.config['clamavconf']
+    if conf and not os.path.exists(conf):
+        wc.log.warn(wc.LOG_FILTER, "No ClamAV config file found at %r.", conf)
         return
     global _clamav_conf
     _clamav_conf = ClamavConfig(wc.configuration.config['clamavconf'])
@@ -239,11 +246,11 @@ class ClamavConfig (dict):
         @return: tuple (connected socket, host)
         """
         if self.get('LocalSocket'):
-            sock = self.create_local_socket()
             host = 'localhost'
+            sock = self.create_local_socket()
         elif self.get('TCPSocket'):
-            sock = self.create_tcp_socket()
             host = self.get('TCPAddr', 'localhost')
+            sock = self.create_tcp_socket(host)
         else:
             raise Exception, _("You have to enable either TCPSocket " \
                                "or LocalSocket in your Clamd configuration")
@@ -253,7 +260,7 @@ class ClamavConfig (dict):
         """
         Create local socket, connect to it and return socket object.
         """
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock = create_socket(socket.AF_UNIX, socket.SOCK_STREAM)
         addr = self['LocalSocket']
         try:
             sock.connect(addr)
@@ -262,14 +269,13 @@ class ClamavConfig (dict):
             raise
         return sock
 
-    def create_tcp_socket (self):
+    def create_tcp_socket (self, host):
         """
         Create tcp socket, connect to it and return socket object.
         """
-        host = self.get('TCPAddr', 'localhost')
         port = int(self['TCPSocket'])
         sockinfo = get_sockinfo(host, port=port)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect(sockinfo[0][4])
         except socket.error:
@@ -277,7 +283,7 @@ class ClamavConfig (dict):
             raise
         return sock
 
-    def new_scansock (self, sock, host):
+    def new_scansock (self, sock, rcvbuf, host):
         """
         Return a connected socket for sending scan data to it.
         """
@@ -286,7 +292,7 @@ class ClamavConfig (dict):
             sock.sendall("STREAM")
             port = None
             for i in range(60):
-                data = sock.recv(wc.proxy.Connection.RECV_BUFSIZE)
+                data = sock.recv(rcvbuf)
                 i = data.find("PORT")
                 if i != -1:
                     port = int(data[i+5:])
@@ -297,7 +303,7 @@ class ClamavConfig (dict):
         if port is None:
             raise Exception, _("Clamd is not ready for stream scanning")
         sockinfo = get_sockinfo(host, port=port)
-        wsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        wsock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             wsock.connect(sockinfo[0][4])
         except socket.error:
