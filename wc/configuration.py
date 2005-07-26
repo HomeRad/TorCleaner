@@ -40,7 +40,7 @@ pending_reload = False
 
 def init (confdir=wc.ConfigDir):
     """
-    Initialize rating system and load the configuration.
+    Initialize and load the configuration.
     """
     global config
     from wc.filter.rating import register_service
@@ -51,6 +51,7 @@ def init (confdir=wc.ConfigDir):
     return config
 
 
+# note that Python already ignores SIGPIPE, so no need to configure that
 @wc.decorators.signal_handler(signal.SIGHUP)
 def sighup_reload_config (signum, frame):
     """
@@ -100,6 +101,7 @@ filtermodules = [
     "ImageReducer",
     "BinaryCharFilter",
     "Rewriter",
+    "XmlRewriter",
     "Replacer",
     "Compress",
     "RatingHeader",
@@ -165,12 +167,7 @@ class Configuration (dict):
         self['gui_theme'] = "classic"
         self['timeout'] = 10
         self['auth_ntlm'] = 0
-        if os.name == 'posix':
-            self['clamavconf'] = "/etc/clamav/clamav.conf"
-        elif os.name == 'nt':
-            self['clamavconf'] = r"c:\clamav-devel\etc\clamav.conf"
-        else:
-            self['clamavconf'] = os.path.join(os.getcwd(), "clamav.conf")
+        self['clamavconf'] = ""
         # in development mode some values have different defaults
         self['development'] = int(os.environ.get("WC_DEVELOPMENT", "0"))
         self['baseurl'] = wc.Url
@@ -351,6 +348,7 @@ rulenames = (
   u'replace',
   u'rating',
   u'antivirus',
+  u'xmlrewrite',
 )
 _nestedtags = (
   'title', 'description',
