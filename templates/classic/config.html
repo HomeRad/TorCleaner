@@ -202,11 +202,14 @@ proxy configuration</title>
 <label i18n:attributes="title"
  title="Location of the Clamav Antivirus software configuration file"
  for="clamav_conf" i18n:translate="">Clamav Config</label>
+<sup><a href="#footnote3" class="footnote" title="see footnote 3"
+ i18n:attributes="title">3)</a></sup>
 </td>
 <td>
-<input tal:condition="config/filterdict/VirusFilter"
+<div tal:condition="config/filterdict/VirusFilter"><input
  class="text" type="text" name="clamav_conf" id="clamav_conf" value=""
  tal:attributes="value config/clamavconf">
+</div>
 <div tal:condition="not:config/filterdict/VirusFilter">
 Enable the VirusFilter module.
 </div>
@@ -219,6 +222,9 @@ Enable the VirusFilter module.
 <span i18n:translate="">Changes to this option require a proxy restart to take effect.</span><br>
 <sup id="footnote2" title="footnote 2" i18n:attributes="title">2)</sup>
 <span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
+<sup id="footnote3" title="footnote 3" i18n:attributes="title">3)</sup>
+<span i18n:translate="">Example ClamAV config file:</span>
+<code tal:content="clamavconf">/etc/clamav/clamd.conf</code>
 </div>
 </fieldset>
 </td>

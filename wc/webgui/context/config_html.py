@@ -21,6 +21,7 @@ Parameters for config.html page.
 # be sure not to import something in the context namespace we do not want
 import base64
 import socket
+import os
 from wc import AppName, Version
 from wc.configuration import config, filtermodules
 from wc import sort_seq as _sort_seq
@@ -77,6 +78,15 @@ ifvalues = {'all_hosts': config['newbindaddress'] == ""}
 for _i in _resolver.interfaces:
     ifnames.append(_i)
     ifvalues[_i] = _i == config['newbindaddress']
+
+
+# default clamav configs for various platforms
+if os.name == 'posix':
+    clamavconf = "/etc/clamav/clamd.conf"
+elif os.name == 'nt':
+    clamavconf = r"c:\clamav-devel\etc\clamd.conf"
+else:
+    clamavconf = "clamd.conf"
 
 
 def _form_reset ():
@@ -150,6 +160,10 @@ def _exec_form (form, lang):
     # ClamAV config
     if form.has_key('clamav_conf'):
         _form_clamavconf(_getval(form, 'clamav_conf').strip())
+    elif config['clamavconf']:
+        config['clamavconf'] = ""
+        config.write_proxyconf()
+        info['clamavconf'] = True
     # ntlm authentication
     if form.has_key('auth_ntlm'):
         if not config['auth_ntlm']:
