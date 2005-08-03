@@ -149,6 +149,13 @@ class TestMessage (unittest.TestCase):
             m = wc.dns.message.from_wire(badwire)
         self.assertRaises(wc.dns.message.ShortHeader, bad)
 
+    def test_RespondingToResponse(self):
+        def bad():
+            q = wc.dns.message.make_query('foo', 'A')
+            r1 = wc.dns.message.make_response(q)
+            r2 = wc.dns.message.make_response(r1)
+        self.assertRaises(wc.dns.exception.FormError, bad)
+
 
 def test_suite ():
     return unittest.makeSuite(TestMessage)
