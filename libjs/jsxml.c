@@ -1,4 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set ts=4 sw=4 et tw=80:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -251,6 +252,7 @@ JS_FRIEND_DATA(JSExtendedClass) js_NamespaceClass = {
     NULL,              NULL,              NULL,              NULL,
     NULL,              NULL,              namespace_mark,    NULL },
     namespace_equality,
+    NULL,
     JSCLASS_NO_RESERVED_MEMBERS
 };
 
@@ -453,6 +455,7 @@ JS_FRIEND_DATA(JSExtendedClass) js_QNameClass = {
     NULL,              NULL,              NULL,              NULL,
     NULL,              NULL,              qname_mark,        NULL },
     qname_equality,
+    NULL,
     JSCLASS_NO_RESERVED_MEMBERS
 };
 
@@ -6974,6 +6977,7 @@ static JSBool
 XML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     jsval v;
+    uint32 oldopts;
     JSXML *xml, *copy;
     JSObject *xobj, *vobj;
     JSClass *clasp;
@@ -6981,8 +6985,13 @@ XML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     v = argv[0];
     if (JSVAL_IS_NULL(v) || JSVAL_IS_VOID(v))
         v = STRING_TO_JSVAL(cx->runtime->emptyString);
+    /* Toggle on XML support since the script has explicitly requested it. */
+    oldopts = cx->options;
+    JS_SetOptions(cx, oldopts | JSOPTION_XML);
 
     xobj = ToXML(cx, v);
+
+    JS_SetOptions(cx, oldopts);
     if (!xobj)
         return JS_FALSE;
     *rval = OBJECT_TO_JSVAL(xobj);
@@ -7800,6 +7809,7 @@ js_FilterXMLList(JSContext *cx, JSObject *obj, jsbytecode *pc, jsval *vp)
     JSStackFrame *fp;
     JSObject *scobj, *listobj, *resobj, *withobj, *kidobj;
     JSXML *xml, *list, *result, *kid;
+    jsval *spbase;
     uint32 i, n;
 
     ok = JS_EnterLocalRootScope(cx);
@@ -7836,6 +7846,9 @@ js_FilterXMLList(JSContext *cx, JSObject *obj, jsbytecode *pc, jsval *vp)
         goto bad;
     fp->scopeChain = withobj;
 
+    /* Save and restore fp->spbase, as js_Interpret sets and clears it. */
+    spbase = fp->spbase;
+
     for (i = 0, n = list->xml_kids.length; i < n; i++) {
         kid = XMLARRAY_MEMBER(&list->xml_kids, i, JSXML);
         kidobj = js_GetXMLObject(cx, kid);
@@ -7858,6 +7871,7 @@ js_FilterXMLList(JSContext *cx, JSObject *obj, jsbytecode *pc, jsval *vp)
     *vp = OBJECT_TO_JSVAL(resobj);
 
 out:
+    fp->spbase = spbase;
     fp->scopeChain = scobj;
     JS_LeaveLocalRootScope(cx);
     return ok;

@@ -431,6 +431,13 @@ QuoteString(Sprinter *sp, JSString *str, jschar quote)
     /* Sprint the closing quote and return the quoted string. */
     if (quote && Sprint(sp, "%c", (char)quote) < 0)
         return NULL;
+
+    /* 
+     * If we haven't Sprint'd anything yet, Sprint an empty string so that
+     * the OFF2STR below gives a valid result.
+     */
+    if (off == sp->offset && Sprint(sp, "") < 0)
+        return NULL;
     return OFF2STR(sp, off);
 }
 
@@ -840,7 +847,7 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
     JSObject *obj;
     JSFunction *fun;
     JSString *str;
-    JSBool ok;
+    JSBool ok, inXML, quoteAttr;
     jsval val;
     static const char catch_cookie[] = "/*CATCH*/";
     static const char with_cookie[] = "/*WITH*/";
@@ -898,6 +905,7 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
     op = JSOP_NOP;
     sn = NULL;
     rval = NULL;
+    inXML = JS_FALSE;
 
     while (pc < endpc) {
         lastop = op;
@@ -925,9 +933,13 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                 if (sn && SN_TYPE(sn) == SRC_ASSIGNOP) {
                     /* Print only the right operand of the assignment-op. */
                     todo = SprintPut(&ss->sprinter, rval, strlen(rval));
-                } else {
+                } else if (!inXML) {
                     todo = Sprint(&ss->sprinter, "%s %s %s",
                                   lval, cs->token, rval);
+                } else {
+                    /* In XML, just concatenate the two operands. */
+                    JS_ASSERT(op == JSOP_ADD);
+                    todo = Sprint(&ss->sprinter, "%s%s", lval, rval);
                 }
                 break;
 
@@ -2040,7 +2052,7 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
 
               BEGIN_LITOPX_CASE(JSOP_STRING)
                 rval = QuoteString(&ss->sprinter, ATOM_TO_STRING(atom),
-                                   (jschar)'"');
+                                   inXML ? 0 : (jschar)'"');
                 if (!rval)
                     return JS_FALSE;
                 todo = STR2OFF(&ss->sprinter, rval);
@@ -2461,6 +2473,12 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
 #endif /* JS_HAS_DEBUGGER_KEYWORD */
 
 #if JS_HAS_XML_SUPPORT
+              case JSOP_STARTXML:
+              case JSOP_STARTXMLEXPR:
+                inXML = op == JSOP_STARTXML; 
+                todo = -2;
+                break;
+
               case JSOP_DEFXMLNS:
                 rval = POP_STR();
                 js_printf(jp, "\t%s %s %s %s;\n",
@@ -2486,7 +2504,6 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
               END_LITOPX_CASE
 
               case JSOP_QNAME:
-                op = JSOP_NOP;           /* turn off parens */
                 rval = POP_STR();
                 lval = POP_STR();
                 todo = Sprint(&ss->sprinter, "%s::[%s]", lval, rval);
@@ -2498,18 +2515,24 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                 break;
 
               case JSOP_TOATTRVAL:
+                todo = -2;
                 break;
 
               case JSOP_ADDATTRNAME:
                 rval = POP_STR();
                 lval = POP_STR();
                 todo = Sprint(&ss->sprinter, "%s %s", lval, rval);
+                /* This gets reset by all XML tag expressions. */
+                quoteAttr = JS_TRUE;
                 break;
 
               case JSOP_ADDATTRVAL:
                 rval = POP_STR();
                 lval = POP_STR();
-                todo = Sprint(&ss->sprinter, "%s=\"%s\"", lval, rval);
+                if (quoteAttr)
+                    todo = Sprint(&ss->sprinter, "%s=\"%s\"", lval, rval);
+                else
+                    todo = Sprint(&ss->sprinter, "%s=%s", lval, rval);
                 break;
 
               case JSOP_BINDXMLNAME:
@@ -2524,11 +2547,20 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                 lval = POP_STR();
                 goto do_setlval;
 
-              case JSOP_XMLNAME:
-              case JSOP_XMLTAGEXPR:
               case JSOP_XMLELTEXPR:
+              case JSOP_XMLTAGEXPR:
+                todo = Sprint(&ss->sprinter, "{%s}", POP_STR());
+                inXML = JS_TRUE; 
+                /* If we're an attribute value, we shouldn't quote this. */
+                quoteAttr = JS_FALSE;
+                break;
+
               case JSOP_TOXML:
               case JSOP_TOXMLLIST:
+                inXML = JS_FALSE;
+                /* fall through */
+
+              case JSOP_XMLNAME:
               case JSOP_FOREACH:
               case JSOP_FILTER:
                 /* Conversion and prefix ops do nothing in the decompiler. */

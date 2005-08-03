@@ -3781,7 +3781,22 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
             break;
 
           case JSOP_THIS:
-            PUSH_OPND(OBJECT_TO_JSVAL(fp->thisp));
+            obj = fp->thisp;
+            clasp = OBJ_GET_CLASS(cx, obj);
+            if (clasp->flags & JSCLASS_IS_EXTENDED) {
+                JSExtendedClass *xclasp;
+
+                xclasp = (JSExtendedClass *) clasp;
+                if (xclasp->outerObject) {
+                    obj = xclasp->outerObject(cx, obj);
+                    if (!obj) {
+                        ok = JS_FALSE;
+                        goto out;
+                    }
+                }
+            }
+
+            PUSH_OPND(OBJECT_TO_JSVAL(obj));
             obj = NULL;
             break;
 
@@ -5062,6 +5077,10 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
           case JSOP_ENDFILTER:
             *result = POP_OPND();
             goto out;
+
+	  case JSOP_STARTXML:
+	  case JSOP_STARTXMLEXPR:
+	    break;
 
           case JSOP_TOXML:
             rval = FETCH_OPND(-1);

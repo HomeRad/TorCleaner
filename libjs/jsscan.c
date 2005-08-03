@@ -1,4 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set sw=4 ts=8 et tw=80:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -321,8 +322,8 @@ js_CloseTokenStream(JSContext *cx, JSTokenStream *ts)
     return !ts->file || fclose(ts->file) == 0;
 }
 
-static int
-my_fgets(char *buf, int size, FILE *file)
+JS_FRIEND_API(int)
+js_fgets(char *buf, int size, FILE *file)
 {
     int n, i, c;
     JSBool crflag;
@@ -372,7 +373,7 @@ GetChar(JSTokenStream *ts)
 
                     /* Fill ts->userbuf so that \r and \r\n convert to \n. */
                     crflag = (ts->flags & TSF_CRFLAG) != 0;
-                    len = my_fgets(cbuf, JS_LINE_LIMIT - crflag, ts->file);
+                    len = js_fgets(cbuf, JS_LINE_LIMIT - crflag, ts->file);
                     if (len <= 0) {
                         ts->flags |= TSF_EOF;
                         return EOF;
@@ -564,12 +565,11 @@ MatchChar(JSTokenStream *ts, int32 expect)
     return JS_FALSE;
 }
 
-JSBool
-js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
-                            uintN errorNumber, ...)
+static JSBool
+ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
+                         uintN errorNumber, JSErrorReport *report,
+                         JSBool charArgs, va_list ap)
 {
-    va_list ap;
-    JSErrorReport report;
     JSString *linestr = NULL;
     JSTokenStream *ts = NULL;
     JSCodeGenerator *cg = NULL;
@@ -583,21 +583,16 @@ js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
     char *message;
     JSBool warning;
 
-    if ((flags & JSREPORT_STRICT) && !JS_HAS_STRICT_OPTION(cx))
-        return JS_TRUE;
-
-    memset(&report, 0, sizeof (struct JSErrorReport));
-    report.flags = flags;
-    report.errorNumber = errorNumber;
+    memset(report, 0, sizeof (struct JSErrorReport));
+    report->flags = flags;
+    report->errorNumber = errorNumber;
     message = NULL;
 
-    va_start(ap, errorNumber);
     if (!js_ExpandErrorArguments(cx, js_GetErrorMessage, NULL,
-                                 errorNumber, &message, &report, &warning,
-                                 JS_TRUE, ap)) {
+                                 errorNumber, &message, report, &warning,
+                                 charArgs, ap)) {
         return JS_FALSE;
     }
-    va_end(ap);
 
     js_AddRoot(cx, &linestr, "error line buffer");
 
@@ -626,21 +621,21 @@ js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
          */
         do {
             if (ts) {
-                report.filename = ts->filename;
+                report->filename = ts->filename;
 #if JS_HAS_XML_SUPPORT
                 if (pn) {
-                    report.lineno = pn->pn_pos.begin.lineno;
-                    if (report.lineno != ts->lineno)
+                    report->lineno = pn->pn_pos.begin.lineno;
+                    if (report->lineno != ts->lineno)
                         break;
                 }
 #endif
-                report.lineno = ts->lineno;
+                report->lineno = ts->lineno;
                 linestr = js_NewStringCopyN(cx, ts->linebuf.base,
                                             PTRDIFF(ts->linebuf.limit,
                                                     ts->linebuf.base,
                                                     jschar),
                                             0);
-                report.linebuf = linestr
+                report->linebuf = linestr
                                  ? JS_GetStringBytes(linestr)
                                  : NULL;
                 tp = &ts->tokens[(ts->cursor+ts->lookahead) & NTOKENS_MASK].pos;
@@ -651,15 +646,15 @@ js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
                 index = (tp->begin.lineno == tp->end.lineno)
                         ? tp->begin.index - ts->linepos
                         : 0;
-                report.tokenptr = linestr ? report.linebuf + index : NULL;
-                report.uclinebuf = linestr ? JS_GetStringChars(linestr) : NULL;
-                report.uctokenptr = linestr ? report.uclinebuf + index : NULL;
+                report->tokenptr = linestr ? report->linebuf + index : NULL;
+                report->uclinebuf = linestr ? JS_GetStringChars(linestr) : NULL;
+                report->uctokenptr = linestr ? report->uclinebuf + index : NULL;
                 break;
             }
 
             if (cg) {
-                report.filename = cg->filename;
-                report.lineno = CG_CURRENT_LINE(cg);
+                report->filename = cg->filename;
+                report->lineno = CG_CURRENT_LINE(cg);
                 break;
             }
 
@@ -669,8 +664,8 @@ js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
              */
             for (fp = cx->fp; fp; fp = fp->down) {
                 if (fp->script && fp->pc) {
-                    report.filename = fp->script->filename;
-                    report.lineno = js_PCToLineNumber(cx, fp->script, fp->pc);
+                    report->filename = fp->script->filename;
+                    report->lineno = js_PCToLineNumber(cx, fp->script, fp->pc);
                     break;
                 }
             }
@@ -700,7 +695,7 @@ js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
          * which is likely spurious.
          */
         if (!ts || !(ts->flags & TSF_ERROR)) {
-            if (js_ErrorToException(cx, message, &report))
+            if (js_ErrorToException(cx, message, report))
                 onError = NULL;
         }
 
@@ -716,25 +711,19 @@ js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
         if (cx->runtime->debugErrorHook && onError) {
             JSDebugErrorHook hook = cx->runtime->debugErrorHook;
             /* test local in case debugErrorHook changed on another thread */
-            if (hook && !hook(cx, message, &report,
+            if (hook && !hook(cx, message, report,
                               cx->runtime->debugErrorHookData)) {
                 onError = NULL;
             }
         }
         if (onError)
-            (*onError)(cx, message, &report);
+            (*onError)(cx, message, report);
     }
 
     if (message)
         JS_free(cx, message);
-    if (report.messageArgs) {
-        int i = 0;
-        while (report.messageArgs[i])
-            JS_free(cx, (void *)report.messageArgs[i++]);
-        JS_free(cx, (void *)report.messageArgs);
-    }
-    if (report.ucmessage)
-        JS_free(cx, (void *)report.ucmessage);
+    if (report->ucmessage)
+        JS_free(cx, (void *)report->ucmessage);
 
     js_RemoveRoot(cx->runtime, &linestr);
 
@@ -742,6 +731,59 @@ js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
         /* Set the error flag to suppress spurious reports. */
         ts->flags |= TSF_ERROR;
     }
+
+    return warning;
+}
+
+JSBool
+js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
+                            uintN errorNumber, ...)
+{
+    va_list ap;
+    JSErrorReport report;
+    JSBool warning;
+
+    if ((flags & JSREPORT_STRICT) && !JS_HAS_STRICT_OPTION(cx))
+        return JS_TRUE;
+
+    va_start(ap, errorNumber);
+    warning = ReportCompileErrorNumber(cx, handle, flags, errorNumber,
+                                       &report, JS_TRUE, ap);
+    va_end(ap);
+
+    /* 
+     * We have to do this here because js_ReportCompileErrorNumberUC doesn't
+     * need to do this.
+     */
+    if (report.messageArgs) {
+        int i = 0;
+        while (report.messageArgs[i])
+            JS_free(cx, (void *)report.messageArgs[i++]);
+        JS_free(cx, (void *)report.messageArgs);
+    }
+
+    return warning;
+}
+
+JSBool
+js_ReportCompileErrorNumberUC(JSContext *cx, void *handle, uintN flags,
+                              uintN errorNumber, ...)
+{
+    va_list ap;
+    JSErrorReport report;
+    JSBool warning;
+
+    if ((flags & JSREPORT_STRICT) && !JS_HAS_STRICT_OPTION(cx))
+        return JS_TRUE;
+ 
+    va_start(ap, errorNumber);
+    warning = ReportCompileErrorNumber(cx, handle, flags, errorNumber,
+                                       &report, JS_FALSE, ap);
+    va_end(ap);
+
+    if (report.messageArgs)
+        JS_free(cx, (void *)report.messageArgs);
+
     return warning;
 }
 
@@ -973,7 +1015,7 @@ GetXMLEntity(JSContext *cx, JSTokenStream *ts)
 badncr:
     msg = JSMSG_BAD_XML_NCR;
 bad:
-    /* No match: throw a TypeError per 10.3.2.1 step 8(a). */
+    /* No match: throw a TypeError per ECMA-357 10.3.2.1 step 8(a). */
     FastAppendChar(&ts->tokenbuf, ';');
     bytes = js_DeflateString(cx, bp + 1,
                              PTRDIFF(ts->tokenbuf.ptr, bp, jschar) - 2);
@@ -1097,7 +1139,7 @@ js_GetToken(JSContext *cx, JSTokenStream *ts)
         qc = (ts->flags & TSF_XMLONLYMODE) ? '<' : '{';
 
         while ((c = GetChar(ts)) != qc && c != '<' && c != EOF) {
-            if (c == '&') {
+            if (c == '&' && qc == '<') {
                 if (!GetXMLEntity(cx, ts))
                     goto error;
                 tt = TOK_XMLTEXT;
@@ -1203,7 +1245,7 @@ js_GetToken(JSContext *cx, JSTokenStream *ts)
                     continue;
                 }
 
-                if (c == '&') {
+                if (c == '&' && (ts->flags & TSF_XMLONLYMODE)) {
                     if (!GetXMLEntity(cx, ts))
                         goto error;
                     continue;

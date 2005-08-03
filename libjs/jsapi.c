@@ -614,9 +614,7 @@ JS_TypeOfValue(JSContext *cx, jsval v)
             {
                 clasp = OBJ_GET_CLASS(cx, obj);
                 if ((ops == &js_ObjectOps)
-                    ? (clasp->call
-                       ? clasp == &js_RegExpClass
-                       : clasp == &js_FunctionClass)
+                    ? clasp == &js_FunctionClass
                     : ops->call != NULL) {
                     type = JSTYPE_FUNCTION;
                 } else {
@@ -1992,7 +1990,8 @@ JS_ConvertStub(JSContext *cx, JSObject *obj, JSType type, jsval *vp)
     if (type == JSTYPE_STRING)
         return JS_TRUE;
 #endif
-    return js_TryValueOf(cx, obj, type, vp);
+    js_TryValueOf(cx, obj, type, vp);
+    return JS_TRUE;
 }
 
 JS_PUBLIC_API(void)
@@ -4474,6 +4473,13 @@ JS_ErrorFromException(JSContext *cx, jsval v)
 #else
     return NULL;
 #endif
+}
+
+JS_PUBLIC_API(JSBool)
+JS_ThrowReportedError(JSContext *cx, const char *message,
+                      JSErrorReport *reportp)
+{
+    return js_ErrorToException(cx, message, reportp);
 }
 
 #ifdef JS_THREADSAFE

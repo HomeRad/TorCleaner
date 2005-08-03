@@ -311,6 +311,68 @@ WeekDay(jsdouble t)
     return (intN) result;
 }
 
+#define MakeTime(hour, min, sec, ms) \
+((((hour) * MinutesPerHour + (min)) * SecondsPerMinute + (sec)) * msPerSecond + (ms))
+
+static jsdouble
+MakeDay(jsdouble year, jsdouble month, jsdouble date)
+{
+    JSBool leap;
+    jsdouble yearday;
+    jsdouble monthday;
+
+    year += floor(month / 12);
+
+    month = fmod(month, 12.0);
+    if (month < 0)
+        month += 12;
+
+    leap = (DaysInYear((jsint) year) == 366);
+
+    yearday = floor(TimeFromYear(year) / msPerDay);
+    monthday = DayFromMonth(month, leap);
+
+    return yearday + monthday + date - 1;
+}
+
+#define MakeDate(day, time) ((day) * msPerDay + (time))
+
+/* 
+ * Years and leap years on which Jan 1 is a Sunday, Monday, etc. 
+ *
+ * yearStartingWith[0][i] is an example non-leap year where
+ * Jan 1 appears on Sunday (i == 0), Monday (i == 1), etc.
+ *
+ * yearStartingWith[1][i] is an example leap year where
+ * Jan 1 appears on Sunday (i == 0), Monday (i == 1), etc.
+ */
+static jsint yearStartingWith[2][7] = {
+    {1978, 1973, 1974, 1975, 1981, 1971, 1977},
+    {1984, 1996, 1980, 1992, 1976, 1988, 1972}
+};
+
+/*
+ * Find a year for which any given date will fall on the same weekday.
+ *
+ * This function should be used with caution when used other than
+ * for determining DST; it hasn't been proven not to produce an
+ * incorrect year for times near year boundaries.
+ */
+static jsint
+EquivalentYearForDST(jsint year) {
+    jsint day;
+    JSBool isLeapYear;
+
+    day = (jsint) DayFromYear(year) + 4;
+    day = day % 7;
+    if (day < 0)
+	day += 7;
+
+    isLeapYear = (DaysInYear(year) == 366);
+
+    return yearStartingWith[isLeapYear][day];
+}
+
 /* LocalTZA gets set by js_InitDateClass() */
 static jsdouble LocalTZA;
 
@@ -325,6 +387,19 @@ DaylightSavingTA(jsdouble t)
     /* abort if NaN */
     if (JSDOUBLE_IS_NaN(t))
         return t;
+
+    /*
+     * If earlier than 1970 or after 2038, potentially beyond the ken of
+     * many OSes, map it to an equivalent year before asking.
+     */
+    if (t < 0.0 || t > 2145916800000.0) {
+        jsint year;
+        jsdouble day;
+
+        year = EquivalentYearForDST(YearFromTime(t));
+        day = MakeDay(year, MonthFromTime(t), DateFromTime(t));
+        t = MakeDate(day, TimeWithinDay(t));
+    }
 
     /* put our t in an LL, and map it to usec for prtime */
     JSLL_D2L(PR_t, t);
@@ -384,36 +459,6 @@ msFromTime(jsdouble t)
         result += (intN)msPerSecond;
     return result;
 }
-
-#define MakeTime(hour, min, sec, ms) \
-(((hour * MinutesPerHour + min) * SecondsPerMinute + sec) * msPerSecond + ms)
-
-static jsdouble
-MakeDay(jsdouble year, jsdouble month, jsdouble date)
-{
-    jsdouble result;
-    JSBool leap;
-    jsdouble yearday;
-    jsdouble monthday;
-
-    year += floor(month / 12);
-
-    month = fmod(month, 12.0);
-    if (month < 0)
-        month += 12;
-
-    leap = (DaysInYear((jsint) year) == 366);
-
-    yearday = floor(TimeFromYear(year) / msPerDay);
-    monthday = DayFromMonth(month, leap);
-
-    result = yearday
-             + monthday
-             + date - 1;
-    return result;
-}
-
-#define MakeDate(day, time) (day * msPerDay + time)
 
 #define TIMECLIP(d) ((JSDOUBLE_IS_FINITE(d) \
                       && !((d < 0 ? -d : d) > HalfTimeDomain)) \
@@ -568,6 +613,8 @@ date_parseString(JSString *str, jsdouble *result)
     jsdouble tzoffset = -1;  /* was an int, overflowed on win16!!! */
     int prevc = 0;
     JSBool seenplusminus = JS_FALSE;
+    int temp;
+    JSBool seenmonthname = JS_FALSE;
 
     if (limit == 0)
         goto syntax;
@@ -621,14 +668,9 @@ date_parseString(JSString *str, jsdouble *result)
                 if (tzoffset != 0 && tzoffset != -1)
                     goto syntax;
                 tzoffset = n;
-            } else if (n >= 70 ||
-                       (prevc == '/' && mon >= 0 && mday >= 0 && year < 0)) {
-                if (mday < 0)
-                    mday = n;
-                else if (year >= 0)
-                    goto syntax;
-                else if (c <= ' ' || c == ',' || c == '/' || i >= limit)
-                    year = n < 100 ? n + 1900 : n;
+            } else if (prevc == '/' && mon >= 0 && mday >= 0 && year < 0) {
+                if (c <= ' ' || c == ',' || c == '/' || i >= limit)
+                    year = n;
                 else
                     goto syntax;
             } else if (c == ':') {
@@ -639,8 +681,10 @@ date_parseString(JSString *str, jsdouble *result)
                 else
                     goto syntax;
             } else if (c == '/') {
+                /* until it is determined that mon is the actual
+                   month, keep it as 1-based rather than 0-based */
                 if (mon < 0)
-                    mon = /*byte*/ n-1;
+                    mon = /*byte*/ n;
                 else if (mday < 0)
                     mday = /*byte*/ n;
                 else
@@ -656,8 +700,12 @@ date_parseString(JSString *str, jsdouble *result)
                 min = /*byte*/ n;
             } else if (min >= 0 && sec < 0) {
                 sec = /*byte*/ n;
-            } else if (mday < 0) {
+            } else if (mon < 0) {
+                mon = /*byte*/n;
+            } else if (mon >= 0 && mday < 0) {
                 mday = /*byte*/ n;
+            } else if (mon >= 0 && mday >= 0 && year < 0) {
+                year = n;
             } else {
                 goto syntax;
             }
@@ -695,8 +743,22 @@ date_parseString(JSString *str, jsdouble *result)
                                 }
                             }
                         } else if (action <= 13) { /* month! */
+                            /* Adjust mon to be 1-based until the final values
+                               for mon, mday and year are adjusted below */
+                            if (seenmonthname) {
+                                goto syntax;
+                            }
+                            seenmonthname = JS_TRUE;
+                            temp = /*byte*/ (action - 2) + 1;
+
                             if (mon < 0) {
-                                mon = /*byte*/ (action - 2);
+                                mon = temp;
+                            } else if (mday < 0) {
+                                mday = mon;
+                                mon = temp;
+                            } else if (year < 0) {
+                                year = mon;
+                                mon = temp;
                             } else {
                                 goto syntax;
                             }
@@ -713,6 +775,68 @@ date_parseString(JSString *str, jsdouble *result)
     }
     if (year < 0 || mon < 0 || mday < 0)
         goto syntax;
+    /*
+      Case 1. The input string contains an English month name.
+              The form of the string can be month f l, or f month l, or
+              f l month which each evaluate to the same date. 
+              If f and l are both greater than or equal to 70, or
+              both less than 70, the date is invalid.
+              The year is taken to be the greater of the values f, l.
+              If the year is greater than or equal to 70 and less than 100,
+              it is considered to be the number of years after 1900.
+      Case 2. The input string is of the form "f/m/l" where f, m and l are
+              integers, e.g. 7/16/45.
+              Adjust the mon, mday and year values to achieve 100% MSIE 
+              compatibility.
+              a. If 0 <= f < 70, f/m/l is interpreted as month/day/year.
+                 i.  If year < 100, it is the number of years after 1900
+                 ii. If year >= 100, it is the number of years after 0.
+              b. If 70 <= f < 100
+                 i.  If m < 70, f/m/l is interpreted as
+                     year/month/day where year is the number of years after
+                     1900.
+                 ii. If m >= 70, the date is invalid.
+              c. If f >= 100
+                 i.  If m < 70, f/m/l is interpreted as
+                     year/month/day where year is the number of years after 0.
+                 ii. If m >= 70, the date is invalid.
+    */
+    if (seenmonthname) {
+        if (mday >= 70 && year >= 70 || mday < 70 && year < 70) {
+            goto syntax;
+        }
+        if (mday > year) {
+            temp = year;
+            year = mday;
+            mday = temp;
+        }
+        if (year >= 70 && year < 100) {
+            year += 1900;
+        }
+    } else if (mon < 70) { /* (a) month/day/year */
+        if (year < 100) {
+            year += 1900;
+        }
+    } else if (mon < 100) { /* (b) year/month/day */
+        if (mday < 70) { 
+            temp = year;
+            year = mon + 1900;
+            mon = mday;
+            mday = temp;
+        } else {
+            goto syntax;
+        }
+    } else { /* (c) year/month/day */
+        if (mday < 70) {
+            temp = year;
+            year = mon;
+            mon = mday;
+            mday = temp;
+        } else {
+            goto syntax;
+        }
+    }
+    mon -= 1; /* convert month to 0-based */
     if (sec < 0)
         sec = 0;
     if (min < 0)

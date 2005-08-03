@@ -276,6 +276,9 @@ js_NewFileTokenStream(JSContext *cx, const char *filename, FILE *defaultfp);
 extern JS_FRIEND_API(JSBool)
 js_CloseTokenStream(JSContext *cx, JSTokenStream *ts);
 
+extern JS_FRIEND_API(int)
+js_fgets(char *buf, int size, FILE *file);
+
 /*
  * Initialize the scanner, installing JS keywords into cx's global scope.
  */
@@ -296,6 +299,10 @@ js_MapKeywords(void (*mapfun)(const char *));
 extern JSBool
 js_ReportCompileErrorNumber(JSContext *cx, void *handle, uintN flags,
                             uintN errorNumber, ...);
+
+extern JSBool
+js_ReportCompileErrorNumberUC(JSContext *cx, void *handle, uintN flags,
+                              uintN errorNumber, ...);
 
 /* Steal some JSREPORT_* bits (see jsapi.h) to tell handle's type. */
 #define JSREPORT_HANDLE 0x300

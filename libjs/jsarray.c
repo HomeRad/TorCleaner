@@ -637,22 +637,27 @@ array_reverse(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
             return JS_FALSE;
         }
 
+        /* 
+         * Get both of the values now. Note that we don't use v, or v2 based on
+         * idexists and id2exists.
+         */
+        if (!OBJ_GET_PROPERTY(cx, obj, id, &v) ||
+            !OBJ_GET_PROPERTY(cx, obj, id2, &v2)) {
+            return JS_FALSE;
+        }
+
         if (idexists) {
-            if (!OBJ_GET_PROPERTY(cx, obj, id, &v) ||
-                !OBJ_SET_PROPERTY(cx, obj, id2, &v)) {
+            if (!OBJ_SET_PROPERTY(cx, obj, id2, &v))
                 return JS_FALSE;
-            }
         } else {
             if (!OBJ_DELETE_PROPERTY(cx, obj, id2, &v))
                 return JS_FALSE;
         }
         if (id2exists) {
-            if (!OBJ_GET_PROPERTY(cx, obj, id2, &v2) ||
-                !OBJ_SET_PROPERTY(cx, obj, id, &v2)) {
+            if (!OBJ_SET_PROPERTY(cx, obj, id, &v2)) 
                 return JS_FALSE;
-            }
         } else {
-            if (!OBJ_DELETE_PROPERTY(cx, obj, id2, &v2))
+            if (!OBJ_DELETE_PROPERTY(cx, obj, id, &v2))
                 return JS_FALSE;
         }
     }
@@ -916,6 +921,7 @@ array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
             goto out;
         if (!idexists) {
             vec[i] = JSVAL_HOLE;
+            all_strings = JS_FALSE;
             continue;
         }
         newlen++;
@@ -1390,6 +1396,9 @@ array_slice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
             end = (jsuint)d;
         }
     }
+
+    if (begin > end)
+        begin = end;
 
     for (slot = begin; slot < end; slot++) {
         if (!IndexToId(cx, slot, &id))
