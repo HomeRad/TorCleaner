@@ -133,7 +133,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         super(RewriteRule, self).__init__(sid=sid, titles=titles,
                                   descriptions=descriptions, disable=disable)
         self.tag = tag
-        self.tag_ro = re.compile(tag)
+        self.tag_ro = re.compile(r"^%s$" % tag)
         if attrs is None:
             self.attrs = {}
         else:
@@ -212,7 +212,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         Return True iff tag name matches this rule.
         """
-        return self.tag_ro.match(tag)
+        return self.tag_ro.search(tag)
 
     def match_attrs (self, attrs):
         """
@@ -227,7 +227,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
                 val = ''
             occurred.append(attr)
             ro = self.attrs_ro.get(attr)
-            if ro and not ro.match(val):
+            if ro and not ro.search(val):
                 return False
         for attr in self.attrs.keys():
             if attr not in occurred:
@@ -267,7 +267,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         for attr, val in attrs.items():
             ro = self.attrs_ro.get(attr)
             if ro:
-                mo = ro.match(val)
+                mo = ro.search(val)
                 if mo:
                     if self.part == ATTR:
                         # replace complete attr, and make it possible
