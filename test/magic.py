@@ -7,7 +7,11 @@ def _main (args):
     import wc.configuration
     wc.configuration.config = wc.configuration.init()
     import wc.magic
-    print repr(wc.magic.classify(open(args[0])))
+    fp = open(args[0])
+    try:
+        print repr(wc.magic.classify(fp))
+    finally:
+        fp.close()
 
 
 if __name__ == '__main__':
