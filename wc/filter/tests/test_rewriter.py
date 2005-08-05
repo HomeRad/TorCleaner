@@ -19,6 +19,7 @@ Test script to test filtering.
 """
 
 import unittest
+import os
 import wc
 import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
@@ -32,19 +33,21 @@ class TestRewriter (unittest.TestCase):
     """
 
     def setUp (self):
+        logfile = os.path.join(wc.InstallData, "test", "logging.conf")
+        wc.initlog(logfile, wc.Name, filelogs=False)
         wc.configuration.init()
         wc.configuration.config['filters'] = ['Rewriter']
         wc.configuration.config.init_filter_modules()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
-        self.attrs = get_filterattrs("", "localhost", [STAGE_RESPONSE_MODIFY],
-                                     serverheaders=self.headers,
-                                     headers=self.headers)
 
-    def filt (self, data, result):
+    def filt (self, data, result, url=""):
         """
         Filter specified data, expect result. Call this only once per test!
         """
+        self.attrs = get_filterattrs(url, "localhost",
+             [STAGE_RESPONSE_MODIFY], serverheaders=self.headers,
+             headers=self.headers)
         filtered = applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', self.attrs)
         self.assertEqual(filtered, result)
 
