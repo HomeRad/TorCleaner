@@ -34,7 +34,7 @@ import wc.proxy.Headers
 import wc.js
 import wc.js.jslib
 import wc.js.JSListener
-import wc.filter.rules.RewriteRule
+import wc.filter.XmlTags
 
 
 _replace_ws = re.compile(ur"\s+").sub
@@ -186,7 +186,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             data = unicode(self.js_htmlparser.getoutput(),
                            self.js_htmlparser.encoding)
             self.htmlparser.tagbuf[-2:-2] = \
-        [[wc.filter.rules.RewriteRule.DATA, data]]+self.js_htmlparser.tagbuf
+        [[wc.filter.XmlTags.DATA, data]]+self.js_htmlparser.tagbuf
             self.htmlparser.debugbuf(wc.LOG_JS)
         self.js_htmlparser = None
         if self.js_popup or self.js_output:
@@ -233,14 +233,14 @@ class JSFilter (wc.js.JSListener.JSListener):
                 return
             if len(self.htmlparser.tagbuf) > 2 and \
                self.htmlparser.tagbuf[-3][0] == \
-               wc.filter.rules.RewriteRule.STARTTAG and \
+               wc.filter.XmlTags.STARTTAG and \
                self.htmlparser.tagbuf[-3][1] == 'script':
                 del self.htmlparser.tagbuf[-1]
         if len(self.htmlparser.tagbuf)<2 or \
            self.htmlparser.tagbuf[-1][0] != \
-           wc.filter.rules.RewriteRule.DATA or \
+           wc.filter.XmlTags.DATA or \
            self.htmlparser.tagbuf[-2][0] != \
-           wc.filter.rules.RewriteRule.STARTTAG or \
+           wc.filter.XmlTags.STARTTAG or \
            self.htmlparser.tagbuf[-2][1] != 'script':
             # syntax error, ignore
             return
@@ -291,7 +291,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             if js_ok and url:
                 self.jsScriptSrc(url, js_lang)
                 return
-        self.htmlparser.tagbuf.append([wc.filter.rules.RewriteRule.STARTTAG,
+        self.htmlparser.tagbuf.append([wc.filter.XmlTags.STARTTAG,
                                        tag, attrs])
 
     def jsForm (self, name, action, target):
@@ -355,17 +355,17 @@ class JSFilter (wc.js.JSListener.JSListener):
                 self.js_script = u"// "+\
                       _("error fetching script from %r") % url
             self.htmlparser.tagbuf.append(
-                 [wc.filter.rules.RewriteRule.STARTTAG, u"script",
+                 [wc.filter.XmlTags.STARTTAG, u"script",
                   {'type': 'text/javascript'}])
             # norm html comments
             script = wc.js.remove_html_comments(self.js_script)
             script = u"\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
             self.htmlparser.tagbuf.append(
-                                   [wc.filter.rules.RewriteRule.DATA, script])
+                                   [wc.filter.XmlTags.DATA, script])
             # Note: <script src=""> could be missing an end tag,
             # but now we need one. Look later for a duplicate </script>.
             self.htmlparser.tagbuf.append(
-                            [wc.filter.rules.RewriteRule.ENDTAG, u"script"])
+                            [wc.filter.XmlTags.ENDTAG, u"script"])
             self.js_script = u''
             self.htmlparser.state = ('parse',)
             wc.log.debug(wc.LOG_JS, "%s switching back to parse with", self)

@@ -25,7 +25,7 @@ import wc.url
 import wc.log
 import wc.filter
 import wc.filter.JSFilter
-import wc.filter.rules.RewriteRule
+import wc.filter.XmlTags
 import wc.filter.HtmlSecurity
 import wc.filter.HtmlTags
 import wc.filter.rating
@@ -96,7 +96,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """
         General handler for data.
         """
-        item = [wc.filter.rules.RewriteRule.DATA, data]
+        item = [wc.filter.XmlTags.DATA, data]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
@@ -122,7 +122,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         if not (self.comments and data):
             return
         wc.log.debug(wc.LOG_FILTER, "%s comment %r", self, data)
-        item = [wc.filter.rules.RewriteRule.COMMENT, data]
+        item = [wc.filter.XmlTags.COMMENT, data]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
@@ -160,7 +160,7 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         """
         # default data
         wc.log.debug(wc.LOG_FILTER, "%s start_element %r %s", self, tag, attrs)
-        if self._is_waiting([wc.filter.rules.RewriteRule.STARTTAG,
+        if self._is_waiting([wc.filter.XmlTags.STARTTAG,
                              tag, attrs]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
@@ -208,9 +208,9 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         rulelist = []
         filtered = False
         if startend:
-            starttype = wc.filter.rules.RewriteRule.STARTENDTAG
+            starttype = wc.filter.XmlTags.STARTENDTAG
         else:
-            starttype = wc.filter.rules.RewriteRule.STARTTAG
+            starttype = wc.filter.XmlTags.STARTTAG
         item = [starttype, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
@@ -253,14 +253,14 @@ class HtmlFilter (wc.filter.JSFilter.JSFilter):
         the tag buffer (calling tagbuf2data).
         """
         wc.log.debug(wc.LOG_FILTER, "%s end_element %r", self, tag)
-        if self._is_waiting([wc.filter.rules.RewriteRule.ENDTAG, tag]):
+        if self._is_waiting([wc.filter.XmlTags.ENDTAG, tag]):
             return
         tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
         if self.stackcount and self.stackcount[-1][0] == tag:
             self.stackcount[-1][1] -= 1
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
-        item = [wc.filter.rules.RewriteRule.ENDTAG, tag]
+        item = [wc.filter.XmlTags.ENDTAG, tag]
         if not self.filter_end_element(tag):
             if self.javascript and tag == 'script':
                 self.js_end_element(item)

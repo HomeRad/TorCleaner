@@ -156,15 +156,15 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
             if self.state[0] == 'wait':
                 # the replaying itself can switch to wait state
                 self.waitbuf.append(item)
-            elif item[0] == wc.filter.rules.RewriteRule.DATA and \
+            elif item[0] == wc.filter.XmlTags.DATA and \
                  hasattr(self.handler, "characters"):
                 self.handler.characters(item[1])
-            elif item[0] == wc.filter.rules.RewriteRule.STARTTAG and \
+            elif item[0] == wc.filter.XmlTags.STARTTAG and \
                  hasattr(self.handler, "start_element"):
                 self.handler.start_element(item[1], item[2])
-            elif item[0] == wc.filter.rules.RewriteRule.ENDTAG and \
+            elif item[0] == wc.filter.XmlTags.ENDTAG and \
                  hasattr(self.handler, "end_element"):
                 self.handler.end_element(item[1])
-            elif item[0] == wc.filter.rules.RewriteRule.COMMENT and \
+            elif item[0] == wc.filter.XmlTags.COMMENT and \
                  hasattr(self.handler, "comment"):
                 self.handler.comment(item[1])

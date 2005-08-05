@@ -26,22 +26,9 @@ import wc.log
 import wc.XmlUtils
 import wc.filter.rules.UrlRule
 import wc.filter.rules.Rule
+import wc.filter.XmlTags
 import wc.HtmlParser.htmllib
 
-
-# tag ids
-STARTTAG = 0
-ENDTAG = 1
-DATA = 2
-COMMENT = 3
-STARTENDTAG = 4
-# tag part ids
-TAG = 0
-TAGNAME = 1
-ATTR = 2
-ATTRVAL = 3
-COMPLETE = 4
-ENCLOSED = 5
 
 def _startout (out, item, end):
     """
@@ -61,15 +48,15 @@ def tagbuf2data (tagbuf, out):
     Write tag buffer items to output stream out and returns out.
     """
     for item in tagbuf:
-        if item[0] == DATA:
+        if item[0] == wc.filter.XmlTags.DATA:
             out.write(item[1])
-        elif item[0] == STARTTAG:
+        elif item[0] == wc.filter.XmlTags.STARTTAG:
             _startout(out, item, u">")
-        elif item[0] == ENDTAG:
+        elif item[0] == wc.filter.XmlTags.ENDTAG:
             out.write(u"</%s>" % item[1])
-        elif item[0] == COMMENT:
+        elif item[0] == wc.filter.XmlTags.COMMENT:
             out.write(u"<!--%s-->" % item[1])
-        elif item[0] == STARTENDTAG:
+        elif item[0] == wc.filter.XmlTags.STARTENDTAG:
             _startout(out, item, u"/>")
         else:
             wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
@@ -126,7 +113,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, tag=u"a", attrs=None, enclosed=u"",
-                  part=COMPLETE, replacement=u""):
+                  part=wc.filter.XmlTags.COMPLETE, replacement=u""):
         """
         Initialize rule data.
         """
@@ -200,7 +187,12 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         if self.tag in NO_CLOSE_TAGS:
             return True
-        return self.part not in [ENCLOSED, COMPLETE, TAG, TAGNAME]
+        return self.part not in [
+            wc.filter.XmlTags.ENCLOSED,
+            wc.filter.XmlTags.COMPLETE,
+            wc.filter.XmlTags.TAG,
+            wc.filter.XmlTags.TAGNAME,
+        ]
 
     def set_start_sufficient (self):
         """
@@ -254,13 +246,13 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         wc.log.debug(wc.LOG_FILTER, "original tag %r attrs %s", tag, attrs)
         wc.log.debug(wc.LOG_FILTER,
                 "replace %s with %r", num_part(self.part), self.replacement)
-        if self.part == COMPLETE:
-            return [DATA, u""]
-        if self.part == TAGNAME:
+        if self.part == wc.filter.XmlTags.COMPLETE:
+            return [wc.filter.XmlTags.DATA, u""]
+        if self.part == wc.filter.XmlTags.TAGNAME:
             return [starttype, self.replacement, attrs]
-        if self.part == TAG:
-            return [DATA, self.replacement]
-        if self.part == ENCLOSED:
+        if self.part == wc.filter.XmlTags.TAG:
+            return [wc.filter.XmlTags.DATA, self.replacement]
+        if self.part == wc.filter.XmlTags.ENCLOSED:
             return [starttype, tag, attrs]
         newattrs = {}
         # look for matching tag attributes
@@ -269,7 +261,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             if ro:
                 mo = ro.search(val)
                 if mo:
-                    if self.part == ATTR:
+                    if self.part == wc.filter.XmlTags.ATTR:
                         # replace complete attr, and make it possible
                         # for replacement to generate multiple attributes,
                         # eg "a=b c=d"
@@ -281,7 +273,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
                                 newattrs[k] = mo.expand(v)
                             else:
                                 newattrs[self.replacement] = None
-                    elif self.part == ATTRVAL:
+                    elif self.part == wc.filter.XmlTags.ATTRVAL:
                         # backreferences are replaced
                         newattrs[attr] = mo.expand(self.replacement)
                     else:
@@ -302,17 +294,17 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
                      self.titles['en'])
         wc.log.debug(wc.LOG_FILTER, "original buffer %s", buf)
         wc.log.debug(wc.LOG_FILTER, "part %s", num_part(self.part))
-        if self.part == COMPLETE:
-            buf[i:] = [[DATA, self.replacement]]
-        elif self.part == TAG:
-            buf[i] = [DATA, self.replacement]
-            buf.append([DATA, self.replacement])
-        elif self.part == TAGNAME:
-            buf[i] = [STARTTAG, self.replacement, {}]
-            buf.append([ENDTAG, self.replacement])
-        elif self.part == ENCLOSED:
-            buf[i+1:] = [[DATA, self.replacement]]
-            buf.append([ENDTAG, tag])
+        if self.part == wc.filter.XmlTags.COMPLETE:
+            buf[i:] = [[wc.filter.XmlTags.DATA, self.replacement]]
+        elif self.part == wc.filter.XmlTags.TAG:
+            buf[i] = [wc.filter.XmlTags.DATA, self.replacement]
+            buf.append([wc.filter.XmlTags.DATA, self.replacement])
+        elif self.part == wc.filter.XmlTags.TAGNAME:
+            buf[i] = [wc.filter.XmlTags.STARTTAG, self.replacement, {}]
+            buf.append([wc.filter.XmlTags.ENDTAG, self.replacement])
+        elif self.part == wc.filter.XmlTags.ENCLOSED:
+            buf[i+1:] = [[wc.filter.XmlTags.DATA, self.replacement]]
+            buf.append([wc.filter.XmlTags.ENDTAG, tag])
         wc.log.debug(wc.LOG_FILTER, "filtered buffer %s", buf)
 
     def toxml (self):
@@ -336,7 +328,7 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
         if self.enclosed:
             s += u"\n  <enclosed>%s</enclosed>" % \
                  wc.XmlUtils.xmlquote(self.enclosed)
-        if self.part != COMPLETE or self.replacement:
+        if self.part != wc.filter.XmlTags.COMPLETE or self.replacement:
             s += u'\n  <replacement part="%s"' % num_part(self.part)
             if self.replacement:
                 s += u">%s</replacement>" % \
