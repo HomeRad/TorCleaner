@@ -1,7 +1,7 @@
 #!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 """
-Filter given .html file with Replacer, Rewriter and BinaryCharFilter module.
+Filter a given file in response modify stage.
 """
 
 import sys
@@ -13,14 +13,33 @@ import wc.proxy
 import wc.proxy.dns_lookups
 import wc.proxy.Headers
 
+extensions = {
+    ".html": "text/html",
+    ".xml": "text/xml",
+    ".rss": "text/xml",
+}
+
+def get_content_type (filename, fp):
+    default_type = "text/html"
+    root, extension = os.path.splitext(filename)
+    if extension in extensions:
+        # found a known extension
+        return extensions[extension]
+    # use magic database
+    import wc.magic
+    content_type = wc.magic.classify(fp)
+    if content_type:
+        return content_type
+    return default_type
+
 def _main ():
-    """USAGE: test/run.sh test/filterfile.py <config dir> <.html file>"""
+    """USAGE: test/run.sh test/filterfile.py <config dir> <filename>"""
     if len(sys.argv)!=3:
         print _main.__doc__
         sys.exit(1)
     confdir = sys.argv[1]
     fname = sys.argv[2]
-    if fname=="-":
+    if fname == "-":
         f = sys.stdin
     else:
         f = file(fname)
@@ -30,7 +49,8 @@ def _main ():
     wc.configuration.config.init_filter_modules()
     wc.proxy.dns_lookups.init_resolver()
     headers = wc.proxy.Headers.WcMessage()
-    headers['Content-Type'] = "text/html"
+    content_type = get_content_type(fname, f)
+    headers['Content-Type'] = content_type
     attrs = wc.filter.get_filterattrs(fname, "127.0.0.1",
                                       [wc.filter.STAGE_RESPONSE_MODIFY],
                                       headers=headers, serverheaders=headers)
