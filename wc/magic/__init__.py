@@ -46,7 +46,9 @@ def classify (fp):
         assert os.path.exists(magicfile)
         magiccache = magicfile+".mgc"
         _magic = Magic(magicfile, magiccache)
+    pos = fp.tell()
     mime = _magic.classify(fp)
+    fp.seek(pos)
     if mime:
         # split off any trailing info
         return mime.split()[0]
