@@ -358,7 +358,12 @@ _nestedtags = (
   'attr','enclosed','replacement',
   # rating rule nested tag names
   'url', 'category',
+  # xmlrewriter rule nested tag names
+  'xmlreplace',
 )
+# make sure no name clashes occur between tag names
+for _x in _nestedtags:
+    assert _x not in rulenames
 
 
 def make_xmlparser ():
