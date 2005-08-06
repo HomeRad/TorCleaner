@@ -202,7 +202,8 @@ class RewriteRule (wc.filter.rules.UrlRule.UrlRule):
             # no enclosed expression => match
             return True
         # put buf items together for matching
-        data = tagbuf2data(tagbuf[pos:], StringIO()).getvalue()
+        items = tagbuf[pos:]
+        data = wc.filter.xmlTags.tagbuf2data(items, StringIO()).getvalue()
         return self.enclosed_ro.match(data)
 
     def filter_tag (self, tag, attrs, starttype):
