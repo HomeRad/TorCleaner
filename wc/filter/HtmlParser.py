@@ -22,7 +22,7 @@ from StringIO import StringIO
 
 import wc.log
 import wc.filter
-import wc.filter.rules.RewriteRule
+import wc.filter.XmlTags
 import wc.HtmlParser.htmlsax
 
 
@@ -91,7 +91,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         and clear the tag buffer.
         """
         wc.log.debug(wc.LOG_FILTER, "%s tagbuf2data", self)
-        wc.filter.rules.RewriteRule.tagbuf2data(self.tagbuf, self.outbuf)
+        wc.filter.XmlTags.tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
     def feed (self, data):

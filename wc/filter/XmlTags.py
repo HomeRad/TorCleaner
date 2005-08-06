@@ -18,6 +18,10 @@
 Numeric constants for XML/HTML document parts.
 """
 
+import wc
+import wc.log
+import wc.HtmlParser.htmllib
+
 # tag ids
 STARTTAG = 0
 ENDTAG = 1
@@ -33,3 +37,37 @@ ATTRVAL = 3    # attribute value
 ATTRNAME = 4   # attribute name
 COMPLETE = 5   # start/end tag and content
 ENCLOSED = 6   # only enclosed content
+
+
+def _startout (out, item, end):
+    """
+    Write given item data on output stream as HTML start tag.
+    """
+    out.write(u"<")
+    out.write(item[1])
+    for name, val in item[2].items():
+        out.write(u' %s' % name)
+        if val:
+            out.write(u'="%s"' % wc.HtmlParser.htmllib.quote_attrval(val))
+    out.write(end)
+
+
+def tagbuf2data (tagbuf, out):
+    """
+    Write tag buffer items to output stream out and returns out.
+    """
+    for item in tagbuf:
+        if item[0] == DATA:
+            out.write(item[1])
+        elif item[0] == STARTTAG:
+            _startout(out, item, u">")
+        elif item[0] == ENDTAG:
+            out.write(u"</%s>" % item[1])
+        elif item[0] == COMMENT:
+            out.write(u"<!--%s-->" % item[1])
+        elif item[0] == STARTENDTAG:
+            _startout(out, item, u"/>")
+        else:
+            wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
+    return out
+
