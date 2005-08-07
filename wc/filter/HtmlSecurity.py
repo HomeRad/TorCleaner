@@ -63,6 +63,74 @@ class HtmlSecurity (object):
         if hasattr(self, fun):
             getattr(self, fun)()
 
+    def _check_attr_size (self, attrs, name, htmlfilter, maxlen=4):
+        """
+        Sanitize too large values.
+        """
+        # Note that a maxlen of 4 is recommended to also allow
+        # percentages like '100%'.
+        if attrs.has_key(name):
+            val = attrs[name]
+            if len(val) > maxlen:
+                msg = "%s %r\n Detected a too large %s attribute value"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
+                attrs[name] = val[:maxlen]
+
+    def _check_percent_url (self, attrs, name, htmlfilter):
+        """
+        Check if url has too much percent chars.
+        """
+        if attrs.has_key(name):
+            url = attrs[name]
+            if _has_lots_of_percents(url):
+                # prevent CAN-2003-0870
+                msg = "%s %r\n Detected and prevented Opera percent " \
+                      "encoding overflow crash"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
+                del attrs[name]
+
+    def a_start (self, attrs, htmlfilter):
+        """
+        Check <a> start tag.
+        """
+        self._check_percent_url(attrs, 'href', htmlfilter)
+
+    def body_start (self, attrs, htmlfilter):
+        """
+        Check <body> start tag.
+        """
+        if attrs.has_key('onload'):
+            val = attrs['onload'].lower()
+            pattern = r"window\s*\(\s*\)"
+            if re.compile(pattern).search(val):
+                del attrs['onload']
+                msg = "%s\n Detected and prevented IE window() crash bug"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
+
+    def embed_start (self, attrs, htmlfilter):
+        """
+        Check <embed> start tag.
+        """
+        if attrs.has_key('src'):
+            src = attrs['src']
+            if '?' in src:
+                i = src.rfind('?')
+                src = src[:i]
+            if "." in src:
+                # prevent CVE-2002-0022
+                i = src.rfind('.')
+                if len(src[i:]) > 10:
+                    msg = "%s %r\n Detected and prevented IE " \
+                          "filename overflow crash"
+                    wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, src)
+                    del attrs['src']
+
+    def font_start (self, attrs, htmlfilter):
+        """
+        Check <font> start tag.
+        """
+        self._check_attrs_size(attrs, 'size', htmlfilter)
+
     def input_start (self, attrs, htmlfilter):
         """
         Check <input> start tag.
@@ -90,12 +158,50 @@ class HtmlSecurity (object):
         """
         Check <hr> start tag.
         """
-        if attrs.has_key('align'):
-            # prevent CAN-2003-0469, length 50 should be safe
-            if len(attrs['align']) > 50:
-                msg = "%s\n Detected and prevented IE <hr align> crash bug"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
-                del attrs['align']
+        # prevent CAN-2003-0469
+        self._check_attrs_size(attrs, 'align', htmlfilter, maxlen=50)
+
+    def iframe_start (self, attrs, htmlfilter):
+        """
+        Check <iframe> start tag.
+        """
+        self._check_attrs_size(attrs, 'src', htmlfilter, maxlen=2048)
+        self._check_attrs_size(attrs, 'name', htmlfilter, maxlen=1024)
+
+    def img_start (self, attrs, htmlfilter):
+        """
+        Check <img> start tag.
+        """
+        self._check_percent_url(attrs, 'src', htmlfilter)
+        self._check_percent_url(attrs, 'lowsrc', htmlfilter)
+        # sanitize width/height values
+        self._check_attr_size(attrs, 'width', htmlfilter)
+        self._check_attr_size(attrs, 'height', htmlfilter)
+
+    def marquee_start (self, attrs, htmlfilter):
+        """
+        Check <marquee> start tag.
+        """
+        self._check_attrs_size(attrs, 'height', htmlfilter)
+
+    def meta_start (self, attrs, htmlfilter):
+        """
+        Check <meta> start tag.
+        """
+        if attrs.has_key('content') and self.macintosh:
+            # prevent CVE-2002-0153
+            if attrs.get('http-equiv', '').lower() == 'refresh':
+                url = attrs['content'].lower()
+                if ";" in url:
+                    url = url.split(";", 1)[1]
+                if url.startswith('url='):
+                    url = url[4:]
+                if url.startswith('file:/'):
+                    msg = "%s %r\n Detected and prevented local file " \
+                          "redirection"
+                    wc.log.warn(wc.LOG_FILTER, msg, htmlfilter,
+                                attrs['content'])
+                    del attrs['content']
 
     def object_start (self, attrs, htmlfilter):
         """
@@ -129,17 +235,6 @@ class HtmlSecurity (object):
                     wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
                     attrs['data'] = url[:i]
 
-    def table_start (self, attrs, htmlfilter):
-        """
-        Check <table> start tag.
-        """
-        if attrs.has_key('width'):
-            # prevent CAN-2003-0238, table width=-1 crashes ICQ client
-            if attrs['width'] == '-1':
-                msg = "%s\n Detected and prevented ICQ table width crash bug"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
-                del attrs['width']
-
     def object_end (self):
         """
         Check <object> start tag.
@@ -158,97 +253,14 @@ class HtmlSecurity (object):
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
                 del attrs['value']
 
-    def meta_start (self, attrs, htmlfilter):
+    def table_start (self, attrs, htmlfilter):
         """
-        Check <meta> start tag.
+        Check <table> start tag.
         """
-        if attrs.has_key('content') and self.macintosh:
-            # prevent CVE-2002-0153
-            if attrs.get('http-equiv', '').lower() == 'refresh':
-                url = attrs['content'].lower()
-                if ";" in url:
-                    url = url.split(";", 1)[1]
-                if url.startswith('url='):
-                    url = url[4:]
-                if url.startswith('file:/'):
-                    msg = "%s %r\n Detected and prevented local file " \
-                          "redirection"
-                    wc.log.warn(wc.LOG_FILTER, msg, htmlfilter,
-                                attrs['content'])
-                    del attrs['content']
-
-    def embed_start (self, attrs, htmlfilter):
-        """
-        Check <embed> start tag.
-        """
-        if attrs.has_key('src'):
-            src = attrs['src']
-            if '?' in src:
-                i = src.rfind('?')
-                src = src[:i]
-            if "." in src:
-                # prevent CVE-2002-0022
-                i = src.rfind('.')
-                if len(src[i:]) > 10:
-                    msg = "%s %r\n Detected and prevented IE " \
-                          "filename overflow crash"
-                    wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, src)
-                    del attrs['src']
-
-    def font_start (self, attrs, htmlfilter):
-        """
-        Check <font> start tag.
-        """
-        if attrs.has_key('size'):
-            if len(attrs['size']) > 10:
-                # prevent CVE-2001-0130
-                msg = "%s %r\n Detected and prevented Lotus Domino font " \
-                      "size overflow crash"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, attrs['size'])
-                del attrs['size']
-
-    def a_start (self, attrs, htmlfilter):
-        """
-        Check <a> start tag.
-        """
-        self.check_percent_url(attrs, 'href', htmlfilter)
-
-    def check_percent_url (self, attrs, name, htmlfilter):
-        """
-        Check if url has too much percent chars.
-        """
-        if attrs.has_key(name):
-            url = attrs[name]
-            if _has_lots_of_percents(url):
-                # prevent CAN-2003-0870
-                msg = "%s %r\n Detected and prevented Opera percent " \
-                      "encoding overflow crash"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
-                del attrs[name]
-
-    def img_start (self, attrs, htmlfilter):
-        """
-        Check <img> start tag.
-        """
-        self.check_percent_url(attrs, 'src', htmlfilter)
-        self.check_percent_url(attrs, 'lowsrc', htmlfilter)
-        # sanitize width/height values
-        self.check_attr_size(attrs, 'width', htmlfilter)
-        self.check_attr_size(attrs, 'height', htmlfilter)
-
-    def check_attr_size (self, attrs, name, htmlfilter, maxlen=4):
-        """
-        Sanitize too large (integer) values.
-        """
-        if attrs.has_key(name):
-            val = attrs[name]
-            # Just chop off the string length if it is too long, there is
-            # no need to parse any integers.
-            # Note that a maxlen of 4 is recommended to also allow
-            # percentages like '100%'.
-            if len(val) > maxlen:
-                msg = "%s %r\n Detected a too large image %s attribute " \
-                      "value"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
-                attrs[name] = val[:maxlen]
+        if attrs.has_key('width'):
+            # prevent CAN-2003-0238, table width=-1 crashes ICQ client
+            if attrs['width'] == '-1':
+                msg = "%s\n Detected and prevented ICQ table width crash bug"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
+                del attrs['width']
 
