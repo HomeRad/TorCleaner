@@ -76,6 +76,18 @@ class HtmlSecurity (object):
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
                 attrs[name] = val[:maxlen]
 
+    def _check_javascript_url (self, attrs, name, htmlfilter):
+        """
+        Check if url has javascript: embedded.
+        """
+        if attrs.has_key(name):
+            url = attrs[name].strip().lower()
+            # to be sure catch all javascript: stuff
+            if "javascript:" in url:
+                msg = "%s\n Detected and prevented invlalid JS URL reference"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
+                del attrs[name]
+
     def _check_percent_url (self, attrs, name, htmlfilter):
         """
         Check if url has too much percent chars.
@@ -111,6 +123,8 @@ class HtmlSecurity (object):
         """
         Check <embed> start tag.
         """
+        self._check_attrs_size(attrs, 'src', htmlfilter, maxlen=1024)
+        self._check_attrs_size(attrs, 'name', htmlfilter, maxlen=1024)
         if attrs.has_key('src'):
             src = attrs['src']
             if '?' in src:
@@ -125,23 +139,6 @@ class HtmlSecurity (object):
                     wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, src)
                     del attrs['src']
 
-    def font_start (self, attrs, htmlfilter):
-        """
-        Check <font> start tag.
-        """
-        self._check_attrs_size(attrs, 'size', htmlfilter)
-
-    def input_start (self, attrs, htmlfilter):
-        """
-        Check <input> start tag.
-        """
-        if attrs.has_key('type'):
-            # prevent IE crash bug on empty type attribute
-            if not attrs['type']:
-                msg = "%s\n Detected and prevented IE <input type> crash bug"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
-                del attrs['type']
-
     def fieldset_start (self, attrs, htmlfilter):
         """
         Check <fieldset> start tag.
@@ -154,6 +151,19 @@ class HtmlSecurity (object):
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
                 del attrs['style']
 
+    def font_start (self, attrs, htmlfilter):
+        """
+        Check <font> start tag.
+        """
+        self._check_attrs_size(attrs, 'size', htmlfilter)
+
+    def frame_start (self, attrs, htmlfilter):
+        """
+        Check <frame> start tag.
+        """
+        self._check_attrs_size(attrs, 'src', htmlfilter, maxlen=1024)
+        self._check_attrs_size(attrs, 'name', htmlfilter, maxlen=1024)
+
     def hr_start (self, attrs, htmlfilter):
         """
         Check <hr> start tag.
@@ -165,18 +175,38 @@ class HtmlSecurity (object):
         """
         Check <iframe> start tag.
         """
-        self._check_attrs_size(attrs, 'src', htmlfilter, maxlen=2048)
+        self._check_attrs_size(attrs, 'src', htmlfilter, maxlen=1024)
         self._check_attrs_size(attrs, 'name', htmlfilter, maxlen=1024)
 
     def img_start (self, attrs, htmlfilter):
         """
         Check <img> start tag.
         """
+        # sanitize *src values
         self._check_percent_url(attrs, 'src', htmlfilter)
+        self._check_javascript_url(attrs, 'src', htmlfilter)
         self._check_percent_url(attrs, 'lowsrc', htmlfilter)
+        self._check_javascript_url(attrs, 'lowsrc', htmlfilter)
         # sanitize width/height values
         self._check_attr_size(attrs, 'width', htmlfilter)
         self._check_attr_size(attrs, 'height', htmlfilter)
+
+    def input_start (self, attrs, htmlfilter):
+        """
+        Check <input> start tag.
+        """
+        if attrs.has_key('type'):
+            # prevent IE crash bug on empty type attribute
+            if not attrs['type']:
+                msg = "%s\n Detected and prevented IE <input type> crash bug"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
+                del attrs['type']
+
+    def link_start (self, attrs, htmlfilter):
+        # CAN-2005-1155 and others
+        if attrs.has_key('rel') and attrs.has_key('href'):
+            if attrs['rel'].strip().lower() == 'icon':
+                self._check_javascript_url(attrs, 'href', htmlfilter)
 
     def marquee_start (self, attrs, htmlfilter):
         """
