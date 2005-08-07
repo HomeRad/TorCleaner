@@ -154,11 +154,25 @@
   <replacement part="attr"/>
 </rewrite>
 
-<rewrite sid="wc.310" disable="1"
+<rewrite sid="wc.310"
  tag="body">
   <title lang="de">Entferne &lt;body&gt; onselectstart</title>
   <title lang="en">&lt;body&gt; onselectstart</title>
   <attr name="onselectstart"/>
+  <replacement part="attr"/>
+</rewrite>
+
+<rewrite sid="wc.20"
+ tag="body">
+  <title lang="en">&lt;body&gt; onclick</title>
+  <attr name="onclick"/>
+  <replacement part="attr"/>
+</rewrite>
+
+<rewrite sid="wc.33"
+ tag="body">
+  <title lang="en">&lt;body&gt; ondblclick</title>
+  <attr name="ondblclick"/>
   <replacement part="attr"/>
 </rewrite>
 
