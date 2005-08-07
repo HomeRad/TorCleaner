@@ -182,11 +182,13 @@ def init_clamav_conf ():
     Initialize clamav configuration.
     """
     conf = wc.configuration.config['clamavconf']
-    if conf and not os.path.exists(conf):
-        wc.log.warn(wc.LOG_FILTER, "No ClamAV config file found at %r.", conf)
-        return
-    global _clamav_conf
-    _clamav_conf = ClamavConfig(wc.configuration.config['clamavconf'])
+    if conf:
+        if os.path.exists(conf):
+            global _clamav_conf
+            _clamav_conf = ClamavConfig(conf)
+        else:
+            wc.log.warn(wc.LOG_FILTER,
+                        "No ClamAV config file found at %r.", conf)
 
 
 def get_clamav_conf ():
