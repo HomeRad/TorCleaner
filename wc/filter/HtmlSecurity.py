@@ -15,7 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-Filter security flaws out of HTML tags.
+Filter some security flaws out of HTML tags.
+
+WARNING: this is by no means a complete. Don't rely on this module
+to catch all known security flaws!
+If you think you found a HTML related security flaw that is not covered
+by this module, you are encouraged to inform me with details.
 """
 
 import os
@@ -47,6 +52,8 @@ class HtmlSecurity (object):
         self.macintosh = os.name == 'mac' or \
               (os.name == 'posix' and sys.platform.startswith('darwin'))
 
+    # scan methods
+
     def scan_start_tag (self, tag, attrs, htmlfilter):
         """
         Delegate to individual start tag handlers.
@@ -62,6 +69,8 @@ class HtmlSecurity (object):
         fun = "%s_end" % tag
         if hasattr(self, fun):
             getattr(self, fun)()
+
+    # helper methods to check/sanitize values
 
     def _check_attr_size (self, attrs, name, htmlfilter, maxlen=4):
         """
@@ -100,6 +109,8 @@ class HtmlSecurity (object):
                       "encoding overflow crash"
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
                 del attrs[name]
+
+    # tag specific scan methods, sorted alphabetically
 
     def a_start (self, attrs, htmlfilter):
         """
