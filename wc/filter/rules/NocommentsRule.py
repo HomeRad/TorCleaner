@@ -23,7 +23,7 @@ import wc.filter.rules.UrlRule
 
 class NocommentsRule (wc.filter.rules.UrlRule.UrlRule):
     """
-    If enabled, this rule tells the Rewriter to remove HTML comments.
+    If enabled, this rule tells the HtmlRewriter to remove HTML comments.
     """
 
     def toxml (self):

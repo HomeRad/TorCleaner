@@ -22,6 +22,7 @@ import unittest
 import os
 import wc
 import wc.configuration
+import wc.filter.html.JSFilter
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 from wc.proxy.Headers import WcMessage
 
@@ -36,7 +37,7 @@ class TestRewriter (unittest.TestCase):
         logfile = os.path.join(wc.InstallData, "test", "logging.conf")
         wc.initlog(logfile, wc.Name, filelogs=False)
         wc.configuration.init()
-        wc.configuration.config['filters'] = ['Rewriter']
+        wc.configuration.config['filters'] = ['HtmlRewriter']
         wc.configuration.config.init_filter_modules()
         self.headers = WcMessage()
         self.headers['Content-Type'] = "text/html"
@@ -93,7 +94,7 @@ class TestRewriter (unittest.TestCase):
                   """<body onload="hulla();">""")
 
     def testBodyPopup (self):
-        for tag in wc.filter.JSFilter.js_event_attrs:
+        for tag in wc.filter.html.JSFilter.js_event_attrs:
             self.filt("""<body %s="window.open();">""" % tag,
                   """<body>""")
 
@@ -245,6 +246,11 @@ class TestRewriter (unittest.TestCase):
                       """<img %s="9999">""" % tag)
             self.filt("""<img %s="12345">""" % tag,
                       """<img %s="1234">""" % tag)
+
+    def testFirelinking (self):
+        self.filt("""<link rel="icon " href= " javascript:void()">""",
+                  """<link rel="icon ">""")
+
 
 def test_suite ():
     suite = unittest.TestSuite()

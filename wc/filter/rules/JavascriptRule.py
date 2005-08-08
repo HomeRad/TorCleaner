@@ -23,7 +23,7 @@ import wc.filter.rules.UrlRule
 
 class JavascriptRule (wc.filter.rules.UrlRule.UrlRule):
     """
-    If enabled, this rule tells the Rewriter to filter JavaScript.
+    If enabled, this rule tells the HtmlRewriter to filter JavaScript.
     """
 
     def toxml (self):

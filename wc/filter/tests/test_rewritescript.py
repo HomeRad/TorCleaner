@@ -35,7 +35,7 @@ class TestRewriteScript (unittest.TestCase):
 
     def setUp (self):
         wc.configuration.init()
-        wc.configuration.config['filters'] = ['Rewriter',]
+        wc.configuration.config['filters'] = ['HtmlRewriter',]
         wc.configuration.config.init_filter_modules()
         wc.proxy.dns_lookups.init_resolver()
         self.headers = WcMessage()
