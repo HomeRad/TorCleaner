@@ -28,8 +28,10 @@ from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import filter_safe as _filter_safe
 from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.filter.rules.Rule import compileRegex as _compileRegex
-from wc.filter.rules.RewriteRule import partvalnames, partnames
-from wc.filter.rules.RewriteRule import part_num as _part_num
+from wc.filter.rules.HtmlrewriteRule import partvalnames, partnames
+from wc.filter.rules.HtmlrewriteRule import part_num as _part_num
+from wc.filter.rules.XmlrewriteRule import replacetypenums
+from wc.filter.rules.XmlrewriteRule import parse_xpath as _parse_xpath
 from wc.filter.rules.FolderRule import FolderRule as _FolderRule
 from wc.filter.rules.FolderRule import recalc_up_down as _recalc_up_down
 from wc.filter.rules import register_rule as _register_rule
@@ -38,6 +40,8 @@ from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.rating import categories
 from wc.filter.rating import get_category as _get_category
 from wc.filter.rating.category import intrange_from_string as _intrange_from_string
+
+xmlreplacetypenames = sorted(replacetypenums.keys())
 
 # config vars
 info = {
@@ -74,6 +78,9 @@ info = {
     "ruleenclosedblock": False,
     "rulerewritepart": False,
     "rulerewritereplacement": False,
+    "xmlselector": False,
+    "xmlreplacetype": False,
+    "xmlreplacevalue": False,
 }
 
 error = {
@@ -103,6 +110,8 @@ error = {
     "ruleindex": False,
     "selindex": False,
     "categoryvalue": False,
+    "xmlselector": False,
+    "xmlreplacetype": False,
 }
 
 _rules_per_page = 50
@@ -116,6 +125,8 @@ curindex = 0
 curparts = None
 # current filterstage value
 curfilterstage = None
+# current replace types
+curreplacetypes = None
 # only some rules allowed for new
 newrulenames = list(rulenames[:])
 newrulenames.remove('allowdomains')
@@ -225,11 +236,13 @@ def _form_reset ():
     for f in config['folderrules']:
         f.selected = False
     global curfolder, currule, curparts, curindex, curfilterstage
+    global curreplacetypes
     curfolder = None
     currule = None
     curparts = None
     curfilterstage = None
     curindex = 0
+    curreplacetypes = None
 
 
 def _form_set_tags ():
@@ -250,7 +263,7 @@ def _form_selfolder (index):
         index = int(index)
         global curfolder
         curfolder = [f for f in config['folderrules'] if f.oid == index][0]
-    except (ValueError, IndexError):
+    except (ValueError, IndexError, OverflowError):
         error['folderindex'] = True
 
 
@@ -269,6 +282,11 @@ def _form_selrule (index):
             curparts = {}
             for i, part in enumerate(partvalnames):
                 curparts[part] = (currule.part == i)
+        elif currule.get_name() == u"xmlrewrite":
+            global curreplacetypes
+            curreplacetypes = {}
+            for name, num in replacetypenums.items():
+                curreplacetypes[name] = (currule.replacetype == num)
         elif currule.get_name() == u"header":
             global curfilterstage
             curfilterstage = {
@@ -276,7 +294,7 @@ def _form_selrule (index):
                 u'request': currule.filterstage == u'request',
                 u'response': currule.filterstage == u'response',
             }
-    except (ValueError, IndexError):
+    except (ValueError, IndexError, OverflowError):
         error['ruleindex'] = True
 
 
@@ -285,7 +303,7 @@ def _form_selindex (index):
     global curindex
     try:
         curindex = int(index)
-    except ValueError:
+    except (ValueError, OverflowError):
         error['selindex'] = True
 
 
@@ -628,7 +646,7 @@ def _form_apply_image (form):
     width = _getval(form, 'rule_imgwidth').strip()
     try:
         width = int(width)
-    except ValueError:
+    except (ValueError, OverflowError):
         error['ruleimgwidth'] = True
         return
     if width != currule.width:
@@ -637,7 +655,7 @@ def _form_apply_image (form):
     height = _getval(form, 'rule_imgheight').strip()
     try:
         height = int(height)
-    except ValueError:
+    except (ValueError, OverflowError):
         error['ruleimgheight'] = True
         return
     if height != currule.height:
@@ -650,7 +668,7 @@ def _form_apply_imagereduce (form):
     quality = _getval(form, 'rule_imgquality').strip()
     try:
         quality = int(quality)
-    except ValueError:
+    except (ValueError, OverflowError):
         error['ruleimgquality'] = True
         return
     if quality != currule.quality:
@@ -659,7 +677,7 @@ def _form_apply_imagereduce (form):
     minsize = _getval(form, 'rule_imgminsize').strip()
     try:
         minsize = int(minsize)
-    except ValueError:
+    except (ValueError, OverflowError):
         error['ruleimgminsize'] = True
         return
     if minsize != currule.minimal_size_bytes:
@@ -744,5 +762,29 @@ def _form_apply_htmlrewrite (form):
 
 
 def _form_apply_xmlrewrite (form):
-    # XXX
-    pass
+    selector = _getval(form, 'rule_xmlselector').strip()
+    if not selector:
+        error['xmlselector'] = True
+        return
+    if selector != currule.selector:
+        currule.selector = selector
+        currule.selector_list = _parse_xpath(selector)
+        info['xmlselector'] = True
+    replacetype = _getval(form, 'rule_xmlreplacetype').strip()
+    try:
+        replacetype = int(replacetype)
+    except (ValueError, OverflowError):
+        error['xmlreplacetype'] = True
+        return
+    if replacetype != currule.replacetype:
+        currule.replacetype = replacetype
+        info['xmlreplacetype'] = True
+    replacevalue = _getval(form, 'rule_xmlreplacevalue').strip()
+    if replacevalue:
+        if replacevalue != currule.value:
+            currule.value = replacevalue
+            info['xmlreplacevalue'] = True
+    else:
+        if currule.value:
+            currule.value = u""
+            info['xmlreplacevalue'] = True

@@ -489,8 +489,8 @@ Regex footnote
 </table>
 <hr noshade size="1">
 
-<!-- RewriteRule -->
-<h2>RewriteRule</h2>
+<!-- HtmlrewriteRule -->
+<h2>HtmlrewriteRule</h2>
 <table metal:define-macro="rewrite" summary="">
 <tr metal:use-macro="rulemacros/titledesc">
 <td>Rule title and description</td>
@@ -589,5 +589,51 @@ Regex footnote
 </table>
 <hr noshade size="1">
 
+<!-- XmlrewriteRule -->
+<h2>XmlrewriteRule</h2>
+<table metal:define-macro="xmlrewrite" summary="">
+<tr metal:use-macro="rulemacros/titledesc">
+<td>Rule title and description</td>
+</tr>
+<tr metal:use-macro="rulemacros/matchurl">
+<td>Rule (don't) match url</td>
+</tr>
+<tr valign="top"><td>
+<label for="rule_xmlselector" i18n:translate="">XML Selector</label>:
+</td><td>
+<input type="text" class="text" name="rule_xmlselector" id="rule_xmlselector"
+ value="/"
+ tal:attributes="value currule/selector">
+</td></tr>
+<tr valign="top"><td>
+<label for="rule_xmlreplacetype" i18n:translate="">Replace type</label>:
+</td><td>
+<div tal:repeat="name xmlreplacetypenames">
+<input type="radio" checked
+ tal:condition="curreplacetypes/?name"
+ tal:attributes="value replacetypenums/?name"
+ name="rule_xmlreplacetype"
+><input type="radio"
+ tal:condition="not:curreplacetypes/?name"
+ tal:attributes="value replacetypenums/?name"
+ name="rule_xmlreplacetype"
+><span tal:replace="name">rsshtml</span></div>
+</td></tr>
+<tr valign="top"><td>
+<label for="rule_xmlreplacevalue" i18n:translate="">Replace value</label>:
+</td><td>
+<input type="text" class="text" name="rule_xmlreplacevalue"
+ id="rule_xmlreplacevalue" value=""
+ tal:attributes="value currule/value">
+</td></tr>
+<tr><td colspan="2">
+<input type="submit" class="submit" name="apply" value="Apply"
+ i18n:attributes="value">
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
+</div>
+</td></tr>
+</table>
+<hr noshade size="1">
 </body>
 </html>
