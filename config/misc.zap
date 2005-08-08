@@ -23,6 +23,8 @@
   <description lang="en">&lt;iframe&gt; content is almost always advertising.</description>
   <nomatchurl>www\.eselfilme\.de</nomatchurl>
   <nomatchurl>coverviewer\.(sourceforge|sf)\.net</nomatchurl>
+  <nomatchurl>www\.eviltrash\.net</nomatchurl>
+  <nomatchurl>www\.flumserberg\.ch</nomatchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.370"
