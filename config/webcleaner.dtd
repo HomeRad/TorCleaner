@@ -2,8 +2,10 @@
 20040317 Bastian Kleineidam
   - removed unused elements
   - added sslport, sslgateway attributes
+20050808 Bastian Kleineidam
+  - changed filter name to CDATA, there are too many filters now
 -->
-<!ELEMENT webcleaner (filter+,Blocker?,GifImage?,Rewriter?)>
+<!ELEMENT webcleaner (filter+)>
 <!ATTLIST webcleaner
  version     CDATA #REQUIRED
  port        CDATA "8080"
@@ -26,5 +28,5 @@
 
 <!ELEMENT filter EMPTY>
 <!ATTLIST filter
- name (Header|Blocker|GifImage|BinaryCharFilter|Rewriter|Replacer|Compress) #REQUIRED
+ name CDATA #REQUIRED
 >
