@@ -32,9 +32,12 @@ rss_allowed = {
     u"div": [],
     u"span": [],
     u"br": [u"clear"],
+    u"hr": [],
     u"p": [],
     u"img": [u"src", u"width", u"height", u"alt", u"title", u"border"],
     u"b": [],
+    u"strong": [],
+    u"em": [],
     u"i": [],
     u"code": [],
     u"sub": [],
@@ -51,21 +54,27 @@ class RssHtmlFilter (object):
 
     def __init__ (self):
         self.parser = wc.HtmlParser.htmlsax.parser(self)
+        self.reset()
+
+    def reset (self):
         self.outbuf = StringIO()
         self.url = ""
         self.valid = True
         self.stack = []
+        self.rules = []
 
-    def filter (self, data, url):
+    def filter (self, data, url, rules):
+        encoding = "UTF8"
+        self.parser.encoding = encoding
+        data = data.encode(encoding)
+        self.rules = rules
         self.url = url
         self.parser.feed(data)
         self.parser.flush()
         self.parser.reset()
-        self.valid = True
-        self.stack = []
         data = self.outbuf.getvalue()
         self.outbuf.close()
-        self.outbuf = StringIO()
+        self.reset()
         return data
 
     def error (self, msg):
@@ -124,7 +133,7 @@ class RssHtmlFilter (object):
         self._start_element(tag, attrs, True)
 
     def _start_element (self, tag, attrs, startend):
-        tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
+        tag = wc.filter.html.check_spelling(tag, self.url)
         self.stack.append(tag)
         if not self.valid:
             return
@@ -145,7 +154,7 @@ class RssHtmlFilter (object):
             self.stack = [tag]
 
     def end_element (self, tag):
-        tag = wc.filter.HtmlTags.check_spelling(tag, self.url)
+        tag = wc.filter.html.check_spelling(tag, self.url)
         if self.stack and self.stack[-1] == tag:
             del self.stack[-1]
         if self.valid:
