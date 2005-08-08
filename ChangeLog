@@ -8,9 +8,20 @@
     Type: bugfix
     Changed: wc/proxy/Dispatcher.py
 
-  * Sanitize too large <img width/height> values.
+  * Remove too large HTML width/height and src/href values.
     Type: feature
     Changed: wc/filter/HtmlSecurity.py
+
+  * Added XML filter module, with special filter mode for RSS feeds.
+    Type: feature
+    Added: wc/filter/XmlRewriter.py, wc/filter/xmlfilt/*.py,
+      wc/filter/rules/Xmlrewriterule.py
+    Changed: wc/webgui/context/filterconfig_html.py,
+      templates/classic/macros/rules.html
+
+  * Allow changing of clamav config value over web GUI.
+    Type: bugfix
+    Changed: wc/webgui/filterconfig_html.py
 
 2.29 "The Forgotten" (released 12.4.2005)
 
