@@ -83,6 +83,7 @@ class HtmlSecurity (object):
             val = attrs[name]
             if len(val) > maxlen:
                 msg = "%s %r\n Detected a too large %s attribute value"
+                msg += " (length %d > %d)" % (len(val), maxlen)
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
                 del attrs[name]
 

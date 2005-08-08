@@ -245,7 +245,7 @@ class TestRewriter (unittest.TestCase):
             self.filt("""<img %s="9999">""" % tag,
                       """<img %s="9999">""" % tag)
             self.filt("""<img %s="12345">""" % tag,
-                      """<img %s="1234">""" % tag)
+                      """<img>""" % tag)
 
     def testFirelinking (self):
         self.filt("""<link rel="icon " href= " javascript:void()">""",
