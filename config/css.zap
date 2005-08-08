@@ -5,11 +5,11 @@
 <title lang="en">CSS filtering</title>
 <description lang="en">Some browsers do not support CSS, so turn it off with these rules. Or you can test your pages without  CSS styles!  Well, we remove only complete &lt;style&gt; tags, not style="" attributes.</description>
 
-<rewrite sid="wc.361" disable="1"
+<htmlrewrite sid="wc.361" disable="1"
  tag="style">
   <title lang="de">Entferne STYLE tag</title>
   <title lang="en">Remove STYLE tag</title>
   <description lang="de">Entferne das &lt;style&gt; tag.</description>
   <description lang="en">Remove the &lt;style&gt; tag.</description>
-</rewrite>
+</htmlrewrite>
 </folder>

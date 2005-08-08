@@ -13,13 +13,13 @@
   <description lang="en">Some tracker sites</description>
 </block>
 
-<rewrite sid="wc.6">
+<htmlrewrite sid="wc.6">
   <title lang="de">Statistik Seiten 2</title>
   <title lang="en">Statistic sites 2</title>
   <attr>^https?://[0-9a-z.]*(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)</attr>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.364"
+<htmlrewrite sid="wc.364"
  tag="img">
   <title lang="de">1x1 Zählerbilder</title>
   <title lang="en">1x1 tracker images</title>
@@ -27,7 +27,7 @@
   <description lang="en">Several sites use 1x1 images to track users.</description>
   <attr name="width">^1$</attr>
   <attr name="height">^1$</attr>
-</rewrite>
+</htmlrewrite>
 
 <image sid="wc.365"
  width="1"
@@ -38,7 +38,7 @@
   <description lang="en">In case the width and height attributes are missing</description>
 </image>
 
-<rewrite sid="wc.25"
+<htmlrewrite sid="wc.25"
  tag="img">
   <title lang="de">0x0 Zählerbilder</title>
   <title lang="en">0x0 tracker images</title>
@@ -46,7 +46,7 @@
   <description lang="en">Several sites use 0x0 images to track users.</description>
   <attr name="width">^0$</attr>
   <attr name="height">^0$</attr>
-</rewrite>
+</htmlrewrite>
 
 <image sid="wc.5">
   <title lang="de">0x0 Zählerbilder 2</title>
@@ -60,18 +60,18 @@
   <title lang="en">Siemens StatServ</title>
 </block>
 
-<rewrite sid="wc.21">
+<htmlrewrite sid="wc.21">
   <title lang="de">Verschiedene Zählskripte</title>
   <description lang="de">CGI Skripte zur Zählung</description>
   <attr>/(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.406"
+<htmlrewrite sid="wc.406"
  tag="img">
   <title lang="de">akamai.net Statistik</title>
   <title lang="en">SF tracker image</title>
   <description lang="de">Zu finden auf Sourceforge.</description>
   <description lang="en">akamai tracker image at sourceforge</description>
   <attr name="src">e\.akamai\.net</attr>
-</rewrite>
+</htmlrewrite>
 </folder>

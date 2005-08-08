@@ -5,7 +5,7 @@
 <title lang="en">Miscellaneous</title>
 <description lang="en">Misc things we dont like in our HTML source :)</description>
 
-<rewrite sid="wc.368"
+<htmlrewrite sid="wc.368"
  tag="link">
   <title lang="de">Entferne favicon</title>
   <title lang="en">Remove favicon</title>
@@ -13,9 +13,9 @@
   <description lang="en">Some HTML pages supply a link to a favicon.gif icon image and it gets loaded automatically.</description>
   <attr name="rel">(?i)shortcut icon</attr>
   <replacement part="tag"/>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.369"
+<htmlrewrite sid="wc.369"
  tag="iframe">
   <title lang="de">Entferne &lt;iframe&gt;</title>
   <title lang="en">Remove &lt;iframe&gt;</title>
@@ -23,14 +23,14 @@
   <description lang="en">&lt;iframe&gt; content is almost always advertising.</description>
   <nomatchurl>www\.eselfilme\.de</nomatchurl>
   <nomatchurl>coverviewer\.(sourceforge|sf)\.net</nomatchurl>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.370"
+<htmlrewrite sid="wc.370"
  tag="noframes">
   <title lang="de">Entferne &lt;noframes&gt;</title>
   <title lang="en">Remove &lt;noframes&gt;</title>
   <description lang="en">Most of the browsers have frames so they dont need the &lt;noframes&gt; content.</description>
-</rewrite>
+</htmlrewrite>
 
 <nocomments sid="wc.371">
   <title lang="de">Entferne HTML Kommentare</title>
@@ -40,14 +40,14 @@
   <nomatchurl>www\.onjava\.com</nomatchurl>
 </nocomments>
 
-<rewrite sid="wc.372"
+<htmlrewrite sid="wc.372"
  tag="blink">
   <title lang="de">Ersetze &lt;blink&gt; durch &lt;b&gt;</title>
   <title lang="en">Replace &lt;blink&gt; with &lt;b&gt;</title>
   <description lang="de">&lt;blink&gt; &lt;blink&gt;</description>
   <description lang="en">Dont we all hate the &lt;blink&gt; tag?</description>
   <replacement part="tagname">b</replacement>
-</rewrite>
+</htmlrewrite>
 
 <replace sid="wc.373"
  search="text-decoration:\s*blink">
@@ -57,14 +57,14 @@
   <description lang="en">Unfuckingbelievable they made a blink CSS entry.</description>
 </replace>
 
-<rewrite sid="wc.374"
+<htmlrewrite sid="wc.374"
  tag="marquee">
   <title lang="de">Ersetze &lt;marquee&gt; mit &lt;span&gt;</title>
   <title lang="en">Replace &lt;marquee&gt; with &lt;span&gt;</title>
   <description lang="de">Als ob blink nicht schon genug wäre.</description>
   <description lang="en">Jeeesus, as if blinking isn't enough.</description>
   <replacement part="tagname">span</replacement>
-</rewrite>
+</htmlrewrite>
 
 <replace sid="wc.375"
  search="(US-Präsident|George( W.)?) Bush">
@@ -74,7 +74,7 @@
   <replacement>Love and Peace</replacement>
 </replace>
 
-<rewrite sid="wc.376"
+<htmlrewrite sid="wc.376"
  tag="img">
   <title lang="de">Entferne &lt;lowsrc&gt;</title>
   <title lang="en">Remove &lt;lowsrc&gt;</title>
@@ -82,39 +82,39 @@
   <description lang="en">The lowsrc is waste of bandwidth if you have enough of it ;)</description>
   <attr name="lowsrc"/>
   <replacement part="attr"/>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.377">
+<htmlrewrite sid="wc.377">
   <title lang="de">Entferne &lt;href&gt; targets</title>
   <title lang="en">Remove &lt;href&gt; targets</title>
   <description lang="en">Can't believe I have to make this case-insensitive 8-)</description>
   <attr name="target">(?i)_(blank|new|top)</attr>
   <replacement part="attr"/>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.378"
+<htmlrewrite sid="wc.378"
  tag="area">
   <title lang="de">Entferne &lt;area&gt; targets</title>
   <title lang="en">Remove &lt;area&gt; targets</title>
   <attr name="target">(?i)_(blank|new)</attr>
   <replacement part="attr"/>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.379"
+<htmlrewrite sid="wc.379"
  tag="div">
   <title lang="en">Eselfilme layer</title>
   <matchurl>eselfilme\.de</matchurl>
   <attr name="id">Layer1</attr>
-</rewrite>
+</htmlrewrite>
 
-<rewrite sid="wc.3">
+<htmlrewrite sid="wc.3">
   <title lang="de">Markiere &lt;href&gt; targets</title>
   <title lang="en">Mark &lt;href&gt; targets</title>
   <description lang="de">Verändere den Mauszeiger wenn Verknüpfungen ein neues Fenster öffnen.</description>
   <description lang="en">Display a little marker when links point to unknown targets.</description>
   <attr name="target">(?i)^(?!_parent)(.+)$</attr>
   <replacement part="attr">target=\1 style=cursor:ne-resize</replacement>
-</rewrite>
+</htmlrewrite>
 
 <replace sid="wc.380" disable="1"
  search="Bastian">
