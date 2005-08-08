@@ -100,7 +100,7 @@ filtermodules = [
     "ImageSize",
     "ImageReducer",
     "BinaryCharFilter",
-    "Rewriter",
+    "HtmlRewriter",
     "XmlRewriter",
     "Replacer",
     "Compress",
@@ -293,9 +293,10 @@ class Configuration (dict):
             clazz = getattr(getattr(wc.filter, filtername), filtername)
             # add content-rewriting mime types to special list
             instance = clazz()
-            if filtername in ['Rewriter', 'Replacer', 'GifImage',
+            if filtername in ['HtmlRewriter', 'Replacer', 'GifImage',
                               'Compress', 'ImageReducer', 'ImageSize',
-                              'VirusFilter', 'BinaryCharFilter']:
+                              'VirusFilter', 'BinaryCharFilter',
+                              'XmlRewriter']:
                 self['mime_content_rewriting'].update(instance.mimes)
             self['filtermodules'].append(instance)
             for folder in self['folderrules']:
@@ -333,7 +334,6 @@ from wc.XmlUtils import xmlquoteattr
 ##### xml parsers #########
 
 rulenames = (
-  u'rewrite',
   u'block',
   u'blockurls',
   u'blockdomains',
@@ -348,18 +348,17 @@ rulenames = (
   u'replace',
   u'rating',
   u'antivirus',
+  u'htmlrewrite',
   u'xmlrewrite',
 )
 _nestedtags = (
-  'title', 'description',
+  u'title', u'description',
   # urlrule nested tag names
-  'matchurl', 'nomatchurl',
-  # rewriter rule nested tag names
-  'attr','enclosed','replacement',
+  u'matchurl', u'nomatchurl',
+  # htmlrewriter rule nested tag names
+  u'attr', u'enclosed', u'replacement',
   # rating rule nested tag names
-  'url', 'category',
-  # xmlrewriter rule nested tag names
-  'xmlreplace',
+  u'url', u'category',
 )
 # make sure no name clashes occur between tag names
 for _x in _nestedtags:

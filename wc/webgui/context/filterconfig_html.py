@@ -50,8 +50,8 @@ info = {
     "disablerule": False,
     "enablerule": False,
     "removerule": False,
-    "rewrite_addattr": False,
-    "rewrite_delattr": False,
+    "htmlrewrite_addattr": False,
+    "htmlrewrite_delattr": False,
     "folderup": False,
     "folderdown": False,
     "ruleup": False,
@@ -84,8 +84,8 @@ error = {
     "newrule": False,
     "disablerule": False,
     "enablerule": False,
-    "rewrite_addattr": False,
-    "rewrite_delattr": False,
+    "htmlrewrite_addattr": False,
+    "htmlrewrite_delattr": False,
     "folderup": False,
     "folderdown": False,
     "ruleup": False,
@@ -188,9 +188,9 @@ def _exec_form (form, lang):
     elif currule and form.has_key('delnomatchurls'):
         _form_rule_delnomatchurls(form)
     elif currule and form.has_key('addattr'):
-        _form_rewrite_addattr(form)
+        _form_htmlrewrite_addattr(form)
     elif currule and form.has_key('removeattrs') and form.has_key('delattr'):
-        _form_rewrite_removeattrs(form)
+        _form_htmlrewrite_removeattrs(form)
 
     # generic apply rule values
     elif currule and form.has_key('apply'):
@@ -264,7 +264,7 @@ def _form_selrule (index):
             ruletype[rt] = (currule.get_name() == rt)
         # XXX this side effect is bad :(
         # fill part flags
-        if currule.get_name() == u"rewrite":
+        if currule.get_name() == u"htmlrewrite":
             global curparts
             curparts = {}
             for i, part in enumerate(partvalnames):
@@ -421,30 +421,30 @@ def _form_removerule (rule):
     info['removerule'] = True
 
 
-def _form_rewrite_addattr (form):
+def _form_htmlrewrite_addattr (form):
     name = _getval(form, "attrname").strip()
     if not name:
-        error['rewrite_addattr'] = True
+        error['htmlrewrite_addattr'] = True
         return
     value = _getval(form, "attrval")
     currule.attrs[name] = value
     currule.attrs_ro[name] = re.compile(name)
     curfolder.write()
-    info['rewrite_addattr'] = True
+    info['htmlrewrite_addattr'] = True
 
 
-def _form_rewrite_removeattrs (form):
+def _form_htmlrewrite_removeattrs (form):
     toremove = _getlist(form, 'delattr')
     if toremove:
         for attr in toremove:
             if not currule.attrs.has_key(attr):
-                error['rewrite_delattr'] = True
+                error['htmlrewrite_delattr'] = True
                 return
         for attr in toremove:
             del currule.attrs[attr]
             del currule.attrs_ro[attr]
         curfolder.write()
-        info['rewrite_delattr'] = True
+        info['htmlrewrite_delattr'] = True
 
 
 def _swap_rules (rules, idx):
@@ -714,7 +714,7 @@ def _form_apply_replace (form):
         info['rulereplace'] = True
 
 
-def _form_apply_rewrite (form):
+def _form_apply_htmlrewrite (form):
     tag = _getval(form, 'rule_tag').strip()
     if not tag:
         error['ruletag'] = True
@@ -741,3 +741,8 @@ def _form_apply_rewrite (form):
     if replacement != currule.replacement:
         currule.replacement = replacement
         info['rulerewritereplacement'] =  True
+
+
+def _form_apply_xmlrewrite (form):
+    # XXX
+    pass
