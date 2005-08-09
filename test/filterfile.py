@@ -32,9 +32,10 @@ def get_content_type (filename, fp):
         return content_type
     return default_type
 
+
 def _main ():
     """USAGE: test/run.sh test/filterfile.py <config dir> <filename>"""
-    if len(sys.argv)!=3:
+    if len(sys.argv) != 3:
         print _main.__doc__
         sys.exit(1)
     confdir = sys.argv[1]
