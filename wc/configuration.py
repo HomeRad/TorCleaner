@@ -190,7 +190,8 @@ class Configuration (dict):
         lines.append('<?xml version="1.0" encoding="%s"?>' % ConfigCharset)
         lines.append('<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">')
         lines.append('<webcleaner')
-        lines.append(' version="%s"' % xmlquoteattr(self['version']))
+        lines.append(' configversion="%s"' % \
+                     xmlquoteattr(self['configversion']))
         lines.append(' bindaddress="%s"' % xmlquoteattr(self['bindaddress']))
         lines.append(' port="%d"' % self['port'])
         lines.append(' sslport="%d"' % self['sslport'])
