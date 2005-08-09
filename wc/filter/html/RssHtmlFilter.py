@@ -34,7 +34,7 @@ rss_allowed = {
     u"br": [u"clear"],
     u"hr": [],
     u"p": [],
-    u"img": [u"src", u"width", u"height", u"alt", u"title", u"border"],
+    u"img": [u"src", u"width", u"height", u"alt", u"title", u"border", u"align", u"vspace", u"hspace"],
     u"b": [],
     u"strong": [],
     u"em": [],
@@ -42,6 +42,7 @@ rss_allowed = {
     u"code": [],
     u"sub": [],
     u"sup": [],
+    u"blockquote": [],
     # XXX more tags needed?
 }
 # HTML tags with attributes holding URIs
