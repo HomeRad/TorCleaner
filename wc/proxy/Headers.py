@@ -110,13 +110,19 @@ def remove_headers (headers, to_remove):
             del headers[h]
 
 
-def has_header_value (headers, key, value):
+def remove_double_entries (headers, name):
+    values = headers.getallmatchingheadervalues(name)
+    if len(values) > 1:
+        headers[name] = values[0]
+
+
+def has_header_value (headers, name, value):
     """
     Return true iff headers contain given value, case of key or value
     is not important.
     """
     value = value.lower()
-    for val in headers.getallmatchingheadervalues(key):
+    for val in headers.getallmatchingheadervalues(name):
         if val.lower() == value:
             return True
     return False
@@ -143,9 +149,22 @@ def client_set_headers (headers):
     """
     Modify client request headers.
     """
+    client_remove_double_entries(headers)
     client_remove_hop_by_hop_headers(headers)
     remove_warning_headers(headers)
     set_via_header(headers)
+
+
+def client_remove_double_entries (headers):
+    # first check for double entries
+    for name in headers.keys():
+        values = headers.getallmatchingheadervalues(name)
+        if len(values) > 1:
+            wc.log.warn(wc.LOG_PROXY, "Double %s header values: %s",
+                        name, str(values))
+    # remove dangerous double entries
+    for name in ['Content-Length', 'Age', 'Date', 'Host']:
+        remove_double_entries(headers, name)
 
 
 def client_remove_hop_by_hop_headers (headers):
