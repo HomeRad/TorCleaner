@@ -261,6 +261,10 @@ def update_filter (wconfig, dryrun=False, log=None):
         p = wc.configuration.ZapperParser(fullname, compile_data=False)
         p.parse(fp=page)
         page.close()
+        # compare version compatibility
+        if wconfig['configversion'][0] != p.folder.configversion[0]:
+            print >> log, _("Incompatible folder version %s, must be %s") % \
+                (wconfig['configversion'], p.folder.configversion)
         if wconfig.merge_folder(p.folder, dryrun=dryrun, log=log):
             chg = True
 
