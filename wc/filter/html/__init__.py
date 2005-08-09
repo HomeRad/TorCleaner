@@ -371,7 +371,3 @@ def check_spelling (tag, url):
         return mo.group("tag")
     return tag
 
-
-if __name__ == '__main__':
-    for tag in ["blink", "bllnk", "htmm", "hu", "xmlns:a", "heisead"]:
-        print tag, check_spelling(tag, "dummy")
