@@ -150,16 +150,14 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         s = super(XmlrewriteRule, self).toxml()
         quote = wc.XmlUtils.xmlquoteattr
-        if self.selector:
-            s += u'\n selector="%s"' % quote(self.selector)
+        s += u'\n selector="%s"' % quote(self.selector)
+        replace = replacetypenames[self.replacetype]
+        s += u'\n replacetype="%s"' % quote(replace)
+        if self.value:
+            s += u'\n value="%s"' % quote(self.value)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
-        if self.replacetype != RSSHTML:
-            replace = replacetypenames[self.replacetype]
-            s += u'\n replacetype="%s"' % quote(replace)
-        if self.value:
-            s += u'\n value="%s"' % quote(self.value)
         s += u"\n</%s>" % self.get_name()
         return s
 
