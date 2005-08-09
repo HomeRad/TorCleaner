@@ -18,39 +18,43 @@
 XML utility functions.
 """
 
-import xml.sax.saxutils
-
-attr_entities = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    "\"": "&quot;",
-}
-
-
 def xmlquote (s):
     """
     Quote characters for XML.
     """
-    return xml.sax.saxutils.escape(s)
+    s = s.replace("&", "&amp;")
+    s = s.replace("<", "&lt;")
+    s = s.replace(">", "&gt;")
+    return s
 
 
 def xmlquoteattr (s):
     """
     Quote XML attribute, ready for inclusion with double quotes.
     """
-    return xml.sax.saxutils.escape(s, attr_entities)
+    s = s.replace("&", "&amp;")
+    s = s.replace("<", "&lt;")
+    s = s.replace(">", "&gt;")
+    s = s.replace("\"", "&quot;")
+    return s
 
 
 def xmlunquote (s):
     """
     Unquote characters from XML.
     """
-    return xml.sax.saxutils.unescape(s)
+    s = s.replace("&lt;", "<")
+    s = s.replace("&gt;", ">")
+    s = s.replace("&amp;", "&")
+    return s
 
 
 def xmlunquoteattr (s):
     """
     Unquote attributes from XML.
     """
-    return xml.sax.saxutils.unescape(s, attr_entities)
+    s = s.replace("&lt;", "<")
+    s = s.replace("&gt;", ">")
+    s = s.replace("&quot;", "\"")
+    s = s.replace("&amp;", "&")
+    return s
