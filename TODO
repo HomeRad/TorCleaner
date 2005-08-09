@@ -15,8 +15,6 @@ TODO
 
 - use privoxy's entries in default.action.master
 
-- limit psyco memory (http://psyco.sourceforge.net/psycoguide/memlimits.html)
-
 - do not remove referrer but replace with a spoofed one, notably "http://www.google.com/"
 
 - add privoxy's UNBLOCK_REFERRER entries to dontmatch list of referrer rule
@@ -27,8 +25,6 @@ TODO
 >     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
 > UnicodeDecodeError: 'ascii' codec can't decode byte 0xfa in position 2:  
 > ordinal not in range(128)
-
-- iframes whitelist www.flumserberg.ch
 
 - http://tracker.tradedoubler.com/click?p=3469&a=919547&url=http://www.apple.com/de/macmini
 
