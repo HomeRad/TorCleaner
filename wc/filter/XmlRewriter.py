@@ -18,8 +18,7 @@
 Filter a HTML stream.
 """
 
-#import xml.sax.expatreader
-
+import xml.sax
 import xml.sax.expatreader
 
 import wc.filter
@@ -51,7 +50,13 @@ class XmlRewriter (wc.filter.Filter.Filter):
             return data
         p = attrs['xmlrewriter_parser']
         f = attrs['xmlrewriter_filter']
-        p.feed(data)
+        if data:
+            try:
+                p.feed(data)
+            except xml.sax.SAXException, msg:
+                wc.log.error(wc.LOG_FILTER, "XML filter error at %s: %s",
+                             attrs['url'], str(msg))
+                return data
         return f.getoutput()
 
     def finish (self, data, attrs):
@@ -62,8 +67,14 @@ class XmlRewriter (wc.filter.Filter.Filter):
             return data
         p = attrs['xmlrewriter_parser']
         f = attrs['xmlrewriter_filter']
-        p.feed(data)
-        p.close()
+        try:
+            if data:
+                p.feed(data)
+            p.close()
+        except xml.sax.SAXException, msg:
+            wc.log.error(wc.LOG_FILTER, "XML finish error at %s: %s",
+                         attrs['url'], str(msg))
+            return data
         return f.getoutput()
 
     def get_attrs (self, url, localhost, stages, headers):
