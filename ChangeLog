@@ -31,6 +31,11 @@
     Type: bugfix
     Changed: wc/proxy/HttpClient.py
 
+  * Updated spidermonkey JavaScript library from upstream CVS as of
+    20050809.
+    Type: feature
+    Changed: libjs/*
+
 2.29 "The Forgotten" (released 12.4.2005)
 
   * Replace template_dir in windows install script.
