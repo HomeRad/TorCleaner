@@ -120,7 +120,7 @@ filter rule configuration</title>
 <div style="margin-top:10px;margin-bottom:10px;">
 <select name="newruletype">
 <option tal:repeat="rule newrulenames" tal:content="rule/capitalize"
- tal:attributes="value rule">Rewrite</option>
+ tal:attributes="value rule">Htmlrewrite</option>
 </select>
 <input type="submit" class="submit" name="newrule" value="New rule"
  title="Add new rule to current folder."
@@ -188,8 +188,8 @@ Here is the rule configuration...
 <div tal:condition="info/disablerule" i18n:translate="">Rule successfully disabled.</div>
 <div tal:condition="info/enablerule" i18n:translate="">Rule successfully enabled.</div>
 <div tal:condition="info/removerule" i18n:translate="">Rule successfully removed.</div>
-<div tal:condition="info/rewrite_addattr" i18n:translate="">Rewrite attribute added.</div>
-<div tal:condition="info/rewrite_delattr" i18n:translate="">Rewrite attribute(s) removed.</div>
+<div tal:condition="info/htmlrewrite_addattr" i18n:translate="">Htmlrewrite attribute added.</div>
+<div tal:condition="info/htmlrewrite_delattr" i18n:translate="">Htmlrewrite attribute(s) removed.</div>
 <div tal:condition="info/folderup" i18n:translate="">Folder moved up.</div>
 <div tal:condition="info/folderdown" i18n:translate="">Folder moved down.</div>
 <div tal:condition="info/ruleup" i18n:translate="">Rule moved up.</div>
@@ -198,7 +198,7 @@ Here is the rule configuration...
 <div tal:condition="info/ruledesc" i18n:translate="">Rule description successfully changed.</div>
 <div tal:condition="info/rulematchurl" i18n:translate="">Rule match-url successfully changed.</div>
 <div tal:condition="info/rulenomatchurl" i18n:translate="">Rule don't-match-url successfully changed.</div>
-<div tal:condition="info/ruleurl" i18n:translate="">Rule url successfully changed.</div>
+<div tal:condition="info/ruleurl" i18n:translate="">Rule URL successfully changed.</div>
 <div tal:condition="info/rulereplacement" i18n:translate="">Rule url replacement successfully changed.</div>
 <div tal:condition="info/ruleheadername" i18n:translate="">Rule header name successfully changed.</div>
 <div tal:condition="info/ruleheadervalue" i18n:translate="">Rule header value successfully changed.</div>
@@ -212,6 +212,9 @@ Here is the rule configuration...
 <div tal:condition="info/ruleenclosedblock" i18n:translate="">Rule enclosed block successfully changed.</div>
 <div tal:condition="info/rulerewritepart" i18n:translate="">Rule rewrite part successfully changed.</div>
 <div tal:condition="info/rulerewritereplacement" i18n:translate="">Rule rewrite replacement successfully changed.</div>
+<div tal:condition="info/xmlselector" i18n:translate="">Rule XML selector successfully changed.</div>
+<div tal:condition="info/xmlreplacetype" i18n:translate="">Rule XML replace type successfully changed.</div>
+<div tal:condition="info/xmlreplacevalue" i18n:translate="">Rule XML replace value successfully changed.</div>
 </div>
 
 <div class="error">
@@ -222,8 +225,8 @@ Here is the rule configuration...
 <div tal:condition="error/newrule" i18n:translate="">Invalid rule type.</div>
 <div tal:condition="error/disablerule" i18n:translate="">Rule already disabled.</div>
 <div tal:condition="error/enablerule" i18n:translate="">Rule already enabled.</div>
-<div tal:condition="error/rewrite_addattr" i18n:translate="">Empty attribute name.</div>
-<div tal:condition="error/rewrite_delattr" i18n:translate="">Invalid attribute name.</div>
+<div tal:condition="error/htmlrewrite_addattr" i18n:translate="">Empty attribute name.</div>
+<div tal:condition="error/htmlrewrite_delattr" i18n:translate="">Invalid attribute name.</div>
 <div tal:condition="error/folderup" i18n:translate="">Invalid folder move up id.</div>
 <div tal:condition="error/folderdown" i18n:translate="">Invalid folder move down id.</div>
 <div tal:condition="error/ruleup" i18n:translate="">Invalid rule move up id.</div>
@@ -241,6 +244,8 @@ Here is the rule configuration...
 <div tal:condition="error/ruleindex" i18n:translate="">Invalid rule index.</div>
 <div tal:condition="error/selindex" i18n:translate="">Invalid selection index.</div>
 <div tal:condition="error/categoryvalue" i18n:translate="">Invalid category value.</div>
+<div tal:condition="error/xmlselector" i18n:translate="">Invalid XML selector.</div>
+<div tal:condition="error/xmlreplacetype" i18n:translate="">Invalid XML replace type.</div>
 </div>
 
 </div>
