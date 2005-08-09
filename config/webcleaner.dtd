@@ -4,10 +4,12 @@
   - added sslport, sslgateway attributes
 20050808 Bastian Kleineidam
   - changed filter name to CDATA, there are too many filters now
+20050809 Bastian Kleineidam
+  - renamed version to configversion
 -->
 <!ELEMENT webcleaner (filter+)>
 <!ATTLIST webcleaner
- version     CDATA #REQUIRED
+ configversion   CDATA #REQUIRED
  port        CDATA "8080"
  sslport     CDATA "8443"
  sslgateway  CDATA #IMPLIED
