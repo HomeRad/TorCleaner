@@ -291,10 +291,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.headers.has_key('Host'):
             wc.log.warn(wc.LOG_PROXY,
                         "%s request without Host header encountered", self)
-            if self.port != 80:
-                self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
-            else:
-                self.headers['Host'] = "%s\r" % self.hostname
+        if self.port != 80:
+            self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
+        else:
+            self.headers['Host'] = "%s\r" % self.hostname
         if wc.configuration.config["proxyuser"]:
             creds = wc.proxy.auth.get_header_credentials(self.headers,
                        'Proxy-Authorization')
