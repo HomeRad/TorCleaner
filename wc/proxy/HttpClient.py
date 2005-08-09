@@ -406,8 +406,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 data = wc.filter.applyfilter(stage, data, "finish",
                                              self.attrs)
             self.content += data
-            if self.content and not self.headers.has_key('Content-Length'):
-                self.headers['Content-Length'] = "%d\r" % len(self.content)
+            if self.content:
+                if self.method in ['GET', 'HEAD']:
+                    wc.log.warn(wc.LOG_PROXY,
+                                "Unexpected content in %s request: %r",
+                                self.method, self.content)
+                    if self.headers.has_key('Content-Length'):
+                        del self.headers['Content-Length']
+                elif not self.headers.has_key('Content-Length'):
+                    self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
             is_local = self.hostname in \
