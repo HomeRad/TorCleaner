@@ -23,6 +23,14 @@
     Type: bugfix
     Changed: wc/webgui/filterconfig_html.py
 
+  * Remove unallowed double header entries.
+    Type: bugfix
+    Changed: wc/proxy/Headers.py
+
+  * Remove unallowed content body from GET and HEAD requests.
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
 2.29 "The Forgotten" (released 12.4.2005)
 
   * Replace template_dir in windows install script.
