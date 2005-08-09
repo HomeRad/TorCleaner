@@ -48,7 +48,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         # make filename read-only
         self._filename = filename
         self.rules = []
-        self.attrnames.append('oid')
+        self.attrnames.extend(('oid', 'configversion'))
         self.intattrs.append('oid')
         self.oid = None
 
@@ -120,9 +120,9 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         """
         s = u"""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-%s oid="%d">""" % \
+%s oid="%d" configversion="%s">""" % \
       (wc.configuration.ConfigCharset, super(FolderRule, self).toxml(),
-       self.oid)
+       self.oid, self.configversion)
         s += u"\n"+self.title_desc_toxml()+u"\n"
         for r in self.rules:
             s += u"\n%s\n" % r.toxml()
