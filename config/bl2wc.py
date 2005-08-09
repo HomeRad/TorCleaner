@@ -91,6 +91,7 @@ def read_ids (filename, ids):
     p.parse()
     ids['folder']['sid'] = str(p.folder.sid)
     ids['folder']['oid'] = p.folder.oid
+    ids['folder']['configversion'] = str(p.folder.configversion)
     for rule in p.folder.rules:
         for ftype in ('domains', 'urls'):
             if rule.get_name().endswith(ftype):
@@ -108,7 +109,7 @@ def write_filters ():
         filename = "config/%s_%s.zap" % (ftype, cat)
         print "writing", filename
         ids = {
-            'folder': {'sid': None, 'oid': None},
+            'folder': {'sid': None, 'oid': None, 'configversion': None},
             'domains': {'sid': None},
             'urls': {'sid': None},
         }
@@ -122,6 +123,18 @@ def write_filters ():
 
 def write_folder (cat, ftype, data, ids, f):
     print "write", cat, "folder"
+    if ids['folder']['sid'] is not None:
+        sid = ' sid="%s"' % ids['folder']['sid']
+    else:
+        sid = ""
+    if ids['folder']['oid'] is not None:
+        oid = ' oid="%d"' % ids['folder']['oid']
+    else:
+        oid = ""
+    if ids['folder']['configversion'] is not None:
+        configversion = ' configversion="%s"' % ids['folder']['configversion']
+    else:
+        configversion = ""
     d = {
         "charset": wc.configuration.ConfigCharset,
         "title_en": wc.XmlUtils.xmlquote("%s %s" %
@@ -132,12 +145,13 @@ def write_folder (cat, ftype, data, ids, f):
         "desc_en": wc.XmlUtils.xmlquote(
                                      "Automatically generated on %s" % date),
         "desc_de": wc.XmlUtils.xmlquote("Automatisch generiert am %s" % date),
-        "sid": ids['folder']['sid'],
-        "oid": ids['folder']['oid'],
+        "sid": sid,
+        "oid": oid,
+        "configversion": configversion,
     }
     f.write("""<?xml version="1.0" encoding="%(charset)s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="%(sid)s" oid="%(oid)d">
+<folder%(sid)s%(oid)s%(configversion)s>
 <title lang="en">%(title_en)s</title>
 <title lang="de">%(title_de)s</title>
 <description lang="en">%(desc_en)s</description>
