@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.17" oid="2">
+<folder sid="wc.17" oid="2" configversion="0.10">
 <title lang="en">Blacklist aggressive</title>
 <title lang="de">Filter für Aggression</title>
 <description lang="en">Automatically generated on 2005-04-11 15:15:28</description>

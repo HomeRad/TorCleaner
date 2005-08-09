@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.22" oid="14">
+<folder sid="wc.22" oid="14" configversion="0.10">
 <title lang="de">HTML Metadaten</title>
 <title lang="en">HTML Metadata</title>
 

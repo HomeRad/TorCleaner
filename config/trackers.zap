@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.366" oid="5">
+<folder sid="wc.366" oid="5" configversion="0.10">
 <title lang="de">Zähler und Statistik</title>
 <title lang="en">Trackers and counters</title>
 <description lang="en">Statistic links and tracker images deserve now a separate category as they became a lot more in the last couple of months.</description>

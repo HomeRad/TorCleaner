@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.323" oid="6">
+<folder sid="wc.323" oid="6" configversion="0.10">
 <title lang="de">HTTP Kopfdaten</title>
 <title lang="en">HTTP Headers</title>
 <description lang="en">Add, delete and modify HTTP headers.</description>

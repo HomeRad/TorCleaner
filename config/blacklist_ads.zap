@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.14" oid="1">
+<folder sid="wc.14" oid="1" configversion="0.10">
 <title lang="en">Blacklist ads</title>
 <title lang="de">Filter für Werbung</title>
 <description lang="en">Automatically generated on 2005-04-11 15:15:28</description>

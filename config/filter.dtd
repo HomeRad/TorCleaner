@@ -7,6 +7,7 @@
  20050809 Bastian Kleineidam
  * renamed rewrite to htmlrewrite
  * added xmlrewrite
+ * added configversion to folder attrs
  20041227 Bastian Kleineidam
  * added "antivirus" element
  20040308 Bastian Kleineidam
@@ -74,6 +75,7 @@
  sid      CDATA #REQUIRED
  oid      CDATA #REQUIRED
  disable  CDATA "0"
+ configversion CDATA #REQUIRED
 >
 
 <!--                      Title and description
