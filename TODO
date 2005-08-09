@@ -157,3 +157,28 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
   dynamic values, like the request domain url the complete URL.
   A use case would be referrer spoofing to use the request domain
   instead of a fixed value.
+
+- suggestion from mail:
+ filter lists from http://phroggy.com/bannerfilter/
+ Check bannerfilter's update.sh for more infos.
+ http://phroggy.com/bannerfilter/banners.data
+ http://phroggy.com/bannerfilter/popups.data
+ http://phroggy.com/bannerfilter/frames.data
+ http://phroggy.com/bannerfilter/exceptions.data
+ 
+ Also well known lists are in guarding.p2p format, for example
+ available from:
+ 
+ DIR_WWW="http://methlabs.org/sync"
+ #Anti-P2P/ Ads/Spyware/ Govt/Military
+ FILE_DL="guarding_all.p2p.zip"
+ #Anti-P2P/ Ads/Spyware
+ #FILE_DL="guarding_plus.p2p.zip"
+ #Anti-P2P
+ #FILE_DL="guarding.p2p.zip"
+ #Ads/Spyware
+ #FILE_DL="antiads.txt.zip"
+ #Govt/Military
+ #FILE_DL="govandmil.txt.zip"
+ FILE_EX="guarding.p2p"
+
