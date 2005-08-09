@@ -51,12 +51,13 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         self.attrnames.extend(('oid', 'configversion'))
         self.intattrs.append('oid')
         self.oid = None
+        self.configversion = "-"
 
     def __str__ (self):
         """
         Return rule data as string.
         """
-        return super(FolderRule, self).__str__()+ \
+        return super(FolderRule, self).__str__() + \
             ("\nrules:   %d" % len(self.rules))
 
     def filename_get (self):
