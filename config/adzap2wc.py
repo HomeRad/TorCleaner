@@ -4,7 +4,6 @@
 """Generate WebCleaner .zap files from an AdZapper squid_redirect file"""
 
 import os
-import os.path
 import re
 import time
 import tempfile
