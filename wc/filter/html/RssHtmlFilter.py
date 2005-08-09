@@ -43,7 +43,7 @@ rss_allowed = {
     u"sub": [],
     u"sup": [],
     u"blockquote": [],
-    # XXX more tags needed?
+    u"cite": [],
 }
 # HTML tags with attributes holding URIs
 rss_uris = {
