@@ -1,5 +1,7 @@
 TODO
 
+- rework the HTML GUI using mini-tabs and styled checkboxes.
+
 - padding error when password ends with equal sign?
   150, in check_credentials                                                                     
   res = check_digest_credentials(creds['Digest'][0], **attrs)                               
