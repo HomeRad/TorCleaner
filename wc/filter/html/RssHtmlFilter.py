@@ -44,6 +44,16 @@ rss_allowed = {
     u"sup": [],
     u"blockquote": [],
     u"cite": [],
+    u"table": [],
+    u"tbody": [],
+    u"thead": [],
+    u"tfoot": [],
+    u"ul": [],
+    u"ol": [],
+    u"li": [],
+    u"tr": [u"align"],
+    u"th": [u"align"],
+    u"td": [u"align", u"colspan", u"rowspan"],
 }
 # HTML tags with attributes holding URIs
 rss_uris = {
