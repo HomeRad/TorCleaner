@@ -221,8 +221,8 @@ static JSBool cookieGetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
             return JS_TRUE;
         }
     }
-    *vp = JSVAL_NULL;
-    return JS_FALSE;
+    *vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, ""));
+    return JS_TRUE;
 }
 
 
