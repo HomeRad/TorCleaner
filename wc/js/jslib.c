@@ -46,7 +46,7 @@ static JSClass generic_class = {
 };
 
 /* hard branching limit to avoid recursive loops */
-static const int BRANCH_LIMIT = 1000;
+static const int BRANCH_LIMIT = 20000;
 
 /* object for JS environment */
 typedef struct {
