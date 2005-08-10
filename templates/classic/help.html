@@ -166,6 +166,27 @@ pages. Filter HTML comments.</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
 Javascript, Nocomments, Rating, Htmlrewrite
 
+<h3>XmlRewriter</h3>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Parse XML code and rewrite single tags, attributes
+and values. Plus there is the ability to filter embedded HTML content,
+often occuring in RSS feeds.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response data of html pages</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Htmlrewrite, Xmlrewrite
+
+<h3>VirusFilter</h3>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Scan all data with the ClamAv virus scanner (which must
+be installed on the proxy host). For performance reasonse there is a
+maximum size of 4 MB. If an object exceeds that size the proxy gives an
+error.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response data of html pages</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Antivirus
+
 
 <h2 i18n:translate="">Filter configuration rules</h2>
 
@@ -237,6 +258,46 @@ string with a backslash and the subgroup number (ie. \1, \2, ...).</p>
 to match, 'attr' and 'attrvalue' replace the first occuring or matching
 attribute or nothing.</p>
 
+<h3>Xmlrewrite</h3>
+<h4 i18n:translate="">Selector</h4>
+<p i18n:translate="">An XML rewrite rule applies to one specific XML tag
+and can replace (or delete) parts of or the complete tag.
+The selector is a simplified XPath expression of the form
+<code><i>(</i>/<i>tag)+</i></code> where a tag is of the form
+<code><i>name</i>([<i>attr</i>=<i>val(</i>,<i>attr</i>=<i>val)*</i>]<i>)?</i></code>.
+Tag names, attributes and values are case sensitive.<br>
+Example: <code>/rss/channel/item/description</code> selects the
+<code>&lt;description&gt;</code> XML tag in an RSS new feed.
+</p>
+<h4 i18n:translate="">Action</h4>
+<table rules="cols" border="0" cellpadding="4" cellspacing="0" summary="">
+<thead>
+<tr>
+<th>&nbsp;</th>
+<th colspan="2" i18n:translate="">Defined replacement types</th>
+</tr>
+<tr style="border-bottom:1px solid black;">
+<th i18n:translate="">replace type</th>
+<th i18n:translate="">replace value</th>
+<th i18n:translate="">action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rsshtml</td>
+<td><i>unused</i></td>
+<td>Assumes all text content inside the XML tag is HTML.
+Only allows certain HTML tags, and filters the HTML data with the
+Htmlrewrite rules.</td>
+</tr>
+<td>remove</td>
+<td><i>unused</i></td>
+<td>Removes the complete selected XML tag and its content.</td>
+<tr>
+</tr>
+</tbody>
+</table>
+
 <h3>Replace</h3>
 <p i18n:translate="">Replace regular expressions in HTML or JavaScript
 pages.</p>
@@ -259,7 +320,7 @@ the header is deleted, else it gets replaced or added if it did not exist
 before.</p>
 
 <h3>Image</h3>
-<p i18n:translate="">Block images with a certain size which is replacing
+<p i18n:translate="">Block images with a certain size by replacing
 them with a transparent 1x1 image.</p>
 
 <h3>Javascript</h3>
