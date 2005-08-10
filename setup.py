@@ -66,6 +66,8 @@ def cnormpath (path):
     if win_compiling:
         # replace slashes with backslashes
         path = path.replace("/", "\\")
+    if not os.path.isabs(path):
+        path= os.path.join(sys.prefix, path)
     return path
 
 
@@ -75,6 +77,7 @@ class MyInstall (install, object):
         super(MyInstall, self).run()
         # we have to write a configuration file because we need the
         # <install_data> directory (and other stuff like author, url, ...)
+        # all paths are made absolute by cnormpath()
         data = []
         for d in ['purelib', 'platlib', 'lib', 'headers', 'scripts', 'data']:
             attr = 'install_%s' % d
@@ -87,12 +90,11 @@ class MyInstall (install, object):
                 val = getattr(self, attr)[cutoff:]
             else:
                 val = getattr(self, attr)
-            if attr == "install_data":
-                base = os.path.join(val, 'share', 'webcleaner')
-                data.append('config_dir = %r' % \
-                            cnormpath(os.path.join(base, 'config')))
-                data.append('template_dir = %r' % \
-                            cnormpath(os.path.join(base, 'templates')))
+            if attr == 'install_data':
+                cdir = os.path.join(val, 'share', 'webcleaner', 'config')
+                data.append('config_dir = %r' % cnormpath(cdir))
+                tdir = os.path.join(val, 'share', 'webcleaner', 'template')
+                data.append('template_dir = %r' % cnormpath(tdir))
             data.append("%s = %r" % (attr, cnormpath(val)))
         self.distribution.create_conf_file(data, directory=self.install_lib)
 
@@ -106,6 +108,7 @@ class MyInstall (install, object):
         return outs
 
     # compatibility bugfix for Python << 2.5, << 2.4.1, << 2.3.5
+    # remove this method when depending on one of the above versions
     def dump_dirs (self, msg):
         if DEBUG:
             from distutils.fancy_getopt import longopt_xlate
@@ -125,7 +128,9 @@ class MyInstall (install, object):
 
 
 class MyInstallData (install_data, object):
-    """My own data installer to handle permissions"""
+    """
+    My own data installer to handle permissions.
+    """
 
     def run (self):
         """
@@ -144,12 +149,14 @@ class MyInstallData (install_data, object):
 
 
 class MyDistribution (distutils.dist.Distribution, object):
-
-    def __init__ (self, attrs=None):
-        super(MyDistribution, self).__init__(attrs=attrs)
-        self.config_file = "_%s2_configdata.py"%self.get_name()
+    """
+    Custom distribution class generating config file.
+    """
 
     def run_commands (self):
+        """
+        Generate config file and run commands.
+        """
         cwd = os.getcwd()
         data = []
 	data.append('config_dir = %r' % os.path.join(cwd, "config"))
@@ -160,6 +167,9 @@ class MyDistribution (distutils.dist.Distribution, object):
         super(MyDistribution, self).run_commands()
 
     def get_conf_filename (self, directory):
+        """
+        Get name for config file.
+        """
         return os.path.join(directory, "_%s2_configdata.py"%self.get_name())
 
     def create_conf_file (self, data, directory=None):
@@ -180,9 +190,13 @@ class MyDistribution (distutils.dist.Distribution, object):
                      "contact_email", "fullname")
         for name in metanames:
               method = "get_" + name
-              cmd = "%s = %r" % (name, getattr(self.metadata, method)())
+              val = getattr(self.metadata, method)()
+              if isinstance(val, str):
+                  val = unicode(val)
+              cmd = "%s = %r" % (name, val)
               data.append(cmd)
         data.append('appname = "WebCleaner"')
+        # write the config file
         util.execute(write_file, (filename, data),
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
@@ -305,7 +319,7 @@ class MyBuildExt (build_ext, object):
         """
         Add -std=gnu99 to build options if supported.
         """
-        # For gcc 3.x we can add -std=gnu99 to get rid of warnings.
+        # For gcc >= 3 we can add -std=gnu99 to get rid of warnings.
         extra = []
         if self.compiler.compiler_type == 'unix':
             option = "-std=gnu99"
@@ -407,7 +421,7 @@ library_dirs = []
 libraries = []
 
 # distinguish the different platforms
-if os.name=='nt':
+if os.name == 'nt':
     # windows does not have unistd.h
     define_macros.append(('YY_NO_UNISTD_H', None))
 else:
@@ -592,7 +606,6 @@ setup (name = "webcleaner",
            'wc.webgui.PageTemplates', 'wc.webgui.TAL', 'wc.webgui.ZTUtils',
            'wc.webgui.context', ],
        ext_modules = extensions,
-       scripts = scripts,
        long_description = """WebCleaner features:
 * remove unwanted HTML (adverts, flash, etc.)
 * popup blocker
@@ -610,13 +623,6 @@ setup (name = "webcleaner",
 * HTTP/1.1 support (persistent connections, pipelining)
 * HTTPS proxy CONNECT and optional SSL gateway support
 """,
-       classifiers = ['Development Status :: 5 - Production/Stable',
-           'Environment :: No Input/Output (Daemon)',
-           'Programming Language :: Python',
-           'Programming Language :: C',
-           'Topic :: Internet :: Proxy Servers',
-           'License :: OSI Approved :: GNU General Public License (GPL)',
-       ],
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
                    'install_data': MyInstallData,
@@ -625,5 +631,13 @@ setup (name = "webcleaner",
                    'build': MyBuild,
                    'clean': MyClean,
                   },
+       scripts = scripts,
        data_files = data_files,
+       classifiers = ['Development Status :: 5 - Production/Stable',
+           'Environment :: No Input/Output (Daemon)',
+           'Programming Language :: Python',
+           'Programming Language :: C',
+           'Topic :: Internet :: Proxy Servers',
+           'License :: OSI Approved :: GNU General Public License (GPL)',
+       ],
 )
