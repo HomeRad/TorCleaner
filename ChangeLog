@@ -36,6 +36,11 @@
     Type: feature
     Changed: libjs/*
 
+  * Initial cookie value is an empty string, not NULL. Fixes some
+    improperly handled JS script.
+    Type: bugfix
+    Changed: wc/js/jslib.c
+
 2.29 "The Forgotten" (released 12.4.2005)
 
   * Replace template_dir in windows install script.
