@@ -47,17 +47,17 @@ Version = configdata.version
 AppName = configdata.appname
 Name = configdata.name
 Description = configdata.description
-App = AppName+" "+Version
-UserAgent = AppName+"/"+Version
+App = AppName+u" "+Version
+UserAgent = AppName+u"/"+Version
 Author =  configdata.author
 HtmlAuthor = Author.replace(' ', '&nbsp;')
-Copyright = "Copyright © 2000-2002 "+Author
-HtmlCopyright = "Copyright &copy; 2000-2003 "+HtmlAuthor
-AppInfo = App+"              "+Copyright
-HtmlAppInfo = App+", "+HtmlCopyright
+Copyright = u"Copyright (C) 2000-2005 "+Author
+HtmlCopyright = u"Copyright &copy; 2000-2005 "+HtmlAuthor
+AppInfo = App+u"              "+Copyright
+HtmlAppInfo = App+u", "+HtmlCopyright
 Url = configdata.url
 Email = configdata.author_email
-Freeware = """%(appname)s comes with ABSOLUTELY NO WARRANTY!
+Freeware = u"""%(appname)s comes with ABSOLUTELY NO WARRANTY!
 This is free software, and you are welcome to redistribute it
 under certain conditions. Look at the file `LICENSE' whithin this
 distribution.""" % {'appname': AppName}
