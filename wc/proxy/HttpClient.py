@@ -221,6 +221,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # default scheme is http
             self.scheme = 'http'
         if not self.allow.is_allowed(self.method, self.scheme, self.port):
+            wc.log.warn(wc.LOG_PROXY, "Unallowed request %s", self.url)
             self.error(403, _("Forbidden"))
             return False
         # request is ok
