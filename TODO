@@ -184,3 +184,30 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
  #FILE_DL="govandmil.txt.zip"
  FILE_EX="guarding.p2p"
 
+- Problem on WinXP box:
+ The instance's SvcRun() method failed 
+   File "C:\Python24\Lib\site-packages\win32\lib\win32serviceutil.py",
+ line 715, in SvcRun
+     self.SvcDoRun()
+   File "C:\Python24\Lib\site-packages\wc\win32start.py", line 74, in
+ SvcDoRun
+     filelogs=self.filelogs)
+   File "C:\Python24\Lib\site-packages\wc\start.py", line 59, in
+ wstartfunc
+     wc.proxy.mainloop(handle=handle, abort=abort)
+   File "C:\Python24\Lib\site-packages\wc\proxy\__init__.py", line 168,
+ in mainloop
+     proxy_poll(timeout=max(0, run_timers()))
+   File "C:\Python24\Lib\site-packages\wc\proxy\__init__.py", line 122,
+ in proxy_poll
+     x.handle_read_event()
+   File "C:\Python24\Lib\site-packages\wc\proxy\Dispatcher.py", line 424,
+ in handle_read_event
+     self.handle_read()
+   File "C:\Python24\Lib\site-packages\wc\proxy\Connection.py", line 95,
+ in handle_read
+     self.process_read()
+   File "C:\Python24\Lib\site-packages\wc\proxy\dns_lookups.py", line
+ 567, in process_read
+     callback(self.hostname, DnsResponse('found', ip_addrs)) 
+ exceptions.TypeError: 'NoneType' object is not callable
