@@ -450,7 +450,6 @@ class HttpServer (wc.proxy.Server.Server):
             self._show_rating_deny(str(msg))
             return
         except wc.filter.FilterProxyError, e:
-            self.client.error(e.status, e.msg, txt=e.text)
             self.handle_error("filter proxy error")
             return
         underflow = self.bytes_remaining is not None and \
