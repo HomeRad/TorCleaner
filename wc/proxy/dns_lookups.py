@@ -7,6 +7,7 @@ http://www.rad.com/networks/1998/dns/main.html
 
 import sys
 import os
+import platform
 import time
 import socket
 import struct
@@ -218,12 +219,15 @@ class DnsCache (object):
         if os.name == 'posix':
             filename = '/etc/hosts'
         elif os.name == 'nt':
-            # XXX find correct %WINDIR% and place for hosts.sam
-            # Win98SE: c:\windows\hosts.sam
-            # Win2000: c:\winnt\system32\drivers\etc\hosts
-            # WinNT: ???
-            # WinXP: ???
-            filename = 'c:\\windows\\hosts.sam'
+            windir = os.environ.get('WINDIR', 'c:\\windows')
+            release = platform.release()
+            if release in ('95', '98', 'Me', 'postMe'):
+                # c:\windows\hosts.sam
+                filename = os.path.join(windir, "hosts.sam")
+            else:
+                # Win2000, WinNT, WinXP c:\winnt\system32\drivers\etc\hosts
+                filename = os.path.join(windir, 'system32', 'drivers',
+                                        'etc', 'hosts')
         else:
             return
         if not os.path.exists(filename):
