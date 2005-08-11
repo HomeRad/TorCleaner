@@ -128,10 +128,7 @@ class DnsExpandHostname (object):
             for domain in resolver.search:
                 self.queries.append(hostname + "." + domain.to_text(True))
             if hostname.find('.') < 0:
-                # If there's no dot, we should try expanding patterns
-                #XXX unsupported for pattern in resolver.search_patterns:
-                #    self.queries.append(pattern % hostname)
-                # it is likely that search_domains matter
+                # it is likely that search domains matter
                 self.delay = 0.2
         self.requests = self.queries[1:] # queries we haven't yet made
         # Issue the primary request
