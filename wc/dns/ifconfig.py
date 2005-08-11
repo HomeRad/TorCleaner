@@ -48,7 +48,7 @@ class IfConfig (object):
         try:
             result = self._fcntl(func, ifreq)
         except IOError, msg:
-            wc.log.warn(wc.LOG,
+            wc.log.warn(wc.LOG_DNS,
                   "error getting addr for interface %r: %s", ifname, msg)
             return None
         return socket.inet_ntoa(result[20:24])

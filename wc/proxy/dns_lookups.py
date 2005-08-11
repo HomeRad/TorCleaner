@@ -373,8 +373,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         super(DnsLookupConnection, self).__init__()
         try:
             self.establish_connection()
-        except socket.error:
+        except socket.error, e:
             # We couldn't even connect .. bah!
+            wc.log.debug(wc.LOG_DNS, "%s connect error %s", self, str(e))
             callback(hostname,
                      DnsResponse('error', 'could not connect to DNS server'))
             self.callback = None
