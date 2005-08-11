@@ -385,10 +385,6 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.create_socket(family, socket.SOCK_STREAM)
             self.connect((self.nameserver, self.PORT))
             wc.proxy.make_timer(30, self.handle_connect_timeout)
-            # XXX: we have to fill the buffer because otherwise we
-            # won't consider this object writable, and we will never
-            # call handle_connect.  This needs to be fixed somehow.
-            self.send_dns_request()
         else:
             self.create_socket(family, socket.SOCK_DGRAM)
             self.connect((self.nameserver, self.PORT))
@@ -417,6 +413,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     def handle_connect (self):
         # For TCP requests only
         dns_accepts_tcp[self.nameserver] = True
+        self.send_dns_request()
 
     def handle_connect_timeout (self):
         # We're trying to perform a TCP connect
