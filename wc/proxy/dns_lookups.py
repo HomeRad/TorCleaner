@@ -469,7 +469,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if (not self.tcp and
             dns_accepts_tcp.get(self.nameserver, True) and
             self.retries == 1):
-            # Switch to TCP
+            wc.log.debug(wc.LOG_DNS, "%s switching to TCP", self)
             self.TIMEOUT = 20
             self.close()
             self.tcp = True
@@ -508,7 +508,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                  wire, keyring=self.query.keyring, request_mac=self.query.mac)
         wc.log.debug(wc.LOG_DNS, "got DNS response %s", response)
         if not self.query.is_response(response):
-            wc.log.warn(wc.LOG_DNS, '%s was no response to %s',
+            wc.log.warn(wc.LOG_DNS, 'Wrong response %s to query %s',
                         response, self.query)
             # Oops, this doesn't answer the right question.  This can
             # happen because we're using UDP, and UDP replies might end
