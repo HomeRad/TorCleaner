@@ -284,10 +284,11 @@ class DnsCache (object):
         assert (not answer.isFound() or len(answer.data) > 0), \
                'Received empty DNS lookup .. should be error? %s' % (answer,)
         self.cache[hostname] = answer
+        curtime = time.time()
         if not answer.isError():
-            self.expires[hostname] = time.time()+self.ValidCacheEntryExpires
+            self.expires[hostname] = curtime+self.ValidCacheEntryExpires
         else:
-            self.expires[hostname] = time.time()+self.InvalidCacheEntryExpires
+            self.expires[hostname] = curtime+self.InvalidCacheEntryExpires
         for c in callbacks:
             c(hostname, answer)
 
