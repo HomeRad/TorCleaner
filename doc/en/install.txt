@@ -238,8 +238,8 @@ Setup for Windows - compiling from source:
 Troubleshooting
 ===============
 
-You can search the `webcleaner-users archive`_ if your bug has already
-been reported.
+You can search the `webcleaner-users archive`_ if your problem has
+already been reported.
 
 .. _webcleaner-users archive:
    http://sourceforge.net/mailarchive/forum.php?forum_id=42921
