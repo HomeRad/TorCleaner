@@ -455,16 +455,16 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         # timeout (see send_dns_request).
         if not self.callback:
             return # It's already handled, so ignore this
-        wc.log.warn(wc.LOG_DNS, "%s DNS timeout", self)
         if not self.connected:
+            wc.log.debug(wc.LOG_DNS, "%s DNS connect timeout", self)
             self.callback(self.hostname,
                           DnsResponse('error', 'timed out connecting'))
             self.callback = None
             return
         self.retries += 1
-        if (not self.tcp and
-            dns_accepts_tcp.get(self.nameserver, True) and
-            self.retries == 1):
+        if (not self.tcp) and \
+           dns_accepts_tcp.get(self.nameserver, True) and \
+           self.retries == 2:
             wc.log.debug(wc.LOG_DNS, "%s switching to TCP", self)
             self.TIMEOUT = 20
             self.close()
@@ -475,11 +475,13 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         elif not self.tcp and self.retries < 12:
             self.send_dns_request()
         else:
+            wc.log.debug(wc.LOG_DNS, "%s DNS timeout", self)
             if self.callback:
                 self.callback(self.hostname,
                               DnsResponse('error', 'timed out'))
                 self.callback = None
-            if self.connected: self.close()
+            if self.connected:
+                self.close()
 
     def process_read (self):
         if not self.callback:
