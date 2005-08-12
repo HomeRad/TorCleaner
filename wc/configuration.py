@@ -52,7 +52,11 @@ def init (confdir=wc.ConfigDir):
 
 
 # note that Python already ignores SIGPIPE, so no need to configure that
-@wc.decorators.signal_handler(signal.SIGHUP)
+if os.name == 'posix':
+    _signum = signal.SIGHUP
+else:
+    _signum = signal.NSIG
+@wc.decorators.signal_handler(_signum)
 def sighup_reload_config (signum, frame):
     """
     Support reload on posix systems.
