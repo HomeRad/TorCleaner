@@ -1,9 +1,5 @@
 TODO
 
-- recompile pycrypto installer .exe with version 2.0.1
-
-- rework the HTML GUI using mini-tabs and styled checkboxes.
-
 - padding error when password ends with equal sign?
   150, in check_credentials                                                                     
   res = check_digest_credentials(creds['Digest'][0], **attrs)                               
@@ -15,7 +11,19 @@ TODO
     password = base64.decodestring(attrs['password_b64'])                                     
   File "C:\Python24\lib\base64.py", line 317, in decodestring                                 
     return binascii.a2b_base64(s)                                                             
-  binascii.Error: Incorrect padding        
+  binascii.Error: Incorrect padding
+
+- > 188, in get_response_digest
+>     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
+> UnicodeDecodeError: 'ascii' codec can't decode byte 0xfa in position 2:
+> ordinal not in range(128)
+
+- Some DNS requests are aborted too early. If the web page is reloaded
+  in the browser and the DNS request is made again, it succeeds.
+
+- recompile pycrypto installer .exe with version 2.0.1
+
+- rework the HTML GUI using mini-tabs and styled checkboxes.
 
 - use privoxy's entries in default.action.master
 
@@ -25,11 +33,6 @@ TODO
 
 - test ads domain filter disablement
 
-- > 188, in get_response_digest
->     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
-> UnicodeDecodeError: 'ascii' codec can't decode byte 0xfa in position 2:  
-> ordinal not in range(128)
-
 - http://tracker.tradedoubler.com/click?p=3469&a=919547&url=http://www.apple.com/de/macmini
 
 - Invalid content?
@@ -37,8 +40,6 @@ TODO
   http://www.v-markt.de/angebote/aktuell/muenchen/muenchen.htm
   to
   http://www.v-markt.de/angebote/vorschau/muenchen/muenchen.htm
-- Remove autostart and hidden in:
-  <embed SRC="annoy.wav" autostart=true hidden=true>
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
@@ -77,37 +78,6 @@ _read
   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 516, in server_content
     assert self.server, "%s server_content(%r) had no server" % \
 AssertionError: <client:closed   being read> server_content('\xfc\
-
-- block *.stats.esomniture.com
-
-- http://www.indianmasala.com/
-
-- wc.proxy.dns <dns-lookup      im.a.hacker.la> DNS timeout
-wc.proxy.dns <dns-lookup TCP  im.a.hacker.la retry #1> DNS timeout
-wc.proxy.dns id 45796
-opcode QUERY
-rcode NOERROR
-flags QR RD RA
-;QUESTION
-im.a.hacker.la. IN A
-;ANSWER
-im.a.hacker.la. 3600 IN A 66.252.11.28
-;AUTHORITY
-;ADDITIONAL was no response to id 63857
-opcode QUERY
-rcode NOERROR
-flags RD
-;QUESTION
-im.a.hacker.la. IN A
-;ANSWER
-;AUTHORITY
-;ADDITIONAL
-
-- geht net: http://arp.ch/
-
-- http://yro.slashdot.org/article.pl?sid=05/02/16/2341200&tid=158&tid=126
-  oder
-  http://www.msnbc.msn.com/id/6969798/
 
 - use http://www.geocities.com/pierceive/adblock/
 
@@ -213,7 +183,4 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
  567, in process_read
      callback(self.hostname, DnsResponse('found', ip_addrs)) 
  exceptions.TypeError: 'NoneType' object is not callable
-
-- Some DNS requests are aborted too early. If the web page is reloaded
-  in the browser and the DNS request is made again, it succeeds.
 
