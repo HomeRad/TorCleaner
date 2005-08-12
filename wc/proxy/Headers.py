@@ -221,8 +221,8 @@ def client_get_max_forwards (headers):
     try:
         mf = int(headers.get('Max-Forwards', -1))
     except ValueError:
-        wc.log.error(wc.LOG_PROXY, "invalid Max-Forwards header value %s",
-                     headers.get('Max-Forwards', ''))
+        wc.log.warn(wc.LOG_PROXY, "invalid Max-Forwards header value %s",
+                    headers.get('Max-Forwards', ''))
         mf = -1
     if mf > 0:
         headers['Max-Forwards'] = "%d\r" % (mf-1)
@@ -295,7 +295,7 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
         # chunked encoded
         tenc = headers['Transfer-Encoding']
         if tenc != 'chunked':
-            wc.log.error(wc.LOG_PROXY,
+            wc.log.warn(wc.LOG_PROXY,
               "unknown transfer encoding %r, assuming chunked encoding", tenc)
         decoders.append(wc.proxy.decoder.UnchunkStream.UnchunkStream())
         # remove encoding header

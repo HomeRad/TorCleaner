@@ -525,9 +525,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # See http://cr.yp.to/djbdns/notes.html
             if self.tcp:
                 # socket.error((84, ''))
-                wc.log.error(wc.LOG_DNS,
-                             'Truncated TCP DNS packet: %s from %s for %r',
-                             response, self.nameserver, self.hostname)
+                wc.log.warn(wc.LOG_DNS,
+                            'Truncated TCP DNS packet: %s from %s for %r',
+                            response, self.nameserver, self.hostname)
                 self.handle_error("dns error: truncated TCP packet")
             else:
                 wc.log.warn(wc.LOG_DNS,

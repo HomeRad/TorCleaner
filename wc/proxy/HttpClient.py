@@ -190,7 +190,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > 2048:
-            wc.log.error(wc.LOG_PROXY,
+            wc.log.warn(wc.LOG_PROXY,
                          "%s request url length %d chars is too long",
                          self, len(self.url))
             self.error(400, _("URL too long"),
@@ -280,7 +280,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             host = self.headers['Host']
             self.hostname, self.port = urllib.splitnport(host, defaultport)
         if not self.hostname:
-            wc.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
+            wc.log.warn(wc.LOG_PROXY, "%s missing hostname in request", self)
             self.error(400, _("Bad Request"))
         # local request?
         if self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
@@ -455,7 +455,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                   self, len(data), self.server)
                 self.server.write(data)
         else:
-            wc.log.error(wc.LOG_PROXY, "%s invalid data", self)
+            wc.log.warn(wc.LOG_PROXY, "%s invalid data", self)
 
     def server_request (self):
         """

@@ -72,7 +72,7 @@ class HttpProxyClient (object):
         """
         On error the client finishes.
         """
-        wc.log.error(wc.LOG_PROXY, '%s error %s %s %s',
+        wc.log.warn(wc.LOG_PROXY, '%s error %s %s %s',
                      self, status, msg, txt)
         self.finish()
 

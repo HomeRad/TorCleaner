@@ -44,12 +44,12 @@ def get_response_data (response, url):
         wc.log.warn(wc.LOG_PROXY, "Empty response message from %r", url)
         parts += ['Bummer']
     elif len(parts) != 3:
-        wc.log.error(wc.LOG_PROXY, "Invalid response %r from %r",
-                     response, url)
+        wc.log.warn(wc.LOG_PROXY, "Invalid response %r from %r",
+                    response, url)
         parts = ['HTTP/1.0', "200", 'Ok']
     if not is_http_status(parts[1]):
-        wc.log.error(wc.LOG_PROXY, "Invalid http statuscode %r from %r",
-                     parts[1], url)
+        wc.log.warn(wc.LOG_PROXY, "Invalid http statuscode %r from %r",
+                    parts[1], url)
         parts[1] = "200"
     parts[1] = int(parts[1])
     return parts
