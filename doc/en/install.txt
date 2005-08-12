@@ -238,8 +238,15 @@ Setup for Windows - compiling from source:
 Troubleshooting
 ===============
 
-For help you can always join the mailing list at
-webcleaner-users@lists.sourceforge.net
+For help you can always join the mailing list
+webcleaner-users@lists.sourceforge.net at the `subscription page`_.
+You can also read the `list archive`_.
+
+.. _subscription page:
+   http://lists.sourceforge.net/mailman/listinfo/webcleaner-users
+.. _list archive:
+   http://sourceforge.net/mailarchive/forum.php?forum_id=42921
+
 
 Troubleshooting for Linux
 -------------------------
